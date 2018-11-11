@@ -23,24 +23,21 @@
 #include "config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
 #include "console.h"
 
+#include "common/atomic.h"
 #include "common/cbasetypes.h"
 #include "common/core.h"
+#include "common/ers.h"
+#include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/mutex.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
+#include "common/spinlock.h"
+#include "common/sql.h"
+#include "common/strlib.h"
 #include "common/sysinfo.h"
-
-#ifndef MINICORE
-#	include "common/atomic.h"
-#	include "common/ers.h"
-#	include "common/memmgr.h"
-#	include "common/mutex.h"
-#	include "common/spinlock.h"
-#	include "common/sql.h"
-#	include "common/strlib.h"
-#	include "common/thread.h"
-#	include "common/timer.h"
-#endif
+#include "common/thread.h"
+#include "common/timer.h"
 
 #include <stdio.h>
 #include <stdlib.h>

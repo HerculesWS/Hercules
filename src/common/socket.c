@@ -301,10 +301,8 @@ static uint32 send_shortlist_set[(FD_SETSIZE+31)/32];// to know if specific fd's
 
 static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse);
 
-#ifndef MINICORE
-	static int ip_rules = 1;
-	static int connect_check(uint32 ip);
-#endif  // MINICORE
+static int ip_rules = 1;
+static int connect_check(uint32 ip);
 
 static const char *error_msg(void)
 {
@@ -556,12 +554,10 @@ static int connect_client(int listen_fd)
 	setsocketopts(fd,NULL);
 	sockt->set_nonblocking(fd, 1);
 
-#ifndef MINICORE
 	if( ip_rules && !connect_check(ntohl(client_address.sin_addr.s_addr)) ) {
 		sockt->close(fd);
 		return -1;
 	}
-#endif  // MINICORE
 
 #ifndef SOCKET_EPOLL
 	// Select Based Event Dispatcher
@@ -1065,9 +1061,6 @@ static int do_sockets(int next)
 	return 0;
 }
 
-//////////////////////////////
-#ifndef MINICORE
-//////////////////////////////
 // IP rules and DDoS protection
 
 struct connect_history {
@@ -1326,11 +1319,6 @@ static bool access_list_add(struct config_setting_t *setting, const char *list_n
 	return true;
 }
 
-//////////////////////////////
-#endif  // MINICORE
-//////////////////////////////
-
-#ifndef MINICORE
 /**
  * Reads 'socket_configuration/ip_rules' and initializes required variables.
  *
@@ -1387,9 +1375,7 @@ static bool socket_config_read_iprules(const char *filename, struct config_t *co
 
 	return true;
 }
-#endif // ! MINICORE
 
-#ifndef MINICORE
 /**
  * Reads 'socket_configuration/ddos' and initializes required variables.
  *
@@ -1419,7 +1405,6 @@ static bool socket_config_read_ddos(const char *filename, struct config_t *confi
 
 	return true;
 }
-#endif // ! MINICORE
 
 /**
  * Reads 'socket_configuration' and initializes required variables.
@@ -1464,7 +1449,6 @@ static bool socket_config_read(const char *filename, bool imported)
 	}
 #endif  // SOCKET_EPOLL
 
-#ifndef MINICORE
 	{
 		uint32 ui32 = 0;
 		libconfig->setting_lookup_bool(setting, "debug", &access_debug);
@@ -1477,7 +1461,6 @@ static bool socket_config_read(const char *filename, bool imported)
 		retval = false;
 	if (!socket_config_read_ddos(filename, &config, imported))
 		retval = false;
-#endif // MINICORE
 
 	// import should overwrite any previous configuration, so it should be called last
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
@@ -1496,12 +1479,10 @@ static bool socket_config_read(const char *filename, bool imported)
 static void socket_final(void)
 {
 	int i;
-#ifndef MINICORE
 	if( connect_history )
 		db_destroy(connect_history);
 	VECTOR_CLEAR(access_allow);
 	VECTOR_CLEAR(access_deny);
-#endif  // MINICORE
 
 	for( i = 1; i < sockt->fd_max; i++ )
 		if(sockt->session[i])
@@ -1686,10 +1667,8 @@ static void socket_init(void)
 	}
 #endif  // defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
 
-#ifndef MINICORE
 	VECTOR_INIT(access_allow);
 	VECTOR_INIT(access_deny);
-#endif // ! MINICORE
 
 	// Get initial local ips
 	sockt->naddr_ = sockt->getips(sockt->addr_,16);
@@ -1729,12 +1708,10 @@ static void socket_init(void)
 	// should hold enough buffer (it is a vacuum so to speak) as it is never flushed. [Skotlex]
 	create_session(0, null_recv, null_send, null_parse);
 
-#ifndef MINICORE
 	// Delete old connection history every 5 minutes
 	connect_history = uidb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(connect_check_clear, "connect_check_clear");
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
-#endif  // MINICORE
 
 	ShowInfo("Server supports up to '"CL_WHITE"%"PRIu64""CL_RESET"' concurrent connections.\n", rlim_cur);
 }
