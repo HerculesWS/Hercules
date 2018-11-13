@@ -138,7 +138,7 @@ morocc,223,102,0	script	Volunteer - Morroc#06::MocVolunteer	2_M_BARD_ORIENT,{
 	next;
 	mes "[Ringing Voice]";
 	mes "Be quiet! Can't you see what's going on?!";
-	specialeffect(EF_HIT2, AREA, getnpcid(0, "Volunteer - Morroc#06"));
+	specialeffect(EF_HIT2, AREA, getnpcid("Volunteer - Morroc#06"));
 	next;
 	mes "[Morroc Volunteer]";
 	mes "Heyyy, you're being too harsh, Senyorita. Your fist may be as fragile as you are, but it sure can hurt somebody.";

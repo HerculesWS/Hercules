@@ -1967,7 +1967,7 @@ kh_vila,184,20,0	script	Book#kh1::BookKHQ1	HIDDEN_NPC,{
 			mes "wall slides opens open";
 			mes "to reveal a secret path.^000000";
 			KielHyreQuest = 28;
-			specialeffect(EF_READYPORTAL2, AREA, getnpcid(0, "Wall#kh"));
+			specialeffect(EF_READYPORTAL2, AREA, getnpcid("Wall#kh"));
 			close;
 		}
 		else {
@@ -6393,11 +6393,11 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		next;
 		mes "[Mitchell]";
 		mes "Nooooo!";
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Mitchell#KiehlRoom"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent1"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent2"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent3"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent4"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Mitchell#KiehlRoom"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent1"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent2"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent3"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent4"));
 		next;
 		cutin "kh_kiel03",2;
 		mes "[Kiehl]";

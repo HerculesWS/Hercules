@@ -569,10 +569,10 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 
 L_Wish:
 	mes "Mysterious energy comes out from the shrine.";
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew1"));
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew2"));
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew3"));
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew4"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew1"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew2"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew3"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew4"));
 	next;
 	mes "You have received the shrine's blessing.";
 	specialeffect(EF_BLESSING, AREA, playerattached());

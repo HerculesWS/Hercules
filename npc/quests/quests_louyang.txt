@@ -4122,7 +4122,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 				Zeny -= 100;
 			}
 			close2;
-			specialeffect(EF_BLASTMINEBOMB, AREA, getnpcid(0, " #fire"));
+			specialeffect(EF_BLASTMINEBOMB, AREA, getnpcid(" #fire"));
 			end;
 		}
 		mes "[Lady]";

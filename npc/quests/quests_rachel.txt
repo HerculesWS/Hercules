@@ -3722,10 +3722,10 @@ OnStart:
 	enablenpc "#ice_4f_2";
 	enablenpc "#ice_4f_3";
 	enablenpc "#ice_4f_4";
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_1"));
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_2"));
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_3"));
-	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "#ice_4f_4"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#ice_4f_1"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#ice_4f_2"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#ice_4f_3"));
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#ice_4f_4"));
 	end;
 
 OnTimer60000:

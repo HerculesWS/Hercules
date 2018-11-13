@@ -835,8 +835,8 @@ OnInit:
 	initnpctimer;
 	end;
 OnTimer5000:
-	specialeffect(EF_REFINEOK, AREA, getnpcid(0, "Suhnmi#eden"));
-	specialeffect(EF_REFINEOK, AREA, getnpcid(0, "Mighty Hammer#ed"));
+	specialeffect(EF_REFINEOK, AREA, getnpcid("Suhnmi#eden"));
+	specialeffect(EF_REFINEOK, AREA, getnpcid("Mighty Hammer#ed"));
 	initnpctimer;
 	end;
 }

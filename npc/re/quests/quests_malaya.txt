@@ -7330,14 +7330,14 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			close;
 		}
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
-		specialeffect(EF_STEAL, AREA, getnpcid(0, "Bushes#ma"));
+		specialeffect(EF_STEAL, AREA, getnpcid("Bushes#ma"));
 		malaya_bang = 13;
 		changequest 11293,11294;
 		close;
 	} else if (malaya_bang == 13) {
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
 		mes "Let's check around.";
-		specialeffect(EF_STEAL, AREA, getnpcid(0, "Bushes#ma"));
+		specialeffect(EF_STEAL, AREA, getnpcid("Bushes#ma"));
 		close;
 	} else if (malaya_bang == 14) {
 		mes "[Nurse Las]";
@@ -8789,11 +8789,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	next;
 	mes "The Tattooist placed the Ancient Grudges around the workplace.";
 	next;
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#01"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#02"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#03"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#04"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#05"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#05"));
 	mes "The Ancient Grudge lit up and tools starts to glow. He smiled satisfyingly at the glowing tools and materials.";
 	next;
 	mes "And then "+.@name$+" stared intensely at the doll as if to remember every detail of it in his head.";
@@ -8903,11 +8903,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	}
 	mes "He held up the powder in both hands and then blew it onto the drawing.";
 	next;
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#01"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#02"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#03"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#04"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#05"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#05"));
 	mes "All Ancient Grudges started to burn and then the glowing light from the "+.@name$+" drawing faded away.";
 	next;
 	specialeffect EF_LIGHTSPHERE;

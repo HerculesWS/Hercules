@@ -130,8 +130,8 @@ ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 		next;
 		mes "[King Crab & Sludge Worm]";
 		mes "Aaaaaahhhhhhhhk!!!!!!!!";
-		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid(0, "King Crab#job_shu"));
-		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid(0, "Sludge Worm#job_shu"));
+		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid("King Crab#job_shu"));
+		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid("Sludge Worm#job_shu"));
 		next;
 		mes "- What is that amazing power? -";
 		mes "- I've never seen this -";

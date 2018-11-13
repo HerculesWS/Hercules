@@ -9844,7 +9844,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 		next;
 		mes "[Expedition Messenger]";
 		mes "What's up? Why haven't you left...?";
-		specialeffect(EF_SOULBREAKER, AREA, getnpcid(0, "Expedition Messenger"));
+		specialeffect(EF_SOULBREAKER, AREA, getnpcid("Expedition Messenger"));
 		next;
 		mes "[Expedition Messenger]";
 		mes "Argh... Why are you doing this?!";
@@ -9871,8 +9871,8 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "[???]";
 			mes "Argh...";
 			next;
-			specialeffect(EF_SOULBREAKER, AREA, getnpcid(0, "Expedition Messenger#3"));
-			specialeffect(EF_SOULBREAKER, AREA, getnpcid(0, "Expedition Messenger#3"));
+			specialeffect(EF_SOULBREAKER, AREA, getnpcid("Expedition Messenger#3"));
+			specialeffect(EF_SOULBREAKER, AREA, getnpcid("Expedition Messenger#3"));
 			mes "[???]";
 			mes "Argh... You...";
 			next;
@@ -9924,8 +9924,8 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "[???]";
 			mes "Argh!";
 			next;
-			specialeffect(EF_SOULBREAKER, AREA, getnpcid(0, "Expedition Messenger#3"));
-			specialeffect(EF_SOULBREAKER, AREA, getnpcid(0, "Expedition Messenger#3"));
+			specialeffect(EF_SOULBREAKER, AREA, getnpcid("Expedition Messenger#3"));
+			specialeffect(EF_SOULBREAKER, AREA, getnpcid("Expedition Messenger#3"));
 			mes "[???]";
 			mes "Argh... You...";
 			next;
@@ -11548,7 +11548,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		specialeffect EF_BEGINSPELL2;
 		next;
 		mes "- The fire sparked, but then it immediatly blew out. -";
-		specialeffect(EF_FIREARROW, AREA, getnpcid(0, "Wet Firewood#moc2"));
+		specialeffect(EF_FIREARROW, AREA, getnpcid("Wet Firewood#moc2"));
 		next;
 		mes "[Defaria]";
 		mes "...............";
@@ -11567,7 +11567,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		specialeffect EF_BEGINSPELL2;
 		next;
 		mes "- The fire sparked, but then it immediately blew out.-";
-		specialeffect(EF_FIREARROW, AREA, getnpcid(0, "Wet Firewood#moc2"));
+		specialeffect(EF_FIREARROW, AREA, getnpcid("Wet Firewood#moc2"));
 		next;
 		mes "[Defaria]";
 		mes "...............";
@@ -11804,8 +11804,8 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			mes "Hopefully I can make a fire with your nice logs....";
 			specialeffect EF_BEGINSPELL2;
 			next;
-			specialeffect(EF_FIREWALL, AREA, getnpcid(0, "Wet Firewood#moc2"));
-			specialeffect(EF_TORCH, AREA, getnpcid(0, "Wet Firewood#moc2"));
+			specialeffect(EF_FIREWALL, AREA, getnpcid("Wet Firewood#moc2"));
+			specialeffect(EF_TORCH, AREA, getnpcid("Wet Firewood#moc2"));
 			mes "[Defaria]";
 			mes "Oh, this is as great as I'd hoped!";
 			mes "I guess my magic hasn't gotten that rusty after all..";
@@ -13096,17 +13096,17 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			cutin "moc2_dan02",255;
 			switch(select("Smack his head.", "Punch his stomach.", "Slap his face.")) {
 			case 1:
-				specialeffect(EF_HIT2, AREA, getnpcid(0, "Rayan#moc_room2_2"));
+				specialeffect(EF_HIT2, AREA, getnpcid("Rayan#moc_room2_2"));
 				mes "- Wanting to stop Rayan from going berserk, you smacked the back of his head with the journal. Rayan staggered and then fell to the ground. Nice job! -";
 				next;
 				break;
 			case 2:
-				specialeffect(EF_HIT4, AREA, getnpcid(0, "Rayan#moc_room2_2"));
+				specialeffect(EF_HIT4, AREA, getnpcid("Rayan#moc_room2_2"));
 				mes "- Wanting to stop Rayan from going berserk, you sucker punched him in the 'ole bread basket. Rayan staggered and then fell to the ground...! -";
 				next;
 				break;
 			case 3:
-				specialeffect(EF_HIT1, AREA, getnpcid(0, "Rayan#moc_room2_2"));
+				specialeffect(EF_HIT1, AREA, getnpcid("Rayan#moc_room2_2"));
 				mes "- Wanting to stop Rayan from going berserk, you slapped his face with the journal. Rayan staggered and then fell onto the ground. Wah! -";
 				next;
 				break;
@@ -13117,7 +13117,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "[Rayan]";
 			mes "Ahh....";
 			mes "....? Isn't.. Isn't this?!....";
-			specialeffect(EF_POISON, AREA, getnpcid(0, "Rayan#moc_room2_2"));
+			specialeffect(EF_POISON, AREA, getnpcid("Rayan#moc_room2_2"));
 			next;
 			mes "[Rin]";
 			mes "Wah! What's going on?";
@@ -13159,7 +13159,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "You're Rin, right?";
 			mes "This is the last time you'll ever see me.";
 			mes "Haha... Muhahahahaha!!";
-			specialeffect(EF_ENTRY, AREA, getnpcid(0, "Rayan#moc_room2_2"));
+			specialeffect(EF_ENTRY, AREA, getnpcid("Rayan#moc_room2_2"));
 			donpcevent "Rayan#moc_room2_2::OnDisable";
 			next;
 			cutin "moc2_rin03",2;
@@ -13533,8 +13533,8 @@ OnTouch:
 	mes "Why? Why is Rin here? Wait, where am I?";
 	mes "Argh.. I can't move at all...";
 	next;
-	specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "Dandelion Member#moc2_1"));
-	specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "Dandelion Member#moc2_2"));
+	specialeffect(EF_BEGINSPELL2, AREA, getnpcid("Dandelion Member#moc2_1"));
+	specialeffect(EF_BEGINSPELL2, AREA, getnpcid("Dandelion Member#moc2_2"));
 	emotion e_gasp,"Rin#moc2_bt_rin01";
 	emotion e_gasp,1;
 	mes "[Rin]";
@@ -13543,8 +13543,8 @@ OnTouch:
 	next;
 	donpcevent "Rin#moc2_bt_rin01::OnDisable";
 	donpcevent "Rin#moc2_bt_rin02::OnEnable";
-	specialeffect(EF_ICECRASH, AREA, getnpcid(0, "Rin#moc2_bt_rin01"));
-	specialeffect(EF_METEORSTORM, AREA, getnpcid(0, "Rin#moc2_bt_rin01"));
+	specialeffect(EF_ICECRASH, AREA, getnpcid("Rin#moc2_bt_rin01"));
+	specialeffect(EF_METEORSTORM, AREA, getnpcid("Rin#moc2_bt_rin01"));
 	mes "[Rayan]";
 	mes "Hah, how impressive! You run like a rabbit!";
 	mes "I should have you killed you when I had the chance.";
@@ -13561,16 +13561,16 @@ OnTouch:
 	donpcevent "Dandelion Member#moc2_4::OnEnable";
 	donpcevent "Dandelion Member#moc2_5::OnEnable";
 	next;
-	specialeffect(EF_FREEZED, AREA, getnpcid(0, "Rin#moc2_bt_rin02"));
+	specialeffect(EF_FREEZED, AREA, getnpcid("Rin#moc2_bt_rin02"));
 	emotion e_gasp;
 	mapannounce "que_dan01", "Rin: When.. When did you...!?!",bc_map,"0x7b68ee";
 	mes "[Rayan]";
 	mes "I'm sorry that I have to do this.";
 	mes "...";
 	mes "Kill her.";
-	specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "Dandelion Member#moc2_3"));
-	specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "Dandelion Member#moc2_4"));
-	specialeffect(EF_BEGINSPELL2, AREA, getnpcid(0, "Dandelion Member#moc2_5"));
+	specialeffect(EF_BEGINSPELL2, AREA, getnpcid("Dandelion Member#moc2_3"));
+	specialeffect(EF_BEGINSPELL2, AREA, getnpcid("Dandelion Member#moc2_4"));
+	specialeffect(EF_BEGINSPELL2, AREA, getnpcid("Dandelion Member#moc2_5"));
 	next;
 	mapannounce "que_dan01", "Rayan: Follow me as soon as you take care of her. Our next meeting place is the usual place. I'm leaving.",bc_map,"0xA8A8A8";
 	donpcevent "Rayan#moc2_bt_r01::OnDisable";
@@ -13578,9 +13578,9 @@ OnTouch:
 	donpcevent "Dandelion Member#moc2_2::OnDisable";
 	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Rin-!!!";
-	specialeffect(EF_LIGHTBOLT, AREA, getnpcid(0, "Rin#moc2_bt_rin02"));
-	specialeffect(EF_FIREPILLARBOMB, AREA, getnpcid(0, "Rin#moc2_bt_rin02"));
-	specialeffect(EF_METEORSTORM, AREA, getnpcid(0, "Rin#moc2_bt_rin02"));
+	specialeffect(EF_LIGHTBOLT, AREA, getnpcid("Rin#moc2_bt_rin02"));
+	specialeffect(EF_FIREPILLARBOMB, AREA, getnpcid("Rin#moc2_bt_rin02"));
+	specialeffect(EF_METEORSTORM, AREA, getnpcid("Rin#moc2_bt_rin02"));
 	donpcevent "Rin#moc2_bt_rin02::OnDisable";
 	next;
 	mes "You feel helpless: you can do nothing but watch her slowly get overpowered..";

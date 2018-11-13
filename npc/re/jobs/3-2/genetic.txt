@@ -189,11 +189,11 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "- Zooooooooooooooooing -";
 		specialeffect EF_ENDURE;
 		next;
-		specialeffect(EF_REPAIRWEAPON, AREA, getnpcid(0, "#from1to2gen"));
+		specialeffect(EF_REPAIRWEAPON, AREA, getnpcid("#from1to2gen"));
 		mes "- (Screeching Sounds)!!! -";
 		mes "- (Screeching)!!! -";
 		next;
-		specialeffect(EF_CRASHEARTH, AREA, getnpcid(0, "#from1to2gen"));
+		specialeffect(EF_CRASHEARTH, AREA, getnpcid("#from1to2gen"));
 		mes "- Bump! Bump! Bump! -";
 		next;
 		mes "[Devries]";
@@ -451,8 +451,8 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 			mes "Damn!";
 			next;
 			if (job_gen == 60) {
-				specialeffect(EF_FLASHER, AREA, getnpcid(0, "Super Cultivator#gen"));
-				specialeffect(EF_PHARMACY_OK, AREA, getnpcid(0, "Super Cultivator#gen"));
+				specialeffect(EF_FLASHER, AREA, getnpcid("Super Cultivator#gen"));
+				specialeffect(EF_PHARMACY_OK, AREA, getnpcid("Super Cultivator#gen"));
 				mes "[Devries]";
 				mes "Popo, look at that!";
 				mes "That's really a mysterious plant!";
@@ -485,8 +485,8 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 				job_gen = 62;
 				changequest 2215,2216;
 			} else {
-				specialeffect(EF_SPELLBREAKER, AREA, getnpcid(0, "Super Cultivator#gen"));
-				specialeffect(EF_PHARMACY_FAIL, AREA, getnpcid(0, "Super Cultivator#gen"));
+				specialeffect(EF_SPELLBREAKER, AREA, getnpcid("Super Cultivator#gen"));
+				specialeffect(EF_PHARMACY_FAIL, AREA, getnpcid("Super Cultivator#gen"));
 				mes "[Devries]";
 				mes "Uh oh! You failed, Popo.";
 				mes "It didn't grow at all, it's withered already.";
