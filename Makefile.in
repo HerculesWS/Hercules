@@ -23,7 +23,7 @@
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	ALL_DEPENDS=common_sql login_sql char_sql map_sql tools sysinfo | import
+	ALL_DEPENDS=common_sql login_sql char_sql map_sql sysinfo | import
 	SQL_DEPENDS=common_sql login_sql char_sql map_sql sysinfo | import
 	COMMON_SQL_DEPENDS=mt19937ar libconfig sysinfo
 	LOGIN_SQL_DEPENDS=mt19937ar libconfig common_sql sysinfo
@@ -53,7 +53,7 @@ HAVE_DOXYGEN=@HAVE_DOXYGEN@
 
 MF_TARGETS = Makefile $(addsuffix /Makefile, src/common 3rdparty/mt19937ar \
              3rdparty/libconfig src/char src/login src/map src/plugins \
-             src/tool src/test tools/HPMHookGen tools/doxygen)
+             src/test tools/HPMHookGen tools/doxygen)
 
 CC = @CC@
 export CC
@@ -65,7 +65,6 @@ export CC
 	login_sql \
 	char_sql \
 	map_sql \
-	tools \
 	plugins \
 	import \
 	test \
@@ -120,10 +119,6 @@ map_sql: $(MAP_SQL_DEPENDS) src/map/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/map sql
 
-tools: $(TOOLS_DEPENDS) src/tool/Makefile
-	@echo "	MAKE	$@"
-	@$(MAKE) -C src/tool
-
 test: src/test/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/test
@@ -159,7 +154,6 @@ clean buildclean: $(MF_TARGETS)
 	@$(MAKE) -C src/char $@
 	@$(MAKE) -C src/map $@
 	@$(MAKE) -C src/plugins $@
-	@$(MAKE) -C src/tool $@
 	@$(MAKE) -C src/test $@
 	@$(MAKE) -C tools/HPMHookGen $@
 	@$(MAKE) -C tools/doxygen $@
@@ -188,7 +182,6 @@ help: Makefile
 	@echo "'login_sql'   - builds login server"
 	@echo "'char_sql'    - builds char server"
 	@echo "'map_sql'     - builds map server"
-	@echo "'tools'       - builds all the tools in src/tools"
 	@echo "'import'      - builds conf/import folder from the template conf/import-tmpl"
 	@echo "'all'         - builds all the above targets"
 	@echo "'sql'         - builds sql servers (targets 'common_sql' 'login_sql' 'char_sql'"

@@ -44,8 +44,6 @@ COMMON_C = $(COMMON_SHARED_C)
 COMMON_SHARED_OBJ = $(patsubst %.c,%.o,$(COMMON_SHARED_C))
 COMMON_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
              console.o core.o memmgr.o socket.o)
-COMMON_MINI_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
-                  miniconsole.o minicore.o minimemmgr.o minisocket.o)
 COMMON_C += console.c core.c memmgr.c socket.c
 COMMON_H = atomic.h cbasetypes.h conf.h console.h core.h db.h des.h ers.h \
            grfio.h hercules.h HPM.h HPMi.h memmgr.h mapindex.h md5calc.h \
@@ -61,7 +59,7 @@ SYSINFO_INC = sysinfo.inc
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	SQL_DEPENDS=common common_sql common_mini
+	SQL_DEPENDS=common common_sql
 else
 	SQL_DEPENDS=needs_mysql
 endif
@@ -72,7 +70,7 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all sql common common_sql common_mini clean buildclean help
+.PHONY: all sql common common_sql clean buildclean help
 
 all: sql
 
@@ -119,17 +117,11 @@ obj_all/common.a: $(COMMON_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_all/common.a $(COMMON_OBJ)
 
-obj_all/common_mini.a: $(COMMON_MINI_OBJ) Makefile
-	@echo "	AR	$@"
-	@@AR@ rcs obj_all/common_mini.a $(COMMON_MINI_OBJ)
-
 obj_sql/common_sql.a: $(COMMON_SQL_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_sql/common_sql.a $(COMMON_SQL_OBJ)
 
 common: $(COMMON_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common.a Makefile
-
-common_mini: $(COMMON_MINI_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common_mini.a Makefile
 
 common_sql: $(COMMON_SQL_OBJ) obj_sql/common_sql.a Makefile
 
@@ -149,10 +141,6 @@ obj_all/sysinfo.o: sysinfo.c $(filter sysinfo.p.h, $(COMMON_PH)) $(COMMON_H) $(C
 obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
-obj_all/mini%.o: %.c $$(filter %.p.h, $(COMMON_PH)) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) -DMINICORE @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 obj_sql/%.o: %.c $$(filter %.p.h, $(COMMON_PH)) $(COMMON_H) $(COMMON_SQL_H) $(CONFIG_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_sql
 	@echo "	CC	$<"

@@ -114,11 +114,6 @@
 	} while(0)
 #endif
 
-/* console_input doesn't go well with minicore */
-#ifdef MINICORE
-	#undef CONSOLE_INPUT
-#endif
-
 /**
  * End of File
  **/
