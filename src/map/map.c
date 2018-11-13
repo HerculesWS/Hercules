@@ -635,6 +635,18 @@ static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, i
 	return returnCount;
 }
 
+static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, int count, int type, ...)
+{
+	int returnCount;
+	va_list ap;
+
+	va_start(ap, type);
+	returnCount = map->vforcountinarea(func, m, 0, 0, map->list[m].bxs, map->list[m].bys, count, type, ap);
+	va_end(ap);
+
+	return returnCount;
+}
+
 /**
  * Applies func to every block_list object of bl_type type on all maps
  * of instance instance_id.
@@ -6901,6 +6913,7 @@ void map_defaults(void)
 	map->foreachinpath = map_foreachinpath;
 	map->vforeachinmap = map_vforeachinmap;
 	map->foreachinmap = map_foreachinmap;
+	map->forcountinmap = map_forcountinmap;
 	map->vforeachininstance = map_vforeachininstance;
 	map->foreachininstance = map_foreachininstance;
 
