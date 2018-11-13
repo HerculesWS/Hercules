@@ -1737,6 +1737,7 @@ struct HookingPointData HookingPoints[] = {
 /* map_interface */
 	{ HP_POP(map->zone_init, HP_map_zone_init) },
 	{ HP_POP(map->zone_remove, HP_map_zone_remove) },
+	{ HP_POP(map->zone_remove_all, HP_map_zone_remove_all) },
 	{ HP_POP(map->zone_apply, HP_map_zone_apply) },
 	{ HP_POP(map->zone_change, HP_map_zone_change) },
 	{ HP_POP(map->zone_change2, HP_map_zone_change2) },
