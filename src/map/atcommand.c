@@ -9125,14 +9125,12 @@ ACMD(channel)
 			return false;
 		}
 		if (VECTOR_INDEX(sd->channels, k)->type == HCS_TYPE_ALLY) {
-			do {
-				for (k = 0; k < VECTOR_LENGTH(sd->channels); k++) {
-					if (VECTOR_INDEX(sd->channels, k)->type == HCS_TYPE_ALLY) {
-						channel->leave(VECTOR_INDEX(sd->channels, k), sd);
-						break;
-					}
+			for (k = VECTOR_LENGTH(sd->channels) - 1; k >= 0; k--) {
+				// Loop downward to avoid issues when channel->leave() compacts the array
+				if (VECTOR_INDEX(sd->channels, k)->type == HCS_TYPE_ALLY) {
+					channel->leave(VECTOR_INDEX(sd->channels, k), sd);
 				}
-			} while (k != VECTOR_LENGTH(sd->channels)); // FIXME
+			}
 		} else {
 			channel->leave(VECTOR_INDEX(sd->channels, k), sd);
 		}

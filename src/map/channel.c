@@ -565,7 +565,8 @@ static void channel_guild_leave_alliance(const struct guild *g_source, const str
 static void channel_quit_guild(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	for (int i = 0; i < VECTOR_LENGTH(sd->channels); i++) { // FIXME
+	for (int i = VECTOR_LENGTH(sd->channels) - 1; i >= 0; i--) {
+		// Loop downward to avoid issues when channel->leave() compacts the array
 		struct channel_data *chan = VECTOR_INDEX(sd->channels, i);
 
 		if (chan->type != HCS_TYPE_ALLY)
