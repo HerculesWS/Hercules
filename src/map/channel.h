@@ -75,6 +75,7 @@ struct Channel_Config {
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
 	bool irc_use_ghost;
+	int channel_opt_msg_delay;
 };
 
 struct channel_ban_entry {
