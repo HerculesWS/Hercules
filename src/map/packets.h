@@ -4367,7 +4367,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER_MAIN_NUM >= 20181017
 // new packets
 	packet(0x0b12,2,clif->pDull/*,XXX*/);
-	packet(0x0b13,40);
+	packet(0x0b13,40); // ZC_ITEM_PREVIEW
 // changed packet sizes
 #endif
 
@@ -4375,8 +4375,30 @@ packet(0x96e,-1,clif->ackmergeitems);
 #if PACKETVER_RE_NUM >= 20181017
 // new packets
 	packet(0x0b12,2,clif->pDull/*,XXX*/);
-	packet(0x0b13,48);
+	packet(0x0b13,48); // ZC_ITEM_PREVIEW
 // changed packet sizes
 #endif
+
+// 2018-10-24_2aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20181024
+// new packets
+	packet(0x0b12,2,clif->pDull/*,XXX*/);
+	packet(0x0b13,40); // ZC_ITEM_PREVIEW
+// changed packet sizes
+#endif
+
+#ifndef PACKETVER_ZERO
+// 2018-10-31aRagexe, 2018-10-31cRagexeRE
+#if PACKETVER >= 20181031
+// new packets
+	packet(0x0b14,2,clif->pDull/*,XXX*/);
+	packet(0x0b15,7,clif->pDull/*,XXX*/);
+	packet(0x0b16,2,clif->pDull/*,XXX*/);
+	packet(0x0b17,3,clif->pDull/*,XXX*/);
+	packet(0x0b18,4,clif->pDull/*,XXX*/);
+	packet(0x0b19,2,clif->pDull/*,XXX*/);
+// changed packet sizes
+#endif
+#endif  // PACKETVER_ZERO
 
 #endif /* MAP_PACKETS_H */

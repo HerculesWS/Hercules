@@ -451,10 +451,15 @@ enum packet_headers {
 #else
 	guildLeave = 0x15a,
 #endif
-#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	itemPreview = 0xb13,
 #else
 	itemPreview = 0xab9,
+#endif
+#if PACKETVER_RE_NUM >= 20181031
+	autoSpellList = 0xafb,
+#else
+	autoSpellList = 0x1cd,
 #endif
 };
 
@@ -1928,7 +1933,9 @@ struct PACKET_ZC_FORMATSTRING_MSG_COLOR {
 	uint16 PacketType;
 	uint16 PacketLength;
 	uint16 messageId;
+#if PACKETVER >= 20160406
 	uint32 color;
+#endif
 	char messageString[];
 } __attribute__((packed));
 
@@ -2880,7 +2887,7 @@ struct PACKET_ZC_CAMERA_INFO {
 struct PACKET_ZC_ITEM_PREVIEW {
 	int16 packetType;
 	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	int8 isDamaged;
 #endif
 	int16 refiningLevel;
@@ -2888,6 +2895,22 @@ struct PACKET_ZC_ITEM_PREVIEW {
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
 
+#if PACKETVER_RE_NUM >= 20181031
+#define PACKET_ZC_AUTOSPELLLIST PACKET_ZC_AUTOSPELLLIST2
+#else
+#define PACKET_ZC_AUTOSPELLLIST PACKET_ZC_AUTOSPELLLIST1
+#endif
+
+struct PACKET_ZC_AUTOSPELLLIST1 {
+	int16 packetType;
+	int skills[7];
+} __attribute__((packed));
+
+struct PACKET_ZC_AUTOSPELLLIST2 {
+	int16 packetType;
+	int16 packetLength;
+	int skills[];
+} __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

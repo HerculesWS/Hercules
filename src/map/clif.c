@@ -7503,44 +7503,43 @@ static void clif_pet_food(struct map_session_data *sd, int foodid, int fail)
 /// 01cd { <skill id>.L }*7
 static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x1cd));
-	WFIFOW(fd, 0)=0x1cd;
+	int fd = sd->fd;
+#if PACKETVER_RE_NUM >= 20181031
+	// reserve space for 7 skills
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_AUTOSPELLLIST) + 4 * 7);
+#else
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_AUTOSPELLLIST));
+#endif
+	struct PACKET_ZC_AUTOSPELLLIST *p = WFIFOP(fd, 0);
+	memset(p, 0, sizeof(struct PACKET_ZC_AUTOSPELLLIST));
+	p->packetType = autoSpellList;
+	int index = 0;
 
-	if(skill_lv>0 && pc->checkskill(sd,MG_NAPALMBEAT)>0)
-		WFIFOL(fd,2)= MG_NAPALMBEAT;
-	else
-		WFIFOL(fd,2)= 0x00000000;
-	if(skill_lv>1 && pc->checkskill(sd,MG_COLDBOLT)>0)
-		WFIFOL(fd,6)= MG_COLDBOLT;
-	else
-		WFIFOL(fd,6)= 0x00000000;
-	if(skill_lv>1 && pc->checkskill(sd,MG_FIREBOLT)>0)
-		WFIFOL(fd,10)= MG_FIREBOLT;
-	else
-		WFIFOL(fd,10)= 0x00000000;
-	if(skill_lv>1 && pc->checkskill(sd,MG_LIGHTNINGBOLT)>0)
-		WFIFOL(fd,14)= MG_LIGHTNINGBOLT;
-	else
-		WFIFOL(fd,14)= 0x00000000;
-	if(skill_lv>4 && pc->checkskill(sd,MG_SOULSTRIKE)>0)
-		WFIFOL(fd,18)= MG_SOULSTRIKE;
-	else
-		WFIFOL(fd,18)= 0x00000000;
-	if(skill_lv>7 && pc->checkskill(sd,MG_FIREBALL)>0)
-		WFIFOL(fd,22)= MG_FIREBALL;
-	else
-		WFIFOL(fd,22)= 0x00000000;
-	if(skill_lv>9 && pc->checkskill(sd,MG_FROSTDIVER)>0)
-		WFIFOL(fd,26)= MG_FROSTDIVER;
-	else
-		WFIFOL(fd,26)= 0x00000000;
+	if (skill_lv > 0 && pc->checkskill(sd, MG_NAPALMBEAT) > 0)
+		p->skills[index++] = MG_NAPALMBEAT;
+	if (skill_lv > 1 && pc->checkskill(sd, MG_COLDBOLT) > 0)
+		p->skills[index++] = MG_COLDBOLT;
+	if (skill_lv > 1 && pc->checkskill(sd, MG_FIREBOLT) > 0)
+		p->skills[index++] = MG_FIREBOLT;
+	if (skill_lv > 1 && pc->checkskill(sd, MG_LIGHTNINGBOLT) > 0)
+		p->skills[index++] = MG_LIGHTNINGBOLT;
+	if (skill_lv > 4 && pc->checkskill(sd, MG_SOULSTRIKE) > 0)
+		p->skills[index++] = MG_SOULSTRIKE;
+	if (skill_lv > 7 && pc->checkskill(sd, MG_FIREBALL) > 0)
+		p->skills[index++] = MG_FIREBALL;
+	if (skill_lv > 9 && pc->checkskill(sd, MG_FROSTDIVER) > 0)
+		p->skills[index++] = MG_FROSTDIVER;
 
-	WFIFOSET(fd,packet_len(0x1cd));
+#if PACKETVER_RE_NUM >= 20181031
+	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST) + index * 4;
+	p->packetLength = len;
+#else
+	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST);
+#endif
+	WFIFOSET(fd, len);
+
 	sd->menuskill_id = SA_AUTOSPELL;
 	sd->menuskill_val = skill_lv;
 }
@@ -9672,7 +9671,9 @@ static void clif_msgtable_str_color(struct map_session_data *sd, enum clif_messa
 	p->PacketType = 0xa6f;
 	p->PacketLength = len;
 	p->messageId = msg_id;
+#if PACKETVER >= 20160406
 	p->color = color;
+#endif
 	safestrncpy(p->messageString, value, message_len);
 	p->messageString[message_len] = 0;
 
@@ -18900,9 +18901,9 @@ static void clif_parse_dull(int fd, struct map_session_data *sd)
 		packet_len = RFIFOW(fd, 2);
 	}
 	if (sd) {
-		ShowWarning("Unhandled packet 0x%04d (length %d), %s session #%d, %d/%d (AID/CID)\n", cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
+		ShowWarning("Unhandled packet 0x%04X (length %d), %s session #%d, %d/%d (AID/CID)\n", (uint32)cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
 	} else {
-		ShowWarning("Unhandled packet 0x%04d (length %d), session #%d\n", cmd, packet_len, fd);
+		ShowWarning("Unhandled packet 0x%04X (length %d), session #%d\n", (uint32)cmd, packet_len, fd);
 	}
 	return;
 }
@@ -21971,7 +21972,7 @@ static void clif_item_preview(struct map_session_data *sd, int n)
 	struct PACKET_ZC_ITEM_PREVIEW p;
 	p.packetType = itemPreview;
 	p.index = n + 2;
-#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017
+#if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	p.isDamaged = (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
 #endif
 	p.refiningLevel = sd->status.inventory[n].refine;
