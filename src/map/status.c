@@ -10557,20 +10557,9 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
 			return true; // Immune to status ailements
 		switch (type) {
-			case SC_DEEP_SLEEP:
 			case SC__CHAOS:
-			case SC_BURNING:
-			case SC_STUN:
-			case SC_SLEEP:
-			case SC_CURSE:
 			case SC_STONE:
-			case SC_POISON:
-			case SC_BLIND:
-			case SC_SILENCE:
-			case SC_BLOODING:
-			case SC_FREEZE:
 			case SC_FROSTMISTY:
-			case SC_COLD:
 			case SC_TOXIN:
 			case SC_PARALYSE:
 			case SC_VENOMBLEED:
@@ -10586,20 +10575,9 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
 			return true; // Immune to status ailements
 		switch (type) {
-			case SC_POISON:
-			case SC_BLIND:
-			case SC_STUN:
-			case SC_SILENCE:
 			case SC__CHAOS:
 			case SC_STONE:
-			case SC_SLEEP:
-			case SC_BLOODING:
-			case SC_CURSE:
-			case SC_BURNING:
 			case SC_FROSTMISTY:
-			case SC_FREEZE:
-			case SC_COLD:
-			case SC_FEAR:
 			case SC_TOXIN:
 			case SC_PARALYSE:
 			case SC_VENOMBLEED:
@@ -10608,7 +10586,6 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 			case SC_PYREXIA:
 			case SC_OBLIVIONCURSE:
 			case SC_LEECHESEND:
-			case SC_DEEP_SLEEP:
 			case SC_SATURDAY_NIGHT_FEVER:
 			case SC__BODYPAINT:
 			case SC__ENERVATION:
