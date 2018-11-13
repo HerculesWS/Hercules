@@ -4577,8 +4577,19 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 		// FIXME: Why are we re-escaping the name if it was already escaped in rename/make_new_char? [Panikon]
 		SQL->EscapeStringLen(inter->sql_handle, esc_name, char_dat.name, strnlen(char_dat.name, NAME_LENGTH));
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `name`) VALUES (NOW(), '%d', '%d', '%d', '%s')",
-					charlog_db, sd->account_id, cd->char_id, slot, esc_name))
+					"INSERT INTO `%s`("
+					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`,"
+					" `str`, `agi`, `vit`, `int`, `dex`, `luk`,"
+					" `hair`, `hair_color`"
+					") VALUES ("
+					" NOW(), 'char select', '%d', '%d', '%d', '%d', '%s',"
+					" '%d', '%d', '%d', '%d', '%d', '%d',"
+					" '%d', '%d')",
+					charlog_db,
+					sd->account_id, cd->char_id, slot, char_dat.class, esc_name,
+					char_dat.str, char_dat.agi, char_dat.vit, char_dat.int_, char_dat.dex, char_dat.luk,
+					char_dat.hair, char_dat.hair_color
+					))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 	ShowInfo("Selected char: (Account %d: %d - %s)\n", sd->account_id, slot, char_dat.name);
