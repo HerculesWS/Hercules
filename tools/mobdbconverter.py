@@ -188,7 +188,7 @@ def convertFile(inFile, itemDb):
         printField("ChaseRange", fields[21])
         printField("Size", fields[22])
         printField("Race", fields[23])
-        print("\tElement: ({0}, {1})".format(int(fields[24]) % 10, int(fields[24]) / 20));
+        print("\tElement: ({0}, {1})".format(int(fields[24]) % 10, int(int(fields[24]) / 20)));
         mode = int(fields[25], 0)
         if mode != 0:
             startGroup("Mode")
@@ -260,7 +260,7 @@ def readItemDB(inFile, itemDb):
                 elif line[:3] == "Id:":
                     try:
                         itemId = int(line[4:])
-                    except:
+                    except ValueError:
                         started = False
                 if itemId != 0 and itemName != "":
 # was need for remove wrong characters
