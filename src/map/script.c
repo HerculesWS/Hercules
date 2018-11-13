@@ -16717,6 +16717,63 @@ static BUILDIN(getdatatype)
 	return true;
 }
 
+static BUILDIN(data_to_string)
+{
+	if (script_hasdata(st, 2)) {
+		struct script_data *data = script_getdata(st, 2);
+
+		if (data_isstring(data)) {
+			script_pushcopy(st, 2);
+		} else if (data_isint(data)) {
+			char *str = NULL;
+
+			CREATE(str, char, 20);
+			safesnprintf(str, 20, "%"PRId64"", data->u.num);
+			script_pushstr(st, str);
+		} else if (data_islabel(data)) {
+			const char *str = "";
+
+			// XXX: because all we have is the label pos we can't be sure which
+			//      one is the correct label if more than one has the same pos.
+			//      We might want to store both the pos and str_data index in
+			//      data->u.num, similar to how C_NAME stores both the array
+			//      index and str_data index in u.num with bitmasking. This
+			//      would also avoid the awkward for() loops as we could
+			//      directly access the string with script->get_str().
+
+			if (st->oid) {
+				struct npc_data *nd = map->id2nd(st->oid);
+
+				for (int i = 0; i < nd->u.scr.label_list_num; ++i) {
+					if (nd->u.scr.label_list[i].pos == data->u.num) {
+						str = nd->u.scr.label_list[i].name;
+						break;
+					}
+				}
+			} else {
+				for (int i = LABEL_START; script->str_data[i].next != 0; i = script->str_data[i].next) {
+					if (script->str_data[i].label == data->u.num) {
+						str = script->get_str(i);
+						break;
+					}
+				}
+			}
+
+			script_pushconststr(st, str);
+		} else if (data_isreference(data)) {
+			script_pushstrcopy(st, reference_getname(data));
+		} else {
+			ShowWarning("script:data_to_string: unknown data type!\n");
+			script->reportdata(data);
+			script_pushconststr(st, "");
+		}
+	} else {
+		script_pushconststr(st, ""); // NIL
+	}
+
+	return true;
+}
+
 //=======================================================
 // chr <int>
 //-------------------------------------------------------
@@ -25191,6 +25248,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(charat,"si"),
 		BUILDIN_DEF(isstr,"v"),
 		BUILDIN_DEF(getdatatype, "?"),
+		BUILDIN_DEF(data_to_string, "?"),
+		BUILDIN_DEF2(getd, "string_to_data", "?"),
 		BUILDIN_DEF(chr,"i"),
 		BUILDIN_DEF(ord,"s"),
 		BUILDIN_DEF(setchar,"ssi"),
