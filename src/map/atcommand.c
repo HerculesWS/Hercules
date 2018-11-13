@@ -8992,9 +8992,7 @@ static void atcommand_channel_help(int fd, const char *command, bool can_create)
 	clif->message(fd, msg_fd(fd,1428));// - binds global chat to <channel name>, making anything you type in global be sent to the channel
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1429),command);// -- %s unbind
 	clif->message(fd, atcmd_output);
-	clif->message(fd, msg_fd(fd,1430));// - unbinds your global chat from its attached channel (if binded)
-	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1429),command);// -- %s unbind
-	clif->message(fd, atcmd_output);
+	clif->message(fd, msg_fd(fd,1430));// - unbinds your global chat from its attached channel (if bound)
 	if( can_create ) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1456),command);// -- %s ban <channel name> <character name>
 		clif->message(fd, atcmd_output);
