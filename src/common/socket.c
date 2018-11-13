@@ -811,7 +811,36 @@ static int rfifoskip(int fd, size_t len)
 
 	if (s->rdata_size < s->rdata_pos + len) {
 		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %"PRIuS" to %"PRIuS" (session #%d)\n", len, RFIFOREST(fd), fd);
+		Assert_report(0);
 		len = RFIFOREST(fd);
+	} else {
+		const size_t lenRest = RFIFOREST(fd);
+		if (s->flag.validate == 1 && len == lenRest) {
+			if (lenRest >= 2) {
+				const uint cmd = (uint)RFIFOW(fd, 0);
+				if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {
+					ShowError("Skip wrong packet id: 0x%04X\n", cmd);
+					Assert_report(0);
+				} else {
+					int packet_len = packets->db[cmd];
+					if (packet_len == -1) {
+						if (lenRest < 4) {
+							ShowError("Skip packet with size smaller than 4\n");
+							Assert_report(0);
+						} else {
+							packet_len = RFIFOW(fd, 2);
+							if (packet_len != lenRest) {
+								ShowError("Skip packet 0x%04X with dynamic size %"PRIuS", but must be size %d\n", cmd, lenRest, packet_len);
+								Assert_report(0);
+							}
+						}
+					} else if (packet_len != lenRest) {
+						ShowError("Skip packet 0x%04X with size %"PRIuS", but must be size %d\n", cmd, lenRest, packet_len);
+						Assert_report(0);
+					}
+				}
+			}
+		}
 	}
 
 	s->rdata_pos = s->rdata_pos + len;
