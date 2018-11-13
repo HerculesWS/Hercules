@@ -828,6 +828,11 @@ static int guild_member_added(int guild_id, int account_id, int char_id, int fla
 	//Next line commented because it do nothing, look at guild_recv_info [LuzZza]
 	//clif->charnameupdate(sd); //Update display name [Skotlex]
 
+	// Makes the character join their respective guild's channel for #ally chat
+	if (channel->config->ally && channel->config->ally_autojoin) {
+		channel->join(g->channel, sd, "", true);
+	}
+
 	return 0;
 }
 
