@@ -1548,9 +1548,20 @@ static int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	// log change
 	if (chr->enable_logs) {
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
-					"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '0', '0', '0', '0', '0', '0', '0', '0')",
-					charlog_db, "change char name", sd->account_id, char_dat.char_id, char_dat.slot, esc_name))
+					"INSERT INTO `%s` ("
+					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`,"
+					" `str`, `agi`, `vit`, `int`, `dex`, `luk`,"
+					" `hair`, `hair_color`"
+					") VALUES ("
+					" NOW(), 'change char name', '%d', '%d', '%d', '%d', '%s',"
+					" '%d', '%d', '%d', '%d', '%d', '%d',"
+					" '%d', '%d'"
+					")",
+					charlog_db,
+					sd->account_id, char_dat.char_id, char_dat.slot, char_dat.class, esc_name,
+					char_dat.str, char_dat.agi, char_dat.vit, char_dat.int_, char_dat.dex, char_dat.luk,
+					char_dat.hair, char_dat.hair_color
+					))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
