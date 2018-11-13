@@ -81,9 +81,9 @@ pre_re:clang-4.0:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   services:
-    - mariadb:10
+    - mariadb:10.1
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat
@@ -96,9 +96,9 @@ re:clang-4.0:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:stretch
   services:
-    - mariadb:10
+    - mariadb:10.1
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat
@@ -111,9 +111,9 @@ zero-2018:clang-4.0:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
-  image: debian:unstable
+  image: debian:stretch
   services:
-    - mariadb:10
+    - mariadb:10.1
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat
