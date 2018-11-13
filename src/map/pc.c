@@ -5839,8 +5839,11 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			vending->close(sd);
 		}
 
-		if (map->list[sd->bl.m].channel) {
-			channel->leave(map->list[sd->bl.m].channel,sd);
+		if (sd->mapindex != 0) {
+			// Only if the character is already on a map
+			if (map->list[sd->bl.m].channel) {
+				channel->leave(map->list[sd->bl.m].channel,sd);
+			}
 		}
 	}
 
