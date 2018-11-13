@@ -139,6 +139,7 @@ char char_name_letters[1024] = ""; // list of letters/symbols allowed (or not) i
 static int char_del_level = 0; ///< From which level you can delete character [Lupus]
 static int char_del_delay = 86400;
 static bool char_aegis_delete = false; ///< Verify if char is in guild/party or char and reacts as Aegis does (disallow deletion), @see chr->delete2_req.
+static bool char_aegis_rename = false; // whether or not the player can be renamed while in party/guild
 
 static int max_connect_user = -1;
 static int gm_allow_group = -1;
@@ -1513,6 +1514,14 @@ static int char_rename_char_sql(struct char_session_data *sd, int char_id)
 
 	if( char_dat.rename == 0 )
 		return 1;
+
+	if (char_aegis_rename) {
+		if (char_dat.guild_id > 0) {
+			return 5; // MSG_FAILED_RENAME_BELONGS_TO_GUILD
+		} else if (char_dat.party_id > 0) {
+			return 6; // MSG_FAILED_RENAME_BELONGS_TO_PARTY
+		}
+	}
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, sd->new_name, strnlen(sd->new_name, NAME_LENGTH));
 
@@ -5848,6 +5857,7 @@ static bool char_config_read_player_name(const char *filename, const struct conf
 	libconfig->setting_lookup_mutable_string(setting, "name_letters", char_name_letters, sizeof(char_name_letters));
 	libconfig->setting_lookup_int(setting, "name_option", &char_name_option);
 	libconfig->setting_lookup_bool_real(setting, "name_ignoring_case", &name_ignoring_case);
+	libconfig->setting_lookup_bool_real(setting, "use_aegis_rename", &char_aegis_rename);
 
 	return true;
 }
