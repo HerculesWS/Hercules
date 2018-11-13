@@ -9019,7 +9019,6 @@ ACMD(channel)
 {
 	struct channel_data *chan;
 	char subcmd[HCS_NAME_LENGTH], sub1[HCS_NAME_LENGTH], sub2[HCS_NAME_LENGTH], sub3[HCS_NAME_LENGTH];
-	unsigned char k = 0;
 	sub1[0] = sub2[0] = sub3[0] = '\0';
 
 	if (!*message || sscanf(message, "%19s %19s %19s %19s", subcmd, sub1, sub2, sub3) < 1) {
@@ -9056,7 +9055,7 @@ ACMD(channel)
 	} else if (strcmpi(subcmd,"list") == 0) {
 		// sub1 = list type; sub2 = unused; sub3 = unused
 		if (sub1[0] != '\0' && strcmpi(sub1,"colors") == 0) {
-			for (k = 0; k < channel->config->colors_count; k++) {
+			for (int k = 0; k < channel->config->colors_count; k++) {
 				safesnprintf(atcmd_output, sizeof(atcmd_output), "[ %s list colors ] : %s", command, channel->config->colors_name[k]);
 
 				clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
@@ -9085,6 +9084,7 @@ ACMD(channel)
 		}
 	} else if (strcmpi(subcmd,"setcolor") == 0) {
 		// sub1 = channel name; sub2 = color; sub3 = unused
+		int k;
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_fd(fd,1405));// Channel name must start with a '#'
 			return false;
@@ -9102,10 +9102,7 @@ ACMD(channel)
 			return false;
 		}
 
-		for (k = 0; k < channel->config->colors_count; k++) {
-			if (strcmpi(sub2, channel->config->colors_name[k]) == 0)
-				break;
-		}
+		ARR_FIND(0, channel->config->colors_count, k, strcmpi(sub2, channel->config->colors_name[k]) == 0);
 		if (k == channel->config->colors_count) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1411), sub2);// Unknown color '%s'
 			clif->message(fd, atcmd_output);
@@ -9116,51 +9113,47 @@ ACMD(channel)
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"leave") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
+		int k;
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_fd(fd,1405));// Channel name must start with a '#'
 			return false;
 		}
-		for (k = 0; k < sd->channel_count; k++) {
-			if (strcmpi(sub1+1,sd->channels[k]->name) == 0)
-				break;
-		}
-		if (k == sd->channel_count) {
+		ARR_FIND(0, VECTOR_LENGTH(sd->channels), k, strcmpi(sub1 + 1, VECTOR_INDEX(sd->channels, k)->name) == 0);
+		if (k == VECTOR_LENGTH(sd->channels)) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1425),sub1);// You're not part of the '%s' channel
 			clif->message(fd, atcmd_output);
 			return false;
 		}
-		if (sd->channels[k]->type == HCS_TYPE_ALLY) {
+		if (VECTOR_INDEX(sd->channels, k)->type == HCS_TYPE_ALLY) {
 			do {
-				for (k = 0; k < sd->channel_count; k++) {
-					if (sd->channels[k]->type == HCS_TYPE_ALLY) {
-						channel->leave(sd->channels[k],sd);
+				for (k = 0; k < VECTOR_LENGTH(sd->channels); k++) {
+					if (VECTOR_INDEX(sd->channels, k)->type == HCS_TYPE_ALLY) {
+						channel->leave(VECTOR_INDEX(sd->channels, k), sd);
 						break;
 					}
 				}
-			} while (k != sd->channel_count);
+			} while (k != VECTOR_LENGTH(sd->channels)); // FIXME
 		} else {
-			channel->leave(sd->channels[k],sd);
+			channel->leave(VECTOR_INDEX(sd->channels, k), sd);
 		}
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1426),sub1); // You've left the '%s' channel
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"bindto") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
+		int k;
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_fd(fd,1405));// Channel name must start with a '#'
 			return false;
 		}
 
-		for (k = 0; k < sd->channel_count; k++) {
-			if (strcmpi(sub1+1,sd->channels[k]->name) == 0)
-				break;
-		}
-		if (k == sd->channel_count) {
+		ARR_FIND(0, VECTOR_LENGTH(sd->channels), k, strcmpi(sub1 + 1, VECTOR_INDEX(sd->channels, k)->name) == 0);
+		if (k == VECTOR_LENGTH(sd->channels)) {
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1425),sub1);// You're not part of the '%s' channel
 			clif->message(fd, atcmd_output);
 			return false;
 		}
 
-		sd->gcbind = sd->channels[k];
+		sd->gcbind = VECTOR_INDEX(sd->channels, k);
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1431),sub1); // Your global chat is now bound to the '%s' channel
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"unbind") == 0) {
@@ -9332,6 +9325,7 @@ ACMD(channel)
 		dbi_destroy(iter);
 	} else if (strcmpi(subcmd,"setopt") == 0) {
 		// sub1 = channel name; sub2 = option name; sub3 = value
+		int k;
 		const char* opt_str[3] = {
 			"None",
 			"JoinAnnounce",

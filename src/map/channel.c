@@ -319,8 +319,8 @@ static void channel_join_sub(struct channel_data *chan, struct map_session_data 
 	if (idb_put(chan->users, sd->status.char_id, sd))
 		return;
 
-	RECREATE(sd->channels, struct channel_data *, ++sd->channel_count);
-	sd->channels[sd->channel_count - 1] = chan;
+	VECTOR_ENSURE(sd->channels, 1, 1);
+	VECTOR_PUSH(sd->channels, chan);
 
 	if (!stealth && (chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
@@ -329,7 +329,7 @@ static void channel_join_sub(struct channel_data *chan, struct map_session_data 
 	}
 
 	/* someone is cheating, we kindly disconnect the bastard */
-	if (sd->channel_count > 200) {
+	if (VECTOR_LENGTH(sd->channels) > 200) {
 		sockt->eof(sd->fd);
 	}
 
@@ -411,32 +411,16 @@ static enum channel_operation_status channel_join(struct channel_data *chan, str
  */
 static void channel_leave_sub(struct channel_data *chan, struct map_session_data *sd)
 {
-	unsigned char i;
+	int i;
 
 	nullpo_retv(chan);
 	nullpo_retv(sd);
-	for (i = 0; i < sd->channel_count; i++) {
-		if (sd->channels[i] == chan) {
-			sd->channels[i] = NULL;
-			break;
-		}
-	}
-	if (i < sd->channel_count) {
-		unsigned char cursor = 0;
-		for (i = 0; i < sd->channel_count; i++) {
-			if (sd->channels[i] == NULL)
-				continue;
-			if (cursor != i) {
-				sd->channels[cursor] = sd->channels[i];
-			}
-			cursor++;
-		}
-		if (!(sd->channel_count = cursor)) {
-			aFree(sd->channels);
-			sd->channels = NULL;
-		}
+	ARR_FIND(0, VECTOR_LENGTH(sd->channels), i, VECTOR_INDEX(sd->channels, i) == chan);
+	if (i < VECTOR_LENGTH(sd->channels)) {
+		VECTOR_ERASE(sd->channels, i);
 	}
 }
+
 /**
  * Leaves a channel.
  *
@@ -475,14 +459,9 @@ static void channel_leave(struct channel_data *chan, struct map_session_data *sd
 static void channel_quit(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
-	while (sd->channel_count > 0) {
+	while (VECTOR_LENGTH(sd->channels) > 0) {
 		// Loop downward to avoid unnecessary array compactions by channel_leave
-		struct channel_data *chan = sd->channels[sd->channel_count-1];
-
-		if (chan == NULL) {
-			sd->channel_count--;
-			continue;
-		}
+		struct channel_data *chan = VECTOR_LAST(sd->channels);
 
 		channel->leave(chan, sd);
 	}
@@ -585,13 +564,11 @@ static void channel_guild_leave_alliance(const struct guild *g_source, const str
  */
 static void channel_quit_guild(struct map_session_data *sd)
 {
-	unsigned char i;
-
 	nullpo_retv(sd);
-	for (i = 0; i < sd->channel_count; i++) {
-		struct channel_data *chan = sd->channels[i];
+	for (int i = 0; i < VECTOR_LENGTH(sd->channels); i++) { // FIXME
+		struct channel_data *chan = VECTOR_INDEX(sd->channels, i);
 
-		if (chan == NULL || chan->type != HCS_TYPE_ALLY)
+		if (chan->type != HCS_TYPE_ALLY)
 			continue;
 
 		channel->leave(chan, sd);
@@ -855,7 +832,6 @@ static void do_final_channel(void)
 {
 	struct DBIterator *iter = db_iterator(channel->db);
 	struct channel_data *chan;
-	unsigned char i;
 
 	for( chan = dbi_first(iter); dbi_exists(iter); chan = dbi_next(iter) ) {
 		channel->delete(chan);
@@ -863,7 +839,7 @@ static void do_final_channel(void)
 
 	dbi_destroy(iter);
 
-	for(i = 0; i < channel->config->colors_count; i++) {
+	for (int i = 0; i < channel->config->colors_count; i++) {
 		aFree(channel->config->colors_name[i]);
 	}
 

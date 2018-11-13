@@ -557,8 +557,7 @@ END_ZEROED_BLOCK;
 	int shadowform_id;
 
 	/* [Ind/Hercules] */
-	struct channel_data **channels;
-	unsigned char channel_count;
+	VECTOR_DECL(struct channel_data *) channels;
 	struct channel_data *gcbind;
 	unsigned char fontcolor;
 	int fontcolor_tid;
