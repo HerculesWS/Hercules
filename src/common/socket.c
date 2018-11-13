@@ -817,7 +817,7 @@ static int rfifoskip(int fd, size_t len)
 		const size_t lenRest = RFIFOREST(fd);
 		if (s->flag.validate == 1 && len == lenRest) {
 			if (lenRest >= 2) {
-				const uint cmd = (uint)RFIFOW(fd, 0);
+				const uint32 cmd = (uint32)RFIFOW(fd, 0);
 				if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {
 					ShowError("Skip wrong packet id: 0x%04X\n", cmd);
 					Assert_report(0);
@@ -2102,8 +2102,8 @@ static void socket_validateWfifo(int fd, size_t len)
 		Assert_retv(0);
 		return;
 	}
-	const uint cmd = (uint)WFIFOW(fd, 0);
-	const uint last_head_size = sockt->session[fd]->last_head_size;
+	const uint32 cmd = (uint32)WFIFOW(fd, 0);
+	const uint32 last_head_size = sockt->session[fd]->last_head_size;
 	sockt->session[fd]->last_head_size = 0;
 
 	if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {

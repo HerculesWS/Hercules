@@ -128,7 +128,7 @@ struct socket_data {
 	size_t max_rdata, max_wdata;
 	size_t rdata_size, wdata_size;
 	size_t rdata_pos;
-	uint last_head_size;
+	uint32 last_head_size;
 	time_t rdata_tick; // time of last recv (for detecting timeouts); zero when timeout is disabled
 
 	RecvFunc func_recv;
