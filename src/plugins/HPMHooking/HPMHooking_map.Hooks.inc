@@ -44624,6 +44624,32 @@ void HP_map_zone_remove(int m) {
 	}
 	return;
 }
+void HP_map_zone_remove_all(int m) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_map_zone_remove_all_pre > 0) {
+		void (*preHookFunc) (int *m);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_remove_all_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_zone_remove_all_pre[hIndex].func;
+			preHookFunc(&m);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.zone_remove_all(m);
+	}
+	if (HPMHooks.count.HP_map_zone_remove_all_post > 0) {
+		void (*postHookFunc) (int m);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_remove_all_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_zone_remove_all_post[hIndex].func;
+			postHookFunc(m);
+		}
+	}
+	return;
+}
 void HP_map_zone_apply(int m, struct map_zone_data *zone, const char *start, const char *buffer, const char *filepath) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_map_zone_apply_pre > 0) {

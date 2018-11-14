@@ -3388,6 +3388,8 @@ struct {
 	struct HPMHookPoint *HP_map_zone_init_post;
 	struct HPMHookPoint *HP_map_zone_remove_pre;
 	struct HPMHookPoint *HP_map_zone_remove_post;
+	struct HPMHookPoint *HP_map_zone_remove_all_pre;
+	struct HPMHookPoint *HP_map_zone_remove_all_post;
 	struct HPMHookPoint *HP_map_zone_apply_pre;
 	struct HPMHookPoint *HP_map_zone_apply_post;
 	struct HPMHookPoint *HP_map_zone_change_pre;
@@ -9991,6 +9993,8 @@ struct {
 	int HP_map_zone_init_post;
 	int HP_map_zone_remove_pre;
 	int HP_map_zone_remove_post;
+	int HP_map_zone_remove_all_pre;
+	int HP_map_zone_remove_all_post;
 	int HP_map_zone_apply_pre;
 	int HP_map_zone_apply_post;
 	int HP_map_zone_change_pre;
