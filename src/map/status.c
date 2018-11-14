@@ -1240,10 +1240,15 @@ static void status_copy(struct status_data *a, const struct status_data *b)
 	memcpy((void*)&a->max_hp, (const void*)&b->max_hp, sizeof(struct status_data)-(sizeof(a->hp)+sizeof(a->sp)));
 }
 
-//Sets HP to given value. Flag is the flag passed to status->heal in case
-//final value is higher than current (use 2 to make a healing effect display
-//on players) It will always succeed (overrides Berserk block), but it can't kill.
-static int status_set_hp(struct block_list *bl, unsigned int hp, int flag)
+/**
+ * Sets HP to the given value.
+ *
+ * @param bl   The target unit.
+ * @param hp   The desired HP value.
+ * @param flag Additional options. @see enum status_heal_flag. STATUS_HEAL_FORCED is always implied.
+ * @return The amount of HP gained.
+ */
+static int status_set_hp(struct block_list *bl, unsigned int hp, enum status_heal_flag flag)
 {
 	struct status_data *st;
 	if (hp < 1) return 0;
@@ -1254,14 +1259,19 @@ static int status_set_hp(struct block_list *bl, unsigned int hp, int flag)
 	if (hp > st->max_hp) hp = st->max_hp;
 	if (hp == st->hp) return 0;
 	if (hp > st->hp)
-		return status->heal(bl, hp - st->hp, 0, 1|flag);
+		return status->heal(bl, hp - st->hp, 0, STATUS_HEAL_FORCED | flag);
 	return status_zap(bl, st->hp - hp, 0);
 }
 
-//Sets SP to given value. Flag is the flag passed to status->heal in case
-//final value is higher than current (use 2 to make a healing effect display
-//on players)
-static int status_set_sp(struct block_list *bl, unsigned int sp, int flag)
+/**
+ * Sets SP to the given value.
+ *
+ * @param bl   The target unit.
+ * @param hp   The desired SP value.
+ * @param flag Additional options. @see enum status_heal_flag. STATUS_HEAL_FORCED is always implied.
+ * @return The amount of SP gained.
+ */
+static int status_set_sp(struct block_list *bl, unsigned int sp, enum status_heal_flag flag)
 {
 	struct status_data *st;
 
@@ -1272,7 +1282,7 @@ static int status_set_sp(struct block_list *bl, unsigned int sp, int flag)
 	if (sp > st->max_sp) sp = st->max_sp;
 	if (sp == st->sp) return 0;
 	if (sp > st->sp)
-		return status->heal(bl, 0, sp - st->sp, 1|flag);
+		return status->heal(bl, 0, sp - st->sp, STATUS_HEAL_FORCED | flag);
 	return status_zap(bl, 0, st->sp - sp);
 }
 
@@ -1304,12 +1314,12 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		sp = 0; //Not a valid SP target.
 
 	if (hp < 0) { //Assume absorbed damage.
-		status->heal(target, -hp, 0, 1);
+		status->heal(target, -hp, 0, STATUS_HEAL_FORCED);
 		hp = 0;
 	}
 
 	if (sp < 0) {
-		status->heal(target, 0, -sp, 1);
+		status->heal(target, 0, -sp, STATUS_HEAL_FORCED);
 		sp = 0;
 	}
 
@@ -1527,9 +1537,16 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 	return (int)(hp+sp);
 }
 
-//Heals a character. If flag&1, this is forced healing (otherwise stuff like Berserk can block it)
-//If flag&2, when the player is healed, show the HP/SP heal effect.
-static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag)
+/**
+ * Heals a character.
+ *
+ * @param bl    The target unit.
+ * @param in_hp Amount of HP to recover.
+ * @param in_sp Amount of SP to recover.
+ * @param flag  Additional options, @see enum status_heal_flag.
+ * @return The amount of HP + SP healed.
+ */
+static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum status_heal_flag flag)
 {
 	struct status_data *st;
 	struct status_change *sc;
@@ -1538,7 +1555,9 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag
 	nullpo_ret(bl);
 	st = status->get_status_data(bl);
 
-	if (st == &status->dummy || !st->hp)
+	if (st == &status->dummy)
+		return 0;
+	if (st->hp == 0 && (flag & STATUS_HEAL_ALLOWREVIVE) != 0)
 		return 0;
 
 	/* From here onwards, we consider it a 32-type as the client does not support higher and the value doesn't get through percentage modifiers */
@@ -1555,10 +1574,10 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag
 		hp = 0;
 	}
 
-	if(hp) {
-		if( sc && sc->data[SC_BERSERK] ) {
-			if( flag&1 )
-				flag &= ~2;
+	if (hp != 0) {
+		if (sc && sc->data[SC_BERSERK] != NULL) {
+			if ((flag & STATUS_HEAL_FORCED) != 0)
+				flag &= ~STATUS_HEAL_SHOWEFFECT;
 			else
 				hp = 0;
 		}
@@ -1593,7 +1612,7 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag
 
 	// send hp update to client
 	switch(bl->type) {
-		case BL_PC:  pc->heal(BL_UCAST(BL_PC, bl), hp, sp, (flag&2) ? 1 : 0); break;
+		case BL_PC:  pc->heal(BL_UCAST(BL_PC, bl), hp, sp, (flag & STATUS_HEAL_SHOWEFFECT) != 0 ? 1 : 0); break;
 		case BL_MOB: mob->heal(BL_UCAST(BL_MOB, bl), hp); break;
 		case BL_HOM: homun->healed(BL_UCAST(BL_HOM, bl)); break;
 		case BL_MER: mercenary->heal(BL_UCAST(BL_MER, bl), hp, sp); break;
@@ -1648,18 +1667,18 @@ static int status_percent_change(struct block_list *src, struct block_list *targ
 		if (flag)
 			status->damage(src, target, INT_MAX, 0, 0, (!src||src==target?5:1));
 		else
-			status->heal(target, INT_MAX, 0, 0);
+			status->heal(target, INT_MAX, 0, STATUS_HEAL_DEFAULT);
 	}
 	if (sp > INT_MAX) {
 		sp -= INT_MAX;
 		if (flag)
 			status->damage(src, target, 0, INT_MAX, 0, (!src||src==target?5:1));
 		else
-			status->heal(target, 0, INT_MAX, 0);
+			status->heal(target, 0, INT_MAX, STATUS_HEAL_DEFAULT);
 	}
 	if (flag)
 		return status->damage(src, target, hp, sp, 0, (!src||src==target?5:1));
-	return status->heal(target, hp, sp, 0);
+	return status->heal(target, hp, sp, STATUS_HEAL_DEFAULT);
 }
 
 static int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per_sp)
@@ -2330,6 +2349,51 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
+/**
+ * Calculates the HP that a character will have after death, on respawn.
+ *
+ * @param sd The character to calculate.
+ * @param st The character's status data.
+ */
+static unsigned int status_get_restart_hp(const struct map_session_data *sd, const struct status_data *st)
+{
+	unsigned int hp = 0;
+
+	if (sd->special_state.restart_full_recover)
+		return st->max_hp;
+
+	if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0 && battle_config.restart_hp_rate < 50)
+		hp = st->max_hp / 2;
+	else
+		hp = APPLY_RATE(st->max_hp, battle_config.restart_hp_rate);
+
+	if (hp > 0)
+		return hp;
+
+	return 1;
+}
+
+/**
+ * Calculates the SP that a character will have after death, on respawn.
+ *
+ * @param sd The character to calculate.
+ * @param st The character's status data.
+ */
+static unsigned int status_get_restart_sp(const struct map_session_data *sd, const struct status_data *st)
+{
+	unsigned int sp = 0;
+
+	if (sd->special_state.restart_full_recover)
+		return st->max_sp;
+
+	sp = APPLY_RATE(st->max_sp, battle_config.restart_sp_rate);
+
+	if (sp > 0)
+		return sp;
+
+	return 1; // the minimum for the respawn setting is SP:1
+}
+
 static void status_calc_pc_additional(struct map_session_data *sd, enum e_status_calc_opt opt)
 {
 	/* Just used for Plugin to give bonuses. */
@@ -2884,20 +2948,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// ----- RESPAWN HP/SP -----
 	//
 	//Calc respawn hp and store it on base_status
-	if (sd->special_state.restart_full_recover)
-	{
-		bstatus->hp = bstatus->max_hp;
-		bstatus->sp = bstatus->max_sp;
-	} else {
-		status->calc_pc_recover_hp(sd, bstatus);
-		if(!bstatus->hp)
-			bstatus->hp = 1;
-
-		bstatus->sp = APPLY_RATE(bstatus->max_sp, battle_config.restart_sp_rate);
-
-		if( !bstatus->sp ) /* the minimum for the respawn setting is SP:1 */
-			bstatus->sp = 1;
-	}
+	bstatus->hp = status->get_restart_hp(sd, bstatus);
+	bstatus->sp = status->get_restart_sp(sd, bstatus);
 
 	// ----- MISC CALCULATION -----
 	status->calc_misc(&sd->bl, bstatus, sd->status.base_level);
@@ -9410,10 +9462,10 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 					return 0;
 
 				PER( 100 / (status_get_max_hp(bl) / hp), lv );
-				status->heal(bl, (!(hp%2) ? (6-lv) *4 / 100 : -(lv*4) / 100), 0, 1);
+				status->heal(bl, (!(hp%2) ? (6-lv) *4 / 100 : -(lv*4) / 100), 0, STATUS_HEAL_FORCED);
 
 				PER( 100 / (status_get_max_sp(bl) / sp), lv );
-				status->heal(bl, 0,(!(sp%2) ? (6-lv) *3 / 100 : -(lv*3) / 100), 1);
+				status->heal(bl, 0,(!(sp%2) ? (6-lv) *3 / 100 : -(lv*3) / 100), STATUS_HEAL_FORCED);
 			}
 #undef PER
 				break;
@@ -9646,8 +9698,8 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 	switch (type) {
 		case SC_BERSERK:
 			if (!(sce->val2)) { //don't heal if already set
-				status->heal(bl, st->max_hp, 0, 1); //Do not use percent_heal as this healing must override BERSERK's block.
-				status->set_sp(bl, 0, 0); //Damage all SP
+				status->heal(bl, st->max_hp, 0, STATUS_HEAL_FORCED); //Do not use percent_heal as this healing must override BERSERK's block.
+				status->set_sp(bl, 0, STATUS_HEAL_DEFAULT); //Damage all SP
 			}
 			sce->val2 = 5 * st->max_hp / 100;
 			break;
@@ -10973,7 +11025,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				status_percent_heal(bl, 100, 0);
 				status_change_end(bl, SC__BLOODYLUST, INVALID_TIMER);
 			} else if(st->hp > 100 && sce->val2) //If val2 is removed, no HP penalty (dispelled?) [Skotlex]
-				status->set_hp(bl, 100, 0);
+				status->set_hp(bl, 100, STATUS_HEAL_DEFAULT);
 			if(sc->data[SC_ENDURE] && sc->data[SC_ENDURE]->val4 == 2) {
 				sc->data[SC_ENDURE]->val4 = 0;
 				status_change_end(bl, SC_ENDURE, INVALID_TIMER);
@@ -11025,8 +11077,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 			if (tid == INVALID_TIMER)
 				break;
 			// "lose almost all their HP and SP" on natural expiration.
-			status->set_hp(bl, 10, 0);
-			status->set_sp(bl, 10, 0);
+			status->set_hp(bl, 10, STATUS_HEAL_DEFAULT);
+			status->set_sp(bl, 10, STATUS_HEAL_DEFAULT);
 			break;
 		case SC_AUTOTRADE:
 			if (tid == INVALID_TIMER)
@@ -11437,8 +11489,8 @@ static int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data)
 	hp = st->max_hp - st->hp;
 	if (hp > sce->val2)
 		hp = sce->val2;
-	if (hp)
-		status->heal(bl, hp, 0, 2);
+	if (hp != 0)
+		status->heal(bl, hp, 0, STATUS_HEAL_SHOWEFFECT);
 	sce->val4 = INVALID_TIMER;
 	return 1;
 }
@@ -11644,7 +11696,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				int hp = 0;
 				if (st->hp < st->max_hp)
 					hp = (sce->val1 < 0) ? (int)(sd->status.max_hp * -1 * sce->val1 / 100.) : sce->val1 ;
-				status->heal(bl, hp, 0, 2);
+				status->heal(bl, hp, 0, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next((sce->val2 * 1000) + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -11793,7 +11845,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 		case SC_ABUNDANCE:
 			if(--(sce->val4) > 0) {
-				status->heal(bl,0,60,0);
+				status->heal(bl, 0, 60, STATUS_HEAL_DEFAULT);
 				sc_timer_next(10000+tick, status->change_timer, bl->id, data);
 			}
 			break;
@@ -11909,7 +11961,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					heal = ~heal + 1;
 
 				map->freeblock_lock();
-				status->heal(bl, heal, 0, 2);
+				status->heal(bl, heal, 0, STATUS_HEAL_SHOWEFFECT);
 				if( sc->data[type] ) {
 					sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				}
@@ -12032,7 +12084,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				if ( sc->data[type] ) {
 					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				}
-				status->heal(src, damage*(5 + 5 * sce->val1)/100, 0, 0); // 5 + 5% per level
+				status->heal(src, damage*(5 + 5 * sce->val1)/100, 0, STATUS_HEAL_DEFAULT); // 5 + 5% per level
 				map->freeblock_unlock();
 				return 0;
 			}
@@ -12049,7 +12101,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_DEEP_SLEEP:
 			if( --(sce->val4) >= 0 )
 			{// Recovers 3% of the player's MaxHP/MaxSP every 2 seconds.
-				status->heal(bl, st->max_hp * 3 / 100, st->max_sp * 3 / 100, 2);
+				status->heal(bl, st->max_hp * 3 / 100, st->max_sp * 3 / 100, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12059,7 +12111,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			if( --(sce->val4) >= 0 ) {
 				if( !status->charge(bl,0,sce->val3) )
 					break;
-				status->heal(bl, sce->val2, 0, 1);
+				status->heal(bl, sce->val2, 0, STATUS_HEAL_FORCED);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12067,7 +12119,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_SONG_OF_MANA:
 			if( --(sce->val4) >= 0 ) {
-				status->heal(bl,0,sce->val3,3);
+				status->heal(bl, 0, sce->val3, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12261,7 +12313,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			return 0;
 		case SC_MEIKYOUSISUI:
 			if( --(sce->val4) > 0 ) {
-				status->heal(bl, st->max_hp * (sce->val1+1) / 100, st->max_sp * sce->val1 / 100, 0);
+				status->heal(bl, st->max_hp * (sce->val1+1) / 100, st->max_sp * sce->val1 / 100, STATUS_HEAL_DEFAULT);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12297,7 +12349,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 		case SC_FRIGG_SONG:
 			if( --(sce->val4) > 0 ) {
-				status->heal(bl, sce->val3, 0, 0);
+				status->heal(bl, sce->val3, 0, STATUS_HEAL_DEFAULT);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12879,7 +12931,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			sregen->tick.hp += val;
 			while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
 				sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-				if(status->heal(bl, sregen->hp, 0, 3) < sregen->hp) {
+				if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) {
 					//Full
 					flag&=~(RGN_HP|RGN_SHP);
 					break;
@@ -12894,7 +12946,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			sregen->tick.sp += val;
 			while(sregen->tick.sp >= (unsigned int)battle_config.natural_heal_skill_interval) {
 				sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-				if(status->heal(bl, 0, sregen->sp, 3) < sregen->sp) {
+				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) {
 					//Full
 					flag&=~(RGN_SP|RGN_SSP);
 					break;
@@ -12943,7 +12995,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 				val += regen->hp;
 				regen->tick.hp -= battle_config.natural_healhp_interval;
 			} while(regen->tick.hp >= (unsigned int)battle_config.natural_healhp_interval);
-			if (status->heal(bl, val, 0, 1) < val)
+			if (status->heal(bl, val, 0, STATUS_HEAL_FORCED) < val)
 				flag&=~RGN_SHP; //full.
 		}
 	}
@@ -12962,7 +13014,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 				val += regen->sp;
 				regen->tick.sp -= battle_config.natural_healsp_interval;
 			} while(regen->tick.sp >= (unsigned int)battle_config.natural_healsp_interval);
-			if (status->heal(bl, 0, val, 1) < val)
+			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED) < val)
 				flag&=~RGN_SSP; //full.
 		}
 	}
@@ -12979,7 +13031,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
 			sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-			if(status->heal(bl, sregen->hp, 0, 3) < sregen->hp)
+			if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp)
 				break; //Full
 		}
 	}
@@ -13004,7 +13056,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 				}
 			}
 			sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-			if(status->heal(bl, 0, val, 3) < val)
+			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < val)
 				break; //Full
 		}
 	}
@@ -13729,6 +13781,8 @@ void status_defaults(void)
 	status->base_atk = status_base_atk;
 	status->get_base_maxhp = status_get_base_maxhp;
 	status->get_base_maxsp = status_get_base_maxsp;
+	status->get_restart_hp = status_get_restart_hp;
+	status->get_restart_sp = status_get_restart_sp;
 	status->calc_npc_ = status_calc_npc_;
 	status->calc_str = status_calc_str;
 	status->calc_agi = status_calc_agi;

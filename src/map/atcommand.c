@@ -1131,7 +1131,7 @@ ACMD(heal)
 	}
 
 	if ( hp > 0 && sp >= 0 ) {
-		if(!status->heal(&sd->bl, hp, sp, 0))
+		if (status->heal(&sd->bl, hp, sp, STATUS_HEAL_DEFAULT) == 0)
 			clif->message(fd, msg_fd(fd,157)); // HP and SP are already with the good value.
 		else
 			clif->message(fd, msg_fd(fd,17)); // HP, SP recovered.
@@ -1148,7 +1148,7 @@ ACMD(heal)
 	//Opposing signs.
 	if ( hp ) {
 		if (hp > 0)
-			status->heal(&sd->bl, hp, 0, 0);
+			status->heal(&sd->bl, hp, 0, STATUS_HEAL_DEFAULT);
 		else {
 			status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
 			clif->damage(&sd->bl,&sd->bl, 0, 0, -hp, 0, BDT_ENDURE, 0);
@@ -1157,7 +1157,7 @@ ACMD(heal)
 
 	if ( sp ) {
 		if (sp > 0)
-			status->heal(&sd->bl, 0, sp, 0);
+			status->heal(&sd->bl, 0, sp, STATUS_HEAL_DEFAULT);
 		else
 			status->damage(NULL, &sd->bl, 0, -sp, 0, 0);
 	}

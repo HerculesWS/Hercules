@@ -3190,6 +3190,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->base_atk, HP_status_base_atk) },
 	{ HP_POP(status->get_base_maxhp, HP_status_get_base_maxhp) },
 	{ HP_POP(status->get_base_maxsp, HP_status_get_base_maxsp) },
+	{ HP_POP(status->get_restart_hp, HP_status_get_restart_hp) },
+	{ HP_POP(status->get_restart_sp, HP_status_get_restart_sp) },
 	{ HP_POP(status->calc_npc_, HP_status_calc_npc_) },
 	{ HP_POP(status->calc_str, HP_status_calc_str) },
 	{ HP_POP(status->calc_agi, HP_status_calc_agi) },

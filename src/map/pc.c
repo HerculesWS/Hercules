@@ -399,7 +399,7 @@ static int pc_banding(struct map_session_data *sd, uint16 skill_lv)
 	for( j = 0; j < i; j++ ) {
 		bsd = map->id2sd(b_sd[j]);
 		if( bsd != NULL ) {
-			status->set_hp(&bsd->bl,hp,0); // Set hp
+			status->set_hp(&bsd->bl, hp, STATUS_HEAL_DEFAULT); // Set hp
 			if( (sc = status->get_sc(&bsd->bl)) != NULL  && sc->data[SC_BANDING] ) {
 				sc->data[SC_BANDING]->val2 = c; // Set the counter. It doesn't count your self.
 				status_calc_bl(&bsd->bl, status->sc2scb_flag(SC_BANDING)); // Set atk and def.
@@ -523,10 +523,9 @@ static int pc_setrestartvalue(struct map_session_data *sd, int type)
 
 	if (type&1) {
 		//Normal resurrection
-		st->hp = 1; //Otherwise status->heal may fail if dead.
-		status->heal(&sd->bl, bst->hp, 0, 1);
+		status->heal(&sd->bl, bst->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_ALLOWREVIVE);
 		if( st->sp < bst->sp )
-			status->set_sp(&sd->bl, bst->sp, 1);
+			status->set_sp(&sd->bl, bst->sp, STATUS_HEAL_FORCED);
 	} else { //Just for saving on the char-server (with values as if respawned)
 		sd->status.hp = bst->hp;
 		sd->status.sp = (st->sp < bst->sp) ? bst->sp : st->sp;
@@ -8827,7 +8826,7 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 		}
 	}
 
-	return status->heal(&sd->bl, hp, sp, 1);
+	return status->heal(&sd->bl, hp, sp, STATUS_HEAL_FORCED);
 }
 
 /*==========================================
@@ -10878,7 +10877,7 @@ static void pc_regen(struct map_session_data *sd, unsigned int diff_tick)
 	}
 
 	if (hp > 0 || sp > 0)
-		status->heal(&sd->bl, hp, sp, 0);
+		status->heal(&sd->bl, hp, sp, STATUS_HEAL_DEFAULT);
 
 	return;
 }

@@ -3244,7 +3244,12 @@ static void clif_updatestatus(struct map_session_data *sd, int type)
 			WFIFOL(fd,4)=sd->battle_status.max_sp;
 			break;
 		case SP_HP:
-			WFIFOL(fd,4)=sd->battle_status.hp;
+			if (sd->battle_status.hp == 0 && battle_config.display_fake_hp_when_dead) {
+				// On official servers, the HP displayed when dead is the HP that the character will have at respawn.
+				WFIFOL(fd, 4) = status->get_restart_hp(sd, &sd->battle_status);
+			} else {
+				WFIFOL(fd, 4) = sd->battle_status.hp;
+			}
 			break;
 		case SP_SP:
 			WFIFOL(fd,4)=sd->battle_status.sp;

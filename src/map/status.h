@@ -99,6 +99,16 @@ enum scstart_flag {
 	SCFLAG_ALL = SCFLAG_NONE|SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE|SCFLAG_NOICON
 };
 
+/**
+ * Flags to be used with status->heal() and related functions.
+ */
+enum status_heal_flag {
+	STATUS_HEAL_DEFAULT     = 0x00, ///< Default
+	STATUS_HEAL_FORCED      = 0x01, ///< Forced healing (bypassing Berserk and similar)
+	STATUS_HEAL_SHOWEFFECT  = 0x02, ///< Show the HP/SP heal effect
+	STATUS_HEAL_ALLOWREVIVE = 0x04, ///< Force resurrection in case of dead targets.
+};
+
 // Status changes listing. These code are for use by the server.
 typedef enum sc_type {
 	SC_NONE = -1,
@@ -2309,9 +2319,9 @@ struct status_interface {
 	int (*charge) (struct block_list* bl, int64 hp, int64 sp);
 	int (*percent_change) (struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag);
 	//Used to set the hp/sp of an object to an absolute value (can't kill)
-	int (*set_hp) (struct block_list *bl, unsigned int hp, int flag);
-	int (*set_sp) (struct block_list *bl, unsigned int sp, int flag);
-	int (*heal) (struct block_list *bl,int64 hp,int64 sp, int flag);
+	int (*set_hp) (struct block_list *bl, unsigned int hp, enum status_heal_flag flag);
+	int (*set_sp) (struct block_list *bl, unsigned int sp, enum status_heal_flag flag);
+	int (*heal) (struct block_list *bl,int64 hp,int64 sp, enum status_heal_flag flag);
 	int (*revive) (struct block_list *bl, unsigned char per_hp, unsigned char per_sp);
 	int (*fixed_revive) (struct block_list *bl, unsigned int per_hp, unsigned int per_sp);
 	struct regen_data * (*get_regen_data) (struct block_list *bl);
@@ -2384,6 +2394,8 @@ struct status_interface {
 	unsigned short (*base_atk) (const struct block_list *bl, const struct status_data *st);
 	unsigned int (*get_base_maxhp) (const struct map_session_data *sd, const struct status_data *st);
 	unsigned int (*get_base_maxsp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_restart_hp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_restart_sp) (const struct map_session_data *sd, const struct status_data *st);
 	int (*calc_npc_) (struct npc_data *nd, enum e_status_calc_opt opt);
 	unsigned short (*calc_str) (struct block_list *bl, struct status_change *sc, int str);
 	unsigned short (*calc_agi) (struct block_list *bl, struct status_change *sc, int agi);
