@@ -1365,25 +1365,28 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 #endif
 			}
 
-			if( battle_config.vit_penalty_type && battle_config.vit_penalty_target&target->type ) {
-				unsigned char target_count; //256 max targets should be a sane max
-				target_count = unit->counttargeted(target);
-				if(target_count >= battle_config.vit_penalty_count) {
-					if(battle_config.vit_penalty_type == 1) {
-						if( !tsc || !tsc->data[SC_STEELBODY] )
-							def1 = (def1 * (100 - (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num))/100;
-						def2 = (def2 * (100 - (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num))/100;
-					} else { //Assume type 2
-						if( !tsc || !tsc->data[SC_STEELBODY] )
-							def1 -= (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num;
-						def2 -= (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num;
+			if (battle_config.vit_penalty_type != 0 && (battle_config.vit_penalty_target & target->type) != 0) {
+				int target_count = unit->counttargeted(target);
+				if (target_count >= battle_config.vit_penalty_count) {
+					int penalty = (target_count - (battle_config.vit_penalty_count - 1)) * battle_config.vit_penalty_num;
+					if (battle_config.vit_penalty_type == 1) {
+						if (tsc == NULL || tsc->data[SC_STEELBODY] == NULL)
+							def1 = def1 * (100 - penalty) / 100;
+						def2 = def2 * (100 - penalty) / 100;
+					} else { // Assume type 2
+						if (tsc == NULL || tsc->data[SC_STEELBODY] == NULL)
+							def1 -= penalty;
+						def2 -= penalty;
 					}
 				}
 #ifndef RENEWAL
-				if(skill_id == AM_ACIDTERROR) def1 = 0; //Acid Terror ignores only armor defense. [Skotlex]
+				if (skill_id == AM_ACIDTERROR)
+					def1 = 0; // Acid Terror ignores only armor defense. [Skotlex]
 #endif
-				def1 = max(def1, 0);
-				if(def2 < 1) def2 = 1;
+				if (def1 < 0)
+					def1 = 0;
+				if (def2 < 1)
+					def2 = 1;
 			}
 			//Vitality reduction from rodatazone: http://rodatazone.simgaming.net/mechanics/substats.php#def
 			if (tsd) {
@@ -4225,16 +4228,16 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 				hitrate = 80; //Default hitrate
 #endif
 
-			if(battle_config.agi_penalty_type && battle_config.agi_penalty_target&target->type) {
-				unsigned char attacker_count; //256 max targets should be a sane max
-				attacker_count = unit->counttargeted(target);
-				if(attacker_count >= battle_config.agi_penalty_count)
-				{
+			if (battle_config.agi_penalty_type != 0 && (battle_config.agi_penalty_target & target->type) != 0) {
+				int attacker_count = unit->counttargeted(target);
+				if (attacker_count >= battle_config.agi_penalty_count) {
+					int penalty = (attacker_count - (battle_config.agi_penalty_count - 1)) * battle_config.agi_penalty_num;
 					if (battle_config.agi_penalty_type == 1)
-						flee = (flee * (100 - (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num))/100;
+						flee = flee * (100 - penalty) / 100;
 					else // assume type 2: absolute reduction
-						flee -= (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num;
-					if(flee < 1) flee = 1;
+						flee -= penalty;
+					if (flee < 1)
+						flee = 1;
 				}
 			}
 
@@ -4750,15 +4753,16 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		short hitrate = 80; //Default hitrate
 #endif
 
-		if(battle_config.agi_penalty_type && battle_config.agi_penalty_target&target->type) {
-			unsigned char attacker_count; //256 max targets should be a sane max
-			attacker_count = unit->counttargeted(target);
-			if(attacker_count >= battle_config.agi_penalty_count) {
+		if (battle_config.agi_penalty_type != 0 && (battle_config.agi_penalty_target & target->type) != 0) {
+			int attacker_count = unit->counttargeted(target);
+			if (attacker_count >= battle_config.agi_penalty_count) {
+				int penalty = (attacker_count - (battle_config.agi_penalty_count - 1)) * battle_config.agi_penalty_num;
 				if (battle_config.agi_penalty_type == 1)
-					flee = (flee * (100 - (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num))/100;
-				else //asume type 2: absolute reduction
-					flee -= (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num;
-				if(flee < 1) flee = 1;
+					flee = flee * (100 - penalty) / 100;
+				else // asume type 2: absolute reduction
+					flee -= penalty;
+				if (flee < 1)
+					flee = 1;
 			}
 		}
 
