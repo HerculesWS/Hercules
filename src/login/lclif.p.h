@@ -35,7 +35,7 @@
 
 // Packet DB
 #define MIN_PACKET_DB 0x0064
-#define MAX_PACKET_LOGIN_DB 0x0acf
+#define MAX_PACKET_LOGIN_DB 0x0ad0
 
 /**
  * Login Client Interface additional data
