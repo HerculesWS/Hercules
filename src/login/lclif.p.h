@@ -28,6 +28,7 @@
 
 #include "common/hercules.h"
 #include "common/mmo.h"
+#include "common/packetsstatic_len.h"
 
 /* Definitions and macros */
 /// Maximum amount of packets processed at once from the same client
@@ -60,6 +61,7 @@ enum login_packet_id {
 
 	PACKET_ID_AC_ACCEPT_LOGIN         = 0x0069,
 	PACKET_ID_AC_ACCEPT_LOGIN2        = 0x0ac4,
+	PACKET_ID_AC_REQ_MOBILE_OTP       = 0x09a2,
 	PACKET_ID_AC_REFUSE_LOGIN         = 0x006a,
 	PACKET_ID_SC_NOTIFY_BAN           = 0x0081,
 	PACKET_ID_AC_ACK_HASH             = 0x01dc,
@@ -161,6 +163,25 @@ struct packet_CA_SSO_LOGIN_REQ {
 	char ip[15];          ///< IP Address
 	char t1[];            ///< SSO Login Token (variable length)
 } __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114
+/**
+ * Packet structure for CA_SSO_LOGIN_REQ.
+ *
+ * Variable-length packet.
+ */
+struct PACKET_CA_ACK_MOBILE_OTP {
+	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_SSO_LOGIN_REQ)
+	int16 packet_len;     ///< Length (variable length)
+	uint32 aid;           ///< Account ID
+	char code[6];         ///< Code
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
+// for enum login_packet_id
+#define PACKET_ID_CA_ACK_MOBILE_OTP HEADER_CA_ACK_MOBILE_OTP
+#define packet_CA_ACK_MOBILE_OTP PACKET_CA_ACK_MOBILE_OTP
+#endif
 
 /**
  * Packet structure for CA_LOGIN_OTP.
@@ -342,6 +363,7 @@ struct lclif_interface_private {
 	LoginParseFunc *parse_CA_LOGIN_HAN;            ///< Packet handler for #packet_CA_LOGIN_HAN.
 	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;        ///< Packet handler for #packet_CA_SSO_LOGIN_REQ.
 	LoginParseFunc *parse_CA_LOGIN_OTP;            ///< Packet handler for #packet_CA_LOGIN_OTP.
+	LoginParseFunc *parse_CA_ACK_MOBILE_OTP;       ///< Packet handler for #packet_CA_ACK_MOBILE_OTP.
 	LoginParseFunc *parse_CA_REQ_HASH;             ///< Packet handler for #packet_CA_REQ_HASH.
 	LoginParseFunc *parse_CA_CHARSERVERCONNECT;    ///< Packet handler for #packet_CA_CHARSERVERCONNECT.
 };
