@@ -256,6 +256,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_NULLPO_H
 	#endif // COMMON_NULLPO_H
+	#ifdef COMMON_PACKETS_H
+		{ "packets_interface", sizeof(struct packets_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_PACKETS_H
+	#endif // COMMON_PACKETS_H
 	#ifdef COMMON_RANDOM_H
 		{ "rnd_interface", sizeof(struct rnd_interface), SERVER_TYPE_ALL },
 	#else
@@ -679,7 +684,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_INVENTORY_MOVE_FAILED", sizeof(struct PACKET_ZC_INVENTORY_MOVE_FAILED), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ITEM_ENTRY", sizeof(struct PACKET_ZC_ITEM_ENTRY), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ITEM_PICKUP_PARTY", sizeof(struct PACKET_ZC_ITEM_PICKUP_PARTY), SERVER_TYPE_MAP },
-		{ "PACKET_ZC_ITEM_PREVIEW", sizeof(struct PACKET_ZC_ITEM_PREVIEW), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_MAIL_LIST", sizeof(struct PACKET_ZC_MAIL_LIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_MAKABLEITEMLIST", sizeof(struct PACKET_ZC_MAKABLEITEMLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_MAKABLEITEMLIST_sub", sizeof(struct PACKET_ZC_MAKABLEITEMLIST_sub), SERVER_TYPE_MAP },

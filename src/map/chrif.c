@@ -1592,6 +1592,7 @@ static int check_connect_char_server(int tid, int64 tick, int id, intptr_t data)
 
 		sockt->session[chrif->fd]->func_parse = chrif->parse;
 		sockt->session[chrif->fd]->flag.server = 1;
+		sockt->session[chrif->fd]->flag.validate = 0;
 		sockt->realloc_fifo(chrif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		chrif->connect(chrif->fd);

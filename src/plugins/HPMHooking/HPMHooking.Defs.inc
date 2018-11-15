@@ -5675,6 +5675,16 @@ typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, in
 typedef void (*HPMHOOK_pre_nullpo_assert_report) (const char **file, int *line, const char **func, const char **targetname, const char **title);
 typedef void (*HPMHOOK_post_nullpo_assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
 #endif // COMMON_NULLPO_H
+#ifdef COMMON_PACKETS_H /* packets */
+typedef void (*HPMHOOK_pre_packets_init) (void);
+typedef void (*HPMHOOK_post_packets_init) (void);
+typedef void (*HPMHOOK_pre_packets_final) (void);
+typedef void (*HPMHOOK_post_packets_final) (void);
+typedef void (*HPMHOOK_pre_packets_addLens) (void);
+typedef void (*HPMHOOK_post_packets_addLens) (void);
+typedef void (*HPMHOOK_pre_packets_addLen) (int *id, int *len);
+typedef void (*HPMHOOK_post_packets_addLen) (int id, int len);
+#endif // COMMON_PACKETS_H
 #ifdef MAP_PARTY_H /* party */
 typedef void (*HPMHOOK_pre_party_init) (bool *minimal);
 typedef void (*HPMHOOK_post_party_init) (bool minimal);
@@ -7454,12 +7464,14 @@ typedef int (*HPMHOOK_pre_sockt_realloc_fifo) (int *fd, unsigned int *rfifo_size
 typedef int (*HPMHOOK_post_sockt_realloc_fifo) (int retVal___, int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 typedef int (*HPMHOOK_pre_sockt_realloc_writefifo) (int *fd, size_t *addition);
 typedef int (*HPMHOOK_post_sockt_realloc_writefifo) (int retVal___, int fd, size_t addition);
-typedef int (*HPMHOOK_pre_sockt_wfifoset) (int *fd, size_t *len);
-typedef int (*HPMHOOK_post_sockt_wfifoset) (int retVal___, int fd, size_t len);
+typedef int (*HPMHOOK_pre_sockt_wfifoset) (int *fd, size_t *len, bool *validate);
+typedef int (*HPMHOOK_post_sockt_wfifoset) (int retVal___, int fd, size_t len, bool validate);
 typedef int (*HPMHOOK_pre_sockt_rfifoskip) (int *fd, size_t *len);
 typedef int (*HPMHOOK_post_sockt_rfifoskip) (int retVal___, int fd, size_t len);
 typedef void (*HPMHOOK_pre_sockt_close) (int *fd);
 typedef void (*HPMHOOK_post_sockt_close) (int fd);
+typedef void (*HPMHOOK_pre_sockt_validateWfifo) (int *fd, size_t *len);
+typedef void (*HPMHOOK_post_sockt_validateWfifo) (int fd, size_t len);
 typedef bool (*HPMHOOK_pre_sockt_session_is_valid) (int *fd);
 typedef bool (*HPMHOOK_post_sockt_session_is_valid) (bool retVal___, int fd);
 typedef bool (*HPMHOOK_pre_sockt_session_is_active) (int *fd);

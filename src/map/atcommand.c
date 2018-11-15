@@ -62,6 +62,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h" // MAX_CARTS
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -262,12 +263,15 @@ ACMD(send)
 
 		if (len) {
 			// show packet length
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,904), type, clif->packet(type)->len); // Packet 0x%x length: %d
+			Assert_retr(false, type <= MAX_PACKET_DB && type >= MIN_PACKET_DB);
+			len = packets->db[type];
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,904), type, len); // Packet 0x%x length: %d
 			clif->message(fd, atcmd_output);
 			return true;
 		}
 
-		len = clif->packet(type)->len;
+		Assert_retr(false, type <= MAX_PACKET_DB && type >= MIN_PACKET_DB);
+		len = packets->db[type];
 
 		if (len == -1) {
 			// dynamic packet
@@ -415,7 +419,7 @@ ACMD(send)
 			SKIP_VALUE(message);
 		}
 
-		if (clif->packet(type)->len == -1) { // send dynamic packet
+		if (packets->db[type] == -1) { // send dynamic packet
 			WFIFOW(sd->fd,2)=TOW(off);
 			WFIFOSET(sd->fd,off);
 		} else {// send static packet

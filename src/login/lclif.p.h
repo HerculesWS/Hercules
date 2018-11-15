@@ -35,7 +35,7 @@
 
 // Packet DB
 #define MIN_PACKET_DB 0x0064
-#define MAX_PACKET_DB 0x0acf
+#define MAX_PACKET_LOGIN_DB 0x0acf
 
 /* Enums */
 
@@ -309,7 +309,7 @@ struct packet_AC_ACK_HASH {
  * Login Client Interface additional data
  */
 struct lclif_interface_dbs {
-	struct login_packet_db packet_db[MAX_PACKET_DB + 1]; ///< Packet database.
+	struct login_packet_db packet_db[MAX_PACKET_LOGIN_DB + 1]; ///< Packet database.
 };
 
 /**

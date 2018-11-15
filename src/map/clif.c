@@ -65,6 +65,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h" // NEW_CARTS, char_achievements
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -18472,7 +18473,7 @@ static void clif_parse_debug(int fd, struct map_session_data *sd)
 	cmd = RFIFOW(fd,0);
 
 	if( sd ) {
-		packet_len = packet_db[cmd].len;
+		packet_len = packets->db[cmd];
 
 		if( packet_len == -1 ) {// variable length
 			packet_len = RFIFOW(fd,2);  // clif_parse ensures, that this amount of data is already received
@@ -18901,7 +18902,7 @@ static void clif_parse_dull(int fd, struct map_session_data *sd)
 	const int cmd = clif->cmd;
 	Assert_retv(cmd <= MAX_PACKET_DB && cmd >= MIN_PACKET_DB);
 
-	int packet_len = packet_db[cmd].len;
+	int packet_len = packets->db[cmd];
 	if (packet_len == -1) { // variable-length packet
 		packet_len = RFIFOW(fd, 2);
 	}
@@ -20530,7 +20531,7 @@ static unsigned short clif_parse_cmd_optional(int fd, struct map_session_data *s
 	unsigned short cmd = RFIFOW(fd,0);
 
 	// filter out invalid / unsupported packets
-	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 ) {
+	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packets->db[cmd] == 0 ) {
 		if( sd )
 			sd->parse_cmd_func = clif_parse_cmd_decrypt;
 		return clif_parse_cmd_decrypt(fd, sd);
@@ -21975,7 +21976,7 @@ static void clif_item_preview(struct map_session_data *sd, int n)
 	Assert_retv(n >= 0 && n < MAX_INVENTORY);
 
 	struct PACKET_ZC_ITEM_PREVIEW p;
-	p.packetType = itemPreview;
+	p.packetType = HEADER_ZC_ITEM_PREVIEW;
 	p.index = n + 2;
 #if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 	p.isDamaged = (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ? 1 : 0;
@@ -22049,7 +22050,7 @@ static int clif_parse(int fd)
 		}
 
 		// filter out invalid / unsupported packets
-		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0) {
+		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packets->db[cmd] == 0) {
 			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
 			            (unsigned int)cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
@@ -22060,7 +22061,7 @@ static int clif_parse(int fd)
 		}
 
 		// determine real packet length
-		if ( ( packet_len = packet_db[cmd].len ) == -1) { // variable-length packet
+		if ((packet_len = packets->db[cmd]) == -1) { // variable-length packet
 
 			if (RFIFOREST(fd) < 4)
 				return 0;
@@ -22149,12 +22150,12 @@ static int clif_parse(int fd)
  */
 static const struct s_packet_db *clif_packet(int packet_id)
 {
-	if (packet_id < MIN_PACKET_DB || packet_id > MAX_PACKET_DB || packet_db[packet_id].len == 0)
+	if (packet_id < MIN_PACKET_DB || packet_id > MAX_PACKET_DB || packets->db[packet_id] == 0)
 		return NULL;
 	return &packet_db[packet_id];
 }
 
-static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
+static void __attribute__ ((unused)) packetdb_addpacket(int cmd, ...)
 {
 	va_list va;
 	int i;
@@ -22171,21 +22172,19 @@ static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
 		return;
 	}
 
-	packet_db[cmd].len = len;
-
-	va_start(va,len);
+	va_start(va, cmd);
 
 	pos = va_arg(va, int);
 
 	va_end(va);
 
-	if( pos == 0xFFFF ) { /* nothing more to do */
+	if (pos == 0xFFFF) { /* nothing more to do */
 		return;
 	}
 
-	va_start(va,len);
+	va_start(va, cmd);
 
-	func = va_arg(va,pFunc);
+	func = va_arg(va, pFunc);
 
 	packet_db[cmd].func = func;
 
@@ -22204,14 +22203,14 @@ static void packetdb_loaddb(void)
 {
 	memset(packet_db,0,sizeof(packet_db));
 
-#define packet(id, size, ...) packetdb_addpacket((id), (size), ##__VA_ARGS__, 0xFFFF)
-#include "packets.h" /* load structure data */
+#define packet(id, ...) packetdb_addpacket((id), ##__VA_ARGS__, 0xFFFF)
+#include "map/packets.h" /* load structure data */
 #ifdef PACKETVER_ZERO
-#include "packets_shuffle_zero.h"
+#include "map/packets_shuffle_zero.h"
 #elif defined(PACKETVER_RE)
-#include "packets_shuffle_re.h"
+#include "map/packets_shuffle_re.h"
 #else  // PACKETVER_ZERO
-#include "packets_shuffle_main.h"
+#include "map/packets_shuffle_main.h"
 #endif  // PACKETVER_ZERO
 #undef packet
 #define packetKeys(a,b,c) do { clif->cryptKey[0] = (a); clif->cryptKey[1] = (b); clif->cryptKey[2] = (c); } while(0)
@@ -22219,9 +22218,9 @@ static void packetdb_loaddb(void)
 	packetKeys(OBFUSCATIONKEY1,OBFUSCATIONKEY2,OBFUSCATIONKEY3);
 #else  // defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
 #ifdef PACKETVER_ZERO
-#include "packets_keys_zero.h"
+#include "map/packets_keys_zero.h"
 #else  // PACKETVER_ZERO
-#include "packets_keys_main.h"
+#include "map/packets_keys_main.h"
 #endif  // PACKETVER_ZERO
 #endif  // defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
 #undef packetKeys
@@ -22258,6 +22257,7 @@ static int do_init_clif(bool minimal)
 	packetdb_loaddb();
 
 	sockt->set_defaultparse(clif->parse);
+	sockt->validate = true;
 	if (sockt->make_listen_bind(clif->bind_ip,clif->map_port) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",clif->map_port);
 		exit(EXIT_FAILURE);

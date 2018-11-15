@@ -512,6 +512,14 @@ struct {
 	struct HPMHookPoint *HP_mutex_cond_broadcast_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
+	struct HPMHookPoint *HP_packets_init_pre;
+	struct HPMHookPoint *HP_packets_init_post;
+	struct HPMHookPoint *HP_packets_final_pre;
+	struct HPMHookPoint *HP_packets_final_post;
+	struct HPMHookPoint *HP_packets_addLens_pre;
+	struct HPMHookPoint *HP_packets_addLens_post;
+	struct HPMHookPoint *HP_packets_addLen_pre;
+	struct HPMHookPoint *HP_packets_addLen_post;
 	struct HPMHookPoint *HP_rnd_init_pre;
 	struct HPMHookPoint *HP_rnd_init_post;
 	struct HPMHookPoint *HP_rnd_final_pre;
@@ -558,6 +566,8 @@ struct {
 	struct HPMHookPoint *HP_sockt_rfifoskip_post;
 	struct HPMHookPoint *HP_sockt_close_pre;
 	struct HPMHookPoint *HP_sockt_close_post;
+	struct HPMHookPoint *HP_sockt_validateWfifo_pre;
+	struct HPMHookPoint *HP_sockt_validateWfifo_post;
 	struct HPMHookPoint *HP_sockt_session_is_valid_pre;
 	struct HPMHookPoint *HP_sockt_session_is_valid_post;
 	struct HPMHookPoint *HP_sockt_session_is_active_pre;
@@ -1293,6 +1303,14 @@ struct {
 	int HP_mutex_cond_broadcast_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
+	int HP_packets_init_pre;
+	int HP_packets_init_post;
+	int HP_packets_final_pre;
+	int HP_packets_final_post;
+	int HP_packets_addLens_pre;
+	int HP_packets_addLens_post;
+	int HP_packets_addLen_pre;
+	int HP_packets_addLen_post;
 	int HP_rnd_init_pre;
 	int HP_rnd_init_post;
 	int HP_rnd_final_pre;
@@ -1339,6 +1357,8 @@ struct {
 	int HP_sockt_rfifoskip_post;
 	int HP_sockt_close_pre;
 	int HP_sockt_close_post;
+	int HP_sockt_validateWfifo_pre;
+	int HP_sockt_validateWfifo_post;
 	int HP_sockt_session_is_valid_pre;
 	int HP_sockt_session_is_valid_post;
 	int HP_sockt_session_is_active_pre;
@@ -1605,6 +1625,7 @@ struct {
 	struct md5_interface md5;
 	struct mutex_interface mutex;
 	struct nullpo_interface nullpo;
+	struct packets_interface packets;
 	struct rnd_interface rnd;
 	struct showmsg_interface showmsg;
 	struct socket_interface sockt;

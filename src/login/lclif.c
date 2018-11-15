@@ -479,7 +479,7 @@ static const struct login_packet_db *lclif_packet(int16 packet_id)
 	if (packet_id == PACKET_ID_CA_CHARSERVERCONNECT)
 		return &lclif->p->dbs->packet_db[0];
 
-	if (packet_id > MAX_PACKET_DB || packet_id < MIN_PACKET_DB)
+	if (packet_id > MAX_PACKET_LOGIN_DB || packet_id < MIN_PACKET_DB)
 		return NULL;
 
 	return &lclif->p->dbs->packet_db[packet_id];
@@ -525,7 +525,7 @@ static void packetdb_loaddb(void)
 
 	for (i = 0; i < length; ++i) {
 		int16 packet_id = packet[i].packet_id;
-		Assert_retb(packet_id >= MIN_PACKET_DB && packet_id <= MAX_PACKET_DB);
+		Assert_retb(packet_id >= MIN_PACKET_DB && packet_id <= MAX_PACKET_LOGIN_DB);
 		lclif->p->dbs->packet_db[packet_id].len = packet[i].packet_len;
 		lclif->p->dbs->packet_db[packet_id].pFunc = packet[i].pFunc;
 	}

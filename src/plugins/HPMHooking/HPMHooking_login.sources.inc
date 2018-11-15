@@ -42,6 +42,7 @@ HPMHooks.source.loginlog = *loginlog;
 HPMHooks.source.md5 = *md5;
 HPMHooks.source.mutex = *mutex;
 HPMHooks.source.nullpo = *nullpo;
+HPMHooks.source.packets = *packets;
 HPMHooks.source.rnd = *rnd;
 HPMHooks.source.showmsg = *showmsg;
 HPMHooks.source.sockt = *sockt;

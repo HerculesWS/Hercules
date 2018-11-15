@@ -7,6 +7,9 @@
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\packets.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\console.c">
       <Filter>common</Filter>
     </ClCompile>

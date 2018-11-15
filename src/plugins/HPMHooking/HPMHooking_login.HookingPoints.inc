@@ -286,6 +286,11 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
+/* packets_interface */
+	{ HP_POP(packets->init, HP_packets_init) },
+	{ HP_POP(packets->final, HP_packets_final) },
+	{ HP_POP(packets->addLens, HP_packets_addLens) },
+	{ HP_POP(packets->addLen, HP_packets_addLen) },
 /* rnd_interface */
 	{ HP_POP(rnd->init, HP_rnd_init) },
 	{ HP_POP(rnd->final, HP_rnd_final) },
@@ -312,6 +317,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sockt->wfifoset, HP_sockt_wfifoset) },
 	{ HP_POP(sockt->rfifoskip, HP_sockt_rfifoskip) },
 	{ HP_POP(sockt->close, HP_sockt_close) },
+	{ HP_POP(sockt->validateWfifo, HP_sockt_validateWfifo) },
 	{ HP_POP(sockt->session_is_valid, HP_sockt_session_is_valid) },
 	{ HP_POP(sockt->session_is_active, HP_sockt_session_is_active) },
 	{ HP_POP(sockt->flush, HP_sockt_flush) },

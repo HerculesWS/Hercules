@@ -65,6 +65,7 @@ HPMHooks.source.mutex = *mutex;
 HPMHooks.source.npc_chat = *npc_chat;
 HPMHooks.source.npc = *npc;
 HPMHooks.source.nullpo = *nullpo;
+HPMHooks.source.packets = *packets;
 HPMHooks.source.party = *party;
 HPMHooks.source.path = *path;
 HPMHooks.source.pcg = *pcg;

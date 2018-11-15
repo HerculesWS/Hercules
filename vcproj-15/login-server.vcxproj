@@ -202,6 +202,7 @@
     <ClCompile Include="..\src\login\loginlog.c" />
     <ClCompile Include="..\src\common\conf.c" />
     <ClCompile Include="..\src\common\core.c" />
+    <ClCompile Include="..\src\common\packets.c" />
     <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\db.c" />
     <ClCompile Include="..\src\common\ers.c" />

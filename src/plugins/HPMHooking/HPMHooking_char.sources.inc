@@ -54,6 +54,7 @@ HPMHooks.source.mapindex = *mapindex;
 HPMHooks.source.md5 = *md5;
 HPMHooks.source.mutex = *mutex;
 HPMHooks.source.nullpo = *nullpo;
+HPMHooks.source.packets = *packets;
 HPMHooks.source.pincode = *pincode;
 HPMHooks.source.rnd = *rnd;
 HPMHooks.source.showmsg = *showmsg;

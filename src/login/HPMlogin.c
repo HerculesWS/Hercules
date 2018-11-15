@@ -41,6 +41,7 @@
 #include "common/memmgr.h"
 #include "common/mutex.h"
 #include "common/mmo.h"
+#include "common/packets.h"
 #include "common/nullpo.h"
 #include "common/random.h"
 #include "common/showmsg.h"
