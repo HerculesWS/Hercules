@@ -35,6 +35,7 @@
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/nullpo.h"
+#include "common/packetsstatic_len.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -66,6 +67,14 @@ static AccountDB *accounts = NULL;
 // Auth database
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
+
+#if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
+struct PACKET_AC_REQ_MOBILE_OTP {
+	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_SSO_LOGIN_REQ)
+	uint32 aid;           ///< Account ID
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09a2);
+#endif
 
 /**
  * @see DBCreateData
@@ -1400,6 +1409,18 @@ static bool login_client_login_otp(int fd, struct login_session_data *sd)
 #endif  // PACKETVER_ZERO
 }
 
+static void login_client_login_mobile_otp_request(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+static void login_client_login_mobile_otp_request(int fd, struct login_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
+	WFIFOHEAD(sd->fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));
+	struct PACKET_AC_REQ_MOBILE_OTP *packet = WP2PTR(sd->fd);
+	packet->packet_id = HEADER_AC_REQ_MOBILE_OTP;
+	packet->aid = sd->account_id;
+	WFIFOSET(fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));
+#endif
+}
+
 static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
 static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
 {
@@ -2275,6 +2296,7 @@ void login_defaults(void)
 	login->parse_fromchar = login_parse_fromchar;
 	login->client_login = login_client_login;
 	login->client_login_otp = login_client_login_otp;
+	login->client_login_mobile_otp_request = login_client_login_mobile_otp_request;
 	login->parse_request_connection = login_parse_request_connection;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;
