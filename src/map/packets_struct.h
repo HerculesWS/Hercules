@@ -30,10 +30,6 @@
 // Packet DB
 #define MAX_PACKET_POS 20
 
-#define DEFINE_PACKET_HEADER(name, id) \
-	STATIC_ASSERT(sizeof(struct PACKET_##name) == PACKET_LEN_##id, "Wrong size PACKET_"#name); \
-	enum { HEADER_##name = id };
-
 /**
  *
  **/
