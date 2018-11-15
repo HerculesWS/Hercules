@@ -7466,6 +7466,8 @@ typedef int (*HPMHOOK_pre_sockt_realloc_writefifo) (int *fd, size_t *addition);
 typedef int (*HPMHOOK_post_sockt_realloc_writefifo) (int retVal___, int fd, size_t addition);
 typedef int (*HPMHOOK_pre_sockt_wfifoset) (int *fd, size_t *len, bool *validate);
 typedef int (*HPMHOOK_post_sockt_wfifoset) (int retVal___, int fd, size_t len, bool validate);
+typedef void (*HPMHOOK_pre_sockt_wfifohead) (int *fd, size_t *len);
+typedef void (*HPMHOOK_post_sockt_wfifohead) (int fd, size_t len);
 typedef int (*HPMHOOK_pre_sockt_rfifoskip) (int *fd, size_t *len);
 typedef int (*HPMHOOK_post_sockt_rfifoskip) (int retVal___, int fd, size_t len);
 typedef void (*HPMHOOK_pre_sockt_close) (int *fd);

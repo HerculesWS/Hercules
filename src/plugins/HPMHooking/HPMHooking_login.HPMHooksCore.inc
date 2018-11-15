@@ -562,6 +562,8 @@ struct {
 	struct HPMHookPoint *HP_sockt_realloc_writefifo_post;
 	struct HPMHookPoint *HP_sockt_wfifoset_pre;
 	struct HPMHookPoint *HP_sockt_wfifoset_post;
+	struct HPMHookPoint *HP_sockt_wfifohead_pre;
+	struct HPMHookPoint *HP_sockt_wfifohead_post;
 	struct HPMHookPoint *HP_sockt_rfifoskip_pre;
 	struct HPMHookPoint *HP_sockt_rfifoskip_post;
 	struct HPMHookPoint *HP_sockt_close_pre;
@@ -1353,6 +1355,8 @@ struct {
 	int HP_sockt_realloc_writefifo_post;
 	int HP_sockt_wfifoset_pre;
 	int HP_sockt_wfifoset_post;
+	int HP_sockt_wfifohead_pre;
+	int HP_sockt_wfifohead_post;
 	int HP_sockt_rfifoskip_pre;
 	int HP_sockt_rfifoskip_post;
 	int HP_sockt_close_pre;

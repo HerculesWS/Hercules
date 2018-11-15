@@ -79971,6 +79971,32 @@ int HP_sockt_wfifoset(int fd, size_t len, bool validate) {
 	}
 	return retVal___;
 }
+void HP_sockt_wfifohead(int fd, size_t len) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_sockt_wfifohead_pre > 0) {
+		void (*preHookFunc) (int *fd, size_t *len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_wfifohead_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sockt_wfifohead_pre[hIndex].func;
+			preHookFunc(&fd, &len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.sockt.wfifohead(fd, len);
+	}
+	if (HPMHooks.count.HP_sockt_wfifohead_post > 0) {
+		void (*postHookFunc) (int fd, size_t len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_wfifohead_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sockt_wfifohead_post[hIndex].func;
+			postHookFunc(fd, len);
+		}
+	}
+	return;
+}
 int HP_sockt_rfifoskip(int fd, size_t len) {
 	int hIndex = 0;
 	int retVal___ = 0;

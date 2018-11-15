@@ -315,6 +315,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sockt->realloc_fifo, HP_sockt_realloc_fifo) },
 	{ HP_POP(sockt->realloc_writefifo, HP_sockt_realloc_writefifo) },
 	{ HP_POP(sockt->wfifoset, HP_sockt_wfifoset) },
+	{ HP_POP(sockt->wfifohead, HP_sockt_wfifohead) },
 	{ HP_POP(sockt->rfifoskip, HP_sockt_rfifoskip) },
 	{ HP_POP(sockt->close, HP_sockt_close) },
 	{ HP_POP(sockt->validateWfifo, HP_sockt_validateWfifo) },
