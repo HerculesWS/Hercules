@@ -204,6 +204,10 @@ struct {
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_LOGIN_OTP_pre;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_LOGIN_OTP_post;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_pre;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_post;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_OTP_CODE_pre;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_OTP_CODE_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_REQ_HASH_pre;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
@@ -436,6 +440,8 @@ struct {
 	struct HPMHookPoint *HP_login_client_login_post;
 	struct HPMHookPoint *HP_login_client_login_otp_pre;
 	struct HPMHookPoint *HP_login_client_login_otp_post;
+	struct HPMHookPoint *HP_login_client_login_mobile_otp_request_pre;
+	struct HPMHookPoint *HP_login_client_login_mobile_otp_request_post;
 	struct HPMHookPoint *HP_login_char_server_connection_status_pre;
 	struct HPMHookPoint *HP_login_char_server_connection_status_post;
 	struct HPMHookPoint *HP_login_parse_request_connection_pre;
@@ -997,6 +1003,10 @@ struct {
 	int HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_post;
 	int HP_PRIV__lclif_parse_CA_LOGIN_OTP_pre;
 	int HP_PRIV__lclif_parse_CA_LOGIN_OTP_post;
+	int HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_pre;
+	int HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_post;
+	int HP_PRIV__lclif_parse_CA_OTP_CODE_pre;
+	int HP_PRIV__lclif_parse_CA_OTP_CODE_post;
 	int HP_PRIV__lclif_parse_CA_REQ_HASH_pre;
 	int HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
@@ -1229,6 +1239,8 @@ struct {
 	int HP_login_client_login_post;
 	int HP_login_client_login_otp_pre;
 	int HP_login_client_login_otp_post;
+	int HP_login_client_login_mobile_otp_request_pre;
+	int HP_login_client_login_mobile_otp_request_post;
 	int HP_login_char_server_connection_status_pre;
 	int HP_login_char_server_connection_status_post;
 	int HP_login_parse_request_connection_pre;

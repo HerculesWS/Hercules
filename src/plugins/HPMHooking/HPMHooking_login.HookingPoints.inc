@@ -126,6 +126,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(lclif->p->parse_CA_LOGIN_HAN, HP_PRIV__lclif_parse_CA_LOGIN_HAN) },
 	{ HP_POP(lclif->p->parse_CA_SSO_LOGIN_REQ, HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ) },
 	{ HP_POP(lclif->p->parse_CA_LOGIN_OTP, HP_PRIV__lclif_parse_CA_LOGIN_OTP) },
+	{ HP_POP(lclif->p->parse_CA_ACK_MOBILE_OTP, HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP) },
+	{ HP_POP(lclif->p->parse_CA_OTP_CODE, HP_PRIV__lclif_parse_CA_OTP_CODE) },
 	{ HP_POP(lclif->p->parse_CA_REQ_HASH, HP_PRIV__lclif_parse_CA_REQ_HASH) },
 	{ HP_POP(lclif->p->parse_CA_CHARSERVERCONNECT, HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT) },
 /* libconfig_interface */
@@ -244,6 +246,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(login->auth_failed, HP_login_auth_failed) },
 	{ HP_POP(login->client_login, HP_login_client_login) },
 	{ HP_POP(login->client_login_otp, HP_login_client_login_otp) },
+	{ HP_POP(login->client_login_mobile_otp_request, HP_login_client_login_mobile_otp_request) },
 	{ HP_POP(login->char_server_connection_status, HP_login_char_server_connection_status) },
 	{ HP_POP(login->parse_request_connection, HP_login_parse_request_connection) },
 	{ HP_POP(login->config_set_defaults, HP_login_config_set_defaults) },

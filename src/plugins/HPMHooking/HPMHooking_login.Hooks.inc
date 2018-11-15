@@ -2409,6 +2409,60 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_LOGIN_OTP(int fd, struct login_sess
 	}
 	return retVal___;
 }
+enum parsefunc_rcode HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP(int fd, struct login_session_data *sd) {
+	int hIndex = 0;
+	enum parsefunc_rcode retVal___ = PACKET_UNKNOWN;
+	if (HPMHooks.count.HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_pre > 0) {
+		enum parsefunc_rcode (*preHookFunc) (int *fd, struct login_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_ACK_MOBILE_OTP(fd, sd);
+	}
+	if (HPMHooks.count.HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_post > 0) {
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_ACK_MOBILE_OTP_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, sd);
+		}
+	}
+	return retVal___;
+}
+enum parsefunc_rcode HP_PRIV__lclif_parse_CA_OTP_CODE(int fd, struct login_session_data *sd) {
+	int hIndex = 0;
+	enum parsefunc_rcode retVal___ = PACKET_UNKNOWN;
+	if (HPMHooks.count.HP_PRIV__lclif_parse_CA_OTP_CODE_pre > 0) {
+		enum parsefunc_rcode (*preHookFunc) (int *fd, struct login_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_OTP_CODE_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_OTP_CODE_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_OTP_CODE(fd, sd);
+	}
+	if (HPMHooks.count.HP_PRIV__lclif_parse_CA_OTP_CODE_post > 0) {
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_OTP_CODE_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_OTP_CODE_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, sd);
+		}
+	}
+	return retVal___;
+}
 enum parsefunc_rcode HP_PRIV__lclif_parse_CA_REQ_HASH(int fd, struct login_session_data *sd) {
 	int hIndex = 0;
 	enum parsefunc_rcode retVal___ = PACKET_UNKNOWN;
@@ -5520,6 +5574,32 @@ bool HP_login_client_login_otp(int fd, struct login_session_data *sd) {
 		}
 	}
 	return retVal___;
+}
+void HP_login_client_login_mobile_otp_request(int fd, struct login_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_login_client_login_mobile_otp_request_pre > 0) {
+		void (*preHookFunc) (int *fd, struct login_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_client_login_mobile_otp_request_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_login_client_login_mobile_otp_request_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.login.client_login_mobile_otp_request(fd, sd);
+	}
+	if (HPMHooks.count.HP_login_client_login_mobile_otp_request_post > 0) {
+		void (*postHookFunc) (int fd, struct login_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_login_client_login_mobile_otp_request_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_login_client_login_mobile_otp_request_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
 }
 void HP_login_char_server_connection_status(int fd, struct login_session_data *sd, uint8 status) {
 	int hIndex = 0;
