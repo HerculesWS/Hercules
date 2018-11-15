@@ -38,7 +38,7 @@ struct hplugin_data_store;
 #endif
 
 #ifndef MAX_ITEM_ID
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 #define MAX_ITEM_ID 0x20000
 #else
 #define MAX_ITEM_ID 0xFFFF
@@ -72,8 +72,8 @@ struct hplugin_data_store;
 #if MAX_ITEM_ID < MAX_ITEMDB
 #error "MAX_ITEM_ID must be bigger or same with MAX_ITEMDB"
 #endif
-#if MAX_ITEM_ID > 0xFFFF && PACKETVER_RE_NUM < 20180704
-#error "For clients before 20180704 RE, MAX_ITEM_ID must be smaller than 0x10000"
+#if MAX_ITEM_ID > 0xFFFF && PACKETVER_RE_NUM < 20180704 && PACKETVER_ZERO_NUM < 20181114
+#error "For clients before 20180704 RE and 2018114 zero, MAX_ITEM_ID must be smaller than 0x10000"
 #endif
 
 enum item_itemid {

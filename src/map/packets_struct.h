@@ -465,7 +465,7 @@ enum packet_headers {
  * structs for data
  */
 struct EQUIPSLOTINFO {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 card[4];
 #else
 	uint16 card[4];
@@ -474,7 +474,7 @@ struct EQUIPSLOTINFO {
 
 struct NORMALITEM_INFO {
 	int16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ITID;
 #else
 	uint16 ITID;
@@ -512,7 +512,7 @@ struct ItemOptions {
 
 struct EQUIPITEM_INFO {
 	int16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ITID;
 #else
 	uint16 ITID;
@@ -589,7 +589,7 @@ struct packet_additem {
 	int16 PacketType;
 	uint16 Index;
 	uint16 count;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
 #else
 	uint16 nameid;
@@ -623,7 +623,7 @@ struct packet_additem {
 struct packet_dropflooritem {
 	int16 PacketType;
 	uint32 ITAID;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ITID;
 #else
 	uint16 ITID;
@@ -735,7 +735,7 @@ struct packet_spawn_unit {
 #else
 	uint32 weapon;
 #endif
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 shield;
 #endif
 	uint16 accessory;
@@ -808,7 +808,7 @@ struct packet_unit_walking {
 #else
 	uint32 weapon;
 #endif
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 shield;
 #endif
 	uint16 accessory;
@@ -880,7 +880,7 @@ struct packet_idle_unit {
 #else
 	uint32 weapon;
 #endif
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 shield;
 #endif
 	uint16 accessory;
@@ -1043,7 +1043,7 @@ struct packet_package_item_announce {
 	int16 PacketType;
 	int16 PacketLength;
 	uint8 type;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ItemID;
 #else
 	uint16 ItemID;
@@ -1051,7 +1051,7 @@ struct packet_package_item_announce {
 	int8 len;
 	char Name[NAME_LENGTH];
 	int8 unknown;  // probably unused
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 BoxItemID;
 #else
 	uint16 BoxItemID;
@@ -1063,7 +1063,7 @@ struct packet_item_drop_announce {
 	int16 PacketType;
 	int16 PacketLength;
 	uint8 type;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ItemID;
 #else
 	uint16 ItemID;
@@ -1118,7 +1118,7 @@ struct packet_roulette_open_ack {
 	int32 Serial;
 	int8 Step;
 	int8 Idx;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 AdditionItemID;
 #else
 	uint16 AdditionItemID;
@@ -1156,7 +1156,7 @@ struct packet_roulette_generate_ack {
 	uint8 Result;
 	uint16 Step;
 	uint16 Idx;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 AdditionItemID;
 #else
 	uint16 AdditionItemID;
@@ -1174,7 +1174,7 @@ struct packet_roulette_itemrecv_req {
 struct packet_roulette_itemrecv_ack {
 	int16 PacketType;
 	uint8 Result;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 AdditionItemID;
 #else
 	uint16 AdditionItemID;
@@ -1379,7 +1379,7 @@ struct packet_npc_market_purchase {
 	int16 PacketType;
 	int16 PacketLength;
 	struct {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 		uint32 ITID;
 #else
 		uint16 ITID;
@@ -1393,7 +1393,7 @@ struct packet_npc_market_result_ack {
 	int16 PacketLength;
 	uint8 result;
 	struct {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 		uint32 ITID;
 #else
 		uint16 ITID;
@@ -1408,7 +1408,7 @@ struct packet_npc_market_open {
 	int16 PacketLength;
 	/* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
 	struct {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 		uint32 nameid;
 #else
 		uint16 nameid;
@@ -1533,7 +1533,7 @@ struct PACKET_ZC_ADD_ITEM_TO_MAIL {
 	int8 result;
 	int16 index;
 	int16 count;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -1551,7 +1551,7 @@ struct PACKET_ZC_ADD_ITEM_TO_MAIL {
 
 struct mail_item {
 	int16 count;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ITID;
 #else
 	uint16 ITID;
@@ -1961,7 +1961,7 @@ struct PACKET_ZC_UI_ACTION {
 struct PACKET_CZ_PRIVATE_AIRSHIP_REQUEST {
 	int16 PacketType;
 	char mapName[MAP_NAME_LENGTH_EXT];
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ItemID;
 #else
 	uint16 ItemID;
@@ -2007,7 +2007,7 @@ struct pet_evolution_items {
 struct PACKET_CZ_PET_EVOLUTION {
 	int16 PacketType;
 	uint16 PacketLength;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 EvolvedPetEggID;
 #else
 	uint16 EvolvedPetEggID;
@@ -2041,7 +2041,7 @@ struct PACKET_ZC_NOTIFY_PLAYERCHAT {
 struct PACKET_ZC_ITEM_ENTRY {
 	int16 packetType;
 	uint32 AID;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2058,7 +2058,7 @@ struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2077,7 +2077,7 @@ struct PACKET_ZC_ADD_ITEM_TO_STORE {
 
 struct PACKET_ZC_MVP_GETTING_ITEM {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2087,7 +2087,7 @@ struct PACKET_ZC_MVP_GETTING_ITEM {
 struct PACKET_ZC_ACK_TOUSESKILL {
 	int16 packetType;
 	uint16 skillId;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	int32 btype;
 	uint32 itemId;
 #else
@@ -2102,7 +2102,7 @@ struct PACKET_ZC_ADD_ITEM_TO_CART {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2121,7 +2121,7 @@ struct PACKET_ZC_ADD_ITEM_TO_CART {
 
 struct PACKET_CZ_REQMAKINGITEM {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 	uint32 material[3];
 #else
@@ -2133,7 +2133,7 @@ struct PACKET_CZ_REQMAKINGITEM {
 struct PACKET_ZC_ACK_REQMAKINGITEM {
 	int16 packetType;
 	int16 result;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2143,7 +2143,7 @@ struct PACKET_ZC_ACK_REQMAKINGITEM {
 struct PACKET_ZC_FEED_PET {
 	int16 packetType;
 	uint8 result;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2153,7 +2153,7 @@ struct PACKET_ZC_FEED_PET {
 struct PACKET_ZC_FEED_MER {
 	int16 packetType;
 	uint8 result;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2163,7 +2163,7 @@ struct PACKET_ZC_FEED_MER {
 struct PACKET_ZC_USE_ITEM_ACK {
 	int16 packetType;
 	int16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 	uint32 AID;
 #elif PACKETVER >= 3
@@ -2178,7 +2178,7 @@ struct PACKET_ZC_SPRITE_CHANGE {
 	int16 packetType;
 	uint32 AID;
 	uint8 type;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 val;
 	uint32 val2;
 #elif PACKETVER >= 4
@@ -2191,7 +2191,7 @@ struct PACKET_ZC_SPRITE_CHANGE {
 
 struct PACKET_ZC_ADD_EXCHANGE_ITEM {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 	uint8 itemType;
 	int32 amount;
@@ -2214,7 +2214,7 @@ struct PACKET_ZC_ADD_EXCHANGE_ITEM {
 
 struct PACKET_ZC_CASH_TIME_COUNTER {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2225,7 +2225,7 @@ struct PACKET_ZC_CASH_TIME_COUNTER {
 struct PACKET_ZC_CASH_ITEM_DELETE {
 	int16 packetType;
 	uint16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2235,7 +2235,7 @@ struct PACKET_ZC_CASH_ITEM_DELETE {
 struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	int16 packetType;
 	uint32 AID;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2250,7 +2250,7 @@ struct PACKET_ZC_ITEM_PICKUP_PARTY {
 
 struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2269,7 +2269,7 @@ struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE {
 struct PACKET_ZC_ACK_WEAPONREFINE {
 	int16 packetType;
 	int32 result;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2284,7 +2284,7 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 level;
 	uint16 hunger;
 	uint16 intimacy;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2315,7 +2315,7 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER {
 	int16 packetType;
 	uint16 result;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2325,7 +2325,7 @@ struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER {
 struct PACKET_CZ_REQ_ITEMREPAIR {
 	int16 packetType;
 	int16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2337,7 +2337,7 @@ struct PACKET_CZ_REQ_ITEMREPAIR {
 struct PACKET_CZ_REQ_MAKINGITEM {
 	int16 packetType;
 	int16 type;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2348,7 +2348,7 @@ struct PACKET_CZ_SSILIST_ITEM_CLICK {
 	int16 packetType;
 	uint32 AID;
 	uint32 storeId;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2356,7 +2356,7 @@ struct PACKET_CZ_SSILIST_ITEM_CLICK {
 } __attribute__((packed));
 
 struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2377,7 +2377,7 @@ struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
 	int16 index;
 	int16 amount;
 	uint8 itemType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2402,7 +2402,7 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub {
 	uint32 price;
 	uint32 discountPrice;
 	uint8 itemType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2417,7 +2417,7 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST {
 
 struct PACKET_CZ_PC_PURCHASE_ITEMLIST_sub {
 	uint16 amount;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2431,7 +2431,7 @@ struct PACKET_CZ_PC_PURCHASE_ITEMLIST {
 } __attribute__((packed));
 
 struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2453,7 +2453,7 @@ struct PACKET_ZC_MYITEMLIST_BUYING_STORE_sub {
 	uint32 price;
 	uint16 amount;
 	uint8 itemType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2473,7 +2473,7 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
 	uint16 amount;
 	int16 index;
 	uint8 itemType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2506,7 +2506,7 @@ struct PACKET_ZC_ACK_ITEMLIST_BUYING_STORE_sub {
 	uint32 price;
 	uint16 amount;
 	uint8 itemType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2524,7 +2524,7 @@ struct PACKET_ZC_ACK_ITEMLIST_BUYING_STORE {
 
 struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub {
 	int16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2541,7 +2541,7 @@ struct PACKET_CZ_REQ_TRADE_BUYING_STORE {
 } __attribute__((packed));
 
 struct PACKET_ZC_MAKABLEITEMLIST_sub {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 	uint32 material[3];
 #else
@@ -2557,7 +2557,7 @@ struct PACKET_ZC_MAKABLEITEMLIST {
 } __attribute__((packed));
 
 struct PACKET_ZC_MAKINGARROW_LIST_sub {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2572,7 +2572,7 @@ struct PACKET_ZC_MAKINGARROW_LIST {
 
 struct PACKET_ZC_REPAIRITEMLIST_sub {
 	int16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2589,7 +2589,7 @@ struct PACKET_ZC_REPAIRITEMLIST {
 
 struct PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub {
 	int16 index;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2605,7 +2605,7 @@ struct PACKET_ZC_NOTIFY_WEAPONITEMLIST {
 } __attribute__((packed));
 
 struct PACKET_ZC_MAKINGITEM_LIST_sub {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2615,7 +2615,7 @@ struct PACKET_ZC_MAKINGITEM_LIST_sub {
 struct PACKET_ZC_MAKINGITEM_LIST {
 	int16 packetType;
 	int16 packetLength;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 makeItem;
 #else
 	uint16 makeItem;
@@ -2627,7 +2627,7 @@ struct PACKET_ZC_PC_CASH_POINT_ITEMLIST_sub {
 	uint32 price;
 	uint32 discountPrice;
 	uint8 itemType;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2646,7 +2646,7 @@ struct PACKET_ZC_PC_CASH_POINT_ITEMLIST {
 
 struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM_sub {
 	uint16 amount;
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2670,7 +2670,7 @@ struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM {
 } __attribute__((packed));
 
 struct PACKET_CZ_SEARCH_STORE_INFO_item {
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
@@ -2695,7 +2695,7 @@ struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub {
 	uint32 storeId;
 	uint32 AID;
 	char shopName[MESSAGE_SIZE];
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
 #else
 	uint16 itemId;
