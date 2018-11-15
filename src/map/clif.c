@@ -1116,7 +1116,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
-#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704
+#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	p.shield = vd->shield;
 #endif
 	p.accessory2 = vd->head_top;
@@ -1273,7 +1273,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
-#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704
+#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	p.shield = vd->shield;
 #endif
 	p.accessory2 = vd->head_top;
@@ -1382,7 +1382,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
 	p.moveStartTime = (unsigned int)timer->gettick();
-#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704
+#if PACKETVER < 7 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	p.shield = vd->shield;
 #endif
 	p.accessory2 = vd->head_top;
@@ -12474,7 +12474,7 @@ static void clif_parse_SelectArrow(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	itemId = RFIFOL(fd, 2);
 #else
 	itemId = RFIFOW(fd, 2);
@@ -21631,7 +21631,7 @@ static void clif_ui_action(struct map_session_data *sd, int32 UIType, int32 data
 static void clif_parse_private_airship_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_private_airship_request(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_RE_NUM >= 20180321 || PACKETVER_MAIN_NUM >= 20180620
+#if PACKETVER_RE_NUM >= 20180321 || PACKETVER_MAIN_NUM >= 20180620 || defined(PACKETVER_ZERO)
 	char evname[EVENT_NAME_LENGTH];
 	struct event_data *ev = NULL;
 	const struct PACKET_CZ_PRIVATE_AIRSHIP_REQUEST *p = RP2PTR(fd);
@@ -21651,7 +21651,7 @@ static void clif_parse_private_airship_request(int fd, struct map_session_data *
 
 static void clif_private_airship_response(struct map_session_data *sd, uint32 flag)
 {
-#if PACKETVER_RE_NUM >= 20180321 || PACKETVER_MAIN_NUM >= 20180620
+#if PACKETVER_RE_NUM >= 20180321 || PACKETVER_MAIN_NUM >= 20180620 || defined(PACKETVER_ZERO)
 	struct PACKET_ZC_PRIVATE_AIRSHIP_RESPONSE p;
 
 	nullpo_retv(sd);
