@@ -52,7 +52,7 @@ static void lclif_connection_error(int fd, uint8 error)
 	struct packet_SC_NOTIFY_BAN *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
 	packet = WP2PTR(fd);
-	packet->packet_id = PACKET_ID_SC_NOTIFY_BAN;
+	packet->packet_id = HEADER_SC_NOTIFY_BAN;
 	packet->error_code = error;
 	WFIFOSET(fd, sizeof(*packet));
 }
@@ -288,9 +288,9 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 	packet = WP2PTR(sd->fd);
 
 #if PACKETVER < 20170315
-	packet->packet_id = PACKET_ID_AC_ACCEPT_LOGIN;
+	packet->packet_id = HEADER_AC_ACCEPT_LOGIN;
 #else
-	packet->packet_id = PACKET_ID_AC_ACCEPT_LOGIN2;
+	packet->packet_id = HEADER_AC_ACCEPT_LOGIN2;
 #endif
 	packet->packet_len = length;
 	packet->auth_code = sd->login_id1;
@@ -329,13 +329,13 @@ static void lclif_send_auth_failed(int fd, time_t ban, uint32 error)
 {
 #if PACKETVER >= 20180627
 	struct packet_AC_REFUSE_LOGIN_R2 *packet = NULL;
-	int packet_id = PACKET_ID_AC_REFUSE_LOGIN_R3;
+	int packet_id = HEADER_AC_REFUSE_LOGIN_R3;
 #elif PACKETVER >= 20101123
 	struct packet_AC_REFUSE_LOGIN_R2 *packet = NULL;
-	int packet_id = PACKET_ID_AC_REFUSE_LOGIN_R2;
+	int packet_id = HEADER_AC_REFUSE_LOGIN_R2;
 #else
 	struct packet_AC_REFUSE_LOGIN *packet = NULL;
-	int packet_id = PACKET_ID_AC_REFUSE_LOGIN;
+	int packet_id = HEADER_AC_REFUSE_LOGIN;
 #endif
 	WFIFOHEAD(fd, sizeof(*packet));
 	packet = WP2PTR(fd);
@@ -354,7 +354,7 @@ static void lclif_send_login_error(int fd, uint8 error)
 	struct packet_AC_REFUSE_LOGIN *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
 	packet = WP2PTR(fd);
-	packet->packet_id = PACKET_ID_AC_REFUSE_LOGIN;
+	packet->packet_id = HEADER_AC_REFUSE_LOGIN;
 	packet->error_code = error;
 	memset(packet->block_date, '\0', sizeof(packet->block_date));
 	WFIFOSET(fd, sizeof(*packet));
@@ -369,7 +369,7 @@ static void lclif_send_coding_key(int fd, struct login_session_data *sd)
 
 	WFIFOHEAD(fd, size);
 	packet = WP2PTR(fd);
-	packet->packet_id = PACKET_ID_AC_ACK_HASH;
+	packet->packet_id = HEADER_AC_ACK_HASH;
 	packet->packet_len = size;
 	memcpy(packet->secret, sd->md5key, sd->md5keylen);
 	WFIFOSET(fd, size);
@@ -492,7 +492,7 @@ static enum parsefunc_rcode lclif_parse_sub(int fd, struct login_session_data *s
 /// @copydoc lclif_interface::packet()
 static const struct login_packet_db *lclif_packet(int16 packet_id)
 {
-	if (packet_id == PACKET_ID_CA_CHARSERVERCONNECT)
+	if (packet_id == HEADER_CA_CHARSERVERCONNECT)
 		return &lclif->p->dbs->packet_db[0];
 
 	if (packet_id > MAX_PACKET_LOGIN_DB || packet_id < MIN_PACKET_DB)
@@ -519,8 +519,8 @@ static void packetdb_loaddb(void)
 		int16 packet_len;
 		LoginParseFunc **pFunc;
 	} packet[] = {
-#define packet_def(name) { PACKET_ID_ ## name, sizeof(struct packet_ ## name), &lclif->p->parse_ ## name }
-#define packet_def2(name, len) { PACKET_ID_ ## name, (len), &lclif->p->parse_ ## name }
+#define packet_def(name) { HEADER_ ## name, sizeof(struct packet_ ## name), &lclif->p->parse_ ## name }
+#define packet_def2(name, len) { HEADER_ ## name, (len), &lclif->p->parse_ ## name }
 		packet_def(CA_CONNECT_INFO_CHANGED),
 		packet_def(CA_EXE_HASHCHECK),
 		packet_def(CA_LOGIN),

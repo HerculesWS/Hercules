@@ -43,29 +43,29 @@
 /// Packet IDs
 enum login_packet_id {
 	// CA (Client to Login)
-	PACKET_ID_CA_LOGIN                = 0x0064,
-	PACKET_ID_CA_LOGIN2               = 0x01dd,
-	PACKET_ID_CA_LOGIN3               = 0x01fa,
-	PACKET_ID_CA_CONNECT_INFO_CHANGED = 0x0200,
-	PACKET_ID_CA_EXE_HASHCHECK        = 0x0204,
-	PACKET_ID_CA_LOGIN_PCBANG         = 0x0277,
-	PACKET_ID_CA_LOGIN4               = 0x027c,
-	PACKET_ID_CA_LOGIN_HAN            = 0x02b0,
-	PACKET_ID_CA_SSO_LOGIN_REQ        = 0x0825,
-	PACKET_ID_CA_LOGIN_OTP            = 0x0acf,
-	PACKET_ID_CA_REQ_HASH             = 0x01db,
-	PACKET_ID_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
-	//PACKET_ID_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
+	HEADER_CA_LOGIN                = 0x0064,
+	HEADER_CA_LOGIN2               = 0x01dd,
+	HEADER_CA_LOGIN3               = 0x01fa,
+	HEADER_CA_CONNECT_INFO_CHANGED = 0x0200,
+	HEADER_CA_EXE_HASHCHECK        = 0x0204,
+	HEADER_CA_LOGIN_PCBANG         = 0x0277,
+	HEADER_CA_LOGIN4               = 0x027c,
+	HEADER_CA_LOGIN_HAN            = 0x02b0,
+	HEADER_CA_SSO_LOGIN_REQ        = 0x0825,
+	HEADER_CA_LOGIN_OTP            = 0x0acf,
+	HEADER_CA_REQ_HASH             = 0x01db,
+	HEADER_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
+	//HEADER_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
 
 	// AC (Login to Client)
 
-	PACKET_ID_AC_ACCEPT_LOGIN         = 0x0069,
-	PACKET_ID_AC_ACCEPT_LOGIN2        = 0x0ac4,
-	PACKET_ID_AC_REFUSE_LOGIN         = 0x006a,
-	PACKET_ID_SC_NOTIFY_BAN           = 0x0081,
-	PACKET_ID_AC_ACK_HASH             = 0x01dc,
-	PACKET_ID_AC_REFUSE_LOGIN_R2      = 0x083e,
-	PACKET_ID_AC_REFUSE_LOGIN_R3      = 0x0b02,
+	HEADER_AC_ACCEPT_LOGIN         = 0x0069,
+	HEADER_AC_ACCEPT_LOGIN2        = 0x0ac4,
+	HEADER_AC_REFUSE_LOGIN         = 0x006a,
+	HEADER_SC_NOTIFY_BAN           = 0x0081,
+	HEADER_AC_ACK_HASH             = 0x01dc,
+	HEADER_AC_REFUSE_LOGIN_R2      = 0x083e,
+	HEADER_AC_REFUSE_LOGIN_R3      = 0x0b02,
 };
 
 /* Packets Structs */
@@ -77,7 +77,7 @@ enum login_packet_id {
  * Packet structure for CA_LOGIN.
  */
 struct packet_CA_LOGIN {
-	int16 packet_id;   ///< Packet ID (#PACKET_ID_CA_LOGIN)
+	int16 packet_id;   ///< Packet ID (#HEADER_CA_LOGIN)
 	uint32 version;    ///< Client Version
 	char id[24];       ///< Username
 	char password[24]; ///< Password
@@ -88,7 +88,7 @@ struct packet_CA_LOGIN {
  * Packet structure for CA_LOGIN2.
  */
 struct packet_CA_LOGIN2 {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN2)
+	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN2)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
 	uint8 password_md5[16]; ///< Password hash
@@ -99,7 +99,7 @@ struct packet_CA_LOGIN2 {
  * Packet structure for CA_LOGIN3.
  */
 struct packet_CA_LOGIN3 {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN3)
+	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN3)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
 	uint8 password_md5[16]; ///< Password hash
@@ -111,7 +111,7 @@ struct packet_CA_LOGIN3 {
  * Packet structure for CA_LOGIN4.
  */
 struct packet_CA_LOGIN4 {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN4)
+	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN4)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
 	uint8 password_md5[16]; ///< Password hash
@@ -123,7 +123,7 @@ struct packet_CA_LOGIN4 {
  * Packet structure for CA_LOGIN_PCBANG.
  */
 struct packet_CA_LOGIN_PCBANG {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_LOGIN_PCBANG)
+	int16 packet_id;      ///< Packet ID (#HEADER_CA_LOGIN_PCBANG)
 	uint32 version;       ///< Client Version
 	char id[24];          ///< Username
 	char password[24];    ///< Password
@@ -136,7 +136,7 @@ struct packet_CA_LOGIN_PCBANG {
  * Packet structure for CA_LOGIN_HAN.
  */
 struct packet_CA_LOGIN_HAN {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN_HAN)
+	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN_HAN)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
 	char password[24];      ///< Password
@@ -152,7 +152,7 @@ struct packet_CA_LOGIN_HAN {
  * Variable-length packet.
  */
 struct packet_CA_SSO_LOGIN_REQ {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_SSO_LOGIN_REQ)
+	int16 packet_id;      ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
 	int16 packet_len;     ///< Length (variable length)
 	uint32 version;       ///< Clientver
 	uint8 clienttype;     ///< Clienttype
@@ -170,7 +170,7 @@ struct packet_CA_SSO_LOGIN_REQ {
  * Variable-length packet.
  */
 struct PACKET_CA_ACK_MOBILE_OTP {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_ACK_MOBILE_OTP)
+	int16 packet_id;      ///< Packet ID (#HEADER_CA_ACK_MOBILE_OTP)
 	int16 packet_len;     ///< Length (variable length)
 	uint32 aid;           ///< Account ID
 	char code[6];         ///< Code
@@ -178,18 +178,16 @@ struct PACKET_CA_ACK_MOBILE_OTP {
 DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
 
 // for enum login_packet_id
-#define PACKET_ID_CA_ACK_MOBILE_OTP HEADER_CA_ACK_MOBILE_OTP
 #define packet_CA_ACK_MOBILE_OTP PACKET_CA_ACK_MOBILE_OTP
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
 struct PACKET_CA_OTP_CODE {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_OTP_CODE)
+	int16 packet_id;      ///< Packet ID (#HEADER_CA_OTP_CODE)
 	char code[9];         ///< Code
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0ad0);
 
-#define PACKET_ID_CA_OTP_CODE HEADER_CA_OTP_CODE
 #define packet_CA_OTP_CODE PACKET_CA_OTP_CODE
 #endif
 
@@ -197,7 +195,7 @@ DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0ad0);
  * Packet structure for CA_LOGIN_OTP.
  */
 struct packet_CA_LOGIN_OTP {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_LOGIN_OTP)
+	int16 packet_id;      ///< Packet ID (#HEADER_CA_LOGIN_OTP)
 #if PACKETVER >= 20171113
 	uint32 devFlags;      ///< flags including dev flag
 #endif
@@ -225,7 +223,7 @@ struct packet_CA_SSO_LOGIN_REQa {
  * New alive packet. Used to verify if client is always alive.
  */
 struct packet_CA_CONNECT_INFO_CHANGED {
-	int16 packet_id; ///< Packet ID (#PACKET_ID_CA_CONNECT_INFO_CHANGED)
+	int16 packet_id; ///< Packet ID (#HEADER_CA_CONNECT_INFO_CHANGED)
 	char id[24];    ///< account.userid
 } __attribute__((packed));
 
@@ -235,7 +233,7 @@ struct packet_CA_CONNECT_INFO_CHANGED {
  * (kRO 2004-05-31aSakexe langtype 0 and 6)
  */
 struct packet_CA_EXE_HASHCHECK {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_EXE_HASHCHECK)
+	int16 packet_id;      ///< Packet ID (#HEADER_CA_EXE_HASHCHECK)
 	uint8 hash_value[16]; ///< Client MD5 hash
 } __attribute__((packed));
 
@@ -243,7 +241,7 @@ struct packet_CA_EXE_HASHCHECK {
  * Packet structure for CA_REQ_HASH.
  */
 struct packet_CA_REQ_HASH {
-	int16 packet_id; ///< Packet ID (#PACKET_ID_CA_REQ_HASH)
+	int16 packet_id; ///< Packet ID (#HEADER_CA_REQ_HASH)
 } __attribute__((packed));
 
 /**
@@ -252,7 +250,7 @@ struct packet_CA_REQ_HASH {
  * This packet is used internally, to signal a char-server connection.
  */
 struct packet_CA_CHARSERVERCONNECT {
-	int16 packet_id;   ///< Packet ID (#PACKET_ID_CA_CHARSERVERCONNECT)
+	int16 packet_id;   ///< Packet ID (#HEADER_CA_CHARSERVERCONNECT)
 	char userid[24];   ///< Username
 	char password[24]; ///< Password
 	int32 unknown;
@@ -268,7 +266,7 @@ struct packet_CA_CHARSERVERCONNECT {
  * Packet structure for SC_NOTIFY_BAN.
  */
 struct packet_SC_NOTIFY_BAN {
-	int16 packet_id;  ///< Packet ID (#PACKET_ID_SC_NOTIFY_BAN)
+	int16 packet_id;  ///< Packet ID (#HEADER_SC_NOTIFY_BAN)
 	uint8 error_code; ///< Error code
 } __attribute__((packed));
 
@@ -276,7 +274,7 @@ struct packet_SC_NOTIFY_BAN {
  * Packet structure for AC_REFUSE_LOGIN.
  */
 struct packet_AC_REFUSE_LOGIN {
-	int16 packet_id;     ///< Packet ID (#PACKET_ID_AC_REFUSE_LOGIN)
+	int16 packet_id;     ///< Packet ID (#HEADER_AC_REFUSE_LOGIN)
 	uint8 error_code;    ///< Error code
 	char block_date[20]; ///< Ban expiration date
 } __attribute__((packed));
@@ -285,7 +283,7 @@ struct packet_AC_REFUSE_LOGIN {
  * Packet structure for AC_REFUSE_LOGIN_R2.
  */
 struct packet_AC_REFUSE_LOGIN_R2 {
-	int16 packet_id;     ///< Packet ID (#PACKET_ID_AC_REFUSE_LOGIN_R2)
+	int16 packet_id;     ///< Packet ID (#HEADER_AC_REFUSE_LOGIN_R2)
 	uint32 error_code;   ///< Error code
 	char block_date[20]; ///< Ban expiration date
 } __attribute__((packed));
@@ -296,7 +294,7 @@ struct packet_AC_REFUSE_LOGIN_R2 {
  * Variable-length packet.
  */
 struct packet_AC_ACCEPT_LOGIN {
-	int16 packet_id;          ///< Packet ID (#PACKET_ID_AC_ACCEPT_LOGIN)
+	int16 packet_id;          ///< Packet ID (#HEADER_AC_ACCEPT_LOGIN)
 	int16 packet_len;         ///< Packet length (variable length)
 	int32 auth_code;          ///< Authentication code
 	uint32 aid;               ///< Account ID
@@ -327,7 +325,7 @@ struct packet_AC_ACCEPT_LOGIN {
  * Variable-length packet
  */
 struct packet_AC_ACK_HASH {
-	int16 packet_id;  ///< Packet ID (#PACKET_ID_AC_ACK_HASH)
+	int16 packet_id;  ///< Packet ID (#HEADER_AC_ACK_HASH)
 	int16 packet_len; ///< Packet length (variable length)
 	uint8 secret[];   ///< Challenge string
 } __attribute__((packed));
