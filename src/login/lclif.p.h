@@ -76,7 +76,7 @@ enum login_packet_id {
 /**
  * Packet structure for CA_LOGIN.
  */
-struct packet_CA_LOGIN {
+struct PACKET_CA_LOGIN {
 	int16 packet_id;   ///< Packet ID (#HEADER_CA_LOGIN)
 	uint32 version;    ///< Client Version
 	char id[24];       ///< Username
@@ -87,7 +87,7 @@ struct packet_CA_LOGIN {
 /**
  * Packet structure for CA_LOGIN2.
  */
-struct packet_CA_LOGIN2 {
+struct PACKET_CA_LOGIN2 {
 	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN2)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
@@ -98,7 +98,7 @@ struct packet_CA_LOGIN2 {
 /**
  * Packet structure for CA_LOGIN3.
  */
-struct packet_CA_LOGIN3 {
+struct PACKET_CA_LOGIN3 {
 	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN3)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
@@ -110,7 +110,7 @@ struct packet_CA_LOGIN3 {
 /**
  * Packet structure for CA_LOGIN4.
  */
-struct packet_CA_LOGIN4 {
+struct PACKET_CA_LOGIN4 {
 	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN4)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
@@ -122,7 +122,7 @@ struct packet_CA_LOGIN4 {
 /**
  * Packet structure for CA_LOGIN_PCBANG.
  */
-struct packet_CA_LOGIN_PCBANG {
+struct PACKET_CA_LOGIN_PCBANG {
 	int16 packet_id;      ///< Packet ID (#HEADER_CA_LOGIN_PCBANG)
 	uint32 version;       ///< Client Version
 	char id[24];          ///< Username
@@ -135,7 +135,7 @@ struct packet_CA_LOGIN_PCBANG {
 /**
  * Packet structure for CA_LOGIN_HAN.
  */
-struct packet_CA_LOGIN_HAN {
+struct PACKET_CA_LOGIN_HAN {
 	int16 packet_id;        ///< Packet ID (#HEADER_CA_LOGIN_HAN)
 	uint32 version;         ///< Client Version
 	char id[24];            ///< Username
@@ -151,7 +151,7 @@ struct packet_CA_LOGIN_HAN {
  *
  * Variable-length packet.
  */
-struct packet_CA_SSO_LOGIN_REQ {
+struct PACKET_CA_SSO_LOGIN_REQ {
 	int16 packet_id;      ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
 	int16 packet_len;     ///< Length (variable length)
 	uint32 version;       ///< Clientver
@@ -176,9 +176,6 @@ struct PACKET_CA_ACK_MOBILE_OTP {
 	char code[6];         ///< Code
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
-
-// for enum login_packet_id
-#define packet_CA_ACK_MOBILE_OTP PACKET_CA_ACK_MOBILE_OTP
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
@@ -187,14 +184,12 @@ struct PACKET_CA_OTP_CODE {
 	char code[9];         ///< Code
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0ad0);
-
-#define packet_CA_OTP_CODE PACKET_CA_OTP_CODE
 #endif
 
 /**
  * Packet structure for CA_LOGIN_OTP.
  */
-struct packet_CA_LOGIN_OTP {
+struct PACKET_CA_LOGIN_OTP {
 	int16 packet_id;      ///< Packet ID (#HEADER_CA_LOGIN_OTP)
 #if PACKETVER >= 20171113
 	uint32 devFlags;      ///< flags including dev flag
@@ -205,7 +200,7 @@ struct packet_CA_LOGIN_OTP {
 } __attribute__((packed));
 
 #if 0 // Unused
-struct packet_CA_SSO_LOGIN_REQa {
+struct PACKET_CA_SSO_LOGIN_REQa {
 	int16 packet_id;
 	int16 packet_len;
 	uint32 version;
@@ -222,7 +217,7 @@ struct packet_CA_SSO_LOGIN_REQa {
  *
  * New alive packet. Used to verify if client is always alive.
  */
-struct packet_CA_CONNECT_INFO_CHANGED {
+struct PACKET_CA_CONNECT_INFO_CHANGED {
 	int16 packet_id; ///< Packet ID (#HEADER_CA_CONNECT_INFO_CHANGED)
 	char id[24];    ///< account.userid
 } __attribute__((packed));
@@ -232,7 +227,7 @@ struct packet_CA_CONNECT_INFO_CHANGED {
  *
  * (kRO 2004-05-31aSakexe langtype 0 and 6)
  */
-struct packet_CA_EXE_HASHCHECK {
+struct PACKET_CA_EXE_HASHCHECK {
 	int16 packet_id;      ///< Packet ID (#HEADER_CA_EXE_HASHCHECK)
 	uint8 hash_value[16]; ///< Client MD5 hash
 } __attribute__((packed));
@@ -240,7 +235,7 @@ struct packet_CA_EXE_HASHCHECK {
 /**
  * Packet structure for CA_REQ_HASH.
  */
-struct packet_CA_REQ_HASH {
+struct PACKET_CA_REQ_HASH {
 	int16 packet_id; ///< Packet ID (#HEADER_CA_REQ_HASH)
 } __attribute__((packed));
 
@@ -249,7 +244,7 @@ struct packet_CA_REQ_HASH {
  *
  * This packet is used internally, to signal a char-server connection.
  */
-struct packet_CA_CHARSERVERCONNECT {
+struct PACKET_CA_CHARSERVERCONNECT {
 	int16 packet_id;   ///< Packet ID (#HEADER_CA_CHARSERVERCONNECT)
 	char userid[24];   ///< Username
 	char password[24]; ///< Password
@@ -265,7 +260,7 @@ struct packet_CA_CHARSERVERCONNECT {
 /**
  * Packet structure for SC_NOTIFY_BAN.
  */
-struct packet_SC_NOTIFY_BAN {
+struct PACKET_SC_NOTIFY_BAN {
 	int16 packet_id;  ///< Packet ID (#HEADER_SC_NOTIFY_BAN)
 	uint8 error_code; ///< Error code
 } __attribute__((packed));
@@ -273,7 +268,7 @@ struct packet_SC_NOTIFY_BAN {
 /**
  * Packet structure for AC_REFUSE_LOGIN.
  */
-struct packet_AC_REFUSE_LOGIN {
+struct PACKET_AC_REFUSE_LOGIN {
 	int16 packet_id;     ///< Packet ID (#HEADER_AC_REFUSE_LOGIN)
 	uint8 error_code;    ///< Error code
 	char block_date[20]; ///< Ban expiration date
@@ -282,7 +277,7 @@ struct packet_AC_REFUSE_LOGIN {
 /**
  * Packet structure for AC_REFUSE_LOGIN_R2.
  */
-struct packet_AC_REFUSE_LOGIN_R2 {
+struct PACKET_AC_REFUSE_LOGIN_R2 {
 	int16 packet_id;     ///< Packet ID (#HEADER_AC_REFUSE_LOGIN_R2)
 	uint32 error_code;   ///< Error code
 	char block_date[20]; ///< Ban expiration date
@@ -293,7 +288,7 @@ struct packet_AC_REFUSE_LOGIN_R2 {
  *
  * Variable-length packet.
  */
-struct packet_AC_ACCEPT_LOGIN {
+struct PACKET_AC_ACCEPT_LOGIN {
 	int16 packet_id;          ///< Packet ID (#HEADER_AC_ACCEPT_LOGIN)
 	int16 packet_len;         ///< Packet length (variable length)
 	int32 auth_code;          ///< Authentication code
@@ -324,7 +319,7 @@ struct packet_AC_ACCEPT_LOGIN {
  *
  * Variable-length packet
  */
-struct packet_AC_ACK_HASH {
+struct PACKET_AC_ACK_HASH {
 	int16 packet_id;  ///< Packet ID (#HEADER_AC_ACK_HASH)
 	int16 packet_len; ///< Packet length (variable length)
 	uint8 secret[];   ///< Challenge string
@@ -361,20 +356,20 @@ struct lclif_interface_private {
 	 */
 	enum parsefunc_rcode (*parse_sub)(int fd, struct login_session_data *sd);
 
-	LoginParseFunc *parse_CA_CONNECT_INFO_CHANGED; ///< Packet handler for #packet_CA_CONNECT_INFO_CHANGED.
-	LoginParseFunc *parse_CA_EXE_HASHCHECK;        ///< Packet handler for #packet_CA_EXE_HASHCHECK.
-	LoginParseFunc *parse_CA_LOGIN;                ///< Packet handler for #packet_CA_LOGIN.
-	LoginParseFunc *parse_CA_LOGIN2;               ///< Packet handler for #packet_CA_LOGIN2.
-	LoginParseFunc *parse_CA_LOGIN3;               ///< Packet handler for #packet_CA_LOGIN3.
-	LoginParseFunc *parse_CA_LOGIN4;               ///< Packet handler for #packet_CA_LOGIN4.
-	LoginParseFunc *parse_CA_LOGIN_PCBANG;         ///< Packet handler for #packet_CA_LOGIN_PCBANG.
-	LoginParseFunc *parse_CA_LOGIN_HAN;            ///< Packet handler for #packet_CA_LOGIN_HAN.
-	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;        ///< Packet handler for #packet_CA_SSO_LOGIN_REQ.
-	LoginParseFunc *parse_CA_LOGIN_OTP;            ///< Packet handler for #packet_CA_LOGIN_OTP.
-	LoginParseFunc *parse_CA_ACK_MOBILE_OTP;       ///< Packet handler for #packet_CA_ACK_MOBILE_OTP.
-	LoginParseFunc *parse_CA_OTP_CODE;             ///< Packet handler for #packet_CA_OTP_CODE.
-	LoginParseFunc *parse_CA_REQ_HASH;             ///< Packet handler for #packet_CA_REQ_HASH.
-	LoginParseFunc *parse_CA_CHARSERVERCONNECT;    ///< Packet handler for #packet_CA_CHARSERVERCONNECT.
+	LoginParseFunc *parse_CA_CONNECT_INFO_CHANGED; ///< Packet handler for #PACKET_CA_CONNECT_INFO_CHANGED.
+	LoginParseFunc *parse_CA_EXE_HASHCHECK;        ///< Packet handler for #PACKET_CA_EXE_HASHCHECK.
+	LoginParseFunc *parse_CA_LOGIN;                ///< Packet handler for #PACKET_CA_LOGIN.
+	LoginParseFunc *parse_CA_LOGIN2;               ///< Packet handler for #PACKET_CA_LOGIN2.
+	LoginParseFunc *parse_CA_LOGIN3;               ///< Packet handler for #PACKET_CA_LOGIN3.
+	LoginParseFunc *parse_CA_LOGIN4;               ///< Packet handler for #PACKET_CA_LOGIN4.
+	LoginParseFunc *parse_CA_LOGIN_PCBANG;         ///< Packet handler for #PACKET_CA_LOGIN_PCBANG.
+	LoginParseFunc *parse_CA_LOGIN_HAN;            ///< Packet handler for #PACKET_CA_LOGIN_HAN.
+	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;        ///< Packet handler for #PACKET_CA_SSO_LOGIN_REQ.
+	LoginParseFunc *parse_CA_LOGIN_OTP;            ///< Packet handler for #PACKET_CA_LOGIN_OTP.
+	LoginParseFunc *parse_CA_ACK_MOBILE_OTP;       ///< Packet handler for #PACKET_CA_ACK_MOBILE_OTP.
+	LoginParseFunc *parse_CA_OTP_CODE;             ///< Packet handler for #PACKET_CA_OTP_CODE.
+	LoginParseFunc *parse_CA_REQ_HASH;             ///< Packet handler for #PACKET_CA_REQ_HASH.
+	LoginParseFunc *parse_CA_CHARSERVERCONNECT;    ///< Packet handler for #PACKET_CA_CHARSERVERCONNECT.
 };
 
 #endif // LOGIN_LCLIF_P_H

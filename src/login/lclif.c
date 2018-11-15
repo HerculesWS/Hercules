@@ -49,7 +49,7 @@ struct lclif_interface *lclif;
 /// @copydoc lclif_interface::connection_error()
 static void lclif_connection_error(int fd, uint8 error)
 {
-	struct packet_SC_NOTIFY_BAN *packet = NULL;
+	struct PACKET_SC_NOTIFY_BAN *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
 	packet = WP2PTR(fd);
 	packet->packet_id = HEADER_SC_NOTIFY_BAN;
@@ -68,7 +68,7 @@ static enum parsefunc_rcode lclif_parse_CA_CONNECT_INFO_CHANGED(int fd, struct l
 static enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_EXE_HASHCHECK *packet = RP2PTR(fd);
+	const struct PACKET_CA_EXE_HASHCHECK *packet = RP2PTR(fd);
 	sd->has_client_hash = 1;
 	memcpy(sd->client_hash, packet->hash_value, 16);
 	return PACKET_VALID;
@@ -78,7 +78,7 @@ static enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_se
 static enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_LOGIN *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN *packet = RP2PTR(fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -97,7 +97,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_da
 static enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_LOGIN2 *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN2 *packet = RP2PTR(fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -113,7 +113,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_d
 static enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_LOGIN3 *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN3 *packet = RP2PTR(fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -131,7 +131,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_d
 static enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_LOGIN4 *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN4 *packet = RP2PTR(fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -149,7 +149,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_d
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_LOGIN_PCBANG *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN_PCBANG *packet = RP2PTR(fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -171,7 +171,7 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_ses
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_LOGIN_HAN *packet = RP2PTR(fd);
+	const struct PACKET_CA_LOGIN_HAN *packet = RP2PTR(fd);
 
 	sd->version = packet->version;
 	sd->clienttype = packet->clienttype;
@@ -194,11 +194,11 @@ static enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_sessio
 static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd)
 {
-	const struct packet_CA_SSO_LOGIN_REQ *packet = RP2PTR(fd);
+	const struct PACKET_CA_SSO_LOGIN_REQ *packet = RP2PTR(fd);
 	int tokenlen = (int)RFIFOREST(fd) - (int)sizeof(*packet);
 
 	if (tokenlen > PASSWD_LEN || tokenlen < 1) {
-		ShowError("packet_CA_SSO_LOGIN_REQ: Token length is not between allowed password length, kicking player ('%s')", packet->id);
+		ShowError("PACKET_CA_SSO_LOGIN_REQ: Token length is not between allowed password length, kicking player ('%s')", packet->id);
 		sockt->eof(fd);
 		return PACKET_VALID;
 	}
@@ -220,7 +220,7 @@ static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_se
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_OTP(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_LOGIN_OTP(int fd, struct login_session_data *sd)
 {
-	//const struct packet_CA_LOGIN_OTP *packet = RP2PTR(fd);
+	//const struct PACKET_CA_LOGIN_OTP *packet = RP2PTR(fd);
 	login->client_login_otp(fd, sd);
 	return PACKET_VALID;
 }
@@ -271,7 +271,7 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 {
 	int server_num = 0, i, n, length;
 	uint32 ip;
-	struct packet_AC_ACCEPT_LOGIN *packet = NULL;
+	struct PACKET_AC_ACCEPT_LOGIN *packet = NULL;
 
 	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
 		if (sockt->session_is_active(login->dbs->server[i].fd))
@@ -328,13 +328,13 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 static void lclif_send_auth_failed(int fd, time_t ban, uint32 error)
 {
 #if PACKETVER >= 20180627
-	struct packet_AC_REFUSE_LOGIN_R2 *packet = NULL;
+	struct PACKET_AC_REFUSE_LOGIN_R2 *packet = NULL;
 	int packet_id = HEADER_AC_REFUSE_LOGIN_R3;
 #elif PACKETVER >= 20101123
-	struct packet_AC_REFUSE_LOGIN_R2 *packet = NULL;
+	struct PACKET_AC_REFUSE_LOGIN_R2 *packet = NULL;
 	int packet_id = HEADER_AC_REFUSE_LOGIN_R2;
 #else
-	struct packet_AC_REFUSE_LOGIN *packet = NULL;
+	struct PACKET_AC_REFUSE_LOGIN *packet = NULL;
 	int packet_id = HEADER_AC_REFUSE_LOGIN;
 #endif
 	WFIFOHEAD(fd, sizeof(*packet));
@@ -351,7 +351,7 @@ static void lclif_send_auth_failed(int fd, time_t ban, uint32 error)
 /// @copydoc lclif_interface::login_error()
 static void lclif_send_login_error(int fd, uint8 error)
 {
-	struct packet_AC_REFUSE_LOGIN *packet = NULL;
+	struct PACKET_AC_REFUSE_LOGIN *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
 	packet = WP2PTR(fd);
 	packet->packet_id = HEADER_AC_REFUSE_LOGIN;
@@ -364,7 +364,7 @@ static void lclif_send_login_error(int fd, uint8 error)
 static void lclif_send_coding_key(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static void lclif_send_coding_key(int fd, struct login_session_data *sd)
 {
-	struct packet_AC_ACK_HASH *packet = NULL;
+	struct PACKET_AC_ACK_HASH *packet = NULL;
 	int16 size = sizeof(*packet) + sd->md5keylen;
 
 	WFIFOHEAD(fd, size);
@@ -519,7 +519,7 @@ static void packetdb_loaddb(void)
 		int16 packet_len;
 		LoginParseFunc **pFunc;
 	} packet[] = {
-#define packet_def(name) { HEADER_ ## name, sizeof(struct packet_ ## name), &lclif->p->parse_ ## name }
+#define packet_def(name) { HEADER_ ## name, sizeof(struct PACKET_ ## name), &lclif->p->parse_ ## name }
 #define packet_def2(name, len) { HEADER_ ## name, (len), &lclif->p->parse_ ## name }
 		packet_def(CA_CONNECT_INFO_CHANGED),
 		packet_def(CA_EXE_HASHCHECK),
@@ -553,7 +553,7 @@ static void packetdb_loaddb(void)
 	}
 
 	//Explict case, we will save character login packet in position 0 which is unused and not valid by normal
-	lclif->p->dbs->packet_db[0].len = sizeof(struct packet_CA_CHARSERVERCONNECT);
+	lclif->p->dbs->packet_db[0].len = sizeof(struct PACKET_CA_CHARSERVERCONNECT);
 	lclif->p->dbs->packet_db[0].pFunc = &lclif->p->parse_CA_CHARSERVERCONNECT;
 }
 
