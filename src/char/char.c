@@ -21,7 +21,7 @@
 #define HERCULES_CORE
 
 #include "config/core.h" // CONSOLE_INPUT
-#include "char.h"
+#include "char/char.h"
 
 #include "char/HPMchar.h"
 #include "char/geoip.h"
@@ -53,6 +53,7 @@
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/packetsstatic_len.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
@@ -1987,7 +1988,7 @@ static int char_count_users(void)
 // Writes char data to the buffer in the format used by the client.
 // Used in packets 0x6b (chars info) and 0x6d (new char info)
 // Returns the size
-#define MAX_CHAR_BUF 150 //Max size (for WFIFOHEAD calls)
+#define MAX_CHAR_BUF (PACKET_LEN_0x006d - 2)
 static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 {
 	unsigned short offset = 0;
@@ -2092,7 +2093,9 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	#endif
 #endif
 
-	return 106+offset;
+	if (106 + offset != MAX_CHAR_BUF)
+		Assert_report("Wrong buffer size in char_mmo_char_tobuf");
+	return 106 + offset;
 }
 
 /* Made Possible by Yommy~! <3 */
