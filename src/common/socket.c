@@ -2133,7 +2133,7 @@ static void socket_validateWfifo(int fd, size_t len)
 		ShowError("Sent packet 0x%04X with size %d, but must be size %d\n", cmd, len2, packet_len);
 		Assert_retv(0);
 	}
-	if (last_head_size < packet_len) {
+	if (last_head_size < (uint32)packet_len) {
 		ShowError("Reserved too small packet buffer for packet 0x%04X with size %u, but must be size %d\n", cmd, last_head_size, packet_len);
 		Assert_retv(0);
 	}
