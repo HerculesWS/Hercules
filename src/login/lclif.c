@@ -233,6 +233,14 @@ static enum parsefunc_rcode lclif_parse_CA_ACK_MOBILE_OTP(int fd, struct login_s
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_OTP_CODE()
+static enum parsefunc_rcode lclif_parse_CA_OTP_CODE(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+static enum parsefunc_rcode lclif_parse_CA_OTP_CODE(int fd, struct login_session_data *sd)
+{
+	// TODO: parsing packet data
+	return PACKET_VALID;
+}
+
 /// @copydoc lclif_interface_private::parse_CA_REQ_HASH()
 static enum parsefunc_rcode lclif_parse_CA_REQ_HASH(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static enum parsefunc_rcode lclif_parse_CA_REQ_HASH(int fd, struct login_session_data *sd)
@@ -526,6 +534,9 @@ static void packetdb_loaddb(void)
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114
 		packet_def(CA_ACK_MOBILE_OTP),
 #endif
+#if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
+		packet_def(CA_OTP_CODE),
+#endif
 		packet_def(CA_REQ_HASH),
 #undef packet_def
 #undef packet_def2
@@ -591,6 +602,7 @@ void lclif_defaults(void)
 	lclif->p->parse_CA_SSO_LOGIN_REQ        = lclif_parse_CA_SSO_LOGIN_REQ;
 	lclif->p->parse_CA_LOGIN_OTP            = lclif_parse_CA_LOGIN_OTP;
 	lclif->p->parse_CA_ACK_MOBILE_OTP       = lclif_parse_CA_ACK_MOBILE_OTP;
+	lclif->p->parse_CA_OTP_CODE             = lclif_parse_CA_OTP_CODE;
 	lclif->p->parse_CA_REQ_HASH             = lclif_parse_CA_REQ_HASH;
 	lclif->p->parse_CA_CHARSERVERCONNECT    = lclif_parse_CA_CHARSERVERCONNECT;
 }

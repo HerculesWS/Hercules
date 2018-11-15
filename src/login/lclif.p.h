@@ -170,7 +170,7 @@ struct packet_CA_SSO_LOGIN_REQ {
  * Variable-length packet.
  */
 struct PACKET_CA_ACK_MOBILE_OTP {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_SSO_LOGIN_REQ)
+	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_ACK_MOBILE_OTP)
 	int16 packet_len;     ///< Length (variable length)
 	uint32 aid;           ///< Account ID
 	char code[6];         ///< Code
@@ -180,6 +180,17 @@ DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
 // for enum login_packet_id
 #define PACKET_ID_CA_ACK_MOBILE_OTP HEADER_CA_ACK_MOBILE_OTP
 #define packet_CA_ACK_MOBILE_OTP PACKET_CA_ACK_MOBILE_OTP
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
+struct PACKET_CA_OTP_CODE {
+	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_OTP_CODE)
+	char code[9];         ///< Code
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0ad0);
+
+#define PACKET_ID_CA_OTP_CODE HEADER_CA_OTP_CODE
+#define packet_CA_OTP_CODE PACKET_CA_OTP_CODE
 #endif
 
 /**
@@ -363,6 +374,7 @@ struct lclif_interface_private {
 	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;        ///< Packet handler for #packet_CA_SSO_LOGIN_REQ.
 	LoginParseFunc *parse_CA_LOGIN_OTP;            ///< Packet handler for #packet_CA_LOGIN_OTP.
 	LoginParseFunc *parse_CA_ACK_MOBILE_OTP;       ///< Packet handler for #packet_CA_ACK_MOBILE_OTP.
+	LoginParseFunc *parse_CA_OTP_CODE;             ///< Packet handler for #packet_CA_OTP_CODE.
 	LoginParseFunc *parse_CA_REQ_HASH;             ///< Packet handler for #packet_CA_REQ_HASH.
 	LoginParseFunc *parse_CA_CHARSERVERCONNECT;    ///< Packet handler for #packet_CA_CHARSERVERCONNECT.
 };
