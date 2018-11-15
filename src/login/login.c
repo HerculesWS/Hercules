@@ -70,7 +70,7 @@ static AccountDB *accounts = NULL;
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
 struct PACKET_AC_REQ_MOBILE_OTP {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_SSO_LOGIN_REQ)
+	int16 packet_id;      ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
 	uint32 aid;           ///< Account ID
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09a2);
