@@ -61,7 +61,6 @@ enum login_packet_id {
 
 	PACKET_ID_AC_ACCEPT_LOGIN         = 0x0069,
 	PACKET_ID_AC_ACCEPT_LOGIN2        = 0x0ac4,
-	PACKET_ID_AC_REQ_MOBILE_OTP       = 0x09a2,
 	PACKET_ID_AC_REFUSE_LOGIN         = 0x006a,
 	PACKET_ID_SC_NOTIFY_BAN           = 0x0081,
 	PACKET_ID_AC_ACK_HASH             = 0x01dc,
@@ -176,8 +175,8 @@ struct PACKET_CA_ACK_MOBILE_OTP {
 	uint32 aid;           ///< Account ID
 	char code[6];         ///< Code
 } __attribute__((packed));
-
 DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
+
 // for enum login_packet_id
 #define PACKET_ID_CA_ACK_MOBILE_OTP HEADER_CA_ACK_MOBILE_OTP
 #define packet_CA_ACK_MOBILE_OTP PACKET_CA_ACK_MOBILE_OTP
