@@ -16,13 +16,6 @@
 		A5467AD31A16FCB4008AFAA6 /* loginif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD11A16FCB4008AFAA6 /* loginif.c */; };
 		A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD41A16FCDC008AFAA6 /* mapif.c */; };
 		A5467AD91A16FD08008AFAA6 /* geoip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5467AD71A16FD08008AFAA6 /* geoip.c */; };
-		A55AED781B8153D800149CF8 /* conf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC690185643BB009EB79C /* conf.c */; };
-		A55AED791B8153EA00149CF8 /* grammar.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72218564C05009EB79C /* grammar.c */; };
-		A55AED7A1B8153EC00149CF8 /* libconfig.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72418564C05009EB79C /* libconfig.c */; };
-		A55AED7B1B8153EF00149CF8 /* scanctx.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72718564C05009EB79C /* scanctx.c */; };
-		A55AED7C1B8153F100149CF8 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72918564C05009EB79C /* scanner.c */; };
-		A55AED7D1B8153F300149CF8 /* strbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC72B18564C05009EB79C /* strbuf.c */; };
-		A567612D185D11D700997C0D /* nullpo.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6B2185643BB009EB79C /* nullpo.c */; };
 		A56CC68918564387009EB79C /* account.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68118564387009EB79C /* account.c */; };
 		A56CC68A18564387009EB79C /* ipban.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68318564387009EB79C /* ipban.c */; };
 		A56CC68B18564387009EB79C /* login.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68518564387009EB79C /* login.c */; };
@@ -168,6 +161,9 @@
 		A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */ = {isa = PBXBuildFile; fileRef = A5B894AB1A03CDFA005AD22E /* HPMchar.c */; };
 		A5B894B01A03CE25005AD22E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
 		A5B894B91A03CE5D005AD22E /* HPMHooking.c in Sources */ = {isa = PBXBuildFile; fileRef = A58A5A271858025D0099683E /* HPMHooking.c */; };
+		A5BBC249219D076900E26B8D /* packets.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BBC218219D076900E26B8D /* packets.c */; };
+		A5BBC251219D081800E26B8D /* packets.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BBC218219D076900E26B8D /* packets.c */; };
+		A5BBC252219D081900E26B8D /* packets.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BBC218219D076900E26B8D /* packets.c */; };
 		A5F7946C191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946D191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946E191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
@@ -441,6 +437,63 @@
 		A5B894CC1A03CEE1005AD22E /* HPMHooking_map.Hooks.inc */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; name = HPMHooking_map.Hooks.inc; path = src/plugins/HPMHooking/HPMHooking_map.Hooks.inc; sourceTree = "<group>"; };
 		A5B894CD1A03CEE1005AD22E /* HPMHooking_map.HPMHooksCore.inc */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; name = HPMHooking_map.HPMHooksCore.inc; path = src/plugins/HPMHooking/HPMHooking_map.HPMHooksCore.inc; sourceTree = "<group>"; };
 		A5B894CE1A03CEE1005AD22E /* HPMHooking_map.sources.inc */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; name = HPMHooking_map.sources.inc; path = src/plugins/HPMHooking/HPMHooking_map.sources.inc; sourceTree = "<group>"; };
+		A5BBC216219D076800E26B8D /* packets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packets.h; path = src/common/packets.h; sourceTree = "<group>"; };
+		A5BBC217219D076900E26B8D /* packetsstatic_len.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packetsstatic_len.h; path = src/common/packetsstatic_len.h; sourceTree = "<group>"; };
+		A5BBC218219D076900E26B8D /* packets.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = packets.c; path = src/common/packets.c; sourceTree = "<group>"; };
+		A5BBC219219D076900E26B8D /* packets_len.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packets_len.h; path = src/common/packets_len.h; sourceTree = "<group>"; };
+		A5BBC21B219D076900E26B8D /* packets2005_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2005_len_sak.h; sourceTree = "<group>"; };
+		A5BBC21C219D076900E26B8D /* packets2018_len_zero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2018_len_zero.h; sourceTree = "<group>"; };
+		A5BBC21D219D076900E26B8D /* packets2008_len_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2008_len_ad.h; sourceTree = "<group>"; };
+		A5BBC21E219D076900E26B8D /* packets2008_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2008_len_sak.h; sourceTree = "<group>"; };
+		A5BBC21F219D076900E26B8D /* packets2013_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2013_len_main.h; sourceTree = "<group>"; };
+		A5BBC220219D076900E26B8D /* packets2016_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2016_len_main.h; sourceTree = "<group>"; };
+		A5BBC221219D076900E26B8D /* packets2003_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2003_len_sak.h; sourceTree = "<group>"; };
+		A5BBC222219D076900E26B8D /* packets_len_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets_len_ad.h; sourceTree = "<group>"; };
+		A5BBC223219D076900E26B8D /* packets2016_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2016_len_re.h; sourceTree = "<group>"; };
+		A5BBC224219D076900E26B8D /* packets2007_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2007_len_main.h; sourceTree = "<group>"; };
+		A5BBC225219D076900E26B8D /* packets2017_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2017_len_re.h; sourceTree = "<group>"; };
+		A5BBC226219D076900E26B8D /* packets2004_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2004_len_sak.h; sourceTree = "<group>"; };
+		A5BBC227219D076900E26B8D /* packets2009_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2009_len_sak.h; sourceTree = "<group>"; };
+		A5BBC228219D076900E26B8D /* packets2011_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2011_len_main.h; sourceTree = "<group>"; };
+		A5BBC229219D076900E26B8D /* packets2011_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2011_len_re.h; sourceTree = "<group>"; };
+		A5BBC22A219D076900E26B8D /* packets2010_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2010_len_re.h; sourceTree = "<group>"; };
+		A5BBC22B219D076900E26B8D /* packets2017_len_zero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2017_len_zero.h; sourceTree = "<group>"; };
+		A5BBC22C219D076900E26B8D /* packets2014_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2014_len_main.h; sourceTree = "<group>"; };
+		A5BBC22D219D076900E26B8D /* packets2008_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2008_len_main.h; sourceTree = "<group>"; };
+		A5BBC22E219D076900E26B8D /* packets_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets_len_main.h; sourceTree = "<group>"; };
+		A5BBC22F219D076900E26B8D /* packets2005_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2005_len_main.h; sourceTree = "<group>"; };
+		A5BBC230219D076900E26B8D /* packets2004_len_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2004_len_ad.h; sourceTree = "<group>"; };
+		A5BBC231219D076900E26B8D /* packets2005_len_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2005_len_ad.h; sourceTree = "<group>"; };
+		A5BBC232219D076900E26B8D /* packets2015_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2015_len_re.h; sourceTree = "<group>"; };
+		A5BBC233219D076900E26B8D /* packets2014_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2014_len_re.h; sourceTree = "<group>"; };
+		A5BBC234219D076900E26B8D /* packets2007_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2007_len_sak.h; sourceTree = "<group>"; };
+		A5BBC235219D076900E26B8D /* packets2017_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2017_len_main.h; sourceTree = "<group>"; };
+		A5BBC236219D076900E26B8D /* packets_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets_len_re.h; sourceTree = "<group>"; };
+		A5BBC237219D076900E26B8D /* packets2006_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2006_len_main.h; sourceTree = "<group>"; };
+		A5BBC238219D076900E26B8D /* packets_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets_len_sak.h; sourceTree = "<group>"; };
+		A5BBC239219D076900E26B8D /* packets2003_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2003_len_main.h; sourceTree = "<group>"; };
+		A5BBC23A219D076900E26B8D /* packets_len_zero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets_len_zero.h; sourceTree = "<group>"; };
+		A5BBC23B219D076900E26B8D /* packets2008_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2008_len_re.h; sourceTree = "<group>"; };
+		A5BBC23C219D076900E26B8D /* packets2009_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2009_len_re.h; sourceTree = "<group>"; };
+		A5BBC23D219D076900E26B8D /* packets2012_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2012_len_main.h; sourceTree = "<group>"; };
+		A5BBC23E219D076900E26B8D /* packets2015_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2015_len_main.h; sourceTree = "<group>"; };
+		A5BBC23F219D076900E26B8D /* packets2006_len_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2006_len_sak.h; sourceTree = "<group>"; };
+		A5BBC240219D076900E26B8D /* packets2007_len_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2007_len_ad.h; sourceTree = "<group>"; };
+		A5BBC241219D076900E26B8D /* packets2009_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2009_len_main.h; sourceTree = "<group>"; };
+		A5BBC242219D076900E26B8D /* packets2006_len_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2006_len_ad.h; sourceTree = "<group>"; };
+		A5BBC243219D076900E26B8D /* packets2018_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2018_len_main.h; sourceTree = "<group>"; };
+		A5BBC244219D076900E26B8D /* packets2004_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2004_len_main.h; sourceTree = "<group>"; };
+		A5BBC245219D076900E26B8D /* packets2012_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2012_len_re.h; sourceTree = "<group>"; };
+		A5BBC246219D076900E26B8D /* packets2013_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2013_len_re.h; sourceTree = "<group>"; };
+		A5BBC247219D076900E26B8D /* packets2018_len_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2018_len_re.h; sourceTree = "<group>"; };
+		A5BBC248219D076900E26B8D /* packets2010_len_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packets2010_len_main.h; sourceTree = "<group>"; };
+		A5BBC24A219D07A800E26B8D /* packets_shuffle_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packets_shuffle_re.h; path = src/map/packets_shuffle_re.h; sourceTree = SOURCE_ROOT; };
+		A5BBC24B219D07A800E26B8D /* messages_re.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages_re.h; path = src/map/messages_re.h; sourceTree = SOURCE_ROOT; };
+		A5BBC24C219D07A800E26B8D /* messages_zero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages_zero.h; path = src/map/messages_zero.h; sourceTree = SOURCE_ROOT; };
+		A5BBC24D219D07A800E26B8D /* messages_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages_main.h; path = src/map/messages_main.h; sourceTree = SOURCE_ROOT; };
+		A5BBC24E219D07A800E26B8D /* messages_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages_ad.h; path = src/map/messages_ad.h; sourceTree = SOURCE_ROOT; };
+		A5BBC24F219D07A800E26B8D /* messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages.h; path = src/map/messages.h; sourceTree = SOURCE_ROOT; };
+		A5BBC250219D07A800E26B8D /* messages_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages_sak.h; path = src/map/messages_sak.h; sourceTree = SOURCE_ROOT; };
 		A5F79468191CA34E002293AB /* HPMDataCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMDataCheck.h; path = src/common/HPMDataCheck.h; sourceTree = "<group>"; };
 		A5F79469191CA34E002293AB /* sysinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sysinfo.c; path = src/common/sysinfo.c; sourceTree = "<group>"; };
 		A5F7946A191CA34E002293AB /* sysinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sysinfo.h; path = src/common/sysinfo.h; sourceTree = "<group>"; };
@@ -659,6 +712,12 @@
 				A56CC79318565812009EB79C /* mapreg.h */,
 				A56CC79418565812009EB79C /* mercenary.c */,
 				A56CC79518565812009EB79C /* mercenary.h */,
+				A5BBC24E219D07A800E26B8D /* messages_ad.h */,
+				A5BBC24D219D07A800E26B8D /* messages_main.h */,
+				A5BBC24B219D07A800E26B8D /* messages_re.h */,
+				A5BBC250219D07A800E26B8D /* messages_sak.h */,
+				A5BBC24C219D07A800E26B8D /* messages_zero.h */,
+				A5BBC24F219D07A800E26B8D /* messages.h */,
 				A56CC79618565812009EB79C /* mob.c */,
 				A56CC79718565812009EB79C /* mob.h */,
 				A56CC79818565812009EB79C /* npc_chat.c */,
@@ -667,6 +726,7 @@
 				A5302672202D78B00060E394 /* packets_keys_main.h */,
 				A5302677202D78B10060E394 /* packets_keys_zero.h */,
 				A5302675202D78B10060E394 /* packets_shuffle_main.h */,
+				A5BBC24A219D07A800E26B8D /* packets_shuffle_re.h */,
 				A5302678202D78B10060E394 /* packets_shuffle_zero.h */,
 				A56CC79B18565812009EB79C /* packets_struct.h */,
 				A56CC79C18565812009EB79C /* packets.h */,
@@ -740,6 +800,11 @@
 				A56CC6AD185643BB009EB79C /* mutex.h */,
 				A56CC6B2185643BB009EB79C /* nullpo.c */,
 				A56CC6B3185643BB009EB79C /* nullpo.h */,
+				A5BBC21A219D076900E26B8D /* packets */,
+				A5BBC219219D076900E26B8D /* packets_len.h */,
+				A5BBC218219D076900E26B8D /* packets.c */,
+				A5BBC216219D076800E26B8D /* packets.h */,
+				A5BBC217219D076900E26B8D /* packetsstatic_len.h */,
 				A56CC6B6185643BB009EB79C /* random.c */,
 				A56CC6B7185643BB009EB79C /* random.h */,
 				A56CC6B8185643BB009EB79C /* showmsg.c */,
@@ -873,6 +938,60 @@
 				A5AA94F8185799DF00C940C8 /* db2sql.c */,
 			);
 			name = db2sql;
+			sourceTree = "<group>";
+		};
+		A5BBC21A219D076900E26B8D /* packets */ = {
+			isa = PBXGroup;
+			children = (
+				A5BBC222219D076900E26B8D /* packets_len_ad.h */,
+				A5BBC22E219D076900E26B8D /* packets_len_main.h */,
+				A5BBC236219D076900E26B8D /* packets_len_re.h */,
+				A5BBC238219D076900E26B8D /* packets_len_sak.h */,
+				A5BBC23A219D076900E26B8D /* packets_len_zero.h */,
+				A5BBC239219D076900E26B8D /* packets2003_len_main.h */,
+				A5BBC221219D076900E26B8D /* packets2003_len_sak.h */,
+				A5BBC230219D076900E26B8D /* packets2004_len_ad.h */,
+				A5BBC244219D076900E26B8D /* packets2004_len_main.h */,
+				A5BBC226219D076900E26B8D /* packets2004_len_sak.h */,
+				A5BBC231219D076900E26B8D /* packets2005_len_ad.h */,
+				A5BBC22F219D076900E26B8D /* packets2005_len_main.h */,
+				A5BBC21B219D076900E26B8D /* packets2005_len_sak.h */,
+				A5BBC242219D076900E26B8D /* packets2006_len_ad.h */,
+				A5BBC237219D076900E26B8D /* packets2006_len_main.h */,
+				A5BBC23F219D076900E26B8D /* packets2006_len_sak.h */,
+				A5BBC240219D076900E26B8D /* packets2007_len_ad.h */,
+				A5BBC224219D076900E26B8D /* packets2007_len_main.h */,
+				A5BBC234219D076900E26B8D /* packets2007_len_sak.h */,
+				A5BBC21D219D076900E26B8D /* packets2008_len_ad.h */,
+				A5BBC22D219D076900E26B8D /* packets2008_len_main.h */,
+				A5BBC23B219D076900E26B8D /* packets2008_len_re.h */,
+				A5BBC21E219D076900E26B8D /* packets2008_len_sak.h */,
+				A5BBC241219D076900E26B8D /* packets2009_len_main.h */,
+				A5BBC23C219D076900E26B8D /* packets2009_len_re.h */,
+				A5BBC227219D076900E26B8D /* packets2009_len_sak.h */,
+				A5BBC248219D076900E26B8D /* packets2010_len_main.h */,
+				A5BBC22A219D076900E26B8D /* packets2010_len_re.h */,
+				A5BBC228219D076900E26B8D /* packets2011_len_main.h */,
+				A5BBC229219D076900E26B8D /* packets2011_len_re.h */,
+				A5BBC23D219D076900E26B8D /* packets2012_len_main.h */,
+				A5BBC245219D076900E26B8D /* packets2012_len_re.h */,
+				A5BBC21F219D076900E26B8D /* packets2013_len_main.h */,
+				A5BBC246219D076900E26B8D /* packets2013_len_re.h */,
+				A5BBC22C219D076900E26B8D /* packets2014_len_main.h */,
+				A5BBC233219D076900E26B8D /* packets2014_len_re.h */,
+				A5BBC23E219D076900E26B8D /* packets2015_len_main.h */,
+				A5BBC232219D076900E26B8D /* packets2015_len_re.h */,
+				A5BBC220219D076900E26B8D /* packets2016_len_main.h */,
+				A5BBC223219D076900E26B8D /* packets2016_len_re.h */,
+				A5BBC235219D076900E26B8D /* packets2017_len_main.h */,
+				A5BBC225219D076900E26B8D /* packets2017_len_re.h */,
+				A5BBC22B219D076900E26B8D /* packets2017_len_zero.h */,
+				A5BBC243219D076900E26B8D /* packets2018_len_main.h */,
+				A5BBC247219D076900E26B8D /* packets2018_len_re.h */,
+				A5BBC21C219D076900E26B8D /* packets2018_len_zero.h */,
+			);
+			name = packets;
+			path = src/common/packets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1140,6 +1259,7 @@
 				A56CC6D8185643BB009EB79C /* ers.c in Sources */,
 				A56CC73718564C05009EB79C /* scanner.c in Sources */,
 				A56CC6EA185643BB009EB79C /* md5calc.c in Sources */,
+				A5BBC249219D076900E26B8D /* packets.c in Sources */,
 				A5F7946C191CA34E002293AB /* sysinfo.c in Sources */,
 				A56CC74018564C23009EB79C /* mt19937ar.c in Sources */,
 				A5B894AA1A03CDD4005AD22E /* HPMlogin.c in Sources */,
@@ -1193,6 +1313,7 @@
 				A56CC760185657D9009EB79C /* int_guild.c in Sources */,
 				A56CC768185657D9009EB79C /* inter.c in Sources */,
 				A5467AD61A16FCDC008AFAA6 /* mapif.c in Sources */,
+				A5BBC251219D081800E26B8D /* packets.c in Sources */,
 				A56CC73818564C05009EB79C /* scanner.c in Sources */,
 				A56CC700185643BB009EB79C /* random.c in Sources */,
 				A5B894AD1A03CDFA005AD22E /* HPMchar.c in Sources */,
@@ -1237,6 +1358,7 @@
 				A56CC7D218565812009EB79C /* party.c in Sources */,
 				A56CC7C118565812009EB79C /* duel.c in Sources */,
 				A56CC70A185643BB009EB79C /* sql.c in Sources */,
+				A5BBC252219D081900E26B8D /* packets.c in Sources */,
 				A56CC7D718565812009EB79C /* quest.c in Sources */,
 				A56CC7CC18565812009EB79C /* map.c in Sources */,
 				A59EA4511A727D36005F2B6D /* channel.c in Sources */,
@@ -1402,12 +1524,6 @@
 					"-DHAS_TLS",
 					"-DHAVE_SETRLIMIT",
 					"-DHAVE_STRNLEN",
-					"-DPACKAGE_NAME=\\\"\\\"",
-					"-DPACKAGE_TARNAME=\\\"\\\"",
-					"-DPACKAGE_VERSION=\\\"\\\"",
-					"-DPACKAGE_STRING=\\\"\\\"",
-					"-DPACKAGE_BUGREPORT=\\\"\\\"",
-					"-DPACKAGE_URL=\\\"\\\"",
 					"-DSTDC_HEADERS=1",
 					"-DHAVE_SYS_TYPES_H=1",
 					"-DHAVE_SYS_STAT_H=1",
@@ -1487,12 +1603,6 @@
 					"-DHAS_TLS",
 					"-DHAVE_SETRLIMIT",
 					"-DHAVE_STRNLEN",
-					"-DPACKAGE_NAME=\\\"\\\"",
-					"-DPACKAGE_TARNAME=\\\"\\\"",
-					"-DPACKAGE_VERSION=\\\"\\\"",
-					"-DPACKAGE_STRING=\\\"\\\"",
-					"-DPACKAGE_BUGREPORT=\\\"\\\"",
-					"-DPACKAGE_URL=\\\"\\\"",
 					"-DSTDC_HEADERS=1",
 					"-DHAVE_SYS_TYPES_H=1",
 					"-DHAVE_SYS_STAT_H=1",
