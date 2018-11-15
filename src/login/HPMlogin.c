@@ -30,6 +30,8 @@
 #include "login/lclif.p.h"
 #include "login/login.h"
 #include "login/loginlog.h"
+#include "login/packets_ac_struct.h"
+#include "login/packets_ca_struct.h"
 #include "common/HPMi.h"
 #include "common/conf.h"
 #include "common/console.h"

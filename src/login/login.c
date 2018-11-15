@@ -27,6 +27,7 @@
 #include "login/ipban.h"
 #include "login/loginlog.h"
 #include "login/lclif.h"
+#include "login/packets_ac_struct.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -67,14 +68,6 @@ static AccountDB *accounts = NULL;
 // Auth database
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
-
-#if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
-struct PACKET_AC_REQ_MOBILE_OTP {
-	int16 packet_id;      ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
-	uint32 aid;           ///< Account ID
-} __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09a2);
-#endif
 
 /**
  * @see DBCreateData
