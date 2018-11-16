@@ -11089,8 +11089,8 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 
 		if (chan) {
 			int k;
-			ARR_FIND(0, sd->channel_count, k, sd->channels[k] == chan);
-			if (k < sd->channel_count || channel->join(chan, sd, "", true) == HCS_STATUS_OK) {
+			ARR_FIND(0, VECTOR_LENGTH(sd->channels), k, VECTOR_INDEX(sd->channels, k) == chan);
+			if (k < VECTOR_LENGTH(sd->channels) || channel->join(chan, sd, "", true) == HCS_STATUS_OK) {
 				channel->send(chan,sd,message);
 			} else {
 				clif->message(fd, msg_fd(fd,1402)); //You're not in that channel, type '@join <#channel_name>'

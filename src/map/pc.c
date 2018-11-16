@@ -1329,6 +1329,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.client_has_bg_data = 0;
 	sd->bg_queue.type = 0;
 
+	VECTOR_INIT(sd->channels);
 	VECTOR_INIT(sd->script_queues);
 	VECTOR_INIT(sd->achievement); // Achievements [Smokexyz/Hercules]
 	VECTOR_INIT(sd->storage.item); // initialize storage item vector.
@@ -5837,8 +5838,11 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			vending->close(sd);
 		}
 
-		if (map->list[sd->bl.m].channel) {
-			channel->leave(map->list[sd->bl.m].channel,sd);
+		if (sd->mapindex != 0) {
+			// Only if the character is already on a map
+			if (map->list[sd->bl.m].channel) {
+				channel->leave(map->list[sd->bl.m].channel,sd);
+			}
 		}
 	}
 
