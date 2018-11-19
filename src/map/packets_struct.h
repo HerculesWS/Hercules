@@ -371,9 +371,6 @@ enum packet_headers {
 	partymemberinfo = 0x01e9,
 	partyinfo = 0x00fb,
 #endif
-#if PACKETVER >= 20120702
-	clanBasicInfo = 0x098A, ///< ZC_CLANINFO
-#endif
 #if PACKETVER >= 20120716
 	clanOnlineCount = 0x0988, ///< ZC_NOTIFY_CLAN_CONNECTINFO
 	clanLeave = 0x0989, ///< ZC_ACK_CLAN_LEAVE
@@ -1800,6 +1797,7 @@ struct PACKET_ZC_GROUP_LIST {
 	struct PACKET_ZC_GROUP_LIST_SUB members[];
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20130626 || PACKETVER_RE_NUM >= 20130605 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_CLANINFO {
 	int16 PacketType;
 	int16 PacketLength;
@@ -1810,6 +1808,8 @@ struct PACKET_ZC_CLANINFO {
 	uint8 AllyCount;
 	uint8 AntagonistCount;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CLANINFO, 0x098a);
+#endif
 
 struct PACKET_ZC_NOTIFY_CLAN_CONNECTINFO {
 	int16 PacketType;

@@ -20358,21 +20358,21 @@ static const char *clif_get_bl_name(const struct block_list *bl)
  */
 static void clif_clan_basicinfo(struct map_session_data *sd)
 {
-#if PACKETVER >= 20120716
+#if PACKETVER_MAIN_NUM >= 20130626 || PACKETVER_RE_NUM >= 20130605 || defined(PACKETVER_ZERO)
 	int len, i, fd;
 	struct clan *c, *ally, *antagonist;
 	struct PACKET_ZC_CLANINFO *packet = NULL;
-
 	nullpo_retv(sd);
 	nullpo_retv(c = sd->clan);
 
 	len = sizeof(struct PACKET_ZC_CLANINFO);
 	fd = sd->fd;
 
-	WFIFOHEAD(fd, len);
+	const int maxEntries = 100;  // max entries with clan names
+	WFIFOHEAD(fd, len + maxEntries * 24);
 	packet = WFIFOP(fd, 0);
 
-	packet->PacketType = clanBasicInfo;
+	packet->PacketType = HEADER_ZC_CLANINFO;
 	packet->ClanID = c->clan_id;
 
 	safestrncpy(packet->ClanName, c->name, NAME_LENGTH);
@@ -20383,24 +20383,27 @@ static void clif_clan_basicinfo(struct map_session_data *sd)
 	packet->AllyCount = VECTOR_LENGTH(c->allies);
 	packet->AntagonistCount = VECTOR_LENGTH(c->antagonists);
 
+	int cnt = 0;
 	// All allies and antagonists are assumed as valid entries
 	// since it only gets inside the vector after the validation
 	// on clan->config_read
-	for (i = 0; i < VECTOR_LENGTH(c->allies); i++) {
+	for (i = 0; i < VECTOR_LENGTH(c->allies) && cnt < maxEntries; i++) {
 		struct clan_relationship *al = &VECTOR_INDEX(c->allies, i);
 
 		if ((ally = clan->search(al->clan_id)) != NULL) {
 			safestrncpy(WFIFOP(fd, len), ally->name, NAME_LENGTH);
 			len += NAME_LENGTH;
+			cnt ++;
 		}
 	}
 
-	for (i = 0; i < VECTOR_LENGTH(c->antagonists); i++) {
+	for (i = 0; i < VECTOR_LENGTH(c->antagonists) && cnt < maxEntries; i++) {
 		struct clan_relationship *an = &VECTOR_INDEX(c->antagonists, i);
 
 		if ((antagonist = clan->search(an->clan_id)) != NULL) {
 			safestrncpy(WFIFOP(fd, len), antagonist->name, NAME_LENGTH);
 			len += NAME_LENGTH;
+			cnt ++;
 		}
 	}
 
