@@ -2546,7 +2546,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if(sd) {
 			// process script-granted extra drop bonuses
 			int itemid = 0;
-			for (i = 0; i < ARRAYLENGTH(sd->add_drop) && (sd->add_drop[i].id || sd->add_drop[i].group); i++)
+			for (i = 0; i < ARRAYLENGTH(sd->add_drop) && (sd->add_drop[i].id != 0 || sd->add_drop[i].is_group); i++)
 			{
 				if ( sd->add_drop[i].race == -md->class_ ||
 					( sd->add_drop[i].race > 0 && (
@@ -2568,7 +2568,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					if (rnd()%10000 >= drop_rate)
 						continue;
-					itemid = (sd->add_drop[i].id > 0) ? sd->add_drop[i].id : itemdb->chain_item(sd->add_drop[i].group,&drop_rate);
+					itemid = (!sd->add_drop[i].is_group) ? sd->add_drop[i].id : itemdb->chain_item(sd->add_drop[i].id, &drop_rate);
 					if( itemid )
 						mob->item_drop(md, dlist, mob->setdropitem(itemid,1,NULL), 0, drop_rate, homkillonly);
 				}
