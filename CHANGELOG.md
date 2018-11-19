@@ -9,6 +9,53 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.11.18] `November 18 2018`
+
+### Added
+
+- Added an option to prevent character renames when in a guild or a party. This is the official behavior, but disabled by default since it's unnecessary in Hercules. To enable, `char_configuration/use_aegis_rename` can be set to `true` in `char-server.conf`. (#1866, issue #1805)
+- Added the script command `data_to_string()`, to return the string representation of the given data (counterpart to `getd()`). (#2304)
+- Added/updated packets, encryption keys and message tables for clients up to 2018-11-14. (#2310, #2321)
+- Added a configuration option for the maximum delay allowed by `@channel setopt MessageDelay` command, see `chsys/channel_opt_msg_delay` in `channels.conf`. (#2287)
+- Added a configuration option for more accurate emulation of the HP display on dead characters. This setting is enabled by default, but the old, less confusing, behavior is available by setting `display_fake_hp_when_dead` to `false` in `client.conf`. (#1215, issues #889 and #840)
+- Added `common/packets`, to provide a common interface to the packet DB, shared by all three servers. (#2321)
+- Added proof of concept of compile time validation of packet struct definition against the packet lengths DB (currently only for `ZC_ITEM_PREVIEW`). (part of #2321)
+- Added runtime client-server packet length validation in `RFIFOSKIP()` and `WFIFOSET()`. An unchecked `WFIFOSET2()` alternative is still provided, for packets that lack a db entry. (part of #2321)
+- Added runtime validation for the size of `WIFOHEAD()` buffer allocations. (part of #2321)
+
+### Changed
+
+- Made `getunits()` stop unnecessarily iterating when the maximum specified amount of units is reached. (#2105)
+- Updated the item bonus documentation, converted to the Markdown format in `doc/item_bonus.md`. (#2259)
+- Improved the channel delay message to include the remaining time before a new message can be sent. (#2286)
+- Removed the unused `type` argument from `getnpcid()`. All the shipped scripts have been updated. (#2289)
+- Improved the `charlog` to include the stats, class, hair color and style whenever available. This affects the character selection and rename log entries, that had most fields zeroed before. (#2320)
+- Updated the quest variables documentation, converted to the Markdown format in `doc/quest_variables.md`. (#2256)
+- Updated the monster modes documentation, converted to the Markdown format in `doc/mob_db_mode_list.md`. (#2255)
+- Documented `flag` of the `status->heal()` function through the `enum status_heal_flag`. (part of #1215)
+- Added packet versions for all server types to the socket datasync validation. (part of #2321)
+
+### Fixed
+
+- Fixed packet `ZC_FORMATSTRING_MSG_COLOR` for clients older than 20160406. (part of #2310)
+- Fixed the output formatting in the unhandled packet reporter. (part of #2310)
+- Improved grammar in the `CONTRIBUTING.md` document. (#2303)
+- Fixed some logically dead code in `status.c`. (#2265)
+- Fixed some alerts reported by LGTM for the python scripts. (#2268)
+- Fixed some typos in the `README.md` document. (#2283)
+- Fixed a crash and/or mapflag inconsistency when reloading scripts, especially in PK servers. Map zones are now removed correctly during a reload. (#2247, issue #2242)
+- Fixed an overflow in the defense calculation when fighting more than 22 enemies. (#1233, issue #1201)
+- Fixed the gitlab-ci builds with clang-4.0, which was removed from Debian testing/unstable. (#2323)
+- Fixed an issue that caused a character leaving their guild to still receive some `#ally` messages from certain allied guilds. (#2322)
+- Fixed an issue that caused a character joining a guild not to join its `#ally` channel group. (part of #2322)
+- Fixed a duplicated line in the `@channel` help output. (part of #2322)
+- Fixed some code that assumed a character to be already on a map and attempt to leave an invalid `#map` channel when logging in. (part of #2322)
+
+### Removed
+
+- Removed support for the `MINICORE` libraries, which were unused but needlessly built since the new mapcache system was implemented in #1552. (#2319)
+- Removed the unused `src/tool` directory. (part of #2319)
+
 ## [v2018.10.21] `October 21 2018`
 
 ### Added
@@ -470,6 +517,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.11.18]: https://github.com/HerculesWS/Hercules/compare/v2018.10.21...v2018.11.18
 [v2018.10.21]: https://github.com/HerculesWS/Hercules/compare/v2018.09.23...v2018.10.21
 [v2018.09.23]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26+1...v2018.09.23
 [v2018.08.26+1]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26...v2018.08.26+1
