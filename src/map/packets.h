@@ -1890,4 +1890,19 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
 #endif
 
+// 2018-11-21bRagexe
+#if PACKETVER_ZERO_NUM >= 20181121
+// new packets
+// changed packet sizes
+	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
+	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
+	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
+	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09c3,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
+
 #endif /* MAP_PACKETS_H */
