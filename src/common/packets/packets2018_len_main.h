@@ -193,16 +193,28 @@ packetLen(0x009b, 34)  // CZ_CHANGE_DIRECTION
 packetLen(0x009c, 9)  // ZC_CHANGE_DIRECTION
 
 // Packet: 0x009d
+#if PACKETVER >= 20181121
+packetLen(0x009d, 19)  // ZC_ITEM_ENTRY
+#elif PACKETVER >= 20180103
 packetLen(0x009d, 17)  // ZC_ITEM_ENTRY
+#endif
 
 // Packet: 0x009e
+#if PACKETVER >= 20181121
+packetLen(0x009e, 19)  // ZC_ITEM_FALL_ENTRY
+#elif PACKETVER >= 20180103
 packetLen(0x009e, 17)  // ZC_ITEM_FALL_ENTRY
+#endif
 
 // Packet: 0x009f
 packetLen(0x009f, 20)  // CZ_ITEM_PICKUP
 
 // Packet: 0x00a0
+#if PACKETVER >= 20181121
+packetLen(0x00a0, 33)  // ZC_ITEM_PICKUP_ACK
+#elif PACKETVER >= 20180103
 packetLen(0x00a0, 23)  // ZC_ITEM_PICKUP_ACK
+#endif
 
 // Packet: 0x00a1
 packetLen(0x00a1, 6)  // ZC_ITEM_DISAPPEAR
@@ -418,7 +430,11 @@ packetLen(0x00e7, 3)  // ZC_ACK_EXCHANGE_ITEM
 packetLen(0x00e8, 8)  // CZ_ADD_EXCHANGE_ITEM
 
 // Packet: 0x00e9
+#if PACKETVER >= 20181121
+packetLen(0x00e9, 29)  // ZC_ADD_EXCHANGE_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x00e9, 19)  // ZC_ADD_EXCHANGE_ITEM
+#endif
 
 // Packet: 0x00ea
 packetLen(0x00ea, 5)  // ZC_ACK_ADD_EXCHANGE_ITEM
@@ -451,7 +467,11 @@ packetLen(0x00f2, 6)  // ZC_NOTIFY_STOREITEM_COUNTINFO
 packetLen(0x00f3, -1)  // CZ_REQUEST_CHAT
 
 // Packet: 0x00f4
+#if PACKETVER >= 20181121
+packetLen(0x00f4, 31)  // ZC_ADD_ITEM_TO_STORE
+#elif PACKETVER >= 20180103
 packetLen(0x00f4, 21)  // ZC_ADD_ITEM_TO_STORE
+#endif
 
 // Packet: 0x00f5
 packetLen(0x00f5, 11)  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY
@@ -517,7 +537,11 @@ packetLen(0x0108, -1)  // CZ_REQUEST_CHAT_PARTY
 packetLen(0x0109, -1)  // ZC_NOTIFY_CHAT_PARTY
 
 // Packet: 0x010a
+#if PACKETVER >= 20181121
+packetLen(0x010a, 6)  // ZC_MVP_GETTING_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x010a, 4)  // ZC_MVP_GETTING_ITEM
+#endif
 
 // Packet: 0x010b
 packetLen(0x010b, 6)  // ZC_MVP_GETTING_SPECIAL_EXP
@@ -535,7 +559,11 @@ packetLen(0x010e, 11)  // ZC_SKILLINFO_UPDATE
 packetLen(0x010f, -1)  // ZC_SKILLINFO_LIST
 
 // Packet: 0x0110
+#if PACKETVER >= 20181121
+packetLen(0x0110, 14)  // ZC_ACK_TOUSESKILL
+#elif PACKETVER >= 20180103
 packetLen(0x0110, 10)  // ZC_ACK_TOUSESKILL
+#endif
 
 // Packet: 0x0111
 packetLen(0x0111, 39)  // ZC_ADD_SKILL
@@ -595,7 +623,11 @@ packetLen(0x0122, -1)  // ZC_CART_EQUIPMENT_ITEMLIST
 packetLen(0x0123, -1)  // ZC_CART_NORMAL_ITEMLIST
 
 // Packet: 0x0124
+#if PACKETVER >= 20181121
+packetLen(0x0124, 31)  // ZC_ADD_ITEM_TO_CART
+#elif PACKETVER >= 20180103
 packetLen(0x0124, 21)  // ZC_ADD_ITEM_TO_CART
+#endif
 
 // Packet: 0x0125
 packetLen(0x0125, 8)  // ZC_DELETE_ITEM_FROM_CART
@@ -907,10 +939,18 @@ packetLen(0x018c, 29)  // ZC_MONSTER_INFO
 packetLen(0x018d, -1)  // ZC_MAKABLEITEMLIST
 
 // Packet: 0x018e
+#if PACKETVER >= 20181121
+packetLen(0x018e, 18)  // CZ_REQMAKINGITEM
+#elif PACKETVER >= 20180103
 packetLen(0x018e, 10)  // CZ_REQMAKINGITEM
+#endif
 
 // Packet: 0x018f
+#if PACKETVER >= 20181121
+packetLen(0x018f, 8)  // ZC_ACK_REQMAKINGITEM
+#elif PACKETVER >= 20180103
 packetLen(0x018f, 6)  // ZC_ACK_REQMAKINGITEM
+#endif
 
 // Packet: 0x0190
 packetLen(0x0190, 23)  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
@@ -970,7 +1010,11 @@ packetLen(0x01a1, 3)  // CZ_COMMAND_PET
 packetLen(0x01a2, 37)  // ZC_PROPERTY_PET
 
 // Packet: 0x01a3
+#if PACKETVER >= 20181121
+packetLen(0x01a3, 7)  // ZC_FEED_PET
+#elif PACKETVER >= 20180103
 packetLen(0x01a3, 5)  // ZC_FEED_PET
+#endif
 
 // Packet: 0x01a4
 packetLen(0x01a4, 11)  // ZC_CHANGESTATE_PET
@@ -1003,7 +1047,11 @@ packetLen(0x01ac, 6)  // ZC_SKILL_UPDATE
 packetLen(0x01ad, -1)  // ZC_MAKINGARROW_LIST
 
 // Packet: 0x01ae
+#if PACKETVER >= 20181121
+packetLen(0x01ae, 6)  // CZ_REQ_MAKINGARROW
+#elif PACKETVER >= 20180103
 packetLen(0x01ae, 4)  // CZ_REQ_MAKINGARROW
+#endif
 
 // Packet: 0x01af
 packetLen(0x01af, 4)  // CZ_REQ_CHANGECART
@@ -1069,10 +1117,18 @@ packetLen(0x01c2, 10)  // ZC_INFO_REMAINTIME
 packetLen(0x01c3, -1)  // ZC_BROADCAST2
 
 // Packet: 0x01c4
+#if PACKETVER >= 20181121
+packetLen(0x01c4, 32)  // ZC_ADD_ITEM_TO_STORE2
+#elif PACKETVER >= 20180103
 packetLen(0x01c4, 22)  // ZC_ADD_ITEM_TO_STORE2
+#endif
 
 // Packet: 0x01c5
+#if PACKETVER >= 20181121
+packetLen(0x01c5, 32)  // ZC_ADD_ITEM_TO_CART2
+#elif PACKETVER >= 20180103
 packetLen(0x01c5, 22)  // ZC_ADD_ITEM_TO_CART2
+#endif
 
 // Packet: 0x01c6
 packetLen(0x01c6, 4)  // CS_REQ_ENCRYPTION
@@ -1081,7 +1137,11 @@ packetLen(0x01c6, 4)  // CS_REQ_ENCRYPTION
 packetLen(0x01c7, 2)  // SC_ACK_ENCRYPTION
 
 // Packet: 0x01c8
+#if PACKETVER >= 20181121
+packetLen(0x01c8, 15)  // ZC_USE_ITEM_ACK2
+#elif PACKETVER >= 20180103
 packetLen(0x01c8, 13)  // ZC_USE_ITEM_ACK2
+#endif
 
 // Packet: 0x01c9
 packetLen(0x01c9, 97)  // ZC_SKILL_ENTRY2
@@ -1126,16 +1186,32 @@ packetLen(0x01d5, -1)  // CZ_INPUT_EDITDLGSTR
 packetLen(0x01d6, 4)  // ZC_NOTIFY_MAPPROPERTY2
 
 // Packet: 0x01d7
+#if PACKETVER >= 20181121
+packetLen(0x01d7, 15)  // ZC_SPRITE_CHANGE2
+#elif PACKETVER >= 20180103
 packetLen(0x01d7, 11)  // ZC_SPRITE_CHANGE2
+#endif
 
 // Packet: 0x01d8
+#if PACKETVER >= 20181121
+packetLen(0x01d8, 58)  // ZC_NOTIFY_STANDENTRY2
+#elif PACKETVER >= 20180103
 packetLen(0x01d8, 54)  // ZC_NOTIFY_STANDENTRY2
+#endif
 
 // Packet: 0x01d9
+#if PACKETVER >= 20181121
+packetLen(0x01d9, 57)  // ZC_NOTIFY_NEWENTRY2
+#elif PACKETVER >= 20180103
 packetLen(0x01d9, 53)  // ZC_NOTIFY_NEWENTRY2
+#endif
 
 // Packet: 0x01da
+#if PACKETVER >= 20181121
+packetLen(0x01da, 64)  // ZC_NOTIFY_MOVEENTRY2
+#elif PACKETVER >= 20180103
 packetLen(0x01da, 60)  // ZC_NOTIFY_MOVEENTRY2
+#endif
 
 // Packet: 0x01db
 packetLen(0x01db, 2)  // CA_REQ_HASH
@@ -1240,7 +1316,11 @@ packetLen(0x01fb, 56)  // CH_DELETE_CHAR2
 packetLen(0x01fc, -1)  // ZC_REPAIRITEMLIST
 
 // Packet: 0x01fd
+#if PACKETVER >= 20181121
+packetLen(0x01fd, 25)  // CZ_REQ_ITEMREPAIR
+#elif PACKETVER >= 20180103
 packetLen(0x01fd, 15)  // CZ_REQ_ITEMREPAIR
+#endif
 
 // Packet: 0x01fe
 packetLen(0x01fe, 5)  // ZC_ACK_ITEMREPAIR
@@ -1355,7 +1435,11 @@ packetLen(0x0221, -1)  // ZC_NOTIFY_WEAPONITEMLIST
 packetLen(0x0222, 6)  // CZ_REQ_WEAPONREFINE
 
 // Packet: 0x0223
+#if PACKETVER >= 20181121
+packetLen(0x0223, 10)  // ZC_ACK_WEAPONREFINE
+#elif PACKETVER >= 20180103
 packetLen(0x0223, 8)  // ZC_ACK_WEAPONREFINE
+#endif
 
 // Packet: 0x0224
 packetLen(0x0224, 10)  // ZC_TAEKWON_POINT
@@ -1376,13 +1460,25 @@ packetLen(0x0228, 18)  // CZ_ACK_GAME_GUARD
 packetLen(0x0229, 15)  // ZC_STATE_CHANGE3
 
 // Packet: 0x022a
+#if PACKETVER >= 20181121
+packetLen(0x022a, 62)  // ZC_NOTIFY_STANDENTRY3
+#elif PACKETVER >= 20180103
 packetLen(0x022a, 58)  // ZC_NOTIFY_STANDENTRY3
+#endif
 
 // Packet: 0x022b
+#if PACKETVER >= 20181121
+packetLen(0x022b, 61)  // ZC_NOTIFY_NEWENTRY3
+#elif PACKETVER >= 20180103
 packetLen(0x022b, 57)  // ZC_NOTIFY_NEWENTRY3
+#endif
 
 // Packet: 0x022c
+#if PACKETVER >= 20181121
+packetLen(0x022c, 69)  // ZC_NOTIFY_MOVEENTRY3
+#elif PACKETVER >= 20180103
 packetLen(0x022c, 65)  // ZC_NOTIFY_MOVEENTRY3
+#endif
 
 // Packet: 0x022d
 #if PACKETVER >= 20180315
@@ -1396,10 +1492,18 @@ packetLen(0x022d, 2)  // CZ_COMMAND_MER
 #endif
 
 // Packet: 0x022e
+#if PACKETVER >= 20181121
+packetLen(0x022e, 73)  // ZC_PROPERTY_HOMUN
+#elif PACKETVER >= 20180103
 packetLen(0x022e, 71)  // ZC_PROPERTY_HOMUN
+#endif
 
 // Packet: 0x022f
+#if PACKETVER >= 20181121
+packetLen(0x022f, 7)  // ZC_FEED_MER
+#elif PACKETVER >= 20180103
 packetLen(0x022f, 5)  // ZC_FEED_MER
+#endif
 
 // Packet: 0x0230
 packetLen(0x0230, 12)  // ZC_CHANGESTATE_MER
@@ -1539,7 +1643,11 @@ packetLen(0x0259, 3)  // AC_ACK_GAME_GUARD
 packetLen(0x025a, -1)  // ZC_MAKINGITEM_LIST
 
 // Packet: 0x025b
+#if PACKETVER >= 20181121
+packetLen(0x025b, 8)  // CZ_REQ_MAKINGITEM
+#elif PACKETVER >= 20180103
 packetLen(0x025b, 6)  // CZ_REQ_MAKINGITEM
+#endif
 
 // Packet: 0x025c
 packetLen(0x025c, 4)  // CZ_AUCTION_REQ_MY_INFO
@@ -1735,13 +1843,25 @@ packetLen(0x0296, -1)  // ZC_STORE_EQUIPMENT_ITEMLIST2
 packetLen(0x0297, -1)  // ZC_CART_EQUIPMENT_ITEMLIST2
 
 // Packet: 0x0298
+#if PACKETVER >= 20181121
+packetLen(0x0298, 10)  // ZC_CASH_TIME_COUNTER
+#elif PACKETVER >= 20180103
 packetLen(0x0298, 8)  // ZC_CASH_TIME_COUNTER
+#endif
 
 // Packet: 0x0299
+#if PACKETVER >= 20181121
+packetLen(0x0299, 8)  // ZC_CASH_ITEM_DELETE
+#elif PACKETVER >= 20180103
 packetLen(0x0299, 6)  // ZC_CASH_ITEM_DELETE
+#endif
 
 // Packet: 0x029a
+#if PACKETVER >= 20181121
+packetLen(0x029a, 37)  // ZC_ITEM_PICKUP_ACK2
+#elif PACKETVER >= 20180103
 packetLen(0x029a, 27)  // ZC_ITEM_PICKUP_ACK2
+#endif
 
 // Packet: 0x029b
 packetLen(0x029b, 80)  // ZC_MER_INIT
@@ -1807,7 +1927,11 @@ packetLen(0x02b6, 7)  // CZ_ACTIVE_QUEST
 packetLen(0x02b7, 7)  // ZC_ACTIVE_QUEST
 
 // Packet: 0x02b8
+#if PACKETVER >= 20181121
+packetLen(0x02b8, 32)  // ZC_ITEM_PICKUP_PARTY
+#elif PACKETVER >= 20180103
 packetLen(0x02b8, 22)  // ZC_ITEM_PICKUP_PARTY
+#endif
 
 // Packet: 0x02b9
 packetLen(0x02b9, 191)  // ZC_SHORTCUT_KEY_LIST
@@ -1882,7 +2006,11 @@ packetLen(0x02d2, -1)  // ZC_CART_EQUIPMENT_ITEMLIST3
 packetLen(0x02d3, 4)  // ZC_NOTIFY_BIND_ON_EQUIP
 
 // Packet: 0x02d4
+#if PACKETVER >= 20181121
+packetLen(0x02d4, 39)  // ZC_ITEM_PICKUP_ACK3
+#elif PACKETVER >= 20180103
 packetLen(0x02d4, 29)  // ZC_ITEM_PICKUP_ACK3
+#endif
 
 // Packet: 0x02d5
 packetLen(0x02d5, 2)  // ZC_ISVR_DISCONNECT
@@ -1954,13 +2082,25 @@ packetLen(0x02ea, -1)  // ZC_STORE_NORMAL_ITEMLIST3
 packetLen(0x02eb, 13)  // ZC_ACCEPT_ENTER2
 
 // Packet: 0x02ec
+#if PACKETVER >= 20181121
+packetLen(0x02ec, 71)  // ZC_NOTIFY_MOVEENTRY4
+#elif PACKETVER >= 20180103
 packetLen(0x02ec, 67)  // ZC_NOTIFY_MOVEENTRY4
+#endif
 
 // Packet: 0x02ed
+#if PACKETVER >= 20181121
+packetLen(0x02ed, 63)  // ZC_NOTIFY_NEWENTRY4
+#elif PACKETVER >= 20180103
 packetLen(0x02ed, 59)  // ZC_NOTIFY_NEWENTRY4
+#endif
 
 // Packet: 0x02ee
+#if PACKETVER >= 20181121
+packetLen(0x02ee, 64)  // ZC_NOTIFY_STANDENTRY4
+#elif PACKETVER >= 20180103
 packetLen(0x02ee, 60)  // ZC_NOTIFY_STANDENTRY4
+#endif
 
 // Packet: 0x02ef
 packetLen(0x02ef, 8)  // ZC_NOTIFY_FONT
@@ -2223,7 +2363,11 @@ packetLen(0x0443, 8)  // CZ_SKILL_SELECT_RESPONSE
 packetLen(0x0444, -1)  // ZC_SIMPLE_CASH_POINT_ITEMLIST
 
 // Packet: 0x0445
+#if PACKETVER >= 20181121
+packetLen(0x0445, 12)  // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x0445, 10)  // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+#endif
 
 // Packet: 0x0446
 packetLen(0x0446, 14)  // ZC_QUEST_NOTIFY_EFFECT
@@ -2451,7 +2595,11 @@ packetLen(0x080d, 3)  // ZC_SIMPLE_CASH_BTNSHOW
 packetLen(0x080e, 14)  // ZC_NOTIFY_HP_TO_GROUPM_R2
 
 // Packet: 0x080f
+#if PACKETVER >= 20181121
+packetLen(0x080f, 30)  // ZC_ADD_EXCHANGE_ITEM2
+#elif PACKETVER >= 20180103
 packetLen(0x080f, 20)  // ZC_ADD_EXCHANGE_ITEM2
+#endif
 
 // Packet: 0x0810
 packetLen(0x0810, 3)  // ZC_OPEN_BUYING_STORE
@@ -2521,7 +2669,11 @@ packetLen(0x0819, 2)  // CZ_REQ_TRADE_BUYING_STORE
 packetLen(0x081a, 4)  // ZC_FAILED_TRADE_BUYING_STORE_TO_BUYER
 
 // Packet: 0x081b
+#if PACKETVER >= 20181121
+packetLen(0x081b, 12)  // ZC_UPDATE_ITEM_FROM_BUYING_STORE
+#elif PACKETVER >= 20180103
 packetLen(0x081b, 10)  // ZC_UPDATE_ITEM_FROM_BUYING_STORE
+#endif
 
 // Packet: 0x081c
 packetLen(0x081c, 10)  // ZC_ITEM_DELETE_BUYING_STORE
@@ -2548,7 +2700,11 @@ packetLen(0x0822, 9)  // CA_OTP_AUTH_REQ
 packetLen(0x0823, -1)  // AC_OTP_AUTH_ACK
 
 // Packet: 0x0824
+#if PACKETVER >= 20181121
+packetLen(0x0824, 8)  // ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER
+#elif PACKETVER >= 20180103
 packetLen(0x0824, 6)  // ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER
+#endif
 
 // Packet: 0x0825
 packetLen(0x0825, -1)  // CA_SSO_LOGIN_REQ
@@ -2610,7 +2766,9 @@ packetLen(0x083a, 5)  // ZC_OPEN_SEARCH_STORE_INFO
 packetLen(0x083b, 2)  // CZ_CLOSE_SEARCH_STORE_INFO
 
 // Packet: 0x083c
-#if PACKETVER >= 20180315
+#if PACKETVER >= 20181121
+packetLen(0x083c, 14)  // CZ_SSILIST_ITEM_CLICK
+#elif PACKETVER >= 20180315
 packetLen(0x083c, 12)  // CZ_SSILIST_ITEM_CLICK
 #elif PACKETVER >= 20180213
 packetLen(0x083c, 2)  // CZ_SSILIST_ITEM_CLICK
@@ -2660,7 +2818,11 @@ packetLen(0x0849, 16)  // ZC_SE_PC_BUY_CASHITEM_RESULT
 packetLen(0x084a, 2)  // CZ_SE_CASHSHOP_CLOSE
 
 // Packet: 0x084b
+#if PACKETVER >= 20181121
+packetLen(0x084b, 21)  // ZC_ITEM_FALL_ENTRY4
+#elif PACKETVER >= 20180103
 packetLen(0x084b, 19)  // ZC_ITEM_FALL_ENTRY4
+#endif
 
 // Packet: 0x084c
 packetLen(0x084c, 10)  // CZ_MACRO_USE_SKILL
@@ -4235,7 +4397,11 @@ packetLen(0x098e, -1)  // ZC_NOTIFY_CLAN_CHAT
 packetLen(0x098f, -1)  // CH_DELETE_CHAR3_EXT
 
 // Packet: 0x0990
+#if PACKETVER >= 20181121
+packetLen(0x0990, 41)  // ZC_ITEM_PICKUP_ACK_V5
+#elif PACKETVER >= 20180103
 packetLen(0x0990, 31)  // ZC_ITEM_PICKUP_ACK_V5
+#endif
 
 // Packet: 0x0991
 packetLen(0x0991, -1)  // ZC_INVENTORY_ITEMLIST_NORMAL_V5
@@ -4322,25 +4488,45 @@ packetLen(0x09ab, 6)  // CZ_REQ_BANKING_CHECK
 packetLen(0x09ac, -1)  // CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO
 
 // Packet: 0x09ad
+#if PACKETVER >= 20181121
+packetLen(0x09ad, 12)  // ZC_ACK_CASH_BARGAIN_SALE_ITEM_INFO
+#elif PACKETVER >= 20180103
 packetLen(0x09ad, 10)  // ZC_ACK_CASH_BARGAIN_SALE_ITEM_INFO
+#endif
 
 // Packet: 0x09ae
+#if PACKETVER >= 20181121
+packetLen(0x09ae, 19)  // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x09ae, 17)  // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+#endif
 
 // Packet: 0x09af
 packetLen(0x09af, 4)  // ZC_ACK_APPLY_BARGAIN_SALE_ITEM
 
 // Packet: 0x09b0
+#if PACKETVER >= 20181121
+packetLen(0x09b0, 10)  // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x09b0, 8)  // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+#endif
 
 // Packet: 0x09b1
 packetLen(0x09b1, 4)  // ZC_ACK_REMOVE_BARGAIN_SALE_ITEM
 
 // Packet: 0x09b2
+#if PACKETVER >= 20181121
+packetLen(0x09b2, 10)  // ZC_NOTIFY_BARGAIN_SALE_SELLING
+#elif PACKETVER >= 20180103
 packetLen(0x09b2, 8)  // ZC_NOTIFY_BARGAIN_SALE_SELLING
+#endif
 
 // Packet: 0x09b3
+#if PACKETVER >= 20181121
+packetLen(0x09b3, 6)  // ZC_NOTIFY_BARGAIN_SALE_CLOSE
+#elif PACKETVER >= 20180103
 packetLen(0x09b3, 4)  // ZC_NOTIFY_BARGAIN_SALE_CLOSE
+#endif
 
 // Packet: 0x09b4
 packetLen(0x09b4, 6)  // CZ_OPEN_BARGAIN_SALE_TOOL
@@ -4385,10 +4571,18 @@ packetLen(0x09c1, 10)  // ZC_C_MARKERINFO
 packetLen(0x09c2, -1)  // HC_SECRETSCAN_DATA
 
 // Packet: 0x09c3
+#if PACKETVER >= 20181121
+packetLen(0x09c3, 10)  // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x09c3, 8)  // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+#endif
 
 // Packet: 0x09c4
+#if PACKETVER >= 20181121
+packetLen(0x09c4, 10)  // ZC_ACK_COUNT_BARGAIN_SALE_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x09c4, 8)  // ZC_ACK_COUNT_BARGAIN_SALE_ITEM
+#endif
 
 // Packet: 0x09c5
 packetLen(0x09c5, 1042)  // CS_LOGIN_QUERY
@@ -4490,7 +4684,11 @@ packetLen(0x09e4, 8)  // CZ_MOVE_ITEM_FROM_GUILDSTORAGE_TO_CART
 packetLen(0x09e5, 18)  // ZC_DELETEITEM_FROM_MCSTORE2
 
 // Packet: 0x09e6
+#if PACKETVER >= 20181121
+packetLen(0x09e6, 24)  // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+#elif PACKETVER >= 20180103
 packetLen(0x09e6, 22)  // ZC_UPDATE_ITEM_FROM_BUYING_STORE2
+#endif
 
 // Packet: 0x09e7
 packetLen(0x09e7, 3)  // ZC_NOTIFY_UNREAD_RODEX
@@ -4541,7 +4739,11 @@ packetLen(0x09f5, 11)  // CZ_REQ_DELETE_RODEX
 packetLen(0x09f6, 11)  // ZC_ACK_DELETE_RODEX
 
 // Packet: 0x09f7
+#if PACKETVER >= 20181121
+packetLen(0x09f7, 77)  // ZC_PROPERTY_HOMUN_2
+#elif PACKETVER >= 20180103
 packetLen(0x09f7, 75)  // ZC_PROPERTY_HOMUN_2
+#endif
 
 // Packet: 0x09f8
 packetLen(0x09f8, -1)  // ZC_ALL_QUEST_LIST3
@@ -4583,7 +4785,11 @@ packetLen(0x0a03, 2)  // CZ_REQ_CANCEL_WRITE_RODEX
 packetLen(0x0a04, 6)  // CZ_REQ_ADD_ITEM_RODEX
 
 // Packet: 0x0a05
+#if PACKETVER >= 20181121
+packetLen(0x0a05, 63)  // ZC_ACK_ADD_ITEM_RODEX
+#elif PACKETVER >= 20180103
 packetLen(0x0a05, 53)  // ZC_ACK_ADD_ITEM_RODEX
+#endif
 
 // Packet: 0x0a06
 packetLen(0x0a06, 6)  // CZ_REQ_REMOVE_RODEX_ITEM
@@ -4595,16 +4801,32 @@ packetLen(0x0a07, 9)  // ZC_ACK_REMOVE_RODEX_ITEM
 packetLen(0x0a08, 26)  // CZ_REQ_OPEN_WRITE_RODEX
 
 // Packet: 0x0a09
+#if PACKETVER >= 20181121
+packetLen(0x0a09, 55)  // ZC_ADD_EXCHANGE_ITEM3
+#elif PACKETVER >= 20180103
 packetLen(0x0a09, 45)  // ZC_ADD_EXCHANGE_ITEM3
+#endif
 
 // Packet: 0x0a0a
+#if PACKETVER >= 20181121
+packetLen(0x0a0a, 57)  // ZC_ADD_ITEM_TO_STORE3
+#elif PACKETVER >= 20180103
 packetLen(0x0a0a, 47)  // ZC_ADD_ITEM_TO_STORE3
+#endif
 
 // Packet: 0x0a0b
+#if PACKETVER >= 20181121
+packetLen(0x0a0b, 57)  // ZC_ADD_ITEM_TO_CART3
+#elif PACKETVER >= 20180103
 packetLen(0x0a0b, 47)  // ZC_ADD_ITEM_TO_CART3
+#endif
 
 // Packet: 0x0a0c
+#if PACKETVER >= 20181121
+packetLen(0x0a0c, 66)  // ZC_ITEM_PICKUP_ACK_V6
+#elif PACKETVER >= 20180103
 packetLen(0x0a0c, 56)  // ZC_ITEM_PICKUP_ACK_V6
+#endif
 
 // Packet: 0x0a0d
 packetLen(0x0a0d, -1)  // ZC_INVENTORY_ITEMLIST_EQUIP_V6
@@ -4646,7 +4868,11 @@ packetLen(0x0a18, 14)  // ZC_ACCEPT_ENTER3
 packetLen(0x0a19, 2)  // CZ_REQ_OPEN_ROULETTE
 
 // Packet: 0x0a1a
+#if PACKETVER >= 20181121
+packetLen(0x0a1a, 25)  // ZC_ACK_OPEN_ROULETTE
+#elif PACKETVER >= 20180103
 packetLen(0x0a1a, 23)  // ZC_ACK_OPEN_ROULETTE
+#endif
 
 // Packet: 0x0a1b
 packetLen(0x0a1b, 2)  // CZ_REQ_ROULETTE_INFO
@@ -4664,13 +4890,21 @@ packetLen(0x0a1e, 3)  // ZC_ACK_CLOSE_ROULETTE
 packetLen(0x0a1f, 2)  // CZ_REQ_GENERATE_ROULETTE
 
 // Packet: 0x0a20
+#if PACKETVER >= 20181121
+packetLen(0x0a20, 23)  // ZC_ACK_GENERATE_ROULETTE
+#elif PACKETVER >= 20180103
 packetLen(0x0a20, 21)  // ZC_ACK_GENERATE_ROULETTE
+#endif
 
 // Packet: 0x0a21
 packetLen(0x0a21, 3)  // CZ_RECV_ROULETTE_ITEM
 
 // Packet: 0x0a22
+#if PACKETVER >= 20181121
+packetLen(0x0a22, 7)  // ZC_RECV_ROULETTE_ITEM
+#elif PACKETVER >= 20180103
 packetLen(0x0a22, 5)  // ZC_RECV_ROULETTE_ITEM
+#endif
 
 // Packet: 0x0a23
 packetLen(0x0a23, -1)  // ZC_ALL_ACH_LIST
@@ -4733,7 +4967,11 @@ packetLen(0x0a35, 4)  // CZ_REQ_ONECLICK_ITEMIDENTIFY
 packetLen(0x0a36, 7)  // ZC_HP_INFO_TINY
 
 // Packet: 0x0a37
+#if PACKETVER >= 20181121
+packetLen(0x0a37, 69)  // ZC_ITEM_PICKUP_ACK_V7
+#elif PACKETVER >= 20180103
 packetLen(0x0a37, 59)  // ZC_ITEM_PICKUP_ACK_V7
+#endif
 
 // Packet: 0x0a38
 packetLen(0x0a38, 3)  // ZC_OPEN_UI
@@ -4751,13 +4989,21 @@ packetLen(0x0a3b, -1)  // ZC_CUSTOM_HAT_EFFECT
 packetLen(0x0a3c, -1)
 
 // Packet: 0x0a3d
+#if PACKETVER >= 20181121
+packetLen(0x0a3d, 20)
+#elif PACKETVER >= 20180103
 packetLen(0x0a3d, 18)
+#endif
 
 // Packet: 0x0a3e
 packetLen(0x0a3e, -1)
 
 // Packet: 0x0a3f
+#if PACKETVER >= 20181121
+packetLen(0x0a3f, 11)
+#elif PACKETVER >= 20180103
 packetLen(0x0a3f, 9)
+#endif
 
 // Packet: 0x0a40
 packetLen(0x0a40, 11)
@@ -4784,7 +5030,11 @@ packetLen(0x0a47, 3)  // ZC_STYLE_CHANGE_RES
 packetLen(0x0a48, 2)
 
 // Packet: 0x0a49
+#if PACKETVER >= 20181121
+packetLen(0x0a49, 22)  // CZ_PRIVATE_AIRSHIP_REQUEST
+#elif PACKETVER >= 20180103
 packetLen(0x0a49, 20)  // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
 
 // Packet: 0x0a4a
 packetLen(0x0a4a, 6)  // ZC_PRIVATE_AIRSHIP_RESPONSE
@@ -4799,7 +5049,11 @@ packetLen(0x0a4c, 28)  // ZC_AIRSHIP_SERVERMOVE
 packetLen(0x0a4d, -1)
 
 // Packet: 0x0a4e
+#if PACKETVER >= 20181121
+packetLen(0x0a4e, 6)
+#elif PACKETVER >= 20180103
 packetLen(0x0a4e, 4)
+#endif
 
 // Packet: 0x0a4f
 packetLen(0x0a4f, -1)
@@ -4940,7 +5194,11 @@ packetLen(0x0a87, -1)
 packetLen(0x0a88, 2)
 
 // Packet: 0x0a89
+#if PACKETVER >= 20181121
+packetLen(0x0a89, 61)  // ZC_NOTIFY_OFFLINE_STORE
+#elif PACKETVER >= 20180103
 packetLen(0x0a89, 57)  // ZC_NOTIFY_OFFLINE_STORE
+#endif
 
 // Packet: 0x0a8a
 packetLen(0x0a8a, 6)  // ZC_OFFLINE_STORE_VANISH
@@ -4979,7 +5237,11 @@ packetLen(0x0a94, 2)
 packetLen(0x0a95, 4)
 
 // Packet: 0x0a96
+#if PACKETVER >= 20181121
+packetLen(0x0a96, 61)  // ZC_ADD_EXCHANGE_ITEM4
+#elif PACKETVER >= 20180103
 packetLen(0x0a96, 51)  // ZC_ADD_EXCHANGE_ITEM4
+#endif
 
 // Packet: 0x0a97
 packetLen(0x0a97, 8)  // CZ_ALT_EQUIPMENT_EQUIP
@@ -5018,7 +5280,11 @@ packetLen(0x0aa1, 4)  // CZ_REFINE_ADD_ITEM
 packetLen(0x0aa2, -1)  // ZC_REFINE_ADD_ITEM
 
 // Packet: 0x0aa3
+#if PACKETVER >= 20181121
+packetLen(0x0aa3, 9)  // CZ_REFINE_ITEM_REQUEST
+#elif PACKETVER >= 20180103
 packetLen(0x0aa3, 7)  // CZ_REFINE_ITEM_REQUEST
+#endif
 
 // Packet: 0x0aa4
 packetLen(0x0aa4, 2)  // CZ_REFINE_WINDOW_CLOSE
@@ -5069,13 +5335,21 @@ packetLen(0x0ab2, 7)  // ZC_GROUP_ISALIVE
 packetLen(0x0ab3, 19)
 
 // Packet: 0x0ab4
+#if PACKETVER >= 20181121
+packetLen(0x0ab4, 6)
+#elif PACKETVER >= 20180103
 packetLen(0x0ab4, 4)
+#endif
 
 // Packet: 0x0ab5
 packetLen(0x0ab5, 2)
 
 // Packet: 0x0ab6
+#if PACKETVER >= 20181121
+packetLen(0x0ab6, 8)
+#elif PACKETVER >= 20180103
 packetLen(0x0ab6, 6)
+#endif
 
 // Packet: 0x0ab7
 packetLen(0x0ab7, 4)
@@ -5084,7 +5358,11 @@ packetLen(0x0ab7, 4)
 packetLen(0x0ab8, 2)
 
 // Packet: 0x0ab9
+#if PACKETVER >= 20181121
+packetLen(0x0ab9, 47)  // ZC_ITEM_PREVIEW
+#elif PACKETVER >= 20180103
 packetLen(0x0ab9, 39)  // ZC_ITEM_PREVIEW
+#endif
 
 // Packet: 0x0aba
 packetLen(0x0aba, 2)
@@ -5153,7 +5431,7 @@ packetLen(0x0ace, 4)
 packetLen(0x0acf, 68)  // CA_LOGIN_OTP
 
 // Packet: 0x0ad0
-packetLen(0x0ad0, 11)
+packetLen(0x0ad0, 11)  // CA_OTP_CODE
 
 // Packet: 0x0ad1
 packetLen(0x0ad1, -1)
@@ -5183,7 +5461,11 @@ packetLen(0x0ad8, 8)
 packetLen(0x0ad9, -1)
 
 // Packet: 0x0ada
+#if PACKETVER >= 20181121
+packetLen(0x0ada, 32)  // ZC_REFINE_STATUS
+#elif PACKETVER >= 20180103
 packetLen(0x0ada, 30)  // ZC_REFINE_STATUS
+#endif
 
 // Packet: 0x0adb
 packetLen(0x0adb, -1)
@@ -5192,7 +5474,11 @@ packetLen(0x0adb, -1)
 packetLen(0x0adc, 6)  // ZC_EQUIPWIN_OTHER
 
 // Packet: 0x0add
+#if PACKETVER >= 20181121
+packetLen(0x0add, 24)  // ZC_ITEM_FALL_ENTRY
+#elif PACKETVER >= 20180103
 packetLen(0x0add, 22)  // ZC_ITEM_FALL_ENTRY
+#endif
 
 // Packet: 0x0ade
 packetLen(0x0ade, 6)  // ZC_OVERWEIGHT_PERCENT
@@ -5375,7 +5661,9 @@ packetLen(0x0b04, 80)
 #endif
 
 // Packet: 0x0b05
-#if PACKETVER >= 20180829
+#if PACKETVER >= 20181121
+packetLen(0x0b05, 63)  // ZC_OFFLINE_STORE_VISIBLE
+#elif PACKETVER >= 20180829
 packetLen(0x0b05, 59)  // ZC_OFFLINE_STORE_VISIBLE
 #endif
 
@@ -5439,12 +5727,12 @@ packetLen(0x0b0f, -1)
 
 // Packet: 0x0b10
 #if PACKETVER >= 20181002
-packetLen(0x0b10, 10)
+packetLen(0x0b10, 10)  // CZ_START_USE_SKILL
 #endif
 
 // Packet: 0x0b11
 #if PACKETVER >= 20181002
-packetLen(0x0b11, 4)
+packetLen(0x0b11, 4)  // CZ_STOP_USE_SKILL
 #endif
 
 // Packet: 0x0b12
@@ -5453,7 +5741,9 @@ packetLen(0x0b12, 2)
 #endif
 
 // Packet: 0x0b13
-#if PACKETVER >= 20181017
+#if PACKETVER >= 20181121
+packetLen(0x0b13, 48)  // ZC_ITEM_PREVIEW
+#elif PACKETVER >= 20181017
 packetLen(0x0b13, 40)  // ZC_ITEM_PREVIEW
 #endif
 
@@ -5485,6 +5775,11 @@ packetLen(0x0b18, 4)
 // Packet: 0x0b19
 #if PACKETVER >= 20181031
 packetLen(0x0b19, 2)
+#endif
+
+// Packet: 0x0b1a
+#if PACKETVER >= 20181212
+packetLen(0x0b1a, 29)
 #endif
 
 
