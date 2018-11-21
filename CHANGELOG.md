@@ -9,6 +9,12 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.11.18+1] `November 18 2018` `PATCH 1`
+
+### Fixed
+
+- Fixed a regression in #1215 that prevented characters from being resurrected. (c34871cb3f65412db663a4793df6f055663e16fa)
+
 ## [v2018.11.18] `November 18 2018`
 
 ### Added
