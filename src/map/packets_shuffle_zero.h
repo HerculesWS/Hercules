@@ -69,7 +69,7 @@
     PACKETVER == 20180919 || \
     PACKETVER == 20180928 || \
     PACKETVER == 20181010 || \
-    PACKETVER >= 20181024
+    PACKETVER == 20181024
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
@@ -742,8 +742,9 @@
 	packet(0x0968,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
 #endif
 
-// 2018-11-14aRagexe_zero
-#if PACKETVER == 20181114
+// 2018-11-14aRagexe_zero, 2018-11-20aRagexe_zero
+#if PACKETVER == 20181114 || \
+    PACKETVER >= 20181120
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
