@@ -24790,6 +24790,56 @@ static BUILDIN(itempreview)
 	return true;
 }
 
+// insert or remove card into equipped item
+static BUILDIN(enchantitem)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	const int pos = script_getnum(st, 2);
+	if ((pos < EQI_ACC_L || pos > EQI_HAND_R) && pos != EQI_AMMO) {
+		ShowError("Wrong equip position: %d\n", pos);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const int cardId = script_getnum(st, 4);
+	struct item_data *it = itemdb->exists(cardId);
+	if (it == NULL || it->type != IT_CARD) {
+		ShowError("Item id is not card or not exists: %d\n", cardId);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const int n = sd->equip_index[pos];
+	if (n < 0) {
+		ShowError("Item in equipment slot %d is not equipped\n", pos);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const int cardSlot = script_getnum(st, 3);
+	if (cardSlot < 0 || cardSlot >= MAX_SLOTS) {
+		ShowError("Wrong card slot %d. Must be in range 0-3.\n", cardSlot);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const bool res = clif->enchant_equipment(sd, pc->equip_pos[pos], cardSlot, cardId);
+	if (res) {
+		logs->pick_pc(sd, LOG_TYPE_CARD, -1, &sd->status.inventory[n],sd->inventory_data[n]);
+		sd->status.inventory[n].card[cardSlot] = cardId;
+		logs->pick_pc(sd, LOG_TYPE_CARD,  1, &sd->status.inventory[n],sd->inventory_data[n]);
+		status_calc_pc(sd, SCO_NONE);
+	}
+	script_pushint(st, res);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25528,6 +25578,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(changecamera, "iii?"),
 
 		BUILDIN_DEF(itempreview, "i"),
+		BUILDIN_DEF(enchantitem, "iii"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

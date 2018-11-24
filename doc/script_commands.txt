@@ -10237,3 +10237,14 @@ Update already opened preview window with item from
 Works for 20181017 RE and main clients or newer.
 
 ---------------------------------------
+
+*enchantitem(<equip_pos>, <card_slot>, <card_id>);
+
+Insert card into equipped item in EQI_* slot.
+card_slot - can be 0 to 3.
+card_id   - any card item id.
+
+returns true if all parameters correct
+false in other case.
+Works for 20160831 main, 20151118 RE, any zero version
+---------------------------------------

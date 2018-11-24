@@ -21992,17 +21992,20 @@ static void clif_item_preview(struct map_session_data *sd, int n)
 }
 
 // insert cardId into equipped item in pos equipment slot into slot cardSlot.
-static void clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId)
+static bool clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId)
 {
 #if PACKETVER_MAIN_NUM >= 20160831 || PACKETVER_RE_NUM >= 20151118 || defined(PACKETVER_ZERO)
-	nullpo_retv(sd);
-	Assert_retv(cardSlot >= 0 && cardSlot <= 3);
+	nullpo_ret(sd);
+	Assert_ret(cardSlot >= 0 && cardSlot < MAX_SLOTS);
 	struct PACKET_ZC_ENCHANT_EQUIPMENT p;
 	p.packetType = HEADER_ZC_ENCHANT_EQUIPMENT;
 	p.wearState = pos;
 	p.cardSlot = cardSlot;
 	p.itemId = cardId;
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
+	return true;
+#else
+	return false;
 #endif
 }
 
