@@ -3824,6 +3824,7 @@ static void clif_equipitemack(struct map_session_data *sd, int n, int pos, enum 
 	p.index = n+2;
 	p.wearLocation = pos;
 #if PACKETVER >= 20100629
+	Assert_retv(n >= 0 && n < MAX_INVENTORY);
 	if (result == EIA_SUCCESS && sd->inventory_data[n]->equip&EQP_VISIBLE)
 		p.wItemSpriteNumber = sd->inventory_data[n]->view_sprite;
 	else

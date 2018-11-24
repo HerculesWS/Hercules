@@ -1073,6 +1073,7 @@ static int pc_isequip(struct map_session_data *sd, int n)
 	struct item_data *item;
 
 	nullpo_ret(sd);
+	Assert_ret(n >= 0 && n < MAX_INVENTORY);
 
 	item = sd->inventory_data[n];
 
