@@ -1554,6 +1554,7 @@ struct clif_interface {
 	void (*camera_showWindow) (struct map_session_data *sd);
 	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
 	void (*item_preview) (struct map_session_data *sd, int n);
+	void (*enchant_equipment) (struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
 };
 
 #ifdef HERCULES_CORE

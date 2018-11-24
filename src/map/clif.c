@@ -21991,6 +21991,21 @@ static void clif_item_preview(struct map_session_data *sd, int n)
 #endif
 }
 
+// insert cardId into equipped item in pos equipment slot into slot cardSlot.
+static void clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId)
+{
+#if PACKETVER_MAIN_NUM >= 20160831 || PACKETVER_RE_NUM >= 20151118 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+	Assert_retv(cardSlot >= 0 && cardSlot <= 3);
+	struct PACKET_ZC_ENCHANT_EQUIPMENT p;
+	p.packetType = HEADER_ZC_ENCHANT_EQUIPMENT;
+	p.wearState = pos;
+	p.cardSlot = cardSlot;
+	p.itemId = cardId;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23157,6 +23172,7 @@ void clif_defaults(void)
 	clif->camera_showWindow = clif_camera_showWindow;
 	clif->camera_change = clif_camera_change;
 	clif->item_preview = clif_item_preview;
+	clif->enchant_equipment = clif_enchant_equipment;
 
 	// -- Pet Evolution
 	clif->pPetEvolution = clif_parse_pet_evolution;
