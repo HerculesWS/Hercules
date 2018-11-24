@@ -29,6 +29,9 @@
 		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
 	enum { HEADER_##name = id };
 
+#define DEFINE_PACKET_ID(name, id) \
+	enum { HEADER_##name = id };
+
 #define packetLen(id, len) PACKET_LEN_##id = (len),
 enum packet_lengths {
 #include "common/packets_len.h"
