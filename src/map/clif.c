@@ -20083,7 +20083,7 @@ static bool clif_parse_roulette_db(void)
 /**
  *
  **/
-static void clif_roulette_generate_ack(struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID)
+static void clif_roulette_generate_ack(struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID)
 {
 #if PACKETVER >= 20140612
 	struct packet_roulette_generate_ack p;

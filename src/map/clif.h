@@ -493,10 +493,14 @@ enum RECV_ROULETTE_ITEM_ACK {
 };
 
 enum GENERATE_ROULETTE_ACK {
-	GENERATE_ROULETTE_SUCCESS =  0x0,
-	GENERATE_ROULETTE_FAILED =  0x1,
-	GENERATE_ROULETTE_NO_ENOUGH_POINT =  0x2,
-	GENERATE_ROULETTE_LOSING =  0x3,
+	GENERATE_ROULETTE_SUCCESS = 0x0,
+	GENERATE_ROULETTE_FAILED  = 0x1,
+	GENERATE_ROULETTE_NO_ENOUGH_POINT = 0x2,
+	GENERATE_ROULETTE_LOSING  = 0x3,
+	GENERATE_ROULETTE_NO_ENOUGH_INVENTORY_SPACE = 0x4,
+#if PACKETVER >= 20141001
+	GENERATE_ROULETTE_CANT_PLAY = 0x5,
+#endif
 };
 
 enum OPEN_ROULETTE_ACK{
@@ -1219,7 +1223,7 @@ struct clif_interface {
 	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
 	/* */
 	bool (*parse_roulette_db) (void);
-	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID);
+	void (*roulette_generate_ack) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);
 	/* Merge Items */
 	void (*openmergeitem) (int fd, struct map_session_data *sd);
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
