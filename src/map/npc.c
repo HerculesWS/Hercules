@@ -2439,11 +2439,11 @@ static int npc_unload(struct npc_data *nd, bool single)
 		}
 		if (nd->u.scr.timer_event)
 			aFree(nd->u.scr.timer_event);
-		if (nd->src_id == 0) {
-			if(nd->u.scr.script) {
-				script->free_code(nd->u.scr.script);
-				nd->u.scr.script = NULL;
-			}
+		if (nd->u.scr.script != NULL && (nd->src_id == 0 || nd->u.scr.script->script_pointer != NULL)) {
+			script->free_code(nd->u.scr.script);
+			nd->u.scr.script = NULL;
+		}
+		if (nd->src_id == 0 || (nd->u.scr.script != NULL && nd->u.scr.script->script_pointer != NULL)) {
 			if (nd->u.scr.label_list) {
 				aFree(nd->u.scr.label_list);
 				nd->u.scr.label_list = NULL;
@@ -3261,11 +3261,23 @@ static bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data 
 	++npc->npc_script;
 	nd->u.scr.xs = xs;
 	nd->u.scr.ys = ys;
-	nd->u.scr.script = snd->u.scr.script;
 	nd->u.scr.label_list = snd->u.scr.label_list;
 	nd->u.scr.label_list_num = snd->u.scr.label_list_num;
 	nd->u.scr.shop = snd->u.scr.shop;
 	nd->u.scr.trader = snd->u.scr.trader;
+
+	if (script->config.true_npc_duplicate || options & NPO_TRUE_DUP) {
+		struct script_code *code;
+		CREATE(code, struct script_code, 1);
+
+		VECTOR_INIT(code->script_buf);
+		code->script_pointer = &snd->u.scr.script->script_buf;
+		code->local.vars = NULL;
+		code->local.arrays = NULL;
+		nd->u.scr.script = code;
+	} else {
+		nd->u.scr.script = snd->u.scr.script;
+	}
 
 	//add the npc to its location
 	npc->add_to_location(nd);
@@ -3282,7 +3294,7 @@ static bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data 
 
 	nd->u.scr.timerid = INVALID_TIMER;
 
-	if (options&NPO_ONINIT) {
+	if (options & NPO_ONINIT || script->config.true_npc_duplicate || options & NPO_TRUE_DUP) {
 		// From npc_parse_script
 		char evname[EVENT_NAME_LENGTH];
 		struct event_data *ev;
@@ -4588,6 +4600,45 @@ static const char *npc_parse_unknown_object(const char *w1, const char *w2, cons
 	return start;
 }
 
+static const char *npc_parse_directive(const char *start, char *buffer, const char *filepath,
+	int *success, enum npc_parse_options *options)
+{
+	// the directive parsing is very basic now, but it could be improved in the future
+	// when we add more directives
+
+	const char *p = start + 1;
+	const char *end = strchr(p, '\n');
+	int line = strline(buffer, start - buffer);
+
+	if (end - p >= 2048 || end == p) {
+		script->error(start, filepath, line, "Directive too short or too long", start);
+		if (success) *success = EXIT_FAILURE;
+		return end;
+	}
+
+	char directive[2048];
+	safestrncpy(directive, p, (end - p) + 1);
+
+	char w1[200];
+	char w2[200];
+
+	if (sscanf(directive, "%30[a-z] %s", w1, w2) != 2) {
+		script->error(start, filepath, line, "Invalid directive format", p);
+		if (success) *success = EXIT_FAILURE;
+		return end;
+	}
+
+	if (strcmp(w1, "pragma") == 0 && strcmp(w2, "true_duplicate") == 0) {
+		*options |= NPO_TRUE_DUP;
+	} else {
+		script->error(start, filepath, line, "Unrecognized directive", p);
+		ShowInfo(">>> This script might have been made for a more recent version of Hercules than what is currently installed.\n");
+		if (success) *success = EXIT_FAILURE;
+	}
+
+	return end;
+}
+
 /**
  * Parses a script file and creates NPCs/functions/mapflags/monsters/etc
  * accordingly.
@@ -4640,12 +4691,19 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 		return EXIT_FAILURE;
 	}
 
+	enum npc_parse_options options = runOnInit ? NPO_ONINIT : NPO_NONE;
+
 	// parse buffer
 	for( p = script->skip_space(buffer); p && *p ; p = script->skip_space(p) ) {
 		int pos[9];
 		char w1[2048], w2[2048], w3[2048], w4[2048];
 		int i, count;
 		lines++;
+
+		if (*p == '#') {
+			p = npc_parse_directive(p, buffer, filepath, &success, &options);
+			continue;
+		}
 
 		// w1<TAB>w2<TAB>w3<TAB>w4
 		count = sv->parse(p, (int)(len+buffer-p), 0, '\t', pos, ARRAYLENGTH(pos), (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
@@ -4754,11 +4812,11 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 			if( strcmp(w1,"function") == 0 ) {
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath, &success);
 			} else {
-				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,runOnInit?NPO_ONINIT:NPO_NONE, &success);
+				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,options, &success);
 			}
 		}
 		else if( strcmp(w2,"trader") == 0 ) {
-			p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,(runOnInit?NPO_ONINIT:NPO_NONE)|NPO_TRADER, &success);
+			p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,options|NPO_TRADER, &success);
 		}
 		else if( strcmp(w2,"warp") == 0 )
 		{
@@ -4766,7 +4824,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 		}
 		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) )
 		{
-			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath, (runOnInit?NPO_ONINIT:NPO_NONE), &success);
+			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath, options, &success);
 		}
 		else if (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0 || strcmp(w2,"miniboss_monster") == 0)
 		{

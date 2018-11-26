@@ -2763,6 +2763,7 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 	VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
 	code->local.vars = NULL;
 	code->local.arrays = NULL;
+	code->script_pointer = NULL;
 #ifdef ENABLE_CASE_CHECK
 	script->local_casecheck.clear();
 	script->parser_current_src = NULL;
@@ -3839,7 +3840,9 @@ static void script_free_code(struct script_code *code)
 	script->free_vars(code->local.vars);
 	if (code->local.arrays)
 		code->local.arrays->destroy(code->local.arrays,script->array_free_db);
+
 	VECTOR_CLEAR(code->script_buf);
+	code->script_pointer = NULL;
 	aFree(code);
 }
 
@@ -4636,7 +4639,17 @@ static void run_script_main(struct script_state *st)
 		st->state = RUN;
 
 	while( st->state == RUN ) {
-		enum c_op c = script->get_com(&st->script->script_buf, &st->pos);
+		enum c_op c;
+		struct script_buf *sbuf;
+
+		if (st->script->script_pointer != NULL) {
+			sbuf = st->script->script_pointer;
+		} else {
+			sbuf = &st->script->script_buf;
+		}
+
+		c = script->get_com(sbuf, &st->pos);
+
 		switch(c) {
 			case C_EOL:
 				if( stack->defsp > stack->sp )
@@ -4645,28 +4658,28 @@ static void run_script_main(struct script_state *st)
 					script->pop_stack(st, stack->defsp, stack->sp);// pop unused stack data. (unused return value)
 				break;
 			case C_INT:
-				script->push_val(stack,C_INT,script->get_num(&st->script->script_buf, &st->pos), NULL);
+				script->push_val(stack,C_INT,script->get_num(sbuf, &st->pos), NULL);
 				break;
 			case C_POS:
 			case C_NAME:
-				script->push_val(stack,c,GETVALUE(&st->script->script_buf, st->pos), NULL);
+				script->push_val(stack,c,GETVALUE(sbuf, st->pos), NULL);
 				st->pos+=3;
 				break;
 			case C_ARG:
 				script->push_val(stack,c,0,NULL);
 				break;
 			case C_STR:
-				script->push_conststr(stack, (const char *)&VECTOR_INDEX(st->script->script_buf, st->pos));
-				while (VECTOR_INDEX(st->script->script_buf, st->pos++) != 0)
+				script->push_conststr(stack, (const char *)&VECTOR_INDEX(*sbuf, st->pos));
+				while (VECTOR_INDEX(*sbuf, st->pos++) != 0)
 					(void)0; // Skip string
 				break;
 			case C_LSTR:
 			{
 				struct map_session_data *lsd = NULL;
 				uint8 translations = 0;
-				int string_id = *((int *)(&VECTOR_INDEX(st->script->script_buf, st->pos)));
+				int string_id = *((int *)(&VECTOR_INDEX(*sbuf, st->pos)));
 				st->pos += sizeof(string_id);
-				translations = *((uint8 *)(&VECTOR_INDEX(st->script->script_buf, st->pos)));
+				translations = *((uint8 *)(&VECTOR_INDEX(*sbuf, st->pos)));
 				st->pos += sizeof(translations);
 
 				if( (!st->rid || !(lsd = map->id2sd(st->rid)) || !lsd->lang_id) && !map->default_lang_id )
@@ -4676,7 +4689,7 @@ static void run_script_main(struct script_state *st)
 					int offset = st->pos;
 
 					for(k = 0; k < translations; k++) {
-						uint8 lang_id = *(uint8 *)(&VECTOR_INDEX(st->script->script_buf, offset));
+						uint8 lang_id = *(uint8 *)(&VECTOR_INDEX(*sbuf, offset));
 						offset += sizeof(uint8);
 						if( lang_id == wlang_id )
 							break;
@@ -4685,7 +4698,7 @@ static void run_script_main(struct script_state *st)
 					if (k == translations)
 						script->push_conststr(stack, script->string_list+string_id);
 					else
-						script->push_conststr(stack, *(const char**)(&VECTOR_INDEX(st->script->script_buf, offset)));
+						script->push_conststr(stack, *(const char**)(&VECTOR_INDEX(*sbuf, offset)));
 				}
 				st->pos += ( ( sizeof(char*) + sizeof(uint8) ) * translations );
 			}
@@ -4828,6 +4841,7 @@ static bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
 	libconfig->setting_lookup_int(setting, "input_max_value", &script->config.input_max_value);
+	libconfig->setting_lookup_bool_real(setting, "true_npc_duplicate", &script->config.true_npc_duplicate);
 
 	if (!HPM->parse_conf(&config, filename, HPCT_SCRIPT, imported))
 		retval = false;
@@ -25950,6 +25964,8 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITR_NOAUCTION", ITR_NOAUCTION, false, false);
 	script->set_constant("ITR_ALL", ITR_ALL, false, false);
 
+	script->constdb_comment("script engine self-test");
+	script->set_constant("TRUE_NPC_DUPLICATE", script->config.true_npc_duplicate, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
@@ -26253,6 +26269,7 @@ void script_defaults(void)
 	script->config.ontouch_name = "OnTouch_";  //ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	script->config.ontouch2_name = "OnTouch";  //ontouch2_name (run whenever a char walks into the OnTouch area)
 	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)
+	script->config.true_npc_duplicate = false; // false by default, for backward compatibility
 
 	// for ENABLE_CASE_CHECK
 	script->calc_hash_ci = calc_hash_ci;

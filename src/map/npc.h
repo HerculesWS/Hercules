@@ -38,6 +38,7 @@ enum npc_parse_options {
 	NPO_NONE  = 0x0,
 	NPO_ONINIT  = 0x1,
 	NPO_TRADER  = 0x2,
+	NPO_TRUE_DUP = 0x4,
 };
 
 enum npc_shop_types {
