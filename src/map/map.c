@@ -641,7 +641,7 @@ static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, 
 	va_list ap;
 
 	va_start(ap, type);
-	returnCount = map->vforcountinarea(func, m, 0, 0, map->list[m].bxs, map->list[m].bys, count, type, ap);
+	returnCount = map->vforcountinarea(func, m, 0, 0, map->list[m].xs, map->list[m].ys, count, type, ap);
 	va_end(ap);
 
 	return returnCount;
