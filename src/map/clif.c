@@ -19824,7 +19824,7 @@ static void clif_parse_RouletteOpen(int fd, struct map_session_data *sd)
 	}
 
 	p.PacketType = 0xa1a;
-	p.Result = 0;
+	p.Result = OPEN_ROULETTE_SUCCESS;
 	p.Serial = 0;
 	p.Step = sd->roulette.stage - 1;
 	p.Idx = (char)sd->roulette.prizeIdx;
