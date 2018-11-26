@@ -418,12 +418,6 @@ enum packet_headers {
 #else
 	buyingStoreUpdateItemType = 0x81b,
 #endif
-// probably can works also for < 20141223, but in 3CeaM packet size defined only for 20150513
-#if PACKETVER >= 20150513
-	hominfoType = 0x9f7,
-#else
-	hominfoType = 0x22e,
-#endif
 	reqName = 0x95,
 #if PACKETVER >= 20150503 // Confirm this?
 	reqNameAllType = 0xA30,
@@ -2276,6 +2270,8 @@ struct PACKET_ZC_ACK_WEAPONREFINE {
 #endif
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO_NUM)
+// PACKET_ZC_PROPERTY_HOMUN2
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
@@ -2297,13 +2293,8 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 mdef;
 	uint16 flee;
 	uint16 amotion;
-#if PACKETVER < 20150513
-	uint16 hp;
-	uint16 maxHp;
-#else
 	uint32 hp;
 	uint32 maxHp;
-#endif
 	uint16 sp;
 	uint16 maxSp;
 	uint32 exp;
@@ -2311,6 +2302,41 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 skillPoints;
 	uint16 range;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x09f7);
+#elif PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO_NUM)
+// PACKET_ZC_PROPERTY_HOMUN1
+struct PACKET_ZC_PROPERTY_HOMUN {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	uint8 flags;
+	uint16 level;
+	uint16 hunger;
+	uint16 intimacy;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint16 atk2;
+	uint16 matk;
+	uint16 hit;
+	uint16 crit;
+	uint16 def;
+	uint16 mdef;
+	uint16 flee;
+	uint16 amotion;
+	uint16 hp;
+	uint16 maxHp;
+	uint16 sp;
+	uint16 maxSp;
+	uint32 exp;
+	uint32 expNext;
+	uint16 skillPoints;
+	uint16 range;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x022e);
+#endif
 
 struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER {
 	int16 packetType;
