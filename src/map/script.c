@@ -15678,6 +15678,29 @@ static BUILDIN(message)
 	return true;
 }
 
+static BUILDIN(servicemessage)
+{
+	struct map_session_data *sd = NULL;
+
+	if (script_hasdata(st, 4)) {
+		if (script_isstringtype(st, 4))
+			sd = script->nick2sd(st, script_getstr(st, 4));
+		else
+			sd = script->id2sd(st, script_getnum(st, 4));
+	} else {
+		sd = script->rid2sd(st);
+	}
+
+	if (sd == NULL)
+		return true;
+
+	const char *message = script_getstr(st, 2);
+	const int color = script_getnum(st, 3);
+	clif->serviceMessageColor(sd, color, message);
+
+	return true;
+}
+
 /*==========================================
  * npctalk (sends message to surrounding area)
  * usage: npctalk("<message>"{, "<npc name>"{, <show_name>}});
@@ -25244,6 +25267,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
 		BUILDIN_DEF(message,"vs"), // [MouseJstr]
+		BUILDIN_DEF(servicemessage, "si?"),
 		BUILDIN_DEF(npctalk,"s??"), // [Valaris][Murilo BiO]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),

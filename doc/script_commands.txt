@@ -10248,3 +10248,13 @@ returns true if all parameters correct
 false in other case.
 Works for 20160831 main, 20151118 RE, any zero version
 ---------------------------------------
+
+*servicemessage("<message>", <color>{, <account_id>})
+*servicemessage("<message>", <color>{, <player_name>})
+
+That command will send a service message to the chat window of the character
+specified by account ID or name, or to connected to npc player.
+It will not be seen by anyone else.
+
+Works fro 20170830 RE and main and for any zero clients
+---------------------------------------
