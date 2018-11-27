@@ -2960,6 +2960,16 @@ struct PACKET_ZC_ENCHANT_EQUIPMENT {
 DEFINE_PACKET_HEADER(ZC_ENCHANT_EQUIPMENT, 0x0a3f);
 #endif  // PACKETVER_MAIN_NUM >= 20160831 || PACKETVER_RE_NUM >= 20151118 || defined(PACKETVER_ZERO)
 
+#if PACKETVER_MAIN_NUM >= 20170830 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_SERVICE_MESSAGE_COLOR {
+	int16 packetType;
+	int16 packetLength;
+	int32 color;
+	char message[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SERVICE_MESSAGE_COLOR, 0x0adb);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

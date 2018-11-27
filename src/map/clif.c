@@ -8971,6 +8971,34 @@ static void clif_messagecolor(struct block_list *bl, uint32 color, const char *m
 	clif->send(buf, WBUFW(buf,2), bl, AREA_CHAT_WOC);
 }
 
+// Message without owner, not logged in chat
+static void clif_serviceMessageColor(struct map_session_data *sd, uint32 color, const char *msg)
+{
+#if PACKETVER_MAIN_NUM >= 20170830 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+	nullpo_retv(msg);
+
+	int msg_len = (int)strlen(msg) + 1;
+
+	if (msg_len > 512) {
+		ShowWarning("clif_serviceMessageColor: Truncating too long message '%s' (len=%d).\n", msg, msg_len);
+		msg_len = 512;
+	}
+
+	const int len = sizeof(struct PACKET_ZC_SERVICE_MESSAGE_COLOR) + msg_len;
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_SERVICE_MESSAGE_COLOR *p = WFIFOP(fd, 0);
+
+	p->packetType = HEADER_ZC_SERVICE_MESSAGE_COLOR;
+	p->packetLength = len;
+	p->color = RGB2BGR(color);
+	safestrncpy(p->message, msg, msg_len);
+
+	WFIFOSET(fd, len);
+#endif
+}
+
 /**
  * Notifies the client that the storage window is still open
  *
@@ -22592,6 +22620,7 @@ void clif_defaults(void)
 	clif->broadcast2 = clif_broadcast2;
 	clif->messagecolor_self = clif_messagecolor_self;
 	clif->messagecolor = clif_messagecolor;
+	clif->serviceMessageColor = clif_serviceMessageColor;
 	clif->disp_overhead = clif_disp_overhead;
 	clif->notify_playerchat = clif_notify_playerchat;
 	clif->msgtable_skill = clif_msgtable_skill;
