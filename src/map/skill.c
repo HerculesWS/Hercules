@@ -7678,10 +7678,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		{
 			unsigned int equip[] = { EQP_WEAPON, EQP_SHIELD, EQP_ARMOR, EQP_HEAD_TOP };
 			int index;
-			if ( sd && (bl->type != BL_PC || (dstsd && pc->checkequip(dstsd, equip[skill_id - AM_CP_WEAPON]) < 0) ||
+			if ( sd && (bl->type != BL_PC || (battle->bc->creator_fullprotect != 2 && ((dstsd && pc->checkequip(dstsd, equip[skill_id - AM_CP_WEAPON]) < 0) ||
 				(dstsd && equip[skill_id - AM_CP_WEAPON] == EQP_SHIELD && pc->checkequip(dstsd, EQP_SHIELD) > 0
 				&& (index = dstsd->equip_index[EQI_HAND_L]) >= 0 && dstsd->inventory_data[index]
-				&& dstsd->inventory_data[index]->type != IT_ARMOR)) ) {
+				&& dstsd->inventory_data[index]->type != IT_ARMOR)))) ) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				map->freeblock_unlock(); // Don't consume item requirements
 				return 0;
@@ -8380,13 +8380,15 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		{
 			unsigned int equip[] = { EQP_WEAPON, EQP_SHIELD, EQP_ARMOR, EQP_HEAD_TOP };
 			int i, s = 0, skilltime = skill->get_time(skill_id, skill_lv);
-			for ( i = 0; i < 4; i++ ) {
-				if ( bl->type != BL_PC || (dstsd && pc->checkequip(dstsd, equip[i]) < 0) )
-					continue;
-				if ( dstsd && equip[i] == EQP_SHIELD ) {
-					short index = dstsd->equip_index[EQI_HAND_L];
-					if ( index >= 0 && dstsd->inventory_data[index] && dstsd->inventory_data[index]->type != IT_ARMOR )
+			for (i = 0; i < 4; i++) {
+				if (battle->bc->creator_fullprotect == 0) {
+					if (bl->type != BL_PC || (dstsd && pc->checkequip(dstsd, equip[i]) < 0))
 						continue;
+					if ( dstsd && equip[i] == EQP_SHIELD ) {
+						short index = dstsd->equip_index[EQI_HAND_L];
+						if ( index >= 0 && dstsd->inventory_data[index] && dstsd->inventory_data[index]->type != IT_ARMOR )
+							continue;
+					}
 				}
 				sc_start(src, bl, (sc_type)(SC_PROTECTWEAPON + i), 100, skill_lv, skilltime);
 				s++;

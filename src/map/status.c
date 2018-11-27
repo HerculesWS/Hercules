@@ -7755,6 +7755,22 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 			}
 			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
+		case SC_PROTECTWEAPON:
+			if (battle->bc->creator_fullprotect != 0)
+				status_change_end(bl, SC_NOEQUIPWEAPON, INVALID_TIMER);
+			break;
+		case SC_PROTECTHELM:
+			if (battle->bc->creator_fullprotect != 0)
+				status_change_end(bl, SC_NOEQUIPHELM, INVALID_TIMER);
+			break;
+		case SC_PROTECTARMOR:
+			if (battle->bc->creator_fullprotect != 0)
+				status_change_end(bl, SC_NOEQUIPARMOR, INVALID_TIMER);
+			break;
+		case SC_PROTECTSHIELD:
+			if (battle->bc->creator_fullprotect != 0)
+				status_change_end(bl, SC_NOEQUIPSHIELD, INVALID_TIMER);
+			break;
 		case SC_MER_FLEE:
 		case SC_MER_ATK:
 		case SC_MER_HP:
