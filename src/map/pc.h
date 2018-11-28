@@ -905,7 +905,7 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*setrestartvalue) (struct map_session_data *sd,int type);
 	int (*makesavestatus) (struct map_session_data *sd);
-	void (*respawn) (struct map_session_data* sd, clr_type clrtype);
+	void (*respawn) (struct map_session_data* sd, enum clr_type clrtype);
 	int (*setnewpc) (struct map_session_data *sd, int account_id, int char_id, int login_id1, unsigned int client_tick, int sex, int fd);
 	bool (*authok) (struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, const struct mmo_charstatus *st, bool changing_mapservers);
 	void (*authfail) (struct map_session_data *sd);
@@ -927,9 +927,9 @@ END_ZEROED_BLOCK; /* End */
 	int (*calc_skilltree_normalize_job) (struct map_session_data *sd);
 	int (*clean_skilltree) (struct map_session_data *sd);
 
-	int (*setpos) (struct map_session_data* sd, unsigned short map_index, int x, int y, clr_type clrtype);
+	int (*setpos) (struct map_session_data* sd, unsigned short map_index, int x, int y, enum clr_type clrtype);
 	int (*setsavepoint) (struct map_session_data *sd, short map_index, int x, int y);
-	int (*randomwarp) (struct map_session_data *sd,clr_type type);
+	int (*randomwarp) (struct map_session_data *sd, enum clr_type type);
 	int (*memo) (struct map_session_data* sd, int pos);
 
 	int (*checkadditem) (struct map_session_data *sd,int nameid,int amount);

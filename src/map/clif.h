@@ -237,13 +237,13 @@ typedef enum emotion_type {
 	E_MAX
 } emotion_type;
 
-typedef enum clr_type {
+enum clr_type {
 	CLR_OUTSIGHT = 0,
 	CLR_DEAD,
 	CLR_RESPAWN,
 	CLR_TELEPORT,
 	CLR_TRICKDEAD,
-} clr_type;
+};
 
 enum map_property { // clif_map_property
 	MAPPROPERTY_NOTHING       = 0,
@@ -756,9 +756,9 @@ struct clif_interface {
 	void (*package_announce) (struct map_session_data *sd, int nameid, int containerid);
 	void (*item_drop_announce) (struct map_session_data *sd, int nameid, char *monsterName);
 	/* unit-related */
-	void (*clearunit_single) (int id, clr_type type, int fd);
-	void (*clearunit_area) (struct block_list* bl, clr_type type);
-	void (*clearunit_delayed) (struct block_list* bl, clr_type type, int64 tick);
+	void (*clearunit_single) (int id, enum clr_type type, int fd);
+	void (*clearunit_area) (struct block_list* bl, enum clr_type type);
+	void (*clearunit_delayed) (struct block_list* bl, enum clr_type type, int64 tick);
 	void (*walkok) (struct map_session_data *sd);
 	void (*move) (struct unit_data *ud);
 	void (*move2) (struct block_list *bl, struct view_data *vd, struct unit_data *ud);

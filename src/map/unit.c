@@ -918,7 +918,7 @@ static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag
 //Warps a unit/ud to a given map/position.
 //In the case of players, pc->setpos is used.
 //it respects the no warp flags, so it is safe to call this without doing nowarpto/nowarp checks.
-static int unit_warp(struct block_list *bl, short m, short x, short y, clr_type type)
+static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_type type)
 {
 	struct unit_data *ud;
 	nullpo_ret(bl);
@@ -2419,7 +2419,7 @@ static int unit_changeviewsize(struct block_list *bl, short size)
  * Otherwise it is assumed bl is being warped.
  * On-Kill specific stuff is not performed here, look at status->damage for that.
  *------------------------------------------*/
-static int unit_remove_map(struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func)
+static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const char *file, int line, const char *func)
 {
 	struct unit_data *ud = unit->bl2ud(bl);
 	struct status_change *sc = status->get_sc(bl);
@@ -2665,7 +2665,7 @@ static int unit_remove_map(struct block_list *bl, clr_type clrtype, const char *
 	return 1;
 }
 
-static void unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype)
+static void unit_remove_map_pc(struct map_session_data *sd, enum clr_type clrtype)
 {
 	nullpo_retv(sd);
 	unit->remove_map(&sd->bl,clrtype,ALC_MARK);
@@ -2697,7 +2697,7 @@ static void unit_free_pc(struct map_session_data *sd)
  * Function to free all related resources to the bl
  * if unit is on map, it is removed using the clrtype specified
  *------------------------------------------*/
-static int unit_free(struct block_list *bl, clr_type clrtype)
+static int unit_free(struct block_list *bl, enum clr_type clrtype)
 {
 	struct unit_data *ud = unit->bl2ud( bl );
 	nullpo_ret(bl);

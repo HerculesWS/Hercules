@@ -890,7 +890,7 @@ static void clif_clearflooritem(struct flooritem_data *fitem, int fd)
 ///     2 = logged out
 ///     3 = teleport
 ///     4 = trickdead
-static void clif_clearunit_single(int id, clr_type type, int fd)
+static void clif_clearunit_single(int id, enum clr_type type, int fd)
 {
 	WFIFOHEAD(fd, packet_len(0x80));
 	WFIFOW(fd,0) = 0x80;
@@ -907,7 +907,7 @@ static void clif_clearunit_single(int id, clr_type type, int fd)
 ///     2 = logged out
 ///     3 = teleport
 ///     4 = trickdead
-static void clif_clearunit_area(struct block_list *bl, clr_type type)
+static void clif_clearunit_area(struct block_list *bl, enum clr_type type)
 {
 	unsigned char buf[8];
 
@@ -936,12 +936,12 @@ static void clif_clearunit_area(struct block_list *bl, clr_type type)
 static int clif_clearunit_delayed_sub(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = (struct block_list *)data;
-	clif->clearunit_area(bl, (clr_type) id);
+	clif->clearunit_area(bl, (enum clr_type) id);
 	ers_free(clif->delay_clearunit_ers,bl);
 	return 0;
 }
 
-static void clif_clearunit_delayed(struct block_list *bl, clr_type type, int64 tick)
+static void clif_clearunit_delayed(struct block_list *bl, enum clr_type type, int64 tick)
 {
 	struct block_list *tbl;
 

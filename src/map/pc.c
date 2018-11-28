@@ -5707,7 +5707,7 @@ static int pc_steal_coin(struct map_session_data *sd, struct block_list *target,
  * 1 - Invalid map index.
  * 2 - Map not in this map-server, and failed to locate alternate map-server.
  *------------------------------------------*/
-static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, clr_type clrtype)
+static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, enum clr_type clrtype)
 {
 	int16 m;
 
@@ -5947,7 +5947,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
  *   0 = fail or FIXME success (from pc->setpos)
  *   x(1|2) = fail
  *------------------------------------------*/
-static int pc_randomwarp(struct map_session_data *sd, clr_type type)
+static int pc_randomwarp(struct map_session_data *sd, enum clr_type type)
 {
 	int x,y,i=0;
 	int16 m;
@@ -7946,7 +7946,7 @@ static int pc_skillheal2_bonus(struct map_session_data *sd, uint16 skill_id)
 	return bonus;
 }
 
-static void pc_respawn(struct map_session_data *sd, clr_type clrtype)
+static void pc_respawn(struct map_session_data *sd, enum clr_type clrtype)
 {
 	if( !pc_isdead(sd) )
 		return; // not applicable
