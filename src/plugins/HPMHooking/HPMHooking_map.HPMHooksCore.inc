@@ -1164,6 +1164,8 @@ struct {
 	struct HPMHookPoint *HP_clif_messagecolor_self_post;
 	struct HPMHookPoint *HP_clif_messagecolor_pre;
 	struct HPMHookPoint *HP_clif_messagecolor_post;
+	struct HPMHookPoint *HP_clif_serviceMessageColor_pre;
+	struct HPMHookPoint *HP_clif_serviceMessageColor_post;
 	struct HPMHookPoint *HP_clif_disp_overhead_pre;
 	struct HPMHookPoint *HP_clif_disp_overhead_post;
 	struct HPMHookPoint *HP_clif_notify_playerchat_pre;
@@ -2224,6 +2226,8 @@ struct {
 	struct HPMHookPoint *HP_clif_camera_change_post;
 	struct HPMHookPoint *HP_clif_item_preview_pre;
 	struct HPMHookPoint *HP_clif_item_preview_post;
+	struct HPMHookPoint *HP_clif_enchant_equipment_pre;
+	struct HPMHookPoint *HP_clif_enchant_equipment_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -7785,6 +7789,8 @@ struct {
 	int HP_clif_messagecolor_self_post;
 	int HP_clif_messagecolor_pre;
 	int HP_clif_messagecolor_post;
+	int HP_clif_serviceMessageColor_pre;
+	int HP_clif_serviceMessageColor_post;
 	int HP_clif_disp_overhead_pre;
 	int HP_clif_disp_overhead_post;
 	int HP_clif_notify_playerchat_pre;
@@ -8845,6 +8851,8 @@ struct {
 	int HP_clif_camera_change_post;
 	int HP_clif_item_preview_pre;
 	int HP_clif_item_preview_post;
+	int HP_clif_enchant_equipment_pre;
+	int HP_clif_enchant_equipment_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

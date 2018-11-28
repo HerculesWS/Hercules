@@ -15184,6 +15184,32 @@ void HP_clif_messagecolor(struct block_list *bl, uint32 color, const char *msg) 
 	}
 	return;
 }
+void HP_clif_serviceMessageColor(struct map_session_data *sd, uint32 color, const char *msg) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_serviceMessageColor_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, uint32 *color, const char **msg);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_serviceMessageColor_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_serviceMessageColor_pre[hIndex].func;
+			preHookFunc(&sd, &color, &msg);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.serviceMessageColor(sd, color, msg);
+	}
+	if (HPMHooks.count.HP_clif_serviceMessageColor_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, uint32 color, const char *msg);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_serviceMessageColor_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_serviceMessageColor_post[hIndex].func;
+			postHookFunc(sd, color, msg);
+		}
+	}
+	return;
+}
 void HP_clif_disp_overhead(struct block_list *bl, const char *mes, enum send_target target, struct block_list *target_bl) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_disp_overhead_pre > 0) {
@@ -20841,10 +20867,10 @@ bool HP_clif_parse_roulette_db(void) {
 	}
 	return retVal___;
 }
-void HP_clif_roulette_generate_ack(struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID) {
+void HP_clif_roulette_generate_ack(struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_roulette_generate_ack_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned char *result, short *stage, short *prizeIdx, int *bonusItemID);
+		void (*preHookFunc) (struct map_session_data **sd, enum GENERATE_ROULETTE_ACK *result, short *stage, short *prizeIdx, int *bonusItemID);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_roulette_generate_ack_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_roulette_generate_ack_pre[hIndex].func;
@@ -20859,7 +20885,7 @@ void HP_clif_roulette_generate_ack(struct map_session_data *sd, unsigned char re
 		HPMHooks.source.clif.roulette_generate_ack(sd, result, stage, prizeIdx, bonusItemID);
 	}
 	if (HPMHooks.count.HP_clif_roulette_generate_ack_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID);
+		void (*postHookFunc) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_roulette_generate_ack_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_roulette_generate_ack_post[hIndex].func;
 			postHookFunc(sd, result, stage, prizeIdx, bonusItemID);
@@ -28990,6 +29016,33 @@ void HP_clif_item_preview(struct map_session_data *sd, int n) {
 		}
 	}
 	return;
+}
+bool HP_clif_enchant_equipment(struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_clif_enchant_equipment_pre > 0) {
+		bool (*preHookFunc) (struct map_session_data **sd, enum equip_pos *pos, int *cardSlot, int *cardId);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_enchant_equipment_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_enchant_equipment_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &pos, &cardSlot, &cardId);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.enchant_equipment(sd, pos, cardSlot, cardId);
+	}
+	if (HPMHooks.count.HP_clif_enchant_equipment_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_enchant_equipment_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_enchant_equipment_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, pos, cardSlot, cardId);
+		}
+	}
+	return retVal___;
 }
 /* cmdline_interface */
 void HP_cmdline_init(void) {

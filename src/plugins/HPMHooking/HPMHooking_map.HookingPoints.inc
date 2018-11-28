@@ -606,6 +606,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->broadcast2, HP_clif_broadcast2) },
 	{ HP_POP(clif->messagecolor_self, HP_clif_messagecolor_self) },
 	{ HP_POP(clif->messagecolor, HP_clif_messagecolor) },
+	{ HP_POP(clif->serviceMessageColor, HP_clif_serviceMessageColor) },
 	{ HP_POP(clif->disp_overhead, HP_clif_disp_overhead) },
 	{ HP_POP(clif->notify_playerchat, HP_clif_notify_playerchat) },
 	{ HP_POP(clif->msgtable, HP_clif_msgtable) },
@@ -1136,6 +1137,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->camera_showWindow, HP_clif_camera_showWindow) },
 	{ HP_POP(clif->camera_change, HP_clif_camera_change) },
 	{ HP_POP(clif->item_preview, HP_clif_item_preview) },
+	{ HP_POP(clif->enchant_equipment, HP_clif_enchant_equipment) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

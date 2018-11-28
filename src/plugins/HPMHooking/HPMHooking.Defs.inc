@@ -1572,6 +1572,8 @@ typedef void (*HPMHOOK_pre_clif_messagecolor_self) (int *fd, uint32 *color, cons
 typedef void (*HPMHOOK_post_clif_messagecolor_self) (int fd, uint32 color, const char *msg);
 typedef void (*HPMHOOK_pre_clif_messagecolor) (struct block_list **bl, uint32 *color, const char **msg);
 typedef void (*HPMHOOK_post_clif_messagecolor) (struct block_list *bl, uint32 color, const char *msg);
+typedef void (*HPMHOOK_pre_clif_serviceMessageColor) (struct map_session_data **sd, uint32 *color, const char **msg);
+typedef void (*HPMHOOK_post_clif_serviceMessageColor) (struct map_session_data *sd, uint32 color, const char *msg);
 typedef void (*HPMHOOK_pre_clif_disp_overhead) (struct block_list **bl, const char **mes, enum send_target *target, struct block_list **target_bl);
 typedef void (*HPMHOOK_post_clif_disp_overhead) (struct block_list *bl, const char *mes, enum send_target target, struct block_list *target_bl);
 typedef void (*HPMHOOK_pre_clif_notify_playerchat) (struct block_list **bl, const char **mes);
@@ -2006,8 +2008,8 @@ typedef void (*HPMHOOK_pre_clif_npc_market_purchase_ack) (struct map_session_dat
 typedef void (*HPMHOOK_post_clif_npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
 typedef bool (*HPMHOOK_pre_clif_parse_roulette_db) (void);
 typedef bool (*HPMHOOK_post_clif_parse_roulette_db) (bool retVal___);
-typedef void (*HPMHOOK_pre_clif_roulette_generate_ack) (struct map_session_data **sd, unsigned char *result, short *stage, short *prizeIdx, int *bonusItemID);
-typedef void (*HPMHOOK_post_clif_roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID);
+typedef void (*HPMHOOK_pre_clif_roulette_generate_ack) (struct map_session_data **sd, enum GENERATE_ROULETTE_ACK *result, short *stage, short *prizeIdx, int *bonusItemID);
+typedef void (*HPMHOOK_post_clif_roulette_generate_ack) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);
 typedef void (*HPMHOOK_pre_clif_openmergeitem) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_openmergeitem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_cancelmergeitem) (int *fd, struct map_session_data **sd);
@@ -2632,6 +2634,8 @@ typedef void (*HPMHOOK_pre_clif_camera_change) (struct map_session_data **sd, fl
 typedef void (*HPMHOOK_post_clif_camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_item_preview) (struct map_session_data **sd, int *n);
 typedef void (*HPMHOOK_post_clif_item_preview) (struct map_session_data *sd, int n);
+typedef bool (*HPMHOOK_pre_clif_enchant_equipment) (struct map_session_data **sd, enum equip_pos *pos, int *cardSlot, int *cardId);
+typedef bool (*HPMHOOK_post_clif_enchant_equipment) (bool retVal___, struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
