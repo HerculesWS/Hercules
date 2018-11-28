@@ -132,6 +132,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define CHAR_MAPIF_H
 	#endif // CHAR_MAPIF_H
+	#ifdef CHAR_PACKETS_HC_STRUCT_H
+		{ "PACKET_HC_ACK_CHARINFO_PER_PAGE", sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_PACKETS_HC_STRUCT_H
+	#endif // CHAR_PACKETS_HC_STRUCT_H
 	#ifdef CHAR_PINCODE_H
 		{ "pincode_interface", sizeof(struct pincode_interface), SERVER_TYPE_CHAR },
 	#else

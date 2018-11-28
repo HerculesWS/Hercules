@@ -9786,10 +9786,10 @@ void HP_clif_item_drop_announce(struct map_session_data *sd, int nameid, char *m
 	}
 	return;
 }
-void HP_clif_clearunit_single(int id, clr_type type, int fd) {
+void HP_clif_clearunit_single(int id, enum clr_type type, int fd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_clearunit_single_pre > 0) {
-		void (*preHookFunc) (int *id, clr_type *type, int *fd);
+		void (*preHookFunc) (int *id, enum clr_type *type, int *fd);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_clearunit_single_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_clearunit_single_pre[hIndex].func;
@@ -9804,7 +9804,7 @@ void HP_clif_clearunit_single(int id, clr_type type, int fd) {
 		HPMHooks.source.clif.clearunit_single(id, type, fd);
 	}
 	if (HPMHooks.count.HP_clif_clearunit_single_post > 0) {
-		void (*postHookFunc) (int id, clr_type type, int fd);
+		void (*postHookFunc) (int id, enum clr_type type, int fd);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_clearunit_single_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_clearunit_single_post[hIndex].func;
 			postHookFunc(id, type, fd);
@@ -9812,10 +9812,10 @@ void HP_clif_clearunit_single(int id, clr_type type, int fd) {
 	}
 	return;
 }
-void HP_clif_clearunit_area(struct block_list *bl, clr_type type) {
+void HP_clif_clearunit_area(struct block_list *bl, enum clr_type type) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_clearunit_area_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, clr_type *type);
+		void (*preHookFunc) (struct block_list **bl, enum clr_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_clearunit_area_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_clearunit_area_pre[hIndex].func;
@@ -9830,7 +9830,7 @@ void HP_clif_clearunit_area(struct block_list *bl, clr_type type) {
 		HPMHooks.source.clif.clearunit_area(bl, type);
 	}
 	if (HPMHooks.count.HP_clif_clearunit_area_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, clr_type type);
+		void (*postHookFunc) (struct block_list *bl, enum clr_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_clearunit_area_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_clearunit_area_post[hIndex].func;
 			postHookFunc(bl, type);
@@ -9838,10 +9838,10 @@ void HP_clif_clearunit_area(struct block_list *bl, clr_type type) {
 	}
 	return;
 }
-void HP_clif_clearunit_delayed(struct block_list *bl, clr_type type, int64 tick) {
+void HP_clif_clearunit_delayed(struct block_list *bl, enum clr_type type, int64 tick) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_clearunit_delayed_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, clr_type *type, int64 *tick);
+		void (*preHookFunc) (struct block_list **bl, enum clr_type *type, int64 *tick);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_clearunit_delayed_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_clearunit_delayed_pre[hIndex].func;
@@ -9856,7 +9856,7 @@ void HP_clif_clearunit_delayed(struct block_list *bl, clr_type type, int64 tick)
 		HPMHooks.source.clif.clearunit_delayed(bl, type, tick);
 	}
 	if (HPMHooks.count.HP_clif_clearunit_delayed_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, clr_type type, int64 tick);
+		void (*postHookFunc) (struct block_list *bl, enum clr_type type, int64 tick);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_clearunit_delayed_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_clearunit_delayed_post[hIndex].func;
 			postHookFunc(bl, type, tick);
@@ -58749,10 +58749,10 @@ int HP_pc_makesavestatus(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-void HP_pc_respawn(struct map_session_data *sd, clr_type clrtype) {
+void HP_pc_respawn(struct map_session_data *sd, enum clr_type clrtype) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_pc_respawn_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, clr_type *clrtype);
+		void (*preHookFunc) (struct map_session_data **sd, enum clr_type *clrtype);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_respawn_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_respawn_pre[hIndex].func;
@@ -58767,7 +58767,7 @@ void HP_pc_respawn(struct map_session_data *sd, clr_type clrtype) {
 		HPMHooks.source.pc.respawn(sd, clrtype);
 	}
 	if (HPMHooks.count.HP_pc_respawn_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, clr_type clrtype);
+		void (*postHookFunc) (struct map_session_data *sd, enum clr_type clrtype);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_respawn_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_respawn_post[hIndex].func;
 			postHookFunc(sd, clrtype);
@@ -59231,11 +59231,11 @@ int HP_pc_clean_skilltree(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, clr_type clrtype) {
+int HP_pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, enum clr_type clrtype) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_setpos_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, clr_type *clrtype);
+		int (*preHookFunc) (struct map_session_data **sd, unsigned short *map_index, int *x, int *y, enum clr_type *clrtype);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_setpos_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_setpos_pre[hIndex].func;
@@ -59250,7 +59250,7 @@ int HP_pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, i
 		retVal___ = HPMHooks.source.pc.setpos(sd, map_index, x, y, clrtype);
 	}
 	if (HPMHooks.count.HP_pc_setpos_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, unsigned short map_index, int x, int y, clr_type clrtype);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, unsigned short map_index, int x, int y, enum clr_type clrtype);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_setpos_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_setpos_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, map_index, x, y, clrtype);
@@ -59285,11 +59285,11 @@ int HP_pc_setsavepoint(struct map_session_data *sd, short map_index, int x, int 
 	}
 	return retVal___;
 }
-int HP_pc_randomwarp(struct map_session_data *sd, clr_type type) {
+int HP_pc_randomwarp(struct map_session_data *sd, enum clr_type type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_randomwarp_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, clr_type *type);
+		int (*preHookFunc) (struct map_session_data **sd, enum clr_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_randomwarp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_randomwarp_pre[hIndex].func;
@@ -59304,7 +59304,7 @@ int HP_pc_randomwarp(struct map_session_data *sd, clr_type type) {
 		retVal___ = HPMHooks.source.pc.randomwarp(sd, type);
 	}
 	if (HPMHooks.count.HP_pc_randomwarp_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, clr_type type);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum clr_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_randomwarp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_randomwarp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, type);
@@ -87973,11 +87973,11 @@ int HP_unit_blown(struct block_list *bl, int dx, int dy, int count, int flag) {
 	}
 	return retVal___;
 }
-int HP_unit_warp(struct block_list *bl, short m, short x, short y, clr_type type) {
+int HP_unit_warp(struct block_list *bl, short m, short x, short y, enum clr_type type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_unit_warp_pre > 0) {
-		int (*preHookFunc) (struct block_list **bl, short *m, short *x, short *y, clr_type *type);
+		int (*preHookFunc) (struct block_list **bl, short *m, short *x, short *y, enum clr_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_warp_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_unit_warp_pre[hIndex].func;
@@ -87992,7 +87992,7 @@ int HP_unit_warp(struct block_list *bl, short m, short x, short y, clr_type type
 		retVal___ = HPMHooks.source.unit.warp(bl, m, x, y, type);
 	}
 	if (HPMHooks.count.HP_unit_warp_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl, short m, short x, short y, clr_type type);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, short m, short x, short y, enum clr_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_warp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_unit_warp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, m, x, y, type);
@@ -88672,11 +88672,11 @@ int HP_unit_changeviewsize(struct block_list *bl, short size) {
 	}
 	return retVal___;
 }
-int HP_unit_remove_map(struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func) {
+int HP_unit_remove_map(struct block_list *bl, enum clr_type clrtype, const char *file, int line, const char *func) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_unit_remove_map_pre > 0) {
-		int (*preHookFunc) (struct block_list **bl, clr_type *clrtype, const char **file, int *line, const char **func);
+		int (*preHookFunc) (struct block_list **bl, enum clr_type *clrtype, const char **file, int *line, const char **func);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_remove_map_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_unit_remove_map_pre[hIndex].func;
@@ -88691,7 +88691,7 @@ int HP_unit_remove_map(struct block_list *bl, clr_type clrtype, const char *file
 		retVal___ = HPMHooks.source.unit.remove_map(bl, clrtype, file, line, func);
 	}
 	if (HPMHooks.count.HP_unit_remove_map_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, enum clr_type clrtype, const char *file, int line, const char *func);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_remove_map_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_unit_remove_map_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, clrtype, file, line, func);
@@ -88699,10 +88699,10 @@ int HP_unit_remove_map(struct block_list *bl, clr_type clrtype, const char *file
 	}
 	return retVal___;
 }
-void HP_unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype) {
+void HP_unit_remove_map_pc(struct map_session_data *sd, enum clr_type clrtype) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_unit_remove_map_pc_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, clr_type *clrtype);
+		void (*preHookFunc) (struct map_session_data **sd, enum clr_type *clrtype);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_remove_map_pc_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_unit_remove_map_pc_pre[hIndex].func;
@@ -88717,7 +88717,7 @@ void HP_unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype) {
 		HPMHooks.source.unit.remove_map_pc(sd, clrtype);
 	}
 	if (HPMHooks.count.HP_unit_remove_map_pc_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, clr_type clrtype);
+		void (*postHookFunc) (struct map_session_data *sd, enum clr_type clrtype);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_remove_map_pc_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_unit_remove_map_pc_post[hIndex].func;
 			postHookFunc(sd, clrtype);
@@ -88751,11 +88751,11 @@ void HP_unit_free_pc(struct map_session_data *sd) {
 	}
 	return;
 }
-int HP_unit_free(struct block_list *bl, clr_type clrtype) {
+int HP_unit_free(struct block_list *bl, enum clr_type clrtype) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_unit_free_pre > 0) {
-		int (*preHookFunc) (struct block_list **bl, clr_type *clrtype);
+		int (*preHookFunc) (struct block_list **bl, enum clr_type *clrtype);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_free_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_unit_free_pre[hIndex].func;
@@ -88770,7 +88770,7 @@ int HP_unit_free(struct block_list *bl, clr_type clrtype) {
 		retVal___ = HPMHooks.source.unit.free(bl, clrtype);
 	}
 	if (HPMHooks.count.HP_unit_free_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl, clr_type clrtype);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, enum clr_type clrtype);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_free_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_unit_free_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, clrtype);
