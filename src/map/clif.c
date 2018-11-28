@@ -7512,10 +7512,11 @@ static void clif_pet_food(struct map_session_data *sd, int foodid, int fail)
 /// 01cd { <skill id>.L }*7
 static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
 {
+#if PACKETVER_MAIN_NUM >= 20090406 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_SAK_NUM >= 20080618
 	nullpo_retv(sd);
 
 	int fd = sd->fd;
-#if PACKETVER_RE_NUM >= 20181031
+#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
 	// reserve space for 7 skills
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_AUTOSPELLLIST) + 4 * 7);
 #else
@@ -7523,7 +7524,7 @@ static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
 #endif
 	struct PACKET_ZC_AUTOSPELLLIST *p = WFIFOP(fd, 0);
 	memset(p, 0, sizeof(struct PACKET_ZC_AUTOSPELLLIST));
-	p->packetType = autoSpellList;
+	p->packetType = HEADER_ZC_AUTOSPELLLIST;
 	int index = 0;
 
 	if (skill_lv > 0 && pc->checkskill(sd, MG_NAPALMBEAT) > 0)
@@ -7541,7 +7542,7 @@ static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
 	if (skill_lv > 9 && pc->checkskill(sd, MG_FROSTDIVER) > 0)
 		p->skills[index++] = MG_FROSTDIVER;
 
-#if PACKETVER_RE_NUM >= 20181031
+#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
 	const int len = sizeof(struct PACKET_ZC_AUTOSPELLLIST) + index * 4;
 	p->packetLength = len;
 #else
@@ -7551,6 +7552,7 @@ static void clif_autospell(struct map_session_data *sd, uint16 skill_lv)
 
 	sd->menuskill_id = SA_AUTOSPELL;
 	sd->menuskill_val = skill_lv;
+#endif
 }
 
 /// Devotion's visual effect (ZC_DEVOTIONLIST).

@@ -441,11 +441,6 @@ enum packet_headers {
 #else
 	guildLeave = 0x15a,
 #endif
-#if PACKETVER_RE_NUM >= 20181031
-	autoSpellList = 0xafb,
-#else
-	autoSpellList = 0x1cd,
-#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -2904,22 +2899,22 @@ struct PACKET_ZC_CAMERA_INFO {
 	float latitude;
 } __attribute__((packed));
 
-#if PACKETVER_RE_NUM >= 20181031
-#define PACKET_ZC_AUTOSPELLLIST PACKET_ZC_AUTOSPELLLIST2
-#else
-#define PACKET_ZC_AUTOSPELLLIST PACKET_ZC_AUTOSPELLLIST1
-#endif
-
-struct PACKET_ZC_AUTOSPELLLIST1 {
-	int16 packetType;
-	int skills[7];
-} __attribute__((packed));
-
-struct PACKET_ZC_AUTOSPELLLIST2 {
+#if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
+// PACKET_ZC_AUTOSPELLLIST2
+struct PACKET_ZC_AUTOSPELLLIST {
 	int16 packetType;
 	int16 packetLength;
 	int skills[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_AUTOSPELLLIST, 0x0afb);
+#elif PACKETVER_MAIN_NUM >= 20090406 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_SAK_NUM >= 20080618
+// PACKET_ZC_AUTOSPELLLIST1
+struct PACKET_ZC_AUTOSPELLLIST {
+	int16 packetType;
+	int skills[7];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_AUTOSPELLLIST, 0x01cd);
+#endif
 
 #if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 #if PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
