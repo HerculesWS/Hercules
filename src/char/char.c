@@ -41,6 +41,7 @@
 #include "char/inter.h"
 #include "char/loginif.h"
 #include "char/mapif.h"
+#include "char/packets_hc_struct.h"
 #include "char/pincode.h"
 
 #include "common/HPM.h"
@@ -1051,7 +1052,7 @@ static int char_mmo_gender(const struct char_session_data *sd, const struct mmo_
 
 //=====================================================================================================
 // Loads the basic character rooster for the given account. Returns total buffer used.
-static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
+static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int *count)
 {
 	struct SqlStmt *stmt;
 	struct mmo_charstatus p;
@@ -1059,6 +1060,9 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
 	char last_map[MAP_NAME_LENGTH_EXT];
 	time_t unban_time = 0;
 	char sex[2];
+
+	if (count)
+		*count = 0;
 
 	nullpo_ret(sd);
 	nullpo_ret(buf);
@@ -1131,7 +1135,8 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
 		return 0;
 	}
 
-	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++ ) {
+	int tmpCount = 0;
+	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++) {
 		if (p.slot >= MAX_CHARS)
 			continue;
 		p.last_point.map = mapindex->name2id(last_map);
@@ -1139,11 +1144,14 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
 		sd->unban_time[p.slot] = unban_time;
 		p.sex = chr->mmo_gender(sd, &p, sex[0]);
 		j += chr->mmo_char_tobuf(WBUFP(buf, j), &p);
+		tmpCount ++;
 	}
 
-	memset(sd->new_name,0,sizeof(sd->new_name));
+	memset(sd->new_name, 0, sizeof(sd->new_name));
 
 	SQL->StmtFree(stmt);
+	if (count)
+		*count = tmpCount;
 	return j;
 }
 
@@ -2099,14 +2107,23 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 }
 
 /* Made Possible by Yommy~! <3 */
-static void char_mmo_char_send099d(int fd, struct char_session_data *sd)
+static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data *sd)
 {
-// support added for client between 20121010 and 20130320
-#if PACKETVER > 20120418
-	WFIFOHEAD(fd,4 + (MAX_CHARS*MAX_CHAR_BUF));
-	WFIFOW(fd,0) = 0x99d;
-	WFIFOW(fd,2) = chr->mmo_chars_fromsql(sd, WFIFOP(fd,4)) + 4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
+	WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE) + (MAX_CHARS * MAX_CHAR_BUF));
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
+	int count = 0;
+	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
+	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, 4), &count) + sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	WFIFOSET(fd, p->packetLen);
+	// send empty packet if chars count is 3*N, for trigger final code in client
+	if (count % 3 != 0) {
+		WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
+		p = WFIFOP(fd, 0);
+		p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
+		p->packetLen = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+		WFIFOSET(fd, p->packetLen);
+	}
 #endif
 }
 
@@ -2192,7 +2209,7 @@ static int char_mmo_char_send_characters(int fd, struct char_session_data *sd)
 	WFIFOB(fd,6) = MAX_CHARS; // Premium slots. AKA any existent chars past sd->char_slots but within MAX_CHARS will show a 'Premium Service' in red
 #endif
 	memset(WFIFOP(fd,4 + offset), 0, 20); // unknown bytes
-	j+=chr->mmo_chars_fromsql(sd, WFIFOP(fd,j));
+	j += chr->mmo_chars_fromsql(sd, WFIFOP(fd, j), NULL);
 	WFIFOW(fd,2) = j; // packet len
 	WFIFOSET(fd,j);
 
@@ -4173,10 +4190,10 @@ static void char_delete2_accept_actual_ack(int fd, int char_id, uint32 result)
 /// Any (0x718): An unknown error has occurred.
 static void char_delete2_accept_ack(int fd, int char_id, uint32 result)
 {// HC: <082a>.W <char id>.L <Msg:0-5>.L
-#if PACKETVER >= 20130000 /* not sure the exact date -- must refresh or client gets stuck */
+#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	if( result == 1 ) {
 		struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
-		chr->mmo_char_send099d(fd, sd);
+		chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 	}
 #endif
 	chr->delete2_accept_actual_ack(fd, char_id, result);
@@ -5009,7 +5026,7 @@ static void char_parse_char_pincode_first_pin(int fd, struct char_session_data *
 
 static void char_parse_char_request_chars(int fd, struct char_session_data *sd)
 {
-	chr->mmo_char_send099d(fd, sd);
+	chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 	RFIFOSKIP(fd,2);
 }
 
@@ -5029,8 +5046,8 @@ static void char_parse_char_move_character(int fd, struct char_session_data *sd)
 	chr->change_character_slot_ack(fd, ret);
 	/* for some stupid reason it requires the char data again (gravity -_-) */
 	if( ret )
-#if PACKETVER >= 20130000
-		chr->mmo_char_send099d(fd, sd);
+#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
+		chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 #else
 		chr->mmo_char_send_characters(fd, sd);
 #endif
@@ -6427,7 +6444,7 @@ void char_defaults(void)
 	chr->divorce_char_sql = char_divorce_char_sql;
 	chr->count_users = char_count_users;
 	chr->mmo_char_tobuf = char_mmo_char_tobuf;
-	chr->mmo_char_send099d = char_mmo_char_send099d;
+	chr->send_HC_ACK_CHARINFO_PER_PAGE = char_send_HC_ACK_CHARINFO_PER_PAGE;
 	chr->mmo_char_send_ban_list = char_mmo_char_send_ban_list;
 	chr->mmo_char_send_slots_info = char_mmo_char_send_slots_info;
 	chr->mmo_char_send_characters = char_mmo_char_send_characters;

@@ -46,7 +46,7 @@ CHAR_C = char.c HPMchar.c loginif.c mapif.c geoip.c inter.c int_achievement.c in
 CHAR_OBJ = $(addprefix obj_sql/, $(patsubst %.c,%.o,$(CHAR_C)))
 CHAR_H = char.h HPMchar.h loginif.h mapif.h geoip.h inter.h int_achievement.h int_auction.h int_clan.h int_elemental.h \
          int_guild.h int_homun.h int_mail.h int_mercenary.h int_party.h int_pet.h \
-         int_quest.h int_rodex.h int_storage.h pincode.h
+         int_quest.h int_rodex.h int_storage.h pincode.h packets_hc_struct.h
 CHAR_PH =
 
 HAVE_MYSQL=@HAVE_MYSQL@
