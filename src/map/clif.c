@@ -11999,33 +11999,24 @@ static void clif_parse_UseSkillToPos_mercenary(struct mercenary_data *md, struct
 		unit->skilluse_pos(&md->bl, x, y, skill_id, skill_lv);
 }
 
-static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-/// Request to use a targeted skill.
-/// 0113 <skill lv>.W <skill id>.W <target id>.L (CZ_USE_SKILL)
-/// 0438 <skill lv>.W <skill id>.W <target id>.L (CZ_USE_SKILL2)
-/// There are various variants of this packet, some of them have padding between fields.
-static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
+static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id) __attribute__((nonnull (2)));
+static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id)
 {
-	uint16 skill_id, skill_lv;
-	int tmp, target_id;
 	int64 tick = timer->gettick();
 
-	skill_lv = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0]);
-	skill_id = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[1]);
-	target_id = RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[2]);
+	if (skill_lv < 1)
+		skill_lv = 1; //No clue, I have seen the client do this with guild skills :/ [Skotlex]
 
-	if( skill_lv < 1 ) skill_lv = 1; //No clue, I have seen the client do this with guild skills :/ [Skotlex]
-
-	tmp = skill->get_inf(skill_id);
-	if (tmp&INF_GROUND_SKILL || !tmp)
+	int tmp = skill->get_inf(skill_id);
+	if (tmp & INF_GROUND_SKILL || !tmp)
 		return; //Using a ground/passive skill on a target? WRONG.
 
-	if( skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE + MAX_HOMUNSKILL ) {
+	if (skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE + MAX_HOMUNSKILL) {
 		clif->pUseSkillToId_homun(sd->hd, sd, tick, skill_id, skill_lv, target_id);
 		return;
 	}
 
-	if( skill_id >= MC_SKILLBASE && skill_id < MC_SKILLBASE + MAX_MERCSKILL ) {
+	if (skill_id >= MC_SKILLBASE && skill_id < MC_SKILLBASE + MAX_MERCSKILL) {
 		clif->pUseSkillToId_mercenary(sd->md, sd, tick, skill_id, skill_lv, target_id);
 		return;
 	}
@@ -12042,51 +12033,52 @@ static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	if( pc_cant_act(sd)
-	&& skill_id != RK_REFRESH
-	&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN))
-	&& (sd->state.storage_flag != STORAGE_FLAG_CLOSED && !(tmp&INF_SELF_SKILL)) // SELF skills can be used with the storage open, issue: 8027
-	)
+	if (pc_cant_act(sd)
+		&& skill_id != RK_REFRESH
+		&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN))
+		&& (sd->state.storage_flag != STORAGE_FLAG_CLOSED && !(tmp&INF_SELF_SKILL)) // SELF skills can be used with the storage open, issue: 8027
+	) {
+		return;
+	}
+
+	if (pc_issit(sd))
 		return;
 
-	if( pc_issit(sd) )
+	if (skill->not_ok(skill_id, sd))
 		return;
 
-	if( skill->not_ok(skill_id, sd) )
-		return;
-
-	if( sd->bl.id != target_id && tmp&INF_SELF_SKILL )
+	if (sd->bl.id != target_id && tmp & INF_SELF_SKILL)
 		target_id = sd->bl.id; // never trust the client
 
-	if( target_id < 0 && -target_id == sd->bl.id ) // for disguises [Valaris]
+	if (target_id < 0 && -target_id == sd->bl.id) // for disguises [Valaris]
 		target_id = sd->bl.id;
 
-	if( sd->ud.skilltimer != INVALID_TIMER ) {
-		if( skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST )
+	if (sd->ud.skilltimer != INVALID_TIMER) {
+		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
 			return;
-	} else if( DIFF_TICK(tick, sd->ud.canact_tick) < 0 ) {
-		if( sd->skillitem != skill_id ) {
+	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
+		if (sd->skillitem != skill_id) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
 	}
 
-	if( sd->sc.option&OPTION_COSTUME )
+	if (sd->sc.option & OPTION_COSTUME)
 		return;
 
-	if( sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id) )
+	if (sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id))
 		return; // On basilica only caster can use Basilica again to stop it.
 
-	if( sd->menuskill_id ) {
-		if( sd->menuskill_id == SA_TAMINGMONSTER ) {
+	if (sd->menuskill_id) {
+		if (sd->menuskill_id == SA_TAMINGMONSTER) {
 			clif_menuskill_clear(sd); //Cancel pet capture.
-		} else if( sd->menuskill_id != SA_AUTOSPELL )
+		} else if (sd->menuskill_id != SA_AUTOSPELL)
 			return; //Can't use skills while a menu is open.
 	}
-	if( sd->skillitem == skill_id ) {
-		if( skill_lv != sd->skillitemlv )
+	if (sd->skillitem == skill_id) {
+		if (skill_lv != sd->skillitemlv)
 			skill_lv = sd->skillitemlv;
-		if( !(tmp&INF_SELF_SKILL) )
+		if (!(tmp&INF_SELF_SKILL))
 			pc->delinvincibletimer(sd); // Target skills through items cancel invincibility. [Inkfish]
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
 		return;
@@ -12095,20 +12087,43 @@ static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	sd->skillitem = sd->skillitemlv = 0;
 
 	if (skill_id >= GD_SKILLBASE && skill_id < GD_MAX) {
-		if( sd->state.gmaster_flag )
+		if (sd->state.gmaster_flag)
 			skill_lv = guild->checkskill(sd->guild, skill_id);
 		else
 			skill_lv = 0;
 	} else {
 		tmp = pc->checkskill(sd, skill_id);
-		if( skill_lv > tmp )
+		if (skill_lv > tmp)
 			skill_lv = tmp;
 	}
 
 	pc->delinvincibletimer(sd);
 
-	if( skill_lv )
+	if (skill_lv)
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
+}
+
+static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to use a targeted skill.
+/// 0113 <skill lv>.W <skill id>.W <target id>.L (CZ_USE_SKILL)
+/// 0438 <skill lv>.W <skill id>.W <target id>.L (CZ_USE_SKILL2)
+/// There are various variants of this packet, some of them have padding between fields.
+static void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
+{
+	clif->useSkillToIdReal(fd,
+		sd,
+		RFIFOW(fd, packet_db[RFIFOW(fd, 0)].pos[1]),
+		RFIFOW(fd, packet_db[RFIFOW(fd, 0)].pos[0]),
+		RFIFOL(fd, packet_db[RFIFOW(fd, 0)].pos[2]));
+}
+
+static void clif_parse_startUseSkillToId(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_startUseSkillToId(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
+	const struct PACKET_CZ_START_USE_SKILL *p = RFIFOP(fd, 0);
+	clif->useSkillToIdReal(fd, sd, p->skillId, p->skillLv, p->targetId);
+#endif
 }
 
 /*==========================================
@@ -22947,6 +22962,8 @@ void clif_defaults(void)
 	clif->pUseSkillToId = clif_parse_UseSkillToId;
 	clif->pUseSkillToId_homun = clif_parse_UseSkillToId_homun;
 	clif->pUseSkillToId_mercenary = clif_parse_UseSkillToId_mercenary;
+	clif->pStartUseSkillToId = clif_parse_startUseSkillToId;
+	clif->useSkillToIdReal = clif_useSkillToIdReal;
 	clif->pUseSkillToPos = clif_parse_UseSkillToPos;
 	clif->pUseSkillToPosSub = clif_parse_UseSkillToPosSub;
 	clif->pUseSkillToPos_homun = clif_parse_UseSkillToPos_homun;

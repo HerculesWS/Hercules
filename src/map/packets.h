@@ -1905,4 +1905,8 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
+	packet(0x0b10,clif->pStartUseSkillToId);
+#endif
+
 #endif /* MAP_PACKETS_H */

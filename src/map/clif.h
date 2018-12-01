@@ -1290,7 +1290,9 @@ struct clif_interface {
 	void (*pChangeCart) (int fd,struct map_session_data *sd);
 	void (*pStatusUp) (int fd,struct map_session_data *sd);
 	void (*pSkillUp) (int fd,struct map_session_data *sd);
+	void (*useSkillToIdReal) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id);
 	void (*pUseSkillToId) (int fd, struct map_session_data *sd);
+	void (*pStartUseSkillToId) (int fd, struct map_session_data *sd);
 	void (*pUseSkillToId_homun) (struct homun_data *hd, struct map_session_data *sd, int64 tick, uint16 skill_id, uint16 skill_lv, int target_id);
 	void (*pUseSkillToId_mercenary) (struct mercenary_data *md, struct map_session_data *sd, int64 tick, uint16 skill_id, uint16 skill_lv, int target_id);
 	void (*pUseSkillToPos) (int fd, struct map_session_data *sd);

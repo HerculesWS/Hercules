@@ -2965,6 +2965,16 @@ struct PACKET_ZC_SERVICE_MESSAGE_COLOR {
 DEFINE_PACKET_HEADER(ZC_SERVICE_MESSAGE_COLOR, 0x0adb);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
+struct PACKET_CZ_START_USE_SKILL {
+	int16 packetType;
+	int16 skillId;
+	int16 skillLv;
+	uint32 targetId;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_START_USE_SKILL, 0x0b10);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
