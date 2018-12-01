@@ -2973,6 +2973,12 @@ struct PACKET_CZ_START_USE_SKILL {
 	uint32 targetId;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_START_USE_SKILL, 0x0b10);
+
+struct PACKET_CZ_STOP_USE_SKILL {
+	int16 packetType;
+	int16 skillId;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_STOP_USE_SKILL, 0x0b11);
 #endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

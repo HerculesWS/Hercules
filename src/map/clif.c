@@ -12126,6 +12126,17 @@ static void clif_parse_startUseSkillToId(int fd, struct map_session_data *sd)
 #endif
 }
 
+static void clif_parse_stopUseSkillToId(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_stopUseSkillToId(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
+	const struct PACKET_CZ_STOP_USE_SKILL *p = RFIFOP(fd, 0);
+	if (p->skillId != GC_ROLLINGCUTTER) {
+		ShowWarning("Packet CZ_STOP_USE_SKILL usage for unknown skill: %d\n", p->skillId);
+	}
+#endif
+}
+
 /*==========================================
  * Client tells server he'd like to use AoE skill id 'skill_id' of level 'skill_lv' on 'x','y' location
  *------------------------------------------*/
@@ -22963,6 +22974,7 @@ void clif_defaults(void)
 	clif->pUseSkillToId_homun = clif_parse_UseSkillToId_homun;
 	clif->pUseSkillToId_mercenary = clif_parse_UseSkillToId_mercenary;
 	clif->pStartUseSkillToId = clif_parse_startUseSkillToId;
+	clif->pStopUseSkillToId = clif_parse_stopUseSkillToId;
 	clif->useSkillToIdReal = clif_useSkillToIdReal;
 	clif->pUseSkillToPos = clif_parse_UseSkillToPos;
 	clif->pUseSkillToPosSub = clif_parse_UseSkillToPosSub;

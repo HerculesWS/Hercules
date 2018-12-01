@@ -1907,6 +1907,7 @@ packet(0x96e,clif->ackmergeitems);
 
 #if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
 	packet(0x0b10,clif->pStartUseSkillToId);
+	packet(0x0b11,clif->pStopUseSkillToId);
 #endif
 
 #endif /* MAP_PACKETS_H */
