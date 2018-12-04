@@ -1108,13 +1108,15 @@ OnInstanceInit:
 		next();
 		mes("The bottom of the Main Altar trembles furiously.");
 		next();
-		specialeffect(EF_METEORSTORM);
-		specialeffect(EF_METEORSTORM);
-		mesf("[%s]", strcharinfo(PC_NAME));
-		mes("Watch out! Something... Something is coming.");
-		'ins_baphomet = 6;
-		donpcevent(instance_npcname("ins_2f_hero_broad")+"::OnEnable");
-		disablenpc(instance_npcname("The Main Altar#ss"));
+		if ('ins_baphomet == 5 && getpartyleader(.@party_id, 2) == getcharid(CHAR_ID_CHAR)) {
+			specialeffect(EF_METEORSTORM);
+			specialeffect(EF_METEORSTORM);
+			mesf("[%s]", strcharinfo(PC_NAME));
+			mes("Watch out! Something... Something is coming.");
+			'ins_baphomet = 6;
+			donpcevent(instance_npcname("ins_2f_hero_broad")+"::OnEnable");
+			disablenpc(instance_npcname("The Main Altar#ss"));
+		}
 		close();
 	} else {
 		mes("An evil power, too terrible to describe, lies under the great altar radiating a violet color.");
