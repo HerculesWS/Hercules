@@ -31,11 +31,17 @@
 
 /* Definitions and macros */
 /// Maximum amount of packets processed at once from the same client
+#ifndef MAX_PROCESSED_PACKETS
 #define MAX_PROCESSED_PACKETS (3)
+#endif
 
 // Packet DB
+#ifndef MIN_PACKET_DB
 #define MIN_PACKET_DB 0x0064
+#endif
+#ifndef MAX_PACKET_LOGIN_DB
 #define MAX_PACKET_LOGIN_DB 0x0ad0
+#endif
 
 /**
  * Login Client Interface additional data
