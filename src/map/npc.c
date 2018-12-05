@@ -1948,7 +1948,11 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 				break;
 
 			case ADDITEM_OVERAMOUNT:
+#if PACKETVER >= 20110705
+				return 9;
+#else
 				return 2;
+#endif
 		}
 
 		value = pc->modifybuyvalue(sd,value);

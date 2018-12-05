@@ -11448,6 +11448,8 @@ static void clif_parse_NpcBuySellSelected(int fd, struct map_session_data *sd)
 ///     1 = "You do not have enough zeny."
 ///     2 = "You are over your Weight Limit."
 ///     3 = "Out of the maximum capacity, you have too many items."
+///     9 = "Amounts are exceeded the possession of the item is not available for purchase."
+///    10 = "Props open-air store sales will be traded in RODEX"
 static void clif_npc_buy_result(struct map_session_data *sd, unsigned char result)
 {
 	int fd;
