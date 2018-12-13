@@ -1910,4 +1910,8 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b11,clif->pStopUseSkillToId);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
+	packet(0x0b14,clif->pInventoryExpansion);
+#endif
+
 #endif /* MAP_PACKETS_H */

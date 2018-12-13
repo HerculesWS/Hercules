@@ -870,6 +870,7 @@ struct clif_interface {
 	void (*inventoryExpansionInfo) (struct map_session_data *sd);
 	void (*inventoryExpandAck) (struct map_session_data *sd, enum expand_inventory result, int itemId);
 	void (*inventoryExpandResult) (struct map_session_data *sd, enum expand_inventory_result result);
+	void (*pInventoryExpansion) (int fd, struct map_session_data *sd);
 	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
 	void (*clearcart) (int fd);
 	void (*item_identify_list) (struct map_session_data *sd);
