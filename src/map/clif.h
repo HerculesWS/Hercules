@@ -677,6 +677,14 @@ enum memorial_dungeon_command {
 	COMMAND_MEMORIALDUNGEON_DESTROY_FORCE = 0x3,
 };
 
+enum expand_inventory {
+	EXPAND_INVENTORY_ASK_CONFIRMATION = 0,
+	EXPAND_INVENTORY_FAILED = 1,
+	EXPAND_INVENTORY_OTHER_WORK = 2,
+	EXPAND_INVENTORY_MISSING_ITEM = 3,
+	EXPAND_INVENTORY_MAX_SIZE = 4
+};
+
 /**
  * Clif.c Interface
  **/
@@ -852,6 +860,7 @@ struct clif_interface {
 	void (*cartList) (struct map_session_data *sd);
 	void (*cartItems) (struct map_session_data *sd, enum inventory_type type);
 	void (*inventoryExpansionInfo) (struct map_session_data *sd);
+	void (*inventoryExpandAck) (struct map_session_data *sd, enum expand_inventory result, int itemId);
 	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
 	void (*clearcart) (int fd);
 	void (*item_identify_list) (struct map_session_data *sd);

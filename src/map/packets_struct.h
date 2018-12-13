@@ -2989,6 +2989,15 @@ struct PACKET_ZC_INVENTORY_EXPANSION_INFO {
 DEFINE_PACKET_HEADER(ZC_INVENTORY_EXPANSION_INFO, 0x0b18);
 #endif
 
+#if PACKETVER_ZERO_NUM >= 20181212
+struct PACKET_ZC_ACK_INVENTORY_EXPAND {
+	int16 packetType;
+	uint8 result;
+	uint32 itemId;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_INVENTORY_EXPAND, 0x0b15);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

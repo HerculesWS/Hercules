@@ -3078,6 +3078,21 @@ static void clif_inventoryExpansionInfo(struct map_session_data *sd)
 #endif
 }
 
+static void clif_inventoryExpandAck(struct map_session_data *sd, enum expand_inventory result, int itemId)
+{
+#if PACKETVER_ZERO_NUM >= 20181212
+	nullpo_retv(sd);
+
+	const int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_INVENTORY_EXPAND));
+	struct PACKET_ZC_ACK_INVENTORY_EXPAND *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ACK_INVENTORY_EXPAND;
+	p->result = result;
+	p->itemId = itemId;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_INVENTORY_EXPAND));
+#endif
+}
+
 /// Removes cart (ZC_CARTOFF).
 /// 012b
 /// Client behavior:
@@ -22544,6 +22559,7 @@ void clif_defaults(void)
 	clif->cartList = clif_cartList;
 	clif->cartItems = clif_cartItems;
 	clif->inventoryExpansionInfo = clif_inventoryExpansionInfo;
+	clif->inventoryExpandAck = clif_inventoryExpandAck;
 	clif->favorite_item = clif_favorite_item;
 	clif->clearcart = clif_clearcart;
 	clif->item_identify_list = clif_item_identify_list;
