@@ -773,6 +773,7 @@ static int pc_setnewpc(struct map_session_data *sd, int account_id, int char_id,
 	sd->battle_status.speed = sd->base_status.speed = DEFAULT_WALK_SPEED;
 	sd->state.warp_clean = 1;
 	sd->catch_target_class = -1;
+	sd->inventorySize = 100;
 	return 0;
 }
 
@@ -1380,6 +1381,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 		pc->setpos(sd,sd->status.last_point.map,0,0,CLR_OUTSIGHT);
 	}
 
+	clif->inventoryExpansionInfo(sd);
 	clif->overweight_percent(sd);
 	clif->authok(sd);
 

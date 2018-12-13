@@ -2981,6 +2981,14 @@ struct PACKET_CZ_STOP_USE_SKILL {
 DEFINE_PACKET_HEADER(CZ_STOP_USE_SKILL, 0x0b11);
 #endif
 
+#if PACKETVER_ZERO_NUM >= 20181212
+struct PACKET_ZC_INVENTORY_EXPANSION_INFO {
+	int16 packetType;
+	int16 expansionSize;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_INVENTORY_EXPANSION_INFO, 0x0b18);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

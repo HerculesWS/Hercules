@@ -165,7 +165,18 @@
 #endif
 #define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
 
+#ifndef MAX_INVENTORY
 #define MAX_INVENTORY 100
+#endif
+
+#ifndef FIXED_INVENTORY_SIZE
+#define FIXED_INVENTORY_SIZE 100
+#endif
+
+#if FIXED_INVENTORY_SIZE > MAX_INVENTORY
+#error FIXED_INVENTORY_SIZE must be same or smaller than MAX_INVENTORY
+#endif
+
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #if PACKETVER >= 20100413
 #ifndef MAX_CHARS
