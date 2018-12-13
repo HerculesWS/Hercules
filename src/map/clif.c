@@ -3139,6 +3139,22 @@ static void clif_parse_inventoryExpansionConfirmed(int fd, struct map_session_da
 #endif
 }
 
+static void clif_parse_inventoryExpansionRejected(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_inventoryExpansionRejected(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
+	char evname[EVENT_NAME_LENGTH];
+	struct event_data *ev = NULL;
+
+	safestrncpy(evname, "inventory_expansion::OnInvExpandRejected", EVENT_NAME_LENGTH);
+	if ((ev = strdb_get(npc->ev_db, evname))) {
+		script->run_npc(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
+	} else {
+		ShowError("clif_parse_inventoryExpansionRejected: event '%s' not found, operation failed.\n", evname);
+	}
+#endif
+}
+
 /// Removes cart (ZC_CARTOFF).
 /// 012b
 /// Client behavior:
@@ -22609,6 +22625,7 @@ void clif_defaults(void)
 	clif->inventoryExpandResult = clif_inventoryExpandResult;
 	clif->pInventoryExpansion = clif_parse_inventoryExpansion;
 	clif->pInventoryExpansionConfirmed = clif_parse_inventoryExpansionConfirmed;
+	clif->pInventoryExpansionRejected = clif_parse_inventoryExpansionRejected;
 	clif->favorite_item = clif_favorite_item;
 	clif->clearcart = clif_clearcart;
 	clif->item_identify_list = clif_item_identify_list;
