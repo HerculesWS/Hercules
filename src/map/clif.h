@@ -685,6 +685,14 @@ enum expand_inventory {
 	EXPAND_INVENTORY_MAX_SIZE = 4
 };
 
+enum expand_inventory_result {
+	EXPAND_INVENTORY_RESULT_SUCCESS = 0,
+	EXPAND_INVENTORY_RESULT_FAILED = 1,
+	EXPAND_INVENTORY_RESULT_OTHER_WORK = 2,
+	EXPAND_INVENTORY_RESULT_MISSING_ITEM = 3,
+	EXPAND_INVENTORY_RESULT_MAX_SIZE = 4
+};
+
 /**
  * Clif.c Interface
  **/
@@ -861,6 +869,7 @@ struct clif_interface {
 	void (*cartItems) (struct map_session_data *sd, enum inventory_type type);
 	void (*inventoryExpansionInfo) (struct map_session_data *sd);
 	void (*inventoryExpandAck) (struct map_session_data *sd, enum expand_inventory result, int itemId);
+	void (*inventoryExpandResult) (struct map_session_data *sd, enum expand_inventory_result result);
 	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
 	void (*clearcart) (int fd);
 	void (*item_identify_list) (struct map_session_data *sd);
