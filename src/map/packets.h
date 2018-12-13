@@ -1912,6 +1912,7 @@ packet(0x96e,clif->ackmergeitems);
 
 #if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
 	packet(0x0b14,clif->pInventoryExpansion);
+	packet(0x0b16,clif->pInventoryExpansionConfirmed);
 #endif
 
 #endif /* MAP_PACKETS_H */
