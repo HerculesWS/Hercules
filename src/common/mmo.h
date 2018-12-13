@@ -166,8 +166,12 @@
 #define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
 
 #ifndef MAX_INVENTORY
+#if PACKETVER_ZERO_NUM >= 20181212
+#define MAX_INVENTORY 200
+#else
 #define MAX_INVENTORY 100
-#endif
+#endif  // PACKETVER_ZERO_NUM >= 20181212
+#endif  // MAX_INVENTORY
 
 #ifndef FIXED_INVENTORY_SIZE
 #define FIXED_INVENTORY_SIZE 100
@@ -721,6 +725,7 @@ struct mmo_charstatus {
 
 	int64 last_login;
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
+	int inventorySize;
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
 	struct s_skill skill[MAX_SKILL_DB];
 

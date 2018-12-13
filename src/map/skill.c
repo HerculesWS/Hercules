@@ -14490,8 +14490,8 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		 **/
 		case AB_ANCILLA:
 			{
-				int count = 0, i;
-				for( i = 0; i < MAX_INVENTORY; i ++ )
+				int count = 0;
+				for (int i = 0; i < sd->status.inventorySize; i ++)
 					if (sd->status.inventory[i].nameid == ITEMID_ANSILA)
 						count += sd->status.inventory[i].amount;
 				if( count >= 3 ) {
@@ -16109,7 +16109,7 @@ static void skill_repairweapon(struct map_session_data *sd, int idx)
 
 	if (idx == 0xFFFF || idx == -1) // No item selected ('Cancel' clicked)
 		return;
-	if( idx < 0 || idx >= MAX_INVENTORY )
+	if (idx < 0 || idx >= sd->status.inventorySize)
 		return; //Invalid index??
 
 	item = &target_sd->status.inventory[idx];
@@ -16157,7 +16157,7 @@ static void skill_identify(struct map_session_data *sd, int idx)
 
 	nullpo_retv(sd);
 	sd->state.workinprogress = 0;
-	if(idx >= 0 && idx < MAX_INVENTORY) {
+	if (idx >= 0 && idx < sd->status.inventorySize) {
 		if(sd->status.inventory[idx].nameid > 0 && sd->status.inventory[idx].identify == 0 ){
 			flag=0;
 			sd->status.inventory[idx].identify=1;
@@ -16173,7 +16173,7 @@ static void skill_weaponrefine(struct map_session_data *sd, int idx)
 {
 	nullpo_retv(sd);
 
-	if (idx >= 0 && idx < MAX_INVENTORY) {
+	if (idx >= 0 && idx < sd->status.inventorySize) {
 		struct item *item;
 		struct item_data *ditem = sd->inventory_data[idx];
 		item = &sd->status.inventory[idx];
@@ -17992,8 +17992,8 @@ static int skill_can_produce_mix(struct map_session_data *sd, int nameid, int tr
 			if (pc->search_inventory(sd,id) == INDEX_NOT_FOUND)
 				return 0;
 		} else {
-			int x, y;
-			for(y=0,x=0;y<MAX_INVENTORY;y++)
+			int x = 0;
+			for (int y = 0; y < sd->status.inventorySize; y++)
 				if( sd->status.inventory[y].nameid == id )
 					x+=sd->status.inventory[y].amount;
 			if(x<qty*skill->dbs->produce_db[i].mat_amount[j])
@@ -18064,7 +18064,7 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 		else temp_qty = 1;
 
 		if (data->stack.inventory) {
-			for( i = 0; i < MAX_INVENTORY; i++ ) {
+			for (i = 0; i < sd->status.inventorySize; i++ ) {
 				if( sd->status.inventory[i].nameid == nameid ) {
 					if( sd->status.inventory[i].amount >= data->stack.amount ) {
 #if PACKETVER >= 20090729
@@ -18872,7 +18872,7 @@ static int skill_elementalanalysis(struct map_session_data *sd, uint16 skill_lv,
 			del_amount -= (del_amount % 10);
 		add_amount = (skill_lv == 1) ? del_amount * (5 + rnd()%5) : del_amount / 10 ;
 
-		if (idx < 0 || idx >= MAX_INVENTORY
+		if (idx < 0 || idx >= sd->status.inventorySize
 		 || (nameid = sd->status.inventory[idx].nameid) <= 0
 		 || del_amount < 0 || del_amount > sd->status.inventory[idx].amount) {
 			clif->skill_fail(sd, SO_EL_ANALYSIS, USESKILL_FAIL_LEVEL, 0, 0);
@@ -18943,7 +18943,7 @@ static int skill_changematerial(struct map_session_data *sd, const struct itemli
 						for (k = 0; k < VECTOR_LENGTH(*item_list); k++) {
 							const struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, k);
 							int idx = entry->id;
-							Assert_ret(idx >= 0 && idx < MAX_INVENTORY);
+							Assert_ret(idx >= 0 && idx < sd->status.inventorySize);
 							amount = entry->amount;
 							nameid = sd->status.inventory[idx].nameid;
 							if (nameid > 0 && sd->status.inventory[idx].identify == 0) {

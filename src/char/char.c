@@ -479,10 +479,17 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font) ||
 		(p->uniqueitem_counter != cp->uniqueitem_counter) || (p->hotkey_rowshift != cp->hotkey_rowshift) ||
 		(p->clan_id != cp->clan_id) || (p->last_login != cp->last_login) || (p->attendance_count != cp->attendance_count) ||
-		(p->attendance_timer != cp->attendance_timer) || (p->title_id != cp->title_id)
+		(p->attendance_timer != cp->attendance_timer) || (p->title_id != cp->title_id) || (p->inventorySize != cp->inventorySize)
 	) {
 		//Save status
 		unsigned int opt = 0;
+
+		if (p->inventorySize <= 0 || p->inventorySize > MAX_INVENTORY) {
+			ShowError("Wrong inventorySize field: %d. Must be in range 1 to %d. Character %s (CID: %d, AID: %d)\n",
+			          p->inventorySize, MAX_INVENTORY, p->name, p->char_id, p->account_id);
+			Assert_report(0);
+			p->inventorySize = FIXED_INVENTORY_SIZE;
+		}
 
 		if( p->allow_party )
 			opt |= OPT_ALLOW_PARTY;
@@ -498,7 +505,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
 			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
 			"`hotkey_rowshift`='%d',`clan_id`='%d',`last_login`='%"PRId64"',`attendance_count`='%d',`attendance_timer`='%"PRId64"',"
-			"`title_id`='%d'"
+			"`title_id`='%d', `inventory_size`='%d'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
 			p->base_exp, p->job_exp, p->zeny,
@@ -511,7 +518,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
 			p->look.robe,p->slotchange,opt,p->font,p->uniqueitem_counter,
 			p->hotkey_rowshift,p->clan_id,p->last_login, p->attendance_count, p->attendance_timer,
-			p->title_id,
+			p->title_id, p->inventorySize,
 			p->account_id, p->char_id) )
 		{
 			Sql_ShowDebug(inter->sql_handle);
@@ -1085,7 +1092,7 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int 
 		"`str`,`agi`,`vit`,`int`,`dex`,`luk`,`max_hp`,`hp`,`max_sp`,`sp`,"
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`hair`,`hair_color`,"
 		"`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`rename`,`delete_date`,"
-		"`robe`,`slotchange`,`unban_time`,`sex`,`title_id`"
+		"`robe`,`slotchange`,`unban_time`,`sex`,`title_id`,`inventory_size`"
 		" FROM `%s` WHERE `account_id`='%d' AND `char_num` < '%d'", char_db, sd->account_id, MAX_CHARS)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,    &p.char_id,          sizeof p.char_id,          NULL, NULL)
@@ -1129,6 +1136,7 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int 
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 38, SQLDT_TIME,   &unban_time,         sizeof unban_time,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 39, SQLDT_ENUM,   &sex,                sizeof sex,                NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 40, SQLDT_INT,    &p.title_id,         sizeof p.title_id,         NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 41, SQLDT_INT,    &p.inventorySize,    sizeof p.inventorySize,    NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -1139,6 +1147,12 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int 
 	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++) {
 		if (p.slot >= MAX_CHARS)
 			continue;
+		if (p.inventorySize <= 0 || p.inventorySize > MAX_INVENTORY) {
+			ShowError("Wrong inventorySize field: %d. Must be in range 1 to %d. Character %s (CID: %d, AID: %d)\n",
+			          p.inventorySize, MAX_INVENTORY, p.name, p.char_id, p.account_id);
+			Assert_report(0);
+			p.inventorySize = FIXED_INVENTORY_SIZE;
+		}
 		p.last_point.map = mapindex->name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
 		sd->unban_time[p.slot] = unban_time;
@@ -1179,6 +1193,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	nullpo_ret(p);
 
 	memset(p, 0, sizeof(struct mmo_charstatus));
+	p->inventorySize = FIXED_INVENTORY_SIZE;
 
 	if (chr->show_save_log)
 		ShowInfo("Char load request (%d)\n", char_id);
@@ -1198,7 +1213,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 		"`hair_color`,`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
 		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
 		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`clan_id`,`last_login`, `attendance_count`, `attendance_timer`,"
-		"`title_id`"
+		"`title_id`, `inventory_size`"
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1266,6 +1281,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 61, SQLDT_SHORT,  &p->attendance_count,   sizeof p->attendance_count,   NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 62, SQLDT_INT64,  &p->attendance_timer,   sizeof p->attendance_timer,   NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 63, SQLDT_INT,    &p->title_id,           sizeof p->title_id,           NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 64, SQLDT_INT,    &p->inventorySize,      sizeof p->inventorySize,      NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -1295,6 +1311,13 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 		p->save_point.map = (unsigned short)strdb_iget(mapindex->db, mapindex->default_map);
 		p->save_point.x = mapindex->default_x;
 		p->save_point.y = mapindex->default_y;
+	}
+
+	if (p->inventorySize <= 0 || p->inventorySize > MAX_INVENTORY) {
+		ShowError("Wrong inventorySize field: %d. Must be in range 1 to %d. Character %s (CID: %d, AID: %d)\n",
+		          p->inventorySize, MAX_INVENTORY, p->name, p->char_id, p->account_id);
+		Assert_report(0);
+		p->inventorySize = FIXED_INVENTORY_SIZE;
 	}
 
 	strcat(t_msg, " status");

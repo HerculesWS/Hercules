@@ -244,6 +244,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
   `attendance_timer` BIGINT(20) NULL DEFAULT '0',
   `title_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `inventory_size` INT(11) UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`char_id`),
   UNIQUE KEY `name_key` (`name`),
   KEY `account_id` (`account_id`),
@@ -922,6 +923,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1528026381); -- 2018-06-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1528180320); -- 2018-06-05--12-02.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1532403228); -- 2018-07-24--03-23.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1535865732); -- 2018-09-01--05-22.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1544738447); -- 2018-12-14--01-02.sql
 
 --
 -- Table structure for table `storage`

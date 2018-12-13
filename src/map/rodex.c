@@ -83,7 +83,7 @@ static void rodex_add_item(struct map_session_data *sd, int16 idx, int16 amount)
 
 	nullpo_retv(sd);
 
-	if (idx < 0 || idx >= MAX_INVENTORY) {
+	if (idx < 0 || idx >= sd->status.inventorySize) {
 		clif->rodex_add_item_result(sd, idx, amount, RODEX_ADD_ITEM_FATAL_ERROR);
 		return;
 	}
@@ -160,7 +160,7 @@ static void rodex_remove_item(struct map_session_data *sd, int16 idx, int16 amou
 	struct item_data *itd;
 
 	nullpo_retv(sd);
-	Assert_retv(idx >= 0 && idx < MAX_INVENTORY);
+	Assert_retv(idx >= 0 && idx < sd->status.inventorySize);
 
 	for (i = 0; i < RODEX_MAX_ITEM; ++i) {
 		if (sd->rodex.tmp.items[i].idx == idx)
@@ -504,7 +504,7 @@ static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 ma
 	}
 
 	required_slots = msg->items_count;
-	for (i = 0; i < MAX_INVENTORY; ++i) {
+	for (i = 0; i < sd->status.inventorySize; ++i) {
 		if (sd->status.inventory[i].nameid == 0) {
 			empty_slots++;
 		} else if (itemdb->isstackable(sd->status.inventory[i].nameid) == 1) {

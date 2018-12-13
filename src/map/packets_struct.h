@@ -1285,6 +1285,7 @@ struct packet_viewequip_ack {
 	int16 body2;
 #endif
 	uint8 sex;
+	// [4144] need remove MAX_INVENTORY from here
 	struct EQUIPITEM_INFO list[MAX_INVENTORY];
 } __attribute__((packed));
 
@@ -1386,6 +1387,7 @@ struct packet_npc_market_result_ack {
 #endif
 		uint16 qty;
 		uint32 price;
+	// [4144] need remove MAX_INVENTORY from here
 	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
 } __attribute__((packed));
 

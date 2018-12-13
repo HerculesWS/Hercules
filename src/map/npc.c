@@ -2235,7 +2235,7 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 		int nameid, value, idx = entry->id;
 
-		if (idx >= MAX_INVENTORY || idx < 0 || entry->amount < 0) {
+		if (idx >= sd->status.inventorySize || idx < 0 || entry->amount < 0) {
 			return 1;
 		}
 

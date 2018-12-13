@@ -285,7 +285,7 @@ static int storage_add_from_inventory(struct map_session_data *sd, int index, in
 	if (sd->storage.aggregate > MAX_STORAGE)
 		return 0; // storage full
 
-	if (index < 0 || index >= MAX_INVENTORY)
+	if (index < 0 || index >= sd->status.inventorySize)
 		return 0;
 
 	if (sd->status.inventory[index].nameid <= 0)
@@ -623,7 +623,7 @@ static int storage_guild_storageadd(struct map_session_data *sd, int index, int 
 	if( !stor->storage_status || stor->storage_amount > MAX_GUILD_STORAGE )
 		return 0;
 
-	if( index<0 || index>=MAX_INVENTORY )
+	if (index < 0 || index >= sd->status.inventorySize)
 		return 0;
 
 	if( sd->status.inventory[index].nameid <= 0 )
