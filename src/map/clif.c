@@ -3111,6 +3111,15 @@ static void clif_parse_inventoryExpansion(int fd, struct map_session_data *sd) _
 static void clif_parse_inventoryExpansion(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
+	if (pc_isdead(sd) || pc_cant_act(sd)) {
+		clif->inventoryExpandAck(sd, EXPAND_INVENTORY_OTHER_WORK, 0);
+		return;
+	}
+	if (sd->status.inventorySize == MAX_INVENTORY) {
+		clif->inventoryExpandAck(sd, EXPAND_INVENTORY_MAX_SIZE, 0);
+		return;
+	}
+
 	char evname[EVENT_NAME_LENGTH];
 	struct event_data *ev = NULL;
 
@@ -3127,6 +3136,15 @@ static void clif_parse_inventoryExpansionConfirmed(int fd, struct map_session_da
 static void clif_parse_inventoryExpansionConfirmed(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
+	if (pc_isdead(sd) || pc_cant_act(sd)) {
+		clif->inventoryExpandResult(sd, EXPAND_INVENTORY_RESULT_OTHER_WORK);
+		return;
+	}
+	if (sd->status.inventorySize == MAX_INVENTORY) {
+		clif->inventoryExpandResult(sd, EXPAND_INVENTORY_RESULT_MAX_SIZE);
+		return;
+	}
+
 	char evname[EVENT_NAME_LENGTH];
 	struct event_data *ev = NULL;
 
