@@ -10247,6 +10247,7 @@ card_id   - any card item id.
 returns true if all parameters correct
 false in other case.
 Works for 20160831 main, 20151118 RE, any zero version
+
 ---------------------------------------
 
 *servicemessage("<message>", <color>{, <account_id>})
@@ -10257,6 +10258,7 @@ specified by account ID or name, or to connected to npc player.
 It will not be seen by anyone else.
 
 Works for 20170830 RE and main and for any zero clients
+
 ---------------------------------------
 
 *expandInventoryAck(<result>{, <itemId>})
@@ -10274,4 +10276,22 @@ Valid result statuses:
 
 ItemId make sense only if result is EXPAND_INVENTORY_ASK_CONFIRMATION
 Works for 20181212 zero clients
+
+---------------------------------------
+
+*expandInventoryResult(<result>)
+
+Send final inventory expansion result.
+Normally this function should be called from script label
+inventory_expansion::OnInventoryExpandConfirmed.
+
+Valid result values:
+ EXPAND_INVENTORY_RESULT_SUCCESS - success message
+ EXPAND_INVENTORY_RESULT_FAILED - other failed reason
+ EXPAND_INVENTORY_RESULT_OTHER_WORK - failed because player busy with other work
+ EXPAND_INVENTORY_RESULT_MISSING_ITEM - failed because missing item
+ EXPAND_INVENTORY_RESULT_MAX_SIZE - failed because inventory size already maximum
+
+Works for 20181212 zero clients
+
 ---------------------------------------
