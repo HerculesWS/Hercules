@@ -1108,7 +1108,7 @@ OnInstanceInit:
 		next();
 		mes("The bottom of the Main Altar trembles furiously.");
 		next();
-		if ('ins_baphomet == 5 && getpartyleader(.@party_id, 2) == getcharid(CHAR_ID_CHAR)) {
+		if ('ins_baphomet == 5) {
 			specialeffect(EF_METEORSTORM);
 			specialeffect(EF_METEORSTORM);
 			mesf("[%s]", strcharinfo(PC_NAME));
