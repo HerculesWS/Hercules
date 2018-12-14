@@ -12338,6 +12338,23 @@ static bool pc_has_second_costume(struct map_session_data *sd)
 	return false;
 }
 
+static bool pc_expandInventory(struct map_session_data *sd, int adjustSize)
+{
+	nullpo_retr(false, sd);
+	const int invSize = sd->status.inventorySize;
+	if (adjustSize > MAX_INVENTORY || invSize + adjustSize <= FIXED_INVENTORY_SIZE || invSize + adjustSize > MAX_INVENTORY) {
+		clif->inventoryExpandResult(sd, EXPAND_INVENTORY_RESULT_MAX_SIZE);
+		return false;
+	}
+	if (pc_isdead(sd) || sd->state.vending || sd->state.buyingstore || sd->chat_id != 0 || sd->state.trading || sd->state.storage_flag || sd->state.prevend) {
+		clif->inventoryExpandResult(sd, EXPAND_INVENTORY_RESULT_OTHER_WORK);
+		return false;
+	}
+	sd->status.inventorySize += adjustSize;
+	clif->inventoryExpansionInfo(sd);
+	return true;
+}
+
 static void do_final_pc(void)
 {
 
@@ -12740,4 +12757,5 @@ void pc_defaults(void)
 
 	pc->isDeathPenaltyJob = pc_isDeathPenaltyJob;
 	pc->has_second_costume = pc_has_second_costume;
+	pc->expandInventory = pc_expandInventory;
 }

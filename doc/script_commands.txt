@@ -10295,3 +10295,13 @@ Valid result values:
 Works for 20181212 zero clients
 
 ---------------------------------------
+
+*expandInventory(<value>)
+
+Adjust player inventory to given value.
+Maximum inventory size is MAX_INVENTORY.
+Minimum inventory size is FIXED_INVENTORY_SIZE.
+For supported clients it send inventory change packet. For old clients,
+this change is silent.
+
+---------------------------------------

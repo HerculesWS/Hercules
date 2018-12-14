@@ -24884,6 +24884,16 @@ static BUILDIN(expandInventoryResult)
 	return true;
 }
 
+// adjust player inventory size to given value positive or negative
+static BUILDIN(expandInventory)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	script_pushint(st, pc->expandInventory(sd, script_getnum(st, 2)));
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25626,6 +25636,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(enchantitem, "iii"),
 		BUILDIN_DEF(expandInventoryAck, "i?"),
 		BUILDIN_DEF(expandInventoryResult, "i"),
+		BUILDIN_DEF(expandInventory, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
