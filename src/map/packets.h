@@ -147,6 +147,7 @@ packet(0x01ba,clif->pGMShift,2);
 packet(0x01bb,clif->pGMShift,2);
 packet(0x01bc,clif->pGMRecall,2);
 packet(0x01bd,clif->pGMRecall,2);
+packet(0x01c0,clif->pReqRemainTime);
 packet(0x01ce,clif->pAutoSpell,2);
 packet(0x01d5,clif->pNpcStringInput,2,4,8);
 packet(0x01df,clif->pGMReqAccountName,2);

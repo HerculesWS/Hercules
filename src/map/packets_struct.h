@@ -3029,6 +3029,11 @@ struct PACKET_CZ_INVENTORY_EXPAND_REJECTED {
 DEFINE_PACKET_HEADER(CZ_INVENTORY_EXPAND_REJECTED, 0x0b19);
 #endif
 
+struct PACKET_CZ_REQ_REMAINTIME {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_REMAINTIME, 0x01c0);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

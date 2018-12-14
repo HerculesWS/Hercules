@@ -3173,6 +3173,12 @@ static void clif_parse_inventoryExpansionRejected(int fd, struct map_session_dat
 #endif
 }
 
+// CZ_REQ_REMAINTIME
+static void clif_parse_reqRemainTime(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_reqRemainTime(int fd, struct map_session_data *sd)
+{
+}
+
 /// Removes cart (ZC_CARTOFF).
 /// 012b
 /// Client behavior:
@@ -23362,4 +23368,5 @@ void clif_defaults(void)
 	clif->petEvolutionResult = clif_pet_evolution_result;
 
 	clif->pMemorialDungeonCommand = clif_parse_memorial_dungeon_command;
+	clif->pReqRemainTime = clif_parse_reqRemainTime;
 }
