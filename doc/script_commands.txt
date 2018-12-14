@@ -10256,5 +10256,22 @@ That command will send a service message to the chat window of the character
 specified by account ID or name, or to connected to npc player.
 It will not be seen by anyone else.
 
-Works fro 20170830 RE and main and for any zero clients
+Works for 20170830 RE and main and for any zero clients
+---------------------------------------
+
+*expandInventoryAck(<result>{, <itemId>})
+
+Send initial inventory expansion result.
+Normally this function should be called from script label
+inventory_expansion::OnInventoryExpandRequest.
+
+Valid result statuses:
+ EXPAND_INVENTORY_ASK_CONFIRMATION - force client to ask player about inventory expansion
+ EXPAND_INVENTORY_FAILED - other failed reason
+ EXPAND_INVENTORY_OTHER_WORK - failed because player busy with other work
+ EXPAND_INVENTORY_MISSING_ITEM - failed because missing item
+ EXPAND_INVENTORY_MAX_SIZE - failed because inventory size already maximum
+
+ItemId make sense only if result is EXPAND_INVENTORY_ASK_CONFIRMATION
+Works for 20181212 zero clients
 ---------------------------------------

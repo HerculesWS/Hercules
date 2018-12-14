@@ -24860,6 +24860,20 @@ static BUILDIN(enchantitem)
 	return true;
 }
 
+// send ack to inventory expand request
+static BUILDIN(expandInventoryAck)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	int itemId = 0;
+	if (script_hasdata(st, 3)) {
+		itemId = script_getnum(st, 3);
+	}
+	clif->inventoryExpandAck(sd, script_getnum(st, 2), itemId);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25600,6 +25614,7 @@ static void script_parse_builtin(void)
 
 		BUILDIN_DEF(itempreview, "i"),
 		BUILDIN_DEF(enchantitem, "iii"),
+		BUILDIN_DEF(expandInventoryAck, "i?"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -26023,6 +26038,12 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITR_NOAUCTION", ITR_NOAUCTION, false, false);
 	script->set_constant("ITR_ALL", ITR_ALL, false, false);
 
+	script->constdb_comment("inventory expand ack responds");
+	script->set_constant("EXPAND_INV_ASK_CONFIRMATION", EXPAND_INVENTORY_ASK_CONFIRMATION, false, false);
+	script->set_constant("EXPAND_INV_FAILED", EXPAND_INVENTORY_FAILED, false, false);
+	script->set_constant("EXPAND_INV_OTHER_WORK", EXPAND_INVENTORY_OTHER_WORK, false, false);
+	script->set_constant("EXPAND_INV_MISSING_ITEM", EXPAND_INVENTORY_MISSING_ITEM, false, false);
+	script->set_constant("EXPAND_INV_MAX_SIZE", EXPAND_INVENTORY_MAX_SIZE, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
