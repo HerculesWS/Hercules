@@ -24894,6 +24894,16 @@ static BUILDIN(expandInventory)
 	return true;
 }
 
+// return current player inventory size
+static BUILDIN(getInventorySize)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	script_pushint(st, sd->status.inventorySize);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25637,6 +25647,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(expandInventoryAck, "i?"),
 		BUILDIN_DEF(expandInventoryResult, "i"),
 		BUILDIN_DEF(expandInventory, "i"),
+		BUILDIN_DEF(getInventorySize, ""),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

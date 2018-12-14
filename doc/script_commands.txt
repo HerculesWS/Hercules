@@ -10303,5 +10303,14 @@ Maximum inventory size is MAX_INVENTORY.
 Minimum inventory size is FIXED_INVENTORY_SIZE.
 For supported clients it send inventory change packet. For old clients,
 this change is silent.
+Current max inventory size can be read by function getInventorySize().
+
+---------------------------------------
+
+*getInventorySize()
+
+Return current player max inventory size.
+This value always smaller or equal to MAX_INVENTORY.
+Size can be changed by group of functions expandInventory*
 
 ---------------------------------------
