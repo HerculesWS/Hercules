@@ -92,8 +92,9 @@ static struct ZC_STORE_ITEMLIST_EQUIP storelist_equip;
 static struct packet_viewequip_ack viewequip_list;
 #if PACKETVER >= 20131223
 static struct packet_npc_market_result_ack npcmarket_result;
-static struct packet_npc_market_open npcmarket_open;
 #endif
+// temporart buffer for send big packets
+char packet_buf[0xffff];
 //#define DUMP_UNKNOWN_PACKET
 //#define DUMP_INVALID_PACKET
 
@@ -19871,31 +19872,31 @@ static void clif_parse_NPCShopClosed(int fd, struct map_session_data *sd)
 /* NPC Market (by Ind after an extensive debugging of the packet, only possible thanks to Yommy <3) */
 static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd)
 {
-#if PACKETVER >= 20131223
-	struct npc_item_list *shop;
-	unsigned short shop_size, i, c;
-
+#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 	nullpo_retv(nd);
-	shop = nd->u.scr.shop->item;
-	shop_size = nd->u.scr.shop->items;
-	npcmarket_open.PacketType = npcmarketopenType;
+	struct npc_item_list *shop = nd->u.scr.shop->item;
+	const int shop_size = nd->u.scr.shop->items;
 
-	for(i = 0, c = 0; i < shop_size; i++) {
+	int c = 0;
+	int maxCount = (sizeof(packet_buf) - sizeof(struct PACKET_ZC_NPC_MARKET_OPEN)) / sizeof(struct PACKET_ZC_NPC_MARKET_OPEN_sub);
+	struct PACKET_ZC_NPC_MARKET_OPEN *packet = (struct PACKET_ZC_NPC_MARKET_OPEN*)&packet_buf[0];
+	packet->packetType = HEADER_ZC_NPC_MARKET_OPEN;
+
+	for (int i = 0; i < shop_size && c < maxCount; i++) {
 		struct item_data *id = NULL;
 		if (shop[i].nameid && (id = itemdb->exists(shop[i].nameid)) != NULL) {
-			npcmarket_open.list[c].nameid = shop[i].nameid;
-			npcmarket_open.list[c].price  = shop[i].value;
-			npcmarket_open.list[c].qty    = shop[i].qty;
-			npcmarket_open.list[c].type   = itemtype(id->type);
-			npcmarket_open.list[c].view   = ( id->view_id > 0 ) ? id->view_id : id->nameid;
+			packet->list[c].nameid = shop[i].nameid;
+			packet->list[c].price  = shop[i].value;
+			packet->list[c].qty    = shop[i].qty;
+			packet->list[c].type   = itemtype(id->type);
+			packet->list[c].weight = id->weight;
 			c++;
 		}
 	}
 
-	npcmarket_open.PacketLength = 4 + ( sizeof(npcmarket_open.list[0]) * c );
-
-	clif->send(&npcmarket_open,npcmarket_open.PacketLength,&sd->bl,SELF);
+	packet->packetLength = sizeof(struct PACKET_ZC_NPC_MARKET_OPEN) + sizeof(struct PACKET_ZC_NPC_MARKET_OPEN_sub) * c;
+	clif->send(packet, packet->packetLength, &sd->bl, SELF);
 #endif
 }
 

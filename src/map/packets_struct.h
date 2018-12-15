@@ -1391,25 +1391,28 @@ struct packet_npc_market_result_ack {
 	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
 } __attribute__((packed));
 
-struct packet_npc_market_open {
-	int16 PacketType;
-	int16 PacketLength;
-	/* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
-	struct {
+#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
+/* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
+struct PACKET_ZC_NPC_MARKET_OPEN_sub {
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-		uint32 nameid;
+	uint32 nameid;
 #else
-		uint16 nameid;
+	uint16 nameid;
 #endif
-		uint8 type;
-		uint32 price;
-		uint32 qty;
-		uint16 view;
-	// It seems that the client doesn't have any hard-coded limit for this list
-	// it's possible to send up to 1890 items without dropping a packet that's
-	// too large [Panikon]
-	} list[1000];/* TODO: whats the actual max of this? */
+	uint8 type;
+	uint32 price;
+	uint32 qty;
+	uint16 weight;
 } __attribute__((packed));
+
+struct PACKET_ZC_NPC_MARKET_OPEN {
+	int16 packetType;
+	int16 packetLength;
+	struct PACKET_ZC_NPC_MARKET_OPEN_sub list[];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_NPC_MARKET_OPEN, 0x09d5);
+#endif
 
 struct packet_wis_end {
 	int16 PacketType;
