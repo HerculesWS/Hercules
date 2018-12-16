@@ -590,6 +590,7 @@ enum e_battle_config_idletime {
 	BCIDLE_EMOTION       = 0x080,
 	BCIDLE_DROPITEM      = 0x100,
 	BCIDLE_ATCOMMAND     = 0x200,
+	BCIDLE_SCRIPT        = 0x400,
 };
 
 // Damage delayed info

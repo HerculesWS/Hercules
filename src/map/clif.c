@@ -2219,6 +2219,8 @@ static void clif_scriptmes(struct map_session_data *sd, int npcid, const char *m
 	slen = (int)strlen(mes) + 9;
 	Assert_retv(slen <= INT16_MAX);
 
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+
 	sd->state.dialog = 1;
 
 	WFIFOHEAD(fd, slen);
@@ -2255,6 +2257,8 @@ static void clif_scriptnext(struct map_session_data *sd, int npcid)
 
 	nullpo_retv(sd);
 
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0xb5));
 	WFIFOW(fd,0)=0xb5;
@@ -2282,6 +2286,8 @@ static void clif_scriptclose(struct map_session_data *sd, int npcid)
 	int fd;
 
 	nullpo_retv(sd);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0xb6));
@@ -2354,6 +2360,8 @@ static void clif_scriptmenu(struct map_session_data *sd, int npcid, const char *
 						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 		clif->sendfakenpc(sd, npcid);
 
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+
 	WFIFOHEAD(fd, slen);
 	WFIFOW(fd,0) = 0xb7;
 	WFIFOW(fd,2) = slen;
@@ -2385,6 +2393,8 @@ static void clif_scriptinput(struct map_session_data *sd, int npcid)
 						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 		clif->sendfakenpc(sd, npcid);
 
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
+
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0x142));
 	WFIFOW(fd,0)=0x142;
@@ -2414,6 +2424,8 @@ static void clif_scriptinputstr(struct map_session_data *sd, int npcid)
 						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 		clif->sendfakenpc(sd, npcid);
+
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0x1d4));
@@ -11571,6 +11583,7 @@ static void clif_npc_buy_result(struct map_session_data *sd, unsigned char resul
 	int fd;
 
 	nullpo_retv(sd);
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 	fd = sd->fd;
 	WFIFOHEAD(fd,packet_len(0xca));
 	WFIFOW(fd,0) = 0xca;
@@ -11624,6 +11637,7 @@ static void clif_npc_sell_result(struct map_session_data *sd, unsigned char resu
 	int fd;
 
 	nullpo_retv(sd);
+	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 	fd = sd->fd;
 	WFIFOHEAD(fd,packet_len(0xcb));
 	WFIFOW(fd,0) = 0xcb;
