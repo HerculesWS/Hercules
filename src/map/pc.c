@@ -5319,6 +5319,10 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if(sd->catch_target_class != -1) //Abort pet catching.
 		sd->catch_target_class = -1;
 
+	// Removes abracadabra/randomize spell flag for delayed consume items or item doesn't get consumed
+	if (sd->inventory_data[n]->flag.delay_consume)
+		sd->state.abra_flag = 0;
+
 	amount = sd->status.inventory[n].amount;
 	//Check if the item is to be consumed immediately [Skotlex]
 	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
