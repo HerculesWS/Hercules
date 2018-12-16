@@ -1583,6 +1583,7 @@ struct clif_interface {
 	void (*pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
 	void (*camera_showWindow) (struct map_session_data *sd);
 	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
+	void (*pCameraInfo) (int fd, struct map_session_data *sd);
 	void (*item_preview) (struct map_session_data *sd, int n);
 	bool (*enchant_equipment) (struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
 	void (*pReqRemainTime) (int fd, struct map_session_data *sd);

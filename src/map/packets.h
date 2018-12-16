@@ -1789,6 +1789,11 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// all 2016-05-25
+#if PACKETVER >= 20160525
+	packet(0x0a77,clif->pCameraInfo); // CZ_CAMERA_INFO
+#endif
+
 // 2017-02-28aRagexeRE
 #if PACKETVER >= 20170228
 // new packets

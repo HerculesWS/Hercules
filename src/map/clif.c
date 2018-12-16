@@ -22148,6 +22148,21 @@ static void clif_camera_change(struct map_session_data *sd, float range, float r
 #endif
 }
 
+static void clif_parse_cameraInfo(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_cameraInfo(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20160525
+	const struct PACKET_CZ_CAMERA_INFO *const p = RFIFOP(fd, 0);
+	char command[100];
+	if (p->action == 1) {
+		sprintf(command, "%ccamerainfo", atcommand->at_symbol);
+	} else {
+		sprintf(command, "%ccamerainfo %15f %15f %15f", atcommand->at_symbol, p->range, p->rotation, p->latitude);
+	}
+	atcommand->exec(fd, sd, command, true);
+#endif
+}
+
 // show item preview in already opened preview window
 static void clif_item_preview(struct map_session_data *sd, int n)
 {
@@ -23361,6 +23376,7 @@ void clif_defaults(void)
 
 	clif->camera_showWindow = clif_camera_showWindow;
 	clif->camera_change = clif_camera_change;
+	clif->pCameraInfo = clif_parse_cameraInfo;
 	clif->item_preview = clif_item_preview;
 	clif->enchant_equipment = clif_enchant_equipment;
 
