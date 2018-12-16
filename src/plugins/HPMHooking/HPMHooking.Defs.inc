@@ -2650,6 +2650,8 @@ typedef void (*HPMHOOK_pre_clif_camera_showWindow) (struct map_session_data **sd
 typedef void (*HPMHOOK_post_clif_camera_showWindow) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_camera_change) (struct map_session_data **sd, float *range, float *rotation, float *latitude, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
+typedef void (*HPMHOOK_pre_clif_pCameraInfo) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pCameraInfo) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_item_preview) (struct map_session_data **sd, int *n);
 typedef void (*HPMHOOK_post_clif_item_preview) (struct map_session_data *sd, int n);
 typedef bool (*HPMHOOK_pre_clif_enchant_equipment) (struct map_session_data **sd, enum equip_pos *pos, int *cardSlot, int *cardId);

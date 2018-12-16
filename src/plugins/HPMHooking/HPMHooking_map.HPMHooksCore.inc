@@ -2242,6 +2242,8 @@ struct {
 	struct HPMHookPoint *HP_clif_camera_showWindow_post;
 	struct HPMHookPoint *HP_clif_camera_change_pre;
 	struct HPMHookPoint *HP_clif_camera_change_post;
+	struct HPMHookPoint *HP_clif_pCameraInfo_pre;
+	struct HPMHookPoint *HP_clif_pCameraInfo_post;
 	struct HPMHookPoint *HP_clif_item_preview_pre;
 	struct HPMHookPoint *HP_clif_item_preview_post;
 	struct HPMHookPoint *HP_clif_enchant_equipment_pre;
@@ -8889,6 +8891,8 @@ struct {
 	int HP_clif_camera_showWindow_post;
 	int HP_clif_camera_change_pre;
 	int HP_clif_camera_change_post;
+	int HP_clif_pCameraInfo_pre;
+	int HP_clif_pCameraInfo_post;
 	int HP_clif_item_preview_pre;
 	int HP_clif_item_preview_post;
 	int HP_clif_enchant_equipment_pre;

@@ -1145,6 +1145,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pMemorialDungeonCommand, HP_clif_pMemorialDungeonCommand) },
 	{ HP_POP(clif->camera_showWindow, HP_clif_camera_showWindow) },
 	{ HP_POP(clif->camera_change, HP_clif_camera_change) },
+	{ HP_POP(clif->pCameraInfo, HP_clif_pCameraInfo) },
 	{ HP_POP(clif->item_preview, HP_clif_item_preview) },
 	{ HP_POP(clif->enchant_equipment, HP_clif_enchant_equipment) },
 	{ HP_POP(clif->pReqRemainTime, HP_clif_pReqRemainTime) },
