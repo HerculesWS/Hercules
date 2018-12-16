@@ -587,8 +587,8 @@ enum zc_ui_types {
 **/
 enum cz_ui_types {
 	CZ_STYLIST_UI = 1,
-	//unknown  = 2,
-	//unknown  = 3,
+	CZ_MACRO_REGISTER_UI = 2,
+	CZ_MACRO_DETECTOR_UI = 3,
 	CZ_ATTENDANCE_UI = 5
 };
 
