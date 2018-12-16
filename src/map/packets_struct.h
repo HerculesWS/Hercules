@@ -3051,6 +3051,12 @@ struct PACKET_CZ_REQ_REMAINTIME {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_REQ_REMAINTIME, 0x01c0);
 
+struct PACKET_CZ_PARTY_CONFIG {
+	int16 packetType;
+	uint8 refuseInvite;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_PARTY_CONFIG, 0x02c8);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

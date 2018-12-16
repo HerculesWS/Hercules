@@ -7136,7 +7136,7 @@ static void clif_partyinvitationstate(struct map_session_data *sd)
 
 	WFIFOHEAD(fd, packet_len(0x2c9));
 	WFIFOW(fd, 0) = 0x2c9;
-	WFIFOB(fd, 2) = sd->status.allow_party ? 1 : 0;
+	WFIFOB(fd, 2) = sd->status.allow_party ? 0 : 1;
 	WFIFOSET(fd, packet_len(0x2c9));
 }
 
@@ -17002,13 +17002,13 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 static void clif_parse_PartyTick(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to change party invitation tick.
 ///     value:
-///         0 = disabled
-///         1 = enabled
+///         0 = enabled
+///         1 = disabled
 static void clif_parse_PartyTick(int fd, struct map_session_data *sd)
 {
-	bool flag = RFIFOB(fd,6)?true:false;
-	sd->status.allow_party = flag;
-	clif->partytickack(sd, flag);
+	const struct PACKET_CZ_PARTY_CONFIG *const p = RFIFOP(fd, 0);
+	sd->status.allow_party = p->refuseInvite ? false : true;
+	clif->partytickack(sd, sd->status.allow_party);
 }
 
 /// Questlog System [Kevin] [Inkfish]
