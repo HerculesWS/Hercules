@@ -9655,6 +9655,25 @@ static BUILDIN(statusup2)
 	return true;
 }
 
+
+/*==========================================
+* Returns the number of stat points needed to change the specified stat by val.
+* needed_status_point(<type>,<val>{,<char id>}); [secretdataz]
+*------------------------------------------*/
+static BUILDIN(needed_status_point)
+{
+	int type = script_getnum(st, 2);
+	int val = script_getnum(st, 3);;
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		script_pushint(st, 0);
+	else
+		script_pushint(st, pc->need_status_point(sd, type, val));
+
+	return true;
+}
+
 /// See 'doc/item_bonus.txt'
 ///
 /// bonus <bonus type>,<val1>;
@@ -25149,6 +25168,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(downrefitem,"i?"),
 		BUILDIN_DEF(statusup,"i"),
 		BUILDIN_DEF(statusup2,"ii"),
+		BUILDIN_DEF(needed_status_point,"ii?"),
 		BUILDIN_DEF(bonus,"iv"),
 		BUILDIN_DEF2(bonus,"bonus2","ivi"),
 		BUILDIN_DEF2(bonus,"bonus3","ivii"),
