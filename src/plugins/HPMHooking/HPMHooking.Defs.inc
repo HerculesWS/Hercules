@@ -6238,8 +6238,8 @@ typedef int (*HPMHOOK_pre_pc_bonus_addeff) (struct s_addeffect **effect, int *ma
 typedef int (*HPMHOOK_post_pc_bonus_addeff) (int retVal___, struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
 typedef int (*HPMHOOK_pre_pc_bonus_addeff_onskill) (struct s_addeffectonskill **effect, int *max, enum sc_type *id, short *rate, short *skill_id, unsigned char *target);
 typedef int (*HPMHOOK_post_pc_bonus_addeff_onskill) (int retVal___, struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
-typedef int (*HPMHOOK_pre_pc_bonus_item_drop) (struct s_add_drop **drop, const short *max, short *id, short *group, int *race, int *rate);
-typedef int (*HPMHOOK_post_pc_bonus_item_drop) (int retVal___, struct s_add_drop *drop, const short max, short id, short group, int race, int rate);
+typedef int (*HPMHOOK_pre_pc_bonus_item_drop) (struct s_add_drop **drop, const short *max, int *id, bool *is_group, int *race, int *rate);
+typedef int (*HPMHOOK_post_pc_bonus_item_drop) (int retVal___, struct s_add_drop *drop, const short max, int id, bool is_group, int race, int rate);
 typedef void (*HPMHOOK_pre_pc_calcexp) (struct map_session_data **sd, uint64 **base_exp, uint64 **job_exp, struct block_list **src);
 typedef void (*HPMHOOK_post_pc_calcexp) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src);
 typedef int (*HPMHOOK_pre_pc_respawn_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
