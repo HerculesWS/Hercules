@@ -2896,6 +2896,7 @@ struct PACKET_ZC_REMOVE_EFFECT {
 	uint32 effectId;
 } __attribute__((packed));
 
+#if PACKETVER >= 20160525
 struct PACKET_ZC_CAMERA_INFO {
 	int16 packetType;
 	int8 action;
@@ -2903,6 +2904,8 @@ struct PACKET_ZC_CAMERA_INFO {
 	float rotation;
 	float latitude;
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CAMERA_INFO, 0x0a78);
+#endif
 
 #if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031
 // PACKET_ZC_AUTOSPELLLIST2

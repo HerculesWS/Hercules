@@ -22125,7 +22125,7 @@ static void clif_camera_showWindow(struct map_session_data *sd)
 #if PACKETVER >= 20160525
 	nullpo_retv(sd);
 	struct PACKET_ZC_CAMERA_INFO p;
-	p.packetType = 0xa78;
+	p.packetType = HEADER_ZC_CAMERA_INFO;
 	p.action = 1;
 	p.range = 0;
 	p.rotation = 0;
@@ -22139,7 +22139,7 @@ static void clif_camera_change(struct map_session_data *sd, float range, float r
 #if PACKETVER >= 20160525
 	nullpo_retv(sd);
 	struct PACKET_ZC_CAMERA_INFO p;
-	p.packetType = 0xa78;
+	p.packetType = HEADER_ZC_CAMERA_INFO;
 	p.action = 0;
 	p.range = range;
 	p.rotation = rotation;
