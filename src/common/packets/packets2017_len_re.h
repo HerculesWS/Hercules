@@ -8960,7 +8960,7 @@ packetLen(0x0acf, 52)  // CA_LOGIN_OTP
 
 // Packet: 0x0ad0
 #if PACKETVER >= 20170614
-packetLen(0x0ad0, 11)
+packetLen(0x0ad0, 11)  // CA_OTP_CODE
 #endif
 
 // Packet: 0x0ad1

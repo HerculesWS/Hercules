@@ -142,7 +142,7 @@ struct char_interface {
 	int (*getitemdata_from_sql) (struct item *items, int max, int guid, enum inventory_table_type table);
 	int (*memitemdata_to_sql) (const struct item items[], int id, enum inventory_table_type table);
 	int (*mmo_gender) (const struct char_session_data *sd, const struct mmo_charstatus *p, char sex);
-	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf);
+	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf, int *count);
 	int (*mmo_char_fromsql) (int char_id, struct mmo_charstatus* p, bool load_everything);
 	int (*mmo_char_sql_init) (void);
 	bool (*char_slotchange) (struct char_session_data *sd, int fd, unsigned short from, unsigned short to);
@@ -153,7 +153,7 @@ struct char_interface {
 	int (*divorce_char_sql) (int partner_id1, int partner_id2);
 	int (*count_users) (void);
 	int (*mmo_char_tobuf) (uint8* buffer, struct mmo_charstatus* p);
-	void (*mmo_char_send099d) (int fd, struct char_session_data *sd);
+	void (*send_HC_ACK_CHARINFO_PER_PAGE) (int fd, struct char_session_data *sd);
 	void (*mmo_char_send_ban_list) (int fd, struct char_session_data *sd);
 	void (*mmo_char_send_slots_info) (int fd, struct char_session_data* sd);
 	int (*mmo_char_send_characters) (int fd, struct char_session_data* sd);

@@ -41,6 +41,8 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #include "login/lclif.p.h"
 #include "login/login.h"
 #include "login/loginlog.h"
+#include "login/packets_ac_struct.h"
+#include "login/packets_ca_struct.h"
 #elif defined (HPMHOOKING_CHAR)
 #define HPM_SERVER_TYPE SERVER_TYPE_CHAR
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_char.HPMHooksCore.inc"

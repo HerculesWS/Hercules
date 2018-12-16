@@ -5605,7 +5605,7 @@ packetLen(0x0ace, 4)
 packetLen(0x0acf, 68)  // CA_LOGIN_OTP
 
 // Packet: 0x0ad0
-packetLen(0x0ad0, 11)
+packetLen(0x0ad0, 11)  // CA_OTP_CODE
 
 // Packet: 0x0ad1
 packetLen(0x0ad1, -1)
@@ -5899,12 +5899,12 @@ packetLen(0x0b0f, -1)
 
 // Packet: 0x0b10
 #if PACKETVER >= 20181010
-packetLen(0x0b10, 10)
+packetLen(0x0b10, 10)  // CZ_START_USE_SKILL
 #endif
 
 // Packet: 0x0b11
 #if PACKETVER >= 20181010
-packetLen(0x0b11, 4)
+packetLen(0x0b11, 4)  // CZ_STOP_USE_SKILL
 #endif
 
 // Packet: 0x0b12
@@ -5947,6 +5947,11 @@ packetLen(0x0b18, 4)
 // Packet: 0x0b19
 #if PACKETVER >= 20181114
 packetLen(0x0b19, 2)
+#endif
+
+// Packet: 0x0b1a
+#if PACKETVER >= 20181212
+packetLen(0x0b1a, 29)
 #endif
 
 

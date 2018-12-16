@@ -132,6 +132,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define CHAR_MAPIF_H
 	#endif // CHAR_MAPIF_H
+	#ifdef CHAR_PACKETS_HC_STRUCT_H
+		{ "PACKET_HC_ACK_CHARINFO_PER_PAGE", sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE), SERVER_TYPE_CHAR },
+	#else
+		#define CHAR_PACKETS_HC_STRUCT_H
+	#endif // CHAR_PACKETS_HC_STRUCT_H
 	#ifdef CHAR_PINCODE_H
 		{ "pincode_interface", sizeof(struct pincode_interface), SERVER_TYPE_CHAR },
 	#else
@@ -346,21 +351,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef LOGIN_LCLIF_P_H
 		{ "lclif_interface_dbs", sizeof(struct lclif_interface_dbs), SERVER_TYPE_LOGIN },
 		{ "lclif_interface_private", sizeof(struct lclif_interface_private), SERVER_TYPE_LOGIN },
-		{ "packet_AC_ACCEPT_LOGIN", sizeof(struct packet_AC_ACCEPT_LOGIN), SERVER_TYPE_LOGIN },
-		{ "packet_AC_REFUSE_LOGIN", sizeof(struct packet_AC_REFUSE_LOGIN), SERVER_TYPE_LOGIN },
-		{ "packet_AC_REFUSE_LOGIN_R2", sizeof(struct packet_AC_REFUSE_LOGIN_R2), SERVER_TYPE_LOGIN },
-		{ "packet_CA_CHARSERVERCONNECT", sizeof(struct packet_CA_CHARSERVERCONNECT), SERVER_TYPE_LOGIN },
-		{ "packet_CA_CONNECT_INFO_CHANGED", sizeof(struct packet_CA_CONNECT_INFO_CHANGED), SERVER_TYPE_LOGIN },
-		{ "packet_CA_EXE_HASHCHECK", sizeof(struct packet_CA_EXE_HASHCHECK), SERVER_TYPE_LOGIN },
-		{ "packet_CA_LOGIN", sizeof(struct packet_CA_LOGIN), SERVER_TYPE_LOGIN },
-		{ "packet_CA_LOGIN2", sizeof(struct packet_CA_LOGIN2), SERVER_TYPE_LOGIN },
-		{ "packet_CA_LOGIN3", sizeof(struct packet_CA_LOGIN3), SERVER_TYPE_LOGIN },
-		{ "packet_CA_LOGIN4", sizeof(struct packet_CA_LOGIN4), SERVER_TYPE_LOGIN },
-		{ "packet_CA_LOGIN_HAN", sizeof(struct packet_CA_LOGIN_HAN), SERVER_TYPE_LOGIN },
-		{ "packet_CA_LOGIN_OTP", sizeof(struct packet_CA_LOGIN_OTP), SERVER_TYPE_LOGIN },
-		{ "packet_CA_LOGIN_PCBANG", sizeof(struct packet_CA_LOGIN_PCBANG), SERVER_TYPE_LOGIN },
-		{ "packet_CA_SSO_LOGIN_REQ", sizeof(struct packet_CA_SSO_LOGIN_REQ), SERVER_TYPE_LOGIN },
-		{ "packet_SC_NOTIFY_BAN", sizeof(struct packet_SC_NOTIFY_BAN), SERVER_TYPE_LOGIN },
 	#else
 		#define LOGIN_LCLIF_P_H
 	#endif // LOGIN_LCLIF_P_H
@@ -383,6 +373,29 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define LOGIN_LOGIN_H
 	#endif // LOGIN_LOGIN_H
+	#ifdef LOGIN_PACKETS_AC_STRUCT_H
+		{ "PACKET_AC_ACCEPT_LOGIN", sizeof(struct PACKET_AC_ACCEPT_LOGIN), SERVER_TYPE_LOGIN },
+		{ "PACKET_AC_REFUSE_LOGIN", sizeof(struct PACKET_AC_REFUSE_LOGIN), SERVER_TYPE_LOGIN },
+		{ "PACKET_AC_REFUSE_LOGIN_R2", sizeof(struct PACKET_AC_REFUSE_LOGIN_R2), SERVER_TYPE_LOGIN },
+		{ "PACKET_SC_NOTIFY_BAN", sizeof(struct PACKET_SC_NOTIFY_BAN), SERVER_TYPE_LOGIN },
+	#else
+		#define LOGIN_PACKETS_AC_STRUCT_H
+	#endif // LOGIN_PACKETS_AC_STRUCT_H
+	#ifdef LOGIN_PACKETS_CA_STRUCT_H
+		{ "PACKET_CA_CHARSERVERCONNECT", sizeof(struct PACKET_CA_CHARSERVERCONNECT), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_CONNECT_INFO_CHANGED", sizeof(struct PACKET_CA_CONNECT_INFO_CHANGED), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_EXE_HASHCHECK", sizeof(struct PACKET_CA_EXE_HASHCHECK), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_LOGIN", sizeof(struct PACKET_CA_LOGIN), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_LOGIN2", sizeof(struct PACKET_CA_LOGIN2), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_LOGIN3", sizeof(struct PACKET_CA_LOGIN3), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_LOGIN4", sizeof(struct PACKET_CA_LOGIN4), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_LOGIN_HAN", sizeof(struct PACKET_CA_LOGIN_HAN), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_LOGIN_OTP", sizeof(struct PACKET_CA_LOGIN_OTP), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_LOGIN_PCBANG", sizeof(struct PACKET_CA_LOGIN_PCBANG), SERVER_TYPE_LOGIN },
+		{ "PACKET_CA_SSO_LOGIN_REQ", sizeof(struct PACKET_CA_SSO_LOGIN_REQ), SERVER_TYPE_LOGIN },
+	#else
+		#define LOGIN_PACKETS_CA_STRUCT_H
+	#endif // LOGIN_PACKETS_CA_STRUCT_H
 	#ifdef MAP_ACHIEVEMENT_H
 		{ "achievement_data", sizeof(struct achievement_data), SERVER_TYPE_MAP },
 		{ "achievement_interface", sizeof(struct achievement_interface), SERVER_TYPE_MAP },
@@ -614,6 +627,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_CZ_CHECKNAME", sizeof(struct PACKET_CZ_CHECKNAME), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_MEMORIALDUNGEON_COMMAND", sizeof(struct PACKET_CZ_MEMORIALDUNGEON_COMMAND), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_OPEN_UI", sizeof(struct PACKET_CZ_OPEN_UI), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_PARTY_CONFIG", sizeof(struct PACKET_CZ_PARTY_CONFIG), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_PC_BUY_CASH_POINT_ITEM", sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_PC_BUY_CASH_POINT_ITEM_sub", sizeof(struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM_sub), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_PC_PURCHASE_ITEMLIST", sizeof(struct PACKET_CZ_PC_PURCHASE_ITEMLIST), SERVER_TYPE_MAP },
@@ -631,6 +645,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_CZ_REQ_OPEN_WRITE_MAIL", sizeof(struct PACKET_CZ_REQ_OPEN_WRITE_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_READ_MAIL", sizeof(struct PACKET_CZ_REQ_READ_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_REFRESH_MAIL_LIST", sizeof(struct PACKET_CZ_REQ_REFRESH_MAIL_LIST), SERVER_TYPE_MAP },
+		{ "PACKET_CZ_REQ_REMAINTIME", sizeof(struct PACKET_CZ_REQ_REMAINTIME), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_REMOVE_ITEM_MAIL", sizeof(struct PACKET_CZ_REQ_REMOVE_ITEM_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_STYLE_CHANGE", sizeof(struct PACKET_CZ_REQ_STYLE_CHANGE), SERVER_TYPE_MAP },
 		{ "PACKET_CZ_REQ_STYLE_CHANGE2", sizeof(struct PACKET_CZ_REQ_STYLE_CHANGE2), SERVER_TYPE_MAP },
@@ -665,9 +680,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_ADD_ITEM_TO_MAIL", sizeof(struct PACKET_ZC_ADD_ITEM_TO_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ADD_ITEM_TO_STORE", sizeof(struct PACKET_ZC_ADD_ITEM_TO_STORE), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ADD_MEMBER_TO_GROUP", sizeof(struct PACKET_ZC_ADD_MEMBER_TO_GROUP), SERVER_TYPE_MAP },
-		{ "PACKET_ZC_AUTOSPELLLIST1", sizeof(struct PACKET_ZC_AUTOSPELLLIST1), SERVER_TYPE_MAP },
-		{ "PACKET_ZC_AUTOSPELLLIST2", sizeof(struct PACKET_ZC_AUTOSPELLLIST2), SERVER_TYPE_MAP },
-		{ "PACKET_ZC_CAMERA_INFO", sizeof(struct PACKET_ZC_CAMERA_INFO), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_AUTOSPELLLIST", sizeof(struct PACKET_ZC_AUTOSPELLLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CASH_ITEM_DELETE", sizeof(struct PACKET_ZC_CASH_ITEM_DELETE), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CASH_TIME_COUNTER", sizeof(struct PACKET_ZC_CASH_TIME_COUNTER), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CHECKNAME", sizeof(struct PACKET_ZC_CHECKNAME), SERVER_TYPE_MAP },
@@ -702,6 +715,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_NOTIFY_UNREADMAIL", sizeof(struct PACKET_ZC_NOTIFY_UNREADMAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_WEAPONITEMLIST", sizeof(struct PACKET_ZC_NOTIFY_WEAPONITEMLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub", sizeof(struct PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_NPC_MARKET_OPEN", sizeof(struct PACKET_ZC_NPC_MARKET_OPEN), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_NPC_MARKET_OPEN_sub", sizeof(struct PACKET_ZC_NPC_MARKET_OPEN_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_OPEN_UI", sizeof(struct PACKET_ZC_OPEN_UI), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_OVERWEIGHT_PERCENT", sizeof(struct PACKET_ZC_OVERWEIGHT_PERCENT), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_PC_CASH_POINT_ITEMLIST", sizeof(struct PACKET_ZC_PC_CASH_POINT_ITEMLIST), SERVER_TYPE_MAP },
@@ -775,7 +790,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_mission_info_sub", sizeof(struct packet_mission_info_sub), SERVER_TYPE_MAP },
 		{ "packet_monster_hp", sizeof(struct packet_monster_hp), SERVER_TYPE_MAP },
 		{ "packet_notify_bounditem", sizeof(struct packet_notify_bounditem), SERVER_TYPE_MAP },
-		{ "packet_npc_market_open", sizeof(struct packet_npc_market_open), SERVER_TYPE_MAP },
 		{ "packet_npc_market_purchase", sizeof(struct packet_npc_market_purchase), SERVER_TYPE_MAP },
 		{ "packet_npc_market_result_ack", sizeof(struct packet_npc_market_result_ack), SERVER_TYPE_MAP },
 		{ "packet_package_item_announce", sizeof(struct packet_package_item_announce), SERVER_TYPE_MAP },

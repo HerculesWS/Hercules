@@ -94,10 +94,10 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 	if (value <= 0) {
 		int i;
 
-		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
 			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
-		if (i != MAX_INVENTORY) {
+		if (i != sd->status.inventorySize) {
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
 		}
 	}
@@ -342,10 +342,10 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	pet->lootitem_drop(pd,sd);
 
 	// Pet Evolution
-	ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
 			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
-	if (i != MAX_INVENTORY) {
+	if (i != sd->status.inventorySize) {
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
 	}
@@ -492,10 +492,10 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 	if(p->incubate == 1) {
 		int i;
 		// Get Egg Index
-		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
 			p->pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
-		if(i == MAX_INVENTORY) {
+		if(i == sd->status.inventorySize) {
 			ShowError("pet_recv_petdata: Hatching pet (%d:%s) aborted, couldn't find egg in inventory for removal!\n",p->pet_id, p->name);
 			sd->status.pet_id = 0;
 			return 1;
@@ -527,7 +527,7 @@ static int pet_select_egg(struct map_session_data *sd, int egg_index)
 {
 	nullpo_ret(sd);
 
-	if(egg_index < 0 || egg_index >= MAX_INVENTORY)
+	if (egg_index < 0 || egg_index >= sd->status.inventorySize)
 		return 0; //Forged packet!
 
 	if(sd->status.inventory[egg_index].card[0] == CARD0_PET)

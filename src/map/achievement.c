@@ -760,14 +760,13 @@ static void achievement_validate_refine(struct map_session_data *sd, unsigned in
 	struct item_data *id = NULL;
 
 	nullpo_retv(sd);
-	Assert_retv(idx < MAX_INVENTORY);
+	Assert_retv(idx < sd->status.inventorySize);
 
 	id = itemdb->exists(sd->status.inventory[idx].nameid);
 
 	if (sd->achievements_received == false)
 		return;
 
-	Assert_retv(idx < MAX_INVENTORY);
 	Assert_retv(id != NULL);
 
 	criteria.goal = sd->status.inventory[idx].refine;

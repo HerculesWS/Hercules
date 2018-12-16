@@ -90,8 +90,8 @@ struct {
 	struct HPMHookPoint *HP_chr_count_users_post;
 	struct HPMHookPoint *HP_chr_mmo_char_tobuf_pre;
 	struct HPMHookPoint *HP_chr_mmo_char_tobuf_post;
-	struct HPMHookPoint *HP_chr_mmo_char_send099d_pre;
-	struct HPMHookPoint *HP_chr_mmo_char_send099d_post;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post;
 	struct HPMHookPoint *HP_chr_mmo_char_send_ban_list_pre;
 	struct HPMHookPoint *HP_chr_mmo_char_send_ban_list_post;
 	struct HPMHookPoint *HP_chr_mmo_char_send_slots_info_pre;
@@ -1725,8 +1725,8 @@ struct {
 	int HP_chr_count_users_post;
 	int HP_chr_mmo_char_tobuf_pre;
 	int HP_chr_mmo_char_tobuf_post;
-	int HP_chr_mmo_char_send099d_pre;
-	int HP_chr_mmo_char_send099d_post;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post;
 	int HP_chr_mmo_char_send_ban_list_pre;
 	int HP_chr_mmo_char_send_ban_list_post;
 	int HP_chr_mmo_char_send_slots_info_pre;

@@ -147,6 +147,7 @@ packet(0x01ba,clif->pGMShift,2);
 packet(0x01bb,clif->pGMShift,2);
 packet(0x01bc,clif->pGMRecall,2);
 packet(0x01bd,clif->pGMRecall,2);
+packet(0x01c0,clif->pReqRemainTime);
 packet(0x01ce,clif->pAutoSpell,2);
 packet(0x01d5,clif->pNpcStringInput,2,4,8);
 packet(0x01df,clif->pGMReqAccountName,2);
@@ -1788,6 +1789,11 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+// all 2016-05-25
+#if PACKETVER >= 20160525
+	packet(0x0a77,clif->pCameraInfo); // CZ_CAMERA_INFO
+#endif
+
 // 2017-02-28aRagexeRE
 #if PACKETVER >= 20170228
 // new packets
@@ -1873,6 +1879,47 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x09b0,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
 	packet(0x09c3,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
 	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
+
+// 2018-11-14aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20181114
+// new packets
+// changed packet sizes
+	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
+	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
+	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
+	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09c3,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
+
+// 2018-11-21bRagexe
+#if PACKETVER_ZERO_NUM >= 20181121
+// new packets
+// changed packet sizes
+	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
+	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
+	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
+	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09c3,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
+	packet(0x0b10,clif->pStartUseSkillToId);
+	packet(0x0b11,clif->pStopUseSkillToId);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
+	packet(0x0b14,clif->pInventoryExpansion);
+	packet(0x0b16,clif->pInventoryExpansionConfirmed);
+	packet(0x0b19,clif->pInventoryExpansionRejected);
 #endif
 
 #endif /* MAP_PACKETS_H */

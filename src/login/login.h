@@ -219,6 +219,7 @@ struct login_interface {
 	void (*auth_failed) (struct login_session_data* sd, int result);
 	bool (*client_login) (int fd, struct login_session_data *sd);
 	bool (*client_login_otp) (int fd, struct login_session_data *sd);
+	void (*client_login_mobile_otp_request) (int fd, struct login_session_data *sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	void (*config_set_defaults) (void);

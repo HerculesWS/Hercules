@@ -2446,7 +2446,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		sd->regen.sregen = &sd->sregen;
 		sd->regen.ssregen = &sd->ssregen;
 		sd->weight=0;
-		for(i=0;i<MAX_INVENTORY;i++){
+		for (i = 0; i < sd->status.inventorySize; i++) {
 			if(sd->status.inventory[i].nameid==0 || sd->inventory_data[i] == NULL)
 				continue;
 			sd->weight += sd->inventory_data[i]->weight*sd->status.inventory[i].amount;

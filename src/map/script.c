@@ -7553,7 +7553,6 @@ static BUILDIN(viewpoint)
  *------------------------------------------*/
 static BUILDIN(countitem)
 {
-	int nameid, i;
 	int count = 0;
 	struct item_data* id = NULL;
 
@@ -7575,11 +7574,12 @@ static BUILDIN(countitem)
 		return false;
 	}
 
-	nameid = id->nameid;
+	int nameid = id->nameid;
 
-	for(i = 0; i < MAX_INVENTORY; i++)
-		if(sd->status.inventory[i].nameid == nameid)
+	for (int i = 0; i < sd->status.inventorySize; i++) {
+		if (sd->status.inventory[i].nameid == nameid)
 			count += sd->status.inventory[i].amount;
+	}
 
 	script_pushint(st,count);
 	return true;
@@ -7593,7 +7593,6 @@ static BUILDIN(countitem2)
 {
 	int nameid, iden, ref, attr, c1, c2, c3, c4;
 	int count = 0;
-	int i;
 	struct item_data* id = NULL;
 
 	struct map_session_data *sd = script->rid2sd(st);
@@ -7623,7 +7622,7 @@ static BUILDIN(countitem2)
 	c3 = script_getnum(st,8);
 	c4 = script_getnum(st,9);
 
-	for(i = 0; i < MAX_INVENTORY; i++)
+	for (int i = 0; i < sd->status.inventorySize; i++)
 		if (sd->status.inventory[i].nameid > 0 && sd->inventory_data[i] != NULL &&
 			sd->status.inventory[i].amount > 0 && sd->status.inventory[i].nameid == nameid &&
 			sd->status.inventory[i].identify == iden && sd->status.inventory[i].refine == ref &&
@@ -9148,13 +9147,13 @@ static BUILDIN(getequipname)
  *------------------------------------------*/
 static BUILDIN(getbrokenid)
 {
-	int i,num,id=0,brokencounter=0;
+	int num,id=0,brokencounter=0;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
 
 	num=script_getnum(st,2);
-	for(i=0; i<MAX_INVENTORY; i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].card[0] == CARD0_PET)
 			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
@@ -9181,7 +9180,7 @@ static BUILDIN(getbrokencount)
 	if (sd == NULL)
 		return true;
 
-	for (i = 0; i < MAX_INVENTORY; i++) {
+	for (i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].card[0] == CARD0_PET)
 			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0)
@@ -9198,14 +9197,13 @@ static BUILDIN(getbrokencount)
  *------------------------------------------*/
 static BUILDIN(repair)
 {
-	int i,num;
 	int repaircounter=0;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
 
-	num=script_getnum(st,2);
-	for(i=0; i<MAX_INVENTORY; i++) {
+	int num = script_getnum(st, 2);
+	for(int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].card[0] == CARD0_PET)
 			continue;
 		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
@@ -9229,12 +9227,12 @@ static BUILDIN(repair)
  *------------------------------------------*/
 static BUILDIN(repairall)
 {
-	int i, repaircounter = 0;
+	int repaircounter = 0;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
 
-	for(i = 0; i < MAX_INVENTORY; i++)
+	for (int i = 0; i < sd->status.inventorySize; i++)
 	{
 		if (sd->status.inventory[i].card[0] == CARD0_PET)
 			continue;
@@ -14722,10 +14720,10 @@ static BUILDIN(getinventorylist)
 	struct map_session_data *sd = script->rid2sd(st);
 	char card_var[SCRIPT_VARNAME_LENGTH];
 
-	int i,j=0,k;
+	int j=0,k;
 	if(!sd) return true;
 
-	for(i=0;i<MAX_INVENTORY;i++) {
+	for (int i = 0;i < sd->status.inventorySize; i++) {
 		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0) {
 			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_id"), j),sd->status.inventory[i].nameid);
 			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_amount"), j),sd->status.inventory[i].amount);
@@ -14816,10 +14814,9 @@ static BUILDIN(getskilllist)
 static BUILDIN(clearitem)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	int i;
 	if (sd == NULL)
 		return true;
-	for (i=0; i<MAX_INVENTORY; i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].amount) {
 			pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_SCRIPT);
 		}
@@ -15590,19 +15587,18 @@ static BUILDIN(getmercinfo)
  *------------------------------------------*/
 static BUILDIN(checkequipedcard)
 {
-	int n,i,c=0;
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
 		return true;
 
-	c = script_getnum(st,2);
+	int c = script_getnum(st,2);
 
-	for( i=0; i<MAX_INVENTORY; i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount && sd->inventory_data[i]) {
 			if (itemdb_isspecial(sd->status.inventory[i].card[0]))
 				continue;
-			for(n=0;n<sd->inventory_data[i]->slot;n++) {
+			for (int n = 0; n < sd->inventory_data[i]->slot; n++) {
 				if(sd->status.inventory[i].card[n]==c) {
 					script_pushint(st,1);
 					return true;
@@ -15674,6 +15670,29 @@ static BUILDIN(message)
 
 	message = script_getstr(st,3);
 	clif->message(sd->fd, message);
+
+	return true;
+}
+
+static BUILDIN(servicemessage)
+{
+	struct map_session_data *sd = NULL;
+
+	if (script_hasdata(st, 4)) {
+		if (script_isstringtype(st, 4))
+			sd = script->nick2sd(st, script_getstr(st, 4));
+		else
+			sd = script->id2sd(st, script_getnum(st, 4));
+	} else {
+		sd = script->rid2sd(st);
+	}
+
+	if (sd == NULL)
+		return true;
+
+	const char *message = script_getstr(st, 2);
+	const int color = script_getnum(st, 3);
+	clif->serviceMessageColor(sd, color, message);
 
 	return true;
 }
@@ -16447,9 +16466,9 @@ static BUILDIN(equip)
 		ShowError("wrong item ID : equipitem(%d)\n",nameid);
 		return false;
 	}
-	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0 );
-	if( i < MAX_INVENTORY )
-		pc->equipitem(sd,i,item_data->equip);
+	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0);
+	if (i < sd->status.inventorySize)
+		pc->equipitem(sd, i, item_data->equip);
 
 	return true;
 }
@@ -16507,21 +16526,21 @@ static BUILDIN(equip2)
 	c2   = script_getnum(st, 7);
 	c3   = script_getnum(st, 8);
 
-	ARR_FIND( 0, MAX_INVENTORY, i,( sd->status.inventory[i].equip == 0 &&
+	ARR_FIND(0, sd->status.inventorySize, i, (sd->status.inventory[i].equip == 0 &&
 									sd->status.inventory[i].nameid == nameid &&
 									sd->status.inventory[i].refine == ref &&
 									sd->status.inventory[i].attribute == attr &&
 									sd->status.inventory[i].card[0] == c0 &&
 									sd->status.inventory[i].card[1] == c1 &&
 									sd->status.inventory[i].card[2] == c2 &&
-									sd->status.inventory[i].card[3] == c3 ) );
+									sd->status.inventory[i].card[3] == c3));
 
-	if( i < MAX_INVENTORY ) {
+	if (i < sd->status.inventorySize) {
 		script_pushint(st,1);
 		pc->equipitem(sd,i,item_data->equip);
-	}
-	else
+	} else {
 		script_pushint(st,0);
+	}
 
 	return true;
 }
@@ -23635,7 +23654,7 @@ static BUILDIN(bg_join_team)
  *------------------------------------------*/
 static BUILDIN(countbound)
 {
-	int i, type, j=0, k=0;
+	int type, j=0, k=0;
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
@@ -23643,7 +23662,7 @@ static BUILDIN(countbound)
 
 	type = script_hasdata(st,2)?script_getnum(st,2):0;
 
-	for(i=0;i<MAX_INVENTORY;i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if(sd->status.inventory[i].nameid > 0 && (
 			(!type && sd->status.inventory[i].bound > 0) ||
 			(type && sd->status.inventory[i].bound == type)
@@ -23689,20 +23708,21 @@ static BUILDIN(checkbound)
 		ShowError("script_checkbound: Not a valid bind type! Type=%d\n", bound_type);
 	}
 
-	ARR_FIND( 0, MAX_INVENTORY, i, (sd->status.inventory[i].nameid == nameid &&
+	ARR_FIND(0, sd->status.inventorySize, i, (sd->status.inventory[i].nameid == nameid &&
 			( sd->status.inventory[i].refine == (script_hasdata(st,4)? script_getnum(st,4) : sd->status.inventory[i].refine) ) &&
 			( sd->status.inventory[i].attribute == (script_hasdata(st,5)? script_getnum(st,5) : sd->status.inventory[i].attribute) ) &&
 			( sd->status.inventory[i].card[0] == (script_hasdata(st,6)? script_getnum(st,6) : sd->status.inventory[i].card[0]) ) &&
 			( sd->status.inventory[i].card[1] == (script_hasdata(st,7)? script_getnum(st,7) : sd->status.inventory[i].card[1]) ) &&
 			( sd->status.inventory[i].card[2] == (script_hasdata(st,8)? script_getnum(st,8) : sd->status.inventory[i].card[2]) ) &&
 			( sd->status.inventory[i].card[3] == (script_hasdata(st,9)? script_getnum(st,9) : sd->status.inventory[i].card[3]) ) &&
-			((sd->status.inventory[i].bound > 0 && !bound_type) || sd->status.inventory[i].bound == bound_type )) );
+			((sd->status.inventory[i].bound > 0 && !bound_type) || sd->status.inventory[i].bound == bound_type)));
 
-	if( i < MAX_INVENTORY ){
+	if (i < sd->status.inventorySize) {
 		script_pushint(st, sd->status.inventory[i].bound);
 		return true;
-	} else
+	} else {
 		script_pushint(st,0);
+	}
 
 	return true;
 }
@@ -24790,6 +24810,100 @@ static BUILDIN(itempreview)
 	return true;
 }
 
+// insert or remove card into equipped item
+static BUILDIN(enchantitem)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	const int pos = script_getnum(st, 2);
+	if ((pos < EQI_ACC_L || pos > EQI_HAND_R) && pos != EQI_AMMO) {
+		ShowError("Wrong equip position: %d\n", pos);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const int cardId = script_getnum(st, 4);
+	struct item_data *it = itemdb->exists(cardId);
+	if (it == NULL || it->type != IT_CARD) {
+		ShowError("Item id is not card or not exists: %d\n", cardId);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const int n = sd->equip_index[pos];
+	if (n < 0) {
+		ShowError("Item in equipment slot %d is not equipped\n", pos);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const int cardSlot = script_getnum(st, 3);
+	if (cardSlot < 0 || cardSlot >= MAX_SLOTS) {
+		ShowError("Wrong card slot %d. Must be in range 0-3.\n", cardSlot);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	const bool res = clif->enchant_equipment(sd, pc->equip_pos[pos], cardSlot, cardId);
+	if (res) {
+		logs->pick_pc(sd, LOG_TYPE_CARD, -1, &sd->status.inventory[n],sd->inventory_data[n]);
+		sd->status.inventory[n].card[cardSlot] = cardId;
+		logs->pick_pc(sd, LOG_TYPE_CARD,  1, &sd->status.inventory[n],sd->inventory_data[n]);
+		status_calc_pc(sd, SCO_NONE);
+	}
+	script_pushint(st, res);
+	return true;
+}
+
+// send ack to inventory expand request
+static BUILDIN(expandInventoryAck)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	int itemId = 0;
+	if (script_hasdata(st, 3)) {
+		itemId = script_getnum(st, 3);
+	}
+	clif->inventoryExpandAck(sd, script_getnum(st, 2), itemId);
+	return true;
+}
+
+// send final ack to inventory expand request
+static BUILDIN(expandInventoryResult)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	clif->inventoryExpandResult(sd, script_getnum(st, 2));
+	return true;
+}
+
+// adjust player inventory size to given value positive or negative
+static BUILDIN(expandInventory)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	script_pushint(st, pc->expandInventory(sd, script_getnum(st, 2)));
+	return true;
+}
+
+// return current player inventory size
+static BUILDIN(getInventorySize)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	script_pushint(st, sd->status.inventorySize);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25194,6 +25308,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
 		BUILDIN_DEF(message,"vs"), // [MouseJstr]
+		BUILDIN_DEF(servicemessage, "si?"),
 		BUILDIN_DEF(npctalk,"s??"), // [Valaris][Murilo BiO]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
@@ -25528,6 +25643,11 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(changecamera, "iii?"),
 
 		BUILDIN_DEF(itempreview, "i"),
+		BUILDIN_DEF(enchantitem, "iii"),
+		BUILDIN_DEF(expandInventoryAck, "i?"),
+		BUILDIN_DEF(expandInventoryResult, "i"),
+		BUILDIN_DEF(expandInventory, "i"),
+		BUILDIN_DEF(getInventorySize, ""),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -25567,8 +25687,9 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAX_LEVEL",MAX_LEVEL,false, false);
 	script->set_constant("MAX_STORAGE",MAX_STORAGE,false, false);
 	script->set_constant("MAX_GUILD_STORAGE",MAX_GUILD_STORAGE,false, false);
-	script->set_constant("MAX_CART",MAX_INVENTORY,false, false);
+	script->set_constant("MAX_CART", MAX_CART, false, false);
 	script->set_constant("MAX_INVENTORY",MAX_INVENTORY,false, false);
+	script->set_constant("FIXED_INVENTORY_SIZE", FIXED_INVENTORY_SIZE, false, false);
 	script->set_constant("MAX_ZENY",MAX_ZENY,false, false);
 	script->set_constant("MAX_BANK_ZENY", MAX_BANK_ZENY, false, false);
 	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false, false);
@@ -25950,6 +26071,19 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITR_NOAUCTION", ITR_NOAUCTION, false, false);
 	script->set_constant("ITR_ALL", ITR_ALL, false, false);
 
+	script->constdb_comment("inventory expand ack responds");
+	script->set_constant("EXPAND_INV_ASK_CONFIRMATION", EXPAND_INVENTORY_ASK_CONFIRMATION, false, false);
+	script->set_constant("EXPAND_INV_FAILED", EXPAND_INVENTORY_FAILED, false, false);
+	script->set_constant("EXPAND_INV_OTHER_WORK", EXPAND_INVENTORY_OTHER_WORK, false, false);
+	script->set_constant("EXPAND_INV_MISSING_ITEM", EXPAND_INVENTORY_MISSING_ITEM, false, false);
+	script->set_constant("EXPAND_INV_MAX_SIZE", EXPAND_INVENTORY_MAX_SIZE, false, false);
+
+	script->constdb_comment("inventory expand final responds");
+	script->set_constant("EXPAND_INV_RESULT_SUCCESS", EXPAND_INVENTORY_RESULT_SUCCESS, false, false);
+	script->set_constant("EXPAND_INV_RESULT_FAILED", EXPAND_INVENTORY_RESULT_FAILED, false, false);
+	script->set_constant("EXPAND_INV_RESULT_OTHER_WORK", EXPAND_INVENTORY_RESULT_OTHER_WORK, false, false);
+	script->set_constant("EXPAND_INV_RESULT_MISSING_ITEM", EXPAND_INVENTORY_RESULT_MISSING_ITEM, false, false);
+	script->set_constant("EXPAND_INV_RESULT_MAX_SIZE", EXPAND_INVENTORY_RESULT_MAX_SIZE, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

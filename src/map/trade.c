@@ -209,7 +209,7 @@ static int impossible_trade_check(struct map_session_data *sd)
 	// remove this part: arrows can be trade and equipped
 	// re-added! [celest]
 	// remove equipped items (they can not be trade)
-	for (i = 0; i < MAX_INVENTORY; i++)
+	for (i = 0; i < sd->status.inventorySize; i++)
 		if (inventory[i].nameid > 0 && inventory[i].equip && !(inventory[i].equip & EQP_AMMO))
 			memset(&inventory[i], 0, sizeof(struct item));
 
@@ -218,7 +218,7 @@ static int impossible_trade_check(struct map_session_data *sd)
 		if (!sd->deal.item[i].amount)
 			continue;
 		index = sd->deal.item[i].index;
-		if (index < 0 || index >= MAX_INVENTORY)
+		if (index < 0 || index >= sd->status.inventorySize)
 			return 1;
 		if (inventory[index].amount < sd->deal.item[i].amount) {
 			// if more than the player have -> hack
@@ -281,9 +281,9 @@ static int trade_check(struct map_session_data *sd, struct map_session_data *tsd
 				return 0; //qty Exploit?
 
 			data = itemdb->search(inventory[n].nameid);
-			i = MAX_INVENTORY;
+			i = tsd->status.inventorySize;
 			if (itemdb->isstackable2(data)) { //Stackable item.
-				for(i = 0; i < MAX_INVENTORY; i++)
+				for(i = 0; i < tsd->status.inventorySize; i++)
 					if (inventory2[i].nameid == inventory[n].nameid &&
 						inventory2[i].card[0] == inventory[n].card[0] && inventory2[i].card[1] == inventory[n].card[1] &&
 						inventory2[i].card[2] == inventory[n].card[2] && inventory2[i].card[3] == inventory[n].card[3]) {
@@ -295,9 +295,9 @@ static int trade_check(struct map_session_data *sd, struct map_session_data *tsd
 					}
 			}
 
-			if (i == MAX_INVENTORY) {// look for an empty slot.
-				for(i = 0; i < MAX_INVENTORY && inventory2[i].nameid; i++);
-				if (i == MAX_INVENTORY)
+			if (i == tsd->status.inventorySize) {// look for an empty slot.
+				for (i = 0; i < tsd->status.inventorySize && inventory2[i].nameid; i++);
+				if (i == tsd->status.inventorySize)
 					return 0;
 				memcpy(&inventory2[i], &inventory[n], sizeof(struct item));
 				inventory2[i].amount = amount;
@@ -308,15 +308,15 @@ static int trade_check(struct map_session_data *sd, struct map_session_data *tsd
 		if (!amount)
 			continue;
 		n = tsd->deal.item[trade_i].index;
-		if (n < 0 || n >= MAX_INVENTORY)
+		if (n < 0 || n >= tsd->status.inventorySize)
 			return 0;
 		if (amount > inventory2[n].amount)
 			return 0;
 		// search if it's possible to add item (for full inventory)
 		data = itemdb->search(inventory2[n].nameid);
-		i = MAX_INVENTORY;
+		i = sd->status.inventorySize;
 		if (itemdb->isstackable2(data)) {
-			for(i = 0; i < MAX_INVENTORY; i++)
+			for(i = 0; i < sd->status.inventorySize; i++)
 				if (inventory[i].nameid == inventory2[n].nameid &&
 					inventory[i].card[0] == inventory2[n].card[0] && inventory[i].card[1] == inventory2[n].card[1] &&
 					inventory[i].card[2] == inventory2[n].card[2] && inventory[i].card[3] == inventory2[n].card[3]) {
@@ -327,9 +327,9 @@ static int trade_check(struct map_session_data *sd, struct map_session_data *tsd
 					break;
 				}
 		}
-		if (i == MAX_INVENTORY) {
-			for(i = 0; i < MAX_INVENTORY && inventory[i].nameid; i++);
-			if (i == MAX_INVENTORY)
+		if (i == sd->status.inventorySize) {
+			for(i = 0; i < sd->status.inventorySize && inventory[i].nameid; i++);
+			if (i == sd->status.inventorySize)
 				return 0;
 			memcpy(&inventory[i], &inventory2[n], sizeof(struct item));
 			inventory[i].amount = amount;
@@ -369,7 +369,7 @@ static void trade_tradeadditem(struct map_session_data *sd, short index, short a
 	index -= 2; // 0 is for zeny, 1 is unknown. Gravity, go figure...
 
 	//Item checks...
-	if( index < 0 || index >= MAX_INVENTORY )
+	if (index < 0 || index >= sd->status.inventorySize)
 		return;
 	if( amount < 0 || amount > sd->status.inventory[index].amount )
 		return;

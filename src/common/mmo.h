@@ -165,7 +165,22 @@
 #endif
 #define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
 
+#ifndef MAX_INVENTORY
+#if PACKETVER_ZERO_NUM >= 20181212
+#define MAX_INVENTORY 200
+#else
 #define MAX_INVENTORY 100
+#endif  // PACKETVER_ZERO_NUM >= 20181212
+#endif  // MAX_INVENTORY
+
+#ifndef FIXED_INVENTORY_SIZE
+#define FIXED_INVENTORY_SIZE 100
+#endif
+
+#if FIXED_INVENTORY_SIZE > MAX_INVENTORY
+#error FIXED_INVENTORY_SIZE must be same or smaller than MAX_INVENTORY
+#endif
+
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #if PACKETVER >= 20100413
 #ifndef MAX_CHARS
@@ -710,6 +725,7 @@ struct mmo_charstatus {
 
 	int64 last_login;
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
+	int inventorySize;
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];
 	struct s_skill skill[MAX_SKILL_DB];
 

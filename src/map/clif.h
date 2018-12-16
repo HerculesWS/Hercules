@@ -237,13 +237,13 @@ typedef enum emotion_type {
 	E_MAX
 } emotion_type;
 
-typedef enum clr_type {
+enum clr_type {
 	CLR_OUTSIGHT = 0,
 	CLR_DEAD,
 	CLR_RESPAWN,
 	CLR_TELEPORT,
 	CLR_TRICKDEAD,
-} clr_type;
+};
 
 enum map_property { // clif_map_property
 	MAPPROPERTY_NOTHING       = 0,
@@ -493,13 +493,17 @@ enum RECV_ROULETTE_ITEM_ACK {
 };
 
 enum GENERATE_ROULETTE_ACK {
-	GENERATE_ROULETTE_SUCCESS =  0x0,
-	GENERATE_ROULETTE_FAILED =  0x1,
-	GENERATE_ROULETTE_NO_ENOUGH_POINT =  0x2,
-	GENERATE_ROULETTE_LOSING =  0x3,
+	GENERATE_ROULETTE_SUCCESS = 0x0,
+	GENERATE_ROULETTE_FAILED  = 0x1,
+	GENERATE_ROULETTE_NO_ENOUGH_POINT = 0x2,
+	GENERATE_ROULETTE_LOSING  = 0x3,
+	GENERATE_ROULETTE_NO_ENOUGH_INVENTORY_SPACE = 0x4,
+#if PACKETVER >= 20141001
+	GENERATE_ROULETTE_CANT_PLAY = 0x5,
+#endif
 };
 
-enum OPEN_ROULETTE_ACK{
+enum OPEN_ROULETTE_ACK {
 	OPEN_ROULETTE_SUCCESS =  0x0,
 	OPEN_ROULETTE_FAILED =  0x1,
 };
@@ -583,8 +587,8 @@ enum zc_ui_types {
 **/
 enum cz_ui_types {
 	CZ_STYLIST_UI = 1,
-	//unknown  = 2,
-	//unknown  = 3,
+	CZ_MACRO_REGISTER_UI = 2,
+	CZ_MACRO_DETECTOR_UI = 3,
 	CZ_ATTENDANCE_UI = 5
 };
 
@@ -673,6 +677,22 @@ enum memorial_dungeon_command {
 	COMMAND_MEMORIALDUNGEON_DESTROY_FORCE = 0x3,
 };
 
+enum expand_inventory {
+	EXPAND_INVENTORY_ASK_CONFIRMATION = 0,
+	EXPAND_INVENTORY_FAILED = 1,
+	EXPAND_INVENTORY_OTHER_WORK = 2,
+	EXPAND_INVENTORY_MISSING_ITEM = 3,
+	EXPAND_INVENTORY_MAX_SIZE = 4
+};
+
+enum expand_inventory_result {
+	EXPAND_INVENTORY_RESULT_SUCCESS = 0,
+	EXPAND_INVENTORY_RESULT_FAILED = 1,
+	EXPAND_INVENTORY_RESULT_OTHER_WORK = 2,
+	EXPAND_INVENTORY_RESULT_MISSING_ITEM = 3,
+	EXPAND_INVENTORY_RESULT_MAX_SIZE = 4
+};
+
 /**
  * Clif.c Interface
  **/
@@ -752,9 +772,9 @@ struct clif_interface {
 	void (*package_announce) (struct map_session_data *sd, int nameid, int containerid);
 	void (*item_drop_announce) (struct map_session_data *sd, int nameid, char *monsterName);
 	/* unit-related */
-	void (*clearunit_single) (int id, clr_type type, int fd);
-	void (*clearunit_area) (struct block_list* bl, clr_type type);
-	void (*clearunit_delayed) (struct block_list* bl, clr_type type, int64 tick);
+	void (*clearunit_single) (int id, enum clr_type type, int fd);
+	void (*clearunit_area) (struct block_list* bl, enum clr_type type);
+	void (*clearunit_delayed) (struct block_list* bl, enum clr_type type, int64 tick);
 	void (*walkok) (struct map_session_data *sd);
 	void (*move) (struct unit_data *ud);
 	void (*move2) (struct block_list *bl, struct view_data *vd, struct unit_data *ud);
@@ -847,6 +867,12 @@ struct clif_interface {
 	void (*equipItems) (struct map_session_data *sd, enum inventory_type type);
 	void (*cartList) (struct map_session_data *sd);
 	void (*cartItems) (struct map_session_data *sd, enum inventory_type type);
+	void (*inventoryExpansionInfo) (struct map_session_data *sd);
+	void (*inventoryExpandAck) (struct map_session_data *sd, enum expand_inventory result, int itemId);
+	void (*inventoryExpandResult) (struct map_session_data *sd, enum expand_inventory_result result);
+	void (*pInventoryExpansion) (int fd, struct map_session_data *sd);
+	void (*pInventoryExpansionConfirmed) (int fd, struct map_session_data *sd);
+	void (*pInventoryExpansionRejected) (int fd, struct map_session_data *sd);
 	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
 	void (*clearcart) (int fd);
 	void (*item_identify_list) (struct map_session_data *sd);
@@ -968,6 +994,7 @@ struct clif_interface {
 	void (*broadcast2) (struct block_list *bl, const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
 	void (*messagecolor_self) (int fd, uint32 color, const char *msg);
 	void (*messagecolor) (struct block_list* bl, uint32 color, const char* msg);
+	void (*serviceMessageColor) (struct map_session_data *sd, uint32 color, const char *msg);
 	void (*disp_overhead) (struct block_list *bl, const char *mes, enum send_target target, struct block_list *target_bl);
 	void (*notify_playerchat) (struct block_list *bl, const char *mes);
 	void (*msgtable) (struct map_session_data* sd, enum clif_messages msg_id);
@@ -1219,7 +1246,7 @@ struct clif_interface {
 	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
 	/* */
 	bool (*parse_roulette_db) (void);
-	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, int bonusItemID);
+	void (*roulette_generate_ack) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);
 	/* Merge Items */
 	void (*openmergeitem) (int fd, struct map_session_data *sd);
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
@@ -1285,7 +1312,10 @@ struct clif_interface {
 	void (*pChangeCart) (int fd,struct map_session_data *sd);
 	void (*pStatusUp) (int fd,struct map_session_data *sd);
 	void (*pSkillUp) (int fd,struct map_session_data *sd);
+	void (*useSkillToIdReal) (int fd, struct map_session_data *sd, int skill_id, int skill_lv, int target_id);
 	void (*pUseSkillToId) (int fd, struct map_session_data *sd);
+	void (*pStartUseSkillToId) (int fd, struct map_session_data *sd);
+	void (*pStopUseSkillToId) (int fd, struct map_session_data *sd);
 	void (*pUseSkillToId_homun) (struct homun_data *hd, struct map_session_data *sd, int64 tick, uint16 skill_id, uint16 skill_lv, int target_id);
 	void (*pUseSkillToId_mercenary) (struct mercenary_data *md, struct map_session_data *sd, int64 tick, uint16 skill_id, uint16 skill_lv, int target_id);
 	void (*pUseSkillToPos) (int fd, struct map_session_data *sd);
@@ -1553,7 +1583,10 @@ struct clif_interface {
 	void (*pMemorialDungeonCommand) (int fd, struct map_session_data *sd);
 	void (*camera_showWindow) (struct map_session_data *sd);
 	void (*camera_change) (struct map_session_data *sd, float range, float rotation, float latitude, enum send_target target);
+	void (*pCameraInfo) (int fd, struct map_session_data *sd);
 	void (*item_preview) (struct map_session_data *sd, int n);
+	bool (*enchant_equipment) (struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
+	void (*pReqRemainTime) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

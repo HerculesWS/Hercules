@@ -5259,7 +5259,7 @@ packetLen(0x0acf, 64)  // CA_LOGIN_OTP
 #endif
 
 // Packet: 0x0ad0
-packetLen(0x0ad0, 11)
+packetLen(0x0ad0, 11)  // CA_OTP_CODE
 
 // Packet: 0x0ad1
 packetLen(0x0ad1, -1)

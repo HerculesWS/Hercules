@@ -609,15 +609,15 @@ int HP_chr_mmo_gender(const struct char_session_data *sd, const struct mmo_chars
 	}
 	return retVal___;
 }
-int HP_chr_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf) {
+int HP_chr_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int *count) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_chr_mmo_chars_fromsql_pre > 0) {
-		int (*preHookFunc) (struct char_session_data **sd, uint8 **buf);
+		int (*preHookFunc) (struct char_session_data **sd, uint8 **buf, int **count);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_mmo_chars_fromsql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_mmo_chars_fromsql_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &buf);
+			retVal___ = preHookFunc(&sd, &buf, &count);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -625,13 +625,13 @@ int HP_chr_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chr.mmo_chars_fromsql(sd, buf);
+		retVal___ = HPMHooks.source.chr.mmo_chars_fromsql(sd, buf, count);
 	}
 	if (HPMHooks.count.HP_chr_mmo_chars_fromsql_post > 0) {
-		int (*postHookFunc) (int retVal___, struct char_session_data *sd, uint8 *buf);
+		int (*postHookFunc) (int retVal___, struct char_session_data *sd, uint8 *buf, int *count);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_mmo_chars_fromsql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_mmo_chars_fromsql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, buf);
+			retVal___ = postHookFunc(retVal___, sd, buf, count);
 		}
 	}
 	return retVal___;
@@ -906,13 +906,13 @@ int HP_chr_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p) {
 	}
 	return retVal___;
 }
-void HP_chr_mmo_char_send099d(int fd, struct char_session_data *sd) {
+void HP_chr_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data *sd) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_chr_mmo_char_send099d_pre > 0) {
+	if (HPMHooks.count.HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre > 0) {
 		void (*preHookFunc) (int *fd, struct char_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_mmo_char_send099d_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_chr_mmo_char_send099d_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre[hIndex].func;
 			preHookFunc(&fd, &sd);
 		}
 		if (*HPMforce_return) {
@@ -921,12 +921,12 @@ void HP_chr_mmo_char_send099d(int fd, struct char_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.chr.mmo_char_send099d(fd, sd);
+		HPMHooks.source.chr.send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 	}
-	if (HPMHooks.count.HP_chr_mmo_char_send099d_post > 0) {
+	if (HPMHooks.count.HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post > 0) {
 		void (*postHookFunc) (int fd, struct char_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_mmo_char_send099d_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_chr_mmo_char_send099d_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post[hIndex].func;
 			postHookFunc(fd, sd);
 		}
 	}

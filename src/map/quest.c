@@ -814,7 +814,7 @@ static bool quest_questinfo_validate_items(struct map_session_data *sd, struct q
 	for (int i = 0; i < VECTOR_LENGTH(qi->items); i++) {
 		struct questinfo_itemreq *item = &VECTOR_INDEX(qi->items, i);
 		int count = 0;
-		for (int j = 0; j < MAX_INVENTORY; j++) {
+		for (int j = 0; j < sd->status.inventorySize; j++) {
 			if (sd->status.inventory[j].nameid == item->nameid)
 				count += sd->status.inventory[j].amount;
 		}

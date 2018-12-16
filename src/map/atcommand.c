@@ -1359,9 +1359,7 @@ ACMD(item2)
  *------------------------------------------*/
 ACMD(itemreset)
 {
-	int i;
-
-	for (i = 0; i < MAX_INVENTORY; i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].amount && sd->status.inventory[i].equip == 0) {
 			pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_COMMAND);
 		}
@@ -4274,10 +4272,8 @@ ACMD(partyspy)
  *------------------------------------------*/
 ACMD(repairall)
 {
-	int count, i;
-
-	count = 0;
-	for (i = 0; i < MAX_INVENTORY; i++) {
+	int count = 0;
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].card[0] == CARD0_PET)
 			continue;
 		if (sd->status.inventory[i].nameid && (sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
@@ -5286,9 +5282,7 @@ ACMD(follow)
  *------------------------------------------*/
 ACMD(dropall)
 {
-	int i;
-
-	for (i = 0; i < MAX_INVENTORY; i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
 				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
@@ -5304,8 +5298,6 @@ ACMD(dropall)
  *------------------------------------------*/
 ACMD(storeall)
 {
-	int i;
-
 	if (sd->state.storage_flag != STORAGE_FLAG_NORMAL) {
 		//Open storage.
 		if (storage->open(sd) == 1) {
@@ -5319,7 +5311,7 @@ ACMD(storeall)
 		return false;
 	}
 
-	for (i = 0; i < MAX_INVENTORY; i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
 				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
@@ -6714,9 +6706,9 @@ ACMD(refreshall)
  *------------------------------------------*/
 ACMD(identify)
 {
-	int i,num;
+	int num = 0;
 
-	for (i=num=0;i<MAX_INVENTORY;i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify!=1){
 			num++;
 		}
@@ -8256,7 +8248,7 @@ ACMD(itemlist)
 	} else if( strcmpi(info->command, "itemlist") == 0 ) {
 		location = "inventory";
 		items = sd->status.inventory;
-		size = MAX_INVENTORY;
+		size = sd->status.inventorySize;
 	} else
 		return false;
 
