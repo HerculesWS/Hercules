@@ -2221,11 +2221,12 @@ static int pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, e
 	return 1;
 }
 
-static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short group, int race_mask, int rate)
+static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, int id, bool is_group, int race_mask, int rate)
 {
 	int i;
 
 	nullpo_ret(drop);
+	Assert_ret(is_group || id > 0);
 	//Apply config rate adjustment settings.
 	if (rate >= 0) { //Absolute drop.
 		if (battle_config.item_rate_adddrop != 100)
@@ -2240,17 +2241,14 @@ static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id
 		if (rate > -1)
 			rate = -1;
 	}
-	for(i = 0; i < max && (drop[i].id || drop[i].group); i++) {
-		if (((id && drop[i].id == id) || (group && drop[i].group == group))
-		 && race_mask != RCMASK_NONE
-		) {
+	for (i = 0; i < max && (drop[i].id != 0 || drop[i].is_group); i++) {
+		if (drop[i].id == id && race_mask != RCMASK_NONE) {
 			drop[i].race |= race_mask;
 			if (drop[i].rate > 0 && rate > 0) {
 				//Both are absolute rates.
 				if (drop[i].rate < rate)
 					drop[i].rate = rate;
-			} else
-			if(drop[i].rate < 0 && rate < 0) {
+			} else if (drop[i].rate < 0 && rate < 0) {
 				//Both are relative rates.
 				if (drop[i].rate > rate)
 					drop[i].rate = rate;
@@ -2264,7 +2262,7 @@ static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id
 		return 0;
 	}
 	drop[i].id = id;
-	drop[i].group = group;
+	drop[i].is_group = is_group;
 	drop[i].race |= race_mask;
 	drop[i].rate = rate;
 	return 1;
@@ -3111,7 +3109,7 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 	#endif
 		case SP_ADD_MONSTER_DROP_CHAINITEM:
 			if (sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, val, map->race_id2mask(RC_ALL), 10000);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), val, true, map->race_id2mask(RC_ALL), 10000);
 		break;
 		case SP_ADDMAXWEIGHT:
 			if (sd->state.lr_flag != 2)
@@ -3686,7 +3684,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 			break;
 		case SP_ADD_MONSTER_DROP_ITEM:
 			if (sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, 0, map->race_id2mask(RC_ALL), val);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, false, map->race_id2mask(RC_ALL), val);
 			break;
 		case SP_SP_LOSS_RATE:
 			if(sd->state.lr_flag != 2) {
@@ -3892,7 +3890,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				break;
 			}
 			if (sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, type2, race_mask, 10000);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, true, race_mask, 10000);
 		}
 			break;
 #ifdef RENEWAL
@@ -3932,12 +3930,12 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 				break;
 			}
 			if (sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, 0, race_mask, val);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, false, race_mask, val);
 		}
 			break;
 		case SP_ADD_CLASS_DROP_ITEM:
 			if(sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, 0, -type3, val);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, false, -type3, val);
 			break;
 		case SP_AUTOSPELL:
 			if(sd->state.lr_flag != 2)
