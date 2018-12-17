@@ -9,6 +9,44 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2018.12.16] `December 16 2018`
+
+### Added
+- Added/updated packets, encryption keys and message tables for clients up to 2018-12-12. (#2324)
+- Added support for the `AC_LOGIN_OTP` packets. (part of #2324)
+- Added script command `enchantitem()` and related packet `ZC_ENCHANT_EQUIPMENT`. (part of #2324)
+- Added script command `servicemessage()` and related packet `ZC_SERVICE_MESSAGE_COLOR`. (part of #2324)
+- Split packets struct definitions out from lclif into separate files for AC and CA packets. (part of #2324)
+- Added struct definitions header for HC packets. (part of #2324)
+- Added support for expandable inventory size, including database persistence, inventory expansion packets, the script commands `expandInventoryAck()`, `expandInventoryResult()`, `expandInventory()`, `getInventorySize()`, the item `Inventory_Extension_Coupon` and the script `npc/other/inventory_expansion.txt`. (part of #2324)
+- Added support for the client commands `/viewpointvalue` and `/setcamera` (like `@camerainfo`). The atcommand aliases `@setcamera` and `@viewpointvalue` are also provided. (part of #2324)
+- Added `needed_status_point()` script function and the global function `F_CashReduceStat()`, for permanent status point reduction. (#2246)
+- Added an option to include script interaction into the idle criteria, disabled by default. See `idletime_criteria` in `conf/map/battle/player.conf` and `BCIDLE_SCRIPT`. (#2244)
+
+### Changed
+
+- Extended support for 32 bit item IDs to the Zero and Main clients that support them. (part of #2324)
+- Renamed packet identifier macros from `PACKET_ID_*` to `HEADER_*`. (part of #2324)
+- Renamed packet struct definitions from `packet_*` to `PACKET_*`. (part of #2324)
+- Increased `MAX_PACKET_LOGIN_DB` to `0x0AD0` to match the existing packets. (part of #2324)
+- Added buffer size validation for `char_mmo_char_tobuf`. (part of #2324)
+- Updated `npc/woe-se` files to modern standards, including `mes()` and `mesf()`. (#2261)
+- Changed HPMDataCheck to exclude packetver-specific packet structs that would cause compile-time errors. (794ce3c89497a17bd64eacbc82bce22f07f00acb)
+
+### Fixed
+
+- Fixed `getunits()` returning the wrong value if no area size is passed. (41d370cd3308be48b4ce00a50ee46515742978b0, issue #2330)
+- Fixed support for old (2010 and older) clients in packet `ZC_PROPERTY_HOMUN`. (part of #2324)
+- Fixed Gaia Sword not granting any bonus drops. This reworks the way `s_add_drop` differentiates between items and groups and the parameters passed to `pc_bonus_item_drop()`. Custom code may need to be updated to match. (#2327)
+- Fixed a 'Gungslinger' typo in `item_db2`. (#2335)
+- Fixed delay-consumed items missing consumption after using Abracadabra/Improvised Song (#2298, issue #1169)
+
+### Deprecated
+
+### Removed
+
+- Removed unnecessary typedef from `clr_type`. The type is now only available as `enum clr_type`. (part of #2324)
+
 ## [v2018.11.18+1] `November 18 2018` `PATCH 1`
 
 ### Fixed
@@ -523,6 +561,8 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2018.12.16]: https://github.com/HerculesWS/Hercules/compare/v2018.11.18+1...v2018.12.16
+[v2018.11.18+1]: https://github.com/HerculesWS/Hercules/compare/v2018.11.18...v2018.11.18+1
 [v2018.11.18]: https://github.com/HerculesWS/Hercules/compare/v2018.10.21...v2018.11.18
 [v2018.10.21]: https://github.com/HerculesWS/Hercules/compare/v2018.09.23...v2018.10.21
 [v2018.09.23]: https://github.com/HerculesWS/Hercules/compare/v2018.08.26+1...v2018.09.23
