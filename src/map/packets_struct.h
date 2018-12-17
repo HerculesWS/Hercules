@@ -1391,9 +1391,9 @@ struct packet_npc_market_result_ack {
 	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
 } __attribute__((packed));
 
+#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
 /* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
 struct PACKET_ZC_NPC_MARKET_OPEN_sub {
-#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
 #else
@@ -1403,21 +1403,14 @@ struct PACKET_ZC_NPC_MARKET_OPEN_sub {
 	uint32 price;
 	uint32 qty;
 	uint16 weight;
-#else
-	UNAVAILABLE_STRUCT;
-#endif
 } __attribute__((packed));
 
 struct PACKET_ZC_NPC_MARKET_OPEN {
-#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_NPC_MARKET_OPEN_sub list[];
-#else
-	UNAVAILABLE_STRUCT;
-#endif
 } __attribute__((packed));
-#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
+
 DEFINE_PACKET_HEADER(ZC_NPC_MARKET_OPEN, 0x09d5);
 #endif
 
@@ -1798,8 +1791,8 @@ struct PACKET_ZC_GROUP_LIST {
 	struct PACKET_ZC_GROUP_LIST_SUB members[];
 } __attribute__((packed));
 
-struct PACKET_ZC_CLANINFO {
 #if PACKETVER_MAIN_NUM >= 20130626 || PACKETVER_RE_NUM >= 20130605 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_CLANINFO {
 	int16 PacketType;
 	int16 PacketLength;
 	uint32 ClanID;
@@ -1808,11 +1801,7 @@ struct PACKET_ZC_CLANINFO {
 	char Map[MAP_NAME_LENGTH_EXT];
 	uint8 AllyCount;
 	uint8 AntagonistCount;
-#else
-	UNAVAILABLE_STRUCT;
-#endif
 } __attribute__((packed));
-#if PACKETVER_MAIN_NUM >= 20130626 || PACKETVER_RE_NUM >= 20130605 || defined(PACKETVER_ZERO)
 DEFINE_PACKET_HEADER(ZC_CLANINFO, 0x098a);
 #endif
 
@@ -2281,8 +2270,9 @@ struct PACKET_ZC_ACK_WEAPONREFINE {
 #endif
 } __attribute__((packed));
 
-struct PACKET_ZC_PROPERTY_HOMUN_2 {
-#if PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO_NUM)
+// PACKET_ZC_PROPERTY_HOMUN2
+struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
 	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
@@ -2311,14 +2301,11 @@ struct PACKET_ZC_PROPERTY_HOMUN_2 {
 	uint32 expNext;
 	uint16 skillPoints;
 	uint16 range;
-#else
-	UNAVAILABLE_STRUCT;
-#endif
 } __attribute__((packed));
-struct PACKET_ZC_PROPERTY_HOMUN_1 {
-#if PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO)
-	UNAVAILABLE_STRUCT;
-#elif PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x09f7);
+#elif PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO_NUM)
+// PACKET_ZC_PROPERTY_HOMUN1
+struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
 	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
@@ -2347,15 +2334,7 @@ struct PACKET_ZC_PROPERTY_HOMUN_1 {
 	uint32 expNext;
 	uint16 skillPoints;
 	uint16 range;
-#else
-	UNAVAILABLE_STRUCT;
-#endif
 } __attribute__((packed));
-#if PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO)
-#define PACKET_ZC_PROPERTY_HOMUN PACKET_ZC_PROPERTY_HOMUN_2
-DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x09f7);
-#elif PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827
-#define PACKET_ZC_PROPERTY_HOMUN PACKET_ZC_PROPERTY_HOMUN_1
 DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x022e);
 #endif
 

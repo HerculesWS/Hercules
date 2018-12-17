@@ -1628,7 +1628,7 @@ static bool clif_spawn(struct block_list *bl)
 /// 022e <name>.24B <modified>.B <level>.W <hunger>.W <intimacy>.W <equip id>.W <atk>.W <matk>.W <hit>.W <crit>.W <def>.W <mdef>.W <flee>.W <aspd>.W <hp>.W <max hp>.W <sp>.W <max sp>.W <exp>.L <max exp>.L <skill points>.W <atk range>.W
 static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int flag)
 {
-#if PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO_NUM)
 	struct status_data *hstatus;
 	enum homun_type htype;
 	struct PACKET_ZC_PROPERTY_HOMUN p;
