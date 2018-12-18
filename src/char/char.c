@@ -2139,8 +2139,8 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
 	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, 4), &count) + sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
 	WFIFOSET(fd, p->packetLen);
-	// send empty packet if chars count is 3*N, for trigger final code in client
-	if (count % 3 != 0) {
+	// send empty packet if chars count is 3, for trigger final code in client
+	if (count == 3) {
 		WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
 		p = WFIFOP(fd, 0);
 		p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
