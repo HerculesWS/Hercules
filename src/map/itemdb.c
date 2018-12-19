@@ -2434,6 +2434,8 @@ static void itemdb_read(bool minimal)
 		}
 	}
 
+	itemdb->other->foreach(itemdb->other, itemdb->addname_sub);
+
 	if (minimal)
 		return;
 
@@ -2445,6 +2447,23 @@ static void itemdb_read(bool minimal)
 	itemdb->read_packages();
 	itemdb->read_options();
 	clif->stylist_read_db_libconfig();
+}
+
+/**
+ * Add item name with high id into map
+ * @see DBApply
+ */
+static int itemdb_addname_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct item_data *item = DB->data2ptr(data);
+	struct DBData prev;
+
+	if (itemdb->names->put(itemdb->names, DB->str2key(item->name), DB->ptr2data(item), &prev)) {
+		struct item_data *oldItem = DB->data2ptr(&prev);
+		ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n", item->name, item->nameid, oldItem->nameid);
+	}
+
+	return 0;
 }
 
 /**
@@ -2789,4 +2808,5 @@ void itemdb_defaults(void)
 	itemdb->is_item_usable = itemdb_is_item_usable;
 	itemdb->lookup_const = itemdb_lookup_const;
 	itemdb->lookup_const_mask = itemdb_lookup_const_mask;
+	itemdb->addname_sub = itemdb_addname_sub;
 }
