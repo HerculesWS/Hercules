@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
- * Copyright (C) 2018  Andrei Karas (4144)
+ * Copyright (C) 2013-2019  Hercules Dev Team
+ * Copyright (C) 2018-2019  Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9663,7 +9663,7 @@
 	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK // 12
 #endif
 
-// 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE, 2018-11-14dRagexeRE, 2018-11-21cRagexeRE, 2018-11-28aRagexeRE, 2018-12-05bRagexeRE, 2018-12-12aRagexeRE, 2018-12-12bRagexeRE
+// 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE, 2018-11-14dRagexeRE, 2018-11-21cRagexeRE, 2018-11-28aRagexeRE, 2018-12-05bRagexeRE, 2018-12-12aRagexeRE, 2018-12-12bRagexeRE, 2018-12-19bRagexeRE, 2018-12-26aRagexeRE, 2019-01-09bRagexeRE
 #if PACKETVER == 20180704 || \
     PACKETVER == 20180711 || \
     PACKETVER == 20180718 || \
@@ -9681,7 +9681,10 @@
     PACKETVER == 20181121 || \
     PACKETVER == 20181128 || \
     PACKETVER == 20181205 || \
-    PACKETVER >= 20181212
+    PACKETVER == 20181212 || \
+    PACKETVER == 20181219 || \
+    PACKETVER == 20181226 || \
+    PACKETVER >= 20190109
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36

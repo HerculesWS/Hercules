@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
- * Copyright (C) 2018  Andrei Karas (4144)
+ * Copyright (C) 2013-2019  Hercules Dev Team
+ * Copyright (C) 2018-2019  Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -742,11 +742,13 @@
 	packet(0x0968,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
 #endif
 
-// 2018-11-14aRagexe_zero, 2018-11-20aRagexe_zero, 2018-11-28aRagexe_zero, 2018-12-12aRagexe_zero
+// 2018-11-14aRagexe_zero, 2018-11-20aRagexe_zero, 2018-11-28aRagexe_zero, 2018-12-12aRagexe_zero, 2018-12-19aRagexe_zero, 2018-12-26_2aRagexe_zero
 #if PACKETVER == 20181114 || \
     PACKETVER == 20181120 || \
     PACKETVER == 20181128 || \
-    PACKETVER >= 20181212
+    PACKETVER == 20181212 || \
+    PACKETVER == 20181219 || \
+    PACKETVER >= 20181226
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
