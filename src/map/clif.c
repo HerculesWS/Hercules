@@ -3079,7 +3079,7 @@ static void clif_cartItems(struct map_session_data *sd, enum inventory_type type
 
 static void clif_inventoryExpansionInfo(struct map_session_data *sd)
 {
-#if PACKETVER_ZERO_NUM >= 20181212
+#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
@@ -3093,7 +3093,7 @@ static void clif_inventoryExpansionInfo(struct map_session_data *sd)
 
 static void clif_inventoryExpandAck(struct map_session_data *sd, enum expand_inventory result, int itemId)
 {
-#if PACKETVER_ZERO_NUM >= 20181212
+#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
@@ -3108,7 +3108,7 @@ static void clif_inventoryExpandAck(struct map_session_data *sd, enum expand_inv
 
 static void clif_inventoryExpandResult(struct map_session_data *sd, enum expand_inventory_result result)
 {
-#if PACKETVER_ZERO_NUM >= 20181212
+#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
 	nullpo_retv(sd);
 
 	const int fd = sd->fd;
