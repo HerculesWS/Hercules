@@ -1700,7 +1700,12 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 
 	nullpo_ret(entry);
 	nullpo_ret(source);
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	if (entry->nameid <= 0 || entry->nameid > MAX_ITEM_ID) {
+#else
+	if (entry->nameid <= 0) {
+#endif
+		// item id wrong for any packet versions
 		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEM_ID), skipping.\n",
 				entry->nameid, n, source, MAX_ITEM_ID);
 		if (entry->script) {
@@ -1716,7 +1721,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 			entry->unequip_script = NULL;
 		}
 		return 0;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	}
+#else
+	} else if (entry->nameid > MAX_ITEM_ID) {
+		// item id too big for packet version before item id in 4 bytes
+		entry->view_id = UNKNOWN_ITEM_ID;
+	}
+#endif
 
 	{
 		const char *c = entry->name;
