@@ -2064,7 +2064,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				}
 				case AM_DEMONSTRATION:
-					skillratio += 20 * skill_lv;
+					skillratio += skill_lv / 2;
 					break;
 				case AM_ACIDTERROR:
 #ifdef RENEWAL
@@ -4031,7 +4031,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 	case CR_ACIDDEMONSTRATION:
 #ifdef RENEWAL
-		{// [malufett]
+		{// [violetharmony]
 			int64 matk=0, atk;
 			short tdef = status->get_total_def(target);
 			short tmdef =  status->get_total_mdef(target);
@@ -4043,7 +4043,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			md.damage = matk + atk;
 			if( src->type == BL_MOB ){
 				totaldef = (tdef + tmdef) >> 1;
-				md.damage = 7 * targetVit * skill_lv * (atk + matk) / 100;
+				md.damage = 7 * targetVit * skill_lv * (atk + matk) / 50;
 				/*
 				// Pending [malufett]
 				if( unknown condition ){
