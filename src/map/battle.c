@@ -4061,7 +4061,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 				if (target->type == BL_PC)
 					md.damage >>= 1;
 			}
-			md.damage -= totaldef/2;
+			md.damage -= totaldef;
 			if( tsc && tsc->data[SC_LEXAETERNA] ) {
 				md.damage <<= 1;
 				status_change_end(target, SC_LEXAETERNA, INVALID_TIMER);
