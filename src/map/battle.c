@@ -3879,7 +3879,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), md.flag);
 			md.damage = matk + atk;
-			md.damage = (100 + 40*skill_lv) * (atk + matk) / 100;
+			md.damage = (100 + 40*skill_lv) * (atk + matk) / 200;
 			ad.damage -= totaldef
 			if( src == target )
 			{
