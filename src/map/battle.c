@@ -4031,7 +4031,8 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 	case CR_ACIDDEMONSTRATION:
 #ifdef RENEWAL
-		{// [violetharmony]
+		{// [malufett]
+			// [violetharmony] ratio change
 			int64 matk=0, atk;
 			short tdef = status->get_total_def(target);
 			short tmdef =  status->get_total_mdef(target);
