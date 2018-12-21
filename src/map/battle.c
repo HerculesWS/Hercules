@@ -5083,7 +5083,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				short totaldef = status->get_total_def(target);
 				GET_NORMAL_ATTACK((sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | 8, skill_id);
 				if ( wd.damage ) {
-					ATK_ADD(250 * (skill_lv + 1) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage));
+					ATK_ADD(250 * (skill_lv + 1) + (10 * (status_get_sp(src) + 1) * wd.damage / 100) + (8 * wd.damage) - (wd.damage / 10));
 					ATK_ADD(-totaldef);
 				}
 			}
