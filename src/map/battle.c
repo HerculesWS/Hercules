@@ -4038,7 +4038,6 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			short tmdef =  status->get_total_mdef(target);
 			int targetVit = min(120, status_get_vit(target));
 			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1; // FIXME: What's the >> 32 supposed to do here? tmdef and tdef are both 16-bit...
-			totaldef = totaldef/2;
 			
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), md.flag);
@@ -4062,7 +4061,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 				if (target->type == BL_PC)
 					md.damage >>= 1;
 			}
-			md.damage -= totaldef;
+			md.damage -= totaldef/2;
 			if( tsc && tsc->data[SC_LEXAETERNA] ) {
 				md.damage <<= 1;
 				status_change_end(target, SC_LEXAETERNA, INVALID_TIMER);
