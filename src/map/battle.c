@@ -4110,7 +4110,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		md.damage = 500+rnd()%500 + 5*skill_lv * sstatus->int_;
 		nk|=NK_IGNORE_FLEE|NK_NO_ELEFIX; //These two are not properties of the weapon based part.
 #else
-		int ratio = 300 + 50 * skill_lv;
+		int ratio = 350 + 50 * skill_lv;
 		int64 matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 		short totaldef = status->get_total_def(target) + status->get_total_mdef(target);
 		int64 atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? 1 : 0) | (sc && sc->data[SC_WEAPONPERFECT] ? 8 : 0), md.flag);
@@ -4118,7 +4118,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		if( sc && sc->data[SC_EDP] )
 			ratio >>= 1;
 #endif
-		md.damage = (matk + atk) * ratio / 100;
+		md.damage = ((matk + atk) * ratio / 100) - ((matk + atk) / 2);
 		md.damage -= totaldef;
 #endif
 		}
