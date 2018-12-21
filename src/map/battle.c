@@ -3871,14 +3871,12 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 
 		if( skill_id == CR_GRANDCROSS || skill_id == NPC_GRANDDARKNESS )
 		{ //Apply the physical part of the skill's damage. [Skotlex]
-			// add def [violetharmony/Hercules]
-			int matk;
-			int totaldef = status->get_total_def(target) + status->get_total_mdef(target);
-			matk = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, status->get_matk(src, 2), 0, wd.flag);
-			matk = battle->attr_fix(src, target, matk, ELE_HOLY, tstatus->def_ele, tstatus->ele_lv);
-			matk = matk * battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag) / 100;
+			// add def [violetharmony]
+			short tdef = status->get_total_def(target);
+			short tmdef = status->get_total_mdef(target);
+			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1;
 			struct Damage wd = battle->calc_weapon_attack(src,target,skill_id,skill_lv,mflag);
-			ad.damage = battle->attr_fix(src, target, wd.damage + ad.damage + matk, s_ele, tstatus->def_ele, tstatus->ele_lv) * (100 + 40*skill_lv)/200;
+			ad.damage = battle->attr_fix(src, target, wd.damage + ad.damage, s_ele, tstatus->def_ele, tstatus->ele_lv) * (100 + 40*skill_lv)/200;
 			ad.damage -= totaldef
 			if( src == target )
 			{
