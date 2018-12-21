@@ -3872,11 +3872,14 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 		if( skill_id == CR_GRANDCROSS || skill_id == NPC_GRANDDARKNESS )
 		{ //Apply the physical part of the skill's damage. [Skotlex]
 			// add def [violetharmony]
+			int64 matk=0, atk;
 			short tdef = status->get_total_def(target);
 			short tmdef = status->get_total_mdef(target);
-			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1;
-			struct Damage wd = battle->calc_weapon_attack(src,target,skill_id,skill_lv,mflag);
-			ad.damage = battle->attr_fix(src, target, wd.damage + ad.damage, s_ele, tstatus->def_ele, tstatus->ele_lv) * (100 + 40*skill_lv)/200;
+			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32));
+			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
+			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), md.flag);
+			md.damage = matk + atk;
+			md.damage = (100 + 40*skill_lv) * (atk + matk) / 100;
 			ad.damage -= totaldef
 			if( src == target )
 			{
