@@ -4694,7 +4694,8 @@ static void char_creation_failed(int fd, int result)
 	/* Others I found [Ind] */
 	/* 0x02 = Symbols in Character Names are forbidden */
 	/* 0x03 = You are not eligible to open the Character Slot. */
-	/* 0x0B = This service is only available for premium users.  */
+	/* 0x0B = This service is only available for premium users. */
+	/* 0x0C = Character name is invalid. */
 	switch (result) {
 		case -1: WFIFOB(fd,2) = 0x00; break; // 'Charname already exists'
 		case -2: WFIFOB(fd,2) = 0xFF; break; // 'Char creation denied'
