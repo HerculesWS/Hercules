@@ -11300,7 +11300,7 @@ static int buildin_getunits_sub(struct block_list *bl, va_list ap)
 		return 0; // type mismatch => skip
 	}
 
-	if (index >= SCRIPT_MAX_ARRAYSIZE || *count >= limit) {
+	if (index >= SCRIPT_MAX_ARRAYSIZE || (limit != 0 && *count >= limit)) {
 		return -1;
 	}
 
