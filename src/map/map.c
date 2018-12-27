@@ -544,10 +544,10 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
  * @param args Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, int max, va_list args)
+static uint32 bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, uint32 max, va_list args)
 {
 	int i;
-	int returnCount = 0;
+	uint32 returnCount = 0;
 
 	map->freeblock_lock();
 	for (i = blockcount; i < map->bl_list_count && returnCount < max; i++) {
@@ -574,10 +574,10 @@ static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount,
  * @param args Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, va_list args)
+static uint32 map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, va_list args)
 {
 	int i;
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int bsize;
 	va_list argscopy;
 	struct block_list *bl;
@@ -607,7 +607,7 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
 	}
 
 	va_copy(argscopy, args);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, argscopy);
+	returnCount = bl_vforeach(func, blockcount, UINT_MAX, argscopy);
 	va_end(argscopy);
 
 	return returnCount;
@@ -623,9 +623,9 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, ...)
+static uint32 map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -635,9 +635,9 @@ static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, i
 	return returnCount;
 }
 
-static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, int count, int type, ...)
+static uint32 map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, uint32 count, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -658,10 +658,10 @@ static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, va_list ap)
+static uint32 map_vforeachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, va_list ap)
 {
 	int i;
-	int returnCount = 0;
+	uint32 returnCount = 0;
 
 	for (i = 0; i < instance->list[instance_id].num_map; i++) {
 		int m = instance->list[instance_id].map[i];
@@ -685,9 +685,9 @@ static int map_vforeachininstance(int (*func)(struct block_list*, va_list), int1
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, ...)
+static uint32 map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -845,9 +845,9 @@ static int bl_vgetall_inrange(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
+static uint32 map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
 {
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
@@ -856,7 +856,7 @@ static int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct 
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inrange, center, range);
 
 	va_copy(apcopy, ap);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	returnCount = bl_vforeach(func, blockcount, UINT_MAX, apcopy);
 	va_end(apcopy);
 
 	return returnCount;
@@ -874,9 +874,9 @@ static int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
+static uint32 map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -899,9 +899,9 @@ static int map_foreachinrange(int (*func)(struct block_list*, va_list), struct b
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int count, int type, va_list ap)
+static uint32 map_vforcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, uint32 count, int type, va_list ap)
 {
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
@@ -930,9 +930,9 @@ static int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_forcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int count, int type, ...)
+static uint32 map_forcountinrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, uint32 count, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -977,9 +977,9 @@ static int bl_vgetall_inshootrange(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
+static uint32 map_vforeachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, va_list ap)
 {
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
@@ -988,7 +988,7 @@ static int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), st
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inshootrange, center, range);
 
 	va_copy(apcopy, ap);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, ap);
+	returnCount = bl_vforeach(func, blockcount, UINT_MAX, ap);
 	va_end(apcopy);
 
 	return returnCount;
@@ -1006,9 +1006,9 @@ static int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), st
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
+static uint32 map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -1032,16 +1032,16 @@ static int map_foreachinshootrange(int (*func)(struct block_list*, va_list), str
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap)
+static uint32 map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap)
 {
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
 	bl_getall_area(type, m, x0, y0, x1, y1, NULL);
 
 	va_copy(apcopy, ap);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	returnCount = bl_vforeach(func, blockcount, UINT_MAX, apcopy);
 	va_end(apcopy);
 
 	return returnCount;
@@ -1062,9 +1062,9 @@ static int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m,
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...)
+static uint32 map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -1090,9 +1090,9 @@ static int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, va_list ap)
+static uint32 map_vforcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, uint32 count, int type, va_list ap)
 {
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
@@ -1122,9 +1122,9 @@ static int map_vforcountinarea(int (*func)(struct block_list*, va_list), int16 m
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_forcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, ...)
+static uint32 map_forcountinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, uint32 count, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -1180,9 +1180,9 @@ static int bl_vgetall_inmovearea(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, va_list ap)
+static uint32 map_vforeachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, va_list ap)
 {
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	int m, x0, x1, y0, y1;
 	va_list apcopy;
@@ -1213,7 +1213,7 @@ static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), stru
 	}
 
 	va_copy(apcopy, ap);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	returnCount = bl_vforeach(func, blockcount, UINT_MAX, apcopy);
 	va_end(apcopy);
 
 	return returnCount;
@@ -1239,9 +1239,9 @@ static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), stru
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, ...)
+static uint32 map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -1263,16 +1263,16 @@ static int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struc
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, va_list ap)
+static uint32 map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, va_list ap)
 {
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
 	bl_getall_area(type, m, x, y, x, y, NULL);
 
 	va_copy(apcopy, ap);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	returnCount = bl_vforeach(func, blockcount, UINT_MAX, apcopy);
 	va_end(apcopy);
 
 	return returnCount;
@@ -1290,9 +1290,9 @@ static int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m,
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, ...)
+static uint32 map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
@@ -1370,7 +1370,7 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
  * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap)
+static uint32 map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap)
 {
 	// [Skotlex]
 	// check for all targets in the square that
@@ -1386,7 +1386,7 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
 	// close/far the target is because that's how SharpShooting works currently in
 	// kRO
 
-	int returnCount = 0;
+	uint32 returnCount = 0;
 	int blockcount = map->bl_list_count;
 	va_list apcopy;
 
@@ -1425,7 +1425,7 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
 	bl_getall_area(type, m, mx0, my0, mx1, my1, bl_vgetall_inpath, m, x0, y0, x1, y1, range, len_limit, magnitude2);
 
 	va_copy(apcopy, ap);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	returnCount = bl_vforeach(func, blockcount, UINT_MAX, apcopy);
 	va_end(apcopy);
 
 	return returnCount;
@@ -1448,9 +1448,9 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-static int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...)
+static uint32 map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...)
 {
-	int returnCount;
+	uint32 returnCount;
 	va_list ap;
 
 	va_start(ap, type);
