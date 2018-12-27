@@ -23878,6 +23878,7 @@ static BUILDIN(sellitem)
 	struct item_data *it;
 	int i = 0, id = script_getnum(st,2);
 	int value = 0;
+	int value2 = 0;
 	int qty = 0;
 
 	if( !(nd = map->id2nd(st->oid)) ) {
@@ -23888,10 +23889,6 @@ static BUILDIN(sellitem)
 		return false;
 	}
 
-	value = script_hasdata(st,3) ? script_getnum(st, 3) : it->value_buy;
-	if( value == -1 )
-		value = it->value_buy;
-
 	if( !nd->u.scr.shop )
 		npc->trader_update(nd->src_id?nd->src_id:nd->bl.id);
 	else {/* no need to run this if its empty */
@@ -23899,6 +23896,12 @@ static BUILDIN(sellitem)
 			if( nd->u.scr.shop->item[i].nameid == id )
 				break;
 		}
+	}
+
+	if (nd->u.scr.shop->type != NST_BARTER) {
+		value = script_hasdata(st,3) ? script_getnum(st, 3) : it->value_buy;
+		if( value == -1 )
+			value = it->value_buy;
 	}
 
 	if( nd->u.scr.shop->type == NST_MARKET ) {
@@ -23913,11 +23916,26 @@ static BUILDIN(sellitem)
 					it->name, id, value, (int)(value*0.75), it->value_sell, (int)(it->value_sell*1.24), nd->exname, nd->path);
 	}
 
+	if (nd->u.scr.shop->type == NST_BARTER) {
+		if (!script_hasdata(st, 5)) {
+			ShowError("buildin_sellitem: invalid number of parameters for barter-type shop!\n");
+			return false;
+		}
+		qty = script_getnum(st, 3);
+		value = script_getnum(st, 4);
+		value2 = script_getnum(st, 5);
+		if (qty <= 0 || value <= 0 || value2 <= 0) {
+			ShowError("buildin_sellitem: invalid parameters for barter-type shop!\n");
+			return false;
+		}
+	}
+
 	if( i != nd->u.scr.shop->items ) {
 		nd->u.scr.shop->item[i].value = value;
 		nd->u.scr.shop->item[i].qty   = qty;
-		if( nd->u.scr.shop->type == NST_MARKET ) /* has been manually updated, make it reflect on sql */
-			npc->market_tosql(nd,i);
+		if (nd->u.scr.shop->type == NST_MARKET) /* has been manually updated, make it reflect on sql */
+			npc->market_tosql(nd, i);
+		// TODO: saving barter shop to sql
 	} else {
 		for( i = 0; i < nd->u.scr.shop->items; i++ ) {
 			if( nd->u.scr.shop->item[i].nameid == 0 )
@@ -23935,6 +23953,7 @@ static BUILDIN(sellitem)
 
 		nd->u.scr.shop->item[i].nameid = it->nameid;
 		nd->u.scr.shop->item[i].value  = value;
+		nd->u.scr.shop->item[i].value2 = value2;
 		nd->u.scr.shop->item[i].qty    = qty;
 	}
 
@@ -23966,11 +23985,13 @@ static BUILDIN(stopselling)
 	if( i != nd->u.scr.shop->items ) {
 		int cursor;
 
-		if( nd->u.scr.shop->type == NST_MARKET )
+		if (nd->u.scr.shop->type == NST_MARKET)
 			npc->market_delfromsql(nd,i);
+		// TODO: remove barter shop from sql
 
 		nd->u.scr.shop->item[i].nameid = 0;
 		nd->u.scr.shop->item[i].value  = 0;
+		nd->u.scr.shop->item[i].value2 = 0;
 		nd->u.scr.shop->item[i].qty    = 0;
 
 		for( i = 0, cursor = 0; i < nd->u.scr.shop->items; i++ ) {
@@ -24054,6 +24075,12 @@ static BUILDIN(tradertype)
 		script->reportsrc(st);
 	}
 #endif
+#if PACKETVER_ZERO_NUM < 20181226
+	if (type == NST_BARTER) {
+		ShowWarning("buildin_tradertype: NST_BARTER is only available with PACKETVER_ZERO_NUM 20181226 or newer!\n");
+		script->reportsrc(st);
+	}
+#endif
 
 	if( nd->u.scr.shop )
 		nd->u.scr.shop->type = type;
@@ -24097,8 +24124,8 @@ static BUILDIN(shopcount)
 	} else if ( !nd->u.scr.shop || !nd->u.scr.shop->items ) {
 		ShowWarning("buildin_shopcount(%d): trying to use without any items!\n",id);
 		return false;
-	} else if ( nd->u.scr.shop->type != NST_MARKET ) {
-		ShowWarning("buildin_shopcount(%d): trying to use on a non-NST_MARKET shop!\n",id);
+	} else if (nd->u.scr.shop->type != NST_MARKET && nd->u.scr.shop->type != NST_BARTER) {
+		ShowWarning("buildin_shopcount(%d): trying to use on a non-NST_MARKET and non-NST_BARTER shop!\n",id);
 		return false;
 	}
 
@@ -25623,7 +25650,7 @@ static void script_parse_builtin(void)
 
 		/* New Shop Support */
 		BUILDIN_DEF(openshop,"?"),
-		BUILDIN_DEF(sellitem,"i??"),
+		BUILDIN_DEF(sellitem,"i???"),
 		BUILDIN_DEF(stopselling,"i"),
 		BUILDIN_DEF(setcurrency,"i?"),
 		BUILDIN_DEF(tradertype,"i"),
@@ -26104,6 +26131,13 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EXPAND_INV_RESULT_OTHER_WORK", EXPAND_INVENTORY_RESULT_OTHER_WORK, false, false);
 	script->set_constant("EXPAND_INV_RESULT_MISSING_ITEM", EXPAND_INVENTORY_RESULT_MISSING_ITEM, false, false);
 	script->set_constant("EXPAND_INV_RESULT_MAX_SIZE", EXPAND_INVENTORY_RESULT_MAX_SIZE, false, false);
+
+	script->constdb_comment("trader type");
+	script->set_constant("NST_ZENY", NST_ZENY, false, false);
+	script->set_constant("NST_CASH", NST_CASH, false, false);
+	script->set_constant("NST_MARKET", NST_MARKET, false, false);
+	script->set_constant("NST_CUSTOM", NST_CUSTOM, false, false);
+	script->set_constant("NST_BARTER", NST_BARTER, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

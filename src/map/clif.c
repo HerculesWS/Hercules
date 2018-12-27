@@ -22215,6 +22215,41 @@ static bool clif_enchant_equipment(struct map_session_data *sd, enum equip_pos p
 #endif
 }
 
+static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *nd)
+{
+#if PACKETVER_ZERO_NUM >= 20181226
+	nullpo_retv(sd);
+	nullpo_retv(nd);
+	struct npc_item_list *shop = nd->u.scr.shop->item;
+	const int shop_size = nd->u.scr.shop->items;
+
+	int c = 0;
+	int maxCount = (sizeof(packet_buf) - sizeof(struct PACKET_ZC_NPC_BARTER_OPEN)) / sizeof(struct PACKET_ZC_NPC_BARTER_OPEN_sub);
+	struct PACKET_ZC_NPC_BARTER_OPEN *packet = (struct PACKET_ZC_NPC_BARTER_OPEN*)&packet_buf[0];
+	packet->packetType = HEADER_ZC_NPC_BARTER_OPEN;
+
+	for (int i = 0; i < shop_size && c < maxCount; i++) {
+		if (shop[i].nameid) {
+			struct item_data *id = itemdb->exists(shop[i].nameid);
+			if (id == NULL)
+				continue;
+
+			packet->list[c].nameid = shop[i].nameid;
+			packet->list[c].type   = itemtype(id->type);
+			packet->list[c].amount = shop[i].qty;
+			packet->list[c].currencyNameid = shop[i].value;
+			packet->list[c].currencyAmount = shop[i].value2;
+			packet->list[c].weight = id->weight * 10;
+			packet->list[c].index = i;
+			c++;
+		}
+	}
+
+	packet->packetLength = sizeof(struct PACKET_ZC_NPC_BARTER_OPEN) + sizeof(struct PACKET_ZC_NPC_BARTER_OPEN_sub) * c;
+	clif->send(packet, packet->packetLength, &sd->bl, SELF);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23400,4 +23435,7 @@ void clif_defaults(void)
 
 	clif->pMemorialDungeonCommand = clif_parse_memorial_dungeon_command;
 	clif->pReqRemainTime = clif_parse_reqRemainTime;
+
+	clif->npc_barter_open = clif_npc_barter_open;
+
 }

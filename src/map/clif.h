@@ -1587,6 +1587,7 @@ struct clif_interface {
 	void (*item_preview) (struct map_session_data *sd, int n);
 	bool (*enchant_equipment) (struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
 	void (*pReqRemainTime) (int fd, struct map_session_data *sd);
+	void (*npc_barter_open) (struct map_session_data *sd, struct npc_data *nd);
 };
 
 #ifdef HERCULES_CORE

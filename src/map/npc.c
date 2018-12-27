@@ -1449,11 +1449,12 @@ static int npc_cashshop_buylist(struct map_session_data *sd, int points, struct 
 		return ERROR_TYPE_NPC;
 
 	if( nd->subtype != CASHSHOP ) {
-		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET ) {
+		if (nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET && nd->u.scr.shop->type != NST_BARTER) {
 			shop = nd->u.scr.shop->item;
 			shop_size = nd->u.scr.shop->items;
-		} else
+		} else {
 			return ERROR_TYPE_NPC;
+		}
 	} else {
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
@@ -1586,7 +1587,7 @@ static void npc_market_fromsql(void)
 			ShowError("npc_market_fromsql: NPC '%s' not found! skipping...\n",name);
 			npc->market_delfromsql_sub(name, USHRT_MAX);
 			continue;
-		} else if ( nd->subtype != SCRIPT || !nd->u.scr.shop || !nd->u.scr.shop->items || nd->u.scr.shop->type != NST_MARKET ) {
+		} else if (nd->subtype != SCRIPT || !nd->u.scr.shop || !nd->u.scr.shop->items || nd->u.scr.shop->type != NST_MARKET) {
 			ShowError("npc_market_fromsql: NPC '%s' is not proper for market, skipping...\n",name);
 			npc->market_delfromsql_sub(name, USHRT_MAX);
 			continue;
@@ -1672,6 +1673,9 @@ static bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd)
 
 				clif->npc_market_open(sd,nd);
 			}
+			break;
+		case NST_BARTER:
+			clif->npc_barter_open(sd, nd);
 			break;
 		default:
 			clif->cashshop_show(sd,nd);
@@ -1799,11 +1803,12 @@ static int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount,
 		return ERROR_TYPE_ITEM_ID; // Invalid Item
 
 	if( nd->subtype != CASHSHOP ) {
-		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET ) {
+		if (nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET && nd->u.scr.shop->type != NST_BARTER) {
 			shop = nd->u.scr.shop->item;
 			shop_size = nd->u.scr.shop->items;
-		} else
+		} else {
 			return ERROR_TYPE_NPC;
+		}
 	} else {
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
