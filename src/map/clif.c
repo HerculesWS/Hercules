@@ -19904,7 +19904,7 @@ static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *n
 			packet->list[c].price  = shop[i].value;
 			packet->list[c].qty    = shop[i].qty;
 			packet->list[c].type   = itemtype(id->type);
-			packet->list[c].weight = id->weight;
+			packet->list[c].weight = id->weight * 10;
 			c++;
 		}
 	}
