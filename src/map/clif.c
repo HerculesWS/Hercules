@@ -11578,6 +11578,10 @@ static void clif_parse_NpcBuySellSelected(int fd, struct map_session_data *sd)
 ///     3 = "Out of the maximum capacity, you have too many items."
 ///     9 = "Amounts are exceeded the possession of the item is not available for purchase."
 ///    10 = "Props open-air store sales will be traded in RODEX"
+///    11 = "The exchange failed."
+///    12 = "The exchange was well done."
+///    13 = "The item is already sold and out of stock."
+///    14 = "There is not enough goods to exchange."
 static void clif_npc_buy_result(struct map_session_data *sd, unsigned char result)
 {
 	int fd;
@@ -22256,6 +22260,35 @@ static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *n
 #endif
 }
 
+static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_ZERO_NUM >= 20181226
+	const struct PACKET_CZ_NPC_BARTER_PURCHASE *p = RP2PTR(fd);
+	int count = (p->packetLength - sizeof(struct PACKET_CZ_NPC_BARTER_PURCHASE)) / sizeof p->list[0];
+	struct barteritemlist item_list;
+
+	Assert_retv(count >= 0 && count <= sd->status.inventorySize);
+
+	VECTOR_INIT(item_list);
+	VECTOR_ENSURE(item_list, count, 1);
+
+	for (int i = 0; i < count; i++) {
+		struct barter_itemlist_entry entry = { 0 };
+		entry.addId = p->list[i].itemId;
+		entry.addAmount = p->list[i].amount;
+		entry.removeIndex = p->list[i].invIndex - 2;
+
+		VECTOR_PUSH(item_list, entry);
+	}
+
+	int response = npc->barter_buylist(sd, &item_list);
+	clif->npc_buy_result(sd, response);
+
+	VECTOR_CLEAR(item_list);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23444,4 +23477,5 @@ void clif_defaults(void)
 
 	clif->npc_barter_open = clif_npc_barter_open;
 	clif->pNPCBarterClosed = clif_parse_NPCBarterClosed;
+	clif->pNPCBarterPurchase = clif_parse_NPCBarterPurchase;
 }

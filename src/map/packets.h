@@ -1923,6 +1923,7 @@ packet(0x96e,clif->ackmergeitems);
 #endif
 
 #if PACKETVER_ZERO_NUM >= 20181226
+	packet(0x0b0f,clif->pNPCBarterPurchase);
 	packet(0x0b12,clif->pNPCBarterClosed);
 #endif
 

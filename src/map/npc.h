@@ -310,6 +310,7 @@ struct npc_interface {
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
 	int (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
 	void (*market_tosql) (struct npc_data *nd, unsigned short index);

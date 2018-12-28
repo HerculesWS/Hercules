@@ -665,6 +665,14 @@ struct stylist_data_entry {
 };
 VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
+struct barter_itemlist_entry {
+	int addId;
+	int addAmount;
+	int removeIndex;
+};
+
+VECTOR_STRUCT_DECL(barteritemlist, struct barter_itemlist_entry);
+
 /**
 * Stylist Shop Responds
 **/
@@ -1589,6 +1597,7 @@ struct clif_interface {
 	void (*pReqRemainTime) (int fd, struct map_session_data *sd);
 	void (*npc_barter_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*pNPCBarterClosed) (int fd, struct map_session_data *sd);
+	void (*pNPCBarterPurchase) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

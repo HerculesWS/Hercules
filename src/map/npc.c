@@ -2117,6 +2117,129 @@ static int npc_market_buylist(struct map_session_data *sd, struct itemlist *item
 	return 0;
 }
 
+/**
+ * Processes incoming npc barter purchase list
+ **/
+static int npc_barter_buylist(struct map_session_data *sd, struct barteritemlist *item_list)
+{
+	struct npc_data* nd;
+	struct npc_item_list *shop = NULL;
+	int w, new_;
+	unsigned short shop_size = 0;
+
+	nullpo_retr(1, sd);
+	nullpo_retr(1, item_list);
+
+	nd = npc->checknear(sd, map->id2bl(sd->npc_shopid));
+
+	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 || !nd->u.scr.shop || nd->u.scr.shop->type != NST_BARTER)
+		return 11;
+
+	shop = nd->u.scr.shop->item;
+	shop_size = nd->u.scr.shop->items;
+
+	w = 0;
+	new_ = 0;
+
+	int items[MAX_INVENTORY] = { 0 };
+
+	// process entries in buy list, one by one
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct barter_itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+
+		const int n = entry->removeIndex;
+		if (n < 0 || n >= sd->status.inventorySize)
+			return 11;  // wrong inventory index
+
+		if (!itemdb->exists(entry->addId))
+			return 13; // item no longer in itemdb
+
+		const int removeId = sd->status.inventory[n].nameid;
+		int j = shop_size;
+		// find this entry in the shop's sell list
+		ARR_FIND(0, shop_size, j, (entry->addId == shop[j].nameid || entry->addId == itemdb_viewid(shop[j].nameid)) &&
+			(removeId == shop[j].value || removeId == itemdb_viewid(shop[j].value)));
+		if (j == shop_size)
+			return 13;  // no such item in shop
+
+		const int removeAmount = shop[j].value2;
+
+		if (entry->addAmount > (int)shop[j].qty)
+			return 14;  // not enough item amount in shop
+
+		if (removeAmount * entry->addAmount > sd->status.inventory[n].amount)
+			return 14;  // not enough item amount in inventory
+
+		items[n] += removeAmount * entry->addAmount;
+
+		if (items[n] > sd->status.inventory[n].amount)
+			return 14;  // not enough item amount in inventory
+
+		entry->addId = shop[j].nameid; //item_avail replacement
+
+		npc_market_qty[i] = j;
+
+		if (!itemdb->isstackable(entry->addId) && entry->addAmount > 1) {
+			//Exploit? You can't buy more than 1 of equipment types o.O
+			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->addAmount, entry->addId);
+			entry->addAmount = 1;
+		}
+
+		switch (pc->checkadditem(sd, entry->addId, entry->addAmount)) {
+			case ADDITEM_EXIST:
+				break;
+			case ADDITEM_NEW:
+				new_++;
+				break;
+			case ADDITEM_OVERAMOUNT: /* TODO find official response for this */
+				return 1;
+		}
+
+		w += itemdb_weight(entry->addId) * entry->addAmount;
+		w -= itemdb_weight(removeId) * removeAmount;
+	}
+
+	if (w + sd->weight > sd->max_weight)
+		return 2; // Too heavy
+
+	if (pc->inventoryblank(sd) < new_)
+		return 3; // Not enough space to store items
+
+	for (int i = 0; i < sd->status.inventorySize; ++i) {
+		const int removeAmountTotal = items[i];
+		if (removeAmountTotal == 0)
+			continue;
+		if (pc->delitem(sd, i, removeAmountTotal, 0, DELITEM_SOLD, LOG_TYPE_NPC) != 0) {
+			return 11;  // unknown exploit
+		}
+	}
+
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct barter_itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		const int shopIdx = npc_market_qty[i];
+
+		if (entry->addAmount > (int)shop[shopIdx].qty) /* wohoo someone tampered with the packet. */
+			return 14;
+
+		shop[shopIdx].qty -= entry->addAmount;
+
+		// TODO: save to sql
+
+		if (itemdb_type(entry->addId) == IT_PETEGG) {
+			pet->create_egg(sd, entry->addId);
+		} else {
+			struct item item_tmp;
+			memset(&item_tmp, 0, sizeof(item_tmp));
+			item_tmp.nameid = entry->addId;
+			item_tmp.identify = 1;
+			pc->additem(sd, &item_tmp, entry->addAmount, LOG_TYPE_NPC);
+		}
+	}
+
+	return 12;
+}
+
 /// npc_selllist for script-controlled shops
 static int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
@@ -5308,6 +5431,7 @@ void npc_defaults(void)
 	npc->trader_pay = npc_trader_pay;
 	npc->trader_update = npc_trader_update;
 	npc->market_buylist = npc_market_buylist;
+	npc->barter_buylist = npc_barter_buylist;
 	npc->trader_open = npc_trader_open;
 	npc->market_fromsql = npc_market_fromsql;
 	npc->market_tosql = npc_market_tosql;
