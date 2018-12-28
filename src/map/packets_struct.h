@@ -3084,6 +3084,13 @@ struct PACKET_ZC_NPC_BARTER_OPEN {
 DEFINE_PACKET_HEADER(ZC_NPC_BARTER_OPEN, 0x0b0e);
 #endif
 
+#if PACKETVER_ZERO_NUM >= 20181226
+struct PACKET_CZ_NPC_BARTER_CLOSE {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_NPC_BARTER_CLOSE, 0x0b12);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

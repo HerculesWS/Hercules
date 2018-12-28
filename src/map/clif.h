@@ -1588,6 +1588,7 @@ struct clif_interface {
 	bool (*enchant_equipment) (struct map_session_data *sd, enum equip_pos pos, int cardSlot, int cardId);
 	void (*pReqRemainTime) (int fd, struct map_session_data *sd);
 	void (*npc_barter_open) (struct map_session_data *sd, struct npc_data *nd);
+	void (*pNPCBarterClosed) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

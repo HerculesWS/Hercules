@@ -19921,6 +19921,12 @@ static void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd)
 	sd->npc_shopid = 0;
 }
 
+static void clif_parse_NPCBarterClosed(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_NPCBarterClosed(int fd, struct map_session_data *sd)
+{
+	sd->npc_shopid = 0;
+}
+
 static void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, unsigned char response)
 {
 #if PACKETVER >= 20131223
@@ -23437,5 +23443,5 @@ void clif_defaults(void)
 	clif->pReqRemainTime = clif_parse_reqRemainTime;
 
 	clif->npc_barter_open = clif_npc_barter_open;
-
+	clif->pNPCBarterClosed = clif_parse_NPCBarterClosed;
 }
