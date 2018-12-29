@@ -1,0 +1,21 @@
+//===== Hercules Script ======================================
+//= Barter shop demo
+//===== By: ==================================================
+//= 4144
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Barter shop demo in prontera.
+//============================================================
+
+prontera,159,284,4	trader	Barter Shop#prt	4_M_KID1,{
+OnInit:
+	tradertype(NST_BARTER);
+	sellitem White_Herb, 100, Red_Potion, 2;
+	sellitem Blue_Herb, 200, Orange_Potion, 3;
+	sellitem Green_Herb, 100, Red_Potion, 4;
+	sellitem White_Herb, 100, Orange_Potion, 1;
+	sellitem Apple, -1, Orange_Potion, 1;
+	sellitem Praetorian_Shield, 100, Berserk_Potion, 10;
+	end;
+}
