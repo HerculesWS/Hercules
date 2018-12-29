@@ -313,9 +313,13 @@ struct npc_interface {
 	int (*barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
-	void (*market_tosql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
+	void (*market_tosql) (struct npc_data *nd, int index);
+	void (*market_delfromsql) (struct npc_data *nd, int index);
+	void (*market_delfromsql_sub) (const char *npcname, int index);
+	void (*barter_fromsql) (void);
+	void (*barter_tosql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql_sub) (const char *npcname, int itemId, int itemId2, int amount2);
 	bool (*db_checkid) (const int id);
 	void (*refresh) (struct npc_data* nd);
 	/**

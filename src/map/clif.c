@@ -22278,6 +22278,7 @@ static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd)
 		entry.addId = p->list[i].itemId;
 		entry.addAmount = p->list[i].amount;
 		entry.removeIndex = p->list[i].invIndex - 2;
+		entry.shopIndex = p->list[i].shopIndex;
 
 		VECTOR_PUSH(item_list, entry);
 	}

@@ -669,6 +669,7 @@ struct barter_itemlist_entry {
 	int addId;
 	int addAmount;
 	int removeIndex;
+	int shopIndex;
 };
 
 VECTOR_STRUCT_DECL(barteritemlist, struct barter_itemlist_entry);

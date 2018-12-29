@@ -9967,8 +9967,10 @@ currency_id and currency_amount can be used only with shop type NST_BARTER
 ---------------------------------------
 
 *stopselling(<Item_ID>)
+*stopselling(<Item_ID>{, <currency_id>, <currency_amount>})
 
 attempts to remove <Item_ID> from the current shop list.
+currency_id and currency_amount can be used only with shop type NST_BARTER
 
 ---------------------------------------
 
