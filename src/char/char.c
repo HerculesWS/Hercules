@@ -4444,6 +4444,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 
 	if( core->runflag != CHARSERVER_ST_RUNNING ) {
 		chr->auth_error(fd, 0);
+		sockt->eof(fd);
 		return;
 	}
 
@@ -4458,11 +4459,13 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 		/* restrictions apply */
 		if( chr->server_type == CST_MAINTENANCE && node->group_id < char_maintenance_min_group_id ) {
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 			return;
 		}
 		/* the client will already deny this request, this check is to avoid someone bypassing. */
 		if( chr->server_type == CST_PAYING && (time_t)node->expiration_time < time(NULL) ) {
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 			return;
 		}
 		idb_remove(auth_db, account_id);
@@ -4474,6 +4477,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 			loginif->auth(fd, sd, ipl);
 		} else { // if no login-server, we must refuse connection
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 		}
 	}
 }
@@ -4995,6 +4999,7 @@ static void char_parse_char_login_map_server(int fd, uint32 ipl)
 		!sockt->allowed_ip_check(ipl))
 	{
 		chr->login_map_server_ack(fd, 3); // Failure
+		sockt->eof(fd);
 	} else {
 		chr->login_map_server_ack(fd, 0); // Success
 
