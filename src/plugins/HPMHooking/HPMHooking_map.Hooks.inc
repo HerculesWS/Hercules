@@ -74397,14 +74397,14 @@ bool HP_script_load_translation_addstring(const char *file, uint8 lang_id, const
 	}
 	return retVal___;
 }
-int HP_script_load_translation(const char *file, uint8 lang_id) {
+int HP_script_load_translation_file(const char *file, uint8 lang_id) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_script_load_translation_pre > 0) {
+	if (HPMHooks.count.HP_script_load_translation_file_pre > 0) {
 		int (*preHookFunc) (const char **file, uint8 *lang_id);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translation_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_script_load_translation_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translation_file_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_load_translation_file_pre[hIndex].func;
 			retVal___ = preHookFunc(&file, &lang_id);
 		}
 		if (*HPMforce_return) {
@@ -74413,13 +74413,40 @@ int HP_script_load_translation(const char *file, uint8 lang_id) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.load_translation(file, lang_id);
+		retVal___ = HPMHooks.source.script.load_translation_file(file, lang_id);
+	}
+	if (HPMHooks.count.HP_script_load_translation_file_post > 0) {
+		int (*postHookFunc) (int retVal___, const char *file, uint8 lang_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translation_file_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_load_translation_file_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, file, lang_id);
+		}
+	}
+	return retVal___;
+}
+int HP_script_load_translation(const char *directory, uint8 lang_id) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_script_load_translation_pre > 0) {
+		int (*preHookFunc) (const char **directory, uint8 *lang_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translation_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_load_translation_pre[hIndex].func;
+			retVal___ = preHookFunc(&directory, &lang_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.load_translation(directory, lang_id);
 	}
 	if (HPMHooks.count.HP_script_load_translation_post > 0) {
-		int (*postHookFunc) (int retVal___, const char *file, uint8 lang_id);
+		int (*postHookFunc) (int retVal___, const char *directory, uint8 lang_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_load_translation_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_script_load_translation_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, file, lang_id);
+			retVal___ = postHookFunc(retVal___, directory, lang_id);
 		}
 	}
 	return retVal___;
@@ -74537,15 +74564,15 @@ uint8 HP_script_add_language(const char *name) {
 	}
 	return retVal___;
 }
-const char* HP_script_get_translation_file_name(const char *file) {
+const char* HP_script_get_translation_dir_name(const char *directory) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
-	if (HPMHooks.count.HP_script_get_translation_file_name_pre > 0) {
-		const char* (*preHookFunc) (const char **file);
+	if (HPMHooks.count.HP_script_get_translation_dir_name_pre > 0) {
+		const char* (*preHookFunc) (const char **directory);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_get_translation_file_name_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_script_get_translation_file_name_pre[hIndex].func;
-			retVal___ = preHookFunc(&file);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_get_translation_dir_name_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_get_translation_dir_name_pre[hIndex].func;
+			retVal___ = preHookFunc(&directory);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -74553,13 +74580,13 @@ const char* HP_script_get_translation_file_name(const char *file) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.get_translation_file_name(file);
+		retVal___ = HPMHooks.source.script.get_translation_dir_name(directory);
 	}
-	if (HPMHooks.count.HP_script_get_translation_file_name_post > 0) {
-		const char* (*postHookFunc) (const char* retVal___, const char *file);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_get_translation_file_name_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_script_get_translation_file_name_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, file);
+	if (HPMHooks.count.HP_script_get_translation_dir_name_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___, const char *directory);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_get_translation_dir_name_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_get_translation_dir_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, directory);
 		}
 	}
 	return retVal___;
