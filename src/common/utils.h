@@ -39,7 +39,7 @@
 void WriteDump(FILE* fp, const void* buffer, size_t length);
 void ShowDump(const void* buffer, size_t length);
 
-void findfile(const char *p, const char *pat, void (func)(const char*));
+void findfile(const char *p, const char *pat, void (func)(const char *, void *), void *context);
 bool exists(const char* filename);
 
 /// calculates the value of A / B, in percent (rounded down)
