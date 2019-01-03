@@ -330,9 +330,13 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 		for (i = 0; i < MAX_MSG; i++) {
 			if (atcommand->msg_table[0][i] == NULL)
 				continue;
-			fprintf(lang_export_fp, "msgctxt \"messages.conf\"\n"
+			fprintf(lang_export_fp, "\n#: conf/messages.conf\n"
+					"# %d: %s\n"
+					"#, c-format\n"
+					"msgctxt \"messages.conf\"\n"
 					"msgid \"%s\"\n"
 					"msgstr \"\"\n",
+					i, atcommand->msg_table[0][i],
 					atcommand->msg_table[0][i]
 			       );
 			lang_export_stringcount_total++;
