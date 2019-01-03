@@ -1005,12 +1005,13 @@ struct script_interface {
 	int (*string_dup) (char *str);
 	void (*load_translations) (void);
 	bool (*load_translation_addstring) (const char *file, uint8 lang_id, const char *msgctxt, const struct script_string_buf *msgid, const struct script_string_buf *msgstr);
-	int (*load_translation) (const char *file, uint8 lang_id);
+	int (*load_translation_file) (const char *file, uint8 lang_id);
+	int (*load_translation) (const char *directory, uint8 lang_id);
 	int (*translation_db_destroyer) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear_translations) (bool reload);
 	int (*parse_cleanup_timer) (int tid, int64 tick, int id, intptr_t data);
 	uint8 (*add_language) (const char *name);
-	const char *(*get_translation_file_name) (const char *file);
+	const char *(*get_translation_dir_name) (const char *directory);
 	void (*parser_clean_leftovers) (void);
 	void (*run_use_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_equip_script) (struct map_session_data *sd, struct item_data *data, int oid);
