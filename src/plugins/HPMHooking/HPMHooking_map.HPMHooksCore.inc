@@ -5576,6 +5576,8 @@ struct {
 	struct HPMHookPoint *HP_script_load_translations_post;
 	struct HPMHookPoint *HP_script_load_translation_addstring_pre;
 	struct HPMHookPoint *HP_script_load_translation_addstring_post;
+	struct HPMHookPoint *HP_script_load_translation_file_pre;
+	struct HPMHookPoint *HP_script_load_translation_file_post;
 	struct HPMHookPoint *HP_script_load_translation_pre;
 	struct HPMHookPoint *HP_script_load_translation_post;
 	struct HPMHookPoint *HP_script_translation_db_destroyer_pre;
@@ -5586,8 +5588,8 @@ struct {
 	struct HPMHookPoint *HP_script_parse_cleanup_timer_post;
 	struct HPMHookPoint *HP_script_add_language_pre;
 	struct HPMHookPoint *HP_script_add_language_post;
-	struct HPMHookPoint *HP_script_get_translation_file_name_pre;
-	struct HPMHookPoint *HP_script_get_translation_file_name_post;
+	struct HPMHookPoint *HP_script_get_translation_dir_name_pre;
+	struct HPMHookPoint *HP_script_get_translation_dir_name_post;
 	struct HPMHookPoint *HP_script_parser_clean_leftovers_pre;
 	struct HPMHookPoint *HP_script_parser_clean_leftovers_post;
 	struct HPMHookPoint *HP_script_run_use_script_pre;
@@ -12363,6 +12365,8 @@ struct {
 	int HP_script_load_translations_post;
 	int HP_script_load_translation_addstring_pre;
 	int HP_script_load_translation_addstring_post;
+	int HP_script_load_translation_file_pre;
+	int HP_script_load_translation_file_post;
 	int HP_script_load_translation_pre;
 	int HP_script_load_translation_post;
 	int HP_script_translation_db_destroyer_pre;
@@ -12373,8 +12377,8 @@ struct {
 	int HP_script_parse_cleanup_timer_post;
 	int HP_script_add_language_pre;
 	int HP_script_add_language_post;
-	int HP_script_get_translation_file_name_pre;
-	int HP_script_get_translation_file_name_post;
+	int HP_script_get_translation_dir_name_pre;
+	int HP_script_get_translation_dir_name_post;
 	int HP_script_parser_clean_leftovers_pre;
 	int HP_script_parser_clean_leftovers_post;
 	int HP_script_run_use_script_pre;
