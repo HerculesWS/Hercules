@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2018  Hercules Dev Team
- * Copyright (C) 2018  Andrei Karas (4144)
+ * Copyright (C) 2019  Hercules Dev Team
+ * Copyright (C) 2019  Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -5717,12 +5717,12 @@ packetLen(0x0b0d, 10)  // ZC_REMOVE_EFFECT
 
 // Packet: 0x0b0e
 #if PACKETVER >= 20180912
-packetLen(0x0b0e, -1)
+packetLen(0x0b0e, -1)  // ZC_NPC_BARTER_OPEN
 #endif
 
 // Packet: 0x0b0f
 #if PACKETVER >= 20180912
-packetLen(0x0b0f, -1)
+packetLen(0x0b0f, -1)  // CZ_NPC_BARTER_PURCHASE
 #endif
 
 // Packet: 0x0b10
@@ -5737,7 +5737,7 @@ packetLen(0x0b11, 4)  // CZ_STOP_USE_SKILL
 
 // Packet: 0x0b12
 #if PACKETVER >= 20181017
-packetLen(0x0b12, 2)
+packetLen(0x0b12, 2)  // CZ_NPC_BARTER_CLOSE
 #endif
 
 // Packet: 0x0b13
@@ -5749,32 +5749,32 @@ packetLen(0x0b13, 40)  // ZC_ITEM_PREVIEW
 
 // Packet: 0x0b14
 #if PACKETVER >= 20181031
-packetLen(0x0b14, 2)
+packetLen(0x0b14, 2)  // CZ_INVENTORY_EXPAND
 #endif
 
 // Packet: 0x0b15
 #if PACKETVER >= 20181031
-packetLen(0x0b15, 7)
+packetLen(0x0b15, 7)  // ZC_ACK_INVENTORY_EXPAND
 #endif
 
 // Packet: 0x0b16
 #if PACKETVER >= 20181031
-packetLen(0x0b16, 2)
+packetLen(0x0b16, 2)  // CZ_INVENTORY_EXPAND_CONFIRMED
 #endif
 
 // Packet: 0x0b17
 #if PACKETVER >= 20181031
-packetLen(0x0b17, 3)
+packetLen(0x0b17, 3)  // ZC_ACK_INVENTORY_EXPAND_RESULT
 #endif
 
 // Packet: 0x0b18
 #if PACKETVER >= 20181031
-packetLen(0x0b18, 4)
+packetLen(0x0b18, 4)  // ZC_INVENTORY_EXPANSION_INFO
 #endif
 
 // Packet: 0x0b19
 #if PACKETVER >= 20181031
-packetLen(0x0b19, 2)
+packetLen(0x0b19, 2)  // CZ_INVENTORY_EXPAND_REJECTED
 #endif
 
 // Packet: 0x0b1a
