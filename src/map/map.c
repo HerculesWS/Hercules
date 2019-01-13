@@ -3268,6 +3268,11 @@ static bool map_iwall_remove(const char *wall_name)
 	return true;
 }
 
+static bool map_iwall_exist(const char *wall_name)
+{
+	return strdb_exists(map->iwall_db, wall_name);
+}
+
 /**
  * @see DBCreateData
  */
@@ -6979,6 +6984,7 @@ void map_defaults(void)
 	map->iwall_set = map_iwall_set;
 	map->iwall_get = map_iwall_get;
 	map->iwall_remove = map_iwall_remove;
+	map->iwall_exist = map_iwall_exist;
 
 	map->addmobtolist = map_addmobtolist; // [Wizputer]
 	map->spawnmobs = map_spawnmobs; // [Wizputer]

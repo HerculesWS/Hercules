@@ -1338,6 +1338,7 @@ END_ZEROED_BLOCK;
 	bool (*iwall_set) (int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char* wall_name);
 	void (*iwall_get) (struct map_session_data *sd);
 	bool (*iwall_remove) (const char *wall_name);
+	bool (*iwall_exist) (const char *wall_name);
 
 	int (*addmobtolist) (unsigned short m, struct spawn_data *spawn); // [Wizputer]
 	void (*spawnmobs) (int16 m); // [Wizputer]

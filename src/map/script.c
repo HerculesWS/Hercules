@@ -14185,6 +14185,14 @@ static BUILDIN(delwall)
 	return true;
 }
 
+static BUILDIN(checkwall)
+{
+	const char *wall_name = script_getstr(st, 2);
+
+	script_pushint(st, map->iwall_exist(wall_name));
+	return true;
+}
+
 /// Retrieves various information about the specified guardian.
 ///
 /// guardianinfo("<map_name>", <index>, <type>) -> <value>
@@ -25487,6 +25495,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(setcell,"siiiiii"),
 		BUILDIN_DEF(setwall,"siiiiis"),
 		BUILDIN_DEF(delwall,"s"),
+		BUILDIN_DEF(checkwall,"s"),
 		BUILDIN_DEF(searchitem,"rs"),
 		BUILDIN_DEF(mercenary_create,"ii"),
 		BUILDIN_DEF(mercenary_heal,"ii"),
