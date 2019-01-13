@@ -8,6 +8,7 @@
 //= Note: This script requires PCRE to run properly.
 //= 5.0 Last update by GmOcean.
 //= 5.1 Cleaned and standardized, mostly. [Euphy]
+//= 5.2 Fix a bug that causes this event run indefinitely [AnnieRuru]
 //============================================================
 
 prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
@@ -183,6 +184,15 @@ OnTimer30000:
 	deletepset 1;
 	stopnpctimer;
 	setnpctimer 0;
+	++.RoundCount;
+	if (.RoundCount >= .Rounds) {
+		setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
+		.RoundCount = 0;
+		.Change = 0;
+		.EventON = 0;
+		npctalk "Thank you all for playing. That was the last round of the Disguise Event. Come play again later.";
+		end;
+	}
 	initnpctimer;
 	end;
 OnTimer60000:
