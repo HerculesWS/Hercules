@@ -8660,10 +8660,14 @@ static BUILDIN(getcharid)
 	int num = script_getnum(st, 2);
 	struct map_session_data *sd;
 
-	if (script_hasdata(st, 3))
-		sd = map->nick2sd(script_getstr(st, 3));
-	else
+	if (script_hasdata(st, 3)) {
+		if (num == 3 && script_isinttype(st, 3))
+			sd = script->charid2sd(st, script_getnum(st, 3));
+		else
+			sd = script_isstringtype(st, 3) ? script->nick2sd(st, script_getstr(st, 3)) : script->id2sd(st, script_getnum(st, 3));
+	} else {
 		sd = script->rid2sd(st);
+	}
 
 	if (sd == NULL) {
 		script_pushint(st, 0); //return 0, according docs
@@ -25150,7 +25154,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(strcharinfo,"i??"),
 		BUILDIN_DEF(strnpcinfo,"i??"),
-		BUILDIN_DEF(charid2rid,"i"),
+		BUILDIN_DEF_DEPRECATED(charid2rid, "i"),
 		BUILDIN_DEF(getequipid,"i"),
 		BUILDIN_DEF(getequipname,"i"),
 		BUILDIN_DEF(getbrokenid,"i"), // [Valaris]
