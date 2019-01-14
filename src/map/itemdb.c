@@ -1700,7 +1700,12 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 
 	nullpo_ret(entry);
 	nullpo_ret(source);
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	if (entry->nameid <= 0 || entry->nameid > MAX_ITEM_ID) {
+#else
+	if (entry->nameid <= 0) {
+#endif
+		// item id wrong for any packet versions
 		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEM_ID), skipping.\n",
 				entry->nameid, n, source, MAX_ITEM_ID);
 		if (entry->script) {
@@ -1716,7 +1721,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 			entry->unequip_script = NULL;
 		}
 		return 0;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	}
+#else
+	} else if (entry->nameid > MAX_ITEM_ID) {
+		// item id too big for packet version before item id in 4 bytes
+		entry->view_id = UNKNOWN_ITEM_ID;
+	}
+#endif
 
 	{
 		const char *c = entry->name;
@@ -2434,6 +2446,8 @@ static void itemdb_read(bool minimal)
 		}
 	}
 
+	itemdb->other->foreach(itemdb->other, itemdb->addname_sub);
+
 	if (minimal)
 		return;
 
@@ -2445,6 +2459,23 @@ static void itemdb_read(bool minimal)
 	itemdb->read_packages();
 	itemdb->read_options();
 	clif->stylist_read_db_libconfig();
+}
+
+/**
+ * Add item name with high id into map
+ * @see DBApply
+ */
+static int itemdb_addname_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct item_data *item = DB->data2ptr(data);
+	struct DBData prev;
+
+	if (itemdb->names->put(itemdb->names, DB->str2key(item->name), DB->ptr2data(item), &prev)) {
+		struct item_data *oldItem = DB->data2ptr(&prev);
+		ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n", item->name, item->nameid, oldItem->nameid);
+	}
+
+	return 0;
 }
 
 /**
@@ -2789,4 +2820,5 @@ void itemdb_defaults(void)
 	itemdb->is_item_usable = itemdb_is_item_usable;
 	itemdb->lookup_const = itemdb_lookup_const;
 	itemdb->lookup_const_mask = itemdb_lookup_const_mask;
+	itemdb->addname_sub = itemdb_addname_sub;
 }
