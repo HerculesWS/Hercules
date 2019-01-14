@@ -9945,8 +9945,15 @@ See /doc/sample/npc_trader_sample.txt
 
 *openshop({NPC_Name})
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 opens the trader shop from the currently-attached npc unless,
 when the optional NPC_Name param is used.
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use callshop instead.
 
 ---------------------------------------
 

@@ -17901,41 +17901,47 @@ static BUILDIN(petstat)
 
 static BUILDIN(callshop)
 {
-	struct npc_data *nd;
-	const char *shopname;
-	int flag = 0;
+	const char *shopname = script_getstr(st, 2);
+	struct npc_data *nd = npc->name2id(shopname);
+	int flag = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
 	struct map_session_data *sd = script->rid2sd(st);
 
-	if (sd == NULL)
+	if (sd == NULL) {
+		ShowWarning("script:callshop: no player attached.\n");
+		script_pushint(st, 0);
 		return true;
-	shopname = script_getstr(st, 2);
-	if( script_hasdata(st,3) )
-		flag = script_getnum(st,3);
-	nd = npc->name2id(shopname);
-	if( !nd || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP) )
-	{
-		ShowError("buildin_callshop: Shop [%s] not found (or NPC is not shop type)\n", shopname);
-		script_pushint(st,0);
+	}
+
+
+	if (nd == NULL || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP &&
+		!(nd->subtype == SCRIPT && nd->u.scr.shop != NULL && nd->u.scr.shop->items > 0))) {
+		if (nd != NULL && nd->subtype == SCRIPT) {
+			ShowError("script:callshop: trader '%s' has no shop list.\n", nd->exname);
+		} else if (nd != NULL) {
+			ShowError("script:callshop: npc '%s' is not a shop.\n", nd->exname);
+		} else {
+			ShowError("script:callshop: npc '%s' does not exist.\n", shopname);
+		}
+		script_pushint(st, 0);
 		return false;
 	}
 
-	if( nd->subtype == SHOP )
-	{
-		// flag the user as using a valid script call for opening the shop (for floating NPCs)
-		sd->state.callshop = 1;
-
-		switch( flag )
-		{
-			case 1: npc->buysellsel(sd,nd->bl.id,0); break; //Buy window
-			case 2: npc->buysellsel(sd,nd->bl.id,1); break; //Sell window
-			default: clif->npcbuysell(sd,nd->bl.id); break; //Show menu
-		}
-	}
-	else
-		clif->cashshop_show(sd, nd);
-
+	// flag the user as using a valid script call for opening the shop (for floating NPCs)
+	sd->state.callshop = 1;
 	sd->npc_shopid = nd->bl.id;
-	script_pushint(st,1);
+
+	switch (flag) {
+	case 1:
+		npc->trader_open(sd, nd);
+		break;
+	case 2:
+		npc->buysellsel(sd, nd->bl.id, 1); // Sell window
+		break;
+	default:
+		clif->npcbuysell(sd, nd->bl.id); // Show buy/sell menu
+	}
+
+	script_pushint(st, 1);
 	return true;
 }
 
@@ -25622,7 +25628,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(bg_match_over,"s?"),
 
 		/* New Shop Support */
-		BUILDIN_DEF(openshop,"?"),
+		BUILDIN_DEF_DEPRECATED(openshop,"?"),
 		BUILDIN_DEF(sellitem,"i??"),
 		BUILDIN_DEF(stopselling,"i"),
 		BUILDIN_DEF(setcurrency,"i?"),
