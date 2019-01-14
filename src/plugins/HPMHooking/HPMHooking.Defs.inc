@@ -4040,6 +4040,8 @@ typedef bool (*HPMHOOK_pre_itemdb_lookup_const) (const struct config_setting_t *
 typedef bool (*HPMHOOK_post_itemdb_lookup_const) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
 typedef bool (*HPMHOOK_pre_itemdb_lookup_const_mask) (const struct config_setting_t **it, const char **name, int **value);
 typedef bool (*HPMHOOK_post_itemdb_lookup_const_mask) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
+typedef int (*HPMHOOK_pre_itemdb_addname_sub) (union DBKey *key, struct DBData **data, va_list ap);
+typedef int (*HPMHOOK_post_itemdb_addname_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 #endif // MAP_ITEMDB_H
 #ifdef LOGIN_LOGIN_H /* lchrif */
 typedef void (*HPMHOOK_pre_lchrif_server_init) (int *id);
