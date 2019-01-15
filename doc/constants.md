@@ -3650,13 +3650,6 @@
 - `IOT_PARTY`: 2
 - `IOT_GUILD`: 3
 
-### tradertype
-
-- `NST_ZENY`: 0
-- `NST_CASH`: 1
-- `NST_MARKET`: 2
-- `NST_CUSTOM`: 3
-
 ### strcharinfo
 
 - `PC_NAME`: 0
@@ -4413,6 +4406,14 @@
 - `EXPAND_INV_RESULT_OTHER_WORK`: 2
 - `EXPAND_INV_RESULT_MISSING_ITEM`: 3
 - `EXPAND_INV_RESULT_MAX_SIZE`: 4
+
+### trader type
+
+- `NST_ZENY`: 0
+- `NST_CASH`: 1
+- `NST_MARKET`: 2
+- `NST_CUSTOM`: 3
+- `NST_BARTER`: 4
 
 ### Renewal
 
