@@ -41,10 +41,11 @@ enum npc_parse_options {
 };
 
 enum npc_shop_types {
-	NST_ZENY,/* default */
-	NST_CASH,/* official npc cash shop */
-	NST_MARKET,/* official npc market type */
+	NST_ZENY,   /* default */
+	NST_CASH,   /* official npc cash shop */
+	NST_MARKET, /* official npc market type */
 	NST_CUSTOM,
+	NST_BARTER, /* official npc barter type */
 	/* */
 	NST_MAX,
 };
@@ -56,11 +57,14 @@ struct npc_label_list {
 	char name[NAME_LENGTH];
 	int pos;
 };
+
 struct npc_item_list {
 	int nameid;
-	unsigned int value;
+	unsigned int value;  // price or barter currency item id
+	int value2;  // barter currency item amount
 	unsigned int qty;
 };
+
 struct npc_shop_data {
 	unsigned char type;/* what am i */
 	struct npc_item_list *item;/* list */
@@ -306,11 +310,16 @@ struct npc_interface {
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
 	int (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
-	void (*market_tosql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
+	void (*market_tosql) (struct npc_data *nd, int index);
+	void (*market_delfromsql) (struct npc_data *nd, int index);
+	void (*market_delfromsql_sub) (const char *npcname, int index);
+	void (*barter_fromsql) (void);
+	void (*barter_tosql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql_sub) (const char *npcname, int itemId, int itemId2, int amount2);
 	bool (*db_checkid) (const int id);
 	void (*refresh) (struct npc_data* nd);
 	/**

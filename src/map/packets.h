@@ -1922,4 +1922,9 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b19,clif->pInventoryExpansionRejected);
 #endif
 
+#if PACKETVER_ZERO_NUM >= 20181226
+	packet(0x0b0f,clif->pNPCBarterPurchase);
+	packet(0x0b12,clif->pNPCBarterClosed);
+#endif
+
 #endif /* MAP_PACKETS_H */

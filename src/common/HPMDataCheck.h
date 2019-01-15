@@ -458,6 +458,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // MAP_CLAN_H
 	#ifdef MAP_CLIF_H
 		{ "attendance_entry", sizeof(struct attendance_entry), SERVER_TYPE_MAP },
+		{ "barter_itemlist_entry", sizeof(struct barter_itemlist_entry), SERVER_TYPE_MAP },
+		{ "barteritemlist", sizeof(struct barteritemlist), SERVER_TYPE_MAP },
 		{ "cdelayed_damage", sizeof(struct cdelayed_damage), SERVER_TYPE_MAP },
 		{ "clif_interface", sizeof(struct clif_interface), SERVER_TYPE_MAP },
 		{ "hCSData", sizeof(struct hCSData), SERVER_TYPE_MAP },

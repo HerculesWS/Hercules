@@ -323,10 +323,12 @@ The types that a trader object can have are the following:
 - NST_MARKET	(2) Normal NPC Market Shop (where items have limited availability
 		    and need to be refurbished)
 - NST_CUSTOM	(3) Custom Shop (any currency, item/var/etca, check sample)
+- NST_BARTER	(4) Barter Shop (each item with own item currency)
 Unless otherwise specified via *tradertype an trader object will be defined as
 NST_ZENY.
 
 Note: NST_MARKET is only available with PACKETVER 20131223 or newer.
+Note: NST_BARTER is only available with PACKETVER 20181226 zero or newer.
 See '12 - NPC Trader-Related Commands' and /doc/sample/npc_trader_sample.txt for
 more information regarding how to use this NPC type.
 
@@ -9951,6 +9953,7 @@ when the optional NPC_Name param is used.
 ---------------------------------------
 
 *sellitem(<Item_ID>{, <price>{, <qty>}})
+*sellitem(<Item_ID>, <qty>, <currency_id>, <currency_amount>)
 
 adds (or modifies) <Item_ID> data to the shop,
 when <price> is not provided (or when it is -1) itemdb default is used.
@@ -9959,11 +9962,15 @@ qty is only necessary for NST_MARKET trader types.
 when <Item_ID> is already in the shop,
 the previous data (price/qty), is overwritten with the new.
 
+currency_id and currency_amount can be used only with shop type NST_BARTER
+
 ---------------------------------------
 
 *stopselling(<Item_ID>)
+*stopselling(<Item_ID>{, <currency_id>, <currency_amount>})
 
 attempts to remove <Item_ID> from the current shop list.
+currency_id and currency_amount can be used only with shop type NST_BARTER
 
 ---------------------------------------
 

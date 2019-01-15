@@ -2139,8 +2139,8 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
 	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, 4), &count) + sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
 	WFIFOSET(fd, p->packetLen);
-	// send empty packet if chars count is 3*N, for trigger final code in client
-	if (count % 3 != 0) {
+	// send empty packet if chars count is 3, for trigger final code in client
+	if (count == 3) {
 		WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
 		p = WFIFOP(fd, 0);
 		p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
@@ -4444,6 +4444,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 
 	if( core->runflag != CHARSERVER_ST_RUNNING ) {
 		chr->auth_error(fd, 0);
+		sockt->eof(fd);
 		return;
 	}
 
@@ -4458,11 +4459,13 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 		/* restrictions apply */
 		if( chr->server_type == CST_MAINTENANCE && node->group_id < char_maintenance_min_group_id ) {
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 			return;
 		}
 		/* the client will already deny this request, this check is to avoid someone bypassing. */
 		if( chr->server_type == CST_PAYING && (time_t)node->expiration_time < time(NULL) ) {
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 			return;
 		}
 		idb_remove(auth_db, account_id);
@@ -4474,6 +4477,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 			loginif->auth(fd, sd, ipl);
 		} else { // if no login-server, we must refuse connection
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 		}
 	}
 }
@@ -4694,7 +4698,8 @@ static void char_creation_failed(int fd, int result)
 	/* Others I found [Ind] */
 	/* 0x02 = Symbols in Character Names are forbidden */
 	/* 0x03 = You are not eligible to open the Character Slot. */
-	/* 0x0B = This service is only available for premium users.  */
+	/* 0x0B = This service is only available for premium users. */
+	/* 0x0C = Character name is invalid. */
 	switch (result) {
 		case -1: WFIFOB(fd,2) = 0x00; break; // 'Charname already exists'
 		case -2: WFIFOB(fd,2) = 0xFF; break; // 'Char creation denied'
@@ -4994,6 +4999,7 @@ static void char_parse_char_login_map_server(int fd, uint32 ipl)
 		!sockt->allowed_ip_check(ipl))
 	{
 		chr->login_map_server_ack(fd, 3); // Failure
+		sockt->eof(fd);
 	} else {
 		chr->login_map_server_ack(fd, 0); // Success
 

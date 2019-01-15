@@ -56,3 +56,11 @@ OnMyResupply:
 		sellitem Red_Potion,-1,49;
 	end;
 }
+/* demonstrate barter shop */
+prontera,159,284,4	trader	Barter Shop#prt	4_M_KID1,{
+OnInit:
+	tradertype(NST_BARTER);
+	sellitem White_Herb, 100, Red_Potion, 2;
+	sellitem Blue_Herb, 200, Orange_Potion, 3;
+	end;
+}

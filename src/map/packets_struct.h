@@ -308,7 +308,6 @@ enum packet_headers {
 	monsterhpType = 0x977,
 	maptypeproperty2Type = 0x99b,
 	npcmarketresultackType = 0x9d7,
-	npcmarketopenType = 0x9d5,
 #if PACKETVER >= 20131223  // version probably can be 20131030 [4144]
 	wisendType = 0x9df,
 #else
@@ -3000,7 +2999,7 @@ struct PACKET_CZ_STOP_USE_SKILL {
 DEFINE_PACKET_HEADER(CZ_STOP_USE_SKILL, 0x0b11);
 #endif
 
-#if PACKETVER_ZERO_NUM >= 20181212
+#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
 struct PACKET_ZC_INVENTORY_EXPANSION_INFO {
 	int16 packetType;
 	int16 expansionSize;
@@ -3008,7 +3007,7 @@ struct PACKET_ZC_INVENTORY_EXPANSION_INFO {
 DEFINE_PACKET_HEADER(ZC_INVENTORY_EXPANSION_INFO, 0x0b18);
 #endif
 
-#if PACKETVER_ZERO_NUM >= 20181212
+#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
 struct PACKET_ZC_ACK_INVENTORY_EXPAND {
 	int16 packetType;
 	uint8 result;
@@ -3017,7 +3016,7 @@ struct PACKET_ZC_ACK_INVENTORY_EXPAND {
 DEFINE_PACKET_HEADER(ZC_ACK_INVENTORY_EXPAND, 0x0b15);
 #endif
 
-#if PACKETVER_ZERO_NUM >= 20181212
+#if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
 struct PACKET_ZC_ACK_INVENTORY_EXPAND_RESULT {
 	int16 packetType;
 	uint8 result;
@@ -3056,6 +3055,61 @@ struct PACKET_CZ_PARTY_CONFIG {
 	uint8 refuseInvite;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_PARTY_CONFIG, 0x02c8);
+
+#if PACKETVER_ZERO_NUM >= 20181226
+struct PACKET_ZC_NPC_BARTER_OPEN_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 nameid;
+#else
+	uint16 nameid;
+#endif
+	uint8 type;
+	uint32 amount;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 currencyNameid;
+#else
+	uint16 currencyNameid;
+#endif
+	uint32 currencyAmount;
+	uint32 weight;
+	uint32 index;
+} __attribute__((packed));
+
+struct PACKET_ZC_NPC_BARTER_OPEN {
+	int16 packetType;
+	int16 packetLength;
+	struct PACKET_ZC_NPC_BARTER_OPEN_sub list[];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_NPC_BARTER_OPEN, 0x0b0e);
+#endif
+
+#if PACKETVER_ZERO_NUM >= 20181226
+struct PACKET_CZ_NPC_BARTER_CLOSE {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_NPC_BARTER_CLOSE, 0x0b12);
+#endif
+
+#if PACKETVER_ZERO_NUM >= 20181226
+struct PACKET_CZ_NPC_BARTER_PURCHASE_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint32 amount;
+	uint16 invIndex;
+	uint32 shopIndex;
+} __attribute__((packed));
+
+struct PACKET_CZ_NPC_BARTER_PURCHASE {
+	int16 packetType;
+	int16 packetLength;
+	struct PACKET_CZ_NPC_BARTER_PURCHASE_sub list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_NPC_BARTER_PURCHASE, 0x0b0f);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
