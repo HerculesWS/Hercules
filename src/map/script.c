@@ -24175,9 +24175,9 @@ static BUILDIN(tradertype)
 		script->reportsrc(st);
 	}
 #endif
-#if PACKETVER_ZERO_NUM < 20181226
+#if PACKETVER_MAIN_NUM < 20190116 && PACKETVER_RE_NUM < 20190116 && PACKETVER_ZERO_NUM < 20181226
 	if (type == NST_BARTER) {
-		ShowWarning("buildin_tradertype: NST_BARTER is only available with PACKETVER_ZERO_NUM 20181226 or newer!\n");
+		ShowWarning("buildin_tradertype: NST_BARTER is only available with PACKETVER_ZERO_NUM 20181226 or PACKETVER_MAIN_NUM 20190116 or PACKETVER_RE_NUM 20190116 or newer!\n");
 		script->reportsrc(st);
 	}
 #endif

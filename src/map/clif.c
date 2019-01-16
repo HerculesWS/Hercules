@@ -22227,7 +22227,7 @@ static bool clif_enchant_equipment(struct map_session_data *sd, enum equip_pos p
 
 static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *nd)
 {
-#if PACKETVER_ZERO_NUM >= 20181226
+#if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 	nullpo_retv(sd);
 	nullpo_retv(nd);
 	struct npc_item_list *shop = nd->u.scr.shop->item;
@@ -22263,7 +22263,7 @@ static void clif_npc_barter_open(struct map_session_data *sd, struct npc_data *n
 static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_ZERO_NUM >= 20181226
+#if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 	const struct PACKET_CZ_NPC_BARTER_PURCHASE *p = RP2PTR(fd);
 	int count = (p->packetLength - sizeof(struct PACKET_CZ_NPC_BARTER_PURCHASE)) / sizeof p->list[0];
 	struct barteritemlist item_list;
