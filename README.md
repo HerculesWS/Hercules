@@ -30,11 +30,12 @@ Project Info:
 Table of Contents
 ---------
 1. What is Hercules?
-2. Prerequisites
-3. Installation
-4. Troubleshooting
+2. [Prerequisites](#prerequisites)
+3. [Installation](#installation) 
+4. [Troubleshooting](#troubleshooting)
 5. Helpful Links
 6. More Documentation
+
 
 What is Hercules?
 -----------------
@@ -45,7 +46,7 @@ warps and modifications. The project is jointly managed by a group of
 volunteers located around the world as well as a tremendous community providing
 QA and support. Hercules is a continuation of the original Athena project.
 
-Prerequisites
+## Prerequisites
 -------------
 Before installing Hercules, you will need to install certain tools and applications.
 This differs between the varying Operating Systems available, so the
@@ -90,7 +91,7 @@ Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki
     - [TortoiseGit](https://tortoisegit.org/) (Windows)
 
 
-Installation
+## Installation
 ------------
 
 This section is a very brief set of installation instructions. For more concise
@@ -133,7 +134,7 @@ the end of this file).
     - `make clean && make sql` (on FreeBSD, replace `make` with `gmake`)
   7. Start the three servers login-server, char-server, map-server.
 
-Troubleshooting
+## Troubleshooting
 ---------------
 
 If you're having problems with starting your server, the first thing you should
