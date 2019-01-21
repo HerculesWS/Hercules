@@ -29,14 +29,15 @@ Project Info:
 
 Table of Contents
 ---------
-1. What is Hercules?
-2. Prerequisites
-3. Installation
-4. Troubleshooting
-5. Helpful Links
-6. More Documentation
+1. [What is Hercules?](#what-is-hercules)
+2. [Prerequisites](#prerequisites)
+3. [Installation](#installation)
+4. [Troubleshooting](#troubleshooting)
+5. [Helpful Links](#helpful-links)
+6. [More Documentation](#more-documentation)
 
-What is Hercules?
+
+## What is Hercules?
 -----------------
 Hercules is a collaborative software development project revolving around the
 creation of a robust Massively Multiplayer Online Role-Playing Game (MMORPG)
@@ -45,7 +46,7 @@ warps and modifications. The project is jointly managed by a group of
 volunteers located around the world as well as a tremendous community providing
 QA and support. Hercules is a continuation of the original Athena project.
 
-Prerequisites
+## Prerequisites
 -------------
 Before installing Hercules, you will need to install certain tools and applications.
 This differs between the varying Operating Systems available, so the
@@ -90,7 +91,7 @@ Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki
     - [TortoiseGit](https://tortoisegit.org/) (Windows)
 
 
-Installation
+## Installation
 ------------
 
 This section is a very brief set of installation instructions. For more concise
@@ -133,7 +134,7 @@ the end of this file).
     - `make clean && make sql` (on FreeBSD, replace `make` with `gmake`)
   7. Start the three servers login-server, char-server, map-server.
 
-Troubleshooting
+## Troubleshooting
 ---------------
 
 If you're having problems with starting your server, the first thing you should
@@ -179,7 +180,7 @@ Examples:
   If this shows up on the map server, it generally means that there is no Char
   Server available to accept the connection.
 
-Helpful Links
+## Helpful Links
 -------------
 
 The following list of links point to various help files within the repository,
@@ -198,7 +199,7 @@ articles or pages on the Wiki or topics within the Hercules forum.
   Network: `irc.rizon.net`
   Channel: `#Hercules`
 
-More Documentation
+## More Documentation
 ------------------
 
 Hercules has a large collection of help files and sample NPC scripts located in
