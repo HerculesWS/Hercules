@@ -29,15 +29,15 @@ Project Info:
 
 Table of Contents
 ---------
-1. What is Hercules?
+1. [What is Hercules?](#what-is-hercules)
 2. [Prerequisites](#prerequisites)
 3. [Installation](#installation) 
 4. [Troubleshooting](#troubleshooting)
-5. Helpful Links
-6. More Documentation
+5. [Helpful Links](#helpful-links)
+6. [More Documentation](#more-documentation)
 
 
-What is Hercules?
+## What is Hercules?
 -----------------
 Hercules is a collaborative software development project revolving around the
 creation of a robust Massively Multiplayer Online Role-Playing Game (MMORPG)
@@ -180,7 +180,7 @@ Examples:
   If this shows up on the map server, it generally means that there is no Char
   Server available to accept the connection.
 
-Helpful Links
+## Helpful Links
 -------------
 
 The following list of links point to various help files within the repository,
@@ -199,7 +199,7 @@ articles or pages on the Wiki or topics within the Hercules forum.
   Network: `irc.rizon.net`
   Channel: `#Hercules`
 
-More Documentation
+## More Documentation
 ------------------
 
 Hercules has a large collection of help files and sample NPC scripts located in
