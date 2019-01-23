@@ -16473,21 +16473,28 @@ static BUILDIN(unequip)
 
 static BUILDIN(equip)
 {
-	int nameid=0,i;
+	int nameid = 0, i;
 	struct item_data *item_data;
 	struct map_session_data *sd = script->rid2sd(st);
-	if (sd == NULL)
-		return false;
 
-	nameid=script_getnum(st,2);
-	if((item_data = itemdb->exists(nameid)) == NULL)
-	{
-		ShowError("wrong item ID : equipitem(%d)\n",nameid);
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	nameid = script_getnum(st, 2);
+	if ((item_data = itemdb->exists(nameid)) == NULL) {
+		ShowError("buildin_equip: Invalid Item ID (%d).\n",nameid);
+		script_pushint(st, 0);
 		return false;
 	}
+
 	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0);
+
 	if (i < sd->status.inventorySize)
-		pc->equipitem(sd, i, item_data->equip);
+		script_pushint(st, pc->equipitem(sd, i, item_data->equip));
+	else
+		script_pushint(st, 0);
 
 	return true;
 }
