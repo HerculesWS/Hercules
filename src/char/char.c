@@ -2141,13 +2141,18 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 	WFIFOSET(fd, p->packetLen);
 	// send empty packet if chars count is 3, for trigger final code in client
 	if (count == 3) {
-		WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
-		p = WFIFOP(fd, 0);
-		p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
-		p->packetLen = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
-		WFIFOSET(fd, p->packetLen);
+		chr->send_HC_ACK_CHARINFO_PER_PAGE_tail(fd, sd);
 	}
 #endif
+}
+
+static void char_send_HC_ACK_CHARINFO_PER_PAGE_tail(int fd, struct char_session_data *sd)
+{
+	WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
+	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
+	p->packetLen = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	WFIFOSET(fd, p->packetLen);
 }
 
 /* Sends character ban list */
@@ -6484,6 +6489,7 @@ void char_defaults(void)
 	chr->count_users = char_count_users;
 	chr->mmo_char_tobuf = char_mmo_char_tobuf;
 	chr->send_HC_ACK_CHARINFO_PER_PAGE = char_send_HC_ACK_CHARINFO_PER_PAGE;
+	chr->send_HC_ACK_CHARINFO_PER_PAGE_tail = char_send_HC_ACK_CHARINFO_PER_PAGE_tail;
 	chr->mmo_char_send_ban_list = char_mmo_char_send_ban_list;
 	chr->mmo_char_send_slots_info = char_mmo_char_send_slots_info;
 	chr->mmo_char_send_characters = char_mmo_char_send_characters;

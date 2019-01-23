@@ -154,6 +154,7 @@ struct char_interface {
 	int (*count_users) (void);
 	int (*mmo_char_tobuf) (uint8* buffer, struct mmo_charstatus* p);
 	void (*send_HC_ACK_CHARINFO_PER_PAGE) (int fd, struct char_session_data *sd);
+	void (*send_HC_ACK_CHARINFO_PER_PAGE_tail) (int fd, struct char_session_data *sd);
 	void (*mmo_char_send_ban_list) (int fd, struct char_session_data *sd);
 	void (*mmo_char_send_slots_info) (int fd, struct char_session_data* sd);
 	int (*mmo_char_send_characters) (int fd, struct char_session_data* sd);
