@@ -16515,6 +16515,44 @@ static BUILDIN(autoequip)
 	return true;
 }
 
+/**
+ * equipidx(<index>{, <item id>})
+ */
+static BUILDIN(equipidx)
+{
+	int nameid = 0, i = script_getnum(st, 2);
+	struct item_data *item_data;
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	if (i < sd->status.inventorySize) {
+		if (script_hasdata(st, 3))
+			nameid = script_getnum(st, 3);
+		else
+			nameid = sd->status.inventory[i].nameid == nameid;
+
+		if ((item_data = itemdb->exists(nameid)) == NULL) {
+			ShowError("buildin_equipidx: Invalid Item ID (%d).\n", nameid);
+			script_pushint(st, 0);
+			return true;
+		}
+
+		if (sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0) {
+			script_pushint(st, pc->equipitem(sd, i, item_data->equip));
+			return true;
+		} else {
+			ShowDebug("buildin_equipidx: Item ID (%d) either not found at index (%d) or cannot be equipped.\n", nameid, i);
+		}
+	}
+
+	script_pushint(st, 0);
+	return true;
+}
+
 /*=======================================================
  * Equip2
  * equip2 <item id>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>;
@@ -25491,6 +25529,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(equip,"i"),
 		BUILDIN_DEF(autoequip,"ii"),
 		BUILDIN_DEF(equip2,"iiiiiii"),
+		BUILDIN_DEF(equipidx, "i?"),
 		BUILDIN_DEF(setbattleflag,"si"),
 		BUILDIN_DEF(getbattleflag,"s"),
 		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
