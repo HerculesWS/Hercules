@@ -3,32 +3,50 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.1
+//= 1.2
 //===== Description: =========================================
 //= Changes your hair style, hair color, and cloth color.
 //===== Additional Comments: =================================
 //= 1.1 Switched to 'getbattleflag', credits to Saithis. [Euphy]
+//= 1.2 Fix style start at 0, add Job_Summoner [AnnieRuru]
 //============================================================
 
 prontera,170,180,1	script	Stylist#custom_stylist	2_M_DYEINGER,{
-
-	setarray .@styles[1],getbattleflag("max_cloth_color"),getbattleflag("max_hair_style"),getbattleflag("max_hair_color");
-	setarray .@Look[1],7,1,6;
-	set .@s, select(" ~ Cloth color", " ~ Hairstyle", " ~ Hair color");
-	set .@Revert, getlook(.@Look[.@s]);
-	set .@style,1;
-	while(1) {
-		setlook .@Look[.@s], .@style;
-		message strcharinfo(PC_NAME),"This is style #"+.@style+".";
-		set .@menu$, " ~ Next (^0055FF"+((.@style!=.@styles[.@s])?.@style+1:1)+"^000000): ~ Previous (^0055FF"+((.@style!=1)?.@style-1:.@styles[.@s])+"^000000): ~ Jump to...: ~ Revert to original (^0055FF"+.@Revert+"^000000)";
-		switch(select(.@menu$)) {
-			case 1: set .@style, ((.@style!=.@styles[.@s])?.@style+1:1); break;
-			case 2: set .@style, ((.@style!=1)?.@style-1:.@styles[.@s]); break;
-			case 3: message strcharinfo(PC_NAME),"Choose a style between 1 - "+.@styles[.@s]+".";
-				input .@style,0,.@styles[.@s];
-				if (!.@style) set .@style, rand(1,.@styles[.@s]);
-				break;
-			case 4: set .@style, .@Revert; setlook .@Look[.@s], .@Revert; break;
+	.@choose = select("Hair style", "Hair color", "Cloth color") -1;
+	.@part = .@lookpart = .look[.@choose];
+	if (BaseClass == Job_Summoner)
+		.@part += Job_Summoner;
+	.@i = .@revert = getlook(.@lookpart);
+	while (true) {
+		setlook .@lookpart, .@i;
+		message strcharinfo(PC_NAME), sprintf("This is style #%d.", .@i);
+		.@next = (.@i == .maxstyles[.@part])? 0 : .@i + 1;
+		.@previous = (.@i == 0)? .maxstyles[.@part] : .@i - 1;
+		switch(select(sprintf(" ~ Next (%s%d%s)", F_MesColor(C_BLUE), .@next, F_MesColor(C_BLACK)), sprintf(" ~ Previous (%s%d%s)", F_MesColor(C_BLUE), .@previous, F_MesColor(C_BLACK)), " ~ Jump to...", sprintf(" ~ Revert to original (%s%d%s)", F_MesColor(C_BLUE), .@revert, F_MesColor(C_BLACK)))) {
+		case 1:
+			.@i = .@next;
+			break;
+		case 2:
+			.@i = .@previous;
+			break;
+		case 3:
+			message strcharinfo(PC_NAME), sprintf("Choose a style between 0 - %d.", .maxstyles[.@part]);
+			input .@i, 0, .maxstyles[.@part];
+			break;
+		case 4:
+			.@i = .@revert;
 		}
 	}
+	end;
+OnInit:
+	.maxstyles[LOOK_HAIR] = getbattleflag("max_hair_style");
+	.maxstyles[LOOK_HAIR_COLOR] = getbattleflag("max_hair_color");
+	.maxstyles[LOOK_CLOTHES_COLOR] = getbattleflag("max_cloth_color");
+
+	.maxstyles[Job_Summoner + LOOK_HAIR] = getbattleflag("max_hair_style");
+	.maxstyles[Job_Summoner + LOOK_HAIR_COLOR] = getbattleflag("max_hair_color");
+	.maxstyles[Job_Summoner + LOOK_CLOTHES_COLOR] = getbattleflag("max_cloth_color");
+
+	setarray .look[0], LOOK_HAIR, LOOK_HAIR_COLOR, LOOK_CLOTHES_COLOR, Job_Summoner + LOOK_HAIR, Job_Summoner + LOOK_HAIR_COLOR, Job_Summoner + LOOK_CLOTHES_COLOR;
+	end;
 }
