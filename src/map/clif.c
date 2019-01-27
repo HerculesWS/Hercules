@@ -9334,7 +9334,7 @@ static void clif_charnameack(int fd, struct block_list *bl)
 				//can parse it. [Skotlex]
 				if (str_p != mobhp) {
 					*(str_p-3) = '\0'; //Remove trailing space + pipe.
-					memcpy(packet.party_name, mobhp, NAME_LENGTH);
+					safesnprintf(packet.name, NAME_LENGTH, "%s %s", md->name, mobhp);
 				}
 			}
 		}
