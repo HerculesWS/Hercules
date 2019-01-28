@@ -5015,7 +5015,7 @@ like this. Careful, minor magic ahead.
 	// binary shift operation. If you don't understand what this does,
 	// just copy it.
 
-	.@card3 = .@charid & 65535;
+	.@card3 = .@charid;
 	.@card4 = .@charid >> 16;
 
 	// If you're inscribing non-equipment, .@card1 must be 254.
