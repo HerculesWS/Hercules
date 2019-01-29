@@ -5603,6 +5603,9 @@ item in his/her inventory, while the autoequip function will equip the
 given item ID when this is looted. The option parameter of the autoequip
 is 1 or 0, 1 to turn it on, and 0 to turn it off.
 
+equip() returns 1 if the item was successfully equipped and 0 if the
+item failed to equip.
+
 Examples:
 
 //This will equip a 1104 (falchion) on the character if this is in the
