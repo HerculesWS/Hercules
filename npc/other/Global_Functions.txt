@@ -474,4 +474,5 @@ function	script	F_GetTradeRestriction	{
 	if (.@trade & ITR_NOAUCTION) {
 		.@trade$ += "NoAuction|";
 	}
+	return .@trade$;
 }
