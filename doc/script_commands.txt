@@ -5625,6 +5625,24 @@ Examples:
 
 ---------------------------------------
 
+*equipidx(<index>)
+
+The equipidx function will attempt to equip the item at the given inventory
+inventory index. This feature is only really useful when multiple instances
+of an Item ID exist in the player's inventory.
+
+Returns 1 if the item was successfully equipped.
+Returns 0 if the item failed to equip.
+
+See getinventorylist() for an explanation on retrieving an inventory index.
+
+Examples:
+
+//This will attempt to equip the item at inventory index 45.
+	equipidx(45);
+
+---------------------------------------
+
 *buyingstore(<slots>)
 
 Invokes buying store preparation window like the skill 'Open Buying
