@@ -5417,32 +5417,31 @@ static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 ///     1 = no text
 static void clif_useskill(struct block_list *bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, uint16 skill_lv, int casttime)
 {
-#if PACKETVER < 20091124
-	const int cmd = 0x13e;
-#else
-	const int cmd = 0x7fb;
-#endif
-	unsigned char buf[32];
-	int property = skill->get_ele(skill_id, skill_lv);
+	nullpo_retv(bl);
 
-	WBUFW(buf,0) = cmd;
-	WBUFL(buf,2) = src_id;
-	WBUFL(buf,6) = dst_id;
-	WBUFW(buf,10) = dst_x;
-	WBUFW(buf,12) = dst_y;
-	WBUFW(buf,14) = skill_id;
-	WBUFL(buf,16) = property<0?0:property; //Avoid sending negatives as element [Skotlex]
-	WBUFL(buf,20) = casttime;
-#if PACKETVER >= 20091124
-	WBUFB(buf,24) = 0;  // isDisposable
+	const int element = skill->get_ele(skill_id, skill_lv);
+	struct PACKET_ZC_USESKILL_ACK p;
+	p.packetType = HEADER_ZC_USESKILL_ACK;
+	p.srcId = src_id;
+	p.dstId = dst_id;
+	p.x = dst_x;
+	p.y = dst_y;
+	p.skillId = skill_id;
+	p.element = element < 0 ? 0 : element; //Avoid sending negatives as element [Skotlex]
+	p.delayTime = casttime;
+#if PACKETVER_MAIN_NUM >= 20091124 || PACKETVER_RE_NUM >= 20091124 || defined(PACKETVER_ZERO)
+	p.disposable = 0;
+#endif
+#if PACKETVER_ZERO_NUM >= 20190130
+	p.unknown = 0;
 #endif
 
 	if (clif->isdisguised(bl)) {
-		clif->send(buf,packet_len(cmd), bl, AREA_WOS);
-		WBUFL(buf,2) = -src_id;
-		clif->send(buf,packet_len(cmd), bl, SELF);
+		clif->send(&p, sizeof(p), bl, AREA_WOS);
+		p.srcId = -src_id;
+		clif->send(&p, sizeof(p), bl, SELF);
 	} else {
-		clif->send(buf,packet_len(cmd), bl, AREA);
+		clif->send(&p, sizeof(p), bl, AREA);
 	}
 #if PACKETVER >= 20151223
 	if ((skill->get_inf2(skill_id) & INF2_SHOW_SKILL_SCALE) != 0)

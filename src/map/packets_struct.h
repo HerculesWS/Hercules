@@ -3111,6 +3111,47 @@ struct PACKET_CZ_NPC_BARTER_PURCHASE {
 DEFINE_PACKET_HEADER(CZ_NPC_BARTER_PURCHASE, 0x0b0f);
 #endif
 
+#if PACKETVER_ZERO_NUM >= 20190130
+struct PACKET_ZC_USESKILL_ACK {
+	int16 packetType;
+	uint32 srcId;
+	uint32 dstId;
+	uint16 x;
+	uint16 y;
+	uint16 skillId;
+	uint32 element;
+	uint32 delayTime;
+	uint8 disposable;
+	uint32 unknown;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x0b1a);
+#elif PACKETVER_MAIN_NUM >= 20091124 || PACKETVER_RE_NUM >= 20091124 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_USESKILL_ACK {
+	int16 packetType;
+	uint32 srcId;
+	uint32 dstId;
+	uint16 x;
+	uint16 y;
+	uint16 skillId;
+	uint32 element;
+	uint32 delayTime;
+	uint8 disposable;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x07fb);
+#elif PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_SAK_NUM >= 20080618 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_USESKILL_ACK {
+	int16 packetType;
+	uint32 srcId;
+	uint32 dstId;
+	uint16 x;
+	uint16 y;
+	uint16 skillId;
+	uint32 element;
+	uint32 delayTime;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x013e);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
