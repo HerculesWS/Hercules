@@ -2381,19 +2381,29 @@ static void char_ping_login_server(int fd)
 
 static int char_parse_fromlogin_connection_state(int fd)
 {
-	if (RFIFOB(fd,2)) {
-		//printf("connect login server error : %d\n", RFIFOB(fd,2));
+	switch (RFIFOB(fd,2)) {
+	case 0:
+		ShowStatus("Connected to login-server (connection #%d).\n", fd);
+		loginif->on_ready();
+		break;
+	case 1: // Invalid username/password
 		ShowError("Can not connect to login-server.\n");
 		ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
 		ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
 		ShowError("The communication passwords are set in /conf/map/map-server.conf and /conf/char/char-server.conf\n");
 		sockt->eof(fd);
 		return 1;
-	} else {
-		ShowStatus("Connected to login-server (connection #%d).\n", fd);
-		loginif->on_ready();
+	case 2: // IP not allowed
+		ShowError("Can not connect to login-server.\n");
+		ShowError("Please make sure your IP is allowed in conf/network.conf\n");
+		sockt->eof(fd);
+		return 1;
+	default:
+		ShowError("Invalid response from the login-server. Error code: %d\n", (int)RFIFOB(fd,2));
+		sockt->eof(fd);
+		return 1;
 	}
-	RFIFOSKIP(fd,3);
+	RFIFOSKIP(fd, 3);
 	return 0;
 }
 
