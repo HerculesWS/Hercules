@@ -7426,6 +7426,9 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	case SC_NETHERWORLD:
 		tick = max(tick, 4000);
 		break;
+	case SC_SIREN:
+		tick = max(tick, 10000); // Minimum duration 10s
+		break;
 	default:
 		//Skills need to trigger even if the duration is reduced below 1ms
 		tick = max(tick, 1);
