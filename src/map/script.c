@@ -4621,6 +4621,9 @@ static void run_script_main(struct script_state *st)
 
 	nullpo_retv(st);
 	script->attach_state(st);
+	if (st->state != END && Assert_chk(st->state == RUN || st->state == STOP || st->state == RERUNLINE)) {
+		st->state = END;
+	}
 
 	nd = map->id2nd(st->oid);
 	if( nd && nd->bl.m >= 0 )
