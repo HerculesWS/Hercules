@@ -2830,11 +2830,11 @@ static void intif_parse_RodexCheckName(int fd)
 	struct map_session_data *sd = NULL;
 	int reqchar_id = RFIFOL(fd, 2);
 	int target_char_id = RFIFOL(fd, 6);
-	short target_class = RFIFOW(fd, 10);
-	int target_level = RFIFOL(fd, 12);
+	int target_class = RFIFOL(fd, 10);
+	int target_level = RFIFOL(fd, 14);
 	char name[NAME_LENGTH];
 
-	safestrncpy(name, RFIFOP(inter_fd, 16), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(inter_fd, 18), NAME_LENGTH);
 
 	if (reqchar_id <= 0)
 		return;
@@ -3001,7 +3001,7 @@ void intif_defaults(void)
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		12,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0,-1, 7, 15,16 + NAME_LENGTH, 0, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
+		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 0, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
 	};
 
 	intif = &intif_s;

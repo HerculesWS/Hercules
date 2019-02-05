@@ -1809,10 +1809,10 @@ static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, in
 	WFIFOW(fd, 0) = 0x3898;
 	WFIFOL(fd, 2) = reqchar_id;
 	WFIFOL(fd, 6) = target_char_id;
-	WFIFOW(fd, 10) = target_class;
-	WFIFOL(fd, 12) = target_level;
-	safestrncpy(WFIFOP(fd, 16), name, NAME_LENGTH);
-	WFIFOSET(fd, 16 + NAME_LENGTH);
+	WFIFOL(fd, 10) = target_class;
+	WFIFOL(fd, 14) = target_level;
+	safestrncpy(WFIFOP(fd, 18), name, NAME_LENGTH);
+	WFIFOSET(fd, 18 + NAME_LENGTH);
 }
 
 static int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
