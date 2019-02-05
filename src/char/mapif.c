@@ -1427,14 +1427,14 @@ static int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 	WFIFOW(fd, 0) = 0x3880;
 	WFIFOL(fd, 2) = account_id;
 	if (p != NULL){
-		WFIFOW(fd, 6) = p->class_;
-		WFIFOL(fd, 8) = p->pet_id;
+		WFIFOL(fd, 6) = p->class_;
+		WFIFOL(fd, 10) = p->pet_id;
 		ShowInfo("int_pet: created pet %d - %s\n", p->pet_id, p->name);
 	} else {
-		WFIFOB(fd, 6) = 0;
-		WFIFOL(fd, 8) = 0;
+		WFIFOL(fd, 6) = 0;
+		WFIFOL(fd, 10) = 0;
 	}
-	WFIFOSET(fd, 12);
+	WFIFOSET(fd, 14);
 
 	return 0;
 }
