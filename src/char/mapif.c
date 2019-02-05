@@ -578,9 +578,9 @@ static int mapif_guild_memberinfoshort(struct guild *g, int idx)
 	WBUFL(buf, 10) = g->member[idx].char_id;
 	WBUFB(buf, 14) = (unsigned char)g->member[idx].online;
 	WBUFW(buf, 15) = g->member[idx].lv;
-	WBUFW(buf, 17) = g->member[idx].class;
-	WBUFL(buf, 19) = g->member[idx].last_login;
-	mapif->sendall(buf, 23);
+	WBUFL(buf, 17) = g->member[idx].class;
+	WBUFL(buf, 21) = g->member[idx].last_login;
+	mapif->sendall(buf, 25);
 	return 0;
 }
 
