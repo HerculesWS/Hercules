@@ -81,16 +81,16 @@ static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_
 	WFIFOW(inter_fd, 0) = 0x3080;
 	WFIFOL(inter_fd, 2) = account_id;
 	WFIFOL(inter_fd, 6) = char_id;
-	WFIFOW(inter_fd, 10) = pet_class;
-	WFIFOW(inter_fd, 12) = pet_lv;
-	WFIFOL(inter_fd, 14) = pet_egg_id;
-	WFIFOL(inter_fd, 18) = pet_equip;
-	WFIFOW(inter_fd, 22) = intimate;
-	WFIFOW(inter_fd, 24) = hungry;
-	WFIFOB(inter_fd, 26) = rename_flag;
-	WFIFOB(inter_fd, 27) = incubate;
-	memcpy(WFIFOP(inter_fd, 28), pet_name, NAME_LENGTH);
-	WFIFOSET(inter_fd, 28 + NAME_LENGTH);
+	WFIFOL(inter_fd, 10) = pet_class;
+	WFIFOL(inter_fd, 14) = pet_lv;
+	WFIFOL(inter_fd, 18) = pet_egg_id;
+	WFIFOL(inter_fd, 22) = pet_equip;
+	WFIFOW(inter_fd, 26) = intimate;
+	WFIFOW(inter_fd, 28) = hungry;
+	WFIFOB(inter_fd, 30) = rename_flag;
+	WFIFOB(inter_fd, 31) = incubate;
+	memcpy(WFIFOP(inter_fd, 32), pet_name, NAME_LENGTH);
+	WFIFOSET(inter_fd, 32 + NAME_LENGTH);
 
 	return 0;
 }

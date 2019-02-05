@@ -1521,15 +1521,15 @@ static int mapif_parse_CreatePet(int fd)
 	account_id = RFIFOL(fd, 2);
 	pet = inter_pet->create(account_id,
 		RFIFOL(fd, 6),
-		RFIFOW(fd, 10),
-		RFIFOW(fd, 12),
+		RFIFOL(fd, 10),
 		RFIFOL(fd, 14),
 		RFIFOL(fd, 18),
-		RFIFOW(fd, 22),
-		RFIFOW(fd, 24),
-		RFIFOB(fd, 26),
-		RFIFOB(fd, 27),
-		RFIFOP(fd, 28));
+		RFIFOL(fd, 22),
+		RFIFOW(fd, 26),
+		RFIFOW(fd, 28),
+		RFIFOB(fd, 30),
+		RFIFOB(fd, 31),
+		RFIFOP(fd, 32));
 
 	if (pet != NULL)
 		mapif->pet_created(fd, account_id, pet);
