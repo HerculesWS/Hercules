@@ -1599,6 +1599,7 @@ struct clif_interface {
 	void (*npc_barter_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*pNPCBarterClosed) (int fd, struct map_session_data *sd);
 	void (*pNPCBarterPurchase) (int fd, struct map_session_data *sd);
+	void (*pClientVersion) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

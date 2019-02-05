@@ -22289,6 +22289,14 @@ static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd)
 #endif
 }
 
+static void clif_parse_clientVersion(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_clientVersion(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_RE_NUM >= 20090408 || PACKETVER_SAK_NUM >= 20090408 || defined(PACKETVER_ZERO)
+	// TODO: show or store client version
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23478,4 +23486,5 @@ void clif_defaults(void)
 	clif->npc_barter_open = clif_npc_barter_open;
 	clif->pNPCBarterClosed = clif_parse_NPCBarterClosed;
 	clif->pNPCBarterPurchase = clif_parse_NPCBarterPurchase;
+	clif->pClientVersion = clif_parse_clientVersion;
 }

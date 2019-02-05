@@ -649,6 +649,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0439,clif->pUseItem,2,4);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_RE_NUM >= 20090408 || PACKETVER_SAK_NUM >= 20090408 || defined(PACKETVER_ZERO)
+	packet(0x044a,clif->pClientVersion);
+#endif
+
 // 2009-05-20aRagexe, 2009-05-20aRagexeRE
 #if PACKETVER >= 20090520
 // new packets
