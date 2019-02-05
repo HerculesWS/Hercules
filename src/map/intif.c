@@ -913,9 +913,9 @@ static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id
 	WFIFOL(inter_fd, 6) = account_id;
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = online;
-	WFIFOW(inter_fd,15) = lv;
-	WFIFOW(inter_fd,17) = class;
-	WFIFOSET(inter_fd,19);
+	WFIFOL(inter_fd,15) = lv;
+	WFIFOL(inter_fd,19) = class;
+	WFIFOSET(inter_fd,23);
 	return 0;
 }
 
