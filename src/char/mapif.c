@@ -797,7 +797,7 @@ static int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char
 }
 
 // Change member info
-static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	inter_guild->update_member_info_short(guild_id, account_id, char_id, online, lv, class);
 	return 0;
@@ -1789,7 +1789,7 @@ static void mapif_parse_rodex_checkname(int fd)
 	int reqchar_id = RFIFOL(fd, 2);
 	char name[NAME_LENGTH];
 	int target_char_id, target_level;
-	short target_class;
+	int target_class;
 
 	safestrncpy(name, RFIFOP(fd, 6), NAME_LENGTH);
 
@@ -1799,7 +1799,7 @@ static void mapif_parse_rodex_checkname(int fd)
 		mapif->rodex_checkname(fd, reqchar_id, 0, 0, 0, name);
 }
 
-static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name)
+static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name)
 {
 	nullpo_retv(name);
 	Assert_retv(reqchar_id > 0);

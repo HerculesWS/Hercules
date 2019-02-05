@@ -268,7 +268,7 @@ static bool inter_rodex_hasnew(int char_id, int account_id)
 }
 
 /// Checks player name and retrieves some data
-static bool inter_rodex_checkname(const char *name, int *target_char_id, short *target_class, int *target_level)
+static bool inter_rodex_checkname(const char *name, int *target_char_id, int *target_class, int *target_level)
 {
 	char esc_name[NAME_LENGTH * 2 + 1];
 	bool found = false;
@@ -286,7 +286,7 @@ static bool inter_rodex_checkname(const char *name, int *target_char_id, short *
 		if (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
 			char *data;
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); *target_char_id = atoi(data);
-			SQL->GetData(inter->sql_handle, 1, &data, NULL); *target_class = (short)atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL); *target_class = atoi(data);
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); *target_level = atoi(data);
 			found = true;
 		}

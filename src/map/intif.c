@@ -71,7 +71,7 @@ static int CheckForCharServer(void)
 }
 
 // pet
-static int intif_create_pet(int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id,
+static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id,
 	int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
 {
 	if (intif->CheckForCharServer())
@@ -903,7 +903,7 @@ static int intif_guild_leave(int guild_id, int account_id, int char_id, int flag
 }
 
 //Update request / Lv online status of the guild members
-static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	if (intif->CheckForCharServer())
 		return 0;

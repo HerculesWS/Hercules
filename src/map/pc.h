@@ -1068,8 +1068,8 @@ END_ZEROED_BLOCK; /* End */
 	void (*setstand) (struct map_session_data *sd);
 	int (*candrop) (struct map_session_data *sd,struct item *item);
 
-	int (*jobid2mapid) (int16 class); // Skotlex
-	int (*mapid2jobid) (unsigned short class_, int sex); // Skotlex
+	int (*jobid2mapid) (int class); // Skotlex
+	int (*mapid2jobid) (unsigned int class_, int sex); // Skotlex
 
 	const char * (*job_name) (int class);
 

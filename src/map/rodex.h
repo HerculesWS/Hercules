@@ -65,7 +65,7 @@ struct rodex_interface {
 	void (*refresh) (struct map_session_data *sd, int8 open_type, int64 first_mail_id);
 	void (*add_item) (struct map_session_data *sd, int16 idx, int16 amount);
 	void (*remove_item) (struct map_session_data *sd, int16 idx, int16 amount);
-	void (*check_player) (struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class);
+	void (*check_player) (struct map_session_data *sd, const char *name, int *base_level, int *char_id, int *class);
 	int (*send_mail) (struct map_session_data *sd, const char *receiver_name, const char *body, const char *title, int64 zeny);
 	void (*send_mail_result) (struct map_session_data *ssd, struct map_session_data *rsd, bool result);
 	struct rodex_message *(*get_mail) (struct map_session_data *sd, int64 mail_id);

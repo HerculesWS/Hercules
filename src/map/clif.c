@@ -14516,7 +14516,7 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 
 				intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
-						 (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
+						 pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,
 						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
 						 100, 0, 1, pet->db[pet_id].jname);
 				clif->petEvolutionResult(fd, PET_EVOL_SUCCESS);
@@ -21071,7 +21071,7 @@ static void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_CHECKNAME *rPacket = RFIFOP(fd, 0);
 	int char_id = 0, base_level = 0;
-	short class = 0;
+	int class = 0;
 	char name[NAME_LENGTH];
 
 	safestrncpy(name, rPacket->Name, NAME_LENGTH);
@@ -21079,7 +21079,7 @@ static void clif_parse_rodex_checkname(int fd, struct map_session_data *sd)
 	rodex->check_player(sd, name, &base_level, &char_id, &class);
 }
 
-static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, short class_, int base_level, const char *name)
+static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id, int class_, int base_level, const char *name)
 {
 #if PACKETVER >= 20140521
 	struct PACKET_ZC_CHECKNAME *sPacket;

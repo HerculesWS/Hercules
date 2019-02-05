@@ -1060,7 +1060,7 @@ static bool inter_guild_leave(int guild_id, int account_id, int char_id, int fla
 }
 
 // Change member info
-static bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	// Could speed up by manipulating only guild_member
 	struct guild *g;

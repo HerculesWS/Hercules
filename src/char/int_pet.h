@@ -37,7 +37,7 @@ struct inter_pet_interface {
 	int (*delete_) (int pet_id);
 	int (*parse_frommap) (int fd);
 
-	struct s_pet *(*create) (int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id,
+	struct s_pet *(*create) (int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id,
 			int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
 	struct s_pet *(*load) (int account_id, int char_id, int pet_id);
 };
