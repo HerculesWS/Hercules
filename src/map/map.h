@@ -800,7 +800,7 @@ struct questinfo {
 	unsigned short icon;
 	unsigned char color;
 	bool hasJob;
-	unsigned short job;/* perhaps a mapid mask would be most flexible? */
+	unsigned int job;/* perhaps a mapid mask would be most flexible? */
 	bool sex_enabled;
 	int sex;
 	struct {
