@@ -5782,7 +5782,7 @@ static void clif_skill_warppoint(struct map_session_data *sd, uint16 skill_id, u
 	nullpo_retv(sd);
 	fd = sd->fd;
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
-	len = sizeof(struct PACKET_ZC_WARPLIST) + sizeof(struct PACKET_ZC_WARPLIST_sub) * mapsCount;
+	len = sizeof(struct PACKET_ZC_WARPLIST) + sizeof(struct PACKET_ZC_WARPLIST_sub) * 6;
 #else
 	len = sizeof(struct PACKET_ZC_WARPLIST);
 #endif
