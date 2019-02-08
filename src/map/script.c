@@ -6524,10 +6524,10 @@ static BUILDIN(warp)
 	else
 		ret = pc->setpos(sd,script->mapindexname2id(st,str),x,y,CLR_OUTSIGHT);
 
-	if( ret ) {
-		ShowError("buildin_warp: moving player '%s' to \"%s\",%d,%d failed.\n", sd->status.name, str, x, y);
-		script->reportsrc(st);
-	}
+	if (ret) {
+		ShowWarning("buildin_warp: moving player '%s' to \"%s\",%d,%d failed.\n", sd->status.name, str, x, y);
+		return false;
+ 	}
 
 	return true;
 }
@@ -6607,8 +6607,8 @@ static BUILDIN(areawarp)
 
 	if( strcmp(str,"Random") == 0 )
 		index = 0;
-	else if( !(index=script->mapindexname2id(st,str)) )
-		return true;
+	else if (!(index = script->mapindexname2id(st, str)))
+		return false;
 
 	map->foreachinarea(script->buildin_areawarp_sub, m,x0,y0,x1,y1, BL_PC, index,x2,y2,x3,y3);
 	return true;
@@ -6668,18 +6668,20 @@ static BUILDIN(warpchar)
 	x=script_getnum(st,3);
 	y=script_getnum(st,4);
 	a=script_getnum(st,5);
+	unsigned short map_index;
 
 	sd = script->charid2sd(st, a);
 	if (sd == NULL)
 		return true;
 
-	if(strcmp(str, "Random") == 0)
+	if (strcmp(str, "Random") == 0)
 		pc->randomwarp(sd, CLR_TELEPORT);
+	else if (strcmp(str, "SavePoint") == 0)
+		pc->setpos(sd, sd->status.save_point.map,sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+	else if ((map_index = script->mapindexname2id(st, str)) != 0)
+		pc->setpos(sd, map_index, x, y, CLR_TELEPORT);
 	else
-		if(strcmp(str, "SavePoint") == 0)
-			pc->setpos(sd, sd->status.save_point.map,sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
-		else
-			pc->setpos(sd, script->mapindexname2id(st,str), x, y, CLR_TELEPORT);
+		return false;
 
 	return true;
 }
@@ -6733,6 +6735,8 @@ static BUILDIN(warpparty)
 		break;
 	case 4:
 		map_index = script->mapindexname2id(st, str);
+		if (!map_index)
+			return false;
 		break;
 	case 2:
 		// "SavePoint" uses save point of the currently attached player
@@ -12884,6 +12888,7 @@ static BUILDIN(warpwaitingpc)
 	const char* map_name;
 	struct npc_data* nd;
 	struct chat_data* cd;
+	unsigned short map_index;
 
 	nd = map->id2nd(st->oid);
 	if (nd == NULL || (cd=map->id2cd(nd->chat_id)) == NULL)
@@ -12921,8 +12926,10 @@ static BUILDIN(warpwaitingpc)
 			pc->randomwarp(sd,CLR_TELEPORT);
 		else if( strcmp(map_name,"SavePoint") == 0 )
 			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+		else if ((map_index = script->mapindexname2id(st,map_name)) != 0)
+			pc->setpos(sd, map_index, x, y, CLR_OUTSIGHT);
 		else
-			pc->setpos(sd, script->mapindexname2id(st,map_name), x, y, CLR_OUTSIGHT);
+			return false;
 	}
 	mapreg->setreg(script->add_variable("$@warpwaitingpcnum"), i);
 	return true;
@@ -13958,8 +13965,8 @@ static BUILDIN(mapwarp)
 	if ((m = script->mapname2mapid(st, mapname)) < 0)
 		return false;
 
-	if(!(index=script->mapindexname2id(st,str)))
-		return true;
+	if (!(index = script->mapindexname2id(st, str)))
+		return false;
 
 	switch(check_val) {
 		case 1:
@@ -14153,8 +14160,10 @@ static BUILDIN(warppartner)
 	if (map_index) {
 		pc->setpos(p_sd,map_index,x,y,CLR_OUTSIGHT);
 		script_pushint(st,1);
-	} else
+	} else {
 		script_pushint(st,0);
+		return false;
+	}
 	return true;
 }
 
@@ -20798,8 +20807,8 @@ static BUILDIN(warpportal)
 	tpx = script_getnum(st,5);
 	tpy = script_getnum(st,6);
 
-	if( map_index == 0 )
-		return true;// map not found
+	if (map_index == 0)
+		return false;// map not found
 
 	if( bl->type == BL_NPC )
 		unit->bl2ud2(bl); // ensure nd->ud is safe to edit
@@ -21518,10 +21527,9 @@ static BUILDIN(waitingroom2bg)
 	if( strcmp(map_name,"-") != 0 )
 	{
 		map_index = script->mapindexname2id(st,map_name);
-		if( map_index == 0 )
-		{ // Invalid Map
+		if (map_index == 0) { // Invalid Map
 			script_pushint(st,0);
-			return true;
+			return false;
 		}
 	}
 
@@ -21562,8 +21570,8 @@ static BUILDIN(waitingroom2bg_single)
 
 	bg_id = script_getnum(st,2);
 	map_name = script_getstr(st,3);
-	if( (map_index = script->mapindexname2id(st,map_name)) == 0 )
-		return true; // Invalid Map
+	if ((map_index = script->mapindexname2id(st,map_name)) == 0)
+		return false; // Invalid Map
 
 	x = script_getnum(st,4);
 	y = script_getnum(st,5);
@@ -21607,8 +21615,8 @@ static BUILDIN(bg_warp)
 
 	bg_id = script_getnum(st,2);
 	map_name = script_getstr(st,3);
-	if( (map_index = script->mapindexname2id(st,map_name)) == 0 )
-		return true; // Invalid Map
+	if ((map_index = script->mapindexname2id(st, map_name)) == 0)
+		return false; // Invalid Map
 	x = script_getnum(st,4);
 	y = script_getnum(st,5);
 	bg->team_warp(bg_id, map_index, x, y);
@@ -23705,9 +23713,9 @@ static BUILDIN(bg_create_team)
 	map_name = script_getstr(st,2);
 	if( strcmp(map_name,"-") != 0 ) {
 		map_index = script->mapindexname2id(st,map_name);
-		if( map_index == 0 ) { // Invalid Map
+		if (map_index == 0) { // Invalid Map
 			script_pushint(st,0);
-			return true;
+			return false;
 		}
 	}
 
@@ -26306,8 +26314,9 @@ static unsigned short script_mapindexname2id(struct script_state *st, const char
 {
 	unsigned short index;
 
-	if( !(index=mapindex->name2id(name)) ) {
-		script->reportsrc(st);
+	if (!(index=mapindex->name2id(name))) {
+		ShowWarning("script_mapindexname2id: Map '%s' not found in index list!\n", name);
+		script->reportfunc(st);
 		return 0;
 	}
 	return index;
