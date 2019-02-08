@@ -26293,6 +26293,19 @@ static unsigned short script_mapindexname2id(struct script_state *st, const char
 	}
 	return index;
 }
+/**
+ * above function return mapindex, this mapname2mapid function return mapid
+ **/
+static int16 script_mapname2mapid(struct script_state *st, const char *name)
+{
+	unsigned short index = mapindex->name2id(name);
+	if (!index) {
+		ShowWarning("script_mapname2mapid: Map '%s' not found in index list!\n", name);
+		script->reportfunc(st);
+		return -1;
+	}
+	return map->mapindex2mapid(index);
+}
 
 void script_defaults(void)
 {
@@ -26586,6 +26599,7 @@ void script_defaults(void)
 	/* */
 	script->hardcoded_constants = script_hardcoded_constants;
 	script->mapindexname2id = script_mapindexname2id;
+	script->mapname2mapid = script_mapname2mapid;
 	script->string_dup = script_string_dup;
 	script->load_translations = script_load_translations;
 	script->load_translation_addstring = script_load_translation_addstring;
