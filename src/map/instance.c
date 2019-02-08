@@ -191,8 +191,10 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 
 	nullpo_retr(-1, name);
 
-	if( m < 0 )
+	if (m < 0) {
+		ShowWarning("instance_add_map: Map '%s' not found in index list!\n", map_name);
 		return -1; // source map not found
+	}
 
 	if( !instance->valid(instance_id) ) {
 		ShowError("instance_add_map: trying to attach '%s' map to non-existing instance %d.\n", name, instance_id);
