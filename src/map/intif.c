@@ -77,7 +77,7 @@ static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(pet_name);
-	WFIFOHEAD(inter_fd, 28 + NAME_LENGTH);
+	WFIFOHEAD(inter_fd, 32 + NAME_LENGTH);
 	WFIFOW(inter_fd, 0) = 0x3080;
 	WFIFOL(inter_fd, 2) = account_id;
 	WFIFOL(inter_fd, 6) = char_id;
@@ -907,7 +907,7 @@ static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd, 19);
+	WFIFOHEAD(inter_fd, 23);
 	WFIFOW(inter_fd, 0) = 0x3035;
 	WFIFOL(inter_fd, 2) = guild_id;
 	WFIFOL(inter_fd, 6) = account_id;
