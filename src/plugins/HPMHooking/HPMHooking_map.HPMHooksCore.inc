@@ -2256,6 +2256,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pNPCBarterClosed_post;
 	struct HPMHookPoint *HP_clif_pNPCBarterPurchase_pre;
 	struct HPMHookPoint *HP_clif_pNPCBarterPurchase_post;
+	struct HPMHookPoint *HP_clif_pClientVersion_pre;
+	struct HPMHookPoint *HP_clif_pClientVersion_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -8923,6 +8925,8 @@ struct {
 	int HP_clif_pNPCBarterClosed_post;
 	int HP_clif_pNPCBarterPurchase_pre;
 	int HP_clif_pNPCBarterPurchase_post;
+	int HP_clif_pClientVersion_pre;
+	int HP_clif_pClientVersion_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

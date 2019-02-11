@@ -1152,6 +1152,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->npc_barter_open, HP_clif_npc_barter_open) },
 	{ HP_POP(clif->pNPCBarterClosed, HP_clif_pNPCBarterClosed) },
 	{ HP_POP(clif->pNPCBarterPurchase, HP_clif_pNPCBarterPurchase) },
+	{ HP_POP(clif->pClientVersion, HP_clif_pClientVersion) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

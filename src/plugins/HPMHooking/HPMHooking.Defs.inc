@@ -562,6 +562,8 @@ typedef int (*HPMHOOK_pre_chr_mmo_char_tobuf) (uint8 **buffer, struct mmo_charst
 typedef int (*HPMHOOK_post_chr_mmo_char_tobuf) (int retVal___, uint8 *buffer, struct mmo_charstatus *p);
 typedef void (*HPMHOOK_pre_chr_send_HC_ACK_CHARINFO_PER_PAGE) (int *fd, struct char_session_data **sd);
 typedef void (*HPMHOOK_post_chr_send_HC_ACK_CHARINFO_PER_PAGE) (int fd, struct char_session_data *sd);
+typedef void (*HPMHOOK_pre_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail) (int *fd, struct char_session_data **sd);
+typedef void (*HPMHOOK_post_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail) (int fd, struct char_session_data *sd);
 typedef void (*HPMHOOK_pre_chr_mmo_char_send_ban_list) (int *fd, struct char_session_data **sd);
 typedef void (*HPMHOOK_post_chr_mmo_char_send_ban_list) (int fd, struct char_session_data *sd);
 typedef void (*HPMHOOK_pre_chr_mmo_char_send_slots_info) (int *fd, struct char_session_data **sd);
@@ -2664,6 +2666,8 @@ typedef void (*HPMHOOK_pre_clif_pNPCBarterClosed) (int *fd, struct map_session_d
 typedef void (*HPMHOOK_post_clif_pNPCBarterClosed) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNPCBarterPurchase) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pNPCBarterPurchase) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pClientVersion) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pClientVersion) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
