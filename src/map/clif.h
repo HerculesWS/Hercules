@@ -1543,7 +1543,7 @@ struct clif_interface {
 	void (*pRodexCancelWriteMail) (int fd, struct map_session_data *sd);
 	void (*pRodexOpenMailbox) (int fd, struct map_session_data *sd);
 	void (*pRodexCheckName) (int fd, struct map_session_data *sd);
-	void (*rodex_checkname_result) (struct map_session_data *sd, int char_id, short class_, int base_level, const char *name);
+	void (*rodex_checkname_result) (struct map_session_data *sd, int char_id, int class_, int base_level, const char *name);
 	void (*pRodexDeleteMail) (int fd, struct map_session_data *sd);
 	void (*rodex_delete_mail) (struct map_session_data *sd, int8 opentype, int64 mail_id);
 	void (*pRodexRefreshMaillist) (int fd, struct map_session_data *sd);

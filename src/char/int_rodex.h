@@ -34,7 +34,7 @@ struct inter_rodex_interface {
 	int (*parse_frommap) (int fd);
 	int (*fromsql) (int char_id, int account_id, int8 opentype, int64 mail_id, struct rodex_maillist *mails);
 	bool (*hasnew) (int char_id, int account_id);
-	bool (*checkname) (const char *name, int *target_char_id, short *target_class, int *target_level);
+	bool (*checkname) (const char *name, int *target_char_id, int *target_class, int *target_level);
 	int64 (*savemessage) (struct rodex_message* msg);
 	bool (*updatemail) (int64 mail_id, int8 flag);
 };

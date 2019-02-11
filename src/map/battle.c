@@ -1019,7 +1019,7 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 {
 	struct map_session_data *sd, *tsd;
 	int cardfix = 1000;
-	short t_class, s_class, s_race2, t_race2;
+	int t_class, s_class, s_race2, t_race2;
 	struct status_data *sstatus, *tstatus;
 	int i;
 
@@ -5552,7 +5552,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #endif
 
 	if( flag.infdef ) { //Plants receive 1 damage when hit
-		short class_ = status->get_class(target);
+		int class_ = status->get_class(target);
 		if( flag.hit || wd.damage > 0 )
 			wd.damage = wd.div_; // In some cases, right hand no need to have a weapon to increase damage
 		if( flag.lh && (flag.hit || wd.damage2 > 0) )

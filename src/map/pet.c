@@ -111,8 +111,8 @@ static int pet_create_egg(struct map_session_data *sd, int item_id)
 	if (!pc->inventoryblank(sd)) return 0; // Inventory full
 	sd->catch_target_class = pet->db[pet_id].class_;
 	intif->create_pet(sd->status.account_id, sd->status.char_id,
-		(short)pet->db[pet_id].class_,
-		(short)mob->db(pet->db[pet_id].class_)->lv,
+		pet->db[pet_id].class_,
+		mob->db(pet->db[pet_id].class_)->lv,
 		pet->db[pet_id].EggID, 0,
 		(short)pet->db[pet_id].intimate,
 		100, 0, 1, pet->db[pet_id].jname);
@@ -614,7 +614,7 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
  * pet_id - Should contain pet id otherwise means failure
  * returns true on success
  **/
-static bool pet_get_egg(int account_id, short pet_class, int pet_id)
+static bool pet_get_egg(int account_id, int pet_class, int pet_id)
 {
 	struct map_session_data *sd;
 	struct item tmp_item;

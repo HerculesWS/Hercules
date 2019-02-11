@@ -1018,7 +1018,7 @@ static int guild_send_memberinfoshort(struct map_session_data *sd, int online)
 }
 
 // cleaned up [LuzZza]
-static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login)
+static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class, uint32 last_login)
 {
 	int i, alv, c, idx = INDEX_NOT_FOUND, om = 0, oldonline = -1;
 	struct guild *g = guild->search(guild_id);

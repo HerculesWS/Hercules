@@ -2961,7 +2961,7 @@ static bool npc_viewisid(const char *viewid)
  * @param class_  The NPC view class.
  * @return A pointer to the created NPC data (ownership passed to the caller).
  */
-static struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, uint8 dir, int16 class_)
+static struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, uint8 dir, int class_)
 {
 	struct npc_data *nd;
 
@@ -3918,7 +3918,7 @@ static void npc_setdisplayname(struct npc_data *nd, const char *newname)
 ///
 /// @param nd Target npc
 /// @param class_ New display class
-static void npc_setclass(struct npc_data *nd, short class_)
+static void npc_setclass(struct npc_data *nd, int class_)
 {
 	nullpo_retv(nd);
 
@@ -4199,7 +4199,7 @@ static const char *npc_parse_mob(const char *w1, const char *w2, const char *w3,
 
 	mobspawn.num = (unsigned short)num;
 	mobspawn.active = 0;
-	mobspawn.class_ = (short) class_;
+	mobspawn.class_ = class_;
 	mobspawn.x = (unsigned short)x;
 	mobspawn.y = (unsigned short)y;
 	mobspawn.xs = (signed short)xs;

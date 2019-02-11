@@ -77,7 +77,7 @@ struct npc_data {
 	struct view_data vd;
 	unsigned int option;
 	struct npc_data *master_nd;
-	short class_;
+	int class_;
 	short speed;
 	char name[NAME_LENGTH+1];// display name
 	char exname[NAME_LENGTH+1];// unique npc name
@@ -268,7 +268,7 @@ struct npc_interface {
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
-	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, uint8 dir, int16 class_);
+	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, uint8 dir, int class_);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char *(*parse_warp) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char *(*parse_shop) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
@@ -288,7 +288,7 @@ struct npc_interface {
 	void (*unsetcells) (struct npc_data *nd);
 	void (*movenpc) (struct npc_data *nd, int16 x, int16 y);
 	void (*setdisplayname) (struct npc_data *nd, const char *newname);
-	void (*setclass) (struct npc_data *nd, short class_);
+	void (*setclass) (struct npc_data *nd, int class_);
 	int (*do_atcmd_event) (struct map_session_data *sd, const char *command, const char *message, const char *eventname);
 	const char *(*parse_function) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*parse_mob2) (struct spawn_data *mobspawn);

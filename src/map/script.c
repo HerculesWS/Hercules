@@ -10733,7 +10733,7 @@ static BUILDIN(makepet)
 	if (pet_id >= 0 && sd) {
 		sd->catch_target_class = pet->db[pet_id].class_;
 		intif->create_pet(sd->status.account_id, sd->status.char_id,
-		                  (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
+		                  pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,
 		                  pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
 		                  100, 0, 1, pet->db[pet_id].jname);
 	}

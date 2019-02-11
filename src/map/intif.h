@@ -58,7 +58,7 @@ struct intif_interface {
 	int packet_len_table[INTIF_PACKET_LEN_TABLE_SIZE];
 	/* funcs */
 	int (*parse) (int fd);
-	int (*create_pet)(int account_id, int char_id, short pet_type, short pet_lv, int pet_egg_id,
+	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,
 	                  int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
 	int (*broadcast) (const char *mes, int len, int type);
 	int (*broadcast2) (const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
@@ -84,7 +84,7 @@ struct intif_interface {
 	int (*guild_request_info) (int guild_id);
 	int (*guild_addmember) (int guild_id, struct guild_member *m);
 	int (*guild_leave) (int guild_id, int account_id, int char_id, int flag, const char *mes);
-	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*guild_break) (int guild_id);
 	int (*guild_message) (int guild_id, int account_id, const char *mes, int len);
 	int (*guild_change_gm) (int guild_id, const char *name, int len);

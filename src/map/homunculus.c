@@ -411,7 +411,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 	return true;
 }
 
-static int homunculus_change_class(struct homun_data *hd, short class_)
+static int homunculus_change_class(struct homun_data *hd, int class_)
 {
 	int i = homun->db_search(class_,HOMUNCULUS_CLASS);
 	nullpo_retr(0, hd);

@@ -6147,7 +6147,7 @@ static int pc_checkequip(struct map_session_data *sd, int pos)
  * Convert's from the client's lame Job ID system
  * to the map server's 'makes sense' system. [Skotlex]
  *------------------------------------------*/
-static int pc_jobid2mapid(int16 class)
+static int pc_jobid2mapid(int class)
 {
 	switch (class) {
 	//Novice And 1-1 Jobs
@@ -6289,9 +6289,9 @@ static int pc_jobid2mapid(int16 class)
 }
 
 //Reverts the map-style class id to the client-style one.
-static int pc_mapid2jobid(uint16 job, int sex)
+static int pc_mapid2jobid(unsigned int class, int sex)
 {
-	switch (job) {
+	switch (class) {
 	//Novice And 1-1 Jobs
 		case MAPID_NOVICE:                return JOB_NOVICE;
 		case MAPID_SWORDMAN:              return JOB_SWORDMAN;

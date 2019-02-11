@@ -578,9 +578,9 @@ static int mapif_guild_memberinfoshort(struct guild *g, int idx)
 	WBUFL(buf, 10) = g->member[idx].char_id;
 	WBUFB(buf, 14) = (unsigned char)g->member[idx].online;
 	WBUFW(buf, 15) = g->member[idx].lv;
-	WBUFW(buf, 17) = g->member[idx].class;
-	WBUFL(buf, 19) = g->member[idx].last_login;
-	mapif->sendall(buf, 23);
+	WBUFL(buf, 17) = g->member[idx].class;
+	WBUFL(buf, 21) = g->member[idx].last_login;
+	mapif->sendall(buf, 25);
 	return 0;
 }
 
@@ -797,7 +797,7 @@ static int mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char
 }
 
 // Change member info
-static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static int mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	inter_guild->update_member_info_short(guild_id, account_id, char_id, online, lv, class);
 	return 0;
@@ -1427,14 +1427,14 @@ static int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 	WFIFOW(fd, 0) = 0x3880;
 	WFIFOL(fd, 2) = account_id;
 	if (p != NULL){
-		WFIFOW(fd, 6) = p->class_;
-		WFIFOL(fd, 8) = p->pet_id;
+		WFIFOL(fd, 6) = p->class_;
+		WFIFOL(fd, 10) = p->pet_id;
 		ShowInfo("int_pet: created pet %d - %s\n", p->pet_id, p->name);
 	} else {
-		WFIFOB(fd, 6) = 0;
-		WFIFOL(fd, 8) = 0;
+		WFIFOL(fd, 6) = 0;
+		WFIFOL(fd, 10) = 0;
 	}
-	WFIFOSET(fd, 12);
+	WFIFOSET(fd, 14);
 
 	return 0;
 }
@@ -1521,15 +1521,15 @@ static int mapif_parse_CreatePet(int fd)
 	account_id = RFIFOL(fd, 2);
 	pet = inter_pet->create(account_id,
 		RFIFOL(fd, 6),
-		RFIFOW(fd, 10),
-		RFIFOW(fd, 12),
+		RFIFOL(fd, 10),
 		RFIFOL(fd, 14),
 		RFIFOL(fd, 18),
-		RFIFOW(fd, 22),
-		RFIFOW(fd, 24),
-		RFIFOB(fd, 26),
-		RFIFOB(fd, 27),
-		RFIFOP(fd, 28));
+		RFIFOL(fd, 22),
+		RFIFOW(fd, 26),
+		RFIFOW(fd, 28),
+		RFIFOB(fd, 30),
+		RFIFOB(fd, 31),
+		RFIFOP(fd, 32));
 
 	if (pet != NULL)
 		mapif->pet_created(fd, account_id, pet);
@@ -1789,7 +1789,7 @@ static void mapif_parse_rodex_checkname(int fd)
 	int reqchar_id = RFIFOL(fd, 2);
 	char name[NAME_LENGTH];
 	int target_char_id, target_level;
-	short target_class;
+	int target_class;
 
 	safestrncpy(name, RFIFOP(fd, 6), NAME_LENGTH);
 
@@ -1799,7 +1799,7 @@ static void mapif_parse_rodex_checkname(int fd)
 		mapif->rodex_checkname(fd, reqchar_id, 0, 0, 0, name);
 }
 
-static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name)
+static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name)
 {
 	nullpo_retv(name);
 	Assert_retv(reqchar_id > 0);
@@ -1809,10 +1809,10 @@ static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, sh
 	WFIFOW(fd, 0) = 0x3898;
 	WFIFOL(fd, 2) = reqchar_id;
 	WFIFOL(fd, 6) = target_char_id;
-	WFIFOW(fd, 10) = target_class;
-	WFIFOL(fd, 12) = target_level;
-	safestrncpy(WFIFOP(fd, 16), name, NAME_LENGTH);
-	WFIFOSET(fd, 16 + NAME_LENGTH);
+	WFIFOL(fd, 10) = target_class;
+	WFIFOL(fd, 14) = target_level;
+	safestrncpy(WFIFOP(fd, 18), name, NAME_LENGTH);
+	WFIFOSET(fd, 18 + NAME_LENGTH);
 }
 
 static int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)

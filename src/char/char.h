@@ -149,7 +149,7 @@ struct char_interface {
 	int (*rename_char_sql) (struct char_session_data *sd, int char_id);
 	bool (*name_exists) (const char *name, const char *esc_name);
 	int (*check_char_name) (const char *name, const char *esc_name);
-	int (*make_new_char_sql) (struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job, uint8 sex);
+	int (*make_new_char_sql) (struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int starting_job, uint8 sex);
 	int (*divorce_char_sql) (int partner_id1, int partner_id2);
 	int (*count_users) (void);
 	int (*mmo_char_tobuf) (uint8* buffer, struct mmo_charstatus* p);

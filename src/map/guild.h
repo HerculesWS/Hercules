@@ -126,7 +126,7 @@ struct guild_interface {
 	int (*check_alliance) (int guild_id1, int guild_id2, int flag);
 	/* */
 	int (*send_memberinfoshort) (struct map_session_data *sd,int online);
-	int (*recv_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login);
+	int (*recv_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class, uint32 last_login);
 	int (*change_memberposition) (int guild_id,int account_id,int char_id,short idx);
 	int (*memberposition_changed) (struct guild *g,int idx,int pos);
 	int (*change_position) (int guild_id,int idx,int mode,int exp_mode,const char *name);

@@ -798,11 +798,11 @@ int HP_chr_check_char_name(const char *name, const char *esc_name) {
 	}
 	return retVal___;
 }
-int HP_chr_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job, uint8 sex) {
+int HP_chr_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int starting_job, uint8 sex) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_chr_make_new_char_sql_pre > 0) {
-		int (*preHookFunc) (struct char_session_data **sd, const char **name_, int *str, int *agi, int *vit, int *int_, int *dex, int *luk, int *slot, int *hair_color, int *hair_style, short *starting_job, uint8 *sex);
+		int (*preHookFunc) (struct char_session_data **sd, const char **name_, int *str, int *agi, int *vit, int *int_, int *dex, int *luk, int *slot, int *hair_color, int *hair_style, int *starting_job, uint8 *sex);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_make_new_char_sql_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_chr_make_new_char_sql_pre[hIndex].func;
@@ -817,7 +817,7 @@ int HP_chr_make_new_char_sql(struct char_session_data *sd, const char *name_, in
 		retVal___ = HPMHooks.source.chr.make_new_char_sql(sd, name_, str, agi, vit, int_, dex, luk, slot, hair_color, hair_style, starting_job, sex);
 	}
 	if (HPMHooks.count.HP_chr_make_new_char_sql_post > 0) {
-		int (*postHookFunc) (int retVal___, struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job, uint8 sex);
+		int (*postHookFunc) (int retVal___, struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int starting_job, uint8 sex);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_make_new_char_sql_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_chr_make_new_char_sql_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, name_, str, agi, vit, int_, dex, luk, slot, hair_color, hair_style, starting_job, sex);
@@ -7031,11 +7031,11 @@ bool HP_inter_guild_leave(int guild_id, int account_id, int char_id, int flag, c
 	}
 	return retVal___;
 }
-bool HP_inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int16 class) {
+bool HP_inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int class) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_guild_update_member_info_short_pre > 0) {
-		bool (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class);
+		bool (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int *class);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_update_member_info_short_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_guild_update_member_info_short_pre[hIndex].func;
@@ -7050,7 +7050,7 @@ bool HP_inter_guild_update_member_info_short(int guild_id, int account_id, int c
 		retVal___ = HPMHooks.source.inter_guild.update_member_info_short(guild_id, account_id, char_id, online, lv, class);
 	}
 	if (HPMHooks.count.HP_inter_guild_update_member_info_short_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+		bool (*postHookFunc) (bool retVal___, int guild_id, int account_id, int char_id, int online, int lv, int class);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_guild_update_member_info_short_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_guild_update_member_info_short_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, guild_id, account_id, char_id, online, lv, class);
@@ -9498,11 +9498,11 @@ int HP_inter_pet_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-struct s_pet* HP_inter_pet_create(int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name) {
+struct s_pet* HP_inter_pet_create(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name) {
 	int hIndex = 0;
 	struct s_pet* retVal___ = NULL;
 	if (HPMHooks.count.HP_inter_pet_create_pre > 0) {
-		struct s_pet* (*preHookFunc) (int *account_id, int *char_id, short *pet_class, short *pet_lv, int *pet_egg_id, int *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incubate, const char **pet_name);
+		struct s_pet* (*preHookFunc) (int *account_id, int *char_id, int *pet_class, int *pet_lv, int *pet_egg_id, int *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incubate, const char **pet_name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_pet_create_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_pet_create_pre[hIndex].func;
@@ -9517,7 +9517,7 @@ struct s_pet* HP_inter_pet_create(int account_id, int char_id, short pet_class, 
 		retVal___ = HPMHooks.source.inter_pet.create(account_id, char_id, pet_class, pet_lv, pet_egg_id, pet_equip, intimate, hungry, rename_flag, incubate, pet_name);
 	}
 	if (HPMHooks.count.HP_inter_pet_create_post > 0) {
-		struct s_pet* (*postHookFunc) (struct s_pet* retVal___, int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
+		struct s_pet* (*postHookFunc) (struct s_pet* retVal___, int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_pet_create_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_pet_create_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, account_id, char_id, pet_class, pet_lv, pet_egg_id, pet_equip, intimate, hungry, rename_flag, incubate, pet_name);
@@ -9850,11 +9850,11 @@ bool HP_inter_rodex_hasnew(int char_id, int account_id) {
 	}
 	return retVal___;
 }
-bool HP_inter_rodex_checkname(const char *name, int *target_char_id, short *target_class, int *target_level) {
+bool HP_inter_rodex_checkname(const char *name, int *target_char_id, int *target_class, int *target_level) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_rodex_checkname_pre > 0) {
-		bool (*preHookFunc) (const char **name, int **target_char_id, short **target_class, int **target_level);
+		bool (*preHookFunc) (const char **name, int **target_char_id, int **target_class, int **target_level);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_rodex_checkname_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_rodex_checkname_pre[hIndex].func;
@@ -9869,7 +9869,7 @@ bool HP_inter_rodex_checkname(const char *name, int *target_char_id, short *targ
 		retVal___ = HPMHooks.source.inter_rodex.checkname(name, target_char_id, target_class, target_level);
 	}
 	if (HPMHooks.count.HP_inter_rodex_checkname_post > 0) {
-		bool (*postHookFunc) (bool retVal___, const char *name, int *target_char_id, short *target_class, int *target_level);
+		bool (*postHookFunc) (bool retVal___, const char *name, int *target_char_id, int *target_class, int *target_level);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_rodex_checkname_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_rodex_checkname_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, name, target_char_id, target_class, target_level);
@@ -13822,11 +13822,11 @@ int HP_mapif_parse_GuildLeave(int fd, int guild_id, int account_id, int char_id,
 	}
 	return retVal___;
 }
-int HP_mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class) {
+int HP_mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_id, int char_id, int online, int lv, int class) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_pre > 0) {
-		int (*preHookFunc) (int *fd, int *guild_id, int *account_id, int *char_id, int *online, int *lv, int16 *class);
+		int (*preHookFunc) (int *fd, int *guild_id, int *account_id, int *char_id, int *online, int *lv, int *class);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_parse_GuildChangeMemberInfoShort_pre[hIndex].func;
@@ -13841,7 +13841,7 @@ int HP_mapif_parse_GuildChangeMemberInfoShort(int fd, int guild_id, int account_
 		retVal___ = HPMHooks.source.mapif.parse_GuildChangeMemberInfoShort(fd, guild_id, account_id, char_id, online, lv, class);
 	}
 	if (HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_post > 0) {
-		int (*postHookFunc) (int retVal___, int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+		int (*postHookFunc) (int retVal___, int fd, int guild_id, int account_id, int char_id, int online, int lv, int class);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_GuildChangeMemberInfoShort_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_parse_GuildChangeMemberInfoShort_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, fd, guild_id, account_id, char_id, online, lv, class);
@@ -16021,10 +16021,10 @@ void HP_mapif_parse_rodex_checkname(int fd) {
 	}
 	return;
 }
-void HP_mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name) {
+void HP_mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mapif_rodex_checkname_pre > 0) {
-		void (*preHookFunc) (int *fd, int *reqchar_id, int *target_char_id, short *target_class, int *target_level, char **name);
+		void (*preHookFunc) (int *fd, int *reqchar_id, int *target_char_id, int *target_class, int *target_level, char **name);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_checkname_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mapif_rodex_checkname_pre[hIndex].func;
@@ -16039,7 +16039,7 @@ void HP_mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, short 
 		HPMHooks.source.mapif.rodex_checkname(fd, reqchar_id, target_char_id, target_class, target_level, name);
 	}
 	if (HPMHooks.count.HP_mapif_rodex_checkname_post > 0) {
-		void (*postHookFunc) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name);
+		void (*postHookFunc) (int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_rodex_checkname_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_rodex_checkname_post[hIndex].func;
 			postHookFunc(fd, reqchar_id, target_char_id, target_class, target_level, name);
