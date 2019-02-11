@@ -9,6 +9,30 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2019.02.10] `February 10 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-01-09. (#2339)
+- Added support for the barter type shops. See `sellitem()`, `NST_BARTER` and the demo scripts in `doc/sample/npc_trader_sample.txt` and `npc/custom/bartershop.txt`. (part of #2339)
+- Added the `countnameditem()` script command. (#2307)
+- Added/updated packets, encryption keys and message tables for clients up to 2019-01-30. (#2353)
+
+### Changed
+
+- Improved the response codes and error messages related to the login/char server authentication. (#2151, issue #737)
+- Changed the character creation to use `FIXED_INVENTORY_SIZE` as default inventory size instead of relying on the SQL table default value. (part of #2353)
+- Changed the type of several variables from `short` to `int`. (#2364)
+
+### Fixed
+
+- Fixed a bug that caused the custom disguise event to run indefinitely. (#2351)
+- Fixed issues (item db loading, item search by name) for item IDs higher than 65535. (#2337)
+- Fixed an issue while sending the last page of `HC_ACK_CHARINFO_PER_PAGE`. (part of #2339)
+- Fixed the minimum duration of Voice of Siren. (#1631)
+- Fixed the Sura Job Change Quest getting stuck after the first attempt. (#1656, issue #1655)
+- Added support for recent MySQL versions that don't define the `my_bool` type. (#2365, issue #2363)
+
 ## [v2018.12.16+1] `December 16 2018` `PATCH 1`
 
 ### Fixed
@@ -18,6 +42,7 @@ If you are reading this in a text editor, simply ignore this section
 ## [v2018.12.16] `December 16 2018`
 
 ### Added
+
 - Added/updated packets, encryption keys and message tables for clients up to 2018-12-12. (#2324)
 - Added support for the `AC_LOGIN_OTP` packets. (part of #2324)
 - Added script command `enchantitem()` and related packet `ZC_ENCHANT_EQUIPMENT`. (part of #2324)
@@ -46,8 +71,6 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed Gaia Sword not granting any bonus drops. This reworks the way `s_add_drop` differentiates between items and groups and the parameters passed to `pc_bonus_item_drop()`. Custom code may need to be updated to match. (#2327)
 - Fixed a 'Gungslinger' typo in `item_db2`. (#2335)
 - Fixed delay-consumed items missing consumption after using Abracadabra/Improvised Song (#2298, issue #1169)
-
-### Deprecated
 
 ### Removed
 
@@ -567,6 +590,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.02.10]: https://github.com/HerculesWS/Hercules/compare/v2018.12.16+1...v2019.02.10
 [v2018.12.16+1]: https://github.com/HerculesWS/Hercules/compare/v2018.12.16...v2018.12.16+1
 [v2018.12.16]: https://github.com/HerculesWS/Hercules/compare/v2018.11.18+1...v2018.12.16
 [v2018.11.18+1]: https://github.com/HerculesWS/Hercules/compare/v2018.11.18...v2018.11.18+1
