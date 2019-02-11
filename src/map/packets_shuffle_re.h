@@ -9663,7 +9663,7 @@
 	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK // 12
 #endif
 
-// 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE, 2018-11-14dRagexeRE, 2018-11-21cRagexeRE, 2018-11-28aRagexeRE, 2018-12-05bRagexeRE, 2018-12-12aRagexeRE, 2018-12-12bRagexeRE, 2018-12-19bRagexeRE, 2018-12-26aRagexeRE, 2019-01-09bRagexeRE
+// 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE, 2018-11-14dRagexeRE, 2018-11-21cRagexeRE, 2018-11-28aRagexeRE, 2018-12-05bRagexeRE, 2018-12-12aRagexeRE, 2018-12-12bRagexeRE, 2018-12-19bRagexeRE, 2018-12-26aRagexeRE, 2019-01-09bRagexeRE, 2019-01-16bRagexeRE, 2019-01-16cRagexeRE, 2019-01-23dRagexeRE
 #if PACKETVER == 20180704 || \
     PACKETVER == 20180711 || \
     PACKETVER == 20180718 || \
@@ -9684,7 +9684,9 @@
     PACKETVER == 20181212 || \
     PACKETVER == 20181219 || \
     PACKETVER == 20181226 || \
-    PACKETVER >= 20190109
+    PACKETVER == 20190109 || \
+    PACKETVER == 20190116 || \
+    PACKETVER >= 20190123
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36

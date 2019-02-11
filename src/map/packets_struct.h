@@ -3056,7 +3056,7 @@ struct PACKET_CZ_PARTY_CONFIG {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_PARTY_CONFIG, 0x02c8);
 
-#if PACKETVER_ZERO_NUM >= 20181226
+#if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 struct PACKET_ZC_NPC_BARTER_OPEN_sub {
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
@@ -3084,14 +3084,14 @@ struct PACKET_ZC_NPC_BARTER_OPEN {
 DEFINE_PACKET_HEADER(ZC_NPC_BARTER_OPEN, 0x0b0e);
 #endif
 
-#if PACKETVER_ZERO_NUM >= 20181226
+#if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 struct PACKET_CZ_NPC_BARTER_CLOSE {
 	int16 packetType;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_NPC_BARTER_CLOSE, 0x0b12);
 #endif
 
-#if PACKETVER_ZERO_NUM >= 20181226
+#if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 struct PACKET_CZ_NPC_BARTER_PURCHASE_sub {
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
@@ -3109,6 +3109,55 @@ struct PACKET_CZ_NPC_BARTER_PURCHASE {
 	struct PACKET_CZ_NPC_BARTER_PURCHASE_sub list[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_NPC_BARTER_PURCHASE, 0x0b0f);
+#endif
+
+#if PACKETVER_ZERO_NUM >= 20190130
+struct PACKET_ZC_USESKILL_ACK {
+	int16 packetType;
+	uint32 srcId;
+	uint32 dstId;
+	uint16 x;
+	uint16 y;
+	uint16 skillId;
+	uint32 element;
+	uint32 delayTime;
+	uint8 disposable;
+	uint32 unknown;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x0b1a);
+#elif PACKETVER_MAIN_NUM >= 20091124 || PACKETVER_RE_NUM >= 20091124 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_USESKILL_ACK {
+	int16 packetType;
+	uint32 srcId;
+	uint32 dstId;
+	uint16 x;
+	uint16 y;
+	uint16 skillId;
+	uint32 element;
+	uint32 delayTime;
+	uint8 disposable;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x07fb);
+#elif PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_SAK_NUM >= 20080618 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_USESKILL_ACK {
+	int16 packetType;
+	uint32 srcId;
+	uint32 dstId;
+	uint16 x;
+	uint16 y;
+	uint16 skillId;
+	uint32 element;
+	uint32 delayTime;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x013e);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_RE_NUM >= 20090408 || PACKETVER_SAK_NUM >= 20090408 || defined(PACKETVER_ZERO)
+struct PACKET_CZ_CLIENT_VERSION {
+	int16 packetType;
+	uint32 clientVersion;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CLIENT_VERSION, 0x044a);
 #endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

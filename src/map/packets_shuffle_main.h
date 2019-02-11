@@ -9727,14 +9727,16 @@
 	packet(0x0967,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID // 6
 #endif
 
-// 2018-11-21bRagexe, 2018-11-28aRagexe, 2018-11-28bRagexe, 2018-11-28cRagexe, 2018-12-05aRagexe, 2018-12-12aRagexe, 2018-12-12bRagexe, 2018-12-19bRagexe, 2018-12-26aRagexe, 2019-01-09aRagexe
+// 2018-11-21bRagexe, 2018-11-28aRagexe, 2018-11-28bRagexe, 2018-11-28cRagexe, 2018-12-05aRagexe, 2018-12-12aRagexe, 2018-12-12bRagexe, 2018-12-19bRagexe, 2018-12-26aRagexe, 2019-01-09aRagexe, 2019-01-16bRagexe, 2019-01-16cRagexe, 2019-01-23dRagexe
 #if PACKETVER == 20181121 || \
     PACKETVER == 20181128 || \
     PACKETVER == 20181205 || \
     PACKETVER == 20181212 || \
     PACKETVER == 20181219 || \
     PACKETVER == 20181226 || \
-    PACKETVER >= 20190109
+    PACKETVER == 20190109 || \
+    PACKETVER == 20190116 || \
+    PACKETVER >= 20190123
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36

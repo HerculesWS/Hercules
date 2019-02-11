@@ -1752,22 +1752,22 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 #if PACKETVER >= 20120307
 	// Insert the new char entry to the database
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`) VALUES ("
-		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c')",
+		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`, `inventory_size`) VALUES ("
+		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c', '%d')",
 		char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, sex)) {
+		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, sex, FIXED_INVENTORY_SIZE)) {
 			Sql_ShowDebug(inter->sql_handle);
 			return -2; //No, stop the procedure!
 	}
 #else
 	//Insert the new char entry to the database
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
-							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
+							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `inventory_size`) VALUES ("
+							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d')",
 							   char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
+							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, FIXED_INVENTORY_SIZE) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		return -2; //No, stop the procedure!
@@ -2141,13 +2141,18 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 	WFIFOSET(fd, p->packetLen);
 	// send empty packet if chars count is 3, for trigger final code in client
 	if (count == 3) {
-		WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
-		p = WFIFOP(fd, 0);
-		p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
-		p->packetLen = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
-		WFIFOSET(fd, p->packetLen);
+		chr->send_HC_ACK_CHARINFO_PER_PAGE_tail(fd, sd);
 	}
 #endif
+}
+
+static void char_send_HC_ACK_CHARINFO_PER_PAGE_tail(int fd, struct char_session_data *sd)
+{
+	WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
+	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
+	p->packetLen = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	WFIFOSET(fd, p->packetLen);
 }
 
 /* Sends character ban list */
@@ -6484,6 +6489,7 @@ void char_defaults(void)
 	chr->count_users = char_count_users;
 	chr->mmo_char_tobuf = char_mmo_char_tobuf;
 	chr->send_HC_ACK_CHARINFO_PER_PAGE = char_send_HC_ACK_CHARINFO_PER_PAGE;
+	chr->send_HC_ACK_CHARINFO_PER_PAGE_tail = char_send_HC_ACK_CHARINFO_PER_PAGE_tail;
 	chr->mmo_char_send_ban_list = char_mmo_char_send_ban_list;
 	chr->mmo_char_send_slots_info = char_mmo_char_send_slots_info;
 	chr->mmo_char_send_characters = char_mmo_char_send_characters;
