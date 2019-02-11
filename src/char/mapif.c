@@ -569,7 +569,7 @@ static int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int f
 // Send short member's info
 static int mapif_guild_memberinfoshort(struct guild *g, int idx)
 {
-	unsigned char buf[23];
+	unsigned char buf[25];
 	nullpo_ret(g);
 	Assert_ret(idx >= 0 && idx < MAX_GUILD);
 	WBUFW(buf, 0) = 0x3835;
@@ -1423,7 +1423,7 @@ static int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, i
 
 static int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 {
-	WFIFOHEAD(fd, 12);
+	WFIFOHEAD(fd, 14);
 	WFIFOW(fd, 0) = 0x3880;
 	WFIFOL(fd, 2) = account_id;
 	if (p != NULL){
@@ -1805,7 +1805,7 @@ static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, in
 	Assert_retv(reqchar_id > 0);
 	Assert_retv(target_char_id >= 0);
 
-	WFIFOHEAD(fd, 16 + NAME_LENGTH);
+	WFIFOHEAD(fd, 18 + NAME_LENGTH);
 	WFIFOW(fd, 0) = 0x3898;
 	WFIFOL(fd, 2) = reqchar_id;
 	WFIFOL(fd, 6) = target_char_id;
