@@ -1597,6 +1597,28 @@ MYSQL_OLD_LIBS="$LIBS" ; LIBS="$LIBS $MYSQL_LIBS"
 MYSQL_OLD_CPPFLAGS="$CPPFLAGS" ; CPPFLAGS="$CPPFLAGS $MYSQL_CFLAGS"
 AC_CHECK_FUNC([mysql_init], [HAVE_MYSQL="yes"])
 AC_CHECK_HEADER([mysql.h], [], [HAVE_MYSQL=""])
+
+AC_MSG_CHECKING([whether my_bool is supported (MySQL)])
+AC_RUN_IFELSE(
+	[AC_LANG_SOURCE([
+		#ifdef WIN32
+		#include "common/winapi.h" // Needed before mysql.h
+		#endif
+		#include <mysql.h>
+		int main(int argc, char **argv){
+			my_bool val = (my_bool)0;
+			return (int)val;
+		}
+	])],
+	[
+		AC_MSG_RESULT([yes])
+	],
+	[
+		AC_MSG_RESULT([no (converting my_bool to bool)])
+		MYSQL_CFLAGS="$MYSQL_CFLAGS -Dmy_bool=bool"
+	]
+)
+
 CPPFLAGS="$MYSQL_OLD_CPPFLAGS"
 LIBS="$MYSQL_OLD_LIBS"
 
