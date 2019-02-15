@@ -33,28 +33,28 @@
 
 OnInvExpandRequest:
 	if (countitem(Inventory_Extension_Coupon) < 1) {
-		expandInventoryAck(EXPAND_INV_MISSING_ITEM);
+		expandinventoryack(EXPAND_INV_MISSING_ITEM);
 		end;
 	}
-	if (getInventorySize() + INVENTORY_INCREASE_STEP > MAX_INVENTORY) {
-		expandInventoryAck(EXPAND_INV_MAX_SIZE);
+	if (getinventorysize() + INVENTORY_INCREASE_STEP > MAX_INVENTORY) {
+		expandinventoryack(EXPAND_INV_MAX_SIZE);
 		end;
 	}
-	expandInventoryAck(EXPAND_INV_ASK_CONFIRMATION, Inventory_Extension_Coupon);
+	expandinventoryack(EXPAND_INV_ASK_CONFIRMATION, Inventory_Extension_Coupon);
 	end;
 
 OnInvExpandConfirmed:
 	if (countitem(Inventory_Extension_Coupon) < 1) {
-		expandInventoryResult(EXPAND_INV_RESULT_MISSING_ITEM);
+		expandinventoryresult(EXPAND_INV_RESULT_MISSING_ITEM);
 		end;
 	}
-	if (getInventorySize() + INVENTORY_INCREASE_STEP > MAX_INVENTORY) {
-		expandInventoryResult(EXPAND_INV_RESULT_MAX_SIZE);
+	if (getinventorysize() + INVENTORY_INCREASE_STEP > MAX_INVENTORY) {
+		expandinventoryresult(EXPAND_INV_RESULT_MAX_SIZE);
 		end;
 	}
 	delitem(Inventory_Extension_Coupon, 1);
-	if (expandInventory(INVENTORY_INCREASE_STEP) == true) {
-		expandInventoryResult(EXPAND_INV_RESULT_SUCCESS);
+	if (expandinventory(INVENTORY_INCREASE_STEP) == true) {
+		expandinventoryresult(EXPAND_INV_RESULT_SUCCESS);
 	}
 	end;
 

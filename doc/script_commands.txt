@@ -10444,7 +10444,7 @@ Works for 20170830 RE and main and for any zero clients
 
 ---------------------------------------
 
-*expandInventoryAck(<result>{, <itemId>})
+*expandinventoryack(<result>{, <itemId>})
 
 Send initial inventory expansion result.
 Normally this function should be called from script label
@@ -10462,7 +10462,7 @@ Works for 20181212 zero clients
 
 ---------------------------------------
 
-*expandInventoryResult(<result>)
+*expandinventoryresult(<result>)
 
 Send final inventory expansion result.
 Normally this function should be called from script label
@@ -10479,7 +10479,7 @@ Works for 20181212 zero clients
 
 ---------------------------------------
 
-*expandInventory(<value>)
+*expandinventory(<value>)
 
 Adjust player inventory to given value.
 Maximum inventory size is MAX_INVENTORY.
@@ -10490,7 +10490,7 @@ Current max inventory size can be read by function getInventorySize().
 
 ---------------------------------------
 
-*getInventorySize()
+*getinventorysize()
 
 Return current player max inventory size.
 This value always smaller or equal to MAX_INVENTORY.
