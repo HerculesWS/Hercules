@@ -5432,7 +5432,7 @@ static void clif_useskill(struct block_list *bl, int src_id, int dst_id, int dst
 #if PACKETVER_MAIN_NUM >= 20091124 || PACKETVER_RE_NUM >= 20091124 || defined(PACKETVER_ZERO)
 	p.disposable = 0;
 #endif
-#if PACKETVER_ZERO_NUM >= 20190130
+#if PACKETVER_MAIN_NUM >= 20181212 || PACKETVER_RE_NUM >= 20181212 || PACKETVER_ZERO_NUM >= 20190130
 	p.unknown = 0;
 #endif
 
