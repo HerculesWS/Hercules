@@ -80816,6 +80816,33 @@ void HP_sockt_flush_fifos(void) {
 	}
 	return;
 }
+int HP_sockt_connect_client(int listen_fd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_sockt_connect_client_pre > 0) {
+		int (*preHookFunc) (int *listen_fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_connect_client_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sockt_connect_client_pre[hIndex].func;
+			retVal___ = preHookFunc(&listen_fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sockt.connect_client(listen_fd);
+	}
+	if (HPMHooks.count.HP_sockt_connect_client_post > 0) {
+		int (*postHookFunc) (int retVal___, int listen_fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_connect_client_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sockt_connect_client_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, listen_fd);
+		}
+	}
+	return retVal___;
+}
 void HP_sockt_set_nonblocking(int fd, unsigned long yes) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_sockt_set_nonblocking_pre > 0) {

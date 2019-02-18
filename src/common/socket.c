@@ -462,7 +462,7 @@ static int recv_to_fifo(int fd)
 		socket_data_ci += len;
 	}
 #endif  // SHOW_SERVER_STATS
-	return 0;
+	return (int)len;
 }
 
 static int send_from_fifo(int fd)
@@ -648,7 +648,7 @@ static int make_listen_bind(uint32 ip, uint16 port)
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
 
-	create_session(fd, connect_client, null_send, null_parse);
+	create_session(fd, sockt->connect_client, null_send, null_parse);
 	sockt->session[fd]->client_addr = 0; // just listens
 	sockt->session[fd]->rdata_tick = 0; // disable timeouts on this socket
 	return fd;
@@ -2177,6 +2177,7 @@ void socket_defaults(void)
 	/* */
 	sockt->flush = flush_fifo;
 	sockt->flush_fifos = flush_fifos;
+	sockt->connect_client = connect_client;
 	sockt->set_nonblocking = set_nonblocking;
 	sockt->set_defaultparse = set_defaultparse;
 	sockt->host2ip = host2ip;

@@ -212,6 +212,7 @@ struct socket_interface {
 	/* */
 	void (*flush) (int fd);
 	void (*flush_fifos) (void);
+	int (*connect_client) (int listen_fd);
 	void (*set_nonblocking) (int fd, unsigned long yes);
 	void (*set_defaultparse) (ParseFunc defaultparse);
 	/* hostname/ip conversion functions */
