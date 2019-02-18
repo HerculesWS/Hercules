@@ -7538,6 +7538,8 @@ typedef void (*HPMHOOK_pre_sockt_flush) (int *fd);
 typedef void (*HPMHOOK_post_sockt_flush) (int fd);
 typedef void (*HPMHOOK_pre_sockt_flush_fifos) (void);
 typedef void (*HPMHOOK_post_sockt_flush_fifos) (void);
+typedef int (*HPMHOOK_pre_sockt_connect_client) (int *listen_fd);
+typedef int (*HPMHOOK_post_sockt_connect_client) (int retVal___, int listen_fd);
 typedef void (*HPMHOOK_pre_sockt_set_nonblocking) (int *fd, unsigned long *yes);
 typedef void (*HPMHOOK_post_sockt_set_nonblocking) (int fd, unsigned long yes);
 typedef void (*HPMHOOK_pre_sockt_set_defaultparse) (ParseFunc *defaultparse);

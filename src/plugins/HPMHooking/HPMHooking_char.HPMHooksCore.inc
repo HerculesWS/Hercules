@@ -1422,6 +1422,8 @@ struct {
 	struct HPMHookPoint *HP_sockt_flush_post;
 	struct HPMHookPoint *HP_sockt_flush_fifos_pre;
 	struct HPMHookPoint *HP_sockt_flush_fifos_post;
+	struct HPMHookPoint *HP_sockt_connect_client_pre;
+	struct HPMHookPoint *HP_sockt_connect_client_post;
 	struct HPMHookPoint *HP_sockt_set_nonblocking_pre;
 	struct HPMHookPoint *HP_sockt_set_nonblocking_post;
 	struct HPMHookPoint *HP_sockt_set_defaultparse_pre;
@@ -3059,6 +3061,8 @@ struct {
 	int HP_sockt_flush_post;
 	int HP_sockt_flush_fifos_pre;
 	int HP_sockt_flush_fifos_post;
+	int HP_sockt_connect_client_pre;
+	int HP_sockt_connect_client_post;
 	int HP_sockt_set_nonblocking_pre;
 	int HP_sockt_set_nonblocking_post;
 	int HP_sockt_set_defaultparse_pre;
