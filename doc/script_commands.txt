@@ -9610,7 +9610,8 @@ map.
 *waitingroom2bg("<mapname>", <x>, <y>, "<On Quit Event>", "<On Death Event>"{, "<npc name>"})
 
 <Mapname> and X Y coordinates refer to where the "respawn" base is, where
-the player group will respawn when they die.
+the player group will respawn when they die. If "-" is supplied for map name,
+player no longer automatically respawn on the battleground map.
 <On Quit Event> refers to an NPC label that attaches to the character and
 is run when they relog.
 <On Death Event> refers to an NPC label that attaches to the character and
@@ -9747,6 +9748,7 @@ mapflag%TAB%<map_name>%TAB%battleground%TAB%2
 
 This command will create a new BG Team.
 When player dies, they will be respawned map_name,X,Y as mentioned.
+If the map_name is "-", player don't automatically respawn on the battleground.
 
 Command will return -1 if BG Creation is failed,
 else it will return the BG ID(Also known as TeamID).
