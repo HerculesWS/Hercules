@@ -663,7 +663,6 @@ struct stylist_data_entry {
 	int boxid;
 	bool allow_doram;
 };
-VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
 struct barter_itemlist_entry {
 	int addId;
@@ -713,6 +712,7 @@ struct clif_interface {
 	char map_ip_str[128];
 	int map_fd;
 	int cmd;
+	VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */

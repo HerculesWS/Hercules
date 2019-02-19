@@ -21877,7 +21877,7 @@ static void clif_stylist_vector_init(void)
 {
 	int i;
 	for (i = 0; i < MAX_STYLIST_TYPE; i++) {
-		VECTOR_INIT(stylist_data[i]);
+		VECTOR_INIT(clif->stylist_data[i]);
 	}
 }
 
@@ -21885,7 +21885,7 @@ static void clif_stylist_vector_clear(void)
 {
 	int i;
 	for (i = 0; i < MAX_STYLIST_TYPE; i++) {
-		VECTOR_CLEAR(stylist_data[i]);
+		VECTOR_CLEAR(clif->stylist_data[i]);
 	}
 }
 
@@ -21952,8 +21952,8 @@ static bool clif_stylist_read_db_libconfig_sub(struct config_setting_t *it, int 
 	if (libconfig->setting_lookup_bool(it, "AllowDoram", &i32))
 		entry.allow_doram = (i32 == 0) ? false : true;
 
-	VECTOR_ENSURE(stylist_data[type], 1, 1);
-	VECTOR_PUSH(stylist_data[type], entry);
+	VECTOR_ENSURE(clif->stylist_data[type], 1, 1);
+	VECTOR_PUSH(clif->stylist_data[type], entry);
 	return true;
 }
 
@@ -21964,9 +21964,9 @@ static bool clif_style_change_validate_requirements(struct map_session_data *sd,
 
 	nullpo_retr(false, sd);
 	Assert_retr(false, type >= 0 && type < MAX_STYLIST_TYPE);
-	Assert_retr(false, idx >= 0 && idx < VECTOR_LENGTH(stylist_data[type]));
+	Assert_retr(false, idx >= 0 && idx < VECTOR_LENGTH(clif->stylist_data[type]));
 
-	entry = &VECTOR_INDEX(stylist_data[type], idx);
+	entry = &VECTOR_INDEX(clif->stylist_data[type], idx);
 
 	if (sd->status.class == JOB_SUMMONER && (entry->allow_doram == false))
 		return false;
@@ -22067,8 +22067,8 @@ static void clif_cz_req_style_change_sub(struct map_session_data *sd, int type, 
 	Assert_retv(idx > 0);
 	Assert_retv(type >= 0 && type < MAX_STYLIST_TYPE);
 
-	if ((idx - 1) < VECTOR_LENGTH(stylist_data[type])) {
-		entry = &VECTOR_INDEX(stylist_data[type], idx - 1);
+	if ((idx - 1) < VECTOR_LENGTH(clif->stylist_data[type])) {
+		entry = &VECTOR_INDEX(clif->stylist_data[type], idx - 1);
 		if (clif->style_change_validate_requirements(sd, type, idx - 1)) {
 			if (isitem == false)
 				pc->changelook(sd, type, entry->id);
