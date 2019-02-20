@@ -10270,9 +10270,9 @@ static bool atcommand_exec(const int fd, struct map_session_data *sd, const char
 			clif->message(fd, msg_fd(fd,143));
 			return false;
 		}
+		if (sd->block_action.commands) // *pcblock script command
+			return false;
 	}
-	if (sd->block_action.commands) // *pcblock script command
-		return false;
 
 	if (*message == atcommand->char_symbol)
 		is_atcommand = false;

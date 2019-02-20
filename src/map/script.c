@@ -15431,7 +15431,6 @@ static BUILDIN(atcommand)
 	struct map_session_data *sd, *dummy_sd = NULL;
 	int fd;
 	const char* cmd;
-	bool ret = true;
 
 	cmd = script_getstr(st,2);
 
@@ -15454,11 +15453,10 @@ static BUILDIN(atcommand)
 
 	if (!atcommand->exec(fd, sd, cmd, false)) {
 		ShowWarning("script: buildin_atcommand: failed to execute command '%s'\n", cmd);
-		script->reportsrc(st);
-		ret = false;
+		return false;
 	}
 	if (dummy_sd) aFree(dummy_sd);
-	return ret;
+	return true;
 }
 
 /**
