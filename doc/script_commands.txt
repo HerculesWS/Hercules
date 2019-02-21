@@ -6322,11 +6322,16 @@ The <type> listed are a bit mask of the following:
 	PCBLOCK_IMMUNE
 	PCBLOCK_SITSTAND
 	PCBLOCK_COMMANDS
+	PCBLOCK_NPCCLICK
+	PCBLOCK_EMOTION
 
 Examples:
 
 // Make the current attached player invulnerable, same as @monsterignore
 	setpcblock(PCBLOCK_IMMUNE, true);
+
+// Prevents the current char from using npc, shops or warp portals
+	setpcblock(PCBLOCK_NPCCLICK, true);
 
 // Prevents the current char from attacking or using skills
 	setpcblock(PCBLOCK_ATTACK|PCBLOCK_SKILL, true);

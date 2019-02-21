@@ -10988,6 +10988,11 @@ static void clif_parse_Emotion(int fd, struct map_session_data *sd)
 
 		pc->update_idle_time(sd, BCIDLE_EMOTION);
 
+		if (sd->block_action.emotion) {
+			clif->skill_fail(sd, 1, USESKILL_FAIL_LEVEL, 1, 0);
+			return;
+		}
+
 		if(battle_config.client_reshuffle_dice && emoticon>=E_DICE1 && emoticon<=E_DICE6) {// re-roll dice
 			emoticon = rnd()%6+E_DICE1;
 		}

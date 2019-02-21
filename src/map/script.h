@@ -464,16 +464,18 @@ enum script_iteminfo_types {
  * Player blocking actions related flags.
  */
 enum pcblock_action_flag {
-	PCBLOCK_NONE     = 0x00,
-	PCBLOCK_MOVE     = 0x01,
-	PCBLOCK_ATTACK   = 0x02,
-	PCBLOCK_SKILL    = 0x04,
-	PCBLOCK_USEITEM  = 0x08,
-	PCBLOCK_CHAT     = 0x10,
-	PCBLOCK_IMMUNE   = 0x20,
-	PCBLOCK_SITSTAND = 0x40,
-	PCBLOCK_COMMANDS = 0x80,
-	PCBLOCK_ALL      = 0xFF,
+	PCBLOCK_NONE     = 0x000,
+	PCBLOCK_MOVE     = 0x001,
+	PCBLOCK_ATTACK   = 0x002,
+	PCBLOCK_SKILL    = 0x004,
+	PCBLOCK_USEITEM  = 0x008,
+	PCBLOCK_CHAT     = 0x010,
+	PCBLOCK_IMMUNE   = 0x020,
+	PCBLOCK_SITSTAND = 0x040,
+	PCBLOCK_COMMANDS = 0x080,
+	PCBLOCK_NPCCLICK = 0x100,
+	PCBLOCK_EMOTION  = 0x200,
+	PCBLOCK_ALL      = 0x3FF,
 };
 
 /**
