@@ -18746,6 +18746,7 @@ static BUILDIN(setunitdata)
 	case UDT_SP:
 	case UDT_MAXSP:
 	case UDT_CLASS:
+	case UDT_MOBID:
 	case UDT_HEADBOTTOM:
 	case UDT_HEADMIDDLE:
 	case UDT_HEADTOP:
@@ -18921,6 +18922,7 @@ static BUILDIN(setunitdata)
 			md->vd->sex = (char) val;
 			break;
 		case UDT_CLASS:
+		case UDT_MOBID:
 			mob->class_change(md, val);
 			break;
 		case UDT_HAIRSTYLE:
@@ -19862,6 +19864,7 @@ static BUILDIN(getunitdata)
 		case UDT_AMOTION:     script_pushint(st, md->status.amotion); break;
 		case UDT_ADELAY:      script_pushint(st, md->status.adelay); break;
 		case UDT_DMOTION:     script_pushint(st, md->status.dmotion); break;
+		case UDT_MOBID:       script_pushint(st, md->class_); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Mob unit.\n", udtype);
 			script_pushint(st, 0);

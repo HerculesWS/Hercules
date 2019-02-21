@@ -431,6 +431,7 @@ enum script_unit_data_types {
 	UDT_STATPOINT,
 	UDT_ROBE,
 	UDT_BODY2,
+	UDT_MOBID,
 	UDT_MAX
 };
 
