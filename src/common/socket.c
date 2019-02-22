@@ -79,8 +79,6 @@
 static struct socket_interface sockt_s;
 struct socket_interface *sockt;
 
-static const char *SOCKET_CONF_FILENAME = "conf/common/socket.conf";
-
 #ifdef SEND_SHORTLIST
 // Add a fd to the shortlist so that it'll be recognized as a fd that needs
 // sending done on it.
@@ -1505,7 +1503,7 @@ static bool socket_config_read(const char *filename, bool imported)
 
 	// import should overwrite any previous configuration, so it should be called last
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
-		if (strcmp(import, filename) == 0 || strcmp(import, SOCKET_CONF_FILENAME) == 0) {
+		if (strcmp(import, filename) == 0 || strcmp(import, sockt->SOCKET_CONF_FILENAME) == 0) {
 			ShowWarning("socket_config_read: Loop detected! Skipping 'import'...\n");
 		} else {
 			if (!socket_config_read(import, true))
@@ -1714,7 +1712,7 @@ static void socket_init(void)
 	// Get initial local ips
 	sockt->naddr_ = sockt->getips(sockt->addr_,16);
 
-	socket_config_read(SOCKET_CONF_FILENAME, false);
+	socket_config_read(sockt->SOCKET_CONF_FILENAME, false);
 
 #ifndef SOCKET_EPOLL
 	// Select based Event Dispatcher:
@@ -2142,6 +2140,8 @@ static void socket_validateWfifo(int fd, size_t len)
 void socket_defaults(void)
 {
 	sockt = &sockt_s;
+
+	sockt->SOCKET_CONF_FILENAME = "conf/common/socket.conf";
 
 	sockt->fd_max = 0;
 	/* */
