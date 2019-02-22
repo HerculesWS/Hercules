@@ -178,6 +178,7 @@ struct socket_interface {
 	time_t stall_time;
 	time_t last_tick;
 
+	const char *SOCKET_CONF_FILENAME;
 	/* */
 	uint32 addr_[16];   // ip addresses of local host (host byte order)
 	int naddr_;   // # of ip addresses
