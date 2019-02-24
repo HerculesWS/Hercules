@@ -182,6 +182,15 @@ struct optdrop_group {
 	struct optdrop_group_optslot optslot[MAX_ITEM_OPTIONS]; //< Details of the options that will go in each slot
 };
 
+/**
+ * Stores data related to a monster drop (normal or mvp drop)
+ */
+struct mob_drop {
+	int nameid; //< Item ID
+	int p; //< Drop chance
+	struct optdrop_group *options; //< Option Drop Group associated with this drop (NULL if none)
+};
+
 struct mob_db {
 	int mob_id;
 	char sprite[NAME_LENGTH],name[NAME_LENGTH],jname[NAME_LENGTH];
@@ -190,8 +199,8 @@ struct mob_db {
 	short range2,range3;
 	short race2; // celest
 	unsigned short lv;
-	struct { int nameid, p; struct optdrop_group *options; } dropitem[MAX_MOB_DROP];
-	struct { int nameid,p; struct optdrop_group *options; } mvpitem[MAX_MVP_DROP];
+	struct mob_drop dropitem[MAX_MOB_DROP];
+	struct mob_drop mvpitem[MAX_MVP_DROP];
 	struct status_data status;
 	struct view_data vd;
 	unsigned int option;
