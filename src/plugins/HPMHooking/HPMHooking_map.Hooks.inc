@@ -51719,15 +51719,41 @@ int HP_mob_ai_hard(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-struct item_drop* HP_mob_setdropitem(int nameid, int qty, struct item_data *data) {
+void HP_mob_setdropitem_options(struct item *item, struct optdrop_group *options) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mob_setdropitem_options_pre > 0) {
+		void (*preHookFunc) (struct item **item, struct optdrop_group **options);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_setdropitem_options_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_setdropitem_options_pre[hIndex].func;
+			preHookFunc(&item, &options);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.setdropitem_options(item, options);
+	}
+	if (HPMHooks.count.HP_mob_setdropitem_options_post > 0) {
+		void (*postHookFunc) (struct item *item, struct optdrop_group *options);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_setdropitem_options_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_setdropitem_options_post[hIndex].func;
+			postHookFunc(item, options);
+		}
+	}
+	return;
+}
+struct item_drop* HP_mob_setdropitem(int nameid, struct optdrop_group *options, int qty, struct item_data *data) {
 	int hIndex = 0;
 	struct item_drop* retVal___ = NULL;
 	if (HPMHooks.count.HP_mob_setdropitem_pre > 0) {
-		struct item_drop* (*preHookFunc) (int *nameid, int *qty, struct item_data **data);
+		struct item_drop* (*preHookFunc) (int *nameid, struct optdrop_group **options, int *qty, struct item_data **data);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_setdropitem_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mob_setdropitem_pre[hIndex].func;
-			retVal___ = preHookFunc(&nameid, &qty, &data);
+			retVal___ = preHookFunc(&nameid, &options, &qty, &data);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -51735,13 +51761,13 @@ struct item_drop* HP_mob_setdropitem(int nameid, int qty, struct item_data *data
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mob.setdropitem(nameid, qty, data);
+		retVal___ = HPMHooks.source.mob.setdropitem(nameid, options, qty, data);
 	}
 	if (HPMHooks.count.HP_mob_setdropitem_post > 0) {
-		struct item_drop* (*postHookFunc) (struct item_drop* retVal___, int nameid, int qty, struct item_data *data);
+		struct item_drop* (*postHookFunc) (struct item_drop* retVal___, int nameid, struct optdrop_group *options, int qty, struct item_data *data);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_setdropitem_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mob_setdropitem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, nameid, qty, data);
+			retVal___ = postHookFunc(retVal___, nameid, options, qty, data);
 		}
 	}
 	return retVal___;
@@ -52634,6 +52660,87 @@ void HP_mob_item_dropratio_adjust(int nameid, int mob_id, int *rate_adjust) {
 	}
 	return;
 }
+bool HP_mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, int group_id, const char *group) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mob_read_optdrops_optslot_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **optslot, int *n, int *group_id, const char **group);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_optdrops_optslot_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_read_optdrops_optslot_pre[hIndex].func;
+			retVal___ = preHookFunc(&optslot, &n, &group_id, &group);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mob.read_optdrops_optslot(optslot, n, group_id, group);
+	}
+	if (HPMHooks.count.HP_mob_read_optdrops_optslot_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *optslot, int n, int group_id, const char *group);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_optdrops_optslot_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_read_optdrops_optslot_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, optslot, n, group_id, group);
+		}
+	}
+	return retVal___;
+}
+bool HP_mob_read_optdrops_group(struct config_setting_t *group, int n) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mob_read_optdrops_group_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **group, int *n);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_optdrops_group_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_read_optdrops_group_pre[hIndex].func;
+			retVal___ = preHookFunc(&group, &n);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mob.read_optdrops_group(group, n);
+	}
+	if (HPMHooks.count.HP_mob_read_optdrops_group_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *group, int n);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_optdrops_group_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_read_optdrops_group_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, group, n);
+		}
+	}
+	return retVal___;
+}
+bool HP_mob_read_optdrops_db(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mob_read_optdrops_db_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_optdrops_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_read_optdrops_db_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mob.read_optdrops_db();
+	}
+	if (HPMHooks.count.HP_mob_read_optdrops_db_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_optdrops_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_read_optdrops_db_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 void HP_mob_readdb(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mob_readdb_pre > 0) {
@@ -52896,6 +53003,33 @@ uint32 HP_mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t)
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_mode_sub_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_mode_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, entry, t);
+		}
+	}
+	return retVal___;
+}
+struct optdrop_group* HP_mob_read_db_drops_option(struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate) {
+	int hIndex = 0;
+	struct optdrop_group* retVal___ = NULL;
+	if (HPMHooks.count.HP_mob_read_db_drops_option_pre > 0) {
+		struct optdrop_group* (*preHookFunc) (struct mob_db **entry, const char **item_name, struct config_setting_t **drop, int **drop_rate);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_drops_option_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_read_db_drops_option_pre[hIndex].func;
+			retVal___ = preHookFunc(&entry, &item_name, &drop, &drop_rate);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mob.read_db_drops_option(entry, item_name, drop, drop_rate);
+	}
+	if (HPMHooks.count.HP_mob_read_db_drops_option_post > 0) {
+		struct optdrop_group* (*postHookFunc) (struct optdrop_group* retVal___, struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_drops_option_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_read_db_drops_option_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, entry, item_name, drop, drop_rate);
 		}
 	}
 	return retVal___;
@@ -53299,6 +53433,32 @@ void HP_mob_destroy_mob_db(int index) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_destroy_mob_db_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mob_destroy_mob_db_post[hIndex].func;
 			postHookFunc(index);
+		}
+	}
+	return;
+}
+void HP_mob_destroy_drop_groups(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mob_destroy_drop_groups_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_destroy_drop_groups_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_destroy_drop_groups_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.destroy_drop_groups();
+	}
+	if (HPMHooks.count.HP_mob_destroy_drop_groups_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_destroy_drop_groups_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_destroy_drop_groups_post[hIndex].func;
+			postHookFunc();
 		}
 	}
 	return;
