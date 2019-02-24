@@ -6777,10 +6777,10 @@ int do_init(int argc, char *argv[])
  *-------------------------------------*/
 void map_defaults(void)
 {
+	map->minimal = false;
 	map = &map_s;
 
 	/* */
-	map->minimal = false;
 	map->scriptcheck = false;
 	map->count = 0;
 	map->retval = EXIT_SUCCESS;
