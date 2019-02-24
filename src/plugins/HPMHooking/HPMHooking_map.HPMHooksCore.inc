@@ -3902,6 +3902,8 @@ struct {
 	struct HPMHookPoint *HP_mob_ai_lazy_post;
 	struct HPMHookPoint *HP_mob_ai_hard_pre;
 	struct HPMHookPoint *HP_mob_ai_hard_post;
+	struct HPMHookPoint *HP_mob_setdropitem_options_pre;
+	struct HPMHookPoint *HP_mob_setdropitem_options_post;
 	struct HPMHookPoint *HP_mob_setdropitem_pre;
 	struct HPMHookPoint *HP_mob_setdropitem_post;
 	struct HPMHookPoint *HP_mob_setlootitem_pre;
@@ -3968,6 +3970,14 @@ struct {
 	struct HPMHookPoint *HP_mob_drop_adjust_post;
 	struct HPMHookPoint *HP_mob_item_dropratio_adjust_pre;
 	struct HPMHookPoint *HP_mob_item_dropratio_adjust_post;
+	struct HPMHookPoint *HP_mob_read_optdrops_option_pre;
+	struct HPMHookPoint *HP_mob_read_optdrops_option_post;
+	struct HPMHookPoint *HP_mob_read_optdrops_optslot_pre;
+	struct HPMHookPoint *HP_mob_read_optdrops_optslot_post;
+	struct HPMHookPoint *HP_mob_read_optdrops_group_pre;
+	struct HPMHookPoint *HP_mob_read_optdrops_group_post;
+	struct HPMHookPoint *HP_mob_read_optdrops_db_pre;
+	struct HPMHookPoint *HP_mob_read_optdrops_db_post;
 	struct HPMHookPoint *HP_mob_readdb_pre;
 	struct HPMHookPoint *HP_mob_readdb_post;
 	struct HPMHookPoint *HP_mob_lookup_const_pre;
@@ -3988,6 +3998,8 @@ struct {
 	struct HPMHookPoint *HP_mob_read_db_mvpdrops_sub_post;
 	struct HPMHookPoint *HP_mob_read_db_mode_sub_pre;
 	struct HPMHookPoint *HP_mob_read_db_mode_sub_post;
+	struct HPMHookPoint *HP_mob_read_db_drops_option_pre;
+	struct HPMHookPoint *HP_mob_read_db_drops_option_post;
 	struct HPMHookPoint *HP_mob_read_db_stats_sub_pre;
 	struct HPMHookPoint *HP_mob_read_db_stats_sub_post;
 	struct HPMHookPoint *HP_mob_name_constants_pre;
@@ -4018,6 +4030,8 @@ struct {
 	struct HPMHookPoint *HP_mob_final_ratio_sub_post;
 	struct HPMHookPoint *HP_mob_destroy_mob_db_pre;
 	struct HPMHookPoint *HP_mob_destroy_mob_db_post;
+	struct HPMHookPoint *HP_mob_destroy_drop_groups_pre;
+	struct HPMHookPoint *HP_mob_destroy_drop_groups_post;
 	struct HPMHookPoint *HP_mob_skill_db_libconfig_pre;
 	struct HPMHookPoint *HP_mob_skill_db_libconfig_post;
 	struct HPMHookPoint *HP_mob_skill_db_libconfig_sub_pre;
@@ -10571,6 +10585,8 @@ struct {
 	int HP_mob_ai_lazy_post;
 	int HP_mob_ai_hard_pre;
 	int HP_mob_ai_hard_post;
+	int HP_mob_setdropitem_options_pre;
+	int HP_mob_setdropitem_options_post;
 	int HP_mob_setdropitem_pre;
 	int HP_mob_setdropitem_post;
 	int HP_mob_setlootitem_pre;
@@ -10637,6 +10653,14 @@ struct {
 	int HP_mob_drop_adjust_post;
 	int HP_mob_item_dropratio_adjust_pre;
 	int HP_mob_item_dropratio_adjust_post;
+	int HP_mob_read_optdrops_option_pre;
+	int HP_mob_read_optdrops_option_post;
+	int HP_mob_read_optdrops_optslot_pre;
+	int HP_mob_read_optdrops_optslot_post;
+	int HP_mob_read_optdrops_group_pre;
+	int HP_mob_read_optdrops_group_post;
+	int HP_mob_read_optdrops_db_pre;
+	int HP_mob_read_optdrops_db_post;
 	int HP_mob_readdb_pre;
 	int HP_mob_readdb_post;
 	int HP_mob_lookup_const_pre;
@@ -10657,6 +10681,8 @@ struct {
 	int HP_mob_read_db_mvpdrops_sub_post;
 	int HP_mob_read_db_mode_sub_pre;
 	int HP_mob_read_db_mode_sub_post;
+	int HP_mob_read_db_drops_option_pre;
+	int HP_mob_read_db_drops_option_post;
 	int HP_mob_read_db_stats_sub_pre;
 	int HP_mob_read_db_stats_sub_post;
 	int HP_mob_name_constants_pre;
@@ -10687,6 +10713,8 @@ struct {
 	int HP_mob_final_ratio_sub_post;
 	int HP_mob_destroy_mob_db_pre;
 	int HP_mob_destroy_mob_db_post;
+	int HP_mob_destroy_drop_groups_pre;
+	int HP_mob_destroy_drop_groups_post;
 	int HP_mob_skill_db_libconfig_pre;
 	int HP_mob_skill_db_libconfig_post;
 	int HP_mob_skill_db_libconfig_sub_pre;

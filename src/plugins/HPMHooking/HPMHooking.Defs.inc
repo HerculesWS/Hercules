@@ -5326,8 +5326,10 @@ typedef int (*HPMHOOK_pre_mob_ai_lazy) (int *tid, int64 *tick, int *id, intptr_t
 typedef int (*HPMHOOK_post_mob_ai_lazy) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_mob_ai_hard) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_mob_ai_hard) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-typedef struct item_drop* (*HPMHOOK_pre_mob_setdropitem) (int *nameid, int *qty, struct item_data **data);
-typedef struct item_drop* (*HPMHOOK_post_mob_setdropitem) (struct item_drop* retVal___, int nameid, int qty, struct item_data *data);
+typedef void (*HPMHOOK_pre_mob_setdropitem_options) (struct item **item, struct optdrop_group **options);
+typedef void (*HPMHOOK_post_mob_setdropitem_options) (struct item *item, struct optdrop_group *options);
+typedef struct item_drop* (*HPMHOOK_pre_mob_setdropitem) (int *nameid, struct optdrop_group **options, int *qty, struct item_data **data);
+typedef struct item_drop* (*HPMHOOK_post_mob_setdropitem) (struct item_drop* retVal___, int nameid, struct optdrop_group *options, int qty, struct item_data *data);
 typedef struct item_drop* (*HPMHOOK_pre_mob_setlootitem) (struct item **item);
 typedef struct item_drop* (*HPMHOOK_post_mob_setlootitem) (struct item_drop* retVal___, struct item *item);
 typedef int (*HPMHOOK_pre_mob_delay_item_drop) (int *tid, int64 *tick, int *id, intptr_t *data);
@@ -5392,6 +5394,14 @@ typedef unsigned int (*HPMHOOK_pre_mob_drop_adjust) (int *baserate, int *rate_ad
 typedef unsigned int (*HPMHOOK_post_mob_drop_adjust) (unsigned int retVal___, int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max);
 typedef void (*HPMHOOK_pre_mob_item_dropratio_adjust) (int *nameid, int *mob_id, int **rate_adjust);
 typedef void (*HPMHOOK_post_mob_item_dropratio_adjust) (int nameid, int mob_id, int *rate_adjust);
+typedef bool (*HPMHOOK_pre_mob_read_optdrops_option) (struct config_setting_t **option, struct optdrop_group_optslot **entry, int **idx, bool **calc_rate, int *slot, const char **group);
+typedef bool (*HPMHOOK_post_mob_read_optdrops_option) (bool retVal___, struct config_setting_t *option, struct optdrop_group_optslot *entry, int *idx, bool *calc_rate, int slot, const char *group);
+typedef bool (*HPMHOOK_pre_mob_read_optdrops_optslot) (struct config_setting_t **optslot, int *n, int *group_id, const char **group);
+typedef bool (*HPMHOOK_post_mob_read_optdrops_optslot) (bool retVal___, struct config_setting_t *optslot, int n, int group_id, const char *group);
+typedef bool (*HPMHOOK_pre_mob_read_optdrops_group) (struct config_setting_t **group, int *n);
+typedef bool (*HPMHOOK_post_mob_read_optdrops_group) (bool retVal___, struct config_setting_t *group, int n);
+typedef bool (*HPMHOOK_pre_mob_read_optdrops_db) (void);
+typedef bool (*HPMHOOK_post_mob_read_optdrops_db) (bool retVal___);
 typedef void (*HPMHOOK_pre_mob_readdb) (void);
 typedef void (*HPMHOOK_post_mob_readdb) (void);
 typedef bool (*HPMHOOK_pre_mob_lookup_const) (const struct config_setting_t **it, const char **name, int **value);
@@ -5412,6 +5422,8 @@ typedef void (*HPMHOOK_pre_mob_read_db_mvpdrops_sub) (struct mob_db **entry, str
 typedef void (*HPMHOOK_post_mob_read_db_mvpdrops_sub) (struct mob_db *entry, struct config_setting_t *t);
 typedef uint32 (*HPMHOOK_pre_mob_read_db_mode_sub) (struct mob_db **entry, struct config_setting_t **t);
 typedef uint32 (*HPMHOOK_post_mob_read_db_mode_sub) (uint32 retVal___, struct mob_db *entry, struct config_setting_t *t);
+typedef struct optdrop_group* (*HPMHOOK_pre_mob_read_db_drops_option) (struct mob_db **entry, const char **item_name, struct config_setting_t **drop, int **drop_rate);
+typedef struct optdrop_group* (*HPMHOOK_post_mob_read_db_drops_option) (struct optdrop_group* retVal___, struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate);
 typedef void (*HPMHOOK_pre_mob_read_db_stats_sub) (struct mob_db **entry, struct config_setting_t **t);
 typedef void (*HPMHOOK_post_mob_read_db_stats_sub) (struct mob_db *entry, struct config_setting_t *t);
 typedef void (*HPMHOOK_pre_mob_name_constants) (void);
@@ -5442,6 +5454,8 @@ typedef int (*HPMHOOK_pre_mob_final_ratio_sub) (union DBKey *key, struct DBData 
 typedef int (*HPMHOOK_post_mob_final_ratio_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef void (*HPMHOOK_pre_mob_destroy_mob_db) (int *index);
 typedef void (*HPMHOOK_post_mob_destroy_mob_db) (int index);
+typedef void (*HPMHOOK_pre_mob_destroy_drop_groups) (void);
+typedef void (*HPMHOOK_post_mob_destroy_drop_groups) (void);
 typedef bool (*HPMHOOK_pre_mob_skill_db_libconfig) (const char **filename, bool *ignore_missing);
 typedef bool (*HPMHOOK_post_mob_skill_db_libconfig) (bool retVal___, const char *filename, bool ignore_missing);
 typedef bool (*HPMHOOK_pre_mob_skill_db_libconfig_sub) (struct config_setting_t **it, int *n);
