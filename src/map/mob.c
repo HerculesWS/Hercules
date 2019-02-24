@@ -2666,11 +2666,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if (!(map->list[m].flag.nomvploot || type&1)) {
 			/* pose them randomly in the list -- so on 100% drop servers it wont always drop the same item */
-			struct {
-				int nameid;
-				int p;
-				struct optdrop_group *options;
-			} mdrop[MAX_MVP_DROP] = { { 0 } };
+			struct mob_drop mdrop[MAX_MVP_DROP] = { { 0 } };
 
 			for (i = 0; i < MAX_MVP_DROP; i++) {
 				int rpos;
