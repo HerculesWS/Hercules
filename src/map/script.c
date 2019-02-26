@@ -24920,6 +24920,19 @@ static BUILDIN(msgtable2)
 	return true;
 }
 
+static BUILDIN(msgtxt)
+{
+	int num = script_getnum(st, 2);
+	
+	if (num < 0 || num >= MAX_MSG) {
+		ShowWarning("buildin_msgtxt: Invalid range %d. Min: %d Max: %d\n", num, 0, MAX_MSG);
+		return false;
+	}
+
+	script_pushstrcopy(st, msg_txt(num));
+	return true;
+}
+
 // show/hide camera info
 static BUILDIN(camerainfo)
 {
@@ -25634,6 +25647,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(showdigit,"i?"),
 		BUILDIN_DEF(msgtable, "i?"),
 		BUILDIN_DEF(msgtable2, "iv?"),
+		BUILDIN_DEF(msgtxt, "i"),
 		// WoE SE
 		BUILDIN_DEF(agitstart2,""),
 		BUILDIN_DEF(agitend2,""),

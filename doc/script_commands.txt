@@ -2825,6 +2825,13 @@ If the character is sitting, it will return true, otherwise (standing) it will r
 In case no player is specified, the function will return the state of the attached player.
 
 ---------------------------------------
+
+*msgtxt(<number>)
+
+This function return the string defined from 'conf/message.conf'.
+return "??" if not found.
+
+---------------------------------------
 //=====================================
 2.1 - Item-Related Commands
 //=====================================
