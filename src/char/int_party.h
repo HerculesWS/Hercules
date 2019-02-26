@@ -60,7 +60,7 @@ struct inter_party_interface {
 	int (*check_exp_share) (struct party_data *p);
 	int (*check_empty) (struct party_data *p);
 	int (*parse_frommap) (int fd);
-	bool (*leave) (int party_id,int account_id, int char_id);
+	bool (*leave) (int party_id, int account_id, int char_id, int option);
 	int (*CharOnline) (int char_id, int party_id);
 	int (*CharOffline) (int char_id, int party_id);
 	struct party_data *(*create) (const char *name, int item, int item2, const struct party_member *leader);

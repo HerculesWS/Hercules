@@ -1903,7 +1903,7 @@ static int char_delete_char_sql(int char_id)
 
 	//Make the character leave the party [Skotlex]
 	if (party_id)
-		inter_party->leave(party_id, account_id, char_id);
+		inter_party->leave(party_id, account_id, char_id, 0);
 
 	/* delete char's pet */
 	//Delete the hatched pet if you have one...

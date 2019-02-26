@@ -576,6 +576,8 @@ struct Battle_Config {
 	int min_item_sell_price;
 
 	int display_fake_hp_when_dead;
+
+	int party_leader_leave;
 };
 
 /* criteria for battle_config.idletime_critera */

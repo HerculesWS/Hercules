@@ -1390,7 +1390,7 @@ static int mapif_parse_PartyChangeOption(int fd, int party_id, int account_id, i
 //Request leave party
 static int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 {
-	inter_party->leave(party_id, account_id, char_id);
+	inter_party->leave(party_id, account_id, char_id, 0);
 	return 0;
 }
 

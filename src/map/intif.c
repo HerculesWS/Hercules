@@ -662,7 +662,7 @@ static int intif_party_changeoption(int party_id, int account_id, int exp, int i
 }
 
 // Request to leave party
-static int intif_party_leave(int party_id, int account_id, int char_id)
+static int intif_party_leave(int party_id, int account_id, int char_id, int option)
 {
 	if (intif->CheckForCharServer())
 		return 0;

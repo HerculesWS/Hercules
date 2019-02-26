@@ -122,7 +122,7 @@ static struct map_session_data *party_sd_check(int party_id, int account_id, int
 		sd->status.party_id = party_id;// auto-join if not in a party
 	if (sd->status.party_id != party_id) {
 		//If player belongs to a different party, kick him out.
-		intif->party_leave(party_id,account_id,char_id);
+		intif->party_leave(party_id, account_id, char_id, battle->bc->party_leader_leave);
 		return NULL;
 	}
 
@@ -204,7 +204,7 @@ static void party_created(int account_id, int char_id, int fail, int party_id, c
 	if (!sd || sd->status.char_id != char_id || !sd->party_creating ) {
 		//Character logged off before creation ack?
 		if (!fail) //break up party since player could not be added to it.
-			intif->party_leave(party_id,account_id,char_id);
+			intif->party_leave(party_id, account_id, char_id, battle->bc->party_leader_leave);
 		return;
 	}
 
@@ -502,7 +502,7 @@ static int party_member_added(int party_id, int account_id, int char_id, int fla
 
 	if(sd == NULL || sd->status.char_id != char_id || !sd->party_joining ) {
 		if (!flag) //Char logged off before being accepted into party.
-			intif->party_leave(party_id,account_id,char_id);
+			intif->party_leave(party_id, account_id, char_id, battle->bc->party_leader_leave);
 		return 0;
 	}
 
@@ -514,7 +514,7 @@ static int party_member_added(int party_id, int account_id, int char_id, int fla
 
 	if (!p) {
 		ShowError("party_member_added: party %d not found.\n",party_id);
-		intif->party_leave(party_id,account_id,char_id);
+		intif->party_leave(party_id, account_id, char_id, battle->bc->party_leader_leave);
 		return 0;
 	}
 
@@ -576,7 +576,7 @@ static int party_removemember(struct map_session_data *sd, int account_id, const
 	if( i == MAX_PARTY )
 		return 0; // no such char in party
 
-	intif->party_leave(p->party.party_id,account_id,p->party.member[i].char_id);
+	intif->party_leave(p->party.party_id, account_id, p->party.member[i].char_id, battle->bc->party_leader_leave);
 	return 1;
 }
 
@@ -595,7 +595,7 @@ static int party_leave(struct map_session_data *sd)
 	if( i == MAX_PARTY )
 		return 0;
 
-	intif->party_leave(p->party.party_id,sd->status.account_id,sd->status.char_id);
+	intif->party_leave(p->party.party_id, sd->status.account_id, sd->status.char_id, battle->bc->party_leader_leave);
 	return 1;
 }
 

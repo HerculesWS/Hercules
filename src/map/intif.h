@@ -75,7 +75,7 @@ struct intif_interface {
 	int (*request_partyinfo) (int party_id, int char_id);
 	int (*party_addmember) (int party_id,struct party_member *member);
 	int (*party_changeoption) (int party_id, int account_id, int exp, int item);
-	int (*party_leave) (int party_id,int account_id, int char_id);
+	int (*party_leave) (int party_id, int account_id, int char_id, int option);
 	int (*party_changemap) (struct map_session_data *sd, int online);
 	int (*break_party) (int party_id);
 	int (*party_message) (int party_id, int account_id, const char *mes,int len);
