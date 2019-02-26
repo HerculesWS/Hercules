@@ -10159,7 +10159,7 @@ Applicable Data types (available as constants) -
 	UDT_LIFETIME:       LifeTime (int) - for summons.
 	UDT_MERC_KILLCOUNT: Kill count for mercenaries (int).
 
-returns 0 if value could not be retrieved.
+returns -1 if value could not be retrieved.
 
 ---------------------------------------
 

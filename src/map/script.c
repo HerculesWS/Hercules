@@ -19767,7 +19767,7 @@ static BUILDIN(getunitdata)
 
 	if (bl == NULL) {
 		ShowWarning("buildin_getunitdata: Error in finding object with given GID %d!\n", script_getnum(st, 2));
-		script_pushint(st, 0);
+		script_pushint(st, -1);
 		return false;
 	}
 
@@ -19776,7 +19776,7 @@ static BUILDIN(getunitdata)
 	/* Type check */
 	if (type < UDT_TYPE || type >= UDT_MAX) {
 		ShowError("buildin_getunitdata: Invalid unit data type %d provided.\n", type);
-		script_pushint(st, 0);
+		script_pushint(st, -1);
 		return false;
 	}
 
@@ -19784,7 +19784,7 @@ static BUILDIN(getunitdata)
 	if (type == UDT_MAPIDXY) {
 		if (data == NULL || !data_isreference(data)) {
 			ShowWarning("buildin_getunitdata: Error in argument 3. Please provide a reference variable to store values in.\n");
-			script_pushint(st, 0);
+			script_pushint(st, -1);
 			return false;
 		}
 
@@ -19794,7 +19794,7 @@ static BUILDIN(getunitdata)
 			sd = script->rid2sd(st);
 			if (sd == NULL) {
 				ShowWarning("buildin_getunitdata: Player not attached! Cannot use player variable %s.\n",name);
-				script_pushint(st, 0);
+				script_pushint(st, -1);
 				return true;// no player attached
 			}
 		}
@@ -19864,7 +19864,7 @@ static BUILDIN(getunitdata)
 		case UDT_DMOTION:     script_pushint(st, md->status.dmotion); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Mob unit.\n", udtype);
-			script_pushint(st, 0);
+			script_pushint(st, -1);
 			return false;
 		}
 	}
@@ -19921,7 +19921,7 @@ static BUILDIN(getunitdata)
 		case UDT_INTIMACY:    script_pushint(st, hd->homunculus.intimacy); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Homunculus unit.\n", udtype);
-			script_pushint(st, 0);
+			script_pushint(st, -1);
 			return false;
 		}
 	}
@@ -19978,7 +19978,7 @@ static BUILDIN(getunitdata)
 		case UDT_INTIMACY:    script_pushint(st, pd->pet.intimate); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Pet unit.\n", udtype);
-			script_pushint(st, 0);
+			script_pushint(st, -1);
 			return false;
 		}
 	}
@@ -20034,7 +20034,7 @@ static BUILDIN(getunitdata)
 		case UDT_LIFETIME:    script_pushint(st, mc->mercenary.life_time); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Mercenary unit.\n", udtype);
-			script_pushint(st, 0);
+			script_pushint(st, -1);
 			return false;
 		}
 	}
@@ -20088,7 +20088,7 @@ static BUILDIN(getunitdata)
 		case UDT_MASTERCID:   script_pushint(st, ed->elemental.char_id); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Elemental unit.\n", udtype);
-			script_pushint(st, 0);
+			script_pushint(st, -1);
 			return false;
 		}
 	}
@@ -20153,14 +20153,14 @@ static BUILDIN(getunitdata)
 		case UDT_BODY2:       script_pushint(st, nd->vd.body_style); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for NPC unit.\n", udtype);
-			script_pushint(st, 0);
+			script_pushint(st, -1);
 			return false;
 		}
 	}
 		break;
 	default:
 		ShowError("buildin_getunitdata: Unknown object!\n");
-		script_pushint(st, 0);
+		script_pushint(st, -1);
 		return false;
 	} // end of bl->type switch
 
