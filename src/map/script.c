@@ -25581,7 +25581,7 @@ static void script_parse_builtin(void)
 		/* Unit Data */
 		BUILDIN_DEF(setunitdata,"iiv??"),
 		BUILDIN_DEF(getunitdata,"ii?"),
-		BUILDIN_DEF(getunitname,"i"),
+		BUILDIN_DEF_DEPRECATED(getunitname,"i"), // Deprecated 2019-02-27
 		BUILDIN_DEF(setunitname,"is"),
 		BUILDIN_DEF(unitwalk,"ii?"),
 		BUILDIN_DEF(unitkill,"i"),
