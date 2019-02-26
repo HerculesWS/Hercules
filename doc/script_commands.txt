@@ -10048,7 +10048,6 @@ Applicable Data Types (available as constants) -
 	UDT_MAXSP:          MAX SP (int)
 	UDT_MASTERAID:      Master Account ID (for Summons) (int)
 	UDT_MASTERCID:      Master Char ID (for Summons) (int)
-	UDT_WALKTOXY:       Make a unit walk to certain co-ordinates. (Val1 = (int) x, Val2 = (int) y)
 	UDT_SPEED:          Unit Speed. (int)
 	UDT_MODE:           Mode (Mobs only) (int)
 	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
