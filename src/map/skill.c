@@ -2892,14 +2892,16 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			}
 		#endif /* MAGIC_REFLECTION_TYPE */
 		}
-		if(sc && sc->data[SC_MAGICROD] && src == dsrc) {
-			int sp = skill->get_sp(skill_id,skill_lv);
+		if (sc && sc->data[SC_MAGICROD] && src == dsrc) {
+			int sp = skill->get_sp(skill_id, skill_lv);
 			dmg.damage = dmg.damage2 = 0;
 			dmg.dmg_lv = ATK_MISS; //This will prevent skill additional effect from taking effect. [Skotlex]
 			sp = sp * sc->data[SC_MAGICROD]->val2 / 100;
-			if(skill_id == WZ_WATERBALL && skill_lv > 1)
-				sp = sp/((skill_lv|1)*(skill_lv|1)); //Estimate SP cost of a single water-ball
+			if (skill_id == WZ_WATERBALL && skill_lv > 1)
+				sp = sp / ((skill_lv | 1) * (skill_lv | 1)); //Estimate SP cost of a single water-ball
 			status->heal(bl, 0, sp, STATUS_HEAL_SHOWEFFECT);
+			if (battle->bc->magicrod_type == 1)
+				clif->skill_nodamage(bl, bl, SA_MAGICROD, sc->data[SC_MAGICROD]->val1, 1); // Animation used here in eAthena [Wolfie]
 		}
 	}
 
@@ -7881,8 +7883,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 			break;
 		case SA_MAGICROD:
-			clif->skill_nodamage(src,src,SA_MAGICROD,skill_lv,1);
-			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			if (battle->bc->magicrod_type == 0)
+				clif->skill_nodamage(src, src, SA_MAGICROD, skill_lv, 1); // Animation used here in official [Wolfie]
+			sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case SA_AUTOSPELL:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
