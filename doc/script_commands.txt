@@ -5317,6 +5317,27 @@ Check getitem2() to understand its expanded parameters.
 
 ---------------------------------------
 
+*delitemidx(<index>{, <amount>{, <account id>}})
+
+This command will remove the item at the given inventory index.
+
+If amount is not specified, it will remove all of the item.
+
+See getinventorylist() for an explanation on retrieving an inventory index.
+
+It is a good idea to check if the player actually has an item at the
+specified index. After deleting an item at an index, that index can
+remain empty until the player re-logs. If you try to delete an item at
+an invalid index or an index with no item, the script will be terminated
+with an error.
+
+Examples:
+
+//This will attempt to delete the item at inventory index 45.
+	delitemidx(45);
+
+---------------------------------------
+
 *countitem(<item id>)
 *countitem("<item name>")
 
