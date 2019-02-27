@@ -8616,6 +8616,58 @@ static BUILDIN(delitem2)
 	return false;
 }
 
+/**
+ * Deletes item at given index.
+ * delitem(<index>{, <account id>});
+ */
+static BUILDIN(delitemidx)
+{
+	struct map_session_data *sd;
+
+	if (script_hasdata(st, 3)) {
+		if ((sd = script->id2sd(st, script_getnum(st, 3))) == NULL) {
+			script_pushint(st, 0);
+			st->state = END;
+			return true;
+		}
+	} else {
+		if ((sd = script->rid2sd(st)) == NULL)
+			return true;
+	}
+
+	int i = script_getnum(st, 2);
+	if (i < 0 || i >= sd->status.inventorySize) {
+		ShowError("buildin_delitemidx: Index (%d) should be from 0-%d.\n", i, sd->status.inventorySize - 1);
+		st->state = END;
+		return false;
+	}
+
+	int nameid = sd->status.inventory[i].nameid;
+	struct item_data *item_data = itemdb->exists(nameid);
+	if (item_data == NULL) {
+		ShowError("buildin_delitemidx: Invalid Item ID (%d).\n", nameid);
+		st->state = END;
+		return false;
+	}
+
+	struct item it;
+	memset(&it, 0, sizeof(it));
+	it.nameid = nameid;
+
+	// nothing to do
+	if ((it.amount = sd->status.inventory[i].amount) <= 0)
+		return true;
+
+	// success
+	if (script->buildin_delitem_search(sd, &it, false))
+		return true;
+
+	ShowError("buildin_delitemidx: Failed to delete %d items at Index (%d) (AID = %d item_id = %d).\n", it.amount, i, sd->status.account_id, it.nameid);
+	st->state = END;
+	clif->scriptclose(sd, st->oid);
+	return false;
+}
+
 /*==========================================
  * Enables/Disables use of items while in an NPC [Skotlex]
  *------------------------------------------*/
@@ -25252,6 +25304,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(makeitem2,"viiiiiiii????"),
 		BUILDIN_DEF(delitem,"vi?"),
 		BUILDIN_DEF(delitem2,"viiiiiiii?"),
+		BUILDIN_DEF(delitemidx, "i?"),
 		BUILDIN_DEF2(enableitemuse,"enable_items",""),
 		BUILDIN_DEF2(disableitemuse,"disable_items",""),
 		BUILDIN_DEF(cutin,"si"),
