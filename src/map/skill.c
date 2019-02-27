@@ -1009,6 +1009,9 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 
+	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNOSKILL))
+		return 1; // block usage on 'noskill' cells [Wolfie]
+
 	if( skill_id == AL_TELEPORT && sd->skillitem == skill_id && sd->skillitemlv > 2 )
 		return 0; // Teleport lv 3 bypasses this check.[Inkfish]
 

@@ -373,6 +373,9 @@
 - `cell_landprotector`: 5
 - `cell_novending`: 6
 - `cell_nochat`: 7
+- `cell_icewall`: 8
+- `cell_noicewall`: 9
+- `cell_noskill`: 10
 
 ### Cell checks
 
@@ -388,6 +391,9 @@
 - `cell_chklandprotector`: 11
 - `cell_chknovending`: 12
 - `cell_chknochat`: 13
+- `cell_chkicewall`: 14
+- `cell_chknoicewall`: 15
+- `cell_chknoskill`: 16
 
 ### Bonuses / Parameter IDs
 

@@ -656,6 +656,7 @@ typedef enum {
 	CELL_NOCHAT,
 	CELL_ICEWALL,
 	CELL_NOICEWALL,
+	CELL_NOSKILL,
 
 } cell_t;
 
@@ -680,6 +681,7 @@ typedef enum {
 	CELL_CHKNOCHAT,
 	CELL_CHKICEWALL,
 	CELL_CHKNOICEWALL,
+	CELL_CHKNOSKILL,
 
 } cell_chk;
 
@@ -698,7 +700,8 @@ struct mapcell {
 		novending : 1,
 		nochat : 1,
 		icewall : 1,
-		noicewall : 1;
+		noicewall : 1,
+		noskill : 1;
 
 #ifdef CELL_NOSTACK
 	int cell_bl; //Holds amount of bls in this cell.
