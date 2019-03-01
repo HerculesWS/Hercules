@@ -228,7 +228,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 			close;
 		}
 	} else if (questprogress(9167) == 1) {
-		if (!getmercinfo(1)) {
+		if (!getmercinfo(MERCINFO_CLASS)) {
 			mes "[Tutorial Instructor]";
 			mes "You haven't gotten a mercenary yet.";
 			next;
