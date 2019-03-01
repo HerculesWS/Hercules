@@ -15617,16 +15617,9 @@ static BUILDIN(gethominfo)
 /// getmercinfo <type>[,<char id>];
 static BUILDIN(getmercinfo)
 {
-	int type;
 	struct map_session_data* sd;
-	struct mercenary_data* md;
-
-	type = script_getnum(st,2);
-
 	if (script_hasdata(st,3)) {
-		int char_id = script_getnum(st,3);
-
-		if ((sd = script->charid2sd(st, char_id)) == NULL) {
+		if ((sd = script->charid2sd(st, script_getnum(st,3))) == NULL) {
 			script_pushnil(st);
 			return true;
 		}
@@ -15635,27 +15628,30 @@ static BUILDIN(getmercinfo)
 			return true;
 	}
 
-	md = ( sd->status.mer_id && sd->md ) ? sd->md : NULL;
+	struct mercenary_data *md = (sd->status.mer_id && sd->md)? sd->md : NULL;
+	int type = script_getnum(st,2);
+	if (md == NULL) {
+		if (type == 2)
+			script_pushconststr(st, "");
+		else
+			script_pushint(st, 0);
+		return true;
+	}
 
-	switch( type )
-	{
-		case 0: script_pushint(st,md ? md->mercenary.mercenary_id : 0); break;
-		case 1: script_pushint(st,md ? md->mercenary.class_ : 0); break;
-		case 2:
-			if( md )
-				script_pushstrcopy(st,md->db->name);
-			else
-				script_pushconststr(st,"");
-			break;
-		case 3: script_pushint(st,md ? mercenary->get_faith(md) : 0); break;
-		case 4: script_pushint(st,md ? mercenary->get_calls(md) : 0); break;
-		case 5: script_pushint(st,md ? md->mercenary.kill_count : 0); break;
-		case 6: script_pushint(st,md ? mercenary->get_lifetime(md) : 0); break;
-		case 7: script_pushint(st,md ? md->db->lv : 0); break;
-		default:
-			ShowError("buildin_getmercinfo: Invalid type %d (char_id=%d).\n", type, sd->status.char_id);
-			script_pushnil(st);
-			return false;
+	switch (type) {
+	case MERCINFO_ID:        script_pushint(st, md->mercenary.mercenary_id); break;
+	case MERCINFO_CLASS:     script_pushint(st, md->mercenary.class_); break;
+	case MERCINFO_NAME:      script_pushstrcopy(st,md->db->name); break;
+	case MERCINFO_FAITH:     script_pushint(st, mercenary->get_faith(md)); break;
+	case MERCINFO_CALLS:     script_pushint(st, mercenary->get_calls(md)); break;
+	case MERCINFO_KILLCOUNT: script_pushint(st, md->mercenary.kill_count); break;
+	case MERCINFO_LIFETIME:  script_pushint(st, mercenary->get_lifetime(md)); break;
+	case MERCINFO_LEVEL:     script_pushint(st, md->db->lv); break;
+	case MERCINFO_GID:       script_pushint(st, md->bl.id); break;
+	default:
+		ShowError("buildin_getmercinfo: Invalid type %d (char_id=%d).\n", type, sd->status.char_id);
+		script_pushnil(st);
+		return false;
 	}
 
 	return true;
@@ -26115,6 +26111,17 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_MATK", ITEMINFO_MATK, false, false);
 	script->set_constant("ITEMINFO_VIEWSPRITE", ITEMINFO_VIEWSPRITE, false, false);
 	script->set_constant("ITEMINFO_TRADE", ITEMINFO_TRADE, false, false);
+
+	script->constdb_comment("getmercinfo options");
+	script->set_constant("MERCINFO_ID,", MERCINFO_ID, false, false);
+	script->set_constant("MERCINFO_CLASS", MERCINFO_CLASS, false, false);
+	script->set_constant("MERCINFO_NAME", MERCINFO_NAME, false, false);
+	script->set_constant("MERCINFO_FAITH", MERCINFO_FAITH, false, false);
+	script->set_constant("MERCINFO_CALLS", MERCINFO_CALLS, false, false);
+	script->set_constant("MERCINFO_KILLCOUNT", MERCINFO_KILLCOUNT, false, false);
+	script->set_constant("MERCINFO_LIFETIME", MERCINFO_LIFETIME, false, false);
+	script->set_constant("MERCINFO_LEVEL", MERCINFO_LEVEL, false, false);
+	script->set_constant("MERCINFO_GID", MERCINFO_GID, false, false);
 
 	script->constdb_comment("monster skill states");
 	script->set_constant("MSS_ANY", MSS_ANY, false, false);
