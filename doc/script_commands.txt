@@ -266,8 +266,8 @@ direction across Y. Walking into that area will trigger the NPC. If no
 'OnTouch:' special label is present in the NPC code, the execution will
 start from the beginning of the script, otherwise, it will start from the
 'OnTouch:' label. Monsters can also trigger the NPC, though the label
-'OnTouchNPC:' is used in this case. If player left area npc will called
-if present label 'OnUnTouch'.
+'OnTouchNPC:' is used in this case, and using mobattached() will return
+monster GID. If player left the area will trigger the label 'OnUnTouch'.
 
 The code part is the script code that will execute whenever the NPC is
 triggered. It may contain commands and function calls, descriptions of
@@ -6505,6 +6505,14 @@ other number for this parameter won't be recognized.
 
 ---------------------------------------
 
+*killmonstergid(<GID>);
+
+This command will kill the specific monster GID. The difference between
+this command and 'unitkill', is this command does not trigger monster's
+event label.
+
+---------------------------------------
+
 *strmobinfo(<type>, <monster id>)
 
 This function will return information about a monster record in the
@@ -6590,6 +6598,17 @@ will run as if by donpcevent().
 
 // Will summon a poring to fight for the character.
 	summon("--ja--", PORING);
+
+---------------------------------------
+
+*mobattached()
+
+This command will return RID of the monster running from 'OnTouchNPC:' label.
+
+
+//	Kill any monster entering npc's trigger area
+OnTouchNPC:
+	killmonstergid mobattached();
 
 ---------------------------------------
 
