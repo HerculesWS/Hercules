@@ -3851,6 +3851,10 @@ If the invoking player doesn't own a pet, this command will return
 
 *petstat(<flag>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 Returns current pet status, all are integers except name.
 Returns 0 or "" if the player doesn't have pets.
 
@@ -3863,6 +3867,9 @@ PET_INTIMATE
 
 Example:
 	.@i = petstat(PET_CLASS);
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use 'getpetinfo' instead.
 
 ---------------------------------------
 
