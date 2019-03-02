@@ -25845,6 +25845,8 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAX_REFINE",MAX_REFINE,false, false);
 	script->set_constant("MAX_MENU_OPTIONS", MAX_MENU_OPTIONS, false, false);
 	script->set_constant("MAX_MENU_LENGTH", MAX_MENU_LENGTH, false, false);
+	script->set_constant("MOB_CLONE_START", MOB_CLONE_START, false, false);
+	script->set_constant("MOB_CLONE_END", MOB_CLONE_END, false, false);
 
 	script->constdb_comment("status options");
 	script->set_constant("Option_Nothing",OPTION_NOTHING,false, false);

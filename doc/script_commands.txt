@@ -718,6 +718,8 @@ MAX_CHAT_USERS		- Maximum Chat users
 MAX_REFINE			- Maximum Refine level
 MAX_MENU_OPTIONS    - Maximum NPC menu options
 MAX_MENU_LENGTH     - Maximum NPC menu string length
+MOB_CLONE_START     - Clone ID start from this range
+MOB_CLONE_END       - Clone ID end with this range
 
 Send targets and status options are also hard-coded and can be found
 in 'doc/constants.md'.
