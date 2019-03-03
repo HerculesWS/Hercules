@@ -18580,6 +18580,7 @@ static void clif_search_store_info_ack(struct map_session_data *sd)
 ///     2 = "You cannot search anymore." (0x706)
 ///     3 = "You cannot search yet." (0x708)
 ///     4 = "No sale (purchase) information available." (0x705)
+///     362 = silent error
 static void clif_search_store_info_failed(struct map_session_data *sd, unsigned char reason)
 {
 #if PACKETVER >= 20100601
