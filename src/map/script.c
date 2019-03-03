@@ -9720,7 +9720,7 @@ static BUILDIN(statusup2)
 
 /*==========================================
 * Returns the number of stat points needed to change the specified stat by val.
-* needed_status_point(<type>,<val>{,<char id>}); [secretdataz]
+* needed_status_point(<type>,<val>); [secretdataz]
 *------------------------------------------*/
 static BUILDIN(needed_status_point)
 {
@@ -25296,7 +25296,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(downrefitem,"i?"),
 		BUILDIN_DEF(statusup,"i"),
 		BUILDIN_DEF(statusup2,"ii"),
-		BUILDIN_DEF(needed_status_point,"ii?"),
+		BUILDIN_DEF(needed_status_point, "ii"),
 		BUILDIN_DEF(bonus,"iv"),
 		BUILDIN_DEF2(bonus,"bonus2","ivi"),
 		BUILDIN_DEF2(bonus,"bonus3","ivii"),
