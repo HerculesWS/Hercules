@@ -2620,24 +2620,10 @@ typedef void (*HPMHOOK_pre_clif_pPrivateAirshipRequest) (int *fd, struct map_ses
 typedef void (*HPMHOOK_post_clif_pPrivateAirshipRequest) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_PrivateAirshipResponse) (struct map_session_data **sd, uint32 *flag);
 typedef void (*HPMHOOK_post_clif_PrivateAirshipResponse) (struct map_session_data *sd, uint32 flag);
-typedef void (*HPMHOOK_pre_clif_stylist_vector_init) (void);
-typedef void (*HPMHOOK_post_clif_stylist_vector_init) (void);
-typedef void (*HPMHOOK_pre_clif_stylist_vector_clear) (void);
-typedef void (*HPMHOOK_post_clif_stylist_vector_clear) (void);
-typedef bool (*HPMHOOK_pre_clif_stylist_read_db_libconfig) (void);
-typedef bool (*HPMHOOK_post_clif_stylist_read_db_libconfig) (bool retVal___);
-typedef bool (*HPMHOOK_pre_clif_stylist_read_db_libconfig_sub) (struct config_setting_t **it, int *idx, const char **source);
-typedef bool (*HPMHOOK_post_clif_stylist_read_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
-typedef bool (*HPMHOOK_pre_clif_style_change_validate_requirements) (struct map_session_data **sd, int *type, int16 *idx);
-typedef bool (*HPMHOOK_post_clif_style_change_validate_requirements) (bool retVal___, struct map_session_data *sd, int type, int16 idx);
-typedef void (*HPMHOOK_pre_clif_stylist_send_rodexitem) (struct map_session_data **sd, int *itemid);
-typedef void (*HPMHOOK_post_clif_stylist_send_rodexitem) (struct map_session_data *sd, int itemid);
 typedef void (*HPMHOOK_pre_clif_pReqStyleChange) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pReqStyleChange) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pReqStyleChange2) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pReqStyleChange2) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_cz_req_style_change_sub) (struct map_session_data **sd, int *type, int16 *idx, bool *isitem);
-typedef void (*HPMHOOK_post_clif_cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 typedef void (*HPMHOOK_pre_clif_style_change_response) (struct map_session_data **sd, enum stylist_shop *flag);
 typedef void (*HPMHOOK_post_clif_style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 typedef void (*HPMHOOK_pre_clif_pPetEvolution) (int *fd, struct map_session_data **sd);
@@ -7969,6 +7955,26 @@ typedef int (*HPMHOOK_post_strlib_strline_) (int retVal___, const char *str, siz
 typedef bool (*HPMHOOK_pre_strlib_bin2hex_) (char **output, const unsigned char **input, size_t *count);
 typedef bool (*HPMHOOK_post_strlib_bin2hex_) (bool retVal___, char *output, const unsigned char *input, size_t count);
 #endif // COMMON_STRLIB_H
+#ifdef MAP_STYLIST_H /* stylist */
+typedef void (*HPMHOOK_pre_stylist_init) (bool *minimal);
+typedef void (*HPMHOOK_post_stylist_init) (bool minimal);
+typedef void (*HPMHOOK_pre_stylist_final) (void);
+typedef void (*HPMHOOK_post_stylist_final) (void);
+typedef void (*HPMHOOK_pre_stylist_vector_init) (void);
+typedef void (*HPMHOOK_post_stylist_vector_init) (void);
+typedef void (*HPMHOOK_pre_stylist_vector_clear) (void);
+typedef void (*HPMHOOK_post_stylist_vector_clear) (void);
+typedef bool (*HPMHOOK_pre_stylist_read_db_libconfig) (void);
+typedef bool (*HPMHOOK_post_stylist_read_db_libconfig) (bool retVal___);
+typedef bool (*HPMHOOK_pre_stylist_read_db_libconfig_sub) (struct config_setting_t **it, int *idx, const char **source);
+typedef bool (*HPMHOOK_post_stylist_read_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+typedef void (*HPMHOOK_pre_stylist_request_style_change) (struct map_session_data **sd, int *type, int16 *idx, bool *isitem);
+typedef void (*HPMHOOK_post_stylist_request_style_change) (struct map_session_data *sd, int type, int16 idx, bool isitem);
+typedef bool (*HPMHOOK_pre_stylist_validate_requirements) (struct map_session_data **sd, int *type, int16 *idx);
+typedef bool (*HPMHOOK_post_stylist_validate_requirements) (bool retVal___, struct map_session_data *sd, int type, int16 idx);
+typedef void (*HPMHOOK_pre_stylist_send_rodexitem) (struct map_session_data **sd, int *itemid);
+typedef void (*HPMHOOK_post_stylist_send_rodexitem) (struct map_session_data *sd, int itemid);
+#endif // MAP_STYLIST_H
 #ifdef COMMON_STRLIB_H /* sv */
 typedef int (*HPMHOOK_pre_sv_parse_next) (struct s_svstate **svstate);
 typedef int (*HPMHOOK_post_sv_parse_next) (int retVal___, struct s_svstate *svstate);
