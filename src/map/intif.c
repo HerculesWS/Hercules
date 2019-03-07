@@ -1507,7 +1507,7 @@ static void intif_parse_GuildMemberWithdraw(int fd)
 // ACK guild member basic info
 static void intif_parse_GuildMemberInfoShort(int fd)
 {
-	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOL(fd,17),RFIFOL(fd,19));
+	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOL(fd,17),RFIFOL(fd,21));
 }
 
 // ACK guild break
