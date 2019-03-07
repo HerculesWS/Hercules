@@ -71,10 +71,6 @@ enum rodex_get_items;
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 #define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
 
-#ifndef MAX_STYLIST_TYPE
-#define MAX_STYLIST_TYPE LOOK_MAX
-#endif
-
 #define COLOR_CYAN    0x00ffffU
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U
@@ -654,16 +650,6 @@ struct attendance_entry {
 	int nameid;
 	int qty;
 };
-
-/* Stylist data [Asheraf/Hercules]*/
-struct stylist_data_entry {
-	int16 id;
-	int32 zeny;
-	int itemid;
-	int boxid;
-	bool allow_doram;
-};
-VECTOR_DECL(struct stylist_data_entry) stylist_data[MAX_STYLIST_TYPE];
 
 struct barter_itemlist_entry {
 	int addId;
@@ -1576,15 +1562,8 @@ struct clif_interface {
 	void (*pPrivateAirshipRequest) (int fd, struct map_session_data *sd);
 	void (*PrivateAirshipResponse) (struct map_session_data *sd, uint32 flag);
 
-	void (*stylist_vector_init) (void);
-	void (*stylist_vector_clear) (void);
-	bool (*stylist_read_db_libconfig) (void);
-	bool (*stylist_read_db_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
-	bool (*style_change_validate_requirements) (struct map_session_data *sd, int type, int16 idx);
-	void (*stylist_send_rodexitem) (struct map_session_data *sd, int itemid);
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
 	void (*pReqStyleChange2) (int fd, struct map_session_data *sd);
-	void (*cz_req_style_change_sub) (struct map_session_data *sd, int type, int16 idx, bool isitem);
 	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);

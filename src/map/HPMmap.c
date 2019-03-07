@@ -86,6 +86,7 @@
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/storage.h"
+#include "map/stylist.h"
 #include "map/trade.h"
 #include "map/unit.h"
 #include "map/vending.h"
