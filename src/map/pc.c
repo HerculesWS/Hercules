@@ -12335,7 +12335,8 @@ static bool pc_has_second_costume(struct map_session_data *sd)
 {
 	nullpo_retr(false, sd);
 
-	if ((sd->job & JOBL_THIRD) != 0)
+//	FIXME: JOB_SUPER_NOVICE_E(4190) is not supposed to be 3rd Job. (Issue#2383)
+	if ((sd->job & JOBL_THIRD) != 0 && (sd->job & MAPID_BASEMASK) != MAPID_NOVICE)
 		return true;
 	return false;
 }
