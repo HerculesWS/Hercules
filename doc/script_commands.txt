@@ -9618,6 +9618,11 @@ is run when they relog.
 <On Death Event> refers to an NPC label that attaches to the character and
 is run when they die. Can be "" for empty.
 
+If "-" is supplied for <mapname>, this will remove the 1 second automatic
+respawn on the battleground map. This allows for better manipulation of
+<On Death Event>. The player will have to be warped to desired location
+at the end of <On Death Event>.
+
 Unlike the prior command, the latter will attach a GROUP in a waiting room
 to the battleground, and sets the array $@arenamembers[0] where 0 holds
 the IDs of the first group, and 1 holds the IDs of the second.
@@ -9749,6 +9754,8 @@ mapflag%TAB%<map_name>%TAB%battleground%TAB%2
 
 This command will create a new BG Team.
 When player dies, they will be respawned map_name,X,Y as mentioned.
+If "-" is supplied for the map name, this will remove the 1 second automatic
+respawn on the battleground map.
 
 Command will return -1 if BG Creation is failed,
 else it will return the BG ID(Also known as TeamID).

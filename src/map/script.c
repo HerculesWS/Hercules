@@ -23687,7 +23687,7 @@ static BUILDIN(bg_create_team)
 	if( strcmp(map_name,"-") != 0 ) {
 		map_index = script->mapindexname2id(st,map_name);
 		if( map_index == 0 ) { // Invalid Map
-			script_pushint(st,0);
+			script_pushint(st, -1);
 			return true;
 		}
 	}
