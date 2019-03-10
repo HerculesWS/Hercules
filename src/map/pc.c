@@ -9008,6 +9008,13 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 	if (sd->disguise != -1)
 		pc->disguise(sd, -1);
 
+	// Fix atcommand @jobchange when the player changing from 3rd job having alternate body style into non-3rd job, crashing the client
+	if (pc->has_second_costume(sd) == false) {
+		sd->status.body = 0;
+		sd->vd.body_style = 0;
+		clif->changelook(&sd->bl, LOOK_BODY2, sd->vd.body_style);
+	}
+
 	status->set_viewdata(&sd->bl, class);
 	clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
 	if(sd->vd.cloth_color)
