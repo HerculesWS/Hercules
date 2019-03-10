@@ -446,32 +446,24 @@ function	script	F_MesColor	{
 function	script	F_GetTradeRestriction	{
 	.@trade = getiteminfo(getarg(0), ITEMINFO_TRADE);
 
-	if (.@trade == 0) {
+	if (.@trade == 0)
 		return "None";
-	}
 	.@trade$ = "";
-	if (.@trade & ITR_NODROP) {
+	if (.@trade & ITR_NODROP)
 		.@trade$ += "NoDrop|";
-	}
-	if (.@trade & ITR_NOTRADE) {
+	if (.@trade & ITR_NOTRADE)
 		.@trade$ += "NoTrade|";
-	}
-	if (.@trade & ITR_PARTNEROVERRIDE) {
+	if (.@trade & ITR_PARTNEROVERRIDE)
 		.@trade$ += "PartnerOverride|";
-	}
-	if (.@trade & ITR_NOSELLTONPC) {
+	if (.@trade & ITR_NOSELLTONPC)
 		.@trade$ += "NoSellToNpc|";
-	}
-	if (.@trade & ITR_NOSTORAGE) {
+	if (.@trade & ITR_NOSTORAGE)
 		.@trade$ += "NoStorage|";
-	}
-	if (.@trade & ITR_NOGSTORAGE) {
+	if (.@trade & ITR_NOGSTORAGE)
 		.@trade$ += "NoGuildStorage|";
-	}
-	if (.@trade & ITR_NOMAIL) {
+	if (.@trade & ITR_NOMAIL)
 		.@trade$ += "NoMail|";
-	}
-	if (.@trade & ITR_NOAUCTION) {
+	if (.@trade & ITR_NOAUCTION)
 		.@trade$ += "NoAuction|";
-	}
+	return .@trade$;
 }
