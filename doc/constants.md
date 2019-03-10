@@ -4282,6 +4282,18 @@
 - `ITEMINFO_VIEWSPRITE`: 16
 - `ITEMINFO_TRADE`: 17
 
+### getmercinfo options
+
+- `MERCINFO_ID,`: 0
+- `MERCINFO_CLASS`: 1
+- `MERCINFO_NAME`: 2
+- `MERCINFO_FAITH`: 3
+- `MERCINFO_CALLS`: 4
+- `MERCINFO_KILLCOUNT`: 5
+- `MERCINFO_LIFETIME`: 6
+- `MERCINFO_LEVEL`: 7
+- `MERCINFO_GID`: 8
+
 ### monster skill states
 
 - `MSS_ANY`: -1
