@@ -461,6 +461,23 @@ enum script_iteminfo_types {
 };
 
 /**
+ * Mercenary Info types.
+ */
+enum script_mercinfo_types {
+	MERCINFO_ID = 0,
+	MERCINFO_CLASS,
+	MERCINFO_NAME,
+	MERCINFO_FAITH,
+	MERCINFO_CALLS,
+	MERCINFO_KILLCOUNT,
+	MERCINFO_LIFETIME,
+	MERCINFO_LEVEL,
+	MERCINFO_GID,
+
+	MERCINFO_MAX
+};
+
+/**
  * Player blocking actions related flags.
  */
 enum pcblock_action_flag {
