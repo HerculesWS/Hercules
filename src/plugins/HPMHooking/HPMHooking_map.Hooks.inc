@@ -36612,15 +36612,15 @@ int HP_intif_party_changeoption(int party_id, int account_id, int exp, int item)
 	}
 	return retVal___;
 }
-int HP_intif_party_leave(int party_id, int account_id, int char_id) {
+int HP_intif_party_leave(int party_id, int account_id, int char_id, int option) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_intif_party_leave_pre > 0) {
-		int (*preHookFunc) (int *party_id, int *account_id, int *char_id);
+		int (*preHookFunc) (int *party_id, int *account_id, int *char_id, int *option);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_leave_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_intif_party_leave_pre[hIndex].func;
-			retVal___ = preHookFunc(&party_id, &account_id, &char_id);
+			retVal___ = preHookFunc(&party_id, &account_id, &char_id, &option);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -36628,13 +36628,13 @@ int HP_intif_party_leave(int party_id, int account_id, int char_id) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.intif.party_leave(party_id, account_id, char_id);
+		retVal___ = HPMHooks.source.intif.party_leave(party_id, account_id, char_id, option);
 	}
 	if (HPMHooks.count.HP_intif_party_leave_post > 0) {
-		int (*postHookFunc) (int retVal___, int party_id, int account_id, int char_id);
+		int (*postHookFunc) (int retVal___, int party_id, int account_id, int char_id, int option);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_leave_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_party_leave_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, party_id, account_id, char_id);
+			retVal___ = postHookFunc(retVal___, party_id, account_id, char_id, option);
 		}
 	}
 	return retVal___;

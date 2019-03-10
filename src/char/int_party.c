@@ -447,42 +447,54 @@ static bool inter_party_change_option(int party_id, int account_id, int exp, int
 }
 
 //Request leave party
-static bool inter_party_leave(int party_id, int account_id, int char_id)
+static bool inter_party_leave(int party_id, int account_id, int char_id, int option)
 {
-	struct party_data *p;
-	int i,j;
+	struct party_data *p = inter_party->fromsql(party_id);
 
-	p = inter_party->fromsql(party_id);
-	if( p == NULL )
-	{// Party does not exists?
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id) )
+	if (p == NULL) { // Party does not exists?
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `party_id` = '0' WHERE `party_id` = '%d'", char_db, party_id))
 			Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 
+	int i, j;
 	for (i = 0; i < MAX_PARTY; i++) {
-		if(p->party.member[i].account_id == account_id &&
-			p->party.member[i].char_id == char_id) {
+		if (p->party.member[i].account_id == account_id && p->party.member[i].char_id == char_id)
 			break;
-		}
 	}
+
 	if (i >= MAX_PARTY)
 		return false; //Member not found?
 
 	mapif->party_withdraw(party_id, account_id, char_id);
 
-	j = p->party.member[i].lv;
-	if (p->party.member[i].online > 0)
-		p->party.count--;
-	memset(&p->party.member[i], 0, sizeof(struct party_member));
-	p->size--;
-	if (j == p->min_lv || j == p->max_lv || p->family) {
-		if(p->family) p->family = 0; //Family state broken.
-		inter_party->check_lv(p);
+	if (p->party.member[i].leader && option == 1) {
+		p->party.member[i].account_id = 0;
+		for (j = 0; j < MAX_PARTY; j++) {
+			if (!p->party.member[j].account_id)
+				continue;
+			mapif->party_withdraw(party_id, p->party.member[j].account_id, p->party.member[j].char_id);
+			p->party.member[j].account_id = 0;
+		}
+		//Party gets deleted on the check_empty call below.
+	} else {
+		if (option == 1)
+			inter_party->tosql(&p->party, PS_DELMEMBER, i);
+		j = p->party.member[i].lv;
+		if (p->party.member[i].online > 0)
+			p->party.count--;
+		memset(&p->party.member[i], 0, sizeof(struct party_member));
+		p->size--;
+		if (j == p->min_lv || j == p->max_lv || p->family) {
+			if (p->family)
+				p->family = 0; //Family state broken.
+			inter_party->check_lv(p);
+		}
 	}
 
 	if (inter_party->check_empty(p) == 0) {
-		inter_party->tosql(&p->party, PS_DELMEMBER, i);
+		if (option == 0)
+			inter_party->tosql(&p->party, PS_DELMEMBER, i);
 		mapif->party_info(-1, &p->party, 0);
 	}
 	return true;
