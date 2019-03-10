@@ -613,7 +613,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 	mes "Don't hang around here doing nothing. This is my area!";
 	close;
 L_Start:
-	if (getmercinfo(1)) {
+	if (getmercinfo(MERCINFO_CLASS)) {
 		mes "[Test Instructor, Teardrop]";
 		mes "Stop!";
 		next;
@@ -1491,7 +1491,7 @@ job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 			setquest 8261;
 			close;
 		}
-		if (getmercinfo(1) == 2034) {
+		if (getmercinfo(MERCINFO_CLASS) == M_DESERT_WOLF_B) {
 			erasequest 8261;
 			mes "Good! Then I'll start the test right now!";
 			next;

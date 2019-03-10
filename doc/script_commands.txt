@@ -9845,17 +9845,18 @@ If char id is given, the information of that character is retrieved
 instead. Type specifies what information to retrieve and can be one of the
 following:
 
-	0 - Database ID
-	1 - Class
-	2 - Name
-	3 - Faith value for this mercenary's guild, if any
-	4 - Calls value for this mercenary's guild, if any
-	5 - Kill count
-	6 - Remaining life time in msec
-	7 - Level
+	MERCINFO_ID        - Mercenary Database ID
+	MERCINFO_CLASS     - Mercenary Class
+	MERCINFO_NAME      - Mercenary Name
+	MERCINFO_FAITH     - Mercenary faith value for this mercenary's guild, if any
+	MERCINFO_CALLS     - Mercenary calls value for this mercenary's guild, if any
+	MERCINFO_KILLCOUNT - Mercenary kill count
+	MERCINFO_LIFETIME  - Mercenary remaining life time in mili-second
+	MERCINFO_LEVEL     - Mercenary Level
+	MERCINFO_GID       - Mercenary Game ID
 
-If the character does not have a mercenary, the command returns ""
-for name and 0 for all other types.
+If the character does not have a mercenary, the command returns "" for MERCINFO_NAME
+and 0 for all other types.
 
 ---------------------------------------
 //=====================================
