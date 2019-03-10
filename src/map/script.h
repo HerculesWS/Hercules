@@ -961,6 +961,7 @@ struct script_interface {
 	/* */
 	void (*hardcoded_constants) (void);
 	unsigned short (*mapindexname2id) (struct script_state *st, const char* name);
+	int16 (*mapname2mapid) (struct script_state *st, const char *name);
 	int (*string_dup) (char *str);
 	void (*load_translations) (void);
 	bool (*load_translation_addstring) (const char *file, uint8 lang_id, const char *msgctxt, const struct script_string_buf *msgid, const struct script_string_buf *msgstr);

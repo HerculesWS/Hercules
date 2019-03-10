@@ -154,8 +154,10 @@ static bool guild_read_castledb(char *str[], int columns, int current)
 
 	nullpo_retr(false, str);
 	index = mapindex->name2id(str[1]);
-	if (map->mapindex2mapid(index) < 0) // Map not found or on another map-server
+	if (map->mapindex2mapid(index) < 0) { // Map not found or on another map-server
+		ShowWarning("guild_read_castledb: Map '%s' not found in index list!\n", str[1]);
 		return false;
+	}
 
 	CREATE(gc, struct guild_castle, 1);
 	gc->castle_id = atoi(str[0]);
