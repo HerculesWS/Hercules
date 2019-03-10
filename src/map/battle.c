@@ -7413,6 +7413,7 @@ static const struct battle_data {
 	{ "min_item_buy_price",                 &battle_config.min_item_buy_price,              1,      0,      INT_MAX,        },
 	{ "min_item_sell_price",                &battle_config.min_item_sell_price,             0,      0,      INT_MAX,        },
 	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1,              },
+	{ "creator_fullprotect",                &battle_config.creator_fullprotect,             0,      0,      2,              },
 };
 
 static bool battle_set_value_sub(int index, int value)
