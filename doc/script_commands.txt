@@ -6334,7 +6334,7 @@ Examples:
 	setpcblock(PCBLOCK_ATTACK|PCBLOCK_SKILL, true);
 
 // Re-enables attack, skills and item use
-	setpcblock(PCBLOCK_ATTACK|PCBLOCK_SKILL|PCBLOCK_ITEM, false);
+	setpcblock(PCBLOCK_ATTACK|PCBLOCK_SKILL|PCBLOCK_USEITEM, false);
 
 // checkpcblock related checks
 	if ((checkpcblock() & PCBLOCK_IMMUNE) != 0)
