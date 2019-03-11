@@ -3210,7 +3210,7 @@ OnTouch:
 
 OnTouchNPC:
 	emotion e_an;
-	//emotion e_gg,1; //Emote on monster - unsupported
+	unitemote mobattached(), e_gg;
 	end;
 
 OnMyMobDead:

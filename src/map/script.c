@@ -11095,6 +11095,21 @@ static BUILDIN(killmonsterall)
 	return true;
 }
 
+static BUILDIN(killmonstergid)
+{
+	int mobgid = script_getnum(st, 2);
+	struct mob_data *md = map->id2md(mobgid);
+
+	if (md == NULL) {
+		ShowWarning("buildin_killmonstergid: Error in finding monster GID '%d' or the target is not a monster.\n", mobgid);
+		return false;
+	}
+
+	md->state.npc_killmonster = 1;
+	status_kill(&md->bl);
+	return true;
+}
+
 /*==========================================
  * Creates a clone of a player.
  * clone map, x, y, event, char_id, master_id, mode, flag, duration
@@ -11726,6 +11741,18 @@ static BUILDIN(playerattached)
 		script_pushint(st,0);
 	else
 		script_pushint(st,st->rid);
+	return true;
+}
+
+/*==========================================
+ * Used by OnTouchNPC: label to return monster GID
+ *------------------------------------------*/
+static BUILDIN(mobattached)
+{
+	if (st->rid == 0 || map->id2md(st->rid) == NULL)
+		script_pushint(st, 0);
+	else
+		script_pushint(st, st->rid);
 	return true;
 }
 
@@ -25354,6 +25381,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(areamonster,"siiiisii???"),
 		BUILDIN_DEF(killmonster,"ss?"),
 		BUILDIN_DEF(killmonsterall,"s?"),
+		BUILDIN_DEF(killmonstergid, "i"),
 		BUILDIN_DEF(clone,"siisi????"),
 		BUILDIN_DEF(doevent,"s"),
 		BUILDIN_DEF(donpcevent,"s"),
@@ -25370,6 +25398,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(attachnpctimer,"?"), // attached the player id to the npc timer [Celest]
 		BUILDIN_DEF(detachnpctimer,"?"), // detached the player id from the npc timer [Celest]
 		BUILDIN_DEF(playerattached,""), // returns id of the current attached player. [Skotlex]
+		BUILDIN_DEF(mobattached, ""),
 		BUILDIN_DEF(announce,"si?????"),
 		BUILDIN_DEF(mapannounce,"ssi?????"),
 		BUILDIN_DEF(areaannounce,"siiiisi?????"),
