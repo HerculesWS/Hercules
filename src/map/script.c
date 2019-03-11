@@ -18679,6 +18679,10 @@ static BUILDIN(getunittype)
  * @param4  Value#2     Optional int value to be passed for certain data types.
  * @param5  Value#3     Optional int value to be passed for certain data types.
  * @return  1 on success, 0 on failure.
+
+ Note: Please make this script command only modify ONE INTEGER value.
+ If need to modify string type data, or having multiple arguments, please
+ introduce a new script command.
  */
 static BUILDIN(setunitdata)
 {
@@ -18704,7 +18708,7 @@ static BUILDIN(setunitdata)
 		return false;
 	}
 
-	/* Mandatory Argument 3 */
+	/* Mandatory Argument 3. Subject to deprecate. */
 	if (type == UDT_MAPIDXY) {
 		if (!script_isstringtype(st, 4)) {
 			ShowError("buildin_setunitdata: Invalid data type for argument #3.\n");
@@ -19796,6 +19800,10 @@ static BUILDIN(setunitdata)
  * @param2  DataType    Type of Data to be set for the unit.
  * @param3  Variable    array reference to store data into. (used for UDT_MAPIDXY)
  * @return  0 on failure, <value> on success
+
+ Note: Please make this script command only return ONE INTEGER value.
+ If the unit data having multiple arguments, or need to return in array,
+ please introduce a new script command.
  */
 static BUILDIN(getunitdata)
 {
@@ -19823,7 +19831,7 @@ static BUILDIN(getunitdata)
 		return false;
 	}
 
-	/* Argument checks */
+	/* Argument checks. Subject to deprecate */
 	if (type == UDT_MAPIDXY) {
 		if (data == NULL || !data_isreference(data)) {
 			ShowWarning("buildin_getunitdata: Error in argument 3. Please provide a reference variable to store values in.\n");
