@@ -465,7 +465,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "hCSData", sizeof(struct hCSData), SERVER_TYPE_MAP },
 		{ "merge_item", sizeof(struct merge_item), SERVER_TYPE_MAP },
 		{ "s_packet_db", sizeof(struct s_packet_db), SERVER_TYPE_MAP },
-		{ "stylist_data_entry", sizeof(struct stylist_data_entry), SERVER_TYPE_MAP },
 	#else
 		#define MAP_CLIF_H
 	#endif // MAP_CLIF_H
@@ -963,6 +962,12 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_STORAGE_H
 	#endif // MAP_STORAGE_H
+	#ifdef MAP_STYLIST_H
+		{ "stylist_data_entry", sizeof(struct stylist_data_entry), SERVER_TYPE_MAP },
+		{ "stylist_interface", sizeof(struct stylist_interface), SERVER_TYPE_MAP },
+	#else
+		#define MAP_STYLIST_H
+	#endif // MAP_STYLIST_H
 	#ifdef MAP_TRADE_H
 		{ "trade_interface", sizeof(struct trade_interface), SERVER_TYPE_MAP },
 	#else

@@ -56,6 +56,7 @@
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/storage.h"
+#include "map/stylist.h"
 #include "map/rodex.h"
 #include "map/trade.h"
 #include "map/unit.h"
@@ -6197,6 +6198,7 @@ int do_final(void)
 	vending->final();
 	rodex->final();
 	achievement->final();
+	stylist->final();
 
 	HPM_map_do_final();
 
@@ -6404,6 +6406,7 @@ static void map_load_defaults(void)
 	achievement_defaults();
 	npc_chat_defaults();
 	rodex_defaults();
+	stylist_defaults();
 }
 /**
  * --run-once handler
@@ -6724,6 +6727,7 @@ int do_init(int argc, char *argv[])
 	duel->init(minimal);
 	vending->init(minimal);
 	rodex->init(minimal);
+	stylist->init(minimal);
 
 	if (map->scriptcheck) {
 		bool failed = map->extra_scripts_count > 0 ? false : true;

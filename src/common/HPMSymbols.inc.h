@@ -281,6 +281,9 @@ struct stringbuf_interface *StrBuf;
 #ifdef COMMON_STRLIB_H /* strlib */
 struct strlib_interface *strlib;
 #endif // COMMON_STRLIB_H
+#ifdef MAP_STYLIST_H /* stylist */
+struct stylist_interface *stylist;
+#endif // MAP_STYLIST_H
 #ifdef COMMON_STRLIB_H /* sv */
 struct sv_interface *sv;
 #endif // COMMON_STRLIB_H
@@ -646,6 +649,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("strlib", strlib))
 		return "strlib";
 #endif // COMMON_STRLIB_H
+#ifdef MAP_STYLIST_H /* stylist */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("stylist", stylist))
+		return "stylist";
+#endif // MAP_STYLIST_H
 #ifdef COMMON_STRLIB_H /* sv */
 	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("sv", sv))
 		return "sv";

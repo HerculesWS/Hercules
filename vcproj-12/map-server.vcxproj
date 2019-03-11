@@ -219,6 +219,7 @@
     <ClInclude Include="..\src\map\skill.h" />
     <ClInclude Include="..\src\map\status.h" />
     <ClInclude Include="..\src\map\storage.h" />
+    <ClInclude Include="..\src\map\stylist.h" />
     <ClInclude Include="..\src\map\trade.h" />
     <ClInclude Include="..\src\map\unit.h" />
     <ClInclude Include="..\src\map\vending.h" />
@@ -293,6 +294,7 @@
     <ClCompile Include="..\src\map\skill.c" />
     <ClCompile Include="..\src\map\status.c" />
     <ClCompile Include="..\src\map\storage.c" />
+    <ClCompile Include="..\src\map\stylist.c" />
     <ClCompile Include="..\src\map\trade.c" />
     <ClCompile Include="..\src\map\unit.c" />
     <ClCompile Include="..\src\map\vending.c" />

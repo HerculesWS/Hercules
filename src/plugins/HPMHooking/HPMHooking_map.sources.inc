@@ -85,6 +85,7 @@ HPMHooks.source.status = *status;
 HPMHooks.source.storage = *storage;
 HPMHooks.source.StrBuf = *StrBuf;
 HPMHooks.source.strlib = *strlib;
+HPMHooks.source.stylist = *stylist;
 HPMHooks.source.sv = *sv;
 HPMHooks.source.sysinfo = *sysinfo;
 HPMHooks.source.thread = *thread;

@@ -52,6 +52,7 @@
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
+#include "map/stylist.h"
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/unit.h"
@@ -21874,162 +21875,23 @@ static void clif_private_airship_response(struct map_session_data *sd, uint32 fl
 #endif
 }
 
-static void clif_stylist_vector_init(void)
-{
-	int i;
-	for (i = 0; i < MAX_STYLIST_TYPE; i++) {
-		VECTOR_INIT(stylist_data[i]);
-	}
-}
-
-static void clif_stylist_vector_clear(void)
-{
-	int i;
-	for (i = 0; i < MAX_STYLIST_TYPE; i++) {
-		VECTOR_CLEAR(stylist_data[i]);
-	}
-}
-
-static bool clif_stylist_read_db_libconfig(void)
-{
-	struct config_t stylist_conf;
-	struct config_setting_t *stylist = NULL, *it = NULL;
-	const char *config_filename = "db/stylist_db.conf"; // FIXME hardcoded name
-	int i = 0;
-
-	if (!libconfig->load_file(&stylist_conf, config_filename))
-		return false;
-
-	if ((stylist = libconfig->setting_get_member(stylist_conf.root, "stylist_db")) == NULL) {
-		ShowError("can't read %s\n", config_filename);
-		return false;
-	}
-
-	clif->stylist_vector_clear();
-
-	while ((it = libconfig->setting_get_elem(stylist, i++))) {
-		clif->stylist_read_db_libconfig_sub(it, i - 1, config_filename);
-	}
-
-	libconfig->destroy(&stylist_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
-	return true;
-}
-
-static bool clif_stylist_read_db_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
-{
-	struct stylist_data_entry entry = { 0 };
-	int i32 = 0, type = 0;
-	int64 i64 = 0;
-
-	nullpo_ret(it);
-	nullpo_ret(source);
-
-	if (!itemdb->lookup_const(it, "Type", &type) || type >= MAX_STYLIST_TYPE || type < 0) {
-		ShowWarning("clif_stylist_read_db_libconfig_sub: Invalid or missing Type (%d) in \"%s\", entry #%d, skipping.\n", type, source, idx);
-		return false;
-	}
-	if (!itemdb->lookup_const(it, "Id", &i32) || i32 < 0) {
-		ShowWarning("clif_stylist_read_db_libconfig_sub: Invalid or missing Id (%d) in \"%s\", entry #%d, skipping.\n", i32, source, idx);
-		return false;
-	}
-	entry.id = i32;
-
-	if (libconfig->setting_lookup_int64(it, "Zeny", &i64)) {
-		if (i64 > MAX_ZENY) {
-			ShowWarning("clif_stylist_read_db_libconfig_sub: zeny is too big in \"%s\", entry #%d, capping to MAX_ZENY.\n", source, idx);
-			entry.zeny = MAX_ZENY;
-		} else {
-			entry.zeny = (int)i64;
-		}
-	}
-
-	if (itemdb->lookup_const(it, "ItemID", &i32))
-		entry.itemid = i32;
-
-	if (itemdb->lookup_const(it, "BoxItemID", &i32))
-		entry.boxid = i32;
-
-	if (libconfig->setting_lookup_bool(it, "AllowDoram", &i32))
-		entry.allow_doram = (i32 == 0) ? false : true;
-
-	VECTOR_ENSURE(stylist_data[type], 1, 1);
-	VECTOR_PUSH(stylist_data[type], entry);
-	return true;
-}
-
-static bool clif_style_change_validate_requirements(struct map_session_data *sd, int type, int16 idx)
-{
-	struct item it;
-	struct stylist_data_entry *entry;
-
-	nullpo_retr(false, sd);
-	Assert_retr(false, type >= 0 && type < MAX_STYLIST_TYPE);
-	Assert_retr(false, idx >= 0 && idx < VECTOR_LENGTH(stylist_data[type]));
-
-	entry = &VECTOR_INDEX(stylist_data[type], idx);
-
-	if (sd->status.class == JOB_SUMMONER && (entry->allow_doram == false))
-		return false;
-
-	if (entry->id >= 0) {
-		if (entry->zeny != 0) {
-			if (sd->status.zeny < entry->zeny)
-				return false;
-
-			sd->status.zeny -= entry->zeny;
-			clif->updatestatus(sd, SP_ZENY);
-		} else if (entry->itemid != 0) {
-			it.nameid = entry->itemid;
-			it.amount = 1;
-			return script->buildin_delitem_search(sd, &it, false);
-		} else if (entry->boxid != 0) {
-			it.nameid = entry->boxid;
-			it.amount = 1;
-			return script->buildin_delitem_search(sd, &it, false);
-		}
-		return true;
-	}
-	return false;
-}
-static void clif_stylist_send_rodexitem(struct map_session_data *sd, int itemid)
-{
-	struct rodex_message msg = { 0 };
-
-	nullpo_retv(sd);
-
-	msg.receiver_id = sd->status.char_id;
-	msg.items[0].item.nameid = itemid;
-	msg.items[0].item.amount = 1;
-	msg.items[0].item.identify = 1;
-	msg.type = MAIL_TYPE_NPC | MAIL_TYPE_ITEM;
-
-	safestrncpy(msg.sender_name, msg_txt(366), NAME_LENGTH);
-	safestrncpy(msg.title, msg_txt(367), RODEX_TITLE_LENGTH);
-	safestrncpy(msg.body, msg_txt(368), MAIL_BODY_LENGTH);
-	msg.send_date = (int)time(NULL);
-	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
-
-	intif->rodex_sendmail(&msg);
-}
-
 static void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_cz_req_style_change(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_REQ_STYLE_CHANGE *p = RP2PTR(fd);
 
 	if (p->HeadStyle > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HAIR, p->HeadStyle, false);
+		stylist->request_style_change(sd, LOOK_HAIR, p->HeadStyle, false);
 	if (p->HeadPalette > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HAIR_COLOR, p->HeadPalette, false);
+		stylist->request_style_change(sd, LOOK_HAIR_COLOR, p->HeadPalette, false);
 	if (p->BodyPalette > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_CLOTHES_COLOR, p->BodyPalette, false);
+		stylist->request_style_change(sd, LOOK_CLOTHES_COLOR, p->BodyPalette, false);
 	if (p->TopAccessory > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HEAD_TOP, p->TopAccessory, true);
+		stylist->request_style_change(sd, LOOK_HEAD_TOP, p->TopAccessory, true);
 	if (p->MidAccessory > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HEAD_MID, p->MidAccessory, true);
+		stylist->request_style_change(sd, LOOK_HEAD_MID, p->MidAccessory, true);
 	if (p->BottomAccessory > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
+		stylist->request_style_change(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
 	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
 }
@@ -22040,43 +21902,24 @@ static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
 	const struct PACKET_CZ_REQ_STYLE_CHANGE2 *p = RP2PTR(fd);
 
 	if (p->HeadStyle > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HAIR, p->HeadStyle, false);
+		stylist->request_style_change(sd, LOOK_HAIR, p->HeadStyle, false);
 	if (p->HeadPalette > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HAIR_COLOR, p->HeadPalette, false);
+		stylist->request_style_change(sd, LOOK_HAIR_COLOR, p->HeadPalette, false);
 	if (p->BodyPalette > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_CLOTHES_COLOR, p->BodyPalette, false);
+		stylist->request_style_change(sd, LOOK_CLOTHES_COLOR, p->BodyPalette, false);
 	if (p->TopAccessory > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HEAD_TOP, p->TopAccessory, true);
+		stylist->request_style_change(sd, LOOK_HEAD_TOP, p->TopAccessory, true);
 	if (p->MidAccessory > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HEAD_MID, p->MidAccessory, true);
+		stylist->request_style_change(sd, LOOK_HEAD_MID, p->MidAccessory, true);
 	if (p->BottomAccessory > 0)
-		clif->cz_req_style_change_sub(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
+		stylist->request_style_change(sd, LOOK_HEAD_BOTTOM, p->BottomAccessory, true);
 	if (p->BodyStyle > 0) {
 		if (pc->has_second_costume(sd)) {
-			clif->cz_req_style_change_sub(sd, LOOK_BODY2, p->BodyStyle, false);
+			stylist->request_style_change(sd, LOOK_BODY2, p->BodyStyle, false);
 		}
 	}
 	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
-}
-
-static void clif_cz_req_style_change_sub(struct map_session_data *sd, int type, int16 idx, bool isitem)
-{
-	struct stylist_data_entry *entry;
-
-	nullpo_retv(sd);
-	Assert_retv(idx > 0);
-	Assert_retv(type >= 0 && type < MAX_STYLIST_TYPE);
-
-	if ((idx - 1) < VECTOR_LENGTH(stylist_data[type])) {
-		entry = &VECTOR_INDEX(stylist_data[type], idx - 1);
-		if (clif->style_change_validate_requirements(sd, type, idx - 1)) {
-			if (isitem == false)
-				pc->changelook(sd, type, entry->id);
-			else
-				clif->stylist_send_rodexitem(sd, entry->id);
-		}
-	}
 }
 
 static void clif_style_change_response(struct map_session_data *sd, enum stylist_shop flag)
@@ -23460,15 +23303,8 @@ void clif_defaults(void)
 	clif->pPrivateAirshipRequest = clif_parse_private_airship_request;
 	clif->PrivateAirshipResponse = clif_private_airship_response;
 
-	clif->stylist_vector_init = clif_stylist_vector_init;
-	clif->stylist_vector_clear = clif_stylist_vector_clear;
-	clif->stylist_read_db_libconfig = clif_stylist_read_db_libconfig;
-	clif->stylist_read_db_libconfig_sub = clif_stylist_read_db_libconfig_sub;
-	clif->style_change_validate_requirements = clif_style_change_validate_requirements;
-	clif->stylist_send_rodexitem = clif_stylist_send_rodexitem;
 	clif->pReqStyleChange = clif_parse_cz_req_style_change;
 	clif->pReqStyleChange2 = clif_parse_cz_req_style_change2;
-	clif->cz_req_style_change_sub = clif_cz_req_style_change_sub;
 	clif->style_change_response = clif_style_change_response;
 
 	clif->camera_showWindow = clif_camera_showWindow;

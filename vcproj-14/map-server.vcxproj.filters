@@ -109,6 +109,9 @@
     <ClCompile Include="..\src\map\storage.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\stylist.c">
+      <Filter>map</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\map\trade.c">
       <Filter>map</Filter>
     </ClCompile>
@@ -340,6 +343,9 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\storage.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\stylist.h">
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\trade.h">
