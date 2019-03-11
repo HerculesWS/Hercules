@@ -6076,7 +6076,7 @@ Amount can be negative. See statusup().
 
 ---------------------------------------
 
-*needed_status_point(<type>, <val>, {<char_id>});
+*needed_status_point(<type>, <val>);
 
 Returns the number of stat points needed to change the specified stat <type> by <val>.
 If <val> is negative, returns the number of stat points that would be needed to
