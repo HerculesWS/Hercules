@@ -3089,6 +3089,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sockt->session_is_active, HP_sockt_session_is_active) },
 	{ HP_POP(sockt->flush, HP_sockt_flush) },
 	{ HP_POP(sockt->flush_fifos, HP_sockt_flush_fifos) },
+	{ HP_POP(sockt->connect_client, HP_sockt_connect_client) },
 	{ HP_POP(sockt->set_nonblocking, HP_sockt_set_nonblocking) },
 	{ HP_POP(sockt->set_defaultparse, HP_sockt_set_defaultparse) },
 	{ HP_POP(sockt->host2ip, HP_sockt_host2ip) },

@@ -10716,6 +10716,9 @@ void atcommand_defaults(void)
 {
 	atcommand = &atcommand_s;
 
+	atcommand->atcmd_output = &atcmd_output;
+	atcommand->atcmd_player_name = &atcmd_player_name;
+
 	atcommand->db = NULL;
 	atcommand->alias_db = NULL;
 

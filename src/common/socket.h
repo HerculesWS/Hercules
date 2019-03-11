@@ -178,6 +178,7 @@ struct socket_interface {
 	time_t stall_time;
 	time_t last_tick;
 
+	const char *SOCKET_CONF_FILENAME;
 	/* */
 	uint32 addr_[16];   // ip addresses of local host (host byte order)
 	int naddr_;   // # of ip addresses
@@ -212,6 +213,7 @@ struct socket_interface {
 	/* */
 	void (*flush) (int fd);
 	void (*flush_fifos) (void);
+	int (*connect_client) (int listen_fd);
 	void (*set_nonblocking) (int fd, unsigned long yes);
 	void (*set_defaultparse) (ParseFunc defaultparse);
 	/* hostname/ip conversion functions */
