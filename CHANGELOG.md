@@ -9,11 +9,53 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2019.03.10] `March 10 2019`
+
+### Added
+
+- Added `MOB_CLONE_START` and `MOB_CLONE_END` to the constants available to the script engine. (#2390)
+- Added crash dumps to the Travis-CI output in case one of the servers crashes during the tests. (#2385)
+- Added gcc-7 and gcc-8 builds to Travis-CI. (part of #2385)
+- Added a configuration setting `magicrod_type` (`skill.conf`) to restore the old eAthena behavior for the Magic Rod skill. (#2034)
+- Added some missing information to the documentation for `bg_create_team()` and `waitingroom2bg()`, to remove the automatic respawn. (#2381)
+- Added the `MERCINFO_*` constants to the script engine, for `getmercinfo()`. (#2397)
+- Added support for `MERCINFO_GID` to `getmercinfo()`. (#2397)
+- Added the script commands `mobattached()` and `killmonstergid()`. (#2396)
+- Added/updated packets, encryption keys and message tables for clients up to 2019-03-06. (#2377)
+- Added a missing value into enum `BATTLEGROUNDS_QUEUE_ACK`. (part of #2377)
+
+### Changed
+
+- Changed the Windows SDK from version 10.0.15063.0 into 10.0.17763.0 for Visual Studio 2017. (#2368)
+- Changed the return value of `getunitdata()` from `0` to `-1` in case the requested value couldn't be retrieved, in order to differentiate between a zero and an invalid value. Note: this may break existing scripts. (#2392)
+- Updated the `getunitdata()` and `setunitdata()` documentation to clarify that the command only handles integer values. (#2391)
+- Added the function `connect_client()` into the socket interface. (#2378)
+- Moved the variable `SOCKET_CONF_FILENAME` to the socket interface. (#2378)
+- Moved local variables from `atcommand.c` to the interface. (#2378)
+- Moved defines from `map.h` to `mapdefines.h` to remove an inclusion loop. (#2378)
+- Moved the stylist-related functions to their own interface. (#2400)
+
+### Fixed
+
+- Fixed some typos in the item bonus documentation. (#2376)
+- Fixed a typo in the `setpcblock()` documentation. (c9bab97108)
+- Fixed a missing return value in `F_GetTradeRestriction()`. (#2360)
+- Fixed the return value of `bg_create_team()` to be -1 in case of failure, as described in the documentation. (part of #2381)
+- Fixed the date field in the member list packet. (part of #2377)
+- Fixed the documentation for `needed_status_point()`, not supporting the `char_id` argument. (#2399)
+
+### Deprecated
+
+- Deprecated the `UDT_MAPIDXY` constant. Its use in `setunitdata()` is replaced by `unitwarp()` and its use in `getunitdata()` is replaced by `getmapxy()`. (#2391)
+- Deprecated the `UDT_WALKTOXY` constant. Its use in `setunitdata()` is replaced by `unitwalk()`. (#2391)
+
+### Removed
+
 ## [v2019.02.10+1] `February 10 2019` `PATCH 1`
 
 ### Fixed
 
-- Fixed a buffer size issue in inter server packets (#2365, issue #2369)
+- Fixed a buffer size issue in inter server packets (#2370, issue #2369)
 
 ## [v2019.02.10] `February 10 2019`
 
@@ -596,7 +638,8 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
-[v2019.02.10+1]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10...v2019.10.10+1
+[v2019.03.10]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10+1...v2019.03.10
+[v2019.02.10+1]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10...v2019.02.10+1
 [v2019.02.10]: https://github.com/HerculesWS/Hercules/compare/v2018.12.16+1...v2019.02.10
 [v2018.12.16+1]: https://github.com/HerculesWS/Hercules/compare/v2018.12.16...v2018.12.16+1
 [v2018.12.16]: https://github.com/HerculesWS/Hercules/compare/v2018.11.18+1...v2018.12.16
