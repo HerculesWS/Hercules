@@ -25598,7 +25598,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getd,"s"),
 		BUILDIN_DEF(setd,"sv"),
 		// <--- [zBuffer] List of dynamic var commands
-		BUILDIN_DEF(petstat,"i"),
+		BUILDIN_DEF_DEPRECATED(petstat, "i"), // Deprecated 2019-03-11
 		BUILDIN_DEF(callshop,"s?"), // [Skotlex]
 		BUILDIN_DEF(npcshopitem,"sii*"), // [Lance]
 		BUILDIN_DEF(npcshopadditem,"sii*"),
