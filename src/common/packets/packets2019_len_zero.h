@@ -4168,7 +4168,7 @@ packetLen(0x0acf, 68)  // CA_LOGIN_OTP
 packetLen(0x0ad0, 11)  // CA_OTP_CODE
 
 // Packet: 0x0ad1
-packetLen(0x0ad1, -1)
+packetLen(0x0ad1, -1)  // AC_LOGIN_OTP
 
 // Packet: 0x0ad2
 packetLen(0x0ad2, 30)
@@ -4375,11 +4375,21 @@ packetLen(0x0b18, 4)  // ZC_INVENTORY_EXPANSION_INFO
 packetLen(0x0b19, 2)  // CZ_INVENTORY_EXPAND_REJECTED
 
 // Packet: 0x0b1a
-packetLen(0x0b1a, 29)
+packetLen(0x0b1a, 29)  // ZC_USESKILL_ACK3
 
 // Packet: 0x0b1b
 #if PACKETVER >= 20190130
 packetLen(0x0b1b, 2)
+#endif
+
+// Packet: 0x0b1c
+#if PACKETVER >= 20190220
+packetLen(0x0b1c, 2)
+#endif
+
+// Packet: 0x0b1d
+#if PACKETVER >= 20190220
+packetLen(0x0b1d, 2)
 #endif
 
 

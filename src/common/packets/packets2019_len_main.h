@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2019  Hercules Dev Team
- * Copyright (C) 2019  Andrei Karas (4144)
+ * Copyright (C) 2018-2019  Hercules Dev Team
+ * Copyright (C) 2018-2019  Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3994,13 +3994,13 @@ packetLen(0x0a95, 4)
 packetLen(0x0a96, 61)  // ZC_ADD_EXCHANGE_ITEM4
 
 // Packet: 0x0a97
-packetLen(0x0a97, 8)  // CZ_ALT_EQUIPMENT_EQUIP
+packetLen(0x0a97, 8)  // CZ_ALT_EQUIPMENT_ADD
 
 // Packet: 0x0a98
 packetLen(0x0a98, 10)  // ZC_ALT_EQUIPMENT_EQUIP
 
 // Packet: 0x0a99
-packetLen(0x0a99, 4)
+packetLen(0x0a99, 4)  // CZ_ALT_EQUIPMENT_REMOVE
 
 // Packet: 0x0a9a
 packetLen(0x0a9a, 10)  // ZC_ALT_EQUIPMENT_REMOVE
@@ -4009,10 +4009,10 @@ packetLen(0x0a9a, 10)  // ZC_ALT_EQUIPMENT_REMOVE
 packetLen(0x0a9b, -1)  // ZC_ALT_EQUIPMENT_ITEMS
 
 // Packet: 0x0a9c
-packetLen(0x0a9c, 2)
+packetLen(0x0a9c, 2)  // CZ_ALT_EQUIPMENT_SWITCH
 
 // Packet: 0x0a9d
-packetLen(0x0a9d, 4)
+packetLen(0x0a9d, 4)  // ZC_ALT_EQUIPMENT_SWITCH_ACK
 
 // Packet: 0x0a9e
 packetLen(0x0a9e, 2)
@@ -4168,7 +4168,7 @@ packetLen(0x0acf, 68)  // CA_LOGIN_OTP
 packetLen(0x0ad0, 11)  // CA_OTP_CODE
 
 // Packet: 0x0ad1
-packetLen(0x0ad1, -1)
+packetLen(0x0ad1, -1)  // AC_LOGIN_OTP
 
 // Packet: 0x0ad2
 packetLen(0x0ad2, 30)
@@ -4375,7 +4375,53 @@ packetLen(0x0b18, 4)  // ZC_INVENTORY_EXPANSION_INFO
 packetLen(0x0b19, 2)  // CZ_INVENTORY_EXPAND_REJECTED
 
 // Packet: 0x0b1a
-packetLen(0x0b1a, 29)
+packetLen(0x0b1a, 29)  // ZC_USESKILL_ACK3
+
+// Packet: 0x0b1b
+#if PACKETVER >= 20190213
+packetLen(0x0b1b, 2)
+#endif
+
+// Packet: 0x0b1c
+#if PACKETVER >= 20190227
+packetLen(0x0b1c, 2)
+#endif
+
+// Packet: 0x0b1d
+#if PACKETVER >= 20190227
+packetLen(0x0b1d, 2)
+#endif
+
+// Packet: 0x0b1e
+#if PACKETVER >= 20190227
+packetLen(0x0b1e, 10)
+#endif
+
+// Packet: 0x0b1f
+#if PACKETVER >= 20190306
+packetLen(0x0b1f, 10)
+#endif
+
+// Packet: 0x0b21
+#if PACKETVER >= 20190306
+// removed
+#elif PACKETVER >= 20190227
+packetLen(0x0b21, 10)
+#endif
+
+// Packet: 0x0b22
+#if PACKETVER >= 20190306
+// removed
+#elif PACKETVER >= 20190227
+packetLen(0x0b22, 6)
+#endif
+
+// Packet: 0x0b23
+#if PACKETVER >= 20190306
+// removed
+#elif PACKETVER >= 20190227
+packetLen(0x0b23, 10)
+#endif
 
 
 #endif /* COMMON_PACKETS2019_LEN_MAIN_H */
