@@ -3059,7 +3059,7 @@ static const char *npc_parse_warp(const char *w1, const char *w2, const char *w3
 		return strchr(start,'\n');// skip and continue
 	}
 
-	if( m != -1 && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
+	if( m >= 0 && m < map->count && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
 		ShowError("npc_parse_warp: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map->list[m].name, x, y, map->list[m].xs, map->list[m].ys,filepath,strline(buffer,start-buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');;//try next
@@ -3137,7 +3137,7 @@ static const char *npc_parse_shop(const char *w1, const char *w2, const char *w3
 		m = map->mapname2mapid(mapname);
 	}
 
-	if( m != -1 && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
+	if( m >= 0 && m < map->count && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
 		ShowError("npc_parse_shop: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map->list[m].name, x, y, map->list[m].xs, map->list[m].ys,filepath,strline(buffer,start-buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');//try next
@@ -3704,7 +3704,7 @@ static const char *npc_parse_duplicate(const char *w1, const char *w2, const cha
 		m = map->mapname2mapid(mapname);
 	}
 
-	if( m != -1 && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
+	if( m >= 0 && m < map->count && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
 		ShowError("npc_parse_duplicate: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map->list[m].name, x, y, map->list[m].xs, map->list[m].ys,filepath,strline(buffer,start-buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return end;//try next
@@ -3817,7 +3817,7 @@ static void npc_setcells(struct npc_data *nd)
 			return; // Other types doesn't have touch area
 	}
 
-	if (m < 0 || xs < 0 || ys < 0 || map->list[m].cell == (struct mapcell *)0xdeadbeaf) //invalid range or map
+	if (m < 0 || m >= map->count || xs < 0 || ys < 0 || map->list[m].cell == (struct mapcell *)0xdeadbeaf) //invalid range or map
 		return;
 
 	for (i = y-ys; i <= y+ys; i++) {
@@ -3866,7 +3866,7 @@ static void npc_unsetcells(struct npc_data *nd)
 			return; // Other types doesn't have touch area
 	}
 
-	if (m < 0 || xs < 0 || ys < 0 || map->list[m].cell == (struct mapcell *)0xdeadbeaf)
+	if (m < 0 || m >= map->count || xs < 0 || ys < 0 || map->list[m].cell == (struct mapcell *)0xdeadbeaf)
 		return;
 
 	//Locate max range on which we can locate npc cells
@@ -3890,7 +3890,7 @@ static void npc_movenpc(struct npc_data *nd, int16 x, int16 y)
 	int16 m;
 	nullpo_retv(nd);
 	m = nd->bl.m;
-	if (m < 0 || nd->bl.prev == NULL) return; //Not on a map.
+	if (m < 0 || m >= map->count || nd->bl.prev == NULL) return; //Not on a map.
 
 	x = cap_value(x, 0, map->list[m].xs-1);
 	y = cap_value(y, 0, map->list[m].ys-1);
@@ -4956,7 +4956,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 				continue;
 			}
 			m = map->mapname2mapid(mapname);
-			if( m < 0 ) {
+			if( m < 0 || m >= map->count ) {
 				// "mapname" is not assigned to this server, we must skip the script info...
 				if( strcmp(w2,"script") == 0 && count > 3 ) {
 					if((p = npc->skip_script(p,buffer,filepath, &success)) == NULL) {
@@ -5304,7 +5304,7 @@ static void npc_debug_warps_sub(struct npc_data *nd)
 		return;
 
 	m = map->mapindex2mapid(nd->u.warp.mapindex);
-	if (m < 0) return; //Warps to another map, nothing to do about it.
+	if (m < 0 || m >= map->count) return; //Warps to another map, nothing to do about it.
 	if (nd->u.warp.x == 0 && nd->u.warp.y == 0) return; // random warp
 
 	if (map->getcell(m, &nd->bl, nd->u.warp.x, nd->u.warp.y, CELL_CHKNPC)) {

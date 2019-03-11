@@ -1983,6 +1983,7 @@ static void clif_changemap(struct map_session_data *sd, short m, int x, int y)
 {
 	int fd;
 	nullpo_retv(sd);
+	Assert_retv(m >= 0 && m < map->count);
 	fd = sd->fd;
 
 	WFIFOHEAD(fd,packet_len(0x91));
@@ -2001,6 +2002,7 @@ static void clif_changemap_airship(struct map_session_data *sd, short m, int x, 
 	// [4144] this packet is not used yet by kro, but it here
 	int fd;
 	nullpo_retv(sd);
+	Assert_retv(m >= 0 && m < map->count);
 	fd = sd->fd;
 
 	WFIFOHEAD(fd, packet_len(0xa4b));
@@ -4939,6 +4941,8 @@ static void clif_standing(struct block_list *bl)
 static void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_target target)
 {
 	unsigned char buf[32];
+
+	Assert_retv(m >= 0 && m < map->count);
 
 	WBUFW(buf,0) = 0x192;
 	WBUFW(buf,2) = x;
@@ -17704,6 +17708,8 @@ static void clif_bg_updatescore(int16 m)
 {
 	struct block_list bl;
 	unsigned char buf[6];
+
+	Assert_retv(m >= 0 && m < map->count);
 
 	memset(&bl, 0, sizeof(bl));
 	bl.type = BL_NUL;

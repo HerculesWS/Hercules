@@ -5846,6 +5846,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 		}
 	}
 
+	// FIXME: this block is dead code
 	if( m < 0 ) {
 		uint32 ip;
 		uint16 port;

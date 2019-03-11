@@ -358,21 +358,22 @@ STATIC_ASSERT(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First c
 #define DEFAULT_AUTOSAVE_INTERVAL (5*60*1000)
 // Specifies maps where players may hit each other
 #define map_flag_vs(m) ( \
+		(m >= 0 && m < map->count) && ( \
 		map->list[m].flag.pvp \
 		|| map->list[m].flag.gvg_dungeon \
 		|| map->list[m].flag.gvg \
 		|| ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) \
 		|| map->list[m].flag.battleground \
 		|| map->list[m].flag.cvc \
-		)
+		))
 // Specifies maps that have special GvG/WoE restrictions
-#define map_flag_gvg(m) (map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle))
+#define map_flag_gvg(m) (m >= 0 && m < map->count && (map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle)))
 // Specifies if the map is tagged as GvG/WoE (regardless of map->agit_flag status)
-#define map_flag_gvg2(m) (map->list[m].flag.gvg || map->list[m].flag.gvg_castle)
+#define map_flag_gvg2(m) (m >= 0 && m < map->count && (map->list[m].flag.gvg || map->list[m].flag.gvg_castle))
 // No Kill Steal Protection
-#define map_flag_ks(m) (map->list[m].flag.town || map->list[m].flag.pvp || map->list[m].flag.gvg || map->list[m].flag.battleground)
+#define map_flag_ks(m) (m >= 0 && m < map->count && (map->list[m].flag.town || map->list[m].flag.pvp || map->list[m].flag.gvg || map->list[m].flag.battleground))
 // No ViewID
-#define map_no_view(m, view) (map->list[m].flag.noviewid & (view))
+#define map_no_view(m, view) ((m >= 0 && m < map->count) ? (map->list[m].flag.noviewid & (view)) : 0)
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]

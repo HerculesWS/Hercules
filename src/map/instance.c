@@ -190,9 +190,7 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 	size_t num_cell, size, j;
 
 	nullpo_retr(-1, name);
-
-	if( m < 0 )
-		return -1; // source map not found
+	Assert_retr(-1, m >= 0 && m < map->count);
 
 	if( !instance->valid(instance_id) ) {
 		ShowError("instance_add_map: trying to attach '%s' map to non-existing instance %d.\n", name, instance_id);
