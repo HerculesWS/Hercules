@@ -3833,21 +3833,25 @@ how many skills a character has.
 
 *getpetinfo(<type>)
 
-This function will return pet information for the pet the invoking
-character currently has active. Valid types are:
+This command will return the currently active pet information of the invoking character.
+These fields are associate in 'db/(pre-)re/pet_db.conf'. Valid types are:
 
- 0 - Unique pet ID number as stored by the char server and distinguishing
-     it from all other pets the characters actually have. This value is
-     currently useless, at most you can use it to tell pets apart reliably.
- 1 - Pet class number as per 'db/pet_db.txt' - will tell you what kind of
-     a pet it is.
- 2 - Pet name. Will return "null" if there's no pet.
- 3 - Pet friendly level (intimacy score). 1000 is full loyalty.
- 4 - Pet hungry level. 100 is completely full.
- 5 - Pet rename flag. 0 means this pet has not been named yet.
-
-If the invoking player doesn't own a pet, this command will return
-"null" for type 2, and return 0 for other types.
+	PETINFO_ID            - Pet Database ID, stored in `pet` table to distinguish from other pets.
+	PETINFO_CLASS         - Pet class ID. (Id field)
+	PETINFO_NAME          - Pet Name, return "null" if there's no active pet.
+	PETINFO_INTIMACY      - Pet Intimacy level. 1000 is full loyalty.
+	PETINFO_HUNGRY        - Pet hungry level. 100 is completely full.
+	PETINFO_RENAME        - Pet rename flag. 0 means this pet has not been named yet.
+	PETINFO_GID           - Pet Game ID
+	PETINFO_EGGITEM       - Pet EggItem
+	PETINFO_FOODITEM      - Pet FoodItem
+	PETINFO_ACCESSORYITEM - Pet AccessoryItem
+	PETINFO_ACCESSORYFLAG - return 1 if the pet currently equipping accessory, return 0 otherwise.
+	PETINFO_EVO_EGGID     - Pet Evolve EggID
+	PETINFO_AUTOFEED      - Pet AutoFeed flag.
+	
+If the invoking player doesn't own a pet, this command will
+return "null" for type PETINFO_NAME, and return 0 for other types.
 
 ---------------------------------------
 

@@ -15573,36 +15573,74 @@ static BUILDIN(recovery)
 	return true;
 }
 
-/*==========================================
- * Get your pet info: getpetinfo(n)
- * n -> 0:pet_id 1:pet_class 2:pet_name
- * 3:friendly 4:hungry, 5: rename flag.
- *------------------------------------------*/
+/* 
+ * Get your current pet information
+ */
 static BUILDIN(getpetinfo)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	struct pet_data *pd;
-	int type=script_getnum(st,2);
+	if (sd == NULL)
+		return true;
 
-	if (sd == NULL || sd->pd == NULL) {
-		if (type == 2)
-			script_pushconststr(st,"null");
+	struct pet_data *pd = sd->pd;
+	int type = script_getnum(st, 2);
+	if (pd == NULL) {
+		if (type == PETINFO_NAME)
+			script_pushconststr(st, "null");
 		else
-			script_pushint(st,0);
+			script_pushint(st, 0);
 		return true;
 	}
-	pd = sd->pd;
+
 	switch(type) {
-		case 0: script_pushint(st,pd->pet.pet_id); break;
-		case 1: script_pushint(st,pd->pet.class_); break;
-		case 2: script_pushstrcopy(st,pd->pet.name); break;
-		case 3: script_pushint(st,pd->pet.intimate); break;
-		case 4: script_pushint(st,pd->pet.hungry); break;
-		case 5: script_pushint(st,pd->pet.rename_flag); break;
-		default:
-			script_pushint(st,0);
-			break;
+	case PETINFO_ID:
+		script_pushint(st, pd->pet.pet_id);
+		break;
+	case PETINFO_CLASS:
+		script_pushint(st, pd->pet.class_);
+		break;
+	case PETINFO_NAME:
+		script_pushstrcopy(st, pd->pet.name);
+		break;
+	case PETINFO_INTIMACY:
+		script_pushint(st, pd->pet.intimate);
+		break;
+	case PETINFO_HUNGRY:
+		script_pushint(st, pd->pet.hungry);
+		break;
+	case PETINFO_RENAME:
+		script_pushint(st, pd->pet.rename_flag);
+		break;
+	case PETINFO_GID:
+		script_pushint(st, pd->bl.id);
+		break;
+	case PETINFO_EGGITEM:
+		script_pushint(st, pd->pet.egg_id);
+		break;
+	case PETINFO_FOODITEM:
+		script_pushint(st, pd->petDB->FoodID);
+		break;
+	case PETINFO_ACCESSORYITEM:
+		script_pushint(st, pd->petDB->AcceID);
+		break;
+	case PETINFO_ACCESSORYFLAG:
+		script_pushint(st, (pd->pet.equip != 0)? 1:0);
+		break;
+	case PETINFO_EVO_EGGID: 
+		if (VECTOR_DATA(pd->petDB->evolve_data) != NULL)
+			script_pushint(st, VECTOR_DATA(pd->petDB->evolve_data)->petEggId);
+		else
+			script_pushint(st, 0);
+		break;
+	case PETINFO_AUTOFEED:
+		script_pushint(st, pd->pet.autofeed);
+		break;
+	default:
+		ShowWarning("buildin_getpetinfo: Invalid type %d.\n", type);
+		script_pushint(st, 0);
+		return false;
 	}
+
 	return true;
 }
 
@@ -26181,6 +26219,21 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MERCINFO_LIFETIME", MERCINFO_LIFETIME, false, false);
 	script->set_constant("MERCINFO_LEVEL", MERCINFO_LEVEL, false, false);
 	script->set_constant("MERCINFO_GID", MERCINFO_GID, false, false);
+
+	script->constdb_comment("getpetinfo options");
+	script->set_constant("PETINFO_ID", PETINFO_ID, false, false);
+	script->set_constant("PETINFO_CLASS", PETINFO_CLASS, false, false);
+	script->set_constant("PETINFO_NAME", PETINFO_NAME, false, false);
+	script->set_constant("PETINFO_INTIMACY", PETINFO_INTIMACY, false, false);
+	script->set_constant("PETINFO_HUNGRY", PETINFO_HUNGRY, false, false);
+	script->set_constant("PETINFO_RENAME", PETINFO_RENAME, false, false);
+	script->set_constant("PETINFO_GID", PETINFO_GID, false, false);
+	script->set_constant("PETINFO_EGGITEM", PETINFO_EGGITEM, false, false);
+	script->set_constant("PETINFO_FOODITEM", PETINFO_FOODITEM, false, false);
+	script->set_constant("PETINFO_ACCESSORYITEM", PETINFO_ACCESSORYITEM, false, false);
+	script->set_constant("PETINFO_ACCESSORYFLAG", PETINFO_ACCESSORYFLAG, false, false);
+	script->set_constant("PETINFO_EVO_EGGID", PETINFO_EVO_EGGID, false, false);
+	script->set_constant("PETINFO_AUTOFEED", PETINFO_AUTOFEED, false, false);
 
 	script->constdb_comment("monster skill states");
 	script->set_constant("MSS_ANY", MSS_ANY, false, false);
