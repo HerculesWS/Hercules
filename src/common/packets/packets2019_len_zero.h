@@ -3787,7 +3787,7 @@ packetLen(0x0a43, 85)  // ZC_ADD_MEMBER_TO_GROUP
 packetLen(0x0a44, -1)  // ZC_GROUP_LIST
 
 // Packet: 0x0a46
-packetLen(0x0a46, 14)
+packetLen(0x0a46, 14)  // CZ_REQ_STYLE_CHANGE
 
 // Packet: 0x0a47
 packetLen(0x0a47, 3)  // ZC_STYLE_CHANGE_RES
@@ -4288,7 +4288,7 @@ packetLen(0x0afa, 54)
 packetLen(0x0afb, -1)  // ZC_AUTOSPELLLIST
 
 // Packet: 0x0afc
-packetLen(0x0afc, 16)
+packetLen(0x0afc, 16)  // CZ_REQ_STYLE_CHANGE2
 
 // Packet: 0x0afd
 packetLen(0x0afd, -1)  // ZC_GUILD_POSITION
@@ -4379,17 +4379,42 @@ packetLen(0x0b1a, 29)  // ZC_USESKILL_ACK3
 
 // Packet: 0x0b1b
 #if PACKETVER >= 20190130
-packetLen(0x0b1b, 2)
+packetLen(0x0b1b, 2)  // ZC_ALT_PING
 #endif
 
 // Packet: 0x0b1c
 #if PACKETVER >= 20190220
-packetLen(0x0b1c, 2)
+packetLen(0x0b1c, 2)  // CZ_PING
 #endif
 
 // Packet: 0x0b1d
 #if PACKETVER >= 20190220
-packetLen(0x0b1d, 2)
+packetLen(0x0b1d, 2)  // ZC_PING
+#endif
+
+// Packet: 0x0b1e
+#if PACKETVER >= 20190313
+packetLen(0x0b1e, 10)
+#endif
+
+// Packet: 0x0b1f
+#if PACKETVER >= 20190313
+packetLen(0x0b1f, 10)
+#endif
+
+// Packet: 0x0b20
+#if PACKETVER >= 20190327
+packetLen(0x0b20, 271)
+#endif
+
+// Packet: 0x0b21
+#if PACKETVER >= 20190327
+packetLen(0x0b21, 13)
+#endif
+
+// Packet: 0x0b22
+#if PACKETVER >= 20190327
+packetLen(0x0b22, 5)
 #endif
 
 
