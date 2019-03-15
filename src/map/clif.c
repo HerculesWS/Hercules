@@ -15662,6 +15662,7 @@ static void clif_parse_FeelSaveOk(int fd, struct map_session_data *sd)
 ///     0 = sun
 ///     1 = moon
 ///     2 = star
+///     10 = Do you agree to cast the magic spell that consumes 1 Black Gemstone and 1,000,000 Zeny?
 static void clif_feel_req(int fd, struct map_session_data *sd, uint16 skill_lv)
 {
 	nullpo_retv(sd);
