@@ -1413,11 +1413,11 @@ REPLACE INTO `mob_skill_db` VALUES (1306,'Leib Olmai@NPC_STUNATTACK','attack',17
 REPLACE INTO `mob_skill_db` VALUES (1306,'Leib Olmai@NPC_SUMMONSLAVE','idle',196,3,10000,2000,60000,'no','self','slavele',NULL,1243,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (1306,'Leib Olmai@SM_ENDURE','chase',8,1,5000,0,10000,'yes','self','longrangeattacked',NULL,NULL,NULL,NULL,NULL,NULL,'6',NULL);
 REPLACE INTO `mob_skill_db` VALUES (1306,'Leib Olmai@SM_MAGNUM','attack',7,9,500,500,5000,'no','self','always',NULL,NULL,NULL,NULL,NULL,NULL,'6',NULL);
-REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o' Nine Tails@NPC_EMOTION','idle',197,1,2000,0,5000,'yes','self','always',NULL,22,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o' Nine Tails@AL_TELEPORT','idle',26,1,10000,0,0,'yes','self','rudeattacked',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o' Nine Tails@MC_MAMMONITE','attack',42,9,500,800,5000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,'8',NULL);
-REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o' Nine Tails@NPC_GUIDEDATTACK','attack',172,2,500,1000,20000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o' Nine Tails@NPC_SUMMONSLAVE','idle',196,2,10000,2000,60000,'no','self','slavele',NULL,1180,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o\'\ Nine Tails@NPC_EMOTION','idle',197,1,2000,0,5000,'yes','self','always',NULL,22,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o\'\ Nine Tails@AL_TELEPORT','idle',26,1,10000,0,0,'yes','self','rudeattacked',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o\'\ Nine Tails@MC_MAMMONITE','attack',42,9,500,800,5000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,'8',NULL);
+REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o\'\ Nine Tails@NPC_GUIDEDATTACK','attack',172,2,500,1000,20000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (1307,'Cat o\'\ Nine Tails@NPC_SUMMONSLAVE','idle',196,2,10000,2000,60000,'no','self','slavele',NULL,1180,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (1308,'Panzer Goblin@NPC_SELFDESTRUCTION','attack',173,1,500,2000,5000,'no','self','myhpltmaxrate','50',NULL,NULL,NULL,NULL,NULL,'23',NULL);
 REPLACE INTO `mob_skill_db` VALUES (1308,'Panzer Goblin@NPC_WINDATTACK','attack',187,1,2000,0,5000,'yes','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (1308,'Panzer Goblin@SM_MAGNUM','attack',7,9,500,500,5000,'no','self','always',NULL,NULL,NULL,NULL,NULL,NULL,'6',NULL);
