@@ -18926,6 +18926,8 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_LEVEL:
 			md->level = val;
+			if (battle_config.show_mob_info & 4)
+				clif->charnameack(0, &md->bl);
 			break;
 		case UDT_HP:
 			status->set_hp(bl, (unsigned int) val, STATUS_HEAL_DEFAULT);
