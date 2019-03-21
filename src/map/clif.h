@@ -1581,6 +1581,10 @@ struct clif_interface {
 	void (*pNPCBarterClosed) (int fd, struct map_session_data *sd);
 	void (*pNPCBarterPurchase) (int fd, struct map_session_data *sd);
 	void (*pClientVersion) (int fd, struct map_session_data *sd);
+	void (*pPing) (int fd, struct map_session_data *sd);
+	void (*ping) (struct map_session_data *sd);
+	int (*pingTimer) (int tid, int64 tick, int id, intptr_t data);
+	int (*pingTimerSub) (struct map_session_data *sd, va_list ap);
 };
 
 #ifdef HERCULES_CORE

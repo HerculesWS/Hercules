@@ -1931,4 +1931,8 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b12,clif->pNPCBarterClosed);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
+	packet(0x0b1c,clif->pPing);
+#endif
+
 #endif /* MAP_PACKETS_H */

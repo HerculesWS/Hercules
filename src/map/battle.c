@@ -7415,6 +7415,8 @@ static const struct battle_data {
 	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1,              },
 	{ "magicrod_type",                      &battle_config.magicrod_type,                   0,      0,      1,              },
 	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
+	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999,       },
+	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999,       },
 };
 
 static bool battle_set_value_sub(int index, int value)
