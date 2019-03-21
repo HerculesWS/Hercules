@@ -6361,7 +6361,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 
 			if (d_bl != NULL
 			 && ((d_bl->type == BL_MER && d_md->master != NULL && d_md->master->bl.id == target->id)
-			  || (d_bl->type == BL_PC && d_sd->devotion[sce->val2] == target->id)
+			  || (d_sd != NULL && d_bl->type == BL_PC && d_sd->devotion[sce->val2] == target->id)
 			    )
 			 && check_distance_bl(target, d_bl, sce->val3)
 			) {
