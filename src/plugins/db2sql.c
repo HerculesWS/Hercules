@@ -41,7 +41,7 @@
 HPExport struct hplugin_info pinfo = {
 	"DB2SQL",        // Plugin name
 	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.5",           // Plugin version
+	"0.6",           // Plugin version
 	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
 };
 
@@ -956,6 +956,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	struct mob_db *md = mob->db(mob_id);
 	char valname[15];
 	const char *name = config_setting_name(it);
+	char e_name [NAME_LENGTH * 2 + 1];
 
 	nullpo_retr(false, it);
 	Assert_retr(false, mob_id <= 0 || md != mob->dummy);
@@ -966,7 +967,8 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	StrBuf->Printf(&buf, "%d,", mob_id);
 
 	// Info
-	StrBuf->Printf(&buf, "'%s@%s',", md->name, name);
+	SQL-> EscapeString (NULL, e_name, md-> name); 
+	StrBuf-> Printf (& buf, "'% s @% s',", e_name, name);
 
 	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
 		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill state %d for skill '%s' in monster %d, defaulting to MSS_ANY.\n", i32, name, mob_id);
