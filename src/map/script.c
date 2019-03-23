@@ -10604,9 +10604,9 @@ static BUILDIN(gettime)
 	return true;
 }
 
-/*==========================================
+/*
  * GetTimeStr("TimeFMT", Length);
- *------------------------------------------*/
+ */
 static BUILDIN(gettimestr)
 {
 	char *tmpstr;
@@ -10614,8 +10614,8 @@ static BUILDIN(gettimestr)
 	int maxlen;
 	time_t now;
 
-	fmtstr=script_getstr(st,2);
-	maxlen=script_getnum(st,3);
+	fmtstr = script_getstr(st, 2);
+	maxlen = script_getnum(st, 3);
 
 	if (script_hasdata(st, 4)) {
 		int timestamp = script_getnum(st, 4);
@@ -10629,11 +10629,11 @@ static BUILDIN(gettimestr)
 		now = time(NULL);
 	}
 
-	tmpstr=(char *)aMalloc((maxlen+1)*sizeof(char));
-	strftime(tmpstr,maxlen,fmtstr,localtime(&now));
-	tmpstr[maxlen]='\0';
+	tmpstr = (char *)aMalloc((maxlen +1)*sizeof(char));
+	strftime(tmpstr, maxlen, fmtstr, localtime(&now));
+	tmpstr[maxlen] = '\0';
 
-	script_pushstr(st,tmpstr);
+	script_pushstr(st, tmpstr);
 	return true;
 }
 
