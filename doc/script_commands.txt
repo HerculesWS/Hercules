@@ -3536,9 +3536,9 @@ Examples :
 This function will return a string containing time data as specified by
 the format string.
 
-This uses the C function 'strfmtime', which obeys special format
+This uses the C function 'strftime', which obeys special format
 characters. For a full description see, for example, the description of
-'strfmtime' at http://www.delorie.com/gnu/docs/glibc/libc_437.html
+'strftime' at http://www.delorie.com/gnu/docs/glibc/libc_437.html
 All the format characters given in there should properly work.
 Max length is the maximum length of a time string to generate.
 
