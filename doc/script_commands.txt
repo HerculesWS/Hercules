@@ -3531,7 +3531,7 @@ Examples :
 
 ---------------------------------------
 
-*gettimestr(<format string>, <max length>)
+*gettimestr(<format string>, <max length>{, <timestamp>})
 
 This function will return a string containing time data as specified by
 the format string.
@@ -3545,6 +3545,7 @@ Max length is the maximum length of a time string to generate.
 The example given in Hercules sample scripts works like this:
 
 	mes(gettimestr("%Y-%m/%d %H:%M:%S", 21));
+	mes(gettimestr("%Y-%m/%d %H:%M:%S", 21, getcalendartime(0, 0)));
 
 This will print a full date and time like 'YYYY-MM/DD HH:MM:SS'.
 
