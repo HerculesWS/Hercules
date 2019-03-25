@@ -13961,6 +13961,14 @@ static bool skill_is_combo(int skill_id)
 	return false;
 }
 
+static int skill_check_invalid_level(int skill_id, int skill_lv)
+{
+	if (skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL)
+		return 1;
+
+	return 0;
+}
+
 static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
 {
 	struct status_data *st;
@@ -14154,7 +14162,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			}
 	}
 
-	if( skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL )
+	if (skill->check_invalid_level(skill_id, skill_lv) == 1)
 		return 0;
 
 	require = skill->get_requirement(sd,skill_id,skill_lv);
@@ -21554,6 +21562,7 @@ void skill_defaults(void)
 	skill->cast_fix_sc = skill_castfix_sc;
 	skill->vf_cast_fix = skill_vfcastfix;
 	skill->delay_fix = skill_delay_fix;
+	skill->check_invalid_level = skill_check_invalid_level;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
 	skill->check_condition_castend = skill_check_condition_castend;
 	skill->consume_requirement = skill_consume_requirement;

@@ -4230,8 +4230,8 @@ static int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 		ShowError("pc_skill: Skill with id %d does not exist in the skill database\n", id);
 		return 0;
 	}
-	if( level > MAX_SKILL_LEVEL ) {
-		ShowError("pc_skill: Skill level %d too high. Max lv supported is %d\n", level, MAX_SKILL_LEVEL);
+	if (skill->check_invalid_level(id, level) == 1) {
+		ShowError("pc_skill: Skill with id %d has invalid level range %d. Default range is %d-%d\n", id, level, 1, MAX_SKILL_LEVEL);
 		return 0;
 	}
 	if( flag == SKILL_GRANT_TEMPSTACK && sd->status.skill[index].lv + level > MAX_SKILL_LEVEL ) {
