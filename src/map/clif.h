@@ -556,7 +556,7 @@ enum clif_unittype {
 **/
 enum CZ_CONFIG {
 	CZ_CONFIG_OPEN_EQUIPMENT_WINDOW  = 0,
-	// Unknown                       = 1,
+	CZ_CONFIG_CALL                   = 1,
 	CZ_CONFIG_PET_AUTOFEEDING        = 2,
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
 };

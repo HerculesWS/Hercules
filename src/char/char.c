@@ -479,7 +479,8 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font) ||
 		(p->uniqueitem_counter != cp->uniqueitem_counter) || (p->hotkey_rowshift != cp->hotkey_rowshift) ||
 		(p->clan_id != cp->clan_id) || (p->last_login != cp->last_login) || (p->attendance_count != cp->attendance_count) ||
-		(p->attendance_timer != cp->attendance_timer) || (p->title_id != cp->title_id) || (p->inventorySize != cp->inventorySize)
+		(p->attendance_timer != cp->attendance_timer) || (p->title_id != cp->title_id) || (p->inventorySize != cp->inventorySize) ||
+		(p->allow_call != cp->allow_call)
 	) {
 		//Save status
 		unsigned int opt = 0;
@@ -491,10 +492,12 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			p->inventorySize = FIXED_INVENTORY_SIZE;
 		}
 
-		if( p->allow_party )
+		if (p->allow_party)
 			opt |= OPT_ALLOW_PARTY;
-		if( p->show_equip )
+		if (p->show_equip)
 			opt |= OPT_SHOW_EQUIP;
+		if (p->allow_call)
+			opt |= OPT_ALLOW_CALL;
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
 			"`base_exp`='%"PRIu64"', `job_exp`='%"PRIu64"', `zeny`='%d',"
@@ -1447,10 +1450,12 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	SQL->StmtFree(stmt);
 
 	/* load options into proper vars */
-	if( opt & OPT_ALLOW_PARTY )
+	if (opt & OPT_ALLOW_PARTY)
 		p->allow_party = true;
-	if( opt & OPT_SHOW_EQUIP )
+	if (opt & OPT_SHOW_EQUIP)
 		p->show_equip = true;
+	if (opt & OPT_ALLOW_CALL)
+		p->allow_call = true;
 
 	cp = idb_ensure(chr->char_db_, char_id, chr->create_charstatus);
 	memcpy(cp, p, sizeof(struct mmo_charstatus));

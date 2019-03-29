@@ -17021,6 +17021,9 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 		hd->homunculus.autofeed = flag;
 		break;
 	}
+	case CZ_CONFIG_CALL:
+		sd->status.allow_call = flag;
+		break;
 	default:
 		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%u).\n", type);
 		return;
