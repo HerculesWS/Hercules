@@ -1009,7 +1009,7 @@ struct clif_interface {
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);
 	void (*wisall) (struct map_session_data *sd,int type,int flag);
 	void (*PMIgnoreList) (struct map_session_data* sd);
-	void (*ShowScript) (struct block_list* bl, const char* message);
+	void (*ShowScript) (struct block_list* bl, const char* message, enum send_target target);
 	/* trade handling */
 	void (*traderequest) (struct map_session_data* sd, const char* name);
 	void (*tradestart) (struct map_session_data* sd, uint8 type);
