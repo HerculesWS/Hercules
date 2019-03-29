@@ -1798,6 +1798,11 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0a77,clif->pCameraInfo); // CZ_CAMERA_INFO
 #endif
 
+// all 20160622+
+#if PACKETVER >= 20160622
+	packet(0x0a88,clif->pResetCooldown);
+#endif
+
 // 2017-02-28aRagexeRE
 #if PACKETVER >= 20170228
 // new packets

@@ -22193,6 +22193,14 @@ static int clif_pingTimerSub(struct map_session_data *sd, va_list ap)
 	return 0;
 }
 
+static void clif_parse_ResetCooldown(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_ResetCooldown(int fd, struct map_session_data *sd)
+{
+	char cmd[15];
+	sprintf(cmd,"%ccddebug reset", atcommand->at_symbol);
+	atcommand->exec(fd, sd, cmd, true);
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23386,4 +23394,5 @@ void clif_defaults(void)
 	clif->ping = clif_ping;
 	clif->pingTimer = clif_pingTimer;
 	clif->pingTimerSub = clif_pingTimerSub;
+	clif->pResetCooldown = clif_parse_ResetCooldown;
 }

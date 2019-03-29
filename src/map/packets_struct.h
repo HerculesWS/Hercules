@@ -3174,6 +3174,13 @@ struct PACKET_ZC_PING {
 DEFINE_PACKET_HEADER(ZC_PING, 0x0b1d);
 #endif
 
+#if PACKETVER >= 20160622
+struct PACKET_CZ_COOLDOWN_RESET {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_COOLDOWN_RESET, 0x0a88);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
