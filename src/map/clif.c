@@ -21745,6 +21745,18 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 		p.data = 0;
 #endif
 		break;
+	case CZ_MACRO_REGISTER_UI:
+		p.UIType = ZC_CAPTCHA_UI;
+#if PACKETVER >= 20171122
+		p.data = 0;
+#endif
+		break;
+	case CZ_MACRO_DETECTOR_UI:
+		p.UIType = ZC_MACRO_UI;
+#if PACKETVER >= 20171122
+		p.data = 0;
+#endif
+		break;
 	case CZ_ATTENDANCE_UI:
 	{
 		if (clif->attendance_getendtime() < time(NULL)) {
