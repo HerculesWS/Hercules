@@ -2045,28 +2045,26 @@ enum e_status_calc_opt {
 //Required because players have two of these, one in status_data
 //and another for their left hand weapon.
 typedef struct weapon_atk {
-	unsigned short atk, atk2;
+	unsigned int atk, atk2;
 	unsigned short range;
 	unsigned char ele;
 #ifdef RENEWAL
-	unsigned short matk;
+	unsigned int matk;
 	unsigned char wlv;
 #endif
 } weapon_atk;
 
 //For holding basic status (which can be modified by status changes)
 struct status_data {
-	unsigned int
+	uint32
 		hp, sp,  // see status_cpy before adding members before hp and sp
-		max_hp, max_sp;
-	unsigned short
+		max_hp, max_sp,
 		str, agi, vit, int_, dex, luk,
 		batk,
 		matk_min, matk_max,
 		speed,
-		amotion, adelay, dmotion;
-	uint32 mode;
-	short
+		amotion, adelay, dmotion,
+		mode,
 		hit, flee, cri, flee2,
 		def2, mdef2,
 #ifdef RENEWAL_ASPD
