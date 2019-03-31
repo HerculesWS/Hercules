@@ -251,7 +251,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 
 	pd->pet.hungry--;
 	/* Pet Autofeed */
-	if (battle_config.feature_enable_homun_autofeed != 0) {
+	if (battle_config.feature_enable_pet_autofeed != 0) {
 		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= 25) {
 			pet->food(sd, pd);
 		}
