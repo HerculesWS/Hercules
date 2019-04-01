@@ -4537,13 +4537,17 @@ static unsigned int status_base_matk(struct block_list *bl, const struct status_
 	switch (bl->type) {
 		case BL_MOB:
 			matk = st->int_ + level;
+			break;
 		case BL_HOM:
 			matk = status_get_homint(st, BL_UCCAST(BL_HOM, bl)) + level;
+			break;
 		case BL_MER:
 			matk = st->int_ + st->int_ / 5 * st->int_ / 5;
+			break;
 		case BL_PC:
 		default: // temporary until all are formulated
 			matk = st->int_ + (st->int_ / 2) + (st->dex / 5) + (st->luk / 3) + (level / 4);
+			break;
 	}
 	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #else
@@ -8479,12 +8483,12 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 					val3 = 0;
 					val4 = 0;
 					max_stat = (status->get_lv(bl)-10<50)?status->get_lv(bl)-10:50;
-					stat = max(0, max_stat - status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - status2->vit ); val3 |= cap_value(stat,0,0xFF);
-					stat = max(0, max_stat - status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - status2->luk ); val4 |= cap_value(stat,0,0xFF);
+					stat = max(0, max_stat - (int)status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
+					stat = max(0, max_stat - (int)status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
+					stat = max(0, max_stat - (int)status2->vit ); val3 |= cap_value(stat,0,0xFF);
+					stat = max(0, max_stat - (int)status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
+					stat = max(0, max_stat - (int)status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
+					stat = max(0, max_stat - (int)status2->luk ); val4 |= cap_value(stat,0,0xFF);
 				}
 				break;
 			case SC_SWORDREJECT:
