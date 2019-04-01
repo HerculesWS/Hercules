@@ -7415,6 +7415,20 @@ static const struct battle_data {
 	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1,              },
 	{ "magicrod_type",                      &battle_config.magicrod_type,                   0,      0,      1,              },
 	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
+	{ "batk_min_limit",                     &battle_config.batk_min,                        0,      0,      INT_MAX,        },
+	{ "batk_max_limit",                     &battle_config.batk_max,                        USHRT_MAX, 1,   INT_MAX,        },
+	{ "matk_min_limit",                     &battle_config.matk_min,                        0,      0,      INT_MAX,        },
+	{ "matk_max_limit",                     &battle_config.matk_max,                        USHRT_MAX, 1,   INT_MAX,        },
+	{ "watk_min_limit",                     &battle_config.watk_min,                        0,      0,      INT_MAX,        },
+	{ "watk_max_limit",                     &battle_config.watk_max,                        USHRT_MAX, 1,   INT_MAX,        },
+	{ "flee_min_limit",                     &battle_config.flee_min,                        1,      1,      INT_MAX,        },
+	{ "flee_max_limit",                     &battle_config.flee_max,                        SHRT_MAX, 1,    INT_MAX,        },
+	{ "flee2_min_limit",                    &battle_config.flee2_min,                       10,     1,      INT_MAX,        },
+	{ "flee2_max_limit",                    &battle_config.flee2_max,                       SHRT_MAX, 1,    INT_MAX,        },
+	{ "critical_min_limit",                 &battle_config.critical_min,                    10,     1,      INT_MAX,        },
+	{ "critical_max_limit",                 &battle_config.critical_max,                    SHRT_MAX, 1,    INT_MAX,        },
+	{ "hit_min_limit",                      &battle_config.hit_min,                         1,      1,      INT_MAX,        },
+	{ "hit_max_limit",                      &battle_config.hit_max,                         SHRT_MAX, 1,    INT_MAX,        },
 };
 
 static bool battle_set_value_sub(int index, int value)
