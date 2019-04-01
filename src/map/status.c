@@ -3854,7 +3854,7 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 		temp = bst->batk - status->base_atk(bl,bst);
 		if (temp) {
 			temp += st->batk;
-			st->batk = cap_value(temp, 0, USHRT_MAX);
+			st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
 		}
 		st->batk = status->calc_batk(bl, sc, st->batk, true);
 	}
@@ -4506,7 +4506,7 @@ static unsigned int status_base_atk(const struct block_list *bl, const struct st
 	if (bl->type == BL_PC)
 		str += dex / 5 + st->luk / 5;
 #endif // RENEWAL
-	return cap_value(str, 0, USHRT_MAX);
+	return cap_value(str, battle_config.batk_min, battle_config.batk_max);
 }
 
 static unsigned int status_base_matk_min(const struct status_data *st)
@@ -4516,8 +4516,8 @@ static unsigned int status_base_matk_min(const struct status_data *st)
 	Assert_ret(0);
 	return 0;
 #else // not RENEWAL
-	int matk = st->int_ + (st->int_ / 7) * (st->int_ / 7)
-	return cap_value(matk, 0, USHRT_MAX);
+	int matk = st->int_ + (st->int_ / 7) * (st->int_ / 7);
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #endif // RENEWAL
 }
 
@@ -4525,7 +4525,7 @@ static unsigned int status_base_matk_max(const struct status_data *st)
 {
 	nullpo_ret(st);
 	int matk = st->int_ + (st->int_ / 5) * (st->int_ / 5);
-	return cap_value(matk, 0, USHRT_MAX);
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 }
 
 static unsigned int status_base_matk(struct block_list *bl, const struct status_data *st, int level)
@@ -4545,7 +4545,7 @@ static unsigned int status_base_matk(struct block_list *bl, const struct status_
 		default: // temporary until all are formulated
 			matk = st->int_ + (st->int_ / 2) + (st->dex / 5) + (st->luk / 3) + (level / 4);
 	}
-	return cap_value(matk, 0, USHRT_MAX);
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #else
 	Assert_ret(0);
 	return 0;
@@ -4602,7 +4602,7 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 
 	if ( st->batk ) {
 		int temp = st->batk + status->base_atk(bl, st);
-		st->batk = cap_value(temp, 0, USHRT_MAX);
+		st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
 	} else
 		st->batk = status->base_atk(bl, st);
 	if ( st->cri ) {
@@ -5003,13 +5003,13 @@ static unsigned int status_calc_batk(struct block_list *bl, struct status_change
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
-		return cap_value(batk,0,USHRT_MAX);
+		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
 		if(sc->data[SC_PLUSATTACKPOWER])
 			batk += sc->data[SC_PLUSATTACKPOWER]->val1;
-		return (unsigned int)cap_value(batk, 0, USHRT_MAX);
+		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 	}
 #ifndef RENEWAL
 	if(sc->data[SC_PLUSATTACKPOWER])
@@ -5092,14 +5092,14 @@ static unsigned int status_calc_batk(struct block_list *bl, struct status_change
 	if (sc->data[SC_SHRIMP])
 		batk += batk * sc->data[SC_SHRIMP]->val2 / 100;
 
-	return (unsigned int)cap_value(batk, 0, USHRT_MAX);
+	return (unsigned int)cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 }
 
 static unsigned int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
-		return cap_value(watk, 0, USHRT_MAX);
+		return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
@@ -5107,7 +5107,7 @@ static unsigned int status_calc_watk(struct block_list *bl, struct status_change
 			watk -= sc->data[SC_WATER_BARRIER]->val3;
 		if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val2)
 			watk += sc->data[SC_GENTLETOUCH_CHANGE]->val2;
-		return (unsigned int)cap_value(watk, 0, USHRT_MAX);
+		return (unsigned int)cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 	}
 #ifndef RENEWAL
 	if(sc->data[SC_IMPOSITIO])
@@ -5185,14 +5185,14 @@ static unsigned int status_calc_watk(struct block_list *bl, struct status_change
 	if (sc->data[SC_CATNIPPOWDER])
 		watk -= watk * sc->data[SC_CATNIPPOWDER]->val2 / 100;
 
-	return (unsigned int)cap_value(watk, 0, USHRT_MAX);
+	return (unsigned int)cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 }
 
 static unsigned int status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk)
 {
 #ifdef RENEWAL
 	if (!sc || !sc->count)
-		return (unsigned int)cap_value(matk, 0, USHRT_MAX);
+		return (unsigned int)cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 	if (sc->data[SC_PLUSMAGICPOWER])
 		matk += sc->data[SC_PLUSMAGICPOWER]->val1;
 	if (sc->data[SC_MATKFOOD])
@@ -5213,7 +5213,7 @@ static unsigned int status_calc_ematk(struct block_list *bl, struct status_chang
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 	if (sc->data[SC_SHRIMP])
 		matk += matk * sc->data[SC_SHRIMP]->val2 / 100;
-	return (unsigned int)cap_value(matk, 0, USHRT_MAX);
+	return (unsigned int)cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #else
 	return 0;
 #endif
@@ -5222,13 +5222,13 @@ static unsigned int status_calc_ematk(struct block_list *bl, struct status_chang
 static unsigned int status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
 {
 	if (!sc || !sc->count)
-		return cap_value(matk, 0, USHRT_MAX);
+		return (unsigned int)cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
 		if (sc->data[SC_MINDBREAKER])
 			matk += matk * sc->data[SC_MINDBREAKER]->val2 / 100;
-		return (unsigned int)cap_value(matk, 0, USHRT_MAX);
+		return (unsigned int)cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 	}
 
 #ifndef RENEWAL
@@ -5286,17 +5286,17 @@ static unsigned int status_calc_matk(struct block_list *bl, struct status_change
 	if (sc->data[SC_MAGIC_CANDY])
 		matk += sc->data[SC_MAGIC_CANDY]->val1;
 
-	return (unsigned int)cap_value(matk, 0, USHRT_MAX);
+	return (unsigned int)cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 }
 
 static signed int status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable)
 {
 	if (!sc || !sc->count)
-		return cap_value(critical, 10, SHRT_MAX);
+		return (signed int)cap_value(critical, battle_config.critical_min, battle_config.critical_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		return (short)cap_value(critical, 10, SHRT_MAX);
+		return (signed int)cap_value(critical, battle_config.critical_min, battle_config.critical_max);
 	}
 
 	if (sc->data[SC_CRITICALPERCENT])
@@ -5327,20 +5327,20 @@ static signed int status_calc_critical(struct block_list *bl, struct status_chan
 	if (sc->data[SC_BUCHEDENOEL])
 		critical += sc->data[SC_BUCHEDENOEL]->val4 * 10;
 
-	return (int)cap_value(critical, 10, SHRT_MAX);
+	return (signed int)cap_value(critical, battle_config.critical_min, battle_config.critical_max);
 }
 
 static signed int status_calc_hit(struct block_list *bl, struct status_change *sc, int hit, bool viewable)
 {
 
 	if (!sc || !sc->count)
-		return cap_value(hit, 1, SHRT_MAX);
+		return (signed int)cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
 		if (sc->data[SC_MTF_ASPD])
 			hit += sc->data[SC_MTF_ASPD]->val2;
-		return (signed int)cap_value(hit, 1, SHRT_MAX);
+		return (signed int)cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 	}
 
 	if (sc->data[SC_INCHIT])
@@ -5382,7 +5382,7 @@ static signed int status_calc_hit(struct block_list *bl, struct status_change *s
 	if (sc->data[SC_BUCHEDENOEL])
 		hit += sc->data[SC_BUCHEDENOEL]->val3;
 
-	return (signed int)cap_value(hit, 1, SHRT_MAX);
+	return (signed int)cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 }
 
 static signed int status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable)
@@ -5397,11 +5397,11 @@ static signed int status_calc_flee(struct block_list *bl, struct status_change *
 	}
 
 	if (!sc || !sc->count)
-		return (signed int)cap_value(flee, 1, SHRT_MAX);
+		return (signed int)cap_value(flee, battle_config.flee_min, battle_config.flee_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		return (signed int)cap_value(flee, 1, SHRT_MAX);
+		return (signed int)cap_value(flee, battle_config.flee_min, battle_config.flee_max);
 	}
 
 	if (sc->data[SC_INCFLEE])
@@ -5479,17 +5479,17 @@ static signed int status_calc_flee(struct block_list *bl, struct status_change *
 	if (sc->data[SC_MYSTICPOWDER])
 		flee += sc->data[SC_MYSTICPOWDER]->val2;
 
-	return (signed int)cap_value(flee, 1, SHRT_MAX);
+	return (signed int)cap_value(flee, battle_config.flee_min, battle_config.flee_max);
 }
 
 static signed int status_calc_flee2(struct block_list *bl, struct status_change *sc, int flee2, bool viewable)
 {
 	if(!sc || !sc->count)
-		return (signed int)cap_value(flee2, 10, SHRT_MAX);
+		return (signed int)cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
-		return (signed int)cap_value(flee2, 10, SHRT_MAX);
+		return (signed int)cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 	}
 
 	if(sc->data[SC_PLUSAVOIDVALUE])
@@ -5501,7 +5501,7 @@ static signed int status_calc_flee2(struct block_list *bl, struct status_change 
 	if (sc->data[SC_FREYJASCROLL])
 		flee2 += sc->data[SC_FREYJASCROLL]->val2;
 
-	return (signed int)cap_value(flee2, 10, SHRT_MAX);
+	return (signed int)cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 }
 
 static defType status_calc_def(struct block_list *bl, struct status_change *sc, int def, bool viewable)
