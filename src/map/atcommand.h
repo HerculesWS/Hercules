@@ -92,8 +92,8 @@ struct atcmd_binding_data {
  * Interface
  **/
 struct atcommand_interface {
-	char (*atcmd_output)[CHAT_SIZE_MAX];
-	char (*atcmd_player_name)[NAME_LENGTH];
+	char atcmd_output[CHAT_SIZE_MAX];
+	char atcmd_player_name[NAME_LENGTH];
 	unsigned char at_symbol;
 	unsigned char char_symbol;
 	/* atcommand binding */
