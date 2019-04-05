@@ -1378,8 +1378,8 @@ typedef void (*HPMHOOK_pre_clif_mvp_noitem) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_mvp_noitem) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_changed_dir) (struct block_list **bl, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_changed_dir) (struct block_list *bl, enum send_target target);
-typedef void (*HPMHOOK_pre_clif_charnameack) (int *fd, struct block_list **bl);
-typedef void (*HPMHOOK_post_clif_charnameack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_blname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_blname_ack) (int fd, struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_monster_hp_bar) (struct mob_data **md, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_clif_hpmeter) (struct map_session_data **sd);
@@ -2654,6 +2654,16 @@ typedef void (*HPMHOOK_pre_clif_pNPCBarterPurchase) (int *fd, struct map_session
 typedef void (*HPMHOOK_post_clif_pNPCBarterPurchase) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pClientVersion) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pClientVersion) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pPing) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pPing) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_ping) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_ping) (struct map_session_data *sd);
+typedef int (*HPMHOOK_pre_clif_pingTimer) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_clif_pingTimer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef int (*HPMHOOK_pre_clif_pingTimerSub) (struct map_session_data **sd, va_list ap);
+typedef int (*HPMHOOK_post_clif_pingTimerSub) (int retVal___, struct map_session_data *sd, va_list ap);
+typedef void (*HPMHOOK_pre_clif_pResetCooldown) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pResetCooldown) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
