@@ -883,7 +883,7 @@ struct clif_interface {
 	void (*mvp_exp) (struct map_session_data *sd, unsigned int exp);
 	void (*mvp_noitem) (struct map_session_data* sd);
 	void (*changed_dir) (struct block_list *bl, enum send_target target);
-	void (*charnameack) (int fd, struct block_list *bl);
+	void (*blname_ack) (int fd, struct block_list *bl);
 	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
 	int (*hpmeter) (struct map_session_data *sd);
 	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);

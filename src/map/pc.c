@@ -8138,7 +8138,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 
 					if( battle_config.show_mob_info&4 )
 					{// update name with new level
-						clif->charnameack(0, &md->bl);
+						clif->blname_ack(0, &md->bl);
 					}
 				}
 				src = battle->get_master(src); // Maybe Player Summon

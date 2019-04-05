@@ -9238,7 +9238,7 @@ static void clif_refresh(struct map_session_data *sd)
 /// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
 /// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
 /// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
-static void clif_charnameack(int fd, struct block_list *bl)
+static void clif_blname_ack(int fd, struct block_list *bl)
 {
 	struct packet_reqnameall_ack packet = { 0 };
 	int len = sizeof(struct packet_reqnameall_ack);
@@ -9359,7 +9359,7 @@ static void clif_charnameack(int fd, struct block_list *bl)
 			memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
 			break;
 		default:
-			ShowError("clif_charnameack: bad type %u(%d)\n", bl->type, bl->id);
+			ShowError("clif_blname_ack: bad type %u(%d)\n", bl->type, bl->id);
 			return;
 	}
 
@@ -10794,7 +10794,7 @@ static void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 	}
 #endif // 0
 
-	clif->charnameack(fd, bl);
+	clif->blname_ack(fd, bl);
 }
 static int clif_undisguise_timer(int tid, int64 tick, int id, intptr_t data)
 {
@@ -20963,8 +20963,8 @@ static void clif_change_title_ack(int fd, struct map_session_data *sd, int title
 	WFIFOSET(fd, packet_len(0xa2f));
 
 	// Update names
-	clif->charnameack(fd, &sd->bl);
-	clif->charnameack(0, &sd->bl);
+	clif->blname_ack(fd, &sd->bl);
+	clif->blname_ack(0, &sd->bl);
 #endif
 }
 // End of Achievement System
@@ -22700,7 +22700,7 @@ void clif_defaults(void)
 	clif->mvp_exp = clif_mvp_exp;
 	clif->mvp_noitem = clif_mvp_noitem;
 	clif->changed_dir = clif_changed_dir;
-	clif->charnameack = clif_charnameack;
+	clif->blname_ack = clif_blname_ack;
 	clif->monster_hp_bar = clif_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;
 	clif->hpmeter_single = clif_hpmeter_single;

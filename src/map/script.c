@@ -18978,15 +18978,15 @@ static BUILDIN(setunitdata)
 		case UDT_LEVEL:
 			md->level = val;
 			if (battle_config.show_mob_info & 4)
-				clif->charnameack(0, &md->bl);
+				clif->blname_ack(0, &md->bl);
 			break;
 		case UDT_HP:
 			status->set_hp(bl, (unsigned int) val, STATUS_HEAL_DEFAULT);
-			clif->charnameack(0, &md->bl);
+			clif->blname_ack(0, &md->bl);
 			break;
 		case UDT_MAXHP:
 			md->status.max_hp = (unsigned int) val;
-			clif->charnameack(0, &md->bl);
+			clif->blname_ack(0, &md->bl);
 			break;
 		case UDT_SP:
 			status->set_sp(bl, (unsigned int) val, STATUS_HEAL_DEFAULT);
@@ -20360,7 +20360,7 @@ static BUILDIN(setunitname)
 	}
 
 	script_pushint(st, 1);
-	clif->charnameack(0, bl); // Send update to client.
+	clif->blname_ack(0, bl); // Send update to client.
 
 	return true;
 }
@@ -21739,7 +21739,7 @@ static BUILDIN(bg_monster_set_team)
 	mob_stop_attack(md);
 	mob_stop_walking(md, STOPWALKING_FLAG_NONE);
 	md->target_id = md->attacked_id = 0;
-	clif->charnameack(0, &md->bl);
+	clif->blname_ack(0, &md->bl);
 
 	return true;
 }

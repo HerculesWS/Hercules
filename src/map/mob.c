@@ -2196,7 +2196,7 @@ static void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 	}
 
 	if (battle_config.show_mob_info&3)
-		clif->charnameack (0, &md->bl);
+		clif->blname_ack(0, &md->bl);
 
 #if PACKETVER >= 20131223
 	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
@@ -2796,7 +2796,7 @@ static void mob_revive(struct mob_data *md, unsigned int hp)
 	skill->unit_move(&md->bl,tick,1);
 	mob->skill_use(md, tick, MSC_SPAWN);
 	if (battle_config.show_mob_info&3)
-		clif->charnameack (0, &md->bl);
+		clif->blname_ack(0, &md->bl);
 }
 
 static int mob_guardian_guildchange(struct mob_data *md)
@@ -2921,7 +2921,7 @@ static int mob_class_change(struct mob_data *md, int class_)
 	md->target_id = md->attacked_id = 0;
 
 	//Need to update name display.
-	clif->charnameack(0, &md->bl);
+	clif->blname_ack(0, &md->bl);
 	status_change_end(&md->bl,SC_KEEPING,INVALID_TIMER);
 	return 0;
 }
@@ -2933,7 +2933,7 @@ static void mob_heal(struct mob_data *md, unsigned int heal)
 {
 	nullpo_retv(md);
 	if (battle_config.show_mob_info&3)
-		clif->charnameack (0, &md->bl);
+		clif->blname_ack(0, &md->bl);
 #if PACKETVER >= 20131223
 	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
 	if (battle_config.show_monster_hp_bar)
