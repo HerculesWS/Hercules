@@ -1777,7 +1777,9 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20151104
 // new packets
 	packet(0x0a46,clif->pReqStyleChange);
+	packet(0x0a48,clif->pStyleClose);
 #endif
+
 
 // 2016-03-23aRagexeRE
 #if PACKETVER >= 20160323

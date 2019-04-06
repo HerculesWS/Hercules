@@ -21948,6 +21948,12 @@ static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
 	return;
 }
 
+static void clif_parse_cz_style_close(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_cz_style_close(int fd, struct map_session_data *sd)
+{
+	// do nothing
+}
+
 static void clif_style_change_response(struct map_session_data *sd, enum stylist_shop flag)
 {
 #if PACKETVER >= 20151104
@@ -23386,6 +23392,7 @@ void clif_defaults(void)
 
 	clif->pReqStyleChange = clif_parse_cz_req_style_change;
 	clif->pReqStyleChange2 = clif_parse_cz_req_style_change2;
+	clif->pStyleClose = clif_parse_cz_style_close;
 	clif->style_change_response = clif_style_change_response;
 
 	clif->camera_showWindow = clif_camera_showWindow;

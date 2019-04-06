@@ -1566,6 +1566,7 @@ struct clif_interface {
 
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
 	void (*pReqStyleChange2) (int fd, struct map_session_data *sd);
+	void (*pStyleClose) (int fd, struct map_session_data *sd);
 	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
