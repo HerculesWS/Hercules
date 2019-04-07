@@ -15758,14 +15758,14 @@ void HP_clif_PMIgnoreList(struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_ShowScript(struct block_list *bl, const char *message) {
+void HP_clif_ShowScript(struct block_list *bl, const char *message, enum send_target target) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_ShowScript_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, const char **message);
+		void (*preHookFunc) (struct block_list **bl, const char **message, enum send_target *target);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_ShowScript_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_ShowScript_pre[hIndex].func;
-			preHookFunc(&bl, &message);
+			preHookFunc(&bl, &message, &target);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -15773,13 +15773,13 @@ void HP_clif_ShowScript(struct block_list *bl, const char *message) {
 		}
 	}
 	{
-		HPMHooks.source.clif.ShowScript(bl, message);
+		HPMHooks.source.clif.ShowScript(bl, message, target);
 	}
 	if (HPMHooks.count.HP_clif_ShowScript_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, const char *message);
+		void (*postHookFunc) (struct block_list *bl, const char *message, enum send_target target);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_ShowScript_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_ShowScript_post[hIndex].func;
-			postHookFunc(bl, message);
+			postHookFunc(bl, message, target);
 		}
 	}
 	return;
