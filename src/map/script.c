@@ -10604,24 +10604,36 @@ static BUILDIN(gettime)
 	return true;
 }
 
-/*==========================================
+/*
  * GetTimeStr("TimeFMT", Length);
- *------------------------------------------*/
+ */
 static BUILDIN(gettimestr)
 {
 	char *tmpstr;
 	const char *fmtstr;
 	int maxlen;
-	time_t now = time(NULL);
+	time_t now;
 
-	fmtstr=script_getstr(st,2);
-	maxlen=script_getnum(st,3);
+	fmtstr = script_getstr(st, 2);
+	maxlen = script_getnum(st, 3);
 
-	tmpstr=(char *)aMalloc((maxlen+1)*sizeof(char));
-	strftime(tmpstr,maxlen,fmtstr,localtime(&now));
-	tmpstr[maxlen]='\0';
+	if (script_hasdata(st, 4)) {
+		int timestamp = script_getnum(st, 4);
+		if (timestamp < 0) {
+			ShowWarning("buildin_gettimestr: UNIX timestamp must be in positive value.\n");
+			return false;
+		}
 
-	script_pushstr(st,tmpstr);
+		now = (time_t)timestamp;
+	} else {
+		now = time(NULL);
+	}
+
+	tmpstr = (char *)aMalloc((maxlen +1)*sizeof(char));
+	strftime(tmpstr, maxlen, fmtstr, localtime(&now));
+	tmpstr[maxlen] = '\0';
+
+	script_pushstr(st, tmpstr);
 	return true;
 }
 
@@ -25379,7 +25391,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(savepoint,"sii"),
 		BUILDIN_DEF(gettimetick,"i"),
 		BUILDIN_DEF(gettime,"i"),
-		BUILDIN_DEF(gettimestr,"si"),
+		BUILDIN_DEF(gettimestr, "si?"),
 		BUILDIN_DEF(openstorage,""),
 		BUILDIN_DEF(guildopenstorage,""),
 		BUILDIN_DEF(itemskill,"vi?"),
