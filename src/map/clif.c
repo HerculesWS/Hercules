@@ -19374,7 +19374,7 @@ static void clif_partytickack(struct map_session_data *sd, bool flag)
 	WFIFOSET(sd->fd, packet_len(0x2c9));
 }
 
-static void clif_ShowScript(struct block_list *bl, const char *message)
+static void clif_ShowScript(struct block_list *bl, const char *message, enum send_target target)
 {
 #if PACKETVER >= 20110111
 	char buf[256];
@@ -19395,7 +19395,7 @@ static void clif_ShowScript(struct block_list *bl, const char *message)
 	WBUFW(buf,2) = len+8;
 	WBUFL(buf,4) = bl->id;
 	safestrncpy(WBUFP(buf,8),message,len);
-	clif->send(buf,WBUFW(buf,2),bl,AREA);
+	clif->send(buf, WBUFW(buf,2), bl, target);
 #endif
 }
 

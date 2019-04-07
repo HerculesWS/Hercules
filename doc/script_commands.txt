@@ -4457,11 +4457,14 @@ if <color> field is left out.
 
 ---------------------------------------
 
-*showscript("<message>"{, <GID>})
+*showscript("<message>"{, <GID>{, <send_target>}})
 
 Makes the attached player or GID, display a message similiar to a chat,
 this will be seen by everyone near the invoking character but will not
 be displayed in the chat window.
+send_target: (optional)
+	AREA: show the message to everyone within the view range (default)
+	SELF: show the message to the given unit GID only
 
 ---------------------------------------
 

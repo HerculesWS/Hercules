@@ -1618,8 +1618,8 @@ typedef void (*HPMHOOK_pre_clif_wisall) (struct map_session_data **sd, int *type
 typedef void (*HPMHOOK_post_clif_wisall) (struct map_session_data *sd, int type, int flag);
 typedef void (*HPMHOOK_pre_clif_PMIgnoreList) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_PMIgnoreList) (struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_ShowScript) (struct block_list **bl, const char **message);
-typedef void (*HPMHOOK_post_clif_ShowScript) (struct block_list *bl, const char *message);
+typedef void (*HPMHOOK_pre_clif_ShowScript) (struct block_list **bl, const char **message, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_ShowScript) (struct block_list *bl, const char *message, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_traderequest) (struct map_session_data **sd, const char **name);
 typedef void (*HPMHOOK_post_clif_traderequest) (struct map_session_data *sd, const char *name);
 typedef void (*HPMHOOK_pre_clif_tradestart) (struct map_session_data **sd, uint8 *type);

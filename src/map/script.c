@@ -24430,7 +24430,7 @@ static BUILDIN(showscript)
 {
 	struct block_list *bl = NULL;
 	const char *msg = script_getstr(st, 2);
-	int id = 0;
+	int id = 0, flag = AREA;
 
 	if (script_hasdata(st, 3)) {
 		id = script_getnum(st, 3);
@@ -24442,14 +24442,14 @@ static BUILDIN(showscript)
 
 	if (!bl) {
 		ShowError("buildin_showscript: Script not attached. (id=%d, rid=%d, oid=%d)\n", id, st->rid, st->oid);
-		script_pushint(st, 0);
 		return false;
 	}
 
-	clif->ShowScript(bl, msg);
-
-	script_pushint(st, 1);
-
+	if (script_hasdata(st, 4))
+		if (script_getnum(st, 4) == SELF)
+			flag = SELF;
+		
+	clif->ShowScript(bl, msg, flag);
 	return true;
 }
 
@@ -25875,7 +25875,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(channelmes, "ss"),
 		BUILDIN_DEF(addchannelhandler, "ss"),
 		BUILDIN_DEF(removechannelhandler, "ss"),
-		BUILDIN_DEF(showscript, "s?"),
+		BUILDIN_DEF(showscript, "s??"),
 		BUILDIN_DEF(mergeitem,""),
 		BUILDIN_DEF(getcalendartime, "ii??"),
 
