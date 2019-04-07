@@ -9,6 +9,47 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2019.04.07] `April 7 2019`
+
+### Added
+
+- Added a configuration flag to disable the achievement system even then it's supported by the current client version. See `features/enable_achievement_system` in `battle/feature.conf`. (#2170)
+- Added the `PETINFO_*` constants, to be used with `getpetinfo()`. (part of #2398)
+- Added/updated packets, encryption keys and message tables for clients up to 2019-04-03. (#2406)
+- Added support for the `ZC_PING` and `CZ_PING` packets. (part of #2406)
+- Added support for the `CZ_COOLDOWN_RESET` packet and the related `/resetcooltime` client command. (part of #2406)
+- Added support for the "allow call" player configuration option. (part of #2406)
+- Added support to open the macro UI in the client. (part of #2406)
+- Added support for the `CZ_STYLE_CLOSE` packet. (part of #2406)
+- Exposed the `MAX_ITEM_ID` constant to the script engine. (#2367)
+
+### Changed
+
+- Extended `getinventorylist()` to return the item's inventory index in the `@inventorylist_idx[]` array. (#2401)
+- Extended `gettimestr()` to accept an optional argument providing a UNIX timestamp, as returned for example by `getcalendartime()`. (#2388)
+- Extended `getpetinfo()` to include information previously returned by `petstat()`. (#2398)
+- Renamed `clif_charnameack()` to the more accurate `clif_blname_ack()`. (part of #2406)
+- Extended `showscript()` to accept an optional argument to specify the send target. (#2415)
+- Updated `README.md` to include links to the sections. (#2354)
+
+### Fixed
+
+- Fixed a compilation error in the sample plugin, on systems where `rand()` is not available. (#2403)
+- Fixed a visual glitch caused by `setunitdata(UDT_LEVEL, ...)` not updating the monster level, when `show_mob_info` is configured to display it. (#2408)
+- Fixed the `features/enable_pet_autofeed` configuration value that was ignored and `features/enable_homunculus_autofeed` was used instead. (#2417)
+- Fixed an unescaped string in the db2sql generated data for the mob skill database. (#2416, related to #2407)
+- Fixed some possible null pointer warnings reported by gcc. (part of #2406)
+- Fixed a client crash with `@bodystyle` and `Job_Super_Novice_E`. (part of #2402, related to #2383)
+- Fixed a client crash when using `@jobchange` to a class that doesn't support alternate body styles while a body style is applied. (#2402)
+
+### Deprecated
+
+- Deprecated the command `petstat()`, superseded by `getpetinfo()`. (part of #2398)
+- Deprecated the `PET_*` constants, used by the `petstat()` command. (part of #2398)
+
+### Removed
+
+
 ## [v2019.03.10] `March 10 2019`
 
 ### Added
@@ -638,6 +679,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.04.07]: https://github.com/HerculesWS/Hercules/compare/v2019.03.10...v2019.04.07
 [v2019.03.10]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10+1...v2019.03.10
 [v2019.02.10+1]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10...v2019.02.10+1
 [v2019.02.10]: https://github.com/HerculesWS/Hercules/compare/v2018.12.16+1...v2019.02.10
