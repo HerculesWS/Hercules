@@ -478,6 +478,27 @@ enum script_mercinfo_types {
 };
 
 /**
+ * Pet Info types.
+ */
+enum script_petinfo_types {
+	PETINFO_ID = 0,
+	PETINFO_CLASS,
+	PETINFO_NAME,
+	PETINFO_INTIMACY,
+	PETINFO_HUNGRY,
+	PETINFO_RENAME,
+	PETINFO_GID,
+	PETINFO_EGGITEM,
+	PETINFO_FOODITEM,
+	PETINFO_ACCESSORYITEM,
+	PETINFO_ACCESSORYFLAG,
+	PETINFO_EVO_EGGID,
+	PETINFO_AUTOFEED,
+
+	PETINFO_MAX
+};
+
+/**
  * Player blocking actions related flags.
  */
 enum pcblock_action_flag {
