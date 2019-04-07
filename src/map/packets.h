@@ -1777,7 +1777,9 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20151104
 // new packets
 	packet(0x0a46,clif->pReqStyleChange);
+	packet(0x0a48,clif->pStyleClose);
 #endif
+
 
 // 2016-03-23aRagexeRE
 #if PACKETVER >= 20160323
@@ -1796,6 +1798,11 @@ packet(0x96e,clif->ackmergeitems);
 // all 2016-05-25
 #if PACKETVER >= 20160525
 	packet(0x0a77,clif->pCameraInfo); // CZ_CAMERA_INFO
+#endif
+
+// all 20160622+
+#if PACKETVER >= 20160622
+	packet(0x0a88,clif->pResetCooldown);
 #endif
 
 // 2017-02-28aRagexeRE
@@ -1929,6 +1936,10 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 	packet(0x0b0f,clif->pNPCBarterPurchase);
 	packet(0x0b12,clif->pNPCBarterClosed);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
+	packet(0x0b1c,clif->pPing);
 #endif
 
 #endif /* MAP_PACKETS_H */

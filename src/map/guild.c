@@ -1899,7 +1899,7 @@ static int guild_gm_changed(int guild_id, int account_id, int char_id)
 	if (g->member[pos].sd && g->member[pos].sd->fd) {
 		clif->message(g->member[pos].sd->fd, msg_sd(g->member[pos].sd,878)); //"You no longer are the Guild Master."
 		g->member[pos].sd->state.gmaster_flag = 0;
-		clif->charnameack(0, &g->member[pos].sd->bl);
+		clif->blname_ack(0, &g->member[pos].sd->bl);
 	}
 
 	if (g->member[0].sd && g->member[0].sd->fd) {
@@ -1907,7 +1907,7 @@ static int guild_gm_changed(int guild_id, int account_id, int char_id)
 		g->member[0].sd->state.gmaster_flag = 1;
 		//Block his skills for 5 minutes to prevent abuse.
 		guild->block_skill(g->member[0].sd, 300000);
-		clif->charnameack(0, &g->member[pos].sd->bl);
+		clif->blname_ack(0, &g->member[pos].sd->bl);
 	}
 
 	// announce the change to all guild members

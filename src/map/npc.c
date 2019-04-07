@@ -3911,7 +3911,7 @@ static void npc_setdisplayname(struct npc_data *nd, const char *newname)
 
 	safestrncpy(nd->name, newname, sizeof(nd->name));
 	if( map->list[nd->bl.m].users )
-		clif->charnameack(0, &nd->bl);
+		clif->blname_ack(0, &nd->bl);
 }
 
 /// Changes the display class of the npc.

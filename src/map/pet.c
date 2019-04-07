@@ -733,7 +733,7 @@ static int pet_change_name_ack(struct map_session_data *sd, const char *name, in
 	}
 	safestrncpy(pd->pet.name, newname, NAME_LENGTH);
 	aFree(newname);
-	clif->charnameack (0,&pd->bl);
+	clif->blname_ack(0,&pd->bl);
 	pd->pet.rename_flag = 1;
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	clif->send_petstatus(sd);

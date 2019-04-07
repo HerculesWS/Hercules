@@ -7739,17 +7739,27 @@ static void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 static void clif_spiritball(struct block_list *bl)
 {
 	unsigned char buf[16];
-	struct map_session_data *sd = BL_CAST(BL_PC,bl);
-	struct homun_data *hd = BL_CAST(BL_HOM,bl);
 
 	nullpo_retv(bl);
 
 	WBUFW(buf, 0) = 0x1d0;
 	WBUFL(buf, 2) = bl->id;
 	WBUFW(buf, 6) = 0; //init to 0
-	switch(bl->type){
-		case BL_PC: WBUFW(buf, 6) = sd->spiritball; break;
-		case BL_HOM: WBUFW(buf, 6) = hd->homunculus.spiritball; break;
+	switch (bl->type) {
+		case BL_PC:
+		{
+			struct map_session_data *sd = BL_CAST(BL_PC, bl);
+			nullpo_retv(sd);
+			WBUFW(buf, 6) = sd->spiritball;
+			break;
+		}
+		case BL_HOM:
+		{
+			struct homun_data *hd = BL_CAST(BL_HOM, bl);
+			nullpo_retv(hd);
+			WBUFW(buf, 6) = hd->homunculus.spiritball;
+			break;
+		}
 	}
 	clif->send(buf, packet_len(0x1d0), bl, AREA);
 }
@@ -9228,7 +9238,7 @@ static void clif_refresh(struct map_session_data *sd)
 /// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
 /// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
 /// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
-static void clif_charnameack(int fd, struct block_list *bl)
+static void clif_blname_ack(int fd, struct block_list *bl)
 {
 	struct packet_reqnameall_ack packet = { 0 };
 	int len = sizeof(struct packet_reqnameall_ack);
@@ -9349,7 +9359,7 @@ static void clif_charnameack(int fd, struct block_list *bl)
 			memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
 			break;
 		default:
-			ShowError("clif_charnameack: bad type %u(%d)\n", bl->type, bl->id);
+			ShowError("clif_blname_ack: bad type %u(%d)\n", bl->type, bl->id);
 			return;
 	}
 
@@ -10784,7 +10794,7 @@ static void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 	}
 #endif // 0
 
-	clif->charnameack(fd, bl);
+	clif->blname_ack(fd, bl);
 }
 static int clif_undisguise_timer(int tid, int64 tick, int id, intptr_t data)
 {
@@ -15662,6 +15672,7 @@ static void clif_parse_FeelSaveOk(int fd, struct map_session_data *sd)
 ///     0 = sun
 ///     1 = moon
 ///     2 = star
+///     10 = Do you agree to cast the magic spell that consumes 1 Black Gemstone and 1,000,000 Zeny?
 static void clif_feel_req(int fd, struct map_session_data *sd, uint16 skill_lv)
 {
 	nullpo_retv(sd);
@@ -17010,6 +17021,9 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 		hd->homunculus.autofeed = flag;
 		break;
 	}
+	case CZ_CONFIG_CALL:
+		sd->status.allow_call = flag;
+		break;
 	default:
 		ShowWarning("clif_parse_cz_config: Unsupported type has been received (%u).\n", type);
 		return;
@@ -20949,8 +20963,8 @@ static void clif_change_title_ack(int fd, struct map_session_data *sd, int title
 	WFIFOSET(fd, packet_len(0xa2f));
 
 	// Update names
-	clif->charnameack(fd, &sd->bl);
-	clif->charnameack(0, &sd->bl);
+	clif->blname_ack(fd, &sd->bl);
+	clif->blname_ack(0, &sd->bl);
 #endif
 }
 // End of Achievement System
@@ -21731,6 +21745,18 @@ static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
 		p.data = 0;
 #endif
 		break;
+	case CZ_MACRO_REGISTER_UI:
+		p.UIType = ZC_CAPTCHA_UI;
+#if PACKETVER >= 20171122
+		p.data = 0;
+#endif
+		break;
+	case CZ_MACRO_DETECTOR_UI:
+		p.UIType = ZC_MACRO_UI;
+#if PACKETVER >= 20171122
+		p.data = 0;
+#endif
+		break;
 	case CZ_ATTENDANCE_UI:
 	{
 		if (clif->attendance_getendtime() < time(NULL)) {
@@ -21920,6 +21946,12 @@ static void clif_parse_cz_req_style_change2(int fd, struct map_session_data *sd)
 	}
 	clif->style_change_response(sd, STYLIST_SHOP_SUCCESS);
 	return;
+}
+
+static void clif_parse_cz_style_close(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_cz_style_close(int fd, struct map_session_data *sd)
+{
+	// do nothing
 }
 
 static void clif_style_change_response(struct map_session_data *sd, enum stylist_shop flag)
@@ -22139,6 +22171,55 @@ static void clif_parse_clientVersion(int fd, struct map_session_data *sd)
 #if PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_RE_NUM >= 20090408 || PACKETVER_SAK_NUM >= 20090408 || defined(PACKETVER_ZERO)
 	// TODO: show or store client version
 #endif
+}
+
+static void clif_parse_ping(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_ping(int fd, struct map_session_data *sd)
+{
+	// do nothing, any packet update client tick
+}
+
+static void clif_ping(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190213 || PACKETVER_RE_NUM >= 20190213 || PACKETVER_ZERO_NUM >= 20190130
+	nullpo_retv(sd);
+	struct PACKET_ZC_PING p;
+	p.packetType = HEADER_ZC_PING;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
+static int clif_pingTimer(int tid, int64 tick, int id, intptr_t data)
+{
+	map->foreachpc(clif->pingTimerSub, time(NULL));
+	return 0;
+}
+
+static int clif_pingTimerSub(struct map_session_data *sd, va_list ap)
+{
+	nullpo_ret(sd);
+	const int fd = sd->fd;
+
+	if (!sockt->session_is_active(fd))
+        {
+		return 0;
+        }
+
+	time_t tick = va_arg(ap, time_t);
+
+	if (sockt->session[fd]->wdata_tick + battle_config.ping_time < tick)
+        {
+		clif->ping(sd);
+        }
+	return 0;
+}
+
+static void clif_parse_ResetCooldown(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_ResetCooldown(int fd, struct map_session_data *sd)
+{
+	char cmd[15];
+	sprintf(cmd,"%ccddebug reset", atcommand->at_symbol);
+	atcommand->exec(fd, sd, cmd, true);
 }
 
 /*==========================================
@@ -22422,6 +22503,12 @@ static int do_init_clif(bool minimal)
 	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
 	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
 
+#if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
+	timer->add_func_list(clif->pingTimer, "clif_pingTimer");
+	if (battle_config.ping_timer_interval != 0)
+		timer->add_interval(timer->gettick() + battle_config.ping_timer_interval * 1000, clif->pingTimer, 0, 0, battle_config.ping_timer_interval * 1000);
+#endif
+
 	return 0;
 }
 
@@ -22619,7 +22706,7 @@ void clif_defaults(void)
 	clif->mvp_exp = clif_mvp_exp;
 	clif->mvp_noitem = clif_mvp_noitem;
 	clif->changed_dir = clif_changed_dir;
-	clif->charnameack = clif_charnameack;
+	clif->blname_ack = clif_blname_ack;
 	clif->monster_hp_bar = clif_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;
 	clif->hpmeter_single = clif_hpmeter_single;
@@ -23305,6 +23392,7 @@ void clif_defaults(void)
 
 	clif->pReqStyleChange = clif_parse_cz_req_style_change;
 	clif->pReqStyleChange2 = clif_parse_cz_req_style_change2;
+	clif->pStyleClose = clif_parse_cz_style_close;
 	clif->style_change_response = clif_style_change_response;
 
 	clif->camera_showWindow = clif_camera_showWindow;
@@ -23324,4 +23412,9 @@ void clif_defaults(void)
 	clif->pNPCBarterClosed = clif_parse_NPCBarterClosed;
 	clif->pNPCBarterPurchase = clif_parse_NPCBarterPurchase;
 	clif->pClientVersion = clif_parse_clientVersion;
+	clif->pPing = clif_parse_ping;
+	clif->ping = clif_ping;
+	clif->pingTimer = clif_pingTimer;
+	clif->pingTimerSub = clif_pingTimerSub;
+	clif->pResetCooldown = clif_parse_ResetCooldown;
 }

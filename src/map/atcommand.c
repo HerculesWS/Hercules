@@ -7669,9 +7669,9 @@ ACMD(fakename)
 		if (sd->fakename[0])
 		{
 			sd->fakename[0] = '\0';
-			clif->charnameack(0, &sd->bl);
+			clif->blname_ack(0, &sd->bl);
 			if( sd->disguise )
-				clif->charnameack(sd->fd, &sd->bl);
+				clif->blname_ack(sd->fd, &sd->bl);
 			clif->message(sd->fd, msg_fd(fd,1307)); // Returned to real name.
 			return true;
 		}
@@ -7687,9 +7687,9 @@ ACMD(fakename)
 	}
 
 	safestrncpy(sd->fakename, message, sizeof(sd->fakename));
-	clif->charnameack(0, &sd->bl);
+	clif->blname_ack(0, &sd->bl);
 	if (sd->disguise) // Another packet should be sent so the client updates the name for sd
-		clif->charnameack(sd->fd, &sd->bl);
+		clif->blname_ack(sd->fd, &sd->bl);
 	clif->message(sd->fd, msg_fd(fd,1310)); // Fake name enabled.
 
 	return true;

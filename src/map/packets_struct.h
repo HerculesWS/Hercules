@@ -3160,6 +3160,34 @@ struct PACKET_CZ_CLIENT_VERSION {
 DEFINE_PACKET_HEADER(CZ_CLIENT_VERSION, 0x044a);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190220 || PACKETVER_ZERO_NUM >= 20190220
+struct PACKET_CZ_PING {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_PING, 0x0b1c);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190213 || PACKETVER_RE_NUM >= 20190213 || PACKETVER_ZERO_NUM >= 20190130
+struct PACKET_ZC_PING {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PING, 0x0b1d);
+#endif
+
+#if PACKETVER >= 20160622
+struct PACKET_CZ_COOLDOWN_RESET {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_COOLDOWN_RESET, 0x0a88);
+#endif
+
+#if PACKETVER >= 20151104
+struct PACKET_CZ_STYLE_CLOSE {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_STYLE_CLOSE, 0x0a48);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

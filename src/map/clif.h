@@ -556,7 +556,7 @@ enum clif_unittype {
 **/
 enum CZ_CONFIG {
 	CZ_CONFIG_OPEN_EQUIPMENT_WINDOW  = 0,
-	// Unknown                       = 1,
+	CZ_CONFIG_CALL                   = 1,
 	CZ_CONFIG_PET_AUTOFEEDING        = 2,
 	CZ_CONFIG_HOMUNCULUS_AUTOFEEDING = 3,
 };
@@ -883,7 +883,7 @@ struct clif_interface {
 	void (*mvp_exp) (struct map_session_data *sd, unsigned int exp);
 	void (*mvp_noitem) (struct map_session_data* sd);
 	void (*changed_dir) (struct block_list *bl, enum send_target target);
-	void (*charnameack) (int fd, struct block_list *bl);
+	void (*blname_ack) (int fd, struct block_list *bl);
 	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
 	int (*hpmeter) (struct map_session_data *sd);
 	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
@@ -1566,6 +1566,7 @@ struct clif_interface {
 
 	void (*pReqStyleChange) (int fd, struct map_session_data *sd);
 	void (*pReqStyleChange2) (int fd, struct map_session_data *sd);
+	void (*pStyleClose) (int fd, struct map_session_data *sd);
 	void (*style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 	void (*pPetEvolution) (int fd, struct map_session_data *sd);
 	void (*petEvolutionResult) (int fd, enum pet_evolution_result result);
@@ -1581,6 +1582,11 @@ struct clif_interface {
 	void (*pNPCBarterClosed) (int fd, struct map_session_data *sd);
 	void (*pNPCBarterPurchase) (int fd, struct map_session_data *sd);
 	void (*pClientVersion) (int fd, struct map_session_data *sd);
+	void (*pPing) (int fd, struct map_session_data *sd);
+	void (*ping) (struct map_session_data *sd);
+	int (*pingTimer) (int tid, int64 tick, int id, intptr_t data);
+	int (*pingTimerSub) (struct map_session_data *sd, va_list ap);
+	void (*pResetCooldown) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

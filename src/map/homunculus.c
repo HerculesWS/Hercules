@@ -779,7 +779,7 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	}
 	safestrncpy(hd->homunculus.name, newname, NAME_LENGTH);
 	aFree(newname);
-	clif->charnameack (0,&hd->bl);
+	clif->blname_ack(0,&hd->bl);
 	hd->homunculus.rename_flag = 1;
 	clif->hominfo(sd,hd,0);
 	return true;
