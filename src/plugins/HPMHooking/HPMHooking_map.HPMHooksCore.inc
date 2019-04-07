@@ -2214,6 +2214,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pReqStyleChange_post;
 	struct HPMHookPoint *HP_clif_pReqStyleChange2_pre;
 	struct HPMHookPoint *HP_clif_pReqStyleChange2_post;
+	struct HPMHookPoint *HP_clif_pStyleClose_pre;
+	struct HPMHookPoint *HP_clif_pStyleClose_post;
 	struct HPMHookPoint *HP_clif_style_change_response_pre;
 	struct HPMHookPoint *HP_clif_style_change_response_post;
 	struct HPMHookPoint *HP_clif_pPetEvolution_pre;
@@ -8899,6 +8901,8 @@ struct {
 	int HP_clif_pReqStyleChange_post;
 	int HP_clif_pReqStyleChange2_pre;
 	int HP_clif_pReqStyleChange2_post;
+	int HP_clif_pStyleClose_pre;
+	int HP_clif_pStyleClose_post;
 	int HP_clif_style_change_response_pre;
 	int HP_clif_style_change_response_post;
 	int HP_clif_pPetEvolution_pre;

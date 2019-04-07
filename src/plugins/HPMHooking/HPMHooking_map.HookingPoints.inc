@@ -1131,6 +1131,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->PrivateAirshipResponse, HP_clif_PrivateAirshipResponse) },
 	{ HP_POP(clif->pReqStyleChange, HP_clif_pReqStyleChange) },
 	{ HP_POP(clif->pReqStyleChange2, HP_clif_pReqStyleChange2) },
+	{ HP_POP(clif->pStyleClose, HP_clif_pStyleClose) },
 	{ HP_POP(clif->style_change_response, HP_clif_style_change_response) },
 	{ HP_POP(clif->pPetEvolution, HP_clif_pPetEvolution) },
 	{ HP_POP(clif->petEvolutionResult, HP_clif_petEvolutionResult) },

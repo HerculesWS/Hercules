@@ -2624,6 +2624,8 @@ typedef void (*HPMHOOK_pre_clif_pReqStyleChange) (int *fd, struct map_session_da
 typedef void (*HPMHOOK_post_clif_pReqStyleChange) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pReqStyleChange2) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pReqStyleChange2) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pStyleClose) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pStyleClose) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_style_change_response) (struct map_session_data **sd, enum stylist_shop *flag);
 typedef void (*HPMHOOK_post_clif_style_change_response) (struct map_session_data *sd, enum stylist_shop flag);
 typedef void (*HPMHOOK_pre_clif_pPetEvolution) (int *fd, struct map_session_data **sd);
