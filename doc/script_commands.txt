@@ -3115,6 +3115,7 @@ invoking character has in its inventory, including all the data needed to
 recreate these items perfectly if they are destroyed. Here's what you get:
 
 @inventorylist_id[]        - array of item ids.
+@inventorylist_idx[]       - array of item inventory index.
 @inventorylist_amount[]    - their corresponding item amounts.
 @inventorylist_equip[]     - will return the slot the item is equipped on, if at all.
 @inventorylist_refine[]    - for how much it is refined.

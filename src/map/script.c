@@ -14857,6 +14857,7 @@ static BUILDIN(getinventorylist)
 			}
 			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
 			pc->setreg(sd,reference_uid(script->add_variable("@inventorylist_bound"), j),sd->status.inventory[i].bound);
+			pc->setreg(sd, reference_uid(script->add_variable("@inventorylist_idx"), j), i);
 			j++;
 		}
 	}
