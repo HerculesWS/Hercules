@@ -716,6 +716,7 @@ MAX_BANK_ZENY		- Maximum Zeny in the bank
 MAX_BG_MEMBERS		- Maximum BattleGround members
 MAX_CHAT_USERS		- Maximum Chat users
 MAX_REFINE			- Maximum Refine level
+MAX_ITEM_ID			- Maximum Item ID
 MAX_MENU_OPTIONS    - Maximum NPC menu options
 MAX_MENU_LENGTH     - Maximum NPC menu string length
 MOB_CLONE_START     - Clone ID start from this range
