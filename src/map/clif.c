@@ -2980,10 +2980,16 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 	int i = 0;
 	struct item_data *id;
 
+#define STORAGE_ITEMS_MAX_ITERATION 500
+	STATIC_ASSERT((sizeof(storelist_normal) - sizeof(storelist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * STORAGE_ITEMS_MAX_ITERATION) <= INT16_MAX,
+		"The storage equipment list data can potentially be larger than the maximum packet size per iteration. This may cause errors at run-time.");
+	STATIC_ASSERT((sizeof(storelist_equip) - sizeof(storelist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * STORAGE_ITEMS_MAX_ITERATION) <= INT16_MAX,
+		"The storage equipment list data can potentially be larger than the maximum packet size per iteration. This may cause errors at run-time.");
+
 	do {
 		int normal = 0, equip = 0, k = 0;
 
-		for( ; i < items_length && k < 500; i++, k++ ) {
+		for( ; i < items_length && k < STORAGE_ITEMS_MAX_ITERATION; i++, k++ ) {
 
 			if( items[i].nameid <= 0 )
 				continue;
@@ -3026,6 +3032,7 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 
 	} while ( i < items_length );
 
+#undef STORAGE_ITEMS_MAX_ITERATION
 }
 
 static void clif_cartList(struct map_session_data *sd)
