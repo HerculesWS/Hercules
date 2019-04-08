@@ -431,19 +431,19 @@ static int clif_send_actual(int fd, void *buf, int len)
  *------------------------------------------*/
 static bool clif_send(const void *buf, int len, struct block_list *bl, enum send_target type)
 {
+	if (type != ALL_CLIENT)
+		nullpo_retr(false, bl);
+	nullpo_retr(false, buf);
+	Assert_retr(false, len > 0);
+
 	int i;
-	struct map_session_data *sd, *tsd;
+	struct map_session_data *sd = BL_CAST(BL_PC, bl), *tsd;
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
 	struct battleground_data *bgd = NULL;
 	int x0 = 0, x1 = 0, y0 = 0, y1 = 0, fd;
 	struct s_mapiterator* iter;
 	int area_size;
-
-	if( type != ALL_CLIENT )
-		nullpo_ret(bl);
-
-	sd = BL_CAST(BL_PC, bl);
 
 	if (sd != NULL && pc_isinvisible(sd)) {
 		if (type == AREA || type == BG || type == BG_AREA)
