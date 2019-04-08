@@ -7138,7 +7138,7 @@ static void clif_party_job_and_level(struct map_session_data *sd)
 	WBUFW(buf, 6) = sd->status.class;
 	WBUFW(buf, 8) = sd->status.base_level;
 
-	clif_send(buf, packet_len(0xabd), &sd->bl, PARTY);
+	clif->send(buf, packet_len(0xabd), &sd->bl, PARTY);
 #endif
 }
 
@@ -21643,7 +21643,7 @@ static void clif_hat_effect_single(struct block_list *bl, uint16 effectId, bool 
 	WBUFB(buf,8) = enable;
 	WBUFL(buf,9) = effectId;
 
-	clif_send(buf, 13, bl, AREA);
+	clif->send(buf, 13, bl, AREA);
 #endif
 }
 
