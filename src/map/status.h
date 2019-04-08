@@ -2338,8 +2338,8 @@ struct status_interface {
 	short (*calc_def2) (struct block_list *bl, struct status_change *sc, int def2, bool viewable);
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int mdef, bool viewable);
 	short (*calc_mdef2) (struct block_list *bl, struct status_change *sc, int mdef2, bool viewable);
-	unsigned int (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
-	unsigned int (*base_matk) (struct block_list *bl, const struct status_data *st, int level);
+	int (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
+	int (*base_matk) (struct block_list *bl, const struct status_data *st, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
 	int (*get_total_mdef) (struct block_list *src);
 	int (*get_total_def) (struct block_list *src);
@@ -2350,7 +2350,7 @@ struct status_interface {
 	void (*initChangeTables) (void);
 	void (*initDummyData) (void);
 	int (*base_amotion_pc) (struct map_session_data *sd, struct status_data *st);
-	unsigned int (*base_atk) (const struct block_list *bl, const struct status_data *st);
+	int (*base_atk) (const struct block_list *bl, const struct status_data *st);
 	unsigned int (*get_base_maxhp) (const struct map_session_data *sd, const struct status_data *st);
 	unsigned int (*get_base_maxsp) (const struct map_session_data *sd, const struct status_data *st);
 	unsigned int (*get_restart_hp) (const struct map_session_data *sd, const struct status_data *st);
@@ -2362,8 +2362,8 @@ struct status_interface {
 	unsigned short (*calc_int) (struct block_list *bl, struct status_change *sc, int int_);
 	unsigned short (*calc_dex) (struct block_list *bl, struct status_change *sc, int dex);
 	unsigned short (*calc_luk) (struct block_list *bl, struct status_change *sc, int luk);
-	unsigned int (*calc_watk) (struct block_list *bl, struct status_change *sc, int watk, bool viewable);
-	unsigned int (*calc_matk) (struct block_list *bl, struct status_change *sc, int matk, bool viewable);
+	int (*calc_watk) (struct block_list *bl, struct status_change *sc, int watk, bool viewable);
+	int (*calc_matk) (struct block_list *bl, struct status_change *sc, int matk, bool viewable);
 	signed int (*calc_hit) (struct block_list *bl, struct status_change *sc, int hit, bool viewable);
 	signed int (*calc_critical) (struct block_list *bl, struct status_change *sc, int critical, bool viewable);
 	signed int (*calc_flee) (struct block_list *bl, struct status_change *sc, int flee, bool viewable);
@@ -2378,7 +2378,7 @@ struct status_interface {
 	unsigned char (*calc_element) (struct block_list *bl, struct status_change *sc, int element);
 	unsigned char (*calc_element_lv) (struct block_list *bl, struct status_change *sc, int lv);
 	uint32 (*calc_mode) (const struct block_list *bl, const struct status_change *sc, uint32 mode);
-	unsigned int (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
+	int (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
 	void (*calc_bl_main) (struct block_list *bl, int flag);
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);
 	void (*display_remove) (struct map_session_data *sd, enum sc_type type);
@@ -2391,8 +2391,8 @@ struct status_interface {
 	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
 	void (*set_sc) (uint16 skill_id, sc_type sc, int icon, unsigned int flag);
 	void (*copy) (struct status_data *a, const struct status_data *b);
-	unsigned int (*base_matk_min) (const struct status_data *st);
-	unsigned int (*base_matk_max) (const struct status_data *st);
+	int (*base_matk_min) (const struct status_data *st);
+	int (*base_matk_max) (const struct status_data *st);
 };
 
 #ifdef HERCULES_CORE
