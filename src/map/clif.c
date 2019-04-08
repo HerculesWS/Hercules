@@ -2978,12 +2978,10 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 	nullpo_retv(items);
 
 	for (int i = 0, normal_count = 0, equip_count = 0; i < items_length; ++i) {
-		struct item_data *itd;
-
 		if (items[i].nameid == 0)
 			continue;
 
-		itd = itemdb->search(items[i].nameid);
+		struct item_data *itd = itemdb->search(items[i].nameid);
 
 		if (!itemdb->isstackable2(itd))
 			clif->item_equip(i + 1, &storelist_equip.list[equip_count++], &items[i], itd, itd->equip);
@@ -7125,7 +7123,7 @@ static void clif_party_job_and_level(struct map_session_data *sd)
 	WBUFW(buf, 6) = sd->status.class;
 	WBUFW(buf, 8) = sd->status.base_level;
 
-	clif_send(buf, packet_len(0xabd), &sd->bl, PARTY);
+	clif->send(buf, packet_len(0xabd), &sd->bl, PARTY);
 #endif
 }
 
@@ -21630,7 +21628,7 @@ static void clif_hat_effect_single(struct block_list *bl, uint16 effectId, bool 
 	WBUFB(buf,8) = enable;
 	WBUFL(buf,9) = effectId;
 
-	clif_send(buf, 13, bl, AREA);
+	clif->send(buf, 13, bl, AREA);
 #endif
 }
 
