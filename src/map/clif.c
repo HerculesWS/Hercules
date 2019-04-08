@@ -2977,34 +2977,20 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 	nullpo_retv(sd);
 	nullpo_retv(items);
 
-	int i = 0;
-	struct item_data *id;
+	for (int i = 0, normal_count = 0, equip_count = 0; i < items_length; ++i) {
+		struct item_data *itd = itemdb->search(items[i].nameid);
 
-#define STORAGE_ITEMS_MAX_ITERATION 488
-	STATIC_ASSERT((sizeof(storelist_normal) - sizeof(storelist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * STORAGE_ITEMS_MAX_ITERATION) <= INT16_MAX,
-		"The storage equipment list data can potentially be larger than the maximum packet size per iteration. This may cause errors at run-time.");
-	STATIC_ASSERT((sizeof(storelist_equip) - sizeof(storelist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * STORAGE_ITEMS_MAX_ITERATION) <= INT16_MAX,
-		"The storage equipment list data can potentially be larger than the maximum packet size per iteration. This may cause errors at run-time.");
+		if (itd == &itemdb->dummy)
+			continue;
 
-	do {
-		int normal = 0, equip = 0, k = 0;
+		if (!itemdb->isstackable2(itd))
+			clif->item_equip(i + 1, &storelist_equip.list[equip_count++], &items[i], itd, itd->equip);
+		else
+			clif->item_normal(i + 1, &storelist_normal.list[normal_count++], &items[i], itd);
 
-		for( ; i < items_length && k < STORAGE_ITEMS_MAX_ITERATION; i++, k++ ) {
-
-			if( items[i].nameid <= 0 )
-				continue;
-
-			id = itemdb->search(items[i].nameid);
-
-			if( !itemdb->isstackable2(id) ) //Non-stackable (Equippable)
-				clif->item_equip(i+1,&storelist_equip.list[equip++],&items[i],id,id->equip);
-			else //Stackable (Normal)
-				clif->item_normal(i+1,&storelist_normal.list[normal++],&items[i],id);
-		}
-
-		if( normal ) {
-			storelist_normal.PacketType   = storageListNormalType;
-			storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
+		if (normal_count > 0 && (normal_count == MAX_STORAGE_ITEM_PACKET_NORMAL || i + 1 == items_length)) {
+			storelist_normal.PacketType = storageListNormalType;
+			storelist_normal.PacketLength = (sizeof(storelist_normal) - sizeof(storelist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal_count);
 
 #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 			storelist_normal.invType = type;
@@ -3014,11 +3000,12 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 #endif
 
 			clif->send(&storelist_normal, storelist_normal.PacketLength, &sd->bl, SELF);
+			normal_count = 0;
 		}
 
-		if( equip ) {
-			storelist_equip.PacketType   = storageListEquipType;
-			storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
+		if (equip_count > 0 && (normal_count == MAX_STORAGE_ITEM_PACKET_EQUIP || i + 1 == items_length)) {
+			storelist_equip.PacketType = storageListEquipType;
+			storelist_equip.PacketLength = (sizeof(storelist_equip) - sizeof(storelist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip_count);
 
 #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 			storelist_equip.invType = type;
@@ -3028,11 +3015,9 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 #endif
 
 			clif->send(&storelist_equip, storelist_equip.PacketLength, &sd->bl, SELF);
+			equip_count = 0;
 		}
-
-	} while ( i < items_length );
-
-#undef STORAGE_ITEMS_MAX_ITERATION
+	}
 }
 
 static void clif_cartList(struct map_session_data *sd)

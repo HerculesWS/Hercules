@@ -78,6 +78,11 @@ enum rodex_get_items;
 #define COLOR_YELLOW  0xffff00U
 #define COLOR_DEFAULT COLOR_GREEN
 
+#define MAX_STORAGE_ITEM_PACKET_NORMAL ((INT16_MAX - (sizeof(struct ZC_STORE_ITEMLIST_NORMAL) - (sizeof(struct NORMALITEM_INFO) * MAX_ITEMLIST))) / sizeof(struct NORMALITEM_INFO))
+#define MAX_STORAGE_ITEM_PACKET_EQUIP  ((INT16_MAX - (sizeof(struct ZC_STORE_ITEMLIST_EQUIP) - (sizeof(struct EQUIPITEM_INFO) * MAX_ITEMLIST))) / sizeof(struct EQUIPITEM_INFO))
+STATIC_ASSERT(MAX_STORAGE_ITEM_PACKET_NORMAL > 0, "Max items per storage item packet for normal items is less than 1, it's most likely to be a bug and shall not be ignored.");
+STATIC_ASSERT(MAX_STORAGE_ITEM_PACKET_EQUIP > 0, "Max items per storage item packet for equip items is less than 1, it's most likely to be a bug and shall not be ignored.");
+
 /**
  * Enumerations
  **/
