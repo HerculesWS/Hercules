@@ -24559,6 +24559,28 @@ static BUILDIN(getcalendartime)
 	return true;
 }
 
+static BUILDIN(setfavoriteitem)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	int idx = script_getnum(st, 2);
+	int value = script_getnum(st, 3);
+
+	if (sd == NULL) {
+		ShowError("buildin_setfavoriteitem: no player attached.\n");
+		return false;
+	}
+	else if (idx < 0 || idx >= sd->status.inventorySize || sd->status.inventorySize <= 0) {
+		ShowError("buildin_setfavoriteitem: Invalid Inventory Index %d (min: %d, max: %d).\n", idx, 0, (sd->status.inventorySize - 1));
+		return false;
+	}
+	else if (sd->status.inventory[idx].equip == 0) {
+		sd->status.inventory[idx].favorite = cap_value(value, 0, 1);
+		clif->favorite_item(sd, idx);
+	}
+
+	return true;
+}
+
 /** place holder for the translation macro **/
 static BUILDIN(_)
 {
@@ -25902,6 +25924,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(expandInventoryResult, "i"),
 		BUILDIN_DEF(expandInventory, "i"),
 		BUILDIN_DEF(getInventorySize, ""),
+		BUILDIN_DEF(setfavoriteitem, "ii"),
+
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
