@@ -3129,7 +3129,8 @@ recreate these items perfectly if they are destroyed. Here's what you get:
                              made by a specific craftsman.
 @inventorylist_expire[]    - expire time (Unix time stamp). 0 means never
                              expires.
-@inventorylist_bound       - whether it is an account bounded item or not.
+@inventorylist_bound[]     - whether it is an account bounded item or not.
+@inventorylist_favorite[]  - whether it is favorite (inside favorite tab) or not. 
 @inventorylist_count       - the number of items in these lists.
 
 This could be handy to save/restore a character's inventory, since no
