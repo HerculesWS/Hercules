@@ -3183,6 +3183,17 @@ runs of getcartinventorylist().
 
 ---------------------------------------
 
+*setfavoriteitem(<idx>, <value>)
+
+This function will set an item in inventory as favorite or not.
+If its favorite item, it will be moved to favorite tab, else move out from favorite tab.
+
+Valid Parameters: 
+	<idx>      - inventory index, refer *getinventorylist()
+	<value>    - true/false (true = favorite item, false = otherwise)
+
+---------------------------------------
+
 *cardscnt()
 
 This function will return the number of cards inserted into the weapon
