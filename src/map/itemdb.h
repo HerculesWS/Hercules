@@ -521,7 +521,8 @@ struct item_data {
 		unsigned no_refine : 1; // [celest]
 		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
 		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
-		unsigned autoequip: 1;
+		unsigned autoequip : 1;
+		unsigned auto_favorite : 1;
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;

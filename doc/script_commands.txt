@@ -3192,6 +3192,30 @@ runs of getcartinventorylist().
 
 ---------------------------------------
 
+*setfavoriteitemidx(<idx>, <flag>)
+
+This function will set an item in inventory as favorite or not.
+If its favorite item, it will be moved to favorite tab, else move out from favorite tab.
+Note: Cant change favorite flag of an equipped item.
+
+Valid Parameters: 
+	<idx>    - inventory index, refer *getinventorylist()
+	<flag>   - true/false (true = favorite item, false = otherwise)
+
+---------------------------------------
+
+*autofavoriteitem(<item_id>, <flag>)
+
+This function will auto set an item as favorite when <item_id> is obtained. 
+If its favorite item, it will be auto moved to favorite tab, else move out from favorite tab.
+This setting affect not only attached player, but also everyone player globally.
+
+Valid Parameters: 
+	<item_id> - item ID
+	<flag>    - true/false (true = favorite item, false = otherwise)
+
+---------------------------------------
+
 *cardscnt()
 
 This function will return the number of cards inserted into the weapon

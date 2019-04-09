@@ -4778,6 +4778,13 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
 
 	sd->weight += w;
 	clif->updatestatus(sd,SP_WEIGHT);
+
+	// auto-favorite
+	if (data->flag.auto_favorite > 0) {
+		sd->status.inventory[i].favorite = 1;
+		clif->favorite_item(sd, i);
+	}
+
 	//Auto-equip
 	if(data->flag.autoequip)
 		pc->equipitem(sd, i, data->equip);
