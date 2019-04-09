@@ -2943,7 +2943,7 @@ static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type
 	p->invType = type;
 #endif
 #if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
-	int strLen = (int)safestrnlen(name, 24);
+	int strLen = (int)safestrnlen(name, 24) + 1;
 	if (strLen > 24)
 		strLen = 24;
 	const int len = sizeof(struct ZC_INVENTORY_START) + strLen;
