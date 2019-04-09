@@ -15203,21 +15203,24 @@ BUILDIN(npctalk)
 }
 
 // change npc walkspeed [Valaris]
-BUILDIN(npcspeed) {
-	struct npc_data* nd;
-	int speed;
-
-	speed = script_getnum(st,2);
-	nd = map->id2nd(st->oid);
+static BUILDIN(npcspeed)
+{
+	struct npc_data *nd = map->id2nd(st->oid);
+	int speed = script_getnum(st, 2);
 
 	if (nd != NULL) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+		if (nd->ud == NULL) {
+			ShowWarning("buildin_npcspeed: Floating NPC don't have unit data.\n");
+			return false;
+		}
 		nd->speed = speed;
 		nd->ud->state.speed_changed = 1;
 	}
 
 	return true;
 }
+
 // make an npc walk to a position [Valaris]
 BUILDIN(npcwalkto)
 {
