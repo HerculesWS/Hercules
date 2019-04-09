@@ -444,8 +444,14 @@ static struct guild *inter_guild_fromsql(int guild_id)
 			m->position = MAX_GUILDPOSITION - 1;
 		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 12, &data, NULL);
-		if (data != NULL)
+		if (data != NULL) {
 			m->last_login = atoi(data);
+			// 2036-12-31
+			if (m->last_login > 2114283600) {
+				ShowError("Last login time bigger than allowd value in %d:%s: %u\n", guild_id, g->name, m->last_login);
+				m->last_login = 0;
+			}
+		}
 		m->modified = GS_MEMBER_UNMODIFIED;
 	}
 
