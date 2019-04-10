@@ -21835,6 +21835,17 @@ static void clif_parse_attendance_reward_request(int fd, struct map_session_data
 static void clif_parse_cz_blocking_play_cancel(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
 static void clif_parse_cz_blocking_play_cancel(int fd, struct map_session_data *sd)
 {
+	clif->loadConfirm(sd);
+}
+
+static void clif_loadConfirm(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320 || PACKETVER_ZERO_NUM >= 20190410
+	nullpo_retv(sd);
+	struct PACKET_ZC_LOAD_CONFIRM p;
+	p.packetType = HEADER_ZC_LOAD_CONFIRM;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
 }
 
 static void clif_ui_action(struct map_session_data *sd, int32 UIType, int32 data)
@@ -23409,4 +23420,5 @@ void clif_defaults(void)
 	clif->pingTimer = clif_pingTimer;
 	clif->pingTimerSub = clif_pingTimerSub;
 	clif->pResetCooldown = clif_parse_ResetCooldown;
+	clif->loadConfirm = clif_loadConfirm;
 }
