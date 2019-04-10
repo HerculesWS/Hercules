@@ -15910,37 +15910,41 @@ static BUILDIN(npctalk)
 // change npc walkspeed [Valaris]
 static BUILDIN(npcspeed)
 {
-	struct npc_data* nd;
-	int speed;
-
-	speed = script_getnum(st,2);
-	nd = map->id2nd(st->oid);
+	struct npc_data *nd = map->id2nd(st->oid);
+	int speed = script_getnum(st, 2);
 
 	if (nd != NULL) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+		if (nd->ud == NULL) {
+			ShowWarning("buildin_npcspeed: floating NPC don't have unit data.\n");
+			return false;
+		}
 		nd->speed = speed;
 		nd->ud->state.speed_changed = 1;
 	}
 
 	return true;
 }
+
 // make an npc walk to a position [Valaris]
 static BUILDIN(npcwalkto)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
-	int x=0,y=0;
-
-	x=script_getnum(st,2);
-	y=script_getnum(st,3);
+	int x = script_getnum(st, 2);
+	int y = script_getnum(st, 3);
 
 	if (nd != NULL) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+		if (nd->ud == NULL) {
+			ShowWarning("buildin_npcwalkto: floating NPC don't have unit data.\n");
+			return false;
+		}
 		if (!nd->status.hp) {
 			status_calc_npc(nd, SCO_FIRST);
 		} else {
 			status_calc_npc(nd, SCO_NONE);
 		}
-		unit->walktoxy(&nd->bl,x,y,0);
+		unit->walktoxy(&nd->bl, x, y, 0);
 	}
 
 	return true;
@@ -15952,6 +15956,10 @@ static BUILDIN(npcstop)
 
 	if (nd != NULL) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+		if (nd->ud == NULL) {
+			ShowWarning("buildin_npcstop: floating NPC don't have unit data.\n");
+			return false;
+		}
 		unit->stop_walking(&nd->bl, STOPWALKING_FLAG_FIXPOS|STOPWALKING_FLAG_NEXTCELL);
 	}
 
@@ -20372,24 +20380,28 @@ static BUILDIN(setunitname)
 /// unitwalk(<unit_id>,<target_id>) -> <bool>
 static BUILDIN(unitwalk)
 {
-	struct block_list* bl;
+	struct block_list *bl = map->id2bl(script_getnum(st, 2));
 
-	bl = map->id2bl(script_getnum(st,2));
-	if( bl == NULL ) {
+	if (bl == NULL) {
 		script_pushint(st, 0);
 		return true;
 	}
 
-	if( bl->type == BL_NPC ) {
-		unit->bl2ud2(bl); // ensure the ((struct npc_data*)bl)->ud is safe to edit
+	if (bl->type == BL_NPC) {
+		struct unit_data *ud = unit->bl2ud2(bl); // ensure the ((struct npc_data*)bl)->ud is safe to edit
+		if (ud == NULL) {
+			ShowWarning("buildin_unitwalk: floating NPC don't have unit data.\n");
+			return false;
+		}
 	}
-	if( script_hasdata(st,4) ) {
-		int x = script_getnum(st,3);
-		int y = script_getnum(st,4);
-		script_pushint(st, unit->walktoxy(bl,x,y,0));// We'll use harder calculations.
-	} else {
-		int target_id = script_getnum(st,3);
-		script_pushint(st, unit->walktobl(bl,map->id2bl(target_id),1,1));
+	if (script_hasdata(st, 4)) {
+		int x = script_getnum(st, 3);
+		int y = script_getnum(st, 4);
+		script_pushint(st, unit->walktoxy(bl, x, y, 0));// We'll use harder calculations.
+	}
+	else {
+		int target_id = script_getnum(st, 3);
+		script_pushint(st, unit->walktobl(bl, map->id2bl(target_id), 1, 1));
 	}
 
 	return true;
@@ -20413,32 +20425,34 @@ static BUILDIN(unitkill)
 /// unitwarp(<unit_id>,"<map name>",<x>,<y>) -> <bool>
 static BUILDIN(unitwarp)
 {
-	int unit_id;
+	int unit_id = script_getnum(st, 2);
+	const char *mapname = script_getstr(st, 3);
+	short x = (short)script_getnum(st, 4);
+	short y = (short)script_getnum(st, 5);
 	int mapid;
-	short x;
-	short y;
-	struct block_list* bl;
-	const char *mapname;
-
-	unit_id = script_getnum(st,2);
-	mapname = script_getstr(st, 3);
-	x = (short)script_getnum(st,4);
-	y = (short)script_getnum(st,5);
+	struct block_list *bl;
 
 	if (!unit_id) //Warp the script's runner
 		bl = map->id2bl(st->rid);
 	else
 		bl = map->id2bl(unit_id);
 
-	if( strcmp(mapname,"this") == 0 )
-		mapid = bl?bl->m:-1;
+	if (strcmp(mapname, "this") == 0)
+		mapid = bl ? bl->m : -1;
 	else
 		mapid = map->mapname2mapid(mapname);
 
-	if( mapid >= 0 && bl != NULL ) {
-		unit->bl2ud2(bl); // ensure ((struct npc_data *)bl)->ud is safe to edit
-		script_pushint(st, unit->warp(bl,mapid,x,y,CLR_OUTSIGHT));
-	} else {
+	if (mapid >= 0 && bl != NULL) {
+		struct unit_data *ud = unit->bl2ud2(bl); // ensure ((struct npc_data *)bl)->ud is safe to edit
+		if (bl->type == BL_NPC) {
+			if (ud == NULL) {
+				ShowWarning("buildin_unitwarp: floating NPC don't have unit data.\n");
+				return false;
+			}
+		}
+		script_pushint(st, unit->warp(bl, mapid, x, y, CLR_OUTSIGHT));
+	}
+	else {
 		script_pushint(st, 0);
 	}
 
@@ -20509,17 +20523,19 @@ static BUILDIN(unitattack)
 /// unitstop <unit_id>;
 static BUILDIN(unitstop)
 {
-	int unit_id;
-	struct block_list* bl;
+	struct block_list *bl = map->id2bl(script_getnum(st, 2));
 
-	unit_id = script_getnum(st,2);
-
-	bl = map->id2bl(unit_id);
-	if( bl != NULL ) {
-		unit->bl2ud2(bl); // ensure ((struct npc_data *)bl)->ud is safe to edit
+	if (bl != NULL) {
+		struct unit_data *ud = unit->bl2ud2(bl); // ensure ((struct npc_data *)bl)->ud is safe to edit
+		if (bl->type == BL_NPC) {
+			if (ud == NULL) {
+				ShowWarning("buildin_unitstop: floating NPC don't have unit data.\n");
+				return false;
+			}
+		}
 		unit->stop_attack(bl);
 		unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
-		if( bl->type == BL_MOB )
+		if (bl->type == BL_MOB)
 			BL_UCAST(BL_MOB, bl)->target_id = 0;
 	}
 
