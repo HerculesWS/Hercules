@@ -3799,7 +3799,7 @@ packetLen(0x0a46, 14)  // CZ_REQ_STYLE_CHANGE
 packetLen(0x0a47, 3)  // ZC_STYLE_CHANGE_RES
 
 // Packet: 0x0a48
-packetLen(0x0a48, 2)
+packetLen(0x0a48, 2)  // CZ_STYLE_CLOSE
 
 // Packet: 0x0a49
 packetLen(0x0a49, 22)  // CZ_PRIVATE_AIRSHIP_REQUEST
@@ -3955,7 +3955,7 @@ packetLen(0x0a86, -1)
 packetLen(0x0a87, -1)
 
 // Packet: 0x0a88
-packetLen(0x0a88, 2)
+packetLen(0x0a88, 2)  // CZ_COOLDOWN_RESET
 
 // Packet: 0x0a89
 packetLen(0x0a89, 61)  // ZC_NOTIFY_OFFLINE_STORE
@@ -4216,7 +4216,7 @@ packetLen(0x0add, 24)  // ZC_ITEM_FALL_ENTRY
 packetLen(0x0ade, 6)  // ZC_OVERWEIGHT_PERCENT
 
 // Packet: 0x0adf
-packetLen(0x0adf, 58)  // ZC_ACK_REQNAME
+packetLen(0x0adf, 58)  // ZC_ACK_REQNAME_TITLE
 
 // Packet: 0x0ae0
 packetLen(0x0ae0, 30)
@@ -4432,10 +4432,27 @@ packetLen(0x0b22, 6)
 #endif
 
 // Packet: 0x0b23
-#if PACKETVER >= 20190306
+#if PACKETVER >= 20190417
+packetLen(0x0b23, 6)
+#elif PACKETVER >= 20190306
 // removed
 #elif PACKETVER >= 20190227
 packetLen(0x0b23, 10)
+#endif
+
+// Packet: 0x0b24
+#if PACKETVER >= 20190417
+packetLen(0x0b24, 6)
+#endif
+
+// Packet: 0x0b25
+#if PACKETVER >= 20190417
+packetLen(0x0b25, 6)
+#endif
+
+// Packet: 0x0b26
+#if PACKETVER >= 20190417
+packetLen(0x0b26, 18)
 #endif
 
 
