@@ -10750,8 +10750,9 @@ static void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 	/* Rovert's prevent logout option fixed [Valaris] */
 	if (!sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] && !sd->sc.data[SC_SUHIDE] &&
 		(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)) {
-		sockt->eof(fd);
 		clif->disconnect_ack(sd, 0);
+		sockt->flush(fd);
+		sockt->eof(fd);
 	} else {
 		clif->disconnect_ack(sd, 1);
 	}
