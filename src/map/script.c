@@ -6983,10 +6983,13 @@ static BUILDIN(input)
 		// first invocation, display npc input box
 		sd->state.menu_or_input = 1;
 		st->state = RERUNLINE;
-		if (is_string_variable(name))
+		if (is_string_variable(name)) {
 			clif->scriptinputstr(sd, st->oid);
-		else
+		} else {
+			sd->npc_amount_min = min;
+			sd->npc_amount_max = max;
 			clif->scriptinput(sd, st->oid);
+		}
 	} else {
 		// take received text/value and store it in the designated variable
 		sd->state.menu_or_input = 0;
@@ -6997,7 +7000,7 @@ static BUILDIN(input)
 		} else {
 			int amount = sd->npc_amount;
 			script->set_reg(st, sd, uid, name, (const void *)h64BPTRSIZE(cap_value(amount,min,max)), script_getref(st,2));
-			script_pushint(st, (amount > max ? 1 : amount < min ? -1 : 0));
+			script_pushint(st, sd->npc_input_capped_range);
 		}
 		st->state = RUN;
 	}
