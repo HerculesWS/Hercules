@@ -3188,6 +3188,13 @@ struct PACKET_CZ_STYLE_CLOSE {
 DEFINE_PACKET_HEADER(CZ_STYLE_CLOSE, 0x0a48);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320 || PACKETVER_ZERO_NUM >= 20190410
+struct PACKET_ZC_LOAD_CONFIRM {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_LOAD_CONFIRM, 0x0b1b);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
