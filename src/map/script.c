@@ -6947,54 +6947,52 @@ static BUILDIN(jobname)
 	return true;
 }
 
-/// Get input from the player.
-/// For numeric inputs the value is capped to the range [min,max]. Returns 1 if
-/// the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
-/// For string inputs it returns 1 if the string was longer than 'max', -1 is
-/// shorter than 'min' and 0 otherwise.
-///
-/// input(<var>{,<min>{,<max>}}) -> <int>
+/*
+ * Get input from the player.
+ * For numeric inputs the value is capped to the range [min,max]. Returns 1 if
+ * the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
+ * For string inputs it returns 1 if the string was longer than 'max', -1 is
+ * shorter than 'min' and 0 otherwise.
+ *
+ * input(<var>{,<min>{,<max>}}) -> <int>
+ */
 static BUILDIN(input)
 {
-	struct script_data* data;
-	int64 uid;
-	const char* name;
-	int min;
-	int max;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
 
-	data = script_getdata(st,2);
-	if( !data_isreference(data) ) {
+	struct script_data *data = script_getdata(st, 2);
+	if (!data_isreference(data)) {
 		ShowError("script:input: not a variable\n");
 		script->reportdata(data);
 		st->state = END;
 		return false;
 	}
-	uid = reference_getuid(data);
-	name = reference_getname(data);
-	min = (script_hasdata(st,3) ? script_getnum(st,3) : script->config.input_min_value);
-	max = (script_hasdata(st,4) ? script_getnum(st,4) : script->config.input_max_value);
+
+	int64 uid  = reference_getuid(data);
+	const char *name = reference_getname(data);
+	int min = (script_hasdata(st, 3) ? script_getnum(st, 3) : script->config.input_min_value);
+	int max = (script_hasdata(st, 4) ? script_getnum(st, 4) : script->config.input_max_value);
 
 #ifdef SECURE_NPCTIMEOUT
 	sd->npc_idle_type = NPCT_WAIT;
 #endif
 
-	if( !sd->state.menu_or_input ) {
+	if (!sd->state.menu_or_input) {
 		// first invocation, display npc input box
 		sd->state.menu_or_input = 1;
 		st->state = RERUNLINE;
-		if( is_string_variable(name) )
-			clif->scriptinputstr(sd,st->oid);
+		if (is_string_variable(name))
+			clif->scriptinputstr(sd, st->oid);
 		else
-			clif->scriptinput(sd,st->oid);
+			clif->scriptinput(sd, st->oid);
 	} else {
 		// take received text/value and store it in the designated variable
 		sd->state.menu_or_input = 0;
 		if (is_string_variable(name)) {
 			int len = (int)strlen(sd->npc_str);
-			script->set_reg(st, sd, uid, name, sd->npc_str, script_getref(st,2));
+			script->set_reg(st, sd, uid, name, sd->npc_str, script_getref(st, 2));
 			script_pushint(st, (len > max ? 1 : len < min ? -1 : 0));
 		} else {
 			int amount = sd->npc_amount;
