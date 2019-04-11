@@ -1380,6 +1380,24 @@ typedef void (*HPMHOOK_pre_clif_changed_dir) (struct block_list **bl, enum send_
 typedef void (*HPMHOOK_post_clif_changed_dir) (struct block_list *bl, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_blname_ack) (int *fd, struct block_list **bl);
 typedef void (*HPMHOOK_post_clif_blname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_pcname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_pcname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_homname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_homname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_mername_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_mername_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_petname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_petname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_npcname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_npcname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_mobname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_mobname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_chatname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_chatname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_elemname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_elemname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_unknownname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_unknownname_ack) (int fd, struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_monster_hp_bar) (struct mob_data **md, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_clif_hpmeter) (struct map_session_data **sd);
@@ -2666,6 +2684,10 @@ typedef int (*HPMHOOK_pre_clif_pingTimerSub) (struct map_session_data **sd, va_l
 typedef int (*HPMHOOK_post_clif_pingTimerSub) (int retVal___, struct map_session_data *sd, va_list ap);
 typedef void (*HPMHOOK_pre_clif_pResetCooldown) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pResetCooldown) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_loadConfirm) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_loadConfirm) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_send_selforarea) (int *fd, struct block_list **bl, const void **buf, int *len);
+typedef void (*HPMHOOK_post_clif_send_selforarea) (int fd, struct block_list *bl, const void *buf, int len);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -3532,8 +3554,12 @@ typedef bool (*HPMHOOK_pre_inter_rodex_checkname) (const char **name, int **targ
 typedef bool (*HPMHOOK_post_inter_rodex_checkname) (bool retVal___, const char *name, int *target_char_id, int *target_class, int *target_level);
 typedef int64 (*HPMHOOK_pre_inter_rodex_savemessage) (struct rodex_message **msg);
 typedef int64 (*HPMHOOK_post_inter_rodex_savemessage) (int64 retVal___, struct rodex_message *msg);
-typedef bool (*HPMHOOK_pre_inter_rodex_updatemail) (int64 *mail_id, int8 *flag);
-typedef bool (*HPMHOOK_post_inter_rodex_updatemail) (bool retVal___, int64 mail_id, int8 flag);
+typedef bool (*HPMHOOK_pre_inter_rodex_updatemail) (int *fd, int *account_id, int *char_id, int64 *mail_id, uint8 *opentype, int8 *flag);
+typedef bool (*HPMHOOK_post_inter_rodex_updatemail) (bool retVal___, int fd, int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag);
+typedef int64 (*HPMHOOK_pre_inter_rodex_getzeny) (int64 *mail_id);
+typedef int64 (*HPMHOOK_post_inter_rodex_getzeny) (int64 retVal___, int64 mail_id);
+typedef int (*HPMHOOK_pre_inter_rodex_getitems) (int64 *mail_id, struct rodex_item **items);
+typedef int (*HPMHOOK_post_inter_rodex_getitems) (int retVal___, int64 mail_id, struct rodex_item *items);
 #endif // CHAR_INT_RODEX_H
 #ifdef CHAR_INT_STORAGE_H /* inter_storage */
 typedef int (*HPMHOOK_pre_inter_storage_tosql) (int *account_id, const struct storage_data **p);
@@ -3700,12 +3726,16 @@ typedef int (*HPMHOOK_pre_intif_rodex_requestinbox) (int *char_id, int *account_
 typedef int (*HPMHOOK_post_intif_rodex_requestinbox) (int retVal___, int char_id, int account_id, int8 flag, int8 opentype, int64 mail_id);
 typedef int (*HPMHOOK_pre_intif_rodex_checkhasnew) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_intif_rodex_checkhasnew) (int retVal___, struct map_session_data *sd);
-typedef int (*HPMHOOK_pre_intif_rodex_updatemail) (int64 *mail_id, int8 *flag);
-typedef int (*HPMHOOK_post_intif_rodex_updatemail) (int retVal___, int64 mail_id, int8 flag);
+typedef int (*HPMHOOK_pre_intif_rodex_updatemail) (struct map_session_data **sd, int64 *mail_id, uint8 *opentype, int8 *flag);
+typedef int (*HPMHOOK_post_intif_rodex_updatemail) (int retVal___, struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag);
 typedef int (*HPMHOOK_pre_intif_rodex_sendmail) (struct rodex_message **msg);
 typedef int (*HPMHOOK_post_intif_rodex_sendmail) (int retVal___, struct rodex_message *msg);
 typedef int (*HPMHOOK_pre_intif_rodex_checkname) (struct map_session_data **sd, const char **name);
 typedef int (*HPMHOOK_post_intif_rodex_checkname) (int retVal___, struct map_session_data *sd, const char *name);
+typedef void (*HPMHOOK_pre_intif_pGetZenyAck) (int *fd);
+typedef void (*HPMHOOK_post_intif_pGetZenyAck) (int fd);
+typedef void (*HPMHOOK_pre_intif_pGetItemsAck) (int *fd);
+typedef void (*HPMHOOK_post_intif_pGetItemsAck) (int fd);
 typedef int (*HPMHOOK_pre_intif_clan_kickoffline) (int *clan_id, int *kick_interval);
 typedef int (*HPMHOOK_post_intif_clan_kickoffline) (int retVal___, int clan_id, int kick_interval);
 typedef int (*HPMHOOK_pre_intif_clan_membercount) (int *clan_id, int *kick_interval);
@@ -5048,6 +5078,10 @@ typedef void (*HPMHOOK_pre_mapif_parse_rodex_checkname) (int *fd);
 typedef void (*HPMHOOK_post_mapif_parse_rodex_checkname) (int fd);
 typedef void (*HPMHOOK_pre_mapif_rodex_checkname) (int *fd, int *reqchar_id, int *target_char_id, int *target_class, int *target_level, char **name);
 typedef void (*HPMHOOK_post_mapif_rodex_checkname) (int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name);
+typedef void (*HPMHOOK_pre_mapif_rodex_getzenyack) (int *fd, int *char_id, int64 *mail_id, uint8 *opentype, int64 *zeny);
+typedef void (*HPMHOOK_post_mapif_rodex_getzenyack) (int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny);
+typedef void (*HPMHOOK_pre_mapif_rodex_getitemsack) (int *fd, int *char_id, int64 *mail_id, uint8 *opentype, int *count, const struct rodex_item **items);
+typedef void (*HPMHOOK_post_mapif_rodex_getitemsack) (int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
 typedef int (*HPMHOOK_pre_mapif_load_guild_storage) (int *fd, int *account_id, int *guild_id, char *flag);
 typedef int (*HPMHOOK_post_mapif_load_guild_storage) (int retVal___, int fd, int account_id, int guild_id, char flag);
 typedef int (*HPMHOOK_pre_mapif_save_guild_storage_ack) (int *fd, int *account_id, int *guild_id, int *fail);
@@ -6608,6 +6642,10 @@ typedef void (*HPMHOOK_pre_rodex_delete_mail) (struct map_session_data **sd, int
 typedef void (*HPMHOOK_post_rodex_delete_mail) (struct map_session_data *sd, int64 mail_id);
 typedef void (*HPMHOOK_pre_rodex_clean) (struct map_session_data **sd, int8 *flag);
 typedef void (*HPMHOOK_post_rodex_clean) (struct map_session_data *sd, int8 flag);
+typedef void (*HPMHOOK_pre_rodex_getZenyAck) (struct map_session_data **sd, int64 *mail_id, int8 *opentype, int64 *zeny);
+typedef void (*HPMHOOK_post_rodex_getZenyAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny);
+typedef void (*HPMHOOK_pre_rodex_getItemsAck) (struct map_session_data **sd, int64 *mail_id, int8 *opentype, int *count, const struct rodex_item **items);
+typedef void (*HPMHOOK_post_rodex_getItemsAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int count, const struct rodex_item *items);
 #endif // MAP_RODEX_H
 #ifdef MAP_SCRIPT_H /* script */
 typedef void (*HPMHOOK_pre_script_init) (bool *minimal);
