@@ -9226,6 +9226,22 @@ static void clif_refresh(struct map_session_data *sd)
 	clif->refresh_storagewindow(sd);
 }
 
+static void clif_send_selforarea(int fd, struct block_list *bl, const void *buf, int len)
+{
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(buf, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(buf, len, &sd->bl, SELF);
+		} else {
+			clif->send(buf, len, bl, SELF);
+		}
+	}
+}
+
 /// Updates the object's (bl) name on client.
 /// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
 /// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
@@ -9295,19 +9311,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		}
 	}
 
-
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 /// Updates the object's (bl) name on client.
@@ -9325,18 +9329,7 @@ static void clif_homname_ack(int fd, struct block_list *bl)
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
 
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 /// Updates the object's (bl) name on client.
@@ -9354,18 +9347,7 @@ static void clif_mername_ack(int fd, struct block_list *bl)
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
 
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 /// Updates the object's (bl) name on client.
@@ -9383,18 +9365,7 @@ static void clif_petname_ack(int fd, struct block_list *bl)
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
 
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 /// Updates the object's (bl) name on client.
@@ -9412,18 +9383,7 @@ static void clif_npcname_ack(int fd, struct block_list *bl)
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
 
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 /// Updates the object's (bl) name on client.
@@ -9464,18 +9424,7 @@ static void clif_mobname_ack(int fd, struct block_list *bl)
 		}
 	}
 
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 /// Updates the object's (bl) name on client.
@@ -9496,18 +9445,7 @@ static void clif_chatname_ack(int fd, struct block_list *bl)
 	memcpy(packet.name, BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
 #endif
 
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 /// Updates the object's (bl) name on client.
@@ -9525,18 +9463,7 @@ static void clif_elemname_ack(int fd, struct block_list *bl)
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
 
-	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
-	if (fd == 0) {
-		clif->send(&packet, len, bl, AREA);
-	} else {
-		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-		if (sd != NULL) {
-			clif->send(&packet, len, &sd->bl, SELF);
-		} else {
-			clif->send(&packet, len, bl, SELF);
-		}
-	}
+	clif->send_selforarea(fd, bl, &packet, len);
 }
 
 static void clif_unknownname_ack(int fd, struct block_list *bl)
@@ -23639,4 +23566,5 @@ void clif_defaults(void)
 	clif->pingTimerSub = clif_pingTimerSub;
 	clif->pResetCooldown = clif_parse_ResetCooldown;
 	clif->loadConfirm = clif_loadConfirm;
+	clif->send_selforarea = clif_send_selforarea;
 }
