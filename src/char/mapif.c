@@ -2464,6 +2464,17 @@ static void mapif_achievement_save(int char_id, struct char_achievements *p)
 		inter_achievement->tosql(char_id, cp, p);
 }
 
+static void mapif_rodex_getzenyack(int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny)
+{
+	WFIFOHEAD(fd, 23);
+	WFIFOW(fd, 0) = 0x3899;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOQ(fd, 6) = zeny;
+	WFIFOQ(fd, 14) = mail_id;
+	WFIFOB(fd, 22) = opentype;
+	WFIFOSET(fd, 23);
+}
+
 void mapif_defaults(void)
 {
 	mapif = &mapif_s;
@@ -2608,6 +2619,7 @@ void mapif_defaults(void)
 	mapif->rodex_send = mapif_rodex_send;
 	mapif->parse_rodex_checkname = mapif_parse_rodex_checkname;
 	mapif->rodex_checkname = mapif_rodex_checkname;
+	mapif->rodex_getzenyack = mapif_rodex_getzenyack;
 	mapif->load_guild_storage = mapif_load_guild_storage;
 	mapif->save_guild_storage_ack = mapif_save_guild_storage_ack;
 	mapif->parse_LoadGuildStorage = mapif_parse_LoadGuildStorage;

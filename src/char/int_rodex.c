@@ -346,6 +346,30 @@ static int64 inter_rodex_savemessage(struct rodex_message *msg)
 	return msg->id;
 }
 
+static int64 inter_rodex_getzeny(int64 mail_id)
+{
+	Assert_retr(-1, mail_id > 0);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `zeny`, `type` FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+	} else {
+		if (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
+			char *data;
+			SQL->GetData(inter->sql_handle, 0, &data, NULL);
+			int64 zeny = atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL);
+			uint8 type = atoi(data);
+			SQL->FreeResult(inter->sql_handle);
+			if ((type & MAIL_TYPE_ZENY) == 0)
+				return -1;
+			return zeny;
+		}
+	}
+	SQL->FreeResult(inter->sql_handle);
+
+	return -1;
+}
+
 /*==========================================
  * Update/Delete mail
  *------------------------------------------*/
@@ -364,10 +388,15 @@ static bool inter_rodex_updatemail(int fd, int account_id, int char_id, int64 ma
 		break;
 
 	case 1: // Get Zeny
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `zeny` = 0, `type` = `type` & (~2) WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
+	{
+		const int64 zeny = inter_rodex->getzeny(mail_id);
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `zeny` = 0, `type` = `type` & (~2) WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id)) {
 			Sql_ShowDebug(inter->sql_handle);
+			break;
+		}
+		mapif->rodex_getzenyack(fd, char_id, mail_id, opentype, zeny);
 		break;
-
+	}
 	case 2: // Get Items
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_item_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
@@ -432,4 +461,5 @@ void inter_rodex_defaults(void)
 	inter_rodex->hasnew = inter_rodex_hasnew;
 	inter_rodex->checkname = inter_rodex_checkname;
 	inter_rodex->updatemail = inter_rodex_updatemail;
+	inter_rodex->getzeny = inter_rodex_getzeny;
 }
