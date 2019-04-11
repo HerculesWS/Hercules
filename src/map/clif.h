@@ -1597,6 +1597,7 @@ struct clif_interface {
 	int (*pingTimerSub) (struct map_session_data *sd, va_list ap);
 	void (*pResetCooldown) (int fd, struct map_session_data *sd);
 	void (*loadConfirm) (struct map_session_data *sd);
+	void (*send_selforarea) (int fd, struct block_list *bl, const void *buf, int len);
 };
 
 #ifdef HERCULES_CORE
