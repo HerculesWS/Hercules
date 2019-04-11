@@ -2860,6 +2860,19 @@ static void intif_parse_RodexCheckName(int fd)
 	clif->rodex_checkname_result(sd, target_char_id, target_class, target_level, name);
 }
 
+static void intif_parse_GetZenyAck(int fd)
+{
+	int char_id = RFIFOL(fd, 2);
+	int64 zeny = RFIFOL(fd, 6);
+	int64 mail_id = RFIFOQ(fd, 14);
+	uint8 opentype = RFIFOB(fd, 22);
+	struct map_session_data *sd = map->charid2sd(char_id);
+
+	if (sd == NULL) // User is not online anymore
+		return;
+	rodex->getZenyAck(sd, mail_id, opentype, zeny);
+}
+
 //-----------------------------------------------------------------
 // Communication from the inter server
 // Return a 0 (false) if there were any errors.
@@ -2977,6 +2990,7 @@ static int intif_parse(int fd)
 		case 0x3896: intif->pRodexHasNew(fd); break;
 		case 0x3897: intif->pRodexSendMail(fd); break;
 		case 0x3898: intif->pRodexCheckName(fd); break;
+		case 0x3899: intif->pGetZenyAck(fd); break;
 
 		// Clan System
 		case 0x3858: intif->pRecvClanMemberAction(fd); break;
@@ -3006,7 +3020,7 @@ void intif_defaults(void)
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		14,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 0, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
+		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 23, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
 	};
 
 	intif = &intif_s;
@@ -3176,6 +3190,7 @@ void intif_defaults(void)
 	intif->pRodexHasNew = intif_parse_RodexNotifications;
 	intif->pRodexSendMail = intif_parse_RodexSendMail;
 	intif->pRodexCheckName = intif_parse_RodexCheckName;
+	intif->pGetZenyAck = intif_parse_GetZenyAck;
 	/* Clan System */
 	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
 	/* Achievement System */
