@@ -435,16 +435,32 @@ static void rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
 	clif->rodex_delete_mail(sd, msg->opentype, msg->id);
 }
 
+/// give requested zeny from message to player
+static void rodex_getZenyAck(struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny)
+{
+	nullpo_retv(sd);
+	if (zeny <= 0) {
+		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
+		return;
+	}
+
+	if (pc->getzeny(sd, zeny, LOG_TYPE_MAIL, NULL) != 0) {
+		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
+		return;
+	}
+
+	clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_SUCCESS);
+}
+
 /// Gets attached zeny
 /// @param sd : Who's getting
 /// @param mail_id : Mail ID that we're getting zeny from
 static void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mail_id)
 {
-	struct rodex_message *msg;
 
 	nullpo_retv(sd);
 
-	msg = rodex->get_mail(sd, mail_id);
+	struct rodex_message *msg = rodex->get_mail(sd, mail_id);
 
 	if (msg == NULL) {
 		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
@@ -456,16 +472,9 @@ static void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mai
 		return;
 	}
 
-	if (pc->getzeny(sd, (int)msg->zeny, LOG_TYPE_MAIL, NULL) != 0) {
-		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
-		return;
-	}
-
 	msg->type &= ~MAIL_TYPE_ZENY;
 	msg->zeny = 0;
 	intif->rodex_updatemail(sd, mail_id, opentype, 1);
-
-	clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_SUCCESS);
 }
 
 /// Gets attached item
@@ -668,4 +677,5 @@ void rodex_defaults(void)
 	rodex->get_zeny = rodex_get_zeny;
 	rodex->get_items = rodex_get_items;
 	rodex->clean = rodex_clean;
+	rodex->getZenyAck = rodex_getZenyAck;
 }
