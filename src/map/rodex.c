@@ -404,12 +404,12 @@ static void rodex_read_mail(struct map_session_data *sd, int64 mail_id)
 
 	if (msg->opentype == RODEX_OPENTYPE_RETURN) {
 		if (msg->sender_read == false) {
-			intif->rodex_updatemail(msg->id, 4);
+			intif->rodex_updatemail(sd, msg->id, 0, 4);
 			msg->sender_read = true;
 		}
 	} else {
 		if (msg->is_read == false) {
-			intif->rodex_updatemail(msg->id, 0);
+			intif->rodex_updatemail(sd, msg->id, 0, 0);
 			msg->is_read = true;
 		}
 	}
@@ -430,7 +430,7 @@ static void rodex_delete_mail(struct map_session_data *sd, int64 mail_id)
 	nullpo_retv(msg);
 
 	msg->is_deleted = true;
-	intif->rodex_updatemail(msg->id, 3);
+	intif->rodex_updatemail(sd, msg->id, 0, 3);
 
 	clif->rodex_delete_mail(sd, msg->opentype, msg->id);
 }
@@ -463,7 +463,7 @@ static void rodex_get_zeny(struct map_session_data *sd, int8 opentype, int64 mai
 
 	msg->type &= ~MAIL_TYPE_ZENY;
 	msg->zeny = 0;
-	intif->rodex_updatemail(mail_id, 1);
+	intif->rodex_updatemail(sd, mail_id, opentype, 1);
 
 	clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_SUCCESS);
 }
@@ -538,7 +538,7 @@ static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 ma
 
 		if (pc->additem(sd, it, it->amount, LOG_TYPE_MAIL) != 0) {
 			clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEM_FULL_ERROR);
-			intif->rodex_updatemail(mail_id, 2);
+			intif->rodex_updatemail(sd, mail_id, opentype, 2);
 			return;
 		} else {
 			memset(it, 0x0, sizeof(*it));
@@ -547,7 +547,7 @@ static void rodex_get_items(struct map_session_data *sd, int8 opentype, int64 ma
 
 	msg->type &= ~MAIL_TYPE_ITEM;
 	msg->items_count = 0;
-	intif->rodex_updatemail(mail_id, 2);
+	intif->rodex_updatemail(sd, mail_id, opentype, 2);
 
 	clif->rodex_request_items(sd, opentype, mail_id, RODEX_GET_ITEMS_SUCCESS);
 }

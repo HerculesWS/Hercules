@@ -135,7 +135,7 @@ struct intif_interface {
 	// RoDEX
 	int(*rodex_requestinbox) (int char_id, int account_id, int8 flag, int8 opentype, int64 mail_id);
 	int(*rodex_checkhasnew) (struct map_session_data *sd);
-	int(*rodex_updatemail) (int64 mail_id, int8 flag);
+	int(*rodex_updatemail) (struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag);
 	int(*rodex_sendmail) (struct rodex_message *msg);
 	int(*rodex_checkname) (struct map_session_data *sd, const char *name);
 	/* Clan System */

@@ -1744,10 +1744,13 @@ static void mapif_rodex_sendhasnew(int fd, int char_id, bool has_new)
  *------------------------------------------*/
 static void mapif_parse_rodex_updatemail(int fd)
 {
-	int64 mail_id = RFIFOL(fd, 2);
-	int8 flag = RFIFOB(fd, 10);
+	int account_id = RFIFOL(fd, 2);
+	int char_id = RFIFOL(fd, 6);
+	int64 mail_id = RFIFOQ(fd, 10);
+	uint8 opentype = RFIFOB(fd, 18);
+	int8 flag = RFIFOB(fd, 19);
 
-	inter_rodex->updatemail(mail_id, flag);
+	inter_rodex->updatemail(fd, account_id, char_id, mail_id, opentype, flag);
 }
 
 /*==========================================

@@ -2754,16 +2754,21 @@ static void intif_parse_RodexNotifications(int fd)
 ///     2 - user got Items
 ///     3 - delete
 ///     4 - sender Read (returned mail)
-static int intif_rodex_updatemail(int64 mail_id, int8 flag)
+static int intif_rodex_updatemail(struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag)
 {
+	nullpo_ret(sd);
+
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd, 11);
+	WFIFOHEAD(inter_fd, 20);
 	WFIFOW(inter_fd, 0) = 0x3097;
-	WFIFOQ(inter_fd, 2) = mail_id;
-	WFIFOB(inter_fd, 10) = flag;
-	WFIFOSET(inter_fd, 11);
+	WFIFOL(inter_fd, 2) = sd->status.account_id;
+	WFIFOL(inter_fd, 6) = sd->status.char_id;
+	WFIFOQ(inter_fd, 10) = mail_id;
+	WFIFOB(inter_fd, 18) = opentype;
+	WFIFOB(inter_fd, 19) = flag;
+	WFIFOSET(inter_fd, 20);
 
 	return 0;
 }
