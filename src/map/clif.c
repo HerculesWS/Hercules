@@ -9238,134 +9238,72 @@ static void clif_refresh(struct map_session_data *sd)
 /// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
 /// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
 /// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
-static void clif_blname_ack(int fd, struct block_list *bl)
+static void clif_pcname_ack(int fd, struct block_list *bl)
 {
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_PC);
+
 	struct packet_reqnameall_ack packet = { 0 };
 	int len = sizeof(struct packet_reqnameall_ack);
-
-	nullpo_retv(bl);
-
-	packet.packet_id = reqName;
 	packet.gid = bl->id;
 
-	switch(bl->type) {
-		case BL_PC:
-		{
-			const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
-			const struct party_data *p = NULL;
-			const struct guild *g = NULL;
-			int ps = -1;
+	const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
+	const struct party_data *p = NULL;
+	const struct guild *g = NULL;
+	int ps = -1;
 
-			if (ssd->fakename[0] != '\0' || ssd->status.guild_id > 0 || ssd->status.party_id > 0 || ssd->status.title_id > 0) {
-				packet.packet_id = reqNameAllType;
-			}
-
-			//Requesting your own "shadow" name. [Skotlex]
-			if (ssd->fd == fd && ssd->disguise != -1) {
-				packet.gid = -bl->id;
-			}
-
-			if (ssd->fakename[0] != '\0') {
-				memcpy(packet.name, ssd->fakename, NAME_LENGTH);
-				break;
-			}
-
-#if PACKETVER >= 20150503
-			// Title System [Dastgir/Hercules]
-			if (ssd->status.title_id > 0) {
-				packet.title_id = ssd->status.title_id;
-			}
-#endif
-
-			memcpy(packet.name, ssd->status.name, NAME_LENGTH);
-
-			if (ssd->status.party_id != 0) {
-				p = party->search(ssd->status.party_id);
-			}
-			if (ssd->status.guild_id != 0) {
-				if ((g = ssd->guild) != NULL) {
-					int i;
-					ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
-					if (i < g->max_member)
-						ps = g->member[i].position;
-				}
-			}
-
-			if (!battle_config.display_party_name && g == NULL) {
-				// do not display party unless the player is also in a guild
-				p = NULL;
-			}
-
-			if (p == NULL && g == NULL)
-				break;
-
-			if (p != NULL) {
-				memcpy(packet.party_name, p->party.name, NAME_LENGTH);
-			}
-
-			if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
-				memcpy(packet.guild_name, g->name,NAME_LENGTH);
-				memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
-			}
-		}
-			break;
-		//[blackhole89]
-		case BL_HOM:
-			memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
-			break;
-		case BL_MER:
-			memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
-			break;
-		case BL_PET:
-			memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
-			break;
-		case BL_NPC:
-			memcpy(packet.name, BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
-			break;
-		case BL_MOB:
-		{
-			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
-
-			memcpy(packet.name, md->name, NAME_LENGTH);
-			if (md->guardian_data && md->guardian_data->g) {
-				packet.packet_id = reqNameAllType;
-				memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
-				memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
-			} else if (battle_config.show_mob_info) {
-				char mobhp[50], *str_p = mobhp;
-				packet.packet_id = reqNameAllType;
-				if (battle_config.show_mob_info&4)
-					str_p += sprintf(str_p, "Lv. %d | ", md->level);
-				if (battle_config.show_mob_info&1)
-					str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
-				if (battle_config.show_mob_info&2)
-					str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
-				//Even thought mobhp ain't a name, we send it as one so the client
-				//can parse it. [Skotlex]
-				if (str_p != mobhp) {
-					*(str_p-3) = '\0'; //Remove trailing space + pipe.
-					memcpy(packet.party_name, mobhp, NAME_LENGTH);
-				}
-			}
-		}
-			break;
-		case BL_CHAT:
-#if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
-			memcpy(packet.name, BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
-			break;
-#endif
-			return;
-		case BL_ELEM:
-			memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
-			break;
-		default:
-			ShowError("clif_blname_ack: bad type %u(%d)\n", bl->type, bl->id);
-			return;
-	}
-
-	if (packet.packet_id == reqName) {
+	if (ssd->fakename[0] != '\0' || ssd->status.guild_id > 0 || ssd->status.party_id > 0 || ssd->status.title_id > 0) {
+		packet.packet_id = reqNameAllType;
+		len = sizeof(struct packet_reqnameall_ack);
+	} else {
+		packet.packet_id = reqName;
 		len = sizeof(struct packet_reqname_ack);
 	}
+
+	//Requesting your own "shadow" name. [Skotlex]
+	if (ssd->fd == fd && ssd->disguise != -1) {
+		packet.gid = -bl->id;
+	}
+
+	if (ssd->fakename[0] != '\0') {
+		memcpy(packet.name, ssd->fakename, NAME_LENGTH);
+	} else {
+#if PACKETVER >= 20150503
+		// Title System [Dastgir/Hercules]
+		if (ssd->status.title_id > 0) {
+			packet.title_id = ssd->status.title_id;
+		}
+#endif
+		memcpy(packet.name, ssd->status.name, NAME_LENGTH);
+
+		if (ssd->status.party_id != 0) {
+			p = party->search(ssd->status.party_id);
+		}
+		if (ssd->status.guild_id != 0) {
+			if ((g = ssd->guild) != NULL) {
+				int i;
+				ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
+				if (i < g->max_member)
+					ps = g->member[i].position;
+			}
+		}
+
+		if (!battle_config.display_party_name && g == NULL) {
+			// do not display party unless the player is also in a guild
+			p = NULL;
+		}
+
+		if (p != NULL) {
+			memcpy(packet.party_name, p->party.name, NAME_LENGTH);
+		}
+
+		if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+			memcpy(packet.guild_name, g->name,NAME_LENGTH);
+			memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+		}
+	}
+
+
 	// if no recipient specified just update nearby clients
 	// if no recipient specified just update nearby clients
 	if (fd == 0) {
@@ -9377,6 +9315,276 @@ static void clif_blname_ack(int fd, struct block_list *bl)
 		} else {
 			clif->send(&packet, len, bl, SELF);
 		}
+	}
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_homname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_HOM);
+
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqname_ack);
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
+	memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
+
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(&packet, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
+	}
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_mername_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_MER);
+
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqname_ack);
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
+	memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
+
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(&packet, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
+	}
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_petname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_PET);
+
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqname_ack);
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
+	memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
+
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(&packet, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
+	}
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_npcname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_NPC);
+
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqname_ack);
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
+	memcpy(packet.name, BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
+
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(&packet, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
+	}
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_mobname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_MOB);
+
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqnameall_ack);
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
+
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+
+	memcpy(packet.name, md->name, NAME_LENGTH);
+	if (md->guardian_data && md->guardian_data->g) {
+		packet.packet_id = reqNameAllType;
+		memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
+		memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
+	} else if (battle_config.show_mob_info) {
+		char mobhp[50], *str_p = mobhp;
+		packet.packet_id = reqNameAllType;
+		if (battle_config.show_mob_info&4)
+			str_p += sprintf(str_p, "Lv. %d | ", md->level);
+		if (battle_config.show_mob_info&1)
+			str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
+		if (battle_config.show_mob_info&2)
+			str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
+		//Even thought mobhp ain't a name, we send it as one so the client
+		//can parse it. [Skotlex]
+		if (str_p != mobhp) {
+			*(str_p-3) = '\0'; //Remove trailing space + pipe.
+			memcpy(packet.party_name, mobhp, NAME_LENGTH);
+		}
+	}
+
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(&packet, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
+	}
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_chatname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_CHAT);
+
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqname_ack);
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
+
+#if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
+	memcpy(packet.name, BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
+#endif
+
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(&packet, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
+	}
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_elemname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_ELEM);
+
+	struct packet_reqnameall_ack packet = { 0 };
+	int len = sizeof(struct packet_reqname_ack);
+	packet.packet_id = reqName;
+	packet.gid = bl->id;
+	memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
+
+	// if no recipient specified just update nearby clients
+	// if no recipient specified just update nearby clients
+	if (fd == 0) {
+		clif->send(&packet, len, bl, AREA);
+	} else {
+		struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+		if (sd != NULL) {
+			clif->send(&packet, len, &sd->bl, SELF);
+		} else {
+			clif->send(&packet, len, bl, SELF);
+		}
+	}
+}
+
+static void clif_unknownname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	ShowError("clif_blname_ack: bad type %u(%d)\n", bl->type, bl->id);
+}
+
+static void clif_blname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+
+	switch(bl->type) {
+		case BL_PC:
+			clif->pcname_ack(fd, bl);
+			break;
+		case BL_HOM:
+			clif->homname_ack(fd, bl);
+			break;
+		case BL_MER:
+			clif->mername_ack(fd, bl);
+			break;
+		case BL_PET:
+			clif->petname_ack(fd, bl);
+			break;
+		case BL_NPC:
+			clif->npcname_ack(fd, bl);
+			break;
+		case BL_MOB:
+			clif->mobname_ack(fd, bl);
+			break;
+		case BL_CHAT:
+			clif->chatname_ack(fd, bl);
+			break;
+		case BL_ELEM:
+			clif->elemname_ack(fd, bl);
+			break;
+		default:
+			clif->unknownname_ack(fd, bl);
+			break;
 	}
 }
 
@@ -22719,6 +22927,15 @@ void clif_defaults(void)
 	clif->mvp_noitem = clif_mvp_noitem;
 	clif->changed_dir = clif_changed_dir;
 	clif->blname_ack = clif_blname_ack;
+	clif->pcname_ack = clif_pcname_ack;
+	clif->homname_ack = clif_homname_ack;
+	clif->mername_ack = clif_mername_ack;
+	clif->petname_ack = clif_petname_ack;
+	clif->npcname_ack = clif_npcname_ack;
+	clif->mobname_ack = clif_mobname_ack;
+	clif->chatname_ack = clif_chatname_ack;
+	clif->elemname_ack = clif_elemname_ack;
+	clif->unknownname_ack = clif_unknownname_ack;
 	clif->monster_hp_bar = clif_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;
 	clif->hpmeter_single = clif_hpmeter_single;

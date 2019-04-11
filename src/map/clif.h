@@ -884,6 +884,15 @@ struct clif_interface {
 	void (*mvp_noitem) (struct map_session_data* sd);
 	void (*changed_dir) (struct block_list *bl, enum send_target target);
 	void (*blname_ack) (int fd, struct block_list *bl);
+	void (*pcname_ack) (int fd, struct block_list *bl);
+	void (*homname_ack) (int fd, struct block_list *bl);
+	void (*mername_ack) (int fd, struct block_list *bl);
+	void (*petname_ack) (int fd, struct block_list *bl);
+	void (*npcname_ack) (int fd, struct block_list *bl);
+	void (*mobname_ack) (int fd, struct block_list *bl);
+	void (*chatname_ack) (int fd, struct block_list *bl);
+	void (*elemname_ack) (int fd, struct block_list *bl);
+	void (*unknownname_ack) (int fd, struct block_list *bl);
 	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
 	int (*hpmeter) (struct map_session_data *sd);
 	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
