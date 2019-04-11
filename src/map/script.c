@@ -11043,10 +11043,16 @@ static BUILDIN(killmonster)
 	int16 m,allflag=0;
 	mapname=script_getstr(st,2);
 	event=script_getstr(st,3);
-	if(strcmp(event,"All")==0)
+
+	if (strcmpi(event, "all") == 0) {
+		if (strcmp(event, "all") != 0) {
+			ShowWarning("buildin_killmonster: \"%s\" deprecated! Please use \"all\" instead.\n", event);
+			script->reportsrc(st);
+		}
 		allflag = 1;
-	else
+	} else {
 		script->check_event(st, event);
+	}
 
 	if( (m=map->mapname2mapid(mapname))<0 )
 		return true;

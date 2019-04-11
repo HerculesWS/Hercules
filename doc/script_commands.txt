@@ -6502,7 +6502,7 @@ This command will kill all monsters that were spawned with monster() or
 areamonster() and have a specified event label attached to them. Commonly
 used to get rid of remaining quest monsters once the quest is complete.
 
-If the label is given as "All", all monsters which have their respawn
+If the label is given as "all", all monsters which have their respawn
 times set to -1 (like all the monsters summoned with 'monster' or
 'areamonster' script command, and all monsters summoned with GM commands,
 but no other ones - that is, all non-permanent monsters) on the specified
