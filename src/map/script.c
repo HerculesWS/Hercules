@@ -26507,6 +26507,66 @@ static void script_hardcoded_constants(void)
 	script->set_constant("NST_CUSTOM", NST_CUSTOM, false, false);
 	script->set_constant("NST_BARTER", NST_BARTER, false, false);
 
+	script->constdb_comment("script unit data types");
+	script->set_constant("UDT_TYPE", UDT_TYPE, false, false);
+	script->set_constant("UDT_SIZE", UDT_SIZE, false, false);
+	script->set_constant("UDT_LEVEL", UDT_LEVEL, false, false);
+	script->set_constant("UDT_HP", UDT_HP, false, false);
+	script->set_constant("UDT_MAXHP", UDT_MAXHP, false, false);
+	script->set_constant("UDT_SP", UDT_SP, false, false);
+	script->set_constant("UDT_MAXSP", UDT_MAXSP, false, false);
+	script->set_constant("UDT_MASTERAID", UDT_MASTERAID, false, false);
+	script->set_constant("UDT_MASTERCID", UDT_MASTERCID, false, false);
+	script->set_constant("UDT_MAPIDXY", UDT_MAPIDXY, false, true);  // for setunitdata use *unitwarp, for getunitdata use *getmapxy
+	script->set_constant("UDT_WALKTOXY", UDT_WALKTOXY, false, true);  // use *unitwalk
+	script->set_constant("UDT_SPEED", UDT_SPEED, false, false);
+	script->set_constant("UDT_MODE", UDT_MODE, false, false);
+	script->set_constant("UDT_AI", UDT_AI, false, false);
+	script->set_constant("UDT_SCOPTION", UDT_SCOPTION, false, false);
+	script->set_constant("UDT_SEX", UDT_SEX, false, false);
+	script->set_constant("UDT_CLASS", UDT_CLASS, false, false);
+	script->set_constant("UDT_HAIRSTYLE", UDT_HAIRSTYLE, false, false);
+	script->set_constant("UDT_HAIRCOLOR", UDT_HAIRCOLOR, false, false);
+	script->set_constant("UDT_HEADBOTTOM", UDT_HEADBOTTOM, false, false);
+	script->set_constant("UDT_HEADMIDDLE", UDT_HEADMIDDLE, false, false);
+	script->set_constant("UDT_HEADTOP", UDT_HEADTOP, false, false);
+	script->set_constant("UDT_CLOTHCOLOR", UDT_CLOTHCOLOR, false, false);
+	script->set_constant("UDT_SHIELD", UDT_SHIELD, false, false);
+	script->set_constant("UDT_WEAPON", UDT_WEAPON, false, false);
+	script->set_constant("UDT_LOOKDIR", UDT_LOOKDIR, false, false);
+	script->set_constant("UDT_CANMOVETICK", UDT_CANMOVETICK, false, false);
+	script->set_constant("UDT_STR", UDT_STR, false, false);
+	script->set_constant("UDT_AGI", UDT_AGI, false, false);
+	script->set_constant("UDT_VIT", UDT_VIT, false, false);
+	script->set_constant("UDT_INT", UDT_INT, false, false);
+	script->set_constant("UDT_DEX", UDT_DEX, false, false);
+	script->set_constant("UDT_LUK", UDT_LUK, false, false);
+	script->set_constant("UDT_ATKRANGE", UDT_ATKRANGE, false, false);
+	script->set_constant("UDT_ATKMIN", UDT_ATKMIN, false, false);
+	script->set_constant("UDT_ATKMAX", UDT_ATKMAX, false, false);
+	script->set_constant("UDT_MATKMIN", UDT_MATKMIN, false, false);
+	script->set_constant("UDT_MATKMAX", UDT_MATKMAX, false, false);
+	script->set_constant("UDT_DEF", UDT_DEF, false, false);
+	script->set_constant("UDT_MDEF", UDT_MDEF, false, false);
+	script->set_constant("UDT_HIT", UDT_HIT, false, false);
+	script->set_constant("UDT_FLEE", UDT_FLEE, false, false);
+	script->set_constant("UDT_PDODGE", UDT_PDODGE, false, false);
+	script->set_constant("UDT_CRIT", UDT_CRIT, false, false);
+	script->set_constant("UDT_RACE", UDT_RACE, false, false);
+	script->set_constant("UDT_ELETYPE", UDT_ELETYPE, false, false);
+	script->set_constant("UDT_ELELEVEL", UDT_ELELEVEL, false, false);
+	script->set_constant("UDT_AMOTION", UDT_AMOTION, false, false);
+	script->set_constant("UDT_ADELAY", UDT_ADELAY, false, false);
+	script->set_constant("UDT_DMOTION", UDT_DMOTION, false, false);
+	script->set_constant("UDT_HUNGER", UDT_HUNGER, false, false);
+	script->set_constant("UDT_INTIMACY", UDT_INTIMACY, false, false);
+	script->set_constant("UDT_LIFETIME", UDT_LIFETIME, false, false);
+	script->set_constant("UDT_MERC_KILLCOUNT", UDT_MERC_KILLCOUNT, false, false);
+	script->set_constant("UDT_STATPOINT", UDT_STATPOINT, false, false);
+	script->set_constant("UDT_ROBE", UDT_ROBE, false, false);
+	script->set_constant("UDT_BODY2", UDT_BODY2, false, false);
+	script->set_constant("UDT_GROUP", UDT_GROUP, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);
