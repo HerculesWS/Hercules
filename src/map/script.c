@@ -52,6 +52,7 @@
 #include "map/pet.h"
 #include "map/pet.h"
 #include "map/quest.h"
+#include "map/refine.h"
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/status.h"
@@ -9505,7 +9506,7 @@ static BUILDIN(getequippercentrefinery)
 
 	if (i >= 0 && sd->status.inventory[i].nameid != 0 && sd->status.inventory[i].refine < MAX_REFINE)
 		script_pushint(st,
-			status->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
+			refine->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
 	else
 		script_pushint(st, 0);
 

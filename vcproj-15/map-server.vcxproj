@@ -212,6 +212,8 @@
     <ClInclude Include="..\src\config\renewal.h" />
     <ClInclude Include="..\src\config\secure.h" />
     <ClInclude Include="..\src\config\classes\general.h" />
+    <ClInclude Include="..\src\map\refine.h" />
+    <ClInclude Include="..\src\map\refine.p.h" />
     <ClInclude Include="..\src\map\rodex.h" />
     <ClInclude Include="..\src\map\script.h" />
     <ClInclude Include="..\src\map\searchstore.h" />
@@ -287,6 +289,7 @@
     <ClCompile Include="..\src\map\pc_groups.c" />
     <ClCompile Include="..\src\map\pet.c" />
     <ClCompile Include="..\src\map\quest.c" />
+    <ClCompile Include="..\src\map\refine.c" />
     <ClCompile Include="..\src\map\rodex.c" />
     <ClCompile Include="..\src\map\script.c" />
     <ClCompile Include="..\src\map\searchstore.c" />
