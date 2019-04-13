@@ -139,6 +139,7 @@ struct intif_interface {
 	int(*rodex_sendmail) (struct rodex_message *msg);
 	int(*rodex_checkname) (struct map_session_data *sd, const char *name);
 	void (*pGetZenyAck) (int fd);
+	void (*pGetItemsAck) (int fd);
 	/* Clan System */
 	int (*clan_kickoffline) (int clan_id, int kick_interval);
 	int (*clan_membercount) (int clan_id, int kick_interval);

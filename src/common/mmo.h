@@ -978,6 +978,11 @@ enum fame_list_type {
 	RANKTYPE_PK         = 3, //Not supported yet
 };
 
+struct rodex_item {
+	struct item item;
+	int idx;
+};
+
 struct rodex_message {
 	int64 id;
 	int sender_id;
@@ -987,10 +992,7 @@ struct rodex_message {
 	char receiver_name[NAME_LENGTH];
 	char title[RODEX_TITLE_LENGTH];
 	char body[RODEX_BODY_LENGTH];
-	struct {
-		struct item item;
-		int idx;
-	} items[RODEX_MAX_ITEM];
+	struct rodex_item items[RODEX_MAX_ITEM];
 	int64 zeny;
 	uint8 type;
 	int8 opentype;

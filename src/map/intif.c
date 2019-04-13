@@ -2873,6 +2873,22 @@ static void intif_parse_GetZenyAck(int fd)
 	rodex->getZenyAck(sd, mail_id, opentype, zeny);
 }
 
+static void intif_parse_GetItemsAck(int fd)
+{
+	int char_id = RFIFOL(fd, 2);
+
+	struct map_session_data *sd = map->charid2sd(char_id);
+	if (sd == NULL) // User is not online anymore
+		return;
+
+	int64 mail_id = RFIFOQ(fd, 6);
+	uint8 opentype = RFIFOB(fd, 14);
+	int count = RFIFOB(fd, 15);
+	struct rodex_item items[RODEX_MAX_ITEM];
+	memcpy(&items[0], RFIFOP(fd, 16), sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	rodex->getItemsAck(sd, mail_id, opentype, count, &items[0]);
+}
+
 //-----------------------------------------------------------------
 // Communication from the inter server
 // Return a 0 (false) if there were any errors.
@@ -2991,6 +3007,7 @@ static int intif_parse(int fd)
 		case 0x3897: intif->pRodexSendMail(fd); break;
 		case 0x3898: intif->pRodexCheckName(fd); break;
 		case 0x3899: intif->pGetZenyAck(fd); break;
+		case 0x389a: intif->pGetItemsAck(fd); break;
 
 		// Clan System
 		case 0x3858: intif->pRecvClanMemberAction(fd); break;
@@ -3020,7 +3037,7 @@ void intif_defaults(void)
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		14,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 23, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
+		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 23, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
 	};
 
 	intif = &intif_s;
@@ -3191,6 +3208,7 @@ void intif_defaults(void)
 	intif->pRodexSendMail = intif_parse_RodexSendMail;
 	intif->pRodexCheckName = intif_parse_RodexCheckName;
 	intif->pGetZenyAck = intif_parse_GetZenyAck;
+	intif->pGetItemsAck = intif_parse_GetItemsAck;
 	/* Clan System */
 	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
 	/* Achievement System */
