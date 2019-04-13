@@ -370,6 +370,96 @@ static int64 inter_rodex_getzeny(int64 mail_id)
 	return -1;
 }
 
+static int inter_rodex_getitems(int64 mail_id, struct rodex_item *items)
+{
+	Assert_retr(-1, mail_id > 0);
+	nullpo_retr(-1, items);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `type` FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return -1;
+	} else {
+		if (SQL_SUCCESS == SQL->NextRow(inter->sql_handle)) {
+			char *data;
+			SQL->GetData(inter->sql_handle, 0, &data, NULL);
+			uint8 type = atoi(data);
+			SQL->FreeResult(inter->sql_handle);
+			if ((type & MAIL_TYPE_ITEM) == 0)
+				return -1;
+		} else {
+			SQL->FreeResult(inter->sql_handle);
+			return -1;
+		}
+	}
+
+
+	int itemsCount = 0;
+
+		struct SqlStmt *stmt_items = SQL->StmtMalloc(inter->sql_handle);
+
+		if (stmt_items == NULL) {
+			return -1;
+		}
+
+		StringBuf buf;
+		StrBuf->Init(&buf);
+
+		StrBuf->AppendStr(&buf, "SELECT `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+		for (int i = 0; i < MAX_SLOTS; i++) {
+			StrBuf->Printf(&buf, ", `card%d`", i);
+		}
+		for (int i = 0; i < MAX_ITEM_OPTIONS; i++) {
+			StrBuf->Printf(&buf, ", `opt_idx%d`, `opt_val%d`", i, i);
+		}
+		StrBuf->Printf(&buf, "FROM `%s` WHERE mail_id = ? ORDER BY `mail_id` ASC", rodex_item_db);
+
+		struct item it = { 0 };
+
+		if (SQL_ERROR == SQL->StmtPrepareStr(stmt_items, StrBuf->Value(&buf))
+		 || SQL_ERROR == SQL->StmtBindParam(stmt_items, 0, SQLDT_INT64, &mail_id, sizeof mail_id)
+		) {
+			SqlStmt_ShowDebug(stmt_items);
+		}
+
+				if (SQL_ERROR == SQL->StmtExecute(stmt_items)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 0,  SQLDT_INT,    &it.nameid,          sizeof it.nameid,      NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 1,  SQLDT_SHORT,  &it.amount,          sizeof it.amount,      NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 2,  SQLDT_UINT,   &it.equip,           sizeof it.equip,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 3,  SQLDT_CHAR,   &it.identify,        sizeof it.identify,    NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 4,  SQLDT_CHAR,   &it.refine,          sizeof it.refine,      NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 5,  SQLDT_CHAR,   &it.attribute,       sizeof it.attribute,   NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 6,  SQLDT_UINT,   &it.expire_time,     sizeof it.expire_time, NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 7,  SQLDT_UCHAR,  &it.bound,           sizeof it.bound,       NULL, NULL)
+				 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 8,  SQLDT_UINT64, &it.unique_id,       sizeof it.unique_id,   NULL, NULL)
+				) {
+					SqlStmt_ShowDebug(stmt_items);
+				}
+				for (int i = 0; i < MAX_SLOTS; i++) {
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + i, SQLDT_INT, &it.card[i], sizeof it.card[i], NULL, NULL))
+						SqlStmt_ShowDebug(stmt_items);
+				}
+				for (int i = 0; i < MAX_ITEM_OPTIONS; i++) {
+					if (SQL_ERROR == SQL->StmtBindColumn(stmt_items, 9 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].index, sizeof it.option[i].index, NULL, NULL)
+					 || SQL_ERROR == SQL->StmtBindColumn(stmt_items, 10 + MAX_SLOTS + i * 2, SQLDT_INT16, &it.option[i].value, sizeof it.option[i].value, NULL, NULL)
+					) {
+						SqlStmt_ShowDebug(stmt_items);
+					}
+				}
+
+				for (int i = 0; i < RODEX_MAX_ITEM && SQL_SUCCESS == SQL->StmtNextRow(stmt_items); ++i) {
+					items[i].item = it;
+					items[i].idx = itemsCount;
+					itemsCount++;
+				}
+
+			SQL->StmtFreeResult(stmt_items);
+
+		StrBuf->Destroy(&buf);
+		SQL->StmtFree(stmt_items);
+
+	return itemsCount;
+}
+
 /*==========================================
  * Update/Delete mail
  *------------------------------------------*/
@@ -398,12 +488,16 @@ static bool inter_rodex_updatemail(int fd, int account_id, int char_id, int64 ma
 		break;
 	}
 	case 2: // Get Items
+	{
+		struct rodex_item items[RODEX_MAX_ITEM];
+		const int count = inter_rodex->getitems(mail_id, &items[0]);
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_item_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `zeny` = 0, `type` = `type` & (~4) WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
+		mapif->rodex_getitemsack(fd, char_id, mail_id, opentype, count, &items[0]);
 		break;
-
+	}
 	case 3: // Delete Mail
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
@@ -462,4 +556,5 @@ void inter_rodex_defaults(void)
 	inter_rodex->checkname = inter_rodex_checkname;
 	inter_rodex->updatemail = inter_rodex_updatemail;
 	inter_rodex->getzeny = inter_rodex_getzeny;
+	inter_rodex->getitems = inter_rodex_getitems;
 }
