@@ -2578,18 +2578,18 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				r = 0;
 
 			if (r)
-				wa->atk2 = refine->dbs->refine_info[wlv].bonus[r-1] / 100;
+				wa->atk2 = refine->get_bonus(wlv, r) / 100;
 
 #ifdef RENEWAL
 			wa->matk += sd->inventory_data[index]->matk;
 			wa->wlv = wlv;
 			if( r && sd->weapontype1 != W_BOW ) // renewal magic attack refine bonus
-				wa->matk += refine->dbs->refine_info[wlv].bonus[r-1] / 100;
+				wa->matk += refine->get_bonus(wlv, r) / 100;
 #endif
 
 			//Overrefined bonus.
 			if (r)
-				wd->overrefine = refine->dbs->refine_info[wlv].randombonus_max[r-1] / 100;
+				wd->overrefine = refine->get_randombonus_max(wlv, r) / 100;
 
 			wa->range += sd->inventory_data[index]->range;
 			if(sd->inventory_data[index]->script) {
@@ -2624,7 +2624,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				r = 0;
 
 			if (r)
-				refinedef += refine->dbs->refine_info[REFINE_TYPE_ARMOR].bonus[r-1];
+				refinedef += refine->get_bonus(REFINE_TYPE_ARMOR, r);
 
 			if(sd->inventory_data[index]->script) {
 				if( i == EQI_HAND_L ) //Shield
@@ -12512,7 +12512,7 @@ static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk,
 		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
 			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
-			int r = refine->dbs->refine_info[watk->wlv].randombonus_max[refine_level + (4 - watk->wlv)] / 100;
+			int r = refine->get_randombonus_max(watk->wlv, refine_level + (4 - watk->wlv) + 1) / 100;
 			if ( r )
 				max += (rnd() % 100) % r + 1;
 		}
@@ -12627,7 +12627,7 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
 			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
-			int r =  refine->dbs->refine_info[sd->inventory_data[index]->wlv].randombonus_max[refine_level + (4 - sd->inventory_data[index]->wlv)] / 100;
+			int r = refine->get_randombonus_max(sd->inventory_data[index]->wlv, refine_level + (4 - sd->inventory_data[index]->wlv) + 1) / 100;
 			if ( r )
 				*matk_max += (rnd() % 100) % r + 1;
 		}
