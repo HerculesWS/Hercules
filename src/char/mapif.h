@@ -24,6 +24,7 @@
 #include "common/mmo.h"
 
 struct WisData;
+struct rodex_item;
 
 /**
  * mapif interface
@@ -169,6 +170,7 @@ struct mapif_interface {
 	void (*parse_rodex_checkname) (int fd);
 	void (*rodex_checkname) (int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name);
 	void (*rodex_getzenyack) (int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny);
+	void (*rodex_getitemsack) (int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
 	int (*load_guild_storage) (int fd, int account_id, int guild_id, char flag);
 	int (*save_guild_storage_ack) (int fd, int account_id, int guild_id, int fail);
 	int (*parse_LoadGuildStorage) (int fd);

@@ -2475,6 +2475,18 @@ static void mapif_rodex_getzenyack(int fd, int char_id, int64 mail_id, uint8 ope
 	WFIFOSET(fd, 23);
 }
 
+static void mapif_rodex_getitemsack(int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items)
+{
+	WFIFOHEAD(fd, 15 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	WFIFOW(fd, 0) = 0x389a;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOQ(fd, 6) = mail_id;
+	WFIFOB(fd, 14) = opentype;
+	WFIFOB(fd, 15) = count;
+	memcpy(WFIFOP(fd, 16), items, sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	WFIFOSET(fd, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+}
+
 void mapif_defaults(void)
 {
 	mapif = &mapif_s;
@@ -2620,6 +2632,7 @@ void mapif_defaults(void)
 	mapif->parse_rodex_checkname = mapif_parse_rodex_checkname;
 	mapif->rodex_checkname = mapif_rodex_checkname;
 	mapif->rodex_getzenyack = mapif_rodex_getzenyack;
+	mapif->rodex_getitemsack = mapif_rodex_getitemsack;
 	mapif->load_guild_storage = mapif_load_guild_storage;
 	mapif->save_guild_storage_ack = mapif_save_guild_storage_ack;
 	mapif->parse_LoadGuildStorage = mapif_parse_LoadGuildStorage;

@@ -38,6 +38,7 @@ struct inter_rodex_interface {
 	int64 (*savemessage) (struct rodex_message* msg);
 	bool (*updatemail) (int fd, int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag);
 	int64 (*getzeny) (int64 mail_id);
+	int (*getitems) (int64 mail_id, struct rodex_item *items);
 };
 
 #ifdef HERCULES_CORE
