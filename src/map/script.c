@@ -18961,6 +18961,20 @@ static BUILDIN(setunitdata)
 	case UDT_ELELEVEL:
 		setunitdata_check_bounds(4, 0, CHAR_MAX);
 		break;
+	case UDT_GROUP:
+	{
+		setunitdata_check_bounds(4, 0, INT_MAX);
+		struct unit_data *ud = unit->bl2ud2(bl);
+		if (ud == NULL) {
+			ShowError("buildin_setunitdata: ud is NULL!\n");
+			script_pushint(st, 0);
+			return false;
+		}
+		ud->groupId = script_getnum(st, 4);
+		clif->blname_ack(0, bl); // Send update to client.
+		script_pushint(st, 1);
+		return true;
+	}
 	default:
 		break;
 	}
@@ -19909,6 +19923,15 @@ static BUILDIN(getunitdata)
 				return true;// no player attached
 			}
 		}
+	} else if (type == UDT_GROUP) {
+		struct unit_data *ud = unit->bl2ud(bl);
+		if (ud == NULL) {
+			ShowError("buildin_setunitdata: ud is NULL!\n");
+			script_pushint(st, -1);
+			return false;
+		}
+		script_pushint(st, ud->groupId);
+		return true;
 	}
 
 #define getunitdata_sub(idx__,var__) script->setd_sub(st,NULL,name,(idx__),(void *)h64BPTRSIZE((int)(var__)),data->ref);
