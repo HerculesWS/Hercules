@@ -12509,10 +12509,10 @@ static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk,
 
 	if ( bl->type == BL_PC && !(flag & 2) ) {
 		const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
-		short index = sd->equip_index[EQI_HAND_R], refine;
+		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
-			int r = status->dbs->refine_info[watk->wlv].randombonus_max[refine + (4 - watk->wlv)] / 100;
+			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+			int r = refine->dbs->refine_info[watk->wlv].randombonus_max[refine_level + (4 - watk->wlv)] / 100;
 			if ( r )
 				max += (rnd() % 100) % r + 1;
 		}
@@ -12624,10 +12624,10 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 
 #ifdef RENEWAL
 	if ( sd && !(flag & 2) ) {
-		short index = sd->equip_index[EQI_HAND_R], refine;
+		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
-			int r =  status->dbs->refine_info[sd->inventory_data[index]->wlv].randombonus_max[refine + (4 - sd->inventory_data[index]->wlv)] / 100;
+			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+			int r =  refine->dbs->refine_info[sd->inventory_data[index]->wlv].randombonus_max[refine_level + (4 - sd->inventory_data[index]->wlv)] / 100;
 			if ( r )
 				*matk_max += (rnd() % 100) % r + 1;
 		}

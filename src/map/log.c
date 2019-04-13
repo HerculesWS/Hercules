@@ -106,7 +106,7 @@ static char log_chattype2char(e_log_chat_type type)
 }
 
 /// check if this item should be logged according the settings
-static bool should_log_item(int nameid, int amount, int refine, struct item_data *id)
+static bool should_log_item(int nameid, int amount, int refine_level, struct item_data *id)
 {
 	int filter = logs->config.filter;
 
@@ -123,7 +123,7 @@ static bool should_log_item(int nameid, int amount, int refine, struct item_data
 		( filter&LOG_FILTER_PETITEM && ( id->type == IT_PETEGG || id->type == IT_PETARMOR ) ) ||
 		( filter&LOG_FILTER_PRICE && id->value_buy >= logs->config.price_items_log ) ||
 		( filter&LOG_FILTER_AMOUNT && abs(amount) >= logs->config.amount_items_log ) ||
-		( filter&LOG_FILTER_REFINE && refine >= logs->config.refine_items_log ) ||
+		( filter&LOG_FILTER_REFINE && refine_level >= logs->config.refine_items_log ) ||
 		( filter&LOG_FILTER_CHANCE && ( ( id->maxchance != -1 && id->maxchance <= logs->config.rare_items_log ) || id->nameid == ITEMID_EMPERIUM ) )
 	)
 		return true;
