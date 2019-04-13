@@ -5277,18 +5277,58 @@ ACMD(follow)
 }
 
 /*==========================================
- * @dropall by [MouseJstr]
- * Drop all your possession on the ground
- *------------------------------------------*/
+* @dropall by [MouseJstr] and [Xantara]
+* Drop all your possession on the ground based on item type
+*------------------------------------------*/
 ACMD(dropall)
 {
-	for (int i = 0; i < sd->status.inventorySize; i++) {
-		if (sd->status.inventory[i].amount) {
-			if(sd->status.inventory[i].equip != 0)
-				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
-			pc->dropitem(sd,  i, sd->status.inventory[i].amount);
+	int type = -1;
+	int i, count = 0;
+	struct item_data *item_data = NULL;
+
+	if (message[0]) {
+		type = atoi(message);
+		switch (type) {
+		case -1:
+		case IT_HEALING:
+		case IT_USABLE:
+		case IT_ETC:
+		case IT_WEAPON:
+		case IT_ARMOR:
+		case IT_CARD:
+		case IT_PETEGG:
+		case IT_PETARMOR:
+		case IT_AMMO:
+		case IT_DELAYCONSUME:
+		case IT_CASH:
+			break;
+		default:
+			clif->message(fd, msg_fd(fd, 1500));
+			clif->message(fd, msg_fd(fd, 1501));
+			return false;
 		}
 	}
+
+	for (i = 0; i < sd->status.inventorySize; i++) {
+		if (sd->status.inventory[i].amount) {
+			item_data = itemdb->exists(sd->status.inventory[i].nameid);
+			if (item_data == NULL) {
+				ShowWarning("Non-existant item %d on dropall list (account_id: %d, char_id: %d)\n", sd->status.inventory[i].nameid, sd->status.account_id, sd->status.char_id);
+				continue;
+			}
+			if (!pc->candrop(sd, &sd->status.inventory[i]))
+				continue;
+			if (type == -1 || type == item_data->type) {
+				if (sd->status.inventory[i].equip != 0)
+					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
+				count += sd->status.inventory[i].amount;
+				pc->dropitem(sd, i, sd->status.inventory[i].amount);
+			}
+		}
+	}
+
+	sprintf(atcmd_output, msg_fd(fd, 1502), count); // %d items are dropped!
+	clif->message(fd, atcmd_output);
 	return true;
 }
 
