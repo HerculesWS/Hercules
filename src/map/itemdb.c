@@ -27,6 +27,7 @@
 #include "map/map.h"
 #include "map/mob.h"    // MAX_MOB_DB
 #include "map/pc.h"     // W_MUSICAL, W_WHIP
+#include "map/refine.h"
 #include "map/script.h" // item script processing
 #include "common/HPM.h"
 #include "common/conf.h"
