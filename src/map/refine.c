@@ -40,6 +40,24 @@ static struct refine_interface_private refine_p;
 static struct refine_interface_dbs refine_dbs;
 struct refine_interface *refine;
 
+/// @copydoc refine_interface::get_randombonus_max()
+static int refine_get_randombonus_max(enum refine_type equipment_type, int refine_level)
+{
+	Assert_ret((int)equipment_type >= REFINE_TYPE_ARMOR && equipment_type < REFINE_TYPE_MAX);
+	Assert_ret(refine_level > 0 && refine_level <= MAX_REFINE);
+
+	return refine->dbs->refine_info[equipment_type].randombonus_max[refine_level - 1];
+}
+
+/// @copydoc refine_interface::get_bonus()
+static int refine_get_bonus(enum refine_type equipment_type, int refine_level)
+{
+	Assert_ret((int)equipment_type >= REFINE_TYPE_ARMOR && equipment_type < REFINE_TYPE_MAX);
+	Assert_ret(refine_level > 0 && refine_level <= MAX_REFINE);
+
+	return refine->dbs->refine_info[equipment_type].bonus[refine_level - 1];
+}
+
 /// @copydoc refine_interface::get_refine_chance()
 static int refine_get_refine_chance(enum refine_type wlv, int refine_level, enum refine_chance_type type)
 {
@@ -230,4 +248,6 @@ void refine_defaults(void)
 	refine->init = refine_init;
 	refine->final = refine_final;
 	refine->get_refine_chance = refine_get_refine_chance;
+	refine->get_bonus = refine_get_bonus;
+	refine->get_randombonus_max = refine_get_randombonus_max;
 }
