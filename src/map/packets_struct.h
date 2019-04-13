@@ -2805,6 +2805,24 @@ struct PACKET_ZC_ACK_REQNAMEALL {
 DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL, 0x0195);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20180207 || PACKETVER_RE_NUM >= 20171129 || PACKETVER_ZERO_NUM >= 20171130
+struct PACKET_ZC_ACK_REQNAME_TITLE {
+	uint16 packet_id;
+	int32 gid;
+	int32 groupId;
+	char name[NAME_LENGTH];
+	char title[NAME_LENGTH];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_REQNAME_TITLE, 0x0adf);
+#else
+struct PACKET_ZC_ACK_REQNAME_TITLE {
+	uint16 packet_id;
+	int32 gid;
+	char name[NAME_LENGTH];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_REQNAME_TITLE, 0x0095);
+#endif
+
 struct PACKET_ZC_OVERWEIGHT_PERCENT {
 	int16 packetType;
 	uint32 percent;
