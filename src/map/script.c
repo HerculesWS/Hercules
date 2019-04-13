@@ -20387,6 +20387,45 @@ static BUILDIN(setunitname)
 	return true;
 }
 
+static BUILDIN(setunittitle)
+{
+	struct block_list *bl = map->id2bl(script_getnum(st, 2));
+	if (bl == NULL) {
+		ShowWarning("buildin_setunittitle: Error in finding object with given game ID %d!\n", script_getnum(st, 2));
+		return false;
+	}
+
+	struct unit_data *ud = unit->bl2ud2(bl);
+	if (ud == NULL) {
+		ShowWarning("buildin_setunittitle: Error in finding unit_data for given game ID %d!\n", script_getnum(st, 2));
+		return false;
+	}
+
+	safestrncpy(ud->title, script_getstr(st, 3), NAME_LENGTH);
+
+	return true;
+}
+
+static BUILDIN(getunittitle)
+{
+	struct block_list *bl = map->id2bl(script_getnum(st, 2));
+	if (bl == NULL) {
+		ShowWarning("buildin_getunitname: Error in finding object with given game ID %d!\n", script_getnum(st, 2));
+		script_pushconststr(st, "Unknown");
+		return false;
+	}
+
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud == NULL) {
+		ShowWarning("buildin_setunittitle: Error in finding unit_data for given game ID %d!\n", script_getnum(st, 2));
+		return false;
+	}
+
+	script_pushstrcopy(st, ud->title);
+
+	return true;
+}
+
 /// Makes the unit walk to target position or target id
 /// Returns if it was successfull
 ///
@@ -25711,6 +25750,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getunitdata,"ii?"),
 		BUILDIN_DEF(getunitname,"i"),
 		BUILDIN_DEF(setunitname,"is"),
+		BUILDIN_DEF(getunittitle,"i"),
+		BUILDIN_DEF(setunittitle,"is"),
 		BUILDIN_DEF(unitwalk,"ii?"),
 		BUILDIN_DEF(unitkill,"i"),
 		BUILDIN_DEF(unitwarp,"isii"),
