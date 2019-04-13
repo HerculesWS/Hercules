@@ -9251,8 +9251,8 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_PC);
 
-	struct packet_reqnameall_ack packet = { 0 };
-	int len = sizeof(struct packet_reqnameall_ack);
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
+	int len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
 	packet.gid = bl->id;
 
 	const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
@@ -9261,8 +9261,8 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	int ps = -1;
 
 	if (ssd->fakename[0] != '\0' || ssd->status.guild_id > 0 || ssd->status.party_id > 0 || ssd->status.title_id > 0) {
-		packet.packet_id = reqNameAllType;
-		len = sizeof(struct packet_reqnameall_ack);
+		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
+		len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
 	} else {
 		packet.packet_id = reqName;
 		len = sizeof(struct packet_reqname_ack);
@@ -9323,7 +9323,7 @@ static void clif_homname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_HOM);
 
-	struct packet_reqnameall_ack packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	int len = sizeof(struct packet_reqname_ack);
 	packet.packet_id = reqName;
 	packet.gid = bl->id;
@@ -9341,7 +9341,7 @@ static void clif_mername_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MER);
 
-	struct packet_reqnameall_ack packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	int len = sizeof(struct packet_reqname_ack);
 	packet.packet_id = reqName;
 	packet.gid = bl->id;
@@ -9359,7 +9359,7 @@ static void clif_petname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_PET);
 
-	struct packet_reqnameall_ack packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	int len = sizeof(struct packet_reqname_ack);
 	packet.packet_id = reqName;
 	packet.gid = bl->id;
@@ -9377,7 +9377,7 @@ static void clif_npcname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_NPC);
 
-	struct packet_reqnameall_ack packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	int len = sizeof(struct packet_reqname_ack);
 	packet.packet_id = reqName;
 	packet.gid = bl->id;
@@ -9395,8 +9395,8 @@ static void clif_mobname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MOB);
 
-	struct packet_reqnameall_ack packet = { 0 };
-	int len = sizeof(struct packet_reqnameall_ack);
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
+	int len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
 	packet.packet_id = reqName;
 	packet.gid = bl->id;
 
@@ -9404,12 +9404,12 @@ static void clif_mobname_ack(int fd, struct block_list *bl)
 
 	memcpy(packet.name, md->name, NAME_LENGTH);
 	if (md->guardian_data && md->guardian_data->g) {
-		packet.packet_id = reqNameAllType;
+		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 		memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
 		memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
 	} else if (battle_config.show_mob_info) {
 		char mobhp[50], *str_p = mobhp;
-		packet.packet_id = reqNameAllType;
+		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 		if (battle_config.show_mob_info&4)
 			str_p += sprintf(str_p, "Lv. %d | ", md->level);
 		if (battle_config.show_mob_info&1)
@@ -9436,7 +9436,7 @@ static void clif_chatname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_CHAT);
 
-	struct packet_reqnameall_ack packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	int len = sizeof(struct packet_reqname_ack);
 	packet.packet_id = reqName;
 	packet.gid = bl->id;
@@ -9457,7 +9457,7 @@ static void clif_elemname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_ELEM);
 
-	struct packet_reqnameall_ack packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	int len = sizeof(struct packet_reqname_ack);
 	packet.packet_id = reqName;
 	packet.gid = bl->id;
@@ -9514,14 +9514,14 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 	int ps = -1;
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
-	struct packet_reqnameall_ack packet = { 0 };
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 
 	nullpo_retv(ssd);
 
 	if (ssd->fakename[0])
 		return; //No need to update as the party/guild was not displayed anyway.
 
-	packet.packet_id = reqNameAllType;
+	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = ssd->bl.id;
 
 	memcpy(packet.name, ssd->status.name, NAME_LENGTH);

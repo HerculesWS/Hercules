@@ -418,11 +418,6 @@ enum packet_headers {
 	buyingStoreUpdateItemType = 0x81b,
 #endif
 	reqName = 0x95,
-#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
-	reqNameAllType = 0xA30,
-#else
-	reqNameAllType = 0x195,
-#endif
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
 	skilWarpPointType = 0xabe,
 #else
@@ -2787,17 +2782,28 @@ struct packet_reqname_ack {
 } __attribute__((packed));
 
 // ZC_ACK_REQNAMEALL / ZC_ACK_REQNAMEALL2
-struct packet_reqnameall_ack {
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_ACK_REQNAMEALL {
 	uint16 packet_id;
 	int32 gid;
 	char name[NAME_LENGTH];
 	char party_name[NAME_LENGTH];
 	char guild_name[NAME_LENGTH];
 	char position_name[NAME_LENGTH];
-#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	int32 title_id;
-#endif
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL, 0x0a30);
+#else
+struct PACKET_ZC_ACK_REQNAMEALL {
+	uint16 packet_id;
+	int32 gid;
+	char name[NAME_LENGTH];
+	char party_name[NAME_LENGTH];
+	char guild_name[NAME_LENGTH];
+	char position_name[NAME_LENGTH];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL, 0x0195);
+#endif
 
 struct PACKET_ZC_OVERWEIGHT_PERCENT {
 	int16 packetType;
