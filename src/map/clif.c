@@ -9331,13 +9331,12 @@ static void clif_homname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_HOM);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct packet_reqname_ack);
-	packet.packet_id = reqName;
+	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
 
-	clif->send_selforarea(fd, bl, &packet, len);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
 /// Updates the object's (bl) name on client.
@@ -9349,13 +9348,12 @@ static void clif_mername_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MER);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct packet_reqname_ack);
-	packet.packet_id = reqName;
+	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
 
-	clif->send_selforarea(fd, bl, &packet, len);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
 /// Updates the object's (bl) name on client.
@@ -9367,13 +9365,12 @@ static void clif_petname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_PET);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct packet_reqname_ack);
-	packet.packet_id = reqName;
+	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
 
-	clif->send_selforarea(fd, bl, &packet, len);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
 /// Updates the object's (bl) name on client.
@@ -9385,13 +9382,12 @@ static void clif_npcname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_NPC);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct packet_reqname_ack);
-	packet.packet_id = reqName;
+	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
 
-	clif->send_selforarea(fd, bl, &packet, len);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
 /// Updates the object's (bl) name on client.
@@ -9403,21 +9399,19 @@ static void clif_mobname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MOB);
 
+	// probably need switch to packet ZC_ACK_REQNAME_TITLE [4144]
 	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
-	packet.packet_id = reqName;
+	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = bl->id;
 
 	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 
 	memcpy(packet.name, md->name, NAME_LENGTH);
 	if (md->guardian_data && md->guardian_data->g) {
-		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 		memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
 		memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
 	} else if (battle_config.show_mob_info) {
 		char mobhp[50], *str_p = mobhp;
-		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 		if (battle_config.show_mob_info&4)
 			str_p += sprintf(str_p, "Lv. %d | ", md->level);
 		if (battle_config.show_mob_info&1)
@@ -9432,7 +9426,7 @@ static void clif_mobname_ack(int fd, struct block_list *bl)
 		}
 	}
 
-	clif->send_selforarea(fd, bl, &packet, len);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAMEALL));
 }
 
 /// Updates the object's (bl) name on client.
@@ -9444,16 +9438,15 @@ static void clif_chatname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_CHAT);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct packet_reqname_ack);
-	packet.packet_id = reqName;
+	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
 
 #if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
 	memcpy(packet.name, BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
 #endif
 
-	clif->send_selforarea(fd, bl, &packet, len);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
 /// Updates the object's (bl) name on client.
@@ -9465,13 +9458,12 @@ static void clif_elemname_ack(int fd, struct block_list *bl)
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_ELEM);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct packet_reqname_ack);
-	packet.packet_id = reqName;
+	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
 	memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
 
-	clif->send_selforarea(fd, bl, &packet, len);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
 static void clif_unknownname_ack(int fd, struct block_list *bl)
