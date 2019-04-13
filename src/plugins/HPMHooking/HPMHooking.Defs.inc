@@ -2666,6 +2666,18 @@ typedef int (*HPMHOOK_pre_clif_pingTimerSub) (struct map_session_data **sd, va_l
 typedef int (*HPMHOOK_post_clif_pingTimerSub) (int retVal___, struct map_session_data *sd, va_list ap);
 typedef void (*HPMHOOK_pre_clif_pResetCooldown) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pResetCooldown) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_OpenRefineryUI) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_OpenRefineryUI) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pAddItemRefineryUI) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pAddItemRefineryUI) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_AddItemRefineryUIAck) (struct map_session_data **sd, int *item_index, struct s_refine_requirement **req);
+typedef void (*HPMHOOK_post_clif_AddItemRefineryUIAck) (struct map_session_data *sd, int item_index, struct s_refine_requirement *req);
+typedef void (*HPMHOOK_pre_clif_pRefineryUIClose) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pRefineryUIClose) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pRefineryUIRefine) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pRefineryUIRefine) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_announce_refine_status) (struct map_session_data **sd, int *item_id, int *refine_level, bool *success, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_announce_refine_status) (struct map_session_data *sd, int item_id, int refine_level, bool success, enum send_target target);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -4306,8 +4318,8 @@ typedef char (*HPMHOOK_pre_logs_picktype2char) (e_log_pick_type *type);
 typedef char (*HPMHOOK_post_logs_picktype2char) (char retVal___, e_log_pick_type type);
 typedef char (*HPMHOOK_pre_logs_chattype2char) (e_log_chat_type *type);
 typedef char (*HPMHOOK_post_logs_chattype2char) (char retVal___, e_log_chat_type type);
-typedef bool (*HPMHOOK_pre_logs_should_log_item) (int *nameid, int *amount, int *refine, struct item_data **id);
-typedef bool (*HPMHOOK_post_logs_should_log_item) (bool retVal___, int nameid, int amount, int refine, struct item_data *id);
+typedef bool (*HPMHOOK_pre_logs_should_log_item) (int *nameid, int *amount, int *refine_level, struct item_data **id);
+typedef bool (*HPMHOOK_post_logs_should_log_item) (bool retVal___, int nameid, int amount, int refine_level, struct item_data *id);
 #endif // MAP_LOG_H
 #ifdef LOGIN_LOGIN_H /* login */
 typedef int (*HPMHOOK_pre_login_mmo_auth) (struct login_session_data **sd, bool *isServer);
@@ -6567,6 +6579,40 @@ typedef bool (*HPMHOOK_post_quest_questinfo_validate_mercenary_class) (bool retV
 typedef void (*HPMHOOK_pre_quest_questinfo_vector_clear) (int *m);
 typedef void (*HPMHOOK_post_quest_questinfo_vector_clear) (int m);
 #endif // MAP_QUEST_H
+#ifdef MAP_REFINE_H /* refine */
+typedef int (*HPMHOOK_pre_refine_init) (bool *minimal);
+typedef int (*HPMHOOK_post_refine_init) (int retVal___, bool minimal);
+typedef void (*HPMHOOK_pre_refine_final) (void);
+typedef void (*HPMHOOK_post_refine_final) (void);
+typedef int (*HPMHOOK_pre_refine_get_refine_chance) (enum refine_type *wlv, int *refine_level, enum refine_chance_type *type);
+typedef int (*HPMHOOK_post_refine_get_refine_chance) (int retVal___, enum refine_type wlv, int refine_level, enum refine_chance_type type);
+typedef int (*HPMHOOK_pre_refine_get_bonus) (enum refine_type *equipment_type, int *refine_level);
+typedef int (*HPMHOOK_post_refine_get_bonus) (int retVal___, enum refine_type equipment_type, int refine_level);
+typedef int (*HPMHOOK_pre_refine_get_randombonus_max) (enum refine_type *equipment_type, int *refine_level);
+typedef int (*HPMHOOK_post_refine_get_randombonus_max) (int retVal___, enum refine_type equipment_type, int refine_level);
+typedef void (*HPMHOOK_pre_refine_refinery_add_item) (struct map_session_data **sd, int *item_index);
+typedef void (*HPMHOOK_post_refine_refinery_add_item) (struct map_session_data *sd, int item_index);
+typedef void (*HPMHOOK_pre_refine_refinery_refine_request) (struct map_session_data **sd, int *item_index, int *material_id, bool *use_blacksmith_blessing);
+typedef void (*HPMHOOK_post_refine_refinery_refine_request) (struct map_session_data *sd, int item_index, int material_id, bool use_blacksmith_blessing);
+#endif // MAP_REFINE_H
+#ifdef MAP_REFINE_P_H /* PRIV__refine */
+typedef int (*HPMHOOK_pre_PRIV__refine_readdb_refine_libconfig_sub) (struct config_setting_t **r, const char **name, const char **source);
+typedef int (*HPMHOOK_post_PRIV__refine_readdb_refine_libconfig_sub) (int retVal___, struct config_setting_t *r, const char *name, const char *source);
+typedef int (*HPMHOOK_pre_PRIV__refine_readdb_refine_libconfig) (const char **filename);
+typedef int (*HPMHOOK_post_PRIV__refine_readdb_refine_libconfig) (int retVal___, const char *filename);
+typedef bool (*HPMHOOK_pre_PRIV__refine_announce_behavior_string2enum) (const char **str, unsigned int **result);
+typedef bool (*HPMHOOK_post_PRIV__refine_announce_behavior_string2enum) (bool retVal___, const char *str, unsigned int *result);
+typedef bool (*HPMHOOK_pre_PRIV__refine_failure_behavior_string2enum) (const char **str, enum refine_ui_failure_behavior **result);
+typedef bool (*HPMHOOK_post_PRIV__refine_failure_behavior_string2enum) (bool retVal___, const char *str, enum refine_ui_failure_behavior *result);
+typedef bool (*HPMHOOK_pre_PRIV__refine_readdb_refinery_ui_settings_items) (const struct config_setting_t **elem, struct s_refine_requirement **req, const char **name, const char **source);
+typedef bool (*HPMHOOK_post_PRIV__refine_readdb_refinery_ui_settings_items) (bool retVal___, const struct config_setting_t *elem, struct s_refine_requirement *req, const char *name, const char *source);
+typedef bool (*HPMHOOK_pre_PRIV__refine_readdb_refinery_ui_settings_sub) (const struct config_setting_t **elem, int *type, const char **name, const char **source);
+typedef bool (*HPMHOOK_post_PRIV__refine_readdb_refinery_ui_settings_sub) (bool retVal___, const struct config_setting_t *elem, int type, const char *name, const char *source);
+typedef int (*HPMHOOK_pre_PRIV__refine_readdb_refinery_ui_settings) (const struct config_setting_t **r, int *type, const char **name, const char **source);
+typedef int (*HPMHOOK_post_PRIV__refine_readdb_refinery_ui_settings) (int retVal___, const struct config_setting_t *r, int type, const char *name, const char *source);
+typedef bool (*HPMHOOK_pre_PRIV__refine_is_refinable) (struct map_session_data **sd, int *item_index);
+typedef bool (*HPMHOOK_post_PRIV__refine_is_refinable) (bool retVal___, struct map_session_data *sd, int item_index);
+#endif // MAP_REFINE_P_H
 #ifdef COMMON_RANDOM_H /* rnd */
 typedef void (*HPMHOOK_pre_rnd_init) (void);
 typedef void (*HPMHOOK_post_rnd_init) (void);
@@ -7014,8 +7060,8 @@ typedef bool (*HPMHOOK_pre_searchstore_queryremote) (struct map_session_data **s
 typedef bool (*HPMHOOK_post_searchstore_queryremote) (bool retVal___, struct map_session_data *sd, int account_id);
 typedef void (*HPMHOOK_pre_searchstore_clearremote) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_searchstore_clearremote) (struct map_session_data *sd);
-typedef bool (*HPMHOOK_pre_searchstore_result) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, int *nameid, unsigned short *amount, unsigned int *price, const int **card, unsigned char *refine, const struct item_option **option);
-typedef bool (*HPMHOOK_post_searchstore_result) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine, const struct item_option *option);
+typedef bool (*HPMHOOK_pre_searchstore_result) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, int *nameid, unsigned short *amount, unsigned int *price, const int **card, unsigned char *refine_level, const struct item_option **option);
+typedef bool (*HPMHOOK_post_searchstore_result) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, const struct item_option *option);
 #endif // MAP_SEARCHSTORE_H
 #ifdef COMMON_SHOWMSG_H /* showmsg */
 typedef void (*HPMHOOK_pre_showmsg_init) (void);
@@ -7652,8 +7698,6 @@ typedef int (*HPMHOOK_pre_status_init) (bool *minimal);
 typedef int (*HPMHOOK_post_status_init) (int retVal___, bool minimal);
 typedef void (*HPMHOOK_pre_status_final) (void);
 typedef void (*HPMHOOK_post_status_final) (void);
-typedef int (*HPMHOOK_pre_status_get_refine_chance) (enum refine_type *wlv, int *refine, enum refine_chance_type *type);
-typedef int (*HPMHOOK_post_status_get_refine_chance) (int retVal___, enum refine_type wlv, int refine, enum refine_chance_type type);
 typedef sc_type (*HPMHOOK_pre_status_skill2sc) (int *skill_id);
 typedef sc_type (*HPMHOOK_post_status_skill2sc) (sc_type retVal___, int skill_id);
 typedef int (*HPMHOOK_pre_status_sc2skill) (sc_type *sc);
@@ -7884,10 +7928,6 @@ typedef bool (*HPMHOOK_pre_status_readdb_job2) (char **fields[], int *columns, i
 typedef bool (*HPMHOOK_post_status_readdb_job2) (bool retVal___, char *fields[], int columns, int current);
 typedef bool (*HPMHOOK_pre_status_readdb_sizefix) (char **fields[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_status_readdb_sizefix) (bool retVal___, char *fields[], int columns, int current);
-typedef int (*HPMHOOK_pre_status_readdb_refine_libconfig) (const char **filename);
-typedef int (*HPMHOOK_post_status_readdb_refine_libconfig) (int retVal___, const char *filename);
-typedef int (*HPMHOOK_pre_status_readdb_refine_libconfig_sub) (struct config_setting_t **r, const char **name, const char **source);
-typedef int (*HPMHOOK_post_status_readdb_refine_libconfig_sub) (int retVal___, struct config_setting_t *r, const char *name, const char *source);
 typedef bool (*HPMHOOK_pre_status_readdb_scconfig) (char **fields[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_status_readdb_scconfig) (bool retVal___, char *fields[], int columns, int current);
 typedef void (*HPMHOOK_pre_status_read_job_db) (void);
