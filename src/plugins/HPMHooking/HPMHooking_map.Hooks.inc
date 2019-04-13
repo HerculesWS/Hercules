@@ -38047,15 +38047,15 @@ int HP_intif_rodex_checkhasnew(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_intif_rodex_updatemail(int64 mail_id, int8 flag) {
+int HP_intif_rodex_updatemail(struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_intif_rodex_updatemail_pre > 0) {
-		int (*preHookFunc) (int64 *mail_id, int8 *flag);
+		int (*preHookFunc) (struct map_session_data **sd, int64 *mail_id, uint8 *opentype, int8 *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_rodex_updatemail_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_intif_rodex_updatemail_pre[hIndex].func;
-			retVal___ = preHookFunc(&mail_id, &flag);
+			retVal___ = preHookFunc(&sd, &mail_id, &opentype, &flag);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -38063,13 +38063,13 @@ int HP_intif_rodex_updatemail(int64 mail_id, int8 flag) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.intif.rodex_updatemail(mail_id, flag);
+		retVal___ = HPMHooks.source.intif.rodex_updatemail(sd, mail_id, opentype, flag);
 	}
 	if (HPMHooks.count.HP_intif_rodex_updatemail_post > 0) {
-		int (*postHookFunc) (int retVal___, int64 mail_id, int8 flag);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_rodex_updatemail_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_rodex_updatemail_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, mail_id, flag);
+			retVal___ = postHookFunc(retVal___, sd, mail_id, opentype, flag);
 		}
 	}
 	return retVal___;
@@ -38127,6 +38127,58 @@ int HP_intif_rodex_checkname(struct map_session_data *sd, const char *name) {
 		}
 	}
 	return retVal___;
+}
+void HP_intif_pGetZenyAck(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_pGetZenyAck_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pGetZenyAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_pGetZenyAck_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.pGetZenyAck(fd);
+	}
+	if (HPMHooks.count.HP_intif_pGetZenyAck_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pGetZenyAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_pGetZenyAck_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
+}
+void HP_intif_pGetItemsAck(int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_intif_pGetItemsAck_pre > 0) {
+		void (*preHookFunc) (int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pGetItemsAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_intif_pGetItemsAck_pre[hIndex].func;
+			preHookFunc(&fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.intif.pGetItemsAck(fd);
+	}
+	if (HPMHooks.count.HP_intif_pGetItemsAck_post > 0) {
+		void (*postHookFunc) (int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pGetItemsAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_intif_pGetItemsAck_post[hIndex].func;
+			postHookFunc(fd);
+		}
+	}
+	return;
 }
 int HP_intif_clan_kickoffline(int clan_id, int kick_interval) {
 	int hIndex = 0;
@@ -68214,6 +68266,58 @@ void HP_rodex_clean(struct map_session_data *sd, int8 flag) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_rodex_clean_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_rodex_clean_post[hIndex].func;
 			postHookFunc(sd, flag);
+		}
+	}
+	return;
+}
+void HP_rodex_getZenyAck(struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_rodex_getZenyAck_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int64 *mail_id, int8 *opentype, int64 *zeny);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_rodex_getZenyAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_rodex_getZenyAck_pre[hIndex].func;
+			preHookFunc(&sd, &mail_id, &opentype, &zeny);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.rodex.getZenyAck(sd, mail_id, opentype, zeny);
+	}
+	if (HPMHooks.count.HP_rodex_getZenyAck_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_rodex_getZenyAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_rodex_getZenyAck_post[hIndex].func;
+			postHookFunc(sd, mail_id, opentype, zeny);
+		}
+	}
+	return;
+}
+void HP_rodex_getItemsAck(struct map_session_data *sd, int64 mail_id, int8 opentype, int count, const struct rodex_item *items) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_rodex_getItemsAck_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int64 *mail_id, int8 *opentype, int *count, const struct rodex_item **items);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_rodex_getItemsAck_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_rodex_getItemsAck_pre[hIndex].func;
+			preHookFunc(&sd, &mail_id, &opentype, &count, &items);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.rodex.getItemsAck(sd, mail_id, opentype, count, items);
+	}
+	if (HPMHooks.count.HP_rodex_getItemsAck_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int64 mail_id, int8 opentype, int count, const struct rodex_item *items);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_rodex_getItemsAck_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_rodex_getItemsAck_post[hIndex].func;
+			postHookFunc(sd, mail_id, opentype, count, items);
 		}
 	}
 	return;

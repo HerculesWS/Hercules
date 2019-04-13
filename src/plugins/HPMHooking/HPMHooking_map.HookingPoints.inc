@@ -1487,6 +1487,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(intif->rodex_updatemail, HP_intif_rodex_updatemail) },
 	{ HP_POP(intif->rodex_sendmail, HP_intif_rodex_sendmail) },
 	{ HP_POP(intif->rodex_checkname, HP_intif_rodex_checkname) },
+	{ HP_POP(intif->pGetZenyAck, HP_intif_pGetZenyAck) },
+	{ HP_POP(intif->pGetItemsAck, HP_intif_pGetItemsAck) },
 	{ HP_POP(intif->clan_kickoffline, HP_intif_clan_kickoffline) },
 	{ HP_POP(intif->clan_membercount, HP_intif_clan_membercount) },
 	{ HP_POP(intif->request_accinfo, HP_intif_request_accinfo) },
@@ -2624,6 +2626,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(rodex->get_items, HP_rodex_get_items) },
 	{ HP_POP(rodex->delete_mail, HP_rodex_delete_mail) },
 	{ HP_POP(rodex->clean, HP_rodex_clean) },
+	{ HP_POP(rodex->getZenyAck, HP_rodex_getZenyAck) },
+	{ HP_POP(rodex->getItemsAck, HP_rodex_getItemsAck) },
 /* script_interface */
 	{ HP_POP(script->init, HP_script_init) },
 	{ HP_POP(script->final, HP_script_final) },
