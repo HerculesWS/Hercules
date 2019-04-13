@@ -418,7 +418,7 @@ enum packet_headers {
 	buyingStoreUpdateItemType = 0x81b,
 #endif
 	reqName = 0x95,
-#if PACKETVER >= 20150503 // Confirm this?
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	reqNameAllType = 0xA30,
 #else
 	reqNameAllType = 0x195,
@@ -2794,8 +2794,8 @@ struct packet_reqnameall_ack {
 	char party_name[NAME_LENGTH];
 	char guild_name[NAME_LENGTH];
 	char position_name[NAME_LENGTH];
-#if PACKETVER >= 20150503 // Confirm this?
-	int32 title_id; // Achievement Title
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
+	int32 title_id;
 #endif
 } __attribute__((packed));
 
