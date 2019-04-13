@@ -97,6 +97,22 @@ struct refine_interface {
 	 * @return The chance to refine the item, in percent (0~100)
 	 **/
 	int (*get_refine_chance) (enum refine_type wlv, int refine_level, enum refine_chance_type type);
+
+	/**
+	 * Gets the attack/deffense bonus for the given equipment type and refine level
+	 * @param equipment_type the equipment type
+	 * @param refine_level the equipment refine level
+	 * @return returns the bonus from refine db
+	 **/
+	int (*get_bonus) (enum refine_type equipment_type, int refine_level);
+
+	/**
+	* Gets the maximum attack/deffense random bonus for the given equipment type and refine level
+	* @param equipment_type the equipment type
+	* @param refine_level the equipment refine level
+	* @return returns the bonus from refine db
+	**/
+	int(*get_randombonus_max) (enum refine_type equipment_type, int refine_level);
 };
 
 #ifdef HERCULES_CORE
