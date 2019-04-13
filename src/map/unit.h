@@ -44,6 +44,7 @@ enum unit_stopwalking_flag {
 
 struct unit_data {
 	struct block_list *bl;
+	char title[NAME_LENGTH];
 	struct walkpath_data walkpath;
 	struct skill_timerskill *skilltimerskill[MAX_SKILLTIMERSKILL];
 	struct skill_unit_group *skillunit[MAX_SKILLUNITGROUP];
@@ -61,6 +62,7 @@ struct unit_data {
 	int   chaserange;
 	bool  stepaction; //Action should be executed on step [Playtester]
 	int   steptimer; //Timer that triggers the action [Playtester]
+	int groupId;  // id of client side group (works for npc and may be other) [4144]
 	uint16 stepskill_id,stepskill_lv; //Remembers skill that should be casted on step [Playtester]
 	int64 attackabletime;
 	int64 canact_tick;
