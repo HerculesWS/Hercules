@@ -635,6 +635,7 @@ static void rodex_refresh(struct map_session_data *sd, int8 open_type, int64 fir
 	if (open_type == RODEX_OPENTYPE_ACCOUNT && battle_config.feature_rodex_use_accountmail == false)
 		open_type = RODEX_OPENTYPE_MAIL;
 
+	rodex->clean(sd, 0);
 	// Some clients sends the first mail id it currently has and expects to receive
 	// a list of newer mails, other clients sends first mail id as 0 and expects
 	// to receive the first page (as if opening the box)
