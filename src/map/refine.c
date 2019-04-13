@@ -46,7 +46,7 @@ static int refine_get_randombonus_max(enum refine_type equipment_type, int refin
 	Assert_ret((int)equipment_type >= REFINE_TYPE_ARMOR && equipment_type < REFINE_TYPE_MAX);
 	Assert_ret(refine_level > 0 && refine_level <= MAX_REFINE);
 
-	return refine->dbs->refine_info[equipment_type].randombonus_max[refine_level - 1];
+	return refine->p->dbs->refine_info[equipment_type].randombonus_max[refine_level - 1];
 }
 
 /// @copydoc refine_interface::get_bonus()
@@ -55,7 +55,7 @@ static int refine_get_bonus(enum refine_type equipment_type, int refine_level)
 	Assert_ret((int)equipment_type >= REFINE_TYPE_ARMOR && equipment_type < REFINE_TYPE_MAX);
 	Assert_ret(refine_level > 0 && refine_level <= MAX_REFINE);
 
-	return refine->dbs->refine_info[equipment_type].bonus[refine_level - 1];
+	return refine->p->dbs->refine_info[equipment_type].bonus[refine_level - 1];
 }
 
 /// @copydoc refine_interface::get_refine_chance()
@@ -69,7 +69,7 @@ static int refine_get_refine_chance(enum refine_type wlv, int refine_level, enum
 	if (type >= REFINE_CHANCE_TYPE_MAX)
 		return 0;
 
-	return refine->dbs->refine_info[wlv].chance[type][refine_level];
+	return refine->p->dbs->refine_info[wlv].chance[type][refine_level];
 }
 
 /// @copydoc refine_interface_private::readdb_refine_libconfig_sub()
@@ -172,13 +172,13 @@ static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const 
 				rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
 		}
 		for (i = 0; i < MAX_REFINE; i++) {
-			refine->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_NORMAL][i] = chance[REFINE_CHANCE_TYPE_NORMAL][i];
-			refine->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_NORMAL][i] = chance[REFINE_CHANCE_TYPE_E_NORMAL][i];
-			refine->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_ENRICHED][i];
-			refine->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_E_ENRICHED][i];
-			refine->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
+			refine->p->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_NORMAL][i] = chance[REFINE_CHANCE_TYPE_NORMAL][i];
+			refine->p->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_NORMAL][i] = chance[REFINE_CHANCE_TYPE_E_NORMAL][i];
+			refine->p->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_ENRICHED][i];
+			refine->p->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_E_ENRICHED][i];
+			refine->p->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
 			bonus[i] += bonus_per_level + (i > 0 ? bonus[i - 1] : 0);
-			refine->dbs->refine_info[type].bonus[i] = bonus[i];
+			refine->p->dbs->refine_info[type].bonus[i] = bonus[i];
 		}
 	} else {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing refine rates for entry '%s' in \"%s\", skipping.\n", name, source);
@@ -240,11 +240,11 @@ void refine_defaults(void)
 {
 	refine = &refine_s;
 	refine->p = &refine_p;
+	refine->p->dbs = &refine_dbs;
 
 	refine->p->readdb_refine_libconfig = refine_readdb_refine_libconfig;
 	refine->p->readdb_refine_libconfig_sub = refine_readdb_refine_libconfig_sub;
 
-	refine->dbs = &refine_dbs;
 	refine->init = refine_init;
 	refine->final = refine_final;
 	refine->get_refine_chance = refine_get_refine_chance;

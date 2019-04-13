@@ -28,10 +28,23 @@
 #include "refine.h"
 #include "common/conf.h"
 
+/* Structures */
+struct s_refine_info {
+	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; // success chance
+	int bonus[MAX_REFINE];                          // cumulative fixed bonus damage
+	int randombonus_max[MAX_REFINE];                // cumulative maximum random bonus damage
+};
+
+struct refine_interface_dbs {
+	struct s_refine_info refine_info[REFINE_TYPE_MAX];
+};
+
 /**
  * Refine Private Interface
  **/
 struct refine_interface_private {
+	struct refine_interface_dbs *dbs;
+
 	/**
 	 * Processes a refine_db.conf entry.
 	 *
