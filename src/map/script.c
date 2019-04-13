@@ -24559,6 +24559,57 @@ static BUILDIN(getcalendartime)
 	return true;
 }
 
+enum consolemes_type {
+	CONSOLEMES_DEBUG = 0,
+	CONSOLEMES_ERROR = 1,
+	CONSOLEMES_WARNING = 2,
+	CONSOLEMES_INFO = 3,
+	CONSOLEMES_STATUS = 4,
+	CONSOLEMES_NOTICE = 5,
+};
+
+/*==========================================
+* consolemes(<type>, "text")
+*------------------------------------------*/
+static BUILDIN(consolemes)
+{
+	struct StringBuf buf;
+	StrBuf->Init(&buf);
+	int type = script_hasdata(st, 2) ? script_getnum(st, 2) : 0;
+
+	if (!script->sprintf_helper(st, 3, &buf)) {
+		StrBuf->Destroy(&buf);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	switch (type) {
+	default:
+	case CONSOLEMES_DEBUG:
+		ShowDebug("consolemes: %s\n", StrBuf->Value(&buf));
+		break;
+	case CONSOLEMES_ERROR:
+		ShowError("consolemes: (st->rid:%d) (st->oid:%d) %s\n", st->rid, st->oid, StrBuf->Value(&buf));
+		break;
+	case CONSOLEMES_WARNING:
+		ShowWarning("consolemes: (st->rid:%d) (st->oid:%d) %s\n", st->rid, st->oid, StrBuf->Value(&buf));
+		break;
+	case CONSOLEMES_INFO:
+		ShowInfo("consolemes: %s\n", StrBuf->Value(&buf));
+		break;
+	case CONSOLEMES_STATUS:
+		ShowStatus("consolemes: %s\n", StrBuf->Value(&buf));
+		break;
+	case CONSOLEMES_NOTICE:
+		ShowNotice("consolemes: %s\n", StrBuf->Value(&buf));
+		break;
+	}
+
+	StrBuf->Destroy(&buf);
+	script_pushint(st, 1);
+	return true;
+}
+
 /** place holder for the translation macro **/
 static BUILDIN(_)
 {
@@ -25478,7 +25529,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(sc_end,"i?"),
 		BUILDIN_DEF(getstatus, "i?"),
 		BUILDIN_DEF(getscrate,"ii?"),
-		BUILDIN_DEF(debugmes,"v*"),
+		BUILDIN_DEF_DEPRECATED(debugmes,"v*"),
+		BUILDIN_DEF(consolemes,"iv*"),
 		BUILDIN_DEF2(catchpet,"pet","i"),
 		BUILDIN_DEF2(birthpet,"bpet",""),
 		BUILDIN_DEF(resetlvl,"i"),
@@ -26204,6 +26256,14 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAPINFO_SIZE_X", MAPINFO_SIZE_X, false, false);
 	script->set_constant("MAPINFO_SIZE_Y", MAPINFO_SIZE_Y, false, false);
 	script->set_constant("MAPINFO_ZONE", MAPINFO_ZONE, false, false);
+
+	script->constdb_comment("consolemes options");
+	script->set_constant("CONSOLEMES_DEBUG", CONSOLEMES_DEBUG, false, false);
+	script->set_constant("CONSOLEMES_ERROR", CONSOLEMES_ERROR, false, false);
+	script->set_constant("CONSOLEMES_WARNING", CONSOLEMES_WARNING, false, false);
+	script->set_constant("CONSOLEMES_INFO", CONSOLEMES_INFO, false, false);
+	script->set_constant("CONSOLEMES_STATUS", CONSOLEMES_STATUS, false, false);
+	script->set_constant("CONSOLEMES_NOTICE", CONSOLEMES_NOTICE, false, false);
 
 	script->constdb_comment("set/getiteminfo options");
 	script->set_constant("ITEMINFO_BUYPRICE", ITEMINFO_BUYPRICE, false, false);

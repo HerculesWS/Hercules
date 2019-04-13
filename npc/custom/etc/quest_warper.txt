@@ -82,7 +82,7 @@ function	script	Q_Warpra	{
 	case 2:
 		warp $QW_SP_WarpMap$, $QW_SP_WarpX, $QW_SP_WarpY;
 		close2;
-		debugmes "Please check your special warp menu settings on the Warpra.";
+		consolemes(CONSOLEMES_INFO, "Please check your special warp menu settings on the Warpra.");
 		end;
 	case 3: goto L_town;
 	case 4: goto L_dungeon;
@@ -1533,7 +1533,7 @@ function	script	QWS_Dungeon_Warpra	{
 		mes "[Warpra]";
 		mes "Sorry, I can only unlock this location.";
 	} else
-		debugmes "QWS_Dungeon_Warpra error, improper syntax?";
+		consolemes(CONSOLEMES_ERROR, "QWS_Dungeon_Warpra error, improper syntax?");
 	return;
 
 function	QWS_D_setbin	{
@@ -1577,7 +1577,7 @@ function	script	QWS_Town_Warpra	{
 	} else if (QWS_T_getbin(getarg(0)) == 1) {
 		callfunc "Q_Warpra",0;
 	} else
-		debugmes "QWS_Town_Warpra error, improper syntax ?";
+		consolemes(CONSOLEMES_ERROR, "QWS_Town_Warpra error, improper syntax ?");
 	return;
 
 function	QWS_T_setbin	{

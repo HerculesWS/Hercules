@@ -93,7 +93,7 @@ function	script	thqs_trade_token	{
 // getarg(1) - .@mp$ -> PRICE
 function	script	thqs_menu_buy	{
 	if( getargcount() != 2 ) {
-		debugmes "thqs_menu_buy: Wrong number of arguments!!";
+		consolemes(CONSOLEMES_ERROR, "thqs_menu_buy: Wrong number of arguments!!");
 		close;
 	}
 
@@ -101,7 +101,7 @@ function	script	thqs_menu_buy	{
 	.@mp$ = getarg(1);
 
 	if( getarraysize( getd(.@mw$) ) != getarraysize( getd(.@mp$) ) ) {
-		debugmes "thqs_menu_buy: Missing entries in data!";
+		consolemes(CONSOLEMES_ERROR, "thqs_menu_buy: Missing entries in data!");
 		close;
 	}
 

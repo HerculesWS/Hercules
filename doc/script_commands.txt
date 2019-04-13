@@ -7775,6 +7775,10 @@ solution rather than sending the map and the monster_id.
 
 *debugmes("<format string>"{, <param>{, ...}})
 
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@ /!\ This command is deprecated @
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This command will print a message in the server console (map-server window),
 after applying the same format-string replacements as sprintf(). It will not be
 displayed anywhere else. Returns true on success.
@@ -7785,6 +7789,29 @@ Example:
 	debugmes("%s has clicked me!", strcharinfo(PC_NAME));
 
 	debugmes("\033[0;32mHello World"); // supports ANSI escape sequences
+
+---------------------------------------
+
+*consolemes("<type>", "<format string>"{,<param>{, ...}})
+
+This command will print a message in the server console (map-server window),
+after applying the same format-string replacements as sprintf(). It will not be
+displayed anywhere else. Returns true on success.
+
+List of available <type> are:
+	CONSOLEMES_DEBUG   = 0
+	CONSOLEMES_ERROR   = 1
+	CONSOLEMES_WARNING = 2
+	CONSOLEMES_INFO    = 3
+	CONSOLEMES_STATUS  = 4
+	CONSOLEMES_NOTICE  = 5
+
+Example:
+
+	// Displays "NAME has clicked me!" in the map-server window.
+	consolemes(CONSOLEMES_DEBUG, "%s has clicked me!", strcharinfo(PC_NAME));
+
+	consolemes(CONSOLEMES_DEBUG, "\033[0;32mHello World"); // supports ANSI escape sequences
 
 ---------------------------------------
 
