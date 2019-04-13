@@ -10138,6 +10138,7 @@ Applicable Data Types (available as constants) -
 	UDT_LIFETIME:       LifeTime - for summons.
 	UDT_MERC_KILLCOUNT: Kill count for mercenaries
 	UDT_STATADD:        Status Points - for NPCs.
+	UDT_GROUP:          group id
 
 returns 0 if value could not be set, 1 if successful.
 
@@ -10200,6 +10201,7 @@ Applicable Data types (available as constants) -
 	UDT_INTIMACY:       Intimacy Rate - for summons.
 	UDT_LIFETIME:       LifeTime - for summons.
 	UDT_MERC_KILLCOUNT: Kill count for mercenaries.
+	UDT_GROUP:          group id
 
 returns -1 if value could not be retrieved.
 
