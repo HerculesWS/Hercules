@@ -9260,7 +9260,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	const struct guild *g = NULL;
 	int ps = -1;
 
-	if (ssd->fakename[0] != '\0' || ssd->status.guild_id > 0 || ssd->status.party_id > 0 || ssd->status.title_id > 0) {
+	if (ssd->fakename[0] != '\0' && ssd->disguise != -1) {
 		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 		len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
 	} else {
@@ -9273,7 +9273,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		packet.gid = -bl->id;
 	}
 
-	if (ssd->fakename[0] != '\0') {
+	if (ssd->fakename[0] != '\0' && ssd->disguise != -1) {
 		memcpy(packet.name, ssd->fakename, NAME_LENGTH);
 	} else {
 #if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
