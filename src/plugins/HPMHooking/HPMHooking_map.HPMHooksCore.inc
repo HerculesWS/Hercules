@@ -2900,6 +2900,10 @@ struct {
 	struct HPMHookPoint *HP_intif_rodex_sendmail_post;
 	struct HPMHookPoint *HP_intif_rodex_checkname_pre;
 	struct HPMHookPoint *HP_intif_rodex_checkname_post;
+	struct HPMHookPoint *HP_intif_pGetZenyAck_pre;
+	struct HPMHookPoint *HP_intif_pGetZenyAck_post;
+	struct HPMHookPoint *HP_intif_pGetItemsAck_pre;
+	struct HPMHookPoint *HP_intif_pGetItemsAck_post;
 	struct HPMHookPoint *HP_intif_clan_kickoffline_pre;
 	struct HPMHookPoint *HP_intif_clan_kickoffline_post;
 	struct HPMHookPoint *HP_intif_clan_membercount_pre;
@@ -5122,6 +5126,10 @@ struct {
 	struct HPMHookPoint *HP_rodex_delete_mail_post;
 	struct HPMHookPoint *HP_rodex_clean_pre;
 	struct HPMHookPoint *HP_rodex_clean_post;
+	struct HPMHookPoint *HP_rodex_getZenyAck_pre;
+	struct HPMHookPoint *HP_rodex_getZenyAck_post;
+	struct HPMHookPoint *HP_rodex_getItemsAck_pre;
+	struct HPMHookPoint *HP_rodex_getItemsAck_post;
 	struct HPMHookPoint *HP_script_init_pre;
 	struct HPMHookPoint *HP_script_init_post;
 	struct HPMHookPoint *HP_script_final_pre;
@@ -9587,6 +9595,10 @@ struct {
 	int HP_intif_rodex_sendmail_post;
 	int HP_intif_rodex_checkname_pre;
 	int HP_intif_rodex_checkname_post;
+	int HP_intif_pGetZenyAck_pre;
+	int HP_intif_pGetZenyAck_post;
+	int HP_intif_pGetItemsAck_pre;
+	int HP_intif_pGetItemsAck_post;
 	int HP_intif_clan_kickoffline_pre;
 	int HP_intif_clan_kickoffline_post;
 	int HP_intif_clan_membercount_pre;
@@ -11809,6 +11821,10 @@ struct {
 	int HP_rodex_delete_mail_post;
 	int HP_rodex_clean_pre;
 	int HP_rodex_clean_post;
+	int HP_rodex_getZenyAck_pre;
+	int HP_rodex_getZenyAck_post;
+	int HP_rodex_getItemsAck_pre;
+	int HP_rodex_getItemsAck_post;
 	int HP_script_init_pre;
 	int HP_script_init_post;
 	int HP_script_final_pre;

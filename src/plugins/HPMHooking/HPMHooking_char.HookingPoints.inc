@@ -416,6 +416,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_rodex->checkname, HP_inter_rodex_checkname) },
 	{ HP_POP(inter_rodex->savemessage, HP_inter_rodex_savemessage) },
 	{ HP_POP(inter_rodex->updatemail, HP_inter_rodex_updatemail) },
+	{ HP_POP(inter_rodex->getzeny, HP_inter_rodex_getzeny) },
+	{ HP_POP(inter_rodex->getitems, HP_inter_rodex_getitems) },
 /* inter_storage_interface */
 	{ HP_POP(inter_storage->tosql, HP_inter_storage_tosql) },
 	{ HP_POP(inter_storage->fromsql, HP_inter_storage_fromsql) },
@@ -650,6 +652,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->rodex_send, HP_mapif_rodex_send) },
 	{ HP_POP(mapif->parse_rodex_checkname, HP_mapif_parse_rodex_checkname) },
 	{ HP_POP(mapif->rodex_checkname, HP_mapif_rodex_checkname) },
+	{ HP_POP(mapif->rodex_getzenyack, HP_mapif_rodex_getzenyack) },
+	{ HP_POP(mapif->rodex_getitemsack, HP_mapif_rodex_getitemsack) },
 	{ HP_POP(mapif->load_guild_storage, HP_mapif_load_guild_storage) },
 	{ HP_POP(mapif->save_guild_storage_ack, HP_mapif_save_guild_storage_ack) },
 	{ HP_POP(mapif->parse_LoadGuildStorage, HP_mapif_parse_LoadGuildStorage) },
