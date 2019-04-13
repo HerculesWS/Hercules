@@ -9276,7 +9276,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	if (ssd->fakename[0] != '\0') {
 		memcpy(packet.name, ssd->fakename, NAME_LENGTH);
 	} else {
-#if PACKETVER >= 20150503
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 		// Title System [Dastgir/Hercules]
 		if (ssd->status.title_id > 0) {
 			packet.title_id = ssd->status.title_id;
@@ -9548,7 +9548,7 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 		memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
 	}
 
-#if PACKETVER >= 20150503
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	// Achievement System [Dastgir/Hercules]
 	if (ssd->status.title_id > 0) {
 		packet.title_id = ssd->status.title_id;
