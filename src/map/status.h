@@ -49,27 +49,6 @@ struct pet_data;
 )
 
 /**
- * Max Refine available to your server
- * Changing this limit requires edits to refine_db.txt
- **/
-#ifdef RENEWAL
-	#define MAX_REFINE 20
-#else
-	#define MAX_REFINE 10
-#endif
-
-enum refine_type {
-	REFINE_TYPE_ARMOR   = 0,
-	REFINE_TYPE_WEAPON1 = 1,
-	REFINE_TYPE_WEAPON2 = 2,
-	REFINE_TYPE_WEAPON3 = 3,
-	REFINE_TYPE_WEAPON4 = 4,
-#ifndef REFINE_TYPE_MAX
-	REFINE_TYPE_MAX     = 5
-#endif
-};
-
-/**
  * SC configuration type
  * @see db/sc_config.txt for more information
  **/
@@ -2249,21 +2228,6 @@ struct status_change {
 #define status_calc_elemental(ed, opt)  (status->calc_bl_(&(ed)->bl, SCB_ALL, (opt)))
 #define status_calc_npc(nd, opt)        (status->calc_bl_(&(nd)->bl, SCB_ALL, (opt)))
 
-enum refine_chance_type {
-	REFINE_CHANCE_TYPE_NORMAL     = 0, // Normal Chance
-	REFINE_CHANCE_TYPE_ENRICHED   = 1, // Enriched Ore Chance
-	REFINE_CHANCE_TYPE_E_NORMAL   = 2, // Event Normal Ore Chance
-	REFINE_CHANCE_TYPE_E_ENRICHED = 3, // Event Enriched Ore Chance
-	REFINE_CHANCE_TYPE_MAX
-};
-
-// bonus values and upgrade chances for refining equipment
-struct s_refine_info {
-	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; // success chance
-	int bonus[MAX_REFINE]; // cumulative fixed bonus damage
-	int randombonus_max[MAX_REFINE]; // cumulative maximum random bonus damage
-};
-
 struct s_status_dbs {
 BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
 	int max_weight_base[CLASS_COUNT];
@@ -2276,8 +2240,6 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	int SkillChangeTable[SC_MAX];         // status -> skill
 	int RelevantBLTypes[SI_MAX];          // "icon" -> enum bl_type (for clif->status_change to identify for which bl types to send packets)
 	bool DisplayType[SC_MAX];
-	/* */
-	struct s_refine_info refine_info[REFINE_TYPE_MAX];
 	/* */
 	int atkmods[3][MAX_SINGLE_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
 	char job_bonus[CLASS_COUNT][MAX_LEVEL];
@@ -2307,7 +2269,6 @@ struct status_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
-	int (*get_refine_chance) (enum refine_type wlv, int refine, enum refine_chance_type type);
 	// for looking up associated data
 	sc_type (*skill2sc) (int skill_id);
 	int (*sc2skill) (sc_type sc);
@@ -2427,8 +2388,6 @@ struct status_interface {
 	int (*natural_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
-	int (*readdb_refine_libconfig) (const char *filename);
-	int (*readdb_refine_libconfig_sub) (struct config_setting_t *r, const char *name, const char *source);
 	bool (*readdb_scconfig) (char *fields[], int columns, int current);
 	void (*read_job_db) (void);
 	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);

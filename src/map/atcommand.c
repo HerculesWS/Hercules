@@ -48,6 +48,7 @@
 #include "map/pc_groups.h" // groupid2name
 #include "map/pet.h"
 #include "map/quest.h"
+#include "map/refine.h"
 #include "map/script.h"
 #include "map/searchstore.h"
 #include "map/skill.h"
