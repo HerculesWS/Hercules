@@ -50,9 +50,12 @@ OnMinute10:	// Start time (every hour)
 
 OnMobKilled:
 	set .Spawn, .Spawn - 1;
-	getitem .Prize, .Amount;
-	if (.Spawn) announce "[ "+strcharinfo(PC_NAME)+" ] has killed a Mushroom. There are now "+.Spawn+" Mushroom(s) left.",bc_map;
-	else {
+	if (playerattached()) {
+		getitem .Prize, .Amount;
+		if (.Spawn)
+			announce "[ "+strcharinfo(PC_NAME)+" ] has killed a Mushroom. There are now "+.Spawn+" Mushroom(s) left.",bc_map;
+	}	
+	if (!.Spawn) {
 		announce "The Find the Mushroom Event has ended. All the Mushrooms have been killed.",0;
 		set .status,0;
 	}
