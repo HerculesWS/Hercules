@@ -444,7 +444,7 @@ static void rodex_getZenyAck(struct map_session_data *sd, int64 mail_id, int8 op
 		return;
 	}
 
-	if (pc->getzeny(sd, zeny, LOG_TYPE_MAIL, NULL) != 0) {
+	if (pc->getzeny(sd, (int)zeny, LOG_TYPE_MAIL, NULL) != 0) {
 		clif->rodex_request_zeny(sd, opentype, mail_id, RODEX_GET_ZENY_FATAL_ERROR);
 		return;
 	}
