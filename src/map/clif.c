@@ -9414,12 +9414,55 @@ static void clif_npcname_ack(int fd, struct block_list *bl)
 /// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
 /// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
 /// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
-static void clif_mobname_ack(int fd, struct block_list *bl)
+static void clif_mobname_guardian_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_MOB);
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+	Assert_retv(md->guardian_data && md->guardian_data->g);
+
+	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
+	packet.gid = bl->id;
+	memcpy(packet.name, md->name, NAME_LENGTH);
+	memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
+	memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAMEALL));
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_mobname_normal_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MOB);
 
-	// probably need switch to packet ZC_ACK_REQNAME_TITLE [4144]
+	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
+	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
+	packet.gid = bl->id;
+	memcpy(packet.name, BL_UCCAST(BL_MOB, bl)->db->name, NAME_LENGTH);
+#if PACKETVER_MAIN_NUM >= 20180207 || PACKETVER_RE_NUM >= 20171129 || PACKETVER_ZERO_NUM >= 20171130
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud != NULL) {
+		memcpy(packet.title, ud->title, NAME_LENGTH);
+		packet.groupId = ud->groupId;
+	}
+#endif
+
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_mobname_additional_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_MOB);
+
 	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = bl->id;
@@ -9427,26 +9470,42 @@ static void clif_mobname_ack(int fd, struct block_list *bl)
 	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 
 	memcpy(packet.name, md->name, NAME_LENGTH);
-	if (md->guardian_data && md->guardian_data->g) {
-		memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
-		memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
-	} else if (battle_config.show_mob_info) {
-		char mobhp[50], *str_p = mobhp;
-		if (battle_config.show_mob_info&4)
-			str_p += sprintf(str_p, "Lv. %d | ", md->level);
-		if (battle_config.show_mob_info&1)
-			str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
-		if (battle_config.show_mob_info&2)
-			str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
-		//Even thought mobhp ain't a name, we send it as one so the client
-		//can parse it. [Skotlex]
-		if (str_p != mobhp) {
-			*(str_p-3) = '\0'; //Remove trailing space + pipe.
-			memcpy(packet.party_name, mobhp, NAME_LENGTH);
-		}
+	char mobhp[100];
+	char *str_p = mobhp;
+	if (battle_config.show_mob_info&4)
+		str_p += sprintf(str_p, "Lv. %d | ", md->level);
+	if (battle_config.show_mob_info&1)
+		str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
+	if (battle_config.show_mob_info&2)
+		str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
+	//Even thought mobhp ain't a name, we send it as one so the client
+	//can parse it. [Skotlex]
+	if (str_p != mobhp) {
+		*(str_p-3) = '\0'; //Remove trailing space + pipe.
+		memcpy(packet.party_name, mobhp, NAME_LENGTH);
 	}
 
 	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAMEALL));
+}
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void clif_mobname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	Assert_retv(bl->type == BL_MOB);
+
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+
+	if (md->guardian_data && md->guardian_data->g) {
+		clif->mobname_guardian_ack(fd, bl);
+	} else if (battle_config.show_mob_info) {
+		clif->mobname_additional_ack(fd, bl);
+	} else {
+		clif->mobname_normal_ack(fd, bl);
+	}
 }
 
 /// Updates the object's (bl) name on client.
@@ -22886,6 +22945,9 @@ void clif_defaults(void)
 	clif->petname_ack = clif_petname_ack;
 	clif->npcname_ack = clif_npcname_ack;
 	clif->mobname_ack = clif_mobname_ack;
+	clif->mobname_guardian_ack = clif_mobname_guardian_ack;
+	clif->mobname_additional_ack = clif_mobname_additional_ack;
+	clif->mobname_normal_ack = clif_mobname_normal_ack;
 	clif->chatname_ack = clif_chatname_ack;
 	clif->elemname_ack = clif_elemname_ack;
 	clif->unknownname_ack = clif_unknownname_ack;

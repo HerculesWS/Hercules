@@ -895,6 +895,9 @@ struct clif_interface {
 	void (*petname_ack) (int fd, struct block_list *bl);
 	void (*npcname_ack) (int fd, struct block_list *bl);
 	void (*mobname_ack) (int fd, struct block_list *bl);
+	void (*mobname_guardian_ack) (int fd, struct block_list *bl);
+	void (*mobname_additional_ack) (int fd, struct block_list *bl);
+	void (*mobname_normal_ack) (int fd, struct block_list *bl);
 	void (*chatname_ack) (int fd, struct block_list *bl);
 	void (*elemname_ack) (int fd, struct block_list *bl);
 	void (*unknownname_ack) (int fd, struct block_list *bl);
