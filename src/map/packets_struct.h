@@ -3227,6 +3227,13 @@ struct PACKET_ZC_PARTY_CONFIG {
 DEFINE_PACKET_HEADER(ZC_PARTY_CONFIG, 0x02c9);
 #endif
 
+struct PACKET_ZC_ROLE_CHANGE {
+	int16 packetType;
+	int32 flag;
+	char name[NAME_LENGTH];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ROLE_CHANGE, 0x00e1);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

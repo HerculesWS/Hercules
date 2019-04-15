@@ -4311,22 +4311,25 @@ static void clif_addchat(struct chat_data *cd, struct map_session_data *sd)
 /// role:
 ///     0 = owner (menu)
 ///     1 = normal
+static void clif_chatRoleChange(struct chat_data *cd, struct map_session_data *sd, struct block_list* bl, int isNotOwner)
+{
+	nullpo_retv(sd);
+	nullpo_retv(bl);
+	struct PACKET_ZC_ROLE_CHANGE p;
+
+	p.packetType = HEADER_ZC_ROLE_CHANGE;
+	p.flag = isNotOwner;
+	memcpy(&p.name, sd->status.name, NAME_LENGTH);
+	clif->send(&p, sizeof(struct PACKET_ZC_ROLE_CHANGE), bl, CHAT);
+}
+
 static void clif_changechatowner(struct chat_data *cd, struct map_session_data *sd)
 {
-	unsigned char buf[64];
-
 	nullpo_retv(sd);
 	nullpo_retv(cd);
 
-	WBUFW(buf, 0) = 0xe1;
-	WBUFL(buf, 2) = 1;
-	memcpy(WBUFP(buf,6),cd->usersd[0]->status.name,NAME_LENGTH);
-
-	WBUFW(buf,30) = 0xe1;
-	WBUFL(buf,32) = 0;
-	memcpy(WBUFP(buf,36),sd->status.name,NAME_LENGTH);
-
-	clif->send(buf,packet_len(0xe1)*2,&sd->bl,CHAT);
+	clif->chatRoleChange(cd, cd->usersd[0], &sd->bl, 1);
+	clif->chatRoleChange(cd, sd, &sd->bl, 0);
 }
 
 /// Notify about user leaving the chatroom (ZC_MEMBER_EXIT).
@@ -23051,6 +23054,7 @@ void clif_defaults(void)
 	clif->joinchatok = clif_joinchatok;
 	clif->addchat = clif_addchat;
 	clif->changechatowner = clif_changechatowner;
+	clif->chatRoleChange = clif_chatRoleChange;
 	clif->clearchat = clif_clearchat;
 	clif->leavechat = clif_leavechat;
 	clif->changechatstatus = clif_changechatstatus;

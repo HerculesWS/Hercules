@@ -998,6 +998,7 @@ struct clif_interface {
 	void (*joinchatok) (struct map_session_data *sd,struct chat_data* cd);
 	void (*addchat) (struct chat_data* cd,struct map_session_data *sd);
 	void (*changechatowner) (struct chat_data* cd, struct map_session_data* sd);
+	void (*chatRoleChange) (struct chat_data *cd, struct map_session_data *sd, struct block_list* bl, int isNotOwner);
 	void (*clearchat) (struct chat_data *cd,int fd);
 	void (*leavechat) (struct chat_data* cd, struct map_session_data* sd, bool flag);
 	void (*changechatstatus) (struct chat_data* cd);
