@@ -3219,6 +3219,14 @@ struct PACKET_ZC_LOAD_CONFIRM {
 DEFINE_PACKET_HEADER(ZC_LOAD_CONFIRM, 0x0b1b);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20070911 || defined(PACKETVER_RE) || PACKETVER_AD_NUM >= 20070911 || PACKETVER_SAK_NUM >= 20070904 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_PARTY_CONFIG {
+	int16 packetType;
+	uint8 denyPartyInvites;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PARTY_CONFIG, 0x02c9);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
