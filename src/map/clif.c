@@ -10978,7 +10978,8 @@ static void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 		(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)) {
 		clif->disconnect_ack(sd, 0);
 		sockt->flush(fd);
-		sockt->eof(fd);
+		if (battle_config.drop_connection_on_quit)
+			sockt->eof(fd);
 	} else {
 		clif->disconnect_ack(sd, 1);
 	}

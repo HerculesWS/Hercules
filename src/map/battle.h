@@ -583,8 +583,10 @@ struct Battle_Config {
 
 	int ping_timer_interval;
 	int ping_time;
-	
+
 	int option_drop_max_loop;
+
+	int drop_connection_on_quit;
 };
 
 /* criteria for battle_config.idletime_critera */
