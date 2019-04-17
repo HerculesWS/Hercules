@@ -1805,6 +1805,12 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0a88,clif->pResetCooldown);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+	packet(0x0aa1, clif->pAddItemRefineryUI);
+	packet(0x0aa3, clif->pRefineryUIRefine);
+	packet(0x0aa4, clif->pRefineryUIClose);
+#endif
+
 // 2017-02-28aRagexeRE
 #if PACKETVER >= 20170228
 // new packets

@@ -6409,6 +6409,7 @@ static void map_load_defaults(void)
 	npc_chat_defaults();
 	rodex_defaults();
 	stylist_defaults();
+	refine_defaults();
 }
 /**
  * --run-once handler

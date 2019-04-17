@@ -130,6 +130,7 @@ enum item_itemid {
 	ITEMID_INDIGO_PTS            = 6361,
 	ITEMID_YELLOW_WISH_PTS       = 6362,
 	ITEMID_LIME_GREEN_PTS        = 6363,
+	ITEMID_BLACKSMITH_BLESSING   = 6635,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,

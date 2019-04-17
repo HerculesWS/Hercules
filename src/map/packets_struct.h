@@ -3319,6 +3319,76 @@ struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT {
 DEFINE_PACKET_HEADER(ZC_SE_PC_BUY_CASHITEM_RESULT, 0x0849);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REFINE_OPEN_WINDOW {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REFINE_OPEN_WINDOW, 0x0aa0);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
+struct PACKET_CZ_REFINE_ADD_ITEM {
+	int16 packetType;
+	int16 index;
+};
+DEFINE_PACKET_HEADER(CZ_REFINE_ADD_ITEM, 0x0aa1);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REFINE_ADD_ITEM_SUB {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	int8 chance;
+	int32 zeny;
+} __attribute__((packed));
+
+struct PACKET_ZC_REFINE_ADD_ITEM {
+	int16 packetType;
+	int16 packtLength;
+	int16 itemIndex;
+	int8 blacksmithBlessing;
+	struct PACKET_ZC_REFINE_ADD_ITEM_SUB req[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REFINE_ADD_ITEM, 0x0aa2);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
+struct PACKET_CZ_REFINE_ITEM_REQUEST {
+	int16 packetType;
+	int16 index;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	int8 blacksmithBlessing;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REFINE_ITEM_REQUEST, 0x0aa3);
+
+struct PACKET_CZ_REFINE_WINDOW_CLOSE {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REFINE_WINDOW_CLOSE, 0x0aa4);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REFINE_STATUS {
+	int16 packetType;
+	char name[NAME_LENGTH];
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	int8 refine_level;
+	int8 status;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REFINE_STATUS, 0x0ada);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

@@ -55,6 +55,7 @@ struct skill_unit;
 struct unit_data;
 struct view_data;
 struct achievement_data; // map/achievement.h
+struct s_refine_requirement;
 
 enum clif_messages;
 enum rodex_add_item;
@@ -1611,6 +1612,11 @@ struct clif_interface {
 	void (*pResetCooldown) (int fd, struct map_session_data *sd);
 	void (*loadConfirm) (struct map_session_data *sd);
 	void (*send_selforarea) (int fd, struct block_list *bl, const void *buf, int len);
+	void (*OpenRefineryUI) (struct map_session_data *sd);
+	void (*pAddItemRefineryUI) (int fd, struct map_session_data *sd);
+	void (*AddItemRefineryUIAck) (struct map_session_data *sd, int item_index, struct s_refine_requirement *req);
+	void (*pRefineryUIClose) (int fd, struct map_session_data *sd);
+	void (*pRefineryUIRefine) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
