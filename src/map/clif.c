@@ -9527,7 +9527,7 @@ static void clif_chatname_ack(int fd, struct block_list *bl)
 	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
 
-#if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
+#if 0 // Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
 	memcpy(packet.name, BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
 #if PACKETVER_MAIN_NUM >= 20180207 || PACKETVER_RE_NUM >= 20171129 || PACKETVER_ZERO_NUM >= 20171130
 	struct unit_data *ud = unit->bl2ud(bl);
