@@ -9,6 +9,13 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2019.04.07+1] `April 7 2019` `PATCH 1`
+
+### Fixed
+
+- Fixed some race conditions and missing validation in the item and zeny handling code for RODEX. (#2437)
+- Fixed pet eggs getting lost for pets that were hatched before the pet evolution system. Pets are now automatically migrated to the new system that keeps eggs in the user's inventory. (#2428)
+
 ## [v2019.04.07] `April 7 2019`
 
 ### Added
@@ -46,9 +53,6 @@ If you are reading this in a text editor, simply ignore this section
 
 - Deprecated the command `petstat()`, superseded by `getpetinfo()`. (part of #2398)
 - Deprecated the `PET_*` constants, used by the `petstat()` command. (part of #2398)
-
-### Removed
-
 
 ## [v2019.03.10] `March 10 2019`
 
@@ -89,8 +93,6 @@ If you are reading this in a text editor, simply ignore this section
 
 - Deprecated the `UDT_MAPIDXY` constant. Its use in `setunitdata()` is replaced by `unitwarp()` and its use in `getunitdata()` is replaced by `getmapxy()`. (#2391)
 - Deprecated the `UDT_WALKTOXY` constant. Its use in `setunitdata()` is replaced by `unitwalk()`. (#2391)
-
-### Removed
 
 ## [v2019.02.10+1] `February 10 2019` `PATCH 1`
 
@@ -679,6 +681,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.04.07+1]: https://github.com/HerculesWS/Hercules/compare/v2019.04.07...v2019.04.07+1
 [v2019.04.07]: https://github.com/HerculesWS/Hercules/compare/v2019.03.10...v2019.04.07
 [v2019.03.10]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10+1...v2019.03.10
 [v2019.02.10+1]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10...v2019.02.10+1
