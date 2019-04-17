@@ -44,6 +44,10 @@
 //=========================================================================
 
 payon,157,146,6	script	Suhnbi#cash	4_M_03,{
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			end();
+	}
 	disable_items;
 	mes "[Suhnbi]";
 	mes "I am the Armsmith";

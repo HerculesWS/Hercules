@@ -64,7 +64,7 @@
 // 20120307 - 2012-03-07aRagexeRE+ - 0x970
 
 #ifndef PACKETVER
-	#define PACKETVER 20141022
+	#define PACKETVER 20190116
 #endif // PACKETVER
 
 //Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
@@ -1365,6 +1365,10 @@ enum questinfo_type {
 #define MAX_ITEMLIST MAX_STORAGE
 #endif
 
+#ifndef MAX_REFINE_REQUIREMENTS
+	#define MAX_REFINE_REQUIREMENTS 4
+#endif
+
 // sanity checks...
 #if MAX_ZENY > INT_MAX
 #error MAX_ZENY is too big
@@ -1376,6 +1380,10 @@ enum questinfo_type {
 
 #ifdef MAX_SKILL
 #error MAX_SKILL has been replaced by MAX_SKILL_DB. Please update your custom definitions.
+#endif
+
+#if MAX_REFINE_REQUIREMENTS > 4
+#error MAX_REFINE_REQUIREMENTS is bigger than allowed, this is a hardcoded limit in the client
 #endif
 
 #endif /* COMMON_MMO_H */

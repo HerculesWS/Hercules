@@ -3188,6 +3188,70 @@ struct PACKET_CZ_STYLE_CLOSE {
 DEFINE_PACKET_HEADER(CZ_STYLE_CLOSE, 0x0a48);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REFINE_OPEN_WINDOW {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REFINE_OPEN_WINDOW, 0x0aa0);
+
+struct PACKET_CZ_REFINE_ADD_ITEM {
+	int16 packetType;
+	int16 index;
+};
+DEFINE_PACKET_HEADER(CZ_REFINE_ADD_ITEM, 0x0aa1);
+
+struct REFINERY_ITEMS {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	int8 chance;
+	int32 zeny;
+} __attribute__((packed));
+
+struct PACKET_ZC_REFINE_ADD_ITEM {
+	int16 packetType;
+	int16 packtLength;
+	int16 itemIndex;
+	int8 blacksmithBlessing;
+	struct REFINERY_ITEMS req[MAX_REFINE_REQUIREMENTS];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REFINE_ADD_ITEM, 0x0aa2);
+
+struct PACKET_CZ_REFINE_ITEM_REQUEST {
+	int16 packetType;
+	int16 index;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	int8 blacksmithBlessing;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REFINE_ITEM_REQUEST, 0x0aa3);
+
+struct PACKET_CZ_REFINE_WINDOW_CLOSE {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REFINE_WINDOW_CLOSE, 0x0aa4);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170726 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_REFINE_STATUS {
+	int16 packetType;
+	char name[NAME_LENGTH];
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	int8 refine_level;
+	int8 status;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_REFINE_STATUS, 0x0ada);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

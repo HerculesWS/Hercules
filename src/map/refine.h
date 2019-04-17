@@ -25,6 +25,7 @@
  * Refine Interface.
  **/
 #include "common/hercules.h"
+#include "common/mmo.h"
 
 /* Defines */
 /**
@@ -58,6 +59,24 @@ enum refine_chance_type {
 	REFINE_CHANCE_TYPE_E_NORMAL   = 2, // Event Normal Ore Chance
 	REFINE_CHANCE_TYPE_E_ENRICHED = 3, // Event Enriched Ore Chance
 	REFINE_CHANCE_TYPE_MAX
+};
+
+enum refine_ui_failure_behavior {
+	REFINE_FAILURE_BEHAVIOR_DESTROY,
+	REFINE_FAILURE_BEHAVIOR_KEEP,
+	REFINE_FAILURE_BEHAVIOR_DOWNGRADE
+};
+
+/* Structure */
+struct s_refine_requirement {
+	int blacksmith_blessing;
+	int req_count;
+	struct {
+		int nameid;
+		int cost;
+		enum refine_chance_type type;
+		enum refine_ui_failure_behavior failure_behavior;
+	} req[MAX_REFINE_REQUIREMENTS];
 };
 
 /**
@@ -101,6 +120,22 @@ struct refine_interface {
 	* @return returns the bonus from refine db
 	**/
 	int(*get_randombonus_max) (enum refine_type equipment_type, int refine_level);
+
+	/**
+	 * Validates and send Item addition packet to the client for refinery UI
+	 * @param sd player session data.
+	 * @param item_index the requested item index in inventory.
+	 **/
+	void (*refinery_add_item) (struct map_session_data *sd, int item_index);
+
+	/**
+	 * Processes an refine request through Refinery UI
+	 * @param sd player session data
+	 * @param item_index the index of the requested item
+	 * @param material_id the refine material chosen by player
+	 * @param use_blacksmith_blessing sets either if blacksmith blessing is requested to be used or not
+	 **/
+	void (*refinery_refine_request) (struct map_session_data *sd, int item_index, int material_id, bool use_blacksmith_blessing);
 };
 
 #ifdef HERCULES_CORE

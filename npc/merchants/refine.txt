@@ -589,6 +589,10 @@ lhz_in02,282,20,7	script	Fulerr	4_M_LGTMAN,{
 // If you enable this function, be sure to edit the value of .@safe to the max
 // safe refine in refine_db.txt as well.
 function	script	refinemain	{
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			end();
+	}
 	disable_items;
 	.@features = getarg(1);
 	mes "[" + getarg(0) + "]";
