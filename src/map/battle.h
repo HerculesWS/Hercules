@@ -583,6 +583,9 @@ struct Battle_Config {
 
 	int ping_timer_interval;
 	int ping_time;
+
+	int enable_refinery_ui;
+	int replace_refine_npcs;
 };
 
 /* criteria for battle_config.idletime_critera */

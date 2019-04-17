@@ -25155,6 +25155,25 @@ static BUILDIN(getInventorySize)
 	return true;
 }
 
+static BUILDIN(openrefineryui)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	if (battle_config.enable_refinery_ui == 0) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	clif->OpenRefineryUI(sd);
+	script_pushint(st, 1);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25903,6 +25922,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(expandInventoryResult, "i"),
 		BUILDIN_DEF(expandInventory, "i"),
 		BUILDIN_DEF(getInventorySize, ""),
+		BUILDIN_DEF(openrefineryui, ""),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
