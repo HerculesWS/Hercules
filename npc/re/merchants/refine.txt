@@ -56,6 +56,20 @@ payon_in01,18,132,3	script	Vestri#pay	4_M_DWARF,{
 // On official servers, if an item is unsuccessfully refined it will break at a
 // 20% rate and downgrade at an 80% rate.
 function	script	refinenew	{
+	mesf("[%s]", getarg(0));
+	mes("I'm a blacksmith skilled in refining weapons and armors.");
+	mes("I can refine an item of your choice among the items you are equipped with.");
+	mes("Which item do you want to refine?");
+
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+		else
+			next();
+	} else {
+		next();
+	}
+	
 	disable_items;
 	mes "["+ getarg(0) +"]";
 	mes "I am the best Armsmith ever!";

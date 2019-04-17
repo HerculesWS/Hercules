@@ -10403,3 +10403,10 @@ This value always smaller or equal to MAX_INVENTORY.
 Size can be changed by group of functions expandInventory*
 
 ---------------------------------------
+
+*openrefineryui()
+
+Opens refinery user interface for the player
+returns true on success and false on failure
+
+---------------------------------------
