@@ -1744,10 +1744,13 @@ static void mapif_rodex_sendhasnew(int fd, int char_id, bool has_new)
  *------------------------------------------*/
 static void mapif_parse_rodex_updatemail(int fd)
 {
-	int64 mail_id = RFIFOL(fd, 2);
-	int8 flag = RFIFOB(fd, 10);
+	int account_id = RFIFOL(fd, 2);
+	int char_id = RFIFOL(fd, 6);
+	int64 mail_id = RFIFOQ(fd, 10);
+	uint8 opentype = RFIFOB(fd, 18);
+	int8 flag = RFIFOB(fd, 19);
 
-	inter_rodex->updatemail(mail_id, flag);
+	inter_rodex->updatemail(fd, account_id, char_id, mail_id, opentype, flag);
 }
 
 /*==========================================
@@ -2461,6 +2464,29 @@ static void mapif_achievement_save(int char_id, struct char_achievements *p)
 		inter_achievement->tosql(char_id, cp, p);
 }
 
+static void mapif_rodex_getzenyack(int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny)
+{
+	WFIFOHEAD(fd, 23);
+	WFIFOW(fd, 0) = 0x3899;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOQ(fd, 6) = zeny;
+	WFIFOQ(fd, 14) = mail_id;
+	WFIFOB(fd, 22) = opentype;
+	WFIFOSET(fd, 23);
+}
+
+static void mapif_rodex_getitemsack(int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items)
+{
+	WFIFOHEAD(fd, 15 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	WFIFOW(fd, 0) = 0x389a;
+	WFIFOL(fd, 2) = char_id;
+	WFIFOQ(fd, 6) = mail_id;
+	WFIFOB(fd, 14) = opentype;
+	WFIFOB(fd, 15) = count;
+	memcpy(WFIFOP(fd, 16), items, sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	WFIFOSET(fd, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+}
+
 void mapif_defaults(void)
 {
 	mapif = &mapif_s;
@@ -2605,6 +2631,8 @@ void mapif_defaults(void)
 	mapif->rodex_send = mapif_rodex_send;
 	mapif->parse_rodex_checkname = mapif_parse_rodex_checkname;
 	mapif->rodex_checkname = mapif_rodex_checkname;
+	mapif->rodex_getzenyack = mapif_rodex_getzenyack;
+	mapif->rodex_getitemsack = mapif_rodex_getitemsack;
 	mapif->load_guild_storage = mapif_load_guild_storage;
 	mapif->save_guild_storage_ack = mapif_save_guild_storage_ack;
 	mapif->parse_LoadGuildStorage = mapif_parse_LoadGuildStorage;

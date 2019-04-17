@@ -230,6 +230,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "party_member", sizeof(struct party_member), SERVER_TYPE_ALL },
 		{ "point", sizeof(struct point), SERVER_TYPE_ALL },
 		{ "quest", sizeof(struct quest), SERVER_TYPE_ALL },
+		{ "rodex_item", sizeof(struct rodex_item), SERVER_TYPE_ALL },
 		{ "rodex_maillist", sizeof(struct rodex_maillist), SERVER_TYPE_ALL },
 		{ "rodex_message", sizeof(struct rodex_message), SERVER_TYPE_ALL },
 		{ "s_elemental", sizeof(struct s_elemental), SERVER_TYPE_ALL },

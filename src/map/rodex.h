@@ -74,6 +74,8 @@ struct rodex_interface {
 	void (*get_items) (struct map_session_data *sd, int8 opentype, int64 mail_id);
 	void (*delete_mail) (struct map_session_data *sd, int64 mail_id);
 	void (*clean) (struct map_session_data *sd, int8 flag);
+	void (*getZenyAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny);
+	void (*getItemsAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int count, const struct rodex_item *items);
 };
 
 #ifdef HERCULES_CORE
