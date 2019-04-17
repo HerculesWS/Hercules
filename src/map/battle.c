@@ -7417,6 +7417,8 @@ static const struct battle_data {
 	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
 	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999,       },
 	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999,       },
+	{"features/enable_refinery_ui",         &battle_config.enable_refinery_ui,              1,      0,      1,              },
+	{"features/replace_refine_npcs",        &battle_config.replace_refine_npcs,             1,      0,      1,              },
 };
 
 static bool battle_set_value_sub(int index, int value)
@@ -7539,6 +7541,18 @@ static void battle_adjust_conf(void)
 	if (battle_config.mvp_exp_reward_message) {
 		ShowWarning("conf/map/battle/client.conf MVP EXP reward message is enabled but it requires PACKETVER 2013-12-23 or newer, disabling...\n");
 		battle_config.mvp_exp_reward_message = 0;
+	}
+#endif
+
+#if !(PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO))
+	if (battle_config.enable_refinery_ui == 1) {
+		ShowWarning("conf/map/battle/feature.conf refinery ui is enabled but it requires PACKETVER 2016-11-09 RagexeRE/2016-11-30 Ragexe or newer, disabling...\n");
+		battle_config.enable_refinery_ui = 0;
+	}
+
+	if (battle_config.replace_refine_npcs == 1) {
+		ShowWarning("conf/map/battle/feature.conf replace refine npcs is enabled but it requires PACKETVER 2016-11-09 RagexeRE/2016-11-30 Ragexe or newer, disabling...\n");
+		battle_config.replace_refine_npcs = 0;
 	}
 #endif
 
