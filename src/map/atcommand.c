@@ -9804,6 +9804,22 @@ ACMD(camerainfo)
 	return true;
 }
 
+ACMD(refineryui)
+{
+#if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
+	if (battle_config.enable_refinery_ui == 0) {
+		clif->message(fd, msg_fd(fd, 453));
+		return false;
+	}
+
+	clif->OpenRefineryUI(sd);
+	return true;
+#else
+	clif->message(fd, msg_fd(fd, 453));
+	return false;
+#endif
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -10087,6 +10103,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(reloadclans),
 		ACMD_DEF(setzone),
 		ACMD_DEF(camerainfo),
+		ACMD_DEF(refineryui),
 	};
 	int i;
 

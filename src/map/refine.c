@@ -22,14 +22,19 @@
 
 #include "refine.p.h"
 #include "common/cbasetypes.h"
-#include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/random.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
+#include "common/utils.h"
+#include "map/itemdb.h"
 #include "map/map.h"
+#include "map/pc.h"
+#include "map/script.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /** @file
 * Implementation of the refine interface.
@@ -39,6 +44,151 @@ static struct refine_interface refine_s;
 static struct refine_interface_private refine_p;
 static struct refine_interface_dbs refine_dbs;
 struct refine_interface *refine;
+
+/// @copydoc refine_interface::refinery_refine_request()
+static void refine_refinery_refine_request(struct map_session_data *sd, int item_index, int material_id, bool use_blacksmith_blessing)
+{
+	nullpo_retv(sd);
+
+	if (item_index < 0 || item_index >= sd->status.inventorySize)
+		return;
+
+	if (!refine->p->is_refinable(sd, item_index))
+		return;
+
+	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid),
+	refine_level = sd->status.inventory[item_index].refine,
+	i = 0;
+	const struct s_refine_requirement *req = &refine->p->dbs->refine_info[weapon_level].refine_requirements[refine_level];
+	ARR_FIND(0, req->req_count, i, req->req[i].nameid == material_id);
+
+	if (i == req->req_count)
+		return;
+
+	if (use_blacksmith_blessing && req->blacksmith_blessing == 0)
+		return;
+
+	if (sd->status.zeny < req->req[i].cost)
+		return;
+
+	if (use_blacksmith_blessing) {
+		int count = 0;
+		for (int k = 0; k < sd->status.inventorySize; ++k) {
+			if (sd->status.inventory[k].nameid == ITEMID_BLACKSMITH_BLESSING)
+				count += sd->status.inventory[k].amount;
+		}
+
+		if (count < req->blacksmith_blessing)
+			return;
+	}
+
+	int idx;
+	if ((idx = pc->search_inventory(sd, req->req[i].nameid)) == INDEX_NOT_FOUND)
+		return;
+
+	if (use_blacksmith_blessing) {
+		int amount = req->blacksmith_blessing;
+		for (int k = 0; k < sd->status.inventorySize; ++k) {
+			if (sd->status.inventory[k].nameid != ITEMID_BLACKSMITH_BLESSING)
+				continue;
+
+			int delamount = (amount < sd->status.inventory[k].amount) ? amount : sd->status.inventory[k].amount;
+			if (pc->delitem(sd, k, delamount, 0, DELITEM_NORMAL, LOG_TYPE_REFINE) != 0)
+				break;
+
+			amount -= delamount;
+			if (amount == 0)
+				break;
+		}
+	}
+
+	if (pc->delitem(sd, idx, 1, 0, DELITEM_NORMAL, LOG_TYPE_REFINE) != 0)
+		return;
+
+	if (pc->payzeny(sd, req->req[i].cost, LOG_TYPE_REFINE, NULL) != 0)
+		return;
+
+	int refine_chance = refine->get_refine_chance(weapon_level, refine_level, req->req[i].type);
+	if (rnd() % 100 >= refine_chance) {
+		clif->misceffect(&sd->bl, 2);
+
+		int failure_behabior = (use_blacksmith_blessing) ? REFINE_FAILURE_BEHAVIOR_KEEP : req->req[i].failure_behavior;
+		switch (failure_behabior) {
+		case REFINE_FAILURE_BEHAVIOR_KEEP:
+			clif->refine(sd->fd, 1, 0, sd->status.inventory[item_index].refine);
+			refine->refinery_add_item(sd, item_index);
+			break;
+		case REFINE_FAILURE_BEHAVIOR_DOWNGRADE:
+			sd->status.inventory[item_index].refine -= 1;
+			sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
+			clif->refine(sd->fd, 2, item_index, sd->status.inventory[item_index].refine);
+			logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
+			refine->refinery_add_item(sd, item_index);
+			break;
+		case REFINE_FAILURE_BEHAVIOR_DESTROY:
+		default:
+			clif->refine(sd->fd, 1, item_index, sd->status.inventory[item_index].refine);
+			pc->delitem(sd, item_index, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_REFINE);
+			break;
+		}
+	} else {
+		sd->status.inventory[item_index].refine += 1;
+		sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
+
+		clif->misceffect(&sd->bl, 3);
+		clif->refine(sd->fd, 0, item_index, sd->status.inventory[item_index].refine);
+		logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
+		refine->refinery_add_item(sd, item_index);
+	}
+}
+
+/// @copydoc refine_interface::refinery_add_item()
+static void refine_refinery_add_item(struct map_session_data *sd, int item_index)
+{
+	nullpo_retv(sd);
+
+	if (item_index < 0 || item_index >= sd->status.inventorySize)
+		return;
+
+	if (!refine->p->is_refinable(sd, item_index))
+		return;
+	
+	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid);
+	int refine_level = sd->status.inventory[item_index].refine;
+	clif->AddItemRefineryUIAck(sd, item_index, &refine->p->dbs->refine_info[weapon_level].refine_requirements[refine_level]);
+}
+
+/// @copydoc refine_interface_private::is_refinable()
+static bool refine_is_refinable(struct map_session_data *sd, int item_index)
+{
+	nullpo_retr(false, sd);
+	Assert_retr(false, item_index >= 0 && item_index < sd->status.inventorySize);
+
+	if (sd->status.inventory[item_index].nameid == 0)
+		return false;
+
+	struct item_data *itd = itemdb->search(sd->status.inventory[item_index].nameid);
+
+	if (itd == &itemdb->dummy)
+		return false;
+
+	if (itd->type != IT_WEAPON && itd->type != IT_ARMOR)
+		return false;
+
+	if (itd->flag.no_refine == 1)
+		return false;
+
+	if (sd->status.inventory[item_index].identify == 0)
+		return false;
+
+	if (sd->status.inventory[item_index].refine >= MAX_REFINE || sd->status.inventory[item_index].expire_time > 0)
+		return false;
+
+	if ((sd->status.inventory[item_index].attribute & ATTR_BROKEN) != 0)
+		return false;
+
+	return true;
+}
 
 /// @copydoc refine_interface::get_randombonus_max()
 static int refine_get_randombonus_max(enum refine_type equipment_type, int refine_level)
@@ -72,6 +222,221 @@ static int refine_get_refine_chance(enum refine_type wlv, int refine_level, enum
 	return refine->p->dbs->refine_info[wlv].chance[type][refine_level];
 }
 
+/// @copydoc refine_interface_private::failure_behavior_string2enum()
+static bool refine_failure_behavior_string2enum(const char *str, enum refine_ui_failure_behavior *result)
+{
+	nullpo_retr(false, str);
+	nullpo_retr(false, result);
+
+	if (strcasecmp(str, "Destroy") == 0)
+		*result = REFINE_FAILURE_BEHAVIOR_DESTROY;
+	else if (strcasecmp(str, "Keep") == 0)
+		*result = REFINE_FAILURE_BEHAVIOR_KEEP;
+	else if (strcasecmp(str, "Downgrade") == 0)
+		*result = REFINE_FAILURE_BEHAVIOR_DOWNGRADE;
+	else
+		return false;
+
+	return true;
+}
+
+/// @copydoc refine_interface_private::readdb_refinery_ui_settings_items()
+static bool refine_readdb_refinery_ui_settings_items(const struct config_setting_t *elem, struct s_refine_requirement *req, const char *name, const char *source)
+{
+	nullpo_retr(false, elem);
+	nullpo_retr(false, req);
+	nullpo_retr(false, name);
+	nullpo_retr(false, source);
+	Assert_retr(false, req->req_count < MAX_REFINE_REQUIREMENTS);
+
+	const char *aegis_name = config_setting_name(elem);
+	struct item_data *itd;
+
+	if ((itd = itemdb->search_name(aegis_name)) == NULL) {
+		ShowWarning("refine_readdb_requirements_items: Invalid item '%s' passed to requirements of '%s' in \"%s\" skipping...\n", aegis_name, name, source);
+		return false;
+	}
+
+	for (int i = 0; i < req->req_count; ++i) {
+		if (req->req[i].nameid == itd->nameid) {
+			ShowWarning("refine_readdb_requirements_items: Duplicated item '%s' passed to requirements of '%s' in \"%s\" skipping...\n", aegis_name, name, source);
+			return false;
+		}
+	}
+
+	const char *type_string = NULL;
+	if (libconfig->setting_lookup_string(elem, "Type", &type_string) == CONFIG_FALSE) {
+		ShowWarning("refine_readdb_requirements_items: no type passed to item '%s' of requirements of '%s' in \"%s\" skipping...\n", aegis_name, name, source);
+		return false;
+	}
+
+	int type;
+	if (!script->get_constant(type_string, &type)) {
+		ShowWarning("refine_readdb_requirements_items: invalid type '%s' passed to item '%s' of requirements of '%s' in \"%s\" skipping...\n", type_string, aegis_name, name, source);
+		return false;
+	}
+
+	int cost = 0;
+	if (libconfig->setting_lookup_int(elem, "Cost", &cost) == CONFIG_TRUE) {
+		if (cost < 1) {
+			ShowWarning("refine_readdb_requirements_items: invalid cost value %d passed to item '%s' of requirements of '%s' in \"%s\" defaulting to 0...\n", cost, aegis_name, name, source);
+			cost = 0;
+		}
+	}
+
+	enum refine_ui_failure_behavior behavior = REFINE_FAILURE_BEHAVIOR_DESTROY;
+	const char *behavior_string;
+	if (libconfig->setting_lookup_string(elem, "FailureBehavior", &behavior_string) != CONFIG_FALSE) {
+		if (!refine->p->failure_behavior_string2enum(behavior_string, &behavior)) {
+			ShowWarning("refine_readdb_requirements_items: invalid failure behavior value %s passed to item '%s' of requirements of '%s' in \"%s\" defaulting to 'Destroy'...\n", behavior_string, aegis_name, name, source);
+		}
+	}
+
+	req->req[req->req_count].nameid = itd->nameid;
+	req->req[req->req_count].type = type;
+	req->req[req->req_count].cost = cost;
+	req->req[req->req_count].failure_behavior = behavior;
+	req->req_count++;
+
+	return true;
+}
+
+/// @copydoc refine_interface_private::readdb_refinery_ui_settings_sub()
+static bool refine_readdb_refinery_ui_settings_sub(const struct config_setting_t *elem, int type, const char *name, const char *source)
+{
+	nullpo_retr(false, elem);
+	nullpo_retr(false, name);
+	nullpo_retr(false, source);
+	Assert_retr(0, type >= REFINE_TYPE_ARMOR && type < REFINE_TYPE_MAX);
+
+	struct config_setting_t *level_t;
+	bool levels[MAX_REFINE] = {0};
+
+	if ((level_t = libconfig->setting_get_member(elem, "Level")) == NULL) {
+		ShowWarning("refine_readdb_requirements_sub: a requirements element missing level field for entry '%s' in \"%s\" skipping...\n", name, source);
+		return false;
+	}
+
+	if (config_setting_is_scalar(level_t)) {
+		if (!config_setting_is_number(level_t)) {
+			ShowWarning("refine_readdb_requirements_sub: expected 'Level' field to be an integer '%s' in \"%s\" skipping...\n", name, source);
+			return false;
+		}
+
+		int refine_level = libconfig->setting_get_int(level_t);
+		if (refine_level < 1 || refine_level > MAX_REFINE) {
+			ShowWarning("refine_readdb_requirements_sub: Invalid 'Level' given value %d expected a value between %d and %d '%s' in \"%s\" skipping...\n", refine_level, 1, MAX_REFINE, name, source);
+			return false;
+		}
+
+		levels[refine_level - 1] = true;
+	} else if (config_setting_is_aggregate(level_t)) {
+		if (libconfig->setting_length(level_t) != 2) {
+			ShowWarning("refine_readdb_requirements_sub: invalid length for Level array, expected 2 found %d for entry '%s' in \"%s\" skipping...\n", libconfig->setting_length(level_t), name, source);
+			return false;
+		}
+
+		int levels_range[2];
+		const struct config_setting_t *level_entry = NULL;
+		int i = 0,
+			k = 0;
+		while ((level_entry = libconfig->setting_get_elem(level_t, i++)) != NULL) {
+			if (!config_setting_is_number(level_entry)) {
+				ShowWarning("refine_readdb_requirements_sub: expected 'Level' array field to be an integer '%s' in \"%s\" skipping...\n", name, source);
+				return false;
+			}
+
+			levels_range[k] = libconfig->setting_get_int(level_entry);
+			if (levels_range[k] < 1 || levels_range[k] > MAX_REFINE) {
+				ShowWarning("refine_readdb_requirements_sub: Invalid 'Level' given value %d expected a value between %d and %d in entry'%s' in \"%s\" skipping...\n", levels_range[k], 1, MAX_REFINE, name, source);
+				return false;
+			}
+
+			++k;
+		}
+
+		if (!(levels_range[0] < levels_range[1])) {
+			ShowWarning("refine_readdb_requirements_sub: Invalid 'Level' range was given low %d high %d in entry'%s' in \"%s\" skipping...\n", levels_range[0], levels_range[1], name, source);
+			return false;
+		}
+
+		for (i = levels_range[0] - 1; i < levels_range[1]; ++i) {
+			levels[i] = true;
+		}
+	}
+
+	struct s_refine_requirement req = {0};
+	if (libconfig->setting_lookup_int(elem, "BlacksmithBlessing", &req.blacksmith_blessing) == CONFIG_TRUE) {
+		if (req.blacksmith_blessing < 1 || req.blacksmith_blessing > INT8_MAX) {
+			ShowWarning("refine_readdb_requirements_sub: Invalid 'BlacksmithBlessing' amount was given value %d expected a value between %d and %d in entry'%s' in \"%s\" defaulting to 0...\n", req.blacksmith_blessing, 1, INT8_MAX, name, source);
+			req.blacksmith_blessing = 0;
+		}
+	}
+
+	struct config_setting_t *items_t;
+	if ((items_t = libconfig->setting_get_member(elem, "Items")) == NULL) {
+		ShowWarning("refine_readdb_requirements_sub: a requirements element missing Items element for entry '%s' in \"%s\" skipping...\n", name, source);
+		return false;
+	}
+
+	if (libconfig->setting_length(items_t) < 1) {
+		ShowWarning("refine_readdb_requirements_sub: an Items element containing no items passed for entry '%s' in \"%s\" skipping...\n", name, source);
+		return false;
+	}
+
+	int loaded_items = 0;
+	for (int i = 0; i < libconfig->setting_length(items_t); ++i) {
+		if (req.req_count >= MAX_REFINE_REQUIREMENTS) {
+			ShowWarning("refine_readdb_requirements_sub: Too many items passed to requirements maximum possible items is %d entry '%s' in \"%s\" skipping...\n", MAX_REFINE_REQUIREMENTS, name, source);
+			continue;
+		}
+
+		struct config_setting_t *item_t = libconfig->setting_get_elem(items_t, i);
+
+		if (!refine->p->readdb_refinery_ui_settings_items(item_t, &req, name, source))
+			continue;
+
+		loaded_items++;
+	}
+
+	if (loaded_items == 0) {
+		ShowWarning("refine_readdb_requirements_sub: no valid items for requirements is passed for entry '%s' in \"%s\" skipping...\n", name, source);
+		return false;
+	}
+
+	for (int i = 0; i < MAX_REFINE; ++i) {
+		if (!levels[i])
+			continue;
+
+		refine->p->dbs->refine_info[type].refine_requirements[i] = req;
+	}
+
+	return true;
+}
+
+/// @copydoc refine_interface_private::readdb_refinery_ui_settings()
+static int refine_readdb_refinery_ui_settings(const struct config_setting_t *r, int type, const char *name, const char *source)
+{
+	nullpo_retr(0, r);
+	nullpo_retr(0, name);
+	nullpo_retr(0, source);
+	Assert_retr(0, type >= REFINE_TYPE_ARMOR && type < REFINE_TYPE_MAX);
+
+	int i = 0;
+	const struct config_setting_t *elem = NULL;
+	while ((elem = libconfig->setting_get_elem(r, i++)) != NULL) {
+		refine->p->readdb_refinery_ui_settings_sub(elem, type, name, source);
+	}
+
+	int retval = 0;
+	for (i = 0; i < MAX_REFINE; ++i) {
+		if (refine->p->dbs->refine_info[type].refine_requirements[i].req_count > 0)
+			retval++;
+	}
+
+	return retval;
+}
+
 /// @copydoc refine_interface_private::readdb_refine_libconfig_sub()
 static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *name, const char *source)
 {
@@ -92,6 +457,18 @@ static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const 
 		ShowError("status_readdb_refine_libconfig_sub: Out of range level for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
 	}
+
+	struct config_setting_t *refinery_ui_settings;
+	if ((refinery_ui_settings = libconfig->setting_get_member(r, "RefineryUISettings")) == NULL) {
+		ShowWarning("status_readdb_refine_libconfig_sub: Missing Requirements for entry '%s' in \"%s\", skipping.\n", name, source);
+		return 0;
+	}
+
+	if (refine->p->readdb_refinery_ui_settings(refinery_ui_settings, type, name, source) != MAX_REFINE) {
+		ShowWarning("status_readdb_refine_libconfig_sub: Not all refine levels have requrements entry for entry '%s' in \"%s\", skipping.\n", name, source);
+		return 0;
+	}
+
 	if (!libconfig->setting_lookup_int(r, "StatsPerLevel", &bonus_per_level)) {
 		ShowWarning("status_readdb_refine_libconfig_sub: Missing StatsPerLevel for entry '%s' in \"%s\", skipping.\n", name, source);
 		return 0;
@@ -244,9 +621,16 @@ void refine_defaults(void)
 
 	refine->p->readdb_refine_libconfig = refine_readdb_refine_libconfig;
 	refine->p->readdb_refine_libconfig_sub = refine_readdb_refine_libconfig_sub;
+	refine->p->failure_behavior_string2enum = refine_failure_behavior_string2enum;
+	refine->p->readdb_refinery_ui_settings_items = refine_readdb_refinery_ui_settings_items;
+	refine->p->readdb_refinery_ui_settings_sub = refine_readdb_refinery_ui_settings_sub;
+	refine->p->readdb_refinery_ui_settings = refine_readdb_refinery_ui_settings;
+	refine->p->is_refinable = refine_is_refinable;
 
 	refine->init = refine_init;
 	refine->final = refine_final;
+	refine->refinery_refine_request = refine_refinery_refine_request;
+	refine->refinery_add_item = refine_refinery_add_item;
 	refine->get_refine_chance = refine_get_refine_chance;
 	refine->get_bonus = refine_get_bonus;
 	refine->get_randombonus_max = refine_get_randombonus_max;
