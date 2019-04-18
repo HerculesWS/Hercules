@@ -26,6 +26,8 @@
 #include "common/random.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "login/login.h"
+#include "login/lclif.p.h"
 #include "map/clif.h"
 #include "map/pc.h"
 #include "map/script.h"
@@ -136,6 +138,19 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd, int n, int amou
 	}
 	return 1;
 }
+
+ /**
+  * pre-hook for lclif->p->parse_CA_CONNECT_INFO_CHANGED this is a private interface function and while in source it cannot be used
+  * outside of lclif.c since it's private, plugin can use it and hook to private interface functions if needed
+  * the pre-hook takes this currently unused packet and show a notice whenver a player sends it
+  **/
+enum parsefunc_rcode my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre(int *fd, struct login_session_data **sd) __attribute__((nonnull(2)));
+enum parsefunc_rcode my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre(int *fd, struct login_session_data **sd)
+{
+	ShowNotice("Player (AID: %d) has sent CA_CONNECT_INFO_CHANGED packet\n", (*sd)->account_id);
+	return PACKET_VALID;
+}
+
 /*
 * Key is the setting name in our example it's 'my_setting' while val is the value of it.
 * this way you can manage more than one setting in one function instead of define multiable ones
@@ -211,6 +226,14 @@ HPExport void plugin_init (void) {
 		/* our posthook will display a message to the user about the cap */
 		/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
 		addHookPost(pc, dropitem, my_pc_dropitem_post);
+	}
+
+	if (SERVER_TYPE == SERVER_TYPE_LOGIN) {
+		/**
+		 * In this example we add a pre-hook to lclif->p->parse_CA_CONNECT_INFO_CHANGED
+		 * It's similar to nomral hooks except it have it own hooking macros which ends with Priv
+		 **/
+		addHookPrePriv(lclif, parse_CA_CONNECT_INFO_CHANGED, my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
