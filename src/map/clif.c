@@ -17267,7 +17267,7 @@ static void clif_parse_PartyTick(int fd, struct map_session_data *sd) __attribut
 static void clif_parse_PartyTick(int fd, struct map_session_data *sd)
 {
 	const struct PACKET_CZ_PARTY_CONFIG *const p = RFIFOP(fd, 0);
-	const bool newAllowParty = p->refuseInvite ? false : true;
+	const bool newAllowParty = p->refuseInvite ? true : false;
 	if (newAllowParty != sd->status.allow_party) {
 		sd->status.allow_party = newAllowParty;
 		if ((map->save_settings & 512) != 0)
