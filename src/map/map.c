@@ -3645,7 +3645,7 @@ static void map_clean(int i)
 	if (map->list[i].channel != NULL)
 		channel->delete(map->list[i].channel);
 
-	quest->questinfo_vector_clear(i);
+	VECTOR_CLEAR(map->list[i].qi_list);
 	HPM->data_store_destroy(&map->list[i].hdata);
 }
 static void do_final_maps(void)
@@ -3743,7 +3743,8 @@ static void map_flags_init(void)
 		map->list[i].short_damage_rate  = 100;
 		map->list[i].long_damage_rate   = 100;
 
-		VECTOR_INIT(map->list[i].qi_data);
+		VECTOR_CLEAR(map->list[i].qi_list);
+		VECTOR_INIT(map->list[i].qi_list);
 	}
 }
 
@@ -5979,28 +5980,30 @@ static int map_get_new_bonus_id(void)
 	return map->bonus_id++;
 }
 
-static void map_add_questinfo(int m, struct questinfo *qi)
+static bool map_add_questinfo(int m, struct npc_data *nd)
 {
-	nullpo_retv(qi);
-	Assert_retv(m >= 0 && m < map->count);
+	nullpo_retr(false, nd);
+	Assert_retr(false, m >= 0 && m < map->count);
 
-	VECTOR_ENSURE(map->list[m].qi_data, 1, 1);
-	VECTOR_PUSH(map->list[m].qi_data, *qi);
+	if (&VECTOR_LAST(map->list[m].qi_list) == nd)
+		return false;
+
+	VECTOR_ENSURE(map->list[m].qi_list, 1, 1);
+	VECTOR_PUSH(map->list[m].qi_list, *nd);
+	return true;
 }
 
 static bool map_remove_questinfo(int m, struct npc_data *nd)
 {
-	unsigned short i;
 
 	nullpo_retr(false, nd);
 	Assert_retr(false, m >= 0 && m < map->count);
 
-	for (i = 0; i < VECTOR_LENGTH(map->list[m].qi_data); i++) {
-		struct questinfo *qi_data = &VECTOR_INDEX(map->list[m].qi_data, i);
-		if (qi_data->nd == nd) {
-			VECTOR_ERASE(map->list[m].qi_data, i);
-			return true;
-		}
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(map->list[m].qi_list), i, &VECTOR_INDEX(map->list[m].qi_list, i) == nd);
+	if (i != VECTOR_LENGTH(map->list[m].qi_list)) {
+		VECTOR_ERASE(map->list[m].qi_list, i);
+		return true;
 	}
 	return false;
 }

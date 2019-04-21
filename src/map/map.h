@@ -705,41 +705,6 @@ struct map_drop_list {
 	int drop_per;
 };
 
-struct questinfo_qreq {
-	int id;
-	int state;
-};
-
-struct questinfo_itemreq {
-	int nameid;
-	int min;
-	int max;
-};
-
-struct questinfo {
-	struct npc_data *nd;
-	unsigned short icon;
-	unsigned char color;
-	bool hasJob;
-	unsigned int job;/* perhaps a mapid mask would be most flexible? */
-	bool sex_enabled;
-	int sex;
-	struct {
-		int min;
-		int max;
-	} base_level;
-	struct {
-		int min;
-		int max;
-	} job_level;
-	VECTOR_DECL(struct questinfo_itemreq) items;
-	struct s_homunculus homunculus;
-	int homunculus_type;
-	VECTOR_DECL(struct questinfo_qreq) quest_requirement;
-	int mercenary_class;
-};
-
-
 struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
@@ -877,8 +842,8 @@ struct map_data {
 		int len;
 	} cell_buf;
 
-	/* ShowEvent Data Cache */
-	VECTOR_DECL(struct questinfo) qi_data;
+	/* questinfo entries list */
+	VECTOR_DECL(struct npc_data) qi_list;
 
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
@@ -1312,7 +1277,7 @@ END_ZEROED_BLOCK;
 	int (*abort_sub) (struct map_session_data *sd, va_list ap);
 	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);
-	void (*add_questinfo) (int m, struct questinfo *qi);
+	bool (*add_questinfo) (int m, struct npc_data *nd);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
 	void (*zone_clear_single) (struct map_zone_data *zone);
