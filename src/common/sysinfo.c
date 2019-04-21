@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2019  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -221,8 +221,12 @@ enum windows_ver_suite {
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2012 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
 #elif _MSC_VER >= 1800 && _MSC_VER < 1900
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2013 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1900 && _MSC_VER < 2000
+#elif _MSC_VER >= 1900 && _MSC_VER < 1910
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2015 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+#elif _MSC_VER >= 1910 && _MSC_VER < 1920
+#define SYSINFO_COMPILER "Microsoft Visual C++ 2017 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+#elif _MSC_VER >= 1920 && _MSC_VER < 2000
+#define SYSINFO_COMPILER "Microsoft Visual C++ 2019 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
 #else // < 1300 || >= 2000
 #define SYSINFO_COMPILER "Microsoft Visual C++ v" EXPAND_AND_QUOTE(_MSC_VER)
 #endif
