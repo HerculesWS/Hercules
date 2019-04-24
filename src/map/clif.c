@@ -8416,42 +8416,44 @@ static void clif_guild_expulsion(struct map_session_data *sd, const char *name, 
 /// 0163 <packet len>.W { <char name>.24B <reason>.40B }* (PACKETVER >= 20100803)
 static void clif_guild_expulsionlist(struct map_session_data *sd)
 {
-#if PACKETVER < 20100803
-	const int offset = NAME_LENGTH*2+40;
-#else
-	const int offset = NAME_LENGTH+40;
-#endif
-	int fd, i, c = 0;
-	struct guild* g;
-
 	nullpo_retv(sd);
 
-	if( (g = sd->guild) == NULL )
+	int c = 0;
+
+	struct guild* g;
+	if ((g = sd->guild) == NULL)
 		return;
 
-	fd = sd->fd;
+	int fd = sd->fd;
 
-	WFIFOHEAD(fd,4 + MAX_GUILDEXPULSION * offset);
-	WFIFOW(fd,0) = 0x163;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_BAN_LIST) + MAX_GUILDEXPULSION * sizeof(struct PACKET_ZC_BAN_LIST_sub));
+	struct PACKET_ZC_BAN_LIST *packet = WFIFOP(fd, 0);
+	packet->packetType = HEADER_ZC_BAN_LIST;
 
-	for( i = 0; i < MAX_GUILDEXPULSION; i++ )
+	for (int i = 0; i < MAX_GUILDEXPULSION; i++)
 	{
 		struct guild_expulsion* e = &g->expulsion[i];
 
-		if( e->account_id > 0 )
+		if (e->account_id > 0)
 		{
-			memcpy(WFIFOP(fd,4 + c*offset), e->name, NAME_LENGTH);
-#if PACKETVER < 20100803
-			memset(WFIFOP(fd,4 + c*offset+24), 0, NAME_LENGTH); // account name (not used for security reasons)
-			memcpy(WFIFOP(fd,4 + c*offset+48), e->mes, 40);
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+			packet->chars[c].char_id = 0; // for now char_id unknown [4144]
+// version unconfirmed
+#elif PACKETVER >= 20100803
+			memcpy(packet->chars[c].char_name, e->name, NAME_LENGTH);
+
 #else
-			memcpy(WFIFOP(fd,4 + c*offset+24), e->mes, 40);
+			memcpy(packet->chars[c].char_name, e->name, NAME_LENGTH);
+			memset(packet->chars[c].account_name, 0, NAME_LENGTH); // account name (not used for security reasons)
+
 #endif
-			c++;
+			memcpy(packet->chars[c].message, e->mes, 40);
+
+			c ++;
 		}
 	}
-	WFIFOW(fd,2) = 4 + c*offset;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	packet->packetLen = sizeof(struct PACKET_ZC_BAN_LIST) + c * sizeof(struct PACKET_ZC_BAN_LIST_sub);
+	WFIFOSET(fd, packet->packetLen);
 }
 
 /// Guild chat message (ZC_GUILD_CHAT).

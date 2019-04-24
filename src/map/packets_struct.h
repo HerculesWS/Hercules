@@ -3234,6 +3234,49 @@ struct PACKET_ZC_ROLE_CHANGE {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_ROLE_CHANGE, 0x00e1);
 
+#if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_BAN_LIST_sub {
+	int char_id;
+	char message[40];
+} __attribute__((packed));
+
+struct PACKET_ZC_BAN_LIST {
+	int16 packetType;
+	uint16 packetLen;
+	struct PACKET_ZC_BAN_LIST_sub chars[];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_BAN_LIST, 0x0a87);
+// version unconfirmed
+#elif PACKETVER >= 20100803
+struct PACKET_ZC_BAN_LIST_sub {
+	char char_name[NAME_LENGTH];
+	char message[40];
+} __attribute__((packed));
+
+struct PACKET_ZC_BAN_LIST {
+	int16 packetType;
+	uint16 packetLen;
+	struct PACKET_ZC_BAN_LIST_sub chars[];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_BAN_LIST, 0x0163);
+#else
+struct PACKET_ZC_BAN_LIST_sub {
+	char char_name[NAME_LENGTH];
+	char account_name[NAME_LENGTH];
+	char message[40];
+} __attribute__((packed));
+
+struct PACKET_ZC_BAN_LIST {
+	int16 packetType;
+	uint16 packetLen;
+	struct PACKET_ZC_BAN_LIST_sub chars[];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_BAN_LIST, 0x0163);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
