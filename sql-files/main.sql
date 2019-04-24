@@ -449,6 +449,7 @@ CREATE TABLE IF NOT EXISTS `guild_castle` (
 CREATE TABLE IF NOT EXISTS `guild_expulsion` (
   `guild_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `name` VARCHAR(24) NOT NULL DEFAULT '',
   `mes` VARCHAR(40) NOT NULL DEFAULT '',
   PRIMARY KEY (`guild_id`,`name`)
@@ -926,6 +927,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1535865732); -- 2018-09-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1544738447); -- 2018-12-14--01-02.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1546059075); -- 2018-12-29--07-51.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1554760320); -- 2019-04-08--21-52.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1556147483); -- 2019-04-25--02-12.sql
 
 --
 -- Table structure for table `storage`
