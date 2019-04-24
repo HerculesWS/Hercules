@@ -8405,6 +8405,7 @@ static void clif_guild_expulsion(struct map_session_data *sd, const char *name, 
 #endif
 	safestrncpy(&p.reason[0], mes, 40);
 
+// version unconfirmed
 #if PACKETVER < 20100803
 	memset(&p.account_name, 0, NAME_LENGTH); // account name (not used for security reasons)
 #endif
@@ -8437,7 +8438,7 @@ static void clif_guild_expulsionlist(struct map_session_data *sd)
 		if (e->account_id > 0)
 		{
 #if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
-			packet->chars[c].char_id = 0; // for now char_id unknown [4144]
+			packet->chars[c].char_id = e->char_id;
 // version unconfirmed
 #elif PACKETVER >= 20100803
 			memcpy(packet->chars[c].char_name, e->name, NAME_LENGTH);

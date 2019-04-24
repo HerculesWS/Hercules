@@ -856,6 +856,7 @@ struct guild_expulsion {
 	char name[NAME_LENGTH];
 	char mes[40];
 	int account_id;
+	int char_id;
 };
 
 struct guild_skill {

@@ -319,8 +319,8 @@ static int inter_guild_tosql(struct guild *g, int flag)
 
 				SQL->EscapeStringLen(inter->sql_handle, esc_name, e->name, strnlen(e->name, NAME_LENGTH));
 				SQL->EscapeStringLen(inter->sql_handle, esc_mes, e->mes, strnlen(e->mes, sizeof(e->mes)));
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`guild_id`,`account_id`,`name`,`mes`) "
-					"VALUES ('%d','%d','%s','%s')", guild_expulsion_db, g->guild_id, e->account_id, esc_name, esc_mes) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`guild_id`,`account_id`, `char_id`, `name`,`mes`) "
+					"VALUES ('%d','%d','%d','%s','%s')", guild_expulsion_db, g->guild_id, e->account_id, e->char_id, esc_name, esc_mes) )
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
@@ -494,7 +494,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	}
 
 	//printf("- Read guild_expulsion %d from sql \n",guild_id);
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`name`,`mes` FROM `%s` WHERE `guild_id`='%d'", guild_expulsion_db, guild_id) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`char_id`,`name`,`mes` FROM `%s` WHERE `guild_id`='%d'", guild_expulsion_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		aFree(g);
@@ -505,8 +505,9 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		struct guild_expulsion *e = &g->expulsion[i];
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); e->account_id = atoi(data);
-		SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(e->name, data, min(len, NAME_LENGTH));
-		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->mes, data, min(len, sizeof(e->mes)));
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); e->char_id = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 3, &data, &len); memcpy(e->mes, data, min(len, sizeof(e->mes)));
 	}
 
 	//printf("- Read guild_skill %d from sql \n",guild_id);
@@ -1044,6 +1045,7 @@ static bool inter_guild_leave(int guild_id, int account_id, int char_id, int fla
 		}
 		// Save the expulsion entry
 		g->expulsion[j].account_id = account_id;
+		g->expulsion[j].char_id = char_id;
 		safestrncpy(g->expulsion[j].name, g->member[i].name, NAME_LENGTH);
 		safestrncpy(g->expulsion[j].mes, mes, 40);
 	}
