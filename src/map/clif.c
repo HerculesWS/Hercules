@@ -20555,6 +20555,19 @@ static void clif_roulette_generate_ack(struct map_session_data *sd, enum GENERAT
 #endif
 }
 
+static void clif_roulette_close(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20141008 || PACKETVER_RE_NUM >= 20140903 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+
+	struct PACKET_ZC_ACK_CLOSE_ROULETTE p;
+	p.packetType = HEADER_ZC_ACK_CLOSE_ROULETTE;
+	p.result = 0;  // close window
+
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
 /**
  * Stackable items merger
  */
@@ -23328,6 +23341,7 @@ void clif_defaults(void)
 	/* */
 	clif->parse_roulette_db = clif_parse_roulette_db;
 	clif->roulette_generate_ack = clif_roulette_generate_ack;
+	clif->roulette_close = clif_roulette_close;
 	/* Merge Items */
 	clif->openmergeitem = clif_openmergeitem;
 	clif->cancelmergeitem = clif_cancelmergeitem;

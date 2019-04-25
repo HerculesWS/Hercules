@@ -1262,6 +1262,7 @@ struct clif_interface {
 	/* */
 	bool (*parse_roulette_db) (void);
 	void (*roulette_generate_ack) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);
+	void (*roulette_close) (struct map_session_data *sd);
 	/* Merge Items */
 	void (*openmergeitem) (int fd, struct map_session_data *sd);
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
