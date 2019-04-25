@@ -1268,6 +1268,7 @@ struct clif_interface {
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
 	int (*comparemergeitem) (const void *a, const void *b);
 	void (*ackmergeitems) (int fd, struct map_session_data *sd);
+	void (*mergeitems) (int fd, struct map_session_data *sd, int index, int amount, enum mergeitem_reason reason);
 	/* */
 	bool (*isdisguised) (struct block_list* bl);
 	void (*navigate_to) (struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id);

@@ -20631,35 +20631,41 @@ static int clif_comparemergeitem(const void *a, const void *b)
 	return a_->nameid > b_->nameid ? -1 : 1;
 }
 
+static void clif_mergeitems(int fd, struct map_session_data *sd, int index, int amount, enum mergeitem_reason reason)
+{
+#if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
+	WFIFOHEAD(fd, 7);
+	WFIFOW(fd, 0) = 0x96f;
+	WFIFOW(fd, 2) = index + 2;
+	WFIFOW(fd, 4) = amount;
+	WFIFOB(fd, 6) = reason;
+	WFIFOSET(fd, 7);
+#endif
+}
+
 static void clif_ackmergeitems(int fd, struct map_session_data *sd)
 {
-#if PACKETVER > 20120228
-	int i = 0, n = 0, length = 0, count = 0;
+#if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+
+	int i = 0, n = 0, count = 0;
 	int nameid = 0;
 	int16 indexes[MAX_INVENTORY] = {0}, amounts[MAX_INVENTORY] = {0};
-	struct item item_data;
 
-	nullpo_retv(sd);
-	length = (RFIFOW(fd,2) - 4)/2;
+	int length = (RFIFOW(fd, 2) - 4) / 2;
 
 	if (length >= sd->status.inventorySize || length < 2) {
-		WFIFOHEAD(fd,7);
-		WFIFOW(fd,0) = 0x96f;
-		WFIFOW(fd,2) = 0;
-		WFIFOW(fd,4) = 0;
-		WFIFOB(fd,6) = MERGEITEM_FAILD;
-		WFIFOSET(fd,7);
+		clif->mergeitems(fd, sd, 0, 0, MERGEITEM_FAILD);
 		return;
 	}
 
 	for (i = 0, n = 0; i < length; i++) {
-		int16 idx = RFIFOW(fd,i*2+4) - 2;
-		struct item *it = NULL;
+		int16 idx = RFIFOW(fd, i * 2 + 4) - 2;
 
 		if (idx < 0 || idx >= sd->status.inventorySize)
 			continue;
 
-		it = &sd->status.inventory[idx];
+		struct item *it = &sd->status.inventory[idx];
 
 		if (it->nameid == 0 || !itemdb->isstackable(it->nameid) || it->bound != IBT_NONE)
 			continue;
@@ -20677,43 +20683,29 @@ static void clif_ackmergeitems(int fd, struct map_session_data *sd)
 	}
 
 	if (n < 2 || count == 0) {
-		WFIFOHEAD(fd,7);
-		WFIFOW(fd,0) = 0x96f;
-		WFIFOW(fd,2) = 0;
-		WFIFOW(fd,4) = 0;
-		WFIFOB(fd,6) = MERGEITEM_FAILD;
-		WFIFOSET(fd,7);
+		clif->mergeitems(fd, sd, 0, 0, MERGEITEM_FAILD);
 		return;
 	}
 
 	if (count > MAX_AMOUNT) {
-		WFIFOHEAD(fd,7);
-		WFIFOW(fd,0) = 0x96f;
-		WFIFOW(fd,2) = 0;
-		WFIFOW(fd,4) = 0;
-		WFIFOB(fd,6) = MERGEITEM_MAXCOUNTFAILD;
-		WFIFOSET(fd,7);
+		clif->mergeitems(fd, sd, 0, 0, MERGEITEM_MAXCOUNTFAILD);
 		return;
 	}
 
 	for (i = 0; i < n; i++)
-		pc->delitem(sd,indexes[i],amounts[i],0,DELITEM_NORMAL,LOG_TYPE_NPC);
+		pc->delitem(sd, indexes[i], amounts[i], 0, DELITEM_NORMAL, LOG_TYPE_NPC);
 
-	memset(&item_data,'\0',sizeof(item_data));
+	struct item item_data;
+	memset(&item_data, '\0', sizeof(item_data));
 
 	item_data.nameid = nameid;
 	item_data.identify = 1;
 	item_data.unique_id = itemdb->unique_id(sd);
-	pc->additem(sd,&item_data,count,LOG_TYPE_NPC);
+	pc->additem(sd, &item_data, count, LOG_TYPE_NPC);
 
 	ARR_FIND(0, sd->status.inventorySize, i, item_data.unique_id == sd->status.inventory[i].unique_id);
 
-	WFIFOHEAD(fd,7);
-	WFIFOW(fd,0) = 0x96f;
-	WFIFOW(fd,2) = i+2;
-	WFIFOW(fd,4) = count;
-	WFIFOB(fd,6) = MERGEITEM_SUCCESS;
-	WFIFOSET(fd,7);
+	clif->mergeitems(fd, sd, i, count, MERGEITEM_SUCCESS);
 #endif
 }
 
@@ -23347,6 +23339,7 @@ void clif_defaults(void)
 	clif->cancelmergeitem = clif_cancelmergeitem;
 	clif->comparemergeitem = clif_comparemergeitem;
 	clif->ackmergeitems = clif_ackmergeitems;
+	clif->mergeitems = clif_mergeitems;
 	/* Cart Deco */
 	clif->selectcart = clif_selectcart;
 	/* */
