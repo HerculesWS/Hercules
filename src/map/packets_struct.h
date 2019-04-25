@@ -3285,6 +3285,16 @@ struct PACKET_ZC_ACK_CLOSE_ROULETTE {
 DEFINE_PACKET_HEADER(ZC_ACK_CLOSE_ROULETTE, 0x0a1e);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_ACK_MERGE_ITEM {
+	int16 packetType;
+	int16 index;
+	int16 amount;
+	uint8 reason;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_MERGE_ITEM, 0x096f);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

@@ -20634,12 +20634,13 @@ static int clif_comparemergeitem(const void *a, const void *b)
 static void clif_mergeitems(int fd, struct map_session_data *sd, int index, int amount, enum mergeitem_reason reason)
 {
 #if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
-	WFIFOHEAD(fd, 7);
-	WFIFOW(fd, 0) = 0x96f;
-	WFIFOW(fd, 2) = index + 2;
-	WFIFOW(fd, 4) = amount;
-	WFIFOB(fd, 6) = reason;
-	WFIFOSET(fd, 7);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_MERGE_ITEM));
+	struct PACKET_ZC_ACK_MERGE_ITEM *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ACK_MERGE_ITEM;
+	p->index = index + 2;
+	p->amount = amount;
+	p->reason = reason;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_MERGE_ITEM));
 #endif
 }
 
