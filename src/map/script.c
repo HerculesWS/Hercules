@@ -25275,6 +25275,16 @@ static BUILDIN(getInventorySize)
 	return true;
 }
 
+// force close roulette window if it opened
+static BUILDIN(closeroulette)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	clif->roulette_close(sd);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -26026,6 +26036,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(expandInventoryResult, "i"),
 		BUILDIN_DEF(expandInventory, "i"),
 		BUILDIN_DEF(getInventorySize, ""),
+
+		BUILDIN_DEF(closeroulette, ""),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

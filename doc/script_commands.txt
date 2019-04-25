@@ -10456,3 +10456,10 @@ Invisible for players, because current implimentation using title id only.
 Works for 20180207 main clients, 20171129 re clients, 20171130 zero clients
 
 ---------------------------------------
+
+*closeroulette()
+
+Force close roulette window.
+Works for 20141008 main clients, 20140903 re, any zero.
+
+---------------------------------------
