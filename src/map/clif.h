@@ -410,6 +410,7 @@ enum CASH_SHOP_BUY_RESULT {
 	CSBR_RUNE_OVERCOUNT     = 0x9,
 	CSBR_EACHITEM_OVERCOUNT = 0xa,
 	CSBR_UNKNOWN            = 0xb,
+	CSBR_BUSY               = 0xc,
 };
 
 enum BATTLEGROUNDS_QUEUE_ACK {
