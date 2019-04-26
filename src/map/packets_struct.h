@@ -3295,6 +3295,19 @@ struct PACKET_ZC_ACK_MERGE_ITEM {
 DEFINE_PACKET_HEADER(ZC_ACK_MERGE_ITEM, 0x096f);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_MERGE_ITEM_OPEN_sub {
+	int16 index;
+} __attribute__((packed));
+
+struct PACKET_ZC_MERGE_ITEM_OPEN {
+	int16 packetType;
+	uint16 packetLen;
+	struct PACKET_ZC_MERGE_ITEM_OPEN_sub items[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MERGE_ITEM_OPEN, 0x096d);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

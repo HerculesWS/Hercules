@@ -20573,15 +20573,16 @@ static void clif_roulette_close(struct map_session_data *sd)
  */
 static void clif_openmergeitem(int fd, struct map_session_data *sd)
 {
-#if PACKETVER > 20120228
-	int i = 0, n = 0, j = 0;
+#if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+
+	int n = 0, j = 0;
 	struct merge_item merge_items[MAX_INVENTORY];
 	struct merge_item *merge_items_[MAX_INVENTORY] = {0};
 
-	nullpo_retv(sd);
-	memset(&merge_items,'\0',sizeof(merge_items));
+	memset(&merge_items, '\0', sizeof(merge_items));
 
-	for (i = 0; i < sd->status.inventorySize; i++) {
+	for (int i = 0; i < sd->status.inventorySize; i++) {
 		struct item *item_data = &sd->status.inventory[i];
 
 		if (item_data->nameid == 0 || !itemdb->isstackable(item_data->nameid) || item_data->bound != IBT_NONE)
@@ -20592,17 +20593,18 @@ static void clif_openmergeitem(int fd, struct map_session_data *sd)
 		n++;
 	}
 
-	qsort(merge_items,n,sizeof(struct merge_item),clif->comparemergeitem);
+	qsort(merge_items, n, sizeof(struct merge_item), clif->comparemergeitem);
 
-	for (i = 0, j = 0; i < n; i++) {
-		if (i > 0 && merge_items[i].nameid == merge_items[i-1].nameid)
+	j = 0;
+	for (int i = 0; i < n; i++) {
+		if (i > 0 && merge_items[i].nameid == merge_items[i - 1].nameid)
 		{
 			merge_items_[j] = &merge_items[i];
 			j++;
 			continue;
 		}
 
-		if (i < n - 1 && merge_items[i].nameid == merge_items[i+1].nameid)
+		if (i < n - 1 && merge_items[i].nameid == merge_items[i + 1].nameid)
 		{
 			merge_items_[j] = &merge_items[i];
 			j++;
@@ -20610,12 +20612,14 @@ static void clif_openmergeitem(int fd, struct map_session_data *sd)
 		}
 	}
 
-	WFIFOHEAD(fd,2*j+4);
-	WFIFOW(fd,0) = 0x96d;
-	WFIFOW(fd,2) = 2*j+4;
-	for ( i = 0; i < j; i++ )
-		WFIFOW(fd,i*2+4) = merge_items_[i]->position;
-	WFIFOSET(fd,2*j+4);
+	const int len = sizeof(struct PACKET_ZC_MERGE_ITEM_OPEN) + j * sizeof(struct PACKET_ZC_MERGE_ITEM_OPEN_sub);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MERGE_ITEM_OPEN *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MERGE_ITEM_OPEN;
+	p->packetLen = len;
+	for (int i = 0; i < j; i++)
+		p->items[i].index = merge_items_[i]->position;
+	WFIFOSET(fd, len);
 #endif
 }
 
