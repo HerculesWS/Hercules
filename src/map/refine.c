@@ -56,9 +56,9 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 	if (!refine->p->is_refinable(sd, item_index))
 		return;
 
-	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid),
-	refine_level = sd->status.inventory[item_index].refine,
-	i = 0;
+	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid);
+	int refine_level = sd->status.inventory[item_index].refine;
+	int i = 0;
 	const struct s_refine_requirement *req = &refine->p->dbs->refine_info[weapon_level].refine_requirements[refine_level];
 	ARR_FIND(0, req->req_count, i, req->req[i].nameid == material_id);
 
@@ -483,23 +483,20 @@ static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const 
 	}
 
 	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
-		struct config_setting_t *t = NULL;
 		bool duplicate[MAX_REFINE];
 		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE];
 		int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE];
-		int i, j;
 
 		memset(&duplicate, 0, sizeof(duplicate));
 		memset(&bonus, 0, sizeof(bonus));
 		memset(&rnd_bonus, 0, sizeof(rnd_bonus));
 
-		for (i = 0; i < REFINE_CHANCE_TYPE_MAX; i++)
-			for (j = 0; j < MAX_REFINE; j++)
+		for (int i = 0; i < REFINE_CHANCE_TYPE_MAX; i++)
+			for (int j = 0; j < MAX_REFINE; j++)
 				chance[i][j] = 100; // default value for all rates.
 
-		i = 0;
-		j = 0;
-		while ((t = libconfig->setting_get_elem(rate,i++)) != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *t = NULL;
+		for (int i = 0; (t = libconfig->setting_get_elem(rate, i++)) != NULL && config_setting_is_group(t); ++i) {
 			int level = 0, i32;
 			char *rlvl = config_setting_name(t);
 			memset(&lv, 0, sizeof(lv));
@@ -548,7 +545,7 @@ static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const 
 			if (level >= rnd_bonus_lv - 1)
 				rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
 		}
-		for (i = 0; i < MAX_REFINE; i++) {
+		for (int i = 0; i < MAX_REFINE; i++) {
 			refine->p->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_NORMAL][i] = chance[REFINE_CHANCE_TYPE_NORMAL][i];
 			refine->p->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_NORMAL][i] = chance[REFINE_CHANCE_TYPE_E_NORMAL][i];
 			refine->p->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_ENRICHED][i];
