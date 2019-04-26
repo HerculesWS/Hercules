@@ -19518,16 +19518,22 @@ static void clif_parse_CashShopBuy(int fd, struct map_session_data *sd)
 		} else {
 			result = CSBR_UNKONWN_ITEM;
 		}
-
-		WFIFOHEAD(fd, 16);
-		WFIFOW(fd, 0) = 0x849;
-		WFIFOL(fd, 2) = id;
-		WFIFOW(fd, 6) = result;/* result */
-		WFIFOL(fd, 8) = sd->cashPoints;/* current cash point */
-		WFIFOL(fd, 12) = sd->kafraPoints;// [Ryuuzaki]
-		WFIFOSET(fd, 16);
+		clif->cashShopBuyAck(fd, sd, id, result);
 
 	}
+}
+
+static void clif_cashShopBuyAck(int fd, struct map_session_data *sd, int itemId, enum CASH_SHOP_BUY_RESULT result)
+{
+	nullpo_retv(sd);
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT));
+	struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT *p = WFIFOP(fd, 0);
+	p->packetType = 0x849;
+	p->itemId = itemId;
+	p->result = result;
+	p->cashPoints = sd->cashPoints;
+	p->kafraPoints = sd->kafraPoints;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT));
 }
 
 static void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -23580,6 +23586,7 @@ void clif_defaults(void)
 	clif->pCashShopReqTab = clif_parse_CashShopReqTab;
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
+	clif->cashShopBuyAck = clif_cashShopBuyAck;
 	/*  */
 	clif->pPartyTick = clif_parse_PartyTick;
 	clif->pGuildInvite2 = clif_parse_GuildInvite2;

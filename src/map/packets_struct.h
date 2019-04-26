@@ -3308,6 +3308,17 @@ struct PACKET_ZC_MERGE_ITEM_OPEN {
 DEFINE_PACKET_HEADER(ZC_MERGE_ITEM_OPEN, 0x096d);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT {
+	int16 packetType;
+	uint32 itemId;  // unused
+	uint16 result;
+	uint32 cashPoints;
+	uint32 kafraPoints;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SE_PC_BUY_CASHITEM_RESULT, 0x0849);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
