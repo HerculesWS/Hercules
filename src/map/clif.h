@@ -1617,6 +1617,7 @@ struct clif_interface {
 	void (*AddItemRefineryUIAck) (struct map_session_data *sd, int item_index, struct s_refine_requirement *req);
 	void (*pRefineryUIClose) (int fd, struct map_session_data *sd);
 	void (*pRefineryUIRefine) (int fd, struct map_session_data *sd);
+	void (*announce_refine_status) (struct map_session_data *sd, int item_id, int refine_level, bool success, enum send_target target);
 };
 
 #ifdef HERCULES_CORE
