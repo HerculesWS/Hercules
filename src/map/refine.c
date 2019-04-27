@@ -131,6 +131,9 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 			pc->delitem(sd, item_index, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_REFINE);
 			break;
 		}
+
+		if ((req->announce & REFINE_ANNOUNCE_FAILURE) != 0)
+			clif->announce_refine_status(sd, sd->status.inventory[item_index].nameid, sd->status.inventory[item_index].refine, false, ALL_CLIENT);
 	} else {
 		sd->status.inventory[item_index].refine += 1;
 		sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
@@ -139,6 +142,9 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 		clif->refine(sd->fd, 0, item_index, sd->status.inventory[item_index].refine);
 		logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
 		refine->refinery_add_item(sd, item_index);
+
+		if ((req->announce & REFINE_ANNOUNCE_SUCCESS) != 0)
+			clif->announce_refine_status(sd, sd->status.inventory[item_index].nameid, sd->status.inventory[item_index].refine, true, ALL_CLIENT);
 	}
 }
 
@@ -220,6 +226,24 @@ static int refine_get_refine_chance(enum refine_type wlv, int refine_level, enum
 		return 0;
 
 	return refine->p->dbs->refine_info[wlv].chance[type][refine_level];
+}
+
+/// @copydoc refine_interface_private::announce_behavior_string2enum()
+static bool refine_announce_behavior_string2enum(const char *str, unsigned int *result)
+{
+	nullpo_retr(false, str);
+	nullpo_retr(false, result);
+
+	if (strcasecmp(str, "Success") == 0)
+		*result = REFINE_ANNOUNCE_SUCCESS;
+	else if (strcasecmp(str, "Failure") == 0)
+		*result = REFINE_ANNOUNCE_FAILURE;
+	else if (strcasecmp(str, "Always") == 0)
+		*result = REFINE_ANNOUNCE_ALWAYS;
+	else
+		return false;
+
+	return true;
 }
 
 /// @copydoc refine_interface_private::failure_behavior_string2enum()
@@ -370,6 +394,14 @@ static bool refine_readdb_refinery_ui_settings_sub(const struct config_setting_t
 		if (req.blacksmith_blessing < 1 || req.blacksmith_blessing > INT8_MAX) {
 			ShowWarning("refine_readdb_requirements_sub: Invalid 'BlacksmithBlessing' amount was given value %d expected a value between %d and %d in entry'%s' in \"%s\" defaulting to 0...\n", req.blacksmith_blessing, 1, INT8_MAX, name, source);
 			req.blacksmith_blessing = 0;
+		}
+	}
+
+	req.announce = 0;
+	const char *announce_behavior = NULL;
+	if (libconfig->setting_lookup_string(elem, "Announce", &announce_behavior) != CONFIG_FALSE) {
+		if (!refine->p->announce_behavior_string2enum(announce_behavior, &req.announce)) {
+			ShowWarning("refine_readdb_requirements_sub: invalid announce behavior value '%s' in entry '%s' in \"%s\" defaulting to not announce...\n", announce_behavior, name, source);
 		}
 	}
 
@@ -620,6 +652,7 @@ void refine_defaults(void)
 
 	refine->p->readdb_refine_libconfig = refine_readdb_refine_libconfig;
 	refine->p->readdb_refine_libconfig_sub = refine_readdb_refine_libconfig_sub;
+	refine->p->announce_behavior_string2enum = refine_announce_behavior_string2enum;
 	refine->p->failure_behavior_string2enum = refine_failure_behavior_string2enum;
 	refine->p->readdb_refinery_ui_settings_items = refine_readdb_refinery_ui_settings_items;
 	refine->p->readdb_refinery_ui_settings_sub = refine_readdb_refinery_ui_settings_sub;

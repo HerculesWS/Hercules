@@ -27,7 +27,14 @@
 
 #include "refine.h"
 #include "common/conf.h"
+/* Enums */
+enum refine_announce_condition {
+	REFINE_ANNOUNCE_SUCCESS = 0x1,
+	REFINE_ANNOUNCE_FAILURE = 0x2,
+	REFINE_ANNOUNCE_ALWAYS = REFINE_ANNOUNCE_SUCCESS | REFINE_ANNOUNCE_FAILURE,
+};
 
+/* Structures */
 struct s_refine_info {
 	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; //< success chance
 	int bonus[MAX_REFINE];                          //< cumulative fixed bonus damage
@@ -66,6 +73,14 @@ struct refine_interface_private {
 	 * @return The number of found entries.
 	 **/
 	int (*readdb_refine_libconfig) (const char *filename);
+
+	/**
+	 * Converts refine database announce behvaior string to enum refine_announce_condition
+	 * @param str the string to convert
+	 * @param result pointer to where the converted value will be held
+	 * @return true on success, false otherwise.
+	**/
+	bool (*announce_behavior_string2enum) (const char *str, unsigned int *result);
 
 	/**
 	 * Converts refine database failure behvaior string to enum refine_ui_failure_behavior
