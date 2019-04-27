@@ -71,6 +71,8 @@ enum refine_ui_failure_behavior {
 struct s_refine_requirement {
 	int blacksmith_blessing;
 	int req_count;
+	bool announce;
+
 	struct {
 		int nameid;
 		int cost;

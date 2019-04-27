@@ -22300,6 +22300,23 @@ static void clif_parse_RefineryUIClose(int fd, struct map_session_data *sd)
 	return;
 }
 
+static void clif_announce_refine_status(struct map_session_data *sd, int item_id, int refine_level, bool success, enum send_target target)
+{
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+	if (target != ALL_CLIENT)
+		nullpo_retv(sd);
+
+	Assert_retv(refine_level > 0 && refine_level <= INT8_MAX);
+
+	struct PACKET_ZC_REFINE_STATUS p;
+	p.packetType = HEADER_ZC_REFINE_STATUS;
+	p.itemId = item_id;
+	p.refine_level = refine_level;
+	p.status = (success) ? true : false;
+	clif->send(&p, sizeof(p), &sd->bl, target);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23500,4 +23517,5 @@ void clif_defaults(void)
 	clif->AddItemRefineryUIAck = clif_AddItemRefineryUIAck;
 	clif->pRefineryUIClose = clif_parse_RefineryUIClose;
 	clif->pRefineryUIRefine = clif_parse_RefineryUIRefine;
+	clif->announce_refine_status = clif_announce_refine_status;
 }

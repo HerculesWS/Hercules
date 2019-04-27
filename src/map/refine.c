@@ -139,6 +139,9 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 		clif->refine(sd->fd, 0, item_index, sd->status.inventory[item_index].refine);
 		logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
 		refine->refinery_add_item(sd, item_index);
+
+		if (req->announce)
+			clif->announce_refine_status(sd, sd->status.inventory[item_index].nameid, sd->status.inventory[item_index].refine, true, ALL_CLIENT);
 	}
 }
 
@@ -372,6 +375,8 @@ static bool refine_readdb_refinery_ui_settings_sub(const struct config_setting_t
 			req.blacksmith_blessing = 0;
 		}
 	}
+
+	libconfig->setting_lookup_bool_real(elem, "Announce", &req.announce);
 
 	struct config_setting_t *items_t;
 	if ((items_t = libconfig->setting_get_member(elem, "Items")) == NULL) {
