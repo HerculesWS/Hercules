@@ -255,6 +255,14 @@ static int chat_leavechat(struct map_session_data *sd, bool kicked)
 	}
 
 	if( leavechar == 0 && cd->owner->type == BL_PC ) {
+
+		// check if new location are CELL_CHKNOCHAT
+		if (map->getcell(cd->usersd[0]->bl.m, NULL, cd->usersd[0]->bl.x, cd->usersd[0]->bl.y, CELL_CHKNOCHAT)) {
+			for (i = (cd->users - 1); i >= 0; i--)
+				chat->leave(cd->usersd[i], false);
+			return 2;
+		}
+
 		// Set and announce new owner
 		cd->owner = &cd->usersd[0]->bl;
 		clif->changechatowner(cd, cd->usersd[0]);
