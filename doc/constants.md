@@ -4262,6 +4262,15 @@
 - `MAPINFO_SIZE_Y`: 3
 - `MAPINFO_ZONE`: 4
 
+### consolemes options
+
+- `CONSOLEMES_DEBUG`: 0
+- `CONSOLEMES_ERROR`: 1
+- `CONSOLEMES_WARNING`: 2
+- `CONSOLEMES_INFO`: 3
+- `CONSOLEMES_STATUS`: 4
+- `CONSOLEMES_NOTICE`: 5
+
 ### set/getiteminfo options
 
 - `ITEMINFO_BUYPRICE`: 0
