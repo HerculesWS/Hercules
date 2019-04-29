@@ -105,7 +105,8 @@ OnAgitBreak:
 	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
 	if (.@GID <= 0) {
 		.@notice$ = "Character "+strcharinfo(PC_NAME)+" ("+getcharid(CHAR_ID_CHAR)+") broke the Emperium in Castle: "+strnpcinfo(NPC_NAME_HIDDEN)+" while guildless. No data will be saved and Emperium respawned.";
-		logmes .@notice$; debugmes .@notice$;
+		logmes .@notice$; 
+		consolemes(CONSOLEMES_NOTICE, .@notice$);
 		donpcevent "Agit#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnStartArena";
 		end;
 	}
