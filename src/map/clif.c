@@ -11774,7 +11774,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 #endif
 		return;
 	}
-	if ( pc_cant_act2(sd) || !(bl = map->id2bl(RFIFOL(fd,2))) || sd->state.vending )
+	if (pc_cant_act2(sd) || !(bl = map->id2bl(RFIFOL(fd,2))) || sd->state.vending || sd->state.prevend)
 		return;
 
 	switch (bl->type) {
@@ -12146,7 +12146,7 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd) __attr
 static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 {
 	int flag = 0;
-	if (pc_istrading(sd))
+	if (pc_istrading(sd) || sd->state.prevend)
 		return;
 	if (!pc_iscarton(sd))
 		return;
@@ -12161,6 +12161,8 @@ static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd) __at
 /// 0127 <index>.W <amount>.L
 static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd)
 {
+	if (sd->state.vending || sd->state.prevend)
+		return;
 	if (!pc_iscarton(sd))
 		return;
 	pc->getitemfromcart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4));
@@ -13072,7 +13074,7 @@ static void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd) 
 /// 0129 <index>.W <amount>.L
 static void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd)
 {
-	if( sd->state.vending )
+	if (sd->state.vending || sd->state.prevend)
 		return;
 	if (!pc_iscarton(sd))
 		return;
@@ -13088,7 +13090,7 @@ static void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd) 
 /// 0128 <index>.W <amount>.L
 static void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd)
 {
-	if( sd->state.vending )
+	if (sd->state.vending || sd->state.prevend)
 		return;
 	if (!pc_iscarton(sd))
 		return;
@@ -16579,7 +16581,7 @@ static void clif_Auction_openwindow(struct map_session_data *sd)
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->state.vending || sd->state.buyingstore || sd->state.trading)
+	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.trading)
 		return;
 
 	if( !battle_config.feature_auction )
@@ -19169,7 +19171,7 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 	if( sd->menuskill_id != SC_AUTOSHADOWSPELL )
 		return;
 
-	if( pc_istrading(sd) ) {
+	if (pc_istrading(sd) || sd->state.prevend) {
 		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
