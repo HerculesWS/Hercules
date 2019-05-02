@@ -12161,7 +12161,7 @@ static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd) __at
 /// 0127 <index>.W <amount>.L
 static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd)
 {
-	if (sd->state.vending || sd->state.prevend)
+	if (pc_istrading(sd) || sd->state.prevend)
 		return;
 	if (!pc_iscarton(sd))
 		return;
@@ -13037,7 +13037,7 @@ static void clif_parse_MoveToKafra(int fd, struct map_session_data *sd)
 {
 	int item_index, item_amount;
 
-	if (pc_istrading(sd))
+	if (pc_istrading(sd) || sd->state.prevend)
 		return;
 
 	item_index = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0])-2;
@@ -13058,6 +13058,9 @@ static void clif_parse_MoveFromKafra(int fd, struct map_session_data *sd) __attr
 /// There are various variants of this packet, some of them have padding between fields.
 static void clif_parse_MoveFromKafra(int fd, struct map_session_data *sd)
 {
+	if (pc_istrading(sd) || sd->state.prevend)
+		return;
+
 	int item_index, item_amount;
 
 	item_index = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0])-1;
@@ -13074,7 +13077,7 @@ static void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd) 
 /// 0129 <index>.W <amount>.L
 static void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd)
 {
-	if (sd->state.vending || sd->state.prevend)
+	if (pc_istrading(sd) || sd->state.prevend)
 		return;
 	if (!pc_iscarton(sd))
 		return;
@@ -13090,7 +13093,7 @@ static void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd) 
 /// 0128 <index>.W <amount>.L
 static void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd)
 {
-	if (sd->state.vending || sd->state.prevend)
+	if (pc_istrading(sd) || sd->state.prevend)
 		return;
 	if (!pc_iscarton(sd))
 		return;
