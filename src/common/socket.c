@@ -1856,7 +1856,7 @@ static void socket_datasync(int fd, bool send)
 			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
 		}
 
-		WFIFOSET(fd, p_len);
+		WFIFOSET2(fd, p_len);
 	} else {
 		for( i = 0; i < alen; i++ ) {
 			if( RFIFOL(fd, 4 + (i * 4) ) != data_list[i].length ) {
@@ -1865,7 +1865,7 @@ static void socket_datasync(int fd, bool send)
 				WFIFOW(fd, 0) = 0x2b0a;
 				WFIFOW(fd, 2) = 8;
 				WFIFOL(fd, 4) = 0;
-				WFIFOSET(fd, 8);
+				WFIFOSET2(fd, 8);
 				sockt->flush(fd);
 				/* shut down */
 				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);
