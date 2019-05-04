@@ -493,8 +493,6 @@ static bool inter_rodex_updatemail(int fd, int account_id, int char_id, int64 ma
 		const int count = inter_rodex->getitems(mail_id, &items[0]);
 		if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `mail_id` = '%"PRId64"'", rodex_item_db, mail_id))
 			Sql_ShowDebug(inter->sql_handle);
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `zeny` = 0, `type` = `type` & (~4) WHERE `mail_id` = '%"PRId64"'", rodex_db, mail_id))
-			Sql_ShowDebug(inter->sql_handle);
 		mapif->rodex_getitemsack(fd, char_id, mail_id, opentype, count, &items[0]);
 		break;
 	}
