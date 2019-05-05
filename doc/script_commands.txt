@@ -1231,7 +1231,7 @@ you have to set it back to black unless you want all the rest of the text be in
 that color:
 
     mes("This is ^FF0000 red ^000000 and this is ^00FF00 green, ^000000 so.");
-    mes(callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE");
+    mesf("%sThis message is now in BLUE.", F_MesColor(C_BLUE));
 
 Notice that the text coloring is handled purely by the client. If you use
 non-English characters, the color codes might get screwed if they stick to
@@ -1254,6 +1254,14 @@ This will allow you to visit 'Google' with the in-game browser using default dim
     mes("You can <URL>Bing!<INFO>http://www.bing.com/,800,600</INFO></URL> anything");
 
 Clicking 'Bing!' will open the in-game browser using the specified dimensions. (800x600)
+
+If you're using client from 2013-01-30 onwards, you can also use <ITEMLINK> to show
+the item's description. Gravity changed this into <ITEM> since 2015-07-29 onwards.
+
+    mes("Bring me an <ITEM>Apple<INFO>512</INFO></ITEM>.");
+    mesf("Bring me an %s.", F_MesItemInfo(Apple));
+
+This will show the item name and a clickable link for the item description.
 
 ---------------------------------------
 

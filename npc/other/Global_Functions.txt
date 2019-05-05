@@ -434,7 +434,7 @@ function	script	F_ShuffleNumbers	{
 //== Function F_MesColor ===================================
 // Function to colorize npc dialog without having to memorize the color code
 // Examples:
-//    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
+//    mesf("%sThis message is now in BLUE.", F_MesColor(C_BLUE));
 function	script	F_MesColor	{
 	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
 }
@@ -466,4 +466,25 @@ function	script	F_GetTradeRestriction	{
 	if (.@trade & ITR_NOAUCTION)
 		.@trade$ += "NoAuction|";
 	return .@trade$;
+}
+
+//== Function F_MesItemInfo ===================================
+// Show the item name and a clickable link for the item description
+// Only works with mes and mesf, does not work in menu/select
+function	script	F_MesItemInfo	{
+	.@item = getarg(0);
+	.@itemname$ = getitemname(.@item);
+	if (.@itemname$ != "null") {
+		.@itemslot = getitemslots(.@item);
+		if (.@itemslot)
+			.@itemname$ = sprintf("%s [%d]", .@itemname$, .@itemslot);
+	}
+	else
+		.@itemname$ = "Unknown Item";
+	if (PACKETVER >= 20150729)
+		return sprintf("<ITEM>%s<INFO>%d</INFO></ITEM>", .@itemname$, .@item);
+	else if (PACKETVER >= 20130130)
+		return sprintf("<ITEMLINK>%s<INFO>%d</INFO></ITEMLINK>", .@itemname$, .@item);
+	else
+		return .@itemname$;
 }
