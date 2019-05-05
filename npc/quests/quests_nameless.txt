@@ -61,7 +61,8 @@
 //= 2.4
 //=========================================================================
 
-//== Nameless Island and Cursed Monestary Access Quest :: aru_monas =
+// Nameless Island and Cursed Monestary Access Quest :: aru_monas
+//=========================================================================
 airplane_01,90,63,0	script	Event Switch#pc	FAKE_NPC,3,3,{
 	end;
 
@@ -998,7 +999,7 @@ nameless_i,127,207,0	script	Dead Crow#Aru	HIDDEN_NPC,{
 		mes "^3355FFThis grass must be the";
 		mes "main ingredient of the";
 		mes "poison used to kill the";
-		mes "Gaebolg family princes.^000000";
+		mes "Geoborg family princes.^000000";
 		next;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Looks like I just hit";
@@ -4406,7 +4407,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ";
+							mes "switch. You'd better ask Dorian...";
 							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
@@ -4432,7 +4433,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ";
+								mes "switch. You'd better ask Dorian...";
 								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
@@ -4458,7 +4459,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ";
+							mes "switch. You'd better ask Dorian...";
 							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
@@ -4484,7 +4485,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ";
+								mes "switch. You'd better ask Dorian...";
 								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
@@ -4509,7 +4510,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ";
+							mes "switch. You'd better ask Dorian...";
 							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
@@ -4535,7 +4536,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ";
+								mes "switch. You'd better ask Dorian...";
 								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
@@ -4561,7 +4562,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 							mes "and vibrated violently";
 							mes "before coming to a sudden";
 							mes "stop. That was the wrong";
-							mes "switch. You'd better ask Dorian... ";
+							mes "switch. You'd better ask Dorian...";
 							changequest 3105,3106;
 							diamond_edq = 11;
 							close;
@@ -4587,7 +4588,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 								mes "and vibrated violently";
 								mes "before coming to a sudden";
 								mes "stop. That was the wrong";
-								mes "switch. You'd better ask Dorian... ";
+								mes "switch. You'd better ask Dorian...";
 								changequest 3105,3106;
 								diamond_edq = 11;
 								close;
@@ -10318,7 +10319,7 @@ comodo,139,184,3	script	Scholar#zgang	2_M_SAGE_B,{
 		mes "jewel came into a rich man's";
 		mes "possession. However, he lost";
 		mes "his fortune and was completely";
-		mes "ruined after obtaining it. Hence  the moniker, ''Unlucky Emerald.''";
+		mes "ruined after obtaining it. Hence the moniker, ''Unlucky Emerald.''";
 		next;
 		mes "[Scholar]";
 		mes "Then the emerald came into";
