@@ -1380,6 +1380,30 @@ typedef void (*HPMHOOK_pre_clif_changed_dir) (struct block_list **bl, enum send_
 typedef void (*HPMHOOK_post_clif_changed_dir) (struct block_list *bl, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_blname_ack) (int *fd, struct block_list **bl);
 typedef void (*HPMHOOK_post_clif_blname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_pcname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_pcname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_homname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_homname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_mername_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_mername_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_petname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_petname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_npcname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_npcname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_mobname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_mobname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_mobname_guardian_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_mobname_guardian_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_mobname_additional_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_mobname_additional_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_mobname_normal_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_mobname_normal_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_chatname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_chatname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_elemname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_elemname_ack) (int fd, struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_unknownname_ack) (int *fd, struct block_list **bl);
+typedef void (*HPMHOOK_post_clif_unknownname_ack) (int fd, struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_monster_hp_bar) (struct mob_data **md, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_clif_hpmeter) (struct map_session_data **sd);
@@ -1566,6 +1590,8 @@ typedef void (*HPMHOOK_pre_clif_addchat) (struct chat_data **cd, struct map_sess
 typedef void (*HPMHOOK_post_clif_addchat) (struct chat_data *cd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_changechatowner) (struct chat_data **cd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_changechatowner) (struct chat_data *cd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_chatRoleChange) (struct chat_data **cd, struct map_session_data **sd, struct block_list **bl, int *isNotOwner);
+typedef void (*HPMHOOK_post_clif_chatRoleChange) (struct chat_data *cd, struct map_session_data *sd, struct block_list *bl, int isNotOwner);
 typedef void (*HPMHOOK_pre_clif_clearchat) (struct chat_data **cd, int *fd);
 typedef void (*HPMHOOK_post_clif_clearchat) (struct chat_data *cd, int fd);
 typedef void (*HPMHOOK_pre_clif_leavechat) (struct chat_data **cd, struct map_session_data **sd, bool *flag);
@@ -2024,6 +2050,8 @@ typedef bool (*HPMHOOK_pre_clif_parse_roulette_db) (void);
 typedef bool (*HPMHOOK_post_clif_parse_roulette_db) (bool retVal___);
 typedef void (*HPMHOOK_pre_clif_roulette_generate_ack) (struct map_session_data **sd, enum GENERATE_ROULETTE_ACK *result, short *stage, short *prizeIdx, int *bonusItemID);
 typedef void (*HPMHOOK_post_clif_roulette_generate_ack) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);
+typedef void (*HPMHOOK_pre_clif_roulette_close) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_roulette_close) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_openmergeitem) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_openmergeitem) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_cancelmergeitem) (int *fd, struct map_session_data **sd);
@@ -2032,6 +2060,8 @@ typedef int (*HPMHOOK_pre_clif_comparemergeitem) (const void **a, const void **b
 typedef int (*HPMHOOK_post_clif_comparemergeitem) (int retVal___, const void *a, const void *b);
 typedef void (*HPMHOOK_pre_clif_ackmergeitems) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_ackmergeitems) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_mergeitems) (int *fd, struct map_session_data **sd, int *index, int *amount, enum mergeitem_reason *reason);
+typedef void (*HPMHOOK_post_clif_mergeitems) (int fd, struct map_session_data *sd, int index, int amount, enum mergeitem_reason reason);
 typedef bool (*HPMHOOK_pre_clif_isdisguised) (struct block_list **bl);
 typedef bool (*HPMHOOK_post_clif_isdisguised) (bool retVal___, struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_navigate_to) (struct map_session_data **sd, const char **mapname, uint16 *x, uint16 *y, uint8 *flag, bool *hideWindow, uint16 *mob_id);
@@ -2476,6 +2506,8 @@ typedef void (*HPMHOOK_pre_clif_pPartyTick) (int *fd, struct map_session_data **
 typedef void (*HPMHOOK_post_clif_pPartyTick) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pGuildInvite2) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pGuildInvite2) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_cashShopBuyAck) (int *fd, struct map_session_data **sd, int *itemId, enum CASH_SHOP_BUY_RESULT *result);
+typedef void (*HPMHOOK_post_clif_cashShopBuyAck) (int fd, struct map_session_data *sd, int itemId, enum CASH_SHOP_BUY_RESULT result);
 typedef void (*HPMHOOK_pre_clif_pPartyBookingAddFilter) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pPartyBookingAddFilter) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pPartyBookingSubFilter) (int *fd, struct map_session_data **sd);
@@ -2666,6 +2698,10 @@ typedef int (*HPMHOOK_pre_clif_pingTimerSub) (struct map_session_data **sd, va_l
 typedef int (*HPMHOOK_post_clif_pingTimerSub) (int retVal___, struct map_session_data *sd, va_list ap);
 typedef void (*HPMHOOK_pre_clif_pResetCooldown) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pResetCooldown) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_loadConfirm) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_loadConfirm) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_send_selforarea) (int *fd, struct block_list **bl, const void **buf, int *len);
+typedef void (*HPMHOOK_post_clif_send_selforarea) (int fd, struct block_list *bl, const void *buf, int len);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
