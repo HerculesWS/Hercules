@@ -5038,9 +5038,8 @@ static void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit 
 	p.xPos = su->bl.x;
 	p.yPos = su->bl.y;
 
-	//Use invisible unit id for traps.
-	if ((battle_config.traps_setting&1 && skill->get_inf2(su->group->skill_id)&INF2_TRAP) ||
-		(skill->get_unit_flag(su->group->skill_id) & UF_RANGEDSINGLEUNIT && !(su->val2 & UF_RANGEDSINGLEUNIT)))
+	// Use invisible unit id for some ground skills.
+	if (skill->get_unit_flag(su->group->skill_id) & UF_RANGEDSINGLEUNIT && !(su->val2 & UF_RANGEDSINGLEUNIT))
 		p.job = UNT_DUMMYSKILL;
 	else
 		p.job = su->group->unit_id;
@@ -5049,7 +5048,7 @@ static void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit 
 	p.RadiusRange = (unsigned char)su->range;
 #endif
 
-	p.isVisible = 1;
+	p.isVisible = su->visible;
 
 #if PACKETVER >= 20130731
 	p.level = (unsigned char)su->group->skill_lv;

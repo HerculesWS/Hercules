@@ -7004,7 +7004,8 @@ static const struct battle_data {
 	{ "player_damage_delay_rate",           &battle_config.pc_damage_delay_rate,            100,    0,      INT_MAX,        },
 	{ "defunit_not_enemy",                  &battle_config.defnotenemy,                     0,      0,      1,              },
 	{ "gvg_traps_target_all",               &battle_config.vs_traps_bctall,                 BL_PC,  BL_NUL, BL_ALL,         },
-	{ "traps_setting",                      &battle_config.traps_setting,                   0,      0,      1,              },
+	{ "trap_options/visibility",            &battle_config.trap_visibility,                 2,      0,      2,              },
+	{ "trap_options/display_on_trigger",    &battle_config.trap_trigger,                    1,      0,      1,              },
 	{ "summon_flora_setting",               &battle_config.summon_flora,                    1|2,    0,      1|2,            },
 	{ "clear_skills_on_death",              &battle_config.clear_unit_ondeath,              BL_NUL, BL_NUL, BL_ALL,         },
 	{ "clear_skills_on_warp",               &battle_config.clear_unit_onwarp,               BL_ALL, BL_NUL, BL_ALL,         },
@@ -7600,6 +7601,10 @@ static bool battle_config_read(const char *filename, bool imported)
 
 	if (!imported)
 		battle->config_set_defaults();
+
+	if (libconfig->lookup(&config, "battle_configuration/traps_setting") != NULL) {
+		ShowError("The `traps_setting` battle conf option has been replaced by `trap_visibility`. Please see conf/map/battle/skill.conf.\n");
+	}
 
 	for (i = 0; i < ARRAYLENGTH(battle_data); i++) {
 		int type, val;
