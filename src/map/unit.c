@@ -957,7 +957,7 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_
 			return 2;
 
 		}
-	} else if (map->getcell(m, bl, x, y, CELL_CHKNOREACH)) {
+	} else if (bl->type != BL_NPC && map->getcell(m, bl, x, y, CELL_CHKNOREACH)) {
 		//Invalid target cell
 		ShowWarning("unit_warp: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", m, map->list[m].name, x,y);
 
