@@ -42,9 +42,9 @@
 // - No arguments.
 function	script	F_CashStore	{
 	cutin "kafra_01",2;
-	mes "[Kafra Employee]";
-	mes "Welcome to the Kafra Corporation.";
-	mes "Here, let me open your Storage for you.";
+	mes("[Kafra Employee]");
+	mes("Welcome to the Kafra Corporation.");
+	mes("Here, let me open your Storage for you.");
 	close2;
 	openstorage;
 	cutin "",255;
@@ -276,33 +276,33 @@ function	script	F_CashSiegeTele	{
 // - No arguments.
 function	script	F_Snowball	{
 	cutin "rutie_snownow03",2;
-	mes "[Snowman]";
-	mes "Merry Christmas!";
+	mes("[Snowman]");
+	mes("Merry Christmas!");
 	switch(select("Restore Some HP/SP", "Strengthen My Body!", "Restore My SP Fully.", "Return to Savepoint")) {
 	case 1:
-		mes "Aha!";
-		mes "Quiet night~";
+		mes("Aha!");
+		mes("Quiet night~");
 		percentheal 70,70;
 		close2;
 		cutin "",255;
 		break;
 	case 2:
-		mes "Blessings.";
-		mes "Holy night~";
+		mes("Blessings.");
+		mes("Holy night~");
 		unitskilluseid getcharid(CHAR_ID_ACCOUNT),"SM_ENDURE",10;
 		close2;
 		cutin "",255;
 		break;
 	case 3:
-		mes "Hey!";
-		mes "White Christmas~";
+		mes("Hey!");
+		mes("White Christmas~");
 		percentheal 0,100;
 		close2;
 		cutin "",255;
 		break;
 	case 4:
-		mes "Jingle Bells~";
-		mes "Jingle Bells~ Jingle Bells!";
+		mes("Jingle Bells~");
+		mes("Jingle Bells~ Jingle Bells!");
 		close2;
 		cutin "",255;
 		warp "SavePoint",0,0;
