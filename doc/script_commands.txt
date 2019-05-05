@@ -10463,3 +10463,9 @@ Force close roulette window.
 Works for 20141008 main clients, 20140903 re, any zero.
 
 ---------------------------------------
+*openrefineryui()
+
+Opens refinery user interface for the player
+returns true on success and false on failure
+
+---------------------------------------

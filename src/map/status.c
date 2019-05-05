@@ -38,6 +38,7 @@
 #include "map/path.h"
 #include "map/pc.h"
 #include "map/pet.h"
+#include "map/refine.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/skill.h"
@@ -2577,18 +2578,18 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				r = 0;
 
 			if (r)
-				wa->atk2 = status->dbs->refine_info[wlv].bonus[r-1] / 100;
+				wa->atk2 = refine->get_bonus(wlv, r) / 100;
 
 #ifdef RENEWAL
 			wa->matk += sd->inventory_data[index]->matk;
 			wa->wlv = wlv;
 			if( r && sd->weapontype1 != W_BOW ) // renewal magic attack refine bonus
-				wa->matk += status->dbs->refine_info[wlv].bonus[r-1] / 100;
+				wa->matk += refine->get_bonus(wlv, r) / 100;
 #endif
 
 			//Overrefined bonus.
 			if (r)
-				wd->overrefine = status->dbs->refine_info[wlv].randombonus_max[r-1] / 100;
+				wd->overrefine = refine->get_randombonus_max(wlv, r) / 100;
 
 			wa->range += sd->inventory_data[index]->range;
 			if(sd->inventory_data[index]->script) {
@@ -2623,7 +2624,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				r = 0;
 
 			if (r)
-				refinedef += status->dbs->refine_info[REFINE_TYPE_ARMOR].bonus[r-1];
+				refinedef += refine->get_bonus(REFINE_TYPE_ARMOR, r);
 
 			if(sd->inventory_data[index]->script) {
 				if( i == EQI_HAND_L ) //Shield
@@ -12508,10 +12509,10 @@ static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk,
 
 	if ( bl->type == BL_PC && !(flag & 2) ) {
 		const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
-		short index = sd->equip_index[EQI_HAND_R], refine;
+		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
-			int r = status->dbs->refine_info[watk->wlv].randombonus_max[refine + (4 - watk->wlv)] / 100;
+			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+			int r = refine->get_randombonus_max(watk->wlv, refine_level + (4 - watk->wlv) + 1) / 100;
 			if ( r )
 				max += (rnd() % 100) % r + 1;
 		}
@@ -12623,10 +12624,10 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 
 #ifdef RENEWAL
 	if ( sd && !(flag & 2) ) {
-		short index = sd->equip_index[EQI_HAND_R], refine;
+		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
-			int r =  status->dbs->refine_info[sd->inventory_data[index]->wlv].randombonus_max[refine + (4 - sd->inventory_data[index]->wlv)] / 100;
+			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+			int r = refine->get_randombonus_max(sd->inventory_data[index]->wlv, refine_level + (4 - sd->inventory_data[index]->wlv) + 1) / 100;
 			if ( r )
 				*matk_max += (rnd() % 100) % r + 1;
 		}
@@ -13076,25 +13077,6 @@ static int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-/**
- * Get the chance to upgrade a piece of equipment.
- * @param wlv The weapon type of the item to refine (see see enum refine_type)
- * @param refine The target refine level
- * @return The chance to refine the item, in percent (0~100)
- */
-static int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type)
-{
-	Assert_ret((int)wlv >= REFINE_TYPE_ARMOR && wlv < REFINE_TYPE_MAX);
-
-	if (refine < 0 || refine >= MAX_REFINE)
-		return 0;
-
-	if (type >= REFINE_CHANCE_TYPE_MAX)
-		return 0;
-
-	return status->dbs->refine_info[wlv].chance[type][refine];
-}
-
 static int status_get_sc_type(sc_type type)
 {
 
@@ -13405,171 +13387,6 @@ static bool status_readdb_sizefix(char *fields[], int columns, int current)
 	return true;
 }
 
-/**
- * Processes a refine_db.conf entry.
- *
- * @param r      Libconfig setting entry. It is expected to be valid and it
- *               won't be freed (it is care of the caller to do so if
- *               necessary)
- * @param n      Ordinal number of the entry, to be displayed in case of
- *               validation errors.
- * @param source Source of the entry (file name), to be displayed in case of
- *               validation errors.
- * @return # of the validated entry, or 0 in case of failure.
- */
-static int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *name, const char *source)
-{
-	struct config_setting_t *rate = NULL;
-	int type = REFINE_TYPE_ARMOR, bonus_per_level = 0, rnd_bonus_v = 0, rnd_bonus_lv = 0;
-	char lv[4];
-	nullpo_ret(r);
-	nullpo_ret(name);
-	nullpo_ret(source);
-
-	if (strncmp(name, "Armors", 6) == 0) {
-		type = REFINE_TYPE_ARMOR;
-	} else if (strncmp(name, "WeaponLevel", 11) != 0 || !strspn(&name[strlen(name)-1], "0123456789") || (type = atoi(strncpy(lv, name+11, 2))) == REFINE_TYPE_ARMOR) {
-		ShowError("status_readdb_refine_libconfig_sub: Invalid key name for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX) {
-		ShowError("status_readdb_refine_libconfig_sub: Out of range level for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (!libconfig->setting_lookup_int(r, "StatsPerLevel", &bonus_per_level)) {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing StatsPerLevel for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (!libconfig->setting_lookup_int(r, "RandomBonusStartLevel", &rnd_bonus_lv)) {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusStartLevel for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (!libconfig->setting_lookup_int(r, "RandomBonusValue", &rnd_bonus_v)) {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusValue for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-
-	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
-		struct config_setting_t *t = NULL;
-		bool duplicate[MAX_REFINE];
-		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE];
-		int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE];
-		int i, j;
-
-		memset(&duplicate, 0, sizeof(duplicate));
-		memset(&bonus, 0, sizeof(bonus));
-		memset(&rnd_bonus, 0, sizeof(rnd_bonus));
-
-		for (i = 0; i < REFINE_CHANCE_TYPE_MAX; i++)
-			for (j = 0; j < MAX_REFINE; j++)
-				chance[i][j] = 100; // default value for all rates.
-
-		i = 0;
-		j = 0;
-		while ((t = libconfig->setting_get_elem(rate,i++)) != NULL && config_setting_is_group(t)) {
-			int level = 0, i32;
-			char *rlvl = config_setting_name(t);
-			memset(&lv, 0, sizeof(lv));
-
-			if (!strspn(&rlvl[strlen(rlvl) - 1], "0123456789") || (level = atoi(strncpy(lv, rlvl + 2, 3))) <= 0) {
-				ShowError("status_readdb_refine_libconfig_sub: Invalid refine level format '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
-				continue;
-			}
-
-			if (level <= 0 || level > MAX_REFINE) {
-				ShowError("status_readdb_refine_libconfig_sub: Out of range refine level '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
-				continue;
-			}
-
-			level--;
-
-			if (duplicate[level]) {
-				ShowWarning("status_readdb_refine_libconfig_sub: duplicate rate '%s' for entry %s in \"%s\", overwriting previous entry...\n", rlvl, name, source);
-			} else {
-				duplicate[level] = true;
-			}
-
-			if (libconfig->setting_lookup_int(t, "NormalChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_NORMAL][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_NORMAL][level] = 100;
-
-			if (libconfig->setting_lookup_int(t, "EnrichedChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
-
-			if (libconfig->setting_lookup_int(t, "EventNormalChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = 100;
-
-			if (libconfig->setting_lookup_int(t, "EventEnrichedChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
-
-			if (libconfig->setting_lookup_int(t, "Bonus", &i32) != 0)
-				bonus[level] += i32;
-
-			if (level >= rnd_bonus_lv - 1)
-				rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
-		}
-		for (i = 0; i < MAX_REFINE; i++) {
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_NORMAL][i] = chance[REFINE_CHANCE_TYPE_NORMAL][i];
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_NORMAL][i] = chance[REFINE_CHANCE_TYPE_E_NORMAL][i];
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_ENRICHED][i];
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_E_ENRICHED][i];
-			status->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
-			bonus[i] += bonus_per_level + (i > 0 ? bonus[i - 1] : 0);
-			status->dbs->refine_info[type].bonus[i] = bonus[i];
-		}
-	} else {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing refine rates for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-
-	return type + 1;
-}
-
-/**
- * Reads from a libconfig-formatted refine_db.conf file.
- *
- * @param *filename File name, relative to the database path.
- * @return The number of found entries.
- */
-static int status_readdb_refine_libconfig(const char *filename)
-{
-	bool duplicate[REFINE_TYPE_MAX];
-	struct config_t refine_db_conf;
-	struct config_setting_t *r;
-	char filepath[256];
-	int i = 0, count = 0;
-
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
-	if (!libconfig->load_file(&refine_db_conf, filepath))
-		return 0;
-
-	memset(&duplicate,0,sizeof(duplicate));
-
-	while((r = libconfig->setting_get_elem(refine_db_conf.root,i++))) {
-		char *name = config_setting_name(r);
-		int type = status->readdb_refine_libconfig_sub(r, name, filename);
-		if (type != 0) {
-			if (duplicate[type-1]) {
-				ShowWarning("status_readdb_refine_libconfig: duplicate entry for %s in \"%s\", overwriting previous entry...\n", name, filename);
-			} else {
-				duplicate[type-1] = true;
-			}
-			count++;
-		}
-	}
-	libconfig->destroy(&refine_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-
-	return count;
-}
-
 static bool status_readdb_scconfig(char *fields[], int columns, int current)
 {
 	int val = 0;
@@ -13627,7 +13444,6 @@ static int status_readdb(void)
 	//
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
 	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
-	status->readdb_refine_libconfig(DBPATH"refine_db.conf");
 	sv->readdb(map->db_path, "sc_config.txt",       ',', 2,                 2,                 SC_MAX,                   status->readdb_scconfig);
 	status->read_job_db();
 
@@ -13685,7 +13501,6 @@ void status_defaults(void)
 	status->natural_heal_prev_tick = 0;
 	status->natural_heal_diff_tick = 0;
 	/* funcs */
-	status->get_refine_chance = status_get_refine_chance;
 	// for looking up associated data
 	status->skill2sc = status_skill2sc;
 	status->sc2skill = status_sc2skill;
@@ -13819,8 +13634,6 @@ void status_defaults(void)
 	status->natural_heal_timer = status_natural_heal_timer;
 	status->readdb_job2 = status_readdb_job2;
 	status->readdb_sizefix = status_readdb_sizefix;
-	status->readdb_refine_libconfig = status_readdb_refine_libconfig;
-	status->readdb_refine_libconfig_sub = status_readdb_refine_libconfig_sub;
 	status->readdb_scconfig = status_readdb_scconfig;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;

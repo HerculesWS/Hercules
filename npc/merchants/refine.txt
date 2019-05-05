@@ -589,14 +589,19 @@ lhz_in02,282,20,7	script	Fulerr	4_M_LGTMAN,{
 // If you enable this function, be sure to edit the value of .@safe to the max
 // safe refine in refine_db.txt as well.
 function	script	refinemain	{
+	mesf("[%s]", getarg(0));
+	mes("I'm the Armsmith.");
+	mes("I can refine all kinds of weapons, armor and equipment, so let me");
+	mes("know what you want me to refine.");
+
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+	}	
+	next();
+
 	disable_items;
 	.@features = getarg(1);
-	mes "[" + getarg(0) + "]";
-	mes "I'm the Armsmith.";
-	mes "I can refine all kinds of weapons, armor and equipment, so let me";
-	mes "know what you want me to refine.";
-	next;
-
 	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
 	.@menu$ = "";
 	for(.@i = 1; .@i <= 10; ++.@i) {

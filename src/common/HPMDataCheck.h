@@ -892,6 +892,19 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_QUEST_H
 	#endif // MAP_QUEST_H
+	#ifdef MAP_REFINE_H
+		{ "refine_interface", sizeof(struct refine_interface), SERVER_TYPE_MAP },
+		{ "s_refine_requirement", sizeof(struct s_refine_requirement), SERVER_TYPE_MAP },
+	#else
+		#define MAP_REFINE_H
+	#endif // MAP_REFINE_H
+	#ifdef MAP_REFINE_P_H
+		{ "refine_interface_dbs", sizeof(struct refine_interface_dbs), SERVER_TYPE_MAP },
+		{ "refine_interface_private", sizeof(struct refine_interface_private), SERVER_TYPE_MAP },
+		{ "s_refine_info", sizeof(struct s_refine_info), SERVER_TYPE_MAP },
+	#else
+		#define MAP_REFINE_P_H
+	#endif // MAP_REFINE_P_H
 	#ifdef MAP_RODEX_H
 		{ "rodex_interface", sizeof(struct rodex_interface), SERVER_TYPE_MAP },
 	#else
@@ -954,7 +967,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_STATUS_H
 		{ "regen_data", sizeof(struct regen_data), SERVER_TYPE_MAP },
 		{ "regen_data_sub", sizeof(struct regen_data_sub), SERVER_TYPE_MAP },
-		{ "s_refine_info", sizeof(struct s_refine_info), SERVER_TYPE_MAP },
 		{ "s_status_dbs", sizeof(struct s_status_dbs), SERVER_TYPE_MAP },
 		{ "sc_display_entry", sizeof(struct sc_display_entry), SERVER_TYPE_MAP },
 		{ "status_change", sizeof(struct status_change), SERVER_TYPE_MAP },

@@ -48,6 +48,7 @@
 #include "map/pc_groups.h" // groupid2name
 #include "map/pet.h"
 #include "map/quest.h"
+#include "map/refine.h"
 #include "map/script.h"
 #include "map/searchstore.h"
 #include "map/skill.h"
@@ -1270,20 +1271,20 @@ ACMD(item2)
 	struct item_data *item_data;
 	char item_name[100];
 	int item_id, number = 0, bound = 0;
-	int identify = 0, refine = 0, attr = 0;
+	int identify = 0, refine_level = 0, attr = 0;
 	int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 
 	memset(item_name, '\0', sizeof(item_name));
 
 	if (!strcmpi(info->command,"itembound2") && (!*message || (
-		sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 &&
-		sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 ))) {
+		sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4, &bound) < 10 &&
+		sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4, &bound) < 10 ))) {
 		clif->message(fd, msg_fd(fd,296)); // Please enter all parameters (usage: @itembound2 <item name/ID> <quantity>
 		clif->message(fd, msg_fd(fd,297)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
 		return false;
 	} else if (!*message
-	         || ( sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4) < 9
-	           && sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4) < 9
+	         || ( sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 9
+	           && sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 9
 	)) {
 		clif->message(fd, msg_fd(fd,984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
 		clif->message(fd, msg_fd(fd,985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
@@ -1319,20 +1320,20 @@ ACMD(item2)
 			get_count = 1;
 			if (item_data->type == IT_PETEGG) {
 				identify = 1;
-				refine = 0;
+				refine_level = 0;
 			}
 			if (item_data->type == IT_PETARMOR)
-				refine = 0;
+				refine_level = 0;
 		} else {
 			identify = 1;
-			refine = attr = 0;
+			refine_level = attr = 0;
 		}
-		refine = cap_value(refine, 0, MAX_REFINE);
+		refine_level = cap_value(refine_level, 0, MAX_REFINE);
 		for (i = 0; i < loop; i++) {
 			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = item_id;
 			item_tmp.identify = identify;
-			item_tmp.refine = refine;
+			item_tmp.refine = refine_level;
 			item_tmp.attribute = attr;
 			item_tmp.bound = (unsigned char)bound;
 			item_tmp.card[0] = c1;
@@ -2215,12 +2216,12 @@ ACMD(killmonster)
  *------------------------------------------*/
 ACMD(refine)
 {
-	int j, position = 0, refine = 0, current_position, final_refine;
+	int j, position = 0, refine_level = 0, current_position, final_refine;
 	int count;
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
-	if (!*message || sscanf(message, "%12d %12d", &position, &refine) < 2) {
+	if (!*message || sscanf(message, "%12d %12d", &position, &refine_level) < 2) {
 		clif->message(fd, msg_fd(fd,996)); // Please enter a position and an amount (usage: @refine <equip position> <+/- amount>).
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,997), EQP_HEAD_LOW); // %d: Lower Headgear
 		clif->message(fd, atcmd_output);
@@ -2245,7 +2246,7 @@ ACMD(refine)
 		return false;
 	}
 
-	refine = cap_value(refine, -MAX_REFINE, MAX_REFINE);
+	refine_level = cap_value(refine_level, -MAX_REFINE, MAX_REFINE);
 
 	count = 0;
 	for (j = 0; j < EQI_MAX; j++) {
@@ -2263,7 +2264,7 @@ ACMD(refine)
 		if(position && !(sd->status.inventory[idx].equip & position))
 			continue;
 
-		final_refine = cap_value(sd->status.inventory[idx].refine + refine, 0, MAX_REFINE);
+		final_refine = cap_value(sd->status.inventory[idx].refine + refine_level, 0, MAX_REFINE);
 		if (sd->status.inventory[idx].refine != final_refine) {
 			sd->status.inventory[idx].refine = final_refine;
 			current_position = sd->status.inventory[idx].equip;
@@ -9828,6 +9829,22 @@ ACMD(camerainfo)
 	return true;
 }
 
+ACMD(refineryui)
+{
+#if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
+	if (battle_config.enable_refinery_ui == 0) {
+		clif->message(fd, msg_fd(fd, 453));
+		return false;
+	}
+
+	clif->OpenRefineryUI(sd);
+	return true;
+#else
+	clif->message(fd, msg_fd(fd, 453));
+	return false;
+#endif
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -10111,6 +10128,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(reloadclans),
 		ACMD_DEF(setzone),
 		ACMD_DEF(camerainfo),
+		ACMD_DEF(refineryui),
 	};
 	int i;
 

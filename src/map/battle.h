@@ -587,6 +587,8 @@ struct Battle_Config {
 	int option_drop_max_loop;
 
 	int drop_connection_on_quit;
+	int enable_refinery_ui;
+	int replace_refine_npcs;
 };
 
 /* criteria for battle_config.idletime_critera */

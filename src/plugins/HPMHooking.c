@@ -106,6 +106,8 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #include "map/pet.h"
 #include "map/quest.h"
 #include "map/rodex.h"
+#include "map/refine.h"
+#include "map/refine.p.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"

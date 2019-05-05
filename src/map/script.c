@@ -52,6 +52,7 @@
 #include "map/pet.h"
 #include "map/pet.h"
 #include "map/quest.h"
+#include "map/refine.h"
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/status.h"
@@ -9505,7 +9506,7 @@ static BUILDIN(getequippercentrefinery)
 
 	if (i >= 0 && sd->status.inventory[i].nameid != 0 && sd->status.inventory[i].refine < MAX_REFINE)
 		script_pushint(st,
-			status->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
+			refine->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int) sd->status.inventory[i].refine, (enum refine_chance_type) type));
 	else
 		script_pushint(st, 0);
 
@@ -25285,6 +25286,25 @@ static BUILDIN(closeroulette)
 	return true;
 }
 
+static BUILDIN(openrefineryui)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	if (battle_config.enable_refinery_ui == 0) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	clif->OpenRefineryUI(sd);
+	script_pushint(st, 1);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -26038,6 +26058,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getInventorySize, ""),
 
 		BUILDIN_DEF(closeroulette, ""),
+		BUILDIN_DEF(openrefineryui, ""),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

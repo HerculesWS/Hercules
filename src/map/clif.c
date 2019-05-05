@@ -49,6 +49,7 @@
 #include "map/pet.h"
 #include "map/quest.h"
 #include "map/rodex.h"
+#include "map/refine.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
@@ -22492,6 +22493,104 @@ static void clif_parse_ResetCooldown(int fd, struct map_session_data *sd)
 	atcommand->exec(fd, sd, cmd, true);
 }
 
+static void clif_OpenRefineryUI(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+
+	if (battle_config.enable_refinery_ui == 0)
+		return;
+
+	struct PACKET_ZC_REFINE_OPEN_WINDOW p;
+	p.packetType = HEADER_ZC_REFINE_OPEN_WINDOW;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	sd->state.refine_ui = 1;
+#endif
+}
+
+static void clif_parse_AddItemRefineryUI(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_AddItemRefineryUI(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
+	if (battle_config.enable_refinery_ui == 0)
+		return;
+
+	const struct PACKET_CZ_REFINE_ADD_ITEM *p = RFIFO2PTR(fd);
+	refine->refinery_add_item(sd, p->index - 2);
+#endif
+}
+
+static void clif_AddItemRefineryUIAck(struct map_session_data *sd, int item_index, struct s_refine_requirement *req)
+{
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+	nullpo_retv(req);
+	Assert_retv(item_index >= 0 && item_index < sd->status.inventorySize);
+
+	if (battle_config.enable_refinery_ui == 0)
+		return;
+
+	char buf[sizeof(struct PACKET_ZC_REFINE_ADD_ITEM) + sizeof(struct PACKET_ZC_REFINE_ADD_ITEM_SUB) * MAX_REFINE_REQUIREMENTS];
+	struct PACKET_ZC_REFINE_ADD_ITEM *p = (struct PACKET_ZC_REFINE_ADD_ITEM *)buf;
+
+	p->packetType = HEADER_ZC_REFINE_ADD_ITEM;
+	p->packtLength = sizeof(*p) + sizeof(p->req[0]) * req->req_count;
+	p->itemIndex = item_index + 2;
+	p->blacksmithBlessing = req->blacksmith_blessing;
+
+	int weapon_level = itemdb_wlv(sd->status.inventory[item_index].nameid);
+	for (int i = 0; i < req->req_count; ++i) {
+		p->req[i].chance = refine->get_refine_chance(weapon_level, sd->status.inventory[item_index].refine, req->req[i].type);
+		p->req[i].itemId = req->req[i].nameid;
+		p->req[i].zeny = req->req[i].cost;
+	}
+
+	clif->send(p, p->packtLength, &sd->bl, SELF);
+#endif
+}
+
+static void clif_parse_RefineryUIRefine(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_RefineryUIRefine(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
+	if (battle_config.enable_refinery_ui == 0)
+		return;
+
+	const struct PACKET_CZ_REFINE_ITEM_REQUEST *p = RFIFO2PTR(fd);
+	refine->refinery_refine_request(sd, p->index - 2, p->itemId, (p->blacksmithBlessing == 1) ? true : false);
+#endif
+}
+
+static void clif_parse_RefineryUIClose(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_RefineryUIClose(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+	if (battle_config.enable_refinery_ui == 0)
+		return;
+
+	sd->state.refine_ui = 0;
+	return;
+#endif
+}
+
+static void clif_announce_refine_status(struct map_session_data *sd, int item_id, int refine_level, bool success, enum send_target target)
+{
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+	nullpo_retv(sd);
+
+	Assert_retv(refine_level > 0 && refine_level <= INT8_MAX);
+
+	struct PACKET_ZC_REFINE_STATUS p;
+	p.packetType = HEADER_ZC_REFINE_STATUS;
+	safestrncpy(p.name, sd->status.name, NAME_LENGTH);
+	p.itemId = item_id;
+	p.refine_level = refine_level;
+	p.status = (success) ? true : false;
+	clif->send(&p, sizeof(p), &sd->bl, target);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23705,4 +23804,10 @@ void clif_defaults(void)
 	clif->pResetCooldown = clif_parse_ResetCooldown;
 	clif->loadConfirm = clif_loadConfirm;
 	clif->send_selforarea = clif_send_selforarea;
+	clif->OpenRefineryUI = clif_OpenRefineryUI;
+	clif->pAddItemRefineryUI = clif_parse_AddItemRefineryUI;
+	clif->AddItemRefineryUIAck = clif_AddItemRefineryUIAck;
+	clif->pRefineryUIClose = clif_parse_RefineryUIClose;
+	clif->pRefineryUIRefine = clif_parse_RefineryUIRefine;
+	clif->announce_refine_status = clif_announce_refine_status;
 }

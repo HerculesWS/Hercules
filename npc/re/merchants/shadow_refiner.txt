@@ -39,11 +39,17 @@ itemmall,31,76,3	script	Shadow Blacksmith#nomal	4_F_JOB_BLACKSMITH,{
 	.@npc_name$ = "[Shadow Blacksmith]";
 	.@zeny_cost = 20000; // Amount of zeny to be charged for refining.
 
-	disable_items;
 	mesf("%s", .@npc_name$);
 	mes("Do you want to refine a Shadow item?");
 	mes("Please choose the part you want to refine.");
-	next;
+	
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+	}
+	next();
+
+	disable_items;
 	setarray(.@position$[0],"Armor","Weapon","Shield","Shoes","Earring","Pendant");
 	for (.@i=EQI_SHADOW_ARMOR; .@i <= EQI_SHADOW_ACC_L; .@i++){
 		.@menu$ = .@menu$ + (getequipisequiped(.@i) ? getequipname(.@i) : ("^8C8C8C" + .@position$[.@i-EQI_SHADOW_ARMOR] + " [Not Equipped]^000000" + ":"));
