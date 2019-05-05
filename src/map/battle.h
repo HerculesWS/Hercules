@@ -589,6 +589,21 @@ struct Battle_Config {
 	int drop_connection_on_quit;
 	int enable_refinery_ui;
 	int replace_refine_npcs;
+
+	int batk_min;
+	int batk_max;
+	int matk_min;
+	int matk_max;
+	int watk_min;
+	int watk_max;
+	int flee_min;
+	int flee_max;
+	int flee2_min;
+	int flee2_max;
+	int critical_min;
+	int critical_max;
+	int hit_min;
+	int hit_max;
 };
 
 /* criteria for battle_config.idletime_critera */
