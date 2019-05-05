@@ -4854,7 +4854,7 @@ static int pc_dropitem(struct map_session_data *sd, int n, int amount)
 	if(sd->status.inventory[n].nameid <= 0 ||
 		sd->status.inventory[n].amount <= 0 ||
 		sd->status.inventory[n].amount < amount ||
-		sd->state.trading || sd->state.vending ||
+		sd->state.trading || sd->state.vending || sd->state.prevend ||
 		!sd->inventory_data[n] //pc->delitem would fail on this case.
 		)
 		return 0;
@@ -5472,7 +5472,7 @@ static int pc_putitemtocart(struct map_session_data *sd, int idx, int amount)
 
 	item_data = &sd->status.inventory[idx];
 
-	if( item_data->nameid == 0 || amount < 1 || item_data->amount < amount || sd->state.vending )
+	if (item_data->nameid == 0 || amount < 1 || item_data->amount < amount || sd->state.vending || sd->state.prevend)
 		return 1;
 
 	if( (flag = pc->cart_additem(sd,item_data,amount,LOG_TYPE_NONE)) == 0 )
@@ -5519,10 +5519,10 @@ static int pc_getitemfromcart(struct map_session_data *sd, int idx, int amount)
 
 	item_data=&sd->status.cart[idx];
 
-	if(item_data->nameid==0 || amount < 1 || item_data->amount<amount || sd->state.vending )
+	if (item_data->nameid == 0 || amount < 1 || item_data->amount < amount || sd->state.vending || sd->state.prevend)
 		return 1;
 
-	if((flag = pc->additem(sd,item_data,amount,LOG_TYPE_NONE)) == 0)
+	if ((flag = pc->additem(sd,item_data,amount,LOG_TYPE_NONE)) == 0)
 		return pc->cart_delitem(sd,idx,amount,0,LOG_TYPE_NONE);
 
 	return flag;
@@ -12356,7 +12356,7 @@ static bool pc_expandInventory(struct map_session_data *sd, int adjustSize)
 		clif->inventoryExpandResult(sd, EXPAND_INVENTORY_RESULT_MAX_SIZE);
 		return false;
 	}
-	if (pc_isdead(sd) || sd->state.vending || sd->state.buyingstore || sd->chat_id != 0 || sd->state.trading || sd->state.storage_flag || sd->state.prevend) {
+	if (pc_isdead(sd) || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->chat_id != 0 || sd->state.trading || sd->state.storage_flag || sd->state.prevend) {
 		clif->inventoryExpandResult(sd, EXPAND_INVENTORY_RESULT_OTHER_WORK);
 		return false;
 	}

@@ -163,8 +163,8 @@ static void trade_tradeack(struct map_session_data *sd, int type)
 	}
 
 	//Check if you can start trade.
-	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag != STORAGE_FLAG_CLOSED
-	 || tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag != STORAGE_FLAG_CLOSED
+	if (sd->npc_id || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.storage_flag != STORAGE_FLAG_CLOSED
+	 || tsd->npc_id || tsd->state.vending || tsd->state.prevend || tsd->state.buyingstore || tsd->state.storage_flag != STORAGE_FLAG_CLOSED
 	) {
 		//Fail
 		clif->tradestart(sd, 2);

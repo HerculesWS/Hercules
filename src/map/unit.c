@@ -1090,6 +1090,7 @@ static int unit_can_move(struct block_list *bl)
 	if (sd && (
 		pc_issit(sd) ||
 		sd->state.vending ||
+		sd->state.prevend ||
 		sd->state.buyingstore ||
 		sd->block_action.move
 	))

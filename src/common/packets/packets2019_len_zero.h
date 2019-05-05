@@ -3793,7 +3793,7 @@ packetLen(0x0a46, 14)  // CZ_REQ_STYLE_CHANGE
 packetLen(0x0a47, 3)  // ZC_STYLE_CHANGE_RES
 
 // Packet: 0x0a48
-packetLen(0x0a48, 2)
+packetLen(0x0a48, 2)  // CZ_STYLE_CLOSE
 
 // Packet: 0x0a49
 packetLen(0x0a49, 22)  // CZ_PRIVATE_AIRSHIP_REQUEST
@@ -3946,10 +3946,10 @@ packetLen(0x0a85, 82)
 packetLen(0x0a86, -1)
 
 // Packet: 0x0a87
-packetLen(0x0a87, -1)
+packetLen(0x0a87, -1)  // ZC_BAN_LIST
 
 // Packet: 0x0a88
-packetLen(0x0a88, 2)
+packetLen(0x0a88, 2)  // CZ_COOLDOWN_RESET
 
 // Packet: 0x0a89
 packetLen(0x0a89, 61)  // ZC_NOTIFY_OFFLINE_STORE
@@ -4210,7 +4210,7 @@ packetLen(0x0add, 24)  // ZC_ITEM_FALL_ENTRY
 packetLen(0x0ade, 6)  // ZC_OVERWEIGHT_PERCENT
 
 // Packet: 0x0adf
-packetLen(0x0adf, 58)  // ZC_ACK_REQNAME
+packetLen(0x0adf, 58)  // ZC_ACK_REQNAME_TITLE
 
 // Packet: 0x0ae0
 packetLen(0x0ae0, 30)
@@ -4415,6 +4415,52 @@ packetLen(0x0b21, 13)
 // Packet: 0x0b22
 #if PACKETVER >= 20190327
 packetLen(0x0b22, 5)
+#endif
+
+// Packet: 0x0b23
+#if PACKETVER >= 20190410
+packetLen(0x0b23, 6)
+#endif
+
+// Packet: 0x0b24
+#if PACKETVER >= 20190424
+packetLen(0x0b24, 6)
+#endif
+
+// Packet: 0x0b25
+#if PACKETVER >= 20190424
+packetLen(0x0b25, 6)
+#endif
+
+// Packet: 0x0b26
+#if PACKETVER >= 20190424
+packetLen(0x0b26, 16)
+#endif
+
+// Packet: 0x0b27
+#if PACKETVER >= 20190502
+packetLen(0x0b27, -1)
+#elif PACKETVER >= 20190424
+packetLen(0x0b27, 2)
+#endif
+
+// Packet: 0x0b28
+#if PACKETVER >= 20190502
+packetLen(0x0b28, 22)
+#elif PACKETVER >= 20190424
+packetLen(0x0b28, -1)
+#endif
+
+// Packet: 0x0b29
+#if PACKETVER >= 20190502
+packetLen(0x0b29, 6)
+#elif PACKETVER >= 20190424
+packetLen(0x0b29, 3)
+#endif
+
+// Packet: 0x0b2a
+#if PACKETVER >= 20190502
+packetLen(0x0b2a, 6)
 #endif
 
 

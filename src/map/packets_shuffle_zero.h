@@ -742,7 +742,7 @@
 	packet(0x0968,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
 #endif
 
-// 2018-11-14aRagexe_zero, 2018-11-20aRagexe_zero, 2018-11-28aRagexe_zero, 2018-12-12aRagexe_zero, 2018-12-19aRagexe_zero, 2018-12-26_2aRagexe_zero, 2019-01-16_2aRagexe_zero, 2019-01-17_1aRagexe_zero, 2019-01-30_2aRagexe_zero, 2019-02-13aRagexe_zero, 2019-02-20aRagexe_zero, 2019-02-27aRagexe_zero, 2019-03-13aRagexe_zero, 2019-03-27_2aRagexe_zero, 2019-03-27_3aRagexe_zero, 2019-04-03aRagexe_zero
+// 2018-11-14aRagexe_zero, 2018-11-20aRagexe_zero, 2018-11-28aRagexe_zero, 2018-12-12aRagexe_zero, 2018-12-19aRagexe_zero, 2018-12-26_2aRagexe_zero, 2019-01-16_2aRagexe_zero, 2019-01-17_1aRagexe_zero, 2019-01-30_2aRagexe_zero, 2019-02-13aRagexe_zero, 2019-02-20aRagexe_zero, 2019-02-27aRagexe_zero, 2019-03-13aRagexe_zero, 2019-03-27_2aRagexe_zero, 2019-03-27_3aRagexe_zero, 2019-04-03aRagexe_zero, 2019-04-10bRagexe_zero, 2019-04-24aRagexe_zero, 2019-05-02aRagexe_zero
 #if PACKETVER == 20181114 || \
     PACKETVER == 20181120 || \
     PACKETVER == 20181128 || \
@@ -757,7 +757,10 @@
     PACKETVER == 20190227 || \
     PACKETVER == 20190313 || \
     PACKETVER == 20190327 || \
-    PACKETVER >= 20190403
+    PACKETVER == 20190403 || \
+    PACKETVER == 20190410 || \
+    PACKETVER == 20190424 || \
+    PACKETVER >= 20190502
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36

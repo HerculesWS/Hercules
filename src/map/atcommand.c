@@ -868,7 +868,7 @@ ACMD(speed)
  *------------------------------------------*/
 ACMD(storage)
 {
-	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
+	if (sd->npc_id || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
 		return false;
 
 	if (storage->open(sd) == 1) { //Already open.
@@ -891,7 +891,7 @@ ACMD(guildstorage)
 		return false;
 	}
 
-	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading)
+	if (sd->npc_id || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.trading)
 		return false;
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
@@ -5425,7 +5425,7 @@ ACMD(clearcart)
 		return false;
 	}
 
-	if (sd->state.vending) {
+	if (sd->state.vending || sd->state.prevend) {
 		clif->message(fd, msg_fd(fd,548)); // You can't clean a cart while vending!
 		return false;
 	}

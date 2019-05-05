@@ -10174,6 +10174,7 @@ Applicable Data Types (available as constants) -
 	UDT_LIFETIME:       LifeTime - for summons.
 	UDT_MERC_KILLCOUNT: Kill count for mercenaries
 	UDT_STATADD:        Status Points - for NPCs.
+	UDT_GROUP:          group id
 
 returns 0 if value could not be set, 1 if successful.
 
@@ -10236,6 +10237,7 @@ Applicable Data types (available as constants) -
 	UDT_INTIMACY:       Intimacy Rate - for summons.
 	UDT_LIFETIME:       LifeTime - for summons.
 	UDT_MERC_KILLCOUNT: Kill count for mercenaries.
+	UDT_GROUP:          group id
 
 returns -1 if value could not be retrieved.
 
@@ -10437,5 +10439,27 @@ Current max inventory size can be read by function getInventorySize().
 Return current player max inventory size.
 This value always smaller or equal to MAX_INVENTORY.
 Size can be changed by group of functions expandInventory*
+
+---------------------------------------
+
+*getunittitle(<GID>)
+
+Return unit title string.
+Works for 20180207 main clients, 20171129 re clients, 20171130 zero clients
+
+---------------------------------------
+
+*setunittitle(<GID>, <title>)
+
+Set unit title string.
+Invisible for players, because current implimentation using title id only.
+Works for 20180207 main clients, 20171129 re clients, 20171130 zero clients
+
+---------------------------------------
+
+*closeroulette()
+
+Force close roulette window.
+Works for 20141008 main clients, 20140903 re, any zero.
 
 ---------------------------------------

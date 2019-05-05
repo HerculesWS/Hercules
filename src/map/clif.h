@@ -410,6 +410,7 @@ enum CASH_SHOP_BUY_RESULT {
 	CSBR_RUNE_OVERCOUNT     = 0x9,
 	CSBR_EACHITEM_OVERCOUNT = 0xa,
 	CSBR_UNKNOWN            = 0xb,
+	CSBR_BUSY               = 0xc,
 };
 
 enum BATTLEGROUNDS_QUEUE_ACK {
@@ -889,6 +890,18 @@ struct clif_interface {
 	void (*mvp_noitem) (struct map_session_data* sd);
 	void (*changed_dir) (struct block_list *bl, enum send_target target);
 	void (*blname_ack) (int fd, struct block_list *bl);
+	void (*pcname_ack) (int fd, struct block_list *bl);
+	void (*homname_ack) (int fd, struct block_list *bl);
+	void (*mername_ack) (int fd, struct block_list *bl);
+	void (*petname_ack) (int fd, struct block_list *bl);
+	void (*npcname_ack) (int fd, struct block_list *bl);
+	void (*mobname_ack) (int fd, struct block_list *bl);
+	void (*mobname_guardian_ack) (int fd, struct block_list *bl);
+	void (*mobname_additional_ack) (int fd, struct block_list *bl);
+	void (*mobname_normal_ack) (int fd, struct block_list *bl);
+	void (*chatname_ack) (int fd, struct block_list *bl);
+	void (*elemname_ack) (int fd, struct block_list *bl);
+	void (*unknownname_ack) (int fd, struct block_list *bl);
 	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
 	int (*hpmeter) (struct map_session_data *sd);
 	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
@@ -986,6 +999,7 @@ struct clif_interface {
 	void (*joinchatok) (struct map_session_data *sd,struct chat_data* cd);
 	void (*addchat) (struct chat_data* cd,struct map_session_data *sd);
 	void (*changechatowner) (struct chat_data* cd, struct map_session_data* sd);
+	void (*chatRoleChange) (struct chat_data *cd, struct map_session_data *sd, struct block_list* bl, int isNotOwner);
 	void (*clearchat) (struct chat_data *cd,int fd);
 	void (*leavechat) (struct chat_data* cd, struct map_session_data* sd, bool flag);
 	void (*changechatstatus) (struct chat_data* cd);
@@ -1249,11 +1263,13 @@ struct clif_interface {
 	/* */
 	bool (*parse_roulette_db) (void);
 	void (*roulette_generate_ack) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);
+	void (*roulette_close) (struct map_session_data *sd);
 	/* Merge Items */
 	void (*openmergeitem) (int fd, struct map_session_data *sd);
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
 	int (*comparemergeitem) (const void *a, const void *b);
 	void (*ackmergeitems) (int fd, struct map_session_data *sd);
+	void (*mergeitems) (int fd, struct map_session_data *sd, int index, int amount, enum mergeitem_reason reason);
 	/* */
 	bool (*isdisguised) (struct block_list* bl);
 	void (*navigate_to) (struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id);
@@ -1483,6 +1499,7 @@ struct clif_interface {
 	void (*pCashShopBuy) (int fd, struct map_session_data *sd);
 	void (*pPartyTick) (int fd, struct map_session_data *sd);
 	void (*pGuildInvite2) (int fd, struct map_session_data *sd);
+	void (*cashShopBuyAck) (int fd, struct map_session_data *sd, int itemId, enum CASH_SHOP_BUY_RESULT result);
 	/* Group Search System Update */
 	void (*pPartyBookingAddFilter) (int fd, struct map_session_data *sd);
 	void (*pPartyBookingSubFilter) (int fd, struct map_session_data *sd);
@@ -1592,6 +1609,8 @@ struct clif_interface {
 	int (*pingTimer) (int tid, int64 tick, int id, intptr_t data);
 	int (*pingTimerSub) (struct map_session_data *sd, va_list ap);
 	void (*pResetCooldown) (int fd, struct map_session_data *sd);
+	void (*loadConfirm) (struct map_session_data *sd);
+	void (*send_selforarea) (int fd, struct block_list *bl, const void *buf, int len);
 };
 
 #ifdef HERCULES_CORE
