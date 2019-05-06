@@ -9,6 +9,66 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2019.05.05] `May 5 2019`
+
+### Added
+
+- Added `consolemes()` script function which allow the script engine to print error, warning, status, debug and info messages to the console. (part of #2440)
+- Added the item combo effect for Geffenia Tomb of Water (2161) and La'cryma Stick (1646). (#2441, issue #1982)
+- Added support for mobs to drop items with Random Options. See the new database file `db/option_drop_group.conf` and the new optional syntax in the drop entries of `mob_db.conf`. (#2309)
+- Added a global function `F_MesItemInfo()`, to print an item name with description link, formatted for the current client version. (#2068)
+- Added/updated packets, encryption keys and message tables for clients up to 2019-05-02. (#2432)
+- Added a new function `clif_selforarea()` to send packets to self, falling back to area when no target is specified. (part of #2432)
+- Added script commands `getunittitle()` and `setunittitle()`, and the related information in the `unit_data` structure. (part of #2432)
+- Added support for players to automatically reject party invites through the party options. (part of #2432)
+- Added an option to automatically drop the connection on the server side when a character is kicked. See `drop_connection_on_quit` in `client.conf` (note: the previous behavior was equivalent to `true`). (part of #2432)
+- Added an option to force character save when the party options are changed. See `save_settings` in `map-server.conf`. (part of #2432)
+- Added the script command `closeroulette()` and the related packet `ZC_ACK_CLOSE_ROULETTE` to close the roulette window. (part of #2432)
+- Added a missing `CSBR_BUSY` value to `enum CASH_SHOP_BUY_RESULT`. (part of #2432)
+- Added support for the refinery UI. See the new `refine_db.conf` changes and the settings `enable_refinery_ui` and `replace_refine_npcs` in `features.conf` to toggle between the new UI and the previous scripted refiner. (#2446)
+- Added a new `SkillInfo` flag `HiddenTrap`, to make certain traps invisible, according to the `trap_options` configuration flag. The default settings have changed to match Renewal. Pre-renewal users might want to review `trap_options` and the now superseded `traps_setting`. (#2232, issues #1927 and #1928)
+
+### Changed
+
+- Extended `@dropall` to accept an optional argument for item type (#2439).
+- Updated copyright header in the configuration files for year 2019. (part of #2452)
+- Extended the `getinventorylist()` script command to return an array `@inventorylist_favorite`, set to true when the item is located in the favorite tab. (#2426)
+- Split the function `clif_blname_ack()` into bl type-specific functions. (part of #2432)
+- Extended `getunitdata()` and `setunitdata()` with support for the group ID (`UDT_GROUP`), and added the related information in the `unit_data` structure. (part of #2432)
+- Moved the `UDT_*` constants from `constants.conf` to `script.c`. (part of #2432)
+- Extended the guild expulsion information to include the character ID for supported client versions. This includes a database migration. (part of #2432)
+- Disabled packet validation in `socket_datasync()`. (part of #2432)
+- Moved the refine database and refine related functions to a new `refine.c` file. A public and private interface is provided, with public database accessors `refine->get_bonus()` and `refine->get_randombonus_max()`. (part of #2446)
+- Changed several battle calculation limits to be configurable through `battle/limits.conf` and no longer hardcoded. Several `status_data` fields and battle functions now use `int` instead of `short` to accommodate this change. (#2419)
+- Changed the `unitwarp()` script command to allow NPCs to be relocated to non-walkable cells (like `movenpc()`). (#2453)
+
+### Fixed
+
+- Corrected MSVC version naming in console (#2450).
+- Corrected an example using a sprite number instead of a constant in README.md. (#2449)
+- Fixed an issue in a monster death label callback in `npc/custom/events/mushroom_event.txt` when the monster is killed without an attached player. (#2442, issue #1955)
+- Fixed an issue where when a chat room handler leaves, the following leader won't be checked for `cell_chknochat` and will bypass it. (#2443, issue #1569)
+- Corrected the documentation for `pincode.enabled` in the char-server configuration. (part of #2452)
+- Fixed an incorrectly displayed ITEMLINK entry in the OldGlastHeim script. (part of #2068)
+- Fixed a packet size underflow in the storage packet for certain client versions. (#2424)
+- Fixed an issue that caused named/brewed/forged items to be saved to database with the wrong character ID. Database migrations are provided, to update the existing data. (#2425, issue #2409)
+- Fixed a truncated title in the inventory window. (part of #2432)
+- Fixed a possible overflow in the guild member login field (only supporting timestamps until 2036-12-31). (part of #2432)
+- Fixed a compile error with old packet versions. (part of #2432, issue #2438)
+- Fixed a potential exploit related to the vending skill, by adding stricter validation on the vending status flags. (part of #2432)
+- Fixed a regression, restoring the ability for HPM Hooks to hook into private interfaces, through the new macros `addHookPrePriv()` and `addHookPostPriv()`. (#2447)
+- Fixed a zeny loss caused by the inter-server deleting zeny from messages when the user only requests to take items. (#2455)
+- Fixed a compatibility issue with Perl 5.26 in the item converter script. (#2444)
+- Fixed various gitlab-ci build failures, by removing some no longer supported debian versions and packages. The gcc-4.6, gcc-4.7 and gcc-5 builds have been removed. (#2458)
+
+### Deprecated
+
+- Deprecated the script command `debugmes()`, superseded by `consolemes()`. (part of #2440)
+
+### Removed
+
+- Removed the superseded `traps_setting` configuration flag, replaced by `trap_options`. (part of #2232)
+
 ## [v2019.04.07+1] `April 7 2019` `PATCH 1`
 
 ### Fixed
@@ -681,6 +741,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.05.05]: https://github.com/HerculesWS/Hercules/compare/v2019.04.07+1...v2019.05.05
 [v2019.04.07+1]: https://github.com/HerculesWS/Hercules/compare/v2019.04.07...v2019.04.07+1
 [v2019.04.07]: https://github.com/HerculesWS/Hercules/compare/v2019.03.10...v2019.04.07
 [v2019.03.10]: https://github.com/HerculesWS/Hercules/compare/v2019.02.10+1...v2019.03.10
