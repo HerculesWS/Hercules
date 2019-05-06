@@ -571,9 +571,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "mapcell", sizeof(struct mapcell), SERVER_TYPE_MAP },
 		{ "mapflag_skill_adjust", sizeof(struct mapflag_skill_adjust), SERVER_TYPE_MAP },
 		{ "mapit_interface", sizeof(struct mapit_interface), SERVER_TYPE_MAP },
-		{ "questinfo", sizeof(struct questinfo), SERVER_TYPE_MAP },
-		{ "questinfo_itemreq", sizeof(struct questinfo_itemreq), SERVER_TYPE_MAP },
-		{ "questinfo_qreq", sizeof(struct questinfo_qreq), SERVER_TYPE_MAP },
 		{ "spawn_data", sizeof(struct spawn_data), SERVER_TYPE_MAP },
 	#else
 		#define MAP_MAP_H
@@ -889,6 +886,9 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "quest_dropitem", sizeof(struct quest_dropitem), SERVER_TYPE_MAP },
 		{ "quest_interface", sizeof(struct quest_interface), SERVER_TYPE_MAP },
 		{ "quest_objective", sizeof(struct quest_objective), SERVER_TYPE_MAP },
+		{ "questinfo", sizeof(struct questinfo), SERVER_TYPE_MAP },
+		{ "questinfo_itemreq", sizeof(struct questinfo_itemreq), SERVER_TYPE_MAP },
+		{ "questinfo_qreq", sizeof(struct questinfo_qreq), SERVER_TYPE_MAP },
 	#else
 		#define MAP_QUEST_H
 	#endif // MAP_QUEST_H
