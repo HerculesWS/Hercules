@@ -9270,11 +9270,11 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	int ps = -1;
 
 	if (ssd->fakename[0] != '\0' && ssd->disguise != -1) {
-		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
-		len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
-	} else {
 		packet.packet_id = reqName;
 		len = sizeof(struct packet_reqname_ack);
+	} else {
+		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
+		len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
 	}
 
 	//Requesting your own "shadow" name. [Skotlex]
