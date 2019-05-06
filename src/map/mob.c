@@ -2699,7 +2699,8 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					item.nameid = mdrop[i].nameid;
 					item.identify = itemdb->isidentified2(data);
-					mob->setdropitem_options(&item, mdrop[i].options);
+					if (mdrop[i].options != NULL)
+						mob->setdropitem_options(&item, mdrop[i].options);
 					clif->mvp_item(mvp_sd, item.nameid);
 					log_mvp[0] = item.nameid;
 
