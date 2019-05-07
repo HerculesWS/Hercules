@@ -7090,6 +7090,10 @@ typedef void (*HPMHOOK_pre_script_run_item_equip_script) (struct map_session_dat
 typedef void (*HPMHOOK_post_script_run_item_equip_script) (struct map_session_data *sd, struct item_data *data, int oid);
 typedef void (*HPMHOOK_pre_script_run_item_unequip_script) (struct map_session_data **sd, struct item_data **data, int *oid);
 typedef void (*HPMHOOK_post_script_run_item_unequip_script) (struct map_session_data *sd, struct item_data *data, int oid);
+typedef void (*HPMHOOK_pre_script_run_item_rental_end_script) (struct map_session_data **sd, struct item_data **data, int *oid);
+typedef void (*HPMHOOK_post_script_run_item_rental_end_script) (struct map_session_data *sd, struct item_data *data, int oid);
+typedef void (*HPMHOOK_pre_script_run_item_rental_start_script) (struct map_session_data **sd, struct item_data **data, int *oid);
+typedef void (*HPMHOOK_post_script_run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
 #endif // MAP_SCRIPT_H
 #ifdef MAP_SEARCHSTORE_H /* searchstore */
 typedef bool (*HPMHOOK_pre_searchstore_open) (struct map_session_data **sd, unsigned int *uses, unsigned short *effect);
