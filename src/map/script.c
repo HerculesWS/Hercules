@@ -22419,6 +22419,19 @@ static BUILDIN(setfont)
 	return true;
 }
 
+static BUILDIN(getfont)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	script_pushint(st, sd->status.font);
+	return true;
+}
+
 static int buildin_mobuseskill_sub(struct block_list *bl, va_list ap)
 {
 	struct mob_data *md = NULL;
@@ -25915,6 +25928,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(mercenary_set_faith,"ii"),
 		BUILDIN_DEF(readbook,"ii"),
 		BUILDIN_DEF(setfont,"i"),
+		BUILDIN_DEF(getfont, ""),
 		BUILDIN_DEF(areamobuseskill,"siiiiviiiii"),
 		BUILDIN_DEF(progressbar,"si"),
 		BUILDIN_DEF(progressbar_unit,"si?"),
