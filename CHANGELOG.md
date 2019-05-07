@@ -9,6 +9,13 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2019.05.05+1] `May 5 2019` `PATCH 1`
+
+### Fixed
+
+- Fixed an issue in the player name packet causing names not to be sent correctly. (#2460, issue #2459)
+- Fixed a null pointer error on MVP drops. (#2461)
+
 ## [v2019.05.05] `May 5 2019`
 
 ### Added
@@ -741,6 +748,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.05.05+1]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05...v2019.05.05+1
 [v2019.05.05]: https://github.com/HerculesWS/Hercules/compare/v2019.04.07+1...v2019.05.05
 [v2019.04.07+1]: https://github.com/HerculesWS/Hercules/compare/v2019.04.07...v2019.04.07+1
 [v2019.04.07]: https://github.com/HerculesWS/Hercules/compare/v2019.03.10...v2019.04.07
