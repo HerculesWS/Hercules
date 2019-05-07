@@ -565,72 +565,8 @@ static int pc_inventory_rental_clear(struct map_session_data *sd)
 /* assumes i is valid (from default areas where it is called, it is) */
 static void pc_rental_expire(struct map_session_data *sd, int i)
 {
-	int nameid;
-
 	nullpo_retv(sd);
 	Assert_retv(i >= 0 && i < sd->status.inventorySize);
-	nameid = sd->status.inventory[i].nameid;
-
-	/* Soon to be dropped, we got plans to integrate it with item db */
-	switch( nameid ) {
-		case ITEMID_BOARDING_HALTER:
-			status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
-			break;
-		case ITEMID_LOVE_ANGEL:
-			if( sd->status.font == 1 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_SQUIRREL:
-			if( sd->status.font == 2 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_GOGO:
-			if( sd->status.font == 3 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_PICTURE_DIARY:
-			if( sd->status.font == 4 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_MINI_HEART:
-			if( sd->status.font == 5 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_NEWCOMER:
-			if( sd->status.font == 6 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_KID:
-			if( sd->status.font == 7 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_MAGIC_CASTLE:
-			if( sd->status.font == 8 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_BULGING_HEAD:
-			if( sd->status.font == 9 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-	}
 
 	clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
 	pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_RENTAL);
