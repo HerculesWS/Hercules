@@ -9172,6 +9172,12 @@ currently used font is used, default interface font is used again.
 
 ---------------------------------------
 
+*getfont()
+
+This command return the player's current font.
+if no player is attached it would always return a 0, which is also the default font.
+
+---------------------------------------'
 *showdigit(<value>{, <type>})
 
 Displays given numeric 'value' in large digital clock font on top of the
