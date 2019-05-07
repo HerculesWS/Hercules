@@ -19561,6 +19561,7 @@ static void clif_parse_CashShopBuy(int fd, struct map_session_data *sd)
 
 static void clif_cashShopBuyAck(int fd, struct map_session_data *sd, int itemId, enum CASH_SHOP_BUY_RESULT result)
 {
+#if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT));
 	struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT *p = WFIFOP(fd, 0);
@@ -19570,6 +19571,7 @@ static void clif_cashShopBuyAck(int fd, struct map_session_data *sd, int itemId,
 	p->cashPoints = sd->cashPoints;
 	p->kafraPoints = sd->kafraPoints;
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT));
+#endif
 }
 
 static void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
