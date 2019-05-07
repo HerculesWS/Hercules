@@ -9,6 +9,13 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2019.05.05+2] `May 5 2019` `PATCH 2`
+
+### Fixed
+
+- Fixed a packet generation issue that caused the Guild Storage to appear empty. (#2464, issue #2463)
+- Fixed use of `ZC_SE_PC_BUY_CASHITEM_RESULT` on old packet versions that didn't support it. (#2465)
+
 ## [v2019.05.05+1] `May 5 2019` `PATCH 1`
 
 ### Fixed
@@ -748,6 +755,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.05.05+2]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+1...v2019.05.05+2
 [v2019.05.05+1]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05...v2019.05.05+1
 [v2019.05.05]: https://github.com/HerculesWS/Hercules/compare/v2019.04.07+1...v2019.05.05
 [v2019.04.07+1]: https://github.com/HerculesWS/Hercules/compare/v2019.04.07...v2019.04.07+1
