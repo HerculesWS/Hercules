@@ -2978,7 +2978,8 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 	nullpo_retv(sd);
 	nullpo_retv(items);
 
-	for (int i = 0, normal_count = 0, equip_count = 0; i < items_length; ++i) {
+	int normal_count = 0, equip_count = 0;
+	for (int i = 0; i < items_length; ++i) {
 		if (items[i].nameid == 0)
 			continue;
 
@@ -3018,6 +3019,36 @@ static void clif_storageItems(struct map_session_data *sd, enum inventory_type t
 			clif->send(&storelist_equip, storelist_equip.PacketLength, &sd->bl, SELF);
 			equip_count = 0;
 		}
+	}
+
+	if (normal_count > 0) {
+		storelist_normal.PacketType = storageListNormalType;
+		storelist_normal.PacketLength = (sizeof(storelist_normal) - sizeof(storelist_normal.list)) + (sizeof(struct NORMALITEM_INFO) * normal_count);
+
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+		storelist_normal.invType = type;
+#endif
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
+		safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
+#endif
+
+		clif->send(&storelist_normal, storelist_normal.PacketLength, &sd->bl, SELF);
+		normal_count = 0;
+	}
+
+	if (equip_count > 0) {
+		storelist_equip.PacketType = storageListEquipType;
+		storelist_equip.PacketLength = (sizeof(storelist_equip) - sizeof(storelist_equip.list)) + (sizeof(struct EQUIPITEM_INFO) * equip_count);
+
+#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+		storelist_equip.invType = type;
+#endif
+#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
+		safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
+#endif
+
+		clif->send(&storelist_equip, storelist_equip.PacketLength, &sd->bl, SELF);
+		equip_count = 0;
 	}
 }
 
