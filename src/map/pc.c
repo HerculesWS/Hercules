@@ -4783,13 +4783,15 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
 		pc->equipitem(sd, i, data->equip);
 
 	/* rental item check */
-	if( item_data->expire_time ) {
-		if( time(NULL) > item_data->expire_time ) {
-			pc->rental_expire(sd,i);
+	if (item_data->expire_time > 0) {
+		if (time(NULL) > item_data->expire_time) {
+			pc->rental_expire(sd, i);
 		} else {
-			int seconds = (int)( item_data->expire_time - time(NULL) );
+			int seconds = (int)(item_data->expire_time - time(NULL));
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, seconds);
 			pc->inventory_rental_add(sd, seconds);
+			if (data->rental_start_script != NULL)
+				script->run_item_rental_start_script(sd, data, 0);
 		}
 	}
 	quest->questinfo_refresh(sd);
@@ -4820,12 +4822,21 @@ static int pc_delitem(struct map_session_data *sd, int n, int amount, int type, 
 
 	sd->status.inventory[n].amount -= amount;
 	sd->weight -= sd->inventory_data[n]->weight*amount ;
+
+	// It's here because the data would most likely get zeroed in following if [Hemagx]
+	struct item_data *itd = sd->inventory_data[n];
+	bool is_rentral = (sd->status.inventory[n].expire_time > 0) ? true : false;
+
 	if( sd->status.inventory[n].amount <= 0 ){
 		if(sd->status.inventory[n].equip)
 			pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 		memset(&sd->status.inventory[n],0,sizeof(sd->status.inventory[0]));
 		sd->inventory_data[n] = NULL;
 	}
+
+	if (is_rentral && itd->rental_end_script != NULL)
+		script->run_item_rental_end_script(sd, itd, 0);
+
 	if(!(type&1))
 		clif->delitem(sd,n,amount,reason);
 	if(!(type&2))

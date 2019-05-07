@@ -1721,6 +1721,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 			script->free_code(entry->unequip_script);
 			entry->unequip_script = NULL;
 		}
+		if (entry->rental_start_script != NULL) {
+			script->free_code(entry->rental_start_script);
+			entry->rental_start_script = NULL;
+		}
+		if (entry->rental_end_script != NULL) {
+			script->free_code(entry->rental_end_script);
+			entry->rental_end_script = NULL;
+		}
 		return 0;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	}
@@ -1750,6 +1758,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 			if (entry->unequip_script) {
 				script->free_code(entry->unequip_script);
 				entry->unequip_script = NULL;
+			}
+			if (entry->rental_start_script != NULL) {
+				script->free_code(entry->rental_start_script);
+				entry->rental_start_script = NULL;
+			}
+			if (entry->rental_end_script != NULL) {
+				script->free_code(entry->rental_end_script);
+				entry->rental_end_script = NULL;
 			}
 			return 0;
 		}
@@ -1878,7 +1894,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		script->free_code(item->unequip_script);
 		item->unequip_script = NULL;
 	}
-
+	if (item->rental_start_script != NULL && item->rental_start_script != entry->rental_start_script) { // Don't free if it's inheriting the same script
+		script->free_code(item->rental_start_script);
+		item->rental_start_script = NULL;
+	}
+	if (item->rental_end_script != NULL && item->rental_end_script != entry->rental_end_script) { // Don't free if it's inheriting the same script
+		script->free_code(item->rental_end_script);
+		item->rental_end_script = NULL;
+	}
 	*item = *entry;
 	return item->nameid;
 }
@@ -1994,6 +2017,8 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	 * ">
 	 * OnEquipScript: <" OnEquip Script ">
 	 * OnUnequipScript: <" OnUnequip Script ">
+	 * OnRentalStartScript: <" on renting script ">
+	 * OnRentalEndScript: <" on renting end script ">
 	 * Inherit: inherit or override
 	 */
 	if( !itemdb->lookup_const(it, "Id", &i32) ) {
@@ -2271,6 +2296,12 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if( libconfig->setting_lookup_string(it, "OnUnequipScript", &str) )
 		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
+	if (libconfig->setting_lookup_string(it, "OnRentalStartScript", &str) != CONFIG_FALSE)
+		id.rental_start_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+
+	if (libconfig->setting_lookup_string(it, "OnRentalEndScript", &str) != CONFIG_FALSE)
+		id.rental_end_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+
 	return itemdb->validate_entry(&id, n, source);
 }
 
@@ -2513,6 +2544,10 @@ static void destroy_item_data(struct item_data *self, int free_self)
 		script->free_code(self->equip_script);
 	if( self->unequip_script )
 		script->free_code(self->unequip_script);
+	if (self->rental_start_script != NULL)
+		script->free_code(self->rental_start_script);
+	if (self->rental_end_script != NULL)
+		script->free_code(self->rental_end_script);
 	if( self->combos )
 		aFree(self->combos);
 	HPM->data_store_destroy(&self->hdata);

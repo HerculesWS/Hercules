@@ -25454,6 +25454,36 @@ static void script_run_item_unequip_script(struct map_session_data *sd, struct i
 	script->current_item_id = 0;
 }
 
+static void script_run_item_rental_start_script(struct map_session_data *sd, struct item_data *data, int oid) __attribute__((nonnull(1, 2)));
+
+/**
+ * Run item rental start script
+ * @param sd    player session data. Must be correct and checked before.
+ * @param data  rental item data. Must be correct and checked before.
+ * @param oid   npc id. Can be also 0 or fake npc id.
+ **/
+static void script_run_item_rental_start_script(struct map_session_data *sd, struct item_data *data, int oid)
+{
+	script->current_item_id = data->nameid;
+	script->run(data->rental_start_script, 0, sd->bl.id, oid);
+	script->current_item_id = 0;
+}
+
+static void script_run_item_rental_end_script(struct map_session_data *sd, struct item_data *data, int oid) __attribute__((nonnull(1, 2)));
+
+/**
+* Run item rental end script
+* @param sd    player session data. Must be correct and checked before.
+* @param data  rental item data. Must be correct and checked before.
+* @param oid   npc id. Can be also 0 or fake npc id.
+**/
+static void script_run_item_rental_end_script(struct map_session_data *sd, struct item_data *data, int oid)
+{
+	script->current_item_id = data->nameid;
+	script->run(data->rental_end_script, 0, sd->bl.id, oid);
+	script->current_item_id = 0;
+}
+
 #define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args, false }
 #define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args, false }
 #define BUILDIN_DEF_DEPRECATED(x,args) { buildin_ ## x , #x , args, true }
@@ -26960,4 +26990,6 @@ void script_defaults(void)
 	script->run_use_script = script_run_use_script;
 	script->run_item_equip_script = script_run_item_equip_script;
 	script->run_item_unequip_script = script_run_item_unequip_script;
+	script->run_item_rental_start_script = script_run_item_rental_start_script;
+	script->run_item_rental_end_script = script_run_item_rental_end_script;
 }
