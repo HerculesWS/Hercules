@@ -10608,7 +10608,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		first_time = true;
 		sd->state.connect_new = 0;
 		clif->skillinfoblock(sd);
-		clif->hotkeys(sd);
+		clif->hotkeysAll(sd);
 		clif->updatestatus(sd,SP_BASEEXP);
 		clif->updatestatus(sd,SP_NEXTBASEEXP);
 		clif->updatestatus(sd,SP_JOBEXP);
@@ -10821,27 +10821,46 @@ static void clif_parse_TickSend(int fd, struct map_session_data *sd)
 	clif->notify_time(sd, timer->gettick());
 }
 
+static void clif_hotkeysAll_send(struct map_session_data *sd)
+{
+#ifdef HOTKEY_SAVING
+	clif->hotkeys(sd, 0);
+#if PACKETVER_RE_NUM >= 20190508
+	// send second tab only if data exists
+	for (int i = MAX_HOTKEYS; i < MAX_HOTKEYS * 2; i++) {
+		if (sd->status.hotkeys[i].type != 0 || sd->status.hotkeys[i].id != 0 || sd->status.hotkeys[i].lv != 0) {
+			clif->hotkeys(sd, 1);
+			return;
+		}
+	}
+#endif
+#endif
+}
+
 /// Sends hotkey bar.
 /// 02b9 { <is skill>.B <id>.L <count>.W }*27 (ZC_SHORTCUT_KEY_LIST)
 /// 07d9 { <is skill>.B <id>.L <count>.W }*36 (ZC_SHORTCUT_KEY_LIST_V2, PACKETVER >= 20090603)
 /// 07d9 { <is skill>.B <id>.L <count>.W }*38 (ZC_SHORTCUT_KEY_LIST_V2, PACKETVER >= 20090617)
 /// 0a00 <rotate>.B { <is skill>.B <id>.L <count>.W }*38 (ZC_SHORTCUT_KEY_LIST_V3, PACKETVER >= 20141022)
-static void clif_hotkeys_send(struct map_session_data *sd)
+static void clif_hotkeys_send(struct map_session_data *sd, int tab)
 {
 #ifdef HOTKEY_SAVING
-	struct packet_hotkey p;
-	int i;
 	nullpo_retv(sd);
-	p.PacketType = hotkeyType;
-#if PACKETVER >= 20141022
-	p.Rotate = sd->status.hotkey_rowshift;
+	struct PACKET_ZC_SHORTCUT_KEY_LIST p;
+	p.packetType = HEADER_ZC_SHORTCUT_KEY_LIST;
+#if PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
+	p.rotate = sd->status.hotkey_rowshift;
 #endif
-	for(i = 0; i < ARRAYLENGTH(p.hotkey); i++) {
-		p.hotkey[i].isSkill = sd->status.hotkeys[i].type;
-		p.hotkey[i].ID = sd->status.hotkeys[i].id;
-		p.hotkey[i].count = sd->status.hotkeys[i].lv;
+#if PACKETVER_RE_NUM >= 20190508
+	p.tab = tab;
+#endif
+	const int offset = tab * MAX_HOTKEYS;
+	for (int i = 0; i < MAX_HOTKEYS_PACKET; i++) {
+		p.hotkey[i].isSkill = sd->status.hotkeys[i + offset].type;
+		p.hotkey[i].id = sd->status.hotkeys[i + offset].id;
+		p.hotkey[i].count = sd->status.hotkeys[i + offset].lv;
 	}
-	clif->send(&p, sizeof(p), &sd->bl, SELF);
+	clif->send(&p, sizeof(struct PACKET_ZC_SHORTCUT_KEY_LIST), &sd->bl, SELF);
 #endif
 }
 
@@ -23070,6 +23089,7 @@ void clif_defaults(void)
 	clif->pRanklist = clif_parse_ranklist;
 	clif->update_rankingpoint = clif_update_rankingpoint;
 	clif->hotkeys = clif_hotkeys_send;
+	clif->hotkeysAll = clif_hotkeysAll_send;
 	clif->insight = clif_insight;
 	clif->outsight = clif_outsight;
 	clif->skillcastcancel = clif_skillcastcancel;

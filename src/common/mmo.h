@@ -134,22 +134,27 @@
 // Comment the following line to disable sc_data saving. [Skotlex]
 #define ENABLE_SC_SAVING
 
-#if PACKETVER >= 20070227
+#if PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
 // Comment the following like to disable server-side hot-key saving support. [Skotlex]
 // Note that newer clients no longer save hotkeys in the registry!
 #define HOTKEY_SAVING
 
-#if PACKETVER < 20090603
-	// (27 = 9 skills x 3 bars)               (0x02b9,191)
-	#define MAX_HOTKEYS 27
-#elif PACKETVER < 20090617
-	// (36 = 9 skills x 4 bars)               (0x07d9,254)
-	#define MAX_HOTKEYS 36
-#else // >= 20090617
-	// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
-	#define MAX_HOTKEYS 38
-#endif // 20090603
-#endif // 20070227
+#if PACKETVER_RE_NUM >= 20190508
+#define MAX_HOTKEYS 38
+#elif PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
+// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
+#define MAX_HOTKEYS 38
+#elif PACKETVER_MAIN_NUM >= 20090617 || PACKETVER_RE_NUM >= 20090617 || PACKETVER_SAK_NUM >= 20090617
+// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
+#define MAX_HOTKEYS 38
+#elif PACKETVER_MAIN_NUM >= 20090603 || PACKETVER_RE_NUM >= 20090603 || PACKETVER_SAK_NUM >= 20090603
+// (36 = 9 skills x 4 bars)               (0x07d9,254)
+#define MAX_HOTKEYS 36
+#elif PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628
+// (27 = 9 skills x 3 bars)               (0x02b9,191)
+#define MAX_HOTKEYS 27
+#endif
+#endif  // PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_RE_NUM >= 20190508
 #define MAX_HOTKEYS_DB ((MAX_HOTKEYS) * 2)

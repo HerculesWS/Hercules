@@ -39,13 +39,6 @@ enum packet_headers {
 	banking_checkType = 0x9a6,
 	cart_additem_ackType = 0x12c,
 	sc_notickType = 0x196,
-#if PACKETVER >= 20141022
-	hotkeyType = 0xa00,
-#elif PACKETVER >= 20090603
-	hotkeyType = 0x7d9,
-#else
-	hotkeyType = 0x2b9,
-#endif
 #if PACKETVER >= 20150226
 	cartaddType = 0xa0b,
 #elif PACKETVER >= 5
@@ -1426,17 +1419,49 @@ struct packet_party_leader_changed {
 #ifdef HOTKEY_SAVING
 struct hotkey_data {
 	int8 isSkill; // 0: Item, 1:Skill
-	uint32 ID;    // Item/Skill ID
+	uint32 id;    // Item/Skill ID
 	int16 count;  // Item Quantity/Skill Level
 } __attribute__((packed));
 
-struct packet_hotkey {
-	int16 PacketType;
-#if PACKETVER >= 20141022
-	int8 Rotate;
-#endif
-	struct hotkey_data hotkey[MAX_HOTKEYS];
+#if PACKETVER_RE_NUM >= 20190508
+#define MAX_HOTKEYS_PACKET 38
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	int8 rotate;
+	int16 tab;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x0b20);
+#elif PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
+#define MAX_HOTKEYS_PACKET 38
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	int8 rotate;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x0a00);
+#elif PACKETVER_MAIN_NUM >= 20090617 || PACKETVER_RE_NUM >= 20090617 || PACKETVER_SAK_NUM >= 20090617
+#define MAX_HOTKEYS_PACKET 38
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x07d9);
+#elif PACKETVER_MAIN_NUM >= 20090603 || PACKETVER_RE_NUM >= 20090603 || PACKETVER_SAK_NUM >= 20090603
+#define MAX_HOTKEYS_PACKET 36
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x07d9);
+#elif PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628
+#define MAX_HOTKEYS_PACKET 27
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x02b9);
+#endif
 #endif // HOTKEY_SAVING
 
 /**

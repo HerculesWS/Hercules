@@ -851,7 +851,8 @@ struct clif_interface {
 	void (*ranklist) (struct map_session_data *sd, enum fame_list_type type);
 	void (*update_rankingpoint) (struct map_session_data *sd, enum fame_list_type type, int points);
 	void (*pRanklist) (int fd, struct map_session_data *sd);
-	void (*hotkeys) (struct map_session_data *sd);
+	void (*hotkeys) (struct map_session_data *sd, int tab);
+	void (*hotkeysAll) (struct map_session_data *sd);
 	int (*insight) (struct block_list *bl,va_list ap);
 	int (*outsight) (struct block_list *bl,va_list ap);
 	void (*skillcastcancel) (struct block_list* bl);
