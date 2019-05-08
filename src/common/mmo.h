@@ -151,6 +151,12 @@
 #endif // 20090603
 #endif // 20070227
 
+#if PACKETVER_RE_NUM >= 20190508
+#define MAX_HOTKEYS_DB ((MAX_HOTKEYS) * 2)
+#else
+#define MAX_HOTKEYS_DB MAX_HOTKEYS
+#endif
+
 #if PACKETVER >= 20150805 /* Cart Decoration */
 	#define CART_DECORATION
 	#define MAX_CARTDECORATION_CARTS 3 // Currently there are 3 Carts available in kRO. [Frost]
@@ -732,7 +738,7 @@ struct mmo_charstatus {
 
 	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]
 #ifdef HOTKEY_SAVING
-	struct hotkey hotkeys[MAX_HOTKEYS];
+	struct hotkey hotkeys[MAX_HOTKEYS_DB];
 #endif
 	bool show_equip;
 	bool allow_party;
