@@ -1423,21 +1423,21 @@ struct packet_party_leader_changed {
 	uint32 new_leader_aid;
 } __attribute__((packed));
 
-struct packet_hotkey {
 #ifdef HOTKEY_SAVING
+struct hotkey_data {
+	int8 isSkill; // 0: Item, 1:Skill
+	uint32 ID;    // Item/Skill ID
+	int16 count;  // Item Quantity/Skill Level
+} __attribute__((packed));
+
+struct packet_hotkey {
 	int16 PacketType;
 #if PACKETVER >= 20141022
 	int8 Rotate;
 #endif
-	struct {
-		int8 isSkill; // 0: Item, 1:Skill
-		uint32 ID;    // Item/Skill ID
-		int16 count;  // Item Quantity/Skill Level
-	} hotkey[MAX_HOTKEYS];
-#else // not HOTKEY_SAVING
-	UNAVAILABLE_STRUCT;
-#endif // HOTKEY_SAVING
+	struct hotkey_data hotkey[MAX_HOTKEYS];
 } __attribute__((packed));
+#endif // HOTKEY_SAVING
 
 /**
  * MISSION_HUNT_INFO (PACKETVER >= 20141022)
