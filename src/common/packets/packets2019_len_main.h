@@ -3946,7 +3946,7 @@ packetLen(0x0a85, 82)
 packetLen(0x0a86, -1)
 
 // Packet: 0x0a87
-packetLen(0x0a87, -1)
+packetLen(0x0a87, -1)  // ZC_BAN_LIST
 
 // Packet: 0x0a88
 packetLen(0x0a88, 2)  // CZ_COOLDOWN_RESET
@@ -4404,25 +4404,25 @@ packetLen(0x0b1f, 10)
 
 // Packet: 0x0b20
 #if PACKETVER >= 20190403
-packetLen(0x0b20, 271)
+packetLen(0x0b20, 271)  // ZC_SHORTCUT_KEY_LIST_V4
 #endif
 
 // Packet: 0x0b21
 #if PACKETVER >= 20190403
-packetLen(0x0b21, 13)
+packetLen(0x0b21, 13)  // CZ_SHORTCUT_KEY_CHANGE
 #elif PACKETVER >= 20190306
 // removed
 #elif PACKETVER >= 20190227
-packetLen(0x0b21, 10)
+packetLen(0x0b21, 10)  // CZ_SHORTCUT_KEY_CHANGE
 #endif
 
 // Packet: 0x0b22
 #if PACKETVER >= 20190403
-packetLen(0x0b22, 5)
+packetLen(0x0b22, 5)  // CZ_SHORTCUTKEYBAR_ROTATE
 #elif PACKETVER >= 20190306
 // removed
 #elif PACKETVER >= 20190227
-packetLen(0x0b22, 6)
+packetLen(0x0b22, 6)  // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
 // Packet: 0x0b23
@@ -4445,8 +4445,66 @@ packetLen(0x0b25, 6)
 #endif
 
 // Packet: 0x0b26
-#if PACKETVER >= 20190417
+#if PACKETVER >= 20190522
+// removed
+#elif PACKETVER >= 20190508
+packetLen(0x0b26, 16)
+#elif PACKETVER >= 20190417
 packetLen(0x0b26, 18)
+#endif
+
+// Packet: 0x0b27
+#if PACKETVER >= 20190508
+packetLen(0x0b27, -1)
+#endif
+
+// Packet: 0x0b28
+#if PACKETVER >= 20190522
+packetLen(0x0b28, 3)
+#elif PACKETVER >= 20190508
+packetLen(0x0b28, 22)
+#endif
+
+// Packet: 0x0b29
+#if PACKETVER >= 20190508
+packetLen(0x0b29, 6)
+#endif
+
+// Packet: 0x0b2a
+#if PACKETVER >= 20190522
+packetLen(0x0b2a, 40)
+#elif PACKETVER >= 20190508
+packetLen(0x0b2a, 6)
+#endif
+
+// Packet: 0x0b2b
+#if PACKETVER >= 20190522
+packetLen(0x0b2b, 11)
+#endif
+
+// Packet: 0x0b2c
+#if PACKETVER >= 20190522
+packetLen(0x0b2c, 3)
+#endif
+
+// Packet: 0x0b2d
+#if PACKETVER >= 20190522
+packetLen(0x0b2d, 11)
+#endif
+
+// Packet: 0x0b2e
+#if PACKETVER >= 20190522
+packetLen(0x0b2e, 4)
+#endif
+
+// Packet: 0x0b2f
+#if PACKETVER >= 20190529
+packetLen(0x0b2f, 73)
+#endif
+
+// Packet: 0x0b30
+#if PACKETVER >= 20190529
+packetLen(0x0b30, -1)
 #endif
 
 
