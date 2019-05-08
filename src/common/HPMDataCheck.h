@@ -778,7 +778,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_equipitem_ack", sizeof(struct packet_equipitem_ack), SERVER_TYPE_MAP },
 		{ "packet_gm_monster_item", sizeof(struct packet_gm_monster_item), SERVER_TYPE_MAP },
 		{ "packet_graffiti_entry", sizeof(struct packet_graffiti_entry), SERVER_TYPE_MAP },
-		{ "packet_hotkey", sizeof(struct packet_hotkey), SERVER_TYPE_MAP },
 		{ "packet_idle_unit", sizeof(struct packet_idle_unit), SERVER_TYPE_MAP },
 		{ "packet_idle_unit2", sizeof(struct packet_idle_unit2), SERVER_TYPE_MAP },
 		{ "packet_item_drop_announce", sizeof(struct packet_item_drop_announce), SERVER_TYPE_MAP },

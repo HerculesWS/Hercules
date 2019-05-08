@@ -11591,13 +11591,39 @@ void HP_clif_pRanklist(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_hotkeys(struct map_session_data *sd) {
+void HP_clif_hotkeys(struct map_session_data *sd, int tab) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_hotkeys_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd);
+		void (*preHookFunc) (struct map_session_data **sd, int *tab);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hotkeys_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_hotkeys_pre[hIndex].func;
+			preHookFunc(&sd, &tab);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.hotkeys(sd, tab);
+	}
+	if (HPMHooks.count.HP_clif_hotkeys_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int tab);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hotkeys_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_hotkeys_post[hIndex].func;
+			postHookFunc(sd, tab);
+		}
+	}
+	return;
+}
+void HP_clif_hotkeysAll(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_hotkeysAll_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hotkeysAll_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_hotkeysAll_pre[hIndex].func;
 			preHookFunc(&sd);
 		}
 		if (*HPMforce_return) {
@@ -11606,12 +11632,12 @@ void HP_clif_hotkeys(struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.hotkeys(sd);
+		HPMHooks.source.clif.hotkeysAll(sd);
 	}
-	if (HPMHooks.count.HP_clif_hotkeys_post > 0) {
+	if (HPMHooks.count.HP_clif_hotkeysAll_post > 0) {
 		void (*postHookFunc) (struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hotkeys_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_hotkeys_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_hotkeysAll_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_hotkeysAll_post[hIndex].func;
 			postHookFunc(sd);
 		}
 	}

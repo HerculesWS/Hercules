@@ -1300,8 +1300,10 @@ typedef void (*HPMHOOK_pre_clif_update_rankingpoint) (struct map_session_data **
 typedef void (*HPMHOOK_post_clif_update_rankingpoint) (struct map_session_data *sd, enum fame_list_type type, int points);
 typedef void (*HPMHOOK_pre_clif_pRanklist) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pRanklist) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_hotkeys) (struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_hotkeys) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_hotkeys) (struct map_session_data **sd, int *tab);
+typedef void (*HPMHOOK_post_clif_hotkeys) (struct map_session_data *sd, int tab);
+typedef void (*HPMHOOK_pre_clif_hotkeysAll) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_hotkeysAll) (struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_clif_insight) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_clif_insight) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_clif_outsight) (struct block_list **bl, va_list ap);

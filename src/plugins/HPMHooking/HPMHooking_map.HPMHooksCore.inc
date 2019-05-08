@@ -892,6 +892,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pRanklist_post;
 	struct HPMHookPoint *HP_clif_hotkeys_pre;
 	struct HPMHookPoint *HP_clif_hotkeys_post;
+	struct HPMHookPoint *HP_clif_hotkeysAll_pre;
+	struct HPMHookPoint *HP_clif_hotkeysAll_post;
 	struct HPMHookPoint *HP_clif_insight_pre;
 	struct HPMHookPoint *HP_clif_insight_post;
 	struct HPMHookPoint *HP_clif_outsight_pre;
@@ -7673,6 +7675,8 @@ struct {
 	int HP_clif_pRanklist_post;
 	int HP_clif_hotkeys_pre;
 	int HP_clif_hotkeys_post;
+	int HP_clif_hotkeysAll_pre;
+	int HP_clif_hotkeysAll_post;
 	int HP_clif_insight_pre;
 	int HP_clif_insight_post;
 	int HP_clif_outsight_pre;

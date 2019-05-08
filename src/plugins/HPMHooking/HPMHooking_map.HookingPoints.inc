@@ -470,6 +470,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->update_rankingpoint, HP_clif_update_rankingpoint) },
 	{ HP_POP(clif->pRanklist, HP_clif_pRanklist) },
 	{ HP_POP(clif->hotkeys, HP_clif_hotkeys) },
+	{ HP_POP(clif->hotkeysAll, HP_clif_hotkeysAll) },
 	{ HP_POP(clif->insight, HP_clif_insight) },
 	{ HP_POP(clif->outsight, HP_clif_outsight) },
 	{ HP_POP(clif->skillcastcancel, HP_clif_skillcastcancel) },
