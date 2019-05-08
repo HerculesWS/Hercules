@@ -2064,8 +2064,8 @@ struct status_data {
 		matk_min, matk_max,
 		speed,
 		amotion, adelay, dmotion,
-		mode,
-		hit, flee, cri, flee2,
+		mode;
+	int32 hit, flee, cri, flee2,
 		def2, mdef2,
 #ifdef RENEWAL_ASPD
 		aspd_rate2,
