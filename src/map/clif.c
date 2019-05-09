@@ -10864,11 +10864,23 @@ static void clif_hotkeys_send(struct map_session_data *sd, int tab)
 #endif
 }
 
-static void clif_parse_HotkeyRowShift(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-static void clif_parse_HotkeyRowShift(int fd, struct map_session_data *sd)
+static void clif_parse_HotkeyRowShift1(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_HotkeyRowShift1(int fd, struct map_session_data *sd)
 {
-	int cmd = RFIFOW(fd, 0);
-	sd->status.hotkey_rowshift = RFIFOB(fd, packet_db[cmd].pos[0]);
+#if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
+	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 *p = RFIFOP(fd, 0);
+	sd->status.hotkey_rowshift = p->rowshift;
+#endif
+}
+
+static void clif_parse_HotkeyRowShift2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_HotkeyRowShift2(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_RE_NUM >= 20190508
+	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 *p = RFIFOP(fd, 0);
+	// need use p->tab
+	sd->status.hotkey_rowshift = p->rowshift;
+#endif
 }
 
 static void clif_parse_Hotkey1(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -23789,7 +23801,8 @@ void clif_defaults(void)
 	clif->pNPCMarketPurchase = clif_parse_NPCMarketPurchase;
 	/* */
 	clif->add_item_options = clif_add_item_options;
-	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
+	clif->pHotkeyRowShift1 = clif_parse_HotkeyRowShift1;
+	clif->pHotkeyRowShift2 = clif_parse_HotkeyRowShift2;
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
 	/* Achievements [Smokexyz/Hercules] */

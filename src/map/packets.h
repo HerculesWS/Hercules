@@ -1667,10 +1667,8 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2014-01-29bRagexeRE
-#if PACKETVER >= 20140129
-// new packets
-	packet(0x0a01,clif->pHotkeyRowShift,2); // CZ_SHORTCUTKEYBAR_ROTATE
+#if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
+	packet(0x0a01,clif->pHotkeyRowShift1); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
 // 2014-02-12aRagexeRE
@@ -1953,6 +1951,7 @@ packet(0x96e,clif->ackmergeitems);
 
 #if PACKETVER_RE_NUM >= 20190508
 	packet(0x0b21,clif->pHotkey2);
+	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
 #endif /* MAP_PACKETS_H */

@@ -1528,7 +1528,8 @@ struct clif_interface {
 	void (*pNPCMarketPurchase) (int fd, struct map_session_data *sd);
 	/* */
 	int (*add_item_options) (struct ItemOptions *buf, const struct item *it);
-	void (*pHotkeyRowShift) (int fd, struct map_session_data *sd);
+	void (*pHotkeyRowShift1) (int fd, struct map_session_data *sd);
+	void (*pHotkeyRowShift2) (int fd, struct map_session_data *sd);
 	void (*dressroom_open) (struct map_session_data *sd, int view);
 	void (*pOneClick_ItemIdentify) (int fd,struct map_session_data *sd);
 	/* Cart Deco */

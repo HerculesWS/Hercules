@@ -1481,6 +1481,24 @@ struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE2, 0x0b21);
 #endif
+
+#if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
+struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 {
+	int16 packetType;
+	uint8 rowshift;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SHORTCUTKEYBAR_ROTATE1, 0x0a01);
+#endif
+
+#if PACKETVER_RE_NUM >= 20190508
+struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 {
+	int16 packetType;
+	uint16 tab;
+	uint8 rowshift;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SHORTCUTKEYBAR_ROTATE2, 0x0b22);
+#endif
+
 #endif // HOTKEY_SAVING
 
 /**
