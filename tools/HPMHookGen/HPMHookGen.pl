@@ -371,7 +371,8 @@ foreach my $file (@files) { # Loop through the xml files
 				$t = ')(int fd, struct login_session_data *sd)'; # typedef LoginParseFunc
 				$def =~ s/^LoginParseFunc\s*\*\s*(.*)$/enum parsefunc_rcode(* $1) (int fd, struct login_session_data *sd)/;
 			}
-			next unless ref $t ne 'HASH' and $t =~ /^[^\[]/; # If it's not a string, or if it starts with an array subscript, we can skip it
+			next if ref $t eq 'HASH'; # Skip if it's not a string
+			next if $t =~ /^\)?\[.*\]$/; # Skip arrays or pointers to array
 
 			my $if = parse($t, $def);
 			next unless scalar keys %$if; # If it returns an empty hash reference, an error must've occurred
