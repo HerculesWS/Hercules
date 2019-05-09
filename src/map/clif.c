@@ -10849,7 +10849,10 @@ static void clif_hotkeys_send(struct map_session_data *sd, int tab)
 	struct PACKET_ZC_SHORTCUT_KEY_LIST p;
 	p.packetType = HEADER_ZC_SHORTCUT_KEY_LIST;
 #if PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
-	p.rotate = sd->status.hotkey_rowshift;
+	if (tab == 0)
+		p.rotate = sd->status.hotkey_rowshift;
+	else
+		p.rotate = sd->status.hotkey_rowshift2;
 #endif
 #if PACKETVER_RE_NUM >= 20190508
 	p.tab = tab;
@@ -10878,8 +10881,10 @@ static void clif_parse_HotkeyRowShift2(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_RE_NUM >= 20190508
 	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 *p = RFIFOP(fd, 0);
-	// need use p->tab
-	sd->status.hotkey_rowshift = p->rowshift;
+	if (p->tab == 0)
+		sd->status.hotkey_rowshift = p->rowshift;
+	else
+		sd->status.hotkey_rowshift2 = p->rowshift;
 #endif
 }
 
