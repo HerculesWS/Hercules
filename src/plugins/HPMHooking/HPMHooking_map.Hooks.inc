@@ -21884,13 +21884,13 @@ void HP_clif_pTickSend(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_pHotkey(int fd, struct map_session_data *sd) {
+void HP_clif_pHotkey1(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_pHotkey_pre > 0) {
+	if (HPMHooks.count.HP_clif_pHotkey1_pre > 0) {
 		void (*preHookFunc) (int *fd, struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkey_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_pHotkey_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkey1_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pHotkey1_pre[hIndex].func;
 			preHookFunc(&fd, &sd);
 		}
 		if (*HPMforce_return) {
@@ -21899,12 +21899,38 @@ void HP_clif_pHotkey(int fd, struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.pHotkey(fd, sd);
+		HPMHooks.source.clif.pHotkey1(fd, sd);
 	}
-	if (HPMHooks.count.HP_clif_pHotkey_post > 0) {
+	if (HPMHooks.count.HP_clif_pHotkey1_post > 0) {
 		void (*postHookFunc) (int fd, struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkey_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_pHotkey_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkey1_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pHotkey1_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pHotkey2(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pHotkey2_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkey2_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pHotkey2_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pHotkey2(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pHotkey2_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkey2_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pHotkey2_post[hIndex].func;
 			postHookFunc(fd, sd);
 		}
 	}
@@ -27865,13 +27891,13 @@ int HP_clif_add_item_options(struct ItemOptions *buf, const struct item *it) {
 	}
 	return retVal___;
 }
-void HP_clif_pHotkeyRowShift(int fd, struct map_session_data *sd) {
+void HP_clif_pHotkeyRowShift1(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_pHotkeyRowShift_pre > 0) {
+	if (HPMHooks.count.HP_clif_pHotkeyRowShift1_pre > 0) {
 		void (*preHookFunc) (int *fd, struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift1_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift1_pre[hIndex].func;
 			preHookFunc(&fd, &sd);
 		}
 		if (*HPMforce_return) {
@@ -27880,12 +27906,38 @@ void HP_clif_pHotkeyRowShift(int fd, struct map_session_data *sd) {
 		}
 	}
 	{
-		HPMHooks.source.clif.pHotkeyRowShift(fd, sd);
+		HPMHooks.source.clif.pHotkeyRowShift1(fd, sd);
 	}
-	if (HPMHooks.count.HP_clif_pHotkeyRowShift_post > 0) {
+	if (HPMHooks.count.HP_clif_pHotkeyRowShift1_post > 0) {
 		void (*postHookFunc) (int fd, struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift1_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift1_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pHotkeyRowShift2(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pHotkeyRowShift2_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift2_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift2_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pHotkeyRowShift2(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pHotkeyRowShift2_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pHotkeyRowShift2_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pHotkeyRowShift2_post[hIndex].func;
 			postHookFunc(fd, sd);
 		}
 	}

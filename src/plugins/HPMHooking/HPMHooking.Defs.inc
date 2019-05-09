@@ -2088,8 +2088,10 @@ typedef void (*HPMHOOK_pre_clif_pLoadEndAck) (int *fd, struct map_session_data *
 typedef void (*HPMHOOK_post_clif_pLoadEndAck) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pTickSend) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pTickSend) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_pHotkey) (int *fd, struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_pHotkey) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pHotkey1) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pHotkey1) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pHotkey2) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pHotkey2) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pProgressbar) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pProgressbar) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pWalkToXY) (int *fd, struct map_session_data **sd);
@@ -2548,8 +2550,10 @@ typedef void (*HPMHOOK_pre_clif_pNPCMarketPurchase) (int *fd, struct map_session
 typedef void (*HPMHOOK_post_clif_pNPCMarketPurchase) (int fd, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_clif_add_item_options) (struct ItemOptions **buf, const struct item **it);
 typedef int (*HPMHOOK_post_clif_add_item_options) (int retVal___, struct ItemOptions *buf, const struct item *it);
-typedef void (*HPMHOOK_pre_clif_pHotkeyRowShift) (int *fd, struct map_session_data **sd);
-typedef void (*HPMHOOK_post_clif_pHotkeyRowShift) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pHotkeyRowShift1) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pHotkeyRowShift1) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pHotkeyRowShift2) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pHotkeyRowShift2) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_dressroom_open) (struct map_session_data **sd, int *view);
 typedef void (*HPMHOOK_post_clif_dressroom_open) (struct map_session_data *sd, int view);
 typedef void (*HPMHOOK_pre_clif_pOneClick_ItemIdentify) (int *fd, struct map_session_data **sd);
