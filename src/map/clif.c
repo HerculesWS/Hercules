@@ -10871,22 +10871,38 @@ static void clif_parse_HotkeyRowShift(int fd, struct map_session_data *sd)
 	sd->status.hotkey_rowshift = RFIFOB(fd, packet_db[cmd].pos[0]);
 }
 
-static void clif_parse_Hotkey(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-/// Request to update a position on the hotkey bar (CZ_SHORTCUT_KEY_CHANGE).
+static void clif_parse_Hotkey1(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to update a position on the hotkey bar (CZ_SHORTCUT_KEY_CHANGE1).
 /// 02ba <index>.W <is skill>.B <id>.L <count>.W
-static void clif_parse_Hotkey(int fd, struct map_session_data *sd)
+static void clif_parse_Hotkey1(int fd, struct map_session_data *sd)
 {
 #ifdef HOTKEY_SAVING
-	unsigned short idx;
-	int cmd;
+#if PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
+	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 *p = RFIFOP(fd, 0);
+	const unsigned short idx = p->index;
+	Assert_retv(idx < MAX_HOTKEYS);
 
-	cmd = RFIFOW(fd, 0);
-	idx = RFIFOW(fd, packet_db[cmd].pos[0]);
-	if (idx >= MAX_HOTKEYS) return;
+	sd->status.hotkeys[idx].type = p->hotkey.isSkill;
+	sd->status.hotkeys[idx].id = p->hotkey.id;
+	sd->status.hotkeys[idx].lv = p->hotkey.count;
+#endif
+#endif
+}
 
-	sd->status.hotkeys[idx].type = RFIFOB(fd, packet_db[cmd].pos[1]);
-	sd->status.hotkeys[idx].id = RFIFOL(fd, packet_db[cmd].pos[2]);
-	sd->status.hotkeys[idx].lv = RFIFOW(fd, packet_db[cmd].pos[3]);
+static void clif_parse_Hotkey2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request to update a position on the hotkey bar (CZ_SHORTCUT_KEY_CHANGE2).
+static void clif_parse_Hotkey2(int fd, struct map_session_data *sd)
+{
+#ifdef HOTKEY_SAVING
+#if PACKETVER_RE_NUM >= 20190508
+	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 *p = RFIFOP(fd, 0);
+	const unsigned short idx = p->index + p->tab * MAX_HOTKEYS;
+	Assert_retv(idx < MAX_HOTKEYS_DB);
+
+	sd->status.hotkeys[idx].type = p->hotkey.isSkill;
+	sd->status.hotkeys[idx].id = p->hotkey.id;
+	sd->status.hotkeys[idx].lv = p->hotkey.count;
+#endif
 #endif
 }
 
@@ -23529,7 +23545,8 @@ void clif_defaults(void)
 	clif->pWantToConnection = clif_parse_WantToConnection;
 	clif->pLoadEndAck = clif_parse_LoadEndAck;
 	clif->pTickSend = clif_parse_TickSend;
-	clif->pHotkey = clif_parse_Hotkey;
+	clif->pHotkey1 = clif_parse_Hotkey1;
+	clif->pHotkey2 = clif_parse_Hotkey2;
 	clif->pProgressbar = clif_parse_progressbar;
 	clif->pWalkToXY = clif_parse_WalkToXY;
 	clif->pQuitGame = clif_parse_QuitGame;

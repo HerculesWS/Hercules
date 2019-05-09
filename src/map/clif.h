@@ -1289,7 +1289,8 @@ struct clif_interface {
 	void (*pWantToConnection) (int fd, struct map_session_data *sd);
 	void (*pLoadEndAck) (int fd,struct map_session_data *sd);
 	void (*pTickSend) (int fd, struct map_session_data *sd);
-	void (*pHotkey) (int fd, struct map_session_data *sd);
+	void (*pHotkey1) (int fd, struct map_session_data *sd);
+	void (*pHotkey2) (int fd, struct map_session_data *sd);
 	void (*pProgressbar) (int fd, struct map_session_data * sd);
 	void (*pWalkToXY) (int fd, struct map_session_data *sd);
 	void (*pQuitGame) (int fd, struct map_session_data *sd);

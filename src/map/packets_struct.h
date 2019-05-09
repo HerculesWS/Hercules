@@ -1462,6 +1462,25 @@ struct PACKET_ZC_SHORTCUT_KEY_LIST {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x02b9);
 #endif
+
+#if PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
+struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 {
+	int16 packetType;
+	uint16 index;
+	struct hotkey_data hotkey;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE1, 0x02ba);
+#endif
+
+#if PACKETVER_RE_NUM >= 20190508
+struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 {
+	int16 packetType;
+	uint16 tab;
+	uint16 index;
+	struct hotkey_data hotkey;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE2, 0x0b21);
+#endif
 #endif // HOTKEY_SAVING
 
 /**
@@ -3413,6 +3432,7 @@ struct PACKET_ZC_REFINE_STATUS {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_REFINE_STATUS, 0x0ada);
 #endif
+
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
