@@ -26647,6 +26647,8 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ACH_PET_CREATE", ACH_PET_CREATE, false, false);
 	script->set_constant("ACH_ACHIEVE", ACH_ACHIEVE, false, false);
 	script->set_constant("ACH_ACHIEVEMENT_RANK", ACH_ACHIEVEMENT_RANK, false, false);
+	script->set_constant("ACH_ZENY_SPEND_VENDING", ACH_ZENY_SPEND_VENDING, false, false);
+	script->set_constant("ACH_ZENY_SPEND_VENDING_TOTAL", ACH_ZENY_SPEND_VENDING_TOTAL, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

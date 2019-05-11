@@ -99,6 +99,8 @@ enum achievement_types {
 	// Achievement
 	ACH_ACHIEVE,
 	ACH_ACHIEVEMENT_RANK,
+	ACH_ZENY_SPEND_VENDING,
+	ACH_ZENY_SPEND_VENDING_TOTAL,
 	ACH_TYPE_MAX
 };
 
@@ -266,6 +268,7 @@ struct achievement_interface {
 	void (*validate_marry) (struct map_session_data *sd);
 	void (*validate_adopt) (struct map_session_data *sd, bool parent);
 	void (*validate_zeny) (struct map_session_data *sd, int amount);
+	void (*validate_zeny_vending) (struct map_session_data *sd, int amount);
 	void (*validate_refine) (struct map_session_data *sd, unsigned int idx, bool success);
 	void (*validate_item_get) (struct map_session_data *sd, int nameid, int amount);
 	void (*validate_item_sell) (struct map_session_data *sd, int nameid, int amount);

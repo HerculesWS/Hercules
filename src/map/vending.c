@@ -22,6 +22,7 @@
 
 #include "vending.h"
 
+#include "map/achievement.h"
 #include "map/atcommand.h"
 #include "map/battle.h"
 #include "map/chrif.h"
@@ -184,6 +185,8 @@ static void vending_purchasereq(struct map_session_data *sd, int aid, unsigned i
 	}
 
 	pc->payzeny(sd, (int)z, LOG_TYPE_VENDING, vsd);
+	achievement->validate_zeny_vending(sd, (int)z);
+
 	if( battle_config.vending_tax )
 		z -= apply_percentrate64(z, battle_config.vending_tax, 10000);
 	pc->getzeny(vsd, (int)z, LOG_TYPE_VENDING, sd);

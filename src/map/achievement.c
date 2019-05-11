@@ -746,6 +746,29 @@ static void achievement_validate_zeny(struct map_session_data *sd, int amount)
 }
 
 /**
+ * Validates zeny type objectives.
+ * @types ACH_ZENY_SPEND_VENDING
+ *        ACH_ZENY_SPEND_VENDING_TOTAL
+ * @param[in] sd        pointer to session data.
+ * @param[in] amount    (goal) amount of zeny spent.
+ * @see achievement_validate_type()
+ */
+static void achievement_validate_zeny_vending(struct map_session_data *sd, int amount)
+{
+	nullpo_retv(sd);
+	Assert_retv(amount > 0);
+
+	if (!sd->achievements_received)
+		return;
+
+	struct achievement_objective criteria = {0};
+	criteria.goal = amount;
+
+	achievement->validate_type(sd, ACH_ZENY_SPEND_VENDING, &criteria, false);
+	achievement->validate_type(sd, ACH_ZENY_SPEND_VENDING_TOTAL, &criteria, true);
+}
+
+/**
  * Validates equipment refinement type objectives.
  * @types ACH_EQUIP_REFINE_SUCCESS
  *        ACH_EQUIP_REFINE_FAILURE
@@ -1991,6 +2014,7 @@ void achievement_defaults(void)
 	achievement->validate_marry = achievement_validate_marry;
 	achievement->validate_adopt = achievement_validate_adopt;
 	achievement->validate_zeny = achievement_validate_zeny;
+	achievement->validate_zeny_vending = achievement_validate_zeny_vending;
 	achievement->validate_refine = achievement_validate_refine;
 	achievement->validate_item_get = achievement_validate_item_get;
 	achievement->validate_item_sell = achievement_validate_item_sell;
