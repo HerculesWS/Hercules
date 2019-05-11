@@ -1195,7 +1195,7 @@ static bool achievement_readdb_validate_criteria_mobid(const struct config_setti
 	nullpo_retr(false, obj);
 
 	if (libconfig->setting_lookup_int(t, "MobId", &val)) {
-		if (mob->db_checkid(val) == 0) {
+		if (val != 0 && mob->db_checkid(val) == 0) {
 			ShowError("achievement_readdb_validate_criteria_mobid: Non-existant monster with ID %id provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
 			return false;
 		}
