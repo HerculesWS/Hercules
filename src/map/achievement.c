@@ -26,12 +26,14 @@
 #include "map/itemdb.h"
 #include "map/mob.h"
 #include "map/party.h"
+#include "map/pet.h"
 #include "map/pc.h"
 #include "map/script.h"
 
 #include "common/conf.h"
 #include "common/db.h"
 #include "common/memmgr.h"
+#include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
@@ -279,6 +281,10 @@ static bool achievement_check_criteria(const struct achievement_objective *objec
 		if (j < VECTOR_LENGTH(criteria->jobid))
 			return false;
 	}
+
+	/* Pet intimacy */
+	if (objective->intimacy > 0 && objective->intimacy > criteria->intimacy)
+		return false;
 
 	return true;
 }
@@ -928,14 +934,14 @@ static void achievement_validate_achieve(struct map_session_data *sd, int achid)
 }
 
 /**
- * Validates taming type objectives.
- * @type ACH_PET_CREATE
- * @param[in] sd        pointer to session data.
- * @param[in] class     (criteria) class of the monster tamed.
- */
+* Validates taming type objectives.
+* @type ACH_PET_CREATE
+* @param[in] sd        pointer to session data.
+* @param[in] class     (criteria) class of the monster tamed.
+*/
 static void achievement_validate_taming(struct map_session_data *sd, int class)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria = {0};
 
 	nullpo_retv(sd);
 
@@ -952,6 +958,47 @@ static void achievement_validate_taming(struct map_session_data *sd, int class)
 }
 
 /**
+ * Validates pet intimacy type objectives.
+ * @type ACH_PET_INTIMACY
+ * @param[in] sd        pointer to session data.
+ */
+static void achievement_validate_pet_intimacy(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+	nullpo_retv(sd->pd);
+
+	if (sd->achievements_received == false)
+		return;
+
+	struct achievement_objective criteria = {0};
+	criteria.mobid = sd->pd->pet.class_;
+	criteria.intimacy = sd->pd->pet.intimate;
+	criteria.goal = 1;
+
+	achievement->validate_type(sd, ACH_PET_INTIMACY, &criteria, true);
+}
+
+/**
+* Validates pet runaway type objectives.
+* @type ACH_PET_RUNAWAY
+* @param[in] sd        pointer to session data.
+* @param[in] class     (criteria) class of the monster tamed.
+*/
+static void achievement_validate_pet_runaway(struct map_session_data *sd, int class)
+{
+	nullpo_retv(sd);
+
+	if (sd->achievements_received == false)
+		return;
+
+	struct achievement_objective criteria = {0};
+	criteria.mobid = class;
+	criteria.goal = 1;
+
+	achievement->validate_type(sd, ACH_PET_RUNAWAY, &criteria, true);
+}
+
+/**
  * Validated achievement rank type objectives.
  * @type ACH_ACHIEVEMENT_RANK
  * @param[in] sd         pointer to session data.
@@ -959,7 +1006,7 @@ static void achievement_validate_taming(struct map_session_data *sd, int class)
  */
 static void achievement_validate_achievement_rank(struct map_session_data *sd, int rank)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria = {0};
 
 	nullpo_retv(sd);
 
@@ -993,6 +1040,8 @@ static bool achievement_type_requires_criteria(enum achievement_types type)
 		|| type == ACH_EQUIP_REFINE_FAILURE_ID
 		|| type == ACH_ITEM_GET_COUNT
 		|| type == ACH_PET_CREATE
+		|| type == ACH_PET_INTIMACY
+		|| type == ACH_PET_RUNAWAY
 		|| type == ACH_ACHIEVE)
 		return true;
 
@@ -1532,6 +1581,36 @@ static bool achievement_readdb_validate_criteria_achievement(const struct config
 }
 
 /**
+ * Validates achievement Id criteria of an objective while parsing an achievement entry.
+ * @param[in]  t        pointer to the config setting.
+ * @param[out] obj      pointer to the achievement objective entry being parsed.
+ * @param[in]  type     Type of the achievement being parsed.
+ * @param[in]  entry_id Id of the entry being parsed.
+ * @param[in]  obj_idx  Index of the objective entry being parsed.
+ * @return false on failure, true on success.
+ */
+static bool achievement_readdb_validate_criteria_intimacy(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+{
+	nullpo_retr(false, t);
+	nullpo_retr(false, obj);
+
+	int val = 0;
+	if (libconfig->setting_lookup_int(t, "Intimacy", &val)) {
+		if (val < 1 || val > 1000) {
+			ShowError("achievement_readdb_validate_criteria_intimacy: Invalid intimacy range given %d (Max: %d Low: %d). Skipping...\n", val, 1, 1000);
+			return false;
+		}
+
+		obj->intimacy = val;
+	} else if (achievement_criteria_intimacy(type)) {
+		ShowError("achievement_readdb_validate_criteria_intimacy: Achievement type of ID %d requires an Intimacy field in the objective criteria, setting not provided. Skipping...\n", entry_id);
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Read a single objective entry of an achievement.
  * @param[in]  conf    config pointer.
  * @param[in]  index   Index of the objective being in the objective list being parsed.
@@ -1581,6 +1660,10 @@ static bool achievement_readdb_objective_sub(const struct config_setting_t *conf
 
 			/* Achievement */
 			if (achievement->readdb_validate_criteria_achievement(c, &obj, entry->type, entry->id, index) == false)
+				return false;
+
+			/* Intimacy */
+			if (achievement->readdb_validate_criteria_intimacy(c, &obj, entry->type, entry->id, index) == false)
 				return false;
 
 			/**
@@ -1978,6 +2061,7 @@ void achievement_defaults(void)
 	achievement->readdb_validate_criteria_itemtype = achievement_readdb_validate_criteria_itemtype;
 	achievement->readdb_validate_criteria_weaponlv = achievement_readdb_validate_criteria_weaponlv;
 	achievement->readdb_validate_criteria_achievement = achievement_readdb_validate_criteria_achievement;
+	achievement->readdb_validate_criteria_intimacy = achievement_readdb_validate_criteria_intimacy;
 	/* */
 	achievement->readdb_rewards = achievement_readdb_rewards;
 	achievement->readdb_validate_reward_items = achievement_readdb_validate_reward_items;
@@ -2020,6 +2104,8 @@ void achievement_defaults(void)
 	achievement->validate_item_sell = achievement_validate_item_sell;
 	achievement->validate_achieve = achievement_validate_achieve;
 	achievement->validate_taming = achievement_validate_taming;
+	achievement->validate_pet_intimacy = achievement_validate_pet_intimacy;
+	achievement->validate_pet_runaway = achievement_validate_pet_runaway;
 	achievement->validate_achievement_rank = achievement_validate_achievement_rank;
 	/* */
 	achievement->type_requires_criteria = achievement_type_requires_criteria;
