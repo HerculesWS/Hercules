@@ -100,6 +100,8 @@ typedef bool (*HPMHOOK_pre_achievement_readdb_validate_criteria_weaponlv) (const
 typedef bool (*HPMHOOK_post_achievement_readdb_validate_criteria_weaponlv) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
 typedef bool (*HPMHOOK_pre_achievement_readdb_validate_criteria_achievement) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
 typedef bool (*HPMHOOK_post_achievement_readdb_validate_criteria_achievement) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+typedef bool (*HPMHOOK_pre_achievement_readdb_validate_criteria_intimacy) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+typedef bool (*HPMHOOK_post_achievement_readdb_validate_criteria_intimacy) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
 typedef bool (*HPMHOOK_pre_achievement_readdb_rewards) (const struct config_setting_t **conf, struct achievement_data **entry, const char **source);
 typedef bool (*HPMHOOK_post_achievement_readdb_rewards) (bool retVal___, const struct config_setting_t *conf, struct achievement_data *entry, const char *source);
 typedef void (*HPMHOOK_pre_achievement_readdb_validate_reward_items) (const struct config_setting_t **t, struct achievement_data **entry);
@@ -158,6 +160,8 @@ typedef void (*HPMHOOK_pre_achievement_validate_adopt) (struct map_session_data 
 typedef void (*HPMHOOK_post_achievement_validate_adopt) (struct map_session_data *sd, bool parent);
 typedef void (*HPMHOOK_pre_achievement_validate_zeny) (struct map_session_data **sd, int *amount);
 typedef void (*HPMHOOK_post_achievement_validate_zeny) (struct map_session_data *sd, int amount);
+typedef void (*HPMHOOK_pre_achievement_validate_zeny_vending) (struct map_session_data **sd, int *amount);
+typedef void (*HPMHOOK_post_achievement_validate_zeny_vending) (struct map_session_data *sd, int amount);
 typedef void (*HPMHOOK_pre_achievement_validate_refine) (struct map_session_data **sd, unsigned int *idx, bool *success);
 typedef void (*HPMHOOK_post_achievement_validate_refine) (struct map_session_data *sd, unsigned int idx, bool success);
 typedef void (*HPMHOOK_pre_achievement_validate_item_get) (struct map_session_data **sd, int *nameid, int *amount);
@@ -168,6 +172,10 @@ typedef void (*HPMHOOK_pre_achievement_validate_achieve) (struct map_session_dat
 typedef void (*HPMHOOK_post_achievement_validate_achieve) (struct map_session_data *sd, int achid);
 typedef void (*HPMHOOK_pre_achievement_validate_taming) (struct map_session_data **sd, int *class);
 typedef void (*HPMHOOK_post_achievement_validate_taming) (struct map_session_data *sd, int class);
+typedef void (*HPMHOOK_pre_achievement_validate_pet_intimacy) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_achievement_validate_pet_intimacy) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_achievement_validate_pet_runaway) (struct map_session_data **sd, int *class);
+typedef void (*HPMHOOK_post_achievement_validate_pet_runaway) (struct map_session_data *sd, int class);
 typedef void (*HPMHOOK_pre_achievement_validate_achievement_rank) (struct map_session_data **sd, int *rank);
 typedef void (*HPMHOOK_post_achievement_validate_achievement_rank) (struct map_session_data *sd, int rank);
 typedef bool (*HPMHOOK_pre_achievement_type_requires_criteria) (enum achievement_types *type);

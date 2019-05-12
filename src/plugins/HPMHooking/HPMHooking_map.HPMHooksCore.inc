@@ -58,6 +58,8 @@ struct {
 	struct HPMHookPoint *HP_achievement_readdb_validate_criteria_weaponlv_post;
 	struct HPMHookPoint *HP_achievement_readdb_validate_criteria_achievement_pre;
 	struct HPMHookPoint *HP_achievement_readdb_validate_criteria_achievement_post;
+	struct HPMHookPoint *HP_achievement_readdb_validate_criteria_intimacy_pre;
+	struct HPMHookPoint *HP_achievement_readdb_validate_criteria_intimacy_post;
 	struct HPMHookPoint *HP_achievement_readdb_rewards_pre;
 	struct HPMHookPoint *HP_achievement_readdb_rewards_post;
 	struct HPMHookPoint *HP_achievement_readdb_validate_reward_items_pre;
@@ -116,6 +118,8 @@ struct {
 	struct HPMHookPoint *HP_achievement_validate_adopt_post;
 	struct HPMHookPoint *HP_achievement_validate_zeny_pre;
 	struct HPMHookPoint *HP_achievement_validate_zeny_post;
+	struct HPMHookPoint *HP_achievement_validate_zeny_vending_pre;
+	struct HPMHookPoint *HP_achievement_validate_zeny_vending_post;
 	struct HPMHookPoint *HP_achievement_validate_refine_pre;
 	struct HPMHookPoint *HP_achievement_validate_refine_post;
 	struct HPMHookPoint *HP_achievement_validate_item_get_pre;
@@ -126,6 +130,10 @@ struct {
 	struct HPMHookPoint *HP_achievement_validate_achieve_post;
 	struct HPMHookPoint *HP_achievement_validate_taming_pre;
 	struct HPMHookPoint *HP_achievement_validate_taming_post;
+	struct HPMHookPoint *HP_achievement_validate_pet_intimacy_pre;
+	struct HPMHookPoint *HP_achievement_validate_pet_intimacy_post;
+	struct HPMHookPoint *HP_achievement_validate_pet_runaway_pre;
+	struct HPMHookPoint *HP_achievement_validate_pet_runaway_post;
 	struct HPMHookPoint *HP_achievement_validate_achievement_rank_pre;
 	struct HPMHookPoint *HP_achievement_validate_achievement_rank_post;
 	struct HPMHookPoint *HP_achievement_type_requires_criteria_pre;
@@ -6839,6 +6847,8 @@ struct {
 	int HP_achievement_readdb_validate_criteria_weaponlv_post;
 	int HP_achievement_readdb_validate_criteria_achievement_pre;
 	int HP_achievement_readdb_validate_criteria_achievement_post;
+	int HP_achievement_readdb_validate_criteria_intimacy_pre;
+	int HP_achievement_readdb_validate_criteria_intimacy_post;
 	int HP_achievement_readdb_rewards_pre;
 	int HP_achievement_readdb_rewards_post;
 	int HP_achievement_readdb_validate_reward_items_pre;
@@ -6897,6 +6907,8 @@ struct {
 	int HP_achievement_validate_adopt_post;
 	int HP_achievement_validate_zeny_pre;
 	int HP_achievement_validate_zeny_post;
+	int HP_achievement_validate_zeny_vending_pre;
+	int HP_achievement_validate_zeny_vending_post;
 	int HP_achievement_validate_refine_pre;
 	int HP_achievement_validate_refine_post;
 	int HP_achievement_validate_item_get_pre;
@@ -6907,6 +6919,10 @@ struct {
 	int HP_achievement_validate_achieve_post;
 	int HP_achievement_validate_taming_pre;
 	int HP_achievement_validate_taming_post;
+	int HP_achievement_validate_pet_intimacy_pre;
+	int HP_achievement_validate_pet_intimacy_post;
+	int HP_achievement_validate_pet_runaway_pre;
+	int HP_achievement_validate_pet_runaway_post;
 	int HP_achievement_validate_achievement_rank_pre;
 	int HP_achievement_validate_achievement_rank_post;
 	int HP_achievement_type_requires_criteria_pre;
