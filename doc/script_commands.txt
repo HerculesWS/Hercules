@@ -6828,6 +6828,20 @@ NPCs talking while hidden then revealing... you can wonder around =P).
 
 ---------------------------------------
 
+*duplicatenpc("<source_npc_name>","<new_npc_name>","<new_npc_hidden_name>","<mapname>",<map_x>,<map_y>,<dir>{, <sprite_id>{, <map_xs>, <map_ys>}});
+
+Duplicate any existing npc based on <source_npc_name>.
+Return 1 on success, 0 if failed.
+
+---------------------------------------
+
+*duplicateremove("<npc_name>");
+
+Remove any existing npc based on <npc_name>.
+*Note: Using this will never remove duplicated NPC itself.
+
+---------------------------------------
+
 *doevent("<NPC object name>::<event label>")
 
 This command will start a new execution thread in a specified NPC object
