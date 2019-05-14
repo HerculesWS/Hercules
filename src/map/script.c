@@ -13052,7 +13052,8 @@ enum mapinfo_info {
 	MAPINFO_ID,
 	MAPINFO_SIZE_X,
 	MAPINFO_SIZE_Y,
-	MAPINFO_ZONE
+	MAPINFO_ZONE,
+	MAPINFO_NPC_COUNT
 };
 
 static BUILDIN(getmapinfo)
@@ -13077,7 +13078,7 @@ static BUILDIN(getmapinfo)
 		}
 
 		if (bl == NULL) {
-			ShowError("script:getmapinfo: map not supplied and NPC/PC not attached!\n");
+			ShowError("buildin_getmapinfo: map not supplied and NPC/PC not attached!\n");
 			script_pushint(st, -3);
 			return false;
 		}
@@ -13108,8 +13109,11 @@ static BUILDIN(getmapinfo)
 	case MAPINFO_ZONE:
 		script_pushstrcopy(st, map->list[m].zone->name);
 		break;
+	case MAPINFO_NPC_COUNT:
+		script_pushint(st, map->list[m].npc_num);
+		break;
 	default:
-		ShowError("script:getmapinfo: unknown option in second argument (%u).\n", mode);
+		ShowError("buildin_getmapinfo: unknown option in second argument (%u).\n", mode);
 		script_pushint(st, -2);
 		return false;
 	}
@@ -26111,6 +26115,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAX_MENU_LENGTH", MAX_MENU_LENGTH, false, false);
 	script->set_constant("MOB_CLONE_START", MOB_CLONE_START, false, false);
 	script->set_constant("MOB_CLONE_END", MOB_CLONE_END, false, false);
+	script->set_constant("MAX_NPC_PER_MAP", MAX_NPC_PER_MAP, false, false);
 
 	script->constdb_comment("status options");
 	script->set_constant("Option_Nothing",OPTION_NOTHING,false, false);
@@ -26361,6 +26366,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MAPINFO_SIZE_X", MAPINFO_SIZE_X, false, false);
 	script->set_constant("MAPINFO_SIZE_Y", MAPINFO_SIZE_Y, false, false);
 	script->set_constant("MAPINFO_ZONE", MAPINFO_ZONE, false, false);
+	script->set_constant("MAPINFO_NPC_COUNT", MAPINFO_NPC_COUNT, false, false);
 
 	script->constdb_comment("consolemes options");
 	script->set_constant("CONSOLEMES_DEBUG", CONSOLEMES_DEBUG, false, false);
