@@ -12183,6 +12183,100 @@ static BUILDIN(hideonnpc)
 	return true;
 }
 
+static BUILDIN(npc_duplicate)
+{
+	int txs = -1, tys = -1;
+
+	if (script_hasdata(st, 10))
+		txs = (script_getnum(st, 10) < -1) ? -1 : script_getnum(st, 10);
+	if (script_hasdata(st, 11))
+		tys = (script_getnum(st, 11) < -1) ? -1 : script_getnum(st, 10);
+
+	if (txs == -1 && tys != -1)
+		txs = 0;
+	if (txs != -1 && tys == -1)
+		tys = 0;
+
+	const char *npc_name = script_getstr(st, 2);
+	const char *dup_name = script_getstr(st, 3);
+	const char *dup_hidden_name = script_getstr(st, 4);
+
+	char targetname[NAME_LENGTH] = "";
+	strcat(targetname, dup_name);
+	if (strcmp(dup_hidden_name, "") != 0) {
+		strncat(targetname, "#", 1);
+		strncat(targetname, dup_hidden_name, strlen(dup_hidden_name));
+	}
+
+	if (strlen(targetname) > NAME_LENGTH) {
+		ShowError("buildin_npc_duplicate: NPC name '%s' is to long (max %d chars).\n", targetname, NAME_LENGTH);
+		script_pushint(st, 0);
+		return false;
+	} else if (npc->name2id(targetname) != NULL) {
+		ShowError("buildin_npc_duplicate: NPC named '%s' already exists.\n", targetname);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	struct npc_data *nd_source = npc->name2id(npc_name);
+	int tclass_;
+	if (script_hasdata(st, 9))
+		tclass_ = (script_getnum(st, 9) < -1) ? -1 : script_getnum(st, 9);
+	else
+		tclass_ = nd_source->class_;
+
+	if (nd_source == NULL) {
+		ShowError("buildin_npc_duplicate: Source NPC not found. (%s)\n", npc_name);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	const char *tmap = script_getstr(st, 5);
+	int tmapid = map->mapname2mapid(tmap);
+	if (tmapid < 0) {
+		ShowError("buildin_npc_duplicate: Target map not found. (%s)\n", tmap);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	int tx = script_getnum(st, 6);
+	int ty = script_getnum(st, 7);
+	int tdir = script_getnum(st, 8);
+	struct npc_data *nd_target = npc->create_npc(nd_source->subtype, tmapid, tx, ty, tdir, tclass_);
+
+	safestrncpy(nd_target->name, targetname, sizeof(nd_target->name));
+	safestrncpy(nd_target->exname, targetname, sizeof(nd_target->exname));
+
+	script_pushint(st, npc->duplicate_sub(nd_target, nd_source, txs, tys, NPO_ONINIT));
+	return true;
+}
+
+static BUILDIN(npc_duplicate_remove)
+{
+	struct npc_data *nd;
+
+	if (script_hasdata(st, 2)) {
+		nd = npc->name2id(script_getstr(st, 2));
+		if (nd == NULL) {
+			ShowError("buildin_npc_duplicate_remove: Duplicate NPC not found. (%s)\n", script_getstr(st, 2));
+			script_pushint(st, 0);
+			return false;
+		}
+	}
+	else
+		nd = map->id2nd(st->oid);
+
+	if (nd != NULL) {
+		if (nd->src_id == 0) //remove all dupicates for this source npc
+			map->foreachnpc(npc->unload_dup_sub, nd->bl.id);
+		else // just remove this duplicate
+			npc->unload(nd, true);
+	}
+
+	script_pushint(st, 1);
+	return true;
+}
+
 /* Starts a status effect on the target unit or on the attached player.
  *
  * sc_start  <effect_id>,<duration>,<val1>{,<rate>,<flag>,{<unit_id>}};
@@ -25623,6 +25717,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(disablenpc,"s"),
 		BUILDIN_DEF(hideoffnpc,"s"),
 		BUILDIN_DEF(hideonnpc,"s"),
+		BUILDIN_DEF(npc_duplicate, "ssssiii???"),
+		BUILDIN_DEF(npc_duplicate_remove, "?"),
 		BUILDIN_DEF(sc_start,"iii???"),
 		BUILDIN_DEF2(sc_start,"sc_start2","iiii???"),
 		BUILDIN_DEF2(sc_start,"sc_start4","iiiiii???"),
