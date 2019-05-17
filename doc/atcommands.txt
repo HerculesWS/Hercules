@@ -1260,6 +1260,16 @@ Example:
 
 ---------------------------------------
 
+@reloadnpc <path>
+
+Unloads all NPCs in a file and reload it again.
+Note: Be aware that mapflags and monsters spawned directly are not removed.
+
+Example:
+@reloadnpc npc/custom/jobmaster.txt
+
+---------------------------------------
+
 =====================
 | 6. Party Commands |
 =====================
