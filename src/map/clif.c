@@ -22537,7 +22537,7 @@ static void clif_parse_ping(int fd, struct map_session_data *sd)
 
 static void clif_ping(struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20190213 || PACKETVER_RE_NUM >= 20190213 || PACKETVER_ZERO_NUM >= 20190130
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190220 || PACKETVER_ZERO_NUM >= 20190220
 	nullpo_retv(sd);
 	struct PACKET_ZC_PING p;
 	p.packetType = HEADER_ZC_PING;
