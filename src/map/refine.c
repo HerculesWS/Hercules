@@ -528,7 +528,7 @@ static int refine_readdb_refine_libconfig_sub(struct config_setting_t *r, const 
 				chance[i][j] = 100; // default value for all rates.
 
 		struct config_setting_t *t = NULL;
-		for (int i = 0; (t = libconfig->setting_get_elem(rate, i++)) != NULL && config_setting_is_group(t); ++i) {
+		for (int i = 0; (t = libconfig->setting_get_elem(rate, i)) != NULL && config_setting_is_group(t); ++i) {
 			int level = 0, i32;
 			char *rlvl = config_setting_name(t);
 			memset(&lv, 0, sizeof(lv));
