@@ -45,16 +45,16 @@ prontera,152,193,3	script	Strange Box#prontera	4_MYSTCASE,{
 				close();
 			}
 			.@int_temp = rand(1,30);
-			if (.@int_temp > 0 && .@int_temp < 11) {
-				pushpc(4,3);
+			if (.@int_temp < 11) {
+				pushpc(DIR_SOUTH, 3);
 				specialeffect(EF_PROVOKE, AREA, playerattached());
 				mes("Surprisingly, as you try to open the box, the box bounces.");
 				mes("^FF0000Anxiety^000000~ ^0000FFCuriosity^000000~");
 				mes("Want to continue?? Want to stop?");
 				close();
-			} else if (.@int_temp > 10 && .@int_temp < 16) {
+			} else if (.@int_temp < 16) {
 				emotion(e_gasp, playerattached());
-				mes("["+strcharinfo(0)+"]");
+				mes("["+strcharinfo(PC_NAME)+"]");
 				mes("What is this?");
 				next();
 				mes("The huge box is empty.");
@@ -69,7 +69,7 @@ prontera,152,193,3	script	Strange Box#prontera	4_MYSTCASE,{
 				mes("It seems like it's too late though.");
 				mes("^800080You got poisoned^000000.");
 				close();
-			} else if (.@int_temp > 15 && .@int_temp < 26) {
+			} else if (.@int_temp < 26) {
 				pushpc(4,3);
 				specialeffect(EF_PROVOKE, AREA, playerattached());
 				mes("Surprisingly, as you try to open the box, the box bounces.");
@@ -77,7 +77,7 @@ prontera,152,193,3	script	Strange Box#prontera	4_MYSTCASE,{
 				close();
 			} else {
 				emotion(e_gasp, playerattached());
-				mes("["+strcharinfo(0)+"]");
+				mes("["+strcharinfo(PC_NAME)+"]");
 				mes("What is this?");
 				next();
 				mes("The huge box is empty.");
@@ -159,7 +159,7 @@ prontera,142,183,3	script	Red Coat Girl#prontera	4_F_NFLOSTGIRL,3,3,{
 		mes("Full of gifts..... So...... wonderful.");
 		emotion(e_pif);
 		close();
-	} else if (evt_2010_xmas > 250 && evt_2010_xmas < 254) {
+	} else if (evt_2010_xmas < 254) {
 		mes("[Red Coat Girl]");
 		mes("If you want to move back to'^FF0000Witch's Castle^000000', you need a Red Frame.");
 		next();
@@ -545,10 +545,8 @@ nif_in,122,182,3	script	Santa Claus#nif	4_M_SANTA,{
 				emotion(e_x);
 				evt_2010_xmas = 252;
 				close();
-			break;
 			case 5:
 				close();
-			break;
 			case 6:
 				mes("[Santa Claus]");
 				mes("Correct answer!");
@@ -570,7 +568,7 @@ nif_in,122,182,3	script	Santa Claus#nif	4_M_SANTA,{
 		mes("The Witch likes Red too.");
 		mes("So what color do you like?");
 		next();
-		while(1) {
+		while(true) {
 			switch(select("[ Find the Witch again ]", "[ About the quiz ]", "[ End conversation ]")) {
 			case 1:
 				if (Zeny < 10000) {
@@ -590,7 +588,7 @@ nif_in,122,182,3	script	Santa Claus#nif	4_M_SANTA,{
 						Zeny -= 10000;
 						close();
 					case 5:
-						end;
+						close();
 					case 6:
 						mes("[Santa Claus]");
 						mes("Correct answer!");
@@ -789,7 +787,7 @@ prontera,170,126,3	script	Old Santa Claus#prontera	4_M_SANTA,{
 		case 1:
 			mes("[Old Santa Claus]");
 			emotion(e_heh);
-			mes("HoHoHo!~ I'm happy to see you too, my dear" +strcharinfo(0)+".");
+			mes("HoHoHo!~ I'm happy to see you too, my dear" +strcharinfo(PC_NAME)+".");
 			mes("Have you done lots of good things");
 			mes("today? Santa Claus is giving away");
 			mes("presents to good kids!");
@@ -840,7 +838,7 @@ prontera,170,126,3	script	Old Santa Claus#prontera	4_M_SANTA,{
 							if (.@int_lottery > 0 && .@int_lottery < 41) {
 								delitem Casual_Diary, 1;
 								getitem Buche_De_Noel, 1;
-							} else if (.@int_lottery > 40 && .@int_lottery < 81) {
+							} else if (.@int_lottery < 81) {
 								delitem Casual_Diary, 1;
 								getitem Cookie_Bag, 1;
 							} else {
@@ -882,10 +880,10 @@ prontera,170,126,3	script	Old Santa Claus#prontera	4_M_SANTA,{
 							if (.@int_lottery > 0 && .@int_lottery < 61) {
 								delitem Honest_Diary, 1;
 								getitem Siege_White_Potion, 1;
-							} else if ( .@int_lottery > 60 && .@int_lottery < 96) {
+							} else if (.@int_lottery < 96) {
 								delitem Honest_Diary, 1;
 								getitem Siege_Blue_Potion, 1;
-							} else if (.@int_lottery > 95 && .@int_lottery < 100) {
+							} else if (.@int_lottery < 100) {
 								delitem Honest_Diary, 1;
 								getitem Yggdrasilberry, 1;
 							} else {

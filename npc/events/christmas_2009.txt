@@ -416,15 +416,13 @@ xmas_in,97,99,5	script	Claris#xmas	4_F_KAFRA5,1,1,{
 				close2();
 			} else if (checkcart() == true) {
 				mes("[kafra Claris]");
-				mes("You already");
-				mes("have a cart.");
+				mes("You already have a cart.");
 				close2();
 			} else {
 				if (getskilllv("MC_PUSHCART") == 0) {
 					mes("[kafra Claris]");
-					mes("You have ^006400Push cart^000000 skill,");
-					mes("If you want");
-					mes("to use a cart.");
+					mes("You need the ^006400Push cart^000000 skill,");
+					mes("If you want to use a cart.");
 					close2();
 					cutin("", 255);
 					end;
@@ -435,8 +433,7 @@ xmas_in,97,99,5	script	Claris#xmas	4_F_KAFRA5,1,1,{
 					setcart;
 				} else {
 					mes("[kafra Claris]");
-					mes("It's 800 zeny for");
-					mes("using a cart.");
+					mes("It's 800 zeny for using a cart.");
 					mes("Will you use it?");
 					next();
 					if (select("Use it.", "Cancel!") == 2) {
@@ -531,16 +528,16 @@ xmas_in,104,99,5	script	Debril#xmas	4_F_KAFRA6,1,1,{
 
 	switch(.@menu) {
 	case 1:
-		.@item = 664; // Gift_Box_1
+		.@item = Gift_Box_1;
 		break;
 	case 2:
-		.@item = 665; // Gift_Box_2
+		.@item = Gift_Box_2;
 		break;
 	case 3:
-		.@item = 666; // Gift_Box_3
+		.@item = Gift_Box_3;
 		break;
 	case 4:
-		.@item = 667; // Gift_Box_4
+		.@item = Gift_Box_4;
 		break;
 	case 5:
 		mes("[kafra Debril]");
@@ -604,16 +601,16 @@ xmas_in,104,99,5	script	Debril#xmas	4_F_KAFRA6,1,1,{
 					emotion(e_thx);
 					switch(rand(1, 4)) {
 						case 1:
-							delitem2 664, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
+							delitem2 Gift_Box_1, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
 							break;
 						case 2:
-							delitem2 665, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
+							delitem2 Gift_Box_2, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
 							break;
 						case 3:
-							delitem2 666, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
+							delitem2 Gift_Box_3, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
 							break;
 						case 4:
-							delitem2 667, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
+							delitem2 Gift_Box_4, 1, 1, 0, 0, 254, 0, .@slot3, .@slot4;
 							break;
 					}
 					mes("[kafra Debril]");
@@ -633,7 +630,7 @@ xmas_in,104,99,5	script	Debril#xmas	4_F_KAFRA6,1,1,{
 					.@n_rand_gift = rand(1, 5);
 					if (.@n_rand_gift > 0 && .@n_rand_gift < 3) {
 						getitem(Santas_Hat, 1);
-					} else if (.@n_rand_gift > 2 && .@n_rand_gift < 5) {
+					} else if (.@n_rand_gift < 5) {
 						getitem(Santas_Hat_, 1);
 					} else {
 						getitem(Santa_Beard, 1);
@@ -870,16 +867,16 @@ xmas,136,314,6	script	The common boy#xmas	4_M_KID1,{
 				} else {
 					switch(rand(1, 4)) {
 						case 1:
-							delitem2 664,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
+							delitem2 Gift_Box_1,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
 							break;
 						case 2:
-							delitem2 665,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
+							delitem2 Gift_Box_2,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
 							break;
 						case 3:
-							delitem2 666,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
+							delitem2 Gift_Box_3,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
 							break;
 						case 4:
-							delitem2 667,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
+							delitem2 Gift_Box_4,1,1,0,0,.@slot1,.@slot2,.@slot3,.@slot4;
 							break;
 					}
 					mes("[Retired Santa]");
@@ -1323,21 +1320,21 @@ xmas_dun02,83,222,0	script	#misty_i06	FAKE_NPC,2,2,{
 	mes(".......");
 	getitem(Illusion_Piece, 1);
 	close2();
-	disablenpc(strnpcinfo(0));
+	disablenpc(strnpcinfo(NPC_NAME));
 	end;
 
 	OnTimer10000:
-		disablenpc(strnpcinfo(0));
+		disablenpc(strnpcinfo(NPC_NAME));
 		end;
 
 	OnEnable:
-		enablenpc(strnpcinfo(0));
+		enablenpc(strnpcinfo(NPC_NAME));
 		initnpctimer();
 		end;
 
 	OnInit:
-		if (strnpcinfo(1) != "") {
-			disablenpc(strnpcinfo(0));
+		if (strnpcinfo(NPC_NAME_VISIBLE) != "") {
+			disablenpc(strnpcinfo(NPC_NAME));
 		}
 		end;
 }
@@ -1371,6 +1368,7 @@ xmas_dun01,0,0,0,0	monster	Christmas Orc	1588,3,30000,0
 // -----------------------------------------------------------
 
 sec_in02,21,175,6	script	Xmas Manager#xmas	4_F_KAFRA7,{
+	callfunc "F_GM_NPC";
 	mes("[Misty]");
 	mes("The number of characters passed mission");
 	mes("--> ^006400"+$091203_xmas01+"^000000");

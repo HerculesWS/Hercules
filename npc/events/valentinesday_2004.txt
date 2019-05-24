@@ -44,13 +44,14 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "That's right, don't you love chocolate.... I do.";
 	mes "And you are in luck, because I'm selling them for only 5,000 zeny a piece!";
 	next;
-	if (select("I want some chocolate!", "No thanks.")==2) {
+	if (select("I want some chocolate!", "No thanks.") == 2) {
 		mes "[Stephen]";
 		mes "You don't want any chocolate?";
 		mes "I'm telling you! You'll regret it!";
 		mes "You better get some now... you won't come across Chocolate like this ever again!";
 		mes "Think it over and visit me again sometime.";
-		close; }
+		close;
+	}
 	mes "[Stephen]";
 	mes "Hah!";
 	mes "I knew it!";
@@ -63,10 +64,12 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "[Stephen]";
 	if (.@i > 5) {
 		mes "I'm sorry, but I can't give you that many.";
-		close; }
+		close;
+	}
 	if (Zeny < .@i*5000) {
 		mes "I'm sorry, but it seems you can't afford to buy these off me.";
-		close; }
+		close;
+	}
 	Zeny -= .@i*5000;
 	getitem 558,.@i;
 	mes "There you go!";
@@ -104,7 +107,7 @@ prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Yes?";
 	next;
-	if (select("I want some hand made chocolate...", "I'm lost, sorry to bother you.")==2) {
+	if (select("I want some hand made chocolate...", "I'm lost, sorry to bother you.") == 2) {
 		mes "[Carl Orleans]";
 		mes "Oh... well, if you want me to make some of my special Hand Made Chocolate....";
 		mes "You will need to give me at least ^0000FF 3 Chocolates^000000.";
@@ -115,14 +118,16 @@ prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 		next;
 		mes "[Carl Orleans]";
 		mes "See You.";
-		close; }
+		close;
+	}
 	mes "[Carl Orleans]";
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
 	mes "[Carl Orleans]";
 	if (countitem(Chocolate) < 3) {
 		mes "I'm sorry, you don't have enough Chocolate Bars to do this.";
-		close; }
+		close;
+	}
 	delitem 558,3;
 	mes "You got 3 pieces of pure chocolate, I see.";
 	mes "Give them to me...";

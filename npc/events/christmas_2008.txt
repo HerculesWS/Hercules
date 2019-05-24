@@ -285,7 +285,6 @@ prontera,226,306,0	script	Caroller#08xmas	1_F_PRIEST,{
 			mes "Isn't that big news?";
 			emotion e_heh;
 			close;
-		break;
 		case 2:
 			mes "[Caroller]";
 			mes "Gift boxes?! All right!";
@@ -303,7 +302,6 @@ prontera,226,306,0	script	Caroller#08xmas	1_F_PRIEST,{
 			mes "Isn't it amazing?";
 			emotion e_heh;
 			close;
-		break;
 		case 3:
 			if (evt_xmas08_carol >= 103) {
 				mes "[Caroller]";
@@ -590,7 +588,7 @@ prontera,226,306,0	script	Caroller#08xmas	1_F_PRIEST,{
 			next;
 			.@SantaCardTurn = 0;
 			.@SantaCardWins = 0;
-			while(1) {
+			while(true) {
 				if (.@SantaCardTurn == 5 || .@SantaCardWins == 3) {
 					break;
 				}

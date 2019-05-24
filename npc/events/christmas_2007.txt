@@ -131,7 +131,7 @@ prontera,47,329,3	script	Examiner#2007xm	4_M_ALCHE_D,3,3,{
 		mes("my report and admit that");
 		mes("I failed to find anything.");
 		next();
-		while(1) {
+		while(true) {
 			switch(select("What is this about?", "What are you looking for?", "How can I help?")) {
 			case 1:
 				mes("[Examiner Miche]");
@@ -340,7 +340,7 @@ xmas,196,245,5	script	Dist. Staff#2007xm	4_M_ROGUE,{
 		mes("we don't have the luxury");
 		mes("of time. Very busy here!");
 		next();
-		while(1) {
+		while(true) {
 			if (select("What you are doing?", "What happened during the heist?") == 2) {
 				mes("[Dist. Staff Igor]");
 				mes("Let's see... We were");
@@ -653,7 +653,7 @@ xmas_dun01,152,129,5	script	Div Staff#2007xm	4_M_EINMAN2,{
 		mes("Headquarters all of a sudden...");
 		mes("Ah, and I heard a noise!");
 		next();
-		while(1) {
+		while(true) {
 			if (select("A noise?", "Chat with Boris?") == 2) {
 				mes("[Div Staff Linus]");
 				mes("Oh, yeah. I was talking to");
@@ -939,19 +939,19 @@ xmas,143,44,3	script	Kid#2007xm	4_F_NFLOSTGIRL,{
 	end;
 
 OnTouch:
-	if (strnpcinfo(2) == "thief107xm") {
+	if (strnpcinfo(NPC_NAME_HIDDEN) == "thief107xm") {
 		.@checkVal = 107;
-	} else if (strnpcinfo(2) == "thief207xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief207xm") {
 		.@checkVal = 108;
-	} else if (strnpcinfo(2) == "thief307xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief307xm") {
 		.@checkVal = 109;
-	} else if (strnpcinfo(2) == "thief407xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief407xm") {
 		.@checkVal = 110;
 	}
 
 	if (05christ_solo == .@checkVal || 05christ_solo == 111) {
-		enablenpc("Odd Old Man#"+strnpcinfo(2));
-		disablenpc("#"+strnpcinfo(2));
+		enablenpc("Odd Old Man#"+strnpcinfo(NPC_NAME_HIDDEN));
+		disablenpc("#"+strnpcinfo(NPC_NAME_HIDDEN));
 	}
 	end;
 }
@@ -962,16 +962,16 @@ xmas_dun02,240,233,0	duplicate(thief07xm)	#thief307xm	FAKE_NPC,3,3
 xmas_dun02,239,19,0	duplicate(thief07xm)	#thief407xm	FAKE_NPC,3,3
 
 -	script	::oldMan07xm	FAKE_NPC,{
-	if (strnpcinfo(2) == "thief107xm") {
+	if (strnpcinfo(NPC_NAME_HIDDEN) == "thief107xm") {
 		.@checkVala = 107;
 		.@checkValb = 111;
-	} else if (strnpcinfo(2) == "thief207xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief207xm") {
 		.@checkVala = 108;
 		.@checkValb = 112;
-	} else if (strnpcinfo(2) == "thief307xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief307xm") {
 		.@checkVala = 109;
 		.@checkValb = 113;
-	} else if (strnpcinfo(2) == "thief407xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief407xm") {
 		.@checkVala = 110;
 		.@checkValb = 114;
 	}
@@ -1027,8 +1027,8 @@ xmas_dun02,239,19,0	duplicate(thief07xm)	#thief407xm	FAKE_NPC,3,3
 		mes("matter altogether. Heh...");
 		mes("I'm gonna kill you!");
 		close2();
-		donpcevent("mobspawn#"+strnpcinfo(2)+"::OnEnable");
-		disablenpc("Odd Old Man#"+strnpcinfo(2));
+		donpcevent("mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnEnable");
+		disablenpc("Odd Old Man#"+strnpcinfo(NPC_NAME_HIDDEN));
 		end;
 	}
 
@@ -1043,14 +1043,14 @@ xmas_dun02,239,19,0	duplicate(thief07xm)	#thief407xm	FAKE_NPC,3,3
 		getitem Stolen_Candy, 1;
 		getitem Yulia_Hat, 1;
 		close2();
-		disablenpc("Odd Old Man#"+strnpcinfo(2));
-		enablenpc("#"+strnpcinfo(2));
+		disablenpc("Odd Old Man#"+strnpcinfo(NPC_NAME_HIDDEN));
+		enablenpc("#"+strnpcinfo(NPC_NAME_HIDDEN));
 		end;
 	}
 
 OnInit:
-	if (strnpcinfo(2) != "") {
-		disablenpc("Odd Old Man#"+strnpcinfo(2));
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "") {
+		disablenpc("Odd Old Man#"+strnpcinfo(NPC_NAME_HIDDEN));
 	}
 	end;
 }
@@ -1064,49 +1064,49 @@ xmas_dun02,239,19,0	duplicate(oldMan07xm)	Odd Old Man#thief407xm	4_M_SANTA
 	end;
 
 OnEnable:
-	enablenpc("mobspawn#"+strnpcinfo(2));
+	enablenpc("mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN));
 	initnpctimer();
-	getmapxy(.@map$, .@mapx, .@mapy, UNITTYPE_NPC, strnpcinfo(0));
-	monster("xmas_dun02",.@mapx,.@mapy,"Cookie Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
-	monster("xmas_dun02",.@mapx,.@mapy,"Hat Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
-	monster("xmas_dun02",.@mapx,.@mapy,"Candy Thief",1962,1,"mobspawn#"+strnpcinfo(2)+"::OnMyMobDead");
+	getmapxy(.@map$, .@mapx, .@mapy, UNITTYPE_NPC, strnpcinfo(NPC_NAME));
+	monster("xmas_dun02",.@mapx,.@mapy,"Cookie Thief",1962,1,"mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnMyMobDead");
+	monster("xmas_dun02",.@mapx,.@mapy,"Hat Thief",1962,1,"mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnMyMobDead");
+	monster("xmas_dun02",.@mapx,.@mapy,"Candy Thief",1962,1,"mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnMyMobDead");
 	end;
 
 OnMyMobDead:
-	if (strnpcinfo(2) == "thief107xm") {
+	if (strnpcinfo(NPC_NAME_HIDDEN) == "thief107xm") {
 		.@checkVala = 107;
 		.@checkValb = 111;
-	} else if (strnpcinfo(2) == "thief207xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief207xm") {
 		.@checkVala = 108;
 		.@checkValb = 112;
-	} else if (strnpcinfo(2) == "thief307xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief307xm") {
 		.@checkVala = 109;
 		.@checkValb = 113;
-	} else if (strnpcinfo(2) == "thief407xm") {
+	} else if (strnpcinfo(NPC_NAME_HIDDEN) == "thief407xm") {
 		.@checkVala = 110;
 		.@checkValb = 114;
 	}
 
-	if (mobcount("xmas_dun02", "#"+strnpcinfo(2)+"::OnMyMobDead") < 1) {
+	if (mobcount("xmas_dun02", "#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnMyMobDead") < 1) {
 		if (05christ_solo == .@checkVala) {
 			05christ_solo = .@checkValb;
 		}
-		enablenpc("Odd Old Man#"+strnpcinfo(2));
-		disablenpc("mobspawn#"+strnpcinfo(2));
+		enablenpc("Odd Old Man#"+strnpcinfo(NPC_NAME_HIDDEN));
+		disablenpc("mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN));
 		stopnpctimer();
 	}
 	end;
 
 OnTimer120000:
-	killmonster("xmas_dun02", "#"+strnpcinfo(2)+"::OnMyMobDead");
-	enablenpc("Odd Old Man#"+strnpcinfo(2));
-	disablenpc("mobspawn#"+strnpcinfo(2));
+	killmonster("xmas_dun02", "#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnMyMobDead");
+	enablenpc("Odd Old Man#"+strnpcinfo(NPC_NAME_HIDDEN));
+	disablenpc("mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN));
 	stopnpctimer();
 	end;
 
 OnInit:
-	if (strnpcinfo(2) != "") {
-		disablenpc("mobspawn#"+strnpcinfo(2));
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "") {
+		disablenpc("mobspawn#"+strnpcinfo(NPC_NAME_HIDDEN));
 	}
 	end;
 }
@@ -2097,7 +2097,7 @@ morocc_in,116,127,3	script	Kage#ryu	4W_M_02,{
 		mes("don't you tell me");
 		mes("who you think it is?");
 		close();
-	} else if (05christ_solo == 139 && Sex == 1) {
+	} else if (05christ_solo == 139 && Sex == SEX_MALE) {
 		mes("[Kage]");
 		mes("Are you here to try");
 		mes("to make me feel guilty");
@@ -2170,7 +2170,7 @@ morocc_in,116,127,3	script	Kage#ryu	4W_M_02,{
 		mes("of hair on a woman's head?");
 		mes("It's like... Art that's alive!");
 		next();
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			mes("[Kage]");
 			mes("You there! You have the");
 			mes("kind of eyes that can");
@@ -2476,7 +2476,7 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 			mes("me know which hairstyle");
 			mes("you want to see!");
 			close();
-		} else if (.@style == 0) {
+		} else if (.@style <= 0) {
 			cutin "hair_f_01", 255;
 			mes("[Artist Louise Kim]");
 			mes("Let me know anytime");
@@ -2831,14 +2831,14 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 				mes("that. Make sure that you");
 				mes("enter a number from 1 to 23.");
 				close();
-			} else if (.@style == 0) {
+			} else if (.@style <= 0) {
 				mes("[Artist Louise Kim]");
 				mes("Oh, you changed your");
 				mes("mind? Alright, but come");
 				mes("back to me if you decide");
 				mes("to change your hairstyle.");
 				close();
-			} else if (getlook(1) == .@style) {
+			} else if (getlook(LOOK_HAIR) == .@style) {
 				mes("[Artist Louise Kim]");
 				mes("Hm? You already have");
 				mes("this hairstyle. Maybe");
@@ -2875,7 +2875,7 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 				mes("your hairstyle again.");
 				mes("I'll be waiting!");
 				delitem Louis_Hair_Coupon, 1;
-				setlook 1,.@style;
+				setlook LOOK_HAIR,.@style;
 				close();
 			}
 		} else {
@@ -2905,15 +2905,9 @@ xmas_in,89,92,5	script	Louise Kim#07christ_00	4_F_06,{
 	L_cutin:
 		.@num = getarg(0);
 		if (Sex == SEX_MALE) {
-			if (.@num < 10)
-				cutin "hair_m_0"+ .@num, 4;
-			else
-				cutin "hair_m_"+ .@num, 4;
+			cutin sprintf("hair_m_%02d", .@num), 4;
 		} else {
-			if (.@num < 10)
-				cutin "hair_f_0"+ .@num, 4;
-			else
-				cutin "hair_f_"+ .@num, 4;
+			cutin sprintf("hair_f_%02d", .@num), 4;
 		}
 		return;
 }
@@ -3195,29 +3189,29 @@ prontera,156,268,3	script	Santa Claus#07christ_01	4_M_SANTA,{
 		.@07christ_gift = rand(1, 100);
 		if (.@07christ_gift < 11) {
 			getitem Red_Bag, 1;
-		} else if (.@07christ_gift > 10 && .@07christ_gift < 21) {
+		} else if (.@07christ_gift < 21) {
 			getitem Chocolate, 3;
-		} else if (.@07christ_gift > 20 && 07christ_gift < 31) {
+		} else if (.@07christ_gift < 31) {
 			getitem White_Chocolate, 2;
-		} else if (.@07christ_gift > 20 && .@07christ_gift < 36) {
+		} else if (.@07christ_gift < 36) {
 			getitem Choco_Tart, 1;
-		} else if (.@07christ_gift > 35 && .@07christ_gift < 41) {
+		} else if (.@07christ_gift < 41) {
 			getitem Jam_Pancake, 1;
-		} else if (.@07christ_gift > 40 && .@07christ_gift < 46) {
+		} else if (.@07christ_gift < 46) {
 			getitem Sour_Cream_Pancake, 1;
-		} else if (.@07christ_gift > 45 && .@07christ_gift < 51) {
+		} else if (.@07christ_gift < 51) {
 			getitem Honey_Pancake, 1;
-		} else if (.@07christ_gift > 50 && .@07christ_gift < 56) {
+		} else if (.@07christ_gift < 56) {
 			getitem Mushroom_Pancake, 1;
-		} else if (.@07christ_gift > 55 && .@07christ_gift < 61) {
+		} else if (.@07christ_gift < 61) {
 			getitem Caviar_Pancake, 1;
-		} else if (.@07christ_gift > 60 && .@07christ_gift < 71) {
+		} else if (.@07christ_gift < 71) {
 			getitem Candy_Striper, 5;
-		} else if (.@07christ_gift > 70 && .@07christ_gift < 81) {
+		} else if (.@07christ_gift < 81) {
 			getitem Santas_Hat, 1;
-		} else if (.@07christ_gift > 80 && .@07christ_gift < 86) {
+		} else if (.@07christ_gift < 86) {
 			getitem Cookie_Bag, 1;
-		} else if (.@07christ_gift > 85 && .@07christ_gift < 91) {
+		} else if (.@07christ_gift < 91) {
 			getitem Old_Bleu_Box, 1;
 		} else {
 			getitem Well_Baked_Cookie, 5;

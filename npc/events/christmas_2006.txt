@@ -144,7 +144,7 @@ xmas_in,89,92,5	script	Louise Kim#06xmas	4_F_06,{
 			next();
 			mes("[Designer Louise Kim]");
 			mes("~This is called the Louise's miracle.~");
-			mes("~The most talented disigner,~");
+			mes("~The most talented designer,~");
 			mes("~L_O_U_I_S_E K_I_M~");
 			emotion(e_lv);
 			specialeffect(EF_BENEDICTIO);
@@ -3260,29 +3260,29 @@ prontera,156,268,3	script	Santa Claus#06xmas_01	4_M_SANTA,{
 			getitem(Santas_Hat, 1);
 		} else if (.@06christ_gift == 2) {
 			getitem(Pierrot_Nose, 1);
-		} else if (.@06christ_gift > 2 && .@06christ_gift < 6) {
+		} else if (.@06christ_gift < 6) {
 			getitem(Gift_Box, 1);
-		} else if (.@06christ_gift > 5 && .@06christ_gift < 11) {
+		} else if (.@06christ_gift < 11) {
 			getitem(Red_Socks_With_Holes, 1);
-		} else if (.@06christ_gift > 10 && .@06christ_gift < 16) {
+		} else if (.@06christ_gift < 16) {
 			getitem(Branch_Of_Dead_Tree, 1);
-		} else if (.@06christ_gift > 15 && .@06christ_gift < 21) {
+		} else if (.@06christ_gift < 21) {
 			getitem(Royal_Jelly, 1);
-		} else if (.@06christ_gift > 20 && .@06christ_gift < 26) {
+		} else if (.@06christ_gift < 26) {
 			getitem(Seed_Of_Yggdrasil, 1);
-		} else if (.@06christ_gift > 25 && .@06christ_gift < 31) {
+		} else if (.@06christ_gift < 31) {
 			getitem(Cookie_Bag, 1);
-		} else if (.@06christ_gift > 30 && .@06christ_gift < 41) {
+		} else if (.@06christ_gift < 41) {
 			getitem(Chocolate, 3);
-		} else if (.@06christ_gift > 40 && .@06christ_gift < 51) {
+		} else if (.@06christ_gift < 51) {
 			getitem(Candy_Striper, 7);
-		} else if (.@06christ_gift > 50 && .@06christ_gift < 61) {
+		} else if (.@06christ_gift < 61) {
 			getitem(Candy, 10);
-		} else if (.@06christ_gift > 60 && .@06christ_gift < 71) {
+		} else if (.@06christ_gift < 71) {
 			getitem(Well_Baked_Cookie, 5);
-		} else if (.@06christ_gift > 70 && .@06christ_gift < 81) {
+		} else if (.@06christ_gift < 81) {
 			getitem(Fruit_Of_Mastela, 1);
-		} else if (.@06christ_gift > 80 && .@06christ_gift < 91) {
+		} else if (.@06christ_gift < 91) {
 			getitem(Event_Cake, 3);
 		} else {
 			getitem(Event_Cake, 5);

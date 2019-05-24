@@ -35,12 +35,10 @@
 prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize()- @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
-
-	.@mas = rand(1, 100);
 
 	if (BaseLevel < 30) {
 		mes("[Quercus]");
@@ -231,7 +229,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 			emotion(e_no1);
 			close();
 		}
-		if (.@mas > 0 && .@mas < 51) {
+		if (rand(1, 100) < 51) {
 			mes("[Quercus]");
 			mes("Alright buddy,");
 			mes("It seems like you really really want to help us.");
@@ -545,7 +543,7 @@ prontera,149,176,5	script	Quercus#mas	XMAS_SMOKEY_R,{
 geffen,113,148,3	script	Castanea#mas	XMAS_SMOKEY_B,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -911,7 +909,7 @@ geffen,110,148,5	script	Juniper#mas01	XMAS_SMOKEY_Y,{
 geffen,199,172,3	script	Bean#mas	XMAS_SMOKEY_R,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -998,7 +996,7 @@ geffen,199,172,3	script	Bean#mas	XMAS_SMOKEY_R,{
 geffen,204,174,0	script	#mas1	FAKE_NPC,2,2,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -1024,7 +1022,7 @@ geffen,204,174,0	script	#mas1	FAKE_NPC,2,2,{
 geffen,37,154,5	script	Pinus#mas	XMAS_SMOKEY_Y,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -1130,7 +1128,7 @@ geffen,37,154,5	script	Pinus#mas	XMAS_SMOKEY_Y,{
 geffen,26,156,0	script	#mas2	FAKE_NPC,2,2,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -1169,7 +1167,7 @@ geffen,26,156,0	script	#mas2	FAKE_NPC,2,2,{
 geffen,109,142,3	script	Pyrus#mas	XMAS_SMOKEY_R,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -1386,7 +1384,7 @@ geffen,109,142,3	script	Pyrus#mas	XMAS_SMOKEY_R,{
 geffen,98,196,3	script	Citrus#mas	XMAS_SMOKEY_B,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -1474,7 +1472,7 @@ geffen,98,196,3	script	Citrus#mas	XMAS_SMOKEY_B,{
 geffen,98,196,3	script	Kaki#mas	XMAS_SMOKEY_Y,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -1606,7 +1604,7 @@ geffen,98,196,3	script	Kaki#mas	XMAS_SMOKEY_Y,{
 xmas_in,95,95,5	script	Little Santa#mas	4_F_RUSCHILD,{
 	getinventorylist();
 
-	if ((MAX_INVENTORY - @inventorylist_count) < 3) {
+	if ((getInventorySize() - @inventorylist_count) < 3) {
 		mes("- You are carrying too many items to continue. -");
 		close();
 	}
@@ -1757,7 +1755,7 @@ xmas_in,95,95,5	script	Little Santa#mas	4_F_RUSCHILD,{
 		next();
 		mes("Let's go back to the Quercus in Prontera.");
 		close();
-	} else if (evt_2011_xmas > 16) {
+	} else {
 		mes("[Racoons shouting]");
 		mes("Give us more Sweet Potato!");
 		mes("My present! My Sweet Potato!");
@@ -1828,7 +1826,7 @@ xmas,137,220,7	script	Abies#mas	XMAS_SMOKEY_R,{
 			mes("Come on!");
 			close();
 		}
-	} else if (evt_2011_xmas > 15) {
+	} else {
 		mes("[Abies]");
 		mes("I can actually picture a Rudolf dancing through");
 		mes("the Christmas carroll.");
@@ -1886,7 +1884,7 @@ xmas,145,218,7	script	Cedrus#mas	XMAS_SMOKEY_Y,{
 			mes("More more!");
 			close();
 		}
-	} else if (evt_2011_xmas > 15) {
+	} else {
 		mes("[Cedrus]");
 		mes("This tastes like sweet potatoes");
 		mes("twinkling like a tree light,");
@@ -1941,7 +1939,7 @@ xmas,150,219,1	script	Wisteria#mas	XMAS_SMOKEY_B,{
 				close();
 			}
 		}
-	} else if (evt_2011_xmas > 15) {
+	} else {
 		mes("[Wisteria]");
 		mes("This tastes so deep,");
 		mes("that makes me almost cry in this winter time!");
@@ -1990,7 +1988,7 @@ xmas,144,215,7	script	Tobira#mas	XMAS_SMOKEY_R,{
 				close();
 			}
 		}
-	} else if (evt_2011_xmas > 15) {
+	} else {
 		mes("[Tobira]");
 		mes("Ah Ah... I'm speechless");
 		mes("from this crazy delicious taste!");
@@ -2047,7 +2045,7 @@ xmas,149,214,1	script	Prunus#mas	XMAS_SMOKEY_B,{
 			mes("My sweet potato~!");
 			close();
 		}
-	} else if (evt_2011_xmas > 15) {
+	} else {
 		mes("[Prunus]");
 		mes("Oh.. Wow...");
 		mes("Even a little bady would stop crying");
@@ -2072,7 +2070,7 @@ prontera,149,169,5	script	Kalopanax#mas	XMAS_SMOKEY_Y,{
 		mes("Leave my fabric alone!!!");
 		emotion(e_an, "Quercus#mas");
 		close();
-	} else if (evt_2011_xmas > 16) {
+	} else {
 		mes("[Kalopanax]");
 		mes("For Christmas, there's nothing better");
 		mes("than a sweet potato!");
@@ -2092,7 +2090,7 @@ prontera,153,173,1	script	Tilia#mas	XMAS_SMOKEY_R,{
 		mes("Stop taking fabrics from me!");
 		emotion(e_an, "Quercus#mas");
 		close();
-	} else if (evt_2011_xmas > 16) {
+	} else {
 		mes("[Tilia]");
 		mes("For Christmas, there's nothing better");
 		mes("than a sweet potato!");
@@ -2112,7 +2110,7 @@ prontera,155,168,1	script	Camphora#mas	XMAS_SMOKEY_B,{
 		mes("Stop taking fabrics from me!");
 		emotion(e_an, "Quercus#mas");
 		close();
-	} else if (evt_2011_xmas > 16) {
+	} else {
 		mes("[Camphora]");
 		mes("For Christmas, there's nothing better");
 		mes("than a sweet potato!");
@@ -2153,9 +2151,9 @@ alberta,127,59,3	duplicate(xmasReporter)	Christmas Reporter#ch9	XMAS_SMOKEY_R
 // -----------------------------------------------------------
 
 prontera,1,2,5	script	Christmas Assistant#mas	4_MASK_SMOKEY,{
-	input .@password;
+	callfunc "F_GM_NPC";
 
-	if (.@password != 1854) {
+	if (callfunc("F_GM_NPC","1854",1) == 0) {
 		mes("Nice sweet potato!");
 		close();
 	}
@@ -2164,7 +2162,7 @@ prontera,1,2,5	script	Christmas Assistant#mas	4_MASK_SMOKEY,{
 	mes("Tell me");
 	mes("everything you want!");
 	next();
-	switch(select("Enable NPC", "Disable NPC", "Initialize Quest", "Castanea ¼±ÅÃÁö", "Pyrus ¼±ÅÃÁö", "¹ã°í±¸¸¶ ¹èÆ÷ Á÷Àü", "Setitem8")) {
+	switch(select("Enable NPC", "Disable NPC", "Initialize Quest", "Castanea", "Pyrus", "Before Sweet Potato", "Castanea Final")) {
 		case 1:
 			enablenpc "Quercus#mas";
 			mes("[Coal Briquet Plan]");

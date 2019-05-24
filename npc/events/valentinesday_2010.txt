@@ -62,7 +62,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 				mes("Would the Old Woman as well laughing?)");
 				close();
 			}
-			mes("[^0000CD"+strcharinfo(0)+"^000000]");
+			mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 			mes("Hello.");
 			mes("May I interrupt you for a second?");
 			next();
@@ -85,7 +85,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 			mes("My wife asks me to tell you that");
 			mes("she's glad to meet you.");
 			next();
-			mes("[^0000CD"+strcharinfo(0)+"^000000]");
+			mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 			mes("Oh, Hello.");
 			next();
 			mes("(The Old Woman still has no words,");
@@ -96,7 +96,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 			mes("to meet you.");
 			mes("She talks a lot today.");
 			next();
-			mes("[^0000CD"+strcharinfo(0)+"^000000]");
+			mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 			mes("...It may be presumptuous to ask but,");
 			mes("is she");
 			mes("ill?");
@@ -137,7 +137,6 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 			mes("I saw the two taking a picture");
 			mes("friendly.");
 			next();
-			cutin("", 255);
 			cutin("Aged_couple_2", 3);
 			mes("I hope them to be happy for a long time.)");
 			emotion(e_lv2, playerattached());
@@ -156,7 +155,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 				if (select("Give her the ^FF1493Cupid's Chocolate^000000.", "Just pass by her.") == 2) {
 					close();
 				}
-				mes("[^0000CD"+strcharinfo(0)+"^000000]");
+				mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 				mes("Grandpa.");
 				mes("Here, please give it to grandma.");
 				mes("Ah, You don't have to eat it");
@@ -166,7 +165,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 				emotion(e_gasp);
 				mes("Why.. what's this?");
 				next();
-				mes("[^0000CD"+strcharinfo(0)+"^000000]");
+				mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 				mes("Today is the ^800080Valentine's Day^000000.");
 				mes("She'll love it when");
 				mes("you give it to her.");
@@ -185,7 +184,7 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 				mes("take this. I'm in the countryside that");
 				mes("I have nothing to give you but this.");
 				next();
-				mes("[^0000CD"+strcharinfo(0)+"^000000]");
+				mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 				mes("No. I didn't want for any reward");
 				mes("when I gave you that.");
 				next();
@@ -210,9 +209,8 @@ hugel,102,148,3	script	The Old Man#hugel	4_M_HUGRANFA,{
 				getitem Yggdrasilberry, 5;
 				getexp(90000, 0);
 				evt_2010_valen = 10;
-				.@i = rand(0, 20);
-				setarray(.@pet,PORING,DROPS,POPORING,LUNATIC,PICKY,CHONCHON,STEEL_CHONCHON,SAVAGE_BABE,DESERT_WOLF_B,ROCKER,SPORE,POISON_SPORE,PECOPECO,SMOKIE,YOYO,ORK_WARRIOR,MUNAK,DOKEBI,ISIS,PETIT,BON_GUN);
-				makepet .@pet[.@i];
+				.@pet = callfunc("F_Rand", PORING, DROPS, POPORING, LUNATIC, PICKY, CHONCHON, STEEL_CHONCHON, SAVAGE_BABE, DESERT_WOLF_B, ROCKER, SPORE, POISON_SPORE, PECOPECO, SMOKIE, YOYO, ORK_WARRIOR, MUNAK, DOKEBI, ISIS, PETIT, BON_GUN);
+				makepet .@pet;
 				close();
 			}
 		} else {
@@ -279,7 +277,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("warm story so, I decided to calm him");
 		mes("down sweetly.)");
 		next();
-		mes("[^0000CD"+strcharinfo(0)+"^000000]");
+		mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 		mes("Hey boy, what's the matter?");
 		mes("Hey, Don't cry. Why are you");
 		mes("crying on such a wonderful day?");
@@ -288,7 +286,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("Sob...sob..");
 		mes("What are you? Sob...");
 		next();
-		mes("[^0000CD"+strcharinfo(0)+"^000000]");
+		mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 		emotion(e_omg, playerattached());
 		mes("(Damn.. you little bean..)");
 		mes("Stop crying, What's up?");
@@ -306,7 +304,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("I'm so embarrassed to live..");
 		mes("Sob..Ugh~");
 		next();
-		mes("[^0000CD"+strcharinfo(0)+"^000000]");
+		mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 		mes("Were you crying over on such thing?");
 		mes("Don't cry, I didn't get any too.");
 		mes("The more important thing than chocolate is the mind..");
@@ -321,7 +319,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("He wishes to die, so shall I just");
 		mes("make his wish come true? Huh...)");
 		next();
-		mes("[^0000CD"+strcharinfo(0)+"^000000]");
+		mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 		mes("I'll just buy you a chocolate!");
 		mes("All right?! So please stop crying!");
 		next();
@@ -335,7 +333,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("You are going as far as ^0000FFAldebaran^000000 to get it?!");
 		mes("Are you sure?");
 		next();
-		mes("[^0000CD"+strcharinfo(0)+"^000000]");
+		mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 		mes("Oops.. When did I...");
 		next();
 		mes("[Andy]");
@@ -344,7 +342,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("^0000FFAldebaran^000000.");
 		mes("I wanna get that chocolate!!");
 		next();
-		mes("[^0000CD"+strcharinfo(0)+"^000000]");
+		mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 		mes(".....How about....");
 		mes("......just a chocolate....?");
 		next();
@@ -368,7 +366,7 @@ yuno,66,189,6	script	Andy#yuno	4_M_NFLOSTMAN,{
 		mes("Wow! Is this the");
 		mes("^FF1493Cupid's Chocolate^000000?!");
 		next();
-		mes("[^0000CD"+strcharinfo(0)+"^000000]");
+		mes("[^0000CD"+strcharinfo(PC_NAME)+"^000000]");
 		mes("Just take it.");
 		next();
 		mes("[Andy]");
@@ -489,7 +487,7 @@ aldebaran,95,139,6	script	The Fairy of Cupid#vday1	4_ANGELING,1,1,{
 					close();
 				}
 				.@int_temp = rand(1, 10);
-				if (.@int_temp == 1 || .@int_temp == 2) {
+				if (.@int_temp <= 2) {
 					mes("[The Fairy of Cupid]");
 					mes("Here it is! Be careful");
 					mes("not to eat it up all for yourself");
@@ -530,7 +528,7 @@ aldebaran,95,139,6	script	The Fairy of Cupid#vday1	4_ANGELING,1,1,{
 		}
 	} else if (evt_2010_valen == 7) {
 		.@int_temp = rand(1, 8);
-		if (.@int_temp == 1 || .@int_temp == 2) {
+		if (.@int_temp <= 2) {
 			mes("[The Fairy of Cupid]");
 			mes("Oh, you've came just in time.");
 			mes("Waited? Here arrived the chocolates");
@@ -595,7 +593,7 @@ aldebaran,184,127,3	script	The Fairy of Cupid#vday2	4_ANGELING,1,1,{
 					close();
 				}
 				.@int_temp = rand(1, 10);
-				if (.@int_temp == 1 || .@int_temp == 2) {
+				if (.@int_temp <= 2) {
 					mes("[The Fairy of Cupid]");
 					mes("Here, Take it.");
 					evt_2010_valen = 8;
@@ -630,7 +628,7 @@ aldebaran,184,127,3	script	The Fairy of Cupid#vday2	4_ANGELING,1,1,{
 		}
 	} else if (evt_2010_valen == 7) {
 		.@int_temp = rand(1, 8);
-		if (.@int_temp == 1 || .@int_temp == 2) {
+		if (.@int_temp <= 2) {
 			mes("[The Fairy of Cupid]");
 			mes("Ah, you are here.");
 			mes("You've waited so long time.");
@@ -903,6 +901,7 @@ aldebaran,177,127,6	script	Man#aldebaran02	4_M_06,{
 }
 
 hugel,1,1,3	script	Valentine ON/OFF#hugel	1_M_SIZ,{
+	callfunc "F_GM_NPC";
 	mes("Hello?");
 	mes("I'm 2010 Valentine's Day Event ON/OFF NPC.");
 	next();
