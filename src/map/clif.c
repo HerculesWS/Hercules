@@ -4059,6 +4059,33 @@ static void clif_changeoption(struct block_list *bl)
 	}
 }
 
+static void clif_changeoption_target(struct block_list *bl, struct block_list *target_bl, enum send_target target)
+{
+	nullpo_retv(bl);
+	nullpo_retv(target_bl);
+
+	struct status_change *sc = status->get_sc(bl);
+
+	if (sc == NULL && bl->type != BL_NPC) // How can an option change if there's no sc?
+		return;
+
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
+	struct PACKET_ZC_STATE_CHANGE p;
+	p.packetType = HEADER_ZC_STATE_CHANGE;
+	p.AID = bl->id;
+	p.bodyState = (sc != NULL) ? sc->opt1 : 0;
+	p.healthState = (sc != NULL) ? sc->opt2 : 0;
+	p.effectState = (sc != NULL) ? sc->option : BL_UCCAST(BL_NPC, bl)->option;
+	p.isPKModeON = (sd != NULL) ? sd->status.karma : 0;
+	if (clif->isdisguised(bl)) {
+		p.AID = -bl->id;
+		clif->send(&p, sizeof(p), target_bl, target);
+		p.AID = bl->id;
+		p.effectState = OPTION_INVISIBLE;
+	}
+	clif->send(&p, sizeof(p), target_bl, target);
+}
+
 /// Displays status change effects on NPCs/monsters (ZC_NPC_SHOWEFST_UPDATE).
 /// 028a <id>.L <effect state>.L <level>.L <showEFST>.L
 static void clif_changeoption2(struct block_list *bl)
@@ -24082,6 +24109,7 @@ void clif_defaults(void)
 	/* visual effects client-side */
 	clif->misceffect = clif_misceffect;
 	clif->changeoption = clif_changeoption;
+	clif->changeoption_target = clif_changeoption_target;
 	clif->changeoption2 = clif_changeoption2;
 	clif->emotion = clif_emotion;
 	clif->talkiebox = clif_talkiebox;
