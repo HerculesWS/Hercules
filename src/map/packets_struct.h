@@ -3851,6 +3851,27 @@ struct PACKET_CZ_NPC_EXPANDED_BARTER_PURCHASE {
 DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_PURCHASE, 0x0b57);
 #endif
 
+#if PACKETVER >= 7
+struct PACKET_ZC_STATE_CHANGE {
+	int16 packetType;
+	uint32 AID;
+	int16 bodyState;
+	int16 healthState;
+	int32 effectState;
+	int8 isPKModeON;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_STATE_CHANGE, 0x0229);
+#else
+struct PACKET_ZC_STATE_CHANGE {
+	int16 PacketType;
+	uint32 AID;
+	int16 bodyState;
+	int16 healthState;
+	int16 effectState;
+	int8 isPKModeON;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_STATE_CHANGE, 0x0119);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
