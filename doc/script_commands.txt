@@ -7041,6 +7041,18 @@ NPCs talking while hidden then revealing... you can wonder around =P).
 
 ---------------------------------------
 
+*cloakonnpc("<NPC object name>"{, <account_id>})
+*cloakoffnpc("<NPC object name>"{, <account_id>})
+
+These commands are used to apply the cloaking effect on npcs
+this is a visual effect only and it does NOT stop the player
+from interacting with the npc.
+
+If an account_id is specified then the effect will only display to the given id,
+otherwise it's displayed to the entire npc area.
+
+---------------------------------------
+
 *doevent("<NPC object name>::<event label>")
 
 This command will start a new execution thread in a specified NPC object
