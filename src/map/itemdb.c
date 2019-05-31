@@ -2449,6 +2449,8 @@ static void itemdb_read(bool minimal)
 
 	itemdb->other->foreach(itemdb->other, itemdb->addname_sub);
 
+	itemdb->read_options();
+	
 	if (minimal)
 		return;
 
@@ -2458,7 +2460,6 @@ static void itemdb_read(bool minimal)
 	itemdb->read_groups();
 	itemdb->read_chains();
 	itemdb->read_packages();
-	itemdb->read_options();
 }
 
 /**
