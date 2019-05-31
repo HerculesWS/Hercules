@@ -17895,6 +17895,12 @@
 - `Chest_Of_Death`: 22679
 - `Solo_Christmas_Gift`: 22685
 - `Solo_Cookie`: 22686
+- `STR_Soul_Potion`: 22702
+- `AGI_Soul_Potion`: 22703
+- `VIT_Soul_Potion`: 22704
+- `INT_Soul_Potion`: 22705
+- `DEX_Soul_Potion`: 22706
+- `LUK_Soul_Potion`: 22707
 - `Bullet_Case_Blood_`: 22737
 - `Bullet_Case_Silver_`: 22738
 - `Sphere_Case_Wind_`: 22739
