@@ -3369,6 +3369,15 @@ This will set a Hat Effect onto the player. The state field allows you to
 enable (true) or disable (false) the effect on the player.
 
 ---------------------------------------
+
+*identifyidx(<Inventory Index>)
+
+This will identify item at attached player's <Inventory Index> inventory index.
+
+Returns true if the item was identified, false otherwise.
+Note: If the item was already identified, it returns false.
+
+---------------------------------------
 //=====================================
 2.1 - End of Item-Related Commands
 //=====================================
