@@ -601,7 +601,7 @@ OnInstanceInit:
 OnStart:
 	stopnpctimer instance_npcname("#gp3control");
 	disablenpc(instance_npcname("#gp3control"));
-	killmonster(instance_mapname("1@spa"), "All");
+	killmonster(instance_mapname("1@spa"), "all");
 	disablenpc(instance_npcname("#gp3warp"));
 	enablenpc(instance_npcname("Lurid Royal Guard#gp5"));
 	enablenpc(instance_npcname("Tiara Princess#gp5"));
