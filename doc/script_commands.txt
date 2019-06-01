@@ -3370,6 +3370,15 @@ enable (true) or disable (false) the effect on the player.
 
 ---------------------------------------
 
+*identify(<Item ID>)
+
+This function identifies the first <Item ID> item in attached player's inventory.
+
+Returns -2 if an error happens, -1 if no unidentified <Item ID> was found.
+Otherwise, returns the idx of the identified item.
+
+---------------------------------------
+
 *identifyidx(<Inventory Index>)
 
 This will identify item at attached player's <Inventory Index> inventory index.
