@@ -13916,7 +13916,8 @@ static BUILDIN(failedremovecards)
 		if (sd->status.inventory[i].card[c] > 0 && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD) {
 			cardflag = 1;
 
-			sd->status.inventory[i].card[c] = 0;
+			if (typefail == 1)
+				sd->status.inventory[i].card[c] = 0;
 
 			if (typefail == 2) { // add cards to inventory, clear
 				int flag;
