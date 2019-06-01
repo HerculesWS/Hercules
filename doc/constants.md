@@ -3934,6 +3934,7 @@
 - `MAX_MENU_LENGTH`: 2048
 - `MOB_CLONE_START`: 4001
 - `MOB_CLONE_END`: 5000
+- `MAX_NPC_PER_MAP`: 512
 
 ### status options
 
@@ -4201,6 +4202,7 @@
 - `MAPINFO_SIZE_X`: 2
 - `MAPINFO_SIZE_Y`: 3
 - `MAPINFO_ZONE`: 4
+- `MAPINFO_NPC_COUNT`: 5
 
 ### consolemes options
 
