@@ -12843,10 +12843,19 @@ static void clif_parse_NpcAmountInput(int fd, struct map_session_data *sd)
 	int npcid = RFIFOL(fd,2);
 	int amount = RFIFOL(fd,6);
 
-	if (amount >= 0)
+	if (amount < sd->npc_amount_min) {
+		sd->npc_amount = sd->npc_amount_min;
+		sd->npc_input_capped_range = -1;
+	}
+	else if (amount > sd->npc_amount_max) {
+		sd->npc_amount = sd->npc_amount_max;
+		sd->npc_input_capped_range = 1;
+	}
+	else {
 		sd->npc_amount = amount;
-	else
-		sd->npc_amount = 0;
+		sd->npc_input_capped_range = 0;
+	}
+
 	npc->scriptcont(sd, npcid, false);
 }
 
