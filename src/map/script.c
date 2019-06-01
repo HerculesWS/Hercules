@@ -17784,6 +17784,17 @@ static BUILDIN(max)
 	return true;
 }
 
+static BUILDIN(cap_value)
+{
+	int value = script_getnum(st, 2);
+	int min = script_getnum(st, 3);
+	int max = script_getnum(st, 4);
+
+	script_pushint(st, (int)cap_value(value, min, max));
+
+	return true;
+}
+
 static BUILDIN(md5)
 {
 	const char *tmpstr;
@@ -25801,6 +25812,7 @@ static void script_parse_builtin(void)
 		// <--- List of mathematics commands
 		BUILDIN_DEF(min, "i*"),
 		BUILDIN_DEF(max, "i*"),
+		BUILDIN_DEF(cap_value, "iii"),
 		BUILDIN_DEF(md5,"s"),
 		BUILDIN_DEF(swap,"rr"),
 		// [zBuffer] List of dynamic var commands --->
