@@ -6727,23 +6727,27 @@ ACMD(refreshall)
 }
 
 /*==========================================
- * @identify
+ * @identify / @identifyall
  * => GM's magnifier.
  *------------------------------------------*/
 ACMD(identify)
 {
 	int num = 0;
+	bool identifyall = (strcmpi(info->command, "identifyall") == 0);
 
 	for (int i = 0; i < sd->status.inventorySize; i++) {
-		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify!=1){
+		if (sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify != 1) {
+			if (identifyall)
+				skill->identify(sd, i);
 			num++;
 		}
 	}
-	if (num > 0) {
-		clif->item_identify_list(sd);
-	} else {
+	
+	if (num == 0)
 		clif->message(fd,msg_fd(fd,1238)); // There are no items to appraise.
-	}
+	else if (!identifyall)
+		clif->item_identify_list(sd);
+
 	return true;
 }
 
@@ -10018,6 +10022,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(refresh),
 		ACMD_DEF(refreshall),
 		ACMD_DEF(identify),
+		ACMD_DEF2("identifyall", identify),
 		ACMD_DEF(misceffect),
 		ACMD_DEF(mobsearch),
 		ACMD_DEF(cleanmap),
