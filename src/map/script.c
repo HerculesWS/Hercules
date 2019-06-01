@@ -21256,7 +21256,6 @@ static BUILDIN(questinfo)
 		return false;
 	}
 
-	qi.nd = nd;
 	qi.icon = quest->questinfo_validate_icon(icon);
 	if (script_hasdata(st, 3)) {
 		int color = script_getnum(st, 3);
@@ -21268,7 +21267,9 @@ static BUILDIN(questinfo)
 		qi.color = (unsigned char)color;
 	}
 
-	map->add_questinfo(nd->bl.m, &qi);
+	VECTOR_ENSURE(nd->qi_data, 1, 1);
+	VECTOR_PUSH(nd->qi_data, qi);
+	map->add_questinfo(nd->bl.m, nd);
 	return true;
 }
 
@@ -21286,15 +21287,12 @@ static BUILDIN(setquestinfo)
 		return false;
 	}
 
-	qi = &VECTOR_LAST(map->list[nd->bl.m].qi_data);
+	qi = &VECTOR_LAST(nd->qi_data);
 	if (qi == NULL) {
 		ShowWarning("buildin_setquestinfo: no valide questinfo data has been found for this npc.\n");
 		return false;
 	}
-	if (qi->nd != nd) {
-		ShowWarning("buildin_setquestinfo: invalid usage, setquestinfo must be used only after questinfo.\n");
-		return false;
-	}
+
 	switch (type) {
 	case QINFO_JOB:
 	{

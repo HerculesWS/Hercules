@@ -2230,6 +2230,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->barter_delfromsql_sub, HP_npc_barter_delfromsql_sub) },
 	{ HP_POP(npc->db_checkid, HP_npc_db_checkid) },
 	{ HP_POP(npc->refresh, HP_npc_refresh) },
+	{ HP_POP(npc->questinfo_clear, HP_npc_questinfo_clear) },
 	{ HP_POP(npc->secure_timeout_timer, HP_npc_secure_timeout_timer) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
@@ -2629,7 +2630,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->questinfo_validate_homunculus_type, HP_quest_questinfo_validate_homunculus_type) },
 	{ HP_POP(quest->questinfo_validate_quests, HP_quest_questinfo_validate_quests) },
 	{ HP_POP(quest->questinfo_validate_mercenary_class, HP_quest_questinfo_validate_mercenary_class) },
-	{ HP_POP(quest->questinfo_vector_clear, HP_quest_questinfo_vector_clear) },
 /* refine_interface */
 	{ HP_POP(refine->init, HP_refine_init) },
 	{ HP_POP(refine->final, HP_refine_final) },

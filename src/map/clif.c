@@ -10790,15 +10790,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 	// NPC Quest / Event Icon Check [Kisuka]
 #if PACKETVER >= 20090218
-	{
-		int i;
-		for (i = 0; i < VECTOR_LENGTH(map->list[sd->bl.m].qi_data); i++)  {
-			struct questinfo *qi = &VECTOR_INDEX(map->list[sd->bl.m].qi_data, i);
-
-			if (quest->questinfo_validate(sd, qi))
-				clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
-		}
-	}
+	quest->questinfo_refresh(sd);
 #endif
 }
 

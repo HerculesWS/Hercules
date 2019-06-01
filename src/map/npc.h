@@ -129,6 +129,7 @@ struct npc_data {
 			int spawn_timer;
 		} tomb;
 	} u;
+	VECTOR_DECL(struct questinfo) qi_data;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
@@ -322,6 +323,7 @@ struct npc_interface {
 	void (*barter_delfromsql_sub) (const char *npcname, int itemId, int itemId2, int amount2);
 	bool (*db_checkid) (const int id);
 	void (*refresh) (struct npc_data* nd);
+	void (*questinfo_clear) (struct npc_data *nd);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/

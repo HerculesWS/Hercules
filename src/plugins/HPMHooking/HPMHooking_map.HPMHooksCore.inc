@@ -4356,6 +4356,8 @@ struct {
 	struct HPMHookPoint *HP_npc_db_checkid_post;
 	struct HPMHookPoint *HP_npc_refresh_pre;
 	struct HPMHookPoint *HP_npc_refresh_post;
+	struct HPMHookPoint *HP_npc_questinfo_clear_pre;
+	struct HPMHookPoint *HP_npc_questinfo_clear_post;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_pre;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
@@ -5136,8 +5138,6 @@ struct {
 	struct HPMHookPoint *HP_quest_questinfo_validate_quests_post;
 	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_pre;
 	struct HPMHookPoint *HP_quest_questinfo_validate_mercenary_class_post;
-	struct HPMHookPoint *HP_quest_questinfo_vector_clear_pre;
-	struct HPMHookPoint *HP_quest_questinfo_vector_clear_post;
 	struct HPMHookPoint *HP_refine_init_pre;
 	struct HPMHookPoint *HP_refine_init_post;
 	struct HPMHookPoint *HP_refine_final_pre;
@@ -11137,6 +11137,8 @@ struct {
 	int HP_npc_db_checkid_post;
 	int HP_npc_refresh_pre;
 	int HP_npc_refresh_post;
+	int HP_npc_questinfo_clear_pre;
+	int HP_npc_questinfo_clear_post;
 	int HP_npc_secure_timeout_timer_pre;
 	int HP_npc_secure_timeout_timer_post;
 	int HP_nullpo_assert_report_pre;
@@ -11917,8 +11919,6 @@ struct {
 	int HP_quest_questinfo_validate_quests_post;
 	int HP_quest_questinfo_validate_mercenary_class_pre;
 	int HP_quest_questinfo_validate_mercenary_class_post;
-	int HP_quest_questinfo_vector_clear_pre;
-	int HP_quest_questinfo_vector_clear_post;
 	int HP_refine_init_pre;
 	int HP_refine_init_post;
 	int HP_refine_final_pre;

@@ -60,6 +60,39 @@ enum quest_check_type {
 	HUNTING,   ///< Check if the given hunting quest's requirements have been met
 };
 
+struct questinfo_qreq {
+	int id;
+	int state;
+};
+
+struct questinfo_itemreq {
+	int nameid;
+	int min;
+	int max;
+};
+
+struct questinfo {
+	unsigned short icon;
+	unsigned char color;
+	bool hasJob;
+	unsigned int job;/* perhaps a mapid mask would be most flexible? */
+	bool sex_enabled;
+	int sex;
+	struct {
+		int min;
+		int max;
+	} base_level;
+	struct {
+		int min;
+		int max;
+	} job_level;
+	VECTOR_DECL(struct questinfo_itemreq) items;
+	struct s_homunculus homunculus;
+	int homunculus_type;
+	VECTOR_DECL(struct questinfo_qreq) quest_requirement;
+	int mercenary_class;
+};
+
 struct quest_interface {
 	struct quest_db **db_data; ///< Quest database
 	struct quest_db dummy;                  ///< Dummy entry for invalid quest lookups
@@ -93,7 +126,6 @@ struct quest_interface {
 	bool (*questinfo_validate_homunculus_type) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_quests) (struct map_session_data *sd, struct questinfo *qi);
 	bool (*questinfo_validate_mercenary_class) (struct map_session_data *sd, struct questinfo *qi);
-	void (*questinfo_vector_clear) (int m);
 };
 
 #ifdef HERCULES_CORE

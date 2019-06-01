@@ -4816,8 +4816,8 @@ typedef void (*HPMHOOK_pre_map_update_cell_bl) (struct block_list **bl, bool *in
 typedef void (*HPMHOOK_post_map_update_cell_bl) (struct block_list *bl, bool increase);
 typedef int (*HPMHOOK_pre_map_get_new_bonus_id) (void);
 typedef int (*HPMHOOK_post_map_get_new_bonus_id) (int retVal___);
-typedef void (*HPMHOOK_pre_map_add_questinfo) (int *m, struct questinfo **qi);
-typedef void (*HPMHOOK_post_map_add_questinfo) (int m, struct questinfo *qi);
+typedef bool (*HPMHOOK_pre_map_add_questinfo) (int *m, struct npc_data **nd);
+typedef bool (*HPMHOOK_post_map_add_questinfo) (bool retVal___, int m, struct npc_data *nd);
 typedef bool (*HPMHOOK_pre_map_remove_questinfo) (int *m, struct npc_data **nd);
 typedef bool (*HPMHOOK_post_map_remove_questinfo) (bool retVal___, int m, struct npc_data *nd);
 typedef struct map_zone_data* (*HPMHOOK_pre_map_merge_zone) (struct map_zone_data **main, struct map_zone_data **other);
@@ -5794,6 +5794,8 @@ typedef bool (*HPMHOOK_pre_npc_db_checkid) (const int *id);
 typedef bool (*HPMHOOK_post_npc_db_checkid) (bool retVal___, const int id);
 typedef void (*HPMHOOK_pre_npc_refresh) (struct npc_data **nd);
 typedef void (*HPMHOOK_post_npc_refresh) (struct npc_data *nd);
+typedef void (*HPMHOOK_pre_npc_questinfo_clear) (struct npc_data **nd);
+typedef void (*HPMHOOK_post_npc_questinfo_clear) (struct npc_data *nd);
 typedef int (*HPMHOOK_pre_npc_secure_timeout_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 #endif // MAP_NPC_H
@@ -6626,8 +6628,6 @@ typedef bool (*HPMHOOK_pre_quest_questinfo_validate_quests) (struct map_session_
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_quests) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
 typedef bool (*HPMHOOK_pre_quest_questinfo_validate_mercenary_class) (struct map_session_data **sd, struct questinfo **qi);
 typedef bool (*HPMHOOK_post_quest_questinfo_validate_mercenary_class) (bool retVal___, struct map_session_data *sd, struct questinfo *qi);
-typedef void (*HPMHOOK_pre_quest_questinfo_vector_clear) (int *m);
-typedef void (*HPMHOOK_post_quest_questinfo_vector_clear) (int m);
 #endif // MAP_QUEST_H
 #ifdef MAP_REFINE_H /* refine */
 typedef int (*HPMHOOK_pre_refine_init) (bool *minimal);
