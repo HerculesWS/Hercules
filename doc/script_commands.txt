@@ -1301,6 +1301,21 @@ and the script will terminate.
 
 ---------------------------------------
 
+*mesclear();
+
+This command will clear the dialog text and continue the script without player interaction.
+
+Example:
+	mes("This is how the 'mesclear' script command works.");
+	sleep2 3000;
+	mesclear(); // This will clear the dialog and continue to the next one.
+	mes("I will show you again.");
+	sleep2 3000;
+	mesclear(); // This will clear the dialog and continue to the next one.
+	mes("Bye!");
+
+---------------------------------------
+
 *close()
 
 This command will create a 'close' button in the message window for the

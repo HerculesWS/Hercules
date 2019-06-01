@@ -5962,6 +5962,19 @@ static BUILDIN(next)
 	return true;
 }
 
+/// Clears the NPC dialog and continues the script without press next button.
+///
+/// mesclear();
+static BUILDIN(mesclear)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd != NULL)
+		clif->scriptclear(sd, st->oid);
+
+	return true;
+}
+
 /// Ends the script and displays the button 'close' on the npc dialog.
 /// The dialog is closed when the button is pressed.
 ///
@@ -25484,6 +25497,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(mes, "?"),
 		BUILDIN_DEF(mesf, "s*"),
 		BUILDIN_DEF(next,""),
+		BUILDIN_DEF(mesclear,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),
 		BUILDIN_DEF(menu,"sl*"),
