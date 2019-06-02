@@ -5519,7 +5519,8 @@ static bool mob_readdb_itemratio(char *str[], int columns, int current)
 static void mob_load(bool minimal)
 {
 	if (minimal) {
-		// Only read the mob db in minimal mode
+		// Only read the mob db and option drops in minimal mode
+		mob->read_optdrops_db();
 		mob->readdb();
 		return;
 	}
