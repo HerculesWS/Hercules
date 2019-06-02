@@ -241,6 +241,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
   `sex` ENUM('M','F','U') NOT NULL DEFAULT 'U',
   `hotkey_rowshift` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+  `hotkey_rowshift2` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
   `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
   `attendance_timer` BIGINT(20) NULL DEFAULT '0',
   `title_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
@@ -928,6 +929,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1544738447); -- 2018-12-1
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1546059075); -- 2018-12-29--07-51.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1554760320); -- 2019-04-08--21-52.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1556147483); -- 2019-04-25--02-12.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1557414445); -- 2019-05-09--18-07.sql
 
 --
 -- Table structure for table `storage`

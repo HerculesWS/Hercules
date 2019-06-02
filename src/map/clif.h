@@ -851,7 +851,8 @@ struct clif_interface {
 	void (*ranklist) (struct map_session_data *sd, enum fame_list_type type);
 	void (*update_rankingpoint) (struct map_session_data *sd, enum fame_list_type type, int points);
 	void (*pRanklist) (int fd, struct map_session_data *sd);
-	void (*hotkeys) (struct map_session_data *sd);
+	void (*hotkeys) (struct map_session_data *sd, int tab);
+	void (*hotkeysAll) (struct map_session_data *sd);
 	int (*insight) (struct block_list *bl,va_list ap);
 	int (*outsight) (struct block_list *bl,va_list ap);
 	void (*skillcastcancel) (struct block_list* bl);
@@ -1288,7 +1289,8 @@ struct clif_interface {
 	void (*pWantToConnection) (int fd, struct map_session_data *sd);
 	void (*pLoadEndAck) (int fd,struct map_session_data *sd);
 	void (*pTickSend) (int fd, struct map_session_data *sd);
-	void (*pHotkey) (int fd, struct map_session_data *sd);
+	void (*pHotkey1) (int fd, struct map_session_data *sd);
+	void (*pHotkey2) (int fd, struct map_session_data *sd);
 	void (*pProgressbar) (int fd, struct map_session_data * sd);
 	void (*pWalkToXY) (int fd, struct map_session_data *sd);
 	void (*pQuitGame) (int fd, struct map_session_data *sd);
@@ -1526,7 +1528,8 @@ struct clif_interface {
 	void (*pNPCMarketPurchase) (int fd, struct map_session_data *sd);
 	/* */
 	int (*add_item_options) (struct ItemOptions *buf, const struct item *it);
-	void (*pHotkeyRowShift) (int fd, struct map_session_data *sd);
+	void (*pHotkeyRowShift1) (int fd, struct map_session_data *sd);
+	void (*pHotkeyRowShift2) (int fd, struct map_session_data *sd);
 	void (*dressroom_open) (struct map_session_data *sd, int view);
 	void (*pOneClick_ItemIdentify) (int fd,struct map_session_data *sd);
 	/* Cart Deco */

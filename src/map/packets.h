@@ -589,7 +589,6 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20070227
 	packet(0x0288,clif->pcashshop_buy,2,4,6);
 	packet(0x02b6,clif->pquestStateAck,2,6);
-	packet(0x02ba,clif->pHotkey,2,4,5,9);
 	packet(0x02c4,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
 	packet(0x02c7,clif->pReplyPartyInvite2,2,6);
 	packet(0x02c8,clif->pPartyTick,2);
@@ -597,6 +596,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x02d6,clif->pViewPlayerEquip,2);
 	packet(0x02d8,clif->p_cz_config,6);
 	packet(0x02db,clif->pBattleChat,2,4);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
+	packet(0x02ba,clif->pHotkey1);
 #endif
 
 //2008-01-02aSakexe
@@ -1664,10 +1667,8 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2014-01-29bRagexeRE
-#if PACKETVER >= 20140129
-// new packets
-	packet(0x0a01,clif->pHotkeyRowShift,2); // CZ_SHORTCUTKEYBAR_ROTATE
+#if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
+	packet(0x0a01,clif->pHotkeyRowShift1); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
 // 2014-02-12aRagexeRE
@@ -1946,6 +1947,11 @@ packet(0x96e,clif->ackmergeitems);
 
 #if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190220 || PACKETVER_ZERO_NUM >= 20190220
 	packet(0x0b1c,clif->pPing);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190515
+	packet(0x0b21,clif->pHotkey2);
+	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
 #endif /* MAP_PACKETS_H */
