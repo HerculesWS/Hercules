@@ -5361,6 +5361,34 @@ Check getitem2() to understand its expanded parameters.
 
 ---------------------------------------
 
+*delitemidx(<index>{, <amount>{, <account id>}})
+
+This command will remove an item at the given inventory index. Unlike the
+'delitem()' counterpart, this doesn't check invalid Item ID, making it useful to remove
+invalid item IDs in player's inventory.
+
+If <amount> is not specified, this will remove all of the items at the specified index.
+Note that items with the 'ForceSerial' flag, not yet merged through 'mergeitem()', will only
+be removed at the given index.
+
+The only way to get the inventory index is by using 'getinventorylist()'. After deleting
+an item at the given index, that index can remain empty until the player relogs, so you
+should recall 'getinventorylist()' again. If you try to delete an item at an invalid index, the
+script will terminate with an error.
+
+This command is also useful to remove rental/bound items because 'delitem()'
+does not discriminate at choosing which item to remove.
+
+Example:
+
+	// This will remove all invalid Item ID in player's inventory
+	getinventorylist();
+	for (.@i = 0; .@i < @inventorylist_count; ++.@i)
+		if (getiteminfo(@inventorylist_id[.@i], ITEMINFO_TYPE) == -1)
+			delitemidx(@inventorylist_idx[.@i]);
+
+---------------------------------------
+
 *countitem(<item id>)
 *countitem("<item name>")
 
