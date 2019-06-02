@@ -9043,6 +9043,63 @@ static BUILDIN(getguildmember)
 	return true;
 }
 
+/**
+ * getguildonline(<Guild ID>{, type})
+ * Returns amount of guild members online.
+**/
+
+enum script_getguildonline_types {
+	GUILD_ONLINE_ALL = 0,
+	GUILD_ONLINE_VENDOR,
+	GUILD_ONLINE_NO_VENDOR
+};
+
+BUILDIN(getguildonline)
+{
+	struct guild *g;
+	int guild_id = script_getnum(st, 2);
+	int type = GUILD_ONLINE_ALL, j = 0;
+
+	if ((g = guild->search(guild_id)) == NULL) {
+		script_pushint(st, -1);
+		return true;
+	}
+
+	if (script_hasdata(st, 3)) {
+		type = script_getnum(st, 3);
+
+		if (type < GUILD_ONLINE_ALL || type > GUILD_ONLINE_NO_VENDOR) {
+			ShowWarning("buildin_getguildonline: Invalid type specified. Defaulting to GUILD_ONLINE_ALL.\n");
+			type = GUILD_ONLINE_ALL;
+		}
+	}
+
+	struct map_session_data *sd;
+	for (int i = 0; i < MAX_GUILD; i++) {
+		if (g->member[i].online && (sd = g->member[i].sd) != NULL) {
+			switch (type) {
+			case GUILD_ONLINE_VENDOR:
+				if (sd->state.vending > 0)
+					j++;
+				break;
+
+			case GUILD_ONLINE_NO_VENDOR:
+				if (sd->state.vending == 0)
+					j++;
+				break;
+
+			default:
+				j++;
+				break;
+			}
+		}
+	}
+
+	script_pushint(st, j);
+
+	return true;
+}
+
 /*==========================================
  * Get char string information by type :
  * Return by @type :
@@ -25625,6 +25682,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
+		BUILDIN_DEF(getguildonline, "i?"),
 		BUILDIN_DEF(strcharinfo,"i??"),
 		BUILDIN_DEF(strnpcinfo,"i??"),
 		BUILDIN_DEF(charid2rid,"i"),
@@ -26696,6 +26754,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("UDT_ROBE", UDT_ROBE, false, false);
 	script->set_constant("UDT_BODY2", UDT_BODY2, false, false);
 	script->set_constant("UDT_GROUP", UDT_GROUP, false, false);
+
+	script->constdb_comment("getguildonline types");
+	script->set_constant("GUILD_ONLINE_ALL", GUILD_ONLINE_ALL, false, false);
+	script->set_constant("GUILD_ONLINE_VENDOR", GUILD_ONLINE_VENDOR, false, false);
+	script->set_constant("GUILD_ONLINE_NO_VENDOR", GUILD_ONLINE_NO_VENDOR, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
