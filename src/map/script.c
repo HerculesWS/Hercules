@@ -25325,7 +25325,7 @@ static BUILDIN(enchantitem)
 }
 
 // send ack to inventory expand request
-static BUILDIN(expandInventoryAck)
+static BUILDIN(expandinventoryack)
 {
 	struct map_session_data *sd = script_rid2sd(st);
 	if (sd == NULL)
@@ -25339,7 +25339,7 @@ static BUILDIN(expandInventoryAck)
 }
 
 // send final ack to inventory expand request
-static BUILDIN(expandInventoryResult)
+static BUILDIN(expandinventoryresult)
 {
 	struct map_session_data *sd = script_rid2sd(st);
 	if (sd == NULL)
@@ -25349,7 +25349,7 @@ static BUILDIN(expandInventoryResult)
 }
 
 // adjust player inventory size to given value positive or negative
-static BUILDIN(expandInventory)
+static BUILDIN(expandinventory)
 {
 	struct map_session_data *sd = script_rid2sd(st);
 	if (sd == NULL)
@@ -25359,7 +25359,7 @@ static BUILDIN(expandInventory)
 }
 
 // return current player inventory size
-static BUILDIN(getInventorySize)
+static BUILDIN(getinventorysize)
 {
 	struct map_session_data *sd = script_rid2sd(st);
 	if (sd == NULL)
@@ -26147,10 +26147,10 @@ static void script_parse_builtin(void)
 
 		BUILDIN_DEF(itempreview, "i"),
 		BUILDIN_DEF(enchantitem, "iii"),
-		BUILDIN_DEF(expandInventoryAck, "i?"),
-		BUILDIN_DEF(expandInventoryResult, "i"),
-		BUILDIN_DEF(expandInventory, "i"),
-		BUILDIN_DEF(getInventorySize, ""),
+		BUILDIN_DEF(expandinventoryack, "i?"),
+		BUILDIN_DEF(expandinventoryresult, "i"),
+		BUILDIN_DEF(expandinventory, "i"),
+		BUILDIN_DEF(getinventorysize, ""),
 
 		BUILDIN_DEF(closeroulette, ""),
 		BUILDIN_DEF(openrefineryui, ""),
