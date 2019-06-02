@@ -4458,6 +4458,12 @@
 - `UDT_BODY2`: 56
 - `UDT_GROUP`: 57
 
+### getguildonline types
+
+- `GUILD_ONLINE_ALL`: 0
+- `GUILD_ONLINE_VENDOR`: 1
+- `GUILD_ONLINE_NO_VENDOR`: 2
+
 ### Renewal
 
 - `RENEWAL`: 1
