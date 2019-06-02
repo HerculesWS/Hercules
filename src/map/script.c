@@ -10766,6 +10766,12 @@ static BUILDIN(openstorage)
 		return false;
 	}
 
+	// Mapflag preventing from openstorage here
+	if (!pc_has_permission(sd, PC_PERM_BYPASS_NOSTORAGE) && (map->list[sd->bl.m].flag.nostorage & 2)) {
+		script_pushint(st, 0);
+		return true;
+	}
+
 	storage->open(sd);
 
 	script_pushint(st, 1); // success flag.
@@ -10778,6 +10784,12 @@ static BUILDIN(guildopenstorage)
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
+
+	// Mapflag preventing from openstorage here
+	if (!pc_has_permission(sd, PC_PERM_BYPASS_NOSTORAGE) && (map->list[sd->bl.m].flag.nogstorage & 2)) {
+		script_pushint(st, 1);
+		return true;
+	}
 
 	ret = gstorage->open(sd);
 	script_pushint(st,ret);
@@ -13306,6 +13318,8 @@ static BUILDIN(getmapflag)
 			case MF_NOVIEWID:           script_pushint(st, map->list[m].flag.noviewid); break;
 			case MF_PAIRSHIP_STARTABLE: script_pushint(st, map->list[m].flag.pairship_startable); break;
 			case MF_PAIRSHIP_ENDABLE:   script_pushint(st, map->list[m].flag.pairship_endable); break;
+			case MF_NOSTORAGE:          script_pushint(st, map->list[m].flag.nostorage); break;
+			case MF_NOGSTORAGE:         script_pushint(st, map->list[m].flag.nogstorage); break;
 		}
 	}
 
@@ -13436,6 +13450,8 @@ static BUILDIN(setmapflag)
 			case MF_NOVIEWID:           map->list[m].flag.noviewid = (val <= 0) ? EQP_NONE : val; break;
 			case MF_PAIRSHIP_STARTABLE: map->list[m].flag.pairship_startable = 1; break;
 			case MF_PAIRSHIP_ENDABLE:   map->list[m].flag.pairship_endable = 1; break;
+			case MF_NOSTORAGE:          map->list[m].flag.nostorage = cap_value(val, 0, 3); break;
+			case MF_NOGSTORAGE:         map->list[m].flag.nogstorage = cap_value(val, 0, 3); break;
 		}
 	}
 
@@ -13527,6 +13543,8 @@ static BUILDIN(removemapflag)
 			case MF_NOCASHSHOP:         map->list[m].flag.nocashshop = 0; break;
 			case MF_NOAUTOLOOT:         map->list[m].flag.noautoloot = 0; break;
 			case MF_NOVIEWID:           map->list[m].flag.noviewid = EQP_NONE; break;
+			case MF_NOSTORAGE:          map->list[m].flag.nostorage = 0; break;
+			case MF_NOGSTORAGE:         map->list[m].flag.nogstorage = 0; break;
 		}
 	}
 
@@ -26444,6 +26462,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("PERM_DISABLE_STORE", PC_PERM_DISABLE_STORE, false, false);
 	script->set_constant("PERM_DISABLE_EXP", PC_PERM_DISABLE_EXP, false, false);
 	script->set_constant("PERM_DISABLE_SKILL_USAGE", PC_PERM_DISABLE_SKILL_USAGE, false, false);
+	script->set_constant("PERM_BYPASS_NOSTORAGE", PC_PERM_BYPASS_NOSTORAGE, false, false);
 
 	script->constdb_comment("Data types");
 	script->set_constant("DATATYPE_NIL", DATATYPE_NIL, false, false);
