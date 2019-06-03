@@ -9,6 +9,47 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.06.02] `June 2 2019`
+
+### Added
+
+- Added Stat Reduction Potions to the Renewal item DB. (#2483)
+- Added the constant `MAX_NPC_PER_MAP` to the script engine. (part of #2474)
+- Added the `cap_value()` script command, to cap a value between a minimum and maximum. (#2472)
+- Added the `mesclear()` script command, to clean an NPC message dialog without user interaction. (#2471)
+- Added a script for simplified installation on Windows development machines. (#2222)
+- Added/updated packets, encryption keys and message tables for clients up to 2019-05-30. (#2468, #2490)
+- Added support for multiple hotkeys sets (two 'tabs' on the RE clients). The constant `MAX_HOTKEYS_DB` represents the maximum amount of hotkeys saved to the database. This requires a database migration. (part of #2468)
+- Added the `delitemidx()` script command, to delete an item by its inventory index. (#2394)
+- Added the `getguildonline()` script command, to return the amount of online guild members. (#2290)
+- Added the `nostorage` and `nogstorage` mapflags, disallowing storage usage on the affected maps. The `bypass_nostorage` permission is also provided, to bypass those mapflags. (#2221)
+
+### Changed
+
+- Moved the questinfo data from map to npc data, allowing the use of multiple `questinfo()` blocks. (#2433, issue #2431)
+- Removed code duplication from the map data cleanup functions. (part of #2433)
+- Allow to read negative values from `input()`. The minimum value is still set to 0 in the default configuration, but it can be overridden globally by editing `input_min_value` or locally by specifying the `min` and `max` arguments to `input()`. (#2375)
+- Extended the `getmapinfo()` command to return the total number of NPCs in a map (`MAPINFO_NPC_COUNT`). (#2474)
+- Updated the pre-renewal Byorgue summon slave delay to match the official value, increased before renewal to prevent farming exploits. (#2456)
+- Changed the `"all"` special value used by `killmonster()` to be lowercase and case sensitive, for consistency with other script commands. (#2380)
+- Updated and simplified the Windows installation instructions. (part of #2222)
+- Updated some NPC/name translations to match the official ones or the official intent. Cougar -> Kuuga Gai, Gaebolg -> Geoborg, Family -> Clan, Magic Gear -> Mado Gear (#2457)
+- Updated the Mado Gear rental NPC to sell Mado Gear Box and Cooling Device. (part of #2457)
+- Changed the `expandinventoryack()`, `expandinventoryresult()`, `expandinventory()` and `getinventorysize()` script commands to be lowercase, for consistency. (#2374)
+
+### Fixed
+
+- Fixed the `failedremovecards()` command, to only remove the carts when `type` is set to 1, as described in its documentation. (#2477, issue #2469)
+- Fixed a crash when using `npcspeed()`, `npcwalkto()`, `npcstop()`, `unitwalk()`, `unitwarp()`, `unitstop()` on a floating NPC without a sprite. (#2430)
+- Fixed a stats calculation regression. (#2482)
+- Fixed a version check for the `ZC_PING` packet. (part of #2468)
+- Fixed errors caused by missing Option DB and Option Drop Groups DB data when the map server loads the mob database in minimal mode. (#2486, related to issue #2484)
+
+### Deprecated
+
+- Deprecated use of `"All"` with `killmonster()`. Use `"all"` instead. (part of #2380)
+- Deprecated the mixed case version of the `expandInventoryAck()`, `expandInventoryResult()`, `expandInventory()` and `getInventorySize()` script commands. Use the lowercase variants instead. (part of #2374)
+
 ## [v2019.05.05+4] `May 5 2019` `PATCH 4`
 
 ### Fixed
@@ -768,6 +809,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.06.02]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+4...v2019.06.02
 [v2019.05.05+4]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+3...v2019.05.05+4
 [v2019.05.05+3]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+2...v2019.05.05+3
 [v2019.05.05+2]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+1...v2019.05.05+2
