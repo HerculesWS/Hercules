@@ -10825,7 +10825,7 @@ static void clif_hotkeysAll_send(struct map_session_data *sd)
 {
 #ifdef HOTKEY_SAVING
 	clif->hotkeys(sd, 0);
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	// send second tab only if data exists
 	for (int i = MAX_HOTKEYS; i < MAX_HOTKEYS * 2; i++) {
 		if (sd->status.hotkeys[i].type != 0 || sd->status.hotkeys[i].id != 0 || sd->status.hotkeys[i].lv != 0) {
@@ -10854,7 +10854,7 @@ static void clif_hotkeys_send(struct map_session_data *sd, int tab)
 	else
 		p.rotate = sd->status.hotkey_rowshift2;
 #endif
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	p.tab = tab;
 #endif
 	const int offset = tab * MAX_HOTKEYS;
@@ -10879,7 +10879,7 @@ static void clif_parse_HotkeyRowShift1(int fd, struct map_session_data *sd)
 static void clif_parse_HotkeyRowShift2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_HotkeyRowShift2(int fd, struct map_session_data *sd)
 {
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	const struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 *p = RFIFOP(fd, 0);
 	if (p->tab == 0)
 		sd->status.hotkey_rowshift = p->rowshift;
@@ -10911,7 +10911,7 @@ static void clif_parse_Hotkey2(int fd, struct map_session_data *sd) __attribute_
 static void clif_parse_Hotkey2(int fd, struct map_session_data *sd)
 {
 #ifdef HOTKEY_SAVING
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 *p = RFIFOP(fd, 0);
 	const unsigned short idx = p->index + p->tab * MAX_HOTKEYS;
 	Assert_retv(idx < MAX_HOTKEYS_DB);
