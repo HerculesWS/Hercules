@@ -4312,7 +4312,11 @@ packetLen(0x0b02, 26)  // AC_REFUSE_LOGIN4
 packetLen(0x0b03, -1)  // ZC_EQUIPWIN_MICROSCOPE_V7
 
 // Packet: 0x0b04
+#if PACKETVER >= 20190605
+packetLen(0x0b04, 72)
+#elif PACKETVER >= 20190116
 packetLen(0x0b04, 80)
+#endif
 
 // Packet: 0x0b05
 packetLen(0x0b05, 63)  // ZC_OFFLINE_STORE_VISIBLE
@@ -4393,12 +4397,16 @@ packetLen(0x0b1d, 2)  // ZC_PING
 #endif
 
 // Packet: 0x0b1e
-#if PACKETVER >= 20190313
+#if PACKETVER >= 20190626
+packetLen(0x0b1e, 14)
+#elif PACKETVER >= 20190313
 packetLen(0x0b1e, 10)
 #endif
 
 // Packet: 0x0b1f
-#if PACKETVER >= 20190313
+#if PACKETVER >= 20190626
+packetLen(0x0b1f, 14)
+#elif PACKETVER >= 20190313
 packetLen(0x0b1f, 10)
 #endif
 
@@ -4456,14 +4464,18 @@ packetLen(0x0b28, -1)
 #endif
 
 // Packet: 0x0b29
-#if PACKETVER >= 20190502
+#if PACKETVER >= 20190605
+// removed
+#elif PACKETVER >= 20190502
 packetLen(0x0b29, 6)
 #elif PACKETVER >= 20190424
 packetLen(0x0b29, 3)
 #endif
 
 // Packet: 0x0b2a
-#if PACKETVER >= 20190529
+#if PACKETVER >= 20190605
+// removed
+#elif PACKETVER >= 20190529
 packetLen(0x0b2a, 40)
 #elif PACKETVER >= 20190502
 packetLen(0x0b2a, 6)
@@ -4491,12 +4503,32 @@ packetLen(0x0b2e, 4)
 
 // Packet: 0x0b2f
 #if PACKETVER >= 20190529
-packetLen(0x0b2f, 73)
+packetLen(0x0b2f, 73)  // ZC_PROPERTY_HOMUN_3
 #endif
 
 // Packet: 0x0b30
 #if PACKETVER >= 20190529
 packetLen(0x0b30, -1)
+#endif
+
+// Packet: 0x0b31
+#if PACKETVER >= 20190626
+packetLen(0x0b31, 17)
+#endif
+
+// Packet: 0x0b32
+#if PACKETVER >= 20190626
+packetLen(0x0b32, -1)
+#endif
+
+// Packet: 0x0b33
+#if PACKETVER >= 20190626
+packetLen(0x0b33, 17)
+#endif
+
+// Packet: 0x0b34
+#if PACKETVER >= 20190626
+packetLen(0x0b34, 26)
 #endif
 
 
