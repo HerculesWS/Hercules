@@ -1649,7 +1649,9 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 	p.level = hd->homunculus.level;
 	p.hunger = hd->homunculus.hunger;
 	p.intimacy = hd->homunculus.intimacy / 100;
+#if !(PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626)
 	p.itemId = 0; // equip id
+#endif
 #ifdef RENEWAL
 	p.atk2 = cap_value(hstatus->rhw.atk2, 0, INT16_MAX);
 #else
