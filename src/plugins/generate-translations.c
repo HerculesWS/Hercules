@@ -386,8 +386,6 @@ HPExport void server_online(void)
 {
 	if (generating_translations) {
 		ShowInfo("Translations template exported to '%s' with %d strings.\n", DIRECTORYNAME, lang_export_stringcount_total);
-		fclose(lang_export_fp);
-		lang_export_fp = NULL;
 	}
 	core->runflag = CORE_ST_STOP;
 }
