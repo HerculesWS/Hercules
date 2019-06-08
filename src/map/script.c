@@ -5349,6 +5349,7 @@ static int script_load_translation_file(const char *file, uint8 lang_id)
 	char line[1024];
 	char msgctxt[NAME_LENGTH*2+1] = "";
 	struct script_string_buf msgid, msgstr;
+	struct script_string_buf *msg_ptr;
 	int translations = 0;
 	int lineno = 0;
 	FILE *fp;
@@ -5366,37 +5367,45 @@ static int script_load_translation_file(const char *file, uint8 lang_id)
 		int i;
 		lineno++;
 
-		if(len <= 1)
+		if (len <= 1) {
+			if (VECTOR_LENGTH(msgid) > 0 && VECTOR_LENGTH(msgstr) > 0) {
+				// Add string
+				if (script->load_translation_addstring(file, lang_id, msgctxt, &msgid, &msgstr))
+					translations++;
+
+				msgctxt[0] = '\0';
+				VECTOR_TRUNCATE(msgid);
+				VECTOR_TRUNCATE(msgstr);
+			}
 			continue;
+		}
 
 		if (line[0] == '#')
 			continue;
 
-		if (VECTOR_LENGTH(msgid) > 0 && VECTOR_LENGTH(msgstr) > 0) {
+		if (VECTOR_LENGTH(msgid) > 0) {
+			if (VECTOR_LENGTH(msgstr) > 0) {
+				msg_ptr = &msgstr;
+			} else {
+				msg_ptr = &msgid;
+			}
 			if (line[0] == '"') {
 				// Continuation line
-				(void)VECTOR_POP(msgstr); // Pop final '\0'
-				for (i = 8; i < len - 2; i++) {
-					VECTOR_ENSURE(msgstr, 1, 512);
+				(void)VECTOR_POP(*msg_ptr); // Pop final '\0'
+				for (i = 1; i < len - 2; i++) {
+					VECTOR_ENSURE(*msg_ptr, 1, 512);
 					if (line[i] == '\\' && line[i+1] == '"') {
-						VECTOR_PUSH(msgstr, '"');
+						VECTOR_PUSH(*msg_ptr, '"');
 						i++;
 					} else {
-						VECTOR_PUSH(msgstr, line[i]);
+						VECTOR_PUSH(*msg_ptr, line[i]);
 					}
 				}
-				VECTOR_ENSURE(msgstr, 1, 512);
-				VECTOR_PUSH(msgstr, '\0');
+				VECTOR_ENSURE(*msg_ptr, 1, 512);
+				VECTOR_PUSH(*msg_ptr, '\0');
 				continue;
 			}
 
-			// Add string
-			if (script->load_translation_addstring(file, lang_id, msgctxt, &msgid, &msgstr))
-				translations++;
-
-			msgctxt[0] = '\0';
-			VECTOR_TRUNCATE(msgid);
-			VECTOR_TRUNCATE(msgstr);
 		}
 
 		if (strncasecmp(line,"msgctxt \"", 9) == 0) {
