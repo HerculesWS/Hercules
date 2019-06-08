@@ -128,7 +128,7 @@ static char *checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char *, void *context))
+void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;

@@ -5241,7 +5241,7 @@ static const char *script_get_translation_dir_name(const char *directory)
 	basename = strrchr(directory, '/');
 #ifdef WIN32
 	{
-		const char *basename_windows = strrchr(file, '\\');
+		const char *basename_windows = strrchr(directory, '\\');
 		if (basename_windows > basename)
 			basename = basename_windows;
 	}
