@@ -3911,20 +3911,16 @@ static void clif_arrow_fail(struct map_session_data *sd, int type)
 /// 01ad <packet len>.W { <name id>.W }*
 static void clif_arrow_create_list(struct map_session_data *sd)
 {
-	int i, c;
-	int fd;
-	int len;
-	struct PACKET_ZC_MAKINGARROW_LIST *p;
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	len = MAX_SKILL_ARROW_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	int fd = sd->fd;
+	int len = MAX_SKILL_ARROW_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
 	WFIFOHEAD(fd, len);
-	p = WFIFOP(fd, 0);
-	p->packetType = 0x1ad;
+	struct PACKET_ZC_MAKINGARROW_LIST *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MAKINGARROW_LIST;
 
-	for (i = 0, c = 0; i < MAX_SKILL_ARROW_DB; i++) {
+	int c = 0;
+	for (int i = 0; i < MAX_SKILL_ARROW_DB; i++) {
 		int j;
 		if (skill->dbs->arrow_db[i].nameid > 0
 		 && (j = pc->search_inventory(sd, skill->dbs->arrow_db[i].nameid)) != INDEX_NOT_FOUND
@@ -19031,27 +19027,30 @@ static void clif_parse_debug(int fd, struct map_session_data *sd)
  *------------------------------------------*/
 static int clif_elementalconverter_list(struct map_session_data *sd)
 {
-	int i,c,view,fd;
-
 	nullpo_ret(sd);
 
 /// Main client packet processing function
-	fd=sd->fd;
-	WFIFOHEAD(fd, MAX_SKILL_PRODUCE_DB *2+4);
-	WFIFOW(fd, 0)=0x1ad;
+	int fd = sd->fd;
+	int len = MAX_SKILL_ARROW_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MAKINGARROW_LIST *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MAKINGARROW_LIST;
 
-	for(i=0,c=0;i<MAX_SKILL_PRODUCE_DB;i++){
-		if( skill->can_produce_mix(sd,skill->dbs->produce_db[i].nameid,23, 1) ){
-			if((view = itemdb_viewid(skill->dbs->produce_db[i].nameid)) > 0)
-				WFIFOW(fd,c*2+ 4)= view;
+	int c = 0;
+	for (int i = 0; i < MAX_SKILL_PRODUCE_DB; i++) {
+		if (skill->can_produce_mix(sd,skill->dbs->produce_db[i].nameid,23, 1) ) {
+			int view = itemdb_viewid(skill->dbs->produce_db[i].nameid);
+			if (view > 0)
+				p->items[c].itemId = view;
 			else
-				WFIFOW(fd,c*2+ 4)= skill->dbs->produce_db[i].nameid;
+				p->items[c].itemId = skill->dbs->produce_db[i].nameid;
 			c++;
 		}
 	}
-	WFIFOW(fd,2) = c*2+4;
-	WFIFOSET(fd, WFIFOW(fd,2));
 	if (c > 0) {
+		len = c * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+		p->packetLength = len;
+		WFIFOSET(fd, len);
 		sd->menuskill_id = SA_CREATECON;
 		sd->menuskill_val = c;
 	}
@@ -19082,33 +19081,33 @@ static void clif_millenniumshield(struct block_list *bl, short shields)
  *------------------------------------------*/
 static int clif_spellbook_list(struct map_session_data *sd)
 {
-	int i, c;
-	int fd;
-
 	nullpo_ret(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, 8 * 8 + 8);
-	WFIFOW(fd,0) = 0x1ad;
+	int fd = sd->fd;
+	int len = MAX_SKILL_ARROW_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MAKINGARROW_LIST *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MAKINGARROW_LIST;
 
-	for (i = 0, c = 0; i < sd->status.inventorySize; i ++ )
+	int c = 0;
+	for (int i = 0; i < sd->status.inventorySize; i ++ )
 	{
-		if( itemdb_is_spellbook(sd->status.inventory[i].nameid) )
+		if (itemdb_is_spellbook(sd->status.inventory[i].nameid))
 		{
-			WFIFOW(fd, c * 2 + 4) = sd->status.inventory[i].nameid;
+			p->items[c].itemId = sd->status.inventory[i].nameid;
 			c++;
 		}
 	}
 
-	if( c > 0 )
+	if (c > 0)
 	{
-		WFIFOW(fd,2) = c * 2 + 4;
-		WFIFOSET(fd, WFIFOW(fd, 2));
+		len = c * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+		p->packetLength = len;
+		WFIFOSET(fd, len);
 		sd->menuskill_id = WL_READING_SB;
 		sd->menuskill_val = c;
-	}
-	else{
-		status_change_end(&sd->bl,SC_STOP,INVALID_TIMER);
+	} else {
+		status_change_end(&sd->bl, SC_STOP, INVALID_TIMER);
 		clif->skill_fail(sd, WL_READING_SB, USESKILL_FAIL_SPELLBOOK, 0, 0);
 	}
 
@@ -19123,17 +19122,18 @@ static int clif_spellbook_list(struct map_session_data *sd)
 static int clif_magicdecoy_list(struct map_session_data *sd, uint16 skill_lv, short x, short y)
 {
 	int i, c;
-	int fd;
 
 	nullpo_ret(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, 8 * 8 + 8);
-	WFIFOW(fd,0) = 0x1ad; // This is the official packet. [pakpil]
+	int fd = sd->fd;
+	int len = MAX_SKILL_ARROW_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MAKINGARROW_LIST *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MAKINGARROW_LIST;
 
 	for (i = 0, c = 0; i < sd->status.inventorySize; i ++) {
-		if( itemdb_is_element(sd->status.inventory[i].nameid) ) {
-			WFIFOW(fd, c * 2 + 4) = sd->status.inventory[i].nameid;
+		if (itemdb_is_element(sd->status.inventory[i].nameid)) {
+			p->items[c].itemId = sd->status.inventory[i].nameid;
 			c ++;
 		}
 	}
@@ -19142,8 +19142,10 @@ static int clif_magicdecoy_list(struct map_session_data *sd, uint16 skill_lv, sh
 		sd->menuskill_val = skill_lv;
 		sd->sc.comet_x = x;
 		sd->sc.comet_y = y;
-		WFIFOW(fd,2) = c * 2 + 4;
-		WFIFOSET(fd, WFIFOW(fd, 2));
+
+		len = c * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+		p->packetLength = len;
+		WFIFOSET(fd, len);
 	} else {
 		clif->skill_fail(sd, NC_MAGICDECOY, USESKILL_FAIL_LEVEL, 0, 0);
 		return 0;
@@ -19160,25 +19162,28 @@ static int clif_magicdecoy_list(struct map_session_data *sd, uint16 skill_lv, sh
 static int clif_poison_list(struct map_session_data *sd, uint16 skill_lv)
 {
 	int i, c;
-	int fd;
 
 	nullpo_ret(sd);
 
-	fd = sd->fd;
-	WFIFOHEAD(fd, 8 * 8 + 8);
-	WFIFOW(fd,0) = 0x1ad; // This is the official packet. [pakpil]
+	int fd = sd->fd;
+	int len = MAX_SKILL_ARROW_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MAKINGARROW_LIST *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MAKINGARROW_LIST;
 
 	for (i = 0, c = 0; i < sd->status.inventorySize; i ++) {
 		if( itemdb_is_poison(sd->status.inventory[i].nameid) ) {
-			WFIFOW(fd, c * 2 + 4) = sd->status.inventory[i].nameid;
+			p->items[c].itemId = sd->status.inventory[i].nameid;
 			c ++;
 		}
 	}
-	if( c > 0 ) {
+	if (c > 0) {
 		sd->menuskill_id = GC_POISONINGWEAPON;
 		sd->menuskill_val = skill_lv;
-		WFIFOW(fd,2) = c * 2 + 4;
-		WFIFOSET(fd, WFIFOW(fd, 2));
+
+		len = c * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+		p->packetLength = len;
+		WFIFOSET(fd, len);
 	} else {
 		clif->skill_fail(sd, GC_POISONINGWEAPON, USESKILL_FAIL_GUILLONTINE_POISON, 0, 0);
 		return 0;

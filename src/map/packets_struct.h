@@ -2679,6 +2679,7 @@ struct PACKET_ZC_MAKINGARROW_LIST {
 	int16 packetLength;
 	struct PACKET_ZC_MAKINGARROW_LIST_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MAKINGARROW_LIST, 0x01ad);
 
 struct PACKET_ZC_REPAIRITEMLIST_sub {
 	int16 index;
