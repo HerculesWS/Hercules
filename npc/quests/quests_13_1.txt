@@ -824,40 +824,38 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "[Sikaiz]";
 		mes "I already accept you. Just write down your name here. Go ahead.";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ != strcharinfo(PC_NAME)) {
 			mes "[Sikaiz]";
 			mes "Don't you know your own name?";
 			mes "Write it again.";
 			close;
 		}
-		else {
-			mes "[Sikaiz]";
-			mes "Ok. I got your name, " + strcharinfo(PC_NAME) + ". Great name! Registration is done!";
-			mes "You've become a member of the three kingdoms!";
-			next;
-			mes "[Sikaiz]";
-			mes "All done.";
-			mes "Go to the field Officer of Schwartzvalt. He should be in the banquet hall of this building downstairs.";
-			next;
-			mes "[Sikaiz]";
-			mes "Only thing left for you is to go to the Officer to say that you are leaving now.";
-			next;
-			mes "[Sikaiz]";
-			mes "As soon as you tell him,";
-			mes "come back to me again.";
-			mes "You are not the only one expecting this great challenge. I am too.";
-			next;
-			mes "[Sikaiz]";
-			mes "I believe you can do it!";
-			mes "It would bear watching you.";
-			next;
-			changequest 10073,10074;
-			ep13_ryu = 18;
-			mes "[Sikaiz]";
-			mes "See you then.";
-			close;
-		}
+		mes "[Sikaiz]";
+		mes "Ok. I got your name, " + strcharinfo(PC_NAME) + ". Great name! Registration is done!";
+		mes "You've become a member of the three kingdoms!";
+		next;
+		mes "[Sikaiz]";
+		mes "All done.";
+		mes "Go to the field Officer of Schwartzvalt. He should be in the banquet hall of this building downstairs.";
+		next;
+		mes "[Sikaiz]";
+		mes "Only thing left for you is to go to the Officer to say that you are leaving now.";
+		next;
+		mes "[Sikaiz]";
+		mes "As soon as you tell him,";
+		mes "come back to me again.";
+		mes "You are not the only one expecting this great challenge. I am too.";
+		next;
+		mes "[Sikaiz]";
+		mes "I believe you can do it!";
+		mes "It would bear watching you.";
+		next;
+		changequest 10073,10074;
+		ep13_ryu = 18;
+		mes "[Sikaiz]";
+		mes "See you then.";
+		close;
 	}
 	if (ep13_ryu == 16) {
 		mes "[Sikaiz]";
@@ -4174,22 +4172,20 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "The owner of the tricorn hat";
 					mes "is a monster called...";
-					input .@input$;
+					input(.@input$);
 					if (compare(.@input$,"Tatacho")) {
 						mes "^FF0000Tatacho^000000";
 						next;
 						break;
 					}
-					else {
-						next;
-						mes "["+strcharinfo(PC_NAME)+"]";
-						mes ""+.@input$+"...? I don't think that was the name...";
-						next;
-					}
+					next;
+					mes "["+strcharinfo(PC_NAME)+"]";
+					mes ""+.@input$+"...? I don't think that was the name...";
+					next;
 				}
 				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "The size of Tatacho is about...";
-				input .@input$;
+				input(.@input$);
 				mes "^3131FF"+.@input$+"^000000, I guess...";
 				next;
 				mes "["+strcharinfo(PC_NAME)+"]";
@@ -8478,16 +8474,15 @@ man_fild03,95,301,0	duplicate(manukrock)	Mysterious Rock#18	CLEAR_NPC
 sec_in02,80,171,0	script	Piece of crack#sec	2_MONEMUS,{
 	callfunc "F_GM_NPC";
 	mes "1~3000";
-	input .@input;
+	input(.@input);
 	next;
 	if (.@input < 1 || .@input > 3000) {
 		mes "Cat trading Point adjust";
 		mes "You can enter the number between 1~3000.";
 		close;
-	} else {
-		ep13_yong1 = .@input;
-		close;
 	}
+	ep13_yong1 = .@input;
+	close;
 }
 
 //== Report from the New World :: ep13_1_edq ===============
@@ -10584,7 +10579,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		mes "[Echinacea]";
 		mes "Say, what's the tracing pattern number?";
 		next;
-		input .@input$;
+		input(.@input$);
 		setarray .@pattern$[0],"SDHF92F-SDF","VWNM94GVWN90","CM3-TRDFGHE0";
 		.@quest = mao_morocc2;
 		if (.@quest > 25) .@quest -= 3;
@@ -11706,7 +11701,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		mes "[Defaria]";
 		mes "..Huh? What do you want?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Dandelion") {
 			mes "[Defaria]";
 			mes "..I know they're involved in this case, but";

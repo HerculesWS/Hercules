@@ -243,7 +243,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hmm, I wanted to tell you...";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "" + .@inputstr$ + "";
 		next;
@@ -483,7 +483,7 @@ OnTouch:
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Pain... What kind of faults have I had?";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I confess my guilt to the Almighty God Odin.";

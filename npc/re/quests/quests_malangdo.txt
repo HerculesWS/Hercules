@@ -185,12 +185,13 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			mes "Isn't it lovely?";
 			mes "How many will you invest in? Enter 0 to cancel.";
 			next;
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Investment Cat Helper]";
 				mes "Please invest next time~";
 				close;
-			} else if (.@input > 10) {
+			}
+			if (.@input > 10) {
 				mes "[Investment Cat Helper]";
 				mes "You can get a maximum of 10 accounts~";
 				close;
@@ -299,29 +300,29 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 		mes "[Investment Cat Helper]";
 		mes "The can donation can range from a minimum of 20 to a maximum of 10,000.";
 		next;
-		input .@input;
+		input(.@input);
 		if (.@input < 20 || .@input > 10000) {
 			mes "[Investment Cat Helper]";
 			mes "The can donation can range from a minimum of 20 to a maximum of 10,000.";
 			close;
-		} else if (countitem(Malang_Sp_Can) < .@input) { // Malang_Sp_Can
+		}
+		if (countitem(Malang_Sp_Can) < .@input) { // Malang_Sp_Can
 			mes "[Investment Cat Helper]";
 			mes "Hmm? You don't have enough cans.";
 			close;
-		} else {
-			delitem Malang_Sp_Can,.@input;
-			mes "[Investment Cat Helper]";
-			mes "Ohh! Thank you~";
-			next;
-			mes "[Investment Cat Helper]";
-			mes "Dear "+strcharinfo(PC_NAME)+" ~";
-			mes "I have only Increase AGI";
-			mes "and Blessing to give you.";
-			mes "Thank you.";
-			npcskill "AL_INCAGI",10,0,0;
-			npcskill "AL_BLESSING",10,0,0;
-			close;
 		}
+		delitem Malang_Sp_Can,.@input;
+		mes "[Investment Cat Helper]";
+		mes "Ohh! Thank you~";
+		next;
+		mes "[Investment Cat Helper]";
+		mes "Dear "+strcharinfo(PC_NAME)+" ~";
+		mes "I have only Increase AGI";
+		mes "and Blessing to give you.";
+		mes "Thank you.";
+		npcskill "AL_INCAGI",10,0,0;
+		npcskill "AL_BLESSING",10,0,0;
+		close;
 	}
 }
 
@@ -5556,7 +5557,7 @@ L_Viewpoint:
 				break;
 			}
 			next;
-			input .@input;
+			input(.@input);
 			if (.@input == .@nori_c) {
 				mes "The card slides out with a sound after entering the number.";
 				mes "^4d4dffYou have passed the "+strnpcinfo(NPC_NAME_VISIBLE)+"! Run to the next destination!^000000";
@@ -7755,7 +7756,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 		next;
 		mes "What do you want to say?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "Come back") {
 			erasequest 5083;
 			setquest 5084;
@@ -7984,7 +7985,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 		next;
 		mes "What do you want to say?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "Come back") {
 			erasequest 5085;
 			setquest 5086;
@@ -8166,7 +8167,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 		next;
 		mes "What do you want to say?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "Come back") {
 			erasequest 5087;
 			setquest 5088;
@@ -8433,7 +8434,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 		next;
 		mes "What do you want to say?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "Come back") {
 			erasequest 5089;
 			setquest 5090;

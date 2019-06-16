@@ -258,7 +258,7 @@ function	script	refinenew	{
 		mes "[" + getarg(0) + "]";
 		mes "How many times would you like me to refine your item?";
 		next;
-		input .@refinecnt;
+		input(.@refinecnt);
 		.@refinecheck = .@refinecnt + getequiprefinerycnt(.@part);
 		if (.@refinecnt < 1 || .@refinecheck > 20) {
 			mes "[" + getarg(0) + "]";

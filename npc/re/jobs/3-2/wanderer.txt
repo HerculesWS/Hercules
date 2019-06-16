@@ -252,7 +252,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "It's because...";
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes "^3131FF" + .@inputstr$ + "^000000";
 		mes "......";
 		next;

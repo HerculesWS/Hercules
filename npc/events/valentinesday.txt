@@ -58,8 +58,9 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "you can come back again.";
 	mes "So how many do you want?";
 	next;
-	input .@i;
-	if (.@i <= 0) close;
+	input(.@i);
+	if (.@i <= 0)
+		close;
 	mes "[Stephen]";
 	if (.@i > 5)  {
 		mes "I'm sorry, but I can't give you that many.";

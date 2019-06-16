@@ -2234,7 +2234,7 @@ sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 		}
 		mes("Input the variable number");
 		next();
-		input(.@input);
+		input(.@input, 0);
 		setd(.@var$, .@input);
 		mesf("%s has been set to %d.", .@var$, .@input);
 		close();

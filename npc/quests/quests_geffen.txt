@@ -306,7 +306,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 
 		// Guess a number that meets all conditions.
 		while(1) {
-			if (input(.@input,100,999) != 0) {
+			if (input(.@input, 100, 999) != 0) {
 				mes "[Nia]";
 				mes "You've canceled the";
 				mes "Number Match game.";

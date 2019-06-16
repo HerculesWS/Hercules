@@ -128,7 +128,7 @@
 			mes .@npc$;
 			mes "Alright then, please sign here.";
 			next;
-			input .@charname$;
+			input(.@charname$);
 			if (.@charname$ == strcharinfo(PC_NAME)) {
 				mes .@npc$;
 				mes "Okay, good.";
@@ -202,7 +202,7 @@
 				mes "The trade cannot be completed without your signature.";
 				close;
 			}
-			input .@charname$;
+			input(.@charname$);
 			if (.@charname$ == strcharinfo(PC_NAME)) {
 				mes .@npc$;
 				mes "Your signature has been received.";
@@ -218,12 +218,10 @@
 				Zeny += 499000000;
 				close;
 			}
-			else {
-				mes .@npc$;
-				mes "Is this really your signature?";
-				mes "Will sign again to confirm?";
-				next;
-			}
+			mes .@npc$;
+			mes "Is this really your signature?";
+			mes "Will sign again to confirm?";
+			next;
 		}
 	}
 }

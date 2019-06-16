@@ -93,7 +93,7 @@ sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 	}
 
 L_Number:
-	input .@input,0,$@god_check2;
+	input(.@input, 0, $@god_check2);
 	mes "[Check]";
 	mes "Would you like to change to "+.@input+"?";
 	mes "Please enter the password.";
@@ -112,7 +112,7 @@ L_Number:
 	}
 
 L_Var:
-	input .@input;
+	input(.@input, 0);
 	setd getarg(0),.@input;
 	next;
 	mes "[Check]";

@@ -84,31 +84,33 @@ S_TradeGems:
 			mes "that you can enter is 100.";
 			next;
 			while(1) {
-				input .@input,0,101;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Jade]";
 					mes "None at all?";
 					mes "I guess you";
 					mes "changed your mind...";
 					close;
 				}
-				else if (.@input > 100) {
+				if (.@input > 100) {
 					mes "[Jade]";
 					mes "Errm...";
 					mes "I asked you to enter";
 					mes "an amount no greater";
 					mes "than 100, remember...?";
 					next;
+					continue;
 				}
-				else if (.@gems < .@input) {
+				if (.@gems < .@input) {
 					// Custom dialogue
 					mes "[Jade]";
 					mes "Errm...";
 					mes "You don't have that";
 					mes "many gems to trade...";
 					next;
+					continue;
 				}
-				else break;
+				break;
 			}
 			delitem getarg(0),.@input * 2;
 			getitem getarg(1),.@input;

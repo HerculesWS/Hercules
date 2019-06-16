@@ -72,8 +72,8 @@
 	mes "You can only buy a maximum of '"+.@max+"' ea.";
 	mes "Enter '0' if you want to cancel.";
 	next;
-	input .@amount;
-	if (.@amount == 0) {
+	input(.@amount);
+	if (.@amount <= 0) {
 		mes "[Poison Herb Merchant]";
 		mes "You've cancelled the trade.";
 		close;
@@ -133,8 +133,8 @@ lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 	mes "and remember, you can only";
 	mes "buy a maximum of '2000' ea.";
 	next;
-	input .@amount;
-	if (.@amount == 0) {
+	input(.@amount);
+	if (.@amount <= 0) {
 		mes "[Rune Merchant]";
 		mes "You're not buying? Please leave!";
 		close;
@@ -199,8 +199,8 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 			mes "You can only buy a maximum of '2000' ea.";
 			mes "Enter '0' if you want to cancel.";
 			next;
-			input .@amount;
-			if (.@amount == 0) {
+			input(.@amount);
+			if (.@amount <= 0) {
 				mes "[Rare Poison Herb Collector]";
 				mes "You've cancelled the trade.";
 				close;
@@ -254,9 +254,9 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 	mes "How many do you want?";
 	mes "If you want to cancel, enter 0.";
 	next;
-	input .@amount;
+	input(.@amount);
 	mes "[Point Merchant]";
-	if (.@amount == 0) {
+	if (.@amount <= 0) {
 		mes "You've cancelled the trade.";
 		close;
 	}

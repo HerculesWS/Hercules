@@ -737,7 +737,7 @@ lhz_cube,234,202,0	script	Picture#cube	HIDDEN_NPC,{
 			mes "hard to move with just";
 			mes "brute strength alone.^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Jackknife") {
 				mes "^3355FFYou take the";
 				mes "Jackknife, thrust";
@@ -817,7 +817,7 @@ lhz_cube,242,201,0	script	Drawer#cube	HIDDEN_NPC,{
 		mes "it's locked. Hopefully, you";
 		mes "can figure how to open it.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Red Key") {
 			mes "^3355FFYou insert the Red Key";
 			mes "into the lock and open the";
@@ -891,7 +891,7 @@ lhz_cube,237,183,0	script	Barrel#cube	HIDDEN_NPC,{
 		mes "you need something to";
 		mes "smash the barrel open.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Axe") {
 			mes "^3355FFAxe in hand, you lift";
 			mes "it above your head and";
@@ -924,7 +924,7 @@ lhz_cube,237,183,0	script	Barrel#cube	HIDDEN_NPC,{
 			mes "digit numbers at one time...^000000";
 			next;
 			for( $@i = 0; .@i < 9; ++.@i )
-				input .@input;
+				input(.@input);
 			mes "^3355FFNothing happened...^000000";
 			close;
 		}
@@ -941,8 +941,9 @@ lhz_cube,237,183,0	script	Barrel#cube	HIDDEN_NPC,{
 			mes "you found inside the keg.^000000";
 			next;
 			for( $@i = 0; .@i < 9; ++.@i ) {
-				input .@input;
-				if (.@input == .@numbers[.@i]) .@number_line += 1;
+				input(.@input);
+				if (.@input == .@numbers[.@i])
+					.@number_line += 1;
 			}
 			if (.@number_line == 9) {
 				mes "^3355FFThe metal plate slides";
@@ -980,7 +981,7 @@ lhz_cube,224,192,0	script	Power Generator#cube	HIDDEN_NPC,{
 		mes "keyhole on the machine";
 		mes "right next to this panel.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "^3355FFNothing happened.";
 		mes "You probably need";
 		mes "to find the right key to";
@@ -995,7 +996,7 @@ lhz_cube,224,192,0	script	Power Generator#cube	HIDDEN_NPC,{
 		mes "keyhole on the machine";
 		mes "right next to this panel.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Yellow Key") {
 			mes "^3355FFYou insert the";
 			mes "Yellow Key into the";
@@ -1264,7 +1265,7 @@ lhz_cube,247,198,0	script	Bed#cube	HIDDEN_NPC,{
 			mes "spot an object. If only you";
 			mes "could reach it somehow...^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Short Stick") {
 				mes "^3355FFYou try to reach";
 				mes "the object by using";
@@ -1302,7 +1303,7 @@ lhz_cube,247,198,0	script	Bed#cube	HIDDEN_NPC,{
 			mes "spot an object. If only you";
 			mes "could reach it somehow...^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Long Stick") {
 				mes "^3355FFWith Long Stick in";
 				mes "hand, you manage to";
@@ -1376,7 +1377,7 @@ lhz_cube,231,202,0	script	Chemicals#cube	HIDDEN_NPC,{
 		mes "corrosive chemicals";
 		mes "that is sitting on the ledge.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "^3355FFWhatever you tried to";
 		mes "pour the chemicals on";
 		mes "wasn't affected at all.";
@@ -1390,7 +1391,7 @@ lhz_cube,231,202,0	script	Chemicals#cube	HIDDEN_NPC,{
 		mes "corrosive chemicals";
 		mes "that is sitting on the ledge.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Rusty Key") {
 			mes "^3355FFPouring the chemicals";
 			mes "on the Rusty Key removes";
@@ -1425,7 +1426,7 @@ lhz_cube,249,191,0	script	Cabinet#cube	HIDDEN_NPC,{
 		mes "something useful is inside?";
 		next;
 		if (select("Open", "Cancel") == 1) {
-			input .@input$;
+			input(.@input$);
 			mes "^3355FFUnfortunately, the";
 			mes "cabinet has been locked.";
 			mes "You'll need the right key";
@@ -1439,7 +1440,7 @@ lhz_cube,249,191,0	script	Cabinet#cube	HIDDEN_NPC,{
 		mes "many drawers. Perhaps";
 		mes "something useful is inside?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Green Key") {
 			mes "^3355FFYou take the Green Key";
 			mes "and finds that it fits into";
@@ -1478,7 +1479,7 @@ lhz_cube,224,197,0	script	Experiment Tube#cube	HIDDEN_NPC,{
 		mes "a thin plate with a keyhole";
 		mes "and a card insertion slot.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "^3355FFNothing happened.";
 		mes "You'll probably need";
 		mes "to find the right key for";
@@ -1494,7 +1495,7 @@ lhz_cube,224,197,0	script	Experiment Tube#cube	HIDDEN_NPC,{
 		mes "a thin plate with a keyhole";
 		mes "and a card insertion slot.^000000";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Black Key") {
 			mes "^3355FFYou insert the Black Key";
 			mes "into the keyhole, causing";
@@ -1524,7 +1525,7 @@ lhz_cube,224,197,0	script	Experiment Tube#cube	HIDDEN_NPC,{
 			mes "rectangular card slot";
 			mes "in front of the tube.^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Laboratory Permit") {
 				if (countitem(Lab_Passport)) {
 					mes "^3355FFYou insert the";
@@ -1575,7 +1576,7 @@ lhz_cube,248,193,0	script	Box#cube1	HIDDEN_NPC,{
 		mes "shaped holes.^000000";
 		next;
 		select("Oval Hole", "Cubic Hole", "Polygon Hole");
-		input .@input$;
+		input(.@input$);
 		mes "^3355FFNothing happened.^000000";
 		close;
 	}
@@ -1588,7 +1589,7 @@ lhz_cube,248,193,0	script	Box#cube1	HIDDEN_NPC,{
 		case 1:
 			if (lhz_secret01 == 9) {
 				next;
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "Oval") {
 					mes "^3355FFYou insert the Oval";
 					mes "into the Oval shaped";
@@ -1606,13 +1607,13 @@ lhz_cube,248,193,0	script	Box#cube1	HIDDEN_NPC,{
 				mes "any Ovals to spare, anyway.^000000";
 				close;
 			}
-			input .@input$;
+			input(.@input$);
 			mes "^3355FFNothing happened.^000000";
 			close;
 		case 2:
 			if (lhz_secret02 == 4) {
 				next;
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "Cube") {
 					mes "^3355FFYou insert the Cube";
 					mes "into the Cubic hole";
@@ -1634,13 +1635,13 @@ lhz_cube,248,193,0	script	Box#cube1	HIDDEN_NPC,{
 				mes "a total waste of time.^000000";
 				close;
 			}
-			input .@input$;
+			input(.@input$);
 			mes "^3355FFNothing happened.^000000";
 			close;
 		case 3:
 			if (lhz_secret03 == 3) {
 				next;
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "Polygon") {
 					mes "^3355FFFortunately, the";
 					mes "nondescript Polygon";
@@ -1662,7 +1663,7 @@ lhz_cube,248,193,0	script	Box#cube1	HIDDEN_NPC,{
 				mes "as this Polygon can do for you.^000000";
 				close;
 			}
-			input .@input$;
+			input(.@input$);
 			mes "^3355FFNothing happened.^000000";
 			close;
 		}
@@ -2829,7 +2830,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		mes "Tell me what that fink";
 		mes "has to say, line by line!";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Hopeless bastard!") {
 			mes "[Maku]";
 			mes "''Hopeless bastard?!''";
@@ -2838,7 +2839,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 			mes "Through somebody else";
 			mes "anyway! What else'd he say?!";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "You're still a stubborn jerk!") {
 				mes "[Maku]";
 				mes "''Stubborn jerk?!''";
@@ -2846,7 +2847,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 				mes "bastard! Why I oughta--";
 				mes "Grrr! What'd he say next?!";
 				next;
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "You owe me at least 3 lunches!") {
 					mes "[Maku]";
 					mes "Three lunches?!";
@@ -2856,7 +2857,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 					mes "know the meaning of friendship!";
 					mes "What else did that moron say?!";
 					next;
-					input .@input$;
+					input(.@input$);
 					if (.@input$ == "Not to mention an apology!") {
 						cutin "lhz_macu05",255;
 						mes "[Maku]";
@@ -2867,7 +2868,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 						mes "That selfish no-good stupid...";
 						mes "W-what else did he tell you?!";
 						next;
-						input .@input$;
+						input(.@input$);
 						if (.@input$ == "But who cares what you think?!") {
 							mes "[Maku]";
 							mes "''Who cares what I think?!''";
@@ -2877,7 +2878,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 							mes "dumb creep! He can't possibly";
 							mes "make me angrier than I am now!";
 							next;
-							input .@input$;
+							input(.@input$);
 							if (.@input$ == "I'm so goddamn happy without you!") {
 								friendship = 5;
 								cutin "lhz_macu06",2;
@@ -9071,7 +9072,7 @@ lhz_fild02,228,214,0	script	Wounded Man	4_M_DIEMAN,{
 				mes "What... What organization";
 				mes "are you working for...?";
 				next;
-				input @jargeah$;
+				input(@jargeah$);
 				if((@jargeah$ == "Kafra Corporation") || (@jargeah$ == "Secret Wing"))
 				{
 					mes "[Jargeah]";
@@ -9689,9 +9690,8 @@ OnTouch:
 							mes "password to open the door.^000000";
 							next;
 							while (true) {
-								input @sneakpass;
-								if(@sneakpass == 738495)
-								{
+								input(@sneakpass);
+								if (@sneakpass == 738495) {
 									mes "^3355FF*Beep~*";
 									mes "You hear a pleasant";
 									mes "sounding electronic chirp,";
@@ -9822,7 +9822,7 @@ lhz_in01,182,35,0	script	File Search Engine	HIDDEN_NPC,{
 					mes "Please do not use";
 					mes "capital letters.^000000";
 					next;
-					input @sneaksearch$;
+					input(@sneaksearch$);
 					if((@sneaksearch$ == "kafra") || (@sneaksearch$ == "cool event"))
 					{
 						mes "^663300[Search Result]";
@@ -10327,7 +10327,7 @@ sec_in02,17,170,4	script	boss::lght_boss_admin	1_M_SIGNMONK,{
 	case 1:
 		break;
 	case 2:
-		input .@input,0,1000;
+		input(.@input, 0, 1000);
 		lght_boss = .@input;
 		break;
 	case 3:

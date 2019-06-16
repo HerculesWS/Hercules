@@ -659,7 +659,7 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		mes "[Leader Gion]";
 		mes "You've come back already? You could have rested more. Is there a reason to hurry?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		cutin "job_ko03",2;
 		mes "[Leader Gion]";
 		mes "Because of ^B24E59" + .@inputstr$ + "^000000?";

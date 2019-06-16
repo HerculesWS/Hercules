@@ -880,7 +880,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "Bartender,";
 				mes "I'm so depressed";
 				mes "because of...";
-				input .@inputstr$;
+				input(.@inputstr$);
 				mes .@inputstr$+"...";
 				next;
 				mes "[Bartender]";
