@@ -9480,7 +9480,8 @@ static void clif_mobname_normal_ack(int fd, struct block_list *bl)
 	struct PACKET_ZC_ACK_REQNAME_TITLE packet = { 0 };
 	packet.packet_id = HEADER_ZC_ACK_REQNAME_TITLE;
 	packet.gid = bl->id;
-	memcpy(packet.name, BL_UCCAST(BL_MOB, bl)->db->name, NAME_LENGTH);
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+	memcpy(packet.name, md->name, NAME_LENGTH);
 #if PACKETVER_MAIN_NUM >= 20180207 || PACKETVER_RE_NUM >= 20171129 || PACKETVER_ZERO_NUM >= 20171130
 	struct unit_data *ud = unit->bl2ud(bl);
 	if (ud != NULL) {
