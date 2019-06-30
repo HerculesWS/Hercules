@@ -4368,8 +4368,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 	if (!strcmpi(w3, "nosave")) {
 		char savemap[32];
 		int savex, savey;
-		if (state == 0)
-			; //Map flag disabled.
+		if (state == 0); //Map flag disabled.
 		else if (w4 && !strcmpi(w4, "SavePoint")) {
 			map->list[m].save.map = 0;
 			map->list[m].save.x = -1;
@@ -4662,7 +4661,8 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 			}
 		}
 
-		if( modifier[0] == '\0' ) {
+		if (state == 0); //Map flag disabled.
+		else if (modifier[0] == '\0') {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		} else if( !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) ) {
@@ -4721,7 +4721,8 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 			}
 		}
 
-		if( modifier[0] == '\0' ) {
+		if (state == 0); //Map flag disabled.
+		else if (modifier[0] == '\0') {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		} else if( !( skill_id = skill->name2id(skill_name) ) ) {
