@@ -1949,7 +1949,7 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b1c,clif->pPing);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	packet(0x0b21,clif->pHotkey2);
 	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif

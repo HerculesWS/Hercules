@@ -1423,7 +1423,7 @@ struct hotkey_data {
 	int16 count;  // Item Quantity/Skill Level
 } __attribute__((packed));
 
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 #define MAX_HOTKEYS_PACKET 38
 struct PACKET_ZC_SHORTCUT_KEY_LIST {
 	int16 packetType;
@@ -1472,7 +1472,7 @@ struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 {
 DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE1, 0x02ba);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 {
 	int16 packetType;
 	uint16 tab;
@@ -1490,7 +1490,7 @@ struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 {
 DEFINE_PACKET_HEADER(CZ_SHORTCUTKEYBAR_ROTATE1, 0x0a01);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 {
 	int16 packetType;
 	uint16 tab;
@@ -2326,7 +2326,35 @@ struct PACKET_ZC_ACK_WEAPONREFINE {
 #endif
 } __attribute__((packed));
 
-#if PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
+// PACKET_ZC_PROPERTY_HOMUN3
+struct PACKET_ZC_PROPERTY_HOMUN {
+	int16 packetType;
+	char name[NAME_LENGTH];
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	uint8 flags;
+	uint16 level;
+	uint16 hunger;
+	uint16 intimacy;
+	uint16 atk2;
+	uint16 matk;
+	uint16 hit;
+	uint16 crit;
+	uint16 def;
+	uint16 mdef;
+	uint16 flee;
+	uint16 amotion;
+	uint32 hp;
+	uint32 maxHp;
+	uint16 sp;
+	uint16 maxSp;
+	uint32 exp;
+	uint32 expNext;
+	uint16 skillPoints;
+	uint16 range;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0b2f);
+#elif PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO)
 // PACKET_ZC_PROPERTY_HOMUN2
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
@@ -2651,6 +2679,7 @@ struct PACKET_ZC_MAKINGARROW_LIST {
 	int16 packetLength;
 	struct PACKET_ZC_MAKINGARROW_LIST_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MAKINGARROW_LIST, 0x01ad);
 
 struct PACKET_ZC_REPAIRITEMLIST_sub {
 	int16 index;
