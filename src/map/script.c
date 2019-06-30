@@ -24848,6 +24848,49 @@ static BUILDIN(consolemes)
 	return true;
 }
 
+static BUILDIN(setfavoriteitemidx)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	int idx = script_getnum(st, 2);
+	int value = script_getnum(st, 3);
+
+	if (sd == NULL) {
+		ShowError("buildin_setfavoriteitemidx: No player attached.\n");
+		return false;
+	}
+
+	if (idx < 0 || idx >= sd->status.inventorySize) {
+		ShowError("buildin_setfavoriteitemidx: Invalid inventory index %d (min: %d, max: %d).\n", idx, 0, (sd->status.inventorySize - 1));
+		return false;
+	} else if (sd->inventory_data[idx] == NULL || sd->inventory_data[idx]->nameid <= 0) {
+		ShowWarning("buildin_setfavoriteitemidx: Current inventory index %d has no data.\n", idx);
+		return false;
+	} else if (sd->status.inventory[idx].equip > 0) {
+		ShowWarning("buildin_setfavoriteitemidx: Cant change favorite flag of an equipped item.\n");
+		return false;
+	} else {
+		sd->status.inventory[idx].favorite = cap_value(value, 0, 1);
+		clif->favorite_item(sd, idx);
+	}
+
+	return true;
+}
+
+static BUILDIN(autofavoriteitem)
+{
+	int nameid = script_getnum(st, 2);
+	int flag = script_getnum(st, 3);
+	struct item_data *item_data;
+
+	if ((item_data = itemdb->exists(nameid)) == NULL) {
+		ShowError("buildin_autofavoriteitem: Invalid item '%d'.\n", nameid);
+		return false;
+	}
+
+	item_data->flag.auto_favorite = cap_value(flag, 0, 1);
+	return true;
+}
+
 /** place holder for the translation macro **/
 static BUILDIN(_)
 {
@@ -26230,6 +26273,8 @@ static void script_parse_builtin(void)
 
 		BUILDIN_DEF(closeroulette, ""),
 		BUILDIN_DEF(openrefineryui, ""),
+		BUILDIN_DEF(setfavoriteitemidx, "ii"),
+		BUILDIN_DEF(autofavoriteitem, "ii"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
