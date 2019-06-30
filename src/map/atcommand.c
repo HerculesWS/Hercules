@@ -4464,6 +4464,38 @@ ACMD(unloadnpc)
 	return true;
 }
 
+/// Unload existing NPC within the NPC file and reload it.
+/// Usage: @reloadnpc npc/sample_npc.txt
+ACMD(reloadnpc)
+{
+	if (!*message) {
+		clif->message(fd, msg_fd(fd, 1385)); // Usage: @unloadnpcfile <file name>
+		return false;
+	} else if (npc->unloadfile(message) == true) {
+		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that mapflags and monsters spawned directly are not removed.
+
+		FILE *fp = fopen(message, "r");
+		// check if script file exists
+		if (fp == NULL) {
+			clif->message(fd, msg_fd(fd, 261));
+			return false;
+		}
+		fclose(fp);
+
+		// add to list of script sources and run it
+		npc->addsrcfile(message);
+		npc->parsesrcfile(message, true);
+		npc->read_event_script();
+
+		clif->message(fd, msg_fd(fd, 262));
+	} else {
+		clif->message(fd, msg_fd(fd, 1387)); // File not found.
+		return false;
+	}
+
+	return true;
+}
+
 /*==========================================
  * time in txt for time command (by [Yor])
  *------------------------------------------*/
@@ -10118,6 +10150,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(addperm),
 		ACMD_DEF2("rmvperm", addperm),
 		ACMD_DEF(unloadnpcfile),
+		ACMD_DEF(reloadnpc),
 		ACMD_DEF(cart),
 		ACMD_DEF(cashmount),
 		ACMD_DEF(join),
