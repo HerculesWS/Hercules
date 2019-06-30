@@ -25516,6 +25516,75 @@ static BUILDIN(openrefineryui)
 }
 
 /**
+ * identify(<item id>)
+ * Identifies the first unidentified <item id> item on player's inventory.
+ * Returns -2 on error, -1 if no item to identify was found, identified idx otherwise.
+ */
+static BUILDIN(identify)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, -2);
+		return true;
+	}
+
+	int itemid = script_getnum(st, 2);
+	if (itemdb->exists(itemid) == NULL) {
+		ShowError("buildin_identify: Invalid item ID (%d)\n", itemid);
+		script_pushint(st, -2);
+		return true;
+	}
+
+	int idx = -1;
+	ARR_FIND(0, sd->status.inventorySize, idx, (sd->status.inventory[idx].nameid == itemid && sd->status.inventory[idx].identify == 0));
+
+	if (idx < 0 || idx >= sd->status.inventorySize) {
+		script_pushint(st, -1);
+		return true;
+	}
+
+	sd->status.inventory[idx].identify = 1;
+	clif->item_identified(sd, idx, 0);
+	script_pushint(st, idx);
+
+	return true;
+}
+
+/**
+ * identifyidx(idx)
+ * Identifies item at idx.
+ * Returns true if item is identified, false otherwise.
+ */
+static BUILDIN(identifyidx)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+
+	if (sd == NULL) {
+		script_pushint(st, false);
+		return true;
+	}
+
+	int idx = script_getnum(st, 2);
+	if (idx < 0 || idx >= sd->status.inventorySize) {
+		ShowError("buildin_identifyidx: Invalid inventory index (%d), expected a value between 0 and %d\n", idx, sd->status.inventorySize);
+		script_pushint(st, false);
+		return true;
+	}
+	
+	if (sd->status.inventory[idx].nameid <= 0 || sd->status.inventory[idx].identify != 0) {
+		script_pushint(st, false);
+		return true;
+	}
+
+	sd->status.inventory[idx].identify = 1;
+	clif->item_identified(sd, idx, 0);
+	script_pushint(st, true);
+
+	return true;
+}
+
+/**
  * Adds a built-in script function.
  *
  * @param buildin Script function data
@@ -26275,6 +26344,9 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(openrefineryui, ""),
 		BUILDIN_DEF(setfavoriteitemidx, "ii"),
 		BUILDIN_DEF(autofavoriteitem, "ii"),
+
+		BUILDIN_DEF(identify, "i"),
+		BUILDIN_DEF(identifyidx, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
