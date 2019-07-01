@@ -9,6 +9,27 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.06.30] `June 30 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-06-05. (#2491)
+- Added support for the new shortcuts packets in the Zero clients. (part of #2491)
+- Added support for the Summoner class in `stylist.txt`. (part of #2357, issue #2356)
+- Implemented the new `setfavoriteitemidx()` and `autofavoriteitem()` script commands. (#2427)
+- Implemented the new `@reloadnpc` atcommand, to reload a single script file. (#2476)
+- Implemented the new `identify()` and `identifyidx()` script commands and `@identifyall` atcommand. (#2487)
+
+### Changed
+
+- Suppressed unnecessary ShowWarning messages related to the `nosave`, `adjust_unit_duration` and `adjust_skill_damage` mapflags when using `@reloadscript`. (#2410, issue #2347)
+- Updated the Rune Knight, Guillotine Cross and Ranger shops with missing items. (#2343)
+
+### Fixed
+
+- Fixed monster spawns disregarding the custom names specified. (#2496, #2491, issue #2495)
+- Fixed the style range in `stylist.txt`, now starting from 1 instead of 0. (part of #2357, issue #2356)
+
 ### [v2019.06.02] `June 2 2019`
 
 ### Added
@@ -809,6 +830,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.06.30]: https://github.com/HerculesWS/Hercules/compare/v2019.06.02...v2019.06.30
 [v2019.06.02]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+4...v2019.06.02
 [v2019.05.05+4]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+3...v2019.05.05+4
 [v2019.05.05+3]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+2...v2019.05.05+3
