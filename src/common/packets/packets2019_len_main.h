@@ -3757,7 +3757,7 @@ packetLen(0x0a39, 36)  // CH_MAKE_CHAR
 packetLen(0x0a3a, 12)
 
 // Packet: 0x0a3b
-packetLen(0x0a3b, -1)  // ZC_CUSTOM_HAT_EFFECT
+packetLen(0x0a3b, -1)  // ZC_HAT_EFFECT
 
 // Packet: 0x0a3c
 packetLen(0x0a3c, -1)
@@ -3901,7 +3901,7 @@ packetLen(0x0a74, 8)
 packetLen(0x0a76, 80)
 
 // Packet: 0x0a77
-packetLen(0x0a77, 15)
+packetLen(0x0a77, 15)  // CZ_CAMERA_INFO
 
 // Packet: 0x0a78
 packetLen(0x0a78, 15)
@@ -4270,7 +4270,7 @@ packetLen(0x0af4, 11)  // CZ_USE_SKILL_TOGROUND
 packetLen(0x0af5, 3)
 
 // Packet: 0x0af6
-packetLen(0x0af6, 88)
+packetLen(0x0af6, 88)  // ZC_ACK_RANKING
 
 // Packet: 0x0af7
 packetLen(0x0af7, 32)  // ZC_ACK_REQNAME_BYGID
@@ -4532,6 +4532,138 @@ packetLen(0x0b32, -1)
 // Packet: 0x0b33
 #if PACKETVER >= 20190619
 packetLen(0x0b33, 17)
+#endif
+
+// Packet: 0x0b34
+#if PACKETVER >= 20190724
+packetLen(0x0b34, 50)
+#elif PACKETVER >= 20190703
+packetLen(0x0b34, 26)
+#endif
+
+// Packet: 0x0b35
+#if PACKETVER >= 20190703
+packetLen(0x0b35, 3)
+#endif
+
+// Packet: 0x0b36
+#if PACKETVER >= 20190717
+packetLen(0x0b36, -1)
+#endif
+
+// Packet: 0x0b37
+#if PACKETVER >= 20190724
+packetLen(0x0b37, -1)
+#endif
+
+// Packet: 0x0b38
+#if PACKETVER >= 20190724
+packetLen(0x0b38, -1)
+#endif
+
+// Packet: 0x0b39
+#if PACKETVER >= 20190724
+packetLen(0x0b39, -1)
+#endif
+
+// Packet: 0x0b3a
+#if PACKETVER >= 20190724
+packetLen(0x0b3a, 4)
+#endif
+
+// Packet: 0x0b3b
+#if PACKETVER >= 20190724
+packetLen(0x0b3b, 4)
+#endif
+
+// Packet: 0x0b3c
+#if PACKETVER >= 20190724
+packetLen(0x0b3c, 4)
+#endif
+
+// Packet: 0x0b3d
+#if PACKETVER >= 20190724
+packetLen(0x0b3d, -1)
+#endif
+
+// Packet: 0x0b3e
+#if PACKETVER >= 20190724
+packetLen(0x0b3e, -1)
+#endif
+
+// Packet: 0x0b3f
+#if PACKETVER >= 20190724
+packetLen(0x0b3f, 64)
+#endif
+
+// Packet: 0x0b40
+#if PACKETVER >= 20190724
+packetLen(0x0b40, -1)
+#endif
+
+// Packet: 0x0b41
+#if PACKETVER >= 20190724
+packetLen(0x0b41, 41)
+#endif
+
+// Packet: 0x0b42
+#if PACKETVER >= 20190724
+packetLen(0x0b42, 30)
+#endif
+
+// Packet: 0x0b43
+#if PACKETVER >= 20190724
+packetLen(0x0b43, 47)
+#endif
+
+// Packet: 0x0b44
+#if PACKETVER >= 20190724
+packetLen(0x0b44, 32)
+#endif
+
+// Packet: 0x0b45
+#if PACKETVER >= 20190724
+packetLen(0x0b45, 32)
+#endif
+
+// Packet: 0x0b46
+#if PACKETVER >= 20190724
+packetLen(0x0b46, 10)
+#endif
+
+// Packet: 0x0b47
+#if PACKETVER >= 20190724
+packetLen(0x0b47, 14)
+#endif
+
+// Packet: 0x0b48
+#if PACKETVER >= 20190724
+packetLen(0x0b48, 18)
+#endif
+
+// Packet: 0x0b49
+#if PACKETVER >= 20190724
+packetLen(0x0b49, 4)
+#endif
+
+// Packet: 0x0b4a
+#if PACKETVER >= 20190724
+packetLen(0x0b4a, 6)
+#endif
+
+// Packet: 0x0b4b
+#if PACKETVER >= 20190724
+packetLen(0x0b4b, 4)
+#endif
+
+// Packet: 0x0b4c
+#if PACKETVER >= 20190724
+packetLen(0x0b4c, 2)
+#endif
+
+// Packet: 0x0b4d
+#if PACKETVER >= 20190724
+packetLen(0x0b4d, 6)
 #endif
 
 
