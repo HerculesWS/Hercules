@@ -3480,6 +3480,20 @@ struct PACKET_ZC_REFINE_STATUS {
 DEFINE_PACKET_HEADER(ZC_REFINE_STATUS, 0x0ada);
 #endif
 
+struct PACKET_ZC_ACK_RANKING_sub {
+	char name[NAME_LENGTH];
+	uint32 points;
+} __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_ACK_RANKING {
+	int16 packetType;
+	int16 rankType;
+	struct PACKET_ZC_ACK_RANKING_sub ranks[10];
+	uint32 myPoints;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x097d);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

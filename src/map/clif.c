@@ -15723,60 +15723,58 @@ static void clif_parse_PVPInfo(int fd, struct map_session_data *sd)
 /// Ranking list
 
 /// ranking pointlist  { <name>.24B <point>.L }*10
-static void clif_ranklist_sub(unsigned char *buf, enum fame_list_type type)
+static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type)
 {
-	const char* name;
-	struct fame_list* list;
-	int i;
+	nullpo_retv(ranks);
 
-	nullpo_retv(buf);
-	switch( type ) {
+	struct fame_list* list;
+	switch (type) {
 		case RANKTYPE_BLACKSMITH: list = pc->smith_fame_list; break;
 		case RANKTYPE_ALCHEMIST:  list = pc->chemist_fame_list; break;
 		case RANKTYPE_TAEKWON:    list = pc->taekwon_fame_list; break;
 		default: return; // Unsupported
 	}
 
+	int i;
 	// Packet size limits this list to 10 elements. [Skotlex]
-	for( i = 0; i < 10 && i < MAX_FAME_LIST; i++ ) {
-		if( list[i].id > 0 ) {
-			if( strcmp(list[i].name, "-") == 0 && (name = map->charid2nick(list[i].id)) != NULL ) {
-				strncpy(WBUFP(buf, 24 * i), name, NAME_LENGTH);
+	for (i = 0; i < 10 && i < MAX_FAME_LIST; i++) {
+		if (list[i].id > 0) {
+			const char* name;
+			if (strcmp(list[i].name, "-") == 0 && (name = map->charid2nick(list[i].id)) != NULL) {
+				strncpy(ranks[i].name, name, NAME_LENGTH);
 			} else {
-				strncpy(WBUFP(buf, 24 * i), list[i].name, NAME_LENGTH);
+				strncpy(ranks[i].name, list[i].name, NAME_LENGTH);
 			}
 		} else {
-			strncpy(WBUFP(buf, 24 * i), "None", 5);
+			strncpy(ranks[i].name, "None", 5);
 		}
-		WBUFL(buf, 24 * 10 + i * 4) = list[i].fame; //points
+		ranks[i].points = list[i].fame; //points
 	}
-	for( ;i < 10; i++ ) { // In case the MAX is less than 10.
-		strncpy(WBUFP(buf, 24 * i), "Unavailable", 12);
-		WBUFL(buf, 24 * 10 + i * 4) = 0;
+	for (;i < 10; i++) { // In case the MAX is less than 10.
+		strncpy(ranks[i].name, "Unavailable", 12);
+		ranks[i].points = 0;
 	}
 }
 
 /// 097d <RankingType>.W {<CharName>.24B <point>L}*10 <mypoint>L (ZC_ACK_RANKING)
 static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 {
-#if PACKETVER >= 20120502
-	int fd;
-	int len = packet_len(0x97d);
-
+#if PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
-	fd = sd->fd;
-	WFIFOHEAD(fd, len);
-	WFIFOW(fd, 0) = 0x97d;
-	WFIFOW(fd, 2) = type;
-	clif_ranklist_sub(WFIFOP(fd,4), type);
+	int fd = sd->fd;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ACK_RANKING));
+	struct PACKET_ZC_ACK_RANKING *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ACK_RANKING;
+	p->rankType = type;
+	clif->ranklist_sub(p->ranks, type);
 
 	if (pc->famelist_type(sd->job) == type) {
-		WFIFOL(fd, 284) = sd->status.fame; //mypoint
+		p->myPoints = sd->status.fame; //mypoint
 	} else {
-		WFIFOL(fd, 284) = 0; //mypoint
+		p->myPoints = 0; //mypoint
 	}
 
-	WFIFOSET(fd, len);
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ACK_RANKING));
 #endif
 }
 
@@ -15826,14 +15824,16 @@ static void clif_update_rankingpoint(struct map_session_data *sd, enum fame_list
 /// 0219 { <name>.24B }*10 { <point>.L }*10
 static void clif_blacksmith(struct map_session_data *sd)
 {
+#if !(PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO))
 	int fd;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
 	WFIFOHEAD(fd,packet_len(0x219));
 	WFIFOW(fd,0) = 0x219;
-	clif_ranklist_sub(WFIFOP(fd, 2), RANKTYPE_BLACKSMITH);
+	clif->ranklist_sub(WFIFOP(fd, 2), RANKTYPE_BLACKSMITH);
 	WFIFOSET(fd, packet_len(0x219));
+#endif
 }
 
 static void clif_parse_Blacksmith(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -15863,14 +15863,16 @@ static void clif_fame_blacksmith(struct map_session_data *sd, int points)
 /// 021a { <name>.24B }*10 { <point>.L }*10
 static void clif_alchemist(struct map_session_data *sd)
 {
+#if !(PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO))
 	int fd;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
 	WFIFOHEAD(fd,packet_len(0x21a));
 	WFIFOW(fd,0) = 0x21a;
-	clif_ranklist_sub(WFIFOP(fd,2), RANKTYPE_ALCHEMIST);
+	clif->ranklist_sub(WFIFOP(fd,2), RANKTYPE_ALCHEMIST);
 	WFIFOSET(fd, packet_len(0x21a));
+#endif
 }
 
 static void clif_parse_Alchemist(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -15900,14 +15902,16 @@ static void clif_fame_alchemist(struct map_session_data *sd, int points)
 /// 0226 { <name>.24B }*10 { <point>.L }*10
 static void clif_taekwon(struct map_session_data *sd)
 {
+#if !(PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO))
 	int fd;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
 	WFIFOHEAD(fd,packet_len(0x226));
 	WFIFOW(fd,0) = 0x226;
-	clif_ranklist_sub(WFIFOP(fd,2), RANKTYPE_TAEKWON);
+	clif->ranklist_sub(WFIFOP(fd,2), RANKTYPE_TAEKWON);
 	WFIFOSET(fd, packet_len(0x226));
+#endif
 }
 
 static void clif_parse_Taekwon(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -23127,6 +23131,7 @@ void clif_defaults(void)
 	clif->fame_alchemist = clif_fame_alchemist;
 	clif->fame_taekwon = clif_fame_taekwon;
 	clif->ranklist = clif_ranklist;
+	clif->ranklist_sub = clif_ranklist_sub;
 	clif->pRanklist = clif_parse_ranklist;
 	clif->update_rankingpoint = clif_update_rankingpoint;
 	clif->hotkeys = clif_hotkeys_send;

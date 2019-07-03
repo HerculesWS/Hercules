@@ -56,6 +56,7 @@ struct unit_data;
 struct view_data;
 struct achievement_data; // map/achievement.h
 struct s_refine_requirement;
+struct PACKET_ZC_ACK_RANKING_sub;
 
 enum clif_messages;
 enum rodex_add_item;
@@ -849,6 +850,7 @@ struct clif_interface {
 	void (*fame_alchemist) (struct map_session_data *sd, int points);
 	void (*fame_taekwon) (struct map_session_data *sd, int points);
 	void (*ranklist) (struct map_session_data *sd, enum fame_list_type type);
+	void (*ranklist_sub) (struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type);
 	void (*update_rankingpoint) (struct map_session_data *sd, enum fame_list_type type, int points);
 	void (*pRanklist) (int fd, struct map_session_data *sd);
 	void (*hotkeys) (struct map_session_data *sd, int tab);
