@@ -851,6 +851,7 @@ struct clif_interface {
 	void (*fame_taekwon) (struct map_session_data *sd, int points);
 	void (*ranklist) (struct map_session_data *sd, enum fame_list_type type);
 	void (*ranklist_sub) (struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type);
+	void (*ranklist_sub2) (uint32 *chars, uint32 *points, enum fame_list_type type);
 	void (*update_rankingpoint) (struct map_session_data *sd, enum fame_list_type type, int points);
 	void (*pRanklist) (int fd, struct map_session_data *sd);
 	void (*hotkeys) (struct map_session_data *sd, int tab);

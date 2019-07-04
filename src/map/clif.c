@@ -15725,6 +15725,7 @@ static void clif_parse_PVPInfo(int fd, struct map_session_data *sd)
 /// ranking pointlist  { <name>.24B <point>.L }*10
 static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type)
 {
+#if !(PACKETVER_RE_NUM >= 20190703)
 	nullpo_retv(ranks);
 
 	struct fame_list* list;
@@ -15754,6 +15755,38 @@ static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame
 		strncpy(ranks[i].name, "Unavailable", 12);
 		ranks[i].points = 0;
 	}
+#endif
+}
+
+static void clif_ranklist_sub2(uint32 *chars, uint32 *points, enum fame_list_type type)
+{
+#if PACKETVER_RE_NUM >= 20190703
+	nullpo_retv(chars);
+	nullpo_retv(points);
+
+	struct fame_list* list;
+	switch (type) {
+		case RANKTYPE_BLACKSMITH: list = pc->smith_fame_list; break;
+		case RANKTYPE_ALCHEMIST:  list = pc->chemist_fame_list; break;
+		case RANKTYPE_TAEKWON:    list = pc->taekwon_fame_list; break;
+		default: return; // Unsupported
+	}
+
+	int i;
+	// Packet size limits this list to 10 elements. [Skotlex]
+	for (i = 0; i < 10 && i < MAX_FAME_LIST; i++) {
+		if (list[i].id > 0) {
+			chars[i] = list[i].id;
+		} else {
+			chars[i] = 0;
+		}
+		points[i] = list[i].fame; //points
+	}
+	for (;i < 10; i++) { // In case the MAX is less than 10.
+		chars[i] = 0;
+		points[i] = 0;
+	}
+#endif
 }
 
 /// 097d <RankingType>.W {<CharName>.24B <point>L}*10 <mypoint>L (ZC_ACK_RANKING)
@@ -15766,7 +15799,11 @@ static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	struct PACKET_ZC_ACK_RANKING *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_ACK_RANKING;
 	p->rankType = type;
+#if PACKETVER_RE_NUM >= 20190703
+	clif->ranklist_sub2(p->chars, p->points, type);
+#else
 	clif->ranklist_sub(p->ranks, type);
+#endif
 
 	if (pc->famelist_type(sd->job) == type) {
 		p->myPoints = sd->status.fame; //mypoint
@@ -23132,6 +23169,7 @@ void clif_defaults(void)
 	clif->fame_taekwon = clif_fame_taekwon;
 	clif->ranklist = clif_ranklist;
 	clif->ranklist_sub = clif_ranklist_sub;
+	clif->ranklist_sub2 = clif_ranklist_sub2;
 	clif->pRanklist = clif_parse_ranklist;
 	clif->update_rankingpoint = clif_update_rankingpoint;
 	clif->hotkeys = clif_hotkeys_send;
