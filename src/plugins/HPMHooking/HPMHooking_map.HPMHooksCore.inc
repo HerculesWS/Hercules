@@ -886,6 +886,10 @@ struct {
 	struct HPMHookPoint *HP_clif_fame_taekwon_post;
 	struct HPMHookPoint *HP_clif_ranklist_pre;
 	struct HPMHookPoint *HP_clif_ranklist_post;
+	struct HPMHookPoint *HP_clif_ranklist_sub_pre;
+	struct HPMHookPoint *HP_clif_ranklist_sub_post;
+	struct HPMHookPoint *HP_clif_ranklist_sub2_pre;
+	struct HPMHookPoint *HP_clif_ranklist_sub2_post;
 	struct HPMHookPoint *HP_clif_update_rankingpoint_pre;
 	struct HPMHookPoint *HP_clif_update_rankingpoint_post;
 	struct HPMHookPoint *HP_clif_pRanklist_pre;
@@ -7673,6 +7677,10 @@ struct {
 	int HP_clif_fame_taekwon_post;
 	int HP_clif_ranklist_pre;
 	int HP_clif_ranklist_post;
+	int HP_clif_ranklist_sub_pre;
+	int HP_clif_ranklist_sub_post;
+	int HP_clif_ranklist_sub2_pre;
+	int HP_clif_ranklist_sub2_post;
 	int HP_clif_update_rankingpoint_pre;
 	int HP_clif_update_rankingpoint_post;
 	int HP_clif_pRanklist_pre;
