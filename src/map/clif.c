@@ -3951,17 +3951,16 @@ static void clif_arrow_create_list(struct map_session_data *sd)
 ///     1 = success
 static void clif_statusupack(struct map_session_data *sd, int type, int ok, int val)
 {
-	int fd;
-
 	nullpo_retv(sd);
+	int fd = sd->fd;
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0xbc));
-	WFIFOW(fd,0)=0xbc;
-	WFIFOW(fd,2)=type;
-	WFIFOB(fd,4)=ok;
-	WFIFOB(fd,5)=cap_value(val,0,UINT8_MAX);
-	WFIFOSET(fd,packet_len(0xbc));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_STATUS_CHANGE_ACK));
+	struct PACKET_ZC_STATUS_CHANGE_ACK *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_STATUS_CHANGE_ACK;
+	p->sp = type;
+	p->ok = ok;
+	p->value = cap_value(val, 0, UINT8_MAX);
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_STATUS_CHANGE_ACK));
 }
 
 /// Notifies the client about the result of a request to equip an item (ZC_REQ_WEAR_EQUIP_ACK).

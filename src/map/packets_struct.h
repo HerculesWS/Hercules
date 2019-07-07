@@ -3514,6 +3514,14 @@ struct PACKET_ZC_ACK_RANKING_sub {
 } __attribute__((packed));
 #endif
 
+struct PACKET_ZC_STATUS_CHANGE_ACK {
+	int16 packetType;
+	uint16 sp;
+	uint8 ok;
+	uint8 value;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_STATUS_CHANGE_ACK, 0x00bc);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
