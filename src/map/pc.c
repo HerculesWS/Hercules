@@ -7359,34 +7359,33 @@ static int pc_maxparameterincrease(struct map_session_data *sd, int type)
  */
 static bool pc_statusup(struct map_session_data *sd, int type, int increase)
 {
-	int max_increase = 0, current = 0, needed_points = 0, final_value = 0;
-
 	nullpo_ret(sd);
+	int realIncrease = increase;
 
 	// check conditions
-	if (type < SP_STR || type > SP_LUK || increase <= 0) {
-		clif->statusupack(sd, type, 0, 0);
+	if (type < SP_STR || type > SP_LUK || realIncrease <= 0) {
+		clif->statusupack(sd, type, 0, increase);
 		return false;
 	}
 
 	// check limits
-	current = pc->getstat(sd, type);
-	max_increase = pc->maxparameterincrease(sd, type);
-	increase = cap_value(increase, 0, max_increase); // cap to the maximum status points available
-	if (increase <= 0 || current + increase > pc_maxparameter(sd)) {
-		clif->statusupack(sd, type, 0, 0);
+	int current = pc->getstat(sd, type);
+	int max_increase = pc->maxparameterincrease(sd, type);
+	realIncrease = cap_value(realIncrease, 0, max_increase); // cap to the maximum status points available
+	if (realIncrease <= 0 || current + realIncrease > pc_maxparameter(sd)) {
+		clif->statusupack(sd, type, 0, increase);
 		return false;
 	}
 
 	// check status points
-	needed_points = pc->need_status_point(sd, type, increase);
+	int needed_points = pc->need_status_point(sd, type, realIncrease);
 	if (needed_points < 0 || needed_points > sd->status.status_point) { // Sanity check
-		clif->statusupack(sd, type, 0, 0);
+		clif->statusupack(sd, type, 0, increase);
 		return false;
 	}
 
 	// set new values
-	final_value = pc->setstat(sd, type, current + increase);
+	int final_value = pc->setstat(sd, type, current + realIncrease);
 	sd->status.status_point -= needed_points;
 
 	status_calc_pc(sd, SCO_NONE);
