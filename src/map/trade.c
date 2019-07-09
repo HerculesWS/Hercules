@@ -50,6 +50,9 @@ static void trade_traderequest(struct map_session_data *sd, struct map_session_d
 {
 	nullpo_retv(sd);
 
+	if (sd == target_sd)
+		return;
+
 	if (map->list[sd->bl.m].flag.notrade) {
 		clif->message (sd->fd, msg_sd(sd,272)); // You can't trade in this map
 		return;
