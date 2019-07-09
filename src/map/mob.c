@@ -5547,6 +5547,29 @@ static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
+static int mob_reload_sub_mob(struct mob_data *md, va_list args)
+{
+	nullpo_ret(md);
+	md->db = mob_db(md->class_);
+
+	status_calc_mob(md, SCO_FIRST);
+
+	// If the view data was not overwritten manually
+	if (md->vd != NULL) {
+		// Get the new view data from the mob database
+		md->vd = mob_get_viewdata(md->class_);
+
+		// If they are spawned right now
+		if (md->bl.prev != NULL) {
+			// Respawn all mobs on client side so that they are displayed correctly(if their view id changed)
+			clif->clearunit_area(&md->bl, CLR_OUTSIGHT);
+			clif->spawn(&md->bl);
+		}
+	}
+
+	return 0;
+}
+
 static void mob_reload(void)
 {
 	int i;
@@ -5570,6 +5593,7 @@ static void mob_reload(void)
 	mob->destroy_drop_groups();
 
 	mob->load(false);
+	map->foreachmob(mob->reload_sub_mob);
 }
 
 /**
@@ -5726,6 +5750,7 @@ void mob_defaults(void)
 
 	/* */
 	mob->reload = mob_reload;
+	mob->reload_sub_mob = mob_reload_sub_mob;
 	mob->init = do_init_mob;
 	mob->final = do_final_mob;
 	/* */
