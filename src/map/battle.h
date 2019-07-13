@@ -605,6 +605,8 @@ struct Battle_Config {
 	int critical_max;
 	int hit_min;
 	int hit_max;
+
+	int autoloot_adjust;
 };
 
 /* criteria for battle_config.idletime_critera */
