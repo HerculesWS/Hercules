@@ -2232,26 +2232,56 @@ ACMD(refine)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
 	if (!*message || sscanf(message, "%12d %12d", &position, &refine_level) < 2) {
-		clif->message(fd, msg_fd(fd,996)); // Please enter a position and an amount (usage: @refine <equip position> <+/- amount>).
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,997), EQP_HEAD_LOW); // %d: Lower Headgear
+		clif->message(fd, msg_fd(fd, 996)); // Please enter a position and an amount (usage: @refine <equip position> <+/- amount>).
+#if PACKETVER > 20100707
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1515), -3); // %d: Refine All Equip (Shadow)
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,998), EQP_HAND_R); // %d: Right Hand
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1514), -2); // %d: Refine All Equip (Costume)
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,999), EQP_GARMENT); // %d: Garment
+#endif
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1513), -1); // %d: Refine All Equip (General)
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1000), EQP_ACC_L); // %d: Left Accessory
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 997), EQP_HEAD_LOW); // %d: Headgear (Low)
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1001), EQP_ARMOR); // %d: Body Armor
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 998), EQP_HAND_R); // Hand (Right)
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1002), EQP_HAND_L); // %d: Left Hand
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 999), EQP_GARMENT); // %d: Garment
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1003), EQP_SHOES); // %d: Shoes
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1000), EQP_ACC_L); // Accessory (Left)
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1004), EQP_ACC_R); // %d: Right Accessory
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1001), EQP_ARMOR); // %d: Body Armor
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1005), EQP_HEAD_TOP); // %d: Top Headgear
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1002), EQP_HAND_L); // Hand (Left)
 		clif->message(fd, atcmd_output);
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1006), EQP_HEAD_MID); // %d: Mid Headgear
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1003), EQP_SHOES); // %d: Shoes
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1004), EQP_ACC_R); // Accessory (Right)
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1005), EQP_HEAD_TOP); // %d: Headgear (Top)
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1006), EQP_HEAD_MID); // %d: Headgear (Mid)
+#if PACKETVER > 20100707
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1503), EQP_COSTUME_HEAD_TOP); // %d: Costume Headgear (Top)
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1504), EQP_COSTUME_HEAD_MID); // %d: Costume Headgear (Mid)
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1505), EQP_COSTUME_HEAD_LOW); // %d: Costume Headgear (Low)
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1506), EQP_COSTUME_GARMENT); // %d: Costume Garment
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1507), EQP_SHADOW_ARMOR); // %d: Shadow Armor
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1508), EQP_SHADOW_WEAPON); // %d: Shadow Weapon
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1509), EQP_SHADOW_SHIELD); // %d: Shadow Shield
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1510), EQP_SHADOW_SHOES); // %d: Shadow Shoes
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1511), EQP_SHADOW_ACC_R); // %d: Shadow Accessory (Right)
+		clif->message(fd, atcmd_output);
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1512), EQP_SHADOW_ACC_L); // %d: Shadow Accessory (Left)
+		clif->message(fd, atcmd_output);
+#endif
 		clif->message(fd, atcmd_output);
 		return false;
 	}
@@ -2263,22 +2293,33 @@ ACMD(refine)
 		int idx = sd->equip_index[j];
 		if (idx < 0)
 			continue;
-		if(j == EQI_AMMO) continue; /* can't equip ammo */
-		if(j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == idx)
+		if (j == EQI_AMMO)
+			continue; /* can't equip ammo */
+		if (j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == idx)
 			continue;
-		if(j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == idx)
+		if (j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == idx)
 			continue;
-		if(j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == idx || sd->equip_index[EQI_HEAD_LOW] == idx))
+		if (j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == idx || sd->equip_index[EQI_HEAD_LOW] == idx))
+			continue;
+		if (j == EQI_COSTUME_MID && sd->equip_index[EQI_COSTUME_LOW] == idx)
+			continue;
+		if (j == EQI_COSTUME_TOP && (sd->equip_index[EQI_COSTUME_MID] == idx || sd->equip_index[EQI_COSTUME_LOW] == idx))
 			continue;
 
-		if(position && !(sd->status.inventory[idx].equip & position))
+		if (position == -3 && !itemdb_is_shadowequip(sd->status.inventory[idx].equip))
+			continue;
+		else if (position == -2 && !itemdb_is_costumeequip(sd->status.inventory[idx].equip))
+			continue;
+		else if (position == -1 && (itemdb_is_costumeequip(sd->status.inventory[idx].equip) || itemdb_is_shadowequip(sd->status.inventory[idx].equip)))
+			continue;
+		else if (position && !(sd->status.inventory[idx].equip & position))
 			continue;
 
 		final_refine = cap_value(sd->status.inventory[idx].refine + refine_level, 0, MAX_REFINE);
 		if (sd->status.inventory[idx].refine != final_refine) {
 			sd->status.inventory[idx].refine = final_refine;
 			current_position = sd->status.inventory[idx].equip;
-			pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+			pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
 			clif->refine(fd, 0, idx, sd->status.inventory[idx].refine);
 			clif->delitem(sd, idx, 1, DELITEM_MATERIALCHANGE);
 			clif->additem(sd, idx, 1, 0);
@@ -2289,11 +2330,11 @@ ACMD(refine)
 	}
 
 	if (count == 0)
-		clif->message(fd, msg_fd(fd,166)); // No item has been refined.
+		clif->message(fd, msg_fd(fd, 166)); // No item has been refined.
 	else if (count == 1)
-		clif->message(fd, msg_fd(fd,167)); // 1 item has been refined.
+		clif->message(fd, msg_fd(fd, 167)); // 1 item has been refined.
 	else {
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,168), count); // %d items have been refined.
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 168), count); // %d items have been refined.
 		clif->message(fd, atcmd_output);
 	}
 
