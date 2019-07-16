@@ -21983,53 +21983,47 @@ static void clif_skill_scale(struct block_list *bl, int src_id, int x, int y, ui
 /// 0A3B <Length>.W <AID>.L <Status>.B { <HatEffectId>.W }
 static void clif_hat_effect(struct block_list *bl, struct block_list *tbl, enum send_target target)
 {
-#if PACKETVER >= 20150422
-	unsigned char *buf;
-	int len, i;
-	struct map_session_data *sd;
-
+#if PACKETVER_MAIN_NUM >= 20150507 || PACKETVER_RE_NUM >= 20150429 || defined(PACKETVER_ZERO)
 	nullpo_retv(bl);
-
-	sd = BL_CAST(BL_PC, bl);
-
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	nullpo_retv(sd);
 
-	len = 9 + VECTOR_LENGTH(sd->hatEffectId) * 2;
+	const int len = sizeof(struct PACKET_ZC_HAT_EFFECT) + VECTOR_LENGTH(sd->hatEffectId) * 2;
+	struct PACKET_ZC_HAT_EFFECT *p = aMalloc(len);
 
-	buf = (unsigned char*)aMalloc(len);
+	p->packetType = HEADER_ZC_HAT_EFFECT;
+	p->packetLength = len;
+	p->aid = bl->id;
+	p->status = 1;
 
-	WBUFW(buf, 0) = 0xa3b;
-	WBUFW(buf, 2) = len;
-	WBUFL(buf, 4) = bl->id;
-	WBUFB(buf, 8) = 1;
-
-	for( i = 0; i < VECTOR_LENGTH(sd->hatEffectId); i++ ){
-		WBUFW(buf, 9 + i * 2) = VECTOR_INDEX(sd->hatEffectId, i);
+	for (int i = 0; i < VECTOR_LENGTH(sd->hatEffectId); i++) {
+		p->effects[i] = VECTOR_INDEX(sd->hatEffectId, i);
 	}
 
 	if (tbl != NULL) {
-		clif->send(buf, len, tbl, target);
+		clif->send(p, len, tbl, target);
 	} else {
-		clif->send(buf, len, bl, target);
+		clif->send(p, len, bl, target);
 	}
-
-	aFree(buf);
+	aFree(p);
 #endif
 }
 
 static void clif_hat_effect_single(struct block_list *bl, uint16 effectId, bool enable){
-#if PACKETVER >= 20150422
-	unsigned char buf[13];
-
+#if PACKETVER_MAIN_NUM >= 20150507 || PACKETVER_RE_NUM >= 20150429 || defined(PACKETVER_ZERO)
 	nullpo_retv(bl);
 
-	WBUFW(buf,0) = 0xa3b;
-	WBUFW(buf,2) = 13;
-	WBUFL(buf,4) = bl->id;
-	WBUFB(buf,8) = enable;
-	WBUFL(buf,9) = effectId;
+	const int len = sizeof(struct PACKET_ZC_HAT_EFFECT) + 2;
+	struct PACKET_ZC_HAT_EFFECT *p = aMalloc(len);
 
-	clif->send(buf, 13, bl, AREA);
+	p->packetType = HEADER_ZC_HAT_EFFECT;
+	p->packetLength = len;
+	p->aid = bl->id;
+	p->status = enable;
+	p->effects[0] = effectId;
+
+	clif->send(p, len, bl, AREA);
+	aFree(p);
 #endif
 }
 
