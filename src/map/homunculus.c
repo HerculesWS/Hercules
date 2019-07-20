@@ -552,6 +552,12 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 
 	hd->homunculus.exp += exp;
 
+	if (hd->master->state.showexp) {
+		char output[256];
+		sprintf(output, "Homunculus Experience Gained Base:%u (%.2f%%)", exp, ((float)exp / (float)hd->exp_next * (float)100));
+		clif_disp_onlyself(hd->master, output);
+	}
+
 	if(hd->homunculus.exp < hd->exp_next) {
 		clif->hominfo(hd->master,hd,0);
 		return 0;

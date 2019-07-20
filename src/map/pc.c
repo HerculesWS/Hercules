@@ -7143,6 +7143,11 @@ static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint
 		clif_disp_onlyself(sd, output);
 	}
 
+	// Share master EXP to homunculus
+	if (sd->hd != NULL && battle_config.hom_bonus_exp_from_master > 0) {
+		homun->gainexp(sd->hd, apply_percentrate((int)base_exp, battle_config.hom_bonus_exp_from_master, 100));
+	}
+
 	return true;
 }
 

@@ -478,6 +478,7 @@ struct Battle_Config {
 	int client_emblem_max_blank_percent;
 	int hom_max_level;
 	int hom_S_max_level;
+	int hom_bonus_exp_from_master;
 
 	// [BattleGround Settings]
 	int bg_update_interval;
