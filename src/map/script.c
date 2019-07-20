@@ -16589,6 +16589,8 @@ static BUILDIN(isequippedcnt)
 			if(j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index) continue;
 			if(j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index) continue;
 			if(j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index)) continue;
+			if(j == EQI_COSTUME_MID && sd->equip_index[EQI_COSTUME_LOW] == index) continue;
+			if(j == EQI_COSTUME_TOP && (sd->equip_index[EQI_COSTUME_MID] == index || sd->equip_index[EQI_COSTUME_LOW] == index)) continue;
 
 			if(!sd->inventory_data[index])
 				continue;
@@ -16642,6 +16644,8 @@ static BUILDIN(isequipped)
 			if(j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index) continue;
 			if(j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index) continue;
 			if(j == EQI_HEAD_TOP && (sd->equip_index[EQI_HEAD_MID] == index || sd->equip_index[EQI_HEAD_LOW] == index)) continue;
+			if(j == EQI_COSTUME_MID && sd->equip_index[EQI_COSTUME_LOW] == index) continue;
+			if(j == EQI_COSTUME_TOP && (sd->equip_index[EQI_COSTUME_MID] == index || sd->equip_index[EQI_COSTUME_LOW] == index)) continue;
 
 			if(!sd->inventory_data[index])
 				continue;
