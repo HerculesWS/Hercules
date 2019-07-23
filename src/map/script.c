@@ -18580,6 +18580,7 @@ static BUILDIN(getmonsterinfo)
 		case 20: script_pushint(st,monster->status.def_ele); break;
 		case 21: script_pushint(st,monster->status.mode); break;
 		case 22: script_pushint(st,monster->mexp); break;
+		case 23: script_pushint(st, monster->dmg_taken_rate); break;
 		default: script_pushint(st,-1); //wrong Index
 	}
 	return true;
@@ -19137,6 +19138,9 @@ static BUILDIN(setunitdata)
 		script_pushint(st, 1);
 		return true;
 	}
+	case UDT_DAMAGE_TAKEN_RATE:
+		setunitdata_check_bounds(4, 1, INT_MAX);
+		break;
 	default:
 		break;
 	}
@@ -19310,6 +19314,9 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_DMOTION:
 			md->status.dmotion = (unsigned short) val;
+			break;
+		case UDT_DAMAGE_TAKEN_RATE:
+			md->dmg_taken_rate = (int) val;
 			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%s' for mob unit.\n", udtype);
@@ -20158,6 +20165,7 @@ static BUILDIN(getunitdata)
 		case UDT_AMOTION:     script_pushint(st, md->status.amotion); break;
 		case UDT_ADELAY:      script_pushint(st, md->status.adelay); break;
 		case UDT_DMOTION:     script_pushint(st, md->status.dmotion); break;
+		case UDT_DAMAGE_TAKEN_RATE: script_pushint(st, md->dmg_taken_rate); break;
 		default:
 			ShowWarning("buildin_getunitdata: Invalid data type '%s' for Mob unit.\n", udtype);
 			script_pushint(st, -1);
@@ -26890,6 +26898,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("UDT_ROBE", UDT_ROBE, false, false);
 	script->set_constant("UDT_BODY2", UDT_BODY2, false, false);
 	script->set_constant("UDT_GROUP", UDT_GROUP, false, false);
+	script->set_constant("UDT_DAMAGE_TAKEN_RATE", UDT_DAMAGE_TAKEN_RATE, false, false);
 
 	script->constdb_comment("getguildonline types");
 	script->set_constant("GUILD_ONLINE_ALL", GUILD_ONLINE_ALL, false, false);

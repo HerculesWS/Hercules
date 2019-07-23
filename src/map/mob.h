@@ -206,6 +206,7 @@ struct mob_db {
 	unsigned int option;
 	int summonper[MAX_RANDOMMONSTER];
 	int maxskill;
+	int dmg_taken_rate;
 	struct mob_skill skill[MAX_MOBSKILL];
 	struct spawn_info spawn[10];
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
@@ -244,6 +245,7 @@ struct mob_data {
 		unsigned int dmg;
 		unsigned int flag : 2; //0: Normal. 1: Homunc exp. 2: Pet exp
 	} dmglog[DAMAGELOG_SIZE];
+	int dmg_taken_rate;
 	struct spawn_data *spawn; //Spawn data.
 	int spawn_timer; //Required for Convex Mirror
 	struct item *lootitem;
