@@ -15724,7 +15724,7 @@ static void clif_parse_PVPInfo(int fd, struct map_session_data *sd)
 /// ranking pointlist  { <name>.24B <point>.L }*10
 static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type)
 {
-#if !(PACKETVER_RE_NUM >= 20190703)
+#if !(PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724)
 	nullpo_retv(ranks);
 
 	struct fame_list* list;
@@ -15759,7 +15759,7 @@ static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame
 
 static void clif_ranklist_sub2(uint32 *chars, uint32 *points, enum fame_list_type type)
 {
-#if PACKETVER_RE_NUM >= 20190703
+#if PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 	nullpo_retv(chars);
 	nullpo_retv(points);
 
@@ -15798,7 +15798,7 @@ static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	struct PACKET_ZC_ACK_RANKING *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_ACK_RANKING;
 	p->rankType = type;
-#if PACKETVER_RE_NUM >= 20190703
+#if PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 	clif->ranklist_sub2(p->chars, p->points, type);
 #else
 	clif->ranklist_sub(p->ranks, type);
