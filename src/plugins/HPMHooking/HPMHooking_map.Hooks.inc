@@ -11539,6 +11539,58 @@ void HP_clif_ranklist(struct map_session_data *sd, enum fame_list_type type) {
 	}
 	return;
 }
+void HP_clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_ranklist_sub_pre > 0) {
+		void (*preHookFunc) (struct PACKET_ZC_ACK_RANKING_sub **ranks, enum fame_list_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_ranklist_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_ranklist_sub_pre[hIndex].func;
+			preHookFunc(&ranks, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.ranklist_sub(ranks, type);
+	}
+	if (HPMHooks.count.HP_clif_ranklist_sub_post > 0) {
+		void (*postHookFunc) (struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_ranklist_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_ranklist_sub_post[hIndex].func;
+			postHookFunc(ranks, type);
+		}
+	}
+	return;
+}
+void HP_clif_ranklist_sub2(uint32 *chars, uint32 *points, enum fame_list_type type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_ranklist_sub2_pre > 0) {
+		void (*preHookFunc) (uint32 **chars, uint32 **points, enum fame_list_type *type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_ranklist_sub2_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_ranklist_sub2_pre[hIndex].func;
+			preHookFunc(&chars, &points, &type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.ranklist_sub2(chars, points, type);
+	}
+	if (HPMHooks.count.HP_clif_ranklist_sub2_post > 0) {
+		void (*postHookFunc) (uint32 *chars, uint32 *points, enum fame_list_type type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_ranklist_sub2_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_ranklist_sub2_post[hIndex].func;
+			postHookFunc(chars, points, type);
+		}
+	}
+	return;
+}
 void HP_clif_update_rankingpoint(struct map_session_data *sd, enum fame_list_type type, int points) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_update_rankingpoint_pre > 0) {

@@ -467,6 +467,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->fame_alchemist, HP_clif_fame_alchemist) },
 	{ HP_POP(clif->fame_taekwon, HP_clif_fame_taekwon) },
 	{ HP_POP(clif->ranklist, HP_clif_ranklist) },
+	{ HP_POP(clif->ranklist_sub, HP_clif_ranklist_sub) },
+	{ HP_POP(clif->ranklist_sub2, HP_clif_ranklist_sub2) },
 	{ HP_POP(clif->update_rankingpoint, HP_clif_update_rankingpoint) },
 	{ HP_POP(clif->pRanklist, HP_clif_pRanklist) },
 	{ HP_POP(clif->hotkeys, HP_clif_hotkeys) },

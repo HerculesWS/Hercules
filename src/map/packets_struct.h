@@ -3480,6 +3480,58 @@ struct PACKET_ZC_REFINE_STATUS {
 DEFINE_PACKET_HEADER(ZC_REFINE_STATUS, 0x0ada);
 #endif
 
+#if PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
+struct PACKET_ZC_ACK_RANKING_sub {
+	char name[NAME_LENGTH];
+	uint32 points;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_RANKING {
+	int16 packetType;
+	int16 rankType;
+	uint32 chars[10];
+	uint32 points[10];
+	uint32 myPoints;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x0af6);
+#elif PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_ACK_RANKING_sub {
+	char name[NAME_LENGTH];
+	uint32 points;
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_RANKING {
+	int16 packetType;
+	int16 rankType;
+	struct PACKET_ZC_ACK_RANKING_sub ranks[10];
+	uint32 myPoints;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x097d);
+#else
+struct PACKET_ZC_ACK_RANKING_sub {
+	char name[NAME_LENGTH];
+	uint32 points;
+} __attribute__((packed));
+#endif
+
+struct PACKET_ZC_STATUS_CHANGE_ACK {
+	int16 packetType;
+	uint16 sp;
+	uint8 ok;
+	uint8 value;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_STATUS_CHANGE_ACK, 0x00bc);
+
+#if PACKETVER_MAIN_NUM >= 20150507 || PACKETVER_RE_NUM >= 20150429 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_HAT_EFFECT {
+	int16 packetType;
+	int16 packetLength;
+	uint32 aid;
+	int8 status;
+	uint16 effects[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_HAT_EFFECT, 0x0a3b);
+#endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

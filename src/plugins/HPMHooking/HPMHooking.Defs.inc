@@ -1296,6 +1296,10 @@ typedef void (*HPMHOOK_pre_clif_fame_taekwon) (struct map_session_data **sd, int
 typedef void (*HPMHOOK_post_clif_fame_taekwon) (struct map_session_data *sd, int points);
 typedef void (*HPMHOOK_pre_clif_ranklist) (struct map_session_data **sd, enum fame_list_type *type);
 typedef void (*HPMHOOK_post_clif_ranklist) (struct map_session_data *sd, enum fame_list_type type);
+typedef void (*HPMHOOK_pre_clif_ranklist_sub) (struct PACKET_ZC_ACK_RANKING_sub **ranks, enum fame_list_type *type);
+typedef void (*HPMHOOK_post_clif_ranklist_sub) (struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type);
+typedef void (*HPMHOOK_pre_clif_ranklist_sub2) (uint32 **chars, uint32 **points, enum fame_list_type *type);
+typedef void (*HPMHOOK_post_clif_ranklist_sub2) (uint32 *chars, uint32 *points, enum fame_list_type type);
 typedef void (*HPMHOOK_pre_clif_update_rankingpoint) (struct map_session_data **sd, enum fame_list_type *type, int *points);
 typedef void (*HPMHOOK_post_clif_update_rankingpoint) (struct map_session_data *sd, enum fame_list_type type, int points);
 typedef void (*HPMHOOK_pre_clif_pRanklist) (int *fd, struct map_session_data **sd);
