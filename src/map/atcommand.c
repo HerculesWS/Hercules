@@ -6752,6 +6752,9 @@ ACMD(mute)
  *------------------------------------------*/
 ACMD(refresh)
 {
+	if (sd->npc_id > 0)
+		return false;
+
 	clif->refresh(sd);
 	return true;
 }
@@ -6763,7 +6766,8 @@ ACMD(refreshall)
 
 	iter = mapit_getallusers();
 	for (iter_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); iter_sd = BL_UCAST(BL_PC, mapit->next(iter)))
-		clif->refresh(iter_sd);
+		if (iter_sd->npc_id <= 0)
+			clif->refresh(iter_sd);
 	mapit->free(iter);
 	return true;
 }
