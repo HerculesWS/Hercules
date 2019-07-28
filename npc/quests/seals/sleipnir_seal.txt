@@ -1316,7 +1316,7 @@ que_god01,20,48,0	script	Slab#G	HIDDEN_NPC,{
 				mes "wkrdjswhgks shfh wkrdjswhgks wkdus wkr...";
 				mes "^ff00ffghswka^000000gks ........fusjs tmld.........";
 				next;
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "dirdnl") {
 					mes "Zap~";
 					mes "^3355FFAs you press the word '^ff0000dirdnl^3355FF,' the slab emitted a strange beeping noise but nothing else happened. Perhaps you must press some of the other words.^000000";
@@ -1335,7 +1335,7 @@ que_god01,20,48,0	script	Slab#G	HIDDEN_NPC,{
 					mes "is not on the slab.^000000";
 					close;
 				}
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "tkaryf") {
 					mes "^3355FFYou press the word '^ff0000tkaryf^3355FF,' and another beep was emitted from";
 					mes "the slab.^000000";
@@ -1354,7 +1354,7 @@ que_god01,20,48,0	script	Slab#G	HIDDEN_NPC,{
 					mes "is not on the slab.^000000";
 					close;
 				}
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "ghswka") {
 					mes "^3355FFYou press on the word '^ff0000ghswka^3355FF,' resulting in an affirmative beep. Nothing has still happened, so perhaps you must press another word.^000000";
 					next;

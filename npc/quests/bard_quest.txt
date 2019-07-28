@@ -320,7 +320,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "[" + @name$ + "]";
 		mes "Don't you think...";
 		mes "The person would be...";
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes .@inputstr$ + "?";
 		next;
 
@@ -546,7 +546,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "The lyrics. They must have been changed. Did Gunther say anything about this?! Hmmm, but who would change the lyrics...?";
 		next;
 		cutin "bard_eland01",2;
-		input .@inputstr$;
+		input(.@inputstr$);
 
 		if (.@inputstr$ == "Kino Kitty") {
 			mes "[Errende]";
@@ -678,7 +678,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "Could it be that";
 		mes "the person who";
 		mes "changed the song is...";
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes "" + .@inputstr$ + "?";
 		next;
 
@@ -879,7 +879,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "[Errende]";
 		mes "The lyrics. They must have been changed. Did Gunther say anything about this?! Hmmm, but who would change the lyrics...?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "Kino Kitty") {
 			cutin "bard_eland01",2;
 			mes "[Errende]";
@@ -2486,14 +2486,14 @@ payon,181,172,3	script	Bard#4	1_M_BARD,{
 		mes "Now, what was the";
 		mes "name of the song again?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "At One, I Fall in Love") {
 			mes "[Gunther Doubleharmony]";
 			mes "Ah~ that song...?";
 			mes "By the way, who asked you";
 			mes "to find out about the song?";
 			next;
-			input .@inputstr$;
+			input(.@inputstr$);
 			if (.@inputstr$ == "Minty Errende") {
 				mes "[Gunther Doubleharmony]";
 				mes "Yes, that's my friend! Minty Errende! We used to so close to each other, so I'll write every word of the song for my friend Minty Errende, so turn around please!";
@@ -2843,7 +2843,7 @@ yuno_in04,20,123,7	script	Representative#bq	4_F_SISTER,{
 		mes "[Marlin Putiur]";
 		mes "I also hear the Bards have been helping scholars instill bulletin boards in fields which indicate the location for new adventurers. Would you let me know the full name of the person you're looking for?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "Minty Errende") {
 			mes "[Marlin Putiur]";
 			mes "Minty Errende...";
@@ -2909,7 +2909,7 @@ yuno_in04,33,119,3	script	Adventurer#1	4_M_ROGUE,{
 		mes "My name is Pane.";
 		mes "May I ask yours?";
 		@name$ = strcharinfo(PC_NAME);
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "[Energetic Young Man]";
 		mes "Oh...";

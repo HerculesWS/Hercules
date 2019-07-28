@@ -63,7 +63,7 @@ function	script	F_GM_NPC	{
 			if (.@error)
 				return -2;
 		} else
-			input .@input;
+			input(.@input, 0);
 		if (.@input == 0)
 			return -1;
 		else

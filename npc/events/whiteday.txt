@@ -118,16 +118,18 @@ S_Purchase:
 	.@price = getarg(0);
 	.@item_id = getarg(1);
 	while (true) {
-		input .@amount;
-		if (.@amount <= 5)
-			break;
-		mes "[Sugar]";
-		mes "???";
-		mes "You seem to have a failure on hearing.";
-		mes "I will tell you once again?";
-		mes "You can only purchase";
-		mes "^ff0000 5 pieces^000000 at once.";
-		next;
+		input(.@amount);
+		if (.@amount < 0 || .@amount > 5) {
+			mes "[Sugar]";
+			mes "???";
+			mes "You seem to have a failure on hearing.";
+			mes "I will tell you once again?";
+			mes "You can only purchase";
+			mes "^ff0000 5 pieces^000000 at once.";
+			next;
+			continue;
+		}
+		break;
 	}
 	if (.@amount == 0) // Cancel
 		return;

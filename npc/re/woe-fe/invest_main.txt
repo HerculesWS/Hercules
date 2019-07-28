@@ -151,18 +151,19 @@ function	script	F_Invest_Abyss	{
 			mes "Please choose between 1 to 200.";
 			mes "Please enter 0 to cancel.";
 			next;
-			input .@units;
+			input(.@units);
 			if (.@units < 0 || .@units > 200) {
 				mes getarg(1);
 				mes "You've exceeded the amount per investment.";
 				mes "Please try again.";
 				close;
-			} else if (.@units == 0) {
+			}
+			if (.@units == 0) {
 				mes getarg(1);
 				mes "Canceled.";
 				close;
-			} else
-				break;
+			}
+			break;
 		case 5:
 			mes getarg(1);
 			mes "Canceled.";
@@ -199,18 +200,19 @@ function	script	F_Invest_Abyss	{
 			mes "Please choose between 1 to 20.";
 			mes "Please enter 0 to cancel.";
 			next;
-			input .@tickets;
+			input(.@tickets);
 			if (.@tickets < 0 || .@tickets > 20) {
 				mes getarg(1);
 				mes "You've exceeded the amount per investment.";
 				mes "Please try again.";
 				close;
-			} else if (.@tickets == 0) {
+			}
+			if (.@tickets == 0) {
 				mes getarg(1);
 				mes "Canceled.";
 				close;
-			} else
-				break;
+			}
+			break;
 		case 4:
 			mes getarg(1);
 			mes "Canceled.";

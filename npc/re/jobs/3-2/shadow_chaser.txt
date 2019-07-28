@@ -327,7 +327,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 			mes "Wow, you deciphered it?";
 			mes "So, what's the right answer?";
 			next;
-			input .@inputstr$;
+			input(.@inputstr$);
 			if (.@inputstr$ == "shadows atelier in prontera" || .@inputstr$ == "SHADOWS ATELIER IN PRONTERA") {
 				mes "[Manager]";
 				mes "Good.";
@@ -1118,7 +1118,7 @@ L_Code:
 	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Paul said...";
 	next;
-	input .@inputstr$;
+	input(.@inputstr$);
 	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Paul said...";
 	mes "'"+.@inputstr$+"' .";
@@ -1694,7 +1694,7 @@ tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 		mes "A blue flame is roaring.";
 		mes "The deciphered code means...";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		.@dap01$ = "blue fire in turtle island third floor";
 		.@dap02$ = "BLUE FIRE IN TURTLE ISLAND THIRD FLOOR";
 		if (.@inputstr$ != .@dap01$ && .@inputstr$ != .@dap02$) {
@@ -1986,7 +1986,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 		mes " ";
 		mes "And also letters. They are blinking as if waiting for a code to be input.";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == .@Codes2$[.@i] || .@inputstr$ == strtolower(.@Codes2$[.@i])) {
 			mes "When you put the correct answer in there,";
 			mes "the box is opened.";
@@ -2042,7 +2042,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 		next;
 		switch(select("Input the answer.", "I can't get it.")) {
 		case 1:
-			input .@input;
+			input(.@input);
 			if (.@input == .@numbers[.@i]) {
 				mes "You put 2 and "+(.@numbers[.@i]-20)+".";
 				mes "The box opens and you get one key.";
@@ -2122,7 +2122,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 		mes "There's no code, so 1 should be A.";
 		mes "And the answer is...";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "turn and shake" || .@inputstr$ == "TURN AND SHAKE") {
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Turn... Turn... and";

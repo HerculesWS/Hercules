@@ -140,13 +140,13 @@ ecl_fild01,94,322,5	script	Security Guard#ep14_2	4_M_FAIRYSOLDIER,{
 		mes "Please fill out your name, occupation, and level here.";
 		next;
 		mes "Write your name.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "Write your occupation.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "Write your level.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "[Security Guard]";
 		mes "If you completed your forms, please submit them to the administrator over there.";
@@ -624,7 +624,7 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 		next;
 		mes "[Fairy Carpenter]";
 		mes "Please write the number of pieces necessary for each length. If no pieces for that length are necessary, please write 0.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		if (.@inputstr$ != "002") {
 			mes "[Fairy Carpenter]";
@@ -1467,7 +1467,7 @@ eclage,191,200,4	script	Yube#ep14_2	4_M_FAIRYKID5,{
 		emotion e_what;
 		cutin "war_y3",2;
 		next;
-		input .@inputnum;
+		input(.@inputnum);
 		if (.@inputnum != 128) {
 			mes "[Yube]";
 			mes "Hmm~ I don't think so.";
@@ -1591,7 +1591,7 @@ eclage,191,200,4	script	Yube#ep14_2	4_M_FAIRYKID5,{
 		mes "I can make as many as 128. How many do you need?";
 		cutin "war_y4",2;
 		next;
-		input .@input;
+		input(.@input);
 		if (.@input < 1 || .@input > 128) {
 			mes "[Yube]";
 			mes "You aren't going to make them?";
@@ -10100,19 +10100,17 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "Oh~ Someone referred you to me? Who was it? You better make sense, or I'll be sure to kick you out.";
 		next;
-		input .@inputstr$;
-		if (.@inputstr$ == "Clever"){
-			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes .@inputstr$ + " referred me(" + strcharinfo(PC_NAME) + ") to you.";
-			next;
-		}
-		else {
+		input(.@inputstr$);
+		if (.@inputstr$ != "Clever") {
 			mes "[Hiel]";
 			mes "I don't know that person! Aren't you suspicious!";
 			close2;
 			warp "eclage",152,91;
 			end;
 		}
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes .@inputstr$ + " referred me(" + strcharinfo(PC_NAME) + ") to you.";
+		next;
 		mes "[Hiel]";
 		mes "Oh really? Give me a minute. I'm going to wrap up what I am doing and come back.";
 		ep14_2_etran = 11;
@@ -10923,13 +10921,8 @@ ecl_in02,133,115,7	script	Prison Guard#pa0829	4_M_FAIRYSOLDIER2,{
 		mes "[Prison Guard]";
 		mes "I see, I don't think I ever saw you on our visitor's list. Who are you visiting?";
 		next;
-		input .@inputstr$;
-		if (.@inputstr$ == "Clever") {
-			mes "[Prison Guard]";
-			mes "^000099" + .@inputstr$ + "^000000? ... That means...";
-			next;
-		}
-		else {
+		input(.@inputstr$);
+		if (.@inputstr$ != "Clever") {
 			mes "[Prison Guard]";
 			mes "Hmm? You want to visit ^000099" + .@inputstr$ + "^000000? I don't see that visitation on the list. Are you sure you made a formal request?";
 			next;
@@ -10939,6 +10932,9 @@ ecl_in02,133,115,7	script	Prison Guard#pa0829	4_M_FAIRYSOLDIER2,{
 			}
 			close;
 		}
+		mes "[Prison Guard]";
+		mes "^000099" + .@inputstr$ + "^000000? ... That means...";
+		next;
 		mes "[Clever]";
 		mes "Huh? I've got a visitor? Yahoo! It's a visit! Yay~";
 		next;
@@ -11753,12 +11749,12 @@ ecl_in04,108,215,4	script	Supreme Elec rope#pa0829	HIDDEN_NPC,{
 }
 
 sec_in02,85,187,4	script	#pa0829Reactor11	4_M_FAIRYKID,3,3,{
-	input .@input;
+	input(.@input);
 	if (.@input == 1854) {
 		mes "[????]";
 		mes "Baby, you don't know why I'm upset, do you?";
 		mes "Present" + ep14_2_etran + "Dog";
-		input .@input;
+		input(.@input, 0);
 		ep14_2_etran = .@input;
 		if (ep14_2_mylord < 7) {
 			ep14_2_mylord = 7;
@@ -13748,7 +13744,7 @@ sec_in02,16,11,5	script	New Oz Image#1	4_M_MINSTREL1,1,1,{
 
 //== Memory of Professor Worm ==============================
 sec_in02,10,17,4	script	Professor Aide#worm	4_BULL,{
-	input .@input;
+	input(.@input);
 	if (.@input != 1917) {
 		mes "EEK!";
 		close;
@@ -19129,7 +19125,7 @@ que_avan01,18,38,0	script	Desk#tl01	CLEAR_NPC,{
 								mes "In the middle, there is a small numerical panel. A 5-digit number can be inputted.";
 								next;
 								if (select("Input a number.", "Look at other parts of the desk.")==1) {
-									input .@input;
+									input(.@input);
 									if (.@input == 31425) {
 										mes "As soon as the number is inputted, a click is heard.";
 										mes "The hinged device can be opened.";

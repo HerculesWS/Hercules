@@ -490,7 +490,7 @@ function	script	F_CheckKafCode	{
 		return;
 	mes "Enter your storage password:";
 	@code_ = 0;
-	input @code_;
+	input(@code_, 0);
 	if (@code_ != #kafra_code) {
 		dispbottom "Wrong storage password.";
 		close2;
@@ -601,7 +601,7 @@ function	script	F_EntKafCode	{
 		@kafcode_try = 0;
 		logmes "Hack: Tried to fit storage password.";
 	}
-	if (input(@code_) == 1) {
+	if (input(@code_, 0) == 1) {
 		mes "You can't use such big password.";
 		return 0;
 	}

@@ -614,20 +614,20 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 		mes "And maximum 3 is all you can get.";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Chicken Masta]";
 				mes "You don't have to buy it, if you don't need it.";
 				close;
 			}
-			else if (@input > 3) {
+			if (@input > 3) {
 				mes "[Chicken Masta]";
 				mes "What did I tell you.";
 				mes "I'm going to sell only three eggs.";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@hw_egg = .@input * 1000;
 		if (Zeny < @hw_egg) {
@@ -666,7 +666,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 		mes "Oh, this must be Chicken Masta's chicken.";
 		mes "I should insert the magic word.";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if( .@inputstr$ == "Return" ) {
 			emotion e_omg;
 			specialeffect EF_TELEPORTATION;

@@ -2078,7 +2078,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "[Kayron]";
 		mes "There's nothing I can do.";
 		mes "I'm... Um... I'm...?";
-		input .@input$;
+		input(.@input$);
 		next;
 		if (.@input$ == "I'm utterly helpless here.") {
 			mes "[Kayron]";
@@ -2112,14 +2112,12 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 			lv4_weapon = 24;
 			close;
 		}
-		else {
-			mes "[Kayron]";
-			mes "Huh...?";
-			mes "What did you just say?";
-			mes "I'm sorry, I'm trying to remember something my father always used";
-			mes "to say...";
-			close;
-		}
+		mes "[Kayron]";
+		mes "Huh...?";
+		mes "What did you just say?";
+		mes "I'm sorry, I'm trying to remember something my father always used";
+		mes "to say...";
+		close;
 	}
 	if (lv4_weapon == 22) {
 		mes "[Kayron]";
@@ -2530,7 +2528,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "something like that,";
 		mes "but there was more to it...";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Live without regret.") {
 			mes "[Reyghema]";
 			mes "...";
@@ -2562,14 +2560,12 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 			lv4_weapon = 33;
 			close;
 		}
-		else {
-			mes "[Reyghema]";
-			mes "What...?";
-			mes "You playin' games";
-			mes "with me or what?";
-			mes "Get outta my face~";
-			close;
-		}
+		mes "[Reyghema]";
+		mes "What...?";
+		mes "You playin' games";
+		mes "with me or what?";
+		mes "Get outta my face~";
+		close;
 	}
 	if (lv4_weapon == 31) {
 		mes "[Reyghema]";
@@ -2986,7 +2982,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "Back during those days,";
 		mes "I never accepted money for my work. Father always used to say, 'Never accept payment to forge a good weapon. It... It...'";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "It brings bad luck.") {
 			mes "[Hein]";
 			mes "That's right!";
@@ -3017,14 +3013,12 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 			mes "of a deal... Right?";
 			close;
 		}
-		else {
-			mes "[Hein]";
-			mes "Wha...?";
-			mes "What are you talking about?";
-			mes "What was I going to say?";
-			mes "Oww... My head hurts!";
-			close;
-		}
+		mes "[Hein]";
+		mes "Wha...?";
+		mes "What are you talking about?";
+		mes "What was I going to say?";
+		mes "Oww... My head hurts!";
+		close;
 	}
 	if (lv4_weapon == 40) {
 		mes "[Hein]";
@@ -3435,7 +3429,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "[Waltboughst]";
 		mes "It's funny, you know. My father always used to say, 'Trying your best won't always result in success...' Um, that's ... Huh? There was more, I think.";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "But that's no excuse!") {
 			mes "[Waltboughst]";
 			mes "Yes! That was it!";
@@ -3461,14 +3455,12 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 			mes "It seems that being deceased has impaired my rententive faculties. Give me some time to remember the things I'll need to conduct my experiment. We shall talk later.";
 			close;
 		}
-		else {
-			mes "[Waltboughst]";
-			mes "What...?";
-			mes "No, no. That";
-			mes "wasn't it at all...";
-			mes "Hmmm.";
-			close;
-		}
+		mes "[Waltboughst]";
+		mes "What...?";
+		mes "No, no. That";
+		mes "wasn't it at all...";
+		mes "Hmmm.";
+		close;
 	}
 	if (lv4_weapon == 49) {
 		mes "[Waltboughst]";

@@ -67,8 +67,8 @@ payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 	mes "Each costs "+ .@price +"z.";
 	mes "(Type in 0 to cancel)";
 	next;
-	input @input;
-	if (@input == 0)
+	input(@input);
+	if (@input <= 0)
 		close;
 	if (@input > 5) {
 		mes "[Exorcist Master Fahae]";

@@ -3618,7 +3618,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "You...  I saw. Feeling. I saw. Feeling.";
 			mes "You... Name?";
 			next;
-			input .@inputstr$;
+			input(.@inputstr$);
 			mes "[Fishee]";
 			mes .@inputstr$+" do.";
 			mes "No know. No remember..";
@@ -3756,7 +3756,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			} else if (questprogress(5017)) {
 				mes "How will you bully the creature?";
 				next;
-				input .@inputstr$;
+				input(.@inputstr$);
 				mes "You do ^0000FF"+.@inputstr$+"^000000 to bully the unidentified creature.";
 				next;
 				setquest 5029;
@@ -4311,7 +4311,7 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 		next;
 		mes "What was the name of the unidentified creature?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ != "Fishee") {
 			mes "[???]";
 			mes "No Family. "+.@inputstr$+" No.";

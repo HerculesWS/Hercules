@@ -2444,7 +2444,7 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 				mes "[Curator Guys]";
 				mes "Oh, do you know the title?";
 				mes "Sure, now what's the name?";
-				input .@input$;
+				input(.@input$);
 				next;
 				if (compare(.@input$,"The Crow of the Fate") == 1) {
 					mes "[Curator Guys]";
@@ -2462,7 +2462,7 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 				mes "[Curator Guys]";
 				mes "Oh, do you know the author?";
 				mes "Sure, now what's the name?";
-				input .@input$;
+				input(.@input$);
 				next;
 				if (compare(.@input$,"Oliver Hilpert") == 1) {
 					mes "[Curator Guys]";
@@ -2481,7 +2481,7 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 				mes "You must be having a hard time remembering the book's title or author.";
 				mes "No problem; why don't you tell me at least a little bit of what you remember?";
 				next;
-				input .@input$;
+				input(.@input$);
 				if ((compare(.@input$,"Fate") == 1) || (compare(.@input$,"Crow") == 1) || (compare(.@input$,"Oliver") == 1) || (compare(.@input$,"Hilpert") == 1)) {
 					mes "[Curator Guys]";
 					mes ""+.@input$+"...?";
@@ -3901,7 +3901,7 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 			next;
 			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I'm here to find somebody!";
-			input .@input$;
+			input(.@input$);
 			mes "Her name is ^FF0000"+.@input$+"^000000!";
 			next;
 			if (compare(.@input$,"Eva") == 0) {
@@ -3911,43 +3911,41 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 				warp "cave",81,92;
 				end;
 			}
-			else {
-				mes "[Cave Settler]";
-				mes "............!!!!";
-				next;
-				mes "[Cave Settler]";
-				mes "Did you just say Eva?";
-				mes "Hmm...";
-				mes "Wait here.";
-				next;
-				emotion e_com;
-				mes "[Cave Settler]";
-				mes "Hey, Jaeda!";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Go upstairs, and tell Eva that she has a visitor.";
-				disablenpc "Jaeda#garas1";
-				next;
-				mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
-				next;
-				mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Hmm... Yeah? I see.";
-				next;
-				disablenpc "Jaeda#garas1";
-				mes "[Cave Settler]";
-				mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
-				next;
-				mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
-				mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
-				barmunt_crow = 9;
-				close2;
-				warp "cave",82,105;
-				end;
-			}
+			mes "[Cave Settler]";
+			mes "............!!!!";
+			next;
+			mes "[Cave Settler]";
+			mes "Did you just say Eva?";
+			mes "Hmm...";
+			mes "Wait here.";
+			next;
+			emotion e_com;
+			mes "[Cave Settler]";
+			mes "Hey, Jaeda!";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Go upstairs, and tell Eva that she has a visitor.";
+			disablenpc "Jaeda#garas1";
+			next;
+			mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
+			next;
+			mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Hmm... Yeah? I see.";
+			next;
+			disablenpc "Jaeda#garas1";
+			mes "[Cave Settler]";
+			mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
+			next;
+			mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
+			mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
+			barmunt_crow = 9;
+			close2;
+			warp "cave",82,105;
+			end;
 		}
 	}
 	else if (barmunt_crow < 8) {
@@ -3989,7 +3987,7 @@ OnTouch:
 			next;
 			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I'm here to find somebody!";
-			input .@input$;
+			input(.@input$);
 			mes "Her name is ^FF0000"+.@input$+"^000000!";
 			next;
 			if (compare(.@input$,"Eva") == 0) {
@@ -3999,43 +3997,41 @@ OnTouch:
 				warp "cave",81,92;
 				end;
 			}
-			else {
-				mes "[Cave Settler]";
-				mes "............!!!!";
-				next;
-				mes "[Cave Settler]";
-				mes "Did you just say Eva?";
-				mes "Hmm...";
-				mes "Wait here.";
-				next;
-				emotion e_com;
-				mes "[Cave Settler]";
-				mes "Hey, Jaeda!";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Go upstairs, and tell Eva that she has a visitor.";
-				disablenpc "Jaeda#garas1";
-				next;
-				mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
-				next;
-				mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Hmm... Yeah? I see.";
-				next;
-				disablenpc "Jaeda#garas1";
-				mes "[Cave Settler]";
-				mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
-				next;
-				mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
-				mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
-				barmunt_crow = 9;
-				close2;
-				warp "cave",82,105;
-				end;
-			}
+			mes "[Cave Settler]";
+			mes "............!!!!";
+			next;
+			mes "[Cave Settler]";
+			mes "Did you just say Eva?";
+			mes "Hmm...";
+			mes "Wait here.";
+			next;
+			emotion e_com;
+			mes "[Cave Settler]";
+			mes "Hey, Jaeda!";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Go upstairs, and tell Eva that she has a visitor.";
+			disablenpc "Jaeda#garas1";
+			next;
+			mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
+			next;
+			mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Hmm... Yeah? I see.";
+			next;
+			disablenpc "Jaeda#garas1";
+			mes "[Cave Settler]";
+			mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
+			next;
+			mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
+			mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
+			barmunt_crow = 9;
+			close2;
+			warp "cave",82,105;
+			end;
 		}
 	}
 	else if (barmunt_crow < 8) {

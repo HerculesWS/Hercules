@@ -188,7 +188,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "name of your partner using";
 		mes "the method I just described.";
 		next;
-		input .@partner$;
+		input(.@partner$);
 		mes "[Marry Happy]";
 		mes "Alright, after you've";
 		mes "decided to get married,";
@@ -329,7 +329,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			mes "down your exact name here.";
 			next;
 			while(1) {
-				input .@name$;
+				input(.@name$);
 				if (.@name$ == strcharinfo(PC_NAME))
 					break;
 				mes "[Marry Happy]";
@@ -599,7 +599,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 						mes "her and protect her. Now, may";
 						mes "I know the name of your bride?";
 						next;
-						input $@wed_bride$;
+						input($@wed_bride$);
 						mes "[Vomars]";
 						mes "Mr. " + strcharinfo(PC_NAME) + "...";
 						mes "Do you swear on your life";

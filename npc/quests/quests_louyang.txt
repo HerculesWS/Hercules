@@ -658,7 +658,7 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 		mes "Ready~!";
 		mes "Say it out loud!";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes .@input$;
 		mapannounce "lou_fild01","'"+strcharinfo(PC_NAME)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
@@ -683,7 +683,7 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 			mes "Alright~!";
 			mes "Say it out loud!";
 			next;
-			input .@input$;
+			input(.@input$);
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes .@input$;
 			mapannounce "lou_fild01","'"+strcharinfo(PC_NAME)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
@@ -1856,7 +1856,7 @@ lou_in02,210,47,0	script	City Hall Officer#lou	4_M_CHNSOLDIER,{
 				mes "Nothing of importance. Now, I'm very busy, so if you would go fill the application over there...";
 				close;
 			}
-			input .@input;
+			input(.@input);
 			if (.@input < 10000) {
 				mes "[Jin Chiyuan]";
 				mes "Good lord,";
@@ -2070,7 +2070,7 @@ lou_in02,156,38,0	script	Studying Officer#lou	4_M_CHNMAN,{
 		mes "So what kind of document";
 		mes "did you need?";
 		next;
-		input .@input$;
+		input(.@input$);
 		switch (ch_par) {
 		case 11:
 			if (.@input$ == "Residence Transfer Application")
@@ -2686,7 +2686,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 						next;
 						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Yeah, I've got some news you might be interested in.";
-						input .@input$;
+						input(.@input$);
 						mes "["+strcharinfo(PC_NAME)+"]";
 						mes ""+.@input$+"";
 						next;
@@ -2710,7 +2710,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 						mes "[Nagash Arses]";
 						mes "I just told you what 'Canine of Desert' is. Now you tell me what it is. If you were listening, you would be able to.";
 						next;
-						input .@input$;
+						input(.@input$);
 						if (.@input$ == "Assassin Organization" || .@input$ == "Assassin" || .@input$ == "Assassins") {
 							mes "[Nagash Arses]";
 							mes "Correct. You listened to me very well. They are Assassins. Assassins that were abandoned by society.";
@@ -2843,7 +2843,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "I have news";
 						mes "of Morroc...";
-						input .@input$;
+						input(.@input$);
 						mes "["+strcharinfo(PC_NAME)+"]";
 						mes ""+.@input$+"";
 						next;
@@ -2862,7 +2862,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "I just told you what 'Canine of Desert.' If you can't remember what I just told you, it's no use for me to explain further. You go ahead and tell me what it is.";
 					next;
-					input .@input$;
+					input(.@input$);
 					if (.@input$ == "Assassin Organization" || .@input$ == "Assassin" || .@input$ == "Assassins") {
 						mes "[Nagash Arses]";
 						mes "Correct. You listened to me very well. They are Assassins. Assassins that were abandoned by society.";
@@ -3449,7 +3449,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 			mes "What did";
 			mes "you just say...?";
 			next;
-			input .@input$;
+			input(.@input$);
 			mes "[Song Zhi Du]";
 			mes ""+.@input$+"...?";
 			next;
@@ -4158,7 +4158,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 			mes "Please tell me";
 			mes "his name.";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Song Zhi Du") {
 				mes "[Lady]";
 				mes "Oh, I see.";

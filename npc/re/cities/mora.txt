@@ -452,16 +452,18 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "You can pay me in the currencies listed below.";
 	mes "Enter the sum you're willing to pay. Enter 0 if you don't want to pay anything.";
 	next;
-	input .@input;
+	input(.@input);
 	if (.@input == 0) {
 		mes "[Raffle Philosopher]";
 		mes "So you don't want to hear a quote, eh?";
 		close;
-	} else if (.@input < 100 || .@input > 1000000) {
+	}
+	if (.@input < 100 || .@input > 1000000) {
 		mes "[Raffle Philosopher]";
 		mes "You can pay between ^FF0000100 and 1000000^000000.";
 		close;
-	} else if (Zeny < .@input) {
+	}
+	if (Zeny < .@input) {
 		mes "[Raffle Philosopher]";
 		mes "So you think this is what my time is worth?";
 		close;
@@ -908,7 +910,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "I wonder what you think";
 	mes "about what I've told you.";
 	next;
-	input .@inputstr$;
+	input(.@inputstr$);
 	mes "[Raffle Philosopher]";
 	mes "So you think that "+.@inputstr$+".";
 	next;
@@ -1146,7 +1148,7 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 			close;
 		}
 	case 3:
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I come from a place called "+.@inputstr$+".";
 		next;

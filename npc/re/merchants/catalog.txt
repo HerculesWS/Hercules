@@ -72,19 +72,21 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 		mes "Or how many do you need?";
 		next;
 		while (1) {
-			input .@input;
+			input(.@input);
 			mes "[Catalog Magician]";
-			if (.@input == 0) {
+			if (.@input <= 0) {
 				mes "The trade has been stopped!";
 				mes "I don't know what to do next...";
 				mes "What should I do?";
 				emotion e_swt2,1;
 				close;
-			} else if (.@input < 1 || .@input > 50) {
+			}
+			if (.@input > 50) {
 				mes "It should be less than 50 pieces.";
 				next;
-			} else
-				break;
+				continue;
+			}
+			break;
 		}
 		.@sell = .@ticket_cost * .@input;
 		mes "The total number of catalog(s) that you're trying to purchase is " + .@input + " pieces.";

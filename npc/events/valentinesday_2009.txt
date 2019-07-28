@@ -66,7 +66,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 			mes "How many do you want anyway?";
 			next;
 			while(.@input <= 0 || .@input > 5) {
-				input .@input;
+				input(.@input);
 				if (.@input < 1) {
 					mes "[Marco Bassinio]";
 					mes "Oh, it's such a shame!";
@@ -195,7 +195,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 				mes "How many do you want?";
 				mes "You can't buy more than 10 items at once.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input <= 0) {
 					mes "[Packs Trader]";
 					mes "Nothing to buy.";
@@ -236,7 +236,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 				mes "How many do you want?";
 				mes "You can't buy more than 10 items at once.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input <= 0) {
 					mes "[Packs Trader]";
 					mes "Nothing to buy.";
@@ -277,7 +277,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 				mes "How many do you want?";
 				mes "You can't buy more than 10 items at once.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input <= 0) {
 					mes "[Packs Trader]";
 					mes "Nothing to buy.";
@@ -443,7 +443,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 				mes "When you write the number of the rings, the number shouldn't be larger than the number of rings you actually have.";
 				mes "'0', cancels everything.";
 				next;
-				input .@input;
+				input(.@input);
 
 				if (.@input <= 0) {
 					mes "[Valentine Vote Manager]";

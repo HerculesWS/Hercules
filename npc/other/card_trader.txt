@@ -121,7 +121,7 @@ prontera,115,90,0	script	Putty	4_F_01,{
 			mes "[Putty]";
 			mes "Please tell me what card you want to exchange.";
 			next;
-			input .@i$;
+			input(.@i$);
 			.@input$ = "_"+.@i$;
 			.@card = 0;
 			freeloop(1);

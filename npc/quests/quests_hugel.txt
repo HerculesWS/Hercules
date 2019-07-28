@@ -2779,7 +2779,7 @@ hu_in01,256,40,3	script	Herico	4_M_HUGRANFA,{
 		mes "[Herico]";
 		mes "By any chance, do you know a man who can aid his power in stopping them?";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "President Karl" || .@inputstr$ == "President Weierstrass" || .@inputstr$ == "President" || .@inputstr$ == "Karl Weierstrass") {
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I think that I know one...";
@@ -7566,7 +7566,7 @@ L_MilkCow:
 	mes "you need to brush her a";
 	mes "certain number of times.^000000";
 	next;
-	input .@cowbrush;
+	input(.@cowbrush);
 	if (.@cowbrush != getarg(1)) {
 		soundeffect "taming_fail.wav",0;
 		mes "^3355FFAwwww...";
@@ -7646,7 +7646,7 @@ L_MilkCow:
 	mes "song in Burupu's notes, and then tell her the correct world without";
 	mes "the tilde character (''~'').^000000";
 	next;
-	input .@cowanswer$;
+	input(.@cowanswer$);
 	if (.@cowanswer$ == .@cowsong$) {
 		soundeffect "tming_success.wav",0;
 		mes "^3355FFSuccess!";

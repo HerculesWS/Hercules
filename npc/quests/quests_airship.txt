@@ -192,26 +192,26 @@ airplane,47,61,7	script	Crewman#ein	4_M_ZONDAOYAJI,{
 				mes("not send this up after all...");
 				emotion(e_an);
 				close();
-			} else if (.@comment$ == "0") {
+			}
+			if (.@comment$ == "0") {
 				mes("[Kain Himere]");
 				mes("Ah, well, if you have any");
 				mes("helpful criticism about our");
 				mes("service, feel free to leave");
 				mes("me a comment at any time.");
 				close();
-			} else {
-				mesf("[%s]", strcharinfo(PC_NAME));
-				mesf("%s.", .@comment$);
-				next();
-				mes("[Kain Himere]");
-				mes("Hmmmm...");
-				mes("I see. Well, I'll");
-				mes("send your message");
-				mes("to my superiors as");
-				mes("soon as possible.");
-				mes("Thank you very much.");
-				close();
 			}
+			mesf("[%s]", strcharinfo(PC_NAME));
+			mesf("%s.", .@comment$);
+			next();
+			mes("[Kain Himere]");
+			mes("Hmmmm...");
+			mes("I see. Well, I'll");
+			mes("send your message");
+			mes("to my superiors as");
+			mes("soon as possible.");
+			mes("Thank you very much.");
+			close();
 		}
 	} else if (kain_ticket == 2) {
 		select("About the Airship...");

@@ -106,8 +106,8 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 					next;
 					mes "[Old Pharmacist]";
 					mes "Then pick a number below 100. If you don't want any, just enter '0'. With the materials you have, you can make about "+.@max+" potions.";
-					input .@amount,0,101;
-					if (.@amount == 0) {
+					input(.@amount);
+					if (.@amount <= 0) {
 						next;
 						mes "[Old Pharmacist]";
 						mes "Make up your mind, will you?!";
@@ -235,9 +235,9 @@ L_Making:
 		next;
 		mes "[Old Pharmacist]";
 		mes "Then pick a number below 100. If you don't want any, just enter '0'. With the materials you have, you can make about "+.@max+" potions.";
-		input .@amount;
+		input(.@amount);
 		next;
-		if (.@amount == 0) {
+		if (.@amount <= 0) {
 			mes "[Old Pharmacist]";
 			mes "Make up your mind, will you?!";
 			close;

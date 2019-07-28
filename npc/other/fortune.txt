@@ -57,23 +57,21 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 			mes "Then...";
 			mes "Please pay your fee with all of your sincerity.";
 			next;
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Lhimetorra]";
 				mes "Ah...?!";
 				mes "You have angered the monster spirits!";
 				close;
 			}
-			else if (.@input > Zeny) {
+			if (.@input > Zeny) {
 				mes "[Lhimetorra]";
 				mes "There's no need to overdo it. Just give with all your heart... *Tsk tsk*";
 				close;
 			}
-			else {
-				mes "[Lhimetorra]";
-				mes "I accept your heart and your devotion with my gratitude. Thoughts are more important than the amount when paying a fortune teller.";
-				Zeny -= .@input;
-			}
+			mes "[Lhimetorra]";
+			mes "I accept your heart and your devotion with my gratitude. Thoughts are more important than the amount when paying a fortune teller.";
+			Zeny -= .@input;
 			next;
 			mes "[Lhimetorra]";
 			mes "Then, I will begin to tell the fortune of your wish. Concentrate on yourself...";

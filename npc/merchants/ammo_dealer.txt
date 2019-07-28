@@ -97,7 +97,7 @@ function	script	Bullet_Trade	{
 	mes "that you'd like. If you want to";
 	mes "cancel, then just enter ''0.''";
 	next;
-	input .@amount;
+	input(.@amount);
 	if (.@amount < 1 || .@amount > 500) {
 		mes "[Tony]";
 		mes "Hey, I can't give you";

@@ -499,7 +499,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "The evil giant Papner,";
 				mes "Turned into a dragon and ate him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "There was a man")
 					.@w_point += 1;
 
@@ -510,7 +510,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "The evil giant Papner,";
 				mes "Turned into a dragon and ate him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "who was said to be immortal.")
 					.@w_point += 1;
 
@@ -521,7 +521,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "The evil giant Papner,";
 				mes "Turned into a dragon and ate him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "His name Jichfreid,")
 					.@w_point += 1;
 
@@ -532,7 +532,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "The evil giant Papner,";
 				mes "Turned into a dragon and ate him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Son of the hero Jichmunt.")
 					.@w_point += 1;
 
@@ -543,7 +543,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "The evil giant Papner,^000000";
 				mes "Turned into a dragon and ate him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "The evil giant Papner,")
 					.@w_point += 1;
 
@@ -554,7 +554,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "The evil giant Papner,";
 				mes "Turned into a dragon and ate him.^000000";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Turned into a dragon and ate him.")
 					.@w_point += 1;
 			}
@@ -566,7 +566,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "At first he only sold Red Potions.";
 				mes "Some say he sold Sweet Potatoes, too.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "A Merchant without money or equipment,")
 					.@w_point += 1;
 
@@ -577,7 +577,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "At first he only sold Red Potions.";
 				mes "Some say he sold Sweet Potatoes, too.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "a Merchant that couldn't sell anything.")
 					.@w_point += 1;
 
@@ -588,7 +588,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "At first he only sold Red Potions.";
 				mes "Some say he sold Sweet Potatoes, too.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "But he was too proud to beg.")
 					.@w_point += 1;
 
@@ -599,7 +599,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "At first he only sold Red Potions.";
 				mes "Some say he sold Sweet Potatoes, too.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "So he gathered some money selling items.")
 					.@w_point += 1;
 
@@ -610,7 +610,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "At first he only sold Red Potions.^000000";
 				mes "Some say he sold Sweet Potatoes, too.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "At first he only sold Red Potions.")
 					.@w_point += 1;
 
@@ -621,7 +621,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "At first he only sold Red Potions.";
 				mes "Some say he sold Sweet Potatoes, too.^000000";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Some say he sold Sweet Potatoes, too.")
 					.@w_point += 1;
 			}
@@ -633,7 +633,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Her sweet apples in her basket,";
 				mes "All thanks to her sweet apples.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "All Gods never age.")
 					.@w_point += 1;
 
@@ -644,7 +644,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Her sweet apples in her basket,";
 				mes "All thanks to her sweet apples.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "The ever so Beautiful Goddess Eden,")
 					.@w_point += 1;
 
@@ -655,7 +655,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Her sweet apples in her basket,";
 				mes "All thanks to her sweet apples.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Beautiful and graceful Goddess Eden,")
 					.@w_point += 1;
 
@@ -666,7 +666,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Her sweet apples in her basket,";
 				mes "All thanks to her sweet apples.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Odin's daughter-in-law and Bragi's wife.")
 					.@w_point += 1;
 
@@ -677,7 +677,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Her sweet apples in her basket,^000000";
 				mes "All thanks to her sweet apples.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Her sweet apples in her basket,")
 					.@w_point += 1;
 
@@ -688,7 +688,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Her sweet apples in her basket,";
 				mes "All thanks to her sweet apples.^000000";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "All thanks to her sweet apples.")
 					.@w_point += 1;
 			}
@@ -700,7 +700,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "All wandering poets are his people,";
 				mes "And all praise shall go to him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Bragi, Bragi,")
 					.@w_point += 1;
 
@@ -711,7 +711,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "All wandering poets are his people,";
 				mes "And all praise shall go to him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Forever call the poets name.")
 					.@w_point += 1;
 
@@ -722,7 +722,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "All wandering poets are his people,";
 				mes "And all praise shall go to him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "My songs are his breath,")
 					.@w_point += 1;
 
@@ -733,7 +733,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "All wandering poets are his people,";
 				mes "And all praise shall go to him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "My mind is his will,")
 					.@w_point += 1;
 
@@ -744,7 +744,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "All wandering poets are his people,^000000";
 				mes "And all praise shall go to him.";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "All wandering poets are his people,")
 					.@w_point += 1;
 
@@ -755,7 +755,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "All wandering poets are his people,";
 				mes "And all praise shall go to him.^000000";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "And all praise shall go to him.")
 					.@w_point += 1;
 			}
@@ -767,7 +767,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Let the castle walls ring.";
 				mes "This day will never come again!";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Louder, louder, louder.")
 					.@w_point += 1;
 
@@ -778,7 +778,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Let the castle walls ring.";
 				mes "This day will never come again!";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Give strength to the warriors!")
 					.@w_point += 1;
 
@@ -789,7 +789,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Let the castle walls ring.";
 				mes "This day will never come again!";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Shake the sky and roar through the land.")
 					.@w_point += 1;
 
@@ -800,7 +800,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Let the castle walls ring.";
 				mes "This day will never come again!";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Make my heart pound again!")
 					.@w_point += 1;
 
@@ -811,7 +811,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Let the castle walls ring.^000000";
 				mes "This day will never come again!";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "Let the castle walls ring.")
 					.@w_point += 1;
 
@@ -822,7 +822,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 				mes "Let the castle walls ring.";
 				mes "This day will never come again!^000000";
 				next;
-				input .@Song$;
+				input(.@Song$);
 				if (.@Song$ != "This day will never come again!")
 					.@w_point += 1;
 			}
