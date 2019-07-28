@@ -9,6 +9,36 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.07.28] `July 28 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-07-24. (#2498)
+- Added a setting to have `@autoloot` take player drop penalties/bonuses into account. See `autoloot_adjust` in `drops.conf` for details. (#2505)
+- Added a mob DB field `DamageTakenRate` to change the rate of the damage received by each monster. (#2510)
+- Added a setting to allow homunculi to obtain a portion of the EXP gained by their master. See `hom_bonus_exp_from_master` in `homunc.conf`. Note: in order to restore the previous behavior, the setting can be changed to `0`. (#2507, issue #2313)
+
+### Changed
+
+- Converted various packets (`ZC_ACK_RANKING`, `ZC_STATUS_CHANGE_ACK`, `ZC_HAT_EFFECT`) into structs. (part of #2498)
+- Changed `pc_statusup()` to send the actual stat value back to the client in case of error. (part of #2498)
+- Disabled the `@refresh` and `@refreshall` commands during NPC conversations, causing the character to be stuck on an invisible NPC dialog until relogging. (#2499)
+- Extended `@reloadmobdb` to update the currently spawned monsters. (#2500)
+- Changed the party sharing checks to avoid unnecessary SQL queries. (part of #2502)
+- Extended the `@refine` command with shortcuts to refine every normal equipment (-1), every costume equipment (-2) or every shadow equipment (-3). (#2504)
+- Extended the `@refine` command to list the costume and shadow equipments. (#part of #2504)
+- Increased the stack limit of Turisus, Asir and Pertz to unlimited and the other runestones to 60. (#2509)
+- Extended the commands `getmonsterinfo()` and `setunitdata()` / `getunitdata()` with accessors for the new `DamageTakenRate` mob DB field, using, respectively, `MOB_DMG_TAKEN_RATE` and `UDT_DAMAGE_TAKEN_RATE`. (part of #2510)
+- Converted the Guild Castle database to the libconfig format, in preparation for future updates. (#2506)
+
+### Fixed
+
+- Sanitized the use of `input()` in all the scripts to work correctly if the minimum accepted value is changed to less than zero in the configuration. It's recommended that third party scripts get updated not to assume a positive value, since the default setting may change in the future. (#2494)
+- Fixed an issue in the Sealed Shrine script, allowing to unseal multiple Baphomets under certain conditions. (#2332)
+- Fixed an issue that allowed an appropriately created party to enable experience sharing even if outside the sharing range. (#2502)
+- Corrected the cooldown after killing Wounded Morroc. (#2503)
+- Corrected `isequipped()` and `isequippedcnt()` to correctly handle costume equipment. (#2508)
+
 ### [v2019.06.30] `June 30 2019`
 
 ### Added
@@ -830,6 +860,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.07.28]: https://github.com/HerculesWS/Hercules/compare/v2019.06.30...v2019.07.28
 [v2019.06.30]: https://github.com/HerculesWS/Hercules/compare/v2019.06.02...v2019.06.30
 [v2019.06.02]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+4...v2019.06.02
 [v2019.05.05+4]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+3...v2019.05.05+4
