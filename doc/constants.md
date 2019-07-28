@@ -1442,6 +1442,7 @@
 - `MOB_ELEMENT`: 20
 - `MOB_MODE`: 21
 - `MOB_MVPEXP`: 22
+- `MOB_DMG_TAKEN_RATE`: 23
 
 ### mercenary guilds
 
@@ -4460,6 +4461,7 @@
 - `UDT_ROBE`: 55
 - `UDT_BODY2`: 56
 - `UDT_GROUP`: 57
+- `UDT_DAMAGE_TAKEN_RATE`: 58
 
 ### getguildonline types
 
