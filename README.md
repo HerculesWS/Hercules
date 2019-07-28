@@ -220,26 +220,26 @@ articles or pages on the Wiki or topics within the Hercules forum.
 ------------------
 
 Hercules has a large collection of help files and sample NPC scripts located in
-/doc/
+[/doc/](https://github.com/HerculesWS/Hercules/blob/stable/doc/) folder.
 
 ### Scripting
-It is recommended to look through /doc/script_commands.txt for help, pointers or
+It is recommended to look through [/doc/script_commands.txt](https://github.com/HerculesWS/Hercules/blob/stable/doc/script_commands.txt) for help, pointers or
 even for ideas for your next NPC script. Most script commands have a usage
 example.
 
 ### `@commands`
 In-game, Game Masters have the ability to use Atcommands (`@`) to control
 players, create items, spawn mobs, reload configuration files and even control
-the weather.  For an in-depth explanation, please see /doc/atcommands.txt
+the weather.  For an in-depth explanation, please see [/doc/atcommands.md](https://github.com/HerculesWS/Hercules/blob/stable/doc/atcommands.md)
 
 ### Permissions
 The Hercules emulator has a permission system that enables certain groups of
 players to perform certain actions, or have access to certain visual
 enhancements or in-game activity. To see what permissions are available, they
-are detailed in /doc/permissions.md
+are detailed in [/doc/permissions.md](https://github.com/HerculesWS/Hercules/blob/stable/doc/permissions.md)
 
 ### Others
-There are more files in the /doc/ directory that will help you to create scripts
+There are more files in the [/doc/](https://github.com/HerculesWS/Hercules/blob/stable/doc/) directory that will help you to create scripts
 or update the mapcache, or even explain how the job system and item bonuses
 work. Before posting a topic asking for help on the forums, we recommend that
 all users take the time to look over this directory.
