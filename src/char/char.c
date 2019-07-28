@@ -2273,6 +2273,8 @@ static int char_char_married(int pl1, int pl2)
 
 static int char_char_child(int parent_id, int child_id)
 {
+	if (parent_id == 0 || child_id == 0) // Failsafe, avoild querys and fix EXP bug dividing with lower level chars
+		return 0;
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `child` FROM `%s` WHERE `char_id` = '%d'", char_db, parent_id) )
 		Sql_ShowDebug(inter->sql_handle);
 	else if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
@@ -2292,6 +2294,8 @@ static int char_char_child(int parent_id, int child_id)
 
 static int char_char_family(int cid1, int cid2, int cid3)
 {
+	if (cid1 == 0 || cid2 == 0 || cid3 == 0) //Failsafe, and avoid querys where there is no sense to keep executing if any of the inputs are 0
+		return 0;
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`partner_id`,`child` FROM `%s` WHERE `char_id` IN ('%d','%d','%d')", char_db, cid1, cid2, cid3) )
 		Sql_ShowDebug(inter->sql_handle);
 	else while( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
