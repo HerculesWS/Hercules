@@ -1984,6 +1984,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->init, HP_mob_init) },
 	{ HP_POP(mob->final, HP_mob_final) },
 	{ HP_POP(mob->reload, HP_mob_reload) },
+	{ HP_POP(mob->reload_sub_mob, HP_mob_reload_sub_mob) },
 	{ HP_POP(mob->db, HP_mob_db) },
 	{ HP_POP(mob->chat, HP_mob_chat) },
 	{ HP_POP(mob->makedummymobdb, HP_mob_makedummymobdb) },

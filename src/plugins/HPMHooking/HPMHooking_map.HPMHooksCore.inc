@@ -3870,6 +3870,8 @@ struct {
 	struct HPMHookPoint *HP_mob_final_post;
 	struct HPMHookPoint *HP_mob_reload_pre;
 	struct HPMHookPoint *HP_mob_reload_post;
+	struct HPMHookPoint *HP_mob_reload_sub_mob_pre;
+	struct HPMHookPoint *HP_mob_reload_sub_mob_post;
 	struct HPMHookPoint *HP_mob_db_pre;
 	struct HPMHookPoint *HP_mob_db_post;
 	struct HPMHookPoint *HP_mob_chat_pre;
@@ -10661,6 +10663,8 @@ struct {
 	int HP_mob_final_post;
 	int HP_mob_reload_pre;
 	int HP_mob_reload_post;
+	int HP_mob_reload_sub_mob_pre;
+	int HP_mob_reload_sub_mob_post;
 	int HP_mob_db_pre;
 	int HP_mob_db_post;
 	int HP_mob_chat_pre;

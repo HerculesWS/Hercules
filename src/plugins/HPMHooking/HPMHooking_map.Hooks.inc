@@ -51206,6 +51206,39 @@ void HP_mob_reload(void) {
 	}
 	return;
 }
+int HP_mob_reload_sub_mob(struct mob_data *md, va_list args) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_mob_reload_sub_mob_pre > 0) {
+		int (*preHookFunc) (struct mob_data **md, va_list args);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_reload_sub_mob_pre; hIndex++) {
+			va_list args___copy; va_copy(args___copy, args);
+			preHookFunc = HPMHooks.list.HP_mob_reload_sub_mob_pre[hIndex].func;
+			retVal___ = preHookFunc(&md, args___copy);
+			va_end(args___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list args___copy; va_copy(args___copy, args);
+		retVal___ = HPMHooks.source.mob.reload_sub_mob(md, args___copy);
+		va_end(args___copy);
+	}
+	if (HPMHooks.count.HP_mob_reload_sub_mob_post > 0) {
+		int (*postHookFunc) (int retVal___, struct mob_data *md, va_list args);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_reload_sub_mob_post; hIndex++) {
+			va_list args___copy; va_copy(args___copy, args);
+			postHookFunc = HPMHooks.list.HP_mob_reload_sub_mob_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, md, args___copy);
+			va_end(args___copy);
+		}
+	}
+	return retVal___;
+}
 struct mob_db* HP_mob_db(int index) {
 	int hIndex = 0;
 	struct mob_db* retVal___ = NULL;

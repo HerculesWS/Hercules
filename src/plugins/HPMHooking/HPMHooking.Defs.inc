@@ -5302,6 +5302,8 @@ typedef int (*HPMHOOK_pre_mob_final) (void);
 typedef int (*HPMHOOK_post_mob_final) (int retVal___);
 typedef void (*HPMHOOK_pre_mob_reload) (void);
 typedef void (*HPMHOOK_post_mob_reload) (void);
+typedef int (*HPMHOOK_pre_mob_reload_sub_mob) (struct mob_data **md, va_list args);
+typedef int (*HPMHOOK_post_mob_reload_sub_mob) (int retVal___, struct mob_data *md, va_list args);
 typedef struct mob_db* (*HPMHOOK_pre_mob_db) (int *index);
 typedef struct mob_db* (*HPMHOOK_post_mob_db) (struct mob_db* retVal___, int index);
 typedef struct mob_chat* (*HPMHOOK_pre_mob_chat) (short *id);
