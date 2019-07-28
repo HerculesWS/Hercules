@@ -34251,15 +34251,15 @@ bool HP_guild_read_guildskill_tree_db(char *split[], int columns, int current) {
 	}
 	return retVal___;
 }
-bool HP_guild_read_castledb(char *str[], int columns, int current) {
+bool HP_guild_read_castledb_libconfig(void) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if (HPMHooks.count.HP_guild_read_castledb_pre > 0) {
-		bool (*preHookFunc) (char **str[], int *columns, int *current);
+	if (HPMHooks.count.HP_guild_read_castledb_libconfig_pre > 0) {
+		bool (*preHookFunc) (void);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_guild_read_castledb_pre[hIndex].func;
-			retVal___ = preHookFunc(&str, &columns, &current);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_libconfig_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_guild_read_castledb_libconfig_pre[hIndex].func;
+			retVal___ = preHookFunc();
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -34267,13 +34267,40 @@ bool HP_guild_read_castledb(char *str[], int columns, int current) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.guild.read_castledb(str, columns, current);
+		retVal___ = HPMHooks.source.guild.read_castledb_libconfig();
 	}
-	if (HPMHooks.count.HP_guild_read_castledb_post > 0) {
-		bool (*postHookFunc) (bool retVal___, char *str[], int columns, int current);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_guild_read_castledb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, str, columns, current);
+	if (HPMHooks.count.HP_guild_read_castledb_libconfig_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_libconfig_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_guild_read_castledb_libconfig_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+bool HP_guild_read_castledb_libconfig_sub(struct config_setting_t *it, int idx, const char *source) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_guild_read_castledb_libconfig_sub_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, int *idx, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_libconfig_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_guild_read_castledb_libconfig_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &idx, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.guild.read_castledb_libconfig_sub(it, idx, source);
+	}
+	if (HPMHooks.count.HP_guild_read_castledb_libconfig_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_libconfig_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_guild_read_castledb_libconfig_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, idx, source);
 		}
 	}
 	return retVal___;

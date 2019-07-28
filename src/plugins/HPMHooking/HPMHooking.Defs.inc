@@ -3054,8 +3054,10 @@ typedef struct map_session_data* (*HPMHOOK_pre_guild_sd_check) (int *guild_id, i
 typedef struct map_session_data* (*HPMHOOK_post_guild_sd_check) (struct map_session_data* retVal___, int guild_id, int account_id, int char_id);
 typedef bool (*HPMHOOK_pre_guild_read_guildskill_tree_db) (char **split[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_guild_read_guildskill_tree_db) (bool retVal___, char *split[], int columns, int current);
-typedef bool (*HPMHOOK_pre_guild_read_castledb) (char **str[], int *columns, int *current);
-typedef bool (*HPMHOOK_post_guild_read_castledb) (bool retVal___, char *str[], int columns, int current);
+typedef bool (*HPMHOOK_pre_guild_read_castledb_libconfig) (void);
+typedef bool (*HPMHOOK_post_guild_read_castledb_libconfig) (bool retVal___);
+typedef bool (*HPMHOOK_pre_guild_read_castledb_libconfig_sub) (struct config_setting_t **it, int *idx, const char **source);
+typedef bool (*HPMHOOK_post_guild_read_castledb_libconfig_sub) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
 typedef int (*HPMHOOK_pre_guild_payexp_timer_sub) (union DBKey *key, struct DBData **data, va_list ap);
 typedef int (*HPMHOOK_post_guild_payexp_timer_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_guild_send_xy_timer_sub) (union DBKey *key, struct DBData **data, va_list ap);
