@@ -2614,8 +2614,10 @@ struct {
 	struct HPMHookPoint *HP_guild_sd_check_post;
 	struct HPMHookPoint *HP_guild_read_guildskill_tree_db_pre;
 	struct HPMHookPoint *HP_guild_read_guildskill_tree_db_post;
-	struct HPMHookPoint *HP_guild_read_castledb_pre;
-	struct HPMHookPoint *HP_guild_read_castledb_post;
+	struct HPMHookPoint *HP_guild_read_castledb_libconfig_pre;
+	struct HPMHookPoint *HP_guild_read_castledb_libconfig_post;
+	struct HPMHookPoint *HP_guild_read_castledb_libconfig_sub_pre;
+	struct HPMHookPoint *HP_guild_read_castledb_libconfig_sub_post;
 	struct HPMHookPoint *HP_guild_payexp_timer_sub_pre;
 	struct HPMHookPoint *HP_guild_payexp_timer_sub_post;
 	struct HPMHookPoint *HP_guild_send_xy_timer_sub_pre;
@@ -9401,8 +9403,10 @@ struct {
 	int HP_guild_sd_check_post;
 	int HP_guild_read_guildskill_tree_db_pre;
 	int HP_guild_read_guildskill_tree_db_post;
-	int HP_guild_read_castledb_pre;
-	int HP_guild_read_castledb_post;
+	int HP_guild_read_castledb_libconfig_pre;
+	int HP_guild_read_castledb_libconfig_post;
+	int HP_guild_read_castledb_libconfig_sub_pre;
+	int HP_guild_read_castledb_libconfig_sub_post;
 	int HP_guild_payexp_timer_sub_pre;
 	int HP_guild_payexp_timer_sub_post;
 	int HP_guild_send_xy_timer_sub_pre;
