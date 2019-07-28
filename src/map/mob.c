@@ -4604,6 +4604,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	 * AttackMotion: attack motion
 	 * DamageMotion: damage motion
 	 * MvpExp: mvp experience
+	 * DamageTakenRate: damage taken rate
 	 * MvpDrops: {
 	 *     AegisName: chance
 	 *     ...
@@ -4835,6 +4836,12 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		if (config_setting_is_group(t)) {
 			mob->read_db_drops_sub(&md, t);
 		}
+	}
+
+	if (mob->lookup_const(mobt, "DamageTakenRate", &i32) && i32 >= 0) {
+		md.dmg_taken_rate = cap_value(i32, 1, INT_MAX);
+	} else if (!inherit) {
+		md.dmg_taken_rate = 100;
 	}
 
 	mob->read_db_additional_fields(&md, mobt, n, source);

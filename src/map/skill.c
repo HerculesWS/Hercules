@@ -2906,6 +2906,18 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		}
 	}
 
+	if (bl->type == BL_MOB) {
+		struct mob_data *md = BL_CAST(BL_MOB, bl);
+		if (md != NULL) {
+			if (md->db->dmg_taken_rate != 100) {
+				if (dmg.damage > 0)
+					dmg.damage = apply_percentrate64(dmg.damage, md->db->dmg_taken_rate, 100);
+				if (dmg.damage2 > 0)
+					dmg.damage2 = apply_percentrate64(dmg.damage2, md->db->dmg_taken_rate, 100);
+			}
+		}
+	}
+
 	damage = dmg.damage + dmg.damage2;
 
 	if( (skill_id == AL_INCAGI || skill_id == AL_BLESSING ||

@@ -3969,29 +3969,30 @@ It will return -1 if there is no such monster (or the type value is
 invalid), or "null" if you requested the monster's name.
 
 Valid types are listed in doc/constants.md:
-	MOB_NAME		0
-	MOB_LV			1
-	MOB_MAXHP		2
-	MOB_BASEEXP		3
-	MOB_JOBEXP		4
-	MOB_ATK1		5
-	MOB_ATK2		6
-	MOB_DEF			7
-	MOB_MDEF		8
-	MOB_STR			9
-	MOB_AGI			10
-	MOB_VIT			11
-	MOB_INT			12
-	MOB_DEX			13
-	MOB_LUK			14
-	MOB_RANGE		15
-	MOB_RANGE2		16
-	MOB_RANGE3		17
-	MOB_SIZE		18
-	MOB_RACE		19
-	MOB_ELEMENT		20
-	MOB_MODE		21
-	MOB_MVPEXP		22
+	MOB_NAME               0
+	MOB_LV                 1
+	MOB_MAXHP              2
+	MOB_BASEEXP            3
+	MOB_JOBEXP             4
+	MOB_ATK1               5
+	MOB_ATK2               6
+	MOB_DEF                7
+	MOB_MDEF               8
+	MOB_STR                9
+	MOB_AGI               10
+	MOB_VIT               11
+	MOB_INT               12
+	MOB_DEX               13
+	MOB_LUK               14
+	MOB_RANGE             15
+	MOB_RANGE2            16
+	MOB_RANGE3            17
+	MOB_SIZE              18
+	MOB_RACE              19
+	MOB_ELEMENT           20
+	MOB_MODE              21
+	MOB_MVPEXP            22
+	MOB_DMG_TAKEN_RATE    23
 
 Check sample in doc/sample/getmonsterinfo.txt
 
@@ -10240,60 +10241,61 @@ Sets or alters the data in real-time for game objects of the following types -
 NPCs, Pets, Monsters, Homunuculus', Mercenaries, Elementals.
 
 Applicable Data Types (available as constants) -
-	Data Types          Description (parameter type)
-	UDT_SIZE:           Unit Size
-	UDT_LEVEL:          Level
-	UDT_HP:             Current HP
-	UDT_MAXHP:          Max HP
-	UDT_SP:             SP
-	UDT_MAXSP:          MAX SP
-	UDT_MASTERAID:      Master Account ID (for Summons)
-	UDT_MASTERCID:      Master Char ID (for Summons)
-	UDT_SPEED:          Unit Speed.
-	UDT_MODE:           Mode (Mobs only)
-	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
-	UDT_SCOPTION:       Status Options. (see doc/constants.md for Unit Option Types)
-	UDT_SEX:            Gender of the unit. (see doc/constants.md for Genders)
-	UDT_CLASS:          Class of the unit. (Monster ID)
-	UDT_HAIRSTYLE:      Hair Style ID.
-	UDT_HAIRCOLOR:      Hair Color ID.
-	UDT_HEADBOTTOM:     Headgear Bottom Sprite ID.
-	UDT_HEADMIDDLE:     Headgear Middle Sprite ID.
-	UDT_HEADTOP:        Headgear Top Sprite ID.
-	UDT_CLOTHCOLOR:     Cloth Color ID.
-	UDT_SHIELD:         Shield Sprite ID.
-	UDT_WEAPON:         Weapon Sprite ID.
-	UDT_LOOKDIR:        Face direction.
-	UDT_CANMOVETICK:    Stop a unit from move for n seconds.
-	UDT_STR:            Unit STR.
-	UDT_AGI:            Unit AGI.
-	UDT_VIT:            Unit VIT.
-	UDT_INT:            Unit INT.
-	UDT_DEX:            Unit DEX.
-	UDT_LUK:            Unit LUK.
-	UDT_ATKRANGE:       Attack range of a unit.
-	UDT_ATKMIN:         Min Atk of a unit.
-	UDT_ATKMAX:         Max Atk of a unit.
-	UDT_MATKMIN:        Min MATK of a unit.
-	UDT_MATKMAX:        Max MATK of a unit.
-	UDT_DEF:            DEF.
-	UDT_MDEF:           MDEF.
-	UDT_HIT:            HIT.
-	UDT_FLEE:           FLEE.
-	UDT_PDODGE:         Perfect Dodge.
-	UDT_CRIT:           Critical Rate.
-	UDT_RACE:           Race. (Eg. constants RC_DemiHuman or Integer 7).
-	UDT_ELETYPE:        Element. (Eg. constants Ele_Neutral or Integer 0).
-	UDT_ELELEVEL:       Element Level.
-	UDT_AMOTION:        AMotion Rate.
-	UDT_ADELAY:         ADelay Rate.
-	UDT_DMOTION:        DMotion Rate.
-	UDT_HUNGER:         Hunger Rate - for summons.
-	UDT_INTIMACY:       Intimacy Rate - for summons.
-	UDT_LIFETIME:       LifeTime - for summons.
-	UDT_MERC_KILLCOUNT: Kill count for mercenaries
-	UDT_STATADD:        Status Points - for NPCs.
-	UDT_GROUP:          group id
+	Data Types                Description (parameter type)
+	UDT_SIZE:                 Unit Size
+	UDT_LEVEL:                Level
+	UDT_HP:                   Current HP
+	UDT_MAXHP:                Max HP
+	UDT_SP:                   SP
+	UDT_MAXSP:                MAX SP
+	UDT_MASTERAID:            Master Account ID (for Summons)
+	UDT_MASTERCID:            Master Char ID (for Summons)
+	UDT_SPEED:                Unit Speed.
+	UDT_MODE:                 Mode (Mobs only)
+	UDT_AI:                   Unit AI Type (see doc/constants.md for Unit AI Types)
+	UDT_SCOPTION:             Status Options. (see doc/constants.md for Unit Option Types)
+	UDT_SEX:                  Gender of the unit. (see doc/constants.md for Genders)
+	UDT_CLASS:                Class of the unit. (Monster ID)
+	UDT_HAIRSTYLE:            Hair Style ID.
+	UDT_HAIRCOLOR:            Hair Color ID.
+	UDT_HEADBOTTOM:           Headgear Bottom Sprite ID.
+	UDT_HEADMIDDLE:           Headgear Middle Sprite ID.
+	UDT_HEADTOP:              Headgear Top Sprite ID.
+	UDT_CLOTHCOLOR:           Cloth Color ID.
+	UDT_SHIELD:               Shield Sprite ID.
+	UDT_WEAPON:               Weapon Sprite ID.
+	UDT_LOOKDIR:              Face direction.
+	UDT_CANMOVETICK:          Stop a unit from move for n seconds.
+	UDT_STR:                  Unit STR.
+	UDT_AGI:                  Unit AGI.
+	UDT_VIT:                  Unit VIT.
+	UDT_INT:                  Unit INT.
+	UDT_DEX:                  Unit DEX.
+	UDT_LUK:                  Unit LUK.
+	UDT_ATKRANGE:             Attack range of a unit.
+	UDT_ATKMIN:               Min Atk of a unit.
+	UDT_ATKMAX:               Max Atk of a unit.
+	UDT_MATKMIN:              Min MATK of a unit.
+	UDT_MATKMAX:              Max MATK of a unit.
+	UDT_DEF:                  DEF.
+	UDT_MDEF:                 MDEF.
+	UDT_HIT:                  HIT.
+	UDT_FLEE:                 FLEE.
+	UDT_PDODGE:               Perfect Dodge.
+	UDT_CRIT:                 Critical Rate.
+	UDT_RACE:                 Race. (Eg. constants RC_DemiHuman or Integer 7).
+	UDT_ELETYPE:              Element. (Eg. constants Ele_Neutral or Integer 0).
+	UDT_ELELEVEL:             Element Level.
+	UDT_AMOTION:              AMotion Rate.
+	UDT_ADELAY:               ADelay Rate.
+	UDT_DMOTION:              DMotion Rate.
+	UDT_HUNGER:               Hunger Rate - for summons.
+	UDT_INTIMACY:             Intimacy Rate - for summons.
+	UDT_LIFETIME:             LifeTime - for summons.
+	UDT_MERC_KILLCOUNT:       Kill count for mercenaries
+	UDT_STATADD:              Status Points - for NPCs.
+	UDT_GROUP:                group id
+	UDT_DAMAGE_TAKEN_RATE:    damage taken rate of a unit.
 
 returns 0 if value could not be set, 1 if successful.
 
@@ -10304,59 +10306,60 @@ returns 0 if value could not be set, 1 if successful.
 Retrieves real-time data of a game object.
 
 Applicable Data types (available as constants) -
-	Data Types          Description (return type)
-	UDT_SIZE:           Unit Size
-	UDT_LEVEL:          Level
-	UDT_HP:             Current HP
-	UDT_MAXHP:          Max HP
-	UDT_SP:             SP
-	UDT_MAXSP:          MAX SP
-	UDT_MASTERAID:      Master Account ID (for Summons)
-	UDT_MASTERCID:      Master Char ID (for Summons)
-	UDT_SPEED:          Unit Speed.
-	UDT_MODE:           Mode (Mobs only)
-	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
-	UDT_SCOPTION:       Status Options. (see doc/constants.md for Unit Option Types)
-	UDT_SEX:            Gender of the unit. (see doc/constants.md for Genders)
-	UDT_CLASS:          Class of the unit. (Monster ID)
-	UDT_HAIRSTYLE:      Hair Style ID.
-	UDT_HAIRCOLOR:      Hair Color ID.
-	UDT_HEADBOTTOM:     Headgear Bottom Sprite ID.
-	UDT_HEADMIDDLE:     Headgear Middle Sprite ID.
-	UDT_HEADTOP:        Headgear Top Sprite ID.
-	UDT_CLOTHCOLOR:     Cloth Color ID.
-	UDT_SHIELD:         Shield Sprite ID.
-	UDT_WEAPON:         Weapon Sprite ID.
-	UDT_LOOKDIR:        Face direction.
-	UDT_CANMOVETICK:    Stop a unit from move for n seconds.
-	UDT_STR:            Unit STR.
-	UDT_AGI:            Unit AGI.
-	UDT_VIT:            Unit VIT.
-	UDT_INT:            Unit INT.
-	UDT_DEX:            Unit DEX.
-	UDT_LUK:            Unit LUK.
-	UDT_ATKRANGE:       Attack range of a unit.
-	UDT_ATKMIN:         Min Atk of a unit.
-	UDT_ATKMAX:         Max Atk of a unit.
-	UDT_MATKMIN:        Min MATK of a unit.
-	UDT_MATKMAX:        Max MATK of a unit.
-	UDT_DEF:            DEF.
-	UDT_MDEF:           MDEF.
-	UDT_HIT:            HIT.
-	UDT_FLEE:           FLEE.
-	UDT_PDODGE:         Perfect Dodge.
-	UDT_CRIT:           Critical Rate.
-	UDT_RACE:           Race. (Eg. constants RC_DemiHuman or Integer 7).
-	UDT_ELETYPE:        Element. (Eg. constants Ele_Neutral or Integer 0).
-	UDT_ELELEVEL:       Element Level.
-	UDT_AMOTION:        AMotion Rate.
-	UDT_ADELAY:         ADelay Rate.
-	UDT_DMOTION:        DMotion Rate.
-	UDT_HUNGER:         Hunger Rate - for summons.
-	UDT_INTIMACY:       Intimacy Rate - for summons.
-	UDT_LIFETIME:       LifeTime - for summons.
-	UDT_MERC_KILLCOUNT: Kill count for mercenaries.
-	UDT_GROUP:          group id
+	Data Types                Description (return type)
+	UDT_SIZE:                 Unit Size
+	UDT_LEVEL:                Level
+	UDT_HP:                   Current HP
+	UDT_MAXHP:                Max HP
+	UDT_SP:                   SP
+	UDT_MAXSP:                MAX SP
+	UDT_MASTERAID:            Master Account ID (for Summons)
+	UDT_MASTERCID:            Master Char ID (for Summons)
+	UDT_SPEED:                Unit Speed.
+	UDT_MODE:                 Mode (Mobs only)
+	UDT_AI:                   Unit AI Type (see doc/constants.md for Unit AI Types)
+	UDT_SCOPTION:             Status Options. (see doc/constants.md for Unit Option Types)
+	UDT_SEX:                  Gender of the unit. (see doc/constants.md for Genders)
+	UDT_CLASS:                Class of the unit. (Monster ID)
+	UDT_HAIRSTYLE:            Hair Style ID.
+	UDT_HAIRCOLOR:            Hair Color ID.
+	UDT_HEADBOTTOM:           Headgear Bottom Sprite ID.
+	UDT_HEADMIDDLE:           Headgear Middle Sprite ID.
+	UDT_HEADTOP:              Headgear Top Sprite ID.
+	UDT_CLOTHCOLOR:           Cloth Color ID.
+	UDT_SHIELD:               Shield Sprite ID.
+	UDT_WEAPON:               Weapon Sprite ID.
+	UDT_LOOKDIR:              Face direction.
+	UDT_CANMOVETICK:          Stop a unit from move for n seconds.
+	UDT_STR:                  Unit STR.
+	UDT_AGI:                  Unit AGI.
+	UDT_VIT:                  Unit VIT.
+	UDT_INT:                  Unit INT.
+	UDT_DEX:                  Unit DEX.
+	UDT_LUK:                  Unit LUK.
+	UDT_ATKRANGE:             Attack range of a unit.
+	UDT_ATKMIN:               Min Atk of a unit.
+	UDT_ATKMAX:               Max Atk of a unit.
+	UDT_MATKMIN:              Min MATK of a unit.
+	UDT_MATKMAX:              Max MATK of a unit.
+	UDT_DEF:                  DEF.
+	UDT_MDEF:                 MDEF.
+	UDT_HIT:                  HIT.
+	UDT_FLEE:                 FLEE.
+	UDT_PDODGE:               Perfect Dodge.
+	UDT_CRIT:                 Critical Rate.
+	UDT_RACE:                 Race. (Eg. constants RC_DemiHuman or Integer 7).
+	UDT_ELETYPE:              Element. (Eg. constants Ele_Neutral or Integer 0).
+	UDT_ELELEVEL:             Element Level.
+	UDT_AMOTION:              AMotion Rate.
+	UDT_ADELAY:               ADelay Rate.
+	UDT_DMOTION:              DMotion Rate.
+	UDT_HUNGER:               Hunger Rate - for summons.
+	UDT_INTIMACY:             Intimacy Rate - for summons.
+	UDT_LIFETIME:             LifeTime - for summons.
+	UDT_MERC_KILLCOUNT:       Kill count for mercenaries.
+	UDT_GROUP:                group id
+	UDT_DAMAGE_TAKEN_RATE:    damage taken rate of a unit.
 
 returns -1 if value could not be retrieved.
 

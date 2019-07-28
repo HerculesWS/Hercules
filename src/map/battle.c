@@ -6321,6 +6321,18 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	if (sd && sd->state.arrow_atk) //Consume arrow.
 		battle->consume_ammo(sd, 0, 0);
 
+	if (target->type == BL_MOB) {
+		struct mob_data *md = BL_CAST(BL_MOB, target);
+		if (md != NULL) {
+			if (md->db->dmg_taken_rate != 100) {
+				if (wd.damage > 0)
+					wd.damage = apply_percentrate64(wd.damage, md->db->dmg_taken_rate, 100);
+				if (wd.damage2 > 0)
+					wd.damage2 = apply_percentrate64(wd.damage2, md->db->dmg_taken_rate, 100);
+			}
+		}
+	}
+
 	damage = wd.damage + wd.damage2;
 	if( damage > 0 && src != target ) {
 		if( sc && sc->data[SC_DUPLELIGHT] && (wd.flag&BF_SHORT) && rnd()%100 <= 10+2*sc->data[SC_DUPLELIGHT]->val1 ){
