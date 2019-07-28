@@ -488,6 +488,7 @@ struct mob_interface {
 	int (*init) (bool mimimal);
 	int (*final) (void);
 	void (*reload) (void);
+	int (*reload_sub_mob) (struct mob_data *md, va_list args);
 	/* */
 	struct mob_db* (*db) (int index);
 	struct mob_chat* (*chat) (short id);
