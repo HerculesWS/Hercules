@@ -2268,7 +2268,7 @@ static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, int id, 
 	return 1;
 }
 
-static int pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short flag, const char *other_script, unsigned short pos, bool onskill)
+static int pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short flag, const char *other_script, unsigned int pos, bool onskill)
 {
 	int i;
 
