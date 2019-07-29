@@ -2999,18 +2999,20 @@ of equipment slots see getequipid().
 
 ---------------------------------------
 
-*getequiprefinerycnt(<equipment slot>)
+*getequiprefinerycnt(<equipment slot>{, <equipment slot>{, <equipment slot>}})
 
-Returns the current number of pluses for the item in the specified
-equipment slot. For a list of equipment slots see 'getequipid'.
+Returns the total of refine of item equipped in the equipment slots.
+For a list of equipment slots, see 'getequipid'.
 
-Can be used to check if you have reached a maximum refine value, default
-for this is +10:
-
-	if (getequiprefinerycnt(EQI_HEAD_TOP) < 10)
-		mes("I will now upgrade your "+getequipname(EQI_HEAD_TOP));
-	else
-		mes("Sorry, it's not possible to refine hats better than +10");
+For example:
+	if (getequiprefinerycnt(EQI_HEAD_TOP) > 10) {
+		mes("You equipped a headgear (top) with above 10 refine.");
+	}
+	
+For example:
+	if (getequiprefinerycnt(EQI_ARMOR, EQI_SHOES) > 20) {
+		mes("Total refine of Armor and Shoes exceed 20.");
+	}
 
 ---------------------------------------
 
