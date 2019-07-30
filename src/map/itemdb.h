@@ -139,7 +139,6 @@ enum item_itemid {
 	ITEMID_COATING_BOTTLE        = 7139,
 	ITEMID_FRAGMENT_OF_CRYSTAL   = 7321,
 	ITEMID_SKULL_                = 7420,
-	ITEMID_TOKEN_OF_SIEGFRIED    = 7621,
 	ITEMID_SPECIAL_ALLOY_TRAP    = 7940,
 	ITEMID_CATNIP_FRUIT          = 11602,
 	ITEMID_RED_POUCH_OF_SURPRISE = 12024,
@@ -359,6 +358,7 @@ enum geneticist_item_list {
 //
 enum e_chain_cache {
 	ECC_ORE,
+	ECC_SIEGFRIED,
 	/* */
 	ECC_MAX,
 };
