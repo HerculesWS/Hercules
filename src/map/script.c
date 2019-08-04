@@ -14586,6 +14586,82 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_TRADE:
 		script_pushint(st, it->flag.trade_restriction);
 		break;
+	case ITEMINFO_ELV_MAX:
+		script_pushint(st, it->elvmax);
+		break;
+	case ITEMINFO_DROPEFFECT_MODE:
+		script_pushint(st, it->dropeffectmode);
+		break;
+	case ITEMINFO_DELAY:
+		script_pushint(st, it->delay);
+		break;
+	case ITEMINFO_CLASS_BASE_1:
+		script_pushint(st, it->class_base[0]);
+		break;
+	case ITEMINFO_CLASS_BASE_2:
+		script_pushint(st, it->class_base[1]);
+		break;
+	case ITEMINFO_CLASS_BASE_3:
+		script_pushint(st, it->class_base[2]);
+		break;
+	case ITEMINFO_CLASS_UPPER:
+		script_pushint(st, it->class_upper);
+		break;
+	case ITEMINFO_FLAG_NO_REFINE:
+		script_pushint(st, it->flag.no_refine);
+		break;
+	case ITEMINFO_FLAG_DELAY_CONSUME:
+		script_pushint(st, it->flag.delay_consume);
+		break;
+	case ITEMINFO_FLAG_AUTOEQUIP:
+		script_pushint(st, it->flag.autoequip);
+		break;
+	case ITEMINFO_FLAG_AUTO_FAVORITE:
+		script_pushint(st, it->flag.auto_favorite);
+		break;
+	case ITEMINFO_FLAG_BUYINGSTORE:
+		script_pushint(st, it->flag.buyingstore);
+		break;
+	case ITEMINFO_FLAG_BINDONEQUIP:
+		script_pushint(st, it->flag.bindonequip);
+		break;
+	case ITEMINFO_FLAG_KEEPAFTERUSE:
+		script_pushint(st, it->flag.keepafteruse);
+		break;
+	case ITEMINFO_FLAG_FORCE_SERIAL:
+		script_pushint(st, it->flag.force_serial);
+		break;
+	case ITEMINFO_FLAG_NO_OPTIONS:
+		script_pushint(st, it->flag.no_options);
+		break;
+	case ITEMINFO_FLAG_DROP_ANNOUNCE:
+		script_pushint(st, it->flag.drop_announce);
+		break;
+	case ITEMINFO_FLAG_SHOWDROPEFFECT:
+		script_pushint(st, it->flag.showdropeffect);
+		break;
+	case ITEMINFO_STACK_AMOUNT:
+		script_pushint(st, it->stack.amount);
+		break;
+	case ITEMINFO_STACK_FLAG:
+		{
+			int stack_flag = 0;
+			if (it->stack.inventory != 0) stack_flag |= 1;
+			if (it->stack.cart != 0) stack_flag |= 2;
+			if (it->stack.storage != 0) stack_flag |= 4;
+			if (it->stack.guildstorage != 0) stack_flag |= 8;
+			script_pushint(st, stack_flag);
+		}
+		break;
+	case ITEMINFO_ITEM_USAGE_FLAG:
+		script_pushint(st, it->item_usage.flag);
+		break;
+	case ITEMINFO_ITEM_USAGE_OVERRIDE:
+		script_pushint(st, it->item_usage.override);
+		break;
+	case ITEMINFO_GM_LV_TRADE_OVERRIDE:
+		script_pushint(st, it->gm_lv_trade_override);
+		break;
 	default:
 		ShowError("buildin_getiteminfo: Invalid item type %d.\n", n);
 		script_pushint(st,-1);
@@ -14854,6 +14930,78 @@ static BUILDIN(setiteminfo)
 		break;
 	case ITEMINFO_TRADE:
 		it->flag.trade_restriction = value;
+		break;
+	case ITEMINFO_ELV_MAX:
+		it->elvmax = cap_value(value, 0, MAX_LEVEL);
+		break;
+	case ITEMINFO_DROPEFFECT_MODE:
+		it->dropeffectmode = value;
+		break;
+	case ITEMINFO_DELAY:
+		it->delay = value;
+		break;
+	case ITEMINFO_CLASS_BASE_1:
+		it->class_base[0] = value;
+		break;
+	case ITEMINFO_CLASS_BASE_2:
+		it->class_base[1] = value;
+		break;
+	case ITEMINFO_CLASS_BASE_3:
+		it->class_base[2] = value;
+		break;
+	case ITEMINFO_CLASS_UPPER:
+		it->class_upper = value;
+		break;
+	case ITEMINFO_FLAG_NO_REFINE:
+		it->flag.no_refine = cap_value(value, 0, MAX_REFINE);
+		break;
+	case ITEMINFO_FLAG_DELAY_CONSUME:
+		it->flag.delay_consume = value;
+		break;
+	case ITEMINFO_FLAG_AUTOEQUIP:
+		it->flag.autoequip = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_AUTO_FAVORITE:
+		it->flag.auto_favorite = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_BUYINGSTORE:
+		it->flag.buyingstore = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_BINDONEQUIP:
+		it->flag.bindonequip = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_KEEPAFTERUSE:
+		it->flag.keepafteruse = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_FORCE_SERIAL:
+		it->flag.force_serial = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_NO_OPTIONS:
+		it->flag.no_options = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_DROP_ANNOUNCE:
+		it->flag.drop_announce = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_FLAG_SHOWDROPEFFECT:
+		it->flag.showdropeffect = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_STACK_AMOUNT:
+		it->stack.amount = cap_value(value, 0, USHRT_MAX);
+		break;
+	case ITEMINFO_STACK_FLAG:
+		it->stack.inventory = ((value & 1) != 0);
+		it->stack.cart = ((value & 2) != 0);
+		it->stack.storage = ((value & 4) != 0);
+		it->stack.guildstorage = ((value & 8) != 0);
+		break;
+	case ITEMINFO_ITEM_USAGE_FLAG:
+		it->item_usage.flag = cap_value(value, 0, 1);
+		break;
+	case ITEMINFO_ITEM_USAGE_OVERRIDE:
+		it->item_usage.override = value;
+		break;
+	case ITEMINFO_GM_LV_TRADE_OVERRIDE:
+		it->gm_lv_trade_override = value;
 		break;
 	default:
 		ShowError("buildin_setiteminfo: invalid type %d.\n", n);
@@ -26692,6 +26840,29 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_MATK", ITEMINFO_MATK, false, false);
 	script->set_constant("ITEMINFO_VIEWSPRITE", ITEMINFO_VIEWSPRITE, false, false);
 	script->set_constant("ITEMINFO_TRADE", ITEMINFO_TRADE, false, false);
+	script->set_constant("ITEMINFO_ELV_MAX", ITEMINFO_ELV_MAX, false, false);
+	script->set_constant("ITEMINFO_DROPEFFECT_MODE", ITEMINFO_DROPEFFECT_MODE, false, false);
+	script->set_constant("ITEMINFO_DELAY", ITEMINFO_DELAY, false, false);
+	script->set_constant("ITEMINFO_CLASS_BASE_1", ITEMINFO_CLASS_BASE_1, false, false);
+	script->set_constant("ITEMINFO_CLASS_BASE_2", ITEMINFO_CLASS_BASE_2, false, false);
+	script->set_constant("ITEMINFO_CLASS_BASE_3", ITEMINFO_CLASS_BASE_3, false, false);
+	script->set_constant("ITEMINFO_CLASS_UPPER", ITEMINFO_CLASS_UPPER, false, false);
+	script->set_constant("ITEMINFO_FLAG_NO_REFINE", ITEMINFO_FLAG_NO_REFINE, false, false);
+	script->set_constant("ITEMINFO_FLAG_DELAY_CONSUME", ITEMINFO_FLAG_DELAY_CONSUME, false, false);
+	script->set_constant("ITEMINFO_FLAG_AUTOEQUIP", ITEMINFO_FLAG_AUTOEQUIP, false, false);
+	script->set_constant("ITEMINFO_FLAG_AUTO_FAVORITE", ITEMINFO_FLAG_AUTO_FAVORITE, false, false);
+	script->set_constant("ITEMINFO_FLAG_BUYINGSTORE", ITEMINFO_FLAG_BUYINGSTORE, false, false);
+	script->set_constant("ITEMINFO_FLAG_BINDONEQUIP", ITEMINFO_FLAG_BINDONEQUIP, false, false);
+	script->set_constant("ITEMINFO_FLAG_KEEPAFTERUSE", ITEMINFO_FLAG_KEEPAFTERUSE, false, false);
+	script->set_constant("ITEMINFO_FLAG_FORCE_SERIAL", ITEMINFO_FLAG_FORCE_SERIAL, false, false);
+	script->set_constant("ITEMINFO_FLAG_NO_OPTIONS", ITEMINFO_FLAG_NO_OPTIONS, false, false);
+	script->set_constant("ITEMINFO_FLAG_DROP_ANNOUNCE", ITEMINFO_FLAG_DROP_ANNOUNCE, false, false);
+	script->set_constant("ITEMINFO_FLAG_SHOWDROPEFFECT", ITEMINFO_FLAG_SHOWDROPEFFECT, false, false);
+	script->set_constant("ITEMINFO_STACK_AMOUNT", ITEMINFO_STACK_AMOUNT, false, false);
+	script->set_constant("ITEMINFO_STACK_FLAG", ITEMINFO_STACK_FLAG, false, false);
+	script->set_constant("ITEMINFO_ITEM_USAGE_FLAG", ITEMINFO_ITEM_USAGE_FLAG, false, false);
+	script->set_constant("ITEMINFO_ITEM_USAGE_OVERRIDE", ITEMINFO_ITEM_USAGE_OVERRIDE, false, false);
+	script->set_constant("ITEMINFO_GM_LV_TRADE_OVERRIDE", ITEMINFO_GM_LV_TRADE_OVERRIDE, false, false);
 
 	script->constdb_comment("getmercinfo options");
 	script->set_constant("MERCINFO_ID,", MERCINFO_ID, false, false);

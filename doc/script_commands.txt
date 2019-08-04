@@ -3276,26 +3276,49 @@ It will return -1 if there is no such item.
 
 Valid types are:
 
-	ITEMINFO_BUYPRICE   - Buy Price
-	ITEMINFO_SELLPRICE  - Sell Price
-	ITEMINFO_TYPE       - Item Type
-	ITEMINFO_MAXCHANCE  - Max drop chance of this item e.g. 1 = 0.01% , etc..
-		if = 0, then monsters don't drop it at all (rare or a quest item)
-		if = 10000, then this item is sold in NPC shops only
-	ITEMINFO_SEX        - Sex
-	ITEMINFO_LOC        - Equip location
-	ITEMINFO_WEIGHT     - Weight (note: 1/10 of unit)
-	ITEMINFO_ATK        - Attack
-	ITEMINFO_DEF        - Defense
-	ITEMINFO_RANGE      - Range
-	ITEMINFO_SLOTS      - Slots
-	ITEMINFO_SUBTYPE    - Item subtype
-	ITEMINFO_ELV        - Equip min. level
-	ITEMINFO_WLV        - Weapon level
-	ITEMINFO_VIEWID     - View ID ("Sprite" field in the Item DB)
-	ITEMINFO_MATK       - MATK (only relevant if RENEWAL is set)
-	ITEMINFO_VIEWSPRITE - View Sprite ("ViewSprite" field in the Item DB)
-	ITEMINFO_TRADE      - Trade Restriction (see "doc/constant.md": item trade restriction)
+	ITEMINFO_BUYPRICE                - Buy Price
+	ITEMINFO_SELLPRICE               - Sell Price
+	ITEMINFO_TYPE                    - Item Type
+	ITEMINFO_MAXCHANCE               - Max drop chance of this item e.g. 1 = 0.01% , etc..
+		                               if = 0, then monsters don't drop it at all (rare or a quest item)
+		                               if = 10000, then this item is sold in NPC shops only
+	ITEMINFO_SEX                     - Sex
+	ITEMINFO_LOC                     - Equip location
+	ITEMINFO_WEIGHT                  - Weight (note: 1/10 of unit)
+	ITEMINFO_ATK                     - Attack
+	ITEMINFO_DEF                     - Defense
+	ITEMINFO_RANGE                   - Range
+	ITEMINFO_SLOTS                   - Slots
+	ITEMINFO_SUBTYPE                 - Item subtype
+	ITEMINFO_ELV                     - Equip min. level
+	ITEMINFO_ELV_MAX                 - Equip max. level
+	ITEMINFO_WLV                     - Weapon level
+	ITEMINFO_VIEWID                  - View ID ("Sprite" field in the Item DB)
+	ITEMINFO_MATK                    - MATK (only relevant if RENEWAL is set)
+	ITEMINFO_VIEWSPRITE              - View Sprite ("ViewSprite" field in the Item DB)
+	ITEMINFO_TRADE                   - Trade Restriction (see "doc/constant.md": item trade restriction)
+	ITEMINFO_DELAY                   - Delay
+	ITEMINFO_DROPEFFECT_MODE         - Drop effect mode
+	ITEMINFO_CLASS_BASE_1            - Class base 1
+	ITEMINFO_CLASS_BASE_2            - Class base 2
+	ITEMINFO_CLASS_BASE_3            - Class base 3
+	ITEMINFO_CLASS_UPPER             - Class Upper
+	ITEMINFO_FLAG_NO_REFINE          - No refine flag
+	ITEMINFO_FLAG_DELAY_CONSUME      - Delay consume flag
+	ITEMINFO_FLAG_AUTOEQUIP          - Auto equip flag
+	ITEMINFO_FLAG_AUTO_FAVORITE      - Auto favorite flag
+	ITEMINFO_FLAG_BUYINGSTORE        - Buying store flag
+	ITEMINFO_FLAG_BINDONEQUIP        - Bind on equip flag
+	ITEMINFO_FLAG_KEEPAFTERUSE       - Keep after use flag
+	ITEMINFO_FLAG_FORCE_SERIAL       - Force serial flag
+	ITEMINFO_FLAG_NO_OPTIONS         - No random item options flag
+	ITEMINFO_FLAG_DROP_ANNOUNCE      - Drop announce flag
+	ITEMINFO_FLAG_SHOWDROPEFFECT     - Shopw drop effect flag
+	ITEMINFO_STACK_AMOUNT            - Stack amount
+	ITEMINFO_STACK_FLAG              - Stack amount flag (1: inventory, 2:cart, 4:storage: 8:guildstorage)
+	ITEMINFO_ITEM_USAGE_FLAG         - Item usage flag
+	ITEMINFO_ITEM_USAGE_OVERRIDE     - Item usage override
+	ITEMINFO_GM_LV_TRADE_OVERRIDE    - Min. GM level override trade restriction 
 
 Check sample in doc/sample/getiteminfo.txt
 
