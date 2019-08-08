@@ -3533,6 +3533,32 @@ struct PACKET_ZC_HAT_EFFECT {
 DEFINE_PACKET_HEADER(ZC_HAT_EFFECT, 0x0a3b);
 #endif
 
+#if PACKETVER_RE_NUM >= 20190807
+struct PACKET_ZC_ADD_SKILL {
+	int16 packetType;
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	uint8 upFlag;
+	uint16 level2;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0b31);
+#else
+struct PACKET_ZC_ADD_SKILL {
+	int16 packetType;
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	char name[NAME_LENGTH];
+	uint8 upFlag;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0111);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

@@ -5314,36 +5314,41 @@ static void clif_skillinfoblock(struct map_session_data *sd)
 /// 0111 <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <skill name>.24B <upgradable>.B
 static void clif_addskill(struct map_session_data *sd, int id)
 {
-	int fd, skill_lv, idx = skill->get_index(id);
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	if (!fd) return;
+	int fd = sd->fd;
+	if (!fd)
+		return;
 
+	int idx = skill->get_index(id);
 	if (sd->status.skill[idx].id <= 0)
 		return;
 
-	skill_lv = sd->status.skill[idx].lv;
+	int skill_lv = sd->status.skill[idx].lv;
 
-	WFIFOHEAD(fd, packet_len(0x111));
-	WFIFOW(fd,0) = 0x111;
-	WFIFOW(fd,2) = id;
-	WFIFOL(fd,4) = skill->get_inf(id);
-	WFIFOW(fd,8) = skill_lv;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_SKILL));
+	struct PACKET_ZC_ADD_SKILL *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ADD_SKILL;
+	p->id = id;
+	p->inf = skill->get_inf(id);
+	p->level = skill_lv;
 	if (skill_lv > 0) {
-		WFIFOW(fd,10) = skill->get_sp(id, skill_lv);
-		WFIFOW(fd,12) = skill->get_range2(&sd->bl, id, skill_lv);
+		p->sp = skill->get_sp(id, skill_lv);
+		p->range2 = skill->get_range2(&sd->bl, id, skill_lv);
 	} else {
-		WFIFOW(fd,10) = 0;
-		WFIFOW(fd,12) = 0;
+		p->sp = 0;
+		p->range2 = 0;
 	}
-	safestrncpy(WFIFOP(fd,14), skill->get_name(id), NAME_LENGTH);
+#if PACKETVER_RE_NUM >= 20190807
+	p->level2 = 0;
+#else
+	safestrncpy(p->name, skill->get_name(id), NAME_LENGTH);
+#endif
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-		WFIFOB(fd,38) = (skill_lv < skill->tree_get_max(id, sd->status.class))? 1:0;
+		p->upFlag = (skill_lv < skill->tree_get_max(id, sd->status.class)) ? 1 : 0;
 	else
-		WFIFOB(fd,38) = 0;
-	WFIFOSET(fd,packet_len(0x111));
+		p->upFlag = 0;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_SKILL));
 }
 
 /// Deletes a skill from the skill tree (ZC_SKILLINFO_DELETE).
