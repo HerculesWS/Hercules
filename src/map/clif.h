@@ -57,6 +57,7 @@ struct view_data;
 struct achievement_data; // map/achievement.h
 struct s_refine_requirement;
 struct PACKET_ZC_ACK_RANKING_sub;
+struct SKILLDATA;
 
 enum clif_messages;
 enum rodex_add_item;
@@ -1068,6 +1069,7 @@ struct clif_interface {
 	void (*skillinfo) (struct map_session_data *sd,int skill_id, int inf);
 	void (*addskill) (struct map_session_data *sd, int id);
 	void (*deleteskill) (struct map_session_data *sd, int id);
+	void (*playerSkillToPacket) (struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill);
 	/* party-specific */
 	void (*party_created) (struct map_session_data *sd,int result);
 	void (*party_member_info) (struct party_data *p, struct map_session_data *sd);

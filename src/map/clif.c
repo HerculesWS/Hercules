@@ -5254,58 +5254,79 @@ static int clif_insight(struct block_list *bl, va_list ap)
 	return 0;
 }
 
+static void clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill)
+{
+	nullpo_retv(sd);
+	nullpo_retv(skillData);
+	Assert_retv(idx >= 0 && idx < MAX_SKILL_DB);
+
+	int skill_lv = sd->status.skill[idx].lv;
+	skillData->id = skillId;
+	skillData->inf = skill->get_inf(skillId);
+	skillData->level = skill_lv;
+	if (skill_lv > 0) {
+		skillData->sp = skill->get_sp(skillId, skill_lv);
+		skillData->range2 = skill->get_range2(&sd->bl, skillId, skill_lv);
+	} else {
+		skillData->sp = 0;
+		skillData->range2 = 0;
+	}
+#if PACKETVER_RE_NUM >= 20190807
+	if (newSkill)
+		skillData->level2 = 0;
+	else
+		skillData->level2 = skill_lv;
+#else
+	safestrncpy(skillData->name, skill->get_name(skillId), NAME_LENGTH);
+#endif
+	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
+		skillData->upFlag = (skill_lv < skill->tree_get_max(skillId, sd->status.class)) ? 1 : 0;
+	else
+		skillData->upFlag = 0;
+}
+
 /// Updates whole skill tree (ZC_SKILLINFO_LIST).
 /// 010f <packet len>.W { <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <skill name>.24B <upgradable>.B }*
 static void clif_skillinfoblock(struct map_session_data *sd)
 {
-	int fd;
-	int i,len,id;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	if (!fd) return;
+	int fd = sd->fd;
+	if (!fd)
+		return;
 
-	WFIFOHEAD(fd, MAX_SKILL_DB * 37 + 4);
-	WFIFOW(fd,0) = 0x10f;
-	for ( i = 0, len = 4; i < MAX_SKILL_DB; i++) {
-		if( (id = sd->status.skill[i].id) != 0 ) {
-			int level;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SKILLINFO_LIST) + MAX_SKILL_DB * sizeof(struct SKILLDATA));
+	struct PACKET_ZC_SKILLINFO_LIST *p = WFIFOP(fd, 0);
+
+	p->packetType = HEADER_ZC_SKILLINFO_LIST;
+	int skillIndex = 0;
+	int len = sizeof(struct PACKET_ZC_SKILLINFO_LIST);
+	int i;
+	for (i = 0; i < MAX_SKILL_DB; i++) {
+		int id = sd->status.skill[i].id;
+		if (id != 0) {
 			// workaround for bugreport:5348
-			if (len + 37 > 8192)
+			if (len + sizeof(struct SKILLDATA) > 8192)
 				break;
 
-			WFIFOW(fd, len)   = id;
-			WFIFOL(fd, len + 2) = skill->get_inf(id);
-			level = sd->status.skill[i].lv;
-			WFIFOW(fd, len + 6) = level;
-			if (level) {
-				WFIFOW(fd, len + 8) = skill->get_sp(id, level);
-				WFIFOW(fd, len + 10)= skill->get_range2(&sd->bl, id, level);
-			}
-			else {
-				WFIFOW(fd, len + 8) = 0;
-				WFIFOW(fd, len + 10)= 0;
-			}
-			safestrncpy(WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
-			if(sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
-				WFIFOB(fd,len+36) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class))? 1:0;
-			else
-				WFIFOB(fd,len+36) = 0;
-			len += 37;
+			clif->playerSkillToPacket(sd, &p->skills[skillIndex], id, i, false);
+			len += sizeof(struct SKILLDATA);
+			skillIndex++;
 		}
 	}
-	WFIFOW(fd,2)=len;
-	WFIFOSET(fd,len);
+	p->packetLength = len;
+	WFIFOSET(fd, len);
 
 	// workaround for bugreport:5348; send the remaining skills one by one to bypass packet size limit
-	for ( ; i < MAX_SKILL_DB; i++) {
-		if( (id = sd->status.skill[i].id) != 0 ) {
+	for (; i < MAX_SKILL_DB; i++) {
+		int id = sd->status.skill[i].id;
+		if (id != 0) {
 			clif->addskill(sd, id);
 			clif->skillinfo(sd, id, 0);
 		}
 	}
 }
+
 /**
  * Server tells client 'sd' to add skill of id 'id' to it's skill tree (e.g. with Ice Falcion item)
  **/
@@ -5324,30 +5345,10 @@ static void clif_addskill(struct map_session_data *sd, int id)
 	if (sd->status.skill[idx].id <= 0)
 		return;
 
-	int skill_lv = sd->status.skill[idx].lv;
-
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_SKILL));
 	struct PACKET_ZC_ADD_SKILL *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_ADD_SKILL;
-	p->id = id;
-	p->inf = skill->get_inf(id);
-	p->level = skill_lv;
-	if (skill_lv > 0) {
-		p->sp = skill->get_sp(id, skill_lv);
-		p->range2 = skill->get_range2(&sd->bl, id, skill_lv);
-	} else {
-		p->sp = 0;
-		p->range2 = 0;
-	}
-#if PACKETVER_RE_NUM >= 20190807
-	p->level2 = 0;
-#else
-	safestrncpy(p->name, skill->get_name(id), NAME_LENGTH);
-#endif
-	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-		p->upFlag = (skill_lv < skill->tree_get_max(id, sd->status.class)) ? 1 : 0;
-	else
-		p->upFlag = 0;
+	clif->playerSkillToPacket(sd, &p->skill, id, idx, true);
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_SKILL));
 }
 
@@ -23383,6 +23384,7 @@ void clif_defaults(void)
 	clif->skillinfo = clif_skillinfo;
 	clif->addskill = clif_addskill;
 	clif->deleteskill = clif_deleteskill;
+	clif->playerSkillToPacket = clif_playerSkillToPacket;
 	/* party-specific */
 	clif->party_created = clif_party_created;
 	clif->party_member_info = clif_party_member_info;

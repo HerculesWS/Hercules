@@ -3533,9 +3533,9 @@ struct PACKET_ZC_HAT_EFFECT {
 DEFINE_PACKET_HEADER(ZC_HAT_EFFECT, 0x0a3b);
 #endif
 
+// [4144] this struct updated not in all packets in client
 #if PACKETVER_RE_NUM >= 20190807
-struct PACKET_ZC_ADD_SKILL {
-	int16 packetType;
+struct SKILLDATA {
 	uint16 id;
 	int inf;
 	uint16 level;
@@ -3544,10 +3544,8 @@ struct PACKET_ZC_ADD_SKILL {
 	uint8 upFlag;
 	uint16 level2;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0b31);
 #else
-struct PACKET_ZC_ADD_SKILL {
-	int16 packetType;
+struct SKILLDATA {
 	uint16 id;
 	int inf;
 	uint16 level;
@@ -3556,7 +3554,31 @@ struct PACKET_ZC_ADD_SKILL {
 	char name[NAME_LENGTH];
 	uint8 upFlag;
 } __attribute__((packed));
+#endif
+
+#if PACKETVER_RE_NUM >= 20190807
+struct PACKET_ZC_ADD_SKILL {
+	int16 packetType;
+	struct SKILLDATA skill;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0b31);
+#else
+struct PACKET_ZC_ADD_SKILL {
+	int16 packetType;
+	struct SKILLDATA skill;
+} __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0111);
+#endif
+
+struct PACKET_ZC_SKILLINFO_LIST {
+	int16 packetType;
+	int16 packetLength;
+	struct SKILLDATA skills[];
+} __attribute__((packed));
+#if PACKETVER_RE_NUM >= 20190807
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x0b32);
+#else
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x010f);
 #endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
