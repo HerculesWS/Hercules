@@ -5402,32 +5402,34 @@ static void clif_skillup(struct map_session_data *sd, uint16 skill_id, int skill
 /// 07e1 <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <upgradable>.B
 static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 {
+	nullpo_retv(sd);
+
 	const int fd = sd->fd;
 	int idx = skill->get_index(skill_id);
-	int skill_lv;
-
-	nullpo_retv(sd);
 	Assert_retv(idx >= 0 && idx < MAX_SKILL_DB);
 
-	skill_lv = sd->status.skill[idx].lv;
-
-	WFIFOHEAD(fd,packet_len(0x7e1));
-	WFIFOW(fd,0) = 0x7e1;
-	WFIFOW(fd,2) = skill_id;
-	WFIFOL(fd,4) = inf?inf:skill->get_inf(skill_id);
-	WFIFOW(fd,8) = skill_lv;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SKILLINFO_UPDATE2));
+	struct PACKET_ZC_SKILLINFO_UPDATE2 *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_SKILLINFO_UPDATE2;
+	int skill_lv = sd->status.skill[idx].lv;
+	p->id = skill_id;
+	p->inf = skill->get_inf(skill_id);
+	p->level = skill_lv;
 	if (skill_lv > 0) {
-		WFIFOW(fd,10) = skill->get_sp(skill_id, skill_lv);
-		WFIFOW(fd,12) = skill->get_range2(&sd->bl, skill_id, skill_lv);
+		p->sp = skill->get_sp(skill_id, skill_lv);
+		p->range2 = skill->get_range2(&sd->bl, skill_id, skill_lv);
 	} else {
-		WFIFOW(fd,10) = 0;
-		WFIFOW(fd,12) = 0;
+		p->sp = 0;
+		p->range2 = 0;
 	}
+#if PACKETVER_RE_NUM >= 20190807
+	p->level2 = skill_lv;
+#endif
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-		WFIFOB(fd,14) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class))? 1:0;
+		p->upFlag = (skill_lv < skill->tree_get_max(skill_id, sd->status.class)) ? 1 : 0;
 	else
-		WFIFOB(fd,14) = 0;
-	WFIFOSET(fd,packet_len(0x7e1));
+		p->upFlag = 0;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SKILLINFO_UPDATE2));
 }
 
 /// Notifies clients in area, that an object is about to use a skill.
