@@ -675,6 +675,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->skillinfo, HP_clif_skillinfo) },
 	{ HP_POP(clif->addskill, HP_clif_addskill) },
 	{ HP_POP(clif->deleteskill, HP_clif_deleteskill) },
+	{ HP_POP(clif->playerSkillToPacket, HP_clif_playerSkillToPacket) },
 	{ HP_POP(clif->party_created, HP_clif_party_created) },
 	{ HP_POP(clif->party_member_info, HP_clif_party_member_info) },
 	{ HP_POP(clif->party_info, HP_clif_party_info) },
