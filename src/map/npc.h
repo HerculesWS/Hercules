@@ -34,6 +34,8 @@ struct hplugin_data_store;
 struct itemlist; // map/itemdb.h
 struct view_data;
 
+enum market_buy_result;
+
 enum npc_parse_options {
 	NPO_NONE  = 0x0,
 	NPO_ONINIT  = 0x1,
@@ -310,7 +312,7 @@ struct npc_interface {
 	void (*trader_count_funds) (struct npc_data *nd, struct map_session_data *sd);
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
-	int (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	enum market_buy_result (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
 	int (*barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);

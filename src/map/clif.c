@@ -92,9 +92,6 @@ static struct packet_itemlist_equip itemlist_equip;
 static struct ZC_STORE_ITEMLIST_NORMAL storelist_normal;
 static struct ZC_STORE_ITEMLIST_EQUIP storelist_equip;
 static struct packet_viewequip_ack viewequip_list;
-#if PACKETVER >= 20131223
-static struct packet_npc_market_result_ack npcmarket_result;
-#endif
 // temporart buffer for send big packets
 char packet_buf[0xffff];
 //#define DUMP_UNKNOWN_PACKET
@@ -20337,40 +20334,43 @@ static void clif_parse_NPCBarterClosed(int fd, struct map_session_data *sd)
 	sd->npc_shopid = 0;
 }
 
-static void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, unsigned char response)
+static void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, enum market_buy_result response)
 {
-#if PACKETVER >= 20131223
-	unsigned short c = 0;
-
+#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20130911 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 	nullpo_retv(item_list);
-	npcmarket_result.PacketType = npcmarketresultackType;
-	npcmarket_result.result = response == 0 ? 1 : 0;/* find other values */
+	struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT *p = (struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT *)packet_buf;
+	p->PacketType = HEADER_ZC_NPC_MARKET_PURCHASE_RESULT;
+	p->result = response;
 
-	if (npcmarket_result.result) {
+	unsigned short c = 0;
+	if (response == MARKET_BUY_RESULT_SUCCESS) {
+		int vectorLen = VECTOR_LENGTH(*item_list);
+		int maxCount = (sizeof(packet_buf) - sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT)) / sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub);
+		if (maxCount > vectorLen)
+			maxCount = vectorLen;
 		struct npc_data *nd = map->id2nd(sd->npc_shopid);
 		struct npc_item_list *shop = nd->u.scr.shop->item;
 		unsigned short shop_size = nd->u.scr.shop->items;
-		int i;
 
-		for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		for (int i = 0; i < maxCount; i++) {
 			const struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 			int j;
 
-			npcmarket_result.list[i].ITID = entry->id;
-			npcmarket_result.list[i].qty  = entry->amount;
+			p->list[i].ITID = entry->id;
+			p->list[i].qty  = entry->amount;
 
-			ARR_FIND( 0, shop_size, j, entry->id == shop[j].nameid);
+			ARR_FIND(0, shop_size, j, entry->id == shop[j].nameid);
 
-			npcmarket_result.list[i].price = (j != shop_size) ? shop[j].value : 0;
+			p->list[i].price = (j != shop_size) ? shop[j].value : 0;
 
 			c++;
 		}
 	}
 
-	npcmarket_result.PacketLength = 5 + ( sizeof(npcmarket_result.list[0]) * c );;
+	p->PacketLength = sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT) + (sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub) * c);
 
-	clif->send(&npcmarket_result,npcmarket_result.PacketLength,&sd->bl,SELF);
+	clif->send(p, p->PacketLength, &sd->bl, SELF);
 #endif
 }
 
@@ -20379,7 +20379,6 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20131223
 	const struct packet_npc_market_purchase *p = RP2PTR(fd);
-	int response = 0, i;
 	int count = (p->PacketLength - 4) / sizeof p->list[0];
 	struct itemlist item_list;
 
@@ -20388,7 +20387,7 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	VECTOR_INIT(item_list);
 	VECTOR_ENSURE(item_list, count, 1);
 
-	for (i = 0; i < count; i++) {
+	for (int i = 0; i < count; i++) {
 		struct itemlist_entry entry = { 0 };
 
 		entry.id = p->list[i].ITID;
@@ -20397,7 +20396,7 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 		VECTOR_PUSH(item_list, entry);
 	}
 
-	response = npc->market_buylist(sd, &item_list);
+	enum market_buy_result response = npc->market_buylist(sd, &item_list);
 	clif->npc_market_purchase_ack(sd, &item_list, response);
 
 	VECTOR_CLEAR(item_list);
