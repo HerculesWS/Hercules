@@ -1954,4 +1954,9 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
+	packet(0x0b28,clif->pGuildCastleTeleportRequest);
+	packet(0x0b2c,clif->pGuildCastleInfoRequest);
+#endif
+
 #endif /* MAP_PACKETS_H */

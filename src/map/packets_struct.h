@@ -3533,6 +3533,49 @@ struct PACKET_ZC_HAT_EFFECT {
 DEFINE_PACKET_HEADER(ZC_HAT_EFFECT, 0x0a3b);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717
+struct PACKET_ZC_GUILD_CASTLE_LIST {
+	int16 packetType;
+	int16 packetLength;
+	int8 castle_list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_CASTLE_LIST, 0x0b27);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
+struct PACKET_CZ_CASTLE_TELEPORT_REQUEST {
+	int16 packetType;
+	int8 castle_id;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CASTLE_TELEPORT_REQUEST, 0x0b28);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717
+struct PACKET_ZC_CASTLE_TELEPORT_RESPONSE {
+	int16 packetType;
+	int16 result;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CASTLE_TELEPORT_RESPONSE, 0x0b2e);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717
+struct PACKET_ZC_CASTLE_INFO {
+	int16 packetType;
+	int8 castle_id;
+	int32 economy;
+	int32 defense;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CASTLE_INFO, 0x0b2d);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
+struct PACKET_CZ_CASTLE_INFO_REQUEST {
+	int16 packetType;
+	int8 castle_id;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_CASTLE_INFO_REQUEST, 0x0b2c);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

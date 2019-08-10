@@ -169,7 +169,7 @@ static bool guild_read_castledb_libconfig(void)
 	}
 
 	libconfig->destroy(&castle_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(guild->castle_db), config_filename);
 	return true;
 }
 
@@ -217,7 +217,60 @@ static bool guild_read_castledb_libconfig_sub(struct config_setting_t *it, int i
 	}
 	safestrncpy(gc->castle_event, name, sizeof(gc->castle_event));
 
+	if (itemdb->lookup_const(it, "SeigeType", &i32) && (i32 >= SEIGE_TYPE_MAX || i32 < 0)) {
+		ShowWarning("guild_read_castledb_libconfig_sub: Invalid SeigeType in \"%s\", entry #%d, defaulting to SEIGE_TYPE_FE.\n", source, idx);
+		gc->seige_type = SEIGE_TYPE_FE;
+	} else {
+		gc->seige_type = i32;
+	}
+
+	libconfig->setting_lookup_bool_real(it, "EnableClientWarp", &gc->enable_client_warp);
+	if (gc->enable_client_warp == true) {
+		struct config_setting_t *wd = libconfig->setting_get_member(it, "ClientWarp");
+		guild->read_castledb_libconfig_sub_warp(wd, source, gc);
+	}
 	idb_put(guild->castle_db, gc->castle_id, gc);
+	return true;
+}
+
+static bool guild_read_castledb_libconfig_sub_warp(struct config_setting_t *wd, const char *source, struct guild_castle *gc)
+{
+	nullpo_retr(false, wd);
+	nullpo_retr(false, gc);
+	nullpo_retr(false, source);
+
+	int64 i64 = 0;
+	struct config_setting_t *it = libconfig->setting_get_member(wd, "Position");
+	if (config_setting_is_list(it)) {
+		int m = map->mapindex2mapid(gc->mapindex);
+
+		gc->client_warp.x = libconfig->setting_get_int_elem(it, 0);
+		gc->client_warp.y = libconfig->setting_get_int_elem(it, 1);
+		if (gc->client_warp.x < 0 || gc->client_warp.x >= map->list[m].xs || gc->client_warp.y < 0 || gc->client_warp.y >= map->list[m].ys) {
+			ShowWarning("guild_read_castledb_libconfig_sub_warp: Invalid Position in \"%s\", for castle (%d).\n", source, gc->castle_id);
+			return false;
+		}
+	} else {
+		ShowWarning("guild_read_castledb_libconfig_sub_warp: Invalid format for Position in \"%s\", for castle (%d).\n", source, gc->castle_id);
+		return false;
+	}
+
+	if (libconfig->setting_lookup_int64(wd, "ZenyCost", &i64)) {
+		if (i64 > MAX_ZENY) {
+			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCost is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
+			gc->client_warp.zeny = MAX_ZENY;
+		} else {
+			gc->client_warp.zeny = (int)i64;
+		}
+	}
+	if (libconfig->setting_lookup_int64(wd, "ZenyCostSeigeTime", &i64)) {
+		if (i64 > MAX_ZENY) {
+			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCostSeigeTime is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
+			gc->client_warp.zeny_seige = MAX_ZENY;
+		} else {
+			gc->client_warp.zeny_seige = (int)i64;
+		}
+	}
 	return true;
 }
 
@@ -2509,6 +2562,7 @@ void guild_defaults(void)
 	guild->read_guildskill_tree_db = guild_read_guildskill_tree_db;
 	guild->read_castledb_libconfig = guild_read_castledb_libconfig;
 	guild->read_castledb_libconfig_sub = guild_read_castledb_libconfig_sub;
+	guild->read_castledb_libconfig_sub_warp = guild_read_castledb_libconfig_sub_warp;
 	guild->payexp_timer_sub = guild_payexp_timer_sub;
 	guild->send_xy_timer_sub = guild_send_xy_timer_sub;
 	guild->send_xy_timer = guild_send_xy_timer;
