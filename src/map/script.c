@@ -26909,6 +26909,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("GUILD_ONLINE_VENDOR", GUILD_ONLINE_VENDOR, false, false);
 	script->set_constant("GUILD_ONLINE_NO_VENDOR", GUILD_ONLINE_NO_VENDOR, false, false);
 
+	script->constdb_comment("Seige Types");
+	script->set_constant("SEIGE_TYPE_FE", SEIGE_TYPE_FE, false, false);
+	script->set_constant("SEIGE_TYPE_SE", SEIGE_TYPE_SE, false, false);
+	script->set_constant("SEIGE_TYPE_TE", SEIGE_TYPE_TE, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

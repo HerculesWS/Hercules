@@ -519,6 +519,16 @@ enum pcblock_action_flag {
 };
 
 /**
+ * Types of Seige (WoE)
+ */
+enum seige_type {
+	SEIGE_TYPE_FE,
+	SEIGE_TYPE_SE,
+	SEIGE_TYPE_TE,
+	SEIGE_TYPE_MAX
+};
+
+/**
  * Structures
  **/
 
