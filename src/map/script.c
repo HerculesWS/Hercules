@@ -27078,6 +27078,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("GUILD_ONLINE_VENDOR", GUILD_ONLINE_VENDOR, false, false);
 	script->set_constant("GUILD_ONLINE_NO_VENDOR", GUILD_ONLINE_NO_VENDOR, false, false);
 
+	script->constdb_comment("Siege Types");
+	script->set_constant("SIEGE_TYPE_FE", SIEGE_TYPE_FE, false, false);
+	script->set_constant("SIEGE_TYPE_SE", SIEGE_TYPE_SE, false, false);
+	script->set_constant("SIEGE_TYPE_TE", SIEGE_TYPE_TE, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

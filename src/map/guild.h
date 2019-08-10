@@ -166,6 +166,7 @@ struct guild_interface {
 	bool (*read_guildskill_tree_db) (char* split[], int columns, int current);
 	bool (*read_castledb_libconfig) (void);
 	bool (*read_castledb_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*read_castledb_libconfig_sub_warp) (struct config_setting_t *wd, const char *source, struct guild_castle *gc);
 	int (*payexp_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_xy_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);

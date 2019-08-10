@@ -633,6 +633,13 @@ enum inventory_type {
 	INVTYPE_GUILD_STORAGE = 3,
 };
 
+/** Guild Teleport Results */
+enum siege_teleport_result {
+	SIEGE_TP_SUCCESS = 0x0,
+	SIEGE_TP_NOT_ENOUGH_ZENY = 0x1,
+	SIEGE_TP_INVALID_MODE = 0x2
+};
+
 /**
  * Structures
  **/
@@ -1114,6 +1121,8 @@ struct clif_interface {
 	void (*guild_masterormember) (struct map_session_data *sd);
 	void (*guild_basicinfo) (struct map_session_data *sd);
 	void (*guild_allianceinfo) (struct map_session_data *sd);
+	void (*guild_castlelist) (struct map_session_data *sd);
+	void (*guild_castleinfo) (struct map_session_data *sd, struct guild_castle *gc);
 	void (*guild_memberlist) (struct map_session_data *sd);
 	void (*guild_skillinfo) (struct map_session_data* sd);
 	void (*guild_send_onlineinfo) (struct map_session_data *sd); //[LuzZza]
@@ -1647,6 +1656,9 @@ struct clif_interface {
 	void (*pRefineryUIClose) (int fd, struct map_session_data *sd);
 	void (*pRefineryUIRefine) (int fd, struct map_session_data *sd);
 	void (*announce_refine_status) (struct map_session_data *sd, int item_id, int refine_level, bool success, enum send_target target);
+	void (*pGuildCastleTeleportRequest) (int fd, struct map_session_data *sd);
+	void (*pGuildCastleInfoRequest) (int fd, struct map_session_data *sd);
+	void (*guild_castleteleport_res) (struct map_session_data *sd, enum siege_teleport_result result);
 };
 
 #ifdef HERCULES_CORE

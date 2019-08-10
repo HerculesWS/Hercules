@@ -91,5 +91,5 @@ UPDATE `guild_castle` SET `castle_id` = 32 WHERE castle_name = 'nguild_alde';
 UPDATE `guild_castle` SET `castle_id` = 33 WHERE castle_name = 'nguild_gef';
 UPDATE `guild_castle` SET `castle_id` = 34 WHERE castle_name = 'nguild_pay';
 ALTER TABLE `guild_castle` ADD PRIMARY KEY (`castle_id`);
-ALTER TABLE "guild_castle" DROP COLUMN "castle_name";
+ALTER TABLE `guild_castle` DROP COLUMN `castle_name`;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1565293394);

@@ -8106,6 +8106,54 @@ static void clif_guild_allianceinfo(struct map_session_data *sd)
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
 
+static void clif_guild_castlelist(struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717 || PACKETVER_ZERO_NUM >= 20190814
+	nullpo_retv(sd);
+
+	struct guild *g = sd->guild;
+	if (g == NULL)
+		return;
+
+	int castle_count = guild->checkcastles(g);
+	if (castle_count > 0) {
+		int len = sizeof(struct PACKET_ZC_GUILD_CASTLE_LIST) + castle_count;
+		struct PACKET_ZC_GUILD_CASTLE_LIST *p = aMalloc(len);
+		p->packetType = HEADER_ZC_GUILD_CASTLE_LIST;
+		p->packetLength = len;
+
+		int i = 0;
+		struct DBIterator *iter = db_iterator(guild->castle_db);
+		for (struct guild_castle *gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter)) {
+			if (gc->guild_id == g->guild_id) {
+				p->castle_list[i] = gc->castle_id;
+				++i;
+			}
+		}
+		dbi_destroy(iter);
+
+		clif->send(p, len, &sd->bl, SELF);
+		aFree(p);
+	}
+#endif
+}
+
+static void clif_guild_castleinfo(struct map_session_data *sd, struct guild_castle *gc)
+{
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717 || PACKETVER_ZERO_NUM >= 20190814
+
+	nullpo_retv(sd);
+	nullpo_retv(gc);
+
+	struct PACKET_ZC_CASTLE_INFO p = { 0 };
+	p.packetType = HEADER_ZC_CASTLE_INFO;
+	p.castle_id = gc->castle_id;
+	p.economy = gc->economy;
+	p.defense = gc->defense;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+
 /// Guild member manager information (ZC_MEMBERMGR_INFO).
 /// 0154 <packet len>.W { <account>.L <char id>.L <hair style>.W <hair color>.W <gender>.W <class>.W <level>.W <contrib exp>.L <state>.L <position>.L <memo>.50B <name>.24B }*
 /// state:
@@ -14407,6 +14455,7 @@ static void clif_parse_GuildRequestInfo(int fd, struct map_session_data *sd)
 		case 0: // Basic Information Guild, hostile alliance information
 			clif->guild_basicinfo(sd);
 			clif->guild_allianceinfo(sd);
+			clif->guild_castlelist(sd);
 			break;
 		case 1: // Members list, list job title
 			clif->guild_positionnamelist(sd);
@@ -23211,6 +23260,78 @@ static void clif_announce_refine_status(struct map_session_data *sd, int item_id
 #endif
 }
 
+static void clif_parse_GuildCastleTeleportRequest(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_GuildCastleTeleportRequest(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
+	const struct PACKET_CZ_CASTLE_TELEPORT_REQUEST *p = RFIFO2PTR(fd);
+	struct guild *g = sd->guild;
+
+	if (g == NULL)
+		return;
+
+	struct guild_castle *gc = guild->castle_search(p->castle_id);
+	if (gc == NULL)
+		return;
+	if (gc->enable_client_warp == false)
+		return;
+	if (gc->guild_id != g->guild_id)
+		return;
+
+	if (map->list[sd->bl.m].flag.gvg_castle == 1)
+		return;
+
+	int zeny = gc->client_warp.zeny;
+	if (gc->siege_type == SIEGE_TYPE_FE && map->agit_flag == 1) {
+		zeny = gc->client_warp.zeny_siege;
+	} else if (gc->siege_type == SIEGE_TYPE_SE && map->agit2_flag == 1) {
+		zeny = gc->client_warp.zeny_siege;
+	} else if (gc->siege_type == SIEGE_TYPE_TE) {
+		clif->guild_castleteleport_res(sd, SIEGE_TP_INVALID_MODE);
+		return;
+	}
+
+	if (sd->status.zeny < zeny) {
+		clif->guild_castleteleport_res(sd, SIEGE_TP_NOT_ENOUGH_ZENY);
+		return;
+	}
+	sd->status.zeny -= zeny;
+	clif->updatestatus(sd, SP_ZENY);
+	pc->setpos(sd, gc->mapindex, gc->client_warp.x, gc->client_warp.y, CLR_OUTSIGHT);
+#endif
+}
+
+static void clif_guild_castleteleport_res(struct map_session_data *sd, enum siege_teleport_result result)
+{
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717 || PACKETVER_ZERO_NUM >= 20190814
+
+	nullpo_retv(sd);
+
+	struct PACKET_ZC_CASTLE_TELEPORT_RESPONSE p = { 0 };
+	p.packetType = HEADER_ZC_CASTLE_TELEPORT_RESPONSE;
+	p.result = (int16)result;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+#endif
+}
+static void clif_parse_GuildCastleInfoRequest(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
+static void clif_parse_GuildCastleInfoRequest(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
+	const struct PACKET_CZ_CASTLE_INFO_REQUEST *p = RFIFO2PTR(fd);
+	struct guild *g = sd->guild;
+
+	if (g == NULL)
+		return;
+
+	struct guild_castle *gc = guild->castle_search(p->castle_id);
+	if (gc == NULL)
+		return;
+	if (gc->guild_id != g->guild_id)
+		return;
+	clif->guild_castleinfo(sd, gc);
+#endif
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -23895,6 +24016,8 @@ void clif_defaults(void)
 	clif->guild_masterormember = clif_guild_masterormember;
 	clif->guild_basicinfo = clif_guild_basicinfo;
 	clif->guild_allianceinfo = clif_guild_allianceinfo;
+	clif->guild_castlelist = clif_guild_castlelist;
+	clif->guild_castleinfo = clif_guild_castleinfo;
 	clif->guild_memberlist = clif_guild_memberlist;
 	clif->guild_skillinfo = clif_guild_skillinfo;
 	clif->guild_send_onlineinfo = clif_guild_send_onlineinfo;
@@ -24436,4 +24559,7 @@ void clif_defaults(void)
 	clif->pRefineryUIClose = clif_parse_RefineryUIClose;
 	clif->pRefineryUIRefine = clif_parse_RefineryUIRefine;
 	clif->announce_refine_status = clif_announce_refine_status;
+	clif->pGuildCastleTeleportRequest = clif_parse_GuildCastleTeleportRequest;
+	clif->pGuildCastleInfoRequest = clif_parse_GuildCastleInfoRequest;
+	clif->guild_castleteleport_res = clif_guild_castleteleport_res;
 }
