@@ -699,7 +699,7 @@ enum expand_inventory_result {
 	EXPAND_INVENTORY_RESULT_MAX_SIZE = 4
 };
 
-#if PACKETVER_RE_NUM >= 20190807
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
 enum market_buy_result {
 	MARKET_BUY_RESULT_ERROR = 0xffff,  // -1
 	MARKET_BUY_RESULT_SUCCESS = 0,
