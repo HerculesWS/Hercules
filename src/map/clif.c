@@ -19967,7 +19967,11 @@ static void clif_package_item_announce(struct map_session_data *sd, int nameid, 
 
 	nullpo_retv(sd);
 	p.PacketType = package_item_announceType;
-	p.PacketLength = 11 + NAME_LENGTH;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	p.PacketLength = 7 + 4 + 4 + NAME_LENGTH;
+#else
+	p.PacketLength = 7 + 2 + 2 + NAME_LENGTH;
+#endif
 	p.type = 0x0;
 	p.ItemID = nameid;
 	p.len = NAME_LENGTH;
@@ -19975,7 +19979,7 @@ static void clif_package_item_announce(struct map_session_data *sd, int nameid, 
 	p.unknown = 0x2; // some strange byte, IDA shows.. BYTE3(BoxItemIDLength) = 2;
 	p.BoxItemID = containerid;
 
-	clif->send(&p,sizeof(p), &sd->bl, ALL_CLIENT);
+	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
 }
 
 /* Made Possible Thanks to Yommy! */
@@ -19993,12 +19997,13 @@ static void clif_item_drop_announce(struct map_session_data *sd, int nameid, cha
 	if (monsterName == NULL) {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN2
 		p.type = 0x2;
+		p.PacketLength -= NAME_LENGTH;
 	} else {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN
 		p.type = 0x1;
 		safestrncpy(p.monsterName, monsterName, sizeof(p.monsterName));
 	}
-	clif->send(&p, sizeof(p), &sd->bl, ALL_CLIENT);
+	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
 }
 
 /* [Ind/Hercules] special thanks to Yommy~! */
