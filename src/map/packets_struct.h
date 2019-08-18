@@ -2709,13 +2709,10 @@ struct PACKET_ZC_MAKINGITEM_LIST_sub {
 struct PACKET_ZC_MAKINGITEM_LIST {
 	int16 packetType;
 	int16 packetLength;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-	uint32 makeItem;
-#else
 	uint16 makeItem;
-#endif
 	struct PACKET_ZC_MAKINGITEM_LIST_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MAKINGITEM_LIST, 0x025a);
 
 struct PACKET_ZC_PC_CASH_POINT_ITEMLIST_sub {
 	uint32 price;

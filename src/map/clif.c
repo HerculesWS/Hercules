@@ -5998,7 +5998,7 @@ static void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 s
 	len = sizeof(struct PACKET_ZC_MAKINGITEM_LIST) + MAX_SKILL_PRODUCE_DB * sizeof(struct PACKET_ZC_MAKINGITEM_LIST_sub);
 	WFIFOHEAD(fd, len);
 	p = WFIFOP(fd, 0);
-	p->packetType = 0x25a;
+	p->packetType = HEADER_ZC_MAKINGITEM_LIST;
 	p->makeItem = list_type; // list type
 
 	c = 0;
