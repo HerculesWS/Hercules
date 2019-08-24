@@ -38,7 +38,7 @@ struct hplugin_data_store;
 #endif
 
 #ifndef MAX_ITEM_ID
-#if PACKETVER_RE_NUM >= 20180704
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 #define MAX_ITEM_ID 0x20000
 #else
 #define MAX_ITEM_ID 0xFFFF
@@ -72,8 +72,8 @@ struct hplugin_data_store;
 #if MAX_ITEM_ID < MAX_ITEMDB
 #error "MAX_ITEM_ID must be bigger or same with MAX_ITEMDB"
 #endif
-#if MAX_ITEM_ID > 0xFFFF && PACKETVER_RE_NUM < 20180704
-#error "For clients before 20180704 RE, MAX_ITEM_ID must be smaller than 0x10000"
+#if MAX_ITEM_ID > 0xFFFF && PACKETVER_MAIN_NUM < 20181121 && PACKETVER_RE_NUM < 20180704 && PACKETVER_ZERO_NUM < 20181114
+#error "For clients before 20181121 Main and 20180704 RE and 20181114 zero, MAX_ITEM_ID must be smaller than 0x10000"
 #endif
 
 enum item_itemid {
@@ -130,6 +130,7 @@ enum item_itemid {
 	ITEMID_INDIGO_PTS            = 6361,
 	ITEMID_YELLOW_WISH_PTS       = 6362,
 	ITEMID_LIME_GREEN_PTS        = 6363,
+	ITEMID_BLACKSMITH_BLESSING   = 6635,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,
@@ -520,7 +521,8 @@ struct item_data {
 		unsigned no_refine : 1; // [celest]
 		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
 		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
-		unsigned autoequip: 1;
+		unsigned autoequip : 1;
+		unsigned auto_favorite : 1;
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;
@@ -683,6 +685,7 @@ struct itemdb_interface {
 	bool (*is_item_usable) (struct item_data *item);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);
+	int (*addname_sub) (union DBKey key, struct DBData *data, va_list ap);
 };
 
 #ifdef HERCULES_CORE

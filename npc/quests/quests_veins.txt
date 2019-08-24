@@ -2654,7 +2654,7 @@ sec_in02,10,43,4	script	Extra Story Patch	1_M_SIGNMONK,{
 	mes "Yeah, you can try.";
 	next;
 	if(select("Now", "How many?") == 2) {
-		input .@input,0,1000;
+		input(.@input, 0, 1000);
 		que_sch = .@input;
 	}
 	mes " ";
@@ -5092,7 +5092,7 @@ ra_temin,87,133,1	script	Rachel Guard#vol1	4_M_RASWORD,5,2,{
 		mes "Of course! I should";
 		mes "talk to him about...";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait a second...";
 		mes "Of course! I should";
@@ -6723,7 +6723,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "^FF0000as a devoted servant";
 			mes "of Goddess Freya";
 			next;
-			input .@input$;
+			input(.@input$);
 			.@answer$ = "as a devoted servant of Goddess Freya";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(PC_NAME)+"]";
@@ -6734,18 +6734,16 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 				next;
 				break;
 			}
-			else {
-				mes "[Colonel Vito]";
-				mes "Wrong! Try again!";
-				next;
-			}
+			mes "[Colonel Vito]";
+			mes "Wrong! Try again!";
+			next;
 		}
 		while(1) {
 			mes "[Colonel Vito]";
 			mes "^FF0000I pledge my honor to";
 			mes "overthrow our mortal enemy";
 			next;
-			input .@input$;
+			input(.@input$);
 			.@answer$ = "I pledge my honor to overthrow our mortal enemy";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(PC_NAME)+"]";
@@ -6755,17 +6753,15 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 				next;
 				break;
 			}
-			else {
-				mes "[Colonel Vito]";
-				mes "Wrong! Try again!";
-				next;
-			}
+			mes "[Colonel Vito]";
+			mes "Wrong! Try again!";
+			next;
 		}
 		while(1) {
 			mes "[Colonel Vito]";
 			mes "^FF0000I will show no mercy^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			.@answer$ = "I will show no mercy";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(PC_NAME)+"]";
@@ -6774,18 +6770,16 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 				next;
 				break;
 			}
-			else {
-				mes "[Colonel Vito]";
-				mes "Wrong! Try again!";
-				next;
-			}
+			mes "[Colonel Vito]";
+			mes "Wrong! Try again!";
+			next;
 		}
 		while(1) {
 			mes "[Colonel Vito]";
 			mes "^FF0000I shall devote";
 			mes "my entire life^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			.@answer$ = "I shall devote my entire life";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(PC_NAME)+"]";
@@ -6796,18 +6790,16 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 				next;
 				break;
 			}
-			else {
-				mes "[Colonel Vito]";
-				mes "Wrong! Try again!";
-				next;
-			}
+			mes "[Colonel Vito]";
+			mes "Wrong! Try again!";
+			next;
 		}
 		while(1) {
 			mes "[Colonel Vito]";
 			mes "^FF0000Down with the";
 			mes "Rune-Midgarts Kingdom!^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			.@answer$ = "Down with the Rune-Midgarts Kingdom!";
 			if (.@input$ == .@answer$) {
 				mes "["+strcharinfo(PC_NAME)+"]";
@@ -6816,11 +6808,9 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 				next;
 				break;
 			}
-			else {
-				mes "[Colonel Vito]";
-				mes "Wrong! Try again!";
-				next;
-			}
+			mes "[Colonel Vito]";
+			mes "Wrong! Try again!";
+			next;
 		}
 		mes "[Colonel Vito]";
 		mes "Good. Now you know the";

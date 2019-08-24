@@ -436,3 +436,4 @@
 24238:24239,{ bonus bAtk,5; if(getequiprefinerycnt(EQI_SHADOW_ACC_R) + getequiprefinerycnt(EQI_SHADOW_ACC_L) >=15) { bonus2 bAddSize,Size_Small,1; } }
 24240:24241:24242,{ bonus bUseSPrate,-1; .@refine = getequiprefinerycnt(EQI_SHADOW_SHIELD)+getequiprefinerycnt(EQI_SHADOW_ARMOR)+getequiprefinerycnt(EQI_SHADOW_SHOES); bonus bVariableCastrate,(.@refine)/5; if(.@refine)>=25 { bonus bUseSPrate,-1; } }
 24243:24244:24245,{ bonus bDelayrate,-1; if (getequiprefinerycnt(EQI_SHADOW_SHIELD)+getequiprefinerycnt(EQI_SHADOW_ARMOR)+getequiprefinerycnt(EQI_SHADOW_SHOES) >= 25) bonus bDelayrate,-5; }
+2161:1646,{ .@r = (getequiprefinerycnt(EQI_HAND_L)*4); bonus2 bVariableCastrate,"WZ_STORMGUST",-.@r; bonus2 bVariableCastrate,"WL_FROSTMISTY",-.@r; bonus2 bVariableCastrate,"WL_JACKFROST",-.@r; }

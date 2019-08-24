@@ -94,10 +94,10 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 	if (value <= 0) {
 		int i;
 
-		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
 			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
-		if (i != MAX_INVENTORY) {
+		if (i != sd->status.inventorySize) {
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
 		}
 	}
@@ -111,8 +111,8 @@ static int pet_create_egg(struct map_session_data *sd, int item_id)
 	if (!pc->inventoryblank(sd)) return 0; // Inventory full
 	sd->catch_target_class = pet->db[pet_id].class_;
 	intif->create_pet(sd->status.account_id, sd->status.char_id,
-		(short)pet->db[pet_id].class_,
-		(short)mob->db(pet->db[pet_id].class_)->lv,
+		pet->db[pet_id].class_,
+		mob->db(pet->db[pet_id].class_)->lv,
 		pet->db[pet_id].EggID, 0,
 		(short)pet->db[pet_id].intimate,
 		100, 0, 1, pet->db[pet_id].jname);
@@ -251,7 +251,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 
 	pd->pet.hungry--;
 	/* Pet Autofeed */
-	if (battle_config.feature_enable_homun_autofeed != 0) {
+	if (battle_config.feature_enable_pet_autofeed != 0) {
 		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= 25) {
 			pet->food(sd, pd);
 		}
@@ -342,12 +342,27 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	pet->lootitem_drop(pd,sd);
 
 	// Pet Evolution
-	ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
 			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
-	if (i != MAX_INVENTORY) {
+	if (i != sd->status.inventorySize) {
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
+	} else {
+		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
+		struct item tmp_item = {0};
+		int flag;
+
+		tmp_item.nameid = pd->petDB->EggID;
+		tmp_item.identify = 1;
+		tmp_item.card[0] = CARD0_PET;
+		tmp_item.card[1] = GetWord(pd->pet.pet_id, 0);
+		tmp_item.card[2] = GetWord(pd->pet.pet_id, 1);
+		tmp_item.card[3] = pd->pet.rename_flag;
+		if ((flag = pc->additem(sd, &tmp_item, 1, LOG_TYPE_EGG)) != 0) {
+			clif->additem(sd, 0, 0, flag);
+			map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
+		}
 	}
 #if PACKETVER >= 20180704
 	clif->inventoryList(sd);
@@ -492,10 +507,10 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 	if(p->incubate == 1) {
 		int i;
 		// Get Egg Index
-		ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].card[0] == CARD0_PET &&
+		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
 			p->pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
-		if(i == MAX_INVENTORY) {
+		if(i == sd->status.inventorySize) {
 			ShowError("pet_recv_petdata: Hatching pet (%d:%s) aborted, couldn't find egg in inventory for removal!\n",p->pet_id, p->name);
 			sd->status.pet_id = 0;
 			return 1;
@@ -527,7 +542,7 @@ static int pet_select_egg(struct map_session_data *sd, int egg_index)
 {
 	nullpo_ret(sd);
 
-	if(egg_index < 0 || egg_index >= MAX_INVENTORY)
+	if (egg_index < 0 || egg_index >= sd->status.inventorySize)
 		return 0; //Forged packet!
 
 	if(sd->status.inventory[egg_index].card[0] == CARD0_PET)
@@ -614,7 +629,7 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
  * pet_id - Should contain pet id otherwise means failure
  * returns true on success
  **/
-static bool pet_get_egg(int account_id, short pet_class, int pet_id)
+static bool pet_get_egg(int account_id, int pet_class, int pet_id)
 {
 	struct map_session_data *sd;
 	struct item tmp_item;
@@ -733,7 +748,7 @@ static int pet_change_name_ack(struct map_session_data *sd, const char *name, in
 	}
 	safestrncpy(pd->pet.name, newname, NAME_LENGTH);
 	aFree(newname);
-	clif->charnameack (0,&pd->bl);
+	clif->blname_ack(0,&pd->bl);
 	pd->pet.rename_flag = 1;
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	clif->send_petstatus(sd);

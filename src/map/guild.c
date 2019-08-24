@@ -38,6 +38,7 @@
 #include "map/storage.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/mapindex.h"
@@ -147,26 +148,76 @@ static int guild_check_skill_require(struct guild *g, int id)
 	return 1;
 }
 
-static bool guild_read_castledb(char *str[], int columns, int current)
-{// <castle id>,<map name>,<castle name>,<castle event>[,<reserved/unused switch flag>]
-	struct guild_castle *gc;
-	int index;
+static bool guild_read_castledb_libconfig(void)
+{
+	struct config_t castle_conf;
+	struct config_setting_t *castle_db = NULL, *it = NULL;
+	const char *config_filename = "db/castle_db.conf"; // FIXME hardcoded name
+	int i = 0;
 
-	nullpo_retr(false, str);
-	index = mapindex->name2id(str[1]);
-	if (map->mapindex2mapid(index) < 0) // Map not found or on another map-server
+	if (libconfig->load_file(&castle_conf, config_filename) == 0)
 		return false;
 
+	if ((castle_db = libconfig->setting_get_member(castle_conf.root, "castle_db")) == NULL) {
+		libconfig->destroy(&castle_conf);
+		ShowError("guild_read_castledb_libconfig: can't read %s\n", config_filename);
+		return false;
+	}
+
+	while ((it = libconfig->setting_get_elem(castle_db, i++)) != NULL) {
+		guild->read_castledb_libconfig_sub(it, i - 1, config_filename);
+	}
+
+	libconfig->destroy(&castle_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, config_filename);
+	return true;
+}
+
+static bool guild_read_castledb_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
+{
+	nullpo_ret(it);
+	nullpo_ret(source);
+
+	struct guild_castle *gc = NULL;
+	const char *name = NULL;
+	int i32 = 0;
 	CREATE(gc, struct guild_castle, 1);
-	gc->castle_id = atoi(str[0]);
+
+	if (libconfig->setting_lookup_int(it, "CastleID", &i32) == CONFIG_FALSE) {
+		aFree(gc);
+		ShowWarning("guild_read_castledb_libconfig_sub: Invalid or missing CastleID (%d) in \"%s\", entry #%d, skipping.\n", i32, source, idx);
+		return false;
+	}
+	gc->castle_id = i32;
+
+	if (libconfig->setting_lookup_string(it, "MapName", &name) == CONFIG_FALSE) {
+		aFree(gc);
+		ShowWarning("guild_read_castledb_libconfig_sub: Invalid or missing MapName in \"%s\", entry #%d, skipping.\n", source, idx);
+		return false;
+	}
+	int index = mapindex->name2id(name);
+	if (map->mapindex2mapid(index) < 0) {
+		aFree(gc);
+		ShowWarning("guild_read_castledb_libconfig_sub: Invalid MapName (%s) in \"%s\", entry #%d, skipping.\n", name, source, idx);
+		return false;
+	}
 	gc->mapindex = index;
-	safestrncpy(gc->castle_name, str[2], sizeof(gc->castle_name));
-	safestrncpy(gc->castle_event, str[3], sizeof(gc->castle_event));
 
-	idb_put(guild->castle_db,gc->castle_id,gc);
+	if (libconfig->setting_lookup_string(it, "CastleName", &name) == CONFIG_FALSE) {
+		aFree(gc);
+		ShowWarning("guild_read_castledb_libconfig_sub: Invalid CastleName in \"%s\", entry #%d, skipping.\n", source, idx);
+		return false;
+	}
+	safestrncpy(gc->castle_name, name, sizeof(gc->castle_name));
 
-	//intif->guild_castle_info(gc->castle_id);
+	if (libconfig->setting_lookup_string(it, "OnGuildBreakEventName", &name) == CONFIG_FALSE){
+		aFree(gc);
+		ShowWarning("guild_read_castledb_libconfig_sub: Invalid OnGuildBreakEventName in \"%s\", entry #%d, skipping.\n", source, idx);
+		return false;
+	}
+	safestrncpy(gc->castle_event, name, sizeof(gc->castle_event));
 
+	idb_put(guild->castle_db, gc->castle_id, gc);
 	return true;
 }
 
@@ -828,6 +879,11 @@ static int guild_member_added(int guild_id, int account_id, int char_id, int fla
 	//Next line commented because it do nothing, look at guild_recv_info [LuzZza]
 	//clif->charnameupdate(sd); //Update display name [Skotlex]
 
+	// Makes the character join their respective guild's channel for #ally chat
+	if (channel->config->ally && channel->config->ally_autojoin) {
+		channel->join(g->channel, sd, "", true);
+	}
+
 	return 0;
 }
 
@@ -1013,7 +1069,7 @@ static int guild_send_memberinfoshort(struct map_session_data *sd, int online)
 }
 
 // cleaned up [LuzZza]
-static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login)
+static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class, uint32 last_login)
 {
 	int i, alv, c, idx = INDEX_NOT_FOUND, om = 0, oldonline = -1;
 	struct guild *g = guild->search(guild_id);
@@ -1894,7 +1950,7 @@ static int guild_gm_changed(int guild_id, int account_id, int char_id)
 	if (g->member[pos].sd && g->member[pos].sd->fd) {
 		clif->message(g->member[pos].sd->fd, msg_sd(g->member[pos].sd,878)); //"You no longer are the Guild Master."
 		g->member[pos].sd->state.gmaster_flag = 0;
-		clif->charnameack(0, &g->member[pos].sd->bl);
+		clif->blname_ack(0, &g->member[pos].sd->bl);
 	}
 
 	if (g->member[0].sd && g->member[0].sd->fd) {
@@ -1902,7 +1958,7 @@ static int guild_gm_changed(int guild_id, int account_id, int char_id)
 		g->member[0].sd->state.gmaster_flag = 1;
 		//Block his skills for 5 minutes to prevent abuse.
 		guild->block_skill(g->member[0].sd, 300000);
-		clif->charnameack(0, &g->member[pos].sd->bl);
+		clif->blname_ack(0, &g->member[pos].sd->bl);
 	}
 
 	// announce the change to all guild members
@@ -2316,8 +2372,7 @@ static void do_init_guild(bool minimal)
 	guild->infoevent_db = idb_alloc(DB_OPT_BASE);
 	guild->expcache_ers = ers_new(sizeof(struct guild_expcache),"guild.c::expcache_ers",ERS_OPT_NONE);
 
-	sv->readdb(map->db_path, "castle_db.txt", ',', 4, 5, -1, guild->read_castledb);
-
+	guild->read_castledb_libconfig();
 	sv->readdb(map->db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, guild->read_guildskill_tree_db); //guild skill tree [Komurka]
 
 	timer->add_func_list(guild->payexp_timer,"guild_payexp_timer");
@@ -2452,7 +2507,8 @@ void guild_defaults(void)
 	guild->payexp_timer = guild_payexp_timer;
 	guild->sd_check = guild_sd_check;
 	guild->read_guildskill_tree_db = guild_read_guildskill_tree_db;
-	guild->read_castledb = guild_read_castledb;
+	guild->read_castledb_libconfig = guild_read_castledb_libconfig;
+	guild->read_castledb_libconfig_sub = guild_read_castledb_libconfig_sub;
 	guild->payexp_timer_sub = guild_payexp_timer_sub;
 	guild->send_xy_timer_sub = guild_send_xy_timer_sub;
 	guild->send_xy_timer = guild_send_xy_timer;

@@ -540,14 +540,15 @@ mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 		mes "If you change your mind,";
 		mes "please enter '0' to cancel.";
 		next;
-		input .@amount;
-		if (.@amount == 0) {
+		input(.@amount);
+		if (.@amount <= 0) {
 			mes "[Dwayne]";
 			mes "Alright, you've";
 			mes "canceled the trade.";
 			mes "Take care!";
 			close;
-		} else if (.@amount < 1 || .@amount > 500){
+		}
+		if (.@amount > 500) {
 			mes "[Dwayne]";
 			mes "The maximum";
 			mes "amount is 500.";

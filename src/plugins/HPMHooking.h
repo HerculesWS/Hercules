@@ -50,9 +50,19 @@ HPExport struct HPMHooking_interface HPMHooking_s;
 		HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->" #funcname, (hook), HPMi->pid) \
 		)
 
+#define addHookPrePriv(ifname, funcname, hook) ( \
+		(void)((HPMHOOK_pre_PRIV__ ## ifname ## _ ## funcname)0 == (hook)), \
+		HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->p->" #funcname, (hook), HPMi->pid) \
+		)
+
 #define addHookPost(ifname, funcname, hook) ( \
 		(void)((HPMHOOK_post_ ## ifname ## _ ## funcname)0 == (hook)), \
 		HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->" #funcname, (hook), HPMi->pid) \
+		)
+
+#define addHookPostPriv(ifname, funcname, hook) ( \
+		(void)((HPMHOOK_post_PRIV__ ## ifname ## _ ## funcname)0 == (hook)), \
+		HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->p->" #funcname, (hook), HPMi->pid) \
 		)
 
 /* need better names ;/ */

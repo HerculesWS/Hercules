@@ -23,31 +23,29 @@
 #include "config/core.h"
 #include "core.h"
 
+#include "common/HPM.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/console.h"
 #include "common/db.h"
 #include "common/des.h"
+#include "common/ers.h"
 #include "common/grfio.h"
+#include "common/md5calc.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/mutex.h"
 #include "common/nullpo.h"
+#include "common/packets.h"
+#include "common/random.h"
 #include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "common/sysinfo.h"
+#include "common/thread.h"
 #include "common/timer.h"
 #include "common/utils.h"
-
-#ifndef MINICORE
-#	include "common/HPM.h"
-#	include "common/conf.h"
-#	include "common/ers.h"
-#	include "common/md5calc.h"
-#	include "common/mutex.h"
-#	include "common/random.h"
-#	include "common/socket.h"
-#	include "common/sql.h"
-#	include "common/thread.h"
-#endif
 
 #ifndef _WIN32
 #	include <unistd.h>
@@ -83,7 +81,6 @@
 static struct core_interface core_s;
 struct core_interface *core = &core_s;
 
-#ifndef MINICORE // minimalist Core
 // Added by Gabuzomeu
 //
 // This is an implementation of signal() using sigaction() for portability.
@@ -196,7 +193,6 @@ static void signals_init(void)
 	compat_signal(SIGTRAP, SIG_DFL);
 #endif
 }
-#endif
 
 /**
  * Warns the user if executed as superuser (root)
@@ -250,10 +246,8 @@ static bool usercheck(void)
 static void core_defaults(void)
 {
 	nullpo_defaults();
-#ifndef MINICORE
 	hpm_defaults();
 	HCache_defaults();
-#endif
 	sysinfo_defaults();
 	console_defaults();
 	strlib_defaults();
@@ -262,17 +256,16 @@ static void core_defaults(void)
 	cmdline_defaults();
 	des_defaults();
 	grfio_defaults(); // Note: grfio is lazily loaded. grfio->init() and grfio->final() are not automatically called.
-#ifndef MINICORE
 	mutex_defaults();
 	libconfig_defaults();
 	sql_defaults();
 	timer_defaults();
 	db_defaults();
 	socket_defaults();
+	packets_defaults();
 	rnd_defaults();
 	md5_defaults();
 	thread_defaults();
-#endif
 }
 
 /**
@@ -280,12 +273,8 @@ static void core_defaults(void)
  */
 static const char *cmdline_arg_source(struct CmdlineArgData *arg)
 {
-#ifdef MINICORE
-	return "core";
-#else // !MINICORE
 	nullpo_retr(NULL, arg);
 	return HPM->pid2name(arg->pluginID);
-#endif // MINICORE
 }
 
 /**
@@ -446,15 +435,9 @@ static int cmdline_exec(int argc, char **argv, unsigned int options)
  */
 static void cmdline_init(void)
 {
-#ifdef MINICORE
-	// Minicore has no HPM. This value isn't used, but the arg_add function requires it, so we're (re)defining it here
-#define HPM_PID_CORE ((unsigned int)-1)
-#endif
 	CMDLINEARG_DEF(help, 'h', "Displays this help screen", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF(version, 'v', "Displays the server's version.", CMDLINE_OPT_NORMAL);
-#ifndef MINICORE
 	CMDLINEARG_DEF2(load-plugin, loadplugin, "Loads an additional plugin (can be repeated).", CMDLINE_OPT_PARAM|CMDLINE_OPT_PREINIT);
-#endif // !MINICORE
 	cmdline_args_init_local();
 }
 
@@ -521,10 +504,6 @@ int main(int argc, char **argv)
 	if (!usercheck())
 		return EXIT_FAILURE;
 
-#ifdef MINICORE // minimalist Core
-	do_init(argc,argv);
-	do_final();
-#else// not MINICORE
 	set_server_type();
 
 	Sql_Init();
@@ -549,6 +528,8 @@ int main(int argc, char **argv)
 
 	sockt->init();
 
+	packets->init();
+
 	do_init(argc,argv);
 
 	// Main runtime cycle
@@ -562,12 +543,12 @@ int main(int argc, char **argv)
 	retval = do_final();
 	HPM->final();
 	timer->final();
+	packets->final();
 	sockt->final();
 	DB->final();
 	thread->final();
 	ers_final();
 	rnd->final();
-#endif
 	cmdline->final();
 	//sysinfo->final(); Called by iMalloc->final()
 

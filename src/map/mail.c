@@ -100,7 +100,7 @@ static unsigned char mail_setitem(struct map_session_data *sd, int idx, int amou
 		idx -= 2;
 		mail->removeitem(sd, 0);
 
-		if( idx < 0 || idx >= MAX_INVENTORY )
+		if (idx < 0 || idx >= sd->status.inventorySize)
 			return 1;
 		if( amount <= 0 || amount > sd->status.inventory[idx].amount )
 			return 1;
@@ -128,7 +128,7 @@ static bool mail_setattachment(struct map_session_data *sd, struct mail_message 
 		return false;
 
 	n = sd->mail.index;
-	Assert_retr(false, n >= 0 && n < MAX_INVENTORY);
+	Assert_retr(false, n >= 0 && n < sd->status.inventorySize);
 	if( sd->mail.amount )
 	{
 		if( sd->status.inventory[n].nameid != sd->mail.nameid )
@@ -177,7 +177,7 @@ static int mail_openmail(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->state.vending || sd->state.buyingstore || sd->state.trading)
+	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.trading)
 		return 0;
 
 	clif->mail_window(sd->fd, 0);

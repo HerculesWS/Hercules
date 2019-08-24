@@ -130,8 +130,8 @@ ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 		next;
 		mes "[King Crab & Sludge Worm]";
 		mes "Aaaaaahhhhhhhhk!!!!!!!!";
-		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid(0, "King Crab#job_shu"));
-		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid(0, "Sludge Worm#job_shu"));
+		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid("King Crab#job_shu"));
+		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid("Sludge Worm#job_shu"));
 		next;
 		mes "- What is that amazing power? -";
 		mes "- I've never seen this -";
@@ -654,14 +654,14 @@ OnTimer305000:
 OnTimer315000:
 	mapannounce "sword_2-1","Come on here.",bc_map;
 	donpcevent "Buddy#job_shuaneh::OnDisable";
-	donpcevent "#Sura_garajjom::OnEnable";
+	// donpcevent "#Sura_garajjom::OnEnable";	// Commented to prevent #Sura_garajjom allowing player to success the test at any case (even when failing it).
 	end;
 OnTimer320000:
 	mapannounce "sword_2-1","I guess you're not ready to meet the master yet...",bc_map;
 	mapwarp "sword_2-1","yuno_fild07",255,178;
-	donpcevent "#Sura_garajjom::OnDisable";
-	donpcevent "Drawing Room::OnEnable";
+	// donpcevent "#Sura_garajjom::OnDisable";
 	donpcevent "Buddy#Sura_Salon::OnDisable";
+	donpcevent "Drawing Room::OnEnable";
 	end;
 }
 

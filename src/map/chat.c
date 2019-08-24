@@ -102,7 +102,7 @@ static bool chat_createpcchat(struct map_session_data *sd, const char *title, co
 	if (sd->chat_id != 0)
 		return false; //Prevent people abusing the chat system by creating multiple chats, as pointed out by End of Exam. [Skotlex]
 
-	if( sd->state.vending || sd->state.buyingstore )
+	if (sd->state.vending || sd->state.prevend || sd->state.buyingstore)
 	{// not chat, when you already have a store open
 		return false;
 	}
@@ -147,7 +147,7 @@ static bool chat_joinchat(struct map_session_data *sd, int chatid, const char *p
 	cd = map->id2cd(chatid);
 
 	if (cd == NULL || cd->bl.type != BL_CHAT || cd->bl.m != sd->bl.m
-	 || sd->state.vending || sd->state.buyingstore || sd->chat_id != 0
+	 || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->chat_id != 0
 	 || ((cd->owner->type == BL_NPC) ? cd->users+1 : cd->users) >= cd->limit
 	) {
 		clif->joinchatfail(sd,0); // room full
@@ -255,6 +255,14 @@ static int chat_leavechat(struct map_session_data *sd, bool kicked)
 	}
 
 	if( leavechar == 0 && cd->owner->type == BL_PC ) {
+
+		// check if new location are CELL_CHKNOCHAT
+		if (map->getcell(cd->usersd[0]->bl.m, NULL, cd->usersd[0]->bl.x, cd->usersd[0]->bl.y, CELL_CHKNOCHAT)) {
+			for (i = (cd->users - 1); i >= 0; i--)
+				chat->leave(cd->usersd[i], false);
+			return 2;
+		}
+
 		// Set and announce new owner
 		cd->owner = &cd->usersd[0]->bl;
 		clif->changechatowner(cd, cd->usersd[0]);

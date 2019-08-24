@@ -7,14 +7,14 @@ follow so that we can have a chance of keeping on top of things.
 
 ## Hercules Core vs Modules
 
-Due to the nature of the project, and the wide range of different applications
-it has, we provide a plugin interface, to keep the core clean of unnecessary
+Due to the nature of the project and the wide range of different applications
+it has, we provide a plugin interface to keep the core clean of unnecessary
 features.
 
 Generally, bugfixes and improvements to existing code, as well as the
 implementation of official Ragnarok Online features and content, should be part
-of the Hercules core, while custom functionalities should be moved to plugins,
-to avoid burdening the core with code potentially useful only to a small subset
+of the Hercules core while custom functionalities should be moved to plugins
+to avoid burdening the core with code that is potentially useful to only a small subset
 of users.
 
 If you are unsure of whether your contribution should be implemented as a
@@ -32,14 +32,13 @@ or drop us an email at dev@herc.ws
 
 ## Submitting an Issue on GitHub
 
-When you open an issue, in order for it to be helpful, you should include as
-much description as possible of the issue you are observing or feature you're
-suggesting.
+When you open an issue, you should include as much description as possible of 
+the issue you are observing or feature you're suggesting.
 
 If you're reporting an issue, you should describe your setup, and provide the
 output of `./map-server --version`.
 
-If you report a crash, make sure that you include a backtrace of the crash,
+If you report a crash, make sure that you include a backtrace of the crash
 generated with either gdb or Visual Studio (depending on your build
 environment). For the backtrace to be useful, you need to compile Hercules in
 debug mode.
@@ -51,10 +50,9 @@ debug mode.
   * To quickly create a topic branch based on master; `git checkout -b
     my_contribution master`. Please avoid working directly on the
     `master` branch.
-* Make commits of logical units. Each commit you submit, must be atomic and
-  complete. **Each commit must do one thing, and do it well.** For separate
-  fixes, make separate commits. Even if this causes commits that only affect
-  one line of code.
+* Make commits of logical units. Each commit you submit must be atomic and
+  complete. **Each commit must do one thing, and do it well.** Make separate commits 
+  for separate fixes, even if this causes commits that only affect one line of code.
 * Check for unnecessary whitespace with `git diff --check` before committing.
 * Make sure you follow our [coding style
   guidelines](https://github.com/HerculesWS/Hercules/wiki/Coding-Style).
@@ -75,7 +73,7 @@ necessary to create a new issue in GitHub.
 * Submit a pull request to the repository in the HerculesWS organization.
 * The dev team looks at Pull Requests on a weekly basis, compatibly with the
   amount of patches in review queue and current workload.
-* After feedback has been given we expect responses within two weeks. After two
+* After feedback has been given, we expect responses within two weeks. After two
   weeks we may close the pull request if it isn't showing any activity.
 
 ## Other ways to help

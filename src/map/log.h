@@ -155,7 +155,7 @@ struct log_interface {
 
 	char (*picktype2char) (e_log_pick_type type);
 	char (*chattype2char) (e_log_chat_type type);
-	bool (*should_log_item) (int nameid, int amount, int refine, struct item_data *id);
+	bool (*should_log_item) (int nameid, int amount, int refine_level, struct item_data *id);
 };
 
 #ifdef HERCULES_CORE

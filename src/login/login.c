@@ -27,6 +27,7 @@
 #include "login/ipban.h"
 #include "login/loginlog.h"
 #include "login/lclif.h"
+#include "login/packets_ac_struct.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -35,6 +36,7 @@
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/nullpo.h"
+#include "common/packetsstatic_len.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -1368,36 +1370,37 @@ static bool login_client_login(int fd, struct login_session_data *sd)
 static bool login_client_login_otp(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 static bool login_client_login_otp(int fd, struct login_session_data *sd)
 {
+#if PACKETVER_MAIN_NUM >= 20170621 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 	// send ok response with fake token
-#ifdef PACKETVER_ZERO
-#if PACKETVER >= 20171127
-	WFIFOHEAD(fd, 33);
-	WFIFOW(fd, 0) = 0x0ae3;
-	WFIFOW(fd, 2) = 33;  // len
-	WFIFOL(fd, 4) = 0;  // normal login
-	safestrncpy(WFIFOP(fd, 8), "S1000", 6);
-	safestrncpy(WFIFOP(fd, 28), "token", 6);
-	WFIFOSET(fd, 33);
-#elif PACKETVER >= 20171123
-	WFIFOHEAD(fd, 19);
-	WFIFOW(fd, 0) = 0x0ae3;
-	WFIFOW(fd, 2) = 19;  // len
-	WFIFOL(fd, 4) = 0;  // normal login
-	safestrncpy(WFIFOP(fd, 8), "S1000", 6);
-	safestrncpy(WFIFOP(fd, 14), "token", 6);
-	WFIFOSET(fd, 19);
-#else
-	WFIFOHEAD(fd, 13);
-	WFIFOW(fd, 0) = 0x0ad1;
-	WFIFOW(fd, 2) = 13;  // len
-	WFIFOL(fd, 4) = 0;  // normal login
-	safestrncpy(WFIFOP(fd, 8), "token", 6);
-	WFIFOSET(fd, 13);
-#endif
+	const int len = sizeof(struct PACKET_AC_LOGIN_OTP) + 6;  // + "token" string
+	WFIFOHEAD(fd, len);
+	struct PACKET_AC_LOGIN_OTP *packet = WP2PTR(sd->fd);
+	memset(packet, 0, len);
+	packet->packet_id = HEADER_AC_LOGIN_OTP;
+	packet->packet_len = len;
+	packet->loginFlag = 0;  // normal login
+#if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171123
+	safestrncpy(packet->loginFlag2, "S1000", 6);
+#endif  // PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171123
+
+	safestrncpy(packet->token, "token", 6);
+	WFIFOSET(fd, len);
 	return true;
-#else  // PACKETVER_ZERO
+#else  // PACKETVER_MAIN_NUM >= 20170621 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 	return false;
-#endif  // PACKETVER_ZERO
+#endif  // PACKETVER_MAIN_NUM >= 20170621 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+}
+
+static void login_client_login_mobile_otp_request(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+static void login_client_login_mobile_otp_request(int fd, struct login_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
+	WFIFOHEAD(sd->fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));
+	struct PACKET_AC_REQ_MOBILE_OTP *packet = WP2PTR(sd->fd);
+	packet->packet_id = HEADER_AC_REQ_MOBILE_OTP;
+	packet->aid = sd->account_id;
+	WFIFOSET(fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));
+#endif
 }
 
 static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
@@ -1438,13 +1441,16 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 	loginlog->log(sockt->session[fd]->client_addr, sd->userid, 100, message);
 
 	result = login->mmo_auth(sd, true);
-	if (core->runflag == LOGINSERVER_ST_RUNNING &&
+
+	if (!sockt->allowed_ip_check(ipl)) {
+		ShowNotice("Connection of the char-server '%s' REFUSED (IP not allowed).\n", server_name);
+		login->char_server_connection_status(fd, sd, 2);
+	} else if (core->runflag == LOGINSERVER_ST_RUNNING &&
 		result == -1 &&
 		sd->sex == 'S' &&
 		sd->account_id >= 0 &&
 		sd->account_id < ARRAYLENGTH(login->dbs->server) &&
-		!sockt->session_is_valid(login->dbs->server[sd->account_id].fd) &&
-		sockt->allowed_ip_check(ipl))
+		!sockt->session_is_valid(login->dbs->server[sd->account_id].fd))
 	{
 		ShowStatus("Connection of the char-server '%s' accepted.\n", server_name);
 		safestrncpy(login->dbs->server[sd->account_id].name, server_name, sizeof(login->dbs->server[sd->account_id].name));
@@ -1457,15 +1463,14 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 
 		sockt->session[fd]->func_parse = login->parse_fromchar;
 		sockt->session[fd]->flag.server = 1;
+		sockt->session[fd]->flag.validate = 0;
 		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		// send connection success
 		login->char_server_connection_status(fd, sd, 0);
-	}
-	else
-	{
+	} else {
 		ShowNotice("Connection of the char-server '%s' REFUSED.\n", server_name);
-		login->char_server_connection_status(fd, sd, 3);
+		login->char_server_connection_status(fd, sd, 1);
 	}
 }
 
@@ -2175,6 +2180,7 @@ int do_init(int argc, char **argv)
 
 	// set default parser as lclif->parse function
 	sockt->set_defaultparse(lclif->parse);
+	sockt->validate = true;
 
 	// every 10 minutes cleanup online account db.
 	timer->add_func_list(login->online_data_cleanup, "login->online_data_cleanup");
@@ -2273,6 +2279,7 @@ void login_defaults(void)
 	login->parse_fromchar = login_parse_fromchar;
 	login->client_login = login_client_login;
 	login->client_login_otp = login_client_login_otp;
+	login->client_login_mobile_otp_request = login_client_login_mobile_otp_request;
 	login->parse_request_connection = login_parse_request_connection;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;

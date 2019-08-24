@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2019  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chr->divorce_char_sql, HP_chr_divorce_char_sql) },
 	{ HP_POP(chr->count_users, HP_chr_count_users) },
 	{ HP_POP(chr->mmo_char_tobuf, HP_chr_mmo_char_tobuf) },
-	{ HP_POP(chr->mmo_char_send099d, HP_chr_mmo_char_send099d) },
+	{ HP_POP(chr->send_HC_ACK_CHARINFO_PER_PAGE, HP_chr_send_HC_ACK_CHARINFO_PER_PAGE) },
+	{ HP_POP(chr->send_HC_ACK_CHARINFO_PER_PAGE_tail, HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail) },
 	{ HP_POP(chr->mmo_char_send_ban_list, HP_chr_mmo_char_send_ban_list) },
 	{ HP_POP(chr->mmo_char_send_slots_info, HP_chr_mmo_char_send_slots_info) },
 	{ HP_POP(chr->mmo_char_send_characters, HP_chr_mmo_char_send_characters) },
@@ -415,6 +416,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_rodex->checkname, HP_inter_rodex_checkname) },
 	{ HP_POP(inter_rodex->savemessage, HP_inter_rodex_savemessage) },
 	{ HP_POP(inter_rodex->updatemail, HP_inter_rodex_updatemail) },
+	{ HP_POP(inter_rodex->getzeny, HP_inter_rodex_getzeny) },
+	{ HP_POP(inter_rodex->getitems, HP_inter_rodex_getitems) },
 /* inter_storage_interface */
 	{ HP_POP(inter_storage->tosql, HP_inter_storage_tosql) },
 	{ HP_POP(inter_storage->fromsql, HP_inter_storage_fromsql) },
@@ -649,6 +652,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->rodex_send, HP_mapif_rodex_send) },
 	{ HP_POP(mapif->parse_rodex_checkname, HP_mapif_parse_rodex_checkname) },
 	{ HP_POP(mapif->rodex_checkname, HP_mapif_rodex_checkname) },
+	{ HP_POP(mapif->rodex_getzenyack, HP_mapif_rodex_getzenyack) },
+	{ HP_POP(mapif->rodex_getitemsack, HP_mapif_rodex_getitemsack) },
 	{ HP_POP(mapif->load_guild_storage, HP_mapif_load_guild_storage) },
 	{ HP_POP(mapif->save_guild_storage_ack, HP_mapif_save_guild_storage_ack) },
 	{ HP_POP(mapif->parse_LoadGuildStorage, HP_mapif_parse_LoadGuildStorage) },
@@ -703,6 +708,11 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
+/* packets_interface */
+	{ HP_POP(packets->init, HP_packets_init) },
+	{ HP_POP(packets->final, HP_packets_final) },
+	{ HP_POP(packets->addLens, HP_packets_addLens) },
+	{ HP_POP(packets->addLen, HP_packets_addLen) },
 /* pincode_interface */
 	{ HP_POP(pincode->handle, HP_pincode_handle) },
 	{ HP_POP(pincode->decrypt, HP_pincode_decrypt) },
@@ -744,12 +754,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sockt->realloc_fifo, HP_sockt_realloc_fifo) },
 	{ HP_POP(sockt->realloc_writefifo, HP_sockt_realloc_writefifo) },
 	{ HP_POP(sockt->wfifoset, HP_sockt_wfifoset) },
+	{ HP_POP(sockt->wfifohead, HP_sockt_wfifohead) },
 	{ HP_POP(sockt->rfifoskip, HP_sockt_rfifoskip) },
 	{ HP_POP(sockt->close, HP_sockt_close) },
+	{ HP_POP(sockt->validateWfifo, HP_sockt_validateWfifo) },
 	{ HP_POP(sockt->session_is_valid, HP_sockt_session_is_valid) },
 	{ HP_POP(sockt->session_is_active, HP_sockt_session_is_active) },
 	{ HP_POP(sockt->flush, HP_sockt_flush) },
 	{ HP_POP(sockt->flush_fifos, HP_sockt_flush_fifos) },
+	{ HP_POP(sockt->connect_client, HP_sockt_connect_client) },
 	{ HP_POP(sockt->set_nonblocking, HP_sockt_set_nonblocking) },
 	{ HP_POP(sockt->set_defaultparse, HP_sockt_set_defaultparse) },
 	{ HP_POP(sockt->host2ip, HP_sockt_host2ip) },

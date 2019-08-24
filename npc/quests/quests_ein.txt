@@ -3684,7 +3684,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It was...";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It was";
 		mes "^3131FF"+.@input$+"^000000!";
@@ -4214,7 +4214,7 @@ OnTouch:
 				.@word2$ = "burapaphurarlandreamduranbatuhiwooikabamturubamdingding";
 				mes "^3CBCBC"+.@word1$+"^000000";
 				next;
-				input .@input1$;
+				input(.@input1$);
 				mes "[Security System]";
 				mes "^FF1493"+.@word2$+"^000000";
 				break;
@@ -4223,7 +4223,7 @@ OnTouch:
 				.@word2$ = "opeN,Open!op3n.openOpen0p3nOpEn0pen`open'0Pen open?open!111OPENSESAME";
 				mes "^3CBCBC"+.@word1$+"^000000";
 				next;
-				input .@input1$;
+				input(.@input1$);
 				mes "[Security System]";
 				mes "^FF1493"+.@word2$+"^000000";
 				break;
@@ -4232,7 +4232,7 @@ OnTouch:
 				.@word2$ = "hfjdkeldjsieldjshfjdjeiskdlefvbd";
 				mes "^3CBCBC"+.@word1$+"^000000";
 				next;
-				input .@input1$;
+				input(.@input1$);
 				mes "[Security System]";
 				mes "^FF1493"+.@word2$+"^000000";
 				break;
@@ -4241,7 +4241,7 @@ OnTouch:
 				.@word2$ = "LiGhTsPeEd RiGhT SPEed LeFT TURn RiGhT BuRn OrIGInAL GaNgSteR SmACk";
 				mes "^3CBCBC"+.@word1$+"^000000";
 				next;
-				input .@input1$;
+				input(.@input1$);
 				mes "[Security System]";
 				mes "^FF1493"+.@word2$+"^000000";
 				break;
@@ -4251,7 +4251,7 @@ OnTouch:
 				mes "^3CBCBCBy the power of p-po-poi-po-poi-poin-poing";
 				mes "GOD-POING. I NEVER LOSE!^000000";
 				next;
-				input .@input1$;
+				input(.@input1$);
 				mes "[Security System]";
 				mes "^FF1493"+.@word2$+"^000000";
 				break;
@@ -4260,7 +4260,7 @@ OnTouch:
 				.@word2$ = "fReeDoM eCstAcy JoUrnaLiSm ArMpIt DisCoverY hEaDaChE MoonbeAmS jUsTiCE";
 				mes "^3CBCBC"+.@word1$+"^000000";
 				next;
-				input .@input1$;
+				input(.@input1$);
 				mes "[Security System]";
 				mes "^800080"+.@word2$+"^000000";
 				break;
@@ -4269,12 +4269,12 @@ OnTouch:
 				.@word2$ = "0uNflAPPaBLe LoVaBLe SeCreTs AnD BoWLiNg aGaINST tHe KarMA of YoUtH";
 				mes "^3CBCBC"+.@word1$+"^000000";
 				next;
-				input .@input1$;
+				input(.@input1$);
 				mes "[Security System]";
 				mes "^800080"+.@word2$+"^000000";
 			}
 			next;
-			input .@input2$;
+			input(.@input2$);
 			.@endtime = gettime(GETTIME_HOUR)*60*60+gettime(GETTIME_MINUTE)*60+gettime(GETTIME_SECOND);
 			.@time = .@endtime-.@startseconds;
 			mes "[Security System]";
@@ -4502,7 +4502,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		mes "me! Would you please";
 		mes "tell me your name?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == strcharinfo(PC_NAME)) {
 			mes "[Calla]";
 			mes "Ah, " + strcharinfo(PC_NAME) + "!";
@@ -4520,14 +4520,12 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 			changequest 8079,808;
 			close;
 		}
-		else {
-			mes "[Calla]";
-			mes "I'm sorry...";
-			mes "I didn't catch that.";
-			mes "Would you please tell";
-			mes "me your name again?";
-			close;
-		}
+		mes "[Calla]";
+		mes "I'm sorry...";
+		mes "I didn't catch that.";
+		mes "Would you please tell";
+		mes "me your name again?";
+		close;
 	}
 	if (EIN_LOVERQ == 4) {
 		mes "[Calla]";
@@ -4822,7 +4820,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		mes "So...";
 		mes "What's your name?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == strcharinfo(PC_NAME)) {
 			mes "[Klitzer]";
 			mes "" + strcharinfo(PC_NAME) + "...";
@@ -4842,16 +4840,14 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 			mes "likes meeting my friends.";
 			close;
 		}
-		else {
-			mes "[Klitzer]";
-			mes "Hm...?";
-			mes "Oh, don't be";
-			mes "so nervous~";
-			mes "But would you please";
-			mes "tell me your name again?";
-			mes "I couldn't hear you...";
-			close;
-		}
+		mes "[Klitzer]";
+		mes "Hm...?";
+		mes "Oh, don't be";
+		mes "so nervous~";
+		mes "But would you please";
+		mes "tell me your name again?";
+		mes "I couldn't hear you...";
+		close;
 	}
 	if (EIN_LOVERQ == 5) {
 		mes "[Klitzer]";
@@ -5141,7 +5137,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "only delivering them? Then";
 		mes "who actually gathered these?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Klitzer") {
 			mes "[Satra]";
 			mes "Ah, Klitzer?";
@@ -5192,14 +5188,12 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 			mes "occasion. Ho ho ho ho ho~";
 			close;
 		}
-		else {
-			mes "[Satra]";
-			mes "I beg your pardon?";
-			mes .@input$ + "? Oh my...";
-			mes "I believe I may have";
-			mes "misheard you. Ho ho ho ho~";
-			close;
-		}
+		mes "[Satra]";
+		mes "I beg your pardon?";
+		mes .@input$ + "? Oh my...";
+		mes "I believe I may have";
+		mes "misheard you. Ho ho ho ho~";
+		close;
 	}
 	if (EIN_LOVERQ == 12) {
 		mes "[Satra]";

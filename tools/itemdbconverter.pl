@@ -109,9 +109,9 @@ sub parsedb (@) {
 			(?<eLV>[0-9]*)[^,:]*(?<hasmaxlv>:[\s\t]*(?<eLVmax>[0-9]*))?[^,]*,[\s\t]*
 			(?<Refineable>[0-9]*)[^,]*,[\s\t]*
 			(?<View>[0-9]*)[^,]*,[\s\t]*
-			{(?<Script>.*)},
-			{(?<OnEquip>.*)},
-			{(?<OnUnequip>.*)}
+			\{(?<Script>.*)},
+			\{(?<OnEquip>.*)},
+			\{(?<OnUnequip>.*)}
 		/x ) {
 			my %cols = map { $_ => $+{$_} } keys %+;
 			print "/*\n" if $cols{prefix};

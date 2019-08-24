@@ -2328,7 +2328,7 @@ izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 		close();
 	}
 	if (questprogress(7478) == 1 && !questprogress(7479)) {
-		specialeffect(EF_STEAL, AREA, getnpcid(0, "Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)));
+		specialeffect(EF_STEAL, AREA, getnpcid("Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)));
 		donpcevent("Cultivated Red Plant#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnDisable");
 		emotion(e_gasp, 1);
 		emotion(e_heh);
@@ -4513,7 +4513,7 @@ iz_ac01,68,49,3	script	General Store Owner#ac	4_F_03,{
 		}
 		next();
 		input(.@input);
-		if (!.@input) {
+		if (.@input <= 0) {
 			mes("[Querrie]");
 			mes("Well, you don't need to buy it now.");
 			mes("Use it next time.");
@@ -4525,7 +4525,7 @@ iz_ac01,68,49,3	script	General Store Owner#ac	4_F_03,{
 			mes("You can buy up to 99 at once.");
 			close();
 		}
-		set .@cost, .@input * (BaseLevel <= 20 ? 30 : 500);
+		.@cost = .@input * (BaseLevel <= 20 ? 30 : 500);
 		mes("[Querrie]");
 		mesf("%d combination kits will cost you %d.... zeny.", .@input, .@cost);
 		if (Zeny < .@cost) {
@@ -5693,7 +5693,7 @@ izlude,95,146,5	script	Mom#iz	4_F_CAVE1,{
 	mes("^0000cd[Come to me, honey~]^000000");
 	next();
 	enablenpc("Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN));
-	specialeffect(EF_PORTAL, AREA, getnpcid(0, "Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_PORTAL, AREA, getnpcid("Etinifni#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	mes("[Etinifni]");
 	mes("What's up? Where am I?");
 	next();
@@ -5779,7 +5779,7 @@ izlude,99,138,3	script	Romantic Male#iz	4_M_SITDOWN,{
 	mes("[Romantic Male]");
 	mes("Are you lifting up our good old memories renting my wedding dress and your tuxedo!! It will strenghthen our relationship, won't it?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid("Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Male]");
 	mes("Honey~~ I love you!! Sweetheart~");
@@ -5813,7 +5813,7 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes("[Romantic Female]");
 	mes("You are tired of sitting, aren't you?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid("Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Female]");
 	mes("My sweetheart!!! I love you!!!");
@@ -5821,7 +5821,7 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes("[Romantic Male]");
 	mes("Yes, thank you for sharing your SP! You are also tired, aren't you?");
 	next();
-	specialeffect(EF_HEARTCASTING, AREA, getnpcid(0, "Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN)));
+	specialeffect(EF_HEARTCASTING, AREA, getnpcid("Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN)));
 	emotion(e_kis2, 0, "Romantic Male#"+strnpcinfo(NPC_NAME_HIDDEN));
 	mes("[Romantic Male]");
 	mes("My sweetheart!! I love you!!!");
@@ -5945,199 +5945,199 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 			mes("If you want to stop, say 0.");
 			next();
 			input(.@style);
-			if (.@style > 19) {
-				mes("[Otter Samssoon]");
-				mes("Oh my!!? Honey~ You can use a coupon for the hair style in here~");
-				close();
-			} else if (!.@style) {
+			if (.@style <= 0) {
 				mes("[Otter Samssoon]");
 				mes("Did you decide? Which style??");
 				mes("I want to touch your hair with my hands~ Honey~");
 				close();
-			} else {
-				callsub(L_cutin, .@style);
-				mes("[Otter Samssoon]");
-				switch(.@style) {
-				case 1:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Play Dead' cut?");
-						mes("This looks neat and relaxed.. So popular style.");
-					} else {
-						mes("Oh my!!? 'First Aid' cut?");
-						mes("This is and adorable style.");
-						mes("I guess it looks good on you too!!");
-					}
-					break;
-				case 2:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Two Handed Sword Mastery' cut?");
-						mes("You... You know the famous D..? He has exactly the same style!");
-					} else {
-						mes("Oh my!!? 'Bash' cut?");
-						mes("This style gives strong curls on both side hair.");
-					}
-					break;
-				case 3:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Napalm Beat' cut?");
-						mes("It has well arranges hair line that makes feel charisma.");
-					} else {
-						mes("Oh my!!? 'Frost Diver' cut?");
-						mes("It is mysterious style that gives cold and warm feeling at the same time.");
-					}
-					break;
-				case 4:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Double Strafe' cut?");
-						mes("Natural hair is shaking by wind.. Clean and good feeling.");
-					} else {
-						mes("Oh my!!? 'Arrow Shower' cut?");
-						mes("Cool and nice shaggy cut makes good style.");
-					}
-					break;
-				case 5:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Angelus' cut?");
-						mes("Calm and piety feeling.. Not boring style.");
-					} else {
-						mes("Oh my!!? 'Heal' cut?");
-						mes("Feminine style give healing feeling.");
-					}
-					break;
-				case 6:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Push Cart' cut?");
-						mes("Big Kar is motivated for this style with a romance of a man.");
-					} else {
-						mes("Oh my!!? 'Vending' cut?");
-						mes("Royal ladies like this style. Make good money style.");
-					}
-					break;
-				case 7:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Envenom' cut?");
-						mes("Tough style makes addicted.");
-					} else {
-						mes("Oh my!!? 'Double Attack' cut?");
-						mes("Whoever will dash twice for this style.");
-						mes("Ponytail is important.");
-					}
-					break;
-				case 8:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Bowling Bash' cut?");
-						mes("This style makes a nice guy to challenge.");
-						mes("Just a giving a glance can steal the heart.");
-					} else {
-						mes("Oh my!!? 'Gloria' cut?");
-						mes("This style is ultimately gorgeous and graceful.");
-					}
-					break;
-				case 9:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Venom Dust' cut?");
-						mes("This style has special ending line that looks fatal.");
-					} else {
-						mes("Oh my!!? 'SP Recovery' cut?");
-						mes("This style has neat cutting that inspires.");
-					}
-					break;
-				case 10:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Turn Undead' cut?");
-						mes("This style is like a cold city man who is strong enough to kill a monster.");
-					} else {
-						mes("Oh my!!? 'Prepare Potion' cut?");
-						mes("This style has a liquid medicine motive so it makes feel cure.");
-					}
-					break;
-				case 11:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Dragonology' cut?");
-						mes("This style is intelligent style of mysterious dragon.");
-					} else {
-						mes("Oh my!!? 'Grand Cross' cut?");
-						mes("Well trimmed hair cut line gives trust.");
-					}
-					break;
-				case 12:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Mace Mastery' cut?");
-						mes("Look fresh and look neat with wax treatment.");
-					} else {
-						mes("Oh my!!? 'Intimidate' cut?");
-						mes("This style is very familiar.");
-					}
-					break;
-				case 13:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Thunder Storm' cut?");
-						mes("This style has natural attractive perm which is like hitting by thunder storm.");
-					} else {
-						mes("Oh my!!? 'Spiritual Sphere");
-						mes("Calm and a little bit looks like a boy cut draw attention.");
-					}
-					break;
-				case 14:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Encore' cut?");
-						mes("Rocker's favorite style.. Even the name itself..");
-					} else {
-						mes("Oh my!!? 'Gypsy's Kiss' cut?");
-						mes("The hair.. Kind to everyone.. Neat and round hair line is very soft and charming.");
-					}
-					break;
-				case 15:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Grimtooth' cut?");
-						mes("The style with edge.");
-					} else {
-						mes("Oh my!!? 'Counter Attack' cut?");
-						mes("It is the style that looks cold and arrogant. Hard to talk to..");
-						mes("But might be nice to boyfriend..?");
-					}
-					break;
-				case 16:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Blitz Beat' cut?");
-						mes("It is the style my senior invented after he broke up with his girlfriends 5 times.");
-					} else {
-						mes("Oh my!!? 'Anke Snare' cut?");
-						mes("It is killing style.. No one can take eyes off!");
-					}
-					break;
-				case 17:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Find Ore' cut?");
-						mes("This style seems to bring encounter or find unexpected things while walking on the street.");
-					} else {
-						mes("Oh my!!? 'Hammer Fall' cut?");
-						mes("Stunning hair with attraction.");
-					}
-					break;
-				case 18:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Fire Pillar' cut?");
-						mes("Everyone used to have this hair style.. Which means that was a trend of an era.");
-					} else {
-						mes("Oh my!!? 'Jupitel Thunder'");
-						mes("Fresh style by giving light waves on both side hairs.");
-					}
-					break;
-				case 19:
-					if (Sex == SEX_MALE) {
-						mes("Oh my!!? 'Guillotine Fist'");
-						mes("It is like one-shot style.. Like a real man. Right?");
-					} else {
-						mes("Oh my!!? 'Whirlwind' cut?");
-						mes("It is cool style which flows with wind. Lah, lah, lah, lah ~");
-					}
-					break;
-				}
-				close2();
-				cutin("", 255);
-				end;
 			}
+			if (.@style > 19) {
+				mes("[Otter Samssoon]");
+				mes("Oh my!!? Honey~ You can use a coupon for the hair style in here~");
+				close();
+			}
+			callsub(L_cutin, .@style);
+			mes("[Otter Samssoon]");
+			switch(.@style) {
+			case 1:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Play Dead' cut?");
+					mes("This looks neat and relaxed.. So popular style.");
+				} else {
+					mes("Oh my!!? 'First Aid' cut?");
+					mes("This is and adorable style.");
+					mes("I guess it looks good on you too!!");
+				}
+				break;
+			case 2:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Two Handed Sword Mastery' cut?");
+					mes("You... You know the famous D..? He has exactly the same style!");
+				} else {
+					mes("Oh my!!? 'Bash' cut?");
+					mes("This style gives strong curls on both side hair.");
+				}
+				break;
+			case 3:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Napalm Beat' cut?");
+					mes("It has well arranges hair line that makes feel charisma.");
+				} else {
+					mes("Oh my!!? 'Frost Diver' cut?");
+					mes("It is mysterious style that gives cold and warm feeling at the same time.");
+				}
+				break;
+			case 4:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Double Strafe' cut?");
+					mes("Natural hair is shaking by wind.. Clean and good feeling.");
+				} else {
+					mes("Oh my!!? 'Arrow Shower' cut?");
+					mes("Cool and nice shaggy cut makes good style.");
+				}
+				break;
+			case 5:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Angelus' cut?");
+					mes("Calm and piety feeling.. Not boring style.");
+				} else {
+					mes("Oh my!!? 'Heal' cut?");
+					mes("Feminine style give healing feeling.");
+				}
+				break;
+			case 6:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Push Cart' cut?");
+					mes("Big Kar is motivated for this style with a romance of a man.");
+				} else {
+					mes("Oh my!!? 'Vending' cut?");
+					mes("Royal ladies like this style. Make good money style.");
+				}
+				break;
+			case 7:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Envenom' cut?");
+					mes("Tough style makes addicted.");
+				} else {
+					mes("Oh my!!? 'Double Attack' cut?");
+					mes("Whoever will dash twice for this style.");
+					mes("Ponytail is important.");
+				}
+				break;
+			case 8:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Bowling Bash' cut?");
+					mes("This style makes a nice guy to challenge.");
+					mes("Just a giving a glance can steal the heart.");
+				} else {
+					mes("Oh my!!? 'Gloria' cut?");
+					mes("This style is ultimately gorgeous and graceful.");
+				}
+				break;
+			case 9:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Venom Dust' cut?");
+					mes("This style has special ending line that looks fatal.");
+				} else {
+					mes("Oh my!!? 'SP Recovery' cut?");
+					mes("This style has neat cutting that inspires.");
+				}
+				break;
+			case 10:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Turn Undead' cut?");
+					mes("This style is like a cold city man who is strong enough to kill a monster.");
+				} else {
+					mes("Oh my!!? 'Prepare Potion' cut?");
+					mes("This style has a liquid medicine motive so it makes feel cure.");
+				}
+				break;
+			case 11:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Dragonology' cut?");
+					mes("This style is intelligent style of mysterious dragon.");
+				} else {
+					mes("Oh my!!? 'Grand Cross' cut?");
+					mes("Well trimmed hair cut line gives trust.");
+				}
+				break;
+			case 12:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Mace Mastery' cut?");
+					mes("Look fresh and look neat with wax treatment.");
+				} else {
+					mes("Oh my!!? 'Intimidate' cut?");
+					mes("This style is very familiar.");
+				}
+				break;
+			case 13:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Thunder Storm' cut?");
+					mes("This style has natural attractive perm which is like hitting by thunder storm.");
+				} else {
+					mes("Oh my!!? 'Spiritual Sphere");
+					mes("Calm and a little bit looks like a boy cut draw attention.");
+				}
+				break;
+			case 14:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Encore' cut?");
+					mes("Rocker's favorite style.. Even the name itself..");
+				} else {
+					mes("Oh my!!? 'Gypsy's Kiss' cut?");
+					mes("The hair.. Kind to everyone.. Neat and round hair line is very soft and charming.");
+				}
+				break;
+			case 15:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Grimtooth' cut?");
+					mes("The style with edge.");
+				} else {
+					mes("Oh my!!? 'Counter Attack' cut?");
+					mes("It is the style that looks cold and arrogant. Hard to talk to..");
+					mes("But might be nice to boyfriend..?");
+				}
+				break;
+			case 16:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Blitz Beat' cut?");
+					mes("It is the style my senior invented after he broke up with his girlfriends 5 times.");
+				} else {
+					mes("Oh my!!? 'Anke Snare' cut?");
+					mes("It is killing style.. No one can take eyes off!");
+				}
+				break;
+			case 17:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Find Ore' cut?");
+					mes("This style seems to bring encounter or find unexpected things while walking on the street.");
+				} else {
+					mes("Oh my!!? 'Hammer Fall' cut?");
+					mes("Stunning hair with attraction.");
+				}
+				break;
+			case 18:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Fire Pillar' cut?");
+					mes("Everyone used to have this hair style.. Which means that was a trend of an era.");
+				} else {
+					mes("Oh my!!? 'Jupitel Thunder'");
+					mes("Fresh style by giving light waves on both side hairs.");
+				}
+				break;
+			case 19:
+				if (Sex == SEX_MALE) {
+					mes("Oh my!!? 'Guillotine Fist'");
+					mes("It is like one-shot style.. Like a real man. Right?");
+				} else {
+					mes("Oh my!!? 'Whirlwind' cut?");
+					mes("It is cool style which flows with wind. Lah, lah, lah, lah ~");
+				}
+				break;
+			}
+			close2();
+			cutin("", 255);
+			end;
 			close();
 		case 2:
 			if (!countitem(Cryptura_Hair_Coupon)) {
@@ -6152,15 +6152,17 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 			mes("Pick the style from page 1 to 19.");
 			next();
 			input(.@style);
+			if (.@style <= 0) {
+				mes("[Otter Samssoon]");
+				mes("Oh my!!? You do not want to?");
+				close();
+			}
 			if (.@style > 19) {
 				mes("[Otter Samssoon]");
 				mes("Come on.. Honey~ You can use a coupon for the hair style in here~");
 				close();
-			} else if (!.@style) {
-				mes("[Otter Samssoon]");
-				mes("Oh my!!? You do not want to?");
-				close();
-			} else if (getlook(1) == .@style) {
+			}
+			if (getlook(1) == .@style) {
 				mes("[Otter Samssoon]");
 				mes("Come on.. Honey~ That is the same style you have.");
 				mes("Do you want to try something new?");
@@ -13114,18 +13116,19 @@ izlude,145,122,7	script	Tadde#iz	4_M_04,{
 		mes("How many would you like? Enter '0' if you want to end.");
 		next();
 		while(true) {
-			input(.@amount, 0, 501);
-			if (.@amount == 0) {
+			input(.@amount);
+			if (.@amount <= 0) {
 				mes("[Tadde]");
 				mes("Trade ended.");
 				close();
-			} else if (.@amount > 500) {
+			}
+			if (.@amount > 500) {
 				mes("[Tadde]");
 				mes("Please reduce your quantity to 500 or less.");
 				next();
-			} else {
-				break;
+				continue;
 			}
+			break;
 		}
 		.@sell = .@amount * 200;
 		.@item_weight = .@amount * 200;
@@ -13150,18 +13153,19 @@ izlude,145,122,7	script	Tadde#iz	4_M_04,{
 		mes("How many would you like? Enter '0' if you want to end.");
 		next();
 		while(true) {
-			input(.@amount, 0, 501);
-			if (.@amount == 0) {
+			input(.@amount);
+			if (.@amount <= 0) {
 				mes("[Tadde]");
 				mes("Trade ended.");
 				close();
-			} else if (.@amount > 500) {
+			}
+			if (.@amount > 500) {
 				mes("[Tadde]");
 				mes("Please reduce your quantity to 500 or less.");
 				next();
-			} else {
-				break;
+				continue;
 			}
+			break;
 		}
 		.@sell = .@amount * 1000;
 		.@item_weight = .@amount * 200;

@@ -87,8 +87,8 @@ struct lclif_interface {
 	 * @param fd    The client connection file descriptor.
 	 * @param ban   The ban duration (if error == 6).
 	 * @param error The authentication error code.
-	 * @see #PACKET_ID_AC_REFUSE_LOGIN.
-	 * @see #PACKET_ID_AC_REFUSE_LOGIN_R2.
+	 * @see #HEADER_AC_REFUSE_LOGIN.
+	 * @see #HEADER_AC_REFUSE_LOGIN_R2.
 	 */
 	void (*auth_failed)(int fd, time_t ban, uint32 error);
 

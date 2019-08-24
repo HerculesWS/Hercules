@@ -49,27 +49,6 @@ struct pet_data;
 )
 
 /**
- * Max Refine available to your server
- * Changing this limit requires edits to refine_db.txt
- **/
-#ifdef RENEWAL
-	#define MAX_REFINE 20
-#else
-	#define MAX_REFINE 10
-#endif
-
-enum refine_type {
-	REFINE_TYPE_ARMOR   = 0,
-	REFINE_TYPE_WEAPON1 = 1,
-	REFINE_TYPE_WEAPON2 = 2,
-	REFINE_TYPE_WEAPON3 = 3,
-	REFINE_TYPE_WEAPON4 = 4,
-#ifndef REFINE_TYPE_MAX
-	REFINE_TYPE_MAX     = 5
-#endif
-};
-
-/**
  * SC configuration type
  * @see db/sc_config.txt for more information
  **/
@@ -97,6 +76,16 @@ enum scstart_flag {
 	SCFLAG_FIXEDRATE = 0x08, ///< rate should not be reduced (not evaluated in status_change_start, but in some calls to other functions).
 	SCFLAG_NOICON    = 0x10, ///< Status icon (SI) should not be sent.
 	SCFLAG_ALL = SCFLAG_NONE|SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE|SCFLAG_NOICON
+};
+
+/**
+ * Flags to be used with status->heal() and related functions.
+ */
+enum status_heal_flag {
+	STATUS_HEAL_DEFAULT     = 0x00, ///< Default
+	STATUS_HEAL_FORCED      = 0x01, ///< Forced healing (bypassing Berserk and similar)
+	STATUS_HEAL_SHOWEFFECT  = 0x02, ///< Show the HP/SP heal effect
+	STATUS_HEAL_ALLOWREVIVE = 0x04, ///< Force resurrection in case of dead targets.
 };
 
 // Status changes listing. These code are for use by the server.
@@ -1900,7 +1889,7 @@ enum e_joint_break
 /**
  * Mob mode definitions. [Skotlex]
  *
- * @see doc/mob_db_mode_list.txt for a description of each mode.
+ * @see doc/mob_db_mode_list.md for a description of each mode.
  */
 enum e_mode
 {
@@ -2056,29 +2045,28 @@ enum e_status_calc_opt {
 //Required because players have two of these, one in status_data
 //and another for their left hand weapon.
 typedef struct weapon_atk {
-	unsigned short atk, atk2;
+	unsigned int atk, atk2;
 	unsigned short range;
 	unsigned char ele;
 #ifdef RENEWAL
-	unsigned short matk;
+	unsigned int matk;
 	unsigned char wlv;
 #endif
 } weapon_atk;
 
 //For holding basic status (which can be modified by status changes)
 struct status_data {
-	unsigned int
+	uint32
 		hp, sp,  // see status_cpy before adding members before hp and sp
 		max_hp, max_sp;
-	unsigned short
-		str, agi, vit, int_, dex, luk,
+	uint16 str, agi, vit, int_, dex, luk;
+	uint32
 		batk,
 		matk_min, matk_max,
 		speed,
-		amotion, adelay, dmotion;
-	uint32 mode;
-	short
-		hit, flee, cri, flee2,
+		amotion, adelay, dmotion,
+		mode;
+	int32 hit, flee, cri, flee2,
 		def2, mdef2,
 #ifdef RENEWAL_ASPD
 		aspd_rate2,
@@ -2239,21 +2227,6 @@ struct status_change {
 #define status_calc_elemental(ed, opt)  (status->calc_bl_(&(ed)->bl, SCB_ALL, (opt)))
 #define status_calc_npc(nd, opt)        (status->calc_bl_(&(nd)->bl, SCB_ALL, (opt)))
 
-enum refine_chance_type {
-	REFINE_CHANCE_TYPE_NORMAL     = 0, // Normal Chance
-	REFINE_CHANCE_TYPE_ENRICHED   = 1, // Enriched Ore Chance
-	REFINE_CHANCE_TYPE_E_NORMAL   = 2, // Event Normal Ore Chance
-	REFINE_CHANCE_TYPE_E_ENRICHED = 3, // Event Enriched Ore Chance
-	REFINE_CHANCE_TYPE_MAX
-};
-
-// bonus values and upgrade chances for refining equipment
-struct s_refine_info {
-	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; // success chance
-	int bonus[MAX_REFINE]; // cumulative fixed bonus damage
-	int randombonus_max[MAX_REFINE]; // cumulative maximum random bonus damage
-};
-
 struct s_status_dbs {
 BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
 	int max_weight_base[CLASS_COUNT];
@@ -2266,8 +2239,6 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	int SkillChangeTable[SC_MAX];         // status -> skill
 	int RelevantBLTypes[SI_MAX];          // "icon" -> enum bl_type (for clif->status_change to identify for which bl types to send packets)
 	bool DisplayType[SC_MAX];
-	/* */
-	struct s_refine_info refine_info[REFINE_TYPE_MAX];
 	/* */
 	int atkmods[3][MAX_SINGLE_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
 	char job_bonus[CLASS_COUNT][MAX_LEVEL];
@@ -2297,7 +2268,6 @@ struct status_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
-	int (*get_refine_chance) (enum refine_type wlv, int refine, enum refine_chance_type type);
 	// for looking up associated data
 	sc_type (*skill2sc) (int skill_id);
 	int (*sc2skill) (sc_type sc);
@@ -2309,9 +2279,9 @@ struct status_interface {
 	int (*charge) (struct block_list* bl, int64 hp, int64 sp);
 	int (*percent_change) (struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag);
 	//Used to set the hp/sp of an object to an absolute value (can't kill)
-	int (*set_hp) (struct block_list *bl, unsigned int hp, int flag);
-	int (*set_sp) (struct block_list *bl, unsigned int sp, int flag);
-	int (*heal) (struct block_list *bl,int64 hp,int64 sp, int flag);
+	int (*set_hp) (struct block_list *bl, unsigned int hp, enum status_heal_flag flag);
+	int (*set_sp) (struct block_list *bl, unsigned int sp, enum status_heal_flag flag);
+	int (*heal) (struct block_list *bl,int64 hp,int64 sp, enum status_heal_flag flag);
 	int (*revive) (struct block_list *bl, unsigned char per_hp, unsigned char per_sp);
 	int (*fixed_revive) (struct block_list *bl, unsigned int per_hp, unsigned int per_sp);
 	struct regen_data * (*get_regen_data) (struct block_list *bl);
@@ -2369,8 +2339,8 @@ struct status_interface {
 	short (*calc_def2) (struct block_list *bl, struct status_change *sc, int def2, bool viewable);
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int mdef, bool viewable);
 	short (*calc_mdef2) (struct block_list *bl, struct status_change *sc, int mdef2, bool viewable);
-	unsigned short (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
-	unsigned short(*base_matk) (struct block_list *bl, const struct status_data *st, int level);
+	int (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
+	int (*base_matk) (struct block_list *bl, const struct status_data *st, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
 	int (*get_total_mdef) (struct block_list *src);
 	int (*get_total_def) (struct block_list *src);
@@ -2381,9 +2351,11 @@ struct status_interface {
 	void (*initChangeTables) (void);
 	void (*initDummyData) (void);
 	int (*base_amotion_pc) (struct map_session_data *sd, struct status_data *st);
-	unsigned short (*base_atk) (const struct block_list *bl, const struct status_data *st);
+	int (*base_atk) (const struct block_list *bl, const struct status_data *st);
 	unsigned int (*get_base_maxhp) (const struct map_session_data *sd, const struct status_data *st);
 	unsigned int (*get_base_maxsp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_restart_hp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_restart_sp) (const struct map_session_data *sd, const struct status_data *st);
 	int (*calc_npc_) (struct npc_data *nd, enum e_status_calc_opt opt);
 	unsigned short (*calc_str) (struct block_list *bl, struct status_change *sc, int str);
 	unsigned short (*calc_agi) (struct block_list *bl, struct status_change *sc, int agi);
@@ -2391,12 +2363,12 @@ struct status_interface {
 	unsigned short (*calc_int) (struct block_list *bl, struct status_change *sc, int int_);
 	unsigned short (*calc_dex) (struct block_list *bl, struct status_change *sc, int dex);
 	unsigned short (*calc_luk) (struct block_list *bl, struct status_change *sc, int luk);
-	unsigned short (*calc_watk) (struct block_list *bl, struct status_change *sc, int watk, bool viewable);
-	unsigned short (*calc_matk) (struct block_list *bl, struct status_change *sc, int matk, bool viewable);
-	signed short (*calc_hit) (struct block_list *bl, struct status_change *sc, int hit, bool viewable);
-	signed short (*calc_critical) (struct block_list *bl, struct status_change *sc, int critical, bool viewable);
-	signed short (*calc_flee) (struct block_list *bl, struct status_change *sc, int flee, bool viewable);
-	signed short (*calc_flee2) (struct block_list *bl, struct status_change *sc, int flee2, bool viewable);
+	int (*calc_watk) (struct block_list *bl, struct status_change *sc, int watk, bool viewable);
+	int (*calc_matk) (struct block_list *bl, struct status_change *sc, int matk, bool viewable);
+	signed int (*calc_hit) (struct block_list *bl, struct status_change *sc, int hit, bool viewable);
+	signed int (*calc_critical) (struct block_list *bl, struct status_change *sc, int critical, bool viewable);
+	signed int (*calc_flee) (struct block_list *bl, struct status_change *sc, int flee, bool viewable);
+	signed int (*calc_flee2) (struct block_list *bl, struct status_change *sc, int flee2, bool viewable);
 	unsigned short (*calc_speed) (struct block_list *bl, struct status_change *sc, int speed);
 	short (*calc_aspd_rate) (struct block_list *bl, struct status_change *sc, int aspd_rate);
 	unsigned short (*calc_dmotion) (struct block_list *bl, struct status_change *sc, int dmotion);
@@ -2407,7 +2379,7 @@ struct status_interface {
 	unsigned char (*calc_element) (struct block_list *bl, struct status_change *sc, int element);
 	unsigned char (*calc_element_lv) (struct block_list *bl, struct status_change *sc, int lv);
 	uint32 (*calc_mode) (const struct block_list *bl, const struct status_change *sc, uint32 mode);
-	unsigned short (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
+	int (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
 	void (*calc_bl_main) (struct block_list *bl, int flag);
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);
 	void (*display_remove) (struct map_session_data *sd, enum sc_type type);
@@ -2415,15 +2387,13 @@ struct status_interface {
 	int (*natural_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
-	int (*readdb_refine_libconfig) (const char *filename);
-	int (*readdb_refine_libconfig_sub) (struct config_setting_t *r, const char *name, const char *source);
 	bool (*readdb_scconfig) (char *fields[], int columns, int current);
 	void (*read_job_db) (void);
 	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
 	void (*set_sc) (uint16 skill_id, sc_type sc, int icon, unsigned int flag);
 	void (*copy) (struct status_data *a, const struct status_data *b);
-	unsigned short (*base_matk_min) (const struct status_data *st);
-	unsigned short (*base_matk_max) (const struct status_data *st);
+	int (*base_matk_min) (const struct status_data *st);
+	int (*base_matk_max) (const struct status_data *st);
 };
 
 #ifdef HERCULES_CORE

@@ -411,7 +411,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 	return true;
 }
 
-static int homunculus_change_class(struct homun_data *hd, short class_)
+static int homunculus_change_class(struct homun_data *hd, int class_)
 {
 	int i = homun->db_search(class_,HOMUNCULUS_CLASS);
 	nullpo_retr(0, hd);
@@ -551,6 +551,12 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 	}
 
 	hd->homunculus.exp += exp;
+
+	if (hd->master->state.showexp && hd->exp_next > 0) {
+		char output[256];
+		sprintf(output, "Homunculus Experience Gained Base:%u (%.2f%%)", exp, ((float)exp / (float)hd->exp_next * (float)100));
+		clif_disp_onlyself(hd->master, output);
+	}
 
 	if(hd->homunculus.exp < hd->exp_next) {
 		clif->hominfo(hd->master,hd,0);
@@ -779,7 +785,7 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	}
 	safestrncpy(hd->homunculus.name, newname, NAME_LENGTH);
 	aFree(newname);
-	clif->charnameack (0,&hd->bl);
+	clif->blname_ack(0,&hd->bl);
 	hd->homunculus.rename_flag = 1;
 	clif->hominfo(sd,hd,0);
 	return true;

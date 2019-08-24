@@ -71,26 +71,26 @@ static int CheckForCharServer(void)
 }
 
 // pet
-static int intif_create_pet(int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id,
+static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id,
 	int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
 {
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(pet_name);
-	WFIFOHEAD(inter_fd, 28 + NAME_LENGTH);
+	WFIFOHEAD(inter_fd, 32 + NAME_LENGTH);
 	WFIFOW(inter_fd, 0) = 0x3080;
 	WFIFOL(inter_fd, 2) = account_id;
 	WFIFOL(inter_fd, 6) = char_id;
-	WFIFOW(inter_fd, 10) = pet_class;
-	WFIFOW(inter_fd, 12) = pet_lv;
-	WFIFOL(inter_fd, 14) = pet_egg_id;
-	WFIFOL(inter_fd, 18) = pet_equip;
-	WFIFOW(inter_fd, 22) = intimate;
-	WFIFOW(inter_fd, 24) = hungry;
-	WFIFOB(inter_fd, 26) = rename_flag;
-	WFIFOB(inter_fd, 27) = incubate;
-	memcpy(WFIFOP(inter_fd, 28), pet_name, NAME_LENGTH);
-	WFIFOSET(inter_fd, 28 + NAME_LENGTH);
+	WFIFOL(inter_fd, 10) = pet_class;
+	WFIFOL(inter_fd, 14) = pet_lv;
+	WFIFOL(inter_fd, 18) = pet_egg_id;
+	WFIFOL(inter_fd, 22) = pet_equip;
+	WFIFOW(inter_fd, 26) = intimate;
+	WFIFOW(inter_fd, 28) = hungry;
+	WFIFOB(inter_fd, 30) = rename_flag;
+	WFIFOB(inter_fd, 31) = incubate;
+	memcpy(WFIFOP(inter_fd, 32), pet_name, NAME_LENGTH);
+	WFIFOSET(inter_fd, 32 + NAME_LENGTH);
 
 	return 0;
 }
@@ -903,19 +903,19 @@ static int intif_guild_leave(int guild_id, int account_id, int char_id, int flag
 }
 
 //Update request / Lv online status of the guild members
-static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd, 19);
+	WFIFOHEAD(inter_fd, 23);
 	WFIFOW(inter_fd, 0) = 0x3035;
 	WFIFOL(inter_fd, 2) = guild_id;
 	WFIFOL(inter_fd, 6) = account_id;
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = online;
-	WFIFOW(inter_fd,15) = lv;
-	WFIFOW(inter_fd,17) = class;
-	WFIFOSET(inter_fd,19);
+	WFIFOL(inter_fd,15) = lv;
+	WFIFOL(inter_fd,19) = class;
+	WFIFOSET(inter_fd,23);
 	return 0;
 }
 
@@ -1507,7 +1507,7 @@ static void intif_parse_GuildMemberWithdraw(int fd)
 // ACK guild member basic info
 static void intif_parse_GuildMemberInfoShort(int fd)
 {
-	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17),RFIFOL(fd,19));
+	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOL(fd,17),RFIFOL(fd,21));
 }
 
 // ACK guild break
@@ -1640,7 +1640,7 @@ static void intif_parse_GuildMasterChanged(int fd)
 // Request pet creation
 static void intif_parse_CreatePet(int fd)
 {
-	pet->get_egg(RFIFOL(fd,2), RFIFOW(fd,6), RFIFOL(fd,8));
+	pet->get_egg(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
 }
 
 // ACK pet data
@@ -2754,16 +2754,21 @@ static void intif_parse_RodexNotifications(int fd)
 ///     2 - user got Items
 ///     3 - delete
 ///     4 - sender Read (returned mail)
-static int intif_rodex_updatemail(int64 mail_id, int8 flag)
+static int intif_rodex_updatemail(struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag)
 {
+	nullpo_ret(sd);
+
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd, 11);
+	WFIFOHEAD(inter_fd, 20);
 	WFIFOW(inter_fd, 0) = 0x3097;
-	WFIFOQ(inter_fd, 2) = mail_id;
-	WFIFOB(inter_fd, 10) = flag;
-	WFIFOSET(inter_fd, 11);
+	WFIFOL(inter_fd, 2) = sd->status.account_id;
+	WFIFOL(inter_fd, 6) = sd->status.char_id;
+	WFIFOQ(inter_fd, 10) = mail_id;
+	WFIFOB(inter_fd, 18) = opentype;
+	WFIFOB(inter_fd, 19) = flag;
+	WFIFOSET(inter_fd, 20);
 
 	return 0;
 }
@@ -2830,11 +2835,11 @@ static void intif_parse_RodexCheckName(int fd)
 	struct map_session_data *sd = NULL;
 	int reqchar_id = RFIFOL(fd, 2);
 	int target_char_id = RFIFOL(fd, 6);
-	short target_class = RFIFOW(fd, 10);
-	int target_level = RFIFOL(fd, 12);
+	int target_class = RFIFOL(fd, 10);
+	int target_level = RFIFOL(fd, 14);
 	char name[NAME_LENGTH];
 
-	safestrncpy(name, RFIFOP(inter_fd, 16), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(inter_fd, 18), NAME_LENGTH);
 
 	if (reqchar_id <= 0)
 		return;
@@ -2853,6 +2858,35 @@ static void intif_parse_RodexCheckName(int fd)
 	safestrncpy(sd->rodex.tmp.receiver_name, name, NAME_LENGTH);
 
 	clif->rodex_checkname_result(sd, target_char_id, target_class, target_level, name);
+}
+
+static void intif_parse_GetZenyAck(int fd)
+{
+	int char_id = RFIFOL(fd, 2);
+	int64 zeny = RFIFOL(fd, 6);
+	int64 mail_id = RFIFOQ(fd, 14);
+	uint8 opentype = RFIFOB(fd, 22);
+	struct map_session_data *sd = map->charid2sd(char_id);
+
+	if (sd == NULL) // User is not online anymore
+		return;
+	rodex->getZenyAck(sd, mail_id, opentype, zeny);
+}
+
+static void intif_parse_GetItemsAck(int fd)
+{
+	int char_id = RFIFOL(fd, 2);
+
+	struct map_session_data *sd = map->charid2sd(char_id);
+	if (sd == NULL) // User is not online anymore
+		return;
+
+	int64 mail_id = RFIFOQ(fd, 6);
+	uint8 opentype = RFIFOB(fd, 14);
+	int count = RFIFOB(fd, 15);
+	struct rodex_item items[RODEX_MAX_ITEM];
+	memcpy(&items[0], RFIFOP(fd, 16), sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	rodex->getItemsAck(sd, mail_id, opentype, count, &items[0]);
 }
 
 //-----------------------------------------------------------------
@@ -2972,6 +3006,8 @@ static int intif_parse(int fd)
 		case 0x3896: intif->pRodexHasNew(fd); break;
 		case 0x3897: intif->pRodexSendMail(fd); break;
 		case 0x3898: intif->pRodexCheckName(fd); break;
+		case 0x3899: intif->pGetZenyAck(fd); break;
+		case 0x389a: intif->pGetItemsAck(fd); break;
 
 		// Clan System
 		case 0x3858: intif->pRecvClanMemberAction(fd); break;
@@ -2995,13 +3031,13 @@ void intif_defaults(void)
 		-1,-1,27,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
-		10,-1,15, 0, 79,23, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
+		10,-1,15, 0, 79,25, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
 		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
-		12,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0,-1, 7, 15,16 + NAME_LENGTH, 0, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
+		14,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
+		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 23, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
 	};
 
 	intif = &intif_s;
@@ -3171,6 +3207,8 @@ void intif_defaults(void)
 	intif->pRodexHasNew = intif_parse_RodexNotifications;
 	intif->pRodexSendMail = intif_parse_RodexSendMail;
 	intif->pRodexCheckName = intif_parse_RodexCheckName;
+	intif->pGetZenyAck = intif_parse_GetZenyAck;
+	intif->pGetItemsAck = intif_parse_GetItemsAck;
 	/* Clan System */
 	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
 	/* Achievement System */

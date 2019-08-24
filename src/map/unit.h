@@ -44,6 +44,7 @@ enum unit_stopwalking_flag {
 
 struct unit_data {
 	struct block_list *bl;
+	char title[NAME_LENGTH];
 	struct walkpath_data walkpath;
 	struct skill_timerskill *skilltimerskill[MAX_SKILLTIMERSKILL];
 	struct skill_unit_group *skillunit[MAX_SKILLUNITGROUP];
@@ -61,6 +62,7 @@ struct unit_data {
 	int   chaserange;
 	bool  stepaction; //Action should be executed on step [Playtester]
 	int   steptimer; //Timer that triggers the action [Playtester]
+	int groupId;  // id of client side group (works for npc and may be other) [4144]
 	uint16 stepskill_id,stepskill_lv; //Remembers skill that should be casted on step [Playtester]
 	int64 attackabletime;
 	int64 canact_tick;
@@ -116,7 +118,7 @@ struct unit_interface {
 	int (*setdir) (struct block_list *bl, unsigned char dir);
 	uint8 (*getdir) (struct block_list *bl);
 	int (*blown) (struct block_list *bl, int dx, int dy, int count, int flag);
-	int (*warp) (struct block_list *bl, short m, short x, short y, clr_type type);
+	int (*warp) (struct block_list *bl, short m, short x, short y, enum clr_type type);
 	int (*stop_walking) (struct block_list *bl, int type);
 	int (*skilluse_id) (struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv);
 	int (*step_timer) (int tid, int64 tick, int id, intptr_t data);
@@ -142,10 +144,10 @@ struct unit_interface {
 	int (*counttargeted) (struct block_list *bl);
 	int (*fixdamage) (struct block_list *src, struct block_list *target, int sdelay, int ddelay, int64 damage, short div, unsigned char type, int64 damage2);
 	int (*changeviewsize) (struct block_list *bl, short size);
-	int (*remove_map) (struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func);
-	void (*remove_map_pc) (struct map_session_data *sd, clr_type clrtype);
+	int (*remove_map) (struct block_list *bl, enum clr_type clrtype, const char *file, int line, const char *func);
+	void (*remove_map_pc) (struct map_session_data *sd, enum clr_type clrtype);
 	void (*free_pc) (struct map_session_data *sd);
-	int (*free) (struct block_list *bl, clr_type clrtype);
+	int (*free) (struct block_list *bl, enum clr_type clrtype);
 };
 
 #ifdef HERCULES_CORE

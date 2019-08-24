@@ -45,42 +45,6 @@ enum E_MAPSERVER_ST {
 	MAPSERVER_ST_LAST
 };
 
-#define MAX_NPC_PER_MAP 512
-#define AREA_SIZE (battle->bc->area_size)
-#define CHAT_AREA_SIZE (battle->bc->chat_area_size)
-#define DEAD_AREA_SIZE (battle->bc->dead_area_size)
-#define DAMAGELOG_SIZE 30
-#define LOOTITEM_SIZE 10
-#define MAX_MOBSKILL 50
-#define MAX_MOB_LIST_PER_MAP 100
-#define MAX_EVENTQUEUE 2
-#define MAX_EVENTTIMER 32
-#define NATURAL_HEAL_INTERVAL 500
-#define MIN_FLOORITEM 2
-#define MAX_FLOORITEM START_ACCOUNT_NUM
-#define MAX_IGNORE_LIST 20 // official is 14
-#define MAX_VENDING 12
-#define MAX_MAP_SIZE (512*512) // Wasn't there something like this already? Can't find it.. [Shinryo]
-
-#define BLOCK_SIZE 8
-#define block_free_max 1048576
-#define BL_LIST_MAX 1048576
-
-// The following system marks a different job ID system used by the map server,
-// which makes a lot more sense than the normal one. [Skotlex]
-// These marks the "level" of the job.
-#define JOBL_2_1   0x0100
-#define JOBL_2_2   0x0200
-#define JOBL_2     0x0300 // JOBL_2_1 | JOBL_2_2
-#define JOBL_UPPER 0x1000
-#define JOBL_BABY  0x2000
-#define JOBL_THIRD 0x4000
-
-// For filtering and quick checking.
-#define MAPID_BASEMASK 0x00ff
-#define MAPID_UPPERMASK 0x0fff
-#define MAPID_THIRDMASK (JOBL_THIRD|MAPID_UPPERMASK)
-
 //First Jobs
 //Note the oddity of the novice:
 //Super Novices are considered the 2-1 version of the novice! Novices are considered a first class type.
@@ -344,36 +308,6 @@ enum {
 
 STATIC_ASSERT(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First class map IDs do not fit into MAPID_BASEMASK");
 
-// Max size for inputs to Graffiti, Talkie Box and Vending text prompts
-#define MESSAGE_SIZE (79 + 1)
-// String length you can write in the 'talking box'
-#define CHATBOX_SIZE (70 + 1)
-// Chatroom-related string sizes
-#define CHATROOM_TITLE_SIZE (36 + 1)
-#define CHATROOM_PASS_SIZE (8 + 1)
-// Max allowed chat text length
-#define CHAT_SIZE_MAX (255 + 1)
-// 24 for npc name + 24 for label + 2 for a "::" and 1 for EOS
-#define EVENT_NAME_LENGTH ( NAME_LENGTH * 2 + 3 )
-#define DEFAULT_AUTOSAVE_INTERVAL (5*60*1000)
-// Specifies maps where players may hit each other
-#define map_flag_vs(m) ( \
-		map->list[m].flag.pvp \
-		|| map->list[m].flag.gvg_dungeon \
-		|| map->list[m].flag.gvg \
-		|| ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) \
-		|| map->list[m].flag.battleground \
-		|| map->list[m].flag.cvc \
-		)
-// Specifies maps that have special GvG/WoE restrictions
-#define map_flag_gvg(m) (map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle))
-// Specifies if the map is tagged as GvG/WoE (regardless of map->agit_flag status)
-#define map_flag_gvg2(m) (map->list[m].flag.gvg || map->list[m].flag.gvg_castle)
-// No Kill Steal Protection
-#define map_flag_ks(m) (map->list[m].flag.town || map->list[m].flag.pvp || map->list[m].flag.gvg || map->list[m].flag.battleground)
-// No ViewID
-#define map_no_view(m, view) (map->list[m].flag.noviewid & (view))
-
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]
 enum bl_type {
@@ -391,9 +325,6 @@ enum bl_type {
 
 	BL_ALL   = 0xFFF,
 };
-
-// For common mapforeach calls. Since pets cannot be affected, they aren't included here yet.
-#define BL_CHAR (BL_PC|BL_MOB|BL_HOM|BL_MER|BL_ELEM)
 
 enum npc_subtype { WARP, SHOP, SCRIPT, CASHSHOP, TOMB };
 
@@ -518,7 +449,7 @@ struct block_list {
 // Mob List Held in memory for Dynamic Mobs [Wizputer]
 // Expanded to specify all mob-related spawn data by [Skotlex]
 struct spawn_data {
-	short class_;                ///< Class, used because a mob can change it's class
+	int class_;                ///< Class, used because a mob can change it's class
 	unsigned short m, x, y;      ///< Spawn information (map, point, spawn-area around point)
 	signed short xs, ys;
 	unsigned short num;          ///< Number of mobs using this structure
@@ -748,16 +679,6 @@ enum map_zone_merge_type {
 	MZMT_NEVERMERGE, ///< Cannot merge with any zones.
 };
 
-#define MAP_ZONE_NAME_LENGTH 60
-#define MAP_ZONE_ALL_NAME "All"
-#define MAP_ZONE_NORMAL_NAME "Normal"
-#define MAP_ZONE_PVP_NAME "PvP"
-#define MAP_ZONE_GVG_NAME "GvG"
-#define MAP_ZONE_BG_NAME "Battlegrounds"
-#define MAP_ZONE_CVC_NAME "CvC"
-#define MAP_ZONE_PK_NAME "PK Mode"
-#define MAP_ZONE_MAPFLAG_LENGTH 65
-
 struct map_zone_data {
 	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
 	enum map_zone_merge_type merge_type;
@@ -783,41 +704,6 @@ struct map_drop_list {
 	int drop_type;
 	int drop_per;
 };
-
-struct questinfo_qreq {
-	int id;
-	int state;
-};
-
-struct questinfo_itemreq {
-	int nameid;
-	int min;
-	int max;
-};
-
-struct questinfo {
-	struct npc_data *nd;
-	unsigned short icon;
-	unsigned char color;
-	bool hasJob;
-	unsigned short job;/* perhaps a mapid mask would be most flexible? */
-	bool sex_enabled;
-	int sex;
-	struct {
-		int min;
-		int max;
-	} base_level;
-	struct {
-		int min;
-		int max;
-	} job_level;
-	VECTOR_DECL(struct questinfo_itemreq) items;
-	struct s_homunculus homunculus;
-	int homunculus_type;
-	VECTOR_DECL(struct questinfo_qreq) quest_requirement;
-	int mercenary_class;
-};
-
 
 struct map_data {
 	char name[MAP_NAME_LENGTH];
@@ -899,6 +785,8 @@ struct map_data {
 		unsigned noautoloot : 1;
 		unsigned pairship_startable : 1;
 		unsigned pairship_endable : 1;
+		unsigned nostorage : 2;
+		unsigned nogstorage : 2;
 		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 	} flag;
 	struct point save;
@@ -956,8 +844,8 @@ struct map_data {
 		int len;
 	} cell_buf;
 
-	/* ShowEvent Data Cache */
-	VECTOR_DECL(struct questinfo) qi_data;
+	/* questinfo entries list */
+	VECTOR_DECL(struct npc_data) qi_list;
 
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
@@ -1167,6 +1055,7 @@ struct map_interface {
 	char autotrade_merchants_db[32];
 	char autotrade_data_db[32];
 	char npc_market_data_db[32];
+	char npc_barter_data_db[32];
 
 	char default_codepage[32];
 	char default_lang_str[64];
@@ -1220,6 +1109,7 @@ END_ZEROED_BLOCK;
 	/* funcs */
 	void (*zone_init) (void);
 	void (*zone_remove) (int m);
+	void (*zone_remove_all) (int m);
 	void (*zone_apply) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change2) (int m, struct map_zone_data *zone);
@@ -1293,6 +1183,7 @@ END_ZEROED_BLOCK;
 	int (*foreachinpath) (int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...);
 	int (*vforeachinmap) (int (*func)(struct block_list*,va_list), int16 m, int type, va_list args);
 	int (*foreachinmap) (int (*func)(struct block_list*,va_list), int16 m, int type, ...);
+	int (*forcountinmap) (int (*func)(struct block_list*,va_list), int16 m, int count, int type, ...);
 	int (*vforeachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type, va_list ap);
 	int (*foreachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type,...);
 
@@ -1388,7 +1279,7 @@ END_ZEROED_BLOCK;
 	int (*abort_sub) (struct map_session_data *sd, va_list ap);
 	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);
-	void (*add_questinfo) (int m, struct questinfo *qi);
+	bool (*add_questinfo) (int m, struct npc_data *nd);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
 	void (*zone_clear_single) (struct map_zone_data *zone);

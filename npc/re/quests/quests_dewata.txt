@@ -1706,7 +1706,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		next;
 		mes "- He seems to be asking for the Island name. -";
 		next;
-		input .@island_name$;
+		input(.@island_name$);
 		next;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It's called "+ .@island_name$ +". What's wrong?";

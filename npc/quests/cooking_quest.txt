@@ -1102,8 +1102,8 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "but I'm not lending those out.";
 			mes "Oh, and enter 0 to cancel.";
 			next;
-			input .@new_book;
-			if (.@new_book < 0 || .@new_book > 5) {
+			input(.@new_book);
+			if (.@new_book > 5) {
 				cutin "orleans_5",0;
 				mes "[Charles Orleans]";
 				mes "Hmm...";
@@ -1113,8 +1113,9 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "only cookbooks that I will";
 				mes "lend out to my students.";
 				callsub L_End;
+				end;
 			}
-			else if (.@new_book == 0) {
+			if (.@new_book <= 0) {
 				cutin "orleans_5",0;
 				mes "[Charles Orleans]";
 				mes "So you changed your mind?";
@@ -1123,6 +1124,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "have right now before trying";
 				mes "something new, I suppose.";
 				callsub L_End;
+				end;
 			}
 			mes "[Charles Orleans]";
 			mes "So you wanted to borrow a";
@@ -1131,8 +1133,8 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "me the level of the cookbook";
 			mes "that you are returning to me?";
 			next;
-			input .@old_book;
-			if (.@old_book < 0 || .@old_book > 5) {
+			input(.@old_book);
+			if (.@old_book > 5) {
 				mes "[Charles Orleans]";
 				mes "There must be some";
 				mes "kind of mistake-- I only";
@@ -1141,8 +1143,9 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "me again when you remember";
 				mes "which cookbook you have, okay?";
 				callsub L_End;
+				end;
 			}
-			else if (.@old_book == 0) {
+			if (.@old_book <= 0) {
 				cutin "orleans_5",0;
 				mes "[Charles Orleans]";
 				mes "So you changed your mind?";
@@ -1151,8 +1154,9 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "have right now before trying";
 				mes "something new, I suppose.";
 				callsub L_End;
+				end;
 			}
-			else if (.@old_book == .@new_book) {
+			if (.@old_book == .@new_book) {
 				cutin "orleans_4",0;
 				mes "[Charles Orleans]";
 				mes "Wait, wait...";
@@ -1162,62 +1166,62 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "have? I guess you made";
 				mes "some sort of mistake?";
 				callsub L_End;
+				end;
 			}
-			else {
-				if (countitem(7471+.@old_book) < 1) {
-					mes "[Charles Orleans]";
-					mes "Wait, wait...";
-					mes "Why don't you have";
-					mes "the book that you said";
-					mes "that you'd return to me?";
-					mes "Find it first, and then I can";
-					mes "lend another cookbook to you.";
-					callsub L_End;
-				}
-				cutin "orleans_2",0;
+			if (countitem(7471+.@old_book) < 1) {
 				mes "[Charles Orleans]";
-				switch(.@old_book) {
-				case 1:
-					mes "Ah, so you're done";
-					mes "with the Level 1 Cookbook.";
-					mes "That's good, that means you're";
-					mes "ready to graduate from the most";
-					mes "basic of basics. From now on,";
-					mes "the recipes will be harder...";
-					break;
-				case 2:
-					mes "Ah, so what did you";
-					mes "think of the recipes in";
-					mes "the Level 2 Cookbook?";
-					mes "Homestyle cooking may be";
-					mes "simple, but it should never";
-					mes "be neglected by chefs.";
-					break;
-				case 3:
-					mes "Ah, done with the Level 3";
-					mes "Cookbook already? The recipes";
-					mes "in there are really good when you're cooking romantic dinners.";
-					mes "They'll come in handy someday,";
-					mes "if you know what I mean.";
-					break;
-				case 4:
-					mes "So you've finished the";
-					mes "Level 4 Cookbook. That's";
-					mes "no small feat! You've got to";
-					mes "use very strange ingredients";
-					mes "to create delicious cuisine!";
-					break;
-				case 5:
-					mes "You're done with the";
-					mes "Level 5 Cookbook? Good";
-					mes "work: most beginners don't";
-					mes "even get this far. I suppose";
-					mes "you'll want to review some";
-					mes "of the easier recipes now~";
-					break;
-				}
-				next;
+				mes "Wait, wait...";
+				mes "Why don't you have";
+				mes "the book that you said";
+				mes "that you'd return to me?";
+				mes "Find it first, and then I can";
+				mes "lend another cookbook to you.";
+				callsub L_End;
+				end;
 			}
+			cutin "orleans_2",0;
+			mes "[Charles Orleans]";
+			switch(.@old_book) {
+			case 1:
+				mes "Ah, so you're done";
+				mes "with the Level 1 Cookbook.";
+				mes "That's good, that means you're";
+				mes "ready to graduate from the most";
+				mes "basic of basics. From now on,";
+				mes "the recipes will be harder...";
+				break;
+			case 2:
+				mes "Ah, so what did you";
+				mes "think of the recipes in";
+				mes "the Level 2 Cookbook?";
+				mes "Homestyle cooking may be";
+				mes "simple, but it should never";
+				mes "be neglected by chefs.";
+				break;
+			case 3:
+				mes "Ah, done with the Level 3";
+				mes "Cookbook already? The recipes";
+				mes "in there are really good when you're cooking romantic dinners.";
+				mes "They'll come in handy someday,";
+				mes "if you know what I mean.";
+				break;
+			case 4:
+				mes "So you've finished the";
+				mes "Level 4 Cookbook. That's";
+				mes "no small feat! You've got to";
+				mes "use very strange ingredients";
+				mes "to create delicious cuisine!";
+				break;
+			case 5:
+				mes "You're done with the";
+				mes "Level 5 Cookbook? Good";
+				mes "work: most beginners don't";
+				mes "even get this far. I suppose";
+				mes "you'll want to review some";
+				mes "of the easier recipes now~";
+				break;
+			}
+			next;
 			cutin "orleans_1",0;
 			mes "[Charles Orleans]";
 			mes "Now, before I let you";
@@ -2079,8 +2083,8 @@ S_SellSets:
 	mes "enter the number 0.";
 	next;
 	while(1) {
-		input .@sell;
-		if (.@sell == 0) {
+		input(.@sell);
+		if (.@sell <= 0) {
 			mes "[Madeleine Chu]";
 			mes "You've changed your";
 			mes "mind? Well, if you need";
@@ -2089,15 +2093,16 @@ S_SellSets:
 			mes "to me at anytime, alright?";
 			close;
 		}
-		else if (.@sell > 100) {
+		if (.@sell > 100) {
 			mes "[Madeleine Chu]";
 			mes "Oh, I'm sorry, but";
 			mes "I don't sell more than";
 			mes "100 "+getitemname(getarg(0));
 			mes "at a time, just to be safe.";
 			next;
+			continue;
 		}
-		else break;
+		break;
 	}
 	.@total_cost = .@sell * .@item_cost;
 	.@total_weight = .@sell * .@item_weight;

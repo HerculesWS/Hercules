@@ -521,7 +521,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 	switch(select("Royal Guard", "Rune Knight", "Sorcerer")) {
 	case 1:
 		mes "1~5";
-		input .@input;
+		input(.@input);
 		next;
 		if (.@input < 1 || .@input > 5) {
 			mes "Set item to adjust the Royal Guard";
@@ -533,7 +533,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 		close;
 	case 2:
 		mes "1~24";
-		input .@input;
+		input(.@input);
 		next;
 		if (.@input < 1 || .@input > 24) {
 			mes "Set item to adjust the Rune Knight";
@@ -545,7 +545,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 		close;
 	case 3:
 		mes "1~5";
-		input .@input;
+		input(.@input);
 		next;
 		if (.@input < 1 || .@input > 5) {
 			mes "Set item to adjust the Sorcerer";

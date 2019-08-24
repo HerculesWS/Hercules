@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2019  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,8 +90,10 @@ struct {
 	struct HPMHookPoint *HP_chr_count_users_post;
 	struct HPMHookPoint *HP_chr_mmo_char_tobuf_pre;
 	struct HPMHookPoint *HP_chr_mmo_char_tobuf_post;
-	struct HPMHookPoint *HP_chr_mmo_char_send099d_pre;
-	struct HPMHookPoint *HP_chr_mmo_char_send099d_post;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_pre;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_post;
 	struct HPMHookPoint *HP_chr_mmo_char_send_ban_list_pre;
 	struct HPMHookPoint *HP_chr_mmo_char_send_ban_list_post;
 	struct HPMHookPoint *HP_chr_mmo_char_send_slots_info_pre;
@@ -762,6 +764,10 @@ struct {
 	struct HPMHookPoint *HP_inter_rodex_savemessage_post;
 	struct HPMHookPoint *HP_inter_rodex_updatemail_pre;
 	struct HPMHookPoint *HP_inter_rodex_updatemail_post;
+	struct HPMHookPoint *HP_inter_rodex_getzeny_pre;
+	struct HPMHookPoint *HP_inter_rodex_getzeny_post;
+	struct HPMHookPoint *HP_inter_rodex_getitems_pre;
+	struct HPMHookPoint *HP_inter_rodex_getitems_post;
 	struct HPMHookPoint *HP_inter_storage_tosql_pre;
 	struct HPMHookPoint *HP_inter_storage_tosql_post;
 	struct HPMHookPoint *HP_inter_storage_fromsql_pre;
@@ -1222,6 +1228,10 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_rodex_checkname_post;
 	struct HPMHookPoint *HP_mapif_rodex_checkname_pre;
 	struct HPMHookPoint *HP_mapif_rodex_checkname_post;
+	struct HPMHookPoint *HP_mapif_rodex_getzenyack_pre;
+	struct HPMHookPoint *HP_mapif_rodex_getzenyack_post;
+	struct HPMHookPoint *HP_mapif_rodex_getitemsack_pre;
+	struct HPMHookPoint *HP_mapif_rodex_getitemsack_post;
 	struct HPMHookPoint *HP_mapif_load_guild_storage_pre;
 	struct HPMHookPoint *HP_mapif_load_guild_storage_post;
 	struct HPMHookPoint *HP_mapif_save_guild_storage_ack_pre;
@@ -1322,6 +1332,14 @@ struct {
 	struct HPMHookPoint *HP_mutex_cond_broadcast_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
+	struct HPMHookPoint *HP_packets_init_pre;
+	struct HPMHookPoint *HP_packets_init_post;
+	struct HPMHookPoint *HP_packets_final_pre;
+	struct HPMHookPoint *HP_packets_final_post;
+	struct HPMHookPoint *HP_packets_addLens_pre;
+	struct HPMHookPoint *HP_packets_addLens_post;
+	struct HPMHookPoint *HP_packets_addLen_pre;
+	struct HPMHookPoint *HP_packets_addLen_post;
 	struct HPMHookPoint *HP_pincode_handle_pre;
 	struct HPMHookPoint *HP_pincode_handle_post;
 	struct HPMHookPoint *HP_pincode_decrypt_pre;
@@ -1396,10 +1414,14 @@ struct {
 	struct HPMHookPoint *HP_sockt_realloc_writefifo_post;
 	struct HPMHookPoint *HP_sockt_wfifoset_pre;
 	struct HPMHookPoint *HP_sockt_wfifoset_post;
+	struct HPMHookPoint *HP_sockt_wfifohead_pre;
+	struct HPMHookPoint *HP_sockt_wfifohead_post;
 	struct HPMHookPoint *HP_sockt_rfifoskip_pre;
 	struct HPMHookPoint *HP_sockt_rfifoskip_post;
 	struct HPMHookPoint *HP_sockt_close_pre;
 	struct HPMHookPoint *HP_sockt_close_post;
+	struct HPMHookPoint *HP_sockt_validateWfifo_pre;
+	struct HPMHookPoint *HP_sockt_validateWfifo_post;
 	struct HPMHookPoint *HP_sockt_session_is_valid_pre;
 	struct HPMHookPoint *HP_sockt_session_is_valid_post;
 	struct HPMHookPoint *HP_sockt_session_is_active_pre;
@@ -1408,6 +1430,8 @@ struct {
 	struct HPMHookPoint *HP_sockt_flush_post;
 	struct HPMHookPoint *HP_sockt_flush_fifos_pre;
 	struct HPMHookPoint *HP_sockt_flush_fifos_post;
+	struct HPMHookPoint *HP_sockt_connect_client_pre;
+	struct HPMHookPoint *HP_sockt_connect_client_post;
 	struct HPMHookPoint *HP_sockt_set_nonblocking_pre;
 	struct HPMHookPoint *HP_sockt_set_nonblocking_post;
 	struct HPMHookPoint *HP_sockt_set_defaultparse_pre;
@@ -1713,8 +1737,10 @@ struct {
 	int HP_chr_count_users_post;
 	int HP_chr_mmo_char_tobuf_pre;
 	int HP_chr_mmo_char_tobuf_post;
-	int HP_chr_mmo_char_send099d_pre;
-	int HP_chr_mmo_char_send099d_post;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_pre;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_post;
 	int HP_chr_mmo_char_send_ban_list_pre;
 	int HP_chr_mmo_char_send_ban_list_post;
 	int HP_chr_mmo_char_send_slots_info_pre;
@@ -2385,6 +2411,10 @@ struct {
 	int HP_inter_rodex_savemessage_post;
 	int HP_inter_rodex_updatemail_pre;
 	int HP_inter_rodex_updatemail_post;
+	int HP_inter_rodex_getzeny_pre;
+	int HP_inter_rodex_getzeny_post;
+	int HP_inter_rodex_getitems_pre;
+	int HP_inter_rodex_getitems_post;
 	int HP_inter_storage_tosql_pre;
 	int HP_inter_storage_tosql_post;
 	int HP_inter_storage_fromsql_pre;
@@ -2845,6 +2875,10 @@ struct {
 	int HP_mapif_parse_rodex_checkname_post;
 	int HP_mapif_rodex_checkname_pre;
 	int HP_mapif_rodex_checkname_post;
+	int HP_mapif_rodex_getzenyack_pre;
+	int HP_mapif_rodex_getzenyack_post;
+	int HP_mapif_rodex_getitemsack_pre;
+	int HP_mapif_rodex_getitemsack_post;
 	int HP_mapif_load_guild_storage_pre;
 	int HP_mapif_load_guild_storage_post;
 	int HP_mapif_save_guild_storage_ack_pre;
@@ -2945,6 +2979,14 @@ struct {
 	int HP_mutex_cond_broadcast_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
+	int HP_packets_init_pre;
+	int HP_packets_init_post;
+	int HP_packets_final_pre;
+	int HP_packets_final_post;
+	int HP_packets_addLens_pre;
+	int HP_packets_addLens_post;
+	int HP_packets_addLen_pre;
+	int HP_packets_addLen_post;
 	int HP_pincode_handle_pre;
 	int HP_pincode_handle_post;
 	int HP_pincode_decrypt_pre;
@@ -3019,10 +3061,14 @@ struct {
 	int HP_sockt_realloc_writefifo_post;
 	int HP_sockt_wfifoset_pre;
 	int HP_sockt_wfifoset_post;
+	int HP_sockt_wfifohead_pre;
+	int HP_sockt_wfifohead_post;
 	int HP_sockt_rfifoskip_pre;
 	int HP_sockt_rfifoskip_post;
 	int HP_sockt_close_pre;
 	int HP_sockt_close_post;
+	int HP_sockt_validateWfifo_pre;
+	int HP_sockt_validateWfifo_post;
 	int HP_sockt_session_is_valid_pre;
 	int HP_sockt_session_is_valid_post;
 	int HP_sockt_session_is_active_pre;
@@ -3031,6 +3077,8 @@ struct {
 	int HP_sockt_flush_post;
 	int HP_sockt_flush_fifos_pre;
 	int HP_sockt_flush_fifos_post;
+	int HP_sockt_connect_client_pre;
+	int HP_sockt_connect_client_post;
 	int HP_sockt_set_nonblocking_pre;
 	int HP_sockt_set_nonblocking_post;
 	int HP_sockt_set_defaultparse_pre;
@@ -3301,6 +3349,7 @@ struct {
 	struct md5_interface md5;
 	struct mutex_interface mutex;
 	struct nullpo_interface nullpo;
+	struct packets_interface packets;
 	struct pincode_interface pincode;
 	struct rnd_interface rnd;
 	struct showmsg_interface showmsg;

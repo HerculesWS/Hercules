@@ -705,7 +705,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			next;
 			while(1) {
 				while(1) {
-					input .@input;
+					input(.@input);
 					if (.@input == 0) {
 						mes "[Union Staff Kay]";
 						mes "Are you sure that you wanna cancel?";
@@ -714,14 +714,15 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 							close;
 						}
 						next;
+						continue;
 					}
-					else if (.@input < 1000000 || .@input > 5000000) {
+					if (.@input < 1000000 || .@input > 5000000) {
 						mes "[Union Staff Kay]";
 						mes "Hey hey. That number's not valid! Enter a value from 1000000 to 5000000. got it?";
 						next;
-					} else {
-						break;
+						continue;
 					}
+					break;
 				}
 				mes "[Union Staff Kay]";
 				if (.@where_village == 1)

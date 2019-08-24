@@ -241,9 +241,11 @@ CREATE TABLE IF NOT EXISTS `char` (
   `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
   `sex` ENUM('M','F','U') NOT NULL DEFAULT 'U',
   `hotkey_rowshift` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+  `hotkey_rowshift2` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
   `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
   `attendance_timer` BIGINT(20) NULL DEFAULT '0',
   `title_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `inventory_size` INT(11) UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`char_id`),
   UNIQUE KEY `name_key` (`name`),
   KEY `account_id` (`account_id`),
@@ -293,7 +295,7 @@ CREATE TABLE IF NOT EXISTS `charlog` (
   `str` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `agi` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `vit` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `INT` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `int` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `dex` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `luk` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `hair` TINYINT(4) NOT NULL DEFAULT '0',
@@ -448,6 +450,7 @@ CREATE TABLE IF NOT EXISTS `guild_castle` (
 CREATE TABLE IF NOT EXISTS `guild_expulsion` (
   `guild_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `name` VARCHAR(24) NOT NULL DEFAULT '',
   `mes` VARCHAR(40) NOT NULL DEFAULT '',
   PRIMARY KEY (`guild_id`,`name`)
@@ -922,6 +925,11 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1528026381); -- 2018-06-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1528180320); -- 2018-06-05--12-02.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1532403228); -- 2018-07-24--03-23.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1535865732); -- 2018-09-01--05-22.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1544738447); -- 2018-12-14--01-02.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1546059075); -- 2018-12-29--07-51.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1554760320); -- 2019-04-08--21-52.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1556147483); -- 2019-04-25--02-12.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1557414445); -- 2019-05-09--18-07.sql
 
 --
 -- Table structure for table `storage`
@@ -1009,4 +1017,13 @@ CREATE TABLE IF NOT EXISTS `rodex_mail` (
   KEY `receiver_accountid` (`receiver_accountid`),
   KEY `send_date` (`send_date`),
   KEY `expire_date` (`expire_date`)
+) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `npc_barter_data` (
+  `name` VARCHAR(24) NOT NULL DEFAULT '',
+  `itemId` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `priceId` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `priceAmount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`name`, `itemid`, `priceId`, `priceAmount`)
 ) ENGINE=MyISAM;

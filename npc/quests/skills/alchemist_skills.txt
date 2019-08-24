@@ -1438,83 +1438,8 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "Homunculus, putting it in";
 		mes "an inert state of hibernation?";
 		next;
-		input .@input$;
-		if (.@input$ == "Vaporize") {
-			mes "[Kellasus]";
-			mes "Hmm, not bad. So you've";
-			mes "been studying. Now, the second";
-			mes "question. What is the item, whose name indicates a very early stage";
-			mes "of Homunculus development, used for the Call Homunculus skill?";
-			next;
-			input .@input$;
-			if (.@input$ == "Embryo") {
-				mes "[Kellasus]";
-				mes "Huh. You got that one";
-				mes "right too. Alright, third";
-				mes "question. What is the";
-				mes "name of the skill, mastered";
-				mes "at Skill Level 5, which allows";
-				mes "you to resurrect Homunculi?";
-				next;
-				input .@input$;
-				if (.@input$ == "Homunculus Resurrection") {
-					mes "[Kellasus]";
-					mes "So you have been putting";
-					mes "a lot of effort in studying";
-					mes "this. I really admire your";
-					mes "dedication and it looks like";
-					mes "you've got the potential to";
-					mes "be a really great Alchemist.";
-					next;
-					mes "[Kellasus]";
-					mes "Still, even though you're";
-					mes "qualified to learn all the";
-					mes "Homunculus skills, I choose";
-					mes "not to teach them based on";
-					mes "my own personal principles.";
-					mes "Nothing can change my mind.";
-					next;
-					mes "[Kellasus]";
-					mes "I admit that I'm proud";
-					mes "of the progress you've";
-					mes "made, but I just can't";
-					mes "bring myself to be a part";
-					mes "of what I believe to be an";
-					mes "abuse of the gift of life.";
-					next;
-					bioeth = 8;
-					mes "[Kellasus]";
-					mes "There's just so much";
-					mes "risk! I don't think I can";
-					mes "bear to be responsible for";
-					mes "any of the consequences that";
-					mes "may come with the existence";
-					mes "of artificially created life.";
-					close;
-				}
-				else {
-					mes "[Kellasus]";
-					mes "I'm disappointed...";
-					mes "I really thought you";
-					mes "had learned everything";
-					mes "you could about Homunculi,";
-					mes "but it looks like there are a";
-					mes "few gaps in your knowledge.";
-					close;
-				}
-			}
-			else {
-				mes "[Kellasus]";
-				mes "Hmm... It looks like";
-				mes "you still haven't learned";
-				mes "enough about Homunculi.";
-				mes "Even if I wanted to teach";
-				mes "you, it looks like you're";
-				mes "not quite ready to learn...";
-				close;
-			}
-		}
-		else {
+		input(.@input$);
+		if (.@input$ != "Vaporize") {
 			mes "[Kellasus]";
 			mes "You'd be able to get";
 			mes "the first question right";
@@ -1524,6 +1449,75 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 			mes "find a new alchemic interest.";
 			close;
 		}
+		mes "[Kellasus]";
+		mes "Hmm, not bad. So you've";
+		mes "been studying. Now, the second";
+		mes "question. What is the item, whose name indicates a very early stage";
+		mes "of Homunculus development, used for the Call Homunculus skill?";
+		next;
+		input(.@input$);
+		if (.@input$ != "Embryo") {
+			mes "[Kellasus]";
+			mes "Hmm... It looks like";
+			mes "you still haven't learned";
+			mes "enough about Homunculi.";
+			mes "Even if I wanted to teach";
+			mes "you, it looks like you're";
+			mes "not quite ready to learn...";
+			close;
+		}
+		mes "[Kellasus]";
+		mes "Huh. You got that one";
+		mes "right too. Alright, third";
+		mes "question. What is the";
+		mes "name of the skill, mastered";
+		mes "at Skill Level 5, which allows";
+		mes "you to resurrect Homunculi?";
+		next;
+		input(.@input$);
+		if (.@input$ != "Homunculus Resurrection") {
+			mes "[Kellasus]";
+			mes "I'm disappointed...";
+			mes "I really thought you";
+			mes "had learned everything";
+			mes "you could about Homunculi,";
+			mes "but it looks like there are a";
+			mes "few gaps in your knowledge.";
+			close;
+		}
+		mes "[Kellasus]";
+		mes "So you have been putting";
+		mes "a lot of effort in studying";
+		mes "this. I really admire your";
+		mes "dedication and it looks like";
+		mes "you've got the potential to";
+		mes "be a really great Alchemist.";
+		next;
+		mes "[Kellasus]";
+		mes "Still, even though you're";
+		mes "qualified to learn all the";
+		mes "Homunculus skills, I choose";
+		mes "not to teach them based on";
+		mes "my own personal principles.";
+		mes "Nothing can change my mind.";
+		next;
+		mes "[Kellasus]";
+		mes "I admit that I'm proud";
+		mes "of the progress you've";
+		mes "made, but I just can't";
+		mes "bring myself to be a part";
+		mes "of what I believe to be an";
+		mes "abuse of the gift of life.";
+		next;
+		bioeth = 8;
+		mes "[Kellasus]";
+		mes "There's just so much";
+		mes "risk! I don't think I can";
+		mes "bear to be responsible for";
+		mes "any of the consequences that";
+		mes "may come with the existence";
+		mes "of artificially created life.";
+		close;
 	}
 	if (BaseJob == Job_Alchemist && bioeth > 3) {
 		mes "[Kellasus]";

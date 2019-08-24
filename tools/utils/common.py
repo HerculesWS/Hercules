@@ -35,13 +35,13 @@ def LoadDBConsts(DBname, mode, serverpath):
 		with io.open(filename) as f:
 			config = libconf.load(f)
 			db = config[DBname]
-			if DBname is 'item_db':
+			if DBname == 'item_db':
 				for i, v in enumerate(db):
 					consts[db[i].Id] = db[i].AegisName
-			elif DBname is 'mob_db':
+			elif DBname == 'mob_db':
 				for i, v in enumerate(db):
 					consts[db[i].Id] = db[i].SpriteName
-			elif DBname is 'skill_db':
+			elif DBname == 'skill_db':
 				for i, v in enumerate(db):
 					consts[db[i].Id] = db[i].Name
 			else:
@@ -55,7 +55,6 @@ def LoadDB(DBname, mode, serverpath):
 	if os.path.isfile(serverpath + 'db/{}2.conf'.format(DBname)):
 		filenames.append(serverpath + 'db/{}2.conf'.format(DBname))
 
-	consts = dict()
 	for filename in filenames:
 		with io.open(filename) as f:
 			config = libconf.load(f)

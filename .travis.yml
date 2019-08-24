@@ -11,6 +11,7 @@ install:
 
 before_script:
   - uname -a
+  - ulimit -c unlimited -S
   - ./tools/ci/travis.sh createdb ragnarok root
   - ./tools/ci/travis.sh importdb ragnarok root
   - ./tools/ci/travis.sh adduser ragnarok travis travis root
@@ -38,25 +39,27 @@ matrix:
   - compiler: false
   include:
   - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug CC=gcc-6 --disable-manager --enable-Werror --enable-packetver=20181017 --enable-packetver-re --enable-buildbot" HPM="1"
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug CC=gcc-6 --disable-manager --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot" HPM="1"
     addons:
       apt:
         sources:
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - gcc-6
         - doxygen
         - libxml-simple-perl
         - libxml-sax-perl
         - libxml-parser-perl
   - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --enable-Werror --enable-packetver=20181017 --enable-packetver-re --enable-buildbot"
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot"
     addons:
       apt:
         sources:
         - llvm-toolchain-trusty-5.0
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - clang-5.0
   - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --disable-renewal --enable-Werror --enable-buildbot"
@@ -66,15 +69,27 @@ matrix:
         - llvm-toolchain-trusty-5.0
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - clang-5.0
   - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --enable-Werror --enable-packetver=20181017 --enable-packetver-re --enable-buildbot"
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot"
     addons:
       apt:
         sources:
         - llvm-toolchain-trusty-4.0
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
+        - clang-4.0
+  - compiler: clang
+    env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --enable-Werror --enable-packetver=20130724 --enable-packetver-re --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - llvm-toolchain-trusty-4.0
+        - ubuntu-toolchain-r-test
+        packages:
+        - gdb
         - clang-4.0
   - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug CC=clang-4.0 --disable-renewal --enable-Werror --enable-buildbot"
@@ -84,22 +99,24 @@ matrix:
         - llvm-toolchain-trusty-4.0
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - clang-4.0
   - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-buildbot"
   - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
   - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-packetver=20181017 --enable-packetver-re --enable-buildbot"
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot"
   - compiler: gcc
     env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
   - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror --enable-packetver=20181017 --enable-packetver-re --enable-buildbot"
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot"
     addons:
       apt:
         sources:
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - gcc-5
   - compiler: gcc
     env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
@@ -108,14 +125,16 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - gcc-5
   - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --enable-Werror --enable-packetver=20181017 --enable-packetver-re --enable-buildbot"
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot"
     addons:
       apt:
         sources:
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - gcc-6
   - compiler: gcc
     env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
@@ -124,7 +143,44 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         packages:
+        - gdb
         - gcc-6
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug CC=gcc-7 --disable-manager --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gdb
+        - gcc-7
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-7 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gdb
+        - gcc-7
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-8 --disable-manager --enable-Werror --enable-packetver=20190724 --enable-packetver-re --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gdb
+        - gcc-8
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-8 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gdb
+        - gcc-8
 
 notifications:
   email: false

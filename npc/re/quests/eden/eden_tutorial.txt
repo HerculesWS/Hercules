@@ -228,7 +228,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 			close;
 		}
 	} else if (questprogress(9167) == 1) {
-		if (!getmercinfo(1)) {
+		if (!getmercinfo(MERCINFO_CLASS)) {
 			mes "[Tutorial Instructor]";
 			mes "You haven't gotten a mercenary yet.";
 			next;
@@ -319,7 +319,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 			mes "if you really checked it?";
 			mes "Write down what material I asked you to get.";
 			next;
-			input .@inputstr$;
+			input(.@inputstr$);
 			if (.@inputstr$ == "10 Jellopy") {
 				mes "[Tutorial Instructor]";
 				mes "Good, you know.";

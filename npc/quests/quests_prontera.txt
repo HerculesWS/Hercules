@@ -37,7 +37,7 @@
 //= Collection of Prontera-based quests.
 //= - Culvert Access
 //= - Ph.D Hat Quest
-//= - Gaebolg Family Curse
+//= - Geoborg Family Curse
 //================= Current Version =======================================
 //= 2.9
 //================= Variables Used ========================================
@@ -45,7 +45,7 @@
 //= - MISC_QUEST (bit 8)
 //= Ph.D Hat Quest:
 //= - n/a
-//= Gaebolg Family Curse:
+//= Geoborg Family Curse:
 //= - prt_curse (max 61)
 //=========================================================================
 
@@ -799,7 +799,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "With the return of peace,";
 		mes "the 7 warriors established";
 		mes "the Rune-Midgarts Kingdom,";
-		mes "choosing Tristram Gaebolg III";
+		mes "choosing Tristram Geoborg III";
 		mes "as the kingdom's first ruler. ";
 		next;
 		mes "[Historian]";
@@ -1043,7 +1043,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 				mes "^FF0000*swallowed the serpent.*^000000";
 				mes "......................";
 				next;
-				input .@answer$;
+				input(.@answer$);
 				if (.@answer$ == "Then the eagle built its nest.") {
 					mes "[Historian Rodafrian]";
 					mes "Really? That makes";
@@ -1078,7 +1078,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 				mes "that you heard from Karlomoff.^000000";
 				next;
 				mes "["+strcharinfo(PC_NAME)+"]";
-				input .@line$;
+				input(.@line$);
 				if (.@line$ == "The great serpent swallowed the sea.") {
 					.@total += 1;
 					mes "*The great serpent*";
@@ -1086,7 +1086,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 				}
 				else mes "* "+.@line$+"*";
 
-				input .@line$;
+				input(.@line$);
 				if (.@line$ == "The eagle of the rainbow swallowed the serpent.") {
 					.@total += 1;
 					mes "*The eagle of the rainbow*";
@@ -1094,14 +1094,14 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 				}
 				else mes "*"+.@line$+"*";
 
-				input .@line$;
+				input(.@line$);
 				if (.@line$ == "Then the eagle built its nest.") {
 					.@total += 1;
 					mes "*Then the eagle built its nest.*";
 				}
 				else mes "*"+.@line$+"*";
 
-				input .@line$;
+				input(.@line$);
 				if (.@line$ == "A nest upon the swallowed sea.") {
 					.@total += 1;
 					mes "*A nest upon the swallowed sea.*";
@@ -1228,7 +1228,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 			next;
 			mes "[Historian Rodafrian]";
 			mes "Anyway, your report about";
-			mes "the Gaebolg family will be";
+			mes "the Geoborg family will be";
 			mes "greatly appreciated by the";
 			mes "Rekenber Historical Research";
 			mes "Group. But first, I need to";
@@ -1237,7 +1237,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 			mes "[Historian Rodafrian]";
 			mes "Anyway, keep this information";
 			mes "a secret between me and you";
-			mes "for now. Then, when I reveal the secret curse of the Gaebolg royal";
+			mes "for now. Then, when I reveal the secret curse of the Geoborg royal";
 			mes "family, I'll finally outshine that Karlomoff! Bwahahahahaha!";
 			next;
 			mes "["+strcharinfo(PC_NAME)+"]";
@@ -1514,7 +1514,7 @@ mjolnir_01,135,168,3	script	Historian#prt03	4_M_SAGE_A,{
 
 S_Song:
 	mes "["+strcharinfo(PC_NAME)+"]";
-	input .@line$;
+	input(.@line$);
 	if (.@line$ == "The great serpent swallowed the sea.") {
 		.@total += 1;
 		mes "*The great serpent*";
@@ -1522,7 +1522,7 @@ S_Song:
 	}
 	else mes "*"+.@line$+"*";
 
-	input .@line$;
+	input(.@line$);
 	if (.@line$ == "The eagle of the rainbow swallowed the serpent.") {
 		.@total += 1;
 		mes "*The eagle of the rainbow*";
@@ -1530,11 +1530,11 @@ S_Song:
 	}
 	else mes "*"+.@line$+"*";
 
-	input .@line$;
+	input(.@line$);
 	if (.@line$ == "Then the eagle built its nest.") .@total += 1;
 	mes "*"+.@line$+"*";
 
-	input .@line$;
+	input(.@line$);
 	if (.@line$ == "A nest upon the swallowed sea.") .@total += 1;
 	mes "*"+.@line$+"*";
 
@@ -2291,7 +2291,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		next;
 		mes "[Father Bamph]";
 		mes "Finally, the first Tristram of";
-		mes "the Gaebolg family defeated";
+		mes "the Geoborg family defeated";
 		mes "Jormungand together with 6";
 		mes "other warriors, but only after";
 		mes "it killed his beloved father.";
@@ -2306,7 +2306,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "[Father Bamph]";
 		mes "To this day...";
 		mes "^FF0000Every first prince of";
-		mes "the Gaebolg family dies";
+		mes "the Geoborg family dies";
 		mes "at a young age^000000. That is";
 		mes "Jormungand's curse and";
 		mes "the royal family's secret.";
@@ -2429,7 +2429,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Oh, my. I learned the song";
 		mes "when I was a young boy from";
 		mes "my father. However, your version seems to reveal the secret curse";
-		mes "of the Gaebolgs. Please tell me, where did you hear that song?";
+		mes "of the Geoborgs. Please tell me, where did you hear that song?";
 		next;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, I first heard this";
@@ -3069,7 +3069,7 @@ prt_church,16,114,4	script	Father Bamph#tomb	1_M_PASTOR,{
 	if (prt_curse == 18) {
 		mes "[Father Bamph]";
 		mes "There are the bodies";
-		mes "of the Gaebolg princes";
+		mes "of the Geoborg princes";
 		mes "that were killed during";
 		mes "the exorcism. Please take";
 		mes "a look at the body to the left.";
@@ -3547,13 +3547,13 @@ OnTouch:
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Long ago, the giant serpent";
 		mes "Jormungand threatened mankind.";
-		mes "7 warriors defeated Jormungand, led by Tristram III of the Gaebolg";
-		mes "family, but Jormungand cursed the Gaebolg bloodline in its defeat.";
+		mes "7 warriors defeated Jormungand, led by Tristram III of the Geoborg";
+		mes "family, but Jormungand cursed the Geoborg bloodline in its defeat.";
 		next;
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ever since, the curse kills";
 		mes "the first born prince of the";
-		mes "Gaebolg family at an early age.";
+		mes "Geoborg family at an early age.";
 		mes "However, all of the princes of";
 		mes "this generation were killed.";
 		next;

@@ -775,11 +775,21 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Getdatatype (getarg integer value)", callsub(OnTestGetdatatype, 5), DATATYPE_INT);
 	callsub(OnCheck, "Getdatatype (getarg string)",        callsub(OnTestGetdatatype, "foo"), DATATYPE_STR | DATATYPE_CONST);
 
+	callsub(OnCheck, "data_to_string (NIL)",              data_to_string(), "");
+	callsub(OnCheck, "data_to_string (empty string)",     data_to_string(""), "");
+	callsub(OnCheck, "data_to_string (string)",           data_to_string("foo"), "foo");
+	callsub(OnCheck, "data_to_string (integer)",          data_to_string(5), "5");
+	callsub(OnCheck, "data_to_string (parameter)",        data_to_string(Hp), "Hp");
+	callsub(OnCheck, "data_to_string (constant)",         data_to_string(DATATYPE_CONST), "DATATYPE_CONST");
+	callsub(OnCheck, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "OnTestGetdatatype");
+	callsub(OnCheck, "data_to_string (string variable)",  data_to_string(.@x$), ".@x$");
+	callsub(OnCheck, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
+
 	if (.errors) {
-		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
-		debugmes "**** The test was completed with " + .errors + " errors. ****";
+		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
+		consolemes(CONSOLEMES_DEBUG, "**** The test was completed with " + .errors + " errors. ****");
 	} else {
-		debugmes "Script engine self-test   [ \033[0;32mPASSED\033[0m ]";
+		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;32mPASSED\033[0m ]");
 	}
 	return .errors;
 	end;
@@ -830,8 +840,8 @@ OnReportError:
 	.@val$ = getarg(1,"");
 	.@ref$ = getarg(2,"");
 	if (.errors == 1)
-		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
-	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
+		consolemes(CONSOLEMES_DEBUG, "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****");
+	consolemes(CONSOLEMES_DEBUG, "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)");
 	++.errors;
 	//end;
 	return;

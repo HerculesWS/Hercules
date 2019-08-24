@@ -174,7 +174,7 @@ struct homunculus_interface {
 	int (*skill_tree_get_max) (int id, int b_class);
 	void (*skillup) (struct homun_data *hd, uint16 skill_id);
 	bool (*levelup) (struct homun_data *hd);
-	int (*change_class) (struct homun_data *hd, short class_);
+	int (*change_class) (struct homun_data *hd, int class_);
 	bool (*evolve) (struct homun_data *hd);
 	bool (*mutate) (struct homun_data *hd, int homun_id);
 	int (*gainexp) (struct homun_data *hd, unsigned int exp);

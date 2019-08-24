@@ -672,7 +672,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			mes "[Tommy]";
 			mes "^FF0000Munak Munak Munak Munak!!^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ != "Pandger Mayer introduced you") {
 				mes "["+strcharinfo(PC_NAME)+"]";
 				mes ""+.@input$+"";

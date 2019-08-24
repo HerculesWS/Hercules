@@ -4302,7 +4302,7 @@ sec_in02,25,33,4	script	Assistant#para_suvquest	4_M_BABYCAT,{
 		.@var =  select("para_suv01", "para_suv02");
 		mes "Enter the modified value";
 		next;
-		input .@input,0,9999;
+		input(.@input, 0, 9999);
 		mes "Value of para_suv0"+.@var+" has been changed to "+.@input+".";
 		setd "para_suv0"+.@var,.@input;
 		close;

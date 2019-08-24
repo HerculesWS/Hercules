@@ -323,11 +323,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 
 			mes "Enter the name of the share company";
 			mes "Transaction fee of ^FF0000" + $S_Trans + "z^000000 will apply.";
-			set @buyname$,"0";
-			input @buyname$;
-
-			set @buyamount,0;
-			input @buyamount;
+			input(@buyname$);
+			input(@buyamount);
 			// Checks valid number //
 			if (@buyamount < $S_BuyMin) {
 				mes "^FF0000Minimum of " + $S_BuyMin + " shares can be bought at a time.^000000";
@@ -476,10 +473,8 @@ prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 			if (#S8 > 0) mes "^0000FF"+$S8N$+"^FF0000" + " x " + #S8 + " [" + $S8 + "z]";
 			if (#S9 > 0) mes "^0000FF"+$S9N$+"^FF0000" + " x " + #S9 + " [" + $S9 + "z]";
 			if (#S10 > 0) mes "^0000FF"+$S10N$+"^FF0000" + " x " + #S10 + " [" + $S10 + "z]";
-			set @sellname$,"0";
-			input @sellname$;
-			set @sellamount,0;
-			input @sellamount;
+			input(@sellname$);
+			input(@sellamount);
 			if (@sellamount < 1) {
 				mes "^FF0000Invalid integer.^000000";
 				next;
@@ -756,7 +751,7 @@ OnGMOpen:
 	if (select("Yes", "No") != 1)
 		return;
 	set @gmset,0;
-	input @gmset;
+	input(@gmset, 0);
 	set $S1,@gmset;
 	set $S2,@gmset;
 	set $S3,@gmset;

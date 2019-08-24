@@ -975,14 +975,14 @@ static bool chrif_divorceack(int char_id, int partner_id)
 
 	if( ( sd = map->charid2sd(char_id) ) != NULL && sd->status.partner_id == partner_id ) {
 		sd->status.partner_id = 0;
-		for(i = 0; i < MAX_INVENTORY; i++)
+		for (i = 0; i < sd->status.inventorySize; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
 				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 	}
 
 	if( ( sd = map->charid2sd(partner_id) ) != NULL && sd->status.partner_id == char_id ) {
 		sd->status.partner_id = 0;
-		for(i = 0; i < MAX_INVENTORY; i++)
+		for (i = 0; i < sd->status.inventorySize; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
 				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 	}
@@ -1592,6 +1592,7 @@ static int check_connect_char_server(int tid, int64 tick, int id, intptr_t data)
 
 		sockt->session[chrif->fd]->func_parse = chrif->parse;
 		sockt->session[chrif->fd]->flag.server = 1;
+		sockt->session[chrif->fd]->flag.validate = 0;
 		sockt->realloc_fifo(chrif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		chrif->connect(chrif->fd);

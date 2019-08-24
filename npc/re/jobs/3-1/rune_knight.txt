@@ -962,7 +962,7 @@ job3_rune01,58,51,1	script	Rune Furnace	CLEAR_NPC,{
 		next;
 		mes .@str$[1];
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == .@str$[0]) {
 			mes "[Rune Knight Renoa]";
 			mes "Wow! This is great. The image of the rune stone in my head and the modeled rune stone match perfectly. It's well made.";

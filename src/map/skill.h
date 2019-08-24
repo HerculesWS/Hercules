@@ -124,6 +124,7 @@ enum e_skill_inf2 {
 	INF2_FREE_CAST_REDUCED = 0x10000,
 	INF2_SHOW_SKILL_SCALE  = 0x20000,
 	INF2_ALLOW_REPRODUCE   = 0x40000,
+	INF2_HIDDEN_TRAP       = 0x80000, // Traps that are hidden (based on trap_visiblity battle conf)
 };
 
 
@@ -1806,6 +1807,7 @@ struct skill_unit {
 
 	int limit;
 	int val1,val2;
+	bool visible;
 	short alive,range;
 	int prev;
 };

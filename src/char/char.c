@@ -21,7 +21,7 @@
 #define HERCULES_CORE
 
 #include "config/core.h" // CONSOLE_INPUT
-#include "char.h"
+#include "char/char.h"
 
 #include "char/HPMchar.h"
 #include "char/geoip.h"
@@ -41,6 +41,7 @@
 #include "char/inter.h"
 #include "char/loginif.h"
 #include "char/mapif.h"
+#include "char/packets_hc_struct.h"
 #include "char/pincode.h"
 
 #include "common/HPM.h"
@@ -53,6 +54,7 @@
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/packetsstatic_len.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
@@ -139,6 +141,7 @@ char char_name_letters[1024] = ""; // list of letters/symbols allowed (or not) i
 static int char_del_level = 0; ///< From which level you can delete character [Lupus]
 static int char_del_delay = 86400;
 static bool char_aegis_delete = false; ///< Verify if char is in guild/party or char and reacts as Aegis does (disallow deletion), @see chr->delete2_req.
+static bool char_aegis_rename = false; // whether or not the player can be renamed while in party/guild
 
 static int max_connect_user = -1;
 static int gm_allow_group = -1;
@@ -474,17 +477,27 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		(p->look.head_mid != cp->look.head_mid) || (p->look.head_bottom != cp->look.head_bottom) || (p->delete_date != cp->delete_date) ||
 		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->look.robe != cp->look.robe) ||
 		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font) ||
-		(p->uniqueitem_counter != cp->uniqueitem_counter) || (p->hotkey_rowshift != cp->hotkey_rowshift) ||
+		(p->uniqueitem_counter != cp->uniqueitem_counter) || (p->hotkey_rowshift != cp->hotkey_rowshift) || (p->hotkey_rowshift2 != cp->hotkey_rowshift2) ||
 		(p->clan_id != cp->clan_id) || (p->last_login != cp->last_login) || (p->attendance_count != cp->attendance_count) ||
-		(p->attendance_timer != cp->attendance_timer) || (p->title_id != cp->title_id)
+		(p->attendance_timer != cp->attendance_timer) || (p->title_id != cp->title_id) || (p->inventorySize != cp->inventorySize) ||
+		(p->allow_call != cp->allow_call)
 	) {
 		//Save status
 		unsigned int opt = 0;
 
-		if( p->allow_party )
+		if (p->inventorySize <= 0 || p->inventorySize > MAX_INVENTORY) {
+			ShowError("Wrong inventorySize field: %d. Must be in range 1 to %d. Character %s (CID: %d, AID: %d)\n",
+			          p->inventorySize, MAX_INVENTORY, p->name, p->char_id, p->account_id);
+			Assert_report(0);
+			p->inventorySize = FIXED_INVENTORY_SIZE;
+		}
+
+		if (p->allow_party)
 			opt |= OPT_ALLOW_PARTY;
-		if( p->show_equip )
+		if (p->show_equip)
 			opt |= OPT_SHOW_EQUIP;
+		if (p->allow_call)
+			opt |= OPT_ALLOW_CALL;
 
 		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
 			"`base_exp`='%"PRIu64"', `job_exp`='%"PRIu64"', `zeny`='%d',"
@@ -494,8 +507,8 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
 			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
-			"`hotkey_rowshift`='%d',`clan_id`='%d',`last_login`='%"PRId64"',`attendance_count`='%d',`attendance_timer`='%"PRId64"',"
-			"`title_id`='%d'"
+			"`hotkey_rowshift`='%d',`hotkey_rowshift2`='%d',`clan_id`='%d',`last_login`='%"PRId64"',`attendance_count`='%d',`attendance_timer`='%"PRId64"',"
+			"`title_id`='%d', `inventory_size`='%d'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
 			p->base_exp, p->job_exp, p->zeny,
@@ -507,8 +520,8 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
 			p->look.robe,p->slotchange,opt,p->font,p->uniqueitem_counter,
-			p->hotkey_rowshift,p->clan_id,p->last_login, p->attendance_count, p->attendance_timer,
-			p->title_id,
+			p->hotkey_rowshift,p->hotkey_rowshift2,p->clan_id,p->last_login, p->attendance_count, p->attendance_timer,
+			p->title_id, p->inventorySize,
 			p->account_id, p->char_id) )
 		{
 			Sql_ShowDebug(inter->sql_handle);
@@ -1049,7 +1062,7 @@ static int char_mmo_gender(const struct char_session_data *sd, const struct mmo_
 
 //=====================================================================================================
 // Loads the basic character rooster for the given account. Returns total buffer used.
-static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
+static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int *count)
 {
 	struct SqlStmt *stmt;
 	struct mmo_charstatus p;
@@ -1057,6 +1070,9 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
 	char last_map[MAP_NAME_LENGTH_EXT];
 	time_t unban_time = 0;
 	char sex[2];
+
+	if (count)
+		*count = 0;
 
 	nullpo_ret(sd);
 	nullpo_ret(buf);
@@ -1079,13 +1095,13 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
 		"`str`,`agi`,`vit`,`int`,`dex`,`luk`,`max_hp`,`hp`,`max_sp`,`sp`,"
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`hair`,`hair_color`,"
 		"`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`rename`,`delete_date`,"
-		"`robe`,`slotchange`,`unban_time`,`sex`,`title_id`"
+		"`robe`,`slotchange`,`unban_time`,`sex`,`title_id`,`inventory_size`"
 		" FROM `%s` WHERE `account_id`='%d' AND `char_num` < '%d'", char_db, sd->account_id, MAX_CHARS)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,    &p.char_id,          sizeof p.char_id,          NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_UCHAR,  &p.slot,             sizeof p.slot,             NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_STRING, &p.name,             sizeof p.name,             NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_INT16,  &p.class,            sizeof p.class,            NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_INT,    &p.class,            sizeof p.class,            NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &p.base_level,       sizeof p.base_level,       NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p.job_level,        sizeof p.job_level,        NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_UINT64, &p.base_exp,         sizeof p.base_exp,         NULL, NULL)
@@ -1123,25 +1139,36 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 38, SQLDT_TIME,   &unban_time,         sizeof unban_time,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 39, SQLDT_ENUM,   &sex,                sizeof sex,                NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 40, SQLDT_INT,    &p.title_id,         sizeof p.title_id,         NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 41, SQLDT_INT,    &p.inventorySize,    sizeof p.inventorySize,    NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return 0;
 	}
 
-	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++ ) {
+	int tmpCount = 0;
+	for (i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++) {
 		if (p.slot >= MAX_CHARS)
 			continue;
+		if (p.inventorySize <= 0 || p.inventorySize > MAX_INVENTORY) {
+			ShowError("Wrong inventorySize field: %d. Must be in range 1 to %d. Character %s (CID: %d, AID: %d)\n",
+			          p.inventorySize, MAX_INVENTORY, p.name, p.char_id, p.account_id);
+			Assert_report(0);
+			p.inventorySize = FIXED_INVENTORY_SIZE;
+		}
 		p.last_point.map = mapindex->name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
 		sd->unban_time[p.slot] = unban_time;
 		p.sex = chr->mmo_gender(sd, &p, sex[0]);
 		j += chr->mmo_char_tobuf(WBUFP(buf, j), &p);
+		tmpCount ++;
 	}
 
-	memset(sd->new_name,0,sizeof(sd->new_name));
+	memset(sd->new_name, 0, sizeof(sd->new_name));
 
 	SQL->StmtFree(stmt);
+	if (count)
+		*count = tmpCount;
 	return j;
 }
 
@@ -1169,6 +1196,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	nullpo_ret(p);
 
 	memset(p, 0, sizeof(struct mmo_charstatus));
+	p->inventorySize = FIXED_INVENTORY_SIZE;
 
 	if (chr->show_save_log)
 		ShowInfo("Char load request (%d)\n", char_id);
@@ -1187,8 +1215,8 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`party_id`,`guild_id`,`pet_id`,`homun_id`,`elemental_id`,`hair`,"
 		"`hair_color`,`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
 		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
-		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`clan_id`,`last_login`, `attendance_count`, `attendance_timer`,"
-		"`title_id`"
+		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`hotkey_rowshift2`,`clan_id`,`last_login`, `attendance_count`, `attendance_timer`,"
+		"`title_id`, `inventory_size`"
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1196,7 +1224,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_INT,    &p->account_id,         sizeof p->account_id,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_UCHAR,  &p->slot,               sizeof p->slot,               NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_STRING, &p->name,               sizeof p->name,               NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT16,  &p->class,              sizeof p->class,              NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &p->class,              sizeof p->class,              NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p->base_level,         sizeof p->base_level,         NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_INT,    &p->job_level,          sizeof p->job_level,          NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7,  SQLDT_UINT64, &p->base_exp,           sizeof p->base_exp,           NULL, NULL)
@@ -1251,11 +1279,13 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 56, SQLDT_UINT32, &p->uniqueitem_counter, sizeof p->uniqueitem_counter, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 57, SQLDT_ENUM,   &sex,                   sizeof sex,                   NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 58, SQLDT_UCHAR,  &p->hotkey_rowshift,    sizeof p->hotkey_rowshift,    NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 59, SQLDT_INT,    &p->clan_id,            sizeof p->clan_id,            NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 60, SQLDT_INT64,  &p->last_login,         sizeof p->last_login,         NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 61, SQLDT_SHORT,  &p->attendance_count,   sizeof p->attendance_count,   NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 62, SQLDT_INT64,  &p->attendance_timer,   sizeof p->attendance_timer,   NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 63, SQLDT_INT,    &p->title_id,           sizeof p->title_id,           NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 59, SQLDT_UCHAR,  &p->hotkey_rowshift2,   sizeof p->hotkey_rowshift2,   NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 60, SQLDT_INT,    &p->clan_id,            sizeof p->clan_id,            NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 61, SQLDT_INT64,  &p->last_login,         sizeof p->last_login,         NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 62, SQLDT_SHORT,  &p->attendance_count,   sizeof p->attendance_count,   NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 63, SQLDT_INT64,  &p->attendance_timer,   sizeof p->attendance_timer,   NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 64, SQLDT_INT,    &p->title_id,           sizeof p->title_id,           NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 65, SQLDT_INT,    &p->inventorySize,      sizeof p->inventorySize,      NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -1285,6 +1315,13 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 		p->save_point.map = (unsigned short)strdb_iget(mapindex->db, mapindex->default_map);
 		p->save_point.x = mapindex->default_x;
 		p->save_point.y = mapindex->default_y;
+	}
+
+	if (p->inventorySize <= 0 || p->inventorySize > MAX_INVENTORY) {
+		ShowError("Wrong inventorySize field: %d. Must be in range 1 to %d. Character %s (CID: %d, AID: %d)\n",
+		          p->inventorySize, MAX_INVENTORY, p->name, p->char_id, p->account_id);
+		Assert_report(0);
+		p->inventorySize = FIXED_INVENTORY_SIZE;
 	}
 
 	strcat(t_msg, " status");
@@ -1379,7 +1416,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 
 	while( SQL_SUCCESS == SQL->StmtNextRow(stmt) )
 	{
-		if( hotkey_num >= 0 && hotkey_num < MAX_HOTKEYS )
+		if( hotkey_num >= 0 && hotkey_num < MAX_HOTKEYS_DB )
 			memcpy(&p->hotkeys[hotkey_num], &tmp_hotkey, sizeof(tmp_hotkey));
 		else
 			ShowWarning("chr->mmo_char_fromsql: ignoring invalid hotkey (hotkey=%d,type=%u,id=%u,lv=%u) of character %s (AID=%d,CID=%d)\n", hotkey_num, tmp_hotkey.type, tmp_hotkey.id, tmp_hotkey.lv, p->name, p->account_id, p->char_id);
@@ -1414,10 +1451,12 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	SQL->StmtFree(stmt);
 
 	/* load options into proper vars */
-	if( opt & OPT_ALLOW_PARTY )
+	if (opt & OPT_ALLOW_PARTY)
 		p->allow_party = true;
-	if( opt & OPT_SHOW_EQUIP )
+	if (opt & OPT_SHOW_EQUIP)
 		p->show_equip = true;
+	if (opt & OPT_ALLOW_CALL)
+		p->allow_call = true;
 
 	cp = idb_ensure(chr->char_db_, char_id, chr->create_charstatus);
 	memcpy(cp, p, sizeof(struct mmo_charstatus));
@@ -1514,6 +1553,14 @@ static int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	if( char_dat.rename == 0 )
 		return 1;
 
+	if (char_aegis_rename) {
+		if (char_dat.guild_id > 0) {
+			return 5; // MSG_FAILED_RENAME_BELONGS_TO_GUILD
+		} else if (char_dat.party_id > 0) {
+			return 6; // MSG_FAILED_RENAME_BELONGS_TO_PARTY
+		}
+	}
+
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, sd->new_name, strnlen(sd->new_name, NAME_LENGTH));
 
 	// check if the char exist
@@ -1539,9 +1586,20 @@ static int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	// log change
 	if (chr->enable_logs) {
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
-					"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '0', '0', '0', '0', '0', '0', '0', '0')",
-					charlog_db, "change char name", sd->account_id, char_dat.char_id, char_dat.slot, esc_name))
+					"INSERT INTO `%s` ("
+					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`,"
+					" `str`, `agi`, `vit`, `int`, `dex`, `luk`,"
+					" `hair`, `hair_color`"
+					") VALUES ("
+					" NOW(), 'change char name', '%d', '%d', '%d', '%d', '%s',"
+					" '%d', '%d', '%d', '%d', '%d', '%d',"
+					" '%d', '%d'"
+					")",
+					charlog_db,
+					sd->account_id, char_dat.char_id, char_dat.slot, char_dat.class, esc_name,
+					char_dat.str, char_dat.agi, char_dat.vit, char_dat.int_, char_dat.dex, char_dat.luk,
+					char_dat.hair, char_dat.hair_color
+					))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
@@ -1653,7 +1711,7 @@ static int char_check_char_name(const char *name, const char *esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-static int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int16 starting_class, uint8 sex)
+static int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int starting_class, uint8 sex)
 {
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
@@ -1700,22 +1758,22 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 #if PACKETVER >= 20120307
 	// Insert the new char entry to the database
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`) VALUES ("
-		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c')",
+		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`, `inventory_size`) VALUES ("
+		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c', '%d')",
 		char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, sex)) {
+		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, sex, FIXED_INVENTORY_SIZE)) {
 			Sql_ShowDebug(inter->sql_handle);
 			return -2; //No, stop the procedure!
 	}
 #else
 	//Insert the new char entry to the database
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
-							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
+							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `inventory_size`) VALUES ("
+							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d')",
 							   char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
+							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, FIXED_INVENTORY_SIZE) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		return -2; //No, stop the procedure!
@@ -1967,7 +2025,7 @@ static int char_count_users(void)
 // Writes char data to the buffer in the format used by the client.
 // Used in packets 0x6b (chars info) and 0x6d (new char info)
 // Returns the size
-#define MAX_CHAR_BUF 150 //Max size (for WFIFOHEAD calls)
+#define MAX_CHAR_BUF (PACKET_LEN_0x006d - 2)
 static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 {
 	unsigned short offset = 0;
@@ -2072,18 +2130,36 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	#endif
 #endif
 
-	return 106+offset;
+	if (106 + offset != MAX_CHAR_BUF)
+		Assert_report("Wrong buffer size in char_mmo_char_tobuf");
+	return 106 + offset;
 }
 
 /* Made Possible by Yommy~! <3 */
-static void char_mmo_char_send099d(int fd, struct char_session_data *sd)
+static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data *sd)
 {
-// support added for client between 20121010 and 20130320
-#if PACKETVER > 20120418
-	WFIFOHEAD(fd,4 + (MAX_CHARS*MAX_CHAR_BUF));
-	WFIFOW(fd,0) = 0x99d;
-	WFIFOW(fd,2) = chr->mmo_chars_fromsql(sd, WFIFOP(fd,4)) + 4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
+	WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE) + (MAX_CHARS * MAX_CHAR_BUF));
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
+	int count = 0;
+	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
+	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(fd, 4), &count) + sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	WFIFOSET(fd, p->packetLen);
+	// send empty packet if chars count is 3, for trigger final code in client
+	if (count == 3) {
+		chr->send_HC_ACK_CHARINFO_PER_PAGE_tail(fd, sd);
+	}
+#endif
+}
+
+static void char_send_HC_ACK_CHARINFO_PER_PAGE_tail(int fd, struct char_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
+	WFIFOHEAD(fd, sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE));
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WFIFOP(fd, 0);
+	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
+	p->packetLen = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
+	WFIFOSET(fd, p->packetLen);
 #endif
 }
 
@@ -2132,17 +2208,20 @@ static void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd)
 //----------------------------------------
 static void char_mmo_char_send_slots_info(int fd, struct char_session_data *sd)
 {
+// also probably supported client 2013-02-15aRagexe but not 2013-02-15bRagexe [4144]
+#if PACKETVER_MAIN_NUM >= 20130612 || PACKETVER_RE_NUM >= 20130115 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
-	WFIFOHEAD(fd,29);
-	WFIFOW(fd,0) = 0x82d;
-	WFIFOW(fd,2) = 29;
-	WFIFOB(fd,4) = sd->char_slots;
-	WFIFOB(fd,5) = MAX_CHARS - sd->char_slots;
-	WFIFOB(fd,6) = 0;
-	WFIFOB(fd,7) = sd->char_slots;
-	WFIFOB(fd,8) = sd->char_slots;
-	memset(WFIFOP(fd,9), 0, 20); // unused bytes
-	WFIFOSET(fd,29);
+	WFIFOHEAD(fd, 29);
+	WFIFOW(fd, 0) = 0x82d;
+	WFIFOW(fd, 2) = 29;
+	WFIFOB(fd, 4) = sd->char_slots;
+	WFIFOB(fd, 5) = MAX_CHARS - sd->char_slots;
+	WFIFOB(fd, 6) = 0;
+	WFIFOB(fd, 7) = sd->char_slots;
+	WFIFOB(fd, 8) = sd->char_slots;
+	memset(WFIFOP(fd, 9), 0, 20); // unused bytes
+	WFIFOSET(fd, 29);
+#endif
 }
 //----------------------------------------
 // Function to send characters to a player
@@ -2166,7 +2245,7 @@ static int char_mmo_char_send_characters(int fd, struct char_session_data *sd)
 	WFIFOB(fd,6) = MAX_CHARS; // Premium slots. AKA any existent chars past sd->char_slots but within MAX_CHARS will show a 'Premium Service' in red
 #endif
 	memset(WFIFOP(fd,4 + offset), 0, 20); // unknown bytes
-	j+=chr->mmo_chars_fromsql(sd, WFIFOP(fd,j));
+	j += chr->mmo_chars_fromsql(sd, WFIFOP(fd, j), NULL);
 	WFIFOW(fd,2) = j; // packet len
 	WFIFOSET(fd,j);
 
@@ -2194,6 +2273,8 @@ static int char_char_married(int pl1, int pl2)
 
 static int char_char_child(int parent_id, int child_id)
 {
+	if (parent_id == 0 || child_id == 0) // Failsafe, avoild querys and fix EXP bug dividing with lower level chars
+		return 0;
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `child` FROM `%s` WHERE `char_id` = '%d'", char_db, parent_id) )
 		Sql_ShowDebug(inter->sql_handle);
 	else if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
@@ -2213,6 +2294,8 @@ static int char_char_child(int parent_id, int child_id)
 
 static int char_char_family(int cid1, int cid2, int cid3)
 {
+	if (cid1 == 0 || cid2 == 0 || cid3 == 0) //Failsafe, and avoid querys where there is no sense to keep executing if any of the inputs are 0
+		return 0;
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`partner_id`,`child` FROM `%s` WHERE `char_id` IN ('%d','%d','%d')", char_db, cid1, cid2, cid3) )
 		Sql_ShowDebug(inter->sql_handle);
 	else while( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
@@ -2315,19 +2398,29 @@ static void char_ping_login_server(int fd)
 
 static int char_parse_fromlogin_connection_state(int fd)
 {
-	if (RFIFOB(fd,2)) {
-		//printf("connect login server error : %d\n", RFIFOB(fd,2));
+	switch (RFIFOB(fd,2)) {
+	case 0:
+		ShowStatus("Connected to login-server (connection #%d).\n", fd);
+		loginif->on_ready();
+		break;
+	case 1: // Invalid username/password
 		ShowError("Can not connect to login-server.\n");
 		ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
 		ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
 		ShowError("The communication passwords are set in /conf/map/map-server.conf and /conf/char/char-server.conf\n");
 		sockt->eof(fd);
 		return 1;
-	} else {
-		ShowStatus("Connected to login-server (connection #%d).\n", fd);
-		loginif->on_ready();
+	case 2: // IP not allowed
+		ShowError("Can not connect to login-server.\n");
+		ShowError("Please make sure your IP is allowed in conf/network.conf\n");
+		sockt->eof(fd);
+		return 1;
+	default:
+		ShowError("Invalid response from the login-server. Error code: %d\n", (int)RFIFOB(fd,2));
+		sockt->eof(fd);
+		return 1;
 	}
-	RFIFOSKIP(fd,3);
+	RFIFOSKIP(fd, 3);
 	return 0;
 }
 
@@ -2409,12 +2502,8 @@ static void char_parse_fromlogin_account_data(int fd)
 			chr->auth_error(i, 0);
 		} else {
 			// send characters to player
-	#if PACKETVER >= 20130000
 			chr->mmo_char_send_slots_info(i, sd);
 			chr->mmo_char_send_characters(i, sd);
-	#else
-			chr->mmo_char_send_characters(i, sd);
-	#endif
 	#if PACKETVER >= 20060819
 			chr->mmo_char_send_ban_list(i, sd);
 	#endif
@@ -4151,10 +4240,10 @@ static void char_delete2_accept_actual_ack(int fd, int char_id, uint32 result)
 /// Any (0x718): An unknown error has occurred.
 static void char_delete2_accept_ack(int fd, int char_id, uint32 result)
 {// HC: <082a>.W <char id>.L <Msg:0-5>.L
-#if PACKETVER >= 20130000 /* not sure the exact date -- must refresh or client gets stuck */
+#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	if( result == 1 ) {
 		struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
-		chr->mmo_char_send099d(fd, sd);
+		chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 	}
 #endif
 	chr->delete2_accept_actual_ack(fd, char_id, result);
@@ -4345,9 +4434,9 @@ static void char_delete2_cancel(int fd, struct char_session_data *sd)
 
 static void char_send_account_id(int fd, int account_id)
 {
-	WFIFOHEAD(fd,4);
-	WFIFOL(fd,0) = account_id;
-	WFIFOSET(fd,4);
+	WFIFOHEAD(fd, 4);
+	WFIFOL(fd, 0) = account_id;
+	WFIFOSET2(fd, 4);
 }
 
 static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32 ipl)
@@ -4382,6 +4471,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 
 	if( core->runflag != CHARSERVER_ST_RUNNING ) {
 		chr->auth_error(fd, 0);
+		sockt->eof(fd);
 		return;
 	}
 
@@ -4396,11 +4486,13 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 		/* restrictions apply */
 		if( chr->server_type == CST_MAINTENANCE && node->group_id < char_maintenance_min_group_id ) {
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 			return;
 		}
 		/* the client will already deny this request, this check is to avoid someone bypassing. */
 		if( chr->server_type == CST_PAYING && (time_t)node->expiration_time < time(NULL) ) {
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 			return;
 		}
 		idb_remove(auth_db, account_id);
@@ -4412,6 +4504,7 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 			loginif->auth(fd, sd, ipl);
 		} else { // if no login-server, we must refuse connection
 			chr->auth_error(fd, 0);
+			sockt->eof(fd);
 		}
 	}
 }
@@ -4558,8 +4651,19 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 		// FIXME: Why are we re-escaping the name if it was already escaped in rename/make_new_char? [Panikon]
 		SQL->EscapeStringLen(inter->sql_handle, esc_name, char_dat.name, strnlen(char_dat.name, NAME_LENGTH));
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `name`) VALUES (NOW(), '%d', '%d', '%d', '%s')",
-					charlog_db, sd->account_id, cd->char_id, slot, esc_name))
+					"INSERT INTO `%s`("
+					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`,"
+					" `str`, `agi`, `vit`, `int`, `dex`, `luk`,"
+					" `hair`, `hair_color`"
+					") VALUES ("
+					" NOW(), 'char select', '%d', '%d', '%d', '%d', '%s',"
+					" '%d', '%d', '%d', '%d', '%d', '%d',"
+					" '%d', '%d')",
+					charlog_db,
+					sd->account_id, cd->char_id, slot, char_dat.class, esc_name,
+					char_dat.str, char_dat.agi, char_dat.vit, char_dat.int_, char_dat.dex, char_dat.luk,
+					char_dat.hair, char_dat.hair_color
+					))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 	ShowInfo("Selected char: (Account %d: %d - %s)\n", sd->account_id, slot, char_dat.name);
@@ -4621,7 +4725,8 @@ static void char_creation_failed(int fd, int result)
 	/* Others I found [Ind] */
 	/* 0x02 = Symbols in Character Names are forbidden */
 	/* 0x03 = You are not eligible to open the Character Slot. */
-	/* 0x0B = This service is only available for premium users.  */
+	/* 0x0B = This service is only available for premium users. */
+	/* 0x0C = Character name is invalid. */
 	switch (result) {
 		case -1: WFIFOB(fd,2) = 0x00; break; // 'Charname already exists'
 		case -2: WFIFOB(fd,2) = 0xFF; break; // 'Char creation denied'
@@ -4900,10 +5005,10 @@ static void char_parse_char_delete2_cancel(int fd, struct char_session_data *sd)
 // 3 - error
 static void char_login_map_server_ack(int fd, uint8 flag)
 {
-	WFIFOHEAD(fd,3);
-	WFIFOW(fd,0) = 0x2af9;
-	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x2af9;
+	WFIFOB(fd, 2) = flag;
+	WFIFOSET2(fd, 3);
 }
 
 static void char_parse_char_login_map_server(int fd, uint32 ipl)
@@ -4921,6 +5026,7 @@ static void char_parse_char_login_map_server(int fd, uint32 ipl)
 		!sockt->allowed_ip_check(ipl))
 	{
 		chr->login_map_server_ack(fd, 3); // Failure
+		sockt->eof(fd);
 	} else {
 		chr->login_map_server_ack(fd, 0); // Success
 
@@ -4930,6 +5036,7 @@ static void char_parse_char_login_map_server(int fd, uint32 ipl)
 		chr->server[i].users = 0;
 		sockt->session[fd]->func_parse = chr->parse_frommap;
 		sockt->session[fd]->flag.server = 1;
+		sockt->session[fd]->flag.validate = 0;
 		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 		chr->mapif_init(fd);
 	}
@@ -4975,7 +5082,7 @@ static void char_parse_char_pincode_first_pin(int fd, struct char_session_data *
 
 static void char_parse_char_request_chars(int fd, struct char_session_data *sd)
 {
-	chr->mmo_char_send099d(fd, sd);
+	chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 	RFIFOSKIP(fd,2);
 }
 
@@ -4995,8 +5102,8 @@ static void char_parse_char_move_character(int fd, struct char_session_data *sd)
 	chr->change_character_slot_ack(fd, ret);
 	/* for some stupid reason it requires the char data again (gravity -_-) */
 	if( ret )
-#if PACKETVER >= 20130000
-		chr->mmo_char_send099d(fd, sd);
+#if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
+		chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 #else
 		chr->mmo_char_send_characters(fd, sd);
 #endif
@@ -5299,6 +5406,7 @@ static int char_check_connect_login_server(int tid, int64 tick, int id, intptr_t
 
 	sockt->session[chr->login_fd]->func_parse = chr->parse_fromlogin;
 	sockt->session[chr->login_fd]->flag.server = 1;
+	sockt->session[chr->login_fd]->flag.validate = 0;
 	sockt->realloc_fifo(chr->login_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 	loginif->connect_to_server();
@@ -5848,6 +5956,7 @@ static bool char_config_read_player_name(const char *filename, const struct conf
 	libconfig->setting_lookup_mutable_string(setting, "name_letters", char_name_letters, sizeof(char_name_letters));
 	libconfig->setting_lookup_int(setting, "name_option", &char_name_option);
 	libconfig->setting_lookup_bool_real(setting, "name_ignoring_case", &name_ignoring_case);
+	libconfig->setting_lookup_bool_real(setting, "use_aegis_rename", &char_aegis_rename);
 
 	return true;
 }
@@ -6290,6 +6399,7 @@ int do_init(int argc, char **argv)
 		Sql_ShowDebug(inter->sql_handle);
 
 	sockt->set_defaultparse(chr->parse_char);
+	sockt->validate = true;
 
 	if ((chr->char_fd = sockt->make_listen_bind(bind_ip,chr->port)) == -1) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",chr->port);
@@ -6390,7 +6500,8 @@ void char_defaults(void)
 	chr->divorce_char_sql = char_divorce_char_sql;
 	chr->count_users = char_count_users;
 	chr->mmo_char_tobuf = char_mmo_char_tobuf;
-	chr->mmo_char_send099d = char_mmo_char_send099d;
+	chr->send_HC_ACK_CHARINFO_PER_PAGE = char_send_HC_ACK_CHARINFO_PER_PAGE;
+	chr->send_HC_ACK_CHARINFO_PER_PAGE_tail = char_send_HC_ACK_CHARINFO_PER_PAGE_tail;
 	chr->mmo_char_send_ban_list = char_mmo_char_send_ban_list;
 	chr->mmo_char_send_slots_info = char_mmo_char_send_slots_info;
 	chr->mmo_char_send_characters = char_mmo_char_send_characters;

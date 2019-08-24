@@ -424,6 +424,12 @@ static int party_invite(struct map_session_data *sd, struct map_session_data *ts
 		return 0;
 	}
 
+	if ((tsd->status.allow_party & 1) != 0) {
+		// party invite blocked by player
+		clif->party_inviteack(sd, tsd->status.name, 5);
+		return 0;
+	}
+
 	tsd->party_invite=sd->status.party_id;
 	tsd->party_invite_account=sd->status.account_id;
 

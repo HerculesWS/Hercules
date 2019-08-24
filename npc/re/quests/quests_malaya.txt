@@ -2088,13 +2088,14 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				mes "How many Silver Crosses do you need?";
 				mes "I can make up to 50 at a time.";
 				next;
-				input .@amount;
-				if (.@amount == 0) {
+				input(.@amount);
+				if (.@amount <= 0) {
 					mes "[Pandoi]";
 					mes "Don't need Silver Crosses?";
 					mes "Well, I can take a rest then. Ha ha ha ha~";
 					close;
-				} else if (.@amount > 50) {
+				}
+				if (.@amount > 50) {
 					mes "[Pandoi]";
 					mes "A maximum of 50 at a time!";
 					close;
@@ -7330,14 +7331,14 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			close;
 		}
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
-		specialeffect(EF_STEAL, AREA, getnpcid(0, "Bushes#ma"));
+		specialeffect(EF_STEAL, AREA, getnpcid("Bushes#ma"));
 		malaya_bang = 13;
 		changequest 11293,11294;
 		close;
 	} else if (malaya_bang == 13) {
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
 		mes "Let's check around.";
-		specialeffect(EF_STEAL, AREA, getnpcid(0, "Bushes#ma"));
+		specialeffect(EF_STEAL, AREA, getnpcid("Bushes#ma"));
 		close;
 	} else if (malaya_bang == 14) {
 		mes "[Nurse Las]";
@@ -8317,7 +8318,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "295 - 343 -> Day 7";
 				mes "Global 1 = 1 hr.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 344)
 					close;
 				$malaya_pintados_00 = .@input;
@@ -8326,7 +8327,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value for the Lesser Agimat.";
 				mes "Values can be adjusted between 0 to 1000.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 1000)
 					close;
 				$malaya_pintados_01 = .@input;
@@ -8335,7 +8336,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value of the Silver Cross.";
 				mes "Values can be adjusted between 0 to 1000.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 1000)
 					close;
 				$malaya_pintados_02 = .@input;
@@ -8344,7 +8345,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value for the Dyestuff.";
 				mes "Values can be adjusted between 0 to 300.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 300)
 					close;
 				$malaya_pintados_03 = .@input;
@@ -8577,7 +8578,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 			mes "[Isco]";
 			mes "He he... I'm slow with numbers. I get lost when it's over 50. How many will you give me?";
 			next;
-			input .@amount;
+			input(.@amount);
 			if (.@amount < 1 || .@amount > 50) {
 				mes "[Isco]";
 				mes "Sigh~ I'm lost! I can't count if the numbers are weird.";
@@ -8609,7 +8610,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 			mes "[Isco]";
 			mes "He he... I'm slow with numbers. I get lost when it's over 50. How many will you give me?";
 			next;
-			input .@amount;
+			input(.@amount);
 			if (.@amount < 1 || .@amount > 50) {
 				mes "[Isco]";
 				mes "Sigh~ I told you I'm not good with numbers.";
@@ -8789,11 +8790,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	next;
 	mes "The Tattooist placed the Ancient Grudges around the workplace.";
 	next;
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#01"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#02"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#03"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#04"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#05"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#05"));
 	mes "The Ancient Grudge lit up and tools starts to glow. He smiled satisfyingly at the glowing tools and materials.";
 	next;
 	mes "And then "+.@name$+" stared intensely at the doll as if to remember every detail of it in his head.";
@@ -8903,11 +8904,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	}
 	mes "He held up the powder in both hands and then blew it onto the drawing.";
 	next;
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#01"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#02"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#03"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#04"));
-	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid(0, "Ancient Grudge#05"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#05"));
 	mes "All Ancient Grudges started to burn and then the glowing light from the "+.@name$+" drawing faded away.";
 	next;
 	specialeffect EF_LIGHTSPHERE;

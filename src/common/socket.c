@@ -30,6 +30,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -77,8 +78,6 @@
  **/
 static struct socket_interface sockt_s;
 struct socket_interface *sockt;
-
-static const char *SOCKET_CONF_FILENAME = "conf/common/socket.conf";
 
 #ifdef SEND_SHORTLIST
 // Add a fd to the shortlist so that it'll be recognized as a fd that needs
@@ -301,10 +300,8 @@ static uint32 send_shortlist_set[(FD_SETSIZE+31)/32];// to know if specific fd's
 
 static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse);
 
-#ifndef MINICORE
-	static int ip_rules = 1;
-	static int connect_check(uint32 ip);
-#endif  // MINICORE
+static int ip_rules = 1;
+static int connect_check(uint32 ip);
 
 static const char *error_msg(void)
 {
@@ -463,7 +460,7 @@ static int recv_to_fifo(int fd)
 		socket_data_ci += len;
 	}
 #endif  // SHOW_SERVER_STATS
-	return 0;
+	return (int)len;
 }
 
 static int send_from_fifo(int fd)
@@ -491,11 +488,12 @@ static int send_from_fifo(int fd)
 		return 0;
 	}
 
-	if( len > 0 )
+	if (len > 0)
 	{
+		sockt->session[fd]->wdata_tick = sockt->last_tick;
 		// some data could not be transferred?
 		// shift unsent data to the beginning of the queue
-		if( (size_t)len < sockt->session[fd]->wdata_size )
+		if ((size_t)len < sockt->session[fd]->wdata_size)
 			memmove(sockt->session[fd]->wdata, sockt->session[fd]->wdata + len, sockt->session[fd]->wdata_size - len);
 
 		sockt->session[fd]->wdata_size -= len;
@@ -556,12 +554,10 @@ static int connect_client(int listen_fd)
 	setsocketopts(fd,NULL);
 	sockt->set_nonblocking(fd, 1);
 
-#ifndef MINICORE
 	if( ip_rules && !connect_check(ntohl(client_address.sin_addr.s_addr)) ) {
 		sockt->close(fd);
 		return -1;
 	}
-#endif  // MINICORE
 
 #ifndef SOCKET_EPOLL
 	// Select Based Event Dispatcher
@@ -584,6 +580,7 @@ static int connect_client(int listen_fd)
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
 	sockt->session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
+	sockt->session[fd]->flag.validate = sockt->validate;
 
 	return fd;
 }
@@ -650,10 +647,10 @@ static int make_listen_bind(uint32 ip, uint16 port)
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
 
-	create_session(fd, connect_client, null_send, null_parse);
+	create_session(fd, sockt->connect_client, null_send, null_parse);
 	sockt->session[fd]->client_addr = 0; // just listens
 	sockt->session[fd]->rdata_tick = 0; // disable timeouts on this socket
-
+	sockt->session[fd]->wdata_tick = 0;
 	return fd;
 }
 
@@ -736,6 +733,7 @@ static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseF
 	sockt->session[fd]->func_send  = func_send;
 	sockt->session[fd]->func_parse = func_parse;
 	sockt->session[fd]->rdata_tick = sockt->last_tick;
+	sockt->session[fd]->wdata_tick = sockt->last_tick;
 	sockt->session[fd]->session_data = NULL;
 	sockt->session[fd]->hdata = NULL;
 	return 0;
@@ -814,7 +812,36 @@ static int rfifoskip(int fd, size_t len)
 
 	if (s->rdata_size < s->rdata_pos + len) {
 		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %"PRIuS" to %"PRIuS" (session #%d)\n", len, RFIFOREST(fd), fd);
+		Assert_report(0);
 		len = RFIFOREST(fd);
+	} else {
+		const size_t lenRest = RFIFOREST(fd);
+		if (s->flag.validate == 1 && len == lenRest) {
+			if (lenRest >= 2) {
+				const uint32 cmd = (uint32)RFIFOW(fd, 0);
+				if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {
+					ShowError("Skip wrong packet id: 0x%04X\n", cmd);
+					Assert_report(0);
+				} else {
+					int packet_len = packets->db[cmd];
+					if (packet_len == -1) {
+						if (lenRest < 4) {
+							ShowError("Skip packet with size smaller than 4\n");
+							Assert_report(0);
+						} else {
+							packet_len = RFIFOW(fd, 2);
+							if (packet_len != lenRest) {
+								ShowError("Skip packet 0x%04X with dynamic size %"PRIuS", but must be size %d\n", cmd, lenRest, packet_len);
+								Assert_report(0);
+							}
+						}
+					} else if (packet_len != lenRest) {
+						ShowError("Skip packet 0x%04X with size %"PRIuS", but must be size %d\n", cmd, lenRest, packet_len);
+						Assert_report(0);
+					}
+				}
+			}
+		}
 	}
 
 	s->rdata_pos = s->rdata_pos + len;
@@ -825,14 +852,12 @@ static int rfifoskip(int fd, size_t len)
 }
 
 /// advance the WFIFO cursor (marking 'len' bytes for sending)
-static int wfifoset(int fd, size_t len)
+static int wfifoset(int fd, size_t len, bool validate)
 {
-	size_t newreserve;
-	struct socket_data* s;
-
 	if (!sockt->session_is_valid(fd))
 		return 0;
-	s = sockt->session[fd];
+
+	struct socket_data* s = sockt->session[fd];
 	if (s == NULL || s->wdata == NULL)
 		return 0;
 
@@ -871,6 +896,10 @@ static int wfifoset(int fd, size_t len)
 		}
 
 	}
+
+	if (validate && s->flag.validate == 1)
+		sockt->validateWfifo(fd, len);
+
 	s->wdata_size += len;
 #ifdef SHOW_SERVER_STATS
 	socket_data_qo += len;
@@ -881,7 +910,7 @@ static int wfifoset(int fd, size_t len)
 
 	// always keep a WFIFO_SIZE reserve in the buffer
 	// For inter-server connections, let the reserve be 1/4th of the link size.
-	newreserve = s->flag.server ? FIFOSIZE_SERVERLINK / 4 : WFIFO_SIZE;
+	size_t newreserve = s->flag.server ? FIFOSIZE_SERVERLINK / 4 : WFIFO_SIZE;
 
 	// readjust the buffer to include the chosen reserve
 	sockt->realloc_writefifo(fd, newreserve);
@@ -891,6 +920,15 @@ static int wfifoset(int fd, size_t len)
 #endif  // SEND_SHORTLIST
 
 	return 0;
+}
+
+static void wfifohead(int fd, size_t len)
+{
+	Assert_retv(fd >= 0);
+
+	sockt->session[fd]->last_head_size = (uint32)len;
+	if (sockt->session[fd]->wdata_size + len > sockt->session[fd]->max_wdata)
+		sockt->realloc_writefifo(fd, len);
 }
 
 static int do_sockets(int next)
@@ -1065,9 +1103,6 @@ static int do_sockets(int next)
 	return 0;
 }
 
-//////////////////////////////
-#ifndef MINICORE
-//////////////////////////////
 // IP rules and DDoS protection
 
 struct connect_history {
@@ -1326,11 +1361,6 @@ static bool access_list_add(struct config_setting_t *setting, const char *list_n
 	return true;
 }
 
-//////////////////////////////
-#endif  // MINICORE
-//////////////////////////////
-
-#ifndef MINICORE
 /**
  * Reads 'socket_configuration/ip_rules' and initializes required variables.
  *
@@ -1387,9 +1417,7 @@ static bool socket_config_read_iprules(const char *filename, struct config_t *co
 
 	return true;
 }
-#endif // ! MINICORE
 
-#ifndef MINICORE
 /**
  * Reads 'socket_configuration/ddos' and initializes required variables.
  *
@@ -1419,7 +1447,6 @@ static bool socket_config_read_ddos(const char *filename, struct config_t *confi
 
 	return true;
 }
-#endif // ! MINICORE
 
 /**
  * Reads 'socket_configuration' and initializes required variables.
@@ -1464,7 +1491,6 @@ static bool socket_config_read(const char *filename, bool imported)
 	}
 #endif  // SOCKET_EPOLL
 
-#ifndef MINICORE
 	{
 		uint32 ui32 = 0;
 		libconfig->setting_lookup_bool(setting, "debug", &access_debug);
@@ -1477,11 +1503,10 @@ static bool socket_config_read(const char *filename, bool imported)
 		retval = false;
 	if (!socket_config_read_ddos(filename, &config, imported))
 		retval = false;
-#endif // MINICORE
 
 	// import should overwrite any previous configuration, so it should be called last
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
-		if (strcmp(import, filename) == 0 || strcmp(import, SOCKET_CONF_FILENAME) == 0) {
+		if (strcmp(import, filename) == 0 || strcmp(import, sockt->SOCKET_CONF_FILENAME) == 0) {
 			ShowWarning("socket_config_read: Loop detected! Skipping 'import'...\n");
 		} else {
 			if (!socket_config_read(import, true))
@@ -1496,12 +1521,10 @@ static bool socket_config_read(const char *filename, bool imported)
 static void socket_final(void)
 {
 	int i;
-#ifndef MINICORE
 	if( connect_history )
 		db_destroy(connect_history);
 	VECTOR_CLEAR(access_allow);
 	VECTOR_CLEAR(access_deny);
-#endif  // MINICORE
 
 	for( i = 1; i < sockt->fd_max; i++ )
 		if(sockt->session[i])
@@ -1686,15 +1709,13 @@ static void socket_init(void)
 	}
 #endif  // defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
 
-#ifndef MINICORE
 	VECTOR_INIT(access_allow);
 	VECTOR_INIT(access_deny);
-#endif // ! MINICORE
 
 	// Get initial local ips
 	sockt->naddr_ = sockt->getips(sockt->addr_,16);
 
-	socket_config_read(SOCKET_CONF_FILENAME, false);
+	socket_config_read(sockt->SOCKET_CONF_FILENAME, false);
 
 #ifndef SOCKET_EPOLL
 	// Select based Event Dispatcher:
@@ -1729,12 +1750,10 @@ static void socket_init(void)
 	// should hold enough buffer (it is a vacuum so to speak) as it is never flushed. [Skotlex]
 	create_session(0, null_recv, null_send, null_parse);
 
-#ifndef MINICORE
 	// Delete old connection history every 5 minutes
 	connect_history = uidb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(connect_check_clear, "connect_check_clear");
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
-#endif  // MINICORE
 
 	ShowInfo("Server supports up to '"CL_WHITE"%"PRIu64""CL_RESET"' concurrent connections.\n", rlim_cur);
 }
@@ -1818,6 +1837,11 @@ static void socket_datasync(int fd, bool send)
 		{ sizeof(struct guild_castle) },
 		{ sizeof(struct fame_list) },
 		{ PACKETVER },
+		{ PACKETVER_MAIN_NUM },
+		{ PACKETVER_RE_NUM },
+		{ PACKETVER_ZERO_NUM },
+		{ PACKETVER_AD_NUM },
+		{ PACKETVER_SAK_NUM },
 	};
 	unsigned short i;
 	unsigned int alen = ARRAYLENGTH(data_list);
@@ -1832,7 +1856,7 @@ static void socket_datasync(int fd, bool send)
 			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
 		}
 
-		WFIFOSET(fd, p_len);
+		WFIFOSET2(fd, p_len);
 	} else {
 		for( i = 0; i < alen; i++ ) {
 			if( RFIFOL(fd, 4 + (i * 4) ) != data_list[i].length ) {
@@ -1841,7 +1865,7 @@ static void socket_datasync(int fd, bool send)
 				WFIFOW(fd, 0) = 0x2b0a;
 				WFIFOW(fd, 2) = 8;
 				WFIFOL(fd, 4) = 0;
-				WFIFOSET(fd, 8);
+				WFIFOSET2(fd, 8);
 				sockt->flush(fd);
 				/* shut down */
 				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);
@@ -2072,9 +2096,55 @@ static void socket_net_config_read(const char *filename)
 	return;
 }
 
+static void socket_validateWfifo(int fd, size_t len)
+{
+	if (len < 2) {
+		ShowError("Sent packet with size smaller than 2\n");
+		Assert_retv(0);
+		return;
+	}
+	const uint32 cmd = (uint32)WFIFOW(fd, 0);
+	const uint32 last_head_size = sockt->session[fd]->last_head_size;
+	sockt->session[fd]->last_head_size = 0;
+
+	if (cmd < MIN_PACKET_DB || cmd > MAX_PACKET_DB) {
+		ShowError("Sent wrong packet id: 0x%04X\n", cmd);
+		Assert_retv(0);
+		return;
+	}
+	if (len > 65535) {
+		ShowError("Sent packet with size bigger than 65535\n");
+		Assert_retv(0);
+		return;
+	}
+	int packet_len = packets->db[cmd];
+	const int len2 = (int)len;
+	if (packet_len == -1) {
+		if (len2 < 4) {
+			ShowError("Sent packet with size smaller than 4\n");
+			Assert_retv(0);
+			return;
+		}
+		packet_len = WFIFOW(fd, 2);
+		if (packet_len != len2) {
+			ShowError("Sent packet 0x%04X with dynamic size %d, but must be size %d\n", cmd, len2, packet_len);
+			Assert_retv(0);
+		}
+	} else if (packet_len != len2) {
+		ShowError("Sent packet 0x%04X with size %d, but must be size %d\n", cmd, len2, packet_len);
+		Assert_retv(0);
+	}
+	if (last_head_size < (uint32)packet_len) {
+		ShowError("Reserved too small packet buffer for packet 0x%04X with size %u, but must be size %d\n", cmd, last_head_size, packet_len);
+		Assert_retv(0);
+	}
+}
+
 void socket_defaults(void)
 {
 	sockt = &sockt_s;
+
+	sockt->SOCKET_CONF_FILENAME = "conf/common/socket.conf";
 
 	sockt->fd_max = 0;
 	/* */
@@ -2083,6 +2153,7 @@ void socket_defaults(void)
 	/* */
 	memset(&sockt->addr_, 0, sizeof(sockt->addr_));
 	sockt->naddr_ = 0;
+	sockt->validate = false;
 	/* */
 	VECTOR_INIT(sockt->lan_subnets);
 	VECTOR_INIT(sockt->allowed_ips);
@@ -2100,6 +2171,7 @@ void socket_defaults(void)
 	sockt->realloc_fifo = realloc_fifo;
 	sockt->realloc_writefifo = realloc_writefifo;
 	sockt->wfifoset = wfifoset;
+	sockt->wfifohead = wfifohead;
 	sockt->rfifoskip = rfifoskip;
 	sockt->close = socket_close;
 	/* */
@@ -2108,6 +2180,7 @@ void socket_defaults(void)
 	/* */
 	sockt->flush = flush_fifo;
 	sockt->flush_fifos = flush_fifos;
+	sockt->connect_client = connect_client;
 	sockt->set_nonblocking = set_nonblocking;
 	sockt->set_defaultparse = set_defaultparse;
 	sockt->host2ip = host2ip;
@@ -2122,4 +2195,5 @@ void socket_defaults(void)
 	sockt->trusted_ip_check = socket_trusted_ip_check;
 	sockt->net_config_read_sub = socket_net_config_read_sub;
 	sockt->net_config_read = socket_net_config_read;
+	sockt->validateWfifo = socket_validateWfifo;
 }

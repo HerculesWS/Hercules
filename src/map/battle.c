@@ -1019,7 +1019,7 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 {
 	struct map_session_data *sd, *tsd;
 	int cardfix = 1000;
-	short t_class, s_class, s_race2, t_race2;
+	int t_class, s_class, s_race2, t_race2;
 	struct status_data *sstatus, *tstatus;
 	int i;
 
@@ -1365,24 +1365,28 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 #endif
 			}
 
-			if( battle_config.vit_penalty_type && battle_config.vit_penalty_target&target->type ) {
-				unsigned char target_count; //256 max targets should be a sane max
-				target_count = unit->counttargeted(target);
-				if(target_count >= battle_config.vit_penalty_count) {
-					if(battle_config.vit_penalty_type == 1) {
-						if( !tsc || !tsc->data[SC_STEELBODY] )
-							def1 = (def1 * (100 - (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num))/100;
-						def2 = (def2 * (100 - (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num))/100;
-					} else { //Assume type 2
-						if( !tsc || !tsc->data[SC_STEELBODY] )
-							def1 -= (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num;
-						def2 -= (target_count - (battle_config.vit_penalty_count - 1))*battle_config.vit_penalty_num;
+			if (battle_config.vit_penalty_type != 0 && (battle_config.vit_penalty_target & target->type) != 0) {
+				int target_count = unit->counttargeted(target);
+				if (target_count >= battle_config.vit_penalty_count) {
+					int penalty = (target_count - (battle_config.vit_penalty_count - 1)) * battle_config.vit_penalty_num;
+					if (battle_config.vit_penalty_type == 1) {
+						if (tsc == NULL || tsc->data[SC_STEELBODY] == NULL)
+							def1 = def1 * (100 - penalty) / 100;
+						def2 = def2 * (100 - penalty) / 100;
+					} else { // Assume type 2
+						if (tsc == NULL || tsc->data[SC_STEELBODY] == NULL)
+							def1 -= penalty;
+						def2 -= penalty;
 					}
 				}
 #ifndef RENEWAL
-				if(skill_id == AM_ACIDTERROR) def1 = 0; //Acid Terror ignores only armor defense. [Skotlex]
+				if (skill_id == AM_ACIDTERROR)
+					def1 = 0; // Acid Terror ignores only armor defense. [Skotlex]
 #endif
-				if(def2 < 1) def2 = 1;
+				if (def1 < 0)
+					def1 = 0;
+				if (def2 < 1)
+					def2 = 1;
 			}
 			//Vitality reduction from rodatazone: http://rodatazone.simgaming.net/mechanics/substats.php#def
 			if (tsd) {
@@ -2872,7 +2876,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		if( sc->data[SC__MAELSTROM] && (flag&BF_MAGIC) && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL) ) {
 			// {(Maelstrom Skill LevelxAbsorbed Skill Level)+(Caster's Job/5)}/2
 			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (t_sd ? t_sd->status.job_level / 5 : 0)) / 2;
-			status->heal(bl, 0, sp, 3);
+			status->heal(bl, 0, sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
 		}
@@ -3243,7 +3247,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		//(since battle_drain is strictly for players currently)
 		if ((sce=sc->data[SC_HAMI_BLOODLUST]) && flag&BF_WEAPON && damage > 0 &&
 			rnd()%100 < sce->val3)
-			status->heal(src, damage*sce->val4/100, 0, 3);
+			status->heal(src, damage*sce->val4/100, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
 
 		if( (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON
 			&& rnd()%100 < sce->val2 && sc->fv_counter <= sce->val3 )
@@ -4224,16 +4228,16 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 				hitrate = 80; //Default hitrate
 #endif
 
-			if(battle_config.agi_penalty_type && battle_config.agi_penalty_target&target->type) {
-				unsigned char attacker_count; //256 max targets should be a sane max
-				attacker_count = unit->counttargeted(target);
-				if(attacker_count >= battle_config.agi_penalty_count)
-				{
+			if (battle_config.agi_penalty_type != 0 && (battle_config.agi_penalty_target & target->type) != 0) {
+				int attacker_count = unit->counttargeted(target);
+				if (attacker_count >= battle_config.agi_penalty_count) {
+					int penalty = (attacker_count - (battle_config.agi_penalty_count - 1)) * battle_config.agi_penalty_num;
 					if (battle_config.agi_penalty_type == 1)
-						flee = (flee * (100 - (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num))/100;
+						flee = flee * (100 - penalty) / 100;
 					else // assume type 2: absolute reduction
-						flee -= (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num;
-					if(flee < 1) flee = 1;
+						flee -= penalty;
+					if (flee < 1)
+						flee = 1;
 				}
 			}
 
@@ -4751,15 +4755,16 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		short hitrate = 80; //Default hitrate
 #endif
 
-		if(battle_config.agi_penalty_type && battle_config.agi_penalty_target&target->type) {
-			unsigned char attacker_count; //256 max targets should be a sane max
-			attacker_count = unit->counttargeted(target);
-			if(attacker_count >= battle_config.agi_penalty_count) {
+		if (battle_config.agi_penalty_type != 0 && (battle_config.agi_penalty_target & target->type) != 0) {
+			int attacker_count = unit->counttargeted(target);
+			if (attacker_count >= battle_config.agi_penalty_count) {
+				int penalty = (attacker_count - (battle_config.agi_penalty_count - 1)) * battle_config.agi_penalty_num;
 				if (battle_config.agi_penalty_type == 1)
-					flee = (flee * (100 - (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num))/100;
-				else //asume type 2: absolute reduction
-					flee -= (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num;
-				if(flee < 1) flee = 1;
+					flee = flee * (100 - penalty) / 100;
+				else // asume type 2: absolute reduction
+					flee -= penalty;
+				if (flee < 1)
+					flee = 1;
 			}
 		}
 
@@ -5547,7 +5552,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #endif
 
 	if( flag.infdef ) { //Plants receive 1 damage when hit
-		short class_ = status->get_class(target);
+		int class_ = status->get_class(target);
 		if( flag.hit || wd.damage > 0 )
 			wd.damage = wd.div_; // In some cases, right hand no need to have a weapon to increase damage
 		if( flag.lh && (flag.hit || wd.damage2 > 0) )
@@ -6094,7 +6099,7 @@ static void battle_drain(struct map_session_data *sd, struct block_list *tbl, in
 
 	if (!thp && !tsp) return;
 
-	status->heal(&sd->bl, thp, tsp, battle_config.show_hp_sp_drain ? 3 : 1);
+	status->heal(&sd->bl, thp, tsp, STATUS_HEAL_FORCED | (battle_config.show_hp_sp_drain ? STATUS_HEAL_SHOWEFFECT : STATUS_HEAL_DEFAULT));
 
 	if (rhp || rsp)
 		status_zap(tbl, rhp, rsp);
@@ -6316,6 +6321,18 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 	if (sd && sd->state.arrow_atk) //Consume arrow.
 		battle->consume_ammo(sd, 0, 0);
 
+	if (target->type == BL_MOB) {
+		struct mob_data *md = BL_CAST(BL_MOB, target);
+		if (md != NULL) {
+			if (md->db->dmg_taken_rate != 100) {
+				if (wd.damage > 0)
+					wd.damage = apply_percentrate64(wd.damage, md->db->dmg_taken_rate, 100);
+				if (wd.damage2 > 0)
+					wd.damage2 = apply_percentrate64(wd.damage2, md->db->dmg_taken_rate, 100);
+			}
+		}
+	}
+
 	damage = wd.damage + wd.damage2;
 	if( damage > 0 && src != target ) {
 		if( sc && sc->data[SC_DUPLELIGHT] && (wd.flag&BF_SHORT) && rnd()%100 <= 10+2*sc->data[SC_DUPLELIGHT]->val1 ){
@@ -6356,7 +6373,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 
 			if (d_bl != NULL
 			 && ((d_bl->type == BL_MER && d_md->master != NULL && d_md->master->bl.id == target->id)
-			  || (d_bl->type == BL_PC && d_sd->devotion[sce->val2] == target->id)
+			  || (d_sd != NULL && d_bl->type == BL_PC && d_sd->devotion[sce->val2] == target->id)
 			    )
 			 && check_distance_bl(target, d_bl, sce->val3)
 			) {
@@ -6999,7 +7016,8 @@ static const struct battle_data {
 	{ "player_damage_delay_rate",           &battle_config.pc_damage_delay_rate,            100,    0,      INT_MAX,        },
 	{ "defunit_not_enemy",                  &battle_config.defnotenemy,                     0,      0,      1,              },
 	{ "gvg_traps_target_all",               &battle_config.vs_traps_bctall,                 BL_PC,  BL_NUL, BL_ALL,         },
-	{ "traps_setting",                      &battle_config.traps_setting,                   0,      0,      1,              },
+	{ "trap_options/visibility",            &battle_config.trap_visibility,                 2,      0,      2,              },
+	{ "trap_options/display_on_trigger",    &battle_config.trap_trigger,                    1,      0,      1,              },
 	{ "summon_flora_setting",               &battle_config.summon_flora,                    1|2,    0,      1|2,            },
 	{ "clear_skills_on_death",              &battle_config.clear_unit_ondeath,              BL_NUL, BL_NUL, BL_ALL,         },
 	{ "clear_skills_on_warp",               &battle_config.clear_unit_onwarp,               BL_ALL, BL_NUL, BL_ALL,         },
@@ -7407,6 +7425,31 @@ static const struct battle_data {
 	{ "features/feature_attendance_endtime",&battle_config.feature_attendance_endtime,      1,      0,      99999999,       },
 	{ "min_item_buy_price",                 &battle_config.min_item_buy_price,              1,      0,      INT_MAX,        },
 	{ "min_item_sell_price",                &battle_config.min_item_sell_price,             0,      0,      INT_MAX,        },
+	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1,              },
+	{ "magicrod_type",                      &battle_config.magicrod_type,                   0,      0,      1,              },
+	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
+	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999,       },
+	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999,       },
+	{ "option_drop_max_loop",               &battle_config.option_drop_max_loop,            10,     1,      100000,         },
+	{ "drop_connection_on_quit",            &battle_config.drop_connection_on_quit,         0,      0,      1,              },
+	{ "features/enable_refinery_ui",        &battle_config.enable_refinery_ui,              1,      0,      1,              },
+	{ "features/replace_refine_npcs",       &battle_config.replace_refine_npcs,             1,      0,      1,              },
+	{ "batk_min_limit",                     &battle_config.batk_min,                        0,      0,      INT_MAX,        },
+	{ "batk_max_limit",                     &battle_config.batk_max,                        USHRT_MAX, 1,   INT_MAX,        },
+	{ "matk_min_limit",                     &battle_config.matk_min,                        0,      0,      INT_MAX,        },
+	{ "matk_max_limit",                     &battle_config.matk_max,                        USHRT_MAX, 1,   INT_MAX,        },
+	{ "watk_min_limit",                     &battle_config.watk_min,                        0,      0,      INT_MAX,        },
+	{ "watk_max_limit",                     &battle_config.watk_max,                        USHRT_MAX, 1,   INT_MAX,        },
+	{ "flee_min_limit",                     &battle_config.flee_min,                        1,      1,      INT_MAX,        },
+	{ "flee_max_limit",                     &battle_config.flee_max,                        SHRT_MAX, 1,    INT_MAX,        },
+	{ "flee2_min_limit",                    &battle_config.flee2_min,                       10,     1,      INT_MAX,        },
+	{ "flee2_max_limit",                    &battle_config.flee2_max,                       SHRT_MAX, 1,    INT_MAX,        },
+	{ "critical_min_limit",                 &battle_config.critical_min,                    10,     1,      INT_MAX,        },
+	{ "critical_max_limit",                 &battle_config.critical_max,                    SHRT_MAX, 1,    INT_MAX,        },
+	{ "hit_min_limit",                      &battle_config.hit_min,                         1,      1,      INT_MAX,        },
+	{ "hit_max_limit",                      &battle_config.hit_max,                         SHRT_MAX, 1,    INT_MAX,        },
+	{ "autoloot_adjust",                    &battle_config.autoloot_adjust,                 0,      0,      1,              },
+	{ "hom_bonus_exp_from_master",          &battle_config.hom_bonus_exp_from_master,      10,      0,      100,            },
 };
 
 static bool battle_set_value_sub(int index, int value)
@@ -7532,6 +7575,18 @@ static void battle_adjust_conf(void)
 	}
 #endif
 
+#if !(PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO))
+	if (battle_config.enable_refinery_ui == 1) {
+		ShowWarning("conf/map/battle/feature.conf refinery ui is enabled but it requires PACKETVER 2016-11-09 RagexeRE/2016-11-30 Ragexe or newer, disabling...\n");
+		battle_config.enable_refinery_ui = 0;
+	}
+
+	if (battle_config.replace_refine_npcs == 1) {
+		ShowWarning("conf/map/battle/feature.conf replace refine npcs is enabled but it requires PACKETVER 2016-11-09 RagexeRE/2016-11-30 Ragexe or newer, disabling...\n");
+		battle_config.replace_refine_npcs = 0;
+	}
+#endif
+
 #ifndef CELL_NOSTACK
 	if (battle_config.custom_cell_stack_limit != 1)
 		ShowWarning("Battle setting 'custom_cell_stack_limit' takes no effect as this server was compiled without Cell Stack Limit support.\n");
@@ -7560,6 +7615,10 @@ static bool battle_config_read(const char *filename, bool imported)
 
 	if (!imported)
 		battle->config_set_defaults();
+
+	if (libconfig->lookup(&config, "battle_configuration/traps_setting") != NULL) {
+		ShowError("The `traps_setting` battle conf option has been replaced by `trap_visibility`. Please see conf/map/battle/skill.conf.\n");
+	}
 
 	for (i = 0; i < ARRAYLENGTH(battle_data); i++) {
 		int type, val;

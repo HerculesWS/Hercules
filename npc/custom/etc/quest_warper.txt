@@ -82,7 +82,7 @@ function	script	Q_Warpra	{
 	case 2:
 		warp $QW_SP_WarpMap$, $QW_SP_WarpX, $QW_SP_WarpY;
 		close2;
-		debugmes "Please check your special warp menu settings on the Warpra.";
+		consolemes(CONSOLEMES_WARNING, "Please check your special warp menu settings on the Warpra.");
 		end;
 	case 3: goto L_town;
 	case 4: goto L_dungeon;
@@ -173,19 +173,19 @@ Setprice:
 		next;
 		mes "Basic - Warps are = "+(($QW_BW_PRICE)?"^00FF00"+$QW_BW_PRICE:"^FF0000Free")+"^000000";
 		mes "Basic - Warps are starter towns and related dungeons.";
-		input $QW_BW_PRICE;
+		input($QW_BW_PRICE, 0);
 		goto Setprice;
 	case 2:
 		next;
 		mes "Advanced - Warps are = "+(($QW_AW_PRICE)?"^00FF00"+$QW_AW_PRICE:"^FF0000Free")+"^000000";
 		mes "Advanced - Warps are towns and dungeons on the same island but not close to any starter town.";
-		input $QW_AW_PRICE;
+		input($QW_AW_PRICE, 0);
 		goto Setprice;
 	case 3:
 		next;
 		mes "Overseas - Warps are = "+(($QW_OW_PRICE)?"^00FF00"+$QW_OW_PRICE:"^FF0000Free")+"^000000";
 		mes "Overseas - Warps are towns and dungeons overseas reachable by boat from Alberta.";
-		input $QW_OW_PRICE;
+		input($QW_OW_PRICE, 0);
 		goto Setprice;
 	case 4:
 		next;
@@ -193,7 +193,7 @@ Setprice:
 		mes "Basic - Warps are starter town related dungeons.";
 		mes "Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.";
 		mes "These costs are on top of the regular Warp costs.";
-		input $QW_BW_FEE;
+		input($QW_BW_FEE, 0);
 		goto Setprice;
 	case 5:
 		next;
@@ -201,7 +201,7 @@ Setprice:
 		mes "Advanced - Warps are dungeons not close to any starter town.";
 		mes "Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.";
 		mes "These costs are on top of the regular Warp costs.";
-		input $QW_AW_FEE;
+		input($QW_AW_FEE, 0);
 		goto Setprice;
 	case 6:
 		next;
@@ -209,13 +209,13 @@ Setprice:
 		mes "Overseas - Warps are dungeons related to towns overseas reachable by boat from Alberta.";
 		mes "Dungeon warp fees are calculated by maps away from entrance of the dungeon times Dungeon warp fee.";
 		mes "These costs are on top of the regular Warp costs.";
-		input $QW_OW_FEE;
+		input($QW_OW_FEE, 0);
 		goto Setprice;
 	case 7:
 		next;
 		mes "Full Healing = "+(($QW_HF_PRICE)?"^00FF00"+$QW_HF_PRICE:"^FF0000Free")+"^000000";
 		mes "Instant full healing 1 price.";
-		input $QW_HF_PRICE;
+		input($QW_HF_PRICE, 0);
 		goto Setprice;
 	case 8:
 		next;
@@ -224,8 +224,8 @@ Setprice:
 		mes "Healing price per 1 HP.";
 		mes "Healing price per 1 SP.";
 		mes "2 inputs, first HP then SP.";
-		input $QW_HP_H_PRICE;
-		input $QW_HP_S_PRICE;
+		input($QW_HP_H_PRICE, 0);
+		input($QW_HP_S_PRICE, 0);
 		goto Setprice;
 	case 9:
 		next;
@@ -233,13 +233,13 @@ Setprice:
 		if (!$QW_S_PRICE) mes "Storage = ^FF0000 Free ^000000";
 		if ($QW_S_PRICE == 60) mes "Storage = ^0000FF Kafra Mode ^000000";
 		mes "Storage cost, if set to 60 Kafra pricing will be handled.";
-		input $QW_S_PRICE;
+		input($QW_S_PRICE, 0);
 		goto Setprice;
 	case 10:
 		next;
 		mes "Guild Storage = "+(($QW_GS_PRICE)?"^00FF00"+$QW_GS_PRICE:"^FF0000Free")+"^000000";
 		mes "Guild Storage, free on Guild Kafras.";
-		input $QW_GS_PRICE;
+		input($QW_GS_PRICE, 0);
 		goto Setprice;
 	case 11:
 		goto GM_Menu;
@@ -264,21 +264,21 @@ SpecialWarpMenu:
 	case 1:
 		next;
 		mes "Set the name to show in the menu as option.";
-		input $QW_SP_Warpname$;
+		input($QW_SP_Warpname$, 0);
 		goto SpecialWarpMenu;
 	case 2:
 		next;
 		mes "Set the map in the ^0000FFmapname^000000 format.";
 		mes "When this warpmap is set the option for players will show once they meet the requirments.";
 		mes "To disable Special Warp Menu option, clear this!";
-		input $QW_SP_WarpMap$;
+		input($QW_SP_WarpMap$, 0);
 		goto SpecialWarpMenu;
 	case 3:
 		next;
 		mes "First input = Xcoord";
 		mes "Second input = Ycoord";
-		input $QW_SP_WarpX;
-		input $QW_SP_WarpY;
+		input($QW_SP_WarpX, 0);
+		input($QW_SP_WarpY, 0);
 		goto SpecialWarpMenu;
 	case 4:
 		goto GM_Menu;
@@ -301,7 +301,7 @@ DungeonLevelLimit:
 		mes "Set limit of Dungeon Depth 0 = entrance";
 		mes "Depth 1 is a map connected to 0 and so on";
 		mes "Shortest Route to map counts as depth";
-		input $QW_DDL;
+		input($QW_DDL, 0);
 		goto DungeonLevelLimit;
 	case 3: goto GM_Menu;
 	default:
@@ -464,7 +464,7 @@ L_Storage:
 	if(#kafra_code) {
 		mes "Enter your storage password:";
 		set @code_,0;
-		input @code_;
+		input(@code_, 0);
 		if(@code_ != #kafra_code) {
 			dispbottom "Wrong storage password.";
 			close;
@@ -1533,7 +1533,7 @@ function	script	QWS_Dungeon_Warpra	{
 		mes "[Warpra]";
 		mes "Sorry, I can only unlock this location.";
 	} else
-		debugmes "QWS_Dungeon_Warpra error, improper syntax?";
+		consolemes(CONSOLEMES_ERROR, "QWS_Dungeon_Warpra error, improper syntax?");
 	return;
 
 function	QWS_D_setbin	{
@@ -1577,7 +1577,7 @@ function	script	QWS_Town_Warpra	{
 	} else if (QWS_T_getbin(getarg(0)) == 1) {
 		callfunc "Q_Warpra",0;
 	} else
-		debugmes "QWS_Town_Warpra error, improper syntax ?";
+		consolemes(CONSOLEMES_ERROR, "QWS_Town_Warpra error, improper syntax ?");
 	return;
 
 function	QWS_T_setbin	{

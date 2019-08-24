@@ -64,6 +64,9 @@ struct item_data;
 
 #define SCRIPT_EQUIP_TABLE_SIZE 20
 
+#define MAX_MENU_OPTIONS 0xFF
+#define MAX_MENU_LENGTH 0x800
+
 //#define SCRIPT_DEBUG_DISP
 //#define SCRIPT_DEBUG_DISASM
 //#define SCRIPT_DEBUG_HASH
@@ -176,6 +179,8 @@ struct item_data;
 #define is_string_variable(name) ( (name)[strlen(name) - 1] == '$' )
 
 #define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
+
+#define get_buildin_name(st) ( script->get_str((int)(script_getdata((st), 0)->u.num)) )
 
 #define script_fetch(st, n, t) do { \
 	if( script_hasdata((st),(n)) ) \
@@ -338,7 +343,9 @@ enum {
 	MF_NOAUTOLOOT,
 	MF_NOVIEWID,
 	MF_PAIRSHIP_STARTABLE,
-	MF_PAIRSHIP_ENDABLE
+	MF_PAIRSHIP_ENDABLE,
+	MF_NOSTORAGE,
+	MF_NOGSTORAGE
 };
 
 enum navigation_service {
@@ -426,6 +433,8 @@ enum script_unit_data_types {
 	UDT_STATPOINT,
 	UDT_ROBE,
 	UDT_BODY2,
+	UDT_GROUP,
+	UDT_DAMAGE_TAKEN_RATE,
 	UDT_MAX
 };
 
@@ -453,6 +462,44 @@ enum script_iteminfo_types {
 	ITEMINFO_TRADE,
 
 	ITEMINFO_MAX
+};
+
+/**
+ * Mercenary Info types.
+ */
+enum script_mercinfo_types {
+	MERCINFO_ID = 0,
+	MERCINFO_CLASS,
+	MERCINFO_NAME,
+	MERCINFO_FAITH,
+	MERCINFO_CALLS,
+	MERCINFO_KILLCOUNT,
+	MERCINFO_LIFETIME,
+	MERCINFO_LEVEL,
+	MERCINFO_GID,
+
+	MERCINFO_MAX
+};
+
+/**
+ * Pet Info types.
+ */
+enum script_petinfo_types {
+	PETINFO_ID = 0,
+	PETINFO_CLASS,
+	PETINFO_NAME,
+	PETINFO_INTIMACY,
+	PETINFO_HUNGRY,
+	PETINFO_RENAME,
+	PETINFO_GID,
+	PETINFO_EGGITEM,
+	PETINFO_FOODITEM,
+	PETINFO_ACCESSORYITEM,
+	PETINFO_ACCESSORYFLAG,
+	PETINFO_EVO_EGGID,
+	PETINFO_AUTOFEED,
+
+	PETINFO_MAX
 };
 
 /**

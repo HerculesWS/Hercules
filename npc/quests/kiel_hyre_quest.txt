@@ -566,7 +566,7 @@ yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	4_M_EIN_SOLDIER,{
 			mes "delivered, and I'll verify it";
 			mes "before letting you inside.";
 			next;
-			input .@KHDelivery$;
+			input(.@KHDelivery$);
 			if (.@KHDelivery$ != "Lecollane") {
 				mes "[Security Guard]";
 				mes "You're here to deliver some";
@@ -576,7 +576,7 @@ yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	4_M_EIN_SOLDIER,{
 				mes "academy named "+.@KHDelivery$+"";
 				close;
 			}
-			input .@KHDelivery$ ;
+			input(.@KHDelivery$);
 			if (.@KHDelivery$ != "Culinary Wine") {
 				mes "[Security Guard]";
 				mes "So you're here to make";
@@ -1438,7 +1438,7 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 			mes "^3355FFElly's not responding...^000000";
 			close;
 		case 2:
-			input .@KHInput$;
+			input(.@KHInput$);
 			if (.@KHInput$ == "Wake up, Elly!") {
 				mes "[Elly]";
 				mes ".............";
@@ -1453,15 +1453,13 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 				KielHyreQuest = 34;
 				close;
 			}
-			else {
-				mes "[Elly]";
-				mes "......";
-				mes ".........";
-				mes "............";
-				next;
-				mes "^3355FFElly's not responding...^000000";
-				close;
-			}
+			mes "[Elly]";
+			mes "......";
+			mes ".........";
+			mes "............";
+			next;
+			mes "^3355FFElly's not responding...^000000";
+			close;
 		case 3:
 			mes "^3355FFAlright...";
 			mes "But sooner or later,";
@@ -1647,7 +1645,7 @@ kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 		mes "deliciously bittersweet.";
 		KielHyreQuest = 109;
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "["+strcharinfo(PC_NAME)+"]";
 		mes ""+.@input$+"";
 		mes "It's time to go back. I can't";
@@ -1703,7 +1701,7 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 			mes "^3355FFWhat should you";
 			mes "insert into the slot?^000000";
 			next;
-			input .@KHInput$;
+			input(.@KHInput$);
 			if (.@KHInput$ == "Yellow Keycard") {
 				mes "^3355FFAn electronic confirmation";
 				mes "chime sounds once you insert";
@@ -1713,7 +1711,7 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 				mes "[Security System]";
 				mes "Please enter the password.";
 				next;
-				input .@KHInput$;
+				input(.@KHInput$);
 				next;
 				if (.@KHInput$ == "4772961") {
 					mes "[Security System]";
@@ -1726,19 +1724,15 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 					KielHyreQuest = 38;
 					close;
 				}
-				else {
-					mes "[Security System]";
-					mes "Incorrect password.";
-					mes "Please try again.";
-					close;
-				}
-			}
-			else {
-				mes "^3355FFWhatever you're trying";
-				mes "to insert into the slot";
-				mes "isn't working at all...^000000";
+				mes "[Security System]";
+				mes "Incorrect password.";
+				mes "Please try again.";
 				close;
 			}
+			mes "^3355FFWhatever you're trying";
+			mes "to insert into the slot";
+			mes "isn't working at all...^000000";
+			close;
 		}
 	}
 	else if ((KielHyreQuest >= 38) && (KielHyreQuest < 106)) {
@@ -1967,7 +1961,7 @@ kh_vila,184,20,0	script	Book#kh1::BookKHQ1	HIDDEN_NPC,{
 			mes "wall slides opens open";
 			mes "to reveal a secret path.^000000";
 			KielHyreQuest = 28;
-			specialeffect(EF_READYPORTAL2, AREA, getnpcid(0, "Wall#kh"));
+			specialeffect(EF_READYPORTAL2, AREA, getnpcid("Wall#kh"));
 			close;
 		}
 		else {
@@ -2974,7 +2968,7 @@ kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	HIDDEN_NPC,{
 			mes "then you know what to call me,";
 			mes "right? Do you know what I am?";
 			next;
-			input .@KHInput$;
+			input(.@KHInput$);
 			if (.@KHInput$ == "little lost devil") {
 				mes "[???]";
 				mes "Heh... Heh heh...";
@@ -2994,14 +2988,12 @@ kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	HIDDEN_NPC,{
 				KielHyreQuest = 30;
 				close;
 			}
-			else {
-				mes "[???]";
-				mes "No... No...";
-				mes "That's not right.";
-				mes "I don't think we";
-				mes "were friends. No...";
-				close;
-			}
+			mes "[???]";
+			mes "No... No...";
+			mes "That's not right.";
+			mes "I don't think we";
+			mes "were friends. No...";
+			close;
 		case 2:
 			mes "^3355FFLet's investigate";
 			mes "this area a little";
@@ -3041,7 +3033,7 @@ kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 		next;
 		switch(select("Open Door", "Cancel")) {
 		case 1:
-			input .@KHInput$;
+			input(.@KHInput$);
 			mes "^3355FFYou try to push the";
 			mes "door open with all";
 			mes "your might, but fail";
@@ -3061,7 +3053,7 @@ kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 		next;
 		switch(select("Open Door", "Cancel")) {
 		case 1:
-			input .@KHInput$;
+			input(.@KHInput$);
 			if (.@KHInput$ == "Blue Keycard") {
 				mes "^3355FFYou've successfully";
 				mes "opened the door.";
@@ -3069,13 +3061,11 @@ kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 				warp "kh_school",119,144;
 				end;
 			}
-			else {
-				mes "^3355FFYou try to push the";
-				mes "door open with all";
-				mes "your might, but fail";
-				mes "to make it budge.^000000";
-				close;
-			}
+			mes "^3355FFYou try to push the";
+			mes "door open with all";
+			mes "your might, but fail";
+			mes "to make it budge.^000000";
+			close;
 		case 2:
 			mes "^3355FFYou decided to leave";
 			mes "this door alone until";
@@ -3101,7 +3091,7 @@ kh_dun01,76,233,0	script	Heavy Door::HeavyDoorKHQ2	HIDDEN_NPC,{
 		next;
 		switch(select("Open Door", "Cancel")) {
 		case 1:
-			input .@KHInput$;
+			input(.@KHInput$);
 			mes "^3355FFYou try to push the";
 			mes "door open with all";
 			mes "your might, but fail";
@@ -3421,7 +3411,7 @@ kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	HIDDEN_NPC,{
 		mes "operated by inserting the";
 		mes "correct keycard into the slot.^000000";
 		next;
-		input .@KHInput$;
+		input(.@KHInput$);
 		if (.@KHInput$ == "Red Keycard") {
 			mes "^3355FFThe door opens once";
 			mes "you insert the Red Keycard.^000000";
@@ -3429,10 +3419,8 @@ kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	HIDDEN_NPC,{
 			warp "kh_dun01",170,227;
 			end;
 		}
-		else {
-			mes "^3355FFNothing happened.^000000";
-			close;
-		}
+		mes "^3355FFNothing happened.^000000";
+		close;
 	}
 }
 
@@ -3530,42 +3518,38 @@ kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	HIDDEN_NPC,{
 		mes "correct keycard into the slot.^000000";
 		close;
 	}
-	else {
-		mes "^3355FFYou encounter";
-		mes "a mechanical device.";
-		mes "It looks like it can be";
-		mes "operated by inserting the";
-		mes "correct keycard into the slot.^000000";
+	mes "^3355FFYou encounter";
+	mes "a mechanical device.";
+	mes "It looks like it can be";
+	mes "operated by inserting the";
+	mes "correct keycard into the slot.^000000";
+	next;
+	input(.@KHInput$);
+	if (.@KHInput$ == "Luxurious Keycard") {
+		mes "^3355FFAs you insert the";
+		mes "Luxurious Keycard";
+		mes "into the keycard slot,";
+		mes "the door swings open";
+		mes "to reveal a long flight";
+		mes "of descending stairs.^000000";
 		next;
-		input .@KHInput$;
-		if (.@KHInput$ == "Luxurious Keycard") {
-			mes "^3355FFAs you insert the";
-			mes "Luxurious Keycard";
-			mes "into the keycard slot,";
-			mes "the door swings open";
-			mes "to reveal a long flight";
-			mes "of descending stairs.^000000";
-			next;
-			switch(select("Descend Stairs", "Cancel")) {
-			case 1:
-				warp "kh_dun02",41,198;
-				end;
-			case 2:
-				mes "^3355FFIt looks like this door";
-				mes "has automatically closed";
-				mes "after the preprogrammed";
-				mes "time limit has elapsed.^000000";
-				close;
-			}
-		}
-		else {
-			mes "^3355FFYou try to push the";
-			mes "door open with all";
-			mes "your might, but fail";
-			mes "to make it budge.^000000";
+		switch(select("Descend Stairs", "Cancel")) {
+		case 1:
+			warp "kh_dun02",41,198;
+			end;
+		case 2:
+			mes "^3355FFIt looks like this door";
+			mes "has automatically closed";
+			mes "after the preprogrammed";
+			mes "time limit has elapsed.^000000";
 			close;
 		}
 	}
+	mes "^3355FFYou try to push the";
+	mes "door open with all";
+	mes "your might, but fail";
+	mes "to make it budge.^000000";
+	close;
 }
 
 kh_dun01,36,195,0	duplicate(KHAccess)	Entrance Device#khd1	HIDDEN_NPC
@@ -5703,7 +5687,7 @@ kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 		mes "a button for each letter";
 		mes "of the alphabet on top of it.^000000";
 		next;
-		input .@KHInput$;
+		input(.@KHInput$);
 		mes "^3355FFNothing happened.^000000";
 		close;
 	}
@@ -5713,7 +5697,7 @@ kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 			mes "a button for each letter";
 			mes "of the alphabet on top of it.^000000";
 			next;
-			input .@KHInput$;
+			input(.@KHInput$);
 			if (.@KHInput$ == "open the door") {
 				mes "^3355FFAs soon as you enter the";
 				mes "password, the nearby door";
@@ -5723,23 +5707,17 @@ kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 				getitem Toy_Key,1;
 				close;
 			}
-			else {
-				mes "^3355FFNothing happened.^000000";
-				close;
-			}
-		}
-		else {
-			mes "^3355FFThis is where you";
-			mes "found the Toy key^000000";
+			mes "^3355FFNothing happened.^000000";
 			close;
 		}
-	}
-	else{
-		mes "^3355FFThe box is wide";
-		mes "open, and there";
-		mes "is nothing in it.^000000";
+		mes "^3355FFThis is where you";
+		mes "found the Toy key^000000";
 		close;
 	}
+	mes "^3355FFThe box is wide";
+	mes "open, and there";
+	mes "is nothing in it.^000000";
+	close;
 }
 
 //- Kiehl's Room; Big Door, (First) -
@@ -5752,7 +5730,7 @@ kh_kiehl01,44,33,0	script	Big Door#BigDoorKHQ1	HIDDEN_NPC,{
 		mes "but there is a narrow";
 		mes "slot next to the doorknob.^000000";
 		next;
-		input .@KHInput$;
+		input(.@KHInput$);
 		if (.@KHInput$ == "Black Keycard") {
 			if (countitem(Black_Key_Card) >= 1) {
 				mes "^3355FFYou insert the";
@@ -5811,7 +5789,7 @@ kh_kiehl01,174,40,0	script	Big Door#BigDoorKHQ2	HIDDEN_NPC,{
 		mes "but there is a small";
 		mes "keyhole next to the knob.^000000";
 		next;
-		input .@KHInput$;
+		input(.@KHInput$);
 		if (.@KHInput$ == "Toy Key") {
 			if (countitem(Toy_Key) >= 1) {
 				mes "^3355FFYou insert the key into";
@@ -5832,10 +5810,8 @@ kh_kiehl01,174,40,0	script	Big Door#BigDoorKHQ2	HIDDEN_NPC,{
 		mes "to make it budge.^000000";
 		close;
 	}
-	else {
-		mes "^3355FFThe door is open.^000000";
-		close;
-	}
+	mes "^3355FFThe door is open.^000000";
+	close;
 }
 
 kh_kiehl01,174,39,0	script	Big_Door_2_Warp	WARPNPC,1,1,{
@@ -5869,7 +5845,7 @@ kh_kiehl01,77,108,0	script	Big Door#BigDoorKHQ3	HIDDEN_NPC,{
 		mes "but there is a narrow";
 		mes "slot next to the doorknob.^000000";
 		next;
-		input .@KHInput$;
+		input(.@KHInput$);
 		if (.@KHInput$ == "Black Keycard") {
 			if (countitem(Black_Key_Card) >= 1) {
 				mes "^3355FFYou insert the";
@@ -5927,7 +5903,7 @@ kh_kiehl01,42,177,0	script	Big Door#BigDoorKHQ4	HIDDEN_NPC,{
 		mes "but there is a narrow";
 		mes "slot next to the doorknob.^000000";
 		next;
-		input .@KHInput$;
+		input(.@KHInput$);
 		if (.@KHInput$ == "Black Keycard") {
 			if (countitem(Black_Key_Card) >= 2) {
 				mes "^3355FFYou insert the";
@@ -5947,11 +5923,8 @@ kh_kiehl01,42,177,0	script	Big Door#BigDoorKHQ4	HIDDEN_NPC,{
 		mes "to make it budge.^000000";
 		close;
 	}
-
-	else {
-		mes "^3355FFThe door is open.^000000";
-		close;
-	}
+	mes "^3355FFThe door is open.^000000";
+	close;
 }
 
 kh_kiehl01,41,177,0	script	Big_Door_4_Warp	WARPNPC,1,1,{
@@ -6393,11 +6366,11 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		next;
 		mes "[Mitchell]";
 		mes "Nooooo!";
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Mitchell#KiehlRoom"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent1"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent2"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent3"));
-		specialeffect(PF_FOGWALL, AREA, getnpcid(0, "Agent#KHAgent4"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Mitchell#KiehlRoom"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent1"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent2"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent3"));
+		specialeffect(PF_FOGWALL, AREA, getnpcid("Agent#KHAgent4"));
 		next;
 		cutin "kh_kiel03",2;
 		mes "[Kiehl]";

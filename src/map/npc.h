@@ -41,10 +41,11 @@ enum npc_parse_options {
 };
 
 enum npc_shop_types {
-	NST_ZENY,/* default */
-	NST_CASH,/* official npc cash shop */
-	NST_MARKET,/* official npc market type */
+	NST_ZENY,   /* default */
+	NST_CASH,   /* official npc cash shop */
+	NST_MARKET, /* official npc market type */
 	NST_CUSTOM,
+	NST_BARTER, /* official npc barter type */
 	/* */
 	NST_MAX,
 };
@@ -56,11 +57,14 @@ struct npc_label_list {
 	char name[NAME_LENGTH];
 	int pos;
 };
+
 struct npc_item_list {
 	int nameid;
-	unsigned int value;
+	unsigned int value;  // price or barter currency item id
+	int value2;  // barter currency item amount
 	unsigned int qty;
 };
+
 struct npc_shop_data {
 	unsigned char type;/* what am i */
 	struct npc_item_list *item;/* list */
@@ -73,7 +77,7 @@ struct npc_data {
 	struct view_data vd;
 	unsigned int option;
 	struct npc_data *master_nd;
-	short class_;
+	int class_;
 	short speed;
 	char name[NAME_LENGTH+1];// display name
 	char exname[NAME_LENGTH+1];// unique npc name
@@ -125,6 +129,7 @@ struct npc_data {
 			int spawn_timer;
 		} tomb;
 	} u;
+	VECTOR_DECL(struct questinfo) qi_data;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
@@ -264,7 +269,7 @@ struct npc_interface {
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
-	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, uint8 dir, int16 class_);
+	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, uint8 dir, int class_);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char *(*parse_warp) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char *(*parse_shop) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
@@ -284,7 +289,7 @@ struct npc_interface {
 	void (*unsetcells) (struct npc_data *nd);
 	void (*movenpc) (struct npc_data *nd, int16 x, int16 y);
 	void (*setdisplayname) (struct npc_data *nd, const char *newname);
-	void (*setclass) (struct npc_data *nd, short class_);
+	void (*setclass) (struct npc_data *nd, int class_);
 	int (*do_atcmd_event) (struct map_session_data *sd, const char *command, const char *message, const char *eventname);
 	const char *(*parse_function) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*parse_mob2) (struct spawn_data *mobspawn);
@@ -306,13 +311,19 @@ struct npc_interface {
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
 	int (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
-	void (*market_tosql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
+	void (*market_tosql) (struct npc_data *nd, int index);
+	void (*market_delfromsql) (struct npc_data *nd, int index);
+	void (*market_delfromsql_sub) (const char *npcname, int index);
+	void (*barter_fromsql) (void);
+	void (*barter_tosql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql_sub) (const char *npcname, int itemId, int itemId2, int amount2);
 	bool (*db_checkid) (const int id);
 	void (*refresh) (struct npc_data* nd);
+	void (*questinfo_clear) (struct npc_data *nd);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/

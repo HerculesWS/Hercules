@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2019  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ HPMHooks.source.mapindex = *mapindex;
 HPMHooks.source.md5 = *md5;
 HPMHooks.source.mutex = *mutex;
 HPMHooks.source.nullpo = *nullpo;
+HPMHooks.source.packets = *packets;
 HPMHooks.source.pincode = *pincode;
 HPMHooks.source.rnd = *rnd;
 HPMHooks.source.showmsg = *showmsg;

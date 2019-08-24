@@ -23,8 +23,11 @@
 #include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/random.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "login/login.h"
+#include "login/lclif.p.h"
 #include "map/clif.h"
 #include "map/pc.h"
 #include "map/script.h"
@@ -79,13 +82,13 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.map = sd->status.last_point.map;
 		data->lastMSGPosition.x = sd->status.last_point.x;
 		data->lastMSGPosition.y = sd->status.last_point.y;
-		data->someNumber = rand()%777;
+		data->someNumber = rnd()%777;
 
 		ShowInfo("Created Appended sockt->session[] data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToSession(sockt->session[fd],data,0,true);
 	} else {
 		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
-		if( rand()%4 == 2 ) {
+		if (rnd()%4 == 2) {
 			ShowInfo("Removing Appended sockt->session[] data\n");
 			removeFromSession(sockt->session[fd],0);
 		}
@@ -98,13 +101,13 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.map = sd->status.last_point.map;
 		data->lastMSGPosition.x = sd->status.last_point.x;
 		data->lastMSGPosition.y = sd->status.last_point.y;
-		data->someNumber = rand()%777;
+		data->someNumber = rnd()%777;
 
 		ShowInfo("Created Appended map_session_data data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToMSD(sd,data,0,true);
 	} else {
 		ShowInfo("Existent Appended map_session_data data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
-		if( rand()%4 == 2 ) {
+		if (rnd()%4 == 2) {
 			ShowInfo("Removing Appended map_session_data data\n");
 			removeFromMSD(sd,0);
 		}
@@ -135,6 +138,19 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd, int n, int amou
 	}
 	return 1;
 }
+
+ /**
+  * pre-hook for lclif->p->parse_CA_CONNECT_INFO_CHANGED this is a private interface function and while in source it cannot be used
+  * outside of lclif.c since it's private, plugin can use it and hook to private interface functions if needed
+  * the pre-hook takes this currently unused packet and show a notice whenver a player sends it
+  **/
+enum parsefunc_rcode my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre(int *fd, struct login_session_data **sd) __attribute__((nonnull(2)));
+enum parsefunc_rcode my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre(int *fd, struct login_session_data **sd)
+{
+	ShowNotice("Player (AID: %d) has sent CA_CONNECT_INFO_CHANGED packet\n", (*sd)->account_id);
+	return PACKET_VALID;
+}
+
 /*
 * Key is the setting name in our example it's 'my_setting' while val is the value of it.
 * this way you can manage more than one setting in one function instead of define multiable ones
@@ -210,6 +226,14 @@ HPExport void plugin_init (void) {
 		/* our posthook will display a message to the user about the cap */
 		/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
 		addHookPost(pc, dropitem, my_pc_dropitem_post);
+	}
+
+	if (SERVER_TYPE == SERVER_TYPE_LOGIN) {
+		/**
+		 * In this example we add a pre-hook to lclif->p->parse_CA_CONNECT_INFO_CHANGED
+		 * It's similar to nomral hooks except it have it own hooking macros which ends with Priv
+		 **/
+		addHookPrePriv(lclif, parse_CA_CONNECT_INFO_CHANGED, my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */

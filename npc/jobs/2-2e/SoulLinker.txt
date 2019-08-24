@@ -434,7 +434,7 @@ OnTouch:
 			mes "[Maia]";
 			mes "This Witherless Rose will";
 			mes "wither away instead of you...";
-			specialeffect(EF_MAPPILLAR2, AREA, getnpcid(0, "Maia#link2"));
+			specialeffect(EF_MAPPILLAR2, AREA, getnpcid("Maia#link2"));
 			next;
 			mes "[Maia]";
 			mes "This Witherless Rose will";

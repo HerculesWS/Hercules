@@ -133,22 +133,22 @@ brasilis,137,77,5	script	Ice-Cream Maker	4_M_03,{
 		mes "So how many d'ya want?";
 		next;
 		while(1) {
-			input .@input; //,1,5;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Ice Cream Maker]";
 				mes "None?";
 				mes "Fine get outta the way, I have customers to serve.";
 				close;
 			}
-			else if ((.@input < 0) || (.@input > 5)) {
+			if (.@input > 5) {
 				mes "[Ice Cream Maker]";
 				mes "Wow.";
 				mes "You ordered too much.";
 				mes "If you eat over 5 you might need to fight with a monster in your stomach. Calm down buddy.";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@icecream_hap = .@input*100;
 		if (Zeny < .@icecream_hap) {

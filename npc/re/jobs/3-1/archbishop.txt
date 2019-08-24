@@ -243,7 +243,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hmm, I wanted to tell you...";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "" + .@inputstr$ + "";
 		next;
@@ -483,7 +483,7 @@ OnTouch:
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Pain... What kind of faults have I had?";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I confess my guilt to the Almighty God Odin.";
@@ -779,7 +779,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 		warp "odin_tem02",282,263;
 		end;
 	}
-	if (getmercinfo(1)) {
+	if (getmercinfo(MERCINFO_CLASS)) {
 		mes "[Valkyrie]";
 		mes "If you want to talk with me, you have to ^3131FFcancel all contracts^000000 with any mercenaries you have.";
 		close;
@@ -1006,7 +1006,7 @@ OnTouch:
 	if (countitem(ValkyrieA_Scroll)) {
 		delitem ValkyrieA_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2037) {
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_A) {
 		if (strnpcinfo(NPC_NAME) == "#arch_1_10")
 			viewpoint 1,113,327,1,0xFF9900;
 		.@randht = rand(1,10);
@@ -1038,7 +1038,7 @@ OnTouch:
 	if (countitem(ValkyrieA_Scroll)) {
 		delitem ValkyrieA_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2037) {
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_A) {
 		mapannounce "job3_arch02","Valkyrie's Nightmare: An incompetent illusion of Valkyrie came here with the assistance of humans. You wanna have that nightmare?",bc_map,"0xFF0000";
 		donpcevent "mob#arch_1::OnKill";
 		end;
@@ -1113,7 +1113,7 @@ OnKill:
 }
 
 job3_arch02,113,327,5	script	Valkyrie#arch_01	4_F_VALKYRIE2,{
-	if (getmercinfo(1)) {
+	if (getmercinfo(MERCINFO_CLASS)) {
 		mes "[Valkyrie]";
 		mes "If you want to talk with me, you have to ^3131FFcancel all contracts^000000 with any mercenaries you have.";
 		close;
@@ -1262,7 +1262,7 @@ OnTouch:
 	mes "So bright and warm....";
 	next;
 	mes "- Shoooo -";
-	specialeffect(EF_CLOAKING, AREA, getnpcid(0, "Valkyrie Anguhilde#end"));
+	specialeffect(EF_CLOAKING, AREA, getnpcid("Valkyrie Anguhilde#end"));
 	hideonnpc "Valkyrie Anguhilde#end";
 	emotion e_omg,1;
 	next;
@@ -1355,7 +1355,7 @@ OnTouch:
 	if (countitem(ValkyrieB_Scroll)) {
 		delitem ValkyrieB_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2038) {
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_B) {
 		.@randht = rand(1,10);
 		if (.@randht < 8)
 			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits. Can you hear? The sound of gathering in crowds.",bc_map,"0xFFCE00";
@@ -1400,7 +1400,7 @@ OnTouch:
 	if (countitem(ValkyrieB_Scroll)) {
 		delitem ValkyrieB_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2038) {
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_B) {
 		mapannounce "job3_arch02","A shout of devil: You are so childish. I invite you a party of devil. I'll make you have a fun!",bc_map,"0xFF0000";
 		end;
 	}

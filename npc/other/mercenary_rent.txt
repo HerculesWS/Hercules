@@ -252,8 +252,8 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 	mes "each cost " + .@str_cost$ + " zeny.";
 	mes "How many would you like?";
 	next;
-	input .@input;
-	if (!.@input) {
+	input(.@input);
+	if (.@input <= 0) {
 		mes "[Mercenary Goods Merchant]";
 		mes "You changed your mind?";
 		mes "Alright, feel free to come";
@@ -261,7 +261,7 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 		mes "to buy any Mercenary Potions.";
 		close;
 	}
-	if (.@input < 0 || .@input > 10000) {
+	if (.@input > 10000) {
 		mes "[Mercenary Goods Merchant]";
 		mes "I'm sorry, but you";
 		mes "can only buy up to";

@@ -301,6 +301,9 @@ static int achievement_validate_type(struct map_session_data *sd, enum achieveme
 
 	Assert_ret(criteria->goal != 0);
 
+	if (battle_config.feature_enable_achievement == 0)
+		return 0;
+
 	if (type == ACH_QUEST) {
 		ShowError("achievement_validate_type: ACH_QUEST is not handled by this function. (use achievement_validate())\n");
 		return 0;
@@ -357,6 +360,9 @@ static bool achievement_validate(struct map_session_data *sd, int aid, unsigned 
 	nullpo_retr(false, sd);
 	Assert_retr(false, progress > 0);
 	Assert_retr(false, obj_idx < MAX_ACHIEVEMENT_OBJECTIVES);
+
+	if (battle_config.feature_enable_achievement == 0)
+		return false;
 
 	if ((ad = achievement->get(aid)) == NULL) {
 		ShowError("achievement_validate: Invalid Achievement %d provided.", aid);
@@ -760,14 +766,13 @@ static void achievement_validate_refine(struct map_session_data *sd, unsigned in
 	struct item_data *id = NULL;
 
 	nullpo_retv(sd);
-	Assert_retv(idx < MAX_INVENTORY);
+	Assert_retv(idx < sd->status.inventorySize);
 
 	id = itemdb->exists(sd->status.inventory[idx].nameid);
 
 	if (sd->achievements_received == false)
 		return;
 
-	Assert_retv(idx < MAX_INVENTORY);
 	Assert_retv(id != NULL);
 
 	criteria.goal = sd->status.inventory[idx].refine;

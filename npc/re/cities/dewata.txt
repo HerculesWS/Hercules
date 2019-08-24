@@ -489,11 +489,12 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 		mes "^FF00001,000 ~ 100,000 Zeny^000000";
 		mes "How much do you want to donate?";
 		next;
-		input .@input,0,100000;
+		input(.@input, 0, 100000);
 		if (.@input < 1000) {
 			mes "- Cancelled. -";
 			close;
-		} else if (.@input <= 50000)
+		}
+		if (.@input <= 50000)
 			.@good_luck = rand(1,10000);
 		else
 			.@good_luck = rand(1,5000);
@@ -557,7 +558,7 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 	case 2:
 		mes "What is your wish?";
 		next;
-		input .@wish$;
+		input(.@wish$);
 		mes "You have made your wish for ^0000FF" + .@wish$ + "^000000 to the small shrine.";
 		next;
 		callsub L_Wish;
@@ -569,10 +570,10 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 
 L_Wish:
 	mes "Mysterious energy comes out from the shrine.";
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew1"));
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew2"));
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew3"));
-	specialeffect(EF_FLASHER, AREA, getnpcid(0, "Small Shrine#dew4"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew1"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew2"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew3"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew4"));
 	next;
 	mes "You have received the shrine's blessing.";
 	specialeffect(EF_BLESSING, AREA, playerattached());

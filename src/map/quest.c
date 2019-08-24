@@ -672,21 +672,22 @@ static int quest_questinfo_validate_icon(int icon)
  */
 static void quest_questinfo_refresh(struct map_session_data *sd)
 {
-	int i;
-
 	nullpo_retv(sd);
 
-	for (i = 0; i < VECTOR_LENGTH(map->list[sd->bl.m].qi_data); i++) {
-		struct questinfo *qi = &VECTOR_INDEX(map->list[sd->bl.m].qi_data, i);
-		// Remove the bubbles if one of the conditions is no longer valid.
-		if (quest->questinfo_validate(sd, qi) == false) {
-#if PACKETVER >= 20120410
-			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
-#else
-			clif->quest_show_event(sd, &qi->nd->bl, 0, 0);
-#endif
+	for (int i = 0; i < VECTOR_LENGTH(map->list[sd->bl.m].qi_list); i++) {
+		struct npc_data *nd = &VECTOR_INDEX(map->list[sd->bl.m].qi_list, i);
+
+		int j;
+		ARR_FIND(0, VECTOR_LENGTH(nd->qi_data), j, quest->questinfo_validate(sd, &VECTOR_INDEX(nd->qi_data, j)) == true);
+		if (j != VECTOR_LENGTH(nd->qi_data)) {
+			struct questinfo *qi = &VECTOR_INDEX(nd->qi_data, j);
+			clif->quest_show_event(sd, &nd->bl, qi->icon, qi->color);
 		} else {
-			clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
+#if PACKETVER >= 20120410
+			clif->quest_show_event(sd, &nd->bl, 9999, 0);
+#else
+			clif->quest_show_event(sd, &nd->bl, 0, 0);
+#endif
 		}
 	}
 }
@@ -814,7 +815,7 @@ static bool quest_questinfo_validate_items(struct map_session_data *sd, struct q
 	for (int i = 0; i < VECTOR_LENGTH(qi->items); i++) {
 		struct questinfo_itemreq *item = &VECTOR_INDEX(qi->items, i);
 		int count = 0;
-		for (int j = 0; j < MAX_INVENTORY; j++) {
+		for (int j = 0; j < sd->status.inventorySize; j++) {
 			if (sd->status.inventory[j].nameid == item->nameid)
 				count += sd->status.inventory[j].amount;
 		}
@@ -927,26 +928,6 @@ static bool quest_questinfo_validate_mercenary_class(struct map_session_data *sd
 }
 
 /**
- * Clears the questinfo data vector
- *
- * @param m mapindex.
- *
- */
-static void quest_questinfo_vector_clear(int m)
-{
-	int i;
-
-	Assert_retv(m >= 0 && m < map->count);
-
-	for (i = 0; i < VECTOR_LENGTH(map->list[m].qi_data); i++) {
-		struct questinfo *qi_data = &VECTOR_INDEX(map->list[m].qi_data, i);
-		VECTOR_CLEAR(qi_data->items);
-		VECTOR_CLEAR(qi_data->quest_requirement);
-	}
-	VECTOR_CLEAR(map->list[m].qi_data);
-}
-
-/**
  * Initializes the quest interface.
  *
  * @param minimal Run in minimal mode (skips most of the loading)
@@ -1020,5 +1001,4 @@ void quest_defaults(void)
 	quest->questinfo_validate_homunculus_type = quest_questinfo_validate_homunculus_type;
 	quest->questinfo_validate_quests = quest_questinfo_validate_quests;
 	quest->questinfo_validate_mercenary_class = quest_questinfo_validate_mercenary_class;
-	quest->questinfo_vector_clear = quest_questinfo_vector_clear;
 }

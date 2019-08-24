@@ -44,8 +44,8 @@ MAP_C = achievement.c atcommand.c battle.c battleground.c buyingstore.c channel.
         chrif.c clan.c clif.c date.c duel.c elemental.c guild.c homunculus.c HPMmap.c \
         instance.c intif.c irc-bot.c itemdb.c log.c mail.c map.c mapreg_sql.c \
         mercenary.c mob.c npc.c npc_chat.c party.c path.c pc.c pc_groups.c \
-        pet.c quest.c rodex.c script.c searchstore.c skill.c status.c storage.c \
-        trade.c unit.c vending.c
+        pet.c quest.c refine.c rodex.c script.c searchstore.c skill.c status.c storage.c \
+        stylist.c trade.c unit.c vending.c
 MAP_OBJ = $(addprefix obj_sql/, $(patsubst %c,%o,$(MAP_C)))
 MAP_H = achievement.h atcommand.h battle.h battleground.h buyingstore.h channel.h chat.h \
         chrif.h clan.h clif.h date.h duel.h elemental.h guild.h homunculus.h HPMmap.h \
@@ -54,9 +54,9 @@ MAP_H = achievement.h atcommand.h battle.h battleground.h buyingstore.h channel.
         messages_sak.h messages_zero.h mob.h npc.h packets.h packets_keys_main.h \
         packets_keys_zero.h packets_shuffle_main.h packets_shuffle_re.h \
         packets_shuffle_zero.h packets_struct.h party.h path.h pc.h pc_groups.h \
-        pet.h quest.h rodex.h script.h searchstore.h skill.h status.h storage.h \
-        trade.h unit.h vending.h
-MAP_PH =
+        pet.h quest.h refine.h rodex.h script.h searchstore.h skill.h status.h storage.h \
+        stylist.h trade.h unit.h vending.h
+MAP_PH = refine.p.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)

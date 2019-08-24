@@ -880,7 +880,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "Bartender,";
 				mes "I'm so depressed";
 				mes "because of...";
-				input .@inputstr$;
+				input(.@inputstr$);
 				mes .@inputstr$+"...";
 				next;
 				mes "[Bartender]";
@@ -1271,7 +1271,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 				next;
 				mes "[Bachewcca]";
 				mes "^666666*Grunt!*^000000";
-				specialeffect(EF_TALK_SCREAM, AREA, getnpcid(0, "Customer#Bachewcca"));
+				specialeffect(EF_TALK_SCREAM, AREA, getnpcid("Customer#Bachewcca"));
 				next;
 				mes "[SoloHan]";
 				mes "To...";
@@ -1377,7 +1377,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 		next;
 		mes "[Bachewcca]";
 		mes "^666666*Grrr...!*^000000";
-		specialeffect(EF_THROWITEM, AREA, getnpcid(0, "Customer#Bachewcca"));
+		specialeffect(EF_THROWITEM, AREA, getnpcid("Customer#Bachewcca"));
 		close;
 	}
 	mes "Oh man...";

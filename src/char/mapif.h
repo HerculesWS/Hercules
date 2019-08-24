@@ -24,6 +24,7 @@
 #include "common/mmo.h"
 
 struct WisData;
+struct rodex_item;
 
 /**
  * mapif interface
@@ -84,7 +85,7 @@ struct mapif_interface {
 	int (*parse_GuildInfo) (int fd, int guild_id);
 	int (*parse_GuildAddMember) (int fd, int guild_id, const struct guild_member *m);
 	int (*parse_GuildLeave) (int fd, int guild_id, int account_id, int char_id, int flag, const char *mes);
-	int (*parse_GuildChangeMemberInfoShort) (int fd, int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+	int (*parse_GuildChangeMemberInfoShort) (int fd, int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*parse_BreakGuild) (int fd, int guild_id);
 	int (*parse_GuildMessage) (int fd, int guild_id, int account_id, const char *mes, int len);
 	int (*parse_GuildBasicInfoChange) (int fd, int guild_id, int type, const void *data, int len);
@@ -167,7 +168,9 @@ struct mapif_interface {
 	void (*parse_rodex_send) (int fd);
 	void (*rodex_send) (int fd, int sender_id, int receiver_id, int receiver_accountid, bool result);
 	void (*parse_rodex_checkname) (int fd);
-	void (*rodex_checkname) (int fd, int reqchar_id, int target_char_id, short target_class, int target_level, char *name);
+	void (*rodex_checkname) (int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name);
+	void (*rodex_getzenyack) (int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny);
+	void (*rodex_getitemsack) (int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
 	int (*load_guild_storage) (int fd, int account_id, int guild_id, char flag);
 	int (*save_guild_storage_ack) (int fd, int account_id, int guild_id, int fail);
 	int (*parse_LoadGuildStorage) (int fd);

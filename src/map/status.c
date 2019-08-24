@@ -38,6 +38,7 @@
 #include "map/path.h"
 #include "map/pc.h"
 #include "map/pet.h"
+#include "map/refine.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/skill.h"
@@ -1240,10 +1241,15 @@ static void status_copy(struct status_data *a, const struct status_data *b)
 	memcpy((void*)&a->max_hp, (const void*)&b->max_hp, sizeof(struct status_data)-(sizeof(a->hp)+sizeof(a->sp)));
 }
 
-//Sets HP to given value. Flag is the flag passed to status->heal in case
-//final value is higher than current (use 2 to make a healing effect display
-//on players) It will always succeed (overrides Berserk block), but it can't kill.
-static int status_set_hp(struct block_list *bl, unsigned int hp, int flag)
+/**
+ * Sets HP to the given value.
+ *
+ * @param bl   The target unit.
+ * @param hp   The desired HP value.
+ * @param flag Additional options. @see enum status_heal_flag. STATUS_HEAL_FORCED is always implied.
+ * @return The amount of HP gained.
+ */
+static int status_set_hp(struct block_list *bl, unsigned int hp, enum status_heal_flag flag)
 {
 	struct status_data *st;
 	if (hp < 1) return 0;
@@ -1254,14 +1260,19 @@ static int status_set_hp(struct block_list *bl, unsigned int hp, int flag)
 	if (hp > st->max_hp) hp = st->max_hp;
 	if (hp == st->hp) return 0;
 	if (hp > st->hp)
-		return status->heal(bl, hp - st->hp, 0, 1|flag);
+		return status->heal(bl, hp - st->hp, 0, STATUS_HEAL_FORCED | flag);
 	return status_zap(bl, st->hp - hp, 0);
 }
 
-//Sets SP to given value. Flag is the flag passed to status->heal in case
-//final value is higher than current (use 2 to make a healing effect display
-//on players)
-static int status_set_sp(struct block_list *bl, unsigned int sp, int flag)
+/**
+ * Sets SP to the given value.
+ *
+ * @param bl   The target unit.
+ * @param hp   The desired SP value.
+ * @param flag Additional options. @see enum status_heal_flag. STATUS_HEAL_FORCED is always implied.
+ * @return The amount of SP gained.
+ */
+static int status_set_sp(struct block_list *bl, unsigned int sp, enum status_heal_flag flag)
 {
 	struct status_data *st;
 
@@ -1272,7 +1283,7 @@ static int status_set_sp(struct block_list *bl, unsigned int sp, int flag)
 	if (sp > st->max_sp) sp = st->max_sp;
 	if (sp == st->sp) return 0;
 	if (sp > st->sp)
-		return status->heal(bl, 0, sp - st->sp, 1|flag);
+		return status->heal(bl, 0, sp - st->sp, STATUS_HEAL_FORCED | flag);
 	return status_zap(bl, 0, st->sp - sp);
 }
 
@@ -1304,12 +1315,12 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		sp = 0; //Not a valid SP target.
 
 	if (hp < 0) { //Assume absorbed damage.
-		status->heal(target, -hp, 0, 1);
+		status->heal(target, -hp, 0, STATUS_HEAL_FORCED);
 		hp = 0;
 	}
 
 	if (sp < 0) {
-		status->heal(target, 0, -sp, 1);
+		status->heal(target, 0, -sp, STATUS_HEAL_FORCED);
 		sp = 0;
 	}
 
@@ -1527,9 +1538,16 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 	return (int)(hp+sp);
 }
 
-//Heals a character. If flag&1, this is forced healing (otherwise stuff like Berserk can block it)
-//If flag&2, when the player is healed, show the HP/SP heal effect.
-static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag)
+/**
+ * Heals a character.
+ *
+ * @param bl    The target unit.
+ * @param in_hp Amount of HP to recover.
+ * @param in_sp Amount of SP to recover.
+ * @param flag  Additional options, @see enum status_heal_flag.
+ * @return The amount of HP + SP healed.
+ */
+static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, enum status_heal_flag flag)
 {
 	struct status_data *st;
 	struct status_change *sc;
@@ -1538,7 +1556,9 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag
 	nullpo_ret(bl);
 	st = status->get_status_data(bl);
 
-	if (st == &status->dummy || !st->hp)
+	if (st == &status->dummy)
+		return 0;
+	if (st->hp == 0 && (flag & STATUS_HEAL_ALLOWREVIVE) == 0)
 		return 0;
 
 	/* From here onwards, we consider it a 32-type as the client does not support higher and the value doesn't get through percentage modifiers */
@@ -1555,10 +1575,10 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag
 		hp = 0;
 	}
 
-	if(hp) {
-		if( sc && sc->data[SC_BERSERK] ) {
-			if( flag&1 )
-				flag &= ~2;
+	if (hp != 0) {
+		if (sc && sc->data[SC_BERSERK] != NULL) {
+			if ((flag & STATUS_HEAL_FORCED) != 0)
+				flag &= ~STATUS_HEAL_SHOWEFFECT;
 			else
 				hp = 0;
 		}
@@ -1593,7 +1613,7 @@ static int status_heal(struct block_list *bl, int64 in_hp, int64 in_sp, int flag
 
 	// send hp update to client
 	switch(bl->type) {
-		case BL_PC:  pc->heal(BL_UCAST(BL_PC, bl), hp, sp, (flag&2) ? 1 : 0); break;
+		case BL_PC:  pc->heal(BL_UCAST(BL_PC, bl), hp, sp, (flag & STATUS_HEAL_SHOWEFFECT) != 0 ? 1 : 0); break;
 		case BL_MOB: mob->heal(BL_UCAST(BL_MOB, bl), hp); break;
 		case BL_HOM: homun->healed(BL_UCAST(BL_HOM, bl)); break;
 		case BL_MER: mercenary->heal(BL_UCAST(BL_MER, bl), hp, sp); break;
@@ -1648,18 +1668,18 @@ static int status_percent_change(struct block_list *src, struct block_list *targ
 		if (flag)
 			status->damage(src, target, INT_MAX, 0, 0, (!src||src==target?5:1));
 		else
-			status->heal(target, INT_MAX, 0, 0);
+			status->heal(target, INT_MAX, 0, STATUS_HEAL_DEFAULT);
 	}
 	if (sp > INT_MAX) {
 		sp -= INT_MAX;
 		if (flag)
 			status->damage(src, target, 0, INT_MAX, 0, (!src||src==target?5:1));
 		else
-			status->heal(target, 0, INT_MAX, 0);
+			status->heal(target, 0, INT_MAX, STATUS_HEAL_DEFAULT);
 	}
 	if (flag)
 		return status->damage(src, target, hp, sp, 0, (!src||src==target?5:1));
-	return status->heal(target, hp, sp, 0);
+	return status->heal(target, hp, sp, STATUS_HEAL_DEFAULT);
 }
 
 static int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per_sp)
@@ -2330,6 +2350,51 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
+/**
+ * Calculates the HP that a character will have after death, on respawn.
+ *
+ * @param sd The character to calculate.
+ * @param st The character's status data.
+ */
+static unsigned int status_get_restart_hp(const struct map_session_data *sd, const struct status_data *st)
+{
+	unsigned int hp = 0;
+
+	if (sd->special_state.restart_full_recover)
+		return st->max_hp;
+
+	if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0 && battle_config.restart_hp_rate < 50)
+		hp = st->max_hp / 2;
+	else
+		hp = APPLY_RATE(st->max_hp, battle_config.restart_hp_rate);
+
+	if (hp > 0)
+		return hp;
+
+	return 1;
+}
+
+/**
+ * Calculates the SP that a character will have after death, on respawn.
+ *
+ * @param sd The character to calculate.
+ * @param st The character's status data.
+ */
+static unsigned int status_get_restart_sp(const struct map_session_data *sd, const struct status_data *st)
+{
+	unsigned int sp = 0;
+
+	if (sd->special_state.restart_full_recover)
+		return st->max_sp;
+
+	sp = APPLY_RATE(st->max_sp, battle_config.restart_sp_rate);
+
+	if (sp > 0)
+		return sp;
+
+	return 1; // the minimum for the respawn setting is SP:1
+}
+
 static void status_calc_pc_additional(struct map_session_data *sd, enum e_status_calc_opt opt)
 {
 	/* Just used for Plugin to give bonuses. */
@@ -2382,7 +2447,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		sd->regen.sregen = &sd->sregen;
 		sd->regen.ssregen = &sd->ssregen;
 		sd->weight=0;
-		for(i=0;i<MAX_INVENTORY;i++){
+		for (i = 0; i < sd->status.inventorySize; i++) {
 			if(sd->status.inventory[i].nameid==0 || sd->inventory_data[i] == NULL)
 				continue;
 			sd->weight += sd->inventory_data[i]->weight*sd->status.inventory[i].amount;
@@ -2513,18 +2578,18 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				r = 0;
 
 			if (r)
-				wa->atk2 = status->dbs->refine_info[wlv].bonus[r-1] / 100;
+				wa->atk2 = refine->get_bonus(wlv, r) / 100;
 
 #ifdef RENEWAL
 			wa->matk += sd->inventory_data[index]->matk;
 			wa->wlv = wlv;
 			if( r && sd->weapontype1 != W_BOW ) // renewal magic attack refine bonus
-				wa->matk += status->dbs->refine_info[wlv].bonus[r-1] / 100;
+				wa->matk += refine->get_bonus(wlv, r) / 100;
 #endif
 
 			//Overrefined bonus.
 			if (r)
-				wd->overrefine = status->dbs->refine_info[wlv].randombonus_max[r-1] / 100;
+				wd->overrefine = refine->get_randombonus_max(wlv, r) / 100;
 
 			wa->range += sd->inventory_data[index]->range;
 			if(sd->inventory_data[index]->script) {
@@ -2559,7 +2624,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 				r = 0;
 
 			if (r)
-				refinedef += status->dbs->refine_info[REFINE_TYPE_ARMOR].bonus[r-1];
+				refinedef += refine->get_bonus(REFINE_TYPE_ARMOR, r);
 
 			if(sd->inventory_data[index]->script) {
 				if( i == EQI_HAND_L ) //Shield
@@ -2884,20 +2949,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// ----- RESPAWN HP/SP -----
 	//
 	//Calc respawn hp and store it on base_status
-	if (sd->special_state.restart_full_recover)
-	{
-		bstatus->hp = bstatus->max_hp;
-		bstatus->sp = bstatus->max_sp;
-	} else {
-		status->calc_pc_recover_hp(sd, bstatus);
-		if(!bstatus->hp)
-			bstatus->hp = 1;
-
-		bstatus->sp = APPLY_RATE(bstatus->max_sp, battle_config.restart_sp_rate);
-
-		if( !bstatus->sp ) /* the minimum for the respawn setting is SP:1 */
-			bstatus->sp = 1;
-	}
+	bstatus->hp = status->get_restart_hp(sd, bstatus);
+	bstatus->sp = status->get_restart_sp(sd, bstatus);
 
 	// ----- MISC CALCULATION -----
 	status->calc_misc(&sd->bl, bstatus, sd->status.base_level);
@@ -3801,7 +3854,7 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 		temp = bst->batk - status->base_atk(bl,bst);
 		if (temp) {
 			temp += st->batk;
-			st->batk = cap_value(temp, 0, USHRT_MAX);
+			st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
 		}
 		st->batk = status->calc_batk(bl, sc, st->batk, true);
 	}
@@ -4396,7 +4449,7 @@ static int status_base_amotion_pc(struct map_session_data *sd, struct status_dat
 	return amotion;
 }
 
-static unsigned short status_base_atk(const struct block_list *bl, const struct status_data *st)
+static int status_base_atk(const struct block_list *bl, const struct status_data *st)
 {
 	int flag = 0, str, dex, dstr;
 
@@ -4453,42 +4506,50 @@ static unsigned short status_base_atk(const struct block_list *bl, const struct 
 	if (bl->type == BL_PC)
 		str += dex / 5 + st->luk / 5;
 #endif // RENEWAL
-	return cap_value(str, 0, USHRT_MAX);
+	return cap_value(str, battle_config.batk_min, battle_config.batk_max);
 }
 
-static unsigned short status_base_matk_min(const struct status_data *st)
+static int status_base_matk_min(const struct status_data *st)
 {
 	nullpo_ret(st);
 #ifdef RENEWAL
 	Assert_ret(0);
 	return 0;
 #else // not RENEWAL
-	return st->int_ + (st->int_ / 7) * (st->int_ / 7);
+	int matk = st->int_ + (st->int_ / 7) * (st->int_ / 7);
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #endif // RENEWAL
 }
 
-static unsigned short status_base_matk_max(const struct status_data *st)
+static int status_base_matk_max(const struct status_data *st)
 {
 	nullpo_ret(st);
-	return st->int_ + (st->int_ / 5)*(st->int_ / 5);
+	int matk = st->int_ + (st->int_ / 5) * (st->int_ / 5);
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 }
 
-static unsigned short status_base_matk(struct block_list *bl, const struct status_data *st, int level)
+static int status_base_matk(struct block_list *bl, const struct status_data *st, int level)
 {
 #ifdef RENEWAL
 	nullpo_ret(bl);
 	nullpo_ret(st);
-	switch ( bl->type ) {
+	int matk = 0;
+	switch (bl->type) {
 		case BL_MOB:
-			return st->int_ + level;
+			matk = st->int_ + level;
+			break;
 		case BL_HOM:
-			return status_get_homint(st, BL_UCCAST(BL_HOM, bl)) + level;
+			matk = status_get_homint(st, BL_UCCAST(BL_HOM, bl)) + level;
+			break;
 		case BL_MER:
-			return st->int_ + st->int_ / 5 * st->int_ / 5;
+			matk = st->int_ + st->int_ / 5 * st->int_ / 5;
+			break;
 		case BL_PC:
 		default: // temporary until all are formulated
-			return st->int_ + (st->int_ / 2) + (st->dex / 5) + (st->luk / 3) + (level / 4);
+			matk = st->int_ + (st->int_ / 2) + (st->dex / 5) + (st->luk / 3) + (level / 4);
+			break;
 	}
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #else
 	Assert_ret(0);
 	return 0;
@@ -4545,7 +4606,7 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 
 	if ( st->batk ) {
 		int temp = st->batk + status->base_atk(bl, st);
-		st->batk = cap_value(temp, 0, USHRT_MAX);
+		st->batk = cap_value(temp, battle_config.batk_min, battle_config.batk_max);
 	} else
 		st->batk = status->base_atk(bl, st);
 	if ( st->cri ) {
@@ -4942,17 +5003,17 @@ static unsigned short status_calc_luk(struct block_list *bl, struct status_chang
 	return (unsigned short)cap_value(luk, 0, USHRT_MAX);
 }
 
-static unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
+static int status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
-		return cap_value(batk,0,USHRT_MAX);
+		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
 		if(sc->data[SC_PLUSATTACKPOWER])
 			batk += sc->data[SC_PLUSATTACKPOWER]->val1;
-		return (unsigned short)cap_value(batk,0,USHRT_MAX);
+		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 	}
 #ifndef RENEWAL
 	if(sc->data[SC_PLUSATTACKPOWER])
@@ -5035,14 +5096,14 @@ static unsigned short status_calc_batk(struct block_list *bl, struct status_chan
 	if (sc->data[SC_SHRIMP])
 		batk += batk * sc->data[SC_SHRIMP]->val2 / 100;
 
-	return (unsigned short)cap_value(batk,0,USHRT_MAX);
+	return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 }
 
-static unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
+static int status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
 {
 	nullpo_ret(bl);
 	if(!sc || !sc->count)
-		return cap_value(watk,0,USHRT_MAX);
+		return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
@@ -5050,7 +5111,7 @@ static unsigned short status_calc_watk(struct block_list *bl, struct status_chan
 			watk -= sc->data[SC_WATER_BARRIER]->val3;
 		if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val2)
 			watk += sc->data[SC_GENTLETOUCH_CHANGE]->val2;
-		return (unsigned short)cap_value(watk,0,USHRT_MAX);
+		return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 	}
 #ifndef RENEWAL
 	if(sc->data[SC_IMPOSITIO])
@@ -5128,14 +5189,14 @@ static unsigned short status_calc_watk(struct block_list *bl, struct status_chan
 	if (sc->data[SC_CATNIPPOWDER])
 		watk -= watk * sc->data[SC_CATNIPPOWDER]->val2 / 100;
 
-	return (unsigned short)cap_value(watk,0,USHRT_MAX);
+	return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 }
 
-static unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk)
+static int status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk)
 {
 #ifdef RENEWAL
 	if (!sc || !sc->count)
-		return cap_value(matk,0,USHRT_MAX);
+		return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 	if (sc->data[SC_PLUSMAGICPOWER])
 		matk += sc->data[SC_PLUSMAGICPOWER]->val1;
 	if (sc->data[SC_MATKFOOD])
@@ -5156,22 +5217,22 @@ static unsigned short status_calc_ematk(struct block_list *bl, struct status_cha
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 	if (sc->data[SC_SHRIMP])
 		matk += matk * sc->data[SC_SHRIMP]->val2 / 100;
-	return (unsigned short)cap_value(matk,0,USHRT_MAX);
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 #else
 	return 0;
 #endif
 }
 
-static unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
+static int status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
 {
 	if (!sc || !sc->count)
-		return cap_value(matk,0,USHRT_MAX);
+		return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
 		if (sc->data[SC_MINDBREAKER])
 			matk += matk * sc->data[SC_MINDBREAKER]->val2 / 100;
-		return (unsigned short)cap_value(matk, 0, USHRT_MAX);
+		return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 	}
 
 #ifndef RENEWAL
@@ -5229,17 +5290,17 @@ static unsigned short status_calc_matk(struct block_list *bl, struct status_chan
 	if (sc->data[SC_MAGIC_CANDY])
 		matk += sc->data[SC_MAGIC_CANDY]->val1;
 
-	return (unsigned short)cap_value(matk, 0, USHRT_MAX);
+	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 }
 
-static signed short status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable)
+static int status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable)
 {
 	if (!sc || !sc->count)
-		return cap_value(critical, 10, SHRT_MAX);
+		return cap_value(critical, battle_config.critical_min, battle_config.critical_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		return (short)cap_value(critical, 10, SHRT_MAX);
+		return cap_value(critical, battle_config.critical_min, battle_config.critical_max);
 	}
 
 	if (sc->data[SC_CRITICALPERCENT])
@@ -5270,20 +5331,20 @@ static signed short status_calc_critical(struct block_list *bl, struct status_ch
 	if (sc->data[SC_BUCHEDENOEL])
 		critical += sc->data[SC_BUCHEDENOEL]->val4 * 10;
 
-	return (short)cap_value(critical, 10, SHRT_MAX);
+	return cap_value(critical, battle_config.critical_min, battle_config.critical_max);
 }
 
-static signed short status_calc_hit(struct block_list *bl, struct status_change *sc, int hit, bool viewable)
+static int status_calc_hit(struct block_list *bl, struct status_change *sc, int hit, bool viewable)
 {
 
 	if (!sc || !sc->count)
-		return cap_value(hit, 1, SHRT_MAX);
+		return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
 		if (sc->data[SC_MTF_ASPD])
 			hit += sc->data[SC_MTF_ASPD]->val2;
-		return (short)cap_value(hit, 1, SHRT_MAX);
+		return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 	}
 
 	if (sc->data[SC_INCHIT])
@@ -5325,26 +5386,26 @@ static signed short status_calc_hit(struct block_list *bl, struct status_change 
 	if (sc->data[SC_BUCHEDENOEL])
 		hit += sc->data[SC_BUCHEDENOEL]->val3;
 
-	return (short)cap_value(hit, 1, SHRT_MAX);
+	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 }
 
-static signed short status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable)
+static int status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable)
 {
 	nullpo_retr(1, bl);
 
 	if (bl->type == BL_PC) {
 		if (map_flag_gvg2(bl->m))
 			flee -= flee * battle_config.gvg_flee_penalty / 100;
-		else if( map->list[bl->m].flag.battleground )
+		else if (map->list[bl->m].flag.battleground)
 			flee -= flee * battle_config.bg_flee_penalty / 100;
 	}
 
 	if (!sc || !sc->count)
-		return cap_value(flee, 1, SHRT_MAX);
+		return cap_value(flee, battle_config.flee_min, battle_config.flee_max);
 
 	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		return (short)cap_value(flee, 1, SHRT_MAX);
+		return cap_value(flee, battle_config.flee_min, battle_config.flee_max);
 	}
 
 	if (sc->data[SC_INCFLEE])
@@ -5422,17 +5483,17 @@ static signed short status_calc_flee(struct block_list *bl, struct status_change
 	if (sc->data[SC_MYSTICPOWDER])
 		flee += sc->data[SC_MYSTICPOWDER]->val2;
 
-	return (short)cap_value(flee, 1, SHRT_MAX);
+	return cap_value(flee, battle_config.flee_min, battle_config.flee_max);
 }
 
-static signed short status_calc_flee2(struct block_list *bl, struct status_change *sc, int flee2, bool viewable)
+static int status_calc_flee2(struct block_list *bl, struct status_change *sc, int flee2, bool viewable)
 {
 	if(!sc || !sc->count)
-		return cap_value(flee2,10,SHRT_MAX);
+		return cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
-		return (short)cap_value(flee2,10,SHRT_MAX);
+		return cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 	}
 
 	if(sc->data[SC_PLUSAVOIDVALUE])
@@ -5444,7 +5505,7 @@ static signed short status_calc_flee2(struct block_list *bl, struct status_chang
 	if (sc->data[SC_FREYJASCROLL])
 		flee2 += sc->data[SC_FREYJASCROLL]->val2;
 
-	return (short)cap_value(flee2,10,SHRT_MAX);
+	return cap_value(flee2, battle_config.flee2_min, battle_config.flee2_max);
 }
 
 static defType status_calc_def(struct block_list *bl, struct status_change *sc, int def, bool viewable)
@@ -7374,6 +7435,9 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	case SC_NETHERWORLD:
 		tick = max(tick, 4000);
 		break;
+	case SC_SIREN:
+		tick = max(tick, 10000); // Minimum duration 10s
+		break;
 	default:
 		//Skills need to trigger even if the duration is reduced below 1ms
 		tick = max(tick, 1);
@@ -8419,12 +8483,12 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 					val3 = 0;
 					val4 = 0;
 					max_stat = (status->get_lv(bl)-10<50)?status->get_lv(bl)-10:50;
-					stat = max(0, max_stat - status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - status2->vit ); val3 |= cap_value(stat,0,0xFF);
-					stat = max(0, max_stat - status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
-					stat = max(0, max_stat - status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
-					stat = max(0, max_stat - status2->luk ); val4 |= cap_value(stat,0,0xFF);
+					stat = max(0, max_stat - (int)status2->str ); val3 |= cap_value(stat,0,0xFF)<<16;
+					stat = max(0, max_stat - (int)status2->agi ); val3 |= cap_value(stat,0,0xFF)<<8;
+					stat = max(0, max_stat - (int)status2->vit ); val3 |= cap_value(stat,0,0xFF);
+					stat = max(0, max_stat - (int)status2->int_); val4 |= cap_value(stat,0,0xFF)<<16;
+					stat = max(0, max_stat - (int)status2->dex ); val4 |= cap_value(stat,0,0xFF)<<8;
+					stat = max(0, max_stat - (int)status2->luk ); val4 |= cap_value(stat,0,0xFF);
 				}
 				break;
 			case SC_SWORDREJECT:
@@ -9410,10 +9474,10 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 					return 0;
 
 				PER( 100 / (status_get_max_hp(bl) / hp), lv );
-				status->heal(bl, (!(hp%2) ? (6-lv) *4 / 100 : -(lv*4) / 100), 0, 1);
+				status->heal(bl, (!(hp%2) ? (6-lv) *4 / 100 : -(lv*4) / 100), 0, STATUS_HEAL_FORCED);
 
 				PER( 100 / (status_get_max_sp(bl) / sp), lv );
-				status->heal(bl, 0,(!(sp%2) ? (6-lv) *3 / 100 : -(lv*3) / 100), 1);
+				status->heal(bl, 0,(!(sp%2) ? (6-lv) *3 / 100 : -(lv*3) / 100), STATUS_HEAL_FORCED);
 			}
 #undef PER
 				break;
@@ -9646,8 +9710,8 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 	switch (type) {
 		case SC_BERSERK:
 			if (!(sce->val2)) { //don't heal if already set
-				status->heal(bl, st->max_hp, 0, 1); //Do not use percent_heal as this healing must override BERSERK's block.
-				status->set_sp(bl, 0, 0); //Damage all SP
+				status->heal(bl, st->max_hp, 0, STATUS_HEAL_FORCED); //Do not use percent_heal as this healing must override BERSERK's block.
+				status->set_sp(bl, 0, STATUS_HEAL_DEFAULT); //Damage all SP
 			}
 			sce->val2 = 5 * st->max_hp / 100;
 			break;
@@ -10557,20 +10621,9 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
 			return true; // Immune to status ailements
 		switch (type) {
-			case SC_DEEP_SLEEP:
 			case SC__CHAOS:
-			case SC_BURNING:
-			case SC_STUN:
-			case SC_SLEEP:
-			case SC_CURSE:
 			case SC_STONE:
-			case SC_POISON:
-			case SC_BLIND:
-			case SC_SILENCE:
-			case SC_BLOODING:
-			case SC_FREEZE:
 			case SC_FROSTMISTY:
-			case SC_COLD:
 			case SC_TOXIN:
 			case SC_PARALYSE:
 			case SC_VENOMBLEED:
@@ -10586,20 +10639,9 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
 			return true; // Immune to status ailements
 		switch (type) {
-			case SC_POISON:
-			case SC_BLIND:
-			case SC_STUN:
-			case SC_SILENCE:
 			case SC__CHAOS:
 			case SC_STONE:
-			case SC_SLEEP:
-			case SC_BLOODING:
-			case SC_CURSE:
-			case SC_BURNING:
 			case SC_FROSTMISTY:
-			case SC_FREEZE:
-			case SC_COLD:
-			case SC_FEAR:
 			case SC_TOXIN:
 			case SC_PARALYSE:
 			case SC_VENOMBLEED:
@@ -10608,7 +10650,6 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 			case SC_PYREXIA:
 			case SC_OBLIVIONCURSE:
 			case SC_LEECHESEND:
-			case SC_DEEP_SLEEP:
 			case SC_SATURDAY_NIGHT_FEVER:
 			case SC__BODYPAINT:
 			case SC__ENERVATION:
@@ -10996,7 +11037,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				status_percent_heal(bl, 100, 0);
 				status_change_end(bl, SC__BLOODYLUST, INVALID_TIMER);
 			} else if(st->hp > 100 && sce->val2) //If val2 is removed, no HP penalty (dispelled?) [Skotlex]
-				status->set_hp(bl, 100, 0);
+				status->set_hp(bl, 100, STATUS_HEAL_DEFAULT);
 			if(sc->data[SC_ENDURE] && sc->data[SC_ENDURE]->val4 == 2) {
 				sc->data[SC_ENDURE]->val4 = 0;
 				status_change_end(bl, SC_ENDURE, INVALID_TIMER);
@@ -11048,8 +11089,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 			if (tid == INVALID_TIMER)
 				break;
 			// "lose almost all their HP and SP" on natural expiration.
-			status->set_hp(bl, 10, 0);
-			status->set_sp(bl, 10, 0);
+			status->set_hp(bl, 10, STATUS_HEAL_DEFAULT);
+			status->set_sp(bl, 10, STATUS_HEAL_DEFAULT);
 			break;
 		case SC_AUTOTRADE:
 			if (tid == INVALID_TIMER)
@@ -11460,8 +11501,8 @@ static int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data)
 	hp = st->max_hp - st->hp;
 	if (hp > sce->val2)
 		hp = sce->val2;
-	if (hp)
-		status->heal(bl, hp, 0, 2);
+	if (hp != 0)
+		status->heal(bl, hp, 0, STATUS_HEAL_SHOWEFFECT);
 	sce->val4 = INVALID_TIMER;
 	return 1;
 }
@@ -11667,7 +11708,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				int hp = 0;
 				if (st->hp < st->max_hp)
 					hp = (sce->val1 < 0) ? (int)(sd->status.max_hp * -1 * sce->val1 / 100.) : sce->val1 ;
-				status->heal(bl, hp, 0, 2);
+				status->heal(bl, hp, 0, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next((sce->val2 * 1000) + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -11816,7 +11857,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 		case SC_ABUNDANCE:
 			if(--(sce->val4) > 0) {
-				status->heal(bl,0,60,0);
+				status->heal(bl, 0, 60, STATUS_HEAL_DEFAULT);
 				sc_timer_next(10000+tick, status->change_timer, bl->id, data);
 			}
 			break;
@@ -11932,7 +11973,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					heal = ~heal + 1;
 
 				map->freeblock_lock();
-				status->heal(bl, heal, 0, 2);
+				status->heal(bl, heal, 0, STATUS_HEAL_SHOWEFFECT);
 				if( sc->data[type] ) {
 					sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				}
@@ -12055,7 +12096,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				if ( sc->data[type] ) {
 					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				}
-				status->heal(src, damage*(5 + 5 * sce->val1)/100, 0, 0); // 5 + 5% per level
+				status->heal(src, damage*(5 + 5 * sce->val1)/100, 0, STATUS_HEAL_DEFAULT); // 5 + 5% per level
 				map->freeblock_unlock();
 				return 0;
 			}
@@ -12072,7 +12113,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		case SC_DEEP_SLEEP:
 			if( --(sce->val4) >= 0 )
 			{// Recovers 3% of the player's MaxHP/MaxSP every 2 seconds.
-				status->heal(bl, st->max_hp * 3 / 100, st->max_sp * 3 / 100, 2);
+				status->heal(bl, st->max_hp * 3 / 100, st->max_sp * 3 / 100, STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12082,7 +12123,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			if( --(sce->val4) >= 0 ) {
 				if( !status->charge(bl,0,sce->val3) )
 					break;
-				status->heal(bl, sce->val2, 0, 1);
+				status->heal(bl, sce->val2, 0, STATUS_HEAL_FORCED);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12090,7 +12131,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_SONG_OF_MANA:
 			if( --(sce->val4) >= 0 ) {
-				status->heal(bl,0,sce->val3,3);
+				status->heal(bl, 0, sce->val3, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT);
 				sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12284,7 +12325,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			return 0;
 		case SC_MEIKYOUSISUI:
 			if( --(sce->val4) > 0 ) {
-				status->heal(bl, st->max_hp * (sce->val1+1) / 100, st->max_sp * sce->val1 / 100, 0);
+				status->heal(bl, st->max_hp * (sce->val1+1) / 100, st->max_sp * sce->val1 / 100, STATUS_HEAL_DEFAULT);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12320,7 +12361,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 		case SC_FRIGG_SONG:
 			if( --(sce->val4) > 0 ) {
-				status->heal(bl, sce->val3, 0, 0);
+				status->heal(bl, sce->val3, 0, STATUS_HEAL_DEFAULT);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -12476,10 +12517,10 @@ static int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk,
 
 	if ( bl->type == BL_PC && !(flag & 2) ) {
 		const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
-		short index = sd->equip_index[EQI_HAND_R], refine;
+		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
-			int r = status->dbs->refine_info[watk->wlv].randombonus_max[refine + (4 - watk->wlv)] / 100;
+			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+			int r = refine->get_randombonus_max(watk->wlv, refine_level + (4 - watk->wlv) + 1) / 100;
 			if ( r )
 				max += (rnd() % 100) % r + 1;
 		}
@@ -12591,10 +12632,10 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 
 #ifdef RENEWAL
 	if ( sd && !(flag & 2) ) {
-		short index = sd->equip_index[EQI_HAND_R], refine;
+		short index = sd->equip_index[EQI_HAND_R], refine_level;
 		if ( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON
-			&& (refine = sd->status.inventory[index].refine) < 16 && refine ) {
-			int r =  status->dbs->refine_info[sd->inventory_data[index]->wlv].randombonus_max[refine + (4 - sd->inventory_data[index]->wlv)] / 100;
+			&& (refine_level = sd->status.inventory[index].refine) < 16 && refine_level) {
+			int r = refine->get_randombonus_max(sd->inventory_data[index]->wlv, refine_level + (4 - sd->inventory_data[index]->wlv) + 1) / 100;
 			if ( r )
 				*matk_max += (rnd() % 100) % r + 1;
 		}
@@ -12902,7 +12943,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			sregen->tick.hp += val;
 			while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
 				sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-				if(status->heal(bl, sregen->hp, 0, 3) < sregen->hp) {
+				if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) {
 					//Full
 					flag&=~(RGN_HP|RGN_SHP);
 					break;
@@ -12917,7 +12958,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			sregen->tick.sp += val;
 			while(sregen->tick.sp >= (unsigned int)battle_config.natural_heal_skill_interval) {
 				sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-				if(status->heal(bl, 0, sregen->sp, 3) < sregen->sp) {
+				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) {
 					//Full
 					flag&=~(RGN_SP|RGN_SSP);
 					break;
@@ -12966,7 +13007,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 				val += regen->hp;
 				regen->tick.hp -= battle_config.natural_healhp_interval;
 			} while(regen->tick.hp >= (unsigned int)battle_config.natural_healhp_interval);
-			if (status->heal(bl, val, 0, 1) < val)
+			if (status->heal(bl, val, 0, STATUS_HEAL_FORCED) < val)
 				flag&=~RGN_SHP; //full.
 		}
 	}
@@ -12985,7 +13026,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 				val += regen->sp;
 				regen->tick.sp -= battle_config.natural_healsp_interval;
 			} while(regen->tick.sp >= (unsigned int)battle_config.natural_healsp_interval);
-			if (status->heal(bl, 0, val, 1) < val)
+			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED) < val)
 				flag&=~RGN_SSP; //full.
 		}
 	}
@@ -13002,7 +13043,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 
 		while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
 			sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-			if(status->heal(bl, sregen->hp, 0, 3) < sregen->hp)
+			if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp)
 				break; //Full
 		}
 	}
@@ -13027,7 +13068,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 				}
 			}
 			sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-			if(status->heal(bl, 0, val, 3) < val)
+			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < val)
 				break; //Full
 		}
 	}
@@ -13042,25 +13083,6 @@ static int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data)
 	map->foreachregen(status->natural_heal);
 	status->natural_heal_prev_tick = tick;
 	return 0;
-}
-
-/**
- * Get the chance to upgrade a piece of equipment.
- * @param wlv The weapon type of the item to refine (see see enum refine_type)
- * @param refine The target refine level
- * @return The chance to refine the item, in percent (0~100)
- */
-static int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_chance_type type)
-{
-	Assert_ret((int)wlv >= REFINE_TYPE_ARMOR && wlv < REFINE_TYPE_MAX);
-
-	if (refine < 0 || refine >= MAX_REFINE)
-		return 0;
-
-	if (type >= REFINE_CHANCE_TYPE_MAX)
-		return 0;
-
-	return status->dbs->refine_info[wlv].chance[type][refine];
 }
 
 static int status_get_sc_type(sc_type type)
@@ -13373,171 +13395,6 @@ static bool status_readdb_sizefix(char *fields[], int columns, int current)
 	return true;
 }
 
-/**
- * Processes a refine_db.conf entry.
- *
- * @param r      Libconfig setting entry. It is expected to be valid and it
- *               won't be freed (it is care of the caller to do so if
- *               necessary)
- * @param n      Ordinal number of the entry, to be displayed in case of
- *               validation errors.
- * @param source Source of the entry (file name), to be displayed in case of
- *               validation errors.
- * @return # of the validated entry, or 0 in case of failure.
- */
-static int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *name, const char *source)
-{
-	struct config_setting_t *rate = NULL;
-	int type = REFINE_TYPE_ARMOR, bonus_per_level = 0, rnd_bonus_v = 0, rnd_bonus_lv = 0;
-	char lv[4];
-	nullpo_ret(r);
-	nullpo_ret(name);
-	nullpo_ret(source);
-
-	if (strncmp(name, "Armors", 6) == 0) {
-		type = REFINE_TYPE_ARMOR;
-	} else if (strncmp(name, "WeaponLevel", 11) != 0 || !strspn(&name[strlen(name)-1], "0123456789") || (type = atoi(strncpy(lv, name+11, 2))) == REFINE_TYPE_ARMOR) {
-		ShowError("status_readdb_refine_libconfig_sub: Invalid key name for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX) {
-		ShowError("status_readdb_refine_libconfig_sub: Out of range level for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (!libconfig->setting_lookup_int(r, "StatsPerLevel", &bonus_per_level)) {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing StatsPerLevel for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (!libconfig->setting_lookup_int(r, "RandomBonusStartLevel", &rnd_bonus_lv)) {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusStartLevel for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-	if (!libconfig->setting_lookup_int(r, "RandomBonusValue", &rnd_bonus_v)) {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing RandomBonusValue for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-
-	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
-		struct config_setting_t *t = NULL;
-		bool duplicate[MAX_REFINE];
-		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE];
-		int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE];
-		int i, j;
-
-		memset(&duplicate, 0, sizeof(duplicate));
-		memset(&bonus, 0, sizeof(bonus));
-		memset(&rnd_bonus, 0, sizeof(rnd_bonus));
-
-		for (i = 0; i < REFINE_CHANCE_TYPE_MAX; i++)
-			for (j = 0; j < MAX_REFINE; j++)
-				chance[i][j] = 100; // default value for all rates.
-
-		i = 0;
-		j = 0;
-		while ((t = libconfig->setting_get_elem(rate,i++)) != NULL && config_setting_is_group(t)) {
-			int level = 0, i32;
-			char *rlvl = config_setting_name(t);
-			memset(&lv, 0, sizeof(lv));
-
-			if (!strspn(&rlvl[strlen(rlvl) - 1], "0123456789") || (level = atoi(strncpy(lv, rlvl + 2, 3))) <= 0) {
-				ShowError("status_readdb_refine_libconfig_sub: Invalid refine level format '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
-				continue;
-			}
-
-			if (level <= 0 || level > MAX_REFINE) {
-				ShowError("status_readdb_refine_libconfig_sub: Out of range refine level '%s' for entry %s in \"%s\"... skipping.\n", rlvl, name, source);
-				continue;
-			}
-
-			level--;
-
-			if (duplicate[level]) {
-				ShowWarning("status_readdb_refine_libconfig_sub: duplicate rate '%s' for entry %s in \"%s\", overwriting previous entry...\n", rlvl, name, source);
-			} else {
-				duplicate[level] = true;
-			}
-
-			if (libconfig->setting_lookup_int(t, "NormalChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_NORMAL][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_NORMAL][level] = 100;
-
-			if (libconfig->setting_lookup_int(t, "EnrichedChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
-
-			if (libconfig->setting_lookup_int(t, "EventNormalChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_E_NORMAL][level] = 100;
-
-			if (libconfig->setting_lookup_int(t, "EventEnrichedChance", &i32) != 0)
-				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = i32;
-			else
-				chance[REFINE_CHANCE_TYPE_E_ENRICHED][level] = level > 10 ? 0 : 100; // enriched ores up to +10 only.
-
-			if (libconfig->setting_lookup_int(t, "Bonus", &i32) != 0)
-				bonus[level] += i32;
-
-			if (level >= rnd_bonus_lv - 1)
-				rnd_bonus[level] = rnd_bonus_v * (level - rnd_bonus_lv + 2);
-		}
-		for (i = 0; i < MAX_REFINE; i++) {
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_NORMAL][i] = chance[REFINE_CHANCE_TYPE_NORMAL][i];
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_NORMAL][i] = chance[REFINE_CHANCE_TYPE_E_NORMAL][i];
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_ENRICHED][i];
-			status->dbs->refine_info[type].chance[REFINE_CHANCE_TYPE_E_ENRICHED][i] = chance[REFINE_CHANCE_TYPE_E_ENRICHED][i];
-			status->dbs->refine_info[type].randombonus_max[i] = rnd_bonus[i];
-			bonus[i] += bonus_per_level + (i > 0 ? bonus[i - 1] : 0);
-			status->dbs->refine_info[type].bonus[i] = bonus[i];
-		}
-	} else {
-		ShowWarning("status_readdb_refine_libconfig_sub: Missing refine rates for entry '%s' in \"%s\", skipping.\n", name, source);
-		return 0;
-	}
-
-	return type + 1;
-}
-
-/**
- * Reads from a libconfig-formatted refine_db.conf file.
- *
- * @param *filename File name, relative to the database path.
- * @return The number of found entries.
- */
-static int status_readdb_refine_libconfig(const char *filename)
-{
-	bool duplicate[REFINE_TYPE_MAX];
-	struct config_t refine_db_conf;
-	struct config_setting_t *r;
-	char filepath[256];
-	int i = 0, count = 0;
-
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
-	if (!libconfig->load_file(&refine_db_conf, filepath))
-		return 0;
-
-	memset(&duplicate,0,sizeof(duplicate));
-
-	while((r = libconfig->setting_get_elem(refine_db_conf.root,i++))) {
-		char *name = config_setting_name(r);
-		int type = status->readdb_refine_libconfig_sub(r, name, filename);
-		if (type != 0) {
-			if (duplicate[type-1]) {
-				ShowWarning("status_readdb_refine_libconfig: duplicate entry for %s in \"%s\", overwriting previous entry...\n", name, filename);
-			} else {
-				duplicate[type-1] = true;
-			}
-			count++;
-		}
-	}
-	libconfig->destroy(&refine_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-
-	return count;
-}
-
 static bool status_readdb_scconfig(char *fields[], int columns, int current)
 {
 	int val = 0;
@@ -13595,7 +13452,6 @@ static int status_readdb(void)
 	//
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
 	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
-	status->readdb_refine_libconfig(DBPATH"refine_db.conf");
 	sv->readdb(map->db_path, "sc_config.txt",       ',', 2,                 2,                 SC_MAX,                   status->readdb_scconfig);
 	status->read_job_db();
 
@@ -13653,7 +13509,6 @@ void status_defaults(void)
 	status->natural_heal_prev_tick = 0;
 	status->natural_heal_diff_tick = 0;
 	/* funcs */
-	status->get_refine_chance = status_get_refine_chance;
 	// for looking up associated data
 	status->skill2sc = status_skill2sc;
 	status->sc2skill = status_sc2skill;
@@ -13752,6 +13607,8 @@ void status_defaults(void)
 	status->base_atk = status_base_atk;
 	status->get_base_maxhp = status_get_base_maxhp;
 	status->get_base_maxsp = status_get_base_maxsp;
+	status->get_restart_hp = status_get_restart_hp;
+	status->get_restart_sp = status_get_restart_sp;
 	status->calc_npc_ = status_calc_npc_;
 	status->calc_str = status_calc_str;
 	status->calc_agi = status_calc_agi;
@@ -13785,8 +13642,6 @@ void status_defaults(void)
 	status->natural_heal_timer = status_natural_heal_timer;
 	status->readdb_job2 = status_readdb_job2;
 	status->readdb_sizefix = status_readdb_sizefix;
-	status->readdb_refine_libconfig = status_readdb_refine_libconfig;
-	status->readdb_refine_libconfig_sub = status_readdb_refine_libconfig_sub;
 	status->readdb_scconfig = status_readdb_scconfig;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;

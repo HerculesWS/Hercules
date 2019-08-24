@@ -256,21 +256,20 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 				mes "Choose a number less than 100. If you don't want to, put '0'. You can make up to " + countitem(.@fruit) + " bottles of juice.";
 				next;
 				while(1) {
-					input .@input;
-					if (.@input == 0) {
+					input(.@input);
+					if (.@input <= 0) {
 						mes "[Merchant Marx Hansen]";
 						mes "Well then...";
 						mes "Come again.";
 						close;
 					}
-					else if (.@input > 100) {
+					if (.@input > 100) {
 						mes "[Merchant Marx Hansen]";
 						mes "More than 100 bottles is impossible. Choose a different amount.";
 						next;
+						continue;
 					}
-					else {
-						break;
-					}
+					break;
 				}
 				.@make = .@input;
 				break;

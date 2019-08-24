@@ -84,7 +84,7 @@ function	script	Kunai_Trade	{
 	mes "If you want to cancel the trade, then please enter ''0.'' How many";
 	mes "Kunai sets would you like?";
 	next;
-	input .@amount;
+	input(.@amount);
 	if(.@amount < 1 || .@amount > 500) {
 		mes "[Kashin]";
 		mes "Eh? I'm sorry, but";

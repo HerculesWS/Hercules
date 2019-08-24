@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2019  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,6 +65,7 @@ HPMHooks.source.mutex = *mutex;
 HPMHooks.source.npc_chat = *npc_chat;
 HPMHooks.source.npc = *npc;
 HPMHooks.source.nullpo = *nullpo;
+HPMHooks.source.packets = *packets;
 HPMHooks.source.party = *party;
 HPMHooks.source.path = *path;
 HPMHooks.source.pcg = *pcg;
@@ -72,6 +73,8 @@ HPMHooks.source.pc = *pc;
 HPMHooks.source.libpcre = *libpcre;
 HPMHooks.source.pet = *pet;
 HPMHooks.source.quest = *quest;
+HPMHooks.source.refine = *refine;
+HPMHooks.source.PRIV__refine = *refine->p;
 HPMHooks.source.rnd = *rnd;
 HPMHooks.source.rodex = *rodex;
 HPMHooks.source.script = *script;
@@ -84,6 +87,7 @@ HPMHooks.source.status = *status;
 HPMHooks.source.storage = *storage;
 HPMHooks.source.StrBuf = *StrBuf;
 HPMHooks.source.strlib = *strlib;
+HPMHooks.source.stylist = *stylist;
 HPMHooks.source.sv = *sv;
 HPMHooks.source.sysinfo = *sysinfo;
 HPMHooks.source.thread = *thread;

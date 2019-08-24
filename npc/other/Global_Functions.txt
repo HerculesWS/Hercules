@@ -434,7 +434,7 @@ function	script	F_ShuffleNumbers	{
 //== Function F_MesColor ===================================
 // Function to colorize npc dialog without having to memorize the color code
 // Examples:
-//    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
+//    mesf("%sThis message is now in BLUE.", F_MesColor(C_BLUE));
 function	script	F_MesColor	{
 	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
 }
@@ -446,32 +446,45 @@ function	script	F_MesColor	{
 function	script	F_GetTradeRestriction	{
 	.@trade = getiteminfo(getarg(0), ITEMINFO_TRADE);
 
-	if (.@trade == 0) {
+	if (.@trade == 0)
 		return "None";
-	}
 	.@trade$ = "";
-	if (.@trade & ITR_NODROP) {
+	if (.@trade & ITR_NODROP)
 		.@trade$ += "NoDrop|";
-	}
-	if (.@trade & ITR_NOTRADE) {
+	if (.@trade & ITR_NOTRADE)
 		.@trade$ += "NoTrade|";
-	}
-	if (.@trade & ITR_PARTNEROVERRIDE) {
+	if (.@trade & ITR_PARTNEROVERRIDE)
 		.@trade$ += "PartnerOverride|";
-	}
-	if (.@trade & ITR_NOSELLTONPC) {
+	if (.@trade & ITR_NOSELLTONPC)
 		.@trade$ += "NoSellToNpc|";
-	}
-	if (.@trade & ITR_NOSTORAGE) {
+	if (.@trade & ITR_NOSTORAGE)
 		.@trade$ += "NoStorage|";
-	}
-	if (.@trade & ITR_NOGSTORAGE) {
+	if (.@trade & ITR_NOGSTORAGE)
 		.@trade$ += "NoGuildStorage|";
-	}
-	if (.@trade & ITR_NOMAIL) {
+	if (.@trade & ITR_NOMAIL)
 		.@trade$ += "NoMail|";
-	}
-	if (.@trade & ITR_NOAUCTION) {
+	if (.@trade & ITR_NOAUCTION)
 		.@trade$ += "NoAuction|";
+	return .@trade$;
+}
+
+//== Function F_MesItemInfo ===================================
+// Show the item name and a clickable link for the item description
+// Only works with mes and mesf, does not work in menu/select
+function	script	F_MesItemInfo	{
+	.@item = getarg(0);
+	.@itemname$ = getitemname(.@item);
+	if (.@itemname$ != "null") {
+		.@itemslot = getitemslots(.@item);
+		if (.@itemslot)
+			.@itemname$ = sprintf("%s [%d]", .@itemname$, .@itemslot);
 	}
+	else
+		.@itemname$ = "Unknown Item";
+	if (PACKETVER >= 20150729)
+		return sprintf("<ITEM>%s<INFO>%d</INFO></ITEM>", .@itemname$, .@item);
+	else if (PACKETVER >= 20130130)
+		return sprintf("<ITEMLINK>%s<INFO>%d</INFO></ITEMLINK>", .@itemname$, .@item);
+	else
+		return .@itemname$;
 }

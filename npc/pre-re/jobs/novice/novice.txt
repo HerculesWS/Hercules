@@ -82,8 +82,8 @@ new_1-2,100,29,4	script	Receptionist#nv1	4_M_04,{
 	mes "Hello, you look to be new here.";
 	mes "What is your name?";
 	next;
-	input .@charname$;
-	if (.@charname$!=strcharinfo(PC_NAME)) {
+	input(.@charname$);
+	if (.@charname$ != strcharinfo(PC_NAME)) {
 		mes "[Training Grounds Receptionist]";
 		mes "Sorry, but I don't think I heard";
 		mes "you correctly";

@@ -21,9 +21,11 @@
 #ifndef MAP_ATCOMMAND_H
 #define MAP_ATCOMMAND_H
 
+#include "map/mapdefines.h"
 #include "map/pc_groups.h"
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/mmo.h"
 
 #include <stdarg.h>
 
@@ -39,7 +41,7 @@ struct config_setting_t;
  * Defines
  **/
 #define ATCOMMAND_LENGTH 50
-#define MAX_MSG 1500
+#define MAX_MSG 1516
 #define msg_txt(idx) atcommand->msg(idx)
 #define msg_sd(sd,msg_number) atcommand->msgsd((sd),(msg_number))
 #define msg_fd(fd,msg_number) atcommand->msgfd((fd),(msg_number))
@@ -90,6 +92,8 @@ struct atcmd_binding_data {
  * Interface
  **/
 struct atcommand_interface {
+	char (*atcmd_output)[CHAT_SIZE_MAX];
+	char (*atcmd_player_name)[NAME_LENGTH];
 	unsigned char at_symbol;
 	unsigned char char_symbol;
 	/* atcommand binding */

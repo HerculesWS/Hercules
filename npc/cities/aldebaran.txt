@@ -1200,8 +1200,9 @@ function	script	F_Lottery	{
 	mes "[Kafra]";
 	mes "How many times do you want the Lottery Machine to spin? You can choose up to 5 times.";
 	next;
-	input @input;
-	if(@input < 1 || @input > 5) @input = rand(1,5); //Lupus's fix
+	input(@input);
+	if (@input < 1 || @input > 5)
+		@input = rand(1,5); // Lupus's fix
 	callsub sF_Spin;
 	mes "[Kafra]";
 	mes "Ok~ Let me check the results~ guess what it is?";
@@ -1274,7 +1275,8 @@ sF_Spin:
 		next;
 		@temp = rand(10);
 		--@input;
-		if(@input <= 0) return;
+		if (@input <= 0)
+			return;
 	}
 }
 
