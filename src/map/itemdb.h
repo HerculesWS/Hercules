@@ -39,7 +39,7 @@ struct hplugin_data_store;
 
 #ifndef MAX_ITEM_ID
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-#define MAX_ITEM_ID 0x20000
+#define MAX_ITEM_ID INT32_MAX
 #else
 #define MAX_ITEM_ID 0xFFFF
 #endif
