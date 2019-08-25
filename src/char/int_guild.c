@@ -1612,7 +1612,6 @@ static int inter_guild_parse_frommap(int fd)
 	case 0x3034: mapif->parse_GuildLeave(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14), RFIFOP(fd,15)); break;
 	case 0x3035: mapif->parse_GuildChangeMemberInfoShort(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOL(fd,15),RFIFOL(fd,19)); break;
 	case 0x3036: mapif->parse_BreakGuild(fd,RFIFOL(fd,2)); break;
-	case 0x3037: mapif->parse_GuildMessage(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12); break;
 	case 0x3039: mapif->parse_GuildBasicInfoChange(fd, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOP(fd,10), RFIFOW(fd,2)-10); break;
 	case 0x303A: mapif->parse_GuildMemberInfoChange(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOL(fd,12), RFIFOW(fd,16), RFIFOP(fd,18), RFIFOW(fd,2)-18); break;
 	case 0x303B: mapif->parse_GuildPosition(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12)); break;

@@ -11096,13 +11096,13 @@ static void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 	sc = status->get_sc(bl);
 	if (sc && sc->option&OPTION_INVISIBLE && !clif->isdisguised(bl) &&
 		bl->type != BL_NPC && //Skip hidden NPCs which can be seen using Maya Purple
-		pc_get_group_level(sd) < battle_config.hack_info_GM_level
+		!pc_has_permission(sd, PC_PERM_RECEIVE_HACK_INFO)
 	) {
 		char gm_msg[256];
 		sprintf(gm_msg, "Hack on NameRequest: character '%s' (account: %d) requested the name of an invisible target (id: %d).\n", sd->status.name, sd->status.account_id, id);
 		ShowWarning(gm_msg);
 		// information is sent to all online GMs
-		intif->wis_message_to_gm(map->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
+		pc->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, gm_msg);
 		return;
 	}
 #endif // 0
@@ -11593,12 +11593,8 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 	dstsd = map->nick2sd(target);
 
 	if (dstsd == NULL || strcmp(dstsd->status.name, target) != 0) {
-		// player is not on this map-server
-		// At this point, don't send wisp/page if it's not exactly the same name, because (example)
-		// if there are 'Test' player on an other map-server and 'test' player on this map-server,
-		// and if we ask for 'Test', we must not contact 'test' player
-		// so, we send information to inter-server, which is the only one which decide (and copy correct name).
-		intif->wis_message(sd, target, message, (int)strlen(message));
+		// Character not found (or found through partial match).
+		clif->wis_end(sd->fd, 1);
 		return;
 	}
 

@@ -11914,12 +11914,12 @@ static BUILDIN(announce)
 	int         fontAlign = script_hasdata(st,7) ? script_getnum(st,7) : 0;     // default fontAlign
 	int         fontY     = script_hasdata(st,8) ? script_getnum(st,8) : 0;     // default fontY
 	size_t len = strlen(mes);
+	send_target target = ALL_CLIENT;
+	struct block_list *bl = NULL;
 	Assert_retr(false, len < INT_MAX);
 
 	if( flag&(BC_TARGET_MASK|BC_SOURCE_MASK) ) {
 		// Broadcast source or broadcast region defined
-		send_target target;
-		struct block_list *bl = NULL;
 		if (flag&BC_NPC) {
 			// If bc_npc flag is set, use NPC as broadcast source
 			bl = map->id2bl(st->oid);
@@ -11937,17 +11937,13 @@ static BUILDIN(announce)
 			case BC_SELF: target = SELF;        break;
 			default:      target = ALL_CLIENT;  break; // BC_ALL
 		}
-
-		if (fontColor)
-			clif->broadcast2(bl, mes, (int)len+1, (unsigned int)strtoul(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY, target);
-		else
-			clif->broadcast(bl, mes, (int)len+1, flag&BC_COLOR_MASK, target);
-	} else {
-		if (fontColor)
-			intif->broadcast2(mes, (int)len+1, (unsigned int)strtoul(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY);
-		else
-			intif->broadcast(mes, (int)len+1, flag&BC_COLOR_MASK);
 	}
+
+	if (fontColor)
+		clif->broadcast2(bl, mes, (int)len+1, (unsigned int)strtoul(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY, target);
+	else
+		clif->broadcast(bl, mes, (int)len+1, flag&BC_COLOR_MASK, target);
+
 	return true;
 }
 /*==========================================

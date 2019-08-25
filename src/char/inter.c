@@ -53,9 +53,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WISDATA_TTL (60*1000) // Wis data Time To Live (60 seconds)
-#define WISDELLIST_MAX 256    // Number of elements in the list Delete data Wis
-
 static struct inter_interface inter_s;
 struct inter_interface *inter;
 
@@ -70,10 +67,10 @@ int party_share_level = 10;
 
 // recv. packet list
 static int inter_recv_packet_length[] = {
-	-1,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
+	 0, 0, 0, 0, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
 	 6,-1, 6,-1,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage, Achievements [Smokexyz]
-	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
-	-1, 6,-1,-1, 55,23, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
+	-1,10,-1,14, 14,19, 6, 0, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
+	-1, 6,-1,-1, 55,23, 6, 0, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
 	-1, 9, 0, 0, 10,10, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040- Clan System(3044-3045)
 	-1,-1,10,10,  0,-1,12, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3050-  Auction System [Zephyrus], Item Bound [Mhalicot]
 	 6,-1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3060-  Quest system [Kevin] [Inkfish]
@@ -81,9 +78,6 @@ static int inter_recv_packet_length[] = {
 	56,14,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3080-
 	-1,10,-1, 6,  0, 20,10,20, -1,6 + NAME_LENGTH, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator], RoDEX packets
 };
-
-static struct DBMap *wis_db = NULL; // int wis_id -> struct WisData*
-static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
 #define MAX_JOB_NAMES 150
 static char *msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
@@ -964,7 +958,6 @@ static int inter_init_sql(const char *file)
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
-	wis_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	inter_guild->sql_init();
 	inter_storage->sql_init();
 	inter_party->sql_init();
@@ -985,8 +978,6 @@ static int inter_init_sql(const char *file)
 // finalize
 static void inter_final(void)
 {
-	wis_db->destroy(wis_db, NULL);
-
 	inter_guild->sql_final();
 	inter_storage->sql_final();
 	inter_party->sql_final();
@@ -1007,77 +998,6 @@ static void inter_final(void)
 static int inter_mapif_init(int fd)
 {
 	return 0;
-}
-
-//--------------------------------------------------------
-
-/**
- * Existence check of WISP data
- * @see DBApply
- */
-static int inter_check_ttl_wisdata_sub(union DBKey key, struct DBData *data, va_list ap)
-{
-	int64 tick;
-	struct WisData *wd = DB->data2ptr(data);
-	nullpo_ret(wd);
-	tick = va_arg(ap, int64);
-
-	if (DIFF_TICK(tick, wd->tick) > WISDATA_TTL && wis_delnum < WISDELLIST_MAX)
-		wis_dellist[wis_delnum++] = wd->id;
-
-	return 0;
-}
-
-static int inter_check_ttl_wisdata(void)
-{
-	int64 tick = timer->gettick();
-	int i;
-
-	do {
-		wis_delnum = 0;
-		wis_db->foreach(wis_db, inter->check_ttl_wisdata_sub, tick);
-		for(i = 0; i < wis_delnum; i++) {
-			struct WisData *wd = (struct WisData*)idb_get(wis_db, wis_dellist[i]);
-			ShowWarning("inter: wis data id=%d time out : from %s to %s\n", wd->id, wd->src, wd->dst);
-			// removed. not send information after a timeout. Just no answer for the player
-			//mapif->wis_end(wd, 1); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-			idb_remove(wis_db, wd->id);
-		}
-	} while(wis_delnum >= WISDELLIST_MAX);
-
-	return 0;
-}
-
-static struct WisData *inter_add_wisdata(int fd, const unsigned char *src, const unsigned char *dst, const unsigned char *msg, int msg_len)
-{
-	static int wisid = 0;
-	struct WisData *wd;
-
-	CREATE(wd, struct WisData, 1);
-
-	// Whether the failure of previous wisp/page transmission (timeout)
-	inter->check_ttl_wisdata();
-
-	wd->id = ++wisid;
-	wd->fd = fd;
-	wd->len = msg_len;
-	memcpy(wd->src, src, NAME_LENGTH);
-	memcpy(wd->dst, dst, NAME_LENGTH);
-	memcpy(wd->msg, msg, wd->len);
-	wd->tick = timer->gettick();
-	idb_put(wis_db, wd->id, wd);
-
-	return wd;
-}
-
-static struct WisData *inter_get_wisdata(int id)
-{
-	return idb_get(wis_db, id);
-}
-
-static void inter_remove_wisdata(int id)
-{
-	idb_remove(wis_db, id);
 }
 
 //--------------------------------------------------------
@@ -1115,10 +1035,6 @@ static int inter_parse_frommap(int fd)
 		return 2;
 
 	switch(cmd) {
-	case 0x3000: mapif->parse_broadcast(fd); break;
-	case 0x3001: mapif->parse_WisRequest(fd); break;
-	case 0x3002: mapif->parse_WisReply(fd); break;
-	case 0x3003: mapif->parse_WisToGM(fd); break;
 	case 0x3004: mapif->parse_Registry(fd); break;
 	case 0x3005: mapif->parse_RegistryRequest(fd); break;
 	case 0x3006: mapif->parse_NameChangeRequest(fd); break;
@@ -1167,8 +1083,6 @@ void inter_defaults(void)
 	inter->log = inter_log;
 	inter->init_sql = inter_init_sql;
 	inter->mapif_init = inter_mapif_init;
-	inter->check_ttl_wisdata_sub = inter_check_ttl_wisdata_sub;
-	inter->check_ttl_wisdata = inter_check_ttl_wisdata;
 	inter->check_length = inter_check_length;
 	inter->parse_frommap = inter_parse_frommap;
 	inter->final = inter_final;
@@ -1176,7 +1090,4 @@ void inter_defaults(void)
 	inter->config_read_connection = inter_config_read_connection;
 	inter->accinfo = inter_accinfo;
 	inter->accinfo2 = inter_accinfo2;
-	inter->add_wisdata = inter_add_wisdata;
-	inter->get_wisdata = inter_get_wisdata;
-	inter->remove_wisdata = inter_remove_wisdata;
 }

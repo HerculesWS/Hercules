@@ -30,12 +30,6 @@
 struct Sql; // common/sql.h
 struct config_t; // common/conf.h
 
-struct WisData {
-	int id, fd, count, len;
-	int64 tick;
-	unsigned char src[24], dst[24], msg[512];
-};
-
 /**
  * inter interface
  **/
@@ -54,8 +48,6 @@ struct inter_interface {
 	int (*log) (char* fmt, ...);
 	int (*init_sql) (const char *file);
 	int (*mapif_init) (int fd);
-	int (*check_ttl_wisdata_sub) (union DBKey key, struct DBData *data, va_list ap);
-	int (*check_ttl_wisdata) (void);
 	int (*check_length) (int fd, int length);
 	int (*parse_frommap) (int fd);
 	void (*final) (void);
@@ -66,9 +58,6 @@ struct inter_interface {
 	void (*accinfo2) (bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
 			const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate,
 			int group_id, int logincount, int state);
-	struct WisData *(*add_wisdata) (int fd, const unsigned char *src, const unsigned char *dst, const unsigned char *msg, int msg_len);
-	struct WisData *(*get_wisdata) (int id);
-	void (*remove_wisdata) (int id);
 };
 
 #ifdef HERCULES_CORE

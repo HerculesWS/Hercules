@@ -60,11 +60,6 @@ struct intif_interface {
 	int (*parse) (int fd);
 	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,
 	                  int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
-	int (*broadcast) (const char *mes, int len, int type);
-	int (*broadcast2) (const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
-	int (*main_message) (struct map_session_data* sd, const char* message);
-	int (*wis_message) (struct map_session_data *sd, const char *nick, const char *mes, int mes_len);
-	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
 	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
 	void (*request_account_storage) (const struct map_session_data *sd);
@@ -78,7 +73,6 @@ struct intif_interface {
 	int (*party_leave) (int party_id,int account_id, int char_id);
 	int (*party_changemap) (struct map_session_data *sd, int online);
 	int (*break_party) (int party_id);
-	int (*party_message) (int party_id, int account_id, const char *mes,int len);
 	int (*party_leaderchange) (int party_id,int account_id,int char_id);
 	int (*guild_create) (const char *name, const struct guild_member *master);
 	int (*guild_request_info) (int guild_id);
@@ -86,7 +80,6 @@ struct intif_interface {
 	int (*guild_leave) (int guild_id, int account_id, int char_id, int flag, const char *mes);
 	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*guild_break) (int guild_id);
-	int (*guild_message) (int guild_id, int account_id, const char *mes, int len);
 	int (*guild_change_gm) (int guild_id, const char *name, int len);
 	int (*guild_change_basicinfo) (int guild_id, int type, const void *data, int len);
 	int (*guild_change_memberinfo) (int guild_id, int account_id, int char_id, int type, const void *data, int len);
@@ -151,10 +144,6 @@ struct intif_interface {
 	void(*achievements_request) (struct map_session_data *sd);
 	void(*achievements_save) (struct map_session_data *sd);
 	/* */
-	void (*pWisMessage) (int fd);
-	void (*pWisEnd) (int fd);
-	int (*pWisToGM_sub) (struct map_session_data* sd,va_list va);
-	void (*pWisToGM) (int fd);
 	void (*pRegisters) (int fd);
 	void (*pAccountStorage) (int fd);
 	void (*pChangeNameOk) (int fd);
@@ -169,14 +158,12 @@ struct intif_interface {
 	void (*pPartyMemberWithdraw) (int fd);
 	void (*pPartyMove) (int fd);
 	void (*pPartyBroken) (int fd);
-	void (*pPartyMessage) (int fd);
 	void (*pGuildCreated) (int fd);
 	void (*pGuildInfo) (int fd);
 	void (*pGuildMemberAdded) (int fd);
 	void (*pGuildMemberWithdraw) (int fd);
 	void (*pGuildMemberInfoShort) (int fd);
 	void (*pGuildBroken) (int fd);
-	void (*pGuildMessage) (int fd);
 	void (*pGuildBasicInfoChanged) (int fd);
 	void (*pGuildMemberInfoChanged) (int fd);
 	void (*pGuildPosition) (int fd);

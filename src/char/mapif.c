@@ -596,22 +596,6 @@ static int mapif_guild_broken(int guild_id, int flag)
 	return 0;
 }
 
-// Send guild message
-static int mapif_guild_message(int guild_id, int account_id, const char *mes, int len, int sfd)
-{
-	unsigned char buf[512];
-	nullpo_ret(mes);
-	if (len > 500)
-		len = 500;
-	WBUFW(buf, 0) = 0x3837;
-	WBUFW(buf, 2) = len + 12;
-	WBUFL(buf, 4) = guild_id;
-	WBUFL(buf, 8) = account_id;
-	memcpy(WBUFP(buf, 12), mes, len);
-	mapif->sendallwos(sfd, buf, len + 12);
-	return 0;
-}
-
 // Send basic info
 static int mapif_guild_basicinfochanged(int guild_id, int type, const void *data, int len)
 {
@@ -808,12 +792,6 @@ static int mapif_parse_BreakGuild(int fd, int guild_id)
 {
 	inter_guild->disband(guild_id);
 	return 0;
-}
-
-// Forward Guild message to others map servers
-static int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *mes, int len)
-{
-	return mapif->guild_message(guild_id,account_id,mes,len, fd);
 }
 
 /**
@@ -1319,20 +1297,6 @@ static int mapif_party_broken(int party_id, int flag)
 	return 0;
 }
 
-//Remarks in the party
-static int mapif_party_message(int party_id, int account_id, const char *mes, int len, int sfd)
-{
-	unsigned char buf[512];
-	nullpo_ret(mes);
-	WBUFW(buf, 0) = 0x3827;
-	WBUFW(buf, 2) = len + 12;
-	WBUFL(buf, 4) = party_id;
-	WBUFL(buf, 8) = account_id;
-	memcpy(WBUFP(buf, 12), mes, len);
-	mapif->sendallwos(sfd, buf, len + 12);
-	return 0;
-}
-
 // Create Party
 static int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const struct party_member *leader)
 {
@@ -1406,12 +1370,6 @@ static int mapif_parse_BreakParty(int fd, int party_id)
 {
 	inter_party->disband(party_id);
 	return 0;
-}
-
-//Party sending the message
-static int mapif_parse_PartyMessage(int fd, int party_id, int account_id, const char *mes, int len)
-{
-	return mapif->party_message(party_id, account_id, mes, len, fd);
 }
 
 static int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char_id)
@@ -2034,67 +1992,6 @@ static void mapif_parse_accinfo(int fd)
 	inter->accinfo(u_fd, aid, castergroup, query, fd);
 }
 
-// broadcast sending
-static int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
-{
-	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
-
-	nullpo_ret(mes);
-	Assert_ret(len >= 16);
-	WBUFW(buf, 0) = 0x3800;
-	WBUFW(buf, 2) = len;
-	WBUFL(buf, 4) = fontColor;
-	WBUFW(buf, 8) = fontType;
-	WBUFW(buf, 10) = fontSize;
-	WBUFW(buf, 12) = fontAlign;
-	WBUFW(buf, 14) = fontY;
-	memcpy(WBUFP(buf, 16), mes, len - 16);
-	mapif->sendallwos(sfd, buf, len);
-
-	aFree(buf);
-	return 0;
-}
-
-// Wis sending
-static int mapif_wis_message(struct WisData *wd)
-{
-	unsigned char buf[2048];
-	nullpo_ret(wd);
-	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
-	if (wd->len < 0)
-		wd->len = 0;
-	if (wd->len >= (int)sizeof(wd->msg) - 1)
-		wd->len = (int)sizeof(wd->msg) - 1;
-
-	WBUFW(buf, 0) = 0x3801;
-	WBUFW(buf, 2) = 56 + wd->len;
-	WBUFL(buf, 4) = wd->id;
-	memcpy(WBUFP(buf, 8), wd->src, NAME_LENGTH);
-	memcpy(WBUFP(buf, 32), wd->dst, NAME_LENGTH);
-	memcpy(WBUFP(buf, 56), wd->msg, wd->len);
-	wd->count = mapif->sendall(buf, WBUFW(buf, 2));
-
-	return 0;
-}
-
-static void mapif_wis_response(int fd, const unsigned char *src, int flag)
-{
-	unsigned char buf[27];
-	nullpo_retv(src);
-	WBUFW(buf, 0) = 0x3802;
-	memcpy(WBUFP(buf, 2), src, 24);
-	WBUFB(buf, 26) = flag;
-	mapif->send(fd, buf, 27);
-}
-
-// Wis sending result
-static int mapif_wis_end(struct WisData *wd, int flag)
-{
-	nullpo_ret(wd);
-	mapif->wis_response(wd->fd, wd->src, flag);
-	return 0;
-}
-
 #if 0
 // Account registry transfer to map-server
 static void mapif_account_reg(int fd, unsigned char *src)
@@ -2123,89 +2020,6 @@ static int mapif_disconnectplayer(int fd, int account_id, int char_id, int reaso
 	WFIFOL(fd, 2) = account_id;
 	WFIFOB(fd, 6) = reason;
 	WFIFOSET(fd, 7);
-	return 0;
-}
-
-// broadcast sending
-static int mapif_parse_broadcast(int fd)
-{
-	mapif->broadcast(RFIFOP(fd, 16), RFIFOW(fd, 2), RFIFOL(fd, 4), RFIFOW(fd, 8), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), fd);
-	return 0;
-}
-
-// Wisp/page request to send
-static int mapif_parse_WisRequest(int fd)
-{
-	struct WisData* wd;
-	char name[NAME_LENGTH];
-	char *data;
-	size_t len;
-
-	if (fd <= 0) // check if we have a valid fd
-		return 0;
-
-	if (RFIFOW(fd, 2) - 52 >= sizeof(wd->msg)) {
-		ShowWarning("inter: Wis message size too long.\n");
-		return 0;
-	} else if (RFIFOW(fd, 2) - 52 <= 0) { // normally, impossible, but who knows...
-		ShowError("inter: Wis message doesn't exist.\n");
-		return 0;
-	}
-
-	safestrncpy(name, RFIFOP(fd, 28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
-
-	// search if character exists before to ask all map-servers
-	if (!chr->name_exists(name, NULL)) {
-		mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-	} else {
-		// Character exists. So, ask all map-servers
-
-		// to be sure of the correct name, rewrite it
-		SQL->GetData(inter->sql_handle, 0, &data, &len);
-		memset(name, 0, NAME_LENGTH);
-		memcpy(name, data, min(len, NAME_LENGTH));
-		// if source is destination, don't ask other servers.
-		if (strncmp(RFIFOP(fd, 4), name, NAME_LENGTH) == 0) {
-			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-		} else {
-			wd = inter->add_wisdata(fd, RFIFOP(fd, 4), RFIFOP(fd, 28), RFIFOP(fd, 52), RFIFOW(fd, 2) - 52);
-			mapif->wis_message(wd);
-		}
-	}
-
-	SQL->FreeResult(inter->sql_handle);
-	return 0;
-}
-
-// Wisp/page transmission result
-static int mapif_parse_WisReply(int fd)
-{
-	int id, flag;
-	struct WisData *wd;
-
-	id = RFIFOL(fd,2);
-	flag = RFIFOB(fd,6);
-	wd = inter->get_wisdata(id);
-	if (wd == NULL)
-		return 0; // This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
-
-	if ((--wd->count) <= 0 || flag != 1) {
-		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-		inter->remove_wisdata(id);
-	}
-
-	return 0;
-}
-
-// Received wisp message from map-server for ALL gm (just copy the message and resends it to ALL map-servers)
-static int mapif_parse_WisToGM(int fd)
-{
-	unsigned char buf[2048]; // 0x3003/0x3803 <packet_len>.w <wispname>.24B <min_gm_level>.w <message>.?B
-
-	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2)); // Message contains the NUL terminator (see intif_wis_message_to_gm())
-	WBUFW(buf, 0) = 0x3803;
-	mapif->sendall(buf, RFIFOW(fd,2));
-
 	return 0;
 }
 
@@ -2532,7 +2346,6 @@ void mapif_defaults(void)
 	mapif->guild_withdraw = mapif_guild_withdraw;
 	mapif->guild_memberinfoshort = mapif_guild_memberinfoshort;
 	mapif->guild_broken = mapif_guild_broken;
-	mapif->guild_message = mapif_guild_message;
 	mapif->guild_basicinfochanged = mapif_guild_basicinfochanged;
 	mapif->guild_memberinfochanged = mapif_guild_memberinfochanged;
 	mapif->guild_skillupack = mapif_guild_skillupack;
@@ -2548,7 +2361,6 @@ void mapif_defaults(void)
 	mapif->parse_GuildLeave = mapif_parse_GuildLeave;
 	mapif->parse_GuildChangeMemberInfoShort = mapif_parse_GuildChangeMemberInfoShort;
 	mapif->parse_BreakGuild = mapif_parse_BreakGuild;
-	mapif->parse_GuildMessage = mapif_parse_GuildMessage;
 	mapif->parse_GuildBasicInfoChange = mapif_parse_GuildBasicInfoChange;
 	mapif->parse_GuildMemberInfoChange = mapif_parse_GuildMemberInfoChange;
 	mapif->parse_GuildPosition = mapif_parse_GuildPosition;
@@ -2596,7 +2408,6 @@ void mapif_defaults(void)
 	mapif->party_withdraw = mapif_party_withdraw;
 	mapif->party_membermoved = mapif_party_membermoved;
 	mapif->party_broken = mapif_party_broken;
-	mapif->party_message = mapif_party_message;
 	mapif->parse_CreateParty = mapif_parse_CreateParty;
 	mapif->parse_PartyInfo = mapif_parse_PartyInfo;
 	mapif->parse_PartyAddMember = mapif_parse_PartyAddMember;
@@ -2604,7 +2415,6 @@ void mapif_defaults(void)
 	mapif->parse_PartyLeave = mapif_parse_PartyLeave;
 	mapif->parse_PartyChangeMap = mapif_parse_PartyChangeMap;
 	mapif->parse_BreakParty = mapif_parse_BreakParty;
-	mapif->parse_PartyMessage = mapif_parse_PartyMessage;
 	mapif->parse_PartyLeaderChange = mapif_parse_PartyLeaderChange;
 	mapif->pet_created = mapif_pet_created;
 	mapif->pet_info = mapif_pet_info;
@@ -2644,16 +2454,8 @@ void mapif_defaults(void)
 	mapif->itembound_ack = mapif_itembound_ack;
 	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 	mapif->parse_accinfo = mapif_parse_accinfo;
-	mapif->broadcast = mapif_broadcast;
-	mapif->wis_message = mapif_wis_message;
-	mapif->wis_response = mapif_wis_response;
-	mapif->wis_end = mapif_wis_end;
 	mapif->account_reg_reply = mapif_account_reg_reply;
 	mapif->disconnectplayer = mapif_disconnectplayer;
-	mapif->parse_broadcast = mapif_parse_broadcast;
-	mapif->parse_WisRequest = mapif_parse_WisRequest;
-	mapif->parse_WisReply = mapif_parse_WisReply;
-	mapif->parse_WisToGM = mapif_parse_WisToGM;
 	mapif->parse_Registry = mapif_parse_Registry;
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;
 	mapif->namechange_ack = mapif_namechange_ack;

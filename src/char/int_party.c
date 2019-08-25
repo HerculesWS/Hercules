@@ -599,7 +599,6 @@ static int inter_party_parse_frommap(int fd)
 	case 0x3024: mapif->parse_PartyLeave(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 	case 0x3025: mapif->parse_PartyChangeMap(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOW(fd,14), RFIFOB(fd,16), RFIFOW(fd,17)); break;
 	case 0x3026: mapif->parse_BreakParty(fd, RFIFOL(fd,2)); break;
-	case 0x3027: mapif->parse_PartyMessage(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12); break;
 	case 0x3029: mapif->parse_PartyLeaderChange(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 	default:
 		return 0;

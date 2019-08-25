@@ -886,30 +886,24 @@ static int party_send_logout(struct map_session_data *sd)
 
 static int party_send_message(struct map_session_data *sd, const char *mes)
 {
-	int len;
-
 	nullpo_ret(sd);
 	nullpo_ret(mes);
 
-	len = (int)strlen(mes);
-
 	if (sd->status.party_id == 0)
 		return 0;
-	intif->party_message(sd->status.party_id, sd->status.account_id, mes, len);
-	party->recv_message(sd->status.party_id, sd->status.account_id, mes, len);
+
+	struct party_data *p = party->search(sd->status.party_id);
+
+	if (p == NULL)
+		return 0;
+
+	int len = (int)strlen(mes);
+
+	clif->party_message(p, sd->status.account_id, mes, len);
 
 	// Chat logging type 'P' / Party Chat
 	logs->chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
 
-	return 0;
-}
-
-static int party_recv_message(int party_id, int account_id, const char *mes, int len)
-{
-	struct party_data *p;
-	if( (p=party->search(party_id))==NULL)
-		return 0;
-	clif->party_message(p,account_id,mes,len);
 	return 0;
 }
 
@@ -1532,7 +1526,6 @@ void party_defaults(void)
 	party->send_levelup = party_send_levelup;
 	party->send_logout = party_send_logout;
 	party->send_message = party_send_message;
-	party->recv_message = party_recv_message;
 	party->skill_check = party_skill_check;
 	party->send_xy_clear = party_send_xy_clear;
 	party->exp_share = party_exp_share;
