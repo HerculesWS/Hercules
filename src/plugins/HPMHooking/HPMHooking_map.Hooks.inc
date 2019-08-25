@@ -57747,11 +57747,12 @@ void HP_npc_trader_update(int master) {
 	}
 	return;
 }
-int HP_npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list) {
+enum market_buy_result HP_npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list) {
+/* Unknown return type 'enum market_buy_result'. Initializing to '0'. */
 	int hIndex = 0;
-	int retVal___ = 0;
+	enum market_buy_result retVal___ = 0;
 	if (HPMHooks.count.HP_npc_market_buylist_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, struct itemlist **item_list);
+		enum market_buy_result (*preHookFunc) (struct map_session_data **sd, struct itemlist **item_list);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_buylist_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_npc_market_buylist_pre[hIndex].func;
@@ -57766,7 +57767,7 @@ int HP_npc_market_buylist(struct map_session_data *sd, struct itemlist *item_lis
 		retVal___ = HPMHooks.source.npc.market_buylist(sd, item_list);
 	}
 	if (HPMHooks.count.HP_npc_market_buylist_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct itemlist *item_list);
+		enum market_buy_result (*postHookFunc) (enum market_buy_result retVal___, struct map_session_data *sd, struct itemlist *item_list);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_buylist_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_npc_market_buylist_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, item_list);

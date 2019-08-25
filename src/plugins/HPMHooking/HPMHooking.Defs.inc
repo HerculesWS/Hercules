@@ -5784,8 +5784,8 @@ typedef bool (*HPMHOOK_pre_npc_trader_pay) (struct npc_data **nd, struct map_ses
 typedef bool (*HPMHOOK_post_npc_trader_pay) (bool retVal___, struct npc_data *nd, struct map_session_data *sd, int price, int points);
 typedef void (*HPMHOOK_pre_npc_trader_update) (int *master);
 typedef void (*HPMHOOK_post_npc_trader_update) (int master);
-typedef int (*HPMHOOK_pre_npc_market_buylist) (struct map_session_data **sd, struct itemlist **item_list);
-typedef int (*HPMHOOK_post_npc_market_buylist) (int retVal___, struct map_session_data *sd, struct itemlist *item_list);
+typedef enum market_buy_result (*HPMHOOK_pre_npc_market_buylist) (struct map_session_data **sd, struct itemlist **item_list);
+typedef enum market_buy_result (*HPMHOOK_post_npc_market_buylist) (enum market_buy_result retVal___, struct map_session_data *sd, struct itemlist *item_list);
 typedef int (*HPMHOOK_pre_npc_barter_buylist) (struct map_session_data **sd, struct barteritemlist **item_list);
 typedef int (*HPMHOOK_post_npc_barter_buylist) (int retVal___, struct map_session_data *sd, struct barteritemlist *item_list);
 typedef bool (*HPMHOOK_pre_npc_trader_open) (struct map_session_data **sd, struct npc_data **nd);
