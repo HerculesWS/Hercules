@@ -1258,6 +1258,9 @@ static void run_tomb(struct map_session_data *sd, struct npc_data *nd)
 	char time[10];
 
 	nullpo_retv(nd);
+
+	sd->npc_id = nd->bl.id;
+
 	strftime(time, sizeof(time), "%H:%M", localtime(&nd->u.tomb.kill_time));
 
 	// TODO: Find exact color?
@@ -1373,8 +1376,10 @@ static int npc_scriptcont(struct map_session_data *sd, int id, bool closing)
 	if( sd->progressbar.npc_id && DIFF_TICK(sd->progressbar.timeout,timer->gettick()) > 0 )
 		return 1;
 
-	if( !sd->st )
+	if( !sd->st ) {
+		sd->npc_id = 0;
 		return 1;
+	}
 
 	if( closing && sd->st->state == CLOSE )
 		sd->st->state = END;
