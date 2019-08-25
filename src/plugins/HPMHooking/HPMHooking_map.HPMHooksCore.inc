@@ -2822,8 +2822,6 @@ struct {
 	struct HPMHookPoint *HP_intif_broadcast2_post;
 	struct HPMHookPoint *HP_intif_main_message_pre;
 	struct HPMHookPoint *HP_intif_main_message_post;
-	struct HPMHookPoint *HP_intif_wis_message_to_gm_pre;
-	struct HPMHookPoint *HP_intif_wis_message_to_gm_post;
 	struct HPMHookPoint *HP_intif_saveregistry_pre;
 	struct HPMHookPoint *HP_intif_saveregistry_post;
 	struct HPMHookPoint *HP_intif_request_registry_pre;
@@ -2974,10 +2972,6 @@ struct {
 	struct HPMHookPoint *HP_intif_achievements_request_post;
 	struct HPMHookPoint *HP_intif_achievements_save_pre;
 	struct HPMHookPoint *HP_intif_achievements_save_post;
-	struct HPMHookPoint *HP_intif_pWisToGM_sub_pre;
-	struct HPMHookPoint *HP_intif_pWisToGM_sub_post;
-	struct HPMHookPoint *HP_intif_pWisToGM_pre;
-	struct HPMHookPoint *HP_intif_pWisToGM_post;
 	struct HPMHookPoint *HP_intif_pRegisters_pre;
 	struct HPMHookPoint *HP_intif_pRegisters_post;
 	struct HPMHookPoint *HP_intif_pAccountStorage_pre;
@@ -4980,6 +4974,10 @@ struct {
 	struct HPMHookPoint *HP_pc_have_magnifier_post;
 	struct HPMHookPoint *HP_pc_process_chat_message_pre;
 	struct HPMHookPoint *HP_pc_process_chat_message_post;
+	struct HPMHookPoint *HP_pc_wis_message_to_gm_pre;
+	struct HPMHookPoint *HP_pc_wis_message_to_gm_post;
+	struct HPMHookPoint *HP_pc_wis_message_to_gm_sub_pre;
+	struct HPMHookPoint *HP_pc_wis_message_to_gm_sub_post;
 	struct HPMHookPoint *HP_pc_check_supernovice_call_pre;
 	struct HPMHookPoint *HP_pc_check_supernovice_call_post;
 	struct HPMHookPoint *HP_pc_check_basicskill_pre;
@@ -9611,8 +9609,6 @@ struct {
 	int HP_intif_broadcast2_post;
 	int HP_intif_main_message_pre;
 	int HP_intif_main_message_post;
-	int HP_intif_wis_message_to_gm_pre;
-	int HP_intif_wis_message_to_gm_post;
 	int HP_intif_saveregistry_pre;
 	int HP_intif_saveregistry_post;
 	int HP_intif_request_registry_pre;
@@ -9763,10 +9759,6 @@ struct {
 	int HP_intif_achievements_request_post;
 	int HP_intif_achievements_save_pre;
 	int HP_intif_achievements_save_post;
-	int HP_intif_pWisToGM_sub_pre;
-	int HP_intif_pWisToGM_sub_post;
-	int HP_intif_pWisToGM_pre;
-	int HP_intif_pWisToGM_post;
 	int HP_intif_pRegisters_pre;
 	int HP_intif_pRegisters_post;
 	int HP_intif_pAccountStorage_pre;
@@ -11769,6 +11761,10 @@ struct {
 	int HP_pc_have_magnifier_post;
 	int HP_pc_process_chat_message_pre;
 	int HP_pc_process_chat_message_post;
+	int HP_pc_wis_message_to_gm_pre;
+	int HP_pc_wis_message_to_gm_post;
+	int HP_pc_wis_message_to_gm_sub_pre;
+	int HP_pc_wis_message_to_gm_sub_post;
 	int HP_pc_check_supernovice_call_pre;
 	int HP_pc_check_supernovice_call_post;
 	int HP_pc_check_basicskill_pre;

@@ -664,7 +664,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->account_reg_reply, HP_mapif_account_reg_reply) },
 	{ HP_POP(mapif->disconnectplayer, HP_mapif_disconnectplayer) },
 	{ HP_POP(mapif->parse_broadcast, HP_mapif_parse_broadcast) },
-	{ HP_POP(mapif->parse_WisToGM, HP_mapif_parse_WisToGM) },
 	{ HP_POP(mapif->parse_Registry, HP_mapif_parse_Registry) },
 	{ HP_POP(mapif->parse_RegistryRequest, HP_mapif_parse_RegistryRequest) },
 	{ HP_POP(mapif->namechange_ack, HP_mapif_namechange_ack) },

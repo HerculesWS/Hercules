@@ -16415,33 +16415,6 @@ int HP_mapif_parse_broadcast(int fd) {
 	}
 	return retVal___;
 }
-int HP_mapif_parse_WisToGM(int fd) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_mapif_parse_WisToGM_pre > 0) {
-		int (*preHookFunc) (int *fd);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_WisToGM_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mapif_parse_WisToGM_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.mapif.parse_WisToGM(fd);
-	}
-	if (HPMHooks.count.HP_mapif_parse_WisToGM_post > 0) {
-		int (*postHookFunc) (int retVal___, int fd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_WisToGM_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mapif_parse_WisToGM_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fd);
-		}
-	}
-	return retVal___;
-}
 int HP_mapif_parse_Registry(int fd) {
 	int hIndex = 0;
 	int retVal___ = 0;
