@@ -118,7 +118,6 @@ static void inter_party_calc_state(struct party_data *p)
 		p->party.exp = 0; //Set off even share.
 		mapif->party_optionchanged(0, &p->party, 0, 0);
 	}
-	return;
 }
 
 // Save party to mysql
@@ -472,8 +471,11 @@ static bool inter_party_leave(int party_id, int account_id, int char_id)
 	mapif->party_withdraw(party_id, account_id, char_id);
 
 	j = p->party.member[i].lv;
-	if (p->party.member[i].online > 0)
+	if (p->party.member[i].online > 0) {
+		p->party.member[i].online = 0;
 		p->party.count--;
+	}
+	inter_party->tosql(&p->party, PS_DELMEMBER, i);
 	memset(&p->party.member[i], 0, sizeof(struct party_member));
 	p->size--;
 	if (j == p->min_lv || j == p->max_lv || p->family) {
@@ -482,7 +484,6 @@ static bool inter_party_leave(int party_id, int account_id, int char_id)
 	}
 
 	if (inter_party->check_empty(p) == 0) {
-		inter_party->tosql(&p->party, PS_DELMEMBER, i);
 		mapif->party_info(-1, &p->party, 0);
 	}
 	return true;
