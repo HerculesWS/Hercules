@@ -964,7 +964,7 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*updateweightstatus) (struct map_session_data *sd);
 
-	int (*addautobonus) (struct s_autobonus *bonus,char max,const char *bonus_script,short rate,unsigned int dur,short atk_type,const char *o_script,unsigned short pos,bool onskill);
+	int (*addautobonus) (struct s_autobonus *bonus,char max,const char *bonus_script,short rate,unsigned int dur,short atk_type,const char *o_script,unsigned int pos,bool onskill);
 	int (*exeautobonus) (struct map_session_data* sd,struct s_autobonus *bonus);
 	int (*endautobonus) (int tid, int64 tick, int id, intptr_t data);
 	int (*delautobonus) (struct map_session_data* sd,struct s_autobonus *bonus,char max,bool restore);
