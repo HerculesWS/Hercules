@@ -2237,6 +2237,14 @@ static void mob_log_damage(struct mob_data *md, struct block_list *src, int dama
 			md->dmglog[minpos].flag= flag;
 			md->dmglog[minpos].dmg = damage;
 		}
+#if (PACKETVER >= 20120404 && PACKETVER < 20131223)
+		// Show HP bar to all chars who hit the mob (fixes TF_STEAL not showing HP bar right away but only when target leaves/re-enters sight range)
+		if (battle_config.show_monster_hp_bar != 0 && (md->status.mode & MD_BOSS) == 0) {
+			struct map_session_data *sd = map->charid2sd(char_id);
+			if (sd != NULL && check_distance_bl(&md->bl, &sd->bl, AREA_SIZE)) // check if in range
+				clif->monster_hp_bar(md, sd);
+		}
+#endif
 	}
 	return;
 }
