@@ -45,7 +45,6 @@
 #include "map/mapreg.h"
 #include "map/mercenary.h"
 #include "map/mob.h"
-#include "map/npc.h"
 #include "map/npc.h" // npc_setcells(), npc_unsetcells()
 #include "map/party.h"
 #include "map/path.h"
@@ -6305,6 +6304,7 @@ static CPCMD(gm_position)
 	map->cpsd->bl.x = x;
 	map->cpsd->bl.y = y;
 	map->cpsd->bl.m = m;
+	map->cpsd->mapindex = map_id2index(m);
 }
 static CPCMD(gm_use)
 {
@@ -6333,6 +6333,8 @@ static void map_cp_defaults(void)
 	map->cpsd->bl.x = mapindex->default_x;
 	map->cpsd->bl.y = mapindex->default_y;
 	map->cpsd->bl.m = map->mapname2mapid(mapindex->default_map);
+	Assert_retv(map->cpsd->bl.m >= 0);
+	map->cpsd->mapindex = map_id2index(map->cpsd->bl.m);
 
 	console->input->addCommand("gm:info",CPCMD_A(gm_position));
 	console->input->addCommand("gm:use",CPCMD_A(gm_use));
