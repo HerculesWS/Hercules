@@ -1022,8 +1022,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_guild_memberinfoshort_post;
 	struct HPMHookPoint *HP_mapif_guild_broken_pre;
 	struct HPMHookPoint *HP_mapif_guild_broken_post;
-	struct HPMHookPoint *HP_mapif_guild_message_pre;
-	struct HPMHookPoint *HP_mapif_guild_message_post;
 	struct HPMHookPoint *HP_mapif_guild_basicinfochanged_pre;
 	struct HPMHookPoint *HP_mapif_guild_basicinfochanged_post;
 	struct HPMHookPoint *HP_mapif_guild_memberinfochanged_pre;
@@ -1054,8 +1052,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_GuildChangeMemberInfoShort_post;
 	struct HPMHookPoint *HP_mapif_parse_BreakGuild_pre;
 	struct HPMHookPoint *HP_mapif_parse_BreakGuild_post;
-	struct HPMHookPoint *HP_mapif_parse_GuildMessage_pre;
-	struct HPMHookPoint *HP_mapif_parse_GuildMessage_post;
 	struct HPMHookPoint *HP_mapif_parse_GuildBasicInfoChange_pre;
 	struct HPMHookPoint *HP_mapif_parse_GuildBasicInfoChange_post;
 	struct HPMHookPoint *HP_mapif_parse_GuildMemberInfoChange_pre;
@@ -1150,8 +1146,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_party_membermoved_post;
 	struct HPMHookPoint *HP_mapif_party_broken_pre;
 	struct HPMHookPoint *HP_mapif_party_broken_post;
-	struct HPMHookPoint *HP_mapif_party_message_pre;
-	struct HPMHookPoint *HP_mapif_party_message_post;
 	struct HPMHookPoint *HP_mapif_parse_CreateParty_pre;
 	struct HPMHookPoint *HP_mapif_parse_CreateParty_post;
 	struct HPMHookPoint *HP_mapif_parse_PartyInfo_pre;
@@ -1166,8 +1160,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_PartyChangeMap_post;
 	struct HPMHookPoint *HP_mapif_parse_BreakParty_pre;
 	struct HPMHookPoint *HP_mapif_parse_BreakParty_post;
-	struct HPMHookPoint *HP_mapif_parse_PartyMessage_pre;
-	struct HPMHookPoint *HP_mapif_parse_PartyMessage_post;
 	struct HPMHookPoint *HP_mapif_parse_PartyLeaderChange_pre;
 	struct HPMHookPoint *HP_mapif_parse_PartyLeaderChange_post;
 	struct HPMHookPoint *HP_mapif_pet_created_pre;
@@ -2643,8 +2635,6 @@ struct {
 	int HP_mapif_guild_memberinfoshort_post;
 	int HP_mapif_guild_broken_pre;
 	int HP_mapif_guild_broken_post;
-	int HP_mapif_guild_message_pre;
-	int HP_mapif_guild_message_post;
 	int HP_mapif_guild_basicinfochanged_pre;
 	int HP_mapif_guild_basicinfochanged_post;
 	int HP_mapif_guild_memberinfochanged_pre;
@@ -2675,8 +2665,6 @@ struct {
 	int HP_mapif_parse_GuildChangeMemberInfoShort_post;
 	int HP_mapif_parse_BreakGuild_pre;
 	int HP_mapif_parse_BreakGuild_post;
-	int HP_mapif_parse_GuildMessage_pre;
-	int HP_mapif_parse_GuildMessage_post;
 	int HP_mapif_parse_GuildBasicInfoChange_pre;
 	int HP_mapif_parse_GuildBasicInfoChange_post;
 	int HP_mapif_parse_GuildMemberInfoChange_pre;
@@ -2771,8 +2759,6 @@ struct {
 	int HP_mapif_party_membermoved_post;
 	int HP_mapif_party_broken_pre;
 	int HP_mapif_party_broken_post;
-	int HP_mapif_party_message_pre;
-	int HP_mapif_party_message_post;
 	int HP_mapif_parse_CreateParty_pre;
 	int HP_mapif_parse_CreateParty_post;
 	int HP_mapif_parse_PartyInfo_pre;
@@ -2787,8 +2773,6 @@ struct {
 	int HP_mapif_parse_PartyChangeMap_post;
 	int HP_mapif_parse_BreakParty_pre;
 	int HP_mapif_parse_BreakParty_post;
-	int HP_mapif_parse_PartyMessage_pre;
-	int HP_mapif_parse_PartyMessage_post;
 	int HP_mapif_parse_PartyLeaderChange_pre;
 	int HP_mapif_parse_PartyLeaderChange_post;
 	int HP_mapif_pet_created_pre;

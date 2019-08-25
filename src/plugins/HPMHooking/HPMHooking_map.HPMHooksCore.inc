@@ -2572,8 +2572,6 @@ struct {
 	struct HPMHookPoint *HP_guild_emblem_changed_post;
 	struct HPMHookPoint *HP_guild_send_message_pre;
 	struct HPMHookPoint *HP_guild_send_message_post;
-	struct HPMHookPoint *HP_guild_recv_message_pre;
-	struct HPMHookPoint *HP_guild_recv_message_post;
 	struct HPMHookPoint *HP_guild_send_dot_remove_pre;
 	struct HPMHookPoint *HP_guild_send_dot_remove_post;
 	struct HPMHookPoint *HP_guild_skillupack_pre;
@@ -2842,8 +2840,6 @@ struct {
 	struct HPMHookPoint *HP_intif_party_changemap_post;
 	struct HPMHookPoint *HP_intif_break_party_pre;
 	struct HPMHookPoint *HP_intif_break_party_post;
-	struct HPMHookPoint *HP_intif_party_message_pre;
-	struct HPMHookPoint *HP_intif_party_message_post;
 	struct HPMHookPoint *HP_intif_party_leaderchange_pre;
 	struct HPMHookPoint *HP_intif_party_leaderchange_post;
 	struct HPMHookPoint *HP_intif_guild_create_pre;
@@ -2858,8 +2854,6 @@ struct {
 	struct HPMHookPoint *HP_intif_guild_memberinfoshort_post;
 	struct HPMHookPoint *HP_intif_guild_break_pre;
 	struct HPMHookPoint *HP_intif_guild_break_post;
-	struct HPMHookPoint *HP_intif_guild_message_pre;
-	struct HPMHookPoint *HP_intif_guild_message_post;
 	struct HPMHookPoint *HP_intif_guild_change_gm_pre;
 	struct HPMHookPoint *HP_intif_guild_change_gm_post;
 	struct HPMHookPoint *HP_intif_guild_change_basicinfo_pre;
@@ -2994,8 +2988,6 @@ struct {
 	struct HPMHookPoint *HP_intif_pPartyMove_post;
 	struct HPMHookPoint *HP_intif_pPartyBroken_pre;
 	struct HPMHookPoint *HP_intif_pPartyBroken_post;
-	struct HPMHookPoint *HP_intif_pPartyMessage_pre;
-	struct HPMHookPoint *HP_intif_pPartyMessage_post;
 	struct HPMHookPoint *HP_intif_pGuildCreated_pre;
 	struct HPMHookPoint *HP_intif_pGuildCreated_post;
 	struct HPMHookPoint *HP_intif_pGuildInfo_pre;
@@ -3008,8 +3000,6 @@ struct {
 	struct HPMHookPoint *HP_intif_pGuildMemberInfoShort_post;
 	struct HPMHookPoint *HP_intif_pGuildBroken_pre;
 	struct HPMHookPoint *HP_intif_pGuildBroken_post;
-	struct HPMHookPoint *HP_intif_pGuildMessage_pre;
-	struct HPMHookPoint *HP_intif_pGuildMessage_post;
 	struct HPMHookPoint *HP_intif_pGuildBasicInfoChanged_pre;
 	struct HPMHookPoint *HP_intif_pGuildBasicInfoChanged_post;
 	struct HPMHookPoint *HP_intif_pGuildMemberInfoChanged_pre;
@@ -4420,8 +4410,6 @@ struct {
 	struct HPMHookPoint *HP_party_send_logout_post;
 	struct HPMHookPoint *HP_party_send_message_pre;
 	struct HPMHookPoint *HP_party_send_message_post;
-	struct HPMHookPoint *HP_party_recv_message_pre;
-	struct HPMHookPoint *HP_party_recv_message_post;
 	struct HPMHookPoint *HP_party_skill_check_pre;
 	struct HPMHookPoint *HP_party_skill_check_post;
 	struct HPMHookPoint *HP_party_send_xy_clear_pre;
@@ -9353,8 +9341,6 @@ struct {
 	int HP_guild_emblem_changed_post;
 	int HP_guild_send_message_pre;
 	int HP_guild_send_message_post;
-	int HP_guild_recv_message_pre;
-	int HP_guild_recv_message_post;
 	int HP_guild_send_dot_remove_pre;
 	int HP_guild_send_dot_remove_post;
 	int HP_guild_skillupack_pre;
@@ -9623,8 +9609,6 @@ struct {
 	int HP_intif_party_changemap_post;
 	int HP_intif_break_party_pre;
 	int HP_intif_break_party_post;
-	int HP_intif_party_message_pre;
-	int HP_intif_party_message_post;
 	int HP_intif_party_leaderchange_pre;
 	int HP_intif_party_leaderchange_post;
 	int HP_intif_guild_create_pre;
@@ -9639,8 +9623,6 @@ struct {
 	int HP_intif_guild_memberinfoshort_post;
 	int HP_intif_guild_break_pre;
 	int HP_intif_guild_break_post;
-	int HP_intif_guild_message_pre;
-	int HP_intif_guild_message_post;
 	int HP_intif_guild_change_gm_pre;
 	int HP_intif_guild_change_gm_post;
 	int HP_intif_guild_change_basicinfo_pre;
@@ -9775,8 +9757,6 @@ struct {
 	int HP_intif_pPartyMove_post;
 	int HP_intif_pPartyBroken_pre;
 	int HP_intif_pPartyBroken_post;
-	int HP_intif_pPartyMessage_pre;
-	int HP_intif_pPartyMessage_post;
 	int HP_intif_pGuildCreated_pre;
 	int HP_intif_pGuildCreated_post;
 	int HP_intif_pGuildInfo_pre;
@@ -9789,8 +9769,6 @@ struct {
 	int HP_intif_pGuildMemberInfoShort_post;
 	int HP_intif_pGuildBroken_pre;
 	int HP_intif_pGuildBroken_post;
-	int HP_intif_pGuildMessage_pre;
-	int HP_intif_pGuildMessage_post;
 	int HP_intif_pGuildBasicInfoChanged_pre;
 	int HP_intif_pGuildBasicInfoChanged_post;
 	int HP_intif_pGuildMemberInfoChanged_pre;
@@ -11201,8 +11179,6 @@ struct {
 	int HP_party_send_logout_post;
 	int HP_party_send_message_pre;
 	int HP_party_send_message_post;
-	int HP_party_recv_message_pre;
-	int HP_party_recv_message_post;
 	int HP_party_skill_check_pre;
 	int HP_party_skill_check_post;
 	int HP_party_send_xy_clear_pre;
