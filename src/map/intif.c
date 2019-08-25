@@ -234,31 +234,6 @@ static int intif_main_message(struct map_session_data *sd, const char *message)
 	return 0;
 }
 
-// The transmission of GM only Wisp/Page from server to inter-server
-static int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
-{
-	int mes_len;
-	if (intif->CheckForCharServer())
-		return 0;
-	nullpo_ret(wisp_name);
-	nullpo_ret(mes);
-	mes_len = (int)strlen(mes) + 1; // + null
-	Assert_ret(mes_len > 0 && mes_len <= INT16_MAX - 32);
-
-	WFIFOHEAD(inter_fd, mes_len + 32);
-	WFIFOW(inter_fd,0) = 0x3003;
-	WFIFOW(inter_fd,2) = mes_len + 32;
-	memcpy(WFIFOP(inter_fd,4), wisp_name, NAME_LENGTH);
-	WFIFOL(inter_fd,4+NAME_LENGTH) = permission;
-	memcpy(WFIFOP(inter_fd,8+NAME_LENGTH), mes, mes_len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-
-	if (battle_config.etc_log)
-		ShowNotice("intif_wis_message_to_gm: from: '%s', required permission: %d, message: '%s'.\n", wisp_name, permission, mes);
-
-	return 0;
-}
-
 //Request for saving registry values.
 static int intif_saveregistry(struct map_session_data *sd)
 {
@@ -1119,46 +1094,6 @@ static int intif_homunculus_requestdelete(int homun_id)
 
 //-----------------------------------------------------------------
 // Packets receive from inter server
-
-static int intif_parse_WisToGM_sub(struct map_session_data *sd, va_list va)
-{
-	int permission = va_arg(va, int);
-	char *wisp_name;
-	char *message;
-	int len;
-
-	nullpo_ret(sd);
-	if (!pc_has_permission(sd, permission))
-		return 0;
-	wisp_name = va_arg(va, char*);
-	message = va_arg(va, char*);
-	len = va_arg(va, int);
-	clif->wis_message(sd->fd, wisp_name, message, len);
-	return 1;
-}
-
-// Received wisp message from map-server via char-server for ALL gm
-// 0x3003/0x3803 <packet_len>.w <wispname>.24B <permission>.l <message>.?B
-static void intif_parse_WisToGM(int fd)
-{
-	int permission, mes_len;
-	char Wisp_name[NAME_LENGTH];
-	char mbuf[255] = { 0 };
-	char *message;
-
-	mes_len =  RFIFOW(fd,2) - 33; // Length not including the NUL terminator
-	Assert_retv(mes_len > 0 && mes_len < 32000);
-	message = (mes_len >= 255 ? aMalloc(mes_len + 1) : mbuf);
-
-	permission = RFIFOL(fd,28);
-	safestrncpy(Wisp_name, RFIFOP(fd,4), NAME_LENGTH);
-	safestrncpy(message, RFIFOP(fd,32), mes_len + 1);
-	// information is sent to all online GM
-	map->foreachpc(intif->pWisToGM_sub, permission, Wisp_name, message, mes_len);
-
-	if (message != mbuf)
-		aFree(message);
-}
 
 // Request player registre
 static void intif_parse_Registers(int fd)
@@ -2823,7 +2758,6 @@ static int intif_parse(int fd)
 			else //Color announce.
 				clif->broadcast2(NULL, RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
 			break;
-		case 0x3803: intif->pWisToGM(fd); break;
 		case 0x3804: intif->pRegisters(fd); break;
 		case 0x3805: intif->pAccountStorage(fd); break;
 		case 0x3806: intif->pChangeNameOk(fd); break;
@@ -2928,7 +2862,7 @@ static int intif_parse(int fd)
 void intif_defaults(void)
 {
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
-		-1, 0, 0,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+		-1, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,25, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
@@ -2951,7 +2885,6 @@ void intif_defaults(void)
 	intif->broadcast = intif_broadcast;
 	intif->broadcast2 = intif_broadcast2;
 	intif->main_message = intif_main_message;
-	intif->wis_message_to_gm = intif_wis_message_to_gm;
 	intif->saveregistry = intif_saveregistry;
 	intif->request_registry = intif_request_registry;
 	intif->request_account_storage = intif_request_account_storage;
@@ -3037,8 +2970,6 @@ void intif_defaults(void)
 	intif->achievements_request = intif_achievements_request;
 	intif->achievements_save = intif_achievements_save;
 	/* parse functions */
-	intif->pWisToGM_sub = intif_parse_WisToGM_sub;
-	intif->pWisToGM = intif_parse_WisToGM;
 	intif->pRegisters = intif_parse_Registers;
 	intif->pChangeNameOk = intif_parse_ChangeNameOk;
 	intif->pMessageToFD = intif_parse_MessageToFD;

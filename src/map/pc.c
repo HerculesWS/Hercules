@@ -12311,6 +12311,54 @@ static void pc_check_supernovice_call(struct map_session_data *sd, const char *m
 	}
 }
 
+/**
+ * Sends a message t all online GMs having the specified permission.
+ *
+ * @param sender_name  Sender character name.
+ * @param permission   The required permission to receive this message.
+ * @param message      The message body.
+ *
+ * @return The amount of characters the message was delivered to.
+ */
+// The transmission of GM only Wisp/Page from server to inter-server
+static int pc_wis_message_to_gm(const char *sender_name, int permission, const char *message)
+{
+	nullpo_ret(sender_name);
+	nullpo_ret(message);
+	int mes_len = (int)strlen(message) + 1; // + null
+	int count = 0;
+
+	// information is sent to all online GM
+	map->foreachpc(pc->wis_message_to_gm_sub, permission, sender_name, message, mes_len, &count);
+
+	return count;
+}
+
+/**
+ * Helper function for pc_wis_message_to_gm().
+ */
+static int pc_wis_message_to_gm_sub(struct map_session_data *sd, va_list va)
+{
+	nullpo_ret(sd);
+
+	int permission = va_arg(va, int);
+	if (!pc_has_permission(sd, permission))
+		return 0;
+
+	const char *sender_name = va_arg(va, const char *);
+	const char *message = va_arg(va, const char *);
+	int len = va_arg(va, int);
+	int *count = va_arg(va, int *);
+
+	nullpo_ret(sender_name);
+	nullpo_ret(message);
+	nullpo_ret(count);
+
+	clif->wis_message(sd->fd, sender_name, message, len);
+	++*count;
+	return 1;
+}
+
 static void pc_update_job_and_level(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
@@ -12758,6 +12806,8 @@ void pc_defaults(void)
 
 	pc->check_supernovice_call = pc_check_supernovice_call;
 	pc->process_chat_message = pc_process_chat_message;
+	pc->wis_message_to_gm = pc_wis_message_to_gm;
+	pc->wis_message_to_gm_sub = pc_wis_message_to_gm_sub;
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
