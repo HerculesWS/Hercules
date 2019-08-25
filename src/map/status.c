@@ -11808,10 +11808,10 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_SPLASHER:
 #if 0 // custom Venom Splasher countdown timer
-			if (sce->val4 % 1000 == 0) {
+			if (sce->val4 % 1000 == 0 && bl && bl->type == BL_PC) {
 				char counter[10];
 				snprintf (counter, 10, "%d", sce->val4/1000);
-				clif->message(bl, counter);
+				clif->message(BL_UCCAST(BL_PC, bl)->fd, counter);
 			}
 #endif // 0
 			if((sce->val4 -= 500) > 0) {
