@@ -258,7 +258,7 @@ static int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve)
 	for( i = 0; i < MAX_SKILL_TREE && ( id = homun->dbs->skill_tree[c][i].id ) > 0; i++ ) {
 		if( hd->homunculus.hskill[ id - HM_SKILLBASE ].id )
 			continue; //Skill already known.
-		j = ( flag_evolve ) ? 10 : hd->homunculus.intimacy;
+		j = ( flag_evolve ) ? 1000 : hd->homunculus.intimacy;
 		if( j < homun->dbs->skill_tree[c][i].intimacylv )
 			continue;
 		if(!battle_config.skillfree) {
@@ -1317,7 +1317,7 @@ static bool homunculus_read_skill_db_sub(char *split[], int columns, int current
 		homun->dbs->skill_tree[classid][j].need[k].lv = atoi(split[3+k*2+minJobLevelPresent+1]);
 	}
 
-	homun->dbs->skill_tree[classid][j].intimacylv = atoi(split[13+minJobLevelPresent]);
+	homun->dbs->skill_tree[classid][j].intimacylv = atoi(split[13+minJobLevelPresent]) * 100;
 
 	return true;
 }

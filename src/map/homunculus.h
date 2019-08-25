@@ -133,7 +133,7 @@ struct homun_skill_tree_entry {
 	short id;
 	unsigned char max;
 	unsigned char joblv;
-	short intimacylv;
+	int intimacylv;
 	struct {
 		short id;
 		unsigned char lv;
