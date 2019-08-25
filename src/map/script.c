@@ -9536,27 +9536,29 @@ static BUILDIN(getequipisidentify)
 }
 
 /*==========================================
- * Get the item refined value at pos
- * return (npc)
- * x : refine amount
- * 0 : false (not refined)
+ * Get the total refine amount of equip at given pos
+ * return total refine amount
  *------------------------------------------*/
 static BUILDIN(getequiprefinerycnt)
 {
-	int i = -1,num;
-	struct map_session_data *sd;
+	int total_refine = 0;
+	struct map_session_data* sd = script->rid2sd(st);
 
-	num = script_getnum(st,2);
-	sd = script->rid2sd(st);
-	if( sd == NULL )
-		return true;
+	if (sd != NULL)
+	{
+		int count = script_lastdata(st);
+		int script_equip_size = ARRAYLENGTH(script->equip);
+		for (int n = 2; n <= count; n++) {
+			int i = -1;
+			int num = script_getnum(st, n);
+			if (num > 0 && num <= script_equip_size)
+				i = pc->checkequip(sd, script->equip[num - 1]);
 
-	if (num > 0 && num <= ARRAYLENGTH(script->equip))
-		i=pc->checkequip(sd,script->equip[num-1]);
-	if(i >= 0)
-		script_pushint(st,sd->status.inventory[i].refine);
-	else
-		script_pushint(st,0);
+			if (i >= 0)
+				total_refine += sd->status.inventory[i].refine;
+		}
+	}
+	script_pushint(st, total_refine);
 
 	return true;
 }
@@ -25837,7 +25839,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getequipisequiped,"i"),
 		BUILDIN_DEF(getequipisenableref,"i"),
 		BUILDIN_DEF(getequipisidentify,"i"),
-		BUILDIN_DEF(getequiprefinerycnt,"i"),
+		BUILDIN_DEF(getequiprefinerycnt,"i*"),
 		BUILDIN_DEF(getequipweaponlv,"i"),
 		BUILDIN_DEF(getequippercentrefinery,"i?"),
 		BUILDIN_DEF(successrefitem,"i?"),
