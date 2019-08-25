@@ -4312,7 +4312,9 @@ packetLen(0x0b02, 26)  // AC_REFUSE_LOGIN4
 packetLen(0x0b03, -1)  // ZC_EQUIPWIN_MICROSCOPE_V7
 
 // Packet: 0x0b04
-#if PACKETVER >= 20190605
+#if PACKETVER >= 20190814
+packetLen(0x0b04, 90)
+#elif PACKETVER >= 20190605
 packetLen(0x0b04, 72)
 #elif PACKETVER >= 20190116
 packetLen(0x0b04, 80)
@@ -4513,17 +4515,17 @@ packetLen(0x0b30, -1)
 
 // Packet: 0x0b31
 #if PACKETVER >= 20190626
-packetLen(0x0b31, 17)
+packetLen(0x0b31, 17)  // ZC_ADD_SKILL
 #endif
 
 // Packet: 0x0b32
 #if PACKETVER >= 20190626
-packetLen(0x0b32, -1)
+packetLen(0x0b32, -1)  // ZC_SKILLINFO_LIST
 #endif
 
 // Packet: 0x0b33
 #if PACKETVER >= 20190626
-packetLen(0x0b33, 17)
+packetLen(0x0b33, 17)  // ZC_SKILLINFO_UPDATE2
 #endif
 
 // Packet: 0x0b34
@@ -4654,8 +4656,45 @@ packetLen(0x0b4c, 2)
 #endif
 
 // Packet: 0x0b4d
-#if PACKETVER >= 20190724
+#if PACKETVER >= 20190814
+packetLen(0x0b4d, -1)
+#elif PACKETVER >= 20190724
 packetLen(0x0b4d, 6)
+#endif
+
+// Packet: 0x0b4e
+#if PACKETVER >= 20190814
+packetLen(0x0b4e, -1)
+#endif
+
+// Packet: 0x0b4f
+#if PACKETVER >= 20190814
+packetLen(0x0b4f, 2)
+#endif
+
+// Packet: 0x0b50
+#if PACKETVER >= 20190814
+packetLen(0x0b50, 2)
+#endif
+
+// Packet: 0x0b51
+#if PACKETVER >= 20190814
+packetLen(0x0b51, 2)
+#endif
+
+// Packet: 0x0b52
+#if PACKETVER >= 20190814
+packetLen(0x0b52, 2)
+#endif
+
+// Packet: 0x0b53
+#if PACKETVER >= 20190814
+packetLen(0x0b53, 52)
+#endif
+
+// Packet: 0x0b54
+#if PACKETVER >= 20190814
+packetLen(0x0b54, 8)
 #endif
 
 

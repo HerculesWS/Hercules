@@ -1712,6 +1712,8 @@ typedef void (*HPMHOOK_pre_clif_addskill) (struct map_session_data **sd, int *id
 typedef void (*HPMHOOK_post_clif_addskill) (struct map_session_data *sd, int id);
 typedef void (*HPMHOOK_pre_clif_deleteskill) (struct map_session_data **sd, int *id);
 typedef void (*HPMHOOK_post_clif_deleteskill) (struct map_session_data *sd, int id);
+typedef void (*HPMHOOK_pre_clif_playerSkillToPacket) (struct map_session_data **sd, struct SKILLDATA **skillData, int *skillId, int *idx, bool *newSkill);
+typedef void (*HPMHOOK_post_clif_playerSkillToPacket) (struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill);
 typedef void (*HPMHOOK_pre_clif_party_created) (struct map_session_data **sd, int *result);
 typedef void (*HPMHOOK_post_clif_party_created) (struct map_session_data *sd, int result);
 typedef void (*HPMHOOK_pre_clif_party_member_info) (struct party_data **p, struct map_session_data **sd);
@@ -2050,8 +2052,8 @@ typedef int (*HPMHOOK_pre_clif_delay_damage_sub) (int *tid, int64 *tick, int *id
 typedef int (*HPMHOOK_post_clif_delay_damage_sub) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_clif_npc_market_open) (struct map_session_data **sd, struct npc_data **nd);
 typedef void (*HPMHOOK_post_clif_npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
-typedef void (*HPMHOOK_pre_clif_npc_market_purchase_ack) (struct map_session_data **sd, const struct itemlist **item_list, unsigned char *response);
-typedef void (*HPMHOOK_post_clif_npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
+typedef void (*HPMHOOK_pre_clif_npc_market_purchase_ack) (struct map_session_data **sd, const struct itemlist **item_list, enum market_buy_result *response);
+typedef void (*HPMHOOK_post_clif_npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, enum market_buy_result response);
 typedef bool (*HPMHOOK_pre_clif_parse_roulette_db) (void);
 typedef bool (*HPMHOOK_post_clif_parse_roulette_db) (bool retVal___);
 typedef void (*HPMHOOK_pre_clif_roulette_generate_ack) (struct map_session_data **sd, enum GENERATE_ROULETTE_ACK *result, short *stage, short *prizeIdx, int *bonusItemID);

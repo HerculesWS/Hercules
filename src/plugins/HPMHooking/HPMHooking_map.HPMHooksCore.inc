@@ -1302,6 +1302,8 @@ struct {
 	struct HPMHookPoint *HP_clif_addskill_post;
 	struct HPMHookPoint *HP_clif_deleteskill_pre;
 	struct HPMHookPoint *HP_clif_deleteskill_post;
+	struct HPMHookPoint *HP_clif_playerSkillToPacket_pre;
+	struct HPMHookPoint *HP_clif_playerSkillToPacket_post;
 	struct HPMHookPoint *HP_clif_party_created_pre;
 	struct HPMHookPoint *HP_clif_party_created_post;
 	struct HPMHookPoint *HP_clif_party_member_info_pre;
@@ -8097,6 +8099,8 @@ struct {
 	int HP_clif_addskill_post;
 	int HP_clif_deleteskill_pre;
 	int HP_clif_deleteskill_post;
+	int HP_clif_playerSkillToPacket_pre;
+	int HP_clif_playerSkillToPacket_post;
 	int HP_clif_party_created_pre;
 	int HP_clif_party_created_post;
 	int HP_clif_party_member_info_pre;

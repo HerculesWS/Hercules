@@ -742,7 +742,7 @@
 	packet(0x0968,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
 #endif
 
-// 2018-11-14aRagexe_zero, 2018-11-20aRagexe_zero, 2018-11-28aRagexe_zero, 2018-12-12aRagexe_zero, 2018-12-19aRagexe_zero, 2018-12-26_2aRagexe_zero, 2019-01-16_2aRagexe_zero, 2019-01-17_1aRagexe_zero, 2019-01-30_2aRagexe_zero, 2019-02-13aRagexe_zero, 2019-02-20aRagexe_zero, 2019-02-27aRagexe_zero, 2019-03-13aRagexe_zero, 2019-03-27_2aRagexe_zero, 2019-03-27_3aRagexe_zero, 2019-04-03aRagexe_zero, 2019-04-10bRagexe_zero, 2019-04-24aRagexe_zero, 2019-05-02aRagexe_zero, 2019-05-08_2aRagexe_zero, 2019-05-08aRagexe_zero, 2019-05-15aRagexe_zero, 2019-05-29aRagexe_zero, 2019-05-30aRagexe_zero, 2019-06-05_2aRagexe_zero, 2019-06-26_2aRagexe_zero, 2019-06-26_3aRagexe_zero, 2019-07-09aRagexe_zero, 2019-07-10_3aRagexe_zero, 2019-07-17aRagexe_zero, 2019-07-24aRagexe_zero
+// 2018-11-14aRagexe_zero, 2018-11-20aRagexe_zero, 2018-11-28aRagexe_zero, 2018-12-12aRagexe_zero, 2018-12-19aRagexe_zero, 2018-12-26_2aRagexe_zero, 2019-01-16_2aRagexe_zero, 2019-01-17_1aRagexe_zero, 2019-01-30_2aRagexe_zero, 2019-02-13aRagexe_zero, 2019-02-20aRagexe_zero, 2019-02-27aRagexe_zero, 2019-03-13aRagexe_zero, 2019-03-27_2aRagexe_zero, 2019-03-27_3aRagexe_zero, 2019-04-03aRagexe_zero, 2019-04-10bRagexe_zero, 2019-04-24aRagexe_zero, 2019-05-02aRagexe_zero, 2019-05-08_2aRagexe_zero, 2019-05-08aRagexe_zero, 2019-05-15aRagexe_zero, 2019-05-29aRagexe_zero, 2019-05-30aRagexe_zero, 2019-06-05_2aRagexe_zero, 2019-06-26_2aRagexe_zero, 2019-06-26_3aRagexe_zero, 2019-07-09aRagexe_zero, 2019-07-10_3aRagexe_zero, 2019-07-17aRagexe_zero, 2019-07-24aRagexe_zero, 2019-08-14_3aRagexe_zero
 #if PACKETVER == 20181114 || \
     PACKETVER == 20181120 || \
     PACKETVER == 20181128 || \
@@ -770,7 +770,8 @@
     PACKETVER == 20190709 || \
     PACKETVER == 20190710 || \
     PACKETVER == 20190717 || \
-    PACKETVER >= 20190724
+    PACKETVER == 20190724 || \
+    PACKETVER >= 20190814
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36

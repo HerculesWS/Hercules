@@ -300,7 +300,6 @@ enum packet_headers {
 	notifybindonequip = 0x2d3,
 	monsterhpType = 0x977,
 	maptypeproperty2Type = 0x99b,
-	npcmarketresultackType = 0x9d7,
 #if PACKETVER >= 20131223  // version probably can be 20131030 [4144]
 	wisendType = 0x9df,
 #else
@@ -1360,22 +1359,6 @@ struct packet_npc_market_purchase {
 #endif
 		int32 qty;
 	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
-} __attribute__((packed));
-
-struct packet_npc_market_result_ack {
-	int16 PacketType;
-	int16 PacketLength;
-	uint8 result;
-	struct {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-		uint32 ITID;
-#else
-		uint16 ITID;
-#endif
-		uint16 qty;
-		uint32 price;
-	// [4144] need remove MAX_INVENTORY from here
-	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
 } __attribute__((packed));
 
 #if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
@@ -2726,13 +2709,10 @@ struct PACKET_ZC_MAKINGITEM_LIST_sub {
 struct PACKET_ZC_MAKINGITEM_LIST {
 	int16 packetType;
 	int16 packetLength;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-	uint32 makeItem;
-#else
 	uint16 makeItem;
-#endif
 	struct PACKET_ZC_MAKINGITEM_LIST_sub items[];
 } __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_MAKINGITEM_LIST, 0x025a);
 
 struct PACKET_ZC_PC_CASH_POINT_ITEMLIST_sub {
 	uint32 price;
@@ -3480,7 +3460,7 @@ struct PACKET_ZC_REFINE_STATUS {
 DEFINE_PACKET_HEADER(ZC_REFINE_STATUS, 0x0ada);
 #endif
 
-#if PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 struct PACKET_ZC_ACK_RANKING_sub {
 	char name[NAME_LENGTH];
 	uint32 points;
@@ -3531,6 +3511,103 @@ struct PACKET_ZC_HAT_EFFECT {
 	uint16 effects[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_HAT_EFFECT, 0x0a3b);
+#endif
+
+// [4144] this struct updated not in all packets in client
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+struct SKILLDATA {
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	uint8 upFlag;
+	uint16 level2;
+} __attribute__((packed));
+#else
+struct SKILLDATA {
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	char name[NAME_LENGTH];
+	uint8 upFlag;
+} __attribute__((packed));
+#endif
+
+struct PACKET_ZC_ADD_SKILL {
+	int16 packetType;
+	struct SKILLDATA skill;
+} __attribute__((packed));
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0b31);
+#else
+DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0111);
+#endif
+
+struct PACKET_ZC_SKILLINFO_LIST {
+	int16 packetType;
+	int16 packetLength;
+	struct SKILLDATA skills[];
+} __attribute__((packed));
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x0b32);
+#else
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x010f);
+#endif
+
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+struct PACKET_ZC_SKILLINFO_UPDATE2 {
+	int16 packetType;
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	uint8 upFlag;
+	uint16 level2;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_UPDATE2, 0x0b33);
+#else
+struct PACKET_ZC_SKILLINFO_UPDATE2 {
+	int16 packetType;
+	uint16 id;
+	int inf;
+	uint16 level;
+	uint16 sp;
+	uint16 range2;
+	uint8 upFlag;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_UPDATE2, 0x07e1);
+#endif
+
+struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 ITID;
+#else
+	uint16 ITID;
+#endif
+	uint16 qty;
+	uint32 price;
+} __attribute__((packed));
+
+#if PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT {
+	int16 PacketType;
+	int16 PacketLength;
+	uint16 result;
+	struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NPC_MARKET_PURCHASE_RESULT, 0x0b4e);
+#elif PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20130911 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT {
+	int16 PacketType;
+	int16 PacketLength;
+	uint8 result;
+	struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_NPC_MARKET_PURCHASE_RESULT, 0x09d7);
 #endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

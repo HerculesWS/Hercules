@@ -92,9 +92,6 @@ static struct packet_itemlist_equip itemlist_equip;
 static struct ZC_STORE_ITEMLIST_NORMAL storelist_normal;
 static struct ZC_STORE_ITEMLIST_EQUIP storelist_equip;
 static struct packet_viewequip_ack viewequip_list;
-#if PACKETVER >= 20131223
-static struct packet_npc_market_result_ack npcmarket_result;
-#endif
 // temporart buffer for send big packets
 char packet_buf[0xffff];
 //#define DUMP_UNKNOWN_PACKET
@@ -5254,58 +5251,79 @@ static int clif_insight(struct block_list *bl, va_list ap)
 	return 0;
 }
 
+static void clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill)
+{
+	nullpo_retv(sd);
+	nullpo_retv(skillData);
+	Assert_retv(idx >= 0 && idx < MAX_SKILL_DB);
+
+	int skill_lv = sd->status.skill[idx].lv;
+	skillData->id = skillId;
+	skillData->inf = skill->get_inf(skillId);
+	skillData->level = skill_lv;
+	if (skill_lv > 0) {
+		skillData->sp = skill->get_sp(skillId, skill_lv);
+		skillData->range2 = skill->get_range2(&sd->bl, skillId, skill_lv);
+	} else {
+		skillData->sp = 0;
+		skillData->range2 = 0;
+	}
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+	if (newSkill)
+		skillData->level2 = 0;
+	else
+		skillData->level2 = skill_lv;
+#else
+	safestrncpy(skillData->name, skill->get_name(skillId), NAME_LENGTH);
+#endif
+	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
+		skillData->upFlag = (skill_lv < skill->tree_get_max(skillId, sd->status.class)) ? 1 : 0;
+	else
+		skillData->upFlag = 0;
+}
+
 /// Updates whole skill tree (ZC_SKILLINFO_LIST).
 /// 010f <packet len>.W { <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <skill name>.24B <upgradable>.B }*
 static void clif_skillinfoblock(struct map_session_data *sd)
 {
-	int fd;
-	int i,len,id;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	if (!fd) return;
+	int fd = sd->fd;
+	if (!fd)
+		return;
 
-	WFIFOHEAD(fd, MAX_SKILL_DB * 37 + 4);
-	WFIFOW(fd,0) = 0x10f;
-	for ( i = 0, len = 4; i < MAX_SKILL_DB; i++) {
-		if( (id = sd->status.skill[i].id) != 0 ) {
-			int level;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SKILLINFO_LIST) + MAX_SKILL_DB * sizeof(struct SKILLDATA));
+	struct PACKET_ZC_SKILLINFO_LIST *p = WFIFOP(fd, 0);
+
+	p->packetType = HEADER_ZC_SKILLINFO_LIST;
+	int skillIndex = 0;
+	int len = sizeof(struct PACKET_ZC_SKILLINFO_LIST);
+	int i;
+	for (i = 0; i < MAX_SKILL_DB; i++) {
+		int id = sd->status.skill[i].id;
+		if (id != 0) {
 			// workaround for bugreport:5348
-			if (len + 37 > 8192)
+			if (len + sizeof(struct SKILLDATA) > 8192)
 				break;
 
-			WFIFOW(fd, len)   = id;
-			WFIFOL(fd, len + 2) = skill->get_inf(id);
-			level = sd->status.skill[i].lv;
-			WFIFOW(fd, len + 6) = level;
-			if (level) {
-				WFIFOW(fd, len + 8) = skill->get_sp(id, level);
-				WFIFOW(fd, len + 10)= skill->get_range2(&sd->bl, id, level);
-			}
-			else {
-				WFIFOW(fd, len + 8) = 0;
-				WFIFOW(fd, len + 10)= 0;
-			}
-			safestrncpy(WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
-			if(sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
-				WFIFOB(fd,len+36) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class))? 1:0;
-			else
-				WFIFOB(fd,len+36) = 0;
-			len += 37;
+			clif->playerSkillToPacket(sd, &p->skills[skillIndex], id, i, false);
+			len += sizeof(struct SKILLDATA);
+			skillIndex++;
 		}
 	}
-	WFIFOW(fd,2)=len;
-	WFIFOSET(fd,len);
+	p->packetLength = len;
+	WFIFOSET(fd, len);
 
 	// workaround for bugreport:5348; send the remaining skills one by one to bypass packet size limit
-	for ( ; i < MAX_SKILL_DB; i++) {
-		if( (id = sd->status.skill[i].id) != 0 ) {
+	for (; i < MAX_SKILL_DB; i++) {
+		int id = sd->status.skill[i].id;
+		if (id != 0) {
 			clif->addskill(sd, id);
 			clif->skillinfo(sd, id, 0);
 		}
 	}
 }
+
 /**
  * Server tells client 'sd' to add skill of id 'id' to it's skill tree (e.g. with Ice Falcion item)
  **/
@@ -5314,36 +5332,21 @@ static void clif_skillinfoblock(struct map_session_data *sd)
 /// 0111 <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <skill name>.24B <upgradable>.B
 static void clif_addskill(struct map_session_data *sd, int id)
 {
-	int fd, skill_lv, idx = skill->get_index(id);
-
 	nullpo_retv(sd);
 
-	fd = sd->fd;
-	if (!fd) return;
+	int fd = sd->fd;
+	if (!fd)
+		return;
 
+	int idx = skill->get_index(id);
 	if (sd->status.skill[idx].id <= 0)
 		return;
 
-	skill_lv = sd->status.skill[idx].lv;
-
-	WFIFOHEAD(fd, packet_len(0x111));
-	WFIFOW(fd,0) = 0x111;
-	WFIFOW(fd,2) = id;
-	WFIFOL(fd,4) = skill->get_inf(id);
-	WFIFOW(fd,8) = skill_lv;
-	if (skill_lv > 0) {
-		WFIFOW(fd,10) = skill->get_sp(id, skill_lv);
-		WFIFOW(fd,12) = skill->get_range2(&sd->bl, id, skill_lv);
-	} else {
-		WFIFOW(fd,10) = 0;
-		WFIFOW(fd,12) = 0;
-	}
-	safestrncpy(WFIFOP(fd,14), skill->get_name(id), NAME_LENGTH);
-	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-		WFIFOB(fd,38) = (skill_lv < skill->tree_get_max(id, sd->status.class))? 1:0;
-	else
-		WFIFOB(fd,38) = 0;
-	WFIFOSET(fd,packet_len(0x111));
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_ADD_SKILL));
+	struct PACKET_ZC_ADD_SKILL *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_ADD_SKILL;
+	clif->playerSkillToPacket(sd, &p->skill, id, idx, true);
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_ADD_SKILL));
 }
 
 /// Deletes a skill from the skill tree (ZC_SKILLINFO_DELETE).
@@ -5396,32 +5399,34 @@ static void clif_skillup(struct map_session_data *sd, uint16 skill_id, int skill
 /// 07e1 <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <upgradable>.B
 static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 {
+	nullpo_retv(sd);
+
 	const int fd = sd->fd;
 	int idx = skill->get_index(skill_id);
-	int skill_lv;
-
-	nullpo_retv(sd);
 	Assert_retv(idx >= 0 && idx < MAX_SKILL_DB);
 
-	skill_lv = sd->status.skill[idx].lv;
-
-	WFIFOHEAD(fd,packet_len(0x7e1));
-	WFIFOW(fd,0) = 0x7e1;
-	WFIFOW(fd,2) = skill_id;
-	WFIFOL(fd,4) = inf?inf:skill->get_inf(skill_id);
-	WFIFOW(fd,8) = skill_lv;
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SKILLINFO_UPDATE2));
+	struct PACKET_ZC_SKILLINFO_UPDATE2 *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_SKILLINFO_UPDATE2;
+	int skill_lv = sd->status.skill[idx].lv;
+	p->id = skill_id;
+	p->inf = skill->get_inf(skill_id);
+	p->level = skill_lv;
 	if (skill_lv > 0) {
-		WFIFOW(fd,10) = skill->get_sp(skill_id, skill_lv);
-		WFIFOW(fd,12) = skill->get_range2(&sd->bl, skill_id, skill_lv);
+		p->sp = skill->get_sp(skill_id, skill_lv);
+		p->range2 = skill->get_range2(&sd->bl, skill_id, skill_lv);
 	} else {
-		WFIFOW(fd,10) = 0;
-		WFIFOW(fd,12) = 0;
+		p->sp = 0;
+		p->range2 = 0;
 	}
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+	p->level2 = skill_lv;
+#endif
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-		WFIFOB(fd,14) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class))? 1:0;
+		p->upFlag = (skill_lv < skill->tree_get_max(skill_id, sd->status.class)) ? 1 : 0;
 	else
-		WFIFOB(fd,14) = 0;
-	WFIFOSET(fd,packet_len(0x7e1));
+		p->upFlag = 0;
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SKILLINFO_UPDATE2));
 }
 
 /// Notifies clients in area, that an object is about to use a skill.
@@ -5993,7 +5998,7 @@ static void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 s
 	len = sizeof(struct PACKET_ZC_MAKINGITEM_LIST) + MAX_SKILL_PRODUCE_DB * sizeof(struct PACKET_ZC_MAKINGITEM_LIST_sub);
 	WFIFOHEAD(fd, len);
 	p = WFIFOP(fd, 0);
-	p->packetType = 0x25a;
+	p->packetType = HEADER_ZC_MAKINGITEM_LIST;
 	p->makeItem = list_type; // list type
 
 	c = 0;
@@ -15724,7 +15729,7 @@ static void clif_parse_PVPInfo(int fd, struct map_session_data *sd)
 /// ranking pointlist  { <name>.24B <point>.L }*10
 static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame_list_type type)
 {
-#if !(PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724)
+#if !(PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724)
 	nullpo_retv(ranks);
 
 	struct fame_list* list;
@@ -15759,7 +15764,7 @@ static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame
 
 static void clif_ranklist_sub2(uint32 *chars, uint32 *points, enum fame_list_type type)
 {
-#if PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 	nullpo_retv(chars);
 	nullpo_retv(points);
 
@@ -15798,7 +15803,7 @@ static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	struct PACKET_ZC_ACK_RANKING *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_ACK_RANKING;
 	p->rankType = type;
-#if PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
+#if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 	clif->ranklist_sub2(p->chars, p->points, type);
 #else
 	clif->ranklist_sub(p->ranks, type);
@@ -19962,7 +19967,11 @@ static void clif_package_item_announce(struct map_session_data *sd, int nameid, 
 
 	nullpo_retv(sd);
 	p.PacketType = package_item_announceType;
-	p.PacketLength = 11 + NAME_LENGTH;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	p.PacketLength = 7 + 4 + 4 + NAME_LENGTH;
+#else
+	p.PacketLength = 7 + 2 + 2 + NAME_LENGTH;
+#endif
 	p.type = 0x0;
 	p.ItemID = nameid;
 	p.len = NAME_LENGTH;
@@ -19970,7 +19979,7 @@ static void clif_package_item_announce(struct map_session_data *sd, int nameid, 
 	p.unknown = 0x2; // some strange byte, IDA shows.. BYTE3(BoxItemIDLength) = 2;
 	p.BoxItemID = containerid;
 
-	clif->send(&p,sizeof(p), &sd->bl, ALL_CLIENT);
+	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
 }
 
 /* Made Possible Thanks to Yommy! */
@@ -19988,12 +19997,13 @@ static void clif_item_drop_announce(struct map_session_data *sd, int nameid, cha
 	if (monsterName == NULL) {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN2
 		p.type = 0x2;
+		p.PacketLength -= NAME_LENGTH;
 	} else {
 		// message: MSG_BROADCASTING_SPECIAL_ITEM_OBTAIN
 		p.type = 0x1;
 		safestrncpy(p.monsterName, monsterName, sizeof(p.monsterName));
 	}
-	clif->send(&p, sizeof(p), &sd->bl, ALL_CLIENT);
+	clif->send(&p, p.PacketLength, &sd->bl, ALL_CLIENT);
 }
 
 /* [Ind/Hercules] special thanks to Yommy~! */
@@ -20329,40 +20339,43 @@ static void clif_parse_NPCBarterClosed(int fd, struct map_session_data *sd)
 	sd->npc_shopid = 0;
 }
 
-static void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, unsigned char response)
+static void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, enum market_buy_result response)
 {
-#if PACKETVER >= 20131223
-	unsigned short c = 0;
-
+#if PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20130911 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 	nullpo_retv(item_list);
-	npcmarket_result.PacketType = npcmarketresultackType;
-	npcmarket_result.result = response == 0 ? 1 : 0;/* find other values */
+	struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT *p = (struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT *)packet_buf;
+	p->PacketType = HEADER_ZC_NPC_MARKET_PURCHASE_RESULT;
+	p->result = response;
 
-	if (npcmarket_result.result) {
+	unsigned short c = 0;
+	if (response == MARKET_BUY_RESULT_SUCCESS) {
+		int vectorLen = VECTOR_LENGTH(*item_list);
+		int maxCount = (sizeof(packet_buf) - sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT)) / sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub);
+		if (maxCount > vectorLen)
+			maxCount = vectorLen;
 		struct npc_data *nd = map->id2nd(sd->npc_shopid);
 		struct npc_item_list *shop = nd->u.scr.shop->item;
 		unsigned short shop_size = nd->u.scr.shop->items;
-		int i;
 
-		for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		for (int i = 0; i < maxCount; i++) {
 			const struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 			int j;
 
-			npcmarket_result.list[i].ITID = entry->id;
-			npcmarket_result.list[i].qty  = entry->amount;
+			p->list[i].ITID = entry->id;
+			p->list[i].qty  = entry->amount;
 
-			ARR_FIND( 0, shop_size, j, entry->id == shop[j].nameid);
+			ARR_FIND(0, shop_size, j, entry->id == shop[j].nameid);
 
-			npcmarket_result.list[i].price = (j != shop_size) ? shop[j].value : 0;
+			p->list[i].price = (j != shop_size) ? shop[j].value : 0;
 
 			c++;
 		}
 	}
 
-	npcmarket_result.PacketLength = 5 + ( sizeof(npcmarket_result.list[0]) * c );;
+	p->PacketLength = sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT) + (sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub) * c);
 
-	clif->send(&npcmarket_result,npcmarket_result.PacketLength,&sd->bl,SELF);
+	clif->send(p, p->PacketLength, &sd->bl, SELF);
 #endif
 }
 
@@ -20371,7 +20384,6 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20131223
 	const struct packet_npc_market_purchase *p = RP2PTR(fd);
-	int response = 0, i;
 	int count = (p->PacketLength - 4) / sizeof p->list[0];
 	struct itemlist item_list;
 
@@ -20380,7 +20392,7 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	VECTOR_INIT(item_list);
 	VECTOR_ENSURE(item_list, count, 1);
 
-	for (i = 0; i < count; i++) {
+	for (int i = 0; i < count; i++) {
 		struct itemlist_entry entry = { 0 };
 
 		entry.id = p->list[i].ITID;
@@ -20389,7 +20401,7 @@ static void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 		VECTOR_PUSH(item_list, entry);
 	}
 
-	response = npc->market_buylist(sd, &item_list);
+	enum market_buy_result response = npc->market_buylist(sd, &item_list);
 	clif->npc_market_purchase_ack(sd, &item_list, response);
 
 	VECTOR_CLEAR(item_list);
@@ -23378,6 +23390,7 @@ void clif_defaults(void)
 	clif->skillinfo = clif_skillinfo;
 	clif->addskill = clif_addskill;
 	clif->deleteskill = clif_deleteskill;
+	clif->playerSkillToPacket = clif_playerSkillToPacket;
 	/* party-specific */
 	clif->party_created = clif_party_created;
 	clif->party_member_info = clif_party_member_info;

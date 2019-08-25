@@ -57,6 +57,7 @@ struct view_data;
 struct achievement_data; // map/achievement.h
 struct s_refine_requirement;
 struct PACKET_ZC_ACK_RANKING_sub;
+struct SKILLDATA;
 
 enum clif_messages;
 enum rodex_add_item;
@@ -698,6 +699,26 @@ enum expand_inventory_result {
 	EXPAND_INVENTORY_RESULT_MAX_SIZE = 4
 };
 
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+enum market_buy_result {
+	MARKET_BUY_RESULT_ERROR = 0xffff,  // -1
+	MARKET_BUY_RESULT_SUCCESS = 0,
+	MARKET_BUY_RESULT_NO_ZENY = 1,
+	MARKET_BUY_RESULT_OVER_WEIGHT = 2,
+	MARKET_BUY_RESULT_OUT_OF_SPACE = 3,
+	MARKET_BUY_RESULT_AMOUNT_TOO_BIG = 9
+};
+#else
+enum market_buy_result {
+	MARKET_BUY_RESULT_ERROR = 0,
+	MARKET_BUY_RESULT_SUCCESS = 1,
+	MARKET_BUY_RESULT_NO_ZENY = 0,
+	MARKET_BUY_RESULT_OVER_WEIGHT = 0,
+	MARKET_BUY_RESULT_OUT_OF_SPACE = 0,
+	MARKET_BUY_RESULT_AMOUNT_TOO_BIG = 0
+};
+#endif
+
 /**
  * Clif.c Interface
  **/
@@ -1068,6 +1089,7 @@ struct clif_interface {
 	void (*skillinfo) (struct map_session_data *sd,int skill_id, int inf);
 	void (*addskill) (struct map_session_data *sd, int id);
 	void (*deleteskill) (struct map_session_data *sd, int id);
+	void (*playerSkillToPacket) (struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill);
 	/* party-specific */
 	void (*party_created) (struct map_session_data *sd,int result);
 	void (*party_member_info) (struct party_data *p, struct map_session_data *sd);
@@ -1264,7 +1286,7 @@ struct clif_interface {
 	int (*delay_damage_sub) (int tid, int64 tick, int id, intptr_t data);
 	/* NPC Market */
 	void (*npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
-	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
+	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, enum market_buy_result response);
 	/* */
 	bool (*parse_roulette_db) (void);
 	void (*roulette_generate_ack) (struct map_session_data *sd, enum GENERATE_ROULETTE_ACK result, short stage, short prizeIdx, int bonusItemID);

@@ -16980,6 +16980,32 @@ void HP_clif_deleteskill(struct map_session_data *sd, int id) {
 	}
 	return;
 }
+void HP_clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_playerSkillToPacket_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct SKILLDATA **skillData, int *skillId, int *idx, bool *newSkill);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_playerSkillToPacket_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_playerSkillToPacket_pre[hIndex].func;
+			preHookFunc(&sd, &skillData, &skillId, &idx, &newSkill);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.playerSkillToPacket(sd, skillData, skillId, idx, newSkill);
+	}
+	if (HPMHooks.count.HP_clif_playerSkillToPacket_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct SKILLDATA *skillData, int skillId, int idx, bool newSkill);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_playerSkillToPacket_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_playerSkillToPacket_post[hIndex].func;
+			postHookFunc(sd, skillData, skillId, idx, newSkill);
+		}
+	}
+	return;
+}
 void HP_clif_party_created(struct map_session_data *sd, int result) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_party_created_pre > 0) {
@@ -21386,10 +21412,10 @@ void HP_clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 	}
 	return;
 }
-void HP_clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, unsigned char response) {
+void HP_clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, enum market_buy_result response) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_npc_market_purchase_ack_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, const struct itemlist **item_list, unsigned char *response);
+		void (*preHookFunc) (struct map_session_data **sd, const struct itemlist **item_list, enum market_buy_result *response);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_market_purchase_ack_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_npc_market_purchase_ack_pre[hIndex].func;
@@ -21404,7 +21430,7 @@ void HP_clif_npc_market_purchase_ack(struct map_session_data *sd, const struct i
 		HPMHooks.source.clif.npc_market_purchase_ack(sd, item_list, response);
 	}
 	if (HPMHooks.count.HP_clif_npc_market_purchase_ack_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
+		void (*postHookFunc) (struct map_session_data *sd, const struct itemlist *item_list, enum market_buy_result response);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_market_purchase_ack_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_npc_market_purchase_ack_post[hIndex].func;
 			postHookFunc(sd, item_list, response);
