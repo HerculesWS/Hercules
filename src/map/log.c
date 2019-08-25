@@ -511,7 +511,7 @@ static void log_sql_final(void)
 /**
  * Initializes logs->config variables
  */
-void log_set_defaults(void)
+static void log_set_defaults(void)
 {
 	memset(&logs->config, 0, sizeof(logs->config));
 
@@ -540,7 +540,7 @@ void log_set_defaults(void)
  *
  * @retval false in case of error.
  */
-bool log_config_read_database(const char *filename, struct config_t *config, bool imported)
+static bool log_config_read_database(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -596,7 +596,7 @@ bool log_config_read_database(const char *filename, struct config_t *config, boo
  *
  * @retval false in case of error.
  */
-bool log_config_read_filter_item(const char *filename, struct config_t *config, bool imported)
+static bool log_config_read_filter_item(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -625,7 +625,7 @@ bool log_config_read_filter_item(const char *filename, struct config_t *config, 
  *
  * @retval false in case of error.
  */
-bool log_config_read_filter_chat(const char *filename, struct config_t *config, bool imported)
+static bool log_config_read_filter_chat(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
 
@@ -651,7 +651,7 @@ bool log_config_read_filter_chat(const char *filename, struct config_t *config, 
  *
  * @retval false in case of error.
  */
-bool log_config_read_filter(const char *filename, struct config_t *config, bool imported)
+static bool log_config_read_filter(const char *filename, struct config_t *config, bool imported)
 {
 	bool retval = true;
 
@@ -674,7 +674,7 @@ bool log_config_read_filter(const char *filename, struct config_t *config, bool 
  *
  * @retval false in case of error.
  */
-bool log_config_read(const char *filename, bool imported)
+static bool log_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	struct config_setting_t *setting = NULL;
@@ -755,7 +755,7 @@ bool log_config_read(const char *filename, bool imported)
 	return retval;
 }
 
-void log_config_complete(void)
+static void log_config_complete(void)
 {
 	if( logs->config.sql_logs ) {
 		logs->pick_sub = log_pick_sub_sql;
