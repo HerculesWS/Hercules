@@ -134,7 +134,6 @@ struct mapif_interface {
 	int (*party_withdraw) (int party_id,int account_id, int char_id);
 	int (*party_membermoved) (struct party *p, int idx);
 	int (*party_broken) (int party_id, int flag);
-	int (*party_message) (int party_id, int account_id, const char *mes, int len, int sfd);
 	int (*parse_CreateParty) (int fd, const char *name, int item, int item2, const struct party_member *leader);
 	void (*parse_PartyInfo) (int fd, int party_id, int char_id);
 	int (*parse_PartyAddMember) (int fd, int party_id, const struct party_member *member);
@@ -142,7 +141,6 @@ struct mapif_interface {
 	int (*parse_PartyLeave) (int fd, int party_id, int account_id, int char_id);
 	int (*parse_PartyChangeMap) (int fd, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv);
 	int (*parse_BreakParty) (int fd, int party_id);
-	int (*parse_PartyMessage) (int fd, int party_id, int account_id, const char *mes, int len);
 	int (*parse_PartyLeaderChange) (int fd, int party_id, int account_id, int char_id);
 	int (*pet_created) (int fd, int account_id, struct s_pet *p);
 	int (*pet_info) (int fd, int account_id, struct s_pet *p);

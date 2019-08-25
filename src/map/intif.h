@@ -73,7 +73,6 @@ struct intif_interface {
 	int (*party_leave) (int party_id,int account_id, int char_id);
 	int (*party_changemap) (struct map_session_data *sd, int online);
 	int (*break_party) (int party_id);
-	int (*party_message) (int party_id, int account_id, const char *mes,int len);
 	int (*party_leaderchange) (int party_id,int account_id,int char_id);
 	int (*guild_create) (const char *name, const struct guild_member *master);
 	int (*guild_request_info) (int guild_id);
@@ -160,7 +159,6 @@ struct intif_interface {
 	void (*pPartyMemberWithdraw) (int fd);
 	void (*pPartyMove) (int fd);
 	void (*pPartyBroken) (int fd);
-	void (*pPartyMessage) (int fd);
 	void (*pGuildCreated) (int fd);
 	void (*pGuildInfo) (int fd);
 	void (*pGuildMemberAdded) (int fd);

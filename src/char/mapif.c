@@ -1319,20 +1319,6 @@ static int mapif_party_broken(int party_id, int flag)
 	return 0;
 }
 
-//Remarks in the party
-static int mapif_party_message(int party_id, int account_id, const char *mes, int len, int sfd)
-{
-	unsigned char buf[512];
-	nullpo_ret(mes);
-	WBUFW(buf, 0) = 0x3827;
-	WBUFW(buf, 2) = len + 12;
-	WBUFL(buf, 4) = party_id;
-	WBUFL(buf, 8) = account_id;
-	memcpy(WBUFP(buf, 12), mes, len);
-	mapif->sendallwos(sfd, buf, len + 12);
-	return 0;
-}
-
 // Create Party
 static int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const struct party_member *leader)
 {
@@ -1406,12 +1392,6 @@ static int mapif_parse_BreakParty(int fd, int party_id)
 {
 	inter_party->disband(party_id);
 	return 0;
-}
-
-//Party sending the message
-static int mapif_parse_PartyMessage(int fd, int party_id, int account_id, const char *mes, int len)
-{
-	return mapif->party_message(party_id, account_id, mes, len, fd);
 }
 
 static int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char_id)
@@ -2452,7 +2432,6 @@ void mapif_defaults(void)
 	mapif->party_withdraw = mapif_party_withdraw;
 	mapif->party_membermoved = mapif_party_membermoved;
 	mapif->party_broken = mapif_party_broken;
-	mapif->party_message = mapif_party_message;
 	mapif->parse_CreateParty = mapif_parse_CreateParty;
 	mapif->parse_PartyInfo = mapif_parse_PartyInfo;
 	mapif->parse_PartyAddMember = mapif_parse_PartyAddMember;
@@ -2460,7 +2439,6 @@ void mapif_defaults(void)
 	mapif->parse_PartyLeave = mapif_parse_PartyLeave;
 	mapif->parse_PartyChangeMap = mapif_parse_PartyChangeMap;
 	mapif->parse_BreakParty = mapif_parse_BreakParty;
-	mapif->parse_PartyMessage = mapif_parse_PartyMessage;
 	mapif->parse_PartyLeaderChange = mapif_parse_PartyLeaderChange;
 	mapif->pet_created = mapif_pet_created;
 	mapif->pet_info = mapif_pet_info;

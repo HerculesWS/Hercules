@@ -118,7 +118,6 @@ struct party_interface {
 	void (*send_levelup) (struct map_session_data *sd);
 	int (*send_logout) (struct map_session_data *sd);
 	int (*send_message) (struct map_session_data *sd, const char *mes);
-	int (*recv_message) (int party_id,int account_id,const char *mes,int len);
 	int (*skill_check) (struct map_session_data *sd, int party_id, uint16 skill_id, uint16 skill_lv);
 	int (*send_xy_clear) (struct party_data *p);
 	int (*exp_share) (struct party_data *p,struct block_list *src,unsigned int base_exp,unsigned int job_exp,int zeny);

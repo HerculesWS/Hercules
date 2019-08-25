@@ -562,27 +562,6 @@ static int intif_break_party(int party_id)
 	return 0;
 }
 
-// Sending party chat
-static int intif_party_message(int party_id, int account_id, const char *mes, int len)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	nullpo_ret(mes);
-	Assert_ret(len > 0 && len < 32000);
-	WFIFOHEAD(inter_fd,len + 12);
-	WFIFOW(inter_fd,0)=0x3027;
-	WFIFOW(inter_fd,2)=len+12;
-	WFIFOL(inter_fd,4)=party_id;
-	WFIFOL(inter_fd,8)=account_id;
-	memcpy(WFIFOP(inter_fd,12),mes,len);
-	WFIFOSET(inter_fd,len+12);
-	return 0;
-}
-
 // Request a new leader for party
 static int intif_party_leaderchange(int party_id, int account_id, int char_id)
 {
@@ -1218,12 +1197,6 @@ static void intif_parse_PartyBroken(int fd)
 static void intif_parse_PartyMove(int fd)
 {
 	party->recv_movemap(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOW(fd,14),RFIFOB(fd,16),RFIFOW(fd,17));
-}
-
-// ACK party messages
-static void intif_parse_PartyMessage(int fd)
-{
-	party->recv_message(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12);
 }
 
 // ACK guild creation
@@ -2686,7 +2659,6 @@ static int intif_parse(int fd)
 		case 0x3824: intif->pPartyMemberWithdraw(fd); break;
 		case 0x3825: intif->pPartyMove(fd); break;
 		case 0x3826: intif->pPartyBroken(fd); break;
-		case 0x3827: intif->pPartyMessage(fd); break;
 		case 0x3830: intif->pGuildCreated(fd); break;
 		case 0x3831: intif->pGuildInfo(fd); break;
 		case 0x3832: intif->pGuildMemberAdded(fd); break;
@@ -2777,7 +2749,7 @@ void intif_defaults(void)
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
 		 0, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
-		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
+		39,-1,15,15, 14,19, 7, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,25, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
 		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
@@ -2808,7 +2780,6 @@ void intif_defaults(void)
 	intif->party_leave = intif_party_leave;
 	intif->party_changemap = intif_party_changemap;
 	intif->break_party = intif_break_party;
-	intif->party_message = intif_party_message;
 	intif->party_leaderchange = intif_party_leaderchange;
 	intif->guild_create = intif_guild_create;
 	intif->guild_request_info = intif_guild_request_info;
@@ -2894,7 +2865,6 @@ void intif_defaults(void)
 	intif->pPartyMemberWithdraw = intif_parse_PartyMemberWithdraw;
 	intif->pPartyMove = intif_parse_PartyMove;
 	intif->pPartyBroken = intif_parse_PartyBroken;
-	intif->pPartyMessage = intif_parse_PartyMessage;
 	intif->pGuildCreated = intif_parse_GuildCreated;
 	intif->pGuildInfo = intif_parse_GuildInfo;
 	intif->pGuildMemberAdded = intif_parse_GuildMemberAdded;
