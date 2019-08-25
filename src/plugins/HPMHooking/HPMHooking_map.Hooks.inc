@@ -35383,15 +35383,15 @@ int HP_homun_dead(struct homun_data *hd) {
 	}
 	return retVal___;
 }
-int HP_homun_vaporize(struct map_session_data *sd, enum homun_state flag) {
+int HP_homun_vaporize(struct map_session_data *sd, enum homun_state state, bool force) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_homun_vaporize_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, enum homun_state *flag);
+		int (*preHookFunc) (struct map_session_data **sd, enum homun_state *state, bool *force);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_vaporize_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_homun_vaporize_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &flag);
+			retVal___ = preHookFunc(&sd, &state, &force);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -35399,13 +35399,13 @@ int HP_homun_vaporize(struct map_session_data *sd, enum homun_state flag) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.homun.vaporize(sd, flag);
+		retVal___ = HPMHooks.source.homun.vaporize(sd, state, force);
 	}
 	if (HPMHooks.count.HP_homun_vaporize_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum homun_state flag);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum homun_state state, bool force);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_vaporize_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_homun_vaporize_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, flag);
+			retVal___ = postHookFunc(retVal___, sd, state, force);
 		}
 	}
 	return retVal___;
