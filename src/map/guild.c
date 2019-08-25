@@ -605,7 +605,7 @@ static int guild_recv_info(const struct guild *sg)
 		before=*sg;
 		//Perform the check on the user because the first load
 		guild->check_member(sg);
-		if ((sd = map->nick2sd(sg->master)) != NULL) {
+		if ((sd = map->nick2sd(sg->master, false)) != NULL) {
 			//If the guild master is online the first time the guild_info is received,
 			//that means he was the first to join, so apply guild skill blocking here.
 			if( battle_config.guild_skill_relog_delay == 1)

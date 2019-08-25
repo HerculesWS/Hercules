@@ -2268,7 +2268,7 @@ static struct map_session_data *map_charid2sd(int charid)
  * (without sensitive case if necessary)
  * return map_session_data pointer or NULL
  *------------------------------------------*/
-static struct map_session_data *map_nick2sd(const char *nick)
+static struct map_session_data *map_nick2sd(const char *nick, bool allow_partial)
 {
 	struct map_session_data* sd;
 	struct map_session_data* found_sd;
@@ -2276,7 +2276,7 @@ static struct map_session_data *map_nick2sd(const char *nick)
 	size_t nicklen;
 	int qty = 0;
 
-	if( nick == NULL )
+	if (nick == NULL)
 		return NULL;
 
 	nicklen = strlen(nick);
@@ -2284,30 +2284,29 @@ static struct map_session_data *map_nick2sd(const char *nick)
 
 	found_sd = NULL;
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if( battle_config.partial_name_scan )
-		{// partial name search
-			if( strnicmp(sd->status.name, nick, nicklen) == 0 )
-			{
+		if (battle_config.partial_name_scan && allow_partial) {
+			// partial name search
+			if (strnicmp(sd->status.name, nick, nicklen) == 0) {
 				found_sd = sd;
 
-				if( strcmp(sd->status.name, nick) == 0 )
-				{// Perfect Match
+				if (strcmp(sd->status.name, nick) == 0) {
+					// Perfect Match
 					qty = 1;
 					break;
 				}
 
 				qty++;
 			}
-		}
-		else if( strcasecmp(sd->status.name, nick) == 0 )
-		{// exact search only
+		} else if (strcasecmp(sd->status.name, nick) == 0) {
+			// exact search only
 			found_sd = sd;
+			qty = 1;
 			break;
 		}
 	}
 	mapit->free(iter);
 
-	if( battle_config.partial_name_scan && qty != 1 )
+	if (battle_config.partial_name_scan && qty != 1)
 		found_sd = NULL;
 
 	return found_sd;
