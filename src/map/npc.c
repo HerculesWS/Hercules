@@ -1349,8 +1349,10 @@ static int npc_scriptcont(struct map_session_data *sd, int id, bool closing)
 		return 1;
 	}
 
-	if(id != npc->fake_nd->bl.id) { // Not item script
-		if ((npc->checknear(sd,target)) == NULL){
+	if (id != npc->fake_nd->bl.id) { // Not item script
+		if (sd->state.npc_unloaded != 0) {
+			sd->state.npc_unloaded = 0;
+		} else if ((npc->checknear(sd,target)) == NULL) {
 			ShowWarning("npc_scriptcont: failed npc->checknear test.\n");
 			return 1;
 		}

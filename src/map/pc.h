@@ -238,6 +238,7 @@ struct map_session_data {
 		unsigned int loggingout : 1;
 		unsigned int warp_clean : 1;
 		unsigned int refine_ui : 1;
+		unsigned int npc_unloaded : 1; ///< The player is talking with an unloaded NPCs (respawned tombstones)
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
