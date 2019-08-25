@@ -565,6 +565,7 @@ static int guild_check_member(const struct guild *g)
 		if (i == INDEX_NOT_FOUND) {
 			sd->status.guild_id=0;
 			sd->guild_emblem_id=0;
+			sd->guild = NULL;
 			ShowWarning("guild: check_member %d[%s] is not member\n",sd->status.account_id,sd->status.name);
 		}
 	}
@@ -581,8 +582,11 @@ static int guild_recv_noinfo(int guild_id)
 
 	iter = mapit_getallusers();
 	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if( sd->status.guild_id == guild_id )
+		if (sd->status.guild_id == guild_id) {
 			sd->status.guild_id = 0; // erase guild
+			sd->guild_emblem_id = 0;
+			sd->guild = NULL;
+		}
 	}
 	mapit->free(iter);
 
@@ -872,6 +876,8 @@ static void guild_member_joined(struct map_session_data *sd)
 	i = guild->getindex(g, sd->status.account_id, sd->status.char_id);
 	if (i == INDEX_NOT_FOUND) {
 		sd->status.guild_id = 0;
+		sd->guild_emblem_id = 0;
+		sd->guild = NULL;
 	} else {
 		g->member[i].sd = sd;
 		sd->guild = g;
