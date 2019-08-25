@@ -1536,17 +1536,16 @@ static int pc_reg_received(struct map_session_data *sd)
 	if (sd->status.guild_id)
 		guild->member_joined(sd);
 
-	// pet
-	if (sd->status.pet_id > 0)
-		intif->request_petdata(sd->status.account_id, sd->status.char_id, sd->status.pet_id);
-
-	// Homunculus [albator]
-	if( sd->status.hom_id > 0 )
-		intif->homunculus_requestload(sd->status.account_id, sd->status.hom_id);
-	if( sd->status.mer_id > 0 )
-		intif->mercenary_request(sd->status.mer_id, sd->status.char_id);
-	if( sd->status.ele_id > 0 )
-		intif->elemental_request(sd->status.ele_id, sd->status.char_id);
+	if (sd->state.standalone == 0 && sd->state.autotrade == 0) { // prevents loading pets, homunculi, mercenaries or elementals if the character doesn't have a client attached
+		if (sd->status.pet_id != 0)
+			intif->request_petdata(sd->status.account_id, sd->status.char_id, sd->status.pet_id);
+		if (sd->status.hom_id != 0)
+			intif->homunculus_requestload(sd->status.account_id, sd->status.hom_id);
+		if (sd->status.mer_id != 0)
+			intif->mercenary_request(sd->status.mer_id, sd->status.char_id);
+		if (sd->status.ele_id != 0)
+			intif->elemental_request(sd->status.ele_id, sd->status.char_id);
+	}
 
 	map->addiddb(&sd->bl);
 	map->delnickdb(sd->status.char_id, sd->status.name);
@@ -8006,7 +8005,7 @@ static void pc_damage(struct map_session_data *sd, struct block_list *src, unsig
 	if( sd->status.pet_id > 0 && sd->pd && battle_config.pet_damage_support )
 		pet->target_check(sd,src,1);
 
-	if( sd->status.ele_id > 0 )
+	if (sd->status.ele_id != 0 && sd->ed != NULL)
 		elemental->set_target(sd,src);
 
 	if (battle_config.prevent_logout_trigger & PLT_DAMAGE)
