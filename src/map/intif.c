@@ -758,28 +758,6 @@ static int intif_guild_break(int guild_id)
 	return 0;
 }
 
-// Send a guild message
-static int intif_guild_message(int guild_id, int account_id, const char *mes, int len)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	nullpo_ret(mes);
-	Assert_ret(len > 0 && len < 32000);
-	WFIFOHEAD(inter_fd, len + 12);
-	WFIFOW(inter_fd,0)=0x3037;
-	WFIFOW(inter_fd,2)=len+12;
-	WFIFOL(inter_fd,4)=guild_id;
-	WFIFOL(inter_fd,8)=account_id;
-	memcpy(WFIFOP(inter_fd,12),mes,len);
-	WFIFOSET(inter_fd,len+12);
-
-	return 0;
-}
-
 /**
  * Requests to change a basic guild information, it is parsed via mapif_parse_GuildBasicInfoChange
  * To see the information types that can be changed see mmo.h::guild_basic_info
@@ -1346,12 +1324,6 @@ static void intif_parse_GuildNotice(int fd)
 static void intif_parse_GuildEmblem(int fd)
 {
 	guild->emblem_changed(RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
-}
-
-// ACK guild message
-static void intif_parse_GuildMessage(int fd)
-{
-	guild->recv_message(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12);
 }
 
 // Reply guild castle data request
@@ -2665,7 +2637,6 @@ static int intif_parse(int fd)
 		case 0x3834: intif->pGuildMemberWithdraw(fd); break;
 		case 0x3835: intif->pGuildMemberInfoShort(fd); break;
 		case 0x3836: intif->pGuildBroken(fd); break;
-		case 0x3837: intif->pGuildMessage(fd); break;
 		case 0x3839: intif->pGuildBasicInfoChanged(fd); break;
 		case 0x383a: intif->pGuildMemberInfoChanged(fd); break;
 		case 0x383b: intif->pGuildPosition(fd); break;
@@ -2750,7 +2721,7 @@ void intif_defaults(void)
 		 0, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
 		39,-1,15,15, 14,19, 7, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
-		10,-1,15, 0, 79,25, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
+		10,-1,15, 0, 79,25, 7, 0,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
 		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
@@ -2787,7 +2758,6 @@ void intif_defaults(void)
 	intif->guild_leave = intif_guild_leave;
 	intif->guild_memberinfoshort = intif_guild_memberinfoshort;
 	intif->guild_break = intif_guild_break;
-	intif->guild_message = intif_guild_message;
 	intif->guild_change_gm = intif_guild_change_gm;
 	intif->guild_change_basicinfo = intif_guild_change_basicinfo;
 	intif->guild_change_memberinfo = intif_guild_change_memberinfo;
@@ -2871,7 +2841,6 @@ void intif_defaults(void)
 	intif->pGuildMemberWithdraw = intif_parse_GuildMemberWithdraw;
 	intif->pGuildMemberInfoShort = intif_parse_GuildMemberInfoShort;
 	intif->pGuildBroken = intif_parse_GuildBroken;
-	intif->pGuildMessage = intif_parse_GuildMessage;
 	intif->pGuildBasicInfoChanged = intif_parse_GuildBasicInfoChanged;
 	intif->pGuildMemberInfoChanged = intif_parse_GuildMemberInfoChanged;
 	intif->pGuildPosition = intif_parse_GuildPosition;

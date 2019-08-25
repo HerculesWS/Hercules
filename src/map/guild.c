@@ -1137,29 +1137,18 @@ static int guild_recv_memberinfoshort(int guild_id, int account_id, int char_id,
  *---------------------------------------------------*/
 static int guild_send_message(struct map_session_data *sd, const char *mes)
 {
-	int len = (int)strlen(mes);
 	nullpo_ret(sd);
 
-	if (sd->status.guild_id == 0)
+	if (sd->status.guild_id == 0 || sd->guild == NULL)
 		return 0;
-	intif->guild_message(sd->status.guild_id, sd->status.account_id, mes, len);
-	guild->recv_message(sd->status.guild_id, sd->status.account_id, mes, len);
+
+	int len = (int)strlen(mes);
+
+	clif->guild_message(sd->guild, sd->status.account_id, mes, len);
 
 	// Chat logging type 'G' / Guild Chat
 	logs->chat(LOG_CHAT_GUILD, sd->status.guild_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
 
-	return 0;
-}
-
-/*====================================================
- * Guild receive a message, will be displayed to whole member
- *---------------------------------------------------*/
-static int guild_recv_message(int guild_id, int account_id, const char *mes, int len)
-{
-	struct guild *g;
-	if( (g=guild->search(guild_id))==NULL)
-		return 0;
-	clif->guild_message(g,account_id,mes,len);
 	return 0;
 }
 
@@ -2480,7 +2469,6 @@ void guild_defaults(void)
 	guild->change_emblem = guild_change_emblem;
 	guild->emblem_changed = guild_emblem_changed;
 	guild->send_message = guild_send_message;
-	guild->recv_message = guild_recv_message;
 	guild->send_dot_remove = guild_send_dot_remove;
 	guild->skillupack = guild_skillupack;
 	guild->dobreak = guild_break;

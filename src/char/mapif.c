@@ -596,22 +596,6 @@ static int mapif_guild_broken(int guild_id, int flag)
 	return 0;
 }
 
-// Send guild message
-static int mapif_guild_message(int guild_id, int account_id, const char *mes, int len, int sfd)
-{
-	unsigned char buf[512];
-	nullpo_ret(mes);
-	if (len > 500)
-		len = 500;
-	WBUFW(buf, 0) = 0x3837;
-	WBUFW(buf, 2) = len + 12;
-	WBUFL(buf, 4) = guild_id;
-	WBUFL(buf, 8) = account_id;
-	memcpy(WBUFP(buf, 12), mes, len);
-	mapif->sendallwos(sfd, buf, len + 12);
-	return 0;
-}
-
 // Send basic info
 static int mapif_guild_basicinfochanged(int guild_id, int type, const void *data, int len)
 {
@@ -808,12 +792,6 @@ static int mapif_parse_BreakGuild(int fd, int guild_id)
 {
 	inter_guild->disband(guild_id);
 	return 0;
-}
-
-// Forward Guild message to others map servers
-static int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *mes, int len)
-{
-	return mapif->guild_message(guild_id,account_id,mes,len, fd);
 }
 
 /**
@@ -2368,7 +2346,6 @@ void mapif_defaults(void)
 	mapif->guild_withdraw = mapif_guild_withdraw;
 	mapif->guild_memberinfoshort = mapif_guild_memberinfoshort;
 	mapif->guild_broken = mapif_guild_broken;
-	mapif->guild_message = mapif_guild_message;
 	mapif->guild_basicinfochanged = mapif_guild_basicinfochanged;
 	mapif->guild_memberinfochanged = mapif_guild_memberinfochanged;
 	mapif->guild_skillupack = mapif_guild_skillupack;
@@ -2384,7 +2361,6 @@ void mapif_defaults(void)
 	mapif->parse_GuildLeave = mapif_parse_GuildLeave;
 	mapif->parse_GuildChangeMemberInfoShort = mapif_parse_GuildChangeMemberInfoShort;
 	mapif->parse_BreakGuild = mapif_parse_BreakGuild;
-	mapif->parse_GuildMessage = mapif_parse_GuildMessage;
 	mapif->parse_GuildBasicInfoChange = mapif_parse_GuildBasicInfoChange;
 	mapif->parse_GuildMemberInfoChange = mapif_parse_GuildMemberInfoChange;
 	mapif->parse_GuildPosition = mapif_parse_GuildPosition;

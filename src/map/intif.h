@@ -80,7 +80,6 @@ struct intif_interface {
 	int (*guild_leave) (int guild_id, int account_id, int char_id, int flag, const char *mes);
 	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*guild_break) (int guild_id);
-	int (*guild_message) (int guild_id, int account_id, const char *mes, int len);
 	int (*guild_change_gm) (int guild_id, const char *name, int len);
 	int (*guild_change_basicinfo) (int guild_id, int type, const void *data, int len);
 	int (*guild_change_memberinfo) (int guild_id, int account_id, int char_id, int type, const void *data, int len);
@@ -165,7 +164,6 @@ struct intif_interface {
 	void (*pGuildMemberWithdraw) (int fd);
 	void (*pGuildMemberInfoShort) (int fd);
 	void (*pGuildBroken) (int fd);
-	void (*pGuildMessage) (int fd);
 	void (*pGuildBasicInfoChanged) (int fd);
 	void (*pGuildMemberInfoChanged) (int fd);
 	void (*pGuildPosition) (int fd);

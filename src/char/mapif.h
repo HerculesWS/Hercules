@@ -70,7 +70,6 @@ struct mapif_interface {
 	int (*guild_withdraw) (int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes);
 	int (*guild_memberinfoshort) (struct guild *g, int idx);
 	int (*guild_broken) (int guild_id, int flag);
-	int (*guild_message) (int guild_id, int account_id, const char *mes, int len, int sfd);
 	int (*guild_basicinfochanged) (int guild_id, int type, const void *data, int len);
 	int (*guild_memberinfochanged) (int guild_id, int account_id, int char_id, int type, const void *data, int len);
 	int (*guild_skillupack) (int guild_id, uint16 skill_id, int account_id);
@@ -86,7 +85,6 @@ struct mapif_interface {
 	int (*parse_GuildLeave) (int fd, int guild_id, int account_id, int char_id, int flag, const char *mes);
 	int (*parse_GuildChangeMemberInfoShort) (int fd, int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*parse_BreakGuild) (int fd, int guild_id);
-	int (*parse_GuildMessage) (int fd, int guild_id, int account_id, const char *mes, int len);
 	int (*parse_GuildBasicInfoChange) (int fd, int guild_id, int type, const void *data, int len);
 	int (*parse_GuildMemberInfoChange) (int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len);
 	int (*parse_GuildPosition) (int fd, int guild_id, int idx, const struct guild_position *p);
