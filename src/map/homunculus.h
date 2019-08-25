@@ -167,7 +167,7 @@ struct homunculus_interface {
 	enum homun_type (*class2type) (int class_);
 	void (*damaged) (struct homun_data *hd);
 	int (*dead) (struct homun_data *hd);
-	int (*vaporize) (struct map_session_data *sd, enum homun_state flag);
+	int (*vaporize) (struct map_session_data *sd, enum homun_state state, bool force);
 	int (*delete) (struct homun_data *hd, int emote);
 	int (*checkskill) (struct homun_data *hd, uint16 skill_id);
 	int (*calc_skilltree) (struct homun_data *hd, int flag_evolve);

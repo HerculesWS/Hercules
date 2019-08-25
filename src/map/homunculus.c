@@ -172,7 +172,7 @@ static int homunculus_dead(struct homun_data *hd)
 }
 
 //Vaporize a character's homun. If flag, HP needs to be 80% or above.
-static int homunculus_vaporize(struct map_session_data *sd, enum homun_state flag)
+static int homunculus_vaporize(struct map_session_data *sd, enum homun_state state, bool force)
 {
 	struct homun_data *hd;
 
@@ -185,13 +185,13 @@ static int homunculus_vaporize(struct map_session_data *sd, enum homun_state fla
 	if (status->isdead(&hd->bl))
 		return 0; //Can't vaporize a dead homun.
 
-	if (flag == HOM_ST_REST && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
+	if (!force && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
 		return 0;
 
 	hd->regen.state.block = 3; //Block regen while vaporized.
 	//Delete timers when vaporized.
 	homun->hunger_timer_delete(hd);
-	hd->homunculus.vaporize = flag;
+	hd->homunculus.vaporize = state;
 	if(battle_config.hom_setting&0x40)
 		memset(hd->blockskill, 0, sizeof(hd->blockskill));
 	clif->hominfo(sd, sd->hd, 0);

@@ -7765,7 +7765,7 @@ static int pc_resetskill(struct map_session_data *sd, int flag)
 			pc->setoption(sd, i);
 
 		if( homun_alive(sd->hd) && pc->checkskill(sd, AM_CALLHOMUN) )
-			homun->vaporize(sd, HOM_ST_REST);
+			homun->vaporize(sd, HOM_ST_REST, true);
 
 		if ((sd->sc.data[SC_SPRITEMABLE] && pc->checkskill(sd, SU_SPRITEMABLE)))
 			status_change_end(&sd->bl, SC_SPRITEMABLE, INVALID_TIMER);
@@ -8054,7 +8054,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 
 	if (sd->status.hom_id > 0){
 	    if(battle_config.homunculus_auto_vapor && sd->hd)
-		    homun->vaporize(sd, HOM_ST_REST);
+		    homun->vaporize(sd, HOM_ST_REST, true);
 	}
 
 	if( sd->md )
@@ -9069,7 +9069,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 		pc->setoption(sd, i);
 
 	if(homun_alive(sd->hd) && !pc->checkskill(sd, AM_CALLHOMUN))
-		homun->vaporize(sd, HOM_ST_REST);
+		homun->vaporize(sd, HOM_ST_REST, true);
 
 	if ((sd->sc.data[SC_SPRITEMABLE] && pc->checkskill(sd, SU_SPRITEMABLE)))
 		status_change_end(&sd->bl, SC_SPRITEMABLE, INVALID_TIMER);
