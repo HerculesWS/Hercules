@@ -2816,12 +2816,6 @@ struct {
 	struct HPMHookPoint *HP_intif_parse_post;
 	struct HPMHookPoint *HP_intif_create_pet_pre;
 	struct HPMHookPoint *HP_intif_create_pet_post;
-	struct HPMHookPoint *HP_intif_broadcast_pre;
-	struct HPMHookPoint *HP_intif_broadcast_post;
-	struct HPMHookPoint *HP_intif_broadcast2_pre;
-	struct HPMHookPoint *HP_intif_broadcast2_post;
-	struct HPMHookPoint *HP_intif_main_message_pre;
-	struct HPMHookPoint *HP_intif_main_message_post;
 	struct HPMHookPoint *HP_intif_saveregistry_pre;
 	struct HPMHookPoint *HP_intif_saveregistry_post;
 	struct HPMHookPoint *HP_intif_request_registry_pre;
@@ -9603,12 +9597,6 @@ struct {
 	int HP_intif_parse_post;
 	int HP_intif_create_pet_pre;
 	int HP_intif_create_pet_post;
-	int HP_intif_broadcast_pre;
-	int HP_intif_broadcast_post;
-	int HP_intif_broadcast2_pre;
-	int HP_intif_broadcast2_post;
-	int HP_intif_main_message_pre;
-	int HP_intif_main_message_post;
 	int HP_intif_saveregistry_pre;
 	int HP_intif_saveregistry_post;
 	int HP_intif_request_registry_pre;

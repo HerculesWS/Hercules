@@ -1445,9 +1445,6 @@ struct HookingPointData HookingPoints[] = {
 /* intif_interface */
 	{ HP_POP(intif->parse, HP_intif_parse) },
 	{ HP_POP(intif->create_pet, HP_intif_create_pet) },
-	{ HP_POP(intif->broadcast, HP_intif_broadcast) },
-	{ HP_POP(intif->broadcast2, HP_intif_broadcast2) },
-	{ HP_POP(intif->main_message, HP_intif_main_message) },
 	{ HP_POP(intif->saveregistry, HP_intif_saveregistry) },
 	{ HP_POP(intif->request_registry, HP_intif_request_registry) },
 	{ HP_POP(intif->request_account_storage, HP_intif_request_account_storage) },

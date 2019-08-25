@@ -16307,33 +16307,6 @@ void HP_mapif_parse_accinfo(int fd) {
 	}
 	return;
 }
-int HP_mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_mapif_broadcast_pre > 0) {
-		int (*preHookFunc) (const unsigned char **mes, int *len, unsigned int *fontColor, short *fontType, short *fontSize, short *fontAlign, short *fontY, int *sfd);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_broadcast_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mapif_broadcast_pre[hIndex].func;
-			retVal___ = preHookFunc(&mes, &len, &fontColor, &fontType, &fontSize, &fontAlign, &fontY, &sfd);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.mapif.broadcast(mes, len, fontColor, fontType, fontSize, fontAlign, fontY, sfd);
-	}
-	if (HPMHooks.count.HP_mapif_broadcast_post > 0) {
-		int (*postHookFunc) (int retVal___, const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_broadcast_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mapif_broadcast_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, sfd);
-		}
-	}
-	return retVal___;
-}
 int HP_mapif_account_reg_reply(int fd, int account_id, int char_id, int type) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -16384,33 +16357,6 @@ int HP_mapif_disconnectplayer(int fd, int account_id, int char_id, int reason) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_disconnectplayer_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapif_disconnectplayer_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, fd, account_id, char_id, reason);
-		}
-	}
-	return retVal___;
-}
-int HP_mapif_parse_broadcast(int fd) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_mapif_parse_broadcast_pre > 0) {
-		int (*preHookFunc) (int *fd);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_broadcast_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mapif_parse_broadcast_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.mapif.parse_broadcast(fd);
-	}
-	if (HPMHooks.count.HP_mapif_parse_broadcast_post > 0) {
-		int (*postHookFunc) (int retVal___, int fd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapif_parse_broadcast_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mapif_parse_broadcast_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, fd);
 		}
 	}
 	return retVal___;
