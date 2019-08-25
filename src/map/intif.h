@@ -63,7 +63,6 @@ struct intif_interface {
 	int (*broadcast) (const char *mes, int len, int type);
 	int (*broadcast2) (const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
 	int (*main_message) (struct map_session_data* sd, const char* message);
-	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
 	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
 	void (*request_account_storage) (const struct map_session_data *sd);
@@ -150,8 +149,6 @@ struct intif_interface {
 	void(*achievements_request) (struct map_session_data *sd);
 	void(*achievements_save) (struct map_session_data *sd);
 	/* */
-	int (*pWisToGM_sub) (struct map_session_data* sd,va_list va);
-	void (*pWisToGM) (int fd);
 	void (*pRegisters) (int fd);
 	void (*pAccountStorage) (int fd);
 	void (*pChangeNameOk) (int fd);

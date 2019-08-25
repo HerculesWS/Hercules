@@ -1185,6 +1185,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*have_magnifier) (struct map_session_data *sd);
 
 	bool (*process_chat_message) (struct map_session_data *sd, const char *message);
+	int (*wis_message_to_gm) (const char *sender_name, int permission, const char *message);
+	int (*wis_message_to_gm_sub) (struct map_session_data *sd, va_list va);
 	void (*check_supernovice_call) (struct map_session_data *sd, const char *message);
 	bool (*check_basicskill) (struct map_session_data *sd, int level);
 	bool (*isDeathPenaltyJob) (uint16 job);

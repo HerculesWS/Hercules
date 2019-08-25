@@ -2093,18 +2093,6 @@ static int mapif_parse_broadcast(int fd)
 	return 0;
 }
 
-// Received wisp message from map-server for ALL gm (just copy the message and resends it to ALL map-servers)
-static int mapif_parse_WisToGM(int fd)
-{
-	unsigned char buf[2048]; // 0x3003/0x3803 <packet_len>.w <wispname>.24B <min_gm_level>.w <message>.?B
-
-	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2)); // Message contains the NUL terminator (see intif_wis_message_to_gm())
-	WBUFW(buf, 0) = 0x3803;
-	mapif->sendall(buf, RFIFOW(fd,2));
-
-	return 0;
-}
-
 // Save account_reg into sql (type=2)
 static int mapif_parse_Registry(int fd)
 {
@@ -2544,7 +2532,6 @@ void mapif_defaults(void)
 	mapif->account_reg_reply = mapif_account_reg_reply;
 	mapif->disconnectplayer = mapif_disconnectplayer;
 	mapif->parse_broadcast = mapif_parse_broadcast;
-	mapif->parse_WisToGM = mapif_parse_WisToGM;
 	mapif->parse_Registry = mapif_parse_Registry;
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;
 	mapif->namechange_ack = mapif_namechange_ack;

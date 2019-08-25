@@ -185,7 +185,6 @@ struct mapif_interface {
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
 	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
 	int (*parse_broadcast) (int fd);
-	int (*parse_WisToGM) (int fd);
 	int (*parse_Registry) (int fd);
 	int (*parse_RegistryRequest) (int fd);
 	void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *name);

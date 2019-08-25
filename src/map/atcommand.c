@@ -8263,7 +8263,7 @@ ACMD(request)
 	}
 
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,278), message); // (@request): %s
-	intif->wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
+	pc->wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
 	clif_disp_onlyself(sd, atcmd_output);
 	clif->message(sd->fd,msg_fd(fd,279)); // @request sent.
 	return true;
