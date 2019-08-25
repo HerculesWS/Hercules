@@ -5583,15 +5583,17 @@ static int pc_steal_item(struct map_session_data *sd, struct block_list *bl, uin
 
 	// Try dropping one item, in the order from first to last possible slot.
 	// Droprate is affected by the skill success rate.
-	for (i = 0; i < MAX_STEAL_DROP; i++) {
+	for (i = 0; i < MAX_MOB_DROP; i++) {
 		if (md->db->dropitem[i].nameid == 0)
 			continue;
 		if ((data = itemdb->exists(md->db->dropitem[i].nameid)) == NULL)
 			continue;
+		if (data->type == IT_CARD)
+			continue;
 		if (rnd() % 10000 < apply_percentrate(md->db->dropitem[i].p, rate, 100))
 			break;
 	}
-	if (i == MAX_STEAL_DROP)
+	if (i == MAX_MOB_DROP)
 		return 0;
 
 	itemid = md->db->dropitem[i].nameid;
