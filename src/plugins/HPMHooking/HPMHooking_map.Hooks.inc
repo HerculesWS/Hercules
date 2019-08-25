@@ -37050,33 +37050,6 @@ int HP_intif_main_message(struct map_session_data *sd, const char *message) {
 	}
 	return retVal___;
 }
-int HP_intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, int mes_len) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_intif_wis_message_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, const char **nick, const char **mes, int *mes_len);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_wis_message_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_intif_wis_message_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &nick, &mes, &mes_len);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.intif.wis_message(sd, nick, mes, mes_len);
-	}
-	if (HPMHooks.count.HP_intif_wis_message_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, const char *nick, const char *mes, int mes_len);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_wis_message_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_intif_wis_message_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, nick, mes, mes_len);
-		}
-	}
-	return retVal___;
-}
 int HP_intif_wis_message_to_gm(char *Wisp_name, int permission, char *mes) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -39116,58 +39089,6 @@ void HP_intif_achievements_save(struct map_session_data *sd) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_achievements_save_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_intif_achievements_save_post[hIndex].func;
 			postHookFunc(sd);
-		}
-	}
-	return;
-}
-void HP_intif_pWisMessage(int fd) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_intif_pWisMessage_pre > 0) {
-		void (*preHookFunc) (int *fd);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pWisMessage_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_intif_pWisMessage_pre[hIndex].func;
-			preHookFunc(&fd);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.intif.pWisMessage(fd);
-	}
-	if (HPMHooks.count.HP_intif_pWisMessage_post > 0) {
-		void (*postHookFunc) (int fd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pWisMessage_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_intif_pWisMessage_post[hIndex].func;
-			postHookFunc(fd);
-		}
-	}
-	return;
-}
-void HP_intif_pWisEnd(int fd) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_intif_pWisEnd_pre > 0) {
-		void (*preHookFunc) (int *fd);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pWisEnd_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_intif_pWisEnd_pre[hIndex].func;
-			preHookFunc(&fd);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.intif.pWisEnd(fd);
-	}
-	if (HPMHooks.count.HP_intif_pWisEnd_post > 0) {
-		void (*postHookFunc) (int fd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_pWisEnd_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_intif_pWisEnd_post[hIndex].func;
-			postHookFunc(fd);
 		}
 	}
 	return;
