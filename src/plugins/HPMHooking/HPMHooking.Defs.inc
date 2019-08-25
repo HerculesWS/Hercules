@@ -3182,8 +3182,8 @@ typedef bool (*HPMHOOK_pre_homun_change_name_ack) (struct map_session_data **sd,
 typedef bool (*HPMHOOK_post_homun_change_name_ack) (bool retVal___, struct map_session_data *sd, const char *name, int flag);
 typedef int (*HPMHOOK_pre_homun_db_search) (int *key, int *type);
 typedef int (*HPMHOOK_post_homun_db_search) (int retVal___, int key, int type);
-typedef bool (*HPMHOOK_pre_homun_create) (struct map_session_data **sd, const struct s_homunculus **hom);
-typedef bool (*HPMHOOK_post_homun_create) (bool retVal___, struct map_session_data *sd, const struct s_homunculus *hom);
+typedef bool (*HPMHOOK_pre_homun_create) (struct map_session_data **sd, const struct s_homunculus **hom, bool *is_new);
+typedef bool (*HPMHOOK_post_homun_create) (bool retVal___, struct map_session_data *sd, const struct s_homunculus *hom, bool is_new);
 typedef void (*HPMHOOK_pre_homun_init_timers) (struct homun_data **hd);
 typedef void (*HPMHOOK_post_homun_init_timers) (struct homun_data *hd);
 typedef bool (*HPMHOOK_pre_homun_call) (struct map_session_data **sd);
