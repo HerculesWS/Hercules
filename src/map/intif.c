@@ -212,28 +212,6 @@ static int intif_broadcast2(const char *mes, int len, unsigned int fontColor, sh
 	return 0;
 }
 
-/// send a message using the main chat system
-/// <sd>         the source of message
-/// <message>    the message that was sent
-static int intif_main_message(struct map_session_data *sd, const char *message)
-{
-	char output[256];
-
-	nullpo_ret(sd);
-	nullpo_ret(message);
-
-	// format the message for main broadcasting
-	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
-
-	// send the message using the inter-server broadcast service
-	intif->broadcast2(output, (int)strlen(output) + 1, 0xFE000000, 0, 0, 0, 0);
-
-	// log the chat message
-	logs->chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );
-
-	return 0;
-}
-
 //Request for saving registry values.
 static int intif_saveregistry(struct map_session_data *sd)
 {
@@ -2884,7 +2862,6 @@ void intif_defaults(void)
 	intif->create_pet = intif_create_pet;
 	intif->broadcast = intif_broadcast;
 	intif->broadcast2 = intif_broadcast2;
-	intif->main_message = intif_main_message;
 	intif->saveregistry = intif_saveregistry;
 	intif->request_registry = intif_request_registry;
 	intif->request_account_storage = intif_request_account_storage;
