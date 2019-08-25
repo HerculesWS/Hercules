@@ -826,7 +826,7 @@ static int homunculus_db_search(int key, int type)
  * @param hom The homunculus source data.
  * @retval false in case of errors.
  */
-static bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *hom)
+static bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *hom, bool is_new)
 {
 	struct homun_data *hd;
 	int i = 0;
@@ -870,7 +870,9 @@ static bool homunculus_create(struct map_session_data *sd, const struct s_homunc
 
 	map->addiddb(&hd->bl);
 	status_calc_homunculus(hd,SCO_FIRST);
-	status_percent_heal(&hd->bl, 100, 100);
+	if (is_new) {
+		status_percent_heal(&hd->bl, 100, 100);
+	}
 
 	hd->hungry_timer = INVALID_TIMER;
 	return true;
@@ -927,6 +929,7 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 {
 	struct map_session_data *sd;
 	struct homun_data *hd;
+	bool is_new = false;
 
 	nullpo_retr(false, sh);
 
@@ -942,15 +945,17 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 	if (sd->status.char_id != sh->char_id && sd->status.hom_id != sh->hom_id)
 		return false;
 
-	if (sd->status.hom_id == 0) //Hom just created.
+	if (sd->status.hom_id == 0) { // Hom just created.
 		sd->status.hom_id = sh->hom_id;
+		is_new = true;
+	}
 
 	if (sd->hd != NULL) {
 		//uh? Overwrite the data.
 		memcpy(&sd->hd->homunculus, sh, sizeof sd->hd->homunculus);
 		sd->hd->homunculus.char_id = sd->status.char_id; // Correct char id if necessary.
 	} else {
-		homun->create(sd, sh);
+		homun->create(sd, sh, is_new);
 	}
 
 	hd = sd->hd;

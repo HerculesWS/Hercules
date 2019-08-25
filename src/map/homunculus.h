@@ -189,7 +189,7 @@ struct homunculus_interface {
 	int (*change_name) (struct map_session_data *sd, const char *name);
 	bool (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
 	int (*db_search) (int key,int type);
-	bool (*create) (struct map_session_data *sd, const struct s_homunculus *hom);
+	bool (*create) (struct map_session_data *sd, const struct s_homunculus *hom, bool is_new);
 	void (*init_timers) (struct homun_data * hd);
 	bool (*call) (struct map_session_data *sd);
 	bool (*recv_data) (int account_id, const struct s_homunculus *sh, int flag);
