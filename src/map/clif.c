@@ -6458,7 +6458,7 @@ static void clif_wis_message(int fd, const char *nick, const char *mes, int mes_
 	safestrncpy(WFIFOP(fd,28), mes, mes_len + 1);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #else
-	ssd = map->nick2sd(nick);
+	ssd = map->nick2sd(nick, false);
 
 	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 9);
 	WFIFOW(fd,0) = 0x97;
@@ -11644,9 +11644,9 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 	}
 
 	// searching destination character
-	dstsd = map->nick2sd(target);
+	dstsd = map->nick2sd(target, false);
 
-	if (dstsd == NULL || strcmp(dstsd->status.name, target) != 0) {
+	if (dstsd == NULL) {
 		// Character not found (or found through partial match).
 		clif->wis_end(sd->fd, 1);
 		return;
@@ -13492,7 +13492,7 @@ static void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	t_sd = map->nick2sd(name);
+	t_sd = map->nick2sd(name, true);
 
 	if(t_sd && t_sd->state.noask) { // @noask [LuzZza]
 		clif->noask_sub(sd, t_sd, 1);
@@ -14766,7 +14766,7 @@ static void clif_parse_GuildInvite2(int fd, struct map_session_data *sd)
 	struct map_session_data *t_sd = NULL;
 
 	safestrncpy(nick, RFIFOP(fd, 2), NAME_LENGTH);
-	t_sd = map->nick2sd(nick);
+	t_sd = map->nick2sd(nick, true);
 
 	clif_sub_guild_invite(fd, sd, t_sd);
 }
@@ -15807,7 +15807,7 @@ static void clif_parse_FriendsListAdd(int fd, struct map_session_data *sd)
 
 	safestrncpy(nick, RFIFOP(fd,2), NAME_LENGTH);
 
-	f_sd = map->nick2sd(nick);
+	f_sd = map->nick2sd(nick, true);
 
 	// ensure that the request player's friend list is not full
 	ARR_FIND(0, MAX_FRIENDS, i, sd->status.friends[i].char_id == 0);
@@ -16539,7 +16539,7 @@ static void clif_parse_Check(int fd, struct map_session_data *sd)
 
 	safestrncpy(charname, RFIFOP(fd,packet_db[RFIFOW(fd,0)].pos[0]), sizeof(charname));
 
-	if( ( pl_sd = map->nick2sd(charname) ) == NULL || pc_get_group_level(sd) < pc_get_group_level(pl_sd) ) {
+	if ((pl_sd = map->nick2sd(charname, true)) == NULL || pc_get_group_level(sd) < pc_get_group_level(pl_sd)) {
 		return;
 	}
 

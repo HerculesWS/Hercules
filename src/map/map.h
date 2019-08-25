@@ -1208,7 +1208,7 @@ END_ZEROED_BLOCK;
 	void (*addiddb) (struct block_list *bl);
 	void (*deliddb) (struct block_list *bl);
 	/* */
-	struct map_session_data * (*nick2sd) (const char *nick);
+	struct map_session_data * (*nick2sd) (const char *nick, bool allow_partial);
 	struct mob_data * (*getmob_boss) (int16 m);
 	struct mob_data * (*id2boss) (int id);
 	uint32 (*race_id2mask) (int race);
