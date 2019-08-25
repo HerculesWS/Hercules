@@ -181,10 +181,8 @@ struct mapif_interface {
 	int (*itembound_ack) (int fd, int aid, int guild_id);
 	void (*parse_ItemBoundRetrieve) (int fd);
 	void (*parse_accinfo) (int fd);
-	int (*broadcast) (const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
 	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
-	int (*parse_broadcast) (int fd);
 	int (*parse_Registry) (int fd);
 	int (*parse_RegistryRequest) (int fd);
 	void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *name);

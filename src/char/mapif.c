@@ -2034,27 +2034,6 @@ static void mapif_parse_accinfo(int fd)
 	inter->accinfo(u_fd, aid, castergroup, query, fd);
 }
 
-// broadcast sending
-static int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
-{
-	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
-
-	nullpo_ret(mes);
-	Assert_ret(len >= 16);
-	WBUFW(buf, 0) = 0x3800;
-	WBUFW(buf, 2) = len;
-	WBUFL(buf, 4) = fontColor;
-	WBUFW(buf, 8) = fontType;
-	WBUFW(buf, 10) = fontSize;
-	WBUFW(buf, 12) = fontAlign;
-	WBUFW(buf, 14) = fontY;
-	memcpy(WBUFP(buf, 16), mes, len - 16);
-	mapif->sendallwos(sfd, buf, len);
-
-	aFree(buf);
-	return 0;
-}
-
 #if 0
 // Account registry transfer to map-server
 static void mapif_account_reg(int fd, unsigned char *src)
@@ -2083,13 +2062,6 @@ static int mapif_disconnectplayer(int fd, int account_id, int char_id, int reaso
 	WFIFOL(fd, 2) = account_id;
 	WFIFOB(fd, 6) = reason;
 	WFIFOSET(fd, 7);
-	return 0;
-}
-
-// broadcast sending
-static int mapif_parse_broadcast(int fd)
-{
-	mapif->broadcast(RFIFOP(fd, 16), RFIFOW(fd, 2), RFIFOL(fd, 4), RFIFOW(fd, 8), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), fd);
 	return 0;
 }
 
@@ -2528,10 +2500,8 @@ void mapif_defaults(void)
 	mapif->itembound_ack = mapif_itembound_ack;
 	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 	mapif->parse_accinfo = mapif_parse_accinfo;
-	mapif->broadcast = mapif_broadcast;
 	mapif->account_reg_reply = mapif_account_reg_reply;
 	mapif->disconnectplayer = mapif_disconnectplayer;
-	mapif->parse_broadcast = mapif_parse_broadcast;
 	mapif->parse_Registry = mapif_parse_Registry;
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;
 	mapif->namechange_ack = mapif_namechange_ack;

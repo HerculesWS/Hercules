@@ -67,7 +67,7 @@ int party_share_level = 10;
 
 // recv. packet list
 static int inter_recv_packet_length[] = {
-	-1, 0, 0, 0, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
+	 0, 0, 0, 0, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
 	 6,-1, 6,-1,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage, Achievements [Smokexyz]
 	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
 	-1, 6,-1,-1, 55,23, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
@@ -1035,7 +1035,6 @@ static int inter_parse_frommap(int fd)
 		return 2;
 
 	switch(cmd) {
-	case 0x3000: mapif->parse_broadcast(fd); break;
 	case 0x3004: mapif->parse_Registry(fd); break;
 	case 0x3005: mapif->parse_RegistryRequest(fd); break;
 	case 0x3006: mapif->parse_NameChangeRequest(fd); break;

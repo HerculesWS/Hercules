@@ -60,8 +60,6 @@ struct intif_interface {
 	int (*parse) (int fd);
 	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,
 	                  int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
-	int (*broadcast) (const char *mes, int len, int type);
-	int (*broadcast2) (const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
 	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
 	void (*request_account_storage) (const struct map_session_data *sd);

@@ -153,65 +153,6 @@ static int intif_rename(struct map_session_data *sd, int type, const char *name)
 	return 0;
 }
 
-// GM Send a message
-static int intif_broadcast(const char *mes, int len, int type)
-{
-	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
-
-	nullpo_ret(mes);
-	Assert_ret(len < 32000);
-	// Send to the local players
-	clif->broadcast(NULL, mes, len, type, ALL_CLIENT);
-
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	WFIFOHEAD(inter_fd, 16 + lp + len);
-	WFIFOW(inter_fd,0)  = 0x3000;
-	WFIFOW(inter_fd,2)  = 16 + lp + len;
-	WFIFOL(inter_fd,4)  = 0xFF000000; // 0xFF000000 color signals standard broadcast
-	WFIFOW(inter_fd,8)  = 0; // fontType not used with standard broadcast
-	WFIFOW(inter_fd,10) = 0; // fontSize not used with standard broadcast
-	WFIFOW(inter_fd,12) = 0; // fontAlign not used with standard broadcast
-	WFIFOW(inter_fd,14) = 0; // fontY not used with standard broadcast
-	if (type&BC_BLUE)
-		WFIFOL(inter_fd,16) = 0x65756c62; //If there's "blue" at the beginning of the message, game client will display it in blue instead of yellow.
-	else if (type&BC_WOE)
-		WFIFOL(inter_fd,16) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
-	memcpy(WFIFOP(inter_fd,16 + lp), mes, len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-	return 0;
-}
-
-static int intif_broadcast2(const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
-{
-	nullpo_ret(mes);
-	Assert_ret(len < 32000);
-	// Send to the local players
-	clif->broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
-
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	WFIFOHEAD(inter_fd, 16 + len);
-	WFIFOW(inter_fd,0)  = 0x3000;
-	WFIFOW(inter_fd,2)  = 16 + len;
-	WFIFOL(inter_fd,4)  = fontColor;
-	WFIFOW(inter_fd,8)  = fontType;
-	WFIFOW(inter_fd,10) = fontSize;
-	WFIFOW(inter_fd,12) = fontAlign;
-	WFIFOW(inter_fd,14) = fontY;
-	memcpy(WFIFOP(inter_fd,16), mes, len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-	return 0;
-}
-
 //Request for saving registry values.
 static int intif_saveregistry(struct map_session_data *sd)
 {
@@ -2730,12 +2671,6 @@ static int intif_parse(int fd)
 	}
 	// Processing branch
 	switch(cmd){
-		case 0x3800:
-			if (RFIFOL(fd,4) == 0xFF000000) //Normal announce.
-				clif->broadcast(NULL, RFIFOP(fd,16), packet_len-16, BC_DEFAULT, ALL_CLIENT);
-			else //Color announce.
-				clif->broadcast2(NULL, RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
-			break;
 		case 0x3804: intif->pRegisters(fd); break;
 		case 0x3805: intif->pAccountStorage(fd); break;
 		case 0x3806: intif->pChangeNameOk(fd); break;
@@ -2840,7 +2775,7 @@ static int intif_parse(int fd)
 void intif_defaults(void)
 {
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
-		-1, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+		 0, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,25, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
@@ -2860,8 +2795,6 @@ void intif_defaults(void)
 	/* funcs */
 	intif->parse = intif_parse;
 	intif->create_pet = intif_create_pet;
-	intif->broadcast = intif_broadcast;
-	intif->broadcast2 = intif_broadcast2;
 	intif->saveregistry = intif_saveregistry;
 	intif->request_registry = intif_request_registry;
 	intif->request_account_storage = intif_request_account_storage;
