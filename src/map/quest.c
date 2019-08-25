@@ -585,7 +585,7 @@ static int quest_read_db(void)
 		count++;
 	}
 	libconfig->destroy(&quest_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 	return count;
 }
 

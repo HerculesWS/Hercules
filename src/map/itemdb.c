@@ -1655,7 +1655,7 @@ static void itemdb_read_combos(void)
 		count++;
 	}
 	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"item_combo_db"CL_RESET"'.\n", count);
+	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, DBPATH"item_combo_db.txt");
 
 	return;
 }
@@ -2407,7 +2407,7 @@ static int itemdb_readdb_libconfig(const char *filename)
 	}
 	db_destroy(duplicate_db);
 	libconfig->destroy(&item_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 	return count;
 }
 
