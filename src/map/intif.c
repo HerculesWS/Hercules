@@ -234,52 +234,6 @@ static int intif_main_message(struct map_session_data *sd, const char *message)
 	return 0;
 }
 
-// The transmission of Wisp/Page to inter-server (player not found on this server)
-static int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, int mes_len)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-	nullpo_ret(sd);
-	nullpo_ret(nick);
-	nullpo_ret(mes);
-
-	if (chrif->other_mapserver_count < 1) {
-		//Character not found.
-		clif->wis_end(sd->fd, 1);
-		return 0;
-	}
-
-	WFIFOHEAD(inter_fd,mes_len + 52);
-	WFIFOW(inter_fd,0) = 0x3001;
-	WFIFOW(inter_fd,2) = mes_len + 52;
-	memcpy(WFIFOP(inter_fd,4), sd->status.name, NAME_LENGTH);
-	memcpy(WFIFOP(inter_fd,4+NAME_LENGTH), nick, NAME_LENGTH);
-	memcpy(WFIFOP(inter_fd,4+2*NAME_LENGTH), mes, mes_len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-
-	if (battle_config.etc_log)
-		ShowInfo("intif_wis_message from %s to %s (message: '%s')\n", sd->status.name, nick, mes);
-
-	return 0;
-}
-
-// The reply of Wisp/page
-static int intif_wis_replay(int id, int flag)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-	WFIFOHEAD(inter_fd,7);
-	WFIFOW(inter_fd,0) = 0x3002;
-	WFIFOL(inter_fd,2) = id;
-	WFIFOB(inter_fd,6) = flag; // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-	WFIFOSET(inter_fd,7);
-
-	if (battle_config.etc_log)
-		ShowInfo("intif_wis_replay: id: %d, flag:%d\n", id, flag);
-
-	return 0;
-}
-
 // The transmission of GM only Wisp/Page from server to inter-server
 static int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 {
@@ -1165,58 +1119,6 @@ static int intif_homunculus_requestdelete(int homun_id)
 
 //-----------------------------------------------------------------
 // Packets receive from inter server
-
-// Wisp/Page reception // rewritten by [Yor]
-static void intif_parse_WisMessage(int fd)
-{
-	struct map_session_data* sd;
-	const char *wisp_source;
-	char name[NAME_LENGTH];
-	int id, i;
-
-	id=RFIFOL(fd,4);
-
-	safestrncpy(name, RFIFOP(fd,32), NAME_LENGTH);
-	sd = map->nick2sd(name);
-	if(sd == NULL || strcmp(sd->status.name, name) != 0) {
-		//Not found
-		intif_wis_replay(id,1);
-		return;
-	}
-	if(sd->state.ignoreAll) {
-		intif_wis_replay(id, 2);
-		return;
-	}
-	wisp_source = RFIFOP(fd,8); // speed up [Yor]
-	for(i=0; i < MAX_IGNORE_LIST &&
-		sd->ignore[i].name[0] != '\0' &&
-		strcmp(sd->ignore[i].name, wisp_source) != 0
-		; i++);
-
-	if (i < MAX_IGNORE_LIST && sd->ignore[i].name[0] != '\0') {
-		//Ignored
-		intif_wis_replay(id, 2);
-		return;
-	}
-	//Success to send whisper.
-	clif->wis_message(sd->fd, wisp_source, RFIFOP(fd,56),RFIFOW(fd,2)-57);
-	intif_wis_replay(id,0);   // success
-}
-
-// Wisp/page transmission result reception
-static void intif_parse_WisEnd(int fd)
-{
-	struct map_session_data* sd;
-	const char *playername = RFIFOP(fd, 2);
-
-	if (battle_config.etc_log)
-		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", playername, RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-	sd = map->nick2sd(playername);
-	if (sd != NULL)
-		clif->wis_end(sd->fd, RFIFOB(fd,26));
-
-	return;
-}
 
 static int intif_parse_WisToGM_sub(struct map_session_data *sd, va_list va)
 {
@@ -2921,8 +2823,6 @@ static int intif_parse(int fd)
 			else //Color announce.
 				clif->broadcast2(NULL, RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
 			break;
-		case 0x3801: intif->pWisMessage(fd); break;
-		case 0x3802: intif->pWisEnd(fd); break;
 		case 0x3803: intif->pWisToGM(fd); break;
 		case 0x3804: intif->pRegisters(fd); break;
 		case 0x3805: intif->pAccountStorage(fd); break;
@@ -3028,7 +2928,7 @@ static int intif_parse(int fd)
 void intif_defaults(void)
 {
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
-		-1,-1,27,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+		-1, 0, 0,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,25, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
@@ -3051,7 +2951,6 @@ void intif_defaults(void)
 	intif->broadcast = intif_broadcast;
 	intif->broadcast2 = intif_broadcast2;
 	intif->main_message = intif_main_message;
-	intif->wis_message = intif_wis_message;
 	intif->wis_message_to_gm = intif_wis_message_to_gm;
 	intif->saveregistry = intif_saveregistry;
 	intif->request_registry = intif_request_registry;
@@ -3138,8 +3037,6 @@ void intif_defaults(void)
 	intif->achievements_request = intif_achievements_request;
 	intif->achievements_save = intif_achievements_save;
 	/* parse functions */
-	intif->pWisMessage = intif_parse_WisMessage;
-	intif->pWisEnd = intif_parse_WisEnd;
 	intif->pWisToGM_sub = intif_parse_WisToGM_sub;
 	intif->pWisToGM = intif_parse_WisToGM;
 	intif->pRegisters = intif_parse_Registers;

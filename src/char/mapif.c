@@ -2055,46 +2055,6 @@ static int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontC
 	return 0;
 }
 
-// Wis sending
-static int mapif_wis_message(struct WisData *wd)
-{
-	unsigned char buf[2048];
-	nullpo_ret(wd);
-	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
-	if (wd->len < 0)
-		wd->len = 0;
-	if (wd->len >= (int)sizeof(wd->msg) - 1)
-		wd->len = (int)sizeof(wd->msg) - 1;
-
-	WBUFW(buf, 0) = 0x3801;
-	WBUFW(buf, 2) = 56 + wd->len;
-	WBUFL(buf, 4) = wd->id;
-	memcpy(WBUFP(buf, 8), wd->src, NAME_LENGTH);
-	memcpy(WBUFP(buf, 32), wd->dst, NAME_LENGTH);
-	memcpy(WBUFP(buf, 56), wd->msg, wd->len);
-	wd->count = mapif->sendall(buf, WBUFW(buf, 2));
-
-	return 0;
-}
-
-static void mapif_wis_response(int fd, const unsigned char *src, int flag)
-{
-	unsigned char buf[27];
-	nullpo_retv(src);
-	WBUFW(buf, 0) = 0x3802;
-	memcpy(WBUFP(buf, 2), src, 24);
-	WBUFB(buf, 26) = flag;
-	mapif->send(fd, buf, 27);
-}
-
-// Wis sending result
-static int mapif_wis_end(struct WisData *wd, int flag)
-{
-	nullpo_ret(wd);
-	mapif->wis_response(wd->fd, wd->src, flag);
-	return 0;
-}
-
 #if 0
 // Account registry transfer to map-server
 static void mapif_account_reg(int fd, unsigned char *src)
@@ -2130,70 +2090,6 @@ static int mapif_disconnectplayer(int fd, int account_id, int char_id, int reaso
 static int mapif_parse_broadcast(int fd)
 {
 	mapif->broadcast(RFIFOP(fd, 16), RFIFOW(fd, 2), RFIFOL(fd, 4), RFIFOW(fd, 8), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), fd);
-	return 0;
-}
-
-// Wisp/page request to send
-static int mapif_parse_WisRequest(int fd)
-{
-	struct WisData* wd;
-	char name[NAME_LENGTH];
-	char *data;
-	size_t len;
-
-	if (fd <= 0) // check if we have a valid fd
-		return 0;
-
-	if (RFIFOW(fd, 2) - 52 >= sizeof(wd->msg)) {
-		ShowWarning("inter: Wis message size too long.\n");
-		return 0;
-	} else if (RFIFOW(fd, 2) - 52 <= 0) { // normally, impossible, but who knows...
-		ShowError("inter: Wis message doesn't exist.\n");
-		return 0;
-	}
-
-	safestrncpy(name, RFIFOP(fd, 28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
-
-	// search if character exists before to ask all map-servers
-	if (!chr->name_exists(name, NULL)) {
-		mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-	} else {
-		// Character exists. So, ask all map-servers
-
-		// to be sure of the correct name, rewrite it
-		SQL->GetData(inter->sql_handle, 0, &data, &len);
-		memset(name, 0, NAME_LENGTH);
-		memcpy(name, data, min(len, NAME_LENGTH));
-		// if source is destination, don't ask other servers.
-		if (strncmp(RFIFOP(fd, 4), name, NAME_LENGTH) == 0) {
-			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-		} else {
-			wd = inter->add_wisdata(fd, RFIFOP(fd, 4), RFIFOP(fd, 28), RFIFOP(fd, 52), RFIFOW(fd, 2) - 52);
-			mapif->wis_message(wd);
-		}
-	}
-
-	SQL->FreeResult(inter->sql_handle);
-	return 0;
-}
-
-// Wisp/page transmission result
-static int mapif_parse_WisReply(int fd)
-{
-	int id, flag;
-	struct WisData *wd;
-
-	id = RFIFOL(fd,2);
-	flag = RFIFOB(fd,6);
-	wd = inter->get_wisdata(id);
-	if (wd == NULL)
-		return 0; // This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
-
-	if ((--wd->count) <= 0 || flag != 1) {
-		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-		inter->remove_wisdata(id);
-	}
-
 	return 0;
 }
 
@@ -2645,14 +2541,9 @@ void mapif_defaults(void)
 	mapif->parse_ItemBoundRetrieve = mapif_parse_ItemBoundRetrieve;
 	mapif->parse_accinfo = mapif_parse_accinfo;
 	mapif->broadcast = mapif_broadcast;
-	mapif->wis_message = mapif_wis_message;
-	mapif->wis_response = mapif_wis_response;
-	mapif->wis_end = mapif_wis_end;
 	mapif->account_reg_reply = mapif_account_reg_reply;
 	mapif->disconnectplayer = mapif_disconnectplayer;
 	mapif->parse_broadcast = mapif_parse_broadcast;
-	mapif->parse_WisRequest = mapif_parse_WisRequest;
-	mapif->parse_WisReply = mapif_parse_WisReply;
 	mapif->parse_WisToGM = mapif_parse_WisToGM;
 	mapif->parse_Registry = mapif_parse_Registry;
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;

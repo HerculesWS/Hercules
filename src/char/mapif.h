@@ -23,7 +23,6 @@
 #include "common/hercules.h"
 #include "common/mmo.h"
 
-struct WisData;
 struct rodex_item;
 
 /**
@@ -183,14 +182,9 @@ struct mapif_interface {
 	void (*parse_ItemBoundRetrieve) (int fd);
 	void (*parse_accinfo) (int fd);
 	int (*broadcast) (const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
-	int (*wis_message) (struct WisData *wd);
-	void (*wis_response) (int fd, const unsigned char *src, int flag);
-	int (*wis_end) (struct WisData *wd, int flag);
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
 	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
 	int (*parse_broadcast) (int fd);
-	int (*parse_WisRequest) (int fd);
-	int (*parse_WisReply) (int fd);
 	int (*parse_WisToGM) (int fd);
 	int (*parse_Registry) (int fd);
 	int (*parse_RegistryRequest) (int fd);
