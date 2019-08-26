@@ -37,15 +37,15 @@
 //=========================================================================
 
 bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
-	if (countitem(War_Badge)) {
-		.@pointstoadd = countitem(War_Badge);
-		delitem 7773,.@pointstoadd;
+	if (countitem(KVM_Badge)) {
+		.@pointstoadd = countitem(KVM_Badge);
+		delitem KVM_Badge,.@pointstoadd;
 		kvm_point += .@pointstoadd;
 		mes("[Logistics]");
-		mesf("Are those %ss I see?", getitemname(7773));
+		mesf("Are those %ss I see?", getitemname(KVM_Badge));
 		mes("We no longer accept that currency,\r"
 			"but I can exchange those for you.");
-		mesf("So you have %d %ss?", .@pointstoadd, getitemname(7773));
+		mesf("So you have %d %ss?", .@pointstoadd, getitemname(KVM_Badge));
 		mesf("Alright, all set, you now have ^580080%d^000000 KVM Points.", kvm_point);
 		next;
 	}
