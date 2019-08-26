@@ -13397,25 +13397,103 @@ static bool status_readdb_sizefix(char *fields[], int columns, int current)
 	return true;
 }
 
-static bool status_readdb_scconfig(char *fields[], int columns, int current)
+static bool status_read_scdb_libconfig(void)
 {
-	int val = 0;
-	char* type = fields[0];
+	struct config_t status_conf;
+	char filepath[256];
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, "sc_config.conf");
 
-	nullpo_retr(false, fields);
-	if( !script->get_constant(type, &val) ){
-		ShowWarning("status_readdb_sc_conf: Invalid status type %s specified.\n", type);
+	if (libconfig->load_file(&status_conf, filepath) == CONFIG_FALSE) {
+		ShowError("status_read_scdb_libconfig: can't read %s\n", filepath);
 		return false;
 	}
 
-	status->dbs->sc_conf[val] = (int)strtol(fields[1], NULL, 0);
-	if (status->dbs->sc_conf[val] & SC_VISIBLE)
-	{
-		status->dbs->DisplayType[val] = true;
+	int i = 0;
+	int count = 0;
+	struct config_setting_t *it = NULL;
+
+	while ((it = libconfig->setting_get_elem(status_conf.root, i++)) != NULL) {
+		if (status->read_scdb_libconfig_sub(it, i - 1, filepath))
+			++count;
 	}
+
+	libconfig->destroy(&status_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool status_read_scdb_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+
+	int i32;
+	const char *name = config_setting_name(it);
+
+	if (!script->get_constant(name, &i32) || i32 <= SC_NONE || i32 >= SC_MAX) {
+		ShowWarning("status_read_scdb_libconfig_sub: Invalid status type (%s) in \"%s\" entry #%d, skipping.\n", name, source, idx);
+		return false;
+	}
+
+	libconfig->setting_lookup_bool_real(it, "Visible", &status->dbs->DisplayType[i32]);
+
+	if ((struct config_setting_t *fg = libconfig->setting_get_member(it, "Flags")) != NULL)
+		status->read_scdb_libconfig_sub_flag(fg, i32, source);
 
 	return true;
 }
+
+static bool status_read_scdb_libconfig_sub_flag(struct config_setting_t *it, int type, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+	Assert_retr(false, type > SC_NONE && type < SC_MAX);
+
+	int i = 0;
+	struct config_setting_t *t = NULL;
+	while ((t = libconfig->setting_get_elem(it, i++)) != NULL) {
+		const char *flag = config_setting_name(t);
+		bool on = libconfig->setting_get_bool_real(t);
+		int j;
+
+		struct {
+			const char *name;
+			enum sc_conf_type value;
+		} flags[] = {
+			{ "NoDeathReset", SC_NO_REM_DEATH },
+			{ "NoSave", SC_NO_SAVE },
+			{ "NoDispelReset", SC_NO_DISPELL },
+			{ "NoClearanceReset", SC_NO_CLEARANCE },
+			{ "Buff", SC_BUFF },
+			{ "Debuff", SC_DEBUFF },
+			{ "NoMadoReset", SC_MADO_NO_RESET },
+			{ "NoAllReset", SC_NO_CLEAR }
+		};
+
+		ARR_FIND(0, ARRAYLENGTH(flags), j, strcmpi(flag, flags[j].name) == 0);
+		if (j != ARRAYLENGTH(flags)) {
+			if (strcmp(flag, flags[j].name) != 0) {
+				ShowWarning("status_read_scdb_libconfig_sub_flag: flag (%s) for status effect (%d) is casesensitive, correct it to (%s).", flag, type, flags[i].name);
+			}
+			if (on) {
+				status->dbs->sc_conf[type] |= flags[j].value;
+			} else {
+				status->dbs->sc_conf[type] &= ~flags[j].value;
+			}
+		} else {
+			if (!status->read_scdb_libconfig_sub_flag_additional(it, type, source))
+				ShowWarning("status_read_scdb_libconfig_sub_flag: invalid flag (%s) for status effect (%d).", flag, type);
+		}
+	}
+	return true;
+}
+
+static bool status_read_scdb_libconfig_sub_flag_additional(struct config_setting_t *it, int type, const char *source)
+{
+	// to be used by plugins
+	return false;
+}
+
 /**
  * Read status db
  * job1.txt
@@ -13454,7 +13532,7 @@ static int status_readdb(void)
 	//
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
 	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
-	sv->readdb(map->db_path, "sc_config.txt",       ',', 2,                 2,                 SC_MAX,                   status->readdb_scconfig);
+	status->read_scdb_libconfig();
 	status->read_job_db();
 
 	pc->validate_levels();
@@ -13644,7 +13722,10 @@ void status_defaults(void)
 	status->natural_heal_timer = status_natural_heal_timer;
 	status->readdb_job2 = status_readdb_job2;
 	status->readdb_sizefix = status_readdb_sizefix;
-	status->readdb_scconfig = status_readdb_scconfig;
+	status->read_scdb_libconfig = status_read_scdb_libconfig;
+	status->read_scdb_libconfig_sub = status_read_scdb_libconfig_sub;
+	status->read_scdb_libconfig_sub_flag = status_read_scdb_libconfig_sub_flag;
+	status->read_scdb_libconfig_sub_flag_additional = status_read_scdb_libconfig_sub_flag_additional;
 	status->read_job_db = status_read_job_db;
 	status->read_job_db_sub = status_read_job_db_sub;
 	status->set_sc = status_set_sc;

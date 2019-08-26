@@ -50,7 +50,7 @@ struct pet_data;
 
 /**
  * SC configuration type
- * @see db/sc_config.txt for more information
+ * @see db/sc_config.conf for more information
  **/
 typedef enum sc_conf_type {
 	SC_NO_REM_DEATH  = 0x001,
@@ -2387,7 +2387,10 @@ struct status_interface {
 	int (*natural_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
-	bool (*readdb_scconfig) (char *fields[], int columns, int current);
+	bool (*read_scdb_libconfig) (void);
+	bool (*read_scdb_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*read_scdb_libconfig_sub_flag) (struct config_setting_t *it, int type, const char *source);
+	bool (*read_scdb_libconfig_sub_flag_additional) (struct config_setting_t *it, int type, const char *source);
 	void (*read_job_db) (void);
 	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
 	void (*set_sc) (uint16 skill_id, sc_type sc, int icon, unsigned int flag);
