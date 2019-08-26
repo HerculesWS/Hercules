@@ -9,6 +9,33 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.08.25] `August 25 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-08-21. (#2517)
+- Added icons for the elemental resistance status changes (`SC_ARMORPROPERTY`). (#2516)
+- Added Visual Studio 2019 solution. (#2520)
+- Added new NPC ID constants. (#2521)
+
+### Changed
+
+- Converted various packets (`ZC_ADD_SKILL`, `ZC_SKILLINFO_LIST`, `ZC_SKILLINFO_UPDATE2`) into structs and added a new version for `ZC_NPC_MARKET_PURCHASE_RESULT`. (part of #2517)
+- Added missing sanity checks into many clif functions. (#2501)
+- Extended the `getequiprefinerycnt()` command to accept multiple equipment slots at the same time, returning the total refine of them. (#2512)
+- Added the path (relative to the Hercules root) to various database reading status messages. (#2513)
+- Extended `setiteminfo()` and `getiteminfo()` with additional options: `ITEMINFO_ELV_MAX`, `ITEMINFO_DELAY`, `ITEMINFO_DROPEFFECT_MODE`, `ITEMINFO_CLASS_*`, `ITEMINFO_FLAG_*`, `ITEMINFO_STACK_*`, `ITEMINFO_ITEM_USAGE_*`, `ITEMINFO_GM_LV_TRADE_OVERRIDE`. (#2518)
+
+### Fixed
+
+- Fixed packets `ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN` and `ZC_MAKINGITEM_LIST`. (part of #2517)
+- Fixed an overflow in the auto bonus processing function, that made it unable to handle costume/shadow gears. (#2514, issues #1355, #1190, #2451)
+
+### Removed
+
+- Removed Visual Studio 2013 solution. (part of #2520)
+- Removed round-trips to the inter-server for packets related to whisper messages, reports to GMs, GM broadcasts, party, guild and main chat, previously needed for, now unsupported, multi-zone setups. (#2522)
+
 ### [v2019.07.28] `July 28 2019`
 
 ### Added
@@ -860,6 +887,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.08.25]: https://github.com/HerculesWS/Hercules/compare/v2019.07.28...v2019.08.25
 [v2019.07.28]: https://github.com/HerculesWS/Hercules/compare/v2019.06.30...v2019.07.28
 [v2019.06.30]: https://github.com/HerculesWS/Hercules/compare/v2019.06.02...v2019.06.30
 [v2019.06.02]: https://github.com/HerculesWS/Hercules/compare/v2019.05.05+4...v2019.06.02
