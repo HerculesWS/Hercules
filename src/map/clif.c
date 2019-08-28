@@ -8689,14 +8689,14 @@ static void clif_emotion(struct block_list *bl, int type)
 /// 0191 <id>.L <contents>.80B
 static void clif_talkiebox(struct block_list *bl, const char *talkie)
 {
-	unsigned char buf[MESSAGE_SIZE+6];
 	nullpo_retv(bl);
 	nullpo_retv(talkie);
+	struct PACKET_ZC_TALKBOX_CHATCONTENTS p;
 
-	WBUFW(buf,0) = 0x191;
-	WBUFL(buf,2) = bl->id;
-	safestrncpy(WBUFP(buf,6),talkie,MESSAGE_SIZE);
-	clif->send(buf,packet_len(0x191),bl,AREA);
+	p.PacketType = HEADER_ZC_TALKBOX_CHATCONTENTS;
+	p.aid = bl->id;
+	safestrncpy(&p.message[0], talkie, TALKBOX_MESSAGE_SIZE);
+	clif->send(&p, sizeof(struct PACKET_ZC_TALKBOX_CHATCONTENTS), bl, AREA);
 }
 
 /// Displays wedding effect centered on an object (ZC_CONGRATULATION).
