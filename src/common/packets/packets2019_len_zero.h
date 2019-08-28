@@ -103,7 +103,11 @@ packetLen(0x007c, 44)  // ZC_NOTIFY_STANDENTRY_NPC
 packetLen(0x007d, 2)  // CZ_NOTIFY_ACTORINIT
 
 // Packet: 0x007e
+#if PACKETVER >= 20190828
+packetLen(0x007e, 46)  // CZ_REQUEST_TIME
+#elif PACKETVER >= 20190116
 packetLen(0x007e, 105)  // CZ_REQUEST_TIME
+#endif
 
 // Packet: 0x007f
 packetLen(0x007f, 6)  // ZC_NOTIFY_TIME
@@ -916,7 +920,11 @@ packetLen(0x018f, 8)  // ZC_ACK_REQMAKINGITEM
 packetLen(0x0190, 23)  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX
 
 // Packet: 0x0191
+#if PACKETVER >= 20190828
+packetLen(0x0191, 27)  // ZC_TALKBOX_CHATCONTENTS
+#elif PACKETVER >= 20190116
 packetLen(0x0191, 86)  // ZC_TALKBOX_CHATCONTENTS
+#endif
 
 // Packet: 0x0192
 packetLen(0x0192, 24)  // ZC_UPDATE_MAPINFO
@@ -1966,7 +1974,11 @@ packetLen(0x0365, 8)  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY2
 packetLen(0x0366, 10)  // CZ_USE_SKILL_TOGROUND2
 
 // Packet: 0x0367
+#if PACKETVER >= 20190828
+packetLen(0x0367, 31)  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX2
+#elif PACKETVER >= 20190116
 packetLen(0x0367, 90)  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX2
+#endif
 
 // Packet: 0x0368
 packetLen(0x0368, 6)  // CZ_REQNAME2
@@ -4695,6 +4707,26 @@ packetLen(0x0b53, 52)
 // Packet: 0x0b54
 #if PACKETVER >= 20190814
 packetLen(0x0b54, 8)
+#endif
+
+// Packet: 0x0b55
+#if PACKETVER >= 20190828
+packetLen(0x0b55, -1)
+#endif
+
+// Packet: 0x0b56
+#if PACKETVER >= 20190828
+packetLen(0x0b56, -1)
+#endif
+
+// Packet: 0x0b57
+#if PACKETVER >= 20190828
+packetLen(0x0b57, -1)
+#endif
+
+// Packet: 0x0b58
+#if PACKETVER >= 20190828
+packetLen(0x0b58, 2)
 #endif
 
 
