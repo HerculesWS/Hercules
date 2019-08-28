@@ -5268,7 +5268,7 @@ static void clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDA
 		skillData->sp = 0;
 		skillData->range2 = 0;
 	}
-#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+#if PACKETVER_RE_NUM >= 20190807
 	if (newSkill)
 		skillData->level2 = 0;
 	else
@@ -5419,7 +5419,7 @@ static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 		p->sp = 0;
 		p->range2 = 0;
 	}
-#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+#if PACKETVER_RE_NUM >= 20190807
 	p->level2 = skill_lv;
 #endif
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
