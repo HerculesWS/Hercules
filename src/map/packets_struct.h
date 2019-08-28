@@ -3610,6 +3610,13 @@ struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT {
 DEFINE_PACKET_HEADER(ZC_NPC_MARKET_PURCHASE_RESULT, 0x09d7);
 #endif
 
+struct PACKET_ZC_TALKBOX_CHATCONTENTS {
+	int16 PacketType;
+	uint32 aid;
+	char message[TALKBOX_MESSAGE_SIZE];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_TALKBOX_CHATCONTENTS, 0x0191);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
