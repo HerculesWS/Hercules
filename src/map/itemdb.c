@@ -1526,138 +1526,99 @@ static void itemdb_read_chains(void)
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
-/**
- * @return: amount of retrieved entries.
- **/
-static int itemdb_combo_split_atoi(char *str, int *val)
+static bool itemdb_read_combodb_libconfig(void)
 {
-	int i;
-
-	nullpo_ret(val);
-
-	for (i=0; i<MAX_ITEMS_PER_COMBO; i++) {
-		if (!str) break;
-
-		val[i] = atoi(str);
-		str = strchr(str,':');
-		if (str)
-			*str++=0;
-	}
-
-	if( i == 0 ) //No data found.
-		return 0;
-
-	return i;
-}
-/**
- * <combo{:combo{:combo:{..}}}>,<{ script }>
- **/
-static void itemdb_read_combos(void)
-{
-	uint32 lines = 0, count = 0;
-	char line[1024];
+	struct config_t combo_conf;
 	char filepath[256];
-	FILE* fp;
+	safesnprintf(filepath, sizeof(filepath), "%s/%s/%s", map->db_path, DBPATH, "item_combo_db.conf");
 
-	safesnprintf(filepath, 256, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
-
-	if ((fp = fopen(filepath, "r")) == NULL) {
-		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
-		return;
+	if (libconfig->load_file(&combo_conf, filepath) == CONFIG_FALSE) {
+		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
+		return false;
 	}
 
-	// process rows one by one
-	while(fgets(line, sizeof(line), fp)) {
-		char *str[2], *p;
-
-		lines++;
-
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-
-		memset(str, 0, sizeof(str));
-
-		p = line;
-		p = trim(p);
-		if (*p == '\0')
-			continue;// empty line
-
-		if (!strchr(p,',')) {
-			/* is there even a single column? */
-			ShowError("itemdb_read_combos: Insufficient columns in line %u of \"%s\", skipping.\n", lines, filepath);
-			continue;
-		}
-
-		str[0] = p;
-		p = strchr(p,',');
-		*p = '\0';
-		p++;
-
-		str[1] = p;
-		p = strchr(p,',');
-		p++;
-
-		if (str[1][0] != '{') {
-			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %u of \"%s\", skipping.\n", lines, filepath);
-			continue;
-		}
-
-		/* no ending key anywhere (missing \}\) */
-		if ( str[1][strlen(str[1])-1] != '}' ) {
-			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %u of \"%s\", skipping.\n", lines, filepath);
-			continue;
-		} else {
-			int items[MAX_ITEMS_PER_COMBO];
-			int v = 0, retcount = 0;
-			struct item_combo *combo = NULL;
-
-			if((retcount = itemdb->combo_split_atoi(str[0], items)) < 2) {
-				ShowError("itemdb_read_combos: line %u of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
-				continue;
-			}
-
-			/* validate */
-			for(v = 0; v < retcount; v++) {
-				if( !itemdb->exists(items[v]) ) {
-					ShowError("itemdb_read_combos: line %u of \"%s\" contains unknown item ID %d, skipping.\n", lines, filepath, items[v]);
-					break;
-				}
-			}
-			/* failed at some item */
-			if( v < retcount )
-				continue;
-
-			RECREATE(itemdb->combos, struct item_combo*, ++itemdb->combo_count);
-
-			CREATE(combo, struct item_combo, 1);
-
-			combo->count = retcount;
-			combo->script = script->parse(str[1], filepath, lines, 0, NULL);
-			combo->id = itemdb->combo_count - 1;
-			/* populate ->nameid field */
-			for( v = 0; v < retcount; v++ ) {
-				combo->nameid[v] = items[v];
-			}
-
-			itemdb->combos[itemdb->combo_count - 1] = combo;
-
-			/* populate the items to refer to this combo */
-			for( v = 0; v < retcount; v++ ) {
-				struct item_data * it;
-				int index;
-
-				it = itemdb->exists(items[v]);
-				index = it->combos_count;
-				RECREATE(it->combos, struct item_combo*, ++it->combos_count);
-				it->combos[index] = combo;
-			}
-		}
-		count++;
+	struct config_setting_t *combo_db = NULL;
+	if ((combo_db = libconfig->setting_get_member(combo_conf.root, "combo_db")) == NULL) {
+		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
+		return false;
 	}
-	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, DBPATH"item_combo_db.txt");
 
-	return;
+	int i = 0;
+	int count = 0;
+	struct config_setting_t *it = NULL;
+
+	while ((it = libconfig->setting_get_elem(combo_db, i++)) != NULL) {
+		if (itemdb->read_combodb_libconfig_sub(it, i - 1, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&combo_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool itemdb_read_combodb_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+
+	struct config_setting_t *t = NULL;
+
+	if ((t = libconfig->setting_get_member(it, "Items")) == NULL) {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: invalid item list for combo (%d), in (%s), skipping..\n", idx, source);
+		return false;
+	}
+
+	if (!config_setting_is_array(t)) {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: the combo (%d) item list must be an array, in (%s), skipping..\n", idx, source);
+		return false;
+	}
+
+	int len = libconfig->setting_length(t);
+	if (len > MAX_ITEMS_PER_COMBO) {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: the size of combo (%d) item list is too big (%d, max = %d), in (%s), skipping..\n", idx, len, MAX_ITEMS_PER_COMBO, source);
+		return false;
+	}
+
+	struct item_combo *combo = NULL;
+	RECREATE(itemdb->combos, struct item_combo *, ++itemdb->combo_count);
+	CREATE(combo, struct item_combo, 1);
+
+	combo->id = itemdb->combo_count - 1;
+	combo->count = len;
+
+	for (int i = 0; i < len; i++) {
+		struct item_data *item = NULL;
+		const char *name = libconfig->setting_get_string_elem(t, i);
+
+		if ((item = itemdb->name2id(name)) == NULL) {
+			ShowWarning("itemdb_read_combodb_libconfig_sub: unknown item '%s', in (%s), skipping..\n", name, source);
+			--itemdb->combo_count;
+			aFree(combo);
+			return false;
+		}
+		combo->nameid[i] = item->nameid;
+	}
+
+	const char *str = NULL;
+	if (libconfig->setting_lookup_string(it, "Script", &str) == CONFIG_TRUE) {
+		combo->script = *str ? script->parse(str, source, -idx, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	} else {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: invalid script for combo (%d) in (%s), skipping..\n", idx, source);
+		--itemdb->combo_count;
+		aFree(combo);
+		return false;
+	}
+
+	itemdb->combos[combo->id] = combo;
+
+	/* populate the items to refer to this combo */
+	for (int i = 0; i < len; i++) {
+		struct item_data *item = itemdb->exists(combo->nameid[i]);
+		RECREATE(item->combos, struct item_combo *, ++item->combos_count);
+		item->combos[item->combos_count - 1] = combo;
+	}
+	return true;
 }
 
 /*======================================
@@ -2456,7 +2417,7 @@ static void itemdb_read(bool minimal)
 
 	itemdb->name_constants();
 
-	itemdb->read_combos();
+	itemdb->read_combodb_libconfig();
 	itemdb->read_groups();
 	itemdb->read_chains();
 	itemdb->read_packages();
@@ -2800,8 +2761,8 @@ void itemdb_defaults(void)
 	itemdb->isrestricted = itemdb_isrestricted;
 	itemdb->isidentified = itemdb_isidentified;
 	itemdb->isidentified2 = itemdb_isidentified2;
-	itemdb->combo_split_atoi = itemdb_combo_split_atoi;
-	itemdb->read_combos = itemdb_read_combos;
+	itemdb->read_combodb_libconfig = itemdb_read_combodb_libconfig;
+	itemdb->read_combodb_libconfig_sub = itemdb_read_combodb_libconfig_sub;
 	itemdb->gendercheck = itemdb_gendercheck;
 	itemdb->validate_entry = itemdb_validate_entry;
 	itemdb->readdb_options_additional_fields = itemdb_readdb_options_additional_fields;
