@@ -6750,6 +6750,18 @@ ACMD(changesex)
 	return true;
 }
 
+ACMD(changecharsex)
+{
+	int i;
+
+	pc->resetskill(sd, PCRESETSKILL_CHSEX);
+	// to avoid any problem with equipment and invalid sex, equipment is unequipped.
+	for (i=0; i<EQI_MAX; i++)
+		if (sd->equip_index[i] >= 0) pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+	chrif->changesex(sd, false);
+	return true;
+}
+
 /*================================================
  * @mute - Mutes a player for a set amount of time
  *------------------------------------------------*/
@@ -10115,6 +10127,7 @@ static void atcommand_basecommands(void)
 		ACMD_DEF(clearweather),
 		ACMD_DEF(uptime),
 		ACMD_DEF(changesex),
+		ACMD_DEF(changecharsex),
 		ACMD_DEF(mute),
 		ACMD_DEF(refresh),
 		ACMD_DEF(refreshall),
