@@ -15978,18 +15978,18 @@ static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame
 		if (list[i].id > 0) {
 			const char* name;
 			if (strcmp(list[i].name, "-") == 0 && (name = map->charid2nick(list[i].id)) != NULL) {
-				strncpy(ranks[i].name, name, NAME_LENGTH);
+				strncpy(ranks->names[i].name, name, NAME_LENGTH);
 			} else {
-				strncpy(ranks[i].name, list[i].name, NAME_LENGTH);
+				strncpy(ranks->names[i].name, list[i].name, NAME_LENGTH);
 			}
 		} else {
-			strncpy(ranks[i].name, "None", 5);
+			strncpy(ranks->names[i].name, "None", 5);
 		}
-		ranks[i].points = list[i].fame; //points
+		ranks->points[i].points = list[i].fame; //points
 	}
 	for (;i < 10; i++) { // In case the MAX is less than 10.
-		strncpy(ranks[i].name, "Unavailable", 12);
-		ranks[i].points = 0;
+		strncpy(ranks->names[i].name, "Unavailable", 12);
+		ranks->points[i].points = 0;
 	}
 #endif
 }
@@ -16038,7 +16038,7 @@ static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 	clif->ranklist_sub2(p->chars, p->points, type);
 #else
-	clif->ranklist_sub(p->ranks, type);
+	clif->ranklist_sub(&p->ranks, type);
 #endif
 
 	if (pc->famelist_type(sd->job) == type) {

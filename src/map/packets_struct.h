@@ -3460,6 +3460,14 @@ struct PACKET_ZC_REFINE_STATUS {
 DEFINE_PACKET_HEADER(ZC_REFINE_STATUS, 0x0ada);
 #endif
 
+struct PACKET_ZC_ACK_RANKING_name {
+	char name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct PACKET_ZC_ACK_RANKING_points {
+	uint32 points;
+} __attribute__((packed));
+
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 struct PACKET_ZC_ACK_RANKING_sub {
 	char name[NAME_LENGTH];
@@ -3476,21 +3484,22 @@ struct PACKET_ZC_ACK_RANKING {
 DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x0af6);
 #elif PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_ACK_RANKING_sub {
-	char name[NAME_LENGTH];
-	uint32 points;
+	struct PACKET_ZC_ACK_RANKING_name names[10];
+	struct PACKET_ZC_ACK_RANKING_points points[10];
 } __attribute__((packed));
 
 struct PACKET_ZC_ACK_RANKING {
 	int16 packetType;
 	int16 rankType;
-	struct PACKET_ZC_ACK_RANKING_sub ranks[10];
+	struct PACKET_ZC_ACK_RANKING_sub ranks;
 	uint32 myPoints;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x097d);
 #else
 struct PACKET_ZC_ACK_RANKING_sub {
-	char name[NAME_LENGTH];
-	uint32 points;
+	struct PACKET_ZC_ACK_RANKING_name names[10];
+	struct PACKET_ZC_ACK_RANKING_points points[10];
 } __attribute__((packed));
 #endif
 
