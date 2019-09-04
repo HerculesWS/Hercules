@@ -178,6 +178,7 @@ struct homunculus_interface {
 	bool (*evolve) (struct homun_data *hd);
 	bool (*mutate) (struct homun_data *hd, int homun_id);
 	int (*gainexp) (struct homun_data *hd, unsigned int exp);
+	int (*gainexp_real) (struct homun_data *hd, unsigned int exp);
 	unsigned int (*add_intimacy) (struct homun_data * hd, unsigned int value);
 	unsigned int (*consume_intimacy) (struct homun_data *hd, unsigned int value);
 	void (*healed) (struct homun_data *hd);
