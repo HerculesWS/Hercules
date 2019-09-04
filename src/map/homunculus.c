@@ -525,6 +525,21 @@ static bool homunculus_mutate(struct homun_data *hd, int homun_id)
 	return true;
 }
 
+static int homunculus_gainexp_real(struct homun_data *hd, unsigned int exp)
+{
+	nullpo_ret(hd);
+	nullpo_ret(hd->master);
+
+	hd->homunculus.exp += exp;
+
+	if (hd->master->state.showexp && hd->exp_next > 0) {
+		char output[256];
+		sprintf(output, msg_fd(hd->master->fd, 449), exp, ((float)exp / (float)hd->exp_next * (float)100));
+		clif_disp_onlyself(hd->master, output);
+	}
+	return 1;
+}
+
 static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 {
 	enum homun_type htype;
@@ -550,16 +565,10 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 			break;
 	}
 
-	hd->homunculus.exp += exp;
+	homun->gainexp_real(hd, exp);
 
-	if (hd->master->state.showexp && hd->exp_next > 0) {
-		char output[256];
-		sprintf(output, "Homunculus Experience Gained Base:%u (%.2f%%)", exp, ((float)exp / (float)hd->exp_next * (float)100));
-		clif_disp_onlyself(hd->master, output);
-	}
-
-	if(hd->homunculus.exp < hd->exp_next) {
-		clif->hominfo(hd->master,hd,0);
+	if (hd->homunculus.exp < hd->exp_next) {
+		clif->hominfo(hd->master, hd, 0);
 		return 0;
 	}
 
@@ -1439,6 +1448,7 @@ void homunculus_defaults(void)
 	homun->evolve = homunculus_evolve;
 	homun->mutate = homunculus_mutate;
 	homun->gainexp = homunculus_gainexp;
+	homun->gainexp_real = homunculus_gainexp_real;
 	homun->add_intimacy = homunculus_add_intimacy;
 	homun->consume_intimacy = homunculus_consume_intimacy;
 	homun->healed = homunculus_healed;
