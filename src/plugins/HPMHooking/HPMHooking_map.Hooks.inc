@@ -48312,9 +48312,8 @@ int HP_map_check_dir(enum unit_dir s_dir, enum unit_dir t_dir) {
 	return retVal___;
 }
 enum unit_dir HP_map_calc_dir(struct block_list *src, int16 x, int16 y) {
-/* Unknown return type 'enum unit_dir'. Initializing to '0'. */
 	int hIndex = 0;
-	enum unit_dir retVal___ = 0;
+	enum unit_dir retVal___ = UNIT_DIR_UNDEFINED;
 	if (HPMHooks.count.HP_map_calc_dir_pre > 0) {
 		enum unit_dir (*preHookFunc) (struct block_list **src, int16 *x, int16 *y);
 		*HPMforce_return = false;
@@ -91157,9 +91156,8 @@ int HP_unit_setdir(struct block_list *bl, enum unit_dir dir) {
 	return retVal___;
 }
 enum unit_dir HP_unit_getdir(struct block_list *bl) {
-/* Unknown return type 'enum unit_dir'. Initializing to '0'. */
 	int hIndex = 0;
-	enum unit_dir retVal___ = 0;
+	enum unit_dir retVal___ = UNIT_DIR_UNDEFINED;
 	if (HPMHooks.count.HP_unit_getdir_pre > 0) {
 		enum unit_dir (*preHookFunc) (struct block_list **bl);
 		*HPMforce_return = false;
