@@ -27,6 +27,7 @@
 #include "common/db.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
+#include "map/unitdefines.h"  // enum unit_dir
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -1215,8 +1216,8 @@ END_ZEROED_BLOCK;
 	// reload config file looking only for npcs
 	void (*reloadnpc) (bool clear);
 
-	int (*check_dir) (int s_dir,int t_dir);
-	uint8 (*calc_dir) (struct block_list *src,int16 x,int16 y);
+	int (*check_dir) (enum unit_dir s_dir, enum unit_dir t_dir);
+	enum unit_dir (*calc_dir) (struct block_list *src, int16 x, int16 y);
 	int (*random_dir) (struct block_list *bl, short *x, short *y); // [Skotlex]
 
 	int (*cleanup_sub) (struct block_list *bl, va_list ap);

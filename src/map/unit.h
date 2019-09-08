@@ -24,6 +24,7 @@
 #include "map/clif.h"  // clr_type
 #include "map/path.h" // struct walkpath_data
 #include "map/skill.h" // 'MAX_SKILLTIMERSKILL, struct skill_timerskill, struct skill_unit_group, struct skill_unit_group_tickset
+#include "map/unitdefines.h" // enum unit_dir
 #include "common/hercules.h"
 
 struct map_session_data;
@@ -67,7 +68,7 @@ struct unit_data {
 	int64 attackabletime;
 	int64 canact_tick;
 	int64 canmove_tick;
-	uint8 dir;
+	enum unit_dir dir;
 	unsigned char walk_count;
 	unsigned char target_count;
 	struct {
@@ -115,8 +116,8 @@ struct unit_interface {
 	void (*run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
 	int (*escape) (struct block_list *bl, struct block_list *target, short dist);
 	int (*movepos) (struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
-	int (*setdir) (struct block_list *bl, unsigned char dir);
-	uint8 (*getdir) (struct block_list *bl);
+	int (*setdir) (struct block_list *bl, enum unit_dir dir);
+	enum unit_dir (*getdir) (struct block_list *bl);
 	int (*blown) (struct block_list *bl, int dx, int dy, int count, int flag);
 	int (*warp) (struct block_list *bl, short m, short x, short y, enum clr_type type);
 	int (*warpto_master) (struct block_list *master_bl, struct block_list *slave_bl);

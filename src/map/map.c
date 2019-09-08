@@ -2841,63 +2841,70 @@ static int map_mapname2ipport(unsigned short name, uint32 *ip, uint16 *port)
 	return 0;
 }
 
-/*==========================================
+/**
  * Checks if both dirs point in the same direction.
- *------------------------------------------*/
-static int map_check_dir(int s_dir, int t_dir)
+ * @param s_dir: direction source is facing
+ * @param t_dir: direction target is facing
+ * @return 0: success(both face the same direction), 1: failure
+ **/
+static int map_check_dir(enum unit_dir s_dir, enum unit_dir t_dir)
 {
-	if(s_dir == t_dir)
+	if (s_dir == t_dir || ((t_dir + UNIT_DIR_MAX - 1) % UNIT_DIR_MAX) == s_dir
+	    || ((t_dir + UNIT_DIR_MAX + 1) % UNIT_DIR_MAX) == s_dir)
 		return 0;
-	switch(s_dir) {
-		case 0: if(t_dir == 7 || t_dir == 1 || t_dir == 0) return 0; break;
-		case 1: if(t_dir == 0 || t_dir == 2 || t_dir == 1) return 0; break;
-		case 2: if(t_dir == 1 || t_dir == 3 || t_dir == 2) return 0; break;
-		case 3: if(t_dir == 2 || t_dir == 4 || t_dir == 3) return 0; break;
-		case 4: if(t_dir == 3 || t_dir == 5 || t_dir == 4) return 0; break;
-		case 5: if(t_dir == 4 || t_dir == 6 || t_dir == 5) return 0; break;
-		case 6: if(t_dir == 5 || t_dir == 7 || t_dir == 6) return 0; break;
-		case 7: if(t_dir == 6 || t_dir == 0 || t_dir == 7) return 0; break;
-	}
 	return 1;
 }
 
-/*==========================================
+/**
  * Returns the direction of the given cell, relative to 'src'
- *------------------------------------------*/
-static uint8 map_calc_dir(struct block_list *src, int16 x, int16 y)
+ * @param src: object to put in relation between coordinates
+ * @param x: x-coordinate of cell
+ * @param y: y-coordinate of cell
+ * @return the direction of the given cell, relative to 'src'
+ **/
+static enum unit_dir map_calc_dir(struct block_list *src, int16 x, int16 y)
 {
-	uint8 dir = 0;
-	int dx, dy;
+	nullpo_retr(UNIT_DIR_NORTH, src);
+	enum unit_dir dir = UNIT_DIR_NORTH;
 
-	nullpo_ret(src);
-
-	dx = x-src->x;
-	dy = y-src->y;
+	int dx = x - src->x;
+	int dy = y - src->y;
 	if (dx == 0 && dy == 0) {
 		// both are standing on the same spot.
 		// aegis-style, makes knockback default to the left.
 		// athena-style, makes knockback default to behind 'src'.
-		dir = (battle_config.knockback_left ? 6 : unit->getdir(src));
-	} else if (dx >= 0 && dy >=0) {
-		// upper-right
-		if( dx*2 < dy || dx == 0 )         dir = 0; // up
-		else if( dx > dy*2+1 || dy == 0 )  dir = 6; // right
-		else                               dir = 7; // up-right
+		if (battle_config.knockback_left)
+			dir = UNIT_DIR_EAST;
+		else
+			dir = unit->getdir(src);
+	} else if (dx >= 0 && dy >= 0) {
+		if ((dx * 2) < dy || dx == 0)
+			dir = UNIT_DIR_NORTH;
+		else if (dx > (dy * 2 + 1) || dy == 0)
+			dir = UNIT_DIR_EAST;
+		else
+			dir = UNIT_DIR_NORTHEAST;
 	} else if (dx >= 0 && dy <= 0) {
-		// lower-right
-		if( dx*2 < -dy || dx == 0 )        dir = 4; // down
-		else if( dx > -dy*2+1 || dy == 0 ) dir = 6; // right
-		else                               dir = 5; // down-right
+		if ((dx * 2) < -dy || dx == 0)
+			dir = UNIT_DIR_SOUTH;
+		else if (dx > (-dy * 2 + 1) || dy == 0)
+			dir = UNIT_DIR_EAST;
+		else
+			dir = UNIT_DIR_SOUTHEAST;
 	} else if (dx <= 0 && dy <= 0) {
-		// lower-left
-		if( dx*2 > dy || dx == 0 )         dir = 4; // down
-		else if( dx < dy*2-1 || dy == 0 )  dir = 2; // left
-		else                               dir = 3; // down-left
+		if ((dx * 2) > dy || dx == 0 )
+			dir = UNIT_DIR_SOUTH;
+		else if (dx < (dy * 2 + 1) || dy == 0)
+			dir = UNIT_DIR_WEST;
+		else
+			dir = UNIT_DIR_SOUTHWEST;
 	} else {
-		// upper-left
-		if( -dx*2 < dy || dx == 0 )        dir = 0; // up
-		else if( -dx > dy*2+1 || dy == 0)  dir = 2; // left
-		else                               dir = 1; // up-left
+		if ((-dx * 2) < dy || dx == 0 )
+			dir = UNIT_DIR_NORTH;
+		else if (-dx > (dy * 2 + 1) || dy == 0)
+			dir = UNIT_DIR_WEST;
+		else
+			dir = UNIT_DIR_NORTHWEST;
 	}
 	return dir;
 }
