@@ -244,6 +244,10 @@ sub parse($$) {
 			$rtinit = ' = DB_OPT_BASE';
 		} elsif ($x =~ /^enum\s+thread_priority$/) { # Known enum thread_priority
 			$rtinit = ' = THREADPRIO_NORMAL';
+		} elsif ($x =~ /^enum\s+market_buy_result$/) { # Known enum market_buy_result
+			$rtinit = ' = MARKET_BUY_RESULT_ERROR';
+		} elsif ($x =~ /^enum\s+unit_dir$/) { # Known enum unit_dir
+			$rtinit = ' = UNIT_DIR_UNDEFINED';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
