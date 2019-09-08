@@ -11348,15 +11348,7 @@ static void clif_parse_MapMove(int fd, struct map_session_data *sd)
 ///     0 = straight
 ///     1 = turned CW
 ///     2 = turned CCW
-/// dir:
-///     0 = north
-///     1 = northwest
-///     2 = west
-///     3 = southwest
-///     4 = south
-///     5 = southeast
-///     6 = east
-///     7 = northeast
+/// dir: @see enum unit_dir
 static void clif_changed_dir(struct block_list *bl, enum send_target target)
 {
 	unsigned char buf[64];

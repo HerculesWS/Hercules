@@ -139,7 +139,7 @@ struct unit_interface {
 	int (*cancel_combo) (struct block_list *bl);
 	bool (*can_reach_pos) (struct block_list *bl, int x, int y, int easy);
 	bool (*can_reach_bl) (struct block_list *bl, struct block_list *tbl, int range, int easy, short *x, short *y);
-	int (*calc_pos) (struct block_list *bl, int tx, int ty, uint8 dir);
+	int (*calc_pos) (struct block_list *bl, int tx, int ty, enum unit_dir dir);
 	int (*attack_timer_sub) (struct block_list *src, int tid, int64 tick);
 	int (*skillcastcancel) (struct block_list *bl, int type);
 	void (*dataset) (struct block_list *bl);
