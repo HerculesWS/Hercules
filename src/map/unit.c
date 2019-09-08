@@ -832,12 +832,18 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	return 1;
 }
 
-static int unit_setdir(struct block_list *bl, unsigned char dir)
+/**
+ * Sets the facing direction of a unit
+ * @param bl: unit to modify
+ * @param dir: the facing direction @see enum unit_dir
+ * @return 0: success, 1: failure
+ */
+static int unit_setdir(struct block_list *bl, enum unit_dir dir)
 {
-	struct unit_data *ud;
-	nullpo_ret(bl );
-	ud = unit->bl2ud(bl);
-	if (!ud) return 0;
+	nullpo_retr(1, bl);
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud == NULL)
+		return 1;
 	ud->dir = dir;
 	if (bl->type == BL_PC)
 		BL_UCAST(BL_PC, bl)->head_dir = 0;
@@ -845,15 +851,20 @@ static int unit_setdir(struct block_list *bl, unsigned char dir)
 	return 0;
 }
 
-static uint8 unit_getdir(struct block_list *bl)
+/**
+ * Get the facing direction of a unit
+ * @param bl: unit to request data from
+ * @return the facing direction @see enum unit_dir
+ */
+static enum unit_dir unit_getdir(struct block_list *bl)
 {
-	struct unit_data *ud;
-	nullpo_ret(bl);
+	nullpo_retr(UNIT_DIR_NORTH, bl);
 
-	if( bl->type == BL_NPC )
+	if (bl->type == BL_NPC)
 		return BL_UCCAST(BL_NPC, bl)->dir;
-	ud = unit->bl2ud(bl);
-	if (!ud) return 0;
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud == NULL)
+		return UNIT_DIR_NORTH;
 	return ud->dir;
 }
 
