@@ -148,10 +148,11 @@ static int unit_walktoxy_sub(struct block_list *bl)
 		// Trim the last part of the path to account for range,
 		// but always move at least one cell when requested to move.
 		for (int i = (ud->chaserange * 10) - 10; i > 0 && ud->walkpath.path_len > 1;) {
-			uint8 dir;
+			enum unit_dir dir;
 			ud->walkpath.path_len--;
 			dir = ud->walkpath.path[ud->walkpath.path_len];
-			if ((dir & 1) != 0)
+			Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+			if (unit_is_diagonal_dir(dir))
 				i -= MOVE_COST * 20; // When chasing, units will target a diamond-shaped area in range [Playtester]
 			else
 				i -= MOVE_COST;
@@ -303,16 +304,15 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 	if (ud->walkpath.path_pos >= ud->walkpath.path_len)
 		return 1;
 
-	uint8 dir = ud->walkpath.path[ud->walkpath.path_pos];
-	if (ud->walkpath.path[ud->walkpath.path_pos] >= 8)
-		return 1;
+	enum unit_dir dir = ud->walkpath.path[ud->walkpath.path_pos];
+	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	int x = bl->x;
 	int y = bl->y;
 
 	ud->dir = dir;
 
-	int dx = dirx[(int) dir];
-	int dy = diry[(int) dir];
+	int dx = dirx[dir];
+	int dy = diry[dir];
 
 	// Get icewall walk block depending on boss mode (players can't be trapped)
 	unsigned char icewall_walk_block = 0;
@@ -751,9 +751,9 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 //Makes bl attempt to run dist cells away from target. Uses hard-paths.
 static int unit_escape(struct block_list *bl, struct block_list *target, short dist)
 {
-	uint8 dir;
 	nullpo_ret(bl);
-	dir = map->calc_dir(target, bl->x, bl->y);
+	enum unit_dir dir = map->calc_dir(target, bl->x, bl->y);
+	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	while (dist > 0 && map->getcell(bl->m, bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], CELL_CHKNOREACH))
 		dist--;
 	return ( dist > 0 && unit->walktoxy(bl, bl->x + dist*dirx[dir], bl->y + dist*diry[dir], 0) );
@@ -763,7 +763,6 @@ static int unit_escape(struct block_list *bl, struct block_list *target, short d
 static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
 {
 	short dx,dy;
-	uint8 dir;
 	struct unit_data        *ud = NULL;
 	struct map_session_data *sd = NULL;
 
@@ -782,7 +781,7 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	ud->to_x = dst_x;
 	ud->to_y = dst_y;
 
-	dir = map->calc_dir(bl, dst_x, dst_y);
+	enum unit_dir dir = map->calc_dir(bl, dst_x, dst_y);
 	ud->dir = dir;
 
 	dx = dst_x - bl->x;
@@ -2082,14 +2081,13 @@ static bool unit_can_reach_bl(struct block_list *bl, struct block_list *tbl, int
 /*==========================================
  * Calculates position of Pet/Mercenary/Homunculus/Elemental
  *------------------------------------------*/
-static int unit_calc_pos(struct block_list *bl, int tx, int ty, uint8 dir)
+static int unit_calc_pos(struct block_list *bl, int tx, int ty, enum unit_dir dir)
 {
 	int dx, dy, x, y;
 	struct unit_data *ud = unit->bl2ud(bl);
 	nullpo_ret(ud);
 
-	if(dir > 7)
-		return 1;
+	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 
 	ud->to_x = tx;
 	ud->to_y = ty;
@@ -2106,7 +2104,7 @@ static int unit_calc_pos(struct block_list *bl, int tx, int ty, uint8 dir)
 		if (!unit->can_reach_pos(bl, x, y, 0)) {
 			int i;
 			for (i = 0; i < 12; i++) {
-				int k = rnd()%8; // Pick a Random Dir
+				enum unit_dir k = rnd() % UNIT_DIR_MAX; // Pick a Random Dir
 				dx = -dirx[k] * 2;
 				dy = -diry[k] * 2;
 				x = tx + dx;

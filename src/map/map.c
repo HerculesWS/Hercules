@@ -1666,7 +1666,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
  *------------------------------------------*/
 static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag)
 {
-	uint8 dir = 6;
+	enum unit_dir dir = UNIT_DIR_EAST;
 	int16 tx;
 	int16 ty;
 	int costrange = 10;
@@ -1685,7 +1685,7 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 		short dy = diry[dir];
 
 		//Linear search
-		if(dir%2 == 0 && costrange%MOVE_COST == 0) {
+		if (!unit_is_diagonal_dir(dir) && (costrange % MOVE_COST) == 0) {
 			tx = *x+dx*(costrange/MOVE_COST);
 			ty = *y+dy*(costrange/MOVE_COST);
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
@@ -1695,7 +1695,7 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 			}
 		}
 		//Full diagonal search
-		else if(dir%2 == 1 && costrange%MOVE_DIAGONAL_COST == 0) {
+		else if (unit_is_diagonal_dir(dir) && (costrange % MOVE_DIAGONAL_COST) == 0) {
 			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
 			ty = *y+dy*(costrange/MOVE_DIAGONAL_COST);
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
@@ -1705,16 +1705,24 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 			}
 		}
 		//One cell diagonal, rest linear (TODO: Find a better algorithm for this)
-		else if(dir%2 == 1 && costrange%MOVE_COST == 4) {
-			tx = *x+dx*((dir%4==3)?(costrange/MOVE_COST):1);
-			ty = *y+dy*((dir%4==1)?(costrange/MOVE_COST):1);
+		else if (unit_is_diagonal_dir(dir) && (costrange % MOVE_COST) == 4) {
+			tx = *x + dx;
+			ty = *y + dy;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_SOUTHWEST))
+				tx *= costrange / MOVE_COST;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_NORTHWEST))
+				ty *= costrange / MOVE_COST;
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
 			}
-			tx = *x+dx*((dir%4==1)?(costrange/MOVE_COST):1);
-			ty = *y+dy*((dir%4==3)?(costrange/MOVE_COST):1);
+			tx = *x + dx;
+			ty = *y + dy;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_NORTHWEST))
+				tx *= costrange / MOVE_COST;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_SOUTHWEST))
+				ty *= costrange / MOVE_COST;
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
@@ -1723,17 +1731,17 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 		}
 
 		//Get next direction
-		if (dir == 5) {
+		if (dir == UNIT_DIR_SOUTHEAST) {
 			//Diagonal search complete, repeat with higher cost range
 			if(costrange == 14) costrange += 6;
 			else if(costrange == 28 || costrange >= 38) costrange += 2;
 			else costrange += 4;
-			dir = 6;
-		} else if (dir == 4) {
+			dir = UNIT_DIR_EAST;
+		} else if (dir == UNIT_DIR_SOUTH) {
 			//Linear search complete, switch to diagonal directions
-			dir = 7;
+			dir = UNIT_DIR_NORTHEAST;
 		} else {
-			dir = (dir+2)%8;
+			dir = unit_get_ccw90_dir(dir);
 		}
 	}
 
@@ -2932,11 +2940,11 @@ static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 	if (dist < 1) dist =1;
 
 	do {
-		int j = 1 + 2*(rnd()%4); //Pick a random diagonal direction
+		enum unit_dir dir = unit_get_rnd_diagonal_dir();
 		short segment = 1+(rnd()%dist); //Pick a random interval from the whole vector in that direction
-		xi = bl->x + segment*dirx[j];
+		xi = bl->x + segment * dirx[dir];
 		segment = (short)sqrt((float)(dist2 - segment*segment)); //The complement of the previously picked segment
-		yi = bl->y + segment*diry[j];
+		yi = bl->y + segment * diry[dir];
 	} while ((map->getcell(bl->m, bl, xi, yi, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, xi, yi, 1, CELL_CHKNOREACH))
 	       && (++i)<100);
 

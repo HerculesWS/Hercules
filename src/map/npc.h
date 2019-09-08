@@ -86,7 +86,7 @@ struct npc_data {
 	int chat_id;
 	int touching_id;
 	int64 next_walktime;
-	uint8 dir;
+	enum unit_dir dir;
 	uint8 area_size;
 
 	int clan_id;
@@ -271,7 +271,7 @@ struct npc_interface {
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
-	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, uint8 dir, int class_);
+	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, enum unit_dir dir, int class_);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char *(*parse_warp) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char *(*parse_shop) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);

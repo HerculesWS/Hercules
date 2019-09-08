@@ -1180,7 +1180,6 @@ static int skillnotok_mercenary(uint16 skill_id, struct mercenary_data *md)
 static struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16 skill_lv, struct block_list *src, int x, int y)
 {
 	int pos = skill->get_unit_layout_type(skill_id,skill_lv);
-	uint8 dir;
 
 	nullpo_retr(&skill->dbs->unit_layout[0], src);
 	if (pos < -1 || pos >= MAX_SKILL_UNIT_LAYOUT) {
@@ -1191,7 +1190,9 @@ static struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16
 	if (pos != -1) // simple single-definition layout
 		return &skill->dbs->unit_layout[pos];
 
-	dir = (src->x == x && src->y == y) ? 6 : map->calc_dir(src,x,y); // 6 - default aegis direction
+	enum unit_dir dir = UNIT_DIR_EAST; // default aegis direction
+	if (!(src->x == x && src->y == y))
+		map->calc_dir(src, x, y);
 
 	if (skill_id == MG_FIREWALL)
 		return &skill->dbs->unit_layout [skill->firewall_unit_pos + dir];
@@ -2626,11 +2627,11 @@ static int skill_strip_equip(struct block_list *bl, unsigned short where, int ra
 /*=========================================================================
  * Used to knock back players, monsters, traps, etc
  * 'count' is the number of squares to knock back
- * 'direction' indicates the way OPPOSITE to the knockback direction (or -1 for default behavior)
+ * 'direction' indicates the way OPPOSITE to the knockback direction (or UNIT_DIR_UNDEFINED for default behavior)
  * if 'flag&0x1', position update packets must not be sent.
  * if 'flag&0x2', skill blown ignores players' special_state.no_knockback
  */
-static int skill_blown(struct block_list *src, struct block_list *target, int count, int8 dir, int flag)
+static int skill_blown(struct block_list *src, struct block_list *target, int count, enum unit_dir dir, int flag)
 {
 	int dx = 0, dy = 0;
 	struct status_change *tsc = status->get_sc(target);
@@ -2672,10 +2673,10 @@ static int skill_blown(struct block_list *src, struct block_list *target, int co
 			break;
 	}
 
-	if (dir == -1) // <optimized>: do the computation here instead of outside
+	if (dir == UNIT_DIR_UNDEFINED) // <optimized>: do the computation here instead of outside
 		dir = map->calc_dir(target, src->x, src->y); // direction from src to target, reversed
 
-	if (dir >= 0 && dir < 8) {
+	if (dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX) {
 		// take the reversed 'direction' and reverse it
 		dx = -dirx[dir];
 		dy = -diry[dir];
@@ -3297,7 +3298,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 	//Only knockback if it's still alive, otherwise a "ghost" is left behind. [Skotlex]
 	//Reflected spells do not bounce back (bl == dsrc since it only happens for direct skills)
 	if (dmg.blewcount > 0 && bl!=dsrc && !status->isdead(bl)) {
-		int8 dir = -1; // default
+		enum unit_dir dir = UNIT_DIR_UNDEFINED; // default
 		switch(skill_id) {//direction
 			case MG_FIREWALL:
 			case PR_SANCTUARY:
@@ -3310,16 +3311,16 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			// This ensures the storm randomly pushes instead of exactly a cell backwards per official mechanics.
 			case WZ_STORMGUST:
 				if(!battle_config.stormgust_knockback)
-					dir = rnd()%8;
+					dir = rnd() % UNIT_DIR_MAX;
 				break;
 			case WL_CRIMSONROCK:
 				dir = map->calc_dir(bl,skill->area_temp[4],skill->area_temp[5]);
 				break;
 			case MC_CARTREVOLUTION:
-				dir = 6; // Official servers push target to the West
+				dir = UNIT_DIR_EAST; // Official servers push target to the West
 				break;
 			default:
-				dir = skill->attack_dir_unknown(&attack_type, src, dsrc, bl, &skill_id, &skill_lv, &tick, &flag);
+				dir = UNIT_DIR_UNDEFINED;
 				break;
 
 		}
@@ -3337,8 +3338,9 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			case SR_KNUCKLEARROW:
 				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) && !(flag&4) ) {
 					short dir_x, dir_y;
-					dir_x = dirx[(dir+4)%8];
-					dir_y = diry[(dir+4)%8];
+					Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+					dir_x = dirx[unit_get_opposite_dir(dir)];
+					dir_y = diry[unit_get_opposite_dir(dir)];
 					if (map->getcell(bl->m, bl, bl->x + dir_x, bl->y + dir_y, CELL_CHKNOPASS) != 0)
 						skill->addtimerskill(src, tick + 300 * ((flag&2) ? 1 : 2), bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag|4);
 				}
@@ -3496,12 +3498,7 @@ static int skill_attack_copy_unknown(int *attack_type, struct block_list *src, s
 	return *skill_id;
 }
 
-static int skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag)
-{
-	return -1;
-}
-
-static void skill_attack_blow_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage, int8 *dir)
+static void skill_attack_blow_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage, enum unit_dir *dir)
 {
 	nullpo_retv(bl);
 	nullpo_retv(dmg);
@@ -3512,7 +3509,7 @@ static void skill_attack_blow_unknown(int *attack_type, struct block_list *src, 
 	if (!dmg->blewcount && bl->type == BL_SKILL && *damage > 0){
 		struct skill_unit *su = BL_UCAST(BL_SKILL, bl);
 		if (su->group && su->group->skill_id == HT_BLASTMINE)
-			skill->blown(src, bl, 3, -1, 0);
+			skill->blown(src, bl, 3, UNIT_DIR_UNDEFINED, 0);
 	}
 }
 
@@ -4401,7 +4398,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case KN_CHARGEATK: {
 				bool path_exists = path->search_long(NULL, src, src->m, src->x, src->y, bl->x, bl->y,CELL_CHKWALL);
 				unsigned int dist = distance_bl(src, bl);
-				uint8 dir = map->calc_dir(bl, src->x, src->y);
+				enum unit_dir dir = map->calc_dir(bl, src->x, src->y);
 
 				// teleport to target (if not on WoE grounds)
 				if( !map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 0, 1) )
@@ -4413,7 +4410,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					skill->blown(src, bl, dist, dir, 0);
 					//HACK: since knockback officially defaults to the left, the client also turns to the left... therefore,
 					// make the caster look in the direction of the target
-					unit->setdir(src, (dir+4)%8);
+					unit->setdir(src, unit_get_opposite_dir(dir));
 				}
 
 			}
@@ -4452,11 +4449,11 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 		case RG_BACKSTAP:
 			{
-				uint8 dir = map->calc_dir(src, bl->x, bl->y), t_dir = unit->getdir(bl);
-				if ((!check_distance_bl(src, bl, 0) && !map->check_dir(dir, t_dir)) || bl->type == BL_SKILL) {
+				enum unit_dir dir = map->calc_dir(src, bl->x, bl->y), t_dir = unit->getdir(bl);
+				if ((!check_distance_bl(src, bl, 0) && map->check_dir(dir, t_dir) == 0) || bl->type == BL_SKILL) {
 					status_change_end(src, SC_HIDING, INVALID_TIMER);
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
-					dir = dir < 4 ? dir+4 : dir-4; // change direction [Celest]
+					dir = unit_get_opposite_dir(dir); // change direction [Celest]
 					unit->setdir(bl,dir);
 				}
 				else if (sd)
@@ -4484,7 +4481,6 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			{
 				short x, y, i = 2; // Move 2 cells for Issen(from target)
 				struct block_list *mbl = bl;
-				short dir = 0;
 
 				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 
@@ -4506,13 +4502,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					status->set_hp(src, 1, STATUS_HEAL_DEFAULT);
 #endif // RENEWAL
 				}
-				dir = map->calc_dir(src,bl->x,bl->y);
-				if( dir > 0 && dir < 4) x = -i;
-				else if( dir > 4 ) x = i;
-				else x = 0;
-				if( dir > 2 && dir < 6 ) y = -i;
-				else if( dir == 7 || dir < 2 ) y = i;
-				else y = 0;
+				enum unit_dir dir = map->calc_dir(src,bl->x,bl->y);
+				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+				x = i * dirx[dir];
+				y = i * diry[dir];
 				if ((mbl == src || (!map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground))) { // only NJ_ISSEN don't have slide effect in GVG
 					if (!(unit->movepos(src, mbl->x+x, mbl->y+y, 1, 1))) {
 						// The cell is not reachable (wall, object, ...), move next to the target
@@ -4739,12 +4732,12 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					if(idb_exists(skill->bowling_db, bl->id))
 						break;
 					// Random direction
-					dir = rnd()%8;
+					dir = rnd() % UNIT_DIR_MAX;
 				} else {
 					// Create an empty list of already hit targets
 					db_clear(skill->bowling_db);
 					// Direction is walkpath
-					dir = (unit->getdir(src)+4)%8;
+					dir = unit_get_opposite_dir(unit->getdir(src));
 				}
 				// Add current target to the list of already hit targets
 				idb_put(skill->bowling_db, bl->id, bl);
@@ -4753,6 +4746,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				ty = bl->y;
 				for(i=0;i<c;i++) {
 					// Target coordinates (get changed even if knockback fails)
+					Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 					tx -= dirx[dir];
 					ty -= diry[dir];
 					// If target cell is a wall then break
@@ -4781,18 +4775,19 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				if (bl->id==skill->area_temp[1])
 					break;
 				if (skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,SD_ANIMATION))
-					skill->blown(src,bl,skill->area_temp[2],-1,0);
+					skill->blown(src, bl, skill->area_temp[2], UNIT_DIR_UNDEFINED, 0);
 			} else {
-				int x=bl->x,y=bl->y,i,dir;
-				dir = map->calc_dir(bl,src->x,src->y);
+				int x=bl->x,y=bl->y,i;
+				enum unit_dir dir = map->calc_dir(bl,src->x,src->y);
 				skill->area_temp[1] = bl->id;
 				skill->area_temp[2] = skill->get_blewcount(skill_id,skill_lv);
 				// all the enemies between the caster and the target are hit, as well as the target
 				if (skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,0))
-					skill->blown(src,bl,skill->area_temp[2],-1,0);
+					skill->blown(src, bl, skill->area_temp[2], UNIT_DIR_UNDEFINED, 0);
 				for (i=0;i<4;i++) {
 					map->foreachincell(skill->area_sub,bl->m,x,y,BL_CHAR,src,skill_id,skill_lv,
 					                   tick,flag|BCT_ENEMY|1,skill->castend_damage_id);
+					Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 					x += dirx[dir];
 					y += diry[dir];
 				}
@@ -5014,7 +5009,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			if(rnd()%100 < (10 + 3*skill_lv)) {
 				if( !sd || pc->checkskill(sd,KN_SPEARBOOMERANG) == 0 )
 					break; // Spear Boomerang auto cast chance only works if you have mastered Spear Boomerang.
-				skill->blown(src,bl,6,-1,0);
+				skill->blown(src, bl, 6, UNIT_DIR_UNDEFINED, 0);
 				skill->addtimerskill(src,tick+800,bl->id,0,0,skill_id,skill_lv,BF_WEAPON,flag);
 				skill->castend_damage_id(src,bl,KN_SPEARBOOMERANG,1,tick,0);
 			}
@@ -5036,16 +5031,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case KO_JYUMONJIKIRI:
 		case GC_DARKILLUSION:
 			{
-				short x, y;
-				short dir = map->calc_dir(bl, src->x, src->y);
-
-				if ( dir < 4 ) {
-					x = bl->x + 2 * (dir > 0) - 3 * (dir > 0);
-					y = bl->y + 1 - (dir / 2) - (dir > 2);
-				} else {
-					x = bl->x + 2 * (dir > 4) - 1 * (dir > 4);
-					y = bl->y + (dir / 6) - 1 + (dir > 6);
-				}
+				enum unit_dir dir = map->calc_dir(bl, src->x, src->y);
+				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+				short x = bl->x + dirx[dir];
+				short y = bl->y + diry[dir];
 
 				if ( unit->movepos(src, x, y, 1, 1) ) {
 					clif->slide(src, x, y);
@@ -5202,14 +5191,13 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			skill->attack(BF_MAGIC,src,src,bl,skill_id,skill_lv,tick,flag|ELE_DARK);
 			break;
 		case RA_WUGSTRIKE:
-			if( sd && pc_isridingwug(sd) ){
-				short x[8]={0,-1,-1,-1,0,1,1,1};
-				short y[8]={1,1,0,-1,-1,-1,0,1};
-				uint8 dir = map->calc_dir(bl, src->x, src->y);
-
-				if( unit->movepos(src, bl->x+x[dir], bl->y+y[dir], 1, 1) )
-				{
-					clif->slide(src, bl->x+x[dir], bl->y+y[dir]);
+			if (sd != NULL && pc_isridingwug(sd)) {
+				enum unit_dir dir = map->calc_dir(bl, src->x, src->y);
+				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+				short x = bl->x + dirx[dir];
+				short y = bl->y + diry[dir];
+				if (unit->movepos(src, x, y, 1, 1) != 0) {
+					clif->slide(src, x, y);
 					clif->fixpos(src);
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
 				}
@@ -5650,8 +5638,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		}
 
 		if(ud->skill_id == RG_BACKSTAP) {
-			uint8 dir = map->calc_dir(src,target->x,target->y),t_dir = unit->getdir(target);
-			if(check_distance_bl(src, target, 0) || map->check_dir(dir,t_dir)) {
+			enum unit_dir dir = map->calc_dir(src,target->x,target->y), t_dir = unit->getdir(target);
+			if (check_distance_bl(src, target, 0) || map->check_dir(dir,t_dir) != 0) {
 				break;
 			}
 		}
@@ -5869,14 +5857,10 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		}
 		if (target && target->m == src->m) {
 			//Move character to target anyway.
-			int dir, x, y;
-			dir = map->calc_dir(src,target->x,target->y);
-			if( dir > 0 && dir < 4) x = -2;
-			else if( dir > 4 ) x = 2;
-			else x = 0;
-			if( dir > 2 && dir < 6 ) y = -2;
-			else if( dir == 7 || dir < 2 ) y = 2;
-			else y = 0;
+			enum unit_dir dir = map->calc_dir(src,target->x,target->y);
+			Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+			int x = 2 * dirx[dir];
+			int y = 2 * diry[dir];
 			if (unit->movepos(src, src->x+x, src->y+y, 1, 1)) {
 				//Display movement + animation.
 				clif->slide(src,src->x,src->y);
@@ -7813,7 +7797,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 		case TK_HIGHJUMP:
 			{
-				int x,y, dir = unit->getdir(src);
+				int x,y;
+				enum unit_dir dir = unit->getdir(src);
 
 				//Fails on noteleport maps, except for GvG and BG maps [Skotlex]
 				if( map->list[src->m].flag.noteleport
@@ -8062,11 +8047,16 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 		case NPC_RUN:
 			{
-				const int mask[8][2] = {{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1}};
-				uint8 dir = (bl == src)?unit->getdir(src):map->calc_dir(src,bl->x,bl->y); //If cast on self, run forward, else run away.
+				enum unit_dir dir;
+				if (bl == src) //If cast on self, run forward, else run away.
+					dir = unit->getdir(src);
+				else
+					dir = map->calc_dir(src, bl->x, bl->y);
+				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 				unit->stop_attack(src);
 				//Run skillv tiles overriding the can-move check.
-				if (unit->walktoxy(src, src->x + skill_lv * mask[dir][0], src->y + skill_lv * mask[dir][1], 2) && md)
+				if (unit->walktoxy(src, (src->x + skill_lv * -dirx[dir]),
+				    (src->y + skill_lv * -diry[dir]), 2) != 0 && md != NULL)
 					md->state.skillstate = MSS_WALK; //Otherwise it isn't updated in the AI.
 			}
 			break;
@@ -9419,7 +9409,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case NC_F_SIDESLIDE:
 		case NC_B_SIDESLIDE:
 			{
-				uint8 dir = (skill_id == NC_F_SIDESLIDE) ? (unit->getdir(src)+4)%8 : unit->getdir(src);
+				enum unit_dir dir = unit->getdir(src);
+				if (skill_id == NC_F_SIDESLIDE)
+					dir = unit_get_opposite_dir(dir);
 				skill->blown(src,bl,skill->get_blewcount(skill_id,skill_lv),dir,0);
 				clif->slide(src,src->x,src->y);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -11576,17 +11568,15 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 
 		case WL_EARTHSTRAIN:
 			{
-				int i, wave = skill_lv + 4, dir = map->calc_dir(src,x,y);
+				int i, wave = skill_lv + 4;
+				enum unit_dir dir = map->calc_dir(src, x, y);
+				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 				int sx = x = src->x, sy = y = src->y; // Store first caster's location to avoid glitch on unit setting
 
-				for( i = 1; i <= wave; i++ )
-				{
-					switch( dir ){
-						case 0: case 1: case 7: sy = y + i; break;
-						case 3: case 4: case 5: sy = y - i; break;
-						case 2: sx = x - i; break;
-						case 6: sx = x + i; break;
-					}
+				for (i = 1; i <= wave; i++ ) {
+					sy = y + i * diry[dir];
+					if (dir == UNIT_DIR_WEST || dir == UNIT_DIR_EAST)
+						sx = x + i * dirx[dir];
 					skill->addtimerskill(src,timer->gettick() + (140 * i),0,sx,sy,skill_id,skill_lv,dir,flag&2);
 				}
 			}
@@ -13805,10 +13795,11 @@ static int skill_check_condition_char_sub(struct block_list *bl, va_list ap)
 	} else {
 
 		switch(skill_id) {
-			case PR_BENEDICTIO: {
-				uint8 dir = map->calc_dir(&sd->bl,tsd->bl.x,tsd->bl.y);
-				dir = (unit->getdir(&sd->bl) + dir)%8; //This adjusts dir to account for the direction the sd is facing.
-				if ((tsd->job & MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == 2 || dir == 6) //Must be standing to the left/right of Priest.
+			case PR_BENEDICTIO:
+			{
+				enum unit_dir dir = map->calc_dir(&sd->bl, tsd->bl.x, tsd->bl.y);
+				dir = (unit->getdir(&sd->bl) + dir) % UNIT_DIR_MAX; //This adjusts dir to account for the direction the sd is facing.
+				if ((tsd->job & MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == UNIT_DIR_WEST || dir == UNIT_DIR_EAST) //Must be standing to the left/right of Priest.
 					&& sd->status.sp >= 10)
 					p_sd[(*c)++]=tsd->bl.id;
 				return 1;
@@ -15944,11 +15935,11 @@ struct square {
 	int val2[5];
 };
 
-static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int16 y)
+static void skill_brandishspear_first(struct square *tc, enum unit_dir dir, int16 x, int16 y)
 {
 	nullpo_retv(tc);
 
-	if(dir == 0){
+	if (dir == UNIT_DIR_NORTH) {
 		tc->val1[0]=x-2;
 		tc->val1[1]=x-1;
 		tc->val1[2]=x;
@@ -15959,7 +15950,7 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 		tc->val2[2]=
 		tc->val2[3]=
 		tc->val2[4]=y-1;
-	} else if(dir==2){
+	} else if (dir == UNIT_DIR_WEST) {
 		tc->val1[0]=
 		tc->val1[1]=
 		tc->val1[2]=
@@ -15970,7 +15961,7 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 		tc->val2[2]=y;
 		tc->val2[3]=y-1;
 		tc->val2[4]=y-2;
-	} else if(dir==4){
+	} else if (dir == UNIT_DIR_SOUTH) {
 		tc->val1[0]=x-2;
 		tc->val1[1]=x-1;
 		tc->val1[2]=x;
@@ -15981,7 +15972,7 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 		tc->val2[2]=
 		tc->val2[3]=
 		tc->val2[4]=y+1;
-	} else if(dir==6){
+	} else if (dir == UNIT_DIR_EAST) {
 		tc->val1[0]=
 		tc->val1[1]=
 		tc->val1[2]=
@@ -15992,7 +15983,7 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 		tc->val2[2]=y;
 		tc->val2[3]=y-1;
 		tc->val2[4]=y-2;
-	} else if(dir==1){
+	} else if (dir == UNIT_DIR_NORTHWEST) {
 		tc->val1[0]=x-1;
 		tc->val1[1]=x;
 		tc->val1[2]=x+1;
@@ -16003,7 +15994,7 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 		tc->val2[2]=y-1;
 		tc->val2[3]=y;
 		tc->val2[4]=y+1;
-	} else if(dir==3){
+	} else if (dir == UNIT_DIR_SOUTHWEST) {
 		tc->val1[0]=x+3;
 		tc->val1[1]=x+2;
 		tc->val1[2]=x+1;
@@ -16014,7 +16005,7 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 		tc->val2[2]=y+1;
 		tc->val2[3]=y+2;
 		tc->val2[4]=y+3;
-	} else if(dir==5){
+	} else if (dir == UNIT_DIR_SOUTHEAST) {
 		tc->val1[0]=x+1;
 		tc->val1[1]=x;
 		tc->val1[2]=x-1;
@@ -16025,7 +16016,7 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 		tc->val2[2]=y+1;
 		tc->val2[3]=y;
 		tc->val2[4]=y-1;
-	} else if(dir==7){
+	} else if (dir == UNIT_DIR_NORTHEAST) {
 		tc->val1[0]=x-3;
 		tc->val1[1]=x-2;
 		tc->val1[2]=x-1;
@@ -16040,36 +16031,27 @@ static void skill_brandishspear_first(struct square *tc, uint8 dir, int16 x, int
 
 }
 
-static void skill_brandishspear_dir(struct square *tc, uint8 dir, int are)
+static void skill_brandishspear_dir(struct square *tc, enum unit_dir dir, int are)
 {
-	int c;
 	nullpo_retv(tc);
+	Assert_retv(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 
-	for( c = 0; c < 5; c++ ) {
-		switch( dir ) {
-			case 0:                   tc->val2[c]+=are; break;
-			case 1: tc->val1[c]-=are; tc->val2[c]+=are; break;
-			case 2: tc->val1[c]-=are;                   break;
-			case 3: tc->val1[c]-=are; tc->val2[c]-=are; break;
-			case 4:                   tc->val2[c]-=are; break;
-			case 5: tc->val1[c]+=are; tc->val2[c]-=are; break;
-			case 6: tc->val1[c]+=are;                   break;
-			case 7: tc->val1[c]+=are; tc->val2[c]+=are; break;
-		}
+	for(int c = 0; c < 5; c++ ) {
+		tc->val1[c] += dirx[dir] * are;
+		tc->val2[c] += diry[dir] * are;
 	}
 }
 
 static void skill_brandishspear(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
 {
 	int c,n=4;
-	uint8 dir;
 	struct square tc;
 	int x, y;
 
 	nullpo_retv(bl);
 	x = bl->x;
 	y = bl->y;
-	dir = map->calc_dir(src, x, y);
+	enum unit_dir dir = map->calc_dir(src, x, y);
 	skill->brandishspear_first(&tc,dir,x,y);
 	skill->brandishspear_dir(&tc,dir,4);
 	skill->area_temp[1] = bl->id;
@@ -21725,7 +21707,6 @@ void skill_defaults(void)
 	skill->attack_combo2_unknown = skill_attack_combo2_unknown;
 	skill->attack_display_unknown = skill_attack_display_unknown;
 	skill->attack_copy_unknown = skill_attack_copy_unknown;
-	skill->attack_dir_unknown = skill_attack_dir_unknown;
 	skill->attack_blow_unknown = skill_attack_blow_unknown;
 	skill->attack_post_unknown = skill_attack_post_unknown;
 	skill->timerskill_dead_unknown = skill_timerskill_dead_unknown;
