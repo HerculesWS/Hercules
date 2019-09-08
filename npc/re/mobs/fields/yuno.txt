@@ -134,3 +134,17 @@ yuno_fild11,0,0,0,0	monster	Yellow Plant	1081,10,180000,90000,1
 //== yuno_fild12 - Border Checkpoint =======================
 yuno_fild12,0,0,0,0	monster	Geographer	1368,60,5000,0,0
 yuno_fild12,0,0,0,0	monster	Mantis	1139,30,5000,0,0
+
+//== Transcendent Quest - Quest #5160 - Library Mistake =======================
+yuno_fild01,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild02,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild03,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild04,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+// yuno_fild05,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild06,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild07,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild08,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild09,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+// yuno_fild10,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild11,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
+yuno_fild12,0,0,0,0	monster	Runaway Book	2414,1,5000,0,"Metheus Sylphe#Library::OnKill"
