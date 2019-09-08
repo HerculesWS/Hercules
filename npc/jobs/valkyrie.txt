@@ -217,31 +217,144 @@ yuno_in02,88,164,5	script	Metheus Sylphe#Library	2_M_SAGE_B,{
 			mes "[Metheus Sylphe]";
 			mes "Welcome to the Library of the Schweicherbil Magic Academy.";
 			mes "I assume you have come here";
-			mes "to read the 'Book of Ymir.'";
-			next;
-			mes "[Metheus Sylphe]";
-			mes "Unfortunately, the original copy of the book has been damaged over time. We currently only allow the public to view a copy of the book.";
-			next;
-			mes "[Metheus Sylphe]";
-			mes "Also, in order to preserve the original 'Book of Ymir,' we have decided to accept donations from people who wish to read the copy we have provided.";
-			next;
+			if (RENEWAL) {
+				if (questprogress(5160)) { // Quest #5160 - Library Mistake
+					mes "to confirm the status of the library guards report?";
+					next;
+					switch (select((!countitem(6586)? "Tell me the report.":""), (countitem(6586)? "I found the book.":""), "Donate Zeny")) {
+						case 1:
+							mes "[Metheus Sylphe]";
+							mes "According to the report, the guard last seen the escaped book at Juno Fields.";
+							close;
+						case 2:
+							mes "[Metheus Sylphe]";
+							mes "Just now the libary guard report aren't helpful, but there is a reason for that...";
+							next;
+							mes "[Metheus Sylphe]";
+							mes "Most importantly, you found the escaped book!";
+							next;
+							mes "[Metheus Sylphe]";
+							mes "As promised, I'll allow you to read the book of Ymir, you may now go in and read the book.";
+							valkyrie_Q = 1;
+							if (questprogress(5160))
+								completequest 5160;
+							close;
+						default: 
+							break;
+					}
+				}
+				else {
+					mes "to read the 'Book of Ymir.'";
+					next;
+					mes "[Metheus Sylphe]";
+					mes "Unfortunately, the original copy of the book has been damaged over time. We currently only allow the public to view a copy of the book.";
+					next;
+					mes "[Metheus Sylphe]";
+					mes "Also, in order to preserve the original 'Book of Ymir,' we have decided to accept donations from people who wish to read the copy we have provided.";
+					next;
+				}
+			}
+			else {
+				mes "to read the 'Book of Ymir.'";
+				next;
+				mes "[Metheus Sylphe]";
+				mes "Unfortunately, the original copy of the book has been damaged over time. We currently only allow the public to view a copy of the book.";
+				next;
+				mes "[Metheus Sylphe]";
+				mes "Also, in order to preserve the original 'Book of Ymir,' we have decided to accept donations from people who wish to read the copy we have provided.";
+				next;
+			}
 			mes "[Metheus Sylphe]";
 			mes "The suggested";
 			mes "donation amount is";
 			mes "1,285,000 zeny.";
 			next;
-			if (select("Donate.", "Cancel.") == 1) {
-				if (Zeny >= 1285000) {
-					Zeny -= 1285000;
-					valkyrie_Q = 1;
+			switch (select("Donate.", ((RENEWAL)?"Can't I just see it?":""), "Cancel.")) {
+				case 1:
+					if (Zeny >= 1285000) {
+						Zeny -= 1285000;
+						valkyrie_Q = 1;
+						if (RENEWAL) {
+							if (questprogress(5160))
+								erasequest 5160;
+						}
+						mes "[Metheus Sylphe]";
+						mes "Thank you, your donation will be used for a good cause. You may";
+						mes "now go in and read the book.";
+						close;
+					}
 					mes "[Metheus Sylphe]";
-					mes "Thank you, your donation will be used for a good cause. You may";
-					mes "now go in and read the book.";
+					mes "Unfortunately, you don't seem to possess enough zeny at the moment. Please check your funds and come back again.";
 					close;
-				}
-				mes "[Metheus Sylphe]";
-				mes "Unfortunately, you don't seem to possess enough zeny at the moment. Please check your funds and come back again.";
-				close;
+				case 2:
+					mes "[Metheus Sylphe]";
+					mes "It is to preserve the original 'Book of Ymir,' we have decided to accept donations from people who wish to read the copy we have provided.";
+					next;
+					mes "[Metheus Sylphe]";
+					mes "Although I understand your feeling, but that's the rule.";
+					next;
+					select("But, I dont have enough Zeny.");
+					mes "[Metheus Sylphe]";
+					mes "The rules stated that everyone must made a donation, if they want to read the book...";
+					next;
+					mes "[Metheus Sylphe]";
+					mes "I guess sometime when life is difficult, we may not follow with the principle?";
+					next;
+					if (select("I must follow the principle!", "I'll do anything.") == 2) {
+						mes "[Metheus Sylphe]";
+						mes "I can feel the passion within you, but I couldn't let you enter for free.";
+						next;
+						mes "[Metheus Sylphe]";
+						mes "So help me resolve the problems happen in the Schweicherbil Magic Academy's library.";
+						mes "I'll help you to read the book of Ymir.";
+						do {
+							next;
+							switch(select("What happened?", "Where does it escaped?", "I'll find it.", "Ignore")) {
+								case 1:
+									mes "[Metheus Sylphe]";
+									mes "This is really a headache.";
+									mes "The library consists of a lot undisclosed books.";
+									next;
+									mes "[Metheus Sylphe]";
+									mes "For example, ^0055FFRideword Hat^000000 that would attack humans can't be disclose to the public.";
+									next;
+									mes "[Metheus Sylphe]";
+									mes "But not long ago, part of the undisclosed books escaped from the library...";
+									next;
+									mes "[Metheus Sylphe]";
+									mes "Although the library guards are currently searching for it, but failed due to lack of manpower.";
+									break;
+								case 2:
+									mes "[Metheus Sylphe]";
+									mes "We're still trying to figure out where it escaped to.";
+									mes "I'll inform you when the library guards have any news for it.";
+									break;
+								case 3:
+									mes "[Metheus Sylphe]";
+									mes "Do you understand the problem now?";
+									mes "Or you know other problems?";
+									next;
+									if (select("Sorry.", "Worry about gifts for girlfriend?", "Worry about the lunch?", "Worry about the escaped books?") == 4) {
+										mes "[Metheus Sylphe]";
+										mes "Ah! You knew the problem already?";
+										mes "or the news already leaked to public?";
+										next;
+										mes "[Metheus Sylphe]";
+										mes "Wait a moment, the library guard has returned with the report.";
+										next;
+										mes "[Metheus Sylphe]";
+										mes "Let's hear the report before you left!";
+										if (!questprogress(5160)) 
+											setquest 5160; // Quest #5160 - Library Mistake
+									}
+								default: 
+									close;
+							}
+						} while (true);
+					}
+					close;
+				default:
+					break;
 			}
 			mes "[Metheus Sylphe]";
 			mes "Take your time, and";
@@ -249,13 +362,20 @@ yuno_in02,88,164,5	script	Metheus Sylphe#Library	2_M_SAGE_B,{
 			close;
 		}
 		mes "[Metheus Sylphe]";
-		mes "Once again, thank you for your generous donation. Feel free to read a carbon copy of the 'Book of Ymir' at your leisure.";
+		mes "Once again, thank you for your generous "+(questprogress(5160) ? "assistance":"donation")+". Feel free to read a carbon copy of the 'Book of Ymir' at your leisure.";
 		close;
 	}
 	mes "[Metheus Sylphe]";
 	mes "Welcome to the Library of the Schweicherbil Magic Academy.";
 	mes "Here, we have a countless number of books. Please take your time and look around.";
 	close;
+	
+	OnKill:
+		if (questprogress(5160)) { // Quest #5160 - Library Mistake
+			if (!countitem(6586))
+				getitem 6586, 1; // Captured_Book
+		}
+		end;
 }
 
 yuno_in02,93,207,1	script	Book of Ymir	HIDDEN_NPC,{
