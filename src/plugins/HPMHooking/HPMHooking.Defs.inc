@@ -7934,8 +7934,14 @@ typedef bool (*HPMHOOK_pre_status_readdb_job2) (char **fields[], int *columns, i
 typedef bool (*HPMHOOK_post_status_readdb_job2) (bool retVal___, char *fields[], int columns, int current);
 typedef bool (*HPMHOOK_pre_status_readdb_sizefix) (char **fields[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_status_readdb_sizefix) (bool retVal___, char *fields[], int columns, int current);
-typedef bool (*HPMHOOK_pre_status_readdb_scconfig) (char **fields[], int *columns, int *current);
-typedef bool (*HPMHOOK_post_status_readdb_scconfig) (bool retVal___, char *fields[], int columns, int current);
+typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig) (void);
+typedef bool (*HPMHOOK_post_status_read_scdb_libconfig) (bool retVal___);
+typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub) (struct config_setting_t **it, int *idx, const char **source);
+typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_flag) (struct config_setting_t **it, int *type, const char **source);
+typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_flag) (bool retVal___, struct config_setting_t *it, int type, const char *source);
+typedef bool (*HPMHOOK_pre_status_read_scdb_libconfig_sub_flag_additional) (struct config_setting_t **it, int *type, const char **source);
+typedef bool (*HPMHOOK_post_status_read_scdb_libconfig_sub_flag_additional) (bool retVal___, struct config_setting_t *it, int type, const char *source);
 typedef void (*HPMHOOK_pre_status_read_job_db) (void);
 typedef void (*HPMHOOK_post_status_read_job_db) (void);
 typedef void (*HPMHOOK_pre_status_read_job_db_sub) (int *idx, const char **name, struct config_setting_t **jdb);
