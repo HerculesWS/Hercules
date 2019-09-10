@@ -488,7 +488,6 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-//TODO: CONTINUE REFACTORING HERE
 static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
