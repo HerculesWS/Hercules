@@ -488,6 +488,14 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
+/**
+ * Timer for delayed execution of unit->walktoxy once triggered
+ * @param tid: Timer ID, unused
+ * @param tick: Tick, unused
+ * @param id: ID of block_list to execute the action
+ * @param data: intptr_t filled with x-coord in highest 16 bits and y-coord in lowest 16 bits
+ * @return 0: success, 1: failure
+ */
 static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
