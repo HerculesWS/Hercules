@@ -103,8 +103,8 @@ enum e_battle_check_target { //New definitions [Skotlex]
 enum battle_dmg_type {
 	BDT_NORMAL      = 0,  // Normal attack
 	//BDT_PICKUP      = 1,  // Pick up item
-	//BDT_SITDOWN     = 2,  // Sit down
-	//BDT_STANDUP     = 3,  // Stand up
+	BDT_SITDOWN     = 2,  // Sit down
+	BDT_STANDUP     = 3,  // Stand up
 	BDT_ENDURE      = 4,  // Damage (endure)
 	BDT_SPLASH      = 5,  // Splash
 	BDT_SKILL       = 6,  // Skill
