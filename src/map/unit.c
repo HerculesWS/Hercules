@@ -498,11 +498,11 @@ static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
 	if (bl == NULL || bl->prev == NULL)
-		return 0;
+		return 1;
 	short x = (short) ((data >> 16) & 0xffff);
 	short y = (short) (data & 0xffff);
 	unit->walktoxy(bl, x, y, 0);
-	return 1;
+	return 0;
 }
 
 //flag parameter:
