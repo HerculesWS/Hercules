@@ -497,8 +497,7 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
-
-	if (!bl || bl->prev == NULL)
+	if (bl == NULL || bl->prev == NULL)
 		return 0;
 	unit->walktoxy(bl, (short)((data>>16)&0xffff), (short)(data&0xffff), 0);
 	return 1;
