@@ -532,7 +532,7 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 	if (ud == NULL)
 		return 0;
 
-	if (battle_config.check_occupied_cells && (flag&8) && !map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR|BL_NPC, 1)) //This might change x and y
+	if (battle_config.check_occupied_cells != 0 && (flag & 8) != 0 && !map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR | BL_NPC, 1)) // This might change x and y
 		return 0;
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
@@ -547,14 +547,14 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 	if ((wpd.path_len > battle_config.max_walk_path) && (bl->type != BL_NPC))
 		return 0;
 
-	if (flag&4 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0 &&
+	if ((flag & 4) != 0 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0 &&
 		DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000) {
 		// Delay walking command. [Skotlex]
 		timer->add(ud->canmove_tick + 1, unit->delay_walktoxy_timer, bl->id, (intptr_t)MakeDWord((uint16)x, (uint16)y));
 		return 1;
 	}
 
-	if(!(flag&2) && (!(status_get_mode(bl)&MD_CANMOVE) || !unit->can_move(bl)))
+	if ((flag & 2) == 0 && ((status_get_mode(bl) & MD_CANMOVE) == 0 || unit->can_move(bl) == 0))
 		return 0;
 
 	ud->state.walk_easy = flag&1;
@@ -566,9 +566,9 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 
 	sc = status->get_sc(bl);
 	if (sc != NULL) {
-		if( sc->data[SC_CONFUSION] || sc->data[SC__CHAOS] ) //Randomize the target position
+		if (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL) //Randomize the target position
 			map->random_dir(bl, &ud->to_x, &ud->to_y);
-		if( sc->data[SC_COMBOATTACK] )
+		if (sc->data[SC_COMBOATTACK] != NULL)
 			status_change_end(bl, SC_COMBOATTACK, INVALID_TIMER);
 	}
 
