@@ -19338,7 +19338,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walktoxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -19509,7 +19509,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walktoxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -19648,7 +19648,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walktoxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -19781,7 +19781,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walktoxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -19915,7 +19915,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walktoxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -20044,7 +20044,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walktoxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_CLASS:
@@ -20779,7 +20779,10 @@ static BUILDIN(unitwalk)
 	if (script_hasdata(st, 4)) {
 		int x = script_getnum(st, 3);
 		int y = script_getnum(st, 4);
-		script_pushint(st, unit->walktoxy(bl, x, y, 0));// We'll use harder calculations.
+		if (unit->walktoxy(bl, x, y, 0) == 0) // We'll use harder calculations.
+			script_pushint(st, 1);
+		else
+			script_pushint(st, 0);
 	}
 	else {
 		int target_id = script_getnum(st, 3);

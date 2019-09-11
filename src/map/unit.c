@@ -513,42 +513,43 @@ static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 //&2 -> force walking
 //&4 -> Delay walking if the reason you can't walk is the canwalk delay
 //&8 -> Search for an unoccupied cell and cancel if none available
+//@return 0: success, 1: failure
 static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 {
 	struct unit_data* ud = NULL;
 	struct status_change* sc = NULL;
 	struct walkpath_data wpd;
 
-	nullpo_ret(bl);
+	nullpo_retr(1, bl);
 
 	ud = unit->bl2ud(bl);
 
-	nullpo_retr(0, ud);
+	nullpo_retr(1, ud);
 
 	if (battle_config.check_occupied_cells != 0 && (flag & 8) != 0 && !map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR | BL_NPC, 1)) // This might change x and y
-		return 0;
+		return 1;
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
-		return 0;
+		return 1;
 
 #ifdef OFFICIAL_WALKPATH
 	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, x, y, CELL_CHKNOPASS) // Check if there is an obstacle between
 		&& (wpd.path_len > (battle_config.max_walk_path/17)*14) // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
 		&& (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
-		return 0;
+		return 1;
 #endif
 	if ((wpd.path_len > battle_config.max_walk_path) && (bl->type != BL_NPC))
-		return 0;
+		return 1;
 
 	if ((flag & 4) != 0 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0 &&
 		DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000) {
 		// Delay walking command. [Skotlex]
 		timer->add(ud->canmove_tick + 1, unit->delay_walktoxy_timer, bl->id, (intptr_t)MakeDWord((uint16)x, (uint16)y));
-		return 1;
+		return 0;
 	}
 
 	if ((flag & 2) == 0 && ((status_get_mode(bl) & MD_CANMOVE) == 0 || unit->can_move(bl) == 0))
-		return 0;
+		return 1;
 
 	ud->state.walk_easy = flag&1;
 	ud->to_x = x;
@@ -567,7 +568,7 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 		// When you come to the center of the grid because the change of destination while you're walking right now
 		// Call a function from a timer unit->walktoxy_sub
 		ud->state.change_walk_target = 1;
-		return 1;
+		return 0;
 	}
 
 	return unit->walktoxy_sub(bl);
@@ -740,14 +741,14 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		return false;
 	}
 
-	if( unit->walktoxy(bl, to_x, to_y, 1) )
+	if (unit->walktoxy(bl, to_x, to_y, 1) == 0)
 		return true;
 
 	//There must be an obstacle nearby. Attempt walking one cell at a time.
 	do {
 		to_x -= dir_x;
 		to_y -= dir_y;
-	} while (--i > 0 && !unit->walktoxy(bl, to_x, to_y, 1));
+	} while (--i > 0 && unit->walktoxy(bl, to_x, to_y, 1) != 0);
 
 	if ( i == 0 ) {
 		unit->run_hit(bl, sc, sd, type);
@@ -765,7 +766,10 @@ static int unit_escape(struct block_list *bl, struct block_list *target, short d
 	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	while (dist > 0 && map->getcell(bl->m, bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], CELL_CHKNOREACH))
 		dist--;
-	return ( dist > 0 && unit->walktoxy(bl, bl->x + dist*dirx[dir], bl->y + dist*diry[dir], 0) );
+	if (dist > 0 && unit->walktoxy(bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], 0) == 0)
+		return 1;
+	else
+		return 0;
 }
 
 //Instant warp function.

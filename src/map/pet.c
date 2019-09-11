@@ -891,7 +891,8 @@ static int pet_randomwalk(struct pet_data *pd, int64 tick)
 			int r=rnd();
 			int x=pd->bl.x+r%(d*2+1)-d;
 			int y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
-			if(map->getcell (pd->bl.m, &pd->bl, x, y, CELL_CHKPASS) && unit->walktoxy(&pd->bl, x, y, 0)) {
+			if (map->getcell(pd->bl.m, &pd->bl, x, y, CELL_CHKPASS)
+			    && unit->walktoxy(&pd->bl, x, y, 0) == 0) {
 				pd->move_fail_count=0;
 				break;
 			}
@@ -991,7 +992,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 			return 0; //Already walking to him
 
 		unit->calc_pos(&pd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
-		if(!unit->walktoxy(&pd->bl,pd->ud.to_x,pd->ud.to_y,0))
+		if (unit->walktoxy(&pd->bl, pd->ud.to_x, pd->ud.to_y, 0) != 0)
 			pet->randomwalk(pd,tick);
 
 		return 0;
