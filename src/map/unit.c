@@ -57,6 +57,7 @@
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/timer.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -493,7 +494,7 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
  * @param tid: Timer ID, unused
  * @param tick: Tick, unused
  * @param id: ID of block_list to execute the action
- * @param data: intptr_t filled with x-coord in highest 16 bits and y-coord in lowest 16 bits
+ * @param data: uint32 data cast to intptr_t with x-coord in lowest 16 bits and y-coord in highest 16 bits
  * @return 0: success, 1: failure
  */
 static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
@@ -501,8 +502,8 @@ static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 	struct block_list *bl = map->id2bl(id);
 	nullpo_retr(1, bl);
 	nullpo_retr(1, bl->prev);
-	short x = (short) ((data >> 16) & 0xffff);
-	short y = (short) (data & 0xffff);
+	short x = (short)GetWord((uint32)data, 0);
+	short y = (short)GetWord((uint32)data, 1);
 	unit->walktoxy(bl, x, y, 0);
 	return 0;
 }
@@ -542,7 +543,7 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 	if (flag&4 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0 &&
 		DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000) {
 		// Delay walking command. [Skotlex]
-		timer->add(ud->canmove_tick+1, unit->delay_walktoxy_timer, bl->id, (x<<16)|(y&0xFFFF));
+		timer->add(ud->canmove_tick + 1, unit->delay_walktoxy_timer, bl->id, (intptr_t)MakeDWord((uint16)x, (uint16)y));
 		return 1;
 	}
 
