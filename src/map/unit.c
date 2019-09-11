@@ -651,7 +651,7 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 	if(!unit->can_move(bl))
 		return 0;
 
-	if (unit->walktoxy_sub(bl) == 0) { //ALREADY REFACTORED
+	if (unit->walktoxy_sub(bl) == 0) {
 		set_mobstate(bl, flag&2);
 		return 0;
 	}
