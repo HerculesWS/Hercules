@@ -178,9 +178,14 @@ static int itemdb_searchname_array(struct item_data **data, int size, const char
 		int db_count = 0;
 		size -= count;
 		db_count = itemdb->other->getall(itemdb->other, (struct DBData**)&db_data, size, itemdb->searchname_array_sub, str);
-		for (i = 0; i < db_count; i++)
+		int iLimit = db_count;
+		if (iLimit > size)
+			iLimit = size;
+		for (i = 0; i < iLimit; i++) {
 			data[count++] = DB->data2ptr(db_data[i]);
-		count += db_count;
+		}
+		if (db_count > size)
+			count += db_count - size;
 	}
 	return count;
 }
