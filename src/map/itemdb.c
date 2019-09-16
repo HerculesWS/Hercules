@@ -172,21 +172,18 @@ static int itemdb_searchname_array(struct item_data **data, int size, const char
 	}
 
 	// search in the db
-	if( count < size )
-	{
-		struct DBData *db_data[MAX_SEARCH];
-		int db_count = 0;
-		size -= count;
-		db_count = itemdb->other->getall(itemdb->other, (struct DBData**)&db_data, size, itemdb->searchname_array_sub, str);
-		int iLimit = db_count;
-		if (iLimit > size)
-			iLimit = size;
-		for (i = 0; i < iLimit; i++) {
-			data[count++] = DB->data2ptr(db_data[i]);
-		}
-		if (db_count > size)
-			count += db_count - size;
+	struct DBData *db_data[MAX_SEARCH];
+	int db_count = 0;
+	size -= count;
+	db_count = itemdb->other->getall(itemdb->other, (struct DBData**)&db_data, size, itemdb->searchname_array_sub, str);
+	int iLimit = db_count;
+	if (iLimit > size)
+		iLimit = size;
+	for (i = 0; i < iLimit; i++) {
+		data[count++] = DB->data2ptr(db_data[i]);
 	}
+	if (db_count > size)
+		count += db_count - size;
 	return count;
 }
 /* [Ind/Hercules] */
