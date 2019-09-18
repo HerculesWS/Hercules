@@ -117,73 +117,105 @@ static struct item_data *itemdb_name2id(const char *str)
  */
 static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
 {
-	struct item_data *item = DB->data2ptr(&data);
-	char *str;
-	str=va_arg(ap,char *);
+	struct item_data *itd = DB->data2ptr(&data);
+	const char *str = va_arg(ap, const char *);
+	enum item_name_search_flag flag = va_arg(ap, enum item_name_search_flag);
+
 	nullpo_ret(str);
-	if (item == &itemdb->dummy)
+
+	if (itd == &itemdb->dummy)
 		return 1; //Invalid item.
-	if(stristr(item->jname,str))
+
+	if (
+		(flag == IT_SEARCH_NAME_PARTIAL
+		 && (stristr(itd->jname, str) != NULL
+			 || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str))
+			 || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str))
+			 ))
+		|| (flag == IT_SEARCH_NAME_EXACT
+			&& (strcmp(itd->jname, str) == 0
+				|| (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0)
+				|| (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)
+				))
+		) {
+
 		return 0;
-	if(battle_config.case_sensitive_aegisnames && strstr(item->name,str))
-		return 0;
-	if(!battle_config.case_sensitive_aegisnames && stristr(item->name,str))
-		return 0;
-	return strcmpi(item->jname,str);
+	} else {
+		return 1;
+	}
 }
 
-/*==========================================
- * Founds up to N matches. Returns number of matches [Skotlex]
- * search flag :
- * 0 - approximate match
- * 1 - exact match
- *------------------------------------------*/
-static int itemdb_searchname_array(struct item_data **data, int size, const char *str, int flag)
+/**
+ * Finds up to passed size matches
+ * @param data array of struct item_data for returning the results in
+ * @param size size of the array
+ * @param str string used in this search
+ * @param flag search mode refer to enum item_name_search_flag for possible values
+ * @return returns all found matches in the database which could be bigger than size
+ **/
+static int itemdb_searchname_array(struct item_data **data, const int size, const char *str, enum item_name_search_flag flag)
 {
-	struct item_data* item;
-	int i;
-	int count=0;
-
 	nullpo_ret(data);
 	nullpo_ret(str);
-	// Search in the array
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
-	{
-		item = itemdb->array[i];
-		if( item == NULL )
+	Assert_ret(flag >= IT_SEARCH_NAME_PARTIAL && flag < IT_SEARCH_NAME_MAX);
+	Assert_ret(size > 0);
+
+	int
+		results_count = 0,
+		length = 0;
+
+	// Search in array
+	for (int i = 0; i < ARRAYLENGTH(itemdb->array); ++i) {
+		struct item_data *itd = itemdb->array[i];
+
+		if (itd == NULL)
 			continue;
 
-		if(
-		    (!flag
-		    && (stristr(item->jname,str)
-		       || (battle_config.case_sensitive_aegisnames && strstr(item->name,str))
-		       || (!battle_config.case_sensitive_aegisnames && stristr(item->name,str))
-		    ))
-		 || (flag
-		    && (strcmp(item->jname,str) == 0
-		       || (battle_config.case_sensitive_aegisnames && strcmp(item->name,str) == 0)
-		       || (!battle_config.case_sensitive_aegisnames && strcasecmp(item->name,str) == 0)
-		    ))
-		) {
-			if( count < size )
-				data[count] = item;
-			++count;
+		if (
+			(flag == IT_SEARCH_NAME_PARTIAL
+			 && (stristr(itd->jname, str) != NULL
+				 || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str))
+				 || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str))
+				 ))
+			|| (flag == IT_SEARCH_NAME_EXACT
+				&& (strcmp(itd->jname, str) == 0
+					|| (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0)
+					|| (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)
+					))
+			) {
+			if (length < size) {
+				data[length] = itd;
+				++length;
+			}
+
+			++results_count;
 		}
 	}
 
-	// search in the db
-	if( count < size )
-	{
-		struct DBData *db_data[MAX_SEARCH];
-		int db_count = 0;
-		size -= count;
-		db_count = itemdb->other->getall(itemdb->other, (struct DBData**)&db_data, size, itemdb->searchname_array_sub, str);
-		for (i = 0; i < db_count; i++)
-			data[count++] = DB->data2ptr(db_data[i]);
-		count += db_count;
+	// Search in dbmap
+	int dbmap_size = size - length;
+	if (dbmap_size > 0) {
+		struct DBData **dbmap_data = NULL;
+		int dbmap_count = 0;
+		CREATE(dbmap_data, struct DBData *, dbmap_size);
+
+		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, flag);
+		dbmap_size = min(dbmap_count, dbmap_size);
+
+		for (int i = 0; i < dbmap_size; ++i) {
+			data[length] = DB->data2ptr(dbmap_data[i]);
+			++length;
+		}
+
+		results_count += dbmap_count;
+		aFree(dbmap_data);
+	} else { // We got all matches we can return, so we only need to count now.
+		results_count += itemdb->other->getall(itemdb->other, NULL, 0, itemdb->searchname_array_sub, str, flag);
 	}
-	return count;
+
+	return results_count;
 }
+
 /* [Ind/Hercules] */
 static int itemdb_chain_item(unsigned short chain_id, int *rate)
 {

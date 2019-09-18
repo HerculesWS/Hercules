@@ -412,6 +412,16 @@ enum ItemOptionTypes {
 	IT_OPT_MAX
 };
 
+/**
+ * Item name search flags
+ **/
+
+enum item_name_search_flag {
+	IT_SEARCH_NAME_PARTIAL,
+	IT_SEARCH_NAME_EXACT,
+	IT_SEARCH_NAME_MAX,
+};
+
 /** Convenience item list (entry) used in various functions */
 struct itemlist_entry {
 	int id;       ///< Item ID or (inventory) index
@@ -633,7 +643,7 @@ struct itemdb_interface {
 	/* */
 	struct item_data* (*name2id) (const char *str);
 	struct item_data* (*search_name) (const char *name);
-	int (*search_name_array) (struct item_data** data, int size, const char *str, int flag);
+	int (*search_name_array) (struct item_data **data, const int size, const char *str, enum item_name_search_flag flag);
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
 	struct item_data* (*exists) (int nameid);
