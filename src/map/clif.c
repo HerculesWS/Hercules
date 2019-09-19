@@ -9298,9 +9298,6 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	packet.gid = bl->id;
 
 	const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
-	const struct party_data *p = NULL;
-	const struct guild *g = NULL;
-	int ps = -1;
 
 	if (ssd->fakename[0] != '\0' && ssd->disguise != -1) {
 		packet.packet_id = reqName;
@@ -9326,9 +9323,12 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 #endif
 		memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
+		const struct party_data *p = NULL;
+		int ps = -1;
 		if (ssd->status.party_id != 0) {
 			p = party->search(ssd->status.party_id);
 		}
+		const struct guild *g = NULL;
 		if (ssd->status.guild_id != 0) {
 			if ((g = ssd->guild) != NULL) {
 				int i;
@@ -9350,6 +9350,12 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
 			memcpy(packet.guild_name, g->name,NAME_LENGTH);
 			memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+		}
+		else if (ssd->status.clan_id != 0) {
+			struct clan *c = clan->search(ssd->status.clan_id);
+			if (c != 0) {
+				memcpy(packet.position_name, c->name, NAME_LENGTH);
+			}
 		}
 	}
 
