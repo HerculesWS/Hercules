@@ -4552,6 +4552,12 @@
 - `GUILD_ONLINE_VENDOR`: 1
 - `GUILD_ONLINE_NO_VENDOR`: 2
 
+### Siege Types
+
+- `SIEGE_TYPE_FE`: 0
+- `SIEGE_TYPE_SE`: 1
+- `SIEGE_TYPE_TE`: 2
+
 ### Renewal
 
 - `RENEWAL`: 1
