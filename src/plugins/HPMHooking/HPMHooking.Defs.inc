@@ -1756,6 +1756,10 @@ typedef void (*HPMHOOK_pre_clif_guild_basicinfo) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_guild_basicinfo) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_guild_allianceinfo) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_guild_allianceinfo) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_guild_castlelist) (struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_guild_castlelist) (struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_guild_castleinfo) (struct map_session_data **sd, struct guild_castle **gc);
+typedef void (*HPMHOOK_post_clif_guild_castleinfo) (struct map_session_data *sd, struct guild_castle *gc);
 typedef void (*HPMHOOK_pre_clif_guild_memberlist) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_guild_memberlist) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_guild_skillinfo) (struct map_session_data **sd);
@@ -2726,6 +2730,12 @@ typedef void (*HPMHOOK_pre_clif_pRefineryUIRefine) (int *fd, struct map_session_
 typedef void (*HPMHOOK_post_clif_pRefineryUIRefine) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_announce_refine_status) (struct map_session_data **sd, int *item_id, int *refine_level, bool *success, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_announce_refine_status) (struct map_session_data *sd, int item_id, int refine_level, bool success, enum send_target target);
+typedef void (*HPMHOOK_pre_clif_pGuildCastleTeleportRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pGuildCastleTeleportRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pGuildCastleInfoRequest) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pGuildCastleInfoRequest) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_guild_castleteleport_res) (struct map_session_data **sd, enum siege_teleport_result *result);
+typedef void (*HPMHOOK_post_clif_guild_castleteleport_res) (struct map_session_data *sd, enum siege_teleport_result result);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -3058,6 +3068,8 @@ typedef bool (*HPMHOOK_pre_guild_read_castledb_libconfig) (void);
 typedef bool (*HPMHOOK_post_guild_read_castledb_libconfig) (bool retVal___);
 typedef bool (*HPMHOOK_pre_guild_read_castledb_libconfig_sub) (struct config_setting_t **it, int *idx, const char **source);
 typedef bool (*HPMHOOK_post_guild_read_castledb_libconfig_sub) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+typedef bool (*HPMHOOK_pre_guild_read_castledb_libconfig_sub_warp) (struct config_setting_t **wd, const char **source, struct guild_castle **gc);
+typedef bool (*HPMHOOK_post_guild_read_castledb_libconfig_sub_warp) (bool retVal___, struct config_setting_t *wd, const char *source, struct guild_castle *gc);
 typedef int (*HPMHOOK_pre_guild_payexp_timer_sub) (union DBKey *key, struct DBData **data, va_list ap);
 typedef int (*HPMHOOK_post_guild_payexp_timer_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_guild_send_xy_timer_sub) (union DBKey *key, struct DBData **data, va_list ap);

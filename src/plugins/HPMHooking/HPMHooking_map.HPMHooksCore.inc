@@ -1346,6 +1346,10 @@ struct {
 	struct HPMHookPoint *HP_clif_guild_basicinfo_post;
 	struct HPMHookPoint *HP_clif_guild_allianceinfo_pre;
 	struct HPMHookPoint *HP_clif_guild_allianceinfo_post;
+	struct HPMHookPoint *HP_clif_guild_castlelist_pre;
+	struct HPMHookPoint *HP_clif_guild_castlelist_post;
+	struct HPMHookPoint *HP_clif_guild_castleinfo_pre;
+	struct HPMHookPoint *HP_clif_guild_castleinfo_post;
 	struct HPMHookPoint *HP_clif_guild_memberlist_pre;
 	struct HPMHookPoint *HP_clif_guild_memberlist_post;
 	struct HPMHookPoint *HP_clif_guild_skillinfo_pre;
@@ -2316,6 +2320,12 @@ struct {
 	struct HPMHookPoint *HP_clif_pRefineryUIRefine_post;
 	struct HPMHookPoint *HP_clif_announce_refine_status_pre;
 	struct HPMHookPoint *HP_clif_announce_refine_status_post;
+	struct HPMHookPoint *HP_clif_pGuildCastleTeleportRequest_pre;
+	struct HPMHookPoint *HP_clif_pGuildCastleTeleportRequest_post;
+	struct HPMHookPoint *HP_clif_pGuildCastleInfoRequest_pre;
+	struct HPMHookPoint *HP_clif_pGuildCastleInfoRequest_post;
+	struct HPMHookPoint *HP_clif_guild_castleteleport_res_pre;
+	struct HPMHookPoint *HP_clif_guild_castleteleport_res_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -2622,6 +2632,8 @@ struct {
 	struct HPMHookPoint *HP_guild_read_castledb_libconfig_post;
 	struct HPMHookPoint *HP_guild_read_castledb_libconfig_sub_pre;
 	struct HPMHookPoint *HP_guild_read_castledb_libconfig_sub_post;
+	struct HPMHookPoint *HP_guild_read_castledb_libconfig_sub_warp_pre;
+	struct HPMHookPoint *HP_guild_read_castledb_libconfig_sub_warp_post;
 	struct HPMHookPoint *HP_guild_payexp_timer_sub_pre;
 	struct HPMHookPoint *HP_guild_payexp_timer_sub_post;
 	struct HPMHookPoint *HP_guild_send_xy_timer_sub_pre;
@@ -8127,6 +8139,10 @@ struct {
 	int HP_clif_guild_basicinfo_post;
 	int HP_clif_guild_allianceinfo_pre;
 	int HP_clif_guild_allianceinfo_post;
+	int HP_clif_guild_castlelist_pre;
+	int HP_clif_guild_castlelist_post;
+	int HP_clif_guild_castleinfo_pre;
+	int HP_clif_guild_castleinfo_post;
 	int HP_clif_guild_memberlist_pre;
 	int HP_clif_guild_memberlist_post;
 	int HP_clif_guild_skillinfo_pre;
@@ -9097,6 +9113,12 @@ struct {
 	int HP_clif_pRefineryUIRefine_post;
 	int HP_clif_announce_refine_status_pre;
 	int HP_clif_announce_refine_status_post;
+	int HP_clif_pGuildCastleTeleportRequest_pre;
+	int HP_clif_pGuildCastleTeleportRequest_post;
+	int HP_clif_pGuildCastleInfoRequest_pre;
+	int HP_clif_pGuildCastleInfoRequest_post;
+	int HP_clif_guild_castleteleport_res_pre;
+	int HP_clif_guild_castleteleport_res_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -9403,6 +9425,8 @@ struct {
 	int HP_guild_read_castledb_libconfig_post;
 	int HP_guild_read_castledb_libconfig_sub_pre;
 	int HP_guild_read_castledb_libconfig_sub_post;
+	int HP_guild_read_castledb_libconfig_sub_warp_pre;
+	int HP_guild_read_castledb_libconfig_sub_warp_post;
 	int HP_guild_payexp_timer_sub_pre;
 	int HP_guild_payexp_timer_sub_post;
 	int HP_guild_send_xy_timer_sub_pre;

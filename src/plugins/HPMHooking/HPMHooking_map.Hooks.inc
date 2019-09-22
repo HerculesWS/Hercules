@@ -17552,6 +17552,58 @@ void HP_clif_guild_allianceinfo(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_guild_castlelist(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_guild_castlelist_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_castlelist_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guild_castlelist_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.guild_castlelist(sd);
+	}
+	if (HPMHooks.count.HP_clif_guild_castlelist_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_castlelist_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guild_castlelist_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_clif_guild_castleinfo(struct map_session_data *sd, struct guild_castle *gc) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_guild_castleinfo_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct guild_castle **gc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_castleinfo_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guild_castleinfo_pre[hIndex].func;
+			preHookFunc(&sd, &gc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.guild_castleinfo(sd, gc);
+	}
+	if (HPMHooks.count.HP_clif_guild_castleinfo_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct guild_castle *gc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_castleinfo_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guild_castleinfo_post[hIndex].func;
+			postHookFunc(sd, gc);
+		}
+	}
+	return;
+}
 void HP_clif_guild_memberlist(struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_guild_memberlist_pre > 0) {
@@ -30193,6 +30245,84 @@ void HP_clif_announce_refine_status(struct map_session_data *sd, int item_id, in
 	}
 	return;
 }
+void HP_clif_pGuildCastleTeleportRequest(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pGuildCastleTeleportRequest_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGuildCastleTeleportRequest_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pGuildCastleTeleportRequest_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pGuildCastleTeleportRequest(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pGuildCastleTeleportRequest_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGuildCastleTeleportRequest_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pGuildCastleTeleportRequest_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pGuildCastleInfoRequest(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_pGuildCastleInfoRequest_pre > 0) {
+		void (*preHookFunc) (int *fd, struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGuildCastleInfoRequest_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_pGuildCastleInfoRequest_pre[hIndex].func;
+			preHookFunc(&fd, &sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pGuildCastleInfoRequest(fd, sd);
+	}
+	if (HPMHooks.count.HP_clif_pGuildCastleInfoRequest_post > 0) {
+		void (*postHookFunc) (int fd, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGuildCastleInfoRequest_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_pGuildCastleInfoRequest_post[hIndex].func;
+			postHookFunc(fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_guild_castleteleport_res(struct map_session_data *sd, enum siege_teleport_result result) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_guild_castleteleport_res_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum siege_teleport_result *result);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_castleteleport_res_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guild_castleteleport_res_pre[hIndex].func;
+			preHookFunc(&sd, &result);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.guild_castleteleport_res(sd, result);
+	}
+	if (HPMHooks.count.HP_clif_guild_castleteleport_res_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum siege_teleport_result result);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_castleteleport_res_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guild_castleteleport_res_post[hIndex].func;
+			postHookFunc(sd, result);
+		}
+	}
+	return;
+}
 /* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -34300,6 +34430,33 @@ bool HP_guild_read_castledb_libconfig_sub(struct config_setting_t *it, int idx, 
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_libconfig_sub_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_guild_read_castledb_libconfig_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, it, idx, source);
+		}
+	}
+	return retVal___;
+}
+bool HP_guild_read_castledb_libconfig_sub_warp(struct config_setting_t *wd, const char *source, struct guild_castle *gc) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_guild_read_castledb_libconfig_sub_warp_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **wd, const char **source, struct guild_castle **gc);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_libconfig_sub_warp_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_guild_read_castledb_libconfig_sub_warp_pre[hIndex].func;
+			retVal___ = preHookFunc(&wd, &source, &gc);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.guild.read_castledb_libconfig_sub_warp(wd, source, gc);
+	}
+	if (HPMHooks.count.HP_guild_read_castledb_libconfig_sub_warp_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *wd, const char *source, struct guild_castle *gc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_libconfig_sub_warp_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_guild_read_castledb_libconfig_sub_warp_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, wd, source, gc);
 		}
 	}
 	return retVal___;
