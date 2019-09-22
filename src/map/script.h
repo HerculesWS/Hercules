@@ -542,6 +542,16 @@ enum pcblock_action_flag {
 };
 
 /**
+ * Types of Siege (WoE)
+ */
+enum siege_type {
+	SIEGE_TYPE_FE,
+	SIEGE_TYPE_SE,
+	SIEGE_TYPE_TE,
+	SIEGE_TYPE_MAX
+};
+
+/**
  * Structures
  **/
 
