@@ -47651,15 +47651,15 @@ void HP_map_deliddb(struct block_list *bl) {
 	}
 	return;
 }
-struct map_session_data* HP_map_nick2sd(const char *nick) {
+struct map_session_data* HP_map_nick2sd(const char *nick, bool allow_partial) {
 	int hIndex = 0;
 	struct map_session_data* retVal___ = NULL;
 	if (HPMHooks.count.HP_map_nick2sd_pre > 0) {
-		struct map_session_data* (*preHookFunc) (const char **nick);
+		struct map_session_data* (*preHookFunc) (const char **nick, bool *allow_partial);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_nick2sd_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_map_nick2sd_pre[hIndex].func;
-			retVal___ = preHookFunc(&nick);
+			retVal___ = preHookFunc(&nick, &allow_partial);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -47667,13 +47667,13 @@ struct map_session_data* HP_map_nick2sd(const char *nick) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.map.nick2sd(nick);
+		retVal___ = HPMHooks.source.map.nick2sd(nick, allow_partial);
 	}
 	if (HPMHooks.count.HP_map_nick2sd_post > 0) {
-		struct map_session_data* (*postHookFunc) (struct map_session_data* retVal___, const char *nick);
+		struct map_session_data* (*postHookFunc) (struct map_session_data* retVal___, const char *nick, bool allow_partial);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_nick2sd_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_map_nick2sd_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, nick);
+			retVal___ = postHookFunc(retVal___, nick, allow_partial);
 		}
 	}
 	return retVal___;

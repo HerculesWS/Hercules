@@ -2813,7 +2813,7 @@ static struct map_session_data *script_charid2sd(struct script_state *st, int ch
 static struct map_session_data *script_nick2sd(struct script_state *st, const char *name)
 {
 	struct map_session_data *sd;
-	if ((sd = map->nick2sd(name)) == NULL) {
+	if ((sd = map->nick2sd(name, false)) == NULL) {
 		ShowWarning("script_nick2sd: Player name '%s' not found!\n", name);
 		script->reportfunc(st);
 		script->reportsrc(st);
@@ -8780,7 +8780,7 @@ static BUILDIN(getcharid)
 	struct map_session_data *sd;
 
 	if (script_hasdata(st, 3))
-		sd = map->nick2sd(script_getstr(st, 3));
+		sd = map->nick2sd(script_getstr(st, 3), false);
 	else
 		sd = script->rid2sd(st);
 
@@ -16488,7 +16488,7 @@ static BUILDIN(getmapxy)
 		case 0: //Get Character Position
 			if (script_hasdata(st,6)) {
 				if (script_isstringtype(st,6))
-					sd = map->nick2sd(script_getstr(st,6));
+					sd = map->nick2sd(script_getstr(st,6), false);
 				else
 					sd = map->id2sd(script_getnum(st,6));
 			} else {
@@ -16515,7 +16515,7 @@ static BUILDIN(getmapxy)
 		case 2: //Get Pet Position
 			if (script_hasdata(st,6)) {
 				if (script_isstringtype(st,6))
-					sd = map->nick2sd(script_getstr(st,6));
+					sd = map->nick2sd(script_getstr(st,6), false);
 				else {
 					bl = map->id2bl(script_getnum(st,6));
 					break;
@@ -16537,7 +16537,7 @@ static BUILDIN(getmapxy)
 		case 4: //Get Homun Position
 			if (script_hasdata(st,6)) {
 				if (script_isstringtype(st,6)) {
-					sd = map->nick2sd(script_getstr(st,6));
+					sd = map->nick2sd(script_getstr(st,6), false);
 				} else {
 					bl = map->id2bl(script_getnum(st,6));
 					break;
@@ -16552,7 +16552,7 @@ static BUILDIN(getmapxy)
 		case 5: //Get Mercenary Position
 			if (script_hasdata(st,6)) {
 				if (script_isstringtype(st,6)) {
-					sd = map->nick2sd(script_getstr(st,6));
+					sd = map->nick2sd(script_getstr(st,6), false);
 				} else {
 					bl = map->id2bl(script_getnum(st,6));
 					break;
@@ -16567,7 +16567,7 @@ static BUILDIN(getmapxy)
 		case 6: //Get Elemental Position
 			if (script_hasdata(st,6)) {
 				if (script_isstringtype(st,6)) {
-					sd = map->nick2sd(script_getstr(st,6));
+					sd = map->nick2sd(script_getstr(st,6), false);
 				} else {
 					bl = map->id2bl(script_getnum(st,6));
 					break;
@@ -23083,7 +23083,7 @@ static BUILDIN(getcharip)
 	/* check if a character name is specified */
 	if (script_hasdata(st, 2)) {
 		if (script_isstringtype(st, 2)) {
-			sd = map->nick2sd(script_getstr(st, 2));
+			sd = map->nick2sd(script_getstr(st, 2), false);
 		} else {
 			int id = script_getnum(st, 2);
 			sd = (map->id2sd(id) ? map->id2sd(id) : map->charid2sd(id));
