@@ -12215,6 +12215,29 @@ static int pc_have_magnifier(struct map_session_data *sd)
 }
 
 /**
+ * checks if player have any item that listed in item chain
+ * @param sd map_session_data of Player
+ * @param chain_id unsigned short of item chain id
+ * @return index of inventory, INDEX_NOT_FOUND if it is not found
+ */
+static int pc_have_item_chain(struct map_session_data *sd, unsigned short chain_id)
+{
+	if (chain_id >= itemdb->chain_count) {
+		ShowError("itemdb_chain_item: unknown chain id %d\n", chain_id);
+		return INDEX_NOT_FOUND;
+	}
+
+	for (int n = 0; n < itemdb->chains[chain_id].qty; n++) {
+		struct item_chain_entry *entry = &itemdb->chains[chain_id].items[n];
+		int index = pc->search_inventory(sd, entry->id);
+		if (index != INDEX_NOT_FOUND)
+			return index;
+	}
+
+	return INDEX_NOT_FOUND;
+}
+
+/**
  * Checks if player have basic skills learned.
  * @param  sd Player Data
  * @param  level Required Level of Novice Skill
@@ -12823,6 +12846,7 @@ void pc_defaults(void)
 	pc->update_idle_time = pc_update_idle_time;
 
 	pc->have_magnifier = pc_have_magnifier;
+	pc->have_item_chain = pc_have_item_chain;
 
 	pc->check_basicskill = pc_check_basicskill;
 

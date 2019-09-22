@@ -1523,6 +1523,11 @@ static void itemdb_read_chains(void)
 	else
 		itemdb->chain_cache[ECC_ORE] = i;
 
+	if (!script->get_constant("ITMCHAIN_SIEGFRIED", &i))
+		ShowWarning("itemdb_read_chains: failed to find 'ITMCHAIN_SIEGFRIED' chain to link to cache!\n");
+	else
+		itemdb->chain_cache[ECC_SIEGFRIED] = i;
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 

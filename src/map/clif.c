@@ -16404,10 +16404,14 @@ static void clif_parse_AutoRevive(int fd, struct map_session_data *sd)
 {
 	if (pc_istrading(sd) || pc_isvending(sd))
 		return;
+
 	if (!pc_isdead(sd))
 		return;
 
-	int item_position = pc->search_inventory(sd, ITEMID_TOKEN_OF_SIEGFRIED);
+	if (sd->sc.data[SC_HELLPOWER]) //Cannot res while under the effect of SC_HELLPOWER.
+		return;
+
+	int item_position = pc->have_item_chain(sd, ECC_SIEGFRIED);
 	int hpsp = 100;
 
 	if (item_position == INDEX_NOT_FOUND) {
@@ -16417,18 +16421,15 @@ static void clif_parse_AutoRevive(int fd, struct map_session_data *sd)
 			return;
 	}
 
-	if (sd->sc.data[SC_HELLPOWER]) //Cannot res while under the effect of SC_HELLPOWER.
-		return;
-
 	if (!status->revive(&sd->bl, hpsp, hpsp))
 		return;
 
 	if (item_position == INDEX_NOT_FOUND)
-		status_change_end(&sd->bl,SC_LIGHT_OF_REGENE,INVALID_TIMER);
+		status_change_end(&sd->bl, SC_LIGHT_OF_REGENE, INVALID_TIMER);
 	else
 		pc->delitem(sd, item_position, 1, 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
 
-	clif->skill_nodamage(&sd->bl,&sd->bl,ALL_RESURRECTION, 4, 1);
+	clif->skill_nodamage(&sd->bl, &sd->bl, ALL_RESURRECTION, 4, 1);
 }
 
 /// Information about character's status values (ZC_ACK_STATUS_GM).

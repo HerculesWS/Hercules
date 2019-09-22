@@ -1184,6 +1184,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);
 
 	int (*have_magnifier) (struct map_session_data *sd);
+	int (*have_item_chain) (struct map_session_data *sd, unsigned short chain_id);
 
 	bool (*process_chat_message) (struct map_session_data *sd, const char *message);
 	int (*wis_message_to_gm) (const char *sender_name, int permission, const char *message);
