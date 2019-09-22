@@ -4958,6 +4958,8 @@ struct {
 	struct HPMHookPoint *HP_pc_update_idle_time_post;
 	struct HPMHookPoint *HP_pc_have_magnifier_pre;
 	struct HPMHookPoint *HP_pc_have_magnifier_post;
+	struct HPMHookPoint *HP_pc_have_item_chain_pre;
+	struct HPMHookPoint *HP_pc_have_item_chain_post;
 	struct HPMHookPoint *HP_pc_process_chat_message_pre;
 	struct HPMHookPoint *HP_pc_process_chat_message_post;
 	struct HPMHookPoint *HP_pc_wis_message_to_gm_pre;
@@ -11737,6 +11739,8 @@ struct {
 	int HP_pc_update_idle_time_post;
 	int HP_pc_have_magnifier_pre;
 	int HP_pc_have_magnifier_post;
+	int HP_pc_have_item_chain_pre;
+	int HP_pc_have_item_chain_post;
 	int HP_pc_process_chat_message_pre;
 	int HP_pc_process_chat_message_post;
 	int HP_pc_wis_message_to_gm_pre;

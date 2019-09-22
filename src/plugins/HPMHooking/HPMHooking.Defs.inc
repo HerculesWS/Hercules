@@ -6374,6 +6374,8 @@ typedef void (*HPMHOOK_pre_pc_update_idle_time) (struct map_session_data **sd, e
 typedef void (*HPMHOOK_post_pc_update_idle_time) (struct map_session_data *sd, enum e_battle_config_idletime type);
 typedef int (*HPMHOOK_pre_pc_have_magnifier) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_have_magnifier) (int retVal___, struct map_session_data *sd);
+typedef int (*HPMHOOK_pre_pc_have_item_chain) (struct map_session_data **sd, unsigned short *chain_id);
+typedef int (*HPMHOOK_post_pc_have_item_chain) (int retVal___, struct map_session_data *sd, unsigned short chain_id);
 typedef bool (*HPMHOOK_pre_pc_process_chat_message) (struct map_session_data **sd, const char **message);
 typedef bool (*HPMHOOK_post_pc_process_chat_message) (bool retVal___, struct map_session_data *sd, const char *message);
 typedef int (*HPMHOOK_pre_pc_wis_message_to_gm) (const char **sender_name, int *permission, const char **message);

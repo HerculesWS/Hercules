@@ -65984,6 +65984,33 @@ int HP_pc_have_magnifier(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
+int HP_pc_have_item_chain(struct map_session_data *sd, unsigned short chain_id) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_pc_have_item_chain_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd, unsigned short *chain_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_have_item_chain_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pc_have_item_chain_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &chain_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.have_item_chain(sd, chain_id);
+	}
+	if (HPMHooks.count.HP_pc_have_item_chain_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, unsigned short chain_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_have_item_chain_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pc_have_item_chain_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, chain_id);
+		}
+	}
+	return retVal___;
+}
 bool HP_pc_process_chat_message(struct map_session_data *sd, const char *message) {
 	int hIndex = 0;
 	bool retVal___ = false;

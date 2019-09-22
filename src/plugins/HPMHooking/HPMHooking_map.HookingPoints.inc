@@ -2537,6 +2537,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->check_job_name, HP_pc_check_job_name) },
 	{ HP_POP(pc->update_idle_time, HP_pc_update_idle_time) },
 	{ HP_POP(pc->have_magnifier, HP_pc_have_magnifier) },
+	{ HP_POP(pc->have_item_chain, HP_pc_have_item_chain) },
 	{ HP_POP(pc->process_chat_message, HP_pc_process_chat_message) },
 	{ HP_POP(pc->wis_message_to_gm, HP_pc_wis_message_to_gm) },
 	{ HP_POP(pc->wis_message_to_gm_sub, HP_pc_wis_message_to_gm_sub) },
