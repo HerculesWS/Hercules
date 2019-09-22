@@ -12629,7 +12629,7 @@ static BUILDIN(homunculus_morphembryo)
 				clif->additem(sd, 0, 0, i);
 				clif->emotion(&sd->hd->bl, E_SWT);
 			} else {
-				homun->vaporize(sd, HOM_ST_MORPH);
+				homun->vaporize(sd, HOM_ST_MORPH, true);
 				success = true;
 			}
 		} else {

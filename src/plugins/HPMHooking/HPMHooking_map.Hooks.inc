@@ -35356,15 +35356,15 @@ int HP_homun_dead(struct homun_data *hd) {
 	}
 	return retVal___;
 }
-int HP_homun_vaporize(struct map_session_data *sd, enum homun_state flag) {
+int HP_homun_vaporize(struct map_session_data *sd, enum homun_state state, bool force) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_homun_vaporize_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, enum homun_state *flag);
+		int (*preHookFunc) (struct map_session_data **sd, enum homun_state *state, bool *force);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_vaporize_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_homun_vaporize_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &flag);
+			retVal___ = preHookFunc(&sd, &state, &force);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -35372,13 +35372,13 @@ int HP_homun_vaporize(struct map_session_data *sd, enum homun_state flag) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.homun.vaporize(sd, flag);
+		retVal___ = HPMHooks.source.homun.vaporize(sd, state, force);
 	}
 	if (HPMHooks.count.HP_homun_vaporize_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum homun_state flag);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum homun_state state, bool force);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_vaporize_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_homun_vaporize_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, flag);
+			retVal___ = postHookFunc(retVal___, sd, state, force);
 		}
 	}
 	return retVal___;
@@ -35973,15 +35973,15 @@ int HP_homun_db_search(int key, int type) {
 	}
 	return retVal___;
 }
-bool HP_homun_create(struct map_session_data *sd, const struct s_homunculus *hom) {
+bool HP_homun_create(struct map_session_data *sd, const struct s_homunculus *hom, bool is_new) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_homun_create_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, const struct s_homunculus **hom);
+		bool (*preHookFunc) (struct map_session_data **sd, const struct s_homunculus **hom, bool *is_new);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_create_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_homun_create_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &hom);
+			retVal___ = preHookFunc(&sd, &hom, &is_new);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -35989,13 +35989,13 @@ bool HP_homun_create(struct map_session_data *sd, const struct s_homunculus *hom
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.homun.create(sd, hom);
+		retVal___ = HPMHooks.source.homun.create(sd, hom, is_new);
 	}
 	if (HPMHooks.count.HP_homun_create_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const struct s_homunculus *hom);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const struct s_homunculus *hom, bool is_new);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_create_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_homun_create_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, hom);
+			retVal___ = postHookFunc(retVal___, sd, hom, is_new);
 		}
 	}
 	return retVal___;

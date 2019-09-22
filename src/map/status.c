@@ -9072,7 +9072,7 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 					if (sd->status.pet_id > 0)
 						pet->menu(sd, 3);
 					if (homun_alive(sd->hd))
-						homun->vaporize(sd,HOM_ST_REST);
+						homun->vaporize(sd, HOM_ST_REST, true);
 					if (sd->md)
 						mercenary->delete(sd->md,3);
 				}
