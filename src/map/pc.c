@@ -565,72 +565,8 @@ static int pc_inventory_rental_clear(struct map_session_data *sd)
 /* assumes i is valid (from default areas where it is called, it is) */
 static void pc_rental_expire(struct map_session_data *sd, int i)
 {
-	int nameid;
-
 	nullpo_retv(sd);
 	Assert_retv(i >= 0 && i < sd->status.inventorySize);
-	nameid = sd->status.inventory[i].nameid;
-
-	/* Soon to be dropped, we got plans to integrate it with item db */
-	switch( nameid ) {
-		case ITEMID_BOARDING_HALTER:
-			status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
-			break;
-		case ITEMID_LOVE_ANGEL:
-			if( sd->status.font == 1 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_SQUIRREL:
-			if( sd->status.font == 2 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_GOGO:
-			if( sd->status.font == 3 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_PICTURE_DIARY:
-			if( sd->status.font == 4 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_MINI_HEART:
-			if( sd->status.font == 5 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_NEWCOMER:
-			if( sd->status.font == 6 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_KID:
-			if( sd->status.font == 7 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_MAGIC_CASTLE:
-			if( sd->status.font == 8 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-		case ITEMID_BULGING_HEAD:
-			if( sd->status.font == 9 ) {
-				sd->status.font = 0;
-				clif->font(sd);
-			}
-			break;
-	}
 
 	clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
 	pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_RENTAL);
@@ -4789,13 +4725,15 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
 		pc->equipitem(sd, i, data->equip);
 
 	/* rental item check */
-	if( item_data->expire_time ) {
-		if( time(NULL) > item_data->expire_time ) {
-			pc->rental_expire(sd,i);
+	if (item_data->expire_time > 0) {
+		if (time(NULL) > item_data->expire_time) {
+			pc->rental_expire(sd, i);
 		} else {
-			int seconds = (int)( item_data->expire_time - time(NULL) );
+			int seconds = (int)(item_data->expire_time - time(NULL));
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, seconds);
 			pc->inventory_rental_add(sd, seconds);
+			if (data->rental_start_script != NULL)
+				script->run_item_rental_start_script(sd, data, 0);
 		}
 	}
 	quest->questinfo_refresh(sd);
@@ -4826,12 +4764,21 @@ static int pc_delitem(struct map_session_data *sd, int n, int amount, int type, 
 
 	sd->status.inventory[n].amount -= amount;
 	sd->weight -= sd->inventory_data[n]->weight*amount ;
+
+	// It's here because the data would most likely get zeroed in following if [Hemagx]
+	struct item_data *itd = sd->inventory_data[n];
+	bool is_rental = (sd->status.inventory[n].expire_time > 0) ? true : false;
+
 	if( sd->status.inventory[n].amount <= 0 ){
 		if(sd->status.inventory[n].equip)
 			pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 		memset(&sd->status.inventory[n],0,sizeof(sd->status.inventory[0]));
 		sd->inventory_data[n] = NULL;
 	}
+
+	if (is_rental && itd->rental_end_script != NULL)
+		script->run_item_rental_end_script(sd, itd, 0);
+
 	if(!(type&1))
 		clif->delitem(sd,n,amount,reason);
 	if(!(type&2))

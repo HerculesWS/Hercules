@@ -516,6 +516,8 @@ struct item_data {
 	struct script_code *script;         ///< Default script for everything.
 	struct script_code *equip_script;   ///< Script executed once when equipping.
 	struct script_code *unequip_script; ///< Script executed once when unequipping.
+	struct script_code *rental_start_script; ///< Script executed once this item get rented
+	struct script_code *rental_end_script;   ///< Script executed once this item rent ends
 	struct {
 		unsigned available : 1;
 		unsigned no_refine : 1; // [celest]

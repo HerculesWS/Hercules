@@ -1049,6 +1049,8 @@ struct script_interface {
 	void (*run_use_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_equip_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_unequip_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_rental_end_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
 };
 
 #ifdef HERCULES_CORE

@@ -74672,6 +74672,58 @@ void HP_script_run_item_unequip_script(struct map_session_data *sd, struct item_
 	}
 	return;
 }
+void HP_script_run_item_rental_end_script(struct map_session_data *sd, struct item_data *data, int oid) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_script_run_item_rental_end_script_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct item_data **data, int *oid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_run_item_rental_end_script_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_run_item_rental_end_script_pre[hIndex].func;
+			preHookFunc(&sd, &data, &oid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.run_item_rental_end_script(sd, data, oid);
+	}
+	if (HPMHooks.count.HP_script_run_item_rental_end_script_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct item_data *data, int oid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_run_item_rental_end_script_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_run_item_rental_end_script_post[hIndex].func;
+			postHookFunc(sd, data, oid);
+		}
+	}
+	return;
+}
+void HP_script_run_item_rental_start_script(struct map_session_data *sd, struct item_data *data, int oid) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_script_run_item_rental_start_script_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct item_data **data, int *oid);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_run_item_rental_start_script_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_run_item_rental_start_script_pre[hIndex].func;
+			preHookFunc(&sd, &data, &oid);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.run_item_rental_start_script(sd, data, oid);
+	}
+	if (HPMHooks.count.HP_script_run_item_rental_start_script_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct item_data *data, int oid);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_run_item_rental_start_script_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_run_item_rental_start_script_post[hIndex].func;
+			postHookFunc(sd, data, oid);
+		}
+	}
+	return;
+}
 /* searchstore_interface */
 bool HP_searchstore_open(struct map_session_data *sd, unsigned int uses, unsigned short effect) {
 	int hIndex = 0;

@@ -5596,6 +5596,10 @@ struct {
 	struct HPMHookPoint *HP_script_run_item_equip_script_post;
 	struct HPMHookPoint *HP_script_run_item_unequip_script_pre;
 	struct HPMHookPoint *HP_script_run_item_unequip_script_post;
+	struct HPMHookPoint *HP_script_run_item_rental_end_script_pre;
+	struct HPMHookPoint *HP_script_run_item_rental_end_script_post;
+	struct HPMHookPoint *HP_script_run_item_rental_start_script_pre;
+	struct HPMHookPoint *HP_script_run_item_rental_start_script_post;
 	struct HPMHookPoint *HP_searchstore_open_pre;
 	struct HPMHookPoint *HP_searchstore_open_post;
 	struct HPMHookPoint *HP_searchstore_query_pre;
@@ -12389,6 +12393,10 @@ struct {
 	int HP_script_run_item_equip_script_post;
 	int HP_script_run_item_unequip_script_pre;
 	int HP_script_run_item_unequip_script_post;
+	int HP_script_run_item_rental_end_script_pre;
+	int HP_script_run_item_rental_end_script_post;
+	int HP_script_run_item_rental_start_script_pre;
+	int HP_script_run_item_rental_start_script_post;
 	int HP_searchstore_open_pre;
 	int HP_searchstore_open_post;
 	int HP_searchstore_query_pre;
