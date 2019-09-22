@@ -239,6 +239,14 @@ static void mvptomb_destroy(struct mob_data *md)
 
 		m = nd->bl.m;
 
+		struct s_mapiterator *iter = mapit_geteachpc();
+		for (struct map_session_data *sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+			if (sd->npc_id == nd->bl.id) {
+				sd->state.npc_unloaded = 1;
+			}
+		}
+		mapit->free(iter);
+
 		clif->clearunit_area(&nd->bl,CLR_OUTSIGHT);
 
 		map->delblock(&nd->bl);
