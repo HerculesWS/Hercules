@@ -2208,11 +2208,11 @@ Multiple statements can be grouped with { }, curly braces, just like with
 the 'if' statement.
 
 Example 1:
-	while (switch(select("Yes", "No") == 2))
+	while (select("Yes", "No") == 2)
 		mes("You picked no.");
 
 Example 2: multiple statements
-	while (switch(select("Yes", "No") == 2 )) {
+	while (select("Yes", "No") == 2) {
 		mes("Why did you pick no?");
 		mes("You should pick yes instead!");
 	}
