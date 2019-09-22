@@ -4789,9 +4789,9 @@ static void clif_getareachar_unit(struct map_session_data *sd, struct block_list
 
 //Modifies the type of damage according to status changes [Skotlex]
 //Aegis data specifies that: 4 endure against single hit sources, 9 against multi-hit.
-static inline int clif_calc_delay(int type, int div, int damage, int delay)
+static inline enum battle_dmg_type clif_calc_delay(enum battle_dmg_type type, int div, int damage, int delay)
 {
-	return ( delay == 0 && damage > 0 ) ? ( div > 1 ? 9 : 4 ) : type;
+	return ( delay == 0 && damage > 0 ) ? ( div > 1 ? BDT_MULTIENDURE : BDT_ENDURE ) : type;
 }
 
 /*==========================================
@@ -4822,7 +4822,7 @@ static int clif_calc_walkdelay(struct block_list *bl, int delay, int type, int d
 /// 08c8 <src ID>.L <dst ID>.L <server tick>.L <src speed>.L <dst speed>.L <damage>.L <IsSPDamage>.B <div>.W <type>.B <damage2>.L (ZC_NOTIFY_ACT2)
 /// type: @see enum battle_dmg_type
 ///     for BDT_NORMAL: [ damage: total damage, div: amount of hits, damage2: assassin dual-wield damage ]
-static int clif_damage(struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type, int64 in_damage2)
+static int clif_damage(struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, enum battle_dmg_type type, int64 in_damage2)
 {
 	struct packet_damage p;
 	struct status_change *sc;
@@ -5268,7 +5268,7 @@ static void clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDA
 		skillData->sp = 0;
 		skillData->range2 = 0;
 	}
-#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+#if PACKETVER_RE_NUM >= 20190807
 	if (newSkill)
 		skillData->level2 = 0;
 	else
@@ -5419,7 +5419,7 @@ static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 		p->sp = 0;
 		p->range2 = 0;
 	}
-#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190814
+#if PACKETVER_RE_NUM >= 20190807
 	p->level2 = skill_lv;
 #endif
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
@@ -5573,7 +5573,7 @@ static void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, un
 /// Skill attack effect and damage.
 /// 0114 <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <damage>.W <level>.W <div>.W <type>.B (ZC_NOTIFY_SKILL)
 /// 01de <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <damage>.L <level>.W <div>.W <type>.B (ZC_NOTIFY_SKILL2)
-static int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 in_damage, int div, uint16 skill_id, uint16 skill_lv, int type)
+static int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 in_damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type)
 {
 	unsigned char buf[64];
 	struct status_change *sc;
@@ -5675,7 +5675,7 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 /// Ground skill attack effect and damage (ZC_NOTIFY_SKILL_POSITION).
 /// 0115 <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <x>.W <y>.W <damage>.W <level>.W <div>.W <type>.B
 #if 0
-static int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int damage, int div, uint16 skill_id, uint16 skill_lv, int type)
+static int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type)
 {
 	unsigned char buf[64];
 	struct status_change *sc;
@@ -8689,14 +8689,14 @@ static void clif_emotion(struct block_list *bl, int type)
 /// 0191 <id>.L <contents>.80B
 static void clif_talkiebox(struct block_list *bl, const char *talkie)
 {
-	unsigned char buf[MESSAGE_SIZE+6];
 	nullpo_retv(bl);
 	nullpo_retv(talkie);
+	struct PACKET_ZC_TALKBOX_CHATCONTENTS p;
 
-	WBUFW(buf,0) = 0x191;
-	WBUFL(buf,2) = bl->id;
-	safestrncpy(WBUFP(buf,6),talkie,MESSAGE_SIZE);
-	clif->send(buf,packet_len(0x191),bl,AREA);
+	p.PacketType = HEADER_ZC_TALKBOX_CHATCONTENTS;
+	p.aid = bl->id;
+	safestrncpy(&p.message[0], talkie, TALKBOX_MESSAGE_SIZE);
+	clif->send(&p, sizeof(struct PACKET_ZC_TALKBOX_CHATCONTENTS), bl, AREA);
 }
 
 /// Displays wedding effect centered on an object (ZC_CONGRATULATION).
@@ -9298,9 +9298,6 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	packet.gid = bl->id;
 
 	const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
-	const struct party_data *p = NULL;
-	const struct guild *g = NULL;
-	int ps = -1;
 
 	if (ssd->fakename[0] != '\0' && ssd->disguise != -1) {
 		packet.packet_id = reqName;
@@ -9326,9 +9323,12 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 #endif
 		memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
+		const struct party_data *p = NULL;
+		int ps = -1;
 		if (ssd->status.party_id != 0) {
 			p = party->search(ssd->status.party_id);
 		}
+		const struct guild *g = NULL;
 		if (ssd->status.guild_id != 0) {
 			if ((g = ssd->guild) != NULL) {
 				int i;
@@ -9350,6 +9350,12 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
 			memcpy(packet.guild_name, g->name,NAME_LENGTH);
 			memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+		}
+		else if (ssd->status.clan_id != 0) {
+			struct clan *c = clan->search(ssd->status.clan_id);
+			if (c != 0) {
+				memcpy(packet.position_name, c->name, NAME_LENGTH);
+			}
 		}
 	}
 
@@ -12687,7 +12693,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 			return;
 		}
 		//You can't use Graffiti/TalkieBox AND have a vending open, so this is safe.
-		safestrncpy(sd->message, RFIFOP(fd,skillmoreinfo), MESSAGE_SIZE);
+		safestrncpy(sd->message, RFIFOP(fd, skillmoreinfo), TALKBOX_MESSAGE_SIZE);
 	}
 
 	if( sd->ud.skilltimer != INVALID_TIMER )
@@ -15978,18 +15984,18 @@ static void clif_ranklist_sub(struct PACKET_ZC_ACK_RANKING_sub *ranks, enum fame
 		if (list[i].id > 0) {
 			const char* name;
 			if (strcmp(list[i].name, "-") == 0 && (name = map->charid2nick(list[i].id)) != NULL) {
-				strncpy(ranks[i].name, name, NAME_LENGTH);
+				strncpy(ranks->names[i].name, name, NAME_LENGTH);
 			} else {
-				strncpy(ranks[i].name, list[i].name, NAME_LENGTH);
+				strncpy(ranks->names[i].name, list[i].name, NAME_LENGTH);
 			}
 		} else {
-			strncpy(ranks[i].name, "None", 5);
+			strncpy(ranks->names[i].name, "None", 5);
 		}
-		ranks[i].points = list[i].fame; //points
+		ranks->points[i].points = list[i].fame; //points
 	}
 	for (;i < 10; i++) { // In case the MAX is less than 10.
-		strncpy(ranks[i].name, "Unavailable", 12);
-		ranks[i].points = 0;
+		strncpy(ranks->names[i].name, "Unavailable", 12);
+		ranks->points[i].points = 0;
 	}
 #endif
 }
@@ -16038,7 +16044,7 @@ static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
 	clif->ranklist_sub2(p->chars, p->points, type);
 #else
-	clif->ranklist_sub(p->ranks, type);
+	clif->ranklist_sub(&p->ranks, type);
 #endif
 
 	if (pc->famelist_type(sd->job) == type) {
@@ -20608,7 +20614,7 @@ static int clif_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
  *
  * @return clif->calc_walkdelay used in further processing
  **/
-static int clif_delay_damage(int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type)
+static int clif_delay_damage(int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, enum battle_dmg_type type)
 {
 	struct cdelayed_damage *dd;
 	struct status_change *sc;
