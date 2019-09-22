@@ -2463,9 +2463,17 @@ if any, or else return an empty string.
 
 *charid2rid(<char id>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This function returns the RID of the character with the given character ID.
 
 If the character is offline or doesn't exist, 0 is returned.
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getcharid instead,
+ie: getcharid(CHAR_ID_ACCOUNT, <char id>)
 
 ---------------------------------------
 
@@ -2577,9 +2585,10 @@ bStr, bInt, bLuk
 ---------------------------------------
 
 *getcharid(<type>{, "<character name>"})
+*getcharid(<type>{, <account id>})
 
 This function will return a unique ID number of the invoking character,
-or, if a character name is specified, of that player.
+or, if a character name or account id is specified, of that player.
 
 Type is the kind of associated ID number required:
 
@@ -2589,6 +2598,10 @@ Type is the kind of associated ID number required:
 (3) CHAR_ID_ACCOUNT - Account ID number.
 (4) CHAR_ID_BG - Battle ground ID
 (5) CHAR_ID_CLAN - Clan ID number.
+
+If type is (3) CHAR_ID_ACCOUNT, the optional parameter will check
+char id instead of account id.
+I.e. getcharid(CHAR_ID_ACCOUNT{, <char id>})
 
 For most purposes other than printing it, a number is better to have than
 a name (people do horrifying things to their character names).
