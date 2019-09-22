@@ -21,7 +21,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import io
-import libconf as libconf
+import sys
+if sys.version_info >= (3, 0):
+	from utils import libconf as libconf
+else:
+	import libconf as libconf
 import os.path
 
 def LoadDBConsts(DBname, mode, serverpath):

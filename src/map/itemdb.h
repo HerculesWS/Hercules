@@ -668,8 +668,8 @@ struct itemdb_interface {
 	int (*isrestricted) (struct item *item, int gmlv, int gmlv2, int(*func)(struct item_data *, int, int));
 	int (*isidentified) (int nameid);
 	int (*isidentified2) (struct item_data *data);
-	int (*combo_split_atoi) (char *str, int *val);
-	void (*read_combos) (void);
+	bool (*read_combodb_libconfig) (void);
+	bool (*read_combodb_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_options_additional_fields) (struct itemdb_option *ito, struct config_setting_t *t, const char *source);

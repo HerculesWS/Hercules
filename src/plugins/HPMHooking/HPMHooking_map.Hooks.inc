@@ -42494,15 +42494,15 @@ int HP_itemdb_isidentified2(struct item_data *data) {
 	}
 	return retVal___;
 }
-int HP_itemdb_combo_split_atoi(char *str, int *val) {
+bool HP_itemdb_read_combodb_libconfig(void) {
 	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_itemdb_combo_split_atoi_pre > 0) {
-		int (*preHookFunc) (char **str, int **val);
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_combodb_libconfig_pre > 0) {
+		bool (*preHookFunc) (void);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_combo_split_atoi_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_itemdb_combo_split_atoi_pre[hIndex].func;
-			retVal___ = preHookFunc(&str, &val);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_combodb_libconfig_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_combodb_libconfig_pre[hIndex].func;
+			retVal___ = preHookFunc();
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -42510,42 +42510,43 @@ int HP_itemdb_combo_split_atoi(char *str, int *val) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.itemdb.combo_split_atoi(str, val);
+		retVal___ = HPMHooks.source.itemdb.read_combodb_libconfig();
 	}
-	if (HPMHooks.count.HP_itemdb_combo_split_atoi_post > 0) {
-		int (*postHookFunc) (int retVal___, char *str, int *val);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_combo_split_atoi_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_itemdb_combo_split_atoi_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, str, val);
+	if (HPMHooks.count.HP_itemdb_read_combodb_libconfig_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_combodb_libconfig_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_combodb_libconfig_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
 		}
 	}
 	return retVal___;
 }
-void HP_itemdb_read_combos(void) {
+bool HP_itemdb_read_combodb_libconfig_sub(struct config_setting_t *it, int idx, const char *source) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_itemdb_read_combos_pre > 0) {
-		void (*preHookFunc) (void);
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_itemdb_read_combodb_libconfig_sub_pre > 0) {
+		bool (*preHookFunc) (struct config_setting_t **it, int *idx, const char **source);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_combos_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_itemdb_read_combos_pre[hIndex].func;
-			preHookFunc();
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_combodb_libconfig_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_read_combodb_libconfig_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&it, &idx, &source);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.itemdb.read_combos();
+		retVal___ = HPMHooks.source.itemdb.read_combodb_libconfig_sub(it, idx, source);
 	}
-	if (HPMHooks.count.HP_itemdb_read_combos_post > 0) {
-		void (*postHookFunc) (void);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_combos_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_itemdb_read_combos_post[hIndex].func;
-			postHookFunc();
+	if (HPMHooks.count.HP_itemdb_read_combodb_libconfig_sub_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct config_setting_t *it, int idx, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_combodb_libconfig_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_read_combodb_libconfig_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, it, idx, source);
 		}
 	}
-	return;
+	return retVal___;
 }
 int HP_itemdb_gendercheck(struct item_data *id) {
 	int hIndex = 0;
