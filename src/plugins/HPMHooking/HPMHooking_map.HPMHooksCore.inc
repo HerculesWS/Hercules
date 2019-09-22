@@ -2718,6 +2718,8 @@ struct {
 	struct HPMHookPoint *HP_homun_mutate_post;
 	struct HPMHookPoint *HP_homun_gainexp_pre;
 	struct HPMHookPoint *HP_homun_gainexp_post;
+	struct HPMHookPoint *HP_homun_gainexp_real_pre;
+	struct HPMHookPoint *HP_homun_gainexp_real_post;
 	struct HPMHookPoint *HP_homun_add_intimacy_pre;
 	struct HPMHookPoint *HP_homun_add_intimacy_post;
 	struct HPMHookPoint *HP_homun_consume_intimacy_pre;
@@ -9495,6 +9497,8 @@ struct {
 	int HP_homun_mutate_post;
 	int HP_homun_gainexp_pre;
 	int HP_homun_gainexp_post;
+	int HP_homun_gainexp_real_pre;
+	int HP_homun_gainexp_real_post;
 	int HP_homun_add_intimacy_pre;
 	int HP_homun_add_intimacy_post;
 	int HP_homun_consume_intimacy_pre;

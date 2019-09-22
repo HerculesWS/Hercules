@@ -11278,11 +11278,11 @@ void HP_clif_viewpoint(struct map_session_data *sd, int npc_id, int type, int x,
 	}
 	return;
 }
-int HP_clif_damage(struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 damage, short div, unsigned char type, int64 damage2) {
+int HP_clif_damage(struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 damage, short div, enum battle_dmg_type type, int64 damage2) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_clif_damage_pre > 0) {
-		int (*preHookFunc) (struct block_list **src, struct block_list **dst, int *sdelay, int *ddelay, int64 *damage, short *div, unsigned char *type, int64 *damage2);
+		int (*preHookFunc) (struct block_list **src, struct block_list **dst, int *sdelay, int *ddelay, int64 *damage, short *div, enum battle_dmg_type *type, int64 *damage2);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_damage_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_damage_pre[hIndex].func;
@@ -11297,7 +11297,7 @@ int HP_clif_damage(struct block_list *src, struct block_list *dst, int sdelay, i
 		retVal___ = HPMHooks.source.clif.damage(src, dst, sdelay, ddelay, damage, div, type, damage2);
 	}
 	if (HPMHooks.count.HP_clif_damage_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 damage, short div, unsigned char type, int64 damage2);
+		int (*postHookFunc) (int retVal___, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 damage, short div, enum battle_dmg_type type, int64 damage2);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_damage_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_damage_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, src, dst, sdelay, ddelay, damage, div, type, damage2);
@@ -14532,11 +14532,11 @@ void HP_clif_callpartner(struct map_session_data *sd) {
 	}
 	return;
 }
-int HP_clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, uint16 skill_lv, int type) {
+int HP_clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_clif_skill_damage_pre > 0) {
-		int (*preHookFunc) (struct block_list **src, struct block_list **dst, int64 *tick, int *sdelay, int *ddelay, int64 *damage, int *div, uint16 *skill_id, uint16 *skill_lv, int *type);
+		int (*preHookFunc) (struct block_list **src, struct block_list **dst, int64 *tick, int *sdelay, int *ddelay, int64 *damage, int *div, uint16 *skill_id, uint16 *skill_lv, enum battle_dmg_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_damage_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_skill_damage_pre[hIndex].func;
@@ -14551,7 +14551,7 @@ int HP_clif_skill_damage(struct block_list *src, struct block_list *dst, int64 t
 		retVal___ = HPMHooks.source.clif.skill_damage(src, dst, tick, sdelay, ddelay, damage, div, skill_id, skill_lv, type);
 	}
 	if (HPMHooks.count.HP_clif_skill_damage_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, uint16 skill_lv, int type);
+		int (*postHookFunc) (int retVal___, struct block_list *src, struct block_list *dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, uint16 skill_lv, enum battle_dmg_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_damage_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_skill_damage_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, src, dst, tick, sdelay, ddelay, damage, div, skill_id, skill_lv, type);
@@ -21332,11 +21332,11 @@ void HP_clif_notify_bounditem(struct map_session_data *sd, unsigned short index)
 	}
 	return;
 }
-int HP_clif_delay_damage(int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type) {
+int HP_clif_delay_damage(int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, enum battle_dmg_type type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_clif_delay_damage_pre > 0) {
-		int (*preHookFunc) (int64 *tick, struct block_list **src, struct block_list **dst, int *sdelay, int *ddelay, int64 *in_damage, short *div, unsigned char *type);
+		int (*preHookFunc) (int64 *tick, struct block_list **src, struct block_list **dst, int *sdelay, int *ddelay, int64 *in_damage, short *div, enum battle_dmg_type *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_delay_damage_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_delay_damage_pre[hIndex].func;
@@ -21351,7 +21351,7 @@ int HP_clif_delay_damage(int64 tick, struct block_list *src, struct block_list *
 		retVal___ = HPMHooks.source.clif.delay_damage(tick, src, dst, sdelay, ddelay, in_damage, div, type);
 	}
 	if (HPMHooks.count.HP_clif_delay_damage_post > 0) {
-		int (*postHookFunc) (int retVal___, int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type);
+		int (*postHookFunc) (int retVal___, int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, enum battle_dmg_type type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_delay_damage_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_delay_damage_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, tick, src, dst, sdelay, ddelay, in_damage, div, type);
@@ -35647,6 +35647,33 @@ int HP_homun_gainexp(struct homun_data *hd, unsigned int exp) {
 		int (*postHookFunc) (int retVal___, struct homun_data *hd, unsigned int exp);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_gainexp_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_homun_gainexp_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, hd, exp);
+		}
+	}
+	return retVal___;
+}
+int HP_homun_gainexp_real(struct homun_data *hd, unsigned int exp) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_homun_gainexp_real_pre > 0) {
+		int (*preHookFunc) (struct homun_data **hd, unsigned int *exp);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_gainexp_real_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_homun_gainexp_real_pre[hIndex].func;
+			retVal___ = preHookFunc(&hd, &exp);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.homun.gainexp_real(hd, exp);
+	}
+	if (HPMHooks.count.HP_homun_gainexp_real_post > 0) {
+		int (*postHookFunc) (int retVal___, struct homun_data *hd, unsigned int exp);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_homun_gainexp_real_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_homun_gainexp_real_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, hd, exp);
 		}
 	}

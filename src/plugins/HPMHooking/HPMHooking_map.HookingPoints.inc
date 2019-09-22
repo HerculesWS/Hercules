@@ -1394,6 +1394,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(homun->evolve, HP_homun_evolve) },
 	{ HP_POP(homun->mutate, HP_homun_mutate) },
 	{ HP_POP(homun->gainexp, HP_homun_gainexp) },
+	{ HP_POP(homun->gainexp_real, HP_homun_gainexp_real) },
 	{ HP_POP(homun->add_intimacy, HP_homun_add_intimacy) },
 	{ HP_POP(homun->consume_intimacy, HP_homun_consume_intimacy) },
 	{ HP_POP(homun->healed, HP_homun_healed) },
