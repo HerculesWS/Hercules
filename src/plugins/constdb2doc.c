@@ -22,7 +22,8 @@
 /// db/constants.conf -> doc/constants.md generator plugin
 
 #include "common/hercules.h"
-//#include "common/memmgr.h"
+#include "common/db.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/strlib.h"
 #include "map/itemdb.h"
@@ -143,17 +144,26 @@ struct item_data *constdb2doc_itemdb_search(int nameid)
 
 void constdb2doc_itemdb(void)
 {
-	int i;
-
 	nullpo_retv(out_fp);
 
 	fprintf(out_fp, "## Items (db/"DBPATH"item_db.conf)\n");
-	for (i = 0; i < ARRAYLENGTH(itemdb->array); i++) {
+	for (int i = 0; i < ARRAYLENGTH(itemdb->array); i++) {
 		struct item_data *id = constdb2doc_itemdb_search(i);
 		if (id == NULL || id->name[0] == '\0')
 			continue;
 		fprintf(out_fp, "- `%s`: %d\n", id->name, id->nameid);
 	}
+
+	if (db_size(itemdb->other) > 0) {
+		struct DBIterator *iter = db_iterator(itemdb->other);
+		for (struct item_data *itd = dbi_first(iter); dbi_exists(iter); itd = dbi_next(iter)) {
+			if (itd == &itemdb->dummy)
+				continue;
+			fprintf(out_fp, "- `%s`: %d\n", itd->name, itd->nameid);
+		}
+		dbi_destroy(iter);
+	}
+
 	fprintf(out_fp, "\n");
 }
 
