@@ -41595,11 +41595,11 @@ struct item_data* HP_itemdb_search_name(const char *name) {
 	}
 	return retVal___;
 }
-int HP_itemdb_search_name_array(struct item_data **data, int size, const char *str, int flag) {
+int HP_itemdb_search_name_array(struct item_data **data, const int size, const char *str, enum item_name_search_flag flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_itemdb_search_name_array_pre > 0) {
-		int (*preHookFunc) (struct item_data ***data, int *size, const char **str, int *flag);
+		int (*preHookFunc) (struct item_data ***data, const int *size, const char **str, enum item_name_search_flag *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_search_name_array_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_itemdb_search_name_array_pre[hIndex].func;
@@ -41614,7 +41614,7 @@ int HP_itemdb_search_name_array(struct item_data **data, int size, const char *s
 		retVal___ = HPMHooks.source.itemdb.search_name_array(data, size, str, flag);
 	}
 	if (HPMHooks.count.HP_itemdb_search_name_array_post > 0) {
-		int (*postHookFunc) (int retVal___, struct item_data **data, int size, const char *str, int flag);
+		int (*postHookFunc) (int retVal___, struct item_data **data, const int size, const char *str, enum item_name_search_flag flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_search_name_array_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_itemdb_search_name_array_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, data, size, str, flag);
