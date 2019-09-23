@@ -25755,6 +25755,25 @@ static BUILDIN(identifyidx)
 	return true;
 }
 
+static BUILDIN(openlapineddukddakboxui)
+{
+	struct map_session_data *sd = script_rid2sd(st);
+	if (sd == NULL)
+		return false;
+	const int item_id = script_getnum(st, 2);
+	struct item_data *it = itemdb->exists(item_id);
+	if (it == NULL) {
+		ShowError("buildin_openlapineddukddakboxui: Item %d is not valid\n", item_id);
+		script->reportfunc(st);
+		script->reportsrc(st);
+		script_pushint(st, false);
+		return true;
+	}
+	clif->lapineDdukDdak_open(sd, item_id);
+	script_pushint(st, true);
+	return true;
+}
+
 /**
  * Adds a built-in script function.
  *
@@ -25931,6 +25950,22 @@ static void script_run_item_rental_end_script(struct map_session_data *sd, struc
 {
 	script->current_item_id = data->nameid;
 	script->run(data->rental_end_script, 0, sd->bl.id, oid);
+	script->current_item_id = 0;
+}
+
+static void script_run_item_lapineddukddak_script(struct map_session_data *sd, struct item_data *data, int oid) __attribute__((nonnull (1, 2)));
+
+/**
+ * Run item lapineddukddak script for item.
+ *
+ * @param sd    player session data. Must be correct and checked before.
+ * @param data  unequipped item data. Must be correct and checked before.
+ * @param oid   npc id. Can be also 0 or fake npc id.
+ */
+static void script_run_item_lapineddukddak_script(struct map_session_data *sd, struct item_data *data, int oid)
+{
+	script->current_item_id = data->nameid;
+	script->run(data->lapineddukddak->script, 0, sd->bl.id, oid);
 	script->current_item_id = 0;
 }
 
@@ -26549,6 +26584,7 @@ static void script_parse_builtin(void)
 
 		BUILDIN_DEF(identify, "i"),
 		BUILDIN_DEF(identifyidx, "i"),
+		BUILDIN_DEF(openlapineddukddakboxui, "i"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -27489,4 +27525,5 @@ void script_defaults(void)
 	script->run_item_unequip_script = script_run_item_unequip_script;
 	script->run_item_rental_start_script = script_run_item_rental_start_script;
 	script->run_item_rental_end_script = script_run_item_rental_end_script;
+	script->run_item_lapineddukddak_script = script_run_item_lapineddukddak_script;
 }

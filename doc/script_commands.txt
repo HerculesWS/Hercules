@@ -10622,3 +10622,9 @@ Opens refinery user interface for the player
 returns true on success and false on failure
 
 ---------------------------------------
+*openlapineddukddakboxui(<item_id>)
+
+Opens lapine ddukddak user interface for the player
+returns true on success and false on failure
+
+---------------------------------------

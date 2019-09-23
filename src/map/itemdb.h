@@ -39,7 +39,7 @@ struct hplugin_data_store;
 
 #ifndef MAX_ITEM_ID
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-#define MAX_ITEM_ID 0x20000
+#define MAX_ITEM_ID INT32_MAX
 #else
 #define MAX_ITEM_ID 0xFFFF
 #endif
@@ -492,6 +492,14 @@ struct itemdb_option {
 	struct script_code *script;
 };
 
+struct item_lapineddukddak {
+	int16 NeedCount;
+	int8 NeedRefineMin;
+	int8 NeedRefineMax;
+	VECTOR_DECL(struct itemlist_entry) SourceItems;
+	struct script_code *script;
+};
+
 struct item_data {
 	int nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -561,6 +569,7 @@ struct item_data {
 	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
 	struct item_group *group;
 	struct item_package *package;
+	struct item_lapineddukddak *lapineddukddak;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
@@ -698,6 +707,9 @@ struct itemdb_interface {
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);
 	int (*addname_sub) (union DBKey key, struct DBData *data, va_list ap);
+	bool (*read_libconfig_lapineddukddak) (void);
+	bool (*read_libconfig_lapineddukddak_sub) (struct config_setting_t *it, const char *source);
+	bool (*read_libconfig_lapineddukddak_sub_sources) (struct config_setting_t *sources, struct item_data *data);
 };
 
 #ifdef HERCULES_CORE
