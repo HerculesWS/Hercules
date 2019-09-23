@@ -2736,6 +2736,14 @@ typedef void (*HPMHOOK_pre_clif_pGuildCastleInfoRequest) (int *fd, struct map_se
 typedef void (*HPMHOOK_post_clif_pGuildCastleInfoRequest) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_guild_castleteleport_res) (struct map_session_data **sd, enum siege_teleport_result *result);
 typedef void (*HPMHOOK_post_clif_guild_castleteleport_res) (struct map_session_data *sd, enum siege_teleport_result result);
+typedef bool (*HPMHOOK_pre_clif_lapineDdukDdak_open) (struct map_session_data **sd, int *item_id);
+typedef bool (*HPMHOOK_post_clif_lapineDdukDdak_open) (bool retVal___, struct map_session_data *sd, int item_id);
+typedef bool (*HPMHOOK_pre_clif_lapineDdukDdak_result) (struct map_session_data **sd, enum lapineddukddak_result *result);
+typedef bool (*HPMHOOK_post_clif_lapineDdukDdak_result) (bool retVal___, struct map_session_data *sd, enum lapineddukddak_result result);
+typedef void (*HPMHOOK_pre_clif_plapineDdukDdak_ack) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_plapineDdukDdak_close) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_plapineDdukDdak_close) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
@@ -4096,6 +4104,12 @@ typedef bool (*HPMHOOK_pre_itemdb_lookup_const_mask) (const struct config_settin
 typedef bool (*HPMHOOK_post_itemdb_lookup_const_mask) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
 typedef int (*HPMHOOK_pre_itemdb_addname_sub) (union DBKey *key, struct DBData **data, va_list ap);
 typedef int (*HPMHOOK_post_itemdb_addname_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineddukddak) (void);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineddukddak) (bool retVal___);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineddukddak_sub) (struct config_setting_t **it, const char **source);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineddukddak_sub) (bool retVal___, struct config_setting_t *it, const char *source);
+typedef bool (*HPMHOOK_pre_itemdb_read_libconfig_lapineddukddak_sub_sources) (struct config_setting_t **sources, struct item_data **data);
+typedef bool (*HPMHOOK_post_itemdb_read_libconfig_lapineddukddak_sub_sources) (bool retVal___, struct config_setting_t *sources, struct item_data *data);
 #endif // MAP_ITEMDB_H
 #ifdef LOGIN_LOGIN_H /* lchrif */
 typedef void (*HPMHOOK_pre_lchrif_server_init) (int *id);
@@ -7066,6 +7080,8 @@ typedef void (*HPMHOOK_pre_script_run_item_rental_end_script) (struct map_sessio
 typedef void (*HPMHOOK_post_script_run_item_rental_end_script) (struct map_session_data *sd, struct item_data *data, int oid);
 typedef void (*HPMHOOK_pre_script_run_item_rental_start_script) (struct map_session_data **sd, struct item_data **data, int *oid);
 typedef void (*HPMHOOK_post_script_run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
+typedef void (*HPMHOOK_pre_script_run_item_lapineddukddak_script) (struct map_session_data **sd, struct item_data **data, int *oid);
+typedef void (*HPMHOOK_post_script_run_item_lapineddukddak_script) (struct map_session_data *sd, struct item_data *data, int oid);
 #endif // MAP_SCRIPT_H
 #ifdef MAP_SEARCHSTORE_H /* searchstore */
 typedef bool (*HPMHOOK_pre_searchstore_open) (struct map_session_data **sd, unsigned int *uses, unsigned short *effect);

@@ -525,6 +525,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "item_combo", sizeof(struct item_combo), SERVER_TYPE_MAP },
 		{ "item_data", sizeof(struct item_data), SERVER_TYPE_MAP },
 		{ "item_group", sizeof(struct item_group), SERVER_TYPE_MAP },
+		{ "item_lapineddukddak", sizeof(struct item_lapineddukddak), SERVER_TYPE_MAP },
 		{ "item_package", sizeof(struct item_package), SERVER_TYPE_MAP },
 		{ "item_package_must_entry", sizeof(struct item_package_must_entry), SERVER_TYPE_MAP },
 		{ "item_package_rand_entry", sizeof(struct item_package_rand_entry), SERVER_TYPE_MAP },

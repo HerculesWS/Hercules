@@ -1187,6 +1187,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pGuildCastleTeleportRequest, HP_clif_pGuildCastleTeleportRequest) },
 	{ HP_POP(clif->pGuildCastleInfoRequest, HP_clif_pGuildCastleInfoRequest) },
 	{ HP_POP(clif->guild_castleteleport_res, HP_clif_guild_castleteleport_res) },
+	{ HP_POP(clif->lapineDdukDdak_open, HP_clif_lapineDdukDdak_open) },
+	{ HP_POP(clif->lapineDdukDdak_result, HP_clif_lapineDdukDdak_result) },
+	{ HP_POP(clif->plapineDdukDdak_ack, HP_clif_plapineDdukDdak_ack) },
+	{ HP_POP(clif->plapineDdukDdak_close, HP_clif_plapineDdukDdak_close) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
@@ -1675,6 +1679,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->lookup_const, HP_itemdb_lookup_const) },
 	{ HP_POP(itemdb->lookup_const_mask, HP_itemdb_lookup_const_mask) },
 	{ HP_POP(itemdb->addname_sub, HP_itemdb_addname_sub) },
+	{ HP_POP(itemdb->read_libconfig_lapineddukddak, HP_itemdb_read_libconfig_lapineddukddak) },
+	{ HP_POP(itemdb->read_libconfig_lapineddukddak_sub, HP_itemdb_read_libconfig_lapineddukddak_sub) },
+	{ HP_POP(itemdb->read_libconfig_lapineddukddak_sub_sources, HP_itemdb_read_libconfig_lapineddukddak_sub_sources) },
 /* libconfig_interface */
 	{ HP_POP(libconfig->read, HP_libconfig_read) },
 	{ HP_POP(libconfig->write, HP_libconfig_write) },
@@ -2866,6 +2873,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->run_item_unequip_script, HP_script_run_item_unequip_script) },
 	{ HP_POP(script->run_item_rental_end_script, HP_script_run_item_rental_end_script) },
 	{ HP_POP(script->run_item_rental_start_script, HP_script_run_item_rental_start_script) },
+	{ HP_POP(script->run_item_lapineddukddak_script, HP_script_run_item_lapineddukddak_script) },
 /* searchstore_interface */
 	{ HP_POP(searchstore->open, HP_searchstore_open) },
 	{ HP_POP(searchstore->query, HP_searchstore_query) },
