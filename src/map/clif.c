@@ -15323,7 +15323,7 @@ static void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 
 	safestrncpy(item_monster_name, p->str, sizeof(item_monster_name));
 
-	if ( (count=itemdb->search_name_array(item_array, 10, item_monster_name, 1)) > 0 ) {
+	if ( (count=itemdb->search_name_array(item_array, 10, item_monster_name, IT_SEARCH_NAME_EXACT)) > 0 ) {
 		for(i = 0; i < count; i++) {
 			if( !item_array[i] )
 				continue;

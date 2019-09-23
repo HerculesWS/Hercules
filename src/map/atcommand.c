@@ -3559,7 +3559,7 @@ ACMD(idsearch)
 
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,77), item_name); // Search results for '%s' (name: id):
 	clif->message(fd, atcmd_output);
-	match = itemdb->search_name_array(item_array, MAX_SEARCH, item_name, 0);
+	match = itemdb->search_name_array(item_array, MAX_SEARCH, item_name, IT_SEARCH_NAME_PARTIAL);
 	if (match > MAX_SEARCH) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,269), MAX_SEARCH, match);
 		clif->message(fd, atcmd_output);
@@ -7453,7 +7453,7 @@ ACMD(iteminfo)
 		return false;
 	}
 	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
-		count = itemdb->search_name_array(item_array, MAX_SEARCH, message, 0);
+		count = itemdb->search_name_array(item_array, MAX_SEARCH, message, IT_SEARCH_NAME_PARTIAL);
 
 	if (!count) {
 		clif->message(fd, msg_fd(fd,19)); // Invalid item ID or name.
@@ -7504,7 +7504,7 @@ ACMD(whodrops)
 		return false;
 	}
 	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
-		count = itemdb->search_name_array(item_array, MAX_SEARCH, message, 0);
+		count = itemdb->search_name_array(item_array, MAX_SEARCH, message, IT_SEARCH_NAME_PARTIAL);
 
 	if (!count) {
 		clif->message(fd, msg_fd(fd,19)); // Invalid item ID or name.

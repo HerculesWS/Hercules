@@ -18804,7 +18804,7 @@ static BUILDIN(searchitem)
 	if ((items[0] = itemdb->exists(atoi(itemname)))) {
 		count = 1;
 	} else {
-		count = itemdb->search_name_array(items, ARRAYLENGTH(items), itemname, 0);
+		count = itemdb->search_name_array(items, ARRAYLENGTH(items), itemname, IT_SEARCH_NAME_PARTIAL);
 		if (count > MAX_SEARCH) count = MAX_SEARCH;
 	}
 
