@@ -458,11 +458,12 @@ static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, c
 
 static struct hplugin *hplugin_load(const char *filename)
 {
+	typedef void *(ImportSymbolFunc)(char *, unsigned int);
 	struct hplugin *plugin;
 	struct hplugin_info *info;
 	struct HPMi_interface **HPMi;
 	bool anyEvent = false;
-	void **import_symbol_ref;
+	ImportSymbolFunc **import_symbol_ref;
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	struct s_HPMDataCheck *HPMDataCheck;
@@ -499,7 +500,7 @@ static struct hplugin *hplugin_load(const char *filename)
 	plugin->info = info;
 	plugin->filename = aStrdup(filename);
 
-	if( !( import_symbol_ref = plugin_import(plugin->dll, "import_symbol",void **) ) ) {
+	if ((import_symbol_ref = plugin_import(plugin->dll, "import_symbol", ImportSymbolFunc **)) == NULL) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'import_symbol' for '"CL_WHITE"%s"CL_RESET"'!\n", filename);
 		exit(EXIT_FAILURE);
 	}

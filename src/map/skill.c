@@ -82,7 +82,7 @@
 #endif
 
 static struct skill_interface skill_s;
-struct s_skill_dbs skilldbs;
+static struct s_skill_dbs skilldbs;
 
 struct skill_interface *skill;
 

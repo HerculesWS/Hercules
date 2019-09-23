@@ -105,7 +105,7 @@ static inline void SETVALUE(struct script_buf *buf, int i, int n)
 	VECTOR_INDEX(*buf, i+2) = GetByte(n, 2);
 }
 
-const char *script_op2name(int op)
+static const char *script_op2name(int op)
 {
 #define RETURN_OP_NAME(type) case type: return #type
 	switch( op ) {
