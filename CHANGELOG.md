@@ -9,6 +9,50 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.09.22] `September 22 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-09-18. (#2528)
+- Added the `@changecharsex` command, to change a character's sex. (part of #2528)
+- Added support for clan names in the name packets. (part of #2528)
+- Added support for multiple Token of Siegfried item IDs. (#2515)
+- Added support for the new guild UI features in the client. (#2519)
+- Added per-item scriptable start/end rental functions, replacing the previous hardcoded functionality. See the new item DB fields `OnRentalStartScript` and `OnRentalEndScript`. (#2462, issue #140)
+- Added the `getfont()` script command, to check the player's current chat font. (part of #2462)
+- Added support for gcc-9 by disabling the array bound checks until the `ZEROED_BLOCK` related code will be fully compatible (#2536)
+- Implemented the LapineDdukDdak System. (#2336)
+- Implemented the Library Mistake Quest, allowing players to bypass the rebirth costs. (#2532)
+
+### Changed
+
+- Converted `sc_config` to libconfig. A tool to convert from the old format has been provided in `tools/scconfigconverter.py`. (#2526)
+- Converted packet `ZC_TALKBOX_CHATCONTENTS` into a struct. (part of #2528)
+- Extracted homunculus experience gain message code to a separate function. (part of #2528)
+- Changed function arguments to type `enum battle_dmg_type` where applicable. (part of #2528)
+- Changed pets, homunculi, etc. not to be loaded when autotrading. (part of #2524)
+- Changed the guild castle IDs order to match the client's. (#part of #2519)
+- Converted the item combo DB to libconfig. A tool to convert from the old format has been provided in `tools/itemcombodbconverter.py`. (#2529)
+- Changed some remaining symbols to `static`. (part of #2536)
+- Updated the gitlab-ci builds to reflect the release of Debian 10 buster. Gcc-8 is now the primary compiler used for the gcov, asan and i386 builds. (part of #2536)
+- Increased the maximum allowed item ID to int32 max, for clients supporting it. (part of #2336)
+
+### Fixed
+
+- Fixed packet `ZC_ACK_RANKING` on old (2013 and earlier) clients. (part of #2528)
+- Fixed an issue preventing homunculus auto-vaporize on death or skill reset, when the 80% HP condition isn't met. (#2524)
+- Fixed a bug that caused homunculi's HP and SP to be refilled on every login instead of just on creation. (part of #2524)
+- Fixed the intimacy requirement check for the homunculus ultimate skills. (part of #2524)
+- Fixed the MVP tombstones causing players to get stuck if they were reading their message when the MVP respawns. (#2525)
+- Fixed the MVP tombstones showing their message multiple times when clicked. (part of #2525)
+- Fixed some incorrect examples of use of `while (select(...))` in the script documentation. (#2533)
+- Corrected the item ID used by the KVM Logistic Officer. (#2527, issue #2404)
+- Fixed several subtle issues caused by the nick partial match feature, when enabled. Now the partial match is only performed for lookups requested by atcommands and client features, while a full match is used for source and script lookups. (#2523)
+- Rewritten the `itemdb_searchname_array` function, now properly supporting the items with IDs greater than 65535. (#2535)
+- Fixed support for items with IDs greater than 65535 in the constdb2doc plugin. (part of #2535)
+- Fixed a minor C standard compliance error, mixing function pointers and non-function pointers. (part of #2536)
+- Fixed the (commented out by default) custom Venom Splasher countdown timer code. (part of #2536)
+
 ### [v2019.08.25] `August 25 2019`
 
 ### Added
@@ -887,6 +931,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.09.22]: https://github.com/HerculesWS/Hercules/compare/v2019.08.25...v2019.09.22
 [v2019.08.25]: https://github.com/HerculesWS/Hercules/compare/v2019.07.28...v2019.08.25
 [v2019.07.28]: https://github.com/HerculesWS/Hercules/compare/v2019.06.30...v2019.07.28
 [v2019.06.30]: https://github.com/HerculesWS/Hercules/compare/v2019.06.02...v2019.06.30
