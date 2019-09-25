@@ -16091,7 +16091,10 @@ static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	p->packetType = HEADER_ZC_ACK_RANKING;
 	p->rankType = type;
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
+PRAGMA_GCC9(GCC diagnostic push)
+PRAGMA_GCC9(GCC diagnostic ignored "-Waddress-of-packed-member")
 	clif->ranklist_sub2(p->chars, p->points, type);
+PRAGMA_GCC9(GCC diagnostic pop)
 #else
 	clif->ranklist_sub(&p->ranks, type);
 #endif

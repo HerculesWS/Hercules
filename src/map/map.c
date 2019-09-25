@@ -6835,7 +6835,10 @@ void map_defaults(void)
 	map->bl_list_size = 0;
 
 	//all in a big chunk, respects order
+PRAGMA_GCC9(GCC diagnostic push)
+PRAGMA_GCC9(GCC diagnostic ignored "-Warray-bounds")
 	memset(ZEROED_BLOCK_POS(map), 0, ZEROED_BLOCK_SIZE(map));
+PRAGMA_GCC9(GCC diagnostic pop)
 
 	map->cpsd = NULL;
 	map->list = NULL;
