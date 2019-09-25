@@ -803,10 +803,12 @@
 	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK // 14
 #endif
 
-// 2019-08-28_2aRagexe_zero, 2019-08-28_3aRagexe_zero, 2019-09-11aRagexe_zero, 2019-09-18_2aRagexe_zero, 2019-09-18aRagexe_zero
+// 2019-08-28_2aRagexe_zero, 2019-08-28_3aRagexe_zero, 2019-09-11aRagexe_zero, 2019-09-18_2aRagexe_zero, 2019-09-18aRagexe_zero, 2019-09-25_3aRagexe_zero, 2019-09-25_5aRagexe_zero, 2019-10-08_2aRagexe_zero
 #if PACKETVER == 20190828 || \
     PACKETVER == 20190911 || \
-    PACKETVER == 20190918
+    PACKETVER == 20190918 || \
+    PACKETVER == 20190925 || \
+    PACKETVER == 20191008
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
