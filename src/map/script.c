@@ -18030,10 +18030,12 @@ static BUILDIN(npcshopdelitem)
 		unsigned int nameid = script_getnum(st,i);
 
 		ARR_FIND(0, size, n, nd->u.shop.shop_item[n].nameid == nameid);
-		if (n < size) {
-			memmove(&nd->u.shop.shop_item[n], &nd->u.shop.shop_item[n+1], sizeof(nd->u.shop.shop_item[0])*(size-n));
-			size--;
+		if (n == size) {
+			continue;
+		} else if (n < size - 1) {
+			memmove(&nd->u.shop.shop_item[n], &nd->u.shop.shop_item[n+1], sizeof(nd->u.shop.shop_item[0]) * (size - n - 1));
 		}
+		size--;
 	}
 
 	RECREATE(nd->u.shop.shop_item, struct npc_item_list, size);
