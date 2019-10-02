@@ -120,8 +120,6 @@ char char_achievement_db[256] = "char_achievements";
 static struct char_interface char_s;
 struct char_interface *chr;
 
-char db_path[1024] = "db";
-
 static char wisp_server_name[NAME_LENGTH] = "Server";
 static char login_ip_str[128];
 static uint32 login_ip = 0;
@@ -5791,7 +5789,8 @@ static bool char_config_read_database(const char *filename, const struct config_
 		if (autosave_interval <= 0)
 			autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 	}
-	libconfig->setting_lookup_mutable_string(setting, "db_path", db_path, sizeof(db_path));
+	libconfig->setting_lookup_mutable_string(setting, "db_path", chr->db_path, sizeof(chr->db_path));
+	libconfig->set_db_path(chr->db_path);
 	libconfig->setting_lookup_bool_real(setting, "log_char", &chr->enable_logs);
 	return true;
 }
@@ -6453,6 +6452,8 @@ void char_defaults(void)
 	chr = &char_s;
 
 	memset(chr->server, 0, sizeof(chr->server));
+	sprintf(chr->db_path, "db");
+	libconfig->set_db_path(chr->db_path);
 
 	chr->login_fd = 0;
 	chr->char_fd = -1;

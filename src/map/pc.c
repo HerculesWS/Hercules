@@ -11533,12 +11533,9 @@ static bool pc_read_exp_db(void)
 	struct config_t exp_db_conf;
 	struct config_setting_t *edb = NULL;
 	int entry_count = 0;
-
-#ifdef RENEWAL
-	const char *config_filename = "db/re/exp_group_db.conf";
-#else
-	const char *config_filename = "db/pre-re/exp_group_db.conf";
-#endif
+	char config_filename[256];
+	
+	libconfig->format_db_path(DBPATH"exp_group_db.conf", config_filename, sizeof(config_filename));
 
 	if (!libconfig->load_file(&exp_db_conf, config_filename))
 		return false;

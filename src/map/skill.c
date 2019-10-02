@@ -21105,7 +21105,7 @@ static bool skill_read_skilldb(const char *filename)
 
 	nullpo_retr(false, filename);
 
-	sprintf(filepath,"db/%s",filename);
+	libconfig->format_db_path(filename, filepath, sizeof(filepath));
 
 	if (!libconfig->load_file(&skilldb, filepath)) {
 		return false; // Libconfig error report.

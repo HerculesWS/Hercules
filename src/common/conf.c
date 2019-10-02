@@ -22,6 +22,7 @@
 
 #include "conf.h"
 
+#include "common/nullpo.h" // nullpo_retv
 #include "common/showmsg.h" // ShowError
 #include "common/strlib.h" // safestrncpy
 #include "common/utils.h" // exists
@@ -31,6 +32,31 @@
 /* interface source */
 static struct libconfig_interface libconfig_s;
 struct libconfig_interface *libconfig;
+
+/**
+ * Sets the server's db_path to be used by config_format_db_path
+ * @param db_path path to the folder where the db files are at
+ */
+static void config_set_db_path(const char *db_path)
+{
+	nullpo_retv(db_path);
+	safestrncpy(libconfig->db_path, db_path, sizeof(libconfig->db_path));
+}
+
+/**
+ * Writes into path_buf the fullpath to the db file in filename.
+ * Basically this prepends map->db_path to filename.
+ * @param filename File name to format (e.g. re/item_db.conf)
+ * @param path_buf Where to save the path to
+ * @param buffer_len Maximun length of path_buf
+ */
+static void config_format_db_path(const char *filename, char *path_buf, int buffer_len)
+{
+	nullpo_retv(filename);
+	nullpo_retv(path_buf);
+	
+	snprintf(path_buf, buffer_len, "%s/%s", libconfig->db_path, filename);
+}
 
 /**
  * Initializes 'config' and loads a configuration file.
@@ -450,6 +476,10 @@ static int config_lookup_int64_real(const struct config_t *config, const char *f
 void libconfig_defaults(void) {
 	libconfig = &libconfig_s;
 
+	snprintf(libconfig->db_path, sizeof(libconfig->db_path), "db");
+	libconfig->set_db_path = config_set_db_path;
+	libconfig->format_db_path = config_format_db_path;
+	/* */
 	libconfig->read = config_read;
 	libconfig->write = config_write;
 	/* */

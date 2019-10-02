@@ -29,6 +29,10 @@
  * The libconfig interface -- specially for plugins, but we enforce it throughout the core to be consistent
  **/
 struct libconfig_interface {
+	char db_path[256];
+	void (*set_db_path) (const char *db_path);
+	void (*format_db_path) (const char *filename, char *path_buf, int buffer_len);
+	/* */
 	int (*read) (struct config_t *config, FILE *stream);
 	void (*write) (const struct config_t *config, FILE *stream);
 	/* */

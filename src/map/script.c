@@ -5150,7 +5150,8 @@ static uint8 script_add_language(const char *name)
 static void script_load_translations(void)
 {
 	struct config_t translations_conf;
-	const char *config_filename = "db/translations.conf"; // FIXME hardcoded name
+	char config_filename[256];
+	libconfig->format_db_path("translations.conf", config_filename, sizeof(config_filename));
 	struct config_setting_t *translations = NULL;
 	int i, size;
 	int total = 0;

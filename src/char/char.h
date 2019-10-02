@@ -124,6 +124,8 @@ struct char_interface {
 	bool show_save_log; ///< Show loading/saving messages.
 	bool enable_logs;   ///< Whether to log char server operations.
 
+	char db_path[256]; //< Database directory (db)
+
 	int (*waiting_disconnect) (int tid, int64 tick, int id, intptr_t data);
 	int (*delete_char_sql) (int char_id);
 	struct DBData (*create_online_char_data) (union DBKey key, va_list args);
