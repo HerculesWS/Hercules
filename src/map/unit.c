@@ -533,32 +533,38 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 	if (ud == NULL)
 		return 1;
 
-	if (battle_config.check_occupied_cells != 0 && (flag & 8) != 0 && !map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR | BL_NPC, 1)) // This might change x and y
+	if ((flag & 8) != 0 && battle_config.check_occupied_cells != 0) {
+		if (!map->closest_freecell(bl->m, bl, &x, &y, BL_CHAR | BL_NPC, 1)) // This might change x and y
+			return 1;
+	}
+
+	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag & 1, CELL_CHKNOPASS)) // Count walk path cells
 		return 1;
 
-	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS)) // Count walk path cells
-		return 1;
-
+	if (bl->type != BL_NPC) {
 #ifdef OFFICIAL_WALKPATH
-	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, x, y, CELL_CHKNOPASS) // Check if there is an obstacle between
-		&& (wpd.path_len > (battle_config.max_walk_path/17)*14) // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
-		&& (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
-		return 1;
+		// Check if there is an obstacle between
+		// Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
+		if (!path->search_long(NULL, bl, bl->m, bl->x, bl->y, x, y, CELL_CHKNOPASS)
+		    && (wpd.path_len > (battle_config.max_walk_path / 17) * 14))
+			return 1;
 #endif
-	if ((wpd.path_len > battle_config.max_walk_path) && (bl->type != BL_NPC))
-		return 1;
+		if (wpd.path_len > battle_config.max_walk_path)
+			return 1;
+	}
 
-	if ((flag & 4) != 0 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0 &&
-		DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000) {
+	if ((flag & 4) != 0 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0
+	    && DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000) {
 		// Delay walking command. [Skotlex]
-		timer->add(ud->canmove_tick + 1, unit->delay_walktoxy_timer, bl->id, (intptr_t)MakeDWord((uint16)x, (uint16)y));
+		timer->add(ud->canmove_tick + 1, unit->delay_walktoxy_timer, bl->id,
+		           (intptr_t)MakeDWord((uint16)x, (uint16)y));
 		return 0;
 	}
 
 	if ((flag & 2) == 0 && ((status_get_mode(bl) & MD_CANMOVE) == 0 || unit->can_move(bl) == 0))
 		return 1;
 
-	ud->state.walk_easy = flag&1;
+	ud->state.walk_easy = flag & 1;
 	ud->to_x = x;
 	ud->to_y = y;
 	unit->stop_attack(bl); //Sets target to 0
@@ -567,13 +573,13 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 
 	sc = status->get_sc(bl);
 	if (sc != NULL) {
-		if (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL) //Randomize the target position
+		if (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL) // Randomize the target position
 			map->random_dir(bl, &ud->to_x, &ud->to_y);
 		if (sc->data[SC_COMBOATTACK] != NULL)
 			status_change_end(bl, SC_COMBOATTACK, INVALID_TIMER);
 	}
 
-	if(ud->walktimer != INVALID_TIMER) {
+	if (ud->walktimer != INVALID_TIMER) {
 		// When you come to the center of the grid because the change of destination while you're walking right now
 		// Call a function from a timer unit->walktoxy_sub
 		ud->state.change_walk_target = 1;
