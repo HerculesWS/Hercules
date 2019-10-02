@@ -588,7 +588,12 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 	return unit->walktoxy_sub(bl);
 }
 
-//To set Mob's CHASE/FOLLOW states (shouldn't be done if there's no path to reach)
+/**
+ * Sets mob's CHASE / FOLLOW states.
+ * WARNING: This shouldn't be done if there's no path to reach
+ * @param bl: block_list of mob
+ * @param flag: if set to 0 this function will set nothing
+ */
 static inline void set_mobstate(struct block_list *bl, int flag)
 {
 	struct mob_data* md = BL_CAST(BL_MOB,bl);
