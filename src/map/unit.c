@@ -523,6 +523,7 @@ static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
  */
 static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 {
+	// TODO: change flag to enum? [skyleo]
 	struct unit_data* ud = NULL;
 	struct status_change* sc = NULL;
 	struct walkpath_data wpd;
