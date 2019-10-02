@@ -508,12 +508,19 @@ static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-//flag parameter:
-//&1 -> 1/0 = easy/hard
-//&2 -> force walking
-//&4 -> Delay walking if the reason you can't walk is the canwalk delay
-//&8 -> Search for an unoccupied cell and cancel if none available
-//@return 0: success, 1: failure
+/**
+ * Makes a unit walk to (x, y) coordinates
+ * @param bl: block_list of unit to move
+ * @param x: x-coordinate
+ * @param y: y-coordinate
+ * @param flag: flag paramater with following options:
+ *  - `& 1` -> 1/0 = easy / hard
+ *  - `& 2` -> Force walking
+ *  - `& 4` -> Delay walking, if the reason you can't walk is the `canwalk delay`
+ *  - `& 8` -> Search for an unoccupied cell and cancel if none available
+ * .
+ * @return 0: success, 1: failure
+ */
 static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 {
 	struct unit_data* ud = NULL;
