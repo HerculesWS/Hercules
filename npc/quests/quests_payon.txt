@@ -229,7 +229,7 @@ payon_in02,25,71,4	script	Boy	4_M_04,{
 }
 
 //== 'Helm of Angel' and 'Deviruchi Cap' Quest =============
-payon_in01,46,21,5	script	Young man#12	4_M_ORIENT02,{
+-	script	Young man#12	4_M_ORIENT02,{
 	mes "[Young man]";
 	mes "...What is it?";
 	next;
