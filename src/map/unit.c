@@ -596,10 +596,14 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
  */
 static inline void set_mobstate(struct block_list *bl, int flag)
 {
-	struct mob_data* md = BL_CAST(BL_MOB,bl);
+	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
-	if( md && flag )
-		md->state.skillstate = md->state.aggressive ? MSS_FOLLOW : MSS_RUSH;
+	if (md != NULL && flag != 0) {
+		if (md->state.aggressive != 0)
+			md->state.skillstate = MSS_FOLLOW;
+		else
+			md->state.skillstate = MSS_RUSH;
+	}
 }
 
 static int unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data)
