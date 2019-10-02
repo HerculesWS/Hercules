@@ -5369,7 +5369,6 @@ ACMD(follow)
 ACMD(dropall)
 {
 	int type = -1;
-	int count = 0;
 
 	if (message[0] != '\0') {
 		type = atoi(message);
@@ -5380,25 +5379,31 @@ ACMD(dropall)
 		}
 	}
 
+	int count = 0, count_skipped = 0;
 	for (int i = 0; i < sd->status.inventorySize; i++) {
-		if (sd->status.inventory[i].amount) {
+		if (sd->status.inventory[i].amount > 0) {
 			struct item_data *item_data = itemdb->exists(sd->status.inventory[i].nameid);
 			if (item_data == NULL) {
 				ShowWarning("Non-existant item %d on dropall list (account_id: %d, char_id: %d)\n", sd->status.inventory[i].nameid, sd->status.account_id, sd->status.char_id);
 				continue;
 			}
+			
 			if (!pc->candrop(sd, &sd->status.inventory[i]))
 				continue;
+			
 			if (type == -1 || type == item_data->type) {
 				if (sd->status.inventory[i].equip != 0)
 					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
-				count += sd->status.inventory[i].amount;
-				pc->dropitem(sd, i, sd->status.inventory[i].amount);
+				
+				if (pc->dropitem(sd, i, sd->status.inventory[i].amount) != 0)
+					count += sd->status.inventory[i].amount;
+				else
+					count_skipped += sd->status.inventory[i].amount;
 			}
 		}
 	}
 
-	sprintf(atcmd_output, msg_fd(fd, 1502), count); // %d items are dropped!
+	sprintf(atcmd_output, msg_fd(fd, 1502), count, count_skipped); // %d items are dropped (%d skipped)!
 	clif->message(fd, atcmd_output);
 	return true;
 }
