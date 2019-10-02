@@ -618,9 +618,13 @@ static inline void set_mobstate(struct block_list *bl, int flag)
 static int unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
-	struct unit_data *ud = bl?unit->bl2ud(bl):NULL;
+	if (bl == NULL)
+		return 1;
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud == NULL)
+		return 1;
 
-	if (ud && ud->walktimer == INVALID_TIMER && ud->target == data) {
+	if (ud->walktimer == INVALID_TIMER && ud->target == data) {
 		if (DIFF_TICK(ud->canmove_tick, tick) > 0) //Keep waiting?
 			timer->add(ud->canmove_tick+1, unit->walktobl_sub, id, data);
 		else if (unit->can_move(bl)) {
