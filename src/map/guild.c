@@ -152,7 +152,8 @@ static bool guild_read_castledb_libconfig(void)
 {
 	struct config_t castle_conf;
 	struct config_setting_t *castle_db = NULL, *it = NULL;
-	const char *config_filename = "db/castle_db.conf"; // FIXME hardcoded name
+	char config_filename[256];
+	libconfig->format_db_path("castle_db.conf", config_filename, sizeof(config_filename));
 	int i = 0;
 
 	if (libconfig->load_file(&castle_conf, config_filename) == 0)

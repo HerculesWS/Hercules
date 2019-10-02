@@ -13339,10 +13339,12 @@ static void status_read_job_db(void)
 	int i = 0;
 	struct config_t job_db_conf;
 	struct config_setting_t *jdb = NULL;
+	char config_filename[256];
+	
 #ifdef RENEWAL_ASPD
-	const char *config_filename = "db/re/job_db.conf";
+	libconfig->format_db_path(DBPATH_RE"job_db.conf", config_filename, sizeof(config_filename));
 #else
-	const char *config_filename = "db/pre-re/job_db.conf";
+	libconfig->format_db_path(DBPATH_PRE"job_db.conf", config_filename, sizeof(config_filename));
 #endif
 
 	if (!libconfig->load_file(&job_db_conf, config_filename))

@@ -4078,10 +4078,8 @@ static bool mob_read_optdrops_group(struct config_setting_t *group, int n)
  */
 static bool mob_read_optdrops_db(void)
 {
-	const char *filename = "option_drop_groups.conf"; // FIXME hardcoded name
-
 	char filepath[256];
-	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, filename);
+	libconfig->format_db_path("option_drop_groups.conf", filepath, sizeof(filepath));
 
 	struct config_t option_groups;
 	if (libconfig->load_file(&option_groups, filepath) == CONFIG_FALSE) {

@@ -4055,6 +4055,7 @@ static bool map_config_read_database(const char *filename, struct config_t *conf
 		return false;
 	}
 	libconfig->setting_lookup_mutable_string(setting, "db_path", map->db_path, sizeof(map->db_path));
+	libconfig->set_db_path(map->db_path);
 	libconfig->setting_lookup_int(setting, "save_settings", &map->save_settings);
 
 	if (libconfig->setting_lookup_int(setting, "autosave_time", &map->autosave_interval) == CONFIG_TRUE) {
@@ -5574,12 +5575,8 @@ static void read_map_zone_db(void)
 {
 	struct config_t map_zone_db;
 	struct config_setting_t *zones = NULL;
-	/* TODO: #ifndef required for re/pre-re */
-#ifdef RENEWAL
-	const char *config_filename = "db/re/map_zone_db.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/map_zone_db.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"map_zone_db.conf", config_filename, sizeof(config_filename));
 	if (!libconfig->load_file(&map_zone_db, config_filename))
 		return;
 
@@ -6774,6 +6771,7 @@ void map_defaults(void)
 	map->extra_scripts_count = 0;
 
 	sprintf(map->db_path ,"db");
+	libconfig->set_db_path(map->db_path);
 	sprintf(map->help_txt ,"conf/help.txt");
 	sprintf(map->charhelp_txt ,"conf/charhelp.txt");
 
