@@ -116,6 +116,11 @@ static struct unit_data *unit_bl2ud2(struct block_list *bl)
 	return unit->bl2ud(bl);
 }
 
+/**
+ * TODO: understand purpose of this function
+ * @param bl block_list to process
+ * @return 0: success, 1: fail, 2: nullpointer
+ */
 static int unit_walktoxy_sub(struct block_list *bl)
 {
 	int i;
