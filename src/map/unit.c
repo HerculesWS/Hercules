@@ -589,16 +589,15 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 }
 
 /**
- * Sets mob's CHASE / FOLLOW states.
+ * Sets CHASE / FOLLOW states, in case bl is a mob.
  * WARNING: This shouldn't be done if there's no path to reach
  * @param bl: block_list of mob
- * @param flag: if set to 0 this function will set nothing
  */
-static inline void set_mobstate(struct block_list *bl, int flag)
+static inline void set_mobstate(struct block_list *bl)
 {
 	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
-	if (md != NULL && flag != 0) {
+	if (md != NULL) {
 		if (md->state.aggressive != 0)
 			md->state.skillstate = MSS_FOLLOW;
 		else
@@ -624,8 +623,8 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
 	if (ud->walktimer == INVALID_TIMER && ud->target == data) {
 		if (DIFF_TICK(ud->canmove_tick, tick) > 0) // Keep waiting?
 			timer->add(ud->canmove_tick + 1, unit->walktobl_timer, id, data);
-		else if (unit->can_move(bl) != 0 && unit->walktoxy_sub(bl) == 0)
-			set_mobstate(bl, ud->state.attack_continue);
+		else if (unit->can_move(bl) != 0 && unit->walktoxy_sub(bl) == 0 && ud->state.attack_continue != 0)
+			set_mobstate(bl);
 	}
 	return 0;
 }
@@ -669,7 +668,8 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 
 	if(ud->walktimer != INVALID_TIMER) {
 		ud->state.change_walk_target = 1;
-		set_mobstate(bl, flag&2);
+		if ((flag & 2) != 0)
+			set_mobstate(bl);
 		return 1;
 	}
 
@@ -682,8 +682,8 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 	if(!unit->can_move(bl))
 		return 0;
 
-	if (unit->walktoxy_sub(bl) == 0) {
-		set_mobstate(bl, flag&2);
+	if (unit->walktoxy_sub(bl) == 0 && (flag & 2) != 0) {
+		set_mobstate(bl);
 		return 0;
 	}
 	return 0;
