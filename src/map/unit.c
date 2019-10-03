@@ -207,24 +207,24 @@ static int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
 	if (!ud->stepaction)
 		return 1;
 
-	//Set to false here because if an error occurs, it should not be executed again
+	// Set to false here because if an error occurs, it should not be executed again
 	ud->stepaction = false;
 
 	if (ud->target_to == 0)
 		return 1;
 
-	//Flush target_to as it might contain map coordinates which should not be used by other functions
-	target_id = ud->target_to;
+	// Flush target_to as it might contain map coordinates which should not be used by other functions
+	int target_id = ud->target_to;
 	ud->target_to = 0;
 
-	//If stepaction is set then we remembered a client request that should be executed on the next step
-	//Execute request now if target is in attack range
-	if(ud->stepskill_id && skill->get_inf(ud->stepskill_id) & INF_GROUND_SKILL) {
-		//Execute ground skill
+	// If stepaction is set then we remembered a client request that should be executed on the next step
+	// Execute request now if target is in attack range
+	if (ud->stepskill_id && (skill->get_inf(ud->stepskill_id) & INF_GROUND_SKILL) != 0) {
+		// Execute ground skill
 		struct map_data *md = &map->list[bl->m];
-		unit->skilluse_pos(bl, target_id%md->xs, target_id/md->xs, ud->stepskill_id, ud->stepskill_lv);
+		unit->skilluse_pos(bl, target_id % md->xs, target_id / md->xs, ud->stepskill_id, ud->stepskill_lv);
 	} else {
-		//If a player has target_id set and target is in range, attempt attack
+		// If a player has target_id set and target is in range, attempt attack
 		struct block_list *tbl = map->id2bl(target_id);
 		nullpo_retr(2, tbl);
 		if (status->check_visibility(bl, tbl) == 0) // Target not visible
