@@ -130,13 +130,13 @@ static int unit_walktoxy_sub(struct block_list *bl)
 	struct walkpath_data wpd = {0};
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, ud->state.walk_easy, CELL_CHKNOPASS))
-		return 0;
+		return 1;
 
 #ifdef OFFICIAL_WALKPATH
 	if (bl->type != BL_NPC // If type is an NPC, disregard.
 		&& !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) // Check if there is an obstacle between
 		&& wpd.path_len > 14) // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
-			return 0;
+			return 1;
 #endif
 
 	ud->walkpath = wpd;
@@ -178,7 +178,7 @@ static int unit_walktoxy_sub(struct block_list *bl)
 		timer_delay = status->get_speed(bl);
 	if (timer_delay > 0)
 		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walktoxy_timer, bl->id, 0); //TODO: check if unit->walktoxy_timer uses any intptr data
-	return 1;
+	return 0;
 }
 
 /**
