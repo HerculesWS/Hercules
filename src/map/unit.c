@@ -129,30 +129,30 @@ static int unit_walktoxy_sub(struct block_list *bl)
 
 	struct walkpath_data wpd = {0};
 
-	if( !path->search(&wpd,bl,bl->m,bl->x,bl->y,ud->to_x,ud->to_y,ud->state.walk_easy,CELL_CHKNOPASS) )
+	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, ud->state.walk_easy, CELL_CHKNOPASS))
 		return 0;
 
 #ifdef OFFICIAL_WALKPATH
-	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) // Check if there is an obstacle between
-		&& wpd.path_len > 14 // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
-		&& (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
+	if (bl->type != BL_NPC // If type is an NPC, disregard.
+		&& !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) // Check if there is an obstacle between
+		&& wpd.path_len > 14) // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
 			return 0;
 #endif
 
 	ud->walkpath = wpd;
 
-	if (ud->target_to && ud->chaserange>1) {
-		//Generally speaking, the walk path is already to an adjacent tile
-		//so we only need to shorten the path if the range is greater than 1.
+	if (ud->target_to && ud->chaserange > 1) {
+		// Generally speaking, the walk path is already to an adjacent tile
+		// so we only need to shorten the path if the range is greater than 1.
 
-		//Trim the last part of the path to account for range,
-		//but always move at least one cell when requested to move.
+		// Trim the last part of the path to account for range,
+		// but always move at least one cell when requested to move.
 		for (int i = (ud->chaserange * 10) - 10; i > 0 && ud->walkpath.path_len > 1;) {
 			uint8 dir;
 			ud->walkpath.path_len--;
 			dir = ud->walkpath.path[ud->walkpath.path_len];
-			if (dir&1)
-				i -= MOVE_COST*20; //When chasing, units will target a diamond-shaped area in range [Playtester]
+			if ((dir & 1) != 0)
+				i -= MOVE_COST * 20; // When chasing, units will target a diamond-shaped area in range [Playtester]
 			else
 				i -= MOVE_COST;
 			ud->to_x -= dirx[dir];
@@ -160,7 +160,7 @@ static int unit_walktoxy_sub(struct block_list *bl)
 		}
 	}
 
-	ud->state.change_walk_target=0;
+	ud->state.change_walk_target = 0;
 
 	if (bl->type == BL_PC) {
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
