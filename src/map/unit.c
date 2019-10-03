@@ -123,7 +123,6 @@ static struct unit_data *unit_bl2ud2(struct block_list *bl)
  */
 static int unit_walktoxy_sub(struct block_list *bl)
 {
-	int i;
 	nullpo_retr(2, bl);
 	struct unit_data *ud = unit->bl2ud(bl);
 	nullpo_retr(2, ud);
@@ -148,7 +147,7 @@ static int unit_walktoxy_sub(struct block_list *bl)
 
 		//Trim the last part of the path to account for range,
 		//but always move at least one cell when requested to move.
-		for (i = (ud->chaserange*10)-10; i > 0 && ud->walkpath.path_len>1;) {
+		for (int i = (ud->chaserange * 10) - 10; i > 0 && ud->walkpath.path_len > 1;) {
 			uint8 dir;
 			ud->walkpath.path_len--;
 			dir = ud->walkpath.path[ud->walkpath.path_len];
@@ -170,14 +169,15 @@ static int unit_walktoxy_sub(struct block_list *bl)
 	}
 	clif->move(ud);
 
-	if(ud->walkpath.path_pos>=ud->walkpath.path_len)
-		i = -1;
-	else if(ud->walkpath.path[ud->walkpath.path_pos]&1)
-		i = status->get_speed(bl)*MOVE_DIAGONAL_COST/MOVE_COST;
+	int timer_delay;
+	if (ud->walkpath.path_pos >= ud->walkpath.path_len)
+		timer_delay = -1;
+	else if ((ud->walkpath.path[ud->walkpath.path_pos] & 1) != 0)
+		timer_delay = status->get_speed(bl) * MOVE_DIAGONAL_COST / MOVE_COST;
 	else
-		i = status->get_speed(bl);
-	if( i > 0)
-		ud->walktimer = timer->add(timer->gettick()+i,unit->walktoxy_timer,bl->id,i);
+		timer_delay = status->get_speed(bl);
+	if (timer_delay > 0)
+		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walktoxy_timer, bl->id, 0); //TODO: check if unit->walktoxy_timer uses any intptr data
 	return 1;
 }
 
