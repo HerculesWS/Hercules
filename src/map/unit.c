@@ -613,12 +613,10 @@ static int unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data)
 	nullpo_retr(1, ud);
 
 	if (ud->walktimer == INVALID_TIMER && ud->target == data) {
-		if (DIFF_TICK(ud->canmove_tick, tick) > 0) //Keep waiting?
-			timer->add(ud->canmove_tick+1, unit->walktobl_sub, id, data);
-		else if (unit->can_move(bl)) {
-			if (unit->walktoxy_sub(bl) == 0)
-				set_mobstate(bl, ud->state.attack_continue);
-		}
+		if (DIFF_TICK(ud->canmove_tick, tick) > 0) // Keep waiting?
+			timer->add(ud->canmove_tick + 1, unit->walktobl_sub, id, data);
+		else if (unit->can_move(bl) != 0 && unit->walktoxy_sub(bl) == 0)
+			set_mobstate(bl, ud->state.attack_continue);
 	}
 	return 0;
 }
