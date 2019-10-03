@@ -186,40 +186,32 @@ static int unit_walktoxy_sub(struct block_list *bl)
  * @param tid: Timer ID
  * @param tick: Unused
  * @param id: ID of bl to do the action
- * @param data: Not used
- * @return 1: Success 0: Fail (No valid bl)
+ * @param data: Unused
+ * @return 0: success, 1: fail, 2: nullpointer
  */
 static int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
 {
-	struct block_list *bl;
-	struct unit_data *ud;
-	int target_id;
+	struct block_list *bl = map->id2bl(id);
+	nullpo_retr(2, bl);
+	nullpo_retr(2, bl->prev);
+	struct unit_data *ud = unit->bl2ud(bl);
+	nullpo_retr(2, ud);
 
-	bl = map->id2bl(id);
-
-	if (!bl || bl->prev == NULL)
-		return 0;
-
-	ud = unit->bl2ud(bl);
-
-	if(!ud)
-		return 0;
-
-	if(ud->steptimer != tid) {
-		ShowError("unit_step_timer mismatch %d != %d\n",ud->steptimer,tid);
-		return 0;
+	if (ud->steptimer != tid) {
+		ShowError("unit_step_timer mismatch %d != %d\n", ud->steptimer, tid);
+		return 1;
 	}
 
 	ud->steptimer = INVALID_TIMER;
 
-	if(!ud->stepaction)
-		return 0;
+	if (!ud->stepaction)
+		return 1;
 
 	//Set to false here because if an error occurs, it should not be executed again
 	ud->stepaction = false;
 
-	if(!ud->target_to)
-		return 0;
+	if (ud->target_to == 0)
+		return 1;
 
 	//Flush target_to as it might contain map coordinates which should not be used by other functions
 	target_id = ud->target_to;
@@ -234,19 +226,16 @@ static int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
 	} else {
 		//If a player has target_id set and target is in range, attempt attack
 		struct block_list *tbl = map->id2bl(target_id);
-		if (!tbl || !status->check_visibility(bl, tbl)) {
-			return 0;
-		}
-		if(ud->stepskill_id == 0) {
-			//Execute normal attack
-			unit->attack(bl, tbl->id, (ud->state.attack_continue) + 2);
-		} else {
-			//Execute non-ground skill
-			unit->skilluse_id(bl, tbl->id, ud->stepskill_id, ud->stepskill_lv);
-		}
+		nullpo_retr(2, tbl);
+		if (status->check_visibility(bl, tbl) == 0) // Target not visible
+			return 1;
+		if (ud->stepskill_id == 0)
+			unit->attack(bl, tbl->id, ud->state.attack_continue + 2); // Execute normal attack
+		else
+			unit->skilluse_id(bl, tbl->id, ud->stepskill_id, ud->stepskill_lv); // Execute non-ground skill
 	}
 
-	return 1;
+	return 0;
 }
 
 static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
