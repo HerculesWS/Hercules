@@ -119,6 +119,7 @@ struct unit_interface {
 	uint8 (*getdir) (struct block_list *bl);
 	int (*blown) (struct block_list *bl, int dx, int dy, int count, int flag);
 	int (*warp) (struct block_list *bl, short m, short x, short y, enum clr_type type);
+	int (*warpto_master) (struct block_list *master_bl, struct block_list *slave_bl);
 	int (*stop_walking) (struct block_list *bl, int type);
 	int (*skilluse_id) (struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv);
 	int (*step_timer) (int tid, int64 tick, int id, intptr_t data);
