@@ -606,7 +606,7 @@ static inline void set_mobstate(struct block_list *bl, int flag)
 	}
 }
 
-static int unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data)
+static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
 	struct unit_data *ud = unit->bl2ud(bl);
@@ -614,7 +614,7 @@ static int unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data)
 
 	if (ud->walktimer == INVALID_TIMER && ud->target == data) {
 		if (DIFF_TICK(ud->canmove_tick, tick) > 0) // Keep waiting?
-			timer->add(ud->canmove_tick + 1, unit->walktobl_sub, id, data);
+			timer->add(ud->canmove_tick + 1, unit->walktobl_timer, id, data);
 		else if (unit->can_move(bl) != 0 && unit->walktoxy_sub(bl) == 0)
 			set_mobstate(bl, ud->state.attack_continue);
 	}
@@ -666,7 +666,7 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 
 	if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0) {
 		//Can't move, wait a bit before invoking the movement.
-		timer->add(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
+		timer->add(ud->canmove_tick+1, unit->walktobl_timer, bl->id, ud->target);
 		return 1;
 	}
 
@@ -1274,7 +1274,7 @@ static int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int 
 			} else {
 				unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
 				if (ud->target)
-					timer->add(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
+					timer->add(ud->canmove_tick+1, unit->walktobl_timer, bl->id, ud->target);
 			}
 		}
 	}
@@ -3003,7 +3003,7 @@ static int do_init_unit(bool minimal)
 
 	timer->add_func_list(unit->attack_timer,  "unit_attack_timer");
 	timer->add_func_list(unit->walktoxy_timer,"unit_walktoxy_timer");
-	timer->add_func_list(unit->walktobl_sub, "unit_walktobl_sub");
+	timer->add_func_list(unit->walktobl_timer, "unit_walktobl_timer");
 	timer->add_func_list(unit->delay_walktoxy_timer,"unit_delay_walktoxy_timer");
 	timer->add_func_list(unit->step_timer,"unit_step_timer");
 	return 0;
@@ -3030,7 +3030,7 @@ void unit_defaults(void)
 	unit->walktoxy_sub = unit_walktoxy_sub;
 	unit->delay_walktoxy_timer = unit_delay_walktoxy_timer;
 	unit->walktoxy = unit_walktoxy;
-	unit->walktobl_sub = unit_walktobl_sub;
+	unit->walktobl_timer = unit_walktobl_timer;
 	unit->walktobl = unit_walktobl;
 	unit->run = unit_run;
 	unit->run_hit = unit_run_hit;

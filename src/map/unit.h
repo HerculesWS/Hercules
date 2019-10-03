@@ -110,7 +110,7 @@ struct unit_interface {
 	int (*walktoxy_sub) (struct block_list *bl);
 	int (*delay_walktoxy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walktoxy) (struct block_list *bl, short x, short y, int flag);
-	int (*walktobl_sub) (int tid, int64 tick, int id, intptr_t data);
+	int (*walktobl_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walktobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
 	bool (*run) (struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 	void (*run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
