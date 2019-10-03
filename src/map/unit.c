@@ -76,15 +76,26 @@ struct unit_interface *unit;
  **/
 static struct unit_data *unit_bl2ud(struct block_list *bl)
 {
-	if (bl == NULL) return NULL;
-	if (bl->type == BL_PC)  return &BL_UCAST(BL_PC, bl)->ud;
-	if (bl->type == BL_MOB) return &BL_UCAST(BL_MOB, bl)->ud;
-	if (bl->type == BL_PET) return &BL_UCAST(BL_PET, bl)->ud;
-	if (bl->type == BL_NPC) return BL_UCAST(BL_NPC, bl)->ud;
-	if (bl->type == BL_HOM) return &BL_UCAST(BL_HOM, bl)->ud;
-	if (bl->type == BL_MER) return &BL_UCAST(BL_MER, bl)->ud;
-	if (bl->type == BL_ELEM) return &BL_UCAST(BL_ELEM, bl)->ud;
-	return NULL;
+	if (bl == NULL)
+		return NULL;
+	switch (bl->type) {
+	case BL_PC:
+		return &BL_UCAST(BL_PC, bl)->ud;
+	case BL_MOB:
+		return &BL_UCAST(BL_MOB, bl)->ud;
+	case BL_PET:
+		return &BL_UCAST(BL_PET, bl)->ud;
+	case BL_NPC:
+		return BL_UCAST(BL_NPC, bl)->ud;
+	case BL_HOM:
+		return &BL_UCAST(BL_HOM, bl)->ud;
+	case BL_MER:
+		return &BL_UCAST(BL_MER, bl)->ud;
+	case BL_ELEM:
+		return &BL_UCAST(BL_ELEM, bl)->ud;
+	default:
+		return NULL;
+	}
 }
 
 /**
