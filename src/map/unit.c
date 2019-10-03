@@ -124,14 +124,11 @@ static struct unit_data *unit_bl2ud2(struct block_list *bl)
 static int unit_walktoxy_sub(struct block_list *bl)
 {
 	int i;
-	struct walkpath_data wpd;
-	struct unit_data *ud = NULL;
+	nullpo_retr(2, bl);
+	struct unit_data *ud = unit->bl2ud(bl);
+	nullpo_retr(2, ud);
 
-	nullpo_retr(1, bl);
-	ud = unit->bl2ud(bl);
-	if(ud == NULL) return 0;
-
-	memset(&wpd, 0, sizeof(wpd));
+	struct walkpath_data wpd = {0};
 
 	if( !path->search(&wpd,bl,bl->m,bl->x,bl->y,ud->to_x,ud->to_y,ud->state.walk_easy,CELL_CHKNOPASS) )
 		return 0;
@@ -143,7 +140,7 @@ static int unit_walktoxy_sub(struct block_list *bl)
 			return 0;
 #endif
 
-	memcpy(&ud->walkpath,&wpd,sizeof(wpd));
+	ud->walkpath = wpd;
 
 	if (ud->target_to && ud->chaserange>1) {
 		//Generally speaking, the walk path is already to an adjacent tile
