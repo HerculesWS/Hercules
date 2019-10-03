@@ -8238,8 +8238,8 @@ typedef int (*HPMHOOK_pre_unit_delay_walktoxy_timer) (int *tid, int64 *tick, int
 typedef int (*HPMHOOK_post_unit_delay_walktoxy_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_unit_walktoxy) (struct block_list **bl, short *x, short *y, int *flag);
 typedef int (*HPMHOOK_post_unit_walktoxy) (int retVal___, struct block_list *bl, short x, short y, int flag);
-typedef int (*HPMHOOK_pre_unit_walktobl_sub) (int *tid, int64 *tick, int *id, intptr_t *data);
-typedef int (*HPMHOOK_post_unit_walktobl_sub) (int retVal___, int tid, int64 tick, int id, intptr_t data);
+typedef int (*HPMHOOK_pre_unit_walktobl_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_unit_walktobl_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_unit_walktobl) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
 typedef int (*HPMHOOK_post_unit_walktobl) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
 typedef bool (*HPMHOOK_pre_unit_run) (struct block_list **bl, struct map_session_data **sd, enum sc_type *type);

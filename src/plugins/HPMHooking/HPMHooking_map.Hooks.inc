@@ -90196,14 +90196,14 @@ int HP_unit_walktoxy(struct block_list *bl, short x, short y, int flag) {
 	}
 	return retVal___;
 }
-int HP_unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data) {
+int HP_unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_unit_walktobl_sub_pre > 0) {
+	if (HPMHooks.count.HP_unit_walktobl_timer_pre > 0) {
 		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_sub_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_unit_walktobl_sub_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_timer_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_unit_walktobl_timer_pre[hIndex].func;
 			retVal___ = preHookFunc(&tid, &tick, &id, &data);
 		}
 		if (*HPMforce_return) {
@@ -90212,12 +90212,12 @@ int HP_unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.unit.walktobl_sub(tid, tick, id, data);
+		retVal___ = HPMHooks.source.unit.walktobl_timer(tid, tick, id, data);
 	}
-	if (HPMHooks.count.HP_unit_walktobl_sub_post > 0) {
+	if (HPMHooks.count.HP_unit_walktobl_timer_post > 0) {
 		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_sub_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_unit_walktobl_sub_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_timer_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_unit_walktobl_timer_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
 		}
 	}
