@@ -606,6 +606,15 @@ static inline void set_mobstate(struct block_list *bl, int flag)
 	}
 }
 
+/**
+ * Timer used for when a unit can't walk towards its target yet due to it's canmove_tick,
+ * keeps retrying until it works or target changes.
+ * @param tid: Timer ID, unused
+ * @param tick: Tick, unused
+ * @param id: ID of block_list to execute the action
+ * @param data: ID of block_list to walk towards
+ * @return 0: success, 1: failure
+ */
 static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
