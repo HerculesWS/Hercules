@@ -3286,6 +3286,10 @@ struct {
 	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineddukddak_sub_post;
 	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineddukddak_sub_sources_pre;
 	struct HPMHookPoint *HP_itemdb_read_libconfig_lapineddukddak_sub_sources_post;
+	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_set_db_path_post;
+	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_format_db_path_post;
 	struct HPMHookPoint *HP_libconfig_read_pre;
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
@@ -3756,6 +3760,10 @@ struct {
 	struct HPMHookPoint *HP_map_merge_zone_post;
 	struct HPMHookPoint *HP_map_zone_clear_single_pre;
 	struct HPMHookPoint *HP_map_zone_clear_single_post;
+	struct HPMHookPoint *HP_mapindex_config_read_dbpath_pre;
+	struct HPMHookPoint *HP_mapindex_config_read_dbpath_post;
+	struct HPMHookPoint *HP_mapindex_config_read_pre;
+	struct HPMHookPoint *HP_mapindex_config_read_post;
 	struct HPMHookPoint *HP_mapindex_init_pre;
 	struct HPMHookPoint *HP_mapindex_init_post;
 	struct HPMHookPoint *HP_mapindex_final_pre;
@@ -10099,6 +10107,10 @@ struct {
 	int HP_itemdb_read_libconfig_lapineddukddak_sub_post;
 	int HP_itemdb_read_libconfig_lapineddukddak_sub_sources_pre;
 	int HP_itemdb_read_libconfig_lapineddukddak_sub_sources_post;
+	int HP_libconfig_set_db_path_pre;
+	int HP_libconfig_set_db_path_post;
+	int HP_libconfig_format_db_path_pre;
+	int HP_libconfig_format_db_path_post;
 	int HP_libconfig_read_pre;
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
@@ -10569,6 +10581,10 @@ struct {
 	int HP_map_merge_zone_post;
 	int HP_map_zone_clear_single_pre;
 	int HP_map_zone_clear_single_post;
+	int HP_mapindex_config_read_dbpath_pre;
+	int HP_mapindex_config_read_dbpath_post;
+	int HP_mapindex_config_read_pre;
+	int HP_mapindex_config_read_post;
 	int HP_mapindex_init_pre;
 	int HP_mapindex_init_post;
 	int HP_mapindex_final_pre;

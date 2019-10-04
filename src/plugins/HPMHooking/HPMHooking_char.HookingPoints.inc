@@ -425,6 +425,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_storage->parse_frommap, HP_inter_storage_parse_frommap) },
 	{ HP_POP(inter_storage->retrieve_bound_items, HP_inter_storage_retrieve_bound_items) },
 /* libconfig_interface */
+	{ HP_POP(libconfig->set_db_path, HP_libconfig_set_db_path) },
+	{ HP_POP(libconfig->format_db_path, HP_libconfig_format_db_path) },
 	{ HP_POP(libconfig->read, HP_libconfig_read) },
 	{ HP_POP(libconfig->write, HP_libconfig_write) },
 	{ HP_POP(libconfig->set_options, HP_libconfig_set_options) },
@@ -665,6 +667,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapif->parse_ClanMemberKick, HP_mapif_parse_ClanMemberKick) },
 	{ HP_POP(mapif->parse_ClanMemberCount, HP_mapif_parse_ClanMemberCount) },
 /* mapindex_interface */
+	{ HP_POP(mapindex->config_read_dbpath, HP_mapindex_config_read_dbpath) },
+	{ HP_POP(mapindex->config_read, HP_mapindex_config_read) },
 	{ HP_POP(mapindex->init, HP_mapindex_init) },
 	{ HP_POP(mapindex->final, HP_mapindex_final) },
 	{ HP_POP(mapindex->addmap, HP_mapindex_addmap) },

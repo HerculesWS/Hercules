@@ -212,6 +212,10 @@ struct {
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post;
+	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_set_db_path_post;
+	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_format_db_path_post;
 	struct HPMHookPoint *HP_libconfig_read_pre;
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
@@ -1013,6 +1017,10 @@ struct {
 	int HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post;
+	int HP_libconfig_set_db_path_pre;
+	int HP_libconfig_set_db_path_post;
+	int HP_libconfig_format_db_path_pre;
+	int HP_libconfig_format_db_path_post;
 	int HP_libconfig_read_pre;
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
