@@ -4178,6 +4178,10 @@ typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_CHARSERVERCONNEC
 typedef enum parsefunc_rcode (*HPMHOOK_post_PRIV__lclif_parse_CA_CHARSERVERCONNECT) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 #endif // LOGIN_LCLIF_P_H
 #ifdef COMMON_CONF_H /* libconfig */
+typedef void (*HPMHOOK_pre_libconfig_set_db_path) (const char **db_path);
+typedef void (*HPMHOOK_post_libconfig_set_db_path) (const char *db_path);
+typedef void (*HPMHOOK_pre_libconfig_format_db_path) (const char **filename, char **path_buf, int *buffer_len);
+typedef void (*HPMHOOK_post_libconfig_format_db_path) (const char *filename, char *path_buf, int buffer_len);
 typedef int (*HPMHOOK_pre_libconfig_read) (struct config_t **config, FILE **stream);
 typedef int (*HPMHOOK_post_libconfig_read) (int retVal___, struct config_t *config, FILE *stream);
 typedef void (*HPMHOOK_pre_libconfig_write) (const struct config_t **config, FILE **stream);
@@ -5144,6 +5148,10 @@ typedef int (*HPMHOOK_pre_mapif_parse_ClanMemberCount) (int *fd, int *clan_id, i
 typedef int (*HPMHOOK_post_mapif_parse_ClanMemberCount) (int retVal___, int fd, int clan_id, int kick_interval);
 #endif // CHAR_MAPIF_H
 #ifdef COMMON_MAPINDEX_H /* mapindex */
+typedef bool (*HPMHOOK_pre_mapindex_config_read_dbpath) (const char **filename, const struct config_t **config);
+typedef bool (*HPMHOOK_post_mapindex_config_read_dbpath) (bool retVal___, const char *filename, const struct config_t *config);
+typedef bool (*HPMHOOK_pre_mapindex_config_read) (void);
+typedef bool (*HPMHOOK_post_mapindex_config_read) (bool retVal___);
 typedef int (*HPMHOOK_pre_mapindex_init) (void);
 typedef int (*HPMHOOK_post_mapindex_init) (int retVal___);
 typedef void (*HPMHOOK_pre_mapindex_final) (void);

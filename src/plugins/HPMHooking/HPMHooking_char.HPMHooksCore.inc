@@ -778,6 +778,10 @@ struct {
 	struct HPMHookPoint *HP_inter_storage_parse_frommap_post;
 	struct HPMHookPoint *HP_inter_storage_retrieve_bound_items_pre;
 	struct HPMHookPoint *HP_inter_storage_retrieve_bound_items_post;
+	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_set_db_path_post;
+	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_format_db_path_post;
 	struct HPMHookPoint *HP_libconfig_read_pre;
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
@@ -1252,6 +1256,10 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_ClanMemberKick_post;
 	struct HPMHookPoint *HP_mapif_parse_ClanMemberCount_pre;
 	struct HPMHookPoint *HP_mapif_parse_ClanMemberCount_post;
+	struct HPMHookPoint *HP_mapindex_config_read_dbpath_pre;
+	struct HPMHookPoint *HP_mapindex_config_read_dbpath_post;
+	struct HPMHookPoint *HP_mapindex_config_read_pre;
+	struct HPMHookPoint *HP_mapindex_config_read_post;
 	struct HPMHookPoint *HP_mapindex_init_pre;
 	struct HPMHookPoint *HP_mapindex_init_post;
 	struct HPMHookPoint *HP_mapindex_final_pre;
@@ -2391,6 +2399,10 @@ struct {
 	int HP_inter_storage_parse_frommap_post;
 	int HP_inter_storage_retrieve_bound_items_pre;
 	int HP_inter_storage_retrieve_bound_items_post;
+	int HP_libconfig_set_db_path_pre;
+	int HP_libconfig_set_db_path_post;
+	int HP_libconfig_format_db_path_pre;
+	int HP_libconfig_format_db_path_post;
 	int HP_libconfig_read_pre;
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
@@ -2865,6 +2877,10 @@ struct {
 	int HP_mapif_parse_ClanMemberKick_post;
 	int HP_mapif_parse_ClanMemberCount_pre;
 	int HP_mapif_parse_ClanMemberCount_post;
+	int HP_mapindex_config_read_dbpath_pre;
+	int HP_mapindex_config_read_dbpath_post;
+	int HP_mapindex_config_read_pre;
+	int HP_mapindex_config_read_post;
 	int HP_mapindex_init_pre;
 	int HP_mapindex_init_post;
 	int HP_mapindex_final_pre;
