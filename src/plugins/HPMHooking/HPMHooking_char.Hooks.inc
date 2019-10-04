@@ -10116,6 +10116,58 @@ bool HP_inter_storage_retrieve_bound_items(int char_id, int account_id, int guil
 	return retVal___;
 }
 /* libconfig_interface */
+void HP_libconfig_set_db_path(const char *db_path) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_libconfig_set_db_path_pre > 0) {
+		void (*preHookFunc) (const char **db_path);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_db_path_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_libconfig_set_db_path_pre[hIndex].func;
+			preHookFunc(&db_path);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.libconfig.set_db_path(db_path);
+	}
+	if (HPMHooks.count.HP_libconfig_set_db_path_post > 0) {
+		void (*postHookFunc) (const char *db_path);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_db_path_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_libconfig_set_db_path_post[hIndex].func;
+			postHookFunc(db_path);
+		}
+	}
+	return;
+}
+void HP_libconfig_format_db_path(const char *filename, char *path_buf, int buffer_len) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_libconfig_format_db_path_pre > 0) {
+		void (*preHookFunc) (const char **filename, char **path_buf, int *buffer_len);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_format_db_path_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_libconfig_format_db_path_pre[hIndex].func;
+			preHookFunc(&filename, &path_buf, &buffer_len);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.libconfig.format_db_path(filename, path_buf, buffer_len);
+	}
+	if (HPMHooks.count.HP_libconfig_format_db_path_post > 0) {
+		void (*postHookFunc) (const char *filename, char *path_buf, int buffer_len);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_format_db_path_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_libconfig_format_db_path_post[hIndex].func;
+			postHookFunc(filename, path_buf, buffer_len);
+		}
+	}
+	return;
+}
 int HP_libconfig_read(struct config_t *config, FILE *stream) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -16415,6 +16467,60 @@ int HP_mapif_parse_ClanMemberCount(int fd, int clan_id, int kick_interval) {
 	return retVal___;
 }
 /* mapindex_interface */
+bool HP_mapindex_config_read_dbpath(const char *filename, const struct config_t *config) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mapindex_config_read_dbpath_pre > 0) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapindex_config_read_dbpath_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapindex_config_read_dbpath_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapindex.config_read_dbpath(filename, config);
+	}
+	if (HPMHooks.count.HP_mapindex_config_read_dbpath_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapindex_config_read_dbpath_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapindex_config_read_dbpath_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config);
+		}
+	}
+	return retVal___;
+}
+bool HP_mapindex_config_read(void) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mapindex_config_read_pre > 0) {
+		bool (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapindex_config_read_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapindex_config_read_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapindex.config_read();
+	}
+	if (HPMHooks.count.HP_mapindex_config_read_post > 0) {
+		bool (*postHookFunc) (bool retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapindex_config_read_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapindex_config_read_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 int HP_mapindex_init(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
