@@ -7515,7 +7515,7 @@ static void status_display_remove(struct map_session_data *sd, enum sc_type type
 }
 
 /**
- * Starts a status change.
+ * Starts a status change with a set remaining time.
  *
  * @param src  Status change source bl.
  * @param bl   Status change target bl.
@@ -7525,13 +7525,14 @@ static void status_display_remove(struct map_session_data *sd, enum sc_type type
  * @param val2 Additional value (meaning depends on type).
  * @param val3 Additional value (meaning depends on type).
  * @param val4 Additional value (meaning depends on type).
+ * @param tick Remaining duration (miliseconds).
  * @param total_tick Total duration (milliseconds).
  * @param flag Special flags (@see enum scstart_flag).
  *
  * @retval 0 if no status change happened.
  * @retval 1 if the status change was successfully applied.
  */
-static int status_change_start(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag)
+static int status_change_start_sub(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag)
 {
 	struct map_session_data *sd = NULL;
 	struct status_change* sc;
@@ -7545,7 +7546,7 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 	st = status->get_status_data(bl);
 
 	if (type <= SC_NONE || type >= SC_MAX) {
-		ShowError("status_change_start: invalid status change (%d)!\n", type);
+		ShowError("status_change_start_sub: invalid status change (%d)!\n", type);
 		return 0;
 	}
 
@@ -9670,14 +9671,16 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 	}
 #endif
 
-	if(!(flag&SCFLAG_NOICON) && !(flag&SCFLAG_LOADED && status->dbs->DisplayType[type]))
-		clif->status_change(bl,status->dbs->IconChangeTable[type],1,total_tick,(val_flag&1)?val1:1,(val_flag&2)?val2:0,(val_flag&4)?val3:0);
+	if (total_tick == INFINITE_DURATION)
+		tick = total_tick;
+	if(!(flag & SCFLAG_NOICON) && !(flag & SCFLAG_LOADED && status->dbs->DisplayType[type]))
+		clif->status_change_sub(bl, status->dbs->IconChangeTable[type], 1, tick, total_tick, (val_flag & 1) ? val1 : 1, (val_flag & 2) ? val2 : 0, (val_flag & 4) ? val3 : 0);
 
 	/**
 	* used as temporary storage for scs with interval ticks, so that the actual duration is sent to the client first.
 	**/
 	if( tick_time )
-		total_tick = tick_time;
+		tick = tick_time;
 
 	//Don't trust the previous sce assignment, in case the SC ended somewhere between there and here.
 	if((sce=sc->data[type])) {// reuse old sc
@@ -9692,9 +9695,10 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 	sce->val2 = val2;
 	sce->val3 = val3;
 	sce->val4 = val4;
+	sce->total_tick = total_tick;
 
-	if (total_tick >= 0) {
-		sce->timer = timer->add(timer->gettick() + total_tick, status->change_timer, bl->id, type);
+	if (tick >= 0) {
+		sce->timer = timer->add(timer->gettick() + tick, status->change_timer, bl->id, type);
 		sce->infinite_duration = false;
 	} else {
 		sce->timer = INVALID_TIMER; //Infinite duration
@@ -9809,6 +9813,28 @@ static bool status_change_start_unknown_sc(struct block_list *src, struct block_
 		return true;
 	}
 	return false;
+}
+
+/**
+ * Starts a status change in its full duration.
+ *
+ * @param src  Status change source bl.
+ * @param bl   Status change target bl.
+ * @param type Status change type.
+ * @param rate Base success rate. 1 means 0.01%, 10000 means 100%.
+ * @param val1 Additional value (meaning depends on type).
+ * @param val2 Additional value (meaning depends on type).
+ * @param val3 Additional value (meaning depends on type).
+ * @param val4 Additional value (meaning depends on type).
+ * @param tick Base duration (milliseconds).
+ * @param flag Special flags (@see enum scstart_flag).
+ *
+ * @retval 0 if no status change happened.
+ * @retval 1 if the status change was successfully applied.
+ */
+static int status_change_start(struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag)
+{
+	return status->change_start_sub(src, bl, type, rate, val1, val2, val3, val4, tick, tick, flag);
 }
 
 static void status_change_start_display(struct map_session_data *sd, enum sc_type type, int val1, int val2, int val3, int val4)
@@ -13633,6 +13659,7 @@ void status_defaults(void)
 	status->get_sc_def = status_get_sc_def;
 
 	status->change_start = status_change_start;
+	status->change_start_sub = status_change_start_sub;
 	status->change_end_ = status_change_end_;
 	status->kaahi_heal_timer = kaahi_heal_timer;
 	status->change_timer = status_change_timer;

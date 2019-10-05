@@ -685,6 +685,7 @@ CREATE TABLE IF NOT EXISTS `sc_data` (
   `char_id` INT(11) UNSIGNED NOT NULL,
   `type` SMALLINT(11) UNSIGNED NOT NULL,
   `tick` INT(11) NOT NULL,
+  `total_tick` INT(11) NOT NULL DEFAULT '0',
   `val1` INT(11) NOT NULL DEFAULT '0',
   `val2` INT(11) NOT NULL DEFAULT '0',
   `val3` INT(11) NOT NULL DEFAULT '0',
@@ -931,6 +932,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1554760320); -- 2019-04-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1556147483); -- 2019-04-25--02-12.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1557414445); -- 2019-05-09--18-07.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1565293394); -- 2019-08-08--19-43.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1570309293); -- 2019-10-05--19-01.sql
 
 --
 -- Table structure for table `storage`

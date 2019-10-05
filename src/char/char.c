@@ -3149,7 +3149,7 @@ static void char_parse_frommap_map_names(int fd, int id)
 static void char_send_scdata(int fd, int aid, int cid)
 {
 	#ifdef ENABLE_SC_SAVING
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `type`, `tick`, `val1`, `val2`, `val3`, `val4` "
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `type`, `tick`, `total_tick`, `val1`, `val2`, `val3`, `val4` "
 		"FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'",
 		scdata_db, aid, cid) )
 	{
@@ -3170,10 +3170,11 @@ static void char_send_scdata(int fd, int aid, int cid)
 		{
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); scdata.type = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); scdata.tick = atoi(data);
-			SQL->GetData(inter->sql_handle, 2, &data, NULL); scdata.val1 = atoi(data);
-			SQL->GetData(inter->sql_handle, 3, &data, NULL); scdata.val2 = atoi(data);
-			SQL->GetData(inter->sql_handle, 4, &data, NULL); scdata.val3 = atoi(data);
-			SQL->GetData(inter->sql_handle, 5, &data, NULL); scdata.val4 = atoi(data);
+			SQL->GetData(inter->sql_handle, 2, &data, NULL); scdata.total_tick = atoi(data);
+			SQL->GetData(inter->sql_handle, 3, &data, NULL); scdata.val1 = atoi(data);
+			SQL->GetData(inter->sql_handle, 4, &data, NULL); scdata.val2 = atoi(data);
+			SQL->GetData(inter->sql_handle, 5, &data, NULL); scdata.val3 = atoi(data);
+			SQL->GetData(inter->sql_handle, 6, &data, NULL); scdata.val4 = atoi(data);
 			memcpy(WFIFOP(fd, 14+count*sizeof(struct status_change_data)), &scdata, sizeof(struct status_change_data));
 		}
 		if (count >= 50)
@@ -3743,14 +3744,14 @@ static void char_parse_frommap_save_status_change_data(int fd)
 		int i;
 
 		StrBuf->Init(&buf);
-		StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `char_id`, `type`, `tick`, `val1`, `val2`, `val3`, `val4`) VALUES ", scdata_db);
+		StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `char_id`, `type`, `tick`, `total_tick`, `val1`, `val2`, `val3`, `val4`) VALUES ", scdata_db);
 		for( i = 0; i < count; ++i )
 		{
 			memcpy (&data, RFIFOP(fd, 14+i*sizeof(struct status_change_data)), sizeof(struct status_change_data));
 			if( i > 0 )
 				StrBuf->AppendStr(&buf, ", ");
-			StrBuf->Printf(&buf, "('%d','%d','%hu','%d','%d','%d','%d','%d')", aid, cid,
-				data.type, data.tick, data.val1, data.val2, data.val3, data.val4);
+			StrBuf->Printf(&buf, "('%d','%d','%hu','%d','%d','%d','%d','%d','%d')", aid, cid,
+				data.type, data.tick, data.total_tick, data.val1, data.val2, data.val3, data.val4);
 		}
 		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
 			Sql_ShowDebug(inter->sql_handle);
