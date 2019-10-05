@@ -922,6 +922,8 @@ struct {
 	struct HPMHookPoint *HP_clif_combo_delay_post;
 	struct HPMHookPoint *HP_clif_status_change_pre;
 	struct HPMHookPoint *HP_clif_status_change_post;
+	struct HPMHookPoint *HP_clif_status_change_sub_pre;
+	struct HPMHookPoint *HP_clif_status_change_sub_post;
 	struct HPMHookPoint *HP_clif_insert_card_pre;
 	struct HPMHookPoint *HP_clif_insert_card_post;
 	struct HPMHookPoint *HP_clif_inventoryList_pre;
@@ -6332,6 +6334,8 @@ struct {
 	struct HPMHookPoint *HP_status_get_sc_def_post;
 	struct HPMHookPoint *HP_status_change_start_pre;
 	struct HPMHookPoint *HP_status_change_start_post;
+	struct HPMHookPoint *HP_status_change_start_sub_pre;
+	struct HPMHookPoint *HP_status_change_start_sub_post;
 	struct HPMHookPoint *HP_status_change_end__pre;
 	struct HPMHookPoint *HP_status_change_end__post;
 	struct HPMHookPoint *HP_status_is_immune_to_status_pre;
@@ -7735,6 +7739,8 @@ struct {
 	int HP_clif_combo_delay_post;
 	int HP_clif_status_change_pre;
 	int HP_clif_status_change_post;
+	int HP_clif_status_change_sub_pre;
+	int HP_clif_status_change_sub_post;
 	int HP_clif_insert_card_pre;
 	int HP_clif_insert_card_post;
 	int HP_clif_inventoryList_pre;
@@ -13145,6 +13151,8 @@ struct {
 	int HP_status_get_sc_def_post;
 	int HP_status_change_start_pre;
 	int HP_status_change_start_post;
+	int HP_status_change_start_sub_pre;
+	int HP_status_change_start_sub_post;
 	int HP_status_change_end__pre;
 	int HP_status_change_end__post;
 	int HP_status_is_immune_to_status_pre;
