@@ -10189,7 +10189,7 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 	switch (type) {
 		case SC_VACUUM_EXTREME:
 			if (!map_flag_gvg(bl->m))
-				unit->stop_walking(bl,1);
+				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 			break;
 		case SC_FREEZE:
 		case SC_STUN:
@@ -10742,9 +10742,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 	struct status_data *st;
 	struct view_data *vd;
 	int opt_flag=0, calc_flag;
-#ifdef ANTI_MAYAP_CHEAT
 	bool invisible = false;
-#endif
 
 	nullpo_ret(bl);
 
@@ -10799,10 +10797,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 		status->display_remove(sd,type);
 	}
 
-#ifdef ANTI_MAYAP_CHEAT
-	if (sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE))
+	if ((sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE)) != 0)
 		invisible = true;
-#endif
 
 	vd = status->get_viewdata(bl);
 	calc_flag = status->dbs->ChangeFlagTable[type];
@@ -11428,6 +11424,12 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 		clif->fixpos(bl);
 	}
 #endif
+
+	// update HP bar when becoming visible again
+	if (invisible && (sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE)) == 0) {
+		if (sd != NULL && battle_config.party_hp_mode == 0 && sd->status.party_id != 0)
+			clif->party_hp(sd);
+	}
 
 	if (calc_flag&SCB_DYE) { //Restore DYE color
 		if (vd && !vd->cloth_color && sce->val4)
