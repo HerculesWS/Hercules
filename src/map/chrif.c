@@ -1226,6 +1226,7 @@ static bool chrif_save_scdata(struct map_session_data *sd)
 		} else {
 			data.tick = INFINITE_DURATION;
 		}
+		data.total_tick = sc->data[i]->total_tick;
 		data.type = i;
 		data.val1 = sc->data[i]->val1;
 		data.val2 = sc->data[i]->val2;
@@ -1273,8 +1274,8 @@ static bool chrif_load_scdata(int fd)
 
 	for (i = 0; i < count; i++) {
 		const struct status_change_data *data = RFIFOP(fd,14 + i*sizeof(struct status_change_data));
-		status->change_start(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
-		                     data->tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
+		status->change_start_sub(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
+		                    data->tick, data->total_tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
 	}
 
 	pc->scdata_received(sd);

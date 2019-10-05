@@ -2138,6 +2138,7 @@ struct sc_display_entry {
 
 struct status_change_entry {
 	int timer;
+	int total_tick;
 	int val1,val2,val3,val4;
 	bool infinite_duration;
 };
@@ -2305,7 +2306,8 @@ struct status_interface {
 	int (*isdead) (struct block_list *bl);
 	int (*isimmune) (struct block_list *bl);
 	int (*get_sc_def) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag);
-	int (*change_start) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int total_tick, int flag);
+	int (*change_start) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag);
+	int (*change_start_sub) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag);
 	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid, const char* file, int line);
 	bool (*is_immune_to_status) (struct status_change* sc, enum sc_type type);
 	bool (*is_boss_resist_sc) (enum sc_type type);
