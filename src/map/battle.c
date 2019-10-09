@@ -3467,11 +3467,6 @@ static int64 battle_calc_gvg_damage(struct block_list *src, struct block_list *b
 		case NC_SELFDESTRUCTION:
 			break;
 		default:
-			/* Uncomment if you want god-mode Emperiums at 100 defense. [Kisuka]
-			if (md && md->guardian_data) {
-				damage -= damage * (md->guardian_data->castle->defense/100) * battle_config.castle_defense_rate/100;
-			}
-			*/
 			break;
 	}
 	return damage;
@@ -7188,7 +7183,6 @@ static const struct battle_data {
 	{ "skill_removetrap_type",              &battle_config.skill_removetrap_type,           0,      0,      1,              },
 	{ "disp_experience",                    &battle_config.disp_experience,                 0,      0,      1,              },
 	{ "disp_zeny",                          &battle_config.disp_zeny,                       0,      0,      1,              },
-	{ "castle_defense_rate",                &battle_config.castle_defense_rate,             100,    0,      100,            },
 	{ "bone_drop",                          &battle_config.bone_drop,                       0,      0,      2,              },
 	{ "buyer_name",                         &battle_config.buyer_name,                      1,      0,      1,              },
 	{ "skill_wall_check",                   &battle_config.skill_wall_check,                1,      0,      1,              },
