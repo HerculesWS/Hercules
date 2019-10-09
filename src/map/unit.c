@@ -1410,13 +1410,6 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		}
 	}
 
-	if (src->type == BL_HOM) {
-		// In case of homunuculus, set the sd to the homunculus' master, as needed below
-		struct block_list *master = battle->get_master(src);
-		if (master)
-			sd = map->id2sd(master->id);
-	}
-
 	if (sd) {
 		/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
 #if 0
