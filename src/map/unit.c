@@ -1328,6 +1328,12 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 
 	if (src->type==BL_HOM)
 		switch(skill_id) { //Homun-auto-target skills.
+			case HVAN_CHAOTIC:
+				target_id = ud->target; // Choose attack target for now
+				target = map->id2bl(target_id);
+				if (target != NULL)
+					break;
+				FALLTHROUGH // Attacking nothing, choose master as default target instead
 			case HLIF_HEAL:
 			case HLIF_AVOID:
 			case HAMI_DEFENCE:
