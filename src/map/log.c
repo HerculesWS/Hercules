@@ -48,7 +48,7 @@ static char log_picktype2char(e_log_pick_type type)
 	switch( type ) {
 		case LOG_TYPE_TRADE:            return 'T';  // (T)rade
 		case LOG_TYPE_VENDING:          return 'V';  // (V)ending
-		case LOG_TYPE_PICKDROP_PLAYER:  return 'P';  // (P)player
+		case LOG_TYPE_PICKDROP_PLAYER:  return 'P';  // (P)layer
 		case LOG_TYPE_PICKDROP_MONSTER: return 'M';  // (M)onster
 		case LOG_TYPE_NPC:              return 'S';  // NPC (S)hop
 		case LOG_TYPE_SCRIPT:           return 'N';  // (N)PC Script
