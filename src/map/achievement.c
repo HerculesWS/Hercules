@@ -1051,10 +1051,10 @@ static void achievement_get_rewards_items(struct map_session_data *sd, const str
 		if (!itemdb->isstackable(it.nameid)) {
 			it.amount = 1;
 			for (int j = 0; j < total; ++j)
-				pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT);
+				pc->additem(sd, &it, 1, LOG_TYPE_ACHIEVEMENT);
 		} else {
 			it.amount = total;
-			pc->additem(sd, &it, total, LOG_TYPE_SCRIPT);
+			pc->additem(sd, &it, total, LOG_TYPE_ACHIEVEMENT);
 		}
 	}
 }

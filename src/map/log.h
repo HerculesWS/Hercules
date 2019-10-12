@@ -88,6 +88,7 @@ typedef enum e_log_pick_type {
 	LOG_TYPE_SKILL            = 0x04000000,
 	LOG_TYPE_REFINE           = 0x08000000,
 	LOG_TYPE_LOOT             = 0x10000000,
+	LOG_TYPE_ACHIEVEMENT      = 0x20000000,
 
 	// all
 	LOG_TYPE_ALL              = 0xFFFFFFFF,
