@@ -87,9 +87,8 @@ typedef enum e_log_pick_type {
 	LOG_TYPE_QUEST            = 0x02000000,
 	LOG_TYPE_SKILL            = 0x04000000,
 	LOG_TYPE_REFINE           = 0x08000000,
+	LOG_TYPE_LOOT             = 0x10000000,
 
-	// combinations
-	LOG_TYPE_LOOT             = LOG_TYPE_PICKDROP_MONSTER|LOG_TYPE_CONSUME,
 	// all
 	LOG_TYPE_ALL              = 0xFFFFFFFF,
 } e_log_pick_type;
