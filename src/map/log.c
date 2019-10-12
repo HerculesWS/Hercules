@@ -75,6 +75,7 @@ static char log_picktype2char(e_log_pick_type type)
 		case LOG_TYPE_SKILL:            return '1';  // Skill
 		case LOG_TYPE_REFINE:           return '2';  // Refine
 		case LOG_TYPE_OTHER:            return 'X';  // Other
+		case LOG_TYPE_ACHIEVEMENT:      return '3';  // Achievement
 	}
 
 	// should not get here, fallback
