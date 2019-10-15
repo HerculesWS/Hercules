@@ -1341,9 +1341,20 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 		) {
 			short x = bl->x, y = bl->y;
 			mob_stop_attack(md);
-			if(map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
-				&& unit->walktoxy(&md->bl, x, y, 0))
-				return 1;
+			if (map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
+			    && unit->walktoxy(&md->bl, x, y, 0)) {
+				struct mob_data *m_md = BL_CAST(BL_MOB, bl);
+				nullpo_retr(1, m_md);
+				switch (m_md->state.skillstate) {
+				case MSS_BERSERK:
+				case MSS_ANGRY:
+				case MSS_RUSH:
+				case MSS_FOLLOW:
+					break;
+				default:
+					return 1; // master not involved in battle, no need to pick target
+				}
+			}
 		}
 	} else if (bl->m != md->bl.m && map_flag_gvg(md->bl.m)) {
 		//Delete the summoned mob if it's in a gvg ground and the master is elsewhere. [Skotlex]
@@ -1353,26 +1364,29 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 
 	//Avoid attempting to lock the master's target too often to avoid unnecessary overload. [Skotlex]
 	if (DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME && !md->target_id) {
-		struct unit_data *ud = unit->bl2ud(bl);
+		struct unit_data  *ud = unit->bl2ud(bl);
+		struct mob_data *m_md = BL_CAST(BL_MOB, bl);
+		nullpo_retr(0, ud);
+		nullpo_retr(0, m_md);
 		md->last_linktime = tick;
+		struct block_list *tbl = NULL;
 
-		if (ud) {
-			struct block_list *tbl=NULL;
-			if (ud->target && ud->state.attack_continue)
-				tbl=map->id2bl(ud->target);
-			else if (ud->skilltarget) {
-				tbl = map->id2bl(ud->skilltarget);
-				//Required check as skilltarget is not always an enemy. [Skotlex]
-				if (tbl && battle->check_target(&md->bl, tbl, BCT_ENEMY) <= 0)
-					tbl = NULL;
-			}
-			if (tbl && status->check_skilluse(&md->bl, tbl, 0, 0)) {
-				md->target_id=tbl->id;
-				md->min_chase=md->db->range3+distance_bl(&md->bl, tbl);
-				if(md->min_chase>MAX_MINCHASE)
-					md->min_chase=MAX_MINCHASE;
-				return 1;
-			}
+		if (m_md->target_id != 0) { // possibly chasing something
+			tbl = map->id2bl(m_md->target_id);
+		} else if (ud->target != 0 && ud->state.attack_continue != 0) {
+			tbl = map->id2bl(ud->target);
+		} else if (ud->skilltarget != 0) {
+			tbl = map->id2bl(ud->skilltarget);
+			//Required check as skilltarget is not always an enemy. [Skotlex]
+			if (tbl != NULL && battle->check_target(&md->bl, tbl, BCT_ENEMY) <= 0)
+				tbl = NULL;
+		}
+		if (tbl != NULL && status->check_skilluse(&md->bl, tbl, 0, 0) != 0) {
+			md->target_id = tbl->id;
+			md->min_chase = md->db->range3 + distance_bl(&md->bl, tbl);
+			if (md->min_chase > MAX_MINCHASE)
+				md->min_chase = MAX_MINCHASE;
+			return 1;
 		}
 	}
 	return 0;
