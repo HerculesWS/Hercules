@@ -1304,9 +1304,9 @@ static int mob_warpchase_sub(struct block_list *bl, va_list ap)
  * @param bl: monster's bl
  * @return true if in battle, false otherwise
  */
-static bool mob_is_in_battle_state(struct block_list *bl)
+static bool mob_is_in_battle_state(const struct block_list *bl)
 {
-	struct mob_data *md = BL_CAST(BL_MOB, bl);
+	const struct mob_data *md = BL_CCAST(BL_MOB, bl);
 	nullpo_retr(false, md);
 	switch (md->state.skillstate) {
 	case MSS_BERSERK:
@@ -1364,7 +1364,8 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 			short x = bl->x, y = bl->y;
 			mob_stop_attack(md);
 			if (map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
-			    && unit->walktoxy(&md->bl, x, y, 0) && !mob->is_in_battle_state(bl))
+			    && (battle_config.slave_chase_masters_chasetarget == 0 || !mob->is_in_battle_state(bl))
+			    && unit->walktoxy(&md->bl, x, y, 0))
 				return 1;
 		}
 	} else if (bl->m != md->bl.m && map_flag_gvg(md->bl.m)) {
@@ -1382,7 +1383,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 		md->last_linktime = tick;
 		struct block_list *tbl = NULL;
 
-		if (m_md->target_id != 0) { // possibly chasing something
+		if (battle_config.slave_chase_masters_chasetarget == 1 && m_md->target_id != 0) { // possibly chasing something
 			tbl = map->id2bl(m_md->target_id);
 		} else if (ud->target != 0 && ud->state.attack_continue != 0) {
 			tbl = map->id2bl(ud->target);
