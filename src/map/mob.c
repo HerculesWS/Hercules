@@ -1297,6 +1297,28 @@ static int mob_warpchase_sub(struct block_list *bl, va_list ap)
 	}
 	return 0;
 }
+
+/**
+ * Checks if a monster is currently involved in battle,
+ * may it be due to aggression or being attacked.
+ * @param bl: monster's bl
+ * @return true if in battle, false otherwise
+ */
+static bool mob_is_in_battle_state(struct block_list *bl)
+{
+	struct mob_data *md = BL_CAST(BL_MOB, bl);
+	nullpo_retr(false, md);
+	switch (md->state.skillstate) {
+	case MSS_BERSERK:
+	case MSS_ANGRY:
+	case MSS_RUSH:
+	case MSS_FOLLOW:
+		return true;
+	default:
+		return false;
+	}
+}
+
 /*==========================================
  * Processing of slave monsters
  *------------------------------------------*/
@@ -1342,19 +1364,8 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 			short x = bl->x, y = bl->y;
 			mob_stop_attack(md);
 			if (map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
-			    && unit->walktoxy(&md->bl, x, y, 0)) {
-				struct mob_data *m_md = BL_CAST(BL_MOB, bl);
-				nullpo_retr(1, m_md);
-				switch (m_md->state.skillstate) {
-				case MSS_BERSERK:
-				case MSS_ANGRY:
-				case MSS_RUSH:
-				case MSS_FOLLOW:
-					break;
-				default:
-					return 1; // master not involved in battle, no need to pick target
-				}
-			}
+			    && unit->walktoxy(&md->bl, x, y, 0) && !mob->is_in_battle_state(bl))
+				return 1;
 		}
 	} else if (bl->m != md->bl.m && map_flag_gvg(md->bl.m)) {
 		//Delete the summoned mob if it's in a gvg ground and the master is elsewhere. [Skotlex]
@@ -5819,6 +5830,7 @@ void mob_defaults(void)
 	mob->ai_sub_hard_bg_ally = mob_ai_sub_hard_bg_ally;
 	mob->ai_sub_hard_lootsearch = mob_ai_sub_hard_lootsearch;
 	mob->warpchase_sub = mob_warpchase_sub;
+	mob->is_in_battle_state = mob_is_in_battle_state;
 	mob->ai_sub_hard_slavemob = mob_ai_sub_hard_slavemob;
 	mob->unlocktarget = mob_unlocktarget;
 	mob->randomwalk = mob_randomwalk;
