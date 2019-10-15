@@ -1937,7 +1937,7 @@ static int mob_ai_hard(int tid, int64 tick, int id, intptr_t data)
 
 /**
  * Adds random options of a given options drop group into item.
- * 
+ *
  * @param item : item receiving random options
  * @param options : Random Option Drop Group to be used
  */
@@ -1945,7 +1945,7 @@ static void mob_setdropitem_options(struct item *item, struct optdrop_group *opt
 {
 	nullpo_retv(item);
 	nullpo_retv(options);
-	
+
 	for (int i = 0; i < options->optslot_count; i++) {
 		if (rnd() % 10000 >= options->optslot_rate[i])
 			continue;
@@ -1977,7 +1977,7 @@ static struct item_drop *mob_setdropitem(int nameid, struct optdrop_group *optio
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
-	
+
 	// Set item options [KirieZ]
 	if (options != NULL)
 		mob->setdropitem_options(&drop->item_data, options);
@@ -3961,7 +3961,7 @@ static bool mob_read_optdrops_option(struct config_setting_t *option, struct opt
 		ShowWarning("mob_read_optdrops_option: Invalid option \"%s\" for option slot %d of %s group, skipping.\n", name, slot, group);
 		return false;
 	}
-	
+
 	int min = 0, max = 0, opt_rate = 0;
 	if (config_setting_is_number(option)) {
 		// OptionName: value
@@ -3970,13 +3970,13 @@ static bool mob_read_optdrops_option(struct config_setting_t *option, struct opt
 		// OptionName: [min, max]
 		// OptionName: [min, max, rate]
 		int slen = libconfig->setting_length(option);
-		
+
 		if (slen >= 2) {
 			// [min, max,...]
 			min = libconfig->setting_get_int_elem(option, 0);
 			max = libconfig->setting_get_int_elem(option, 1);
 		}
-		
+
 		if (slen == 3) {
 			// [min, max, rate]
 			opt_rate = libconfig->setting_get_int_elem(option, 2);
@@ -3988,7 +3988,7 @@ static bool mob_read_optdrops_option(struct config_setting_t *option, struct opt
 
 	if (max < min)
 		max = min;
-	
+
 	entry->options[*idx].id = opt_id;
 	entry->options[*idx].min = min;
 	entry->options[*idx].max = max;
@@ -4016,7 +4016,7 @@ static bool mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, i
 	nullpo_retr(false, group);
 	Assert_retr(false, group_id >= 0 && group_id < mob->opt_drop_groups_count);
 	Assert_retr(false, n >= 0 && n < MAX_ITEM_OPTIONS);
-	
+
 	// Structure:
 	//	{
 	//		Rate: chance of option 1 (int)
@@ -4040,7 +4040,7 @@ static bool mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, i
 
 	struct optdrop_group_optslot *entry = &(mob->opt_drop_groups[group_id].optslot[n]);
 	entry->options = aCalloc(sizeof(struct optdrop_group_option), count);
-	
+
 	int idx = 0;
 	int i = 0;
 	struct config_setting_t *opt = NULL;
@@ -4052,7 +4052,7 @@ static bool mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, i
 	entry->option_count = idx;
 	mob->opt_drop_groups[group_id].optslot_count++;
 	mob->opt_drop_groups[group_id].optslot_rate[n] = drop_rate;
-	
+
 	// If there're empty rates, calculate them
 	if (calc_rate == true) {
 		for (int j = 0; j < idx; ++j) {
@@ -4221,7 +4221,7 @@ static uint32 mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t
 
 /**
  * Process an entry of mob/mvp drops that contains a random option drop group.
- * 
+ *
  * @param entry : mob db entry being read (used in error messages)
  * @param item_name : AegisName of the item in this entry (used in error messages)
  * @param drop : drop data entry
@@ -4244,7 +4244,7 @@ static struct optdrop_group *mob_read_db_drops_option(struct mob_db *entry, cons
 	int i32;
 	if (mob->get_const(libconfig->setting_get_elem(drop, 0), &i32) && i32 >= 0)
 		*drop_rate = i32;
-		
+
 	const char *group_name = libconfig->setting_get_string_elem(drop, 1);
 	if (group_name == NULL || *group_name == '\0') {
 		ShowError("mob_read_db_optdrops: Missing option drop group name on item \"%s\" in monster %d, skipping.\n", item_name, entry->mob_id);
@@ -4289,7 +4289,7 @@ static void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting
 			i++;
 			continue;
 		}
-		
+
 		struct optdrop_group *drop_option = NULL;
 		if (config_setting_is_number(drop)) {
 			// Setting is a number, item doesn't contain options
@@ -4369,7 +4369,7 @@ static void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t 
 			// (Drop Rate, "Opt Drop Group")
 			drop_option = mob->read_db_drops_option(entry, name, drop, &value);
 		}
-		
+
 		if (value <= 0) {
 			ShowWarning("mob_read_db: wrong drop chance %d for drop item %s in monster %d\n", value, name, entry->mob_id);
 			i++;
@@ -5697,7 +5697,7 @@ static void mob_destroy_drop_groups(void)
 {
 	for (int i = 0; i < mob->opt_drop_groups_count; i++) {
 		struct optdrop_group *group = &mob->opt_drop_groups[i];
-		
+
 		for (int j = 0; j < group->optslot_count; j++) {
 			aFree(group->optslot[j].options);
 		}
