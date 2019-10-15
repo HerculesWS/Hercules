@@ -405,6 +405,7 @@ struct Battle_Config {
 	int mob_remove_delay; // Dynamic Mobs - delay before removing mobs from a map [Skotlex]
 	int mob_active_time; //Duration through which mobs execute their Hard AI after players leave their area of sight.
 	int boss_active_time;
+	int slave_chase_masters_chasetarget;
 
 	int show_hp_sp_drain, show_hp_sp_gain; //[Skotlex]
 	int show_katar_crit_bonus;

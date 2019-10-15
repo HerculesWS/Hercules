@@ -4343,7 +4343,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			}
 		break;
 	}
-	
+
 	battle->reflect_trap(target, src, &md, skill_id);
 
 	return md;
@@ -7321,6 +7321,7 @@ static const struct battle_data {
 	{ "mob_remove_delay",                   &battle_config.mob_remove_delay,                60000,  1000,   INT_MAX,        },
 	{ "mob_active_time",                    &battle_config.mob_active_time,                 0,      0,      INT_MAX,        },
 	{ "boss_active_time",                   &battle_config.boss_active_time,                0,      0,      INT_MAX,        },
+	{ "slave_chase_masters_chasetarget",    &battle_config.slave_chase_masters_chasetarget, 1,      0,      1,              },
 	{ "sg_miracle_skill_duration",          &battle_config.sg_miracle_skill_duration,       3600000, 0,     INT_MAX,        },
 	{ "hvan_explosion_intimate",            &battle_config.hvan_explosion_intimate,         45000,  0,      100000,         },
 	{ "quest_exp_rate",                     &battle_config.quest_exp_rate,                  100,    0,      INT_MAX,        },
