@@ -1304,9 +1304,9 @@ static int mob_warpchase_sub(struct block_list *bl, va_list ap)
  * @param bl: monster's bl
  * @return true if in battle, false otherwise
  */
-static bool mob_is_in_battle_state(struct block_list *bl)
+static bool mob_is_in_battle_state(const struct block_list *bl)
 {
-	struct mob_data *md = BL_CAST(BL_MOB, bl);
+	const struct mob_data *md = BL_CCAST(BL_MOB, bl);
 	nullpo_retr(false, md);
 	switch (md->state.skillstate) {
 	case MSS_BERSERK:
