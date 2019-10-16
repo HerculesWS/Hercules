@@ -1304,9 +1304,8 @@ static int mob_warpchase_sub(struct block_list *bl, va_list ap)
  * @param bl: monster's bl
  * @return true if in battle, false otherwise
  */
-static bool mob_is_in_battle_state(const struct block_list *bl)
+static bool mob_is_in_battle_state(const struct mob_data *md)
 {
-	const struct mob_data *md = BL_CCAST(BL_MOB, bl);
 	nullpo_retr(false, md);
 	switch (md->state.skillstate) {
 	case MSS_BERSERK:
@@ -1363,8 +1362,10 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 		) {
 			short x = bl->x, y = bl->y;
 			mob_stop_attack(md);
+			const struct mob_data *m_md = BL_CAST(BL_MOB, bl);
+			nullpo_retr(0, m_md);
 			if (map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
-			    && (battle_config.slave_chase_masters_chasetarget == 0 || !mob->is_in_battle_state(bl))
+			    && (battle_config.slave_chase_masters_chasetarget == 0 || !mob->is_in_battle_state(m_md))
 			    && unit->walktoxy(&md->bl, x, y, 0))
 				return 1;
 		}
