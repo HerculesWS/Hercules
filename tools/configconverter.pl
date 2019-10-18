@@ -554,7 +554,6 @@ my @defaults = (
 			guild_exp_limit                   => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 50},
 			guild_max_castles                 => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 0},
 			guild_skill_relog_delay           => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "guild:", default => "false"},
-			castle_defense_rate               => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 100},
 			gvg_flee_penalty                  => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 20},
 			require_glory_guild               => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "guild:", default => "false"},
 			max_guild_alliance                => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 3},
