@@ -4441,7 +4441,7 @@ static int pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
 
 		if (sd->state.showzeny) {
 			char output[255];
-			sprintf(output, "Removed %dz.", zeny);
+			sprintf(output, msg_sd(sd, 885), zeny); // Removed %dz.
 			clif_disp_onlyself(sd, output);
 		}
 	}
@@ -4580,7 +4580,7 @@ static int pc_getzeny(struct map_session_data *sd, int zeny, enum e_log_pick_typ
 
 		if (sd->state.showzeny) {
 			char output[255];
-			sprintf(output, "Gained %dz.", zeny);
+			sprintf(output, msg_sd(sd, 886), zeny); // Gained %dz.
 			clif_disp_onlyself(sd, output);
 		}
 	}
@@ -5535,9 +5535,9 @@ static int pc_show_steal(struct block_list *bl, va_list ap)
 	nullpo_ret(sd);
 
 	if((item=itemdb->exists(itemid))==NULL)
-		sprintf(output,"%s stole an Unknown Item (id: %i).",sd->status.name, itemid);
+		sprintf(output, msg_sd(sd, 887), sd->status.name, itemid); // %s stole an Unknown Item (id: %i).
 	else
-		sprintf(output,"%s stole %s.",sd->status.name,item->jname);
+		sprintf(output, msg_sd(sd, 888), sd->status.name, item->jname); // %s stole %s.
 	clif->message(tsd->fd, output);
 
 	return 0;
@@ -7084,7 +7084,7 @@ static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint
 	if(sd->state.showexp) {
 		char output[256];
 		sprintf(output,
-			"Experience Gained Base:%"PRIu64" (%.2f%%) Job:%"PRIu64" (%.2f%%)",
+			msg_sd(sd, 889), // Experience Gained Base:%"PRIu64" (%.2f%%) Job:%"PRIu64" (%.2f%%)
 			base_exp, nextbp * (float)100, job_exp, nextjp * (float)100);
 		clif_disp_onlyself(sd, output);
 	}

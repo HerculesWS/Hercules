@@ -10769,7 +10769,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 		if( map->list[sd->bl.m].flag.allowks && !map_flag_ks(sd->bl.m) ) {
 			char output[128];
-			sprintf(output, "[ Kill Steal Protection Disabled. KS is allowed in this map ]");
+			sprintf(output, "%s", msg_sd(sd, 893)); // [ Kill Steal Protection Disabled. KS is allowed in this map ]
 			clif->broadcast(&sd->bl, output, (int)strlen(output) + 1, BC_BLUE, SELF);
 		}
 
@@ -11664,7 +11664,7 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 	// if player is autotrading
 	if (dstsd->state.autotrade) {
 		char output[256];
-		sprintf(output, "%s is in autotrade mode and cannot receive whispered messages.", dstsd->status.name);
+		sprintf(output, msg_fd(fd, 894), dstsd->status.name); // %s is in autotrade mode and cannot receive whispered messages.
 		clif->wis_message(fd, map->wisp_server_name, output, (int)strlen(output));
 		return;
 	}
@@ -16683,7 +16683,7 @@ static void clif_Mail_refreshinbox(struct map_session_data *sd)
 
 	if( md->full ) {// TODO: is this official?
 		char output[100];
-		sprintf(output, "Inbox is full (Max %d). Delete some mails.", MAIL_MAX_INBOX);
+		sprintf(output, msg_sd(sd, 511), MAIL_MAX_INBOX); // Inbox is full (Max %d). Delete some mails.
 		clif_disp_onlyself(sd, output);
 	}
 }
@@ -20599,7 +20599,7 @@ static void clif_show_modifiers(struct map_session_data *sd)
 	if( sd->status.mod_exp != 100 || sd->status.mod_drop != 100 || sd->status.mod_death != 100 ) {
 		char output[128];
 
-		snprintf(output,128,"Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%",
+		snprintf(output,128, msg_sd(sd, 896), // Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%
 				sd->status.mod_exp,sd->status.mod_drop,sd->status.mod_death);
 		clif->broadcast2(&sd->bl, output, (int)strlen(output) + 1, 0xffbc90, 0x190, 12, 0, 0, SELF);
 	}
