@@ -6530,10 +6530,6 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			clif->skill_nodamage (src,src,skill_id,skill_lv,1);
 			// Initiate 10% of your damage becomes fire element.
 			sc_start4(src,src,SC_SUB_WEAPONPROPERTY,100,3,20,0,0,skill->get_time2(skill_id, skill_lv));
-			if( sd )
-				skill->blockpc_start(sd, skill_id, skill->get_time(skill_id, skill_lv));
-			else if( bl->type == BL_MER )
-				skill->blockmerc_start(BL_UCAST(BL_MER, bl), skill_id, skill->get_time(skill_id, skill_lv));
 			break;
 
 		case TK_JUMPKICK:
