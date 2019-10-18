@@ -6041,7 +6041,7 @@ static void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 s
 	}
 }
 
-static void clif_status_change_notick(struct block_list *bl, int type, int flag, int tick, int val1, int val2, int val3)
+static void clif_status_change_notick(struct block_list *bl, int type, int flag, int tick, int total_tick, int val1, int val2, int val3)
 {
 	struct packet_sc_notick p;
 	struct map_session_data *sd;
@@ -6070,7 +6070,7 @@ static void clif_status_change_notick(struct block_list *bl, int type, int flag,
 /// 08ff <id>.L <index>.W <remain msec>.L { <val>.L }*3  (PACKETVER >= 20111108)
 /// 0983 <index>.W <id>.L <state>.B <total msec>.L <remain msec>.L { <val>.L }*3 (PACKETVER >= 20120618)
 /// 0984 <id>.L <index>.W <total msec>.L <remain msec>.L { <val>.L }*3 (PACKETVER >= 20120618)
-static void clif_status_change(struct block_list *bl, int type, int flag, int tick, int val1, int val2, int val3)
+static void clif_status_change_sub(struct block_list *bl, int type, int flag, int tick, int total_tick, int val1, int val2, int val3)
 {
 	struct packet_status_change p;
 	struct map_session_data *sd;
@@ -6094,7 +6094,7 @@ static void clif_status_change(struct block_list *bl, int type, int flag, int ti
 	p.state = (unsigned char)flag;
 
 #if PACKETVER >= 20120618
-	p.Total = tick; /* at this stage remain and total are the same value I believe */
+	p.Total = total_tick;
 #endif
 #if PACKETVER >= 20090121
 	p.Left = tick;
@@ -6103,6 +6103,13 @@ static void clif_status_change(struct block_list *bl, int type, int flag, int ti
 	p.val3 = val3;
 #endif
 	clif->send(&p,sizeof(p), bl, (sd && sd->status.option&OPTION_INVISIBLE) ? SELF : AREA);
+}
+
+/// Notifies clients of a status change.
+/// @see clif_status_change_sub
+static void clif_status_change(struct block_list *bl, int type, int flag, int total_tick, int val1, int val2, int val3)
+{
+	clif->status_change_sub(bl, type, flag, total_tick, total_tick, val1, val2, val3);
 }
 
 /// Send message (modified by [Yor]) (ZC_NOTIFY_PLAYERCHAT).
@@ -23679,9 +23686,9 @@ static void packetdb_loaddb(void)
 static void clif_bc_ready(void)
 {
 	if( battle_config.display_status_timers )
-		clif->status_change = clif_status_change;
+		clif->status_change_sub = clif_status_change_sub;
 	else
-		clif->status_change = clif_status_change_notick;
+		clif->status_change_sub = clif_status_change_notick;
 
 	switch( battle_config.packet_obfuscation ) {
 		case 0:
@@ -23899,6 +23906,7 @@ void clif_defaults(void)
 	clif->autospell = clif_autospell;
 	clif->combo_delay = clif_combo_delay;
 	clif->status_change = clif_status_change;
+	clif->status_change_sub = clif_status_change_sub;
 	clif->insert_card = clif_insert_card;
 	clif->inventoryList = clif_inventoryList;
 	clif->inventoryItems = clif_inventoryItems;
