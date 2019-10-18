@@ -12393,9 +12393,35 @@ static bool pc_expandInventory(struct map_session_data *sd, int adjustSize)
 	return true;
 }
 
+static void pc_checkstatus(struct map_session_data *sd)
+{
+	int i;
+	struct status_change *sc;
+
+	nullpo_retv(sd);
+
+	sc = status->get_sc(&sd->bl);
+
+	if (sc == NULL || sc->count == 0)
+		return;
+
+	for (i = 0; i < SC_MAX; i++) {
+		int j;
+
+		if (sc->data[i] == NULL)
+			continue;
+
+		ARR_FIND(0, map->list[sd->bl.m].zone->disabled_status_count, j, map->list[sd->bl.m].zone->disabled_status[j] == i);
+
+		if (j < map->list[sd->bl.m].zone->disabled_status_count)
+			status_change_end(&sd->bl, (sc_type)i, INVALID_TIMER);
+	}
+
+	return;
+}
+
 static void do_final_pc(void)
 {
-
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
 
@@ -12799,4 +12825,5 @@ void pc_defaults(void)
 	pc->isDeathPenaltyJob = pc_isDeathPenaltyJob;
 	pc->has_second_costume = pc_has_second_costume;
 	pc->expandInventory = pc_expandInventory;
+	pc->checkstatus = pc_checkstatus;
 }

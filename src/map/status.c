@@ -7570,6 +7570,14 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
 
 	sd = BL_CAST(BL_PC, bl);
 
+	if (sd != NULL) {
+		int i;
+		ARR_FIND(0, map->list[sd->bl.m].zone->disabled_status_count, i, map->list[sd->bl.m].zone->disabled_status[i] == type);
+		// Status is disabled on map.
+		if (i < map->list[sd->bl.m].zone->disabled_status_count)
+			return 0;
+	}
+
 	//Adjust tick according to status resistances
 	if( !(flag&(SCFLAG_NOAVOID|SCFLAG_LOADED)) ) {
 		tick = status->get_sc_def(src, bl, type, rate, tick, flag);

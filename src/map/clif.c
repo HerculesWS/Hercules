@@ -10541,6 +10541,9 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	// Check for and delete unavailable/disabled items.
 	pc->checkitem(sd);
 
+	// Check for Invalid status
+	pc->checkstatus(sd);
+
 	// Send the character's weight to the client.
 	clif->updatestatus(sd, SP_WEIGHT);
 	clif->updatestatus(sd, SP_MAXWEIGHT);

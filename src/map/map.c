@@ -3534,6 +3534,12 @@ static void map_zone_clear_single(struct map_zone_data *zone)
 	if( zone->disabled_skills )
 		aFree(zone->disabled_skills);
 
+	if (zone->disabled_status != NULL)
+		aFree(zone->disabled_status);
+
+	if (zone->cant_disable_status != NULL)
+		aFree(zone->cant_disable_status);
+
 	if( zone->disabled_items )
 		aFree(zone->disabled_items);
 
@@ -4504,6 +4510,7 @@ static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct m
 	zone->mapflags_count = main->mapflags_count + other->mapflags_count;
 	zone->disabled_commands_count = main->disabled_commands_count + other->disabled_commands_count;
 	zone->capped_skills_count = main->capped_skills_count + other->capped_skills_count;
+	zone->disabled_status_count = main->disabled_status_count + other->disabled_status_count;
 
 	CREATE(zone->disabled_skills, struct map_zone_disabled_skill_entry *, zone->disabled_skills_count );
 	for(i = 0, cursor = 0; i < main->disabled_skills_count; i++, cursor++ ) {
@@ -4516,6 +4523,34 @@ static struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct m
 		memcpy(zone->disabled_skills[cursor], other->disabled_skills[i], sizeof(struct map_zone_disabled_skill_entry));
 	}
 
+	// Disabled Status
+	for (j = 0; j < main->cant_disable_status_count; j++) {
+		for (i = 0; i < other->disabled_status_count; i++) {
+			if (other->disabled_status[i] == main->cant_disable_status[j]) {
+				zone->disabled_status_count--;
+				break;
+			}
+		}
+	}
+
+	CREATE(zone->disabled_status, int, zone->disabled_status_count);
+	for (i = 0, cursor = 0; i < main->disabled_status_count; i++, cursor++) {
+		zone->disabled_status[cursor] = main->disabled_status[i];
+	}
+
+	for (i = 0; i < other->disabled_status_count; i++) {
+		for (j = 0; j < main->cant_disable_status_count; j++) {
+			if (other->disabled_status[i] == main->cant_disable_status[j]) {
+				break;
+			}
+		}
+		if (j != main->cant_disable_status_count)
+			continue;
+		zone->disabled_status[cursor] = other->disabled_status[i];
+		cursor++;
+	}
+
+	// Disabled Items
 	for(j = 0; j < main->cant_disable_items_count; j++) {
 		for(i = 0; i < other->disabled_items_count; i++) {
 			if( other->disabled_items[i] == main->cant_disable_items[j] ) {
@@ -5593,11 +5628,12 @@ static void read_map_zone_db(void)
 		struct config_setting_t *mapflags;
 		struct config_setting_t *commands;
 		struct config_setting_t *caps;
+		struct config_setting_t *statuses;
 		const char *name;
 		const char *zonename;
 		int i,h,v,j;
 		int zone_count = 0, disabled_skills_count = 0, disabled_items_count = 0, mapflags_count = 0,
-			disabled_commands_count = 0, capped_skills_count = 0;
+			disabled_commands_count = 0, capped_skills_count = 0, disabled_status_count = 0;
 		enum map_zone_skill_subtype subtype;
 
 		zone_count = libconfig->setting_length(zones);
@@ -5676,6 +5712,46 @@ static void read_map_zone_db(void)
 
 				}
 				zone->disabled_skills_count = disabled_skills_count;
+			}
+
+			if ((statuses = libconfig->setting_get_member(zone_e, "disabled_status")) != NULL) {
+				disabled_status_count = libconfig->setting_length(statuses);
+				/* validate */
+				for(h = 0; h < libconfig->setting_length(statuses); h++) {
+					struct config_setting_t *status_info = libconfig->setting_get_elem(statuses, h);
+					int status_value = SC_NONE;
+					name = config_setting_name(status_info);
+					if (!script->get_constant(name, &status_value) || status_value <= SC_NONE || status_value >= SC_MAX) {
+						ShowError("map_zone_db: unknown status (%s) in disabled_status for zone '%s', skipping skill...\n", name, zone->name);
+						libconfig->setting_remove_elem(statuses, h);
+						--disabled_status_count;
+						--h;
+						continue;
+					}
+
+					if( !libconfig->setting_get_bool(status_info) )/* we don't remove it from the three due to inheritance */
+						--disabled_status_count;
+				}
+				/* all ok, process */
+				CREATE(zone->disabled_status, int, disabled_status_count);
+				if ((libconfig->setting_length(statuses) - disabled_status_count) > 0) { // Some are forcefully enabled
+					zone->cant_disable_status_count = libconfig->setting_length(statuses) - disabled_status_count;
+					CREATE(zone->cant_disable_status, int, zone->cant_disable_status_count);
+				}
+
+				for (h = 0, v = 0, j = 0; h < libconfig->setting_length(statuses); h++) {
+					struct config_setting_t *status_info = libconfig->setting_get_elem(statuses, h);
+					
+					name = config_setting_name(status_info);
+
+					if (libconfig->setting_get_bool(status_info)) { /* only add if enabled */
+						script->get_constant(name, &zone->disabled_status[v++]);
+					} else {
+						script->get_constant(name, &zone->cant_disable_status[j++]);
+					}
+
+				}
+				zone->disabled_status_count = disabled_status_count;
 			}
 
 			if( (items = libconfig->setting_get_member(zone_e, "disabled_items")) != NULL ) {
@@ -5838,6 +5914,7 @@ static void read_map_zone_db(void)
 				int mapflags_count_i = 0; /* mapflag count from inherit zone */
 				int disabled_commands_count_i = 0; /* commands count from inherit zone */
 				int capped_skills_count_i = 0; /* skill capped count from inherit zone */
+				int disabled_status_count_i = 0;
 
 				name = libconfig->setting_get_string_elem(inherit_tree, h);
 				libconfig->setting_lookup_string(zone_e, "name", &zonename);/* will succeed for we validated it earlier */
@@ -5859,6 +5936,7 @@ static void read_map_zone_db(void)
 				mapflags_count_i = izone->mapflags_count;
 				disabled_commands_count_i = izone->disabled_commands_count;
 				capped_skills_count_i = izone->capped_skills_count;
+				disabled_status_count_i = izone->disabled_status_count;
 
 				/* process everything to override, paying attention to config_setting_get_bool */
 				if( disabled_skills_count_i ) {
@@ -5881,6 +5959,27 @@ static void read_map_zone_db(void)
 							entry->type = izone->disabled_skills[j]->type;
 							entry->subtype = izone->disabled_skills[j]->subtype;
 							zone->disabled_skills[zone->disabled_skills_count-1] = entry;
+						}
+					}
+				}
+
+				if (disabled_status_count_i > 0) {
+					if ((statuses = libconfig->setting_get_member(zone_e, "disabled_status")) == NULL)
+						statuses = libconfig->setting_add(zone_e, "disabled_status", CONFIG_TYPE_GROUP);
+					disabled_status_count = libconfig->setting_length(statuses);
+					for (j = 0; j < disabled_status_count_i; j++) {
+						int k;
+						int status_id;
+						for (k = 0; k < disabled_status_count; k++) {
+							struct config_setting_t *status_info = libconfig->setting_get_elem(statuses, k);
+							script->get_constant(config_setting_name(status_info), &status_id);
+							if (status_id == izone->disabled_status[j]) {
+								break;
+							}
+						}
+						if (k == disabled_status_count) {/* we didn't find it */
+							RECREATE(zone->disabled_status, int, ++zone->disabled_status_count);
+							zone->disabled_status[zone->disabled_status_count - 1] = izone->disabled_status[j];
 						}
 					}
 				}
