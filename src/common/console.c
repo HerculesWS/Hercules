@@ -322,6 +322,7 @@ static void console_parse_create(char *name, CParseFunc func)
 	nullpo_retv(name);
 	safestrncpy(sublist, name, CP_CMD_LENGTH * 5);
 	tok = strtok(sublist,":");
+	nullpo_retv(tok);
 
 	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
 
@@ -404,6 +405,10 @@ static void console_parse_sub(char *line)
 	nullpo_retv(line);
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
+	if (tok == NULL) {
+		// Ignore empty commands
+		return;
+	}
 
 	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
 	if (i == VECTOR_LENGTH(console->input->command_list)) {
@@ -417,6 +422,12 @@ static void console_parse_sub(char *line)
 
 	if (cmd->type == CPET_FUNCTION) {
 		tok = strtok(NULL, "");
+		if (tok != NULL) {
+			while (tok[0] == ' ')
+				tok++;
+			if (tok[0] == '\0')
+				tok = NULL;
+		}
 		cmd->u.func(tok);
 		return;
 	}
@@ -444,6 +455,12 @@ static void console_parse_sub(char *line)
 		entry = VECTOR_INDEX(cmd->u.children, i);
 		if (entry->type == CPET_FUNCTION) {
 			tok = strtok(NULL, "");
+			if (tok != NULL) {
+				while (tok[0] == ' ')
+					tok++;
+				if (tok[0] == '\0')
+					tok = NULL;
+			}
 			entry->u.func(tok);
 			return;
 		}
