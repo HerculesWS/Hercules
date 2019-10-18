@@ -459,10 +459,10 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 		}
 		if (tbl->m == bl->m && check_distance_bl(bl, tbl, ud->chaserange)) {
 			//Reached destination.
+			ud->target_to = 0;
 			if (ud->state.attack_continue) {
 				//Aegis uses one before every attack, we should
 				//only need this one for syncing purposes. [Skotlex]
-				ud->target_to = 0;
 				clif->fixpos(bl);
 				unit->attack(bl, tbl->id, ud->state.attack_continue);
 			}
@@ -544,6 +544,7 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 	ud->to_x = x;
 	ud->to_y = y;
 	unit->stop_attack(bl); //Sets target to 0
+	ud->target_to = 0;
 
 	sc = status->get_sc(bl);
 	if( sc ) {
