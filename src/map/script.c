@@ -5189,8 +5189,8 @@ static void script_load_translations(void)
 	size = libconfig->setting_length(translations);
 
 	for(i = 0; i < size; i++) {
-		const char *translation_file = libconfig->setting_get_string_elem(translations, i);
-		total += script->load_translation(translation_file, ++lang_id);
+		const char *translation_dir = libconfig->setting_get_string_elem(translations, i);
+		total += script->load_translation(translation_dir, ++lang_id);
 	}
 	libconfig->destroy(&translations_conf);
 
@@ -5227,39 +5227,39 @@ static void script_load_translations(void)
 }
 
 /**
- * Generates a language name from a translation filename.
+ * Generates a language name from a translation directory name.
  *
- * @param file The filename.
+ * @param directory The directory name.
  * @return The corresponding translation name.
  */
-static const char *script_get_translation_file_name(const char *file)
+static const char *script_get_translation_dir_name(const char *directory)
 {
 	const char *basename = NULL, *last_dot = NULL;
 
-	nullpo_retr("Unknown", file);
+	nullpo_retr("Unknown", directory);
 
-	basename = strrchr(file, '/');;
+	basename = strrchr(directory, '/');
 #ifdef WIN32
 	{
-		const char *basename_windows = strrchr(file, '\\');
+		const char *basename_windows = strrchr(directory, '\\');
 		if (basename_windows > basename)
 			basename = basename_windows;
 	}
 #endif // WIN32
 	if (basename == NULL)
-		basename = file;
+		basename = directory;
 	else
 		basename++; // Skip slash
 	Assert_retr("Unknown", *basename != '\0');
 
 	last_dot = strrchr(basename, '.');
 	if (last_dot != NULL) {
-		static char file_name[200];
+		static char dir_name[200];
 		if (last_dot == basename)
 			return basename + 1;
 
-		safestrncpy(file_name, basename, last_dot - basename + 1);
-		return file_name;
+		safestrncpy(dir_name, basename, last_dot - basename + 1);
+		return dir_name;
 	}
 
 	return basename;
@@ -5340,18 +5340,19 @@ static bool script_load_translation_addstring(const char *file, uint8 lang_id, c
 /**
  * Parses an individual translation file.
  *
- * @param file The filename to parse.
+ * @param directory The directory structure to read.
  * @param lang_id The language identifier.
  * @return The amount of strings loaded.
  */
-static int script_load_translation(const char *file, uint8 lang_id)
+static int script_load_translation_file(const char *file, uint8 lang_id)
 {
-	int translations = 0;
 	char line[1024];
-	char msgctxt[NAME_LENGTH*2+1] = { 0 };
-	FILE *fp;
-	int lineno = 0;
+	char msgctxt[NAME_LENGTH*2+1] = "";
 	struct script_string_buf msgid, msgstr;
+	struct script_string_buf *msg_ptr;
+	int translations = 0;
+	int lineno = 0;
+	FILE *fp;
 
 	nullpo_ret(file);
 
@@ -5363,46 +5364,50 @@ static int script_load_translation(const char *file, uint8 lang_id)
 	VECTOR_INIT(msgid);
 	VECTOR_INIT(msgstr);
 
-	script->add_language(script->get_translation_file_name(file));
-	if (lang_id >= atcommand->max_message_table)
-		atcommand->expand_message_table();
-
 	while (fgets(line, sizeof(line), fp) != NULL) {
 		int len = (int)strlen(line);
 		int i;
 		lineno++;
 
-		if(len <= 1)
+		if (len <= 1) {
+			if (VECTOR_LENGTH(msgid) > 0 && VECTOR_LENGTH(msgstr) > 0) {
+				// Add string
+				if (script->load_translation_addstring(file, lang_id, msgctxt, &msgid, &msgstr))
+					translations++;
+
+				msgctxt[0] = '\0';
+				VECTOR_TRUNCATE(msgid);
+				VECTOR_TRUNCATE(msgstr);
+			}
 			continue;
+		}
 
 		if (line[0] == '#')
 			continue;
 
-		if (VECTOR_LENGTH(msgid) > 0 && VECTOR_LENGTH(msgstr) > 0) {
+		if (VECTOR_LENGTH(msgid) > 0) {
+			if (VECTOR_LENGTH(msgstr) > 0) {
+				msg_ptr = &msgstr;
+			} else {
+				msg_ptr = &msgid;
+			}
 			if (line[0] == '"') {
 				// Continuation line
-				(void)VECTOR_POP(msgstr); // Pop final '\0'
-				for (i = 8; i < len - 2; i++) {
-					VECTOR_ENSURE(msgstr, 1, 512);
+				(void)VECTOR_POP(*msg_ptr); // Pop final '\0'
+				for (i = 1; i < len - 2; i++) {
+					VECTOR_ENSURE(*msg_ptr, 1, 512);
 					if (line[i] == '\\' && line[i+1] == '"') {
-						VECTOR_PUSH(msgstr, '"');
+						VECTOR_PUSH(*msg_ptr, '"');
 						i++;
 					} else {
-						VECTOR_PUSH(msgstr, line[i]);
+						VECTOR_PUSH(*msg_ptr, line[i]);
 					}
 				}
-				VECTOR_ENSURE(msgstr, 1, 512);
-				VECTOR_PUSH(msgstr, '\0');
+				VECTOR_ENSURE(*msg_ptr, 1, 512);
+				VECTOR_PUSH(*msg_ptr, '\0');
 				continue;
 			}
 
-			// Add string
-			if (script->load_translation_addstring(file, lang_id, msgctxt, &msgid, &msgstr))
-				translations++;
-
-			msgctxt[0] = '\0';
-			VECTOR_TRUNCATE(msgid);
-			VECTOR_TRUNCATE(msgstr);
 		}
 
 		if (strncasecmp(line,"msgctxt \"", 9) == 0) {
@@ -5477,8 +5482,45 @@ static int script_load_translation(const char *file, uint8 lang_id)
 	VECTOR_CLEAR(msgid);
 	VECTOR_CLEAR(msgstr);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' translations in '"CL_WHITE"%s"CL_RESET"'.\n", translations, file);
 	return translations;
+}
+
+struct load_translation_data {
+	uint8 lang_id;
+	int translation_count;
+};
+
+static void script_load_translation_sub(const char *filename, void *context)
+{
+	nullpo_retv(context);
+
+	struct load_translation_data *data = context;
+
+	data->translation_count += script->load_translation_file(filename, data->lang_id);
+}
+
+/**
+ * Loads a translations directory
+ *
+ * @param directory The directory structure to read.
+ * @param lang_id The language identifier.
+ * @return The amount of strings loaded.
+ */
+static int script_load_translation(const char *directory, uint8 lang_id)
+{
+	struct load_translation_data data = { 0 };
+	data.lang_id = lang_id;
+
+	nullpo_ret(directory);
+
+	script->add_language(script->get_translation_dir_name(directory));
+	if (lang_id >= atcommand->max_message_table)
+		atcommand->expand_message_table();
+
+	findfile(directory, ".po", script_load_translation_sub, &data);
+
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' translations in '"CL_WHITE"%s"CL_RESET"'.\n", data.translation_count, directory);
+	return data.translation_count;
 }
 
 /**
@@ -27514,12 +27556,13 @@ void script_defaults(void)
 	script->string_dup = script_string_dup;
 	script->load_translations = script_load_translations;
 	script->load_translation_addstring = script_load_translation_addstring;
+	script->load_translation_file = script_load_translation_file;
 	script->load_translation = script_load_translation;
 	script->translation_db_destroyer = script_translation_db_destroyer;
 	script->clear_translations = script_clear_translations;
 	script->parse_cleanup_timer = script_parse_cleanup_timer;
 	script->add_language = script_add_language;
-	script->get_translation_file_name = script_get_translation_file_name;
+	script->get_translation_dir_name = script_get_translation_dir_name;
 	script->parser_clean_leftovers = script_parser_clean_leftovers;
 
 	script->run_use_script = script_run_use_script;

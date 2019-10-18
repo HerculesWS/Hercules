@@ -128,7 +128,7 @@ static char *checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char *))
+void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
@@ -155,12 +155,11 @@ void findfile(const char *p, const char *pat, void (func)(const char *))
 			sprintf(tmppath,"%s%c%s",path,PATHSEP,FindFileData.cFileName);
 
 			if (strstr(FindFileData.cFileName, pattern)) {
-				func( tmppath );
+				func(tmppath, context);
 			}
 
-			if( FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-			{
-				findfile(tmppath, pat, func);
+			if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+				findfile(tmppath, pat, func, context);
 			}
 		}while (FindNextFileA(hFind, &FindFileData) != 0);
 		FindClose(hFind);
@@ -190,7 +189,7 @@ static char *checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char *))
+void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
 {
 	DIR* dir;             ///< pointer to the scanned directory.
 	struct dirent* entry; ///< pointer to one directory entry.
@@ -220,7 +219,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *))
 
 		// check if the pattern matches.
 		if (strstr(entry->d_name, pattern)) {
-			func( tmppath );
+			func(tmppath, context);
 		}
 		// check if it is a directory.
 		if (stat(tmppath, &dir_stat) == -1) {
@@ -230,7 +229,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *))
 		// is this a directory?
 		if (S_ISDIR(dir_stat.st_mode)) {
 			// decent recursively
-			findfile(tmppath, pat, func);
+			findfile(tmppath, pat, func, context);
 		}
 	}//end while
 
