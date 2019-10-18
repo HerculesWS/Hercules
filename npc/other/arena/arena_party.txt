@@ -165,6 +165,8 @@ OnTouch:
 }
 
 force_1-2,99,31,4	script	Slipslowrun#party	4_F_TELEPORTER,{
+	end;
+
 OnStart:
 	initnpctimer;
 	$arena_minptst = gettime(GETTIME_MINUTE);
