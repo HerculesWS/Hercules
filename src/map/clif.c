@@ -2935,10 +2935,10 @@ static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type
 	nullpo_retv(sd);
 	nullpo_retv(name);
 
-	char buf[sizeof(struct ZC_INVENTORY_START) + 24];
+	char buf[sizeof(struct PACKET_ZC_INVENTORY_START) + 24];
 	memset(buf, 0, sizeof(buf));
-	struct ZC_INVENTORY_START *p = (struct ZC_INVENTORY_START *)buf;
-	p->packetType = 0xb08;
+	struct PACKET_ZC_INVENTORY_START *p = (struct PACKET_ZC_INVENTORY_START *)buf;
+	p->packetType = HEADER_ZC_INVENTORY_START;
 #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	p->invType = type;
 #endif
@@ -2946,11 +2946,11 @@ static void clif_inventoryStart(struct map_session_data *sd, enum inventory_type
 	int strLen = (int)safestrnlen(name, 24) + 1;
 	if (strLen > 24)
 		strLen = 24;
-	const int len = sizeof(struct ZC_INVENTORY_START) + strLen;
+	const int len = sizeof(struct PACKET_ZC_INVENTORY_START) + strLen;
 	p->packetLength = len;
 	safestrncpy(p->name, name, strLen);
 #else
-	const int len = sizeof(struct ZC_INVENTORY_START);
+	const int len = sizeof(struct PACKET_ZC_INVENTORY_START);
 	safestrncpy(p->name, name, NAME_LENGTH);
 #endif
 	clif->send(p, len, &sd->bl, SELF);
@@ -2962,8 +2962,8 @@ static void clif_inventoryEnd(struct map_session_data *sd, enum inventory_type t
 #if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	nullpo_retv(sd);
 
-	struct ZC_INVENTORY_END p;
-	p.packetType = 0xb0b;
+	struct PACKET_ZC_INVENTORY_END p;
+	p.packetType = HEADER_ZC_INVENTORY_END;
 #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	p.invType = type;
 #endif
@@ -5268,7 +5268,7 @@ static void clif_playerSkillToPacket(struct map_session_data *sd, struct SKILLDA
 		skillData->sp = 0;
 		skillData->range2 = 0;
 	}
-#if PACKETVER_RE_NUM >= 20190807
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190918
 	if (newSkill)
 		skillData->level2 = 0;
 	else
@@ -5419,7 +5419,7 @@ static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 		p->sp = 0;
 		p->range2 = 0;
 	}
-#if PACKETVER_RE_NUM >= 20190807
+#if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190918
 	p->level2 = skill_lv;
 #endif
 	if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
@@ -16091,7 +16091,10 @@ static void clif_ranklist(struct map_session_data *sd, enum fame_list_type type)
 	p->packetType = HEADER_ZC_ACK_RANKING;
 	p->rankType = type;
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190724
+PRAGMA_GCC9(GCC diagnostic push)
+PRAGMA_GCC9(GCC diagnostic ignored "-Waddress-of-packed-member")
 	clif->ranklist_sub2(p->chars, p->points, type);
+PRAGMA_GCC9(GCC diagnostic pop)
 #else
 	clif->ranklist_sub(&p->ranks, type);
 #endif

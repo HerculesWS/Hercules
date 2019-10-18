@@ -1090,7 +1090,6 @@ AC_CHECK_COMPILER_WNOFLAG(format-nonliteral)
 AC_CHECK_COMPILER_WNOFLAG(switch)
 AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
 AC_CHECK_COMPILER_WNOFLAG(suggest-attribute=format)
-AC_CHECK_COMPILER_WNOFLAG(array-bounds)
 
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
