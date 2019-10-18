@@ -773,6 +773,10 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 				.@shaman_max += rand(6,10);
 				++.@sha_man;
 			}
+			if (countitem(.@divide) < .@input) {
+				close;
+			}
+			delitem .@divide, .@input;
 			switch(.@divide) {
 			case 994:
 				getitem Boody_Red,.@shaman_max;
@@ -786,7 +790,6 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 			case 997:
 				getitem Yellow_Live,.@shaman_max;
 			}
-			delitem .@divide,.@input;
 			close;
 		}
 		mes "[Puchuchartan]";
