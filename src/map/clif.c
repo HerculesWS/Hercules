@@ -14305,7 +14305,7 @@ static void clif_parse_CloseVending(int fd, struct map_session_data *sd) __attri
 /// 012e
 static void clif_parse_CloseVending(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isdead(sd))
+	if (sd->npc_id || sd->state.buyingstore || sd->state.trading)
 		return;
 
 	vending->close(sd);
