@@ -5348,6 +5348,8 @@ typedef int (*HPMHOOK_pre_mob_ai_sub_hard_lootsearch) (struct block_list **bl, v
 typedef int (*HPMHOOK_post_mob_ai_sub_hard_lootsearch) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_mob_warpchase_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_mob_warpchase_sub) (int retVal___, struct block_list *bl, va_list ap);
+typedef bool (*HPMHOOK_pre_mob_is_in_battle_state) (const struct mob_data **md);
+typedef bool (*HPMHOOK_post_mob_is_in_battle_state) (bool retVal___, const struct mob_data *md);
 typedef int (*HPMHOOK_pre_mob_ai_sub_hard_slavemob) (struct mob_data **md, int64 *tick);
 typedef int (*HPMHOOK_post_mob_ai_sub_hard_slavemob) (int retVal___, struct mob_data *md, int64 tick);
 typedef int (*HPMHOOK_pre_mob_unlocktarget) (struct mob_data **md, int64 *tick);

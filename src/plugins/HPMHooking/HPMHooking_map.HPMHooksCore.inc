@@ -3950,6 +3950,8 @@ struct {
 	struct HPMHookPoint *HP_mob_ai_sub_hard_lootsearch_post;
 	struct HPMHookPoint *HP_mob_warpchase_sub_pre;
 	struct HPMHookPoint *HP_mob_warpchase_sub_post;
+	struct HPMHookPoint *HP_mob_is_in_battle_state_pre;
+	struct HPMHookPoint *HP_mob_is_in_battle_state_post;
 	struct HPMHookPoint *HP_mob_ai_sub_hard_slavemob_pre;
 	struct HPMHookPoint *HP_mob_ai_sub_hard_slavemob_post;
 	struct HPMHookPoint *HP_mob_unlocktarget_pre;
@@ -10769,6 +10771,8 @@ struct {
 	int HP_mob_ai_sub_hard_lootsearch_post;
 	int HP_mob_warpchase_sub_pre;
 	int HP_mob_warpchase_sub_post;
+	int HP_mob_is_in_battle_state_pre;
+	int HP_mob_is_in_battle_state_post;
 	int HP_mob_ai_sub_hard_slavemob_pre;
 	int HP_mob_ai_sub_hard_slavemob_post;
 	int HP_mob_unlocktarget_pre;

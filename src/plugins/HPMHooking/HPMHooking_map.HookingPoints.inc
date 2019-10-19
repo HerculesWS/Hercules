@@ -2024,6 +2024,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->ai_sub_hard_bg_ally, HP_mob_ai_sub_hard_bg_ally) },
 	{ HP_POP(mob->ai_sub_hard_lootsearch, HP_mob_ai_sub_hard_lootsearch) },
 	{ HP_POP(mob->warpchase_sub, HP_mob_warpchase_sub) },
+	{ HP_POP(mob->is_in_battle_state, HP_mob_is_in_battle_state) },
 	{ HP_POP(mob->ai_sub_hard_slavemob, HP_mob_ai_sub_hard_slavemob) },
 	{ HP_POP(mob->unlocktarget, HP_mob_unlocktarget) },
 	{ HP_POP(mob->randomwalk, HP_mob_randomwalk) },

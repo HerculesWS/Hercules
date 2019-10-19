@@ -52322,6 +52322,33 @@ int HP_mob_warpchase_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
+bool HP_mob_is_in_battle_state(const struct mob_data *md) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mob_is_in_battle_state_pre > 0) {
+		bool (*preHookFunc) (const struct mob_data **md);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_is_in_battle_state_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_is_in_battle_state_pre[hIndex].func;
+			retVal___ = preHookFunc(&md);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mob.is_in_battle_state(md);
+	}
+	if (HPMHooks.count.HP_mob_is_in_battle_state_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct mob_data *md);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_is_in_battle_state_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_is_in_battle_state_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, md);
+		}
+	}
+	return retVal___;
+}
 int HP_mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick) {
 	int hIndex = 0;
 	int retVal___ = 0;
