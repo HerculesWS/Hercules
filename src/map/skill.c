@@ -3789,7 +3789,7 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 		if (itemid[i] < 1) continue; // No item
 		index[i] = pc->search_inventory(sd, itemid[i]);
 		if (index[i] == INDEX_NOT_FOUND || sd->status.inventory[index[i]].amount < amount[i]) {
-			clif->skill_fail(sd, skill_id, USESKILL_FAIL_NEED_ITEM, amount[i], itemid[i] << 16);
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_NEED_ITEM, amount[i], itemid[i]);
 			return 0;
 		}
 	}
@@ -8754,12 +8754,20 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				int r = rnd()%100;
 				int target = (skill_lv-1)%5;
 				int hp;
-				if(r<per[target][0]) //Self
+				if (r < per[target][0]) { //Self
 					bl = src;
-				else if(r<per[target][1]) //Master
+				} else if (r < per[target][1]) { //Master
 					bl = battle->get_master(src);
-				else //Enemy
-					bl = map->id2bl(battle->get_target(src));
+				} else if ((per[target][1] - per[target][0]) < per[target][0]
+					   && bl == battle->get_master(src)) {
+					/**
+					 * Skill rolled for enemy, but there's nothing the Homunculus is attacking.
+					 * So bl has been set to its master in unit->skilluse_id2.
+					 * If it's more likely that it will heal itself,
+					 * we let it heal itself.
+					 */
+					bl = src;
+				}
 
 				if (!bl) bl = src;
 				hp = skill->calc_heal(src, bl, skill_id, 1+rnd()%skill_lv, true);

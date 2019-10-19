@@ -1328,6 +1328,12 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 
 	if (src->type==BL_HOM)
 		switch(skill_id) { //Homun-auto-target skills.
+			case HVAN_CHAOTIC:
+				target_id = ud->target; // Choose attack target for now
+				target = map->id2bl(target_id);
+				if (target != NULL)
+					break;
+				FALLTHROUGH // Attacking nothing, choose master as default target instead
 			case HLIF_HEAL:
 			case HLIF_AVOID:
 			case HAMI_DEFENCE:
@@ -1408,13 +1414,6 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 				sd->skill_lv_old = skill_lv;
 				break;
 		}
-	}
-
-	if (src->type == BL_HOM) {
-		// In case of homunuculus, set the sd to the homunculus' master, as needed below
-		struct block_list *master = battle->get_master(src);
-		if (master)
-			sd = map->id2sd(master->id);
 	}
 
 	if (sd) {
