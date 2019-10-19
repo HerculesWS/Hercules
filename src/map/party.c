@@ -695,6 +695,7 @@ static int party_broken(int party_id)
 		if( p->data[i].sd!=NULL ) {
 			clif->party_withdraw(p,p->data[i].sd,p->party.member[i].account_id,p->party.member[i].name,0x10);
 			p->data[i].sd->status.party_id=0;
+			clif->charnameupdate(p->data[i].sd);
 		}
 	}
 
