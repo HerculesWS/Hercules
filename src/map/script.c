@@ -8980,6 +8980,93 @@ static BUILDIN(getpartyleader)
 	return true;
 }
 
+enum guildinfo_type {
+	GUILDINFO_NAME,
+	GUILDINFO_ID,
+	GUILDINFO_LEVEL,
+	GUILDINFO_ONLINE,
+	GUILDINFO_AV_LEVEL,
+	GUILDINFO_MAX_MEMBERS,
+	GUILDINFO_EXP,
+	GUILDINFO_NEXT_EXP,
+	GUILDINFO_SKILL_POINTS,
+	GUILDINFO_MASTER_NAME,
+	GUILDINFO_MASTER_CID,
+};
+
+static BUILDIN(getguildinfo)
+{
+	struct guild *g = NULL;
+
+	if (script_hasdata(st, 3)) {
+		if (script_isstringtype(st, 3)) {
+			const char *guild_name = script_getstr(st, 3);
+			g = guild->searchname(guild_name);
+		} else {
+			int guild_id = script_getnum(st, 3);
+			g = guild->search(guild_id);
+		}
+	} else {
+		struct map_session_data *sd = script->rid2sd(st);
+		g = sd ? sd->guild : NULL;
+	}
+
+	enum guildinfo_type type = script_getnum(st, 2);
+
+	if (g == NULL) {
+		// guild does not exist
+		switch (type) {
+		case GUILDINFO_NAME:
+		case GUILDINFO_MASTER_NAME:
+			script_pushconststr(st, "");
+			break;
+		default:
+			script_pushint(st, -1);
+		}
+	} else {
+		switch (type) {
+		case GUILDINFO_NAME:
+			script_pushstrcopy(st, g->name);
+			break;
+		case GUILDINFO_ID:
+			script_pushint(st, g->guild_id);
+			break;
+		case GUILDINFO_LEVEL:
+			script_pushint(st, g->guild_lv);
+			break;
+		case GUILDINFO_ONLINE:
+			script_pushint(st, g->connect_member);
+			break;
+		case GUILDINFO_AV_LEVEL:
+			script_pushint(st, g->average_lv);
+			break;
+		case GUILDINFO_MAX_MEMBERS:
+			script_pushint(st, g->max_member);
+			break;
+		case GUILDINFO_EXP:
+			script_pushint(st, g->exp);
+			break;
+		case GUILDINFO_NEXT_EXP:
+			script_pushint(st, g->next_exp);
+			break;
+		case GUILDINFO_SKILL_POINTS:
+			script_pushint(st, g->skill_point);
+			break;
+		case GUILDINFO_MASTER_NAME:
+			script_pushstrcopy(st, g->member[0].name);
+			break;
+		case GUILDINFO_MASTER_CID:
+			script_pushint(st, g->member[0].char_id);
+			break;
+		default:
+			ShowError("script:getguildinfo: unknown info type!\n");
+			st->state = END;
+			return false;
+		}
+	}
+	return true;
+}
+
 /*==========================================
  * Return the name of the @guild_id
  * null if not found
@@ -15924,7 +16011,7 @@ static BUILDIN(recovery)
 	return true;
 }
 
-/* 
+/*
  * Get your current pet information
  */
 static BUILDIN(getpetinfo)
@@ -15977,7 +16064,7 @@ static BUILDIN(getpetinfo)
 	case PETINFO_ACCESSORYFLAG:
 		script_pushint(st, (pd->pet.equip != 0)? 1:0);
 		break;
-	case PETINFO_EVO_EGGID: 
+	case PETINFO_EVO_EGGID:
 		if (VECTOR_DATA(pd->petDB->evolve_data) != NULL)
 			script_pushint(st, VECTOR_DATA(pd->petDB->evolve_data)->petEggId);
 		else
@@ -24901,7 +24988,7 @@ static BUILDIN(showscript)
 	if (script_hasdata(st, 4))
 		if (script_getnum(st, 4) == SELF)
 			flag = SELF;
-		
+
 	clif->ShowScript(bl, msg, flag);
 	return true;
 }
@@ -25786,7 +25873,7 @@ static BUILDIN(identifyidx)
 		script_pushint(st, false);
 		return true;
 	}
-	
+
 	if (sd->status.inventory[idx].nameid <= 0 || sd->status.inventory[idx].identify != 0) {
 		script_pushint(st, false);
 		return true;
@@ -26092,6 +26179,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
+		BUILDIN_DEF(getguildinfo,"i?"),
 		BUILDIN_DEF(getguildonline, "i?"),
 		BUILDIN_DEF(strcharinfo,"i??"),
 		BUILDIN_DEF(strnpcinfo,"i??"),
@@ -27206,6 +27294,19 @@ static void script_hardcoded_constants(void)
 	script->set_constant("SIEGE_TYPE_FE", SIEGE_TYPE_FE, false, false);
 	script->set_constant("SIEGE_TYPE_SE", SIEGE_TYPE_SE, false, false);
 	script->set_constant("SIEGE_TYPE_TE", SIEGE_TYPE_TE, false, false);
+
+	script->constdb_comment("guildinfo types");
+	script->set_constant("GUILDINFO_NAME", GUILDINFO_NAME, false, false);
+	script->set_constant("GUILDINFO_ID", GUILDINFO_ID, false, false);
+	script->set_constant("GUILDINFO_LEVEL", GUILDINFO_LEVEL, false, false);
+	script->set_constant("GUILDINFO_ONLINE", GUILDINFO_ONLINE, false, false);
+	script->set_constant("GUILDINFO_AV_LEVEL", GUILDINFO_AV_LEVEL, false, false);
+	script->set_constant("GUILDINFO_MAX_MEMBERS", GUILDINFO_MAX_MEMBERS, false, false);
+	script->set_constant("GUILDINFO_EXP", GUILDINFO_EXP, false, false);
+	script->set_constant("GUILDINFO_NEXT_EXP", GUILDINFO_NEXT_EXP, false, false);
+	script->set_constant("GUILDINFO_SKILL_POINTS", GUILDINFO_SKILL_POINTS, false, false);
+	script->set_constant("GUILDINFO_MASTER_NAME", GUILDINFO_MASTER_NAME, false, false);
+	script->set_constant("GUILDINFO_MASTER_CID", GUILDINFO_MASTER_CID, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

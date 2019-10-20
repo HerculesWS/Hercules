@@ -32824,11 +32824,11 @@ struct guild* HP_guild_search(int guild_id) {
 	}
 	return retVal___;
 }
-struct guild* HP_guild_searchname(char *str) {
+struct guild* HP_guild_searchname(const char *str) {
 	int hIndex = 0;
 	struct guild* retVal___ = NULL;
 	if (HPMHooks.count.HP_guild_searchname_pre > 0) {
-		struct guild* (*preHookFunc) (char **str);
+		struct guild* (*preHookFunc) (const char **str);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_searchname_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_guild_searchname_pre[hIndex].func;
@@ -32843,7 +32843,7 @@ struct guild* HP_guild_searchname(char *str) {
 		retVal___ = HPMHooks.source.guild.searchname(str);
 	}
 	if (HPMHooks.count.HP_guild_searchname_post > 0) {
-		struct guild* (*postHookFunc) (struct guild* retVal___, char *str);
+		struct guild* (*postHookFunc) (struct guild* retVal___, const char *str);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_searchname_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_guild_searchname_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, str);
