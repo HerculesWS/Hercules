@@ -3757,6 +3757,10 @@ likely to be removed at a later time. Please use getguildinfo instead:
 
 *getguildmaster(<guild id>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This function return the name of the master of the guild which has the
 specified ID number. If there is no such guild, "null" will be returned.
 
@@ -3779,6 +3783,10 @@ Maybe you want to make a room only guild masters can enter:
 	}
 	mes("Sorry you don't own the guild you are in");
 	close();
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_MASTER_NAME, <guild id>)
 
 ---------------------------------------
 
