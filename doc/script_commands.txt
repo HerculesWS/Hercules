@@ -3732,6 +3732,10 @@ Example:
 
 *getguildname(<guild id>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This function returns a guild's name given an ID number. If there is no
 such guild, "null" will be returned;
 
@@ -3744,6 +3748,10 @@ such guild, "null" will be returned;
 
 This is used all over the WoE controlling scripts. You could also use it
 for a guild-based event.
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_NAME, <guild id>)
 
 ---------------------------------------
 
