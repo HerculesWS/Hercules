@@ -230,18 +230,18 @@ OnTreasureDied:
 		mes("to conquer this stronghold?");
 		close;
 	}
-	if (getcharid(CHAR_ID_GUILD) != .@GID || strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
+	if (getcharid(CHAR_ID_GUILD) != .@GID || strcharinfo(PC_NAME) != getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 		mes("[ Steward ]");
 		mes("Hmpf. Your threats don't");
 		mes("scare me! Guardians, drive");
 		mes("this infidel away from here!");
 		mes("I will always be loyal to the");
 		mes("master of this stronghold,");
-		mesf("the one and only ^FF0000%s^000000.", getguildmaster(.@GID));
+		mesf("the one and only ^FF0000%s^000000.", getguildinfo(GUILDINFO_MASTER_NAME, .@GID));
 		close;
 	}
 	mes("[ Steward ]");
-	mesf("Ah, Master ^FF0000%s^000000...", getguildmaster(.@GID));
+	mesf("Ah, Master ^FF0000%s^000000...", getguildinfo(GUILDINFO_MASTER_NAME, .@GID));
 	mes("How shall I serve you today?");
 	mes("Was there an aspect of this");
 	mes("stronghold's maintenance");
@@ -637,7 +637,7 @@ OnStartArena:
 	// Disable Kafra
 	disablenpc "Kafra Employee#"+strnpcinfo(NPC_NAME_HIDDEN);
 
-	announce "The ["+getguildname(.@GID)+"] guild conquered the ["+.@region$+" "+charat(strnpcinfo(NPC_NAME_HIDDEN),3)+"] stronghold of "+getcastlename(strnpcinfo(NPC_MAP))+"!",bc_all|bc_woe;
+	announce "The ["+getguildinfo(GUILDINFO_NAME, .@GID)+"] guild conquered the ["+.@region$+" "+charat(strnpcinfo(NPC_NAME_HIDDEN),3)+"] stronghold of "+getcastlename(strnpcinfo(NPC_MAP))+"!",bc_all|bc_woe;
 	mapannounce strnpcinfo(NPC_MAP),"The emperium has been shattered!",bc_map,"0x00FF00",FW_NORMAL,20,0,40;
 	donpcevent "Manager#"+strnpcinfo(NPC_MAP)+"::OnReset";
 	maprespawnguildid strnpcinfo(NPC_MAP),getcastledata(strnpcinfo(NPC_MAP),1),2;
@@ -664,7 +664,7 @@ OnStartArena:
 		close;
 	}
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		if (strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) != getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes(.@n$);
 			mes("As guardian of this");
 			mes("stronghold, I answer only");
@@ -857,7 +857,7 @@ OnInit:
 	if (getcharid(CHAR_ID_GUILD) == .@GID && getgdskilllv(.@GID,10001)) {
 		mes("[Kafra Employee]");
 		mes("Welcome, proud member");
-		mesf("of the ^FF0000%s^000000 Guild!", getguildname(.@GID));
+		mesf("of the ^FF0000%s^000000 Guild!", getguildinfo(GUILDINFO_NAME, .@GID));
 		mes("The Kafra Corporation is ready");
 		mes("to assist you wherever you go!");
 		next;
@@ -953,7 +953,7 @@ OnInit:
 		mes("I'm sorry, but I've been");
 		mes("exclusively contracted");
 		mes("to the members of the");
-		mesf("^FF0000%s^000000 Guild.", getguildname(.@GID));
+		mesf("^FF0000%s^000000 Guild.", getguildinfo(GUILDINFO_NAME, .@GID));
 		mes("You'll have to ask another");
 		mes("Kafra Employee to help you...");
 		close2;
@@ -1121,7 +1121,7 @@ OnEnable:
 	.@num = atoi(charat(strnpcinfo(NPC_NAME_VISIBLE),15));
 	.@var$ = "$agit_"+strnpcinfo(NPC_NAME_HIDDEN);
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			if (getd(.@var$+"["+(.@num+1)+"]") == 2) {
 				mes("^3355FFDemolished Fortress");
 				mes("Gates can be repaired,");
@@ -1808,11 +1808,11 @@ function	script	ReturnFlag	{
 	mes("The Holy Kingdom of");
 	mesf("%s decrees that", .@str$);
 	mes("this stronghold is owned");
-	mesf("by the ^FF0000%s^000000 Guild.", getguildname(.@GID));
+	mesf("by the ^FF0000%s^000000 Guild.", getguildinfo(GUILDINFO_NAME, .@GID));
 	next;
 	mesf("[ %s Royal Edict ]", .@str$);
-	mesf("^FF0000%s^000000 is", getguildmaster(.@GID));
-	mesf("Guild Master of ^FF0000%s^000000.", getguildname(.@GID));
+	mesf("^FF0000%s^000000 is", getguildinfo(GUILDINFO_MASTER_NAME, .@GID));
+	mesf("Guild Master of ^FF0000%s^000000.", getguildinfo(GUILDINFO_NAME, .@GID));
 	mes("Any that object must claim this");
 	mes("stronghold through strength of");
 	mes("steel and magic during the");

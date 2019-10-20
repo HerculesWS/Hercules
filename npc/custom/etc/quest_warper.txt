@@ -495,7 +495,7 @@ L_GStorage:
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + ($QW_GS_PRICE/5);
 	next;
 	mes "[Warpra]";
-	mes "Close this window and I will open the ^5533FF" + getguildname(@GID) + "^000000 storage.";
+	mes "Close this window and I will open the ^5533FF" + getguildinfo(GUILDINFO_NAME, @GID) + "^000000 storage.";
 	close2;
 	guildopenstorage;
 	end;

@@ -85,7 +85,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 		close;
 	}
 	.@chk_urquest = questprogress(2143,PLAYTIME);
-	.@chk_yourgdname$ = getguildname(getcharid(CHAR_ID_GUILD));
+	.@chk_yourgdname$ = getguildinfo(GUILDINFO_NAME, getcharid(CHAR_ID_GUILD));
 	if ($@gdeventv_s1 == 0) {
 		if ($@gdevents_s$ == "") {
 			$@gdeventv_s1 = 1;
@@ -520,7 +520,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 		mes "- and come back later. -";
 		close;
 	}
-	if (strcharinfo(PC_NAME) == getguildmaster(getcharid(CHAR_ID_GUILD))) {
+	if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD))) {
 		if ($@gdeventv_s2 == 0) {
 			.@que_2143 = questprogress(2143,PLAYTIME);
 			if (!.@que_2143) {

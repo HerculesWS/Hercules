@@ -71,10 +71,10 @@
 	mes " ";
 	mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
 	mes "we approve that this place is in";
-	mes "the private prossession of ^ff0000"+getguildname(.@GID)+"^000000 Guild.";
+	mes "the private prossession of ^ff0000"+getguildinfo(GUILDINFO_NAME, .@GID)+"^000000 Guild.";
 	mes " ";
-	mes "2. The guild Master of ^ff0000"+getguildname(.@GID)+"^000000 Guild is";
-	mes "^ff0000"+getguildmaster(.@GID)+"^000000";
+	mes "2. The guild Master of ^ff0000"+getguildinfo(GUILDINFO_NAME, .@GID)+"^000000 Guild is";
+	mes "^ff0000"+getguildinfo(GUILDINFO_MASTER_NAME, .@GID)+"^000000";
 	mes "If there is anyone who objects to this,";
 	mes "prove your strength and honor with a steel blade in your hand.";
 	close;
