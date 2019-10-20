@@ -26177,7 +26177,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getpartyleader,"i?"),
 		BUILDIN_DEF_DEPRECATED(getguildname,"i"),
 		BUILDIN_DEF_DEPRECATED(getguildmaster,"i"),
-		BUILDIN_DEF(getguildmasterid,"i"),
+		BUILDIN_DEF_DEPRECATED(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
 		BUILDIN_DEF(getguildinfo,"i?"),
 		BUILDIN_DEF(getguildonline, "i?"),
