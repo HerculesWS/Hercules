@@ -3704,6 +3704,32 @@ You need to put a 'close' after that yourself.
 //=====================================
 ---------------------------------------
 
+*getguildinfo(<info type>{, <guild id>})
+*getguildinfo(<info type>{, "<guild name>"})
+
+This command returns misc info about the guild of the attached player. If a
+guild id or guild name is specified it will be used instead. If the target guild
+does not exist it returns an empty string or -1 depending on whether a string
+or an integer was requested.
+
+Valid <info type> are:
+	GUILDINFO_NAME          - guild name
+	GUILDINFO_ID            - guild id
+	GUILDINFO_LEVEL         - current level
+	GUILDINFO_EXP           - current exp
+	GUILDINFO_NEXT_EXP      - exp required to reach the next level
+	GUILDINFO_SKILL_POINTS  - available skill points
+	GUILDINFO_ONLINE        - number of online members
+	GUILDINFO_AV_LEVEL      - average member level
+	GUILDINFO_MAX_MEMBERS   - guild capacity
+	GUILDINFO_MASTER_NAME   - name of the guild master
+	GUILDINFO_MASTER_CID    - char id of the guild master
+
+Example:
+	getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD, "Haru"))
+
+---------------------------------------
+
 *getguildname(<guild id>)
 
 This function returns a guild's name given an ID number. If there is no
