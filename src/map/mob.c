@@ -1173,13 +1173,15 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 				battle->check_range(&md->bl,bl,md->db->range2)
 			) { //Pick closest target?
 #ifdef ACTIVEPATHSEARCH
-			struct walkpath_data wpd;
-			if (!path->search(&wpd, &md->bl, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS)) // Count walk path cells
-				return 0;
-			//Standing monsters use range2, walking monsters use range3
-			if ((md->ud.walktimer == INVALID_TIMER && wpd.path_len > md->db->range2)
-				|| (md->ud.walktimer != INVALID_TIMER && wpd.path_len > md->db->range3))
-				return 0;
+				struct walkpath_data wpd;
+				bool is_standing = (md->ud.walktimer == INVALID_TIMER);
+				if (!path->search(&wpd, &md->bl, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, 0, CELL_CHKNOPASS) // Count walk path cells
+				    || (is_standing && wpd.path_len > md->db->range2) //Standing monsters use range2, walking monsters use range3
+				    || (!is_standing && wpd.path_len > md->db->range3)) {
+					if (!check_distance_bl(&md->bl, bl, md->status.rhw.range)
+					    || !path->search_long(NULL, &md->bl, md->bl.m, md->bl.x, md->bl.y, bl->x, bl->y, CELL_CHKWALL))
+						return 0;
+				}
 #endif
 				(*target) = bl;
 				md->target_id=bl->id;
