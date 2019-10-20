@@ -21,6 +21,7 @@
 #ifndef COMMON_MAPINDEX_H
 #define COMMON_MAPINDEX_H
 
+#include "common/conf.h"
 #include "common/hercules.h"
 #include "common/mmo.h"
 
@@ -97,6 +98,9 @@ struct mapindex_interface {
 	struct {
 		char name[MAP_NAME_LENGTH];
 	} list[MAX_MAPINDEX];
+	/* */
+	bool (*config_read_dbpath) (const char *filename, const struct config_t *config);
+	bool (*config_read) (void);
 	/* */
 	int (*init) (void);
 	void (*final) (void);

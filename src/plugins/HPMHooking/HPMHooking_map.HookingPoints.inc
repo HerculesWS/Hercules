@@ -1684,6 +1684,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(itemdb->read_libconfig_lapineddukddak_sub, HP_itemdb_read_libconfig_lapineddukddak_sub) },
 	{ HP_POP(itemdb->read_libconfig_lapineddukddak_sub_sources, HP_itemdb_read_libconfig_lapineddukddak_sub_sources) },
 /* libconfig_interface */
+	{ HP_POP(libconfig->set_db_path, HP_libconfig_set_db_path) },
+	{ HP_POP(libconfig->format_db_path, HP_libconfig_format_db_path) },
 	{ HP_POP(libconfig->read, HP_libconfig_read) },
 	{ HP_POP(libconfig->write, HP_libconfig_write) },
 	{ HP_POP(libconfig->set_options, HP_libconfig_set_options) },
@@ -1923,6 +1925,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->merge_zone, HP_map_merge_zone) },
 	{ HP_POP(map->zone_clear_single, HP_map_zone_clear_single) },
 /* mapindex_interface */
+	{ HP_POP(mapindex->config_read_dbpath, HP_mapindex_config_read_dbpath) },
+	{ HP_POP(mapindex->config_read, HP_mapindex_config_read) },
 	{ HP_POP(mapindex->init, HP_mapindex_init) },
 	{ HP_POP(mapindex->final, HP_mapindex_final) },
 	{ HP_POP(mapindex->addmap, HP_mapindex_addmap) },

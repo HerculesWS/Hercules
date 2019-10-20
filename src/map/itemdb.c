@@ -846,11 +846,8 @@ static void itemdb_read_groups(void)
 {
 	struct config_t item_group_conf;
 	struct config_setting_t *itg = NULL, *it = NULL;
-#ifdef RENEWAL
-	const char *config_filename = "db/re/item_group.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/item_group.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"item_group.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c;
 	unsigned int *gsize = NULL;
@@ -1144,11 +1141,8 @@ static void itemdb_read_packages(void)
 {
 	struct config_t item_packages_conf;
 	struct config_setting_t *itg = NULL, *it = NULL, *t = NULL;
-#ifdef RENEWAL
-	const char *config_filename = "db/re/item_packages.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/item_packages.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"item_packages.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c = 0, highest_gcount = 0;
 	unsigned int *must = NULL, *random = NULL, *rgroup = NULL, **rgroups = NULL;
@@ -1393,7 +1387,8 @@ static void itemdb_read_options(void)
 	struct config_t item_options_db;
 	struct config_setting_t *ito = NULL, *conf = NULL;
 	int index = 0, count = 0;
-	const char *filepath = "db/item_options.conf";
+	char filepath[256];
+	libconfig->format_db_path("item_options.conf", filepath, sizeof(filepath));
 	VECTOR_DECL(int) duplicate_id;
 
 	if (!libconfig->load_file(&item_options_db, filepath))
@@ -1494,11 +1489,8 @@ static void itemdb_read_chains(void)
 {
 	struct config_t item_chain_conf;
 	struct config_setting_t *itc = NULL;
-#ifdef RENEWAL
-	const char *config_filename = "db/re/item_chain.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/item_chain.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"item_chain.conf", config_filename, sizeof(config_filename));
 	int i = 0, count = 0;
 
 	if (!libconfig->load_file(&item_chain_conf, config_filename))

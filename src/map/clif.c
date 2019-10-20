@@ -19794,7 +19794,8 @@ static void clif_cashshop_db(void)
 {
 	struct config_t cashshop_conf;
 	struct config_setting_t *cashshop = NULL, *cats = NULL;
-	const char *config_filename = "db/cashshop_db.conf"; // FIXME hardcoded name
+	char config_filename[256];
+	libconfig->format_db_path("cashshop_db.conf", config_filename, sizeof(config_filename));
 	int i, item_count_t = 0;
 	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
 		CREATE(clif->cs.data[i], struct hCSData *, 1);
@@ -21065,7 +21066,8 @@ static bool clif_parse_roulette_db(void)
 {
 	struct config_t roulette_conf;
 	struct config_setting_t *roulette = NULL, *levels = NULL;
-	const char *config_filename = "db/roulette_db.conf"; // FIXME hardcoded name
+	char config_filename[256];
+	libconfig->format_db_path("roulette_db.conf", config_filename, sizeof(config_filename));
 	int i, j, item_count_t = 0;
 
 	for( i = 0; i < MAX_ROULETTE_LEVEL; i++ ) {
@@ -22549,7 +22551,8 @@ static bool clif_parse_attendance_db(void)
 {
 	struct config_t attendance_conf;
 	struct config_setting_t *attendance = NULL, *it = NULL;
-	const char *config_filename = "db/attendance_db.conf"; // FIXME hardcoded name
+	char config_filename[256];
+	libconfig->format_db_path("attendance_db.conf", config_filename, sizeof(config_filename));
 	int i = 0;
 
 	if (!libconfig->load_file(&attendance_conf, config_filename))

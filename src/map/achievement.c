@@ -1099,7 +1099,8 @@ static bool achievement_get_rewards(struct map_session_data *sd, const struct ac
  */
 static void achievement_readdb_ranks(void)
 {
-	const char *filename = "db/achievement_rank_db.conf";
+	char filename[256];
+	libconfig->format_db_path("achievement_rank_db.conf", filename, sizeof(filename));
 	struct config_t ar_conf = { 0 };
 	struct config_setting_t *ardb = NULL, *conf = NULL;
 	int entry = 0;
@@ -1777,7 +1778,8 @@ static void achievement_readdb_additional_fields(const struct config_setting_t *
  */
 static void achievement_readb(void)
 {
-	const char *filename = "db/"DBPATH"achievement_db.conf";
+	char filename[256];
+	libconfig->format_db_path(DBPATH"achievement_db.conf", filename, sizeof(filename));
 	struct config_t ach_conf = { 0 };
 	struct config_setting_t *achdb = NULL, *conf = NULL;
 	int entry = 0, count = 0;
