@@ -9,6 +9,48 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.10.20] `October 20 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-10-02. (#2537)
+- Added a new config file `conf/common/map-index.conf` to customize the location of the `map_index.txt` file. (part of #2547)
+
+### Changed
+
+- Moved several hardcoded messages to `messages.conf`. (#2152, issue #1282)
+- Updated the `@dropall` command to correctly show the amount of dropped (and skipped) items. (#2545)
+- Split the HULD generated translations into smaller (and easier to manage) files. A translation will now consist of a folder, with one .po (.pot) file per script. Third party translations may need to be updated to match this change. (#2492)
+- Changed the slave monsters' behavior to react to chase the same target as their master, to match the official behavior. A configuration setting `slave_chase_masters_chasetarget` has been provided in `battle/monster.conf` for those that wish to keep using the old custom behavior. (#2561)
+- De-hardcoded the path to the `db` folder, now using `map_configuration.database.db_path` and `char_configuration.database.db_path` in the map and char server respectively. This allows the user to customize the location of the db folder. (#2547)
+
+### Fixed
+
+- Fixed an exploitable issue in the Izlude Arena party mode script. (#2538)
+- Fixed a buffer overflow in the `buildin_npcshopdelitem()`. (#2540)
+- Fixed a potentially exploitable issue in the Ore Downgrade script. (#1935, issue #1934)
+- Corrected the item bonus for `Drooping_Kitty_C`. (#2543)
+- Corrected the display of the Sense skill to cap to 0 the negative resistance values instead of underflowing them. (#2544)
+- Fixed compilation warning with gcc-9. (part of #2537)
+- Fixed the HP bar of party members not showing when they unhide. (#2549)
+- Fixed the status change timers not showing the correct values in the client, after relogging. This requires a database migration. (#2551, issue #2018)
+- Corrected Magnum Break's 2 second delay to be an after-cast delay (reducible by Bragi's Poem) instead of a cooldown. (#2553)
+- Fixed an issue that prevented players from closing their own vending shop. (#2555, issue #2554)
+- Fixed the Homunculus skill requirements being applied to the master as well. (#2556)
+- Fixed the Homunculus skill failure message not displaying any required items (part of #2556)
+- Fixed the Chaotic Blessings skill from Vanilmirth never picking the enemy as its random target to heal. (part of #2556)
+- Fixed an issue that caused the saved character data to retain the old party ID after leaving or getting kicked. (#2562)
+- Fixed some possible crashes or memory corruption caused by dangling pointers to guilds in the character data. (part of #2562, related to issue #1266)
+- Fixed the party name not getting removed from all affected characters (clientside) when a party is disbanded. (part of #2562)
+- Fixed a crash in the console command parser when a line consisting only of spaces is executed. (#2563)
+- Fixed the argument string passed to console commands when the input starts with multiple adjacent spaces. (part of #2563)
+- Fixed the mapindex value not getting updated in the `gm:info` console command. (part of #2563)
+- Fixed an issue that caused aggressive monsters with ranged attack to be unable to attack from above a cliff. (#2550)
+
+### Removed
+
+- Removed the legacy, unused, `castle_defense_rate` option from `battle/guild.conf`. (#2552)
+
 ### [v2019.09.22] `September 22 2019`
 
 ### Added
@@ -931,6 +973,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.10.20]: https://github.com/HerculesWS/Hercules/compare/v2019.09.22...v2019.10.20
 [v2019.09.22]: https://github.com/HerculesWS/Hercules/compare/v2019.08.25...v2019.09.22
 [v2019.08.25]: https://github.com/HerculesWS/Hercules/compare/v2019.07.28...v2019.08.25
 [v2019.07.28]: https://github.com/HerculesWS/Hercules/compare/v2019.06.30...v2019.07.28
