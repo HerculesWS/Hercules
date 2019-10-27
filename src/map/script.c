@@ -5400,6 +5400,9 @@ static int script_load_translation_file(const char *file, uint8 lang_id)
 					if (line[i] == '\\' && line[i+1] == '"') {
 						VECTOR_PUSH(*msg_ptr, '"');
 						i++;
+					} else if (line[i] == '\\' && line[i+1] == 'r') {
+						VECTOR_PUSH(*msg_ptr, '\r');
+						i++;
 					} else {
 						VECTOR_PUSH(*msg_ptr, line[i]);
 					}
@@ -5417,6 +5420,9 @@ static int script_load_translation_file(const char *file, uint8 lang_id)
 			for (i = 9; i < len - 2; i++) {
 				if (line[i] == '\\' && line[i+1] == '"') {
 					msgctxt[cursor] = '"';
+					i++;
+				} else if (line[i] == '\\' && line[i+1] == 'r') {
+					msgctxt[cursor] = '\r';
 					i++;
 				} else {
 					msgctxt[cursor] = line[i];
@@ -5439,6 +5445,9 @@ static int script_load_translation_file(const char *file, uint8 lang_id)
 				if (line[i] == '\\' && line[i+1] == '"') {
 					VECTOR_PUSH(msgid, '"');
 					i++;
+				} else if (line[i] == '\\' && line[i+1] == 'r') {
+					VECTOR_PUSH(msgid, '\r');
+					i++;
 				} else {
 					VECTOR_PUSH(msgid, line[i]);
 				}
@@ -5457,6 +5466,9 @@ static int script_load_translation_file(const char *file, uint8 lang_id)
 				VECTOR_ENSURE(msgstr, 1, 512);
 				if (line[i] == '\\' && line[i+1] == '"') {
 					VECTOR_PUSH(msgstr, '"');
+					i++;
+				} else if (line[i] == '\\' && line[i+1] == 'r') {
+					VECTOR_PUSH(msgstr, '\r');
 					i++;
 				} else {
 					VECTOR_PUSH(msgstr, line[i]);
