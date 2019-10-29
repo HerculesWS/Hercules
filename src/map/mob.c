@@ -5080,46 +5080,15 @@ static void mob_name_constants(void)
 #endif // ENABLE_CASE_CHECK
 }
 
-/*==========================================
- * MOB display graphic change data reading
- *------------------------------------------*/
-static bool mob_readdb_mobavail(char *str[], int columns, int current)
+static void mob_mobavail_removal_notice(void)
 {
-	int class_, view_class;
+	char filepath[256];
 
-	nullpo_retr(false, str);
-	class_=atoi(str[0]);
+	safesnprintf(filepath, sizeof(filepath), "%s/mob_avail.txt", map->db_path);
 
-	if(mob->db(class_) == mob->dummy) {
-		// invalid class (probably undefined in db)
-		ShowWarning("mob_readdb_mobavail: Unknown mob id %d.\n", class_);
-		return false;
+	if (exists(filepath)) {
+		ShowError("mob_mobavail_removal_notice: the usage of mob_avail.txt is no longer supported, move your data using tools/mobavailconverter.py and delete the database file to suspend this message.\n");
 	}
-
-	view_class = atoi(str[1]);
-
-	memset(&mob->db_data[class_]->vd, 0, sizeof(struct view_data));
-	mob->db_data[class_]->vd.class = view_class;
-
-	//Player sprites
-	if (pc->db_checkid(view_class) && columns == 12) {
-		mob->db_data[class_]->vd.sex=atoi(str[2]);
-		mob->db_data[class_]->vd.hair_style=atoi(str[3]);
-		mob->db_data[class_]->vd.hair_color=atoi(str[4]);
-		mob->db_data[class_]->vd.weapon=atoi(str[5]);
-		mob->db_data[class_]->vd.shield=atoi(str[6]);
-		mob->db_data[class_]->vd.head_top=atoi(str[7]);
-		mob->db_data[class_]->vd.head_mid=atoi(str[8]);
-		mob->db_data[class_]->vd.head_bottom=atoi(str[9]);
-		mob->db_data[class_]->option=atoi(str[10])&~(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE);
-		mob->db_data[class_]->vd.cloth_color=atoi(str[11]); // Monster player dye option - Valaris
-	}
-	else if(columns==3)
-		mob->db_data[class_]->vd.head_bottom=atoi(str[2]); // mob equipment [Valaris]
-	else if( columns != 2 )
-		return false;
-
-	return true;
 }
 
 /*==========================================
@@ -5637,7 +5606,7 @@ static void mob_load(bool minimal)
 	mob->readchatdb();
 	mob->readdb();
 	mob->readskilldb();
-	sv->readdb(map->db_path, "mob_avail.txt", ',', 2, 12, -1, mob->readdb_mobavail);
+	mob->mobavail_removal_notice();
 	mob->read_randommonster();
 	sv->readdb(map->db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, mob->readdb_race2);
 }
@@ -5961,7 +5930,7 @@ void mob_defaults(void)
 	mob->read_db_stats_sub = mob_read_db_stats_sub;
 	mob->read_db_viewdata_sub = mob_read_db_viewdata_sub;
 	mob->name_constants = mob_name_constants;
-	mob->readdb_mobavail = mob_readdb_mobavail;
+	mob->mobavail_removal_notice = mob_mobavail_removal_notice;
 	mob->read_randommonster = mob_read_randommonster;
 	mob->parse_row_chatdb = mob_parse_row_chatdb;
 	mob->readchatdb = mob_readchatdb;
