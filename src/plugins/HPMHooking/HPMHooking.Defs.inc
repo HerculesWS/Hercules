@@ -5478,10 +5478,12 @@ typedef struct optdrop_group* (*HPMHOOK_pre_mob_read_db_drops_option) (struct mo
 typedef struct optdrop_group* (*HPMHOOK_post_mob_read_db_drops_option) (struct optdrop_group* retVal___, struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate);
 typedef void (*HPMHOOK_pre_mob_read_db_stats_sub) (struct mob_db **entry, struct config_setting_t **t);
 typedef void (*HPMHOOK_post_mob_read_db_stats_sub) (struct mob_db *entry, struct config_setting_t *t);
+typedef void (*HPMHOOK_pre_mob_read_db_viewdata_sub) (struct mob_db **entry, struct config_setting_t **t);
+typedef void (*HPMHOOK_post_mob_read_db_viewdata_sub) (struct mob_db *entry, struct config_setting_t *t);
 typedef void (*HPMHOOK_pre_mob_name_constants) (void);
 typedef void (*HPMHOOK_post_mob_name_constants) (void);
-typedef bool (*HPMHOOK_pre_mob_readdb_mobavail) (char **str[], int *columns, int *current);
-typedef bool (*HPMHOOK_post_mob_readdb_mobavail) (bool retVal___, char *str[], int columns, int current);
+typedef void (*HPMHOOK_pre_mob_mobavail_removal_notice) (void);
+typedef void (*HPMHOOK_post_mob_mobavail_removal_notice) (void);
 typedef int (*HPMHOOK_pre_mob_read_randommonster) (void);
 typedef int (*HPMHOOK_post_mob_read_randommonster) (int retVal___);
 typedef bool (*HPMHOOK_pre_mob_parse_row_chatdb) (char ***str, const char **source, int *line, int **last_msg_id);
