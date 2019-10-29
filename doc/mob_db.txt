@@ -73,6 +73,22 @@ mob_db: (
 		AegisName: (chance, "Option Drop Group")
 		// ...
 	}
+  DamageTakenRate: damage taken rate    (int, defaults to 100)
+  ViewData: {
+    SpriteId: sprite id              (int, defaults to Id)
+    WeaponId: weapon id              (int, defaults to 0)
+    ShieldId: shield id              (int, defaults to 0)
+    RobeId: garment id               (int, defaults to 0)
+    HeadTopId: top headgear id       (int, defaults to 0)
+    HeadMidId: middle headgear id    (int, defaults to 0)
+    HeadLowId: lower headgear id     (int, defaults to 0)
+    HairStyleId: hair style id       (int, defaults to 0)
+    BodyStyleId: clothes id          (int, defaults to 0)
+    HairColorId: hair color id       (int, defaults to 0)
+    BodyColorId: clothes color id    (int, defaults to 0)
+    Gender: gender                   (string, defaults to "SEX_FEMALE")
+    Options: options                 (int, defaults to 0)
+  }
 },
 ...
 )
@@ -255,3 +271,10 @@ Drops: Sets monster drops list.
 	   }
 
 	   When not specified, becomes false (no drops).
+
+DamageTakenRate:
+  Limit the total damage received by the monster to the given rate
+
+ViewData:
+  Overrides the default view data sent to the client with the given values for:
+    Sprite, Weapon, Shield, Robe, HeadTop, HeadMid, HeadLow, HairStyle, BodyStyle, HairColor, BodyColor, Gender, Options
