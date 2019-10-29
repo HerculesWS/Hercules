@@ -10581,55 +10581,10 @@ static bool status_is_boss_resist_sc(enum sc_type type)
 {
 	if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
 		return true;
-	switch (type) {
-		case SC_BLESSING:
-		case SC_DEC_AGI:
-		case SC_PROVOKE:
-		case SC_COMA:
-		case SC_GRAVITATION:
-		case SC_NJ_SUITON:
-		case SC_RICHMANKIM:
-		case SC_ROKISWEIL:
-		case SC_FOGWALL:
-		case SC_FROSTMISTY:
-		case SC_BURNING:
-		case SC_MARSHOFABYSS:
-		case SC_ADORAMUS:
-		case SC_NEEDLE_OF_PARALYZE:
-		case SC_DEEP_SLEEP:
-		case SC_COLD:
 
-		// Exploit prevention - kRO Fix
-		case SC_PYREXIA:
-		case SC_DEATHHURT:
-		case SC_TOXIN:
-		case SC_PARALYSE:
-		case SC_VENOMBLEED:
-		case SC_MAGICMUSHROOM:
-		case SC_OBLIVIONCURSE:
-		case SC_LEECHESEND:
+	if (status->get_sc_type(type) & SC_NO_BOSS)
+		return true;
 
-		// Ranger Effects
-		case SC_WUGBITE:
-		case SC_ELECTRICSHOCKER:
-		case SC_MAGNETICFIELD:
-
-		// Masquerades
-		case SC__ENERVATION:
-		case SC__GROOMY:
-		case SC__LAZINESS:
-		case SC__UNLUCKY:
-		case SC__WEAKNESS:
-		case SC__IGNORANCE:
-
-		// Other Effects
-		case SC_VACUUM_EXTREME:
-		case SC_NETHERWORLD:
-		case SC_FRESHSHRIMP:
-		case SC_SV_ROOTTWIST:
-		case SC_BITESCAR:
-			return true;
-	}
 	return false;
 }
 
@@ -13498,7 +13453,8 @@ static bool status_read_scdb_libconfig_sub_flag(struct config_setting_t *it, int
 			{ "Buff", SC_BUFF },
 			{ "Debuff", SC_DEBUFF },
 			{ "NoMadoReset", SC_MADO_NO_RESET },
-			{ "NoAllReset", SC_NO_CLEAR }
+			{ "NoAllReset", SC_NO_CLEAR },
+			{ "NoBoss", SC_NO_BOSS },
 		};
 
 		ARR_FIND(0, ARRAYLENGTH(flags), j, strcmpi(flag, flags[j].name) == 0);
