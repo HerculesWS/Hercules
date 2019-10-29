@@ -13962,27 +13962,9 @@ static int skill_isammotype(struct map_session_data *sd, int skill_id)
  **/
 static bool skill_is_combo(int skill_id)
 {
-	switch( skill_id )
-	{
-		case MO_CHAINCOMBO:
-		case MO_COMBOFINISH:
-		case CH_TIGERFIST:
-		case CH_CHAINCRUSH:
-		case MO_EXTREMITYFIST:
-		case TK_TURNKICK:
-		case TK_STORMKICK:
-		case TK_DOWNKICK:
-		case TK_COUNTER:
-		case TK_JUMPKICK:
-		case HT_POWER:
-		case GC_COUNTERSLASH:
-		case GC_WEAPONCRUSH:
-		case SR_FALLENEMPIRE:
-		case SR_DRAGONCOMBO:
-		case SR_TIGERCANNON:
-		case SR_GATEOFHELL:
-			return true;
-	}
+	if (skill->get_inf2(skill_id) & INF2_IS_COMBO_SKILL)
+		return true;
+
 	return false;
 }
 
@@ -20278,6 +20260,12 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 					sk->inf2 |= INF2_HIDDEN_TRAP;
 				} else {
 					sk->inf2 &= ~INF2_HIDDEN_TRAP;
+				}
+			} else if (strcmpi(type, "IsCombo") == 0) {
+				if (on) {
+					sk->inf2 |= INF2_IS_COMBO_SKILL;
+				} else {
+					sk->inf2 &= ~INF2_IS_COMBO_SKILL;
 				}
 			} else if (strcmpi(type, "None") != 0) {
 				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
