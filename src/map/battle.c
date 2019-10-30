@@ -6228,8 +6228,8 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 			status_change_end(src, SC_CLOAKINGEXCEED, INVALID_TIMER);
 	}
 	if( tsc && tsc->data[SC_AUTOCOUNTER] && status->check_skilluse(target, src, KN_AUTOCOUNTER, 1) ) {
-		enum unit_dir dir = map->calc_dir(target, src->x, src->y),
-		            t_dir = unit->getdir(target);
+		enum unit_dir   dir = map->calc_dir(target, src->x, src->y);
+		enum unit_dir t_dir = unit->getdir(target);
 		int dist = distance_bl(src, target);
 		if(dist <= 0 || (map->check_dir(dir, t_dir) == 0 && dist <= tstatus->rhw.range + 1)) {
 			uint16 skill_lv = tsc->data[SC_AUTOCOUNTER]->val1;
