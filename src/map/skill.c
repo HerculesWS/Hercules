@@ -3320,7 +3320,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 				dir = UNIT_DIR_EAST; // Official servers push target to the West
 				break;
 			default:
-				dir = UNIT_DIR_UNDEFINED;
+				dir = skill->attack_dir_unknown(&attack_type, src, dsrc, bl, &skill_id, &skill_lv, &tick, &flag);
 				break;
 
 		}
@@ -3496,6 +3496,11 @@ static int skill_attack_copy_unknown(int *attack_type, struct block_list *src, s
 {
 	nullpo_ret(skill_id);
 	return *skill_id;
+}
+
+static int skill_attack_dir_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag)
+{
+	return UNIT_DIR_UNDEFINED;
 }
 
 static void skill_attack_blow_unknown(int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl,
@@ -21750,6 +21755,7 @@ void skill_defaults(void)
 	skill->attack_combo2_unknown = skill_attack_combo2_unknown;
 	skill->attack_display_unknown = skill_attack_display_unknown;
 	skill->attack_copy_unknown = skill_attack_copy_unknown;
+	skill->attack_dir_unknown = skill_attack_dir_unknown;
 	skill->attack_blow_unknown = skill_attack_blow_unknown;
 	skill->attack_post_unknown = skill_attack_post_unknown;
 	skill->timerskill_dead_unknown = skill_timerskill_dead_unknown;
