@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef UNIT_UNITDEFINES_H
-#define UNIT_UNITDEFINES_H
+#ifndef MAP_UNITDEFINES_H
+#define MAP_UNITDEFINES_H
 
 /**
  * Used for directions, @see unit_data.dir
@@ -55,4 +55,4 @@ enum unit_dir {
 /* Returns a random diagonal direction */
 #define unit_get_rnd_diagonal_dir() ( UNIT_DIR_NORTHWEST + 2 * (rnd() % 4) )
 
-#endif /* UNIT_UNITDEFINES_H */
+#endif /* MAP_UNITDEFINES_H */
