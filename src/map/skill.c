@@ -3338,7 +3338,10 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			case SR_KNUCKLEARROW:
 				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) && !(flag&4) ) {
 					short dir_x, dir_y;
-					Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+					if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+						map->freeblock_unlock(); // unblock before assert-returning
+						return 0;
+					}
 					dir_x = dirx[unit_get_opposite_dir(dir)];
 					dir_y = diry[unit_get_opposite_dir(dir)];
 					if (map->getcell(bl->m, bl, bl->x + dir_x, bl->y + dir_y, CELL_CHKNOPASS) != 0)
@@ -4762,7 +4765,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				ty = bl->y;
 				for(i=0;i<c;i++) {
 					// Target coordinates (get changed even if knockback fails)
-					Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+					if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+						map->freeblock_unlock(); // unblock before assert-returning
+						return 0;
+					}
 					tx -= dirx[dir];
 					ty -= diry[dir];
 					// If target cell is a wall then break
@@ -4805,7 +4811,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				for (i=0;i<4;i++) {
 					map->foreachincell(skill->area_sub,bl->m,x,y,BL_CHAR,src,skill_id,skill_lv,
 					                   tick,flag|BCT_ENEMY|1,skill->castend_damage_id);
-					Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+					if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+						map->freeblock_unlock(); // unblock before assert-returning
+						return 0;
+					}
 					x += dirx[dir];
 					y += diry[dir];
 				}
@@ -5050,7 +5059,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case GC_DARKILLUSION:
 			{
 				enum unit_dir dir = map->calc_dir(bl, src->x, src->y);
-				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+				if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+					map->freeblock_unlock(); // unblock before assert-returning
+					return 0;
+				}
 				short x = bl->x + dirx[dir];
 				short y = bl->y + diry[dir];
 
@@ -5211,7 +5223,10 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case RA_WUGSTRIKE:
 			if (sd != NULL && pc_isridingwug(sd)) {
 				enum unit_dir dir = map->calc_dir(bl, src->x, src->y);
-				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+				if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+					map->freeblock_unlock(); // unblock before assert-returning
+					return 0;
+				}
 				short x = bl->x + dirx[dir];
 				short y = bl->y + diry[dir];
 				if (unit->movepos(src, x, y, 1, 1) != 0) {
@@ -8081,7 +8096,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					dir = unit->getdir(src);
 				else
 					dir = map->calc_dir(src, bl->x, bl->y);
-				Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+				if (Assert_chk(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX)) {
+					map->freeblock_unlock(); // unblock before assert-returning
+					return 0;
+				}
 				unit->stop_attack(src);
 				//Run skillv tiles overriding the can-move check.
 				if (unit->walktoxy(src, (src->x + skill_lv * -dirx[dir]),
