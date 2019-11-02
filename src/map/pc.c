@@ -10755,6 +10755,21 @@ static int pc_checkitem(struct map_session_data *sd)
 
 	}
 
+	if (sd->bl.m >= 0) {
+		for (i = 0; i < EQI_MAX; i++) {
+			if ((pc->equip_pos[i] & EQP_VISIBLE) == 0)
+				continue;
+			int index = sd->equip_index[i];
+			if (index == -1)
+				continue;
+			if (map_no_view(sd->bl.m, pc->equip_pos[i]))
+				pc->unequipitem_pos(sd, index, sd->status.inventory[index].equip);
+			else
+				pc->equipitem_pos(sd, sd->inventory_data[index], index, sd->status.inventory[index].equip);
+		}
+	}
+
+
 	if (calc_flag != 0 && sd->state.active == 1) {
 		pc->checkallowskill(sd);
 		status_calc_pc(sd, SCO_NONE);
