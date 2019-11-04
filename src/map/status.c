@@ -13458,19 +13458,24 @@ static bool status_read_scdb_libconfig_sub(struct config_setting_t *it, int idx,
 	nullpo_retr(false, source);
 
 	int i32;
+	int status_id;
 	const char *name = config_setting_name(it);
 
-	if (!script->get_constant(name, &i32) || i32 <= SC_NONE || i32 >= SC_MAX) {
+	if (!script->get_constant(name, &status_id) || status_id <= SC_NONE || status_id >= SC_MAX) {
 		ShowWarning("status_read_scdb_libconfig_sub: Invalid status type (%s) in \"%s\" entry #%d, skipping.\n", name, source, idx);
 		return false;
 	}
 
-	libconfig->setting_lookup_bool_real(it, "Visible", &status->dbs->DisplayType[i32]);
+	libconfig->setting_lookup_bool_real(it, "Visible", &status->dbs->DisplayType[status_id]);
 
 	struct config_setting_t *fg = libconfig->setting_get_member(it, "Flags");
 	if (fg != NULL)
-		status->read_scdb_libconfig_sub_flag(fg, i32, source);
+		status->read_scdb_libconfig_sub_flag(fg, status_id, source);
 
+	if (itemdb->lookup_const(it, "Icon", &i32) && i32 >= 0)
+		status->dbs->IconChangeTable[status_id] = i32;
+	else
+		status->dbs->IconChangeTable[status_id] = SI_BLANK;
 	return true;
 }
 
