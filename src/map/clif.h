@@ -902,8 +902,8 @@ struct clif_interface {
 	void (*cooking_list) (struct map_session_data *sd, int trigger, uint16 skill_id, int qty, int list_type);
 	void (*autospell) (struct map_session_data *sd,uint16 skill_lv);
 	void (*combo_delay) (struct block_list *bl,int wait);
-	void (*status_change) (struct block_list *bl, int type, int flag, int total_tick, int val1, int val2, int val3);
-	void (*status_change_sub) (struct block_list *bl, int type, int flag, int tick, int total_tick, int val1, int val2, int val3);
+	void (*status_change) (struct block_list *bl, int relevant_bl, int type, int flag, int total_tick, int val1, int val2, int val3);
+	void (*status_change_sub) (struct block_list *bl, int type, int relevant_bl, int flag, int tick, int total_tick, int val1, int val2, int val3);
 	void (*insert_card) (struct map_session_data *sd,int idx_equip,int idx_card,int flag);
 	void (*inventoryList) (struct map_session_data *sd);
 	void (*inventoryItems) (struct map_session_data *sd, enum inventory_type type);

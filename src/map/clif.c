@@ -1586,7 +1586,8 @@ static bool clif_spawn(struct block_list *bl)
 			if (sd->bg_id != 0 && map->list[sd->bl.m].flag.battleground)
 				clif->sendbgemblem_area(sd);
 			for (i = 0; i < sd->sc_display_count; i++) {
-				clif->sc_continue(&sd->bl, sd->bl.id,AREA,status->dbs->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
+				clif->sc_continue(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(sd->sc_display[i]->type), sd->sc_display[i]->val1, sd->sc_display[i]->val2, sd->sc_display[i]->val3);
+
 			}
 			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 				clif->spiritcharm(sd);
@@ -1612,7 +1613,7 @@ static bool clif_spawn(struct block_list *bl)
 			else if (nd->size == SZ_MEDIUM)
 				clif->specialeffect(&nd->bl,421,AREA);
 			if (nd->clan_id > 0)
-				clif->sc_load(&nd->bl, nd->bl.id, AREA, status->dbs->IconChangeTable[SC_CLAN_INFO], 0, nd->clan_id, 0);
+				clif->sc_load(&nd->bl, nd->bl.id, AREA, status->get_sc_icon(SC_CLAN_INFO), 0, nd->clan_id, 0);
 		}
 			break;
 		case BL_PET:
@@ -3873,7 +3874,7 @@ static void clif_arrowequip(struct map_session_data *sd, int val)
 	nullpo_retv(sd);
 
 #if PACKETVER >= 20121128
-	clif->status_change(&sd->bl, SI_CLIENT_ONLY_EQUIP_ARROW, 1, INVALID_TIMER, 0, 0, 0);
+	clif->status_change(&sd->bl, status->get_sc_icon(SC_CLIENT_ONLY_EQUIP_ARROW), status->get_sc_relevant_bl_types(SC_CLIENT_ONLY_EQUIP_ARROW), 1, INVALID_TIMER, 0, 0, 0);
 #endif
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0x013c));
@@ -4676,7 +4677,7 @@ static void clif_getareachar_pc(struct map_session_data *sd, struct map_session_
 		clif->charm_single(sd->fd, dstsd);
 
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
-		clif->sc_continue(&sd->bl,dstsd->bl.id,SELF,status->dbs->IconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
+		clif->sc_continue(&sd->bl, dstsd->bl.id, SELF, status->get_sc_icon(dstsd->sc_display[i]->type), dstsd->sc_display[i]->val1, dstsd->sc_display[i]->val2, dstsd->sc_display[i]->val3);
 	}
 	if( (sd->status.party_id && dstsd->status.party_id == sd->status.party_id) || //Party-mate, or hpdisp setting.
 		(sd->bg_id && sd->bg_id == dstsd->bg_id) || //BattleGround
@@ -4757,7 +4758,7 @@ static void clif_getareachar_unit(struct map_session_data *sd, struct block_list
 			else if (nd->size == SZ_MEDIUM)
 				clif->specialeffect_single(bl,421,sd->fd);
 			if (nd->clan_id > 0)
-				clif->sc_load(&nd->bl, nd->bl.id, AREA, status->dbs->IconChangeTable[SC_CLAN_INFO], 0, nd->clan_id, 0);
+				clif->sc_load(&nd->bl, nd->bl.id, AREA, status->get_sc_icon(SC_CLAN_INFO), 0, nd->clan_id, 0);
 		}
 			break;
 		case BL_MOB:
@@ -6041,7 +6042,7 @@ static void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 s
 	}
 }
 
-static void clif_status_change_notick(struct block_list *bl, int type, int flag, int tick, int total_tick, int val1, int val2, int val3)
+static void clif_status_change_notick(struct block_list *bl, int type, int relevant_bl, int flag, int tick, int total_tick, int val1, int val2, int val3)
 {
 	struct packet_sc_notick p;
 	struct map_session_data *sd;
@@ -6051,7 +6052,7 @@ static void clif_status_change_notick(struct block_list *bl, int type, int flag,
 	if (type == SI_BLANK)  //It shows nothing on the client...
 		return;
 
-	if (!(status->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
+	if (!(relevant_bl & bl->type)) // only send status changes that actually matter to the client
 		return;
 
 	sd = BL_CAST(BL_PC, bl);
@@ -6070,7 +6071,7 @@ static void clif_status_change_notick(struct block_list *bl, int type, int flag,
 /// 08ff <id>.L <index>.W <remain msec>.L { <val>.L }*3  (PACKETVER >= 20111108)
 /// 0983 <index>.W <id>.L <state>.B <total msec>.L <remain msec>.L { <val>.L }*3 (PACKETVER >= 20120618)
 /// 0984 <id>.L <index>.W <total msec>.L <remain msec>.L { <val>.L }*3 (PACKETVER >= 20120618)
-static void clif_status_change_sub(struct block_list *bl, int type, int flag, int tick, int total_tick, int val1, int val2, int val3)
+static void clif_status_change_sub(struct block_list *bl, int type, int relevant_bl, int flag, int tick, int total_tick, int val1, int val2, int val3)
 {
 	struct packet_status_change p;
 	struct map_session_data *sd;
@@ -6080,7 +6081,7 @@ static void clif_status_change_sub(struct block_list *bl, int type, int flag, in
 
 	nullpo_retv(bl);
 
-	if (!(status->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
+	if (!(relevant_bl & bl->type)) // only send status changes that actually matter to the client
 		return;
 
 	if ( tick < 0 )
@@ -6107,9 +6108,9 @@ static void clif_status_change_sub(struct block_list *bl, int type, int flag, in
 
 /// Notifies clients of a status change.
 /// @see clif_status_change_sub
-static void clif_status_change(struct block_list *bl, int type, int flag, int total_tick, int val1, int val2, int val3)
+static void clif_status_change(struct block_list *bl, int type, int relevant_bl, int flag, int total_tick, int val1, int val2, int val3)
 {
-	clif->status_change_sub(bl, type, flag, total_tick, total_tick, val1, val2, val3);
+	clif->status_change_sub(bl, type, relevant_bl, flag, total_tick, total_tick, val1, val2, val3);
 }
 
 /// Send message (modified by [Yor]) (ZC_NOTIFY_PLAYERCHAT).
@@ -10681,11 +10682,11 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		clif->initialstatus(sd);
 
 		if (pc_isfalcon(sd))
-			clif->status_change(&sd->bl, SI_FALCON, 1, 0, 0, 0, 0);
+			clif->status_change(&sd->bl, status->get_sc_icon(SC_FALCON), status->get_sc_relevant_bl_types(SC_FALCON), 1, 0, 0, 0, 0);
 		if (pc_isridingpeco(sd) || pc_isridingdragon(sd))
-			clif->status_change(&sd->bl, SI_RIDING, 1, 0, 0, 0, 0);
+			clif->status_change(&sd->bl, status->get_sc_icon(SC_RIDING), status->get_sc_relevant_bl_types(SC_RIDING), 1, 0, 0, 0, 0);
 		else if (pc_isridingwug(sd))
-			clif->status_change(&sd->bl, SI_WUGRIDER, 1, 0, 0, 0, 0);
+			clif->status_change(&sd->bl, status->get_sc_icon(SC_WUGRIDER), status->get_sc_relevant_bl_types(SC_WUGRIDER), 1, 0, 0, 0, 0);
 
 		if(sd->status.manner < 0)
 			sc_start(NULL,&sd->bl,SC_NOCHAT,100,0,0);
@@ -10709,7 +10710,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 		if (map->night_flag && map->list[sd->bl.m].flag.nightenabled) {
 			sd->state.night = 1;
-			clif->status_change(&sd->bl, SI_SKE, 1, 0, 0, 0, 0);
+			clif->status_change(&sd->bl, status->get_sc_icon(SC_SKE), status->get_sc_relevant_bl_types(SC_SKE), 1, 0, 0, 0, 0);
 		}
 
 		// Notify everyone that this char logged in [Skotlex].
@@ -10761,11 +10762,11 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 			//Display night.
 			if( !sd->state.night ) {
 				sd->state.night = 1;
-				clif->status_change(&sd->bl, SI_SKE, 1, 0, 0, 0, 0);
+				clif->status_change(&sd->bl, status->get_sc_icon(SC_SKE), status->get_sc_relevant_bl_types(SC_SKE), 1, 0, 0, 0, 0);
 			}
 		} else if( sd->state.night ) { //Clear night display.
 			sd->state.night = 0;
-			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_SKE);
+			clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_SKE));
 		}
 
 		if( map->list[sd->bl.m].flag.battleground ) {
@@ -10813,7 +10814,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		npc->script_event(sd, NPCE_LOADMAP);
 
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd)) //blindness [Komurka]
-		clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL1);
+		clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_DEVIL1));
 
 	if (sd->sc.opt2) //Client loses these on warp.
 		clif->changeoption(&sd->bl);

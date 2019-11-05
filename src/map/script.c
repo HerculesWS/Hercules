@@ -25462,7 +25462,7 @@ static BUILDIN(clan_master)
 	}
 
 	nd->clan_id = clan_id;
-	clif->sc_load(&nd->bl, nd->bl.id, AREA, status->dbs->IconChangeTable[SC_CLAN_INFO], 0, clan_id, 0);
+	clif->sc_load(&nd->bl, nd->bl.id, AREA, status->get_sc_icon(SC_CLAN_INFO), 0, clan_id, 0);
 
 	script_pushint(st, true);
 	return true;
@@ -27245,7 +27245,6 @@ static void script_hardcoded_constants(void)
 	script->set_constant("RENEWAL_ASPD", 0, false, false);
 #endif
 	script->constdb_comment(NULL);
-#include "constants.inc"
 }
 
 /**

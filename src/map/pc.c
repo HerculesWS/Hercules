@@ -2839,7 +2839,7 @@ static int pc_bonus(struct map_session_data *sd, int type, int val)
 		case SP_INTRAVISION: // Maya Purple Card effect allowing to see Hiding/Cloaking people [DracoRPG]
 			if(sd->state.lr_flag != 2) {
 				sd->special_state.intravision = 1;
-				clif->status_change(&sd->bl, SI_CLAIRVOYANCE, 1, 0, 0, 0, 0);
+				clif->status_change(&sd->bl, status->get_sc_icon(SC_CLAIRVOYANCE), status->get_sc_relevant_bl_types(SC_CLAIRVOYANCE), 1, 0, 0, 0, 0);
 			}
 			break;
 		case SP_NO_KNOCKBACK:
@@ -6916,7 +6916,7 @@ static int pc_checkjoblevelup(struct map_session_data *sd)
 	status_calc_pc(sd,SCO_FORCE);
 	clif->misceffect(&sd->bl,1);
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd))
-		clif->status_change(&sd->bl,SI_DEVIL1, 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
+		clif->status_change(&sd->bl, status->get_sc_icon(SC_DEVIL1), status->get_sc_relevant_bl_types(SC_DEVIL1), 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
 
 	npc->script_event(sd, NPCE_JOBLVUP);
 
@@ -7686,7 +7686,7 @@ static int pc_resetskill(struct map_session_data *sd, int flag)
 			return 0;
 
 		if( pc->checkskill(sd, SG_DEVIL) &&  !pc->nextjobexp(sd) ) //Remove perma blindness due to skill-reset. [Skotlex]
-			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL1);
+			clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_DEVIL1));
 		i = sd->sc.option;
 		if( i&OPTION_RIDING && pc->checkskill(sd, KN_RIDING) )
 			i &= ~OPTION_RIDING;
@@ -8056,7 +8056,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 
 	/* e.g. not killed through pc->damage */
 	if( pc_issit(sd) ) {
-		clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
+		clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_SIT));
 	}
 
 	pc_setdead(sd);
@@ -9155,11 +9155,11 @@ static int pc_setoption(struct map_session_data *sd, int type)
 
 	if( (type&OPTION_RIDING && !(p_type&OPTION_RIDING)) || (type&OPTION_DRAGON && !(p_type&OPTION_DRAGON) && pc->checkskill(sd,RK_DRAGONTRAINING) > 0) ) {
 		// Mounting
-		clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_RIDING, 0, 0, 0);
+		clif->sc_load(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_RIDING), 0, 0, 0);
 		status_calc_pc(sd,SCO_NONE);
 	} else if( (!(type&OPTION_RIDING) && p_type&OPTION_RIDING) || (!(type&OPTION_DRAGON) && p_type&OPTION_DRAGON) ) {
 		// Dismount
-		clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_RIDING);
+		clif->sc_end(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_RIDING));
 		status_calc_pc(sd,SCO_NONE);
 	}
 
@@ -9179,15 +9179,15 @@ static int pc_setoption(struct map_session_data *sd, int type)
 #endif
 
 	if (type&OPTION_FALCON && !(p_type&OPTION_FALCON)) //Falcon ON
-		clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_FALCON, 0, 0, 0);
+		clif->sc_load(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_FALCON), 0, 0, 0);
 	else if (!(type&OPTION_FALCON) && p_type&OPTION_FALCON) //Falcon OFF
-		clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_FALCON);
+		clif->sc_end(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_FALCON));
 
 	if( type&OPTION_WUGRIDER && !(p_type&OPTION_WUGRIDER) ) { // Mounting
-		clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER, 0, 0, 0);
+		clif->sc_load(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_WUGRIDER), 0, 0, 0);
 		status_calc_pc(sd,SCO_NONE);
 	} else if( !(type&OPTION_WUGRIDER) && p_type&OPTION_WUGRIDER ) { // Dismount
-		clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER);
+		clif->sc_end(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_WUGRIDER));
 		status_calc_pc(sd,SCO_NONE);
 	}
 
@@ -9275,7 +9275,7 @@ static int pc_setcart(struct map_session_data *sd, int type)
 				clif->cartList(sd);
 			clif->updatestatus(sd, SP_CARTINFO);
 			sc_start(NULL,&sd->bl, SC_PUSH_CART, 100, type, 0);
-			clif->sc_load(&sd->bl, sd->bl.id, AREA, SI_ON_PUSH_CART, type, 0, 0);
+			clif->sc_load(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(SC_ON_PUSH_CART), type, 0, 0);
 			if( sd->sc.data[SC_PUSH_CART] )/* forcefully update */
 				sd->sc.data[SC_PUSH_CART]->val1 = type;
 			break;
@@ -10913,7 +10913,7 @@ static int pc_daynight_timer_sub(struct map_session_data *sd, va_list ap)
 {
 	nullpo_ret(sd);
 	if (sd->state.night != map->night_flag && map->list[sd->bl.m].flag.nightenabled) { //Night/day state does not match.
-		clif->status_change(&sd->bl, SI_SKE, map->night_flag, 0, 0, 0, 0); //New night effect by dynamix [Skotlex]
+		clif->status_change(&sd->bl, status->get_sc_icon(SC_SKE), status->get_sc_relevant_bl_types(SC_SKE), map->night_flag, 0, 0, 0, 0); //New night effect by dynamix [Skotlex]
 		sd->state.night = map->night_flag;
 		return 1;
 	}
@@ -10966,7 +10966,7 @@ static void pc_setstand(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	status_change_end(&sd->bl, SC_TENSIONRELAX, INVALID_TIMER);
-	clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
+	clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_SIT));
 	//Reset sitting tick.
 	sd->ssregen.tick.hp = sd->ssregen.tick.sp = 0;
 	if (pc_isdead(sd)) {

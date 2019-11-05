@@ -6457,7 +6457,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
 				sd->state.autocast = 0;
 				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
-				clif->status_change(src, SI_POSTDELAY, 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
+				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
 		}
 

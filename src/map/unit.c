@@ -661,7 +661,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 	lv = sc->data[type]->val1;
 	//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
 	if( type == SC_RUN )
-		clif->sc_load(bl,bl->id,AREA,SI_TING,0,0,0);
+		clif->sc_load(bl, bl->id, AREA, status->get_sc_icon(SC_TING), 0, 0, 0);
 
 	ud = unit->bl2ud(bl);
 	nullpo_retv(ud);
@@ -673,7 +673,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 		if (lv > 0)
 			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
-		clif->sc_end(bl, bl->id, AREA, SI_TING);
+		clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_TING));
 	} else if (sd) {
 		clif->fixpos(bl);
 		skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
