@@ -39,23 +39,23 @@
 	.@GID = getcastledata("aldeg_cas05",1);
 
 	if (.@GID == 0) {
-		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
-		mes " ";
-		mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
-		mes "We declare that";
-		mes "there is no formal master of this castle.";
-		mes " ";
-		mes "2. To the one who can ";
-		mes "overcome all trials";
-		mes "and destroy the Emperium,";
-		mes "the king will endow the one with";
-		mes "ownership of this castle.";
+		mes("[ Edict of the Divine Rune-Midgarts Kingdom ]");
+		mes(" ");
+		mes("1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ");
+		mes("We declare that");
+		mes("there is no formal master of this castle.");
+		mes(" ");
+		mes("2. To the one who can ");
+		mes("overcome all trials");
+		mes("and destroy the Emperium,");
+		mes("the king will endow the one with");
+		mes("ownership of this castle.");
 		close;
 	}
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		mes "[ Echoing Voice ]";
-		mes "Brave ones...";
-		mes "Do you wish to return to your honorable place?";
+		mes("[ Echoing Voice ]");
+		mes("Brave ones...");
+		mes("Do you wish to return to your honorable place?");
 		next;
 		if(select("Return to the guild castle.", "Quit.") == 1) {
 			close2;
@@ -67,16 +67,16 @@
 		}
 		close;
 	}
-	mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
-	mes " ";
-	mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
-	mes "we approve that this place is in";
-	mes "the private prossession of ^ff0000"+getguildname(.@GID)+"^000000 Guild.";
-	mes " ";
-	mes "2. The guild Master of ^ff0000"+getguildname(.@GID)+"^000000 Guild is";
-	mes "^ff0000"+getguildmaster(.@GID)+"^000000";
-	mes "If there is anyone who objects to this,";
-	mes "prove your strength and honor with a steel blade in your hand.";
+	mes("[ Edict of the Divine Rune-Midgarts Kingdom ]");
+	mes(" ");
+	mes("1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ");
+	mes("we approve that this place is in");
+	mesf("the private prossession of ^ff0000%s^000000 Guild.", getguildname(.@GID));
+	mes(" ");
+	mesf("2. The guild Master of ^ff0000%s^000000 Guild is", getguildname(.@GID));
+	mesf("^ff0000%s^000000", getguildmaster(.@GID));
+	mes("If there is anyone who objects to this,");
+	mes("prove your strength and honor with a steel blade in your hand.");
 	close;
 
 OnRecvCastleA05:
@@ -125,8 +125,8 @@ aldeg_cas05,51,179,0	duplicate(cm)	Esmarehk#aldeg_cas05	1_M_JOBTESTER
 //== Treasure Room Exit ====================================
 aldeg_cas05,64,8,0	script	#lever_A05	HIDDEN_NPC,{
 
-	mes " ";
-	mes "There's a small lever. Will you pull it?";
+	mes(" ");
+	mes("There's a small lever. Will you pull it?");
 	next;
 	if(select("Pull.", "Do not.") == 1) {
 		close2;
