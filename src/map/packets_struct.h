@@ -3714,6 +3714,14 @@ struct PACKET_ZC_LAPINEDDUKDDAK_RESULT {
 DEFINE_PACKET_HEADER(ZC_LAPINEDDUKDDAK_RESULT, 0x0a50);
 #endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
 
+#if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190709
+struct PACKET_CZ_REQ_MOUNTOFF {
+	int16 packetType;
+	uint8 action;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_MOUNTOFF, 0x0b35);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

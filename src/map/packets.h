@@ -1796,6 +1796,14 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+#if PACKETVER >= 20160302
+	packet(0x0a4f,clif->plapineDdukDdak_ack);
+#endif
+
+#if PACKETVER >= 20160504
+	packet(0x0a70,clif->plapineDdukDdak_close);
+#endif
+
 // all 2016-05-25
 #if PACKETVER >= 20160525
 	packet(0x0a77,clif->pCameraInfo); // CZ_CAMERA_INFO
@@ -1959,12 +1967,12 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b2c,clif->pGuildCastleInfoRequest);
 #endif
 
-#if PACKETVER >= 20160302
-	packet(0x0a4f,clif->plapineDdukDdak_ack);
+#if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703
+	packet(0x0b35,clif->pReqGearOff);
 #endif
 
-#if PACKETVER >= 20160504
-	packet(0x0a70,clif->plapineDdukDdak_close);
+#if PACKETVER_ZERO_NUM >= 20190709
+	packet(0x0b35,clif->pReqGearOff);
 #endif
 
 #endif /* MAP_PACKETS_H */

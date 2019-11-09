@@ -12377,6 +12377,42 @@ static void clif_parse_RemoveOption(int fd, struct map_session_data *sd)
 	}
 }
 
+static void clif_parse_reqGearOff(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_reqGearOff(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190709
+	const struct PACKET_CZ_REQ_MOUNTOFF *p = RFIFOP(fd, 0);
+	switch (p->action) {
+	case REMOVE_MOUNT_DRAGON:
+		if (pc_isridingdragon(sd))
+			pc->setoption(sd, sd->sc.option &~ OPTION_DRAGON);
+		break;
+	case REMOVE_MOUNT_MADO:
+		if (pc_ismadogear(sd))
+			pc->setoption(sd, sd->sc.option &~ OPTION_MADOGEAR);
+		break;
+	case REMOVE_MOUNT_PECO:
+		if (pc_isridingpeco(sd))
+			pc->setoption(sd, sd->sc.option &~ OPTION_RIDING);
+		break;
+	case REMOVE_MOUNT_FALCON:
+		if (pc_isfalcon(sd))
+			pc->setoption(sd, sd->sc.option &~ OPTION_FALCON);
+		break;
+	case REMOVE_MOUNT_CART:
+		// this packet exists in clients with only new carts [4144]
+		if (sd->sc.data[SC_PUSH_CART])
+			pc->setcart(sd, 0);
+		break;
+	case REMOVE_MOUNT_0:
+	case REMOVE_MOUNT_2:
+	default:
+		ShowError("Unknown action in remove mount packet: %d\n", p->action);
+		break;
+	}
+#endif
+}
+
 static void clif_parse_ChangeCart(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to change cart's visual look (CZ_REQ_CHANGECART).
 /// 01af <num>.W
@@ -24680,4 +24716,5 @@ void clif_defaults(void)
 	clif->lapineDdukDdak_result = clif_lapineDdukDdak_result;
 	clif->plapineDdukDdak_ack = clif_parse_lapineDdukDdak_ack;
 	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
+	clif->pReqGearOff = clif_parse_reqGearOff;
 }
