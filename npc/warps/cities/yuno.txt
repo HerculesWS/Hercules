@@ -216,3 +216,6 @@ yuno_pre,81,68,0	warp	yungvn09	1,1,yuno_pre,95,68
 yuno_pre,18,92,0	warp	yungvn10	1,1,yuno_pre,18,73
 yuno,157,322,0	warp	yungvn11	1,1,yuno_pre,69,13
 yuno_pre,69,10,0	warp	yungvn12	1,1,yuno,157,317
+
+yuno,195,87,0	warp	yun78	1,1,yuno_in04,186,28
+yuno_in04,192,28,0	warp	yun79	1,1,yuno,198,87

@@ -120,3 +120,5 @@ lighthalzen,251,299,0	warp	lhz_house3_1-1	1,1,lhz_in03,97,21
 lhz_in03,93,21,0	warp	lhz_house3_1-2	1,1,lighthalzen,247,299
 lhz_in03,134,14,0	warp	lhz_house3_2-1	1,1,lhz_in03,125,90
 lhz_in03,120,90,0	warp	lhz_house3_2-2	1,1,lhz_in03,130,14
+lighthalzen,340,240,0	warp	lhz_pub3-1	1,1,lhz_in03,180,86
+lhz_in03,180,90,0	warp	lhz_pub3-2	1,1,lighthalzen,339,245
