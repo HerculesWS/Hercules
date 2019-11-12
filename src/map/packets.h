@@ -1800,7 +1800,7 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0a4f,clif->plapineDdukDdak_ack);
 #endif
 
-#if PACKETVER >= 20160504
+#if PACKETVER_MAIN_NUM >= 20160504 || PACKETVER_RE_NUM >= 20160504 || defined(PACKETVER_ZERO)
 	packet(0x0a70,clif->plapineDdukDdak_close);
 #endif
 
