@@ -40,7 +40,6 @@ struct hplugin_data_store;
 //The number of drops all mobs have and the max drop-slot that the steal skill will attempt to steal from.
 #define MAX_MOB_DROP 10
 #define MAX_MVP_DROP 3
-#define MAX_STEAL_DROP 7
 
 //Min time between AI executions
 #define MIN_MOBTHINKTIME 100
