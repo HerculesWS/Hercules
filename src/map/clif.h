@@ -733,6 +733,16 @@ enum lapineddukddak_result {
 	LAPINEDDKUKDDAK_INVALID_ITEM = 7,
 };
 
+enum removeGear_flag {
+	REMOVE_MOUNT_0 = 0,  // unused
+	REMOVE_MOUNT_DRAGON = 1,
+	REMOVE_MOUNT_2 = 2,  // unused
+	REMOVE_MOUNT_MADO = 3,
+	REMOVE_MOUNT_PECO = 4,
+	REMOVE_MOUNT_FALCON = 5,
+	REMOVE_MOUNT_CART = 6,
+};
+
 /**
  * Clif.c Interface
  **/
@@ -1670,6 +1680,7 @@ struct clif_interface {
 	bool (*lapineDdukDdak_result) (struct map_session_data *sd, enum lapineddukddak_result result);
 	void (*plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
 	void (*plapineDdukDdak_close) (int fd, struct map_session_data *sd);
+	void (*pReqGearOff) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
