@@ -9354,7 +9354,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 
 	const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
 
-	if (ssd->fakename[0] != '\0' && ssd->disguise != -1) {
+	if (ssd->fakename[0] != '\0') {
 		packet.packet_id = reqName;
 		len = sizeof(struct packet_reqname_ack);
 	} else {
@@ -9367,7 +9367,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		packet.gid = -bl->id;
 	}
 
-	if (ssd->fakename[0] != '\0' && ssd->disguise != -1) {
+	if (ssd->fakename[0] != '\0') {
 		memcpy(packet.name, ssd->fakename, NAME_LENGTH);
 	} else {
 #if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
