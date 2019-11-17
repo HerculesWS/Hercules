@@ -61,7 +61,8 @@ typedef enum sc_conf_type {
 	SC_DEBUFF        = 0x020,
 	SC_MADO_NO_RESET = 0x040,
 	SC_NO_CLEAR      = 0x080,
-	SC_VISIBLE       = 0x100
+	SC_VISIBLE       = 0x100,
+	SC_NO_BOSS       = 0x200
 } sc_conf_type;
 
 /**
