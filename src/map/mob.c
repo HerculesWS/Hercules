@@ -1364,10 +1364,10 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 		) {
 			short x = bl->x, y = bl->y;
 			mob_stop_attack(md);
-			const struct mob_data *m_md = BL_CCAST(BL_MOB, bl);
-			nullpo_retr(0, m_md);
-			if (map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
-			    && (battle_config.slave_chase_masters_chasetarget == 0 || !mob->is_in_battle_state(m_md))
+			const struct mob_data *m_md = BL_CCAST(BL_MOB, bl); // Can be NULL due to master being BL_PC
+			// If master is BL_MOB and in battle, lock & chase to master's target instead, unless configured not to.
+			if ((battle_config.slave_chase_masters_chasetarget == 0 || (m_md != NULL && !mob->is_in_battle_state(m_md)))
+			    && map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
 			    && unit->walktoxy(&md->bl, x, y, 0))
 				return 1;
 		}
@@ -1380,13 +1380,12 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 	//Avoid attempting to lock the master's target too often to avoid unnecessary overload. [Skotlex]
 	if (DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME && !md->target_id) {
 		struct unit_data  *ud = unit->bl2ud(bl);
-		struct mob_data *m_md = BL_CAST(BL_MOB, bl);
+		struct mob_data *m_md = BL_CAST(BL_MOB, bl); // Can be NULL due to master being BL_PC
 		nullpo_retr(0, ud);
-		nullpo_retr(0, m_md);
 		md->last_linktime = tick;
 		struct block_list *tbl = NULL;
 
-		if (battle_config.slave_chase_masters_chasetarget == 1 && m_md->target_id != 0) { // possibly chasing something
+		if (battle_config.slave_chase_masters_chasetarget == 1 && m_md != NULL && m_md->target_id != 0) { // possibly chasing something
 			tbl = map->id2bl(m_md->target_id);
 		} else if (ud->target != 0 && ud->state.attack_continue != 0) {
 			tbl = map->id2bl(ud->target);
