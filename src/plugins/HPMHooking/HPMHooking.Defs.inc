@@ -2746,6 +2746,8 @@ typedef void (*HPMHOOK_pre_clif_plapineDdukDdak_ack) (int *fd, struct map_sessio
 typedef void (*HPMHOOK_post_clif_plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_plapineDdukDdak_close) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_plapineDdukDdak_close) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pReqGearOff) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pReqGearOff) (int fd, struct map_session_data *sd);
 #endif // MAP_CLIF_H
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);

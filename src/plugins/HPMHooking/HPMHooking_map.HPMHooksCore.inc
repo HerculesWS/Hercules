@@ -2336,6 +2336,8 @@ struct {
 	struct HPMHookPoint *HP_clif_plapineDdukDdak_ack_post;
 	struct HPMHookPoint *HP_clif_plapineDdukDdak_close_pre;
 	struct HPMHookPoint *HP_clif_plapineDdukDdak_close_post;
+	struct HPMHookPoint *HP_clif_pReqGearOff_pre;
+	struct HPMHookPoint *HP_clif_pReqGearOff_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -9165,6 +9167,8 @@ struct {
 	int HP_clif_plapineDdukDdak_ack_post;
 	int HP_clif_plapineDdukDdak_close_pre;
 	int HP_clif_plapineDdukDdak_close_post;
+	int HP_clif_pReqGearOff_pre;
+	int HP_clif_pReqGearOff_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;

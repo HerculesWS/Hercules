@@ -1192,6 +1192,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->lapineDdukDdak_result, HP_clif_lapineDdukDdak_result) },
 	{ HP_POP(clif->plapineDdukDdak_ack, HP_clif_plapineDdukDdak_ack) },
 	{ HP_POP(clif->plapineDdukDdak_close, HP_clif_plapineDdukDdak_close) },
+	{ HP_POP(clif->pReqGearOff, HP_clif_pReqGearOff) },
 /* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
