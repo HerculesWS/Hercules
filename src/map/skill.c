@@ -4425,7 +4425,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					skill->blown(src, bl, dist, dir, 0);
 					//HACK: since knockback officially defaults to the left, the client also turns to the left... therefore,
 					// make the caster look in the direction of the target
-					unit->setdir(src, unit_get_opposite_dir(dir));
+					unit->set_dir(src, unit_get_opposite_dir(dir));
 				}
 
 			}
@@ -4470,7 +4470,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					status_change_end(src, SC_HIDING, INVALID_TIMER);
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
 					dir = unit_get_opposite_dir(dir); // change direction [Celest]
-					unit->setdir(bl,dir);
+					unit->set_dir(bl, dir);
 				}
 				else if (sd)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
@@ -5044,7 +5044,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case RK_PHANTOMTHRUST:
 		{
 			struct map_session_data *tsd = BL_CAST(BL_PC, bl);
-			unit->setdir(src,map->calc_dir(src, bl->x, bl->y));
+			unit->set_dir(src, map->calc_dir(src, bl->x, bl->y));
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 
 			skill->blown(src,bl,distance_bl(src,bl)-1,unit->getdir(src),0);
@@ -5871,7 +5871,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 		// Asura Strike caster doesn't look to their target in the end
 		if (src->id != target->id && !is_asura)
-			unit->setdir(src, map->calc_dir(src, target->x, target->y));
+			unit->set_dir(src, map->calc_dir(src, target->x, target->y));
 
 		map->freeblock_unlock();
 		return 1;
@@ -8102,8 +8102,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 				unit->stop_attack(src);
 				//Run skillv tiles overriding the can-move check.
-				if (unit->walktoxy(src, (src->x + skill_lv * -dirx[dir]),
-				    (src->y + skill_lv * -diry[dir]), 2) == 0 && md != NULL)
+				if (unit->walk_toxy(src, src->x + skill_lv * -dirx[dir], src->y + skill_lv * -diry[dir], 2) == 0
+				    && md != NULL)
 					md->state.skillstate = MSS_WALK; //Otherwise it isn't updated in the AI.
 			}
 			break;
@@ -10844,7 +10844,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		if( sd && sd->skillitem != AL_WARP ) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
 			sd->skillitem = sd->skillitemlv = 0;
 
-		unit->setdir(src, map->calc_dir(src, ud->skillx, ud->skilly));
+		unit->set_dir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
 		if (ud->skilltimer == INVALID_TIMER) {
 			if (md) md->skill_idx = -1;

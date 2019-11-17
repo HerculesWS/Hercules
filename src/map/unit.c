@@ -122,7 +122,7 @@ static struct unit_data *unit_bl2ud2(struct block_list *bl)
  * @param bl block_list to process
  * @return 0: success, 1: fail, 2: nullpointer
  */
-static int unit_walktoxy_sub(struct block_list *bl)
+static int unit_walk_toxy_sub(struct block_list *bl)
 {
 	nullpo_retr(2, bl);
 	struct unit_data *ud = unit->bl2ud(bl);
@@ -182,7 +182,7 @@ static int unit_walktoxy_sub(struct block_list *bl)
 		timer_delay = status->get_speed(bl);
 
 	if (timer_delay > 0)
-		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walktoxy_timer, bl->id, 0); //TODO: check if unit->walktoxy_timer uses any intptr data
+		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walk_toxy_timer, bl->id, 0); //TODO: check if unit->walk_toxy_timer uses any intptr data
 	return 0;
 }
 
@@ -194,7 +194,7 @@ static int unit_walktoxy_sub(struct block_list *bl)
  * @param data: Unused
  * @return 0: success, 1: fail, 2: nullpointer
  */
-static int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
+static int unit_steptimer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
 	if (bl == NULL || bl->prev == NULL)
@@ -204,7 +204,7 @@ static int unit_step_timer(int tid, int64 tick, int id, intptr_t data)
 		return 2;
 
 	if (ud->steptimer != tid) {
-		ShowError("unit_step_timer mismatch %d != %d\n", ud->steptimer, tid);
+		ShowError("unit_steptimer mismatch %d != %d\n", ud->steptimer, tid);
 		return 1;
 	}
 
@@ -289,7 +289,7 @@ static int unit_warpto_master(struct block_list *master_bl, struct block_list *s
  * @param data: unused
  * @return 0: success, 1: fail
  */
-static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
+static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
 	if (bl == NULL || bl->prev == NULL) // Stop moved because it is missing from the block_list
@@ -330,7 +330,7 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 	// Monsters will walk into an icewall from the west and south if they already started walking
 	if (map->getcell(bl->m, bl, x + dx, y + dy, CELL_CHKNOPASS)
 	    && (icewall_walk_block == 0 || !map->getcell(bl->m, bl, x + dx, y + dy, CELL_CHKICEWALL) || dx < 0 || dy < 0))
-		return unit->walktoxy_sub(bl);
+		return unit->walk_toxy_sub(bl);
 
 	// Monsters can only leave icewalls to the west and south
 	// But if movement fails more than icewall_walk_block times, they can ignore this rule
@@ -416,7 +416,7 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 	if (ud->stepaction && ud->target_to != 0) {
 		// Delete old stepaction even if not executed yet, the latest command is what counts
 		if (ud->steptimer != INVALID_TIMER) {
-			timer->delete(ud->steptimer, unit->step_timer);
+			timer->delete(ud->steptimer, unit->steptimer);
 			ud->steptimer = INVALID_TIMER;
 		}
 		// Delay stepactions by half a step (so they are executed at full step)
@@ -425,11 +425,11 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 			timer_delay = status->get_speed(bl) * 14 / 20;
 		else
 			timer_delay = status->get_speed(bl) / 2;
-		ud->steptimer = timer->add(tick + timer_delay, unit->step_timer, bl->id, 0);
+		ud->steptimer = timer->add(tick + timer_delay, unit->steptimer, bl->id, 0);
 	}
 
 	if (ud->state.change_walk_target) {
-		if (unit->walktoxy_sub(bl) == 0)
+		if (unit->walk_toxy_sub(bl) == 0)
 			return 0;
 		clif->fixpos(bl);
 		return 1;
@@ -445,7 +445,7 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 		timer_delay = status->get_speed(bl);
 
 	if (timer_delay > 0) {
-		ud->walktimer = timer->add(tick + timer_delay, unit->walktoxy_timer, id, 0);
+		ud->walktimer = timer->add(tick + timer_delay, unit->walk_toxy_timer, id, 0);
 		if (md != NULL && DIFF_TICK(tick, md->dmgtick) < 3000) // not required not damaged recently
 			clif->move(ud);
 	} else if (ud->state.running != 0) {
@@ -483,34 +483,34 @@ static int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
 		ud->to_y = bl->y;
 
 		if (battle_config.official_cell_stack_limit != 0 && map->count_oncell(bl->m, x, y, BL_CHAR | BL_NPC, 0x1 | 0x2) > battle_config.official_cell_stack_limit) {
-			// Walked on occupied cell, call unit->walktoxy again
+			// Walked on occupied cell, call unit->walk_toxy again
 			if (ud->steptimer != INVALID_TIMER) {
 				// Execute step timer on next step instead
-				timer->delete(ud->steptimer, unit->step_timer);
+				timer->delete(ud->steptimer, unit->steptimer);
 				ud->steptimer = INVALID_TIMER;
 			}
-			return unit->walktoxy(bl, x, y, 8);
+			return unit->walk_toxy(bl, x, y, 8);
 		}
 	}
 	return 0;
 }
 
 /**
- * Timer for delayed execution of unit->walktoxy once triggered
+ * Timer for delayed execution of unit->walk_toxy once triggered
  * @param tid: Timer ID, unused
  * @param tick: Tick, unused
  * @param id: ID of block_list to execute the action
  * @param data: uint32 data cast to intptr_t with x-coord in lowest 16 bits and y-coord in highest 16 bits
  * @return 0: success, 1: failure
  */
-static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
+static int unit_delay_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
 	if (bl == NULL || bl->prev == NULL)
 		return 1;
 	short x = (short)GetWord((uint32)data, 0);
 	short y = (short)GetWord((uint32)data, 1);
-	unit->walktoxy(bl, x, y, 0);
+	unit->walk_toxy(bl, x, y, 0);
 	return 0;
 }
 
@@ -527,7 +527,7 @@ static int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data)
  * .
  * @return 0: success, 1: failure
  */
-static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
+static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
 {
 	// TODO: change flag to enum? [skyleo]
 	struct unit_data* ud = NULL;
@@ -564,7 +564,7 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 	if ((flag & 4) != 0 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0
 	    && DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000) {
 		// Delay walking command. [Skotlex]
-		timer->add(ud->canmove_tick + 1, unit->delay_walktoxy_timer, bl->id,
+		timer->add(ud->canmove_tick + 1, unit->delay_walk_toxy_timer, bl->id,
 		           (intptr_t)MakeDWord((uint16)x, (uint16)y));
 		return 0;
 	}
@@ -589,12 +589,12 @@ static int unit_walktoxy(struct block_list *bl, short x, short y, int flag)
 
 	if (ud->walktimer != INVALID_TIMER) {
 		// When you come to the center of the grid because the change of destination while you're walking right now
-		// Call a function from a timer unit->walktoxy_sub
+		// Call a function from a timer unit->walk_toxy_sub
 		ud->state.change_walk_target = 1;
 		return 0;
 	}
 
-	return unit->walktoxy_sub(bl);
+	return unit->walk_toxy_sub(bl);
 }
 
 /**
@@ -635,7 +635,7 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
 	if (ud->walktimer == INVALID_TIMER && ud->target == data) {
 		if (DIFF_TICK(ud->canmove_tick, tick) > 0) // Keep waiting?
 			timer->add(ud->canmove_tick + 1, unit->walktobl_timer, id, data);
-		else if (unit->can_move(bl) != 0 && unit->walktoxy_sub(bl) == 0 && ud->state.attack_continue != 0)
+		else if (unit->can_move(bl) != 0 && unit->walk_toxy_sub(bl) == 0 && ud->state.attack_continue != 0)
 			set_mobstate(bl);
 	}
 	return 0;
@@ -694,7 +694,7 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 	if(!unit->can_move(bl))
 		return 0;
 
-	if (unit->walktoxy_sub(bl) == 0 && (flag & 2) != 0) {
+	if (unit->walk_toxy_sub(bl) == 0 && (flag & 2) != 0) {
 		set_mobstate(bl);
 		return 0;
 	}
@@ -784,14 +784,14 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		return false;
 	}
 
-	if (unit->walktoxy(bl, to_x, to_y, 1) == 0)
+	if (unit->walk_toxy(bl, to_x, to_y, 1) == 0)
 		return true;
 
 	//There must be an obstacle nearby. Attempt walking one cell at a time.
 	do {
 		to_x -= dir_x;
 		to_y -= dir_y;
-	} while (--i > 0 && unit->walktoxy(bl, to_x, to_y, 1) != 0);
+	} while (--i > 0 && unit->walk_toxy(bl, to_x, to_y, 1) != 0);
 
 	if ( i == 0 ) {
 		unit->run_hit(bl, sc, sd, type);
@@ -809,7 +809,7 @@ static int unit_escape(struct block_list *bl, struct block_list *target, short d
 	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	while (dist > 0 && map->getcell(bl->m, bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], CELL_CHKNOREACH))
 		dist--;
-	if (dist > 0 && unit->walktoxy(bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], 0) == 0)
+	if (dist > 0 && unit->walk_toxy(bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], 0) == 0)
 		return 1;
 	else
 		return 0;
@@ -885,7 +885,7 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
  * @param dir: the facing direction @see enum unit_dir
  * @return 0: success, 1: failure
  */
-static int unit_setdir(struct block_list *bl, enum unit_dir dir)
+static int unit_set_dir(struct block_list *bl, enum unit_dir dir)
 {
 	nullpo_retr(1, bl);
 	struct unit_data *ud = unit->bl2ud(bl);
@@ -1075,7 +1075,7 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 	//timer->delete function does not messes with it. If the function's
 	//behavior changes in the future, this code could break!
 	td = timer->get(ud->walktimer);
-	timer->delete(ud->walktimer, unit->walktoxy_timer);
+	timer->delete(ud->walktimer, unit->walk_toxy_timer);
 	ud->walktimer = INVALID_TIMER;
 	ud->state.change_walk_target = 0;
 	tick = timer->gettick();
@@ -1083,7 +1083,7 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 	||  (flag&STOPWALKING_FLAG_NEXTCELL && td && DIFF_TICK(td->tick, tick) <= td->data/2) //Enough time has passed to cover half-cell
 	) {
 		ud->walkpath.path_len = ud->walkpath.path_pos+1;
-		unit->walktoxy_timer(INVALID_TIMER, tick, bl->id, ud->walkpath.path_pos);
+		unit->walk_toxy_timer(INVALID_TIMER, tick, bl->id, ud->walkpath.path_pos);
 	}
 
 	if(flag&STOPWALKING_FLAG_FIXPOS)
@@ -1515,7 +1515,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		ud->target_to = target_id;
 		ud->stepskill_id = skill_id;
 		ud->stepskill_lv = skill_lv;
-		return 0; // Attacking will be handled by unit_walktoxy_timer in this case
+		return 0; // Attacking will be handled by unit_walk_toxy_timer in this case
 	}
 
 	//Check range when not using skill on yourself or is a combo-skill during attack
@@ -1728,7 +1728,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 
 	if( casttime > 0 ) {
 		if (src->id != target->id) // self-targeted skills shouldn't show different direction
-			unit->setdir(src, map->calc_dir(src, target->x, target->y));
+			unit->set_dir(src, map->calc_dir(src, target->x, target->y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_id, src->id, 0 );
 		if (sd && (pc->checkskill(sd, SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
@@ -1822,7 +1822,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 		ud->target_to = (skill_x + skill_y*md->xs);
 		ud->stepskill_id = skill_id;
 		ud->stepskill_lv = skill_lv;
-		return 0; // Attacking will be handled by unit_walktoxy_timer in this case
+		return 0; // Attacking will be handled by unit_walk_toxy_timer in this case
 	}
 
 	if( skill->get_state(ud->skill_id) == ST_MOVE_ENABLE ) {
@@ -1883,7 +1883,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	// in official this is triggered even if no cast time.
 	clif->useskill(src, src->id, 0, skill_x, skill_y, skill_id, skill_lv, casttime);
 	if( casttime > 0 ) {
-		unit->setdir(src, map->calc_dir(src, skill_x, skill_y));
+		unit->set_dir(src, map->calc_dir(src, skill_x, skill_y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
 		if ((sd && pc->checkskill(sd, SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
@@ -1962,7 +1962,7 @@ static void unit_stop_stepaction(struct block_list *bl)
 		return;
 
 	//Clear timer
-	timer->delete(ud->steptimer, unit->step_timer);
+	timer->delete(ud->steptimer, unit->steptimer);
 	ud->steptimer = INVALID_TIMER;
 }
 
@@ -2046,7 +2046,7 @@ static int unit_attack(struct block_list *src, int target_id, int continuous)
 		ud->target_to = ud->target;
 		ud->stepskill_id = 0;
 		ud->stepskill_lv = 0;
-		return 0; // Attacking will be handled by unit_walktoxy_timer in this case
+		return 0; // Attacking will be handled by unit_walk_toxy_timer in this case
 	}
 
 	if(DIFF_TICK(ud->attackabletime, timer->gettick()) > 0)
@@ -2336,7 +2336,7 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 	}
 
 	if(ud->state.attack_continue) {
-		unit->setdir(src, map->calc_dir(src, target->x, target->y));
+		unit->set_dir(src, map->calc_dir(src, target->x, target->y));
 		if( src->type == BL_PC )
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
 		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
@@ -3033,10 +3033,10 @@ static int do_init_unit(bool minimal)
 		return 0;
 
 	timer->add_func_list(unit->attack_timer,  "unit_attack_timer");
-	timer->add_func_list(unit->walktoxy_timer,"unit_walktoxy_timer");
+	timer->add_func_list(unit->walk_toxy_timer, "unit_walk_toxy_timer");
 	timer->add_func_list(unit->walktobl_timer, "unit_walktobl_timer");
-	timer->add_func_list(unit->delay_walktoxy_timer,"unit_delay_walktoxy_timer");
-	timer->add_func_list(unit->step_timer,"unit_step_timer");
+	timer->add_func_list(unit->delay_walk_toxy_timer, "unit_delay_walk_toxy_timer");
+	timer->add_func_list(unit->steptimer, "unit_steptimer");
 	return 0;
 }
 
@@ -3057,24 +3057,24 @@ void unit_defaults(void)
 	unit->bl2ud2 = unit_bl2ud2;
 	unit->init_ud = unit_init_ud;
 	unit->attack_timer = unit_attack_timer;
-	unit->walktoxy_timer = unit_walktoxy_timer;
-	unit->walktoxy_sub = unit_walktoxy_sub;
-	unit->delay_walktoxy_timer = unit_delay_walktoxy_timer;
-	unit->walktoxy = unit_walktoxy;
+	unit->walk_toxy_timer = unit_walk_toxy_timer;
+	unit->walk_toxy_sub = unit_walk_toxy_sub;
+	unit->delay_walk_toxy_timer = unit_delay_walk_toxy_timer;
+	unit->walk_toxy = unit_walk_toxy;
 	unit->walktobl_timer = unit_walktobl_timer;
 	unit->walktobl = unit_walktobl;
 	unit->run = unit_run;
 	unit->run_hit = unit_run_hit;
 	unit->escape = unit_escape;
 	unit->movepos = unit_movepos;
-	unit->setdir = unit_setdir;
+	unit->set_dir = unit_set_dir;
 	unit->getdir = unit_getdir;
 	unit->blown = unit_blown;
 	unit->warp = unit_warp;
 	unit->warpto_master = unit_warpto_master;
 	unit->stop_walking = unit_stop_walking;
 	unit->skilluse_id = unit_skilluse_id;
-	unit->step_timer = unit_step_timer;
+	unit->steptimer = unit_steptimer;
 	unit->stop_stepaction = unit_stop_stepaction;
 	unit->is_walking = unit_is_walking;
 	unit->can_move = unit_can_move;
