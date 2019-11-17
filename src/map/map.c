@@ -2874,7 +2874,7 @@ static int map_check_dir(enum unit_dir s_dir, enum unit_dir t_dir)
  * @param y: y-coordinate of cell
  * @return the direction of the given cell, relative to 'src'
  **/
-static enum unit_dir map_calc_dir(struct block_list *src, int16 x, int16 y)
+static enum unit_dir map_calc_dir(const struct block_list *src, int16 x, int16 y)
 {
 	nullpo_retr(UNIT_DIR_NORTH, src);
 	enum unit_dir dir = UNIT_DIR_NORTH;

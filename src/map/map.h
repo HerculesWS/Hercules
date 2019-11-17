@@ -1218,7 +1218,7 @@ END_ZEROED_BLOCK;
 	void (*reloadnpc) (bool clear);
 
 	int (*check_dir) (enum unit_dir s_dir, enum unit_dir t_dir);
-	enum unit_dir (*calc_dir) (struct block_list *src, int16 x, int16 y);
+	enum unit_dir (*calc_dir) (const struct block_list *src, int16 x, int16 y);
 	int (*random_dir) (struct block_list *bl, short *x, short *y); // [Skotlex]
 
 	int (*cleanup_sub) (struct block_list *bl, va_list ap);
