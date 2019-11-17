@@ -6701,13 +6701,13 @@ int do_init(int argc, char *argv[])
 	elemental->init(minimal);
 	quest->init(minimal);
 	achievement->init(minimal);
+	stylist->init(minimal);
 	npc->init(minimal);
 	unit->init(minimal);
 	bg->init(minimal);
 	duel->init(minimal);
 	vending->init(minimal);
 	rodex->init(minimal);
-	stylist->init(minimal);
 
 	if (map->scriptcheck) {
 		bool failed = map->extra_scripts_count > 0 ? false : true;
