@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `picklog` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `time` DATETIME NULL,
   `char_id` INT(11) NOT NULL DEFAULT '0',
-  `type` ENUM('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U','K','Y','Z','W','Q','J','H','@','0','1','2') NOT NULL DEFAULT 'P',
+  `type` ENUM('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U','K','Y','Z','W','Q','J','H','@','0','1','2','3') NOT NULL DEFAULT 'P',
   `nameid` INT(11) NOT NULL DEFAULT '0',
   `amount` INT(11) NOT NULL DEFAULT '1',
   `refine` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
