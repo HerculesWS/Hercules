@@ -25,7 +25,7 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		}
 		mes "What kind of bind?";
 		.@boundtype = 1 << (select("Account", "Guild", "Character")-1);
-		if(.@boundtype == 2 && (!getcharid(CHAR_ID_GUILD) || getguildmaster(getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))) {
+		if(.@boundtype == 2 && (!getcharid(CHAR_ID_GUILD) || getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))) {
 			mes "In order for me to bind an item to a guild you must be the master of one.";
 			close;
 		}
@@ -88,7 +88,7 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		next;
 		for(.@i = 0; .@i < getarraysize(@bound_items); .@i++) {
 			if(@inventorylist_id[.@item] == @bound_items[.@i] &&
-				(!getcharid(CHAR_ID_GUILD) || getguildmaster(getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))
+				(!getcharid(CHAR_ID_GUILD) || getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))
 			) {
 				mes "I will only unbind guild bound items that the guild master requests.";
 				close;

@@ -278,7 +278,7 @@ static struct guild *guild_search(int guild_id)
 }
 
 /// lookup: guild name -> guild*
-static struct guild *guild_searchname(char *str)
+static struct guild *guild_searchname(const char *str)
 {
 	struct guild* g;
 	struct DBIterator *iter = db_iterator(guild->db);

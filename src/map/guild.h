@@ -91,7 +91,7 @@ struct guild_interface {
 	bool (*isallied) (int guild_id, int guild_id2); //Checks alliance based on guild Ids. [Skotlex]
 	/* */
 	struct guild *(*search) (int guild_id);
-	struct guild *(*searchname) (char *str);
+	struct guild *(*searchname) (const char *str);
 	struct guild_castle *(*castle_search) (int gcid);
 	/* */
 	struct guild_castle *(*mapname2gc) (const char* mapname);

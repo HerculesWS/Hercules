@@ -3008,7 +3008,7 @@ For example:
 	if (getequiprefinerycnt(EQI_HEAD_TOP) > 10) {
 		mes("You equipped a headgear (top) with above 10 refine.");
 	}
-	
+
 For example:
 	if (getequiprefinerycnt(EQI_ARMOR, EQI_SHOES) > 20) {
 		mes("Total refine of Armor and Shoes exceed 20.");
@@ -3155,7 +3155,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @inventorylist_expire[]    - expire time (Unix time stamp). 0 means never
                              expires.
 @inventorylist_bound[]     - whether it is an account bounded item or not.
-@inventorylist_favorite[]  - whether it is favorite (inside favorite tab) or not. 
+@inventorylist_favorite[]  - whether it is favorite (inside favorite tab) or not.
 @inventorylist_count       - the number of items in these lists.
 
 This could be handy to save/restore a character's inventory, since no
@@ -3215,7 +3215,7 @@ This function will set an item in inventory as favorite or not.
 If its favorite item, it will be moved to favorite tab, else move out from favorite tab.
 Note: Cant change favorite flag of an equipped item.
 
-Valid Parameters: 
+Valid Parameters:
 	<idx>    - inventory index, refer *getinventorylist()
 	<flag>   - true/false (true = favorite item, false = otherwise)
 
@@ -3223,11 +3223,11 @@ Valid Parameters:
 
 *autofavoriteitem(<item_id>, <flag>)
 
-This function will auto set an item as favorite when <item_id> is obtained. 
+This function will auto set an item as favorite when <item_id> is obtained.
 If its favorite item, it will be auto moved to favorite tab, else move out from favorite tab.
 This setting affect not only attached player, but also everyone player globally.
 
-Valid Parameters: 
+Valid Parameters:
 	<item_id> - item ID
 	<flag>    - true/false (true = favorite item, false = otherwise)
 
@@ -3320,7 +3320,7 @@ Valid types are:
 	ITEMINFO_STACK_FLAG              - Stack amount flag (1: inventory, 2:cart, 4:storage: 8:guildstorage)
 	ITEMINFO_ITEM_USAGE_FLAG         - Item usage flag
 	ITEMINFO_ITEM_USAGE_OVERRIDE     - Item usage override
-	ITEMINFO_GM_LV_TRADE_OVERRIDE    - Min. GM level override trade restriction 
+	ITEMINFO_GM_LV_TRADE_OVERRIDE    - Min. GM level override trade restriction
 
 Check sample in doc/sample/getiteminfo.txt
 
@@ -3704,7 +3704,37 @@ You need to put a 'close' after that yourself.
 //=====================================
 ---------------------------------------
 
+*getguildinfo(<info type>{, <guild id>})
+*getguildinfo(<info type>{, "<guild name>"})
+
+This command returns misc info about the guild of the attached player. If a
+guild id or guild name is specified it will be used instead. If the target guild
+does not exist it returns an empty string or -1 depending on whether a string
+or an integer was requested.
+
+Valid <info type> are:
+	GUILDINFO_NAME          - guild name
+	GUILDINFO_ID            - guild id
+	GUILDINFO_LEVEL         - current level
+	GUILDINFO_EXP           - current exp
+	GUILDINFO_NEXT_EXP      - exp required to reach the next level
+	GUILDINFO_SKILL_POINTS  - available skill points
+	GUILDINFO_ONLINE        - number of online members
+	GUILDINFO_AV_LEVEL      - average member level
+	GUILDINFO_MAX_MEMBERS   - guild capacity
+	GUILDINFO_MASTER_NAME   - name of the guild master
+	GUILDINFO_MASTER_CID    - char id of the guild master
+
+Example:
+	getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD, "Haru"))
+
+---------------------------------------
+
 *getguildname(<guild id>)
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 This function returns a guild's name given an ID number. If there is no
 such guild, "null" will be returned;
@@ -3719,9 +3749,17 @@ such guild, "null" will be returned;
 This is used all over the WoE controlling scripts. You could also use it
 for a guild-based event.
 
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_NAME, <guild id>)
+
 ---------------------------------------
 
 *getguildmaster(<guild id>)
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 This function return the name of the master of the guild which has the
 specified ID number. If there is no such guild, "null" will be returned.
@@ -3746,13 +3784,25 @@ Maybe you want to make a room only guild masters can enter:
 	mes("Sorry you don't own the guild you are in");
 	close();
 
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_MASTER_NAME, <guild id>)
+
 ---------------------------------------
 
 *getguildmasterid(<guild id>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This function will return the character ID number of the guild master of
 the guild specified by the ID. 0 if the character is not a guild master of
 any guild.
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_MASTER_CID, <guild id>)
 
 ---------------------------------------
 
@@ -3956,7 +4006,7 @@ These fields are associate in 'db/(pre-)re/pet_db.conf'. Valid types are:
 	PETINFO_ACCESSORYFLAG - return 1 if the pet currently equipping accessory, return 0 otherwise.
 	PETINFO_EVO_EGGID     - Pet Evolve EggID
 	PETINFO_AUTOFEED      - Pet AutoFeed flag.
-	
+
 If the invoking player doesn't own a pet, this command will
 return "null" for type PETINFO_NAME, and return 0 for other types.
 

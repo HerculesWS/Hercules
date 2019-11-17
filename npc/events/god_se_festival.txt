@@ -72,7 +72,7 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 		mes "This is the flower.";
 		mes "This is just a formality, but let me check your qualifications.";
 		next;
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes "[Rmimi Ravies]";
 			mes "Your qualification is verified as a Guild master.";
 			next;
@@ -141,7 +141,7 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 				mes "[Rmimi Ravies]";
 				mes "Have a good time.";
 				donpcevent "Rmimi Ravies#gq_fes01::OnStart";
-				announce "["+ strcharinfo(PC_NAME) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Juno'.",bc_all,"0x70dbdb";
+				announce "["+ strcharinfo(PC_NAME) +"] member of ["+ getguildinfo(GUILDINFO_NAME, .@GID) +"] is summoning a 'Valkyrie's Present' in 'Juno'.",bc_all,"0x70dbdb";
 				close;
 			}
 			else {
@@ -448,7 +448,7 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 		mes "A flower!!";
 		mes "Shall we proceed?";
 		next;
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes "[Rhehe Ravies]";
 			mes "Eeeeh, so young and yet you're a guild master? Your guildsmen must be jealous.";
 			next;
@@ -521,7 +521,7 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 				mes "[Rhehe Ravies]";
 				mes "I hope you enjoy yourself!";
 				donpcevent "Rhehe Ravies#gq_fes03::OnStart";
-				announce "["+ strcharinfo(PC_NAME) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Rachel'.",bc_all,"0x70dbdb";
+				announce "["+ strcharinfo(PC_NAME) +"] member of ["+ getguildinfo(GUILDINFO_NAME, .@GID) +"] is summoning a 'Valkyrie's Present' in 'Rachel'.",bc_all,"0x70dbdb";
 				close;
 			}
 			else {

@@ -82,7 +82,7 @@ S_DisplayOwners:
 	setarray .@maps$[15],"prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05";
 	for (.@i = 0; .@i <= 19; ++.@i) {
 		if (getcastledata(.@maps$[.@i],1))
-			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle has been conquered by the [" + getguildname(getcastledata(.@maps$[.@i],1)) + "] guild.",bc_all|bc_woe;
+			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle has been conquered by the [" + getguildinfo(GUILDINFO_NAME, getcastledata(.@maps$[.@i],1)) + "] guild.",bc_all|bc_woe;
 		else
 			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle is currently unoccupied.",bc_all|bc_woe;
 	}
