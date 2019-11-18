@@ -50,13 +50,13 @@ CREATE TABLE IF NOT EXISTS `rodex_items` (
 
 CREATE TABLE IF NOT EXISTS `rodex_mail` (
 	`mail_id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-	`sender_name` VARCHAR(30) NOT NULL COLLATE 'utf8_unicode_ci',
+	`sender_name` VARCHAR(30) COLLATE 'utf8_unicode_ci' NOT NULL,
 	`sender_id` INT(11) NOT NULL,
-	`receiver_name` VARCHAR(30) NOT NULL COLLATE 'utf8_unicode_ci',
+	`receiver_name` VARCHAR(30) COLLATE 'utf8_unicode_ci' NOT NULL,
 	`receiver_id` INT(11) NOT NULL,
 	`receiver_accountid` INT(11) NOT NULL,
-	`title` VARCHAR(50) NOT NULL COLLATE 'utf8_unicode_ci',
-	`body` VARCHAR(510) NOT NULL COLLATE 'utf8_unicode_ci',
+	`title` VARCHAR(50) COLLATE 'utf8_unicode_ci' NOT NULL,
+	`body` VARCHAR(510) COLLATE 'utf8_unicode_ci' NOT NULL,
 	`zeny` BIGINT(20) NOT NULL,
 	`type` TINYINT(8) UNSIGNED NOT NULL,
 	`is_read` TINYINT(8) NOT NULL,
