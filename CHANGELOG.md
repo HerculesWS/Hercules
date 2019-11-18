@@ -9,6 +9,16 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.11.17+1] `November 17 2019` `PATCH 1`
+
+### Added
+
+- Added an SQL linter. The `./tools/checksql.sh` script can be used to automatically validate the syntax of every file in the `sql-files` folder (note: dependencies might need to be installed through composer). The script is also executed in the Travis builds. (#2582)
+
+### Fixed
+
+- Fixed a syntax error in the `2019-10-12--14-21.sql` migration file. (part of #2582)
+
 ### [v2019.11.17] `November 17 2019`
 
 ### Added
@@ -1014,6 +1024,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.11.17+1]: https://github.com/HerculesWS/Hercules/compare/v2019.11.17...v2019.11.17+1
 [v2019.11.17]: https://github.com/HerculesWS/Hercules/compare/v2019.10.20...v2019.11.17
 [v2019.10.20]: https://github.com/HerculesWS/Hercules/compare/v2019.09.22...v2019.10.20
 [v2019.09.22]: https://github.com/HerculesWS/Hercules/compare/v2019.08.25...v2019.09.22
