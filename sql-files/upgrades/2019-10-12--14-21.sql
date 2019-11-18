@@ -19,5 +19,5 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-ALTER TABLE `picklog` MODIFY `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U','K','Y','Z','W','Q','J','H','@','0','1','2', '3') NOT NULL DEFAULT 'P',
+ALTER TABLE `picklog` MODIFY `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U','K','Y','Z','W','Q','J','H','@','0','1','2', '3') NOT NULL DEFAULT 'P';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1570870260);

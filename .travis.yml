@@ -38,6 +38,14 @@ matrix:
   - env: ignore=this
   - compiler: false
   include:
+  - language: php
+    env: sqlcheck=true
+    script:
+        - travis_retry composer self-update
+        - cd tools/php-sqllint
+        - travis_retry composer install --no-interaction --prefer-source
+        - cd ../..
+        - ./tools/checksql.sh
   - compiler: gcc
     env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug CC=gcc-6 --disable-manager --enable-Werror --enable-packetver=20191113 --enable-packetver-re --enable-buildbot" HPM="1"
     addons:
