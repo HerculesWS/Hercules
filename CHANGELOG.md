@@ -9,6 +9,47 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+### [v2019.11.17] `November 17 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-11-13. (#2568)
+- Added support for packet `CZ_REQ_MOUNTOFF`. (part of #2568)
+- Added a missing building entrance portal in Juno and in Lighthalzen. (#2542)
+- Added the script command `getguildinfo()` and its related constants `GUILDINFO_*`, to lookup information about a guild. (#2566)
+- Added a separate configuration flag in `map_log.enable` to control the logging of `LOG_TYPE_LOOT`. (part of #2560, issue #2414)
+- Added a new log type, `LOG_TYPE_ACHIEVEMENT` and its configuration flag, to control the logging of achievement-granted items. A database migration is required. (#2560, issue #2414)
+- De-hardcoded the boss monsters' resistance to some status effects. It's now controlled by a new `NoBoss` flag in `sc_config`. (#2570)
+- De-hardcoded the combo skills chaining check. It's now controlled by a new `IsCombo` flag in `skill_db`. (#2573)
+- De-hardcoded the status icons. They are now defined through a new `Icon` field in `sc_config`. (#2577)
+
+### Changed
+
+- Added error details to the python converter tools when a libconfig parsing error is encountered. (part of #2568)
+- Converted packet `CZ_LAPINEDDUKDDAK_CLOSE` into a struct. (part of #2568)
+- Updated the location of various NPCs: portals in Juno, sign post in Brasilis, Young Man in Payon (pre-renewal). (part of #2542)
+- Reordered the loading of the stylist DB to be before the loading of NPC scripts, for consistence with the other DB files. (#2571)
+
+### Fixed
+
+- Fixed an incorrect nullpo check when slave monsters are summoned by an alchemist. (#2574, issue #2576)
+- Fixed the Steal skill not showing the HP bar of the targeted monster right away but only when leaving and re-entering sight range. (part of #2567)
+- Fixed a regression in the Steal skill that caused it to allow stealing of some cards. Card stealing prevention is now enforced by item type rather than by position in the drop list. (#2567)
+- Fixed the `@fakename` to display the overridden name regardless of whether the character is disguised. (#2548, issue #2539)
+- Fixed the `target_to` field not being cleared appropriately, causing monsters to get stuck in a loop walking to their previous target that has died, and causing hunters with auto-attack to be unable to walk away from their target and cancel their attack action. (#2564)
+- Fixed the handling of HULD .po translations that contain the `\r` escape sequence. (#2569)
+- Fixed the unintended clearing of status changes granted by passive guild skills, via `sc_end(SC_ALL)`. (#2575, issue #1147)
+
+### Deprecated
+
+- Deprecated the script command `getguildname()`, use `getguildinfo(GUILDINFO_NAME, <guild id>)` instead. (part of #2566)
+- Deprecated the script command `getguildmaster()`, use `getguildinfo(GUILDINFO_MASTER_NAME, <guild id>)` instead. (part of #2566)
+- Deprecated the script command `getguildmasterid()`, use `getguildinfo(GUILDINFO_MASTER_CID, <guild id>)` instead. (part of #2566)
+
+### Removed
+
+- Removed the `SI_*` constants from the source code, now available through `constants.conf`. (part of #2577)
+
 ### [v2019.10.20] `October 20 2019`
 
 ### Added
@@ -973,6 +1014,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.11.17]: https://github.com/HerculesWS/Hercules/compare/v2019.10.20...v2019.11.17
 [v2019.10.20]: https://github.com/HerculesWS/Hercules/compare/v2019.09.22...v2019.10.20
 [v2019.09.22]: https://github.com/HerculesWS/Hercules/compare/v2019.08.25...v2019.09.22
 [v2019.08.25]: https://github.com/HerculesWS/Hercules/compare/v2019.07.28...v2019.08.25
