@@ -617,7 +617,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
 --
 
 CREATE TABLE IF NOT EXISTS `ipbanlist` (
-  `list` VARCHAR(255) NOT NULL DEFAULT '',
+  `list` VARCHAR(13) NOT NULL DEFAULT '',
   `btime` DATETIME NULL,
   `rtime` DATETIME NULL,
   `reason` VARCHAR(255) NOT NULL DEFAULT '',
