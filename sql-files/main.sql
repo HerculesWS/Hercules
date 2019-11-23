@@ -617,7 +617,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
 --
 
 CREATE TABLE IF NOT EXISTS `ipbanlist` (
-  `list` VARCHAR(255) NOT NULL DEFAULT '',
+  `list` VARCHAR(13) NOT NULL DEFAULT '',
   `btime` DATETIME NULL,
   `rtime` DATETIME NULL,
   `reason` VARCHAR(255) NOT NULL DEFAULT '',
@@ -934,6 +934,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1557414445); -- 2019-05-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1565293394); -- 2019-08-08--19-43.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1570309293); -- 2019-10-05--19-01.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1570870260); -- 2019-10-21--14-21.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1574463539); -- 2019-11-22--23-58.sql
 
 --
 -- Table structure for table `storage`
