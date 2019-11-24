@@ -9798,6 +9798,9 @@ static int status_get_val_flag(enum sc_type type)
 		case SC_DAILYSENDMAILCNT:
 			val_flag |= 1 | 2;
 			break;
+		case SC_MADOGEAR:
+			val_flag |= 1;
+			break;
 	}
 	return val_flag;
 }

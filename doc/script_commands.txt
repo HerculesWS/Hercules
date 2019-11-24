@@ -4378,7 +4378,7 @@ falcon and false if they don't.
 
 ---------------------------------------
 
-*setmount({<flag>})
+*setmount({<flag>{, <type>}})
 *checkmount()
 
 If <flag> is MOUNT_NONE this command will remove the mount from the
@@ -4413,6 +4413,12 @@ The following flag values are accepted:
 
 Unlike 'setfalcon' and 'setcart' this will not work at all if they aren't of a
 class which can ride a mount.
+
+For clients PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106
+you can pass a <type> flag which specifies the madogear wanted.
+The Available types:
+	MADO_ROBOT
+	MADO_SUITE
 
 The accompanying function will return MOUNT_NONE if the invoking
 character is not on a mount, and a non-zero value (according to the

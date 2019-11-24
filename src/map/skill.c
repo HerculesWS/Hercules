@@ -9433,7 +9433,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case NC_SELFDESTRUCTION:
 			if (sd) {
 				if (pc_ismadogear(sd))
-					 pc->setmadogear(sd, false);
+					 pc->setmadogear(sd, false, MADO_ROBOT);
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				skill->castend_damage_id(src, src, skill_id, skill_lv, tick, flag);
 				status->set_sp(src, 0, STATUS_HEAL_DEFAULT);
