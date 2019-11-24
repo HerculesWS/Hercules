@@ -63465,14 +63465,14 @@ void HP_pc_setridingpeco(struct map_session_data *sd, bool flag) {
 	}
 	return;
 }
-void HP_pc_setmadogear(struct map_session_data *sd, bool flag) {
+void HP_pc_setmadogear(struct map_session_data *sd, bool flag, enum mado_type mtype) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_pc_setmadogear_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, bool *flag);
+		void (*preHookFunc) (struct map_session_data **sd, bool *flag, enum mado_type *mtype);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_setmadogear_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_pc_setmadogear_pre[hIndex].func;
-			preHookFunc(&sd, &flag);
+			preHookFunc(&sd, &flag, &mtype);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -63480,13 +63480,13 @@ void HP_pc_setmadogear(struct map_session_data *sd, bool flag) {
 		}
 	}
 	{
-		HPMHooks.source.pc.setmadogear(sd, flag);
+		HPMHooks.source.pc.setmadogear(sd, flag, mtype);
 	}
 	if (HPMHooks.count.HP_pc_setmadogear_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, bool flag);
+		void (*postHookFunc) (struct map_session_data *sd, bool flag, enum mado_type mtype);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pc_setmadogear_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pc_setmadogear_post[hIndex].func;
-			postHookFunc(sd, flag);
+			postHookFunc(sd, flag, mtype);
 		}
 	}
 	return;

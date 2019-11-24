@@ -6188,8 +6188,8 @@ typedef void (*HPMHOOK_pre_pc_setfalcon) (struct map_session_data **sd, bool *fl
 typedef void (*HPMHOOK_post_pc_setfalcon) (struct map_session_data *sd, bool flag);
 typedef void (*HPMHOOK_pre_pc_setridingpeco) (struct map_session_data **sd, bool *flag);
 typedef void (*HPMHOOK_post_pc_setridingpeco) (struct map_session_data *sd, bool flag);
-typedef void (*HPMHOOK_pre_pc_setmadogear) (struct map_session_data **sd, bool *flag);
-typedef void (*HPMHOOK_post_pc_setmadogear) (struct map_session_data *sd, bool flag);
+typedef void (*HPMHOOK_pre_pc_setmadogear) (struct map_session_data **sd, bool *flag, enum mado_type *mtype);
+typedef void (*HPMHOOK_post_pc_setmadogear) (struct map_session_data *sd, bool flag, enum mado_type mtype);
 typedef void (*HPMHOOK_pre_pc_setridingdragon) (struct map_session_data **sd, unsigned int *type);
 typedef void (*HPMHOOK_post_pc_setridingdragon) (struct map_session_data *sd, unsigned int type);
 typedef void (*HPMHOOK_pre_pc_setridingwug) (struct map_session_data **sd, bool *flag);
