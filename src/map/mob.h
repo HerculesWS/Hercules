@@ -255,6 +255,7 @@ struct mob_data {
 	int areanpc_id; //Required in OnTouchNPC (to avoid multiple area touchs)
 	unsigned int bg_id; // BattleGround System
 	int clan_id; // Clan System
+	int npc_id; // NPC ID if spawned with monster/areamonster/clone/summon/guardian/bg_monster (Used to kill mob on NPC unload.)
 
 	int64 next_walktime, last_thinktime, last_linktime, last_pcneartime, dmgtick;
 	short move_fail_count;
@@ -507,14 +508,14 @@ struct mob_interface {
 	int (*db_checkid) (const int id);
 	struct view_data* (*get_viewdata) (int class_);
 	int (*parse_dataset) (struct spawn_data *data);
-	struct mob_data* (*spawn_dataset) (struct spawn_data *data);
+	struct mob_data* (*spawn_dataset) (struct spawn_data *data, int npc_id);
 	int (*get_random_id) (int type, int flag, int lv);
 	bool (*ksprotected) (struct block_list *src, struct block_list *target);
-	struct mob_data* (*once_spawn_sub) (struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai);
+	struct mob_data* (*once_spawn_sub) (struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai, int npc_id);
 	int (*once_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
 	int (*once_spawn_area) (struct map_session_data *sd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
-	int (*spawn_guardian) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index);
-	int (*spawn_bg) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id);
+	int (*spawn_guardian) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index, int npc_id);
+	int (*spawn_bg) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id, int npc_id);
 	int (*can_reach) (struct mob_data *md, struct block_list *bl, int range, int state);
 	int (*linksearch) (struct block_list *bl, va_list ap);
 	int (*delayspawn) (int tid, int64 tick, int id, intptr_t data);

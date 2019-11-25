@@ -4262,6 +4262,8 @@ struct {
 	struct HPMHookPoint *HP_npc_unload_dup_sub_post;
 	struct HPMHookPoint *HP_npc_unload_duplicates_pre;
 	struct HPMHookPoint *HP_npc_unload_duplicates_post;
+	struct HPMHookPoint *HP_npc_unload_mob_pre;
+	struct HPMHookPoint *HP_npc_unload_mob_post;
 	struct HPMHookPoint *HP_npc_unload_pre;
 	struct HPMHookPoint *HP_npc_unload_post;
 	struct HPMHookPoint *HP_npc_clearsrcfile_pre;
@@ -11095,6 +11097,8 @@ struct {
 	int HP_npc_unload_dup_sub_post;
 	int HP_npc_unload_duplicates_pre;
 	int HP_npc_unload_duplicates_post;
+	int HP_npc_unload_mob_pre;
+	int HP_npc_unload_mob_post;
 	int HP_npc_unload_pre;
 	int HP_npc_unload_post;
 	int HP_npc_clearsrcfile_pre;

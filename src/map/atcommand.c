@@ -4515,7 +4515,7 @@ ACMD(reloadnpc)
 		clif->message(fd, msg_fd(fd, 1385)); // Usage: @unloadnpcfile <file name>
 		return false;
 	} else if (npc->unloadfile(message) == true) {
-		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that mapflags and monsters spawned directly are not removed.
+		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that mapflags are not removed.
 
 		FILE *fp = fopen(message, "r");
 		// check if script file exists
@@ -6603,7 +6603,7 @@ ACMD(summon)
 		return false;
 	}
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "", SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "", SZ_SMALL, AI_NONE, (sd->npc_id) ? sd->npc_id : 0);
 
 	if(!md)
 		return false;

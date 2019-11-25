@@ -14529,7 +14529,7 @@ static BUILDIN(guardian)
 	}
 
 	script->check_event(st, evt);
-	script_pushint(st, mob->spawn_guardian(mapname,x,y,str,class_,evt,guardian,has_index));
+	script_pushint(st, mob->spawn_guardian(mapname, x, y, str, class_, evt, guardian, has_index, st->oid));
 
 	return true;
 }
@@ -16829,7 +16829,7 @@ static BUILDIN(summon)
 
 	clif->skill_poseffect(&sd->bl,AM_CALLHOMUN,1,sd->bl.x,sd->bl.y,tick);
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, SZ_SMALL, AI_NONE, (sd->npc_id) ? sd->npc_id : 0);
 	if (md) {
 		md->master_id=sd->bl.id;
 		md->special_state.ai = AI_ATTACK;
@@ -22261,7 +22261,7 @@ static BUILDIN(bg_monster)
 	class_  = script_getnum(st,7);
 	if( script_hasdata(st,8) ) evt = script_getstr(st,8);
 	script->check_event(st, evt);
-	script_pushint(st, mob->spawn_bg(mapname,x,y,str,class_,evt,bg_id));
+	script_pushint(st, mob->spawn_bg(mapname, x, y, str, class_, evt, bg_id, st->oid));
 	return true;
 }
 

@@ -262,6 +262,7 @@ struct npc_interface {
 	int (*unload_ev_label) (union DBKey key, struct DBData *data, va_list ap);
 	int (*unload_dup_sub) (struct npc_data *nd, va_list args);
 	void (*unload_duplicates) (struct npc_data *nd);
+	int (*unload_mob) (struct mob_data* md, va_list args);
 	int (*unload) (struct npc_data *nd, bool single);
 	void (*clearsrcfile) (void);
 	void (*addsrcfile) (const char *name);

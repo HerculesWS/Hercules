@@ -2621,6 +2621,23 @@ static void npc_unload_duplicates(struct npc_data *nd)
 	map->foreachnpc(npc->unload_dup_sub,nd->bl.id);
 }
 
+//Removes mobs spawned by NPC (monster/areamonster/clone/summon/guardian/bg_monster)
+static int npc_unload_mob(struct mob_data *md, va_list args)
+{
+	int npc_id;
+
+	nullpo_ret(md);
+
+	npc_id = va_arg(args, int);
+	
+	if(md->npc_id) {
+		md->state.npc_killmonster = 1;
+		status_kill(&md->bl);
+		return 1;
+	}
+	return 0;
+}
+
 //Removes an npc from map and db.
 //Single is to free name (for duplicates).
 static int npc_unload(struct npc_data *nd, bool single)
@@ -2711,6 +2728,8 @@ static int npc_unload(struct npc_data *nd, bool single)
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
+
+	map->foreachmob(npc->unload_mob, nd->bl.id);
 
 	HPM->data_store_destroy(&nd->hdata);
 
@@ -4103,7 +4122,7 @@ static void npc_parse_mob2(struct spawn_data *mobspawn)
 
 	nullpo_retv(mobspawn);
 	for( i = mobspawn->active; i < mobspawn->num; ++i ) {
-		struct mob_data* md = mob->spawn_dataset(mobspawn);
+		struct mob_data* md = mob->spawn_dataset(mobspawn, 0);
 		md->spawn = mobspawn;
 		md->spawn->active++;
 		mob->spawn(md);
@@ -5514,6 +5533,7 @@ void npc_defaults(void)
 	npc->unload_ev_label = npc_unload_ev_label;
 	npc->unload_dup_sub = npc_unload_dup_sub;
 	npc->unload_duplicates = npc_unload_duplicates;
+	npc->unload_mob = npc_unload_mob;
 	npc->unload = npc_unload;
 	npc->clearsrcfile = npc_clearsrcfile;
 	npc->addsrcfile = npc_addsrcfile;
