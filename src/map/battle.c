@@ -4661,12 +4661,16 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	{
 		short cri = sstatus->cri;
 		if (sd != NULL) {
+			// Racial crit bonuses are affected by katar's crit bonus.
+			if (battle_config.show_katar_crit_bonus && sd->weapontype == W_KATAR)
+				cri += sd->critaddrace[tstatus->race] * 2;
+			else
+				cri += sd->critaddrace[tstatus->race];
+
 			// if show_katar_crit_bonus is enabled, it already done the calculation in status.c
 			if (!battle_config.show_katar_crit_bonus && sd->weapontype == W_KATAR) {
 				cri <<= 1;
 			}
-
-			cri+= sd->critaddrace[tstatus->race];
 
 			if (flag.arrow) {
 				cri += sd->bonus.arrow_cri;
