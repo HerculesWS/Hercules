@@ -28,12 +28,40 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_EXECINFO
+#ifdef HAVE_LIBBACKTRACE
+#include "libbacktrace/backtrace.h"
+#include "libbacktrace/backtrace-supported.h"
+#elif defined(HAVE_EXECINFO)
 #include <execinfo.h>
-#endif // HAVE_EXECINFO
+#endif // HAVE_LIBBACKTRACE
+
 
 static struct nullpo_interface nullpo_s;
 struct nullpo_interface *nullpo;
+
+#ifdef HAVE_LIBBACKTRACE
+static void nullpo_error_callback(void *data, const char *msg, int errnum)
+{
+	ShowError("Error: %s (%d)", msg, errnum);
+}
+
+static int nullpo_print_callback(void *data, uintptr_t pc, const char *filename, int lineno, const char *function)
+{
+	ShowError("0x%lx %s\n",
+		(unsigned long) pc,
+		function == NULL ? "???" : function);
+	ShowError("\t%s:%d\n",
+		filename == NULL ? "???" : filename,
+		lineno);
+	return 0;
+}
+
+static void nullpo_backtrace_print(struct backtrace_state *state)
+{
+	backtrace_full(state, 0, nullpo_print_callback, nullpo_error_callback, state);
+}
+
+#endif  // HAVE_LIBBACKTRACE
 
 /**
  * Reports failed assertions or NULL pointers
@@ -46,12 +74,12 @@ struct nullpo_interface *nullpo;
  */
 static void assert_report(const char *file, int line, const char *func, const char *targetname, const char *title)
 {
-#ifdef HAVE_EXECINFO
+#if !defined(HAVE_LIBBACKTRACE) && defined(HAVE_EXECINFO)
 	void *array[10];
 	int size;
 	char **strings;
 	int i;
-#endif // HAVE_EXECINFO
+#endif // !defined(HAVE_LIBBACKTRACE) && defined(HAVE_EXECINFO)
 	if (file == NULL)
 		file = "??";
 
@@ -60,14 +88,18 @@ static void assert_report(const char *file, int line, const char *func, const ch
 
 	ShowError("--- %s --------------------------------------------\n", title);
 	ShowError("%s:%d: '%s' in function `%s'\n", file, line, targetname, func);
-#ifdef HAVE_EXECINFO
+#ifdef HAVE_LIBBACKTRACE
+	struct backtrace_state *state = backtrace_create_state("hercules", BACKTRACE_SUPPORTS_THREADS, nullpo_error_callback, NULL);
+	nullpo_backtrace_print(state);
+#elif defined(HAVE_EXECINFO)
 	size = (int)backtrace(array, 10);
 	strings = backtrace_symbols(array, size);
 	for (i = 0; i < size; i++)
 		ShowError("%s\n", strings[i]);
 	free(strings);
-#endif // HAVE_EXECINFO
+#endif // HAVE_LIBBACKTRACE
 	ShowError("--- end %s ----------------------------------------\n", title);
+
 }
 
 /**

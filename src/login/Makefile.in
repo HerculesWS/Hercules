@@ -36,6 +36,13 @@ LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
 
+LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
+LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
+              dwarf.o elf.o fileline.o mmapio.o mmap.o posix.o print.o \
+              simple.o sort.o state.o)
+LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
+              backtrace-supported.h config.h filenames.h internal.h)
+
 MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
@@ -47,7 +54,7 @@ LOGIN_PH = lclif.p.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	LOGIN_SERVER_SQL_DEPENDS=$(LOGIN_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
+	LOGIN_SERVER_SQL_DEPENDS=$(LOGIN_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
 else
 	LOGIN_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -86,7 +93,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/login/Makefile
 
-$(SYSINFO_INC): $(LOGIN_C) $(LOGIN_PH) $(LOGIN_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(LOGIN_C) $(LOGIN_PH) $(LOGIN_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -107,7 +114,7 @@ login-server: ../../login-server@EXEEXT@
 ../../login-server@EXEEXT@: $(LOGIN_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
 	@$(CC) @STATIC@ @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
-		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:
@@ -126,10 +133,14 @@ $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
 
+$(LIBBACKTRACE_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBBACKTRACE_D)
+
 .SECONDEXPANSION:
 
 # login object files
 
-obj_sql/%.o: %.c $$(filter %.p.h, $(LOGIN_PH)) $(LOGIN_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
+obj_sql/%.o: %.c $$(filter %.p.h, $(LOGIN_PH)) $(LOGIN_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

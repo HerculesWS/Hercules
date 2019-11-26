@@ -36,6 +36,13 @@ LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
 
+LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
+LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
+              dwarf.o elf.o fileline.o mmapio.o mmap.o posix.o print.o \
+              simple.o sort.o state.o)
+LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
+              backtrace-supported.h config.h filenames.h internal.h)
+
 MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
@@ -43,7 +50,7 @@ MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 TEST_C = test_libconfig.c test_spinlock.c
 TEST_OBJ = $(addprefix obj/, $(patsubst %c,%o,%(TEST_C)))
 TEST_H =
-TEST_DEPENDS = $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
+TEST_DEPENDS = $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
 
 TESTS_ALL = test_libconfig test_spinlock
 
@@ -70,7 +77,7 @@ clean: buildclean
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/test/Makefile
 
-$(SYSINFO_INC): $(TEST_C) $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(TEST_C) $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -88,11 +95,11 @@ $(TESTS_ALL): test_%: ../../test_%@EXEEXT@
 ../../test_%@EXEEXT@: obj/test_%.o $(TEST_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
 	@$(CC) @STATIC@ @LDFLAGS@ -o $@ $< $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
-		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # object files
 
-obj/%.o: %.c $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
+obj/%.o: %.c $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | obj
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
@@ -112,3 +119,7 @@ $(MT19937AR_OBJ):
 $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
+
+$(LIBBACKTRACE_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBBACKTRACE_D)
