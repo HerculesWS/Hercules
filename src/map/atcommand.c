@@ -4487,11 +4487,12 @@ ACMD(unloadnpc)
 {
 	struct npc_data *nd;
 	char NPCname[NAME_LENGTH+1];
+	short flag = 1;
 
 	memset(NPCname, '\0', sizeof(NPCname));
 
-	if (!*message || sscanf(message, "%24[^\n]", NPCname) < 1) {
-		clif->message(fd, msg_fd(fd,1133)); // Please enter a NPC name (usage: @npcoff <NPC_name>).
+	if (!*message || sscanf(message, "%24s %5hd", NPCname, &flag) < 1) {
+		clif->message(fd, msg_fd(fd, 1133)); // Please enter a NPC name (Usage: @unloadnpc <NPC_name> {<flag>}).
 		return false;
 	}
 
@@ -4500,24 +4501,28 @@ ACMD(unloadnpc)
 		return false;
 	}
 
-	npc->unload_duplicates(nd);
-	npc->unload(nd,true);
+	npc->unload_duplicates(nd, (flag != 0));
+	npc->unload(nd, true, (flag != 0));
 	npc->read_event_script();
 	clif->message(fd, msg_fd(fd,112)); // Npc Disabled.
 	return true;
 }
 
 /// Unload existing NPC within the NPC file and reload it.
-/// Usage: @reloadnpc npc/sample_npc.txt
+/// Usage: @reloadnpc npc/sample_npc.txt {flag}
+/// Note: Be aware that some changes made by NPC are not reverted on unload. See doc/atcommands.txt for details.
 ACMD(reloadnpc)
 {
-	if (!*message) {
-		clif->message(fd, msg_fd(fd, 1385)); // Usage: @unloadnpcfile <file name>
-		return false;
-	} else if (npc->unloadfile(message) == true) {
-		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that mapflags and monsters spawned directly are not removed.
+	char file_path[100];
+	short flag = 1;
 
-		FILE *fp = fopen(message, "r");
+	if (!*message || (sscanf(message, "%99s %5hd", file_path, &flag) < 1)) {
+		clif->message(fd, msg_fd(fd, 1516)); // Usage: @reloadnpc <path> {<flag>}
+		return false;
+	} else if (npc->unloadfile(file_path, (flag != 0)) == true) {
+		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that...
+
+		FILE *fp = fopen(file_path, "r");
 		// check if script file exists
 		if (fp == NULL) {
 			clif->message(fd, msg_fd(fd, 261));
@@ -4526,8 +4531,8 @@ ACMD(reloadnpc)
 		fclose(fp);
 
 		// add to list of script sources and run it
-		npc->addsrcfile(message);
-		npc->parsesrcfile(message, true);
+		npc->addsrcfile(file_path);
+		npc->parsesrcfile(file_path, true);
 		npc->read_event_script();
 
 		clif->message(fd, msg_fd(fd, 262));
@@ -6603,7 +6608,7 @@ ACMD(summon)
 		return false;
 	}
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "", SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "", SZ_SMALL, AI_NONE, 0);
 
 	if(!md)
 		return false;
@@ -9011,13 +9016,16 @@ ACMD(addperm)
 
 ACMD(unloadnpcfile)
 {
-	if (!*message) {
-		clif->message(fd, msg_fd(fd,1385)); // Usage: @unloadnpcfile <file name>
+	char file_path[100];
+	short flag = 1;
+
+	if (!*message || (sscanf(message, "%99s %5hd", file_path, &flag) < 1)) {
+		clif->message(fd, msg_fd(fd, 1385)); // Usage: @unloadnpcfile <path> {<flag>}
 		return false;
 	}
 
-	if (npc->unloadfile(message)) {
-		clif->message(fd, msg_fd(fd,1386)); // File unloaded. Be aware that mapflags and monsters spawned directly are not removed.
+	if (npc->unloadfile(file_path, (flag != 0))) {
+		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that...
 	} else {
 		clif->message(fd, msg_fd(fd,1387)); // File not found.
 		return false;

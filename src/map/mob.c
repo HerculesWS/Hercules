@@ -340,7 +340,7 @@ static int mob_parse_dataset(struct spawn_data *data)
 /*==========================================
  * Generates the basic mob data using the spawn_data provided.
  *------------------------------------------*/
-static struct mob_data *mob_spawn_dataset(struct spawn_data *data)
+static struct mob_data *mob_spawn_dataset(struct spawn_data *data, int npc_id)
 {
 	struct mob_data *md = NULL;
 	nullpo_retr(NULL, data);
@@ -364,6 +364,7 @@ static struct mob_data *mob_spawn_dataset(struct spawn_data *data)
 		memcpy(md->npc_event, data->eventname, 50);
 	if(md->db->status.mode&MD_LOOTER)
 		md->lootitem = (struct item *)aCalloc(LOOTITEM_SIZE,sizeof(struct item));
+	md->npc_id = npc_id;
 	md->spawn_timer = INVALID_TIMER;
 	md->deletetimer = INVALID_TIMER;
 	md->skill_idx = -1;
@@ -503,7 +504,7 @@ static bool mob_ksprotected(struct block_list *src, struct block_list *target)
 	return false;
 }
 
-static struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai)
+static struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai, int npc_id)
 {
 	struct spawn_data data;
 
@@ -538,7 +539,7 @@ static struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16
 	if (!mob->parse_dataset(&data))
 		return NULL;
 
-	return mob->spawn_dataset(&data);
+	return mob->spawn_dataset(&data, npc_id);
 }
 
 /*==========================================
@@ -562,7 +563,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 
 	for (count = 0; count < amount; count++) {
 		int c = (class_ >= 0) ? class_ : mob->get_random_id(-class_ - 1, (battle_config.random_monster_checklv) ? 3 : 1, lv);
-		md = mob->once_spawn_sub((sd) ? &sd->bl : NULL, m, x, y, mobname, c, event, size, ai);
+		md = mob->once_spawn_sub((sd != NULL) ? &sd->bl : NULL, m, x, y, mobname, c, event, size, ai, (sd != NULL) ? sd->npc_id : 0);
 
 		if (!md)
 			continue;
@@ -698,7 +699,7 @@ static int mob_spawn_guardian_sub(int tid, int64 tick, int id, intptr_t data)
 /*==========================================
  * Summoning Guardians [Valaris]
  *------------------------------------------*/
-static int mob_spawn_guardian(const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index)
+static int mob_spawn_guardian(const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index, int npc_id)
 {
 	struct mob_data *md=NULL;
 	struct spawn_data data;
@@ -767,7 +768,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 		}
 	}
 
-	md = mob->spawn_dataset(&data);
+	md = mob->spawn_dataset(&data, npc_id);
 	md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
 	md->guardian_data->number = guardian;
 	md->guardian_data->castle = gc;
@@ -798,7 +799,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 /*==========================================
  * Summoning BattleGround [Zephyrus]
  *------------------------------------------*/
-static int mob_spawn_bg(const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id)
+static int mob_spawn_bg(const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id, int npc_id)
 {
 	struct mob_data *md = NULL;
 	struct spawn_data data;
@@ -835,7 +836,7 @@ static int mob_spawn_bg(const char *mapname, short x, short y, const char *mobna
 	if( !mob->parse_dataset(&data) )
 		return 0;
 
-	md = mob->spawn_dataset(&data);
+	md = mob->spawn_dataset(&data, npc_id);
 	mob->spawn(md);
 	md->bg_id = bg_id; // BG Team ID
 
@@ -3161,7 +3162,7 @@ static int mob_summonslave(struct mob_data *md2, int *value, int amount, uint16 
 		if (!mob->parse_dataset(&data))
 			continue;
 
-		md= mob->spawn_dataset(&data);
+		md = mob->spawn_dataset(&data, 0);
 		if(skill_id == NPC_SUMMONSLAVE){
 			md->master_id=md2->bl.id;
 			md->special_state.ai = md2->special_state.ai;
@@ -3773,7 +3774,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 	sd->fd = fd;
 
 	//Finally, spawn it.
-	md = mob->once_spawn_sub(&sd->bl, m, x, y, DEFAULT_MOB_NAME, class_, event, SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, m, x, y, DEFAULT_MOB_NAME, class_, event, SZ_SMALL, AI_NONE, 0);
 	if (!md) return 0; //Failed?
 
 	md->special_state.clone = 1;

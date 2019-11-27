@@ -15273,8 +15273,8 @@ static void clif_parse_GMKick(int fd, struct map_session_data *sd)
 				clif->GM_kickack(sd, 0);
 				return;
 			}
-			npc->unload_duplicates(nd);
-			npc->unload(nd,true);
+			npc->unload_duplicates(nd, true);
+			npc->unload(nd, true, true);
 			npc->read_event_script();
 		}
 		break;

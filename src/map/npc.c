@@ -2939,25 +2939,42 @@ static int npc_unload_ev_label(union DBKey key, struct DBData *data, va_list ap)
 //Sub-function used to find duplicates.
 static int npc_unload_dup_sub(struct npc_data *nd, va_list args)
 {
-	int src_id;
-
 	nullpo_ret(nd);
-	src_id = va_arg(args, int);
+	int src_id = va_arg(args, int);
+	int unload_mobs = va_arg(args, int);
+
 	if (nd->src_id == src_id)
-		npc->unload(nd, true);
+		npc->unload(nd, true, (unload_mobs == 1));
+
 	return 0;
 }
 
 //Removes all npcs that are duplicates of the passed one. [Skotlex]
-static void npc_unload_duplicates(struct npc_data *nd)
+static void npc_unload_duplicates(struct npc_data *nd, bool unload_mobs)
 {
 	nullpo_retv(nd);
-	map->foreachnpc(npc->unload_dup_sub,nd->bl.id);
+	// passing unload_mobs as int, because va_arg() would promote bool to int and cause compiler warnings
+	map->foreachnpc(npc->unload_dup_sub, nd->bl.id, unload_mobs ? 1 : 0);
+}
+
+//Removes mobs spawned by NPC (monster/areamonster/guardian/bg_monster/atcommand("@monster xy"))
+static int npc_unload_mob(struct mob_data *md, va_list args)
+{
+	nullpo_ret(md);
+	int npc_id = va_arg(args, int);
+
+	if (md->npc_id == npc_id) {
+		md->state.npc_killmonster = 1;
+		status_kill(&md->bl);
+		return 1;
+	}
+
+	return 0;
 }
 
 //Removes an npc from map and db.
 //Single is to free name (for duplicates).
-static int npc_unload(struct npc_data *nd, bool single)
+static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 {
 	nullpo_ret(nd);
 
@@ -2990,6 +3007,12 @@ static int npc_unload(struct npc_data *nd, bool single)
 	} else if (nd->subtype == SCRIPT) {
 		struct s_mapiterator *iter;
 		struct map_session_data *sd = NULL;
+
+		char evname[EVENT_NAME_LENGTH];
+		struct event_data *ev;
+		snprintf(evname, ARRAYLENGTH(evname), "%s::OnNPCUnload", nd->exname);
+		if ((ev = (struct event_data*)strdb_get(npc->ev_db, evname)) != NULL)
+			script->run_npc(nd->u.scr.script, ev->pos, 0, nd->bl.id); // Run OnNPCUnload
 
 		if( single ) {
 			npc->ev_db->foreach(npc->ev_db,npc->unload_ev,nd->exname); //Clean up all events related
@@ -3050,6 +3073,9 @@ static int npc_unload(struct npc_data *nd, bool single)
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
+
+	if (unload_mobs)
+		map->foreachmob(npc->unload_mob, nd->bl.id);
 
 	HPM->data_store_destroy(&nd->hdata);
 
@@ -4442,7 +4468,7 @@ static void npc_parse_mob2(struct spawn_data *mobspawn)
 
 	nullpo_retv(mobspawn);
 	for( i = mobspawn->active; i < mobspawn->num; ++i ) {
-		struct mob_data* md = mob->spawn_dataset(mobspawn);
+		struct mob_data *md = mob->spawn_dataset(mobspawn, 0);
 		md->spawn = mobspawn;
 		md->spawn->active++;
 		mob->spawn(md);
@@ -5528,7 +5554,7 @@ static int npc_reload(void)
 		switch(bl->type) {
 			case BL_NPC:
 				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd
-					npc->unload(BL_UCAST(BL_NPC, bl), false);
+					npc->unload(BL_UCAST(BL_NPC, bl), false, false);
 				break;
 			case BL_MOB:
 				unit->free(bl,CLR_OUTSIGHT);
@@ -5603,7 +5629,7 @@ static int npc_reload(void)
 }
 
 //Unload all npc in the given file
-static bool npc_unloadfile(const char *filepath)
+static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 {
 	struct DBIterator *iter = db_iterator(npc->name_db);
 	struct npc_data* nd = NULL;
@@ -5614,8 +5640,8 @@ static bool npc_unloadfile(const char *filepath)
 	for( nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter) ) {
 		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) { // FIXME: This can break in case-sensitive file systems
 			found = true;
-			npc->unload_duplicates(nd);/* unload any npcs which could duplicate this but be in a different file */
-			npc->unload(nd, true);
+			npc->unload_duplicates(nd, unload_mobs);/* unload any npcs which could duplicate this but be in a different file */
+			npc->unload(nd, true, unload_mobs);
 		}
 	}
 
@@ -5854,6 +5880,7 @@ void npc_defaults(void)
 	npc->unload_ev_label = npc_unload_ev_label;
 	npc->unload_dup_sub = npc_unload_dup_sub;
 	npc->unload_duplicates = npc_unload_duplicates;
+	npc->unload_mob = npc_unload_mob;
 	npc->unload = npc_unload;
 	npc->clearsrcfile = npc_clearsrcfile;
 	npc->addsrcfile = npc_addsrcfile;

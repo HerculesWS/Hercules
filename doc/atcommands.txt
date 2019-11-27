@@ -1273,31 +1273,47 @@ Example:
 
 ---------------------------------------
 
-@unloadnpc <npc name>
+@unloadnpc <NPC_name> {<flag>}
 
-Unloads an NPC.
+Unloads a NPC.
+Flag:
+	0 - do not unload mobs spawned by NPCs in file
+	1 - unload mobs spawned by NPCs in file
+	Default is 1; every number other than 0 will be treaten as 1.
+	Mobs that were spawned with monster/areamonster/guardian/bg_monster/atcommand("@monster xy") are affected.
+Note:
+	Be aware that some changes made by NPC are not reverted on unload.
+	Please use the OnNPCUnload label to clean things up by yourself. Commonly relevant for these script commands:
+	-> setmapflagnosave, setmapflag, removemapflags, setbattleflag, setcell, setwall
+	-> agitstart/agitstart2, agitend/agitend2, gvgon, gvgoff, pvpon, pvpoff
+	-> addmonsterdrop, setitemscript, npcshopitem, npcshopadditem, npcshopdelitem, hateffect, disguise
+	-> pcfollow, pcblockmove, setpcblock, setnpcdir, navigateto, viewpoint, add_group_command, skill/addtoskill
+	-> instance and battleground related stuff (excepting bg_monster)
 
 Example:
-@unloadnpc Job Master
+@unloadnpc Job Master 0
 
 ---------------------------------------
 
-@unloadnpcfile <path>
+@unloadnpcfile <path> {<flag>}
 
 Unloads all NPCs in a file.
+Flag: See @unloadnpc
+Note: See @unloadnpc
 
 Example:
-@unloadnpcfile npc/custom/jobmaster.txt
+@unloadnpcfile npc/custom/jobmaster.txt 0
 
 ---------------------------------------
 
-@reloadnpc <path>
+@reloadnpc <path> {<flag>}
 
 Unloads all NPCs in a file and reload it again.
-Note: Be aware that mapflags and monsters spawned directly are not removed.
+Flag: See @unloadnpc
+Note: See @unloadnpc
 
 Example:
-@reloadnpc npc/custom/jobmaster.txt
+@reloadnpc npc/custom/jobmaster.txt 0
 
 ---------------------------------------
 
