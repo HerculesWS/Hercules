@@ -9087,21 +9087,26 @@ static void clif_specialeffect_single(struct block_list *bl, int type, int fd)
 ///     @see doc/effect_list.txt
 /// num data:
 ///     effect-dependent value
-static void clif_specialeffect_value(struct block_list *bl, int effect_id, int num, send_target target)
+static void clif_specialeffect_value(struct block_list *bl, int effect_id, uint64 num, send_target target)
 {
-	uint8 buf[14];
+#if PACKETVER_MAIN_NUM >= 20060911 || PACKETVER_AD_NUM >= 20060911 || PACKETVER_SAK_NUM >= 20060911 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
+	struct PACKET_ZC_NOTIFY_EFFECT3 packet;
+	packet.packetType = HEADER_ZC_NOTIFY_EFFECT3;
+	packet.aid = bl->id;
+	packet.effectId = effect_id;
+#if PACKETVER >= 20191127
+	packet.num = num;
+#else
+	packet.num = (uint32)num;
+#endif
 
-	WBUFW(buf,0) = 0x284;
-	WBUFL(buf,2) = bl->id;
-	WBUFL(buf,6) = effect_id;
-	WBUFL(buf,10) = num;
-
-	clif->send(buf, packet_len(0x284), bl, target);
+	clif->send(&packet, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3), bl, target);
 
 	if (clif->isdisguised(bl)) {
-		WBUFL(buf,2) = -bl->id;
-		clif->send(buf, packet_len(0x284), bl, SELF);
+		packet.aid = -bl->id;
+		clif->send(&packet, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3), bl, SELF);
 	}
+#endif
 }
 
 /// Remove special effects (ZC_REMOVE_EFFECT).
