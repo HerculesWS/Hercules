@@ -1031,6 +1031,7 @@ struct clif_interface {
 	void (*specialeffect) (struct block_list* bl, int type, enum send_target target);
 	void (*specialeffect_single) (struct block_list* bl, int type, int fd);
 	void (*specialeffect_value) (struct block_list* bl, int effect_id, uint64 num, send_target target);
+	void (*specialeffect_value_single) (struct block_list *bl, int effect_id, uint64 num, int fd);
 	void (*removeSpecialEffect) (struct block_list *bl, int effectId, enum send_target target);
 	void (*removeSpecialEffect_single) (struct block_list *bl, int effectId, struct block_list *targetBl);
 	void (*millenniumshield) (struct block_list *bl, short shields );

@@ -6231,6 +6231,15 @@ Example usage:
 
 ---------------------------------------
 
+*specialeffectnum(<effect number>, <num1>, <num2>{, <send_target>{, <unit id>{, <account id>}}})
+*specialeffectnum(<effect number>, <num1>, <num2>{, <send_target>{, "<NPC Name>"{, <account id>}}})
+
+Works same as specialeffect but also send effect numbers to client.
+For PACKETVER >= 20191127 support two numbers (num1, num2).
+For older packet versions only num1 supported.
+
+---------------------------------------
+
 *removespecialeffect(<effect number>{, <send_target>{, <unit id>{, <account id>}}})
 *removespecialeffect(<effect number>{, <send_target>{, "<NPC Name>"{, <account id>}}})
 

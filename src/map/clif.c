@@ -9109,6 +9109,24 @@ static void clif_specialeffect_value(struct block_list *bl, int effect_id, uint6
 #endif
 }
 
+static void clif_specialeffect_value_single(struct block_list *bl, int effect_id, uint64 num, int fd)
+{
+#if PACKETVER_MAIN_NUM >= 20060911 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3));
+
+	struct PACKET_ZC_NOTIFY_EFFECT3 *packet = WFIFOP(fd, 0);
+	packet->packetType = HEADER_ZC_NOTIFY_EFFECT3;
+	packet->aid = bl->id;
+	packet->effectId = effect_id;
+#if PACKETVER >= 20191127
+	packet->num = num;
+#else
+	packet->num = (uint32)num;
+#endif
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3));
+#endif
+}
+
 /// Remove special effects (ZC_REMOVE_EFFECT).
 /// 0b0d <id>.L <effect id>.L
 /// effect id:
@@ -24069,6 +24087,7 @@ void clif_defaults(void)
 	clif->specialeffect = clif_specialeffect;
 	clif->specialeffect_single = clif_specialeffect_single;
 	clif->specialeffect_value = clif_specialeffect_value;
+	clif->specialeffect_value_single = clif_specialeffect_value_single;
 	clif->removeSpecialEffect = clif_removeSpecialEffect;
 	clif->removeSpecialEffect_single = clif_removeSpecialEffect_single;
 	clif->millenniumshield = clif_millenniumshield;
