@@ -72,6 +72,9 @@ struct unit_interface *unit;
 /**
  * Returns the unit_data for the given block_list. If the object is using
  * shared unit_data (i.e. in case of BL_NPC), it returns the shared data.
+ *
+ * __Warning:__ if bl->type is not known or NULL,
+ * an assertion will be triggered and NULL returned.
  * @param bl block_list to process, it is expected to be not NULL.
  * @return a pointer to the given object's unit_data
  **/
@@ -94,7 +97,7 @@ static struct unit_data *unit_bl2ud(struct block_list *bl)
 	case BL_ELEM:
 		return &BL_UCAST(BL_ELEM, bl)->ud;
 	default:
-		return NULL;
+		Assert_retr(NULL, false);
 	}
 }
 
