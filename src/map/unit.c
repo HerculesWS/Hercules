@@ -100,6 +100,38 @@ static struct unit_data *unit_bl2ud(struct block_list *bl)
 }
 
 /**
+ * Returns the const unit_data for the given const block_list. If the object is using
+ * shared unit_data (i.e. in case of BL_NPC), it returns the shared data.
+ *
+ * __Warning:__ if bl->type is not known or NULL,
+ * an assertion will be triggered and NULL returned.
+ * @param bl block_list to process, it is expected to be not NULL.
+ * @return a pointer to the given object's unit_data
+ **/
+static const struct unit_data *unit_cbl2ud(const struct block_list *bl)
+{
+	Assert_retr(NULL, bl != NULL);
+	switch (bl->type) {
+	case BL_PC:
+		return &BL_UCCAST(BL_PC, bl)->ud;
+	case BL_MOB:
+		return &BL_UCCAST(BL_MOB, bl)->ud;
+	case BL_PET:
+		return &BL_UCCAST(BL_PET, bl)->ud;
+	case BL_NPC:
+		return BL_UCCAST(BL_NPC, bl)->ud;
+	case BL_HOM:
+		return &BL_UCCAST(BL_HOM, bl)->ud;
+	case BL_MER:
+		return &BL_UCCAST(BL_MER, bl)->ud;
+	case BL_ELEM:
+		return &BL_UCCAST(BL_ELEM, bl)->ud;
+	default:
+		Assert_retr(NULL, false);
+	}
+}
+
+/**
  * Returns the unit_data for the given block_list. If the object is using
  * shared unit_data (i.e. in case of BL_NPC), it recreates a copy of the
  * data so that it's safe to modify.
@@ -3054,6 +3086,7 @@ void unit_defaults(void)
 	unit->final = do_final_unit;
 	/* */
 	unit->bl2ud = unit_bl2ud;
+	unit->cbl2ud = unit_cbl2ud;
 	unit->bl2ud2 = unit_bl2ud2;
 	unit->init_ud = unit_init_ud;
 	unit->attack_timer = unit_attack_timer;

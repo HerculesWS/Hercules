@@ -103,6 +103,7 @@ struct unit_interface {
 	int (*final) (void);
 	/* */
 	struct unit_data* (*bl2ud) (struct block_list *bl);
+	const struct unit_data* (*cbl2ud) (const struct block_list *bl);
 	struct unit_data* (*bl2ud2) (struct block_list *bl);
 	void (*init_ud) (struct unit_data *ud);
 	int (*attack_timer) (int tid, int64 tick, int id, intptr_t data);
