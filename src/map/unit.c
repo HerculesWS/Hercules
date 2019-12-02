@@ -937,13 +937,13 @@ static int unit_set_dir(struct block_list *bl, enum unit_dir dir)
  * @param bl: unit to request data from
  * @return the facing direction @see enum unit_dir
  */
-static enum unit_dir unit_getdir(struct block_list *bl)
+static enum unit_dir unit_getdir(const struct block_list *bl)
 {
 	nullpo_retr(UNIT_DIR_NORTH, bl);
 
 	if (bl->type == BL_NPC)
 		return BL_UCCAST(BL_NPC, bl)->dir;
-	struct unit_data *ud = unit->bl2ud(bl);
+	const struct unit_data *ud = unit->cbl2ud(bl);
 	if (ud == NULL)
 		return UNIT_DIR_NORTH;
 	return ud->dir;
