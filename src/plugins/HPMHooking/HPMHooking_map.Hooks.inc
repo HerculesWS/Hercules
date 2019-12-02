@@ -48311,11 +48311,11 @@ int HP_map_check_dir(enum unit_dir s_dir, enum unit_dir t_dir) {
 	}
 	return retVal___;
 }
-enum unit_dir HP_map_calc_dir(struct block_list *src, int16 x, int16 y) {
+enum unit_dir HP_map_calc_dir(const struct block_list *src, int16 x, int16 y) {
 	int hIndex = 0;
 	enum unit_dir retVal___ = UNIT_DIR_UNDEFINED;
 	if (HPMHooks.count.HP_map_calc_dir_pre > 0) {
-		enum unit_dir (*preHookFunc) (struct block_list **src, int16 *x, int16 *y);
+		enum unit_dir (*preHookFunc) (const struct block_list **src, int16 *x, int16 *y);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_calc_dir_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_map_calc_dir_pre[hIndex].func;
@@ -48330,7 +48330,7 @@ enum unit_dir HP_map_calc_dir(struct block_list *src, int16 x, int16 y) {
 		retVal___ = HPMHooks.source.map.calc_dir(src, x, y);
 	}
 	if (HPMHooks.count.HP_map_calc_dir_post > 0) {
-		enum unit_dir (*postHookFunc) (enum unit_dir retVal___, struct block_list *src, int16 x, int16 y);
+		enum unit_dir (*postHookFunc) (enum unit_dir retVal___, const struct block_list *src, int16 x, int16 y);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_calc_dir_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_map_calc_dir_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, src, x, y);
@@ -90806,6 +90806,33 @@ struct unit_data* HP_unit_bl2ud(struct block_list *bl) {
 	}
 	return retVal___;
 }
+const struct unit_data* HP_unit_cbl2ud(const struct block_list *bl) {
+	int hIndex = 0;
+	const struct unit_data* retVal___ = NULL;
+	if (HPMHooks.count.HP_unit_cbl2ud_pre > 0) {
+		const struct unit_data* (*preHookFunc) (const struct block_list **bl);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_cbl2ud_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_unit_cbl2ud_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.unit.cbl2ud(bl);
+	}
+	if (HPMHooks.count.HP_unit_cbl2ud_post > 0) {
+		const struct unit_data* (*postHookFunc) (const struct unit_data* retVal___, const struct block_list *bl);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_cbl2ud_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_unit_cbl2ud_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl);
+		}
+	}
+	return retVal___;
+}
 struct unit_data* HP_unit_bl2ud2(struct block_list *bl) {
 	int hIndex = 0;
 	struct unit_data* retVal___ = NULL;
@@ -91182,11 +91209,11 @@ int HP_unit_set_dir(struct block_list *bl, enum unit_dir dir) {
 	}
 	return retVal___;
 }
-enum unit_dir HP_unit_getdir(struct block_list *bl) {
+enum unit_dir HP_unit_getdir(const struct block_list *bl) {
 	int hIndex = 0;
 	enum unit_dir retVal___ = UNIT_DIR_UNDEFINED;
 	if (HPMHooks.count.HP_unit_getdir_pre > 0) {
-		enum unit_dir (*preHookFunc) (struct block_list **bl);
+		enum unit_dir (*preHookFunc) (const struct block_list **bl);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_getdir_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_unit_getdir_pre[hIndex].func;
@@ -91201,7 +91228,7 @@ enum unit_dir HP_unit_getdir(struct block_list *bl) {
 		retVal___ = HPMHooks.source.unit.getdir(bl);
 	}
 	if (HPMHooks.count.HP_unit_getdir_post > 0) {
-		enum unit_dir (*postHookFunc) (enum unit_dir retVal___, struct block_list *bl);
+		enum unit_dir (*postHookFunc) (enum unit_dir retVal___, const struct block_list *bl);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_getdir_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_unit_getdir_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
