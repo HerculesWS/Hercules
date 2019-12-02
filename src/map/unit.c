@@ -72,13 +72,12 @@ struct unit_interface *unit;
 /**
  * Returns the unit_data for the given block_list. If the object is using
  * shared unit_data (i.e. in case of BL_NPC), it returns the shared data.
- * @param bl block_list to process
+ * @param bl block_list to process, it is expected to be not NULL.
  * @return a pointer to the given object's unit_data
  **/
 static struct unit_data *unit_bl2ud(struct block_list *bl)
 {
-	if (bl == NULL)
-		return NULL;
+	Assert_retr(NULL, bl != NULL);
 	switch (bl->type) {
 	case BL_PC:
 		return &BL_UCAST(BL_PC, bl)->ud;
