@@ -3525,31 +3525,31 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 	}
 
 
+	if (sc->data[SC_MAGNIFICAT]) {
+#ifndef RENEWAL // HP Regen applies only in Pre-renewal
+		regen->rate.hp += regen->rate.hp * 100 / 100;
+#endif
+		regen->rate.sp += regen->rate.sp * 100 / 100;
+	}
+
 	// Tension relax allows the user to recover HP while overweight
 	// at 1x speed. Other SC ignored? [csnv]
 	if (sc->data[SC_TENSIONRELAX]) {
 		if (sc->data[SC_WEIGHTOVER50] || sc->data[SC_WEIGHTOVER90]) {
 			regen->flag &= ~RGN_SP;
-			regen->rate.hp = 100;
+			regen->rate.hp += regen->rate.hp * 100 / 100;
 		} else {
-			regen->rate.hp += 200;
+			regen->rate.hp += regen->rate.hp * 200 / 100;
 			if (regen->skill != NULL)
-				regen->skill->rate.hp += 300;
+				regen->skill->rate.hp += regen->skill->rate.hp * 300 / 100;
 		}
-	}
-
-	if (sc->data[SC_MAGNIFICAT]) {
-#ifndef RENEWAL // HP Regen applies only in Pre-renewal
-		regen->rate.hp += 100;
-#endif
-		regen->rate.sp += 100;
 	}
 
 	if (sc->data[SC_GDSKILL_REGENERATION]) {
 		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
 		if (!sce->val4) {
-			regen->rate.hp += sce->val2;
-			regen->rate.sp += sce->val3;
+			regen->rate.hp += regen->rate.hp * sce->val2 / 100;
+			regen->rate.sp += regen->rate.sp * sce->val3 / 100;
 		} else
 			regen->flag&=~sce->val4; //Remove regen as specified by val4
 	}
@@ -3560,7 +3560,7 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
-		regen->rate.hp *= 2;
+		regen->rate.hp += regen->rate.hp * 100 / 100;
 	if (sc->data[SC_VITALITYACTIVATION])
 		regen->flag &=~RGN_SP;
 
@@ -3578,8 +3578,8 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
 	}
 	if (sc->data[SC_CATNIPPOWDER]) {
-		regen->rate.hp *= 2;
-		regen->rate.sp *= 2;
+		regen->rate.hp += regen->rate.hp * 100 / 100;
+		regen->rate.sp += regen->rate.sp * 100 / 100;
 	}
 }
 
