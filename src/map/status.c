@@ -3495,6 +3495,16 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 	regen->rate.hp = 100;
 	regen->rate.sp = 100;
 
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+		struct guild_castle *gc = guild->mapindex2gc(bl->m);
+
+		if (gc != NULL && gc->guild_id == sd->status.guild_id) {
+			regen->rate.hp += regen->rate.hp * 100 / 100;
+			regen->rate.sp += regen->rate.sp * 100 / 100;
+		}
+	}
+
 	if (!sc || !sc->count)
 		return;
 
@@ -13234,8 +13244,6 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	if (flag&(RGN_HP|RGN_SP)) {
 		if(!vd) vd = status->get_viewdata(bl);
 		if(vd && vd->dead_sit == 2)
-			bonus += 100;
-		if(regen->state.gc)
 			bonus += 100;
 	}
 

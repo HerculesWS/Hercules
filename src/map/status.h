@@ -1121,7 +1121,6 @@ struct regen_data {
 
 	struct {
 		unsigned walk:1;        //Can you regen even when walking?
-		unsigned gc:1;          //Tags when you should have double regen due to GVG castle
 		unsigned overweight :2; //overweight state (1: 50%, 2: 90%)
 		unsigned block :2;      //Block regen flag (1: Hp, 2: Sp)
 	} state;

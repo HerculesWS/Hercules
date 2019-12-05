@@ -180,6 +180,7 @@ struct guild_interface {
 	int (*check_member) (const struct guild *g);
 	int (*get_alliance_count) (struct guild *g,int flag);
 	void (*castle_reconnect_sub) (void *key, void *data, va_list ap);
+	int (*castle_owner_change_foreach) (struct map_session_data *sd, va_list ap);
 };
 
 #ifdef HERCULES_CORE
