@@ -76,6 +76,13 @@ POSSIBILITY OF SUCH DAMAGE.  */
 #include "backtrace.h"
 #include "internal.h"
 
+// Pragma macro only enabled on gcc >= 8
+#if defined(__GNUC__) && (GCC_VERSION >= 8000)
+#define PRAGMA_GCC8(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 8000)
+#define PRAGMA_GCC8(str)
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 8000)
+
 struct macho_commands_view
 {
     struct backtrace_view view;
@@ -222,7 +229,7 @@ macho_get_commands (struct backtrace_state *state, int descriptor,
     goto end;
   file_header_view_valid = 1;
 
-  switch (*(uint32_t *) file_header_view.data)
+  switch (*(const uint32_t *) file_header_view.data)
     {
       case MH_MAGIC:
         if (BACKTRACE_BITS == 32)
@@ -328,7 +335,7 @@ macho_get_commands (struct backtrace_state *state, int descriptor,
       file_header_view_valid = 1;
 
       // The endianess of the slice may be different than the fat image
-      switch (*(uint32_t *) file_header_view.data)
+      switch (*(const uint32_t *) file_header_view.data)
         {
           case MH_MAGIC:
             if (BACKTRACE_BITS == 32)
@@ -433,7 +440,7 @@ macho_get_uuid (struct backtrace_state *state ATTRIBUTE_UNUSED,
             }
 
           uuid_command =
-              (struct uuid_command *) raw_command;
+              (const struct uuid_command *) raw_command;
           memcpy (uuid, uuid_command->uuid, sizeof (uuid_t));
           return 1;
         }
@@ -499,7 +506,7 @@ macho_get_addr_range (struct backtrace_state *state ATTRIBUTE_UNUSED,
               return 0;
             }
 
-          raw_segment = (segment_command_native_t *) raw_command;
+          raw_segment = (const segment_command_native_t *) raw_command;
 
           segment_vmaddr = macho_file_to_host_usize (
               commands_view->bytes_swapped, raw_segment->vmaddr);
@@ -617,7 +624,7 @@ macho_add_symtab (struct backtrace_state *state,
               return 0;
             }
 
-          symtab_command = (struct symtab_command *) raw_command;
+          symtab_command = (const struct symtab_command *) raw_command;
 
           symbol_table_offset = macho_file_to_host_u32 (
               commands_view->bytes_swapped, symtab_command->symoff);
@@ -1050,11 +1057,11 @@ macho_try_dsym (struct backtrace_state *state,
                 int *found_sym, int *found_dwarf)
 {
   int ret = 0;
-  char dwarf_image_dir_path[PATH_MAX];
+  char dwarf_image_dir_path[PATH_MAX + 1] = "";
   DIR *dwarf_image_dir;
   int dwarf_image_dir_valid = 0;
   struct dirent *directory_entry;
-  char dwarf_filename[PATH_MAX];
+  char dwarf_filename[PATH_MAX + 1] = "";
   int dwarf_matched;
   int dwarf_had_sym;
   int dwarf_had_dwarf;
@@ -1079,7 +1086,11 @@ macho_try_dsym (struct backtrace_state *state,
       if (directory_entry->d_type != DT_REG)
         continue;
 
+PRAGMA_GCC8(GCC diagnostic push)
+PRAGMA_GCC8(GCC diagnostic ignored "-Wstringop-truncation")
+      // Silence the warning since the string is initialized to zero and has an extra NUL byte at the end.
       strncpy (dwarf_filename, dwarf_image_dir_path, PATH_MAX);
+PRAGMA_GCC8(GCC diagnostic pop)
       strncat (dwarf_filename, "/", PATH_MAX);
       strncat (dwarf_filename, directory_entry->d_name, PATH_MAX);
 
@@ -1124,12 +1135,12 @@ macho_add (struct backtrace_state *state,
   int ret = 0;
   struct macho_commands_view commands_view;
   int commands_view_valid = 0;
-  char executable_dirname[PATH_MAX];
+  char executable_dirname[PATH_MAX + 1] = "";
   size_t filename_len;
   DIR *executable_dir = NULL;
   int executable_dir_valid = 0;
   struct dirent *directory_entry;
-  char dsym_full_path[PATH_MAX];
+  char dsym_full_path[PATH_MAX + 1] = "";
   static const char *extension;
   size_t extension_len;
   ssize_t i;
@@ -1209,7 +1220,11 @@ macho_add (struct backtrace_state *state,
           int dsym_had_dwarf;
 
           // Found a dSYM
+PRAGMA_GCC8(GCC diagnostic push)
+PRAGMA_GCC8(GCC diagnostic ignored "-Wstringop-truncation")
+          // Silence the warning since the string is initialized to zero and has an extra NUL byte at the end.
           strncpy (dsym_full_path, executable_dirname, PATH_MAX);
+PRAGMA_GCC8(GCC diagnostic pop)
           strncat (dsym_full_path, "/", PATH_MAX);
           strncat (dsym_full_path, directory_entry->d_name, PATH_MAX);
 
@@ -1343,7 +1358,6 @@ backtrace_initialize (struct backtrace_state *state,
                       backtrace_error_callback error_callback,
                       void *data, fileline *fileline_fn)
 {
-  int ret;
   fileline macho_fileline_fn = macho_nodebug;
   int found_sym = 0;
   int found_dwarf = 0;
