@@ -1503,25 +1503,25 @@ AC_COMPILE_IFELSE(
 libbacktrace_cv_sys_filetype=$filetype])
 
 # Match the file type to decide what files to compile.
-FORMAT_FILE=
+LIBBACKTRACE_FORMAT_FILE=
 backtrace_supports_data=yes
 case "$libbacktrace_cv_sys_filetype" in
-elf*) FORMAT_FILE="elf.lo" ;;
-pecoff) FORMAT_FILE="pecoff.lo"
+elf*) LIBBACKTRACE_FORMAT_FILE="elf.o" ;;
+pecoff) LIBBACKTRACE_FORMAT_FILE="pecoff.o"
         backtrace_supports_data=no
 	;;
-xcoff*) FORMAT_FILE="xcoff.lo"
+xcoff*) LIBBACKTRACE_FORMAT_FILE="xcoff.o"
         backtrace_supports_data=no
         ;;
-macho*) FORMAT_FILE="macho.lo"
+macho*) LIBBACKTRACE_FORMAT_FILE="macho.o"
         backtrace_supports_data=no
         ;;
 *) AC_MSG_WARN([could not determine output file type])
-   FORMAT_FILE="unknown.lo"
+   LIBBACKTRACE_FORMAT_FILE="unknown.o"
    backtrace_supported=no
    ;;
 esac
-AC_SUBST(FORMAT_FILE)
+AC_SUBST(LIBBACKTRACE_FORMAT_FILE)
 
 # ELF defines.
 elfsize=

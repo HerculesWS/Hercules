@@ -35,7 +35,7 @@ LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
 
 LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
 LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
-              dwarf.o elf.o fileline.o mmapio.o mmap.o posix.o print.o \
+              dwarf.o @LIBBACKTRACE_FORMAT_FILE@ fileline.o mmapio.o mmap.o posix.o print.o \
               simple.o sort.o state.o)
 LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
               backtrace-supported.h config.h filenames.h internal.h)

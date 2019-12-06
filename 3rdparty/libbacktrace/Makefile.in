@@ -29,13 +29,12 @@ LIBBACKTRACE_OBJ = atomic.o \
 	backtrace.o \
 	simple.o \
 	nounwind.o \
-	elf.o \
-	pecoff.o \
 	unknown.o \
 	read.o \
 	mmapio.o \
 	alloc.o \
-	mmap.o
+	mmap.o \
+	@LIBBACKTRACE_FORMAT_FILE@
 LIBBACKTRACE_H = backtrace.h internal.h
 
 

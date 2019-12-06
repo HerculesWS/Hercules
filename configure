@@ -638,7 +638,7 @@ ALLOC_FILE
 VIEW_FILE
 BACKTRACE_SUPPORTS_DATA
 BACKTRACE_SUPPORTED
-FORMAT_FILE
+LIBBACKTRACE_FORMAT_FILE
 BACKTRACE_SUPPORTS_THREADS
 BACKTRACE_FILE
 AWK
@@ -8824,22 +8824,22 @@ fi
 $as_echo "$libbacktrace_cv_sys_filetype" >&6; }
 
 # Match the file type to decide what files to compile.
-FORMAT_FILE=
+LIBBACKTRACE_FORMAT_FILE=
 backtrace_supports_data=yes
 case "$libbacktrace_cv_sys_filetype" in
-elf*) FORMAT_FILE="elf.lo" ;;
-pecoff) FORMAT_FILE="pecoff.lo"
+elf*) LIBBACKTRACE_FORMAT_FILE="elf.o" ;;
+pecoff) LIBBACKTRACE_FORMAT_FILE="pecoff.o"
         backtrace_supports_data=no
 	;;
-xcoff*) FORMAT_FILE="xcoff.lo"
+xcoff*) LIBBACKTRACE_FORMAT_FILE="xcoff.o"
         backtrace_supports_data=no
         ;;
-macho*) FORMAT_FILE="macho.lo"
+macho*) LIBBACKTRACE_FORMAT_FILE="macho.o"
         backtrace_supports_data=no
         ;;
 *) { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: could not determine output file type" >&5
 $as_echo "$as_me: WARNING: could not determine output file type" >&2;}
-   FORMAT_FILE="unknown.lo"
+   LIBBACKTRACE_FORMAT_FILE="unknown.o"
    backtrace_supported=no
    ;;
 esac
