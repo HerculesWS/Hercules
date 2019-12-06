@@ -1086,8 +1086,8 @@ struct status_data {
 
 //Additional regen data that only players have.
 struct regen_data_sub {
-	unsigned short hp;
-	unsigned short sp;
+	int hp;
+	int sp;
 
 	//tick accumulation before healing.
 	struct {
@@ -1104,8 +1104,8 @@ struct regen_data_sub {
 
 struct regen_data {
 	unsigned short flag; //Marks what stuff you may heal or not.
-	unsigned short hp;
-	unsigned short sp;
+	int hp;
+	int sp;
 
 	//tick accumulation before healing.
 	struct {
@@ -1334,6 +1334,10 @@ struct status_interface {
 	int (*calc_mercenary_) (struct mercenary_data *md, enum e_status_calc_opt opt);
 	int (*calc_elemental_) (struct elemental_data *ed, enum e_status_calc_opt opt);
 	void (*calc_misc) (struct block_list *bl, struct status_data *st, int level);
+	void (*calc_regen_pc) (struct map_session_data *sd, struct status_data *st, struct regen_data *regen);
+	void (*calc_regen_homunculus) (struct homun_data *hd, struct status_data *st, struct regen_data *regen);
+	void (*calc_regen_mercenary) (struct mercenary_data *md, struct status_data *st, struct regen_data *regen);
+	void (*calc_regen_elemental) (struct elemental_data *md, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
 	int (*check_skilluse) (struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
