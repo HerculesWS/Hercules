@@ -74,12 +74,6 @@ static void nullpo_backtrace_print(struct backtrace_state *state)
  */
 static void assert_report(const char *file, int line, const char *func, const char *targetname, const char *title)
 {
-#if !defined(HAVE_LIBBACKTRACE) && defined(HAVE_EXECINFO)
-	void *array[10];
-	int size;
-	char **strings;
-	int i;
-#endif // !defined(HAVE_LIBBACKTRACE) && defined(HAVE_EXECINFO)
 	if (file == NULL)
 		file = "??";
 
@@ -89,17 +83,31 @@ static void assert_report(const char *file, int line, const char *func, const ch
 	ShowError("--- %s --------------------------------------------\n", title);
 	ShowError("%s:%d: '%s' in function `%s'\n", file, line, targetname, func);
 #ifdef HAVE_LIBBACKTRACE
-	struct backtrace_state *state = backtrace_create_state("hercules", BACKTRACE_SUPPORTS_THREADS, nullpo_error_callback, NULL);
-	nullpo_backtrace_print(state);
+	if (nullpo->backtrace_state != NULL)
+		nullpo_backtrace_print(nullpo->backtrace_state);
 #elif defined(HAVE_EXECINFO)
-	size = (int)backtrace(array, 10);
-	strings = backtrace_symbols(array, size);
-	for (i = 0; i < size; i++)
+	void *array[10];
+	int size = (int)backtrace(array, 10);
+	char **strings = backtrace_symbols(array, size);
+	for (int i = 0; i < size; i++)
 		ShowError("%s\n", strings[i]);
 	free(strings);
 #endif // HAVE_LIBBACKTRACE
 	ShowError("--- end %s ----------------------------------------\n", title);
+}
 
+static void nullpo_init(void)
+{
+#ifdef HAVE_LIBBACKTRACE
+	nullpo->backtrace_state = backtrace_create_state("hercules", BACKTRACE_SUPPORTS_THREADS, nullpo_error_callback, NULL);
+#endif
+}
+
+static void nullpo_final(void)
+{
+	// FIXME: libbacktrace doesn't provide a backtrace_free_state, and it's unsafe to pass the state to
+	// backtrace_free (the function itself uses the state internally). For the time being, we'll leave the state
+	// allocated until program termination as shown in their examples.
 }
 
 /**
@@ -108,5 +116,9 @@ static void assert_report(const char *file, int line, const char *func, const ch
 void nullpo_defaults(void)
 {
 	nullpo = &nullpo_s;
+	nullpo->init = nullpo_init;
+	nullpo->final = nullpo_final;
 	nullpo->assert_report = assert_report;
+
+	nullpo->backtrace_state = NULL;
 }
