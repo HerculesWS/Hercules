@@ -3503,9 +3503,6 @@ static void status_calc_regen_homunculus(struct homun_data *hd, struct status_da
 	// Base natural HP/SP restore bonuses
 	if ((skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0)
 		regen->hp = regen->hp * (100 + 5 * skill_lv) / 100;
-
-	if ((skill_lv = homun->checkskill(hd, HLIF_BRAIN)) > 0)
-		regen->sp = regen->sp * (100 + 3 * skill_lv) / 100;
 }
 
 static void status_calc_regen_mercenary(struct mercenary_data *md, struct status_data *st, struct regen_data *regen)
@@ -3658,6 +3655,17 @@ static void status_calc_regen_rate_elemental(struct elemental_data *md, struct r
 		regen->rate.hp += regen->rate.hp * 100 / 100;
 }
 
+static void status_calc_regen_rate_homunculus(struct homun_data *hd, struct regen_data *regen)
+{
+	nullpo_retv(hd);
+	nullpo_retv(regen);
+
+	int skill_lv;
+
+	if ((skill_lv = homun->checkskill(hd, HLIF_BRAIN)) > 0)
+		regen->rate.sp = regen->rate.sp * (100 + 3 * skill_lv) / 100;
+}
+
 //Calculates SC related regen rates.
 static void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen)
 {
@@ -3687,6 +3695,9 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		break;
 	case BL_ELEM:
 		status->calc_regen_rate_elemental(BL_UCAST(BL_ELEM, bl), regen);
+		break;
+	case BL_HOM:
+		status->calc_regen_rate_homunculus(BL_UCAST(BL_HOM, bl), regen);
 		break;
 	}
 }
@@ -14052,6 +14063,7 @@ void status_defaults(void)
 	status->calc_regen = status_calc_regen;
 	status->calc_regen_rate_pc = status_calc_regen_rate_pc;
 	status->calc_regen_rate_elemental = status_calc_regen_rate_elemental;
+	status->calc_regen_rate_homunculus = status_calc_regen_rate_homunculus;
 	status->calc_regen_rate = status_calc_regen_rate;
 
 	status->check_skilluse = status_check_skilluse; // [Skotlex]
