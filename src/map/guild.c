@@ -2128,7 +2128,7 @@ static int guild_castle_owner_change_foreach(struct map_session_data *sd, va_lis
 		return 0;
 
 	status->calc_regen(&sd->bl, &sd->battle_status, &sd->regen);
-	status->calc_regen_rate(&sd->bl, &sd->regen, &sd->sc);
+	status->calc_regen_rate(&sd->bl, &sd->regen);
 	return 1;
 }
 

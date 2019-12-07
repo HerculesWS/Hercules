@@ -1339,7 +1339,9 @@ struct status_interface {
 	void (*calc_regen_mercenary) (struct mercenary_data *md, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen_elemental) (struct elemental_data *md, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
-	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
+	void (*calc_regen_rate_pc) (struct map_session_data *sd, struct regen_data *regen);
+	void (*calc_regen_rate_elemental) (struct elemental_data *md, struct regen_data *regen);
+	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen);
 	int (*check_skilluse) (struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
 	int (*check_visibility) (struct block_list *src, struct block_list *target); //[Skotlex]
 	int (*change_spread) (struct block_list *src, struct block_list *bl);

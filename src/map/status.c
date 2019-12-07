@@ -3583,40 +3583,21 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 	}
 }
 
-//Calculates SC related regen rates.
-static void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc)
+static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_data *regen)
 {
-	nullpo_retv(bl);
-	if (!(bl->type&BL_REGEN) || !regen)
-		return;
+	nullpo_retv(sd);
+	nullpo_retv(regen);
+	nullpo_retv(regen->skill);
+	nullpo_retv(regen->sitting);
 
-	regen->rate.hp = 100;
-	regen->rate.sp = 100;
-
-	if (regen->skill != NULL) {
-		regen->skill->rate.hp = 100;
-		regen->skill->rate.sp = 100;
+	struct guild_castle *gc = guild->mapindex2gc(sd->bl.m);
+	if (gc != NULL && gc->guild_id == sd->status.guild_id) {
+		regen->rate.hp += regen->rate.hp * 100 / 100;
+		regen->rate.sp += regen->rate.sp * 100 / 100;
 	}
 
-	if (regen->sitting != NULL) {
-		regen->sitting->rate.hp = 100;
-		regen->sitting->rate.sp = 100;
-	}
-
-	if (bl->type == BL_PC) {
-		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
-		struct guild_castle *gc = guild->mapindex2gc(bl->m);
-
-		if (gc != NULL && gc->guild_id == sd->status.guild_id) {
-			regen->rate.hp += regen->rate.hp * 100 / 100;
-			regen->rate.sp += regen->rate.sp * 100 / 100;
-		}
-	}
-
-	if (!sc || !sc->count)
-		return;
-
-	if (sc->data[SC_MAGNIFICAT]) {
+	struct status_change *sc = &sd->sc;
+	if (sc->data[SC_MAGNIFICAT] != NULL) {
 #ifndef RENEWAL // HP Regen applies only in Pre-renewal
 		regen->rate.hp += regen->rate.hp * 100 / 100;
 #endif
@@ -3625,7 +3606,7 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 
 	// Tension relax allows the user to recover HP while overweight
 	// at 1x speed. Other SC ignored? [csnv]
-	if (sc->data[SC_TENSIONRELAX]) {
+	if (sc->data[SC_TENSIONRELAX] != NULL) {
 		if (sc->data[SC_WEIGHTOVER50] || sc->data[SC_WEIGHTOVER90]) {
 			regen->rate.hp += regen->rate.hp * 100 / 100;
 		} else {
@@ -3635,19 +3616,13 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		}
 	}
 
-	if (sc->data[SC_GDSKILL_REGENERATION]) {
+	if (sc->data[SC_GDSKILL_REGENERATION] != NULL) {
 		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
 		if (sce->val4 == 0) {
 			regen->rate.hp += regen->rate.hp * sce->val2 / 100;
 			regen->rate.sp += regen->rate.sp * sce->val3 / 100;
 		}
 	}
-
-	if ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1) //if insignia lvl 1
-		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
-		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
-		regen->rate.hp += regen->rate.hp * 100 / 100;
 
 	// Recovery Items
 	if (sc->data[SC_EXTRACT_WHITE_POTION_Z])
@@ -3662,9 +3637,57 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		regen->rate.hp += regen->rate.hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
 		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
 	}
-	if (sc->data[SC_CATNIPPOWDER]) {
+
+	if (sc->data[SC_CATNIPPOWDER] != NULL) {
 		regen->rate.hp += regen->rate.hp * 100 / 100;
 		regen->rate.sp += regen->rate.sp * 100 / 100;
+	}
+}
+
+static void status_calc_regen_rate_elemental(struct elemental_data *md, struct regen_data *regen)
+{
+	nullpo_retv(md);
+	nullpo_retv(regen);
+
+	struct status_change *sc = &md->sc;
+
+	if ((sc->data[SC_FIRE_INSIGNIA] != NULL && sc->data[SC_FIRE_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_WATER_INSIGNIA] != NULL && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_EARTH_INSIGNIA] != NULL && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
+		|| (sc->data[SC_WIND_INSIGNIA] != NULL && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
+		regen->rate.hp += regen->rate.hp * 100 / 100;
+}
+
+//Calculates SC related regen rates.
+static void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen)
+{
+	nullpo_retv(bl);
+
+	if ((bl->type & BL_REGEN) == 0)
+		return;
+
+	nullpo_retv(regen);
+
+	regen->rate.hp = 100;
+	regen->rate.sp = 100;
+
+	if (regen->skill != NULL) {
+		regen->skill->rate.hp = 100;
+		regen->skill->rate.sp = 100;
+	}
+
+	if (regen->sitting != NULL) {
+		regen->sitting->rate.hp = 100;
+		regen->sitting->rate.sp = 100;
+	}
+
+	switch (bl->type) {
+	case BL_PC:
+		status->calc_regen_rate_pc(BL_UCAST(BL_PC, bl), regen);
+		break;
+	case BL_ELEM:
+		status->calc_regen_rate_elemental(BL_UCAST(BL_ELEM, bl), regen);
+		break;
 	}
 }
 
@@ -4069,7 +4092,7 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 		status->calc_regen(bl, st, status->get_regen_data(bl));
 
 	if(flag&SCB_REGEN && bl->type&BL_REGEN)
-		status->calc_regen_rate(bl, status->get_regen_data(bl), sc);
+		status->calc_regen_rate(bl, status->get_regen_data(bl));
 }
 
 /// Recalculates parts of an object's base status and battle status according to the specified flags.
@@ -14005,6 +14028,8 @@ void status_defaults(void)
 	status->calc_regen_mercenary = status_calc_regen_mercenary;
 	status->calc_regen_elemental = status_calc_regen_elemental;
 	status->calc_regen = status_calc_regen;
+	status->calc_regen_rate_pc = status_calc_regen_rate_pc;
+	status->calc_regen_rate_elemental = status_calc_regen_rate_elemental;
 	status->calc_regen_rate = status_calc_regen_rate;
 
 	status->check_skilluse = status_check_skilluse; // [Skotlex]

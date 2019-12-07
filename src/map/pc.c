@@ -6057,7 +6057,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 		&& (map->list[map_id].flag.gvg_castle == 1 || map->list[sd->bl.m].flag.gvg_castle == 1)) {
 		// If coming from or going to a guild castle, recalculate HP/SP regen [Hemagx]
 		status->calc_regen(&sd->bl, &sd->battle_status, &sd->regen);
-		status->calc_regen_rate(&sd->bl, &sd->regen, &sd->sc);
+		status->calc_regen_rate(&sd->bl, &sd->regen);
 	}
 
 	sd->mapindex = map_index;
