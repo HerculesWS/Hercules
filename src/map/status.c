@@ -3428,6 +3428,20 @@ static void status_calc_regen_pc(struct map_session_data *sd, struct status_data
 	if (sc->data[SC_GENTLETOUCH_REVITALIZE] != NULL)
 		regen->hp += regen->hp * (30 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1 + 50) / 100;
 
+	// Recovery Items
+	if (sc->data[SC_EXTRACT_WHITE_POTION_Z] != NULL)
+		regen->hp += regen->hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
+	if (sc->data[SC_VITATA_500] != NULL)
+		regen->sp += regen->sp * sc->data[SC_VITATA_500]->val1 / 100;
+	if (sc->data[SC_ATKER_ASPD] != NULL)
+		regen->hp += regen->hp * sc->data[SC_ATKER_ASPD]->val2 / 100;
+	if (sc->data[SC_ATKER_MOVESPEED] != NULL)
+		regen->sp += regen->sp * sc->data[SC_ATKER_MOVESPEED]->val2 / 100;
+	if (sc->data[SC_BUCHEDENOEL] != NULL) {
+		regen->hp += regen->hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
+		regen->sp += regen->sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
+	}
+
 	// Skill HP/SP restore bonuses
 	struct regen_data_sub *skill_regen = regen->skill;
 	skill_regen->hp = 0;
@@ -3622,20 +3636,6 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 			regen->rate.hp += regen->rate.hp * sce->val2 / 100;
 			regen->rate.sp += regen->rate.sp * sce->val3 / 100;
 		}
-	}
-
-	// Recovery Items
-	if (sc->data[SC_EXTRACT_WHITE_POTION_Z])
-		regen->rate.hp += regen->rate.hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
-	if (sc->data[SC_VITATA_500])
-		regen->rate.sp += regen->rate.sp * sc->data[SC_VITATA_500]->val1 / 100;
-	if (sc->data[SC_ATKER_ASPD])
-		regen->rate.hp += regen->rate.hp * sc->data[SC_ATKER_ASPD]->val2 / 100;
-	if (sc->data[SC_ATKER_MOVESPEED])
-		regen->rate.sp += regen->rate.sp * sc->data[SC_ATKER_MOVESPEED]->val2 / 100;
-	if (sc->data[SC_BUCHEDENOEL]) {
-		regen->rate.hp += regen->rate.hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
-		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
 	}
 
 	if (sc->data[SC_CATNIPPOWDER] != NULL) {
