@@ -67,20 +67,6 @@
 
 #define SKILLUNITTIMER_INTERVAL 100
 
-// ranges reserved for mapping skill ids to skilldb offsets
-#define HM_SKILLRANGEMIN 750
-#define HM_SKILLRANGEMAX (HM_SKILLRANGEMIN + MAX_HOMUNSKILL)
-#define MC_SKILLRANGEMIN (HM_SKILLRANGEMAX + 1)
-#define MC_SKILLRANGEMAX (MC_SKILLRANGEMIN + MAX_MERCSKILL)
-#define EL_SKILLRANGEMIN (MC_SKILLRANGEMAX + 1)
-#define EL_SKILLRANGEMAX (EL_SKILLRANGEMIN + MAX_ELEMENTALSKILL)
-#define GD_SKILLRANGEMIN (EL_SKILLRANGEMAX + 1)
-#define GD_SKILLRANGEMAX (GD_SKILLRANGEMIN + MAX_GUILDSKILL)
-
-#if GD_SKILLRANGEMAX > 999
-	#error GD_SKILLRANGEMAX is greater than 999
-#endif
-
 static struct skill_interface skill_s;
 static struct s_skill_dbs skilldbs;
 
@@ -110,41 +96,55 @@ static int skill_name2id(const char *name)
 /// Returns the skill's array index, or 0 (Unknown Skill).
 static int skill_get_index(int skill_id)
 {
-	// avoid ranges reserved for mapping guild/homun/mercenary skills
-	if( (skill_id >= GD_SKILLRANGEMIN && skill_id <= GD_SKILLRANGEMAX)
-	||  (skill_id >= HM_SKILLRANGEMIN && skill_id <= HM_SKILLRANGEMAX)
-	||  (skill_id >= MC_SKILLRANGEMIN && skill_id <= MC_SKILLRANGEMAX)
-	||  (skill_id >= EL_SKILLRANGEMIN && skill_id <= EL_SKILLRANGEMAX) )
-		return 0;
+	int skillRange[] = { NV_BASIC, NPC_LEX_AETERNA,
+			KN_CHARGEATK, SA_ELEMENTWIND,
+			RK_ENCHANTBLADE, AB_SILENTIUM,
+			WL_WHITEIMPRISON, SC_FEINTBOMB,
+			LG_CANNONSPEAR, SR_GENTLETOUCH_REVITALIZE,
+			WA_SWING_DANCE, WA_MOONLIT_SERENADE,
+			MI_RUSH_WINDMILL, MI_HARMONIZE,
+			WM_LESSON, WM_UNLIMITED_HUMMING_VOICE,
+			SO_FIREWALK, SO_EARTH_INSIGNIA,
+			GN_TRAINING_SWORD, GN_SLINGITEM_RANGEMELEEATK,
+			AB_SECRAMENT, LG_OVERBRAND_PLUSATK,
+			ALL_ODINS_RECALL, ALL_LIGHTGUARD,
+			RL_GLITTERING_GREED, RL_GLITTERING_GREED_ATK,
+			KO_YAMIKUMO, OB_AKAITSUKI,
+			ECL_SNOWFLIP, ALL_THANATOS_RECALL,
+			GC_DARKCROW, NC_MAGMA_ERUPTION_DOTDAMAGE,
+			SU_BASIC_SKILL, SU_SPIRITOFSEA,
+			HLIF_HEAL, MH_VOLCANIC_ASH,
+			MS_BASH, MER_INVINCIBLEOFF2,
+			EL_CIRCLE_OF_FIRE, EL_STONE_RAIN,
+			GD_APPROVAL, GD_DEVELOPMENT
+			CUSTOM_SKILL_RANGES};
+	int length = sizeof(skillRange) / sizeof(int);
+	STATIC_ASSERT(sizeof(skillRange) / sizeof(int) % 2 == 0, "skill_get_index: skillRange should be multiple of 2");
 
-	// map skill id to skill db index
-	if( skill_id >= GD_SKILLBASE )
-		skill_id = GD_SKILLRANGEMIN + skill_id - GD_SKILLBASE;
-	else if( skill_id >= EL_SKILLBASE )
-		skill_id = EL_SKILLRANGEMIN + skill_id - EL_SKILLBASE;
-	else if( skill_id >= MC_SKILLBASE )
-		skill_id = MC_SKILLRANGEMIN + skill_id - MC_SKILLBASE;
-	else if( skill_id >= HM_SKILLBASE )
-		skill_id = HM_SKILLRANGEMIN + skill_id - HM_SKILLBASE;
-	//[Ind/Hercules] GO GO GO LESS! - http://herc.ws/board/topic/512-skill-id-processing-overhaul/
-	else if( skill_id > 1019 && skill_id < 8001 ) {
-		if( skill_id < 2058 ) // 1020 - 2000 are empty
-			skill_id = 1020 + skill_id - 2001;
-		else if( skill_id < 2549 ) // 2058 - 2200 are empty - 1020+57
-			skill_id = (1077) + skill_id - 2201;
-		else if ( skill_id < 3036 ) // 2549 - 3000 are empty - 1020+57+348
-			skill_id = (1425) + skill_id - 3001;
-		else if ( skill_id < 5044 ) // 3036 - 5000 are empty - 1020+57+348+35
-			skill_id = (1460) + skill_id - 5001;
-		else
-			ShowWarning("skill_get_index: skill id '%d' is not being handled!\n",skill_id);
+
+	if (skill_id < skillRange[0] || skill_id > skillRange[length - 1]) {
+		ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
+		return 0;
 	}
 
-	// validate result
-	if (skill_id <= 0|| skill_id >= MAX_SKILL_DB)
-		return 0;
+	int skill_idx = 0;
+	// Map Skill ID to Skill Indexes (in reverse order)
+	for (int i = 0; i < length; i += 2) {
+		// Check if SkillID belongs to this range.
+		if (skill_id <= skillRange[i + 1] && skill_id >= skillRange[i]) {
+			skill_idx += (skillRange[i + 1] - skill_id);
+			break;
+		}
+		// Add the difference of current range
+		skill_idx += (skillRange[i + 1] - skillRange[i] + 1);
+	}
 
-	return skill_id;
+	if (skill_idx >= MAX_SKILL_DB) {
+		ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
+		return 0;
+	}
+
+	return skill_idx;
 }
 
 static const char *skill_get_name(int skill_id)
