@@ -19983,6 +19983,7 @@ static void clif_parse_dull(int fd, struct map_session_data *sd)
 static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd)
 {
+#if PACKETVER >= 20100824
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
@@ -19996,6 +19997,7 @@ static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd)
 	WFIFOL(fd, 2) = sd->cashPoints; //[Ryuuzaki] - switched positions to reflect proper values
 	WFIFOL(fd, 6) = sd->kafraPoints;
 	WFIFOSET(fd, 10);
+#endif
 }
 
 static void clif_parse_CashShopClose(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));

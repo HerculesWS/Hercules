@@ -3748,6 +3748,19 @@ struct PACKET_ZC_NOTIFY_EFFECT3 {
 DEFINE_PACKET_HEADER(ZC_NOTIFY_EFFECT3, 0x0284);
 #endif
 
+#if PACKETVER >= 20190724
+struct PACKET_CZ_SE_CASHSHOP_OPEN {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN, 0x0b4c);
+CHECK_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN, 0x0844);
+#elif PACKETVER >= 20100824
+struct PACKET_CZ_SE_CASHSHOP_OPEN {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN, 0x0844);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
