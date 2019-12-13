@@ -9338,6 +9338,8 @@ static void clif_refresh(struct map_session_data *sd)
 
 	mail->clear(sd);
 
+	clif->loadConfirm(sd);
+
 	if (clif->isdisguised(&sd->bl)) {/* refresh-da */
 		short disguise = sd->disguise;
 		pc->disguise(sd, -1);
