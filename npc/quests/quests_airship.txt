@@ -1976,7 +1976,7 @@ OnTimer600000:
 	donpcevent("#AirshipWarp-4::OnHide");
 	mapannounce("airplane_01", _("The Airship is now taking off. Our next destination is Izlude."), bc_map, C_LIME);
 	stopnpctimer();
-	set(getvariableofnpc(.moninv, "International_Airship"), 2);
+	setd(getvariableofnpc(.moninv, "International_Airship"), 2);
 	donpcevent("International_Airship::OnEnable");
 	end;
 

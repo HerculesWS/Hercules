@@ -201,7 +201,7 @@ function	script	cute_pet_manager	{
 		}
 		delitem .@hunt_id, .@hunt_amount;
 		delitem 6083, 1;
-		set getarg(5), getarg(5) + 1;
+		setd(getarg(5), getarg(5) + 1);
 		getitem .@tame_id, .@tame_amount;
 		mes "[Cute Pet Manager]";
 		mes "Wise choice.";

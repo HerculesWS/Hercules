@@ -888,7 +888,7 @@ function	script	Func_BingoResult	{
 	enablenpc ""+getarg(0)+"c#bingo";
 	enablenpc ""+getarg(0)+"d#bingo";
 	enablenpc ""+getarg(0)+"e#bingo";
-	set getarg(0),getarg(0) +1;
+	setd(getarg(0), getarg(0) + 1);
 	end;
 }
 

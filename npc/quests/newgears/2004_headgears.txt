@@ -2471,7 +2471,7 @@ OnTouch:
 		mes "[Nine Tails]";
 		mes "Yelp! Yelp yelp!";
 		close2;
-		set getvariableofnpc(.MyMobs1,"SpawnManager#Kitsune"),1;
+		setd(getvariableofnpc(.MyMobs1, "SpawnManager#Kitsune"), 1);
 		switch(rand(1,25)) {
 		case 1:  .@x = 118; .@y =  66; break;
 		case 2:  .@x = 103; .@y = 194; break;
@@ -2570,7 +2570,7 @@ pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	4_M_JPN2,{
 		mes "I will give you this ^0000FFKitsune Mask^000000 if you bring me what I asked. How does that sound? Remember, ^0000FF999 ^FF0000Nine Tail^000000.";
 		close;
 	}
-	set getvariableofnpc(.MyMobs2,"SpawnManager#Kitsune"),1;
+	setd(getvariableofnpc(.MyMobs2, "SpawnManager#Kitsune"), 1);
 	switch(rand(1,25)) {
 	case 1:  .@x = 118; .@y =  66; break;
 	case 2:  .@x = 103; .@y = 194; break;
@@ -2604,7 +2604,7 @@ pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	4_M_JPN2,{
 	end;
 
 OnInit:
-	set getvariableofnpc(.MyMobs2,"SpawnManager#Kitsune"),1;
+	setd(getvariableofnpc(.MyMobs2, "SpawnManager#Kitsune"), 1);
 	monster "pay_dun03",48,83,"Nine Tail",1180,1,"SpawnManager#Kitsune::OnMyMobDead2";
 	disablenpc "Nine Tails#Kitsune Man";
 	end;

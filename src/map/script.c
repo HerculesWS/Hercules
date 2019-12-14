@@ -18318,32 +18318,65 @@ static BUILDIN(swap)
 
 // [zBuffer] List of dynamic var commands --->
 
+/**
+ * Sets the value of a variable or an array.
+ * The variable's name can be passed as a string and thus can dynamically be constructed.
+ *
+ * [Kenpachi]
+ * Passing a reference to a variable is supported, too.
+ * Useful when using getvariableofnpc(), getvariableofpc(), getd() or getarg().
+ *
+ * @code{.herc}
+ *	setd("<variable name>", <value>);
+ *	setd(<reference to variable>, <value>);
+ * @endcode
+ *
+ */
 static BUILDIN(setd)
 {
-	struct map_session_data *sd = NULL;
+	int idx = 0;
+	int length = 0;
 	char varname[100];
 	const char *buffer;
-	int elem;
-	buffer = script_getstr(st, 2);
+	const void *value;
+	struct map_session_data *sd = NULL;
+	struct script_data *data = script_getdata(st, 2);
+	struct reg_db *ref = reference_getref(data);
 
-	if(sscanf(buffer, "%99[^[][%d]", varname, &elem) < 2)
-		elem = 0;
+	if (data_isreference(data)) {
+		buffer = reference_getname(data);
+		idx = reference_getindex(data);
 
-	if( not_server_variable(*varname) )
-	{
-		sd = script->rid2sd(st);
-		if( sd == NULL )
-		{
-			ShowError("script:setd: no player attached for player variable '%s'\n", buffer);
-			return true;
-		}
-	}
-
-	if (is_string_variable(varname)) {
-		script->setd_sub(st, sd, varname, elem, script_getstr(st, 3), NULL);
+		if (not_server_variable(*buffer))
+			ref = NULL;
 	} else {
-		script->setd_sub(st, sd, varname, elem, (const void *)h64BPTRSIZE(script_getnum(st, 3)), NULL);
+		buffer = script_getstr(st, 2);
 	}
+
+	/// Special case: Variable of type string was passed directly or by getd().
+	if (data_isreference(data) && reference_tovariable(data) && script_isstringtype(st, 2)) {
+		if (data->type == C_STR) /// Type has changed now, bacause script->get_val() was called by script_isstringtype().
+			buffer = data->u.str; /// Get the value of the passed variable instead of its name.
+	}
+
+	if (sscanf(buffer, "%99[^[][%d]", varname, &idx) < 2 && idx == 0)
+		idx = 0;
+
+	for (; varname[++length] != '\0';);
+
+	if (length > SCRIPT_VARNAME_LENGTH) {
+		ShowError("script:%s: Variable name %s is too long (%d)! Maximum allowed length is %d.\n",
+			  script->getfuncname(st), varname, length, SCRIPT_VARNAME_LENGTH);
+		return false;
+	}
+
+	if (not_server_variable(*varname) && (sd = script->rid2sd(st)) == NULL) {
+		ShowError("script:%s: No character attached for character variable %s!\n", script->getfuncname(st), varname);
+		return false;
+	}
+
+	value = is_string_variable(varname) ? script_getstr(st, 3) : (const void *)h64BPTRSIZE(script_getnum(st, 3));
+	script->setd_sub(st, sd, varname, idx, value, ref);
 
 	return true;
 }
@@ -26150,7 +26183,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(warpguild,"siii?"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
-		BUILDIN_DEF2(__setr,"set","rv"),
+		BUILDIN_DEF2_DEPRECATED(__setr,"set","rv"),
 		BUILDIN_DEF(setarray,"rv*"),
 		BUILDIN_DEF(cleararray,"rvi"),
 		BUILDIN_DEF(copyarray,"rri"),
@@ -26465,7 +26498,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(swap,"rr"),
 		// [zBuffer] List of dynamic var commands --->
 		BUILDIN_DEF(getd,"s"),
-		BUILDIN_DEF(setd,"sv"),
+		BUILDIN_DEF(setd,"vv"),
 		// <--- [zBuffer] List of dynamic var commands
 		BUILDIN_DEF_DEPRECATED(petstat, "i"), // Deprecated 2019-03-11
 		BUILDIN_DEF(callshop,"s?"), // [Skotlex]

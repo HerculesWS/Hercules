@@ -1401,14 +1401,14 @@ OnEnable:
 	freeloop(1);
 	.@defence = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),3);
 	callsub OnSummon,.@z;
-	if (.@defence > 70) set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),5;
-	else if (.@defence > 50) set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),4;
-	else if (.@defence > 30) set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),3;
-	else if (.@defence > 10) set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),2;
+	if (.@defence > 70) setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), 5);
+	else if (.@defence > 50) setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), 4);
+	else if (.@defence > 30) setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), 3);
+	else if (.@defence > 10) setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), 2);
 	if (.@w[4] && .@z)
 		guardian strnpcinfo(NPC_NAME_HIDDEN),.@w[4],.@w[5],"Guardian Soldier",1899,strnpcinfo(NPC_NAME)+"::OnGuardianDied";
 	else if (.@defence < 11) {
-		set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),2;
+		setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), 2);
 		.@i = (.@z)?2:0;
 		guardian strnpcinfo(NPC_NAME_HIDDEN),.@w[.@i],.@w[.@i+1],"Guardian Soldier",1899,strnpcinfo(NPC_NAME)+"::OnGuardianDied";
 	}
@@ -1430,7 +1430,7 @@ OnTimer3600000:
 	if (charat(strnpcinfo(NPC_NAME_VISIBLE),4) == "2") end;
 	.@var$ = ".timer_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN);
 	setd .@var$, getd(.@var$)+1;
-	set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN))+1;
+	setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)) + 1);
 	callsub OnSummon,getd(.@var$);
 	setarray .count$[5],"1st","2nd","3rd","4th","5th";
 	mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+.count$[getd(.@var$)]+" Guardian has been summoned from the Gate House.",bc_map,"0xff4500";
@@ -1448,7 +1448,7 @@ OnTimer3900000:
 	if (!(charat(strnpcinfo(NPC_NAME_VISIBLE),4) == "2")) end;
 	.@var$ = ".timer_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN);
 	setd .@var$, getd(.@var$)+1;
-	set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN))+1;
+	setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)) + 1);
 	callsub OnSummon,getd(.@var$);
 	if (getd(.@var$) == 20) {
 		setd .@var$,0;
@@ -1463,9 +1463,9 @@ OnSummon:
 OnGuardianDied:
 	if (charat(strnpcinfo(NPC_NAME_VISIBLE),4) == "2")
 		.@z = 11;
-	set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN))-1;
+	setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)) - 1);
 	if (getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)) < 2) {
-		set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN))+1;
+		setd(getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)), getd(".MyMobCount_" + charat(strnpcinfo(NPC_NAME_VISIBLE), 4) + strnpcinfo(NPC_NAME_HIDDEN)) + 1);
 		callsub OnSummon,10+.@z;
 	}
 	end;
@@ -1678,8 +1678,8 @@ OnEnable:
 			}
 		}
 	}
-	if (.@num == 3) set getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)),4;
-	else if (.@num) set getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)),6;
+	if (.@num == 3) setd(getd(".MyMobCount_" + .@num+strnpcinfo(NPC_NAME_HIDDEN)), 4);
+	else if (.@num) setd(getd(".MyMobCount_" + .@num+strnpcinfo(NPC_NAME_HIDDEN)), 6);
 	setwall strnpcinfo(NPC_NAME_HIDDEN),.@wall[0],.@wall[1],.@wall[2],.@wall[3],.@wall[4],substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9)+"_"+strnpcinfo(NPC_NAME_VISIBLE);
 	if (.@num == 0)
 		setcell(strnpcinfo(NPC_NAME_HIDDEN), .@x[0], .@y[0], .@x[getarraysize(.@x)-1], .@y[getarraysize(.@y)-1], cell_basilica, true);
@@ -1693,7 +1693,7 @@ OnEnable:
 OnBarrierDestroyed:
 	.@num = atoi(charat(strnpcinfo(NPC_NAME_VISIBLE),2));
 	if (!.@num) end;
-	set getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)),getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN))-1;
+	setd(getd(".MyMobCount_" + .@num+strnpcinfo(NPC_NAME_HIDDEN)), getd(".MyMobCount_" + .@num+strnpcinfo(NPC_NAME_HIDDEN)) - 1);
 	if (getd(".MyMobCount_"+.@num+strnpcinfo(NPC_NAME_HIDDEN)) == 0) {
 		.@var$ = substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9);
 		setd "$agit_"+.@var$+"["+(.@num+1)+"]",1;

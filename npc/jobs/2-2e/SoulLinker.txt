@@ -353,7 +353,7 @@ job_soul,30,31,0	script	Maia#link2::SLTester	FAKE_NPC,3,3,{
 OnTouch:
 	if (Class == Job_Taekwon) {
 		if (JobLevel < 40) {
-			set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+			setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 			mes "[Maia]";
 			mes "Hm? How did you come";
 			mes "here? You're not qualified";
@@ -471,12 +471,12 @@ OnTouch:
 			mes "spirits will be able to protect";
 			mes "you and help you fight in your battles. Farewell for now, friend.";
 			close2;
-			set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+			setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 			donpcevent "Timer#link3::OnDisable";
 			warp "morocc",157,47;
 			end;
 		}
-		set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+		setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 		mes "[Maia]";
 		mes "Hmm...?";
 		mes "The time for you";
@@ -487,7 +487,7 @@ OnTouch:
 		warp "morocc",157,47;
 		end;
 	}
-	set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+	setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 	if (Class == Job_Soul_Linker) {
 		mes "[Maia]";
 		mes "The time has come for";
@@ -658,14 +658,14 @@ OnEnable:
 
 OnDisable:
 	stopnpctimer;
-	set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+	setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 	end;
 
 OnTimer60000:
 OnTimer120000:
 	if (getmapusers("job_soul") == 0) {
 		stopnpctimer;
-		set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+		setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 	}
 	end;
 
@@ -677,7 +677,7 @@ OnTimer182000:
 
 OnTimer183000:
 	mapwarp "job_soul","morocc",157,47;
-	set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+	setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 	stopnpctimer;
 }
 
@@ -707,7 +707,7 @@ sec_in02,35,153,0	script	Soul Linker Var	4_M_OPERATION,{
 			mes "The Soul Linker";
 			mes "Job Quest NPCs";
 			mes "have been reset.";
-			set getvariableofnpc(.SoulLinkerTest,"Kid#link1"),0;
+			setd(getvariableofnpc(.SoulLinkerTest, "Kid#link1"), 0);
 			close;
 		case 2:
 			mes "[Soul Linker Var]";

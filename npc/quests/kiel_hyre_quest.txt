@@ -5772,7 +5772,7 @@ OnTimer30000:
 	stopnpctimer;
 	specialeffect EF_SUMMONSLAVE;
 	disablenpc "Big_Door_1_Warp";
-	set getvariableofnpc(.KHDoor1Opened,"Big Door#BigDoorKHQ1"),0;
+	setd(getvariableofnpc(.KHDoor1Opened, "Big Door#BigDoorKHQ1"), 0);
 	end;
 
 OnTouch:
@@ -5828,7 +5828,7 @@ OnTimer30000:
 	stopnpctimer;
 	specialeffect EF_SUMMONSLAVE;
 	disablenpc "Big_Door_2_Warp";
-	set getvariableofnpc(.KHDoor2Opened,"Big Door#BigDoorKHQ2"),0;
+	setd(getvariableofnpc(.KHDoor2Opened, "Big Door#BigDoorKHQ2"), 0);
 	end;
 
 OnTouch:
@@ -5886,7 +5886,7 @@ OnTimer30000:
 	stopnpctimer;
 	specialeffect EF_SUMMONSLAVE;
 	disablenpc "Big_Door_3_Warp";
-	set getvariableofnpc(.KHDoor3Opened,"Big Door#BigDoorKHQ3"),0;
+	setd(getvariableofnpc(.KHDoor3Opened, "Big Door#BigDoorKHQ3"), 0);
 	end;
 
 OnTouch:
@@ -5941,7 +5941,7 @@ OnTimer30000:
 	stopnpctimer;
 	specialeffect EF_SUMMONSLAVE;
 	disablenpc "Big_Door_4_Warp";
-	set getvariableofnpc(.KHDoor4Opened,"Big Door#BigDoorKHQ4"),0;
+	setd(getvariableofnpc(.KHDoor4Opened, "Big Door#BigDoorKHQ4"), 0);
 	end;
 
 OnTouch:
@@ -6142,7 +6142,7 @@ OnTimer30000:
 	stopnpctimer;
 	specialeffect EF_SUMMONSLAVE;
 	disablenpc "Big_Door_5_Warp";
-	set getvariableofnpc(.KHDoor5Opened,"Big Door#BigDoorKHQ5"),0;
+	setd(getvariableofnpc(.KHDoor5Opened, "Big Door#BigDoorKHQ5"), 0);
 	end;
 
 OnInit:
@@ -6233,7 +6233,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "then show me what you've got!";
 		close2;
 		cutin "",255;
-		set getvariableofnpc(.KHKilled,"KiehlRoom"),0;
+		setd(getvariableofnpc(.KHKilled, "KiehlRoom"), 0);
 		monster "kh_kiehl02",50,52,"Aliot",1740,1,"KiehlRoom::OnKiehlMobDead";
 		monster "kh_kiehl02",50,52,"Alicel",1739,1,"KiehlRoom::OnKiehlMobDead";
 		monster "kh_kiehl02",50,52,"Constant",1745,1,"KiehlRoom::OnKiehlMobDead";
@@ -6346,7 +6346,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		next;
 	}
 	if ((KielHyreQuest == 100) && (getvariableofnpc(.KHKilledBoss,"KiehlRoom") < 1)) {
-		set getvariableofnpc(.KHKilledBoss,"KiehlRoom"),0;
+		setd(getvariableofnpc(.KHKilledBoss, "KiehlRoom"), 0);
 		cutin "kh_kiel01",2;
 		mes "[Kiehl]";
 		mes "Ah, Schwaltzvalt Republic";
@@ -6726,7 +6726,7 @@ OnReset:
 	hideoffnpc "Kiehl#Original";
 	.KHKilledBoss = 0;
 	.KHKilled = 0;
-	set getvariableofnpc(.KHTrapSprung,"Kiehl_Room_Trap"),0;
+	setd(getvariableofnpc(.KHTrapSprung, "Kiehl_Room_Trap"), 0);
 	$@KHQuestBusy = 0;
 	end;
 }

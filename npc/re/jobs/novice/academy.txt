@@ -3607,7 +3607,7 @@ izlude,115,181,5	script	Shop Helper#iz	4_F_KHELLISIA,{
 	while(true) {
 		mes("What would you like to know?");
 		next();
-		set .@menu$,"Shop types:Currency types:Cash Shop:"+(Class == Job_Novice && !questprogress(1238)?"Experience training.":"No, I know enough.");
+		.@menu$ = "Shop types:Currency types:Cash Shop:" + (Class == Job_Novice && !questprogress(1238) ? "Experience training." : "No, I know enough.");
 		switch(select(.@menu$)) {
 			case 1:
 				mes("[Shop Helper Leonie]");
@@ -4563,8 +4563,8 @@ iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
 				next();
 				mes("[Battle Instructor Subino]");
 				mes("Try to talk to ^ff0000each job instructor^000000 on the 2nd floor of the Academy if you aren't sure what job you want still.");
-				for(set .@i,0; .@i<6; set .@i,.@i+1) {
-					set .@quest_id,11339+.@i;
+				for(.@i = 0; .@i < 6; .@i++) {
+					.@quest_id = 11339 + .@i;
 					setarray .@bexp[0],90,90,135,200,0,120;
 					setarray .@jexp[0],50,50,100,175,0,90;
 					setarray .@material[0],909,515,914,939,0,915;
@@ -7170,7 +7170,7 @@ iz_ac02,143,55,3	script	Cream Puff#ac	4_M_KID1,{
 			.@ele = .@i;
 		}
 	}
-	set .@who_job, .@ele + 1;
+	.@who_job = .@ele + 1;
 	mes("[Cream Puff]");
 	mes("All right!!!! It's done!!!!!!!!");
 	next();
@@ -12840,7 +12840,7 @@ izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_
 	next();
 	setarray .@position$[1],"Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
 	.@menu$ = "";
-	for(set .@i,1; .@i<=10; set .@i,.@i+1)
+	for(.@i = 1; .@i <= 10; .@i++)
 		.@menu$ = .@menu$+(getequipisequiped(.@i)?getequipname(.@i):.@position$[.@i]+" - [Unarmed]")+":";
 	.@part = select(.@menu$);
 	if (!getequipisequiped(.@part)) {

@@ -73,12 +73,12 @@ OnTouch:
 		next;
 		mes "The conversation stopped abruptly. Hidden place? Wall? Part of a test? What is all this about?";
 		setquest 5131;
-		set job_kagero,1;
+		job_kagero = 1;
 		close;
 	} else if (BaseJob != Job_Ninja && job_kagero > 0) {
-		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
+		for (.@i = 5131; .@i <= 5146; .@i++)
 			if (questprogress(.@i)) erasequest .@i;
-		set job_kagero,0;
+		job_kagero = 0;
 	}
 	end;
 }
@@ -125,9 +125,9 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		close;
 	}
 	if (BaseJob != Job_Ninja) {
-		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
+		for (.@i = 5131; .@i <= 5146; .@i++)
 			if (questprogress(.@i)) erasequest .@i;
-		set job_kagero,0;
+		job_kagero = 0;
 		mes "[Kuuga Gai]";
 		mes "You are not in the clan of the Ninja.";
 		close2;
@@ -192,7 +192,7 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		next;
 		erasequest 5131;
 		setquest 5132;
-		set job_kagero,2;
+		job_kagero = 2;
 		mes "[Old Man]";
 		mes "You'll have to lend me your ear for I have so much to tell you about the clan story.";
 		close2;
@@ -237,7 +237,7 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		next;
 		erasequest 5132;
 		setquest 5133;
-		set job_kagero,3;
+		job_kagero = 3;
 		mes "^1A95E6The old man looks even more forlorn.^1A95E6";
 		close2;
 		cutin "",255;
@@ -285,7 +285,7 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		next;
 		erasequest 5133;
 		setquest 5134;
-		set job_kagero,4;
+		job_kagero = 4;
 		mes "[Leader Gion]";
 		mes "If you are prepared to follow me, Leader Gion, on the "+ (Sex == SEX_MALE ? "Kagerou" : "Oboro") +" path, we will meet again.";
 		close2;
@@ -315,8 +315,8 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		mes "I know you are curious what these tests are. Let me explain one by one.";
 		next;
 		while(1) {
-			set .@i, select("Test of Knowledge", "Test of Survival", "Test of Weaponry", "Test of Battle");
-			set .@test, .@test | (1<<(.@i-1));
+			.@i = select("Test of Knowledge", "Test of Survival", "Test of Weaponry", "Test of Battle");
+			.@test |= (1<<(.@i-1));
 			switch (.@i) {
 			case 1:
 				mes "[Leader Gion]";
@@ -401,17 +401,17 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		next;
 		erasequest 5134;
 		setquest 5135;
-		set job_kagero,5;
+		job_kagero = 5;
 		mes "[Leader Gion]";
 		mes "Let's start right away after you are done with preparations.";
 		close2;
 		cutin "",255;
 		end;
 	} else if (job_kagero == 5) {
-		set .@ko_test_01, questprogress(5136);
-		set .@ko_test_02, questprogress(5137);
-		set .@ko_test_03, questprogress(5138);
-		set .@ko_test, .@ko_test_01 + .@ko_test_02 + .@ko_test_03;
+		.@ko_test_01 = questprogress(5136);
+		.@ko_test_02 = questprogress(5137);
+		.@ko_test_03 = questprogress(5138);
+		.@ko_test = .@ko_test_01 + .@ko_test_02 + .@ko_test_03;
 		if (.@ko_test == 0) {
 			cutin "job_ko03",2;
 			mes "[Leader Gion]";
@@ -457,21 +457,21 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 			cutin "job_ko01",2;
 			mes "[Leader Gion]";
 			if (.@ko_test_01 == 2) {
-				set .@menu$,":Test of Survival:Test of Weaponry";
+				.@menu$ = ":Test of Survival:Test of Weaponry";
 				mes "You've passed the Test of Knowledge.";
 				next;
 				mes "[Leader Gion]";
 				mes "My friend doesn't approve of others that easily but I guess he liked you.";
 				next;
 			} else if (.@ko_test_02 == 2) {
-				set .@menu$,"Test of Knowledge::Test of Weaponry";
+				.@menu$ = "Test of Knowledge::Test of Weaponry";
 				mes "You've passed the Test of Survival.";
 				next;
 				mes "[Leader Gion]";
 				mes "Looks like you went through hell with this test.";
 				next;
 			} else if (.@ko_test_03 == 2) {
-				set .@menu$,"Test of Knowledge:Test of Survival:";
+				.@menu$ = "Test of Knowledge:Test of Survival:";
 				mes "You've passed the Test of Weaponry.";
 				next;
 				mes "[Leader Gion]";
@@ -519,13 +519,13 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 			cutin "job_ko04",2;
 			mes "[Leader Gion]";
 			if (.@ko_test_01 == 2 && .@ko_test_02 == 2) {
-				set .@last_test,3;
+				.@last_test = 3;
 				mes "You've passed the ^339CCCTests of Knowledge and Survival^000000!";
 			} else if (.@ko_test_01 == 2 && .@ko_test_03 == 2) {
-				set .@last_test,2;
+				.@last_test = 2;
 				mes "You've passed the ^339CCCTests of Knowledge and Weaponry^000000!";
 			} else if (.@ko_test_02 == 2 && .@ko_test_03 == 2) {
-				set .@last_test,1;
+				.@last_test = 1;
 				mes "You've passed the ^339CCCTests of Survival and Weaponry^000000!";
 			}
 			next;
@@ -617,7 +617,7 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 			mes "[Leader Gion]";
 			mes "That's that. Now shouldn't you be preparing for the last test?";
 			next;
-			set job_kagero,6;
+			job_kagero = 6;
 			mes "[Leader Gion]";
 			mes "But you must be tired from all the tests so far. Take a rest.";
 			close2;
@@ -626,11 +626,11 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		} else if (.@ko_test == 1 || .@ko_test == 3 || .@ko_test == 5) {
 			cutin "job_ko04",2;
 			if (.@ko_test_01 == 1)
-				set .@test_ko$, "Knowledge";
+				.@test_ko$ = "Knowledge";
 			else if (.@ko_test_02 == 1)
-				set .@test_ko$, "Survival";
+				.@test_ko$ = "Survival";
 			else if (.@ko_test_03 == 1)
-				set .@test_ko$, "Weaponry";
+				.@test_ko$ = "Weaponry";
 			mes "[Leader Gion]";
 			mes "Weren't you taking the Test of " + .@test_ko$ + " just now?";
 			next;
@@ -687,7 +687,7 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 		mes "May the blessings of '" + (Sex == SEX_MALE ? "Kagerou, dancing sun" : "Oboro, misty moonlight") + "' be with you.";
 		next;
 		setquest 5146;
-		set job_kagero,7;
+		job_kagero = 7;
 		mes "[Leader Gion]";
 		mes "Then let's go to the battle test field.";
 		close2;
@@ -733,9 +733,9 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 //callsub L_StartTest,<1=Knowledge,2=Survival,3=Weaponry>,<test number [1..3]>;
 L_StartTest:
 	switch (getarg(1)) {
-		case 1: set .@str$,"You are starting with the ^339CCCTest of %s^000000? "; break;
-		case 2: set .@str$,"You are taking the ^339CCCTest of %s^000000 as the second test? "; break;
-		case 3: set .@str$,"Your third test is the ^339CCCTest of %s^000000! "; break;
+		case 1: .@str$ = "You are starting with the ^339CCCTest of %s^000000? "; break;
+		case 2: .@str$ = "You are taking the ^339CCCTest of %s^000000 as the second test? "; break;
+		case 3: .@str$ = "Your third test is the ^339CCCTest of %s^000000! "; break;
 	}
 	mes "[Leader Gion]";
 	switch (getarg(0)) {
@@ -777,9 +777,9 @@ L_StartTest:
 //== Test of Knowledge =====================================
 job_ko,81,124,4	script	Kuuga Gai#ko	4_M_JOB_ASSASSIN,{
 	if (BaseJob != Job_Ninja) {
-		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
+		for (.@i = 5131; .@i <= 5146; .@i++)
 			if (questprogress(.@i)) erasequest .@i;
-		set job_kagero,0;
+		job_kagero = 0;
 		mes "[Kuuga Gai]";
 		mes "Sorry, your clan is not same as ours, is there something wrong?";
 		close2;
@@ -792,8 +792,8 @@ job_ko,81,124,4	script	Kuuga Gai#ko	4_M_JOB_ASSASSIN,{
 			mes "This is a test of knowledge, so why did you bring so many things?";
 			close;
 		}
-		set .@ko_test_01, questprogress(5136);
-		set .@ko_test_01_1, questprogress(5139);
+		.@ko_test_01 = questprogress(5136);
+		.@ko_test_01_1 = questprogress(5139);
 		if (.@ko_test_01 == 1 && .@ko_test_01_1 == 0) {
 			mes "[Kuuga Gai]";
 			mes "It's been a while.";
@@ -846,24 +846,24 @@ job_ko,81,124,4	script	Kuuga Gai#ko	4_M_JOB_ASSASSIN,{
 			mes "Let's start.";
 			next;
 
-			set .@questions,10;  // number of questions to ask
+			.@questions = 10;  // number of questions to ask
 
 			// shuffle array an array of questions to be asked
 			freeloop(1);
 			setarray .@n[0],
 				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
 				26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50;
-			for (set .@i,getarraysize(.@n)-1; .@i>0; set .@i,.@i-1) {
-				set .@rand, rand(.@i);
-				set .@tmp, .@n[.@i];
-				set .@n[.@i], .@n[.@rand];
-				set .@n[.@rand], .@tmp;
+			for (.@i = getarraysize(.@n) - 1; .@i > 0; .@i--) {
+				.@rand = rand(.@i);
+				.@tmp = .@n[.@i];
+				.@n[.@i] = .@n[.@rand];
+				.@n[.@rand] = .@tmp;
 			}
 			deletearray .@n[10],getarraysize(.@n) - .@questions;
 			freeloop(0);
 
-			set @job_ko_kuuga,0;
-			for (set .@i,1; .@i<=.@questions; set .@i,.@i+1) {
+			@job_ko_kuuga = 0;
+			for (.@i = 1; .@i <= .@questions; .@i++) {
 				mes "[Kuuga Gai]";
 				mes (.@i < .@questions)?"Question number "+.@i+":":"Last question:";
 				switch (.@n[.@i-1]) {
@@ -965,7 +965,7 @@ job_ko,81,124,4	script	Kuuga Gai#ko	4_M_JOB_ASSASSIN,{
 				warp "job_ko",16,113;
 				end;
 			}
-			set @job_ko_kuuga,0;
+			@job_ko_kuuga = 0;
 			close;
 		} else if (.@ko_test_01 == 2 && .@ko_test_01_1 == 0) {
 			mes "[Kuuga Gai]";
@@ -991,7 +991,7 @@ L_Question:
 	mes getarg(0);
 	next;
 	if(select(getarg(2)) == getarg(1))
-		set @job_ko_kuuga, @job_ko_kuuga + 10;
+		@job_ko_kuuga += 10;
 	return;
 }
 
@@ -1065,8 +1065,8 @@ function	script	F_KO_Survival_dice	{
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
-	set job_kagero_lp, job_kagero_lp - getarg(1,1);
-	set .@dice, rand(1,6);
+	job_kagero_lp -= getarg(1, 1);
+	.@dice = rand(1,6);
 	emotion 57 + .@dice,1;
 	mes "The dice came out as " + .@dice + ".";
 	if (getarg(2,0))
@@ -1090,15 +1090,15 @@ function	script	F_KO_Survival_dice2	{
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
-	set job_kagero_lp, job_kagero_lp - getarg(1,2);
+	job_kagero_lp -= getarg(1, 2);
 	mes "< Used " + getarg(1,2) + " LP >";
 	next;
-	set @job_ko_dice1, rand(1,6);
+	@job_ko_dice1 = rand(1, 6);
 	emotion 57 + @job_ko_dice1,1;
 	mes "First dice result is " + @job_ko_dice1 + ". Do you want to roll the second dice?";
 	next;
 	select("Roll the second dice.");
-	set @job_ko_dice2, rand(1,6);
+	@job_ko_dice2 = rand(1, 6);
 	emotion 57 + @job_ko_dice2,1;
 	return;
 }
@@ -1110,8 +1110,8 @@ function	script	F_KO_Survival_rps	{
 
 	mes "Rock! Paper! Scissors!";
 	next;
-	set .@pc, select("Give scissors.", "Give rock.", "Give paper.");
-	set .@npc, rand(1,3);
+	.@pc = select("Give scissors.", "Give rock.", "Give paper.");
+	.@npc = rand(1, 3);
 	emotion .@emote[.@pc],1;
 	emotion .@emote[.@npc];
 	mes "=Game Results=";
@@ -1142,13 +1142,13 @@ OnTouch:
 	mes "There are tiny letters on the sign.";
 	next;
 	switch (atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4))) {
-		case  2: set .@id,0; break;
-		case  7: set .@id,5; break;
-		case 11: set .@id,9; break;
-		case 23: set .@id,18; break;
-		case 26: set .@id,20; break;
-		case 30: set .@id,9; break;
-		case 35: set .@id,29; break;
+		case  2: .@id = 0; break;
+		case  7: .@id = 5; break;
+		case 11: .@id = 9; break;
+		case 23: .@id = 18; break;
+		case 26: .@id = 20; break;
+		case 30: .@id = 9; break;
+		case 35: .@id = 29; break;
 	}
 	mes "This block has a trap.";
 	mes "Press Close to go back to block " + .@id + ".";
@@ -1160,11 +1160,11 @@ OnTouch:
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
+	.@id = atoi(substr(strnpcinfo(NPC_NAME_HIDDEN), 3, 4));
 	switch (.@id) {
-		case 10: set .@var$, "$20110808_vko01"; break;
-		case 28: set .@var$, "$20110808_vko03"; break;
-		//case 38: set .@var$, "$20110808_vko04"; break;
+		case 10: .@var$ = "$20110808_vko01"; break;
+		case 28: .@var$ = "$20110808_vko03"; break;
+		//case 38: .@var$ = "$20110808_vko04"; break;
 	}
 	mes "There are tiny letters on the sign.";
 	next;
@@ -1178,7 +1178,7 @@ OnTouch:
 		if(select("Install a trap.", "Roll the Dice.") == 1) {
 			if (job_kagero_lp > 9) {
 				mes "< Used 10 LP >";
-				set job_kagero_lp, job_kagero_lp - 10;
+				job_kagero_lp -= 10;
 				setd .@var$,1;
 				next;
 				mes "The trap is installed. Please roll the dice.";
@@ -1190,7 +1190,7 @@ OnTouch:
 			}
 		}
 	} else {
-		set job_kagero_lp,0;
+		job_kagero_lp = 0;
 		setd .@var$,0;
 		mes "You are caught in the trap installed.";
 		mes "Press Close to go back to block 0.";
@@ -1205,7 +1205,7 @@ OnTouch:
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
+	.@id = atoi(substr(strnpcinfo(NPC_NAME_HIDDEN), 3, 4));
 	mes "There are tiny letters on the sign.";
 	next;
 	mes "This block is blessed.";
@@ -1214,7 +1214,7 @@ OnTouch:
 	next;
 	mes "< Recovered " + ((job_kagero_lp + 7 > 100) ? "" : "7") + " LP >";
 	next;
-	set job_kagero_lp, ((job_kagero_lp + 7 > 100) ? 100 : job_kagero_lp + 7);
+	job_kagero_lp = ((job_kagero_lp + 7 > 100) ? 100 : job_kagero_lp + 7);
 	callfunc "F_KO_Survival_dice",.@id;
 	end;
 }
@@ -1223,8 +1223,8 @@ OnTouch:
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
-	set .@playtime, questprogress(5141,PLAYTIME);
+	.@id = atoi(substr(strnpcinfo(NPC_NAME_HIDDEN), 3, 4));
+	.@playtime = questprogress(5141, PLAYTIME);
 	if (!.@playtime) {
 		mes "There are tiny letters on the sign.";
 		next;
@@ -1232,7 +1232,7 @@ OnTouch:
 		next;
 		if(select("Use 5 LP", "Do not pay.") == 1) {
 			if (job_kagero_lp > 4) {
-				set job_kagero_lp, job_kagero_lp - 5;
+				job_kagero_lp -= 5;
 				mes "<Used 5 LP>";
 				mes "You can roll the dice.";
 				next;
@@ -1268,7 +1268,7 @@ OnTouch:
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
+	.@id = atoi(substr(strnpcinfo(NPC_NAME_HIDDEN), 3, 4));
 	mes "There are tiny letters on the sign.";
 	next;
 	mes "Area cursed with 10 times the normal gravity. You will need 10 ^FD0260LP^000000 to roll the dice.";
@@ -1293,13 +1293,13 @@ OnTouch:
 		next;
 		callsub L_Description;
 		setquest 5140;
-		set job_kagero_lp,100;
+		job_kagero_lp = 100;
 		mes "You've gained 100 Life Points (LP).";
 		next;
 	} else {
 		if (questprogress(5141,PLAYTIME) > 0)
 			erasequest 5141;
-		set job_kagero_lp,100;
+		job_kagero_lp = 100;
 		mes "You've returned to the first block. Your LP is recovered.";
 		next;
 		callsub L_Description;
@@ -1329,15 +1329,15 @@ job_ko,49,16,4	script	Sight#ko_01	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",1;
 	end;
 OnTouch:
-	set .@life_p, job_kagero_lp;
+	.@life_p = job_kagero_lp;
 	mes "There are tiny letters on the sign.";
 	next;
 	mes "You are really bad at rolling dice. How can you get a 1 from the start? You can move to block 9 if you pay up 10 LP in this block.";
 	next;
 	if(select("Use 10 LP", "Roll the dice.") == 1) {
 		if (job_kagero_lp > 9) {
-			set .@reset_p, .@life_p - 10;
-			set job_kagero_lp, .@reset_p;
+			.@reset_p = .@life_p - 10;
+			job_kagero_lp = .@reset_p;
 			mes "< Used 10 LP >";
 			mes "Press Close to move to block 9.";
 			callfunc "F_KO_Survival_warp",9;
@@ -1367,7 +1367,7 @@ OnTouch:
 	select("Use 5 LP");
 	if (job_kagero_lp > 4) {
 		mes "< Used 5 LP >";
-		set job_kagero_lp, job_kagero_lp - 5;
+		job_kagero_lp -= 5;
 		callfunc "F_KO_Survival_dice",3;
 	} else {
 		mes "< Did not use 5 LP >";
@@ -1392,9 +1392,9 @@ OnTouch:
 	if(select("Use 5 LP and leave your name.", "Continue to roll the dice.") == 1) {
 		if (job_kagero_lp > 4) {
 			mes "< Used 5 LP >";
-			set job_kagero_lp, job_kagero_lp - 5;
+			job_kagero_lp -= 5;
 			next;
-			set $20110808_sko01$, strcharinfo(PC_NAME);
+			$20110808_sko01$ = strcharinfo(PC_NAME);
 			mes strcharinfo(PC_NAME)+" was here.";
 			mes "You left your name.";
 			next;
@@ -1490,7 +1490,7 @@ job_ko,54,60,4	script	Sight#ko_15	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",15;
 	end;
 OnTouch:
-	set .@playtime, questprogress(5141,PLAYTIME);
+	.@playtime = questprogress(5141, PLAYTIME);
 	if (!.@playtime) {
 		mes "There are tiny letters on the sign.";
 		next;
@@ -1531,8 +1531,8 @@ OnTouch:
 			next;
 		}
 	}
-	set @job_ko_dice1,0;
-	set @job_ko_dice2,0;
+	@job_ko_dice1 = 0;
+	@job_ko_dice2 = 0;
 	//mes "Second dice result is " + @job_ko_dice2 + ", which is the same number. Press Close to move block 30.";
 	mes "You got the same number. Press Close to move block 30.";
 	callfunc "F_KO_Survival_warp",30;
@@ -1554,10 +1554,10 @@ OnTouch:
 	callfunc "F_KO_Survival_dice2",18;
 	mes "Second dice result is " + @job_ko_dice2 + ".";
 	next;
-	set .@dice_sum, @job_ko_dice1 + @job_ko_dice2;
+	.@dice_sum = @job_ko_dice1 + @job_ko_dice2;
 	mes @job_ko_dice1 + " + " + @job_ko_dice2 + " = " + .@dice_sum;
-	set @job_ko_dice1,0;
-	set @job_ko_dice2,0;
+	@job_ko_dice1 = 0;
+	@job_ko_dice2 = 0;
 	if (.@dice_sum < 5) {
 		mes "You total is lower than 5. Press Close to move to block 30.";
 		callfunc "F_KO_Survival_warp",30;
@@ -1597,14 +1597,14 @@ OnTouch:
 		mes "If you leave your ^FD0260LP^000000 then the next person for test that arrives at the block will automatically pass the test.";
 		next;
 		if(select("Leave all your LP.", "Continue to roll the dice.") == 1) {
-			set job_kagero_lp,0;
-			set $20110808_vko02,1;
+			job_kagero_lp = 0;
+			$20110808_vko02 = 1;
 			mes "Leave all remaining ^FD0260LP^000000 here. Press Close and go back to block 0.";
 			callfunc "F_KO_Survival_warp",0;
 			end;
 		}
 	} else if ($20110808_vko02 == 1) {
-		set $20110808_vko02,0;
+		$20110808_vko02 = 0;
 		mes "Someone before you sacrificed all their ^FD0260LP^000000, so press Close and go to the last block.";
 		callfunc "F_KO_Survival_warp",40;
 		end;
@@ -1632,17 +1632,17 @@ OnTouch:
 	callfunc "F_KO_Survival_dice2",24;
 	mes "Second dice result is " + @job_ko_dice2 + ".";
 	next;
-	set .@dice_sum, @job_ko_dice1 + @job_ko_dice2;
+	.@dice_sum = @job_ko_dice1 + @job_ko_dice2;
 	if (.@dice_sum > 8) {
 		mes @job_ko_dice1 + " + " + @job_ko_dice2 + " = " + .@dice_sum;
-		set @job_ko_dice1,0;
-		set @job_ko_dice2,0;
+		@job_ko_dice1 = 0;
+		@job_ko_dice2 = 0;
 		mes "You total is larger than 8. Please choose a block to move between blocks 25 through 30.";
 		callfunc "F_KO_Survival_warp", select("Move to block 25", "Move to block 26", "Move to block 27", "Move to block 28", "Move to block 29", "Move to block 30") + 24;
 		end;
 	} else {
-		set @job_ko_dice1,0;
-		set @job_ko_dice2,0;
+		@job_ko_dice1 = 0;
+		@job_ko_dice2 = 0;
 		mes "You total is lower than 8. Press Close to move to block 19.";
 		callfunc "F_KO_Survival_warp",19;
 		end;
@@ -1653,7 +1653,7 @@ job_ko,25,23,4	script	Sight#ko_25	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",25;
 	end;
 OnTouch:
-	set .@playtime, questprogress(5141,PLAYTIME);
+	.@playtime = questprogress(5141, PLAYTIME);
 	if (!.@playtime) {
 		mes "There are tiny letters on the sign.";
 		next;
@@ -1747,8 +1747,8 @@ OnTouch:
 	next;
 	switch(select("Pay LP.", "Move forward a little bit at a time.")) {
 	case 1:
-		set .@sell_p, job_kagero_lp - 1;
-		set job_kagero_lp,1;
+		.@sell_p =  job_kagero_lp - 1;
+		job_kagero_lp = 1;
 		mes "< Used " + .@sell_p + " LP >";
 		next;
 		mes "Press Close to move to block 39.";
@@ -1783,13 +1783,13 @@ OnTouch:
 	switch(select("Try it the other way.", "Go by the rules.")) {
 	case 1:
 		//mes "The Other Way (2nd Rule)";
-		set .@dodoripo,0;
+		.@dodoripo = 0;
 		break;
 	case 2:
-		set .@dodoripo,1;
+		.@dodoripo = 1;
 		break;
 	}
-	set .@dice, callfunc("F_KO_Survival_dice",36,1,1);
+	.@dice = callfunc("F_KO_Survival_dice", 36, 1, 1);
 	if (.@dodoripo == 0) {
 		if (.@dice <= 3) {
 			mes "Press Close to move to the end.";
@@ -1817,7 +1817,7 @@ OnTouch:
 	next;
 	mes "If you get 1, 3, or 5, move to the arrival point; if you get 2, 4, or 6, go back to the starting point.";
 	next;
-	set .@dice, callfunc("F_KO_Survival_dice",37,1,1);
+	.@dice = callfunc("F_KO_Survival_dice", 37, 1, 1);
 	if (.@dice % 2) {
 		mes "Press Close to move to the last block.";
 		callfunc "F_KO_Survival_warp",40;
@@ -1842,9 +1842,9 @@ OnTouch:
 		next;
 		switch(select("Install a trap.", "Do not install.")) {
 		case 1:
-			set .@reset_p, job_kagero_lp - 1;
-			set job_kagero_lp,1;
-			set $20110808_vko04,1;
+			.@reset_p = job_kagero_lp - 1;
+			job_kagero_lp = 1;
+			$20110808_vko04 = 1;
 			mes "< Used " + .@reset_p + " LP >";
 			next;
 			mes "The trap is installed. Please roll the dice.";
@@ -1856,13 +1856,13 @@ OnTouch:
 			break;
 		}
 	} else {
-		set $20110808_vko04,0;
-		set job_kagero_lp,0;
+		$20110808_vko04 = 0;
+		job_kagero_lp = 0;
 		mes "You are caught in the trap installed. Press Close to go back to block 0.";
 		callfunc "F_KO_Survival_warp",0;
 		end;
 	}
-	set .@dice, callfunc("F_KO_Survival_dice",38,1,1);
+	.@dice = callfunc("F_KO_Survival_dice", 38, 1, 1);
 	mes "Press Close to move forward " + .@dice + " blocks.";
 	callfunc "F_KO_Survival_warp", ((.@dice == 1) ? .@dice + 38 : 40);
 	end;
@@ -1878,7 +1878,7 @@ OnTouch:
 	next;
 	mes "But you cannot go so easily. If you get a 3, you will go back to block 3.";
 	next;
-	set .@dice, callfunc("F_KO_Survival_dice",39,1,1);
+	.@dice = callfunc("F_KO_Survival_dice", 39, 1, 1);
 	if (.@dice == 3) {
 		mes "Press Close to move to the 3rd block.";
 		callfunc "F_KO_Survival_warp",3;
@@ -1914,7 +1914,7 @@ OnTouch:
 	completequest 5137;
 	erasequest 5140;
 	if (questprogress(5141)) erasequest 5141;
-	set job_kagero_lp,0;
+	job_kagero_lp = 0;
 	mes "Let's read all the writing on the sign.";
 	mes "You feel like you are moved to another place.";
 	close2;
@@ -1930,9 +1930,9 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 		close;
 	}
 	if (BaseJob != Job_Ninja) {
-		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
+		for (.@i = 5131; .@i <= 5146; .@i++)
 			if (questprogress(.@i)) erasequest .@i;
-		set job_kagero,0;
+		job_kagero = 0;
 		mes "[Red Leopard Joe]";
 		mes "Sorry, your clan is not the same as ours, is there something wrong?";
 		close2;
@@ -1948,11 +1948,11 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 		warp "amatsu",147,136;
 		end;
 	}
-	set .@ko_test_03_1, questprogress(5138);
-	set .@ko_test_03_2, questprogress(5142);
-	set .@ko_test_03_3, questprogress(5143);
-	set .@ko_test_03_4, questprogress(5144);
-	set .@ko_test_03_5, questprogress(5145);
+	.@ko_test_03_1 = questprogress(5138);
+	.@ko_test_03_2 = questprogress(5142);
+	.@ko_test_03_3 = questprogress(5143);
+	.@ko_test_03_4 = questprogress(5144);
+	.@ko_test_03_5 = questprogress(5145);
 	if (.@ko_test_03_1 == 1 && .@ko_test_03_2 == 0 && .@ko_test_03_3 == 0 && .@ko_test_03_4 == 0 && .@ko_test_03_5 == 0) {
 		mes "[Red Leopard Joe]";
 		mes "It's been a while!";
@@ -2082,13 +2082,13 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 		mes "[Red Leopard Joe]";
 		mes "Looks like you've got some results.";
 		next;
-		set .@part, EQI_HAND_R;
+		.@part = EQI_HAND_R;
 		if (!getequipisequiped(.@part)) {
 			mes "[Red Leopard Joe]";
 			mes "Ahh! You have not equipped any weapons!";
 			close;
 		} else {
-			set .@equip_id, getequipid(.@part);
+			.@equip_id = getequipid(.@part);
 			if (.@equip_id == 13074 || .@equip_id == 13312) {
 				mes "[Red Leopard Joe]";
 				mes "Is that weapon yours? Let me have a look.";
@@ -2104,7 +2104,7 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 		}
 		mes "Joe took a thorough look at the seal.";
 		next;
-		set .@equip_refine, getequiprefinerycnt(.@part);
+		.@equip_refine = getequiprefinerycnt(.@part);
 		if (.@equip_refine < 7) {
 			mes "[Red Leopard Joe]";
 			mes "Are you that low?";
@@ -2261,30 +2261,30 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 	callsub L_CheckMaterials;
 	while(1) {
 		switch(select("Melt Iron Ore.", "Melt Iron.", "Melt Steel.", "Melt Phracon.", "Melt Emveretarcon.", "Melt Rough Oridecon.", "Melt Rough Elunium.", "Stop.")) {
-			case 1: set .@item,1002; set .@val1,1; break;  //Iron_Ore
-			case 2: set .@item, 998; set .@val1,2; break;  //Iron
-			case 3: set .@item, 999; set .@val1,3; break;  //Steel
-			case 4: set .@item,1010; set .@val2,1; break;  //Phracon
-			case 5: set .@item,1011; set .@val2,2; break;  //Emveretarcon
-			case 6: set .@item, 756; set .@val2,3; break;  //Oridecon_Stone
-			case 7: set .@item, 757; set .@val3,5; break;  //Elunium_Stone
+			case 1: .@item = 1002; .@val1 = 1; break;  //Iron_Ore
+			case 2: .@item = 998; .@val1 = 2; break;  //Iron
+			case 3: .@item = 999; .@val1 = 3; break;  //Steel
+			case 4: .@item = 1010; .@val2 = 1; break;  //Phracon
+			case 5: .@item = 1011; .@val2 = 2; break;  //Emveretarcon
+			case 6: .@item = 756; .@val2 = 3; break;  //Oridecon_Stone
+			case 7: .@item = 757; .@val3 = 5; break;  //Elunium_Stone
 			case 8: close;
 		}
 		if (countitem(.@item)) {
 			delitem .@item,1;
 			if (.@val1) {         //Iron Ore, Iron, Steel
-				set .@ston_t01, .@ston_t01 + .@val1;
+				.@ston_t01 += .@val1;
 				if (.@ston_t02 > 0)
-					set .@ston_t02, .@ston_t02 - .@val1;
+					.@ston_t02 -= .@val1;
 			} else if (.@val2) {  //Phracon, Emveretarcon, Rough Oridecon
-				set .@ston_t02, .@ston_t02 + .@val2;
+				.@ston_t02 += .@val2;
 				if (.@ston_t01 > 0)
-					set .@ston_t01, .@ston_t01 - .@val2;
+					.@ston_t01 -= .@val2;
 			} else if (.@val3) {  //Rouch Elunium
 				if (.@ston_t01 > 0)
-					set .@ston_t01, .@ston_t01 - .@val3;
+					.@ston_t01 -= .@val3;
 				if (.@ston_t02 > 0)
-					set .@ston_t02, .@ston_t02 - .@val3;
+					.@ston_t02 -= .@val3;
 			}
 			specialeffect EF_DEMONSTRATION;
 			mes "Melted " + getitemname(.@item) + " in high temperature.";
@@ -2299,7 +2299,7 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 		mes "Which metal will be melted next?";
 		next;
 	}
-	set .@boll_01, ((.@ston_t01 > 49) ? .@ston_t01 : .@ston_t02);
+	.@boll_01 = ((.@ston_t01 > 49) ? .@ston_t01 : .@ston_t02);
 
 	// Part 2: Forging
 	// Grind and temper a weapon.
@@ -2309,11 +2309,11 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 	next;
 	switch(select("Dagger Mold", "Shuriken Mold")) {
 	case 1:
-		set .@weapon_who,0;
+		.@weapon_who = 0;
 		mes "Poured the melted metal into the dagger mold.";
 		break;
 	case 2:
-		set .@weapon_who,1;
+		.@weapon_who = 1;
 		mes "Poured the melted metal into the shuriken mold.";
 		break;
 	}
@@ -2321,8 +2321,8 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 	progressbar "ffff00",3;
 	mes "Looks like the metal is taking shape. Now what next?";
 	next;
-	set @job_ko_forge,0;
-	set @job_ko_lastaction,0;
+	@job_ko_forge = 0;
+	@job_ko_lastaction = 0;
 	callsub L_ForgeWeapon,":";
 	while(1) {
 		mes "Now what next?";
@@ -2330,21 +2330,21 @@ job_ko,131,124,0	script	Crafting Tools#ko_01	CLEAR_NPC,{
 		if (callsub(L_ForgeWeapon,":Final Touches") == 0)
 			break;
 	}
-	set .@boll_02, @job_ko_forge;
-	set @job_ko_forge,0;
-	set @job_ko_lastaction,0;
+	.@boll_02 = @job_ko_forge;
+	@job_ko_forge = 0;
+	@job_ko_lastaction = 0;
 
 	// Part 3: Create the Weapon
 	// Success rate based on previous two parts.
-	set .@boll_00, .@boll_01 + .@boll_02;
+	.@boll_00 = .@boll_01 + .@boll_02;
 	mes "Start to sharpen the tool using a whetstone for finishing touches.";
 	next;
 	progressbar "ffff00",3;
-	set .@success_pp, rand(1,100);
+	.@success_pp = rand(1,100);
 	if (.@boll_00 < 100) {
-		if (.@success_pp == 77) set .@success,1;
+		if (.@success_pp == 77) .@success = 1;
 	} else {
-		if (.@success_pp != 44) set .@success,1;
+		if (.@success_pp != 44) .@success = 1;
 	}
 	if (.@success) {
 		specialeffect(EF_PERFECTION, AREA, playerattached());
@@ -2377,7 +2377,7 @@ L_CheckMaterials:
 	return;
 
 L_ForgeWeapon:
-	set .@i, select("Grind the weapon", "Temper the weapon" + getarg(0));
+	.@i = select("Grind the weapon", "Temper the weapon" + getarg(0));
 	switch (.@i) {
 	case 1:
 		specialeffect(EF_DETOXICATION, AREA, playerattached());
@@ -2392,10 +2392,10 @@ L_ForgeWeapon:
 	}
 	next;
 	if (@job_ko_lastaction == .@i)
-		set @job_ko_forge, @job_ko_forge + 1;
+		@job_ko_forge++;
 	else
-		set @job_ko_forge, @job_ko_forge + 2;
-	set @job_ko_lastaction, .@i;
+		@job_ko_forge += 2;
+	@job_ko_lastaction = .@i;
 	return 1;
 }
 job_ko,129,129,0	duplicate(Crafting Tools#ko_01)	Crafting Tools#ko_02	CLEAR_NPC
@@ -2417,7 +2417,7 @@ job_ko,121,121,0	script	Refinement Tools#ko_01	CLEAR_NPC,{
 		mes "You turned off the tool.";
 		close;
 	}
-	set .@part, EQI_HAND_R;
+	.@part = EQI_HAND_R;
 	if (!getequipisequiped(.@part)) {
 		mes "Bzzzt";
 		mes "A warning beep comes from the tool.";
@@ -2426,7 +2426,7 @@ job_ko,121,121,0	script	Refinement Tools#ko_01	CLEAR_NPC,{
 		mes "This equipment does not work without an equipped item to refine.";
 		close;
 	} else {
-		set .@equip_id, getequipid(.@part);
+		.@equip_id = getequipid(.@part);
 		if (.@equip_id == 13074 || .@equip_id == 13312) {
 			mes "Analyzing the weapon.";
 			next;
@@ -2447,7 +2447,7 @@ job_ko,121,121,0	script	Refinement Tools#ko_01	CLEAR_NPC,{
 		mes "That weapon cannot be refined. Where did you get it?";
 		close;
 	}
-	set .@equip_refine, getequiprefinerycnt(.@part);
+	.@equip_refine = getequiprefinerycnt(.@part);
 	if (.@equip_refine >= 20) {
 		mes "Bzzzt";
 		mes "A warning beep comes from the tool.";
@@ -2468,21 +2468,21 @@ job_ko,121,121,0	script	Refinement Tools#ko_01	CLEAR_NPC,{
 		next;
 	}
 	progressbar "ffff00",1;
-	set .@rand, rand(1,100);
+	.@rand = rand(1,100);
 	if (.@equip_refine < 5) {          // 0>5 100%
-		set .@wlevel_up,1;
+		.@wlevel_up = 1;
 	} else if (.@equip_refine == 5) {  // 5>6  40%
-		if (.@rand < 41) set .@wlevel_up,1;
+		if (.@rand < 41) .@wlevel_up = 1;
 	} else if (.@equip_refine == 6) {  // 6>7  30%
-		if (.@rand < 31) set .@wlevel_up,1;
+		if (.@rand < 31) .@wlevel_up = 1;
 	} else if (.@equip_refine == 7) {  // 7>8  20%
-		if (.@rand < 21) set .@wlevel_up,1;
+		if (.@rand < 21) .@wlevel_up = 1;
 	} else if (.@equip_refine == 8) {  // 8>9  10%
-		if (.@rand < 11) set .@wlevel_up,1;
+		if (.@rand < 11) .@wlevel_up = 1;
 	} else if (.@equip_refine == 9) {  // 9>10  5%
-		if (.@rand < 6) set .@wlevel_up,1;
+		if (.@rand < 6) .@wlevel_up = 1;
 	} else {                           // 10>20 2%
-		if (.@rand < 3) set .@wlevel_up,1;
+		if (.@rand < 3) .@wlevel_up = 1;
 	}
 	if (.@wlevel_up) {
 		successrefitem .@part;
@@ -2584,11 +2584,11 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 		mes "Puhahaha! Gai is all talk. I know I was know valuable to you than that Gai.";
 		next;
 		if (questprogress(5143) == 2) {
-			set .@item,13075; //Kurenai
-			set .@weapon$,"dagger";
+			.@item = 13075; //Kurenai
+			.@weapon$ = "dagger";
 		} else {
-			set .@item,13311; //Huuma_Shadow
-			set .@weapon$,"shuriken";
+			.@item = 13311; //Huuma_Shadow
+			.@weapon$ = "shuriken";
 		}
 		mes "[Red Leopard Joe]";
 		mes "I did some work on the prototype " + .@weapon$ + " you made.";
@@ -2613,9 +2613,9 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 		mes "[Leader Gion]";
 		mes "You only need to look forward and never turn back.";
 		next;
-		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
+		for (.@i = 5131; .@i <= 5146; .@i++)
 			if (questprogress(.@i)) erasequest .@i;
-		set job_kagero,9;
+		job_kagero = 9;
 		getnameditem .@item,strcharinfo(PC_NAME);
 		jobchange(Sex == SEX_MALE ? Job_Kagerou : Job_Oboro);
 		donpcevent "Summon Target#ko::OnEnable";
@@ -2676,13 +2676,13 @@ OnTimer180000:
 OnEnable:
 	stopnpctimer;
 	switch (rand(1,7)) {
-		case 1: set .@mob,1002; break;
-		case 2: set .@mob,1031; break;
-		case 3: set .@mob,1113; break;
-		case 4: set .@mob,1063; break;
-		case 5: set .@mob,1010; break;
-		case 6: set .@mob,1049; break;
-		case 7: set .@mob,1050; break;
+		case 1: .@mob = 1002; break;
+		case 2: .@mob = 1031; break;
+		case 3: .@mob = 1113; break;
+		case 4: .@mob = 1063; break;
+		case 5: .@mob = 1010; break;
+		case 6: .@mob = 1049; break;
+		case 7: .@mob = 1050; break;
 	}
 	areamonster "job_ko",120,30,160,70,"Clan Secret",.@mob,1,"Summon Target#ko::OnMyMobDead";
 	end;
@@ -2693,7 +2693,7 @@ OnMyMobDead:
 	if (mobcount("job_ko","Summon Target#ko::OnMyMobDead") < 1) {
 		if (job_kagero == 7) {
 			donpcevent "Summon Target#ko::OnDisable";
-			set job_kagero,8;
+			job_kagero = 8;
 		} else
 			donpcevent "Summon Target#ko::OnEnable";
 	}
@@ -2814,20 +2814,20 @@ job_ko,4,1,4	script	Guide#ko_helper	4_M_KAGE_OLD,{
 		next;
 		switch(select("Complete Test of Knowledge", "Complete Test of Survival", "Complete Test of Weaponry")) {
 		case 1:
-			set job_kagero,5;
+			job_kagero = 5;
 			setquest 5136;
 			completequest 5136;
 			mes "The Test of Knowledge has been set as complete. I hope you have finished your initialization.";
 			break;
 		case 2:
-			set job_kagero,5;
-			set job_kagero_lp,0;
+			job_kagero = 5;
+			job_kagero_lp = 0;
 			setquest 5137;
 			completequest 5137;
 			mes "The Test of Survival has been set as complete. I hope you have finished your initialization.";
 			break;
 		case 3:
-			set job_kagero,5;
+			job_kagero = 5;
 			setquest 5138;
 			completequest 5138;
 			mes "The Test of Weaponry has been set as complete. I hope you have finished your initialization.";
@@ -2840,8 +2840,8 @@ job_ko,4,1,4	script	Guide#ko_helper	4_M_KAGE_OLD,{
 		mes "Please select a weapon.";
 		next;
 		switch(select("Dagger", "Shuriken")) {
-			case 1: set .@quest,5143; break;
-			case 2: set .@quest,5144; break;
+			case 1: .@quest = 5143; break;
+			case 2: .@quest = 5144; break;
 		}
 		setquest 5136;
 		completequest 5136;
@@ -2852,13 +2852,13 @@ job_ko,4,1,4	script	Guide#ko_helper	4_M_KAGE_OLD,{
 		setquest .@quest;
 		completequest .@quest;
 		setquest 5146;
-		set job_kagero,8;
+		job_kagero = 8;
 		mes "I've set the Pre-Transfer status. Good luck!!";
 		close;
 	case 4:
-		set job_kagero,0;
-		set job_kagero_lp,0;
-		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
+		job_kagero = 0;
+		job_kagero_lp = 0;
+		for (.@i = 5131; .@i <= 5146; .@i++)
 			if (questprogress(.@i)) erasequest .@i;
 		mes "The task of initialization is complete. You can confirm this through the [Current Status] option!";
 		close;

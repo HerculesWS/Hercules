@@ -49,18 +49,18 @@ function	script	F_GldTreas	{
 
 		// Only spawn one treasure chest for novice castles.
 		if (compare(getarg(0),"nguild"))
-			set getarg(2),1;
+			setd(getarg(2), 1);
 		else
-			set getarg(2),getcastledata(getarg(0),2)/5+4;
+			setd(getarg(2), getcastledata(getarg(0), 2) / 5 + 4);
 
 		if (getarg(2) <= 0) return;
 
 		//sets the counter variable = to the box number amount
-		set getarg(3), getarg(2);
+		setd(getarg(3), getarg(2));
 	}
 	for (.@i = 1; .@i <= getarg(3); ++.@i) {
 		// set treasure box ID
-		set getarg(4), getarg(5) + (.@i+1) % 2;
+		setd(getarg(4), getarg(5) + (.@i + 1) % 2);
 		areamonster getarg(0),getarg(6),getarg(7),getarg(8),getarg(9),"Treasure Chest",getarg(4),1,"Treasure_"+getarg(1)+"::OnDied";
 	}
 	return;

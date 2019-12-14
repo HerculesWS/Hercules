@@ -47,9 +47,9 @@ bat_room,148,150,4	script	Teleporter#bat	4_F_TELEPORTER,{
 		close;
 	}
 
-	set .@spoint$, getsavepoint(0);
-	set .@x, getsavepoint(1);
-	set .@y, getsavepoint(2);
+	.@spoint$ = getsavepoint(0);
+	.@x = getsavepoint(1);
+	.@y = getsavepoint(2);
 	mes "[Teleporter]";
 	mes "You will be sent back to " + .@spoint$ + ".";
 	close2;
@@ -94,7 +94,7 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	mes "[General Guillaume]";
 	mes "Welcome to my army, comrade.";
 	mes "Your eyes tell me that you're a soldier that I can trust.";
-	set Bat_Team,1;
+	Bat_Team = 1;
 	next;
 	mes "[General Guillaume]";
 	mes "Now, go upstairs and apply for battle with your comrades. I'm sure they'll welcome you whole-heartedly!";
@@ -127,7 +127,7 @@ bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 	}
 	mes "[Prince Croix]";
 	mes "Thank you so much. I feel like I can win with the help of adventurers like you. Now, please go downstairs and join your comrades in sharpening their skills to fight the enemy!";
-	set Bat_Team,2;
+	Bat_Team = 2;
 	close2;
 	cutin "",255;
 	end;
@@ -136,35 +136,35 @@ bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 // Time calculation Function
 // *********************************************************************
 function	script	Time2Str	{
-	set .@time_left, getarg(0) - gettimetick(2);
+	.@time_left = getarg(0) - gettimetick(2);
 
-	set .@Days, .@time_left / 86400;
-	set .@time_left, .@time_left - (.@Days * 86400);
-	set .@Hours, .@time_left / 3600;
-	set .@time_left, .@time_left - (.@Hours * 3600);
-	set .@Minutes, .@time_left / 60;
-	set .@time_left, .@time_left - (.@Minutes * 60);
+	.@Days = .@time_left / 86400;
+	.@time_left = .@time_left - (.@Days * 86400);
+	.@Hours = .@time_left / 3600;
+	.@time_left = .@time_left - (.@Hours * 3600);
+	.@Minutes = .@time_left / 60;
+	.@time_left = .@time_left - (.@Minutes * 60);
 
-	set .@Time$, "";
+	.@Time$ = "";
 	if( .@Days > 1 )
-		set .@Time$, .@Time$ + .@Days + " days, ";
+		.@Time$ = .@Time$ + .@Days + " days, ";
 	else if( .@Days > 0 )
-		set .@Time$, .@Time$ + .@Days + " day, ";
+		.@Time$ = .@Time$ + .@Days + " day, ";
 
 	if( .@Hours > 1 )
-		set .@Time$, .@Time$ + .@Hours + " hours, ";
+		.@Time$ = .@Time$ + .@Hours + " hours, ";
 	else if( .@Hours > 0 )
-		set .@Time$, .@Time$ + .@Hours + " hour, ";
+		.@Time$ = .@Time$ + .@Hours + " hour, ";
 
 	if( .@Minutes > 1 )
-		set .@Time$, .@Time$ + .@Minutes + " minutes, ";
+		.@Time$ = .@Time$ + .@Minutes + " minutes, ";
 	else if( .@Minutes > 0 )
-		set .@Time$, .@Time$ + .@Minutes + " minute, ";
+		.@Time$ = .@Time$ + .@Minutes + " minute, ";
 
 	if( .@time_left > 1 || .@time_left == 0 )
-		set .@Time$, .@Time$ + .@time_left + " seconds.";
+		.@Time$ = .@Time$ + .@time_left + " seconds.";
 	else if( .@time_left == 1 )
-		set .@Time$, .@Time$ + .@time_left + " second.";
+		.@Time$ = .@Time$ + .@time_left + " second.";
 
 	return .@Time$;
 }
@@ -1161,7 +1161,7 @@ bat_room,161,158,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid4	4_M_KY_H
 	end;
 
 OnTouch:
-	set BG_Delay_Tick, gettimetick(2) + 30;
+	BG_Delay_Tick = gettimetick(2) + 30;
 	warp "bat_room",154,149;
 	end;
 }
@@ -1250,15 +1250,15 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "What kind of item do you want to exchange?";
 			next;
 			deletearray .@Item_DB[0],127;
-			set .@Badge, 7828;
+			.@Badge = 7828;
 
 			switch( select("Weapons", "Garment", "Footgear", "Armor", "Accessory") )
 			{
-				case 1: setarray .@Item_DB[0],13036,13411,1425,1632,1634,1543,1924,1978,1574,1824,1183,1380,13305,1279,1739,13108,13172; set .@Value, 100; break;
-				case 2: setarray .@Item_DB[0],2538,2539,2540; set .@Value, 50; break;
-				case 3: setarray .@Item_DB[0],2435,2436,2437; set .@Value, 50; break;
-				case 4: setarray .@Item_DB[0],2376,2377,2378,2379,2380,2381,2382; set .@Value, 80; break;
-				case 5: setarray .@Item_DB[0],2720,2721,2722,2723,2724,2725,2733; set .@Value, 500; break;
+				case 1: setarray .@Item_DB[0],13036,13411,1425,1632,1634,1543,1924,1978,1574,1824,1183,1380,13305,1279,1739,13108,13172; .@Value = 100; break;
+				case 2: setarray .@Item_DB[0],2538,2539,2540; .@Value = 50; break;
+				case 3: setarray .@Item_DB[0],2435,2436,2437; .@Value = 50; break;
+				case 4: setarray .@Item_DB[0],2376,2377,2378,2379,2380,2381,2382; .@Value = 80; break;
+				case 5: setarray .@Item_DB[0],2720,2721,2722,2723,2724,2725,2733; .@Value = 500; break;
 			}
 
 			break;
@@ -1268,15 +1268,15 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "What kind of item do you want to exchange?";
 			next;
 			deletearray .@Item_DB[0],127;
-			set .@Badge, 7829;
+			.@Badge = 7829;
 
 			switch( select("Weapons", "Garment", "Footgear", "Armor", "Accessory") )
 			{
-				case 1: setarray .@Item_DB[0],13037,13410,1633,1635,1542,1923,1977,1575,1823,1184,1482,1379,13306,1280,1738,13171,13173,13174; set .@Value, 100; break;
-				case 2: setarray .@Item_DB[0],2538,2539,2540; set .@Value, 50; break;
-				case 3: setarray .@Item_DB[0],2435,2436,2437; set .@Value, 50; break;
-				case 4: setarray .@Item_DB[0],2376,2377,2378,2379,2380,2381,2382; set .@Value, 80; break;
-				case 5: setarray .@Item_DB[0],2720,2721,2722,2723,2724,2725,2733; set .@Value, 500; break;
+				case 1: setarray .@Item_DB[0],13037,13410,1633,1635,1542,1923,1977,1575,1823,1184,1482,1379,13306,1280,1738,13171,13173,13174; .@Value = 100; break;
+				case 2: setarray .@Item_DB[0],2538,2539,2540; .@Value = 50; break;
+				case 3: setarray .@Item_DB[0],2435,2436,2437; .@Value = 50; break;
+				case 4: setarray .@Item_DB[0],2376,2377,2378,2379,2380,2381,2382; .@Value = 80; break;
+				case 5: setarray .@Item_DB[0],2720,2721,2722,2723,2724,2725,2733; .@Value = 500; break;
 			}
 
 			break;
@@ -1292,12 +1292,12 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	mes "If you are not sure, check the catalog.";
 	next;
 
-	set .@menu$, "";
-	set .@count, getarraysize(.@Item_DB);
-	for( set .@i, 0; .@i < .@count; set .@i, .@i + 1 )
-		set .@menu$, .@menu$ + getitemname(.@Item_DB[.@i]) + ":";
+	.@menu$ = "";
+	.@count = getarraysize(.@Item_DB);
+	for(.@i = 0; .@i < .@count; .@i++)
+		.@menu$ = .@menu$ + getitemname(.@Item_DB[.@i]) + ":";
 
-	set .@Item_ID, .@Item_DB[select(.@menu$) - 1];
+	.@Item_ID = .@Item_DB[select(.@menu$) - 1];
 
 	mes "[Erundek]";
 	mes "Would you like to exchange ^FF0000" + .@Value + " " + getitemname(.@Badge) + "^000000 for a ^0000FF" + getitemname(.@Item_ID) + "^000000?";

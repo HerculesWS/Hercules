@@ -425,7 +425,7 @@ function	script	F_ShuffleNumbers	{
 		.@temparray[.@i] = .@i;
 	for (.@i = 0; .@i < .@count; ++.@i) {
 		.@rand = rand(.@range);
-		set getelementofarray( getarg(2), .@i ), .@temparray[.@rand] + .@static;
+		setd(getelementofarray( getarg(2), .@i ), .@temparray[.@rand] + .@static);
 		.@temparray[.@rand] = .@temparray[--.@range];
 	}
 	return .@count;

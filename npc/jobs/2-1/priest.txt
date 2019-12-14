@@ -1170,7 +1170,7 @@ OnTimer302000:
 	end;
 
 OnMyMobDead:
-	set getvariableofnpc(.MyMobs,"Zombie_Generator#prst"),getvariableofnpc(.MyMobs,"Zombie_Generator#prst") - 1;
+	setd(getvariableofnpc(.MyMobs, "Zombie_Generator#prst"), getvariableofnpc(.MyMobs, "Zombie_Generator#prst") - 1);
 	end;
 }
 

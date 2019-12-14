@@ -1394,9 +1394,12 @@ assignment instead.
 ---------------------------------------
 
 *setd("<variable name>", <value>)
+*setd(<reference to variable>, <value>)
 
-Works almost identically as set(), except the variable name is
-identified as a string and can thus be constructed dynamically.
+Works almost identically to set(). It sets the value of a variable or an array.
+The variable's name is passed as a string and thus can dynamically be constructed.
+Passing a reference to a variable is supported, too. This is useful when using
+getvariableofnpc(), getvariableofpc(), getd() or getarg().
 
 This command is equivalent to:
   set(getd("variable name"), <value>);
@@ -1408,6 +1411,16 @@ Examples:
 
   setd(".@" + .@var$ + "123$", "Poporing is cool");
   mes(.@Poporing123$); // Displays "Poporing is cool".
+
+  setd(getvariableofnpc(.var$, "TargetNPC"), "Poring party!");
+  mes(getvariableofnpc(.var$, "TargetNPC")); // Displays "Poring party!".
+
+  input(.@acc_id);
+  setd(getvariableofpc(@var$, .@acc_id), "Hello world!");
+  mes(getvariableofpc(@var$, .@acc_id)); // Displays "Hello world!".
+
+  setd(getd(".@var$"), "Hercules!");
+  mes(getd(".@var$")); // Displays "Hercules!".
 
 ---------------------------------------
 

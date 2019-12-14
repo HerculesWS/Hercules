@@ -1108,7 +1108,7 @@ OnStartArena:
 	}
 	donpcevent "Beholder#ASNTEST::OnEnable";
 	donpcevent "Keeper of the Door#ASN::OnDisable";
-	set getvariableofnpc(.DisableTraps,"Beholder#ASNTEST"),0;
+	setd(getvariableofnpc(.DisableTraps, "Beholder#ASNTEST"), 0);
 	disablewaitingroomevent;
 	end;
 
