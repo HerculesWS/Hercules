@@ -7395,6 +7395,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			//Undead are immune to Freeze/Stone
 			if (undead_flag && !(flag&SCFLAG_NOAVOID))
 				return 0;
+			// SC_LEXAETERNA should be removed when applying SC_STONE or SC_FREEZE
+			if (sc->data[SC_LEXAETERNA] != NULL)
+				status_change_end(bl, SC_LEXAETERNA, INVALID_TIMER);
 			FALLTHROUGH
 		case SC_SLEEP:
 		case SC_STUN:
