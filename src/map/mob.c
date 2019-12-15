@@ -4178,6 +4178,50 @@ static void mob_read_db_stats_sub(struct mob_db *entry, struct config_setting_t 
 }
 
 /**
+ * Processes the view data for a mob_db entry.
+ *
+ * @param[in,out] entry The destination mob_db entry, already initialized
+ *                      (mob_id, status.mode are expected to be already set).
+ * @param[in]     t     The libconfig entry.
+ */
+static void mob_read_db_viewdata_sub(struct mob_db *entry, struct config_setting_t *t)
+{
+	nullpo_retv(entry);
+	nullpo_retv(t);
+
+	struct config_setting_t *it;
+	int i32;
+
+	if ((it = libconfig->setting_get_member(t, "SpriteId")) != NULL)
+		entry->vd.class = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "WeaponId")) != NULL)
+		entry->vd.weapon = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "ShieldId")) != NULL)
+		entry->vd.shield = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "RobeId")) != NULL)
+		entry->vd.robe = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "HeadTopId")) != NULL)
+		entry->vd.head_top = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "HeadMidId")) != NULL)
+		entry->vd.head_mid = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "HeadLowId")) != NULL)
+		entry->vd.head_bottom = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "HairStyleId")) != NULL)
+		entry->vd.hair_style = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "BodyStyleId")) != NULL)
+		entry->vd.body_style = libconfig->setting_get_int(it);
+	if ((it = libconfig->setting_get_member(t, "HairColorId")) != NULL)
+		entry->vd.hair_color = libconfig->setting_get_uint16(it);
+	if ((it = libconfig->setting_get_member(t, "BodyColorId")) != NULL)
+		entry->vd.cloth_color = libconfig->setting_get_uint16(it);
+	if (mob->lookup_const(t, "Gender", &i32) && i32 >= 0) {
+		entry->vd.sex = (char)i32;
+	}
+	if ((it = libconfig->setting_get_member(t, "Options")) != NULL)
+		entry->option = libconfig->setting_get_int(it) &~ (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE);
+}
+
+/**
  * Processes the mode for a mob_db entry.
  *
  * @param[in] entry The destination mob_db entry, already initialized.
@@ -4657,6 +4701,22 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	 *     AegisName: (chance, "Option Drop Group")
 	 *     ...
 	 * }
+	 * DamageTakenRate: damage taken rate
+	 * ViewData: {
+	 *     SpriteId: sprite id
+	 *     WeaponId: weapon id
+	 *     ShieldId: shield id
+	 *     RobeId: garment id
+	 *     HeadTopId: top headgear id
+	 *     HeadMidId: middle headgear id
+	 *     HeadLowId: lower headgear id
+	 *     HairStyleId: hair style id
+	 *     BodyStyleId: clothes id
+	 *     HairColorId: hair color id
+	 *     BodyColorId: clothes color id
+	 *     Gender: gender
+	 *     Options: options
+	 * }
 	 */
 
 	if (!libconfig->setting_lookup_int(mobt, "Id", &i32)) {
@@ -4886,6 +4946,12 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		md.dmg_taken_rate = 100;
 	}
 
+	if ((t = libconfig->setting_get_member(mobt, "ViewData"))) {
+		if (config_setting_is_group(t)) {
+			mob->read_db_viewdata_sub(&md, t);
+		}
+	}
+
 	mob->read_db_additional_fields(&md, mobt, n, source);
 
 	return mob->db_validate_entry(&md, n, source);
@@ -5021,46 +5087,15 @@ static void mob_name_constants(void)
 #endif // ENABLE_CASE_CHECK
 }
 
-/*==========================================
- * MOB display graphic change data reading
- *------------------------------------------*/
-static bool mob_readdb_mobavail(char *str[], int columns, int current)
+static void mob_mobavail_removal_notice(void)
 {
-	int class_, view_class;
+	char filepath[256];
 
-	nullpo_retr(false, str);
-	class_=atoi(str[0]);
+	safesnprintf(filepath, sizeof(filepath), "%s/mob_avail.txt", map->db_path);
 
-	if(mob->db(class_) == mob->dummy) {
-		// invalid class (probably undefined in db)
-		ShowWarning("mob_readdb_mobavail: Unknown mob id %d.\n", class_);
-		return false;
+	if (exists(filepath)) {
+		ShowError("mob_mobavail_removal_notice: the usage of mob_avail.txt is no longer supported, move your data using tools/mobavailconverter.py and delete the database file to suspend this message.\n");
 	}
-
-	view_class = atoi(str[1]);
-
-	memset(&mob->db_data[class_]->vd, 0, sizeof(struct view_data));
-	mob->db_data[class_]->vd.class = view_class;
-
-	//Player sprites
-	if (pc->db_checkid(view_class) && columns == 12) {
-		mob->db_data[class_]->vd.sex=atoi(str[2]);
-		mob->db_data[class_]->vd.hair_style=atoi(str[3]);
-		mob->db_data[class_]->vd.hair_color=atoi(str[4]);
-		mob->db_data[class_]->vd.weapon=atoi(str[5]);
-		mob->db_data[class_]->vd.shield=atoi(str[6]);
-		mob->db_data[class_]->vd.head_top=atoi(str[7]);
-		mob->db_data[class_]->vd.head_mid=atoi(str[8]);
-		mob->db_data[class_]->vd.head_bottom=atoi(str[9]);
-		mob->db_data[class_]->option=atoi(str[10])&~(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE);
-		mob->db_data[class_]->vd.cloth_color=atoi(str[11]); // Monster player dye option - Valaris
-	}
-	else if(columns==3)
-		mob->db_data[class_]->vd.head_bottom=atoi(str[2]); // mob equipment [Valaris]
-	else if( columns != 2 )
-		return false;
-
-	return true;
 }
 
 /*==========================================
@@ -5578,7 +5613,7 @@ static void mob_load(bool minimal)
 	mob->readchatdb();
 	mob->readdb();
 	mob->readskilldb();
-	sv->readdb(map->db_path, "mob_avail.txt", ',', 2, 12, -1, mob->readdb_mobavail);
+	mob->mobavail_removal_notice();
 	mob->read_randommonster();
 	sv->readdb(map->db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, mob->readdb_race2);
 }
@@ -5900,8 +5935,9 @@ void mob_defaults(void)
 	mob->read_db_mode_sub = mob_read_db_mode_sub;
 	mob->read_db_drops_option = mob_read_db_drops_option;
 	mob->read_db_stats_sub = mob_read_db_stats_sub;
+	mob->read_db_viewdata_sub = mob_read_db_viewdata_sub;
 	mob->name_constants = mob_name_constants;
-	mob->readdb_mobavail = mob_readdb_mobavail;
+	mob->mobavail_removal_notice = mob_mobavail_removal_notice;
 	mob->read_randommonster = mob_read_randommonster;
 	mob->parse_row_chatdb = mob_parse_row_chatdb;
 	mob->readchatdb = mob_readchatdb;

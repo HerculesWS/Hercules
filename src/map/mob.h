@@ -589,8 +589,9 @@ struct mob_interface {
 	uint32 (*read_db_mode_sub) (struct mob_db *entry, struct config_setting_t *t);
 	struct optdrop_group *(*read_db_drops_option) (struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate);
 	void (*read_db_stats_sub) (struct mob_db *entry, struct config_setting_t *t);
+	void (*read_db_viewdata_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*name_constants) (void);
-	bool (*readdb_mobavail) (char *str[], int columns, int current);
+	void (*mobavail_removal_notice) (void);
 	int (*read_randommonster) (void);
 	bool (*parse_row_chatdb) (char **str, const char *source, int line, int *last_msg_id);
 	void (*readchatdb) (void);

@@ -54163,6 +54163,32 @@ void HP_mob_read_db_stats_sub(struct mob_db *entry, struct config_setting_t *t) 
 	}
 	return;
 }
+void HP_mob_read_db_viewdata_sub(struct mob_db *entry, struct config_setting_t *t) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mob_read_db_viewdata_sub_pre > 0) {
+		void (*preHookFunc) (struct mob_db **entry, struct config_setting_t **t);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_viewdata_sub_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_read_db_viewdata_sub_pre[hIndex].func;
+			preHookFunc(&entry, &t);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.read_db_viewdata_sub(entry, t);
+	}
+	if (HPMHooks.count.HP_mob_read_db_viewdata_sub_post > 0) {
+		void (*postHookFunc) (struct mob_db *entry, struct config_setting_t *t);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_viewdata_sub_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_read_db_viewdata_sub_post[hIndex].func;
+			postHookFunc(entry, t);
+		}
+	}
+	return;
+}
 void HP_mob_name_constants(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mob_name_constants_pre > 0) {
@@ -54189,32 +54215,31 @@ void HP_mob_name_constants(void) {
 	}
 	return;
 }
-bool HP_mob_readdb_mobavail(char *str[], int columns, int current) {
+void HP_mob_mobavail_removal_notice(void) {
 	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_mob_readdb_mobavail_pre > 0) {
-		bool (*preHookFunc) (char **str[], int *columns, int *current);
+	if (HPMHooks.count.HP_mob_mobavail_removal_notice_pre > 0) {
+		void (*preHookFunc) (void);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_readdb_mobavail_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mob_readdb_mobavail_pre[hIndex].func;
-			retVal___ = preHookFunc(&str, &columns, &current);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_mobavail_removal_notice_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_mobavail_removal_notice_pre[hIndex].func;
+			preHookFunc();
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
-			return retVal___;
+			return;
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mob.readdb_mobavail(str, columns, current);
+		HPMHooks.source.mob.mobavail_removal_notice();
 	}
-	if (HPMHooks.count.HP_mob_readdb_mobavail_post > 0) {
-		bool (*postHookFunc) (bool retVal___, char *str[], int columns, int current);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_readdb_mobavail_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mob_readdb_mobavail_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, str, columns, current);
+	if (HPMHooks.count.HP_mob_mobavail_removal_notice_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_mobavail_removal_notice_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_mobavail_removal_notice_post[hIndex].func;
+			postHookFunc();
 		}
 	}
-	return retVal___;
+	return;
 }
 int HP_mob_read_randommonster(void) {
 	int hIndex = 0;
