@@ -15028,10 +15028,10 @@ void HP_clif_specialeffect_single(struct block_list *bl, int type, int fd) {
 	}
 	return;
 }
-void HP_clif_specialeffect_value(struct block_list *bl, int effect_id, int num, send_target target) {
+void HP_clif_specialeffect_value(struct block_list *bl, int effect_id, uint64 num, send_target target) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_specialeffect_value_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, int *effect_id, int *num, send_target *target);
+		void (*preHookFunc) (struct block_list **bl, int *effect_id, uint64 *num, send_target *target);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_specialeffect_value_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_specialeffect_value_pre[hIndex].func;
@@ -15046,10 +15046,36 @@ void HP_clif_specialeffect_value(struct block_list *bl, int effect_id, int num, 
 		HPMHooks.source.clif.specialeffect_value(bl, effect_id, num, target);
 	}
 	if (HPMHooks.count.HP_clif_specialeffect_value_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, int effect_id, int num, send_target target);
+		void (*postHookFunc) (struct block_list *bl, int effect_id, uint64 num, send_target target);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_specialeffect_value_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_specialeffect_value_post[hIndex].func;
 			postHookFunc(bl, effect_id, num, target);
+		}
+	}
+	return;
+}
+void HP_clif_specialeffect_value_single(struct block_list *bl, int effect_id, uint64 num, int fd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_specialeffect_value_single_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, int *effect_id, uint64 *num, int *fd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_specialeffect_value_single_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_specialeffect_value_single_pre[hIndex].func;
+			preHookFunc(&bl, &effect_id, &num, &fd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.specialeffect_value_single(bl, effect_id, num, fd);
+	}
+	if (HPMHooks.count.HP_clif_specialeffect_value_single_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, int effect_id, uint64 num, int fd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_specialeffect_value_single_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_specialeffect_value_single_post[hIndex].func;
+			postHookFunc(bl, effect_id, num, fd);
 		}
 	}
 	return;

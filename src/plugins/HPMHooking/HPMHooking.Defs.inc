@@ -1562,8 +1562,10 @@ typedef void (*HPMHOOK_pre_clif_specialeffect) (struct block_list **bl, int *typ
 typedef void (*HPMHOOK_post_clif_specialeffect) (struct block_list *bl, int type, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_specialeffect_single) (struct block_list **bl, int *type, int *fd);
 typedef void (*HPMHOOK_post_clif_specialeffect_single) (struct block_list *bl, int type, int fd);
-typedef void (*HPMHOOK_pre_clif_specialeffect_value) (struct block_list **bl, int *effect_id, int *num, send_target *target);
-typedef void (*HPMHOOK_post_clif_specialeffect_value) (struct block_list *bl, int effect_id, int num, send_target target);
+typedef void (*HPMHOOK_pre_clif_specialeffect_value) (struct block_list **bl, int *effect_id, uint64 *num, send_target *target);
+typedef void (*HPMHOOK_post_clif_specialeffect_value) (struct block_list *bl, int effect_id, uint64 num, send_target target);
+typedef void (*HPMHOOK_pre_clif_specialeffect_value_single) (struct block_list **bl, int *effect_id, uint64 *num, int *fd);
+typedef void (*HPMHOOK_post_clif_specialeffect_value_single) (struct block_list *bl, int effect_id, uint64 num, int fd);
 typedef void (*HPMHOOK_pre_clif_removeSpecialEffect) (struct block_list **bl, int *effectId, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_removeSpecialEffect) (struct block_list *bl, int effectId, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_removeSpecialEffect_single) (struct block_list **bl, int *effectId, struct block_list **targetBl);

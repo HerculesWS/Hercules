@@ -1154,6 +1154,8 @@ struct {
 	struct HPMHookPoint *HP_clif_specialeffect_single_post;
 	struct HPMHookPoint *HP_clif_specialeffect_value_pre;
 	struct HPMHookPoint *HP_clif_specialeffect_value_post;
+	struct HPMHookPoint *HP_clif_specialeffect_value_single_pre;
+	struct HPMHookPoint *HP_clif_specialeffect_value_single_post;
 	struct HPMHookPoint *HP_clif_removeSpecialEffect_pre;
 	struct HPMHookPoint *HP_clif_removeSpecialEffect_post;
 	struct HPMHookPoint *HP_clif_removeSpecialEffect_single_pre;
@@ -7987,6 +7989,8 @@ struct {
 	int HP_clif_specialeffect_single_post;
 	int HP_clif_specialeffect_value_pre;
 	int HP_clif_specialeffect_value_post;
+	int HP_clif_specialeffect_value_single_pre;
+	int HP_clif_specialeffect_value_single_post;
 	int HP_clif_removeSpecialEffect_pre;
 	int HP_clif_removeSpecialEffect_post;
 	int HP_clif_removeSpecialEffect_single_pre;
