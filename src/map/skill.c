@@ -8463,7 +8463,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 							status_fix_damage(src, bl, 1000, 0);
 							clif->damage(src,bl,0,0,1000,0,BDT_NORMAL,0);
 							if( !status->isdead(bl) ) {
-								int where[] = { EQP_ARMOR, EQP_SHIELD, EQP_HELM, EQP_SHOES, EQP_GARMENT };
+								int where[] = {EQP_ARMOR, EQP_SHIELD, EQP_HELM};
 								skill->break_equip(bl, where[rnd() % ARRAYLENGTH(where)], 10000, BCT_ENEMY);
 							}
 						}
