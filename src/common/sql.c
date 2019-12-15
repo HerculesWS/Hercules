@@ -94,6 +94,9 @@ static struct Sql *Sql_Malloc(void)
 	{
 		my_bool reconnect = 1;
 		mysql_options(&self->handle, MYSQL_OPT_RECONNECT, &reconnect);
+#ifdef WIN32
+		mysql_optionsv(&self->handle, MYSQL_PLUGIN_DIR, MARIADB_PLUGINDIR);
+#endif
 	}
 	return self;
 }
