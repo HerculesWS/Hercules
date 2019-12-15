@@ -19758,23 +19758,23 @@ static int skill_get_elemental_type(uint16 skill_id, uint16 skill_lv)
 static void skill_cooldown_save(struct map_session_data *sd)
 {
 	int i;
-	struct skill_cd* cd = NULL;
+	struct skill_cd *cd = NULL;
 	int64 now = 0;
 
-	// always check to make sure the session properly exists
 	nullpo_retv(sd);
 
-	if( !(cd = idb_get(skill->cd_db, sd->status.char_id)) ) {// no skill cooldown is associated with this character
+	if ((cd = idb_get(skill->cd_db, sd->status.char_id)) == NULL)
 		return;
-	}
 
 	now = timer->gettick();
 
-	// process each individual cooldown associated with the character
-	for( i = 0; i < cd->cursor; i++ ) {
-		cd->entry[i]->duration = DIFF_TICK32(cd->entry[i]->started+cd->entry[i]->duration,now);
-		if( cd->entry[i]->timer != INVALID_TIMER ) {
-			timer->delete(cd->entry[i]->timer,skill->blockpc_end);
+	for (i = 0; i < cd->cursor; i++) {
+		if (battle_config.guild_skill_relog_delay == 1 && cd->entry[i]->skill_id > GD_SKILLBASE && cd->entry[i]->skill_id < GD_MAX)
+			continue;
+
+		cd->entry[i]->duration = DIFF_TICK32(cd->entry[i]->started + cd->entry[i]->duration, now);
+		if (cd->entry[i]->timer != INVALID_TIMER) {
+			timer->delete(cd->entry[i]->timer, skill->blockpc_end);
 			cd->entry[i]->timer = INVALID_TIMER;
 		}
 	}
