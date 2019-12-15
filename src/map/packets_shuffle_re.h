@@ -9744,7 +9744,7 @@
 	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK // 14
 #endif
 
-// 2019-09-04bRagexeRE, 2019-09-18cRagexeRE, 2019-09-25aRagexeRE, 2019-09-25bRagexeRE, 2019-10-02bRagexeRE, 2019-10-02dRagexeRE, 2019-10-02dRagexeRE_2, 2019-10-16fRagexeRE, 2019-10-16gRagexeRE, 2019-10-23aRagexeRE, 2019-10-30bRagexeRE, 2019-11-06bRagexeRE, 2019-11-07aRagexeRE, 2019-11-13eRagexeRE
+// 2019-09-04bRagexeRE, 2019-09-18cRagexeRE, 2019-09-25aRagexeRE, 2019-09-25bRagexeRE, 2019-10-02bRagexeRE, 2019-10-02dRagexeRE, 2019-10-02dRagexeRE_2, 2019-10-16fRagexeRE, 2019-10-16gRagexeRE, 2019-10-23aRagexeRE, 2019-10-30bRagexeRE, 2019-11-06bRagexeRE, 2019-11-07aRagexeRE, 2019-11-13eRagexeRE, 2019-11-20cRagexeRE, 2019-11-27aRagexeRE, 2019-12-04aRagexeRE, 2019-12-04bRagexeRE, 2019-12-04cRagexeRE, 2019-12-11fRagexeRE
 #if PACKETVER == 20190904 || \
     PACKETVER == 20190918 || \
     PACKETVER == 20190925 || \
@@ -9754,7 +9754,11 @@
     PACKETVER == 20191030 || \
     PACKETVER == 20191106 || \
     PACKETVER == 20191107 || \
-    PACKETVER == 20191113
+    PACKETVER == 20191113 || \
+    PACKETVER == 20191120 || \
+    PACKETVER == 20191127 || \
+    PACKETVER == 20191204 || \
+    PACKETVER == 20191211
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36

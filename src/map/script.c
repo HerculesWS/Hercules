@@ -15815,6 +15815,56 @@ static BUILDIN(specialeffect)
 	return true;
 }
 
+/*==========================================
+ * Special effects with num [4144]
+ *------------------------------------------*/
+static BUILDIN(specialeffectnum)
+{
+	struct block_list *bl = NULL;
+	int type = script_getnum(st, 2);
+	int num = script_getnum(st, 3);
+	int num2 = script_getnum(st, 4);
+	enum send_target target = AREA;
+
+	if (script_hasdata(st, 5)) {
+		target = script_getnum(st, 5);
+	}
+
+	if (script_hasdata(st, 6)) {
+		if (script_isstringtype(st, 6)) {
+			struct npc_data *nd = npc->name2id(script_getstr(st, 6));
+			if (nd != NULL) {
+				bl = &nd->bl;
+			}
+		} else {
+			bl = map->id2bl(script_getnum(st, 6));
+		}
+	} else {
+		bl = map->id2bl(st->oid);
+	}
+
+	if (bl == NULL) {
+		return true;
+	}
+
+	uint64 bigNum = ((uint64)num2) * 0xffffffff + num;
+	if (target == SELF) {
+		struct map_session_data *sd;
+		if (script_hasdata(st, 7)) {
+			sd = map->id2sd(script_getnum(st, 7));
+		} else {
+			sd = script->rid2sd(st);
+		}
+		if (sd != NULL) {
+			clif->specialeffect_value_single(bl, type, bigNum, sd->fd);
+		}
+	} else {
+		clif->specialeffect_value(bl, type, bigNum, target);
+	}
+
+	return true;
+}
+
 static BUILDIN(specialeffect2)
 {
 	struct map_session_data *sd;
@@ -26369,6 +26419,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
 		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
 		BUILDIN_DEF(specialeffect,"i???"), // npc skill effect [Valaris]
+		BUILDIN_DEF(specialeffectnum,"iii???"), // npc skill effect with num [4144]
 		BUILDIN_DEF(removespecialeffect,"i???"),
 		BUILDIN_DEF_DEPRECATED(specialeffect2,"i??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]

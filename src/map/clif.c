@@ -9087,21 +9087,44 @@ static void clif_specialeffect_single(struct block_list *bl, int type, int fd)
 ///     @see doc/effect_list.txt
 /// num data:
 ///     effect-dependent value
-static void clif_specialeffect_value(struct block_list *bl, int effect_id, int num, send_target target)
+static void clif_specialeffect_value(struct block_list *bl, int effect_id, uint64 num, send_target target)
 {
-	uint8 buf[14];
+#if PACKETVER_MAIN_NUM >= 20060911 || PACKETVER_AD_NUM >= 20060911 || PACKETVER_SAK_NUM >= 20060911 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
+	struct PACKET_ZC_NOTIFY_EFFECT3 packet;
+	packet.packetType = HEADER_ZC_NOTIFY_EFFECT3;
+	packet.aid = bl->id;
+	packet.effectId = effect_id;
+#if PACKETVER >= 20191127
+	packet.num = num;
+#else
+	packet.num = (uint32)num;
+#endif
 
-	WBUFW(buf,0) = 0x284;
-	WBUFL(buf,2) = bl->id;
-	WBUFL(buf,6) = effect_id;
-	WBUFL(buf,10) = num;
-
-	clif->send(buf, packet_len(0x284), bl, target);
+	clif->send(&packet, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3), bl, target);
 
 	if (clif->isdisguised(bl)) {
-		WBUFL(buf,2) = -bl->id;
-		clif->send(buf, packet_len(0x284), bl, SELF);
+		packet.aid = -bl->id;
+		clif->send(&packet, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3), bl, SELF);
 	}
+#endif
+}
+
+static void clif_specialeffect_value_single(struct block_list *bl, int effect_id, uint64 num, int fd)
+{
+#if PACKETVER_MAIN_NUM >= 20060911 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3));
+
+	struct PACKET_ZC_NOTIFY_EFFECT3 *packet = WFIFOP(fd, 0);
+	packet->packetType = HEADER_ZC_NOTIFY_EFFECT3;
+	packet->aid = bl->id;
+	packet->effectId = effect_id;
+#if PACKETVER >= 20191127
+	packet->num = num;
+#else
+	packet->num = (uint32)num;
+#endif
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_NOTIFY_EFFECT3));
+#endif
 }
 
 /// Remove special effects (ZC_REMOVE_EFFECT).
@@ -9314,6 +9337,8 @@ static void clif_refresh(struct map_session_data *sd)
 	buyingstore->close(sd);
 
 	mail->clear(sd);
+
+	clif->loadConfirm(sd);
 
 	if (clif->isdisguised(&sd->bl)) {/* refresh-da */
 		short disguise = sd->disguise;
@@ -19960,6 +19985,7 @@ static void clif_parse_dull(int fd, struct map_session_data *sd)
 static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd)
 {
+#if PACKETVER >= 20100824
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
@@ -19973,6 +19999,7 @@ static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd)
 	WFIFOL(fd, 2) = sd->cashPoints; //[Ryuuzaki] - switched positions to reflect proper values
 	WFIFOL(fd, 6) = sd->kafraPoints;
 	WFIFOSET(fd, 10);
+#endif
 }
 
 static void clif_parse_CashShopClose(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -24064,6 +24091,7 @@ void clif_defaults(void)
 	clif->specialeffect = clif_specialeffect;
 	clif->specialeffect_single = clif_specialeffect_single;
 	clif->specialeffect_value = clif_specialeffect_value;
+	clif->specialeffect_value_single = clif_specialeffect_value_single;
 	clif->removeSpecialEffect = clif_removeSpecialEffect;
 	clif->removeSpecialEffect_single = clif_removeSpecialEffect_single;
 	clif->millenniumshield = clif_millenniumshield;

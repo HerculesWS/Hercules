@@ -21,7 +21,7 @@ The following is a compiled list of visual and sound effects which the client
 can produce. Each list entry contains a number and a short description of the
 effect. You can produce these effects ingame by using the `@effect` atcommand.
 It's also possible to attach effects to item/npc scripts by using the
-`specialeffect()` script command.
+`specialeffect()` or `specialeffectnum()` script commands.
 
   ID | Constant Name                  | Description
  --: | :----------------------------- | :----------------------------------
