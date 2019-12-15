@@ -18350,7 +18350,13 @@ static BUILDIN(setd)
 		if (not_server_variable(*buffer))
 			ref = NULL;
 	} else {
-		buffer = script_getstr(st, 2);
+		if (script_isstring(st, 2)) {
+			buffer = script_getstr(st, 2);
+		} else {
+			ShowError("script:%s: Invalid type for argument 1 (%s)! Must be string or reference.\n",
+				  script->getfuncname(st), script_getstr(st, 2));
+			return false;
+		}
 	}
 
 	/// Special case: Variable of type string was passed directly or by getd().
@@ -18359,7 +18365,7 @@ static BUILDIN(setd)
 			buffer = data->u.str; /// Get the value of the passed variable instead of its name.
 	}
 
-	if (sscanf(buffer, "%99[^[][%d]", varname, &idx) < 2 && idx == 0)
+	if (sscanf(buffer, "%99[^[][%10d]", varname, &idx) < 2 && idx == 0)
 		idx = 0;
 
 	for (; varname[++length] != '\0';);
