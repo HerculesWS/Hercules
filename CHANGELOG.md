@@ -9,7 +9,36 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
-### [v2019.11.17+1] `November 17 2019` `PATCH 1`
+## [v2019.12.15] `December 15 2019`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2019-12-11. (#2585)
+- Added new version of packet `ZC_NOTIFY_EFFECT3`. (part of #2583)
+- Added script function `specialeffectnum()`. (part of #2583)
+
+### Changed
+
+- Reduced the IP ban column length to 13 characters, matching the length of the inserted data. A database migration is required. (#2583, issue #2349)
+- Converted packet `CZ_SE_CASHSHOP_OPEN` into a struct. (part of #2583)
+- Replaced the old MySQL Connector with MariaDB C Connector 3.1.5 / Client Lib 10.4.3, for the Windows VS builds. (#2580)
+- Moved the functionalities of `mob_avail.txt` to the mob database, expanding it with more fields (see the `mob_db` documentation for details). (#2572)
+
+### Fixed
+
+- Fixed incompatibilities with MySQL 8. (part of #2580)
+- Fixed errors when `guild_skill_relog_delay` is set to 1 (reset on relog). (#2592, issue #2591)
+- Fixed Tarot Card equipment breaking behavior to match the official, targeting only Left Hand (Shield), Armor and Helm. (#2589)
+- Fixed racial crit bonuses not being affected by katar crit bonus. (#2588)
+- Fixed interaction between Lex Aetherna and Stone/Freezing, now mutually exclusive. (#2598, issue #2559)
+
+### Deprecated
+
+### Removed
+
+- Removed `mob_avail.txt`, since its functionality has been moved to the mob database. (part of #2572)
+
+## [v2019.11.17+1] `November 17 2019` `PATCH 1`
 
 ### Added
 
@@ -19,7 +48,7 @@ If you are reading this in a text editor, simply ignore this section
 
 - Fixed a syntax error in the `2019-10-12--14-21.sql` migration file. (part of #2582)
 
-### [v2019.11.17] `November 17 2019`
+## [v2019.11.17] `November 17 2019`
 
 ### Added
 
@@ -60,7 +89,7 @@ If you are reading this in a text editor, simply ignore this section
 
 - Removed the `SI_*` constants from the source code, now available through `constants.conf`. (part of #2577)
 
-### [v2019.10.20] `October 20 2019`
+## [v2019.10.20] `October 20 2019`
 
 ### Added
 
@@ -102,7 +131,7 @@ If you are reading this in a text editor, simply ignore this section
 
 - Removed the legacy, unused, `castle_defense_rate` option from `battle/guild.conf`. (#2552)
 
-### [v2019.09.22] `September 22 2019`
+## [v2019.09.22] `September 22 2019`
 
 ### Added
 
@@ -146,7 +175,7 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed a minor C standard compliance error, mixing function pointers and non-function pointers. (part of #2536)
 - Fixed the (commented out by default) custom Venom Splasher countdown timer code. (part of #2536)
 
-### [v2019.08.25] `August 25 2019`
+## [v2019.08.25] `August 25 2019`
 
 ### Added
 
@@ -173,7 +202,7 @@ If you are reading this in a text editor, simply ignore this section
 - Removed Visual Studio 2013 solution. (part of #2520)
 - Removed round-trips to the inter-server for packets related to whisper messages, reports to GMs, GM broadcasts, party, guild and main chat, previously needed for, now unsupported, multi-zone setups. (#2522)
 
-### [v2019.07.28] `July 28 2019`
+## [v2019.07.28] `July 28 2019`
 
 ### Added
 
@@ -203,7 +232,7 @@ If you are reading this in a text editor, simply ignore this section
 - Corrected the cooldown after killing Wounded Morroc. (#2503)
 - Corrected `isequipped()` and `isequippedcnt()` to correctly handle costume equipment. (#2508)
 
-### [v2019.06.30] `June 30 2019`
+## [v2019.06.30] `June 30 2019`
 
 ### Added
 
@@ -224,7 +253,7 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed monster spawns disregarding the custom names specified. (#2496, #2491, issue #2495)
 - Fixed the style range in `stylist.txt`, now starting from 1 instead of 0. (part of #2357, issue #2356)
 
-### [v2019.06.02] `June 2 2019`
+## [v2019.06.02] `June 2 2019`
 
 ### Added
 
@@ -1024,6 +1053,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2019.12.15]: https://github.com/HerculesWS/Hercules/compare/v2019.11.17+1...v2019.12.15
 [v2019.11.17+1]: https://github.com/HerculesWS/Hercules/compare/v2019.11.17...v2019.11.17+1
 [v2019.11.17]: https://github.com/HerculesWS/Hercules/compare/v2019.10.20...v2019.11.17
 [v2019.10.20]: https://github.com/HerculesWS/Hercules/compare/v2019.09.22...v2019.10.20
