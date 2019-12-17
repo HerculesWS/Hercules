@@ -10193,6 +10193,7 @@ static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, 
 				sd->status.look.robe = id->view_sprite;
 			}
 		} else {
+			overlap_mask &= ~map->list[sd->bl.m].flag.noviewid;
 			if (pc->checkequip(sd, overlap_mask) == -1) {
 				// Only apply if there isn't a costume that would partly cover the item
 				if ((pos & EQP_HEAD_TOP) != 0) {
@@ -10402,6 +10403,7 @@ static void pc_unequipitem_pos_sub(struct map_session_data *sd, int pos_combinat
 	nullpo_retv(sd);
 	nullpo_retv(look);
 
+	pos_costume &= ~map->list[sd->bl.m].flag.noviewid;
 	if ((pos_combination & pos) != 0 && pc->checkequip(sd, pos_costume) == -1) {
 		*look = 0;
 		clif->changelook(&sd->bl, look_type, 0);
