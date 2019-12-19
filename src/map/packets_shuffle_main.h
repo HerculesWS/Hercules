@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2019  Hercules Dev Team
- * Copyright (C) 2018-2019  Andrei Karas (4144)
+ * Copyright (C) 2013-2020  Hercules Dev Team
+ * Copyright (C) 2018-2020  Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9794,7 +9794,7 @@
 	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK // 14
 #endif
 
-// 2019-09-04aRagexe, 2019-09-04bRagexe, 2019-09-18bRagexe, 2019-09-25aRagexe, 2019-09-25bRagexe, 2019-10-02cRagexe, 2019-10-02dRagexe, 2019-10-16fRagexe, 2019-10-16gRagexe, 2019-10-18aRagexe, 2019-10-23aRagexe, 2019-10-30cRagexe, 2019-11-06aRagexe, 2019-11-07aRagexe, 2019-11-13cRagexe, 2019-11-13eRagexe, 2019-11-20aRagexe, 2019-11-20dRagexe, 2019-11-27aRagexe, 2019-11-27bRagexe, 2019-12-04aRagexe, 2019-12-04bRagexe, 2019-12-11aRagexe
+// 2019-09-04aRagexe, 2019-09-04bRagexe, 2019-09-18bRagexe, 2019-09-25aRagexe, 2019-09-25bRagexe, 2019-10-02cRagexe, 2019-10-02dRagexe, 2019-10-16fRagexe, 2019-10-16gRagexe, 2019-10-18aRagexe, 2019-10-23aRagexe, 2019-10-30cRagexe, 2019-11-06aRagexe, 2019-11-07aRagexe, 2019-11-13cRagexe, 2019-11-13eRagexe, 2019-11-20aRagexe, 2019-11-20dRagexe, 2019-11-27aRagexe, 2019-11-27bRagexe, 2019-12-04aRagexe, 2019-12-04bRagexe, 2019-12-11aRagexe, 2019-12-18bRagexe, 2019-12-24aRagexe, 2019-12-24bRagexe, 2020-01-08aRagexe
 #if PACKETVER == 20190904 || \
     PACKETVER == 20190918 || \
     PACKETVER == 20190925 || \
@@ -9809,7 +9809,10 @@
     PACKETVER == 20191120 || \
     PACKETVER == 20191127 || \
     PACKETVER == 20191204 || \
-    PACKETVER == 20191211
+    PACKETVER == 20191211 || \
+    PACKETVER == 20191218 || \
+    PACKETVER == 20191224 || \
+    PACKETVER == 20200108
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
