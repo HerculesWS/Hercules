@@ -19990,15 +19990,26 @@ static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd)
 		return;
 
 	if (map->list[sd->bl.m].flag.nocashshop) {
-		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd,1489)); //Cash Shop is disabled in this map
+		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd, 1489)); //Cash Shop is disabled in this map
 		return;
 	}
 
-	WFIFOHEAD(fd, 10);
-	WFIFOW(fd, 0) = 0x845;
-	WFIFOL(fd, 2) = sd->cashPoints; //[Ryuuzaki] - switched positions to reflect proper values
-	WFIFOL(fd, 6) = sd->kafraPoints;
-	WFIFOSET(fd, 10);
+	clif->cashShopOpen(fd, sd, 0);
+#endif
+}
+
+static void clif_cashShopOpen(int fd, struct map_session_data *sd, int tab)
+{
+#if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || PACKETVER_ZERO_NUM >= defined(PACKETVER_ZERO)
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SE_CASHSHOP_OPEN));
+	struct PACKET_ZC_SE_CASHSHOP_OPEN *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_SE_CASHSHOP_OPEN;
+	p->cashPoints = sd->cashPoints;  //[Ryuuzaki] - switched positions to reflect proper values
+	p->kafraPoints = sd->kafraPoints;
+#if PACKETVER_ZERO_NUM >= 20191224
+	p->tab = tab;
+#endif
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_SE_CASHSHOP_OPEN));
 #endif
 }
 
@@ -24621,6 +24632,7 @@ void clif_defaults(void)
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
 	clif->cashShopBuyAck = clif_cashShopBuyAck;
+	clif->cashShopOpen = clif_cashShopOpen;
 	/*  */
 	clif->pPartyTick = clif_parse_PartyTick;
 	clif->pGuildInvite2 = clif_parse_GuildInvite2;
