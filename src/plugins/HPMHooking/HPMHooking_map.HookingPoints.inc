@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2019  Hercules Dev Team
+ * Copyright (C) 2013-2020  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1074,7 +1074,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pBGQueueCheckState, HP_clif_pBGQueueCheckState) },
 	{ HP_POP(clif->pBGQueueRevokeReq, HP_clif_pBGQueueRevokeReq) },
 	{ HP_POP(clif->pBGQueueBattleBeginAck, HP_clif_pBGQueueBattleBeginAck) },
-	{ HP_POP(clif->pCashShopOpen, HP_clif_pCashShopOpen) },
+	{ HP_POP(clif->pCashShopOpen1, HP_clif_pCashShopOpen1) },
+	{ HP_POP(clif->pCashShopOpen2, HP_clif_pCashShopOpen2) },
+	{ HP_POP(clif->pCashShopLimitedReq, HP_clif_pCashShopLimitedReq) },
 	{ HP_POP(clif->pCashShopClose, HP_clif_pCashShopClose) },
 	{ HP_POP(clif->pCashShopReqTab, HP_clif_pCashShopReqTab) },
 	{ HP_POP(clif->pCashShopSchedule, HP_clif_pCashShopSchedule) },
@@ -1082,6 +1084,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pPartyTick, HP_clif_pPartyTick) },
 	{ HP_POP(clif->pGuildInvite2, HP_clif_pGuildInvite2) },
 	{ HP_POP(clif->cashShopBuyAck, HP_clif_cashShopBuyAck) },
+	{ HP_POP(clif->cashShopOpen, HP_clif_cashShopOpen) },
 	{ HP_POP(clif->pPartyBookingAddFilter, HP_clif_pPartyBookingAddFilter) },
 	{ HP_POP(clif->pPartyBookingSubFilter, HP_clif_pPartyBookingSubFilter) },
 	{ HP_POP(clif->pPartyBookingReqVolunteer, HP_clif_pPartyBookingReqVolunteer) },

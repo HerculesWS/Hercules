@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2014-2019  Hercules Dev Team
+ * Copyright (C) 2014-2020  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -736,6 +736,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_REPAIRITEMLIST", sizeof(struct PACKET_ZC_REPAIRITEMLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_REPAIRITEMLIST_sub", sizeof(struct PACKET_ZC_REPAIRITEMLIST_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ROLE_CHANGE", sizeof(struct PACKET_ZC_ROLE_CHANGE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_SE_CASHSHOP_OPEN", sizeof(struct PACKET_ZC_SE_CASHSHOP_OPEN), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SEARCH_STORE_INFO_ACK", sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SEARCH_STORE_INFO_ACK_sub", sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SKILL_SCALE", sizeof(struct PACKET_ZC_SKILL_SCALE), SERVER_TYPE_MAP },
