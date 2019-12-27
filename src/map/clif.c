@@ -19982,10 +19982,9 @@ static void clif_parse_dull(int fd, struct map_session_data *sd)
 	return;
 }
 
-static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd)
+static void clif_parse_CashShopOpen1(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_CashShopOpen1(int fd, struct map_session_data *sd)
 {
-#if PACKETVER >= 20100824
 	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
@@ -19995,6 +19994,27 @@ static void clif_parse_CashShopOpen(int fd, struct map_session_data *sd)
 	}
 
 	clif->cashShopOpen(fd, sd, 0);
+}
+
+static void clif_parse_CashShopLimitedReq(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_CashShopLimitedReq(int fd, struct map_session_data *sd)
+{
+}
+
+static void clif_parse_CashShopOpen2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_CashShopOpen2(int fd, struct map_session_data *sd)
+{
+	if (sd->state.trading != 0 || pc_isdead(sd) || pc_isvending(sd))
+		return;
+
+	if (map->list[sd->bl.m].flag.nocashshop != 0) {
+		clif->messagecolor_self(fd, COLOR_RED, msg_fd(fd, 1489)); //Cash Shop is disabled in this map
+		return;
+	}
+
+#if PACKETVER >= 20191224
+	const struct PACKET_CZ_SE_CASHSHOP_OPEN2 *p = RFIFOP(fd, 0);
+	clif->cashShopOpen(fd, sd, p->tab);
 #endif
 }
 
@@ -24626,7 +24646,9 @@ void clif_defaults(void)
 	clif->pBGQueueRevokeReq = clif_parse_bgqueue_revoke_req;
 	clif->pBGQueueBattleBeginAck = clif_parse_bgqueue_battlebegin_ack;
 	/* RagExe Cash Shop [Ind/Hercules] */
-	clif->pCashShopOpen = clif_parse_CashShopOpen;
+	clif->pCashShopOpen1 = clif_parse_CashShopOpen1;
+	clif->pCashShopOpen2 = clif_parse_CashShopOpen2;
+	clif->pCashShopLimitedReq = clif_parse_CashShopLimitedReq;
 	clif->pCashShopClose = clif_parse_CashShopClose;
 	clif->pCashShopReqTab = clif_parse_CashShopReqTab;
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;

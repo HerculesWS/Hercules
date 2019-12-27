@@ -1548,7 +1548,9 @@ struct clif_interface {
 	void (*pBGQueueRevokeReq) (int fd, struct map_session_data *sd);
 	void (*pBGQueueBattleBeginAck) (int fd, struct map_session_data *sd);
 	/* RagExe Cash Shop [Ind/Hercules] */
-	void (*pCashShopOpen) (int fd, struct map_session_data *sd);
+	void (*pCashShopOpen1) (int fd, struct map_session_data *sd);
+	void (*pCashShopOpen2) (int fd, struct map_session_data *sd);
+	void (*pCashShopLimitedReq) (int fd, struct map_session_data *sd);
 	void (*pCashShopClose) (int fd, struct map_session_data *sd);
 	void (*pCashShopReqTab) (int fd, struct map_session_data *sd);
 	void (*pCashShopSchedule) (int fd, struct map_session_data *sd);
