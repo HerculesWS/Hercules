@@ -3769,8 +3769,29 @@ static int map_waterheight(char *mapname)
 	// read & convert fn
 	rsw = grfio_read(fn);
 	if (rsw) {
+		if (memcmp(rsw, "GRSW", 4) != 0) {
+			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
+			aFree(rsw);
+			return NO_WATER;
+		}
+		int major_version = rsw[4];
+		int minor_version = rsw[5];
+		if (major_version > 2 || (major_version == 2 && minor_version > 2)) {
+			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
+			aFree(rsw);
+			return NO_WATER;
+		}
+		if (major_version < 1 || (major_version == 1 && minor_version <= 4)) {
+			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
+			aFree(rsw);
+			return NO_WATER;
+		}
+		int offset = 166;
+		if (major_version == 2 && minor_version >= 2) {
+			offset = 167;
+		}
 		//Load water height from file
-		int wh = (int) *(float*)(rsw+166);
+		int wh = (int)*(float*)(rsw + offset);
 		aFree(rsw);
 		return wh;
 	}
