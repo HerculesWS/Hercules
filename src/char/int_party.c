@@ -72,8 +72,6 @@ static void inter_party_calc_state(struct party_data *p)
 {
 	int i;
 	nullpo_retv(p);
-	p->min_lv = UINT_MAX;
-	p->max_lv = 0;
 	p->party.count =
 	p->size =
 	p->family = 0;
@@ -100,22 +98,8 @@ static void inter_party_calc_state(struct party_data *p)
 			p->party.member[2].char_id
 		);
 	}
-	//max/min levels.
-	for (i = 0; i < MAX_PARTY; i++) {
-		unsigned int lv = p->party.member[i].lv;
-		if (!lv) continue;
-		if (p->party.member[i].online
-		 && p->party.member[i].char_id != p->family /* In families, the kid is not counted towards exp share rules. */
-		) {
-			if( lv < p->min_lv ) p->min_lv=lv;
-			if( p->max_lv < lv ) p->max_lv=lv;
-		}
-	}
 
-	if (p->party.exp && !inter_party->check_exp_share(p)) {
-		p->party.exp = 0; //Set off even share.
-		mapif->party_optionchanged(0, &p->party, 0, 0);
-	}
+	inter_party->check_lv(p);
 }
 
 // Save party to mysql
