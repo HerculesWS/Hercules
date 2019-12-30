@@ -46,10 +46,9 @@ struct inter_party_interface *inter_party;
 static int inter_party_check_lv(struct party_data *p)
 {
 	int i;
-	unsigned int lv;
 	nullpo_ret(p);
-	p->min_lv = UINT_MAX;
-	p->max_lv = 0;
+	p->min_lv = MAX_LEVEL;
+	p->max_lv = 1;
 	for(i=0;i<MAX_PARTY;i++){
 		/**
 		 * - If not online OR if it's a family party and this is the child (doesn't affect exp range)
@@ -57,9 +56,8 @@ static int inter_party_check_lv(struct party_data *p)
 		if(!p->party.member[i].online || p->party.member[i].char_id == p->family )
 			continue;
 
-		lv=p->party.member[i].lv;
-		if (lv < p->min_lv) p->min_lv = lv;
-		if (lv > p->max_lv) p->max_lv = lv;
+		p->min_lv = min(p->min_lv, p->party.member[i].lv);
+		p->max_lv = max(p->max_lv, p->party.member[i].lv);
 	}
 
 	if (p->party.exp && !inter_party->check_exp_share(p)) {
