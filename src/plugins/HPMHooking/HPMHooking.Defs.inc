@@ -3556,8 +3556,8 @@ typedef bool (*HPMHOOK_pre_inter_party_add_member) (int *party_id, const struct 
 typedef bool (*HPMHOOK_post_inter_party_add_member) (bool retVal___, int party_id, const struct party_member *member);
 typedef bool (*HPMHOOK_pre_inter_party_change_option) (int *party_id, int *account_id, int *exp, int *item, int *map_fd);
 typedef bool (*HPMHOOK_post_inter_party_change_option) (bool retVal___, int party_id, int account_id, int exp, int item, int map_fd);
-typedef bool (*HPMHOOK_pre_inter_party_change_map) (int *party_id, int *account_id, int *char_id, unsigned short *map, int *online, unsigned int *lv);
-typedef bool (*HPMHOOK_post_inter_party_change_map) (bool retVal___, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv);
+typedef bool (*HPMHOOK_pre_inter_party_change_map) (int *party_id, int *account_id, int *char_id, unsigned short *map, int *online, int *lv);
+typedef bool (*HPMHOOK_post_inter_party_change_map) (bool retVal___, int party_id, int account_id, int char_id, unsigned short map, int online, int lv);
 typedef bool (*HPMHOOK_pre_inter_party_disband) (int *party_id);
 typedef bool (*HPMHOOK_post_inter_party_disband) (bool retVal___, int party_id);
 typedef bool (*HPMHOOK_pre_inter_party_change_leader) (int *party_id, int *account_id, int *char_id);

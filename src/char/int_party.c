@@ -490,7 +490,7 @@ static bool inter_party_leave(int party_id, int account_id, int char_id)
 }
 
 // When member goes to other map or levels up.
-static bool inter_party_change_map(int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv)
+static bool inter_party_change_map(int party_id, int account_id, int char_id, unsigned short map, int online, int lv)
 {
 	struct party_data *p;
 	int i;
