@@ -65,7 +65,7 @@ arug_cas01,98,232,0	script	LF-09#arug_cas01	HIDDEN_NPC,{ callfunc "LinkFlag","Ar
 arug_cas01,101,232,0	script	LF-10#arug_cas01	HIDDEN_NPC,{ callfunc "LinkFlag","Convenience Facility",121,357; }
 arug_cas01,72,176,0	script	Mardol#LF_ar01_1::LF_ar01_1	HIDDEN_NPC,{ callfunc "LinkFlag","Emperium Center",67,193; }
 arug_cas01,103,186,0	duplicate(LF_ar01_1)	Mardol#LF_ar01_2	HIDDEN_NPC
-arug_cas01,92,126,4	script	Mardol#LF_ar01_3::LF_ar01_2	HIDDEN_NPC,{
+arug_cas01,92,126,4	script	Mardol#LF_ar01_3::LF_ar01_2	GUILD_FLAG,{
 	callfunc "LinkFlag","Emperium Center",67,193;
 	end;
 OnAgitInit2:
@@ -73,7 +73,7 @@ OnRecvCastleAr01:
 	flagemblem getcastledata("arug_cas01",1);
 	end;
 }
-arug_cas01,127,126,4	duplicate(LF_ar01_2)	Mardol#LF_ar01_3	HIDDEN_NPC
+arug_cas01,127,126,4	duplicate(LF_ar01_2)	Mardol#LF_ar01_3	GUILD_FLAG
 arug_cas01,150,102,0	duplicate(LF_ar01_1)	Mardol#LF_ar01_4	HIDDEN_NPC
 arug_cas01,208,68,0	duplicate(LF_ar01_1)	Mardol#LF_ar01_5	HIDDEN_NPC
 arug_cas01,249,52,0	duplicate(LF_ar01_1)	Mardol#LF_ar01_6	HIDDEN_NPC
