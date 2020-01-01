@@ -359,6 +359,7 @@ enum geneticist_item_list {
 enum e_chain_cache {
 	ECC_ORE,
 	ECC_SIEGFRIED,
+	ECC_NEO_INSURANCE,
 	/* */
 	ECC_MAX,
 };

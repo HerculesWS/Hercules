@@ -1196,6 +1196,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*isDeathPenaltyJob) (uint16 job);
 	bool (*has_second_costume) (struct map_session_data *sd);
 	bool (*expandInventory) (struct map_session_data *sd, int adjustSize);
+	bool (*auto_exp_insurance) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

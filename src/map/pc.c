@@ -8189,6 +8189,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 	   && pc->isDeathPenaltyJob(sd->job)
 	   && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
 	   && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
+	   && !pc->auto_exp_insurance(sd)
 	   ) {
 		if (battle_config.death_penalty_base > 0) {
 			unsigned int base_penalty = 0;
@@ -12392,6 +12393,21 @@ static bool pc_expandInventory(struct map_session_data *sd, int adjustSize)
 	return true;
 }
 
+static bool pc_auto_exp_insurance(struct map_session_data *sd)
+{
+	nullpo_retr(false, sd);
+
+	int item_position = pc->have_item_chain(sd, ECC_NEO_INSURANCE);
+	if (item_position == INDEX_NOT_FOUND)
+		return false;
+
+	pc->delitem(sd, item_position, 1, 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
+#if PACKETVER >= 20100914
+	clif->msgtable(sd, MSG_NOTIFY_NEO_INSURANCE_ITEM_USE);
+#endif
+	return true;
+}
+
 static void do_final_pc(void)
 {
 
@@ -12798,4 +12814,5 @@ void pc_defaults(void)
 	pc->isDeathPenaltyJob = pc_isDeathPenaltyJob;
 	pc->has_second_costume = pc_has_second_costume;
 	pc->expandInventory = pc_expandInventory;
+	pc->auto_exp_insurance = pc_auto_exp_insurance;
 }
