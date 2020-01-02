@@ -67,6 +67,84 @@ static int inter_party_check_lv(struct party_data *p)
 	}
 	return 1;
 }
+
+/**
+ * Checks if a party is a family state party. (Family share feature.)
+ * Conditions for a family state party:
+ * - All party members have to belong to the same family. Not even offline strangers are allowed.
+ *   So only parties with 2 or 3 members come in question.
+ * - At least one parent has to be on the same map with the child.
+ * - Parents within the party have to be level 70 or higher, even when offline.
+ *
+ * @param p The party.
+ * @return The child's char ID on success, otherwise 0.
+ *
+ */
+static int inter_party_is_family_party(struct party_data *p)
+{
+	nullpo_ret(p);
+
+	if (p->size < 2 || p->size > 3 || p->party.count < 2)
+		return 0;
+
+	int child_id = 0;
+
+	for (int i = 0; i < MAX_PARTY - 1; i++) {
+		if (p->party.member[i].online == 0)
+			continue;
+
+		struct mmo_charstatus *char_i = idb_get(chr->char_db_, p->party.member[i].char_id);
+
+		if (char_i == NULL)
+			continue;
+
+		for (int j = i + 1; j < MAX_PARTY; j++) {
+			if (p->party.member[j].online == 0)
+				continue;
+
+			struct mmo_charstatus *char_j = idb_get(chr->char_db_, p->party.member[j].char_id);
+
+			if (char_j == NULL)
+				continue;
+
+			if (p->party.member[i].map != p->party.member[j].map)
+				continue;
+
+			if (char_i->char_id == char_j->child && char_j->base_level >= 70)
+				child_id = char_i->char_id;
+
+			if (char_j->char_id == char_i->child && char_i->base_level >= 70)
+				child_id = char_j->char_id;
+
+			if (child_id != 0)
+				break;
+		}
+
+		if (child_id != 0)
+			break;
+	}
+
+	if (child_id != 0 && p->size > 2) {
+		for (int i = 0; i < MAX_PARTY; i++) {
+			struct mmo_charstatus *party_member = idb_get(chr->char_db_, p->party.member[i].char_id);
+
+			/// Check if there is a stranger within the party.
+			if (party_member != NULL && party_member->char_id != child_id && party_member->child != child_id) {
+				child_id = 0; /// Stranger detected.
+				break;
+			}
+
+			/// Check if there is a parents with level lower than 70 within the party.
+			if (party_member != NULL && party_member->child == child_id && party_member->base_level < 70) {
+				child_id = 0; /// Parent with level lower than 70 detected.
+				break;
+			}
+		}
+	}
+
+	return child_id;
+}
+
 //Calculates the state of a party.
 static void inter_party_calc_state(struct party_data *p)
 {
@@ -83,22 +161,8 @@ static void inter_party_calc_state(struct party_data *p)
 		if(p->party.member[i].online)
 			p->party.count++;
 	}
-	// FIXME[Haru]: What if the occupied positions aren't the first three? It can happen if some party members leave. This is the reason why family sharing some times stops working until you recreate your party
-	if( p->size == 2 && ( chr->char_child(p->party.member[0].char_id,p->party.member[1].char_id) || chr->char_child(p->party.member[1].char_id,p->party.member[0].char_id) ) ) {
-		//Child should be able to share with either of their parents  [RoM]
-		if (p->party.member[0].class >= JOB_BABY && p->party.member[0].class <= JOB_SUPER_BABY) //first slot is the child?
-			p->family = p->party.member[0].char_id;
-		else
-			p->family = p->party.member[1].char_id;
-	} else if( p->size == 3 ) {
-		//Check Family State.
-		p->family = chr->char_family(
-			p->party.member[0].char_id,
-			p->party.member[1].char_id,
-			p->party.member[2].char_id
-		);
-	}
 
+	p->family = inter_party->is_family_party(p);
 	inter_party->check_lv(p);
 }
 
@@ -299,7 +363,7 @@ static struct party_data *inter_party_search_partyname(const char *const str)
 static int inter_party_check_exp_share(struct party_data *const p)
 {
 	nullpo_ret(p);
-	return (p->party.count < 2 || p->max_lv - p->min_lv <= party_share_level);
+	return (p->party.count < 2 || p->family != 0 || p->max_lv - p->min_lv <= party_share_level);
 }
 
 // Is there any member in the party?
@@ -694,6 +758,7 @@ void inter_party_defaults(void)
 	inter_party->sql_init = inter_party_sql_init;
 	inter_party->sql_final = inter_party_sql_final;
 	inter_party->check_lv = inter_party_check_lv;
+	inter_party->is_family_party = inter_party_is_family_party;
 	inter_party->calc_state = inter_party_calc_state;
 	inter_party->tosql = inter_party_tosql;
 	inter_party->fromsql = inter_party_fromsql;
