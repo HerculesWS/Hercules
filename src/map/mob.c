@@ -342,10 +342,12 @@ static int mob_parse_dataset(struct spawn_data *data)
  *------------------------------------------*/
 static struct mob_data *mob_spawn_dataset(struct spawn_data *data, int npc_id)
 {
-	struct mob_data *md = NULL;
 	nullpo_retr(NULL, data);
-	CREATE(md, struct mob_data, 1);
-	md->bl.id= npc->get_new_npc_id();
+
+	struct mob_data *md = (struct mob_data *)aCalloc(1, sizeof(struct mob_data));
+
+	memcpy(md->name, data->name, NAME_LENGTH);
+	md->bl.id = npc->get_new_npc_id();
 	md->bl.type = BL_MOB;
 	md->bl.m = data->m;
 	md->bl.x = data->x;
@@ -353,25 +355,29 @@ static struct mob_data *mob_spawn_dataset(struct spawn_data *data, int npc_id)
 	md->class_ = data->class_;
 	md->state.boss = data->state.boss;
 	md->db = mob->db(md->class_);
-	if (data->level > 0 && data->level <= MAX_LEVEL)
-		md->level = data->level;
-	memcpy(md->name, data->name, NAME_LENGTH);
-	if (data->state.ai)
-		md->special_state.ai = data->state.ai;
-	if (data->state.size)
-		md->special_state.size = data->state.size;
-	if (data->eventname[0] && strlen(data->eventname) >= 4)
-		memcpy(md->npc_event, data->eventname, 50);
-	if(md->db->status.mode&MD_LOOTER)
-		md->lootitem = (struct item *)aCalloc(LOOTITEM_SIZE,sizeof(struct item));
 	md->npc_id = npc_id;
 	md->spawn_timer = INVALID_TIMER;
 	md->deletetimer = INVALID_TIMER;
 	md->skill_idx = -1;
+
+	if (data->level > 0 && data->level <= MAX_LEVEL)
+		md->level = data->level;
+
+	if (data->state.ai > 0)
+		md->special_state.ai = data->state.ai;
+
+	if (data->state.size > 0)
+		md->special_state.size = data->state.size;
+
+	if (data->eventname[0] != '\0' && strlen(data->eventname) >= 4)
+		memcpy(md->npc_event, data->eventname, 50);
+
+	if ((md->db->status.mode & MD_LOOTER) == MD_LOOTER)
+		md->lootitem = (struct item *)aCalloc(LOOTITEM_SIZE, sizeof(struct item));
+
 	status->set_viewdata(&md->bl, md->class_);
 	status->change_init(&md->bl);
 	unit->dataset(&md->bl);
-
 	map->addiddb(&md->bl);
 	return md;
 }
@@ -522,21 +528,21 @@ static struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16
 	else
 		strcpy(data.name, DEFAULT_MOB_JNAME);
 
-	if (event)
+	if (event != NULL)
 		safestrncpy(data.eventname, event, sizeof(data.eventname));
 
-	// Locate spot next to player.
-	if (bl && (x < 0 || y < 0))
+	/** Locate spot next to player. */
+	if (bl != NULL && (x < 0 || y < 0))
 		map->search_freecell(bl, m, &x, &y, 1, 1, 0);
 
-	// if none found, pick random position on map
+	/** If none found, pick random position on map. */
 	if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys)
 		map->search_freecell(NULL, m, &x, &y, -1, -1, 1);
 
 	data.x = x;
 	data.y = y;
 
-	if (!mob->parse_dataset(&data))
+	if (mob->parse_dataset(&data) == 0)
 		return NULL;
 
 	return mob->spawn_dataset(&data, npc_id);

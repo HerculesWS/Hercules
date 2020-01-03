@@ -4485,26 +4485,27 @@ ACMD(loadnpc)
 
 ACMD(unloadnpc)
 {
-	struct npc_data *nd;
-	char NPCname[NAME_LENGTH+1];
-	short flag = 1;
+	char npc_name[NAME_LENGTH + 1];
+	int flag = 1;
 
-	memset(NPCname, '\0', sizeof(NPCname));
+	memset(npc_name, '\0', sizeof(npc_name));
 
-	if (!*message || sscanf(message, "%24s %5hd", NPCname, &flag) < 1) {
-		clif->message(fd, msg_fd(fd, 1133)); // Please enter a NPC name (Usage: @unloadnpc <NPC_name> {<flag>}).
+	if (*message == '\0' || sscanf(message, "%24s %5d", npc_name, &flag) < 1) {
+		clif->message(fd, msg_fd(fd, 1133)); /// Please enter a NPC name (Usage: @unloadnpc <NPC_name> {<flag>}).
 		return false;
 	}
-
-	if ((nd = npc->name2id(NPCname)) == NULL) {
-		clif->message(fd, msg_fd(fd,111)); // This NPC doesn't exist.
+	
+	struct npc_data *nd = npc->name2id(npc_name);
+	
+	if (nd == NULL) {
+		clif->message(fd, msg_fd(fd, 111)); /// This NPC doesn't exist.
 		return false;
 	}
 
 	npc->unload_duplicates(nd, (flag != 0));
 	npc->unload(nd, true, (flag != 0));
 	npc->read_event_script();
-	clif->message(fd, msg_fd(fd,112)); // Npc Disabled.
+	clif->message(fd, msg_fd(fd, 112)); /// Npc Disabled.
 	return true;
 }
 
@@ -4514,33 +4515,32 @@ ACMD(unloadnpc)
 ACMD(reloadnpc)
 {
 	char file_path[100];
-	short flag = 1;
+	int flag = 1;
 
-	if (!*message || (sscanf(message, "%99s %5hd", file_path, &flag) < 1)) {
-		clif->message(fd, msg_fd(fd, 1516)); // Usage: @reloadnpc <path> {<flag>}
-		return false;
-	} else if (npc->unloadfile(file_path, (flag != 0)) == true) {
-		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that...
-
-		FILE *fp = fopen(file_path, "r");
-		// check if script file exists
-		if (fp == NULL) {
-			clif->message(fd, msg_fd(fd, 261));
-			return false;
-		}
-		fclose(fp);
-
-		// add to list of script sources and run it
-		npc->addsrcfile(file_path);
-		npc->parsesrcfile(file_path, true);
-		npc->read_event_script();
-
-		clif->message(fd, msg_fd(fd, 262));
-	} else {
-		clif->message(fd, msg_fd(fd, 1387)); // File not found.
+	if (*message == '\0' || (sscanf(message, "%99s %5d", file_path, &flag) < 1)) {
+		clif->message(fd, msg_fd(fd, 1516)); /// Usage: @reloadnpc <path> {<flag>}
 		return false;
 	}
 
+	FILE *fp = fopen(file_path, "r");
+
+	if (fp == NULL) {
+		clif->message(fd, msg_fd(fd, 1387)); /// File not found.
+		return false;
+	}
+
+	fclose(fp);
+
+	if (!npc->unloadfile(file_path, (flag != 0))) {
+		clif->message(fd, msg_fd(fd, 1517)); /// Script could not be unloaded.
+		return false;
+	}
+
+	clif->message(fd, msg_fd(fd, 1386)); /// File unloaded. Be aware that...
+	npc->addsrcfile(file_path);
+	npc->parsesrcfile(file_path, true);
+	npc->read_event_script();
+	clif->message(fd, msg_fd(fd, 262)); /// Script loaded.
 	return true;
 }
 
@@ -6584,44 +6584,41 @@ ACMD(reset)
 ACMD(summon)
 {
 	char name[NAME_LENGTH];
-	int mob_id = 0;
 	int duration = 0;
-	struct mob_data *md;
-	int64 tick=timer->gettick();
 
-	if (!*message || sscanf(message, "%23s %12d", name, &duration) < 1)
+	if (*message == '\0' || sscanf(message, "%23s %12d", name, &duration) < 1)
 	{
-		clif->message(fd, msg_fd(fd,1225)); // Please enter a monster name (usage: @summon <monster name> {duration}).
+		clif->message(fd, msg_fd(fd, 1225)); /// Please enter a monster name (usage: @summon <monster name> {duration}).
 		return false;
 	}
 
-	if (duration < 1)
-		duration =1;
-	else if (duration > 60)
-		duration =60;
+	int mob_id = atoi(name);
 
-	if ((mob_id = atoi(name)) == 0)
+	if (mob_id == 0)
 		mob_id = mob->db_searchname(name);
-	if(mob_id == 0 || mob->db_checkid(mob_id) == 0)
+
+	if (mob_id == 0 || mob->db_checkid(mob_id) == 0)
 	{
-		clif->message(fd, msg_fd(fd,40)); // Invalid monster ID or name.
+		clif->message(fd, msg_fd(fd, 40)); /// Invalid monster ID or name.
 		return false;
 	}
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "", SZ_SMALL, AI_NONE, 0);
+	struct mob_data *md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "", SZ_SMALL, AI_NONE, 0);
 
-	if(!md)
+	if (md == NULL)
 		return false;
 
 	md->master_id = sd->bl.id;
 	md->special_state.ai = AI_ATTACK;
-	md->deletetimer = timer->add(tick+(duration*60000),mob->timer_delete,md->bl.id,0);
-	clif->specialeffect(&md->bl,344,AREA);
-	mob->spawn(md);
-	sc_start4(NULL,&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
-	clif->skill_poseffect(&sd->bl,AM_CALLHOMUN,1,md->bl.x,md->bl.y,tick);
-	clif->message(fd, msg_fd(fd,39)); // All monster summoned!
 
+	int64 tick = timer->gettick();
+
+	md->deletetimer = timer->add(tick + cap_value(duration, 1, 60) * 60000, mob->timer_delete, md->bl.id, 0);
+	clif->specialeffect(&md->bl, 344, AREA);
+	mob->spawn(md);
+	sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
+	clif->skill_poseffect(&sd->bl, AM_CALLHOMUN, 1, md->bl.x, md->bl.y, tick);
+	clif->message(fd, msg_fd(fd, 39)); /// All monster summoned!
 	return true;
 }
 
@@ -9017,19 +9014,28 @@ ACMD(addperm)
 ACMD(unloadnpcfile)
 {
 	char file_path[100];
-	short flag = 1;
+	int flag = 1;
 
-	if (!*message || (sscanf(message, "%99s %5hd", file_path, &flag) < 1)) {
-		clif->message(fd, msg_fd(fd, 1385)); // Usage: @unloadnpcfile <path> {<flag>}
+	if (*message == '\0' || (sscanf(message, "%99s %5d", file_path, &flag) < 1)) {
+		clif->message(fd, msg_fd(fd, 1385)); /// Usage: @unloadnpcfile <path> {<flag>}
 		return false;
 	}
 
-	if (npc->unloadfile(file_path, (flag != 0))) {
-		clif->message(fd, msg_fd(fd, 1386)); // File unloaded. Be aware that...
-	} else {
-		clif->message(fd, msg_fd(fd,1387)); // File not found.
+	FILE *fp = fopen(file_path, "r");
+
+	if (fp == NULL) {
+		clif->message(fd, msg_fd(fd, 1387)); /// File not found.
 		return false;
 	}
+
+	fclose(fp);
+
+	if (!npc->unloadfile(file_path, (flag != 0))) {
+		clif->message(fd, msg_fd(fd, 1517)); /// Script could not be unloaded.
+		return false;
+	}
+
+	clif->message(fd, msg_fd(fd, 1386)); /// File unloaded. Be aware that...
 	return true;
 }
 

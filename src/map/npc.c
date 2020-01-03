@@ -2940,6 +2940,7 @@ static int npc_unload_ev_label(union DBKey key, struct DBData *data, va_list ap)
 static int npc_unload_dup_sub(struct npc_data *nd, va_list args)
 {
 	nullpo_ret(nd);
+
 	int src_id = va_arg(args, int);
 	int unload_mobs = va_arg(args, int);
 
@@ -2953,14 +2954,15 @@ static int npc_unload_dup_sub(struct npc_data *nd, va_list args)
 static void npc_unload_duplicates(struct npc_data *nd, bool unload_mobs)
 {
 	nullpo_retv(nd);
-	// passing unload_mobs as int, because va_arg() would promote bool to int and cause compiler warnings
-	map->foreachnpc(npc->unload_dup_sub, nd->bl.id, unload_mobs ? 1 : 0);
+
+	map->foreachnpc(npc->unload_dup_sub, nd->bl.id, unload_mobs);
 }
 
 //Removes mobs spawned by NPC (monster/areamonster/guardian/bg_monster/atcommand("@monster xy"))
 static int npc_unload_mob(struct mob_data *md, va_list args)
 {
 	nullpo_ret(md);
+
 	int npc_id = va_arg(args, int);
 
 	if (md->npc_id == npc_id) {
@@ -2978,98 +2980,109 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 {
 	nullpo_ret(nd);
 
-	if( nd->ud && nd->ud != &npc->base_ud ) {
+	if (nd->ud != NULL && nd->ud != &npc->base_ud)
 		skill->clear_unitgroup(&nd->bl);
-	}
 
 	npc->remove_map(nd);
 	map->deliddb(&nd->bl);
-	if( single )
+
+	if (single)
 		strdb_remove(npc->name_db, nd->exname);
 
-	if (nd->chat_id) // remove npc chatroom object and kick users
+	if (nd->chat_id != 0) /// Remove NPC chatroom object and kick users.
 		chat->delete_npc_chat(nd);
 
-	npc_chat->finalize(nd); // deallocate npc PCRE data structures
+	npc_chat->finalize(nd); /// Deallocate NPC PCRE data structures.
 
 	if (single && nd->path != NULL) {
 		npc->releasepathreference(nd->path);
 		nd->path = NULL;
 	}
 
-	if (single && nd->bl.m != -1)
+	if (single && nd->bl.m != INDEX_NOT_FOUND)
 		map->remove_questinfo(nd->bl.m, nd);
+
 	npc->questinfo_clear(nd);
 
-	if (nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP)) {
-		//src check for duplicate shops [Orcao]
-		aFree(nd->u.shop.shop_item);
+	if (nd->src_id == 0 && (nd->subtype == SHOP || nd->subtype == CASHSHOP)) {
+		aFree(nd->u.shop.shop_item); /// src check for duplicate shops. [Orcao]
 	} else if (nd->subtype == SCRIPT) {
-		struct s_mapiterator *iter;
-		struct map_session_data *sd = NULL;
-
 		char evname[EVENT_NAME_LENGTH];
-		struct event_data *ev;
+		
 		snprintf(evname, ARRAYLENGTH(evname), "%s::OnNPCUnload", nd->exname);
-		if ((ev = (struct event_data*)strdb_get(npc->ev_db, evname)) != NULL)
-			script->run_npc(nd->u.scr.script, ev->pos, 0, nd->bl.id); // Run OnNPCUnload
 
-		if( single ) {
-			npc->ev_db->foreach(npc->ev_db,npc->unload_ev,nd->exname); //Clean up all events related
-			npc->ev_label_db->foreach(npc->ev_label_db,npc->unload_ev_label,nd);
+		struct event_data *ev = strdb_get(npc->ev_db, evname);
+		
+		if (ev != NULL)
+			script->run_npc(nd->u.scr.script, ev->pos, 0, nd->bl.id); /// Run OnNPCUnload.
+
+		if (single) {
+			npc->ev_db->foreach(npc->ev_db, npc->unload_ev, nd->exname); /// Clean up all related events.
+			npc->ev_label_db->foreach(npc->ev_label_db, npc->unload_ev_label, nd);
 		}
 
-		iter = mapit_geteachpc();
-		for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-			if (sd->npc_timer_id != INVALID_TIMER ) {
+		struct s_mapiterator *iter = mapit_geteachpc();
+		struct map_session_data *sd = BL_UCAST(BL_PC, mapit->first(iter));
+
+		for (; mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+			if (sd->npc_timer_id != INVALID_TIMER) {
 				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
-				if( td && td->id != nd->bl.id )
+				if (td != NULL && td->id != nd->bl.id)
 					continue;
 
-				if( td && td->data )
+				if (td != NULL && td->data != 0)
 					ers_free(npc->timer_event_ers, (void*)td->data);
+
 				timer->delete(sd->npc_timer_id, npc->timerevent);
 				sd->npc_timer_id = INVALID_TIMER;
 			}
 		}
+
 		mapit->free(iter);
 
 		if (nd->u.scr.timerid != INVALID_TIMER) {
-			const struct TimerData *td;
-			td = timer->get(nd->u.scr.timerid);
-			if (td && td->data)
+			const struct TimerData *td = timer->get(nd->u.scr.timerid);
+
+			if (td != NULL && td->data != 0)
 				ers_free(npc->timer_event_ers, (void*)td->data);
+
 			timer->delete(nd->u.scr.timerid, npc->timerevent);
 		}
-		if (nd->u.scr.timer_event)
+
+		if (nd->u.scr.timer_event != NULL)
 			aFree(nd->u.scr.timer_event);
+
 		if (nd->src_id == 0) {
-			if(nd->u.scr.script) {
+			if (nd->u.scr.script != NULL) {
 				script->free_code(nd->u.scr.script);
 				nd->u.scr.script = NULL;
 			}
-			if (nd->u.scr.label_list) {
+
+			if (nd->u.scr.label_list != NULL) {
 				aFree(nd->u.scr.label_list);
 				nd->u.scr.label_list = NULL;
 				nd->u.scr.label_list_num = 0;
 			}
-			if(nd->u.scr.shop) {
-				if(nd->u.scr.shop->item) {
+
+			if (nd->u.scr.shop != NULL) {
+				if (nd->u.scr.shop->item != NULL) {
 					for (int i = 0; i < nd->u.scr.shop->items; i ++) {
-						if (nd->u.scr.shop->item[i].currency)
+						if (nd->u.scr.shop->item[i].currency != NULL)
 							aFree(nd->u.scr.shop->item[i].currency);
 					}
 					aFree(nd->u.scr.shop->item);
 				}
+
 				aFree(nd->u.scr.shop);
 			}
 		}
-		if( nd->u.scr.guild_id )
+
+		if (nd->u.scr.guild_id > 0)
 			guild->flag_remove(nd);
 	}
 
-	if( nd->ud && nd->ud != &npc->base_ud ) {
+	if (nd->ud != NULL && nd->ud != &npc->base_ud) {
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
@@ -3078,9 +3091,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 		map->foreachmob(npc->unload_mob, nd->bl.id);
 
 	HPM->data_store_destroy(&nd->hdata);
-
 	aFree(nd);
-
 	return 0;
 }
 
@@ -4464,10 +4475,9 @@ static const char *npc_parse_function(const char *w1, const char *w2, const char
  *------------------------------------------*/
 static void npc_parse_mob2(struct spawn_data *mobspawn)
 {
-	int i;
-
 	nullpo_retv(mobspawn);
-	for( i = mobspawn->active; i < mobspawn->num; ++i ) {
+
+	for (int i = mobspawn->active; i < mobspawn->num; ++i) {
 		struct mob_data *md = mob->spawn_dataset(mobspawn, 0);
 		md->spawn = mobspawn;
 		md->spawn->active++;
@@ -5631,23 +5641,22 @@ static int npc_reload(void)
 //Unload all npc in the given file
 static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 {
-	struct DBIterator *iter = db_iterator(npc->name_db);
-	struct npc_data* nd = NULL;
-	bool found = false;
-
 	nullpo_retr(false, filepath);
 
-	for( nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter) ) {
-		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) { // FIXME: This can break in case-sensitive file systems
+	struct DBIterator *iter = db_iterator(npc->name_db);
+	bool found = false;
+
+	for (struct npc_data *nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter)) {
+		if (nd->path != NULL && strcasecmp(nd->path, filepath) == 0) { // FIXME: This can break in case-sensitive file systems.
 			found = true;
-			npc->unload_duplicates(nd, unload_mobs);/* unload any npcs which could duplicate this but be in a different file */
+			npc->unload_duplicates(nd, unload_mobs); /// Unload any NPC which could duplicate this but be in a different file.
 			npc->unload(nd, true, unload_mobs);
 		}
 	}
 
 	dbi_destroy(iter);
 
-	if( found ) /* refresh event cache */
+	if (found) /// Refresh event cache.
 		npc->read_event_script();
 
 	return found;
