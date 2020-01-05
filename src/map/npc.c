@@ -2935,14 +2935,20 @@ static int npc_unload_ev_label(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
-//Chk if npc matches src_id, then unload.
-//Sub-function used to find duplicates.
+/**
+ * Unloads a NPC if it's a duplicate of the passed one.
+ *
+ * @param nd The NPC to check.
+ * @param args List of arguments.
+ * @return Always 0.
+ *
+ **/
 static int npc_unload_dup_sub(struct npc_data *nd, va_list args)
 {
 	nullpo_ret(nd);
 
-	int src_id = va_arg(args, int);
-	int unload_mobs = va_arg(args, int);
+	const int src_id = va_arg(args, int);
+	const int unload_mobs = va_arg(args, int);
 
 	if (nd->src_id == src_id)
 		npc->unload(nd, true, (unload_mobs == 1));
@@ -2950,7 +2956,15 @@ static int npc_unload_dup_sub(struct npc_data *nd, va_list args)
 	return 0;
 }
 
-//Removes all npcs that are duplicates of the passed one. [Skotlex]
+/**
+ * Unloads all NPCs which are duplicates of the passed one.
+ *
+ * @param nd The source NPC.
+ * @param unload_mobs If true, mobs spawned by duplicates will be removed.
+ *
+ * @author Skotlex
+ *
+ **/
 static void npc_unload_duplicates(struct npc_data *nd, bool unload_mobs)
 {
 	nullpo_retv(nd);
@@ -2958,12 +2972,21 @@ static void npc_unload_duplicates(struct npc_data *nd, bool unload_mobs)
 	map->foreachnpc(npc->unload_dup_sub, nd->bl.id, unload_mobs);
 }
 
-//Removes mobs spawned by NPC (monster/areamonster/guardian/bg_monster/atcommand("@monster xy"))
+/**
+ * Removes a mob, which was spawned by a NPC (monster/areamonster/guardian/bg_monster/atcommand("@monster xy")).
+ *
+ * @param md The mob to remove.
+ * @param args List of arguments.
+ * @return 1 on success, 0 on failure.
+ *
+ * @author Kenpachi
+ *
+ **/
 static int npc_unload_mob(struct mob_data *md, va_list args)
 {
 	nullpo_ret(md);
 
-	int npc_id = va_arg(args, int);
+	const int npc_id = va_arg(args, int);
 
 	if (md->npc_id == npc_id) {
 		md->state.npc_killmonster = 1;
@@ -2974,8 +2997,15 @@ static int npc_unload_mob(struct mob_data *md, va_list args)
 	return 0;
 }
 
-//Removes an npc from map and db.
-//Single is to free name (for duplicates).
+/**
+ * Removes a NPC from map and database.
+ *
+ * @param nd The NPC which should be removed.
+ * @param single If true, names are freed. (For duplicates.)
+ * @param unload_mobs If true, mobs spawned by the NPC will be removed.
+ * @return Always 0.
+ *
+ **/
 static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 {
 	nullpo_ret(nd);
@@ -4468,17 +4498,23 @@ static const char *npc_parse_function(const char *w1, const char *w2, const char
 	return end;
 }
 
-/*==========================================
- * Parse Mob 1 - Parse mob list into each map
- * Parse Mob 2 - Actually Spawns Mob
- * [Wizputer]
- *------------------------------------------*/
+/**
+ * Spawns a mob by using the passed spawn data. (Permanent mob spawns.)
+ * npc_parse_mob() - Parses mob list into each map.
+ * npc_parse_mob2() - Actually spawns mob.
+ *
+ * @param mobspawn The mobs spawn data.
+ *
+ * @author Wizputer
+ *
+ **/
 static void npc_parse_mob2(struct spawn_data *mobspawn)
 {
 	nullpo_retv(mobspawn);
 
 	for (int i = mobspawn->active; i < mobspawn->num; ++i) {
 		struct mob_data *md = mob->spawn_dataset(mobspawn, 0);
+
 		md->spawn = mobspawn;
 		md->spawn->active++;
 		mob->spawn(md);
@@ -5535,110 +5571,125 @@ static void npc_process_files(int npc_min)
 		npc->npc_id - npc_min, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
 }
 
-//Clear then reload npcs files
+/**
+ * Clears and then reloads all NPC files.
+ *
+ * @return Always 0.
+ *
+ **/
 static int npc_reload(void)
 {
-	int npc_new_min = npc->npc_id;
-	struct s_mapiterator* iter;
-	struct block_list* bl;
+	if (map->retval == EXIT_FAILURE) /// Clear return status in case something failed before.
+		map->retval = EXIT_SUCCESS;
 
-	if (map->retval == EXIT_FAILURE)
-		map->retval = EXIT_SUCCESS; // Clear return status in case something failed before.
-
-	/* clear guild flag cache */
-	guild->flags_clear();
-
+	guild->flags_clear(); /// Clear guild flag cache.
 	npc->path_db->clear(npc->path_db, npc->path_db_clear_sub);
-
 	db_clear(npc->name_db);
 	db_clear(npc->ev_db);
 	npc->ev_label_db->clear(npc->ev_label_db, npc->ev_label_db_clear_sub);
-
 	npc->npc_last_npd = NULL;
 	npc->npc_last_path = NULL;
 	npc->npc_last_ref = NULL;
+	
+	const int npc_new_min = npc->npc_id;
+	struct s_mapiterator *iter = mapit_geteachiddb();
 
-	//Remove all npcs/mobs. [Skotlex]
-	iter = mapit_geteachiddb();
-	for (bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
-		switch(bl->type) {
-			case BL_NPC:
-				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd
-					npc->unload(BL_UCAST(BL_NPC, bl), false, false);
-				break;
-			case BL_MOB:
-				unit->free(bl,CLR_OUTSIGHT);
-				break;
+	/** Remove all NPCs/mobs. [Skotlex] **/
+	for (struct block_list *bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
+		switch (bl->type) {
+		case BL_NPC:
+			if (bl->id != npc->fake_nd->bl.id) /// Don't remove fake_nd.
+				npc->unload(BL_UCAST(BL_NPC, bl), false, false);
+
+			break;
+		case BL_MOB:
+			unit->free(bl, CLR_OUTSIGHT);
+			break;
+		default:
+			break;
 		}
 	}
+
 	mapit->free(iter);
 
-	if(battle_config.dynamic_mobs) {// dynamic check by [random]
-		int16 m;
-		for (m = 0; m < map->count; m++) {
-			int16 i;
-			for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
+	if (battle_config.dynamic_mobs) { /// Dynamic check. [random]
+		for (int m = 0; m < map->count; m++) {
+			for (int i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
 				if (map->list[m].moblist[i] != NULL) {
 					aFree(map->list[m].moblist[i]);
 					map->list[m].moblist[i] = NULL;
 				}
-				if( map->list[m].mob_delete_timer != INVALID_TIMER )
-				{ // Mobs were removed anyway,so delete the timer [Inkfish]
+
+				if (map->list[m].mob_delete_timer != INVALID_TIMER) { /// Mobs were removed anyway, so delete the timer. [Inkfish]
 					timer->delete(map->list[m].mob_delete_timer, map->removemobs_timer);
 					map->list[m].mob_delete_timer = INVALID_TIMER;
 				}
 			}
+
 			if (map->list[m].npc_num > 0)
-				ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", map->list[m].npc_num, map->list[m].name);
+				ShowWarning("npc_reload: %d NPCs weren't removed from map %s!\n",
+					    map->list[m].npc_num, map->list[m].name);
 		}
 	}
 
-	// clear mob spawn lookup index
 	mob->clear_spawninfo();
-
-	npc->npc_warp = npc->npc_shop = npc->npc_script = 0;
-	npc->npc_mob = npc->npc_cache_mob = npc->npc_delay_mob = 0;
-
-	// reset mapflags
+	npc->npc_warp = 0;
+	npc->npc_shop = 0;
+	npc->npc_script = 0;
+	npc->npc_mob = 0;
+	npc->npc_cache_mob = 0;
+	npc->npc_delay_mob = 0;
 	map->zone_reload();
 	map->flags_init();
-
-	// Reprocess npc files and reload constants
 	itemdb->name_constants();
 	clan->set_constants();
-	npc_process_files( npc_new_min );
-
+	npc_process_files(npc_new_min);
 	instance->reload();
-
 	map->zone_init();
-
-	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
-
-	//Re-read the NPC Script Events cache.
+	npc->motd = npc->name2id("HerculesMOTD"); /// [Ind/Hercules]
 	npc->read_event_script();
 
-	// Execute main initialisation events
-	// The correct initialisation order is:
-	// OnInit -> OnInterIfInit -> OnInterIfInitOnce -> OnAgitInit -> OnAgitInit2
-	npc->event_do_oninit( true );
+	/**
+	 * Execute main initialization events
+	 * The correct initialization order is:
+	 * OnInit -> OnInterIfInit -> OnInterIfInitOnce -> OnAgitInit -> OnAgitInit2
+	 *
+	 **/
+	npc->event_do_oninit(true);
+
 	npc->market_fromsql();
 	npc->barter_fromsql();
 	npc->expanded_barter_fromsql();
-	// Execute rest of the startup events if connected to char-server. [Lance]
-	// Executed when connection is established with char-server in chrif_connectack
-	if( !intif->CheckForCharServer() ) {
-		ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInit"));
-		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInitOnce"));
+
+	/*
+	 * Execute rest of the startup events if connected to char-server. [Lance]
+	 * Executed when connection is established with char-server in chrif_connectack().
+	 */
+	if (intif->CheckForCharServer() == 0) {
+		ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n",
+		           npc->event_doall("OnInterIfInit"));
+		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n",
+		           npc->event_doall("OnInterIfInitOnce"));
 	}
-	// Refresh guild castle flags on both woe setups
-	// These events are only executed after receiving castle information from char-server
+
+	/*
+	 * Refresh guild castle flags on both WoE setups.
+	 * These events are only executed after receiving castle information from char-server.
+	 */
 	npc->event_doall("OnAgitInit");
 	npc->event_doall("OnAgitInit2");
 
 	return 0;
 }
 
-//Unload all npc in the given file
+/**
+ * Unloads all NPCs in the given file.
+ *
+ * @param filepath Path to the file which should be unloaded.
+ * @param unload_mobs If true, mobs spawned by NPCs in the file will be removed.
+ * @return true if at least one NPC was unloaded, otherwise false.
+ *
+ **/
 static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 {
 	nullpo_retr(false, filepath);
