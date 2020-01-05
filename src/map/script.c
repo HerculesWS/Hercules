@@ -14526,47 +14526,53 @@ static BUILDIN(strmobinfo)
 	return true;
 }
 
-/*==========================================
- * Summon guardians [Valaris]
- * guardian("<map name>",<x>,<y>,"<name to show>",<mob id>{,"<event label>"}{,<guardian index>}) -> <id>
- *------------------------------------------*/
+/**
+ * Summons a castle guardian mob.
+ *
+ * @code{.herc}
+ *	guardian("<map name>", <x>, <y>, "<name to show>", <mob id>{, <guardian index>});
+ *	guardian("<map name>", <x>, <y>, "<name to show>", <mob id>{, "<event label>"{, <guardian index>}});
+ * @endcode
+ *
+ * @author Valaris
+ *
+ **/
 static BUILDIN(guardian)
 {
-	int class_ = 0, x = 0, y = 0, guardian = 0;
-	const char *str, *mapname, *evt="";
 	bool has_index = false;
+	int guardian = 0;
+	const char *event = "";
 
-	mapname = script_getstr(st,2);
-	x       = script_getnum(st,3);
-	y       = script_getnum(st,4);
-	str     = script_getstr(st,5);
-	class_  = script_getnum(st,6);
-
-	if( script_hasdata(st,8) )
-	{// "<event label>",<guardian index>
-		evt=script_getstr(st,7);
-		guardian=script_getnum(st,8);
+	if (script_hasdata(st, 8)) { /// "<event label>", <guardian index>
+		event = script_getstr(st, 7);
+		script->check_event(st, event);
+		guardian = script_getnum(st, 8);
 		has_index = true;
-	} else if( script_hasdata(st,7) ) {
-		struct script_data *data = script_getdata(st,7);
-		script->get_val(st,data); // Dereference if it's a variable
-		if( data_isstring(data) ) {
-			// "<event label>"
-			evt=script_getstr(st,7);
-		} else if( data_isint(data) ) {
-			// <guardian index>
-			guardian=script_getnum(st,7);
+	} else if (script_hasdata(st, 7)) {
+		struct script_data *data = script_getdata(st, 7);
+
+		script->get_val(st, data); /// Dereference if it's a variable.
+
+		if (data_isstring(data)) { /// "<event label>"
+			event = script_getstr(st, 7);
+			script->check_event(st, event);
+		} else if (data_isint(data)) { /// <guardian index>
+			guardian = script_getnum(st, 7);
 			has_index = true;
 		} else {
-			ShowError("script:guardian: invalid data type for argument #6 (from 1)\n");
+			ShowError("script:guardian: Invalid data type for argument #6!\n");
 			script->reportdata(data);
 			return false;
 		}
 	}
 
-	script->check_event(st, evt);
-	script_pushint(st, mob->spawn_guardian(mapname, x, y, str, class_, evt, guardian, has_index, st->oid));
+	const char *mapname = script_getstr(st, 2);
+	const char *name = script_getstr(st, 5);
+	const int x = script_getnum(st, 3);
+	const int y = script_getnum(st, 4);
+	const int mob_id = script_getnum(st, 6);
 
+	script_pushint(st, mob->spawn_guardian(mapname, x, y, name, mob_id, event, guardian, has_index, st->oid));
 	return true;
 }
 /*==========================================
@@ -16894,38 +16900,54 @@ static BUILDIN(logmes)
 	return true;
 }
 
+/**
+ * Summons a mob which will act as a slave for the invoking character.
+ *
+ * @code{.herc}
+ *	summon("mob name", <mob id>{, <timeout>{, "event label"}});
+ * @endcode
+ *
+ * @author Celest
+ *
+ **/
 static BUILDIN(summon)
 {
-	int class_, timeout=0;
-	const char *str,*event="";
-	struct mob_data *md;
-	int64 tick = timer->gettick();
 	struct map_session_data *sd = script->rid2sd(st);
+
 	if (sd == NULL)
 		return true;
 
-	str    = script_getstr(st,2);
-	class_ = script_getnum(st,3);
-	if( script_hasdata(st,4) )
-		timeout=script_getnum(st,4);
-	if( script_hasdata(st,5) ) {
-		event=script_getstr(st,5);
+	const int64 tick = timer->gettick();
+
+	clif->skill_poseffect(&sd->bl, AM_CALLHOMUN, 1, sd->bl.x, sd->bl.y, tick);
+
+	const char *event = "";
+
+	if (script_hasdata(st, 5)) {
+		event = script_getstr(st, 5);
 		script->check_event(st, event);
 	}
 
-	clif->skill_poseffect(&sd->bl,AM_CALLHOMUN,1,sd->bl.x,sd->bl.y,tick);
+	const char *name = script_getstr(st, 2);
+	const int mob_id = script_getnum(st, 3);
+	struct mob_data *md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, name, mob_id, event,
+						  SZ_SMALL, AI_NONE, 0);
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, SZ_SMALL, AI_NONE, 0);
-	if (md) {
-		md->master_id=sd->bl.id;
+	if (md != NULL) {
+		md->master_id = sd->bl.id;
 		md->special_state.ai = AI_ATTACK;
-		if( md->deletetimer != INVALID_TIMER )
+
+		if (md->deletetimer != INVALID_TIMER)
 			timer->delete(md->deletetimer, mob->timer_delete);
-		md->deletetimer = timer->add(tick+(timeout>0?timeout*1000:60000),mob->timer_delete,md->bl.id,0);
-		mob->spawn (md); //Now it is ready for spawning.
-		clif->specialeffect(&md->bl,344,AREA);
+
+		const int timeout = script_hasdata(st, 4) ? script_getnum(st, 4) * 1000 : 60000;
+
+		md->deletetimer = timer->add(tick + ((timeout == 0) ? 60000 : timeout), mob->timer_delete, md->bl.id, 0);
+		mob->spawn(md);
+		clif->specialeffect(&md->bl, 344, AREA);
 		sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
 	}
+
 	return true;
 }
 
@@ -22340,20 +22362,31 @@ static BUILDIN(bg_warp)
 	return true;
 }
 
+/**
+ * Spawns a mob with allegiance to the given battle group.
+ *
+ * @code{.herc}
+ *	bg_monster(<battle group>, "<map name>", <x>, <y>, "<name to show>", <mob id>{, "<event label>"});
+ * @endcode
+ *
+ **/
 static BUILDIN(bg_monster)
 {
-	int class_ = 0, x = 0, y = 0, bg_id = 0;
-	const char *str, *mapname, *evt="";
+	const char *event = "";
 
-	bg_id   = script_getnum(st,2);
-	mapname = script_getstr(st,3);
-	x       = script_getnum(st,4);
-	y       = script_getnum(st,5);
-	str     = script_getstr(st,6);
-	class_  = script_getnum(st,7);
-	if( script_hasdata(st,8) ) evt = script_getstr(st,8);
-	script->check_event(st, evt);
-	script_pushint(st, mob->spawn_bg(mapname, x, y, str, class_, evt, bg_id, st->oid));
+	if (script_hasdata(st, 8)) {
+		event = script_getstr(st, 8);
+		script->check_event(st, event);
+	}
+
+	const char *mapname = script_getstr(st, 3);
+	const char *name = script_getstr(st, 6);
+	const int bg_id = script_getnum(st, 2);
+	const int x = script_getnum(st, 4);
+	const int y = script_getnum(st, 5);
+	const int mob_id = script_getnum(st, 7);
+
+	script_pushint(st, mob->spawn_bg(mapname, x, y, name, mob_id, event, bg_id, st->oid));
 	return true;
 }
 
