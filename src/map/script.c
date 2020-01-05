@@ -6828,21 +6828,17 @@ static BUILDIN(warpparty)
 
 		switch( type ) {
 		case 0: // Random
-			if (!map->list[pl_sd->bl.m].flag.nowarp)
-				pc->randomwarp(pl_sd, CLR_TELEPORT);
+			pc->randomwarp(pl_sd, CLR_TELEPORT);
 			break;
 		case 1: // SavePointAll
-			if (!map->list[pl_sd->bl.m].flag.noreturn)
-				pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
+			pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
 			break;
 		case 2: // SavePoint
-			if (!map->list[pl_sd->bl.m].flag.noreturn)
-				pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 			break;
 		case 3: // Leader
 		case 4: // m,x,y
-			if (!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-				pc->setpos(pl_sd, map_index, x, y, CLR_TELEPORT);
+			pc->setpos(pl_sd, map_index, x, y, CLR_TELEPORT);
 			break;
 		}
 	}
@@ -6894,20 +6890,16 @@ static BUILDIN(warpguild)
 			switch (type)
 			{
 			case 0: // Random
-				if (!map->list[pl_sd->bl.m].flag.nowarp)
-					pc->randomwarp(pl_sd, CLR_TELEPORT);
+				pc->randomwarp(pl_sd, CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
-				if (!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
+				pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
-				if (!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+				pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 				break;
 			case 3: // m,x,y
-				if (!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-					pc->setpos(pl_sd, script->mapindexname2id(st, str), x, y, CLR_TELEPORT);
+				pc->setpos(pl_sd, script->mapindexname2id(st, str), x, y, CLR_TELEPORT);
 				break;
 			}
 		}
