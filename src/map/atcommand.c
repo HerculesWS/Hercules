@@ -4483,14 +4483,20 @@ ACMD(loadnpc)
 	return true;
 }
 
+/**
+ * Unloads a specific NPC.
+ *
+ * @code{.herc}
+ *	@unloadnpc <NPC_name> {<flag>}
+ * @endcode
+ *
+ **/
 ACMD(unloadnpc)
 {
-	char npc_name[NAME_LENGTH + 1];
+	char npc_name[NAME_LENGTH + 1] = {'\0'};
 	int flag = 1;
 
-	memset(npc_name, '\0', sizeof(npc_name));
-
-	if (*message == '\0' || sscanf(message, "%24s %5d", npc_name, &flag) < 1) {
+	if (*message == '\0' || sscanf(message, "%24s %1d", npc_name, &flag) < 1) {
 		clif->message(fd, msg_fd(fd, 1133)); /// Please enter a NPC name (Usage: @unloadnpc <NPC_name> {<flag>}).
 		return false;
 	}
@@ -4509,16 +4515,34 @@ ACMD(unloadnpc)
 	return true;
 }
 
-/// Unload existing NPC within the NPC file and reload it.
-/// Usage: @reloadnpc npc/sample_npc.txt {flag}
-/// Note: Be aware that some changes made by NPC are not reverted on unload. See doc/atcommands.txt for details.
+/**
+ * Unloads a script file and reloads it.
+ * Note: Be aware that some changes made by NPC are not reverted on unload. See doc/atcommands.txt for details.
+ *
+ * @code{.herc}
+ *	@reloadnpc <path> {<flag>}
+ * @endcode
+ *
+ **/
 ACMD(reloadnpc)
 {
-	char file_path[100];
+	char file_path[100] = {'\0'};
 	int flag = 1;
 
-	if (*message == '\0' || (sscanf(message, "%99s %5d", file_path, &flag) < 1)) {
+	if (*message == '\0' || (sscanf(message, "%99s %1d", file_path, &flag) < 1)) {
 		clif->message(fd, msg_fd(fd, 1516)); /// Usage: @reloadnpc <path> {<flag>}
+		return false;
+	}
+
+	const char *dot = strrchr(file_path, '.');
+
+	if (dot == NULL) {
+		clif->message(fd, msg_fd(fd, 1518)); /// No file extension specified.
+		return false;
+	}
+
+	if (strlen(dot) < 4 || strncmp(dot, ".txt", 4) != 0) {
+		clif->message(fd, msg_fd(fd, 1519)); /// Not a TXT file.
 		return false;
 	}
 
@@ -6581,13 +6605,21 @@ ACMD(reset)
 /*==========================================
  *
  *------------------------------------------*/
+
+/**
+ * Spawns mobs which treats the invoking as its master.
+ *
+ * @code{.herc}
+ *	@summon <monster name/ID> {<duration>}
+ * @endcode
+ *
+ **/
 ACMD(summon)
 {
-	char name[NAME_LENGTH];
+	char name[NAME_LENGTH + 1] = {'\0'};
 	int duration = 0;
 
-	if (*message == '\0' || sscanf(message, "%23s %12d", name, &duration) < 1)
-	{
+	if (*message == '\0' || sscanf(message, "%24s %12d", name, &duration) < 1) {
 		clif->message(fd, msg_fd(fd, 1225)); /// Please enter a monster name (usage: @summon <monster name> {duration}).
 		return false;
 	}
@@ -6597,13 +6629,13 @@ ACMD(summon)
 	if (mob_id == 0)
 		mob_id = mob->db_searchname(name);
 
-	if (mob_id == 0 || mob->db_checkid(mob_id) == 0)
-	{
+	if (mob_id == 0 || mob->db_checkid(mob_id) == 0) {
 		clif->message(fd, msg_fd(fd, 40)); /// Invalid monster ID or name.
 		return false;
 	}
 
-	struct mob_data *md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "", SZ_SMALL, AI_NONE, 0);
+	struct mob_data *md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, DEFAULT_MOB_JNAME, mob_id, "",
+						  SZ_SMALL, AI_NONE, 0);
 
 	if (md == NULL)
 		return false;
@@ -6611,9 +6643,9 @@ ACMD(summon)
 	md->master_id = sd->bl.id;
 	md->special_state.ai = AI_ATTACK;
 
-	int64 tick = timer->gettick();
+	const int64 tick = timer->gettick();
 
-	md->deletetimer = timer->add(tick + cap_value(duration, 1, 60) * 60000, mob->timer_delete, md->bl.id, 0);
+	md->deletetimer = timer->add(tick + (int64)cap_value(duration, 1, 60) * 60000, mob->timer_delete, md->bl.id, 0);
 	clif->specialeffect(&md->bl, 344, AREA);
 	mob->spawn(md);
 	sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
@@ -9011,13 +9043,34 @@ ACMD(addperm)
 	return true;
 }
 
+/**
+ * Unloads a script file.
+ * Note: Be aware that some changes made by NPC are not reverted on unload. See doc/atcommands.txt for details.
+ *
+ * @code{.herc}
+ *	@unloadnpcfile <path> {<flag>}
+ * @endcode
+ *
+ **/
 ACMD(unloadnpcfile)
 {
-	char file_path[100];
+	char file_path[100] = {'\0'};
 	int flag = 1;
 
-	if (*message == '\0' || (sscanf(message, "%99s %5d", file_path, &flag) < 1)) {
+	if (*message == '\0' || (sscanf(message, "%99s %1d", file_path, &flag) < 1)) {
 		clif->message(fd, msg_fd(fd, 1385)); /// Usage: @unloadnpcfile <path> {<flag>}
+		return false;
+	}
+
+	const char *dot = strrchr(file_path, '.');
+
+	if (dot == NULL) {
+		clif->message(fd, msg_fd(fd, 1518)); /// No file extension specified.
+		return false;
+	}
+
+	if (strlen(dot) < 4 || strncmp(dot, ".txt", 4) != 0) {
+		clif->message(fd, msg_fd(fd, 1519)); /// Not a TXT file.
 		return false;
 	}
 
