@@ -6757,7 +6757,7 @@ static BUILDIN(warpchar)
  * Warps a party to a specific/random map or save point.
  *
  * @code{.herc}
- *	warpparty("<to map name>", <x>, <y>, <party id>{, "<from map name>"{, <include leader>}});
+ *	warpparty("<to map name>", <x>, <y>, <party id>{{, <ignore mapflags>}, "<from map name>"{, <include leader>}});
  * @endcode
  *
  **/
@@ -6819,23 +6819,47 @@ static BUILDIN(warpparty)
 	}
 
 	for (int i = 0; i < MAX_PARTY; i++) {
-		const bool include_leader = script_hasdata(st, 7) ? script_getnum(st, 7) : true;
-		const char *m_name_from = script_hasdata(st, 6) ? script_getstr(st, 6) : NULL;
+		if ((p_sd = p->data[i].sd) == NULL || p_sd->status.party_id != p_id || pc_isdead(p_sd))
+			continue;
+
+		int offset = 0;
+		bool ignore_mapflags = false;
+
+		if (script_hasdata(st, 6) && script_isinttype(st, 6)) {
+			offset = 1;
+			ignore_mapflags = (script_getnum(st, 6) != 0);
+		}
+
+		if (!ignore_mapflags) {
+			if (((type == 0 || type > 2) && map->list[p_sd->bl.m].flag.nowarp == 1) ||
+			    (type > 0 && map->list[p_sd->bl.m].flag.noreturn == 1))
+				continue;
+		}
+
+		const bool include_leader = script_hasdata(st, 7 + offset) ? script_getnum(st, 7 + offset) : true;
 
 		if (p->party.member[i].online == 0 || (!include_leader && p->party.member[i].leader == 1))
 			continue;
 
-		if ((p_sd = p->data[i].sd) == NULL || p_sd->status.party_id != p_id || pc_isdead(p_sd))
-			continue;
+		const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
+
+		if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
+			ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
+			script_pushint(st, 0);
+			return false;
+		}
 
 		if (m_name_from != NULL && strcmp(m_name_from, map->list[p_sd->bl.m].name) != 0)
 			continue;
 
-		if (type > 1)
+		if (type == 1) {
+			map_index = p_sd->status.save_point.map;
+			x = p_sd->status.save_point.x;
+			y = p_sd->status.save_point.y;
+		}
+
+		if (type > 0)
 			pc->setpos(p_sd, map_index, x, y, CLR_TELEPORT);
-		else if (type == 1)
-			pc->setpos(p_sd, p_sd->status.save_point.map, p_sd->status.save_point.x,
-				   p_sd->status.save_point.y, CLR_TELEPORT);
 		else
 			pc->randomwarp(p_sd, CLR_TELEPORT);
 	}
