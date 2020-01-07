@@ -6872,7 +6872,7 @@ static BUILDIN(warpparty)
  * Warps a guild to a specific/random map or save point.
  *
  * @code{.herc}
- *	warpguild("<to map name>", <x>, <y>, <guild id>{, "<from map name>"});
+ *	warpguild("<to map name>", <x>, <y>, <guild id>{{, <ignore mapflags>}, "<from map name>"});
  * @endcode
  *
  **/
@@ -6918,20 +6918,44 @@ static BUILDIN(warpguild)
 	}
 
 	for (int i = 0; i < MAX_GUILD; i++) {
-		const char *m_name_from = script_hasdata(st, 6) ? script_getstr(st, 6) : NULL;
 		struct map_session_data *g_sd = g->member[i].sd;
 
 		if (g->member[i].online == 0 || g_sd == NULL || g_sd->status.guild_id != g_id || pc_isdead(g_sd))
 			continue;
 
+		int offset = 0;
+		bool ignore_mapflags = false;
+
+		if (script_hasdata(st, 6) && script_isinttype(st, 6)) {
+			offset = 1;
+			ignore_mapflags = (script_getnum(st, 6) != 0);
+		}
+
+		if (!ignore_mapflags) {
+			if (((type == 0 || type > 2) && map->list[g_sd->bl.m].flag.nowarp == 1) ||
+			    (type > 0 && map->list[g_sd->bl.m].flag.noreturn == 1))
+				continue;
+		}
+
+		const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
+
+		if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
+			ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
+			script_pushint(st, 0);
+			return false;
+		}
+
 		if (m_name_from != NULL && strcmp(m_name_from, map->list[g_sd->bl.m].name) != 0)
 			continue;
 
-		if (type > 1)
+		if (type == 1) {
+			map_index = g_sd->status.save_point.map;
+			x = g_sd->status.save_point.x;
+			y = g_sd->status.save_point.y;
+		}
+
+		if (type > 0)
 			pc->setpos(g_sd, map_index, x, y, CLR_TELEPORT);
-		else if (type == 1)
-			pc->setpos(g_sd, g_sd->status.save_point.map, g_sd->status.save_point.x,
-				   g_sd->status.save_point.y, CLR_TELEPORT);
 		else
 			pc->randomwarp(g_sd, CLR_TELEPORT);
 	}
