@@ -3615,18 +3615,6 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 		regen->rate.sp += regen->rate.sp * 100 / 100;
 	}
 
-	// Tension relax allows the user to recover HP while overweight
-	// at 1x speed. Other SC ignored? [csnv]
-	if (sc->data[SC_TENSIONRELAX] != NULL) {
-		if (sc->data[SC_WEIGHTOVER50] || sc->data[SC_WEIGHTOVER90]) {
-			regen->rate.hp += regen->rate.hp * 100 / 100;
-		} else {
-			regen->rate.hp += regen->rate.hp * 200 / 100;
-			if (regen->skill != NULL)
-				regen->skill->rate.hp += regen->skill->rate.hp * 300 / 100;
-		}
-	}
-
 	if (sc->data[SC_GDSKILL_REGENERATION] != NULL) {
 		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
 		if (sce->val4 == 0) {
@@ -3638,6 +3626,15 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 	if (sc->data[SC_CATNIPPOWDER] != NULL) {
 		regen->rate.hp += regen->rate.hp * 100 / 100;
 		regen->rate.sp += regen->rate.sp * 100 / 100;
+	}
+
+	// According to Aegis Tension relax increases recovery by 3 times
+	// in normal HP regeneration and Skill HP regeneration and only if
+	// player is non-overweight otherwise it has no affect to formula
+	// it's also applied last right before the actual heal function call [hemagx]
+	if (regen->state.overweight == 0 && sc->data[SC_TENSIONRELAX] != NULL) {
+		regen->rate.hp += regen->rate.hp * 300 / 100;
+		regen->skill->rate.hp += regen->skill->rate.hp * 300 / 100;
 	}
 }
 
@@ -13334,9 +13331,12 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		}
 	}
 
-	// SC_TENSIONRELAX allows HP to be recovered even when overweight. [csnv]
-	if (flag && regen->state.overweight && (sc == NULL || sc->data[SC_TENSIONRELAX] == NULL)) {
+	if (flag != 0 && regen->state.overweight != 0) {
 		flag = 0;
+
+		// SC_TENSIONRELAX allows HP to be recovered even when overweight. [csnv]
+		if (sc != NULL && sc->data[SC_TENSIONRELAX] != NULL)
+			flag |= RGN_HP | RGN_SHP;
 	}
 
 	ud = unit->bl2ud(bl);
