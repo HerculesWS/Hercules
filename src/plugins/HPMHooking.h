@@ -41,7 +41,11 @@ struct HPMHooking_core_interface {
 	const char *(*Hooked)(bool *fr);
 };
 #else // ! HERCULES_CORE
+#ifdef HERCULES_CORE_HPMI_SKIP
+extern struct HPMHooking_interface HPMHooking_s;
+#else
 HPExport struct HPMHooking_interface HPMHooking_s;
+#endif
 
 #include "HPMHooking/HPMHooking.Defs.inc"
 
