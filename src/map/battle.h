@@ -250,6 +250,7 @@ struct Battle_Config {
 	int summer2_ignorepalette;
 	int natural_healhp_interval;
 	int natural_healsp_interval;
+	int natural_heal_cap;
 	int natural_heal_skill_interval;
 	int natural_heal_weight_rate;
 	int arrow_decrement;
@@ -621,10 +622,13 @@ struct Battle_Config {
 
 	int elem_natural_heal_hp;
 	int elem_natural_heal_sp;
+	int elem_natural_heal_cap;
 	int hom_natural_heal_hp;
 	int hom_natural_heal_sp;
+	int hom_natural_heal_cap;
 	int merc_natural_heal_hp;
 	int merc_natural_heal_sp;
+	int merc_natural_heal_cap;
 };
 
 /* criteria for battle_config.idletime_critera */
