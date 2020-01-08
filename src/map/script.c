@@ -26245,8 +26245,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(warp,"sii?"),
 		BUILDIN_DEF(areawarp,"siiiisii??"),
 		BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
-		BUILDIN_DEF(warpparty,"siii??"), // [Fredzilla] [Paradox924X] [Jedzkie] [Dastgir]
-		BUILDIN_DEF(warpguild,"siii?"), // [Fredzilla]
+		BUILDIN_DEF(warpparty,"siii???"), // [Fredzilla] [Paradox924X] [Jedzkie] [Dastgir]
+		BUILDIN_DEF(warpguild,"siii??"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
 		BUILDIN_DEF2(__setr,"set","rv"),
