@@ -11467,7 +11467,9 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action
 		{
 			struct npc_data *nd = map->id2nd(target_id);
 			if (nd != NULL) {
-				npc->click(sd, nd);
+				if (sd->block_action.npc == 0) { // *pcblock script command
+					npc->click(sd, nd);
+				}
 				return;
 			}
 
@@ -11942,7 +11944,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
-	if (sd->npc_id || sd->state.workinprogress & 2) {
+	if (sd->npc_id > 0 || (sd->state.workinprogress & 2) == 2 || sd->block_action.npc == 1) {	// *pcblock script command
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
