@@ -20276,12 +20276,15 @@ static void clif_status_change2(struct block_list *bl, int tid, enum send_target
 
 static void clif_partytickack(struct map_session_data *sd, bool flag)
 {
+#if PACKETVER_MAIN_NUM >= 20070911 || defined(PACKETVER_RE) || PACKETVER_AD_NUM >= 20070911 || PACKETVER_SAK_NUM >= 20070904 || defined(PACKETVER_ZERO)
 	nullpo_retv(sd);
 
-	WFIFOHEAD(sd->fd, packet_len(0x2c9));
-	WFIFOW(sd->fd, 0) = 0x2c9;
-	WFIFOB(sd->fd, 2) = flag;
-	WFIFOSET(sd->fd, packet_len(0x2c9));
+	WFIFOHEAD(sd->fd, sizeof(struct PACKET_ZC_PARTY_CONFIG));
+	struct PACKET_ZC_PARTY_CONFIG *p = WFIFOP(sd->fd, 0);
+	p->packetType = HEADER_ZC_PARTY_CONFIG;
+	p->denyPartyInvites = flag;
+	WFIFOSET(sd->fd, sizeof(struct PACKET_ZC_PARTY_CONFIG));
+#endif
 }
 
 static void clif_ShowScript(struct block_list *bl, const char *message, enum send_target target)
