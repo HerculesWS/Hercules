@@ -3484,7 +3484,6 @@ static void status_calc_regen_homunculus(struct homun_data *hd, struct status_da
 	nullpo_retv(regen);
 
 	struct status_change *sc = &hd->sc;
-	int skill_lv;
 
 	if ((sc->data[SC_POISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
 		|| (sc->data[SC_DPOISON] != NULL && sc->data[SC_SLOWPOISON] == NULL)
@@ -3499,10 +3498,6 @@ static void status_calc_regen_homunculus(struct homun_data *hd, struct status_da
 	regen->sp = 1 + (st->int_ / 6) + (st->max_sp / 100);
 	if (st->int_ >= 120)
 		regen->sp += ((st->int_ - 120) / 2) + 4;
-
-	// Base natural HP/SP restore bonuses
-	if ((skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0)
-		regen->hp = regen->hp * (100 + 5 * skill_lv) / 100;
 }
 
 static void status_calc_regen_mercenary(struct mercenary_data *md, struct status_data *st, struct regen_data *regen)
@@ -3658,6 +3653,9 @@ static void status_calc_regen_rate_homunculus(struct homun_data *hd, struct rege
 
 	if ((skill_lv = homun->checkskill(hd, HLIF_BRAIN)) > 0)
 		regen->rate.sp = regen->rate.sp * (100 + 3 * skill_lv) / 100;
+
+	if ((skill_lv = homun->checkskill(hd, HAMI_SKIN)) > 0)
+		regen->rate.hp = regen->rate.hp * (100 + 5 * skill_lv) / 100;
 }
 
 //Calculates SC related regen rates.
