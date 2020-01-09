@@ -6818,39 +6818,32 @@ static BUILDIN(warpparty)
 		y = sd->status.save_point.y;
 	}
 
+	const int offset = (script_hasdata(st, 6) && script_isinttype(st, 6)) ? 1 : 0;
+	const bool ignore_mapflags = (offset == 1 && script_getnum(st, 6) != 0);
+	const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
+	const bool include_leader = script_hasdata(st, 7 + offset) ? script_getnum(st, 7 + offset) : true;
+
+	if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
+		ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
+		script_pushint(st, 0);
+		return false;
+	}
+
 	for (int i = 0; i < MAX_PARTY; i++) {
 		if ((p_sd = p->data[i].sd) == NULL || p_sd->status.party_id != p_id || pc_isdead(p_sd))
 			continue;
 
-		int offset = 0;
-		bool ignore_mapflags = false;
+		if (p->party.member[i].online == 0 || (!include_leader && p->party.member[i].leader == 1))
+			continue;
 
-		if (script_hasdata(st, 6) && script_isinttype(st, 6)) {
-			offset = 1;
-			ignore_mapflags = (script_getnum(st, 6) != 0);
-		}
+		if (m_name_from != NULL && strcmp(m_name_from, map->list[p_sd->bl.m].name) != 0)
+			continue;
 
 		if (!ignore_mapflags) {
 			if (((type == 0 || type > 2) && map->list[p_sd->bl.m].flag.nowarp == 1) ||
 			    (type > 0 && map->list[p_sd->bl.m].flag.noreturn == 1))
 				continue;
 		}
-
-		const bool include_leader = script_hasdata(st, 7 + offset) ? script_getnum(st, 7 + offset) : true;
-
-		if (p->party.member[i].online == 0 || (!include_leader && p->party.member[i].leader == 1))
-			continue;
-
-		const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
-
-		if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
-			ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
-			script_pushint(st, 0);
-			return false;
-		}
-
-		if (m_name_from != NULL && strcmp(m_name_from, map->list[p_sd->bl.m].name) != 0)
-			continue;
 
 		if (type == 1) {
 			map_index = p_sd->status.save_point.map;
@@ -6917,36 +6910,30 @@ static BUILDIN(warpguild)
 		y = sd->status.save_point.y;
 	}
 
+	const int offset = (script_hasdata(st, 6) && script_isinttype(st, 6)) ? 1 : 0;
+	const bool ignore_mapflags = (offset == 1 && script_getnum(st, 6) != 0);
+	const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
+
+	if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
+		ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
+		script_pushint(st, 0);
+		return false;
+	}
+
 	for (int i = 0; i < MAX_GUILD; i++) {
 		struct map_session_data *g_sd = g->member[i].sd;
 
 		if (g->member[i].online == 0 || g_sd == NULL || g_sd->status.guild_id != g_id || pc_isdead(g_sd))
 			continue;
 
-		int offset = 0;
-		bool ignore_mapflags = false;
-
-		if (script_hasdata(st, 6) && script_isinttype(st, 6)) {
-			offset = 1;
-			ignore_mapflags = (script_getnum(st, 6) != 0);
-		}
+		if (m_name_from != NULL && strcmp(m_name_from, map->list[g_sd->bl.m].name) != 0)
+			continue;
 
 		if (!ignore_mapflags) {
 			if (((type == 0 || type > 2) && map->list[g_sd->bl.m].flag.nowarp == 1) ||
 			    (type > 0 && map->list[g_sd->bl.m].flag.noreturn == 1))
 				continue;
 		}
-
-		const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
-
-		if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
-			ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
-			script_pushint(st, 0);
-			return false;
-		}
-
-		if (m_name_from != NULL && strcmp(m_name_from, map->list[g_sd->bl.m].name) != 0)
-			continue;
 
 		if (type == 1) {
 			map_index = g_sd->status.save_point.map;
