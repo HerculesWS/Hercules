@@ -1095,10 +1095,10 @@ struct regen_data_sub {
 		unsigned int sp;
 	} tick;
 
-	//Regen rates (where every 1 means +100% regen)
+	//Regen rates on a base of 100
 	struct {
-		unsigned char hp;
-		unsigned char sp;
+		int hp;
+		int sp;
 	} rate;
 };
 
@@ -1113,10 +1113,10 @@ struct regen_data {
 		unsigned int sp;
 	} tick;
 
-	//Regen rates (where every 1 means +100% regen)
+	//Regen rates on a base of 100
 	struct {
-		unsigned char hp;
-		unsigned char sp;
+		int hp;
+		int sp;
 	} rate;
 
 	struct {
