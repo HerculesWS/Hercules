@@ -11326,7 +11326,8 @@ static void pc_setstand(struct map_session_data *sd)
 	status_change_end(&sd->bl, SC_TENSIONRELAX, INVALID_TIMER);
 	clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_SIT));
 	//Reset sitting tick.
-	sd->ssregen.tick.hp = sd->ssregen.tick.sp = 0;
+	sd->sitting_regen.tick.hp = 0;
+	sd->sitting_regen.tick.sp = 0;
 	if (pc_isdead(sd)) {
 		sd->state.dead_sit = sd->vd.dead_sit = 0;
 		clif->party_dead_notification(sd);

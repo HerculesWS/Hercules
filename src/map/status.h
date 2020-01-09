@@ -1127,7 +1127,8 @@ struct regen_data {
 	} state;
 
 	//skill-regen, sitting-skill-regen (since not all chars with regen need it)
-	struct regen_data_sub *sregen, *ssregen;
+	struct regen_data_sub *skill;
+	struct regen_data_sub *sitting;
 };
 
 struct sc_display_entry {

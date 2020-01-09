@@ -1281,12 +1281,12 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 	if(target->type&BL_REGEN) {
 		//Reset regen ticks.
 		struct regen_data *regen = status->get_regen_data(target);
-		if (regen) {
+		if (regen != NULL) {
 			memset(&regen->tick, 0, sizeof(regen->tick));
-			if (regen->sregen)
-				memset(&regen->sregen->tick, 0, sizeof(regen->sregen->tick));
-			if (regen->ssregen)
-				memset(&regen->ssregen->tick, 0, sizeof(regen->ssregen->tick));
+			if (regen->skill != NULL)
+				memset(&regen->skill->tick, 0, sizeof(regen->skill->tick));
+			if (regen->sitting != NULL)
+				memset(&regen->sitting->tick, 0, sizeof(regen->sitting->tick));
 		}
 	}
 
@@ -2243,8 +2243,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		//Load Hp/SP from char-received data.
 		sd->battle_status.hp = sd->status.hp;
 		sd->battle_status.sp = sd->status.sp;
-		sd->regen.sregen = &sd->sregen;
-		sd->regen.ssregen = &sd->ssregen;
+		sd->regen.skill = &sd->skill_regen;
+		sd->regen.sitting = &sd->sitting_regen;
 		sd->weight=0;
 		for (i = 0; i < sd->status.inventorySize; i++) {
 			if(sd->status.inventory[i].nameid==0 || sd->inventory_data[i] == NULL)
@@ -3400,7 +3400,7 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 			regen->sp = cap_value(val, 1, SHRT_MAX);
 		}
 		//Only players have skill/sitting skill regen for now.
-		sregen = regen->sregen;
+		sregen = regen->skill;
 
 		val = 0;
 		if( (skill_lv=pc->checkskill(sd,SM_RECOVERY)) > 0 )
@@ -3418,7 +3418,7 @@ static void status_calc_regen(struct block_list *bl, struct status_data *st, str
 		sregen->sp = cap_value(val, 0, SHRT_MAX);
 
 		// Skill-related recovery (only when sit)
-		sregen = regen->ssregen;
+		sregen = regen->sitting;
 
 		val = 0;
 		if( (skill_lv=pc->checkskill(sd,MO_SPIRITSRECOVERY)) > 0 )
@@ -3472,25 +3472,26 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		return;
 
 	regen->flag = RGN_HP|RGN_SP;
-	if(regen->sregen)
-	{
-		if (regen->sregen->hp)
-			regen->flag|=RGN_SHP;
+	if(regen->skill != NULL) {
+		if (regen->skill->hp != 0)
+			regen->flag |= RGN_SHP;
 
-		if (regen->sregen->sp)
-			regen->flag|=RGN_SSP;
-		regen->sregen->rate.hp = regen->sregen->rate.sp = 1;
+		if (regen->skill->sp != 0)
+			regen->flag |= RGN_SSP;
+		regen->skill->rate.hp = 1;
+		regen->skill->rate.sp = 1;
 	}
-	if (regen->ssregen)
-	{
-		if (regen->ssregen->hp)
-			regen->flag|=RGN_SHP;
+	if (regen->sitting != NULL)	{
+		if (regen->sitting->hp != 0)
+			regen->flag |= RGN_SHP;
 
-		if (regen->ssregen->sp)
-			regen->flag|=RGN_SSP;
-		regen->ssregen->rate.hp = regen->ssregen->rate.sp = 1;
+		if (regen->sitting->sp != 0)
+			regen->flag |= RGN_SSP;
+		regen->sitting->rate.hp = 1;
+		regen->sitting->rate.sp = 1;
 	}
-	regen->rate.hp = regen->rate.sp = 1;
+	regen->rate.hp = 1;
+	regen->rate.sp = 1;
 
 	if (!sc || !sc->count)
 		return;
@@ -3530,8 +3531,8 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 			regen->rate.hp = 1;
 		} else {
 			regen->rate.hp += 2;
-			if (regen->sregen)
-				regen->sregen->rate.hp += 3;
+			if (regen->skill != NULL)
+				regen->skill->rate.hp += 3;
 		}
 	}
 
@@ -13174,12 +13175,12 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	}
 
 	if (flag&(RGN_SHP|RGN_SSP)
-	 && regen->ssregen
+	 && regen->sitting != NULL
 	 && (vd = status->get_viewdata(bl)) != NULL
 	 && vd->dead_sit == 2
 	) {
 		//Apply sitting regen bonus.
-		sregen = regen->ssregen;
+		sregen = regen->sitting;
 		if(flag&(RGN_SHP)) {
 			//Sitting HP regen
 			val = status->natural_heal_diff_tick * sregen->rate.hp;
@@ -13276,11 +13277,11 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		}
 	}
 
-	if (!regen->sregen)
+	if (regen->skill == NULL)
 		return flag;
 
 	//Skill regen
-	sregen = regen->sregen;
+	sregen = regen->skill;
 
 	if(flag&RGN_SHP) {
 		//Skill HP regen
