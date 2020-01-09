@@ -13253,7 +13253,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	struct view_data *vd = NULL;
 	struct regen_data_sub *sregen;
 	struct map_session_data *sd;
-	int val,rate,bonus = 0,flag;
+	int val, rate, flag;
 
 	nullpo_ret(bl);
 	regen = status->get_regen_data(bl);
@@ -13339,21 +13339,30 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	if (!flag)
 		return 0;
 
-	if (flag&(RGN_HP|RGN_SP)) {
-		if(!vd) vd = status->get_viewdata(bl);
-		if(vd && vd->dead_sit == 2)
-			bonus += 100;
+	int hp_bonus = regen->rate.hp,
+		sp_bonus = regen->rate.sp;
+	if ((flag & (RGN_HP | RGN_SP)) != 0) {
+		if(vd == NULL)
+			vd = status->get_viewdata(bl);
+		if (vd != NULL && vd->dead_sit == 2) {
+			// In Aegis sit bonus is calculated beofre any other bonuses
+			// Which is also an cumulative additions [Hemagx]
+			hp_bonus += 100 * hp_bonus / 100;
+			sp_bonus += 100 * sp_bonus / 100;
+		}
 	}
 
 	//Natural Hp regen
-	if (flag&RGN_HP) {
-		rate = status->natural_heal_diff_tick* (regen->rate.hp + bonus) / 100;
-		if (ud && ud->walktimer != INVALID_TIMER)
-			rate/=2;
-		// Homun HP regen fix (they should regen as if they were sitting (twice as fast)
-		if(bl->type==BL_HOM) rate *=2;
+	if ((flag & RGN_HP) != 0) {
+		int tick = status->natural_heal_diff_tick * hp_bonus / 100;
 
-		regen->tick.hp += rate;
+		if (ud != NULL && ud->walktimer != INVALID_TIMER)
+			tick /= 2;
+
+		if (bl->type == BL_HOM)
+			tick *= 2;
+
+		regen->tick.hp += tick;
 
 		if(regen->tick.hp >= (unsigned int)battle_config.natural_healhp_interval) {
 			val = 0;
@@ -13367,12 +13376,13 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	}
 
 	//Natural SP regen
-	if(flag&RGN_SP) {
-		rate = status->natural_heal_diff_tick* (regen->rate.sp + bonus) / 100;
-		// Homun SP regen fix (they should regen as if they were sitting (twice as fast)
-		if(bl->type==BL_HOM) rate *=2;
+	if ((flag & RGN_SP) != 0) {
+		int tick = status->natural_heal_diff_tick * sp_bonus / 100;
 
-		regen->tick.sp += rate;
+		if (bl->type == BL_HOM)
+			tick *= 2;
+
+		regen->tick.sp += tick;
 
 		if(regen->tick.sp >= (unsigned int)battle_config.natural_healsp_interval) {
 			val = 0;
