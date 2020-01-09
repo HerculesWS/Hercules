@@ -7496,6 +7496,12 @@ static const struct battle_data {
 	{ "allowed_actions_when_dead",          &battle_config.allowed_actions_when_dead,       0,      0,      3,              },
 	{ "teleport_close_storage",             &battle_config.teleport_close_storage,          1,      0,      1,              },
 	{ "features/show_attendance_window",    &battle_config.show_attendance_window,          1,      0,      1,              },
+	{ "elem_natural_heal_hp",               &battle_config.elem_natural_heal_hp,           6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "elem_natural_heal_sp",               &battle_config.elem_natural_heal_sp,           8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "hom_natural_heal_hp",                &battle_config.elem_natural_heal_hp,           2000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "hom_natural_heal_sp",                &battle_config.elem_natural_heal_sp,           4000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "merc_natural_heal_hp",               &battle_config.merc_natural_heal_hp,           6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "merc_natural_heal_sp",               &battle_config.merc_natural_heal_sp,           8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
 };
 
 static bool battle_set_value_sub(int index, int value)

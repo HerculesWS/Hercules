@@ -13352,6 +13352,23 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		}
 	}
 
+	int hp_interval = battle_config.natural_healhp_interval;
+	int sp_interval = battle_config.natural_healsp_interval;
+	switch (bl->type) { //PC objects uses the default heal intervals provided above
+	case BL_HOM:
+		hp_interval = battle_config.hom_natural_heal_hp;
+		sp_interval = battle_config.hom_natural_heal_sp;
+		break;
+	case BL_MER:
+		hp_interval = battle_config.merc_natural_heal_hp;
+		sp_interval = battle_config.merc_natural_heal_sp;
+		break;
+	case BL_ELEM:
+		hp_interval = battle_config.elem_natural_heal_hp;
+		sp_interval = battle_config.elem_natural_heal_sp;
+		break;
+	}
+
 	//Natural Hp regen
 	if ((flag & RGN_HP) != 0) {
 		int tick = status->natural_heal_diff_tick * hp_bonus / 100;
@@ -13359,19 +13376,17 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		if (ud != NULL && ud->walktimer != INVALID_TIMER)
 			tick /= 2;
 
-		if (bl->type == BL_HOM)
-			tick *= 2;
-
 		regen->tick.hp += tick;
 
-		if(regen->tick.hp >= (unsigned int)battle_config.natural_healhp_interval) {
+		if (regen->tick.hp >= hp_interval) {
 			val = 0;
 			do {
 				val += regen->hp;
-				regen->tick.hp -= battle_config.natural_healhp_interval;
-			} while(regen->tick.hp >= (unsigned int)battle_config.natural_healhp_interval);
+				regen->tick.hp -= hp_interval;
+			} while (regen->tick.hp >= hp_interval);
+
 			if (status->heal(bl, val, 0, STATUS_HEAL_FORCED) < val)
-				flag&=~RGN_SHP; //full.
+				flag &= ~RGN_SHP; //full.
 		}
 	}
 
@@ -13379,19 +13394,16 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	if ((flag & RGN_SP) != 0) {
 		int tick = status->natural_heal_diff_tick * sp_bonus / 100;
 
-		if (bl->type == BL_HOM)
-			tick *= 2;
-
 		regen->tick.sp += tick;
 
-		if(regen->tick.sp >= (unsigned int)battle_config.natural_healsp_interval) {
+		if (regen->tick.sp >= sp_interval) {
 			val = 0;
 			do {
 				val += regen->sp;
-				regen->tick.sp -= battle_config.natural_healsp_interval;
-			} while(regen->tick.sp >= (unsigned int)battle_config.natural_healsp_interval);
+				regen->tick.sp -= sp_interval;
+			} while (regen->tick.sp >= sp_interval);
 			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED) < val)
-				flag&=~RGN_SSP; //full.
+				flag &= ~RGN_SSP; //full.
 		}
 	}
 
