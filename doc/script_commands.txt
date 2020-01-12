@@ -4684,13 +4684,13 @@ See also warp().
 
 ---------------------------------------
 
-*warpparty("<to_mapname>", <x>, <y>, <party_id>, "<from_mapname>", <include_leader>)
+*warpparty("<to map name>", <x>, <y>, <party id>{{, <ignore mapflags>}, "<from map name>"{, <include leader>}})
 
 Warps a party to specified map and coordinate given the party ID, which
 you can get with getcharid(CHAR_ID_PARTY). You can also request another party id given
 a member's name with getcharid(CHAR_ID_PARTY, <player_name>).
 
-You can use the following "map names" for special warping behavior:
+You can use the following <to map name> for special warping behavior:
 Random:       All party members are randomly warped in their current map
               (as if they all used a fly wing).
 SavePointAll: All party members are warped to their respective save point.
@@ -4701,8 +4701,10 @@ Leader:       All party members are warped to the leader's position. The
               leader must be online and in the current map-server for
               this to work.
 
-If you specify a from_mapname, warpparty() will only affect those on
-that map.
+If <ignore mapflags> is not 0, warpparty() ignores nowarp/noreturn restrictions
+of the warped character's current map. <ignore mapflags> defaults to 0.
+
+If you specify a <from map name>, warpparty() will only affect those on that map.
 
 You can exclude Party leader from warping, by keeping include_leader option as false.
 
@@ -4730,13 +4732,13 @@ Example:
 
 ---------------------------------------
 
-*warpguild("<mapname>", <x>, <y>, <guild_id>, {"<from_mapname>"})
+*warpguild("<to map name>", <x>, <y>, <guild id>{{, <ignore mapflags>}, "<from map name>"})
 
 Warps a guild to specified map and coordinate given the guild id, which
 you can get with getcharid(CHAR_ID_GUILD). You can also request another guild id given
 the member's name with getcharid(CHAR_ID_GUILD, <player_name>).
 
-You can use the following "map names" for special warping behavior:
+You can use the following <to map name> for special warping behavior:
 Random:       All guild members are randomly warped in their current map
               (as if they all used a fly wing)
 SavePointAll: All guild members are warped to their respective save point.
@@ -4744,12 +4746,19 @@ SavePoint:    All guild members are warped to the save point of the
               currently attached player (will fail if there's no player
               attached).
 
-If you specify a from_mapname, warpguild() will only affect those on that map.
+If <ignore mapflags> is not 0, warpguild() ignores nowarp/noreturn restrictions
+of the warped character's current map. <ignore mapflags> defaults to 0.
+
+If you specify a <from map name>, warpguild() will only affect those on that map.
 
 Example:
 
-	warpguild("prontera", x, y, Guild_ID);
-	warpguild("prontera", x, y, Guild_ID, "payon"); // warp member from Payon map only.
+	warpguild("prontera", x, y, Guild_ID); // Warp all guild members to Prontera,
+					       // but check nowarp/noreturn restriction of their current map.
+	warpguild("prontera", x, y, Guild_ID, 1); // Warp all guild members to Prontera.
+	warpguild("prontera", x, y, Guild_ID, "payon"); // Warp guild members from Payon to Prontera,
+							// but check nowarp/noreturn restriction of Payon.
+	warpguild("prontera", x, y, Guild_ID, 1, "payon"); // Warp guild members from Payon to Prontera.
 
 ---------------------------------------
 

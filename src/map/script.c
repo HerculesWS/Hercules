@@ -6752,169 +6752,205 @@ static BUILDIN(warpchar)
 
 	return true;
 }
-/*==========================================
- * Warpparty - [Fredzilla] [Paradox924X] [Jedzkie] [Dastgir]
- * Syntax: warpparty("<to_mapname>", <x>, <y>, <party_id>, "<from_mapname>", <include_leader>)
- * If 'from_mapname' is specified, only the party members on that map will be warped
- * If 'include_leader' option is set to false, the leader will be warped too.
- *------------------------------------------*/
+
+/**
+ * Warps a party to a specific/random map or save point.
+ *
+ * @code{.herc}
+ *	warpparty("<to map name>", <x>, <y>, <party id>{{, <ignore mapflags>}, "<from map name>"{, <include leader>}});
+ * @endcode
+ *
+ **/
 static BUILDIN(warpparty)
 {
-	struct map_session_data *sd = NULL;
-	struct map_session_data *pl_sd;
-	struct party_data* p;
-	int type;
-	int map_index;
-	int i;
-	bool include_leader = true;
+	const int p_id = script_getnum(st, 5);
+	struct party_data *p = party->search(p_id);
 
-	const char* str = script_getstr(st, 2);
+	if (p == NULL) {
+		ShowError("script:%s: Party not found! (%d)\n", script->getfuncname(st), p_id);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	const char *m_name_to = script_getstr(st, 2);
+	const int type = (strcmp(m_name_to, "Random") == 0) ? 0 :
+			 (strcmp(m_name_to, "SavePointAll") == 0) ? 1 :
+			 (strcmp(m_name_to, "SavePoint") == 0) ? 2 :
+			 (strcmp(m_name_to, "Leader") == 0) ? 3 : 4;
+	int map_index = 0;
+
+	if (type == 4 && (map_index = script->mapindexname2id(st, m_name_to)) == 0) {
+		ShowError("script:%s: Target map not found! (%s)\n", script->getfuncname(st), m_name_to);
+		script_pushint(st, 0);
+		return false;
+	}
+
 	int x = script_getnum(st, 3);
 	int y = script_getnum(st, 4);
-	int p_id = script_getnum(st, 5);
-	const char* str2 = NULL;
+	struct map_session_data *p_sd;
 
-	if (script_hasdata(st, 6))
-		str2 = script_getstr(st, 6);
-	if (script_hasdata(st, 7))
-		include_leader = script_getnum(st, 7);
+	if (type == 3) {
+		int idx;
 
-	p = party->search(p_id);
+		ARR_FIND(0, MAX_PARTY, idx, p->party.member[idx].leader == 1);
 
-	if (p == NULL)
-		return true;
-
-	type = (strcmp(str, "Random") == 0) ? 0
-	: (strcmp(str, "SavePointAll") == 0) ? 1
-	: (strcmp(str, "SavePoint") == 0) ? 2
-	: (strcmp(str, "Leader") == 0) ? 3
-	: 4;
-
-	switch (type) {
-	case 3:
-		ARR_FIND(0, MAX_PARTY, i, p->party.member[i].leader);
-		if (i == MAX_PARTY || !p->data[i].sd) // Leader not found / not online
-			return true;
-		pl_sd = p->data[i].sd;
-		map_index = pl_sd->mapindex;
-		x = pl_sd->bl.x;
-		y = pl_sd->bl.y;
-		break;
-	case 4:
-		map_index = script->mapindexname2id(st, str);
-		break;
-	case 2:
-		// "SavePoint" uses save point of the currently attached player
-		if ((sd = script->rid2sd(st)) == NULL)
-			return true;
-		/* Fall through */
-	default:
-		map_index = 0;
-		break;
-	}
-
-	for (i = 0; i < MAX_PARTY; i++) {
-		if (!(pl_sd = p->data[i].sd) || pl_sd->status.party_id != p_id)
-			continue;
-
-		if (str2 && strcmp(str2, map->list[pl_sd->bl.m].name) != 0)
-			continue;
-
-		if (pc_isdead(pl_sd))
-			continue;
-
-		if (include_leader == false && p->party.member[i].leader)
-			continue;
-
-		switch( type ) {
-		case 0: // Random
-			if (!map->list[pl_sd->bl.m].flag.nowarp)
-				pc->randomwarp(pl_sd, CLR_TELEPORT);
-			break;
-		case 1: // SavePointAll
-			if (!map->list[pl_sd->bl.m].flag.noreturn)
-				pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
-			break;
-		case 2: // SavePoint
-			if (!map->list[pl_sd->bl.m].flag.noreturn)
-				pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
-			break;
-		case 3: // Leader
-		case 4: // m,x,y
-			if (!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-				pc->setpos(pl_sd, map_index, x, y, CLR_TELEPORT);
-			break;
+		if (idx == MAX_PARTY || (p_sd = p->data[idx].sd) == NULL) {
+			ShowError("script:%s: Party leader not found!\n", script->getfuncname(st));
+			script_pushint(st, 0);
+			return false;
 		}
+
+		map_index = p_sd->mapindex;
+		x = p_sd->bl.x;
+		y = p_sd->bl.y;
+	} else if (type == 2) {
+		struct map_session_data *sd = script->rid2sd(st);
+
+		if (sd == NULL) {
+			ShowError("script:%s: No character attached for warp to save point!\n",
+				  script->getfuncname(st));
+			script_pushint(st, 0);
+			return false;
+		}
+
+		map_index = sd->status.save_point.map;
+		x = sd->status.save_point.x;
+		y = sd->status.save_point.y;
 	}
 
+	const int offset = (script_hasdata(st, 6) && script_isinttype(st, 6)) ? 1 : 0;
+	const bool ignore_mapflags = (offset == 1 && script_getnum(st, 6) != 0);
+	const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
+	const bool include_leader = script_hasdata(st, 7 + offset) ? script_getnum(st, 7 + offset) : true;
+
+	if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
+		ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	for (int i = 0; i < MAX_PARTY; i++) {
+		if ((p_sd = p->data[i].sd) == NULL || p_sd->status.party_id != p_id || pc_isdead(p_sd))
+			continue;
+
+		if (p->party.member[i].online == 0 || (!include_leader && p->party.member[i].leader == 1))
+			continue;
+
+		if (m_name_from != NULL && strcmp(m_name_from, map->list[p_sd->bl.m].name) != 0)
+			continue;
+
+		if (!ignore_mapflags) {
+			if (((type == 0 || type > 2) && map->list[p_sd->bl.m].flag.nowarp == 1) ||
+			    (type > 0 && map->list[p_sd->bl.m].flag.noreturn == 1))
+				continue;
+		}
+
+		if (type == 1) {
+			map_index = p_sd->status.save_point.map;
+			x = p_sd->status.save_point.x;
+			y = p_sd->status.save_point.y;
+		}
+
+		if (type > 0)
+			pc->setpos(p_sd, map_index, x, y, CLR_TELEPORT);
+		else
+			pc->randomwarp(p_sd, CLR_TELEPORT);
+	}
+
+	script_pushint(st, 1);
 	return true;
 }
-/*==========================================
- * Warpguild - [Fredzilla]
- * Syntax: warpguild "mapname",x,y,Guild_ID,{"from_mapname"};
- *------------------------------------------*/
+
+/**
+ * Warps a guild to a specific/random map or save point.
+ *
+ * @code{.herc}
+ *	warpguild("<to map name>", <x>, <y>, <guild id>{{, <ignore mapflags>}, "<from map name>"});
+ * @endcode
+ *
+ **/
 static BUILDIN(warpguild)
 {
-	struct map_session_data *sd = NULL;
-	struct guild* g;
-	int type;
-	int i;
-	int16 map_id = -1;
+	const int g_id = script_getnum(st, 5);
+	struct guild *g = guild->search(g_id);
 
-	const char *str  = script_getstr(st, 2);
-	int x            = script_getnum(st, 3);
-	int y            = script_getnum(st, 4);
-	int gid          = script_getnum(st, 5);
-
-	if (script_hasdata(st, 6)) {
-		map_id = map->mapname2mapid(script_getstr(st, 6));
+	if (g == NULL) {
+		ShowError("script:%s: Guild not found! (%d)\n", script->getfuncname(st), g_id);
+		script_pushint(st, 0);
+		return false;
 	}
 
-	g = guild->search(gid);
-	if (g == NULL)
-		return true;
+	const char *m_name_to = script_getstr(st, 2);
+	const int type = (strcmp(m_name_to, "Random") == 0) ? 0 :
+			 (strcmp(m_name_to, "SavePointAll") == 0) ? 1 :
+			 (strcmp(m_name_to, "SavePoint") == 0) ? 2 : 3;
+	int map_index = 0;
 
-	type = (strcmp(str, "Random") == 0) ? 0
-	: (strcmp(str, "SavePointAll") == 0) ? 1
-	: (strcmp(str, "SavePoint") == 0) ? 2
-	: 3;
-
-	if (type == 2 && (sd = script->rid2sd(st)) == NULL)
-	{// "SavePoint" uses save point of the currently attached player
-		return true;
+	if (type == 3 && (map_index = script->mapindexname2id(st, m_name_to)) == 0) {
+		ShowError("script:%s: Target map not found! (%s)\n", script->getfuncname(st), m_name_to);
+		script_pushint(st, 0);
+		return false;
 	}
 
-	for (i = 0; i < MAX_GUILD; i++) {
-		if (g->member[i].online && g->member[i].sd != NULL) {
-			struct map_session_data *pl_sd = g->member[i].sd;
+	int x = script_getnum(st, 3);
+	int y = script_getnum(st, 4);
 
-			if (map_id >= 0 && map_id != pl_sd->bl.m)
-				continue;
+	if (type == 2) {
+		struct map_session_data *sd = script->rid2sd(st);
 
-			switch (type)
-			{
-			case 0: // Random
-				if (!map->list[pl_sd->bl.m].flag.nowarp)
-					pc->randomwarp(pl_sd, CLR_TELEPORT);
-				break;
-			case 1: // SavePointAll
-				if (!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd, pl_sd->status.save_point.map, pl_sd->status.save_point.x, pl_sd->status.save_point.y, CLR_TELEPORT);
-				break;
-			case 2: // SavePoint
-				if (!map->list[pl_sd->bl.m].flag.noreturn)
-					pc->setpos(pl_sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
-				break;
-			case 3: // m,x,y
-				if (!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-					pc->setpos(pl_sd, script->mapindexname2id(st, str), x, y, CLR_TELEPORT);
-				break;
-			}
+		if (sd == NULL) {
+			ShowError("script:%s: No character attached for warp to save point!\n",
+				  script->getfuncname(st));
+			script_pushint(st, 0);
+			return false;
 		}
+
+		map_index = sd->status.save_point.map;
+		x = sd->status.save_point.x;
+		y = sd->status.save_point.y;
 	}
 
+	const int offset = (script_hasdata(st, 6) && script_isinttype(st, 6)) ? 1 : 0;
+	const bool ignore_mapflags = (offset == 1 && script_getnum(st, 6) != 0);
+	const char *m_name_from = script_hasdata(st, 6 + offset) ? script_getstr(st, 6 + offset) : NULL;
+
+	if (m_name_from != NULL && script->mapindexname2id(st, m_name_from) == 0) {
+		ShowError("script:%s: Source map not found! (%s)\n", script->getfuncname(st), m_name_from);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	for (int i = 0; i < MAX_GUILD; i++) {
+		struct map_session_data *g_sd = g->member[i].sd;
+
+		if (g->member[i].online == 0 || g_sd == NULL || g_sd->status.guild_id != g_id || pc_isdead(g_sd))
+			continue;
+
+		if (m_name_from != NULL && strcmp(m_name_from, map->list[g_sd->bl.m].name) != 0)
+			continue;
+
+		if (!ignore_mapflags) {
+			if (((type == 0 || type > 2) && map->list[g_sd->bl.m].flag.nowarp == 1) ||
+			    (type > 0 && map->list[g_sd->bl.m].flag.noreturn == 1))
+				continue;
+		}
+
+		if (type == 1) {
+			map_index = g_sd->status.save_point.map;
+			x = g_sd->status.save_point.x;
+			y = g_sd->status.save_point.y;
+		}
+
+		if (type > 0)
+			pc->setpos(g_sd, map_index, x, y, CLR_TELEPORT);
+		else
+			pc->randomwarp(g_sd, CLR_TELEPORT);
+	}
+
+	script_pushint(st, 1);
 	return true;
 }
+
 /*==========================================
  * Force Heal a player (hp and sp)
  *------------------------------------------*/
@@ -26234,8 +26270,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(warp,"sii?"),
 		BUILDIN_DEF(areawarp,"siiiisii??"),
 		BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
-		BUILDIN_DEF(warpparty,"siii??"), // [Fredzilla] [Paradox924X] [Jedzkie] [Dastgir]
-		BUILDIN_DEF(warpguild,"siii?"), // [Fredzilla]
+		BUILDIN_DEF(warpparty,"siii???"), // [Fredzilla] [Paradox924X] [Jedzkie] [Dastgir]
+		BUILDIN_DEF(warpguild,"siii??"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
 		BUILDIN_DEF2(__setr,"set","rv"),
