@@ -5085,6 +5085,7 @@
 - `PCBLOCK_IMMUNE`: 32
 - `PCBLOCK_SITSTAND`: 64
 - `PCBLOCK_COMMANDS`: 128
+- `PCBLOCK_NPC`: 256
 
 ### private airship responds
 

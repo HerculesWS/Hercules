@@ -1932,8 +1932,10 @@ static int unit_attack(struct block_list *src, int target_id, int continuous)
 
 	if (src->type == BL_PC) {
 		struct map_session_data *sd = BL_UCAST(BL_PC, src);
-		if( target->type == BL_NPC ) { // monster npcs [Valaris]
-			npc->click(sd, BL_UCAST(BL_NPC, target)); // submitted by leinsirk10 [Celest]
+		if (target->type == BL_NPC) { // monster npcs [Valaris]
+			if (sd->block_action.npc == 0) { // *pcblock script command
+				npc->click(sd, BL_UCAST(BL_NPC, target)); // submitted by leinsirk10 [Celest]
+			}
 			return 0;
 		}
 		if( pc_is90overweight(sd) || pc_isridingwug(sd) ) { // overweight or mounted on warg - stop attacking

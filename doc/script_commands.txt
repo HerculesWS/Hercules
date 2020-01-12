@@ -6551,6 +6551,7 @@ The <type> listed are a bit mask of the following:
 	PCBLOCK_IMMUNE
 	PCBLOCK_SITSTAND
 	PCBLOCK_COMMANDS
+	PCBLOCK_NPC
 
 Examples:
 
