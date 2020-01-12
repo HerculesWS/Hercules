@@ -3748,17 +3748,44 @@ struct PACKET_ZC_NOTIFY_EFFECT3 {
 DEFINE_PACKET_HEADER(ZC_NOTIFY_EFFECT3, 0x0284);
 #endif
 
+#if PACKETVER >= 20100824
+struct PACKET_CZ_SE_CASHSHOP_OPEN1 {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN1, 0x0844);
+#endif
+
+#if PACKETVER >= 20191224
+struct PACKET_CZ_SE_CASHSHOP_OPEN2 {
+	int16 packetType;
+	uint32 tab;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN2, 0x0b6d);
+#endif
+
 #if PACKETVER >= 20190724
-struct PACKET_CZ_SE_CASHSHOP_OPEN {
+struct PACKET_CZ_SE_CASHSHOP_LIMITED_REQ {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN, 0x0b4c);
-CHECK_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN, 0x0844);
-#elif PACKETVER >= 20100824
-struct PACKET_CZ_SE_CASHSHOP_OPEN {
+DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_LIMITED_REQ, 0x0b4c);
+#endif
+
+#if PACKETVER_ZERO_NUM >= 20191224
+struct PACKET_ZC_SE_CASHSHOP_OPEN {
 	int16 packetType;
+	uint32 cashPoints;
+	uint32 kafraPoints;
+	uint32 tab;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN, 0x0844);
+DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0b6e);
+// for ragexeRE in some version this packet unused [4144]
+#elif PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || PACKETVER_ZERO_NUM >= defined(PACKETVER_ZERO)
+struct PACKET_ZC_SE_CASHSHOP_OPEN {
+	int16 packetType;
+	uint32 cashPoints;
+	uint32 kafraPoints;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0845);
 #endif
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
