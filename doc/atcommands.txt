@@ -892,6 +892,12 @@ Resets a Star Gladiator's marked maps.
 
 ---------------------------------------
 
+@hatereset
+
+Resets a Star Gladiator's hatred targets.
+
+---------------------------------------
+
 @jobchange <job name/ID>
 
 Changes your job.
