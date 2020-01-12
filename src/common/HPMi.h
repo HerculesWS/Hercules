@@ -241,9 +241,15 @@ struct HPMi_interface {
 #ifdef HERCULES_CORE
 #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)
 #else // ! HERCULES_CORE
+#ifdef HERCULES_CORE_HPMI_SKIP
+extern struct HPMi_interface HPMi_s;
+extern struct HPMi_interface *HPMi;
+extern void *(*import_symbol) (char *name, unsigned int pID);
+#else
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
 HPExport void *(*import_symbol) (char *name, unsigned int pID);
+#endif
 #define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
 #endif // !HERCULES_CORE
 
