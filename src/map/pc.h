@@ -1186,7 +1186,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);
 
 	int (*have_magnifier) (struct map_session_data *sd);
-	int (*have_item_chain) (struct map_session_data *sd, unsigned short chain_id);
+	int (*have_item_chain) (struct map_session_data *sd, enum e_chain_cache chain_cache_id);
 
 	bool (*process_chat_message) (struct map_session_data *sd, const char *message);
 	int (*wis_message_to_gm) (const char *sender_name, int permission, const char *message);
@@ -1196,6 +1196,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*isDeathPenaltyJob) (uint16 job);
 	bool (*has_second_costume) (struct map_session_data *sd);
 	bool (*expandInventory) (struct map_session_data *sd, int adjustSize);
+	bool (*auto_exp_insurance) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

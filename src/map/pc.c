@@ -8189,6 +8189,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 	   && pc->isDeathPenaltyJob(sd->job)
 	   && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
 	   && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
+	   && !pc->auto_exp_insurance(sd)
 	   ) {
 		if (battle_config.death_penalty_base > 0) {
 			unsigned int base_penalty = 0;
@@ -12162,15 +12163,15 @@ static int pc_have_magnifier(struct map_session_data *sd)
 /**
  * checks if player have any item that listed in item chain
  * @param sd map_session_data of Player
- * @param chain_id unsigned short of item chain id
+ * @param chain_cache_id cache id of item chain
  * @return index of inventory, INDEX_NOT_FOUND if it is not found
  */
-static int pc_have_item_chain(struct map_session_data *sd, unsigned short chain_id)
+static int pc_have_item_chain(struct map_session_data *sd, enum e_chain_cache chain_cache_id)
 {
-	if (chain_id >= itemdb->chain_count) {
-		ShowError("itemdb_chain_item: unknown chain id %d\n", chain_id);
-		return INDEX_NOT_FOUND;
-	}
+	nullpo_retr(INDEX_NOT_FOUND, sd);
+	Assert_retr(INDEX_NOT_FOUND, chain_cache_id >= ECC_ORE && chain_cache_id < ECC_MAX);
+
+	int chain_id = itemdb->chain_cache[chain_cache_id];
 
 	for (int n = 0; n < itemdb->chains[chain_id].qty; n++) {
 		struct item_chain_entry *entry = &itemdb->chains[chain_id].items[n];
@@ -12389,6 +12390,21 @@ static bool pc_expandInventory(struct map_session_data *sd, int adjustSize)
 	}
 	sd->status.inventorySize += adjustSize;
 	clif->inventoryExpansionInfo(sd);
+	return true;
+}
+
+static bool pc_auto_exp_insurance(struct map_session_data *sd)
+{
+	nullpo_retr(false, sd);
+
+	int item_position = pc->have_item_chain(sd, ECC_NEO_INSURANCE);
+	if (item_position == INDEX_NOT_FOUND)
+		return false;
+
+	pc->delitem(sd, item_position, 1, 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
+#if PACKETVER >= 20100914
+	clif->msgtable(sd, MSG_NOTIFY_NEO_INSURANCE_ITEM_USE);
+#endif
 	return true;
 }
 
@@ -12798,4 +12814,5 @@ void pc_defaults(void)
 	pc->isDeathPenaltyJob = pc_isDeathPenaltyJob;
 	pc->has_second_costume = pc_has_second_costume;
 	pc->expandInventory = pc_expandInventory;
+	pc->auto_exp_insurance = pc_auto_exp_insurance;
 }

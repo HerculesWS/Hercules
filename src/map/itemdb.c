@@ -1552,6 +1552,11 @@ static void itemdb_read_chains(void)
 	else
 		itemdb->chain_cache[ECC_SIEGFRIED] = i;
 
+	if (!script->get_constant("ITMCHAIN_NEO_INSURANCE", &i))
+		ShowWarning("itemdb_read_chains: failed to find 'ITMCHAIN_NEO_INSURANCE' chain to link to cache!\n");
+	else
+		itemdb->chain_cache[ECC_NEO_INSURANCE] = i;
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
