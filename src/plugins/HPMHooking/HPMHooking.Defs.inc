@@ -6424,8 +6424,8 @@ typedef void (*HPMHOOK_pre_pc_update_idle_time) (struct map_session_data **sd, e
 typedef void (*HPMHOOK_post_pc_update_idle_time) (struct map_session_data *sd, enum e_battle_config_idletime type);
 typedef int (*HPMHOOK_pre_pc_have_magnifier) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_have_magnifier) (int retVal___, struct map_session_data *sd);
-typedef int (*HPMHOOK_pre_pc_have_item_chain) (struct map_session_data **sd, unsigned short *chain_id);
-typedef int (*HPMHOOK_post_pc_have_item_chain) (int retVal___, struct map_session_data *sd, unsigned short chain_id);
+typedef int (*HPMHOOK_pre_pc_have_item_chain) (struct map_session_data **sd, enum e_chain_cache *chain_cache_id);
+typedef int (*HPMHOOK_post_pc_have_item_chain) (int retVal___, struct map_session_data *sd, enum e_chain_cache chain_cache_id);
 typedef bool (*HPMHOOK_pre_pc_process_chat_message) (struct map_session_data **sd, const char **message);
 typedef bool (*HPMHOOK_post_pc_process_chat_message) (bool retVal___, struct map_session_data *sd, const char *message);
 typedef int (*HPMHOOK_pre_pc_wis_message_to_gm) (const char **sender_name, int *permission, const char **message);
@@ -6442,6 +6442,8 @@ typedef bool (*HPMHOOK_pre_pc_has_second_costume) (struct map_session_data **sd)
 typedef bool (*HPMHOOK_post_pc_has_second_costume) (bool retVal___, struct map_session_data *sd);
 typedef bool (*HPMHOOK_pre_pc_expandInventory) (struct map_session_data **sd, int *adjustSize);
 typedef bool (*HPMHOOK_post_pc_expandInventory) (bool retVal___, struct map_session_data *sd, int adjustSize);
+typedef bool (*HPMHOOK_pre_pc_auto_exp_insurance) (struct map_session_data **sd);
+typedef bool (*HPMHOOK_post_pc_auto_exp_insurance) (bool retVal___, struct map_session_data *sd);
 #endif // MAP_PC_H
 #ifdef MAP_NPC_H /* libpcre */
 typedef pcre* (*HPMHOOK_pre_libpcre_compile) (const char **pattern, int *options, const char ***errptr, int **erroffset, const unsigned char **tableptr);

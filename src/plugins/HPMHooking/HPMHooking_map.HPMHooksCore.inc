@@ -5026,6 +5026,8 @@ struct {
 	struct HPMHookPoint *HP_pc_has_second_costume_post;
 	struct HPMHookPoint *HP_pc_expandInventory_pre;
 	struct HPMHookPoint *HP_pc_expandInventory_post;
+	struct HPMHookPoint *HP_pc_auto_exp_insurance_pre;
+	struct HPMHookPoint *HP_pc_auto_exp_insurance_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -11869,6 +11871,8 @@ struct {
 	int HP_pc_has_second_costume_post;
 	int HP_pc_expandInventory_pre;
 	int HP_pc_expandInventory_post;
+	int HP_pc_auto_exp_insurance_pre;
+	int HP_pc_auto_exp_insurance_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;
