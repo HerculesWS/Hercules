@@ -3,7 +3,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2013-2018  Hercules Dev Team
+# Copyright (C) 2013-2020 Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -472,7 +472,7 @@ my $fileheader = <<"EOF";
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-$year  Hercules Dev Team
+ * Copyright (C) 2013-$year Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

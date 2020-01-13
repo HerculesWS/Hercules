@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 #
-# Copyright (C) 2018 Hercules Dev Team
+# Copyright (C) 2018-2020 Hercules Dev Team
 #
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

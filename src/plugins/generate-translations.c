@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2016  Hercules Dev Team
+ * Copyright (C) 2016-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -254,7 +254,7 @@ bool translations_enter_file(const char *filepath)
 				"# This file is part of Hercules.\n"
 				"# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
 				"#\n"
-				"# Copyright (C) 2013-%d  Hercules Dev Team\n"
+				"# Copyright (C) 2013-%d Hercules Dev Team\n"
 				"#\n"
 				"# Hercules is free software: you can redistribute it and/or modify\n"
 				"# it under the terms of the GNU General Public License as published by\n"
