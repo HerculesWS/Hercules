@@ -61,7 +61,11 @@ struct inter_interface {
 };
 
 #ifdef HERCULES_CORE
-extern int party_share_level; ///< Share range for parties.
+#ifndef RENEWAL
+	extern int party_share_level; ///< Share range for parties in Pre-RE mode.
+#else
+	extern int party_share_level_renewal; ///< Share range for parties in RE mode.
+#endif
 
 void inter_defaults(void);
 #endif // HERCULES_CORE

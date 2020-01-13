@@ -63,7 +63,11 @@ static char char_server_pw[100] = "ragnarok";
 static char char_server_db[32] = "ragnarok";
 static char default_codepage[32] = ""; //Feature by irmin.
 
-int party_share_level = 10;
+#ifndef RENEWAL
+	int party_share_level = 10;
+#else
+	int party_share_level_renewal = 10;
+#endif
 
 // recv. packet list
 static int inter_recv_packet_length[] = {
@@ -878,7 +882,11 @@ static bool inter_config_read(const char *filename, bool imported)
 		ShowError("inter_config_read: inter_configuration was not found in %s!\n", filename);
 		return false;
 	}
+#ifndef RENEWAL
 	libconfig->setting_lookup_int(setting, "party_share_level", &party_share_level);
+#else
+	libconfig->setting_lookup_int(setting, "party_share_level_renewal", &party_share_level_renewal);
+#endif
 
 	if (!inter->config_read_log(filename, &config, imported))
 		retval = false;

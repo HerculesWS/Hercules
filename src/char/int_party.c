@@ -317,7 +317,11 @@ static struct party_data *inter_party_search_partyname(const char *const str)
 static int inter_party_check_exp_share(struct party_data *const p)
 {
 	nullpo_ret(p);
+#ifndef RENEWAL
 	return (p->party.count < 2 || p->max_lv - p->min_lv <= party_share_level);
+#else
+	return (p->party.count < 2 || p->max_lv - p->min_lv <= party_share_level_renewal);
+#endif
 }
 
 // Is there any member in the party?
