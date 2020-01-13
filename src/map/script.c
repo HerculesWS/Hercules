@@ -27364,6 +27364,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("NST_MARKET", NST_MARKET, false, false);
 	script->set_constant("NST_CUSTOM", NST_CUSTOM, false, false);
 	script->set_constant("NST_BARTER", NST_BARTER, false, false);
+	script->set_constant("NST_EXPANDED_BARTER", NST_EXPANDED_BARTER, false, false);
 
 	script->constdb_comment("script unit data types");
 	script->set_constant("UDT_TYPE", UDT_TYPE, false, false);
