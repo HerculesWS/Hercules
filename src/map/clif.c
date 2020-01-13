@@ -23209,6 +23209,11 @@ static void clif_parse_NPCBarterPurchase(int fd, struct map_session_data *sd)
 #endif
 }
 
+static void clif_parse_npc_expanded_barter_closed(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_npc_expanded_barter_closed(int fd, struct map_session_data *sd)
+{
+}
+
 static void clif_parse_clientVersion(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_clientVersion(int fd, struct map_session_data *sd)
 {
@@ -24766,6 +24771,7 @@ void clif_defaults(void)
 	clif->npc_barter_open = clif_npc_barter_open;
 	clif->pNPCBarterClosed = clif_parse_NPCBarterClosed;
 	clif->pNPCBarterPurchase = clif_parse_NPCBarterPurchase;
+	clif->pNPCExpandedBarterClosed = clif_parse_npc_expanded_barter_closed;
 	clif->pClientVersion = clif_parse_clientVersion;
 	clif->pPing = clif_parse_ping;
 	clif->ping = clif_ping;

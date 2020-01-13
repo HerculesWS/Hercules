@@ -3788,6 +3788,13 @@ struct PACKET_ZC_SE_CASHSHOP_OPEN {
 DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0845);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
+struct PACKET_CZ_NPC_EXPANDED_BARTER_CLOSE {
+	int16 packetType;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_CLOSE, 0x0b58);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
