@@ -6600,10 +6600,6 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 
 	m = target->m;
 
-	if (flag & BCT_ENEMY && (map->getcell(m, src, src->x, src->y, CELL_CHKBASILICA) || map->getcell(m, src, target->x, target->y, CELL_CHKBASILICA))) {
-		return -1;
-	}
-
 	//t_bl/s_bl hold the 'master' of the attack, while src/target are the actual
 	//objects involved.
 	if( (t_bl = battle->get_master(target)) == NULL )
@@ -6611,6 +6607,11 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 
 	if( (s_bl = battle->get_master(src)) == NULL )
 		s_bl = src;
+
+	if ((flag & BCT_ENEMY) != 0 && (status_get_mode(s_bl) & MD_BOSS) == 0 && (map->getcell(m, src, src->x, src->y, CELL_CHKBASILICA)
+	    || map->getcell(m, src, target->x, target->y, CELL_CHKBASILICA))) {
+		return -1;
+	}
 
 	if (s_bl->type == BL_PC) {
 		const struct map_session_data *s_sd = BL_UCCAST(BL_PC, s_bl);
