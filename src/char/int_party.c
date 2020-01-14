@@ -42,29 +42,34 @@
 static struct inter_party_interface inter_party_s;
 struct inter_party_interface *inter_party;
 
-//Updates party's level range and unsets even share if broken.
+/**
+ * Updates party's level range and disables even share if requirements are not fulfilled.
+ *
+ * @param p The party.
+ * @return 0 on failure, 1 on success.
+ *
+ **/
 static int inter_party_check_lv(struct party_data *p)
 {
-	int i;
 	nullpo_ret(p);
+
 	p->min_lv = MAX_LEVEL;
 	p->max_lv = 1;
-	for(i=0;i<MAX_PARTY;i++){
-		/**
-		 * - If not online OR if it's a family party and this is the child (doesn't affect exp range)
-		 **/
-		if(!p->party.member[i].online || p->party.member[i].char_id == p->family )
-			continue;
+
+	for (int i = 0; i < MAX_PARTY; i++) {
+		if (p->party.member[i].online == 0 || p->party.member[i].char_id == p->family)
+			continue; /// If not online OR if it's a family party and this is the child, don't affect exp range.
 
 		p->min_lv = min(p->min_lv, p->party.member[i].lv);
 		p->max_lv = max(p->max_lv, p->party.member[i].lv);
 	}
 
-	if (p->party.exp && !inter_party->check_exp_share(p)) {
+	if (p->party.exp == 1 && inter_party->check_exp_share(p) == 0) {
 		p->party.exp = 0;
 		mapif->party_optionchanged(0, &p->party, 0, 0);
 		return 0;
 	}
+
 	return 1;
 }
 
@@ -79,7 +84,7 @@ static int inter_party_check_lv(struct party_data *p)
  * @param p The party.
  * @return The child's char ID on success, otherwise 0.
  *
- */
+ **/
 static int inter_party_is_family_party(struct party_data *p)
 {
 	nullpo_ret(p);
@@ -145,20 +150,26 @@ static int inter_party_is_family_party(struct party_data *p)
 	return child_id;
 }
 
-//Calculates the state of a party.
+/**
+ * Calculates the state of a party.
+ *
+ * @param p The party.
+ *
+ **/
 static void inter_party_calc_state(struct party_data *p)
 {
-	int i;
 	nullpo_retv(p);
-	p->party.count =
-	p->size =
-	p->family = 0;
 
-	//Check party size
-	for(i=0;i<MAX_PARTY;i++){
-		if (!p->party.member[i].lv) continue;
+	p->party.count = 0;
+	p->size = 0;
+
+	for (int i = 0; i < MAX_PARTY; i++) {
+		if (p->party.member[i].lv == 0) /// Is this even possible? [Kenpachi]
+			continue;
+
 		p->size++;
-		if(p->party.member[i].online)
+
+		if (p->party.member[i].online == 1)
 			p->party.count++;
 	}
 
@@ -359,10 +370,17 @@ static struct party_data *inter_party_search_partyname(const char *const str)
 	return p;
 }
 
-// Returns whether this party can keep having exp share or not.
+/**
+ * Checks if a party fulfills the requirements to share EXP.
+ *
+ * @param p The party.
+ * @return 1 if party can share EXP, otherwise 0.
+ *
+ **/
 static int inter_party_check_exp_share(struct party_data *const p)
 {
 	nullpo_ret(p);
+
 	return (p->party.count < 2 || p->family != 0 || p->max_lv - p->min_lv <= party_share_level);
 }
 
@@ -434,23 +452,32 @@ static struct party_data *inter_party_create(const char *name, int item, int ite
 	return p;
 }
 
-// Add a player to party request
+/**
+ * Add a player to party request.
+ *
+ * @param party_id The ID of the party.
+ * @param member The member to add.
+ * @return true on success, otherwise false.
+ *
+ **/
 static bool inter_party_add_member(int party_id, const struct party_member *member)
 {
-	struct party_data *p;
+	nullpo_retr(false, member);
+
+	if (party_id < 1) /// Invalid party ID.
+		return false;
+
+	struct party_data *p = inter_party->fromsql(party_id);
+
+	if (p == NULL) /// Party does not exist.
+		return false;
+
 	int i;
 
-	nullpo_ret(member);
-	p = inter_party->fromsql(party_id);
-	if( p == NULL || p->size == MAX_PARTY ) {
-		return false;
-	}
+	ARR_FIND(0, MAX_PARTY, i, p->party.member[i].account_id == 0);
 
-	ARR_FIND( 0, MAX_PARTY, i, p->party.member[i].account_id == 0 );
-	if (i == MAX_PARTY) {
-		// Party full
+	if (i == MAX_PARTY) /// Party is full.
 		return false;
-	}
 
 	memcpy(&p->party.member[i], member, sizeof(struct party_member));
 	p->party.member[i].leader = 0;
@@ -482,100 +509,92 @@ static bool inter_party_change_option(int party_id, int account_id, int exp, int
 	return true;
 }
 
-//Request leave party
+/**
+ * Leave party request.
+ *
+ * @param party_id The ID of the party.
+ * @param account_id The account ID of the leaving character.
+ * @param char_id The char ID of the leaving character.
+ * @return true on success, otherwise false.
+ *
+ **/
 static bool inter_party_leave(int party_id, int account_id, int char_id)
 {
-	struct party_data *p;
-	int i;
+	if (party_id < 1) /// Invalid party ID.
+		return false;
 
-	p = inter_party->fromsql(party_id);
-	if( p == NULL )
-	{// Party does not exists?
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id) )
+	struct party_data *p = inter_party->fromsql(party_id);
+
+	if (p == NULL) { /// Party does not exist.
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id))
 			Sql_ShowDebug(inter->sql_handle);
+
 		return false;
 	}
 
-	for (i = 0; i < MAX_PARTY; i++) {
-		if(p->party.member[i].account_id == account_id &&
-			p->party.member[i].char_id == char_id) {
-			break;
-		}
-	}
-	if (i >= MAX_PARTY)
-		return false; //Member not found?
+	int i;
+
+	ARR_FIND(0, MAX_PARTY, i, p->party.member[i].account_id == account_id && p->party.member[i].char_id == char_id);
+
+	if (i == MAX_PARTY) /// Character not found in party.
+		return false;
 
 	mapif->party_withdraw(party_id, account_id, char_id);
 
-	if (p->party.member[i].online > 0) {
+	if (p->party.member[i].online == 1)
 		p->party.member[i].online = 0;
-		p->party.count--;
-	}
-	inter_party->tosql(&p->party, PS_DELMEMBER, i);
+
 	memset(&p->party.member[i], 0, sizeof(struct party_member));
 	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
+	inter_party->tosql(&p->party, PS_DELMEMBER, i);
 
-	if (inter_party->check_empty(p) == 0) {
+	if (inter_party->check_empty(p) == 0)
 		mapif->party_info(-1, &p->party, 0);
-	}
+
 	return true;
 }
 
-// When member goes to other map or levels up.
+/**
+ * Updates party data if a member changes map or levels up.
+ *
+ * @param party_id The ID of the party.
+ * @param account_id The character's account ID.
+ * @param char_id The character's char ID.
+ * @param map The character's map index.
+ * @param online The character's online state.
+ * @param lv The character's level.
+ * @return true on success, otherwise false.
+ *
+ **/
 static bool inter_party_change_map(int party_id, int account_id, int char_id, unsigned short map, int online, int lv)
 {
-	struct party_data *p;
-	int i;
-
-	p = inter_party->fromsql(party_id);
-	if (p == NULL)
+	if (party_id < 1) /// Invalid party ID.
 		return false;
 
-	for(i = 0; i < MAX_PARTY &&
-		(p->party.member[i].account_id != account_id ||
-		p->party.member[i].char_id != char_id); i++);
+	struct party_data *p = inter_party->fromsql(party_id);
 
-	if (i == MAX_PARTY)
+	if (p == NULL) /// Party does not exist.
+		return false;
+
+	int i;
+
+	ARR_FIND(0, MAX_PARTY, i, p->party.member[i].account_id == account_id && p->party.member[i].char_id == char_id);
+
+	if (i == MAX_PARTY) /// Character not found in party.
 		return false;
 
 	if (p->party.member[i].online != online)
-	{
 		p->party.member[i].online = online;
-		if (online)
-			p->party.count++;
-		else
-			p->party.count--;
-		// Even share check situations: Family state (always breaks)
-		// character logging on/off is max/min level (update level range)
-		// or character logging on/off has a different level (update level range using new level)
-		if (p->family ||
-			(p->party.member[i].lv <= p->min_lv || p->party.member[i].lv >= p->max_lv) ||
-			(p->party.member[i].lv != lv && (lv <= p->min_lv || lv >= p->max_lv))
-			)
-		{
-			p->party.member[i].lv = lv;
-			inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
-		}
-		//Send online/offline update.
-		mapif->party_membermoved(&p->party, i);
-	}
 
-	if (p->party.member[i].lv != lv) {
-		if(p->party.member[i].lv == p->min_lv ||
-			p->party.member[i].lv == p->max_lv)
-		{
-			p->party.member[i].lv = lv;
-			inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
-		} else
-			p->party.member[i].lv = lv;
-		//There is no need to send level update to map servers
-		//since they do nothing with it.
-	}
+	if (p->party.member[i].lv != lv)
+		p->party.member[i].lv = lv;
 
-	if (p->party.member[i].map != map) {
+	if (p->party.member[i].map != map)
 		p->party.member[i].map = map;
-		mapif->party_membermoved(&p->party, i);
-	}
+
+	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
+	mapif->party_membermoved(&p->party, i); /// Send online/offline update.
+
 	return true;
 }
 
@@ -639,93 +658,100 @@ static int inter_party_parse_frommap(int fd)
 	return 1;
 }
 
+/**
+ * Sets the online state of a charcter within a party to online.
+ *
+ * @param char_id The character's char ID.
+ * @param party_id The ID of the party.
+ * @return 1 on success, otherwise 0.
+ *
+ **/
 static int inter_party_CharOnline(int char_id, int party_id)
 {
-	struct party_data* p;
-	int i;
-
-	if( party_id == -1 )
-	{// Get party_id from the database
+	if (party_id == INDEX_NOT_FOUND) { /// Get party_id from the database.
 		char* data;
 
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id) )
-		{
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id)) {
 			Sql_ShowDebug(inter->sql_handle);
 			return 0;
 		}
 
-		if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-			return 0; //Eh? No party?
+		if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle))
+			return 0;
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		party_id = atoi(data);
 		SQL->FreeResult(inter->sql_handle);
 	}
-	if (party_id == 0)
-		return 0; //No party...
 
-	p = inter_party->fromsql(party_id);
-	if(!p) {
-		ShowError("Character %d's party %d not found!\n", char_id, party_id);
+	if (party_id == 0) /// Character isn't member of a party.
 		return 0;
-	}
 
-	//Set member online
-	for(i=0; i<MAX_PARTY; i++) {
-		if (p->party.member[i].char_id == char_id) {
-			if (!p->party.member[i].online) {
-				p->party.member[i].online = 1;
-				inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
-			}
-			break;
-		}
-	}
+	struct party_data *p = inter_party->fromsql(party_id);
+
+	if (p == NULL) /// Party does not exist.
+		return 0;
+
+	int i;
+
+	ARR_FIND(0, MAX_PARTY, i, p->party.member[i].char_id == char_id);
+
+	if (i == MAX_PARTY) /// Character not found in party.
+		return 0;
+
+	p->party.member[i].online = 1; /// Set member online.
+	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
+
 	return 1;
 }
 
+/**
+ * Sets the online state of a charcter within a party to offline.
+ *
+ * @param char_id The character's char ID.
+ * @param party_id The ID of the party.
+ * @return 1 on success, otherwise 0.
+ *
+ **/
 static int inter_party_CharOffline(int char_id, int party_id)
 {
-	struct party_data *p=NULL;
-	int i;
-
-	if( party_id == -1 )
-	{// Get guild_id from the database
+	if (party_id == INDEX_NOT_FOUND) { /// Get party_id from the database.
 		char* data;
 
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id) )
-		{
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id)) {
 			Sql_ShowDebug(inter->sql_handle);
 			return 0;
 		}
 
-		if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-			return 0; //Eh? No party?
+		if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle))
+			return 0;
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		party_id = atoi(data);
 		SQL->FreeResult(inter->sql_handle);
 	}
-	if (party_id == 0)
-		return 0; //No party...
 
-	//Character has a party, set character offline and check if they were the only member online
-	if ((p = inter_party->fromsql(party_id)) == NULL)
+	if (party_id == 0) /// Character isn't member of a party.
 		return 0;
 
-	//Set member offline
-	for(i=0; i< MAX_PARTY; i++) {
-		if(p->party.member[i].char_id == char_id)
-		{
-			p->party.member[i].online = 0;
-			inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
+	struct party_data *p = inter_party->fromsql(party_id);
 
-			break;
-		}
-	}
+	if (p == NULL) /// Party does not exist.
+		return 0;
 
-	if(!p->party.count)
-		//Parties don't have any data that needs be saved at this point... so just remove it from memory.
+	int i;
+
+	ARR_FIND(0, MAX_PARTY, i, p->party.member[i].char_id == char_id);
+
+	if (i == MAX_PARTY) /// Character not found in party.
+		return 0;
+
+	p->party.member[i].online = 0; /// Set member offline.
+	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
+
+	if (p->party.count == 0) /// Parties don't have any data that needs be saved at this point... so just remove it from memory.
 		idb_remove(inter_party->db, party_id);
+
 	return 1;
 }
 
