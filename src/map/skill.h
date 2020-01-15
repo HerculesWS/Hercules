@@ -91,7 +91,7 @@ enum e_skill_inf {
 enum e_skill_nk {
 	NK_NONE           = 0x00,
 	NK_NO_DAMAGE      = 0x01,
-	NK_SPLASH         = 0x02|0x04, // 0x4 = splash & split
+	NK_SPLASH         = 0x02 | 0x04, ///< 0x04 = splash & split
 	NK_SPLASH_ONLY    = 0x02,
 	NK_SPLASHSPLIT    = 0x04,
 	NK_NO_CARDFIX_ATK = 0x08,
@@ -99,6 +99,7 @@ enum e_skill_nk {
 	NK_IGNORE_DEF     = 0x20,
 	NK_IGNORE_FLEE    = 0x40,
 	NK_NO_CARDFIX_DEF = 0x80,
+	NK_CRITICAL       = 0x100,
 };
 
 //A skill with 3 would be no damage + splash: area of effect.

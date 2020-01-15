@@ -3062,7 +3062,10 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		case NPC_CRITICALSLASH:
 		case TF_DOUBLE:
 		case GS_CHAINACTION:
-			dmg.dmotion = clif->damage(src,bl,dmg.amotion,dmg.dmotion,damage,dmg.div_,dmg.type,dmg.damage2);
+		case SN_SHARPSHOOTING:
+		case MA_SHARPSHOOTING:
+		case NJ_KIRIKAGE:
+			dmg.dmotion = clif->damage(src, bl, dmg.amotion, dmg.dmotion, damage, dmg.div_, dmg.type, dmg.damage2);
 			break;
 
 		case AS_SPLASHER:
@@ -20063,6 +20066,10 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
 			sk->hit = BDT_MULTIHIT;
 		} else if (strcmpi(type, "BDT_NORMAL") == 0) {
 			sk->hit = BDT_NORMAL;
+		} else if (strcmpi(type, "BDT_MULTICRIT") == 0) {
+			sk->hit = BDT_MULTICRIT;
+		} else if (strcmpi(type, "BDT_CRIT") == 0) {
+			sk->hit = BDT_CRIT;
 		} else {
 			skilldb_invalid_error(type, "Hit", sk->nameid);
 			return;
@@ -20411,6 +20418,12 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 					sk->nk |= NK_NO_CARDFIX_DEF;
 				} else {
 					sk->nk &= ~NK_NO_CARDFIX_DEF;
+				}
+			} else if (strcmpi(type, "CritDamage") == 0) {
+				if (on) {
+					sk->nk |= NK_CRITICAL;
+				} else {
+					sk->nk &= ~NK_CRITICAL;
 				}
 			} else {
 				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
