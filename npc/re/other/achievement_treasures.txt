@@ -1,0 +1,342 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2020 Hercules Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+// Exploration Achievements
+//=========================================================================
+
+-	script	achievement_tr	FAKE_NPC,{
+	sscanf(strnpcinfo(NPC_NAME_HIDDEN), "tr%d", .@id);
+	if (!achievement_iscompleted(.@id))
+		achievement_progress(.@id, 1, 1, true);
+	end;
+OnInit:
+	cloakonnpc(strnpcinfo(NPC_NAME));
+	end;
+}
+
+-	script	achievement_wp	FAKE_NPC,{
+OnTouch:
+	sscanf(strnpcinfo(NPC_NAME_HIDDEN), "wp%d", .@id);
+	if (!achievement_iscompleted(.@id))
+		cloakoffnpc(sprintf("#tr%d", .@id), playerattached());
+	end;
+}
+
+// Treasure Chests
+prt_fild01,146,126,4	duplicate(achievement_tr)	#tr120001	4_TREASURE_BOX
+prt_fild02,142,221,4	duplicate(achievement_tr)	#tr120002	4_TREASURE_BOX
+prt_fild03,172,139,4	duplicate(achievement_tr)	#tr120003	4_TREASURE_BOX
+prt_fild04,118,57,4	duplicate(achievement_tr)	#tr120004	4_TREASURE_BOX
+prt_fild05,189,291,4	duplicate(achievement_tr)	#tr120005	4_TREASURE_BOX
+prt_fild06,298,304,4	duplicate(achievement_tr)	#tr120006	4_TREASURE_BOX
+prt_fild07,44,104,4	duplicate(achievement_tr)	#tr120007	4_TREASURE_BOX
+prt_fild08,203,222,4	duplicate(achievement_tr)	#tr120008	4_TREASURE_BOX
+prt_fild09,37,354,4	duplicate(achievement_tr)	#tr120009	4_TREASURE_BOX
+prt_fild10,177,206,4	duplicate(achievement_tr)	#tr120010	4_TREASURE_BOX
+gef_fild00,73,119,4	duplicate(achievement_tr)	#tr120011	4_TREASURE_BOX
+gef_fild01,222,224,4	duplicate(achievement_tr)	#tr120012	4_TREASURE_BOX
+gef_fild05,202,292,4	duplicate(achievement_tr)	#tr120013	4_TREASURE_BOX
+gef_fild06,279,105,4	duplicate(achievement_tr)	#tr120014	4_TREASURE_BOX
+gef_fild07,184,249,4	duplicate(achievement_tr)	#tr120015	4_TREASURE_BOX
+gef_fild09,170,73,4	duplicate(achievement_tr)	#tr120016	4_TREASURE_BOX
+gef_fild11,239,248,4	duplicate(achievement_tr)	#tr120017	4_TREASURE_BOX
+moc_fild11,188,218,4	duplicate(achievement_tr)	#tr120018	4_TREASURE_BOX
+moc_fild12,234,96,4	duplicate(achievement_tr)	#tr120019	4_TREASURE_BOX
+moc_fild13,290,207,4	duplicate(achievement_tr)	#tr120020	4_TREASURE_BOX
+moc_fild16,196,108,4	duplicate(achievement_tr)	#tr120021	4_TREASURE_BOX
+moc_fild17,269,105,4	duplicate(achievement_tr)	#tr120022	4_TREASURE_BOX
+moc_fild18,54,284,4	duplicate(achievement_tr)	#tr120023	4_TREASURE_BOX
+pay_fild01,167,243,4	duplicate(achievement_tr)	#tr120024	4_TREASURE_BOX
+pay_fild02,105,240,4	duplicate(achievement_tr)	#tr120025	4_TREASURE_BOX
+pay_fild03,144,97,4	duplicate(achievement_tr)	#tr120026	4_TREASURE_BOX
+pay_fild04,257,95,4	duplicate(achievement_tr)	#tr120027	4_TREASURE_BOX
+pay_fild07,365,37,4	duplicate(achievement_tr)	#tr120028	4_TREASURE_BOX
+pay_fild08,237,345,4	duplicate(achievement_tr)	#tr120029	4_TREASURE_BOX
+pay_fild09,251,42,4	duplicate(achievement_tr)	#tr120030	4_TREASURE_BOX
+pay_fild10,196,38,4	duplicate(achievement_tr)	#tr120031	4_TREASURE_BOX
+mjolnir_01,47,60,4	duplicate(achievement_tr)	#tr120032	4_TREASURE_BOX
+mjolnir_02,77,49,4	duplicate(achievement_tr)	#tr120033	4_TREASURE_BOX
+mjolnir_03,190,200,4	duplicate(achievement_tr)	#tr120034	4_TREASURE_BOX
+mjolnir_04,201,146,4	duplicate(achievement_tr)	#tr120035	4_TREASURE_BOX
+mjolnir_05,43,327,4	duplicate(achievement_tr)	#tr120036	4_TREASURE_BOX
+mjolnir_06,162,290,4	duplicate(achievement_tr)	#tr120037	4_TREASURE_BOX
+mjolnir_07,321,127,4	duplicate(achievement_tr)	#tr120038	4_TREASURE_BOX
+mjolnir_08,175,225,4	duplicate(achievement_tr)	#tr120039	4_TREASURE_BOX
+mjolnir_09,299,123,4	duplicate(achievement_tr)	#tr120040	4_TREASURE_BOX
+mjolnir_10,353,371,4	duplicate(achievement_tr)	#tr120041	4_TREASURE_BOX
+mjolnir_11,325,178,4	duplicate(achievement_tr)	#tr120042	4_TREASURE_BOX
+mjolnir_12,110,298,4	duplicate(achievement_tr)	#tr120043	4_TREASURE_BOX
+cmd_fild01,112,200,4	duplicate(achievement_tr)	#tr120044	4_TREASURE_BOX
+cmd_fild02,86,94,4	duplicate(achievement_tr)	#tr120045	4_TREASURE_BOX
+cmd_fild03,144,190,4	duplicate(achievement_tr)	#tr120046	4_TREASURE_BOX
+cmd_fild04,151,191,4	duplicate(achievement_tr)	#tr120047	4_TREASURE_BOX
+cmd_fild06,221,108,4	duplicate(achievement_tr)	#tr120048	4_TREASURE_BOX
+cmd_fild07,269,322,4	duplicate(achievement_tr)	#tr120049	4_TREASURE_BOX
+cmd_fild08,181,136,4	duplicate(achievement_tr)	#tr120050	4_TREASURE_BOX
+cmd_fild09,211,266,4	duplicate(achievement_tr)	#tr120051	4_TREASURE_BOX
+yuno_fild01,284,138,4	duplicate(achievement_tr)	#tr120052	4_TREASURE_BOX
+yuno_fild12,76,268,4	duplicate(achievement_tr)	#tr120053	4_TREASURE_BOX
+yuno_fild02,142,191,4	duplicate(achievement_tr)	#tr120054	4_TREASURE_BOX
+yuno_fild03,135,329,4	duplicate(achievement_tr)	#tr120055	4_TREASURE_BOX
+yuno_fild04,35,369,4	duplicate(achievement_tr)	#tr120056	4_TREASURE_BOX
+yuno_fild06,262,220,4	duplicate(achievement_tr)	#tr120057	4_TREASURE_BOX
+yuno_fild07,113,339,4	duplicate(achievement_tr)	#tr120058	4_TREASURE_BOX
+yuno_fild08,179,209,4	duplicate(achievement_tr)	#tr120059	4_TREASURE_BOX
+yuno_fild09,166,228,4	duplicate(achievement_tr)	#tr120060	4_TREASURE_BOX
+yuno_fild11,141,357,4	duplicate(achievement_tr)	#tr120061	4_TREASURE_BOX
+hu_fild01,347,312,4	duplicate(achievement_tr)	#tr120062	4_TREASURE_BOX
+hu_fild02,80,152,4	duplicate(achievement_tr)	#tr120063	4_TREASURE_BOX
+hu_fild04,322,313,4	duplicate(achievement_tr)	#tr120064	4_TREASURE_BOX
+hu_fild06,204,228,4	duplicate(achievement_tr)	#tr120065	4_TREASURE_BOX
+hu_fild05,197,210,4	duplicate(achievement_tr)	#tr120066	4_TREASURE_BOX
+ein_fild01,266,277,4	duplicate(achievement_tr)	#tr120067	4_TREASURE_BOX
+ein_fild03,99,332,4	duplicate(achievement_tr)	#tr120068	4_TREASURE_BOX
+ein_fild04,334,305,4	duplicate(achievement_tr)	#tr120069	4_TREASURE_BOX
+ein_fild05,337,233,4	duplicate(achievement_tr)	#tr120070	4_TREASURE_BOX
+ein_fild06,174,245,4	duplicate(achievement_tr)	#tr120071	4_TREASURE_BOX
+ein_fild07,188,50,4	duplicate(achievement_tr)	#tr120072	4_TREASURE_BOX
+ein_fild08,258,78,4	duplicate(achievement_tr)	#tr120073	4_TREASURE_BOX
+ein_fild09,330,76,4	duplicate(achievement_tr)	#tr120074	4_TREASURE_BOX
+lhz_fild01,118,73,4	duplicate(achievement_tr)	#tr120075	4_TREASURE_BOX
+lhz_fild02,239,243,4	duplicate(achievement_tr)	#tr120076	4_TREASURE_BOX
+lhz_fild03,313,132,4	duplicate(achievement_tr)	#tr120077	4_TREASURE_BOX
+ra_fild01,138,166,4	duplicate(achievement_tr)	#tr120078	4_TREASURE_BOX
+ra_fild03,224,275,4	duplicate(achievement_tr)	#tr120079	4_TREASURE_BOX
+ra_fild08,326,45,4	duplicate(achievement_tr)	#tr120080	4_TREASURE_BOX
+ra_fild12,352,165,4	duplicate(achievement_tr)	#tr120081	4_TREASURE_BOX
+ra_fild04,92,302,4	duplicate(achievement_tr)	#tr120082	4_TREASURE_BOX
+ra_fild05,59,59,4	duplicate(achievement_tr)	#tr120083	4_TREASURE_BOX
+ra_fild06,362,230,4	duplicate(achievement_tr)	#tr120084	4_TREASURE_BOX
+ve_fild01,180,234,4	duplicate(achievement_tr)	#tr120085	4_TREASURE_BOX
+ve_fild02,65,194,4	duplicate(achievement_tr)	#tr120086	4_TREASURE_BOX
+ve_fild03,197,242,4	duplicate(achievement_tr)	#tr120087	4_TREASURE_BOX
+ve_fild04,288,279,4	duplicate(achievement_tr)	#tr120088	4_TREASURE_BOX
+ve_fild07,33,113,4	duplicate(achievement_tr)	#tr120089	4_TREASURE_BOX
+ecl_fild01,234,217,4	duplicate(achievement_tr)	#tr120090	4_TREASURE_BOX
+bif_fild02,155,322,4	duplicate(achievement_tr)	#tr120091	4_TREASURE_BOX
+bif_fild01,147,64,4	duplicate(achievement_tr)	#tr120092	4_TREASURE_BOX
+spl_fild01,335,315,4	duplicate(achievement_tr)	#tr120093	4_TREASURE_BOX
+spl_fild02,153,358,4	duplicate(achievement_tr)	#tr120094	4_TREASURE_BOX
+spl_fild03,61,286,4	duplicate(achievement_tr)	#tr120095	4_TREASURE_BOX
+man_fild01,41,172,4	duplicate(achievement_tr)	#tr120096	4_TREASURE_BOX
+man_fild02,268,357,4	duplicate(achievement_tr)	#tr120097	4_TREASURE_BOX
+man_fild03,198,91,4	duplicate(achievement_tr)	#tr120098	4_TREASURE_BOX
+dic_fild01,227,82,4	duplicate(achievement_tr)	#tr120099	4_TREASURE_BOX
+dic_fild02,147,196,4	duplicate(achievement_tr)	#tr120100	4_TREASURE_BOX
+ama_fild01,187,337,4	duplicate(achievement_tr)	#tr120101	4_TREASURE_BOX
+gon_fild01,171,332,4	duplicate(achievement_tr)	#tr120102	4_TREASURE_BOX
+lou_fild01,104,232,4	duplicate(achievement_tr)	#tr120103	4_TREASURE_BOX
+ayo_fild01,289,70,4	duplicate(achievement_tr)	#tr120104	4_TREASURE_BOX
+mosk_fild02,176,77,4	duplicate(achievement_tr)	#tr120105	4_TREASURE_BOX
+bra_fild01,99,193,4	duplicate(achievement_tr)	#tr120106	4_TREASURE_BOX
+dew_fild01,175,287,4	duplicate(achievement_tr)	#tr120107	4_TREASURE_BOX
+ma_fild01,308,206,4	duplicate(achievement_tr)	#tr120108	4_TREASURE_BOX
+ma_fild02,246,323,4	duplicate(achievement_tr)	#tr120109	4_TREASURE_BOX
+abbey03,27,72,4	duplicate(achievement_tr)	#tr120110	4_TREASURE_BOX
+abyss_03,86,55,4	duplicate(achievement_tr)	#tr120111	4_TREASURE_BOX
+alde_dun04,90,107,4	duplicate(achievement_tr)	#tr120112	4_TREASURE_BOX
+ama_dun03,60,163,4	duplicate(achievement_tr)	#tr120113	4_TREASURE_BOX
+anthell02,253,41,4	duplicate(achievement_tr)	#tr120114	4_TREASURE_BOX
+ayo_dun02,150,256,4	duplicate(achievement_tr)	#tr120115	4_TREASURE_BOX
+beach_dun3,102,71,4	duplicate(achievement_tr)	#tr120116	4_TREASURE_BOX
+bra_dun02,171,121,4	duplicate(achievement_tr)	#tr120117	4_TREASURE_BOX
+c_tower4,37,158,4	duplicate(achievement_tr)	#tr120118	4_TREASURE_BOX
+dew_dun02,87,272,4	duplicate(achievement_tr)	#tr120119	4_TREASURE_BOX
+dic_dun03,216,211,4	duplicate(achievement_tr)	#tr120120	4_TREASURE_BOX
+ecl_tdun04,37,37,4	duplicate(achievement_tr)	#tr120121	4_TREASURE_BOX
+ein_dun02,31,255,4	duplicate(achievement_tr)	#tr120122	4_TREASURE_BOX
+gef_dun02,222,163,4	duplicate(achievement_tr)	#tr120123	4_TREASURE_BOX
+gl_sew04,288,6,4	duplicate(achievement_tr)	#tr120124	4_TREASURE_BOX
+gl_knt02,126,235,4	duplicate(achievement_tr)	#tr120125	4_TREASURE_BOX
+gl_cas02,53,151,4	duplicate(achievement_tr)	#tr120126	4_TREASURE_BOX
+gl_prison1,126,158,4	duplicate(achievement_tr)	#tr120127	4_TREASURE_BOX
+gon_dun03,166,231,4	duplicate(achievement_tr)	#tr120128	4_TREASURE_BOX
+ice_dun03,45,261,4	duplicate(achievement_tr)	#tr120129	4_TREASURE_BOX
+in_sphinx5,154,107,4	duplicate(achievement_tr)	#tr120130	4_TREASURE_BOX
+iz_dun05,64,223,4	duplicate(achievement_tr)	#tr120131	4_TREASURE_BOX
+kh_dun02,70,107,4	duplicate(achievement_tr)	#tr120132	4_TREASURE_BOX
+lhz_dun03,240,221,4	duplicate(achievement_tr)	#tr120133	4_TREASURE_BOX
+lou_dun03,29,228,4	duplicate(achievement_tr)	#tr120134	4_TREASURE_BOX
+mag_dun02,197,77,4	duplicate(achievement_tr)	#tr120135	4_TREASURE_BOX
+mjo_dun03,76,220,4	duplicate(achievement_tr)	#tr120136	4_TREASURE_BOX
+moc_pryd06,102,121,4	duplicate(achievement_tr)	#tr120137	4_TREASURE_BOX
+orcsdun02,31,72,4	duplicate(achievement_tr)	#tr120138	4_TREASURE_BOX
+pay_dun04,120,124,4	duplicate(achievement_tr)	#tr120139	4_TREASURE_BOX
+prt_maze03,11,14,4	duplicate(achievement_tr)	#tr120140	4_TREASURE_BOX
+prt_sewb4,19,183,4	duplicate(achievement_tr)	#tr120141	4_TREASURE_BOX
+tha_t06,150,176,4	duplicate(achievement_tr)	#tr120142	4_TREASURE_BOX
+thor_v03,220,221,4	duplicate(achievement_tr)	#tr120143	4_TREASURE_BOX
+treasure02,19,142,4	duplicate(achievement_tr)	#tr120144	4_TREASURE_BOX
+tur_dun04,134,130,4	duplicate(achievement_tr)	#tr120145	4_TREASURE_BOX
+xmas_dun02,120,224,4	duplicate(achievement_tr)	#tr120146	4_TREASURE_BOX
+
+// Hidden Warps
+prt_fild01,146,126,0	duplicate(achievement_wp)	#wp120001	HIDDEN_WARP_NPC,5,5
+prt_fild02,142,221,0	duplicate(achievement_wp)	#wp120002	HIDDEN_WARP_NPC,5,5
+prt_fild03,172,139,0	duplicate(achievement_wp)	#wp120003	HIDDEN_WARP_NPC,5,5
+prt_fild04,118,57,0	duplicate(achievement_wp)	#wp120004	HIDDEN_WARP_NPC,5,5
+prt_fild05,189,291,0	duplicate(achievement_wp)	#wp120005	HIDDEN_WARP_NPC,5,5
+prt_fild06,298,304,0	duplicate(achievement_wp)	#wp120006	HIDDEN_WARP_NPC,5,5
+prt_fild07,44,104,0	duplicate(achievement_wp)	#wp120007	HIDDEN_WARP_NPC,5,5
+prt_fild08,203,222,0	duplicate(achievement_wp)	#wp120008	HIDDEN_WARP_NPC,5,5
+prt_fild09,37,354,0	duplicate(achievement_wp)	#wp120009	HIDDEN_WARP_NPC,5,5
+prt_fild10,177,206,0	duplicate(achievement_wp)	#wp120010	HIDDEN_WARP_NPC,5,5
+gef_fild00,73,119,0	duplicate(achievement_wp)	#wp120011	HIDDEN_WARP_NPC,5,5
+gef_fild01,222,224,0	duplicate(achievement_wp)	#wp120012	HIDDEN_WARP_NPC,5,5
+gef_fild05,202,292,0	duplicate(achievement_wp)	#wp120013	HIDDEN_WARP_NPC,5,5
+gef_fild06,279,105,0	duplicate(achievement_wp)	#wp120014	HIDDEN_WARP_NPC,5,5
+gef_fild07,184,249,0	duplicate(achievement_wp)	#wp120015	HIDDEN_WARP_NPC,5,5
+gef_fild09,170,73,0	duplicate(achievement_wp)	#wp120016	HIDDEN_WARP_NPC,5,5
+gef_fild11,239,248,0	duplicate(achievement_wp)	#wp120017	HIDDEN_WARP_NPC,5,5
+moc_fild11,188,218,0	duplicate(achievement_wp)	#wp120018	HIDDEN_WARP_NPC,5,5
+moc_fild12,234,96,0	duplicate(achievement_wp)	#wp120019	HIDDEN_WARP_NPC,5,5
+moc_fild13,290,207,0	duplicate(achievement_wp)	#wp120020	HIDDEN_WARP_NPC,5,5
+moc_fild16,196,108,0	duplicate(achievement_wp)	#wp120021	HIDDEN_WARP_NPC,5,5
+moc_fild17,269,105,0	duplicate(achievement_wp)	#wp120022	HIDDEN_WARP_NPC,5,5
+moc_fild18,54,284,0	duplicate(achievement_wp)	#wp120023	HIDDEN_WARP_NPC,5,5
+pay_fild01,167,243,0	duplicate(achievement_wp)	#wp120024	HIDDEN_WARP_NPC,5,5
+pay_fild02,105,240,0	duplicate(achievement_wp)	#wp120025	HIDDEN_WARP_NPC,5,5
+pay_fild03,144,97,0	duplicate(achievement_wp)	#wp120026	HIDDEN_WARP_NPC,5,5
+pay_fild04,257,95,0	duplicate(achievement_wp)	#wp120027	HIDDEN_WARP_NPC,5,5
+pay_fild07,365,37,0	duplicate(achievement_wp)	#wp120028	HIDDEN_WARP_NPC,5,5
+pay_fild08,237,345,0	duplicate(achievement_wp)	#wp120029	HIDDEN_WARP_NPC,5,5
+pay_fild09,251,42,0	duplicate(achievement_wp)	#wp120030	HIDDEN_WARP_NPC,5,5
+pay_fild10,196,38,0	duplicate(achievement_wp)	#wp120031	HIDDEN_WARP_NPC,5,5
+mjolnir_01,47,60,0	duplicate(achievement_wp)	#wp120032	HIDDEN_WARP_NPC,5,5
+mjolnir_02,77,49,0	duplicate(achievement_wp)	#wp120033	HIDDEN_WARP_NPC,5,5
+mjolnir_03,190,200,0	duplicate(achievement_wp)	#wp120034	HIDDEN_WARP_NPC,5,5
+mjolnir_04,201,146,0	duplicate(achievement_wp)	#wp120035	HIDDEN_WARP_NPC,5,5
+mjolnir_05,43,327,0	duplicate(achievement_wp)	#wp120036	HIDDEN_WARP_NPC,5,5
+mjolnir_06,162,290,0	duplicate(achievement_wp)	#wp120037	HIDDEN_WARP_NPC,5,5
+mjolnir_07,321,127,0	duplicate(achievement_wp)	#wp120038	HIDDEN_WARP_NPC,5,5
+mjolnir_08,175,225,0	duplicate(achievement_wp)	#wp120039	HIDDEN_WARP_NPC,5,5
+mjolnir_09,299,123,0	duplicate(achievement_wp)	#wp120040	HIDDEN_WARP_NPC,5,5
+mjolnir_10,353,371,0	duplicate(achievement_wp)	#wp120041	HIDDEN_WARP_NPC,5,5
+mjolnir_11,325,178,0	duplicate(achievement_wp)	#wp120042	HIDDEN_WARP_NPC,5,5
+mjolnir_12,110,298,0	duplicate(achievement_wp)	#wp120043	HIDDEN_WARP_NPC,5,5
+cmd_fild01,112,200,0	duplicate(achievement_wp)	#wp120044	HIDDEN_WARP_NPC,5,5
+cmd_fild02,86,94,0	duplicate(achievement_wp)	#wp120045	HIDDEN_WARP_NPC,5,5
+cmd_fild03,144,190,0	duplicate(achievement_wp)	#wp120046	HIDDEN_WARP_NPC,5,5
+cmd_fild04,151,191,0	duplicate(achievement_wp)	#wp120047	HIDDEN_WARP_NPC,5,5
+cmd_fild06,221,108,0	duplicate(achievement_wp)	#wp120048	HIDDEN_WARP_NPC,5,5
+cmd_fild07,269,322,0	duplicate(achievement_wp)	#wp120049	HIDDEN_WARP_NPC,5,5
+cmd_fild08,181,136,0	duplicate(achievement_wp)	#wp120050	HIDDEN_WARP_NPC,5,5
+cmd_fild09,211,266,0	duplicate(achievement_wp)	#wp120051	HIDDEN_WARP_NPC,5,5
+yuno_fild01,284,138,0	duplicate(achievement_wp)	#wp120052	HIDDEN_WARP_NPC,5,5
+yuno_fild12,76,268,0	duplicate(achievement_wp)	#wp120053	HIDDEN_WARP_NPC,5,5
+yuno_fild02,142,191,0	duplicate(achievement_wp)	#wp120054	HIDDEN_WARP_NPC,5,5
+yuno_fild03,135,329,0	duplicate(achievement_wp)	#wp120055	HIDDEN_WARP_NPC,5,5
+yuno_fild04,35,369,0	duplicate(achievement_wp)	#wp120056	HIDDEN_WARP_NPC,5,5
+yuno_fild06,262,220,0	duplicate(achievement_wp)	#wp120057	HIDDEN_WARP_NPC,5,5
+yuno_fild07,113,339,0	duplicate(achievement_wp)	#wp120058	HIDDEN_WARP_NPC,5,5
+yuno_fild08,179,209,0	duplicate(achievement_wp)	#wp120059	HIDDEN_WARP_NPC,5,5
+yuno_fild09,166,228,0	duplicate(achievement_wp)	#wp120060	HIDDEN_WARP_NPC,5,5
+yuno_fild11,141,357,0	duplicate(achievement_wp)	#wp120061	HIDDEN_WARP_NPC,5,5
+hu_fild01,347,312,0	duplicate(achievement_wp)	#wp120062	HIDDEN_WARP_NPC,5,5
+hu_fild02,80,152,0	duplicate(achievement_wp)	#wp120063	HIDDEN_WARP_NPC,5,5
+hu_fild04,322,313,0	duplicate(achievement_wp)	#wp120064	HIDDEN_WARP_NPC,5,5
+hu_fild06,204,228,0	duplicate(achievement_wp)	#wp120065	HIDDEN_WARP_NPC,5,5
+hu_fild05,197,210,0	duplicate(achievement_wp)	#wp120066	HIDDEN_WARP_NPC,5,5
+ein_fild01,266,277,0	duplicate(achievement_wp)	#wp120067	HIDDEN_WARP_NPC,5,5
+ein_fild03,99,332,0	duplicate(achievement_wp)	#wp120068	HIDDEN_WARP_NPC,5,5
+ein_fild04,334,305,0	duplicate(achievement_wp)	#wp120069	HIDDEN_WARP_NPC,5,5
+ein_fild05,337,233,0	duplicate(achievement_wp)	#wp120070	HIDDEN_WARP_NPC,5,5
+ein_fild06,174,245,0	duplicate(achievement_wp)	#wp120071	HIDDEN_WARP_NPC,5,5
+ein_fild07,188,50,0	duplicate(achievement_wp)	#wp120072	HIDDEN_WARP_NPC,5,5
+ein_fild08,258,78,0	duplicate(achievement_wp)	#wp120073	HIDDEN_WARP_NPC,5,5
+ein_fild09,330,76,0	duplicate(achievement_wp)	#wp120074	HIDDEN_WARP_NPC,5,5
+lhz_fild01,118,73,0	duplicate(achievement_wp)	#wp120075	HIDDEN_WARP_NPC,5,5
+lhz_fild02,239,243,0	duplicate(achievement_wp)	#wp120076	HIDDEN_WARP_NPC,5,5
+lhz_fild03,313,132,0	duplicate(achievement_wp)	#wp120077	HIDDEN_WARP_NPC,5,5
+ra_fild01,138,166,0	duplicate(achievement_wp)	#wp120078	HIDDEN_WARP_NPC,5,5
+ra_fild03,224,275,0	duplicate(achievement_wp)	#wp120079	HIDDEN_WARP_NPC,5,5
+ra_fild08,326,45,0	duplicate(achievement_wp)	#wp120080	HIDDEN_WARP_NPC,5,5
+ra_fild12,352,165,0	duplicate(achievement_wp)	#wp120081	HIDDEN_WARP_NPC,5,5
+ra_fild04,92,302,0	duplicate(achievement_wp)	#wp120082	HIDDEN_WARP_NPC,5,5
+ra_fild05,59,59,0	duplicate(achievement_wp)	#wp120083	HIDDEN_WARP_NPC,5,5
+ra_fild06,362,230,0	duplicate(achievement_wp)	#wp120084	HIDDEN_WARP_NPC,5,5
+ve_fild01,180,234,0	duplicate(achievement_wp)	#wp120085	HIDDEN_WARP_NPC,5,5
+ve_fild02,65,194,0	duplicate(achievement_wp)	#wp120086	HIDDEN_WARP_NPC,5,5
+ve_fild03,197,242,0	duplicate(achievement_wp)	#wp120087	HIDDEN_WARP_NPC,5,5
+ve_fild04,288,279,0	duplicate(achievement_wp)	#wp120088	HIDDEN_WARP_NPC,5,5
+ve_fild07,33,113,0	duplicate(achievement_wp)	#wp120089	HIDDEN_WARP_NPC,5,5
+ecl_fild01,234,217,0	duplicate(achievement_wp)	#wp120090	HIDDEN_WARP_NPC,5,5
+bif_fild02,155,322,0	duplicate(achievement_wp)	#wp120091	HIDDEN_WARP_NPC,5,5
+bif_fild01,147,64,0	duplicate(achievement_wp)	#wp120092	HIDDEN_WARP_NPC,5,5
+spl_fild01,335,315,0	duplicate(achievement_wp)	#wp120093	HIDDEN_WARP_NPC,5,5
+spl_fild02,153,358,0	duplicate(achievement_wp)	#wp120094	HIDDEN_WARP_NPC,5,5
+spl_fild03,61,286,0	duplicate(achievement_wp)	#wp120095	HIDDEN_WARP_NPC,5,5
+man_fild01,41,172,0	duplicate(achievement_wp)	#wp120096	HIDDEN_WARP_NPC,5,5
+man_fild02,268,357,0	duplicate(achievement_wp)	#wp120097	HIDDEN_WARP_NPC,5,5
+man_fild03,198,91,0	duplicate(achievement_wp)	#wp120098	HIDDEN_WARP_NPC,5,5
+dic_fild01,227,82,0	duplicate(achievement_wp)	#wp120099	HIDDEN_WARP_NPC,5,5
+dic_fild02,147,196,0	duplicate(achievement_wp)	#wp120100	HIDDEN_WARP_NPC,5,5
+ama_fild01,187,337,0	duplicate(achievement_wp)	#wp120101	HIDDEN_WARP_NPC,5,5
+gon_fild01,171,332,0	duplicate(achievement_wp)	#wp120102	HIDDEN_WARP_NPC,5,5
+lou_fild01,104,232,0	duplicate(achievement_wp)	#wp120103	HIDDEN_WARP_NPC,5,5
+ayo_fild01,289,70,0	duplicate(achievement_wp)	#wp120104	HIDDEN_WARP_NPC,5,5
+mosk_fild02,176,77,0	duplicate(achievement_wp)	#wp120105	HIDDEN_WARP_NPC,5,5
+bra_fild01,99,193,0	duplicate(achievement_wp)	#wp120106	HIDDEN_WARP_NPC,5,5
+dew_fild01,175,287,0	duplicate(achievement_wp)	#wp120107	HIDDEN_WARP_NPC,5,5
+ma_fild01,308,206,0	duplicate(achievement_wp)	#wp120108	HIDDEN_WARP_NPC,5,5
+ma_fild02,246,323,0	duplicate(achievement_wp)	#wp120109	HIDDEN_WARP_NPC,5,5
+abbey03,27,72,0	duplicate(achievement_wp)	#wp120110	HIDDEN_WARP_NPC,5,5
+abyss_03,86,55,0	duplicate(achievement_wp)	#wp120111	HIDDEN_WARP_NPC,5,5
+alde_dun04,90,107,0	duplicate(achievement_wp)	#wp120112	HIDDEN_WARP_NPC,5,5
+ama_dun03,60,163,0	duplicate(achievement_wp)	#wp120113	HIDDEN_WARP_NPC,5,5
+anthell02,253,41,0	duplicate(achievement_wp)	#wp120114	HIDDEN_WARP_NPC,5,5
+ayo_dun02,150,256,0	duplicate(achievement_wp)	#wp120115	HIDDEN_WARP_NPC,5,5
+beach_dun3,102,71,0	duplicate(achievement_wp)	#wp120116	HIDDEN_WARP_NPC,5,5
+bra_dun02,171,121,0	duplicate(achievement_wp)	#wp120117	HIDDEN_WARP_NPC,5,5
+c_tower4,37,158,0	duplicate(achievement_wp)	#wp120118	HIDDEN_WARP_NPC,5,5
+dew_dun02,87,272,0	duplicate(achievement_wp)	#wp120119	HIDDEN_WARP_NPC,5,5
+dic_dun03,216,211,0	duplicate(achievement_wp)	#wp120120	HIDDEN_WARP_NPC,5,5
+ecl_tdun04,37,37,0	duplicate(achievement_wp)	#wp120121	HIDDEN_WARP_NPC,5,5
+ein_dun02,31,255,0	duplicate(achievement_wp)	#wp120122	HIDDEN_WARP_NPC,5,5
+gef_dun02,222,163,0	duplicate(achievement_wp)	#wp120123	HIDDEN_WARP_NPC,5,5
+gl_sew04,288,6,0	duplicate(achievement_wp)	#wp120124	HIDDEN_WARP_NPC,5,5
+gl_knt02,126,235,0	duplicate(achievement_wp)	#wp120125	HIDDEN_WARP_NPC,5,5
+gl_cas02,53,151,0	duplicate(achievement_wp)	#wp120126	HIDDEN_WARP_NPC,5,5
+gl_prison1,126,158,0	duplicate(achievement_wp)	#wp120127	HIDDEN_WARP_NPC,5,5
+gon_dun03,166,231,0	duplicate(achievement_wp)	#wp120128	HIDDEN_WARP_NPC,5,5
+ice_dun03,45,261,0	duplicate(achievement_wp)	#wp120129	HIDDEN_WARP_NPC,5,5
+in_sphinx5,154,107,0	duplicate(achievement_wp)	#wp120130	HIDDEN_WARP_NPC,5,5
+iz_dun05,64,223,0	duplicate(achievement_wp)	#wp120131	HIDDEN_WARP_NPC,5,5
+kh_dun02,70,107,0	duplicate(achievement_wp)	#wp120132	HIDDEN_WARP_NPC,5,5
+lhz_dun03,240,221,0	duplicate(achievement_wp)	#wp120133	HIDDEN_WARP_NPC,5,5
+lou_dun03,29,228,0	duplicate(achievement_wp)	#wp120134	HIDDEN_WARP_NPC,5,5
+mag_dun02,197,77,0	duplicate(achievement_wp)	#wp120135	HIDDEN_WARP_NPC,5,5
+mjo_dun03,76,220,0	duplicate(achievement_wp)	#wp120136	HIDDEN_WARP_NPC,5,5
+moc_pryd06,102,121,0	duplicate(achievement_wp)	#wp120137	HIDDEN_WARP_NPC,5,5
+orcsdun02,31,72,0	duplicate(achievement_wp)	#wp120138	HIDDEN_WARP_NPC,5,5
+pay_dun04,120,124,0	duplicate(achievement_wp)	#wp120139	HIDDEN_WARP_NPC,5,5
+prt_maze03,11,14,0	duplicate(achievement_wp)	#wp120140	HIDDEN_WARP_NPC,5,5
+prt_sewb4,19,183,0	duplicate(achievement_wp)	#wp120141	HIDDEN_WARP_NPC,5,5
+tha_t06,150,176,0	duplicate(achievement_wp)	#wp120142	HIDDEN_WARP_NPC,5,5
+thor_v03,220,221,0	duplicate(achievement_wp)	#wp120143	HIDDEN_WARP_NPC,5,5
+treasure02,19,142,0	duplicate(achievement_wp)	#wp120144	HIDDEN_WARP_NPC,5,5
+tur_dun04,134,130,0	duplicate(achievement_wp)	#wp120145	HIDDEN_WARP_NPC,5,5
+xmas_dun02,120,224,0	duplicate(achievement_wp)	#wp120146	HIDDEN_WARP_NPC,5,5
