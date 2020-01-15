@@ -10634,6 +10634,14 @@ returns progress on success and false on failure
 
 ---------------------------------------
 
+*achievement_iscompleted(<ach_id>{, <account_id>})
+
+Checks whether the attached player have completed all the given achievement objectives.
+
+returns true if yes and false if no.
+
+---------------------------------------
+
 *itempreview(<index>)
 
 Update already opened preview window with item from

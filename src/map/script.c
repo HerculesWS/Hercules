@@ -22269,6 +22269,23 @@ static BUILDIN(achievement_progress)
 	return true;
 }
 
+static BUILDIN(achievement_iscompleted)
+{
+	struct map_session_data *sd = script_hasdata(st, 3) ? map->id2sd(script_getnum(st, 3)) : script->rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	int aid = script_getnum(st, 2);
+	const struct achievement_data *ad = achievement->get(aid);
+	if (ad == NULL) {
+		ShowError("buildin_achievement_iscompleted: Invalid Achievement %d provided.\n", aid);
+		return false;
+	}
+
+	script_pushint(st, achievement->check_complete(sd, ad));
+	return true;
+}
+
 /*==========================================
  * BattleGround System
  *------------------------------------------*/
@@ -27006,6 +27023,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(agitcheck2,""),
 		// Achievements [Smokexyz/Hercules]
 		BUILDIN_DEF(achievement_progress, "iiii?"),
+		BUILDIN_DEF(achievement_iscompleted, "i?"),
 		// BattleGround
 		BUILDIN_DEF(waitingroom2bg,"siiss?"),
 		BUILDIN_DEF(waitingroom2bg_single,"isiis"),
