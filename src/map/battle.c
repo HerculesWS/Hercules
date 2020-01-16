@@ -6608,7 +6608,7 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 	if( (s_bl = battle->get_master(src)) == NULL )
 		s_bl = src;
 
-	if ((flag & BCT_ENEMY) != 0 && (status_get_mode(s_bl) & MD_BOSS) == 0 && (map->getcell(m, src, src->x, src->y, CELL_CHKBASILICA)
+	if ((flag & BCT_ENEMY) != 0 && (status_get_mode(s_bl) & MD_BOSS) == 0 && (map->getcell(m, src, src->x, src->y, CELL_CHKBASILICA) != 0
 	    || map->getcell(m, src, target->x, target->y, CELL_CHKBASILICA))) {
 		return -1;
 	}
