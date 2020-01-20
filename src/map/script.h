@@ -565,6 +565,14 @@ enum mado_type {
 };
 
 /**
+ * Option flags for itemskill() script command.
+ **/
+enum itemskill_flag {
+	ISF_NONE = 0x00,
+	ISF_IGNORECONDITIONS = 0x01, // Ignore skill conditions and don't consume them.
+};
+
+/**
  * Structures
  **/
 

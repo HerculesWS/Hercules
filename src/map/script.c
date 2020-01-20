@@ -11000,15 +11000,26 @@ static BUILDIN(itemskill)
 
 	id = ( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	lv = script_getnum(st,3);
-/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
-#if 0
-	if( !script_hasdata(st, 4) ) {
-		if( !skill->check_condition_castbegin(sd,id,lv) || !skill->check_condition_castend(sd,id,lv) )
-			return true;
-	}
-#endif
 	sd->skillitem=id;
 	sd->skillitemlv=lv;
+
+	/// itemskill_conditions_checked/itemskill_no_conditions abuse prevention.
+	/// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	sd->itemskill_id = id;
+	sd->itemskill_lv = lv;
+
+	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
+
+	sd->state.itemskill_conditions_checked = 0; /// Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.
+	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; /// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+
+	if (sd->state.itemskill_no_conditions == 0) {
+		if (skill->check_condition_castbegin(sd, id, lv) == 0 || skill->check_condition_castend(sd, id, lv) == 0)
+			return true;
+
+		sd->state.itemskill_conditions_checked = 1; /// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	}
+
 	clif->item_skill(sd,id,lv);
 	return true;
 }

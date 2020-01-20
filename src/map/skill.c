@@ -13997,8 +13997,16 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 
 	nullpo_ret(sd);
 
+	if (skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL)
+		return 0;
+
 	if (sd->chat_id != 0)
 		return 0;
+
+	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_no_conditions == 1)
+	    && sd->itemskill_id == sd->skillitem && sd->itemskill_lv == sd->skillitemlv) {
+		return 1;
+	}
 
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id) {
 		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
@@ -14041,24 +14049,32 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			if( (i = sd->itemindex) == -1 ||
 				sd->status.inventory[i].nameid != sd->itemid ||
 				sd->inventory_data[i] == NULL ||
-				!sd->inventory_data[i]->flag.delay_consume ||
+				(sd->inventory_data[i]->flag.delay_consume == 0 && skill_id == WZ_EARTHSPIKE) || // TODO: See below. [Kenpachi]
 				sd->status.inventory[i].amount < 1
 			) {
 				//Something went wrong, item exploit?
 				sd->itemid = sd->itemindex = -1;
 				return 0;
 			}
+
+			/**
+			 * [Kenpachi] TODO:
+			 * - No skill casting item should be of type IT_DELAYCONSUME, they are all consumed immediately, even before the skill cursor appears.
+			 *   The WZ_EARTHSPIKE check for TK_SPTIME skill should be moved to pc_useitem(), once the type of all skill casting items is updated.
+			 *
+			 * - The consumption of 10 SP when using Earth_Scroll_1_3 or Earth_Scroll_1_5 while SC_EARTHSCROLL is active needs to be implemented.
+			 *
+			 **/
 			//Consume
 			sd->itemid = sd->itemindex = -1;
 			if( skill_id == WZ_EARTHSPIKE && sc && sc->data[SC_EARTHSCROLL] && rnd()%100 > sc->data[SC_EARTHSCROLL]->val2 ) // [marquis007]
 				; //Do not consume item.
-			else if( sd->status.inventory[i].expire_time == 0 ) // Rental usable items are not consumed until expiration
+			else if (sd->status.inventory[i].expire_time == 0 && sd->inventory_data[i]->flag.delay_consume == 1) // Rental usable items are not consumed until expiration
 				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 		}
-		return 1;
 	}
 
-	if( pc_is90overweight(sd) ) {
+	if (pc_is90overweight(sd) && sd->skillitem != skill_id) { /// Skill casting items ignore the overweight restriction. [Kenpachi]
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_WEIGHTOVER, 0, 0);
 		return 0;
 	}
@@ -14181,9 +14197,6 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				}
 			}
 	}
-
-	if( skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL )
-		return 0;
 
 	require = skill->get_requirement(sd,skill_id,skill_lv);
 
@@ -14932,7 +14945,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 0;
 	}
 
-	if( require.sp > 0 && st->sp < (unsigned int)require.sp) {
+	if (require.sp > 0 && st->sp < (unsigned int)require.sp && sd->skillitem != skill_id) { /// Skill casting items and Hocus-Pocus skills don't consume SP. [Kenpachi]
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 		return 0;
 	}
@@ -14990,6 +15003,11 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 	if (sd->chat_id != 0)
 		return 0;
 
+	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_no_conditions == 1)
+	    && sd->itemskill_id == sd->skillitem && sd->itemskill_lv == sd->skillitemlv) {
+		return 1;
+	}
+
 	if( pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id ) {
 		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
@@ -15017,14 +15035,8 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 				return 0;
 			break;
 	}
-	/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
-#if 0
-	if( sd->state.abra_flag ) // Casting finished (Hocus-Pocus)
-		return 1;
-#endif
-	if( sd->skillitem == skill_id )
-		return 1;
-	if( pc_is90overweight(sd) ) {
+
+	if (pc_is90overweight(sd) && sd->skillitem != skill_id) { /// Skill casting items ignore the overweight restriction. [Kenpachi]
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_WEIGHTOVER, 0, 0);
 		return 0;
 	}
@@ -15197,6 +15209,9 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 
 	nullpo_ret(sd);
 
+	if (sd->state.itemskill_no_conditions == 1 && sd->itemskill_id == sd->skillitem && sd->itemskill_lv == sd->skillitemlv)
+		return 1;
+
 	req = skill->get_requirement(sd,skill_id,skill_lv);
 
 	if (type&1) {
@@ -15206,8 +15221,9 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 				req.sp = 0;
 				break;
 			default:
-				if( sd->state.autocast )
+				if (sd->state.autocast == 1 || sd->skillitem == skill_id) /// Skill casting items and Hocus-Pocus skills don't consume SP. [Kenpachi]
 					req.sp = 0;
+
 				break;
 		}
 
@@ -15285,12 +15301,6 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 
 	if( !sd )
 		return req;
-#if 0 /* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
-	if( sd->state.abra_flag )
-#else // not 0
-	if( sd->skillitem == skill_id )
-#endif // 0
-		return req; // Hocus-Pocus don't have requirements.
 
 	sc = &sd->sc;
 	if( !sc->count )

@@ -240,6 +240,8 @@ struct map_session_data {
 		unsigned int refine_ui : 1;
 		unsigned int npc_unloaded : 1; ///< The player is talking with an unloaded NPCs (respawned tombstones)
 		unsigned int lapine_ui : 1;
+		unsigned int itemskill_conditions_checked : 1; // Used by itemskill() script command, to prevent second check of conditions after target was selected.
+		unsigned int itemskill_no_conditions : 1; // Used by itemskill() script command, to ignore skill conditions and don't consume them.
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -643,6 +645,15 @@ END_ZEROED_BLOCK;
 	bool achievements_received;
 	// Title
 	VECTOR_DECL(int) title_ids;
+
+	/*
+	 * itemskill_conditions_checked/itemskill_no_conditions abuse prevention.
+	 * If a skill, casted by itemskill() script command, is aborted while target selection,
+	 * the map server gets no notification where these states could be unset.
+	 * Thus we need this helper variables to prevent abusing these states for next skill cast.
+	 */
+	int itemskill_id;
+	int itemskill_lv;
 };
 
 #define EQP_WEAPON EQP_HAND_R
