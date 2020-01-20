@@ -570,6 +570,7 @@ enum mado_type {
 enum itemskill_flag {
 	ISF_NONE = 0x00,
 	ISF_IGNORECONDITIONS = 0x01, // Ignore skill conditions and don't consume them.
+	ISF_INSTANTCAST = 0x02, // Cast skill instantaneously.
 };
 
 /**
