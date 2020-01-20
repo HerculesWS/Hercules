@@ -27851,6 +27851,12 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MADO_ROBOT", MADO_ROBOT, false, false);
 	script->set_constant("MADO_SUITE", MADO_SUITE, false, false);
 
+	script->constdb_comment("itemskill option flags");
+	script->set_constant("ISF_NONE", ISF_NONE, false, false);
+	script->set_constant("ISF_IGNORECONDITIONS", ISF_IGNORECONDITIONS, false, false);
+	script->set_constant("ISF_INSTANTCAST", ISF_INSTANTCAST, false, false);
+	script->set_constant("ISF_CASTONSELF", ISF_CASTONSELF, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);
