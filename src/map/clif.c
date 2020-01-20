@@ -6759,10 +6759,16 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 	nullpo_retv(sd);
 
 	fd=sd->fd;
+
+	int type = skill->get_inf(skill_id);
+
+	if (sd->state.itemskill_castonself == 1 && sd->itemskill_id == sd->skillitem && sd->itemskill_lv == sd->skillitemlv)
+		type = INF_SELF_SKILL;
+
 	WFIFOHEAD(fd,packet_len(0x147));
 	WFIFOW(fd, 0)=0x147;
 	WFIFOW(fd, 2)=skill_id;
-	WFIFOL(fd, 4)=skill->get_inf(skill_id);
+	WFIFOL(fd, 4) = type;
 	WFIFOW(fd, 8)=skill_lv;
 	WFIFOW(fd,10)=skill->get_sp(skill_id,skill_lv);
 	WFIFOW(fd,12)=skill->get_range2(&sd->bl, skill_id,skill_lv);
