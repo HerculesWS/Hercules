@@ -10985,46 +10985,52 @@ static BUILDIN(guildopenstorage)
 	return true;
 }
 
-/*==========================================
- * Make player use a skill trought item usage
- *------------------------------------------*/
-/// itemskill <skill id>,<level>{,flag
-/// itemskill "<skill name>",<level>{,flag
+/**
+ * Makes the attached character use a skill by using an item.
+ *
+ * @code{.herc}
+ *	itemskill(<skill id>, <skill level>{, <flag>});
+ *	itemskill("<skill name>", <skill level>{, <flag>});
+ * @endcode
+ *
+ */
 static BUILDIN(itemskill)
 {
-	int id;
-	int lv;
 	struct map_session_data *sd = script->rid2sd(st);
+
 	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
 		return true;
 
-	id = ( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
-	lv = script_getnum(st,3);
-	sd->skillitem=id;
-	sd->skillitemlv=lv;
-
-	/// itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention.
-	/// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
-	sd->itemskill_id = id;
-	sd->itemskill_lv = lv;
+	sd->skillitem = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
+	sd->skillitemlv = script_getnum(st, 3);
+	sd->state.itemskill_conditions_checked = 0; // Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
-	sd->state.itemskill_conditions_checked = 0; /// Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.
-	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; /// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
-	sd->state.itemskill_no_casttime = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST) ? 1 : 0; /// /// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
-	sd->state.itemskill_castonself = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF) ? 1 : 0; /// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
 
 	if (sd->state.itemskill_no_conditions == 0) {
-		if (skill->check_condition_castbegin(sd, id, lv) == 0 || skill->check_condition_castend(sd, id, lv) == 0)
+		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
+		    || skill->check_condition_castend(sd, sd->skillitem, sd->skillitemlv) == 0) {
 			return true;
+		}
 
-		sd->state.itemskill_conditions_checked = 1; /// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+		sd->state.itemskill_conditions_checked = 1; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
 	}
 
-	clif->item_skill(sd, id, lv);
+	sd->state.itemskill_no_casttime = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST) ? 1 : 0; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	sd->state.itemskill_castonself = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF) ? 1 : 0; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+
+	// itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention.
+	// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	sd->itemskill_id = sd->skillitem;
+	sd->itemskill_lv = sd->skillitemlv;
+
+	clif->item_skill(sd, sd->skillitem, sd->skillitemlv);
+
 	return true;
 }
+
 /*==========================================
  * Attempt to create an item
  *------------------------------------------*/
