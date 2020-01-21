@@ -881,17 +881,17 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 	if( div < 0 ) // div fix
 		div = 1;
 	if( skill_id == MO_FINGEROFFENSIVE )//The finger offensive spheres on moment of attack do count. [Skotlex]
-		damage += div * sd->spiritball_old * 3;
+		damage += (int64)div * sd->spiritball_old * 3;
 	else
-		damage += div * sd->spiritball * 3;
+		damage += (int64)div * sd->spiritball * 3;
 	if( skill_id != CR_SHIELDBOOMERANG ) // Only Shield boomerang doesn't takes the Star Crumbs bonus.
-		damage += div * (left ? sd->left_weapon.star : sd->right_weapon.star);
+		damage += (int64)div * (left ? sd->left_weapon.star : sd->right_weapon.star);
 	if( skill_id != MC_CARTREVOLUTION && (skill2_lv=pc->checkskill(sd,BS_HILTBINDING)) > 0 )
 		damage += 4;
 
 	if(sd->status.party_id && (skill2_lv=pc->checkskill(sd,TK_POWER)) > 0) {
 		if( (i = party->foreachsamemap(party->sub_count, sd, 0)) > 1 )
-			damage += 2 * skill2_lv * i * (damage /*+ unknown value*/)  / 100 /*+ unknown value*/;
+			damage += 2 * (int64)skill2_lv * i * (damage /*+ unknown value*/)  / 100 /*+ unknown value*/;
 	}
 #else
 	if( skill_id != ASC_BREAKER && weapon ) // Adv Katar Mastery is does not applies to ASC_BREAKER, but other masteries DO apply >_>
@@ -3966,7 +3966,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	case MA_LANDMINE:
 	case HT_BLASTMINE:
 	case HT_CLAYMORETRAP:
-		md.damage = skill_lv * sstatus->dex * (3+status->get_lv(src)/100) * (1+sstatus->int_/35);
+		md.damage = (int64)skill_lv * sstatus->dex * (3+status->get_lv(src)/100) * (1+sstatus->int_/35);
 		md.damage += md.damage * (rnd()%20-10) / 100;
 		md.damage += 40 * (sd?pc->checkskill(sd,RA_RESEARCHTRAP):0);
 		break;
@@ -4038,7 +4038,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			md.damage = matk + atk;
 			if( src->type == BL_MOB ){
 				totaldef = (tdef + tmdef) >> 1;
-				md.damage = 7 * targetVit * skill_lv * (atk + matk) / 100;
+				md.damage = 7 * (int64)targetVit * skill_lv * (atk + matk) / 100;
 				/*
 				// Pending [malufett]
 				if( unknown condition ){
@@ -4127,7 +4127,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 	case RK_DRAGONBREATH:
 	case RK_DRAGONBREATH_WATER:
-		md.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
+		md.damage = (int64)((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
 		RE_LVL_MDMOD(150);
 		if (sd) md.damage = md.damage * (95 + 5 * pc->checkskill(sd,RK_DRAGONTRAINING)) / 100;
 		md.flag |= BF_LONG|BF_WEAPON;
@@ -4152,7 +4152,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 
 		break;
 	case WM_SOUND_OF_DESTRUCTION:
-		md.damage = 1000 * (int64)skill_lv + sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
+		md.damage = 1000 * (int64)skill_lv + (int64)sstatus->int_ * (sd ? pc->checkskill(sd,WM_LESSON) : 10);
 		md.damage += md.damage * 10 * battle->calc_chorusbonus(sd) / 100;
 		break;
 	/**
@@ -4165,7 +4165,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 #else
 			short totaldef = tstatus->def2 + (short)status->get_def(target);
 #endif
-			md.damage = ( (sd?pc->checkskill(sd,NC_MAINFRAME):10) + 8 ) * ( skill_lv + 1 ) * ( status_get_sp(src) + sstatus->vit );
+			md.damage = (int64)( (sd?pc->checkskill(sd,NC_MAINFRAME):10) + 8 ) * ( skill_lv + 1 ) * ( status_get_sp(src) + sstatus->vit );
 			RE_LVL_MDMOD(100);
 			md.damage += status_get_hp(src) - totaldef;
 		}
@@ -4897,7 +4897,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					if( sc && sc->data[SC_NJ_BUNSINJYUTSU] && (i=sc->data[SC_NJ_BUNSINJYUTSU]->val2) > 0 )
 						wd.div_ = ~( i++ + 2 ) + 1;
 					if( wd.damage ){
-						wd.damage *= sstatus->hp * skill_lv;
+						wd.damage *= (int64)sstatus->hp * skill_lv;
 						wd.damage = wd.damage / sstatus->max_hp + sstatus->hp + i * (wd.damage / sstatus->max_hp + sstatus->hp) / 5;
 					}
 					ATK_ADD(-totaldef);

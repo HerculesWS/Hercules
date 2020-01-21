@@ -48,7 +48,7 @@
 #include <string.h>
 
 static struct battleground_interface bg_s;
-struct battleground_interface *bg;
+struct battleground_interface *bg; // lgtm[cpp/short-global-name]
 
 /// Search a BG Team using bg_id
 static struct battleground_data* bg_team_search(int bg_id)

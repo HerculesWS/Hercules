@@ -25132,27 +25132,27 @@ static BUILDIN(getcalendartime)
 	info.tm_mon = month - 1;
 	info.tm_year = year - 1900;
 
-	if (day_of_month > -1 && day_of_week > -1) {
+	if (day_of_month != -1 && day_of_week != -1) {
 		ShowError("script:getcalendartime: You must only specify a day_of_week or a day_of_month, not both\n");
 		script_pushint(st, -1);
 		return false;
 	}
-	if (day_of_month > -1 && (day_of_month < 1 || day_of_month > 31)) {
+	if (day_of_month != -1 && (day_of_month < 1 || day_of_month > 31)) {
 		ShowError("script:getcalendartime: Day of Month in invalid range. Must be between 1 and 31.\n");
 		script_pushint(st, -1);
 		return false;
 	}
-	if (day_of_week > -1 && (day_of_week < 0 || day_of_week > 6)) {
+	if (day_of_week != -1 && (day_of_week < 0 || day_of_week > 6)) {
 		ShowError("script:getcalendartime: Day of Week in invalid range. Must be between 0 and 6.\n");
 		script_pushint(st, -1);
 		return false;
 	}
-	if (hour > -1 && (hour > 23)) {
+	if (hour != -1 && (hour < 0 || hour > 23)) {
 		ShowError("script:getcalendartime: Hour in invalid range. Must be between 0 and 23.\n");
 		script_pushint(st, -1);
 		return false;
 	}
-	if (minute > -1 && (minute > 59)) {
+	if (minute != -1 && (minute < 0 || minute > 59)) {
 		ShowError("script:getcalendartime: Minute in invalid range. Must be between 0 and 59.\n");
 		script_pushint(st, -1);
 		return false;

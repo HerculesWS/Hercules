@@ -56,7 +56,7 @@
 #include <string.h>
 
 static struct pet_interface pet_s;
-struct pet_interface *pet;
+struct pet_interface *pet; // lgtm[cpp/short-global-name]
 
 #define MIN_PETTHINKTIME 100
 

@@ -239,7 +239,7 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 	}
 
 	// Reallocate cells
-	num_cell = map->list[im].xs * map->list[im].ys;
+	num_cell = (size_t)map->list[im].xs * map->list[im].ys;
 	CREATE( map->list[im].cell, struct mapcell, num_cell );
 	memcpy( map->list[im].cell, map->list[m].cell, num_cell * sizeof(struct mapcell) );
 
@@ -254,7 +254,7 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 		map->list[im].cell[j].landprotector = 0;
 	}
 
-	size = map->list[im].bxs * map->list[im].bys * sizeof(struct block_list*);
+	size = (size_t)map->list[im].bxs * map->list[im].bys * sizeof(struct block_list*);
 	map->list[im].block = (struct block_list**)aCalloc(size, 1);
 	map->list[im].block_mob = (struct block_list**)aCalloc(size, 1);
 

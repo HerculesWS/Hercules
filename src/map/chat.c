@@ -403,7 +403,7 @@ static bool chat_createnpcchat(struct npc_data *nd, const char *title, int limit
 		return false;
 	}
 
-	if (zeny > MAX_ZENY || max_level > MAX_LEVEL) {
+	if (zeny > MAX_ZENY || max_level > MAX_LEVEL) { // lgtm [cpp/constant-comparison]
 		ShowError("chat_createnpcchat: npc '%s' has a required lvl or amount of zeny over the max limit!\n", nd->exname);
 		return false;
 	}

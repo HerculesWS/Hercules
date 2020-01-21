@@ -38,7 +38,7 @@ static struct sv_interface sv_s;
 
 struct strlib_interface *strlib;
 struct stringbuf_interface *StrBuf;
-struct sv_interface *sv;
+struct sv_interface *sv; // lgtm[cpp/short-global-name]
 
 // escapes a string in-place (' -> \' , \ -> \\ , % -> _)
 static char *jstrescape(char *pt)
