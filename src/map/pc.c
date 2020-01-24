@@ -5257,6 +5257,14 @@ static int pc_useitem(struct map_session_data *sd, int n)
 #endif
 			if( battle_config.item_restricted_consumption_type && sd->status.inventory[n].expire_time == 0 ) {
 				clif->useitemack(sd,n,sd->status.inventory[n].amount-1,true);
+
+				// If Earth Spike Scroll is used while SC_EARTHSCROLL is active, there is a chance to don't consume the scroll. [Kenpachi]
+				if ((nameid == ITEMID_EARTH_SCROLL_1_3 || nameid == ITEMID_EARTH_SCROLL_1_5)
+				    && sd->sc.count > 0 && sd->sc.data[SC_EARTHSCROLL] != NULL
+				    && rnd() % 100 > sd->sc.data[SC_EARTHSCROLL]->val2) {
+					return 0;
+				}
+
 				pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 			}
 			return 0;
@@ -5301,6 +5309,12 @@ static int pc_useitem(struct map_session_data *sd, int n)
 
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
+
+	// If Earth Spike Scroll is used while SC_EARTHSCROLL is active, there is a chance to don't consume the scroll. [Kenpachi]
+	if ((nameid == ITEMID_EARTH_SCROLL_1_3 || nameid == ITEMID_EARTH_SCROLL_1_5) && sd->sc.count > 0
+	    && sd->sc.data[SC_EARTHSCROLL] != NULL && rnd() % 100 > sd->sc.data[SC_EARTHSCROLL]->val2) {
+		removeItem = false;
+	}
 
 	if (removeItem)
 		pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);

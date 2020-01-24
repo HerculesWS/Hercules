@@ -14049,7 +14049,6 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			if( (i = sd->itemindex) == -1 ||
 				sd->status.inventory[i].nameid != sd->itemid ||
 				sd->inventory_data[i] == NULL ||
-				(sd->inventory_data[i]->flag.delay_consume == 0 && skill_id == WZ_EARTHSPIKE) || // TODO: See below. [Kenpachi]
 				sd->status.inventory[i].amount < 1
 			) {
 				//Something went wrong, item exploit?
@@ -14057,17 +14056,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				return 0;
 			}
 
-			/**
-			 * [Kenpachi] TODO:
-			 * - No skill casting item should be of type IT_DELAYCONSUME, they are all consumed immediately, even before the skill cursor appears.
-			 *   The WZ_EARTHSPIKE check for TK_SPTIME skill should be moved to pc_useitem(), once the type of all skill casting items is updated.
-			 *
-			 **/
 			//Consume
 			sd->itemid = sd->itemindex = -1;
-			if( skill_id == WZ_EARTHSPIKE && sc && sc->data[SC_EARTHSCROLL] && rnd()%100 > sc->data[SC_EARTHSCROLL]->val2 ) // [marquis007]
-				; //Do not consume item.
-			else if (sd->status.inventory[i].expire_time == 0 && sd->inventory_data[i]->flag.delay_consume == 1) // Rental usable items are not consumed until expiration
+			if (sd->status.inventory[i].expire_time == 0 && sd->inventory_data[i]->flag.delay_consume == 1) // Rental usable items are not consumed until expiration
 				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 		}
 	}
