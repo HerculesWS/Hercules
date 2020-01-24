@@ -14062,8 +14062,6 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			 * - No skill casting item should be of type IT_DELAYCONSUME, they are all consumed immediately, even before the skill cursor appears.
 			 *   The WZ_EARTHSPIKE check for TK_SPTIME skill should be moved to pc_useitem(), once the type of all skill casting items is updated.
 			 *
-			 * - The consumption of 10 SP when using Earth_Scroll_1_3 or Earth_Scroll_1_5 while SC_EARTHSCROLL is active needs to be implemented.
-			 *
 			 **/
 			//Consume
 			sd->itemid = sd->itemindex = -1;
@@ -15219,6 +15217,11 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 			case CG_TAROTCARD: // TarotCard will consume sp in skill_cast_nodamage_id [Inkfish]
 			case MC_IDENTIFY:
 				req.sp = 0;
+				break;
+			case WZ_EARTHSPIKE:
+				if (sd->sc.count > 0 && sd->sc.data[SC_EARTHSCROLL] != NULL) // If Earth Spike Scroll is used while SC_EARTHSCROLL is active, 10 SP are consumed. [Kenpachi]
+					req.sp = 10;
+
 				break;
 			default:
 				if (sd->state.autocast == 1 || sd->skillitem == skill_id) /// Skill casting items and Hocus-Pocus skills don't consume SP. [Kenpachi]
