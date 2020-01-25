@@ -3742,6 +3742,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 	strcpy(db->name, sd->status.name);
 	strcpy(db->jname, sd->status.name);
 	db->lv = status->get_lv(&sd->bl);
+	db->dmg_taken_rate = 100;
 	memcpy(mstatus, &sd->base_status, sizeof(struct status_data));
 	mstatus->rhw.atk2 = mstatus->dex + mstatus->rhw.atk + mstatus->rhw.atk2; /// Max ATK.
 	mstatus->rhw.atk = mstatus->dex; /// Min ATK.
