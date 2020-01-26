@@ -6762,7 +6762,7 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 
 	int type = skill->get_inf(skill_id);
 
-	if (sd->state.itemskill_castonself == 1 && sd->itemskill_id == sd->skillitem && sd->itemskill_lv == sd->skillitemlv)
+	if (sd->state.itemskill_castonself == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
 		type = INF_SELF_SKILL;
 
 	WFIFOHEAD(fd,packet_len(0x147));
