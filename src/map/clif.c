@@ -12932,6 +12932,7 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 
 	pc->delinvincibletimer(sd);
 	skill->castend_map(sd,skill_id,map_name);
+	pc->itemskill_clear(sd);
 }
 
 static void clif_parse_RequestMemo(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));

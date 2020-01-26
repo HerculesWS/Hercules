@@ -1046,14 +1046,8 @@ static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_
 	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL) {
-		sd->itemskill_id = 0;
-		sd->itemskill_lv = 0;
-		sd->state.itemskill_conditions_checked = 0;
-		sd->state.itemskill_no_conditions = 0;
-		sd->state.itemskill_no_casttime = 0;
-		sd->state.itemskill_castonself = 0;
-	}
+	if (sd != NULL)
+		pc->itemskill_clear(sd);
 
 	return ret;
 }
@@ -1691,14 +1685,8 @@ static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_
 	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL) {
-		sd->itemskill_id = 0;
-		sd->itemskill_lv = 0;
-		sd->state.itemskill_conditions_checked = 0;
-		sd->state.itemskill_no_conditions = 0;
-		sd->state.itemskill_no_casttime = 0;
-		sd->state.itemskill_castonself = 0;
-	}
+	if (sd != NULL)
+		pc->itemskill_clear(sd);
 
 	return ret;
 }

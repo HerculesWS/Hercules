@@ -5321,6 +5321,26 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	return 1;
 }
 
+/**
+ * Sets state flags and helper variables, used by itemskill() script command, to 0.
+ *
+ * @param sd The character's session data.
+ * @return 0 if parameter sd is NULL, otherwise 1.
+ */
+static int pc_itemskill_clear(struct map_session_data *sd)
+{
+	nullpo_ret(sd);
+
+	sd->itemskill_id = 0;
+	sd->itemskill_lv = 0;
+	sd->state.itemskill_conditions_checked = 0;
+	sd->state.itemskill_no_conditions = 0;
+	sd->state.itemskill_no_casttime = 0;
+	sd->state.itemskill_castonself = 0;
+
+	return 1;
+}
+
 /*==========================================
  * Add item on cart for given index.
  * Return:
@@ -12662,6 +12682,7 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
+	pc->itemskill_clear = pc_itemskill_clear;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;

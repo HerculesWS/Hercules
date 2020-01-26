@@ -11007,7 +11007,7 @@ static BUILDIN(itemskill)
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
-	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
 
 	if (sd->state.itemskill_no_conditions == 0) {
 		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
@@ -11015,14 +11015,13 @@ static BUILDIN(itemskill)
 			return true;
 		}
 
-		sd->state.itemskill_conditions_checked = 1; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+		sd->state.itemskill_conditions_checked = 1; // Unset in pc_itemskill_clear().
 	}
 
-	sd->state.itemskill_no_casttime = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST) ? 1 : 0; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
-	sd->state.itemskill_castonself = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF) ? 1 : 0; // Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	sd->state.itemskill_no_casttime = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST) ? 1 : 0; // Unset in pc_itemskill_clear().
+	sd->state.itemskill_castonself = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF) ? 1 : 0; // Unset in pc_itemskill_clear().
 
-	// itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention.
-	// Unset in unit_skilluse_id()/unit_skilluse_pos() if skill was not aborted while target selection.
+	// itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention. Unset in pc_itemskill_clear().
 	sd->itemskill_id = sd->skillitem;
 	sd->itemskill_lv = sd->skillitemlv;
 
