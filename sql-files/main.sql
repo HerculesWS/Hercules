@@ -935,6 +935,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1565293394); -- 2019-08-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1570309293); -- 2019-10-05--19-01.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1570870260); -- 2019-10-21--14-21.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1574463539); -- 2019-11-22--23-58.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1579817630); -- 2020-01-24--01-09.sql
 
 --
 -- Table structure for table `storage`
@@ -1031,4 +1032,47 @@ CREATE TABLE IF NOT EXISTS `npc_barter_data` (
   `priceId` INT UNSIGNED NOT NULL DEFAULT '0',
   `priceAmount` INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`name`, `itemid`, `priceId`, `priceAmount`)
+) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `npc_expanded_barter_data` (
+  `name` VARCHAR(24) NOT NULL DEFAULT '',
+  `itemId` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `zeny` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyId1` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount1` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine1` INT(11) NOT NULL DEFAULT '0',
+  `currencyId2` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount2` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine2` INT(11) NOT NULL DEFAULT '0',
+  `currencyId3` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount3` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine3` INT(11) NOT NULL DEFAULT '0',
+  `currencyId4` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount4` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine4` INT(11) NOT NULL DEFAULT '0',
+  `currencyId5` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount5` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine5` INT(11) NOT NULL DEFAULT '0',
+  `currencyId6` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount6` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine6` INT(11) NOT NULL DEFAULT '0',
+  `currencyId7` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount7` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine7` INT(11) NOT NULL DEFAULT '0',
+  `currencyId8` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount8` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine8` INT(11) NOT NULL DEFAULT '0',
+  `currencyId9` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount9` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine9` INT(11) NOT NULL DEFAULT '0',
+  `currencyId10` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyAmount10` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `currencyRefine10` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`name`, `itemid`, `zeny`,
+    `currencyId1`, `currencyAmount1`, `currencyRefine1`,
+    `currencyId2`, `currencyAmount2`, `currencyRefine2`,
+    `currencyId3`, `currencyAmount3`, `currencyRefine3`,
+    `currencyId4`, `currencyAmount4`, `currencyRefine4`
+)
 ) ENGINE=MyISAM;
