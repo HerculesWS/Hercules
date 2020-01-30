@@ -1720,6 +1720,8 @@ static void npc_barter_tosql(struct npc_data *nd, int index)
 	nullpo_retv(nd);
 	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
 	const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
+	if (item->qty == -1)
+		return;
 	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s', '%d', '%d', '%u', '%d')",
 	    map->npc_barter_data_db, nd->exname, item->nameid, item->qty, item->value, item->value2)) {
 		Sql_ShowDebug(map->mysql_handle);
@@ -1851,11 +1853,12 @@ static void npc_expanded_barter_tosql(struct npc_data *nd, int index)
 	nullpo_retv(nd);
 	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
 	const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
+	if (item->qty == -1)
+		return;
 
 	npc->expanded_barter_delfromsql(nd, index);
 
 	StringBuf buf;
-
 	StrBuf->Init(&buf);
 	StrBuf->Printf(&buf, "INSERT INTO `%s` VALUES ('%s', '%d', '%d', '%u'", map->npc_expanded_barter_data_db, nd->exname, item->nameid, item->qty, item->value);
 	int currencyCount = item->value2;
