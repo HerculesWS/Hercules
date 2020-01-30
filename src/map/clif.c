@@ -20028,7 +20028,7 @@ static void clif_cashShopOpen(int fd, struct map_session_data *sd, int tab)
 	p->packetType = HEADER_ZC_SE_CASHSHOP_OPEN;
 	p->cashPoints = sd->cashPoints;  //[Ryuuzaki] - switched positions to reflect proper values
 	p->kafraPoints = sd->kafraPoints;
-#if PACKETVER_ZERO_NUM >= 20191224
+#if PACKETVER_MAIN_NUM >= 20200129 || PACKETVER_RE_NUM >= 20200205 || PACKETVER_ZERO_NUM >= 20191224
 	p->tab = tab;
 #endif
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_SE_CASHSHOP_OPEN));
