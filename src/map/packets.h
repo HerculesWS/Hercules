@@ -1984,7 +1984,8 @@ packet(0x96e,clif->ackmergeitems);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
-	packet(0x0b12,clif->pNPCExpandedBarterClosed);
+	packet(0x0b57,clif->pNPCExpandedBarterPurchase);
+	packet(0x0b58,clif->pNPCExpandedBarterClosed);
 #endif
 
 #if PACKETVER >= 20191224

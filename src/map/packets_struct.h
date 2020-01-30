@@ -3795,6 +3795,63 @@ struct PACKET_CZ_NPC_EXPANDED_BARTER_CLOSE {
 DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_CLOSE, 0x0b58);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
+struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 nameid;
+#else
+	uint16 nameid;
+#endif
+	uint16 refine_level;
+	uint32 amount;
+	uint16 type;
+} __attribute__((packed));
+
+struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 nameid;
+#else
+	uint16 nameid;
+#endif
+	uint16 type;
+	uint32 amount;
+	uint32 weight;
+	uint32 index;
+	uint32 zeny;
+	uint32 currency_count;
+	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 currencies[];
+} __attribute__((packed));
+
+struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN {
+	int16 packetType;
+	int16 packetLength;
+	int32 items_count;
+	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub items[];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_NPC_EXPANDED_BARTER_OPEN, 0x0b56);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
+struct PACKET_CZ_NPC_EXPANDED_BARTER_PURCHASE_sub {
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint32 shopIndex;
+	uint32 amount;
+} __attribute__((packed));
+
+struct PACKET_CZ_NPC_EXPANDED_BARTER_PURCHASE {
+	int16 packetType;
+	int16 packetLength;
+	struct PACKET_CZ_NPC_EXPANDED_BARTER_PURCHASE_sub list[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_PURCHASE, 0x0b57);
+#endif
+
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

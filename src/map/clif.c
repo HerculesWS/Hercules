@@ -23214,6 +23214,111 @@ static void clif_parse_npc_expanded_barter_closed(int fd, struct map_session_dat
 {
 }
 
+#if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
+#define NEXT_EXPANDED_BARTER_ITEM(var, count) \
+	var = (struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub *)((char*)item + \
+		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub) + \
+		count * sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2))
+#endif
+
+static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct npc_data *nd)
+{
+#if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
+	nullpo_retv(sd);
+	nullpo_retv(nd);
+	struct npc_item_list *shop = nd->u.scr.shop->item;
+	const int shop_size = nd->u.scr.shop->items;
+
+	int items_count = 0;
+	int currencies_count = 0;
+	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN *packet = (struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN*)&packet_buf[0];
+	STATIC_ASSERT(sizeof(packet_buf) > sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN), "packet_buf size too small");
+	int buf_left = sizeof(packet_buf) - sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN);
+	packet->packetType = HEADER_ZC_NPC_EXPANDED_BARTER_OPEN;
+	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub *item = &packet->items[0];
+
+	for (int i = 0; i < shop_size && buf_left >= sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub); i++) {
+		if (shop[i].nameid) {
+			struct item_data *id = itemdb->exists(shop[i].nameid);
+			if (id == NULL)
+				continue;
+
+			item->nameid = shop[i].nameid;
+			item->type   = itemtype(id->type);
+			item->amount = shop[i].qty;
+			item->weight = id->weight * 10;
+			item->index  = i;
+			item->zeny   = shop[i].value;
+			item->currency_count = 0;
+			buf_left -= sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub);
+			items_count ++;
+			int count = shop[i].value2;
+			if (buf_left < sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2) * count) {
+				NEXT_EXPANDED_BARTER_ITEM(item, 0);
+				break;
+			}
+			for (int j = 0; j < count; j ++) {
+				struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 *packet_currency = &item->currencies[j];
+				struct npc_barter_currency *currency = &shop[i].currency[j];
+				struct item_data *id2 = itemdb->exists(currency->nameid);
+				if (id2 == NULL)
+					continue;
+				packet_currency->nameid = currency->nameid;
+				if (currency->refine == -1)
+					packet_currency->refine_level = 0;
+				else
+					packet_currency->refine_level = currency->refine;
+				packet_currency->amount = currency->amount;
+				packet_currency->type = itemtype(id2->type);
+				currencies_count ++;
+				item->currency_count ++;
+			}
+			NEXT_EXPANDED_BARTER_ITEM(item, item->currency_count);
+		}
+	}
+
+	packet->items_count = items_count;
+	packet->packetLength = sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN) +
+		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub) * items_count +
+		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2) * currencies_count;
+	clif->send(packet, packet->packetLength, &sd->bl, SELF);
+#endif
+}
+
+#undef NEXT_EXPANDED_BARTER_ITEM
+
+static void clif_parse_npc_expanded_barter_purchase(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_npc_expanded_barter_purchase(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
+	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+		return;
+
+	const struct PACKET_CZ_NPC_EXPANDED_BARTER_PURCHASE *const p = RP2PTR(fd);
+	int count = (p->packetLength - sizeof(struct PACKET_CZ_NPC_EXPANDED_BARTER_PURCHASE)) / sizeof p->list[0];
+	struct barteritemlist item_list;
+
+	Assert_retv(count >= 0 && count <= sd->status.inventorySize);
+
+	VECTOR_INIT(item_list);
+	VECTOR_ENSURE(item_list, count, 1);
+
+	for (int i = 0; i < count; i++) {
+		struct barter_itemlist_entry entry = { 0 };
+		entry.addId = p->list[i].itemId;
+		entry.addAmount = p->list[i].amount;
+		entry.removeIndex = -1;
+		entry.shopIndex = p->list[i].shopIndex;
+		VECTOR_PUSH(item_list, entry);
+	}
+
+	int response = npc->expanded_barter_buylist(sd, &item_list);
+	clif->npc_buy_result(sd, response);
+
+	VECTOR_CLEAR(item_list);
+#endif
+}
+
 static void clif_parse_clientVersion(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_clientVersion(int fd, struct map_session_data *sd)
 {
@@ -24771,6 +24876,8 @@ void clif_defaults(void)
 	clif->npc_barter_open = clif_npc_barter_open;
 	clif->pNPCBarterClosed = clif_parse_NPCBarterClosed;
 	clif->pNPCBarterPurchase = clif_parse_NPCBarterPurchase;
+	clif->npc_expanded_barter_open = clif_npc_expanded_barter_open;
+	clif->pNPCExpandedBarterPurchase = clif_parse_npc_expanded_barter_purchase;
 	clif->pNPCExpandedBarterClosed = clif_parse_npc_expanded_barter_closed;
 	clif->pClientVersion = clif_parse_clientVersion;
 	clif->pPing = clif_parse_ping;
