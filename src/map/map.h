@@ -1056,6 +1056,7 @@ struct map_interface {
 	char autotrade_data_db[32];
 	char npc_market_data_db[32];
 	char npc_barter_data_db[32];
+	char npc_expanded_barter_data_db[32];
 
 	char default_codepage[32];
 	char default_lang_str[64];

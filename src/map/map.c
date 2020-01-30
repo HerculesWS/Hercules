@@ -4452,6 +4452,7 @@ static bool inter_config_read_database_names(const char *filename, const struct 
 	libconfig->setting_lookup_mutable_string(setting, "autotrade_data_db", map->autotrade_data_db, sizeof(map->autotrade_data_db));
 	libconfig->setting_lookup_mutable_string(setting, "npc_market_data_db", map->npc_market_data_db, sizeof(map->npc_market_data_db));
 	libconfig->setting_lookup_mutable_string(setting, "npc_barter_data_db", map->npc_barter_data_db, sizeof(map->npc_barter_data_db));
+	libconfig->setting_lookup_mutable_string(setting, "npc_expanded_barter_data_db", map->npc_expanded_barter_data_db, sizeof(map->npc_expanded_barter_data_db));
 
 	if (!mapreg->config_read(filename, setting, imported))
 		retval = false;
@@ -6749,6 +6750,7 @@ int do_init(int argc, char *argv[])
 	npc->event_do_oninit( false ); // Init npcs (OnInit)
 	npc->market_fromsql(); /* after OnInit */
 	npc->barter_fromsql(); /* after OnInit */
+	npc->expanded_barter_fromsql(); /* after OnInit */
 
 	if (battle_config.pk_mode)
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");
