@@ -82,7 +82,7 @@ mob_db: (
     HeadTopId: top headgear id       (int, defaults to 0)
     HeadMidId: middle headgear id    (int, defaults to 0)
     HeadLowId: lower headgear id     (int, defaults to 0)
-    HairStyleId: hair style id       (int, defaults to 0)
+    HairStyleId: hair style id       (int, defaults to 1)
     BodyStyleId: clothes id          (int, defaults to 0)
     HairColorId: hair color id       (int, defaults to 0)
     BodyColorId: clothes color id    (int, defaults to 0)
@@ -193,7 +193,7 @@ Element: Monster's element. Sets element type and level.
 Mode: Monster AI behaviour. If this block is omitted, monster doesn't react to anything.
       All the settings in this group are boolean values,
       Default value is false (mode not set) for any missing setting.
-      See /doc/sample/mob_db_mode_list.txt for more information about monsters Mode types.
+      See /doc/mob_db_mode_list.md for more information about monsters Mode types.
 
 MoveSpeed: Monster's speed. Sets speed (cells/sec).
            MoveSpeed is calculated to Hercules with this formula: 1000 / SPEED (CELLS/SEC)
@@ -278,3 +278,4 @@ DamageTakenRate:
 ViewData:
   Overrides the default view data sent to the client with the given values for:
     Sprite, Weapon, Shield, Robe, HeadTop, HeadMid, HeadLow, HairStyle, BodyStyle, HairColor, BodyColor, Gender, Options
+  Note: HairStyleId will only default to 1, if the ViewData block is defined.
