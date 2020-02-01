@@ -4206,8 +4206,12 @@ static void mob_read_db_viewdata_sub(struct mob_db *entry, struct config_setting
 		entry->vd.head_mid = libconfig->setting_get_int(it);
 	if ((it = libconfig->setting_get_member(t, "HeadLowId")) != NULL)
 		entry->vd.head_bottom = libconfig->setting_get_int(it);
+
 	if ((it = libconfig->setting_get_member(t, "HairStyleId")) != NULL)
 		entry->vd.hair_style = libconfig->setting_get_int(it);
+	else
+		entry->vd.hair_style = 1;
+
 	if ((it = libconfig->setting_get_member(t, "BodyStyleId")) != NULL)
 		entry->vd.body_style = libconfig->setting_get_int(it);
 	if ((it = libconfig->setting_get_member(t, "HairColorId")) != NULL)
