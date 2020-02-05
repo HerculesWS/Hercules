@@ -454,16 +454,7 @@ static bool inter_party_add_member(int party_id, const struct party_member *memb
 
 	memcpy(&p->party.member[i], member, sizeof(struct party_member));
 	p->party.member[i].leader = 0;
-	if (p->party.member[i].online) p->party.count++;
-	p->size++;
-	if (p->size == 2 || p->size == 3) // Check family state. And also accept either of their Parents. [RoM]
-		inter_party->calc_state(p);
-	else //Check even share range.
-	if (member->lv < p->min_lv || member->lv > p->max_lv || p->family) {
-		if (p->family) p->family = 0; //Family state broken.
-		inter_party->check_lv(p);
-	}
-
+	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
 	mapif->party_info(-1, &p->party, 0);
 	inter_party->tosql(&p->party, PS_ADDMEMBER, i);
 
@@ -495,7 +486,7 @@ static bool inter_party_change_option(int party_id, int account_id, int exp, int
 static bool inter_party_leave(int party_id, int account_id, int char_id)
 {
 	struct party_data *p;
-	int i,j;
+	int i;
 
 	p = inter_party->fromsql(party_id);
 	if( p == NULL )
@@ -516,18 +507,13 @@ static bool inter_party_leave(int party_id, int account_id, int char_id)
 
 	mapif->party_withdraw(party_id, account_id, char_id);
 
-	j = p->party.member[i].lv;
 	if (p->party.member[i].online > 0) {
 		p->party.member[i].online = 0;
 		p->party.count--;
 	}
 	inter_party->tosql(&p->party, PS_DELMEMBER, i);
 	memset(&p->party.member[i], 0, sizeof(struct party_member));
-	p->size--;
-	if (j == p->min_lv || j == p->max_lv || p->family) {
-		if(p->family) p->family = 0; //Family state broken.
-		inter_party->check_lv(p);
-	}
+	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
 
 	if (inter_party->check_empty(p) == 0) {
 		mapif->party_info(-1, &p->party, 0);
@@ -568,7 +554,7 @@ static bool inter_party_change_map(int party_id, int account_id, int char_id, un
 			)
 		{
 			p->party.member[i].lv = lv;
-			inter_party->check_lv(p);
+			inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
 		}
 		//Send online/offline update.
 		mapif->party_membermoved(&p->party, i);
@@ -579,7 +565,7 @@ static bool inter_party_change_map(int party_id, int account_id, int char_id, un
 			p->party.member[i].lv == p->max_lv)
 		{
 			p->party.member[i].lv = lv;
-			inter_party->check_lv(p);
+			inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
 		} else
 			p->party.member[i].lv = lv;
 		//There is no need to send level update to map servers
@@ -689,10 +675,7 @@ static int inter_party_CharOnline(int char_id, int party_id)
 		if (p->party.member[i].char_id == char_id) {
 			if (!p->party.member[i].online) {
 				p->party.member[i].online = 1;
-				p->party.count++;
-				if (p->party.member[i].lv < p->min_lv ||
-					p->party.member[i].lv > p->max_lv)
-					inter_party->check_lv(p);
+				inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
 			}
 			break;
 		}
@@ -734,10 +717,8 @@ static int inter_party_CharOffline(int char_id, int party_id)
 		if(p->party.member[i].char_id == char_id)
 		{
 			p->party.member[i].online = 0;
-			p->party.count--;
-			if(p->party.member[i].lv == p->min_lv ||
-				p->party.member[i].lv == p->max_lv)
-				inter_party->check_lv(p);
+			inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
+
 			break;
 		}
 	}
