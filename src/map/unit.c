@@ -279,9 +279,9 @@ static int unit_steptimer(int tid, int64 tick, int id, intptr_t data)
 }
 
 /**
- * Warps homunuculus or mercenary towards his master in case he's too far away for 3 seconds.
+ * Warps homunculus or mercenary towards his master in case he's too far away for 3 seconds.
  * @param master_bl: block_list of master
- * @param slave_bl: block_list of homunuculus/mercenary master owns
+ * @param slave_bl: block_list of homunculus/mercenary master owns
  * @return 0: success, 1: fail
  */
 static int unit_warpto_master(struct block_list *master_bl, struct block_list *slave_bl)
