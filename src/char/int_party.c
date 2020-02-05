@@ -252,6 +252,39 @@ static int inter_party_tosql(struct party *p, int flag, int index)
 	return 1;
 }
 
+/**
+ * Updates the `char`.`party_id` column and removes party data from memory.
+ * Sets the party ID of all characters whose party ID matches the passed one to 0.
+ * Calls idb_remove() to remove party data from memory.
+ *
+ * @param party_id The party ID.
+ * @return 0 on failure, 1 on success.
+ *
+ **/
+static int inter_party_del_nonexistent_party(int party_id)
+{
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+
+	if (stmt == NULL) {
+		SqlStmt_ShowDebug(stmt);
+		return 0;
+	}
+
+	const char *query = "UPDATE `%s` SET `party_id`='0' WHERE `party_id`=?";
+
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, char_db)
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_UINT32, &party_id, sizeof(party_id))
+	    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+			SqlStmt_ShowDebug(stmt);
+			SQL->StmtFree(stmt);
+			return 0;
+	}
+
+	idb_remove(inter_party->db, party_id);
+
+	return 1;
+}
+
 // Read party from mysql
 static struct party_data *inter_party_fromsql(int party_id)
 {
@@ -469,8 +502,10 @@ static bool inter_party_add_member(int party_id, const struct party_member *memb
 
 	struct party_data *p = inter_party->fromsql(party_id);
 
-	if (p == NULL) /// Party does not exist.
+	if (p == NULL) { /// Party does not exist.
+		inter_party->del_nonexistent_party(party_id);
 		return false;
+	}
 
 	int i;
 
@@ -526,9 +561,7 @@ static bool inter_party_leave(int party_id, int account_id, int char_id)
 	struct party_data *p = inter_party->fromsql(party_id);
 
 	if (p == NULL) { /// Party does not exist.
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id))
-			Sql_ShowDebug(inter->sql_handle);
-
+		inter_party->del_nonexistent_party(party_id);
 		return false;
 	}
 
@@ -573,8 +606,10 @@ static bool inter_party_change_map(int party_id, int account_id, int char_id, un
 
 	struct party_data *p = inter_party->fromsql(party_id);
 
-	if (p == NULL) /// Party does not exist.
+	if (p == NULL) { /// Party does not exist.
+		inter_party->del_nonexistent_party(party_id);
 		return false;
+	}
 
 	int i;
 
@@ -689,8 +724,10 @@ static int inter_party_CharOnline(int char_id, int party_id)
 
 	struct party_data *p = inter_party->fromsql(party_id);
 
-	if (p == NULL) /// Party does not exist.
+	if (p == NULL) { /// Party does not exist.
+		inter_party->del_nonexistent_party(party_id);
 		return 0;
+	}
 
 	int i;
 
@@ -736,8 +773,10 @@ static int inter_party_CharOffline(int char_id, int party_id)
 
 	struct party_data *p = inter_party->fromsql(party_id);
 
-	if (p == NULL) /// Party does not exist.
+	if (p == NULL) { /// Party does not exist.
+		inter_party->del_nonexistent_party(party_id);
 		return 0;
+	}
 
 	int i;
 
@@ -768,6 +807,7 @@ void inter_party_defaults(void)
 	inter_party->is_family_party = inter_party_is_family_party;
 	inter_party->calc_state = inter_party_calc_state;
 	inter_party->tosql = inter_party_tosql;
+	inter_party->del_nonexistent_party = inter_party_del_nonexistent_party;
 	inter_party->fromsql = inter_party_fromsql;
 	inter_party->search_partyname = inter_party_search_partyname;
 	inter_party->check_exp_share = inter_party_check_exp_share;

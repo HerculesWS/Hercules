@@ -55,6 +55,7 @@ struct inter_party_interface {
 	int (*is_family_party) (struct party_data *p);
 	void (*calc_state) (struct party_data *p);
 	int (*tosql) (struct party *p, int flag, int index);
+	int (*del_nonexistent_party) (int party_id);
 	struct party_data* (*fromsql) (int party_id);
 	int (*sql_init) (void);
 	void (*sql_final) (void);
