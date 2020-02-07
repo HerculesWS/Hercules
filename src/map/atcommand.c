@@ -4526,30 +4526,32 @@ ACMD(unloadnpc)
  **/
 ACMD(reloadnpc)
 {
-	char file_path[100] = {'\0'};
+	char format[20];
+
+	snprintf(format, sizeof(format), "%%%ds %%1d", MAX_DIR_PATH);
+
+	char file_path[MAX_DIR_PATH + 1] = {'\0'};
 	int flag = 1;
 
-	if (*message == '\0' || (sscanf(message, "%99s %1d", file_path, &flag) < 1)) {
+	if (*message == '\0' || (sscanf(message, format, file_path, &flag) < 1)) {
 		clif->message(fd, msg_fd(fd, 1516)); /// Usage: @reloadnpc <path> {<flag>}
 		return false;
 	}
 
-	const char *dot = strrchr(file_path, '.');
-
-	if (dot == NULL) {
-		clif->message(fd, msg_fd(fd, 1518)); /// No file extension specified.
+	if (!exists(file_path)) {
+		clif->message(fd, msg_fd(fd, 1387)); /// File not found.
 		return false;
 	}
 
-	if (strlen(dot) < 4 || strncmp(dot, ".txt", 4) != 0) {
-		clif->message(fd, msg_fd(fd, 1519)); /// Not a TXT file.
+	if (!is_file(file_path)) {
+		clif->message(fd, msg_fd(fd, 1518)); /// Not a file.
 		return false;
 	}
 
 	FILE *fp = fopen(file_path, "r");
 
 	if (fp == NULL) {
-		clif->message(fd, msg_fd(fd, 1387)); /// File not found.
+		clif->message(fd, msg_fd(fd, 1519)); /// Can't open file.
 		return false;
 	}
 
