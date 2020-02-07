@@ -132,7 +132,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *, void *co
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
-	char tmppath[MAX_PATH+1];
+	char tmppath[MAX_DIR_PATH + 1];
 	const char *path    = (p  ==NULL)? "." : p;
 	const char *pattern = (pat==NULL)? "" : pat;
 
@@ -178,7 +178,7 @@ bool is_file(const char *path)
 {
 	nullpo_retr(false, path);
 
-	char path_tmp[MAX_PATH + 1];
+	char path_tmp[MAX_DIR_PATH + 1];
 
 	checkpath(path_tmp, path);
 
@@ -186,8 +186,6 @@ bool is_file(const char *path)
 }
 
 #else
-
-#define MAX_DIR_PATH 2048
 
 static char *checkpath(char *path, const char *srcpath)
 {
