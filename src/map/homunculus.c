@@ -179,7 +179,7 @@ static int homunculus_vaporize(struct map_session_data *sd, enum homun_state sta
 	nullpo_ret(sd);
 
 	hd = sd->hd;
-	if (!hd || hd->homunculus.vaporize != HOM_ST_ACTIVE)
+	if (hd == NULL || hd->bl.prev == NULL || hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return 0;
 
 	if (status->isdead(&hd->bl))
