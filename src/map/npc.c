@@ -1343,14 +1343,20 @@ static int npc_scriptcont(struct map_session_data *sd, int id, bool closing)
 	struct block_list *target = map->id2bl(id);
 	nullpo_retr(1, sd);
 
-	if( id != sd->npc_id ){
-		struct npc_data *nd_sd = map->id2nd(sd->npc_id);
-		struct npc_data *nd = BL_CAST(BL_NPC, target);
-		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
-			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
-			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
-		return 1;
+#ifdef SECURE_NPCTIMEOUT
+	if (sd->npc_idle_timer != INVALID_TIMER) {
+#endif
+		if( id != sd->npc_id ){
+			struct npc_data *nd_sd = map->id2nd(sd->npc_id);
+			struct npc_data *nd = BL_CAST(BL_NPC, target);
+			ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
+				nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
+				nd?(char*)nd->name:"'Unknown NPC'", (int)id);
+			return 1;
+		}
+#ifdef SECURE_NPCTIMEOUT
 	}
+#endif
 
 	if (id != npc->fake_nd->bl.id) { // Not item script
 		if (sd->state.npc_unloaded != 0) {
