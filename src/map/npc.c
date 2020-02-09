@@ -1335,53 +1335,68 @@ static int npc_click(struct map_session_data *sd, struct npc_data *nd)
 	return 0;
 }
 
-/*==========================================
+/**
+ * Validates a character's script related data and (re-)runs the script if validation was successful.
  *
- *------------------------------------------*/
+ * Is called when:
+ * - The Next/Close button was clicked.
+ * - A menu option was selected.
+ * - A value was entered by input() script command.
+ * - A progress bar has reached 100%.
+ * - The character timed out because of idling.
+ *
+ * @param sd The character's session data.
+ * @param id The NPC ID.
+ * @param closing Whether the script is closing, or not.
+ * @return 0 on success, otherwise 1.
+ *
+**/
 static int npc_scriptcont(struct map_session_data *sd, int id, bool closing)
 {
-	struct block_list *target = map->id2bl(id);
 	nullpo_retr(1, sd);
 
-	if( id != sd->npc_id ){
-		struct npc_data *nd_sd = map->id2nd(sd->npc_id);
-		struct npc_data *nd = BL_CAST(BL_NPC, target);
-		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
-			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
-			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
-		return 1;
-	}
+	struct block_list *target = map->id2bl(id);
 
-	if (id != npc->fake_nd->bl.id) { // Not item script
+#ifdef SECURE_NPCTIMEOUT
+	if (sd->npc_idle_timer != INVALID_TIMER) { /// Not yet timed out.
+#endif
+		if (id != sd->npc_id) {
+			struct npc_data *nd_sd = map->id2nd(sd->npc_id);
+			struct npc_data *nd = BL_CAST(BL_NPC, target);
+
+			ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
+				(nd_sd != NULL) ? nd_sd->name : "'Unknown NPC'", sd->npc_id,
+				(nd != NULL) ? nd->name : "'Unknown NPC'", id);
+
+			return 1;
+		}
+#ifdef SECURE_NPCTIMEOUT
+	}
+#endif
+
+	if (id != npc->fake_nd->bl.id) { /// Not an item script.
 		if (sd->state.npc_unloaded != 0) {
 			sd->state.npc_unloaded = 0;
-		} else if ((npc->checknear(sd,target)) == NULL) {
-			ShowWarning("npc_scriptcont: failed npc->checknear test.\n");
+		} else if (npc->checknear(sd, target) == NULL) {
+			ShowWarning("npc_scriptcont: Failed npc->checknear test.\n");
 			return 1;
 		}
 	}
-	/**
-	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
-	 **/
+
 #ifdef SECURE_NPCTIMEOUT
-	/**
-	 * Update the last NPC iteration
-	 **/
-	sd->npc_idle_tick = timer->gettick();
+	sd->npc_idle_tick = timer->gettick(); /// Update the last NPC iteration.
 #endif
 
-	/**
-	 * WPE can get to this point with a progressbar; we deny it.
-	 **/
-	if( sd->progressbar.npc_id && DIFF_TICK(sd->progressbar.timeout,timer->gettick()) > 0 )
+	/// WPE can get to this point with a progressbar; we deny it.
+	if (sd->progressbar.npc_id != 0 && DIFF_TICK(sd->progressbar.timeout, timer->gettick()) > 0)
 		return 1;
 
-	if( !sd->st ) {
+	if (sd->st == NULL) {
 		sd->npc_id = 0;
 		return 1;
 	}
 
-	if( closing && sd->st->state == CLOSE )
+	if (closing && sd->st->state == CLOSE)
 		sd->st->state = END;
 
 	script->run_main(sd->st);
