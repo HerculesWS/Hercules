@@ -5152,6 +5152,7 @@
 - `NST_MARKET`: 2
 - `NST_CUSTOM`: 3
 - `NST_BARTER`: 4
+- `NST_EXPANDED_BARTER`: 5
 
 ### script unit data types
 
