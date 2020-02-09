@@ -638,8 +638,11 @@ static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, i
 
 static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, int count, int type, ...)
 {
-	int returnCount;
+	int returnCount = 0;
 	va_list ap;
+
+	if (m < 0)
+		return returnCount;
 
 	va_start(ap, type);
 	returnCount = map->vforcountinarea(func, m, 0, 0, map->list[m].xs, map->list[m].ys, count, type, ap);

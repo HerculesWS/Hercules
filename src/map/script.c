@@ -11775,6 +11775,13 @@ static BUILDIN(getunits)
 		const char *mapname = script_getstr(st, 5);
 		int16 m = map->mapname2mapid(mapname);
 
+		if (m == -1) {
+			ShowError("script:getunits: Invalid map(%s) provided.\n", mapname);
+			script->reportdata(data);
+			st->state = END;
+			return false;
+		}
+
 		if (script_hasdata(st, 9)) {
 			int16 x1 = script_getnum(st, 6);
 			int16 y1 = script_getnum(st, 7);
