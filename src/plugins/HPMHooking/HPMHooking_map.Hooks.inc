@@ -14402,6 +14402,32 @@ void HP_clif_changeoption(struct block_list *bl) {
 	}
 	return;
 }
+void HP_clif_changeoption_target(struct block_list *bl, struct block_list *target_bl, enum send_target target) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_changeoption_target_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, struct block_list **target_bl, enum send_target *target);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changeoption_target_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_changeoption_target_pre[hIndex].func;
+			preHookFunc(&bl, &target_bl, &target);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.changeoption_target(bl, target_bl, target);
+	}
+	if (HPMHooks.count.HP_clif_changeoption_target_post > 0) {
+		void (*postHookFunc) (struct block_list *bl, struct block_list *target_bl, enum send_target target);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_changeoption_target_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_changeoption_target_post[hIndex].func;
+			postHookFunc(bl, target_bl, target);
+		}
+	}
+	return;
+}
 void HP_clif_changeoption2(struct block_list *bl) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_changeoption2_pre > 0) {

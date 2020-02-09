@@ -576,6 +576,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->quitsave, HP_clif_quitsave) },
 	{ HP_POP(clif->misceffect, HP_clif_misceffect) },
 	{ HP_POP(clif->changeoption, HP_clif_changeoption) },
+	{ HP_POP(clif->changeoption_target, HP_clif_changeoption_target) },
 	{ HP_POP(clif->changeoption2, HP_clif_changeoption2) },
 	{ HP_POP(clif->emotion, HP_clif_emotion) },
 	{ HP_POP(clif->talkiebox, HP_clif_talkiebox) },

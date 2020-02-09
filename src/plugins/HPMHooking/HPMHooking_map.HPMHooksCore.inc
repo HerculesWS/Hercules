@@ -1104,6 +1104,8 @@ struct {
 	struct HPMHookPoint *HP_clif_misceffect_post;
 	struct HPMHookPoint *HP_clif_changeoption_pre;
 	struct HPMHookPoint *HP_clif_changeoption_post;
+	struct HPMHookPoint *HP_clif_changeoption_target_pre;
+	struct HPMHookPoint *HP_clif_changeoption_target_post;
 	struct HPMHookPoint *HP_clif_changeoption2_pre;
 	struct HPMHookPoint *HP_clif_changeoption2_post;
 	struct HPMHookPoint *HP_clif_emotion_pre;
@@ -7967,6 +7969,8 @@ struct {
 	int HP_clif_misceffect_post;
 	int HP_clif_changeoption_pre;
 	int HP_clif_changeoption_post;
+	int HP_clif_changeoption_target_pre;
+	int HP_clif_changeoption_target_post;
 	int HP_clif_changeoption2_pre;
 	int HP_clif_changeoption2_post;
 	int HP_clif_emotion_pre;

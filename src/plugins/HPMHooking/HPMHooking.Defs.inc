@@ -1514,6 +1514,8 @@ typedef void (*HPMHOOK_pre_clif_misceffect) (struct block_list **bl, int *type);
 typedef void (*HPMHOOK_post_clif_misceffect) (struct block_list *bl, int type);
 typedef void (*HPMHOOK_pre_clif_changeoption) (struct block_list **bl);
 typedef void (*HPMHOOK_post_clif_changeoption) (struct block_list *bl);
+typedef void (*HPMHOOK_pre_clif_changeoption_target) (struct block_list **bl, struct block_list **target_bl, enum send_target *target);
+typedef void (*HPMHOOK_post_clif_changeoption_target) (struct block_list *bl, struct block_list *target_bl, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_changeoption2) (struct block_list **bl);
 typedef void (*HPMHOOK_post_clif_changeoption2) (struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_emotion) (struct block_list **bl, int *type);
