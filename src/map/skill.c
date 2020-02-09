@@ -5613,6 +5613,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 	// Use a do so that you can break out of it when the skill fails.
 	do {
+		bool is_asura = (ud->skill_id == MO_EXTREMITYFIST);
+
 		if(!target || target->prev==NULL) break;
 
 		if(src->m != target->m || status->isdead(src)) break;
@@ -5845,7 +5847,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			ud->skill_lv = ud->skilltarget = 0;
 		}
 
-		if (src->id != target->id)
+		// Asura Strike caster doesn't look to their target in the end
+		if (src->id != target->id && !is_asura)
 			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 
 		map->freeblock_unlock();
@@ -5870,19 +5873,30 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		if (target && target->m == src->m) {
 			//Move character to target anyway.
 			int dir, x, y;
+			int dist = 3; // number of cells that asura caster will walk
+
 			dir = map->calc_dir(src,target->x,target->y);
-			if( dir > 0 && dir < 4) x = -2;
-			else if( dir > 4 ) x = 2;
-			else x = 0;
-			if( dir > 2 && dir < 6 ) y = -2;
-			else if( dir == 7 || dir < 2 ) y = 2;
-			else y = 0;
-			if (unit->movepos(src, src->x+x, src->y+y, 1, 1)) {
+			if (dir > 0 && dir < 4)
+				x = -dist;
+			else if (dir > 4)
+				x = dist;
+			else
+				x = 0;
+			
+			if (dir > 2 && dir < 6)
+				y = -dist;
+			else if (dir == 7 || dir < 2)
+				y = dist;
+			else
+				y = 0;
+
+			if (unit->movepos(src, src->x + x, src->y + y, 1, 1) == 1) {
 				//Display movement + animation.
-				clif->slide(src,src->x,src->y);
+				clif->slide(src, src->x, src->y);
 				clif->spiritball(src);
 			}
-			clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+			// "Skill Failed" message was already shown when checking that target is invalid
+			//clif->skill_fail(sd, ud->skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		}
 	}
 
