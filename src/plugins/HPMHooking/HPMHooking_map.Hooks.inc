@@ -31601,14 +31601,14 @@ void HP_duel_showinfo(const unsigned int did, struct map_session_data *sd) {
 	}
 	return;
 }
-int HP_duel_checktime(struct map_session_data *sd) {
+int64 HP_duel_difftime(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_duel_checktime_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd);
+	int64 retVal___ = 0;
+	if (HPMHooks.count.HP_duel_difftime_pre > 0) {
+		int64 (*preHookFunc) (struct map_session_data **sd);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_duel_checktime_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_duel_checktime_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_duel_difftime_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_duel_difftime_pre[hIndex].func;
 			retVal___ = preHookFunc(&sd);
 		}
 		if (*HPMforce_return) {
@@ -31617,12 +31617,12 @@ int HP_duel_checktime(struct map_session_data *sd) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.duel.checktime(sd);
+		retVal___ = HPMHooks.source.duel.difftime(sd);
 	}
-	if (HPMHooks.count.HP_duel_checktime_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_duel_checktime_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_duel_checktime_post[hIndex].func;
+	if (HPMHooks.count.HP_duel_difftime_post > 0) {
+		int64 (*postHookFunc) (int64 retVal___, struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_duel_difftime_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_duel_difftime_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
 		}
 	}
