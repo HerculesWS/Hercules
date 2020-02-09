@@ -2712,6 +2712,12 @@ typedef void (*HPMHOOK_pre_clif_pNPCBarterClosed) (int *fd, struct map_session_d
 typedef void (*HPMHOOK_post_clif_pNPCBarterClosed) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pNPCBarterPurchase) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pNPCBarterPurchase) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pNPCExpandedBarterClosed) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pNPCExpandedBarterClosed) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_pNPCExpandedBarterPurchase) (int *fd, struct map_session_data **sd);
+typedef void (*HPMHOOK_post_clif_pNPCExpandedBarterPurchase) (int fd, struct map_session_data *sd);
+typedef void (*HPMHOOK_pre_clif_npc_expanded_barter_open) (struct map_session_data **sd, struct npc_data **nd);
+typedef void (*HPMHOOK_post_clif_npc_expanded_barter_open) (struct map_session_data *sd, struct npc_data *nd);
 typedef void (*HPMHOOK_pre_clif_pClientVersion) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pClientVersion) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pPing) (int *fd, struct map_session_data **sd);
@@ -5782,6 +5788,8 @@ typedef enum market_buy_result (*HPMHOOK_pre_npc_market_buylist) (struct map_ses
 typedef enum market_buy_result (*HPMHOOK_post_npc_market_buylist) (enum market_buy_result retVal___, struct map_session_data *sd, struct itemlist *item_list);
 typedef int (*HPMHOOK_pre_npc_barter_buylist) (struct map_session_data **sd, struct barteritemlist **item_list);
 typedef int (*HPMHOOK_post_npc_barter_buylist) (int retVal___, struct map_session_data *sd, struct barteritemlist *item_list);
+typedef int (*HPMHOOK_pre_npc_expanded_barter_buylist) (struct map_session_data **sd, struct barteritemlist **item_list);
+typedef int (*HPMHOOK_post_npc_expanded_barter_buylist) (int retVal___, struct map_session_data *sd, struct barteritemlist *item_list);
 typedef bool (*HPMHOOK_pre_npc_trader_open) (struct map_session_data **sd, struct npc_data **nd);
 typedef bool (*HPMHOOK_post_npc_trader_open) (bool retVal___, struct map_session_data *sd, struct npc_data *nd);
 typedef void (*HPMHOOK_pre_npc_market_fromsql) (void);
@@ -5800,6 +5808,14 @@ typedef void (*HPMHOOK_pre_npc_barter_delfromsql) (struct npc_data **nd, int *in
 typedef void (*HPMHOOK_post_npc_barter_delfromsql) (struct npc_data *nd, int index);
 typedef void (*HPMHOOK_pre_npc_barter_delfromsql_sub) (const char **npcname, int *itemId, int *itemId2, int *amount2);
 typedef void (*HPMHOOK_post_npc_barter_delfromsql_sub) (const char *npcname, int itemId, int itemId2, int amount2);
+typedef void (*HPMHOOK_pre_npc_expanded_barter_fromsql) (void);
+typedef void (*HPMHOOK_post_npc_expanded_barter_fromsql) (void);
+typedef void (*HPMHOOK_pre_npc_expanded_barter_tosql) (struct npc_data **nd, int *index);
+typedef void (*HPMHOOK_post_npc_expanded_barter_tosql) (struct npc_data *nd, int index);
+typedef void (*HPMHOOK_pre_npc_expanded_barter_delfromsql) (struct npc_data **nd, int *index);
+typedef void (*HPMHOOK_post_npc_expanded_barter_delfromsql) (struct npc_data *nd, int index);
+typedef void (*HPMHOOK_pre_npc_expanded_barter_delfromsql_sub) (const char **npcname, int *itemId, int *zeny, int *currencyCount, struct npc_barter_currency **currency);
+typedef void (*HPMHOOK_post_npc_expanded_barter_delfromsql_sub) (const char *npcname, int itemId, int zeny, int currencyCount, struct npc_barter_currency *currency);
 typedef bool (*HPMHOOK_pre_npc_db_checkid) (const int *id);
 typedef bool (*HPMHOOK_post_npc_db_checkid) (bool retVal___, const int id);
 typedef void (*HPMHOOK_pre_npc_refresh) (struct npc_data **nd);
@@ -7114,6 +7130,8 @@ typedef void (*HPMHOOK_pre_script_run_item_rental_start_script) (struct map_sess
 typedef void (*HPMHOOK_post_script_run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
 typedef void (*HPMHOOK_pre_script_run_item_lapineddukddak_script) (struct map_session_data **sd, struct item_data **data, int *oid);
 typedef void (*HPMHOOK_post_script_run_item_lapineddukddak_script) (struct map_session_data *sd, struct item_data *data, int oid);
+typedef bool (*HPMHOOK_pre_script_sellitemcurrency_add) (struct npc_data **nd, struct script_state **st, int *argIndex);
+typedef bool (*HPMHOOK_post_script_sellitemcurrency_add) (bool retVal___, struct npc_data *nd, struct script_state *st, int argIndex);
 #endif // MAP_SCRIPT_H
 #ifdef MAP_SEARCHSTORE_H /* searchstore */
 typedef bool (*HPMHOOK_pre_searchstore_open) (struct map_session_data **sd, unsigned int *uses, unsigned short *effect);

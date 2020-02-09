@@ -600,6 +600,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // MAP_MOB_H
 	#ifdef MAP_NPC_H
 		{ "event_data", sizeof(struct event_data), SERVER_TYPE_MAP },
+		{ "npc_barter_currency", sizeof(struct npc_barter_currency), SERVER_TYPE_MAP },
 		{ "npc_chat_interface", sizeof(struct npc_chat_interface), SERVER_TYPE_MAP },
 		{ "npc_data", sizeof(struct npc_data), SERVER_TYPE_MAP },
 		{ "npc_interface", sizeof(struct npc_interface), SERVER_TYPE_MAP },
