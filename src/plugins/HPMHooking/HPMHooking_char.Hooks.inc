@@ -9115,11 +9115,11 @@ bool HP_inter_party_change_option(int party_id, int account_id, int exp, int ite
 	}
 	return retVal___;
 }
-bool HP_inter_party_change_map(int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv) {
+bool HP_inter_party_change_map(int party_id, int account_id, int char_id, unsigned short map, int online, int lv) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if (HPMHooks.count.HP_inter_party_change_map_pre > 0) {
-		bool (*preHookFunc) (int *party_id, int *account_id, int *char_id, unsigned short *map, int *online, unsigned int *lv);
+		bool (*preHookFunc) (int *party_id, int *account_id, int *char_id, unsigned short *map, int *online, int *lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_party_change_map_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_inter_party_change_map_pre[hIndex].func;
@@ -9134,7 +9134,7 @@ bool HP_inter_party_change_map(int party_id, int account_id, int char_id, unsign
 		retVal___ = HPMHooks.source.inter_party.change_map(party_id, account_id, char_id, map, online, lv);
 	}
 	if (HPMHooks.count.HP_inter_party_change_map_post > 0) {
-		bool (*postHookFunc) (bool retVal___, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv);
+		bool (*postHookFunc) (bool retVal___, int party_id, int account_id, int char_id, unsigned short map, int online, int lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_inter_party_change_map_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_inter_party_change_map_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, party_id, account_id, char_id, map, online, lv);

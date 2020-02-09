@@ -38,10 +38,11 @@ enum {
 };
 
 struct party_data {
-	struct party party;
-	unsigned int min_lv, max_lv;
-	int family; //Is this party a family? if so, this holds the child id.
-	unsigned char size; //Total size of party.
+	struct party party; // Party data.
+	int min_lv; // The lowest base level of all party members.
+	int max_lv; // The highest base level of all party members.
+	int family; // Is this party a family? If so, this holds the child's char ID.
+	int size; // Amount of party members, including offline members.
 };
 
 /**
@@ -51,8 +52,10 @@ struct inter_party_interface {
 	struct party_data *pt;
 	struct DBMap *db;  // int party_id -> struct party_data*
 	int (*check_lv) (struct party_data *p);
+	int (*is_family_party) (struct party_data *p);
 	void (*calc_state) (struct party_data *p);
 	int (*tosql) (struct party *p, int flag, int index);
+	int (*del_nonexistent_party) (int party_id);
 	struct party_data* (*fromsql) (int party_id);
 	int (*sql_init) (void);
 	void (*sql_final) (void);
@@ -66,7 +69,7 @@ struct inter_party_interface {
 	struct party_data *(*create) (const char *name, int item, int item2, const struct party_member *leader);
 	bool (*add_member) (int party_id, const struct party_member *member);
 	bool (*change_option) (int party_id, int account_id, int exp, int item, int map_fd);
-	bool (*change_map) (int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv);
+	bool (*change_map) (int party_id, int account_id, int char_id, unsigned short map, int online, int lv);
 	bool (*disband) (int party_id);
 	bool (*change_leader) (int party_id, int account_id, int char_id);
 };

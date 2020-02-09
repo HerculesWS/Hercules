@@ -822,8 +822,8 @@ struct party_member {
 	int char_id;
 	char name[NAME_LENGTH];
 	int class;
+	int lv;
 	unsigned short map;
-	unsigned short lv;
 	unsigned leader : 1,
 	         online : 1;
 };
