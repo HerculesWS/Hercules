@@ -4977,6 +4977,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				switch (sd->weapontype) {
 					case W_BOW:
 					case W_REVOLVER:
+					case W_RIFLE:
 					case W_GATLING:
 					case W_SHOTGUN:
 					case W_GRENADE:
