@@ -7320,27 +7320,34 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 
 		case PR_STRECOVERY:
-			if(status->isimmune(bl)) {
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,0);
+			if (status->isimmune(bl) != 0) {
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, 0);
 				break;
 			}
-			if (tsc && tsc->opt1) {
-				status_change_end(bl, SC_FREEZE, INVALID_TIMER);
-				status_change_end(bl, SC_STONE, INVALID_TIMER);
-				status_change_end(bl, SC_SLEEP, INVALID_TIMER);
-				status_change_end(bl, SC_STUN, INVALID_TIMER);
-				status_change_end(bl, SC_WHITEIMPRISON, INVALID_TIMER);
+
+			if (!battle->check_undead(tstatus->race, tstatus->def_ele)) {
+				if (tsc != NULL && tsc->opt1 != 0) {
+					status_change_end(bl, SC_FREEZE, INVALID_TIMER);
+					status_change_end(bl, SC_STONE, INVALID_TIMER);
+					status_change_end(bl, SC_SLEEP, INVALID_TIMER);
+					status_change_end(bl, SC_STUN, INVALID_TIMER);
+					status_change_end(bl, SC_WHITEIMPRISON, INVALID_TIMER);
+				}
+
+				status_change_end(bl, SC_NETHERWORLD, INVALID_TIMER);
+			} else {
+				int rate = 100 * (100 - (tstatus->int_ / 2 + tstatus->vit / 3 + tstatus->luk / 10));
+				int duration = skill->get_time2(skill_id, skill_lv);
+
+				duration *= (100 - (tstatus->int_ + tstatus->vit) / 2) / 100;
+				status->change_start(src, bl, SC_BLIND, rate, 1, 0, 0, 0, duration, SCFLAG_NONE);
 			}
-			status_change_end(bl, SC_NETHERWORLD, INVALID_TIMER);
-			//Is this equation really right? It looks so... special.
-			if( battle->check_undead(tstatus->race,tstatus->def_ele) ) {
-				status->change_start(src, bl, SC_BLIND,
-				                     100*(100-(tstatus->int_/2+tstatus->vit/3+tstatus->luk/10)), 1,0,0,0,
-				                     skill->get_time2(skill_id, skill_lv) * (100-(tstatus->int_+tstatus->vit)/2)/100,SCFLAG_NONE);
-			}
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			if(dstmd)
-				mob->unlocktarget(dstmd,tick);
+
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+
+			if (dstmd != NULL)
+				mob->unlocktarget(dstmd, tick);
+
 			break;
 
 		// Mercenary Supportive Skills
