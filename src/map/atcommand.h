@@ -41,7 +41,7 @@ struct config_setting_t;
  * Defines
  **/
 #define ATCOMMAND_LENGTH 50
-#define MAX_MSG 1516
+#define MAX_MSG 1520
 #define msg_txt(idx) atcommand->msg(idx)
 #define msg_sd(sd,msg_number) atcommand->msgsd((sd),(msg_number))
 #define msg_fd(fd,msg_number) atcommand->msgfd((fd),(msg_number))

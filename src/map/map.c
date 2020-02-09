@@ -6092,7 +6092,7 @@ static int cleanup_sub(struct block_list *bl, va_list ap)
 			map->quit(BL_UCAST(BL_PC, bl));
 			break;
 		case BL_NPC:
-			npc->unload(BL_UCAST(BL_NPC, bl), false);
+			npc->unload(BL_UCAST(BL_NPC, bl), false, true);
 			break;
 		case BL_MOB:
 			unit->free(bl,CLR_OUTSIGHT);

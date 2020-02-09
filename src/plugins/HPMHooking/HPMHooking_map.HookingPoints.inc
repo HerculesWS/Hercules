@@ -2192,6 +2192,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->unload_ev_label, HP_npc_unload_ev_label) },
 	{ HP_POP(npc->unload_dup_sub, HP_npc_unload_dup_sub) },
 	{ HP_POP(npc->unload_duplicates, HP_npc_unload_duplicates) },
+	{ HP_POP(npc->unload_mob, HP_npc_unload_mob) },
 	{ HP_POP(npc->unload, HP_npc_unload) },
 	{ HP_POP(npc->clearsrcfile, HP_npc_clearsrcfile) },
 	{ HP_POP(npc->addsrcfile, HP_npc_addsrcfile) },

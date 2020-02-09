@@ -270,8 +270,9 @@ struct npc_interface {
 	int (*unload_ev) (union DBKey key, struct DBData *data, va_list ap);
 	int (*unload_ev_label) (union DBKey key, struct DBData *data, va_list ap);
 	int (*unload_dup_sub) (struct npc_data *nd, va_list args);
-	void (*unload_duplicates) (struct npc_data *nd);
-	int (*unload) (struct npc_data *nd, bool single);
+	void (*unload_duplicates) (struct npc_data *nd, bool unload_mobs);
+	int (*unload_mob) (struct mob_data *md, va_list args);
+	int (*unload) (struct npc_data *nd, bool single, bool unload_mobs);
 	void (*clearsrcfile) (void);
 	void (*addsrcfile) (const char *name);
 	void (*delsrcfile) (const char *name);
@@ -313,7 +314,7 @@ struct npc_interface {
 	int (*path_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
 	int (*ev_label_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
 	int (*reload) (void);
-	bool (*unloadfile) (const char *filepath);
+	bool (*unloadfile) (const char *filepath, bool unload_mobs);
 	void (*do_clear_npc) (void);
 	void (*debug_warps_sub) (struct npc_data *nd);
 	void (*debug_warps) (void);

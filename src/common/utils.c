@@ -132,7 +132,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *, void *co
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
-	char tmppath[MAX_PATH+1];
+	char tmppath[MAX_DIR_PATH + 1];
 	const char *path    = (p  ==NULL)? "." : p;
 	const char *pattern = (pat==NULL)? "" : pat;
 
@@ -166,9 +166,26 @@ void findfile(const char *p, const char *pat, void (func)(const char *, void *co
 	}
 	return;
 }
-#else
 
-#define MAX_DIR_PATH 2048
+/**
+ * Checks if the passed path points to a file.
+ *
+ * @param path The path which should be checked.
+ * @return true if the passed path points to a file, otherwise false.
+ *
+ **/
+bool is_file(const char *path)
+{
+	nullpo_retr(false, path);
+
+	char path_tmp[MAX_DIR_PATH + 1];
+
+	checkpath(path_tmp, path);
+
+	return ((GetFileAttributesA(path_tmp) & FILE_ATTRIBUTE_DIRECTORY) == 0);
+}
+
+#else
 
 static char *checkpath(char *path, const char *srcpath)
 {
@@ -235,6 +252,27 @@ void findfile(const char *p, const char *pat, void (func)(const char *, void *co
 
 	closedir(dir);
 }
+
+/**
+ * Checks if the passed path points to a file.
+ *
+ * @param path The path which should be checked.
+ * @return true if the passed path points to a file, otherwise false.
+ *
+ **/
+bool is_file(const char *path)
+{
+	nullpo_retr(false, path);
+
+	char path_tmp[MAX_DIR_PATH + 1];
+
+	checkpath(path_tmp, path);
+
+	struct stat path_stat;
+
+	return (stat(path_tmp, &path_stat) == 0 && S_ISREG(path_stat.st_mode));
+}
+
 #endif
 
 bool exists(const char *filename)

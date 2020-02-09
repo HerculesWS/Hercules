@@ -1034,6 +1034,11 @@ will only execute once and will not execute if the map server reconnects
 to the char server later. Note that all those events will be executed upon
 scripts reloading.
 
+OnNPCUnload:
+
+OnNPCUnload will be executed when a NPC is unloaded.
+OnNPCUnload is called when @reloadscript, @reloadnpc, @unloadnpc or @unloadnpcfile is used.
+
 OnAgitStart:
 OnAgitEnd:
 OnAgitInit:
