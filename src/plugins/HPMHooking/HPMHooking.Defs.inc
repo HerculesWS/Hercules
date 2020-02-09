@@ -5691,7 +5691,7 @@ typedef void (*HPMHOOK_post_npc_unload_duplicates) (struct npc_data *nd, bool un
 typedef int (*HPMHOOK_pre_npc_unload_mob) (struct mob_data **md, va_list args);
 typedef int (*HPMHOOK_post_npc_unload_mob) (int retVal___, struct mob_data *md, va_list args);
 typedef int (*HPMHOOK_pre_npc_unload) (struct npc_data **nd, bool *single, bool *unload_mobs);
-typedef int (*HPMHOOK_post_npc_unload) (int retVal___, struct npc_data *nd, bool single, bool unload_mobs;
+typedef int (*HPMHOOK_post_npc_unload) (int retVal___, struct npc_data *nd, bool single, bool unload_mobs);
 typedef void (*HPMHOOK_pre_npc_clearsrcfile) (void);
 typedef void (*HPMHOOK_post_npc_clearsrcfile) (void);
 typedef void (*HPMHOOK_pre_npc_addsrcfile) (const char **name);
