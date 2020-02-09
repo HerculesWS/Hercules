@@ -21025,6 +21025,38 @@ static BUILDIN(unitwalk)
 	return true;
 }
 
+/**
+ * Checks if a unit is walking.
+ *
+ * Returns 1 if unit is walking, 0 if unit is not walking and -1 on error.
+ *
+ * @code{.herc}
+ *	unitiswalking({<GID>});
+ * @endcode
+ *
+ **/
+static BUILDIN(unitiswalking)
+{
+	int gid = script_hasdata(st, 2) ? script_getnum(st, 2) : st->rid;
+	struct block_list *bl = map->id2bl(gid);
+
+	if (bl == NULL) {
+		ShowWarning("buildin_unitiswalking: Error in finding object for GID %d!\n", gid);
+		script_pushint(st, -1);
+		return false;
+	}
+
+	if (unit->bl2ud(bl) == NULL) {
+		ShowWarning("buildin_unitiswalking: Error in finding unit_data for GID %d!\n", gid);
+		script_pushint(st, -1);
+		return false;
+	}
+
+	script_pushint(st, unit->is_walking(bl));
+
+	return true;
+}
+
 /// Kills the unit
 ///
 /// unitkill <unit_id>;
@@ -26635,6 +26667,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(getunittitle,"i"),
 		BUILDIN_DEF(setunittitle,"is"),
 		BUILDIN_DEF(unitwalk,"ii?"),
+		BUILDIN_DEF(unitiswalking, "?"),
 		BUILDIN_DEF(unitkill,"i"),
 		BUILDIN_DEF(unitwarp,"isii"),
 		BUILDIN_DEF(unitattack,"iv?"),

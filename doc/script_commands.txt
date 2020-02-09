@@ -6957,6 +6957,37 @@ Examples:
 
 ---------------------------------------
 
+*unitiswalking({<GID>})
+
+This command checks, if a unit is walking or not.
+If <GID> is omitted, the currently attached character is used.
+Returns 1 if the unit is walking, 0 if the unit is not walking and -1 on error.
+
+Note: There's no differentiation between script and client initiated walking.
+
+Example:
+
+prontera,155,185,5	script	Check Walking	1_F_MARIA,{
+	mes("Enter character name.");
+	mes("");
+	input(.@name$);
+	.@GID = getcharid(CHAR_ID_ACCOUNT, .@name$);
+	if (.@GID != 0) {
+		.@iswalking = unitiswalking(.@GID);
+		if (.@iswalking == 1)
+			mesf("%s is walking.", .@name$);
+		else if (.@iswalking == 0)
+			mesf("%s is not walking.", .@name$);
+		else
+			mesf("Can't get %s's walking state.", .@name$);
+	} else {
+		mesf("%s not found!", .@name$);
+	}
+	close();
+}
+
+---------------------------------------
+
 *unitkill(<GID>)
 *unitwarp(<GID>, <Mapname>, <x>, <y>)
 *unitattack(<GID>, <Target ID>)
