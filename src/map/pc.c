@@ -8417,8 +8417,12 @@ static int64 pc_readparam(const struct map_session_data *sd, int type)
 		case SP_FLEE1:           val = sd->battle_status.flee; break;
 		case SP_FLEE2:           val = sd->battle_status.flee2; break;
 		case SP_DEFELE:          val = sd->battle_status.def_ele; break;
-#ifndef RENEWAL_CAST
 		case SP_VARCASTRATE:
+#ifdef RENEWAL_CAST
+			val = sd->bonus.varcastrate;
+			break;
+#else
+			FALLTHROUGH
 #endif
 		case SP_CASTRATE:
 				val = sd->castrate;
@@ -8504,7 +8508,6 @@ static int64 pc_readparam(const struct map_session_data *sd, int type)
 		case SP_FIXCASTRATE:     val = sd->bonus.fixcastrate; break;
 		case SP_ADD_FIXEDCAST:   val = sd->bonus.add_fixcast; break;
 #ifdef RENEWAL_CAST
-		case SP_VARCASTRATE:     val = sd->bonus.varcastrate; break;
 		case SP_ADD_VARIABLECAST:val = sd->bonus.add_varcast; break;
 #endif
 	}
