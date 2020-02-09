@@ -3532,10 +3532,14 @@ typedef bool (*HPMHOOK_post_inter_mercenary_delete) (bool retVal___, int merc_id
 #ifdef CHAR_INT_PARTY_H /* inter_party */
 typedef int (*HPMHOOK_pre_inter_party_check_lv) (struct party_data **p);
 typedef int (*HPMHOOK_post_inter_party_check_lv) (int retVal___, struct party_data *p);
+typedef int (*HPMHOOK_pre_inter_party_is_family_party) (struct party_data **p);
+typedef int (*HPMHOOK_post_inter_party_is_family_party) (int retVal___, struct party_data *p);
 typedef void (*HPMHOOK_pre_inter_party_calc_state) (struct party_data **p);
 typedef void (*HPMHOOK_post_inter_party_calc_state) (struct party_data *p);
 typedef int (*HPMHOOK_pre_inter_party_tosql) (struct party **p, int *flag, int *index);
 typedef int (*HPMHOOK_post_inter_party_tosql) (int retVal___, struct party *p, int flag, int index);
+typedef int (*HPMHOOK_pre_inter_party_del_nonexistent_party) (int *party_id);
+typedef int (*HPMHOOK_post_inter_party_del_nonexistent_party) (int retVal___, int party_id);
 typedef struct party_data* (*HPMHOOK_pre_inter_party_fromsql) (int *party_id);
 typedef struct party_data* (*HPMHOOK_post_inter_party_fromsql) (struct party_data* retVal___, int party_id);
 typedef int (*HPMHOOK_pre_inter_party_sql_init) (void);

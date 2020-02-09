@@ -368,8 +368,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter_mercenary->delete, HP_inter_mercenary_delete) },
 /* inter_party_interface */
 	{ HP_POP(inter_party->check_lv, HP_inter_party_check_lv) },
+	{ HP_POP(inter_party->is_family_party, HP_inter_party_is_family_party) },
 	{ HP_POP(inter_party->calc_state, HP_inter_party_calc_state) },
 	{ HP_POP(inter_party->tosql, HP_inter_party_tosql) },
+	{ HP_POP(inter_party->del_nonexistent_party, HP_inter_party_del_nonexistent_party) },
 	{ HP_POP(inter_party->fromsql, HP_inter_party_fromsql) },
 	{ HP_POP(inter_party->sql_init, HP_inter_party_sql_init) },
 	{ HP_POP(inter_party->sql_final, HP_inter_party_sql_final) },
