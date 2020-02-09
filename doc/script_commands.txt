@@ -324,11 +324,13 @@ The types that a trader object can have are the following:
 		    and need to be refurbished)
 - NST_CUSTOM	(3) Custom Shop (any currency, item/var/etca, check sample)
 - NST_BARTER	(4) Barter Shop (each item with own item currency)
+- NST_EXPANDED_BARTER	(5) Expanded Barter Shop (buy items and spend zeny and items)
 Unless otherwise specified via *tradertype an trader object will be defined as
 NST_ZENY.
 
 Note: NST_MARKET is only available with PACKETVER 20131223 or newer.
-Note: NST_BARTER is only available with PACKETVER 20181226 zero or newer.
+Note: NST_BARTER is only available with PACKETVER 20190116 main or 20190116 RE or 20181226 zero or newer.
+Note: NST_EXPANDED_BARTER is only available with PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
 See '12 - NPC Trader-Related Commands' and /doc/sample/npc_trader_sample.txt for
 more information regarding how to use this NPC type.
 
@@ -10290,6 +10292,7 @@ when the optional NPC_Name param is used.
 
 *sellitem(<Item_ID>{, <price>{, <qty>}})
 *sellitem(<Item_ID>, <qty>, <currency_id>, <currency_amount>)
+*sellitem(<Item_ID>, <zeny>, <qty>{, <currency_id1>, <currency_amount1>{, <currency_refine1>}{, ...}})
 
 adds (or modifies) <Item_ID> data to the shop,
 when <price> is not provided (or when it is -1) itemdb default is used.
@@ -10298,7 +10301,37 @@ qty is only necessary for NST_MARKET trader types.
 when <Item_ID> is already in the shop,
 the previous data (price/qty), is overwritten with the new.
 
-currency_id and currency_amount can be used only with shop type NST_BARTER
+currency_id and currency_amount can be used only with shop type NST_BARTER.
+zeny, currency_id1, currency_amount1, currency_refine1, can be used only with
+shop type NST_EXPANDED_BARTER.
+
+---------------------------------------
+
+*startsellitem(<Item_ID>, <zeny>, <qty>)
+
+Starts adding item into expanded barter shop (NST_EXPANDED_BARTER).
+Before this command possible to use commands *sellitemcurrency.
+Need PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
+
+Alternative way for add item to expanded barter shop is *sellitem with
+currency parameters.
+
+---------------------------------------
+
+*sellitemcurrency(<Item_ID>, <qty>{, <refine>})
+
+adds <Item_ID> as currency into expanded barter shop (NST_EXPANDED_BARTER)
+If <refine> set to -1, mean for any refine level.
+if <refine> missing used value -1.
+
+Need PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
+
+---------------------------------------
+
+*endsellitem()
+
+Complete adding item into expanded barter shop (NST_EXPANDED_BARTER).
+Need PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
 
 ---------------------------------------
 

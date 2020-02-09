@@ -48,6 +48,7 @@ enum npc_shop_types {
 	NST_MARKET, /* official npc market type */
 	NST_CUSTOM,
 	NST_BARTER, /* official npc barter type */
+	NST_EXPANDED_BARTER, /* official npc expanded barter type */
 	/* */
 	NST_MAX,
 };
@@ -60,17 +61,25 @@ struct npc_label_list {
 	int pos;
 };
 
+struct npc_barter_currency {
+	int nameid;
+	int refine;
+	int amount;
+};
+
 struct npc_item_list {
 	int nameid;
 	unsigned int value;  // price or barter currency item id
-	int value2;  // barter currency item amount
-	unsigned int qty;
+	int value2;  // barter currency item amount / expanded barter currency size
+	int qty;
+	struct npc_barter_currency *currency;
 };
 
 struct npc_shop_data {
 	unsigned char type;/* what am i */
 	struct npc_item_list *item;/* list */
 	unsigned int items;/* total */
+	int shop_last_index;  // only for NST_EXPANDED_BARTER
 };
 struct npc_parse;
 struct npc_data {
@@ -314,6 +323,7 @@ struct npc_interface {
 	void (*trader_update) (int master);
 	enum market_buy_result (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
 	int (*barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
+	int (*expanded_barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
 	void (*market_tosql) (struct npc_data *nd, int index);
@@ -323,6 +333,10 @@ struct npc_interface {
 	void (*barter_tosql) (struct npc_data *nd, int index);
 	void (*barter_delfromsql) (struct npc_data *nd, int index);
 	void (*barter_delfromsql_sub) (const char *npcname, int itemId, int itemId2, int amount2);
+	void (*expanded_barter_fromsql) (void);
+	void (*expanded_barter_tosql) (struct npc_data *nd, int index);
+	void (*expanded_barter_delfromsql) (struct npc_data *nd, int index);
+	void (*expanded_barter_delfromsql_sub) (const char *npcname, int itemId, int zeny, int currencyCount, struct npc_barter_currency* currency);
 	bool (*db_checkid) (const int id);
 	void (*refresh) (struct npc_data* nd);
 	void (*questinfo_clear) (struct npc_data *nd);

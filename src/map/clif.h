@@ -1663,6 +1663,9 @@ struct clif_interface {
 	void (*npc_barter_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*pNPCBarterClosed) (int fd, struct map_session_data *sd);
 	void (*pNPCBarterPurchase) (int fd, struct map_session_data *sd);
+	void (*pNPCExpandedBarterClosed) (int fd, struct map_session_data *sd);
+	void (*pNPCExpandedBarterPurchase) (int fd, struct map_session_data *sd);
+	void (*npc_expanded_barter_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*pClientVersion) (int fd, struct map_session_data *sd);
 	void (*pPing) (int fd, struct map_session_data *sd);
 	void (*ping) (struct map_session_data *sd);
