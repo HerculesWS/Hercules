@@ -10694,6 +10694,7 @@ static BUILDIN(checkmount)
 /**
  * Mounts or dismounts a combat mount.
  *
+ * setmount <flag>, <mtype>;
  * setmount <flag>;
  * setmount;
  *
@@ -10712,6 +10713,8 @@ static BUILDIN(checkmount)
  * If an invalid value or no flag is specified, the appropriate mount is
  * auto-detected. As a result of this, there is no need to specify a flag at
  * all, unless it is a dragon color other than green.
+ *
+ * In newer clients you can specify the mado gear type though the mtype argument.
  */
 static BUILDIN(setmount)
 {
@@ -10723,6 +10726,12 @@ static BUILDIN(setmount)
 
 	if (script_hasdata(st,2))
 		flag = script_getnum(st,2);
+
+	enum mado_type mtype = script_hasdata(st, 3) ? script_getnum(st, 3) : MADO_ROBOT;
+	if (mtype < MADO_ROBOT || mtype >= MADO_MAX) {
+		ShowError("script_setmount: Invalid mado type has been passed (%d).\n", flag);
+		return false;
+	}
 
 	// Color variants for Rune Knight dragon mounts.
 	if (flag != SETMOUNT_TYPE_NONE) {
@@ -10750,7 +10759,7 @@ static BUILDIN(setmount)
 		} else if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 			// Mechanic (Mado Gear)
 			if (pc->checkskill(sd, NC_MADOLICENCE))
-				pc->setmadogear(sd, true);
+				pc->setmadogear(sd, true, mtype);
 		} else {
 			// Knight / Crusader (Peco Peco)
 			if (pc->checkskill(sd, KN_RIDING))
@@ -10764,7 +10773,7 @@ static BUILDIN(setmount)
 			pc->setridingwug(sd, false);
 		}
 		if (pc_ismadogear(sd)) {
-			pc->setmadogear(sd, false);
+			pc->setmadogear(sd, false, mtype);
 		}
 		if (pc_isridingpeco(sd)) {
 			pc->setridingpeco(sd, false);
@@ -26732,7 +26741,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(checkcart,""),
 		BUILDIN_DEF(setfalcon,"?"),
 		BUILDIN_DEF(checkfalcon,""),
-		BUILDIN_DEF(setmount,"?"),
+		BUILDIN_DEF(setmount,"??"),
 		BUILDIN_DEF(checkmount,""),
 		BUILDIN_DEF(checkwug,""),
 		BUILDIN_DEF(savepoint,"sii"),
@@ -27824,6 +27833,10 @@ static void script_hardcoded_constants(void)
 	script->set_constant("GUILDINFO_SKILL_POINTS", GUILDINFO_SKILL_POINTS, false, false);
 	script->set_constant("GUILDINFO_MASTER_NAME", GUILDINFO_MASTER_NAME, false, false);
 	script->set_constant("GUILDINFO_MASTER_CID", GUILDINFO_MASTER_CID, false, false);
+
+	script->constdb_comment("madogear types");
+	script->set_constant("MADO_ROBOT", MADO_ROBOT, false, false);
+	script->set_constant("MADO_SUITE", MADO_SUITE, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

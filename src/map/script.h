@@ -553,6 +553,18 @@ enum siege_type {
 };
 
 /**
+ * Types of MadoGear
+ */
+enum mado_type {
+	MADO_ROBOT = 0x00,
+	// unused  = 0x01,
+	MADO_SUITE = 0x02,
+#ifndef MADO_MAX
+	MADO_MAX
+#endif
+};
+
+/**
  * Structures
  **/
 

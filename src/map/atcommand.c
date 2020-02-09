@@ -4212,12 +4212,19 @@ ACMD(mount_peco)
 		return true;
 	}
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
+		int mtype = MADO_ROBOT;
+		if (!*message)
+			sscanf(message, "%d", &mtype);
+		if (mtype < MADO_ROBOT || mtype >= MADO_MAX) {
+			clif->message(fd, msg_fd(fd, 173)); // Please enter a valid madogear type.
+			return false;
+		}
 		if (!pc_ismadogear(sd)) {
 			clif->message(sd->fd,msg_fd(fd,1123)); // You have mounted your Mado Gear.
-			pc->setmadogear(sd, true);
+			pc->setmadogear(sd, true, (enum mado_type)mtype);
 		} else {
 			clif->message(sd->fd,msg_fd(fd,1124)); // You have released your Mado Gear.
-			pc->setmadogear(sd, false);
+			pc->setmadogear(sd, false, (enum mado_type)mtype);
 		}
 		return true;
 	}

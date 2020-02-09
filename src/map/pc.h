@@ -1037,7 +1037,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*setcart) (struct map_session_data* sd, int type);
 	void (*setfalcon) (struct map_session_data *sd, bool flag);
 	void (*setridingpeco) (struct map_session_data *sd, bool flag);
-	void (*setmadogear) (struct map_session_data *sd, bool flag);
+	void (*setmadogear) (struct map_session_data *sd, bool flag, enum mado_type mtype);
 	void (*setridingdragon) (struct map_session_data *sd, unsigned int type);
 	void (*setridingwug) (struct map_session_data *sd, bool flag);
 	int (*changelook) (struct map_session_data *sd,int type,int val);

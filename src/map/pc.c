@@ -9345,15 +9345,23 @@ static void pc_setridingpeco(struct map_session_data *sd, bool flag)
  *
  * @param sd Target player.
  * @param flag New state.
+ * @param mtype Type of the mado gear.
  **/
-static void pc_setmadogear(struct map_session_data *sd, bool flag)
+static void pc_setmadogear(struct map_session_data *sd, bool flag, enum mado_type mtype)
 {
 	nullpo_retv(sd);
+	Assert_retv(mtype >= MADO_ROBOT && mtype < MADO_MAX);
+
 	if (flag) {
-		if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC)
+		if ((sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
+#if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106
+			sc_start(&sd->bl, &sd->bl, SC_MADOGEAR, 100, (int)mtype, INFINITE_DURATION);
+#endif
+		}
 	} else if (pc_ismadogear(sd)) {
 		pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
+		// pc->setoption resets status effects when changing mado, no need to re do it here.
 	}
 }
 
