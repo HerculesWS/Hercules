@@ -12489,6 +12489,56 @@ static BUILDIN(hideonnpc)
 	npc->enable(str,4);
 	return true;
 }
+/*==========================================
+ *------------------------------------------*/
+static BUILDIN(cloakonnpc)
+{
+	struct npc_data *nd = npc->name2id(script_getstr(st, 2));
+	if (nd == NULL) {
+		ShowError("buildin_cloakonnpc: invalid npc name '%s'.\n", script_getstr(st, 2));
+		return false;
+	}
+
+	if (script_hasdata(st, 3)) {
+		struct map_session_data *sd = map->id2sd(script_getnum(st, 3));
+		if (sd == NULL)
+			return false;
+
+		uint32 val = nd->option;
+		nd->option |= OPTION_CLOAK;
+		clif->changeoption_target(&nd->bl, &sd->bl, SELF);
+		nd->option = val;
+	} else {
+		nd->option |= OPTION_CLOAK;
+		clif->changeoption(&nd->bl);
+	}
+	return true;
+}
+/*==========================================
+ *------------------------------------------*/
+static BUILDIN(cloakoffnpc)
+{
+	struct npc_data *nd = npc->name2id(script_getstr(st, 2));
+	if (nd == NULL) {
+		ShowError("buildin_cloakoffnpc: invalid npc name '%s'.\n", script_getstr(st, 2));
+		return false;
+	}
+
+	if (script_hasdata(st, 3)) {
+		struct map_session_data *sd = map->id2sd(script_getnum(st, 3));
+		if (sd == NULL)
+			return false;
+
+		uint32 val = nd->option;
+		nd->option &= ~OPTION_CLOAK;
+		clif->changeoption_target(&nd->bl, &sd->bl, SELF);
+		nd->option = val;
+	} else {
+		nd->option &= ~OPTION_CLOAK;
+		clif->changeoption(&nd->bl);
+	}
+	return true;
+}
 
 /* Starts a status effect on the target unit or on the attached player.
  *
@@ -22219,6 +22269,23 @@ static BUILDIN(achievement_progress)
 	return true;
 }
 
+static BUILDIN(achievement_iscompleted)
+{
+	struct map_session_data *sd = script_hasdata(st, 3) ? map->id2sd(script_getnum(st, 3)) : script->rid2sd(st);
+	if (sd == NULL)
+		return false;
+
+	int aid = script_getnum(st, 2);
+	const struct achievement_data *ad = achievement->get(aid);
+	if (ad == NULL) {
+		ShowError("buildin_achievement_iscompleted: Invalid Achievement %d provided.\n", aid);
+		return false;
+	}
+
+	script_pushint(st, achievement->check_complete(sd, ad));
+	return true;
+}
+
 /*==========================================
  * BattleGround System
  *------------------------------------------*/
@@ -26672,6 +26739,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(disablenpc,"s"),
 		BUILDIN_DEF(hideoffnpc,"s"),
 		BUILDIN_DEF(hideonnpc,"s"),
+		BUILDIN_DEF(cloakonnpc,"s?"),
+		BUILDIN_DEF(cloakoffnpc,"s?"),
 		BUILDIN_DEF(sc_start,"iii???"),
 		BUILDIN_DEF2(sc_start,"sc_start2","iiii???"),
 		BUILDIN_DEF2(sc_start,"sc_start4","iiiiii???"),
@@ -26954,6 +27023,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(agitcheck2,""),
 		// Achievements [Smokexyz/Hercules]
 		BUILDIN_DEF(achievement_progress, "iiii?"),
+		BUILDIN_DEF(achievement_iscompleted, "i?"),
 		// BattleGround
 		BUILDIN_DEF(waitingroom2bg,"siiss?"),
 		BUILDIN_DEF(waitingroom2bg_single,"isiis"),

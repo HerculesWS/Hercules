@@ -1006,6 +1006,7 @@ struct clif_interface {
 	/* visual effects client-side */
 	void (*misceffect) (struct block_list* bl,int type);
 	void (*changeoption) (struct block_list* bl);
+	void (*changeoption_target) (struct block_list *bl, struct block_list *target_bl, enum send_target target);
 	void (*changeoption2) (struct block_list* bl);
 	void (*emotion) (struct block_list *bl,int type);
 	void (*talkiebox) (struct block_list* bl, const char* talkie);

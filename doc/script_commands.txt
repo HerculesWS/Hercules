@@ -7041,6 +7041,18 @@ NPCs talking while hidden then revealing... you can wonder around =P).
 
 ---------------------------------------
 
+*cloakonnpc("<NPC object name>"{, <account_id>})
+*cloakoffnpc("<NPC object name>"{, <account_id>})
+
+These commands are used to apply the cloaking effect on npcs
+this is a visual effect only and it does NOT stop the player
+from interacting with the npc.
+
+If an account_id is specified then the effect will only display to the given id,
+otherwise it's displayed to the entire npc area.
+
+---------------------------------------
+
 *doevent("<NPC object name>::<event label>")
 
 This command will start a new execution thread in a specified NPC object
@@ -10619,6 +10631,14 @@ incremental - (boolean) true to add the progress towards the goal,
 account_id  - (optional) AID to perform on (default to attached player).
 
 returns progress on success and false on failure
+
+---------------------------------------
+
+*achievement_iscompleted(<ach_id>{, <account_id>})
+
+Checks whether the attached player have completed all the given achievement objectives.
+
+returns true if yes and false if no.
 
 ---------------------------------------
 
