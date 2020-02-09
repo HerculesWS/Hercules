@@ -7742,6 +7742,7 @@
 - `DUMMY_150`: 2411
 - `DUMMY_10_FIRE`: 2413
 - `RUNAWAY_BOOK`: 2414
+- `G_L_SHECIL`: 2431
 - `MG_ZOMBIE`: 2464
 - `MG_WRAITH`: 2465
 - `MG_GHOUL`: 2466
@@ -8138,6 +8139,8 @@
 - `XM_CELINE_KIMI`: 2996
 - `GRIM_REAPER_ANKOU`: 3029
 - `TIMEHOLDER`: 3074
+- `J_REB_SHECIL1`: 3169
+- `J_REB_SHECIL2`: 3170
 - `E1_FELOCK`: 3181
 - `MM_SARAH`: 3190
 - `ORGANIC_JAKK`: 3202
@@ -12680,6 +12683,8 @@
 - `Bag_Of_Selling_Goods`: 6682
 - `Cash_Hair_Coupon`: 6707
 - `Lovely_Stick`: 6712
+- `Steel_Article`: 6746
+- `Steel_Article_`: 6747
 - `Corrupted_Charm`: 6755
 - `ORGANIC_PUMPKIN`: 6804
 - `INORGANIC_PUMPKIN`: 6805
@@ -14954,6 +14959,8 @@
 - `Upg_Revolver`: 13115
 - `Novice_Revolver`: 13116
 - `TE_Woe_Pistol`: 13117
+- `Tiny_Flame`: 13118
+- `Freedom_Flame`: 13119
 - `H_FEATHER_H_FIRE`: 13120
 - `ALTAIR_ARES`: 13122
 - `ALTAIR_ARES_`: 13124
@@ -15036,6 +15043,11 @@
 - `Poison_Sphere_`: 13225
 - `Blind_Sphere_`: 13226
 - `Freezing_Sphere_`: 13227
+- `Flare_Bullet`: 13228
+- `Lightning_Bullet`: 13229
+- `Ice_Bullet`: 13230
+- `Poison_Bullet`: 13231
+- `Blind_Bullet`: 13232
 - `Shuriken`: 13250
 - `Nimbus_Shuriken`: 13251
 - `Flash_Shuriken`: 13252
@@ -18757,6 +18769,7 @@
 - `S_Genesis_Weapon`: 24581
 - `S_Genesis_Pendant`: 24582
 - `S_Genesis_Earing`: 24583
+- `Slug_Bullet`: 25187
 - `BrokenArrow`: 25258
 - `Shining_Spore`: 25265
 - `Dried_Leaf_Of_Ygg`: 25266
