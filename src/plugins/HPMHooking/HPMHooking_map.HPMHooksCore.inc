@@ -2422,8 +2422,8 @@ struct {
 	struct HPMHookPoint *HP_duel_leave_post;
 	struct HPMHookPoint *HP_duel_showinfo_pre;
 	struct HPMHookPoint *HP_duel_showinfo_post;
-	struct HPMHookPoint *HP_duel_checktime_pre;
-	struct HPMHookPoint *HP_duel_checktime_post;
+	struct HPMHookPoint *HP_duel_difftime_pre;
+	struct HPMHookPoint *HP_duel_difftime_post;
 	struct HPMHookPoint *HP_duel_init_pre;
 	struct HPMHookPoint *HP_duel_init_post;
 	struct HPMHookPoint *HP_duel_final_pre;
@@ -9267,8 +9267,8 @@ struct {
 	int HP_duel_leave_post;
 	int HP_duel_showinfo_pre;
 	int HP_duel_showinfo_post;
-	int HP_duel_checktime_pre;
-	int HP_duel_checktime_post;
+	int HP_duel_difftime_pre;
+	int HP_duel_difftime_post;
 	int HP_duel_init_pre;
 	int HP_duel_init_post;
 	int HP_duel_final_pre;

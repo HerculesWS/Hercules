@@ -1241,7 +1241,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(duel->reject, HP_duel_reject) },
 	{ HP_POP(duel->leave, HP_duel_leave) },
 	{ HP_POP(duel->showinfo, HP_duel_showinfo) },
-	{ HP_POP(duel->checktime, HP_duel_checktime) },
+	{ HP_POP(duel->difftime, HP_duel_difftime) },
 	{ HP_POP(duel->init, HP_duel_init) },
 	{ HP_POP(duel->final, HP_duel_final) },
 /* elemental_interface */

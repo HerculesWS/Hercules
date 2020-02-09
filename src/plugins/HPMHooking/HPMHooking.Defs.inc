@@ -2844,8 +2844,8 @@ typedef void (*HPMHOOK_pre_duel_leave) (const unsigned int *did, struct map_sess
 typedef void (*HPMHOOK_post_duel_leave) (const unsigned int did, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_duel_showinfo) (const unsigned int *did, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_duel_showinfo) (const unsigned int did, struct map_session_data *sd);
-typedef int (*HPMHOOK_pre_duel_checktime) (struct map_session_data **sd);
-typedef int (*HPMHOOK_post_duel_checktime) (int retVal___, struct map_session_data *sd);
+typedef int64 (*HPMHOOK_pre_duel_difftime) (struct map_session_data **sd);
+typedef int64 (*HPMHOOK_post_duel_difftime) (int64 retVal___, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_duel_init) (bool *minimal);
 typedef void (*HPMHOOK_post_duel_init) (bool minimal);
 typedef void (*HPMHOOK_pre_duel_final) (void);
