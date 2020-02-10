@@ -531,10 +531,12 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
 	return NULL;
 }
 
-/** @name Functions for block_list search and manipulation
+/**
+ * @name Functions for block_list search and manipulation
+ *
+ * @{
  */
 
-/* @{ */
 /**
  * Applies func to every block_list in bl_list starting with bl_list[blockcount].
  * Sets bl_list_count back to blockcount.
