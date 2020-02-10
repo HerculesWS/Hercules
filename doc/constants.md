@@ -5249,6 +5249,13 @@
 - `MADO_ROBOT`: 0
 - `MADO_SUITE`: 2
 
+### itemskill option flags
+
+- `ISF_NONE`: 0
+- `ISF_IGNORECONDITIONS`: 1
+- `ISF_INSTANTCAST`: 2
+- `ISF_CASTONSELF`: 4
+
 ### Renewal
 
 - `RENEWAL`: 1
