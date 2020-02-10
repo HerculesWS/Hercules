@@ -6754,21 +6754,28 @@ static void clif_item_refine_list(struct map_session_data *sd)
 /// 0147 <skill id>.W <type>.L <level>.W <sp cost>.W <atk range>.W <skill name>.24B <upgradeable>.B
 static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
 {
-	int fd;
-
 	nullpo_retv(sd);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd,packet_len(0x147));
-	WFIFOW(fd, 0)=0x147;
-	WFIFOW(fd, 2)=skill_id;
-	WFIFOL(fd, 4)=skill->get_inf(skill_id);
-	WFIFOW(fd, 8)=skill_lv;
-	WFIFOW(fd,10)=skill->get_sp(skill_id,skill_lv);
-	WFIFOW(fd,12)=skill->get_range2(&sd->bl, skill_id,skill_lv);
-	safestrncpy(WFIFOP(fd,14),skill->get_name(skill_id),NAME_LENGTH);
-	WFIFOB(fd,38)=0;
-	WFIFOSET(fd,packet_len(0x147));
+	int fd = sd->fd;
+
+	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_AUTORUN_SKILL));
+
+	struct PACKET_ZC_AUTORUN_SKILL *p = WFIFOP(fd, 0);
+	int type = skill->get_inf(skill_id);
+
+	if (sd->state.itemskill_castonself == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+		type = INF_SELF_SKILL;
+
+	p->packetType = HEADER_ZC_AUTORUN_SKILL;
+	p->skill_id = skill_id;
+	p->skill_type = type;
+	p->skill_lv = skill_lv;
+	p->skill_sp = skill->get_sp(skill_id, skill_lv);
+	p->skill_range = skill->get_range2(&sd->bl, skill_id, skill_lv);
+	safestrncpy(p->skill_name, skill->get_name(skill_id), NAME_LENGTH);
+	p->up_flag = 0;
+
+	WFIFOSET(fd, sizeof(struct PACKET_ZC_AUTORUN_SKILL));
 }
 
 /// Adds an item to character's cart.
@@ -12926,6 +12933,7 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 
 	pc->delinvincibletimer(sd);
 	skill->castend_map(sd,skill_id,map_name);
+	pc->itemskill_clear(sd);
 }
 
 static void clif_parse_RequestMemo(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));

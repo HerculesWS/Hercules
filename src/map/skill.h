@@ -2019,6 +2019,7 @@ struct skill_interface {
 	int (*cast_fix_sc) ( struct block_list *bl, int time);
 	int (*vf_cast_fix) ( struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
 	int (*delay_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
+	bool (*is_item_skill) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*check_condition_castbegin) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*check_condition_castend) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*consume_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type);

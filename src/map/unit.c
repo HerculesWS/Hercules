@@ -1041,11 +1041,15 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 
 static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv)
 {
-	return unit->skilluse_id2(
-		src, target_id, skill_id, skill_lv,
-		skill->cast_fix(src, skill_id, skill_lv),
-		skill->get_castcancel(skill_id)
-	);
+	int casttime = skill->cast_fix(src, skill_id, skill_lv);
+	int castcancel = skill->get_castcancel(skill_id);
+	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
+
+	if (sd != NULL)
+		pc->itemskill_clear(sd);
+
+	return ret;
 }
 
 static int unit_is_walking(struct block_list *bl)
@@ -1418,15 +1422,8 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		}
 	}
 
-	if (sd) {
-		/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
-#if 0
-		if (sd->skillitem != skill_id && !skill->check_condition_castbegin(sd, skill_id, skill_lv))
-#else
-		if (!skill->check_condition_castbegin(sd, skill_id, skill_lv))
-#endif
-			return 0;
-	}
+	if (sd != NULL && skill->check_condition_castbegin(sd, skill_id, skill_lv) == 0)
+		return 0;
 
 	if (src->type == BL_MOB) {
 		const struct mob_data *src_md = BL_UCCAST(BL_MOB, src);
@@ -1609,6 +1606,9 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
 		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
 
+	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+		casttime = 0;
+
 	// in official this is triggered even if no cast time.
 	clif->useskill(src, src->id, target_id, 0,0, skill_id, skill_lv, casttime);
 	if( casttime > 0 || temp )
@@ -1678,11 +1678,15 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 
 static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv)
 {
-	return unit->skilluse_pos2(
-		src, skill_x, skill_y, skill_id, skill_lv,
-		skill->cast_fix(src, skill_id, skill_lv),
-		skill->get_castcancel(skill_id)
-	);
+	int casttime = skill->cast_fix(src, skill_id, skill_lv);
+	int castcancel = skill->get_castcancel(skill_id);
+	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
+
+	if (sd != NULL)
+		pc->itemskill_clear(sd);
+
+	return ret;
 }
 
 static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel)
@@ -1807,6 +1811,10 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	}
 
 	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
+
+	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+		casttime = 0;
+
 	// in official this is triggered even if no cast time.
 	clif->useskill(src, src->id, 0, skill_x, skill_y, skill_id, skill_lv, casttime);
 	if( casttime > 0 ) {

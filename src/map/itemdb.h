@@ -95,6 +95,8 @@ enum item_itemid {
 	ITEMID_ALOEBERA              = 606,
 	ITEMID_SPECTACLES            = 611,
 	ITEMID_POISON_BOTTLE         = 678,
+	ITEMID_EARTH_SCROLL_1_3      = 686,
+	ITEMID_EARTH_SCROLL_1_5      = 687,
 	ITEMID_EMPTY_BOTTLE          = 713,
 	ITEMID_EMPERIUM              = 714,
 	ITEMID_YELLOW_GEMSTONE       = 715,

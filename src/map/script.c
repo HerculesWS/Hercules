@@ -10985,33 +10985,51 @@ static BUILDIN(guildopenstorage)
 	return true;
 }
 
-/*==========================================
- * Make player use a skill trought item usage
- *------------------------------------------*/
-/// itemskill <skill id>,<level>{,flag
-/// itemskill "<skill name>",<level>{,flag
+/**
+ * Makes the attached character use a skill by using an item.
+ *
+ * @code{.herc}
+ *	itemskill(<skill id>, <skill level>{, <flag>});
+ *	itemskill("<skill name>", <skill level>{, <flag>});
+ * @endcode
+ *
+ */
 static BUILDIN(itemskill)
 {
-	int id;
-	int lv;
 	struct map_session_data *sd = script->rid2sd(st);
+
 	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
 		return true;
 
-	id = ( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
-	lv = script_getnum(st,3);
-/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
-#if 0
-	if( !script_hasdata(st, 4) ) {
-		if( !skill->check_condition_castbegin(sd,id,lv) || !skill->check_condition_castend(sd,id,lv) )
+	sd->skillitem = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
+	sd->skillitemlv = script_getnum(st, 3);
+	sd->state.itemskill_conditions_checked = 0; // Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.
+
+	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
+
+	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
+
+	if (sd->state.itemskill_no_conditions == 0) {
+		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
+		    || skill->check_condition_castend(sd, sd->skillitem, sd->skillitemlv) == 0) {
 			return true;
+		}
+
+		sd->state.itemskill_conditions_checked = 1; // Unset in pc_itemskill_clear().
 	}
-#endif
-	sd->skillitem=id;
-	sd->skillitemlv=lv;
-	clif->item_skill(sd,id,lv);
+
+	sd->state.itemskill_no_casttime = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST) ? 1 : 0; // Unset in pc_itemskill_clear().
+	sd->state.itemskill_castonself = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF) ? 1 : 0; // Unset in pc_itemskill_clear().
+
+	// itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention. Unset in pc_itemskill_clear().
+	sd->itemskill_id = sd->skillitem;
+	sd->itemskill_lv = sd->skillitemlv;
+
+	clif->item_skill(sd, sd->skillitem, sd->skillitemlv);
+
 	return true;
 }
+
 /*==========================================
  * Attempt to create an item
  *------------------------------------------*/
@@ -27837,6 +27855,12 @@ static void script_hardcoded_constants(void)
 	script->constdb_comment("madogear types");
 	script->set_constant("MADO_ROBOT", MADO_ROBOT, false, false);
 	script->set_constant("MADO_SUITE", MADO_SUITE, false, false);
+
+	script->constdb_comment("itemskill option flags");
+	script->set_constant("ISF_NONE", ISF_NONE, false, false);
+	script->set_constant("ISF_IGNORECONDITIONS", ISF_IGNORECONDITIONS, false, false);
+	script->set_constant("ISF_INSTANTCAST", ISF_INSTANTCAST, false, false);
+	script->set_constant("ISF_CASTONSELF", ISF_CASTONSELF, false, false);
 
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL

@@ -5257,6 +5257,14 @@ static int pc_useitem(struct map_session_data *sd, int n)
 #endif
 			if( battle_config.item_restricted_consumption_type && sd->status.inventory[n].expire_time == 0 ) {
 				clif->useitemack(sd,n,sd->status.inventory[n].amount-1,true);
+
+				// If Earth Spike Scroll is used while SC_EARTHSCROLL is active, there is a chance to don't consume the scroll. [Kenpachi]
+				if ((nameid == ITEMID_EARTH_SCROLL_1_3 || nameid == ITEMID_EARTH_SCROLL_1_5)
+				    && sd->sc.count > 0 && sd->sc.data[SC_EARTHSCROLL] != NULL
+				    && rnd() % 100 > sd->sc.data[SC_EARTHSCROLL]->val2) {
+					return 0;
+				}
+
 				pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 			}
 			return 0;
@@ -5302,8 +5310,34 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
 
+	// If Earth Spike Scroll is used while SC_EARTHSCROLL is active, there is a chance to don't consume the scroll. [Kenpachi]
+	if ((nameid == ITEMID_EARTH_SCROLL_1_3 || nameid == ITEMID_EARTH_SCROLL_1_5) && sd->sc.count > 0
+	    && sd->sc.data[SC_EARTHSCROLL] != NULL && rnd() % 100 > sd->sc.data[SC_EARTHSCROLL]->val2) {
+		removeItem = false;
+	}
+
 	if (removeItem)
 		pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
+	return 1;
+}
+
+/**
+ * Sets state flags and helper variables, used by itemskill() script command, to 0.
+ *
+ * @param sd The character's session data.
+ * @return 0 if parameter sd is NULL, otherwise 1.
+ */
+static int pc_itemskill_clear(struct map_session_data *sd)
+{
+	nullpo_ret(sd);
+
+	sd->itemskill_id = 0;
+	sd->itemskill_lv = 0;
+	sd->state.itemskill_conditions_checked = 0;
+	sd->state.itemskill_no_conditions = 0;
+	sd->state.itemskill_no_casttime = 0;
+	sd->state.itemskill_castonself = 0;
+
 	return 1;
 }
 
@@ -12648,6 +12682,7 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
+	pc->itemskill_clear = pc_itemskill_clear;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;

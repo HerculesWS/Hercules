@@ -565,6 +565,16 @@ enum mado_type {
 };
 
 /**
+ * Option flags for itemskill() script command.
+ **/
+enum itemskill_flag {
+	ISF_NONE = 0x00,
+	ISF_IGNORECONDITIONS = 0x01, // Ignore skill conditions and don't consume them.
+	ISF_INSTANTCAST = 0x02, // Cast skill instantaneously.
+	ISF_CASTONSELF = 0x04, // Forcefully cast skill on invoking character without showing the target selection cursor.
+};
+
+/**
  * Structures
  **/
 

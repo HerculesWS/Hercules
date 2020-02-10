@@ -3873,6 +3873,18 @@ struct PACKET_ZC_STATE_CHANGE {
 DEFINE_PACKET_HEADER(ZC_STATE_CHANGE, 0x0119);
 #endif
 
+struct PACKET_ZC_AUTORUN_SKILL {
+	int16 packetType;
+	uint16 skill_id;
+	uint32 skill_type;
+	uint16 skill_lv;
+	uint16 skill_sp;
+	uint16 skill_range;
+	char skill_name[NAME_LENGTH];
+	char up_flag;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_AUTORUN_SKILL, 0x0147);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
