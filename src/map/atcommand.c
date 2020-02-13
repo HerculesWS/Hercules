@@ -2817,7 +2817,7 @@ ACMD(petfriendly)
 		return false;
 	}
 
-	if (friendly < 0 || friendly > 1000)
+	if (friendly < PET_INTIMACY_NONE || friendly > PET_INTIMACY_MAX)
 	{
 		clif->message(fd, msg_fd(fd,37)); // An invalid number was specified.
 		return false;

@@ -91,7 +91,7 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 		status_calc_pc(sd,SCO_NONE);
 
 	/* Pet is lost, delete the egg */
-	if (value <= 0) {
+	if (value <= PET_INTIMACY_NONE) {
 		int i;
 
 		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
@@ -246,7 +246,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	}
 	pd->pet_hungry_timer = INVALID_TIMER;
 
-	if (pd->pet.intimate <= 0)
+	if (pd->pet.intimate <= PET_INTIMACY_NONE)
 		return 1; //You lost the pet already, the rest is irrelevant.
 
 	pd->pet.hungry--;
@@ -262,9 +262,9 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 		pet_stop_attack(pd);
 		pd->pet.hungry = PET_HUNGER_STARVING;
 		pet->set_intimate(pd, pd->pet.intimate - battle_config.pet_hungry_friendly_decrease);
-		if( pd->pet.intimate <= 0 )
+		if (pd->pet.intimate <= PET_INTIMACY_NONE)
 		{
-			pd->pet.intimate = 0;
+			pd->pet.intimate = PET_INTIMACY_NONE;
 			pd->status.speed = pd->db->status.speed;
 		}
 		status_calc_pet(pd, SCO_NONE);
@@ -320,9 +320,9 @@ static int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 	int val;
 
 	nullpo_retr(1, pd);
-	if (pd->pet.intimate > 900)
+	if (pd->pet.intimate > PET_INTIMACY_LOYAL)
 		val = (pd->petDB->s_perfor > 0)? 4:3;
-	else if(pd->pet.intimate > 750) //TODO: this is way too high
+	else if (pd->pet.intimate > PET_INTIMACY_CORDIAL) //TODO: this is way too high
 		val = 2;
 	else
 		val = 1;
@@ -678,7 +678,7 @@ static int pet_menu(struct map_session_data *sd, int menunum)
 		return 1;
 
 	//You lost the pet already.
-	if(!sd->status.pet_id || sd->pd->pet.intimate <= 0 || sd->pd->pet.incubate)
+	if (!sd->status.pet_id || sd->pd->pet.intimate <= PET_INTIMACY_NONE || sd->pd->pet.incubate)
 		return 1;
 
 	egg_id = itemdb->exists(sd->pd->petDB->EggID);
@@ -858,12 +858,12 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 		}
 		pet->set_intimate(pd, pd->pet.intimate + add_intimate);
 	}
-	if (pd->pet.intimate <= 0) {
-		pd->pet.intimate = 0;
+	if (pd->pet.intimate <= PET_INTIMACY_NONE) {
+		pd->pet.intimate = PET_INTIMACY_NONE;
 		pet_stop_attack(pd);
 		pd->status.speed = pd->db->status.speed;
-	} else if (pd->pet.intimate > 1000) {
-		pd->pet.intimate = 1000;
+	} else if (pd->pet.intimate > PET_INTIMACY_MAX) {
+		pd->pet.intimate = PET_INTIMACY_MAX;
 	}
 	status_calc_pet(pd, SCO_NONE);
 	pd->pet.hungry += pd->petDB->fullness;
@@ -937,7 +937,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 	if(pd->ud.walktimer != INVALID_TIMER && pd->ud.walkpath.path_pos <= 2)
 		return 0; //No thinking when you just started to walk.
 
-	if(pd->pet.intimate <= 0) {
+	if (pd->pet.intimate <= PET_INTIMACY_NONE) {
 		//Pet should just... well, random walk.
 		pet->randomwalk(pd,tick);
 		return 0;
@@ -1168,7 +1168,7 @@ static int pet_skill_bonus_timer(int tid, int64 tick, int id, intptr_t data)
 	if (pd->state.skillbonus && pd->bonus->delay > 0) {
 		bonus = 0;
 		duration = pd->bonus->delay*1000; // the duration until pet bonuses will be reactivated again
-	} else if (pd->pet.intimate) {
+	} else if (pd->pet.intimate > PET_INTIMACY_NONE) {
 		bonus = 1;
 		duration = pd->bonus->duration*1000; // the duration for pet bonuses to be in effect
 	} else { //Lost pet...

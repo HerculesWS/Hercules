@@ -10804,7 +10804,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 			}
 		}
 
-		if(sd->pd && sd->pd->pet.intimate > 900)
+		if (sd->pd && sd->pd->pet.intimate > PET_INTIMACY_LOYAL)
 			clif->pet_emotion(sd->pd,(sd->pd->pet.class_ - 100)*100 + 50 + pet->hungry_val(sd->pd));
 
 		if(homun_alive(sd->hd))
@@ -15232,7 +15232,7 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 	}
 
 	// Not Loyal Yet
-	if (sd->pd == NULL || sd->pd->pet.intimate < 900) {
+	if (sd->pd == NULL || sd->pd->pet.intimate < PET_INTIMACY_LOYAL) {
 		clif->petEvolutionResult(fd, PET_EVOL_RG_FAMILIAR);
 		return;
 	}

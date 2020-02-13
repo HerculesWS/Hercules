@@ -2583,7 +2583,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		struct pet_data *pd = sd->pd;
 		if( pd && pd->petDB && pd->petDB->equip_script && pd->pet.intimate >= battle_config.pet_equip_min_friendly )
 			script->run(pd->petDB->equip_script,0,sd->bl.id,0);
-		if( pd && pd->pet.intimate > 0 && (!battle_config.pet_equip_required || pd->pet.equip > 0) && pd->state.skillbonus == 1 && pd->bonus )
+		if (pd && pd->pet.intimate > PET_INTIMACY_NONE && (!battle_config.pet_equip_required || pd->pet.equip > 0) && pd->state.skillbonus == 1 && pd->bonus)
 			pc->bonus(sd,pd->bonus->type, pd->bonus->val);
 	}
 

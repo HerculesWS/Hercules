@@ -61,7 +61,7 @@ static int inter_pet_tosql(const struct s_pet *p)
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, p->name, strnlen(p->name, NAME_LENGTH));
 	hungry = cap_value(p->hungry, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
-	intimate = cap_value(p->intimate, 0, 1000);
+	intimate = cap_value(p->intimate, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if (p->pet_id == 0) {
 		// New pet.
@@ -129,7 +129,7 @@ static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 		SQL->FreeResult(inter->sql_handle);
 
 		p->hungry = cap_value(p->hungry, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
-		p->intimate = cap_value(p->intimate, 0, 1000);
+		p->intimate = cap_value(p->intimate, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 		if (chr->show_save_log)
 			ShowInfo("Pet loaded (%d - %s).\n", pet_id, p->name);
@@ -176,15 +176,10 @@ static struct s_pet *inter_pet_create(int account_id, int char_id, int pet_class
 	inter_pet->pt->level = pet_lv;
 	inter_pet->pt->egg_id = pet_egg_id;
 	inter_pet->pt->equip = pet_equip;
-	inter_pet->pt->intimate = intimate;
+	inter_pet->pt->intimate = cap_value(intimate, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 	inter_pet->pt->hungry = cap_value(hungry, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
 	inter_pet->pt->rename_flag = rename_flag;
 	inter_pet->pt->incubate = incubate;
-
-	if(inter_pet->pt->intimate < 0)
-		inter_pet->pt->intimate = 0;
-	else if(inter_pet->pt->intimate > 1000)
-		inter_pet->pt->intimate = 1000;
 
 	inter_pet->pt->pet_id = 0; //Signal NEW pet.
 	if ((inter_pet->pt->pet_id = inter_pet->tosql(inter_pet->pt)) != 0)

@@ -5920,7 +5920,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			sd->regen.state.gc = 1;
 	}
 
-	if( sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > 0 ) {
+	if (sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
 		sd->pd->bl.m = m;
 		sd->pd->bl.x = sd->pd->ud.to_x = x;
 		sd->pd->bl.y = sd->pd->ud.to_y = y;
@@ -8046,8 +8046,8 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		struct pet_data *pd = sd->pd;
 		if( !map->list[sd->bl.m].flag.noexppenalty ) {
 			pet->set_intimate(pd, pd->pet.intimate - pd->petDB->die);
-			if( pd->pet.intimate < 0 )
-				pd->pet.intimate = 0;
+			if (pd->pet.intimate < PET_INTIMACY_NONE)
+				pd->pet.intimate = PET_INTIMACY_NONE;
 			clif->send_petdata(sd,sd->pd,1,pd->pet.intimate);
 		}
 		if( sd->pd->target_id ) // Unlock all targets...

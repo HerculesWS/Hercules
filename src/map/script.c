@@ -27721,6 +27721,15 @@ static void script_hardcoded_constants(void)
 	script->set_constant("PET_HUNGER_SATISFIED", PET_HUNGER_SATISFIED, false, false);
 	script->set_constant("PET_HUNGER_STUFFED", PET_HUNGER_STUFFED, false, false);
 
+	script->constdb_comment("Pet intimacy levels");
+	script->set_constant("PET_INTIMACY_NONE", PET_INTIMACY_NONE, false, false);
+	script->set_constant("PET_INTIMACY_AWKWARD", PET_INTIMACY_AWKWARD, false, false);
+	script->set_constant("PET_INTIMACY_SHY", PET_INTIMACY_SHY, false, false);
+	script->set_constant("PET_INTIMACY_NEUTRAL", PET_INTIMACY_NEUTRAL, false, false);
+	script->set_constant("PET_INTIMACY_CORDIAL", PET_INTIMACY_CORDIAL, false, false);
+	script->set_constant("PET_INTIMACY_LOYAL", PET_INTIMACY_LOYAL, false, false);
+	script->set_constant("PET_INTIMACY_MAX", PET_INTIMACY_MAX, false, false);
+
 	script->constdb_comment("monster skill states");
 	script->set_constant("MSS_ANY", MSS_ANY, false, false);
 	script->set_constant("MSS_IDLE", MSS_IDLE, false, false);
