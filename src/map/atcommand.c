@@ -2774,7 +2774,7 @@ ACMD(makeegg)
 						 sd->status.account_id, sd->status.char_id,
 						 pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,
 						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
-						 100, 0, 1, pet->db[pet_id].jname);
+						 PET_HUNGER_STUFFED, 0, 1, pet->db[pet_id].jname);
 	} else {
 		clif->message(fd, msg_fd(fd,180)); // The monster/egg name/id doesn't exist.
 		return false;
@@ -2852,7 +2852,7 @@ ACMD(pethungry)
 		clif->message(fd, msg_fd(fd,184)); // Sorry, but you have no pet.
 		return false;
 	}
-	if (hungry < 0 || hungry > 100) {
+	if (hungry < PET_HUNGER_STARVING || hungry > PET_HUNGER_STUFFED) {
 		clif->message(fd, msg_fd(fd,37)); // An invalid number was specified.
 		return false;
 	}

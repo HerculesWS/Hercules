@@ -64,13 +64,13 @@ static int pet_hungry_val(struct pet_data *pd)
 {
 	nullpo_ret(pd);
 
-	if(pd->pet.hungry > 90)
+	if(pd->pet.hungry > PET_HUNGER_SATISFIED)
 		return 4;
-	else if(pd->pet.hungry > 75)
+	else if(pd->pet.hungry > PET_HUNGER_NEUTRAL)
 		return 3;
-	else if(pd->pet.hungry > 25)
+	else if(pd->pet.hungry > PET_HUNGER_HUNGRY)
 		return 2;
-	else if(pd->pet.hungry > 10)
+	else if(pd->pet.hungry > PET_HUNGER_VERY_HUNGRY)
 		return 1;
 	else
 		return 0;
@@ -115,7 +115,7 @@ static int pet_create_egg(struct map_session_data *sd, int item_id)
 		mob->db(pet->db[pet_id].class_)->lv,
 		pet->db[pet_id].EggID, 0,
 		(short)pet->db[pet_id].intimate,
-		100, 0, 1, pet->db[pet_id].jname);
+		PET_HUNGER_STUFFED, 0, 1, pet->db[pet_id].jname);
 	return 1;
 }
 
@@ -174,7 +174,7 @@ static int pet_target_check(struct map_session_data *sd, struct block_list *bl, 
 
 	if( bl == NULL || bl->type != BL_MOB || bl->prev == NULL
 	 || pd->pet.intimate < battle_config.pet_support_min_friendly
-	 || pd->pet.hungry < 1
+	 || pd->pet.hungry <= PET_HUNGER_STARVING
 	 || pd->pet.class_ == status->get_class(bl))
 		return 0;
 
@@ -252,15 +252,15 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	pd->pet.hungry--;
 	/* Pet Autofeed */
 	if (battle_config.feature_enable_pet_autofeed != 0) {
-		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= 25) {
+		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= PET_HUNGER_HUNGRY) {
 			pet->food(sd, pd);
 		}
 	}
 
-	if( pd->pet.hungry < 0 )
+	if (pd->pet.hungry < PET_HUNGER_STARVING)
 	{
 		pet_stop_attack(pd);
-		pd->pet.hungry = 0;
+		pd->pet.hungry = PET_HUNGER_STARVING;
 		pet->set_intimate(pd, pd->pet.intimate - battle_config.pet_hungry_friendly_decrease);
 		if( pd->pet.intimate <= 0 )
 		{
@@ -607,7 +607,7 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		status_kill(&md->bl);
 		clif->pet_roulette(sd,1);
 		intif->create_pet(sd->status.account_id,sd->status.char_id,pet->db[i].class_,mob->db(pet->db[i].class_)->lv,
-			pet->db[i].EggID,0,pet->db[i].intimate,100,0,1,pet->db[i].jname);
+			pet->db[i].EggID, 0, pet->db[i].intimate, PET_HUNGER_STUFFED, 0, 1, pet->db[i].jname);
 
 		achievement->validate_taming(sd, pet->db[i].class_);
 	}
@@ -843,7 +843,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	}
 	pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 
-	if (pd->pet.hungry > 90) {
+	if (pd->pet.hungry > PET_HUNGER_SATISFIED) {
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->r_full);
 	} else {
 		int add_intimate = 0;
@@ -851,7 +851,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 			add_intimate = (pd->petDB->r_hungry * battle_config.pet_friendly_rate)/100;
 		else
 			add_intimate = pd->petDB->r_hungry;
-		if (pd->pet.hungry > 75) {
+		if (pd->pet.hungry > PET_HUNGER_NEUTRAL) {
 			add_intimate = add_intimate >> 1;
 			if (add_intimate <= 0)
 				add_intimate = 1;
@@ -867,8 +867,8 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	}
 	status_calc_pet(pd, SCO_NONE);
 	pd->pet.hungry += pd->petDB->fullness;
-	if( pd->pet.hungry > 100 )
-		pd->pet.hungry = 100;
+	if (pd->pet.hungry > PET_HUNGER_STUFFED)
+		pd->pet.hungry = PET_HUNGER_STUFFED;
 
 	clif->send_petdata(sd,pd,2,pd->pet.hungry);
 	clif->send_petdata(sd,pd,1,pd->pet.intimate);

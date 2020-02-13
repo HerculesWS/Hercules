@@ -15292,7 +15292,7 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 						 sd->status.account_id, sd->status.char_id,
 						 pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,
 						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
-						 100, 0, 1, pet->db[pet_id].jname);
+						 PET_HUNGER_STUFFED, 0, 1, pet->db[pet_id].jname);
 				clif->petEvolutionResult(fd, PET_EVOL_SUCCESS);
 			} else {
 				clif->petEvolutionResult(fd, PET_EVOL_UNKNOWN);

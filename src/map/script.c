@@ -19635,7 +19635,7 @@ static BUILDIN(setunitdata)
 		setunitdata_check_bounds(4, 0, SHRT_MAX);
 		break;
 	case UDT_HUNGER:
-		setunitdata_check_bounds(4, 0, 99);
+		setunitdata_check_bounds(4, PET_HUNGER_STARVING, PET_HUNGER_STUFFED); // Pets and Homunculi have the same hunger value bounds.
 		break;
 	case UDT_RACE:
 	case UDT_ELETYPE:
@@ -27712,6 +27712,14 @@ static void script_hardcoded_constants(void)
 	script->set_constant("PETINFO_ACCESSORYFLAG", PETINFO_ACCESSORYFLAG, false, false);
 	script->set_constant("PETINFO_EVO_EGGID", PETINFO_EVO_EGGID, false, false);
 	script->set_constant("PETINFO_AUTOFEED", PETINFO_AUTOFEED, false, false);
+
+	script->constdb_comment("Pet hunger levels");
+	script->set_constant("PET_HUNGER_STARVING", PET_HUNGER_STARVING, false, false);
+	script->set_constant("PET_HUNGER_VERY_HUNGRY", PET_HUNGER_VERY_HUNGRY, false, false);
+	script->set_constant("PET_HUNGER_HUNGRY", PET_HUNGER_HUNGRY, false, false);
+	script->set_constant("PET_HUNGER_NEUTRAL", PET_HUNGER_NEUTRAL, false, false);
+	script->set_constant("PET_HUNGER_SATISFIED", PET_HUNGER_SATISFIED, false, false);
+	script->set_constant("PET_HUNGER_STUFFED", PET_HUNGER_STUFFED, false, false);
 
 	script->constdb_comment("monster skill states");
 	script->set_constant("MSS_ANY", MSS_ANY, false, false);
