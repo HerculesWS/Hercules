@@ -85,13 +85,13 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 	intimate = pd->pet.intimate;
 	sd = pd->msd;
 
-	pd->pet.intimate = value;
+	pd->pet.intimate = cap_value(value, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if( (intimate >= battle_config.pet_equip_min_friendly && pd->pet.intimate < battle_config.pet_equip_min_friendly) || (intimate < battle_config.pet_equip_min_friendly && pd->pet.intimate >= battle_config.pet_equip_min_friendly) )
 		status_calc_pc(sd,SCO_NONE);
 
 	/* Pet is lost, delete the egg */
-	if (value <= PET_INTIMACY_NONE) {
+	if (pd->pet.intimate == PET_INTIMACY_NONE) {
 		int i;
 
 		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
@@ -262,11 +262,8 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 		pet_stop_attack(pd);
 		pd->pet.hungry = PET_HUNGER_STARVING;
 		pet->set_intimate(pd, pd->pet.intimate - battle_config.pet_hungry_friendly_decrease);
-		if (pd->pet.intimate <= PET_INTIMACY_NONE)
-		{
-			pd->pet.intimate = PET_INTIMACY_NONE;
+		if (pd->pet.intimate == PET_INTIMACY_NONE)
 			pd->status.speed = pd->db->status.speed;
-		}
 		status_calc_pet(pd, SCO_NONE);
 		clif->send_petdata(sd,pd,1,pd->pet.intimate);
 	}
@@ -858,12 +855,9 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 		}
 		pet->set_intimate(pd, pd->pet.intimate + add_intimate);
 	}
-	if (pd->pet.intimate <= PET_INTIMACY_NONE) {
-		pd->pet.intimate = PET_INTIMACY_NONE;
+	if (pd->pet.intimate == PET_INTIMACY_NONE) {
 		pet_stop_attack(pd);
 		pd->status.speed = pd->db->status.speed;
-	} else if (pd->pet.intimate > PET_INTIMACY_MAX) {
-		pd->pet.intimate = PET_INTIMACY_MAX;
 	}
 	status_calc_pet(pd, SCO_NONE);
 	pd->pet.hungry += pd->petDB->fullness;
