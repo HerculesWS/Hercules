@@ -1357,12 +1357,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	}
 
 	pet->db[n].class_ = i32;
-
-	if (!libconfig->setting_lookup_string(it, "SpriteName", &str) || !*str ) {
-		ShowWarning("pet_read_db_sub: Missing SpriteName in pet %d of \"%s\", skipping.\n", pet->db[n].class_, source);
-		return 0;
-	}
-	safestrncpy(pet->db[n].name, str, sizeof(pet->db[n].name));
+	safestrncpy(pet->db[n].name, mob->db(i32)->sprite, sizeof(pet->db[n].name));
 
 	if (!libconfig->setting_lookup_string(it, "Name", &str) || !*str) {
 		ShowWarning("pet_read_db_sub: Missing Name in pet %d of \"%s\", skipping.\n", pet->db[n].class_, source);
