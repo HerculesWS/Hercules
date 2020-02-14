@@ -377,7 +377,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	struct pet_data *pd;
-	int i=0,interval=0;
+	int i = 0;
 
 	nullpo_retr(1, sd);
 	nullpo_retr(1, petinfo);
@@ -437,15 +437,12 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 		if( pd->petDB->equip_script )
 			status_calc_pc(sd,SCO_NONE);
 
-		if( battle_config.pet_hungry_delay_rate != 100 )
-			interval = (pd->petDB->hungry_delay*battle_config.pet_hungry_delay_rate)/100;
-		else
-			interval = pd->petDB->hungry_delay;
+		if (pd->petDB->hungry_delay > 0) {
+			int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
+			pd->pet_hungry_timer = timer->add(timer->gettick() + max(interval, 1), pet->hungry, sd->bl.id, 0);
+		}
 	}
 
-	if( interval <= 0 )
-		interval = 1;
-	pd->pet_hungry_timer = timer->add(timer->gettick() + interval, pet->hungry, sd->bl.id, 0);
 	return 0;
 }
 
