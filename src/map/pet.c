@@ -592,7 +592,7 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		return 1;
 	}
 
-	pet_catch_rate = (pet->db[i].capture + (sd->status.base_level - md->level)*30 + sd->battle_status.luk*20)*(200 - get_percentage(md->status.hp, md->status.max_hp))/100;
+	pet_catch_rate = pet->db[i].capture * (100 - get_percentage(md->status.hp, md->status.max_hp)) / 100 + pet->db[i].capture;
 
 	if(pet_catch_rate < 1) pet_catch_rate = 1;
 	if(battle->bc->pet_catch_rate != 100)
