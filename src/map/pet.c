@@ -172,6 +172,9 @@ static int pet_target_check(struct map_session_data *sd, struct block_list *bl, 
 
 	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
 
+	if (pd->petDB != NULL && ((type == 0 && pd->petDB->attack_rate == 0) || (type != 0 && pd->petDB->defence_attack_rate == 0)))
+		return 0; // If base rate is 0, there's nothing to do.
+
 	if( bl == NULL || bl->type != BL_MOB || bl->prev == NULL
 	 || pd->pet.intimate < battle_config.pet_support_min_friendly
 	 || pd->pet.hungry <= PET_HUNGER_STARVING
