@@ -5895,7 +5895,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			else
 				y = 0;
 
-			if (unit->movepos(src, src->x + x, src->y + y, 1, 1) == 1) {
+			if (unit->movepos(src, src->x + x, src->y + y, 1, 1) != 0) {
 				//Display movement + animation.
 				clif->slide(src, src->x, src->y);
 				clif->spiritball(src);
