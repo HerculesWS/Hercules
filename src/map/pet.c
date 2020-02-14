@@ -1365,19 +1365,23 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	}
 	safestrncpy(pet->db[n].jname, str, sizeof(pet->db[n].jname));
 
+	if (libconfig->setting_lookup_string(it, "EggItem", &str) == CONFIG_FALSE || *str == '\0') {
+		ShowWarning("pet_read_db_sub: Missing EggItem in pet %d of \"%s\", skipping.\n", pet->db[n].class_, source);
+		return 0;
+	}
+
+	if ((data = itemdb->name2id(str)) == NULL) {
+		ShowWarning("pet_read_db_sub: Invalid EggItem '%s' in pet %d of \"%s\", skipping.\n", str, pet->db[n].class_, source);
+		return 0;
+	}
+
+	pet->db[n].EggID = data->nameid;
+
 	if (libconfig->setting_lookup_string(it, "TamingItem", &str)) {
 		if (!(data = itemdb->name2id(str))) {
 			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
 		} else {
 			pet->db[n].itemID = data->nameid;
-		}
-	}
-
-	if (libconfig->setting_lookup_string(it, "EggItem", &str)) {
-		if (!(data = itemdb->name2id(str))) {
-			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
-		} else {
-			pet->db[n].EggID = data->nameid;
 		}
 	}
 
