@@ -1350,6 +1350,12 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		ShowWarning("pet_read_db_sub: Missing Id in \"%s\", entry #%d, skipping.\n", source, n);
 		return 0;
 	}
+
+	if (mob->db_checkid(i32) == 0) {
+		ShowWarning("pet_read_db_sub: Invalid Id %d in \"%s\", entry #%d, skipping.\n", i32, source, n);
+		return 0;
+	}
+
 	pet->db[n].class_ = i32;
 
 	if (!libconfig->setting_lookup_string(it, "SpriteName", &str) || !*str ) {
