@@ -1393,33 +1393,43 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		}
 	}
 
+	pet->db[n].FoodID = 537;
+
 	if (libconfig->setting_lookup_string(it, "FoodItem", &str)) {
 		if (!(data = itemdb->name2id(str))) {
-			ShowWarning("pet_read_db_sub: Invalid item '%s' in pet %d of \"%s\", defaulting to 0.\n", str, pet->db[n].class_, source);
+			ShowWarning("pet_read_db_sub: Invalid FoodItem '%s' in pet %d of \"%s\", defaulting to Pet_Food (ID=537).\n", str, pet->db[n].class_, source);
 		} else {
 			pet->db[n].FoodID = data->nameid;
 		}
 	}
 
-	if (libconfig->setting_lookup_int(it, "FoodEffectiveness", &i32))
-		pet->db[n].fullness = i32;
+	int ret = libconfig->setting_lookup_int(it, "FoodEffectiveness", &i32);
+	pet->db[n].fullness = (ret == CONFIG_FALSE) ? 80 : cap_value(i32, 1, PET_HUNGER_STUFFED);
 
-	if (libconfig->setting_lookup_int(it, "HungerDelay", &i32))
-		pet->db[n].hungry_delay = i32 * 1000;
+	ret = libconfig->setting_lookup_int(it, "HungerDelay", &i32);
+	pet->db[n].hungry_delay = (ret == CONFIG_FALSE) ? 60000 : cap_value(1000 * i32, 0, INT_MAX);
+
+	/**
+	 * Preventively set default intimacy values here, just in case that 'Intimacy' block is not defined,
+	 * or pet_read_db_sub_intimacy() fails execution.
+	 *
+	 **/
+	pet->db[n].intimate = PET_INTIMACY_NEUTRAL;
+	pet->db[n].r_hungry = 10;
+	pet->db[n].r_full = 100;
+	pet->db[n].die = 20;
 
 	if ((t = libconfig->setting_get_member(it, "Intimacy"))) {
 		if (config_setting_is_group(t)) {
 			pet->read_db_sub_intimacy(n, t);
 		}
 	}
-	if (pet->db[n].r_hungry <= 0)
-		pet->db[n].r_hungry = 1;
 
-	if (libconfig->setting_lookup_int(it, "CaptureRate", &i32))
-		pet->db[n].capture = i32;
+	ret = libconfig->setting_lookup_int(it, "CaptureRate", &i32);
+	pet->db[n].capture = (ret == CONFIG_FALSE) ? 1000 : cap_value(i32, 1, 10000);
 
-	if (libconfig->setting_lookup_int(it, "Speed", &i32))
-		pet->db[n].speed = i32;
+	ret = libconfig->setting_lookup_int(it, "Speed", &i32);
+	pet->db[n].speed = (ret == CONFIG_FALSE) ? DEFAULT_WALK_SPEED : cap_value(i32, MIN_WALK_SPEED, MAX_WALK_SPEED);
 
 	if ((t = libconfig->setting_get_member(it, "SpecialPerformance")) && (i32 = libconfig->setting_get_bool(t)))
 		pet->db[n].s_perfor = (char)i32;
@@ -1427,14 +1437,14 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	if ((t = libconfig->setting_get_member(it, "TalkWithEmotes")) && (i32 = libconfig->setting_get_bool(t)))
 		pet->db[n].talk_convert_class = i32;
 
-	if (libconfig->setting_lookup_int(it, "AttackRate", &i32))
-		pet->db[n].attack_rate = i32;
+	ret = libconfig->setting_lookup_int(it, "AttackRate", &i32);
+	pet->db[n].attack_rate = (ret == CONFIG_FALSE) ? 300 : cap_value(i32, 0, 10000);
 
-	if (libconfig->setting_lookup_int(it, "DefendRate", &i32))
-		pet->db[n].defence_attack_rate = i32;
+	ret = libconfig->setting_lookup_int(it, "DefendRate", &i32);
+	pet->db[n].defence_attack_rate = (ret == CONFIG_FALSE) ? 300 : cap_value(i32, 0, 10000);
 
-	if (libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32))
-		pet->db[n].change_target_rate = i32;
+	ret = libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32);
+	pet->db[n].change_target_rate = (ret == CONFIG_FALSE) ? 800 : cap_value(i32, 0, 10000);
 
 	// Pet Evolution
 	if ((t = libconfig->setting_get_member(it, "Evolve")) && config_setting_is_group(t)) {
@@ -1536,16 +1546,16 @@ static bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
 	Assert_ret(idx >= 0 && idx < MAX_PET_DB);
 
 	if (libconfig->setting_lookup_int(t, "Initial", &i32))
-		pet->db[idx].intimate = i32;
+		pet->db[idx].intimate = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "FeedIncrement", &i32))
-		pet->db[idx].r_hungry = i32;
+		pet->db[idx].r_hungry = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OverFeedDecrement", &i32))
-		pet->db[idx].r_full = i32;
+		pet->db[idx].r_full = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32))
-		pet->db[idx].die = i32;
+		pet->db[idx].die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	return true;
 }
