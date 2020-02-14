@@ -240,6 +240,17 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 		return 1;
 
 	pd = sd->pd;
+
+	/**
+	 * If HungerDelay is 0, there's nothing to do.
+	 * Actually this shouldn't happen, since the timer wasn't added in pet_data_init(), but just to be sure...
+	 *
+	 **/
+	if (pd->petDB != NULL && pd->petDB->hungry_delay == 0) {
+		pet->hungry_timer_delete(pd);
+		return 0;
+	}
+
 	if(pd->pet_hungry_timer != tid){
 		ShowError("pet_hungry_timer %d != %d\n",pd->pet_hungry_timer,tid);
 		return 0;
