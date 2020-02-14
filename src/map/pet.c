@@ -840,21 +840,24 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	}
 	pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 
-	if (pd->pet.hungry > PET_HUNGER_SATISFIED) {
-		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->r_full);
-	} else {
-		int add_intimate = 0;
-		if (battle_config.pet_friendly_rate != 100)
-			add_intimate = (pd->petDB->r_hungry * battle_config.pet_friendly_rate)/100;
-		else
-			add_intimate = pd->petDB->r_hungry;
-		if (pd->pet.hungry > PET_HUNGER_NEUTRAL) {
-			add_intimate = add_intimate >> 1;
-			if (add_intimate <= 0)
-				add_intimate = 1;
-		}
-		pet->set_intimate(pd, pd->pet.intimate + add_intimate);
-	}
+	int intimacy = 0;
+
+	if (pd->pet.hungry >= PET_HUNGER_STUFFED)
+		intimacy -= pd->petDB->r_full; // Decrease intimacy by OverFeedDecrement.
+	else if (pd->pet.hungry > PET_HUNGER_SATISFIED)
+		intimacy -= pd->petDB->r_full / 2; // Decrease intimacy by 50% of OverFeedDecrement.
+	else if (pd->pet.hungry > PET_HUNGER_NEUTRAL)
+		intimacy -= pd->petDB->r_full * 5 / 100; // Decrease intimacy by 5% of OverFeedDecrement.
+	else if (pd->pet.hungry > PET_HUNGER_HUNGRY)
+		intimacy += pd->petDB->r_hungry * 75 / 100; // Increase intimacy by 75% of FeedIncrement.
+	else if (pd->pet.hungry > PET_HUNGER_VERY_HUNGRY)
+		intimacy += pd->petDB->r_hungry; // Increase intimacy by FeedIncrement.
+	else
+		intimacy += pd->petDB->r_hungry / 2; // Increase intimacy by 50% of FeedIncrement.
+
+	intimacy *= battle_config.pet_friendly_rate / 100;
+	pet->set_intimate(pd, pd->pet.intimate + intimacy);
+
 	if (pd->pet.intimate == PET_INTIMACY_NONE) {
 		pet_stop_attack(pd);
 		pd->status.speed = pd->db->status.speed;
