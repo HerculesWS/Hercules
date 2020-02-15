@@ -2805,39 +2805,47 @@ ACMD(hatch)
 	return true;
 }
 
-/*==========================================
+/**
+ * Sets a pet's intimacy value.
  *
- *------------------------------------------*/
+ * @code{.herc}
+ *	@petfriendly <0-1000>
+ * @endcode
+ *
+ **/
 ACMD(petfriendly)
 {
-	int friendly;
-	struct pet_data *pd;
-
-	if (!*message || (friendly = atoi(message)) < 0) {
-		clif->message(fd, msg_fd(fd,1016)); // Please enter a valid value (usage: @petfriendly <0-1000>).
+	if (*message == '\0' || (atoi(message) == 0 && isdigit(*message) == 0)) {
+		clif->message(fd, msg_fd(fd, 1016)); // Please enter a valid value (usage: @petfriendly <0-1000>).
 		return false;
 	}
 
-	pd = sd->pd;
-	if (!pd) {
-		clif->message(fd, msg_fd(fd,184)); // Sorry, but you have no pet.
+	int friendly = atoi(message);
+
+	if (friendly < PET_INTIMACY_NONE || friendly > PET_INTIMACY_MAX) {
+		clif->message(fd, msg_fd(fd, 1016)); // Please enter a valid value (usage: @petfriendly <0-1000>).
 		return false;
 	}
 
-	if (friendly < PET_INTIMACY_NONE || friendly > PET_INTIMACY_MAX)
-	{
-		clif->message(fd, msg_fd(fd,37)); // An invalid number was specified.
+	struct pet_data *pd = sd->pd;
+
+	if (sd->status.pet_id == 0 || pd == NULL) {
+		clif->message(fd, msg_fd(fd, 184)); // Sorry, but you have no pet.
 		return false;
 	}
 
-	if (friendly == pd->pet.intimate) {
-		clif->message(fd, msg_fd(fd,183)); // Pet intimacy is already at maximum.
+	if (friendly == pd->pet.intimate && friendly == PET_INTIMACY_MAX) {
+		clif->message(fd, msg_fd(fd, 183)); // Pet intimacy is already at maximum.
 		return false;
 	}
 
-	pet->set_intimate(pd, friendly);
-	clif->send_petstatus(sd);
-	clif->message(fd, msg_fd(fd,182)); // Pet intimacy changed.
+	if (friendly != pd->pet.intimate) { // No need to update the pet's status if intimacy value won't change.
+		pet->set_intimate(pd, friendly);
+		clif->send_petstatus(sd);
+	}
+
+	clif->message(fd, msg_fd(fd, 182)); // Pet intimacy changed. (Send message regardless of value has changed or not.)
+
 	return true;
 }
 
