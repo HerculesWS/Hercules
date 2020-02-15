@@ -128,8 +128,21 @@ static int inter_pet_tosql(const struct s_pet *p)
 	return pet_id;
 }
 
+/**
+ * Loads a pet's data from the SQL database.
+ *
+ * Table structure:
+ * `pet` (`pet_id`, `class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, `intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed`)
+ *
+ * @param pet_id The pet's ID.
+ * @param p The pet data to save the SQL data in.
+ * @return Always 0.
+ *
+ **/
 static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 {
+	nullpo_ret(p);
+
 	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	if (stmt == NULL) {
@@ -140,13 +153,12 @@ static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 #ifdef NOISY
 	ShowInfo("Loading pet (%d)...\n",pet_id);
 #endif
-	nullpo_ret(p);
+
 	memset(p, 0, sizeof(struct s_pet));
 
-	//`pet` (`pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`, `autofeed`)
-
 	const char *query = "SELECT "
-		"`class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, `intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed` "
+		"`class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, "
+		"`intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed` "
 		"FROM `%s` WHERE `pet_id`=?";
 
 	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, pet_db) ||
