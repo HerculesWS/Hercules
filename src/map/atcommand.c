@@ -2744,41 +2744,48 @@ ACMD(guildlevelup)
 	return true;
 }
 
-/*==========================================
+/**
+ * Creates a pet egg in the character's inventory.
  *
- *------------------------------------------*/
+ * @code{.herc}
+ *	@makeegg <pet>
+ * @endcode
+ *
+ **/
 ACMD(makeegg)
 {
-	struct item_data *item_data;
-	int id, pet_id;
-
-	if (!*message) {
-		clif->message(fd, msg_fd(fd,1015)); // Please enter a monster/egg name/ID (usage: @makeegg <pet>).
+	if (*message == '\0') {
+		clif->message(fd, msg_fd(fd, 1015)); // Please enter a monster/egg name/ID (usage: @makeegg <pet>).
 		return false;
 	}
 
-	if ((item_data = itemdb->search_name(message)) != NULL) // for egg name
+	struct item_data *item_data = itemdb->search_name(message);
+	int id;
+
+	if (item_data != NULL) { // Egg name.
 		id = item_data->nameid;
-	else
-		if ((id = mob->db_searchname(message)) != 0) // for monster name
-			;
-		else
-			id = atoi(message);
-
-	pet_id = pet->search_petDB_index(id, PET_CLASS);
-	if (pet_id < 0)
-		pet_id = pet->search_petDB_index(id, PET_EGG);
-	if (pet_id >= 0) {
-		sd->catch_target_class = pet->db[pet_id].class_;
-		intif->create_pet(
-						 sd->status.account_id, sd->status.char_id,
-						 pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,
-						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
-						 PET_HUNGER_STUFFED, 0, 1, pet->db[pet_id].jname);
 	} else {
-		clif->message(fd, msg_fd(fd,180)); // The monster/egg name/id doesn't exist.
+		id = mob->db_searchname(message); // Monster name.
+
+		if (id == 0)
+			id = atoi(message); // Egg/monster ID.
+	}
+
+	int pet_id = pet->search_petDB_index(id, PET_CLASS);
+
+	if (pet_id == INDEX_NOT_FOUND)
+		pet_id = pet->search_petDB_index(id, PET_EGG);
+
+	if (pet_id == INDEX_NOT_FOUND) {
+		clif->message(fd, msg_fd(fd, 180)); // The monster/egg name/ID doesn't exist.
 		return false;
 	}
+
+	sd->catch_target_class = pet->db[pet_id].class_;
+	intif->create_pet(sd->status.account_id, sd->status.char_id, pet->db[pet_id].class_,
+			  mob->db(pet->db[pet_id].class_)->lv, pet->db[pet_id].EggID, 0,
+			  (short)pet->db[pet_id].intimate, PET_HUNGER_STUFFED,
+			  0, 1,pet->db[pet_id].jname);
 
 	return true;
 }
