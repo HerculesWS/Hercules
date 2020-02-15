@@ -43,19 +43,17 @@ struct inter_pet_interface *inter_pet;
 /**
  * Saves a pet to the SQL database.
  *
- * @remark
- *   In case of newly created pet, the pet ID is not updated to reflect the
- *   newly assigned ID.  The caller must do so.
+ * Table structure:
+ * `pet` (`pet_id`, `class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, `intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed`)
+ *
+ * @remark In case of newly created pet, the pet ID is not updated to reflect the newly assigned ID. The caller must do so.
  *
  * @param p The pet data to save.
- * @return The ID of the saved pet.
- * @retval 0 in case of errors.
- */
+ * @return The ID of the saved pet, or 0 in case of errors.
+ *
+ **/
 static int inter_pet_tosql(const struct s_pet *p)
 {
-	//`pet` (`pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`)
-	int pet_id = 0;
-
 	nullpo_ret(p);
 
 	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
@@ -65,9 +63,12 @@ static int inter_pet_tosql(const struct s_pet *p)
 		return 0;
 	}
 
+	int pet_id = 0;
+
 	if (p->pet_id == 0) { // New pet.
 		const char *query = "INSERT INTO `%s` "
-			"(`class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, `intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed`) "
+			"(`class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, "
+			"`intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed`) "
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, pet_db) ||
@@ -92,7 +93,8 @@ static int inter_pet_tosql(const struct s_pet *p)
 		pet_id = (int)SQL->LastInsertId(inter->sql_handle);
 	} else { // Update pet.
 		const char *query = "UPDATE `%s` SET "
-			"`class`=?, `name`=?, `account_id`=?, `char_id`=?, `level`=?, `egg_id`=?, `equip`=?, `intimate`=?, `hungry`=?, `rename_flag`=?, `incubate`=?, `autofeed`=? "
+			"`class`=?, `name`=?, `account_id`=?, `char_id`=?, `level`=?, `egg_id`=?, `equip`=?, "
+			"`intimate`=?, `hungry`=?, `rename_flag`=?, `incubate`=?, `autofeed`=? "
 			"WHERE `pet_id`=?";
 
 		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, pet_db) ||
