@@ -58,6 +58,7 @@ struct s_pet_db {
 	int change_target_rate;
 	int autofeed;
 	int hunger_decrement;
+	int starving_delay;
 	struct script_code *equip_script;
 	struct script_code *pet_script;
 

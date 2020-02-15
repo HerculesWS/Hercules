@@ -271,6 +271,8 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 		}
 	}
 
+	interval = pd->petDB->hungry_delay;
+
 	if (pd->pet.hungry < PET_HUNGER_STARVING)
 	{
 		pet_stop_attack(pd);
@@ -280,13 +282,14 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 			pd->status.speed = pd->db->status.speed;
 		status_calc_pet(pd, SCO_NONE);
 		clif->send_petdata(sd,pd,1,pd->pet.intimate);
+
+		if (pd->petDB->starving_delay > 0)
+			interval = pd->petDB->starving_delay;
 	}
 	clif->send_petdata(sd,pd,2,pd->pet.hungry);
 
-	if(battle_config.pet_hungry_delay_rate != 100)
-		interval = (pd->petDB->hungry_delay*battle_config.pet_hungry_delay_rate)/100;
-	else
-		interval = pd->petDB->hungry_delay;
+	interval *= battle_config.pet_hungry_delay_rate / 100;
+
 	if(interval <= 0)
 		interval = 1;
 	pd->pet_hungry_timer = timer->add(tick+interval,pet->hungry,sd->bl.id,0);
@@ -1424,6 +1427,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	pet->db[n].r_hungry = 10;
 	pet->db[n].r_full = 100;
 	pet->db[n].die = 20;
+	pet->db[n].starving_delay = min(20000, pet->db[n].hungry_delay);
 
 	if ((t = libconfig->setting_get_member(it, "Intimacy"))) {
 		if (config_setting_is_group(t)) {
@@ -1562,6 +1566,9 @@ static bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
 
 	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32))
 		pet->db[idx].die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+
+	if (libconfig->setting_lookup_int(t, "StarvingDelay", &i32) == CONFIG_TRUE)
+		pet->db[idx].starving_delay = cap_value(1000 * i32, 0, pet->db[idx].hungry_delay);
 
 	return true;
 }
