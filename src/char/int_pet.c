@@ -128,8 +128,12 @@ static int inter_pet_tosql(const struct s_pet *p)
 
 static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 {
-	char* data;
-	size_t len;
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+
+	if (stmt == NULL) {
+		SqlStmt_ShowDebug(stmt);
+		return 0;
+	}
 
 #ifdef NOISY
 	ShowInfo("Loading pet (%d)...\n",pet_id);
@@ -139,36 +143,47 @@ static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 
 	//`pet` (`pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`, `autofeed`)
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`,`autofeed` FROM `%s` WHERE `pet_id`='%d'", pet_db, pet_id) )
-	{
-		Sql_ShowDebug(inter->sql_handle);
+	const char *query = "SELECT "
+		"`class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, `intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed` "
+		"FROM `%s` WHERE `pet_id`=?";
+
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, pet_db) ||
+	    SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &pet_id, sizeof(pet_id)) ||
+	    SQL_ERROR == SQL->StmtExecute(stmt) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT32, &p->class_, sizeof(p->class_), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_STRING, &p->name, sizeof(p->name), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT32, &p->account_id, sizeof(p->account_id), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_INT32, &p->char_id, sizeof(p->char_id), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_INT16, &p->level, sizeof(p->level), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_INT32, &p->egg_id, sizeof(p->egg_id), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_INT32, &p->equip, sizeof(p->equip), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_INT16, &p->intimate, sizeof(p->intimate), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_INT16, &p->hungry, sizeof(p->hungry), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_INT8, &p->rename_flag, sizeof(p->rename_flag), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_INT8, &p->incubate, sizeof(p->incubate), NULL, NULL) ||
+	    SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_INT32, &p->autofeed, sizeof(p->autofeed), NULL, NULL)) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
 		return 0;
 	}
 
-	if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
-	{
-		p->pet_id = pet_id;
-		SQL->GetData(inter->sql_handle,  1, &data, NULL); p->class_ = atoi(data);
-		SQL->GetData(inter->sql_handle,  2, &data, &len); memcpy(p->name, data, min(len, NAME_LENGTH));
-		SQL->GetData(inter->sql_handle,  3, &data, NULL); p->account_id = atoi(data);
-		SQL->GetData(inter->sql_handle,  4, &data, NULL); p->char_id = atoi(data);
-		SQL->GetData(inter->sql_handle,  5, &data, NULL); p->level = atoi(data);
-		SQL->GetData(inter->sql_handle,  6, &data, NULL); p->egg_id = atoi(data);
-		SQL->GetData(inter->sql_handle,  7, &data, NULL); p->equip = atoi(data);
-		SQL->GetData(inter->sql_handle,  8, &data, NULL); p->intimate = atoi(data);
-		SQL->GetData(inter->sql_handle,  9, &data, NULL); p->hungry = atoi(data);
-		SQL->GetData(inter->sql_handle, 10, &data, NULL); p->rename_flag = atoi(data);
-		SQL->GetData(inter->sql_handle, 11, &data, NULL); p->incubate = atoi(data);
-		SQL->GetData(inter->sql_handle, 12, &data, NULL); p->autofeed = atoi(data);
-
-		SQL->FreeResult(inter->sql_handle);
-
-		p->hungry = cap_value(p->hungry, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
-		p->intimate = cap_value(p->intimate, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
-
-		if (chr->show_save_log)
-			ShowInfo("Pet loaded (%d - %s).\n", pet_id, p->name);
+	if (SQL->StmtNumRows(stmt) < 1) {
+		ShowError("inter_pet_fromsql: Requested non-existant pet ID: %d\n", pet_id);
+		SQL->StmtFree(stmt);
+		return 0;
 	}
+
+	if (SQL_ERROR == SQL->StmtNextRow(stmt)) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		return 0;
+	}
+
+	SQL->StmtFree(stmt);
+
+	if (chr->show_save_log)
+		ShowInfo("Pet loaded %d - %s.\n", pet_id, p->name);
+
 	return 0;
 }
 //----------------------------------------------
