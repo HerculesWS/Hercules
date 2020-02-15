@@ -224,18 +224,34 @@ static int inter_pet_delete(int pet_id)
 	return 0;
 }
 //------------------------------------------------------
+
+/**
+ * Creates a new pet and inserts its data into the `pet` SQL table.
+ *
+ * @param account_id The pet's master's account ID.
+ * @param char_id The pet's master's char ID.
+ * @param pet_class The pet's class/monster ID.
+ * @param pet_lv The pet's level.
+ * @param pet_egg_id The pet's egg's item ID.
+ * @param pet_equip The pet's equipment's item ID.
+ * @param intimate The pet's intimacy value.
+ * @param hungry The pet's hunger value.
+ * @param rename_flag The pet's rename flag.
+ * @param incubate The pet's incubate state.
+ * @param pet_name The pet's name.
+ * @return The created pet's data struct, or NULL in case of errors.
+ *
+ **/
 static struct s_pet *inter_pet_create(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id,
-	int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name)
+				      int pet_equip, short intimate, short hungry, char rename_flag,
+				      char incubate, const char *pet_name)
 {
-	nullpo_ret(pet_name);
+	nullpo_retr(NULL, pet_name);
+
 	memset(inter_pet->pt, 0, sizeof(struct s_pet));
 	safestrncpy(inter_pet->pt->name, pet_name, NAME_LENGTH);
-	if(incubate == 1)
-		inter_pet->pt->account_id = inter_pet->pt->char_id = 0;
-	else {
-		inter_pet->pt->account_id = account_id;
-		inter_pet->pt->char_id = char_id;
-	}
+	inter_pet->pt->account_id = (incubate == 1) ? 0 : account_id;
+	inter_pet->pt->char_id = (incubate == 1) ? 0 : char_id;
 	inter_pet->pt->class_ = pet_class;
 	inter_pet->pt->level = pet_lv;
 	inter_pet->pt->egg_id = pet_egg_id;
@@ -244,12 +260,12 @@ static struct s_pet *inter_pet_create(int account_id, int char_id, int pet_class
 	inter_pet->pt->hungry = cap_value(hungry, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
 	inter_pet->pt->rename_flag = rename_flag;
 	inter_pet->pt->incubate = incubate;
+	inter_pet->pt->pet_id = 0; // Signal NEW pet.
 
-	inter_pet->pt->pet_id = 0; //Signal NEW pet.
 	if ((inter_pet->pt->pet_id = inter_pet->tosql(inter_pet->pt)) != 0)
 		return inter_pet->pt;
-	else //Failed...
-		return NULL;
+
+	return NULL;
 }
 
 static struct s_pet *inter_pet_load(int account_id, int char_id, int pet_id)
