@@ -2861,7 +2861,7 @@ ACMD(pethungry)
 		return false;
 	}
 
-	pd->pet.hungry = hungry;
+	pet->set_hunger(pd, hungry);
 	clif->send_petstatus(sd);
 	clif->message(fd, msg_fd(fd,185)); // Pet hunger changed.
 

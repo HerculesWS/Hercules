@@ -76,6 +76,20 @@ static int pet_hungry_val(struct pet_data *pd)
 		return 0;
 }
 
+/**
+ * Sets a pet's hunger value.
+ *
+ * @param pd The pet.
+ * @param value The pet's new hunger value.
+ *
+ **/
+static void pet_set_hunger(struct pet_data *pd, int value)
+{
+	nullpo_retv(pd);
+
+	pd->pet.hungry = cap_value(value, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
+}
+
 static void pet_set_intimate(struct pet_data *pd, int value)
 {
 	struct map_session_data *sd;
@@ -259,7 +273,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	if (pd->pet.intimate <= PET_INTIMACY_NONE)
 		return 1; //You lost the pet already, the rest is irrelevant.
 
-	pd->pet.hungry -= pd->petDB->hunger_decrement;
+	pet->set_hunger(pd, pd->pet.hungry - pd->petDB->hunger_decrement);
 	/* Pet Autofeed */
 	if (battle_config.feature_enable_pet_autofeed != 0) {
 		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= PET_HUNGER_HUNGRY) {
@@ -269,10 +283,9 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 
 	interval = pd->petDB->hungry_delay;
 
-	if (pd->pet.hungry < PET_HUNGER_STARVING)
+	if (pd->pet.hungry == PET_HUNGER_STARVING)
 	{
 		pet_stop_attack(pd);
-		pd->pet.hungry = PET_HUNGER_STARVING;
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->starving_decrement);
 		if (pd->pet.intimate == PET_INTIMACY_NONE)
 			pd->status.speed = pd->db->status.speed;
@@ -873,9 +886,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 		pd->status.speed = pd->db->status.speed;
 	}
 	status_calc_pet(pd, SCO_NONE);
-	pd->pet.hungry += pd->petDB->fullness;
-	if (pd->pet.hungry > PET_HUNGER_STUFFED)
-		pd->pet.hungry = PET_HUNGER_STUFFED;
+	pet->set_hunger(pd, pd->pet.hungry + pd->petDB->fullness);
 
 	clif->send_petdata(sd,pd,2,pd->pet.hungry);
 	clif->send_petdata(sd,pd,1,pd->pet.intimate);
@@ -1665,6 +1676,7 @@ void pet_defaults(void)
 	pet->final = do_final_pet;
 
 	pet->hungry_val = pet_hungry_val;
+	pet->set_hunger = pet_set_hunger;
 	pet->set_intimate = pet_set_intimate;
 	pet->create_egg = pet_create_egg;
 	pet->unlocktarget = pet_unlocktarget;

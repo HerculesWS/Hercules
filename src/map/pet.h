@@ -146,6 +146,7 @@ struct pet_interface {
 	int (*final) (void);
 	/* */
 	int (*hungry_val) (struct pet_data *pd);
+	void (*set_hunger) (struct pet_data *pd, int value);
 	void (*set_intimate) (struct pet_data *pd, int value);
 	int (*create_egg) (struct map_session_data *sd, int item_id);
 	int (*unlocktarget) (struct pet_data *pd);

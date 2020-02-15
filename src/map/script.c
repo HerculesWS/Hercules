@@ -20109,7 +20109,7 @@ static BUILDIN(setunitdata)
 			clif->send_petdata(pd->msd, pd, 1, pd->pet.intimate);
 			break;
 		case UDT_HUNGER:
-			pd->pet.hungry = (short) val;
+			pet->set_hunger(pd, val);
 			break;
 		default:
 			ShowWarning("buildin_setunitdata: Invalid data type '%s' for pet unit.\n", udtype);
