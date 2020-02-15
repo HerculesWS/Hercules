@@ -78,17 +78,13 @@ static int pet_hungry_val(struct pet_data *pd)
 
 static void pet_set_intimate(struct pet_data *pd, int value)
 {
-	int intimate;
 	struct map_session_data *sd;
 
 	nullpo_retv(pd);
-	intimate = pd->pet.intimate;
 	sd = pd->msd;
 
 	pd->pet.intimate = cap_value(value, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
-
-	if( (intimate >= battle_config.pet_equip_min_friendly && pd->pet.intimate < battle_config.pet_equip_min_friendly) || (intimate < battle_config.pet_equip_min_friendly && pd->pet.intimate >= battle_config.pet_equip_min_friendly) )
-		status_calc_pc(sd,SCO_NONE);
+	status_calc_pc(sd, SCO_NONE);
 
 	/* Pet is lost, delete the egg */
 	if (pd->pet.intimate == PET_INTIMACY_NONE) {
