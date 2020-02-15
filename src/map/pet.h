@@ -57,6 +57,7 @@ struct s_pet_db {
 	int defence_attack_rate;
 	int change_target_rate;
 	int autofeed;
+	int hunger_decrement;
 	struct script_code *equip_script;
 	struct script_code *pet_script;
 

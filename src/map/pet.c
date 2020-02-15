@@ -263,7 +263,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	if (pd->pet.intimate <= PET_INTIMACY_NONE)
 		return 1; //You lost the pet already, the rest is irrelevant.
 
-	pd->pet.hungry--;
+	pd->pet.hungry -= pd->petDB->hunger_decrement;
 	/* Pet Autofeed */
 	if (battle_config.feature_enable_pet_autofeed != 0) {
 		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= PET_HUNGER_HUNGRY) {
@@ -1408,6 +1408,12 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 
 	ret = libconfig->setting_lookup_int(it, "HungerDelay", &i32);
 	pet->db[n].hungry_delay = (ret == CONFIG_FALSE) ? 60000 : cap_value(1000 * i32, 0, INT_MAX);
+
+	ret = libconfig->setting_lookup_int(it, "HungerDecrement", &i32);
+	pet->db[n].hunger_decrement = (ret == CONFIG_FALSE) ? 1 : cap_value(i32, PET_HUNGER_STARVING, PET_HUNGER_STUFFED - 1);
+
+	if (pet->db[n].hunger_decrement == PET_HUNGER_STARVING)
+		pet->db[n].hungry_delay = 0;
 
 	/**
 	 * Preventively set default intimacy values here, just in case that 'Intimacy' block is not defined,
