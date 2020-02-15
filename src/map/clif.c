@@ -15235,58 +15235,68 @@ static void clif_parse_ChangePetName(int fd, struct map_session_data *sd)
 	pet->change_name(sd, RFIFOP(fd,2));
 }
 
+/**
+ * Request to evolve the pet. (CZ_PET_EVOLUTION)
+ *
+ * @code
+ *	09fb <Length>.W <EvolvedPetEggID>.W {<index>.W <amount>.W}*items
+ * @endcode
+ *
+ * @param fd The incoming file descriptor.
+ * @param sd The related character.
+ *
+ **/
 static void clif_parse_pet_evolution(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-/// Request to Evolve the pet (CZ_PET_EVOLUTION) [Dastgir/Hercules]
-/// 09fb <Length>.W <EvolvedPetEggID>.W {<index>.W <amount>.W}*items
 static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading != 0 || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
-	const struct PACKET_CZ_PET_EVOLUTION *p = RP2PTR(fd);
-	int i = 0, idx, petIndex;
-
-	Assert_retv(p->PacketLength >= (uint16)sizeof(struct PACKET_CZ_PET_EVOLUTION));
-
-	if (sd->status.pet_id == 0) {
+	if (sd->pd == NULL || sd->status.pet_id == 0) { // No pet.
 		clif->petEvolutionResult(fd, PET_EVOL_NO_CALLPET);
 		return;
 	}
 
-	ARR_FIND(0, sd->status.inventorySize, idx, sd->status.inventory[idx].card[0] == CARD0_PET &&
-			sd->status.pet_id == MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
+	int inv_index;
 
-	if (idx == sd->status.inventorySize) {
+	ARR_FIND(0, sd->status.inventorySize, inv_index, sd->status.inventory[inv_index].card[0] == CARD0_PET
+		 && sd->status.pet_id == MakeDWord(sd->status.inventory[inv_index].card[1],
+						   sd->status.inventory[inv_index].card[2]));
+
+	if (inv_index == sd->status.inventorySize) { // No pet egg.
 		clif->petEvolutionResult(fd, PET_EVOL_NO_PETEGG);
 		return;
 	}
 
-	// Not Loyal Yet
-	if (sd->pd == NULL || sd->pd->pet.intimate < PET_INTIMACY_LOYAL) {
+	if (sd->pd->pet.intimate < PET_INTIMACY_LOYAL) { // Pet isn't loyal.
 		clif->petEvolutionResult(fd, PET_EVOL_RG_FAMILIAR);
 		return;
 	}
 
-	ARR_FIND(0, MAX_PET_DB, petIndex, pet->db[petIndex].class_ == sd->pd->pet.class_);
+	int pet_index;
 
-	if (petIndex == MAX_PET_DB) {
-		// Which error?
-		clif->petEvolutionResult(fd, PET_EVOL_UNKNOWN);
+	ARR_FIND(0, MAX_PET_DB, pet_index, pet->db[pet_index].class_ == sd->pd->pet.class_);
+
+	if (pet_index == MAX_PET_DB) {
+		clif->petEvolutionResult(fd, PET_EVOL_UNKNOWN); // Which error?
 		return;
 	}
 
-	// Client side validation is not done as it is insecure.
-	for (i = 0; i < VECTOR_LENGTH(pet->db[petIndex].evolve_data); i++) {
-		struct pet_evolve_data *ped = &VECTOR_INDEX(pet->db[petIndex].evolve_data, i);
-		if (ped->petEggId == p->EvolvedPetEggID) {
-			int j;
-			int pet_id;
+	const struct PACKET_CZ_PET_EVOLUTION *p = RP2PTR(fd);
 
+	Assert_retv(p->PacketLength >= (uint16)sizeof(struct PACKET_CZ_PET_EVOLUTION));
+
+	// Client side validation is not done as it is insecure.
+	for (int i = 0; i < VECTOR_LENGTH(pet->db[pet_index].evolve_data); i++) {
+		struct pet_evolve_data *ped = &VECTOR_INDEX(pet->db[pet_index].evolve_data, i);
+
+		if (ped->petEggId == p->EvolvedPetEggID) {
 			if (VECTOR_LENGTH(ped->items) == 0) {
 				clif->petEvolutionResult(fd, PET_EVOL_NO_RECIPE);
 				return;
 			}
-			for (j = 0; j < VECTOR_LENGTH(ped->items); j++) {
+
+			for (int j = 0; j < VECTOR_LENGTH(ped->items); j++) {
 				struct itemlist_entry *list = &VECTOR_INDEX(ped->items, j);
 				int n = pc->search_inventory(sd, list->id);
 
@@ -15296,7 +15306,7 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 				}
 			}
 
-			for (j = 0; j < VECTOR_LENGTH(ped->items); j++) {
+			for (int j = 0; j < VECTOR_LENGTH(ped->items); j++) {
 				struct itemlist_entry *list = &VECTOR_INDEX(ped->items, j);
 				int n = pc->search_inventory(sd, list->id);
 
@@ -15306,27 +15316,26 @@ static void clif_parse_pet_evolution(int fd, struct map_session_data *sd)
 				}
 			}
 
-			// Return to Egg
-			pet->return_egg(sd, sd->pd);
+			pet->return_egg(sd, sd->pd); // Return pet to egg.
 
-			if (pc->delitem(sd, idx, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG) == 1) {
+			if (pc->delitem(sd, inv_index, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG) == 1) {
 				clif->petEvolutionResult(fd, PET_EVOL_NO_PETEGG);
 				return;
 			}
 
-			pet_id = pet->search_petDB_index(ped->petEggId, PET_EGG);
+			int pet_id = pet->search_petDB_index(ped->petEggId, PET_EGG);
+
 			if (pet_id >= 0) {
 				sd->catch_target_class = pet->db[pet_id].class_;
-
-				intif->create_pet(
-						 sd->status.account_id, sd->status.char_id,
-						 pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,
-						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
-						 PET_HUNGER_STUFFED, 0, 1, pet->db[pet_id].jname);
+				intif->create_pet(sd->status.account_id, sd->status.char_id, pet->db[pet_id].class_,
+						  mob->db(pet->db[pet_id].class_)->lv, pet->db[pet_id].EggID,
+						  0, (short)pet->db[pet_id].intimate, PET_HUNGER_STUFFED,
+						  0, 1, pet->db[pet_id].jname);
 				clif->petEvolutionResult(fd, PET_EVOL_SUCCESS);
 			} else {
 				clif->petEvolutionResult(fd, PET_EVOL_UNKNOWN);
 			}
+
 			return;
 		}
 	}
