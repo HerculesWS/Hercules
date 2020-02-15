@@ -2849,36 +2849,46 @@ ACMD(petfriendly)
 	return true;
 }
 
-/*==========================================
+/**
+ * Sets a pet's hunger value.
  *
- *------------------------------------------*/
+ * @code{.herc}
+ *	@pethungry <0-100>
+ * @endcode
+ *
+ **/
 ACMD(pethungry)
 {
-	int hungry;
-	struct pet_data *pd;
-
-	if (!*message || (hungry = atoi(message)) < 0) {
-		clif->message(fd, msg_fd(fd,1017)); // Please enter a valid number (usage: @pethungry <0-100>).
+	if (*message == '\0' || (atoi(message) == 0 && isdigit(*message) == 0)) {
+		clif->message(fd, msg_fd(fd, 1017)); // Please enter a valid number (usage: @pethungry <0-100>).
 		return false;
 	}
 
-	pd = sd->pd;
-	if (!sd->status.pet_id || !pd) {
-		clif->message(fd, msg_fd(fd,184)); // Sorry, but you have no pet.
-		return false;
-	}
+	int hungry = atoi(message);
+
 	if (hungry < PET_HUNGER_STARVING || hungry > PET_HUNGER_STUFFED) {
-		clif->message(fd, msg_fd(fd,37)); // An invalid number was specified.
-		return false;
-	}
-	if (hungry == pd->pet.hungry) {
-		clif->message(fd, msg_fd(fd,186)); // Pet hunger is already at maximum.
+		clif->message(fd, msg_fd(fd, 1017)); // Please enter a valid number (usage: @pethungry <0-100>).
 		return false;
 	}
 
-	pet->set_hunger(pd, hungry);
-	clif->send_petstatus(sd);
-	clif->message(fd, msg_fd(fd,185)); // Pet hunger changed.
+	struct pet_data *pd = sd->pd;
+
+	if (sd->status.pet_id == 0 || pd == NULL) {
+		clif->message(fd, msg_fd(fd, 184)); // Sorry, but you have no pet.
+		return false;
+	}
+
+	if (hungry == pd->pet.hungry && hungry == PET_HUNGER_STUFFED) {
+		clif->message(fd, msg_fd(fd, 186)); // Pet hunger is already at maximum.
+		return false;
+	}
+
+	if (hungry != pd->pet.hungry) { // No need to update the pet's status if hunger value won't change.
+		pd->pet.hungry = hungry;
+		clif->send_petstatus(sd);
+	}
+
+	clif->message(fd, msg_fd(fd, 185)); // Pet hunger changed. (Send message regardless of value has changed or not.)
 
 	return true;
 }
