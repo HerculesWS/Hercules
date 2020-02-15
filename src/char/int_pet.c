@@ -54,36 +54,71 @@ struct inter_pet_interface *inter_pet;
 static int inter_pet_tosql(const struct s_pet *p)
 {
 	//`pet` (`pet_id`, `class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`)
-	char esc_name[NAME_LENGTH*2+1];// escaped pet name
-	int pet_id = 0, hungry = 0, intimate = 0;
+	int pet_id = 0;
 
 	nullpo_ret(p);
 
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, p->name, strnlen(p->name, NAME_LENGTH));
-	hungry = cap_value(p->hungry, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
-	intimate = cap_value(p->intimate, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
-	if (p->pet_id == 0) {
-		// New pet.
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` "
-				"(`class`,`name`,`account_id`,`char_id`,`level`,`egg_id`,`equip`,`intimate`,`hungry`,`rename_flag`,`incubate`, `autofeed`) "
-				"VALUES ('%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
-				pet_db, p->class_, esc_name, p->account_id, p->char_id, p->level, p->egg_id,
-				p->equip, intimate, hungry, p->rename_flag, p->incubate, p->autofeed)) {
-			Sql_ShowDebug(inter->sql_handle);
+	if (stmt == NULL) {
+		SqlStmt_ShowDebug(stmt);
+		return 0;
+	}
+
+	if (p->pet_id == 0) { // New pet.
+		const char *query = "INSERT INTO `%s` "
+			"(`class`, `name`, `account_id`, `char_id`, `level`, `egg_id`, `equip`, `intimate`, `hungry`, `rename_flag`, `incubate`, `autofeed`) "
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, pet_db) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &p->class_, sizeof(p->class_)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_STRING, &p->name, strnlen(p->name, sizeof(p->name))) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &p->account_id, sizeof(p->account_id)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 3, SQLDT_INT32, &p->char_id, sizeof(p->char_id)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 4, SQLDT_INT16, &p->level, sizeof(p->level)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 5, SQLDT_INT32, &p->egg_id, sizeof(p->egg_id)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 6, SQLDT_INT32, &p->equip, sizeof(p->equip)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 7, SQLDT_INT16, &p->intimate, sizeof(p->intimate)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 8, SQLDT_INT16, &p->hungry, sizeof(p->hungry)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 9, SQLDT_INT8, &p->rename_flag, sizeof(p->rename_flag)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 10, SQLDT_INT8, &p->incubate, sizeof(p->incubate)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 11, SQLDT_INT32, &p->autofeed, sizeof(p->autofeed)) ||
+		    SQL_ERROR == SQL->StmtExecute(stmt)) {
+			SqlStmt_ShowDebug(stmt);
+			SQL->StmtFree(stmt);
 			return 0;
 		}
+
 		pet_id = (int)SQL->LastInsertId(inter->sql_handle);
-	} else {
-		// Update pet.
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d',`name`='%s',`account_id`='%d',`char_id`='%d',`level`='%d',`egg_id`='%d',`equip`='%d',`intimate`='%d',`hungry`='%d',`rename_flag`='%d',`incubate`='%d', `autofeed`='%d' WHERE `pet_id`='%d'",
-				pet_db, p->class_, esc_name, p->account_id, p->char_id, p->level, p->egg_id,
-				p->equip, intimate, hungry, p->rename_flag, p->incubate, p->autofeed, p->pet_id)) {
-			Sql_ShowDebug(inter->sql_handle);
+	} else { // Update pet.
+		const char *query = "UPDATE `%s` SET "
+			"`class`=?, `name`=?, `account_id`=?, `char_id`=?, `level`=?, `egg_id`=?, `equip`=?, `intimate`=?, `hungry`=?, `rename_flag`=?, `incubate`=?, `autofeed`=? "
+			"WHERE `pet_id`=?";
+
+		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, pet_db) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &p->class_, sizeof(p->class_)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_STRING, &p->name, strnlen(p->name, sizeof(p->name))) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &p->account_id, sizeof(p->account_id)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 3, SQLDT_INT32, &p->char_id, sizeof(p->char_id)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 4, SQLDT_INT16, &p->level, sizeof(p->level)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 5, SQLDT_INT32, &p->egg_id, sizeof(p->egg_id)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 6, SQLDT_INT32, &p->equip, sizeof(p->equip)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 7, SQLDT_INT16, &p->intimate, sizeof(p->intimate)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 8, SQLDT_INT16, &p->hungry, sizeof(p->hungry)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 9, SQLDT_INT8, &p->rename_flag, sizeof(p->rename_flag)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 10, SQLDT_INT8, &p->incubate, sizeof(p->incubate)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 11, SQLDT_INT32, &p->autofeed, sizeof(p->autofeed)) ||
+		    SQL_ERROR == SQL->StmtBindParam(stmt, 12, SQLDT_INT32, &p->pet_id, sizeof(p->pet_id)) ||
+		    SQL_ERROR == SQL->StmtExecute(stmt)) {
+			SqlStmt_ShowDebug(stmt);
+			SQL->StmtFree(stmt);
 			return 0;
 		}
+
 		pet_id = p->pet_id;
 	}
+
+	SQL->StmtFree(stmt);
 
 	if (chr->show_save_log)
 		ShowInfo("Pet saved %d - %s.\n", pet_id, p->name);
