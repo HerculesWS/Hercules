@@ -60,17 +60,25 @@ struct pet_interface *pet;
 
 #define MIN_PETTHINKTIME 100
 
+/**
+ * Gets a pet's hunger value, depending it's hunger level.
+ * This value is only used in clif_parse_LoadEndAck() when calling clif_pet_emotion().
+ *
+ * @param pd The pet.
+ * @return The pet's hunger value.
+ *
+ **/
 static int pet_hungry_val(struct pet_data *pd)
 {
 	nullpo_ret(pd);
 
-	if(pd->pet.hungry > PET_HUNGER_SATISFIED)
+	if (pd->pet.hungry > PET_HUNGER_SATISFIED)
 		return 4;
-	else if(pd->pet.hungry > PET_HUNGER_NEUTRAL)
+	else if (pd->pet.hungry > PET_HUNGER_NEUTRAL)
 		return 3;
-	else if(pd->pet.hungry > PET_HUNGER_HUNGRY)
+	else if (pd->pet.hungry > PET_HUNGER_HUNGRY)
 		return 2;
-	else if(pd->pet.hungry > PET_HUNGER_VERY_HUNGRY)
+	else if (pd->pet.hungry > PET_HUNGER_VERY_HUNGRY)
 		return 1;
 	else
 		return 0;
