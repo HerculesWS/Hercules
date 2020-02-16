@@ -259,69 +259,72 @@ static int pet_sc_check(struct map_session_data *sd, int type)
 	return 0;
 }
 
+/**
+ * Updates a pet's hunger value and timer and updates the pet's intimacy value if starving.
+ *
+ * @param tid The timer ID.
+ * @param tick The base amount of ticks to add to the pet's hunger timer. (The timer's current ticks when calling this fuction.)
+ * @param id The pet master's account ID.
+ * @param data Unused.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
 static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 {
-	struct map_session_data *sd;
-	struct pet_data *pd;
-	int interval;
+	struct map_session_data *sd = map->id2sd(id);
 
-	sd=map->id2sd(id);
-	if(!sd)
+	if (sd == NULL || sd->status.pet_id == 0 || sd->pd == NULL)
 		return 1;
 
-	if(!sd->status.pet_id || !sd->pd)
-		return 1;
-
-	pd = sd->pd;
+	struct pet_data *pd = sd->pd;
 
 	/**
 	 * If HungerDelay is 0, there's nothing to do.
 	 * Actually this shouldn't happen, since the timer wasn't added in pet_data_init(), but just to be sure...
 	 *
 	 **/
-	if (pd->petDB != NULL && pd->petDB->hungry_delay == 0) {
+	if (pd->petDB->hungry_delay == 0) {
 		pet->hungry_timer_delete(pd);
 		return 0;
 	}
 
-	if(pd->pet_hungry_timer != tid){
-		ShowError("pet_hungry_timer %d != %d\n",pd->pet_hungry_timer,tid);
-		return 0;
+	if (pd->pet_hungry_timer != tid) {
+		ShowError("pet_hungry: pet_hungry_timer %d != %d\n", pd->pet_hungry_timer, tid);
+		return 1;
 	}
+
 	pd->pet_hungry_timer = INVALID_TIMER;
 
 	if (pd->pet.intimate <= PET_INTIMACY_NONE)
-		return 1; //You lost the pet already, the rest is irrelevant.
+		return 1; // You lost the pet already, the rest is irrelevant.
 
 	pet->set_hunger(pd, pd->pet.hungry - pd->petDB->hunger_decrement);
-	/* Pet Autofeed */
-	if (battle_config.feature_enable_pet_autofeed != 0) {
-		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= PET_HUNGER_HUNGRY) {
+
+	// Pet auto-feed.
+	if (battle_config.feature_enable_pet_autofeed == 1) {
+		if (pd->petDB->autofeed == 1 && pd->pet.autofeed == 1 && pd->pet.hungry <= PET_HUNGER_HUNGRY)
 			pet->food(sd, pd);
-		}
 	}
 
-	interval = pd->petDB->hungry_delay;
+	int interval = pd->petDB->hungry_delay;
 
-	if (pd->pet.hungry == PET_HUNGER_STARVING)
-	{
+	if (pd->pet.hungry == PET_HUNGER_STARVING) {
 		pet_stop_attack(pd);
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->starving_decrement);
+
 		if (pd->pet.intimate == PET_INTIMACY_NONE)
 			pd->status.speed = pd->db->status.speed;
+
 		status_calc_pet(pd, SCO_NONE);
-		clif->send_petdata(sd,pd,1,pd->pet.intimate);
+		clif->send_petdata(sd, pd, 1, pd->pet.intimate);
 
 		if (pd->petDB->starving_delay > 0)
 			interval = pd->petDB->starving_delay;
 	}
-	clif->send_petdata(sd,pd,2,pd->pet.hungry);
 
+	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
 	interval *= battle_config.pet_hungry_delay_rate / 100;
-
-	if(interval <= 0)
-		interval = 1;
-	pd->pet_hungry_timer = timer->add(tick+interval,pet->hungry,sd->bl.id,0);
+	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
 
 	return 0;
 }
