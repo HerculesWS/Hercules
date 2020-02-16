@@ -98,26 +98,34 @@ static void pet_set_hunger(struct pet_data *pd, int value)
 	pd->pet.hungry = cap_value(value, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
 }
 
+/**
+ * Sets a pet's intimacy value.
+ * Deletes the pet if its intimacy value reaches PET_INTIMACY_NONE (0).
+ *
+ * @param pd The pet.
+ * @param value The pet's new intimacy value.
+ *
+ **/
 static void pet_set_intimate(struct pet_data *pd, int value)
 {
-	struct map_session_data *sd;
-
 	nullpo_retv(pd);
-	sd = pd->msd;
+	nullpo_retv(pd->msd);
 
 	pd->pet.intimate = cap_value(value, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+
+	struct map_session_data *sd = pd->msd;
+
 	status_calc_pc(sd, SCO_NONE);
 
-	/* Pet is lost, delete the egg */
-	if (pd->pet.intimate == PET_INTIMACY_NONE) {
+	if (pd->pet.intimate == PET_INTIMACY_NONE) { /// Pet is lost. Delete the egg.
 		int i;
 
-		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET &&
-			pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
+			 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1],
+							sd->status.inventory[i].card[2]));
 
-		if (i != sd->status.inventorySize) {
+		if (i != sd->status.inventorySize)
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
-		}
 	}
 }
 
