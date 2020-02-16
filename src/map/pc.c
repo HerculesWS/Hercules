@@ -5700,7 +5700,7 @@ static int pc_steal_coin(struct map_session_data *sd, struct block_list *target,
 	return 0;
 }
 
- /**
+/**
  * Sets a character's position.
  *
  * @param sd The related character.
@@ -5717,233 +5717,278 @@ static int pc_steal_coin(struct map_session_data *sd, struct block_list *target,
  **/
 static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, enum clr_type clrtype)
 {
-	int16 m;
-
 	nullpo_retr(3, sd);
 
-	if( !map_index || !mapindex_id2name(map_index) || ( m = map->mapindex2mapid(map_index) ) == -1 ) {
-		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", map_index);
+	int map_id = map->mapindex2mapid(map_index);
+
+	if (map_index == 0 || !mapindex_id2name(map_index) || map_id == INDEX_NOT_FOUND) {
+		ShowDebug("pc_setpos: Passed mapindex %d is invalid!\n", map_index);
 		return 1;
 	}
 
-	if( pc_isdead(sd) ) { //Revive dead people before warping them
+	if (pc_isdead(sd)) { // Revive dead character before warping.
 		pc->setstand(sd);
-		pc->setrestartvalue(sd,1);
+		pc->setrestartvalue(sd, 1);
 	}
 
-	if( map->list[m].flag.src4instance ) {
-		struct party_data *p;
+	if (map->list[map_id].flag.src4instance != 0) {
 		bool stop = false;
-		int i = 0, j = 0;
 
-		if( sd->instances ) {
-			for( i = 0; i < sd->instances; i++ ) {
-				if( sd->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j, map->list[instance->list[sd->instance[i]].map[j]].instance_src_map == m && !map->list[instance->list[sd->instance[i]].map[j]].custom_name);
-					if( j != instance->list[sd->instance[i]].num_map )
+		if (sd->instances != 0) {
+			int i, j = 0;
+
+			for (i = 0; i < sd->instances; i++) {
+				if (sd->instance[i] >= 0) {
+					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j,
+						 map->list[instance->list[sd->instance[i]].map[j]].instance_src_map == map_id
+						 && !map->list[instance->list[sd->instance[i]].map[j]].custom_name);
+
+					if (j != instance->list[sd->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != sd->instances ) {
-				m = instance->list[sd->instance[i]].map[j];
-				map_index = map_id2index(m);
+
+			if (i != sd->instances) {
+				map_id = instance->list[sd->instance[i]].map[j];
+				map_index = map_id2index(map_id);
 				stop = true;
 			}
 		}
-		if ( !stop && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instances ) {
-			for( i = 0; i < p->instances; i++ ) {
-				if( p->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[p->instance[i]].num_map, j, map->list[instance->list[p->instance[i]].map[j]].instance_src_map == m && !map->list[instance->list[p->instance[i]].map[j]].custom_name);
-					if( j != instance->list[p->instance[i]].num_map )
+
+		struct party_data *p = party->search(sd->status.party_id);
+
+		if (!stop && sd->status.party_id != 0 && p != NULL && p->instances != 0) {
+			int i, j = 0;
+
+			for (i = 0; i < p->instances; i++) {
+				if (p->instance[i] >= 0) {
+					ARR_FIND(0, instance->list[p->instance[i]].num_map, j,
+						 map->list[instance->list[p->instance[i]].map[j]].instance_src_map == map_id
+						 && !map->list[instance->list[p->instance[i]].map[j]].custom_name);
+
+					if (j != instance->list[p->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != p->instances ) {
-				m = instance->list[p->instance[i]].map[j];
-				map_index = map_id2index(m);
+
+			if (i != p->instances) {
+				map_id = instance->list[p->instance[i]].map[j];
+				map_index = map_id2index(map_id);
 				stop = true;
 			}
 		}
-		if ( !stop && sd->status.guild_id && sd->guild && sd->guild->instances ) {
-			for( i = 0; i < sd->guild->instances; i++ ) {
-				if( sd->guild->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j, map->list[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == m && !map->list[instance->list[sd->guild->instance[i]].map[j]].custom_name);
-					if( j != instance->list[sd->guild->instance[i]].num_map )
+
+		if (!stop && sd->status.guild_id != 0 && sd->guild != NULL && sd->guild->instances != 0) {
+			int i, j = 0;
+
+			for (i = 0; i < sd->guild->instances; i++) {
+				if (sd->guild->instance[i] >= 0) {
+					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j,
+						 map->list[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == map_id
+						 && !map->list[instance->list[sd->guild->instance[i]].map[j]].custom_name);
+
+					if (j != instance->list[sd->guild->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != sd->guild->instances ) {
-				m = instance->list[sd->guild->instance[i]].map[j];
-				map_index = map_id2index(m);
-				//stop = true; Uncomment if adding new checks
+
+			if (i != sd->guild->instances) {
+				map_id = instance->list[sd->guild->instance[i]].map[j];
+				map_index = map_id2index(map_id);
+				//stop = true; Uncomment when adding new checks.
 			}
 		}
 
-		/* we hit a instance, if empty we populate the spawn data */
-		if( map->list[m].instance_id >= 0 && instance->list[map->list[m].instance_id].respawn.map == 0 &&
-		    instance->list[map->list[m].instance_id].respawn.x == 0 &&
-		    instance->list[map->list[m].instance_id].respawn.y == 0) {
-			instance->list[map->list[m].instance_id].respawn.map = map_index;
-			instance->list[map->list[m].instance_id].respawn.x = x;
-			instance->list[map->list[m].instance_id].respawn.y = y;
+		// We hit an instance. If empty we populate the spawn data.
+		if (map->list[map_id].instance_id >= 0 && instance->list[map->list[map_id].instance_id].respawn.map == 0
+		    && instance->list[map->list[map_id].instance_id].respawn.x == 0
+		    && instance->list[map->list[map_id].instance_id].respawn.y == 0) {
+			instance->list[map->list[map_id].instance_id].respawn.map = map_index;
+			instance->list[map->list[map_id].instance_id].respawn.x = x;
+			instance->list[map->list[map_id].instance_id].respawn.y = y;
 		}
 	}
 
-	sd->state.changemap = (sd->mapindex != map_index);
+	sd->state.changemap = (sd->mapindex != map_index) ? 1 : 0;
 	sd->state.warping = 1;
 	sd->state.workinprogress = 0;
-	if( sd->state.changemap ) { // Misc map-changing settings
-		int i;
+
+	if (sd->state.changemap != 0) { // Miscellaneous map-changing settings.
 		sd->state.pmap = sd->bl.m;
 
-		for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
+		for (int i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
 			struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
-			if (queue && queue->event_mapchange[0] != '\0') {
-				pc->setregstr(sd, script->add_variable("@Queue_Destination_Map$"), map->list[m].name);
+
+			if (queue != NULL && queue->event_mapchange[0] != '\0') {
+				pc->setregstr(sd, script->add_variable("@Queue_Destination_Map$"), map->list[map_id].name);
 				npc->event(sd, queue->event_mapchange, 0);
 			}
 		}
 
-		if( map->list[m].cell == (struct mapcell *)0xdeadbeaf )
-			map->cellfromcache(&map->list[m]);
-		if (sd->sc.count) { // Cancel some map related stuff.
-			if (sd->sc.data[SC_JAILED])
-				return 4; //You may not get out!
+		if (map->list[map_id].cell == (struct mapcell *)0xdeadbeaf)
+			map->cellfromcache(&map->list[map_id]);
+
+		if (sd->sc.count != 0) { // Cancel some map related stuff.
+			if (sd->sc.data[SC_JAILED] != NULL)
+				return 4; // You may not get out!
+
 			status_change_end(&sd->bl, SC_CASH_BOSS_ALARM, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_WARM, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_SUN_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_MOON_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STAR_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_MIRACLE, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER);//Will later check if this is needed. [Rytech]
+			status_change_end(&sd->bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER); // Will later check if this is needed. [Rytech]
 			status_change_end(&sd->bl, SC_NEUTRALBARRIER, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STEALTHFIELD_MASTER, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STEALTHFIELD, INVALID_TIMER);
-			if (sd->sc.data[SC_KNOWLEDGE]) {
+
+			if (sd->sc.data[SC_KNOWLEDGE] != NULL) {
 				struct status_change_entry *sce = sd->sc.data[SC_KNOWLEDGE];
+
 				if (sce->timer != INVALID_TIMER)
 					timer->delete(sce->timer, status->change_timer);
-				sce->timer = timer->add(timer->gettick() + skill->get_time(SG_KNOWLEDGE, sce->val1), status->change_timer, sd->bl.id, SC_KNOWLEDGE);
+
+				sce->timer = timer->add(timer->gettick() + skill->get_time(SG_KNOWLEDGE, sce->val1),
+							status->change_timer, sd->bl.id, SC_KNOWLEDGE);
 			}
+
 			status_change_end(&sd->bl, SC_PROPERTYWALK, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKING, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
 		}
-		for( i = 0; i < EQI_MAX; i++ ) {
-			if( sd->equip_index[ i ] >= 0 )
-				if( !pc->isequip( sd , sd->equip_index[ i ] ) )
-					pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
+
+		for (int i = 0; i < EQI_MAX; i++) {
+			if (sd->equip_index[i] >= 0 && pc->isequip(sd , sd->equip_index[i]) == 0)
+				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
 		}
-		if (battle_config.clear_unit_onwarp&BL_PC)
+
+		if ((battle_config.clear_unit_onwarp & BL_PC) != 0)
 			skill->clear_unitgroup(&sd->bl);
-		party->send_dot_remove(sd); //minimap dot fix [Kevin]
+
+		party->send_dot_remove(sd); // Minimap dot fix. [Kevin]
 		guild->send_dot_remove(sd);
 		bg->send_dot_remove(sd);
-		if (sd->regen.state.gc)
+
+		if (sd->regen.state.gc != 0)
 			sd->regen.state.gc = 0;
-		// make sure vending is allowed here
-		if (sd->state.vending && map->list[m].flag.novending) {
-			clif->message (sd->fd, msg_sd(sd,276)); // "You can't open a shop on this map"
+
+		// Make sure that vending is allowed here.
+		if (sd->state.vending != 0 && map->list[map_id].flag.novending != 0) {
+			clif->message(sd->fd, msg_sd(sd, 276)); // "You can't open a shop on this map"
 			vending->close(sd);
 		}
 
-		if (sd->mapindex != 0) {
-			// Only if the character is already on a map
-			if (map->list[sd->bl.m].channel) {
-				channel->leave(map->list[sd->bl.m].channel,sd);
-			}
-		}
+		if (sd->mapindex != 0 && map->list[sd->bl.m].channel != NULL) // Only if the character is already on a map.
+			channel->leave(map->list[sd->bl.m].channel, sd);
 	}
 
-	if( m < 0 ) {
+	if (map_id < 0) {
 		uint32 ip;
 		uint16 port;
-		//if can't find any map-servers, just abort setting position.
-		if(!sd->mapindex || map->mapname2ipport(map_index,&ip,&port))
+
+		// If can't find any map-servers, just abort setting position.
+		if (sd->mapindex == 0 || map->mapname2ipport(map_index, &ip, &port) != 0)
 			return 2;
 
-		if (sd->npc_id)
+		if (sd->npc_id != 0)
 			npc->event_dequeue(sd);
-		npc->script_event(sd, NPCE_LOGOUT);
-		//remove from map, THEN change x/y coordinates
-		unit->remove_map_pc(sd,clrtype);
-		if (battle_config.player_warp_keep_direction == 0)
-			sd->ud.dir = 0; // makes character face north
-		sd->mapindex = map_index;
-		sd->bl.x=x;
-		sd->bl.y=y;
-		pc->clean_skilltree(sd);
-		chrif->save(sd,2);
-		chrif->changemapserver(sd, ip, (short)port);
 
-		//Free session data from this map server [Kevin]
+		npc->script_event(sd, NPCE_LOGOUT);
+
+		// Remove from map, THEN change x/y coordinates.
+		unit->remove_map_pc(sd, clrtype);
+
+		if (battle_config.player_warp_keep_direction == 0)
+			sd->ud.dir = 0; /// Make character facing north.
+
+		sd->mapindex = map_index;
+		sd->bl.x= x;
+		sd->bl.y= y;
+		pc->clean_skilltree(sd);
+		chrif->save(sd, 2);
+		chrif->changemapserver(sd, ip, port);
+
+		// Free session data from this map server. [Kevin]
 		unit->free_pc(sd);
 
 		return 0;
 	}
 
-	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
-		ShowError("pc_setpos: attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(map_index),x,y);
-		x = y = 0; // make it random
+	if (x < 0 || x >= map->list[map_id].xs || y < 0 || y >= map->list[map_id].ys) { // Invalid coordinates. Randomize them.
+		ShowError("pc_setpos: Attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)!\n",
+			  sd->status.name, sd->status.account_id, sd->status.char_id,
+			  mapindex_id2name(map_index), x, y);
+		x = 0;
+		y = 0;
 	}
 
-	if( x == 0 && y == 0 ) {// pick a random walkable cell
+	if (x == 0 && y == 0) { // Pick a random walkable cell.
 		do {
-			x=rnd()%(map->list[m].xs-2)+1;
-			y=rnd()%(map->list[m].ys-2)+1;
-		} while(map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS));
+			x = rnd() % (map->list[map_id].xs - 2) + 1;
+			y = rnd() % (map->list[map_id].ys - 2) + 1;
+		} while(map->getcell(map_id, &sd->bl, x, y, CELL_CHKNOPASS) != 0);
 	}
 
-	if (sd->state.vending && map->getcell(m, &sd->bl, x, y, CELL_CHKNOVENDING)) {
-		clif->message (sd->fd, msg_sd(sd,204)); // "You can't open a shop on this cell."
+	if (sd->state.vending != 0 && map->getcell(map_id, &sd->bl, x, y, CELL_CHKNOVENDING) != 0) {
+		clif->message(sd->fd, msg_sd(sd, 204)); // "You can't open a shop on this cell."
 		vending->close(sd);
 	}
 
 	if (battle_config.player_warp_keep_direction == 0)
-		sd->ud.dir = 0; // makes character face north
+		sd->ud.dir = 0; // Make character facing north.
 
-	if(sd->bl.prev != NULL){
-		unit->remove_map_pc(sd,clrtype);
-		clif->changemap(sd,m,x,y); // [MouseJstr]
-	} else if(sd->state.active)
-		//Tag player for rewarping after map-loading is done. [Skotlex]
-		sd->state.rewarp = 1;
+	if (sd->bl.prev != NULL) {
+		unit->remove_map_pc(sd, clrtype);
+		clif->changemap(sd, map_id, x, y); // [MouseJstr]
+	} else if (sd->state.active != 0) {
+		sd->state.rewarp = 1; // Tag character for re-warping after map-loading is done. [Skotlex]
+	}
 
 	sd->mapindex = map_index;
-	sd->bl.m = m;
-	sd->bl.x = sd->ud.to_x = x;
-	sd->bl.y = sd->ud.to_y = y;
+	sd->bl.m = map_id;
+	sd->bl.x = x;
+	sd->bl.y = y;
+	sd->ud.to_x = x;
+	sd->ud.to_y = y;
 
-	if( sd->status.guild_id > 0 && map->list[m].flag.gvg_castle ) { // Increased guild castle regen [Valaris]
+	if (sd->status.guild_id > 0 && map->list[map_id].flag.gvg_castle != 0) { // Double regeneration in guild castle. [Valaris]
 		struct guild_castle *gc = guild->mapindex2gc(sd->mapindex);
-		if(gc && gc->guild_id == sd->status.guild_id)
+
+		if (gc != NULL && gc->guild_id == sd->status.guild_id)
 			sd->regen.state.gc = 1;
 	}
 
-	if (sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
-		sd->pd->bl.m = m;
-		sd->pd->bl.x = sd->pd->ud.to_x = x;
-		sd->pd->bl.y = sd->pd->ud.to_y = y;
+	if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
+		sd->pd->bl.m = map_id;
+		sd->pd->bl.x = x;
+		sd->pd->bl.y = y;
+		sd->pd->ud.to_x = x;
+		sd->pd->ud.to_y = y;
 		sd->pd->ud.dir = sd->ud.dir;
 	}
 
-	if( homun_alive(sd->hd) ) {
-		sd->hd->bl.m = m;
-		sd->hd->bl.x = sd->hd->ud.to_x = x;
-		sd->hd->bl.y = sd->hd->ud.to_y = y;
+	if (homun_alive(sd->hd)) {
+		sd->hd->bl.m = map_id;
+		sd->hd->bl.x = x;
+		sd->hd->bl.y = y;
+		sd->hd->ud.to_x = x;
+		sd->hd->ud.to_y = y;
 		sd->hd->ud.dir = sd->ud.dir;
 	}
 
-	if( sd->md ) {
-		sd->md->bl.m = m;
-		sd->md->bl.x = sd->md->ud.to_x = x;
-		sd->md->bl.y = sd->md->ud.to_y = y;
+	if (sd->md != NULL) {
+		sd->md->bl.m = map_id;
+		sd->md->bl.x = x;
+		sd->md->bl.y = y;
+		sd->md->ud.to_x = x;
+		sd->md->ud.to_y = y;
 		sd->md->ud.dir = sd->ud.dir;
 	}
 
-	/* given autotrades have no clients you have to trigger this manually otherwise they get stuck in memory limbo bugreport:7495 */
-	if( sd->state.autotrade )
-		clif->pLoadEndAck(0,sd);
+	// Given autotrades have no clients. You have to trigger this manually, otherwise they get stuck in memory limbo. (bugreport:7495)
+	if (sd->state.autotrade != 0)
+		clif->pLoadEndAck(0, sd);
 
 	return 0;
 }
