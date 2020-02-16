@@ -201,51 +201,42 @@ static int pet_attackskill(struct pet_data *pd, int target_id)
 	return 0;
 }
 
+/**
+ * Checks if a pet can attack a target.
+ *
+ * @param sd The pet's master.
+ * @param bl The pet's target.
+ * @param type 0 - Support master when attacking. Not 0 - Support master when being attacked.
+ * @return 0 on failure, 1 on success.
+ *
+ **/
 static int pet_target_check(struct map_session_data *sd, struct block_list *bl, int type)
 {
-	struct pet_data *pd;
-	int rate;
-
 	nullpo_ret(sd);
-	pd = sd->pd;
+	nullpo_ret(sd->pd);
+	nullpo_ret(bl);
+	Assert_ret(sd->pd->msd == NULL || sd->pd->msd->pd == sd->pd);
 
-	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
+	struct pet_data *pd = sd->pd;
 
-	if (pd->petDB != NULL && ((type == 0 && pd->petDB->attack_rate == 0) || (type != 0 && pd->petDB->defence_attack_rate == 0)))
+	if ((type == 0 && pd->petDB->attack_rate == 0) || (type != 0 && pd->petDB->defence_attack_rate == 0))
 		return 0; // If base rate is 0, there's nothing to do.
 
-	if( bl == NULL || bl->type != BL_MOB || bl->prev == NULL
-	 || pd->pet.intimate < battle_config.pet_support_min_friendly
-	 || pd->pet.hungry <= PET_HUNGER_STARVING
-	 || pd->pet.class_ == status->get_class(bl))
+	if (bl->type != BL_MOB || bl->prev == NULL || pd->pet.intimate < battle_config.pet_support_min_friendly
+	    || pd->pet.hungry <= PET_HUNGER_STARVING || pd->pet.class_ == status->get_class(bl)
+	    || pd->bl.m != bl->m || !check_distance_bl(&pd->bl, bl, pd->db->range2)
+	    || status->check_skilluse(&pd->bl, bl, 0, 0) == 0) {
 		return 0;
-
-	if( pd->bl.m != bl->m
-	 || !check_distance_bl(&pd->bl, bl, pd->db->range2))
-		return 0;
-
-	if (!status->check_skilluse(&pd->bl, bl, 0, 0))
-		return 0;
-
-	if(!type) {
-		rate = pd->petDB->attack_rate;
-		rate = rate * pd->rate_fix/1000;
-		if(pd->petDB->attack_rate > 0 && rate <= 0)
-			rate = 1;
-	} else {
-		rate = pd->petDB->defence_attack_rate;
-		rate = rate * pd->rate_fix/1000;
-		if(pd->petDB->defence_attack_rate > 0 && rate <= 0)
-			rate = 1;
 	}
-	if(rnd()%10000 < rate)
-	{
-		if(pd->target_id == 0 || rnd()%10000 < pd->petDB->change_target_rate)
-			pd->target_id = bl->id;
-	}
+
+	int rate = ((type == 0) ? pd->petDB->attack_rate : pd->petDB->defence_attack_rate) * pd->rate_fix / 1000;
+
+	if (rnd() % 10000 < max(rate, 1) && (pd->target_id == 0 || rnd() % 10000 < pd->petDB->change_target_rate))
+		pd->target_id = bl->id;
 
 	return 0;
 }
+
 /*==========================================
  * Pet SC Check [Skotlex]
  *------------------------------------------*/
