@@ -361,21 +361,31 @@ static int pet_hungry_timer_delete(struct pet_data *pd)
 	return 1;
 }
 
+/**
+ * Makes a pet start performing/dancing.
+ *
+ * @param sd Unused.
+ * @param pd The pet.
+ * @return 0 on failure, 1 on success.
+ *
+ **/
 static int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 {
+	nullpo_ret(pd);
+
 	int val;
 
-	nullpo_retr(1, pd);
 	if (pd->pet.intimate > PET_INTIMACY_LOYAL)
-		val = (pd->petDB->s_perfor > 0)? 4:3;
-	else if (pd->pet.intimate > PET_INTIMACY_CORDIAL) //TODO: this is way too high
+		val = (pd->petDB->s_perfor > 0) ? 4 : 3;
+	else if (pd->pet.intimate > PET_INTIMACY_CORDIAL) //TODO: This is way too high.
 		val = 2;
 	else
 		val = 1;
 
-	pet_stop_walking(pd,STOPWALKING_FLAG_NONE | (2000<<8)); // Stop walking for 2000ms
-	clif->send_petdata(NULL, pd, 4, rnd()%val + 1);
-	pet->lootitem_drop(pd,NULL);
+	pet_stop_walking(pd, STOPWALKING_FLAG_NONE | (2000 << 8)); // Stop walking for 2 seconds.
+	clif->send_petdata(NULL, pd, 4, rnd() % val + 1);
+	pet->lootitem_drop(pd, NULL);
+
 	return 1;
 }
 
