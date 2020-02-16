@@ -129,19 +129,32 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 	}
 }
 
+/**
+ * Creates a pet egg.
+ *
+ * @param sd The character who tries to create the pet egg.
+ * @param item_id The pet egg's item ID.
+ * @return 0 on failure, 1 on success.
+ *
+ **/
 static int pet_create_egg(struct map_session_data *sd, int item_id)
 {
-	int pet_id = pet->search_petDB_index(item_id, PET_EGG);
 	nullpo_ret(sd);
-	if (pet_id < 0) return 0; //No pet egg here.
-	if (!pc->inventoryblank(sd)) return 0; // Inventory full
+
+	int pet_id = pet->search_petDB_index(item_id, PET_EGG);
+
+	if (pet_id == INDEX_NOT_FOUND) // No pet egg here.
+		return 0;
+
+	if (pc->inventoryblank(sd) == 0)  // Inventory full.
+		return 0;
+
 	sd->catch_target_class = pet->db[pet_id].class_;
-	intif->create_pet(sd->status.account_id, sd->status.char_id,
-		pet->db[pet_id].class_,
-		mob->db(pet->db[pet_id].class_)->lv,
-		pet->db[pet_id].EggID, 0,
-		(short)pet->db[pet_id].intimate,
-		PET_HUNGER_STUFFED, 0, 1, pet->db[pet_id].jname);
+	intif->create_pet(sd->status.account_id, sd->status.char_id, pet->db[pet_id].class_,
+			  mob->db(pet->db[pet_id].class_)->lv, pet->db[pet_id].EggID, 0,
+			  (short)pet->db[pet_id].intimate, PET_HUNGER_STUFFED,
+			  0, 1, pet->db[pet_id].jname);
+
 	return 1;
 }
 
