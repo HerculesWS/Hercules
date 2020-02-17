@@ -621,57 +621,56 @@ static int pet_catch_process1(struct map_session_data *sd, int target_class)
 	return 0;
 }
 
+/**
+ * Begins the actual process of catching a monster.
+ *
+ * @param sd The character who tries to catch the monster.
+ * @param target_id The monster ID of the pet, which the character tries to catch.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
 static int pet_catch_process2(struct map_session_data *sd, int target_id)
 {
-	struct mob_data *md = NULL;
-	struct block_list *bl = NULL;
-	int i = 0, pet_catch_rate = 0;
-
 	nullpo_retr(1, sd);
 
-	bl = map->id2bl(target_id); // TODO: Why does this not use map->id2md?
-	md = BL_CAST(BL_MOB, bl);
-	if (md == NULL || md->bl.prev == NULL) {
-		// Invalid inputs/state, abort capture.
-		clif->pet_roulette(sd,0);
+	struct mob_data *md = BL_CAST(BL_MOB, map->id2bl(target_id)); //TODO: Why does this not use map->id2md?
+
+	if (md == NULL || md->bl.prev == NULL) { // Invalid inputs/state, abort capture.
+		clif->pet_roulette(sd, 0);
 		sd->catch_target_class = -1;
 		sd->itemid = -1;
 		sd->itemindex = -1;
 		return 1;
 	}
 
-	//FIXME: delete taming item here, if this was an item-invoked capture and the item was flagged as delay-consume [ultramage]
+	//FIXME: Delete taming item here, if this was an item-invoked capture and the item was flagged as delay-consume. [ultramage]
 
-	i = pet->search_petDB_index(md->class_,PET_CLASS);
-	//catch_target_class == 0 is used for universal lures (except bosses for now). [Skotlex]
-	if (sd->catch_target_class == 0 && !(md->status.mode&MD_BOSS))
+	// catch_target_class == 0 is used for universal lures (except bosses for now). [Skotlex]
+	if (sd->catch_target_class == 0 && (md->status.mode & MD_BOSS) == 0)
 		sd->catch_target_class = md->class_;
-	if(i < 0 || sd->catch_target_class != md->class_) {
-		clif->emotion(&md->bl, E_AG); //mob will do /ag if wrong lure is used on them.
-		clif->pet_roulette(sd,0);
+
+	int i = pet->search_petDB_index(md->class_, PET_CLASS);
+
+	if (i == INDEX_NOT_FOUND || sd->catch_target_class != md->class_) {
+		clif->emotion(&md->bl, E_AG); // Mob will do /ag if wrong lure is used on it.
+		clif->pet_roulette(sd, 0);
 		sd->catch_target_class = -1;
 		return 1;
 	}
 
-	pet_catch_rate = pet->db[i].capture * (100 - get_percentage(md->status.hp, md->status.max_hp)) / 100 + pet->db[i].capture;
+	int pet_catch_rate = pet->db[i].capture * (100 - get_percentage(md->status.hp, md->status.max_hp)) / 100 + pet->db[i].capture;
 
-	if(pet_catch_rate < 1) pet_catch_rate = 1;
-	if(battle->bc->pet_catch_rate != 100)
-		pet_catch_rate = (pet_catch_rate*battle->bc->pet_catch_rate)/100;
+	pet_catch_rate = cap_value(pet_catch_rate, 1, 10000) * battle_config.pet_catch_rate / 100;
 
-	if(rnd()%10000 < pet_catch_rate)
-	{
-		unit->remove_map(&md->bl,CLR_OUTSIGHT,ALC_MARK);
+	if (rnd() % 10000 < pet_catch_rate) {
+		unit->remove_map(&md->bl, CLR_OUTSIGHT, ALC_MARK);
 		status_kill(&md->bl);
-		clif->pet_roulette(sd,1);
-		intif->create_pet(sd->status.account_id,sd->status.char_id,pet->db[i].class_,mob->db(pet->db[i].class_)->lv,
-			pet->db[i].EggID, 0, pet->db[i].intimate, PET_HUNGER_STUFFED, 0, 1, pet->db[i].jname);
-
+		clif->pet_roulette(sd, 1);
+		intif->create_pet(sd->status.account_id, sd->status.char_id, pet->db[i].class_, mob->db(pet->db[i].class_)->lv,
+				  pet->db[i].EggID, 0, pet->db[i].intimate, PET_HUNGER_STUFFED, 0, 1, pet->db[i].jname);
 		achievement->validate_taming(sd, pet->db[i].class_);
-	}
-	else
-	{
-		clif->pet_roulette(sd,0);
+	} else {
+		clif->pet_roulette(sd, 0);
 		sd->catch_target_class = -1;
 	}
 
