@@ -897,17 +897,26 @@ static int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd)
 	return 0;
 }
 
+/**
+ * Feeds a pet and updates its intimacy value.
+ *
+ * @param sd The pet's master.
+ * @param pd The pet.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
 static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 {
-	int i, food_id;
-
+	nullpo_retr(1, sd);
 	nullpo_retr(1, pd);
-	food_id = pd->petDB->FoodID;
-	i = pc->search_inventory(sd, food_id);
-	if(i == INDEX_NOT_FOUND) {
-		clif->pet_food(sd, food_id, 0);
+
+	int i = pc->search_inventory(sd, pd->petDB->FoodID);
+
+	if (i == INDEX_NOT_FOUND) {
+		clif->pet_food(sd, pd->petDB->FoodID, 0);
 		return 1;
 	}
+
 	pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 
 	int intimacy = 0;
@@ -932,12 +941,12 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 		pet_stop_attack(pd);
 		pd->status.speed = pd->db->status.speed;
 	}
+
 	status_calc_pet(pd, SCO_NONE);
 	pet->set_hunger(pd, pd->pet.hungry + pd->petDB->fullness);
-
-	clif->send_petdata(sd,pd,2,pd->pet.hungry);
-	clif->send_petdata(sd,pd,1,pd->pet.intimate);
-	clif->pet_food(sd,pd->petDB->FoodID,1);
+	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
+	clif->send_petdata(sd, pd, 1, pd->pet.intimate);
+	clif->pet_food(sd, pd->petDB->FoodID, 1);
 
 	return 0;
 }
