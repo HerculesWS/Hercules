@@ -727,42 +727,52 @@ static bool pet_get_egg(int account_id, int pet_class, int pet_id)
 	return true;
 }
 
+/**
+ * Performs selected pet menu option.
+ *
+ * @param sd The pet's master.
+ * @param menunum The selected menu option.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
 static int pet_menu(struct map_session_data *sd, int menunum)
 {
-	struct item_data *egg_id;
-	nullpo_ret(sd);
-	if (sd->pd == NULL)
-		return 1;
+	nullpo_retr(1, sd);
+	nullpo_retr(1, sd->pd);
 
-	//You lost the pet already.
-	if (!sd->status.pet_id || sd->pd->pet.intimate <= PET_INTIMACY_NONE || sd->pd->pet.incubate)
-		return 1;
+	if (sd->status.pet_id == 0 || sd->pd->pet.intimate <= PET_INTIMACY_NONE || sd->pd->pet.incubate != 0)
+		return 1; // You lost the pet already.
 
-	egg_id = itemdb->exists(sd->pd->petDB->EggID);
-	if (egg_id) {
-		if ((egg_id->flag.trade_restriction&ITR_NODROP) && !pc->inventoryblank(sd)) {
-			clif->message(sd->fd, msg_sd(sd,451)); // You can't return your pet because your inventory is full.
+	struct item_data *egg_id = itemdb->exists(sd->pd->petDB->EggID);
+
+	if (egg_id != NULL) {
+		if ((egg_id->flag.trade_restriction & ITR_NODROP) != 0 && pc->inventoryblank(sd) == 0) {
+			clif->message(sd->fd, msg_sd(sd, 451)); // You can't return your pet because your inventory is full.
 			return 1;
 		}
 	}
 
-	switch(menunum) {
-		case 0:
-			clif->send_petstatus(sd);
-			break;
-		case 1:
-			pet->food(sd, sd->pd);
-			break;
-		case 2:
-			pet->performance(sd, sd->pd);
-			break;
-		case 3:
-			pet->return_egg(sd, sd->pd);
-			break;
-		case 4:
-			pet->unequipitem(sd, sd->pd);
-			break;
+	switch (menunum) {
+	case 0:
+		clif->send_petstatus(sd);
+		break;
+	case 1:
+		pet->food(sd, sd->pd);
+		break;
+	case 2:
+		pet->performance(sd, sd->pd);
+		break;
+	case 3:
+		pet->return_egg(sd, sd->pd);
+		break;
+	case 4:
+		pet->unequipitem(sd, sd->pd);
+		break;
+	default: ;
+		ShowError("pet_menu: Unexpected menu option: %d\n", menunum);
+		return 1;
 	}
+
 	return 0;
 }
 
