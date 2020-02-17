@@ -433,68 +433,73 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	return 1;
 }
 
+/**
+ * Initializes a pet.
+ *
+ * @param sd The pet's master.
+ * @param petinfo The pet's status data.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
 static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 {
-	struct pet_data *pd;
-	int i = 0;
-
 	nullpo_retr(1, sd);
 	nullpo_retr(1, petinfo);
-	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
+	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == NULL || sd->pd->msd == sd);
 
-	if(sd->status.account_id != petinfo->account_id || sd->status.char_id != petinfo->char_id) {
+	if (sd->status.account_id != petinfo->account_id || sd->status.char_id != petinfo->char_id) {
 		sd->status.pet_id = 0;
 		return 1;
 	}
+
 	if (sd->status.pet_id != petinfo->pet_id) {
-		if (sd->status.pet_id) {
-			//Wrong pet?? Set incubate to no and send it back for saving.
+		if (sd->status.pet_id != 0) { // Wrong pet? Set incubate to no and send it back for saving.
 			petinfo->incubate = 1;
-			intif->save_petdata(sd->status.account_id,petinfo);
+			intif->save_petdata(sd->status.account_id, petinfo);
 			sd->status.pet_id = 0;
 			return 1;
 		}
-		//The pet_id value was lost? odd... restore it.
-		sd->status.pet_id = petinfo->pet_id;
+
+		sd->status.pet_id = petinfo->pet_id; // The pet_id value was lost? Odd... Restore it.
 	}
 
-	i = pet->search_petDB_index(petinfo->class_,PET_CLASS);
-	if(i < 0) {
+	int i = pet->search_petDB_index(petinfo->class_, PET_CLASS);
+
+	if (i == INDEX_NOT_FOUND) {
 		sd->status.pet_id = 0;
 		return 1;
 	}
-	CREATE(pd, struct pet_data, 1);
-	pd->bl.type = BL_PET;
-	pd->bl.id = npc->get_new_npc_id();
-	sd->pd = pd;
 
+	struct pet_data *pd;
+
+	CREATE(pd, struct pet_data, 1);
+	memcpy(&pd->pet, petinfo, sizeof(struct s_pet));
+	sd->pd = pd;
 	pd->msd = sd;
 	pd->petDB = &pet->db[i];
-	pd->db = mob->db(petinfo->class_);
-	memcpy(&pd->pet, petinfo, sizeof(struct s_pet));
-	status->set_viewdata(&pd->bl, petinfo->class_);
+	pd->db = mob->db(pd->petDB->class_);
+	pd->bl.type = BL_PET;
+	pd->bl.id = npc->get_new_npc_id();
+	status->set_viewdata(&pd->bl, pd->petDB->class_);
 	unit->dataset(&pd->bl);
 	pd->ud.dir = sd->ud.dir;
-
 	pd->bl.m = sd->bl.m;
 	pd->bl.x = sd->bl.x;
 	pd->bl.y = sd->bl.y;
 	unit->calc_pos(&pd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 	pd->bl.x = pd->ud.to_x;
 	pd->bl.y = pd->ud.to_y;
-
 	map->addiddb(&pd->bl);
-	status_calc_pet(pd,SCO_FIRST);
-
+	status_calc_pet(pd, SCO_FIRST);
 	pd->last_thinktime = timer->gettick();
 	pd->state.skillbonus = 0;
 
-	if( battle_config.pet_status_support )
-		script->run_pet(pet->db[i].pet_script,0,sd->bl.id,0);
+	if (pd->petDB != NULL) {
+		if (pd->petDB->pet_script != NULL && battle_config.pet_status_support == 1)
+			script->run_pet(pd->petDB->pet_script, 0, sd->bl.id, 0);
 
-	if( pd->petDB ) {
-		if( pd->petDB->equip_script )
-			status_calc_pc(sd,SCO_NONE);
+		if (pd->petDB->equip_script != NULL)
+			status_calc_pc(sd, SCO_NONE);
 
 		if (pd->petDB->hungry_delay > 0) {
 			int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
