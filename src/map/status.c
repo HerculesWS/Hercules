@@ -2579,12 +2579,16 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	status->calc_pc_additional(sd, opt);
 
-	if( sd->pd ) { // Pet Bonus
+	if (sd->pd != NULL) { // Pet bonus.
 		struct pet_data *pd = sd->pd;
-		if (pd != NULL && pd->petDB != NULL && pd->petDB->equip_script != NULL)
-			script->run(pd->petDB->equip_script,0,sd->bl.id,0);
-		if (pd && pd->pet.intimate > PET_INTIMACY_NONE && (!battle_config.pet_equip_required || pd->pet.equip > 0) && pd->state.skillbonus == 1 && pd->bonus)
-			pc->bonus(sd,pd->bonus->type, pd->bonus->val);
+
+		if (pd->petDB != NULL && pd->petDB->equip_script != NULL)
+			script->run(pd->petDB->equip_script, 0, sd->bl.id, 0);
+
+		if (pd->pet.intimate > PET_INTIMACY_NONE && pd->state.skillbonus == 1 && pd->bonus != NULL
+		    && (battle_config.pet_equip_required == 0 || pd->pet.equip > 0)) {
+			pc->bonus(sd, pd->bonus->type, pd->bonus->val);
+		}
 	}
 
 	//param_bonus now holds card bonuses.
