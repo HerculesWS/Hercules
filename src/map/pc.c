@@ -5688,18 +5688,26 @@ static int pc_steal_coin(struct map_session_data *sd, struct block_list *target,
 	return 0;
 }
 
-/*==========================================
- * Set's a player position.
- * Return values:
- * 0 - Success.
- * 1 - Invalid map index.
- * 2 - Map not in this map-server, and failed to locate alternate map-server.
- *------------------------------------------*/
+ /**
+ * Sets a character's position.
+ *
+ * @param sd The related character.
+ * @param map_index The target map's index.
+ * @param x The target x-coordinate.
+ * @param y The target y-coordinate.
+ * @param clrtype The unit clear type, which should be used.
+ * @retval 0 Success.
+ * @retval 1 Invalid map index.
+ * @retval 2 Map not in this map-server, and failed to locate alternative map-server.
+ * @retval 3 No character data. (Parameter sd is a NULL pointer.)
+ * @retval 4 Character is jailed.
+ *
+ **/
 static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, enum clr_type clrtype)
 {
 	int16 m;
 
-	nullpo_ret(sd);
+	nullpo_retr(3, sd);
 
 	if( !map_index || !mapindex_id2name(map_index) || ( m = map->mapindex2mapid(map_index) ) == -1 ) {
 		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", map_index);
@@ -5788,7 +5796,7 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			map->cellfromcache(&map->list[m]);
 		if (sd->sc.count) { // Cancel some map related stuff.
 			if (sd->sc.data[SC_JAILED])
-				return 1; //You may not get out!
+				return 4; //You may not get out!
 			status_change_end(&sd->bl, SC_CASH_BOSS_ALARM, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_WARM, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_SUN_COMFORT, INVALID_TIMER);
