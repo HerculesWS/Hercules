@@ -1649,23 +1649,31 @@ static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
 	}
 }
 
+/**
+ * Reads a pet's intimacy data from DB.
+ *
+ * @param idx The pet's index in pet->db[].
+ * @param t The libconfig settings block, which contains the pet's intimacy data.
+ * @return false on failure, true on success.
+ *
+ **/
 static bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
 {
+	nullpo_retr(false, t);
+	Assert_retr(false, idx >= 0 && idx < MAX_PET_DB);
+
 	int i32 = 0;
 
-	nullpo_retr(false, t);
-	Assert_ret(idx >= 0 && idx < MAX_PET_DB);
-
-	if (libconfig->setting_lookup_int(t, "Initial", &i32))
+	if (libconfig->setting_lookup_int(t, "Initial", &i32) == CONFIG_TRUE)
 		pet->db[idx].intimate = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
-	if (libconfig->setting_lookup_int(t, "FeedIncrement", &i32))
+	if (libconfig->setting_lookup_int(t, "FeedIncrement", &i32) == CONFIG_TRUE)
 		pet->db[idx].r_hungry = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
-	if (libconfig->setting_lookup_int(t, "OverFeedDecrement", &i32))
+	if (libconfig->setting_lookup_int(t, "OverFeedDecrement", &i32) == CONFIG_TRUE)
 		pet->db[idx].r_full = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
-	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32))
+	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32) == CONFIG_TRUE)
 		pet->db[idx].die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "StarvingDelay", &i32) == CONFIG_TRUE)
