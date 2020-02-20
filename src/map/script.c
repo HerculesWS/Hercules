@@ -14788,9 +14788,15 @@ static BUILDIN(getitemslots)
  *------------------------------------------*/
 static BUILDIN(getiteminfo)
 {
-	int item_id = script_getnum(st, 2);
 	int n = script_getnum(st, 3);
-	struct item_data *it = itemdb->exists(item_id);
+	struct item_data *it;
+
+	if (script_isstringtype(st, 2)) { /// Item name.
+		const char *name = script_getstr(st, 2);
+		it = itemdb->search_name(name);
+	} else { /// Item ID.
+		it = itemdb->exists(script_getnum(st, 2));
+	}
 
 	if (it == NULL) {
 		script_pushint(st, -1);
@@ -26970,7 +26976,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(setnpcdisplay,"sv??"),
 		BUILDIN_DEF(compare,"ss"), // Lordalfa - To bring strstr to scripting Engine.
 		BUILDIN_DEF(strcmp,"ss"),
-		BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
+		BUILDIN_DEF(getiteminfo,"vi"), //[Lupus] returns Items Buy / sell Price, etc info
 		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
 		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
 		BUILDIN_DEF(getequippedoptioninfo, "i"),
