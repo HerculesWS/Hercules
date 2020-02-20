@@ -14934,6 +14934,15 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_GM_LV_TRADE_OVERRIDE:
 		script_pushint(st, it->gm_lv_trade_override);
 		break;
+	case ITEMINFO_ID:
+		script_pushint(st, it->nameid);
+		break;
+	case ITEMINFO_AEGISNAME:
+		script_pushstr(st, it->name);
+		break;
+	case ITEMINFO_NAME:
+		script_pushstr(st, it->jname);
+		break;
 	default:
 		ShowError("buildin_getiteminfo: Invalid item type %d.\n", n);
 		script_pushint(st,-1);
