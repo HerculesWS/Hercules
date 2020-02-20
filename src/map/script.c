@@ -27621,6 +27621,9 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_ITEM_USAGE_FLAG", ITEMINFO_ITEM_USAGE_FLAG, false, false);
 	script->set_constant("ITEMINFO_ITEM_USAGE_OVERRIDE", ITEMINFO_ITEM_USAGE_OVERRIDE, false, false);
 	script->set_constant("ITEMINFO_GM_LV_TRADE_OVERRIDE", ITEMINFO_GM_LV_TRADE_OVERRIDE, false, false);
+	script->set_constant("ITEMINFO_ID", ITEMINFO_ID, false, false);
+	script->set_constant("ITEMINFO_AEGISNAME", ITEMINFO_AEGISNAME, false, false);
+	script->set_constant("ITEMINFO_NAME", ITEMINFO_NAME, false, false);
 
 	script->constdb_comment("getmercinfo options");
 	script->set_constant("MERCINFO_ID,", MERCINFO_ID, false, false);
