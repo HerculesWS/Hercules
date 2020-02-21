@@ -14780,15 +14780,17 @@ static BUILDIN(getitemslots)
 	return true;
 }
 
-// TODO: add matk here if needed
-
-/*==========================================
- * Returns some values of an item [Lupus]
- * Price, Weight, etc...
- *------------------------------------------*/
+/**
+ * Returns various information about an item.
+ *
+ * @code{.herc}
+ *	getiteminfo(<item ID>, <type>);
+ *	getiteminfo("<item name>", <type>);
+ * @endcode
+ *
+ **/
 static BUILDIN(getiteminfo)
 {
-	int n = script_getnum(st, 3);
 	struct item_data *it;
 
 	if (script_isstringtype(st, 2)) { /// Item name.
@@ -14803,7 +14805,9 @@ static BUILDIN(getiteminfo)
 		return true;
 	}
 
-	switch (n) {
+	int type = script_getnum(st, 3);
+
+	switch (type) {
 	case ITEMINFO_BUYPRICE:
 		script_pushint(st, it->value_buy);
 		break;
@@ -14915,16 +14919,24 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_STACK_AMOUNT:
 		script_pushint(st, it->stack.amount);
 		break;
-	case ITEMINFO_STACK_FLAG:
-		{
-			int stack_flag = 0;
-			if (it->stack.inventory != 0) stack_flag |= 1;
-			if (it->stack.cart != 0) stack_flag |= 2;
-			if (it->stack.storage != 0) stack_flag |= 4;
-			if (it->stack.guildstorage != 0) stack_flag |= 8;
-			script_pushint(st, stack_flag);
-		}
+	case ITEMINFO_STACK_FLAG: {
+		int stack_flag = 0;
+
+		if (it->stack.inventory != 0)
+			stack_flag |= 1;
+
+		if (it->stack.cart != 0)
+			stack_flag |= 2;
+
+		if (it->stack.storage != 0)
+			stack_flag |= 4;
+
+		if (it->stack.guildstorage != 0)
+			stack_flag |= 8;
+
+		script_pushint(st, stack_flag);
 		break;
+	}
 	case ITEMINFO_ITEM_USAGE_FLAG:
 		script_pushint(st, it->item_usage.flag);
 		break;
@@ -14944,10 +14956,11 @@ static BUILDIN(getiteminfo)
 		script_pushstr(st, it->jname);
 		break;
 	default:
-		ShowError("buildin_getiteminfo: Invalid item type %d.\n", n);
-		script_pushint(st,-1);
+		ShowError("buildin_getiteminfo: Invalid item info type %d.\n", type);
+		script_pushint(st, -1);
 		return false;
 	}
+
 	return true;
 }
 
