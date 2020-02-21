@@ -9764,13 +9764,13 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 
 	nullpo_retv(ssd);
 
-	if (ssd->fakename[0])
-		return; //No need to update as the party/guild was not displayed anyway.
-
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = ssd->bl.id;
 
-	memcpy(packet.name, ssd->status.name, NAME_LENGTH);
+	if (ssd->fakename[0] != '\0')
+		memcpy(packet.name, ssd->fakename, NAME_LENGTH);
+	else
+		memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
 	if (!battle_config.display_party_name) {
 		if (ssd->status.party_id > 0 && ssd->status.guild_id > 0 && (g = ssd->guild) != NULL)
@@ -9786,18 +9786,41 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 		if( i < g->max_member ) ps = g->member[i].position;
 	}
 
-	if (p != NULL)
-		memcpy(packet.party_name, p->party.name, NAME_LENGTH);
+	if (p != NULL) {
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_PARTYNAME) != 0)
+		    || ssd->fakename[0] == '\0') {
+			memcpy(packet.party_name, p->party.name, NAME_LENGTH);
+		}
+	}
 
 	if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
-		memcpy(packet.guild_name, g->name,NAME_LENGTH);
-		memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDNAME) != 0)
+		    || ssd->fakename[0] == '\0') {
+			memcpy(packet.guild_name, g->name,NAME_LENGTH);
+		}
+
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDPOSITION) != 0)
+		    || ssd->fakename[0] == '\0') {
+			memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+		}
+	} else if (ssd->status.clan_id != 0) {
+		struct clan *c = clan->search(ssd->status.clan_id);
+
+		if (c != NULL) {
+			if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_CLANPOSITION) != 0)
+			    || ssd->fakename[0] == '\0') {
+				memcpy(packet.position_name, c->name, NAME_LENGTH);
+			}
+		}
 	}
 
 #if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
 	// Achievement System [Dastgir/Hercules]
 	if (ssd->status.title_id > 0) {
-		packet.title_id = ssd->status.title_id;
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_TITLE) != 0)
+		    || ssd->fakename[0] == '\0') {
+			packet.title_id = ssd->status.title_id;
+		}
 	}
 #endif
 
