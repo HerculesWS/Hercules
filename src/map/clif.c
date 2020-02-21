@@ -9379,61 +9379,59 @@ static void clif_send_selforarea(int fd, struct block_list *bl, const void *buf,
 	}
 }
 
-/// Updates the object's (bl) name on client.
-/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
-/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
-/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+/**
+ * Updates a character's name on client.
+ *
+ * @code
+ *	0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+ *	0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+ *	0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+ * @endcode
+ *
+ * @param fd The incoming file descriptor.
+ * @param bl The related character's block list.
+ *
+ **/
 static void clif_pcname_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_PC);
 
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-	int len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
-	packet.gid = bl->id;
+	struct PACKET_ZC_ACK_REQNAMEALL packet = {0};
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
+	packet.gid = bl->id;
 
 	const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
 
-	//Requesting your own "shadow" name. [Skotlex]
-	if (ssd->fd == fd && ssd->disguise != -1) {
+	if (ssd->fd == fd && ssd->disguise != -1) // Requesting your own "shadow" name.
 		packet.gid = -bl->id;
-	}
 
 	if (ssd->fakename[0] != '\0')
 		memcpy(packet.name, ssd->fakename, NAME_LENGTH);
 	else
 		memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
-#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
-	// Title System [Dastgir/Hercules]
-	if (ssd->status.title_id > 0) {
-		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_TITLE) != 0)
-		    || ssd->fakename[0] == '\0') {
-			packet.title_id = ssd->status.title_id;
-		}
-	}
-#endif
-
 	const struct party_data *p = NULL;
-	int ps = -1;
-	if (ssd->status.party_id != 0) {
+
+	if (ssd->status.party_id != 0)
 		p = party->search(ssd->status.party_id);
-	}
+
 	const struct guild *g = NULL;
-	if (ssd->status.guild_id != 0) {
-		if ((g = ssd->guild) != NULL) {
-			int i;
-			ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
-			if (i < g->max_member)
-				ps = g->member[i].position;
-		}
+	int pos_idx = INDEX_NOT_FOUND;
+
+	if (ssd->status.guild_id != 0 && (g = ssd->guild) != NULL) {
+		int i;
+		int acc_id = ssd->status.account_id;
+		int chr_id = ssd->status.char_id;
+
+		ARR_FIND(0, g->max_member, i, g->member[i].account_id == acc_id && g->member[i].char_id == chr_id);
+
+		if (i < g->max_member)
+			pos_idx = g->member[i].position;
 	}
 
-	if (!battle_config.display_party_name && g == NULL) {
-		// do not display party unless the player is also in a guild
-		p = NULL;
-	}
+	if (battle_config.display_party_name == 0 && g == NULL)
+		p = NULL; // Do not display party name, unless the character is also in a guild.
 
 	if (p != NULL) {
 		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_PARTYNAME) != 0)
@@ -9442,7 +9440,7 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		}
 	}
 
-	if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+	if (g != NULL && pos_idx >= 0 && pos_idx < MAX_GUILDPOSITION) {
 		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDNAME) != 0)
 		    || ssd->fakename[0] == '\0') {
 			memcpy(packet.guild_name, g->name,NAME_LENGTH);
@@ -9450,11 +9448,11 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 
 		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDPOSITION) != 0)
 		    || ssd->fakename[0] == '\0') {
-			memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+			memcpy(packet.position_name, g->position[pos_idx].name, NAME_LENGTH);
 		}
-	}
-	else if (ssd->status.clan_id != 0) {
+	} else if (ssd->status.clan_id != 0) {
 		struct clan *c = clan->search(ssd->status.clan_id);
+
 		if (c != 0) {
 			if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_CLANPOSITION) != 0)
 			    || ssd->fakename[0] == '\0') {
@@ -9463,7 +9461,16 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		}
 	}
 
-	clif->send_selforarea(fd, bl, &packet, len);
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO) // Title system.
+	if (ssd->status.title_id > 0) {
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_TITLE) != 0)
+		    || ssd->fakename[0] == '\0') {
+			packet.title_id = ssd->status.title_id;
+		}
+	}
+#endif
+
+	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAMEALL));
 }
 
 /// Updates the object's (bl) name on client.
