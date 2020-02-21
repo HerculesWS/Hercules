@@ -7856,6 +7856,7 @@ ACMD(fakename)
 		if (sd->fakename[0])
 		{
 			sd->fakename[0] = '\0';
+			sd->fakename_options = FAKENAME_OPTION_NONE;
 			clif->blname_ack(0, &sd->bl);
 			if( sd->disguise )
 				clif->blname_ack(sd->fd, &sd->bl);
@@ -7867,13 +7868,28 @@ ACMD(fakename)
 		return false;
 	}
 
-	if (strlen(message) < 2)
+	int options = FAKENAME_OPTION_NONE;
+	char buf[NAME_LENGTH] = {'\0'};
+	const char *fake_name = NULL;
+
+	if (sscanf(message, "%d %23[^\n]", &options, buf) == 2) {
+		fake_name = buf;
+	} else {
+		options = FAKENAME_OPTION_NONE;
+		fake_name = message;
+	}
+
+	if (strlen(fake_name) < 2)
 	{
 		clif->message(sd->fd, msg_fd(fd,1309)); // Fake name must be at least two characters.
 		return false;
 	}
 
-	safestrncpy(sd->fakename, message, sizeof(sd->fakename));
+	if (options < FAKENAME_OPTION_NONE)
+		options = FAKENAME_OPTION_NONE;
+
+	safestrncpy(sd->fakename, fake_name, sizeof(sd->fakename));
+	sd->fakename_options = options;
 	clif->blname_ack(0, &sd->bl);
 	if (sd->disguise) // Another packet should be sent so the client updates the name for sd
 		clif->blname_ack(sd->fd, &sd->bl);
