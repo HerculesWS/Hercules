@@ -9391,16 +9391,9 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
 	int len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
 	packet.gid = bl->id;
+	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 
 	const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
-
-	if (ssd->fakename[0] != '\0') {
-		packet.packet_id = reqName;
-		len = sizeof(struct packet_reqname_ack);
-	} else {
-		packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
-		len = sizeof(struct PACKET_ZC_ACK_REQNAMEALL);
-	}
 
 	//Requesting your own "shadow" name. [Skotlex]
 	if (ssd->fd == fd && ssd->disguise != -1) {
