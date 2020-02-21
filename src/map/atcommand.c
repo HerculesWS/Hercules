@@ -7845,26 +7845,31 @@ ACMD(monsterignore)
 
 	return true;
 }
-/*==========================================
- * @fakename
- * => Gives your character a fake name. [Valaris]
- *------------------------------------------*/
+
+/**
+ * Temporarily changes the character's name to the specified string.
+ *
+ * @code{.herc}
+ *	@fakename {<options>} {<fake_name>}
+ * @endcode
+ *
+ **/
 ACMD(fakename)
 {
-	if (!*message)
-	{
-		if (sd->fakename[0])
-		{
+	if (*message == '\0') {
+		if (sd->fakename[0] != '\0') {
 			sd->fakename[0] = '\0';
 			sd->fakename_options = FAKENAME_OPTION_NONE;
 			clif->blname_ack(0, &sd->bl);
-			if( sd->disguise )
+
+			if (sd->disguise != 0) // Another packet should be sent so the client updates the name for sd.
 				clif->blname_ack(sd->fd, &sd->bl);
-			clif->message(sd->fd, msg_fd(fd,1307)); // Returned to real name.
+
+			clif->message(sd->fd, msg_fd(fd, 1307)); // Returned to real name.
 			return true;
 		}
 
-		clif->message(sd->fd, msg_fd(fd,1308)); // You must enter a name.
+		clif->message(sd->fd, msg_fd(fd, 1308)); // You must enter a name.
 		return false;
 	}
 
@@ -7879,9 +7884,8 @@ ACMD(fakename)
 		fake_name = message;
 	}
 
-	if (strlen(fake_name) < 2)
-	{
-		clif->message(sd->fd, msg_fd(fd,1309)); // Fake name must be at least two characters.
+	if (strlen(fake_name) < 2) {
+		clif->message(sd->fd, msg_fd(fd, 1309)); // Fake name must be at least two characters.
 		return false;
 	}
 
@@ -7891,9 +7895,11 @@ ACMD(fakename)
 	safestrncpy(sd->fakename, fake_name, sizeof(sd->fakename));
 	sd->fakename_options = options;
 	clif->blname_ack(0, &sd->bl);
-	if (sd->disguise) // Another packet should be sent so the client updates the name for sd
+
+	if (sd->disguise != 0) // Another packet should be sent so the client updates the name for sd.
 		clif->blname_ack(sd->fd, &sd->bl);
-	clif->message(sd->fd, msg_fd(fd,1310)); // Fake name enabled.
+
+	clif->message(sd->fd, msg_fd(fd, 1310)); // Fake name enabled.
 
 	return true;
 }
