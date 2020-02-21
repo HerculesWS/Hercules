@@ -9400,48 +9400,64 @@ static void clif_pcname_ack(int fd, struct block_list *bl)
 		packet.gid = -bl->id;
 	}
 
-	if (ssd->fakename[0] != '\0') {
+	if (ssd->fakename[0] != '\0')
 		memcpy(packet.name, ssd->fakename, NAME_LENGTH);
-	} else {
-#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
-		// Title System [Dastgir/Hercules]
-		if (ssd->status.title_id > 0) {
-			packet.title_id = ssd->status.title_id;
-		}
-#endif
+	else
 		memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
-		const struct party_data *p = NULL;
-		int ps = -1;
-		if (ssd->status.party_id != 0) {
-			p = party->search(ssd->status.party_id);
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
+	// Title System [Dastgir/Hercules]
+	if (ssd->status.title_id > 0) {
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_TITLE) != 0)
+		    || ssd->fakename[0] == '\0') {
+			packet.title_id = ssd->status.title_id;
 		}
-		const struct guild *g = NULL;
-		if (ssd->status.guild_id != 0) {
-			if ((g = ssd->guild) != NULL) {
-				int i;
-				ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
-				if (i < g->max_member)
-					ps = g->member[i].position;
-			}
-		}
+	}
+#endif
 
-		if (!battle_config.display_party_name && g == NULL) {
-			// do not display party unless the player is also in a guild
-			p = NULL;
+	const struct party_data *p = NULL;
+	int ps = -1;
+	if (ssd->status.party_id != 0) {
+		p = party->search(ssd->status.party_id);
+	}
+	const struct guild *g = NULL;
+	if (ssd->status.guild_id != 0) {
+		if ((g = ssd->guild) != NULL) {
+			int i;
+			ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
+			if (i < g->max_member)
+				ps = g->member[i].position;
 		}
+	}
 
-		if (p != NULL) {
+	if (!battle_config.display_party_name && g == NULL) {
+		// do not display party unless the player is also in a guild
+		p = NULL;
+	}
+
+	if (p != NULL) {
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_PARTYNAME) != 0)
+		    || ssd->fakename[0] == '\0') {
 			memcpy(packet.party_name, p->party.name, NAME_LENGTH);
 		}
+	}
 
-		if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+	if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDNAME) != 0)
+		    || ssd->fakename[0] == '\0') {
 			memcpy(packet.guild_name, g->name,NAME_LENGTH);
+		}
+
+		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDPOSITION) != 0)
+		    || ssd->fakename[0] == '\0') {
 			memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
 		}
-		else if (ssd->status.clan_id != 0) {
-			struct clan *c = clan->search(ssd->status.clan_id);
-			if (c != 0) {
+	}
+	else if (ssd->status.clan_id != 0) {
+		struct clan *c = clan->search(ssd->status.clan_id);
+		if (c != 0) {
+			if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_CLANPOSITION) != 0)
+			    || ssd->fakename[0] == '\0') {
 				memcpy(packet.position_name, c->name, NAME_LENGTH);
 			}
 		}
