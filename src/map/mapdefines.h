@@ -30,7 +30,15 @@
 #define DAMAGELOG_SIZE 30
 #define LOOTITEM_SIZE 10
 #define MAX_MOBSKILL 50
+
+#ifndef MAX_MOB_LIST_PER_MAP
+#ifdef RENEWAL
 #define MAX_MOB_LIST_PER_MAP 100
+#else
+#define MAX_MOB_LIST_PER_MAP 115
+#endif
+#endif
+
 #define MAX_EVENTQUEUE 2
 #define MAX_EVENTTIMER 32
 #define NATURAL_HEAL_INTERVAL 500
