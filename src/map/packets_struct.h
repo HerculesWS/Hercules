@@ -3819,8 +3819,14 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub {
 	uint32 index;
 	uint32 zeny;
 	uint32 currency_count;
-	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 currencies[];
+	// Workaround for fix Visual Studio bug (error C2233). Here should be currencies[]
+	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2 currencies[1];
 } __attribute__((packed));
+
+// Workaround check for Visual Studio bug (error C2233)
+STATIC_ASSERT(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2[1]) ==
+	sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2),
+	"Wrong PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub size");
 
 struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN {
 	int16 packetType;

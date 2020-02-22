@@ -23232,7 +23232,8 @@ static void clif_parse_npc_expanded_barter_closed(int fd, struct map_session_dat
 #if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
 #define NEXT_EXPANDED_BARTER_ITEM(var, count) \
 	var = (struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub *)((char*)item + \
-		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub) + \
+		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub) - \
+		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2) + \
 		count * sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2))
 #endif
 
@@ -23252,7 +23253,11 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 	packet->packetType = HEADER_ZC_NPC_EXPANDED_BARTER_OPEN;
 	struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub *item = &packet->items[0];
 
-	for (int i = 0; i < shop_size && buf_left >= sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub); i++) {
+	// Workaround for fix Visual Studio bug (error C2233)
+	// Here should be sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub)
+	const int ptr_size = sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub) -
+		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2);
+	for (int i = 0; i < shop_size && buf_left >= ptr_size; i++) {
 		if (shop[i].nameid) {
 			struct item_data *id = itemdb->exists(shop[i].nameid);
 			if (id == NULL)
@@ -23265,7 +23270,7 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 			item->index  = i;
 			item->zeny   = shop[i].value;
 			item->currency_count = 0;
-			buf_left -= sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub);
+			buf_left -= ptr_size;
 			items_count ++;
 			int count = shop[i].value2;
 			if (buf_left < sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2) * count) {
@@ -23294,7 +23299,7 @@ static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct np
 
 	packet->items_count = items_count;
 	packet->packetLength = sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN) +
-		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub) * items_count +
+		ptr_size * items_count +
 		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_OPEN_sub2) * currencies_count;
 	clif->send(packet, packet->packetLength, &sd->bl, SELF);
 #endif
