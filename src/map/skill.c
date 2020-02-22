@@ -14029,6 +14029,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 1;
 	}
 
+	if (sd->state.abra_flag == 2) /// Skills, casted by Improvised Song, ignore all requirements.
+		return 1;
+
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id) {
 		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
@@ -15015,6 +15018,11 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 
 	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_no_conditions == 1)
 	    && skill->is_item_skill(sd, skill_id, skill_lv)) {
+		return 1;
+	}
+
+	if (sd->state.abra_flag == 2) { /// Skills, casted by Improvised Song, ignore all requirements.
+		sd->state.abra_flag = 0;
 		return 1;
 	}
 
