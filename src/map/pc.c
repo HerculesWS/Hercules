@@ -10464,12 +10464,8 @@ static int pc_unequipitem(struct map_session_data *sd, int n, int flag)
 	//OnUnEquip script [Skotlex]
 	if (sd->inventory_data[n] != NULL) {
 		if (sd->inventory_data[n]->unequip_script != NULL) {
-			if (battle_config.unequip_restricted_equipment & 1) {
-				ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, i, map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid);
-				if (i == map->list[sd->bl.m].zone->disabled_items_count)
-					script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
-			}
-			else
+			ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, i, map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid);
+			if (i == map->list[sd->bl.m].zone->disabled_items_count)
 				script->run_item_unequip_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 		}
 		if (itemdb_isspecial(sd->status.inventory[n].card[0]) == false) {
@@ -10480,14 +10476,10 @@ static int pc_unequipitem(struct map_session_data *sd, int n, int flag)
 
 				if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL) {
 					if (data->unequip_script) {
-						if (battle_config.unequip_restricted_equipment & 2) {
-							int j;
-							ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, j, map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[n].card[i]);
-							if (j == map->list[sd->bl.m].zone->disabled_items_count)
-								script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
-						} else {
+						int j;
+						ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, j, map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[n].card[i]);
+						if (j == map->list[sd->bl.m].zone->disabled_items_count)
 							script->run_item_unequip_script(sd, data, npc->fake_nd->bl.id);
-						}
 					}
 				}
 
