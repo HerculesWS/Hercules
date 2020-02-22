@@ -9760,17 +9760,22 @@ static void clif_blname_ack(int fd, struct block_list *bl)
 	}
 }
 
-//Used to update when a char leaves a party/guild. [Skotlex]
-//Needed because when you send a 0x95 packet, the client will not remove the cached party/guild info that is not sent.
+/**
+ * Updates a character's name on client when leaving a party/guild.
+ *
+ * @code
+ *	0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+ *	0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+ * @endcode
+ *
+ * @param ssd The related character.
+ *
+ **/
 static void clif_charnameupdate(struct map_session_data *ssd)
 {
-	int ps = -1;
-	struct party_data *p = NULL;
-	struct guild *g = NULL;
-	struct PACKET_ZC_ACK_REQNAMEALL packet = { 0 };
-
 	nullpo_retv(ssd);
 
+	struct PACKET_ZC_ACK_REQNAMEALL packet = {0};
 	packet.packet_id = HEADER_ZC_ACK_REQNAMEALL;
 	packet.gid = ssd->bl.id;
 
@@ -9779,19 +9784,27 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 	else
 		memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
-	if (!battle_config.display_party_name) {
-		if (ssd->status.party_id > 0 && ssd->status.guild_id > 0 && (g = ssd->guild) != NULL)
-			p = party->search(ssd->status.party_id);
-	} else {
-		if (ssd->status.party_id > 0)
-			p = party->search(ssd->status.party_id);
+	struct party_data *p = NULL;
+
+	if (ssd->status.party_id != 0)
+		p = party->search(ssd->status.party_id);
+
+	struct guild *g = NULL;
+	int pos_idx = INDEX_NOT_FOUND;
+
+	if (ssd->status.guild_id != 0 && (g = ssd->guild) != NULL) {
+		int i;
+		int acc_id = ssd->status.account_id;
+		int chr_id = ssd->status.char_id;
+
+		ARR_FIND(0, g->max_member, i, g->member[i].account_id == acc_id && g->member[i].char_id == chr_id);
+
+		if (i < g->max_member)
+			pos_idx = g->member[i].position;
 	}
 
-	if (ssd->status.guild_id > 0 && (g = ssd->guild) != NULL) {
-		int i;
-		ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
-		if( i < g->max_member ) ps = g->member[i].position;
-	}
+	if (battle_config.display_party_name == 0 && g == NULL)
+		p = NULL; // Do not display party name, unless the character is also in a guild.
 
 	if (p != NULL) {
 		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_PARTYNAME) != 0)
@@ -9800,7 +9813,7 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 		}
 	}
 
-	if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+	if (g != NULL && pos_idx >= 0 && pos_idx < MAX_GUILDPOSITION) {
 		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDNAME) != 0)
 		    || ssd->fakename[0] == '\0') {
 			memcpy(packet.guild_name, g->name,NAME_LENGTH);
@@ -9808,12 +9821,12 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 
 		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_GUILDPOSITION) != 0)
 		    || ssd->fakename[0] == '\0') {
-			memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+			memcpy(packet.position_name, g->position[pos_idx].name, NAME_LENGTH);
 		}
 	} else if (ssd->status.clan_id != 0) {
 		struct clan *c = clan->search(ssd->status.clan_id);
 
-		if (c != NULL) {
+		if (c != 0) {
 			if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_CLANPOSITION) != 0)
 			    || ssd->fakename[0] == '\0') {
 				memcpy(packet.position_name, c->name, NAME_LENGTH);
@@ -9821,8 +9834,7 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 		}
 	}
 
-#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO)
-	// Achievement System [Dastgir/Hercules]
+#if PACKETVER_MAIN_NUM >= 20150225 || PACKETVER_RE_NUM >= 20141126 || defined(PACKETVER_ZERO) // Title system.
 	if (ssd->status.title_id > 0) {
 		if ((ssd->fakename[0] != '\0' && (ssd->fakename_options & FAKENAME_OPTION_SHOW_TITLE) != 0)
 		    || ssd->fakename[0] == '\0') {
@@ -9831,8 +9843,7 @@ static void clif_charnameupdate(struct map_session_data *ssd)
 	}
 #endif
 
-	// Update nearby clients
-	clif->send(&packet, sizeof(packet), &ssd->bl, AREA);
+	clif->send(&packet, sizeof(packet), &ssd->bl, AREA); // Update nearby clients.
 }
 
 /// Taekwon Jump (TK_HIGHJUMP) effect (ZC_HIGHJUMP).
