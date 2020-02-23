@@ -10145,151 +10145,163 @@ static void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, 
 	}
 }
 
-/*==========================================
- * Equip item on player sd at req_pos from inventory index n
- * Return:
- *   0 = fail
- *   1 = success
- *------------------------------------------*/
+/**
+ * Attempts to equip an item.
+ *
+ * @param sd The related character.
+ * @param n The item's inventory index.
+ * @param req_pos The equipment slot, where the item should be equipped. (See enum equip_pos.)
+ * @return 0 on failure, 1 on success.
+ *
+ **/
 static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 {
-	int i,pos,flag=0,iflag;
-	struct item_data *id;
-
 	nullpo_ret(sd);
 
 	if (n < 0 || n >= sd->status.inventorySize) {
-		clif->equipitemack(sd,0,0,EIA_FAIL);
+		clif->equipitemack(sd, 0, 0, EIA_FAIL);
 		return 0;
 	}
 
-	if( DIFF_TICK(sd->canequip_tick,timer->gettick()) > 0 )
-	{
-		clif->equipitemack(sd,n,0,EIA_FAIL);
+	// If the character is in berserk mode, the item can't be equipped.
+	if (sd->sc.count != 0 && (sd->sc.data[SC_BERSERK] != NULL || sd->sc.data[SC_NO_SWITCH_EQUIP] != NULL)) {
+		clif->equipitemack(sd, n, 0, EIA_FAIL);
 		return 0;
 	}
 
-	id = sd->inventory_data[n];
-	pos = pc->equippoint(sd,n); //With a few exceptions, item should go in all specified slots.
+	if (battle_config.battle_log != 0)
+		ShowInfo("equip %d(%d) %x:%x\n", sd->status.inventory[n].nameid, n, sd->status.inventory[n].equip,
+			 (unsigned int)req_pos);
 
-	if(battle_config.battle_log)
-		ShowInfo("equip %d(%d) %x:%x\n", sd->status.inventory[n].nameid, n, (unsigned int)(id ? id->equip : 0), (unsigned int)req_pos);
-	if(!pc->isequip(sd,n) || !(pos&req_pos) || sd->status.inventory[n].equip != 0 || (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ) { // [Valaris]
-		// FIXME: pc->isequip: equip level failure uses 2 instead of 0
-		clif->equipitemack(sd,n,0,EIA_FAIL); // fail
+	if (DIFF_TICK(sd->canequip_tick, timer->gettick()) > 0) {
+		clif->equipitemack(sd, n, 0, EIA_FAIL);
 		return 0;
 	}
 
-	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_NO_SWITCH_EQUIP])
-	{
-		clif->equipitemack(sd,n,0,EIA_FAIL); // fail
+	int pos = pc->equippoint(sd, n); // With a few exceptions, item should go in all specified slots.
+
+	if (pc->isequip(sd,n) == 0 || (pos & req_pos) == 0 || sd->status.inventory[n].equip != 0
+	    || (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0) {
+		clif->equipitemack(sd, n, 0, EIA_FAIL);
 		return 0;
+	}	
+
+	if (sd->inventory_data[n]->flag.bindonequip != 0 && sd->status.inventory[n].bound == 0) {
+		sd->status.inventory[n].bound = IBT_CHARACTER;
+		clif->notify_bounditem(sd, n);
 	}
 
-	/* won't fail from this point onwards */
-	if( id->flag.bindonequip && !sd->status.inventory[n].bound ) {
-		sd->status.inventory[n].bound = (unsigned char)IBT_CHARACTER;
-		clif->notify_bounditem(sd,n);
+	if (pos == EQP_ACC) { // Accesories should only go in one of the two.
+		pos = req_pos & EQP_ACC;
+
+		if (pos == EQP_ACC) // User specified both slots.
+			pos = (sd->equip_index[EQI_ACC_R] >= 0) ? EQP_ACC_L : EQP_ACC_R;
+	} else if (pos == EQP_ARMS && sd->inventory_data[n]->equip == EQP_HAND_R) { // Dual wield capable weapon.
+		pos = req_pos & EQP_ARMS;
+
+		if (pos == EQP_ARMS) // User specified both slots, pick one for them.
+			pos = (sd->equip_index[EQI_HAND_R] >= 0) ? EQP_HAND_L : EQP_HAND_R;
+	} else if (pos == EQP_SHADOW_ACC) { // Accesories should only go in one of the two,
+		pos = req_pos & EQP_SHADOW_ACC;
+
+		if (pos == EQP_SHADOW_ACC) // User specified both slots.
+			pos = (sd->equip_index[EQI_SHADOW_ACC_R] >= 0) ? EQP_SHADOW_ACC_L : EQP_SHADOW_ACC_R;
+	} else if (pos == EQP_SHADOW_ARMS && sd->inventory_data[n]->equip == EQP_SHADOW_WEAPON) { // Dual wield capable weapon.
+		pos = req_pos & EQP_SHADOW_ARMS;
+
+		if (pos == EQP_SHADOW_ARMS) // User specified both slots, pick one for them.
+			pos = (sd->equip_index[EQI_SHADOW_WEAPON] >= 0) ? EQP_SHADOW_SHIELD : EQP_SHADOW_WEAPON;
 	}
 
-	if(pos == EQP_ACC) { //Accesories should only go in one of the two,
-		pos = req_pos&EQP_ACC;
-		if (pos == EQP_ACC) //User specified both slots..
-			pos = sd->equip_index[EQI_ACC_R] >= 0 ? EQP_ACC_L : EQP_ACC_R;
-	} else if(pos == EQP_ARMS && id->equip == EQP_HAND_R) { //Dual wield capable weapon.
-		pos = (req_pos&EQP_ARMS);
-		if (pos == EQP_ARMS) //User specified both slots, pick one for them.
-			pos = sd->equip_index[EQI_HAND_R] >= 0 ? EQP_HAND_L : EQP_HAND_R;
-	} else if(pos == EQP_SHADOW_ACC) { //Accesories should only go in one of the two,
-		pos = req_pos&EQP_SHADOW_ACC;
-		if (pos == EQP_SHADOW_ACC) //User specified both slots..
-			pos = sd->equip_index[EQI_SHADOW_ACC_R] >= 0 ? EQP_SHADOW_ACC_L : EQP_SHADOW_ACC_R;
-	} else if( pos == EQP_SHADOW_ARMS && id->equip == EQP_SHADOW_WEAPON) { //Dual wield capable weapon.
-		pos = (req_pos&EQP_SHADOW_ARMS);
-		if (pos == EQP_SHADOW_ARMS) //User specified both slots, pick one for them.
-			pos = sd->equip_index[EQI_SHADOW_WEAPON] >= 0 ? EQP_SHADOW_SHIELD : EQP_SHADOW_WEAPON;
-	}
+	int flag = 0;
 
-	if (pos&EQP_HAND_R && battle_config.use_weapon_skill_range&BL_PC) {
-		//Update skill-block range database when weapon range changes. [Skotlex]
-		i = sd->equip_index[EQI_HAND_R];
-		if (i < 0 || !sd->inventory_data[i]) //No data, or no weapon equipped
+	// Update skill-block range database when weapon range changes. [Skotlex]
+	if ((pos & EQP_HAND_R) != 0 && (battle_config.use_weapon_skill_range & BL_PC) != 0) {
+		int idx = sd->equip_index[EQI_HAND_R];
+
+		if (idx < 0 || sd->inventory_data[idx] == NULL) // No data, or no weapon equipped.
 			flag = 1;
 		else
-			flag = id->range != sd->inventory_data[i]->range;
+			flag = (sd->inventory_data[n]->range != sd->inventory_data[idx]->range) ? 1 : 0;
 	}
 
-	for(i=0;i<EQI_MAX;i++) {
-		if(pos & pc->equip_pos[i]) {
-			if(sd->equip_index[i] >= 0) //Slot taken, remove item from there.
+	for (int i = 0; i < EQI_MAX; i++) {
+		if ((pos & pc->equip_pos[i]) != 0) {
+			if (sd->equip_index[i] >= 0) // Slot taken, remove item from there.
 				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
 
 			sd->equip_index[i] = n;
 		}
 	}
 
-	if(pos==EQP_AMMO){
-		clif->arrowequip(sd,n);
-		clif->arrow_fail(sd,3);
+	if (pos == EQP_AMMO) {
+		clif->arrowequip(sd, n);
+		clif->arrow_fail(sd, 3);
+	} else {
+		clif->equipitemack(sd, n, pos, EIA_SUCCESS);
 	}
-	else
-		clif->equipitemack(sd,n,pos,EIA_SUCCESS);
 
-	sd->status.inventory[n].equip=pos;
+	sd->status.inventory[n].equip = pos;
+	pc->equipitem_pos(sd, sd->inventory_data[n], n, pos);
+	pc->checkallowskill(sd); // Check if status changes should be halted.
 
-	pc->equipitem_pos(sd, id, n, pos);
+	int iflag = sd->npc_item_flag;
 
-	pc->checkallowskill(sd); //Check if status changes should be halted.
-	iflag = sd->npc_item_flag;
+	// Check for combos. (MUST be done before status->calc_pc()!)
+	if (sd->inventory_data[n]->combos_count != 0)
+		pc->checkcombo(sd, sd->inventory_data[n]);
 
-	/* check for combos (MUST be before status_calc_pc) */
-	if( id->combos_count )
-		pc->checkcombo(sd,id);
-	if(itemdb_isspecial(sd->status.inventory[n].card[0]))
-		; //No cards
-	else {
-		for( i = 0; i < id->slot; i++ ) {
-			struct item_data *data;
-			if (!sd->status.inventory[n].card[i])
+	if (!itemdb_isspecial(sd->status.inventory[n].card[0])) {
+		for (int i = 0; i < sd->inventory_data[n]->slot; i++) {
+			if (sd->status.inventory[n].card[i] == 0)
 				continue;
-			if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-				if( data->combos_count )
-					pc->checkcombo(sd,data);
-			}
+
+			struct item_data *data = itemdb->exists(sd->status.inventory[n].card[i]);
+
+			if (data != NULL && data->combos_count != 0)
+				pc->checkcombo(sd, data);
 		}
 	}
 
-	status_calc_pc(sd,SCO_NONE);
-	if (flag) //Update skill data
+	status_calc_pc(sd, SCO_NONE);
+
+	if (flag != 0) // Update skill data.
 		clif->skillinfoblock(sd);
+	
+	// Execute equip script. [Skotlex]
+	struct item_data *equip_data = sd->inventory_data[n];
+	struct map_zone_data *zone = map->list[sd->bl.m].zone;
+	int dis_items_cnt = zone->disabled_items_count;
 
-	//OnEquip script [Skotlex]
-	if (id->equip_script != NULL) {
-		ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, i, map->list[sd->bl.m].zone->disabled_items[i] == id->nameid);
+	if (equip_data->equip_script != NULL) {
+		int idx;
 
-		if (i == map->list[sd->bl.m].zone->disabled_items_count)
-			script->run_item_equip_script(sd, id, npc->fake_nd->bl.id);
+		ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == equip_data->nameid);
+
+		if (idx == dis_items_cnt)
+			script->run_item_equip_script(sd, equip_data, npc->fake_nd->bl.id);
 	}
 
-	if(itemdb_isspecial(sd->status.inventory[n].card[0]))
-		; //No cards
-	else {
-		for( i = 0; i < id->slot; i++ ) {
-			struct item_data *data;
-			if (!sd->status.inventory[n].card[i])
+	struct item *equip = &sd->status.inventory[n];
+
+	if (!itemdb_isspecial(equip->card[0])) {
+		for (int slot = 0; slot < equip_data->slot; slot++) {
+			if (equip->card[slot] == 0)
 				continue;
-			if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
-				if (data->equip_script != NULL) {
-					int j;
 
-					ARR_FIND(0, map->list[sd->bl.m].zone->disabled_items_count, j, map->list[sd->bl.m].zone->disabled_items[j] == sd->status.inventory[n].card[i]);
+			struct item_data *card_data = itemdb->exists(equip->card[slot]);
 
-					if (j == map->list[sd->bl.m].zone->disabled_items_count)
-						script->run_item_equip_script(sd, data, npc->fake_nd->bl.id);
-				}
+			if (card_data != NULL && card_data->equip_script != NULL) {
+				int idx;
+
+				ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == card_data->nameid);
+
+				if (idx == dis_items_cnt)
+					script->run_item_equip_script(sd, card_data, npc->fake_nd->bl.id);
 			}
 		}
 	}
+
 	sd->npc_item_flag = iflag;
 
 	return 1;
