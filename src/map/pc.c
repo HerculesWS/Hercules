@@ -998,20 +998,23 @@ static bool pc_adoption(struct map_session_data *p1_sd, struct map_session_data 
 	return false; // Job Change Fail
 }
 
-/*=================================================
- * Checks if the player can equip the item at index n in inventory.
- * Returns 0 (no) or 1 (yes).
- *------------------------------------------------*/
+/**
+ * Checks if a character can equip an item.
+ *
+ * @param sd The related character.
+ * @param n The item's inventory index.
+ * @retval 0 Character can't equip the item.
+ * @retval 1 Character can equip the item.
+ *
+ **/
 static int pc_isequip(struct map_session_data *sd, int n)
 {
-	struct item_data *item;
-
 	nullpo_ret(sd);
 	Assert_ret(n >= 0 && n < sd->status.inventorySize);
 
-	item = sd->inventory_data[n];
+	struct item_data *item = sd->inventory_data[n];
 
-	if(item == NULL)
+	if (item == NULL)
 		return 0;
 
 #if PACKETVER <= 20100707
@@ -1019,31 +1022,34 @@ static int pc_isequip(struct map_session_data *sd, int n)
 		return 0;
 #endif
 
-	if(pc_has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
+	if (pc_has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
 		return 1;
 
-	if (item->elv && sd->status.base_level < item->elv) {
+	if (item->elv != 0 && sd->status.base_level < item->elv) {
 #if PACKETVER >= 20100525
 		clif->msgtable(sd, MSG_CANNOT_EQUIP_ITEM_LEVEL);
 #endif
 		return 0;
 	}
-	if (item->elvmax && sd->status.base_level > item->elvmax) {
+
+	if (item->elvmax != 0 && sd->status.base_level > item->elvmax) {
 #if PACKETVER >= 20100525
 		clif->msgtable(sd, MSG_CANNOT_EQUIP_ITEM_LEVEL);
 #endif
 		return 0;
 	}
-	if(item->sex != 2 && sd->status.sex != item->sex)
+
+	if (item->sex != SEX_SERVER && sd->status.sex != item->sex)
 		return 0;
 
-	if ( item->equip & EQP_AMMO ) {
-		if (sd->state.active && !pc_iscarton(sd) && (sd->job & MAPID_THIRDMASK) == MAPID_GENETIC) { // check if sc data is already loaded.
+	if ((item->equip & EQP_AMMO) != 0) {
+		if (sd->state.active != 0 && !pc_iscarton(sd) && (sd->job & MAPID_THIRDMASK) == MAPID_GENETIC) { // Check if sc data is already loaded.
 #if PACKETVER_RE_NUM >= 20090529 || PACKETVER_MAIN_NUM >= 20090603 || defined(PACKETVER_ZERO)
 			clif->msgtable(sd, MSG_USESKILL_FAIL_CART);
 #endif
 			return 0;
 		}
+
 		if (!pc_ismadogear(sd) && (sd->job & MAPID_THIRDMASK) == MAPID_MECHANIC) {
 #if PACKETVER_RE_NUM >= 20090226 || PACKETVER_MAIN_NUM >= 20090304 || defined(PACKETVER_ZERO)
 			clif->msgtable(sd, MSG_USESKILL_FAIL_MADOGEAR);
@@ -1052,75 +1058,83 @@ static int pc_isequip(struct map_session_data *sd, int n)
 		}
 	}
 
-	if ( battle_config.unequip_restricted_equipment & 1 ) {
-		int i;
-		for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
-			if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid )
+	if ((battle_config.unequip_restricted_equipment & 1) != 0) {
+		for (int i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++)
+			if (map->list[sd->bl.m].zone->disabled_items[i] == item->nameid)
 				return 0;
 	}
 
-	if ( battle_config.unequip_restricted_equipment & 2 ) {
-		if ( !itemdb_isspecial( sd->status.inventory[n].card[0] ) ) {
-			int i, slot;
-			for ( slot = 0; slot < MAX_SLOTS; slot++ )
-				for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
-					if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].card[slot] )
-						return 0;
-		}
+	if ((battle_config.unequip_restricted_equipment & 2) != 0 && !itemdb_isspecial(sd->status.inventory[n].card[0])) {
+		for (int slot = 0; slot < item->slot; slot++)
+			for (int i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++)
+				if (map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].card[slot])
+					return 0;
 	}
 
-	if (sd->sc.count) {
-
-		if(item->equip & EQP_ARMS && item->type == IT_WEAPON && sd->sc.data[SC_NOEQUIPWEAPON]) // Also works with left-hand weapons [DracoRPG]
-			return 0;
-		if(item->equip & EQP_SHIELD && item->type == IT_ARMOR && sd->sc.data[SC_NOEQUIPSHIELD])
-			return 0;
-		if(item->equip & EQP_ARMOR && sd->sc.data[SC_NOEQUIPARMOR])
-			return 0;
-		if(item->equip & EQP_HEAD_TOP && sd->sc.data[SC_NOEQUIPHELM])
-			return 0;
-		if(item->equip & EQP_ACC && sd->sc.data[SC__STRIPACCESSARY])
-			return 0;
-		if(item->equip && sd->sc.data[SC_KYOUGAKU])
+	if (sd->sc.count != 0) {
+		if ((item->equip & EQP_ARMS) != 0 && item->type == IT_WEAPON && sd->sc.data[SC_NOEQUIPWEAPON] != NULL) // Also works with left-hand weapons. [DracoRPG]
 			return 0;
 
-		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_SUPERNOVICE) {
-			//Spirit of Super Novice equip bonuses. [Skotlex]
-			if (sd->status.base_level > 90 && item->equip & EQP_HELM)
-				return 1; //Can equip all helms
+		if ((item->equip & EQP_SHIELD) != 0 && item->type == IT_ARMOR && sd->sc.data[SC_NOEQUIPSHIELD] != NULL)
+			return 0;
 
-			if (sd->status.base_level > 96 && item->equip & EQP_ARMS && item->type == IT_WEAPON)
-				switch (item->subtype) { //In weapons, the look determines type of weapon.
-				case W_DAGGER: //Level 4 Knives are equippable.. this means all knives, I'd guess?
-				case W_1HSWORD: //All 1H swords
-				case W_1HAXE: //All 1H Axes
-				case W_MACE: //All 1H Maces
-				case W_STAFF: //All 1H Staves
+		if ((item->equip & EQP_ARMOR) != 0 && sd->sc.data[SC_NOEQUIPARMOR] != NULL)
+			return 0;
+
+		if ((item->equip & EQP_HEAD_TOP) != 0 && sd->sc.data[SC_NOEQUIPHELM] != NULL)
+			return 0;
+
+		if ((item->equip & EQP_ACC) != 0 && sd->sc.data[SC__STRIPACCESSARY] != NULL)
+			return 0;
+
+		if (item->equip != 0 && sd->sc.data[SC_KYOUGAKU] != NULL)
+			return 0;
+
+		if (sd->sc.data[SC_SOULLINK] != NULL && sd->sc.data[SC_SOULLINK]->val2 == SL_SUPERNOVICE) { // Spirit of Super Novice equip bonuses. [Skotlex]
+			if (sd->status.base_level > 90 && (item->equip & EQP_HELM) != 0)
+				return 1; // Can equip all helms.
+
+			if (sd->status.base_level > 96 && (item->equip & EQP_ARMS) != 0 && item->type == IT_WEAPON) {
+				switch (item->subtype) { // In weapons, the look determines type of weapon.
+				case W_DAGGER: // Level 4 Knives are equippable.. this means all knives, I'd guess?
+				case W_1HSWORD: // All 1H swords.
+				case W_1HAXE: // All 1H axes.
+				case W_MACE: // All 1H maces.
+				case W_STAFF: // All 1H staffs.
 					return 1;
 				}
+			}
 		}
 	}
-	//Not equipable by class. [Skotlex]
-	if (((1ULL<<(sd->job & MAPID_BASEMASK)) & item->class_base[(sd->job & JOBL_2_1) != 0 ? 1 : ((sd->job & JOBL_2_2) != 0 ? 2 : 0)]) == 0)
+
+	uint64 mask_job = 1ULL << (sd->job & MAPID_BASEMASK);
+	uint64 mask_item = item->class_base[((sd->job & JOBL_2_1) != 0) ? 1 : (((sd->job & JOBL_2_2) != 0) ? 2 : 0)];
+
+	if ((mask_job & mask_item) == 0) // Not equipable by class. [Skotlex]
 		return 0;
-	//Not usable by upper class. [Inkfish]
-	while( 1 ) {
+
+	// Not usable by upper class. [Inkfish]
+	while (1) {
 		if ((item->class_upper & ITEMUPPER_NORMAL) != 0) {
-			if ((sd->job & (JOBL_UPPER|JOBL_THIRD|JOBL_BABY)) == 0)
+			if ((sd->job & (JOBL_UPPER | JOBL_THIRD | JOBL_BABY)) == 0)
 				break;
 		}
+
 		if ((item->class_upper & ITEMUPPER_UPPER) != 0) {
-			if ((sd->job & (JOBL_UPPER|JOBL_THIRD)) != 0)
+			if ((sd->job & (JOBL_UPPER | JOBL_THIRD)) != 0)
 				break;
 		}
+
 		if ((item->class_upper & ITEMUPPER_BABY) != 0) {
 			if ((sd->job & JOBL_BABY) != 0)
 				break;
 		}
+
 		if ((item->class_upper & ITEMUPPER_THIRD) != 0) {
 			if ((sd->job & JOBL_THIRD) != 0)
 				break;
 		}
+
 		return 0;
 	}
 
