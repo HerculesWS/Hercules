@@ -1051,6 +1051,24 @@ static int pc_isequip(struct map_session_data *sd, int n)
 			return 0;
 		}
 	}
+
+	if ( battle_config.unequip_restricted_equipment & 1 ) {
+		int i;
+		for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
+			if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid )
+				return 0;
+	}
+
+	if ( battle_config.unequip_restricted_equipment & 2 ) {
+		if ( !itemdb_isspecial( sd->status.inventory[n].card[0] ) ) {
+			int i, slot;
+			for ( slot = 0; slot < MAX_SLOTS; slot++ )
+				for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
+					if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].card[slot] )
+						return 0;
+		}
+	}
+
 	if (sd->sc.count) {
 
 		if(item->equip & EQP_ARMS && item->type == IT_WEAPON && sd->sc.data[SC_NOEQUIPWEAPON]) // Also works with left-hand weapons [DracoRPG]
@@ -1104,23 +1122,6 @@ static int pc_isequip(struct map_session_data *sd, int n)
 				break;
 		}
 		return 0;
-	}
-
-	if ( battle_config.unequip_restricted_equipment & 1 ) {
-		int i;
-		for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
-			if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].nameid )
-				return 0;
-	}
-
-	if ( battle_config.unequip_restricted_equipment & 2 ) {
-		if ( !itemdb_isspecial( sd->status.inventory[n].card[0] ) ) {
-			int i, slot;
-			for ( slot = 0; slot < MAX_SLOTS; slot++ )
-				for ( i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++ )
-					if ( map->list[sd->bl.m].zone->disabled_items[i] == sd->status.inventory[n].card[slot] )
-						return 0;
-		}
 	}
 
 	return 1;
