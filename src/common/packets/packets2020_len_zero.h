@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2018-2020  Hercules Dev Team
- * Copyright (C) 2018-2020  Andrei Karas (4144)
+ * Copyright (C) 2018-2020 Hercules Dev Team
+ * Copyright (C) 2018-2020 Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -4629,6 +4629,21 @@ packetLen(0x0b71, 177)
 // Packet: 0x0b72
 #if PACKETVER >= 20200129
 packetLen(0x0b72, 4)
+#endif
+
+// Packet: 0x0b73
+#if PACKETVER >= 20200212
+packetLen(0x0b73, 8)
+#endif
+
+// Packet: 0x0b74
+#if PACKETVER >= 20200304
+packetLen(0x0b74, 1026)
+#endif
+
+// Packet: 0x0b75
+#if PACKETVER >= 20200304
+packetLen(0x0b75, 1026)
 #endif
 
 
