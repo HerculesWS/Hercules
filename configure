@@ -5294,9 +5294,14 @@ fi
 # Check if CC supports __thread attribute (Thread Local Storage)
 # (Usually our OSX friends 're lacking support of it in older llvm versions ..)
 #
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC supports __thread specifier (TLS)" >&5
+case "${host}" in
+	*-*-mingw*)
+		CPPFLAGS="$CPPFLAGS -DHAS_TLS"
+		;;
+	*)
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC supports __thread specifier (TLS)" >&5
 $as_echo_n "checking whether $CC supports __thread specifier (TLS)... " >&6; }
-if test "$cross_compiling" = yes; then :
+		if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "cannot run test program while cross compiling
@@ -5305,23 +5310,22 @@ else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-		__thread int g_Test = -1;
-
-		int main(int argc, char **argv){
-			g_Test = 0;
-			return g_Test;
-		}
+				__thread int g_Test = -1;
+				int main(int argc, char **argv){
+					g_Test = 0;
+					return g_Test;
+				}
 
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+				{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-		CPPFLAGS="$CPPFLAGS -DHAS_TLS"
+				CPPFLAGS="$CPPFLAGS -DHAS_TLS"
 
 else
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+				{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 
 
@@ -5329,6 +5333,9 @@ fi
 rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
+
+		;;
+esac
 
 
 #
@@ -9619,7 +9626,7 @@ $as_echo_n "checking for MinGW... " >&6; }
 if test -n "`$CC --version 2>/dev/null | grep -i mingw`" ; then
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-	CPPFLAGS="$CPPFLAGS -DMINGW"
+	CPPFLAGS="$CPPFLAGS -DMINGW -DLIBCONFIG_EXPORTS"
 	if test -z "$fd_setsize" ; then
 		CPPFLAGS="$CPPFLAGS -DFD_SETSIZE=4096"
 	fi
@@ -9882,7 +9889,11 @@ fi
 #
 # pthread
 #
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_create" >&5
+case "${host}" in
+	*-*-mingw*)
+		;;
+	*)
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_create" >&5
 $as_echo_n "checking for library containing pthread_create... " >&6; }
 if ${ac_cv_search_pthread_create+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -9940,7 +9951,7 @@ else
   as_fn_error $? "pthread library not found or incompatible" "$LINENO" 5
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_sigmask" >&5
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_sigmask" >&5
 $as_echo_n "checking for library containing pthread_sigmask... " >&6; }
 if ${ac_cv_search_pthread_sigmask+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -9998,7 +10009,7 @@ else
   as_fn_error $? "pthread library not found or incompatible" "$LINENO" 5
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_attr_init" >&5
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_attr_init" >&5
 $as_echo_n "checking for library containing pthread_attr_init... " >&6; }
 if ${ac_cv_search_pthread_attr_init+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -10056,7 +10067,7 @@ else
   as_fn_error $? "pthread library not found or incompatible" "$LINENO" 5
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_attr_setstacksize" >&5
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_attr_setstacksize" >&5
 $as_echo_n "checking for library containing pthread_attr_setstacksize... " >&6; }
 if ${ac_cv_search_pthread_attr_setstacksize+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -10114,7 +10125,7 @@ else
   as_fn_error $? "pthread library not found or incompatible" "$LINENO" 5
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_attr_destroy" >&5
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_attr_destroy" >&5
 $as_echo_n "checking for library containing pthread_attr_destroy... " >&6; }
 if ${ac_cv_search_pthread_attr_destroy+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -10172,7 +10183,7 @@ else
   as_fn_error $? "pthread library not found or incompatible" "$LINENO" 5
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_cancel" >&5
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_cancel" >&5
 $as_echo_n "checking for library containing pthread_cancel... " >&6; }
 if ${ac_cv_search_pthread_cancel+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -10230,7 +10241,7 @@ else
   as_fn_error $? "pthread library not found or incompatible" "$LINENO" 5
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_join" >&5
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pthread_join" >&5
 $as_echo_n "checking for library containing pthread_join... " >&6; }
 if ${ac_cv_search_pthread_join+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -10288,6 +10299,8 @@ else
   as_fn_error $? "pthread library not found or incompatible" "$LINENO" 5
 fi
 
+		;;
+esac
 
 # execinfo (backtrace)
 for ac_header in execinfo.h
@@ -10424,12 +10437,19 @@ fi
 
 MYSQL_OLD_LIBS="$LIBS" ; LIBS="$LIBS $MYSQL_LIBS"
 MYSQL_OLD_CPPFLAGS="$CPPFLAGS" ; CPPFLAGS="$CPPFLAGS $MYSQL_CFLAGS"
-ac_fn_c_check_func "$LINENO" "mysql_init" "ac_cv_func_mysql_init"
+
+case "${host}" in
+	*-*-mingw*)
+		HAVE_MYSQL="yes"
+		MYSQL_CFLAGS="$MYSQL_CFLAGS -Dmy_bool=bool"
+		;;
+	*)
+		ac_fn_c_check_func "$LINENO" "mysql_init" "ac_cv_func_mysql_init"
 if test "x$ac_cv_func_mysql_init" = xyes; then :
   HAVE_MYSQL="yes"
 fi
 
-ac_fn_c_check_header_mongrel "$LINENO" "mysql.h" "ac_cv_header_mysql_h" "$ac_includes_default"
+		ac_fn_c_check_header_mongrel "$LINENO" "mysql.h" "ac_cv_header_mysql_h" "$ac_includes_default"
 if test "x$ac_cv_header_mysql_h" = xyes; then :
 
 else
@@ -10438,9 +10458,9 @@ fi
 
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether my_bool is supported (MySQL)" >&5
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether my_bool is supported (MySQL)" >&5
 $as_echo_n "checking whether my_bool is supported (MySQL)... " >&6; }
-if test "$cross_compiling" = yes; then :
+		if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "cannot run test program while cross compiling
@@ -10449,26 +10469,26 @@ else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-		#ifdef WIN32
-		#include "common/winapi.h" // Needed before mysql.h
-		#endif
-		#include <mysql.h>
-		int main(int argc, char **argv){
-			my_bool val = (my_bool)0;
-			return (int)val;
-		}
+				#ifdef WIN32
+				#include "common/winapi.h" // Needed before mysql.h
+				#endif
+				#include <mysql.h>
+				int main(int argc, char **argv){
+					my_bool val = (my_bool)0;
+					return (int)val;
+				}
 
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+				{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 
 else
 
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no (converting my_bool to bool)" >&5
+				{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no (converting my_bool to bool)" >&5
 $as_echo "no (converting my_bool to bool)" >&6; }
-		MYSQL_CFLAGS="$MYSQL_CFLAGS -Dmy_bool=bool"
+				MYSQL_CFLAGS="$MYSQL_CFLAGS -Dmy_bool=bool"
 
 
 fi
@@ -10476,6 +10496,8 @@ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 
+		;;
+esac
 
 CPPFLAGS="$MYSQL_OLD_CPPFLAGS"
 LIBS="$MYSQL_OLD_LIBS"
