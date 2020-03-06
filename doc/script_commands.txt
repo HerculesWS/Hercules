@@ -5659,18 +5659,20 @@ usable items. It will not work properly if there is a visible dialog
 window or menu.
 If the skill is self or auto-targeting, it will be used immediately.
 Otherwise, a target cursor is shown.
-Optional value <flag> is a bitmask to manipulate how the skill is casted.
+By default, all skill requirements are ignored.
+Optional argument <flag> is a bitmask to manipulate how the skill is cast.
 Since <flag> is a bitmask, the flags can be summed up.
 Possible flags are:
- - 0x00 - ISF_NONE		- Skill is casted as if has been used from skill tree.
+ - 0x00 - ISF_NONE		- Skill is cast as if it has been used from skill tree.
 				  (Same like <flag> was omitted.)
- - 0x01 - ISF_IGNORECONDITIONS	- Skill requirements are ignored and not consumed
- - 0x02 - ISF_INSTANTCAST	- Skill is casted instantaneously.
- - 0x04 - ISF_CASTONSELF	- Skill is forcefully casted on invoking character,
+ - 0x01 - ISF_CHECKCONDITIONS	- Skill requirements are checked and consumed.
+				  (SP are never checked/consumed.)
+ - 0x02 - ISF_INSTANTCAST	- Skill is cast instantaneously.
+ - 0x04 - ISF_CASTONSELF	- Skill is forcefully cast on invoking character,
 				  without showing the target selection cursor.
 
 Important: Items which use itemskill() should be of type IT_USABLE.
-           If the item type is IT_DELAYCONSUME and ISF_IGNORECONDITIONS is set,
+           If the item type is IT_DELAYCONSUME and ISF_CHECKCONDITIONS isn't set,
            the item won't be consumed when using the item!
 
 // When Anodyne is used, it will cast Endure, Level 1, as if the actual skill
@@ -5678,8 +5680,8 @@ Important: Items which use itemskill() should be of type IT_USABLE.
 	itemskill(SM_ENDURE, 1);
 
 // Instantaneously cast Level 10 Increase Agility on invoking character,
-// without checking/consuming skill requirements.
-	itemskill(AL_INCAGI, 10, ISF_IGNORECONDITIONS | ISF_INSTANTCAST | ISF_CASTONSELF);
+// with checking/consuming skill requirements (15 HP).
+	itemskill(AL_INCAGI, 10, ISF_CHECKCONDITIONS | ISF_INSTANTCAST | ISF_CASTONSELF);
 // Instaed of using the constants, one could also do it like this:
 	itemskill(AL_INCAGI, 10, 7);
 
