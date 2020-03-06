@@ -885,6 +885,7 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_MAGIC_CANDY] |= SCB_MATK | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MYSTICPOWDER] |= SCB_FLEE | SCB_LUK;
 	status->dbs->ChangeFlagTable[SC_POPECOOKIE] |= SCB_BASE | SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_VITALIZE_POTION] |= SCB_BATK | SCB_MATK;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4816,6 +4817,8 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 			batk += sc->data[SC_PLUSATTACKPOWER]->val1;
 		if (sc->data[SC_POPECOOKIE] != NULL)
 			batk += batk * sc->data[SC_POPECOOKIE]->val1 / 100;
+		if (sc->data[SC_VITALIZE_POTION] != NULL)
+			batk += batk * sc->data[SC_VITALIZE_POTION]->val1 / 100;
 		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 	}
 #ifndef RENEWAL
@@ -5037,6 +5040,8 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 			matk += matk * sc->data[SC_MINDBREAKER]->val2 / 100;
 		if (sc->data[SC_POPECOOKIE] != NULL)
 			matk += matk * sc->data[SC_POPECOOKIE]->val2 / 100;
+		if (sc->data[SC_VITALIZE_POTION] != NULL)
+			matk += matk * sc->data[SC_VITALIZE_POTION]->val2 / 100;
 		return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 	}
 
