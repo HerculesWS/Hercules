@@ -241,7 +241,7 @@ struct map_session_data {
 		unsigned int npc_unloaded : 1; ///< The player is talking with an unloaded NPCs (respawned tombstones)
 		unsigned int lapine_ui : 1;
 		unsigned int itemskill_conditions_checked : 1; // Used by itemskill() script command, to prevent second check of conditions after target was selected.
-		unsigned int itemskill_no_conditions : 1; // Used by itemskill() script command, to ignore skill conditions and don't consume them.
+		unsigned int itemskill_check_conditions : 1; // Used by itemskill() script command, to check skill conditions and consume them.
 		unsigned int itemskill_no_casttime : 1; // Used by itemskill() script command, to cast skill instantaneously.
 		unsigned int itemskill_castonself : 1; // Used by itemskill() script command, to forcefully cast skill on invoking character.
 	} state;
