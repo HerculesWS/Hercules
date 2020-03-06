@@ -11010,7 +11010,7 @@ static BUILDIN(itemskill)
 
 	sd->state.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
 
-	if (sd->state.itemskill_check_conditions == 0) {
+	if (sd->state.itemskill_check_conditions == 1) {
 		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
 		    || skill->check_condition_castend(sd, sd->skillitem, sd->skillitemlv) == 0) {
 			pc->itemskill_clear(sd);
