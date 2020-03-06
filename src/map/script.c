@@ -11001,6 +11001,7 @@ static BUILDIN(itemskill)
 	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
 		return true;
 
+	pc->itemskill_clear(sd);
 	sd->skillitem = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	sd->skillitemlv = script_getnum(st, 3);
 	sd->state.itemskill_conditions_checked = 0; // Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.
@@ -11012,6 +11013,7 @@ static BUILDIN(itemskill)
 	if (sd->state.itemskill_no_conditions == 0) {
 		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
 		    || skill->check_condition_castend(sd, sd->skillitem, sd->skillitemlv) == 0) {
+			pc->itemskill_clear(sd);
 			return true;
 		}
 
