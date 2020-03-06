@@ -11008,7 +11008,7 @@ static BUILDIN(itemskill)
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
-	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
+	sd->state.itemskill_no_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
 
 	if (sd->state.itemskill_no_conditions == 0) {
 		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
@@ -27860,7 +27860,7 @@ static void script_hardcoded_constants(void)
 
 	script->constdb_comment("itemskill option flags");
 	script->set_constant("ISF_NONE", ISF_NONE, false, false);
-	script->set_constant("ISF_IGNORECONDITIONS", ISF_IGNORECONDITIONS, false, false);
+	script->set_constant("ISF_CHECKCONDITIONS", ISF_CHECKCONDITIONS, false, false);
 	script->set_constant("ISF_INSTANTCAST", ISF_INSTANTCAST, false, false);
 	script->set_constant("ISF_CASTONSELF", ISF_CASTONSELF, false, false);
 
