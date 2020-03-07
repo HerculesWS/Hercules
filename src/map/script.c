@@ -27862,6 +27862,13 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ISF_INSTANTCAST", ISF_INSTANTCAST, false, false);
 	script->set_constant("ISF_CASTONSELF", ISF_CASTONSELF, false, false);
 
+	script->constdb_comment("Item Bound Types");
+	script->set_constant("IBT_ANY", IBT_NONE, false, false); // for *checkbound()
+	script->set_constant("IBT_ACCOUNT", IBT_ACCOUNT, false, false);
+	script->set_constant("IBT_GUILD", IBT_GUILD, false, false);
+	script->set_constant("IBT_PARTY", IBT_PARTY, false, false);
+	script->set_constant("IBT_CHARACTER", IBT_CHARACTER, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

@@ -5273,11 +5273,11 @@ bound to the target character as specified by the bound type. All items created
 in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
 some cases cannot be traded or stored.
 
-Valid bound types are:
- 1 - Account Bound
- 2 - Guild Bound
- 3 - Party Bound
- 4 - Character Bound
+Valid item bound types are:
+ 1 - IBT_ACCOUNT     - Account Bound
+ 2 - IBT_GUILD       - Guild Bound
+ 3 - IBT_PARTY       - Party Bound
+ 4 - IBT_CHARACTER   - Character Bound
 
 ---------------------------------------
 
@@ -5318,12 +5318,12 @@ If a bound type is not specified or a bound type of 0 is used, it will search th
 of any type, so long as the other parameters match. In all cases, this command will return the bound type of the
 item found, or 0 if the specified item was not found.
 
-Valid bound types are:
- 0 - All Bound types.
- 1 - Account Bound
- 2 - Guild Bound
- 3 - Party Bound
- 4 - Character Bound
+Valid item bound types are:
+ 0 - IBT_ANY         - Any Bound
+ 1 - IBT_ACCOUNT     - Account Bound
+ 2 - IBT_GUILD       - Guild Bound
+ 3 - IBT_PARTY       - Party Bound
+ 4 - IBT_CHARACTER   - Character Bound
 
 Optional Parameters:
  bound_type - checks to see if the item has the specified bound type.
@@ -5341,7 +5341,7 @@ Example:
 	close();
 
 	// This will also check if you have a bound (any type) 1205 (Cutter).
-	if (checkbound(Cutter, 0)) {
+	if (checkbound(Cutter, IBT_ANY)) {
 		mes("You have a bound Cutter");
 	} else {
 		mes("You do not have a bound Cutter");
@@ -5356,8 +5356,8 @@ Example:
 	}
 	close();
 
-	// This will check if the item found, has a bound type of 2 (guild_bound)
-	if (checkbound(Cutter) == 2) {
+	// This will check if the item found, has a bound type of IBT_GUILD
+	if (checkbound(Cutter) == IBT_GUILD) {
 		mes("You have a guild_bound Cutter");
 	} else {
 		mes("You do not have a guild_bound Cutter.");
@@ -5365,7 +5365,7 @@ Example:
 	close();
 
 	// This will check if you have a 'guild_bound' +7 1205 (Cutter).
-	if (checkbound(Cutter, 2, 7)) {
+	if (checkbound(Cutter, IBT_GUILD, 7)) {
 		mes("You have a +7 guild_bound Cutter.");
 	} else {
 		mes("You don't have the required item.");
