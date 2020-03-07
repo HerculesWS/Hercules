@@ -5469,6 +5469,19 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 				map_zone_mf_cache_add(m, rflag);
 			}
 		}
+	} else if (strcmpi(flag, "nopet") == 0) {
+		if (state == 0) {
+			if (map->list[m].flag.nopet != 0) {
+				sprintf(rflag, "nopet\t%d", map->list[m].flag.nopet);
+				map_zone_mf_cache_add(m, rflag);
+			}
+		}
+		if (sscanf(params, "%d", &state) == 1) {
+			if (state != map->list[m].flag.nopet) {
+				sprintf(rflag, "nopet\t%d", state);
+				map_zone_mf_cache_add(m, rflag);
+			}
+		}
 	}
 
 	return false;
