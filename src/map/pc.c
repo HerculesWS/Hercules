@@ -7120,8 +7120,8 @@ static bool pc_gainexp(struct map_session_data *sd, struct block_list *src, uint
 	if(sd->state.showexp) {
 		char output[256];
 		sprintf(output,
-			msg_sd(sd, 889), // Experience Gained Base:%"PRIu64" (%.2f%%) Job:%"PRIu64" (%.2f%%)
-			base_exp, nextbp * (float)100, job_exp, nextjp * (float)100);
+			msg_sd(sd, 889), // Experience Gained Base:%llu (%.2f%%) Job:%llu (%.2f%%)
+			(unsigned long long)base_exp, nextbp * 100.0f, (unsigned long long)job_exp, nextjp * 100.0f);
 		clif_disp_onlyself(sd, output);
 	}
 
