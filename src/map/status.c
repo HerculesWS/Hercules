@@ -801,21 +801,21 @@ static void initChangeTables(void)
 	set_sc_with_vfx( GN_ILLUSIONDOPING   , SC_ILLUSIONDOPING    , SCB_HIT );
 
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
-	status->dbs->Skill2SCTable[SL_ALCHEMIST]   = (sc_type)MAPID_ALCHEMIST,
-	status->dbs->Skill2SCTable[SL_MONK]        = (sc_type)MAPID_MONK,
-	status->dbs->Skill2SCTable[SL_STAR]        = (sc_type)MAPID_STAR_GLADIATOR,
-	status->dbs->Skill2SCTable[SL_SAGE]        = (sc_type)MAPID_SAGE,
-	status->dbs->Skill2SCTable[SL_CRUSADER]    = (sc_type)MAPID_CRUSADER,
-	status->dbs->Skill2SCTable[SL_SUPERNOVICE] = (sc_type)MAPID_SUPER_NOVICE,
-	status->dbs->Skill2SCTable[SL_KNIGHT]      = (sc_type)MAPID_KNIGHT,
-	status->dbs->Skill2SCTable[SL_WIZARD]      = (sc_type)MAPID_WIZARD,
-	status->dbs->Skill2SCTable[SL_PRIEST]      = (sc_type)MAPID_PRIEST,
-	status->dbs->Skill2SCTable[SL_BARDDANCER]  = (sc_type)MAPID_BARDDANCER,
-	status->dbs->Skill2SCTable[SL_ROGUE]       = (sc_type)MAPID_ROGUE,
-	status->dbs->Skill2SCTable[SL_ASSASIN]     = (sc_type)MAPID_ASSASSIN,
-	status->dbs->Skill2SCTable[SL_BLACKSMITH]  = (sc_type)MAPID_BLACKSMITH,
-	status->dbs->Skill2SCTable[SL_HUNTER]      = (sc_type)MAPID_HUNTER,
-	status->dbs->Skill2SCTable[SL_SOULLINKER]  = (sc_type)MAPID_SOUL_LINKER,
+	status->dbs->Skill2SCTable[skill->get_index(SL_ALCHEMIST)]   = (sc_type)MAPID_ALCHEMIST,
+	status->dbs->Skill2SCTable[skill->get_index(SL_MONK)]        = (sc_type)MAPID_MONK,
+	status->dbs->Skill2SCTable[skill->get_index(SL_STAR)]        = (sc_type)MAPID_STAR_GLADIATOR,
+	status->dbs->Skill2SCTable[skill->get_index(SL_SAGE)]        = (sc_type)MAPID_SAGE,
+	status->dbs->Skill2SCTable[skill->get_index(SL_CRUSADER)]    = (sc_type)MAPID_CRUSADER,
+	status->dbs->Skill2SCTable[skill->get_index(SL_SUPERNOVICE)] = (sc_type)MAPID_SUPER_NOVICE,
+	status->dbs->Skill2SCTable[skill->get_index(SL_KNIGHT)]      = (sc_type)MAPID_KNIGHT,
+	status->dbs->Skill2SCTable[skill->get_index(SL_WIZARD)]      = (sc_type)MAPID_WIZARD,
+	status->dbs->Skill2SCTable[skill->get_index(SL_PRIEST)]      = (sc_type)MAPID_PRIEST,
+	status->dbs->Skill2SCTable[skill->get_index(SL_BARDDANCER)]  = (sc_type)MAPID_BARDDANCER,
+	status->dbs->Skill2SCTable[skill->get_index(SL_ROGUE)]       = (sc_type)MAPID_ROGUE,
+	status->dbs->Skill2SCTable[skill->get_index(SL_ASSASIN)]     = (sc_type)MAPID_ASSASSIN,
+	status->dbs->Skill2SCTable[skill->get_index(SL_BLACKSMITH)]  = (sc_type)MAPID_BLACKSMITH,
+	status->dbs->Skill2SCTable[skill->get_index(SL_HUNTER)]      = (sc_type)MAPID_HUNTER,
+	status->dbs->Skill2SCTable[skill->get_index(SL_SOULLINKER)]  = (sc_type)MAPID_SOUL_LINKER,
 
 	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] |= SCB_ASPD;
