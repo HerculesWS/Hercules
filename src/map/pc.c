@@ -5349,7 +5349,7 @@ static int pc_itemskill_clear(struct map_session_data *sd)
 	sd->itemskill_id = 0;
 	sd->itemskill_lv = 0;
 	sd->state.itemskill_conditions_checked = 0;
-	sd->state.itemskill_no_conditions = 0;
+	sd->state.itemskill_check_conditions = 0;
 	sd->state.itemskill_no_casttime = 0;
 	sd->state.itemskill_castonself = 0;
 

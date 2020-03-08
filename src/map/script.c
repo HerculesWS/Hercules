@@ -11001,17 +11001,19 @@ static BUILDIN(itemskill)
 	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
 		return true;
 
+	pc->itemskill_clear(sd);
 	sd->skillitem = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	sd->skillitemlv = script_getnum(st, 3);
 	sd->state.itemskill_conditions_checked = 0; // Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
-	sd->state.itemskill_no_conditions = ((flag & ISF_IGNORECONDITIONS) == ISF_IGNORECONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
+	sd->state.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
 
-	if (sd->state.itemskill_no_conditions == 0) {
+	if (sd->state.itemskill_check_conditions == 1) {
 		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
 		    || skill->check_condition_castend(sd, sd->skillitem, sd->skillitemlv) == 0) {
+			pc->itemskill_clear(sd);
 			return true;
 		}
 
@@ -27925,7 +27927,7 @@ static void script_hardcoded_constants(void)
 
 	script->constdb_comment("itemskill option flags");
 	script->set_constant("ISF_NONE", ISF_NONE, false, false);
-	script->set_constant("ISF_IGNORECONDITIONS", ISF_IGNORECONDITIONS, false, false);
+	script->set_constant("ISF_CHECKCONDITIONS", ISF_CHECKCONDITIONS, false, false);
 	script->set_constant("ISF_INSTANTCAST", ISF_INSTANTCAST, false, false);
 	script->set_constant("ISF_CASTONSELF", ISF_CASTONSELF, false, false);
 
