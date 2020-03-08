@@ -5256,6 +5256,14 @@
 - `ISF_INSTANTCAST`: 2
 - `ISF_CASTONSELF`: 4
 
+### Item Bound Types
+
+- `IBT_ANY`: 0
+- `IBT_ACCOUNT`: 1
+- `IBT_GUILD`: 2
+- `IBT_PARTY`: 3
+- `IBT_CHARACTER`: 4
+
 ### Renewal
 
 - `RENEWAL`: 1
