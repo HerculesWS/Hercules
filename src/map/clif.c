@@ -10585,6 +10585,65 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		clif->updatestatus(sd, SP_CARTINFO);
 	}
 
+	/**
+	 * In official servers, an item's unequip script is executed when entering a zone where the item is restricted,
+	 * even if the item won't be unequipped.
+	 *
+	 **/
+	if (map->list[sd->bl.m].zone != NULL && map->list[sd->bl.m].zone->disabled_items_count != 0) {
+		struct map_zone_data *zone = map->list[sd->bl.m].zone;
+		int dis_items_cnt = zone->disabled_items_count;
+		int handled_equip = 0x00000000;
+
+		for (int i = 0; i < EQI_MAX; i++) {
+			if (sd->equip_index[i] == INDEX_NOT_FOUND)
+				continue;
+
+			int inv_idx = sd->equip_index[i];
+			struct item_data *equip_data = sd->inventory_data[inv_idx];
+
+			if (equip_data == NULL)
+				continue;
+
+			if ((handled_equip & equip_data->equip) != 0)
+				continue; // Equipment takes multiple slots and was already handled.
+
+			handled_equip |= equip_data->equip;
+
+			if (equip_data->unequip_script != NULL) {
+				int idx;
+
+				ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == equip_data->nameid);
+
+				if (idx < dis_items_cnt)
+					script->run_item_unequip_script(sd, equip_data, npc->fake_nd->bl.id);
+			}
+
+			if (inv_idx != sd->equip_index[i])
+				continue; // Unequip script execution corrupted the inventory index.
+
+			struct item *equip = &sd->status.inventory[inv_idx];
+
+			if (equip != NULL && !itemdb_isspecial(equip->card[0])) {
+				for (int slot = 0; slot < equip_data->slot; slot++) {
+					if (equip->card[slot] == 0)
+						continue;
+
+					struct item_data *card_data = itemdb->exists(equip->card[slot]);
+
+					if (card_data != NULL && card_data->unequip_script != NULL) {
+						int idx;
+
+						ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == card_data->nameid);
+
+						if (idx < dis_items_cnt)
+							script->run_item_unequip_script(sd, card_data, npc->fake_nd->bl.id);
+					}
+				}
+			}
+		}
+	}
+
 	// Check for and delete unavailable/disabled items.
 	pc->checkitem(sd);
 
