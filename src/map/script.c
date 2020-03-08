@@ -16558,7 +16558,7 @@ static BUILDIN(npcwalkto)
 		} else {
 			status_calc_npc(nd, SCO_NONE);
 		}
-		unit->walktoxy(&nd->bl, x, y, 0);
+		unit->walk_toxy(&nd->bl, x, y, 0);
 	}
 
 	return true;
@@ -19680,7 +19680,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -19727,7 +19727,7 @@ static BUILDIN(setunitdata)
 			clif->changelook(bl, LOOK_WEAPON, val);
 			break;
 		case UDT_LOOKDIR:
-			unit->setdir(bl, (uint8) val);
+			unit->set_dir(bl, (enum unit_dir)val);
 			break;
 		case UDT_CANMOVETICK:
 			md->ud.canmove_tick = val;
@@ -19851,7 +19851,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -19859,7 +19859,7 @@ static BUILDIN(setunitdata)
 			status->calc_misc(bl, &hd->base_status, hd->homunculus.level);
 			break;
 		case UDT_LOOKDIR:
-			unit->setdir(bl, (unsigned char) val);
+			unit->set_dir(bl, (enum unit_dir)val);
 			break;
 		case UDT_CANMOVETICK:
 			hd->ud.canmove_tick = val;
@@ -19990,7 +19990,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -19998,7 +19998,7 @@ static BUILDIN(setunitdata)
 			status->calc_misc(bl, &pd->status, pd->pet.level);
 			break;
 		case UDT_LOOKDIR:
-			unit->setdir(bl, (unsigned char) val);
+			unit->set_dir(bl, (enum unit_dir)val);
 			break;
 		case UDT_CANMOVETICK:
 			pd->ud.canmove_tick = val;
@@ -20123,7 +20123,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -20131,7 +20131,7 @@ static BUILDIN(setunitdata)
 			status->calc_misc(bl, &mc->base_status, mc->db->lv);
 			break;
 		case UDT_LOOKDIR:
-			unit->setdir(bl, (unsigned char) val);
+			unit->set_dir(bl, (enum unit_dir)val);
 			break;
 		case UDT_CANMOVETICK:
 			mc->ud.canmove_tick = val;
@@ -20257,7 +20257,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_SPEED:
@@ -20265,7 +20265,7 @@ static BUILDIN(setunitdata)
 			status->calc_misc(bl, &ed->base_status, ed->db->lv);
 			break;
 		case UDT_LOOKDIR:
-			unit->setdir(bl, (unsigned char) val);
+			unit->set_dir(bl, (enum unit_dir)val);
 			break;
 		case UDT_CANMOVETICK:
 			ed->ud.canmove_tick = val;
@@ -20386,7 +20386,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short) val, (short) val2, (short) val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (!unit->walktoxy(bl, (short) val, (short) val2, 2))
+			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
 				unit->movepos(bl, (short) val, (short) val2, 0, 0);
 			break;
 		case UDT_CLASS:
@@ -20397,7 +20397,7 @@ static BUILDIN(setunitdata)
 			status->calc_misc(bl, &nd->status, nd->level);
 			break;
 		case UDT_LOOKDIR:
-			unit->setdir(bl, (unsigned char) val);
+			unit->set_dir(bl, (enum unit_dir)val);
 			break;
 		case UDT_STR:
 			nd->status.str = (unsigned short) val;
@@ -21121,7 +21121,10 @@ static BUILDIN(unitwalk)
 	if (script_hasdata(st, 4)) {
 		int x = script_getnum(st, 3);
 		int y = script_getnum(st, 4);
-		script_pushint(st, unit->walktoxy(bl, x, y, 0));// We'll use harder calculations.
+		if (unit->walk_toxy(bl, x, y, 0) == 0) // We'll use harder calculations.
+			script_pushint(st, 1);
+		else
+			script_pushint(st, 0);
 	}
 	else {
 		int target_id = script_getnum(st, 3);
@@ -23250,7 +23253,6 @@ static BUILDIN(progressbar_unit)
 }
 static BUILDIN(pushpc)
 {
-	uint8 dir;
 	int cells, dx, dy;
 	struct map_session_data* sd;
 
@@ -23259,14 +23261,14 @@ static BUILDIN(pushpc)
 		return true;
 	}
 
-	dir = script_getnum(st,2);
-	cells     = script_getnum(st,3);
+	enum unit_dir dir = script_getnum(st, 2);
+	cells = script_getnum(st,3);
 
-	if (dir > 7) {
+	if (dir >= UNIT_DIR_MAX) {
 		ShowWarning("buildin_pushpc: Invalid direction %d specified.\n", dir);
 		script->reportsrc(st);
 
-		dir%= 8;  // trim spin-over
+		dir %= UNIT_DIR_MAX;  // trim spin-over
 	}
 
 	if(!cells)
@@ -23275,10 +23277,11 @@ static BUILDIN(pushpc)
 	}
 	else if(cells<0)
 	{// pushing backwards
-		dir = (dir+4)%8;  // turn around
-		cells     = -cells;
+		dir   = unit_get_opposite_dir(dir);
+		cells = -cells;
 	}
 
+	Assert_retr(false, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	dx = dirx[dir];
 	dy = diry[dir];
 

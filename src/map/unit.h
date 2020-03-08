@@ -24,6 +24,7 @@
 #include "map/clif.h"  // clr_type
 #include "map/path.h" // struct walkpath_data
 #include "map/skill.h" // 'MAX_SKILLTIMERSKILL, struct skill_timerskill, struct skill_unit_group, struct skill_unit_group_tickset
+#include "map/unitdefines.h" // enum unit_dir
 #include "common/hercules.h"
 
 struct map_session_data;
@@ -67,7 +68,7 @@ struct unit_data {
 	int64 attackabletime;
 	int64 canact_tick;
 	int64 canmove_tick;
-	uint8 dir;
+	enum unit_dir dir;
 	unsigned char walk_count;
 	unsigned char target_count;
 	struct {
@@ -102,26 +103,28 @@ struct unit_interface {
 	int (*final) (void);
 	/* */
 	struct unit_data* (*bl2ud) (struct block_list *bl);
+	const struct unit_data* (*cbl2ud) (const struct block_list *bl);
 	struct unit_data* (*bl2ud2) (struct block_list *bl);
 	void (*init_ud) (struct unit_data *ud);
 	int (*attack_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*walktoxy_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*walktoxy_sub) (struct block_list *bl);
-	int (*delay_walktoxy_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*walktoxy) (struct block_list *bl, short x, short y, int flag);
-	int (*walktobl_sub) (int tid, int64 tick, int id, intptr_t data);
+	int (*walk_toxy_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*walk_toxy_sub) (struct block_list *bl);
+	int (*delay_walk_toxy_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*walk_toxy) (struct block_list *bl, short x, short y, int flag);
+	int (*walktobl_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walktobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
 	bool (*run) (struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 	void (*run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
 	int (*escape) (struct block_list *bl, struct block_list *target, short dist);
 	int (*movepos) (struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
-	int (*setdir) (struct block_list *bl, unsigned char dir);
-	uint8 (*getdir) (struct block_list *bl);
+	int (*set_dir) (struct block_list *bl, enum unit_dir dir);
+	enum unit_dir (*getdir) (const struct block_list *bl);
 	int (*blown) (struct block_list *bl, int dx, int dy, int count, int flag);
 	int (*warp) (struct block_list *bl, short m, short x, short y, enum clr_type type);
+	int (*warpto_master) (struct block_list *master_bl, struct block_list *slave_bl);
 	int (*stop_walking) (struct block_list *bl, int type);
 	int (*skilluse_id) (struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv);
-	int (*step_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*steptimer) (int tid, int64 tick, int id, intptr_t data);
 	void (*stop_stepaction) (struct block_list *bl);
 	int (*is_walking) (struct block_list *bl);
 	int (*can_move) (struct block_list *bl);
@@ -137,7 +140,7 @@ struct unit_interface {
 	int (*cancel_combo) (struct block_list *bl);
 	bool (*can_reach_pos) (struct block_list *bl, int x, int y, int easy);
 	bool (*can_reach_bl) (struct block_list *bl, struct block_list *tbl, int range, int easy, short *x, short *y);
-	int (*calc_pos) (struct block_list *bl, int tx, int ty, uint8 dir);
+	int (*calc_pos) (struct block_list *bl, int tx, int ty, enum unit_dir dir);
 	int (*attack_timer_sub) (struct block_list *src, int tid, int64 tick);
 	int (*skillcastcancel) (struct block_list *bl, int type);
 	void (*dataset) (struct block_list *bl);
