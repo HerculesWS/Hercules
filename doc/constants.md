@@ -5255,7 +5255,7 @@
 ### itemskill option flags
 
 - `ISF_NONE`: 0
-- `ISF_IGNORECONDITIONS`: 1
+- `ISF_CHECKCONDITIONS`: 1
 - `ISF_INSTANTCAST`: 2
 - `ISF_CASTONSELF`: 4
 
