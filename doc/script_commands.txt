@@ -3277,6 +3277,7 @@ Example:
 ---------------------------------------
 
 *getiteminfo(<item ID>, <type>)
+*getiteminfo("<item name>", <type>)
 *setiteminfo(<item ID>, <type>, <value>)
 
 This function will look up the item with the specified ID number in the
@@ -3285,6 +3286,9 @@ It will return -1 if there is no such item.
 
 Valid types are:
 
+	ITEMINFO_ID                      - Item ID (getiteminfo() only!)
+	ITEMINFO_AEGISNAME               - Unique name to reference the item (getiteminfo() only!)
+	ITEMINFO_NAME                    - Display name (getiteminfo() only!)
 	ITEMINFO_BUYPRICE                - Buy Price
 	ITEMINFO_SELLPRICE               - Sell Price
 	ITEMINFO_TYPE                    - Item Type

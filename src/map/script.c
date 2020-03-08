@@ -14780,24 +14780,34 @@ static BUILDIN(getitemslots)
 	return true;
 }
 
-// TODO: add matk here if needed
-
-/*==========================================
- * Returns some values of an item [Lupus]
- * Price, Weight, etc...
- *------------------------------------------*/
+/**
+ * Returns various information about an item.
+ *
+ * @code{.herc}
+ *	getiteminfo(<item ID>, <type>);
+ *	getiteminfo("<item name>", <type>);
+ * @endcode
+ *
+ **/
 static BUILDIN(getiteminfo)
 {
-	int item_id = script_getnum(st, 2);
-	int n = script_getnum(st, 3);
-	struct item_data *it = itemdb->exists(item_id);
+	struct item_data *it;
+
+	if (script_isstringtype(st, 2)) { /// Item name.
+		const char *name = script_getstr(st, 2);
+		it = itemdb->search_name(name);
+	} else { /// Item ID.
+		it = itemdb->exists(script_getnum(st, 2));
+	}
 
 	if (it == NULL) {
 		script_pushint(st, -1);
 		return true;
 	}
 
-	switch (n) {
+	int type = script_getnum(st, 3);
+
+	switch (type) {
 	case ITEMINFO_BUYPRICE:
 		script_pushint(st, it->value_buy);
 		break;
@@ -14909,16 +14919,24 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_STACK_AMOUNT:
 		script_pushint(st, it->stack.amount);
 		break;
-	case ITEMINFO_STACK_FLAG:
-		{
-			int stack_flag = 0;
-			if (it->stack.inventory != 0) stack_flag |= 1;
-			if (it->stack.cart != 0) stack_flag |= 2;
-			if (it->stack.storage != 0) stack_flag |= 4;
-			if (it->stack.guildstorage != 0) stack_flag |= 8;
-			script_pushint(st, stack_flag);
-		}
+	case ITEMINFO_STACK_FLAG: {
+		int stack_flag = 0;
+
+		if (it->stack.inventory != 0)
+			stack_flag |= 1;
+
+		if (it->stack.cart != 0)
+			stack_flag |= 2;
+
+		if (it->stack.storage != 0)
+			stack_flag |= 4;
+
+		if (it->stack.guildstorage != 0)
+			stack_flag |= 8;
+
+		script_pushint(st, stack_flag);
 		break;
+	}
 	case ITEMINFO_ITEM_USAGE_FLAG:
 		script_pushint(st, it->item_usage.flag);
 		break;
@@ -14928,11 +14946,21 @@ static BUILDIN(getiteminfo)
 	case ITEMINFO_GM_LV_TRADE_OVERRIDE:
 		script_pushint(st, it->gm_lv_trade_override);
 		break;
+	case ITEMINFO_ID:
+		script_pushint(st, it->nameid);
+		break;
+	case ITEMINFO_AEGISNAME:
+		script_pushstr(st, it->name);
+		break;
+	case ITEMINFO_NAME:
+		script_pushstr(st, it->jname);
+		break;
 	default:
-		ShowError("buildin_getiteminfo: Invalid item type %d.\n", n);
-		script_pushint(st,-1);
+		ShowError("buildin_getiteminfo: Invalid item info type %d.\n", type);
+		script_pushint(st, -1);
 		return false;
 	}
+
 	return true;
 }
 
@@ -27005,7 +27033,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(setnpcdisplay,"sv??"),
 		BUILDIN_DEF(compare,"ss"), // Lordalfa - To bring strstr to scripting Engine.
 		BUILDIN_DEF(strcmp,"ss"),
-		BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
+		BUILDIN_DEF(getiteminfo,"vi"), //[Lupus] returns Items Buy / sell Price, etc info
 		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
 		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
 		BUILDIN_DEF(getequippedoptioninfo, "i"),
@@ -27651,6 +27679,9 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_ITEM_USAGE_FLAG", ITEMINFO_ITEM_USAGE_FLAG, false, false);
 	script->set_constant("ITEMINFO_ITEM_USAGE_OVERRIDE", ITEMINFO_ITEM_USAGE_OVERRIDE, false, false);
 	script->set_constant("ITEMINFO_GM_LV_TRADE_OVERRIDE", ITEMINFO_GM_LV_TRADE_OVERRIDE, false, false);
+	script->set_constant("ITEMINFO_ID", ITEMINFO_ID, false, false);
+	script->set_constant("ITEMINFO_AEGISNAME", ITEMINFO_AEGISNAME, false, false);
+	script->set_constant("ITEMINFO_NAME", ITEMINFO_NAME, false, false);
 
 	script->constdb_comment("getmercinfo options");
 	script->set_constant("MERCINFO_ID,", MERCINFO_ID, false, false);
