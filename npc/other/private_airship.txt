@@ -47,11 +47,11 @@ OnAirShipRequest:
 		airship_respond(P_AIRSHIP_ITEM_NOT_ENOUGH);
 		end;
 	}
-	if (getmapflag(strcharinfo(PC_MAP), mf_pairship_startable) != true) {
+	if (getmapflag(strcharinfo(PC_MAP), MF_PAIRSHIP_STARTABLE) != true) {
 		airship_respond(P_AIRSHIP_INVALID_START_MAP);
 		end;
 	}
-	if (getmapflag(@mapname$, mf_pairship_endable) != true) {
+	if (getmapflag(@mapname$, MF_PAIRSHIP_ENDABLE) != true) {
 		airship_respond(P_AIRSHIP_INVALID_END_MAP);
 		end;
 	}

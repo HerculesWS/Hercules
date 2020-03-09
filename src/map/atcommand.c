@@ -3921,7 +3921,7 @@ ACMD(reloadscript)
 ACMD(mapinfo)
 {
 	const struct map_session_data *pl_sd;
-	struct s_mapiterator* iter;
+	struct s_mapiterator *iter;
 	const struct chat_data *cd = NULL;
 	char direction[12];
 	int i, m_id, chat_num = 0, list = 0, vend_num = 0;
@@ -3935,31 +3935,31 @@ ACMD(mapinfo)
 	sscanf(message, "%12d %23[^\n]", &list, mapname);
 
 	if (list < 0 || list > 3) {
-		clif->message(fd, msg_fd(fd,1038)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
+		clif->message(fd, msg_fd(fd, 1038)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
 		return false;
 	}
 
 	if (mapname[0] == '\0') {
 		safestrncpy(mapname, mapindex_id2name(sd->mapindex), MAP_NAME_LENGTH);
-		m_id =  map->mapindex2mapid(sd->mapindex);
+		m_id = map->mapindex2mapid(sd->mapindex);
 	} else {
 		m_id = map->mapname2mapid(mapname);
 	}
 
 	if (m_id < 0) {
-		clif->message(fd, msg_fd(fd,1)); // Map not found.
+		clif->message(fd, msg_fd(fd, 1)); // Map not found.
 		return false;
 	}
 	m_index = mapindex->name2id(mapname); //This one shouldn't fail since the previous seek did not.
 
-	clif->message(fd, msg_fd(fd,1039)); // ------ Map Info ------
+	clif->message(fd, msg_fd(fd, 1039)); // ------ Map Info ------
 
 	// count chats (for initial message)
 	chat_num = 0;
 	iter = mapit_getallusers();
 	for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
-		if( pl_sd->mapindex == m_index ) {
-			if( pl_sd->state.vending )
+		if (pl_sd->mapindex == m_index) {
+			if (pl_sd->state.vending != 0)
 				vend_num++;
 			else if ((cd = map->id2cd(pl_sd->chat_id)) != NULL && cd->usersd[0] == pl_sd)
 				chat_num++;
@@ -3967,224 +3967,233 @@ ACMD(mapinfo)
 	}
 	mapit->free(iter);
 
-	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1040), mapname, map->list[m_id].zone->name, map->list[m_id].users, map->list[m_id].npc_num, chat_num, vend_num); // Map: %s (Zone:%s) | Players: %d | NPCs: %d | Chats: %d | Vendings: %d
+	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1040), mapname, map->list[m_id].zone->name, map->list[m_id].users, map->list[m_id].npc_num, chat_num, vend_num); // Map: %s (Zone:%s) | Players: %d | NPCs: %d | Chats: %d | Vendings: %d
 	clif->message(fd, atcmd_output);
-	clif->message(fd, msg_fd(fd,1041)); // ------ Map Flags ------
-	if (map->list[m_id].flag.town)
-		clif->message(fd, msg_fd(fd,1042)); // Town Map
+	clif->message(fd, msg_fd(fd, 1041)); // ------ Map Flags ------
+	if (map->list[m_id].flag.town != 0)
+		clif->message(fd, msg_fd(fd, 1042)); // Town Map
 
 	if (battle_config.autotrade_mapflag == map->list[m_id].flag.autotrade)
-		clif->message(fd, msg_fd(fd,1043)); // Autotrade Enabled
+		clif->message(fd, msg_fd(fd, 1043)); // Autotrade Enabled
 	else
-		clif->message(fd, msg_fd(fd,1044)); // Autotrade Disabled
+		clif->message(fd, msg_fd(fd, 1044)); // Autotrade Disabled
 
-	if (map->list[m_id].flag.battleground)
-		clif->message(fd, msg_fd(fd,1045)); // Battlegrounds ON
+	if (map->list[m_id].flag.battleground != 0)
+		clif->message(fd, msg_fd(fd, 1045)); // Battlegrounds ON
 
-	if (map->list[m_id].flag.cvc)
+	if (map->list[m_id].flag.cvc != 0)
 		clif->message(fd, msg_fd(fd, 139)); // CvC ON
 
-	strcpy(atcmd_output,msg_fd(fd,1046)); // PvP Flags:
-	if (map->list[m_id].flag.pvp)
-		strcat(atcmd_output, msg_fd(fd,1047)); // Pvp ON |
-	if (map->list[m_id].flag.pvp_noguild)
-		strcat(atcmd_output, msg_fd(fd,1048)); // NoGuild |
-	if (map->list[m_id].flag.pvp_noparty)
-		strcat(atcmd_output, msg_fd(fd,1049)); // NoParty |
-	if (map->list[m_id].flag.pvp_nightmaredrop)
-		strcat(atcmd_output, msg_fd(fd,1050)); // NightmareDrop |
-	if (map->list[m_id].flag.pvp_nocalcrank)
-		strcat(atcmd_output, msg_fd(fd,1051)); // NoCalcRank |
+	strcpy(atcmd_output, msg_fd(fd, 1046)); // PvP Flags:
+	if (map->list[m_id].flag.pvp != 0)
+		strcat(atcmd_output, msg_fd(fd, 1047)); // Pvp ON |
+	if (map->list[m_id].flag.pvp_noguild != 0)
+		strcat(atcmd_output, msg_fd(fd, 1048)); // NoGuild |
+	if (map->list[m_id].flag.pvp_noparty != 0)
+		strcat(atcmd_output, msg_fd(fd, 1049)); // NoParty |
+	if (map->list[m_id].flag.pvp_nightmaredrop != 0)
+		strcat(atcmd_output, msg_fd(fd, 1050)); // NightmareDrop |
+	if (map->list[m_id].flag.pvp_nocalcrank != 0)
+		strcat(atcmd_output, msg_fd(fd, 1051)); // NoCalcRank |
 	clif->message(fd, atcmd_output);
 
-	strcpy(atcmd_output,msg_fd(fd,1052)); // GvG Flags:
-	if (map->list[m_id].flag.gvg)
-		strcat(atcmd_output, msg_fd(fd,1053)); // GvG ON |
-	if (map->list[m_id].flag.gvg_dungeon)
-		strcat(atcmd_output, msg_fd(fd,1054)); // GvG Dungeon |
-	if (map->list[m_id].flag.gvg_castle)
-		strcat(atcmd_output, msg_fd(fd,1055)); // GvG Castle |
-	if (map->list[m_id].flag.gvg_noparty)
-		strcat(atcmd_output, msg_fd(fd,1056)); // NoParty |
+	strcpy(atcmd_output, msg_fd(fd, 1052)); // GvG Flags:
+	if (map->list[m_id].flag.gvg != 0)
+		strcat(atcmd_output, msg_fd(fd, 1053)); // GvG ON |
+	if (map->list[m_id].flag.gvg_dungeon != 0)
+		strcat(atcmd_output, msg_fd(fd, 1054)); // GvG Dungeon |
+	if (map->list[m_id].flag.gvg_castle != 0)
+		strcat(atcmd_output, msg_fd(fd, 1055)); // GvG Castle |
+	if (map->list[m_id].flag.gvg_noparty != 0)
+		strcat(atcmd_output, msg_fd(fd, 1056)); // NoParty |
 	clif->message(fd, atcmd_output);
 
-	strcpy(atcmd_output,msg_fd(fd,1057)); // Teleport Flags:
-	if (map->list[m_id].flag.noteleport)
-		strcat(atcmd_output, msg_fd(fd,1058)); // NoTeleport |
-	if (map->list[m_id].flag.monster_noteleport)
-		strcat(atcmd_output, msg_fd(fd,1059)); // Monster NoTeleport |
-	if (map->list[m_id].flag.nowarp)
-		strcat(atcmd_output, msg_fd(fd,1060)); // NoWarp |
-	if (map->list[m_id].flag.nowarpto)
-		strcat(atcmd_output, msg_fd(fd,1061)); // NoWarpTo |
-	if (map->list[m_id].flag.noreturn)
-		strcat(atcmd_output, msg_fd(fd,1062)); // NoReturn |
-	if (map->list[m_id].flag.nomemo)
-		strcat(atcmd_output, msg_fd(fd,1064)); // NoMemo |
+	strcpy(atcmd_output, msg_fd(fd, 1057)); // Teleport Flags:
+	if (map->list[m_id].flag.noteleport != 0)
+		strcat(atcmd_output, msg_fd(fd, 1058)); // NoTeleport |
+	if (map->list[m_id].flag.monster_noteleport != 0)
+		strcat(atcmd_output, msg_fd(fd, 1059)); // Monster NoTeleport |
+	if (map->list[m_id].flag.nowarp != 0)
+		strcat(atcmd_output, msg_fd(fd, 1060)); // NoWarp |
+	if (map->list[m_id].flag.nowarpto != 0)
+		strcat(atcmd_output, msg_fd(fd, 1061)); // NoWarpTo |
+	if (map->list[m_id].flag.noreturn != 0)
+		strcat(atcmd_output, msg_fd(fd, 1062)); // NoReturn |
+	if (map->list[m_id].flag.nomemo != 0)
+		strcat(atcmd_output, msg_fd(fd, 1064)); // NoMemo |
 	clif->message(fd, atcmd_output);
 
-	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1065),  // No Exp Penalty: %s | No Zeny Penalty: %s
-			(map->list[m_id].flag.noexppenalty) ? msg_fd(fd,1066) : msg_fd(fd,1067),
-			(map->list[m_id].flag.nozenypenalty) ? msg_fd(fd,1066) : msg_fd(fd,1067)); // On / Off
+	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1065),  // No Exp Penalty: %s | No Zeny Penalty: %s
+		(map->list[m_id].flag.noexppenalty != 0) ? msg_fd(fd, 1066) : msg_fd(fd, 1067),
+		(map->list[m_id].flag.nozenypenalty != 0) ? msg_fd(fd, 1066) : msg_fd(fd, 1067)); // On / Off
 	clif->message(fd, atcmd_output);
 
-	if (map->list[m_id].flag.nosave) {
+	if (map->list[m_id].flag.nosave != 0) {
 		if (!map->list[m_id].save.map)
-			clif->message(fd, msg_fd(fd,1068)); // No Save (Return to last Save Point)
-		else if (map->list[m_id].save.x == -1 || map->list[m_id].save.y == -1 ) {
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1069), mapindex_id2name(map->list[m_id].save.map)); // No Save, Save Point: %s,Random
+			clif->message(fd, msg_fd(fd, 1068)); // No Save (Return to last Save Point)
+		else if (map->list[m_id].save.x == -1 || map->list[m_id].save.y == -1) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1069), mapindex_id2name(map->list[m_id].save.map)); // No Save, Save Point: %s,Random
 			clif->message(fd, atcmd_output);
 		} else {
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1070), // No Save, Save Point: %s,%d,%d
-					mapindex_id2name(map->list[m_id].save.map),map->list[m_id].save.x,map->list[m_id].save.y);
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1070), // No Save, Save Point: %s,%d,%d
+				mapindex_id2name(map->list[m_id].save.map), map->list[m_id].save.x, map->list[m_id].save.y);
 			clif->message(fd, atcmd_output);
 		}
 	}
 
-	strcpy(atcmd_output,msg_fd(fd,1071)); // Weather Flags:
-	if (map->list[m_id].flag.snow)
-		strcat(atcmd_output, msg_fd(fd,1072)); // Snow |
-	if (map->list[m_id].flag.fog)
-		strcat(atcmd_output, msg_fd(fd,1073)); // Fog |
-	if (map->list[m_id].flag.sakura)
-		strcat(atcmd_output, msg_fd(fd,1074)); // Sakura |
-	if (map->list[m_id].flag.clouds)
-		strcat(atcmd_output, msg_fd(fd,1075)); // Clouds |
-	if (map->list[m_id].flag.clouds2)
-		strcat(atcmd_output, msg_fd(fd,1076)); // Clouds2 |
-	if (map->list[m_id].flag.fireworks)
-		strcat(atcmd_output, msg_fd(fd,1077)); // Fireworks |
-	if (map->list[m_id].flag.leaves)
-		strcat(atcmd_output, msg_fd(fd,1078)); // Leaves |
-	if (map->list[m_id].flag.nightenabled)
-		strcat(atcmd_output, msg_fd(fd,1080)); // Displays Night |
+	strcpy(atcmd_output, msg_fd(fd, 1071)); // Weather Flags:
+	if (map->list[m_id].flag.snow != 0)
+		strcat(atcmd_output, msg_fd(fd, 1072)); // Snow |
+	if (map->list[m_id].flag.fog != 0)
+		strcat(atcmd_output, msg_fd(fd, 1073)); // Fog |
+	if (map->list[m_id].flag.sakura != 0)
+		strcat(atcmd_output, msg_fd(fd, 1074)); // Sakura |
+	if (map->list[m_id].flag.clouds != 0)
+		strcat(atcmd_output, msg_fd(fd, 1075)); // Clouds |
+	if (map->list[m_id].flag.clouds2 != 0)
+		strcat(atcmd_output, msg_fd(fd, 1076)); // Clouds2 |
+	if (map->list[m_id].flag.fireworks != 0)
+		strcat(atcmd_output, msg_fd(fd, 1077)); // Fireworks |
+	if (map->list[m_id].flag.leaves != 0)
+		strcat(atcmd_output, msg_fd(fd, 1078)); // Leaves |
+	if (map->list[m_id].flag.nightenabled != 0)
+		strcat(atcmd_output, msg_fd(fd, 1080)); // Displays Night |
 	clif->message(fd, atcmd_output);
 
-	strcpy(atcmd_output,msg_fd(fd,1081)); // Other Flags:
-	if (map->list[m_id].flag.nobranch)
-		strcat(atcmd_output, msg_fd(fd,1082)); // NoBranch |
-	if (map->list[m_id].flag.notrade)
-		strcat(atcmd_output, msg_fd(fd,1083)); // NoTrade |
-	if (map->list[m_id].flag.novending)
-		strcat(atcmd_output, msg_fd(fd,1084)); // NoVending |
-	if (map->list[m_id].flag.nodrop)
-		strcat(atcmd_output, msg_fd(fd,1085)); // NoDrop |
-	if (map->list[m_id].flag.noskill)
-		strcat(atcmd_output, msg_fd(fd,1086)); // NoSkill |
-	if (map->list[m_id].flag.noicewall)
-		strcat(atcmd_output, msg_fd(fd,1087)); // NoIcewall |
-	if (map->list[m_id].flag.allowks)
-		strcat(atcmd_output, msg_fd(fd,1088)); // AllowKS |
-	if (map->list[m_id].flag.reset)
-		strcat(atcmd_output, msg_fd(fd,1089)); // Reset |
+	strcpy(atcmd_output, msg_fd(fd, 1081)); // Other Flags:
+	if (map->list[m_id].flag.nobranch != 0)
+		strcat(atcmd_output, msg_fd(fd, 1082)); // NoBranch |
+	if (map->list[m_id].flag.notrade != 0)
+		strcat(atcmd_output, msg_fd(fd, 1083)); // NoTrade |
+	if (map->list[m_id].flag.novending != 0)
+		strcat(atcmd_output, msg_fd(fd, 1084)); // NoVending |
+	if (map->list[m_id].flag.nodrop != 0)
+		strcat(atcmd_output, msg_fd(fd, 1085)); // NoDrop |
+	if (map->list[m_id].flag.noskill != 0)
+		strcat(atcmd_output, msg_fd(fd, 1086)); // NoSkill |
+	if (map->list[m_id].flag.noicewall != 0)
+		strcat(atcmd_output, msg_fd(fd, 1087)); // NoIcewall |
+	if (map->list[m_id].flag.allowks != 0)
+		strcat(atcmd_output, msg_fd(fd, 1088)); // AllowKS |
+	if (map->list[m_id].flag.reset != 0)
+		strcat(atcmd_output, msg_fd(fd, 1089)); // Reset |
+	if (map->list[m_id].flag.src4instance != 0)
+		strcat(atcmd_output, msg_fd(fd, 850)); // No Knockback |
 	clif->message(fd, atcmd_output);
 
-	strcpy(atcmd_output,msg_fd(fd,1090)); // Other Flags:
-	if (map->list[m_id].nocommand)
-		strcat(atcmd_output, msg_fd(fd,1091)); // NoCommand |
-	if (map->list[m_id].flag.nobaseexp)
-		strcat(atcmd_output, msg_fd(fd,1092)); // NoBaseEXP |
-	if (map->list[m_id].flag.nojobexp)
-		strcat(atcmd_output, msg_fd(fd,1093)); // NoJobEXP |
-	if (map->list[m_id].flag.nomobloot)
-		strcat(atcmd_output, msg_fd(fd,1094)); // NoMobLoot |
-	if (map->list[m_id].flag.nomvploot)
-		strcat(atcmd_output, msg_fd(fd,1095)); // NoMVPLoot |
-	if (map->list[m_id].flag.partylock)
-		strcat(atcmd_output, msg_fd(fd,1096)); // PartyLock |
-	if (map->list[m_id].flag.guildlock)
-		strcat(atcmd_output, msg_fd(fd,1097)); // GuildLock |
-	if (map->list[m_id].flag.noautoloot)
+	strcpy(atcmd_output, msg_fd(fd, 1090)); // Other Flags:
+	if (map->list[m_id].nocommand != 0)
+		strcat(atcmd_output, msg_fd(fd, 1091)); // NoCommand |
+	if (map->list[m_id].flag.nobaseexp != 0)
+		strcat(atcmd_output, msg_fd(fd, 1092)); // NoBaseEXP |
+	if (map->list[m_id].flag.nojobexp != 0)
+		strcat(atcmd_output, msg_fd(fd, 1093)); // NoJobEXP |
+	if (map->list[m_id].flag.nomobloot != 0)
+		strcat(atcmd_output, msg_fd(fd, 1094)); // NoMobLoot |
+	if (map->list[m_id].flag.nomvploot != 0)
+		strcat(atcmd_output, msg_fd(fd, 1095)); // NoMVPLoot |
+	if (map->list[m_id].flag.partylock != 0)
+		strcat(atcmd_output, msg_fd(fd, 1096)); // PartyLock |
+	if (map->list[m_id].flag.guildlock != 0)
+		strcat(atcmd_output, msg_fd(fd, 1097)); // GuildLock |
+	if (map->list[m_id].flag.noautoloot != 0)
 		strcat(atcmd_output, msg_fd(fd, 1063)); // NoAutoloot |
 	if (map->list[m_id].flag.noviewid != EQP_NONE)
-		strcat(atcmd_output, msg_fd(fd,1079)); // NoViewID |
-	if (map->list[m_id].flag.pairship_startable)
+		strcat(atcmd_output, msg_fd(fd, 1079)); // NoViewID |
+	if (map->list[m_id].flag.pairship_startable != 0)
 		strcat(atcmd_output, msg_fd(fd, 1292)); // PrivateAirshipStartable |
-	if (map->list[m_id].flag.pairship_endable)
+	if (map->list[m_id].flag.pairship_endable != 0)
 		strcat(atcmd_output, msg_fd(fd, 1293)); // PrivateAirshipEndable |
+	if (map->list[m_id].flag.noknockback != 0)
+		strcat(atcmd_output, msg_fd(fd, 850)); // No Knockback |
+	if (map->list[m_id].flag.src4instance != 0)
+		strcat(atcmd_output, msg_fd(fd, 851)); // Source For Instance |
+	if (map->list[m_id].flag.chsysnolocalaj != 0)
+		strcat(atcmd_output, msg_fd(fd, 852)); // No Map Channel Auto Join |
 	if (map->list[m_id].flag.nopet != 0)
 		strcat(atcmd_output, msg_fd(fd, 853)); // NoPet |
+
 	clif->message(fd, atcmd_output);
 
 	switch (list) {
-		case 0:
-			// Do nothing. It's list 0, no additional display.
-			break;
-		case 1:
-			clif->message(fd, msg_fd(fd,1098)); // ----- Players in Map -----
-			iter = mapit_getallusers();
-			for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
-				if (pl_sd->mapindex == m_index) {
-					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1099), // Player '%s' (session #%d) | Location: %d,%d
-							pl_sd->status.name, pl_sd->fd, pl_sd->bl.x, pl_sd->bl.y);
-					clif->message(fd, atcmd_output);
-				}
-			}
-			mapit->free(iter);
-			break;
-		case 2:
-			clif->message(fd, msg_fd(fd,1100)); // ----- NPCs in Map -----
-			for (i = 0; i < map->list[m_id].npc_num;) {
-				struct npc_data *nd = map->list[m_id].npc[i];
-				switch(nd->dir) {
-				case UNIT_DIR_NORTH:
-					strcpy(direction, msg_fd(fd, 1101)); // North
-					break;
-				case UNIT_DIR_NORTHWEST:
-					strcpy(direction, msg_fd(fd, 1102)); // North West
-					break;
-				case UNIT_DIR_WEST:
-					strcpy(direction, msg_fd(fd, 1103)); // West
-					break;
-				case UNIT_DIR_SOUTHWEST:
-					strcpy(direction, msg_fd(fd, 1104)); // South West
-					break;
-				case UNIT_DIR_SOUTH:
-					strcpy(direction, msg_fd(fd, 1105)); // South
-					break;
-				case UNIT_DIR_SOUTHEAST:
-					strcpy(direction, msg_fd(fd, 1106)); // South East
-					break;
-				case UNIT_DIR_EAST:
-					strcpy(direction, msg_fd(fd, 1107)); // East
-					break;
-				case UNIT_DIR_NORTHEAST:
-					strcpy(direction, msg_fd(fd, 1108)); // North East
-					break;
-				case 9: // is this actually used? [skyleo]
-					strcpy(direction, msg_fd(fd, 1109)); // North
-					break;
-				default:
-					strcpy(direction, msg_fd(fd, 1110)); // Unknown
-					break;
-				}
-				if(strcmp(nd->name,nd->exname) == 0)
-					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1111), // NPC %d: %s | Direction: %s | Sprite: %d | Location: %d %d
-						++i, nd->name, direction, nd->class_, nd->bl.x, nd->bl.y);
-				else
-					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1112), // NPC %d: %s::%s | Direction: %s | Sprite: %d | Location: %d %d
-						++i, nd->name, nd->exname, direction, nd->class_, nd->bl.x, nd->bl.y);
+	case 0:
+		// Do nothing. It's list 0, no additional display.
+		break;
+	case 1:
+		clif->message(fd, msg_fd(fd, 1098)); // ----- Players in Map -----
+		iter = mapit_getallusers();
+		for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
+			if (pl_sd->mapindex == m_index) {
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1099), // Player '%s' (session #%d) | Location: %d,%d
+					pl_sd->status.name, pl_sd->fd, pl_sd->bl.x, pl_sd->bl.y);
 				clif->message(fd, atcmd_output);
 			}
-			break;
-		case 3:
-			clif->message(fd, msg_fd(fd,1113)); // ----- Chats in Map -----
-			iter = mapit_getallusers();
-			for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
-				if ((cd = map->id2cd(pl_sd->chat_id)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
-					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1114), // Chat: %s | Player: %s | Location: %d %d
-							cd->title, pl_sd->status.name, cd->bl.x, cd->bl.y);
-					clif->message(fd, atcmd_output);
-					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1115), //    Users: %d/%d | Password: %s | Public: %s
-							cd->users, cd->limit, cd->pass, (cd->pub) ? msg_fd(fd,1116) : msg_fd(fd,1117)); // Yes / No
-					clif->message(fd, atcmd_output);
-				}
+		}
+		mapit->free(iter);
+		break;
+	case 2:
+		clif->message(fd, msg_fd(fd, 1100)); // ----- NPCs in Map -----
+		for (i = 0; i < map->list[m_id].npc_num;) {
+			struct npc_data *nd = map->list[m_id].npc[i];
+			switch (nd->dir) {
+			case UNIT_DIR_NORTH:
+				strcpy(direction, msg_fd(fd, 1101)); // North
+				break;
+			case UNIT_DIR_NORTHWEST:
+				strcpy(direction, msg_fd(fd, 1102)); // North West
+				break;
+			case UNIT_DIR_WEST:
+				strcpy(direction, msg_fd(fd, 1103)); // West
+				break;
+			case UNIT_DIR_SOUTHWEST:
+				strcpy(direction, msg_fd(fd, 1104)); // South West
+				break;
+			case UNIT_DIR_SOUTH:
+				strcpy(direction, msg_fd(fd, 1105)); // South
+				break;
+			case UNIT_DIR_SOUTHEAST:
+				strcpy(direction, msg_fd(fd, 1106)); // South East
+				break;
+			case UNIT_DIR_EAST:
+				strcpy(direction, msg_fd(fd, 1107)); // East
+				break;
+			case UNIT_DIR_NORTHEAST:
+				strcpy(direction, msg_fd(fd, 1108)); // North East
+				break;
+			case 9: // is this actually used? [skyleo]
+				strcpy(direction, msg_fd(fd, 1109)); // North
+				break;
+			default:
+				strcpy(direction, msg_fd(fd, 1110)); // Unknown
+				break;
 			}
-			mapit->free(iter);
-			break;
-		default: // normally impossible to arrive here
-			clif->message(fd, msg_fd(fd,1118)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
-			return false;
+			if (strcmp(nd->name, nd->exname) == 0)
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1111), // NPC %d: %s | Direction: %s | Sprite: %d | Location: %d %d
+					++i, nd->name, direction, nd->class_, nd->bl.x, nd->bl.y);
+			else
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1112), // NPC %d: %s::%s | Direction: %s | Sprite: %d | Location: %d %d
+					++i, nd->name, nd->exname, direction, nd->class_, nd->bl.x, nd->bl.y);
+			clif->message(fd, atcmd_output);
+		}
+		break;
+	case 3:
+		clif->message(fd, msg_fd(fd, 1113)); // ----- Chats in Map -----
+		iter = mapit_getallusers();
+		for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
+			if ((cd = map->id2cd(pl_sd->chat_id)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1114), // Chat: %s | Player: %s | Location: %d %d
+					cd->title, pl_sd->status.name, cd->bl.x, cd->bl.y);
+				clif->message(fd, atcmd_output);
+				safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd, 1115), //    Users: %d/%d | Password: %s | Public: %s
+					cd->users, cd->limit, cd->pass, (cd->pub) ? msg_fd(fd, 1116) : msg_fd(fd, 1117)); // Yes / No
+				clif->message(fd, atcmd_output);
+			}
+		}
+		mapit->free(iter);
+		break;
+	default: // normally impossible to arrive here
+		clif->message(fd, msg_fd(fd, 1118)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
+		return false;
 	}
 
 	return true;
@@ -7938,44 +7947,96 @@ ACMD(fakename)
  *------------------------------------------*/
 ACMD(mapflag)
 {
-#define CHECKFLAG( cmd ) do { if (map->list[ sd->bl.m ].flag.cmd ) clif->message(sd->fd,#cmd);} while(0)
-#define SETFLAG( cmd ) do { \
-	if (strcmp( flag_name , #cmd ) == 0) { \
-		map->list[ sd->bl.m ].flag.cmd = flag; \
-		safesnprintf(atcmd_output, sizeof(atcmd_output),"[ @mapflag ] %s flag has been set to %s value = %hd",#cmd,flag?"On":"Off",flag); \
-		clif->message(sd->fd,atcmd_output); \
+#define CHECKFLAG(cmd) do { \
+	if (map->list[sd->bl.m].flag.cmd != 0) { \
+		clif->message(sd->fd, #cmd); \
+	} \
+} while(0)
+#define SETFLAG(cmd) do { \
+	if (strcmp(flag_name, #cmd) == 0) { \
+		map->list[sd->bl.m].flag.cmd = flag; \
+		safesnprintf(atcmd_output, sizeof(atcmd_output), "[ @mapflag ] %s flag has been set to %s value = %hd", #cmd, (flag ? "On" : "Off"), flag); \
+		clif->message(sd->fd, atcmd_output); \
 		return true; \
 	} \
 } while(0)
 
 	char flag_name[100];
-	short flag=0,i;
+	short flag = 0;
+	int i = 0;
 
 	memset(flag_name, '\0', sizeof(flag_name));
 
 	if (!*message || (sscanf(message, "%99s %5hd", flag_name, &flag) < 1)) {
-		clif->message(sd->fd,msg_fd(fd,1311)); // Enabled Mapflags in this map:
-		clif->message(sd->fd,"----------------------------------");
-		CHECKFLAG(autotrade);         CHECKFLAG(allowks);            CHECKFLAG(nomemo);       CHECKFLAG(noteleport);
-		CHECKFLAG(noreturn);          CHECKFLAG(monster_noteleport); CHECKFLAG(nosave);       CHECKFLAG(nobranch);
-		CHECKFLAG(noexppenalty);      CHECKFLAG(pvp);                CHECKFLAG(pvp_noparty);  CHECKFLAG(pvp_noguild);
-		CHECKFLAG(pvp_nightmaredrop); CHECKFLAG(pvp_nocalcrank);     CHECKFLAG(gvg_castle);   CHECKFLAG(gvg);
-		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(cvc);
-		CHECKFLAG(nozenypenalty);     CHECKFLAG(notrade);            CHECKFLAG(noskill);      CHECKFLAG(nowarp);
-		CHECKFLAG(nowarpto);          CHECKFLAG(noicewall);          CHECKFLAG(snow);         CHECKFLAG(clouds);
-		CHECKFLAG(clouds2);           CHECKFLAG(fog);                CHECKFLAG(fireworks);    CHECKFLAG(sakura);
-		CHECKFLAG(leaves);            CHECKFLAG(nobaseexp);
-		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
-		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
-		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
-		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);         CHECKFLAG(noviewid);     CHECKFLAG(town);
-		CHECKFLAG(nostorage);         CHECKFLAG(nogstorage);
-		clif->message(sd->fd," ");
-		clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
-		clif->message(sd->fd,msg_fd(fd,1313)); // Type "@mapflag available" to list the available mapflags.
+		clif->message(sd->fd, msg_fd(fd, 1311)); // Enabled Mapflags in this map:
+		clif->message(sd->fd, "----------------------------------");
+
+		CHECKFLAG(town);
+		CHECKFLAG(autotrade);
+		CHECKFLAG(allowks);
+		CHECKFLAG(nomemo);
+		CHECKFLAG(noteleport);
+		CHECKFLAG(noreturn);
+		CHECKFLAG(monster_noteleport);
+		CHECKFLAG(nosave);
+		CHECKFLAG(nobranch);
+		CHECKFLAG(noexppenalty);
+		CHECKFLAG(pvp);
+		CHECKFLAG(pvp_noparty);
+		CHECKFLAG(pvp_noguild);
+		CHECKFLAG(pvp_nightmaredrop);
+		CHECKFLAG(pvp_nocalcrank);
+		CHECKFLAG(gvg_castle);
+		CHECKFLAG(gvg);
+		CHECKFLAG(gvg_dungeon);
+		CHECKFLAG(gvg_noparty);
+		CHECKFLAG(battleground);
+		CHECKFLAG(cvc);
+		CHECKFLAG(nozenypenalty);
+		CHECKFLAG(notrade);
+		CHECKFLAG(noskill);
+		CHECKFLAG(nowarp);
+		CHECKFLAG(nowarpto);
+		CHECKFLAG(noicewall);
+		CHECKFLAG(snow);
+		CHECKFLAG(clouds);
+		CHECKFLAG(clouds2);
+		CHECKFLAG(fog);
+		CHECKFLAG(fireworks);
+		CHECKFLAG(sakura);
+		CHECKFLAG(leaves);
+		CHECKFLAG(nobaseexp);
+		CHECKFLAG(nojobexp);
+		CHECKFLAG(nomobloot);
+		CHECKFLAG(nomvploot);
+		CHECKFLAG(nightenabled);
+		CHECKFLAG(nodrop);
+		CHECKFLAG(novending);
+		CHECKFLAG(loadevent);
+		CHECKFLAG(nochat);
+		CHECKFLAG(partylock);
+		CHECKFLAG(guildlock);
+		CHECKFLAG(src4instance);
+		CHECKFLAG(reset);
+		CHECKFLAG(chsysnolocalaj);
+		CHECKFLAG(noknockback);
+		CHECKFLAG(notomb);
+		CHECKFLAG(nocashshop);
+		CHECKFLAG(noautoloot);
+		CHECKFLAG(pairship_startable);
+		CHECKFLAG(pairship_endable);
+		CHECKFLAG(nostorage);
+		CHECKFLAG(nogstorage);
+		CHECKFLAG(noviewid);
+
+		clif->message(sd->fd, " ");
+		clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
+		clif->message(sd->fd, msg_fd(fd, 1313)); // Type "@mapflag available" to list the available mapflags.
 		return true;
 	}
-	for (i = 0; flag_name[i]; i++) flag_name[i] = TOLOWER(flag_name[i]); //lowercase
+
+	for (i = 0; flag_name[i] != '\0'; i++)
+		flag_name[i] = TOLOWER(flag_name[i]); //lowercase
 
 	if (strcmp(flag_name, "gvg") == 0) {
 		if (flag && !map->list[sd->bl.m].flag.gvg)
@@ -7999,20 +8060,63 @@ ACMD(mapflag)
 			map->zone_change2(sd->bl.m, map->list[sd->bl.m].prev_zone);
 	}
 
-	SETFLAG(autotrade);         SETFLAG(allowks);            SETFLAG(nomemo);       SETFLAG(noteleport);
-	SETFLAG(noreturn);          SETFLAG(monster_noteleport); SETFLAG(nosave);       SETFLAG(nobranch);
-	SETFLAG(noexppenalty);      SETFLAG(pvp);                SETFLAG(pvp_noparty);  SETFLAG(pvp_noguild);
-	SETFLAG(pvp_nightmaredrop); SETFLAG(pvp_nocalcrank);     SETFLAG(gvg_castle);   SETFLAG(gvg);
-	SETFLAG(gvg_dungeon);       SETFLAG(gvg_noparty);        SETFLAG(battleground); SETFLAG(cvc);
-	SETFLAG(nozenypenalty);     SETFLAG(notrade);            SETFLAG(noskill);      SETFLAG(nowarp);
-	SETFLAG(nowarpto);          SETFLAG(noicewall);          SETFLAG(snow);         SETFLAG(clouds);
-	SETFLAG(clouds2);           SETFLAG(fog);                SETFLAG(fireworks);    SETFLAG(sakura);
-	SETFLAG(leaves);            SETFLAG(nobaseexp);          SETFLAG(nojobexp);     SETFLAG(nomobloot);
-	SETFLAG(nomvploot);         SETFLAG(nightenabled);       SETFLAG(nodrop);       SETFLAG(novending);
-	SETFLAG(loadevent);         SETFLAG(nochat);             SETFLAG(partylock);    SETFLAG(guildlock);
-	SETFLAG(src4instance);      SETFLAG(notomb);             SETFLAG(nocashshop);   SETFLAG(noviewid);
-	SETFLAG(town);              SETFLAG(nostorage);          SETFLAG(nogstorage);
-
+	SETFLAG(town);
+	SETFLAG(autotrade);
+	SETFLAG(allowks);
+	SETFLAG(nomemo);
+	SETFLAG(noteleport);
+	SETFLAG(noreturn);
+	SETFLAG(monster_noteleport);
+	SETFLAG(nosave);
+	SETFLAG(nobranch);
+	SETFLAG(noexppenalty);
+	SETFLAG(pvp);
+	SETFLAG(pvp_noparty);
+	SETFLAG(pvp_noguild);
+	SETFLAG(pvp_nightmaredrop);
+	SETFLAG(pvp_nocalcrank);
+	SETFLAG(gvg_castle);
+	SETFLAG(gvg);
+	SETFLAG(gvg_dungeon);
+	SETFLAG(gvg_noparty);
+	SETFLAG(battleground);
+	SETFLAG(cvc);
+	SETFLAG(nozenypenalty);
+	SETFLAG(notrade);
+	SETFLAG(noskill);
+	SETFLAG(nowarp);
+	SETFLAG(nowarpto);
+	SETFLAG(noicewall);
+	SETFLAG(snow);
+	SETFLAG(clouds);
+	SETFLAG(clouds2);
+	SETFLAG(fog);
+	SETFLAG(fireworks);
+	SETFLAG(sakura);
+	SETFLAG(leaves);
+	SETFLAG(nobaseexp);
+	SETFLAG(nojobexp);
+	SETFLAG(nomobloot);
+	SETFLAG(nomvploot);
+	SETFLAG(nightenabled);
+	SETFLAG(nodrop);
+	SETFLAG(novending);
+	SETFLAG(loadevent);
+	SETFLAG(nochat);
+	SETFLAG(partylock);
+	SETFLAG(guildlock);
+	SETFLAG(src4instance);
+	SETFLAG(reset);
+	SETFLAG(chsysnolocalaj);
+	SETFLAG(noknockback);
+	SETFLAG(notomb);
+	SETFLAG(nocashshop);
+	SETFLAG(noautoloot);
+	SETFLAG(pairship_startable);
+	SETFLAG(pairship_endable);
+	SETFLAG(nostorage);
+	SETFLAG(nogstorage);
+	SETFLAG(noviewid);
 
 	clif->message(sd->fd, msg_fd(fd, 1314)); // Invalid flag name or flag.
 	clif->message(sd->fd, msg_fd(fd, 1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -8022,9 +8126,11 @@ ACMD(mapflag)
 	clif->message(sd->fd, "nobranch, noexppenalty, pvp, pvp_noparty, pvp_noguild, pvp_nightmaredrop,");
 	clif->message(sd->fd, "pvp_nocalcrank, gvg_castle, gvg, gvg_dungeon, gvg_noparty, battleground, cvc,");
 	clif->message(sd->fd, "nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
-	clif->message(sd->fd, "fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
-	clif->message(sd->fd, "nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd, "guildlock, src4instance, notomb, nocashshop, noviewid, nostorage, nogstorage");
+	clif->message(sd->fd, "fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot, nomvploot,");
+	clif->message(sd->fd, "nightenabled, nodrop, novending, loadevent, nochat, partylock, guildlock,");
+	clif->message(sd->fd, "src4instance, reset, chsysnolocalaj, noknockback, notomb, nocashshop, noautoloot,");
+	clif->message(sd->fd, "pairship_startable, pairship_endable, nostorage, nogstorage, noviewid");
+
 #undef CHECKFLAG
 #undef SETFLAG
 

@@ -4780,382 +4780,415 @@ static void npc_parse_unknown_mapflag(const char *name, const char *w3, const ch
  */
 static const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
 {
-	int16 m;
 	char mapname[32];
 	int state = 1;
 
-	nullpo_retr(strchr(start,'\n'), w1);
-	nullpo_retr(strchr(start,'\n'), w3);
+	nullpo_retr(strchr(start, '\n'), w1);
+	nullpo_retr(strchr(start, '\n'), w3);
 
 	// w1=<mapname>
-	if( sscanf(w1, "%31[^,]", mapname) != 1 )
-	{
-		ShowError("npc_parse_mapflag: Invalid mapflag definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
-		if (retval) *retval = EXIT_FAILURE;
-		return strchr(start,'\n');// skip and continue
+	if (sscanf(w1, "%31[^,]", mapname) != 1) {
+		ShowError("npc_parse_mapflag: Invalid mapflag definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
+		if (retval != NULL)
+			*retval = EXIT_FAILURE;
+		return strchr(start, '\n');// skip and continue
 	}
-	m = map->mapname2mapid(mapname);
+
+	int16 m = map->mapname2mapid(mapname);
 	if (m < 0) {
 		ShowWarning("npc_parse_mapflag: Unknown map in file '%s', line '%d': %s\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n",
-		            filepath, strline(buffer,start-buffer), mapname, w1, w2, w3, w4);
-		if (retval) *retval = EXIT_FAILURE;
-		return strchr(start,'\n');// skip and continue
+			filepath, strline(buffer, start - buffer), mapname, w1, w2, w3, w4);
+		if (retval != NULL)
+			*retval = EXIT_FAILURE;
+		return strchr(start, '\n');// skip and continue
 	}
 
-	if (w4 && !strcmpi(w4, "off"))
+	if (w4 != NULL && strcmpi(w4, "off") == 0)
 		state = 0; //Disable mapflag rather than enable it. [Skotlex]
 
-	if (!strcmpi(w3, "nosave")) {
+	if (strcmpi(w3, "nomemo") == 0)
+		map->list[m].flag.nomemo = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noteleport") == 0)
+		map->list[m].flag.noteleport = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nosave") == 0) {
 		char savemap[32];
 		int savex, savey;
 		if (state == 0); //Map flag disabled.
-		else if (w4 && !strcmpi(w4, "SavePoint")) {
+		else if (w4 != NULL && strcmpi(w4, "SavePoint") == 0) {
 			map->list[m].save.map = 0;
 			map->list[m].save.x = -1;
 			map->list[m].save.y = -1;
-		} else if (w4 && sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
+		} else if (w4 != NULL && sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
 			map->list[m].save.map = mapindex->name2id(savemap);
 			map->list[m].save.x = savex;
 			map->list[m].save.y = savey;
 			if (!map->list[m].save.map) {
-				ShowWarning("npc_parse_mapflag: Specified save point map '%s' for mapflag 'nosave' not found in file '%s', line '%d', using 'SavePoint'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", savemap, filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
-				if (retval) *retval = EXIT_FAILURE;
+				ShowWarning("npc_parse_mapflag: Specified save point map '%s' for mapflag 'nosave' not found in file '%s', line '%d', using 'SavePoint'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", savemap, filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
+				if (retval != NULL)
+					*retval = EXIT_FAILURE;
 				map->list[m].save.x = -1;
 				map->list[m].save.y = -1;
 			}
 		}
-		map->list[m].flag.nosave = state;
-	}
-	else if (!strcmpi(w3,"autotrade"))
-		map->list[m].flag.autotrade=state;
-	else if (!strcmpi(w3,"allowks"))
-		map->list[m].flag.allowks=state; // [Kill Steal Protection]
-	else if (!strcmpi(w3,"town"))
-		map->list[m].flag.town=state;
-	else if (!strcmpi(w3,"nomemo"))
-		map->list[m].flag.nomemo=state;
-	else if (!strcmpi(w3,"noteleport"))
-		map->list[m].flag.noteleport=state;
-	else if (!strcmpi(w3,"nowarp"))
-		map->list[m].flag.nowarp=state;
-	else if (!strcmpi(w3,"nowarpto"))
-		map->list[m].flag.nowarpto=state;
-	else if (!strcmpi(w3,"noreturn"))
-		map->list[m].flag.noreturn=state;
-	else if (!strcmpi(w3,"monster_noteleport"))
-		map->list[m].flag.monster_noteleport=state;
-	else if (!strcmpi(w3,"nobranch"))
-		map->list[m].flag.nobranch=state;
-	else if (!strcmpi(w3,"nopenalty")) {
-		map->list[m].flag.noexppenalty=state;
-		map->list[m].flag.nozenypenalty=state;
-	}
-	else if (!strcmpi(w3,"pvp")) {
+		map->list[m].flag.nosave = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3, "nobranch") == 0)
+		map->list[m].flag.nobranch = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nopenalty") == 0) {
+		map->list[m].flag.noexppenalty = (state != 0) ? 1 : 0;
+		map->list[m].flag.nozenypenalty = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3, "nozenypenalty") == 0)
+		map->list[m].flag.nozenypenalty = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "pvp") == 0) {
 		struct map_zone_data *zone;
-		map->list[m].flag.pvp = state;
-		if( state && (map->list[m].flag.gvg || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg_castle) ) {
+		map->list[m].flag.pvp = (state != 0) ? 1 : 0;
+		if (state != 0 && (map->list[m].flag.gvg != 0 || map->list[m].flag.gvg_dungeon != 0 || map->list[m].flag.gvg_castle != 0)) {
 			map->list[m].flag.gvg = 0;
 			map->list[m].flag.gvg_dungeon = 0;
 			map->list[m].flag.gvg_castle = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing GvG flags from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing GvG flags from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		}
-		if (state && map->list[m].flag.cvc) {
+		if (state != 0 && map->list[m].flag.cvc != 0) {
 			map->list[m].flag.cvc = 0;
-			ShowWarning("npc_parse_mapflag: You can't set CvC and PvP flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			ShowWarning("npc_parse_mapflag: You can't set CvC and PvP flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		}
-		if( state && map->list[m].flag.battleground ) {
+		if (state != 0 && map->list[m].flag.battleground != 0) {
 			map->list[m].flag.battleground = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		}
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL && map->list[m].zone != zone ) {
-			map->zone_change(m,zone,start,buffer,filepath);
-		} else if ( !state ) {
+		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) != NULL && map->list[m].zone != zone) {
+			map->zone_change(m, zone, start, buffer, filepath);
+		} else if (state == 0) {
 			map->list[m].zone = &map->zone_all;
 		}
-	}
-	else if (!strcmpi(w3,"pvp_noparty"))
-		map->list[m].flag.pvp_noparty=state;
-	else if (!strcmpi(w3,"pvp_noguild"))
-		map->list[m].flag.pvp_noguild=state;
-	else if (!strcmpi(w3, "pvp_nightmaredrop")) {
+	} else if (strcmpi(w3, "pvp_noparty") == 0)
+		map->list[m].flag.pvp_noparty = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "pvp_noguild") == 0)
+		map->list[m].flag.pvp_noguild = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "gvg") == 0) {
+		struct map_zone_data *zone;
+
+		map->list[m].flag.gvg = (state != 0) ? 1 : 0;
+		if (state != 0 && map->list[m].flag.pvp != 0) {
+			map->list[m].flag.pvp = 0;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
+		}
+		if (state != 0 && map->list[m].flag.cvc != 0) {
+			map->list[m].flag.cvc = 0;
+			ShowWarning("npc_parse_mapflag: You can't set CvC and GvG flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
+		}
+		if (state != 0 && map->list[m].flag.battleground != 0) {
+			map->list[m].flag.battleground = 0;
+			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
+		}
+		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) != NULL && map->list[m].zone != zone) {
+			map->zone_change(m, zone, start, buffer, filepath);
+		}
+	} else if (strcmpi(w3, "gvg_noparty") == 0)
+		map->list[m].flag.gvg_noparty = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "notrade") == 0)
+		map->list[m].flag.notrade = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noskill") == 0)
+		map->list[m].flag.noskill = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nowarp") == 0)
+		map->list[m].flag.nowarp = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "partylock") == 0)
+		map->list[m].flag.partylock = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noicewall") == 0)
+		map->list[m].flag.noicewall = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "snow") == 0)
+		map->list[m].flag.snow = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "fog") == 0)
+		map->list[m].flag.fog = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "sakura") == 0)
+		map->list[m].flag.sakura = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "leaves") == 0)
+		map->list[m].flag.leaves = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "clouds") == 0)
+		map->list[m].flag.clouds = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "clouds2") == 0)
+		map->list[m].flag.clouds2 = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "fireworks") == 0)
+		map->list[m].flag.fireworks = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "gvg_castle") == 0) {
+		map->list[m].flag.gvg_castle = (state != 0) ? 1 : 0;
+		if (state != 0)
+			map->list[m].flag.pvp = 0;
+	} else if (strcmpi(w3, "gvg_dungeon") == 0) {
+		map->list[m].flag.gvg_dungeon = (state != 0) ? 1 : 0;
+		if (state != 0)
+			map->list[m].flag.pvp = 0;
+	} else if (strcmpi(w3, "nightenabled") == 0)
+		map->list[m].flag.nightenabled = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noexp") == 0) {
+		map->list[m].flag.nobaseexp = (state != 0) ? 1 : 0;
+		map->list[m].flag.nojobexp = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3, "nobaseexp") == 0)
+		map->list[m].flag.nobaseexp = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nojobexp") == 0)
+		map->list[m].flag.nojobexp = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noloot") == 0) {
+		map->list[m].flag.nomobloot = (state != 0) ? 1 : 0;
+		map->list[m].flag.nomvploot = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3, "nomobloot") == 0)
+		map->list[m].flag.nomobloot = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nomvploot") == 0)
+		map->list[m].flag.nomvploot = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noreturn") == 0)
+		map->list[m].flag.noreturn = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nowarpto") == 0)
+		map->list[m].flag.nowarpto = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "pvp_nightmaredrop") == 0) {
 		char drop_arg1[16], drop_arg2[16];
 		int drop_per = 0;
 		if (sscanf(w4, "%15[^,],%15[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
 			int drop_id = 0, drop_type = 0;
-			if (!strcmpi(drop_arg1, "random"))
+			if (strcmpi(drop_arg1, "random") == 0)
 				drop_id = -1;
 			else if (itemdb->exists((drop_id = atoi(drop_arg1))) == NULL)
 				drop_id = 0;
-			if (!strcmpi(drop_arg2, "inventory"))
+			if (strcmpi(drop_arg2, "inventory") == 0)
 				drop_type = 1;
-			else if (!strcmpi(drop_arg2,"equip"))
+			else if (strcmpi(drop_arg2, "equip") == 0)
 				drop_type = 2;
-			else if (!strcmpi(drop_arg2,"all"))
+			else if (strcmpi(drop_arg2, "all") == 0)
 				drop_type = 3;
 
 			if (drop_id != 0) {
 				RECREATE(map->list[m].drop_list, struct map_drop_list, ++map->list[m].drop_list_count);
-				map->list[m].drop_list[map->list[m].drop_list_count-1].drop_id = drop_id;
-				map->list[m].drop_list[map->list[m].drop_list_count-1].drop_type = drop_type;
-				map->list[m].drop_list[map->list[m].drop_list_count-1].drop_per = drop_per;
+				map->list[m].drop_list[map->list[m].drop_list_count - 1].drop_id = drop_id;
+				map->list[m].drop_list[map->list[m].drop_list_count - 1].drop_type = drop_type;
+				map->list[m].drop_list[map->list[m].drop_list_count - 1].drop_per = drop_per;
 				map->list[m].flag.pvp_nightmaredrop = 1;
 			}
-		} else if (!state) //Disable
+		} else if (state == 0) //Disable
 			map->list[m].flag.pvp_nightmaredrop = 0;
-	}
-	else if (!strcmpi(w3,"pvp_nocalcrank"))
-		map->list[m].flag.pvp_nocalcrank=state;
-	else if (!strcmpi(w3,"gvg")) {
+	} else if (strcmpi(w3, "zone") == 0) {
 		struct map_zone_data *zone;
 
-		map->list[m].flag.gvg = state;
-		if( state && map->list[m].flag.pvp ) {
-			map->list[m].flag.pvp = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+		if (!(zone = strdb_get(map->zone_db, w4))) {
+			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s in file '%s', line '%d'.\n", w4, map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
+		} else if (map->list[m].zone != zone) {
+			map->zone_change(m, zone, start, buffer, filepath);
 		}
-		if (state && map->list[m].flag.cvc) {
-			map->list[m].flag.cvc = 0;
-			ShowWarning("npc_parse_mapflag: You can't set CvC and GvG flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
-		}
-		if( state && map->list[m].flag.battleground ) {
-			map->list[m].flag.battleground = 0;
-			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
-		}
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) != NULL && map->list[m].zone != zone ) {
-			map->zone_change(m,zone,start,buffer,filepath);
-		}
-	}
-	else if (!strcmpi(w3,"gvg_noparty"))
-		map->list[m].flag.gvg_noparty=state;
-	else if (!strcmpi(w3,"gvg_dungeon")) {
-		map->list[m].flag.gvg_dungeon=state;
-		if (state) map->list[m].flag.pvp=0;
-	}
-	else if (!strcmpi(w3,"gvg_castle")) {
-		map->list[m].flag.gvg_castle=state;
-		if (state) map->list[m].flag.pvp=0;
-	}
-	else if (!strcmpi(w3,"battleground")) {
+	} else if (strcmpi(w3, "nocommand") == 0) {
+		if (state != 0) {
+			if (w4 != NULL && sscanf(w4, "%d", &state) == 1)
+				map->list[m].nocommand = (state != 0) ? 1 : 0;
+			else //No level specified, block everyone.
+				map->list[m].nocommand = 100;
+		} else
+			map->list[m].nocommand = 0;
+	} else if (strcmpi(w3, "nodrop") == 0)
+		map->list[m].flag.nodrop = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "jexp") == 0) {
+		map->list[m].jexp = (state != 0) ? atoi(w4) : 100;
+		if (map->list[m].jexp < 0)
+			map->list[m].jexp = 100;
+		map->list[m].flag.nojobexp = (map->list[m].jexp == 0) ? 1 : 0;
+	} else if (strcmpi(w3, "bexp") == 0) {
+		map->list[m].bexp = (state != 0) ? atoi(w4) : 100;
+		if (map->list[m].bexp < 0)
+			map->list[m].bexp = 100;
+		map->list[m].flag.nobaseexp = (map->list[m].bexp == 0) ? 1 : 0;
+	} else if (strcmpi(w3, "novending") == 0)
+		map->list[m].flag.novending = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "loadevent") == 0)
+		map->list[m].flag.loadevent = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nochat") == 0)
+		map->list[m].flag.nochat = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noexppenalty") == 0)
+		map->list[m].flag.noexppenalty = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "guildlock") == 0)
+		map->list[m].flag.guildlock = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "town") == 0)
+		map->list[m].flag.town = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "autotrade") == 0)
+		map->list[m].flag.autotrade = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "allowks") == 0)
+		map->list[m].flag.allowks = (state != 0) ? 1 : 0; // [Kill Steal Protection]
+	else if (strcmpi(w3, "monster_noteleport") == 0)
+		map->list[m].flag.monster_noteleport = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "pvp_nocalcrank") == 0)
+		map->list[m].flag.pvp_nocalcrank = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "battleground") == 0) {
 		struct map_zone_data *zone;
-		if (state) {
-			if (w4 && sscanf(w4, "%d", &state) == 1)
-				map->list[m].flag.battleground = state;
+		if (state != 0) {
+			if (w4 != NULL && sscanf(w4, "%d", &state) == 1)
+				map->list[m].flag.battleground = (state != 0) ? 1 : 0;
 			else
 				map->list[m].flag.battleground = 1; // Default value
 		} else {
 			map->list[m].flag.battleground = 0;
 		}
 
-		if( map->list[m].flag.battleground && map->list[m].flag.pvp ) {
+		if (map->list[m].flag.battleground != 0 && map->list[m].flag.pvp != 0) {
 			map->list[m].flag.pvp = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		}
-		if( map->list[m].flag.battleground && (map->list[m].flag.gvg || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg_castle) ) {
+		if (map->list[m].flag.battleground != 0 && (map->list[m].flag.gvg != 0 || map->list[m].flag.gvg_dungeon != 0 || map->list[m].flag.gvg_castle != 0)) {
 			map->list[m].flag.gvg = 0;
 			map->list[m].flag.gvg_dungeon = 0;
 			map->list[m].flag.gvg_castle = 0;
-			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		}
-		if (map->list[m].flag.cvc) {
+		if (map->list[m].flag.cvc != 0) {
 			map->list[m].flag.cvc = 0;
-			ShowWarning("npc_parse_mapflag: You can't set CvC and BattleGround flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			ShowWarning("npc_parse_mapflag: You can't set CvC and BattleGround flags for the same map! Removing CvC flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		}
 
-		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL && map->list[m].zone != zone ) {
-			map->zone_change(m,zone,start,buffer,filepath);
+		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) != NULL && map->list[m].zone != zone) {
+			map->zone_change(m, zone, start, buffer, filepath);
 		}
-	}
-	else if (!strcmpi(w3, "cvc")) {
+	} else if (strcmpi(w3, "reset") == 0)
+		map->list[m].flag.reset = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "notomb") == 0)
+		map->list[m].flag.notomb = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nocashshop") == 0)
+		map->list[m].flag.nocashshop = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noautoloot") == 0)
+		map->list[m].flag.noautoloot = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noviewid") == 0)
+		map->list[m].flag.noviewid = (state != 0) ? atoi(w4) : 0;
+	else if (strcmpi(w3, "pairship_startable") == 0)
+		map->list[m].flag.pairship_startable = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "pairship_endable") == 0)
+		map->list[m].flag.pairship_endable = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "nostorage") == 0)
+		map->list[m].flag.nostorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
+	else if (strcmpi(w3, "nogstorage") == 0)
+		map->list[m].flag.nogstorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
+	else if (strcmpi(w3, "nomapchannelautojoin") == 0)
+		map->list[m].flag.chsysnolocalaj = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "noknockback") == 0)
+		map->list[m].flag.noknockback = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "src4instance") == 0)
+		map->list[m].flag.src4instance = (state != 0) ? 1 : 0;
+	else if (strcmpi(w3, "cvc") == 0) {
 		struct map_zone_data *zone;
 
-		map->list[m].flag.cvc = state;
-		if (state && (map->list[m].flag.gvg || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg_castle)) {
+		map->list[m].flag.cvc = (state != 0) ? 1 : 0;
+		if (state != 0 && (map->list[m].flag.gvg != 0 || map->list[m].flag.gvg_dungeon != 0 || map->list[m].flag.gvg_castle != 0)) {
 			map->list[m].flag.gvg = 0;
 			map->list[m].flag.gvg_dungeon = 0;
 			map->list[m].flag.gvg_castle = 0;
-			ShowWarning("npc_parse_mapflag: You can't set GvG and CvC flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
-			if (retval) {
+			ShowWarning("npc_parse_mapflag: You can't set GvG and CvC flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
 				*retval = EXIT_FAILURE;
-			}
 		}
-		if (state && map->list[m].flag.pvp) {
+		if (state != 0 && map->list[m].flag.pvp != 0) {
 			map->list[m].flag.pvp = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and CvC flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
-			if (retval) {
+			ShowWarning("npc_parse_mapflag: You can't set PvP and CvC flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
 				*retval = EXIT_FAILURE;
-			}
 		}
-		if (state && map->list[m].flag.battleground) {
+		if (state != 0 && map->list[m].flag.battleground != 0) {
 			map->list[m].flag.battleground = 0;
-			ShowWarning("npc_parse_mapflag: You can't set CvC and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start-buffer));
-			if (retval) {
+			ShowWarning("npc_parse_mapflag: You can't set CvC and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
 				*retval = EXIT_FAILURE;
-			}
 		}
-		if (state && (zone = strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)) != NULL && map->list[m].zone != zone) {
+		if (state != 0 && (zone = strdb_get(map->zone_db, MAP_ZONE_CVC_NAME)) != NULL && map->list[m].zone != zone) {
 			map->zone_change(m, zone, start, buffer, filepath);
 		}
 	}
-	else if (!strcmpi(w3,"noexppenalty"))
-		map->list[m].flag.noexppenalty=state;
-	else if (!strcmpi(w3,"nozenypenalty"))
-		map->list[m].flag.nozenypenalty=state;
-	else if (!strcmpi(w3,"notrade"))
-		map->list[m].flag.notrade=state;
-	else if (!strcmpi(w3,"novending"))
-		map->list[m].flag.novending=state;
-	else if (!strcmpi(w3,"nodrop"))
-		map->list[m].flag.nodrop=state;
-	else if (!strcmpi(w3,"noskill"))
-		map->list[m].flag.noskill=state;
-	else if (!strcmpi(w3,"noicewall"))
-		map->list[m].flag.noicewall=state;
-	else if (!strcmpi(w3,"snow"))
-		map->list[m].flag.snow=state;
-	else if (!strcmpi(w3,"clouds"))
-		map->list[m].flag.clouds=state;
-	else if (!strcmpi(w3,"clouds2"))
-		map->list[m].flag.clouds2=state;
-	else if (!strcmpi(w3,"fog"))
-		map->list[m].flag.fog=state;
-	else if (!strcmpi(w3,"fireworks"))
-		map->list[m].flag.fireworks=state;
-	else if (!strcmpi(w3,"sakura"))
-		map->list[m].flag.sakura=state;
-	else if (!strcmpi(w3,"leaves"))
-		map->list[m].flag.leaves=state;
-	else if (!strcmpi(w3,"nightenabled"))
-		map->list[m].flag.nightenabled=state;
-	else if (!strcmpi(w3,"noexp")) {
-		map->list[m].flag.nobaseexp=state;
-		map->list[m].flag.nojobexp=state;
-	}
-	else if (!strcmpi(w3,"nobaseexp"))
-		map->list[m].flag.nobaseexp=state;
-	else if (!strcmpi(w3,"nojobexp"))
-		map->list[m].flag.nojobexp=state;
-	else if (!strcmpi(w3,"noloot")) {
-		map->list[m].flag.nomobloot=state;
-		map->list[m].flag.nomvploot=state;
-	}
-	else if (!strcmpi(w3,"nomobloot"))
-		map->list[m].flag.nomobloot=state;
-	else if (!strcmpi(w3,"nomvploot"))
-		map->list[m].flag.nomvploot=state;
-	else if (!strcmpi(w3,"nocommand")) {
-		if (state) {
-			if (w4 && sscanf(w4, "%d", &state) == 1)
-				map->list[m].nocommand =state;
-			else //No level specified, block everyone.
-				map->list[m].nocommand =100;
-		} else
-			map->list[m].nocommand=0;
-	}
-	else if (!strcmpi(w3,"jexp")) {
-		map->list[m].jexp = (state) ? atoi(w4) : 100;
-		if( map->list[m].jexp < 0 ) map->list[m].jexp = 100;
-		map->list[m].flag.nojobexp = (map->list[m].jexp==0)?1:0;
-	}
-	else if (!strcmpi(w3,"bexp")) {
-		map->list[m].bexp = (state) ? atoi(w4) : 100;
-		if( map->list[m].bexp < 0 ) map->list[m].bexp = 100;
-		 map->list[m].flag.nobaseexp = (map->list[m].bexp==0)?1:0;
-	}
-	else if (!strcmpi(w3,"loadevent"))
-		map->list[m].flag.loadevent=state;
-	else if (!strcmpi(w3,"nochat"))
-		map->list[m].flag.nochat=state;
-	else if (!strcmpi(w3,"partylock"))
-		map->list[m].flag.partylock=state;
-	else if (!strcmpi(w3,"guildlock"))
-		map->list[m].flag.guildlock=state;
-	else if (!strcmpi(w3,"reset"))
-		map->list[m].flag.reset=state;
-	else if (!strcmpi(w3,"notomb"))
-		map->list[m].flag.notomb=state;
-	else if (!strcmpi(w3, "noautoloot"))
-		map->list[m].flag.noautoloot = state;
-	else if (!strcmpi(w3,"adjust_unit_duration")) {
-		int skill_id, k;
+
+	// Map Zones
+	else if (strcmpi(w3, "adjust_unit_duration") == 0) {
+		int skill_id;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
-		size_t len = w4 ? strlen(w4) : 0;
+		int len = w4 != NULL ? (int)strlen(w4) : 0;
 
 		modifier[0] = '\0';
-		if( w4 )
+		if (w4 != NULL)
 			memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
 
-		for(k = 0; k < len; k++) {
-			if( skill_name[k] == '\t' ) {
-				memcpy(modifier, &skill_name[k+1], len - k);
+		for (int k = 0; k < len; k++) {
+			if (skill_name[k] == '\t') {
+				memcpy(modifier, &skill_name[k + 1], len - k);
 				skill_name[k] = '\0';
 				break;
 			}
 		}
 
-		if (state == 0); //Map flag disabled.
-		else if (modifier[0] == '\0') {
+		if (state == 0) {
+			//Map flag disabled.
+		} else if (modifier[0] == '\0') {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		} else if ((skill_id = skill->name2id(skill_name)) == 0 || skill->get_unit_id(skill->name2id(skill_name), 1, 0) == 0) {
 			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n",skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", atoi(modifier), skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		} else {
 			int idx = map->list[m].unit_count;
-
+			int k;
 			ARR_FIND(0, idx, k, map->list[m].units[k]->skill_id == skill_id);
 
-			if( k < idx ) {
-				if( atoi(modifier) != 100 )
+			if (k < idx) {
+				if (atoi(modifier) != 100)
 					map->list[m].units[k]->modifier = (unsigned short)atoi(modifier);
 				else { /* remove */
 					int cursor = 0;
 					aFree(map->list[m].units[k]);
 					map->list[m].units[k] = NULL;
-					for( k = 0; k < idx; k++ ) {
-						if( map->list[m].units[k] == NULL )
+					for (k = 0; k < idx; k++) {
+						if (map->list[m].units[k] == NULL)
 							continue;
 
 						map->list[m].units[cursor] = map->list[m].units[k];
 
 						cursor++;
 					}
-					if( !( map->list[m].unit_count = cursor ) ) {
+					if (!(map->list[m].unit_count = cursor)) {
 						aFree(map->list[m].units);
 						map->list[m].units = NULL;
 					}
 				}
-			} else if( atoi(modifier) != 100 )  {
-				RECREATE(map->list[m].units, struct mapflag_skill_adjust*, ++map->list[m].unit_count);
-				CREATE(map->list[m].units[idx],struct mapflag_skill_adjust,1);
+			} else if (atoi(modifier) != 100) {
+				RECREATE(map->list[m].units, struct mapflag_skill_adjust *, ++map->list[m].unit_count);
+				CREATE(map->list[m].units[idx], struct mapflag_skill_adjust, 1);
 				map->list[m].units[idx]->skill_id = (unsigned short)skill_id;
 				map->list[m].units[idx]->modifier = (unsigned short)atoi(modifier);
 			}
 		}
-	} else if (!strcmpi(w3,"adjust_skill_damage")) {
-		int skill_id, k;
+	} else if (strcmpi(w3, "adjust_skill_damage") == 0) {
+		int skill_id;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
-		size_t len = w4 ? strlen(w4) : 0;
+		int len = w4 != NULL ? (int)strlen(w4) : 0;
 
 		modifier[0] = '\0';
 
-		if( w4 )
+		if (w4 != NULL)
 			memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
 
-		for(k = 0; k < len; k++) {
-			if( skill_name[k] == '\t' ) {
-				memcpy(modifier, &skill_name[k+1], len - k);
+		for (int k = 0; k < len; k++) {
+			if (skill_name[k] == '\t') {
+				memcpy(modifier, &skill_name[k + 1], len - k);
 				skill_name[k] = '\0';
 				break;
 			}
@@ -5163,92 +5196,96 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 
 		if (state == 0); //Map flag disabled.
 		else if (modifier[0] == '\0') {
-			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
-		} else if( !( skill_id = skill->name2id(skill_name) ) ) {
-			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
-		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
-			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", atoi(modifier), skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
+		} else if (!(skill_id = skill->name2id(skill_name))) {
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", skill_name, map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
+		} else if (atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX) {
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", atoi(modifier), skill_name, map->list[m].name, filepath, strline(buffer, start - buffer));
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		} else {
 			int idx = map->list[m].skill_count;
-
+			int k;
 			ARR_FIND(0, idx, k, map->list[m].skills[k]->skill_id == skill_id);
 
-			if( k < idx ) {
-				if( atoi(modifier) != 100 )
+			if (k < idx) {
+				if (atoi(modifier) != 100)
 					map->list[m].skills[k]->modifier = (unsigned short)atoi(modifier);
 				else { /* remove */
 					int cursor = 0;
 					aFree(map->list[m].skills[k]);
 					map->list[m].skills[k] = NULL;
-					for( k = 0; k < idx; k++ ) {
-						if( map->list[m].skills[k] == NULL )
+					for (k = 0; k < idx; k++) {
+						if (map->list[m].skills[k] == NULL)
 							continue;
 
 						map->list[m].skills[cursor] = map->list[m].skills[k];
 
 						cursor++;
 					}
-					if( !( map->list[m].skill_count = cursor ) ) {
+					if (!(map->list[m].skill_count = cursor)) {
 						aFree(map->list[m].skills);
 						map->list[m].skills = NULL;
 					}
 				}
-			} else if( atoi(modifier) != 100 ) {
-				RECREATE(map->list[m].skills, struct mapflag_skill_adjust*, ++map->list[m].skill_count);
-				CREATE(map->list[m].skills[idx],struct mapflag_skill_adjust,1);
+			} else if (atoi(modifier) != 100) {
+				RECREATE(map->list[m].skills, struct mapflag_skill_adjust *, ++map->list[m].skill_count);
+				CREATE(map->list[m].skills[idx], struct mapflag_skill_adjust, 1);
 				map->list[m].skills[idx]->skill_id = (unsigned short)skill_id;
 				map->list[m].skills[idx]->modifier = (unsigned short)atoi(modifier);
 			}
 		}
-	} else if (!strcmpi(w3,"zone")) {
+	} else if (strcmpi(w3, "zone") == 0) {
 		struct map_zone_data *zone;
 
 		if( !(zone = strdb_get(map->zone_db, w4)) ) {
 			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s in file '%s', line '%d'.\n", w4, map->list[m].name, filepath, strline(buffer,start-buffer));
-			if (retval) *retval = EXIT_FAILURE;
+			if (retval != NULL)
+				*retval = EXIT_FAILURE;
 		} else if( map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		}
-	} else if ( !strcmpi(w3,"nomapchannelautojoin") ) {
-		map->list[m].flag.chsysnolocalaj = state;
-	} else if ( !strcmpi(w3,"invincible_time_inc") ) {
-		map->list[m].invincible_time_inc = (state) ? atoi(w4) : 0;
-	} else if ( !strcmpi(w3,"noknockback") ) {
-		map->list[m].flag.noknockback = state;
-	} else if ( !strcmpi(w3,"weapon_damage_rate") ) {
-		map->list[m].weapon_damage_rate = (state) ? atoi(w4) : 100;
-	} else if ( !strcmpi(w3,"magic_damage_rate") ) {
-		map->list[m].magic_damage_rate = (state) ? atoi(w4) : 100;
-	} else if ( !strcmpi(w3,"misc_damage_rate") ) {
-		map->list[m].misc_damage_rate = (state) ? atoi(w4) : 100;
-	} else if ( !strcmpi(w3,"short_damage_rate") ) {
-		map->list[m].short_damage_rate = (state) ? atoi(w4) : 100;
-	} else if ( !strcmpi(w3,"long_damage_rate") ) {
-		map->list[m].long_damage_rate = (state) ? atoi(w4) : 100;
-	} else if ( !strcmpi(w3,"src4instance") ) {
-		map->list[m].flag.src4instance = (state) ? 1 : 0;
-	} else if ( !strcmpi(w3,"nocashshop") ) {
-		map->list[m].flag.nocashshop = (state) ? 1 : 0;
-	} else if (!strcmpi(w3,"noviewid")) {
-		map->list[m].flag.noviewid = (state) ? atoi(w4) : 0;
-	} else if (!strcmpi(w3, "pairship_startable")) {
-		map->list[m].flag.pairship_startable = (state) ? 1 : 0;
-	}  else if (!strcmpi(w3, "pairship_endable")) {
-		map->list[m].flag.pairship_endable = (state) ? 1 : 0;
-	}  else if (!strcmpi(w3, "nostorage")) {
-		map->list[m].flag.nostorage = (state) ? cap_value(atoi(w4), 1, 3) : 0;
-	}  else if (!strcmpi(w3, "nogstorage")) {
-		map->list[m].flag.nogstorage = (state) ? cap_value(atoi(w4), 1, 3) : 0;
-	}  else if (strcmpi(w3, "nopet") == 0) {
+	} else if (strcmpi(w3, "invincible_time_inc") == 0) {
+		map->list[m].invincible_time_inc = (state != 0) ? atoi(w4) : 0;
+	} else if (strcmpi(w3, "weapon_damage_rate") == 0) {
+		map->list[m].weapon_damage_rate = (state != 0) ? atoi(w4) : 100;
+	} else if (strcmpi(w3, "magic_damage_rate") == 0) {
+		map->list[m].magic_damage_rate = (state != 0) ? atoi(w4) : 100;
+	} else if (strcmpi(w3, "misc_damage_rate") == 0) {
+		map->list[m].misc_damage_rate = (state != 0) ? atoi(w4) : 100;
+	} else if (strcmpi(w3, "short_damage_rate") == 0) {
+		map->list[m].short_damage_rate = (state != 0) ? atoi(w4) : 100;
+	} else if (strcmpi(w3, "long_damage_rate") == 0) {
+		map->list[m].long_damage_rate = (state != 0) ? atoi(w4) : 100;
+	} else if (strcmpi(w3,"nomapchannelautojoin") == 0) {
+		map->list[m].flag.chsysnolocalaj = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3,"noknockback") == 0) {
+		map->list[m].flag.noknockback = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3,"src4instance") == 0) {
+		map->list[m].flag.src4instance = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3,"nocashshop") == 0) {
+		map->list[m].flag.nocashshop = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3,"noviewid") == 0) {
+		map->list[m].flag.noviewid = (state != 0) ? atoi(w4) : 0;
+	} else if (strcmpi(w3, "pairship_startable") == 0) {
+		map->list[m].flag.pairship_startable = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3, "pairship_endable") == 0) {
+		map->list[m].flag.pairship_endable = (state != 0) ? 1 : 0;
+	} else if (strcmpi(w3, "nostorage") == 0) {
+		map->list[m].flag.nostorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
+	} else if (strcmpi(w3, "nogstorage") == 0) {
+		map->list[m].flag.nogstorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
+	} else if (strcmpi(w3, "nopet") == 0) {
 		map->list[m].flag.nopet = (state != 0) ? 1 : 0;
 	} else {
 		npc->parse_unknown_mapflag(mapname, w3, w4, start, buffer, filepath, retval);
 	}
 
-	return strchr(start,'\n');// continue
+	return strchr(start, '\n');// continue
 }
 
 /**
