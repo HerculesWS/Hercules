@@ -856,6 +856,7 @@ typedef enum sc_type {
 	SC_MADOGEAR,
 	SC_POPECOOKIE,
 	SC_VITALIZE_POTION,
+	SC_SKF_MATK,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif
