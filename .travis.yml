@@ -1,5 +1,5 @@
 language: c
-sudo: false
+os: linux
 dist: trusty
 addons:
   apt:
@@ -24,7 +24,7 @@ script:
 compiler: false # Necessary at the top level because referenced by allow_failures
 env: ignore=this # Necessary at the top level because referenced by allow_failures
 
-matrix:
+jobs:
   allow_failures:
   - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug CC=clang-5.0 --enable-Werror --enable-buildbot"
