@@ -9,6 +9,63 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.03.08] `March 08 2020`
+
+### Added
+
+- Added/updated packets, encryption keys and message tables for clients up to 2020-03-04. (#2645)
+- Exposed the item bound type (`IBT_*`) constants to the script engine. (#2650)
+- Added item scripts for item IDs 12459 through 12465 and corrected their name in the pre-renewal DB. (#2634, issue #1196)
+- Added the `unitiswalking()` script command, to check whether an unit is walking at a given time. (#2628)
+
+### Changed
+
+- Changed the default `PACKETVER` to 2019-05-30. (part of #2645)
+- Major refactoring of the functions in `unit.c`, adding code documentation and following the code style guidelines. Functions have been renamed when backward compatible changes to the arguments or return values were made. (#2546)
+  - A new header `unitdefines.h` has been added.
+  - `enum unit_dir` is now provided, to standardize handling of facing/walking directions.
+  - The macros `unit_get_opposite_dir()`, `unit_is_diagonal_dir()`, `unit_is_dir_or_opposite()`, `unit_get_ccw90_dir()`, `unit_get_rnd_diagonal_dir()` have been added.
+  - `unit->walktoxy_timer()` has been renamed to `unit->walk_toxy_timer()` and its return values have been changed and documented.
+  - `unit->walktoxy_sub()` has been renamed to `unit->walk_toxy_sub()` and its return values have been changed and documented.
+  - `unit->delay_walktoxy_timer()` has been renamed to `unit->delay_walk_toxy_timer()` and its return values have been changed and documented.
+  - `unit->walktoxy()` has been renamed to `unit->walk_toxy()` and its return values have been changed and documented.
+  - `unit->walktobl_sub()` has been renamed to `unit->walk_tobl_timer()` and its return values have been changed and documented.
+  - `unit->setdir()` has been renamed to `unit->set_dir()` and its return value and arguments have been changed and documented.
+  - `unit->getdir()` has been renamed to `unit->get_dir()` and its return type and constness of the arguments have been changed.
+  - `unit->warpto_master()` has been added.
+  - `unit->sleep_timer()` has been renamed to `unit->sleeptimer()` and its return values have been changed and documented.
+  - `unit->calc_pos()` now accepts `enum unit_dir`.
+  - `map->check_dir()` now accepts `enum unit_dir`.
+  - `map->calc_dir()` now returns `enum unit_dir` and accepts a const bl.
+  - `npc->create_npc()` now accepts `enum unit_dir`.
+  - `skill->blown()` now accepts `enum unit_dir`.
+  - `skill->brandishspear_first()` now accepts `enum unit_dir`.
+  - `skill->brandishspear_dir()` now accepts `enum unit_dir`.
+  - `skill->attack_blow_unknown()` now accepts `enum unit_dir`.
+  - The remaining unit functions have been documented.
+- New return values have been added to `pc->setpos()`, for better error handling. (#2633, issue #2632)
+- Increased the `MAX_MOB_LIST_PER_MAP` value to 115 in pre-renewal builds, to fit all the default spawns. (#2638, issue #1915)
+- Extended the `getiteminfo()` command to also accept item names, and added the types `ITEMINFO_ID`, `ITEMINFO_AEGISNAME`, `ITEMINFO_NAME`. (#2639)
+- Changed `itemskill()` to ignore conditions by default. The `ISF_CHECKCONDITIONS` needs to be explicitly passed if conditions should be checked/consumed. (part of #2648)
+- Changed the NPC shop behavior to prevent selling items from the favorites tab of the inventory. (#2651)
+- Updated Doxygen configuration to speed up generation and fix compatibility warnings. (0d747896e0)
+- Updated the Travis-CI configuration file according to the validation warnings and notices. (eb97973e68)
+
+### Fixed
+
+- Fixed a missing `get_index()` call in `Skill2SCTable`, causing some skills to activate the wrong status. (#2643, issue #2636)
+- Fixed a compilation error C2233 in Visual Studio. (part of #2645)
+- Fixed Basilica unintentionally restraining boss mobs. (#2612, issue #1276, related to issue #2420)
+- Fixed the handling of unequip scripts in zones where an item is restricted. The `OnUnequip` script is now never executed when unequipping in a restricted zone, but it is always executed when entering such zones, regardless of the `unequip_restricted_equipment` battle flag. (#2642, issue #2180)
+- Fixed the handling of skill requirements and conditions by the `itemskill()` command. (#2648, issue #2646)
+- Added missing requirements to `CASH_INCAGI` and `RK_CRUSHSTRIKE`. (part of #2648)
+
+### Deprecated
+
+### Removed
+
+- Removed the `ISF_IGNORECONDITIONS` flag previously used by `itemskill()`, now the default behavior. (#2648)
+
 ## [v2020.02.09] `February 09 2020`
 
 ### Added
@@ -1196,6 +1253,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.02.09]: https://github.com/HerculesWS/Hercules/compare/v2020.02.09...v2020.03.08
 [v2020.02.09]: https://github.com/HerculesWS/Hercules/compare/v2020.01.12...v2020.02.09
 [v2020.01.12]: https://github.com/HerculesWS/Hercules/compare/v2019.12.15...v2020.01.12
 [v2019.12.15]: https://github.com/HerculesWS/Hercules/compare/v2019.11.17+1...v2019.12.15
