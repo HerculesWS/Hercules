@@ -212,6 +212,7 @@ struct Battle_Config {
 	int guild_aura;
 	int pc_invincible_time;
 
+	int pet_catch_rate_official_formula;
 	int pet_catch_rate;
 	int pet_rename;
 	int pet_friendly_rate;
