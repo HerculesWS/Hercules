@@ -888,6 +888,7 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_VITALIZE_POTION] |= SCB_BATK | SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_SKF_MATK] |= SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_SKF_ATK] |= SCB_BATK;
+	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -5929,6 +5930,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += sc->data[SC_BATTLESCROLL]->val1;
 		if (sc->data[SC_STEAMPACK])
 			bonus += sc->data[SC_STEAMPACK]->val2;
+		if (sc->data[SC_SKF_ASPD] != NULL)
+			bonus += sc->data[SC_SKF_ASPD]->val1;
 	}
 
 	return (bonus + pots);
@@ -6096,6 +6099,8 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 		aspd_rate += sc->data[SC_BATTLESCROLL]->val1 * 10;
 	if (sc->data[SC_STEAMPACK])
 		aspd_rate += sc->data[SC_STEAMPACK]->val2 * 10;
+	if (sc->data[SC_SKF_ASPD] != NULL)
+		aspd_rate -= sc->data[SC_SKF_ASPD]->val1 * 10;
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
