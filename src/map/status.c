@@ -889,6 +889,7 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_SKF_MATK] |= SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_SKF_ATK] |= SCB_BATK;
 	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_SKF_CAST] |= SCB_NONE;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
