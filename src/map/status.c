@@ -887,6 +887,7 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_POPECOOKIE] |= SCB_BASE | SCB_BATK | SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_VITALIZE_POTION] |= SCB_BATK | SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_SKF_MATK] |= SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_SKF_ATK] |= SCB_BATK;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4899,6 +4900,8 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_STEAMPACK])
 		batk += sc->data[SC_STEAMPACK]->val1;
+	if (sc->data[SC_SKF_ATK] != NULL)
+		batk += sc->data[SC_SKF_ATK]->val1;
 
 	if (sc->data[SC_SHRIMP])
 		batk += batk * sc->data[SC_SHRIMP]->val2 / 100;
