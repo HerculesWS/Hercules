@@ -658,7 +658,17 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		return 1;
 	}
 
-	int pet_catch_rate = pet->db[i].capture * (100 - get_percentage(md->status.hp, md->status.max_hp)) / 100 + pet->db[i].capture;
+	int pet_catch_rate;
+	int capture = pet->db[i].capture;
+	int mob_hp_perc = get_percentage(md->status.hp, md->status.max_hp);
+
+	if (battle_config.pet_catch_rate_official_formula == 1) {
+		pet_catch_rate = capture * (100 - mob_hp_perc) / 100 + capture;
+	} else {
+		int lvl_diff_mod = (sd->status.base_level - md->level) * 30;
+		int char_luk_mod = sd->battle_status.luk * 20;
+		pet_catch_rate = (capture + lvl_diff_mod + char_luk_mod) * (200 - mob_hp_perc) / 100;
+	}
 
 	pet_catch_rate = cap_value(pet_catch_rate, 1, 10000) * battle_config.pet_catch_rate / 100;
 
