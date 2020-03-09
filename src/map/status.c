@@ -890,6 +890,7 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_SKF_ATK] |= SCB_BATK;
 	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_SKF_CAST] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_ALMIGHTY] |= SCB_BATK | SCB_MATK;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4904,6 +4905,8 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		batk += sc->data[SC_STEAMPACK]->val1;
 	if (sc->data[SC_SKF_ATK] != NULL)
 		batk += sc->data[SC_SKF_ATK]->val1;
+	if (sc->data[SC_ALMIGHTY] != NULL)
+		batk += sc->data[SC_ALMIGHTY]->val1;
 
 	if (sc->data[SC_SHRIMP])
 		batk += batk * sc->data[SC_SHRIMP]->val2 / 100;
@@ -5107,6 +5110,8 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += sc->data[SC_MAGIC_CANDY]->val1;
 	if (sc->data[SC_SKF_MATK] != NULL)
 		matk += sc->data[SC_SKF_MATK]->val1;
+	if (sc->data[SC_ALMIGHTY] != NULL)
+		matk += sc->data[SC_ALMIGHTY]->val2;
 
 	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 }
