@@ -1010,7 +1010,7 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 
-	if (skill_id == AL_TELEPORT && sd->autocast.type == AUTOCAST_ITEM && sd->skillitemlv > 2)
+	if (skill_id == AL_TELEPORT && sd->autocast.type == AUTOCAST_ITEM && sd->autocast.skill_lv > 2)
 		return 0; // Teleport level 3 and higher bypasses this check if cast by itemskill() script commands.
 
 	// Epoque:
@@ -5824,7 +5824,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		if (ud->walktimer != INVALID_TIMER && ud->skill_id != TK_RUN && ud->skill_id != RA_WUGDASH)
 			unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-		if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+		if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv); // Tests show wings don't overwrite the delay but skill scrolls do. [Inkfish]
 		if (sd) { // Cooldown application
 			int i, cooldown = skill->get_cooldown(ud->skill_id, ud->skill_lv);
@@ -5942,7 +5942,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		}
 	}
 
-	if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+	if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 		ud->canact_tick = tick;
 	ud->skill_id = ud->skill_lv = ud->skilltarget = 0;
 	//You can't place a skill failed packet here because it would be
@@ -6334,8 +6334,6 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					sd->autocast.type = AUTOCAST_ABRA;
 					sd->autocast.skill_id = abra_skill_id;
 					sd->autocast.skill_lv = abra_skill_lv;
-					sd->skillitem = abra_skill_id;
-					sd->skillitemlv = abra_skill_lv;
 					clif->item_skill(sd, abra_skill_id, abra_skill_lv);
 				} else {
 					// mob-casted
@@ -7501,7 +7499,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 				}
 
-				if (sd->autocast.type == AUTOCAST_TEMP || ((sd->skillitem == AL_TELEPORT || battle_config.skip_teleport_lv1_menu) && skill_lv == 1) || skill_lv == 3)
+				if (sd->autocast.type == AUTOCAST_TEMP || ((sd->autocast.skill_id == AL_TELEPORT || battle_config.skip_teleport_lv1_menu) && skill_lv == 1) || skill_lv == 3)
 				{
 					if( skill_lv == 1 )
 						pc->randomwarp(sd,CLR_TELEPORT);
@@ -10078,8 +10076,6 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					sd->autocast.type = AUTOCAST_IMPROVISE;
 					sd->autocast.skill_id = improv_skill_id;
 					sd->autocast.skill_lv = improv_skill_lv;
-					sd->skillitem = improv_skill_id;
-					sd->skillitemlv = improv_skill_lv;
 					clif->item_skill(sd, improv_skill_id, improv_skill_lv);
 				} else {
 					struct unit_data *ud = unit->bl2ud(src);
@@ -10848,7 +10844,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		if (ud->walktimer != INVALID_TIMER)
 			unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-		if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+		if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv);
 		if (sd) { //Cooldown application
 			int i, cooldown = skill->get_cooldown(ud->skill_id, ud->skill_lv);
@@ -10877,7 +10873,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		map->freeblock_lock();
 		skill->castend_pos2(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv,tick,0);
 
-		if( sd && sd->skillitem != AL_WARP ) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
+		if (sd != NULL && sd->autocast.skill_id != AL_WARP) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
 			pc->autocast_clear(sd);
 
 		unit->set_dir(src, map->calc_dir(src, ud->skillx, ud->skilly));
@@ -10892,7 +10888,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		return 1;
 	} while(0);
 
-	if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+	if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 		ud->canact_tick = tick;
 	ud->skill_id = ud->skill_lv = 0;
 	if(sd)
@@ -11026,7 +11022,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 					}
 				}
 
-				lv = (sd->autocast.type > AUTOCAST_TEMP) ? sd->skillitemlv : pc->checkskill(sd, skill_id);
+				lv = (sd->autocast.type > AUTOCAST_TEMP) ? sd->autocast.skill_lv : pc->checkskill(sd, skill_id);
 				wx = sd->menuskill_val>>16;
 				wy = sd->menuskill_val&0xffff;
 

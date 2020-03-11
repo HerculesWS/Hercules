@@ -12786,8 +12786,8 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 			return; //Can't use skills while a menu is open.
 	}
 	if (sd->autocast.type != AUTOCAST_NONE) {
-		if (skill_lv != sd->skillitemlv)
-			skill_lv = sd->skillitemlv;
+		if (skill_lv != sd->autocast.skill_lv)
+			skill_lv = sd->autocast.skill_lv;
 		if (!(tmp&INF_SELF_SKILL))
 			pc->delinvincibletimer(sd); // Target skills through items cancel invincibility. [Inkfish]
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
@@ -12927,8 +12927,8 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	pc->delinvincibletimer(sd);
 
 	if (sd->autocast.type != AUTOCAST_NONE) {
-		if( skill_lv != sd->skillitemlv )
-			skill_lv = sd->skillitemlv;
+		if (skill_lv != sd->autocast.skill_lv)
+			skill_lv = sd->autocast.skill_lv;
 		unit->skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);
 	} else {
 		int lv;

@@ -304,7 +304,6 @@ struct map_session_data {
 	int followtimer; // [MouseJstr]
 	int followtarget;
 	time_t emotionlasttime; // to limit flood with emotion packets
-	int skillitem,skillitemlv;
 	uint16 skill_id_old,skill_lv_old;
 	uint16 skill_id_dance,skill_lv_dance;
 	short cook_mastery; // range: [0,1999] [Inkfish]

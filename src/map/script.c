@@ -11005,16 +11005,14 @@ static BUILDIN(itemskill)
 	sd->autocast.type = AUTOCAST_ITEM;
 	sd->autocast.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	sd->autocast.skill_lv = script_getnum(st, 3);
-	sd->skillitem = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
-	sd->skillitemlv = script_getnum(st, 3);
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
 	sd->autocast.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
 
 	if (sd->autocast.itemskill_check_conditions) {
-		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
-		    || skill->check_condition_castend(sd, sd->skillitem, sd->skillitemlv) == 0) {
+		if (skill->check_condition_castbegin(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0
+		    || skill->check_condition_castend(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0) {
 			pc->autocast_clear(sd);
 			return true;
 		}
@@ -11025,7 +11023,7 @@ static BUILDIN(itemskill)
 	sd->autocast.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
 	sd->autocast.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 
-	clif->item_skill(sd, sd->skillitem, sd->skillitemlv);
+	clif->item_skill(sd, sd->autocast.skill_id, sd->autocast.skill_lv);
 
 	return true;
 }
