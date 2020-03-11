@@ -2055,6 +2055,7 @@ struct skill_interface {
 	int (*not_ok_hom) (uint16 skill_id, struct homun_data *hd);
 	int (*not_ok_hom_unknown) (uint16 skill_id, struct homun_data *hd);
 	int (*not_ok_mercenary) (uint16 skill_id, struct mercenary_data *md);
+	void (*validate_autocast_data) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*chastle_mob_changetarget) (struct block_list *bl,va_list ap);
 	int (*can_produce_mix) ( struct map_session_data *sd, int nameid, int trigger, int qty);
 	int (*produce_mix) ( struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty );

@@ -1177,6 +1177,31 @@ static int skillnotok_mercenary(uint16 skill_id, struct mercenary_data *md)
 	return skill->not_ok(skill_id, md->master);
 }
 
+/**
+ * Validates the plausibility of auto-cast related data and calls pc_autocast_clear() if necessary.
+ *
+ * @param sd The character who cast the skill.
+ * @param skill_id The cast skill's ID.
+ * @param skill_lv The cast skill's level. (clif_parse_UseSkillMap() passes 0.)
+ *
+ **/
+static void skill_validate_autocast_data(struct map_session_data *sd, int skill_id, int skill_lv)
+{
+	nullpo_retv(sd);
+
+	// Determine if called by clif_parse_UseSkillMap().
+	bool use_skill_map = (skill_lv == 0 && (skill_id == AL_WARP || skill_id == AL_TELEPORT));
+
+	if (sd->autocast.type == AUTOCAST_NONE)
+		pc->autocast_clear(sd); // No auto-cast type set. Preventively unset all auto-cast related data.
+	else if (sd->autocast.type == AUTOCAST_TEMP)
+		pc->autocast_clear(sd); // AUTOCAST_TEMP should have been unset straight after usage.
+	else if (sd->autocast.skill_id == 0 || skill_id == 0 || sd->autocast.skill_id != skill_id)
+		pc->autocast_clear(sd); // Implausible skill ID.
+	else if (sd->autocast.skill_lv == 0 || (!use_skill_map && (skill_lv == 0 || sd->autocast.skill_lv != skill_lv)))
+		pc->autocast_clear(sd); // Implausible skill level.
+}
+
 static struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16 skill_lv, struct block_list *src, int x, int y)
 {
 	int pos = skill->get_unit_layout_type(skill_id,skill_lv);
@@ -21685,6 +21710,7 @@ void skill_defaults(void)
 	skill->not_ok_hom = skillnotok_hom;
 	skill->not_ok_hom_unknown = skillnotok_hom_unknown;
 	skill->not_ok_mercenary = skillnotok_mercenary;
+	skill->validate_autocast_data = skill_validate_autocast_data;
 	skill->chastle_mob_changetarget = skill_chastle_mob_changetarget;
 	skill->can_produce_mix = skill_can_produce_mix;
 	skill->produce_mix = skill_produce_mix;
