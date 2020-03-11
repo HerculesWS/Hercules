@@ -11003,6 +11003,8 @@ static BUILDIN(itemskill)
 
 	pc->itemskill_clear(sd);
 	sd->autocast.type = AUTOCAST_ITEM;
+	sd->autocast.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
+	sd->autocast.skill_lv = script_getnum(st, 3);
 	sd->skillitem = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	sd->skillitemlv = script_getnum(st, 3);
 	sd->state.itemskill_conditions_checked = 0; // Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.

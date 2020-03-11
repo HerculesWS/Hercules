@@ -6322,6 +6322,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				if (sd) {
 					// player-casted
 					sd->autocast.type = AUTOCAST_ABRA;
+					sd->autocast.skill_id = abra_skill_id;
+					sd->autocast.skill_lv = abra_skill_lv;
 					sd->state.abra_flag = 1;
 					sd->skillitem = abra_skill_id;
 					sd->skillitemlv = abra_skill_lv;
@@ -10065,6 +10067,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 				if (sd != NULL) {
 					sd->autocast.type = AUTOCAST_IMPROVISE;
+					sd->autocast.skill_id = improv_skill_id;
+					sd->autocast.skill_lv = improv_skill_lv;
 					sd->state.abra_flag = 2;
 					sd->skillitem = improv_skill_id;
 					sd->skillitemlv = improv_skill_lv;
