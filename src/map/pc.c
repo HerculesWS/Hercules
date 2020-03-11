@@ -5349,6 +5349,10 @@ static int pc_itemskill_clear(struct map_session_data *sd)
 	sd->autocast.type = AUTOCAST_NONE;
 	sd->autocast.skill_id = 0;
 	sd->autocast.skill_lv = 0;
+	sd->autocast.itemskill_conditions_checked = false;
+	sd->autocast.itemskill_check_conditions = false;
+	sd->autocast.itemskill_instant_cast = false;
+	sd->autocast.itemskill_cast_on_self = false;
 	sd->itemskill_id = 0;
 	sd->itemskill_lv = 0;
 	sd->state.itemskill_conditions_checked = 0;

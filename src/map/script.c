@@ -11012,6 +11012,7 @@ static BUILDIN(itemskill)
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
 	sd->state.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS) ? 1 : 0; // Unset in pc_itemskill_clear().
+	sd->autocast.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
 
 	if (sd->state.itemskill_check_conditions == 1) {
 		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
@@ -11021,10 +11022,13 @@ static BUILDIN(itemskill)
 		}
 
 		sd->state.itemskill_conditions_checked = 1; // Unset in pc_itemskill_clear().
+		sd->autocast.itemskill_conditions_checked = true;
 	}
 
 	sd->state.itemskill_no_casttime = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST) ? 1 : 0; // Unset in pc_itemskill_clear().
 	sd->state.itemskill_castonself = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF) ? 1 : 0; // Unset in pc_itemskill_clear().
+	sd->autocast.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
+	sd->autocast.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 
 	// itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention. Unset in pc_itemskill_clear().
 	sd->itemskill_id = sd->skillitem;
