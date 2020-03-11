@@ -2066,7 +2066,9 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			temp = (sd->autospell[i].id > 0) ? sd->autospell[i].id : -sd->autospell[i].id;
 
 			sd->state.autocast = 1;
+			sd->autocast.type = AUTOCAST_TEMP;
 			notok = skill->not_ok(temp, sd);
+			sd->autocast.type = AUTOCAST_NONE;
 			sd->state.autocast = 0;
 
 			if ( notok )
@@ -2119,9 +2121,11 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 				type = CAST_GROUND;
 
 			sd->state.autocast = 1;
+			sd->autocast.type = AUTOCAST_TEMP;
 			skill->consume_requirement(sd,temp,auto_skill_lv,1);
 			skill->toggle_magicpower(src, temp);
 			skill->castend_type(type, src, tbl, temp, auto_skill_lv, tick, 0);
+			sd->autocast.type = AUTOCAST_NONE;
 			sd->state.autocast = 0;
 			//Set canact delay. [Skotlex]
 			ud = unit->bl2ud(src);
@@ -2191,6 +2195,9 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 	if( sd == NULL || !skill_id )
 		return 0;
 
+	// Preserve auto-cast type if bAutoSpellOnSkill was triggered by a skill which was cast by Abracadabra, Improvised Song or an item.
+	enum autocast_type ac_type = sd->autocast.type;
+
 	for( i = 0; i < ARRAYLENGTH(sd->autospell3) && sd->autospell3[i].flag; i++ ) {
 		if( sd->autospell3[i].flag != skill_id )
 			continue;
@@ -2201,7 +2208,9 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 		temp = (sd->autospell3[i].id > 0) ? sd->autospell3[i].id : -sd->autospell3[i].id;
 
 		sd->state.autocast = 1;
+		sd->autocast.type = AUTOCAST_TEMP;
 		notok = skill->not_ok(temp, sd);
+		sd->autocast.type = AUTOCAST_NONE;
 		sd->state.autocast = 0;
 
 		if ( notok )
@@ -2250,11 +2259,15 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 
 		sd->state.autocast = 1;
 		sd->autospell3[i].lock = true;
+		sd->autocast.type = AUTOCAST_TEMP;
 		skill->consume_requirement(sd,temp,skill_lv,1);
 		skill->castend_type(type, &sd->bl, tbl, temp, skill_lv, tick, 0);
+		sd->autocast.type = AUTOCAST_NONE;
 		sd->autospell3[i].lock = false;
 		sd->state.autocast = 0;
 	}
+
+	sd->autocast.type = ac_type;
 
 	if (sd->autobonus3[0].rate) {
 		for( i = 0; i < ARRAYLENGTH(sd->autobonus3); i++ ) {
@@ -2402,6 +2415,9 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 		struct unit_data *ud;
 		int i, auto_skill_id, auto_skill_lv, type, notok;
 
+		// Preserve auto-cast type if bAutoSpellWhenHit was triggered during cast of a skill which was cast by Abracadabra, Improvised Song or an item.
+		enum autocast_type ac_type = dstsd->autocast.type;
+
 		for (i = 0; i < ARRAYLENGTH(dstsd->autospell2) && dstsd->autospell2[i].id; i++) {
 
 			if(!(dstsd->autospell2[i].flag&attack_type&BF_WEAPONMASK &&
@@ -2418,7 +2434,9 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 				 rate>>=1;
 
 			dstsd->state.autocast = 1;
+			dstsd->autocast.type = AUTOCAST_TEMP;
 			notok = skill->not_ok(auto_skill_id, dstsd);
+			dstsd->autocast.type = AUTOCAST_NONE;
 			dstsd->state.autocast = 0;
 
 			if ( notok )
@@ -2461,8 +2479,10 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 				continue;
 
 			dstsd->state.autocast = 1;
+			dstsd->autocast.type = AUTOCAST_TEMP;
 			skill->consume_requirement(dstsd,auto_skill_id,auto_skill_lv,1);
 			skill->castend_type(type, bl, tbl, auto_skill_id, auto_skill_lv, tick, 0);
+			dstsd->autocast.type = AUTOCAST_NONE;
 			dstsd->state.autocast = 0;
 			// Set canact delay. [Skotlex]
 			ud = unit->bl2ud(bl);
@@ -2475,6 +2495,8 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 				}
 			}
 		}
+
+		dstsd->autocast.type = ac_type;
 	}
 
 	//Autobonus when attacked
@@ -6299,6 +6321,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 				if (sd) {
 					// player-casted
+					sd->autocast.type = AUTOCAST_ABRA;
 					sd->state.abra_flag = 1;
 					sd->skillitem = abra_skill_id;
 					sd->skillitemlv = abra_skill_lv;
@@ -10041,6 +10064,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 
 				if (sd != NULL) {
+					sd->autocast.type = AUTOCAST_IMPROVISE;
 					sd->state.abra_flag = 2;
 					sd->skillitem = improv_skill_id;
 					sd->skillitemlv = improv_skill_lv;

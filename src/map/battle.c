@@ -5939,7 +5939,17 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 						sd->state.autocast = 1;
 					}
 
+					enum autocast_type ac_type;
+
+					if (sd != NULL) {
+						ac_type = sd->autocast.type;
+						sd->autocast.type = AUTOCAST_TEMP;
+					}
+
 					map->foreachinshootrange(battle->damage_area,target,skill->get_splash(LG_REFLECTDAMAGE,1),BL_CHAR,tick,target,delay,wd->dmotion,rdamage,status_get_race(target));
+
+					if (sd != NULL)
+						sd->autocast.type = ac_type;
 
 					if( change )
 						sd->state.autocast = 0;
@@ -6457,8 +6467,10 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 				}
 
 				sd->state.autocast = 1;
+				sd->autocast.type = AUTOCAST_TEMP;
 				skill->consume_requirement(sd,r_skill,r_lv,3);
 				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
+				sd->autocast.type = AUTOCAST_NONE;
 				sd->state.autocast = 0;
 				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
 				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
