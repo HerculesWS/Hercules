@@ -12767,7 +12767,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
 			return;
 	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
-		if (sd->skillitem != skill_id) {
+		if (sd->autocast.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -12785,7 +12785,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		} else if (sd->menuskill_id != SA_AUTOSPELL)
 			return; //Can't use skills while a menu is open.
 	}
-	if (sd->skillitem == skill_id) {
+	if (sd->autocast.type != AUTOCAST_NONE) {
 		if (skill_lv != sd->skillitemlv)
 			skill_lv = sd->skillitemlv;
 		if (!(tmp&INF_SELF_SKILL))
@@ -12905,7 +12905,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		return;
 
 	if( DIFF_TICK(tick, sd->ud.canact_tick) < 0 ) {
-		if( sd->skillitem != skill_id ) {
+		if (sd->autocast.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -12926,7 +12926,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 
 	pc->delinvincibletimer(sd);
 
-	if( sd->skillitem == skill_id ) {
+	if (sd->autocast.type != AUTOCAST_NONE) {
 		if( skill_lv != sd->skillitemlv )
 			skill_lv = sd->skillitemlv;
 		unit->skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);

@@ -1010,8 +1010,8 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 
-	if( skill_id == AL_TELEPORT && sd->skillitem == skill_id && sd->skillitemlv > 2 )
-		return 0; // Teleport lv 3 bypasses this check.[Inkfish]
+	if (skill_id == AL_TELEPORT && sd->autocast.type == AUTOCAST_ITEM && sd->skillitemlv > 2)
+		return 0; // Teleport level 3 and higher bypasses this check if cast by itemskill() script commands.
 
 	// Epoque:
 	// This code will compare the player's attack motion value which is influenced by ASPD before
@@ -1032,7 +1032,7 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	 * It has been confirmed on a official server (thanks to Yommy) that item-cast skills bypass all the restrictions below
 	 * Also, without this check, an exploit where an item casting + healing (or any other kind buff) isn't deleted after used on a restricted map
 	 **/
-	if( sd->skillitem == skill_id )
+	if (sd->autocast.type == AUTOCAST_ITEM)
 		return 0;
 
 	if( sd->sc.data[SC_ALL_RIDING] )
@@ -7464,7 +7464,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					map->freeblock_unlock();
 					return 1;
 				}
-				if( sd->skillitem != skill_id )
+				if (sd->autocast.type == AUTOCAST_NONE)
 					status_zap(src, 0, skill->get_sp(skill_id, skill_lv)); // consume sp only if succeeded
 			}
 			break;
@@ -11026,7 +11026,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 					}
 				}
 
-				lv = sd->skillitem==skill_id?sd->skillitemlv:pc->checkskill(sd,skill_id);
+				lv = (sd->autocast.type > AUTOCAST_TEMP) ? sd->skillitemlv : pc->checkskill(sd, skill_id);
 				wx = sd->menuskill_val>>16;
 				wy = sd->menuskill_val&0xffff;
 
@@ -14067,8 +14067,8 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 1;
 	}
 
-	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id) {
-		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
+	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->autocast.type != AUTOCAST_ITEM) {
+		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.
 		return 1;
@@ -14099,7 +14099,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	if( !sc->count )
 		sc = NULL;
 
-	if( sd->skillitem == skill_id ) {
+	if (sd->autocast.type == AUTOCAST_ITEM) {
 		if (sd->autocast.type == AUTOCAST_ABRA || sd->autocast.type == AUTOCAST_IMPROVISE) { // Abracadabra or Improvised Song was used.
 			sd->autocast.type = AUTOCAST_NONE;
 		} else {
@@ -14122,7 +14122,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		}
 	}
 
-	if (pc_is90overweight(sd) && sd->skillitem != skill_id) { /// Skill casting items ignore the overweight restriction. [Kenpachi]
+	if (pc_is90overweight(sd) && sd->autocast.type != AUTOCAST_ITEM) { // Skill casting items ignore the overweight restriction.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_WEIGHTOVER, 0, 0);
 		return 0;
 	}
@@ -14993,7 +14993,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 0;
 	}
 
-	if (require.sp > 0 && st->sp < (unsigned int)require.sp && sd->skillitem != skill_id) { /// Skill casting items and Hocus-Pocus skills don't consume SP. [Kenpachi]
+	if (require.sp > 0 && st->sp < (unsigned int)require.sp && sd->autocast.type == AUTOCAST_NONE) { // Auto-cast skills don't consume SP.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 		return 0;
 	}
@@ -15056,8 +15056,8 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 		return 1;
 	}
 
-	if( pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id ) {
-		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
+	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->autocast.type != AUTOCAST_ITEM) {
+		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.
 		return 1;
@@ -15084,7 +15084,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			break;
 	}
 
-	if (pc_is90overweight(sd) && sd->skillitem != skill_id) { /// Skill casting items ignore the overweight restriction. [Kenpachi]
+	if (pc_is90overweight(sd) && sd->autocast.type != AUTOCAST_ITEM) { // Skill casting items ignore the overweight restriction.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_WEIGHTOVER, 0, 0);
 		return 0;
 	}

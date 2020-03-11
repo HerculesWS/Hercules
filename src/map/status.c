@@ -1584,7 +1584,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	}
 
 	if( skill_id ) {
-		if (src != NULL && (sd == NULL || sd->skillitem == 0)) {
+		if (src != NULL && (sd == NULL || sd->autocast.type != AUTOCAST_ITEM)) {
 			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;
 
@@ -1628,7 +1628,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				if (src != NULL
 				 && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR)
 				 && !(st->mode&MD_BOSS)
-				 && (src->type != BL_PC || sd->skillitem != skill_id))
+				 && (src->type != BL_PC || sd->autocast.type != AUTOCAST_ITEM))
 					return 0;
 				break;
 			default:
@@ -1707,7 +1707,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				return 0; //Can't amp out of Wand of Hermode :/ [Skotlex]
 		}
 
-		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->skillitem != skill_id)) {
+		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->autocast.type != AUTOCAST_ITEM)) {
 			//Skills blocked through status changes...
 			if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
 				sc->data[SC_SILENCE] ||
