@@ -1145,8 +1145,10 @@ static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_
 	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->autocast_clear(sd);
+	if (sd != NULL && ret == 0)
+		pc->autocast_clear(sd); // Error in unit_skilluse_id2().
+	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
+		skill->validate_autocast_data(sd, skill_id, skill_lv);
 
 	return ret;
 }
@@ -1782,8 +1784,10 @@ static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_
 	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->autocast_clear(sd);
+	if (sd != NULL && ret == 0)
+		pc->autocast_clear(sd); // Error in unit_skilluse_pos2().
+	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
+		skill->validate_autocast_data(sd, skill_id, skill_lv);
 
 	return ret;
 }
