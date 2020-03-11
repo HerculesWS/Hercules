@@ -1799,6 +1799,7 @@ static void npc_expanded_barter_fromsql(void)
 		) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
+		StrBuf->Destroy(&buf);
 		return;
 	}
 
