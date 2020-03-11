@@ -4223,7 +4223,7 @@ static void skill_castend_type(int type, struct block_list *src, struct block_li
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
 	if (sd != NULL)
-		pc->itemskill_clear(sd);
+		pc->autocast_clear(sd);
 }
 
 /*==========================================

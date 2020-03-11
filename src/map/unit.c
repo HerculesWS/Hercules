@@ -1146,7 +1146,7 @@ static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
 	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->itemskill_clear(sd);
+		pc->autocast_clear(sd);
 
 	return ret;
 }
@@ -1783,7 +1783,7 @@ static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
 	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->itemskill_clear(sd);
+		pc->autocast_clear(sd);
 
 	return ret;
 }

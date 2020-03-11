@@ -4764,8 +4764,8 @@ struct {
 	struct HPMHookPoint *HP_pc_checkitem_post;
 	struct HPMHookPoint *HP_pc_useitem_pre;
 	struct HPMHookPoint *HP_pc_useitem_post;
-	struct HPMHookPoint *HP_pc_itemskill_clear_pre;
-	struct HPMHookPoint *HP_pc_itemskill_clear_post;
+	struct HPMHookPoint *HP_pc_autocast_clear_pre;
+	struct HPMHookPoint *HP_pc_autocast_clear_post;
 	struct HPMHookPoint *HP_pc_skillatk_bonus_pre;
 	struct HPMHookPoint *HP_pc_skillatk_bonus_post;
 	struct HPMHookPoint *HP_pc_skillheal_bonus_pre;
@@ -11639,8 +11639,8 @@ struct {
 	int HP_pc_checkitem_post;
 	int HP_pc_useitem_pre;
 	int HP_pc_useitem_post;
-	int HP_pc_itemskill_clear_pre;
-	int HP_pc_itemskill_clear_post;
+	int HP_pc_autocast_clear_pre;
+	int HP_pc_autocast_clear_post;
 	int HP_pc_skillatk_bonus_pre;
 	int HP_pc_skillatk_bonus_post;
 	int HP_pc_skillheal_bonus_pre;

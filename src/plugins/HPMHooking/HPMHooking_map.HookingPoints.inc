@@ -2440,7 +2440,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->unequipitem_pos, HP_pc_unequipitem_pos) },
 	{ HP_POP(pc->checkitem, HP_pc_checkitem) },
 	{ HP_POP(pc->useitem, HP_pc_useitem) },
-	{ HP_POP(pc->itemskill_clear, HP_pc_itemskill_clear) },
+	{ HP_POP(pc->autocast_clear, HP_pc_autocast_clear) },
 	{ HP_POP(pc->skillatk_bonus, HP_pc_skillatk_bonus) },
 	{ HP_POP(pc->skillheal_bonus, HP_pc_skillheal_bonus) },
 	{ HP_POP(pc->skillheal2_bonus, HP_pc_skillheal2_bonus) },
