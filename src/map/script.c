@@ -11030,10 +11030,6 @@ static BUILDIN(itemskill)
 	sd->autocast.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
 	sd->autocast.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 
-	// itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention. Unset in pc_autocast_clear().
-	sd->itemskill_id = sd->skillitem;
-	sd->itemskill_lv = sd->skillitemlv;
-
 	clif->item_skill(sd, sd->skillitem, sd->skillitemlv);
 
 	return true;
