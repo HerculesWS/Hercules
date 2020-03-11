@@ -5354,10 +5354,6 @@ static int pc_autocast_clear(struct map_session_data *sd)
 	sd->autocast.itemskill_check_conditions = false;
 	sd->autocast.itemskill_instant_cast = false;
 	sd->autocast.itemskill_cast_on_self = false;
-	sd->state.itemskill_conditions_checked = 0;
-	sd->state.itemskill_check_conditions = 0;
-	sd->state.itemskill_no_casttime = 0;
-	sd->state.itemskill_castonself = 0;
 
 	return 1;
 }

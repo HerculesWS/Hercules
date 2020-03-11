@@ -11007,26 +11007,21 @@ static BUILDIN(itemskill)
 	sd->autocast.skill_lv = script_getnum(st, 3);
 	sd->skillitem = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	sd->skillitemlv = script_getnum(st, 3);
-	sd->state.itemskill_conditions_checked = 0; // Skill casting items will check the conditions prior to the target selection in AEGIS. Thus we need a flag to prevent checking them twice.
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
-	sd->state.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS) ? 1 : 0; // Unset in pc_autocast_clear().
 	sd->autocast.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
 
-	if (sd->state.itemskill_check_conditions == 1) {
+	if (sd->autocast.itemskill_check_conditions) {
 		if (skill->check_condition_castbegin(sd, sd->skillitem, sd->skillitemlv) == 0
 		    || skill->check_condition_castend(sd, sd->skillitem, sd->skillitemlv) == 0) {
 			pc->autocast_clear(sd);
 			return true;
 		}
 
-		sd->state.itemskill_conditions_checked = 1; // Unset in pc_autocast_clear().
 		sd->autocast.itemskill_conditions_checked = true;
 	}
 
-	sd->state.itemskill_no_casttime = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST) ? 1 : 0; // Unset in pc_autocast_clear().
-	sd->state.itemskill_castonself = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF) ? 1 : 0; // Unset in pc_autocast_clear().
 	sd->autocast.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
 	sd->autocast.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 

@@ -14062,7 +14062,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	if (sd->chat_id != 0)
 		return 0;
 
-	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_check_conditions == 0)
+	if ((sd->autocast.itemskill_conditions_checked || !sd->autocast.itemskill_check_conditions)
 	    && sd->autocast.type == AUTOCAST_ITEM) {
 		return 1;
 	}
@@ -15051,7 +15051,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 	if (sd->chat_id != 0)
 		return 0;
 
-	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_check_conditions == 0)
+	if ((sd->autocast.itemskill_conditions_checked || !sd->autocast.itemskill_check_conditions)
 	    && sd->autocast.type == AUTOCAST_ITEM) {
 		return 1;
 	}
@@ -15257,7 +15257,7 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 
 	nullpo_ret(sd);
 
-	if (sd->state.itemskill_check_conditions == 0 && sd->autocast.type == AUTOCAST_ITEM)
+	if (!sd->autocast.itemskill_check_conditions && sd->autocast.type == AUTOCAST_ITEM)
 		return 1;
 
 	req = skill->get_requirement(sd,skill_id,skill_lv);

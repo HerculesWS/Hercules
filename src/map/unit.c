@@ -1707,7 +1707,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
 		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
 
-	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && sd->autocast.type == AUTOCAST_ITEM)
+	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
@@ -1915,7 +1915,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && sd->autocast.type == AUTOCAST_ITEM)
+	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
