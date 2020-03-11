@@ -6334,7 +6334,6 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					sd->autocast.type = AUTOCAST_ABRA;
 					sd->autocast.skill_id = abra_skill_id;
 					sd->autocast.skill_lv = abra_skill_lv;
-					sd->state.abra_flag = 1;
 					sd->skillitem = abra_skill_id;
 					sd->skillitemlv = abra_skill_lv;
 					clif->item_skill(sd, abra_skill_id, abra_skill_lv);
@@ -10079,7 +10078,6 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					sd->autocast.type = AUTOCAST_IMPROVISE;
 					sd->autocast.skill_id = improv_skill_id;
 					sd->autocast.skill_lv = improv_skill_lv;
-					sd->state.abra_flag = 2;
 					sd->skillitem = improv_skill_id;
 					sd->skillitemlv = improv_skill_lv;
 					clif->item_skill(sd, improv_skill_id, improv_skill_lv);
@@ -14118,9 +14116,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		sc = NULL;
 
 	if( sd->skillitem == skill_id ) {
-		if( sd->state.abra_flag ) // Hocus-Pocus was used. [Inkfish]
-			sd->state.abra_flag = 0;
-		else {
+		if (sd->autocast.type == AUTOCAST_ABRA || sd->autocast.type == AUTOCAST_IMPROVISE) { // Abracadabra or Improvised Song was used.
+			sd->autocast.type = AUTOCAST_NONE;
+		} else {
 			int i;
 			// When a target was selected, consume items that were skipped in pc_use_item [Skotlex]
 			if( (i = sd->itemindex) == -1 ||

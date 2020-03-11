@@ -5295,9 +5295,10 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if(sd->catch_target_class != -1) //Abort pet catching.
 		sd->catch_target_class = -1;
 
-	// Removes abracadabra/randomize spell flag for delayed consume items or item doesn't get consumed
-	if (sd->inventory_data[n]->flag.delay_consume)
-		sd->state.abra_flag = 0;
+	// Unset auto-cast related data for items of type IT_DELAYCONSUME or the item won't be consumed.
+	// TODO: Check if this is still required. [Kenpachi]
+	if (sd->inventory_data[n]->flag.delay_consume != 0)
+		sd->autocast.type = AUTOCAST_NONE;
 
 	amount = sd->status.inventory[n].amount;
 	//Check if the item is to be consumed immediately [Skotlex]
