@@ -173,6 +173,17 @@ struct pc_combos {
 	int id; /* this combo id */
 };
 
+/** Auto-cast related data. **/
+struct autocast_data {
+	enum autocast_type type; // The auto-cast type.
+	int skill_id; // The auto-cast skill ID.
+	int skill_lv; // The auto-cast skill level.
+	bool itemskill_conditions_checked; // Used by itemskill() script command, to prevent second check of conditions after target was selected.
+	bool itemskill_check_conditions; // Used by itemskill() script command, to check skill conditions and consume them.
+	bool itemskill_instant_cast; // Used by itemskill() script command, to cast skill instantaneously.
+	bool itemskill_cast_on_self; // Used by itemskill() script command, to forcefully cast skill on invoking character.
+};
+
 struct map_session_data {
 	struct block_list bl;
 	struct unit_data ud;
