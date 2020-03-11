@@ -1017,7 +1017,7 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	// This code will compare the player's attack motion value which is influenced by ASPD before
 	// allowing a skill to be cast. This is to prevent no-delay ACT files from spamming skills such as
 	// AC_DOUBLE which do not have a skill delay and are not regarded in terms of attack motion.
-	if( !sd->state.autocast && sd->skillitem != skill_id && sd->canskill_tick &&
+	if (sd->autocast.type == AUTOCAST_NONE && sd->canskill_tick != 0 &&
 		DIFF_TICK(timer->gettick(), sd->canskill_tick) < (sd->battle_status.amotion * (battle_config.skill_amotion_leniency) / 100) )
 	{// attempted to cast a skill before the attack motion has finished
 		return 1;
@@ -2090,11 +2090,9 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 
 			temp = (sd->autospell[i].id > 0) ? sd->autospell[i].id : -sd->autospell[i].id;
 
-			sd->state.autocast = 1;
 			sd->autocast.type = AUTOCAST_TEMP;
 			notok = skill->not_ok(temp, sd);
 			sd->autocast.type = AUTOCAST_NONE;
-			sd->state.autocast = 0;
 
 			if ( notok )
 				continue;
@@ -2145,13 +2143,12 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			else if (temp == PF_SPIDERWEB) //Special case, due to its nature of coding.
 				type = CAST_GROUND;
 
-			sd->state.autocast = 1;
 			sd->autocast.type = AUTOCAST_TEMP;
 			skill->consume_requirement(sd,temp,auto_skill_lv,1);
 			skill->toggle_magicpower(src, temp);
 			skill->castend_type(type, src, tbl, temp, auto_skill_lv, tick, 0);
 			sd->autocast.type = AUTOCAST_NONE;
-			sd->state.autocast = 0;
+
 			//Set canact delay. [Skotlex]
 			ud = unit->bl2ud(src);
 			if (ud) {
@@ -2232,11 +2229,9 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 
 		temp = (sd->autospell3[i].id > 0) ? sd->autospell3[i].id : -sd->autospell3[i].id;
 
-		sd->state.autocast = 1;
 		sd->autocast.type = AUTOCAST_TEMP;
 		notok = skill->not_ok(temp, sd);
 		sd->autocast.type = AUTOCAST_NONE;
-		sd->state.autocast = 0;
 
 		if ( notok )
 			continue;
@@ -2282,14 +2277,12 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 			!battle->check_range(&sd->bl, tbl, skill->get_range2(&sd->bl, temp,skill_lv) + (temp == RG_CLOSECONFINE?0:1)) )
 			continue;
 
-		sd->state.autocast = 1;
 		sd->autospell3[i].lock = true;
 		sd->autocast.type = AUTOCAST_TEMP;
 		skill->consume_requirement(sd,temp,skill_lv,1);
 		skill->castend_type(type, &sd->bl, tbl, temp, skill_lv, tick, 0);
 		sd->autocast.type = AUTOCAST_NONE;
 		sd->autospell3[i].lock = false;
-		sd->state.autocast = 0;
 	}
 
 	sd->autocast.type = ac_type;
@@ -2458,11 +2451,9 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 			if (attack_type&BF_LONG)
 				 rate>>=1;
 
-			dstsd->state.autocast = 1;
 			dstsd->autocast.type = AUTOCAST_TEMP;
 			notok = skill->not_ok(auto_skill_id, dstsd);
 			dstsd->autocast.type = AUTOCAST_NONE;
-			dstsd->state.autocast = 0;
 
 			if ( notok )
 				continue;
@@ -2503,12 +2494,11 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 			if( !battle->check_range(src, tbl, skill->get_range2(src, auto_skill_id,auto_skill_lv) + (auto_skill_id == RG_CLOSECONFINE?0:1)) && battle_config.autospell_check_range )
 				continue;
 
-			dstsd->state.autocast = 1;
 			dstsd->autocast.type = AUTOCAST_TEMP;
 			skill->consume_requirement(dstsd,auto_skill_id,auto_skill_lv,1);
 			skill->castend_type(type, bl, tbl, auto_skill_id, auto_skill_lv, tick, 0);
 			dstsd->autocast.type = AUTOCAST_NONE;
-			dstsd->state.autocast = 0;
+
 			// Set canact delay. [Skotlex]
 			ud = unit->bl2ud(bl);
 			if (ud) {
@@ -7512,7 +7502,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 				}
 
-				if( sd->state.autocast || ( (sd->skillitem == AL_TELEPORT || battle_config.skip_teleport_lv1_menu) && skill_lv == 1 ) || skill_lv == 3 )
+				if (sd->autocast.type == AUTOCAST_TEMP || ((sd->skillitem == AL_TELEPORT || battle_config.skip_teleport_lv1_menu) && skill_lv == 1) || skill_lv == 3)
 				{
 					if( skill_lv == 1 )
 						pc->randomwarp(sd,CLR_TELEPORT);
@@ -15302,7 +15292,7 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 
 				break;
 			default:
-				if (sd->state.autocast == 1 || sd->skillitem == skill_id) /// Skill casting items and Hocus-Pocus skills don't consume SP. [Kenpachi]
+				if (sd->autocast.type != AUTOCAST_NONE) // Auto-cast skills don't consume SP.
 					req.sp = 0;
 
 				break;
