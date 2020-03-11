@@ -4219,11 +4219,6 @@ static void skill_castend_type(int type, struct block_list *src, struct block_li
 			skill->castend_damage_id(src, bl, skill_id, skill_lv, tick, flag);
 			break;
 	}
-
-	struct map_session_data *sd = BL_CAST(BL_PC, src);
-
-	if (sd != NULL)
-		pc->autocast_clear(sd);
 }
 
 /*==========================================
