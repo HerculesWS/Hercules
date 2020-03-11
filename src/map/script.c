@@ -21436,7 +21436,10 @@ static BUILDIN(unitskilluseid)
 			} else {
 				status_calc_npc(nd, SCO_NONE);
 			}
+		} else if (bl->type == BL_PC) {
+			pc->autocast_clear(BL_UCAST(BL_PC, bl));
 		}
+
 		unit->skilluse_id(bl, target_id, skill_id, skill_lv);
 	}
 
@@ -21472,7 +21475,10 @@ static BUILDIN(unitskillusepos)
 			} else {
 				status_calc_npc(nd, SCO_NONE);
 			}
+		} else if (bl->type == BL_PC) {
+			pc->autocast_clear(BL_UCAST(BL_PC, bl));
 		}
+
 		unit->skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
 	}
 

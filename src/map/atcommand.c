@@ -5671,6 +5671,8 @@ ACMD(useskill)
 		return false;
 	}
 
+	pc->autocast_clear(sd);
+
 	if (skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE+MAX_HOMUNSKILL
 		&& sd->hd && homun_alive(sd->hd)) // (If used with @useskill, put the homunc as dest)
 		bl = &sd->hd->bl;

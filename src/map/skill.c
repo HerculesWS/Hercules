@@ -5883,7 +5883,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		}
 
 		if( sd && ud->skill_id != SA_ABRACADABRA && ud->skill_id != WM_RANDOMIZESPELL ) // they just set the data so leave it as it is.[Inkfish]
-			sd->skillitem = sd->skillitemlv = 0;
+			pc->autocast_clear(sd);
 
 		if (ud->skilltimer == INVALID_TIMER) {
 			if(md) md->skill_idx = -1;
@@ -5939,7 +5939,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 	//sent in ALL cases, even cases where skill_check_condition fails
 	//which would lead to double 'skill failed' messages u.u [Skotlex]
 	if(sd)
-		sd->skillitem = sd->skillitemlv = 0;
+		pc->autocast_clear(sd);
 	else if(md)
 		md->skill_idx = -1;
 	return 0;
@@ -10870,7 +10870,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		skill->castend_pos2(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv,tick,0);
 
 		if( sd && sd->skillitem != AL_WARP ) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
-			sd->skillitem = sd->skillitemlv = 0;
+			pc->autocast_clear(sd);
 
 		unit->set_dir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
@@ -10888,7 +10888,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		ud->canact_tick = tick;
 	ud->skill_id = ud->skill_lv = 0;
 	if(sd)
-		sd->skillitem = sd->skillitemlv = 0;
+		pc->autocast_clear(sd);
 	else if(md)
 		md->skill_idx  = -1;
 	return 0;
@@ -11041,7 +11041,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 				}
 
 				skill->consume_requirement(sd,sd->menuskill_id,lv,2);
-				sd->skillitem = sd->skillitemlv = 0; // Clear data that's skipped in 'skill_castend_pos' [Inkfish]
+				pc->autocast_clear(sd); // Clear data which was skipped in skill_castend_pos().
 
 				if((group=skill->unitsetting(&sd->bl,skill_id,lv,wx,wy,0))==NULL) {
 					skill_failed(sd);

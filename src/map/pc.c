@@ -8129,9 +8129,9 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 
 	clif->party_dead_notification(sd);
 
-	//Reset menu skills/item skills
-	if (sd->skillitem)
-		sd->skillitem = sd->skillitemlv = 0;
+	pc->autocast_clear(sd); // Unset auto-cast data.
+
+	// Reset menu skills.
 	if (sd->menuskill_id)
 		sd->menuskill_id = sd->menuskill_val = 0;
 	//Reset ticks.

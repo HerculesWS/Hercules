@@ -12786,7 +12786,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		return;
 	}
 
-	sd->skillitem = sd->skillitemlv = 0;
+	pc->autocast_clear(sd);
 
 	if (skill_id >= GD_SKILLBASE && skill_id < GD_MAX) {
 		if (sd->state.gmaster_flag)
@@ -12914,7 +12914,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		unit->skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);
 	} else {
 		int lv;
-		sd->skillitem = sd->skillitemlv = 0;
+		pc->autocast_clear(sd);
 		if( (lv = pc->checkskill(sd, skill_id)) > 0 ) {
 			if( skill_lv > lv )
 				skill_lv = lv;
