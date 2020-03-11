@@ -78163,33 +78163,6 @@ int HP_skill_delay_fix(struct block_list *bl, uint16 skill_id, uint16 skill_lv) 
 	}
 	return retVal___;
 }
-bool HP_skill_is_item_skill(struct map_session_data *sd, int skill_id, int skill_lv) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_skill_is_item_skill_pre > 0) {
-		bool (*preHookFunc) (struct map_session_data **sd, int *skill_id, int *skill_lv);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_is_item_skill_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_skill_is_item_skill_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.skill.is_item_skill(sd, skill_id, skill_lv);
-	}
-	if (HPMHooks.count.HP_skill_is_item_skill_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int skill_id, int skill_lv);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_is_item_skill_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_skill_is_item_skill_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv);
-		}
-	}
-	return retVal___;
-}
 int HP_skill_check_condition_castbegin(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;

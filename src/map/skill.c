@@ -14048,22 +14048,6 @@ static bool skill_is_combo(int skill_id)
 	return false;
 }
 
-/**
- * Checks if a skill is casted by an item (itemskill() script command).
- *
- * @param sd The charcater's session data.
- * @param skill_id The skill's ID.
- * @param skill_lv The skill's level.
- * @return true if skill is casted by an item, otherwise false.
- */
-static bool skill_is_item_skill(struct map_session_data *sd, int skill_id, int skill_lv)
-{
-	nullpo_retr(false, sd);
-
-	return (sd->skillitem == skill_id && sd->skillitemlv == skill_lv
-		&& sd->itemskill_id == skill_id && sd->itemskill_lv == skill_lv);
-}
-
 static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
 {
 	struct status_data *st;
@@ -14079,7 +14063,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 0;
 
 	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_check_conditions == 0)
-	    && skill->is_item_skill(sd, skill_id, skill_lv)) {
+	    && sd->autocast.type == AUTOCAST_ITEM) {
 		return 1;
 	}
 
@@ -15068,7 +15052,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 		return 0;
 
 	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_check_conditions == 0)
-	    && skill->is_item_skill(sd, skill_id, skill_lv)) {
+	    && sd->autocast.type == AUTOCAST_ITEM) {
 		return 1;
 	}
 
@@ -15273,7 +15257,7 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 
 	nullpo_ret(sd);
 
-	if (sd->state.itemskill_check_conditions == 0 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if (sd->state.itemskill_check_conditions == 0 && sd->autocast.type == AUTOCAST_ITEM)
 		return 1;
 
 	req = skill->get_requirement(sd,skill_id,skill_lv);
@@ -21672,7 +21656,6 @@ void skill_defaults(void)
 	skill->cast_fix_sc = skill_castfix_sc;
 	skill->vf_cast_fix = skill_vfcastfix;
 	skill->delay_fix = skill_delay_fix;
-	skill->is_item_skill = skill_is_item_skill;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
 	skill->check_condition_castend = skill_check_condition_castend;
 	skill->consume_requirement = skill_consume_requirement;

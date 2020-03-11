@@ -6766,7 +6766,7 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 	struct PACKET_ZC_AUTORUN_SKILL *p = WFIFOP(fd, 0);
 	int type = skill->get_inf(skill_id);
 
-	if (sd->state.itemskill_castonself == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if (sd->state.itemskill_castonself == 1 && sd->autocast.type == AUTOCAST_ITEM)
 		type = INF_SELF_SKILL;
 
 	p->packetType = HEADER_ZC_AUTORUN_SKILL;

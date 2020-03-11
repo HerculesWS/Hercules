@@ -2997,7 +2997,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->cast_fix_sc, HP_skill_cast_fix_sc) },
 	{ HP_POP(skill->vf_cast_fix, HP_skill_vf_cast_fix) },
 	{ HP_POP(skill->delay_fix, HP_skill_delay_fix) },
-	{ HP_POP(skill->is_item_skill, HP_skill_is_item_skill) },
 	{ HP_POP(skill->check_condition_castbegin, HP_skill_check_condition_castbegin) },
 	{ HP_POP(skill->check_condition_castend, HP_skill_check_condition_castend) },
 	{ HP_POP(skill->consume_requirement, HP_skill_consume_requirement) },

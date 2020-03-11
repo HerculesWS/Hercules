@@ -7332,8 +7332,6 @@ typedef int (*HPMHOOK_pre_skill_vf_cast_fix) (struct block_list **bl, double *ti
 typedef int (*HPMHOOK_post_skill_vf_cast_fix) (int retVal___, struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
 typedef int (*HPMHOOK_pre_skill_delay_fix) (struct block_list **bl, uint16 *skill_id, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_skill_delay_fix) (int retVal___, struct block_list *bl, uint16 skill_id, uint16 skill_lv);
-typedef bool (*HPMHOOK_pre_skill_is_item_skill) (struct map_session_data **sd, int *skill_id, int *skill_lv);
-typedef bool (*HPMHOOK_post_skill_is_item_skill) (bool retVal___, struct map_session_data *sd, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_check_condition_castbegin) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_skill_check_condition_castbegin) (int retVal___, struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 typedef int (*HPMHOOK_pre_skill_check_condition_castend) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv);

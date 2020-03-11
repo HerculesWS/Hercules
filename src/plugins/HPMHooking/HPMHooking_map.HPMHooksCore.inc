@@ -5856,8 +5856,6 @@ struct {
 	struct HPMHookPoint *HP_skill_vf_cast_fix_post;
 	struct HPMHookPoint *HP_skill_delay_fix_pre;
 	struct HPMHookPoint *HP_skill_delay_fix_post;
-	struct HPMHookPoint *HP_skill_is_item_skill_pre;
-	struct HPMHookPoint *HP_skill_is_item_skill_post;
 	struct HPMHookPoint *HP_skill_check_condition_castbegin_pre;
 	struct HPMHookPoint *HP_skill_check_condition_castbegin_post;
 	struct HPMHookPoint *HP_skill_check_condition_castend_pre;
@@ -12731,8 +12729,6 @@ struct {
 	int HP_skill_vf_cast_fix_post;
 	int HP_skill_delay_fix_pre;
 	int HP_skill_delay_fix_post;
-	int HP_skill_is_item_skill_pre;
-	int HP_skill_is_item_skill_post;
 	int HP_skill_check_condition_castbegin_pre;
 	int HP_skill_check_condition_castbegin_post;
 	int HP_skill_check_condition_castend_pre;
