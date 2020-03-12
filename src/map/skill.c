@@ -14095,25 +14095,6 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	if( !sc->count )
 		sc = NULL;
 
-	// TODO: Check if the validation of delayed consume is still required. (See the delayed consume related TODO in pc_useitem().)
-	if (sd->autocast.type == AUTOCAST_ITEM) {
-		int i = sd->itemindex;
-
-		if (i == INDEX_NOT_FOUND || sd->status.inventory[i].nameid != sd->itemid || sd->inventory_data[i] == NULL
-		    || sd->status.inventory[i].amount < 1) { // Something went wrong. Item exploit?
-			sd->itemid = INDEX_NOT_FOUND;
-			sd->itemindex = INDEX_NOT_FOUND;
-			return 0;
-		}
-
-		// Consume the item. Rental usable items are not consumed until expiration.
-		if (sd->status.inventory[i].expire_time == 0 && sd->inventory_data[i]->flag.delay_consume == 1)
-			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
-
-		sd->itemid = INDEX_NOT_FOUND;
-		sd->itemindex = INDEX_NOT_FOUND;
-	}
-
 	if (pc_is90overweight(sd) && sd->autocast.type != AUTOCAST_ITEM) { // Skill casting items ignore the overweight restriction.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_WEIGHTOVER, 0, 0);
 		return 0;

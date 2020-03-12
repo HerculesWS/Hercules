@@ -5295,11 +5295,6 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if(sd->catch_target_class != -1) //Abort pet catching.
 		sd->catch_target_class = -1;
 
-	// Unset auto-cast related data for items of type IT_DELAYCONSUME or the item won't be consumed.
-	// TODO: Check if this is still required. [Kenpachi]
-	if (sd->inventory_data[n]->flag.delay_consume != 0)
-		sd->autocast.type = AUTOCAST_NONE;
-
 	amount = sd->status.inventory[n].amount;
 	//Check if the item is to be consumed immediately [Skotlex]
 	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
