@@ -93558,14 +93558,14 @@ int HP_unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-int HP_unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int flag) {
+int HP_unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int range, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_unit_walktobl_pre > 0) {
+	if (HPMHooks.count.HP_unit_walk_tobl_pre > 0) {
 		int (*preHookFunc) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_unit_walktobl_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walk_tobl_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_unit_walk_tobl_pre[hIndex].func;
 			retVal___ = preHookFunc(&bl, &tbl, &range, &flag);
 		}
 		if (*HPMforce_return) {
@@ -93574,12 +93574,12 @@ int HP_unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, i
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.unit.walktobl(bl, tbl, range, flag);
+		retVal___ = HPMHooks.source.unit.walk_tobl(bl, tbl, range, flag);
 	}
-	if (HPMHooks.count.HP_unit_walktobl_post > 0) {
+	if (HPMHooks.count.HP_unit_walk_tobl_post > 0) {
 		int (*postHookFunc) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_unit_walktobl_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_walk_tobl_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_unit_walk_tobl_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, tbl, range, flag);
 		}
 	}

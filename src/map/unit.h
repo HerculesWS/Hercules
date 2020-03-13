@@ -112,7 +112,7 @@ struct unit_interface {
 	int (*delay_walk_toxy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walk_toxy) (struct block_list *bl, short x, short y, int flag);
 	int (*walktobl_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*walktobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
+	int (*walk_tobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
 	bool (*run) (struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 	void (*run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
 	int (*escape) (struct block_list *bl, struct block_list *target, short dist);

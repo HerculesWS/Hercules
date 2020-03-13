@@ -6956,7 +6956,7 @@ static int pc_follow_timer(int tid, int64 tick, int id, intptr_t data)
 	) {
 		if((sd->bl.m == tbl->m) && unit->can_reach_bl(&sd->bl,tbl, AREA_SIZE, 0, NULL, NULL)) {
 			if (!check_distance_bl(&sd->bl, tbl, 5))
-				unit->walktobl(&sd->bl, tbl, 5, 0);
+				unit->walk_tobl(&sd->bl, tbl, 5, 0);
 		} else
 			pc->setpos(sd, map_id2index(tbl->m), tbl->x, tbl->y, CLR_TELEPORT);
 	}
@@ -10444,7 +10444,7 @@ static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 	    || (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0) {
 		clif->equipitemack(sd, n, 0, EIA_FAIL);
 		return 0;
-	}	
+	}
 
 	if (sd->inventory_data[n]->flag.bindonequip != 0 && sd->status.inventory[n].bound == 0) {
 		sd->status.inventory[n].bound = IBT_CHARACTER;
@@ -10527,7 +10527,7 @@ static int pc_equipitem(struct map_session_data *sd, int n, int req_pos)
 
 	if (flag != 0) // Update skill data.
 		clif->skillinfoblock(sd);
-	
+
 	// Execute equip script. [Skotlex]
 	struct item_data *equip_data = sd->inventory_data[n];
 	struct map_zone_data *zone = map->list[sd->bl.m].zone;
@@ -11865,7 +11865,7 @@ static bool pc_read_exp_db(void)
 	struct config_setting_t *edb = NULL;
 	int entry_count = 0;
 	char config_filename[256];
-	
+
 	libconfig->format_db_path(DBPATH"exp_group_db.conf", config_filename, sizeof(config_filename));
 
 	if (!libconfig->load_file(&exp_db_conf, config_filename))

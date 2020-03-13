@@ -515,7 +515,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 				unit->attack(bl, tbl->id, ud->state.attack_continue);
 			}
 		} else { // Update chase-path
-			unit->walktobl(bl, tbl, ud->chaserange, ud->state.walk_easy | ud->state.attack_continue);
+			unit->walk_tobl(bl, tbl, ud->chaserange, ud->state.walk_easy | ud->state.attack_continue);
 			return 0;
 		}
 	} else {
@@ -700,7 +700,7 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
  *  .
  * @return 0: success, 1: failure
  */
-static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int flag)
+static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int range, int flag)
 {
 	struct unit_data     *ud = NULL;
 	struct status_change *sc = NULL;
@@ -2335,14 +2335,14 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 		return 1;
 	} else if(md && !check_distance_bl(src,target,range)) {
 		// Monster: Chase if required
-		unit->walktobl(src,target,ud->chaserange,ud->state.walk_easy|2);
+		unit->walk_tobl(src, target, ud->chaserange, ud->state.walk_easy | 2);
 		return 1;
 	}
 	if( !battle->check_range(src,target,range) ) {
 		//Within range, but no direct line of attack
 		if( ud->state.attack_continue ) {
 			if(ud->chaserange > 2) ud->chaserange-=2;
-			unit->walktobl(src,target,ud->chaserange,ud->state.walk_easy|2);
+			unit->walk_tobl(src, target, ud->chaserange, ud->state.walk_easy | 2);
 		}
 		return 1;
 	}
@@ -3131,7 +3131,7 @@ void unit_defaults(void)
 	unit->delay_walk_toxy_timer = unit_delay_walk_toxy_timer;
 	unit->walk_toxy = unit_walk_toxy;
 	unit->walktobl_timer = unit_walktobl_timer;
-	unit->walktobl = unit_walktobl;
+	unit->walk_tobl = unit_walk_tobl;
 	unit->run = unit_run;
 	unit->run_hit = unit_run_hit;
 	unit->escape = unit_escape;

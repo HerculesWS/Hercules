@@ -473,7 +473,7 @@ static int elemental_action(struct elemental_data *ed, struct block_list *bl, in
 	// Not in skill range.
 	if( !battle->check_range(&ed->bl,bl,skill->get_range(skill_id,skill_lv)) ) {
 		// Try to walk to the target.
-		if (unit->walktobl(&ed->bl, bl, skill->get_range(skill_id, skill_lv), 2) != 0) {
+		if (unit->walk_tobl(&ed->bl, bl, skill->get_range(skill_id, skill_lv), 2) != 0) {
 			elemental->unlocktarget(ed);
 		} else {
 			// Walking, waiting to be in range. Client don't handle it, then we must handle it here.
@@ -820,7 +820,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 		}
 
 		//Follow up if possible.
-		if (unit->walktobl(&ed->bl, target, ed->base_status.rhw.range, 2) != 0)
+		if (unit->walk_tobl(&ed->bl, target, ed->base_status.rhw.range, 2) != 0)
 			elemental->unlocktarget(ed);
 	}
 

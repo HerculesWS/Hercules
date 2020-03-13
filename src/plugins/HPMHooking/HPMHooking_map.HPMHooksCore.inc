@@ -6994,8 +6994,8 @@ struct {
 	struct HPMHookPoint *HP_unit_walk_toxy_post;
 	struct HPMHookPoint *HP_unit_walktobl_timer_pre;
 	struct HPMHookPoint *HP_unit_walktobl_timer_post;
-	struct HPMHookPoint *HP_unit_walktobl_pre;
-	struct HPMHookPoint *HP_unit_walktobl_post;
+	struct HPMHookPoint *HP_unit_walk_tobl_pre;
+	struct HPMHookPoint *HP_unit_walk_tobl_post;
 	struct HPMHookPoint *HP_unit_run_pre;
 	struct HPMHookPoint *HP_unit_run_post;
 	struct HPMHookPoint *HP_unit_run_hit_pre;
@@ -14059,8 +14059,8 @@ struct {
 	int HP_unit_walk_toxy_post;
 	int HP_unit_walktobl_timer_pre;
 	int HP_unit_walktobl_timer_post;
-	int HP_unit_walktobl_pre;
-	int HP_unit_walktobl_post;
+	int HP_unit_walk_tobl_pre;
+	int HP_unit_walk_tobl_post;
 	int HP_unit_run_pre;
 	int HP_unit_run_post;
 	int HP_unit_run_hit_pre;

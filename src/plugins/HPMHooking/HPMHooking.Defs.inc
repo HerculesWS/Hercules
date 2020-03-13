@@ -8496,8 +8496,8 @@ typedef int (*HPMHOOK_pre_unit_walk_toxy) (struct block_list **bl, short *x, sho
 typedef int (*HPMHOOK_post_unit_walk_toxy) (int retVal___, struct block_list *bl, short x, short y, int flag);
 typedef int (*HPMHOOK_pre_unit_walktobl_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_unit_walktobl_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-typedef int (*HPMHOOK_pre_unit_walktobl) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
-typedef int (*HPMHOOK_post_unit_walktobl) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
+typedef int (*HPMHOOK_pre_unit_walk_tobl) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
+typedef int (*HPMHOOK_post_unit_walk_tobl) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
 typedef bool (*HPMHOOK_pre_unit_run) (struct block_list **bl, struct map_session_data **sd, enum sc_type *type);
 typedef bool (*HPMHOOK_post_unit_run) (bool retVal___, struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 typedef void (*HPMHOOK_pre_unit_run_hit) (struct block_list **bl, struct status_change **sc, struct map_session_data **sd, enum sc_type *type);
