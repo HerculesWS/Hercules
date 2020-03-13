@@ -21824,7 +21824,10 @@ static BUILDIN(unitwalk)
 	}
 	else {
 		int target_id = script_getnum(st, 3);
-		script_pushint(st, unit->walktobl(bl, map->id2bl(target_id), 1, 1));
+		if (unit->walktobl(bl, map->id2bl(target_id), 1, 1) == 0)
+			script_pushint(st, 1);
+		else
+			script_pushint(st, 0);
 	}
 
 	return true;
@@ -21969,7 +21972,10 @@ static BUILDIN(unitattack)
 			script_pushint(st, 0);
 			return false;
 	}
-	script_pushint(st, unit->walktobl(unit_bl, target_bl, 65025, 2));
+	if (unit->walktobl(unit_bl, target_bl, 65025, 2) == 0)
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
 	return true;
 }
 

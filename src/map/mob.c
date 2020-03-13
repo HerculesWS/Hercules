@@ -625,7 +625,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 
 			if (gc != NULL) {
 				struct guild *g = guild->search(gc->guild_id);
-				
+
 				md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
 				md->guardian_data->castle = gc;
 				md->guardian_data->number = MAX_GUARDIANS;
@@ -1626,7 +1626,7 @@ static int mob_warpchase(struct mob_data *md, struct block_list *target)
 	map->foreachinrange(mob->warpchase_sub, &md->bl,
 	                    md->db->range2, BL_NPC, target, &warp, &distance);
 
-	if (warp && unit->walktobl(&md->bl, &warp->bl, 1, 1))
+	if (warp != NULL && unit->walktobl(&md->bl, &warp->bl, 1, 1) == 0)
 		return 1;
 	return 0;
 }
@@ -1796,7 +1796,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 				return true;/* we are already moving */
 			map->foreachinrange (mob->ai_sub_hard_bg_ally, &md->bl, view_range, BL_PC, md, &tbl, mode);
 			if( tbl ) {
-				if( distance_blxy(&md->bl, tbl->x, tbl->y) <= 3 || unit->walktobl(&md->bl, tbl, 1, 1) )
+				if (distance_blxy(&md->bl, tbl->x, tbl->y) <= 3 || unit->walktobl(&md->bl, tbl, 1, 1) == 0)
 					return true;/* we're moving or close enough don't unlock the target. */
 			}
 		}
@@ -1827,7 +1827,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 			if (!can_move) //Stuck. Wait before walking.
 				return true;
 			md->state.skillstate = MSS_LOOT;
-			if (!unit->walktobl(&md->bl, tbl, 1, 1))
+			if (unit->walktobl(&md->bl, tbl, 1, 1) != 0)
 				mob->unlocktarget(md, tick); //Can't loot...
 			return true;
 		}
@@ -1908,8 +1908,8 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 
 	//Follow up if possible.
 	//Hint: Chase skills are handled in the walktobl routine
-	if(!mob->can_reach(md, tbl, md->min_chase, MSS_RUSH) ||
-		!unit->walktobl(&md->bl, tbl, md->status.rhw.range, 2))
+	if (mob->can_reach(md, tbl, md->min_chase, MSS_RUSH) == 0
+	    || unit->walktobl(&md->bl, tbl, md->status.rhw.range, 2) != 0)
 		mob->unlocktarget(md,tick);
 
 	return true;

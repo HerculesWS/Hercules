@@ -1097,7 +1097,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 
 		pd->status.speed = max(sd->battle_status.speed / 2, MIN_WALK_SPEED);
 
-		if (unit->walktobl(&pd->bl, &sd->bl, 3, 0) == 0)
+		if (unit->walktobl(&pd->bl, &sd->bl, 3, 0) != 0)
 			pet->randomwalk(pd, tick);
 
 		return 0;
@@ -1149,7 +1149,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 
 	if (target->type != BL_ITEM) { // Target is enemy. Chase or attack it.
 		if (!battle->check_range(&pd->bl, target, pd->status.rhw.range)) { // Chase enemy.
-			if (unit->walktobl(&pd->bl, target, pd->status.rhw.range, 2) == 0) // Enemy is unreachable.
+			if (unit->walktobl(&pd->bl, target, pd->status.rhw.range, 2) != 0) // Enemy is unreachable.
 				pet->unlocktarget(pd);
 
 			return 0;
@@ -1158,7 +1158,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 		unit->attack(&pd->bl, pd->target_id, 1); // Start/continue attacking.
 	} else { // Target is item. Attempt looting.
 		if (!check_distance_bl(&pd->bl, target, 1)) { // Item is out of range.
-			if (unit->walktobl(&pd->bl, target, 1, 1) == 0) // Item is unreachable.
+			if (unit->walktobl(&pd->bl, target, 1, 1) != 0) // Item is unreachable.
 				pet->unlocktarget(pd);
 
 			return 0;

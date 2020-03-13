@@ -698,27 +698,27 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
  *  - `& 1` -> 1/0 = easy / hard @n
  *  - `& 2` -> 1 = chase to attack upon arrival within range.
  *  .
- * @return 1: success, 0: failure
+ * @return 0: success, 1: failure
  */
 static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int flag)
 {
 	struct unit_data     *ud = NULL;
 	struct status_change *sc = NULL;
 
-	nullpo_ret(bl);
-	nullpo_ret(tbl);
+	nullpo_retr(1, bl);
+	nullpo_retr(1, tbl);
 
 	ud = unit->bl2ud(bl);
-	if( ud == NULL) return 0;
+	if (ud == NULL) return 1;
 
 	if (!(status_get_mode(bl)&MD_CANMOVE))
-		return 0;
+		return 1;
 
 	if (!unit->can_reach_bl(bl, tbl, distance_bl(bl, tbl)+1, flag&1, &ud->to_x, &ud->to_y)) {
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
 		ud->target_to = 0;
-		return 0;
+		return 1;
 	} else if (range == 0) {
 		//Should walk on the same cell as target (for looters)
 		ud->to_x = tbl->x;
@@ -743,26 +743,24 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 		ud->state.change_walk_target = 1;
 		if ((flag & 2) != 0)
 			set_mobstate(bl);
-		return 1;
+		return 0;
 	}
 
 	if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0) {
 		//Can't move, wait a bit before invoking the movement.
 		timer->add(ud->canmove_tick + 1, unit->walktobl_timer, bl->id, ud->target);
-		return 1;
+		return 0;
 	}
 
 	if(!unit->can_move(bl))
-		return 0;
+		return 1;
 
 	if (unit->walk_toxy_sub(bl) == 0) {
-		if ((flag & 2) != 0)
+		if (flag & 2) != 0)
 			set_mobstate(bl);
-
-		return 1;
+		return 0;
 	}
-
-	return 0;
+	return 1;
 }
 
 
