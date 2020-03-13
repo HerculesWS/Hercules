@@ -702,16 +702,14 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
  */
 static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int range, int flag)
 {
-	struct unit_data     *ud = NULL;
-	struct status_change *sc = NULL;
-
 	nullpo_retr(1, bl);
 	nullpo_retr(1, tbl);
 
-	ud = unit->bl2ud(bl);
-	if (ud == NULL) return 1;
-
 	if (!(status_get_mode(bl)&MD_CANMOVE))
+		return 1;
+
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud == NULL)
 		return 1;
 
 	if (!unit->can_reach_bl(bl, tbl, distance_bl(bl, tbl)+1, flag&1, &ud->to_x, &ud->to_y)) {
@@ -731,9 +729,8 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 	ud->state.attack_continue = (flag&2) ? 1 : 0; //Chase to attack.
 	unit->stop_attack(bl); //Sets target to 0
 
-	sc = status->get_sc(bl);
-	if (sc != NULL && (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL)) { // Randomize the target position
-		// Aegis behavior, yes if it doesn't find a random walkable cell it will not move at all.
+	struct status_change *sc = status->get_sc(bl);
+	if (sc && (sc->data[SC_CONFUSION] || sc->data[SC__CHAOS])) { //Randomize the target position
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
 		map->get_random_cell_in_range(bl, bl->m, &ud->to_x, &ud->to_y, AREA_SIZE / 2, AREA_SIZE / 2);
