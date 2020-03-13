@@ -719,17 +719,17 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 		ud->target_to = 0;
 		return 1;
 	} else if (range == 0) {
-		//Should walk on the same cell as target (for looters)
+		// Should walk on the same cell as target (for looters)
 		ud->to_x = tbl->x;
 		ud->to_y = tbl->y;
 	}
 
 	ud->state.walk_easy = walk_easy;
 	ud->target_to = tbl->id;
-	ud->chaserange = range; //Note that if flag&2, this SHOULD be attack-range
+	ud->chaserange = range; // Note that if (flag & 2) != 0, this SHOULD be attack-range
 	int attack_continue = ((flag & 2) == 0) ? 0 : 1;
 	ud->state.attack_continue = attack_continue; // Chase to attack.
-	unit->stop_attack(bl); //Sets target to 0
+	unit->stop_attack(bl); // Sets target to 0
 
 	struct status_change *sc = status->get_sc(bl);
 	if (sc != NULL && (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL)) { //Randomize the target position
@@ -738,7 +738,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 		map->get_random_cell_in_range(bl, bl->m, &ud->to_x, &ud->to_y, AREA_SIZE / 2, AREA_SIZE / 2);
 	}
 
-	if(ud->walktimer != INVALID_TIMER) {
+	if (ud->walktimer != INVALID_TIMER) {
 		ud->state.change_walk_target = 1;
 		if (attack_continue != 0)
 			set_mobstate(bl);
@@ -746,7 +746,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 	}
 
 	if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0) {
-		//Can't move, wait a bit before invoking the movement.
+		// Can't move, wait a bit before invoking the movement.
 		timer->add(ud->canmove_tick + 1, unit->walktobl_timer, bl->id, ud->target);
 		return 0;
 	}
