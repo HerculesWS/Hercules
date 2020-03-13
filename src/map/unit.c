@@ -705,7 +705,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 	nullpo_retr(1, bl);
 	nullpo_retr(1, tbl);
 
-	if (!(status_get_mode(bl)&MD_CANMOVE))
+	if ((status_get_mode(bl) & MD_CANMOVE) == MD_NONE)
 		return 1;
 
 	struct unit_data *ud = unit->bl2ud(bl);
@@ -732,7 +732,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 	unit->stop_attack(bl); //Sets target to 0
 
 	struct status_change *sc = status->get_sc(bl);
-	if (sc && (sc->data[SC_CONFUSION] || sc->data[SC__CHAOS])) { //Randomize the target position
+	if (sc != NULL && (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL)) { //Randomize the target position
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
 		map->get_random_cell_in_range(bl, bl->m, &ud->to_x, &ud->to_y, AREA_SIZE / 2, AREA_SIZE / 2);
@@ -751,7 +751,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 		return 0;
 	}
 
-	if(!unit->can_move(bl))
+	if (unit->can_move(bl) == 0)
 		return 1;
 
 	if (unit->walk_toxy_sub(bl) == 0) {
