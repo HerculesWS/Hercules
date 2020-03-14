@@ -730,7 +730,7 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 
 	if (unit->walk_toxy_sub(bl) == 0 && (flag & 2) != 0) {
 		set_mobstate(bl);
-		return 0;
+		return 1;
 	}
 	return 0;
 }
