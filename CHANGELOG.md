@@ -9,6 +9,12 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.03.08] `March 08 2020` `PATCH 1`
+
+### Fixed
+
+- Fixed an incorrect return value in `unit->walktobl()` causing mobs to be unable to walk to their target. (#2659)
+
 ## [v2020.03.08] `March 08 2020`
 
 ### Added
@@ -59,8 +65,6 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed the handling of unequip scripts in zones where an item is restricted. The `OnUnequip` script is now never executed when unequipping in a restricted zone, but it is always executed when entering such zones, regardless of the `unequip_restricted_equipment` battle flag. (#2642, issue #2180)
 - Fixed the handling of skill requirements and conditions by the `itemskill()` command. (#2648, issue #2646)
 - Added missing requirements to `CASH_INCAGI` and `RK_CRUSHSTRIKE`. (part of #2648)
-
-### Deprecated
 
 ### Removed
 
@@ -1253,7 +1257,8 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
-[v2020.02.09]: https://github.com/HerculesWS/Hercules/compare/v2020.02.09...v2020.03.08
+[v2020.03.08+1]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08...v2020.03.08+1
+[v2020.03.08]: https://github.com/HerculesWS/Hercules/compare/v2020.02.09...v2020.03.08
 [v2020.02.09]: https://github.com/HerculesWS/Hercules/compare/v2020.01.12...v2020.02.09
 [v2020.01.12]: https://github.com/HerculesWS/Hercules/compare/v2019.12.15...v2020.01.12
 [v2019.12.15]: https://github.com/HerculesWS/Hercules/compare/v2019.11.17+1...v2019.12.15
