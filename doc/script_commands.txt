@@ -10929,3 +10929,9 @@ Opens lapine ddukddak user interface for the player
 returns true on success and false on failure
 
 ---------------------------------------
+*openlapineupgradeui(<item_id>)
+
+Opens lapine ddukddak upgrade user interface for the player
+returns true on success and false on failure
+
+---------------------------------------

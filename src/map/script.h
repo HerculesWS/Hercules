@@ -1095,6 +1095,7 @@ struct script_interface {
 	void (*run_item_rental_end_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_lapineddukddak_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_lapineupgrade_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	bool (*sellitemcurrency_add) (struct npc_data *nd, struct script_state* st, int argIndex);
 };
 

@@ -508,6 +508,15 @@ struct item_lapineddukddak {
 	struct script_code *script;
 };
 
+struct item_lapineupgrade {
+	int8 NeedRefineMin;
+	int8 NeedRefineMax;
+	int8 NeedOptionMin;
+	bool NoEnchant;
+	VECTOR_DECL(struct itemlist_entry) TargetItems;
+	struct script_code *script;
+};
+
 struct item_data {
 	int nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -578,6 +587,7 @@ struct item_data {
 	struct item_group *group;
 	struct item_package *package;
 	struct item_lapineddukddak *lapineddukddak;
+	struct item_lapineupgrade *lapineupgrade;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
@@ -717,6 +727,10 @@ struct itemdb_interface {
 	bool (*read_libconfig_lapineddukddak) (void);
 	bool (*read_libconfig_lapineddukddak_sub) (struct config_setting_t *it, const char *source);
 	bool (*read_libconfig_lapineddukddak_sub_sources) (struct config_setting_t *sources, struct item_data *data);
+
+	bool (*read_libconfig_lapineupgrade) (void);
+	bool (*read_libconfig_lapineupgrade_sub) (struct config_setting_t *it, const char *source);
+	bool (*read_libconfig_lapineupgrade_sub_targets) (struct config_setting_t *sources, struct item_data *data);
 };
 
 #ifdef HERCULES_CORE

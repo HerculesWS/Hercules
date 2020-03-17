@@ -2592,6 +2592,103 @@ static bool itemdb_read_libconfig_lapineddukddak_sub_sources(struct config_setti
 	return true;
 }
 
+static bool itemdb_read_libconfig_lapineupgrade(void)
+{
+	struct config_t item_lapineupgrade;
+	struct config_setting_t *it = NULL;
+	char filepath[256];
+
+	int i = 0;
+	int count = 0;
+
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineupgrade.conf");
+	if (libconfig->load_file(&item_lapineupgrade, filepath) == CONFIG_FALSE)
+		return false;
+
+	while ((it = libconfig->setting_get_elem(item_lapineupgrade.root, i++)) != NULL) {
+		if (itemdb->read_libconfig_lapineupgrade_sub(it, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&item_lapineupgrade);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool itemdb_read_libconfig_lapineupgrade_sub(struct config_setting_t *it, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+
+	struct item_data *data = NULL;
+	const char *name = config_setting_name(it);
+	const char *str = NULL;
+	int i32 = 0;
+	bool real_bool = false;
+
+	if ((data = itemdb->name2id(name)) == NULL) {
+		ShowWarning("itemdb_read_libconfig_lapineupgrade_sub: unknown item '%s', skipping..\n", name);
+		return false;
+	}
+
+	data->lapineupgrade = aCalloc(1, sizeof(struct item_lapineupgrade));
+
+	if (libconfig->setting_lookup_int(it, "NeedRefineMin", &i32) == CONFIG_TRUE)
+		data->lapineupgrade->NeedRefineMin = (int8)i32;
+
+	if (libconfig->setting_lookup_int(it, "NeedRefineMax", &i32) == CONFIG_TRUE)
+		data->lapineupgrade->NeedRefineMax = (int8)i32;
+
+	if (libconfig->setting_lookup_int(it, "NeedOptionMin", &i32) == CONFIG_TRUE)
+		data->lapineupgrade->NeedOptionMin = (int8)i32;
+
+	if (libconfig->setting_lookup_bool_real(it, "NoEnchants", &real_bool) == CONFIG_TRUE)
+		data->lapineupgrade->NoEnchant = real_bool;
+
+	struct config_setting_t *targets = libconfig->setting_get_member(it, "TargetItems");
+	itemdb->read_libconfig_lapineupgrade_sub_targets(targets, data);
+
+	if (libconfig->setting_lookup_string(it, "Script", &str) == CONFIG_TRUE)
+		data->lapineupgrade->script = *str ? script->parse(str, source, -data->nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	return true;
+}
+
+static bool itemdb_read_libconfig_lapineupgrade_sub_targets(struct config_setting_t *targets, struct item_data *data)
+{
+	nullpo_retr(false, data);
+	nullpo_retr(false, data->lapineupgrade);
+
+	int i = 0;
+	struct config_setting_t *entry = NULL;
+
+	if (targets == NULL || !config_setting_is_group(targets))
+		return false;
+
+	VECTOR_INIT(data->lapineupgrade->TargetItems);
+	while ((entry = libconfig->setting_get_elem(targets, i++)) != NULL) {
+		struct item_data *edata = NULL;
+		struct itemlist_entry item = {0};
+		const char *name = config_setting_name(entry);
+		int i32 = 0;
+
+		if ((edata = itemdb->name2id(name)) == NULL) {
+			ShowWarning("itemdb_read_libconfig_lapineupgrade_sub_targets: unknown item '%s', skipping..\n", name);
+			continue;
+		}
+		item.id = edata->nameid;
+
+		if ((i32 = libconfig->setting_get_int(entry)) == CONFIG_TRUE && (i32 <= 0 || i32 > MAX_AMOUNT)) {
+			ShowWarning("itemdb_read_libconfig_lapineupgrade_sub_targets: invalid amount (%d) for target item '%s', skipping..\n", i32, name);
+			continue;
+		}
+		item.amount = i32;
+
+		VECTOR_ENSURE(data->lapineupgrade->TargetItems, 1, 1);
+		VECTOR_PUSH(data->lapineupgrade->TargetItems, item);
+	}
+	return true;
+}
+
 /**
  * Reads all item-related databases.
  */
@@ -2631,6 +2728,7 @@ static void itemdb_read(bool minimal)
 	itemdb->read_chains();
 	itemdb->read_packages();
 	itemdb->read_libconfig_lapineddukddak();
+	itemdb->read_libconfig_lapineupgrade();
 }
 
 /**
@@ -2696,6 +2794,12 @@ static void destroy_item_data(struct item_data *self, int free_self)
 			script->free_code(self->lapineddukddak->script);
 		VECTOR_CLEAR(self->lapineddukddak->SourceItems);
 		aFree(self->lapineddukddak);
+	}
+	if (self->lapineupgrade != NULL) {
+		if (self->lapineupgrade->script != NULL)
+			script->free_code(self->lapineupgrade->script);
+		VECTOR_CLEAR(self->lapineupgrade->TargetItems);
+		aFree(self->lapineupgrade);
 	}
 	HPM->data_store_destroy(&self->hdata);
 #if defined(DEBUG)
@@ -3004,4 +3108,7 @@ void itemdb_defaults(void)
 	itemdb->read_libconfig_lapineddukddak = itemdb_read_libconfig_lapineddukddak;
 	itemdb->read_libconfig_lapineddukddak_sub = itemdb_read_libconfig_lapineddukddak_sub;
 	itemdb->read_libconfig_lapineddukddak_sub_sources = itemdb_read_libconfig_lapineddukddak_sub_sources;
+	itemdb->read_libconfig_lapineupgrade = itemdb_read_libconfig_lapineupgrade;
+	itemdb->read_libconfig_lapineupgrade_sub = itemdb_read_libconfig_lapineupgrade_sub;
+	itemdb->read_libconfig_lapineupgrade_sub_targets = itemdb_read_libconfig_lapineupgrade_sub_targets;
 }
