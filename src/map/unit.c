@@ -791,7 +791,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
 		clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_TING));
-	} else if (sd) {
+	} else if (sd != NULL) {
 		clif->fixpos(bl);
 		skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
 	}
