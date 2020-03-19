@@ -773,21 +773,19 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
  */
 static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type)
 {
-	int lv;
-	struct unit_data *ud;
-
 	Assert_retv(type >= 0 && type < SC_MAX);
-	lv = sc->data[type]->val1;
+
 	//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
 	if( type == SC_RUN )
 		clif->sc_load(bl, bl->id, AREA, status->get_sc_icon(SC_TING), 0, 0, 0);
 
-	ud = unit->bl2ud(bl);
+	struct unit_data *ud = unit->bl2ud(bl);
 	nullpo_retv(ud);
 	//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
 	ud->state.running = 0;
 	status_change_end(bl, type, INVALID_TIMER);
 
+	int lv = sc->data[type]->val1;
 	if (type == SC_RUN) {
 		if (lv > 0)
 			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
