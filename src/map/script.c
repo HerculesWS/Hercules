@@ -19271,8 +19271,10 @@ static BUILDIN(setpcblock)
 	enum pcblock_action_flag type = script_getnum(st, 2);
 	int state = (script_getnum(st, 3) > 0) ? 1 : 0;
 
-	if (sd == NULL)
+	if (sd == NULL) {
+		script_pushint(st, 0);
 		return true;
+	}
 
 	if ((type & PCBLOCK_MOVE) != 0)
 		sd->block_action.move = state;
@@ -19301,6 +19303,7 @@ static BUILDIN(setpcblock)
 	if ((type & PCBLOCK_NPC) != 0)
 		sd->block_action.npc = state;
 
+	script_pushint(st, 1);
 	return true;
 }
 
