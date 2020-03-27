@@ -19267,7 +19267,7 @@ static BUILDIN(pcblockmove)
 
 static BUILDIN(setpcblock)
 {
-	struct map_session_data *sd = script->rid2sd(st);
+	struct map_session_data *sd = script_hasdata(st, 4) ? script->id2sd(st, script_getnum(st, 4)) : script->rid2sd(st);
 	enum pcblock_action_flag type = script_getnum(st, 2);
 	int state = (script_getnum(st, 3) > 0) ? 1 : 0;
 
@@ -27085,7 +27085,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
 		BUILDIN_DEF_DEPRECATED(pcblockmove,"ii"), // Deprecated 2018-05-04
-		BUILDIN_DEF(setpcblock, "ii"),
+		BUILDIN_DEF(setpcblock, "ii?"),
 		BUILDIN_DEF(checkpcblock, ""),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
