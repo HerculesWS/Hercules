@@ -20091,7 +20091,7 @@ static void clif_parse_cashShopOpen2(int fd, struct map_session_data *sd)
 
 static void clif_cashShopOpen(int fd, struct map_session_data *sd, int tab)
 {
-#if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || PACKETVER_ZERO_NUM >= defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || defined(PACKETVER_ZERO)
 	WFIFOHEAD(fd, sizeof(struct PACKET_ZC_SE_CASHSHOP_OPEN));
 	struct PACKET_ZC_SE_CASHSHOP_OPEN *p = WFIFOP(fd, 0);
 	p->packetType = HEADER_ZC_SE_CASHSHOP_OPEN;
