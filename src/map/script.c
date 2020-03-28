@@ -1161,6 +1161,41 @@ static const char *parse_variable(const char *p)
 	return p;
 }
 
+/**
+ * converts a number expression literal to an actual integer
+*/
+static long long parse_number(const char *p, char **np) {
+	long long lli = 0;
+	unsigned char radix = 10;
+
+	nullpo_retr(lli, p);
+
+	if (*p == '0' && p[1] == 'x') {
+		p += 2;
+		radix = 16; // hexadecimal
+	} else if (*p == '0' && p[1] == 'o') {
+		p += 2;
+		radix = 8; // octal
+	} else if (*p == '0' && p[1] == 'b') {
+		p += 2;
+		radix = 2; // binary
+	}
+
+	// actual parsing happens here
+	lli = strtoll(p, np, radix);
+
+	// make sure we can't underflow/overflow
+	if (lli < INT_MIN) {
+		lli = INT_MIN;
+		script->disp_warning_message("parse_number: underflow detected, capping value to INT_MIN", p);
+	} else if (lli > INT_MAX) {
+		lli = INT_MAX;
+		script->disp_warning_message("parse_number: overflow detected, capping value to INT_MAX", p);
+	}
+
+	return lli;
+}
+
 /*
  * Checks whether the gives string is a number literal
  *
@@ -1177,24 +1212,44 @@ static const char *parse_variable(const char *p)
 static bool is_number(const char *p)
 {
 	const char *np;
-	if (!p)
-		return false;
-	if (*p == '-' || *p == '+')
+	nullpo_retr(false, p);
+
+	if (*p == '-' || *p == '+') {
 		p++;
-	np = p;
-	if (*p == '0' && p[1] == 'x') {
-		p+=2;
-		np = p;
-		// Hexadecimal
-		while (ISXDIGIT(*np))
-			np++;
-	} else {
-		// Decimal
-		while (ISDIGIT(*np))
-			np++;
 	}
-	if (p != np && *np != '_' && !ISALPHA(*np)) // At least one digit, and next isn't a letter or _
+
+	np = p;
+
+	if (*p == '0' && p[1] == 'x') {
+		// Hexadecimal: 0xFFFF
+		np = p += 2;
+		while (ISXDIGIT(*np)) {
+			np++;
+		}
+	} else if (*p == '0' && p[1] == 'b') {
+		// Binary: 0b0001
+		np = p += 2;
+		while (ISBDIGIT(*np)) {
+			np++;
+		}
+	} else if (*p == '0' && p[1] == 'o') {
+		// Octal: 0o1500
+		np = p += 2;
+		while (ISODIGIT(*np)) {
+			np++;
+		}
+	} else {
+		// Decimal: 1234
+		while (ISDIGIT(*np)) {
+			np++;
+		}
+	}
+
+	if (p != np && *np != '_' && !ISALPHA(*np)) {
+		// At least one digit, and next isn't a letter or _
 		return true;
+	}
+
 	return false;
 }
 
@@ -1276,20 +1331,8 @@ static const char *parse_simpleexpr_paren(const char *p)
 static const char *parse_simpleexpr_number(const char *p)
 {
 	char *np = NULL;
-	long long lli;
+	long long lli = parse_number(p, &np);
 
-	nullpo_retr(NULL, p);
-	while (*p == '0' && ISDIGIT(p[1]))
-		p++; // Skip leading zeros, we don't support octal literals
-
-	lli = strtoll(p, &np, 0);
-	if (lli < INT_MIN) {
-		lli = INT_MIN;
-		script->disp_warning_message("parse_simpleexpr: underflow detected, capping value to INT_MIN", p);
-	} else if (lli > INT_MAX) {
-		lli = INT_MAX;
-		script->disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX", p);
-	}
 	script->addi((int)lli); // Cast is safe, as it's already been checked for overflows
 
 	return np;
