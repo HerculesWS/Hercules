@@ -19,24 +19,28 @@
 
 # @configure_input@
 
-LIBBACKTRACE_OBJ = atomic.o \
-	dwarf.o \
-	fileline.o \
-	posix.o \
-	print.o \
-	sort.o \
-	state.o \
-	backtrace.o \
-	simple.o \
-	nounwind.o \
-	unknown.o \
-	read.o \
-	mmapio.o \
-	alloc.o \
-	mmap.o \
-	@LIBBACKTRACE_FORMAT_FILE@
-LIBBACKTRACE_H = backtrace.h internal.h
-
+ifeq (@USE_LIBBACKTRACE@,yes)
+	LIBBACKTRACE_OBJ = atomic.o \
+		dwarf.o \
+		fileline.o \
+		posix.o \
+		print.o \
+		sort.o \
+		state.o \
+		backtrace.o \
+		simple.o \
+		nounwind.o \
+		unknown.o \
+		read.o \
+		mmapio.o \
+		alloc.o \
+		mmap.o \
+		@LIBBACKTRACE_FORMAT_FILE@
+	LIBBACKTRACE_H = backtrace.h internal.h
+else
+	LIBBACKTRACE_OBJ =
+	LIBBACKTRACE_H =
+endif
 
 @SET_MAKE@
 
