@@ -101,19 +101,20 @@ enum e_battle_check_target { //New definitions [Skotlex]
  * Note: some values may not apply in some contexts.
  */
 enum battle_dmg_type {
-	BDT_NORMAL      = 0,  // Normal attack
-	//BDT_PICKUP      = 1,  // Pick up item
-	BDT_SITDOWN     = 2,  // Sit down
-	BDT_STANDUP     = 3,  // Stand up
-	BDT_ENDURE      = 4,  // Damage (endure)
-	BDT_SPLASH      = 5,  // Splash
-	BDT_SKILL       = 6,  // Skill
-	//BDT_REPEAT      = 7,  // (repeat damage?)
-	BDT_MULTIHIT    = 8,  // Multi-hit damage
-	BDT_MULTIENDURE = 9,  // Multi-hit damage (endure)
-	BDT_CRIT        = 10, // Critical hit
-	BDT_PDODGE      = 11, // Lucky dodge
-	//BDT_TOUCH       = 12, // (touch skill?)
+	BDT_NORMAL      = 0,  ///< Normal attack (damage: total damage, div: amount of hits, damage2: assassin dual-wield damage)
+	//BDT_PICKUP    = 1,  ///< Pick up item
+	BDT_SITDOWN     = 2,  ///< Sit down
+	BDT_STANDUP     = 3,  ///< Stand up
+	BDT_ENDURE      = 4,  ///< Damage (endure)
+	BDT_SPLASH      = 5,  ///< Splash
+	BDT_SKILL       = 6,  ///< Skill
+	//BDT_REPEAT    = 7,  ///< (Repeat damage?)
+	BDT_MULTIHIT    = 8,  ///< Multi-hit damage
+	BDT_MULTIENDURE = 9,  ///< Multi-hit damage (endure)
+	BDT_CRIT        = 10, ///< Critical hit
+	BDT_PDODGE      = 11, ///< Lucky dodge
+	//BDT_TOUCH     = 12, ///< (Touch skill?)
+	BDT_MULTICRIT   = 13, ///< Multi-hit with critical
 };
 
 /**
@@ -591,6 +592,8 @@ struct Battle_Config {
 	int drop_connection_on_quit;
 	int enable_refinery_ui;
 	int replace_refine_npcs;
+
+	int feature_enable_multi_crit;
 
 	int batk_min;
 	int batk_max;

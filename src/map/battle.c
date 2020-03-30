@@ -4358,8 +4358,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	int i, nk;
 	bool n_ele = false; // non-elemental
 
-	struct map_session_data *sd, *tsd;
 	struct Damage wd;
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
+	struct map_session_data *tsd = BL_CAST(BL_PC, target);
 	struct status_change *sc = status->get_sc(src);
 	struct status_change *tsc = status->get_sc(target);
 	struct status_data *sstatus = status->get_status_data(src);
@@ -4426,9 +4427,6 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	if (tsc && !tsc->count)
 		tsc = NULL; //Skip checking as there are no status changes active.
 
-	sd = BL_CAST(BL_PC, src);
-	tsd = BL_CAST(BL_PC, target);
-
 	if(sd)
 		wd.blewcount += battle->blewcount_bonus(sd, skill_id);
 
@@ -4439,7 +4437,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	)
 		flag.arrow = 1;
 
-	if(skill_id) {
+	if(skill_id || (skill->get_nk(skill_id) & NK_CRITICAL) == 0) {
 		wd.flag |= battle->range_type(src, target, skill_id, skill_lv);
 		switch(skill_id) {
 			case MO_FINGEROFFENSIVE:
@@ -4470,7 +4468,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 			case TF_DOUBLE: //For NPC used skill.
 			case GS_CHAINACTION:
-				wd.type = BDT_MULTIHIT;
+				wd.type = BDT_CRIT | BDT_MULTICRIT;
 				break;
 
 			case GS_GROUNDDRIFT:
@@ -4483,7 +4481,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 
 			case KN_AUTOCOUNTER:
-				wd.flag=(wd.flag&~BF_SKILLMASK)|BF_NORMAL;
+				wd.flag = (wd.flag & ~BF_SKILLMASK) | BF_NORMAL;
 				break;
 
 			case NPC_CRITICALSLASH:
@@ -4598,21 +4596,21 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 	if (sd && !skill_id) {
 		//Check for double attack.
-		if (( (skill_lv=pc->checkskill(sd,TF_DOUBLE)) > 0 && sd->weapontype1 == W_DAGGER )
-		 || ( sd->bonus.double_rate > 0 && sd->weapontype1 != W_FIST ) //Will fail bare-handed
-		 || ( sc && sc->data[SC_KAGEMUSYA] && sd->weapontype1 != W_FIST ) // Need confirmation
+		if (sd->bonus.double_rate > 0
+		 || (skill_lv = pc->checkskill(sd, TF_DOUBLE)) > 0
+		 || (sc != NULL && sc->data[SC_KAGEMUSYA] != NULL)
 		) {
 			//Success chance is not added, the higher one is used [Skotlex]
 			if( rnd()%100 < ( 5*skill_lv > sd->bonus.double_rate ? 5*skill_lv : sc && sc->data[SC_KAGEMUSYA]?sc->data[SC_KAGEMUSYA]->val1*3:sd->bonus.double_rate ) )
 			{
 				wd.div_ = skill->get_num(TF_DOUBLE,skill_lv?skill_lv:1);
-				wd.type = BDT_MULTIHIT;
+				wd.type = BDT_CRIT | BDT_MULTICRIT;
 			}
 		}
 		else if( sd->weapontype1 == W_REVOLVER && (skill_lv = pc->checkskill(sd,GS_CHAINACTION)) > 0 && rnd()%100 < 5*skill_lv )
 		{
 			wd.div_ = skill->get_num(GS_CHAINACTION,skill_lv);
-			wd.type = BDT_MULTIHIT;
+			wd.type = BDT_CRIT | BDT_MULTICRIT;
 		}
 		else if(sc && sc->data[SC_FEARBREEZE] && sd->weapontype1==W_BOW
 			&& (i = sd->equip_index[EQI_AMMO]) >= 0 && sd->inventory_data[i] && sd->status.inventory[i].amount > 1){
@@ -4646,17 +4644,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				if ( wd.div_ > 1 ) {
 					wd.div_ = min(wd.div_, sd->status.inventory[i].amount);
 					sc->data[SC_FEARBREEZE]->val4 = wd.div_ - 1;
-					wd.type = BDT_MULTIHIT;
+					wd.type = BDT_CRIT | BDT_MULTICRIT;
 				}
 		}
 	}
 
 	//Check for critical
-	if( !flag.cri && wd.type != BDT_MULTIHIT && sstatus->cri &&
-		(!skill_id ||
-		skill_id == KN_AUTOCOUNTER ||
-		skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING ||
-		skill_id == NJ_KIRIKAGE))
+	if (sstatus->cri != 0)
 	{
 		short cri = sstatus->cri;
 		if (sd != NULL) {
@@ -4716,6 +4710,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	}
 	if (flag.cri) {
 		wd.type = BDT_CRIT;
+#ifdef RENEWAL
+#if PACKETVER >= 20161207
+		if (battle_config.feature_enable_multi_crit == 1 && (wd.type & BDT_MULTIHIT) != 0)
+			wd.type = BDT_MULTICRIT;
+#endif
+#endif
 #ifndef RENEWAL
 		flag.idef = flag.idef2 =
 #endif
@@ -7450,6 +7450,7 @@ static const struct battle_data {
 	{ "hit_max_limit",                      &battle_config.hit_max,                         SHRT_MAX, 1,    INT_MAX,        },
 	{ "autoloot_adjust",                    &battle_config.autoloot_adjust,                 0,      0,      1,              },
 	{ "hom_bonus_exp_from_master",          &battle_config.hom_bonus_exp_from_master,      10,      0,      100,            },
+	{ "features/enable_multi_critical",     &battle_config.feature_enable_multi_crit,       1,      0,      1,              },
 };
 
 static bool battle_set_value_sub(int index, int value)
