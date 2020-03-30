@@ -38,8 +38,11 @@ m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_GNU_SOURCE]
 )
 
+AC_MSG_CHECKING([host OS])
+host_os="`uname`"
+AC_MSG_RESULT([$host_os])
+
 # Root-check
-host_is="`uname`"
 case $host_os in
 CYGWIN*)
 	;;
@@ -330,7 +333,16 @@ AC_ARG_ENABLE(
 			*) AC_MSG_ERROR([[invalid argument --enable-libbacktrace=$enableval... stopping]]);;
 		esac
 	],
-	[enable_libbacktrace="no"]
+	[
+		case $host_os in
+		Linux* )
+			enable_libbacktrace="yes"
+			;;
+		*)
+			enable_libbacktrace="no"
+			;;
+		esac
+	]
 )
 
 #
@@ -1698,9 +1710,6 @@ AC_CHECK_FLAG(-fno-var-tracking)
 #
 # Host specific stuff
 #
-AC_MSG_CHECKING([host OS])
-host_os="`uname`"
-AC_MSG_RESULT([$host_os])
 fd_setsize=""
 DLLEXT=".so"
 case $host_os in
