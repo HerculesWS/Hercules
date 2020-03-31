@@ -90,6 +90,10 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 	if( (intimate >= battle_config.pet_equip_min_friendly && pd->pet.intimate < battle_config.pet_equip_min_friendly) || (intimate < battle_config.pet_equip_min_friendly && pd->pet.intimate >= battle_config.pet_equip_min_friendly) )
 		status_calc_pc(sd,SCO_NONE);
 
+	if (value > 0)
+		achievement->validate_pet_intimacy(sd);
+	achievement->validate_pet_runaway(sd, pd->pet.class_);
+
 	/* Pet is lost, delete the egg */
 	if (value <= 0) {
 		int i;

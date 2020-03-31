@@ -461,6 +461,33 @@ bool HP_achievement_readdb_validate_criteria_achievement(const struct config_set
 	}
 	return retVal___;
 }
+bool HP_achievement_readdb_validate_criteria_intimacy(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_intimacy_pre > 0) {
+		bool (*preHookFunc) (const struct config_setting_t **t, struct achievement_objective **obj, enum achievement_types *type, int *entry_id, int *obj_idx);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_intimacy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_intimacy_pre[hIndex].func;
+			retVal___ = preHookFunc(&t, &obj, &type, &entry_id, &obj_idx);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.achievement.readdb_validate_criteria_intimacy(t, obj, type, entry_id, obj_idx);
+	}
+	if (HPMHooks.count.HP_achievement_readdb_validate_criteria_intimacy_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_readdb_validate_criteria_intimacy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_readdb_validate_criteria_intimacy_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, t, obj, type, entry_id, obj_idx);
+		}
+	}
+	return retVal___;
+}
 bool HP_achievement_readdb_rewards(const struct config_setting_t *conf, struct achievement_data *entry, const char *source) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -1223,6 +1250,32 @@ void HP_achievement_validate_zeny(struct map_session_data *sd, int amount) {
 	}
 	return;
 }
+void HP_achievement_validate_zeny_vending(struct map_session_data *sd, int amount) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_zeny_vending_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *amount);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_zeny_vending_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_zeny_vending_pre[hIndex].func;
+			preHookFunc(&sd, &amount);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_zeny_vending(sd, amount);
+	}
+	if (HPMHooks.count.HP_achievement_validate_zeny_vending_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int amount);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_zeny_vending_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_zeny_vending_post[hIndex].func;
+			postHookFunc(sd, amount);
+		}
+	}
+	return;
+}
 void HP_achievement_validate_refine(struct map_session_data *sd, unsigned int idx, bool success) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_achievement_validate_refine_pre > 0) {
@@ -1348,6 +1401,58 @@ void HP_achievement_validate_taming(struct map_session_data *sd, int class) {
 		void (*postHookFunc) (struct map_session_data *sd, int class);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_taming_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_achievement_validate_taming_post[hIndex].func;
+			postHookFunc(sd, class);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_pet_intimacy(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_pet_intimacy_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pet_intimacy_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_pet_intimacy_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_pet_intimacy(sd);
+	}
+	if (HPMHooks.count.HP_achievement_validate_pet_intimacy_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pet_intimacy_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_pet_intimacy_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_achievement_validate_pet_runaway(struct map_session_data *sd, int class) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_achievement_validate_pet_runaway_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *class);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pet_runaway_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_achievement_validate_pet_runaway_pre[hIndex].func;
+			preHookFunc(&sd, &class);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.achievement.validate_pet_runaway(sd, class);
+	}
+	if (HPMHooks.count.HP_achievement_validate_pet_runaway_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int class);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_achievement_validate_pet_runaway_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_achievement_validate_pet_runaway_post[hIndex].func;
 			postHookFunc(sd, class);
 		}
 	}

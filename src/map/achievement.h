@@ -99,6 +99,10 @@ enum achievement_types {
 	// Achievement
 	ACH_ACHIEVE,
 	ACH_ACHIEVEMENT_RANK,
+	ACH_ZENY_SPEND_VENDING,
+	ACH_ZENY_SPEND_VENDING_TOTAL,
+	ACH_PET_INTIMACY,
+	ACH_PET_RUNAWAY,
 	ACH_TYPE_MAX
 };
 
@@ -138,6 +142,7 @@ struct achievement_objective {
 	/* */
 	uint32 item_type;
 	int mobid;
+	int intimacy;
 	VECTOR_DECL(int) jobid;
 };
 
@@ -166,7 +171,9 @@ struct achievement_data {
 // Achievements types that use Mob ID as criteria.
 #define achievement_criteria_mobid(t) ( \
 		   (t) == ACH_KILL_MOB_CLASS \
-		|| (t) == ACH_PET_CREATE )
+		|| (t) == ACH_PET_CREATE \
+		|| (t) == ACH_PET_INTIMACY \
+		|| (t) == ACH_PET_RUNAWAY )
 
 // Achievements types that use JobID vector as criteria.
 #define achievement_criteria_jobid(t) ( \
@@ -196,6 +203,10 @@ struct achievement_data {
 #define achievement_criteria_weaponlv(t) ( \
 		   (t) == ACH_EQUIP_REFINE_SUCCESS_WLV \
 		|| (t) == ACH_EQUIP_REFINE_FAILURE_WLV )
+
+// Achievement types that uses intimacy as criteria
+#define achievement_criteria_intimacy(t) ( \
+		    (t) == ACH_PET_INTIMACY )
 
 // Valid status types for objective criteria.
 #define achievement_valid_status_types(s) ( \
@@ -230,6 +241,7 @@ struct achievement_interface {
 	bool (*readdb_validate_criteria_itemtype) (const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
 	bool (*readdb_validate_criteria_weaponlv) (const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
 	bool (*readdb_validate_criteria_achievement) (const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
+	bool (*readdb_validate_criteria_intimacy) (const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx);
 	/* */
 	bool (*readdb_rewards) (const struct config_setting_t *conf, struct achievement_data *entry, const char *source);
 	void (*readdb_validate_reward_items) (const struct config_setting_t *t, struct achievement_data *entry);
@@ -266,11 +278,14 @@ struct achievement_interface {
 	void (*validate_marry) (struct map_session_data *sd);
 	void (*validate_adopt) (struct map_session_data *sd, bool parent);
 	void (*validate_zeny) (struct map_session_data *sd, int amount);
+	void (*validate_zeny_vending) (struct map_session_data *sd, int amount);
 	void (*validate_refine) (struct map_session_data *sd, unsigned int idx, bool success);
 	void (*validate_item_get) (struct map_session_data *sd, int nameid, int amount);
 	void (*validate_item_sell) (struct map_session_data *sd, int nameid, int amount);
 	void (*validate_achieve) (struct map_session_data *sd, int achid);
 	void (*validate_taming) (struct map_session_data *sd, int class);
+	void (*validate_pet_intimacy) (struct map_session_data *sd);
+	void (*validate_pet_runaway) (struct map_session_data *sd, int class);
 	void (*validate_achievement_rank) (struct map_session_data *sd, int rank);
 	/* */
 	bool (*type_requires_criteria) (enum achievement_types type);
