@@ -3,3 +3,9 @@
 *.sln    merge=union
 *.vcproj merge=union
 *.vcxproj merge=union
+
+# libconfig generated files
+3rdparty/libconfig/grammar.c linguist-generated=true
+3rdparty/libconfig/grammar.h linguist-generated=true
+3rdparty/libconfig/scanner.c linguist-generated=true
+3rdparty/libconfig/scanner.h linguist-generated=true

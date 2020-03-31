@@ -48,60 +48,64 @@ extern int libconfig_yydebug;
     TOK_BOOLEAN = 258,
     TOK_INTEGER = 259,
     TOK_HEX = 260,
-    TOK_INTEGER64 = 261,
-    TOK_HEX64 = 262,
-    TOK_FLOAT = 263,
-    TOK_STRING = 264,
-    TOK_NAME = 265,
-    TOK_EQUALS = 266,
-    TOK_NEWLINE = 267,
-    TOK_ARRAY_START = 268,
-    TOK_ARRAY_END = 269,
-    TOK_LIST_START = 270,
-    TOK_LIST_END = 271,
-    TOK_COMMA = 272,
-    TOK_GROUP_START = 273,
-    TOK_GROUP_END = 274,
-    TOK_SEMICOLON = 275,
-    TOK_GARBAGE = 276,
-    TOK_ERROR = 277
+    TOK_BIN = 261,
+    TOK_INTEGER64 = 262,
+    TOK_HEX64 = 263,
+    TOK_BIN64 = 264,
+    TOK_FLOAT = 265,
+    TOK_STRING = 266,
+    TOK_NAME = 267,
+    TOK_EQUALS = 268,
+    TOK_NEWLINE = 269,
+    TOK_ARRAY_START = 270,
+    TOK_ARRAY_END = 271,
+    TOK_LIST_START = 272,
+    TOK_LIST_END = 273,
+    TOK_COMMA = 274,
+    TOK_GROUP_START = 275,
+    TOK_GROUP_END = 276,
+    TOK_SEMICOLON = 277,
+    TOK_GARBAGE = 278,
+    TOK_ERROR = 279
   };
 #endif
 /* Tokens.  */
 #define TOK_BOOLEAN 258
 #define TOK_INTEGER 259
 #define TOK_HEX 260
-#define TOK_INTEGER64 261
-#define TOK_HEX64 262
-#define TOK_FLOAT 263
-#define TOK_STRING 264
-#define TOK_NAME 265
-#define TOK_EQUALS 266
-#define TOK_NEWLINE 267
-#define TOK_ARRAY_START 268
-#define TOK_ARRAY_END 269
-#define TOK_LIST_START 270
-#define TOK_LIST_END 271
-#define TOK_COMMA 272
-#define TOK_GROUP_START 273
-#define TOK_GROUP_END 274
-#define TOK_SEMICOLON 275
-#define TOK_GARBAGE 276
-#define TOK_ERROR 277
+#define TOK_BIN 261
+#define TOK_INTEGER64 262
+#define TOK_HEX64 263
+#define TOK_BIN64 264
+#define TOK_FLOAT 265
+#define TOK_STRING 266
+#define TOK_NAME 267
+#define TOK_EQUALS 268
+#define TOK_NEWLINE 269
+#define TOK_ARRAY_START 270
+#define TOK_ARRAY_END 271
+#define TOK_LIST_START 272
+#define TOK_LIST_END 273
+#define TOK_COMMA 274
+#define TOK_GROUP_START 275
+#define TOK_GROUP_END 276
+#define TOK_SEMICOLON 277
+#define TOK_GARBAGE 278
+#define TOK_ERROR 279
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 86 "grammar.y" /* yacc.c:1915  */
+#line 86 "grammar.y" /* yacc.c:1909  */
 
   int ival;
   long long llval;
   double fval;
   char *sval;
 
-#line 105 "grammar.h" /* yacc.c:1915  */
+#line 109 "grammar.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
