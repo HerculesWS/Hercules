@@ -9710,6 +9710,7 @@ static void clif_unknownname_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
 	ShowError("clif_blname_ack: bad type %u(%d)\n", bl->type, bl->id);
+	Assert_retv(0);
 }
 
 static void clif_blname_ack(int fd, struct block_list *bl)
