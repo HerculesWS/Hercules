@@ -49,24 +49,26 @@ extern int libconfig_yydebug;
     TOK_INTEGER = 259,
     TOK_HEX = 260,
     TOK_BIN = 261,
-    TOK_INTEGER64 = 262,
-    TOK_HEX64 = 263,
-    TOK_BIN64 = 264,
-    TOK_FLOAT = 265,
-    TOK_STRING = 266,
-    TOK_NAME = 267,
-    TOK_EQUALS = 268,
-    TOK_NEWLINE = 269,
-    TOK_ARRAY_START = 270,
-    TOK_ARRAY_END = 271,
-    TOK_LIST_START = 272,
-    TOK_LIST_END = 273,
-    TOK_COMMA = 274,
-    TOK_GROUP_START = 275,
-    TOK_GROUP_END = 276,
-    TOK_SEMICOLON = 277,
-    TOK_GARBAGE = 278,
-    TOK_ERROR = 279
+    TOK_OCT = 262,
+    TOK_INTEGER64 = 263,
+    TOK_HEX64 = 264,
+    TOK_BIN64 = 265,
+    TOK_OCT64 = 266,
+    TOK_FLOAT = 267,
+    TOK_STRING = 268,
+    TOK_NAME = 269,
+    TOK_EQUALS = 270,
+    TOK_NEWLINE = 271,
+    TOK_ARRAY_START = 272,
+    TOK_ARRAY_END = 273,
+    TOK_LIST_START = 274,
+    TOK_LIST_END = 275,
+    TOK_COMMA = 276,
+    TOK_GROUP_START = 277,
+    TOK_GROUP_END = 278,
+    TOK_SEMICOLON = 279,
+    TOK_GARBAGE = 280,
+    TOK_ERROR = 281
   };
 #endif
 /* Tokens.  */
@@ -74,24 +76,26 @@ extern int libconfig_yydebug;
 #define TOK_INTEGER 259
 #define TOK_HEX 260
 #define TOK_BIN 261
-#define TOK_INTEGER64 262
-#define TOK_HEX64 263
-#define TOK_BIN64 264
-#define TOK_FLOAT 265
-#define TOK_STRING 266
-#define TOK_NAME 267
-#define TOK_EQUALS 268
-#define TOK_NEWLINE 269
-#define TOK_ARRAY_START 270
-#define TOK_ARRAY_END 271
-#define TOK_LIST_START 272
-#define TOK_LIST_END 273
-#define TOK_COMMA 274
-#define TOK_GROUP_START 275
-#define TOK_GROUP_END 276
-#define TOK_SEMICOLON 277
-#define TOK_GARBAGE 278
-#define TOK_ERROR 279
+#define TOK_OCT 262
+#define TOK_INTEGER64 263
+#define TOK_HEX64 264
+#define TOK_BIN64 265
+#define TOK_OCT64 266
+#define TOK_FLOAT 267
+#define TOK_STRING 268
+#define TOK_NAME 269
+#define TOK_EQUALS 270
+#define TOK_NEWLINE 271
+#define TOK_ARRAY_START 272
+#define TOK_ARRAY_END 273
+#define TOK_LIST_START 274
+#define TOK_LIST_END 275
+#define TOK_COMMA 276
+#define TOK_GROUP_START 277
+#define TOK_GROUP_END 278
+#define TOK_SEMICOLON 279
+#define TOK_GARBAGE 280
+#define TOK_ERROR 281
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -105,7 +109,7 @@ union YYSTYPE
   double fval;
   char *sval;
 
-#line 109 "grammar.h" /* yacc.c:1909  */
+#line 113 "grammar.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

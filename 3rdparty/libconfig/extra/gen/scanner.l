@@ -84,6 +84,68 @@ static unsigned long long fromhex(const char *s)
 #endif /* __MINGW32__ */
 }
 
+static unsigned long long frombin (const char *s)
+{
+#ifdef __MINGW32__
+
+  /* same problem as fromhex(): MinGW's strtoull() is broken */
+
+  const char *p = s;
+  unsigned long long val = 0;
+
+  if (*p != '0')
+    return(0);
+
+  ++p;
+
+  if (*p != 'b' && *p != 'B')
+    return(0);
+
+  for (++p; *p == '0' || *p == '1'; ++p) {
+    val <<= 1;
+    val |= *p == '0' ? 0 : 1;
+  }
+
+  return val;
+
+#else /* ! __MINGW32__ */
+
+  return strtoull(s + 2, NULL, 2);
+
+#endif /* __MINGW32__ */
+}
+
+static unsigned long long fromoct (const char *s)
+{
+#ifdef __MINGW32__
+
+  /* same problem as fromhex(): MinGW's strtoull() is broken */
+
+  const char *p = s;
+  unsigned long long val = 0;
+
+  if (*p != '0')
+    return(0);
+
+  ++p;
+
+  if (*p != 'o' && *p != 'O')
+    return(0);
+
+  for (++p; *p >= '0' && *p <= '7'; ++p) {
+    val <<= 3;
+    val |= *p & 0xF;
+  }
+
+  return val;
+
+#else /* ! __MINGW32__ */
+
+  return strtoull(s + 2, NULL, 8);
+
+#endif /* __MINGW32__ */
+}
+
 %}
 
 true              [Tt][Rr][Uu][Ee]
@@ -93,6 +155,10 @@ integer           [-+]?[0-9]+
 integer64         [-+]?[0-9]+L(L)?
 hex               0[Xx][0-9A-Fa-f]+
 hex64             0[Xx][0-9A-Fa-f]+L(L)?
+bin               0[Bb][01]+
+bin64             0[Bb][01]+L(L)?
+oct               0[Oo][0-7]+
+oct64             0[Oo][0-7]+L(L)?
 hexchar           \\[Xx][0-9A-Fa-f]{2}
 float             ([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]?([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)
 comment           (#|\/\/).*$
@@ -196,6 +262,22 @@ include_open      ^[ \t]*@include[ \t]+\"
                     return(TOK_HEX);
                   }
 {hex64}           { yylval->llval = fromhex(yytext); return(TOK_HEX64); }
+{bin}             {
+                    unsigned long ulval = strtoul(yytext + 2, NULL, 2);
+                    if (ulval > INT32_MAX)
+                      ulval &= INT32_MAX;
+                    yylval->ival = (int)ulval;
+                    return TOK_BIN;
+                  }
+{bin64}           { yylval->llval = frombin(yytext); return TOK_BIN64; }
+{oct}             {
+                    unsigned long ulval = strtoul(yytext + 2, NULL, 8);
+                    if (ulval > INT32_MAX)
+                      ulval &= INT32_MAX;
+                    yylval->ival = (int)ulval;
+                    return TOK_OCT;
+                  }
+{oct64}           { yylval->llval = fromoct(yytext); return TOK_OCT64; }
 {name}            { yylval->sval = yytext; return(TOK_NAME); }
 \[                { return(TOK_ARRAY_START); }
 \]                { return(TOK_ARRAY_END); }
