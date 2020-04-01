@@ -130,6 +130,8 @@ static const struct unit_data *unit_cbl2ud(const struct block_list *bl)
 		return &BL_UCCAST(BL_MER, bl)->ud;
 	case BL_ELEM:
 		return &BL_UCCAST(BL_ELEM, bl)->ud;
+	case BL_SKILL: // No assertion to not spam the server console when attacking a skill type unit such as Ice Wall.
+		return NULL;
 	default:
 		Assert_retr(NULL, false);
 	}
