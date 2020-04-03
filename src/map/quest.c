@@ -675,7 +675,7 @@ static void quest_questinfo_refresh(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	for (int i = 0; i < VECTOR_LENGTH(map->list[sd->bl.m].qi_list); i++) {
-		struct npc_data *nd = &VECTOR_INDEX(map->list[sd->bl.m].qi_list, i);
+		struct npc_data *nd = VECTOR_INDEX(map->list[sd->bl.m].qi_list, i);
 
 		int j;
 		ARR_FIND(0, VECTOR_LENGTH(nd->qi_data), j, quest->questinfo_validate(sd, &VECTOR_INDEX(nd->qi_data, j)) == true);
