@@ -22021,11 +22021,12 @@ static BUILDIN(setquestinfo)
 		return false;
 	}
 
-	qi = &VECTOR_LAST(nd->qi_data);
-	if (qi == NULL) {
+	if (VECTOR_LENGTH(nd->qi_data) == 0) {
 		ShowWarning("buildin_setquestinfo: no valide questinfo data has been found for this npc.\n");
 		return false;
 	}
+
+	qi = &VECTOR_LAST(nd->qi_data);
 
 	switch (type) {
 	case QINFO_JOB:
