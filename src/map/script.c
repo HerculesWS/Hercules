@@ -14952,10 +14952,10 @@ static BUILDIN(getiteminfo)
 		script_pushint(st, it->nameid);
 		break;
 	case ITEMINFO_AEGISNAME:
-		script_pushstr(st, it->name);
+		script_pushstrcopy(st, it->name);
 		break;
 	case ITEMINFO_NAME:
-		script_pushstr(st, it->jname);
+		script_pushstrcopy(st, it->jname);
 		break;
 	default:
 		ShowError("buildin_getiteminfo: Invalid item info type %d.\n", type);
