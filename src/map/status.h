@@ -854,6 +854,13 @@ typedef enum sc_type {
 	SC_RESIST_PROPERTY_WIND,
 	SC_CLIENT_ONLY_EQUIP_ARROW,
 	SC_MADOGEAR,
+	SC_POPECOOKIE,
+	SC_VITALIZE_POTION,
+	SC_SKF_MATK,
+	SC_SKF_ATK,
+	SC_SKF_ASPD,
+	SC_SKF_CAST,
+	SC_ALMIGHTY,
 #ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 #endif

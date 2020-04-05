@@ -884,6 +884,13 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_PHI_DEMON] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MAGIC_CANDY] |= SCB_MATK | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MYSTICPOWDER] |= SCB_FLEE | SCB_LUK;
+	status->dbs->ChangeFlagTable[SC_POPECOOKIE] |= SCB_BASE | SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_VITALIZE_POTION] |= SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_SKF_MATK] |= SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_SKF_ATK] |= SCB_BATK;
+	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_SKF_CAST] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_ALMIGHTY] |= SCB_BATK | SCB_MATK;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -3038,6 +3045,18 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 			sd->subele[ELE_EARTH] += i;
 			sd->subele[ELE_FIRE] -= i;
 		}
+		if (sc->data[SC_POPECOOKIE] != NULL) {
+			i = sc->data[SC_POPECOOKIE]->val3;
+			sd->subele[ELE_WATER] += i;
+			sd->subele[ELE_EARTH] += i;
+			sd->subele[ELE_FIRE] += i;
+			sd->subele[ELE_WIND] += i;
+			sd->subele[ELE_POISON] += i;
+			sd->subele[ELE_HOLY] += i;
+			sd->subele[ELE_DARK] += i;
+			sd->subele[ELE_GHOST] += i;
+			sd->subele[ELE_UNDEAD] += i;
+		}
 		if (sc->data[SC_MTF_MLEATKED])
 			sd->subele[ELE_NEUTRAL] += sc->data[SC_MTF_MLEATKED]->val1;
 		if (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3)
@@ -4801,6 +4820,10 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		/* some statuses that are hidden in the status window */
 		if(sc->data[SC_PLUSATTACKPOWER])
 			batk += sc->data[SC_PLUSATTACKPOWER]->val1;
+		if (sc->data[SC_POPECOOKIE] != NULL)
+			batk += batk * sc->data[SC_POPECOOKIE]->val1 / 100;
+		if (sc->data[SC_VITALIZE_POTION] != NULL)
+			batk += batk * sc->data[SC_VITALIZE_POTION]->val1 / 100;
 		return cap_value(batk, battle_config.batk_min, battle_config.batk_max);
 	}
 #ifndef RENEWAL
@@ -4880,6 +4903,10 @@ static int status_calc_batk(struct block_list *bl, struct status_change *sc, int
 		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_STEAMPACK])
 		batk += sc->data[SC_STEAMPACK]->val1;
+	if (sc->data[SC_SKF_ATK] != NULL)
+		batk += sc->data[SC_SKF_ATK]->val1;
+	if (sc->data[SC_ALMIGHTY] != NULL)
+		batk += sc->data[SC_ALMIGHTY]->val1;
 
 	if (sc->data[SC_SHRIMP])
 		batk += batk * sc->data[SC_SHRIMP]->val2 / 100;
@@ -5020,6 +5047,10 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		/* some statuses that are hidden in the status window */
 		if (sc->data[SC_MINDBREAKER])
 			matk += matk * sc->data[SC_MINDBREAKER]->val2 / 100;
+		if (sc->data[SC_POPECOOKIE] != NULL)
+			matk += matk * sc->data[SC_POPECOOKIE]->val2 / 100;
+		if (sc->data[SC_VITALIZE_POTION] != NULL)
+			matk += matk * sc->data[SC_VITALIZE_POTION]->val2 / 100;
 		return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 	}
 
@@ -5077,6 +5108,10 @@ static int status_calc_matk(struct block_list *bl, struct status_change *sc, int
 		matk += matk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_MAGIC_CANDY])
 		matk += sc->data[SC_MAGIC_CANDY]->val1;
+	if (sc->data[SC_SKF_MATK] != NULL)
+		matk += sc->data[SC_SKF_MATK]->val1;
+	if (sc->data[SC_ALMIGHTY] != NULL)
+		matk += sc->data[SC_ALMIGHTY]->val2;
 
 	return cap_value(matk, battle_config.matk_min, battle_config.matk_max);
 }
@@ -5901,6 +5936,8 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += sc->data[SC_BATTLESCROLL]->val1;
 		if (sc->data[SC_STEAMPACK])
 			bonus += sc->data[SC_STEAMPACK]->val2;
+		if (sc->data[SC_SKF_ASPD] != NULL)
+			bonus += sc->data[SC_SKF_ASPD]->val1;
 	}
 
 	return (bonus + pots);
@@ -6068,6 +6105,8 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 		aspd_rate += sc->data[SC_BATTLESCROLL]->val1 * 10;
 	if (sc->data[SC_STEAMPACK])
 		aspd_rate += sc->data[SC_STEAMPACK]->val2 * 10;
+	if (sc->data[SC_SKF_ASPD] != NULL)
+		aspd_rate -= sc->data[SC_SKF_ASPD]->val1 * 10;
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
