@@ -326,7 +326,7 @@ static int unit_warpto_master(struct block_list *master_bl, struct block_list *s
 static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
-	if (bl == NULL || bl->prev == NULL) // Stop moved because it is missing from the block_list
+	if (bl == NULL)
 		return 1;
 	struct unit_data *ud = unit->bl2ud(bl);
 	if (ud == NULL)
@@ -336,7 +336,11 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		ShowError("unit_walk_timer mismatch %d != %d\n",ud->walktimer,tid);
 		return 1;
 	}
+
 	ud->walktimer = INVALID_TIMER;
+
+	if (bl->prev == NULL) // Stop moved because it is missing from the block_list.
+		return 1;
 
 	if (ud->walkpath.path_pos >= ud->walkpath.path_len)
 		return 1;
