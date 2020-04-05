@@ -1378,6 +1378,27 @@ enum questinfo_type {
 	QINFO_MERCENARY_CLASS
 };
 
+/** Pet hunger level **/
+enum e_pet_hunger_level {
+	PET_HUNGER_STARVING = 0,
+	PET_HUNGER_VERY_HUNGRY = 10,
+	PET_HUNGER_HUNGRY = 25,
+	PET_HUNGER_NEUTRAL = 75,
+	PET_HUNGER_SATISFIED = 90,
+	PET_HUNGER_STUFFED = 100
+};
+
+/** Pet intimacy level **/
+enum e_pet_intimacy_level {
+	PET_INTIMACY_NONE = 0,
+	PET_INTIMACY_AWKWARD = 1,
+	PET_INTIMACY_SHY = 100,
+	PET_INTIMACY_NEUTRAL = 250,
+	PET_INTIMACY_CORDIAL = 750,
+	PET_INTIMACY_LOYAL = 900,
+	PET_INTIMACY_MAX = 1000
+};
+
 /* packet size constant for itemlist */
 #if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
 #define MAX_ITEMLIST MAX_INVENTORY
