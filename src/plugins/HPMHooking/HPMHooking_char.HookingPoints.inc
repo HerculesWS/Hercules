@@ -696,6 +696,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mutex->cond_signal, HP_mutex_cond_signal) },
 	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* nullpo_interface */
+	{ HP_POP(nullpo->init, HP_nullpo_init) },
+	{ HP_POP(nullpo->final, HP_nullpo_final) },
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
 /* packets_interface */
 	{ HP_POP(packets->init, HP_packets_init) },

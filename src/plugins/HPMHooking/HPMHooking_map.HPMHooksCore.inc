@@ -4420,6 +4420,10 @@ struct {
 	struct HPMHookPoint *HP_npc_questinfo_clear_post;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_pre;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_post;
+	struct HPMHookPoint *HP_nullpo_init_pre;
+	struct HPMHookPoint *HP_nullpo_init_post;
+	struct HPMHookPoint *HP_nullpo_final_pre;
+	struct HPMHookPoint *HP_nullpo_final_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
 	struct HPMHookPoint *HP_packets_init_pre;
@@ -11295,6 +11299,10 @@ struct {
 	int HP_npc_questinfo_clear_post;
 	int HP_npc_secure_timeout_timer_pre;
 	int HP_npc_secure_timeout_timer_post;
+	int HP_nullpo_init_pre;
+	int HP_nullpo_init_post;
+	int HP_nullpo_final_pre;
+	int HP_nullpo_final_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
 	int HP_packets_init_pre;

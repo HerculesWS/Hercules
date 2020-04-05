@@ -2263,6 +2263,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->questinfo_clear, HP_npc_questinfo_clear) },
 	{ HP_POP(npc->secure_timeout_timer, HP_npc_secure_timeout_timer) },
 /* nullpo_interface */
+	{ HP_POP(nullpo->init, HP_nullpo_init) },
+	{ HP_POP(nullpo->final, HP_nullpo_final) },
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
 /* packets_interface */
 	{ HP_POP(packets->init, HP_packets_init) },

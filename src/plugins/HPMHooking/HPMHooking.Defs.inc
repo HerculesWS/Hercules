@@ -5830,6 +5830,10 @@ typedef int (*HPMHOOK_pre_npc_secure_timeout_timer) (int *tid, int64 *tick, int 
 typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 #endif // MAP_NPC_H
 #ifdef COMMON_NULLPO_H /* nullpo */
+typedef void (*HPMHOOK_pre_nullpo_init) (void);
+typedef void (*HPMHOOK_post_nullpo_init) (void);
+typedef void (*HPMHOOK_pre_nullpo_final) (void);
+typedef void (*HPMHOOK_post_nullpo_final) (void);
 typedef void (*HPMHOOK_pre_nullpo_assert_report) (const char **file, int *line, const char **func, const char **targetname, const char **title);
 typedef void (*HPMHOOK_post_nullpo_assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
 #endif // COMMON_NULLPO_H
