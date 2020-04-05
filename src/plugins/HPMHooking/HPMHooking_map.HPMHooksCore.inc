@@ -5910,6 +5910,8 @@ struct {
 	struct HPMHookPoint *HP_skill_not_ok_hom_unknown_post;
 	struct HPMHookPoint *HP_skill_not_ok_mercenary_pre;
 	struct HPMHookPoint *HP_skill_not_ok_mercenary_post;
+	struct HPMHookPoint *HP_skill_validate_autocast_data_pre;
+	struct HPMHookPoint *HP_skill_validate_autocast_data_post;
 	struct HPMHookPoint *HP_skill_chastle_mob_changetarget_pre;
 	struct HPMHookPoint *HP_skill_chastle_mob_changetarget_post;
 	struct HPMHookPoint *HP_skill_can_produce_mix_pre;
@@ -12787,6 +12789,8 @@ struct {
 	int HP_skill_not_ok_hom_unknown_post;
 	int HP_skill_not_ok_mercenary_pre;
 	int HP_skill_not_ok_mercenary_post;
+	int HP_skill_validate_autocast_data_pre;
+	int HP_skill_validate_autocast_data_post;
 	int HP_skill_chastle_mob_changetarget_pre;
 	int HP_skill_chastle_mob_changetarget_post;
 	int HP_skill_can_produce_mix_pre;

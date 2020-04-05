@@ -7386,6 +7386,8 @@ typedef int (*HPMHOOK_pre_skill_not_ok_hom_unknown) (uint16 *skill_id, struct ho
 typedef int (*HPMHOOK_post_skill_not_ok_hom_unknown) (int retVal___, uint16 skill_id, struct homun_data *hd);
 typedef int (*HPMHOOK_pre_skill_not_ok_mercenary) (uint16 *skill_id, struct mercenary_data **md);
 typedef int (*HPMHOOK_post_skill_not_ok_mercenary) (int retVal___, uint16 skill_id, struct mercenary_data *md);
+typedef void (*HPMHOOK_pre_skill_validate_autocast_data) (struct map_session_data **sd, int *skill_id, int *skill_lv);
+typedef void (*HPMHOOK_post_skill_validate_autocast_data) (struct map_session_data *sd, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_chastle_mob_changetarget) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_chastle_mob_changetarget) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_can_produce_mix) (struct map_session_data **sd, int *nameid, int *trigger, int *qty);

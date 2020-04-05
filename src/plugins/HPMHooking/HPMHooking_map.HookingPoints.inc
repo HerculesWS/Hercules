@@ -3024,6 +3024,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->not_ok_hom, HP_skill_not_ok_hom) },
 	{ HP_POP(skill->not_ok_hom_unknown, HP_skill_not_ok_hom_unknown) },
 	{ HP_POP(skill->not_ok_mercenary, HP_skill_not_ok_mercenary) },
+	{ HP_POP(skill->validate_autocast_data, HP_skill_validate_autocast_data) },
 	{ HP_POP(skill->chastle_mob_changetarget, HP_skill_chastle_mob_changetarget) },
 	{ HP_POP(skill->can_produce_mix, HP_skill_can_produce_mix) },
 	{ HP_POP(skill->produce_mix, HP_skill_produce_mix) },

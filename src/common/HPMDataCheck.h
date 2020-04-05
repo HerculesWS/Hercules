@@ -858,6 +858,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_PC_GROUPS_H
 	#endif // MAP_PC_GROUPS_H
 	#ifdef MAP_PC_H
+		{ "autocast_data", sizeof(struct autocast_data), SERVER_TYPE_MAP },
 		{ "autotrade_vending", sizeof(struct autotrade_vending), SERVER_TYPE_MAP },
 		{ "class_exp_group", sizeof(struct class_exp_group), SERVER_TYPE_MAP },
 		{ "class_exp_tables", sizeof(struct class_exp_tables), SERVER_TYPE_MAP },

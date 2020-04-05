@@ -78892,6 +78892,32 @@ int HP_skill_not_ok_mercenary(uint16 skill_id, struct mercenary_data *md) {
 	}
 	return retVal___;
 }
+void HP_skill_validate_autocast_data(struct map_session_data *sd, int skill_id, int skill_lv) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_validate_autocast_data_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, int *skill_id, int *skill_lv);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_autocast_data_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_autocast_data_pre[hIndex].func;
+			preHookFunc(&sd, &skill_id, &skill_lv);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_autocast_data(sd, skill_id, skill_lv);
+	}
+	if (HPMHooks.count.HP_skill_validate_autocast_data_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, int skill_id, int skill_lv);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_autocast_data_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_autocast_data_post[hIndex].func;
+			postHookFunc(sd, skill_id, skill_lv);
+		}
+	}
+	return;
+}
 int HP_skill_chastle_mob_changetarget(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;
