@@ -54,6 +54,16 @@ typedef enum {
 	COMMAND_CHARCOMMAND = 2,
 } AtCommandType;
 
+/** @fakename display option flags **/
+enum fakename_option_flag {
+	FAKENAME_OPTION_NONE = 0x00,
+	FAKENAME_OPTION_SHOW_PARTYNAME = 0x01,
+	FAKENAME_OPTION_SHOW_GUILDNAME = 0x02,
+	FAKENAME_OPTION_SHOW_GUILDPOSITION = 0x04,
+	FAKENAME_OPTION_SHOW_CLANPOSITION = 0x08,
+	FAKENAME_OPTION_SHOW_TITLE = 0x10
+};
+
 /**
  * Typedef
  **/

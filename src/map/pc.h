@@ -497,6 +497,7 @@ END_ZEROED_BLOCK;
 	int change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
 
 	char fakename[NAME_LENGTH]; // fake names [Valaris]
+	int fakename_options; // Fake name display options.
 
 	int duel_group; // duel vars [LuzZza]
 	int duel_invite;
