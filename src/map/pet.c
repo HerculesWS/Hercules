@@ -494,17 +494,15 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	pd->last_thinktime = timer->gettick();
 	pd->state.skillbonus = 0;
 
-	if (pd->petDB != NULL) {
-		if (pd->petDB->pet_script != NULL && battle_config.pet_status_support == 1)
-			script->run_pet(pd->petDB->pet_script, 0, sd->bl.id, 0);
+	if (pd->petDB->pet_script != NULL && battle_config.pet_status_support == 1)
+		script->run_pet(pd->petDB->pet_script, 0, sd->bl.id, 0);
 
-		if (pd->petDB->equip_script != NULL)
-			status_calc_pc(sd, SCO_NONE);
+	if (pd->petDB->equip_script != NULL)
+		status_calc_pc(sd, SCO_NONE);
 
-		if (pd->petDB->hungry_delay > 0) {
-			int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
-			pd->pet_hungry_timer = timer->add(timer->gettick() + max(interval, 1), pet->hungry, sd->bl.id, 0);
-		}
+	if (pd->petDB->hungry_delay > 0) {
+		int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
+		pd->pet_hungry_timer = timer->add(timer->gettick() + max(interval, 1), pet->hungry, sd->bl.id, 0);
 	}
 
 	return 0;
