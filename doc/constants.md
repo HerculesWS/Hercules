@@ -1339,6 +1339,13 @@
 - `SC_RESIST_PROPERTY_WIND`: 667
 - `SC_CLIENT_ONLY_EQUIP_ARROW`: 668
 - `SC_MADOGEAR`: 669
+- `SC_POPECOOKIE`: 670
+- `SC_VITALIZE_POTION`: 671
+- `SC_SKF_MATK`: 672
+- `SC_SKF_ATK`: 673
+- `SC_SKF_ASPD`: 674
+- `SC_SKF_CAST`: 675
+- `SC_ALMIGHTY`: 676
 
 ### Emotes
 
@@ -14774,6 +14781,7 @@
 - `Elf_Tear_Curse`: 12880
 - `Elf_Tear_Silence`: 12881
 - `Elf_Tear_Blind`: 12882
+- `Almighty`: 12883
 - `C_Center_Potion`: 12884
 - `C_Awakening_Potion`: 12885
 - `C_Berserk_Potion`: 12886
@@ -16642,6 +16650,7 @@
 - `Tw_Red_Scroll`: 17210
 - `Tw_Orange_Scroll`: 17211
 - `Tw_Yellow_Scroll`: 17212
+- `Almighty_Box`: 17224
 - `C_Center_Potion_Box`: 17226
 - `C_Awakening_Potion_Box`: 17227
 - `C_Berserk_Potion_Box`: 17228
