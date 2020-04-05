@@ -500,6 +500,8 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	if (pd->petDB->equip_script != NULL)
 		status_calc_pc(sd, SCO_NONE);
 
+	pd->pet_hungry_timer = INVALID_TIMER;
+
 	if (pd->petDB->hungry_delay > 0) {
 		int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
 		pd->pet_hungry_timer = timer->add(timer->gettick() + max(interval, 1), pet->hungry, sd->bl.id, 0);
