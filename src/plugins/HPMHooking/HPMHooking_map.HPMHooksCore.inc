@@ -5076,6 +5076,8 @@ struct {
 	struct HPMHookPoint *HP_pet_final_post;
 	struct HPMHookPoint *HP_pet_hungry_val_pre;
 	struct HPMHookPoint *HP_pet_hungry_val_post;
+	struct HPMHookPoint *HP_pet_set_hunger_pre;
+	struct HPMHookPoint *HP_pet_set_hunger_post;
 	struct HPMHookPoint *HP_pet_set_intimate_pre;
 	struct HPMHookPoint *HP_pet_set_intimate_post;
 	struct HPMHookPoint *HP_pet_create_egg_pre;
@@ -11955,6 +11957,8 @@ struct {
 	int HP_pet_final_post;
 	int HP_pet_hungry_val_pre;
 	int HP_pet_hungry_val_post;
+	int HP_pet_set_hunger_pre;
+	int HP_pet_set_hunger_post;
 	int HP_pet_set_intimate_pre;
 	int HP_pet_set_intimate_post;
 	int HP_pet_create_egg_pre;

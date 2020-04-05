@@ -6500,6 +6500,8 @@ typedef int (*HPMHOOK_pre_pet_final) (void);
 typedef int (*HPMHOOK_post_pet_final) (int retVal___);
 typedef int (*HPMHOOK_pre_pet_hungry_val) (struct pet_data **pd);
 typedef int (*HPMHOOK_post_pet_hungry_val) (int retVal___, struct pet_data *pd);
+typedef void (*HPMHOOK_pre_pet_set_hunger) (struct pet_data **pd, int *value);
+typedef void (*HPMHOOK_post_pet_set_hunger) (struct pet_data *pd, int value);
 typedef void (*HPMHOOK_pre_pet_set_intimate) (struct pet_data **pd, int *value);
 typedef void (*HPMHOOK_post_pet_set_intimate) (struct pet_data *pd, int value);
 typedef int (*HPMHOOK_pre_pet_create_egg) (struct map_session_data **sd, int *item_id);

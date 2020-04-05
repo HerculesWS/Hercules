@@ -2598,6 +2598,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pet->init, HP_pet_init) },
 	{ HP_POP(pet->final, HP_pet_final) },
 	{ HP_POP(pet->hungry_val, HP_pet_hungry_val) },
+	{ HP_POP(pet->set_hunger, HP_pet_set_hunger) },
 	{ HP_POP(pet->set_intimate, HP_pet_set_intimate) },
 	{ HP_POP(pet->create_egg, HP_pet_create_egg) },
 	{ HP_POP(pet->unlocktarget, HP_pet_unlocktarget) },

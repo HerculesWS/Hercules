@@ -67561,6 +67561,32 @@ int HP_pet_hungry_val(struct pet_data *pd) {
 	}
 	return retVal___;
 }
+void HP_pet_set_hunger(struct pet_data *pd, int value) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_pet_set_hunger_pre > 0) {
+		void (*preHookFunc) (struct pet_data **pd, int *value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_set_hunger_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pet_set_hunger_pre[hIndex].func;
+			preHookFunc(&pd, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pet.set_hunger(pd, value);
+	}
+	if (HPMHooks.count.HP_pet_set_hunger_post > 0) {
+		void (*postHookFunc) (struct pet_data *pd, int value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_set_hunger_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pet_set_hunger_post[hIndex].func;
+			postHookFunc(pd, value);
+		}
+	}
+	return;
+}
 void HP_pet_set_intimate(struct pet_data *pd, int value) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_pet_set_intimate_pre > 0) {
