@@ -5295,10 +5295,6 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if(sd->catch_target_class != -1) //Abort pet catching.
 		sd->catch_target_class = -1;
 
-	// Removes abracadabra/randomize spell flag for delayed consume items or item doesn't get consumed
-	if (sd->inventory_data[n]->flag.delay_consume)
-		sd->state.abra_flag = 0;
-
 	amount = sd->status.inventory[n].amount;
 	//Check if the item is to be consumed immediately [Skotlex]
 	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
@@ -5337,21 +5333,22 @@ static int pc_useitem(struct map_session_data *sd, int n)
 }
 
 /**
- * Sets state flags and helper variables, used by itemskill() script command, to 0.
+ * Unsets a character's auto-cast related data.
  *
  * @param sd The character's session data.
  * @return 0 if parameter sd is NULL, otherwise 1.
  */
-static int pc_itemskill_clear(struct map_session_data *sd)
+static int pc_autocast_clear(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	sd->itemskill_id = 0;
-	sd->itemskill_lv = 0;
-	sd->state.itemskill_conditions_checked = 0;
-	sd->state.itemskill_check_conditions = 0;
-	sd->state.itemskill_no_casttime = 0;
-	sd->state.itemskill_castonself = 0;
+	sd->autocast.type = AUTOCAST_NONE;
+	sd->autocast.skill_id = 0;
+	sd->autocast.skill_lv = 0;
+	sd->autocast.itemskill_conditions_checked = false;
+	sd->autocast.itemskill_check_conditions = false;
+	sd->autocast.itemskill_instant_cast = false;
+	sd->autocast.itemskill_cast_on_self = false;
 
 	return 1;
 }
@@ -8122,9 +8119,9 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 
 	clif->party_dead_notification(sd);
 
-	//Reset menu skills/item skills
-	if (sd->skillitem)
-		sd->skillitem = sd->skillitemlv = 0;
+	pc->autocast_clear(sd); // Unset auto-cast data.
+
+	// Reset menu skills.
 	if (sd->menuskill_id)
 		sd->menuskill_id = sd->menuskill_val = 0;
 	//Reset ticks.
@@ -12730,7 +12727,7 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
-	pc->itemskill_clear = pc_itemskill_clear;
+	pc->autocast_clear = pc_autocast_clear;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;

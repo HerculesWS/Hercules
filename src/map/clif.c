@@ -6766,7 +6766,7 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 	struct PACKET_ZC_AUTORUN_SKILL *p = WFIFOP(fd, 0);
 	int type = skill->get_inf(skill_id);
 
-	if (sd->state.itemskill_castonself == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if (sd->autocast.itemskill_cast_on_self && sd->autocast.type == AUTOCAST_ITEM)
 		type = INF_SELF_SKILL;
 
 	p->packetType = HEADER_ZC_AUTORUN_SKILL;
@@ -12707,6 +12707,14 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 {
 	int64 tick = timer->gettick();
 
+	/**
+	 * According to Skotlex' comment below, the client sometimes passes 0 for the skill level.
+	 * Even though this seems to only affect guild skills, sd->autocast.skill_lv is used
+	 * for the auto-cast data validation if skill_lv is 0.
+	 *
+	 **/
+	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->autocast.skill_lv : skill_lv);
+
 	if (skill_lv < 1)
 		skill_lv = 1; //No clue, I have seen the client do this with guild skills :/ [Skotlex]
 
@@ -12760,7 +12768,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
 			return;
 	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
-		if (sd->skillitem != skill_id) {
+		if (sd->autocast.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -12778,16 +12786,16 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		} else if (sd->menuskill_id != SA_AUTOSPELL)
 			return; //Can't use skills while a menu is open.
 	}
-	if (sd->skillitem == skill_id) {
-		if (skill_lv != sd->skillitemlv)
-			skill_lv = sd->skillitemlv;
+	if (sd->autocast.type != AUTOCAST_NONE) {
+		if (skill_lv != sd->autocast.skill_lv)
+			skill_lv = sd->autocast.skill_lv;
 		if (!(tmp&INF_SELF_SKILL))
 			pc->delinvincibletimer(sd); // Target skills through items cancel invincibility. [Inkfish]
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
 		return;
 	}
 
-	sd->skillitem = sd->skillitemlv = 0;
+	pc->autocast_clear(sd);
 
 	if (skill_id >= GD_SKILLBASE && skill_id < GD_MAX) {
 		if (sd->state.gmaster_flag)
@@ -12848,6 +12856,16 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	int64 tick = timer->gettick();
 
 	nullpo_retv(sd);
+
+	/**
+	 * When using clif_item_skill() to initiate the execution of ground skills,
+	 * the client sometimes passes 0 for the skill level in packet 0x0af4.
+	 * In that case sd->autocast.skill_lv is used for the auto-cast data validation,
+	 * since clif_item_skill() is only used for auto-cast skills.
+	 *
+	 **/
+	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->autocast.skill_lv : skill_lv);
+
 	if( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) )
 		return; //Using a target skill on the ground? WRONG.
 
@@ -12888,7 +12906,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		return;
 
 	if( DIFF_TICK(tick, sd->ud.canact_tick) < 0 ) {
-		if( sd->skillitem != skill_id ) {
+		if (sd->autocast.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -12909,13 +12927,13 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 
 	pc->delinvincibletimer(sd);
 
-	if( sd->skillitem == skill_id ) {
-		if( skill_lv != sd->skillitemlv )
-			skill_lv = sd->skillitemlv;
+	if (sd->autocast.type != AUTOCAST_NONE) {
+		if (skill_lv != sd->autocast.skill_lv)
+			skill_lv = sd->autocast.skill_lv;
 		unit->skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);
 	} else {
 		int lv;
-		sd->skillitem = sd->skillitemlv = 0;
+		pc->autocast_clear(sd);
 		if( (lv = pc->checkskill(sd, skill_id)) > 0 ) {
 			if( skill_lv > lv )
 				skill_lv = lv;
@@ -12986,9 +13004,15 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	/**
+	 * Since no skill level was passed use 0 to notify skill_validate_autocast_data() of this special case.
+	 *
+	 **/
+	skill->validate_autocast_data(sd, skill_id, 0);
+
 	pc->delinvincibletimer(sd);
 	skill->castend_map(sd,skill_id,map_name);
-	pc->itemskill_clear(sd);
+	pc->autocast_clear(sd);
 }
 
 static void clif_parse_RequestMemo(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));

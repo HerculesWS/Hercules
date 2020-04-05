@@ -1148,8 +1148,10 @@ static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_
 	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->itemskill_clear(sd);
+	if (sd != NULL && ret == 0)
+		pc->autocast_clear(sd); // Error in unit_skilluse_id2().
+	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
+		skill->validate_autocast_data(sd, skill_id, skill_lv);
 
 	return ret;
 }
@@ -1708,7 +1710,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
 		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
 
-	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
@@ -1746,7 +1748,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if( casttime <= 0 )
 		ud->state.skillcastcancel = 0;
 
-	if( !sd || sd->skillitem != skill_id || skill->get_cast(skill_id,skill_lv) )
+	if (sd == NULL || sd->autocast.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
 		ud->canact_tick = tick + casttime + 100;
 	if( sd )
 	{
@@ -1785,8 +1787,10 @@ static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_
 	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->itemskill_clear(sd);
+	if (sd != NULL && ret == 0)
+		pc->autocast_clear(sd); // Error in unit_skilluse_pos2().
+	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
+		skill->validate_autocast_data(sd, skill_id, skill_lv);
 
 	return ret;
 }
@@ -1883,7 +1887,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	}
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
-	if( !sd || sd->skillitem != skill_id || skill->get_cast(skill_id,skill_lv) )
+	if (sd == NULL || sd->autocast.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
 		ud->canact_tick  = tick + casttime + 100;
 #if 0
 	if (sd) {
@@ -1914,7 +1918,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
