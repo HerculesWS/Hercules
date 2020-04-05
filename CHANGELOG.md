@@ -9,6 +9,29 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.04.05] `April 05 2020`
+
+### Added
+
+- The `setpcblock()` and `checkpcblock()` can now be used on another character by passing the account id. (#2668)
+- Added new StatusChange types (`SC_POPECOOKIE`, `SC_VITALIZE_POTION`, `SC_SKF_MATK`, `SC_SKF_ATK`, `SC_SKF_ASPD`, `SC_SKF_CAST`, `SC_ALMIGHTY`) and updated relevant items. (#2658)
+- Added _libbacktrace_ support (currently Linux-only) for better error call stack logging. (#2581)
+
+### Changed
+
+- Added a `UNIQUE` constraint to the `userid` column of the `login` SQL table to prevent having multiple accounts with the same name. (#2666)
+- Increased the column size of `list`for the `ipbanlist` SQL table to accomodate for non-wildcard IPv4 and for IPv6 compatiblity. (#2665)
+
+### Fixed
+
+- Fixed a bug causing failed assertions that appeared when attacking a skill unit (such as Ice Wall). (#2678)
+- Fixed a bug causing failed assertions that appeared in `timer_do_delete`.
+- Fixed a bug allowing to equip bullets and grenades regardless of the weapon type. (#2660)
+- Fixed a bug that made pet_db2 completely overwrite pet_db rather than patch/append. (#2206)
+- Fixed a memory leak in barter NPCs. (#2655)
+- Fixed a pointer overflow in the script command `getiteminfo()`.  (#2656)
+- Refactored and fixed several bugs in the skill auto-cast system. (#2657)
+
 ## [v2020.03.08+2] `March 08 2020` `PATCH 2`
 
 ### Fixed
@@ -1263,6 +1286,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.04.05]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+2...v2020.04.05
 [v2020.03.08+2]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+1...v2020.03.08+2
 [v2020.03.08+1]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08...v2020.03.08+1
 [v2020.03.08]: https://github.com/HerculesWS/Hercules/compare/v2020.02.09...v2020.03.08
