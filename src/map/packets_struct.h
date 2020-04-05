@@ -3779,7 +3779,7 @@ struct PACKET_ZC_SE_CASHSHOP_OPEN {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0b6e);
 // for ragexeRE in some version this packet unused [4144]
-#elif PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || PACKETVER_ZERO_NUM >= defined(PACKETVER_ZERO)
+#elif PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_SE_CASHSHOP_OPEN {
 	int16 packetType;
 	uint32 cashPoints;
