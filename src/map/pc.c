@@ -5295,10 +5295,6 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if(sd->catch_target_class != -1) //Abort pet catching.
 		sd->catch_target_class = -1;
 
-	// Removes abracadabra/randomize spell flag for delayed consume items or item doesn't get consumed
-	if (sd->inventory_data[n]->flag.delay_consume)
-		sd->state.abra_flag = 0;
-
 	amount = sd->status.inventory[n].amount;
 	//Check if the item is to be consumed immediately [Skotlex]
 	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
@@ -5337,21 +5333,22 @@ static int pc_useitem(struct map_session_data *sd, int n)
 }
 
 /**
- * Sets state flags and helper variables, used by itemskill() script command, to 0.
+ * Unsets a character's auto-cast related data.
  *
  * @param sd The character's session data.
  * @return 0 if parameter sd is NULL, otherwise 1.
  */
-static int pc_itemskill_clear(struct map_session_data *sd)
+static int pc_autocast_clear(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	sd->itemskill_id = 0;
-	sd->itemskill_lv = 0;
-	sd->state.itemskill_conditions_checked = 0;
-	sd->state.itemskill_check_conditions = 0;
-	sd->state.itemskill_no_casttime = 0;
-	sd->state.itemskill_castonself = 0;
+	sd->autocast.type = AUTOCAST_NONE;
+	sd->autocast.skill_id = 0;
+	sd->autocast.skill_lv = 0;
+	sd->autocast.itemskill_conditions_checked = false;
+	sd->autocast.itemskill_check_conditions = false;
+	sd->autocast.itemskill_instant_cast = false;
+	sd->autocast.itemskill_cast_on_self = false;
 
 	return 1;
 }
@@ -5703,7 +5700,7 @@ static int pc_steal_coin(struct map_session_data *sd, struct block_list *target,
 	return 0;
 }
 
- /**
+/**
  * Sets a character's position.
  *
  * @param sd The related character.
@@ -5720,233 +5717,278 @@ static int pc_steal_coin(struct map_session_data *sd, struct block_list *target,
  **/
 static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, enum clr_type clrtype)
 {
-	int16 m;
-
 	nullpo_retr(3, sd);
 
-	if( !map_index || !mapindex_id2name(map_index) || ( m = map->mapindex2mapid(map_index) ) == -1 ) {
-		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", map_index);
+	int map_id = map->mapindex2mapid(map_index);
+
+	if (map_index == 0 || !mapindex_id2name(map_index) || map_id == INDEX_NOT_FOUND) {
+		ShowDebug("pc_setpos: Passed mapindex %d is invalid!\n", map_index);
 		return 1;
 	}
 
-	if( pc_isdead(sd) ) { //Revive dead people before warping them
+	if (pc_isdead(sd)) { // Revive dead character before warping.
 		pc->setstand(sd);
-		pc->setrestartvalue(sd,1);
+		pc->setrestartvalue(sd, 1);
 	}
 
-	if( map->list[m].flag.src4instance ) {
-		struct party_data *p;
+	if (map->list[map_id].flag.src4instance != 0) {
 		bool stop = false;
-		int i = 0, j = 0;
 
-		if( sd->instances ) {
-			for( i = 0; i < sd->instances; i++ ) {
-				if( sd->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j, map->list[instance->list[sd->instance[i]].map[j]].instance_src_map == m && !map->list[instance->list[sd->instance[i]].map[j]].custom_name);
-					if( j != instance->list[sd->instance[i]].num_map )
+		if (sd->instances != 0) {
+			int i, j = 0;
+
+			for (i = 0; i < sd->instances; i++) {
+				if (sd->instance[i] >= 0) {
+					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j,
+						 map->list[instance->list[sd->instance[i]].map[j]].instance_src_map == map_id
+						 && !map->list[instance->list[sd->instance[i]].map[j]].custom_name);
+
+					if (j != instance->list[sd->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != sd->instances ) {
-				m = instance->list[sd->instance[i]].map[j];
-				map_index = map_id2index(m);
+
+			if (i != sd->instances) {
+				map_id = instance->list[sd->instance[i]].map[j];
+				map_index = map_id2index(map_id);
 				stop = true;
 			}
 		}
-		if ( !stop && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instances ) {
-			for( i = 0; i < p->instances; i++ ) {
-				if( p->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[p->instance[i]].num_map, j, map->list[instance->list[p->instance[i]].map[j]].instance_src_map == m && !map->list[instance->list[p->instance[i]].map[j]].custom_name);
-					if( j != instance->list[p->instance[i]].num_map )
+
+		struct party_data *p = party->search(sd->status.party_id);
+
+		if (!stop && sd->status.party_id != 0 && p != NULL && p->instances != 0) {
+			int i, j = 0;
+
+			for (i = 0; i < p->instances; i++) {
+				if (p->instance[i] >= 0) {
+					ARR_FIND(0, instance->list[p->instance[i]].num_map, j,
+						 map->list[instance->list[p->instance[i]].map[j]].instance_src_map == map_id
+						 && !map->list[instance->list[p->instance[i]].map[j]].custom_name);
+
+					if (j != instance->list[p->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != p->instances ) {
-				m = instance->list[p->instance[i]].map[j];
-				map_index = map_id2index(m);
+
+			if (i != p->instances) {
+				map_id = instance->list[p->instance[i]].map[j];
+				map_index = map_id2index(map_id);
 				stop = true;
 			}
 		}
-		if ( !stop && sd->status.guild_id && sd->guild && sd->guild->instances ) {
-			for( i = 0; i < sd->guild->instances; i++ ) {
-				if( sd->guild->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j, map->list[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == m && !map->list[instance->list[sd->guild->instance[i]].map[j]].custom_name);
-					if( j != instance->list[sd->guild->instance[i]].num_map )
+
+		if (!stop && sd->status.guild_id != 0 && sd->guild != NULL && sd->guild->instances != 0) {
+			int i, j = 0;
+
+			for (i = 0; i < sd->guild->instances; i++) {
+				if (sd->guild->instance[i] >= 0) {
+					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j,
+						 map->list[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == map_id
+						 && !map->list[instance->list[sd->guild->instance[i]].map[j]].custom_name);
+
+					if (j != instance->list[sd->guild->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != sd->guild->instances ) {
-				m = instance->list[sd->guild->instance[i]].map[j];
-				map_index = map_id2index(m);
-				//stop = true; Uncomment if adding new checks
+
+			if (i != sd->guild->instances) {
+				map_id = instance->list[sd->guild->instance[i]].map[j];
+				map_index = map_id2index(map_id);
+				//stop = true; Uncomment when adding new checks.
 			}
 		}
 
-		/* we hit a instance, if empty we populate the spawn data */
-		if( map->list[m].instance_id >= 0 && instance->list[map->list[m].instance_id].respawn.map == 0 &&
-		    instance->list[map->list[m].instance_id].respawn.x == 0 &&
-		    instance->list[map->list[m].instance_id].respawn.y == 0) {
-			instance->list[map->list[m].instance_id].respawn.map = map_index;
-			instance->list[map->list[m].instance_id].respawn.x = x;
-			instance->list[map->list[m].instance_id].respawn.y = y;
+		// We hit an instance. If empty we populate the spawn data.
+		if (map->list[map_id].instance_id >= 0 && instance->list[map->list[map_id].instance_id].respawn.map == 0
+		    && instance->list[map->list[map_id].instance_id].respawn.x == 0
+		    && instance->list[map->list[map_id].instance_id].respawn.y == 0) {
+			instance->list[map->list[map_id].instance_id].respawn.map = map_index;
+			instance->list[map->list[map_id].instance_id].respawn.x = x;
+			instance->list[map->list[map_id].instance_id].respawn.y = y;
 		}
 	}
 
-	sd->state.changemap = (sd->mapindex != map_index);
+	sd->state.changemap = (sd->mapindex != map_index) ? 1 : 0;
 	sd->state.warping = 1;
 	sd->state.workinprogress = 0;
-	if( sd->state.changemap ) { // Misc map-changing settings
-		int i;
+
+	if (sd->state.changemap != 0) { // Miscellaneous map-changing settings.
 		sd->state.pmap = sd->bl.m;
 
-		for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
+		for (int i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
 			struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
-			if (queue && queue->event_mapchange[0] != '\0') {
-				pc->setregstr(sd, script->add_variable("@Queue_Destination_Map$"), map->list[m].name);
+
+			if (queue != NULL && queue->event_mapchange[0] != '\0') {
+				pc->setregstr(sd, script->add_variable("@Queue_Destination_Map$"), map->list[map_id].name);
 				npc->event(sd, queue->event_mapchange, 0);
 			}
 		}
 
-		if( map->list[m].cell == (struct mapcell *)0xdeadbeaf )
-			map->cellfromcache(&map->list[m]);
-		if (sd->sc.count) { // Cancel some map related stuff.
-			if (sd->sc.data[SC_JAILED])
-				return 4; //You may not get out!
+		if (map->list[map_id].cell == (struct mapcell *)0xdeadbeaf)
+			map->cellfromcache(&map->list[map_id]);
+
+		if (sd->sc.count != 0) { // Cancel some map related stuff.
+			if (sd->sc.data[SC_JAILED] != NULL)
+				return 4; // You may not get out!
+
 			status_change_end(&sd->bl, SC_CASH_BOSS_ALARM, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_WARM, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_SUN_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_MOON_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STAR_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_MIRACLE, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER);//Will later check if this is needed. [Rytech]
+			status_change_end(&sd->bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER); // Will later check if this is needed. [Rytech]
 			status_change_end(&sd->bl, SC_NEUTRALBARRIER, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STEALTHFIELD_MASTER, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STEALTHFIELD, INVALID_TIMER);
-			if (sd->sc.data[SC_KNOWLEDGE]) {
+
+			if (sd->sc.data[SC_KNOWLEDGE] != NULL) {
 				struct status_change_entry *sce = sd->sc.data[SC_KNOWLEDGE];
+
 				if (sce->timer != INVALID_TIMER)
 					timer->delete(sce->timer, status->change_timer);
-				sce->timer = timer->add(timer->gettick() + skill->get_time(SG_KNOWLEDGE, sce->val1), status->change_timer, sd->bl.id, SC_KNOWLEDGE);
+
+				sce->timer = timer->add(timer->gettick() + skill->get_time(SG_KNOWLEDGE, sce->val1),
+							status->change_timer, sd->bl.id, SC_KNOWLEDGE);
 			}
+
 			status_change_end(&sd->bl, SC_PROPERTYWALK, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKING, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
 		}
-		for( i = 0; i < EQI_MAX; i++ ) {
-			if( sd->equip_index[ i ] >= 0 )
-				if( !pc->isequip( sd , sd->equip_index[ i ] ) )
-					pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
+
+		for (int i = 0; i < EQI_MAX; i++) {
+			if (sd->equip_index[i] >= 0 && pc->isequip(sd , sd->equip_index[i]) == 0)
+				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
 		}
-		if (battle_config.clear_unit_onwarp&BL_PC)
+
+		if ((battle_config.clear_unit_onwarp & BL_PC) != 0)
 			skill->clear_unitgroup(&sd->bl);
-		party->send_dot_remove(sd); //minimap dot fix [Kevin]
+
+		party->send_dot_remove(sd); // Minimap dot fix. [Kevin]
 		guild->send_dot_remove(sd);
 		bg->send_dot_remove(sd);
-		if (sd->regen.state.gc)
+
+		if (sd->regen.state.gc != 0)
 			sd->regen.state.gc = 0;
-		// make sure vending is allowed here
-		if (sd->state.vending && map->list[m].flag.novending) {
-			clif->message (sd->fd, msg_sd(sd,276)); // "You can't open a shop on this map"
+
+		// Make sure that vending is allowed here.
+		if (sd->state.vending != 0 && map->list[map_id].flag.novending != 0) {
+			clif->message(sd->fd, msg_sd(sd, 276)); // "You can't open a shop on this map"
 			vending->close(sd);
 		}
 
-		if (sd->mapindex != 0) {
-			// Only if the character is already on a map
-			if (map->list[sd->bl.m].channel) {
-				channel->leave(map->list[sd->bl.m].channel,sd);
-			}
-		}
+		if (sd->mapindex != 0 && map->list[sd->bl.m].channel != NULL) // Only if the character is already on a map.
+			channel->leave(map->list[sd->bl.m].channel, sd);
 	}
 
-	if( m < 0 ) {
+	if (map_id < 0) {
 		uint32 ip;
 		uint16 port;
-		//if can't find any map-servers, just abort setting position.
-		if(!sd->mapindex || map->mapname2ipport(map_index,&ip,&port))
+
+		// If can't find any map-servers, just abort setting position.
+		if (sd->mapindex == 0 || map->mapname2ipport(map_index, &ip, &port) != 0)
 			return 2;
 
-		if (sd->npc_id)
+		if (sd->npc_id != 0)
 			npc->event_dequeue(sd);
-		npc->script_event(sd, NPCE_LOGOUT);
-		//remove from map, THEN change x/y coordinates
-		unit->remove_map_pc(sd,clrtype);
-		if (battle_config.player_warp_keep_direction == 0)
-			sd->ud.dir = 0; // makes character face north
-		sd->mapindex = map_index;
-		sd->bl.x=x;
-		sd->bl.y=y;
-		pc->clean_skilltree(sd);
-		chrif->save(sd,2);
-		chrif->changemapserver(sd, ip, (short)port);
 
-		//Free session data from this map server [Kevin]
+		npc->script_event(sd, NPCE_LOGOUT);
+
+		// Remove from map, THEN change x/y coordinates.
+		unit->remove_map_pc(sd, clrtype);
+
+		if (battle_config.player_warp_keep_direction == 0)
+			sd->ud.dir = 0; /// Make character facing north.
+
+		sd->mapindex = map_index;
+		sd->bl.x= x;
+		sd->bl.y= y;
+		pc->clean_skilltree(sd);
+		chrif->save(sd, 2);
+		chrif->changemapserver(sd, ip, port);
+
+		// Free session data from this map server. [Kevin]
 		unit->free_pc(sd);
 
 		return 0;
 	}
 
-	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
-		ShowError("pc_setpos: attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(map_index),x,y);
-		x = y = 0; // make it random
+	if (x < 0 || x >= map->list[map_id].xs || y < 0 || y >= map->list[map_id].ys) { // Invalid coordinates. Randomize them.
+		ShowError("pc_setpos: Attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)!\n",
+			  sd->status.name, sd->status.account_id, sd->status.char_id,
+			  mapindex_id2name(map_index), x, y);
+		x = 0;
+		y = 0;
 	}
 
-	if( x == 0 && y == 0 ) {// pick a random walkable cell
+	if (x == 0 && y == 0) { // Pick a random walkable cell.
 		do {
-			x=rnd()%(map->list[m].xs-2)+1;
-			y=rnd()%(map->list[m].ys-2)+1;
-		} while(map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS));
+			x = rnd() % (map->list[map_id].xs - 2) + 1;
+			y = rnd() % (map->list[map_id].ys - 2) + 1;
+		} while(map->getcell(map_id, &sd->bl, x, y, CELL_CHKNOPASS) != 0);
 	}
 
-	if (sd->state.vending && map->getcell(m, &sd->bl, x, y, CELL_CHKNOVENDING)) {
-		clif->message (sd->fd, msg_sd(sd,204)); // "You can't open a shop on this cell."
+	if (sd->state.vending != 0 && map->getcell(map_id, &sd->bl, x, y, CELL_CHKNOVENDING) != 0) {
+		clif->message(sd->fd, msg_sd(sd, 204)); // "You can't open a shop on this cell."
 		vending->close(sd);
 	}
 
 	if (battle_config.player_warp_keep_direction == 0)
-		sd->ud.dir = 0; // makes character face north
+		sd->ud.dir = 0; // Make character facing north.
 
-	if(sd->bl.prev != NULL){
-		unit->remove_map_pc(sd,clrtype);
-		clif->changemap(sd,m,x,y); // [MouseJstr]
-	} else if(sd->state.active)
-		//Tag player for rewarping after map-loading is done. [Skotlex]
-		sd->state.rewarp = 1;
+	if (sd->bl.prev != NULL) {
+		unit->remove_map_pc(sd, clrtype);
+		clif->changemap(sd, map_id, x, y); // [MouseJstr]
+	} else if (sd->state.active != 0) {
+		sd->state.rewarp = 1; // Tag character for re-warping after map-loading is done. [Skotlex]
+	}
 
 	sd->mapindex = map_index;
-	sd->bl.m = m;
-	sd->bl.x = sd->ud.to_x = x;
-	sd->bl.y = sd->ud.to_y = y;
+	sd->bl.m = map_id;
+	sd->bl.x = x;
+	sd->bl.y = y;
+	sd->ud.to_x = x;
+	sd->ud.to_y = y;
 
-	if( sd->status.guild_id > 0 && map->list[m].flag.gvg_castle ) { // Increased guild castle regen [Valaris]
+	if (sd->status.guild_id > 0 && map->list[map_id].flag.gvg_castle != 0) { // Double regeneration in guild castle. [Valaris]
 		struct guild_castle *gc = guild->mapindex2gc(sd->mapindex);
-		if(gc && gc->guild_id == sd->status.guild_id)
+
+		if (gc != NULL && gc->guild_id == sd->status.guild_id)
 			sd->regen.state.gc = 1;
 	}
 
-	if( sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > 0 ) {
-		sd->pd->bl.m = m;
-		sd->pd->bl.x = sd->pd->ud.to_x = x;
-		sd->pd->bl.y = sd->pd->ud.to_y = y;
+	if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
+		sd->pd->bl.m = map_id;
+		sd->pd->bl.x = x;
+		sd->pd->bl.y = y;
+		sd->pd->ud.to_x = x;
+		sd->pd->ud.to_y = y;
 		sd->pd->ud.dir = sd->ud.dir;
 	}
 
-	if( homun_alive(sd->hd) ) {
-		sd->hd->bl.m = m;
-		sd->hd->bl.x = sd->hd->ud.to_x = x;
-		sd->hd->bl.y = sd->hd->ud.to_y = y;
+	if (homun_alive(sd->hd)) {
+		sd->hd->bl.m = map_id;
+		sd->hd->bl.x = x;
+		sd->hd->bl.y = y;
+		sd->hd->ud.to_x = x;
+		sd->hd->ud.to_y = y;
 		sd->hd->ud.dir = sd->ud.dir;
 	}
 
-	if( sd->md ) {
-		sd->md->bl.m = m;
-		sd->md->bl.x = sd->md->ud.to_x = x;
-		sd->md->bl.y = sd->md->ud.to_y = y;
+	if (sd->md != NULL) {
+		sd->md->bl.m = map_id;
+		sd->md->bl.x = x;
+		sd->md->bl.y = y;
+		sd->md->ud.to_x = x;
+		sd->md->ud.to_y = y;
 		sd->md->ud.dir = sd->ud.dir;
 	}
 
-	/* given autotrades have no clients you have to trigger this manually otherwise they get stuck in memory limbo bugreport:7495 */
-	if( sd->state.autotrade )
-		clif->pLoadEndAck(0,sd);
+	// Given autotrades have no clients. You have to trigger this manually, otherwise they get stuck in memory limbo. (bugreport:7495)
+	if (sd->state.autotrade != 0)
+		clif->pLoadEndAck(0, sd);
 
 	return 0;
 }
@@ -8026,163 +8068,177 @@ static void pc_damage(struct map_session_data *sd, struct block_list *src, unsig
 	}
 }
 
-/*==========================================
- * Invoked when a player has negative current hp
- *------------------------------------------*/
+/**
+ * Invoked when a character died.
+ *
+ * @param sd The died character.
+ * @param src The unit which caused the death.
+ * @retval 0 Death canceled.
+ * @retval 1 Standard death.
+ * @retval 9 Died in PVP/GVG/BG.
+ *
+ **/
 static int pc_dead(struct map_session_data *sd, struct block_list *src)
 {
-	int i=0,j=0;
-	int64 tick = timer->gettick();
+	nullpo_ret(sd);
 
-	nullpo_retr(0, sd);
+	for (int i = 0; i < MAX_PC_DEVOTION; i++) {
+		if (sd->devotion[i] != 0) {
+			struct map_session_data *devsd = map->id2sd(sd->devotion[i]);
 
-	for (j = 0; j < MAX_PC_DEVOTION; j++) {
-		if (sd->devotion[j]) {
-			struct map_session_data *devsd = map->id2sd(sd->devotion[j]);
-			if (devsd)
+			if (devsd != NULL)
 				status_change_end(&devsd->bl, SC_DEVOTION, INVALID_TIMER);
-			sd->devotion[j] = 0;
+
+			sd->devotion[i] = 0;
 		}
 	}
 
-	if(sd->status.pet_id > 0 && sd->pd) {
+	if (sd->status.pet_id > 0 && sd->pd != NULL) {
 		struct pet_data *pd = sd->pd;
-		if( !map->list[sd->bl.m].flag.noexppenalty ) {
+
+		if (map->list[sd->bl.m].flag.noexppenalty == 0) {
 			pet->set_intimate(pd, pd->pet.intimate - pd->petDB->die);
-			if( pd->pet.intimate < 0 )
-				pd->pet.intimate = 0;
-			clif->send_petdata(sd,sd->pd,1,pd->pet.intimate);
+			clif->send_petdata(sd, sd->pd, 1, pd->pet.intimate);
 		}
-		if( sd->pd->target_id ) // Unlock all targets...
+
+		if (sd->pd->target_id != 0) // Unlock all targets.
 			pet->unlocktarget(sd->pd);
 	}
 
-	if (sd->status.hom_id > 0){
-	    if(battle_config.homunculus_auto_vapor && sd->hd)
-		    homun->vaporize(sd, HOM_ST_REST, true);
-	}
+	if (sd->status.hom_id > 0 && sd->hd != NULL && battle_config.homunculus_auto_vapor != 0)
+		homun->vaporize(sd, HOM_ST_REST, true);
 
-	if( sd->md )
-		mercenary->delete(sd->md, 3); // Your mercenary soldier has ran away.
+	if (sd->md != NULL)
+		mercenary->delete(sd->md, 3); // Your mercenary soldier ran away.
 
-	if( sd->ed )
+	if (sd->ed != NULL)
 		elemental->delete(sd->ed, 0);
 
-	// Leave duel if you die [LuzZza]
-	if(battle_config.duel_autoleave_when_die) {
-		if(sd->duel_group > 0)
+	if (battle_config.duel_autoleave_when_die != 0) { // Leave duel if character died. [LuzZza]
+		if (sd->duel_group > 0)
 			duel->leave(sd->duel_group, sd);
-		if(sd->duel_invite > 0)
+		if (sd->duel_invite > 0)
 			duel->reject(sd->duel_invite, sd);
 	}
 
-	if (sd->npc_id && sd->st && sd->st->state != RUN)
+	if (sd->npc_id != 0 && sd->st != NULL && sd->st->state != RUN)
 		npc->event_dequeue(sd);
 
-	pc_setglobalreg(sd,script->add_variable("PC_DIE_COUNTER"),sd->die_counter+1);
-	pc->setparam(sd, SP_KILLERRID, src?src->id:0);
+	pc_setglobalreg(sd, script->add_variable("PC_DIE_COUNTER"), sd->die_counter + 1);
+	pc->setparam(sd, SP_KILLERRID, (src != NULL) ? src->id : 0);
 
-	if( sd->bg_id ) {/* TODO: purge when bgqueue is deemed ok */
-		struct battleground_data *bgd;
-		if( (bgd = bg->team_search(sd->bg_id)) != NULL && bgd->die_event[0] )
+	if (sd->bg_id != 0) { //TODO: Purge when bgqueue is deemed ok.
+		struct battleground_data *bgd = bg->team_search(sd->bg_id);
+
+		if (bgd != NULL && bgd->die_event[0] != '\0')
 			npc->event(sd, bgd->die_event, 0);
 	}
 
-	for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++ ) {
+	for (int i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
 		struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
-		if (queue && queue->event_death[0] != '\0')
+
+		if (queue != NULL && queue->event_death[0] != '\0')
 			npc->event(sd, queue->event_death, 0);
 	}
 
-	npc->script_event(sd,NPCE_DIE);
+	npc->script_event(sd, NPCE_DIE);
 
-	// Clear anything NPC-related when you die and was interacting with one.
-	if ( (sd->npc_id || sd->npc_shopid) && sd->state.dialog) {
-		if (sd->state.using_fake_npc) {
+	// Clear anything NPC-related if character died while interacting with one.
+	if ((sd->npc_id != 0 || sd->npc_shopid != 0) && sd->state.dialog != 0) {
+		if (sd->state.using_fake_npc != 0) {
 			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
 		}
-		if (sd->state.menu_or_input)
+
+		if (sd->state.menu_or_input != 0)
 			sd->state.menu_or_input = 0;
-		if (sd->npc_menu)
+
+		if (sd->npc_menu != 0)
 			sd->npc_menu = 0;
 
 		sd->npc_id = 0;
 		sd->npc_shopid = 0;
-		if (sd->st && sd->st->state != END)
+
+		if (sd->st != NULL && sd->st->state != END)
 			sd->st->state = END;
 	}
 
-	/* e.g. not killed through pc->damage */
-	if( pc_issit(sd) ) {
+	// E.g. not killed through pc->damage().
+	if (pc_issit(sd))
 		clif->sc_end(&sd->bl, sd->bl.id, SELF, status->get_sc_icon(SC_SIT));
-	}
 
 	pc_setdead(sd);
-
 	clif->party_dead_notification(sd);
 
-	//Reset menu skills/item skills
-	if (sd->skillitem)
-		sd->skillitem = sd->skillitemlv = 0;
-	if (sd->menuskill_id)
-		sd->menuskill_id = sd->menuskill_val = 0;
-	//Reset ticks.
-	sd->hp_loss.tick = sd->sp_loss.tick = sd->hp_regen.tick = sd->sp_regen.tick = 0;
+	pc->autocast_clear(sd); // Unset auto-cast data.
 
-	if ( sd->spiritball )
+	if (sd->menuskill_id != 0) { // Reset menu skills.
+		sd->menuskill_id = 0;
+		sd->menuskill_val = 0;
+	}
+
+	// Reset ticks.
+	sd->hp_loss.tick = 0;
+	sd->sp_loss.tick = 0;
+	sd->hp_regen.tick = 0;
+	sd->sp_regen.tick = 0;
+
+	if (sd->spiritball != 0)
 		pc->delspiritball(sd, sd->spiritball, 0);
+
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		pc->del_charm(sd, sd->charm_count, sd->charm_type);
 
+	int64 tick = timer->gettick();
+
 	if (src != NULL) {
 		switch (src->type) {
-			case BL_MOB:
-			{
-				struct mob_data *md = BL_UCAST(BL_MOB, src);
-				if (md->target_id==sd->bl.id)
-					mob->unlocktarget(md,tick);
-				if (battle_config.mobs_level_up && md->status.hp
-				 && md->level < pc->maxbaselv(sd)
-				 && !md->guardian_data && md->special_state.ai == AI_NONE// Guardians/summons should not level. [Skotlex]
-				) {
-					// monster level up [Valaris]
-					clif->misceffect(&md->bl,0);
-					md->level++;
-					status_calc_mob(md, SCO_NONE);
-					status_percent_heal(src,10,0);
+		case BL_MOB: {
+			struct mob_data *md = BL_UCAST(BL_MOB, src);
 
-					if( battle_config.show_mob_info&4 )
-					{// update name with new level
-						clif->blname_ack(0, &md->bl);
-					}
-				}
-				src = battle->get_master(src); // Maybe Player Summon
+			if (md->target_id == sd->bl.id)
+				mob->unlocktarget(md, tick);
+
+			if (battle_config.mobs_level_up != 0 && md->status.hp != 0 && md->level < pc->maxbaselv(sd)
+			    && md->guardian_data == NULL && md->special_state.ai == AI_NONE) { // Guardians/summons should not level up. [Skotlex]
+				/// Monster level up. [Valaris]
+				clif->misceffect(&md->bl, 0);
+				md->level++;
+				status_calc_mob(md, SCO_NONE);
+				status_percent_heal(src, 10, 0);
+
+				if ((battle_config.show_mob_info & 4) != 0)
+					clif->blname_ack(0, &md->bl); // Update name with new level.
 			}
+
+			src = battle->get_master(src); // Maybe character summon.
 			break;
-			case BL_PET: //Pass on to master...
-				src = &BL_UCAST(BL_PET, src)->msd->bl;
+		}
+		case BL_PET:
+			src = &BL_UCAST(BL_PET, src)->msd->bl; // Pass on to master.
 			break;
-			case BL_HOM:
-				src = &BL_UCAST(BL_HOM, src)->master->bl;
+		case BL_HOM:
+			src = &BL_UCAST(BL_HOM, src)->master->bl; // Pass on to master.
 			break;
-			case BL_MER:
-				src = &BL_UCAST(BL_MER, src)->master->bl;
+		case BL_MER:
+			src = &BL_UCAST(BL_MER, src)->master->bl; // Pass on to master.
 			break;
 		}
 	}
 
 	if (src != NULL && src->type == BL_PC) {
 		struct map_session_data *ssd = BL_UCAST(BL_PC, src);
+
 		pc->setparam(ssd, SP_KILLEDRID, sd->bl.id);
 		npc->script_event(ssd, NPCE_KILLPC);
+		achievement->validate_pc_kill(ssd, sd);
 
-		achievement->validate_pc_kill(ssd, sd); // Achievements [Smokexyz/Hercules]
-
-		if (battle_config.pk_mode&2) {
+		if ((battle_config.pk_mode & 2) != 0) {
 			ssd->status.manner -= 5;
-			if(ssd->status.manner < 0)
-				sc_start(NULL,src,SC_NOCHAT,100,0,0);
+
+			if (ssd->status.manner < 0)
+				sc_start(NULL, src, SC_NOCHAT, 100, 0, 0);
+
 #if 0
 			// PK/Karma system code (not enabled yet) [celest]
 			// originally from Kade Online, so i don't know if any of these is correct ^^;
@@ -8194,14 +8250,15 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 				// If player killed was more evil
 				sd->status.karma--;
 				ssd->status.karma--;
-			}
-			else if (sd->status.karma < ssd->status.karma) // If player killed was more good
+			} else if (sd->status.karma < ssd->status.karma) { // If player killed was more good
 				ssd->status.karma++;
+			}
 
 			// or the PK System way...
 
 			if (sd->status.karma > 0) // player killed is dishonourable?
 				ssd->status.karma--; // honour points earned
+
 			sd->status.karma++; // honour points lost
 
 			// To-do: Receive exp on certain occasions
@@ -8209,137 +8266,156 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		}
 	}
 
-	if( battle_config.bone_drop==2
-	 || (battle_config.bone_drop==1 && map->list[sd->bl.m].flag.pvp)
-	) {
+	if (battle_config.bone_drop == 2 || (battle_config.bone_drop == 1 && map->list[sd->bl.m].flag.pvp != 0)) {
 		struct item item_tmp;
-		memset(&item_tmp,0,sizeof(item_tmp));
-		item_tmp.nameid=ITEMID_SKULL_;
-		item_tmp.identify=1;
-		item_tmp.card[0]=CARD0_CREATE;
-		item_tmp.card[1]=0;
-		item_tmp.card[2]=GetWord(sd->status.char_id,0); // CharId
-		item_tmp.card[3]=GetWord(sd->status.char_id,1);
+
+		memset(&item_tmp, 0, sizeof(item_tmp));
+		item_tmp.nameid = ITEMID_SKULL_;
+		item_tmp.identify = 1;
+		item_tmp.card[0] = CARD0_CREATE;
+		item_tmp.card[1] = 0;
+		item_tmp.card[2] = GetWord(sd->status.char_id, 0);
+		item_tmp.card[3] = GetWord(sd->status.char_id, 1);
 		map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 	}
 
-	// activate Steel body if a super novice dies at 99+% exp [celest]
-	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && !sd->state.snovice_dead_flag) {
+	// Activate Steel Body if a Super Novice dies at 99+% EXP. [celest]
+	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->state.snovice_dead_flag == 0) {
 		uint64 next = pc->nextbaseexp(sd);
-		if( next == 0 ) next = pc->thisbaseexp(sd);
+
+		if (next == 0)
+			next = pc->thisbaseexp(sd);
+
 		if (get_percentage64(sd->status.base_exp, next) >= 99) {
 			sd->state.snovice_dead_flag = 1;
 			pc->setstand(sd);
 			status_percent_heal(&sd->bl, 100, 100);
 			clif->resurrection(&sd->bl, 1);
-			if(battle_config.pc_invincible_time)
+
+			if (battle_config.pc_invincible_time != 0)
 				pc->setinvincibletimer(sd, battle_config.pc_invincible_time);
-			sc_start(NULL,&sd->bl,status->skill2sc(MO_STEELBODY),100,1,skill->get_time(MO_STEELBODY,1));
-			if(map_flag_gvg2(sd->bl.m))
+
+			sc_start(NULL, &sd->bl, status->skill2sc(MO_STEELBODY), 100, 1, skill->get_time(MO_STEELBODY, 1));
+
+			if (map_flag_gvg2(sd->bl.m))
 				pc->respawn_timer(INVALID_TIMER, timer->gettick(), sd->bl.id, 0);
+
 			return 0;
 		}
 	}
 
-	// changed penalty options, added death by player if pk_mode [Valaris]
-	if (battle_config.death_penalty_type
-	   && pc->isDeathPenaltyJob(sd->job)
-	   && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
-	   && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
-	   && !pc->auto_exp_insurance(sd)
-	   ) {
+	if (battle_config.death_penalty_type != 0 && pc->isDeathPenaltyJob(sd->job) && !map_flag_gvg2(sd->bl.m)
+	    && map->list[sd->bl.m].flag.noexppenalty == 0 && sd->sc.data[SC_BABY] == NULL
+	    && sd->sc.data[SC_CASH_DEATHPENALTY] == NULL && !pc->auto_exp_insurance(sd)) {
 		if (battle_config.death_penalty_base > 0) {
 			unsigned int base_penalty = 0;
+			int rate = battle_config.death_penalty_base;
+
 			switch (battle_config.death_penalty_type) {
-				case 1:
-					base_penalty = (unsigned int) apply_percentrate64(pc->nextbaseexp(sd), battle_config.death_penalty_base, 10000);
-					break;
-				case 2:
-					base_penalty = (unsigned int) apply_percentrate64(sd->status.base_exp, battle_config.death_penalty_base, 10000);
-					break;
+			case 1:
+				base_penalty = (unsigned int)apply_percentrate64(pc->nextbaseexp(sd), rate, 10000);
+				break;
+			case 2:
+				base_penalty = (unsigned int)apply_percentrate64(sd->status.base_exp, rate, 10000);
+				break;
 			}
 
 			if (base_penalty != 0) {
-				if (battle_config.pk_mode && src && src->type==BL_PC)
-					base_penalty*=2;
-				if( sd->status.mod_death != 100 )
-					base_penalty = base_penalty * sd->status.mod_death / 100;
+				if (battle_config.pk_mode != 0 && src != NULL && src->type == BL_PC)
+					base_penalty *= 2;
+
+				if (sd->status.mod_death != 100)
+					base_penalty *= sd->status.mod_death / 100;
+
 				sd->status.base_exp -= min(sd->status.base_exp, base_penalty);
-				clif->updatestatus(sd,SP_BASEEXP);
+				clif->updatestatus(sd, SP_BASEEXP);
 			}
 		}
 
-		if(battle_config.death_penalty_job > 0) {
+		if (battle_config.death_penalty_job > 0) {
 			unsigned int job_penalty = 0;
+			int rate = battle_config.death_penalty_job;
 
 			switch (battle_config.death_penalty_type) {
-				case 1:
-					job_penalty = (unsigned int) apply_percentrate64(pc->nextjobexp(sd), battle_config.death_penalty_job, 10000);
-					break;
-				case 2:
-					job_penalty = (unsigned int) apply_percentrate64(sd->status.job_exp, battle_config.death_penalty_job, 10000);
-					break;
+			case 1:
+				job_penalty = (unsigned int)apply_percentrate64(pc->nextjobexp(sd), rate, 10000);
+				break;
+			case 2:
+				job_penalty = (unsigned int)apply_percentrate64(sd->status.job_exp, rate, 10000);
+				break;
 			}
 
 			if (job_penalty != 0) {
-				if (battle_config.pk_mode && src && src->type==BL_PC)
-					job_penalty*=2;
-				if( sd->status.mod_death != 100 )
-					job_penalty = job_penalty * sd->status.mod_death / 100;
+				if (battle_config.pk_mode != 0 && src != NULL && src->type == BL_PC)
+					job_penalty *= 2;
+
+				if (sd->status.mod_death != 100)
+					job_penalty *= sd->status.mod_death / 100;
+
 				sd->status.job_exp -= min(sd->status.job_exp, job_penalty);
-				clif->updatestatus(sd,SP_JOBEXP);
+				clif->updatestatus(sd, SP_JOBEXP);
 			}
 		}
 
-		if (battle_config.zeny_penalty > 0 && !map->list[sd->bl.m].flag.nozenypenalty) {
+		if (battle_config.zeny_penalty > 0 && map->list[sd->bl.m].flag.nozenypenalty == 0) {
 			int zeny_penalty = apply_percentrate(sd->status.zeny, battle_config.zeny_penalty, 10000);
+
 			if (zeny_penalty != 0)
 				pc->payzeny(sd, zeny_penalty, LOG_TYPE_PICKDROP_PLAYER, NULL);
 		}
 	}
 
-	if(map->list[sd->bl.m].flag.pvp_nightmaredrop) {
-		// Moved this outside so it works when PVP isn't enabled and during pk mode [Ancyker]
-		for(j=0;j<map->list[sd->bl.m].drop_list_count;j++){
-			int id = map->list[sd->bl.m].drop_list[j].drop_id;
-			int type = map->list[sd->bl.m].drop_list[j].drop_type;
-			int per = map->list[sd->bl.m].drop_list[j].drop_per;
-			if(id == 0)
+	if (map->list[sd->bl.m].flag.pvp_nightmaredrop != 0) {
+		// Moved this outside so it works when PVP isn't enabled and during pk mode. [Ancyker]
+		for (int i = 0; i < map->list[sd->bl.m].drop_list_count; i++) {
+			int id = map->list[sd->bl.m].drop_list[i].drop_id;
+			int type = map->list[sd->bl.m].drop_list[i].drop_type;
+			int per = map->list[sd->bl.m].drop_list[i].drop_per;
+
+			if (id == 0)
 				continue;
-			if(id == -1){
-				int eq_num = 0, eq_n[MAX_INVENTORY], k;
-				memset(eq_n,0,sizeof(eq_n));
-				for(i = 0; i < sd->status.inventorySize; i++) {
-					if( (type == 1 && !sd->status.inventory[i].equip)
-						|| (type == 2 && sd->status.inventory[i].equip)
-						||  type == 3)
-					{
+
+			if (id == -1) {
+				int eq_num = 0;
+				int eq_n[MAX_INVENTORY];
+
+				memset(eq_n, 0, sizeof(eq_n));
+
+				for (int j = 0; j < sd->status.inventorySize; j++) {
+					bool is_equipped = (sd->status.inventory[j].equip != 0);
+
+					if ((type == 1 && !is_equipped) || (type == 2 && is_equipped) || type == 3) {
+						int k;
+
 						ARR_FIND(0, sd->status.inventorySize, k, eq_n[k] <= 0);
+
 						if (k < sd->status.inventorySize)
-							eq_n[k] = i;
+							eq_n[k] = j;
 
 						eq_num++;
 					}
 				}
-				if(eq_num > 0){
-					int n = eq_n[rnd()%eq_num];
-					if(rnd()%10000 < per){
-						if(sd->status.inventory[n].equip)
+
+				if (eq_num > 0) {
+					int n = eq_n[rnd() % eq_num];
+
+					if (rnd() % 10000 < per) {
+						if (sd->status.inventory[n].equip != 0)
 							pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
-						pc->dropitem(sd,n,1);
+
+						pc->dropitem(sd, n, 1);
 					}
 				}
-			}
-			else if(id > 0){
-				for( i = 0; i < sd->status.inventorySize; i++) {
-					if(sd->status.inventory[i].nameid == id
-						&& rnd()%10000 < per
-						&& ((type == 1 && !sd->status.inventory[i].equip)
-							|| (type == 2 && sd->status.inventory[i].equip)
-							|| type == 3) ){
-						if(sd->status.inventory[i].equip)
-							pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
-						pc->dropitem(sd,i,1);
+			} else if (id > 0) {
+				for (int j = 0; j < sd->status.inventorySize; j++) {
+					bool is_equipped = (sd->status.inventory[j].equip != 0);
+
+					if (((type == 1 && !is_equipped) || (type == 2 && is_equipped) || type == 3)
+					    && sd->status.inventory[j].nameid == id && rnd() % 10000 < per) {
+						if (is_equipped)
+							pc->unequipitem(sd, j, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+
+						pc->dropitem(sd, j, 1);
 						break;
 					}
 				}
@@ -8347,46 +8423,51 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		}
 	}
 
-	// Remove autotrade to prevent autotrading from save point
-	if( (sd->state.standalone || sd->state.autotrade)
-	 && (map->list[sd->bl.m].flag.pvp || map->list[sd->bl.m].flag.gvg)
-	  ) {
+	// Remove autotrade to prevent autotrading from save point.
+	if ((map->list[sd->bl.m].flag.pvp != 0 || map->list[sd->bl.m].flag.gvg != 0)
+	    && (sd->state.standalone != 0 || sd->state.autotrade != 0)) {
 		sd->state.autotrade = 0;
 		sd->state.standalone = 0;
-		pc->autotrade_update(sd,PAUC_REMOVE);
+		pc->autotrade_update(sd, PAUC_REMOVE);
 		map->quit(sd);
 	}
 
-	// pvp
-	// disable certain pvp functions on pk_mode [Valaris]
-	if( map->list[sd->bl.m].flag.pvp && !battle_config.pk_mode && !map->list[sd->bl.m].flag.pvp_nocalcrank ) {
+	// Disable certain PVP functions on pk_mode. [Valaris]
+	if (map->list[sd->bl.m].flag.pvp != 0 && battle_config.pk_mode == 0
+	    && map->list[sd->bl.m].flag.pvp_nocalcrank == 0) {
 		sd->pvp_point -= 5;
 		sd->pvp_lost++;
+
 		if (src != NULL && src->type == BL_PC) {
 			struct map_session_data *ssd = BL_UCAST(BL_PC, src);
+
 			ssd->pvp_point++;
 			ssd->pvp_won++;
 		}
-		if( sd->pvp_point < 0 )
-		{
-			timer->add(tick+1, pc->respawn_timer,sd->bl.id,0);
-			return 1|8;
-		}
-	}
-	//GvG
-	if( map_flag_gvg2(sd->bl.m) ) {
-		timer->add(tick+1, pc->respawn_timer, sd->bl.id, 0);
-		return 1|8;
-	} else if( sd->bg_id ) {
-		struct battleground_data *bgd = bg->team_search(sd->bg_id);
-		if( bgd && bgd->mapindex > 0 ) { // Respawn by BG
-			timer->add(tick+1000, pc->respawn_timer, sd->bl.id, 0);
+
+		if (sd->pvp_point < 0) {
+			timer->add(tick + 1, pc->respawn_timer, sd->bl.id, 0);
 			return 1|8;
 		}
 	}
 
-	//Reset "can log out" tick.
-	if( battle_config.prevent_logout )
+	// GVG
+	if (map_flag_gvg2(sd->bl.m)) {
+		timer->add(tick + 1, pc->respawn_timer, sd->bl.id, 0);
+		return 1|8;
+	}
+
+	if (sd->bg_id != 0) {
+		struct battleground_data *bgd = bg->team_search(sd->bg_id);
+
+		if (bgd != NULL && bgd->mapindex > 0) { // Respawn by BG.
+			timer->add(tick + 1000, pc->respawn_timer, sd->bl.id, 0);
+			return 1|8;
+		}
+	}
+
+	// Reset "can log out" tick.
+	if (battle_config.prevent_logout != 0)
 		sd->canlog_tick = timer->gettick() - battle_config.prevent_logout;
 
 	return 1;
@@ -8809,6 +8890,10 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 		// 2014 Halloween Event : Pumpkin Bonus
 		if ( sd->sc.data[SC_MTF_PUMPKIN] && itemid == ITEMID_PUMPKIN )
 			hp += (int)(hp * sd->sc.data[SC_MTF_PUMPKIN]->val1/100);
+
+		// Activation Potion
+		if (sd->sc.data[SC_VITALIZE_POTION] != NULL)
+			hp += hp * sd->sc.data[SC_VITALIZE_POTION]->val3 / 100;
 	}
 	if(sp) {
 		bonus = 100 + (sd->battle_status.int_<<1)
@@ -12726,7 +12811,7 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
-	pc->itemskill_clear = pc_itemskill_clear;
+	pc->autocast_clear = pc_autocast_clear;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;

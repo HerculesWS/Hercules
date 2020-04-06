@@ -846,7 +846,7 @@ struct map_data {
 	} cell_buf;
 
 	/* questinfo entries list */
-	VECTOR_DECL(struct npc_data) qi_list;
+	VECTOR_DECL(struct npc_data *) qi_list;
 
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;

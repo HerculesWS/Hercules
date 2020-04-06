@@ -2744,41 +2744,48 @@ ACMD(guildlevelup)
 	return true;
 }
 
-/*==========================================
+/**
+ * Creates a pet egg in the character's inventory.
  *
- *------------------------------------------*/
+ * @code{.herc}
+ *	@makeegg <pet>
+ * @endcode
+ *
+ **/
 ACMD(makeegg)
 {
-	struct item_data *item_data;
-	int id, pet_id;
-
-	if (!*message) {
-		clif->message(fd, msg_fd(fd,1015)); // Please enter a monster/egg name/ID (usage: @makeegg <pet>).
+	if (*message == '\0') {
+		clif->message(fd, msg_fd(fd, 1015)); // Please enter a monster/egg name/ID (usage: @makeegg <pet>).
 		return false;
 	}
 
-	if ((item_data = itemdb->search_name(message)) != NULL) // for egg name
+	struct item_data *item_data = itemdb->search_name(message);
+	int id;
+
+	if (item_data != NULL) { // Egg name.
 		id = item_data->nameid;
-	else
-		if ((id = mob->db_searchname(message)) != 0) // for monster name
-			;
-		else
-			id = atoi(message);
-
-	pet_id = pet->search_petDB_index(id, PET_CLASS);
-	if (pet_id < 0)
-		pet_id = pet->search_petDB_index(id, PET_EGG);
-	if (pet_id >= 0) {
-		sd->catch_target_class = pet->db[pet_id].class_;
-		intif->create_pet(
-						 sd->status.account_id, sd->status.char_id,
-						 pet->db[pet_id].class_, mob->db(pet->db[pet_id].class_)->lv,
-						 pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
-						 100, 0, 1, pet->db[pet_id].jname);
 	} else {
-		clif->message(fd, msg_fd(fd,180)); // The monster/egg name/id doesn't exist.
+		id = mob->db_searchname(message); // Monster name.
+
+		if (id == 0)
+			id = atoi(message); // Egg/monster ID.
+	}
+
+	int pet_id = pet->search_petDB_index(id, PET_CLASS);
+
+	if (pet_id == INDEX_NOT_FOUND)
+		pet_id = pet->search_petDB_index(id, PET_EGG);
+
+	if (pet_id == INDEX_NOT_FOUND) {
+		clif->message(fd, msg_fd(fd, 180)); // The monster/egg name/ID doesn't exist.
 		return false;
 	}
+
+	sd->catch_target_class = pet->db[pet_id].class_;
+	intif->create_pet(sd->status.account_id, sd->status.char_id, pet->db[pet_id].class_,
+			  mob->db(pet->db[pet_id].class_)->lv, pet->db[pet_id].EggID, 0,
+			  (short)pet->db[pet_id].intimate, PET_HUNGER_STUFFED,
+			  0, 1,pet->db[pet_id].jname);
 
 	return true;
 }
@@ -2798,72 +2805,90 @@ ACMD(hatch)
 	return true;
 }
 
-/*==========================================
+/**
+ * Sets a pet's intimacy value.
  *
- *------------------------------------------*/
+ * @code{.herc}
+ *	@petfriendly <0-1000>
+ * @endcode
+ *
+ **/
 ACMD(petfriendly)
 {
-	int friendly;
-	struct pet_data *pd;
-
-	if (!*message || (friendly = atoi(message)) < 0) {
-		clif->message(fd, msg_fd(fd,1016)); // Please enter a valid value (usage: @petfriendly <0-1000>).
+	if (*message == '\0' || (atoi(message) == 0 && isdigit(*message) == 0)) {
+		clif->message(fd, msg_fd(fd, 1016)); // Please enter a valid value (usage: @petfriendly <0-1000>).
 		return false;
 	}
 
-	pd = sd->pd;
-	if (!pd) {
-		clif->message(fd, msg_fd(fd,184)); // Sorry, but you have no pet.
+	int friendly = atoi(message);
+
+	if (friendly < PET_INTIMACY_NONE || friendly > PET_INTIMACY_MAX) {
+		clif->message(fd, msg_fd(fd, 1016)); // Please enter a valid value (usage: @petfriendly <0-1000>).
 		return false;
 	}
 
-	if (friendly < 0 || friendly > 1000)
-	{
-		clif->message(fd, msg_fd(fd,37)); // An invalid number was specified.
+	struct pet_data *pd = sd->pd;
+
+	if (sd->status.pet_id == 0 || pd == NULL) {
+		clif->message(fd, msg_fd(fd, 184)); // Sorry, but you have no pet.
 		return false;
 	}
 
-	if (friendly == pd->pet.intimate) {
-		clif->message(fd, msg_fd(fd,183)); // Pet intimacy is already at maximum.
+	if (friendly == pd->pet.intimate && friendly == PET_INTIMACY_MAX) {
+		clif->message(fd, msg_fd(fd, 183)); // Pet intimacy is already at maximum.
 		return false;
 	}
 
-	pet->set_intimate(pd, friendly);
-	clif->send_petstatus(sd);
-	clif->message(fd, msg_fd(fd,182)); // Pet intimacy changed.
+	if (friendly != pd->pet.intimate) { // No need to update the pet's status if intimacy value won't change.
+		pet->set_intimate(pd, friendly);
+		clif->send_petstatus(sd);
+	}
+
+	clif->message(fd, msg_fd(fd, 182)); // Pet intimacy changed. (Send message regardless of value has changed or not.)
+
 	return true;
 }
 
-/*==========================================
+/**
+ * Sets a pet's hunger value.
  *
- *------------------------------------------*/
+ * @code{.herc}
+ *	@pethungry <0-100>
+ * @endcode
+ *
+ **/
 ACMD(pethungry)
 {
-	int hungry;
-	struct pet_data *pd;
-
-	if (!*message || (hungry = atoi(message)) < 0) {
-		clif->message(fd, msg_fd(fd,1017)); // Please enter a valid number (usage: @pethungry <0-100>).
+	if (*message == '\0' || (atoi(message) == 0 && isdigit(*message) == 0)) {
+		clif->message(fd, msg_fd(fd, 1017)); // Please enter a valid number (usage: @pethungry <0-100>).
 		return false;
 	}
 
-	pd = sd->pd;
-	if (!sd->status.pet_id || !pd) {
-		clif->message(fd, msg_fd(fd,184)); // Sorry, but you have no pet.
-		return false;
-	}
-	if (hungry < 0 || hungry > 100) {
-		clif->message(fd, msg_fd(fd,37)); // An invalid number was specified.
-		return false;
-	}
-	if (hungry == pd->pet.hungry) {
-		clif->message(fd, msg_fd(fd,186)); // Pet hunger is already at maximum.
+	int hungry = atoi(message);
+
+	if (hungry < PET_HUNGER_STARVING || hungry > PET_HUNGER_STUFFED) {
+		clif->message(fd, msg_fd(fd, 1017)); // Please enter a valid number (usage: @pethungry <0-100>).
 		return false;
 	}
 
-	pd->pet.hungry = hungry;
-	clif->send_petstatus(sd);
-	clif->message(fd, msg_fd(fd,185)); // Pet hunger changed.
+	struct pet_data *pd = sd->pd;
+
+	if (sd->status.pet_id == 0 || pd == NULL) {
+		clif->message(fd, msg_fd(fd, 184)); // Sorry, but you have no pet.
+		return false;
+	}
+
+	if (hungry == pd->pet.hungry && hungry == PET_HUNGER_STUFFED) {
+		clif->message(fd, msg_fd(fd, 186)); // Pet hunger is already at maximum.
+		return false;
+	}
+
+	if (hungry != pd->pet.hungry) { // No need to update the pet's status if hunger value won't change.
+		pd->pet.hungry = hungry;
+		clif->send_petstatus(sd);
+	}
+
+	clif->message(fd, msg_fd(fd, 185)); // Pet hunger changed. (Send message regardless of value has changed or not.)
 
 	return true;
 }
@@ -5671,6 +5696,8 @@ ACMD(useskill)
 		return false;
 	}
 
+	pc->autocast_clear(sd);
+
 	if (skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE+MAX_HOMUNSKILL
 		&& sd->hd && homun_alive(sd->hd)) // (If used with @useskill, put the homunc as dest)
 		bl = &sd->hd->bl;
@@ -7865,39 +7892,61 @@ ACMD(monsterignore)
 
 	return true;
 }
-/*==========================================
- * @fakename
- * => Gives your character a fake name. [Valaris]
- *------------------------------------------*/
+
+/**
+ * Temporarily changes the character's name to the specified string.
+ *
+ * @code{.herc}
+ *	@fakename {<options>} {<fake_name>}
+ * @endcode
+ *
+ **/
 ACMD(fakename)
 {
-	if (!*message)
-	{
-		if (sd->fakename[0])
-		{
+	if (*message == '\0') {
+		if (sd->fakename[0] != '\0') {
 			sd->fakename[0] = '\0';
+			sd->fakename_options = FAKENAME_OPTION_NONE;
 			clif->blname_ack(0, &sd->bl);
-			if( sd->disguise )
+
+			if (sd->disguise != 0) // Another packet should be sent so the client updates the name for sd.
 				clif->blname_ack(sd->fd, &sd->bl);
-			clif->message(sd->fd, msg_fd(fd,1307)); // Returned to real name.
+
+			clif->message(sd->fd, msg_fd(fd, 1307)); // Returned to real name.
 			return true;
 		}
 
-		clif->message(sd->fd, msg_fd(fd,1308)); // You must enter a name.
+		clif->message(sd->fd, msg_fd(fd, 1308)); // You must enter a name.
 		return false;
 	}
 
-	if (strlen(message) < 2)
-	{
-		clif->message(sd->fd, msg_fd(fd,1309)); // Fake name must be at least two characters.
+	int options = FAKENAME_OPTION_NONE;
+	char buf[NAME_LENGTH] = {'\0'};
+	const char *fake_name = NULL;
+
+	if (sscanf(message, "%d %23[^\n]", &options, buf) == 2) {
+		fake_name = buf;
+	} else {
+		options = FAKENAME_OPTION_NONE;
+		fake_name = message;
+	}
+
+	if (strlen(fake_name) < 2) {
+		clif->message(sd->fd, msg_fd(fd, 1309)); // Fake name must be at least two characters.
 		return false;
 	}
 
-	safestrncpy(sd->fakename, message, sizeof(sd->fakename));
+	if (options < FAKENAME_OPTION_NONE)
+		options = FAKENAME_OPTION_NONE;
+
+	safestrncpy(sd->fakename, fake_name, sizeof(sd->fakename));
+	sd->fakename_options = options;
 	clif->blname_ack(0, &sd->bl);
-	if (sd->disguise) // Another packet should be sent so the client updates the name for sd
+
+	if (sd->disguise != 0) // Another packet should be sent so the client updates the name for sd.
 		clif->blname_ack(sd->fd, &sd->bl);
-	clif->message(sd->fd, msg_fd(fd,1310)); // Fake name enabled.
+
+	clif->message(sd->fd, msg_fd(fd, 1310)); // Fake name enabled.
 
 	return true;
 }

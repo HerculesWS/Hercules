@@ -617,7 +617,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
 --
 
 CREATE TABLE IF NOT EXISTS `ipbanlist` (
-  `list` VARCHAR(13) NOT NULL DEFAULT '',
+  `list` VARCHAR(39) NOT NULL DEFAULT '',
   `btime` DATETIME NULL,
   `rtime` DATETIME NULL,
   `reason` VARCHAR(255) NOT NULL DEFAULT '',
@@ -630,7 +630,7 @@ CREATE TABLE IF NOT EXISTS `ipbanlist` (
 
 CREATE TABLE IF NOT EXISTS `login` (
   `account_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `userid` VARCHAR(23) NOT NULL DEFAULT '',
+  `userid` VARCHAR(23) NOT NULL,
   `user_pass` VARCHAR(32) NOT NULL DEFAULT '',
   `sex` ENUM('M','F','S') NOT NULL DEFAULT 'M',
   `email` VARCHAR(39) NOT NULL DEFAULT '',
@@ -646,7 +646,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `pincode` VARCHAR(4) NOT NULL DEFAULT '',
   `pincode_change` INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`),
-  KEY `name` (`userid`)
+  UNIQUE KEY `name` (`userid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000;
 
 -- added standard accounts for servers, VERY INSECURE!!!
@@ -936,6 +936,8 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1570309293); -- 2019-10-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1570870260); -- 2019-10-21--14-21.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1574463539); -- 2019-11-22--23-58.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1579817630); -- 2020-01-24--01-09.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1584838560); -- 2020-03-22--01-56.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1584842940); -- 2020-03-22--03-09.sql
 
 --
 -- Table structure for table `storage`

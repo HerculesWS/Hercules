@@ -935,6 +935,8 @@ static int skill_calc_heal(struct block_list *src, struct block_list *target, ui
 			hp -= hp * 20/100;
 		if(sc->data[SC_HEALPLUS] && skill_id != NPC_EVILLAND && skill_id != BA_APPLEIDUN)
 			hp += hp * sc->data[SC_HEALPLUS]->val1/100; // Only affects Heal, Sanctuary and PotionPitcher.(like bHealPower) [Inkfish]
+		if (sc->data[SC_VITALIZE_POTION] != NULL && skill_id != NPC_EVILLAND && skill_id != BA_APPLEIDUN)
+			hp += hp * sc->data[SC_VITALIZE_POTION]->val3 / 100;
 		if(sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2)
 			hp += hp / 10;
 		if (sc->data[SC_VITALITYACTIVATION])
@@ -1010,14 +1012,14 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 
-	if( skill_id == AL_TELEPORT && sd->skillitem == skill_id && sd->skillitemlv > 2 )
-		return 0; // Teleport lv 3 bypasses this check.[Inkfish]
+	if (skill_id == AL_TELEPORT && sd->autocast.type == AUTOCAST_ITEM && sd->autocast.skill_lv > 2)
+		return 0; // Teleport level 3 and higher bypasses this check if cast by itemskill() script commands.
 
 	// Epoque:
 	// This code will compare the player's attack motion value which is influenced by ASPD before
 	// allowing a skill to be cast. This is to prevent no-delay ACT files from spamming skills such as
 	// AC_DOUBLE which do not have a skill delay and are not regarded in terms of attack motion.
-	if( !sd->state.autocast && sd->skillitem != skill_id && sd->canskill_tick &&
+	if (sd->autocast.type == AUTOCAST_NONE && sd->canskill_tick != 0 &&
 		DIFF_TICK(timer->gettick(), sd->canskill_tick) < (sd->battle_status.amotion * (battle_config.skill_amotion_leniency) / 100) )
 	{// attempted to cast a skill before the attack motion has finished
 		return 1;
@@ -1032,7 +1034,7 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	 * It has been confirmed on a official server (thanks to Yommy) that item-cast skills bypass all the restrictions below
 	 * Also, without this check, an exploit where an item casting + healing (or any other kind buff) isn't deleted after used on a restricted map
 	 **/
-	if( sd->skillitem == skill_id )
+	if (sd->autocast.type == AUTOCAST_ITEM)
 		return 0;
 
 	if( sd->sc.data[SC_ALL_RIDING] )
@@ -1175,6 +1177,31 @@ static int skillnotok_mercenary(uint16 skill_id, struct mercenary_data *md)
 		return 1;
 
 	return skill->not_ok(skill_id, md->master);
+}
+
+/**
+ * Validates the plausibility of auto-cast related data and calls pc_autocast_clear() if necessary.
+ *
+ * @param sd The character who cast the skill.
+ * @param skill_id The cast skill's ID.
+ * @param skill_lv The cast skill's level. (clif_parse_UseSkillMap() passes 0.)
+ *
+ **/
+static void skill_validate_autocast_data(struct map_session_data *sd, int skill_id, int skill_lv)
+{
+	nullpo_retv(sd);
+
+	// Determine if called by clif_parse_UseSkillMap().
+	bool use_skill_map = (skill_lv == 0 && (skill_id == AL_WARP || skill_id == AL_TELEPORT));
+
+	if (sd->autocast.type == AUTOCAST_NONE)
+		pc->autocast_clear(sd); // No auto-cast type set. Preventively unset all auto-cast related data.
+	else if (sd->autocast.type == AUTOCAST_TEMP)
+		pc->autocast_clear(sd); // AUTOCAST_TEMP should have been unset straight after usage.
+	else if (sd->autocast.skill_id == 0 || skill_id == 0 || sd->autocast.skill_id != skill_id)
+		pc->autocast_clear(sd); // Implausible skill ID.
+	else if (sd->autocast.skill_lv == 0 || (!use_skill_map && (skill_lv == 0 || sd->autocast.skill_lv != skill_lv)))
+		pc->autocast_clear(sd); // Implausible skill level.
 }
 
 static struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16 skill_lv, struct block_list *src, int x, int y)
@@ -2065,9 +2092,9 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 
 			temp = (sd->autospell[i].id > 0) ? sd->autospell[i].id : -sd->autospell[i].id;
 
-			sd->state.autocast = 1;
+			sd->autocast.type = AUTOCAST_TEMP;
 			notok = skill->not_ok(temp, sd);
-			sd->state.autocast = 0;
+			sd->autocast.type = AUTOCAST_NONE;
 
 			if ( notok )
 				continue;
@@ -2118,11 +2145,12 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			else if (temp == PF_SPIDERWEB) //Special case, due to its nature of coding.
 				type = CAST_GROUND;
 
-			sd->state.autocast = 1;
+			sd->autocast.type = AUTOCAST_TEMP;
 			skill->consume_requirement(sd,temp,auto_skill_lv,1);
 			skill->toggle_magicpower(src, temp);
 			skill->castend_type(type, src, tbl, temp, auto_skill_lv, tick, 0);
-			sd->state.autocast = 0;
+			sd->autocast.type = AUTOCAST_NONE;
+
 			//Set canact delay. [Skotlex]
 			ud = unit->bl2ud(src);
 			if (ud) {
@@ -2191,6 +2219,9 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 	if( sd == NULL || !skill_id )
 		return 0;
 
+	// Preserve auto-cast type if bAutoSpellOnSkill was triggered by a skill which was cast by Abracadabra, Improvised Song or an item.
+	enum autocast_type ac_type = sd->autocast.type;
+
 	for( i = 0; i < ARRAYLENGTH(sd->autospell3) && sd->autospell3[i].flag; i++ ) {
 		if( sd->autospell3[i].flag != skill_id )
 			continue;
@@ -2200,9 +2231,9 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 
 		temp = (sd->autospell3[i].id > 0) ? sd->autospell3[i].id : -sd->autospell3[i].id;
 
-		sd->state.autocast = 1;
+		sd->autocast.type = AUTOCAST_TEMP;
 		notok = skill->not_ok(temp, sd);
-		sd->state.autocast = 0;
+		sd->autocast.type = AUTOCAST_NONE;
 
 		if ( notok )
 			continue;
@@ -2248,13 +2279,15 @@ static int skill_onskillusage(struct map_session_data *sd, struct block_list *bl
 			!battle->check_range(&sd->bl, tbl, skill->get_range2(&sd->bl, temp,skill_lv) + (temp == RG_CLOSECONFINE?0:1)) )
 			continue;
 
-		sd->state.autocast = 1;
 		sd->autospell3[i].lock = true;
+		sd->autocast.type = AUTOCAST_TEMP;
 		skill->consume_requirement(sd,temp,skill_lv,1);
 		skill->castend_type(type, &sd->bl, tbl, temp, skill_lv, tick, 0);
+		sd->autocast.type = AUTOCAST_NONE;
 		sd->autospell3[i].lock = false;
-		sd->state.autocast = 0;
 	}
+
+	sd->autocast.type = ac_type;
 
 	if (sd->autobonus3[0].rate) {
 		for( i = 0; i < ARRAYLENGTH(sd->autobonus3); i++ ) {
@@ -2402,6 +2435,9 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 		struct unit_data *ud;
 		int i, auto_skill_id, auto_skill_lv, type, notok;
 
+		// Preserve auto-cast type if bAutoSpellWhenHit was triggered during cast of a skill which was cast by Abracadabra, Improvised Song or an item.
+		enum autocast_type ac_type = dstsd->autocast.type;
+
 		for (i = 0; i < ARRAYLENGTH(dstsd->autospell2) && dstsd->autospell2[i].id; i++) {
 
 			if(!(dstsd->autospell2[i].flag&attack_type&BF_WEAPONMASK &&
@@ -2417,9 +2453,9 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 			if (attack_type&BF_LONG)
 				 rate>>=1;
 
-			dstsd->state.autocast = 1;
+			dstsd->autocast.type = AUTOCAST_TEMP;
 			notok = skill->not_ok(auto_skill_id, dstsd);
-			dstsd->state.autocast = 0;
+			dstsd->autocast.type = AUTOCAST_NONE;
 
 			if ( notok )
 				continue;
@@ -2460,10 +2496,11 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 			if( !battle->check_range(src, tbl, skill->get_range2(src, auto_skill_id,auto_skill_lv) + (auto_skill_id == RG_CLOSECONFINE?0:1)) && battle_config.autospell_check_range )
 				continue;
 
-			dstsd->state.autocast = 1;
+			dstsd->autocast.type = AUTOCAST_TEMP;
 			skill->consume_requirement(dstsd,auto_skill_id,auto_skill_lv,1);
 			skill->castend_type(type, bl, tbl, auto_skill_id, auto_skill_lv, tick, 0);
-			dstsd->state.autocast = 0;
+			dstsd->autocast.type = AUTOCAST_NONE;
+
 			// Set canact delay. [Skotlex]
 			ud = unit->bl2ud(bl);
 			if (ud) {
@@ -2475,6 +2512,8 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 				}
 			}
 		}
+
+		dstsd->autocast.type = ac_type;
 	}
 
 	//Autobonus when attacked
@@ -4200,11 +4239,6 @@ static void skill_castend_type(int type, struct block_list *src, struct block_li
 			skill->castend_damage_id(src, bl, skill_id, skill_lv, tick, flag);
 			break;
 	}
-
-	struct map_session_data *sd = BL_CAST(BL_PC, src);
-
-	if (sd != NULL)
-		pc->itemskill_clear(sd);
 }
 
 /*==========================================
@@ -5795,7 +5829,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		if (ud->walktimer != INVALID_TIMER && ud->skill_id != TK_RUN && ud->skill_id != RA_WUGDASH)
 			unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-		if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+		if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv); // Tests show wings don't overwrite the delay but skill scrolls do. [Inkfish]
 		if (sd) { // Cooldown application
 			int i, cooldown = skill->get_cooldown(ud->skill_id, ud->skill_lv);
@@ -5864,7 +5898,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		}
 
 		if( sd && ud->skill_id != SA_ABRACADABRA && ud->skill_id != WM_RANDOMIZESPELL ) // they just set the data so leave it as it is.[Inkfish]
-			sd->skillitem = sd->skillitemlv = 0;
+			pc->autocast_clear(sd);
 
 		if (ud->skilltimer == INVALID_TIMER) {
 			if(md) md->skill_idx = -1;
@@ -5913,14 +5947,14 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		}
 	}
 
-	if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+	if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 		ud->canact_tick = tick;
 	ud->skill_id = ud->skill_lv = ud->skilltarget = 0;
 	//You can't place a skill failed packet here because it would be
 	//sent in ALL cases, even cases where skill_check_condition fails
 	//which would lead to double 'skill failed' messages u.u [Skotlex]
 	if(sd)
-		sd->skillitem = sd->skillitemlv = 0;
+		pc->autocast_clear(sd);
 	else if(md)
 		md->skill_idx = -1;
 	return 0;
@@ -6302,9 +6336,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 				if (sd) {
 					// player-casted
-					sd->state.abra_flag = 1;
-					sd->skillitem = abra_skill_id;
-					sd->skillitemlv = abra_skill_lv;
+					sd->autocast.type = AUTOCAST_ABRA;
+					sd->autocast.skill_id = abra_skill_id;
+					sd->autocast.skill_lv = abra_skill_lv;
 					clif->item_skill(sd, abra_skill_id, abra_skill_lv);
 				} else {
 					// mob-casted
@@ -7433,7 +7467,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					map->freeblock_unlock();
 					return 1;
 				}
-				if( sd->skillitem != skill_id )
+				if (sd->autocast.type == AUTOCAST_NONE)
 					status_zap(src, 0, skill->get_sp(skill_id, skill_lv)); // consume sp only if succeeded
 			}
 			break;
@@ -7470,7 +7504,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					break;
 				}
 
-				if( sd->state.autocast || ( (sd->skillitem == AL_TELEPORT || battle_config.skip_teleport_lv1_menu) && skill_lv == 1 ) || skill_lv == 3 )
+				if (sd->autocast.type == AUTOCAST_TEMP || ((sd->autocast.skill_id == AL_TELEPORT || battle_config.skip_teleport_lv1_menu) && skill_lv == 1) || skill_lv == 3)
 				{
 					if( skill_lv == 1 )
 						pc->randomwarp(sd,CLR_TELEPORT);
@@ -10044,9 +10078,9 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 
 				if (sd != NULL) {
-					sd->state.abra_flag = 2;
-					sd->skillitem = improv_skill_id;
-					sd->skillitemlv = improv_skill_lv;
+					sd->autocast.type = AUTOCAST_IMPROVISE;
+					sd->autocast.skill_id = improv_skill_id;
+					sd->autocast.skill_lv = improv_skill_lv;
 					clif->item_skill(sd, improv_skill_id, improv_skill_lv);
 				} else {
 					struct unit_data *ud = unit->bl2ud(src);
@@ -10815,7 +10849,7 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		if (ud->walktimer != INVALID_TIMER)
 			unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-		if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+		if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv);
 		if (sd) { //Cooldown application
 			int i, cooldown = skill->get_cooldown(ud->skill_id, ud->skill_lv);
@@ -10844,8 +10878,8 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		map->freeblock_lock();
 		skill->castend_pos2(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv,tick,0);
 
-		if( sd && sd->skillitem != AL_WARP ) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
-			sd->skillitem = sd->skillitemlv = 0;
+		if (sd != NULL && sd->autocast.skill_id != AL_WARP) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
+			pc->autocast_clear(sd);
 
 		unit->set_dir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
@@ -10859,11 +10893,11 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		return 1;
 	} while(0);
 
-	if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
+	if (sd == NULL || sd->autocast.skill_id != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) != 0)
 		ud->canact_tick = tick;
 	ud->skill_id = ud->skill_lv = 0;
 	if(sd)
-		sd->skillitem = sd->skillitemlv = 0;
+		pc->autocast_clear(sd);
 	else if(md)
 		md->skill_idx  = -1;
 	return 0;
@@ -10993,7 +11027,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 					}
 				}
 
-				lv = sd->skillitem==skill_id?sd->skillitemlv:pc->checkskill(sd,skill_id);
+				lv = (sd->autocast.type > AUTOCAST_TEMP) ? sd->autocast.skill_lv : pc->checkskill(sd, skill_id);
 				wx = sd->menuskill_val>>16;
 				wy = sd->menuskill_val&0xffff;
 
@@ -11016,7 +11050,7 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 				}
 
 				skill->consume_requirement(sd,sd->menuskill_id,lv,2);
-				sd->skillitem = sd->skillitemlv = 0; // Clear data that's skipped in 'skill_castend_pos' [Inkfish]
+				pc->autocast_clear(sd); // Clear data which was skipped in skill_castend_pos().
 
 				if((group=skill->unitsetting(&sd->bl,skill_id,lv,wx,wy,0))==NULL) {
 					skill_failed(sd);
@@ -14015,22 +14049,6 @@ static bool skill_is_combo(int skill_id)
 	return false;
 }
 
-/**
- * Checks if a skill is casted by an item (itemskill() script command).
- *
- * @param sd The charcater's session data.
- * @param skill_id The skill's ID.
- * @param skill_lv The skill's level.
- * @return true if skill is casted by an item, otherwise false.
- */
-static bool skill_is_item_skill(struct map_session_data *sd, int skill_id, int skill_lv)
-{
-	nullpo_retr(false, sd);
-
-	return (sd->skillitem == skill_id && sd->skillitemlv == skill_lv
-		&& sd->itemskill_id == skill_id && sd->itemskill_lv == skill_lv);
-}
-
 static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
 {
 	struct status_data *st;
@@ -14045,13 +14063,13 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	if (sd->chat_id != 0)
 		return 0;
 
-	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_check_conditions == 0)
-	    && skill->is_item_skill(sd, skill_id, skill_lv)) {
+	if (((sd->autocast.itemskill_conditions_checked || !sd->autocast.itemskill_check_conditions)
+	    && sd->autocast.type == AUTOCAST_ITEM) || sd->autocast.type == AUTOCAST_IMPROVISE) {
 		return 1;
 	}
 
-	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id) {
-		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
+	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->autocast.type != AUTOCAST_ITEM) {
+		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.
 		return 1;
@@ -14082,30 +14100,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	if( !sc->count )
 		sc = NULL;
 
-	if( sd->skillitem == skill_id ) {
-		if( sd->state.abra_flag ) // Hocus-Pocus was used. [Inkfish]
-			sd->state.abra_flag = 0;
-		else {
-			int i;
-			// When a target was selected, consume items that were skipped in pc_use_item [Skotlex]
-			if( (i = sd->itemindex) == -1 ||
-				sd->status.inventory[i].nameid != sd->itemid ||
-				sd->inventory_data[i] == NULL ||
-				sd->status.inventory[i].amount < 1
-			) {
-				//Something went wrong, item exploit?
-				sd->itemid = sd->itemindex = -1;
-				return 0;
-			}
-
-			//Consume
-			sd->itemid = sd->itemindex = -1;
-			if (sd->status.inventory[i].expire_time == 0 && sd->inventory_data[i]->flag.delay_consume == 1) // Rental usable items are not consumed until expiration
-				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
-		}
-	}
-
-	if (pc_is90overweight(sd) && sd->skillitem != skill_id) { /// Skill casting items ignore the overweight restriction. [Kenpachi]
+	if (pc_is90overweight(sd) && sd->autocast.type != AUTOCAST_ITEM) { // Skill casting items ignore the overweight restriction.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_WEIGHTOVER, 0, 0);
 		return 0;
 	}
@@ -14976,7 +14971,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 0;
 	}
 
-	if (require.sp > 0 && st->sp < (unsigned int)require.sp && sd->skillitem != skill_id) { /// Skill casting items and Hocus-Pocus skills don't consume SP. [Kenpachi]
+	if (require.sp > 0 && st->sp < (unsigned int)require.sp && sd->autocast.type == AUTOCAST_NONE) { // Auto-cast skills don't consume SP.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 		return 0;
 	}
@@ -15034,13 +15029,13 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 	if (sd->chat_id != 0)
 		return 0;
 
-	if ((sd->state.itemskill_conditions_checked == 1 || sd->state.itemskill_check_conditions == 0)
-	    && skill->is_item_skill(sd, skill_id, skill_lv)) {
+	if (((sd->autocast.itemskill_conditions_checked || !sd->autocast.itemskill_check_conditions)
+	    && sd->autocast.type == AUTOCAST_ITEM) || sd->autocast.type == AUTOCAST_IMPROVISE) {
 		return 1;
 	}
 
-	if( pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id ) {
-		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
+	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->autocast.type != AUTOCAST_ITEM) {
+		// GMs don't override the AUTOCAST_ITEM check, otherwise they can use items without them being consumed!
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.
 		return 1;
@@ -15067,7 +15062,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			break;
 	}
 
-	if (pc_is90overweight(sd) && sd->skillitem != skill_id) { /// Skill casting items ignore the overweight restriction. [Kenpachi]
+	if (pc_is90overweight(sd) && sd->autocast.type != AUTOCAST_ITEM) { // Skill casting items ignore the overweight restriction.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_WEIGHTOVER, 0, 0);
 		return 0;
 	}
@@ -15173,10 +15168,8 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			clif->messagecolor_self(sd->fd, COLOR_RED, e_msg);
 			return 0;
 		}
-		if (!(require.ammo&1<<sd->inventory_data[i]->subtype)) { //Ammo type check. Send the "wrong weapon type" message
-			//which is the closest we have to wrong ammo type. [Skotlex]
-			clif->arrow_fail(sd,0); //Haplo suggested we just send the equip-arrows message instead. [Skotlex]
-			//clif->skill_fail(sd, skill_id, USESKILL_FAIL_THIS_WEAPON, 0, 0);
+		if ((require.ammo & (1 << sd->inventory_data[i]->subtype)) == 0 || !battle->check_arrows(sd)) { // Ammo type check.
+			clif->arrow_fail(sd, 0); // "Please equip the proper ammunition first."
 			return 0;
 		}
 	}
@@ -15240,8 +15233,10 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 
 	nullpo_ret(sd);
 
-	if (sd->state.itemskill_check_conditions == 0 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if ((!sd->autocast.itemskill_check_conditions && sd->autocast.type == AUTOCAST_ITEM)
+	    || sd->autocast.type == AUTOCAST_IMPROVISE) {
 		return 1;
+	}
 
 	req = skill->get_requirement(sd,skill_id,skill_lv);
 
@@ -15257,7 +15252,7 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 
 				break;
 			default:
-				if (sd->state.autocast == 1 || sd->skillitem == skill_id) /// Skill casting items and Hocus-Pocus skills don't consume SP. [Kenpachi]
+				if (sd->autocast.type != AUTOCAST_NONE) // Auto-cast skills don't consume SP.
 					req.sp = 0;
 
 				break;
@@ -15745,6 +15740,8 @@ static int skill_castfix_sc(struct block_list *bl, int time)
 		}
 		if (sc->data[SC_POEMBRAGI])
 			time -= time * sc->data[SC_POEMBRAGI]->val2 / 100;
+		if (sc->data[SC_SKF_CAST] != NULL)
+			time -= time * sc->data[SC_SKF_CAST]->val1 / 100;
 		if (sc->data[SC_IZAYOI])
 			time -= time * 50 / 100;
 	}
@@ -15846,6 +15843,8 @@ static int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, 
 		}
 		if (sc->data[SC_MYSTICSCROLL])
 			VARCAST_REDUCTION(sc->data[SC_MYSTICSCROLL]->val1);
+		if (sc->data[SC_SKF_CAST] != NULL)
+			VARCAST_REDUCTION(sc->data[SC_SKF_CAST]->val1);
 
 		// Fixed cast reduction bonuses
 		if( sc->data[SC__LAZINESS] )
@@ -21649,7 +21648,6 @@ void skill_defaults(void)
 	skill->cast_fix_sc = skill_castfix_sc;
 	skill->vf_cast_fix = skill_vfcastfix;
 	skill->delay_fix = skill_delay_fix;
-	skill->is_item_skill = skill_is_item_skill;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
 	skill->check_condition_castend = skill_check_condition_castend;
 	skill->consume_requirement = skill_consume_requirement;
@@ -21675,6 +21673,7 @@ void skill_defaults(void)
 	skill->not_ok_hom = skillnotok_hom;
 	skill->not_ok_hom_unknown = skillnotok_hom_unknown;
 	skill->not_ok_mercenary = skillnotok_mercenary;
+	skill->validate_autocast_data = skill_validate_autocast_data;
 	skill->chastle_mob_changetarget = skill_chastle_mob_changetarget;
 	skill->can_produce_mix = skill_can_produce_mix;
 	skill->produce_mix = skill_produce_mix;

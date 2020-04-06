@@ -738,7 +738,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_REPAIRITEMLIST", sizeof(struct PACKET_ZC_REPAIRITEMLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_REPAIRITEMLIST_sub", sizeof(struct PACKET_ZC_REPAIRITEMLIST_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ROLE_CHANGE", sizeof(struct PACKET_ZC_ROLE_CHANGE), SERVER_TYPE_MAP },
-		{ "PACKET_ZC_SE_CASHSHOP_OPEN", sizeof(struct PACKET_ZC_SE_CASHSHOP_OPEN), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SEARCH_STORE_INFO_ACK", sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SEARCH_STORE_INFO_ACK_sub", sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SKILL_SCALE", sizeof(struct PACKET_ZC_SKILL_SCALE), SERVER_TYPE_MAP },
@@ -859,6 +858,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_PC_GROUPS_H
 	#endif // MAP_PC_GROUPS_H
 	#ifdef MAP_PC_H
+		{ "autocast_data", sizeof(struct autocast_data), SERVER_TYPE_MAP },
 		{ "autotrade_vending", sizeof(struct autotrade_vending), SERVER_TYPE_MAP },
 		{ "class_exp_group", sizeof(struct class_exp_group), SERVER_TYPE_MAP },
 		{ "class_exp_tables", sizeof(struct class_exp_tables), SERVER_TYPE_MAP },

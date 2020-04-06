@@ -1725,6 +1725,15 @@ enum {
 	UNT_MAX = 0x190
 };
 
+/** Constants to identify the auto-cast type. **/
+enum autocast_type {
+	AUTOCAST_NONE = 0,
+	AUTOCAST_TEMP, // Used when type is only required during the execution of the calling instance. (For example bAutoSpell* skills.)
+	AUTOCAST_ABRA, // Used for Abracadabra (Hocus pocus).
+	AUTOCAST_IMPROVISE, // Used for Improvised Song.
+	AUTOCAST_ITEM, // Used for itemskill() script command.
+};
+
 /**
  * Structures
  **/
@@ -2021,7 +2030,6 @@ struct skill_interface {
 	int (*cast_fix_sc) ( struct block_list *bl, int time);
 	int (*vf_cast_fix) ( struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
 	int (*delay_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
-	bool (*is_item_skill) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*check_condition_castbegin) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*check_condition_castend) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*consume_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type);
@@ -2047,6 +2055,7 @@ struct skill_interface {
 	int (*not_ok_hom) (uint16 skill_id, struct homun_data *hd);
 	int (*not_ok_hom_unknown) (uint16 skill_id, struct homun_data *hd);
 	int (*not_ok_mercenary) (uint16 skill_id, struct mercenary_data *md);
+	void (*validate_autocast_data) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*chastle_mob_changetarget) (struct block_list *bl,va_list ap);
 	int (*can_produce_mix) ( struct map_session_data *sd, int nameid, int trigger, int qty);
 	int (*produce_mix) ( struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty );

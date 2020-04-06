@@ -4420,6 +4420,10 @@ struct {
 	struct HPMHookPoint *HP_npc_questinfo_clear_post;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_pre;
 	struct HPMHookPoint *HP_npc_secure_timeout_timer_post;
+	struct HPMHookPoint *HP_nullpo_init_pre;
+	struct HPMHookPoint *HP_nullpo_init_post;
+	struct HPMHookPoint *HP_nullpo_final_pre;
+	struct HPMHookPoint *HP_nullpo_final_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
 	struct HPMHookPoint *HP_packets_init_pre;
@@ -4764,8 +4768,8 @@ struct {
 	struct HPMHookPoint *HP_pc_checkitem_post;
 	struct HPMHookPoint *HP_pc_useitem_pre;
 	struct HPMHookPoint *HP_pc_useitem_post;
-	struct HPMHookPoint *HP_pc_itemskill_clear_pre;
-	struct HPMHookPoint *HP_pc_itemskill_clear_post;
+	struct HPMHookPoint *HP_pc_autocast_clear_pre;
+	struct HPMHookPoint *HP_pc_autocast_clear_post;
 	struct HPMHookPoint *HP_pc_skillatk_bonus_pre;
 	struct HPMHookPoint *HP_pc_skillatk_bonus_post;
 	struct HPMHookPoint *HP_pc_skillheal_bonus_pre;
@@ -5072,6 +5076,8 @@ struct {
 	struct HPMHookPoint *HP_pet_final_post;
 	struct HPMHookPoint *HP_pet_hungry_val_pre;
 	struct HPMHookPoint *HP_pet_hungry_val_post;
+	struct HPMHookPoint *HP_pet_set_hunger_pre;
+	struct HPMHookPoint *HP_pet_set_hunger_post;
 	struct HPMHookPoint *HP_pet_set_intimate_pre;
 	struct HPMHookPoint *HP_pet_set_intimate_post;
 	struct HPMHookPoint *HP_pet_create_egg_pre;
@@ -5856,8 +5862,6 @@ struct {
 	struct HPMHookPoint *HP_skill_vf_cast_fix_post;
 	struct HPMHookPoint *HP_skill_delay_fix_pre;
 	struct HPMHookPoint *HP_skill_delay_fix_post;
-	struct HPMHookPoint *HP_skill_is_item_skill_pre;
-	struct HPMHookPoint *HP_skill_is_item_skill_post;
 	struct HPMHookPoint *HP_skill_check_condition_castbegin_pre;
 	struct HPMHookPoint *HP_skill_check_condition_castbegin_post;
 	struct HPMHookPoint *HP_skill_check_condition_castend_pre;
@@ -5908,6 +5912,8 @@ struct {
 	struct HPMHookPoint *HP_skill_not_ok_hom_unknown_post;
 	struct HPMHookPoint *HP_skill_not_ok_mercenary_pre;
 	struct HPMHookPoint *HP_skill_not_ok_mercenary_post;
+	struct HPMHookPoint *HP_skill_validate_autocast_data_pre;
+	struct HPMHookPoint *HP_skill_validate_autocast_data_post;
 	struct HPMHookPoint *HP_skill_chastle_mob_changetarget_pre;
 	struct HPMHookPoint *HP_skill_chastle_mob_changetarget_post;
 	struct HPMHookPoint *HP_skill_can_produce_mix_pre;
@@ -11295,6 +11301,10 @@ struct {
 	int HP_npc_questinfo_clear_post;
 	int HP_npc_secure_timeout_timer_pre;
 	int HP_npc_secure_timeout_timer_post;
+	int HP_nullpo_init_pre;
+	int HP_nullpo_init_post;
+	int HP_nullpo_final_pre;
+	int HP_nullpo_final_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
 	int HP_packets_init_pre;
@@ -11639,8 +11649,8 @@ struct {
 	int HP_pc_checkitem_post;
 	int HP_pc_useitem_pre;
 	int HP_pc_useitem_post;
-	int HP_pc_itemskill_clear_pre;
-	int HP_pc_itemskill_clear_post;
+	int HP_pc_autocast_clear_pre;
+	int HP_pc_autocast_clear_post;
 	int HP_pc_skillatk_bonus_pre;
 	int HP_pc_skillatk_bonus_post;
 	int HP_pc_skillheal_bonus_pre;
@@ -11947,6 +11957,8 @@ struct {
 	int HP_pet_final_post;
 	int HP_pet_hungry_val_pre;
 	int HP_pet_hungry_val_post;
+	int HP_pet_set_hunger_pre;
+	int HP_pet_set_hunger_post;
 	int HP_pet_set_intimate_pre;
 	int HP_pet_set_intimate_post;
 	int HP_pet_create_egg_pre;
@@ -12731,8 +12743,6 @@ struct {
 	int HP_skill_vf_cast_fix_post;
 	int HP_skill_delay_fix_pre;
 	int HP_skill_delay_fix_post;
-	int HP_skill_is_item_skill_pre;
-	int HP_skill_is_item_skill_post;
 	int HP_skill_check_condition_castbegin_pre;
 	int HP_skill_check_condition_castbegin_post;
 	int HP_skill_check_condition_castend_pre;
@@ -12783,6 +12793,8 @@ struct {
 	int HP_skill_not_ok_hom_unknown_post;
 	int HP_skill_not_ok_mercenary_pre;
 	int HP_skill_not_ok_mercenary_post;
+	int HP_skill_validate_autocast_data_pre;
+	int HP_skill_validate_autocast_data_post;
 	int HP_skill_chastle_mob_changetarget_pre;
 	int HP_skill_chastle_mob_changetarget_post;
 	int HP_skill_can_produce_mix_pre;

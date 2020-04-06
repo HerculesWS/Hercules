@@ -489,6 +489,7 @@ int main(int argc, char **argv)
 
 	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
 	showmsg->init();
+	nullpo->init();
 
 	cmdline->init();
 
@@ -552,6 +553,7 @@ int main(int argc, char **argv)
 	cmdline->final();
 	//sysinfo->final(); Called by iMalloc->final()
 
+	nullpo->final();
 	iMalloc->final();
 	showmsg->final(); // Should be after iMalloc->final()
 

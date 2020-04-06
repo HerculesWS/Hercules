@@ -5830,6 +5830,10 @@ typedef int (*HPMHOOK_pre_npc_secure_timeout_timer) (int *tid, int64 *tick, int 
 typedef int (*HPMHOOK_post_npc_secure_timeout_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 #endif // MAP_NPC_H
 #ifdef COMMON_NULLPO_H /* nullpo */
+typedef void (*HPMHOOK_pre_nullpo_init) (void);
+typedef void (*HPMHOOK_post_nullpo_init) (void);
+typedef void (*HPMHOOK_pre_nullpo_final) (void);
+typedef void (*HPMHOOK_post_nullpo_final) (void);
 typedef void (*HPMHOOK_pre_nullpo_assert_report) (const char **file, int *line, const char **func, const char **targetname, const char **title);
 typedef void (*HPMHOOK_post_nullpo_assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
 #endif // COMMON_NULLPO_H
@@ -6184,8 +6188,8 @@ typedef int (*HPMHOOK_pre_pc_checkitem) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_checkitem) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_useitem) (struct map_session_data **sd, int *n);
 typedef int (*HPMHOOK_post_pc_useitem) (int retVal___, struct map_session_data *sd, int n);
-typedef int (*HPMHOOK_pre_pc_itemskill_clear) (struct map_session_data **sd);
-typedef int (*HPMHOOK_post_pc_itemskill_clear) (int retVal___, struct map_session_data *sd);
+typedef int (*HPMHOOK_pre_pc_autocast_clear) (struct map_session_data **sd);
+typedef int (*HPMHOOK_post_pc_autocast_clear) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_skillatk_bonus) (struct map_session_data **sd, uint16 *skill_id);
 typedef int (*HPMHOOK_post_pc_skillatk_bonus) (int retVal___, struct map_session_data *sd, uint16 skill_id);
 typedef int (*HPMHOOK_pre_pc_skillheal_bonus) (struct map_session_data **sd, uint16 *skill_id);
@@ -6496,6 +6500,8 @@ typedef int (*HPMHOOK_pre_pet_final) (void);
 typedef int (*HPMHOOK_post_pet_final) (int retVal___);
 typedef int (*HPMHOOK_pre_pet_hungry_val) (struct pet_data **pd);
 typedef int (*HPMHOOK_post_pet_hungry_val) (int retVal___, struct pet_data *pd);
+typedef void (*HPMHOOK_pre_pet_set_hunger) (struct pet_data **pd, int *value);
+typedef void (*HPMHOOK_post_pet_set_hunger) (struct pet_data *pd, int value);
 typedef void (*HPMHOOK_pre_pet_set_intimate) (struct pet_data **pd, int *value);
 typedef void (*HPMHOOK_post_pet_set_intimate) (struct pet_data *pd, int value);
 typedef int (*HPMHOOK_pre_pet_create_egg) (struct map_session_data **sd, int *item_id);
@@ -7332,8 +7338,6 @@ typedef int (*HPMHOOK_pre_skill_vf_cast_fix) (struct block_list **bl, double *ti
 typedef int (*HPMHOOK_post_skill_vf_cast_fix) (int retVal___, struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
 typedef int (*HPMHOOK_pre_skill_delay_fix) (struct block_list **bl, uint16 *skill_id, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_skill_delay_fix) (int retVal___, struct block_list *bl, uint16 skill_id, uint16 skill_lv);
-typedef bool (*HPMHOOK_pre_skill_is_item_skill) (struct map_session_data **sd, int *skill_id, int *skill_lv);
-typedef bool (*HPMHOOK_post_skill_is_item_skill) (bool retVal___, struct map_session_data *sd, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_check_condition_castbegin) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_skill_check_condition_castbegin) (int retVal___, struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 typedef int (*HPMHOOK_pre_skill_check_condition_castend) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv);
@@ -7384,6 +7388,8 @@ typedef int (*HPMHOOK_pre_skill_not_ok_hom_unknown) (uint16 *skill_id, struct ho
 typedef int (*HPMHOOK_post_skill_not_ok_hom_unknown) (int retVal___, uint16 skill_id, struct homun_data *hd);
 typedef int (*HPMHOOK_pre_skill_not_ok_mercenary) (uint16 *skill_id, struct mercenary_data **md);
 typedef int (*HPMHOOK_post_skill_not_ok_mercenary) (int retVal___, uint16 skill_id, struct mercenary_data *md);
+typedef void (*HPMHOOK_pre_skill_validate_autocast_data) (struct map_session_data **sd, int *skill_id, int *skill_lv);
+typedef void (*HPMHOOK_post_skill_validate_autocast_data) (struct map_session_data *sd, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_chastle_mob_changetarget) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_chastle_mob_changetarget) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_can_produce_mix) (struct map_session_data **sd, int *nameid, int *trigger, int *qty);

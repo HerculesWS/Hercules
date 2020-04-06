@@ -28,6 +28,8 @@
 // if need disable asserts checks this line can be commented
 #define ASSERT_CHECK
 
+struct backtrace_state;
+
 /** Assert */
 
 #if defined(ASSERT_CHECK)
@@ -148,7 +150,12 @@
 
 
 struct nullpo_interface {
+	void (*init) (void);
+	void (*final) (void);
+
 	void (*assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
+
+	struct backtrace_state *backtrace_state;
 };
 
 #ifdef HERCULES_CORE

@@ -5928,21 +5928,21 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 					delay += 100;/* gradual increase so the numbers don't clip in the client */
 				}
 				if( sc->data[SC_LG_REFLECTDAMAGE] && rnd()%100 < (30 + 10*sc->data[SC_LG_REFLECTDAMAGE]->val1) ) {
-					bool change = false;
-
 					NORMALIZE_RDAMAGE(damage * sc->data[SC_LG_REFLECTDAMAGE]->val2 / 100);
 
 					trdamage -= rdamage;/* wont count towards total */
 
-					if( sd && !sd->state.autocast ) {
-						change = true;
-						sd->state.autocast = 1;
+					enum autocast_type ac_type;
+
+					if (sd != NULL) {
+						ac_type = sd->autocast.type;
+						sd->autocast.type = AUTOCAST_TEMP;
 					}
 
 					map->foreachinshootrange(battle->damage_area,target,skill->get_splash(LG_REFLECTDAMAGE,1),BL_CHAR,tick,target,delay,wd->dmotion,rdamage,status_get_race(target));
 
-					if( change )
-						sd->state.autocast = 0;
+					if (sd != NULL)
+						sd->autocast.type = ac_type;
 
 					delay += 150;/* gradual increase so the numbers don't clip in the client */
 
@@ -6132,7 +6132,7 @@ static int battle_damage_area(struct block_list *bl, va_list ap)
 		else
 			status_fix_damage(src,bl,damage,0);
 		clif->damage(bl,bl,amotion,dmotion,damage,1,BDT_ENDURE,0);
-		if (src->type != BL_PC || !BL_UCCAST(BL_PC, src)->state.autocast)
+		if (src->type != BL_PC || BL_UCCAST(BL_PC, src)->autocast.type != AUTOCAST_TEMP)
 			skill->additional_effect(src, bl, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,tick);
 		map->freeblock_unlock();
 	}
@@ -6456,10 +6456,10 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 					}
 				}
 
-				sd->state.autocast = 1;
+				sd->autocast.type = AUTOCAST_TEMP;
 				skill->consume_requirement(sd,r_skill,r_lv,3);
 				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
-				sd->state.autocast = 0;
+				sd->autocast.type = AUTOCAST_NONE;
 				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
 				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
@@ -7085,16 +7085,15 @@ static const struct battle_data {
 	{ "guild_emperium_check",               &battle_config.guild_emperium_check,            1,      0,      1,              },
 	{ "guild_exp_limit",                    &battle_config.guild_exp_limit,                 50,     0,      99,             },
 	{ "player_invincible_time",             &battle_config.pc_invincible_time,              5000,   0,      INT_MAX,        },
+	{ "pet_catch_rate_official_formula",    &battle_config.pet_catch_rate_official_formula, 1,      0,      1,              },
 	{ "pet_catch_rate",                     &battle_config.pet_catch_rate,                  100,    0,      INT_MAX,        },
 	{ "pet_rename",                         &battle_config.pet_rename,                      0,      0,      1,              },
 	{ "pet_friendly_rate",                  &battle_config.pet_friendly_rate,               100,    0,      INT_MAX,        },
 	{ "pet_hungry_delay_rate",              &battle_config.pet_hungry_delay_rate,           100,    10,     INT_MAX,        },
-	{ "pet_hungry_friendly_decrease",       &battle_config.pet_hungry_friendly_decrease,    5,      0,      INT_MAX,        },
 	{ "pet_status_support",                 &battle_config.pet_status_support,              0,      0,      1,              },
 	{ "pet_attack_support",                 &battle_config.pet_attack_support,              0,      0,      1,              },
 	{ "pet_damage_support",                 &battle_config.pet_damage_support,              0,      0,      1,              },
 	{ "pet_support_min_friendly",           &battle_config.pet_support_min_friendly,        900,    0,      950,            },
-	{ "pet_equip_min_friendly",             &battle_config.pet_equip_min_friendly,          900,    0,      950,            },
 	{ "pet_support_rate",                   &battle_config.pet_support_rate,                100,    0,      INT_MAX,        },
 	{ "pet_attack_exp_to_master",           &battle_config.pet_attack_exp_to_master,        0,      0,      1,              },
 	{ "pet_attack_exp_rate",                &battle_config.pet_attack_exp_rate,             100,    0,      INT_MAX,        },

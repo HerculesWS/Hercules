@@ -173,6 +173,17 @@ struct pc_combos {
 	int id; /* this combo id */
 };
 
+/** Auto-cast related data. **/
+struct autocast_data {
+	enum autocast_type type; // The auto-cast type.
+	int skill_id; // The auto-cast skill ID.
+	int skill_lv; // The auto-cast skill level.
+	bool itemskill_conditions_checked; // Used by itemskill() script command, to prevent second check of conditions after target was selected.
+	bool itemskill_check_conditions; // Used by itemskill() script command, to check skill conditions and consume them.
+	bool itemskill_instant_cast; // Used by itemskill() script command, to cast skill instantaneously.
+	bool itemskill_cast_on_self; // Used by itemskill() script command, to forcefully cast skill on invoking character.
+};
+
 struct map_session_data {
 	struct block_list bl;
 	struct unit_data ud;
@@ -181,6 +192,7 @@ struct map_session_data {
 	struct status_change sc;
 	struct regen_data regen;
 	struct regen_data_sub sregen, ssregen;
+	struct autocast_data autocast;
 	//NOTE: When deciding to add a flag to state or special_state, take into consideration that state is preserved in
 	//status_calc_pc, while special_state is recalculated in each call. [Skotlex]
 	struct {
@@ -194,8 +206,6 @@ struct map_session_data {
 		unsigned int rest : 1;
 		unsigned int storage_flag : 2; // @see enum storage_flag
 		unsigned int snovice_dead_flag : 1; //Explosion spirits on death: 0 off, 1 used.
-		unsigned int abra_flag : 2; // Abracadabra bugfix by Aru
-		unsigned int autocast : 1; // Autospell flag [Inkfish]
 		unsigned int autotrade : 2; //By Fantik
 		unsigned int showdelay :1;
 		unsigned int showexp :1;
@@ -240,10 +250,6 @@ struct map_session_data {
 		unsigned int refine_ui : 1;
 		unsigned int npc_unloaded : 1; ///< The player is talking with an unloaded NPCs (respawned tombstones)
 		unsigned int lapine_ui : 1;
-		unsigned int itemskill_conditions_checked : 1; // Used by itemskill() script command, to prevent second check of conditions after target was selected.
-		unsigned int itemskill_check_conditions : 1; // Used by itemskill() script command, to check skill conditions and consume them.
-		unsigned int itemskill_no_casttime : 1; // Used by itemskill() script command, to cast skill instantaneously.
-		unsigned int itemskill_castonself : 1; // Used by itemskill() script command, to forcefully cast skill on invoking character.
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -298,7 +304,6 @@ struct map_session_data {
 	int followtimer; // [MouseJstr]
 	int followtarget;
 	time_t emotionlasttime; // to limit flood with emotion packets
-	int skillitem,skillitemlv;
 	uint16 skill_id_old,skill_lv_old;
 	uint16 skill_id_dance,skill_lv_dance;
 	short cook_mastery; // range: [0,1999] [Inkfish]
@@ -492,6 +497,7 @@ END_ZEROED_BLOCK;
 	int change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
 
 	char fakename[NAME_LENGTH]; // fake names [Valaris]
+	int fakename_options; // Fake name display options.
 
 	int duel_group; // duel vars [LuzZza]
 	int duel_invite;
@@ -647,15 +653,6 @@ END_ZEROED_BLOCK;
 	bool achievements_received;
 	// Title
 	VECTOR_DECL(int) title_ids;
-
-	/*
-	 * itemskill_conditions_checked/itemskill_no_conditions/itemskill_no_casttime/itemskill_castonself abuse prevention.
-	 * If a skill, casted by itemskill() script command, is aborted while target selection,
-	 * the map server gets no notification where these states could be unset.
-	 * Thus we need this helper variables to prevent abusing these states for next skill cast.
-	 */
-	int itemskill_id;
-	int itemskill_lv;
 };
 
 #define EQP_WEAPON EQP_HAND_R
@@ -1034,7 +1031,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*unequipitem_pos) (struct map_session_data *sd, int n, int pos);
 	int (*checkitem) (struct map_session_data *sd);
 	int (*useitem) (struct map_session_data *sd,int n);
-	int (*itemskill_clear) (struct map_session_data *sd);
+	int (*autocast_clear) (struct map_session_data *sd);
 
 	int (*skillatk_bonus) (struct map_session_data *sd, uint16 skill_id);
 	int (*skillheal_bonus) (struct map_session_data *sd, uint16 skill_id);

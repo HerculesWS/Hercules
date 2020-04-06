@@ -6047,11 +6047,15 @@ static bool map_add_questinfo(int m, struct npc_data *nd)
 	nullpo_retr(false, nd);
 	Assert_retr(false, m >= 0 && m < map->count);
 
-	if (&VECTOR_LAST(map->list[m].qi_list) == nd)
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(map->list[m].qi_list), i, VECTOR_INDEX(map->list[m].qi_list, i) == nd);
+
+	if (i < VECTOR_LENGTH(map->list[m].qi_list)) {
 		return false;
+	}
 
 	VECTOR_ENSURE(map->list[m].qi_list, 1, 1);
-	VECTOR_PUSH(map->list[m].qi_list, *nd);
+	VECTOR_PUSH(map->list[m].qi_list, nd);
 	return true;
 }
 
@@ -6062,7 +6066,7 @@ static bool map_remove_questinfo(int m, struct npc_data *nd)
 	Assert_retr(false, m >= 0 && m < map->count);
 
 	int i;
-	ARR_FIND(0, VECTOR_LENGTH(map->list[m].qi_list), i, &VECTOR_INDEX(map->list[m].qi_list, i) == nd);
+	ARR_FIND(0, VECTOR_LENGTH(map->list[m].qi_list), i, VECTOR_INDEX(map->list[m].qi_list, i) == nd);
 	if (i != VECTOR_LENGTH(map->list[m].qi_list)) {
 		VECTOR_ERASE(map->list[m].qi_list, i);
 		return true;

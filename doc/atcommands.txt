@@ -968,10 +968,19 @@ If no position is given, the command defaults to headgear.
 
 ---------------------------------------
 
-@fakename {<text string>}
+@fakename {<options>} {<fake_name>}
 
-Temporarily changes name to the specified string.
-If no string is given, the character's real name will be re-applied.
+Temporarily changes the character's name to <fake_name>.
+If no parameter is passed, the character's real name will be re-applied.
+The <options> parameter is used, to modify which names will be displayed.
+The fake name will always be displayed, regardless of <options>.
+Valid <options> flags (combinable):
+  0 - Only the fake name is displayed. (Default value.)
+  1 - Display party name.
+  2 - Display guild name.
+  4 - Display guild position.
+  8 - Display clan position.
+ 16 - Display title.
 
 ---------------------------------------
 

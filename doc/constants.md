@@ -1339,6 +1339,13 @@
 - `SC_RESIST_PROPERTY_WIND`: 667
 - `SC_CLIENT_ONLY_EQUIP_ARROW`: 668
 - `SC_MADOGEAR`: 669
+- `SC_POPECOOKIE`: 670
+- `SC_VITALIZE_POTION`: 671
+- `SC_SKF_MATK`: 672
+- `SC_SKF_ATK`: 673
+- `SC_SKF_ASPD`: 674
+- `SC_SKF_CAST`: 675
+- `SC_ALMIGHTY`: 676
 
 ### Emotes
 
@@ -4665,8 +4672,8 @@
 - `MAX_ITEM_ID`: 2147483647
 - `MAX_MENU_OPTIONS`: 255
 - `MAX_MENU_LENGTH`: 2048
-- `MOB_CLONE_START`: 4001
-- `MOB_CLONE_END`: 5000
+- `MOB_CLONE_START`: 21001
+- `MOB_CLONE_END`: 22000
 - `MAX_NPC_PER_MAP`: 512
 
 ### status options
@@ -5021,6 +5028,25 @@
 - `PETINFO_ACCESSORYFLAG`: 10
 - `PETINFO_EVO_EGGID`: 11
 - `PETINFO_AUTOFEED`: 12
+
+### Pet hunger levels
+
+- `PET_HUNGER_STARVING`: 0
+- `PET_HUNGER_VERY_HUNGRY`: 10
+- `PET_HUNGER_HUNGRY`: 25
+- `PET_HUNGER_NEUTRAL`: 75
+- `PET_HUNGER_SATISFIED`: 90
+- `PET_HUNGER_STUFFED`: 100
+
+### Pet intimacy levels
+
+- `PET_INTIMACY_NONE`: 0
+- `PET_INTIMACY_AWKWARD`: 1
+- `PET_INTIMACY_SHY`: 100
+- `PET_INTIMACY_NEUTRAL`: 250
+- `PET_INTIMACY_CORDIAL`: 750
+- `PET_INTIMACY_LOYAL`: 900
+- `PET_INTIMACY_MAX`: 1000
 
 ### monster skill states
 
@@ -14774,6 +14800,7 @@
 - `Elf_Tear_Curse`: 12880
 - `Elf_Tear_Silence`: 12881
 - `Elf_Tear_Blind`: 12882
+- `Almighty`: 12883
 - `C_Center_Potion`: 12884
 - `C_Awakening_Potion`: 12885
 - `C_Berserk_Potion`: 12886
@@ -16642,6 +16669,7 @@
 - `Tw_Red_Scroll`: 17210
 - `Tw_Orange_Scroll`: 17211
 - `Tw_Yellow_Scroll`: 17212
+- `Almighty_Box`: 17224
 - `C_Center_Potion_Box`: 17226
 - `C_Awakening_Potion_Box`: 17227
 - `C_Berserk_Potion_Box`: 17228

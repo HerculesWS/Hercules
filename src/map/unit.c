@@ -96,6 +96,8 @@ static struct unit_data *unit_bl2ud(struct block_list *bl)
 		return &BL_UCAST(BL_MER, bl)->ud;
 	case BL_ELEM:
 		return &BL_UCAST(BL_ELEM, bl)->ud;
+	case BL_SKILL: // No assertion to not spam the server console when attacking a skill type unit such as Ice Wall.
+		return NULL;
 	default:
 		Assert_retr(NULL, false);
 	}
@@ -128,6 +130,8 @@ static const struct unit_data *unit_cbl2ud(const struct block_list *bl)
 		return &BL_UCCAST(BL_MER, bl)->ud;
 	case BL_ELEM:
 		return &BL_UCCAST(BL_ELEM, bl)->ud;
+	case BL_SKILL: // No assertion to not spam the server console when attacking a skill type unit such as Ice Wall.
+		return NULL;
 	default:
 		Assert_retr(NULL, false);
 	}
@@ -326,7 +330,7 @@ static int unit_warpto_master(struct block_list *master_bl, struct block_list *s
 static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = map->id2bl(id);
-	if (bl == NULL || bl->prev == NULL) // Stop moved because it is missing from the block_list
+	if (bl == NULL)
 		return 1;
 	struct unit_data *ud = unit->bl2ud(bl);
 	if (ud == NULL)
@@ -336,7 +340,11 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		ShowError("unit_walk_timer mismatch %d != %d\n",ud->walktimer,tid);
 		return 1;
 	}
+
 	ud->walktimer = INVALID_TIMER;
+
+	if (bl->prev == NULL) // Stop moved because it is missing from the block_list.
+		return 1;
 
 	if (ud->walkpath.path_pos >= ud->walkpath.path_len)
 		return 1;
@@ -898,7 +906,7 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 		} else
 			npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);
 
-		if( sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > 0 )
+		if (sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > PET_INTIMACY_NONE)
 		{ // Check if pet needs to be teleported. [Skotlex]
 			int flag = 0;
 			struct block_list* pbl = &sd->pd->bl;
@@ -1148,8 +1156,10 @@ static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_
 	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->itemskill_clear(sd);
+	if (sd != NULL && ret == 0)
+		pc->autocast_clear(sd); // Error in unit_skilluse_id2().
+	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
+		skill->validate_autocast_data(sd, skill_id, skill_lv);
 
 	return ret;
 }
@@ -1708,7 +1718,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
 		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
 
-	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
@@ -1746,7 +1756,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if( casttime <= 0 )
 		ud->state.skillcastcancel = 0;
 
-	if( !sd || sd->skillitem != skill_id || skill->get_cast(skill_id,skill_lv) )
+	if (sd == NULL || sd->autocast.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
 		ud->canact_tick = tick + casttime + 100;
 	if( sd )
 	{
@@ -1785,8 +1795,10 @@ static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_
 	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && (ret == 0 || !skill->is_item_skill(sd, skill_id, skill_lv)))
-		pc->itemskill_clear(sd);
+	if (sd != NULL && ret == 0)
+		pc->autocast_clear(sd); // Error in unit_skilluse_pos2().
+	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
+		skill->validate_autocast_data(sd, skill_id, skill_lv);
 
 	return ret;
 }
@@ -1883,7 +1895,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	}
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
-	if( !sd || sd->skillitem != skill_id || skill->get_cast(skill_id,skill_lv) )
+	if (sd == NULL || sd->autocast.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
 		ud->canact_tick  = tick + casttime + 100;
 #if 0
 	if (sd) {
@@ -1914,7 +1926,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-	if (sd != NULL && sd->state.itemskill_no_casttime == 1 && skill->is_item_skill(sd, skill_id, skill_lv))
+	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
@@ -2718,7 +2730,7 @@ static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const c
 		case BL_PET:
 		{
 			struct pet_data *pd = BL_UCAST(BL_PET, bl);
-			if( pd->pet.intimate <= 0 && !(pd->msd && !pd->msd->state.active) ) {
+			if (pd->pet.intimate <= PET_INTIMACY_NONE && !(pd->msd && !pd->msd->state.active)) {
 				//If logging out, this is deleted on unit->free
 				clif->clearunit_area(bl,clrtype);
 				map->delblock(bl);
@@ -2932,7 +2944,7 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 				aFree (pd->loot);
 				pd->loot = NULL;
 			}
-			if (pd->pet.intimate > 0) {
+			if (pd->pet.intimate > PET_INTIMACY_NONE) {
 				intif->save_petdata(pd->pet.account_id,&pd->pet);
 			} else {
 				//Remove pet.

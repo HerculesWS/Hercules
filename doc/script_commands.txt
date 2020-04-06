@@ -6575,16 +6575,21 @@ Examples:
 
 ---------------------------------------
 
-*setpcblock(<type>,<option>)
-*checkpcblock()
+*setpcblock(<type>, <option>{, <account id>})
+*checkpcblock({<account id>})
 
-Prevents the player from doing the following action.
+Prevents a character from doing the following action.
 
 For setpcblock, when the <option> is true(1) will block them, and false(0)
 will allow those actions again.
 
+The setpcblock command returns 1 on success or 0 if no character was attached.
+
 The checkpcblock command returned value is a bit mask of the currently
 enabled block flags (or PCBLOCK_NONE when none is set).
+
+Parameter <account id> is optional for both commands.
+If omitted, the currently attached character is used.
 
 The <type> listed are a bit mask of the following:
 	PCBLOCK_NONE (only used by checkpcblock)
