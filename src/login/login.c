@@ -1406,10 +1406,10 @@ static void login_client_login_mobile_otp_request(int fd, struct login_session_d
 static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
 static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
 {
-	WFIFOHEAD(fd,3);
-	WFIFOW(fd,0) = 0x2711;
-	WFIFOB(fd,2) = status;
-	WFIFOSET(fd,3);
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x2711;
+	WFIFOB(fd, 2) = status;
+	WFIFOSET2(fd, 3);
 }
 
 // CA_CHARSERVERCONNECT
