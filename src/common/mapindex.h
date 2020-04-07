@@ -74,6 +74,7 @@ struct DBMap; // common/db.h
 #define MAP_MALAYA "malaya"
 #define MAP_ECLAGE "eclage"
 #define MAP_ECLAGE_IN "ecl_in01"
+#define MAP_LASAGNA "lasagna"
 
 #define mapindex_id2name(n) mapindex->id2name((n),__FILE__, __LINE__, __func__)
 #define mapindex_exists(n) ( mapindex->list[(n)].name[0] != '\0' )

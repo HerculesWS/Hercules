@@ -1988,6 +1988,7 @@ ACMD(go)
 		{ MAP_MALANGDO,    140, 114, 5 }, // 33 = Malangdo Island
 		{ MAP_MALAYA,      242, 211, 5 }, // 34 = Malaya Port
 		{ MAP_ECLAGE,      110,  39, 3 }, // 35 = Eclage
+		{ MAP_LASAGNA,     193, 182, 3 }, // 36 = Lasagna
 	};
 
 	memset(map_name, '\0', sizeof(map_name));
@@ -2047,6 +2048,9 @@ ACMD(go)
 			town = 16;
 		} else if (strncmpi(map_name, "rael", 3) == 0) { // Original town name for 'rachel'
 			town = 23;
+		}
+		else if (strncmpi(map_name, "lasa", 3) == 0) { // Original town name for 'lasagna'
+			town = 36;
 		}
 	}
 
