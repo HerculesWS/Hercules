@@ -1584,8 +1584,8 @@ OnStart:
 	killmonster(.@in_map$, .@gl_npc1$+"::OnMyMobDead");
 	'xm_celine_gid = monster(.@in_map$, 231, 184, "Celine Kimi", XM_CELINE_KIMI, 1, .@gl_npc1$+"::OnMyMobDead");
 	'g_xm_celine_gid = monster(.@in_map$, 226, 190, "Celine's Illusion", G_XM_CELINE_KIMI, 1, .@gl_npc1$+"::OnMyMobDead");
-	// setunitdata('xm_celine_gid, UDT_MAXHP, 20000000);
-	// setunitdata('g_xm_celine_gid, UDT_MAXHP, 20000000);
+	// setunitdata('xm_celine_gid, UDT_MAXHP, 20000000); //Need to Update Script Command!
+	// setunitdata('g_xm_celine_gid, UDT_MAXHP, 20000000); //Need to Update Script Command!
 	unittalk('xm_celine_gid, _("I don't want to be abandoned here!"));
 	initnpctimer();
 	end;
@@ -1613,15 +1613,15 @@ OnTimer10000:
 	.@mob_dead_num = mobcount(.@in_map$, instance_npcname("#finalbs2")+"::OnMyMobDead");
 	if (.@mob_dead_num > 1) {
 		.@gl_npc1$ = instance_npcname("#finalbs2");
-		// .@MOB_HP1 = getunitdata('xm_celine_gid, UDT_HP);
-		// .@MOB_HP2 = getunitdata('g_xm_celine_gid, UDT_HP);
+		// .@MOB_HP1 = getunitdata('xm_celine_gid, UDT_HP); //Need to Update Script Command!
+		// .@MOB_HP2 = getunitdata('g_xm_celine_gid, UDT_HP); //Need to Update Script Command!
 		if (.@MOB_HP1 > .@MOB_HP2) {
 			.@gp_hp = (.@MOB_HP1 - .@MOB_HP2);
 			if (.@gp_hp > 100000) {
 				.@set_bs_hp = ((.@gp_hp * 5) / 10);
 				.@MOB_HP3 = min(.@MOB_HP1 + .@set_bs_hp, 66666666);
-				// setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
-				// setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
+				// setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
+				// setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
 				donpcevent(instance_npcname("#eff_f01")+"::OnStart");
 				unittalk('xm_celine_gid, _("Let me heal you up!"));
 				sleep(1000);
@@ -1633,8 +1633,8 @@ OnTimer10000:
 			if (.@gp_hp > 100000) {
 				.@set_bs_hp = ((.@gp_hp * 5) / 10);
 				.@MOB_HP3 = min(.@MOB_HP2 + .@set_bs_hp, 66666666);
-				// setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
-				// setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
+				// setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
+				// setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
 				donpcevent(instance_npcname("#eff_f01")+"::OnStart");
 				unittalk('g_xm_celine_gid, _("Let me restore you up!"));
 				sleep(1000);
