@@ -4711,10 +4711,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	if (flag.cri) {
 		wd.type = BDT_CRIT;
 #ifdef RENEWAL
-#if PACKETVER >= 20161207
-		if (battle_config.feature_enable_multi_crit == 1 && (wd.type & BDT_MULTIHIT) != 0)
-			wd.type = BDT_MULTICRIT;
-#endif
+	if (battle_config.feature_enable_multi_crit == 1 && (wd.type & BDT_MULTIHIT) != 0)
+		wd.type = BDT_MULTICRIT;
 #endif
 #ifndef RENEWAL
 		flag.idef = flag.idef2 =
@@ -7584,6 +7582,13 @@ static void battle_adjust_conf(void)
 	if (battle_config.replace_refine_npcs == 1) {
 		ShowWarning("conf/map/battle/feature.conf replace refine npcs is enabled but it requires PACKETVER 2016-11-09 RagexeRE/2016-11-30 Ragexe or newer, disabling...\n");
 		battle_config.replace_refine_npcs = 0;
+	}
+#endif
+
+#if PACKETVER < 20161207
+	if( battle_config.feature_enable_multi_crit ) {
+		ShowWarning("conf/map/battle/feature.conf feature_enable_multi_crit is enabled but it requires PACKETVER 2016-12-07 or newer, disabling...\n");
+		battle_config.feature_enable_multi_crit = 0;
 	}
 #endif
 
