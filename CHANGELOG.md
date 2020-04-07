@@ -10,6 +10,12 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.04.05] `April 05 2020` `PATCH 1`
+
+### Fixed
+
+- Fixed a regression that prevented pets from hatching. (#2685, issue #2683)
+
 ## [v2020.04.05] `April 05 2020`
 
 ### Added
@@ -1316,6 +1322,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.04.05]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05...v2020.04.05+1
 [v2020.04.05]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+2...v2020.04.05
 [v2020.03.08+2]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+1...v2020.03.08+2
 [v2020.03.08+1]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08...v2020.03.08+1
