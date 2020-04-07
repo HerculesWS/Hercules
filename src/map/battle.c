@@ -7586,7 +7586,7 @@ static void battle_adjust_conf(void)
 #endif
 
 #if PACKETVER < 20161207
-	if( battle_config.feature_enable_multi_crit ) {
+	if (battle_config.feature_enable_multi_crit) {
 		ShowWarning("conf/map/battle/feature.conf feature_enable_multi_crit is enabled but it requires PACKETVER 2016-12-07 or newer, disabling...\n");
 		battle_config.feature_enable_multi_crit = 0;
 	}

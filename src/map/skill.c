@@ -20474,7 +20474,7 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 					sk->nk &= ~NK_NO_CARDFIX_DEF;
 				}
 			} else if (strcmpi(type, "CritDamage") == 0) {
-				if (on) {
+				if (on != 0) {
 					sk->nk |= NK_CRITICAL;
 				} else {
 					sk->nk &= ~NK_CRITICAL;
