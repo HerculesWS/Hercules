@@ -696,6 +696,7 @@ static void initChangeTables(void)
 	status->set_sc( WM_BEYOND_OF_WARCRY       , SC_BEYOND_OF_WARCRY       , SCB_STR|SCB_CRI|SCB_MAXHP );
 	status->set_sc( WM_UNLIMITED_HUMMING_VOICE, SC_UNLIMITED_HUMMING_VOICE, SCB_NONE );
 	status->set_sc( WM_FRIGG_SONG             , SC_FRIGG_SONG             , SCB_MAXHP );
+	status->set_sc( WM_SEVERE_RAINSTORM       , SC_NO_SWITCH_EQUIP        , SCB_NONE );
 
 	/**
 	* Sorcerer
