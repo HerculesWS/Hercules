@@ -9318,6 +9318,42 @@ static void pc_hide(struct map_session_data *sd, bool show_msg)
 	clif->changeoption(&sd->bl);
 }
 
+/**
+ * Unhides a character.
+ *
+ * @param sd The character to unhide.
+ * @param show_msg Whether to show message to the character or not.
+ *
+ **/
+static void pc_unhide(struct map_session_data *sd, bool show_msg)
+{
+	nullpo_retv(sd);
+
+	sd->sc.option &= ~OPTION_INVISIBLE;
+
+	if (sd->disguise != -1)
+		status->set_viewdata(&sd->bl, sd->disguise);
+	else
+		status->set_viewdata(&sd->bl, sd->status.class);
+
+	if (show_msg)
+		clif->message(sd->fd, atcommand->msgsd(sd, 10)); // Invisible: Off
+
+	// Increment the number of pvp players on the map.
+	map->list[sd->bl.m].users_pvp++;
+
+	if (map->list[sd->bl.m].flag.pvp != 0 && map->list[sd->bl.m].flag.pvp_nocalcrank == 0) // Register the player for ranking.
+		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
+
+	// bugreport:2266
+	map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
+
+	if (sd->disguise != -1)
+		clif->spawn_unit(&sd->bl, AREA_WOS);
+
+	clif->changeoption(&sd->bl);
+}
+
 /*==========================================
  * Give an option (type) to player (sd) and display it to client
  *------------------------------------------*/
@@ -12855,6 +12891,7 @@ void pc_defaults(void)
 	pc->percentheal = pc_percentheal;
 	pc->jobchange = pc_jobchange;
 	pc->hide = pc_hide;
+	pc->unhide = pc_unhide;
 	pc->setoption = pc_setoption;
 	pc->setcart = pc_setcart;
 	pc->setfalcon = pc_setfalcon;

@@ -1045,6 +1045,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*percentheal) (struct map_session_data *sd,int hp,int sp);
 	int (*jobchange) (struct map_session_data *sd, int class, int upper);
 	void (*hide) (struct map_session_data *sd, bool show_msg);
+	void (*unhide) (struct map_session_data *sd, bool show_msg);
 	int (*setoption) (struct map_session_data *sd,int type);
 	int (*setcart) (struct map_session_data* sd, int type);
 	void (*setfalcon) (struct map_session_data *sd, bool flag);
