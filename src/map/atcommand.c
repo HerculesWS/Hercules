@@ -962,39 +962,10 @@ ACMD(option)
  *------------------------------------------*/
 ACMD(hide)
 {
-	if (pc_isinvisible(sd)) {
-		sd->sc.option &= ~OPTION_INVISIBLE;
-		if (sd->disguise != -1 )
-			status->set_viewdata(&sd->bl, sd->disguise);
-		else
-			status->set_viewdata(&sd->bl, sd->status.class);
-		clif->message(fd, msg_fd(fd,10)); // Invisible: Off
-
-		// increment the number of pvp players on the map
-		map->list[sd->bl.m].users_pvp++;
-
-		if( map->list[sd->bl.m].flag.pvp && !map->list[sd->bl.m].flag.pvp_nocalcrank ) {
-			// register the player for ranking calculations
-			sd->pvp_timer = timer->add( timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0 );
-		}
-		//bugreport:2266
-		map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
-	} else {
-		clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
-		sd->sc.option |= OPTION_INVISIBLE;
-		sd->vd.class = INVISIBLE_CLASS;
-		clif->message(fd, msg_fd(fd,11)); // Invisible: On
-
-		// decrement the number of pvp players on the map
-		map->list[sd->bl.m].users_pvp--;
-
-		if( map->list[sd->bl.m].flag.pvp && !map->list[sd->bl.m].flag.pvp_nocalcrank && sd->pvp_timer != INVALID_TIMER ) {
-			// unregister the player for ranking
-			timer->delete( sd->pvp_timer, pc->calc_pvprank_timer );
-			sd->pvp_timer = INVALID_TIMER;
-		}
-	}
-	clif->changeoption(&sd->bl);
+	if (pc_isinvisible(sd))
+		pc->unhide(sd, true);
+	else
+		pc->hide(sd, true);
 
 	return true;
 }
