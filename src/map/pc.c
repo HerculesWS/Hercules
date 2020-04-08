@@ -9365,7 +9365,13 @@ static int pc_setoption(struct map_session_data *sd, int type)
 
 	//Option has to be changed client-side before the class sprite or it won't always work (eg: Wedding sprite) [Skotlex]
 	sd->sc.option=type;
-	clif->changeoption(&sd->bl);
+
+	if ((p_type & OPTION_INVISIBLE) != 0 && (type & OPTION_INVISIBLE) == 0) // Unhide character.
+		pc->unhide(sd, false);
+	else if ((p_type & OPTION_INVISIBLE) == 0 && (type & OPTION_INVISIBLE) != 0) // Hide character.
+		pc->hide(sd, false);
+	else
+		clif->changeoption(&sd->bl);
 
 	if( (type&OPTION_RIDING && !(p_type&OPTION_RIDING)) || (type&OPTION_DRAGON && !(p_type&OPTION_DRAGON) && pc->checkskill(sd,RK_DRAGONTRAINING) > 0) ) {
 		// Mounting
