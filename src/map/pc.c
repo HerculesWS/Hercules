@@ -9288,6 +9288,36 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 	return 0;
 }
 
+/**
+ * Hides a character.
+ *
+ * @param sd The character to hide.
+ * @param show_msg Whether to show message to the character or not.
+ *
+ **/
+static void pc_hide(struct map_session_data *sd, bool show_msg)
+{
+	nullpo_retv(sd);
+
+	clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
+	sd->sc.option |= OPTION_INVISIBLE;
+	sd->vd.class = INVISIBLE_CLASS;
+
+	if (show_msg)
+		clif->message(sd->fd, atcommand->msgsd(sd, 11)); // Invisible: On
+
+	// Decrement the number of pvp players on the map.
+	map->list[sd->bl.m].users_pvp--;
+
+	if (map->list[sd->bl.m].flag.pvp != 0 && map->list[sd->bl.m].flag.pvp_nocalcrank == 0
+	    && sd->pvp_timer != INVALID_TIMER) { // Unregister the player for ranking.
+		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		sd->pvp_timer = INVALID_TIMER;
+	}
+
+	clif->changeoption(&sd->bl);
+}
+
 /*==========================================
  * Give an option (type) to player (sd) and display it to client
  *------------------------------------------*/
@@ -12824,6 +12854,7 @@ void pc_defaults(void)
 	pc->itemheal = pc_itemheal;
 	pc->percentheal = pc_percentheal;
 	pc->jobchange = pc_jobchange;
+	pc->hide = pc_hide;
 	pc->setoption = pc_setoption;
 	pc->setcart = pc_setcart;
 	pc->setfalcon = pc_setfalcon;
