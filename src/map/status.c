@@ -7809,6 +7809,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	calc_flag = status->dbs->ChangeFlagTable[type];
 	if(!(flag&SCFLAG_LOADED)) { // Do not parse val settings when loading SCs
 		switch(type) {
+			case SC_AUTOTRADE:
 			case SC_KSPROTECTED:
 				break; // Prevent calling status_change_start_unknown_sc().
 			case SC_ADORAMUS:
