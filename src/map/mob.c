@@ -5012,12 +5012,10 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 			md.status.def_ele = i32;
 			md.status.ele_lv = value;
 		} else if (!inherit) {
-			ShowWarning("mob_read_db_sub: Missing element for monster ID %d.\n", md.mob_id);
 			md.status.def_ele = ELE_NEUTRAL;
 			md.status.ele_lv = 1;
 		}
 	} else if (!inherit) {
-		ShowWarning("mob_read_db_sub: Missing element for monster ID %d.\n", md.mob_id);
 		md.status.def_ele = ELE_NEUTRAL;
 		md.status.ele_lv = 1;
 	}
