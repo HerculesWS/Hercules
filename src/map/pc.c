@@ -8325,7 +8325,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 					base_penalty *= 2;
 
 				if (sd->status.mod_death != 100)
-					base_penalty *= sd->status.mod_death / 100;
+					base_penalty = base_penalty * sd->status.mod_death / 100;
 
 				sd->status.base_exp -= min(sd->status.base_exp, base_penalty);
 				clif->updatestatus(sd, SP_BASEEXP);
@@ -8350,7 +8350,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 					job_penalty *= 2;
 
 				if (sd->status.mod_death != 100)
-					job_penalty *= sd->status.mod_death / 100;
+					job_penalty = job_penalty * sd->status.mod_death / 100;
 
 				sd->status.job_exp -= min(sd->status.job_exp, job_penalty);
 				clif->updatestatus(sd, SP_JOBEXP);

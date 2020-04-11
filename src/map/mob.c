@@ -3907,8 +3907,8 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 			}
 		}
 
-		mob_skills[i].permillage *= battle_config.mob_skill_rate / 100;
-		mob_skills[i].delay *= battle_config.mob_skill_delay / 100;
+		mob_skills[i].permillage = mob_skills[i].permillage * battle_config.mob_skill_rate / 100;
+		mob_skills[i].delay = mob_skills[i].delay * battle_config.mob_skill_delay / 100;
 		db->maxskill = ++i;
 	}
 

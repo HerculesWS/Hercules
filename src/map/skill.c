@@ -7383,7 +7383,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				int rate = 100 * (100 - (tstatus->int_ / 2 + tstatus->vit / 3 + tstatus->luk / 10));
 				int duration = skill->get_time2(skill_id, skill_lv);
 
-				duration *= (100 - (tstatus->int_ + tstatus->vit) / 2) / 100;
+				duration = duration * (100 - (tstatus->int_ + tstatus->vit) / 2) / 100;
 				status->change_start(src, bl, SC_BLIND, rate, 1, 0, 0, 0, duration, SCFLAG_NONE);
 			}
 

@@ -323,7 +323,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
-	interval *= battle_config.pet_hungry_delay_rate / 100;
+	interval = interval * battle_config.pet_hungry_delay_rate / 100;
 	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
 
 	return 0;
@@ -944,7 +944,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	else
 		intimacy += pd->petDB->r_hungry / 2; // Increase intimacy by 50% of FeedIncrement.
 
-	intimacy *= battle_config.pet_friendly_rate / 100;
+	intimacy = intimacy * battle_config.pet_friendly_rate / 100;
 	pet->set_intimate(pd, pd->pet.intimate + intimacy);
 
 	if (pd->pet.intimate == PET_INTIMACY_NONE) {

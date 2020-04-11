@@ -1713,9 +1713,9 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 			tx = *x + dx;
 			ty = *y + dy;
 			if (unit_is_dir_or_opposite(dir, UNIT_DIR_SOUTHWEST))
-				tx *= costrange / MOVE_COST;
+				tx = tx * costrange / MOVE_COST;
 			if (unit_is_dir_or_opposite(dir, UNIT_DIR_NORTHWEST))
-				ty *= costrange / MOVE_COST;
+				ty = ty * costrange / MOVE_COST;
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
@@ -1724,9 +1724,9 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 			tx = *x + dx;
 			ty = *y + dy;
 			if (unit_is_dir_or_opposite(dir, UNIT_DIR_NORTHWEST))
-				tx *= costrange / MOVE_COST;
+				tx = tx * costrange / MOVE_COST;
 			if (unit_is_dir_or_opposite(dir, UNIT_DIR_SOUTHWEST))
-				ty *= costrange / MOVE_COST;
+				ty = ty * costrange / MOVE_COST;
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
