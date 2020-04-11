@@ -323,6 +323,13 @@ enum {
 	MSC_SPAWN,
 };
 
+/** Special monster(-name) constants used to assign skills to a group of monsters. **/
+enum mob_group {
+	ALL_MOBS_NONBOSS = -1,
+	ALL_MOBS_BOSS = -2,
+	ALL_MOBS = -3,
+};
+
 /**
  * Mob IDs
  */
