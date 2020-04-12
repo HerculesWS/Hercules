@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2017  Hercules Dev Team
+//= Copyright (C) 2012-2020 Hercules Dev Team
 //= Copyright (C) Ridley
 //= Copyright (C) Steph
 //= Copyright (C) AtlantisRO
@@ -457,8 +457,8 @@ OnStart:
 	.@in_map$ = instance_mapname("1@xm_d");
 	.@in_npc$ = instance_npcname("#fac1ct");
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 16, 24, 114, 112, "Vicious Cookie", XM_COOKIE, 31, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 16, 24, 114, 112, "Evil Dwelling Box", XM_MYSTCASE, 36, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 16, 24, 114, 112, "--ja--", XM_COOKIE, 31, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 16, 24, 114, 112, "--ja--", XM_MYSTCASE, 36, .@in_npc$+"::OnMyMobDead");
 	end;
 
 OnMyMobDead:
@@ -522,7 +522,7 @@ OnAlert:
 	npctalk(_("Factory Manager: Officers! Officers!! There are humans here!!!"));
 	sleep(3000);
 	disablenpc(.@in_npc$);
-	areamonster(.@in_map$, 61, 118, 71, 128, "Toy Factory Guard", XM_CRUISER, 11, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 61, 118, 71, 128, "--ja--", XM_CRUISER, 11, .@in_npc$+"::OnMyMobDead");
 	initnpctimer();
 	end;
 
@@ -781,10 +781,10 @@ OnStart:
 	.@in_map$ = instance_mapname("1@xm_d");
 	.@in_npc$ = instance_npcname("#fac2ct");
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 140, 19, 240, 18, "Malicious Baby Ghost", XM_HYLOZOIST, 19, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 140, 19, 240, 18, "Evil Dwelling Box", XM_MYSTCASE, 16, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 140, 19, 240, 18, "Abandoned Teddy Bear", XM_TEDDY_BEAR, 22, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 140, 19, 240, 18, "Creepy Demon", XM_LUDE, 16, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 140, 19, 240, 18, "--ja--", XM_HYLOZOIST, 19, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 140, 19, 240, 18, "--ja--", XM_MYSTCASE, 16, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 140, 19, 240, 18, "--ja--", XM_TEDDY_BEAR, 22, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 140, 19, 240, 18, "--ja--", XM_LUDE, 16, .@in_npc$+"::OnMyMobDead");
 	end;
 
 OnMyMobDead:
@@ -936,7 +936,7 @@ OnAlert:
 		setarray(.@xy[0], .@mapx - 8, .@mapy - 8, .@mapx + 8, .@mapy + 8);
 		break;
 	}
-	areamonster(.@in_map$, .@xy[0], .@xy[1], .@xy[2], .@xy[3], "Corrupt Cruiser", XM_CRUISER, 21, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, .@xy[0], .@xy[1], .@xy[2], .@xy[3], "--ja--", XM_CRUISER, 21, .@in_npc$+"::OnMyMobDead");
 	donpcevent(.@in_npc$+"::OnStart");
 	initnpctimer();
 	end;
@@ -1129,10 +1129,10 @@ OnStart:
 	.@in_map$ = instance_mapname("1@xm_d");
 	.@in_npc$ = instance_npcname("#fac3ct");
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 13, 144, 121, 248, "Dancing Marionette", XM_MARIONETTE, 37, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 13, 144, 121, 248, "Decorated Evil Tree", XM_TREE, 31, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 13, 144, 121, 248, "Abandoned Teddy Bear", XM_TEDDY_BEAR, 43, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 13, 144, 121, 248, "Creepy Demon", XM_LUDE, 31, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 13, 144, 121, 248, "--ja--", XM_MARIONETTE, 37, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 13, 144, 121, 248, "--ja--", XM_TREE, 31, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 13, 144, 121, 248, "--ja--", XM_TEDDY_BEAR, 43, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 13, 144, 121, 248, "--ja--", XM_LUDE, 31, .@in_npc$+"::OnMyMobDead");
 	end;
 
 OnMyMobDead:
@@ -1154,10 +1154,10 @@ OnStart:
 	.@in_map$ = instance_mapname("1@xm_d");
 	.@in_npc$ = instance_npcname("#fac3ct2");
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 159, 215, 241, 247, "Malicious Baby Ghost", XM_HYLOZOIST, 13, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 159, 215, 241, 247, "Decorated Evil Tree", XM_TREE, 11, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 159, 215, 241, 247, "Abandoned Teddy Bear", XM_TEDDY_BEAR, 15, .@in_npc$+"::OnMyMobDead");
-	areamonster(.@in_map$, 159, 215, 241, 247, "Creepy Demon", XM_LUDE, 11, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 159, 215, 241, 247, "--ja--", XM_HYLOZOIST, 13, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 159, 215, 241, 247, "--ja--", XM_TREE, 11, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 159, 215, 241, 247, "--ja--", XM_TEDDY_BEAR, 15, .@in_npc$+"::OnMyMobDead");
+	areamonster(.@in_map$, 159, 215, 241, 247, "--ja--", XM_LUDE, 11, .@in_npc$+"::OnMyMobDead");
 	end;
 
 OnMyMobDead:
@@ -1178,9 +1178,9 @@ OnStart:
 	killmonster(.@in_map$, .@in_npc$+"::OnMyMobDead");	// Custom check to prevent abuse.
 	// Aegis used wrong Antonio Id. Changed from ANTONIO to XM_ANTONIO
 	if (rand(1, 10) > 3)
-		'antonio_gid = areamonster(.@in_map$, 13, 144, 121, 248, "Wicked Vice Plant Manager", XM_ANTONIO, 1, .@in_npc$+"::OnMyMobDead");
+		'antonio_gid = areamonster(.@in_map$, 13, 144, 121, 248, "--ja--", XM_ANTONIO, 1, .@in_npc$+"::OnMyMobDead");
 	else
-		'antonio_gid = areamonster(.@in_map$, 159, 215, 241, 247, "Wicked Vice Plant Manager", XM_ANTONIO, 1, .@in_npc$+"::OnMyMobDead");
+		'antonio_gid = areamonster(.@in_map$, 159, 215, 241, 247, "--ja--", XM_ANTONIO, 1, .@in_npc$+"::OnMyMobDead");
 	end;
 
 OnEnd:
@@ -1582,10 +1582,10 @@ OnStart:
 	.@in_map$ = instance_mapname("1@xm_d");
 	.@gl_npc1$ = instance_npcname("#finalbs2");
 	killmonster(.@in_map$, .@gl_npc1$+"::OnMyMobDead");
-	'xm_celine_gid = monster(.@in_map$, 231, 184, "Celine Kimi", XM_CELINE_KIMI, 1, .@gl_npc1$+"::OnMyMobDead");
+	'xm_celine_gid = monster(.@in_map$, 231, 184, "--ja--", XM_CELINE_KIMI, 1, .@gl_npc1$+"::OnMyMobDead");
 	'g_xm_celine_gid = monster(.@in_map$, 226, 190, "Celine's Illusion", G_XM_CELINE_KIMI, 1, .@gl_npc1$+"::OnMyMobDead");
-	// setunitdata('xm_celine_gid, UDT_MAXHP, 20000000); //Need to Update Script Command!
-	// setunitdata('g_xm_celine_gid, UDT_MAXHP, 20000000); //Need to Update Script Command!
+	setunitdata('xm_celine_gid, UDT_MAXHP, 20000000);
+	setunitdata('g_xm_celine_gid, UDT_MAXHP, 20000000);
 	unittalk('xm_celine_gid, _("I don't want to be abandoned here!"));
 	initnpctimer();
 	end;
@@ -1613,15 +1613,15 @@ OnTimer10000:
 	.@mob_dead_num = mobcount(.@in_map$, instance_npcname("#finalbs2")+"::OnMyMobDead");
 	if (.@mob_dead_num > 1) {
 		.@gl_npc1$ = instance_npcname("#finalbs2");
-		// .@MOB_HP1 = getunitdata('xm_celine_gid, UDT_HP); //Need to Update Script Command!
-		// .@MOB_HP2 = getunitdata('g_xm_celine_gid, UDT_HP); //Need to Update Script Command!
+		.@MOB_HP1 = getunitdata('xm_celine_gid, UDT_HP);
+		.@MOB_HP2 = getunitdata('g_xm_celine_gid, UDT_HP);
 		if (.@MOB_HP1 > .@MOB_HP2) {
 			.@gp_hp = (.@MOB_HP1 - .@MOB_HP2);
 			if (.@gp_hp > 100000) {
 				.@set_bs_hp = ((.@gp_hp * 5) / 10);
 				.@MOB_HP3 = min(.@MOB_HP1 + .@set_bs_hp, 66666666);
-				// setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
-				// setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
+				setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
+				setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
 				donpcevent(instance_npcname("#eff_f01")+"::OnStart");
 				unittalk('xm_celine_gid, _("Let me heal you up!"));
 				sleep(1000);
@@ -1633,8 +1633,8 @@ OnTimer10000:
 			if (.@gp_hp > 100000) {
 				.@set_bs_hp = ((.@gp_hp * 5) / 10);
 				.@MOB_HP3 = min(.@MOB_HP2 + .@set_bs_hp, 66666666);
-				// setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
-				// setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3); //Need to Update Script Command!
+				setunitdata('xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
+				setunitdata('g_xm_celine_gid, UDT_MAXHP, .@MOB_HP3);
 				donpcevent(instance_npcname("#eff_f01")+"::OnStart");
 				unittalk('g_xm_celine_gid, _("Let me restore you up!"));
 				sleep(1000);
@@ -1816,7 +1816,7 @@ OnTimer1000:
 		break;
 	}
 	getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_NPC);
-	for (.@i = 0; .@i < .@idnum001; ++.@i) {
+	for (.@i = 0; .@i < .@item_count; ++.@i) {
 		.@idx = rand(.@mapx - 2, .@mapx + 2);
 		.@idy = rand(.@mapy - 2, .@mapy + 2);
 		makeitem(Bloody_Coin, 1, .@mapname$, .@idx, .@idy);
