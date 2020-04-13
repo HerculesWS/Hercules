@@ -286,8 +286,7 @@ xmas,240,294,3	script	Bearded Joe#pa0829	4_M_05,{
 	.@compo_num = getequiprefinerycnt(.@eq_num[.@s]);
 	setarray(.@equip_card[0], getequipcardid(.@eq_num[.@s], 0), getequipcardid(.@eq_num[.@s], 1), getequipcardid(.@eq_num[.@s], 2), getequipcardid(.@eq_num[.@s], 3));
 	switch (.@enc_s_n) {
-	case 2486:
-		.@enc_ts = Shadow_Walk_;
+	case Shadow_Walk_:
 		.@enc_coin = 1;
 		.@sc_type = 2;
 		break;
