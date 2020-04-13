@@ -9722,6 +9722,17 @@ static void clif_elemname_ack(int fd, struct block_list *bl)
 	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
+static void clif_skillname_ack(int fd, struct block_list *bl)
+{
+}
+
+static void clif_itemname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	ShowError("clif_itemname_ack: bad type %u(%d)\n", bl->type, bl->id);
+	Assert_retv(0);
+}
+
 static void clif_unknownname_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
@@ -9757,6 +9768,12 @@ static void clif_blname_ack(int fd, struct block_list *bl)
 			break;
 		case BL_ELEM:
 			clif->elemname_ack(fd, bl);
+			break;
+		case BL_ITEM:
+			clif->itemname_ack(fd, bl);
+			break;
+		case BL_SKILL:
+			clif->skillname_ack(fd, bl);
 			break;
 		default:
 			clif->unknownname_ack(fd, bl);
@@ -24346,6 +24363,8 @@ void clif_defaults(void)
 	clif->mobname_normal_ack = clif_mobname_normal_ack;
 	clif->chatname_ack = clif_chatname_ack;
 	clif->elemname_ack = clif_elemname_ack;
+	clif->skillname_ack = clif_skillname_ack;
+	clif->itemname_ack = clif_itemname_ack;
 	clif->unknownname_ack = clif_unknownname_ack;
 	clif->monster_hp_bar = clif_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;

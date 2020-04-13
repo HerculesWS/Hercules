@@ -952,6 +952,8 @@ struct clif_interface {
 	void (*mobname_normal_ack) (int fd, struct block_list *bl);
 	void (*chatname_ack) (int fd, struct block_list *bl);
 	void (*elemname_ack) (int fd, struct block_list *bl);
+	void (*skillname_ack) (int fd, struct block_list *bl);
+	void (*itemname_ack) (int fd, struct block_list *bl);
 	void (*unknownname_ack) (int fd, struct block_list *bl);
 	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
 	int (*hpmeter) (struct map_session_data *sd);
