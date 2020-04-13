@@ -1132,7 +1132,7 @@ static int pet_ai_sub_foreachclient(struct map_session_data *sd, va_list ap)
 {
 	int64 tick = va_arg(ap,int64);
 	nullpo_ret(sd);
-	if(sd->status.pet_id && sd->pd)
+	if (sd->bl.prev != NULL && sd->status.pet_id != 0 && sd->pd != NULL && sd->pd->bl.prev != NULL)
 		pet->ai_sub_hard(sd->pd,sd,tick);
 
 	return 0;
