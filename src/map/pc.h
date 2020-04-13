@@ -439,7 +439,7 @@ END_ZEROED_BLOCK;
 	int spiritball, spiritball_old;
 	int spirit_timer[MAX_SPIRITBALL];
 	int charm_count;
-	int charm_type;
+	enum spirit_charm_types charm_type;
 	int charm_timer[MAX_SPIRITCHARM];
 	unsigned char potion_success_counter; //Potion successes in row counter
 	unsigned char mission_count; //Stores the bounty kill count for TK_MISSION
@@ -1129,8 +1129,8 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*load_combo) (struct map_session_data *sd);
 
-	void (*add_charm) (struct map_session_data *sd, int interval, int max, int type);
-	void (*del_charm) (struct map_session_data *sd, int count, int type);
+	void (*add_charm) (struct map_session_data *sd, int interval, int max, enum spirit_charm_types type);
+	void (*del_charm) (struct map_session_data *sd, int count, enum spirit_charm_types type);
 
 	void (*baselevelchanged) (struct map_session_data *sd);
 	int (*level_penalty_mod) (int diff, unsigned char race, uint32 mode, int type);
