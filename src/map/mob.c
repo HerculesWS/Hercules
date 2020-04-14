@@ -3388,42 +3388,50 @@ static struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md, int rate
 
 	return NULL;
 }
-/*==========================================
- * What a status state suits by nearby MOB is looked for.
- *------------------------------------------*/
+
+/**
+ * Checks if the passed monster/character meets the passed status change requirements
+ * and returns it by reference parameter on success.
+ *
+ * @param bl The monster/character to check.
+ * @param ap List of arguments. (Source monster, MSC_* flag, SC_* flag, reference bl.)
+ * @return Always 0.
+ *
+ **/
 static int mob_getfriendstatus_sub(struct block_list *bl, va_list ap)
 {
-	int cond1,cond2;
-	struct block_list **fr = NULL;
-	struct mob_data *md = NULL;
-	int flag=0;
-
 	nullpo_ret(bl);
-	nullpo_ret(md = va_arg(ap, struct mob_data *));
+
+	struct mob_data *md = va_arg(ap, struct mob_data *);
+
+	nullpo_ret(md);
 
 	if (md->bl.id == bl->id && (battle_config.mob_ai & 0x10) == 0)
 		return 0;
 
 	if (battle->check_target(&md->bl, bl, BCT_ENEMY) > 0)
 		return 0;
-	cond1=va_arg(ap,int);
-	cond2=va_arg(ap,int);
-	fr = va_arg(ap, struct block_list **);
+
+	int cond1 = va_arg(ap, int);
+	int cond2 = va_arg(ap, int);
+	struct block_list **fr = va_arg(ap, struct block_list **);
 
 	if ((*fr) != NULL) // A friend was already found.
 		return 0;
 
+	int flag = 0;
 	struct status_change *sc = status->get_sc(bl);
 
-	if( cond2==-1 ){
-		int j;
-		for(j=SC_COMMON_MIN;j<=SC_COMMON_MAX && !flag;j++){
-			if ((flag = (sc->data[j] != NULL)) != 0) // Once an effect was found, break out. [Skotlex]
+	if (cond2 == -1) { // Check for any of the common status alignments.
+		for (int i = SC_COMMON_MIN; i <= SC_COMMON_MAX; i++) {
+			if ((flag = (sc->data[i] != NULL)) != 0) // Once an effect was found, break out. [Skotlex]
 				break;
 		}
-	}else
+	} else {
 		flag = (sc->data[cond2] != NULL);
-	if( flag^( cond1==MSC_FRIENDSTATUSOFF ) )
+	}
+
+	if ((flag ^ (cond1 == MSC_FRIENDSTATUSOFF)) != 0)
 		(*fr) = bl;
 
 	return 0;
