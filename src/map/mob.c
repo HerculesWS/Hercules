@@ -5564,51 +5564,70 @@ static bool mob_skill_db_libconfig_sub(struct config_setting_t *it, int n)
 	return true;
 }
 
+/**
+ * Reads a single monster skill from DB.
+ *
+ * @param it The libconfig settings block, which contains the skill data.
+ * @param n The skill data block's index within the parent monster block.
+ * @param mob_id The monster's ID.
+ * @return true on success, false on failure.
+ *
+ **/
 static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n, int mob_id)
 {
-	int i, j, idx = 0;
-	int skill_id = 0;
-	int skill_idx = 0;
-	bool clearskills = false;
-	const char *name = config_setting_name(it);
-	struct mob_skill *ms, gms;
-
 	nullpo_retr(false, it);
 	Assert_retr(false, mob_id <= 0 || mob->db(mob_id) != mob->dummy);
 
-	if (!(skill_id = skill->name2id(name))) {
-		ShowWarning("mob_skill_db_libconfig_sub_skill: Non existant skill id %d in monster %d, skipping.\n", skill_id, mob_id);
+	int skill_id = 0;
+	const char *name = config_setting_name(it);
+	const char *mob_str = (mob_id < 0) ? "global ID" : "monster";
+
+	if ((skill_id = skill->name2id(name)) == 0) {
+		ShowWarning("%s: Non existant skill %d in %s %d, skipping.\n", __func__, skill_id, mob_str, mob_id);
 		return false;
 	}
 
+	const char *skill_name = skill->get_name(skill_id);
+	bool clearskills = false;
+
 	// If ClearSkills flag is enabled clear all the previous skills.
-	if (libconfig->setting_lookup_bool_real(it, "ClearSkills", &clearskills) && clearskills) {
+	if (libconfig->setting_lookup_bool_real(it, "ClearSkills", &clearskills) == CONFIG_TRUE && clearskills) {
 		if (mob_id < 0) {
-			ShowError("mob_skill_db_libconfig_sub_skill: Global skill clearing is not supported. (Global ID %d.)\n",
-				  mob_id);
+			ShowError("%s: Global skill clearing is not supported, skipping. (Global ID %d, skill %d (%s).)\n",
+				  __func__, mob_id, skill_id, skill_name);
 			return false;
 		}
+
 		memset(mob->db_data[mob_id]->skill, 0, sizeof(struct mob_skill) * MAX_MOBSKILL);
 		mob->db_data[mob_id]->maxskill = 0;
 		return true;
 	}
 
-	if (mob_id < 0) {
-		// Prepare global skill. [Skotlex]
+	struct mob_skill *ms;
+
+	if (mob_id < 0) { // Prepare global skill. [Skotlex]
+		struct mob_skill gms;
 		memset(&gms, 0, sizeof (struct mob_skill));
 		ms = &gms;
 	} else {
+		int idx = 0;
+
 		ARR_FIND(0, MAX_MOBSKILL, idx, (ms = &mob->db_data[mob_id]->skill[idx])->skill_id == 0);
+
 		if (idx == MAX_MOBSKILL) {
-			ShowError("mob_skill_db_libconfig_sub_skill: Too many skills for monster %d\n", mob_id);
+			ShowError("%s: Too many skills for monster %d, skipping.\n", __func__, mob_id);
 			return false;
 		}
+
+		mob->db_data[mob_id]->maxskill = idx + 1;
 	}
+
 	ms->skill_id = skill_id;
 
 	int i32 = MSS_ANY;
 	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
-		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill state %d for skill id %d in monster %d, defaulting to MSS_ANY.\n", i32, skill_id, mob_id);
+		ShowWarning("%s: Invalid skill state %d for skill %d (%s) in %s %d, defaulting to MSS_ANY.\n",
+			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
 		i32 = MSS_ANY;
 	}
 	ms->state = i32;
@@ -5616,15 +5635,16 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	int res = libconfig->setting_lookup_int(it, "SkillLevel", &i32);
 	ms->skill_lv = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, battle_config.mob_max_skilllvl);
 
-	//Apply battle_config modifiers to rate (permillage) and delay [Skotlex]
 	res = libconfig->setting_lookup_int(it, "Rate", &i32);
 	ms->permillage = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, 10000);
 
+	// Apply battle_config modifier to rate (permillage).
 	if (battle_config.mob_skill_rate != 100)
 		ms->permillage = ms->permillage * battle_config.mob_skill_rate / 100;
+
 	if (ms->permillage > 10000)
 		ms->permillage = 10000;
-	else if (ms->permillage == 0 && battle_config.mob_skill_rate)
+	else if (ms->permillage == 0 && battle_config.mob_skill_rate != 0)
 		ms->permillage = 1;
 
 	res = libconfig->setting_lookup_int(it, "CastTime", &i32);
@@ -5633,6 +5653,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	res = libconfig->setting_lookup_int(it, "Delay", &i32);
 	ms->delay = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, MOB_MAX_DELAY);
 
+	// Apply battle_config modifier to delay.
 	if (battle_config.mob_skill_delay != 100)
 		ms->delay = ms->delay * battle_config.mob_skill_delay / 100;
 
@@ -5643,32 +5664,34 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 
 	i32 = MST_TARGET;
 	if (mob->lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
-		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill target %d for skill id %d in monster %d, defaulting to MST_TARGET.\n", i32, skill_id, mob_id);
+		ShowWarning("%s: Invalid skill target %d for skill %d (%s) in %s %d, defaulting to MST_TARGET.\n",
+			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
 		i32 = MST_TARGET;
 	}
 	ms->target = i32;
 
 	// Check the target condition for non-ground skills. (Ground skills can use every target.)
-	skill_idx = skill->get_index(skill_id);
-	if (skill->get_casttype2(skill_idx) != CAST_GROUND && ms->target > MST_MASTER) {
-		ShowWarning("mob_skill_db_libconfig_sub_skill: Wrong mob skill target 'around' for non-ground skill %d (%s) for %s.\n",
-			    ms->skill_id, skill->dbs->db[skill_idx].name, mob_id < 0 ? "all mobs" : mob->db_data[mob_id]->sprite);
+	if (skill->get_casttype2(skill->get_index(skill_id)) != CAST_GROUND && ms->target > MST_MASTER) {
+		ShowWarning("%s: Wrong skill target %d for non-ground skill %d (%s) in %s %d, defaulting to MST_TARGET.\n",
+			    __func__, ms->target, skill_id, skill_name, mob_str, mob_id);
 		ms->target = MST_TARGET;
 	}
 
 	i32 = MSC_ALWAYS;
 	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_SPAWN)) {
-		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill condition %d for skill id %d in monster %d, defaulting to MSC_ALWAYS.\n", i32, skill_id, mob_id);
+		ShowWarning("%s: Invalid skill condition %d for skill id %d (%s) in %s %d, defaulting to MSC_ALWAYS.\n",
+			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
 		i32 = MSC_ALWAYS;
 	}
 	ms->cond1 = i32;
 
 	ms->cond2 = !mob->lookup_const(it, "ConditionData", &i32) ? 0 : cap_value(i32, SHRT_MIN, SHRT_MAX);
 
-	for (i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		char valname[16];
 		sprintf(valname, "val%1d", i);
-		if (libconfig->setting_lookup_int(it, valname, &i32))
+
+		if (libconfig->setting_lookup_int(it, valname, &i32) == CONFIG_TRUE)
 			ms->val[i] = i32;
 	}
 
@@ -5679,17 +5702,17 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 
 		if (mob_id > 0 && (uint32)ms->val[1] == mob->db(mob_id)->status.mode) {
 			ms->val[1] = MD_NONE;
-			ms->val[4] = 1; //request to return mode to normal.
+			ms->val[4] = 1; // Request to return mode to normal.
 		}
 	}
 
 	if (ms->skill_id == NPC_EMOTION_ON && mob_id > 0 && ms->val[1] != MD_NONE) {
-		//Adds a mode to the mob.
-		//Remove aggressive mode when the new mob type is passive.
-		if (!(ms->val[1] & MD_AGGRESSIVE))
+		// Add a mode to the mob and remove aggressive mode if the new mode is passive.
+		if ((ms->val[1] & MD_AGGRESSIVE) == 0)
 			ms->val[3] |= MD_AGGRESSIVE;
-		ms->val[2] |= (uint32)ms->val[1]; //Add the new mode.
-		ms->val[1] = MD_NONE; //Do not "set" it.
+
+		ms->val[2] |= (uint32)ms->val[1]; // Add the new mode.
+		ms->val[1] = MD_NONE; // Do not "set" it.
 	}
 
 	res = libconfig->setting_lookup_int(it, "Emotion", &i32);
@@ -5697,42 +5720,45 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 
 	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) == CONFIG_TRUE) {
 		if (i32 <= 0 || i32 > MAX_MOB_CHAT || mob->chat_db[i32] == NULL) {
-			ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid msg id %d for skill id %d in monster %d, ignoring.\n", i32, skill_id, mob_id);
+			ShowWarning("%s: Invalid message ID %d for skill %d (%s) in %s %d, ignoring.\n",
+				    __func__, i32, skill_id, skill_name, mob_str, mob_id);
 		} else {
 			ms->msg_id = i32;
 		}
 	}
 
-	if (mob_id < 0) {
-		// Set this skill to ALL mobs. [Skotlex]
-		mob_id *= -1;
-		for (i = 1; i < MAX_MOB_DB; i++) {
+	if (mob_id < 0) { // Global skill assignment.
+		mob_id = -mob_id;
+
+		for (int i = 1; i < MAX_MOB_DB; i++) {
 			if (mob->db_data[i] == NULL)
 				continue;
-			if (mob->db_data[i]->status.mode & MD_BOSS) {
-				if (!(mob_id & 2)) //Skill not for bosses
+
+			if ((mob->db_data[i]->status.mode & MD_BOSS) != 0) {
+				if ((mob_id & 2) == 0) // Skill not for boss monsters.
 					continue;
 			} else {
-				if (!(mob_id & 1)) //Skill not for normal enemies.
+				if ((mob_id & 1) == 0) // Skill not for normal monsters.
 					continue;
 			}
-			ARR_FIND(0, MAX_MOBSKILL, j, mob->db_data[i]->skill[j].skill_id == 0);
-			if (j == MAX_MOBSKILL) {
-				ShowError("mob_skill_db_libconfig_sub_skill: Too many skills for monster %d. (Global ID %d.)\n",
-					  i, -mob_id);
+
+			int idx;
+
+			ARR_FIND(0, MAX_MOBSKILL, idx, mob->db_data[i]->skill[idx].skill_id == 0);
+
+			if (idx == MAX_MOBSKILL) {
+				ShowError("%s: Too many skills for monster %d in global ID %d, skipping.\n",
+					  __func__, i, -mob_id);
 				continue;
 			}
 
-			memcpy(&mob->db_data[i]->skill[j], ms, sizeof(struct mob_skill));
-			mob->db_data[i]->maxskill = j + 1;
+			memcpy(&mob->db_data[i]->skill[idx], ms, sizeof(struct mob_skill));
+			mob->db_data[i]->maxskill = idx + 1;
 		}
-	} else { //Skill set on a single mob.
-		mob->db_data[mob_id]->maxskill = idx + 1;
 	}
 
 	return true;
 }
-
 
 /*==========================================
  * mob_skill_db.txt reading
