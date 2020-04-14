@@ -78,6 +78,7 @@ struct mob_interface *mob;
 // Move probability for mobs away from players (rate of 1000 minute)
 // in Aegis, this is 100% for mobs that have been activated by players and none otherwise.
 #define MOB_LAZYMOVEPERC(md) ((md)->state.spotted?1000:0)
+#define MOB_MAX_CASTTIME (10 * 60 * 1000) // Maximum cast time for monster skills. (10 minutes)
 #define MOB_MAX_DELAY (24*3600*1000)
 #define MAX_MINCHASE 30 //Max minimum chase value to use for mobs.
 #define RUDE_ATTACKED_COUNT 2 //After how many rude-attacks should the skill be used?
@@ -5499,7 +5500,6 @@ static bool mob_skill_db_libconfig_sub(struct config_setting_t *it, int n)
 static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n, int mob_id)
 {
 	int i, j, idx = 0;
-	int i32;
 	int skill_id = 0;
 	int skill_idx = 0;
 	bool clearskills = false;
@@ -5539,19 +5539,19 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 	ms->skill_id = skill_id;
 
+	int i32 = MSS_ANY;
 	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
 		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill state %d for skill id %d in monster %d, defaulting to MSS_ANY.\n", i32, skill_id, mob_id);
 		i32 = MSS_ANY;
 	}
 	ms->state = i32;
 
-	if (!libconfig->setting_lookup_int(it, "SkillLevel", &i32) || i32 <= 0)
-		i32 = 1;
-	ms->skill_lv = i32 > battle_config.mob_max_skilllvl ? battle_config.mob_max_skilllvl : i32; //we strip max skill level
+	int res = libconfig->setting_lookup_int(it, "SkillLevel", &i32);
+	ms->skill_lv = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, battle_config.mob_max_skilllvl);
 
 	//Apply battle_config modifiers to rate (permillage) and delay [Skotlex]
-	if (libconfig->setting_lookup_int(it, "Rate", &i32))
-		ms->permillage = i32;
+	res = libconfig->setting_lookup_int(it, "Rate", &i32);
+	ms->permillage = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, 10000);
 
 	if (battle_config.mob_skill_rate != 100)
 		ms->permillage = ms->permillage * battle_config.mob_skill_rate / 100;
@@ -5560,22 +5560,24 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	else if (ms->permillage == 0 && battle_config.mob_skill_rate)
 		ms->permillage = 1;
 
-	if (libconfig->setting_lookup_int(it, "CastTime", &i32) && i32 > 0)
-		ms->casttime = i32;
+	res = libconfig->setting_lookup_int(it, "CastTime", &i32);
+	ms->casttime = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, MOB_MAX_CASTTIME);
 
-	if (libconfig->setting_lookup_int(it, "Delay", &i32))
-		ms->delay = i32;
+	res = libconfig->setting_lookup_int(it, "Delay", &i32);
+	ms->delay = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, MOB_MAX_DELAY);
+
 	if (battle_config.mob_skill_delay != 100)
 		ms->delay = ms->delay * battle_config.mob_skill_delay / 100;
-	if (ms->delay < 0 || ms->delay > MOB_MAX_DELAY) //time overflow?
-		ms->delay = MOB_MAX_DELAY;
 
-	if (libconfig->setting_lookup_bool(it, "Cancelable", &i32))
-		ms->cancel = (i32 == 0) ? 0 : 1;
+	ms->delay = min(ms->delay, MOB_MAX_DELAY);
 
+	res = libconfig->setting_lookup_bool(it, "Cancelable", &i32);
+	ms->cancel = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, 1);
+
+	i32 = MST_TARGET;
 	if (mob->lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
 		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill target %d for skill id %d in monster %d, defaulting to MST_TARGET.\n", i32, skill_id, mob_id);
-		ms->target = MST_TARGET;
+		i32 = MST_TARGET;
 	}
 	ms->target = i32;
 
@@ -5595,14 +5597,14 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ms->target = MST_TARGET;
 	}
 
+	i32 = MSC_ALWAYS;
 	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_SPAWN)) {
 		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill condition %d for skill id %d in monster %d, defaulting to MSC_ALWAYS.\n", i32, skill_id, mob_id);
-		ms->cond1 = MSC_ALWAYS;
+		i32 = MSC_ALWAYS;
 	}
 	ms->cond1 = i32;
 
-	if (mob->lookup_const(it, "ConditionData", &i32))
-		ms->cond2 = i32;
+	ms->cond2 = !mob->lookup_const(it, "ConditionData", &i32) ? 0 : cap_value(i32, SHRT_MIN, SHRT_MAX);
 
 	for (i = 0; i < 5; i++) {
 		char valname[16];
@@ -5631,13 +5633,11 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ms->val[1] = MD_NONE; //Do not "set" it.
 	}
 
-	if (libconfig->setting_lookup_int(it, "Emotion", &i32))
-		ms->emotion = i32;
-	else
-		ms->emotion = -1;
+	res = libconfig->setting_lookup_int(it, "Emotion", &i32);
+	ms->emotion = (res == CONFIG_FALSE) ? -1 : cap_value(i32, -1, SHRT_MAX);
 
-	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) && i32 > 0 && i32 <= MAX_MOB_CHAT) {
-		if (mob->chat_db[i32] == NULL) {
+	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) == CONFIG_TRUE) {
+		if (i32 <= 0 || i32 > MAX_MOB_CHAT || mob->chat_db[i32] == NULL) {
 			ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid msg id %d for skill id %d in monster %d, ignoring.\n", i32, skill_id, mob_id);
 		} else {
 			ms->msg_id = i32;
