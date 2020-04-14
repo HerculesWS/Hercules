@@ -3529,7 +3529,8 @@ static int mobskill_use(struct mob_data *md, int64 tick, int event)
 				case MSC_ATTACKPCGE: // attack pc >= num
 					flag = (unit->counttargeted(&md->bl) >= c2); break;
 				case MSC_AFTERSKILL:
-					flag = (md->ud.skill_id == c2); break;
+					flag = (md->ud.skill_id == c2 || c2 == 0);
+					break;
 				case MSC_RUDEATTACKED:
 					flag = (md->state.attacked_count >= RUDE_ATTACKED_COUNT);
 					if (flag) md->state.attacked_count = 0; //Rude attacked count should be reset after the skill condition is met. Thanks to Komurka [Skotlex]
