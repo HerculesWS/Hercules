@@ -5655,8 +5655,11 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 					continue;
 			}
 			ARR_FIND(0, MAX_MOBSKILL, j, mob->db_data[i]->skill[j].skill_id == 0);
-			if (j == MAX_MOBSKILL)
+			if (j == MAX_MOBSKILL) {
+				ShowError("mob_skill_db_libconfig_sub_skill: Too many skills for monster %d. (Global ID %d.)\n",
+					  i, -mob_id);
 				continue;
+			}
 
 			memcpy(&mob->db_data[i]->skill[j], ms, sizeof(struct mob_skill));
 			mob->db_data[i]->maxskill = j + 1;
