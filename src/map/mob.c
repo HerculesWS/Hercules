@@ -5581,19 +5581,11 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 	ms->target = i32;
 
-	//Check that the target condition is right for the skill type. [Skotlex]
+	// Check the target condition for non-ground skills. (Ground skills can use every target.)
 	skill_idx = skill->get_index(skill_id);
-	if (skill->get_casttype2(skill_idx) == CAST_GROUND) {//Ground skill.
-		if (ms->target > MST_AROUND) {
-			ShowWarning("mob_skill_db_libconfig_sub_skill: Wrong mob skill target for ground skill %d (%s) for %s.\n",
-				ms->skill_id, skill->dbs->db[skill_idx].name,
-				mob_id < 0 ? "all mobs" : mob->db_data[mob_id]->sprite);
-			ms->target = MST_TARGET;
-		}
-	} else if (ms->target > MST_MASTER) {
+	if (skill->get_casttype2(skill_idx) != CAST_GROUND && ms->target > MST_MASTER) {
 		ShowWarning("mob_skill_db_libconfig_sub_skill: Wrong mob skill target 'around' for non-ground skill %d (%s) for %s.\n",
-			ms->skill_id, skill->dbs->db[skill_idx].name,
-			mob_id < 0 ? "all mobs" : mob->db_data[mob_id]->sprite);
+			    ms->skill_id, skill->dbs->db[skill_idx].name, mob_id < 0 ? "all mobs" : mob->db_data[mob_id]->sprite);
 		ms->target = MST_TARGET;
 	}
 
