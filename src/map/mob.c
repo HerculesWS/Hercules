@@ -3393,42 +3393,49 @@ static struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md, int rate
 static int mob_getfriendstatus_sub(struct block_list *bl, va_list ap)
 {
 	int cond1,cond2;
-	struct mob_data **fr = NULL, *md = NULL, *mmd = NULL;
+	struct block_list **fr = NULL;
+	struct mob_data *md = NULL;
 	int flag=0;
 
 	nullpo_ret(bl);
-	Assert_ret(bl->type == BL_MOB);
-	md = BL_UCAST(BL_MOB, bl);
-	nullpo_ret(mmd=va_arg(ap,struct mob_data *));
+	nullpo_ret(md = va_arg(ap, struct mob_data *));
 
-	if( mmd->bl.id == bl->id && !(battle_config.mob_ai&0x10) )
+	if (md->bl.id == bl->id && (battle_config.mob_ai & 0x10) == 0)
 		return 0;
 
-	if (battle->check_target(&mmd->bl,bl,BCT_ENEMY)>0)
+	if (battle->check_target(&md->bl, bl, BCT_ENEMY) > 0)
 		return 0;
 	cond1=va_arg(ap,int);
 	cond2=va_arg(ap,int);
-	fr=va_arg(ap,struct mob_data **);
+	fr = va_arg(ap, struct block_list **);
+
+	if ((*fr) != NULL) // A friend was already found.
+		return 0;
+
+	struct status_change *sc = status->get_sc(bl);
+
 	if( cond2==-1 ){
 		int j;
 		for(j=SC_COMMON_MIN;j<=SC_COMMON_MAX && !flag;j++){
-			if ((flag=(md->sc.data[j] != NULL))) //Once an effect was found, break out. [Skotlex]
+			if ((flag = (sc->data[j] != NULL)) != 0) // Once an effect was found, break out. [Skotlex]
 				break;
 		}
 	}else
-		flag=( md->sc.data[cond2] != NULL );
+		flag = (sc->data[cond2] != NULL);
 	if( flag^( cond1==MSC_FRIENDSTATUSOFF ) )
-		(*fr)=md;
+		(*fr) = bl;
 
 	return 0;
 }
 
-static struct mob_data *mob_getfriendstatus(struct mob_data *md, int cond1, int cond2)
+static struct block_list *mob_getfriendstatus(struct mob_data *md, int cond1, int cond2)
 {
-	struct mob_data* fr = NULL;
+	struct block_list *fr = NULL;
 	nullpo_ret(md);
 
-	map->foreachinrange(mob->getfriendstatus_sub, &md->bl, 8,BL_MOB, md,cond1,cond2,&fr);
+	int type = (md->special_state.ai != AI_NONE) ? BL_PC : BL_MOB;
+
+	map->foreachinrange(mob->getfriendstatus_sub, &md->bl, 8, type, md, cond1, cond2, &fr);
 	return fr;
 }
 
@@ -3440,7 +3447,6 @@ static int mobskill_use(struct mob_data *md, int64 tick, int event)
 	struct mob_skill *ms;
 	struct block_list *fbl = NULL; //Friend bl, which can either be a BL_PC or BL_MOB depending on the situation. [Skotlex]
 	struct block_list *bl;
-	struct mob_data *fmd = NULL;
 	int i,j,n;
 
 	nullpo_ret(md);
@@ -3512,7 +3518,8 @@ static int mobskill_use(struct mob_data *md, int64 tick, int event)
 					flag = ((fbl = mob->getfriendhprate(md, ms[i].cond2, ms[i].val[0])) != NULL); break;
 				case MSC_FRIENDSTATUSON: // friend status[num] on
 				case MSC_FRIENDSTATUSOFF: // friend status[num] off
-					flag = ((fmd = mob->getfriendstatus(md, ms[i].cond1, ms[i].cond2)) != NULL); break;
+					flag = ((fbl = mob->getfriendstatus(md, ms[i].cond1, ms[i].cond2)) != NULL);
+					break;
 				case MSC_SLAVELT: // slave < num
 					flag = (mob->countslave(&md->bl) < c2 ); break;
 				case MSC_ATTACKPCGT: // attack pc > num
@@ -3564,7 +3571,7 @@ static int mobskill_use(struct mob_data *md, int64 tick, int event)
 						break;
 					FALLTHROUGH
 				case MST_FRIEND:
-					bl = fbl?fbl:(fmd?&fmd->bl:&md->bl);
+					bl = (fbl != NULL) ? fbl : &md->bl;
 					break;
 				default:
 					bl = &md->bl;
@@ -3609,9 +3616,6 @@ static int mobskill_use(struct mob_data *md, int64 tick, int event)
 				case MST_FRIEND:
 					if (fbl) {
 						bl = fbl;
-						break;
-					} else if (fmd) {
-						bl = &fmd->bl;
 						break;
 					} // else fall through
 					FALLTHROUGH
