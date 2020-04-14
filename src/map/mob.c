@@ -3429,14 +3429,25 @@ static int mob_getfriendstatus_sub(struct block_list *bl, va_list ap)
 	return 0;
 }
 
+/**
+ * Gets a random monster/character within a range of 8 cells around md.
+ * If md is summoned (no monster slave!) a character is picker, otherwise a monster.
+ *
+ * @param md The monster which tries to cast a skill.
+ * @param cond1 Whether to check for active or inactive status change. (MSC_FRIENDSTATUSON/MSC_FRIENDSTATUSOFF)
+ * @param cond2 The status change (SC_* flag) to check.
+ * @return A randomly picked monster/character within range.
+ *
+ **/
 static struct block_list *mob_getfriendstatus(struct mob_data *md, int cond1, int cond2)
 {
-	struct block_list *fr = NULL;
 	nullpo_ret(md);
 
 	int type = (md->special_state.ai != AI_NONE) ? BL_PC : BL_MOB;
+	struct block_list *fr = NULL;
 
 	map->foreachinrange(mob->getfriendstatus_sub, &md->bl, 8, type, md, cond1, cond2, &fr);
+
 	return fr;
 }
 
