@@ -1520,7 +1520,7 @@ static int mob_unlocktarget(struct mob_data *md, int64 tick)
 		FALLTHROUGH
 	case MSS_IDLE:
 		// Idle skill.
-		if (!(++md->ud.walk_count%IDLE_SKILL_INTERVAL) && mob->skill_use(md, tick, -1))
+		if ((++md->ud.walk_count % IDLE_SKILL_INTERVAL) == 0 && mob->skill_use(md, tick, -1) == 0)
 			break;
 		//Random walk.
 		if (!md->master_id &&
@@ -1700,7 +1700,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 			    || !mob->can_reach(md, tbl, md->min_chase, MSS_RUSH)
 			    )
 			 && md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
-			 && !mob->skill_use(md, tick, MSC_RUDEATTACKED) // If can't rude Attack
+			 && mob->skill_use(md, tick, MSC_RUDEATTACKED) == 0 // If can't rude Attack
 			 && can_move && unit->escape(&md->bl, tbl, rnd()%10 +1) // Attempt escape
 			) {
 				//Escaped
@@ -1728,7 +1728,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 			) {
 				// Rude attacked
 				if (md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
-				 && !mob->skill_use(md, tick, MSC_RUDEATTACKED) && can_move
+				 && mob->skill_use(md, tick, MSC_RUDEATTACKED) == 0 && can_move != 0
 				 && !tbl && unit->escape(&md->bl, abl, rnd()%10 +1)
 				) {
 					//Escaped.
@@ -3465,7 +3465,7 @@ static struct block_list *mob_getfriendstatus(struct mob_data *md, int cond1, in
  * @param md The monster which tries to cast a skill.
  * @param tick The timestamp of skill execution.
  * @param event The MSC_* flag which triggered the skill execution. (-1 for non-event skill conditions.)
- * @return 1 on success, 0 on failure.
+ * @return 0 on success, 1 on failure.
  *
  **/
 static int mob_skill_use(struct mob_data *md, int64 tick, int event)
@@ -3477,10 +3477,10 @@ static int mob_skill_use(struct mob_data *md, int64 tick, int event)
 	nullpo_ret(ms);
 
 	if (battle_config.mob_skill_rate == 0 || md->ud.skilltimer != INVALID_TIMER || md->db->maxskill == 0)
-		return 0;
+		return 1;
 
 	if (event == -1 && DIFF_TICK(md->ud.canact_tick, tick) > 0)
-		return 0; // Skill act delay only affects non-event skill conditions.
+		return 1; // Skill act delay only affects non-event skill conditions.
 
 	// Pick a starting position and loop from that.
 	int skill_idx = ((battle_config.mob_ai & 0x100) != 0) ? rnd() % md->db->maxskill : 0;
@@ -3718,12 +3718,12 @@ static int mob_skill_use(struct mob_data *md, int64 tick, int event)
 		}
 
 		map->freeblock_unlock();
-		return 1;
+		return 0;
 	}
 
 	// No skill was used.
 	md->skill_idx = -1;
-	return 0;
+	return 1;
 }
 
 /*==========================================
@@ -3736,7 +3736,7 @@ static int mobskill_event(struct mob_data *md, struct block_list *src, int64 tic
 	nullpo_ret(md);
 	nullpo_ret(src);
 	if(md->bl.prev == NULL || md->status.hp <= 0)
-		return 0;
+		return 1;
 
 	if (md->special_state.ai == AI_SPHERE) {//LOne WOlf explained that ANYONE can trigger the marine countdown skill. [Skotlex]
 		md->state.alchemist = 1;
@@ -3756,7 +3756,7 @@ static int mobskill_event(struct mob_data *md, struct block_list *src, int64 tic
 	else if (flag&BF_LONG && !(flag&BF_MAGIC)) //Long-attacked should not include magic.
 		res = mob->skill_use(md, tick, MSC_LONGRANGEATTACKED);
 
-	if (!res)
+	if (res != 0)
 	//Restore previous target only if skill condition failed to trigger. [Skotlex]
 		md->target_id = target_id;
 	//Otherwise check if the target is an enemy, and unlock if needed.
