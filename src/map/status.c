@@ -8052,7 +8052,6 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// This is done this way because the message that the client displays is hardcoded, and only
 				// shows how many minutes are remaining. [Panikon]
 				total_tick = 60000;
-				val1 = battle_config.manner_system; //Mute filters.
 				if (sd)
 				{
 					clif->changestatus(sd,SP_MANNER,sd->status.manner);
