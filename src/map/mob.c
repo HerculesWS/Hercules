@@ -5516,8 +5516,11 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 
 	// If ClearSkills flag is enabled clear all the previous skills.
 	if (libconfig->setting_lookup_bool_real(it, "ClearSkills", &clearskills) && clearskills) {
-		if (mob_id < 0) // Clearing skills globaly is not supported
+		if (mob_id < 0) {
+			ShowError("mob_skill_db_libconfig_sub_skill: Global skill clearing is not supported. (Global ID %d.)\n",
+				  mob_id);
 			return false;
+		}
 		memset(mob->db_data[mob_id]->skill, 0, sizeof(struct mob_skill) * MAX_MOBSKILL);
 		mob->db_data[mob_id]->maxskill = 0;
 		return true;
