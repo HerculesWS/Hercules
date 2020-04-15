@@ -23797,12 +23797,15 @@ static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd) _
 static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20160302
+	if (sd->state.lapine_ui == 0)
+		return;
+
 	const struct PACKET_CZ_LAPINEDDUKDDAK_ACK *p = RP2PTR(fd);
 	struct item_data *it = itemdb->exists(p->itemId);
 
 	if (it == NULL || it->lapineddukddak == NULL)
 		return;
-	if (pc_cant_act(sd))
+	if (pc_cant_act_except_lapine(sd))
 		return;
 	if (pc->search_inventory(sd, it->nameid) == INDEX_NOT_FOUND)
 		return;
