@@ -1824,6 +1824,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0aa4, clif->pRefineryUIClose);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+	packet(0x0ab5, clif->pLapineUpgrade_close);
+#endif
+
 // 2017-02-28aRagexeRE
 #if PACKETVER >= 20170228
 // new packets

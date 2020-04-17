@@ -1691,6 +1691,7 @@ struct clif_interface {
 	void (*plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
 	void (*plapineDdukDdak_close) (int fd, struct map_session_data *sd);
 	bool (*lapineUpgrade_open) (struct map_session_data *sd, int item_id);
+	void (*pLapineUpgrade_close) (int fd, struct map_session_data *sd);
 	void (*pReqGearOff) (int fd, struct map_session_data *sd);
 };
 
