@@ -733,6 +733,11 @@ enum lapineddukddak_result {
 	LAPINEDDKUKDDAK_INVALID_ITEM = 7,
 };
 
+enum lapineUpgrade_result {
+	LAPINE_UPGRADE_SUCCESS = 0,
+	LAPINE_UPGRADE_FAILED = 1
+};
+
 enum removeGear_flag {
 	REMOVE_MOUNT_0 = 0,  // unused
 	REMOVE_MOUNT_DRAGON = 1,
@@ -1691,6 +1696,7 @@ struct clif_interface {
 	void (*plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
 	void (*plapineDdukDdak_close) (int fd, struct map_session_data *sd);
 	bool (*lapineUpgrade_open) (struct map_session_data *sd, int item_id);
+	bool (*lapineUpgrade_result) (struct map_session_data *sd, enum lapineUpgrade_result result);
 	void (*pLapineUpgrade_close) (int fd, struct map_session_data *sd);
 	void (*pLapineUpgrade_makeItem) (int fd, struct map_session_data *sd);
 	void (*pReqGearOff) (int fd, struct map_session_data *sd);

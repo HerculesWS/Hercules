@@ -23895,7 +23895,24 @@ static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *s
 {
 #if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 	ShowError("Lapin upgrade not implimented yet");
+	clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
 #endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+}
+
+static bool clif_lapineUpgrade_result(struct map_session_data *sd, enum lapineUpgrade_result result)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	struct PACKET_ZC_LAPINEUPGRADE_RESULT p;
+
+	p.packetType = HEADER_ZC_LAPINEUPGRADE_RESULT;
+	p.result = result;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	return true;
+#else
+	return false;
+#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 }
 
 /*==========================================
@@ -25144,6 +25161,7 @@ void clif_defaults(void)
 	clif->plapineDdukDdak_ack = clif_parse_lapineDdukDdak_ack;
 	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
 	clif->lapineUpgrade_open = clif_lapineUpgrade_open;
+	clif->lapineUpgrade_result = clif_lapineUpgrade_result;
 	clif->pLapineUpgrade_close = clif_parse_lapineUpgrade_close;
 	clif->pLapineUpgrade_makeItem = clif_parse_lapineUpgrade_makeItem;
 	clif->pReqGearOff = clif_parse_reqGearOff;
