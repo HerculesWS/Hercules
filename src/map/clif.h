@@ -1690,6 +1690,7 @@ struct clif_interface {
 	bool (*lapineDdukDdak_result) (struct map_session_data *sd, enum lapineddukddak_result result);
 	void (*plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
 	void (*plapineDdukDdak_close) (int fd, struct map_session_data *sd);
+	bool (*lapineUpgrade_open) (struct map_session_data *sd, int item_id);
 	void (*pReqGearOff) (int fd, struct map_session_data *sd);
 };
 

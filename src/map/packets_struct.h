@@ -3891,6 +3891,18 @@ struct PACKET_ZC_AUTORUN_SKILL {
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_AUTORUN_SKILL, 0x0147);
 
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+struct PACKET_ZC_LAPINEUPGRADE_OPEN {
+	int16 packetType;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_LAPINEUPGRADE_OPEN, 0x0ab4);
+#endif
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

@@ -23866,6 +23866,23 @@ static void clif_parse_lapineDdukDdak_close(int fd, struct map_session_data *sd)
 #endif // PACKETVER >= 20160504
 }
 
+static bool clif_lapineUpgrade_open(struct map_session_data *sd, int item_id)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	nullpo_retr(false, itemdb->exists(item_id));
+	struct PACKET_ZC_LAPINEUPGRADE_OPEN p;
+
+	p.packetType = HEADER_ZC_LAPINEUPGRADE_OPEN;
+	p.itemId = item_id;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	return true;
+#else
+	return false;
+#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -25111,5 +25128,6 @@ void clif_defaults(void)
 	clif->lapineDdukDdak_result = clif_lapineDdukDdak_result;
 	clif->plapineDdukDdak_ack = clif_parse_lapineDdukDdak_ack;
 	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
+	clif->lapineUpgrade_open = clif_lapineUpgrade_open;
 	clif->pReqGearOff = clif_parse_reqGearOff;
 }
