@@ -23890,6 +23890,14 @@ static void clif_parse_lapineUpgrade_close(int fd, struct map_session_data *sd)
 #endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 }
 
+static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+	ShowError("Lapin upgrade not implimented yet");
+#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -25137,5 +25145,6 @@ void clif_defaults(void)
 	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
 	clif->lapineUpgrade_open = clif_lapineUpgrade_open;
 	clif->pLapineUpgrade_close = clif_parse_lapineUpgrade_close;
+	clif->pLapineUpgrade_makeItem = clif_parse_lapineUpgrade_makeItem;
 	clif->pReqGearOff = clif_parse_reqGearOff;
 }

@@ -1826,6 +1826,7 @@ packet(0x96e,clif->ackmergeitems);
 
 #if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 	packet(0x0ab5, clif->pLapineUpgrade_close);
+	packet(0x0ab6, clif->pLapineUpgrade_makeItem);
 #endif
 
 // 2017-02-28aRagexeRE

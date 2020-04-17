@@ -3908,7 +3908,18 @@ struct PACKET_CZ_LAPINEUPGRADE_CLOSE {
 	int16 packetType;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(CZ_LAPINEUPGRADE_CLOSE, 0x0ab5);
-#endif // PACKETVER_MAIN_NUM >= 20160504 || PACKETVER_RE_NUM >= 20160504 || defined(PACKETVER_ZERO)
+
+struct PACKET_CZ_LAPINEUPGRADE_MAKE_ITEM {
+	int16 packetType;
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	uint32 itemId;
+#else
+	uint16 itemId;
+#endif
+	uint16 index;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_LAPINEUPGRADE_MAKE_ITEM, 0x0ab6);
+#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
