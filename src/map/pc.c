@@ -1627,31 +1627,32 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 		}
 
-		if( sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER && skill->dbs->db[i].nameid >= DC_HUMMING && skill->dbs->db[i].nameid <= DC_SERVICEFORYOU )
-		{ //Enable Bard/Dancer spirit linked skills.
-			if (sd->status.sex) {
-				// Link dancer skills to bard.
-				if (i < 8) {
-					Assert_report(i >= 8);
-					continue;
-				}
-				if (sd->status.skill[i-8].lv < 10)
-					continue;
-				sd->status.skill[i].id = skill->dbs->db[i].nameid;
-				sd->status.skill[i].lv = sd->status.skill[i-8].lv; // Set the level to the same as the linking skill
-				sd->status.skill[i].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
-			} else {
-				// Link bard skills to dancer.
-				if (i < 8) {
-					Assert_report(i >= 8);
-					continue;
-				}
-				if (sd->status.skill[i].lv < 10)
-					continue;
-				sd->status.skill[i-8].id = skill->dbs->db[i-8].nameid;
-				sd->status.skill[i-8].lv = sd->status.skill[i].lv; // Set the level to the same as the linking skill
-				sd->status.skill[i-8].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
+		if (sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER
+		 && ((skill->dbs->db[i].nameid >= BA_WHISTLE && skill->dbs->db[i].nameid <= BA_APPLEIDUN)
+		  || (skill->dbs->db[i].nameid >= DC_HUMMING && skill->dbs->db[i].nameid <= DC_SERVICEFORYOU))
+		) {
+			//Enable Bard/Dancer spirit linked skills.
+			int linked_nameid = skill->get_linked_song_dance_id(skill->dbs->db[i].nameid);
+			if (linked_nameid == 0) {
+				Assert_report("Linked bard/dance skill not found");
+				continue;
 			}
+			int copy_from_index;
+			int copy_to_index;
+			if (sd->status.sex == SEX_MALE && skill->dbs->db[i].nameid >= BA_WHISTLE && skill->dbs->db[i].nameid <= BA_APPLEIDUN) {
+				copy_from_index = i;
+				copy_to_index = skill->get_index(linked_nameid);
+			} else {
+				copy_from_index = skill->get_index(linked_nameid);
+				copy_to_index = i;
+			}
+			if (copy_from_index < copy_to_index)
+				continue; // Copy only after the source skill has been filled into the tree
+			if (sd->status.skill[copy_from_index].lv < 10)
+				continue; // Copy only if the linked skill has been mastered
+			sd->status.skill[copy_to_index].id = skill->dbs->db[copy_to_index].nameid;
+			sd->status.skill[copy_to_index].lv = sd->status.skill[copy_from_index].lv; // Set the level to the same as the linking skill
+			sd->status.skill[copy_to_index].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
 		}
 	}
 
