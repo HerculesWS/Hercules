@@ -72,6 +72,34 @@ static struct s_skill_dbs skilldbs;
 
 struct skill_interface *skill;
 
+static const struct {
+	int start;
+	int end;
+} skill_idx_ranges[] = {
+	{ NV_BASIC, NPC_LEX_AETERNA },
+	{ KN_CHARGEATK, SA_ELEMENTWIND },
+	{ RK_ENCHANTBLADE, AB_SILENTIUM },
+	{ WL_WHITEIMPRISON, SC_FEINTBOMB },
+	{ LG_CANNONSPEAR, SR_GENTLETOUCH_REVITALIZE },
+	{ WA_SWING_DANCE, WA_MOONLIT_SERENADE },
+	{ MI_RUSH_WINDMILL, MI_HARMONIZE },
+	{ WM_LESSON, WM_UNLIMITED_HUMMING_VOICE },
+	{ SO_FIREWALK, SO_EARTH_INSIGNIA },
+	{ GN_TRAINING_SWORD, GN_SLINGITEM_RANGEMELEEATK },
+	{ AB_SECRAMENT, LG_OVERBRAND_PLUSATK },
+	{ ALL_ODINS_RECALL, ALL_LIGHTGUARD },
+	{ RL_GLITTERING_GREED, RL_GLITTERING_GREED_ATK },
+	{ KO_YAMIKUMO, OB_AKAITSUKI },
+	{ ECL_SNOWFLIP, ALL_THANATOS_RECALL },
+	{ GC_DARKCROW, NC_MAGMA_ERUPTION_DOTDAMAGE },
+	{ SU_BASIC_SKILL, SU_SPIRITOFSEA },
+	{ HLIF_HEAL, MH_VOLCANIC_ASH },
+	{ MS_BASH, MER_INVINCIBLEOFF2 },
+	{ EL_CIRCLE_OF_FIRE, EL_STONE_RAIN },
+	{ GD_APPROVAL, GD_DEVELOPMENT },
+	CUSTOM_SKILL_RANGES
+};
+
 //Since only mob-casted splash skills can hit ice-walls
 static int skill_splash_target(struct block_list *bl)
 {
@@ -96,47 +124,24 @@ static int skill_name2id(const char *name)
 /// Returns the skill's array index, or 0 (Unknown Skill).
 static int skill_get_index(int skill_id)
 {
-	int skillRange[] = { NV_BASIC, NPC_LEX_AETERNA,
-			KN_CHARGEATK, SA_ELEMENTWIND,
-			RK_ENCHANTBLADE, AB_SILENTIUM,
-			WL_WHITEIMPRISON, SC_FEINTBOMB,
-			LG_CANNONSPEAR, SR_GENTLETOUCH_REVITALIZE,
-			WA_SWING_DANCE, WA_MOONLIT_SERENADE,
-			MI_RUSH_WINDMILL, MI_HARMONIZE,
-			WM_LESSON, WM_UNLIMITED_HUMMING_VOICE,
-			SO_FIREWALK, SO_EARTH_INSIGNIA,
-			GN_TRAINING_SWORD, GN_SLINGITEM_RANGEMELEEATK,
-			AB_SECRAMENT, LG_OVERBRAND_PLUSATK,
-			ALL_ODINS_RECALL, ALL_LIGHTGUARD,
-			RL_GLITTERING_GREED, RL_GLITTERING_GREED_ATK,
-			KO_YAMIKUMO, OB_AKAITSUKI,
-			ECL_SNOWFLIP, ALL_THANATOS_RECALL,
-			GC_DARKCROW, NC_MAGMA_ERUPTION_DOTDAMAGE,
-			SU_BASIC_SKILL, SU_SPIRITOFSEA,
-			HLIF_HEAL, MH_VOLCANIC_ASH,
-			MS_BASH, MER_INVINCIBLEOFF2,
-			EL_CIRCLE_OF_FIRE, EL_STONE_RAIN,
-			GD_APPROVAL, GD_DEVELOPMENT
-			CUSTOM_SKILL_RANGES};
-	int length = sizeof(skillRange) / sizeof(int);
-	STATIC_ASSERT(sizeof(skillRange) / sizeof(int) % 2 == 0, "skill_get_index: skillRange should be multiple of 2");
+	int length = ARRAYLENGTH(skill_idx_ranges);
 
 
-	if (skill_id < skillRange[0] || skill_id > skillRange[length - 1]) {
+	if (skill_id < skill_idx_ranges[0].start || skill_id > skill_idx_ranges[length - 1].end) {
 		ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
 		return 0;
 	}
 
 	int skill_idx = 0;
 	// Map Skill ID to Skill Indexes (in reverse order)
-	for (int i = 0; i < length; i += 2) {
+	for (int i = 0; i < length; i++) {
 		// Check if SkillID belongs to this range.
-		if (skill_id <= skillRange[i + 1] && skill_id >= skillRange[i]) {
-			skill_idx += (skillRange[i + 1] - skill_id);
+		if (skill_id <= skill_idx_ranges[i].end && skill_id >= skill_idx_ranges[i].start) {
+			skill_idx += (skill_idx_ranges[i].end - skill_id);
 			break;
 		}
 		// Add the difference of current range
-		skill_idx += (skillRange[i + 1] - skillRange[i] + 1);
+		skill_idx += (skill_idx_ranges[i].end - skill_idx_ranges[i].start + 1);
 	}
 
 	if (skill_idx >= MAX_SKILL_DB) {
