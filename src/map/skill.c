@@ -133,17 +133,23 @@ static int skill_get_index(int skill_id)
 	}
 
 	int skill_idx = 0;
+	bool found = false;
 	// Map Skill ID to Skill Indexes (in reverse order)
 	for (int i = 0; i < length; i++) {
 		// Check if SkillID belongs to this range.
 		if (skill_id <= skill_idx_ranges[i].end && skill_id >= skill_idx_ranges[i].start) {
 			skill_idx += (skill_idx_ranges[i].end - skill_id);
+			found = true;
 			break;
 		}
 		// Add the difference of current range
 		skill_idx += (skill_idx_ranges[i].end - skill_idx_ranges[i].start + 1);
 	}
 
+	if (!found) {
+		ShowWarning("skill_get_index: skill id '%d' (idx: %d) is not handled as it lies outside the defined ranges!\n", skill_id, skill_idx);
+		return 0;
+	}
 	if (skill_idx >= MAX_SKILL_DB) {
 		ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
 		return 0;
