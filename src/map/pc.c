@@ -5383,6 +5383,28 @@ static void pc_autocast_set_current(struct map_session_data *sd, int skill_id)
 	}
 }
 
+/**
+ * Removes a specific entry from a character's auto-cast vector.
+ *
+ * @param sd The character.
+ * @param type The entry's auto-cast type.
+ * @param skill_id The entry's skill ID.
+ * @param skill_lv The entry's skill level.
+ *
+ **/
+static void pc_autocast_remove(struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv)
+{
+	nullpo_retv(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).type == type && VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id
+		    && VECTOR_INDEX(sd->auto_cast, i).skill_lv == skill_lv) {
+			VECTOR_ERASE(sd->auto_cast, i);
+			break;
+		}
+	}
+}
+
 /*==========================================
  * Add item on cart for given index.
  * Return:
@@ -12915,6 +12937,7 @@ void pc_defaults(void)
 	pc->useitem = pc_useitem;
 	pc->autocast_clear = pc_autocast_clear;
 	pc->autocast_set_current = pc_autocast_set_current;
+	pc->autocast_remove = pc_autocast_remove;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;
