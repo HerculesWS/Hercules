@@ -11039,7 +11039,6 @@ static BUILDIN(itemskill)
 	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
 		return true;
 
-	pc->autocast_clear(sd);
 	sd->autocast.type = AUTOCAST_ITEM;
 	sd->autocast.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	sd->autocast.skill_lv = script_getnum(st, 3);
@@ -11051,7 +11050,6 @@ static BUILDIN(itemskill)
 	if (sd->autocast.itemskill_check_conditions) {
 		if (skill->check_condition_castbegin(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0
 		    || skill->check_condition_castend(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0) {
-			pc->autocast_clear(sd);
 			return true;
 		}
 
