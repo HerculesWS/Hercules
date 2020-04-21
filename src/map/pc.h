@@ -1035,6 +1035,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkitem) (struct map_session_data *sd);
 	int (*useitem) (struct map_session_data *sd,int n);
 	int (*autocast_clear) (struct map_session_data *sd);
+	void (*autocast_set_current) (struct map_session_data *sd, int skill_id);
 
 	int (*skillatk_bonus) (struct map_session_data *sd, uint16 skill_id);
 	int (*skillheal_bonus) (struct map_session_data *sd, uint16 skill_id);

@@ -5356,6 +5356,33 @@ static int pc_autocast_clear(struct map_session_data *sd)
 	return 1;
 }
 
+/**
+ * Sets a character's currently processed auto-cast skill data by comparing the skill ID.
+ *
+ * @param sd The character.
+ * @param skill_id The skill ID to compare.
+ *
+ **/
+static void pc_autocast_set_current(struct map_session_data *sd, int skill_id)
+{
+	nullpo_retv(sd);
+
+	sd->auto_cast_current.type = AUTOCAST_NONE;
+	sd->auto_cast_current.skill_id = 0;
+	sd->auto_cast_current.skill_lv = 0;
+	sd->auto_cast_current.itemskill_conditions_checked = false;
+	sd->auto_cast_current.itemskill_check_conditions = true;
+	sd->auto_cast_current.itemskill_instant_cast = false;
+	sd->auto_cast_current.itemskill_cast_on_self = false;
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id) {
+			sd->auto_cast_current = VECTOR_INDEX(sd->auto_cast, i);
+			break;
+		}
+	}
+}
+
 /*==========================================
  * Add item on cart for given index.
  * Return:
@@ -12887,6 +12914,7 @@ void pc_defaults(void)
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
 	pc->autocast_clear = pc_autocast_clear;
+	pc->autocast_set_current = pc_autocast_set_current;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;
