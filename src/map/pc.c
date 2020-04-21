@@ -5362,14 +5362,7 @@ static int pc_autocast_clear(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	sd->auto_cast_current.type = AUTOCAST_NONE;
-	sd->auto_cast_current.skill_id = 0;
-	sd->auto_cast_current.skill_lv = 0;
-	sd->auto_cast_current.itemskill_conditions_checked = false;
-	sd->auto_cast_current.itemskill_check_conditions = false;
-	sd->auto_cast_current.itemskill_instant_cast = false;
-	sd->auto_cast_current.itemskill_cast_on_self = false;
-
+	pc->autocast_clear_current(sd);
 	VECTOR_TRUNCATE(sd->auto_cast); // Truncate auto-cast vector.
 
 	return 1;
@@ -5386,13 +5379,7 @@ static void pc_autocast_set_current(struct map_session_data *sd, int skill_id)
 {
 	nullpo_retv(sd);
 
-	sd->auto_cast_current.type = AUTOCAST_NONE;
-	sd->auto_cast_current.skill_id = 0;
-	sd->auto_cast_current.skill_lv = 0;
-	sd->auto_cast_current.itemskill_conditions_checked = false;
-	sd->auto_cast_current.itemskill_check_conditions = true;
-	sd->auto_cast_current.itemskill_instant_cast = false;
-	sd->auto_cast_current.itemskill_cast_on_self = false;
+	pc->autocast_clear_current(sd);
 
 	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
 		if (VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id) {
