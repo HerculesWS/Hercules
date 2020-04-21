@@ -5355,17 +5355,15 @@ static void pc_autocast_clear_current(struct map_session_data *sd)
 /**
  * Unsets a character's auto-cast related data.
  *
- * @param sd The character's session data.
- * @return 0 if parameter sd is NULL, otherwise 1.
- */
-static int pc_autocast_clear(struct map_session_data *sd)
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear(struct map_session_data *sd)
 {
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
 	pc->autocast_clear_current(sd);
 	VECTOR_TRUNCATE(sd->auto_cast); // Truncate auto-cast vector.
-
-	return 1;
 }
 
 /**

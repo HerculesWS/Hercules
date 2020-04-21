@@ -1034,7 +1034,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkitem) (struct map_session_data *sd);
 	int (*useitem) (struct map_session_data *sd,int n);
 	void (*autocast_clear_current) (struct map_session_data *sd);
-	int (*autocast_clear) (struct map_session_data *sd);
+	void (*autocast_clear) (struct map_session_data *sd);
 	void (*autocast_set_current) (struct map_session_data *sd, int skill_id);
 	void (*autocast_remove) (struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv);
 
