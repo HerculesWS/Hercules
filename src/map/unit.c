@@ -2889,6 +2889,8 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 				aFree(sd->instance);
 				sd->instance = NULL;
 			}
+
+			VECTOR_CLEAR(sd->auto_cast); // Clear auto-cast vector.
 			VECTOR_CLEAR(sd->channels);
 			VECTOR_CLEAR(sd->script_queues);
 			VECTOR_CLEAR(sd->achievement); // Achievement [Smokexyz/Hercules]

@@ -1279,6 +1279,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.client_has_bg_data = 0;
 	sd->bg_queue.type = 0;
 
+	VECTOR_INIT(sd->auto_cast); // Initialize auto-cast vector.
 	VECTOR_INIT(sd->channels);
 	VECTOR_INIT(sd->script_queues);
 	VECTOR_INIT(sd->achievement); // Achievements [Smokexyz/Hercules]
@@ -5349,6 +5350,8 @@ static int pc_autocast_clear(struct map_session_data *sd)
 	sd->autocast.itemskill_check_conditions = false;
 	sd->autocast.itemskill_instant_cast = false;
 	sd->autocast.itemskill_cast_on_self = false;
+
+	VECTOR_TRUNCATE(sd->auto_cast); // Truncate auto-cast vector.
 
 	return 1;
 }
