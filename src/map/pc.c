@@ -5334,6 +5334,25 @@ static int pc_useitem(struct map_session_data *sd, int n)
 }
 
 /**
+ * Unsets a character's currently processed auto-cast skill data.
+ *
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear_current(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	sd->auto_cast_current.type = AUTOCAST_NONE;
+	sd->auto_cast_current.skill_id = 0;
+	sd->auto_cast_current.skill_lv = 0;
+	sd->auto_cast_current.itemskill_conditions_checked = false;
+	sd->auto_cast_current.itemskill_check_conditions = true;
+	sd->auto_cast_current.itemskill_instant_cast = false;
+	sd->auto_cast_current.itemskill_cast_on_self = false;
+}
+
+/**
  * Unsets a character's auto-cast related data.
  *
  * @param sd The character's session data.
@@ -12935,6 +12954,7 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
+	pc->autocast_clear_current = pc_autocast_clear_current;
 	pc->autocast_clear = pc_autocast_clear;
 	pc->autocast_set_current = pc_autocast_set_current;
 	pc->autocast_remove = pc_autocast_remove;
