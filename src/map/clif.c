@@ -12864,7 +12864,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		target_id = sd->bl.id;
 
 	if (sd->ud.skilltimer != INVALID_TIMER) {
-		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
+		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST && sd->auto_cast_current.type == AUTOCAST_NONE)
 			return;
 	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
 		if (sd->auto_cast_current.type == AUTOCAST_NONE) {
@@ -13003,7 +13003,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		safestrncpy(sd->message, RFIFOP(fd, skillmoreinfo), TALKBOX_MESSAGE_SIZE);
 	}
 
-	if( sd->ud.skilltimer != INVALID_TIMER )
+	if (sd->ud.skilltimer != INVALID_TIMER && sd->auto_cast_current.type == AUTOCAST_NONE)
 		return;
 
 	if( DIFF_TICK(tick, sd->ud.canact_tick) < 0 ) {

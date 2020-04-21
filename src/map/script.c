@@ -11036,7 +11036,7 @@ static BUILDIN(itemskill)
 {
 	struct map_session_data *sd = script->rid2sd(st);
 
-	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
+	if (sd == NULL)
 		return true;
 
 	sd->auto_cast_current.type = AUTOCAST_ITEM;
