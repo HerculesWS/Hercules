@@ -12804,6 +12804,8 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 {
 	int64 tick = timer->gettick();
 
+	pc->autocast_set_current(sd, skill_id);
+
 	/**
 	 * According to Skotlex' comment below, the client sometimes passes 0 for the skill level.
 	 * Even though this seems to only affect guild skills, sd->autocast.skill_lv is used
@@ -12953,6 +12955,8 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	int64 tick = timer->gettick();
 
 	nullpo_retv(sd);
+	
+	pc->autocast_set_current(sd, skill_id);
 
 	/**
 	 * When using clif_item_skill() to initiate the execution of ground skills,
@@ -13100,6 +13104,8 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
+	
+	pc->autocast_set_current(sd, skill_id);
 
 	/**
 	 * Since no skill level was passed use 0 to notify skill_validate_autocast_data() of this special case.
