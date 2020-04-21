@@ -5343,13 +5343,13 @@ static int pc_autocast_clear(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	sd->autocast.type = AUTOCAST_NONE;
-	sd->autocast.skill_id = 0;
-	sd->autocast.skill_lv = 0;
-	sd->autocast.itemskill_conditions_checked = false;
-	sd->autocast.itemskill_check_conditions = false;
-	sd->autocast.itemskill_instant_cast = false;
-	sd->autocast.itemskill_cast_on_self = false;
+	sd->auto_cast_current.type = AUTOCAST_NONE;
+	sd->auto_cast_current.skill_id = 0;
+	sd->auto_cast_current.skill_lv = 0;
+	sd->auto_cast_current.itemskill_conditions_checked = false;
+	sd->auto_cast_current.itemskill_check_conditions = false;
+	sd->auto_cast_current.itemskill_instant_cast = false;
+	sd->auto_cast_current.itemskill_cast_on_self = false;
 
 	VECTOR_TRUNCATE(sd->auto_cast); // Truncate auto-cast vector.
 

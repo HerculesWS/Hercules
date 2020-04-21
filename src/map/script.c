@@ -11039,30 +11039,30 @@ static BUILDIN(itemskill)
 	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
 		return true;
 
-	sd->autocast.type = AUTOCAST_ITEM;
-	sd->autocast.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
-	sd->autocast.skill_lv = script_getnum(st, 3);
+	sd->auto_cast_current.type = AUTOCAST_ITEM;
+	sd->auto_cast_current.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
+	sd->auto_cast_current.skill_lv = script_getnum(st, 3);
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
-	sd->autocast.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
+	sd->auto_cast_current.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
 
-	if (sd->autocast.itemskill_check_conditions) {
-		if (skill->check_condition_castbegin(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0
-		    || skill->check_condition_castend(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0) {
+	if (sd->auto_cast_current.itemskill_check_conditions) {
+		if (skill->check_condition_castbegin(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv) == 0
+		    || skill->check_condition_castend(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv) == 0) {
 			return true;
 		}
 
-		sd->autocast.itemskill_conditions_checked = true;
+		sd->auto_cast_current.itemskill_conditions_checked = true;
 	}
 
-	sd->autocast.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
-	sd->autocast.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
+	sd->auto_cast_current.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
+	sd->auto_cast_current.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 
 	VECTOR_ENSURE(sd->auto_cast, 1, 1);
-	VECTOR_PUSH(sd->auto_cast, sd->autocast);
+	VECTOR_PUSH(sd->auto_cast, sd->auto_cast_current);
 
-	clif->item_skill(sd, sd->autocast.skill_id, sd->autocast.skill_lv);
+	clif->item_skill(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv);
 
 	return true;
 }
