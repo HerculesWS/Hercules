@@ -11059,6 +11059,9 @@ static BUILDIN(itemskill)
 	sd->autocast.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
 	sd->autocast.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 
+	VECTOR_ENSURE(sd->auto_cast, 1, 1);
+	VECTOR_PUSH(sd->auto_cast, sd->autocast);
+
 	clif->item_skill(sd, sd->autocast.skill_id, sd->autocast.skill_lv);
 
 	return true;

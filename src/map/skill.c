@@ -6353,6 +6353,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					sd->autocast.type = AUTOCAST_ABRA;
 					sd->autocast.skill_id = abra_skill_id;
 					sd->autocast.skill_lv = abra_skill_lv;
+					VECTOR_ENSURE(sd->auto_cast, 1, 1);
+					VECTOR_PUSH(sd->auto_cast, sd->autocast);
 					clif->item_skill(sd, abra_skill_id, abra_skill_lv);
 				} else {
 					// mob-casted
@@ -10095,6 +10097,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					sd->autocast.type = AUTOCAST_IMPROVISE;
 					sd->autocast.skill_id = improv_skill_id;
 					sd->autocast.skill_lv = improv_skill_lv;
+					VECTOR_ENSURE(sd->auto_cast, 1, 1);
+					VECTOR_PUSH(sd->auto_cast, sd->autocast);
 					clif->item_skill(sd, improv_skill_id, improv_skill_lv);
 				} else {
 					struct unit_data *ud = unit->bl2ud(src);
