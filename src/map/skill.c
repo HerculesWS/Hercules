@@ -1211,14 +1211,16 @@ static void skill_validate_autocast_data(struct map_session_data *sd, int skill_
 	// Determine if called by clif_parse_UseSkillMap().
 	bool use_skill_map = (skill_lv == 0 && (skill_id == AL_WARP || skill_id == AL_TELEPORT));
 
-	if (sd->auto_cast_current.type == AUTOCAST_NONE)
+	struct autocast_data *auto_cast = &sd->auto_cast_current;
+
+	if (auto_cast->type == AUTOCAST_NONE)
 		pc->autocast_clear(sd); // No auto-cast type set. Preventively unset all auto-cast related data.
-	else if (sd->auto_cast_current.type == AUTOCAST_TEMP)
+	else if (auto_cast->type == AUTOCAST_TEMP)
 		pc->autocast_clear(sd); // AUTOCAST_TEMP should have been unset straight after usage.
-	else if (sd->auto_cast_current.skill_id == 0 || skill_id == 0 || sd->auto_cast_current.skill_id != skill_id)
-		pc->autocast_clear(sd); // Implausible skill ID.
-	else if (sd->auto_cast_current.skill_lv == 0 || (!use_skill_map && (skill_lv == 0 || sd->auto_cast_current.skill_lv != skill_lv)))
-		pc->autocast_clear(sd); // Implausible skill level.
+	else if (auto_cast->skill_id == 0 || skill_id == 0 || auto_cast->skill_id != skill_id)
+		pc->autocast_remove(sd, auto_cast->type, auto_cast->skill_id, auto_cast->skill_lv); // Implausible skill ID.
+	else if (auto_cast->skill_lv == 0 || (!use_skill_map && (skill_lv == 0 || auto_cast->skill_lv != skill_lv)))
+		pc->autocast_remove(sd, auto_cast->type, auto_cast->skill_id, auto_cast->skill_lv); // Implausible skill level.
 }
 
 static struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16 skill_lv, struct block_list *src, int x, int y)
@@ -5912,7 +5914,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 		}
 
 		if( sd && ud->skill_id != SA_ABRACADABRA && ud->skill_id != WM_RANDOMIZESPELL ) // they just set the data so leave it as it is.[Inkfish]
-			pc->autocast_clear(sd);
+			pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
+					    sd->auto_cast_current.skill_lv);
 
 		if (ud->skilltimer == INVALID_TIMER) {
 			if(md) md->skill_idx = -1;
@@ -5968,7 +5971,8 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 	//sent in ALL cases, even cases where skill_check_condition fails
 	//which would lead to double 'skill failed' messages u.u [Skotlex]
 	if(sd)
-		pc->autocast_clear(sd);
+		pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
+				    sd->auto_cast_current.skill_lv);
 	else if(md)
 		md->skill_idx = -1;
 	return 0;
@@ -10897,7 +10901,8 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		skill->castend_pos2(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv,tick,0);
 
 		if (sd != NULL && sd->auto_cast_current.skill_id != AL_WARP) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
-			pc->autocast_clear(sd);
+			pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
+					    sd->auto_cast_current.skill_lv);
 
 		unit->set_dir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
@@ -10915,7 +10920,8 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		ud->canact_tick = tick;
 	ud->skill_id = ud->skill_lv = 0;
 	if(sd)
-		pc->autocast_clear(sd);
+		pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
+				    sd->auto_cast_current.skill_lv);
 	else if(md)
 		md->skill_idx  = -1;
 	return 0;
@@ -11099,7 +11105,10 @@ static int skill_castend_map(struct map_session_data *sd, uint16 skill_id, const
 				}
 
 				skill->consume_requirement(sd,sd->menuskill_id,lv,2);
-				pc->autocast_clear(sd); // Clear data which was skipped in skill_castend_pos().
+
+				// Clear data which was skipped in skill_castend_pos().
+				pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
+						    sd->auto_cast_current.skill_lv);
 
 				if((group=skill->unitsetting(&sd->bl,skill_id,lv,wx,wy,0))==NULL) {
 					skill_failed(sd);
