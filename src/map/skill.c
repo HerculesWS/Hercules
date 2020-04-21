@@ -5913,9 +5913,10 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				skill->blockpc_start(sd,BD_ADAPTATION,3000);
 		}
 
-		if( sd && ud->skill_id != SA_ABRACADABRA && ud->skill_id != WM_RANDOMIZESPELL ) // they just set the data so leave it as it is.[Inkfish]
-			pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
-					    sd->auto_cast_current.skill_lv);
+		if (sd != NULL && ud->skill_id != SA_ABRACADABRA && ud->skill_id != WM_RANDOMIZESPELL
+		    && ud->skill_id == sd->auto_cast_current.skill_id) { // they just set the data so leave it as it is.[Inkfish]
+			pc->autocast_remove(sd, sd->auto_cast_current.type, ud->skill_id, ud->skill_lv);
+		}
 
 		if (ud->skilltimer == INVALID_TIMER) {
 			if(md) md->skill_idx = -1;
@@ -5966,15 +5967,18 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 
 	if (sd == NULL || sd->auto_cast_current.skill_id != ud->skill_id || skill->get_delay(ud->skill_id, ud->skill_lv) != 0)
 		ud->canact_tick = tick;
-	ud->skill_id = ud->skill_lv = ud->skilltarget = 0;
 	//You can't place a skill failed packet here because it would be
 	//sent in ALL cases, even cases where skill_check_condition fails
 	//which would lead to double 'skill failed' messages u.u [Skotlex]
-	if(sd)
-		pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
-				    sd->auto_cast_current.skill_lv);
+	if (sd != NULL && ud->skill_id == sd->auto_cast_current.skill_id)
+		pc->autocast_remove(sd, sd->auto_cast_current.type, ud->skill_id, ud->skill_lv);
 	else if(md)
 		md->skill_idx = -1;
+
+	ud->skill_id = 0;
+	ud->skill_lv = 0;
+	ud->skilltarget = 0;
+
 	return 0;
 }
 
@@ -10902,9 +10906,8 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		map->freeblock_lock();
 		skill->castend_pos2(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv,tick,0);
 
-		if (sd != NULL && sd->auto_cast_current.skill_id != AL_WARP) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
-			pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
-					    sd->auto_cast_current.skill_lv);
+		if (sd != NULL && ud->skill_id != AL_WARP && ud->skill_id == sd->auto_cast_current.skill_id) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
+			pc->autocast_remove(sd, sd->auto_cast_current.type, ud->skill_id, ud->skill_lv);
 
 		unit->set_dir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
@@ -10920,12 +10923,15 @@ static int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 
 	if (sd == NULL || sd->auto_cast_current.skill_id != ud->skill_id || skill->get_delay(ud->skill_id, ud->skill_lv) != 0)
 		ud->canact_tick = tick;
-	ud->skill_id = ud->skill_lv = 0;
-	if(sd)
-		pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
-				    sd->auto_cast_current.skill_lv);
+	
+	if (sd != NULL && ud->skill_id == sd->auto_cast_current.skill_id)
+		pc->autocast_remove(sd, sd->auto_cast_current.type, ud->skill_id, ud->skill_lv);
 	else if(md)
 		md->skill_idx  = -1;
+
+	ud->skill_id = 0;
+	ud->skill_lv = 0;
+
 	return 0;
 
 }
