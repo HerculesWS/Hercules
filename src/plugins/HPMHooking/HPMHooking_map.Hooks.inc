@@ -71539,14 +71539,14 @@ bool HP_script_get_constant(const char *name, int *value) {
 	}
 	return retVal___;
 }
-void HP_script_label_add(int key, int pos) {
+void HP_script_label_add(int key, int pos, enum script_label_flags flags) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_script_label_add_pre > 0) {
-		void (*preHookFunc) (int *key, int *pos);
+		void (*preHookFunc) (int *key, int *pos, enum script_label_flags *flags);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_label_add_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_script_label_add_pre[hIndex].func;
-			preHookFunc(&key, &pos);
+			preHookFunc(&key, &pos, &flags);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -71554,13 +71554,13 @@ void HP_script_label_add(int key, int pos) {
 		}
 	}
 	{
-		HPMHooks.source.script.label_add(key, pos);
+		HPMHooks.source.script.label_add(key, pos, flags);
 	}
 	if (HPMHooks.count.HP_script_label_add_post > 0) {
-		void (*postHookFunc) (int key, int pos);
+		void (*postHookFunc) (int key, int pos, enum script_label_flags flags);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_label_add_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_script_label_add_post[hIndex].func;
-			postHookFunc(key, pos);
+			postHookFunc(key, pos, flags);
 		}
 	}
 	return;
@@ -72411,6 +72411,33 @@ const char* HP_script_parse_syntax(const char *p) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_syntax_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_script_parse_syntax_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, p);
+		}
+	}
+	return retVal___;
+}
+const char* HP_script_parse_syntax_function(const char *p, bool is_public) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_script_parse_syntax_function_pre > 0) {
+		const char* (*preHookFunc) (const char **p, bool *is_public);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_syntax_function_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_parse_syntax_function_pre[hIndex].func;
+			retVal___ = preHookFunc(&p, &is_public);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.parse_syntax_function(p, is_public);
+	}
+	if (HPMHooks.count.HP_script_parse_syntax_function_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___, const char *p, bool is_public);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_syntax_function_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_parse_syntax_function_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p, is_public);
 		}
 	}
 	return retVal___;

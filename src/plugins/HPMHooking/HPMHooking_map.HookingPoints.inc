@@ -2785,6 +2785,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->parse_syntax_close, HP_script_parse_syntax_close) },
 	{ HP_POP(script->parse_syntax_close_sub, HP_script_parse_syntax_close_sub) },
 	{ HP_POP(script->parse_syntax, HP_script_parse_syntax) },
+	{ HP_POP(script->parse_syntax_function, HP_script_parse_syntax_function) },
 	{ HP_POP(script->get_com, HP_script_get_com) },
 	{ HP_POP(script->get_num, HP_script_get_num) },
 	{ HP_POP(script->op2name, HP_script_op2name) },
