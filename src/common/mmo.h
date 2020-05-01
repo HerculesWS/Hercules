@@ -380,7 +380,10 @@ STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define JOBL_BABY  0x2000
 #define JOBL_THIRD 0x4000
 
-#define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
+#define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable's name including affixes and excluding NULL-terminator.
+STATIC_ASSERT(SCRIPT_VARNAME_LENGTH <= 32, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
+#define SCRIPT_STRING_VAR_LENGTH 255 ///< Maximum length of strings stored in script variables excluding NULL-terminator.
+STATIC_ASSERT(SCRIPT_STRING_VAR_LENGTH <= 255, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
 
 #define INFINITE_DURATION (-1) // Infinite duration for status changes
 
