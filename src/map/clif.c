@@ -11777,7 +11777,7 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 		char *str = target + 4; // Skip the NPC: string part.
 		struct npc_data *nd;
 		if ((nd = npc->name2id(str))) {
-			char split_data[NUM_WHISPER_VAR][CHAT_SIZE_MAX];
+			char split_data[NUM_WHISPER_VAR][SCRIPT_STRING_VAR_LENGTH + 1];
 			char *split;
 			char output[256];
 

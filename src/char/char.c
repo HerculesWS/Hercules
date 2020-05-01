@@ -2898,13 +2898,13 @@ static void char_global_accreg_to_login_add(const char *key, unsigned int index,
 
 		if( val ) {
 			char *sval = (char*)val;
-			len = strlen(sval)+1;
+			len = strlen(sval);
 
-			WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 254 */
+			WFIFOB(chr->login_fd, nlen) = (unsigned char)len; // Won't be higher; the column size is 255.
 			nlen += 1;
 
-			safestrncpy(WFIFOP(chr->login_fd,nlen), sval, len);
-			nlen += len;
+			safestrncpy(WFIFOP(chr->login_fd, nlen), sval, len + 1);
+			nlen += len + 1;
 		}
 	} else {
 		WFIFOB(chr->login_fd, nlen) = val ? 0 : 1;

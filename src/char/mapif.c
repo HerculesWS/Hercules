@@ -2030,7 +2030,8 @@ static int mapif_parse_Registry(int fd)
 
 	if (count != 0) {
 		int cursor = 14, i;
-		char key[SCRIPT_VARNAME_LENGTH+1], sval[254];
+		char key[SCRIPT_VARNAME_LENGTH + 1];
+		char sval[SCRIPT_STRING_VAR_LENGTH + 1];
 		bool isLoginActive = sockt->session_is_active(chr->login_fd);
 
 		if (isLoginActive)
@@ -2057,8 +2058,8 @@ static int mapif_parse_Registry(int fd)
 			/* str */
 			case 2:
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
-				cursor += len + 1;
+				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				cursor += len + 2;
 				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
 				break;
 			case 3:
