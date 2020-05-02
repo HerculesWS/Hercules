@@ -865,6 +865,7 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_WEDDING] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_ARMORPROPERTY] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ARMOR_RESIST] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_WATER] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ATKER_BLOOD] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_WALKSPEED] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_TARGET_BLOOD] |= SCB_ALL;
@@ -3028,6 +3029,10 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 			sd->subele[ELE_EARTH] += sc->data[SC_ARMOR_RESIST]->val2;
 			sd->subele[ELE_FIRE] += sc->data[SC_ARMOR_RESIST]->val3;
 			sd->subele[ELE_WIND] += sc->data[SC_ARMOR_RESIST]->val4;
+		}
+		if (sc->data[SC_RESIST_PROPERTY_WATER] != NULL) { // Coldproof Potion
+			sd->subele[ELE_WATER] += sc->data[SC_RESIST_PROPERTY_WATER]->val1;
+			sd->subele[ELE_WIND] += sc->data[SC_RESIST_PROPERTY_WATER]->val2;
 		}
 		if (sc->data[SC_FIRE_CLOAK_OPTION]) {
 			i = sc->data[SC_FIRE_CLOAK_OPTION]->val2;
@@ -7753,6 +7758,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_ENCHANTARMS:
 			case SC_ARMORPROPERTY:
 			case SC_ARMOR_RESIST:
+			case SC_RESIST_PROPERTY_WATER:
 				break;
 			case SC_GOSPEL:
 				//Must not override a casting gospel char.
@@ -8723,6 +8729,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
 					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
 				}
+
+				break;
+			case SC_RESIST_PROPERTY_WATER:
+				if (val1 <= 0)
+					flag |= SCFLAG_NOICON;
 
 				break;
 			case SC_MER_FLEE:
