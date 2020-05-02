@@ -727,9 +727,13 @@ struct str_data_struct {
 	uint8 deprecated : 1;
 };
 
+/** a label within a script (does not use the label db) */
 struct script_label_entry {
+	/** label name (held within str_data) */
 	int key;
+	/** position within the script  */
 	int pos;
+	/** optional flags for the label */
 	enum script_label_flags flags;
 };
 
