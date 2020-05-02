@@ -8699,6 +8699,32 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				//associated, and yet are not wrong/unknown. [Skotlex]
 				//break;
 				}
+			case SC_ARMOR_RESIST:
+				if (val1 > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				}
+
+				if (val2 > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				}
+
+				if (val3 > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				}
+
+				if (val4 > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				}
+
+				break;
 			case SC_MER_FLEE:
 			case SC_MER_ATK:
 			case SC_MER_HIT:
@@ -11055,6 +11081,20 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 					status_zap(bl, 0, status_get_max_sp(bl) / 2);
 					break;
 			}
+			break;
+		case SC_ARMOR_RESIST:
+			if (sce->val1 > 0)
+				clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WATER));
+
+			if (sce->val2 > 0)
+				clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_GROUND));
+
+			if (sce->val3 > 0)
+				clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_FIRE));
+
+			if (sce->val4 > 0)
+				clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WIND));
+
 			break;
 	}
 
