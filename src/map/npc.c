@@ -390,7 +390,9 @@ static int npc_event_export(struct npc_data *nd, int i)
 	lname = nd->u.scr.label_list[i].name;
 	pos = nd->u.scr.label_list[i].pos;
 
-	if ((nd->u.scr.label_list[i].flags & LABEL_IS_EXTERN) != 0 && (nd->u.scr.label_list[i].flags & LABEL_IS_USERFUNC) == 0) {
+	if ((nd->u.scr.label_list[i].flags & LABEL_IS_EXTERN) != 0
+		&& ((nd->u.scr.label_list[i].flags & LABEL_IS_USERFUNC) == 0
+			|| script->config.functions_as_events)) {
 		struct event_data *ev;
 		struct linkdb_node **label_linkdb = NULL;
 		char buf[EVENT_NAME_LENGTH];
