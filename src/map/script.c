@@ -2091,8 +2091,12 @@ static const char *parse_syntax(const char *p)
 			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			return p;
 		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
-			// local function implicitly marked as private
-			return script->parse_syntax_function(p2, false);
+			// local function not marked as public or private
+			if (script->config.functions_private_by_default) {
+				return script->parse_syntax_function(p2, false);
+			} else {
+				return script->parse_syntax_function(p2, true);
+			}
 		}
 		break;
 	case 'i':
@@ -4968,6 +4972,7 @@ static bool script_config_read(const char *filename, bool imported)
 
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_paramnum", &script->config.warn_func_mismatch_paramnum);
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_argtypes", &script->config.warn_func_mismatch_argtypes);
+	libconfig->setting_lookup_bool_real(setting, "functions_private_by_default", &script->config.functions_private_by_default);
 	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
@@ -28570,6 +28575,7 @@ void script_defaults(void)
 	script->config.ontouch_name = "OnTouch_";  //ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	script->config.ontouch2_name = "OnTouch";  //ontouch2_name (run whenever a char walks into the OnTouch area)
 	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)
+	script->config.functions_private_by_default = true;
 
 	// for ENABLE_CASE_CHECK
 	script->calc_hash_ci = calc_hash_ci;
