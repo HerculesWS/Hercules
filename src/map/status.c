@@ -868,6 +868,7 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_WATER] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_GROUND] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_FIRE] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_WIND] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ATKER_BLOOD] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_WALKSPEED] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_TARGET_BLOOD] |= SCB_ALL;
@@ -3043,6 +3044,10 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 		if (sc->data[SC_RESIST_PROPERTY_FIRE] != NULL) { // Fireproof Potion
 			sd->subele[ELE_FIRE] += sc->data[SC_RESIST_PROPERTY_FIRE]->val1;
 			sd->subele[ELE_WATER] += sc->data[SC_RESIST_PROPERTY_FIRE]->val2;
+		}
+		if (sc->data[SC_RESIST_PROPERTY_WIND] != NULL) { // Thunderproof Potion
+			sd->subele[ELE_WIND] += sc->data[SC_RESIST_PROPERTY_WIND]->val1;
+			sd->subele[ELE_EARTH] += sc->data[SC_RESIST_PROPERTY_WIND]->val2;
 		}
 		if (sc->data[SC_FIRE_CLOAK_OPTION]) {
 			i = sc->data[SC_FIRE_CLOAK_OPTION]->val2;
@@ -7771,6 +7776,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_RESIST_PROPERTY_WATER:
 			case SC_RESIST_PROPERTY_GROUND:
 			case SC_RESIST_PROPERTY_FIRE:
+			case SC_RESIST_PROPERTY_WIND:
 				break;
 			case SC_GOSPEL:
 				//Must not override a casting gospel char.
@@ -8746,6 +8752,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_RESIST_PROPERTY_WATER:
 			case SC_RESIST_PROPERTY_GROUND:
 			case SC_RESIST_PROPERTY_FIRE:
+			case SC_RESIST_PROPERTY_WIND:
 				if (val1 <= 0)
 					flag |= SCFLAG_NOICON;
 
