@@ -8732,11 +8732,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// Water
 				int sum_water = val1 + ((sce_fire != NULL) ? sce_fire->val2 : 0);
 				bool show_icon = true;
-				if (sce_water != NULL) {
-					sum_water += sce_water->val1;
-					int left = (int)DIFF_TICK(timer->get(sce_water->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_water - val1 > 0)
-						show_icon = false;
+				if (sce_water != NULL && sce_water->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_water->timer);
+					if (td != NULL) {
+						sum_water += sce_water->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_water - val1 > 0)
+							show_icon = false;
+					}
 				}
 				if (val1 > 0 && sum_water > 0 && show_icon) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
@@ -8749,11 +8752,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// Ground
 				int sum_ground = val2 + ((sce_wind != NULL) ? sce_wind->val2 : 0);
 				show_icon = true;
-				if (sce_ground != NULL) {
-					sum_ground += sce_ground->val1;
-					int left = (int)DIFF_TICK(timer->get(sce_ground->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_ground - val2 > 0)
-						show_icon = false;
+				if (sce_ground != NULL && sce_ground->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_ground->timer);
+					if (td != NULL) {
+						sum_ground += sce_ground->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_ground - val2 > 0)
+							show_icon = false;
+					}
 				}
 				if (val2 > 0 && sum_ground > 0 && show_icon) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
@@ -8766,11 +8772,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// Fire
 				int sum_fire = val3 + ((sce_ground != NULL) ? sce_ground->val2 : 0);
 				show_icon = true;
-				if (sce_fire != NULL) {
-					sum_fire += sce_fire->val1;
-					int left = (int)DIFF_TICK(timer->get(sce_fire->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_fire - val3 > 0)
-						show_icon = false;
+				if (sce_fire != NULL && sce_fire->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_fire->timer);
+					if (td != NULL) {
+						sum_fire += sce_fire->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_fire - val3 > 0)
+							show_icon = false;
+					}
 				}
 				if (val3 > 0 && sum_fire > 0 && show_icon) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
@@ -8783,11 +8792,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				// Wind
 				int sum_wind = val4 + ((sce_water != NULL) ? sce_water->val2 : 0);
 				show_icon = true;
-				if (sce_wind != NULL) {
-					sum_wind += sce_wind->val1;
-					int left = (int)DIFF_TICK(timer->get(sce_wind->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_wind - val4 > 0)
-						show_icon = false;
+				if (sce_wind != NULL && sce_wind->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_wind->timer);
+					if (td != NULL) {
+						sum_wind += sce_wind->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_wind - val4 > 0)
+							show_icon = false;
+					}
 				}
 				if (val4 > 0 && sum_wind > 0 && show_icon) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
@@ -8806,11 +8818,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 				// Water
 				int sum_water = val1 + ((sce_fire != NULL) ? sce_fire->val2 : 0);
-				if (sce_all != NULL) {
-					sum_water += sce_all->val1;
-					int left = (int)DIFF_TICK(timer->get(sce_all->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_water - val1 > 0)
-						flag |= SCFLAG_NOICON;
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_water += sce_all->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_water - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
 				}
 				if (sum_water <= 0) {
 					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WATER));
@@ -8832,11 +8847,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 				// Ground
 				int sum_ground = val1 + ((sce_wind != NULL) ? sce_wind->val2 : 0);
-				if (sce_all != NULL) {
-					sum_ground += sce_all->val2;
-					int left = (int)DIFF_TICK(timer->get(sce_all->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_ground - val1 > 0)
-						flag |= SCFLAG_NOICON;
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_ground += sce_all->val2;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_ground - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
 				}
 				if (sum_ground <= 0) {
 					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_GROUND));
@@ -8858,11 +8876,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 				// Fire
 				int sum_fire = val1 + ((sce_ground != NULL) ? sce_ground->val2 : 0);
-				if (sce_all != NULL) {
-					sum_fire += sce_all->val3;
-					int left = (int)DIFF_TICK(timer->get(sce_all->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_fire - val1 > 0)
-						flag |= SCFLAG_NOICON;
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_fire += sce_all->val3;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_fire - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
 				}
 				if (sum_fire <= 0) {
 					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_FIRE));
@@ -8884,11 +8905,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 				// Wind
 				int sum_wind = val1 + ((sce_water != NULL) ? sce_water->val2 : 0);
-				if (sce_all != NULL) {
-					sum_wind += sce_all->val4;
-					int left = (int)DIFF_TICK(timer->get(sce_all->timer)->tick, timer->gettick());
-					if (left > total_tick && sum_wind - val1 > 0)
-						flag |= SCFLAG_NOICON;
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_wind += sce_all->val4;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_wind - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
 				}
 				if (sum_wind <= 0) {
 					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WIND));
@@ -11271,10 +11295,10 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 			// Water
 			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WATER));
-			if (sce_water != NULL) {
+			if (sce_water != NULL && sce_water->timer != INVALID_TIMER) {
 				int sum_water = sce_water->val1 + ((sce_fire != NULL) ? sce_fire->val2 : 0);
-				if (sce_water->val1 > 0 && sum_water > 0) {
-					const struct TimerData *td = timer->get(sce_water->timer);
+				const struct TimerData *td = timer->get(sce_water->timer);
+				if (td != NULL && sce_water->val1 > 0 && sum_water > 0) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11285,10 +11309,10 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 			// Ground
 			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_GROUND));
-			if (sce_ground != NULL) {
+			if (sce_ground != NULL && sce_ground->timer != INVALID_TIMER) {
 				int sum_ground = sce_ground->val1 + ((sce_wind != NULL) ? sce_wind->val2 : 0);
-				if (sce_ground->val1 > 0 && sum_ground > 0) {
-					const struct TimerData *td = timer->get(sce_ground->timer);
+				const struct TimerData *td = timer->get(sce_ground->timer);
+				if (td != NULL && sce_ground->val1 > 0 && sum_ground > 0) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11299,10 +11323,10 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 			// Fire
 			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_FIRE));
-			if (sce_fire != NULL) {
+			if (sce_fire != NULL && sce_fire->timer != INVALID_TIMER) {
 				int sum_fire = sce_fire->val1 + ((sce_ground != NULL) ? sce_ground->val2 : 0);
-				if (sce_fire->val1 > 0 && sum_fire > 0) {
-					const struct TimerData *td = timer->get(sce_fire->timer);
+				const struct TimerData *td = timer->get(sce_fire->timer);
+				if (td != NULL && sce_fire->val1 > 0 && sum_fire > 0) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11313,10 +11337,10 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 			// Wind
 			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WIND));
-			if (sce_wind != NULL) {
+			if (sce_wind != NULL && sce_wind->timer != INVALID_TIMER) {
 				int sum_wind = sce_wind->val1 + ((sce_water != NULL) ? sce_water->val2 : 0);
-				if (sce_wind->val1 > 0 && sum_wind > 0) {
-					const struct TimerData *td = timer->get(sce_wind->timer);
+				const struct TimerData *td = timer->get(sce_wind->timer);
+				if (td != NULL && sce_wind->val1 > 0 && sum_wind > 0) {
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11328,13 +11352,16 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 			break;
 		}
 		case SC_RESIST_PROPERTY_WATER:
-			if (sc->data[SC_ARMOR_RESIST] != NULL) {
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
 				// Water
 				int sum_water = sc->data[SC_ARMOR_RESIST]->val1;
 				if (sc->data[SC_RESIST_PROPERTY_FIRE] != NULL)
 					sum_water += sc->data[SC_RESIST_PROPERTY_FIRE]->val2;
 				if (sc->data[SC_ARMOR_RESIST]->val1 > 0 && sum_water > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11348,7 +11375,6 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				if (sc->data[SC_RESIST_PROPERTY_WIND] != NULL)
 					sum_wind += sc->data[SC_RESIST_PROPERTY_WIND]->val1;
 				if (sc->data[SC_ARMOR_RESIST]->val4 > 0 && sum_wind > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11359,13 +11385,16 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 			break;
 		case SC_RESIST_PROPERTY_GROUND:
-			if (sc->data[SC_ARMOR_RESIST] != NULL) {
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
 				// Ground
 				int sum_ground = sc->data[SC_ARMOR_RESIST]->val2;
 				if (sc->data[SC_RESIST_PROPERTY_WIND] != NULL)
 					sum_ground += sc->data[SC_RESIST_PROPERTY_WIND]->val2;
 				if (sc->data[SC_ARMOR_RESIST]->val2 > 0 && sum_ground > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11379,7 +11408,6 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				if (sc->data[SC_RESIST_PROPERTY_FIRE] != NULL)
 					sum_fire += sc->data[SC_RESIST_PROPERTY_FIRE]->val1;
 				if (sc->data[SC_ARMOR_RESIST]->val3 > 0 && sum_fire > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11390,13 +11418,16 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 			break;
 		case SC_RESIST_PROPERTY_FIRE:
-			if (sc->data[SC_ARMOR_RESIST] != NULL) {
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
 				// Fire
 				int sum_fire = sc->data[SC_ARMOR_RESIST]->val3;
 				if (sc->data[SC_RESIST_PROPERTY_GROUND] != NULL)
 					sum_fire += sc->data[SC_RESIST_PROPERTY_GROUND]->val2;
 				if (sc->data[SC_ARMOR_RESIST]->val3 > 0 && sum_fire > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11410,7 +11441,6 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				if (sc->data[SC_RESIST_PROPERTY_WATER] != NULL)
 					sum_water += sc->data[SC_RESIST_PROPERTY_WATER]->val1;
 				if (sc->data[SC_ARMOR_RESIST]->val1 > 0 && sum_water > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11421,13 +11451,16 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 			break;
 		case SC_RESIST_PROPERTY_WIND:
-			if (sc->data[SC_ARMOR_RESIST] != NULL) {
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
 				// Wind
 				int sum_wind = sc->data[SC_ARMOR_RESIST]->val4;
 				if (sc->data[SC_RESIST_PROPERTY_WATER] != NULL)
 					sum_wind += sc->data[SC_RESIST_PROPERTY_WATER]->val2;
 				if (sc->data[SC_ARMOR_RESIST]->val4 > 0 && sum_wind > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
@@ -11441,7 +11474,6 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				if (sc->data[SC_RESIST_PROPERTY_GROUND] != NULL)
 					sum_ground += sc->data[SC_RESIST_PROPERTY_GROUND]->val1;
 				if (sc->data[SC_ARMOR_RESIST]->val2 > 0 && sum_ground > 0) {
-					const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
 					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
 					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
 					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
