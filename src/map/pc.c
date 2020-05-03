@@ -9288,6 +9288,72 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 	return 0;
 }
 
+/**
+ * Hides a character.
+ *
+ * @param sd The character to hide.
+ * @param show_msg Whether to show message to the character or not.
+ *
+ **/
+static void pc_hide(struct map_session_data *sd, bool show_msg)
+{
+	nullpo_retv(sd);
+
+	clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
+	sd->sc.option |= OPTION_INVISIBLE;
+	sd->vd.class = INVISIBLE_CLASS;
+
+	if (show_msg)
+		clif->message(sd->fd, atcommand->msgsd(sd, 11)); // Invisible: On
+
+	// Decrement the number of pvp players on the map.
+	map->list[sd->bl.m].users_pvp--;
+
+	if (map->list[sd->bl.m].flag.pvp != 0 && map->list[sd->bl.m].flag.pvp_nocalcrank == 0
+	    && sd->pvp_timer != INVALID_TIMER) { // Unregister the player for ranking.
+		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		sd->pvp_timer = INVALID_TIMER;
+	}
+
+	clif->changeoption(&sd->bl);
+}
+
+/**
+ * Unhides a character.
+ *
+ * @param sd The character to unhide.
+ * @param show_msg Whether to show message to the character or not.
+ *
+ **/
+static void pc_unhide(struct map_session_data *sd, bool show_msg)
+{
+	nullpo_retv(sd);
+
+	sd->sc.option &= ~OPTION_INVISIBLE;
+
+	if (sd->disguise != -1)
+		status->set_viewdata(&sd->bl, sd->disguise);
+	else
+		status->set_viewdata(&sd->bl, sd->status.class);
+
+	if (show_msg)
+		clif->message(sd->fd, atcommand->msgsd(sd, 10)); // Invisible: Off
+
+	// Increment the number of pvp players on the map.
+	map->list[sd->bl.m].users_pvp++;
+
+	if (map->list[sd->bl.m].flag.pvp != 0 && map->list[sd->bl.m].flag.pvp_nocalcrank == 0) // Register the player for ranking.
+		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
+
+	// bugreport:2266
+	map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
+
+	if (sd->disguise != -1)
+		clif->spawn_unit(&sd->bl, AREA_WOS);
+
+	clif->changeoption(&sd->bl);
+}
+
 /*==========================================
  * Give an option (type) to player (sd) and display it to client
  *------------------------------------------*/
@@ -9299,7 +9365,13 @@ static int pc_setoption(struct map_session_data *sd, int type)
 
 	//Option has to be changed client-side before the class sprite or it won't always work (eg: Wedding sprite) [Skotlex]
 	sd->sc.option=type;
-	clif->changeoption(&sd->bl);
+
+	if ((p_type & OPTION_INVISIBLE) != 0 && (type & OPTION_INVISIBLE) == 0) // Unhide character.
+		pc->unhide(sd, false);
+	else if ((p_type & OPTION_INVISIBLE) == 0 && (type & OPTION_INVISIBLE) != 0) // Hide character.
+		pc->hide(sd, false);
+	else
+		clif->changeoption(&sd->bl);
 
 	if( (type&OPTION_RIDING && !(p_type&OPTION_RIDING)) || (type&OPTION_DRAGON && !(p_type&OPTION_DRAGON) && pc->checkskill(sd,RK_DRAGONTRAINING) > 0) ) {
 		// Mounting
@@ -12824,6 +12896,8 @@ void pc_defaults(void)
 	pc->itemheal = pc_itemheal;
 	pc->percentheal = pc_percentheal;
 	pc->jobchange = pc_jobchange;
+	pc->hide = pc_hide;
+	pc->unhide = pc_unhide;
 	pc->setoption = pc_setoption;
 	pc->setcart = pc_setcart;
 	pc->setfalcon = pc_setfalcon;
