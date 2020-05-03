@@ -95,7 +95,7 @@
 // debug function name
 #ifndef __NETBSD__
 #if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
-#	if __GNUC__ >= 2
+#	if __GNUC__ >= 2 || defined(WIN32)
 #		define __func__ __FUNCTION__
 #	else
 #		define __func__ ""

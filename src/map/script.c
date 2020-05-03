@@ -27847,6 +27847,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MST_AROUND4", MST_AROUND4, false, false);
 	script->set_constant("MST_AROUND", MST_AROUND , false, false);
 
+	script->constdb_comment("Monster group constants");
+	script->set_constant("ALL_MOBS_NONBOSS", ALL_MOBS_NONBOSS, false, false);
+	script->set_constant("ALL_MOBS_BOSS", ALL_MOBS_BOSS, false, false);
+	script->set_constant("ALL_MOBS", ALL_MOBS, false, false);
+
 	script->constdb_comment("pc block constants, use with *setpcblock* and *checkpcblock*");
 	script->set_constant("PCBLOCK_NONE",     PCBLOCK_NONE,     false, false);
 	script->set_constant("PCBLOCK_MOVE",     PCBLOCK_MOVE,     false, false);
