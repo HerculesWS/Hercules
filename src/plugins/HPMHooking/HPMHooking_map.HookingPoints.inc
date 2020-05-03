@@ -2453,6 +2453,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->itemheal, HP_pc_itemheal) },
 	{ HP_POP(pc->percentheal, HP_pc_percentheal) },
 	{ HP_POP(pc->jobchange, HP_pc_jobchange) },
+	{ HP_POP(pc->hide, HP_pc_hide) },
+	{ HP_POP(pc->unhide, HP_pc_unhide) },
 	{ HP_POP(pc->setoption, HP_pc_setoption) },
 	{ HP_POP(pc->setcart, HP_pc_setcart) },
 	{ HP_POP(pc->setfalcon, HP_pc_setfalcon) },

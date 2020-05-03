@@ -6210,6 +6210,10 @@ typedef int (*HPMHOOK_pre_pc_percentheal) (struct map_session_data **sd, int *hp
 typedef int (*HPMHOOK_post_pc_percentheal) (int retVal___, struct map_session_data *sd, int hp, int sp);
 typedef int (*HPMHOOK_pre_pc_jobchange) (struct map_session_data **sd, int *class, int *upper);
 typedef int (*HPMHOOK_post_pc_jobchange) (int retVal___, struct map_session_data *sd, int class, int upper);
+typedef void (*HPMHOOK_pre_pc_hide) (struct map_session_data **sd, bool *show_msg);
+typedef void (*HPMHOOK_post_pc_hide) (struct map_session_data *sd, bool show_msg);
+typedef void (*HPMHOOK_pre_pc_unhide) (struct map_session_data **sd, bool *show_msg);
+typedef void (*HPMHOOK_post_pc_unhide) (struct map_session_data *sd, bool show_msg);
 typedef int (*HPMHOOK_pre_pc_setoption) (struct map_session_data **sd, int *type);
 typedef int (*HPMHOOK_post_pc_setoption) (int retVal___, struct map_session_data *sd, int type);
 typedef int (*HPMHOOK_pre_pc_setcart) (struct map_session_data **sd, int *type);

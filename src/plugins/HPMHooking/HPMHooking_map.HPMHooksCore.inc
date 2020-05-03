@@ -4790,6 +4790,10 @@ struct {
 	struct HPMHookPoint *HP_pc_percentheal_post;
 	struct HPMHookPoint *HP_pc_jobchange_pre;
 	struct HPMHookPoint *HP_pc_jobchange_post;
+	struct HPMHookPoint *HP_pc_hide_pre;
+	struct HPMHookPoint *HP_pc_hide_post;
+	struct HPMHookPoint *HP_pc_unhide_pre;
+	struct HPMHookPoint *HP_pc_unhide_post;
 	struct HPMHookPoint *HP_pc_setoption_pre;
 	struct HPMHookPoint *HP_pc_setoption_post;
 	struct HPMHookPoint *HP_pc_setcart_pre;
@@ -11671,6 +11675,10 @@ struct {
 	int HP_pc_percentheal_post;
 	int HP_pc_jobchange_pre;
 	int HP_pc_jobchange_post;
+	int HP_pc_hide_pre;
+	int HP_pc_hide_post;
+	int HP_pc_unhide_pre;
+	int HP_pc_unhide_post;
 	int HP_pc_setoption_pre;
 	int HP_pc_setoption_post;
 	int HP_pc_setcart_pre;
