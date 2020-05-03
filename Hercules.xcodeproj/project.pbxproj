@@ -164,6 +164,8 @@
 		A5BBC249219D076900E26B8D /* packets.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BBC218219D076900E26B8D /* packets.c */; };
 		A5BBC251219D081800E26B8D /* packets.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BBC218219D076900E26B8D /* packets.c */; };
 		A5BBC252219D081900E26B8D /* packets.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BBC218219D076900E26B8D /* packets.c */; };
+		A5C5CF5F227F959700485106 /* refine.c in Sources */ = {isa = PBXBuildFile; fileRef = A5C5CF59227F959600485106 /* refine.c */; };
+		A5C5CF60227F959700485106 /* stylist.c in Sources */ = {isa = PBXBuildFile; fileRef = A5C5CF5A227F959600485106 /* stylist.c */; };
 		A5F7946C191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946D191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
 		A5F7946E191CA34E002293AB /* sysinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = A5F79469191CA34E002293AB /* sysinfo.c */; };
@@ -494,6 +496,15 @@
 		A5BBC24E219D07A800E26B8D /* messages_ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages_ad.h; path = src/map/messages_ad.h; sourceTree = SOURCE_ROOT; };
 		A5BBC24F219D07A800E26B8D /* messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages.h; path = src/map/messages.h; sourceTree = SOURCE_ROOT; };
 		A5BBC250219D07A800E26B8D /* messages_sak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messages_sak.h; path = src/map/messages_sak.h; sourceTree = SOURCE_ROOT; };
+		A5C5CF56227F955100485106 /* packets_ac_struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packets_ac_struct.h; path = src/login/packets_ac_struct.h; sourceTree = SOURCE_ROOT; };
+		A5C5CF57227F955100485106 /* packets_ca_struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packets_ca_struct.h; path = src/login/packets_ca_struct.h; sourceTree = SOURCE_ROOT; };
+		A5C5CF58227F956900485106 /* packets_hc_struct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = packets_hc_struct.h; path = src/char/packets_hc_struct.h; sourceTree = SOURCE_ROOT; };
+		A5C5CF59227F959600485106 /* refine.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = refine.c; path = src/map/refine.c; sourceTree = SOURCE_ROOT; };
+		A5C5CF5A227F959600485106 /* stylist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = stylist.c; path = src/map/stylist.c; sourceTree = SOURCE_ROOT; };
+		A5C5CF5B227F959700485106 /* stylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stylist.h; path = src/map/stylist.h; sourceTree = SOURCE_ROOT; };
+		A5C5CF5C227F959700485106 /* refine.p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = refine.p.h; path = src/map/refine.p.h; sourceTree = SOURCE_ROOT; };
+		A5C5CF5D227F959700485106 /* mapdefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mapdefines.h; path = src/map/mapdefines.h; sourceTree = SOURCE_ROOT; };
+		A5C5CF5E227F959700485106 /* refine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = refine.h; path = src/map/refine.h; sourceTree = SOURCE_ROOT; };
 		A5F79468191CA34E002293AB /* HPMDataCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPMDataCheck.h; path = src/common/HPMDataCheck.h; sourceTree = "<group>"; };
 		A5F79469191CA34E002293AB /* sysinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sysinfo.c; path = src/common/sysinfo.c; sourceTree = "<group>"; };
 		A5F7946A191CA34E002293AB /* sysinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sysinfo.h; path = src/common/sysinfo.h; sourceTree = "<group>"; };
@@ -607,6 +618,8 @@
 				A56CC68618564387009EB79C /* login.h */,
 				A56CC68718564387009EB79C /* loginlog.c */,
 				A56CC68818564387009EB79C /* loginlog.h */,
+				A5C5CF56227F955100485106 /* packets_ac_struct.h */,
+				A5C5CF57227F955100485106 /* packets_ca_struct.h */,
 			);
 			path = "login-server";
 			sourceTree = "<group>";
@@ -652,6 +665,7 @@
 				A5467AD21A16FCB4008AFAA6 /* loginif.h */,
 				A5467AD41A16FCDC008AFAA6 /* mapif.c */,
 				A5467AD51A16FCDC008AFAA6 /* mapif.h */,
+				A5C5CF58227F956900485106 /* packets_hc_struct.h */,
 				A56CC75B185657D9009EB79C /* pincode.c */,
 				A56CC75C185657D9009EB79C /* pincode.h */,
 			);
@@ -708,6 +722,7 @@
 				A56CC78F18565812009EB79C /* mail.h */,
 				A56CC79018565812009EB79C /* map.c */,
 				A56CC79118565812009EB79C /* map.h */,
+				A5C5CF5D227F959700485106 /* mapdefines.h */,
 				A56CC79218565812009EB79C /* mapreg_sql.c */,
 				A56CC79318565812009EB79C /* mapreg.h */,
 				A56CC79418565812009EB79C /* mercenary.c */,
@@ -742,6 +757,9 @@
 				A56CC7A618565812009EB79C /* pet.h */,
 				A56CC7A718565812009EB79C /* quest.c */,
 				A56CC7A818565812009EB79C /* quest.h */,
+				A5C5CF59227F959600485106 /* refine.c */,
+				A5C5CF5E227F959700485106 /* refine.h */,
+				A5C5CF5C227F959700485106 /* refine.p.h */,
 				755495851FEE5A1F00CE4B7D /* rodex.c */,
 				755495861FEE5A1F00CE4B7D /* rodex.h */,
 				A56CC7A918565812009EB79C /* script.c */,
@@ -754,6 +772,8 @@
 				A56CC7B018565812009EB79C /* status.h */,
 				A56CC7B118565812009EB79C /* storage.c */,
 				A56CC7B218565812009EB79C /* storage.h */,
+				A5C5CF5A227F959600485106 /* stylist.c */,
+				A5C5CF5B227F959700485106 /* stylist.h */,
 				A56CC7B318565812009EB79C /* trade.c */,
 				A56CC7B418565812009EB79C /* trade.h */,
 				A56CC7B518565812009EB79C /* unit.c */,
@@ -1385,11 +1405,13 @@
 				A56CC7BF18565812009EB79C /* clif.c in Sources */,
 				A5F7946E191CA34E002293AB /* sysinfo.c in Sources */,
 				A56CC7D018565812009EB79C /* npc_chat.c in Sources */,
+				A5C5CF5F227F959700485106 /* refine.c in Sources */,
 				A56CC6CE185643BB009EB79C /* console.c in Sources */,
 				A56CC73018564C05009EB79C /* grammar.c in Sources */,
 				A56CC7DA18565812009EB79C /* skill.c in Sources */,
 				A56CC6EC185643BB009EB79C /* md5calc.c in Sources */,
 				A56CC73918564C05009EB79C /* scanner.c in Sources */,
+				A5C5CF60227F959700485106 /* stylist.c in Sources */,
 				A56CC701185643BB009EB79C /* random.c in Sources */,
 				A56CC7CD18565812009EB79C /* mapreg_sql.c in Sources */,
 				A56CC7D318565812009EB79C /* path.c in Sources */,

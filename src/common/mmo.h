@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@
 // 20120307 - 2012-03-07aRagexeRE+ - 0x970
 
 #ifndef PACKETVER
-	#define PACKETVER 20141022
+	#define PACKETVER 20190530
 #endif // PACKETVER
 
 //Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
@@ -134,22 +134,33 @@
 // Comment the following line to disable sc_data saving. [Skotlex]
 #define ENABLE_SC_SAVING
 
-#if PACKETVER >= 20070227
+#if PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
 // Comment the following like to disable server-side hot-key saving support. [Skotlex]
 // Note that newer clients no longer save hotkeys in the registry!
 #define HOTKEY_SAVING
 
-#if PACKETVER < 20090603
-	// (27 = 9 skills x 3 bars)               (0x02b9,191)
-	#define MAX_HOTKEYS 27
-#elif PACKETVER < 20090617
-	// (36 = 9 skills x 4 bars)               (0x07d9,254)
-	#define MAX_HOTKEYS 36
-#else // >= 20090617
-	// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
-	#define MAX_HOTKEYS 38
-#endif // 20090603
-#endif // 20070227
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+#define MAX_HOTKEYS 38
+#elif PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
+// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
+#define MAX_HOTKEYS 38
+#elif PACKETVER_MAIN_NUM >= 20090617 || PACKETVER_RE_NUM >= 20090617 || PACKETVER_SAK_NUM >= 20090617
+// (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
+#define MAX_HOTKEYS 38
+#elif PACKETVER_MAIN_NUM >= 20090603 || PACKETVER_RE_NUM >= 20090603 || PACKETVER_SAK_NUM >= 20090603
+// (36 = 9 skills x 4 bars)               (0x07d9,254)
+#define MAX_HOTKEYS 36
+#elif PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628
+// (27 = 9 skills x 3 bars)               (0x02b9,191)
+#define MAX_HOTKEYS 27
+#endif
+#endif  // PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+#define MAX_HOTKEYS_DB ((MAX_HOTKEYS) * 2)
+#else
+#define MAX_HOTKEYS_DB MAX_HOTKEYS
+#endif
 
 #if PACKETVER >= 20150805 /* Cart Decoration */
 	#define CART_DECORATION
@@ -207,7 +218,7 @@
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #ifndef MAX_SKILL_DB
-#define MAX_SKILL_DB 1510 ///< Maximum number of skills in the skill DB (compacted array size)
+#define MAX_SKILL_DB 1314 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
 #ifndef MAX_SKILL_ID
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
@@ -487,6 +498,7 @@ enum e_mmo_charstatus_opt {
 	OPT_NONE        = 0x0,
 	OPT_SHOW_EQUIP  = 0x1,
 	OPT_ALLOW_PARTY = 0x2,
+	OPT_ALLOW_CALL  = 0x4,
 };
 
 enum e_item_bound_type {
@@ -568,6 +580,7 @@ struct status_change_data {
 	unsigned short type;        ///< Status change type (@see enum sc_type)
 	int val1, val2, val3, val4; ///< Parameters (meaning depends on type).
 	int tick;                   ///< Remaining duration.
+	int total_tick;             ///< Total duration.
 };
 
 struct storage_data {
@@ -731,9 +744,11 @@ struct mmo_charstatus {
 
 	struct s_friend friends[MAX_FRIENDS]; //New friend system [Skotlex]
 #ifdef HOTKEY_SAVING
-	struct hotkey hotkeys[MAX_HOTKEYS];
+	struct hotkey hotkeys[MAX_HOTKEYS_DB];
 #endif
-	bool show_equip, allow_party;
+	bool show_equip;
+	bool allow_party;
+	bool allow_call;
 	unsigned short rename;
 	unsigned short slotchange;
 
@@ -750,6 +765,7 @@ struct mmo_charstatus {
 	short attendance_count;
 
 	unsigned char hotkey_rowshift;
+	unsigned char hotkey_rowshift2;
 
 	int32 title_id; // Achievement Title[Dastgir/Hercules]
 };
@@ -806,8 +822,8 @@ struct party_member {
 	int char_id;
 	char name[NAME_LENGTH];
 	int class;
+	int lv;
 	unsigned short map;
-	unsigned short lv;
 	unsigned leader : 1,
 	         online : 1;
 };
@@ -853,6 +869,7 @@ struct guild_expulsion {
 	char name[NAME_LENGTH];
 	char mes[40];
 	int account_id;
+	int char_id;
 };
 
 struct guild_skill {
@@ -891,6 +908,14 @@ struct guild_castle {
 	int mapindex;
 	char castle_name[NAME_LENGTH];
 	char castle_event[NAME_LENGTH];
+	int siege_type;
+	bool enable_client_warp;
+	struct {
+		int x;
+		int y;
+		int zeny;
+		int zeny_siege;
+	} client_warp;
 	int guild_id;
 	int economy;
 	int defense;
@@ -975,6 +1000,11 @@ enum fame_list_type {
 	RANKTYPE_PK         = 3, //Not supported yet
 };
 
+struct rodex_item {
+	struct item item;
+	int idx;
+};
+
 struct rodex_message {
 	int64 id;
 	int sender_id;
@@ -984,10 +1014,7 @@ struct rodex_message {
 	char receiver_name[NAME_LENGTH];
 	char title[RODEX_TITLE_LENGTH];
 	char body[RODEX_BODY_LENGTH];
-	struct {
-		struct item item;
-		int idx;
-	} items[RODEX_MAX_ITEM];
+	struct rodex_item items[RODEX_MAX_ITEM];
 	int64 zeny;
 	uint8 type;
 	int8 opentype;
@@ -1351,6 +1378,27 @@ enum questinfo_type {
 	QINFO_MERCENARY_CLASS
 };
 
+/** Pet hunger level **/
+enum e_pet_hunger_level {
+	PET_HUNGER_STARVING = 0,
+	PET_HUNGER_VERY_HUNGRY = 10,
+	PET_HUNGER_HUNGRY = 25,
+	PET_HUNGER_NEUTRAL = 75,
+	PET_HUNGER_SATISFIED = 90,
+	PET_HUNGER_STUFFED = 100
+};
+
+/** Pet intimacy level **/
+enum e_pet_intimacy_level {
+	PET_INTIMACY_NONE = 0,
+	PET_INTIMACY_AWKWARD = 1,
+	PET_INTIMACY_SHY = 100,
+	PET_INTIMACY_NEUTRAL = 250,
+	PET_INTIMACY_CORDIAL = 750,
+	PET_INTIMACY_LOYAL = 900,
+	PET_INTIMACY_MAX = 1000
+};
+
 /* packet size constant for itemlist */
 #if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
 #define MAX_ITEMLIST MAX_INVENTORY
@@ -1358,6 +1406,10 @@ enum questinfo_type {
 #define MAX_ITEMLIST MAX_CART
 #else
 #define MAX_ITEMLIST MAX_STORAGE
+#endif
+
+#ifndef MAX_REFINE_REQUIREMENTS
+	#define MAX_REFINE_REQUIREMENTS 4
 #endif
 
 // sanity checks...
@@ -1371,6 +1423,10 @@ enum questinfo_type {
 
 #ifdef MAX_SKILL
 #error MAX_SKILL has been replaced by MAX_SKILL_DB. Please update your custom definitions.
+#endif
+
+#if MAX_REFINE_REQUIREMENTS > 4
+#error MAX_REFINE_REQUIREMENTS is bigger than allowed, this is a hardcoded limit in the client
 #endif
 
 #endif /* COMMON_MMO_H */

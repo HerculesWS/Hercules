@@ -4,8 +4,8 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2012-2015  Hercules Dev Team
-# Copyright (C)  Athena Dev Teams
+# Copyright (C) 2012-2020 Hercules Dev Team
+# Copyright (C) Athena Dev Teams
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ AC_REVISION([m4_esyscmd_s([type git >/dev/null 2>&1 && git describe --always 2>/
 AC_PREREQ([2.59])
 AC_CONFIG_SRCDIR([src/common/cbasetypes.h])
 AC_CONFIG_FILES([Makefile src/common/Makefile])
-AC_CONFIG_FILES([3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile])
+AC_CONFIG_FILES([3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile 3rdparty/libbacktrace/Makefile 3rdparty/libbacktrace/backtrace-supported.h])
 AC_CONFIG_FILES([src/char/Makefile src/login/Makefile])
 AC_CONFIG_FILES([src/map/Makefile src/plugins/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
@@ -38,8 +38,11 @@ m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_GNU_SOURCE]
 )
 
+AC_MSG_CHECKING([host OS])
+host_os="`uname`"
+AC_MSG_RESULT([$host_os])
+
 # Root-check
-host_is="`uname`"
 case $host_os in
 CYGWIN*)
 	;;
@@ -309,6 +312,37 @@ AC_ARG_ENABLE(
 		esac
 	],
 	[enable_debug="yes"]
+)
+
+#
+# libbacktrace
+#
+AC_ARG_ENABLE(
+	[libbacktrace],
+	AC_HELP_STRING(
+		[--enable-libbacktrace@<:@=ARG@:>@],
+		[
+			Compiles with libbacktrace. (no by default - experimental)
+		]
+	),
+	[
+		enable_libbacktrace="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-libbacktrace=$enableval... stopping]]);;
+		esac
+	],
+	[
+		case $host_os in
+		Linux* )
+			enable_libbacktrace="yes"
+			;;
+		*)
+			enable_libbacktrace="no"
+			;;
+		esac
+	]
 )
 
 #
@@ -963,7 +997,6 @@ if test "$enable_sanitize" != "no" ; then
 	fi
 fi
 
-
 AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -W$1])
@@ -1392,6 +1425,237 @@ case $enable_debug in
 esac
 
 #
+# libbacktrace
+#
+if test "$enable_libbacktrace" = "no" ; then
+	USE_LIBBACKTRACE="no"
+else
+	CPPFLAGS="$CPPFLAGS -DHAVE_LIBBACKTRACE"
+	USE_LIBBACKTRACE="yes"
+
+	# libbacktrace checks
+	AC_CHECK_FLAG(-funwind-tables)
+
+	AC_PROG_AWK
+	case "$AWK" in
+		"")
+			AC_MSG_ERROR([Libbacktrace requires awk to build])
+			;;
+	esac
+
+	backtrace_supported=yes
+	AC_CHECK_HEADER([unwind.h],
+		[AC_CHECK_FUNC([_Unwind_Backtrace],
+				[BACKTRACE_FILE="backtrace.lo simple.lo"],
+				[
+					BACKTRACE_FILE="nounwind.lo"
+					backtrace_supported=no
+				]
+		)],
+		[
+			BACKTRACE_FILE="nounwind.lo"
+		 	backtrace_supported=no
+		]
+	)
+	AC_SUBST(BACKTRACE_FILE)
+
+	AC_DEFINE(HAVE_GETIPINFO, 1, [Define if _Unwind_GetIPInfo is available.])
+
+	AC_CACHE_CHECK([__sync extensions],
+		[libbacktrace_cv_sys_sync],
+		[
+			if test -n "${with_target_subdir}"; then
+				case "${host}" in
+					hppa*-*-hpux*)
+						libbacktrace_cv_sys_sync=no
+						;;
+					*)
+						libbacktrace_cv_sys_sync=yes
+						;;
+				esac
+			else
+				AC_LINK_IFELSE(
+					[
+						AC_LANG_PROGRAM([int i;],
+							[
+								__sync_bool_compare_and_swap(&i, i, i);
+								__sync_lock_test_and_set(&i, 1);
+								__sync_lock_release(&i);
+							]
+						)
+					],
+					[libbacktrace_cv_sys_sync=yes],
+					[libbacktrace_cv_sys_sync=no]
+				)
+			fi
+		]
+	)
+	BACKTRACE_SUPPORTS_THREADS=0
+	if test "$libbacktrace_cv_sys_sync" = "yes"; then
+		BACKTRACE_SUPPORTS_THREADS=1
+		AC_DEFINE([HAVE_SYNC_FUNCTIONS], 1, [Define to 1 if you have the __sync functions])
+	fi
+	AC_SUBST(BACKTRACE_SUPPORTS_THREADS)
+
+	# Test for __atomic support.
+	AC_CACHE_CHECK([__atomic extensions],
+		[libbacktrace_cv_sys_atomic],
+		[
+			if test -n "${with_target_subdir}"; then
+				libbacktrace_cv_sys_atomic=yes
+			else
+				AC_LINK_IFELSE(
+					[
+						AC_LANG_PROGRAM([int i;],
+							[
+								__atomic_load_n(&i, __ATOMIC_ACQUIRE);
+								__atomic_store_n(&i, 1, __ATOMIC_RELEASE);
+							]
+						)
+					],
+					[libbacktrace_cv_sys_atomic=yes],
+					[libbacktrace_cv_sys_atomic=no]
+				)
+			fi
+		]
+	)
+	if test "$libbacktrace_cv_sys_atomic" = "yes"; then
+		AC_DEFINE([HAVE_ATOMIC_FUNCTIONS], 1, [Define to 1 if you have the __atomic functions])
+	fi
+
+	# The library needs to be able to read the executable itself.  Compile
+	# a file to determine the executable format.  The awk script
+	# filetype.awk prints out the file type.
+	AC_CACHE_CHECK([output filetype],
+		[libbacktrace_cv_sys_filetype],
+		[
+			filetype=
+			AC_COMPILE_IFELSE(
+				[AC_LANG_PROGRAM([int i;], [int j;])],
+				[filetype=`${AWK} -f $srcdir/3rdparty/libbacktrace/filetype.awk conftest.$ac_objext`],
+				[AC_MSG_FAILURE([compiler failed])]
+			)
+			libbacktrace_cv_sys_filetype=$filetype
+		]
+	)
+
+	# Match the file type to decide what files to compile.
+	LIBBACKTRACE_FORMAT_FILE=
+	backtrace_supports_data=yes
+	case "$libbacktrace_cv_sys_filetype" in
+		elf*)
+			LIBBACKTRACE_FORMAT_FILE="elf.o"
+			;;
+		pecoff)
+			LIBBACKTRACE_FORMAT_FILE="pecoff.o"
+			backtrace_supports_data=no
+			;;
+		xcoff*)
+			LIBBACKTRACE_FORMAT_FILE="xcoff.o"
+			backtrace_supports_data=no
+			;;
+		macho*)
+			LIBBACKTRACE_FORMAT_FILE="macho.o"
+			backtrace_supports_data=no
+			;;
+		*)
+			AC_MSG_WARN([could not determine output file type])
+			LIBBACKTRACE_FORMAT_FILE="unknown.o"
+			backtrace_supported=no
+			;;
+	esac
+	AC_SUBST(LIBBACKTRACE_FORMAT_FILE)
+
+	# ELF defines.
+	elfsize=
+	case "$libbacktrace_cv_sys_filetype" in
+		elf32)
+			elfsize=32
+			;;
+		elf64)
+			elfsize=64
+			;;
+		*)
+			elfsize=unused
+	esac
+	AC_DEFINE_UNQUOTED([BACKTRACE_ELF_SIZE], [$elfsize], [ELF size: 32 or 64])
+
+	# XCOFF defines.
+	xcoffsize=
+	case "$libbacktrace_cv_sys_filetype" in
+		xcoff32)
+			xcoffsize=32
+			;;
+		xcoff64)
+			xcoffsize=64
+			;;
+		*)
+			xcoffsize=unused
+	esac
+	AC_DEFINE_UNQUOTED([BACKTRACE_XCOFF_SIZE], [$xcoffsize], [XCOFF size: 32 or 64])
+
+	BACKTRACE_SUPPORTED=0
+	if test "$backtrace_supported" = "yes"; then
+		BACKTRACE_SUPPORTED=1
+	fi
+	AC_SUBST(BACKTRACE_SUPPORTED)
+
+	BACKTRACE_SUPPORTS_DATA=0
+	if test "$backtrace_supports_data" = "yes"; then
+		BACKTRACE_SUPPORTS_DATA=1
+	fi
+	AC_SUBST(BACKTRACE_SUPPORTS_DATA)
+
+	AC_CHECK_FUNC(mmap, [have_mmap=yes], [have_mmap=no])
+
+	VIEW_FILE=mmapio.lo
+	ALLOC_FILE=mmap.lo
+
+	AC_SUBST(VIEW_FILE)
+	AC_SUBST(ALLOC_FILE)
+
+	BACKTRACE_USES_MALLOC=0
+	if test "$ALLOC_FILE" = "alloc.lo"; then
+		BACKTRACE_USES_MALLOC=1
+	fi
+	AC_SUBST(BACKTRACE_USES_MALLOC)
+
+	AC_CHECK_FUNC([dl_iterate_phdr], [have_dl_iterate_phdr=yes], [have_dl_iterate_phdr=no])
+	if test "$have_dl_iterate_phdr" = "yes"; then
+		AC_DEFINE(HAVE_DL_ITERATE_PHDR, 1, [Define if dl_iterate_phdr is available.])
+	fi
+
+	# Check for the fcntl function.
+	if test -n "${with_target_subdir}"; then
+		case "${host}" in
+			*-*-mingw*)
+				have_fcntl=no
+				;;
+			spu-*-*)
+				have_fcntl=no
+				;;
+			*)
+				have_fcntl=yes
+				;;
+		esac
+	else
+		AC_CHECK_FUNC(fcntl, [have_fcntl=yes], [have_fcntl=no])
+	fi
+	if test "$have_fcntl" = "yes"; then
+		AC_DEFINE([HAVE_FCNTL], 1, [Define to 1 if you have the fcntl function])
+	fi
+
+	AC_CHECK_DECLS(strnlen)
+	AC_CHECK_FUNCS(lstat readlink)
+
+	AC_CHECK_FUNC(getexecname, [have_getexecname=yes], [have_getexecname=no])
+	if test "$have_getexecname" = "yes"; then
+		AC_DEFINE(HAVE_GETEXECNAME, 1, [Define if getexecname is available.])
+	fi
+fi
+AC_SUBST(USE_LIBBACKTRACE)
+
+#
 # Buildbot
 #
 case $enable_buildbot in
@@ -1446,9 +1710,6 @@ AC_CHECK_FLAG(-fno-var-tracking)
 #
 # Host specific stuff
 #
-AC_MSG_CHECKING([host OS])
-host_os="`uname`"
-AC_MSG_RESULT([$host_os])
 fd_setsize=""
 DLLEXT=".so"
 case $host_os in

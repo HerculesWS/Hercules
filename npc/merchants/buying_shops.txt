@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Kisuka
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -67,31 +67,32 @@ que_job01,68,84,1	script	Black Marketeer#Buying	4_M_SITDOWN,{
 		mes "It'll cost 500 zeny for each one.";
 		next;
 		while(1) {
-			input .@input;
+			input(.@input);
 			mes "[Mr. Jass]";
-			if (.@input == 0) {
+			if (.@input <= 0) {
 				mes "Don't you need those licenses?";
 				close;
-			} else if (.@input > 10) {
+			}
+			if (.@input > 10) {
 				mes "I can only make up to 10 at a time, you know.";
 				next;
-			} else {
-				mes "It'll cost "+(.@input*500)+" zeny.";
-				if (Zeny < (.@input*500)) {
-					mes "but you don't have enough money.";
-					next;
-					mes "[Mr. Jass]";
-					mes "Don't you know the basics of business? Everything has a price.";
-					mes "If you want something, you gotta pay for it.";
-				} else {
-					mes "Ha... Ha ha ha!";
-					mes "Mr. Hugh, I'll take over your license business. You'll see!";
-					mes "*Giggle Giggle*";
-					getitem Buy_Market_Permit2,.@input;
-					Zeny -= (.@input*500);
-				}
-				close;
+				continue;
 			}
+			mes "It'll cost "+(.@input*500)+" zeny.";
+			if (Zeny < (.@input*500)) {
+				mes "but you don't have enough money.";
+				next;
+				mes "[Mr. Jass]";
+				mes "Don't you know the basics of business? Everything has a price.";
+				mes "If you want something, you gotta pay for it.";
+				close();
+			}
+			mes "Ha... Ha ha ha!";
+			mes "Mr. Hugh, I'll take over your license business. You'll see!";
+			mes "*Giggle Giggle*";
+			getitem Buy_Market_Permit2,.@input;
+			Zeny -= (.@input*500);
+			close;
 		}
 	case 2:
 		mes "[Mr. Jass]";
@@ -139,26 +140,27 @@ alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
 			mes "How many licenses do you need?";
 			next;
 			while(1) {
-				input .@input;
+				input(.@input);
 				mes "[Mr. Hugh]";
-				if (.@input == 0) {
+				if (.@input <= 0) {
 					mes "You have cancelled the trade.";
 					mes "Have a good day.";
 					close;
-				} else if (.@input > 50) {
+				}
+				if (.@input > 50) {
 					mes "Please enter a value of 50 or less.";
 					next;
-				} else {
-					mes "It'll cost "+(.@input*200)+" zeny for "+.@input+" licenses.";
-					if (Zeny < (.@input*200)) {
-						mes "but you don't seem to have enough money.";
-					} else {
-						mes "Thank you for your patronage.";
-						getitem Buy_Market_Permit,.@input; //Buy_Stall_Permit
-						Zeny -= (.@input*200);
-					}
-					close;
+					continue;
 				}
+				mes "It'll cost "+(.@input*200)+" zeny for "+.@input+" licenses.";
+				if (Zeny < (.@input*200)) {
+					mes "but you don't seem to have enough money.";
+				} else {
+					mes "Thank you for your patronage.";
+					getitem Buy_Market_Permit,.@input; //Buy_Stall_Permit
+					Zeny -= (.@input*200);
+				}
+				close;
 			}
 		} else {
 			mes "I'm Hugh from the Purchasing Team at the Alberta Merchant Guild.";
@@ -234,7 +236,7 @@ alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
 				mes "You've made a good decision.";
 				mes "Please give me the registration fee, and sign right here....";
 				next;
-				input .@name$;
+				input(.@name$);
 				mes "[Mr. Hugh]";
 				mes .@name$+"....";
 				mes "I like your handwriting.";

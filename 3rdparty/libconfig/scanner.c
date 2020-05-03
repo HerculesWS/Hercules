@@ -551,8 +551,8 @@ static const flex_int32_t yy_rule_can_match_eol[46] =
 /* -*- mode: C -*- */
 /* --------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2018  Hercules Dev Team
-   Copyright (C) 2005-2014  Mark A Lindner
+   Copyright (C) 2013-2020 Hercules Dev Team
+   Copyright (C) 2005-2014 Mark A Lindner
 
    This file is part of libconfig.
 

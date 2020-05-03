@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include "mapindex.h"
 
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/db.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -159,8 +160,61 @@ static const char *mapindex_id2name_sub(uint16 id, const char *file, int line, c
 	return mapindex->list[id].name;
 }
 
+/**
+ * Reads the db_path config of mapindex configuration file
+ * @param filename File being read (used when displaying errors)
+ * @param config Config structure being read
+ * @returns true if it read the all the configs, false otherwise
+ */
+static bool mapindex_config_read_dbpath(const char *filename, const struct config_t *config)
+{
+	nullpo_retr(false, config);
+
+	const struct config_setting_t *setting = NULL;
+
+	if ((setting = libconfig->lookup(config, "mapindex_configuration")) == NULL) {
+		ShowError("mapindex_config_read: mapindex_configuration was not found in %s!\n", filename);
+		return false;
+	}
+
+	// mapindex_configuration/file_path
+	if (libconfig->setting_lookup_mutable_string(setting, "file_path", mapindex->config_file, sizeof(mapindex->config_file)) == CONFIG_TRUE) {
+		ShowInfo("map_index file %s\n", mapindex->config_file);
+	} else {
+		ShowInfo("Failed to load map_index path, defaulting to db/map_index.txt\n");
+		safestrncpy(mapindex->config_file, "db/map_index.txt", sizeof(mapindex->config_file));
+	}
+
+	return true;
+}
+
+/**
+ * Reads conf/common/map-index.conf config file
+ * @returns true if it successfully read the file and configs, false otherwise
+ */
+static bool mapindex_config_read(void)
+{
+	struct config_t config;
+	const char *filename = "conf/common/map-index.conf";
+	
+	if (!libconfig->load_file(&config, filename))
+		return false; // Error message is already shown by libconfig->load_file
+
+	if (!mapindex_config_read_dbpath(filename, &config)) {
+		libconfig->destroy(&config);
+		return false;
+	}
+
+	ShowInfo("Done reading %s.\n", filename);
+	libconfig->destroy(&config);
+	return true;
+}
+
 static int mapindex_init(void)
 {
+	if (!mapindex_config_read())
+		ShowError("Failed to load map_index configuration. Continuing with default values...\n");
+
 	FILE *fp;
 	char line[1024];
 	int last_index = -1;
@@ -233,6 +287,9 @@ void mapindex_defaults(void)
 	mapindex->default_y = MAP_DEFAULT_Y;
 	memset (&mapindex->list, 0, sizeof (mapindex->list));
 
+	/* */
+	mapindex->config_read = mapindex_config_read;
+	mapindex->config_read_dbpath = mapindex_config_read_dbpath;
 	/* */
 	mapindex->init = mapindex_init;
 	mapindex->final = mapindex_final;

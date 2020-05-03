@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 		close;
 	}
 	.@chk_urquest = questprogress(2143,PLAYTIME);
-	.@chk_yourgdname$ = getguildname(getcharid(CHAR_ID_GUILD));
+	.@chk_yourgdname$ = getguildinfo(GUILDINFO_NAME, getcharid(CHAR_ID_GUILD));
 	if ($@gdeventv_s1 == 0) {
 		if ($@gdevents_s$ == "") {
 			$@gdeventv_s1 = 1;
@@ -520,7 +520,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 		mes "- and come back later. -";
 		close;
 	}
-	if (strcharinfo(PC_NAME) == getguildmaster(getcharid(CHAR_ID_GUILD))) {
+	if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD))) {
 		if ($@gdeventv_s2 == 0) {
 			.@que_2143 = questprogress(2143,PLAYTIME);
 			if (!.@que_2143) {

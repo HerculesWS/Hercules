@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@
 		close;
 	}
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			if (guildrelay_q == 100) {
 				if (guildtime > 22) {
 					if (gettime(GETTIME_HOUR) > 1 && gettime(GETTIME_HOUR) < guildtime) {
@@ -1265,7 +1265,7 @@
 		close;
 	}
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			if (countitem(Soul_Of_Guild) > 0) {
 				mes "[" + .@name$ + "]";
 				mes "Hm. You can't just keep";
@@ -1728,7 +1728,7 @@
 		}
 	}
 	else {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes "[" + .@name$ + "]";
 			mes "Hm? What brings you";
 			mes "here? Feel free to take";
@@ -1769,7 +1769,7 @@
 		close;
 	}
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			if (countitem(Soul_Of_Confidence) > 0) {
 				mes "[" + .@name$ + "]";
 				mes "Hm? What are you doing?";
@@ -2283,7 +2283,7 @@
 		}
 	}
 	else {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes "[" + .@name$ + "]";
 			mes "Hm. You're the master";
 			mes "of another guild, aren't";
@@ -2453,7 +2453,7 @@
 		close;
 	}
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			if (countitem(Soul_Of_Peace) > 0) {
 				mes "[" + .@name$ + "]";
 				mes "Hm? That spirit that";
@@ -3076,7 +3076,7 @@
 		}
 	}
 	else {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes "[" + .@name$ + "]";
 			mes "You might be the master";
 			mes "of a guild, but you and I";

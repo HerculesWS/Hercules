@@ -1,11 +1,11 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf8 -*-
 #
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2015  Hercules Dev Team
-# Copyright (C) 2015  Andrei Karas (4144)
+# Copyright (C) 2015-2020 Hercules Dev Team
+# Copyright (C) 2015 Andrei Karas (4144)
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -141,6 +141,24 @@ def isHaveData(fields, start, cnt):
         return True
     return False
 
+def convertToSize(size):
+    sizes = ["Size_Small", "Size_Medium", "Size_Large"]
+    if (size >= len(sizes)):
+        return size
+    return f'"{sizes[size]}"'
+
+def convertToRace(race):
+    races = ["RC_Formless", "RC_Undead", "RC_Brute", "RC_Plant", "RC_Insect", "RC_Fish", "RC_Demon", "RC_DemiHuman", "RC_Angel", "RC_Dragon"]
+    if (race >= len(races)):
+        return race
+    return f'"{races[race]}"'
+
+def convertToElement(element):
+    elements = ["Ele_Neutral", "Ele_Water", "Ele_Earth", "Ele_Fire", "Ele_Wind", "Ele_Poison", "Ele_Holy", "Ele_Dark", "Ele_Ghost", "Ele_Undead"]
+    if (element >= len(elements)):
+        return element
+    return f'"{elements[element]}"'
+
 def convertFile(inFile, itemDb):
     if inFile != "" and not os.path.exists(inFile):
         return
@@ -186,9 +204,9 @@ def convertFile(inFile, itemDb):
         endGroup()
         printField("ViewRange", fields[20])
         printField("ChaseRange", fields[21])
-        printField("Size", fields[22])
-        printField("Race", fields[23])
-        print("\tElement: ({0}, {1})".format(int(fields[24]) % 10, int(int(fields[24]) / 20)));
+        printField("Size", convertToSize(int(fields[22])))
+        printField("Race", convertToRace(int(fields[23])))
+        print("\tElement: ({0}, {1})".format(convertToElement(int(fields[24]) % 10), int(int(fields[24]) / 20)));
         mode = int(fields[25], 0)
         if mode != 0:
             startGroup("Mode")
@@ -277,13 +295,13 @@ def readItemDB(inFile, itemDb):
     return itemDb
 
 if len(sys.argv) != 4 and len(sys.argv) != 3:
-    printHelp();
+    printHelp()
     exit(1)
 startPath = sys.argv[2]
 if len(sys.argv) == 4:
     sourceFile = sys.argv[3]
 else:
-    sourceFile = "";
+    sourceFile = ""
 
 itemDb = dict()
 if sys.argv[1] == "re":
@@ -293,7 +311,7 @@ elif sys.argv[1] == "pre-re":
     itemDb = readItemDB(startPath + "/db/pre-re/item_db.conf", itemDb)
     itemDb = readItemDB(startPath + "/db/item_db2.conf", itemDb)
 else:
-    printHelp();
+    printHelp()
     exit(1)
 
 convertFile(sourceFile, itemDb)

@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Toshiro90
-//= Copyright (C)  Joseph
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Toshiro90
+//= Copyright (C) Joseph
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -194,7 +194,7 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 	.@GID = getcastledata(.@t$,1);
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		cutin "wish_maiden31",1;
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes "[Wish Maiden]";
 			mes "I am... Wish maiden.";
 			mes "Mourning in this virtual realm, Okolnir.";
@@ -258,7 +258,7 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 							donpcevent "#okolnir_"+.@sub$+"::OnEnable";
 							disablenpc "Wish Maiden#gq_"+.@sub$;
 							cutin "wish_maiden11",255;
-							announce "["+ strcharinfo(PC_NAME) +"], of the guild ["+ getguildname(.@GID) +"] has opened the gates to the realm of Okolnir.",bc_all,"0x70dbdb";
+							announce "["+ strcharinfo(PC_NAME) +"], of the guild ["+ getguildinfo(GUILDINFO_NAME, .@GID) +"] has opened the gates to the realm of Okolnir.",bc_all,"0x70dbdb";
 							end;
 						}
 						else {
@@ -2162,7 +2162,7 @@ que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WIS
 	.@t$ = ((compare(strnpcinfo(NPC_MAP),"aru"))?"arug_cas0":"schg_cas0")+(charat(strnpcinfo(NPC_MAP),getstrlen(strnpcinfo(NPC_MAP))-1));
 	.@GID = getcastledata(.@t$,1);
 	if (getcharid(CHAR_ID_GUILD) == .@GID) {
-		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			if (compare(.@sub$,"aru")) {
 				setarray .@n, 7835,1,7836,1,7837,1,7838,1,2513,1,7291,10,7293,10,7063,100,985,20;
 				.@rwd = 2541; //Asprika
@@ -2198,7 +2198,7 @@ que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WIS
 					delitem .@n[.@i],.@n[.@i+1];
 				getitem .@rwd,1;
 				getitem Valkyrie_Gift,1;
-				announce "["+ strcharinfo(PC_NAME) +"], of guild ["+ getguildname(.@GID) +"] has brought a "+getitemname(.@rwd)+" into this world.",bc_all,"0x70dbdb";
+				announce "["+ strcharinfo(PC_NAME) +"], of guild ["+ getguildinfo(GUILDINFO_NAME, .@GID) +"] has brought a "+getitemname(.@rwd)+" into this world.",bc_all,"0x70dbdb";
 				close2;
 				cutin "wish_maiden11",255;
 				disablenpc "Wish Maiden#"+.@sub$+"_gift";

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,9 @@ struct s_pet_db {
 	int defence_attack_rate;
 	int change_target_rate;
 	int autofeed;
+	int hunger_decrement;
+	int starving_delay;
+	int starving_decrement;
 	struct script_code *equip_script;
 	struct script_code *pet_script;
 
@@ -143,6 +146,7 @@ struct pet_interface {
 	int (*final) (void);
 	/* */
 	int (*hungry_val) (struct pet_data *pd);
+	void (*set_hunger) (struct pet_data *pd, int value);
 	void (*set_intimate) (struct pet_data *pd, int value);
 	int (*create_egg) (struct map_session_data *sd, int item_id);
 	int (*unlocktarget) (struct pet_data *pd);

@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Lupus
-//= Copyright (C)  Silent
-//= Copyright (C)  Evera
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) Silent
+//= Copyright (C) Evera
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1209,8 +1209,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1223,8 +1223,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1237,8 +1237,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1251,8 +1251,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 3.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 3)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 3) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1265,8 +1265,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1279,8 +1279,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 2.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 2)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 2) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1293,8 +1293,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 2.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 2)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 2) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1307,8 +1307,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 10000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 10000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 10000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;

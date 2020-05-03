@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,8 +78,6 @@
  **/
 static struct socket_interface sockt_s;
 struct socket_interface *sockt;
-
-static const char *SOCKET_CONF_FILENAME = "conf/common/socket.conf";
 
 #ifdef SEND_SHORTLIST
 // Add a fd to the shortlist so that it'll be recognized as a fd that needs
@@ -462,7 +460,7 @@ static int recv_to_fifo(int fd)
 		socket_data_ci += len;
 	}
 #endif  // SHOW_SERVER_STATS
-	return 0;
+	return (int)len;
 }
 
 static int send_from_fifo(int fd)
@@ -490,11 +488,12 @@ static int send_from_fifo(int fd)
 		return 0;
 	}
 
-	if( len > 0 )
+	if (len > 0)
 	{
+		sockt->session[fd]->wdata_tick = sockt->last_tick;
 		// some data could not be transferred?
 		// shift unsent data to the beginning of the queue
-		if( (size_t)len < sockt->session[fd]->wdata_size )
+		if ((size_t)len < sockt->session[fd]->wdata_size)
 			memmove(sockt->session[fd]->wdata, sockt->session[fd]->wdata + len, sockt->session[fd]->wdata_size - len);
 
 		sockt->session[fd]->wdata_size -= len;
@@ -648,9 +647,10 @@ static int make_listen_bind(uint32 ip, uint16 port)
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
 
-	create_session(fd, connect_client, null_send, null_parse);
+	create_session(fd, sockt->connect_client, null_send, null_parse);
 	sockt->session[fd]->client_addr = 0; // just listens
 	sockt->session[fd]->rdata_tick = 0; // disable timeouts on this socket
+	sockt->session[fd]->wdata_tick = 0;
 	return fd;
 }
 
@@ -733,6 +733,7 @@ static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseF
 	sockt->session[fd]->func_send  = func_send;
 	sockt->session[fd]->func_parse = func_parse;
 	sockt->session[fd]->rdata_tick = sockt->last_tick;
+	sockt->session[fd]->wdata_tick = sockt->last_tick;
 	sockt->session[fd]->session_data = NULL;
 	sockt->session[fd]->hdata = NULL;
 	return 0;
@@ -1505,7 +1506,7 @@ static bool socket_config_read(const char *filename, bool imported)
 
 	// import should overwrite any previous configuration, so it should be called last
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
-		if (strcmp(import, filename) == 0 || strcmp(import, SOCKET_CONF_FILENAME) == 0) {
+		if (strcmp(import, filename) == 0 || strcmp(import, sockt->SOCKET_CONF_FILENAME) == 0) {
 			ShowWarning("socket_config_read: Loop detected! Skipping 'import'...\n");
 		} else {
 			if (!socket_config_read(import, true))
@@ -1714,7 +1715,7 @@ static void socket_init(void)
 	// Get initial local ips
 	sockt->naddr_ = sockt->getips(sockt->addr_,16);
 
-	socket_config_read(SOCKET_CONF_FILENAME, false);
+	socket_config_read(sockt->SOCKET_CONF_FILENAME, false);
 
 #ifndef SOCKET_EPOLL
 	// Select based Event Dispatcher:
@@ -1855,7 +1856,7 @@ static void socket_datasync(int fd, bool send)
 			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
 		}
 
-		WFIFOSET(fd, p_len);
+		WFIFOSET2(fd, p_len);
 	} else {
 		for( i = 0; i < alen; i++ ) {
 			if( RFIFOL(fd, 4 + (i * 4) ) != data_list[i].length ) {
@@ -1864,7 +1865,7 @@ static void socket_datasync(int fd, bool send)
 				WFIFOW(fd, 0) = 0x2b0a;
 				WFIFOW(fd, 2) = 8;
 				WFIFOL(fd, 4) = 0;
-				WFIFOSET(fd, 8);
+				WFIFOSET2(fd, 8);
 				sockt->flush(fd);
 				/* shut down */
 				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);
@@ -2143,6 +2144,8 @@ void socket_defaults(void)
 {
 	sockt = &sockt_s;
 
+	sockt->SOCKET_CONF_FILENAME = "conf/common/socket.conf";
+
 	sockt->fd_max = 0;
 	/* */
 	sockt->stall_time = 60;
@@ -2177,6 +2180,7 @@ void socket_defaults(void)
 	/* */
 	sockt->flush = flush_fifo;
 	sockt->flush_fifos = flush_fifos;
+	sockt->connect_client = connect_client;
 	sockt->set_nonblocking = set_nonblocking;
 	sockt->set_defaultparse = set_defaultparse;
 	sockt->host2ip = host2ip;

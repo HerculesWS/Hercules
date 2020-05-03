@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2013-2017  Hercules Dev Team
-//= Copyright (C) 2013-2017  Haru
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) 2013-2020 Haru
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -786,10 +786,10 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
 
 	if (.errors) {
-		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
-		debugmes "**** The test was completed with " + .errors + " errors. ****";
+		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
+		consolemes(CONSOLEMES_DEBUG, "**** The test was completed with " + .errors + " errors. ****");
 	} else {
-		debugmes "Script engine self-test   [ \033[0;32mPASSED\033[0m ]";
+		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;32mPASSED\033[0m ]");
 	}
 	return .errors;
 	end;
@@ -840,8 +840,8 @@ OnReportError:
 	.@val$ = getarg(1,"");
 	.@ref$ = getarg(2,"");
 	if (.errors == 1)
-		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
-	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
+		consolemes(CONSOLEMES_DEBUG, "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****");
+	consolemes(CONSOLEMES_DEBUG, "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)");
 	++.errors;
 	//end;
 	return;

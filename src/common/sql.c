@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,6 +94,9 @@ static struct Sql *Sql_Malloc(void)
 	{
 		my_bool reconnect = 1;
 		mysql_options(&self->handle, MYSQL_OPT_RECONNECT, &reconnect);
+#ifdef WIN32
+		mysql_optionsv(&self->handle, MYSQL_PLUGIN_DIR, MARIADB_PLUGINDIR);
+#endif
 	}
 	return self;
 }

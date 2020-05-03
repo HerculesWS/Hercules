@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Muad_Dib (Prometheus Project)
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib (Prometheus Project)
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -58,8 +58,9 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "you can come back again.";
 	mes "So how many do you want?";
 	next;
-	input .@i;
-	if (.@i <= 0) close;
+	input(.@i);
+	if (.@i <= 0)
+		close;
 	mes "[Stephen]";
 	if (.@i > 5)  {
 		mes "I'm sorry, but I can't give you that many.";

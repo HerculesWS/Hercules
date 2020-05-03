@@ -322,10 +322,11 @@ L_Sell:
 	mes "You have: ^FF0000" + #monpoints + "^000000 experience points";
 	mes "How many would you like to sell?";
 	next;
-	input @sellexp;
-	if (@sellexp > #monpoints) goto L_NoExp;
-	set #monpoints,#monpoints-@sellexp;
-	set @sellearn,100*@sellexp; // Price of exp
+	input(@sellexp, 0);
+	if (@sellexp > #monpoints)
+		goto L_NoExp;
+	#monpoints -= @sellexp;
+	@sellearn = 100 * @sellexp; // Price of exp
 	Zeny += @sellearn;
 	mes "[Monster Trainer]";
 	mes "You earned ^0000FF" + @sellearn + "^000000z.";

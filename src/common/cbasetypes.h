@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
+ * Copyright (C) 2012-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -312,6 +312,13 @@ typedef uintptr_t uintptr;
 #else // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
 #define PRAGMA_GCC5(str)
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
+
+// Pragma macro only enabled on gcc >= 9
+#if defined(__GNUC__) && (GCC_VERSION >= 90000)
+#define PRAGMA_GCC9(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
+#define PRAGMA_GCC9(str)
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
 
 // fallthrough attribute only enabled on gcc >= 7.0
 #if defined(__GNUC__) && (GCC_VERSION >= 70000)

@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -80,70 +80,66 @@ prt_are_in,103,11,3	script	Arena Point Manager	4_M_JOB_HUNTER,{
 			mes "value you may enter is 20.";
 			mes "To cancel, enter ''^3355FF0^000000.''";
 			next;
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Arena Point Manager]";
 				mes "You have";
 				mes "canceled";
 				mes "this service.";
 				close;
 			}
-			else if (.@input > 20) {
+			if (.@input > 20) {
 				mes "[Arena Point Manager]";
 				mes "Your request exceeds";
 				mes "the maximum limit. Please";
 				mes "enter a value no greater than 20.";
 				close;
 			}
-			else {
-				.@want_point1 = 10 * .@input;
-				.@want_point = 5 * .@input;
-				.@my_arena_all = arena_point + .@want_point;
-				.@my_turbo_all = tt_point - .@want_point1;
-				if (.@my_arena_all > 28999) {
-					mes "[Arena Point Manager]";
-					mes "You will exceed the";
-					mes "maximum amount of";
-					mes "Arena Points if we proceed";
-					mes "with this conversion of your";
-					mes "Turbo Track Points. You cannot";
-					mes "have more than 29,000 Arena Points.";
-					next;
-					mes "[Arena Point Manager]";
-					mes "Please spend some of";
-					mes "your Arena Points before";
-					mes "using this service again.";
-					mes "Thank you for your patronage.";
-					close;
-				}
-				if (.@my_turbo_all < 0) {
-					mes "[Arena Point Manager]";
-					mes "I'm sorry, but";
-					mes "you don't have enough";
-					mes "Turbo Track Points to";
-					mes "perform this Arena";
-					mes "Point conversion.";
-					close;
-				}
-				else {
-					mes "[Arena Point Manager]";
-					mes "You have converted";
-					mes "10 Turbo Track Points";
-					mes "into 5 Arena Points " + .@input + " times.";
-					mes "A total of " + .@want_point1 + " Turbo Track Points were converted into";
-					mes "" + .@want_point +" Arena Points.";
-					tt_point -= .@want_point1;
-					arena_point += .@want_point;
-					next;
-					mes "[Arena Point Manager]";
-					mes "" + strcharinfo(PC_NAME) + ",";
-					mes "you now have";
-					mes "^4682B4" + arena_point + "^000000 Arena Points";
-					mes "and ^00688B" + tt_point + "^000000 Turbo Track Points.";
-					mes "Thank you for your patronage.";
-					close;
-				}
+			.@want_point1 = 10 * .@input;
+			.@want_point = 5 * .@input;
+			.@my_arena_all = arena_point + .@want_point;
+			.@my_turbo_all = tt_point - .@want_point1;
+			if (.@my_arena_all > 28999) {
+				mes "[Arena Point Manager]";
+				mes "You will exceed the";
+				mes "maximum amount of";
+				mes "Arena Points if we proceed";
+				mes "with this conversion of your";
+				mes "Turbo Track Points. You cannot";
+				mes "have more than 29,000 Arena Points.";
+				next;
+				mes "[Arena Point Manager]";
+				mes "Please spend some of";
+				mes "your Arena Points before";
+				mes "using this service again.";
+				mes "Thank you for your patronage.";
+				close;
 			}
+			if (.@my_turbo_all < 0) {
+				mes "[Arena Point Manager]";
+				mes "I'm sorry, but";
+				mes "you don't have enough";
+				mes "Turbo Track Points to";
+				mes "perform this Arena";
+				mes "Point conversion.";
+				close;
+			}
+			mes "[Arena Point Manager]";
+			mes "You have converted";
+			mes "10 Turbo Track Points";
+			mes "into 5 Arena Points " + .@input + " times.";
+			mes "A total of " + .@want_point1 + " Turbo Track Points were converted into";
+			mes "" + .@want_point +" Arena Points.";
+			tt_point -= .@want_point1;
+			arena_point += .@want_point;
+			next;
+			mes "[Arena Point Manager]";
+			mes "" + strcharinfo(PC_NAME) + ",";
+			mes "you now have";
+			mes "^4682B4" + arena_point + "^000000 Arena Points";
+			mes "and ^00688B" + tt_point + "^000000 Turbo Track Points.";
+			mes "Thank you for your patronage.";
+			close;
 		case 6:
 			mes "[Arena Point Manager]";
 			mes "You have";

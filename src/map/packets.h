@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -589,7 +589,6 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20070227
 	packet(0x0288,clif->pcashshop_buy,2,4,6);
 	packet(0x02b6,clif->pquestStateAck,2,6);
-	packet(0x02ba,clif->pHotkey,2,4,5,9);
 	packet(0x02c4,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
 	packet(0x02c7,clif->pReplyPartyInvite2,2,6);
 	packet(0x02c8,clif->pPartyTick,2);
@@ -597,6 +596,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x02d6,clif->pViewPlayerEquip,2);
 	packet(0x02d8,clif->p_cz_config,6);
 	packet(0x02db,clif->pBattleChat,2,4);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
+	packet(0x02ba,clif->pHotkey1);
 #endif
 
 //2008-01-02aSakexe
@@ -723,6 +726,11 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0843,clif->pGMRemove2,2);
 #endif
 
+// all versions
+#if PACKETVER >= 20100824
+	packet(0x0844,clif->pCashShopOpen1);
+#endif
+
 //2010-11-24aRagexeRE
 #if PACKETVER >= 20101124
 	packet(0x0288,clif->pcashshop_buy,4,8);
@@ -773,7 +781,6 @@ packet(0x96e,clif->ackmergeitems);
 //2011-07-18aRagexe (Thanks to Yommy!)
 #if PACKETVER >= 20110718
 // shuffle packets not added
-	packet(0x0844,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
 	packet(0x084a,clif->pCashShopClose,2);/* tell server cashshop window is being closed */
 	packet(0x0846,clif->pCashShopReqTab,2);
 	packet(0x0848,clif->pCashShopBuy,2);
@@ -1664,10 +1671,8 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2014-01-29bRagexeRE
-#if PACKETVER >= 20140129
-// new packets
-	packet(0x0a01,clif->pHotkeyRowShift,2); // CZ_SHORTCUTKEYBAR_ROTATE
+#if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
+	packet(0x0a01,clif->pHotkeyRowShift1); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
 // 2014-02-12aRagexeRE
@@ -1777,7 +1782,9 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20151104
 // new packets
 	packet(0x0a46,clif->pReqStyleChange);
+	packet(0x0a48,clif->pStyleClose);
 #endif
+
 
 // 2016-03-23aRagexeRE
 #if PACKETVER >= 20160323
@@ -1793,9 +1800,28 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
+#if PACKETVER >= 20160302
+	packet(0x0a4f,clif->plapineDdukDdak_ack);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20160504 || PACKETVER_RE_NUM >= 20160504 || defined(PACKETVER_ZERO)
+	packet(0x0a70,clif->plapineDdukDdak_close);
+#endif
+
 // all 2016-05-25
 #if PACKETVER >= 20160525
 	packet(0x0a77,clif->pCameraInfo); // CZ_CAMERA_INFO
+#endif
+
+// all 20160622+
+#if PACKETVER >= 20160622
+	packet(0x0a88,clif->pResetCooldown);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+	packet(0x0aa1, clif->pAddItemRefineryUI);
+	packet(0x0aa3, clif->pRefineryUIRefine);
+	packet(0x0aa4, clif->pRefineryUIClose);
 #endif
 
 // 2017-02-28aRagexeRE
@@ -1929,6 +1955,41 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 	packet(0x0b0f,clif->pNPCBarterPurchase);
 	packet(0x0b12,clif->pNPCBarterClosed);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190220 || PACKETVER_ZERO_NUM >= 20190220
+	packet(0x0b1c,clif->pPing);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+	packet(0x0b21,clif->pHotkey2);
+	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
+	packet(0x0b28,clif->pGuildCastleTeleportRequest);
+	packet(0x0b2c,clif->pGuildCastleInfoRequest);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703
+	packet(0x0b35,clif->pReqGearOff);
+#endif
+
+#if PACKETVER_ZERO_NUM >= 20190709
+	packet(0x0b35,clif->pReqGearOff);
+#endif
+
+#if PACKETVER >= 20190724
+	packet(0x0b4c,clif->pCashShopLimitedReq);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
+	packet(0x0b57,clif->pNPCExpandedBarterPurchase);
+	packet(0x0b58,clif->pNPCExpandedBarterClosed);
+#endif
+
+#if PACKETVER >= 20191224
+	packet(0x0b6d,clif->pCashShopOpen2);
 #endif
 
 #endif /* MAP_PACKETS_H */

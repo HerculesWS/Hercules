@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Panikon
-//= Copyright (C)  Michieru
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Panikon
+//= Copyright (C) Michieru
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -2231,449 +2231,400 @@ brasilis,180,249,5	script	Daniel#bra	4_M_KID1,{
 }
 
 bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- A key is inserted in the locked door.-";
+	mes "- A key is inserted in the locked door.-";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Turn the key.", "Ignore it.")) {
+	case 1:
+		mes "You start saying the first line of the magic words.";
+		input(.@input$);
 		next;
-		switch(select("Turn the key.", "Ignore it.")) {
-		case 1:
-			mes "You start saying the first line of the magic words.";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother the door won't open!";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 2) {
-					mes "[Sobbing Voice]";
-					mes "'^FF0000Turn the key as many times as there are colors in the rainbow.^000000'";
-					next;
-					switch(select("Open the door", "Knock on the door.", "Turn the key.", "Take the key out.")) {
-					case 1:
-						mes "The door is locked.";
-						mes "So nothing happens.";
-						close;
-					case 2:
-						mes "How many times should I try to knock?";
-						input .@input,0,999;
-						next;
-						mes "You knocked on the door "+.@input+" times.";
-						next;
-						mes "But, nothing happens.";
-						close;
-					case 3:
-						mes "How many times should I turn the key?";
-						input .@input,0,999;
-						next;
-						if (.@input == 7) {
-							mes "You turn the key 7 times.";
-							next;
-							mes "Click! Click! Click!";
-							mes "Click! Click! Click!";
-							mes "Click...!";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							mes "You hear water flushing.";
-							next;
-							specialeffect(EF_VENOMDUST, AREA, playerattached());
-							mes "Faint laughing can be heard off in the direction of the toilet.";
-							brazil_ghost = 3;
-							changequest 2208,60351;
-							close;
-						}
-						else {
-							mes "You turned over the key "+.@input+" times.";
-							next;
-							mes "But nothing doesn't happened.";
-							close;
-						}
-					case 4:
-						mes "How many times should I insert the key into the door?";
-						input .@input,0,999;
-						next;
-						mes "You inserted the key "+.@input+" times.";
-						next;
-						mes "But nothing happened.";
-						close;
-					}
-				}
-				else {
-					mes "Mother the door won't open!";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother the door won't open!";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- A key is inserted in the locked door.-";
+		if (brazil_ghost != 2) {
+			mes "Mother the door won't open!";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "'^FF0000Turn the key as many times as there are colors in the rainbow.^000000'";
+		next;
+		switch(select("Open the door", "Knock on the door.", "Turn the key.", "Take the key out.")) {
+		case 1:
+			mes "The door is locked.";
+			mes "So nothing happens.";
+			close;
+		case 2:
+			mes "How many times should I try to knock?";
+			input(.@input, 0, 999);
+			next;
+			mes "You knocked on the door "+.@input+" times.";
+			next;
+			mes "But, nothing happens.";
+			close;
+		case 3:
+			mes "How many times should I turn the key?";
+			input(.@input, 0, 999);
+			next;
+			mes "You turned over the key "+.@input+" times.";
+			next;
+			if (.@input != 7) {
+				mes "But nothing doesn't happened.";
+				close;
+			}
+			mes "Click! Click! Click!";
+			mes "Click! Click! Click!";
+			mes "Click...!";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			mes "You hear water flushing.";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the toilet.";
+			brazil_ghost = 3;
+			changequest 2208,60351;
+			close;
+		case 4:
+			mes "How many times should I insert the key into the door?";
+			input(.@input, 0, 999);
+			next;
+			mes "You inserted the key "+.@input+" times.";
+			next;
+			mes "But nothing happened.";
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- Looks like an ordinary toilet -";
-		next;
-		if (brazil_ghost > 6) {
-			switch(select("Flush the toilet.", "Doing nothing.")) {
-			case 1:
-				mes "After flushing the toilet, you suddenly feel dizzy and are suddenly swept away somewhere.";
-				specialeffect(EF_WATERFALL_SMALL_T2_90, AREA, playerattached());
-				close2;
-				warp "bra_in01",206,102;
-				end;
-			case 2:
-				mes "The water in the toilet looks gross.";
-				close;
-			}
-		}
-		switch(select("Use the toilet", "Ignore.")) {
+	mes "- Looks like an ordinary toilet -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	if (brazil_ghost > 6) {
+		switch(select("Flush the toilet.", "Doing nothing.")) {
 		case 1:
-			mes "- What was the second line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother the water is flooding!";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 3) {
-					mes "[Sobbing Voice]";
-					mes "^FF0000If the moon disappears 3 times... don't worry.....^000000";
-					next;
-					switch(select("Flush the toilet.", "Close the lid.")) {
-					case 1:
-						mes "How many times should I flush?";
-						input .@input,0,999;
-						next;
-						if (.@input == 3) {
-							mes "You flush the toilet 3 times.";
-							next;
-							mes "qwaaaaaaaaa!";
-							mes "kwaaaaaaaaaa!";
-							mes "kwaaaaaaaaaaaaaaaaaaa!";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							mes "Suddenly the sink sounds like water is flowing freely from it.";
-							next;
-							specialeffect(EF_VENOMDUST, AREA, playerattached());
-							mes "Faint laughing can be heard off in the direction of the faucet.";
-							brazil_ghost = 4;
-							changequest 60351,60352;
-							close;
-						}
-						else {
-							mes "You flush the toilet "+.@input+" times.";
-							next;
-							mes "But nothing happens.";
-							close;
-						}
-					case 2:
-						mes "You close the lid of the toilet.";
-						mes "Nothing seems to be happening.";
-						close;
-					}
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
+			mes "After flushing the toilet, you suddenly feel dizzy and are suddenly swept away somewhere.";
+			specialeffect(EF_WATERFALL_SMALL_T2_90, AREA, playerattached());
+			close2;
+			warp "bra_in01",206,102;
+			end;
 		case 2:
-			mes "You do nothing.";
+			mes "The water in the toilet looks gross.";
 			close;
 		}
 	}
-	else {
-		mes "- Looks like an ordinary toilet -";
+	switch(select("Use the toilet", "Ignore.")) {
+	case 1:
+		mes "- What was the second line to that spell now? -";
+		input(.@input$);
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother the water is flooding!";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
+			close;
+		}
+		if (brazil_ghost != 3) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "^FF0000If the moon disappears 3 times... don't worry.....^000000";
+		next;
+		switch(select("Flush the toilet.", "Close the lid.")) {
+		case 1:
+			mes "How many times should I flush?";
+			input(.@input, 0, 999);
+			next;
+			mes "You flush the toilet "+.@input+" times.";
+			next;
+			if (.@input != 3) {
+				mes "But nothing happens.";
+				close;
+			}
+			mes "qwaaaaaaaaa!";
+			mes "kwaaaaaaaaaa!";
+			mes "kwaaaaaaaaaaaaaaaaaaa!";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			mes "Suddenly the sink sounds like water is flowing freely from it.";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the faucet.";
+			brazil_ghost = 4;
+			changequest 60351,60352;
+			close;
+		case 2:
+			mes "You close the lid of the toilet.";
+			mes "Nothing seems to be happening.";
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- It seems like an ordinary faucet -";
+	mes "- It seems like an ordinary faucet -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Examine it.", "Ignore.")) {
+	case 1:
+		mes "- What was the next line to that spell now? -";
+		input(.@input$);
 		next;
-		switch(select("Examine it.", "Ignore.")) {
-		case 1:
-			mes "- What was the next line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother the drought has started!";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 4) {
-					mes "[Sobbing Voice]";
-					mes "^FF0000Don't worry... the waterfall will help it....^000000";
-					next;
-					switch(select("Tap on the faucet.", "Turn on the water.")) {
-					case 1:
-						mes "How many times will you tap the faucet?";
-						input .@input,0,999;
-						next;
-						mes "You tap the faucet "+.@input+" times.";
-						next;
-						mes "But nothing happens.";
-						close;
-					case 2:
-						mes "How many times should I turn the water on?";
-						input .@input,0,999;
-						next;
-						if (.@input == 1) {
-							mes "You turn the faucet on once.";
-							next;
-							mes "swwwaaaaaaa-";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							mes "You see the carpet move.";
-							next;
-							specialeffect(EF_VENOMDUST, AREA, playerattached());
-							mes "Faint laughing can be heard off in the direction of the carpet.";
-							brazil_ghost = 5;
-							changequest 60352,60353;
-							close;
-						}
-						else {
-							mes "You turn the faucet on "+.@input+" times.";
-							next;
-							mes "But nothing happens.";
-							close;
-						}
-					}
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother the drought has started!";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- It seems like an ordinary faucet -";
+		if (brazil_ghost != 4) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "^FF0000Don't worry... the waterfall will help it....^000000";
+		next;
+		switch(select("Tap on the faucet.", "Turn on the water.")) {
+		case 1:
+			mes "How many times will you tap the faucet?";
+			input(.@input, 0, 999);
+			next;
+			mes "You tap the faucet "+.@input+" times.";
+			next;
+			mes "But nothing happens.";
+			close;
+		case 2:
+			mes "How many times should I turn the water on?";
+			input(.@input, 0, 999);
+			next;
+			if (.@input != 1) {
+				mes "You turn the faucet on "+.@input+" times.";
+				next;
+				mes "But nothing happens.";
+				close;
+			}
+			mes "You turn the faucet on once.";
+			next;
+			mes "swwwaaaaaaa-";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			mes "You see the carpet move.";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the carpet.";
+			brazil_ghost = 5;
+			changequest 60352,60353;
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- A carpet with an intricate pattern on it -";
+	mes "- A carpet with an intricate pattern on it -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Examine it.", "Ignore.")) {
+	case 1:
+		mes "- What was the next line to that spell now? -";
+		input(.@input$);
 		next;
-		switch(select("Examine it.", "Ignore.")) {
-		case 1:
-			mes "- What was the next line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother where are my friends?";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 5) {
-					mes "[Sobbing Voice]";
-					mes "^FF0000your 7 friends....are...sleeping... now it...'s time ....to wake them........^000000";
-					next;
-					switch(select("Jump on the carpet.", "Lie on the carpet.", "Shake the carpet.")) {
-					case 1:
-						mes "How many times should I jump?";
-						input .@input,0,999;
-						next;
-						mes "You jump on the carpet "+.@input+" times.";
-						next;
-						mes "But nothing happens.";
-						close;
-					case 2:
-						mes "How many times should I lie on the carpet?";
-						input .@input,0,999;
-						next;
-						mes "You lie on the carpet "+.@input+" times.";
-						next;
-						mes "But nothing happens.";
-						close;
-					case 3:
-						mes "How many times should I shake the carpet?";
-						input .@input,0,999;
-						next;
-						if (.@input == 7) {
-							mes "You shake the carpet 7 times.";
-							next;
-							mes "- fly~ fly~ fly~ fly~ fly~ fly~ fly~ -";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							next;
-							specialeffect(EF_VENOMDUST, AREA, playerattached());
-							mes "Faint laughing can be heard off in the direction of the mirror.";
-							brazil_ghost = 6;
-							changequest 60353,60354;
-							close;
-						}
-						else {
-							mes "You shake the carpet "+.@input+" times.";
-							next;
-							mes "But nothing happens.";
-							close;
-						}
-					}
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother where are my friends?";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- A carpet with an intricate pattern on it -";
+		if (brazil_ghost != 5) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "^FF0000your 7 friends....are...sleeping... now it...'s time ....to wake them........^000000";
+		next;
+		switch(select("Jump on the carpet.", "Lie on the carpet.", "Shake the carpet.")) {
+		case 1:
+			mes "How many times should I jump?";
+			input(.@input, 0, 999);
+			next;
+			mes "You jump on the carpet "+.@input+" times.";
+			next;
+			mes "But nothing happens.";
+			close;
+		case 2:
+			mes "How many times should I lie on the carpet?";
+			input(.@input, 0, 999);
+			next;
+			mes "You lie on the carpet "+.@input+" times.";
+			next;
+			mes "But nothing happens.";
+			close;
+		case 3:
+			mes "How many times should I shake the carpet?";
+			input(.@input, 0, 999);
+			next;
+			mes "You shake the carpet "+.@input+" times.";
+			next;
+			if (.@input != 7) {
+				mes "But nothing happens.";
+				close;
+			}
+			mes "- fly~ fly~ fly~ fly~ fly~ fly~ fly~ -";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the mirror.";
+			brazil_ghost = 6;
+			changequest 60353,60354;
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- You can see a clean mirror without any marks or dust -";
+	mes "- You can see a clean mirror without any marks or dust -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Examine it.", "Ignore.")) {
+	case 1:
+		mes "- What was the next line to that spell now? -";
+		input(.@input$);
 		next;
-		switch(select("Examine it.", "Ignore.")) {
-		case 1:
-			mes "- What was the next line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(PC_NAME)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Where are you mom?";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 6) {
-					mes "[Distant Sound]";
-					mes "^FF0000kihe! hit! hit! hit! hit!^000000";
-					next;
-					mes "[Distant Sound]";
-					mes "^FF0000kihe! hit! hit! hit! hit!^000000";
-					mes "^FF0000kihe! hit! hit! hit! hit!^000000";
-					next;
-					mes "[Distant Sound]";
-					mes "Behind you...";
-					enablenpc "Ghost#bra";
-					next;
-					emotion e_omg,1;
-					mes "["+strcharinfo(PC_NAME)+"]";
-					mes "The stories about the ghost are true~!";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000my baby....^000000";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000I can't see.... my eye....^000000";
-					mes "^FF0000What's going on....?^000000";
-					next;
-					mes "- You take a deep breath and then look at the Ghost and notice it has an eye patch -";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000My eyes are so tight... can you take this off?^000000";
-					next;
-					mes "You step carefully towards the ghost.";
-					next;
-					mes "His face was covered with dust making strange contortions with it's face.";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000Come on help mom.....^000000";
-					next;
-					switch(select("Take the eye bandage off.", "Run away~.")) {
-					case 1:
-						while(1) {
-							.@cpudice = rand(1,6);
-							.@pcdice = rand(1,6);
-							if (.@cpudice != .@pcdice) {
-								emotion (57+.@cpudice),0,"Ghost#bra";
-								emotion (57+.@cpudice),1;
-								break;
-							}
-						}
-						if (.@cpudice > .@pcdice) {
-							specialeffect(EF_DEVIL, AREA, playerattached());
-							mes "[Ghost]";
-							mes "^FF0000Go away!^000000";
-							brazil_ghost = 1;
-							changequest 60354,2208;
-							percentheal -50,-50;
-							close2;
-							disablenpc "Ghost#bra";
-							warp "bra_in01",12,183;
-							end;
-						}
-						else {
-							emotion e_bzz,1;
-							mes "[Ghost]";
-							mes "^FF0000Ahh!^000000";
-							mes "The Ghost disappeared into the toilet.";
-							brazil_ghost = 7;
-							changequest 60354,60355;
-							close2;
-							disablenpc "Ghost#bra";
-							warp "bra_in01",206,100;
-							end;
-						}
-					case 2:
-						mes "You run away from the ghost.";
-						close2;
-						brazil_ghost = 1;
-						changequest 60354,2208;
-						warp "bra_in01",12,183;
-						disablenpc "Ghost#bra";
-						end;
-					}
-					close;
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Where are you mom?";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- You can see a clean mirror without any marks or dust -";
+		if (brazil_ghost != 6) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Distant Sound]";
+		mes "^FF0000kihe! hit! hit! hit! hit!^000000";
+		next;
+		mes "[Distant Sound]";
+		mes "^FF0000kihe! hit! hit! hit! hit!^000000";
+		mes "^FF0000kihe! hit! hit! hit! hit!^000000";
+		next;
+		mes "[Distant Sound]";
+		mes "Behind you...";
+		enablenpc "Ghost#bra";
+		next;
+		emotion e_omg,1;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "The stories about the ghost are true~!";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000my baby....^000000";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000I can't see.... my eye....^000000";
+		mes "^FF0000What's going on....?^000000";
+		next;
+		mes "- You take a deep breath and then look at the Ghost and notice it has an eye patch -";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000My eyes are so tight... can you take this off?^000000";
+		next;
+		mes "You step carefully towards the ghost.";
+		next;
+		mes "His face was covered with dust making strange contortions with it's face.";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000Come on help mom.....^000000";
+		next;
+		switch(select("Take the eye bandage off.", "Run away~.")) {
+		case 1:
+			while(1) {
+				.@cpudice = rand(1,6);
+				.@pcdice = rand(1,6);
+				if (.@cpudice != .@pcdice) {
+					emotion (57+.@cpudice),0,"Ghost#bra";
+					emotion (57+.@cpudice),1;
+					break;
+				}
+			}
+			if (.@cpudice > .@pcdice) {
+				specialeffect(EF_DEVIL, AREA, playerattached());
+				mes "[Ghost]";
+				mes "^FF0000Go away!^000000";
+				brazil_ghost = 1;
+				changequest 60354,2208;
+				percentheal -50,-50;
+				close2;
+				disablenpc "Ghost#bra";
+				warp "bra_in01",12,183;
+				end;
+			}
+			else {
+				emotion e_bzz,1;
+				mes "[Ghost]";
+				mes "^FF0000Ahh!^000000";
+				mes "The Ghost disappeared into the toilet.";
+				brazil_ghost = 7;
+				changequest 60354,60355;
+				close2;
+				disablenpc "Ghost#bra";
+				warp "bra_in01",206,100;
+				end;
+			}
+		case 2:
+			mes "You run away from the ghost.";
+			close2;
+			brazil_ghost = 1;
+			changequest 60354,2208;
+			warp "bra_in01",12,183;
+			disablenpc "Ghost#bra";
+			end;
+		}
+		close;
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }

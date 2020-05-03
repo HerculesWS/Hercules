@@ -9,14 +9,14 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Samuray22
-//= Copyright (C)  massdriller
-//= Copyright (C)  Lupus
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  kobra_k88
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) massdriller
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -437,50 +437,50 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 				switch(select("Jellopy.", "Fluff.", "Milk.", "Ready to Mix.")) {
 				case 1:
 					while(1) {
-						input .@input;
+						input(.@input, 0);
 						if (.@input > 10000) {
 							next;
 							mes "[Mixing Machine]";
 							mes "Error: Item limit exceeded. Please enter values less than 10,000 try again.";
 							next;
+							continue;
 						}
-						else {
-							if (countitem(Jellopy) > 0) .@mixitem1_1 += .@input;
-							.@progress = 2;
-							break;
-						}
+						if (countitem(Jellopy) > 0)
+							.@mixitem1_1 += .@input;
+						.@progress = 2;
+						break;
 					}
 					break;
 				case 2:
 					while(1) {
-						input .@input;
+						input(.@input, 0);
 						if (.@input > 10000) {
 							next;
 							mes "[Mixing Machine]";
 							mes "Error: Item limit exceeded. Please enter values less than 10,000 try again.";
 							next;
+							continue;
 						}
-						else {
-							if (countitem(Fluff) > 0) .@mixitem1_2 += .@input;
-							.@progress = 2;
-							break;
-						}
+						if (countitem(Fluff) > 0)
+							.@mixitem1_2 += .@input;
+						.@progress = 2;
+						break;
 					}
 					break;
 				case 3:
 					while(1) {
-						input .@input;
+						input(.@input, 0);
 						if (.@input > 10000) {
 							next;
 							mes "[Mixing Machine]";
 							mes "Error: Item limit exceeded. Please enter values less than 10,000 try again.";
 							next;
+							continue;
 						}
-						else {
-						if (countitem(Milk) > 0) .@mixitem1_3 += .@input;
-							.@progress = 2;
-							break;
-						}
+						if (countitem(Milk) > 0)
+							.@mixitem1_3 += .@input;
+						.@progress = 2;
+						break;
 					}
 					break;
 
@@ -499,40 +499,39 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 		mes "the Magic Powder.";
 		next;
 		while(1) {
-			input .@input;
+			input(.@input);
+			if (.@input == 0) {
+				mes "[Mixing Machine]";
+				mes "Do you want to skip this Menu?";
+				next;
+				if (select("Yes.", "No.") == 1) {
+					break;
+				}
+				continue;
+			}
 			if (.@input < 1000 || .@input > 9999) {
 				mes "[Mixing Machine]";
-				if (.@input == 0) {
-					mes "Do you want to skip this Menu?";
-					next;
-					if (select("Yes.", "No.") == 1) {
-						break;
-					}
-				}
-				else {
-					mes "Invalid Serial Number.";
-					mes "Please try again.";
-					next;
-				}
-			}
-			else {
-				mes "[Mixing Machine]";
-				mes "The Serial Number is #" + .@input + ", correct?";
+				mes "Invalid Serial Number.";
+				mes "Please try again.";
 				next;
-				if (select("Confirm.", "Cancel.") == 1) {
-					if (.@input == 8472)
-						.@magic_powder = 1;
-					else if (.@input == 3735)
-						.@magic_powder = 2;
-					else if (.@input == 2750)
-						.@magic_powder = 3;
-					else if (.@input == 5429)
-						.@magic_powder = 4;
-					else
-						.@magic_powder = 5;
-				}
-				break;
+				continue;
 			}
+			mes "[Mixing Machine]";
+			mes "The Serial Number is #" + .@input + ", correct?";
+			next;
+			if (select("Confirm.", "Cancel.") == 1) {
+				if (.@input == 8472)
+					.@magic_powder = 1;
+				else if (.@input == 3735)
+					.@magic_powder = 2;
+				else if (.@input == 2750)
+					.@magic_powder = 3;
+				else if (.@input == 5429)
+					.@magic_powder = 4;
+				else
+					.@magic_powder = 5;
+			}
+			break;
 		}
 		mes "[Mixing Machine]";
 		mes "Choose a";

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -295,13 +295,6 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 		}
 	}
 
-	//Mimic questinfo
-	VECTOR_INIT(map->list[im].qi_data);
-	VECTOR_ENSURE(map->list[im].qi_data, VECTOR_LENGTH(map->list[m].qi_data), 1);
-	for (i = 0; i < VECTOR_LENGTH(map->list[m].qi_data); i++) {
-		VECTOR_PUSH(map->list[im].qi_data, VECTOR_INDEX(map->list[m].qi_data, i));
-	}
-
 	map->list[im].m = im;
 	map->list[im].instance_id = instance_id;
 	map->list[im].instance_src_map = m;
@@ -453,7 +446,7 @@ static int instance_cleanup_sub(struct block_list *bl, va_list ap)
 			map->quit(BL_UCAST(BL_PC, bl));
 			break;
 		case BL_NPC:
-			npc->unload(BL_UCAST(BL_NPC, bl), true);
+			npc->unload(BL_UCAST(BL_NPC, bl), true, true);
 			break;
 		case BL_MOB:
 			unit->free(bl,CLR_OUTSIGHT);
@@ -518,7 +511,7 @@ static void instance_del_map(int16 m)
 		aFree(map->list[m].zone_mf);
 	}
 
-	quest->questinfo_vector_clear(m);
+	VECTOR_CLEAR(map->list[m].qi_list);
 
 	// Remove from instance
 	for( i = 0; i < instance->list[map->list[m].instance_id].num_map; i++ ) {

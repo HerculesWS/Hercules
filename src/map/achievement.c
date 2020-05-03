@@ -2,7 +2,7 @@
 * This file is part of Hercules.
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
-* Copyright (C) 2017  Hercules Dev Team
+* Copyright (C) 2017-2020 Hercules Dev Team
 * Copyright (C) Smokexyz
 * Copyright (C) Dastgir
 *
@@ -301,6 +301,9 @@ static int achievement_validate_type(struct map_session_data *sd, enum achieveme
 
 	Assert_ret(criteria->goal != 0);
 
+	if (battle_config.feature_enable_achievement == 0)
+		return 0;
+
 	if (type == ACH_QUEST) {
 		ShowError("achievement_validate_type: ACH_QUEST is not handled by this function. (use achievement_validate())\n");
 		return 0;
@@ -357,6 +360,9 @@ static bool achievement_validate(struct map_session_data *sd, int aid, unsigned 
 	nullpo_retr(false, sd);
 	Assert_retr(false, progress > 0);
 	Assert_retr(false, obj_idx < MAX_ACHIEVEMENT_OBJECTIVES);
+
+	if (battle_config.feature_enable_achievement == 0)
+		return false;
 
 	if ((ad = achievement->get(aid)) == NULL) {
 		ShowError("achievement_validate: Invalid Achievement %d provided.", aid);
@@ -1045,10 +1051,10 @@ static void achievement_get_rewards_items(struct map_session_data *sd, const str
 		if (!itemdb->isstackable(it.nameid)) {
 			it.amount = 1;
 			for (int j = 0; j < total; ++j)
-				pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT);
+				pc->additem(sd, &it, 1, LOG_TYPE_ACHIEVEMENT);
 		} else {
 			it.amount = total;
-			pc->additem(sd, &it, total, LOG_TYPE_SCRIPT);
+			pc->additem(sd, &it, total, LOG_TYPE_ACHIEVEMENT);
 		}
 	}
 }
@@ -1093,7 +1099,8 @@ static bool achievement_get_rewards(struct map_session_data *sd, const struct ac
  */
 static void achievement_readdb_ranks(void)
 {
-	const char *filename = "db/achievement_rank_db.conf";
+	char filename[256];
+	libconfig->format_db_path("achievement_rank_db.conf", filename, sizeof(filename));
 	struct config_t ar_conf = { 0 };
 	struct config_setting_t *ardb = NULL, *conf = NULL;
 	int entry = 0;
@@ -1771,7 +1778,8 @@ static void achievement_readdb_additional_fields(const struct config_setting_t *
  */
 static void achievement_readb(void)
 {
-	const char *filename = "db/"DBPATH"achievement_db.conf";
+	char filename[256];
+	libconfig->format_db_path(DBPATH"achievement_db.conf", filename, sizeof(filename));
 	struct config_t ach_conf = { 0 };
 	struct config_setting_t *achdb = NULL, *conf = NULL;
 	int entry = 0, count = 0;

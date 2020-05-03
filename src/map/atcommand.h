@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,11 @@
 #ifndef MAP_ATCOMMAND_H
 #define MAP_ATCOMMAND_H
 
+#include "map/mapdefines.h"
 #include "map/pc_groups.h"
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/mmo.h"
 
 #include <stdarg.h>
 
@@ -39,7 +41,7 @@ struct config_setting_t;
  * Defines
  **/
 #define ATCOMMAND_LENGTH 50
-#define MAX_MSG 1500
+#define MAX_MSG 1520
 #define msg_txt(idx) atcommand->msg(idx)
 #define msg_sd(sd,msg_number) atcommand->msgsd((sd),(msg_number))
 #define msg_fd(fd,msg_number) atcommand->msgfd((fd),(msg_number))
@@ -51,6 +53,16 @@ typedef enum {
 	COMMAND_ATCOMMAND = 1,
 	COMMAND_CHARCOMMAND = 2,
 } AtCommandType;
+
+/** @fakename display option flags **/
+enum fakename_option_flag {
+	FAKENAME_OPTION_NONE = 0x00,
+	FAKENAME_OPTION_SHOW_PARTYNAME = 0x01,
+	FAKENAME_OPTION_SHOW_GUILDNAME = 0x02,
+	FAKENAME_OPTION_SHOW_GUILDPOSITION = 0x04,
+	FAKENAME_OPTION_SHOW_CLANPOSITION = 0x08,
+	FAKENAME_OPTION_SHOW_TITLE = 0x10
+};
 
 /**
  * Typedef
@@ -90,6 +102,8 @@ struct atcmd_binding_data {
  * Interface
  **/
 struct atcommand_interface {
+	char (*atcmd_output)[CHAT_SIZE_MAX];
+	char (*atcmd_player_name)[NAME_LENGTH];
 	unsigned char at_symbol;
 	unsigned char char_symbol;
 	/* atcommand binding */

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
+ * Copyright (C) 2012-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include "common/hercules.h"
 #include "common/mmo.h"
 
-struct WisData;
+struct rodex_item;
 
 /**
  * mapif interface
@@ -70,7 +70,6 @@ struct mapif_interface {
 	int (*guild_withdraw) (int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes);
 	int (*guild_memberinfoshort) (struct guild *g, int idx);
 	int (*guild_broken) (int guild_id, int flag);
-	int (*guild_message) (int guild_id, int account_id, const char *mes, int len, int sfd);
 	int (*guild_basicinfochanged) (int guild_id, int type, const void *data, int len);
 	int (*guild_memberinfochanged) (int guild_id, int account_id, int char_id, int type, const void *data, int len);
 	int (*guild_skillupack) (int guild_id, uint16 skill_id, int account_id);
@@ -86,7 +85,6 @@ struct mapif_interface {
 	int (*parse_GuildLeave) (int fd, int guild_id, int account_id, int char_id, int flag, const char *mes);
 	int (*parse_GuildChangeMemberInfoShort) (int fd, int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*parse_BreakGuild) (int fd, int guild_id);
-	int (*parse_GuildMessage) (int fd, int guild_id, int account_id, const char *mes, int len);
 	int (*parse_GuildBasicInfoChange) (int fd, int guild_id, int type, const void *data, int len);
 	int (*parse_GuildMemberInfoChange) (int fd, int guild_id, int account_id, int char_id, int type, const char *data, int len);
 	int (*parse_GuildPosition) (int fd, int guild_id, int idx, const struct guild_position *p);
@@ -134,7 +132,6 @@ struct mapif_interface {
 	int (*party_withdraw) (int party_id,int account_id, int char_id);
 	int (*party_membermoved) (struct party *p, int idx);
 	int (*party_broken) (int party_id, int flag);
-	int (*party_message) (int party_id, int account_id, const char *mes, int len, int sfd);
 	int (*parse_CreateParty) (int fd, const char *name, int item, int item2, const struct party_member *leader);
 	void (*parse_PartyInfo) (int fd, int party_id, int char_id);
 	int (*parse_PartyAddMember) (int fd, int party_id, const struct party_member *member);
@@ -142,7 +139,6 @@ struct mapif_interface {
 	int (*parse_PartyLeave) (int fd, int party_id, int account_id, int char_id);
 	int (*parse_PartyChangeMap) (int fd, int party_id, int account_id, int char_id, unsigned short map, int online, unsigned int lv);
 	int (*parse_BreakParty) (int fd, int party_id);
-	int (*parse_PartyMessage) (int fd, int party_id, int account_id, const char *mes, int len);
 	int (*parse_PartyLeaderChange) (int fd, int party_id, int account_id, int char_id);
 	int (*pet_created) (int fd, int account_id, struct s_pet *p);
 	int (*pet_info) (int fd, int account_id, struct s_pet *p);
@@ -168,6 +164,8 @@ struct mapif_interface {
 	void (*rodex_send) (int fd, int sender_id, int receiver_id, int receiver_accountid, bool result);
 	void (*parse_rodex_checkname) (int fd);
 	void (*rodex_checkname) (int fd, int reqchar_id, int target_char_id, int target_class, int target_level, char *name);
+	void (*rodex_getzenyack) (int fd, int char_id, int64 mail_id, uint8 opentype, int64 zeny);
+	void (*rodex_getitemsack) (int fd, int char_id, int64 mail_id, uint8 opentype, int count, const struct rodex_item *items);
 	int (*load_guild_storage) (int fd, int account_id, int guild_id, char flag);
 	int (*save_guild_storage_ack) (int fd, int account_id, int guild_id, int fail);
 	int (*parse_LoadGuildStorage) (int fd);
@@ -179,16 +177,8 @@ struct mapif_interface {
 	int (*itembound_ack) (int fd, int aid, int guild_id);
 	void (*parse_ItemBoundRetrieve) (int fd);
 	void (*parse_accinfo) (int fd);
-	int (*broadcast) (const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
-	int (*wis_message) (struct WisData *wd);
-	void (*wis_response) (int fd, const unsigned char *src, int flag);
-	int (*wis_end) (struct WisData *wd, int flag);
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
 	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
-	int (*parse_broadcast) (int fd);
-	int (*parse_WisRequest) (int fd);
-	int (*parse_WisReply) (int fd);
-	int (*parse_WisToGM) (int fd);
 	int (*parse_Registry) (int fd);
 	int (*parse_RegistryRequest) (int fd);
 	void (*namechange_ack) (int fd, int account_id, int char_id, int type, int flag, const char *name);

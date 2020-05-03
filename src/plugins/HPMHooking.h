@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2016  Hercules Dev Team
+ * Copyright (C) 2016-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,11 @@ struct HPMHooking_core_interface {
 	const char *(*Hooked)(bool *fr);
 };
 #else // ! HERCULES_CORE
+#ifdef HERCULES_CORE_HPMI_SKIP
+extern struct HPMHooking_interface HPMHooking_s;
+#else
 HPExport struct HPMHooking_interface HPMHooking_s;
+#endif
 
 #include "HPMHooking/HPMHooking.Defs.inc"
 
@@ -50,9 +54,19 @@ HPExport struct HPMHooking_interface HPMHooking_s;
 		HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->" #funcname, (hook), HPMi->pid) \
 		)
 
+#define addHookPrePriv(ifname, funcname, hook) ( \
+		(void)((HPMHOOK_pre_PRIV__ ## ifname ## _ ## funcname)0 == (hook)), \
+		HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->p->" #funcname, (hook), HPMi->pid) \
+		)
+
 #define addHookPost(ifname, funcname, hook) ( \
 		(void)((HPMHOOK_post_ ## ifname ## _ ## funcname)0 == (hook)), \
 		HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->" #funcname, (hook), HPMi->pid) \
+		)
+
+#define addHookPostPriv(ifname, funcname, hook) ( \
+		(void)((HPMHOOK_post_PRIV__ ## ifname ## _ ## funcname)0 == (hook)), \
+		HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->p->" #funcname, (hook), HPMi->pid) \
 		)
 
 /* need better names ;/ */

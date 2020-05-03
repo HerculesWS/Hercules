@@ -9,13 +9,13 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  KirieZ
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  SinSloth
-//= Copyright (C)  Lupus
-//= Copyright (C)  Jukka
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) KirieZ
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Lupus
+//= Copyright (C) Jukka
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1888,69 +1888,8 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "from all the suspects? First,";
 		mes "tell me the code that Hans had.";
 		next;
-		input .@inputstr$;
-		if(.@inputstr$ == .@hans$){
-			mes "[Dequ'ee]";
-			mes "victkleyundncem?";
-			mes "That's certainly";
-			mes "strange sounding.";
-			mes "Now, tell me Bankley's.";
-			next;
-			input .@inputstr$;
-			if(.@inputstr$ == .@bang$){
-				mes "[Dequ'ee]";
-				mes "hekdlfiDrindkelsd..";
-				mes "What the hell is that...?";
-				mes "It's certainly cryptic.";
-				mes "What about Muetro's?";
-				next;
-				input .@inputstr$;
-				if(.@inputstr$ == .@mutr$){
-					mes "[Dequ'ee]";
-					mes "ConBanfoevidehi.";
-					mes "This is going to";
-					mes "be tough to figure";
-					mes "out. Alright, now";
-					mes "tell me Geil's.";
-					next;
-					input .@inputstr$;
-					if(.@inputstr$ == .@geil$){
-						mes "[Dequ'ee]";
-						mes "TheisWesomeof...";
-						mes "Alright, great.";
-						mes "Now all we have to";
-						mes "do is figure out what";
-						mes "all of this means.";
-						next;
-						mes "[Dequ'ee]";
-						mes "This is going to";
-						mes "be really difficult.";
-						mes "Do you have any ideas?";
-						mes "We have to figure this";
-						mes "out, it's the only clue";
-						mes "that we have...";
-						tu_swordman = 16;
-						changequest 8223,8224;
-						close;
-					} else {
-						mes "[Dequ'ee]";
-						mes "...Are you sure that you heard";
-						mes "him right? Why don't you go check it out again?";
-						close;
-					}
-				} else {
-					mes "[Dequ'ee]";
-					mes "...Are you sure that you heard";
-					mes "him right? Why don't you go check it out again?";
-					close;
-				}
-			} else {
-				mes "[Dequ'ee]";
-				mes "...Are you sure that you heard";
-				mes "him right? Why don't you go check it out again?";
-				close;
-			}
-		} else {
+		input(.@inputstr$);
+		if(.@inputstr$ != .@hans$) {
 			mes "[Dequ'ee]";
 			mes "Are you sure that's right?";
 			mes "No, no, I don't think it is.";
@@ -1958,6 +1897,63 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "if you need to?";
 			close;
 		}
+		mes "[Dequ'ee]";
+		mes "victkleyundncem?";
+		mes "That's certainly";
+		mes "strange sounding.";
+		mes "Now, tell me Bankley's.";
+		next;
+		input(.@inputstr$);
+		if(.@inputstr$ != .@bang$) {
+			mes "[Dequ'ee]";
+			mes "...Are you sure that you heard";
+			mes "him right? Why don't you go check it out again?";
+			close;
+		}
+		mes "[Dequ'ee]";
+		mes "hekdlfiDrindkelsd..";
+		mes "What the hell is that...?";
+		mes "It's certainly cryptic.";
+		mes "What about Muetro's?";
+		next;
+		input(.@inputstr$);
+		if(.@inputstr$ != .@mutr$) {
+			mes "[Dequ'ee]";
+			mes "...Are you sure that you heard";
+			mes "him right? Why don't you go check it out again?";
+			close;
+		}
+		mes "[Dequ'ee]";
+		mes "ConBanfoevidehi.";
+		mes "This is going to";
+		mes "be tough to figure";
+		mes "out. Alright, now";
+		mes "tell me Geil's.";
+		next;
+		input(.@inputstr$);
+		if(.@inputstr$ != .@geil$) {
+			mes "[Dequ'ee]";
+			mes "...Are you sure that you heard";
+			mes "him right? Why don't you go check it out again?";
+			close;
+		}
+		mes "[Dequ'ee]";
+		mes "TheisWesomeof...";
+		mes "Alright, great.";
+		mes "Now all we have to";
+		mes "do is figure out what";
+		mes "all of this means.";
+		next;
+		mes "[Dequ'ee]";
+		mes "This is going to";
+		mes "be really difficult.";
+		mes "Do you have any ideas?";
+		mes "We have to figure this";
+		mes "out, it's the only clue";
+		mes "that we have...";
+		tu_swordman = 16;
+		changequest 8223,8224;
+		close;
 	}
 	if(tu_swordman == 14){
 		mes "[Dequ'ee]";

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2014-2019  Hercules Dev Team
+ * Copyright (C) 2014-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define CHAR_GEOIP_H
 	#endif // CHAR_GEOIP_H
 	#ifdef CHAR_INTER_H
-		{ "WisData", sizeof(struct WisData), SERVER_TYPE_CHAR },
 		{ "inter_interface", sizeof(struct inter_interface), SERVER_TYPE_CHAR },
 	#else
 		#define CHAR_INTER_H
@@ -230,6 +229,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "party_member", sizeof(struct party_member), SERVER_TYPE_ALL },
 		{ "point", sizeof(struct point), SERVER_TYPE_ALL },
 		{ "quest", sizeof(struct quest), SERVER_TYPE_ALL },
+		{ "rodex_item", sizeof(struct rodex_item), SERVER_TYPE_ALL },
 		{ "rodex_maillist", sizeof(struct rodex_maillist), SERVER_TYPE_ALL },
 		{ "rodex_message", sizeof(struct rodex_message), SERVER_TYPE_ALL },
 		{ "s_elemental", sizeof(struct s_elemental), SERVER_TYPE_ALL },
@@ -465,7 +465,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "hCSData", sizeof(struct hCSData), SERVER_TYPE_MAP },
 		{ "merge_item", sizeof(struct merge_item), SERVER_TYPE_MAP },
 		{ "s_packet_db", sizeof(struct s_packet_db), SERVER_TYPE_MAP },
-		{ "stylist_data_entry", sizeof(struct stylist_data_entry), SERVER_TYPE_MAP },
 	#else
 		#define MAP_CLIF_H
 	#endif // MAP_CLIF_H
@@ -526,6 +525,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "item_combo", sizeof(struct item_combo), SERVER_TYPE_MAP },
 		{ "item_data", sizeof(struct item_data), SERVER_TYPE_MAP },
 		{ "item_group", sizeof(struct item_group), SERVER_TYPE_MAP },
+		{ "item_lapineddukddak", sizeof(struct item_lapineddukddak), SERVER_TYPE_MAP },
 		{ "item_package", sizeof(struct item_package), SERVER_TYPE_MAP },
 		{ "item_package_must_entry", sizeof(struct item_package_must_entry), SERVER_TYPE_MAP },
 		{ "item_package_rand_entry", sizeof(struct item_package_rand_entry), SERVER_TYPE_MAP },
@@ -571,9 +571,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "mapcell", sizeof(struct mapcell), SERVER_TYPE_MAP },
 		{ "mapflag_skill_adjust", sizeof(struct mapflag_skill_adjust), SERVER_TYPE_MAP },
 		{ "mapit_interface", sizeof(struct mapit_interface), SERVER_TYPE_MAP },
-		{ "questinfo", sizeof(struct questinfo), SERVER_TYPE_MAP },
-		{ "questinfo_itemreq", sizeof(struct questinfo_itemreq), SERVER_TYPE_MAP },
-		{ "questinfo_qreq", sizeof(struct questinfo_qreq), SERVER_TYPE_MAP },
 		{ "spawn_data", sizeof(struct spawn_data), SERVER_TYPE_MAP },
 	#else
 		#define MAP_MAP_H
@@ -591,14 +588,19 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "mob_chat", sizeof(struct mob_chat), SERVER_TYPE_MAP },
 		{ "mob_data", sizeof(struct mob_data), SERVER_TYPE_MAP },
 		{ "mob_db", sizeof(struct mob_db), SERVER_TYPE_MAP },
+		{ "mob_drop", sizeof(struct mob_drop), SERVER_TYPE_MAP },
 		{ "mob_interface", sizeof(struct mob_interface), SERVER_TYPE_MAP },
 		{ "mob_skill", sizeof(struct mob_skill), SERVER_TYPE_MAP },
+		{ "optdrop_group", sizeof(struct optdrop_group), SERVER_TYPE_MAP },
+		{ "optdrop_group_option", sizeof(struct optdrop_group_option), SERVER_TYPE_MAP },
+		{ "optdrop_group_optslot", sizeof(struct optdrop_group_optslot), SERVER_TYPE_MAP },
 		{ "spawn_info", sizeof(struct spawn_info), SERVER_TYPE_MAP },
 	#else
 		#define MAP_MOB_H
 	#endif // MAP_MOB_H
 	#ifdef MAP_NPC_H
 		{ "event_data", sizeof(struct event_data), SERVER_TYPE_MAP },
+		{ "npc_barter_currency", sizeof(struct npc_barter_currency), SERVER_TYPE_MAP },
 		{ "npc_chat_interface", sizeof(struct npc_chat_interface), SERVER_TYPE_MAP },
 		{ "npc_data", sizeof(struct npc_data), SERVER_TYPE_MAP },
 		{ "npc_interface", sizeof(struct npc_interface), SERVER_TYPE_MAP },
@@ -665,8 +667,13 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_ACK_LEAVE_GUILD1", sizeof(struct PACKET_ZC_ACK_LEAVE_GUILD1), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_LEAVE_GUILD2", sizeof(struct PACKET_ZC_ACK_LEAVE_GUILD2), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_OPEN_WRITE_MAIL", sizeof(struct PACKET_ZC_ACK_OPEN_WRITE_MAIL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_RANKING_name", sizeof(struct PACKET_ZC_ACK_RANKING_name), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_RANKING_points", sizeof(struct PACKET_ZC_ACK_RANKING_points), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_RANKING_sub", sizeof(struct PACKET_ZC_ACK_RANKING_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_REMOVE_ITEM_MAIL", sizeof(struct PACKET_ZC_ACK_REMOVE_ITEM_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_REQMAKINGITEM", sizeof(struct PACKET_ZC_ACK_REQMAKINGITEM), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_REQNAME_TITLE", sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ACK_REQNAMEALL", sizeof(struct PACKET_ZC_ACK_REQNAMEALL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_SCHEDULER_CASHITEM", sizeof(struct PACKET_ZC_ACK_SCHEDULER_CASHITEM), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub", sizeof(struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ACK_TOUSESKILL", sizeof(struct PACKET_ZC_ACK_TOUSESKILL), SERVER_TYPE_MAP },
@@ -677,6 +684,10 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_ADD_ITEM_TO_MAIL", sizeof(struct PACKET_ZC_ADD_ITEM_TO_MAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ADD_ITEM_TO_STORE", sizeof(struct PACKET_ZC_ADD_ITEM_TO_STORE), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_ADD_MEMBER_TO_GROUP", sizeof(struct PACKET_ZC_ADD_MEMBER_TO_GROUP), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ADD_SKILL", sizeof(struct PACKET_ZC_ADD_SKILL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_AUTORUN_SKILL", sizeof(struct PACKET_ZC_AUTORUN_SKILL), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_BAN_LIST", sizeof(struct PACKET_ZC_BAN_LIST), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_BAN_LIST_sub", sizeof(struct PACKET_ZC_BAN_LIST_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CASH_ITEM_DELETE", sizeof(struct PACKET_ZC_CASH_ITEM_DELETE), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CASH_TIME_COUNTER", sizeof(struct PACKET_ZC_CASH_TIME_COUNTER), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_CHECKNAME", sizeof(struct PACKET_ZC_CHECKNAME), SERVER_TYPE_MAP },
@@ -710,6 +721,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_NOTIFY_UNREADMAIL", sizeof(struct PACKET_ZC_NOTIFY_UNREADMAIL), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_WEAPONITEMLIST", sizeof(struct PACKET_ZC_NOTIFY_WEAPONITEMLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub", sizeof(struct PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub", sizeof(struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_OPEN_UI", sizeof(struct PACKET_ZC_OPEN_UI), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_OVERWEIGHT_PERCENT", sizeof(struct PACKET_ZC_OVERWEIGHT_PERCENT), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_PC_CASH_POINT_ITEMLIST", sizeof(struct PACKET_ZC_PC_CASH_POINT_ITEMLIST), SERVER_TYPE_MAP },
@@ -725,19 +737,24 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "PACKET_ZC_REMOVE_EFFECT", sizeof(struct PACKET_ZC_REMOVE_EFFECT), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_REPAIRITEMLIST", sizeof(struct PACKET_ZC_REPAIRITEMLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_REPAIRITEMLIST_sub", sizeof(struct PACKET_ZC_REPAIRITEMLIST_sub), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_ROLE_CHANGE", sizeof(struct PACKET_ZC_ROLE_CHANGE), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SEARCH_STORE_INFO_ACK", sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SEARCH_STORE_INFO_ACK_sub", sizeof(struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SKILL_SCALE", sizeof(struct PACKET_ZC_SKILL_SCALE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_SKILLINFO_LIST", sizeof(struct PACKET_ZC_SKILLINFO_LIST), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_SKILLINFO_UPDATE2", sizeof(struct PACKET_ZC_SKILLINFO_UPDATE2), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_SPRITE_CHANGE", sizeof(struct PACKET_ZC_SPRITE_CHANGE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_STATE_CHANGE", sizeof(struct PACKET_ZC_STATE_CHANGE), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_STATUS_CHANGE_ACK", sizeof(struct PACKET_ZC_STATUS_CHANGE_ACK), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_STYLE_CHANGE_RES", sizeof(struct PACKET_ZC_STYLE_CHANGE_RES), SERVER_TYPE_MAP },
+		{ "PACKET_ZC_TALKBOX_CHATCONTENTS", sizeof(struct PACKET_ZC_TALKBOX_CHATCONTENTS), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_UI_ACTION", sizeof(struct PACKET_ZC_UI_ACTION), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE", sizeof(struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_USE_ITEM_ACK", sizeof(struct PACKET_ZC_USE_ITEM_ACK), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_WARPLIST", sizeof(struct PACKET_ZC_WARPLIST), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_WARPLIST_sub", sizeof(struct PACKET_ZC_WARPLIST_sub), SERVER_TYPE_MAP },
 		{ "PACKET_ZC_WRITE_MAIL_RESULT", sizeof(struct PACKET_ZC_WRITE_MAIL_RESULT), SERVER_TYPE_MAP },
-		{ "ZC_INVENTORY_END", sizeof(struct ZC_INVENTORY_END), SERVER_TYPE_MAP },
-		{ "ZC_INVENTORY_START", sizeof(struct ZC_INVENTORY_START), SERVER_TYPE_MAP },
+		{ "SKILLDATA", sizeof(struct SKILLDATA), SERVER_TYPE_MAP },
 		{ "ZC_PROGRESS_ACTOR", sizeof(struct ZC_PROGRESS_ACTOR), SERVER_TYPE_MAP },
 		{ "ZC_STORE_ITEMLIST_EQUIP", sizeof(struct ZC_STORE_ITEMLIST_EQUIP), SERVER_TYPE_MAP },
 		{ "ZC_STORE_ITEMLIST_NORMAL", sizeof(struct ZC_STORE_ITEMLIST_NORMAL), SERVER_TYPE_MAP },
@@ -772,7 +789,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_equipitem_ack", sizeof(struct packet_equipitem_ack), SERVER_TYPE_MAP },
 		{ "packet_gm_monster_item", sizeof(struct packet_gm_monster_item), SERVER_TYPE_MAP },
 		{ "packet_graffiti_entry", sizeof(struct packet_graffiti_entry), SERVER_TYPE_MAP },
-		{ "packet_hotkey", sizeof(struct packet_hotkey), SERVER_TYPE_MAP },
 		{ "packet_idle_unit", sizeof(struct packet_idle_unit), SERVER_TYPE_MAP },
 		{ "packet_idle_unit2", sizeof(struct packet_idle_unit2), SERVER_TYPE_MAP },
 		{ "packet_item_drop_announce", sizeof(struct packet_item_drop_announce), SERVER_TYPE_MAP },
@@ -783,7 +799,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_monster_hp", sizeof(struct packet_monster_hp), SERVER_TYPE_MAP },
 		{ "packet_notify_bounditem", sizeof(struct packet_notify_bounditem), SERVER_TYPE_MAP },
 		{ "packet_npc_market_purchase", sizeof(struct packet_npc_market_purchase), SERVER_TYPE_MAP },
-		{ "packet_npc_market_result_ack", sizeof(struct packet_npc_market_result_ack), SERVER_TYPE_MAP },
 		{ "packet_package_item_announce", sizeof(struct packet_package_item_announce), SERVER_TYPE_MAP },
 		{ "packet_party_leader_changed", sizeof(struct packet_party_leader_changed), SERVER_TYPE_MAP },
 		{ "packet_quest_add_header", sizeof(struct packet_quest_add_header), SERVER_TYPE_MAP },
@@ -795,7 +810,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "packet_quest_update_header", sizeof(struct packet_quest_update_header), SERVER_TYPE_MAP },
 		{ "packet_quest_update_hunt", sizeof(struct packet_quest_update_hunt), SERVER_TYPE_MAP },
 		{ "packet_reqname_ack", sizeof(struct packet_reqname_ack), SERVER_TYPE_MAP },
-		{ "packet_reqnameall_ack", sizeof(struct packet_reqnameall_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_close_ack", sizeof(struct packet_roulette_close_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_generate_ack", sizeof(struct packet_roulette_generate_ack), SERVER_TYPE_MAP },
 		{ "packet_roulette_info_ack", sizeof(struct packet_roulette_info_ack), SERVER_TYPE_MAP },
@@ -844,6 +858,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define MAP_PC_GROUPS_H
 	#endif // MAP_PC_GROUPS_H
 	#ifdef MAP_PC_H
+		{ "autocast_data", sizeof(struct autocast_data), SERVER_TYPE_MAP },
 		{ "autotrade_vending", sizeof(struct autotrade_vending), SERVER_TYPE_MAP },
 		{ "class_exp_group", sizeof(struct class_exp_group), SERVER_TYPE_MAP },
 		{ "class_exp_tables", sizeof(struct class_exp_tables), SERVER_TYPE_MAP },
@@ -881,9 +896,25 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "quest_dropitem", sizeof(struct quest_dropitem), SERVER_TYPE_MAP },
 		{ "quest_interface", sizeof(struct quest_interface), SERVER_TYPE_MAP },
 		{ "quest_objective", sizeof(struct quest_objective), SERVER_TYPE_MAP },
+		{ "questinfo", sizeof(struct questinfo), SERVER_TYPE_MAP },
+		{ "questinfo_itemreq", sizeof(struct questinfo_itemreq), SERVER_TYPE_MAP },
+		{ "questinfo_qreq", sizeof(struct questinfo_qreq), SERVER_TYPE_MAP },
 	#else
 		#define MAP_QUEST_H
 	#endif // MAP_QUEST_H
+	#ifdef MAP_REFINE_H
+		{ "refine_interface", sizeof(struct refine_interface), SERVER_TYPE_MAP },
+		{ "s_refine_requirement", sizeof(struct s_refine_requirement), SERVER_TYPE_MAP },
+	#else
+		#define MAP_REFINE_H
+	#endif // MAP_REFINE_H
+	#ifdef MAP_REFINE_P_H
+		{ "refine_interface_dbs", sizeof(struct refine_interface_dbs), SERVER_TYPE_MAP },
+		{ "refine_interface_private", sizeof(struct refine_interface_private), SERVER_TYPE_MAP },
+		{ "s_refine_info", sizeof(struct s_refine_info), SERVER_TYPE_MAP },
+	#else
+		#define MAP_REFINE_P_H
+	#endif // MAP_REFINE_P_H
 	#ifdef MAP_RODEX_H
 		{ "rodex_interface", sizeof(struct rodex_interface), SERVER_TYPE_MAP },
 	#else
@@ -946,7 +977,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_STATUS_H
 		{ "regen_data", sizeof(struct regen_data), SERVER_TYPE_MAP },
 		{ "regen_data_sub", sizeof(struct regen_data_sub), SERVER_TYPE_MAP },
-		{ "s_refine_info", sizeof(struct s_refine_info), SERVER_TYPE_MAP },
 		{ "s_status_dbs", sizeof(struct s_status_dbs), SERVER_TYPE_MAP },
 		{ "sc_display_entry", sizeof(struct sc_display_entry), SERVER_TYPE_MAP },
 		{ "status_change", sizeof(struct status_change), SERVER_TYPE_MAP },
@@ -963,6 +993,12 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define MAP_STORAGE_H
 	#endif // MAP_STORAGE_H
+	#ifdef MAP_STYLIST_H
+		{ "stylist_data_entry", sizeof(struct stylist_data_entry), SERVER_TYPE_MAP },
+		{ "stylist_interface", sizeof(struct stylist_interface), SERVER_TYPE_MAP },
+	#else
+		#define MAP_STYLIST_H
+	#endif // MAP_STYLIST_H
 	#ifdef MAP_TRADE_H
 		{ "trade_interface", sizeof(struct trade_interface), SERVER_TYPE_MAP },
 	#else

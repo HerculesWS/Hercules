@@ -9,10 +9,10 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  rAthena Dev Team
-//= Copyright (C)  eAthena Dev Team
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -98,13 +98,13 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "100,000 zeny.";
 	mes "How many would you like to purchase?";
 	next;
-	input .@amount;
-	if (.@amount == 0) {
+	input(.@amount);
+	if (.@amount <= 0) {
 		mes "[Craft Book Merchant]";
 		mes "Would you like to see some different books?";
 		close;
 	}
-	if (.@amount < 1 || .@amount > 99 ){
+	if (.@amount > 99 ){
 		mes "[Craft Book Merchant]";
 		mes "You cannot purchase more than 100 at a time.";
 		close;

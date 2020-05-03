@@ -9,14 +9,14 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  SinSloth
-//= Copyright (C)  Zephiris
-//= Copyright (C)  Vicious
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  DracoRPG
-//= Copyright (C)  Sara-chan
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Zephiris
+//= Copyright (C) Vicious
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) DracoRPG
+//= Copyright (C) Sara-chan
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -120,3 +120,5 @@ lighthalzen,251,299,0	warp	lhz_house3_1-1	1,1,lhz_in03,97,21
 lhz_in03,93,21,0	warp	lhz_house3_1-2	1,1,lighthalzen,247,299
 lhz_in03,134,14,0	warp	lhz_house3_2-1	1,1,lhz_in03,125,90
 lhz_in03,120,90,0	warp	lhz_house3_2-2	1,1,lhz_in03,130,14
+lighthalzen,340,240,0	warp	lhz_pub3-1	1,1,lhz_in03,180,86
+lhz_in03,180,90,0	warp	lhz_pub3-2	1,1,lighthalzen,339,245

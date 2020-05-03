@@ -1,7 +1,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2013-2018  Hercules Dev Team
+# Copyright (C) 2013-2020 Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -103,7 +103,7 @@ Makefile: Makefile.in
 
 ../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@$(CC) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ @LIBS@ @MYSQL_LIBS@ -o $@ $<
 
 ../../plugins/HPMHooking_login@DLLEXT@: HPMHOOKINGTYPE = LOGIN
 ../../plugins/HPMHooking_char@DLLEXT@: HPMHOOKINGTYPE = CHAR

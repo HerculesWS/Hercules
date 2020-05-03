@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2013-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Euphy
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -151,18 +151,19 @@ function	script	F_Invest_Abyss	{
 			mes "Please choose between 1 to 200.";
 			mes "Please enter 0 to cancel.";
 			next;
-			input .@units;
+			input(.@units);
 			if (.@units < 0 || .@units > 200) {
 				mes getarg(1);
 				mes "You've exceeded the amount per investment.";
 				mes "Please try again.";
 				close;
-			} else if (.@units == 0) {
+			}
+			if (.@units == 0) {
 				mes getarg(1);
 				mes "Canceled.";
 				close;
-			} else
-				break;
+			}
+			break;
 		case 5:
 			mes getarg(1);
 			mes "Canceled.";
@@ -199,18 +200,19 @@ function	script	F_Invest_Abyss	{
 			mes "Please choose between 1 to 20.";
 			mes "Please enter 0 to cancel.";
 			next;
-			input .@tickets;
+			input(.@tickets);
 			if (.@tickets < 0 || .@tickets > 20) {
 				mes getarg(1);
 				mes "You've exceeded the amount per investment.";
 				mes "Please try again.";
 				close;
-			} else if (.@tickets == 0) {
+			}
+			if (.@tickets == 0) {
 				mes getarg(1);
 				mes "Canceled.";
 				close;
-			} else
-				break;
+			}
+			break;
 		case 4:
 			mes getarg(1);
 			mes "Canceled.";
@@ -906,7 +908,7 @@ OnAgitInvest:
 		for(.@i = 1; .@i<=5; ++.@i) {
 			.@castle_name$[.@i] = getcastlename(.@npc$+"g_cas0"+.@i);
 			.@owner_id[.@i] = getcastledata(.@npc$+"g_cas0"+.@i,1);
-			.@owner_name$[.@i] = getguildname(.@owner_id[.@i]);
+			.@owner_name$[.@i] = getguildinfo(GUILDINFO_NAME, .@owner_id[.@i]);
 			if (.@guild == .@owner_id[.@i]) {
 				.@menu$ = .@menu$+.@castle_name$[.@i]+" ["+.@owner_name$[.@i]+"] Guild:";
 				.@castles_owned = .@castles_owned | (1<<.@i);
@@ -1060,7 +1062,7 @@ OnAgitInvest:
 		for(.@i = 1; .@i<=5; ++.@i) {
 			.@map$ = .@npc$+"g_cas0"+.@i;
 			.@fund[.@i] = getd("$@vfund_"+.@npc$+"0"+.@i);
-			mes getcastlename(.@map$)+" "+getguildname(getcastledata(.@map$,1))+" Guild: "+.@fund[.@i];
+			mes getcastlename(.@map$)+" "+getguildinfo(GUILDINFO_NAME, getcastledata(.@map$,1))+" Guild: "+.@fund[.@i];
 		}
 		.@fund[0] = getd("$@vfund_"+.@npc$+"_extra");
 		mes .@realm$+" normal: "+.@fund[0];

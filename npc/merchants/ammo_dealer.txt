@@ -9,14 +9,14 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Masao
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Lupus
-//= Copyright (C)  Legionaire
-//= Copyright (C)  Paradox924X
-//= Copyright (C)  Playtester
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Kisuka
+//= Copyright (C) Lupus
+//= Copyright (C) Legionaire
+//= Copyright (C) Paradox924X
+//= Copyright (C) Playtester
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ function	script	Bullet_Trade	{
 	mes "that you'd like. If you want to";
 	mes "cancel, then just enter ''0.''";
 	next;
-	input .@amount;
+	input(.@amount);
 	if (.@amount < 1 || .@amount > 500) {
 		mes "[Tony]";
 		mes "Hey, I can't give you";

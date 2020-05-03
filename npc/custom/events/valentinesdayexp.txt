@@ -95,12 +95,15 @@ alberta,26,243,4	script	Stephen#val1	1_M_MERCHANT,{
 	mes "you can come back again.";
 	mes "So how many do you want?";
 	next;
-	set @needmon,0;
-	input @flag_num;
-	if (@flag_num <= 0) goto L_NONE;
-	if (@flag_num > 5) goto L_ERR;
-	set @needmon,@flag_num*5000;
-	if (Zeny < @needmon) goto L_NOTENO;
+	@needmon = 0;
+	input(@flag_num);
+	if (@flag_num <= 0)
+		goto L_NONE;
+	if (@flag_num > 5)
+		goto L_ERR;
+	@needmon = @flag_num * 5000;
+	if (Zeny < @needmon)
+		goto L_NOTENO;
 	Zeny -= @needmon;
 	getitem 558,@flag_num;
 	mes "[Stephen]";
@@ -154,13 +157,17 @@ alberta,29,243,4	script	Jainie#val1	1_M_INNKEEPER,{
 	mes "you can come back again.";
 	mes "So how many do you want? 1 portion is 4500z + 1 Milk.";
 	next;
-	set @needmon,0;
-	input @flag_num;
-	if (@flag_num == 0) goto L_NONE;
-	if (@flag_num > 5) goto L_ERR;
-	set @needmon,@flag_num*4500;
-	if (Zeny < @needmon) goto L_NOTENO;
-	if (countitem(Milk) < @flag_num) goto L_NOMILK;
+	@needmon = 0;
+	input(@flag_num);
+	if (@flag_num == 0)
+		goto L_NONE;
+	if (@flag_num > 5)
+		goto L_ERR;
+	@needmon = @flag_num * 4500;
+	if (Zeny < @needmon)
+		goto L_NOTENO;
+	if (countitem(Milk) < @flag_num)
+		goto L_NOMILK;
 	Zeny -= @needmon;
 	delitem 519,@flag_num;
 	getitem 561,@flag_num;

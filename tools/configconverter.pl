@@ -3,8 +3,8 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2016  Hercules Dev Team
-# Copyright (C) 2016  Haru
+# Copyright (C) 2016-2020 Hercules Dev Team
+# Copyright (C) 2016 Haru
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -554,7 +554,6 @@ my @defaults = (
 			guild_exp_limit                   => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 50},
 			guild_max_castles                 => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 0},
 			guild_skill_relog_delay           => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "guild:", default => "false"},
-			castle_defense_rate               => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 100},
 			gvg_flee_penalty                  => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 20},
 			require_glory_guild               => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "guild:", default => "false"},
 			max_guild_alliance                => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "guild:", default => 3},

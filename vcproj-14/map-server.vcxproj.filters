@@ -109,6 +109,9 @@
     <ClCompile Include="..\src\map\storage.c">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\map\stylist.c">
+      <Filter>map</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\map\trade.c">
       <Filter>map</Filter>
     </ClCompile>
@@ -215,6 +218,9 @@
       <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="..\src\map\clan.c">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\map\refine.c">
       <Filter>map</Filter>
     </ClCompile>
   </ItemGroup>
@@ -340,6 +346,9 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\storage.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\stylist.h">
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\trade.h">
@@ -493,6 +502,12 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\clan.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\refine.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\refine.p.h">
       <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>

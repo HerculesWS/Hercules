@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Z3R0
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Z3R0
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@
 			mes .@npc$;
 			mes "Alright then, please sign here.";
 			next;
-			input .@charname$;
+			input(.@charname$);
 			if (.@charname$ == strcharinfo(PC_NAME)) {
 				mes .@npc$;
 				mes "Okay, good.";
@@ -202,7 +202,7 @@
 				mes "The trade cannot be completed without your signature.";
 				close;
 			}
-			input .@charname$;
+			input(.@charname$);
 			if (.@charname$ == strcharinfo(PC_NAME)) {
 				mes .@npc$;
 				mes "Your signature has been received.";
@@ -218,12 +218,10 @@
 				Zeny += 499000000;
 				close;
 			}
-			else {
-				mes .@npc$;
-				mes "Is this really your signature?";
-				mes "Will sign again to confirm?";
-				next;
-			}
+			mes .@npc$;
+			mes "Is this really your signature?";
+			mes "Will sign again to confirm?";
+			next;
 		}
 	}
 }

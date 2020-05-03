@@ -9,14 +9,14 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  brianluau
-//= Copyright (C)  Samuray22
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Lupus
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) brianluau
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -954,7 +954,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "But isn't";
 					mes "the file about...";
-					input @str$;
+					input(@str$);
 					mes "^0000FF" + @str$ + "?";
 					next;
 					if (@str$ == "the 1st squad's final mission") {
@@ -1007,7 +1007,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 				next;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Isn't the file...";
-				input @str$;
+				input(@str$);
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "^0000FF" + @str$ + "?";
 				next;
@@ -1155,7 +1155,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 					mes "Please do not use";
 					mes "capital letters.^000000";
 					next;
-					input .@input$;
+					input(.@input$);
 					if (compare(.@input$,"crusader") == 1) {
 						mes "^663300[Keyword: ^996633Crusader^663300]";
 						mes "Crusaders are warriors preparing for the upcoming Holy War against Evil. Experienced swordsmen, usually with remarkable spiritual prowess.^000000";
@@ -1817,7 +1817,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 			mes "Are you looking for";
 			mes "someone...?";
 			next;
-			input @str$;
+			input(@str$);
 			if (@str$ == "Cuaque Donon" || @str$ == "Cuaque" || @str$ == "Donon") {
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Do you happen to know a person named " + @str$ + " ...?";

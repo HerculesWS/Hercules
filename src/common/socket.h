@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -130,6 +130,7 @@ struct socket_data {
 	size_t rdata_pos;
 	uint32 last_head_size;
 	time_t rdata_tick; // time of last recv (for detecting timeouts); zero when timeout is disabled
+	time_t wdata_tick; // time of last send (for detecting timeouts);
 
 	RecvFunc func_recv;
 	SendFunc func_send;
@@ -178,6 +179,7 @@ struct socket_interface {
 	time_t stall_time;
 	time_t last_tick;
 
+	const char *SOCKET_CONF_FILENAME;
 	/* */
 	uint32 addr_[16];   // ip addresses of local host (host byte order)
 	int naddr_;   // # of ip addresses
@@ -212,6 +214,7 @@ struct socket_interface {
 	/* */
 	void (*flush) (int fd);
 	void (*flush_fifos) (void);
+	int (*connect_client) (int listen_fd);
 	void (*set_nonblocking) (int fd, unsigned long yes);
 	void (*set_defaultparse) (ParseFunc defaultparse);
 	/* hostname/ip conversion functions */

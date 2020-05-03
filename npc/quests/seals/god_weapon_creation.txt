@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	4_M_DWARF,{
 	case 3:
 		.@GID = getcharid(CHAR_ID_GUILD);
 		if (($God1 < $@god_check2) || ($God2 < $@god_check2) || ($God3 < $@god_check2) || ($God4 < $@god_check2)){
-			if (($God1 >= $@god_check1) && ($God2 >= $@god_check1) && ($God3 >= $@god_check1) && ($God4 >= $@god_check1) && (strcharinfo(PC_NAME) == getguildmaster(.@GID))) {
+			if (($God1 >= $@god_check1) && ($God2 >= $@god_check1) && ($God3 >= $@god_check1) && ($God4 >= $@god_check1) && (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, .@GID))) {
 				mes "[Dwarf Grunburti]";
 				mes "Hmm...";
 				mes "I'll need some things to make a weapon for you. What exactly were you interested in having?";
@@ -167,7 +167,7 @@ gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	4_M_DWARF,{
 			mes "Stop bothering me and get out of here! Go play with some monsters, you simple minded fool!";
 			close;
 		}
-		if (strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) != getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 			mes "[Dwarf Grunburti]";
 			mes "I'll only present";
 			mes "my magnificent skills";
@@ -413,7 +413,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 		close;
 	}
 	.@GID = getcharid(CHAR_ID_GUILD);
-	if (strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
+	if (strcharinfo(PC_NAME) != getguildinfo(GUILDINFO_MASTER_NAME, .@GID)) {
 		mes "[Dwarf Grunburti]";
 		mes "How in the...";
 		mes "Get out of here!";
@@ -515,7 +515,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				$God2 = 0;
 				$God3 = 0;
 				$God4 = 0;
-				announce "[Brisingamen] has come into the hands of [" + strcharinfo(PC_NAME) + "], master of the [" + getguildname(.@GID) + "] guild.",bc_all;
+				announce "[Brisingamen] has come into the hands of [" + strcharinfo(PC_NAME) + "], master of the [" + getguildinfo(GUILDINFO_NAME, .@GID) + "] guild.",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "Ah, just look at this dazzling beauty. No other piece of jewelry complemented Freya as well as Brisingamen.";
 				close;
@@ -589,7 +589,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				$God2 = 0;
 				$God3 = 0;
 				$God4 = 0;
-				announce "[Megingjard] the godly item has been given to [" + strcharinfo(PC_NAME) + "], the master of the guild [" + getguildname(.@GID) + "].",bc_all;
+				announce "[Megingjard] the godly item has been given to [" + strcharinfo(PC_NAME) + "], the master of the guild [" + getguildinfo(GUILDINFO_NAME, .@GID) + "].",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "Here...";
 				mes "Be careful with how";
@@ -679,7 +679,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				$God2 = 0;
 				$God3 = 0;
 				$God4 = 0;
-				announce "[Sleipnir] the godly item has been given to [" + strcharinfo(PC_NAME) + "], the master of the guild [" + getguildname(.@GID) + "].",bc_all;
+				announce "[Sleipnir] the godly item has been given to [" + strcharinfo(PC_NAME) + "], the master of the guild [" + getguildinfo(GUILDINFO_NAME, .@GID) + "].",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "There...";
 				mes "Wear these, and";
@@ -768,7 +768,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 				$God2 = 0;
 				$God3 = 0;
 				$God4 = 0;
-				announce "[Mjolnir] has been bestowed to [" + strcharinfo(PC_NAME) + "], the master of the [" + getguildname(.@GID) + "] guild.",bc_all;
+				announce "[Mjolnir] has been bestowed to [" + strcharinfo(PC_NAME) + "], the master of the [" + getguildinfo(GUILDINFO_NAME, .@GID) + "] guild.",bc_all;
 				mes "[Dwarf Grunburti]";
 				mes "It's done.";
 				mes "Take it. How does";
