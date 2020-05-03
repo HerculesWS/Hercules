@@ -15453,6 +15453,8 @@ static BUILDIN(atcommand)
 
 	if (!atcommand->exec(fd, sd, cmd, false)) {
 		ShowWarning("script: buildin_atcommand: failed to execute command '%s'\n", cmd);
+		if (dummy_sd != NULL)
+			aFree(dummy_sd);
 		return false;
 	}
 	if (dummy_sd) aFree(dummy_sd);
