@@ -53703,11 +53703,11 @@ int HP_mob_getfriendstatus_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-struct block_list *HP_mob_getfriendstatus(struct mob_data *md, int cond1, int cond2) {
+struct block_list* HP_mob_getfriendstatus(struct mob_data *md, int cond1, int cond2) {
 	int hIndex = 0;
-	struct block_list *retVal___ = NULL;
+	struct block_list* retVal___ = NULL;
 	if (HPMHooks.count.HP_mob_getfriendstatus_pre > 0) {
-		struct block_list *(*preHookFunc) (struct mob_data **md, int *cond1, int *cond2);
+		struct block_list* (*preHookFunc) (struct mob_data **md, int *cond1, int *cond2);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_getfriendstatus_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mob_getfriendstatus_pre[hIndex].func;
@@ -53722,7 +53722,7 @@ struct block_list *HP_mob_getfriendstatus(struct mob_data *md, int cond1, int co
 		retVal___ = HPMHooks.source.mob.getfriendstatus(md, cond1, cond2);
 	}
 	if (HPMHooks.count.HP_mob_getfriendstatus_post > 0) {
-		struct block_list *(*postHookFunc) (struct block_list *retVal___, struct mob_data *md, int cond1, int cond2);
+		struct block_list* (*postHookFunc) (struct block_list* retVal___, struct mob_data *md, int cond1, int cond2);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_getfriendstatus_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mob_getfriendstatus_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, md, cond1, cond2);
