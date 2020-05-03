@@ -10055,6 +10055,14 @@ REPLACE INTO `mob_skill_db` VALUES (2959,'Torturous Redeemer@SM_BASH','attack',5
 REPLACE INTO `mob_skill_db` VALUES (2959,'Torturous Redeemer@NPC_FIREATTACK','attack',186,3,1000,0,200000,'yes','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (2959,'Torturous Redeemer@WZ_FIREPILLAR','attack',80,5,500,0,10000,'no','around2','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (2959,'Torturous Redeemer@SM_MAGNUM','attack',7,5,500,0,10000,'no','self','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2963,'Woodie@AL_HEAL','attack',28,9,10000,500,5000,'no','self','myhpinrate',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2963,'Woodie@NPC_FIREATTACK','attack',186,3,2000,500,5000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2963,'Woodie@NPC_GROUNDATTACK','attack',185,3,2000,500,5000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2995,'Abandoned Teddy Bear@NPC_CURSEATTACK','attack',181,4,500,0,5000,'no','self','myhpinrate',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2995,'Abandoned Teddy Bear@NPC_CURSEATTACK','follow',181,4,500,0,5000,'no','self','myhpinrate',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2995,'Abandoned Teddy Bear@NPC_CRITICALSLASH','attack',170,1,500,0,5000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2995,'Abandoned Teddy Bear@SA_DISPELL','attack',289,1,50,1000,15000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `mob_skill_db` VALUES (2995,'Abandoned Teddy Bear@BS_HAMMERFALL','attack',110,5,500,1000,5000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (3074,'Time Holder@NPC_AGIUP','attack',350,5,10000,0,10000,'yes','self','myhpltmaxrate','30',NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (3074,'Time Holder@AL_INCAGI','chase',29,10,2000,700,10000,'no','self','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `mob_skill_db` VALUES (3074,'Time Holder@WZ_METEOR','attack',83,11,1000,500,10000,'no','target','always',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
