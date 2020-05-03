@@ -5105,6 +5105,12 @@
 - `MST_AROUND4`: 12
 - `MST_AROUND`: 12
 
+### Monster group constants
+
+- `ALL_MOBS_NONBOSS`: -1
+- `ALL_MOBS_BOSS`: -2
+- `ALL_MOBS`: -3
+
 ### pc block constants, use with *setpcblock* and *checkpcblock*
 
 - `PCBLOCK_NONE`: 0
