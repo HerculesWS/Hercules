@@ -11296,7 +11296,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			FALLTHROUGH
 		case GS_GROUNDDRIFT: //Ammo should be deleted right away.
 			if ( skill_id == WM_SEVERE_RAINSTORM )
-				sc_start(src,src,SC_NO_SWITCH_EQUIP,100,0,skill->get_time(skill_id,skill_lv));
+				sc_start(src, src, type, 100, 0, skill->get_time(skill_id, skill_lv));
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
 			break;
 		case WZ_ICEWALL:

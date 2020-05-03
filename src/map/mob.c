@@ -446,6 +446,9 @@ static bool mob_ksprotected(struct block_list *src, struct block_list *target)
 	if( !battle_config.ksprotection )
 		return false; // KS Protection Disabled
 
+	if (status->isdead(target) != 0)
+		return false; // Target is dead.
+
 	if( !(md = BL_CAST(BL_MOB,target)) )
 		return false; // Target is not MOB
 
