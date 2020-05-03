@@ -1605,24 +1605,21 @@ static void pc_calc_skilltree_clear(struct map_session_data *sd)
  *------------------------------------------*/
 static int pc_calc_skilltree(struct map_session_data *sd)
 {
-	int i,id=0,flag;
-	int class = 0, classidx = 0;
-
 	nullpo_ret(sd);
-	i = pc->calc_skilltree_normalize_job(sd);
-	class = pc->mapid2jobid(i, sd->status.sex);
+	uint32 job = pc->calc_skilltree_normalize_job(sd);
+	int class = pc->mapid2jobid(job, sd->status.sex);
 	if (class == -1) {
 		//Unable to normalize job??
-		ShowError("pc_calc_skilltree: Unable to normalize job %d for character %s (%d:%d)\n", i, sd->status.name, sd->status.account_id, sd->status.char_id);
+		ShowError("pc_calc_skilltree: Unable to normalize job %u for character %s (%d:%d)\n", job, sd->status.name, sd->status.account_id, sd->status.char_id);
 		return 1;
 	}
-	classidx = pc->class2idx(class);
+	int classidx = pc->class2idx(class);
 
 	pc->calc_skilltree_clear(sd);
 
-	for (i = 0; i < MAX_SKILL_DB; i++) {
-		if( sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED )
-		{ // Restore original level of skills after deleting earned skills.
+	for (int i = 0; i < MAX_SKILL_DB; i++) {
+		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
+			// Restore original level of skills after deleting earned skills.
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 		}
@@ -1657,7 +1654,7 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 	}
 
 	if( pc_has_permission(sd, PC_PERM_ALL_SKILL) ) {
-		for (i = 0; i < MAX_SKILL_DB; i++) {
+		for (int i = 0; i < MAX_SKILL_DB; i++) {
 			switch(skill->dbs->db[i].nameid) {
 				/**
 				 * Dummy skills must be added here otherwise they'll be displayed in the,
@@ -1689,9 +1686,11 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 		return 0;
 	}
 
+	bool changed = false;
 	do {
-		flag = 0;
-		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[classidx][i].id) > 0; i++) {
+		changed = false;
+		int id;
+		for (int i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[classidx][i].id) > 0; i++) {
 			int idx = pc->skill_tree[classidx][i].idx;
 			bool satisfied = true;
 			if (sd->status.skill[idx].id > 0)
@@ -1741,10 +1740,10 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 					sd->status.skill[idx].lv = 1; // need to manually specify a skill level
 					sd->status.skill[idx].flag = SKILL_FLAG_TEMPORARY; //So it is not saved, and tagged as a "bonus" skill.
 				}
-				flag = 1; // skill list has changed, perform another pass
+				changed = true; // skill list has changed, perform another pass
 			}
 		}
-	} while(flag);
+	} while (changed);
 
 	pc->calc_skilltree_bonus(sd, classidx);
 
@@ -4207,7 +4206,7 @@ static int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 			if( sd->status.skill[index].id == id ) {
 				if( sd->status.skill[index].lv >= level )
 					return 0;
-				if( sd->status.skill[index].flag == SKILL_FLAG_PERMANENT ) //Non-granted skill, store it's level.
+				if (sd->status.skill[index].flag == SKILL_FLAG_PERMANENT) // Non-granted skill, store its level.
 					sd->status.skill[index].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[index].lv;
 			} else {
 				sd->status.skill[index].id   = id;
@@ -7569,7 +7568,7 @@ static int pc_allskillup(struct map_session_data *sd)
 	nullpo_ret(sd);
 
 	for (i = 0; i < MAX_SKILL_DB; i++) {
-		if (sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED) {
+		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 			if (sd->status.skill[i].lv == 0)
