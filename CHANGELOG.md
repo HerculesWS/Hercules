@@ -10,6 +10,44 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.05.03] `May 03 2020`
+
+### Added
+
+- Added the new pets (including the jRO exclusive ones) and their related items/monsters to the renewal database. (#2689)
+- Added constants `ALL_MOBS_NONBOSS`, `ALL_MOBS_BOSS`, `ALL_MOBS` for the special mob IDs for global skill assignment in the mob skill database. (part of #2691)
+- Added support for `__func__` on Windows, since it's now available in every supported compiler. (part of #2691)
+- Added documentation for the mob skill database. See `doc/mob_skill_db.conf`. (#2680)
+- Added missing functions for the name ack packets for `BL_ITEM` and `BL_SKILL`. (part of #2695)
+- Added/updated packets and encryption keys for clients up to 2020-04-14. (#2695)
+- Added support for packets `ZC_LAPINEUPGRADE_OPEN`, `CZ_LAPINEUPGRADE_CLOSE` and `ZC_LAPINEUPGRADE_RESULT` and a placeholder for `CZ_LAPINEUPGRADE_MAKE_ITEM`. (part of #2695)
+- Added a new cell type `cell_noskill`, to block skill usage. (#2188)
+
+### Changed
+
+- Removed warning messages about missing elements in the mob db, since it's an optional field. (part of #2689)
+- Updated the renewal pet database with the correct values and bonuses. (part of #2689, issue #2435)
+- Changed `mob_getfriendstatus()` to consider character as friends of their support monsters, for consistency with `mob_getfriendhprate()`. (part of #2691)
+- Changed `MSC_AFTERSKILL` to trigger on any skill when its `ConditionData` is 0, for consistency with `MSC_SKILLUSED`. (part of #2691)
+- Improved data validation and error reporting in the mob skill database. (part of #2691)
+- Changed return values of `mob_skill_use()` and `mobskill_event()`. Any third party code that uses them needs to be updated. (part of #2691)
+- Changed the battle configuration flag `manner_system` to be applied immediately to any existing `SC_NOCHAT`. (#2696, issue #227)
+- Changed the `atcommand()` command to ignore `PCBLOCK_COMMANDS`. (#2062)
+
+### Fixed
+
+- Fixed `SC_AUTOTRADE`, `SC_KSPROTECTED` and `SC_NO_SWITCH_EQUIP` incorrectly recognized as unknown status changes. (#2686, issue #2684)
+- Prevented `SC_KSPROTECTED` from starting on dead monsters. (part of #2686)
+- Fixed character unhiding while disguised or when using `@option 0`. (#2687, issues #1556 and #2104)
+- Fixed an incorrect order of operations causing results too small in various calculations related to free cell search, mob skill chances/delays, exp penalty, pet hunger and friendly rates, cast duration. (#2690)
+- Fixed errors caused by `pet_ai_sub_hard()` called for monsters that haven't been added to a map yet. (#2693)
+- Fixed a wrong packet error displayed when using an incorrect password for the char-login connection. (part of #2695)
+- Fixed a security check in the lapine ack packet handler. (part of #2695)
+- Fixed some incorrect assumptions about the skill index values, causing the Bard/Dancer soul link to grant the wrong skills. (#2710, issue #2670)
+- Fixed some conditions that could cause a skill to be attempted to save to the database with a negative skill level, resulting in query errors and data loss. (part of #2710)
+- Fixed the skill type of `RK_DRAGONBREATH` and `RK_DRAGONBREATH_WATER` to be `BF_WEAPON` and support the `bLongAtkRate` bonus. (#1304)
+- Fixed `SC_TELEKINESIS_INTENSE` to add percent MATK instead of fixed MATK. (part of #1304)
+
 ## [v2020.04.05] `April 05 2020` `PATCH 1`
 
 ### Fixed
@@ -1322,7 +1360,8 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
-[v2020.04.05]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05...v2020.04.05+1
+[v2020.05.03]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05+1...v2020.05.03
+[v2020.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05...v2020.04.05+1
 [v2020.04.05]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+2...v2020.04.05
 [v2020.03.08+2]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+1...v2020.03.08+2
 [v2020.03.08+1]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08...v2020.03.08+1
