@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,8 +90,10 @@ struct {
 	struct HPMHookPoint *HP_chr_count_users_post;
 	struct HPMHookPoint *HP_chr_mmo_char_tobuf_pre;
 	struct HPMHookPoint *HP_chr_mmo_char_tobuf_post;
-	struct HPMHookPoint *HP_chr_mmo_char_send099d_pre;
-	struct HPMHookPoint *HP_chr_mmo_char_send099d_post;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_pre;
+	struct HPMHookPoint *HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_post;
 	struct HPMHookPoint *HP_chr_mmo_char_send_ban_list_pre;
 	struct HPMHookPoint *HP_chr_mmo_char_send_ban_list_post;
 	struct HPMHookPoint *HP_chr_mmo_char_send_slots_info_pre;
@@ -608,10 +610,6 @@ struct {
 	struct HPMHookPoint *HP_inter_init_sql_post;
 	struct HPMHookPoint *HP_inter_mapif_init_pre;
 	struct HPMHookPoint *HP_inter_mapif_init_post;
-	struct HPMHookPoint *HP_inter_check_ttl_wisdata_sub_pre;
-	struct HPMHookPoint *HP_inter_check_ttl_wisdata_sub_post;
-	struct HPMHookPoint *HP_inter_check_ttl_wisdata_pre;
-	struct HPMHookPoint *HP_inter_check_ttl_wisdata_post;
 	struct HPMHookPoint *HP_inter_check_length_pre;
 	struct HPMHookPoint *HP_inter_check_length_post;
 	struct HPMHookPoint *HP_inter_parse_frommap_pre;
@@ -628,12 +626,6 @@ struct {
 	struct HPMHookPoint *HP_inter_accinfo_post;
 	struct HPMHookPoint *HP_inter_accinfo2_pre;
 	struct HPMHookPoint *HP_inter_accinfo2_post;
-	struct HPMHookPoint *HP_inter_add_wisdata_pre;
-	struct HPMHookPoint *HP_inter_add_wisdata_post;
-	struct HPMHookPoint *HP_inter_get_wisdata_pre;
-	struct HPMHookPoint *HP_inter_get_wisdata_post;
-	struct HPMHookPoint *HP_inter_remove_wisdata_pre;
-	struct HPMHookPoint *HP_inter_remove_wisdata_post;
 	struct HPMHookPoint *HP_inter_mail_sql_init_pre;
 	struct HPMHookPoint *HP_inter_mail_sql_init_post;
 	struct HPMHookPoint *HP_inter_mail_sql_final_pre;
@@ -682,10 +674,14 @@ struct {
 	struct HPMHookPoint *HP_inter_mercenary_delete_post;
 	struct HPMHookPoint *HP_inter_party_check_lv_pre;
 	struct HPMHookPoint *HP_inter_party_check_lv_post;
+	struct HPMHookPoint *HP_inter_party_is_family_party_pre;
+	struct HPMHookPoint *HP_inter_party_is_family_party_post;
 	struct HPMHookPoint *HP_inter_party_calc_state_pre;
 	struct HPMHookPoint *HP_inter_party_calc_state_post;
 	struct HPMHookPoint *HP_inter_party_tosql_pre;
 	struct HPMHookPoint *HP_inter_party_tosql_post;
+	struct HPMHookPoint *HP_inter_party_del_nonexistent_party_pre;
+	struct HPMHookPoint *HP_inter_party_del_nonexistent_party_post;
 	struct HPMHookPoint *HP_inter_party_fromsql_pre;
 	struct HPMHookPoint *HP_inter_party_fromsql_post;
 	struct HPMHookPoint *HP_inter_party_sql_init_pre;
@@ -762,6 +758,10 @@ struct {
 	struct HPMHookPoint *HP_inter_rodex_savemessage_post;
 	struct HPMHookPoint *HP_inter_rodex_updatemail_pre;
 	struct HPMHookPoint *HP_inter_rodex_updatemail_post;
+	struct HPMHookPoint *HP_inter_rodex_getzeny_pre;
+	struct HPMHookPoint *HP_inter_rodex_getzeny_post;
+	struct HPMHookPoint *HP_inter_rodex_getitems_pre;
+	struct HPMHookPoint *HP_inter_rodex_getitems_post;
 	struct HPMHookPoint *HP_inter_storage_tosql_pre;
 	struct HPMHookPoint *HP_inter_storage_tosql_post;
 	struct HPMHookPoint *HP_inter_storage_fromsql_pre;
@@ -782,6 +782,10 @@ struct {
 	struct HPMHookPoint *HP_inter_storage_parse_frommap_post;
 	struct HPMHookPoint *HP_inter_storage_retrieve_bound_items_pre;
 	struct HPMHookPoint *HP_inter_storage_retrieve_bound_items_post;
+	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_set_db_path_post;
+	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_format_db_path_post;
 	struct HPMHookPoint *HP_libconfig_read_pre;
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
@@ -1026,8 +1030,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_guild_memberinfoshort_post;
 	struct HPMHookPoint *HP_mapif_guild_broken_pre;
 	struct HPMHookPoint *HP_mapif_guild_broken_post;
-	struct HPMHookPoint *HP_mapif_guild_message_pre;
-	struct HPMHookPoint *HP_mapif_guild_message_post;
 	struct HPMHookPoint *HP_mapif_guild_basicinfochanged_pre;
 	struct HPMHookPoint *HP_mapif_guild_basicinfochanged_post;
 	struct HPMHookPoint *HP_mapif_guild_memberinfochanged_pre;
@@ -1058,8 +1060,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_GuildChangeMemberInfoShort_post;
 	struct HPMHookPoint *HP_mapif_parse_BreakGuild_pre;
 	struct HPMHookPoint *HP_mapif_parse_BreakGuild_post;
-	struct HPMHookPoint *HP_mapif_parse_GuildMessage_pre;
-	struct HPMHookPoint *HP_mapif_parse_GuildMessage_post;
 	struct HPMHookPoint *HP_mapif_parse_GuildBasicInfoChange_pre;
 	struct HPMHookPoint *HP_mapif_parse_GuildBasicInfoChange_post;
 	struct HPMHookPoint *HP_mapif_parse_GuildMemberInfoChange_pre;
@@ -1154,8 +1154,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_party_membermoved_post;
 	struct HPMHookPoint *HP_mapif_party_broken_pre;
 	struct HPMHookPoint *HP_mapif_party_broken_post;
-	struct HPMHookPoint *HP_mapif_party_message_pre;
-	struct HPMHookPoint *HP_mapif_party_message_post;
 	struct HPMHookPoint *HP_mapif_parse_CreateParty_pre;
 	struct HPMHookPoint *HP_mapif_parse_CreateParty_post;
 	struct HPMHookPoint *HP_mapif_parse_PartyInfo_pre;
@@ -1170,8 +1168,6 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_PartyChangeMap_post;
 	struct HPMHookPoint *HP_mapif_parse_BreakParty_pre;
 	struct HPMHookPoint *HP_mapif_parse_BreakParty_post;
-	struct HPMHookPoint *HP_mapif_parse_PartyMessage_pre;
-	struct HPMHookPoint *HP_mapif_parse_PartyMessage_post;
 	struct HPMHookPoint *HP_mapif_parse_PartyLeaderChange_pre;
 	struct HPMHookPoint *HP_mapif_parse_PartyLeaderChange_post;
 	struct HPMHookPoint *HP_mapif_pet_created_pre;
@@ -1222,6 +1218,10 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_rodex_checkname_post;
 	struct HPMHookPoint *HP_mapif_rodex_checkname_pre;
 	struct HPMHookPoint *HP_mapif_rodex_checkname_post;
+	struct HPMHookPoint *HP_mapif_rodex_getzenyack_pre;
+	struct HPMHookPoint *HP_mapif_rodex_getzenyack_post;
+	struct HPMHookPoint *HP_mapif_rodex_getitemsack_pre;
+	struct HPMHookPoint *HP_mapif_rodex_getitemsack_post;
 	struct HPMHookPoint *HP_mapif_load_guild_storage_pre;
 	struct HPMHookPoint *HP_mapif_load_guild_storage_post;
 	struct HPMHookPoint *HP_mapif_save_guild_storage_ack_pre;
@@ -1244,26 +1244,10 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_ItemBoundRetrieve_post;
 	struct HPMHookPoint *HP_mapif_parse_accinfo_pre;
 	struct HPMHookPoint *HP_mapif_parse_accinfo_post;
-	struct HPMHookPoint *HP_mapif_broadcast_pre;
-	struct HPMHookPoint *HP_mapif_broadcast_post;
-	struct HPMHookPoint *HP_mapif_wis_message_pre;
-	struct HPMHookPoint *HP_mapif_wis_message_post;
-	struct HPMHookPoint *HP_mapif_wis_response_pre;
-	struct HPMHookPoint *HP_mapif_wis_response_post;
-	struct HPMHookPoint *HP_mapif_wis_end_pre;
-	struct HPMHookPoint *HP_mapif_wis_end_post;
 	struct HPMHookPoint *HP_mapif_account_reg_reply_pre;
 	struct HPMHookPoint *HP_mapif_account_reg_reply_post;
 	struct HPMHookPoint *HP_mapif_disconnectplayer_pre;
 	struct HPMHookPoint *HP_mapif_disconnectplayer_post;
-	struct HPMHookPoint *HP_mapif_parse_broadcast_pre;
-	struct HPMHookPoint *HP_mapif_parse_broadcast_post;
-	struct HPMHookPoint *HP_mapif_parse_WisRequest_pre;
-	struct HPMHookPoint *HP_mapif_parse_WisRequest_post;
-	struct HPMHookPoint *HP_mapif_parse_WisReply_pre;
-	struct HPMHookPoint *HP_mapif_parse_WisReply_post;
-	struct HPMHookPoint *HP_mapif_parse_WisToGM_pre;
-	struct HPMHookPoint *HP_mapif_parse_WisToGM_post;
 	struct HPMHookPoint *HP_mapif_parse_Registry_pre;
 	struct HPMHookPoint *HP_mapif_parse_Registry_post;
 	struct HPMHookPoint *HP_mapif_parse_RegistryRequest_pre;
@@ -1276,6 +1260,10 @@ struct {
 	struct HPMHookPoint *HP_mapif_parse_ClanMemberKick_post;
 	struct HPMHookPoint *HP_mapif_parse_ClanMemberCount_pre;
 	struct HPMHookPoint *HP_mapif_parse_ClanMemberCount_post;
+	struct HPMHookPoint *HP_mapindex_config_read_dbpath_pre;
+	struct HPMHookPoint *HP_mapindex_config_read_dbpath_post;
+	struct HPMHookPoint *HP_mapindex_config_read_pre;
+	struct HPMHookPoint *HP_mapindex_config_read_post;
 	struct HPMHookPoint *HP_mapindex_init_pre;
 	struct HPMHookPoint *HP_mapindex_init_post;
 	struct HPMHookPoint *HP_mapindex_final_pre;
@@ -1320,6 +1308,10 @@ struct {
 	struct HPMHookPoint *HP_mutex_cond_signal_post;
 	struct HPMHookPoint *HP_mutex_cond_broadcast_pre;
 	struct HPMHookPoint *HP_mutex_cond_broadcast_post;
+	struct HPMHookPoint *HP_nullpo_init_pre;
+	struct HPMHookPoint *HP_nullpo_init_post;
+	struct HPMHookPoint *HP_nullpo_final_pre;
+	struct HPMHookPoint *HP_nullpo_final_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
 	struct HPMHookPoint *HP_packets_init_pre;
@@ -1420,6 +1412,8 @@ struct {
 	struct HPMHookPoint *HP_sockt_flush_post;
 	struct HPMHookPoint *HP_sockt_flush_fifos_pre;
 	struct HPMHookPoint *HP_sockt_flush_fifos_post;
+	struct HPMHookPoint *HP_sockt_connect_client_pre;
+	struct HPMHookPoint *HP_sockt_connect_client_post;
 	struct HPMHookPoint *HP_sockt_set_nonblocking_pre;
 	struct HPMHookPoint *HP_sockt_set_nonblocking_post;
 	struct HPMHookPoint *HP_sockt_set_defaultparse_pre;
@@ -1725,8 +1719,10 @@ struct {
 	int HP_chr_count_users_post;
 	int HP_chr_mmo_char_tobuf_pre;
 	int HP_chr_mmo_char_tobuf_post;
-	int HP_chr_mmo_char_send099d_pre;
-	int HP_chr_mmo_char_send099d_post;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_pre;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_post;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_pre;
+	int HP_chr_send_HC_ACK_CHARINFO_PER_PAGE_tail_post;
 	int HP_chr_mmo_char_send_ban_list_pre;
 	int HP_chr_mmo_char_send_ban_list_post;
 	int HP_chr_mmo_char_send_slots_info_pre;
@@ -2243,10 +2239,6 @@ struct {
 	int HP_inter_init_sql_post;
 	int HP_inter_mapif_init_pre;
 	int HP_inter_mapif_init_post;
-	int HP_inter_check_ttl_wisdata_sub_pre;
-	int HP_inter_check_ttl_wisdata_sub_post;
-	int HP_inter_check_ttl_wisdata_pre;
-	int HP_inter_check_ttl_wisdata_post;
 	int HP_inter_check_length_pre;
 	int HP_inter_check_length_post;
 	int HP_inter_parse_frommap_pre;
@@ -2263,12 +2255,6 @@ struct {
 	int HP_inter_accinfo_post;
 	int HP_inter_accinfo2_pre;
 	int HP_inter_accinfo2_post;
-	int HP_inter_add_wisdata_pre;
-	int HP_inter_add_wisdata_post;
-	int HP_inter_get_wisdata_pre;
-	int HP_inter_get_wisdata_post;
-	int HP_inter_remove_wisdata_pre;
-	int HP_inter_remove_wisdata_post;
 	int HP_inter_mail_sql_init_pre;
 	int HP_inter_mail_sql_init_post;
 	int HP_inter_mail_sql_final_pre;
@@ -2317,10 +2303,14 @@ struct {
 	int HP_inter_mercenary_delete_post;
 	int HP_inter_party_check_lv_pre;
 	int HP_inter_party_check_lv_post;
+	int HP_inter_party_is_family_party_pre;
+	int HP_inter_party_is_family_party_post;
 	int HP_inter_party_calc_state_pre;
 	int HP_inter_party_calc_state_post;
 	int HP_inter_party_tosql_pre;
 	int HP_inter_party_tosql_post;
+	int HP_inter_party_del_nonexistent_party_pre;
+	int HP_inter_party_del_nonexistent_party_post;
 	int HP_inter_party_fromsql_pre;
 	int HP_inter_party_fromsql_post;
 	int HP_inter_party_sql_init_pre;
@@ -2397,6 +2387,10 @@ struct {
 	int HP_inter_rodex_savemessage_post;
 	int HP_inter_rodex_updatemail_pre;
 	int HP_inter_rodex_updatemail_post;
+	int HP_inter_rodex_getzeny_pre;
+	int HP_inter_rodex_getzeny_post;
+	int HP_inter_rodex_getitems_pre;
+	int HP_inter_rodex_getitems_post;
 	int HP_inter_storage_tosql_pre;
 	int HP_inter_storage_tosql_post;
 	int HP_inter_storage_fromsql_pre;
@@ -2417,6 +2411,10 @@ struct {
 	int HP_inter_storage_parse_frommap_post;
 	int HP_inter_storage_retrieve_bound_items_pre;
 	int HP_inter_storage_retrieve_bound_items_post;
+	int HP_libconfig_set_db_path_pre;
+	int HP_libconfig_set_db_path_post;
+	int HP_libconfig_format_db_path_pre;
+	int HP_libconfig_format_db_path_post;
 	int HP_libconfig_read_pre;
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
@@ -2661,8 +2659,6 @@ struct {
 	int HP_mapif_guild_memberinfoshort_post;
 	int HP_mapif_guild_broken_pre;
 	int HP_mapif_guild_broken_post;
-	int HP_mapif_guild_message_pre;
-	int HP_mapif_guild_message_post;
 	int HP_mapif_guild_basicinfochanged_pre;
 	int HP_mapif_guild_basicinfochanged_post;
 	int HP_mapif_guild_memberinfochanged_pre;
@@ -2693,8 +2689,6 @@ struct {
 	int HP_mapif_parse_GuildChangeMemberInfoShort_post;
 	int HP_mapif_parse_BreakGuild_pre;
 	int HP_mapif_parse_BreakGuild_post;
-	int HP_mapif_parse_GuildMessage_pre;
-	int HP_mapif_parse_GuildMessage_post;
 	int HP_mapif_parse_GuildBasicInfoChange_pre;
 	int HP_mapif_parse_GuildBasicInfoChange_post;
 	int HP_mapif_parse_GuildMemberInfoChange_pre;
@@ -2789,8 +2783,6 @@ struct {
 	int HP_mapif_party_membermoved_post;
 	int HP_mapif_party_broken_pre;
 	int HP_mapif_party_broken_post;
-	int HP_mapif_party_message_pre;
-	int HP_mapif_party_message_post;
 	int HP_mapif_parse_CreateParty_pre;
 	int HP_mapif_parse_CreateParty_post;
 	int HP_mapif_parse_PartyInfo_pre;
@@ -2805,8 +2797,6 @@ struct {
 	int HP_mapif_parse_PartyChangeMap_post;
 	int HP_mapif_parse_BreakParty_pre;
 	int HP_mapif_parse_BreakParty_post;
-	int HP_mapif_parse_PartyMessage_pre;
-	int HP_mapif_parse_PartyMessage_post;
 	int HP_mapif_parse_PartyLeaderChange_pre;
 	int HP_mapif_parse_PartyLeaderChange_post;
 	int HP_mapif_pet_created_pre;
@@ -2857,6 +2847,10 @@ struct {
 	int HP_mapif_parse_rodex_checkname_post;
 	int HP_mapif_rodex_checkname_pre;
 	int HP_mapif_rodex_checkname_post;
+	int HP_mapif_rodex_getzenyack_pre;
+	int HP_mapif_rodex_getzenyack_post;
+	int HP_mapif_rodex_getitemsack_pre;
+	int HP_mapif_rodex_getitemsack_post;
 	int HP_mapif_load_guild_storage_pre;
 	int HP_mapif_load_guild_storage_post;
 	int HP_mapif_save_guild_storage_ack_pre;
@@ -2879,26 +2873,10 @@ struct {
 	int HP_mapif_parse_ItemBoundRetrieve_post;
 	int HP_mapif_parse_accinfo_pre;
 	int HP_mapif_parse_accinfo_post;
-	int HP_mapif_broadcast_pre;
-	int HP_mapif_broadcast_post;
-	int HP_mapif_wis_message_pre;
-	int HP_mapif_wis_message_post;
-	int HP_mapif_wis_response_pre;
-	int HP_mapif_wis_response_post;
-	int HP_mapif_wis_end_pre;
-	int HP_mapif_wis_end_post;
 	int HP_mapif_account_reg_reply_pre;
 	int HP_mapif_account_reg_reply_post;
 	int HP_mapif_disconnectplayer_pre;
 	int HP_mapif_disconnectplayer_post;
-	int HP_mapif_parse_broadcast_pre;
-	int HP_mapif_parse_broadcast_post;
-	int HP_mapif_parse_WisRequest_pre;
-	int HP_mapif_parse_WisRequest_post;
-	int HP_mapif_parse_WisReply_pre;
-	int HP_mapif_parse_WisReply_post;
-	int HP_mapif_parse_WisToGM_pre;
-	int HP_mapif_parse_WisToGM_post;
 	int HP_mapif_parse_Registry_pre;
 	int HP_mapif_parse_Registry_post;
 	int HP_mapif_parse_RegistryRequest_pre;
@@ -2911,6 +2889,10 @@ struct {
 	int HP_mapif_parse_ClanMemberKick_post;
 	int HP_mapif_parse_ClanMemberCount_pre;
 	int HP_mapif_parse_ClanMemberCount_post;
+	int HP_mapindex_config_read_dbpath_pre;
+	int HP_mapindex_config_read_dbpath_post;
+	int HP_mapindex_config_read_pre;
+	int HP_mapindex_config_read_post;
 	int HP_mapindex_init_pre;
 	int HP_mapindex_init_post;
 	int HP_mapindex_final_pre;
@@ -2955,6 +2937,10 @@ struct {
 	int HP_mutex_cond_signal_post;
 	int HP_mutex_cond_broadcast_pre;
 	int HP_mutex_cond_broadcast_post;
+	int HP_nullpo_init_pre;
+	int HP_nullpo_init_post;
+	int HP_nullpo_final_pre;
+	int HP_nullpo_final_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
 	int HP_packets_init_pre;
@@ -3055,6 +3041,8 @@ struct {
 	int HP_sockt_flush_post;
 	int HP_sockt_flush_fifos_pre;
 	int HP_sockt_flush_fifos_post;
+	int HP_sockt_connect_client_pre;
+	int HP_sockt_connect_client_post;
 	int HP_sockt_set_nonblocking_pre;
 	int HP_sockt_set_nonblocking_post;
 	int HP_sockt_set_defaultparse_pre;

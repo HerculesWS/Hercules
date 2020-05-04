@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -319,8 +319,8 @@ static int inter_guild_tosql(struct guild *g, int flag)
 
 				SQL->EscapeStringLen(inter->sql_handle, esc_name, e->name, strnlen(e->name, NAME_LENGTH));
 				SQL->EscapeStringLen(inter->sql_handle, esc_mes, e->mes, strnlen(e->mes, sizeof(e->mes)));
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`guild_id`,`account_id`,`name`,`mes`) "
-					"VALUES ('%d','%d','%s','%s')", guild_expulsion_db, g->guild_id, e->account_id, esc_name, esc_mes) )
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`guild_id`,`account_id`, `char_id`, `name`,`mes`) "
+					"VALUES ('%d','%d','%d','%s','%s')", guild_expulsion_db, g->guild_id, e->account_id, e->char_id, esc_name, esc_mes) )
 					Sql_ShowDebug(inter->sql_handle);
 			}
 		}
@@ -444,8 +444,14 @@ static struct guild *inter_guild_fromsql(int guild_id)
 			m->position = MAX_GUILDPOSITION - 1;
 		SQL->GetData(inter->sql_handle, 11, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 12, &data, NULL);
-		if (data != NULL)
+		if (data != NULL) {
 			m->last_login = atoi(data);
+			// 2036-12-31
+			if (m->last_login > 2114283600) {
+				ShowError("Last login time bigger than allowd value in %d:%s: %u\n", guild_id, g->name, m->last_login);
+				m->last_login = 0;
+			}
+		}
 		m->modified = GS_MEMBER_UNMODIFIED;
 	}
 
@@ -488,7 +494,7 @@ static struct guild *inter_guild_fromsql(int guild_id)
 	}
 
 	//printf("- Read guild_expulsion %d from sql \n",guild_id);
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`name`,`mes` FROM `%s` WHERE `guild_id`='%d'", guild_expulsion_db, guild_id) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`char_id`,`name`,`mes` FROM `%s` WHERE `guild_id`='%d'", guild_expulsion_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		aFree(g);
@@ -499,8 +505,9 @@ static struct guild *inter_guild_fromsql(int guild_id)
 		struct guild_expulsion *e = &g->expulsion[i];
 
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); e->account_id = atoi(data);
-		SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(e->name, data, min(len, NAME_LENGTH));
-		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->mes, data, min(len, sizeof(e->mes)));
+		SQL->GetData(inter->sql_handle, 1, &data, NULL); e->char_id = atoi(data);
+		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(e->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 3, &data, &len); memcpy(e->mes, data, min(len, sizeof(e->mes)));
 	}
 
 	//printf("- Read guild_skill %d from sql \n",guild_id);
@@ -740,7 +747,7 @@ static int inter_guild_sql_init(void)
 	inter_guild->castle_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	//Read exp file
-	sv->readdb("db", DBPATH"exp_guild.txt", ',', 1, 1, MAX_GUILDLEVEL, inter_guild->exp_parse_row);
+	sv->readdb(chr->db_path, DBPATH"exp_guild.txt", ',', 1, 1, MAX_GUILDLEVEL, inter_guild->exp_parse_row);
 
 	timer->add_func_list(inter_guild->save_timer, "inter_guild->save_timer");
 	timer->add(timer->gettick() + 10000, inter_guild->save_timer, 0, 0);
@@ -1038,6 +1045,7 @@ static bool inter_guild_leave(int guild_id, int account_id, int char_id, int fla
 		}
 		// Save the expulsion entry
 		g->expulsion[j].account_id = account_id;
+		g->expulsion[j].char_id = char_id;
 		safestrncpy(g->expulsion[j].name, g->member[i].name, NAME_LENGTH);
 		safestrncpy(g->expulsion[j].mes, mes, 40);
 	}
@@ -1060,7 +1068,7 @@ static bool inter_guild_leave(int guild_id, int account_id, int char_id, int fla
 }
 
 // Change member info
-static bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static bool inter_guild_update_member_info_short(int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	// Could speed up by manipulating only guild_member
 	struct guild *g;
@@ -1602,9 +1610,8 @@ static int inter_guild_parse_frommap(int fd)
 	case 0x3032: mapif->parse_GuildAddMember(fd, RFIFOL(fd,4), RFIFOP(fd,8)); break;
 	case 0x3033: mapif->parse_GuildMasterChange(fd, RFIFOL(fd,4), RFIFOP(fd,8), RFIFOW(fd,2)-8); break;
 	case 0x3034: mapif->parse_GuildLeave(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14), RFIFOP(fd,15)); break;
-	case 0x3035: mapif->parse_GuildChangeMemberInfoShort(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17)); break;
+	case 0x3035: mapif->parse_GuildChangeMemberInfoShort(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOL(fd,15),RFIFOL(fd,19)); break;
 	case 0x3036: mapif->parse_BreakGuild(fd,RFIFOL(fd,2)); break;
-	case 0x3037: mapif->parse_GuildMessage(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12); break;
 	case 0x3039: mapif->parse_GuildBasicInfoChange(fd, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOP(fd,10), RFIFOW(fd,2)-10); break;
 	case 0x303A: mapif->parse_GuildMemberInfoChange(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOL(fd,12), RFIFOW(fd,16), RFIFOP(fd,18), RFIFOW(fd,2)-18); break;
 	case 0x303B: mapif->parse_GuildPosition(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12)); break;

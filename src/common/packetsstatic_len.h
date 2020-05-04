@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,18 @@
 #ifdef packetLen
 #error packetLen already defined
 #endif
+
+#define DEFINE_PACKET_HEADER(name, id) \
+	STATIC_ASSERT((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
+		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
+	enum { HEADER_##name = id };
+
+#define DEFINE_PACKET_ID(name, id) \
+	enum { HEADER_##name = id };
+
+#define CHECK_PACKET_HEADER(name, id) \
+	STATIC_ASSERT((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
+		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
 
 #define packetLen(id, len) PACKET_LEN_##id = (len),
 enum packet_lengths {

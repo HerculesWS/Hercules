@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2017 Hercules Dev Team
+ * Copyright (C) 2017-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ struct rodex_interface {
 	void (*refresh) (struct map_session_data *sd, int8 open_type, int64 first_mail_id);
 	void (*add_item) (struct map_session_data *sd, int16 idx, int16 amount);
 	void (*remove_item) (struct map_session_data *sd, int16 idx, int16 amount);
-	void (*check_player) (struct map_session_data *sd, const char *name, int *base_level, int *char_id, short *class);
+	void (*check_player) (struct map_session_data *sd, const char *name, int *base_level, int *char_id, int *class);
 	int (*send_mail) (struct map_session_data *sd, const char *receiver_name, const char *body, const char *title, int64 zeny);
 	void (*send_mail_result) (struct map_session_data *ssd, struct map_session_data *rsd, bool result);
 	struct rodex_message *(*get_mail) (struct map_session_data *sd, int64 mail_id);
@@ -74,6 +74,8 @@ struct rodex_interface {
 	void (*get_items) (struct map_session_data *sd, int8 opentype, int64 mail_id);
 	void (*delete_mail) (struct map_session_data *sd, int64 mail_id);
 	void (*clean) (struct map_session_data *sd, int8 flag);
+	void (*getZenyAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny);
+	void (*getItemsAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int count, const struct rodex_item *items);
 };
 
 #ifdef HERCULES_CORE

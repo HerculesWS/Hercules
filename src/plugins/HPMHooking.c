@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,8 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #include "login/lclif.p.h"
 #include "login/login.h"
 #include "login/loginlog.h"
+#include "login/packets_ac_struct.h"
+#include "login/packets_ca_struct.h"
 #elif defined (HPMHOOKING_CHAR)
 #define HPM_SERVER_TYPE SERVER_TYPE_CHAR
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_char.HPMHooksCore.inc"
@@ -104,10 +106,13 @@ PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 #include "map/pet.h"
 #include "map/quest.h"
 #include "map/rodex.h"
+#include "map/refine.h"
+#include "map/refine.p.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/storage.h"
+#include "map/stylist.h"
 #include "map/trade.h"
 #include "map/unit.h"
 #include "common/grfio.h"

@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Kisuka
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Lance
-//= Copyright (C)  kobra_k88
-//= Copyright (C)  Lupus
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lance
+//= Copyright (C) kobra_k88
+//= Copyright (C) Lupus
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -256,21 +256,20 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 				mes "Choose a number less than 100. If you don't want to, put '0'. You can make up to " + countitem(.@fruit) + " bottles of juice.";
 				next;
 				while(1) {
-					input .@input;
-					if (.@input == 0) {
+					input(.@input);
+					if (.@input <= 0) {
 						mes "[Merchant Marx Hansen]";
 						mes "Well then...";
 						mes "Come again.";
 						close;
 					}
-					else if (.@input > 100) {
+					if (.@input > 100) {
 						mes "[Merchant Marx Hansen]";
 						mes "More than 100 bottles is impossible. Choose a different amount.";
 						next;
+						continue;
 					}
-					else {
-						break;
-					}
+					break;
 				}
 				.@make = .@input;
 				break;

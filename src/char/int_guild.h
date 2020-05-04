@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ struct inter_guild_interface {
 	struct guild *(*create) (const char *name, const struct guild_member *master);
 	bool (*add_member) (int guild_id, const struct guild_member *member, int map_fd);
 	bool (*leave) (int guild_id, int account_id, int char_id, int flag, const char *mes, int map_fd);
-	bool (*update_member_info_short) (int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+	bool (*update_member_info_short) (int guild_id, int account_id, int char_id, int online, int lv, int class);
 	bool (*update_member_info) (int guild_id, int account_id, int char_id, int type, const char *data, int len);
 	bool (*disband) (int guild_id);
 	bool (*update_basic_info) (int guild_id, int type, const void *data, int len);

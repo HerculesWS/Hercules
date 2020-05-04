@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,12 +35,11 @@ struct hplugin_data_store;
 // Change this to increase the table size in your mob_db to accommodate a larger mob database.
 // Be sure to note that IDs 4001 to 4048 are reserved for advanced/baby/expanded classes.
 // Notice that the last 1000 entries are used for player clones, so always set this to desired value +1000
-#define MAX_MOB_DB 5000
+#define MAX_MOB_DB 22000
 
 //The number of drops all mobs have and the max drop-slot that the steal skill will attempt to steal from.
 #define MAX_MOB_DROP 10
 #define MAX_MVP_DROP 3
-#define MAX_STEAL_DROP 7
 
 //Min time between AI executions
 #define MIN_MOBTHINKTIME 100
@@ -152,6 +151,45 @@ struct spawn_info {
 	unsigned short qty;
 };
 
+/**
+ * Information of one possible option that will fill
+ * an option slot (see optdrop_group_optslot)
+ */
+struct optdrop_group_option {
+	int id; //< Option ID
+	int min; //< Minimun value when this option drops
+	int max; //< Maximun value when this option drops
+	int rate; //< Chance of dropping this option
+};
+
+/**
+ * Information of possible options that will fill
+ * one option slot
+ */
+struct optdrop_group_optslot {
+	int option_count; //< Number of options in *options
+	struct optdrop_group_option *options; //< Array of possible options
+};
+
+/**
+ * A group of options to be random picked when
+ * dropping an item
+ */
+struct optdrop_group {
+	int optslot_count; //< How many option slots are configured by this group
+	int optslot_rate[MAX_ITEM_OPTIONS]; //< The rate to fill each of the configured slots
+	struct optdrop_group_optslot optslot[MAX_ITEM_OPTIONS]; //< Details of the options that will go in each slot
+};
+
+/**
+ * Stores data related to a monster drop (normal or mvp drop)
+ */
+struct mob_drop {
+	int nameid; //< Item ID
+	int p; //< Drop chance
+	struct optdrop_group *options; //< Option Drop Group associated with this drop (NULL if none)
+};
+
 struct mob_db {
 	int mob_id;
 	char sprite[NAME_LENGTH],name[NAME_LENGTH],jname[NAME_LENGTH];
@@ -160,13 +198,14 @@ struct mob_db {
 	short range2,range3;
 	short race2; // celest
 	unsigned short lv;
-	struct { int nameid,p; } dropitem[MAX_MOB_DROP];
-	struct { int nameid,p; } mvpitem[MAX_MVP_DROP];
+	struct mob_drop dropitem[MAX_MOB_DROP];
+	struct mob_drop mvpitem[MAX_MVP_DROP];
 	struct status_data status;
 	struct view_data vd;
 	unsigned int option;
 	int summonper[MAX_RANDOMMONSTER];
 	int maxskill;
+	int dmg_taken_rate;
 	struct mob_skill skill[MAX_MOBSKILL];
 	struct spawn_info spawn[10];
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
@@ -205,16 +244,18 @@ struct mob_data {
 		unsigned int dmg;
 		unsigned int flag : 2; //0: Normal. 1: Homunc exp. 2: Pet exp
 	} dmglog[DAMAGELOG_SIZE];
+	int dmg_taken_rate;
 	struct spawn_data *spawn; //Spawn data.
 	int spawn_timer; //Required for Convex Mirror
 	struct item *lootitem;
-	short class_;
+	int class_;
 	unsigned int tdmg; //Stores total damage given to the mob, for exp calculations. [Skotlex]
 	int level;
 	int target_id,attacked_id;
 	int areanpc_id; //Required in OnTouchNPC (to avoid multiple area touchs)
 	unsigned int bg_id; // BattleGround System
 	int clan_id; // Clan System
+	int npc_id; // NPC ID if spawned with monster/areamonster/guardian/bg_monster/atcommand("@monster xy") (Used to kill mob on NPC unload.)
 
 	int64 next_walktime, last_thinktime, last_linktime, last_pcneartime, dmgtick;
 	short move_fail_count;
@@ -280,6 +321,13 @@ enum {
 	MSC_MASTERATTACKED,
 	MSC_ALCHEMIST,
 	MSC_SPAWN,
+};
+
+/** Special monster(-name) constants used to assign skills to a group of monsters. **/
+enum mob_group {
+	ALL_MOBS_NONBOSS = -1,
+	ALL_MOBS_BOSS = -2,
+	ALL_MOBS = -3,
 };
 
 /**
@@ -436,6 +484,9 @@ struct mob_interface {
 	struct mob_db *dummy; //Dummy mob to be returned when a non-existant one is requested.
 	// Dynamic mob chat database
 	struct mob_chat *chat_db[MAX_MOB_CHAT + 1];
+	// Random Option Drop groups
+	struct optdrop_group *opt_drop_groups;
+	int opt_drop_groups_count;
 	// Defines the Manuk/Splendide/Mora mob groups for the status reductions [Epoque & Frost]
 	int manuk[8];
 	int splendide[5];
@@ -446,6 +497,7 @@ struct mob_interface {
 	int (*init) (bool mimimal);
 	int (*final) (void);
 	void (*reload) (void);
+	int (*reload_sub_mob) (struct mob_data *md, va_list args);
 	/* */
 	struct mob_db* (*db) (int index);
 	struct mob_chat* (*chat) (short id);
@@ -463,14 +515,14 @@ struct mob_interface {
 	int (*db_checkid) (const int id);
 	struct view_data* (*get_viewdata) (int class_);
 	int (*parse_dataset) (struct spawn_data *data);
-	struct mob_data* (*spawn_dataset) (struct spawn_data *data);
+	struct mob_data* (*spawn_dataset) (struct spawn_data *data, int npc_id);
 	int (*get_random_id) (int type, int flag, int lv);
 	bool (*ksprotected) (struct block_list *src, struct block_list *target);
-	struct mob_data* (*once_spawn_sub) (struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai);
+	struct mob_data* (*once_spawn_sub) (struct block_list *bl, int16 m, int16 x, int16 y, const char *mobname, int class_, const char *event, unsigned int size, unsigned int ai, int npc_id);
 	int (*once_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
 	int (*once_spawn_area) (struct map_session_data *sd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai);
-	int (*spawn_guardian) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index);
-	int (*spawn_bg) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id);
+	int (*spawn_guardian) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index, int npc_id);
+	int (*spawn_bg) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id, int npc_id);
 	int (*can_reach) (struct mob_data *md, struct block_list *bl, int range, int state);
 	int (*linksearch) (struct block_list *bl, va_list ap);
 	int (*delayspawn) (int tid, int64 tick, int id, intptr_t data);
@@ -484,6 +536,7 @@ struct mob_interface {
 	int (*ai_sub_hard_bg_ally) (struct block_list *bl, va_list ap);
 	int (*ai_sub_hard_lootsearch) (struct block_list *bl, va_list ap);
 	int (*warpchase_sub) (struct block_list *bl, va_list ap);
+	bool (*is_in_battle_state) (const struct mob_data *md);
 	int (*ai_sub_hard_slavemob) (struct mob_data *md, int64 tick);
 	int (*unlocktarget) (struct mob_data *md, int64 tick);
 	int (*randomwalk) (struct mob_data *md, int64 tick);
@@ -494,7 +547,8 @@ struct mob_interface {
 	int (*ai_sub_lazy) (struct mob_data *md, va_list args);
 	int (*ai_lazy) (int tid, int64 tick, int id, intptr_t data);
 	int (*ai_hard) (int tid, int64 tick, int id, intptr_t data);
-	struct item_drop* (*setdropitem) (int nameid, int qty, struct item_data *data);
+	void (*setdropitem_options) (struct item *item, struct optdrop_group *options);
+	struct item_drop* (*setdropitem) (int nameid, struct optdrop_group *options, int qty, struct item_data *data);
 	struct item_drop* (*setlootitem) (struct item *item);
 	int (*delay_item_drop) (int tid, int64 tick, int id, intptr_t data);
 	void (*item_drop) (struct mob_data *md, struct item_drop_list *dlist, struct item_drop *ditem, int loot, int drop_rate, unsigned short flag);
@@ -519,7 +573,7 @@ struct mob_interface {
 	struct block_list* (*getfriendhprate) (struct mob_data *md, int min_rate, int max_rate);
 	struct block_list* (*getmasterhpltmaxrate) (struct mob_data *md, int rate);
 	int (*getfriendstatus_sub) (struct block_list *bl, va_list ap);
-	struct mob_data* (*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
+	struct block_list *(*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
 	int (*skill_use) (struct mob_data *md, int64 tick, int event);
 	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);
@@ -527,6 +581,10 @@ struct mob_interface {
 	int (*clone_delete) (struct mob_data *md);
 	unsigned int (*drop_adjust) (int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max);
 	void (*item_dropratio_adjust) (int nameid, int mob_id, int *rate_adjust);
+	bool (*read_optdrops_option) (struct config_setting_t *option, struct optdrop_group_optslot *entry, int *idx, bool *calc_rate, int slot, const char *group);
+	bool (*read_optdrops_optslot) (struct config_setting_t *optslot, int n, int group_id, const char *group);
+	bool (*read_optdrops_group) (struct config_setting_t *group, int n);
+	bool (*read_optdrops_db) (void);
 	void (*readdb) (void);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*get_const) (const struct config_setting_t *it, int *value);
@@ -537,9 +595,11 @@ struct mob_interface {
 	void (*read_db_drops_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct config_setting_t *t);
 	uint32 (*read_db_mode_sub) (struct mob_db *entry, struct config_setting_t *t);
+	struct optdrop_group *(*read_db_drops_option) (struct mob_db *entry, const char *item_name, struct config_setting_t *drop, int *drop_rate);
 	void (*read_db_stats_sub) (struct mob_db *entry, struct config_setting_t *t);
+	void (*read_db_viewdata_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*name_constants) (void);
-	bool (*readdb_mobavail) (char *str[], int columns, int current);
+	void (*mobavail_removal_notice) (void);
 	int (*read_randommonster) (void);
 	bool (*parse_row_chatdb) (char **str, const char *source, int line, int *last_msg_id);
 	void (*readchatdb) (void);
@@ -552,6 +612,7 @@ struct mob_interface {
 	void (*set_item_drop_ratio) (int nameid, struct item_drop_ratio *ratio);
 	int (*final_ratio_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*destroy_mob_db) (int index);
+	void (*destroy_drop_groups) (void);
 	bool (*skill_db_libconfig) (const char *filename, bool ignore_missing);
 	bool (*skill_db_libconfig_sub) (struct config_setting_t *it, int n);
 	bool (*skill_db_libconfig_sub_skill) (struct config_setting_t *it, int n, int mob_id);

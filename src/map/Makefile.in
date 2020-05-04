@@ -1,8 +1,8 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2012-2018  Hercules Dev Team
-# Copyright (C)  Athena Dev Teams
+# Copyright (C) 2012-2020 Hercules Dev Team
+# Copyright (C) Athena Dev Teams
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,6 +36,19 @@ LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
 
+ifeq (@USE_LIBBACKTRACE@,yes)
+	LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
+	LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
+	              dwarf.o @LIBBACKTRACE_FORMAT_FILE@ fileline.o mmapio.o mmap.o posix.o print.o \
+	              simple.o sort.o state.o)
+	LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
+	              backtrace-supported.h config.h filenames.h internal.h)
+else
+	LIBBACKTRACE_D =
+	LIBBACKTRACE_OBJ =
+	LIBBACKTRACE_H =
+endif
+
 MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
@@ -44,8 +57,8 @@ MAP_C = achievement.c atcommand.c battle.c battleground.c buyingstore.c channel.
         chrif.c clan.c clif.c date.c duel.c elemental.c guild.c homunculus.c HPMmap.c \
         instance.c intif.c irc-bot.c itemdb.c log.c mail.c map.c mapreg_sql.c \
         mercenary.c mob.c npc.c npc_chat.c party.c path.c pc.c pc_groups.c \
-        pet.c quest.c rodex.c script.c searchstore.c skill.c status.c storage.c \
-        trade.c unit.c vending.c
+        pet.c quest.c refine.c rodex.c script.c searchstore.c skill.c status.c storage.c \
+        stylist.c trade.c unit.c vending.c
 MAP_OBJ = $(addprefix obj_sql/, $(patsubst %c,%o,$(MAP_C)))
 MAP_H = achievement.h atcommand.h battle.h battleground.h buyingstore.h channel.h chat.h \
         chrif.h clan.h clif.h date.h duel.h elemental.h guild.h homunculus.h HPMmap.h \
@@ -54,13 +67,13 @@ MAP_H = achievement.h atcommand.h battle.h battleground.h buyingstore.h channel.
         messages_sak.h messages_zero.h mob.h npc.h packets.h packets_keys_main.h \
         packets_keys_zero.h packets_shuffle_main.h packets_shuffle_re.h \
         packets_shuffle_zero.h packets_struct.h party.h path.h pc.h pc_groups.h \
-        pet.h quest.h rodex.h script.h searchstore.h skill.h status.h storage.h \
-        trade.h unit.h vending.h
-MAP_PH =
+        pet.h quest.h refine.h rodex.h script.h searchstore.h skill.h status.h storage.h \
+        stylist.h trade.h unit.h vending.h
+MAP_PH = refine.p.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
+	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
 else
 	MAP_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -99,7 +112,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/map/Makefile
 
-$(SYSINFO_INC): $(MAP_C) $(MAP_PH) $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(MAP_C) $(MAP_PH) $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -120,7 +133,7 @@ map-server: ../../map-server@EXEEXT@
 ../../map-server@EXEEXT@: $(MAP_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
 	@$(CC) @STATIC@ @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
-		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:
@@ -139,10 +152,14 @@ $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
 
+$(LIBBACKTRACE_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBBACKTRACE_D)
+
 .SECONDEXPANSION:
 
 # map object files
 
-obj_sql/%.o: %.c $$(filter %.p.h, $(MAP_PH)) $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
+obj_sql/%.o: %.c $$(filter %.p.h, $(MAP_PH)) $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

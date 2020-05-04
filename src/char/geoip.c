@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include "geoip.h"
 
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/showmsg.h"
 
@@ -141,7 +142,9 @@ static void geoip_init(void)
 
 	geoip->data->active = true;
 
-	db = fopen("./db/GeoIP.dat","rb");
+	char file_path[256];
+	libconfig->format_db_path("GeoIP.dat", file_path, sizeof(file_path));
+	db = fopen(file_path, "rb");
 	if (db == NULL) {
 		ShowError("geoip_readdb: Error reading GeoIP.dat!\n");
 		geoip->final(false);

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
- * Copyright (C) 2018  Andrei Karas (4144)
+ * Copyright (C) 2013-2020 Hercules Dev Team
+ * Copyright (C) 2018-2020 Andrei Karas (4144)
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -9663,7 +9663,7 @@
 	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK // 12
 #endif
 
-// 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE
+// 2018-07-04aRagexeRE, 2018-07-11aRagexeRE, 2018-07-18bRagexeRE, 2018-07-18bRagexeRE1, 2018-07-18cRagexeRE, 2018-08-01cRagexeRE, 2018-08-08bRagexeRE, 2018-08-22cRagexeRE, 2018-08-29aRagexeRE, 2018-08-29bRagexeRE, 2018-09-12dRagexeRE, 2018-09-19aRagexeRE, 2018-10-02aRagexeRE, 2018-10-02bRagexeRE, 2018-10-17_02aRagexeRE, 2018-10-17_03aRagexeRE, 2018-10-17bRagexeRE, 2018-10-31cRagexeRE, 2018-11-07aRagexeRE, 2018-11-14cRagexeRE, 2018-11-14dRagexeRE, 2018-11-21cRagexeRE, 2018-11-28aRagexeRE, 2018-12-05bRagexeRE, 2018-12-12aRagexeRE, 2018-12-12bRagexeRE, 2018-12-19bRagexeRE, 2018-12-26aRagexeRE, 2019-01-09bRagexeRE, 2019-01-16bRagexeRE, 2019-01-16cRagexeRE, 2019-01-23dRagexeRE, 2019-02-13IRagexeRE, 2019-02-20aRagexeRE, 2019-02-27bRagexeRE, 2019-02-28aRagexeRE, 2019-03-06bRagexeRE, 2019-03-06cRagexeRE, 2019-03-20aRagexeRE, 2019-03-22aRagexeRE, 2019-03-27bRagexeRE, 2019-04-03bRagexeRE, 2019-04-03cRagexeRE, 2019-04-17cRagexeRE, 2019-04-18aRagexeRE, 2019-05-08dRagexeRE, 2019-05-08eRagexeRE, 2019-05-22bRagexeRE, 2019-05-22cRagexeRE, 2019-05-29bRagexeRE, 2019-05-29cRagexeRE, 2019-05-30aRagexeRE, 2019-06-05hRagexeRE, 2019-06-05JRagexeRE, 2019-06-05LRagexeRE, 2019-06-19cRagexeRE, 2019-06-26bRagexeRE, 2019-07-03bRagexeRE, 2019-07-17cRagexeRE, 2019-07-17dRagexeRE, 2019-07-24bRagexeRE, 2019-07-31bRagexeRE, 2019-08-02aRagexeRE, 2019-08-07dRagexeRE, 2019-08-21cRagexeRE, 2019-08-21dRagexeRE, 2019-08-28aRagexeRE
 #if PACKETVER == 20180704 || \
     PACKETVER == 20180711 || \
     PACKETVER == 20180718 || \
@@ -9677,7 +9677,42 @@
     PACKETVER == 20181017 || \
     PACKETVER == 20181031 || \
     PACKETVER == 20181107 || \
-    PACKETVER >= 20181114
+    PACKETVER == 20181114 || \
+    PACKETVER == 20181121 || \
+    PACKETVER == 20181128 || \
+    PACKETVER == 20181205 || \
+    PACKETVER == 20181212 || \
+    PACKETVER == 20181219 || \
+    PACKETVER == 20181226 || \
+    PACKETVER == 20190109 || \
+    PACKETVER == 20190116 || \
+    PACKETVER == 20190123 || \
+    PACKETVER == 20190213 || \
+    PACKETVER == 20190220 || \
+    PACKETVER == 20190227 || \
+    PACKETVER == 20190228 || \
+    PACKETVER == 20190306 || \
+    PACKETVER == 20190320 || \
+    PACKETVER == 20190322 || \
+    PACKETVER == 20190327 || \
+    PACKETVER == 20190403 || \
+    PACKETVER == 20190417 || \
+    PACKETVER == 20190418 || \
+    PACKETVER == 20190508 || \
+    PACKETVER == 20190522 || \
+    PACKETVER == 20190529 || \
+    PACKETVER == 20190530 || \
+    PACKETVER == 20190605 || \
+    PACKETVER == 20190619 || \
+    PACKETVER == 20190626 || \
+    PACKETVER == 20190703 || \
+    PACKETVER == 20190717 || \
+    PACKETVER == 20190724 || \
+    PACKETVER == 20190731 || \
+    PACKETVER == 20190802 || \
+    PACKETVER == 20190807 || \
+    PACKETVER == 20190821 || \
+    PACKETVER >= 20190828
 	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
 	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
 	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
@@ -9692,6 +9727,60 @@
 	packet(0x0365,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY // 8
 	packet(0x0366,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND // 10
 	packet(0x0367,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX // 90
+	packet(0x0368,clif->pGetCharNameRequest,2);  // CZ_REQNAME // 6
+	packet(0x0369,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID // 6
+	packet(0x0436,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER // 19
+	packet(0x0437,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT // 7
+	packet(0x0438,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL // 10
+	packet(0x07e4,clif->pItemListWindowSelected,2,4,8);  // CZ_ITEMLISTWIN_RES // -1
+	packet(0x07ec,clif->pDull/*,XXX*/);  // CZ_JOIN_BATTLE_FIELD // 8
+	packet(0x0802,clif->pPartyBookingRegisterReq,2,4);  // CZ_PARTY_BOOKING_REQ_REGISTER // 18
+	packet(0x0811,clif->pReqOpenBuyingStore,2,4,8,9,89);  // CZ_REQ_OPEN_BUYING_STORE // -1
+	packet(0x0815,clif->pReqCloseBuyingStore,0);  // CZ_REQ_CLOSE_BUYING_STORE // 2
+	packet(0x0817,clif->pReqClickBuyingStore,2);  // CZ_REQ_CLICK_TO_BUYING_STORE // 6
+	packet(0x0819,clif->pReqTradeBuyingStore,2,4,8,12);  // CZ_REQ_TRADE_BUYING_STORE // -1
+	packet(0x0835,clif->pSearchStoreInfo,2,4,5,9,13,14,15);  // CZ_SEARCH_STORE_INFO // -1
+	packet(0x0838,clif->pSearchStoreInfoNextPage,0);  // CZ_SEARCH_STORE_INFO_NEXT_PAGE // 2
+	packet(0x083c,clif->pSearchStoreInfoListItemClick,2,6,10);  // CZ_SSILIST_ITEM_CLICK // 14
+#endif
+
+// 2019-09-04bRagexeRE, 2019-09-18cRagexeRE, 2019-09-25aRagexeRE, 2019-09-25bRagexeRE, 2019-10-02bRagexeRE, 2019-10-02dRagexeRE, 2019-10-02dRagexeRE_2, 2019-10-16fRagexeRE, 2019-10-16gRagexeRE, 2019-10-23aRagexeRE, 2019-10-30bRagexeRE, 2019-11-06bRagexeRE, 2019-11-07aRagexeRE, 2019-11-13eRagexeRE, 2019-11-20cRagexeRE, 2019-11-27aRagexeRE, 2019-12-04aRagexeRE, 2019-12-04bRagexeRE, 2019-12-04cRagexeRE, 2019-12-11fRagexeRE, 2019-12-18bRagexeRE, 2019-12-24aRagexeRE, 2019-12-24bRagexeRE, 2020-01-08bRagexeRE, 2020-01-22cRagexeRE, 2020-02-05aRagexeRE, 2020-02-12aRagexeRE, 2020-02-19eRagexeRE, 2020-03-04aRagexeRE
+#if PACKETVER == 20190904 || \
+    PACKETVER == 20190918 || \
+    PACKETVER == 20190925 || \
+    PACKETVER == 20191002 || \
+    PACKETVER == 20191016 || \
+    PACKETVER == 20191023 || \
+    PACKETVER == 20191030 || \
+    PACKETVER == 20191106 || \
+    PACKETVER == 20191107 || \
+    PACKETVER == 20191113 || \
+    PACKETVER == 20191120 || \
+    PACKETVER == 20191127 || \
+    PACKETVER == 20191204 || \
+    PACKETVER == 20191211 || \
+    PACKETVER == 20191218 || \
+    PACKETVER == 20191224 || \
+    PACKETVER == 20200108 || \
+    PACKETVER == 20200122 || \
+    PACKETVER == 20200205 || \
+    PACKETVER == 20200212 || \
+    PACKETVER == 20200219 || \
+    PACKETVER == 20200304
+	packet(0x0202,clif->pFriendsListAdd,2);  // CZ_ADD_FRIENDS // 26
+	packet(0x022d,clif->pHomMenu,2,4);  // CZ_COMMAND_MER // 5
+	packet(0x023b,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD // 36
+	packet(0x0281,clif->pDull/*,XXX*/);  // CZ_GANGSI_RANK // 4
+	packet(0x02c4,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ // 26
+	packet(0x035f,clif->pWalkToXY,2);  // CZ_REQUEST_MOVE // 5
+	packet(0x0360,clif->pTickSend,2);  // CZ_REQUEST_TIME // 6
+	packet(0x0361,clif->pChangeDir,2,4);  // CZ_CHANGE_DIRECTION // 5
+	packet(0x0362,clif->pTakeItem,2);  // CZ_ITEM_PICKUP // 6
+	packet(0x0363,clif->pDropItem,2,4);  // CZ_ITEM_THROW // 6
+	packet(0x0364,clif->pMoveToKafra,2,4);  // CZ_MOVE_ITEM_FROM_BODY_TO_STORE // 8
+	packet(0x0365,clif->pMoveFromKafra,2,4);  // CZ_MOVE_ITEM_FROM_STORE_TO_BODY // 8
+	packet(0x0366,clif->pUseSkillToPos,2,4,6,8);  // CZ_USE_SKILL_TOGROUND // 10
+	packet(0x0367,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);  // CZ_USE_SKILL_TOGROUND_WITHTALKBOX // 31
 	packet(0x0368,clif->pGetCharNameRequest,2);  // CZ_REQNAME // 6
 	packet(0x0369,clif->pSolveCharName,2);  // CZ_REQNAME_BYGID // 6
 	packet(0x0436,clif->pWantToConnection,2,6,10,14,18);  // CZ_ENTER // 19

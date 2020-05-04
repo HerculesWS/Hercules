@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -219,6 +219,7 @@ struct login_interface {
 	void (*auth_failed) (struct login_session_data* sd, int result);
 	bool (*client_login) (int fd, struct login_session_data *sd);
 	bool (*client_login_otp) (int fd, struct login_session_data *sd);
+	void (*client_login_mobile_otp_request) (int fd, struct login_session_data *sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	void (*config_set_defaults) (void);

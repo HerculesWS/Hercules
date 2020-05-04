@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\src\map\achievement.c">
-  	  <Filter>map</Filter>
+      <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="..\src\map\atcommand.c">
       <Filter>map</Filter>
@@ -107,6 +107,9 @@
       <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="..\src\map\status.c">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\map\stylist.c">
       <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="..\src\map\storage.c">
@@ -215,6 +218,9 @@
       <Filter>map</Filter>
     </ClCompile>
     <ClCompile Include="..\src\map\rodex.c">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\map\refine.c">
       <Filter>map</Filter>
     </ClCompile>
   </ItemGroup>
@@ -340,6 +346,9 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\status.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\stylist.h">
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\storage.h">
@@ -493,6 +502,12 @@
       <Filter>config</Filter>
     </ClInclude>
     <ClInclude Include="..\src\map\rodex.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\refine.p.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\map\refine.h">
       <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -309,4 +309,31 @@ function	script	F_Snowball	{
 		break;
 	}
 	end;
+}
+
+// Status reduction potion
+//============================================================
+// - Permanently reduces base stat <type> by <val>.
+// - Returns status points equals to points needed to raise
+//   that stat to original value.
+// - Doesn't work if base status <type> would become lower than 1 after reduction.
+// * callfunc("F_CashReduceStat", <type>{, <val>, <itemid>});
+function	script	F_CashReduceStat	{
+	.@type = getarg(0);
+	.@amount = getarg(1, -1);
+	.@itemid = getarg(2, 0);
+	
+	if ((readparam(.@type) + .@amount) < 1) return;
+	
+	if (.@itemid) {
+		if (countitem(.@itemid))
+			delitem .@itemid, 1;
+		else
+			return;
+	}
+	
+	StatusPoint += needed_status_point(.@type, .@amount);
+	statusup2 .@type, .@amount;
+	
+	return;
 }

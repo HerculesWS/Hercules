@@ -1,8 +1,8 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2012-2018  Hercules Dev Team
-# Copyright (C)  Athena Dev Teams
+# Copyright (C) 2012-2020 Hercules Dev Team
+# Copyright (C) Athena Dev Teams
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,6 +36,19 @@ LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
 
+ifeq (@USE_LIBBACKTRACE@,yes)
+	LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
+	LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
+	              dwarf.o @LIBBACKTRACE_FORMAT_FILE@ fileline.o mmapio.o mmap.o posix.o print.o \
+	              simple.o sort.o state.o)
+	LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
+	              backtrace-supported.h config.h filenames.h internal.h)
+else
+	LIBBACKTRACE_D =
+	LIBBACKTRACE_OBJ =
+	LIBBACKTRACE_H =
+endif
+
 MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
@@ -46,12 +59,12 @@ CHAR_C = char.c HPMchar.c loginif.c mapif.c geoip.c inter.c int_achievement.c in
 CHAR_OBJ = $(addprefix obj_sql/, $(patsubst %.c,%.o,$(CHAR_C)))
 CHAR_H = char.h HPMchar.h loginif.h mapif.h geoip.h inter.h int_achievement.h int_auction.h int_clan.h int_elemental.h \
          int_guild.h int_homun.h int_mail.h int_mercenary.h int_party.h int_pet.h \
-         int_quest.h int_rodex.h int_storage.h pincode.h
+         int_quest.h int_rodex.h int_storage.h pincode.h packets_hc_struct.h
 CHAR_PH =
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	CHAR_SERVER_SQL_DEPENDS=$(CHAR_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(SYSINFO_INC)
+	CHAR_SERVER_SQL_DEPENDS=$(CHAR_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
 else
 	CHAR_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -90,7 +103,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/char/Makefile
 
-$(SYSINFO_INC): $(CHAR_C) $(CHAR_PH) $(CHAR_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(CHAR_C) $(CHAR_PH) $(CHAR_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -111,7 +124,7 @@ char-server: ../../char-server@EXEEXT@
 ../../char-server@EXEEXT@: $(CHAR_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
 	@$(CC) @STATIC@ @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
-		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:
@@ -130,10 +143,14 @@ $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
 
+$(LIBBACKTRACE_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBBACKTRACE_D)
+
 .SECONDEXPANSION:
 
 # char object files
 
-obj_sql/%.o: %.c $$(filter %.p.h, $(CHAR_PH)) $(CHAR_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
+obj_sql/%.o: %.c $$(filter %.p.h, $(CHAR_PH)) $(CHAR_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,6 @@
 #include "map/mapreg.h"
 #include "map/mercenary.h"
 #include "map/mob.h"
-#include "map/npc.h"
 #include "map/npc.h" // npc_setcells(), npc_unsetcells()
 #include "map/party.h"
 #include "map/path.h"
@@ -56,7 +55,9 @@
 #include "map/skill.h"
 #include "map/status.h"
 #include "map/storage.h"
+#include "map/stylist.h"
 #include "map/rodex.h"
+#include "map/refine.h"
 #include "map/trade.h"
 #include "map/unit.h"
 #include "map/achievement.h"
@@ -530,10 +531,12 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
 	return NULL;
 }
 
-/** @name Functions for block_list search and manipulation
+/**
+ * @name Functions for block_list search and manipulation
+ *
+ * @{
  */
 
-/* @{ */
 /**
  * Applies func to every block_list in bl_list starting with bl_list[blockcount].
  * Sets bl_list_count back to blockcount.
@@ -637,8 +640,11 @@ static int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, i
 
 static int map_forcountinmap(int (*func)(struct block_list*, va_list), int16 m, int count, int type, ...)
 {
-	int returnCount;
+	int returnCount = 0;
 	va_list ap;
+
+	if (m < 0)
+		return returnCount;
 
 	va_start(ap, type);
 	returnCount = map->vforcountinarea(func, m, 0, 0, map->list[m].xs, map->list[m].ys, count, type, ap);
@@ -1664,7 +1670,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
  *------------------------------------------*/
 static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag)
 {
-	uint8 dir = 6;
+	enum unit_dir dir = UNIT_DIR_EAST;
 	int16 tx;
 	int16 ty;
 	int costrange = 10;
@@ -1683,7 +1689,7 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 		short dy = diry[dir];
 
 		//Linear search
-		if(dir%2 == 0 && costrange%MOVE_COST == 0) {
+		if (!unit_is_diagonal_dir(dir) && (costrange % MOVE_COST) == 0) {
 			tx = *x+dx*(costrange/MOVE_COST);
 			ty = *y+dy*(costrange/MOVE_COST);
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
@@ -1693,7 +1699,7 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 			}
 		}
 		//Full diagonal search
-		else if(dir%2 == 1 && costrange%MOVE_DIAGONAL_COST == 0) {
+		else if (unit_is_diagonal_dir(dir) && (costrange % MOVE_DIAGONAL_COST) == 0) {
 			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
 			ty = *y+dy*(costrange/MOVE_DIAGONAL_COST);
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
@@ -1703,16 +1709,24 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 			}
 		}
 		//One cell diagonal, rest linear (TODO: Find a better algorithm for this)
-		else if(dir%2 == 1 && costrange%MOVE_COST == 4) {
-			tx = *x+dx*((dir%4==3)?(costrange/MOVE_COST):1);
-			ty = *y+dy*((dir%4==1)?(costrange/MOVE_COST):1);
+		else if (unit_is_diagonal_dir(dir) && (costrange % MOVE_COST) == 4) {
+			tx = *x + dx;
+			ty = *y + dy;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_SOUTHWEST))
+				tx = tx * costrange / MOVE_COST;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_NORTHWEST))
+				ty = ty * costrange / MOVE_COST;
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
 				return true;
 			}
-			tx = *x+dx*((dir%4==1)?(costrange/MOVE_COST):1);
-			ty = *y+dy*((dir%4==3)?(costrange/MOVE_COST):1);
+			tx = *x + dx;
+			ty = *y + dy;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_NORTHWEST))
+				tx = tx * costrange / MOVE_COST;
+			if (unit_is_dir_or_opposite(dir, UNIT_DIR_SOUTHWEST))
+				ty = ty * costrange / MOVE_COST;
 			if (!map->count_oncell(m, tx, ty, type, flag) && map->getcell(m, bl, tx, ty, CELL_CHKPASS)) {
 				*x = tx;
 				*y = ty;
@@ -1721,17 +1735,17 @@ static bool map_closest_freecell(int16 m, const struct block_list *bl, int16 *x,
 		}
 
 		//Get next direction
-		if (dir == 5) {
+		if (dir == UNIT_DIR_SOUTHEAST) {
 			//Diagonal search complete, repeat with higher cost range
 			if(costrange == 14) costrange += 6;
 			else if(costrange == 28 || costrange >= 38) costrange += 2;
 			else costrange += 4;
-			dir = 6;
-		} else if (dir == 4) {
+			dir = UNIT_DIR_EAST;
+		} else if (dir == UNIT_DIR_SOUTH) {
 			//Linear search complete, switch to diagonal directions
-			dir = 7;
+			dir = UNIT_DIR_NORTHEAST;
 		} else {
-			dir = (dir+2)%8;
+			dir = unit_get_ccw90_dir(dir);
 		}
 	}
 
@@ -2266,30 +2280,25 @@ static struct map_session_data *map_charid2sd(int charid)
  * (without sensitive case if necessary)
  * return map_session_data pointer or NULL
  *------------------------------------------*/
-static struct map_session_data *map_nick2sd(const char *nick)
+static struct map_session_data *map_nick2sd(const char *nick, bool allow_partial)
 {
-	struct map_session_data* sd;
-	struct map_session_data* found_sd;
-	struct s_mapiterator* iter;
-	size_t nicklen;
-	int qty = 0;
-
-	if( nick == NULL )
+	if (nick == NULL)
 		return NULL;
 
-	nicklen = strlen(nick);
-	iter = mapit_getallusers();
+	struct s_mapiterator *iter = mapit_getallusers();
+	struct map_session_data *found_sd = NULL;
 
-	found_sd = NULL;
-	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-		if( battle_config.partial_name_scan )
-		{// partial name search
-			if( strnicmp(sd->status.name, nick, nicklen) == 0 )
-			{
+	if (battle_config.partial_name_scan && allow_partial) {
+		int nicklen = (int)strlen(nick);
+		int qty = 0;
+
+		// partial name search
+		for (struct map_session_data *sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+			if (strnicmp(sd->status.name, nick, nicklen) == 0) {
 				found_sd = sd;
 
-				if( strcmp(sd->status.name, nick) == 0 )
-				{// Perfect Match
+				if (strcmp(sd->status.name, nick) == 0) {
+					// Perfect Match
 					qty = 1;
 					break;
 				}
@@ -2297,16 +2306,19 @@ static struct map_session_data *map_nick2sd(const char *nick)
 				qty++;
 			}
 		}
-		else if( strcasecmp(sd->status.name, nick) == 0 )
-		{// exact search only
-			found_sd = sd;
-			break;
+
+		if (qty != 1)
+			found_sd = NULL;
+	} else {
+		// exact search only
+		for (struct map_session_data *sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+			if (strcasecmp(sd->status.name, nick) == 0) {
+				found_sd = sd;
+				break;
+			}
 		}
 	}
 	mapit->free(iter);
-
-	if( battle_config.partial_name_scan && qty != 1 )
-		found_sd = NULL;
 
 	return found_sd;
 }
@@ -2841,63 +2853,70 @@ static int map_mapname2ipport(unsigned short name, uint32 *ip, uint16 *port)
 	return 0;
 }
 
-/*==========================================
+/**
  * Checks if both dirs point in the same direction.
- *------------------------------------------*/
-static int map_check_dir(int s_dir, int t_dir)
+ * @param s_dir: direction source is facing
+ * @param t_dir: direction target is facing
+ * @return 0: success(both face the same direction), 1: failure
+ **/
+static int map_check_dir(enum unit_dir s_dir, enum unit_dir t_dir)
 {
-	if(s_dir == t_dir)
+	if (s_dir == t_dir || ((t_dir + UNIT_DIR_MAX - 1) % UNIT_DIR_MAX) == s_dir
+	    || ((t_dir + UNIT_DIR_MAX + 1) % UNIT_DIR_MAX) == s_dir)
 		return 0;
-	switch(s_dir) {
-		case 0: if(t_dir == 7 || t_dir == 1 || t_dir == 0) return 0; break;
-		case 1: if(t_dir == 0 || t_dir == 2 || t_dir == 1) return 0; break;
-		case 2: if(t_dir == 1 || t_dir == 3 || t_dir == 2) return 0; break;
-		case 3: if(t_dir == 2 || t_dir == 4 || t_dir == 3) return 0; break;
-		case 4: if(t_dir == 3 || t_dir == 5 || t_dir == 4) return 0; break;
-		case 5: if(t_dir == 4 || t_dir == 6 || t_dir == 5) return 0; break;
-		case 6: if(t_dir == 5 || t_dir == 7 || t_dir == 6) return 0; break;
-		case 7: if(t_dir == 6 || t_dir == 0 || t_dir == 7) return 0; break;
-	}
 	return 1;
 }
 
-/*==========================================
+/**
  * Returns the direction of the given cell, relative to 'src'
- *------------------------------------------*/
-static uint8 map_calc_dir(struct block_list *src, int16 x, int16 y)
+ * @param src: object to put in relation between coordinates
+ * @param x: x-coordinate of cell
+ * @param y: y-coordinate of cell
+ * @return the direction of the given cell, relative to 'src'
+ **/
+static enum unit_dir map_calc_dir(const struct block_list *src, int16 x, int16 y)
 {
-	uint8 dir = 0;
-	int dx, dy;
+	nullpo_retr(UNIT_DIR_NORTH, src);
+	enum unit_dir dir = UNIT_DIR_NORTH;
 
-	nullpo_ret(src);
-
-	dx = x-src->x;
-	dy = y-src->y;
+	int dx = x - src->x;
+	int dy = y - src->y;
 	if (dx == 0 && dy == 0) {
 		// both are standing on the same spot.
 		// aegis-style, makes knockback default to the left.
 		// athena-style, makes knockback default to behind 'src'.
-		dir = (battle_config.knockback_left ? 6 : unit->getdir(src));
-	} else if (dx >= 0 && dy >=0) {
-		// upper-right
-		if( dx*2 < dy || dx == 0 )         dir = 0; // up
-		else if( dx > dy*2+1 || dy == 0 )  dir = 6; // right
-		else                               dir = 7; // up-right
+		if (battle_config.knockback_left != 0)
+			dir = UNIT_DIR_EAST;
+		else
+			dir = unit->getdir(src);
+	} else if (dx >= 0 && dy >= 0) {
+		if (dx * 2 < dy || dx == 0)
+			dir = UNIT_DIR_NORTH;
+		else if (dx > dy * 2 + 1 || dy == 0)
+			dir = UNIT_DIR_EAST;
+		else
+			dir = UNIT_DIR_NORTHEAST;
 	} else if (dx >= 0 && dy <= 0) {
-		// lower-right
-		if( dx*2 < -dy || dx == 0 )        dir = 4; // down
-		else if( dx > -dy*2+1 || dy == 0 ) dir = 6; // right
-		else                               dir = 5; // down-right
+		if (dx * 2 < -dy || dx == 0)
+			dir = UNIT_DIR_SOUTH;
+		else if (dx > -dy * 2 + 1 || dy == 0)
+			dir = UNIT_DIR_EAST;
+		else
+			dir = UNIT_DIR_SOUTHEAST;
 	} else if (dx <= 0 && dy <= 0) {
-		// lower-left
-		if( dx*2 > dy || dx == 0 )         dir = 4; // down
-		else if( dx < dy*2-1 || dy == 0 )  dir = 2; // left
-		else                               dir = 3; // down-left
+		if (dx * 2 > dy || dx == 0 )
+			dir = UNIT_DIR_SOUTH;
+		else if (dx < dy * 2 + 1 || dy == 0)
+			dir = UNIT_DIR_WEST;
+		else
+			dir = UNIT_DIR_SOUTHWEST;
 	} else {
-		// upper-left
-		if( -dx*2 < dy || dx == 0 )        dir = 0; // up
-		else if( -dx > dy*2+1 || dy == 0)  dir = 2; // left
-		else                               dir = 1; // up-left
+		if (-dx * 2 < dy || dx == 0 )
+			dir = UNIT_DIR_NORTH;
+		else if (-dx > dy * 2 + 1 || dy == 0)
+			dir = UNIT_DIR_WEST;
+		else
+			dir = UNIT_DIR_NORTHWEST;
 	}
 	return dir;
 }
@@ -2925,11 +2944,11 @@ static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 	if (dist < 1) dist =1;
 
 	do {
-		int j = 1 + 2*(rnd()%4); //Pick a random diagonal direction
+		enum unit_dir dir = unit_get_rnd_diagonal_dir();
 		short segment = 1+(rnd()%dist); //Pick a random interval from the whole vector in that direction
-		xi = bl->x + segment*dirx[j];
+		xi = bl->x + segment * dirx[dir];
 		segment = (short)sqrt((float)(dist2 - segment*segment)); //The complement of the previously picked segment
-		yi = bl->y + segment*diry[j];
+		yi = bl->y + segment * diry[dir];
 	} while ((map->getcell(bl->m, bl, xi, yi, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, xi, yi, 1, CELL_CHKNOREACH))
 	       && (++i)<100);
 
@@ -3058,6 +3077,8 @@ static int map_getcellp(struct map_data *m, const struct block_list *bl, int16 x
 		return (cell.icewall);
 	case CELL_CHKNOICEWALL:
 		return (cell.noicewall);
+	case CELL_CHKNOSKILL:
+		return (cell.noskill);
 
 		// special checks
 	case CELL_CHKPASS:
@@ -3122,6 +3143,7 @@ static void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag)
 	case CELL_NOCHAT:        map->list[m].cell[j].nochat = flag;        break;
 	case CELL_ICEWALL:       map->list[m].cell[j].icewall = flag;       break;
 	case CELL_NOICEWALL:     map->list[m].cell[j].noicewall = flag;     break;
+	case CELL_NOSKILL:       map->list[m].cell[j].noskill = flag;       break;
 
 	default:
 		ShowWarning("map_setcell: invalid cell type '%d'\n", (int)cell);
@@ -3584,23 +3606,27 @@ static void map_zone_db_clear(void)
 }
 static void map_clean(int i)
 {
-	int v;
 	Assert_retv(i >= 0 && i < map->count);
-	if(map->list[i].cell && map->list[i].cell != (struct mapcell *)0xdeadbeaf) aFree(map->list[i].cell);
-	if(map->list[i].block) aFree(map->list[i].block);
-	if(map->list[i].block_mob) aFree(map->list[i].block_mob);
 
-	if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
-		int j;
-		if(map->list[i].mob_delete_timer != INVALID_TIMER)
+	if (map->list[i].cell && map->list[i].cell != (struct mapcell *)0xdeadbeaf)
+		aFree(map->list[i].cell);
+	if (map->list[i].block)
+		aFree(map->list[i].block);
+	if (map->list[i].block_mob)
+		aFree(map->list[i].block_mob);
+
+	if (battle_config.dynamic_mobs != 0) { //Dynamic mobs flag by [random]
+		if (map->list[i].mob_delete_timer != INVALID_TIMER)
 			timer->delete(map->list[i].mob_delete_timer, map->removemobs_timer);
-		for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
-			if (map->list[i].moblist[j]) aFree(map->list[i].moblist[j]);
+		for (int j = 0; j < MAX_MOB_LIST_PER_MAP; j++) {
+			if (map->list[i].moblist[j] != NULL)
+				aFree(map->list[i].moblist[j]);
+		}
 	}
 
-	if( map->list[i].unit_count ) {
-		if( map->list[i].units ) {
-			for(v = 0; v < map->list[i].unit_count; v++) {
+	if (map->list[i].unit_count != 0) {
+		if (map->list[i].units != NULL) {
+			for (int v = 0; v < map->list[i].unit_count; v++) {
 				aFree(map->list[i].units[v]);
 			}
 			aFree(map->list[i].units);
@@ -3609,98 +3635,44 @@ static void map_clean(int i)
 		map->list[i].unit_count = 0;
 	}
 
-	if( map->list[i].skill_count ) {
-		if( map->list[i].skills ) {
-			for(v = 0; v < map->list[i].skill_count; v++) {
-					aFree(map->list[i].skills[v]);
-				}
+	if (map->list[i].skill_count != 0) {
+		if (map->list[i].skills != NULL) {
+			for (int v = 0; v < map->list[i].skill_count; v++) {
+				aFree(map->list[i].skills[v]);
+			}
 			aFree(map->list[i].skills);
 			map->list[i].skills = NULL;
 		}
 		map->list[i].skill_count = 0;
 	}
 
-	if( map->list[i].zone_mf_count ) {
-		if( map->list[i].zone_mf ) {
-			for(v = 0; v < map->list[i].zone_mf_count; v++) {
-					aFree(map->list[i].zone_mf[v]);
-				}
+	if (map->list[i].zone_mf_count != 0) {
+		if (map->list[i].zone_mf != NULL) {
+			for (int v = 0; v < map->list[i].zone_mf_count; v++) {
+				aFree(map->list[i].zone_mf[v]);
+			}
 			aFree(map->list[i].zone_mf);
 			map->list[i].zone_mf = NULL;
 		}
 		map->list[i].zone_mf_count = 0;
 	}
 
-	if( map->list[i].channel )
+	if (map->list[i].drop_list_count != 0)
+		map->list[i].drop_list_count = 0;
+	if (map->list[i].drop_list != NULL)
+		aFree(map->list[i].drop_list);
+
+	if (map->list[i].channel != NULL)
 		channel->delete(map->list[i].channel);
+
+	VECTOR_CLEAR(map->list[i].qi_list);
+	HPM->data_store_destroy(&map->list[i].hdata);
 }
 static void do_final_maps(void)
 {
-	int i, v = 0;
-
-	for( i = 0; i < map->count; i++ ) {
-
-		if(map->list[i].cell && map->list[i].cell != (struct mapcell *)0xdeadbeaf ) aFree(map->list[i].cell);
-		if(map->list[i].block) aFree(map->list[i].block);
-		if(map->list[i].block_mob) aFree(map->list[i].block_mob);
-
-		if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
-			int j;
-			if(map->list[i].mob_delete_timer != INVALID_TIMER)
-				timer->delete(map->list[i].mob_delete_timer, map->removemobs_timer);
-			for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
-				if (map->list[i].moblist[j]) aFree(map->list[i].moblist[j]);
-		}
-
-		if( map->list[i].unit_count ) {
-			if( map->list[i].units ) {
-				for(v = 0; v < map->list[i].unit_count; v++) {
-					aFree(map->list[i].units[v]);
-				}
-				aFree(map->list[i].units);
-				map->list[i].units = NULL;
-			}
-			map->list[i].unit_count = 0;
-		}
-
-		if( map->list[i].skill_count ) {
-			if( map->list[i].skills ) {
-				for(v = 0; v < map->list[i].skill_count; v++) {
-					aFree(map->list[i].skills[v]);
-				}
-				aFree(map->list[i].skills);
-				map->list[i].skills = NULL;
-			}
-			map->list[i].skill_count = 0;
-		}
-
-		if( map->list[i].zone_mf_count ) {
-			if( map->list[i].zone_mf ) {
-				for(v = 0; v < map->list[i].zone_mf_count; v++) {
-					aFree(map->list[i].zone_mf[v]);
-				}
-				aFree(map->list[i].zone_mf);
-				map->list[i].zone_mf = NULL;
-			}
-			map->list[i].zone_mf_count = 0;
-		}
-
-		if( map->list[i].drop_list_count ) {
-			map->list[i].drop_list_count = 0;
-		}
-		if( map->list[i].drop_list != NULL )
-			aFree(map->list[i].drop_list);
-
-		if( map->list[i].channel )
-			channel->delete(map->list[i].channel);
-
-		quest->questinfo_vector_clear(i);
-
-		HPM->data_store_destroy(&map->list[i].hdata);
-	}
-
+	for (int i = 0; i < map->count; i++)
+		map->clean(i);
 	map->zone_db_clear();
-
 }
 
 static void map_zonedb_reload(void)
@@ -3791,7 +3763,8 @@ static void map_flags_init(void)
 		map->list[i].short_damage_rate  = 100;
 		map->list[i].long_damage_rate   = 100;
 
-		VECTOR_INIT(map->list[i].qi_data);
+		VECTOR_CLEAR(map->list[i].qi_list);
+		VECTOR_INIT(map->list[i].qi_list);
 	}
 }
 
@@ -3819,8 +3792,29 @@ static int map_waterheight(char *mapname)
 	// read & convert fn
 	rsw = grfio_read(fn);
 	if (rsw) {
+		if (memcmp(rsw, "GRSW", 4) != 0) {
+			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
+			aFree(rsw);
+			return NO_WATER;
+		}
+		int major_version = rsw[4];
+		int minor_version = rsw[5];
+		if (major_version > 2 || (major_version == 2 && minor_version > 2)) {
+			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
+			aFree(rsw);
+			return NO_WATER;
+		}
+		if (major_version < 1 || (major_version == 1 && minor_version <= 4)) {
+			ShowWarning("Failed to find water level for %s (%s)\n", mapname, fn);
+			aFree(rsw);
+			return NO_WATER;
+		}
+		int offset = 166;
+		if (major_version == 2 && minor_version >= 2) {
+			offset = 167;
+		}
 		//Load water height from file
-		int wh = (int) *(float*)(rsw+166);
+		int wh = (int)*(float*)(rsw + offset);
 		aFree(rsw);
 		return wh;
 	}
@@ -4104,6 +4098,7 @@ static bool map_config_read_database(const char *filename, struct config_t *conf
 		return false;
 	}
 	libconfig->setting_lookup_mutable_string(setting, "db_path", map->db_path, sizeof(map->db_path));
+	libconfig->set_db_path(map->db_path);
 	libconfig->setting_lookup_int(setting, "save_settings", &map->save_settings);
 
 	if (libconfig->setting_lookup_int(setting, "autosave_time", &map->autosave_interval) == CONFIG_TRUE) {
@@ -4479,6 +4474,8 @@ static bool inter_config_read_database_names(const char *filename, const struct 
 	libconfig->setting_lookup_mutable_string(setting, "autotrade_merchants_db", map->autotrade_merchants_db, sizeof(map->autotrade_merchants_db));
 	libconfig->setting_lookup_mutable_string(setting, "autotrade_data_db", map->autotrade_data_db, sizeof(map->autotrade_data_db));
 	libconfig->setting_lookup_mutable_string(setting, "npc_market_data_db", map->npc_market_data_db, sizeof(map->npc_market_data_db));
+	libconfig->setting_lookup_mutable_string(setting, "npc_barter_data_db", map->npc_barter_data_db, sizeof(map->npc_barter_data_db));
+	libconfig->setting_lookup_mutable_string(setting, "npc_expanded_barter_data_db", map->npc_expanded_barter_data_db, sizeof(map->npc_expanded_barter_data_db));
 
 	if (!mapreg->config_read(filename, setting, imported))
 		retval = false;
@@ -5425,6 +5422,32 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			else if( map->list[m].flag.nocashshop )
 				map_zone_mf_cache_add(m,"nocashshop");
 		}
+	} else if (strcmpi(flag, "nostorage") == 0) {
+		if (!state) {
+			if (map->list[m].flag.nostorage != 0) {
+				sprintf(rflag, "nostorage\t%d", map->list[m].flag.nostorage);
+				map_zone_mf_cache_add(m, rflag);
+			}
+		}
+		if (sscanf(params, "%d", &state) == 1) {
+			if (state != map->list[m].flag.nostorage) {
+				sprintf(rflag, "nostorage\t%d", state);
+				map_zone_mf_cache_add(m, rflag);
+			}
+		}
+	} else if (strcmpi(flag, "nogstorage") == 0) {
+		if (!state) {
+			if (map->list[m].flag.nogstorage != 0) {
+				sprintf(rflag, "nogstorage\t%d", map->list[m].flag.nogstorage);
+				map_zone_mf_cache_add(m, rflag);
+			}
+		}
+		if (sscanf(params, "%d", &state) == 1) {
+			if (state != map->list[m].flag.nogstorage) {
+				sprintf(rflag, "nogstorage\t%d", state);
+				map_zone_mf_cache_add(m, rflag);
+			}
+		}
 	}
 
 	return false;
@@ -5596,12 +5619,8 @@ static void read_map_zone_db(void)
 {
 	struct config_t map_zone_db;
 	struct config_setting_t *zones = NULL;
-	/* TODO: #ifndef required for re/pre-re */
-#ifdef RENEWAL
-	const char *config_filename = "db/re/map_zone_db.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/map_zone_db.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"map_zone_db.conf", config_filename, sizeof(config_filename));
 	if (!libconfig->load_file(&map_zone_db, config_filename))
 		return;
 
@@ -6026,28 +6045,34 @@ static int map_get_new_bonus_id(void)
 	return map->bonus_id++;
 }
 
-static void map_add_questinfo(int m, struct questinfo *qi)
+static bool map_add_questinfo(int m, struct npc_data *nd)
 {
-	nullpo_retv(qi);
-	Assert_retv(m >= 0 && m < map->count);
+	nullpo_retr(false, nd);
+	Assert_retr(false, m >= 0 && m < map->count);
 
-	VECTOR_ENSURE(map->list[m].qi_data, 1, 1);
-	VECTOR_PUSH(map->list[m].qi_data, *qi);
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(map->list[m].qi_list), i, VECTOR_INDEX(map->list[m].qi_list, i) == nd);
+
+	if (i < VECTOR_LENGTH(map->list[m].qi_list)) {
+		return false;
+	}
+
+	VECTOR_ENSURE(map->list[m].qi_list, 1, 1);
+	VECTOR_PUSH(map->list[m].qi_list, nd);
+	return true;
 }
 
 static bool map_remove_questinfo(int m, struct npc_data *nd)
 {
-	unsigned short i;
 
 	nullpo_retr(false, nd);
 	Assert_retr(false, m >= 0 && m < map->count);
 
-	for (i = 0; i < VECTOR_LENGTH(map->list[m].qi_data); i++) {
-		struct questinfo *qi_data = &VECTOR_INDEX(map->list[m].qi_data, i);
-		if (qi_data->nd == nd) {
-			VECTOR_ERASE(map->list[m].qi_data, i);
-			return true;
-		}
+	int i;
+	ARR_FIND(0, VECTOR_LENGTH(map->list[m].qi_list), i, VECTOR_INDEX(map->list[m].qi_list, i) == nd);
+	if (i != VECTOR_LENGTH(map->list[m].qi_list)) {
+		VECTOR_ERASE(map->list[m].qi_list, i);
+		return true;
 	}
 	return false;
 }
@@ -6094,7 +6119,7 @@ static int cleanup_sub(struct block_list *bl, va_list ap)
 			map->quit(BL_UCAST(BL_PC, bl));
 			break;
 		case BL_NPC:
-			npc->unload(BL_UCAST(BL_NPC, bl), false);
+			npc->unload(BL_UCAST(BL_NPC, bl), false, true);
 			break;
 		case BL_MOB:
 			unit->free(bl,CLR_OUTSIGHT);
@@ -6188,6 +6213,7 @@ int do_final(void)
 	atcommand->final_msg();
 	skill->final();
 	status->final();
+	refine->final();
 	unit->final();
 	bg->final();
 	duel->final();
@@ -6196,6 +6222,7 @@ int do_final(void)
 	vending->final();
 	rodex->final();
 	achievement->final();
+	stylist->final();
 
 	HPM_map_do_final();
 
@@ -6323,6 +6350,7 @@ static CPCMD(gm_position)
 	map->cpsd->bl.x = x;
 	map->cpsd->bl.y = y;
 	map->cpsd->bl.m = m;
+	map->cpsd->mapindex = map_id2index(m);
 }
 static CPCMD(gm_use)
 {
@@ -6351,6 +6379,8 @@ static void map_cp_defaults(void)
 	map->cpsd->bl.x = mapindex->default_x;
 	map->cpsd->bl.y = mapindex->default_y;
 	map->cpsd->bl.m = map->mapname2mapid(mapindex->default_map);
+	Assert_retv(map->cpsd->bl.m >= 0);
+	map->cpsd->mapindex = map_id2index(map->cpsd->bl.m);
 
 	console->input->addCommand("gm:info",CPCMD_A(gm_position));
 	console->input->addCommand("gm:use",CPCMD_A(gm_use));
@@ -6403,6 +6433,8 @@ static void map_load_defaults(void)
 	achievement_defaults();
 	npc_chat_defaults();
 	rodex_defaults();
+	stylist_defaults();
+	refine_defaults();
 }
 /**
  * --run-once handler
@@ -6707,6 +6739,7 @@ int do_init(int argc, char *argv[])
 		map->read_zone_db();/* read after item and skill initialization */
 	mob->init(minimal);
 	pc->init(minimal);
+	refine->init(minimal);
 	status->init(minimal);
 	party->init(minimal);
 	guild->init(minimal);
@@ -6717,6 +6750,7 @@ int do_init(int argc, char *argv[])
 	elemental->init(minimal);
 	quest->init(minimal);
 	achievement->init(minimal);
+	stylist->init(minimal);
 	npc->init(minimal);
 	unit->init(minimal);
 	bg->init(minimal);
@@ -6742,6 +6776,8 @@ int do_init(int argc, char *argv[])
 
 	npc->event_do_oninit( false ); // Init npcs (OnInit)
 	npc->market_fromsql(); /* after OnInit */
+	npc->barter_fromsql(); /* after OnInit */
+	npc->expanded_barter_fromsql(); /* after OnInit */
 
 	if (battle_config.pk_mode)
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");
@@ -6787,6 +6823,7 @@ void map_defaults(void)
 	map->extra_scripts_count = 0;
 
 	sprintf(map->db_path ,"db");
+	libconfig->set_db_path(map->db_path);
 	sprintf(map->help_txt ,"conf/help.txt");
 	sprintf(map->charhelp_txt ,"conf/charhelp.txt");
 
@@ -6848,7 +6885,10 @@ void map_defaults(void)
 	map->bl_list_size = 0;
 
 	//all in a big chunk, respects order
+PRAGMA_GCC9(GCC diagnostic push)
+PRAGMA_GCC9(GCC diagnostic ignored "-Warray-bounds")
 	memset(ZEROED_BLOCK_POS(map), 0, ZEROED_BLOCK_SIZE(map));
+PRAGMA_GCC9(GCC diagnostic pop)
 
 	map->cpsd = NULL;
 	map->list = NULL;

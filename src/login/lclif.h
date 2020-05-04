@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2016  Hercules Dev Team
+ * Copyright (C) 2016-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,8 +87,8 @@ struct lclif_interface {
 	 * @param fd    The client connection file descriptor.
 	 * @param ban   The ban duration (if error == 6).
 	 * @param error The authentication error code.
-	 * @see #PACKET_ID_AC_REFUSE_LOGIN.
-	 * @see #PACKET_ID_AC_REFUSE_LOGIN_R2.
+	 * @see #HEADER_AC_REFUSE_LOGIN.
+	 * @see #HEADER_AC_REFUSE_LOGIN_R2.
 	 */
 	void (*auth_failed)(int fd, time_t ban, uint32 error);
 

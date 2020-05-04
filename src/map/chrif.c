@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -975,14 +975,14 @@ static bool chrif_divorceack(int char_id, int partner_id)
 
 	if( ( sd = map->charid2sd(char_id) ) != NULL && sd->status.partner_id == partner_id ) {
 		sd->status.partner_id = 0;
-		for(i = 0; i < MAX_INVENTORY; i++)
+		for (i = 0; i < sd->status.inventorySize; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
 				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 	}
 
 	if( ( sd = map->charid2sd(partner_id) ) != NULL && sd->status.partner_id == char_id ) {
 		sd->status.partner_id = 0;
-		for(i = 0; i < MAX_INVENTORY; i++)
+		for (i = 0; i < sd->status.inventorySize; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
 				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 	}
@@ -1226,6 +1226,7 @@ static bool chrif_save_scdata(struct map_session_data *sd)
 		} else {
 			data.tick = INFINITE_DURATION;
 		}
+		data.total_tick = sc->data[i]->total_tick;
 		data.type = i;
 		data.val1 = sc->data[i]->val1;
 		data.val2 = sc->data[i]->val2;
@@ -1273,8 +1274,8 @@ static bool chrif_load_scdata(int fd)
 
 	for (i = 0; i < count; i++) {
 		const struct status_change_data *data = RFIFOP(fd,14 + i*sizeof(struct status_change_data));
-		status->change_start(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
-		                     data->tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
+		status->change_start_sub(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
+		                    data->tick, data->total_tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
 	}
 
 	pc->scdata_received(sd);

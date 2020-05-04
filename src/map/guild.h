@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ struct guild_interface {
 	bool (*isallied) (int guild_id, int guild_id2); //Checks alliance based on guild Ids. [Skotlex]
 	/* */
 	struct guild *(*search) (int guild_id);
-	struct guild *(*searchname) (char *str);
+	struct guild *(*searchname) (const char *str);
 	struct guild_castle *(*castle_search) (int gcid);
 	/* */
 	struct guild_castle *(*mapname2gc) (const char* mapname);
@@ -126,7 +126,7 @@ struct guild_interface {
 	int (*check_alliance) (int guild_id1, int guild_id2, int flag);
 	/* */
 	int (*send_memberinfoshort) (struct map_session_data *sd,int online);
-	int (*recv_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int16 class, uint32 last_login);
+	int (*recv_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class, uint32 last_login);
 	int (*change_memberposition) (int guild_id,int account_id,int char_id,short idx);
 	int (*memberposition_changed) (struct guild *g,int idx,int pos);
 	int (*change_position) (int guild_id,int idx,int mode,int exp_mode,const char *name);
@@ -136,7 +136,6 @@ struct guild_interface {
 	int (*change_emblem) (struct map_session_data *sd,int len,const char *data);
 	int (*emblem_changed) (int len,int guild_id,int emblem_id,const char *data);
 	int (*send_message) (struct map_session_data *sd, const char *mes);
-	int (*recv_message) (int guild_id,int account_id,const char *mes,int len);
 	int (*send_dot_remove) (struct map_session_data *sd);
 	int (*skillupack) (int guild_id,uint16 skill_id,int account_id);
 	int (*dobreak) (struct map_session_data *sd, const char *name);
@@ -165,7 +164,9 @@ struct guild_interface {
 	int (*payexp_timer) (int tid, int64 tick, int id, intptr_t data);
 	struct map_session_data *(*sd_check) (int guild_id, int account_id, int char_id);
 	bool (*read_guildskill_tree_db) (char* split[], int columns, int current);
-	bool (*read_castledb) (char* str[], int columns, int current);
+	bool (*read_castledb_libconfig) (void);
+	bool (*read_castledb_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
+	bool (*read_castledb_libconfig_sub_warp) (struct config_setting_t *wd, const char *source, struct guild_castle *gc);
 	int (*payexp_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_xy_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);

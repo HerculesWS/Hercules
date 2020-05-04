@@ -3,7 +3,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2018  Hercules Dev Team
+-- Copyright (C) 2018-2020 Hercules Dev Team
 -- Copyright (C) 2018 Dastgir
 --
 -- Hercules is free software: you can redistribute it and/or modify

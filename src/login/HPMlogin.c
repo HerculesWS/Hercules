@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2014-2018  Hercules Dev Team
+ * Copyright (C) 2014-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
 #include "login/lclif.p.h"
 #include "login/login.h"
 #include "login/loginlog.h"
+#include "login/packets_ac_struct.h"
+#include "login/packets_ca_struct.h"
 #include "common/HPMi.h"
 #include "common/conf.h"
 #include "common/console.h"

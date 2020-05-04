@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,26 +71,26 @@ static int CheckForCharServer(void)
 }
 
 // pet
-static int intif_create_pet(int account_id, int char_id, short pet_class, short pet_lv, int pet_egg_id,
+static int intif_create_pet(int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id,
 	int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
 {
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(pet_name);
-	WFIFOHEAD(inter_fd, 28 + NAME_LENGTH);
+	WFIFOHEAD(inter_fd, 32 + NAME_LENGTH);
 	WFIFOW(inter_fd, 0) = 0x3080;
 	WFIFOL(inter_fd, 2) = account_id;
 	WFIFOL(inter_fd, 6) = char_id;
-	WFIFOW(inter_fd, 10) = pet_class;
-	WFIFOW(inter_fd, 12) = pet_lv;
-	WFIFOL(inter_fd, 14) = pet_egg_id;
-	WFIFOL(inter_fd, 18) = pet_equip;
-	WFIFOW(inter_fd, 22) = intimate;
-	WFIFOW(inter_fd, 24) = hungry;
-	WFIFOB(inter_fd, 26) = rename_flag;
-	WFIFOB(inter_fd, 27) = incubate;
-	memcpy(WFIFOP(inter_fd, 28), pet_name, NAME_LENGTH);
-	WFIFOSET(inter_fd, 28 + NAME_LENGTH);
+	WFIFOL(inter_fd, 10) = pet_class;
+	WFIFOL(inter_fd, 14) = pet_lv;
+	WFIFOL(inter_fd, 18) = pet_egg_id;
+	WFIFOL(inter_fd, 22) = pet_equip;
+	WFIFOW(inter_fd, 26) = intimate;
+	WFIFOW(inter_fd, 28) = hungry;
+	WFIFOB(inter_fd, 30) = rename_flag;
+	WFIFOB(inter_fd, 31) = incubate;
+	memcpy(WFIFOP(inter_fd, 32), pet_name, NAME_LENGTH);
+	WFIFOSET(inter_fd, 32 + NAME_LENGTH);
 
 	return 0;
 }
@@ -150,158 +150,6 @@ static int intif_rename(struct map_session_data *sd, int type, const char *name)
 	WFIFOB(inter_fd,10) = type;  //Type: 0 - PC, 1 - PET, 2 - HOM
 	memcpy(WFIFOP(inter_fd,11),name, NAME_LENGTH);
 	WFIFOSET(inter_fd,NAME_LENGTH+12);
-	return 0;
-}
-
-// GM Send a message
-static int intif_broadcast(const char *mes, int len, int type)
-{
-	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
-
-	nullpo_ret(mes);
-	Assert_ret(len < 32000);
-	// Send to the local players
-	clif->broadcast(NULL, mes, len, type, ALL_CLIENT);
-
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	WFIFOHEAD(inter_fd, 16 + lp + len);
-	WFIFOW(inter_fd,0)  = 0x3000;
-	WFIFOW(inter_fd,2)  = 16 + lp + len;
-	WFIFOL(inter_fd,4)  = 0xFF000000; // 0xFF000000 color signals standard broadcast
-	WFIFOW(inter_fd,8)  = 0; // fontType not used with standard broadcast
-	WFIFOW(inter_fd,10) = 0; // fontSize not used with standard broadcast
-	WFIFOW(inter_fd,12) = 0; // fontAlign not used with standard broadcast
-	WFIFOW(inter_fd,14) = 0; // fontY not used with standard broadcast
-	if (type&BC_BLUE)
-		WFIFOL(inter_fd,16) = 0x65756c62; //If there's "blue" at the beginning of the message, game client will display it in blue instead of yellow.
-	else if (type&BC_WOE)
-		WFIFOL(inter_fd,16) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
-	memcpy(WFIFOP(inter_fd,16 + lp), mes, len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-	return 0;
-}
-
-static int intif_broadcast2(const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
-{
-	nullpo_ret(mes);
-	Assert_ret(len < 32000);
-	// Send to the local players
-	clif->broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
-
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	WFIFOHEAD(inter_fd, 16 + len);
-	WFIFOW(inter_fd,0)  = 0x3000;
-	WFIFOW(inter_fd,2)  = 16 + len;
-	WFIFOL(inter_fd,4)  = fontColor;
-	WFIFOW(inter_fd,8)  = fontType;
-	WFIFOW(inter_fd,10) = fontSize;
-	WFIFOW(inter_fd,12) = fontAlign;
-	WFIFOW(inter_fd,14) = fontY;
-	memcpy(WFIFOP(inter_fd,16), mes, len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-	return 0;
-}
-
-/// send a message using the main chat system
-/// <sd>         the source of message
-/// <message>    the message that was sent
-static int intif_main_message(struct map_session_data *sd, const char *message)
-{
-	char output[256];
-
-	nullpo_ret(sd);
-	nullpo_ret(message);
-
-	// format the message for main broadcasting
-	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
-
-	// send the message using the inter-server broadcast service
-	intif->broadcast2(output, (int)strlen(output) + 1, 0xFE000000, 0, 0, 0, 0);
-
-	// log the chat message
-	logs->chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );
-
-	return 0;
-}
-
-// The transmission of Wisp/Page to inter-server (player not found on this server)
-static int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, int mes_len)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-	nullpo_ret(sd);
-	nullpo_ret(nick);
-	nullpo_ret(mes);
-
-	if (chrif->other_mapserver_count < 1) {
-		//Character not found.
-		clif->wis_end(sd->fd, 1);
-		return 0;
-	}
-
-	WFIFOHEAD(inter_fd,mes_len + 52);
-	WFIFOW(inter_fd,0) = 0x3001;
-	WFIFOW(inter_fd,2) = mes_len + 52;
-	memcpy(WFIFOP(inter_fd,4), sd->status.name, NAME_LENGTH);
-	memcpy(WFIFOP(inter_fd,4+NAME_LENGTH), nick, NAME_LENGTH);
-	memcpy(WFIFOP(inter_fd,4+2*NAME_LENGTH), mes, mes_len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-
-	if (battle_config.etc_log)
-		ShowInfo("intif_wis_message from %s to %s (message: '%s')\n", sd->status.name, nick, mes);
-
-	return 0;
-}
-
-// The reply of Wisp/page
-static int intif_wis_replay(int id, int flag)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-	WFIFOHEAD(inter_fd,7);
-	WFIFOW(inter_fd,0) = 0x3002;
-	WFIFOL(inter_fd,2) = id;
-	WFIFOB(inter_fd,6) = flag; // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-	WFIFOSET(inter_fd,7);
-
-	if (battle_config.etc_log)
-		ShowInfo("intif_wis_replay: id: %d, flag:%d\n", id, flag);
-
-	return 0;
-}
-
-// The transmission of GM only Wisp/Page from server to inter-server
-static int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
-{
-	int mes_len;
-	if (intif->CheckForCharServer())
-		return 0;
-	nullpo_ret(wisp_name);
-	nullpo_ret(mes);
-	mes_len = (int)strlen(mes) + 1; // + null
-	Assert_ret(mes_len > 0 && mes_len <= INT16_MAX - 32);
-
-	WFIFOHEAD(inter_fd, mes_len + 32);
-	WFIFOW(inter_fd,0) = 0x3003;
-	WFIFOW(inter_fd,2) = mes_len + 32;
-	memcpy(WFIFOP(inter_fd,4), wisp_name, NAME_LENGTH);
-	WFIFOL(inter_fd,4+NAME_LENGTH) = permission;
-	memcpy(WFIFOP(inter_fd,8+NAME_LENGTH), mes, mes_len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
-
-	if (battle_config.etc_log)
-		ShowNotice("intif_wis_message_to_gm: from: '%s', required permission: %d, message: '%s'.\n", wisp_name, permission, mes);
-
 	return 0;
 }
 
@@ -714,27 +562,6 @@ static int intif_break_party(int party_id)
 	return 0;
 }
 
-// Sending party chat
-static int intif_party_message(int party_id, int account_id, const char *mes, int len)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	nullpo_ret(mes);
-	Assert_ret(len > 0 && len < 32000);
-	WFIFOHEAD(inter_fd,len + 12);
-	WFIFOW(inter_fd,0)=0x3027;
-	WFIFOW(inter_fd,2)=len+12;
-	WFIFOL(inter_fd,4)=party_id;
-	WFIFOL(inter_fd,8)=account_id;
-	memcpy(WFIFOP(inter_fd,12),mes,len);
-	WFIFOSET(inter_fd,len+12);
-	return 0;
-}
-
 // Request a new leader for party
 static int intif_party_leaderchange(int party_id, int account_id, int char_id)
 {
@@ -903,19 +730,19 @@ static int intif_guild_leave(int guild_id, int account_id, int char_id, int flag
 }
 
 //Update request / Lv online status of the guild members
-static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int16 class)
+static int intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class)
 {
 	if (intif->CheckForCharServer())
 		return 0;
-	WFIFOHEAD(inter_fd, 19);
+	WFIFOHEAD(inter_fd, 23);
 	WFIFOW(inter_fd, 0) = 0x3035;
 	WFIFOL(inter_fd, 2) = guild_id;
 	WFIFOL(inter_fd, 6) = account_id;
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = online;
-	WFIFOW(inter_fd,15) = lv;
-	WFIFOW(inter_fd,17) = class;
-	WFIFOSET(inter_fd,19);
+	WFIFOL(inter_fd,15) = lv;
+	WFIFOL(inter_fd,19) = class;
+	WFIFOSET(inter_fd,23);
 	return 0;
 }
 
@@ -928,28 +755,6 @@ static int intif_guild_break(int guild_id)
 	WFIFOW(inter_fd, 0) = 0x3036;
 	WFIFOL(inter_fd, 2) = guild_id;
 	WFIFOSET(inter_fd,6);
-	return 0;
-}
-
-// Send a guild message
-static int intif_guild_message(int guild_id, int account_id, const char *mes, int len)
-{
-	if (intif->CheckForCharServer())
-		return 0;
-
-	if (chrif->other_mapserver_count < 1)
-		return 0; //No need to send.
-
-	nullpo_ret(mes);
-	Assert_ret(len > 0 && len < 32000);
-	WFIFOHEAD(inter_fd, len + 12);
-	WFIFOW(inter_fd,0)=0x3037;
-	WFIFOW(inter_fd,2)=len+12;
-	WFIFOL(inter_fd,4)=guild_id;
-	WFIFOL(inter_fd,8)=account_id;
-	memcpy(WFIFOP(inter_fd,12),mes,len);
-	WFIFOSET(inter_fd,len+12);
-
 	return 0;
 }
 
@@ -1166,98 +971,6 @@ static int intif_homunculus_requestdelete(int homun_id)
 //-----------------------------------------------------------------
 // Packets receive from inter server
 
-// Wisp/Page reception // rewritten by [Yor]
-static void intif_parse_WisMessage(int fd)
-{
-	struct map_session_data* sd;
-	const char *wisp_source;
-	char name[NAME_LENGTH];
-	int id, i;
-
-	id=RFIFOL(fd,4);
-
-	safestrncpy(name, RFIFOP(fd,32), NAME_LENGTH);
-	sd = map->nick2sd(name);
-	if(sd == NULL || strcmp(sd->status.name, name) != 0) {
-		//Not found
-		intif_wis_replay(id,1);
-		return;
-	}
-	if(sd->state.ignoreAll) {
-		intif_wis_replay(id, 2);
-		return;
-	}
-	wisp_source = RFIFOP(fd,8); // speed up [Yor]
-	for(i=0; i < MAX_IGNORE_LIST &&
-		sd->ignore[i].name[0] != '\0' &&
-		strcmp(sd->ignore[i].name, wisp_source) != 0
-		; i++);
-
-	if (i < MAX_IGNORE_LIST && sd->ignore[i].name[0] != '\0') {
-		//Ignored
-		intif_wis_replay(id, 2);
-		return;
-	}
-	//Success to send whisper.
-	clif->wis_message(sd->fd, wisp_source, RFIFOP(fd,56),RFIFOW(fd,2)-57);
-	intif_wis_replay(id,0);   // success
-}
-
-// Wisp/page transmission result reception
-static void intif_parse_WisEnd(int fd)
-{
-	struct map_session_data* sd;
-	const char *playername = RFIFOP(fd, 2);
-
-	if (battle_config.etc_log)
-		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", playername, RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-	sd = map->nick2sd(playername);
-	if (sd != NULL)
-		clif->wis_end(sd->fd, RFIFOB(fd,26));
-
-	return;
-}
-
-static int intif_parse_WisToGM_sub(struct map_session_data *sd, va_list va)
-{
-	int permission = va_arg(va, int);
-	char *wisp_name;
-	char *message;
-	int len;
-
-	nullpo_ret(sd);
-	if (!pc_has_permission(sd, permission))
-		return 0;
-	wisp_name = va_arg(va, char*);
-	message = va_arg(va, char*);
-	len = va_arg(va, int);
-	clif->wis_message(sd->fd, wisp_name, message, len);
-	return 1;
-}
-
-// Received wisp message from map-server via char-server for ALL gm
-// 0x3003/0x3803 <packet_len>.w <wispname>.24B <permission>.l <message>.?B
-static void intif_parse_WisToGM(int fd)
-{
-	int permission, mes_len;
-	char Wisp_name[NAME_LENGTH];
-	char mbuf[255] = { 0 };
-	char *message;
-
-	mes_len =  RFIFOW(fd,2) - 33; // Length not including the NUL terminator
-	Assert_retv(mes_len > 0 && mes_len < 32000);
-	message = (mes_len >= 255 ? aMalloc(mes_len + 1) : mbuf);
-
-	permission = RFIFOL(fd,28);
-	safestrncpy(Wisp_name, RFIFOP(fd,4), NAME_LENGTH);
-	safestrncpy(message, RFIFOP(fd,32), mes_len + 1);
-	// information is sent to all online GM
-	map->foreachpc(intif->pWisToGM_sub, permission, Wisp_name, message, mes_len);
-
-	if (message != mbuf)
-		aFree(message);
-}
-
 // Request player registre
 static void intif_parse_Registers(int fd)
 {
@@ -1464,12 +1177,6 @@ static void intif_parse_PartyMove(int fd)
 	party->recv_movemap(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOW(fd,14),RFIFOB(fd,16),RFIFOW(fd,17));
 }
 
-// ACK party messages
-static void intif_parse_PartyMessage(int fd)
-{
-	party->recv_message(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12);
-}
-
 // ACK guild creation
 static void intif_parse_GuildCreated(int fd)
 {
@@ -1507,7 +1214,7 @@ static void intif_parse_GuildMemberWithdraw(int fd)
 // ACK guild member basic info
 static void intif_parse_GuildMemberInfoShort(int fd)
 {
-	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17),RFIFOL(fd,19));
+	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOL(fd,17),RFIFOL(fd,21));
 }
 
 // ACK guild break
@@ -1619,12 +1326,6 @@ static void intif_parse_GuildEmblem(int fd)
 	guild->emblem_changed(RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
 }
 
-// ACK guild message
-static void intif_parse_GuildMessage(int fd)
-{
-	guild->recv_message(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12);
-}
-
 // Reply guild castle data request
 static void intif_parse_GuildCastleDataLoad(int fd)
 {
@@ -1640,7 +1341,7 @@ static void intif_parse_GuildMasterChanged(int fd)
 // Request pet creation
 static void intif_parse_CreatePet(int fd)
 {
-	pet->get_egg(RFIFOL(fd,2), RFIFOW(fd,6), RFIFOL(fd,8));
+	pet->get_egg(RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOL(fd, 10));
 }
 
 // ACK pet data
@@ -2754,16 +2455,21 @@ static void intif_parse_RodexNotifications(int fd)
 ///     2 - user got Items
 ///     3 - delete
 ///     4 - sender Read (returned mail)
-static int intif_rodex_updatemail(int64 mail_id, int8 flag)
+static int intif_rodex_updatemail(struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag)
 {
+	nullpo_ret(sd);
+
 	if (intif->CheckForCharServer())
 		return 0;
 
-	WFIFOHEAD(inter_fd, 11);
+	WFIFOHEAD(inter_fd, 20);
 	WFIFOW(inter_fd, 0) = 0x3097;
-	WFIFOQ(inter_fd, 2) = mail_id;
-	WFIFOB(inter_fd, 10) = flag;
-	WFIFOSET(inter_fd, 11);
+	WFIFOL(inter_fd, 2) = sd->status.account_id;
+	WFIFOL(inter_fd, 6) = sd->status.char_id;
+	WFIFOQ(inter_fd, 10) = mail_id;
+	WFIFOB(inter_fd, 18) = opentype;
+	WFIFOB(inter_fd, 19) = flag;
+	WFIFOSET(inter_fd, 20);
 
 	return 0;
 }
@@ -2830,11 +2536,11 @@ static void intif_parse_RodexCheckName(int fd)
 	struct map_session_data *sd = NULL;
 	int reqchar_id = RFIFOL(fd, 2);
 	int target_char_id = RFIFOL(fd, 6);
-	short target_class = RFIFOW(fd, 10);
-	int target_level = RFIFOL(fd, 12);
+	int target_class = RFIFOL(fd, 10);
+	int target_level = RFIFOL(fd, 14);
 	char name[NAME_LENGTH];
 
-	safestrncpy(name, RFIFOP(inter_fd, 16), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(inter_fd, 18), NAME_LENGTH);
 
 	if (reqchar_id <= 0)
 		return;
@@ -2853,6 +2559,35 @@ static void intif_parse_RodexCheckName(int fd)
 	safestrncpy(sd->rodex.tmp.receiver_name, name, NAME_LENGTH);
 
 	clif->rodex_checkname_result(sd, target_char_id, target_class, target_level, name);
+}
+
+static void intif_parse_GetZenyAck(int fd)
+{
+	int char_id = RFIFOL(fd, 2);
+	int64 zeny = RFIFOL(fd, 6);
+	int64 mail_id = RFIFOQ(fd, 14);
+	uint8 opentype = RFIFOB(fd, 22);
+	struct map_session_data *sd = map->charid2sd(char_id);
+
+	if (sd == NULL) // User is not online anymore
+		return;
+	rodex->getZenyAck(sd, mail_id, opentype, zeny);
+}
+
+static void intif_parse_GetItemsAck(int fd)
+{
+	int char_id = RFIFOL(fd, 2);
+
+	struct map_session_data *sd = map->charid2sd(char_id);
+	if (sd == NULL) // User is not online anymore
+		return;
+
+	int64 mail_id = RFIFOQ(fd, 6);
+	uint8 opentype = RFIFOB(fd, 14);
+	int count = RFIFOB(fd, 15);
+	struct rodex_item items[RODEX_MAX_ITEM];
+	memcpy(&items[0], RFIFOP(fd, 16), sizeof(struct rodex_item) * RODEX_MAX_ITEM);
+	rodex->getItemsAck(sd, mail_id, opentype, count, &items[0]);
 }
 
 //-----------------------------------------------------------------
@@ -2881,15 +2616,6 @@ static int intif_parse(int fd)
 	}
 	// Processing branch
 	switch(cmd){
-		case 0x3800:
-			if (RFIFOL(fd,4) == 0xFF000000) //Normal announce.
-				clif->broadcast(NULL, RFIFOP(fd,16), packet_len-16, BC_DEFAULT, ALL_CLIENT);
-			else //Color announce.
-				clif->broadcast2(NULL, RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
-			break;
-		case 0x3801: intif->pWisMessage(fd); break;
-		case 0x3802: intif->pWisEnd(fd); break;
-		case 0x3803: intif->pWisToGM(fd); break;
 		case 0x3804: intif->pRegisters(fd); break;
 		case 0x3805: intif->pAccountStorage(fd); break;
 		case 0x3806: intif->pChangeNameOk(fd); break;
@@ -2905,14 +2631,12 @@ static int intif_parse(int fd)
 		case 0x3824: intif->pPartyMemberWithdraw(fd); break;
 		case 0x3825: intif->pPartyMove(fd); break;
 		case 0x3826: intif->pPartyBroken(fd); break;
-		case 0x3827: intif->pPartyMessage(fd); break;
 		case 0x3830: intif->pGuildCreated(fd); break;
 		case 0x3831: intif->pGuildInfo(fd); break;
 		case 0x3832: intif->pGuildMemberAdded(fd); break;
 		case 0x3834: intif->pGuildMemberWithdraw(fd); break;
 		case 0x3835: intif->pGuildMemberInfoShort(fd); break;
 		case 0x3836: intif->pGuildBroken(fd); break;
-		case 0x3837: intif->pGuildMessage(fd); break;
 		case 0x3839: intif->pGuildBasicInfoChanged(fd); break;
 		case 0x383a: intif->pGuildMemberInfoChanged(fd); break;
 		case 0x383b: intif->pGuildPosition(fd); break;
@@ -2972,6 +2696,8 @@ static int intif_parse(int fd)
 		case 0x3896: intif->pRodexHasNew(fd); break;
 		case 0x3897: intif->pRodexSendMail(fd); break;
 		case 0x3898: intif->pRodexCheckName(fd); break;
+		case 0x3899: intif->pGetZenyAck(fd); break;
+		case 0x389a: intif->pGetItemsAck(fd); break;
 
 		// Clan System
 		case 0x3858: intif->pRecvClanMemberAction(fd); break;
@@ -2992,16 +2718,16 @@ static int intif_parse(int fd)
 void intif_defaults(void)
 {
 	const int packet_len_table [INTIF_PACKET_LEN_TABLE_SIZE] = {
-		-1,-1,27,-1, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+		 0, 0, 0, 0, -1,-1,37,-1,  7, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 		-1, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810 Achievements [Smokexyz/Hercules]
-		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
-		10,-1,15, 0, 79,23, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
+		39,-1,15,15, 14,19, 7, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
+		10,-1,15, 0, 79,25, 7, 0,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
 		-1,-1, 7, 7,  7,11, 8, 0, 10, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari] Clan System[Murilo BiO]
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
-		12,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
-		-1,-1, 7, 3,  0,-1, 7, 15,16 + NAME_LENGTH, 0, 0, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
+		14,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
+		-1,-1, 7, 3,  0,-1, 7, 15,18 + NAME_LENGTH, 23, 16 + sizeof(struct rodex_item) * RODEX_MAX_ITEM, 0, 0, 0, 0, 0, //0x3890  Homunculus [albator] / RoDEX [KirieZ]
 	};
 
 	intif = &intif_s;
@@ -3012,11 +2738,6 @@ void intif_defaults(void)
 	/* funcs */
 	intif->parse = intif_parse;
 	intif->create_pet = intif_create_pet;
-	intif->broadcast = intif_broadcast;
-	intif->broadcast2 = intif_broadcast2;
-	intif->main_message = intif_main_message;
-	intif->wis_message = intif_wis_message;
-	intif->wis_message_to_gm = intif_wis_message_to_gm;
 	intif->saveregistry = intif_saveregistry;
 	intif->request_registry = intif_request_registry;
 	intif->request_account_storage = intif_request_account_storage;
@@ -3030,7 +2751,6 @@ void intif_defaults(void)
 	intif->party_leave = intif_party_leave;
 	intif->party_changemap = intif_party_changemap;
 	intif->break_party = intif_break_party;
-	intif->party_message = intif_party_message;
 	intif->party_leaderchange = intif_party_leaderchange;
 	intif->guild_create = intif_guild_create;
 	intif->guild_request_info = intif_guild_request_info;
@@ -3038,7 +2758,6 @@ void intif_defaults(void)
 	intif->guild_leave = intif_guild_leave;
 	intif->guild_memberinfoshort = intif_guild_memberinfoshort;
 	intif->guild_break = intif_guild_break;
-	intif->guild_message = intif_guild_message;
 	intif->guild_change_gm = intif_guild_change_gm;
 	intif->guild_change_basicinfo = intif_guild_change_basicinfo;
 	intif->guild_change_memberinfo = intif_guild_change_memberinfo;
@@ -3102,10 +2821,6 @@ void intif_defaults(void)
 	intif->achievements_request = intif_achievements_request;
 	intif->achievements_save = intif_achievements_save;
 	/* parse functions */
-	intif->pWisMessage = intif_parse_WisMessage;
-	intif->pWisEnd = intif_parse_WisEnd;
-	intif->pWisToGM_sub = intif_parse_WisToGM_sub;
-	intif->pWisToGM = intif_parse_WisToGM;
 	intif->pRegisters = intif_parse_Registers;
 	intif->pChangeNameOk = intif_parse_ChangeNameOk;
 	intif->pMessageToFD = intif_parse_MessageToFD;
@@ -3120,14 +2835,12 @@ void intif_defaults(void)
 	intif->pPartyMemberWithdraw = intif_parse_PartyMemberWithdraw;
 	intif->pPartyMove = intif_parse_PartyMove;
 	intif->pPartyBroken = intif_parse_PartyBroken;
-	intif->pPartyMessage = intif_parse_PartyMessage;
 	intif->pGuildCreated = intif_parse_GuildCreated;
 	intif->pGuildInfo = intif_parse_GuildInfo;
 	intif->pGuildMemberAdded = intif_parse_GuildMemberAdded;
 	intif->pGuildMemberWithdraw = intif_parse_GuildMemberWithdraw;
 	intif->pGuildMemberInfoShort = intif_parse_GuildMemberInfoShort;
 	intif->pGuildBroken = intif_parse_GuildBroken;
-	intif->pGuildMessage = intif_parse_GuildMessage;
 	intif->pGuildBasicInfoChanged = intif_parse_GuildBasicInfoChanged;
 	intif->pGuildMemberInfoChanged = intif_parse_GuildMemberInfoChanged;
 	intif->pGuildPosition = intif_parse_GuildPosition;
@@ -3171,6 +2884,8 @@ void intif_defaults(void)
 	intif->pRodexHasNew = intif_parse_RodexNotifications;
 	intif->pRodexSendMail = intif_parse_RodexSendMail;
 	intif->pRodexCheckName = intif_parse_RodexCheckName;
+	intif->pGetZenyAck = intif_parse_GetZenyAck;
+	intif->pGetItemsAck = intif_parse_GetItemsAck;
 	/* Clan System */
 	intif->pRecvClanMemberAction = intif_parse_RecvClanMemberAction;
 	/* Achievement System */

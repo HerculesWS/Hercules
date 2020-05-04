@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,13 +58,8 @@ struct intif_interface {
 	int packet_len_table[INTIF_PACKET_LEN_TABLE_SIZE];
 	/* funcs */
 	int (*parse) (int fd);
-	int (*create_pet)(int account_id, int char_id, short pet_type, short pet_lv, int pet_egg_id,
+	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,
 	                  int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
-	int (*broadcast) (const char *mes, int len, int type);
-	int (*broadcast2) (const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
-	int (*main_message) (struct map_session_data* sd, const char* message);
-	int (*wis_message) (struct map_session_data *sd, const char *nick, const char *mes, int mes_len);
-	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
 	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
 	void (*request_account_storage) (const struct map_session_data *sd);
@@ -78,15 +73,13 @@ struct intif_interface {
 	int (*party_leave) (int party_id,int account_id, int char_id);
 	int (*party_changemap) (struct map_session_data *sd, int online);
 	int (*break_party) (int party_id);
-	int (*party_message) (int party_id, int account_id, const char *mes,int len);
 	int (*party_leaderchange) (int party_id,int account_id,int char_id);
 	int (*guild_create) (const char *name, const struct guild_member *master);
 	int (*guild_request_info) (int guild_id);
 	int (*guild_addmember) (int guild_id, struct guild_member *m);
 	int (*guild_leave) (int guild_id, int account_id, int char_id, int flag, const char *mes);
-	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int16 class);
+	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*guild_break) (int guild_id);
-	int (*guild_message) (int guild_id, int account_id, const char *mes, int len);
 	int (*guild_change_gm) (int guild_id, const char *name, int len);
 	int (*guild_change_basicinfo) (int guild_id, int type, const void *data, int len);
 	int (*guild_change_memberinfo) (int guild_id, int account_id, int char_id, int type, const void *data, int len);
@@ -135,9 +128,11 @@ struct intif_interface {
 	// RoDEX
 	int(*rodex_requestinbox) (int char_id, int account_id, int8 flag, int8 opentype, int64 mail_id);
 	int(*rodex_checkhasnew) (struct map_session_data *sd);
-	int(*rodex_updatemail) (int64 mail_id, int8 flag);
+	int(*rodex_updatemail) (struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag);
 	int(*rodex_sendmail) (struct rodex_message *msg);
 	int(*rodex_checkname) (struct map_session_data *sd, const char *name);
+	void (*pGetZenyAck) (int fd);
+	void (*pGetItemsAck) (int fd);
 	/* Clan System */
 	int (*clan_kickoffline) (int clan_id, int kick_interval);
 	int (*clan_membercount) (int clan_id, int kick_interval);
@@ -149,10 +144,6 @@ struct intif_interface {
 	void(*achievements_request) (struct map_session_data *sd);
 	void(*achievements_save) (struct map_session_data *sd);
 	/* */
-	void (*pWisMessage) (int fd);
-	void (*pWisEnd) (int fd);
-	int (*pWisToGM_sub) (struct map_session_data* sd,va_list va);
-	void (*pWisToGM) (int fd);
 	void (*pRegisters) (int fd);
 	void (*pAccountStorage) (int fd);
 	void (*pChangeNameOk) (int fd);
@@ -167,14 +158,12 @@ struct intif_interface {
 	void (*pPartyMemberWithdraw) (int fd);
 	void (*pPartyMove) (int fd);
 	void (*pPartyBroken) (int fd);
-	void (*pPartyMessage) (int fd);
 	void (*pGuildCreated) (int fd);
 	void (*pGuildInfo) (int fd);
 	void (*pGuildMemberAdded) (int fd);
 	void (*pGuildMemberWithdraw) (int fd);
 	void (*pGuildMemberInfoShort) (int fd);
 	void (*pGuildBroken) (int fd);
-	void (*pGuildMessage) (int fd);
 	void (*pGuildBasicInfoChanged) (int fd);
 	void (*pGuildMemberInfoChanged) (int fd);
 	void (*pGuildPosition) (int fd);

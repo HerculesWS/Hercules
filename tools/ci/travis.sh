@@ -3,7 +3,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2014-2015  Hercules Dev Team
+# Copyright (C) 2014-2020 Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -47,7 +47,8 @@ function aborterror {
 
 function run_server {
 	echo "Running: $1 --run-once $2"
-	$1 --run-once $2 2>runlog.txt
+	rm -rf core* || true
+	CRASH_PLEASE=1 $1 --run-once $2 2>runlog.txt
 	export errcode=$?
 	export teststr=$(head -c 10000 runlog.txt)
 	if [[ -n "${teststr}" ]]; then
@@ -59,12 +60,17 @@ function run_server {
 	fi
 	if [ ${errcode} -ne 0 ]; then
 		echo "server $1 terminated with exit code ${errcode}"
+		COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1)
+		if [[ -f "$COREFILE" ]]; then
+			gdb -c "$COREFILE" $1 -ex "thread apply all bt" -ex "set pagination 0" -batch
+		fi
 		aborterror "Test failed"
 	fi
 }
 
 function run_test {
 	echo "Running: test_$1"
+	sysctl -w kernel.core_pattern=core || true
 	./test_$1 2>runlog.txt
 	export errcode=$?
 	export teststr=$(head -c 10000 runlog.txt)

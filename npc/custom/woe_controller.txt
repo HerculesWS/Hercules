@@ -149,7 +149,7 @@ OnMinute00:
 
 function Disp_Owner {
 	set .@o, getcastledata(getarg(0),1);
-	if (.@o) announce "The ["+getcastlename(getarg(0))+"] castle "+((getarg(1))?"has been conquered":"is currently held")+" by the ["+getguildname(.@o)+"] guild.",bc_all|bc_woe;
+	if (.@o) announce "The ["+getcastlename(getarg(0))+"] castle "+((getarg(1))?"has been conquered":"is currently held")+" by the ["+getguildinfo(GUILDINFO_NAME, .@o)+"] guild.",bc_all|bc_woe;
 	else announce "The ["+getcastlename(getarg(0))+"] castle is currently unoccupied.",bc_all|bc_woe;
 	return;
 }
@@ -275,7 +275,7 @@ while(1) {
 			mes "> ^FF0000"+.Regions$[.@i]+"^000000";
 			for(set .@j,.@k; .@j<(.@k+5); set .@j,.@j+1) {
 				set .@t, getcastledata(.Castles$[.@j],1);
-				mes "  ~ "+getcastlename(.Castles$[.@j])+": "+((.@t)?"^0055FF"+getguildname(.@t):"^777777unoccupied")+"^000000";
+				mes "  ~ "+getcastlename(.Castles$[.@j])+": "+((.@t)?"^0055FF"+getguildinfo(GUILDINFO_NAME, .@t):"^777777unoccupied")+"^000000";
 			}
 			if (.@i < 5) mes " ";
 		}

@@ -29,14 +29,15 @@ Project Info:
 
 Table of Contents
 ---------
-1. What is Hercules?
-2. Prerequisites
-3. Installation
-4. Troubleshooting
-5. Helpful Links
-6. More Documentation
+1. [What is Hercules?](#what-is-hercules)
+2. [Prerequisites](#prerequisites)
+3. [Installation](#installation)
+4. [Troubleshooting](#troubleshooting)
+5. [Helpful Links](#helpful-links)
+6. [More Documentation](#more-documentation)
 
-What is Hercules?
+
+## What is Hercules?
 -----------------
 Hercules is a collaborative software development project revolving around the
 creation of a robust Massively Multiplayer Online Role-Playing Game (MMORPG)
@@ -45,20 +46,17 @@ warps and modifications. The project is jointly managed by a group of
 volunteers located around the world as well as a tremendous community providing
 QA and support. Hercules is a continuation of the original Athena project.
 
-Prerequisites
+## Prerequisites
 -------------
 Before installing Hercules, you will need to install certain tools and applications.
 This differs between the varying Operating Systems available, so the
 following list is broken down into Windows and Unix (incl. Linux) prerequisites.
 
-For a list of supported platforms, please refer to the [Supported
-Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki page.
+For a list of supported platforms, please refer to the [Supported Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki page.
 
 #### Windows
-  - Git client
-  - MySQL-compatible server ([MySQL Community Edition](https://www.mysql.com/products/community/) or
-    [MariaDB](https://mariadb.org/))
-  - Microsoft Visual Studio ([Version 2012 through 2015](https://www.visualstudio.com/))
+  - [Git client](https://git-scm.com/)
+  - [Microsoft Visual Studio Community](https://visualstudio.microsoft.com/vs/community/)
 
 #### Unix/Linux/BSD (names of packages may require specific version numbers on certain distributions)
   - git
@@ -84,13 +82,23 @@ Platforms](https://github.com/HerculesWS/Hercules/wiki/Supported-Platforms) wiki
   - MySQL GUI clients
     - [MySQL Workbench](http://www.mysql.com/downloads/workbench/) (cross-platform)
     - [HeidiSQL](http://www.heidisql.com/) (Windows)
+    - [DBeaver](http://dbeaver.jkiss.org/) (cross-platform)
     - [Sequel Pro](http://www.sequelpro.com/) (Mac OS X)
+       - *More options available at [mariadb.com](https://mariadb.com/kb/en/library/graphical-and-enhanced-clients/)*
   - GUI Git clients
+    - [GitHub Desktop](https://desktop.github.com/) (cross-platform)
+    - [GitKraken](https://www.gitkraken.com/git-client) (cross-platform)
+    - [SmartGit](https://www.syntevo.com/smartgit/) (cross-platform)
     - [Atlassian SourceTree](https://www.sourcetreeapp.com/) (Windows, Mac OS X)
-    - [TortoiseGit](https://tortoisegit.org/) (Windows)
+        - *More options available at [git-scm.com](https://git-scm.com/downloads/guis)*
+  - Text editors with syntax highlighting
+    - [Visual Studio Code](https://code.visualstudio.com) (cross-platform)
+    - [Atom](https://atom.io) (cross-platform)
+    - [Notepad++](https://notepad-plus-plus.org) (Windows)
+        - *More options available at [wikipedia.org](https://en.wikipedia.org/wiki/Comparison_of_text_editors#Overview)*
 
 
-Installation
+## Installation
 ------------
 
 This section is a very brief set of installation instructions. For more concise
@@ -98,42 +106,52 @@ guides relevant to your Operation System, please refer to the Wiki (links at
 the end of this file).
 
 #### Windows
+##### Easy installation
   1. Install the prerequisites.
-  2. Clone the Hercules repository (see [GitHub](https://github.com/HerculesWS/Hercules)) using a git client, into a new
+  2. Clone the [Hercules repository](https://github.com/HerculesWS/Hercules) using a git client, into a new
      folder.
-  3. Connect to the MySQL server as root:
-    - Create a database (hercules): `CREATE DATABASE hercules;`
-    - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
-    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
-  4. Connect to the MySQL server as the new user:
-    - Import the .sql files in /sql-files/ into the new database.
-  5. Start Visual Studio and load the provided solution:
-    - Compile and run the three projects, login-server, char-server, map-server.
+      - If you do not want to use the command line, you can instead clone with [GitHub Desktop](https://desktop.github.com/).
+  3. Run `mariadb.bat` to automatically install and configure MariaDB.
+  4. Start Visual Studio and load the provided solution:
+      - Compile and run the three projects, login-server, char-server, map-server.
+##### Manual installation
+  1. Install the prerequisites.
+  2. Install a MySQL-compatible server, such as [MariaDB](https://mariadb.org/) (recommended) or [MySQL Community Edition](https://www.mysql.com/products/community/)
+  3. Clone the Hercules repository [Hercules repository](https://github.com/HerculesWS/Hercules) using a git client, into a new
+     folder.
+  4. Connect to the MySQL server as root:
+      - Create a database (hercules): `CREATE DATABASE hercules;`
+      - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
+      - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
+  5. Connect to the MySQL server as the new user:
+      - Import the .sql files in /sql-files/ into the new database.
+  6. Start Visual Studio and load the provided solution:
+      - Compile and run the three projects, login-server, char-server, map-server.
 
 #### Unix
   1. Install the prerequisites through your distribution's package manager
-    - (Red Hat compatible / CentOS) `yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel git`
-    - (Debian compatible) `apt-get install gcc make libmysqlclient-dev zlib1g-dev libpcre3-dev mysql-server git`
-    - (FreeBSD) `pkg install clang35 gmake mysql56-server mysql-connector-c pcre git`
-    - (Mac OS X):
-      - Install Xcode through the Mac App Store
-      - Initialize the build tools through the Terminal `xcode-select --help`
-      - Install Homebrew as described on the project page
-      - Install the other prerequisites: `brew install mysql pcre`
+      - (Red Hat compatible / CentOS) `yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel git`
+      - (Debian compatible) `apt-get install gcc make libmysqlclient-dev zlib1g-dev libpcre3-dev mysql-server git`
+      - (FreeBSD) `pkg install clang35 gmake mysql56-server mysql-connector-c pcre git`
+      - (Mac OS X):
+          - Install Xcode through the Mac App Store
+          - Initialize the build tools through the Terminal `xcode-select --help`
+          - Install Homebrew as described on the project page
+          - Install the other prerequisites: `brew install mysql pcre`
   2. Clone the Hercules repository `git clone https://github.com/HerculesWS/Hercules.git ~/Hercules`
   3. Configure the MySQL server and start it.
   4. Connect to the MySQL server as root:
-    - Create a database (hercules): `CREATE DATABASE hercules;`
-    - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
-    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
+      - Create a database (hercules): `CREATE DATABASE hercules;`
+      - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
+      - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON hercules.* TO 'hercules'@'localhost';`
   5. Connect to the MySQL server as the new user:
-    - Import the .sql files in /sql-files/ into the new database.
+      - Import the .sql files in /sql-files/ into the new database.
   6. Enter the Hercules directory and configure/build Hercules
-    - `./configure`
-    - `make clean && make sql` (on FreeBSD, replace `make` with `gmake`)
+      - `./configure`
+      - `make clean && make sql` (on FreeBSD, replace `make` with `gmake`)
   7. Start the three servers login-server, char-server, map-server.
 
-Troubleshooting
+## Troubleshooting
 ---------------
 
 If you're having problems with starting your server, the first thing you should
@@ -148,7 +166,7 @@ Examples:
 [Error]: npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file 'npc/custom/jobmaster.txt', line '17'. Skipping line...
         * w1=prontera,153,193,6 script
         * w2=Job Master
-        * w3=123,{
+        * w3=2_F_MAGICMASTER,{
         * w4=
 ```
 
@@ -179,7 +197,7 @@ Examples:
   If this shows up on the map server, it generally means that there is no Char
   Server available to accept the connection.
 
-Helpful Links
+## Helpful Links
 -------------
 
 The following list of links point to various help files within the repository,
@@ -198,7 +216,7 @@ articles or pages on the Wiki or topics within the Hercules forum.
   Network: `irc.rizon.net`
   Channel: `#Hercules`
 
-More Documentation
+## More Documentation
 ------------------
 
 Hercules has a large collection of help files and sample NPC scripts located in

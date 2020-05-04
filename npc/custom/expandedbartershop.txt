@@ -1,0 +1,63 @@
+//===== Hercules Script ======================================
+//= Expanded barter shop demo
+//===== By: ==================================================
+//= 4144
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Expanded barter shop demo in prontera.
+//============================================================
+
+prontera,160,284,4	trader	Expanded Barter Shop#prt	4_M_KID1,{
+	end;
+OnInit:
+	tradertype(NST_EXPANDED_BARTER);
+
+	// Selling Orange_Potion with items price and 4 items price
+	startsellitem(Orange_Potion, 2, 100000);
+	sellitemcurrency(Banana, 2);
+	sellitemcurrency(Apple, 1);
+	sellitemcurrency(Carrot, 2);
+	sellitemcurrency(Sweet_Potato, 1);
+	endsellitem();
+
+	// sell item with price only in zeny
+	sellitem(White_Herb, 1, 100);
+	// sell item with zeny and item price
+	sellitem(Blue_Herb, 22, 200, Orange_Potion, 2, 3);
+
+	// sell item with price only in zeny (infinite amount)
+	sellitem(Green_Herb, 3, -1);
+
+	// sell item with zeny and two items price (1)
+	sellitem(Orange_Potion, 20, 100000, Banana, 2, -1, Berserk_Potion, 10, -1);
+
+	// sell item with zeny and two items price (same as before but with different zeny price)
+	sellitem(Orange_Potion, 1, 100000, Banana, 2, -1, Berserk_Potion, 10, -1);
+
+	// sell item with item price
+	sellitem(Blade, 0, 1000, Sword, 2, -1);
+
+	// sell item with zeny and two items price
+	sellitem(Scimiter, 2000, -1, Sword, 1, 2, Sword, 1, 5);
+
+	// sell item with zeny and two items price (selling another Orange_Potion)
+	sellitem(Orange_Potion, 1, 100000, Green_Herb, 2, -1);
+
+	// modify selling Orange_Potion with items price (same as previous)
+	// modification reset amount stored in db
+	startsellitem(Orange_Potion, 1, 100);
+	sellitemcurrency(Green_Herb, 2);
+	endsellitem();
+
+	// sell item with zeny and item price (selling another White_Herb)
+	sellitem(White_Herb, 10, 100, Banana, 1, -1);
+
+	// stop selling blades
+//	stopselling(Blade, 1);
+
+	// sell item with zeny and two items price (modify amount for entry (1))
+//	sellitem(Orange_Potion, 1, 200000, Banana, 2, -1, Berserk_Potion, 10, -1);
+
+	end;
+}

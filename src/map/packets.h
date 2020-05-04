@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -147,6 +147,7 @@ packet(0x01ba,clif->pGMShift,2);
 packet(0x01bb,clif->pGMShift,2);
 packet(0x01bc,clif->pGMRecall,2);
 packet(0x01bd,clif->pGMRecall,2);
+packet(0x01c0,clif->pReqRemainTime);
 packet(0x01ce,clif->pAutoSpell,2);
 packet(0x01d5,clif->pNpcStringInput,2,4,8);
 packet(0x01df,clif->pGMReqAccountName,2);
@@ -588,7 +589,6 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20070227
 	packet(0x0288,clif->pcashshop_buy,2,4,6);
 	packet(0x02b6,clif->pquestStateAck,2,6);
-	packet(0x02ba,clif->pHotkey,2,4,5,9);
 	packet(0x02c4,clif->pPartyInvite2,2);  // CZ_PARTY_JOIN_REQ
 	packet(0x02c7,clif->pReplyPartyInvite2,2,6);
 	packet(0x02c8,clif->pPartyTick,2);
@@ -596,6 +596,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x02d6,clif->pViewPlayerEquip,2);
 	packet(0x02d8,clif->p_cz_config,6);
 	packet(0x02db,clif->pBattleChat,2,4);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
+	packet(0x02ba,clif->pHotkey1);
 #endif
 
 //2008-01-02aSakexe
@@ -646,6 +650,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0437,clif->pActionRequest,2,6);  // CZ_REQUEST_ACT
 	packet(0x0438,clif->pUseSkillToId,2,4,6);  // CZ_USE_SKILL
 	packet(0x0439,clif->pUseItem,2,4);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_RE_NUM >= 20090408 || PACKETVER_SAK_NUM >= 20090408 || defined(PACKETVER_ZERO)
+	packet(0x044a,clif->pClientVersion);
 #endif
 
 // 2009-05-20aRagexe, 2009-05-20aRagexeRE
@@ -718,6 +726,11 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0843,clif->pGMRemove2,2);
 #endif
 
+// all versions
+#if PACKETVER >= 20100824
+	packet(0x0844,clif->pCashShopOpen1);
+#endif
+
 //2010-11-24aRagexeRE
 #if PACKETVER >= 20101124
 	packet(0x0288,clif->pcashshop_buy,4,8);
@@ -768,7 +781,6 @@ packet(0x96e,clif->ackmergeitems);
 //2011-07-18aRagexe (Thanks to Yommy!)
 #if PACKETVER >= 20110718
 // shuffle packets not added
-	packet(0x0844,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
 	packet(0x084a,clif->pCashShopClose,2);/* tell server cashshop window is being closed */
 	packet(0x0846,clif->pCashShopReqTab,2);
 	packet(0x0848,clif->pCashShopBuy,2);
@@ -1659,10 +1671,8 @@ packet(0x96e,clif->ackmergeitems);
 // changed packet sizes
 #endif
 
-// 2014-01-29bRagexeRE
-#if PACKETVER >= 20140129
-// new packets
-	packet(0x0a01,clif->pHotkeyRowShift,2); // CZ_SHORTCUTKEYBAR_ROTATE
+#if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
+	packet(0x0a01,clif->pHotkeyRowShift1); // CZ_SHORTCUTKEYBAR_ROTATE
 #endif
 
 // 2014-02-12aRagexeRE
@@ -1772,7 +1782,9 @@ packet(0x96e,clif->ackmergeitems);
 #if PACKETVER >= 20151104
 // new packets
 	packet(0x0a46,clif->pReqStyleChange);
+	packet(0x0a48,clif->pStyleClose);
 #endif
+
 
 // 2016-03-23aRagexeRE
 #if PACKETVER >= 20160323
@@ -1786,6 +1798,35 @@ packet(0x96e,clif->ackmergeitems);
 // new packets
 	packet(0x0a6e,clif->pRodexSendMail); // CZ_RODEX_SEND_MAIL
 // changed packet sizes
+#endif
+
+#if PACKETVER >= 20160302
+	packet(0x0a4f,clif->plapineDdukDdak_ack);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20160504 || PACKETVER_RE_NUM >= 20160504 || defined(PACKETVER_ZERO)
+	packet(0x0a70,clif->plapineDdukDdak_close);
+#endif
+
+// all 2016-05-25
+#if PACKETVER >= 20160525
+	packet(0x0a77,clif->pCameraInfo); // CZ_CAMERA_INFO
+#endif
+
+// all 20160622+
+#if PACKETVER >= 20160622
+	packet(0x0a88,clif->pResetCooldown);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
+	packet(0x0aa1, clif->pAddItemRefineryUI);
+	packet(0x0aa3, clif->pRefineryUIRefine);
+	packet(0x0aa4, clif->pRefineryUIClose);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+	packet(0x0ab5, clif->pLapineUpgrade_close);
+	packet(0x0ab6, clif->pLapineUpgrade_makeItem);
 #endif
 
 // 2017-02-28aRagexeRE
@@ -1873,6 +1914,87 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x09b0,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
 	packet(0x09c3,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
 	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
+
+// 2018-11-14aRagexe_zero
+#if PACKETVER_ZERO_NUM >= 20181114
+// new packets
+// changed packet sizes
+	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
+	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
+	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
+	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09c3,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
+
+// 2018-11-21bRagexe
+#if PACKETVER_ZERO_NUM >= 20181121
+// new packets
+// changed packet sizes
+	packet(0x018e,clif->pProduceMix); // CZ_REQMAKINGITEM
+	packet(0x01ae,clif->pSelectArrow,2); // CZ_REQ_MAKINGARROW
+	packet(0x01fd,clif->pRepairItem); // CZ_REQ_ITEMREPAIR
+	packet(0x025b,clif->pCooking); // CZ_REQ_MAKINGITEM
+	packet(0x0445,clif->pDull/*,XXX*/); // CZ_SIMPLE_BUY_CASH_POINT_ITEM
+	packet(0x09ae,clif->pDull/*,XXX*/); // CZ_REQ_APPLY_BARGAIN_SALE_ITEM
+	packet(0x09b0,clif->pDull/*,XXX*/); // CZ_REQ_REMOVE_BARGAIN_SALE_ITEM
+	packet(0x09c3,clif->pDull/*,XXX*/); // CZ_REQ_COUNT_BARGAIN_SALE_ITEM
+	packet(0x0a49,clif->pPrivateAirshipRequest); // CZ_PRIVATE_AIRSHIP_REQUEST
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
+	packet(0x0b10,clif->pStartUseSkillToId);
+	packet(0x0b11,clif->pStopUseSkillToId);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
+	packet(0x0b14,clif->pInventoryExpansion);
+	packet(0x0b16,clif->pInventoryExpansionConfirmed);
+	packet(0x0b19,clif->pInventoryExpansionRejected);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
+	packet(0x0b0f,clif->pNPCBarterPurchase);
+	packet(0x0b12,clif->pNPCBarterClosed);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190220 || PACKETVER_ZERO_NUM >= 20190220
+	packet(0x0b1c,clif->pPing);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+	packet(0x0b21,clif->pHotkey2);
+	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
+	packet(0x0b28,clif->pGuildCastleTeleportRequest);
+	packet(0x0b2c,clif->pGuildCastleInfoRequest);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703
+	packet(0x0b35,clif->pReqGearOff);
+#endif
+
+#if PACKETVER_ZERO_NUM >= 20190709
+	packet(0x0b35,clif->pReqGearOff);
+#endif
+
+#if PACKETVER >= 20190724
+	packet(0x0b4c,clif->pCashShopLimitedReq);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
+	packet(0x0b57,clif->pNPCExpandedBarterPurchase);
+	packet(0x0b58,clif->pNPCExpandedBarterClosed);
+#endif
+
+#if PACKETVER >= 20191224
+	packet(0x0b6d,clif->pCashShopOpen2);
 #endif
 
 #endif /* MAP_PACKETS_H */

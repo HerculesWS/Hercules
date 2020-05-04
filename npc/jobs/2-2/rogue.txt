@@ -9,16 +9,16 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Brainstorm
-//= Copyright (C)  Samuray22
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  SinSloth
-//= Copyright (C)  Silent
-//= Copyright (C)  Vicious
-//= Copyright (C)  Lupus
-//= Copyright (C)  kobra_k88
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Brainstorm
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Silent
+//= Copyright (C) Vicious
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1292,7 +1292,7 @@ in_rogue,270,130,0	script	he_to_rogue#rg	WARPNPC,1,1,{
 OnTouch:
 	mes "^3355FFThe door is locked. You'll need to enter the four number combination to open it.^000000";
 	next;
-	input .@input;
+	input(.@input);
 	if (.@input < 1 || .@input > 10000) {
 		if (ROGUE_Q == 12)
 			mes "^3355FFIt didn't work. Please re-enter the four number combination.^000000";
@@ -1300,7 +1300,7 @@ OnTouch:
 			mes "^3355FFPlease enter a combination of four numbers.^000000";
 		close;
 	}
-	else if (.@input == 3019) {
+	if (.@input == 3019) {
 		if (ROGUE_Q == 12) {
 			mes "^3355FFThe door";
 			mes "has opened.^000000";
@@ -1308,8 +1308,7 @@ OnTouch:
 			warp "in_rogue",10,21;
 			ROGUE_Q = 12;
 			end;
-		}
-		else {
+		} else {
 			mes "[HermanthornJr.]";
 			mes "Well...";
 			mes "Didn't I tell you";
@@ -1318,11 +1317,9 @@ OnTouch:
 			close;
 		}
 	}
-	else {
-		mes "^3355FFThe door";
-		mes "is still locked.^000000";
-		close;
-	}
+	mes "^3355FFThe door";
+	mes "is still locked.^000000";
+	close;
 }
 
 in_rogue,200,389,0	script	gen_ro#1	FAKE_NPC,3,3,{

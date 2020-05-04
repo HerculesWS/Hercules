@@ -27,7 +27,7 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 			mes "They cost ^0000FF" + $ninja_price + " zeny ^000000each.";
 
 			set @buy,0;
-			input @buy;
+			input(@buy, 0);
 			next;
 			if ($ninja_avail < 1) {
 				mes "[Shifty Assassin]";
@@ -83,8 +83,7 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 			mes "Active Ninjas: "+#ninjas;
 			mes "Resting Ninjas: "+#ninjasr;
 			mes "How many do you want to send?";
-			set @number,0;
-			input @number;
+			input(@number);
 			if (@number < 1) {
 				mes "[Shifty Assassin]";
 				mes "You can't kill anyone without ninjas.";
@@ -144,7 +143,7 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 			mes "How many ninjas do you want to make available?";
 			next;
 			set @add,0;
-			input @add;
+			input(@add, 0);
 			set $ninja_avail,$ninja_avail+@add;
 			mes @add + " ninjas added.";
 			close;

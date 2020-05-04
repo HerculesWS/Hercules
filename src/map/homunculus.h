@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,7 +133,7 @@ struct homun_skill_tree_entry {
 	short id;
 	unsigned char max;
 	unsigned char joblv;
-	short intimacylv;
+	int intimacylv;
 	struct {
 		short id;
 		unsigned char lv;
@@ -167,17 +167,18 @@ struct homunculus_interface {
 	enum homun_type (*class2type) (int class_);
 	void (*damaged) (struct homun_data *hd);
 	int (*dead) (struct homun_data *hd);
-	int (*vaporize) (struct map_session_data *sd, enum homun_state flag);
+	int (*vaporize) (struct map_session_data *sd, enum homun_state state, bool force);
 	int (*delete) (struct homun_data *hd, int emote);
 	int (*checkskill) (struct homun_data *hd, uint16 skill_id);
 	int (*calc_skilltree) (struct homun_data *hd, int flag_evolve);
 	int (*skill_tree_get_max) (int id, int b_class);
 	void (*skillup) (struct homun_data *hd, uint16 skill_id);
 	bool (*levelup) (struct homun_data *hd);
-	int (*change_class) (struct homun_data *hd, short class_);
+	int (*change_class) (struct homun_data *hd, int class_);
 	bool (*evolve) (struct homun_data *hd);
 	bool (*mutate) (struct homun_data *hd, int homun_id);
 	int (*gainexp) (struct homun_data *hd, unsigned int exp);
+	int (*gainexp_real) (struct homun_data *hd, unsigned int exp);
 	unsigned int (*add_intimacy) (struct homun_data * hd, unsigned int value);
 	unsigned int (*consume_intimacy) (struct homun_data *hd, unsigned int value);
 	void (*healed) (struct homun_data *hd);
@@ -189,7 +190,7 @@ struct homunculus_interface {
 	int (*change_name) (struct map_session_data *sd, const char *name);
 	bool (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
 	int (*db_search) (int key,int type);
-	bool (*create) (struct map_session_data *sd, const struct s_homunculus *hom);
+	bool (*create) (struct map_session_data *sd, const struct s_homunculus *hom, bool is_new);
 	void (*init_timers) (struct homun_data * hd);
 	bool (*call) (struct map_session_data *sd);
 	bool (*recv_data) (int account_id, const struct s_homunculus *sh, int flag);

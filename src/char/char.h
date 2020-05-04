@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -124,6 +124,8 @@ struct char_interface {
 	bool show_save_log; ///< Show loading/saving messages.
 	bool enable_logs;   ///< Whether to log char server operations.
 
+	char db_path[256]; //< Database directory (db)
+
 	int (*waiting_disconnect) (int tid, int64 tick, int id, intptr_t data);
 	int (*delete_char_sql) (int char_id);
 	struct DBData (*create_online_char_data) (union DBKey key, va_list args);
@@ -142,18 +144,19 @@ struct char_interface {
 	int (*getitemdata_from_sql) (struct item *items, int max, int guid, enum inventory_table_type table);
 	int (*memitemdata_to_sql) (const struct item items[], int id, enum inventory_table_type table);
 	int (*mmo_gender) (const struct char_session_data *sd, const struct mmo_charstatus *p, char sex);
-	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf);
+	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf, int *count);
 	int (*mmo_char_fromsql) (int char_id, struct mmo_charstatus* p, bool load_everything);
 	int (*mmo_char_sql_init) (void);
 	bool (*char_slotchange) (struct char_session_data *sd, int fd, unsigned short from, unsigned short to);
 	int (*rename_char_sql) (struct char_session_data *sd, int char_id);
 	bool (*name_exists) (const char *name, const char *esc_name);
 	int (*check_char_name) (const char *name, const char *esc_name);
-	int (*make_new_char_sql) (struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job, uint8 sex);
+	int (*make_new_char_sql) (struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int starting_job, uint8 sex);
 	int (*divorce_char_sql) (int partner_id1, int partner_id2);
 	int (*count_users) (void);
 	int (*mmo_char_tobuf) (uint8* buffer, struct mmo_charstatus* p);
-	void (*mmo_char_send099d) (int fd, struct char_session_data *sd);
+	void (*send_HC_ACK_CHARINFO_PER_PAGE) (int fd, struct char_session_data *sd);
+	void (*send_HC_ACK_CHARINFO_PER_PAGE_tail) (int fd, struct char_session_data *sd);
 	void (*mmo_char_send_ban_list) (int fd, struct char_session_data *sd);
 	void (*mmo_char_send_slots_info) (int fd, struct char_session_data* sd);
 	int (*mmo_char_send_characters) (int fd, struct char_session_data* sd);

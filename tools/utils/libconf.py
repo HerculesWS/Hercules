@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 #
-# Copyright (C) 2018 Hercules Dev Team
+# Copyright (C) 2018-2020 Hercules Dev Team
 #
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -226,8 +226,15 @@ class Tokenizer:
             for cls, type, regex in self.token_map:
                 m = regex.match(string, pos=pos)
                 if m:
-                    yield cls(type, m.group(0),
-                              self.filename, self.row, self.column)
+                    try:
+                        yield cls(type, m.group(0),
+                                  self.filename, self.row, self.column)
+                    except ValueError as e:
+                        print("Error parsing file "
+                              "{0}, in line:\n{1}\n{2}".format(self.filename,
+                                                               m.group(0),
+                                                               self.row))
+                        raise
                     self.column += len(m.group(0))
                     pos = m.end()
                     break

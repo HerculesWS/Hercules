@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Joseph
-//= Copyright (C)  Gepard
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) Gepard
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1108,13 +1108,15 @@ OnInstanceInit:
 		next();
 		mes("The bottom of the Main Altar trembles furiously.");
 		next();
-		specialeffect(EF_METEORSTORM);
-		specialeffect(EF_METEORSTORM);
-		mesf("[%s]", strcharinfo(PC_NAME));
-		mes("Watch out! Something... Something is coming.");
-		'ins_baphomet = 6;
-		donpcevent(instance_npcname("ins_2f_hero_broad")+"::OnEnable");
-		disablenpc(instance_npcname("The Main Altar#ss"));
+		if ('ins_baphomet == 5) {
+			specialeffect(EF_METEORSTORM);
+			specialeffect(EF_METEORSTORM);
+			mesf("[%s]", strcharinfo(PC_NAME));
+			mes("Watch out! Something... Something is coming.");
+			'ins_baphomet = 6;
+			donpcevent(instance_npcname("ins_2f_hero_broad")+"::OnEnable");
+			disablenpc(instance_npcname("The Main Altar#ss"));
+		}
 		close();
 	} else {
 		mes("An evil power, too terrible to describe, lies under the great altar radiating a violet color.");

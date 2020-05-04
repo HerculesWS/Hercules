@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,8 +38,8 @@ struct hplugin_data_store;
 #endif
 
 #ifndef MAX_ITEM_ID
-#if PACKETVER_RE_NUM >= 20180704
-#define MAX_ITEM_ID 0x20000
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+#define MAX_ITEM_ID INT32_MAX
 #else
 #define MAX_ITEM_ID 0xFFFF
 #endif
@@ -72,8 +72,8 @@ struct hplugin_data_store;
 #if MAX_ITEM_ID < MAX_ITEMDB
 #error "MAX_ITEM_ID must be bigger or same with MAX_ITEMDB"
 #endif
-#if MAX_ITEM_ID > 0xFFFF && PACKETVER_RE_NUM < 20180704
-#error "For clients before 20180704 RE, MAX_ITEM_ID must be smaller than 0x10000"
+#if MAX_ITEM_ID > 0xFFFF && PACKETVER_MAIN_NUM < 20181121 && PACKETVER_RE_NUM < 20180704 && PACKETVER_ZERO_NUM < 20181114
+#error "For clients before 20181121 Main and 20180704 RE and 20181114 zero, MAX_ITEM_ID must be smaller than 0x10000"
 #endif
 
 enum item_itemid {
@@ -95,6 +95,8 @@ enum item_itemid {
 	ITEMID_ALOEBERA              = 606,
 	ITEMID_SPECTACLES            = 611,
 	ITEMID_POISON_BOTTLE         = 678,
+	ITEMID_EARTH_SCROLL_1_3      = 686,
+	ITEMID_EARTH_SCROLL_1_5      = 687,
 	ITEMID_EMPTY_BOTTLE          = 713,
 	ITEMID_EMPERIUM              = 714,
 	ITEMID_YELLOW_GEMSTONE       = 715,
@@ -130,6 +132,7 @@ enum item_itemid {
 	ITEMID_INDIGO_PTS            = 6361,
 	ITEMID_YELLOW_WISH_PTS       = 6362,
 	ITEMID_LIME_GREEN_PTS        = 6363,
+	ITEMID_BLACKSMITH_BLESSING   = 6635,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,
@@ -138,7 +141,6 @@ enum item_itemid {
 	ITEMID_COATING_BOTTLE        = 7139,
 	ITEMID_FRAGMENT_OF_CRYSTAL   = 7321,
 	ITEMID_SKULL_                = 7420,
-	ITEMID_TOKEN_OF_SIEGFRIED    = 7621,
 	ITEMID_SPECIAL_ALLOY_TRAP    = 7940,
 	ITEMID_CATNIP_FRUIT          = 11602,
 	ITEMID_RED_POUCH_OF_SURPRISE = 12024,
@@ -358,6 +360,8 @@ enum geneticist_item_list {
 //
 enum e_chain_cache {
 	ECC_ORE,
+	ECC_SIEGFRIED,
+	ECC_NEO_INSURANCE,
 	/* */
 	ECC_MAX,
 };
@@ -409,6 +413,16 @@ enum ItemOptionTypes {
 	IT_OPT_VALUE,
 	IT_OPT_PARAM,
 	IT_OPT_MAX
+};
+
+/**
+ * Item name search flags
+ **/
+
+enum item_name_search_flag {
+	IT_SEARCH_NAME_PARTIAL,
+	IT_SEARCH_NAME_EXACT,
+	IT_SEARCH_NAME_MAX,
 };
 
 /** Convenience item list (entry) used in various functions */
@@ -481,6 +495,14 @@ struct itemdb_option {
 	struct script_code *script;
 };
 
+struct item_lapineddukddak {
+	int16 NeedCount;
+	int8 NeedRefineMin;
+	int8 NeedRefineMax;
+	VECTOR_DECL(struct itemlist_entry) SourceItems;
+	struct script_code *script;
+};
+
 struct item_data {
 	int nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -515,12 +537,15 @@ struct item_data {
 	struct script_code *script;         ///< Default script for everything.
 	struct script_code *equip_script;   ///< Script executed once when equipping.
 	struct script_code *unequip_script; ///< Script executed once when unequipping.
+	struct script_code *rental_start_script; ///< Script executed once this item get rented
+	struct script_code *rental_end_script;   ///< Script executed once this item rent ends
 	struct {
 		unsigned available : 1;
 		unsigned no_refine : 1; // [celest]
 		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
 		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
-		unsigned autoequip: 1;
+		unsigned autoequip : 1;
+		unsigned auto_favorite : 1;
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;
@@ -547,6 +572,7 @@ struct item_data {
 	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
 	struct item_group *group;
 	struct item_package *package;
+	struct item_lapineddukddak *lapineddukddak;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
@@ -631,7 +657,7 @@ struct itemdb_interface {
 	/* */
 	struct item_data* (*name2id) (const char *str);
 	struct item_data* (*search_name) (const char *name);
-	int (*search_name_array) (struct item_data** data, int size, const char *str, int flag);
+	int (*search_name_array) (struct item_data **data, const int size, const char *str, enum item_name_search_flag flag);
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
 	struct item_data* (*exists) (int nameid);
@@ -664,8 +690,8 @@ struct itemdb_interface {
 	int (*isrestricted) (struct item *item, int gmlv, int gmlv2, int(*func)(struct item_data *, int, int));
 	int (*isidentified) (int nameid);
 	int (*isidentified2) (struct item_data *data);
-	int (*combo_split_atoi) (char *str, int *val);
-	void (*read_combos) (void);
+	bool (*read_combodb_libconfig) (void);
+	bool (*read_combodb_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_options_additional_fields) (struct itemdb_option *ito, struct config_setting_t *t, const char *source);
@@ -683,6 +709,10 @@ struct itemdb_interface {
 	bool (*is_item_usable) (struct item_data *item);
 	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 	bool (*lookup_const_mask) (const struct config_setting_t *it, const char *name, int *value);
+	int (*addname_sub) (union DBKey key, struct DBData *data, va_list ap);
+	bool (*read_libconfig_lapineddukddak) (void);
+	bool (*read_libconfig_lapineddukddak_sub) (struct config_setting_t *it, const char *source);
+	bool (*read_libconfig_lapineddukddak_sub_sources) (struct config_setting_t *sources, struct item_data *data);
 };
 
 #ifdef HERCULES_CORE

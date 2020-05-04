@@ -41,7 +41,7 @@ OnMinute10:	// Start time (every hour)
 	set .status,1;
 	set .Spawn,rand(1,10);	// How many Mushrooms should spawn?
 	set .Map$,.maps$[rand(getarraysize(.maps$))];
-	killmonster .Map$,"All";
+	killmonster(.Map$, "all");
 	monster .Map$,0,0,"Please don't kill me!",1084,.Spawn,strnpcinfo(NPC_NAME)+"::OnMobKilled";
 	announce "Find the Mushroom : Total of "+.Spawn+" Mushrooms have been spawned in "+.Map$+"!",0;
 	sleep 2500;
@@ -50,9 +50,12 @@ OnMinute10:	// Start time (every hour)
 
 OnMobKilled:
 	set .Spawn, .Spawn - 1;
-	getitem .Prize, .Amount;
-	if (.Spawn) announce "[ "+strcharinfo(PC_NAME)+" ] has killed a Mushroom. There are now "+.Spawn+" Mushroom(s) left.",bc_map;
-	else {
+	if (playerattached() != 0) {
+		getitem .Prize, .Amount;
+		if (.Spawn)
+			announce "[ "+strcharinfo(PC_NAME)+" ] has killed a Mushroom. There are now "+.Spawn+" Mushroom(s) left.",bc_map;
+	}	
+	if (!.Spawn) {
 		announce "The Find the Mushroom Event has ended. All the Mushrooms have been killed.",0;
 		set .status,0;
 	}

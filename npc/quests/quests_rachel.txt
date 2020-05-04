@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1803,7 +1803,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 		mes "long time. What the heck do you";
 		mes "want to ask me about, anyway?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Lighthalzen") {
 			mes "[Katinshuell]";
 			mes "Lighthalzen...?";
@@ -2222,7 +2222,7 @@ rachel,73,244,3	script	Lachellen	4_F_SHABBY,{
 		mes "so I'll help you if you have";
 		mes "any questions for me~";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Lighthalzen") {
 			mes "[Lachellen]";
 			mes "Lighthalzen? Oh, that's";
@@ -3210,7 +3210,7 @@ OnTouch:
 
 OnTouchNPC:
 	emotion e_an;
-	//emotion e_gg,1; //Emote on monster - unsupported
+	unitemote mobattached(), e_gg;
 	end;
 
 OnMyMobDead:
@@ -5468,7 +5468,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 				next;
 				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Isn't the scientist's name...";
-				input .@input$;
+				input(.@input$);
 				mes "^3131FF"+.@input$+"^000000?";
 				next;
 				if (.@input$ == "Varmunt") {
@@ -5961,7 +5961,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 						mes "for protecting peace here";
 						mes "in Arunafeltz?";
 						next;
-						input .@input$;
+						input(.@input$);
 						mes "["+strcharinfo(PC_NAME)+"]";
 						mes ""+.@input$+"?";
 						next;
@@ -6890,7 +6890,7 @@ ra_temsky,99,99,5	script	Pope#rachel	4_F_ARUNA_POP,{
 		mes "So... Um... Where do you";
 		mes "come from, "+strcharinfo(PC_NAME)+"?";
 		next;
-		input @input$;
+		input(@input$);
 		mes "[Pope]";
 		mes @input$ +"...?";
 		mes "I think I might have heard";
@@ -6898,7 +6898,7 @@ ra_temsky,99,99,5	script	Pope#rachel	4_F_ARUNA_POP,{
 		mes "Wow... What did you do";
 		mes "when you lived there?";
 		next;
-		input @input$;
+		input(@input$);
 		mes "[Pope]";
 		mes @input$ +"...?";
 		mes "Wow, that sounds quite";
@@ -6988,7 +6988,7 @@ ra_temsky,99,99,5	script	Pope#rachel	4_F_ARUNA_POP,{
 			mes "interesting stories about";
 			mes "the outside world again?";
 			next;
-			input .@input$;
+			input(.@input$);
 			mes "[Pope]";
 			mes "Mm. That sounds pretty";
 			mes "strange to me. Well, it's";

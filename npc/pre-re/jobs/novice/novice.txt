@@ -9,16 +9,16 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Samuray22
-//= Copyright (C)  Lupus
-//= Copyright (C)  Toms
-//= Copyright (C)  Silent
-//= Copyright (C)  Vicious
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  Dr.Evil
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) Lupus
+//= Copyright (C) Toms
+//= Copyright (C) Silent
+//= Copyright (C) Vicious
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Dr.Evil
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -82,8 +82,8 @@ new_1-2,100,29,4	script	Receptionist#nv1	4_M_04,{
 	mes "Hello, you look to be new here.";
 	mes "What is your name?";
 	next;
-	input .@charname$;
-	if (.@charname$!=strcharinfo(PC_NAME)) {
+	input(.@charname$);
+	if (.@charname$ != strcharinfo(PC_NAME)) {
 		mes "[Training Grounds Receptionist]";
 		mes "Sorry, but I don't think I heard";
 		mes "you correctly";

@@ -5,7 +5,7 @@
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2012-2018 Hercules Dev Team
+> Copyright (C) 2012-2020 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
 > 
 > Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -277,7 +277,7 @@ bonus3 bSubEle,`e`,`n`,`bf`;         | +n% Damage reduction against element `e`.
 bonus2 bAddDamageClass,`c`,`x`;      | +n% extra physical damage against monsters of class `c`
 bonus2 bAddMagicDamageClass,`c`,`x`; | +n% extra magical damage against monsters of class `c`
 bonus2 bAddDefClass,`c`,`x`;         | +n% physical damage reduction against monsters of class `c`
-bonus2 bAddMDefClass,`c`,`x`;        | +n% magical damage reduction against monsters of class `c`
+bonus2 bAddMdefClass,`c`,`x`;        | +n% magical damage reduction against monsters of class `c`
 bonus2 bCriticalAddRace,`r`,`n`;     | +`n` Critical Against race `r`
 
 Attack/Def                             | Description
@@ -292,9 +292,9 @@ bonus4 bSetMDefRace,`r`,`n`,`t`,`y`;   | Set MDEF to `y` of an enemy of race `r`
 Ignore Def                        | Description
 :-------------------------------- | :-------------------------
 bonus bIgnoreDefRace,`r`;         | Disregard DEF against enemies of race `r`
-bonus bIgnoreMDefRace,`r`;        | Disregard MDEF against enemies of race `r`
+bonus bIgnoreMdefRace,`r`;        | Disregard MDEF against enemies of race `r`
 bonus bIgnoreDefEle,`e`;          | Disregard DEF against enemies of element `e`
-bonus bIgnoreMDefEle,`e`;         | Disregard MDEF against enemies of element `e`
+bonus bIgnoreMdefEle,`e`;         | Disregard MDEF against enemies of element `e`
 bonus2 bIgnoreDefRate,`r`,`n`;    | Disregard `n`% of the target's DEF if the target belongs to race `r`
 bonus2 bIgnoreMdefRate,`r`,`n`;   | Disregard `n`% of the target's MDEF if the target belongs to race `r`
 bonus bIgnoreMdefRate,`n`;        | Disregard `n`% of the target's MDEF

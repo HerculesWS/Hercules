@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,7 +104,7 @@ void db2sql_fileheader(void)
 			"-- This file is part of Hercules.\n"
 			"-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
 			"--\n"
-			"-- Copyright (C) 2013-%d  Hercules Dev Team\n"
+			"-- Copyright (C) 2013-%d Hercules Dev Team\n"
 			"--\n"
 			"-- Hercules is free software: you can redistribute it and/or modify\n"
 			"-- it under the terms of the GNU General Public License as published by\n"
@@ -956,6 +956,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	struct mob_db *md = mob->db(mob_id);
 	char valname[15];
 	const char *name = config_setting_name(it);
+	char e_name[NAME_LENGTH*2+1];
 
 	nullpo_retr(false, it);
 	Assert_retr(false, mob_id <= 0 || md != mob->dummy);
@@ -966,7 +967,8 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	StrBuf->Printf(&buf, "%d,", mob_id);
 
 	// Info
-	StrBuf->Printf(&buf, "'%s@%s',", md->name, name);
+	SQL->EscapeString(NULL, e_name, md->name);
+	StrBuf->Printf(&buf, "'%s@%s',", e_name, name);
 
 	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
 		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill state %d for skill '%s' in monster %d, defaulting to MSS_ANY.\n", i32, name, mob_id);

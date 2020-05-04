@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@
 #include "map/mob.h"
 #include "map/pc.h"
 #include "map/pet.h"
+#include "map/quest.h"
 #include "map/script.h"
 #include "map/skill.h"
 #include "map/status.h"
@@ -1257,6 +1258,9 @@ static void run_tomb(struct map_session_data *sd, struct npc_data *nd)
 	char time[10];
 
 	nullpo_retv(nd);
+
+	sd->npc_id = nd->bl.id;
+
 	strftime(time, sizeof(time), "%H:%M", localtime(&nd->u.tomb.kill_time));
 
 	// TODO: Find exact color?
@@ -1331,49 +1335,68 @@ static int npc_click(struct map_session_data *sd, struct npc_data *nd)
 	return 0;
 }
 
-/*==========================================
+/**
+ * Validates a character's script related data and (re-)runs the script if validation was successful.
  *
- *------------------------------------------*/
+ * Is called when:
+ * - The Next/Close button was clicked.
+ * - A menu option was selected.
+ * - A value was entered by input() script command.
+ * - A progress bar has reached 100%.
+ * - The character timed out because of idling.
+ *
+ * @param sd The character's session data.
+ * @param id The NPC ID.
+ * @param closing Whether the script is closing, or not.
+ * @return 0 on success, otherwise 1.
+ *
+**/
 static int npc_scriptcont(struct map_session_data *sd, int id, bool closing)
 {
-	struct block_list *target = map->id2bl(id);
 	nullpo_retr(1, sd);
 
-	if( id != sd->npc_id ){
-		struct npc_data *nd_sd = map->id2nd(sd->npc_id);
-		struct npc_data *nd = BL_CAST(BL_NPC, target);
-		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
-			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
-			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
-		return 1;
-	}
+	struct block_list *target = map->id2bl(id);
 
-	if(id != npc->fake_nd->bl.id) { // Not item script
-		if ((npc->checknear(sd,target)) == NULL){
-			ShowWarning("npc_scriptcont: failed npc->checknear test.\n");
+#ifdef SECURE_NPCTIMEOUT
+	if (sd->npc_idle_timer != INVALID_TIMER) { /// Not yet timed out.
+#endif
+		if (id != sd->npc_id) {
+			struct npc_data *nd_sd = map->id2nd(sd->npc_id);
+			struct npc_data *nd = BL_CAST(BL_NPC, target);
+
+			ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
+				(nd_sd != NULL) ? nd_sd->name : "'Unknown NPC'", sd->npc_id,
+				(nd != NULL) ? nd->name : "'Unknown NPC'", id);
+
+			return 1;
+		}
+#ifdef SECURE_NPCTIMEOUT
+	}
+#endif
+
+	if (id != npc->fake_nd->bl.id) { /// Not an item script.
+		if (sd->state.npc_unloaded != 0) {
+			sd->state.npc_unloaded = 0;
+		} else if (npc->checknear(sd, target) == NULL) {
+			ShowWarning("npc_scriptcont: Failed npc->checknear test.\n");
 			return 1;
 		}
 	}
-	/**
-	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
-	 **/
+
 #ifdef SECURE_NPCTIMEOUT
-	/**
-	 * Update the last NPC iteration
-	 **/
-	sd->npc_idle_tick = timer->gettick();
+	sd->npc_idle_tick = timer->gettick(); /// Update the last NPC iteration.
 #endif
 
-	/**
-	 * WPE can get to this point with a progressbar; we deny it.
-	 **/
-	if( sd->progressbar.npc_id && DIFF_TICK(sd->progressbar.timeout,timer->gettick()) > 0 )
+	/// WPE can get to this point with a progressbar; we deny it.
+	if (sd->progressbar.npc_id != 0 && DIFF_TICK(sd->progressbar.timeout, timer->gettick()) > 0)
 		return 1;
 
-	if( !sd->st )
+	if (sd->st == NULL) {
+		sd->npc_id = 0;
 		return 1;
+	}
 
-	if( closing && sd->st->state == CLOSE )
+	if (closing && sd->st->state == CLOSE)
 		sd->st->state = END;
 
 	script->run_main(sd->st);
@@ -1449,11 +1472,16 @@ static int npc_cashshop_buylist(struct map_session_data *sd, int points, struct 
 		return ERROR_TYPE_NPC;
 
 	if( nd->subtype != CASHSHOP ) {
-		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET ) {
+		if (nd->subtype == SCRIPT && nd->u.scr.shop &&
+		    nd->u.scr.shop->type != NST_ZENY &&
+		    nd->u.scr.shop->type != NST_MARKET &&
+		    nd->u.scr.shop->type != NST_BARTER &&
+		    nd->u.scr.shop->type != NST_EXPANDED_BARTER) {
 			shop = nd->u.scr.shop->item;
 			shop_size = nd->u.scr.shop->items;
-		} else
+		} else {
 			return ERROR_TYPE_NPC;
+		}
 	} else {
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
@@ -1584,11 +1612,11 @@ static void npc_market_fromsql(void)
 
 		if( !(nd = npc->name2id(name)) ) {
 			ShowError("npc_market_fromsql: NPC '%s' not found! skipping...\n",name);
-			npc->market_delfromsql_sub(name, USHRT_MAX);
+			npc->market_delfromsql_sub(name, INT_MAX);
 			continue;
-		} else if ( nd->subtype != SCRIPT || !nd->u.scr.shop || !nd->u.scr.shop->items || nd->u.scr.shop->type != NST_MARKET ) {
+		} else if (nd->subtype != SCRIPT || !nd->u.scr.shop || !nd->u.scr.shop->items || nd->u.scr.shop->type != NST_MARKET) {
 			ShowError("npc_market_fromsql: NPC '%s' is not proper for market, skipping...\n",name);
-			npc->market_delfromsql_sub(name, USHRT_MAX);
+			npc->market_delfromsql_sub(name, INT_MAX);
 			continue;
 		}
 
@@ -1610,20 +1638,20 @@ static void npc_market_fromsql(void)
 /**
  * Saves persistent NPC Market Data into SQL
  **/
-static void npc_market_tosql(struct npc_data *nd, unsigned short index)
+static void npc_market_tosql(struct npc_data *nd, int index)
 {
 	nullpo_retv(nd);
-	Assert_retv(index < nd->u.scr.shop->items);
-	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%u')",
+	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%d')",
 		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty))
 		Sql_ShowDebug(map->mysql_handle);
 }
 /**
  * Removes persistent NPC Market Data from SQL
  */
-static void npc_market_delfromsql_sub(const char *npcname, unsigned short index)
+static void npc_market_delfromsql_sub(const char *npcname, int index)
 {
-	if( index == USHRT_MAX ) {
+	if (index == INT_MAX ) {
 		if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s'", map->npc_market_data_db, npcname) )
 			Sql_ShowDebug(map->mysql_handle);
 	} else {
@@ -1635,12 +1663,290 @@ static void npc_market_delfromsql_sub(const char *npcname, unsigned short index)
 /**
  * Removes persistent NPC Market Data from SQL
  **/
-static void npc_market_delfromsql(struct npc_data *nd, unsigned short index)
+static void npc_market_delfromsql(struct npc_data *nd, int index)
 {
 	nullpo_retv(nd);
-	Assert_retv(index == USHRT_MAX || index < nd->u.scr.shop->items);
-	npc->market_delfromsql_sub(nd->exname, index == USHRT_MAX ? index : nd->u.scr.shop->item[index].nameid);
+	Assert_retv(index == INT_MAX || (index >= 0 && index < nd->u.scr.shop->items));
+	npc->market_delfromsql_sub(nd->exname, index == INT_MAX ? index : nd->u.scr.shop->item[index].nameid);
 }
+
+/**
+ * Loads persistent NPC Barter Data from SQL
+ **/
+static void npc_barter_fromsql(void)
+{
+	struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
+	char name[NAME_LENGTH + 1];
+	int itemid;
+	int amount;
+	int removeId;
+	int removeAmount;
+
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `name`, `itemId`, `amount`, `priceId`, `priceAmount` FROM `%s`", map->npc_barter_data_db)
+		|| SQL_ERROR == SQL->StmtExecute(stmt)
+		) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		return;
+	}
+
+	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name,          sizeof name,         NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &itemid,        sizeof itemid,       NULL, NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_UINT32, &amount,        sizeof amount,       NULL, NULL);
+	SQL->StmtBindColumn(stmt, 3, SQLDT_INT,    &removeId,      sizeof removeId,     NULL, NULL);
+	SQL->StmtBindColumn(stmt, 4, SQLDT_INT,    &removeAmount,  sizeof removeAmount, NULL, NULL);
+
+	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
+		struct npc_data *nd = NULL;
+		unsigned short i;
+
+		if (!(nd = npc->name2id(name))) {
+			ShowError("npc_barter_fromsql: NPC '%s' not found! skipping...\n",name);
+			npc->barter_delfromsql_sub(name, INT_MAX, 0, 0);
+			continue;
+		} else if (nd->subtype != SCRIPT || !nd->u.scr.shop || !nd->u.scr.shop->items || nd->u.scr.shop->type != NST_BARTER) {
+			ShowError("npc_barter_fromsql: NPC '%s' is not proper for barter, skipping...\n",name);
+			npc->barter_delfromsql_sub(name, INT_MAX, 0, 0);
+			continue;
+		}
+
+		for (i = 0; i < nd->u.scr.shop->items; i++) {
+			struct npc_item_list *const item = &nd->u.scr.shop->item[i];
+			if (item->nameid == itemid && item->value == removeId && item->value2 == removeAmount) {
+				item->qty = amount;
+				break;
+			}
+		}
+
+		if (i == nd->u.scr.shop->items) {
+			ShowError("npc_barter_fromsql: NPC '%s' does not sell item %d (qty %d), deleting...\n", name, itemid, amount);
+			npc->barter_delfromsql_sub(name, itemid, removeId, removeAmount);
+			continue;
+		}
+	}
+	SQL->StmtFree(stmt);
+}
+
+/**
+ * Saves persistent NPC Barter Data into SQL
+ **/
+static void npc_barter_tosql(struct npc_data *nd, int index)
+{
+	nullpo_retv(nd);
+	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+	const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
+	if (item->qty == -1)
+		return;
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s', '%d', '%d', '%u', '%d')",
+	    map->npc_barter_data_db, nd->exname, item->nameid, item->qty, item->value, item->value2)) {
+		Sql_ShowDebug(map->mysql_handle);
+	}
+}
+
+/**
+ * Removes persistent NPC Barter Data from SQL
+ */
+static void npc_barter_delfromsql_sub(const char *npcname, int itemId, int itemId2, int amount2)
+{
+	if (itemId == INT_MAX) {
+		if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s'", map->npc_barter_data_db, npcname))
+			Sql_ShowDebug(map->mysql_handle);
+	} else {
+		if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s' AND `itemId`='%d' AND `priceId`='%d' AND `priceAmount`='%d' LIMIT 1",
+		    map->npc_barter_data_db, npcname, itemId, itemId2, amount2)) {
+			Sql_ShowDebug(map->mysql_handle);
+		}
+	}
+}
+
+/**
+ * Removes persistent NPC Barter Data from SQL
+ **/
+static void npc_barter_delfromsql(struct npc_data *nd, int index)
+{
+	nullpo_retv(nd);
+	if (index == INT_MAX) {
+		npc->barter_delfromsql_sub(nd->exname, INT_MAX, 0, 0);
+	} else {
+		Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+		const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
+		npc->barter_delfromsql_sub(nd->exname, item->nameid, item->value, item->value2);
+	}
+}
+
+
+/**
+ * Loads persistent NPC Expanded Barter Data from SQL
+ **/
+static void npc_expanded_barter_fromsql(void)
+{
+	struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
+	char name[NAME_LENGTH + 1];
+	int itemid;
+	int amount;
+	int zeny;
+	StringBuf buf;
+
+	StrBuf->Init(&buf);
+	StrBuf->AppendStr(&buf, "SELECT `name`, `itemId`, `amount`, `zeny`");
+	for (int k = 1; k < 11; k ++) {
+		StrBuf->Printf(&buf, ", `currencyId%d`, `currencyAmount%d`, `currencyRefine%d`", k, k, k);
+	}
+	StrBuf->Printf(&buf, " FROM `%s`", map->npc_expanded_barter_data_db);
+
+	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+		|| SQL_ERROR == SQL->StmtExecute(stmt)
+		) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		StrBuf->Destroy(&buf);
+		return;
+	}
+
+	struct npc_barter_currency tempCurrency[10];
+	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name,   sizeof name,   NULL, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &itemid, sizeof itemid, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_UINT32, &amount, sizeof amount, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT32, &zeny,   sizeof zeny,   NULL, NULL);
+	for (int k = 0; k < 10; k ++) {
+		SQL->StmtBindColumn(stmt, k * 3 + 4, SQLDT_INT, &tempCurrency[k].nameid,    sizeof tempCurrency[k].nameid,     NULL, NULL);
+		SQL->StmtBindColumn(stmt, k * 3 + 5, SQLDT_INT, &tempCurrency[k].amount,    sizeof tempCurrency[k].amount,     NULL, NULL);
+		SQL->StmtBindColumn(stmt, k * 3 + 6, SQLDT_INT, &tempCurrency[k].refine,    sizeof tempCurrency[k].refine,     NULL, NULL);
+	}
+
+	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
+		struct npc_data *nd = NULL;
+		unsigned short i;
+
+		if ((nd = npc->name2id(name)) == NULL) {
+			ShowError("npc_expanded_barter_fromsql: NPC '%s' not found! skipping...\n",name);
+			npc->expanded_barter_delfromsql_sub(name, INT_MAX, 0, 0, NULL);
+			continue;
+		} else if (nd->subtype != SCRIPT || nd->u.scr.shop == NULL || nd->u.scr.shop->items == 0 || nd->u.scr.shop->type != NST_EXPANDED_BARTER) {
+			ShowError("npc_expanded_barter_fromsql: NPC '%s' is not proper for barter, skipping...\n",name);
+			npc->expanded_barter_delfromsql_sub(name, INT_MAX, 0, 0, NULL);
+			continue;
+		}
+
+		for (i = 0; i < nd->u.scr.shop->items; i++) {
+			struct npc_item_list *const item = &nd->u.scr.shop->item[i];
+			if (item->nameid == itemid && item->value == zeny) {
+				int count = nd->u.scr.shop->item[i].value2;
+				if (count > 10)
+					count = 10;
+				int curIndex;
+				for (curIndex = 0; curIndex < count; curIndex ++) {
+					struct npc_barter_currency *currency = &nd->u.scr.shop->item[i].currency[curIndex];
+					struct npc_barter_currency *currency2 = &tempCurrency[curIndex];
+					if (currency->nameid != currency2->nameid ||
+					    currency->amount != currency2->amount ||
+					    currency->refine != currency2->refine) {
+						break;
+					}
+				}
+				if (curIndex == count) {
+					item->qty = amount;
+					break;
+				}
+			}
+		}
+
+		if (i == nd->u.scr.shop->items) {
+			ShowError("npc_expanded_barter_fromsql: NPC '%s' does not sell item %d (qty %d), deleting...\n", name, itemid, amount);
+			npc->expanded_barter_delfromsql_sub(name, itemid, zeny, 10, &tempCurrency[0]);
+			continue;
+		}
+	}
+	SQL->StmtFree(stmt);
+	StrBuf->Destroy(&buf);
+}
+
+/**
+ * Saves persistent NPC Expanded Barter Data into SQL
+ **/
+static void npc_expanded_barter_tosql(struct npc_data *nd, int index)
+{
+	nullpo_retv(nd);
+	Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+	const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
+	if (item->qty == -1)
+		return;
+
+	npc->expanded_barter_delfromsql(nd, index);
+
+	StringBuf buf;
+	StrBuf->Init(&buf);
+	StrBuf->Printf(&buf, "INSERT INTO `%s` VALUES ('%s', '%d', '%d', '%u'", map->npc_expanded_barter_data_db, nd->exname, item->nameid, item->qty, item->value);
+	int currencyCount = item->value2;
+	if (currencyCount > 10)
+		currencyCount = 10;
+	int k;
+	for (k = 0; k < currencyCount; k++) {
+		struct npc_barter_currency *currency = &item->currency[k];
+		StrBuf->Printf(&buf, ", '%d', '%d', '%d'", currency->nameid, currency->amount, currency->refine);
+	}
+	for (; k < 10; k ++) {
+		StrBuf->Printf(&buf, ", '0', '0', '0'");
+	}
+	StrBuf->AppendStr(&buf, ")");
+
+	if (SQL_ERROR == SQL->QueryStr(map->mysql_handle, StrBuf->Value(&buf))) {
+		Sql_ShowDebug(map->mysql_handle);
+	}
+	StrBuf->Destroy(&buf);
+}
+
+/**
+ * Removes persistent NPC Expanded Barter Data from SQL
+ */
+static void npc_expanded_barter_delfromsql_sub(const char *npcname, int itemId, int zeny, int currencyCount, struct npc_barter_currency* currency)
+{
+	if (itemId == INT_MAX) {
+		if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `name`='%s'", map->npc_expanded_barter_data_db, npcname))
+			Sql_ShowDebug(map->mysql_handle);
+	} else {
+		StringBuf buf;
+
+		StrBuf->Init(&buf);
+		StrBuf->Printf(&buf, "DELETE FROM `%s` WHERE `name`='%s' AND `itemId`='%d' AND `zeny`='%d'",
+			map->npc_expanded_barter_data_db, npcname, itemId, zeny);
+		int k = 0;
+		if (currencyCount > 10)
+			currencyCount = 10;
+		for (k = 0; k < currencyCount; k++) {
+			struct npc_barter_currency *currency1 = &currency[k];
+			StrBuf->Printf(&buf, " AND currencyId%d='%d' and currencyAmount%d='%d' and currencyRefine%d='%d'",
+				k + 1, currency1->nameid, k + 1, currency1->amount, k + 1, currency1->refine);
+		}
+		for (; k < 10; k ++) {
+			StrBuf->Printf(&buf, " AND currencyId%d='0' and currencyAmount%d='0' and currencyRefine%d='0'",
+				k + 1, k + 1, k + 1);
+		}
+		StrBuf->AppendStr(&buf, " LIMIT 1");
+
+		if (SQL_ERROR == SQL->QueryStr(map->mysql_handle, StrBuf->Value(&buf))) {
+			Sql_ShowDebug(map->mysql_handle);
+		}
+		StrBuf->Destroy(&buf);
+	}
+}
+
+
+/**
+ * Removes persistent NPC Expanded Barter Data from SQL
+ **/
+static void npc_expanded_barter_delfromsql(struct npc_data *nd, int index)
+{
+	nullpo_retv(nd);
+	if (index == INT_MAX) {
+		npc->expanded_barter_delfromsql_sub(nd->exname, INT_MAX, 0, 0, NULL);
+	} else {
+		Assert_retv(index >= 0 && index < nd->u.scr.shop->items);
+		const struct npc_item_list *const item = &nd->u.scr.shop->item[index];
+		npc->expanded_barter_delfromsql_sub(nd->exname, item->nameid, item->value, item->value2, &item->currency[0]);
+	}
+}
+
 /**
  * Judges whether to allow and spawn a trader's window.
  **/
@@ -1672,6 +1978,12 @@ static bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd)
 
 				clif->npc_market_open(sd,nd);
 			}
+			break;
+		case NST_BARTER:
+			clif->npc_barter_open(sd, nd);
+			break;
+		case NST_EXPANDED_BARTER:
+			clif->npc_expanded_barter_open(sd, nd);
 			break;
 		default:
 			clif->cashshop_show(sd,nd);
@@ -1799,11 +2111,16 @@ static int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount,
 		return ERROR_TYPE_ITEM_ID; // Invalid Item
 
 	if( nd->subtype != CASHSHOP ) {
-		if( nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET ) {
+		if (nd->subtype == SCRIPT && nd->u.scr.shop &&
+		    nd->u.scr.shop->type != NST_ZENY &&
+		    nd->u.scr.shop->type != NST_MARKET &&
+		    nd->u.scr.shop->type != NST_BARTER &&
+		    nd->u.scr.shop->type != NST_EXPANDED_BARTER) {
 			shop = nd->u.scr.shop->item;
 			shop_size = nd->u.scr.shop->items;
-		} else
+		} else {
 			return ERROR_TYPE_NPC;
+		}
 	} else {
 		shop = nd->u.shop.shop_item;
 		shop_size = nd->u.shop.count;
@@ -1948,7 +2265,11 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 				break;
 
 			case ADDITEM_OVERAMOUNT:
+#if PACKETVER >= 20110705
+				return 9;
+#else
 				return 2;
+#endif
 		}
 
 		value = pc->modifybuyvalue(sd,value);
@@ -2002,7 +2323,7 @@ static int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
 /**
  * Processes incoming npc market purchase list
  **/
-static int npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
+static enum market_buy_result npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
 {
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
@@ -2016,7 +2337,7 @@ static int npc_market_buylist(struct map_session_data *sd, struct itemlist *item
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 
 	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET)
-		return 1;
+		return MARKET_BUY_RESULT_ERROR;
 
 	shop = nd->u.scr.shop->item;
 	shop_size = nd->u.scr.shop->items;
@@ -2036,18 +2357,18 @@ static int npc_market_buylist(struct map_session_data *sd, struct itemlist *item
 				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
 		if (j == shop_size) /* TODO find official response for this */
-			return 1; // no such item in shop
+			return MARKET_BUY_RESULT_ERROR; // no such item in shop
 
 		entry->id = shop[j].nameid; //item_avail replacement
 
 		if (entry->amount > (int)shop[j].qty)
-			return 1;
+			return MARKET_BUY_RESULT_AMOUNT_TOO_BIG;
 
 		value = shop[j].value;
 		npc_market_qty[i] = j;
 
 		if (!itemdb->exists(entry->id)) /* TODO find official response for this */
-			return 1; // item no longer in itemdb
+			return MARKET_BUY_RESULT_ERROR; // item no longer in itemdb
 
 		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
@@ -2071,13 +2392,13 @@ static int npc_market_buylist(struct map_session_data *sd, struct itemlist *item
 	}
 
 	if (z > sd->status.zeny) /* TODO find official response for this */
-		return 1; // Not enough Zeny
+		return MARKET_BUY_RESULT_NO_ZENY; // Not enough Zeny
 
 	if( w + sd->weight > sd->max_weight ) /* TODO find official response for this */
-		return 1; // Too heavy
+		return MARKET_BUY_RESULT_OVER_WEIGHT; // Too heavy
 
 	if( pc->inventoryblank(sd) < new_ ) /* TODO find official response for this */
-		return 1; // Not enough space to store items
+		return MARKET_BUY_RESULT_OUT_OF_SPACE; // Not enough space to store items
 
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 
@@ -2087,7 +2408,7 @@ static int npc_market_buylist(struct map_session_data *sd, struct itemlist *item
 		j = npc_market_qty[i];
 
 		if (entry->amount > (int)shop[j].qty) /* wohoo someone tampered with the packet. */
-			return 1;
+			return MARKET_BUY_RESULT_AMOUNT_TOO_BIG;
 
 		shop[j].qty -= entry->amount;
 
@@ -2105,7 +2426,283 @@ static int npc_market_buylist(struct map_session_data *sd, struct itemlist *item
 		}
 	}
 
-	return 0;
+	return MARKET_BUY_RESULT_SUCCESS;
+}
+
+/**
+ * Processes incoming npc barter purchase list
+ **/
+static int npc_barter_buylist(struct map_session_data *sd, struct barteritemlist *item_list)
+{
+	struct npc_data* nd;
+	struct npc_item_list *shop = NULL;
+	int w, new_;
+	unsigned short shop_size = 0;
+
+	nullpo_retr(1, sd);
+	nullpo_retr(1, item_list);
+
+	nd = npc->checknear(sd, map->id2bl(sd->npc_shopid));
+
+	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 || !nd->u.scr.shop || nd->u.scr.shop->type != NST_BARTER)
+		return 11;
+
+	shop = nd->u.scr.shop->item;
+	shop_size = nd->u.scr.shop->items;
+
+	w = 0;
+	new_ = 0;
+
+	int items[MAX_INVENTORY] = { 0 };
+
+	// process entries in buy list, one by one
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct barter_itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+
+		const int n = entry->removeIndex;
+		if (n < 0 || n >= sd->status.inventorySize)
+			return 11;  // wrong inventory index
+
+		if (entry->addAmount <= 0)
+			return 14;  // not enough item amount in inventory
+
+		int removeId = sd->status.inventory[n].nameid;
+		const int j = entry->shopIndex;
+		if (j < 0 || j >= shop_size)
+			return 13;  // no such item in shop
+		if (entry->addId != shop[j].nameid && entry->addId != itemdb_viewid(shop[j].nameid))
+			return 13;  // no such item in shop
+		if (removeId != shop[j].value && removeId != itemdb_viewid(shop[j].value))
+			return 13;  // no such item in shop
+		entry->addId = shop[j].nameid;  // item_avail replacement
+		removeId = shop[j].value;  // item_avail replacement
+
+		if (!itemdb->exists(entry->addId))
+			return 13; // item no longer in itemdb
+
+		const int removeAmount = shop[j].value2;
+
+		if ((int)shop[j].qty != -1 && entry->addAmount > (int)shop[j].qty)
+			return 14;  // not enough item amount in shop
+
+		if (removeAmount * entry->addAmount > sd->status.inventory[n].amount)
+			return 14;  // not enough item amount in inventory
+
+		items[n] += removeAmount * entry->addAmount;
+
+		if (items[n] > sd->status.inventory[n].amount)
+			return 14;  // not enough item amount in inventory
+
+		entry->addId = shop[j].nameid; //item_avail replacement
+
+		npc_market_qty[i] = j;
+
+		if (!itemdb->isstackable(entry->addId) && entry->addAmount > 1) {
+			//Exploit? You can't buy more than 1 of equipment types o.O
+			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->addAmount, entry->addId);
+			entry->addAmount = 1;
+		}
+
+		switch (pc->checkadditem(sd, entry->addId, entry->addAmount)) {
+			case ADDITEM_EXIST:
+				break;
+			case ADDITEM_NEW:
+				new_++;
+				break;
+			case ADDITEM_OVERAMOUNT: /* TODO find official response for this */
+				return 1;
+		}
+
+		w += itemdb_weight(entry->addId) * entry->addAmount;
+		w -= itemdb_weight(removeId) * removeAmount;
+	}
+
+	if (w + sd->weight > sd->max_weight)
+		return 2; // Too heavy
+
+	if (pc->inventoryblank(sd) < new_)
+		return 3; // Not enough space to store items
+
+	for (int i = 0; i < sd->status.inventorySize; ++i) {
+		const int removeAmountTotal = items[i];
+		if (removeAmountTotal == 0)
+			continue;
+		if (pc->delitem(sd, i, removeAmountTotal, 0, DELITEM_SOLD, LOG_TYPE_NPC) != 0) {
+			return 11;  // unknown exploit
+		}
+	}
+
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct barter_itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		const int shopIdx = npc_market_qty[i];
+
+		if ((int)shop[shopIdx].qty != -1) {
+			if (entry->addAmount > (int)shop[shopIdx].qty) /* wohoo someone tampered with the packet. */
+				return 14;
+			shop[shopIdx].qty -= entry->addAmount;
+		}
+
+		npc->barter_tosql(nd, shopIdx);
+
+		if (itemdb_type(entry->addId) == IT_PETEGG) {
+			pet->create_egg(sd, entry->addId);
+		} else {
+			struct item item_tmp;
+			memset(&item_tmp, 0, sizeof(item_tmp));
+			item_tmp.nameid = entry->addId;
+			item_tmp.identify = 1;
+			pc->additem(sd, &item_tmp, entry->addAmount, LOG_TYPE_NPC);
+		}
+	}
+
+	return 12;
+}
+
+
+/**
+ * Processes incoming npc expanded barter purchase list
+ **/
+static int npc_expanded_barter_buylist(struct map_session_data *sd, struct barteritemlist *item_list)
+{
+	nullpo_retr(1, sd);
+	nullpo_retr(1, item_list);
+
+	struct npc_data* nd = npc->checknear(sd, map->id2bl(sd->npc_shopid));
+
+	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 ||
+	    !nd->u.scr.shop || nd->u.scr.shop->type != NST_EXPANDED_BARTER) {
+		return 11;
+	}
+
+	struct npc_item_list *shop = nd->u.scr.shop->item;
+	unsigned short shop_size = nd->u.scr.shop->items;
+	int w = 0;
+	int new_ = 0;
+	int64 z = 0;
+	int items[MAX_INVENTORY] = { 0 };
+
+	// process entries in buy list, one by one
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct barter_itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+
+		if (entry->addAmount <= 0)
+			return 14;  // not enough item amount in inventory
+
+		const int j = entry->shopIndex;
+		if (j < 0 || j >= shop_size)
+			return 13;  // no such item in shop
+		if (entry->addId != shop[j].nameid && entry->addId != itemdb_viewid(shop[j].nameid))
+			return 13;  // no such item in shop
+		entry->addId = shop[j].nameid;  // item_avail replacement
+		if (!itemdb->exists(entry->addId))
+			return 13; // item no longer in itemdb
+
+		if ((int)shop[j].qty != -1 && entry->addAmount > (int)shop[j].qty)
+			return 14;  // not enough item amount in shop
+
+		int currencyCount = shop[j].value2;
+		for (int currencyIndex = 0; currencyIndex < currencyCount; currencyIndex ++) {
+			struct npc_barter_currency *currency = &shop[j].currency[currencyIndex];
+			const int currencyItemId = currency->nameid;
+			const int currencyRefine = currency->refine;
+			int removeAmount = currency->amount * entry->addAmount;
+			if (removeAmount <= 0)
+				continue;
+			for (int n = 0; n < sd->status.inventorySize && removeAmount > 0; ++n) {
+				// check item id and existing amount
+				if (sd->status.inventory[n].nameid == currencyItemId && sd->status.inventory[n].amount > 0) {
+					// check item refine level
+					if (currencyRefine != -1 && sd->status.inventory[n].refine != currencyRefine)
+						continue;
+					if (sd->status.inventory[n].amount >= removeAmount) {
+						items[n] += removeAmount;
+						removeAmount = 0;
+						w -= itemdb_weight(currencyItemId) * removeAmount;
+						break;
+					} else {
+						items[n] += sd->status.inventory[n].amount;
+						removeAmount -= sd->status.inventory[n].amount;
+						w -= itemdb_weight(currencyItemId) * sd->status.inventory[n].amount;
+					}
+				}
+				if (items[n] > sd->status.inventory[n].amount)
+					return 14;  // not enough item amount in inventory
+			}
+			if (removeAmount != 0) {
+				return 14;  // not enough item amount in inventory
+			}
+		}
+
+		entry->addId = shop[j].nameid; //item_avail replacement
+
+		npc_market_qty[i] = j;
+
+		if (!itemdb->isstackable(entry->addId) && entry->addAmount > 1) {
+			//Exploit? You can't buy more than 1 of equipment types o.O
+			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->addAmount, entry->addId);
+			entry->addAmount = 1;
+		}
+
+		switch (pc->checkadditem(sd, entry->addId, entry->addAmount)) {
+			case ADDITEM_EXIST:
+				break;
+			case ADDITEM_NEW:
+				new_++;
+				break;
+			case ADDITEM_OVERAMOUNT: /* TODO find official response for this */
+				return 1;
+		}
+
+		z += (int64)shop[j].value * entry->addAmount;
+		w += itemdb_weight(entry->addId) * entry->addAmount;
+	}
+
+	if (z > sd->status.zeny)
+		return 3; // Not enough Zeny
+
+	if ((int64)w + sd->weight > sd->max_weight)
+		return 2; // Too heavy
+
+	if (pc->inventoryblank(sd) < new_)
+		return 3; // Not enough space to store items
+
+	for (int i = 0; i < sd->status.inventorySize; ++i) {
+		const int removeAmountTotal = items[i];
+		if (removeAmountTotal == 0)
+			continue;
+		if (pc->delitem(sd, i, removeAmountTotal, 0, DELITEM_SOLD, LOG_TYPE_NPC) != 0) {
+			return 11;  // unknown exploit
+		}
+	}
+
+	pc->payzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
+
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct barter_itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		const int shopIdx = npc_market_qty[i];
+
+		if ((int)shop[shopIdx].qty != -1) {
+			if (entry->addAmount > (int)shop[shopIdx].qty) /* wohoo someone tampered with the packet. */
+				return 14;
+			shop[shopIdx].qty -= entry->addAmount;
+		}
+
+		npc->expanded_barter_tosql(nd, shopIdx);
+
+		if (itemdb_type(entry->addId) == IT_PETEGG) {
+			pet->create_egg(sd, entry->addId);
+		} else {
+			struct item item_tmp;
+			memset(&item_tmp, 0, sizeof(item_tmp));
+			item_tmp.nameid = entry->addId;
+			item_tmp.identify = 1;
+			pc->additem(sd, &item_tmp, entry->addAmount, LOG_TYPE_NPC);
+		}
+	}
+
+	return 12;
 }
 
 /// npc_selllist for script-controlled shops
@@ -2231,7 +2828,7 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 		int nameid, value, idx = entry->id;
 
-		if (idx >= MAX_INVENTORY || idx < 0 || entry->amount < 0) {
+		if (idx >= sd->status.inventorySize || idx < 0 || entry->amount < 0) {
 			return 1;
 		}
 
@@ -2354,120 +2951,193 @@ static int npc_unload_ev_label(union DBKey key, struct DBData *data, va_list ap)
 	return 0;
 }
 
-//Chk if npc matches src_id, then unload.
-//Sub-function used to find duplicates.
+/**
+ * Unloads a NPC if it's a duplicate of the passed one.
+ *
+ * @param nd The NPC to check.
+ * @param args List of arguments.
+ * @return Always 0.
+ *
+ **/
 static int npc_unload_dup_sub(struct npc_data *nd, va_list args)
 {
-	int src_id;
-
 	nullpo_ret(nd);
-	src_id = va_arg(args, int);
+
+	const int src_id = va_arg(args, int);
+	const int unload_mobs = va_arg(args, int);
+
 	if (nd->src_id == src_id)
-		npc->unload(nd, true);
+		npc->unload(nd, true, (unload_mobs == 1));
+
 	return 0;
 }
 
-//Removes all npcs that are duplicates of the passed one. [Skotlex]
-static void npc_unload_duplicates(struct npc_data *nd)
+/**
+ * Unloads all NPCs which are duplicates of the passed one.
+ *
+ * @param nd The source NPC.
+ * @param unload_mobs If true, mobs spawned by duplicates will be removed.
+ *
+ * @author Skotlex
+ *
+ **/
+static void npc_unload_duplicates(struct npc_data *nd, bool unload_mobs)
 {
 	nullpo_retv(nd);
-	map->foreachnpc(npc->unload_dup_sub,nd->bl.id);
+
+	map->foreachnpc(npc->unload_dup_sub, nd->bl.id, unload_mobs);
 }
 
-//Removes an npc from map and db.
-//Single is to free name (for duplicates).
-static int npc_unload(struct npc_data *nd, bool single)
+/**
+ * Removes a mob, which was spawned by a NPC (monster/areamonster/guardian/bg_monster/atcommand("@monster xy")).
+ *
+ * @param md The mob to remove.
+ * @param args List of arguments.
+ * @return 1 on success, 0 on failure.
+ *
+ * @author Kenpachi
+ *
+ **/
+static int npc_unload_mob(struct mob_data *md, va_list args)
+{
+	nullpo_ret(md);
+
+	const int npc_id = va_arg(args, int);
+
+	if (md->npc_id == npc_id) {
+		md->state.npc_killmonster = 1;
+		status_kill(&md->bl);
+		return 1;
+	}
+
+	return 0;
+}
+
+/**
+ * Removes a NPC from map and database.
+ *
+ * @param nd The NPC which should be removed.
+ * @param single If true, names are freed. (For duplicates.)
+ * @param unload_mobs If true, mobs spawned by the NPC will be removed.
+ * @return Always 0.
+ *
+ **/
+static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 {
 	nullpo_ret(nd);
 
-	if( nd->ud && nd->ud != &npc->base_ud ) {
+	if (nd->ud != NULL && nd->ud != &npc->base_ud)
 		skill->clear_unitgroup(&nd->bl);
-	}
 
 	npc->remove_map(nd);
 	map->deliddb(&nd->bl);
-	if( single )
+
+	if (single)
 		strdb_remove(npc->name_db, nd->exname);
 
-	if (nd->chat_id) // remove npc chatroom object and kick users
+	if (nd->chat_id != 0) /// Remove NPC chatroom object and kick users.
 		chat->delete_npc_chat(nd);
 
-	npc_chat->finalize(nd); // deallocate npc PCRE data structures
+	npc_chat->finalize(nd); /// Deallocate NPC PCRE data structures.
 
 	if (single && nd->path != NULL) {
 		npc->releasepathreference(nd->path);
 		nd->path = NULL;
 	}
 
-	if( single && nd->bl.m != -1 )
-		map->remove_questinfo(nd->bl.m,nd);
+	if (single && nd->bl.m != INDEX_NOT_FOUND)
+		map->remove_questinfo(nd->bl.m, nd);
 
-	if (nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP)) {
-		//src check for duplicate shops [Orcao]
-		aFree(nd->u.shop.shop_item);
+	npc->questinfo_clear(nd);
+
+	if (nd->src_id == 0 && (nd->subtype == SHOP || nd->subtype == CASHSHOP)) {
+		aFree(nd->u.shop.shop_item); /// src check for duplicate shops. [Orcao]
 	} else if (nd->subtype == SCRIPT) {
-		struct s_mapiterator *iter;
-		struct map_session_data *sd = NULL;
+		char evname[EVENT_NAME_LENGTH];
+		
+		snprintf(evname, ARRAYLENGTH(evname), "%s::OnNPCUnload", nd->exname);
 
-		if( single ) {
-			npc->ev_db->foreach(npc->ev_db,npc->unload_ev,nd->exname); //Clean up all events related
-			npc->ev_label_db->foreach(npc->ev_label_db,npc->unload_ev_label,nd);
+		struct event_data *ev = strdb_get(npc->ev_db, evname);
+		
+		if (ev != NULL)
+			script->run_npc(nd->u.scr.script, ev->pos, 0, nd->bl.id); /// Run OnNPCUnload.
+
+		if (single) {
+			npc->ev_db->foreach(npc->ev_db, npc->unload_ev, nd->exname); /// Clean up all related events.
+			npc->ev_label_db->foreach(npc->ev_label_db, npc->unload_ev_label, nd);
 		}
 
-		iter = mapit_geteachpc();
-		for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-			if (sd->npc_timer_id != INVALID_TIMER ) {
+		struct s_mapiterator *iter = mapit_geteachpc();
+		struct map_session_data *sd = BL_UCAST(BL_PC, mapit->first(iter));
+
+		for (; mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+			if (sd->npc_timer_id != INVALID_TIMER) {
 				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
-				if( td && td->id != nd->bl.id )
+				if (td != NULL && td->id != nd->bl.id)
 					continue;
 
-				if( td && td->data )
+				if (td != NULL && td->data != 0)
 					ers_free(npc->timer_event_ers, (void*)td->data);
+
 				timer->delete(sd->npc_timer_id, npc->timerevent);
 				sd->npc_timer_id = INVALID_TIMER;
 			}
 		}
+
 		mapit->free(iter);
 
 		if (nd->u.scr.timerid != INVALID_TIMER) {
-			const struct TimerData *td;
-			td = timer->get(nd->u.scr.timerid);
-			if (td && td->data)
+			const struct TimerData *td = timer->get(nd->u.scr.timerid);
+
+			if (td != NULL && td->data != 0)
 				ers_free(npc->timer_event_ers, (void*)td->data);
+
 			timer->delete(nd->u.scr.timerid, npc->timerevent);
 		}
-		if (nd->u.scr.timer_event)
+
+		if (nd->u.scr.timer_event != NULL)
 			aFree(nd->u.scr.timer_event);
+
 		if (nd->src_id == 0) {
-			if(nd->u.scr.script) {
+			if (nd->u.scr.script != NULL) {
 				script->free_code(nd->u.scr.script);
 				nd->u.scr.script = NULL;
 			}
-			if (nd->u.scr.label_list) {
+
+			if (nd->u.scr.label_list != NULL) {
 				aFree(nd->u.scr.label_list);
 				nd->u.scr.label_list = NULL;
 				nd->u.scr.label_list_num = 0;
 			}
-			if(nd->u.scr.shop) {
-				if(nd->u.scr.shop->item)
+
+			if (nd->u.scr.shop != NULL) {
+				if (nd->u.scr.shop->item != NULL) {
+					for (int i = 0; i < nd->u.scr.shop->items; i ++) {
+						if (nd->u.scr.shop->item[i].currency != NULL)
+							aFree(nd->u.scr.shop->item[i].currency);
+					}
 					aFree(nd->u.scr.shop->item);
+				}
+
 				aFree(nd->u.scr.shop);
 			}
 		}
-		if( nd->u.scr.guild_id )
+
+		if (nd->u.scr.guild_id > 0)
 			guild->flag_remove(nd);
 	}
 
-	if( nd->ud && nd->ud != &npc->base_ud ) {
+	if (nd->ud != NULL && nd->ud != &npc->base_ud) {
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
 
+	if (unload_mobs)
+		map->foreachmob(npc->unload_mob, nd->bl.id);
+
 	HPM->data_store_destroy(&nd->hdata);
-
 	aFree(nd);
-
 	return 0;
 }
 
@@ -2722,7 +3392,7 @@ static bool npc_viewisid(const char *viewid)
  * @param class_  The NPC view class.
  * @return A pointer to the created NPC data (ownership passed to the caller).
  */
-static struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, uint8 dir, int16 class_)
+static struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, enum unit_dir dir, int class_)
 {
 	struct npc_data *nd;
 
@@ -2739,6 +3409,7 @@ static struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, i
 	nd->class_ = class_;
 	nd->speed = 200;
 	nd->vd = npc_viewdb[0]; // Copy INVISIBLE_CLASS view data. Actual view data is set by npc->add_to_location() later.
+	VECTOR_INIT(nd->qi_data);
 
 	return nd;
 }
@@ -3672,14 +4343,14 @@ static void npc_setdisplayname(struct npc_data *nd, const char *newname)
 
 	safestrncpy(nd->name, newname, sizeof(nd->name));
 	if( map->list[nd->bl.m].users )
-		clif->charnameack(0, &nd->bl);
+		clif->blname_ack(0, &nd->bl);
 }
 
 /// Changes the display class of the npc.
 ///
 /// @param nd Target npc
 /// @param class_ New display class
-static void npc_setclass(struct npc_data *nd, short class_)
+static void npc_setclass(struct npc_data *nd, int class_)
 {
 	nullpo_retv(nd);
 
@@ -3843,18 +4514,23 @@ static const char *npc_parse_function(const char *w1, const char *w2, const char
 	return end;
 }
 
-/*==========================================
- * Parse Mob 1 - Parse mob list into each map
- * Parse Mob 2 - Actually Spawns Mob
- * [Wizputer]
- *------------------------------------------*/
+/**
+ * Spawns a mob by using the passed spawn data. (Permanent mob spawns.)
+ * npc_parse_mob() - Parses mob list into each map.
+ * npc_parse_mob2() - Actually spawns mob.
+ *
+ * @param mobspawn The mobs spawn data.
+ *
+ * @author Wizputer
+ *
+ **/
 static void npc_parse_mob2(struct spawn_data *mobspawn)
 {
-	int i;
-
 	nullpo_retv(mobspawn);
-	for( i = mobspawn->active; i < mobspawn->num; ++i ) {
-		struct mob_data* md = mob->spawn_dataset(mobspawn);
+
+	for (int i = mobspawn->active; i < mobspawn->num; ++i) {
+		struct mob_data *md = mob->spawn_dataset(mobspawn, 0);
+
 		md->spawn = mobspawn;
 		md->spawn->active++;
 		mob->spawn(md);
@@ -3960,7 +4636,7 @@ static const char *npc_parse_mob(const char *w1, const char *w2, const char *w3,
 
 	mobspawn.num = (unsigned short)num;
 	mobspawn.active = 0;
-	mobspawn.class_ = (short) class_;
+	mobspawn.class_ = class_;
 	mobspawn.x = (unsigned short)x;
 	mobspawn.y = (unsigned short)y;
 	mobspawn.xs = (signed short)xs;
@@ -4126,8 +4802,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 	if (!strcmpi(w3, "nosave")) {
 		char savemap[32];
 		int savex, savey;
-		if (state == 0)
-			; //Map flag disabled.
+		if (state == 0); //Map flag disabled.
 		else if (w4 && !strcmpi(w4, "SavePoint")) {
 			map->list[m].save.map = 0;
 			map->list[m].save.x = -1;
@@ -4420,7 +5095,8 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 			}
 		}
 
-		if( modifier[0] == '\0' ) {
+		if (state == 0); //Map flag disabled.
+		else if (modifier[0] == '\0') {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		} else if( !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) ) {
@@ -4479,7 +5155,8 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 			}
 		}
 
-		if( modifier[0] == '\0' ) {
+		if (state == 0); //Map flag disabled.
+		else if (modifier[0] == '\0') {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		} else if( !( skill_id = skill->name2id(skill_name) ) ) {
@@ -4555,6 +5232,10 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		map->list[m].flag.pairship_startable = (state) ? 1 : 0;
 	}  else if (!strcmpi(w3, "pairship_endable")) {
 		map->list[m].flag.pairship_endable = (state) ? 1 : 0;
+	}  else if (!strcmpi(w3, "nostorage")) {
+		map->list[m].flag.nostorage = (state) ? cap_value(atoi(w4), 1, 3) : 0;
+	}  else if (!strcmpi(w3, "nogstorage")) {
+		map->list[m].flag.nogstorage = (state) ? cap_value(atoi(w4), 1, 3) : 0;
 	} else {
 		npc->parse_unknown_mapflag(mapname, w3, w4, start, buffer, filepath, retval);
 	}
@@ -4906,127 +5587,143 @@ static void npc_process_files(int npc_min)
 		npc->npc_id - npc_min, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
 }
 
-//Clear then reload npcs files
+/**
+ * Clears and then reloads all NPC files.
+ *
+ * @return Always 0.
+ *
+ **/
 static int npc_reload(void)
 {
-	int npc_new_min = npc->npc_id;
-	struct s_mapiterator* iter;
-	struct block_list* bl;
+	if (map->retval == EXIT_FAILURE) /// Clear return status in case something failed before.
+		map->retval = EXIT_SUCCESS;
 
-	if (map->retval == EXIT_FAILURE)
-		map->retval = EXIT_SUCCESS; // Clear return status in case something failed before.
-
-	/* clear guild flag cache */
-	guild->flags_clear();
-
+	guild->flags_clear(); /// Clear guild flag cache.
 	npc->path_db->clear(npc->path_db, npc->path_db_clear_sub);
-
 	db_clear(npc->name_db);
 	db_clear(npc->ev_db);
 	npc->ev_label_db->clear(npc->ev_label_db, npc->ev_label_db_clear_sub);
-
 	npc->npc_last_npd = NULL;
 	npc->npc_last_path = NULL;
 	npc->npc_last_ref = NULL;
+	
+	const int npc_new_min = npc->npc_id;
+	struct s_mapiterator *iter = mapit_geteachiddb();
 
-	//Remove all npcs/mobs. [Skotlex]
-	iter = mapit_geteachiddb();
-	for (bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
-		switch(bl->type) {
-			case BL_NPC:
-				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd
-					npc->unload(BL_UCAST(BL_NPC, bl), false);
-				break;
-			case BL_MOB:
-				unit->free(bl,CLR_OUTSIGHT);
-				break;
+	/** Remove all NPCs/mobs. [Skotlex] **/
+	for (struct block_list *bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
+		switch (bl->type) {
+		case BL_NPC:
+			if (bl->id != npc->fake_nd->bl.id) /// Don't remove fake_nd.
+				npc->unload(BL_UCAST(BL_NPC, bl), false, false);
+
+			break;
+		case BL_MOB:
+			unit->free(bl, CLR_OUTSIGHT);
+			break;
+		default:
+			break;
 		}
 	}
+
 	mapit->free(iter);
 
-	if(battle_config.dynamic_mobs) {// dynamic check by [random]
-		int16 m;
-		for (m = 0; m < map->count; m++) {
-			int16 i;
-			for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
+	if (battle_config.dynamic_mobs) { /// Dynamic check. [random]
+		for (int m = 0; m < map->count; m++) {
+			for (int i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
 				if (map->list[m].moblist[i] != NULL) {
 					aFree(map->list[m].moblist[i]);
 					map->list[m].moblist[i] = NULL;
 				}
-				if( map->list[m].mob_delete_timer != INVALID_TIMER )
-				{ // Mobs were removed anyway,so delete the timer [Inkfish]
+
+				if (map->list[m].mob_delete_timer != INVALID_TIMER) { /// Mobs were removed anyway, so delete the timer. [Inkfish]
 					timer->delete(map->list[m].mob_delete_timer, map->removemobs_timer);
 					map->list[m].mob_delete_timer = INVALID_TIMER;
 				}
 			}
+
 			if (map->list[m].npc_num > 0)
-				ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", map->list[m].npc_num, map->list[m].name);
+				ShowWarning("npc_reload: %d NPCs weren't removed from map %s!\n",
+					    map->list[m].npc_num, map->list[m].name);
 		}
 	}
 
-	// clear mob spawn lookup index
 	mob->clear_spawninfo();
-
-	npc->npc_warp = npc->npc_shop = npc->npc_script = 0;
-	npc->npc_mob = npc->npc_cache_mob = npc->npc_delay_mob = 0;
-
-	// reset mapflags
+	npc->npc_warp = 0;
+	npc->npc_shop = 0;
+	npc->npc_script = 0;
+	npc->npc_mob = 0;
+	npc->npc_cache_mob = 0;
+	npc->npc_delay_mob = 0;
 	map->zone_reload();
 	map->flags_init();
-
-	// Reprocess npc files and reload constants
 	itemdb->name_constants();
 	clan->set_constants();
-	npc_process_files( npc_new_min );
-
+	npc_process_files(npc_new_min);
 	instance->reload();
-
 	map->zone_init();
-
-	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
-
-	//Re-read the NPC Script Events cache.
+	npc->motd = npc->name2id("HerculesMOTD"); /// [Ind/Hercules]
 	npc->read_event_script();
 
-	// Execute main initialisation events
-	// The correct initialisation order is:
-	// OnInit -> OnInterIfInit -> OnInterIfInitOnce -> OnAgitInit -> OnAgitInit2
-	npc->event_do_oninit( true );
+	/**
+	 * Execute main initialization events
+	 * The correct initialization order is:
+	 * OnInit -> OnInterIfInit -> OnInterIfInitOnce -> OnAgitInit -> OnAgitInit2
+	 *
+	 **/
+	npc->event_do_oninit(true);
+
 	npc->market_fromsql();
-	// Execute rest of the startup events if connected to char-server. [Lance]
-	// Executed when connection is established with char-server in chrif_connectack
-	if( !intif->CheckForCharServer() ) {
-		ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInit"));
-		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInitOnce"));
+	npc->barter_fromsql();
+	npc->expanded_barter_fromsql();
+
+	/*
+	 * Execute rest of the startup events if connected to char-server. [Lance]
+	 * Executed when connection is established with char-server in chrif_connectack().
+	 */
+	if (intif->CheckForCharServer() == 0) {
+		ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n",
+		           npc->event_doall("OnInterIfInit"));
+		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n",
+		           npc->event_doall("OnInterIfInitOnce"));
 	}
-	// Refresh guild castle flags on both woe setups
-	// These events are only executed after receiving castle information from char-server
+
+	/*
+	 * Refresh guild castle flags on both WoE setups.
+	 * These events are only executed after receiving castle information from char-server.
+	 */
 	npc->event_doall("OnAgitInit");
 	npc->event_doall("OnAgitInit2");
 
 	return 0;
 }
 
-//Unload all npc in the given file
-static bool npc_unloadfile(const char *filepath)
+/**
+ * Unloads all NPCs in the given file.
+ *
+ * @param filepath Path to the file which should be unloaded.
+ * @param unload_mobs If true, mobs spawned by NPCs in the file will be removed.
+ * @return true if at least one NPC was unloaded, otherwise false.
+ *
+ **/
+static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 {
-	struct DBIterator *iter = db_iterator(npc->name_db);
-	struct npc_data* nd = NULL;
-	bool found = false;
-
 	nullpo_retr(false, filepath);
 
-	for( nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter) ) {
-		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) { // FIXME: This can break in case-sensitive file systems
+	struct DBIterator *iter = db_iterator(npc->name_db);
+	bool found = false;
+
+	for (struct npc_data *nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter)) {
+		if (nd->path != NULL && strcasecmp(nd->path, filepath) == 0) { // FIXME: This can break in case-sensitive file systems.
 			found = true;
-			npc->unload_duplicates(nd);/* unload any npcs which could duplicate this but be in a different file */
-			npc->unload(nd, true);
+			npc->unload_duplicates(nd, unload_mobs); /// Unload any NPC which could duplicate this but be in a different file.
+			npc->unload(nd, true, unload_mobs);
 		}
 	}
 
 	dbi_destroy(iter);
 
-	if( found ) /* refresh event cache */
+	if (found) /// Refresh event cache.
 		npc->read_event_script();
 
 	return found;
@@ -5089,6 +5786,18 @@ static void npc_debug_warps(void)
 	for (m = 0; m < map->count; m++)
 		for (i = 0; i < map->list[m].npc_num; i++)
 			npc->debug_warps_sub(map->list[m].npc[i]);
+}
+
+static void npc_questinfo_clear(struct npc_data *nd)
+{
+	nullpo_retv(nd);
+
+	for (int i = 0; i < VECTOR_LENGTH(nd->qi_data); i++) {
+		struct questinfo *qi = &VECTOR_INDEX(nd->qi_data, i);
+		VECTOR_CLEAR(qi->items);
+		VECTOR_CLEAR(qi->quest_requirement);
+	}
+	VECTOR_CLEAR(nd->qi_data);
 }
 
 /*==========================================
@@ -5247,6 +5956,7 @@ void npc_defaults(void)
 	npc->unload_ev_label = npc_unload_ev_label;
 	npc->unload_dup_sub = npc_unload_dup_sub;
 	npc->unload_duplicates = npc_unload_duplicates;
+	npc->unload_mob = npc_unload_mob;
 	npc->unload = npc_unload;
 	npc->clearsrcfile = npc_clearsrcfile;
 	npc->addsrcfile = npc_addsrcfile;
@@ -5299,11 +6009,22 @@ void npc_defaults(void)
 	npc->trader_pay = npc_trader_pay;
 	npc->trader_update = npc_trader_update;
 	npc->market_buylist = npc_market_buylist;
+	npc->barter_buylist = npc_barter_buylist;
+	npc->expanded_barter_buylist = npc_expanded_barter_buylist;
 	npc->trader_open = npc_trader_open;
 	npc->market_fromsql = npc_market_fromsql;
 	npc->market_tosql = npc_market_tosql;
 	npc->market_delfromsql = npc_market_delfromsql;
 	npc->market_delfromsql_sub = npc_market_delfromsql_sub;
+	npc->barter_fromsql = npc_barter_fromsql;
+	npc->barter_tosql = npc_barter_tosql;
+	npc->barter_delfromsql = npc_barter_delfromsql;
+	npc->barter_delfromsql_sub = npc_barter_delfromsql_sub;
+	npc->expanded_barter_fromsql = npc_expanded_barter_fromsql;
+	npc->expanded_barter_tosql = npc_expanded_barter_tosql;
+	npc->expanded_barter_delfromsql = npc_expanded_barter_delfromsql;
+	npc->expanded_barter_delfromsql_sub = npc_expanded_barter_delfromsql_sub;
 	npc->db_checkid = npc_db_checkid;
 	npc->refresh = npc_refresh;
+	npc->questinfo_clear = npc_questinfo_clear;
 }

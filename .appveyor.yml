@@ -11,10 +11,11 @@ image: Visual Studio 2015
 clone_depth: 5
 environment:
   matrix:
-  - HerculesProject: Hercules-12.sln
   - HerculesProject: Hercules-14.sln
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     HerculesProject: Hercules-15.sln
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    HerculesProject: Hercules-16.sln
 services: mysql56
 build_script:
 - cmd: MSBuild %HerculesProject% /t:map-server,char-server,login-server
