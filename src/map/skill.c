@@ -129,6 +129,7 @@ static int skill_get_index(int skill_id)
 
 	if (skill_id < skill_idx_ranges[0].start || skill_id > skill_idx_ranges[length - 1].end) {
 		ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
+		Assert_report(0);
 		return 0;
 	}
 
@@ -148,10 +149,12 @@ static int skill_get_index(int skill_id)
 
 	if (!found) {
 		ShowWarning("skill_get_index: skill id '%d' (idx: %d) is not handled as it lies outside the defined ranges!\n", skill_id, skill_idx);
+		Assert_report(0);
 		return 0;
 	}
 	if (skill_idx >= MAX_SKILL_DB) {
 		ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
+		Assert_report(0);
 		return 0;
 	}
 
