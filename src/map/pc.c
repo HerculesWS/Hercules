@@ -11328,7 +11328,7 @@ static int pc_charm_timer(int tid, int64 tick, int id, intptr_t data)
  * @param max      Maximum amount of charms to add.
  * @param type     Charm type (@see spirit_charm_types)
  */
-static void pc_add_charm(struct map_session_data *sd, int interval, int max, int type)
+static void pc_add_charm(struct map_session_data *sd, int interval, int max, enum spirit_charm_types type)
 {
 	int tid, i;
 
@@ -11370,7 +11370,7 @@ static void pc_add_charm(struct map_session_data *sd, int interval, int max, int
  * @param count Amount of charms to remove.
  * @param type  Type of charm to remove.
  */
-static void pc_del_charm(struct map_session_data *sd, int count, int type)
+static void pc_del_charm(struct map_session_data *sd, int count, enum spirit_charm_types type)
 {
 	int i;
 

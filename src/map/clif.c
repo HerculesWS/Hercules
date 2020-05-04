@@ -9722,6 +9722,17 @@ static void clif_elemname_ack(int fd, struct block_list *bl)
 	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
+static void clif_skillname_ack(int fd, struct block_list *bl)
+{
+}
+
+static void clif_itemname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	ShowError("clif_itemname_ack: bad type %u(%d)\n", bl->type, bl->id);
+	Assert_retv(0);
+}
+
 static void clif_unknownname_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
@@ -9757,6 +9768,12 @@ static void clif_blname_ack(int fd, struct block_list *bl)
 			break;
 		case BL_ELEM:
 			clif->elemname_ack(fd, bl);
+			break;
+		case BL_ITEM:
+			clif->itemname_ack(fd, bl);
+			break;
+		case BL_SKILL:
+			clif->skillname_ack(fd, bl);
 			break;
 		default:
 			clif->unknownname_ack(fd, bl);
@@ -23780,12 +23797,15 @@ static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd) _
 static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20160302
+	if (sd->state.lapine_ui == 0)
+		return;
+
 	const struct PACKET_CZ_LAPINEDDUKDDAK_ACK *p = RP2PTR(fd);
 	struct item_data *it = itemdb->exists(p->itemId);
 
 	if (it == NULL || it->lapineddukddak == NULL)
 		return;
-	if (pc_cant_act(sd))
+	if (pc_cant_act_except_lapine(sd))
 		return;
 	if (pc->search_inventory(sd, it->nameid) == INDEX_NOT_FOUND)
 		return;
@@ -23844,6 +23864,55 @@ static void clif_parse_lapineDdukDdak_close(int fd, struct map_session_data *sd)
 #if PACKETVER >= 20160504
 	sd->state.lapine_ui = 0;
 #endif // PACKETVER >= 20160504
+}
+
+static bool clif_lapineUpgrade_open(struct map_session_data *sd, int item_id)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	nullpo_retr(false, itemdb->exists(item_id));
+	struct PACKET_ZC_LAPINEUPGRADE_OPEN p;
+
+	p.packetType = HEADER_ZC_LAPINEUPGRADE_OPEN;
+	p.itemId = item_id;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	return true;
+#else
+	return false;
+#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+}
+
+static void clif_parse_lapineUpgrade_close(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineUpgrade_close(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+}
+
+static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+	ShowError("Lapin upgrade not implimented yet");
+	clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
+#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+}
+
+static bool clif_lapineUpgrade_result(struct map_session_data *sd, enum lapineUpgrade_result result)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	struct PACKET_ZC_LAPINEUPGRADE_RESULT p;
+
+	p.packetType = HEADER_ZC_LAPINEUPGRADE_RESULT;
+	p.result = result;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	return true;
+#else
+	return false;
+#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 }
 
 /*==========================================
@@ -24346,6 +24415,8 @@ void clif_defaults(void)
 	clif->mobname_normal_ack = clif_mobname_normal_ack;
 	clif->chatname_ack = clif_chatname_ack;
 	clif->elemname_ack = clif_elemname_ack;
+	clif->skillname_ack = clif_skillname_ack;
+	clif->itemname_ack = clif_itemname_ack;
 	clif->unknownname_ack = clif_unknownname_ack;
 	clif->monster_hp_bar = clif_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;
@@ -25089,5 +25160,9 @@ void clif_defaults(void)
 	clif->lapineDdukDdak_result = clif_lapineDdukDdak_result;
 	clif->plapineDdukDdak_ack = clif_parse_lapineDdukDdak_ack;
 	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
+	clif->lapineUpgrade_open = clif_lapineUpgrade_open;
+	clif->lapineUpgrade_result = clif_lapineUpgrade_result;
+	clif->pLapineUpgrade_close = clif_parse_lapineUpgrade_close;
+	clif->pLapineUpgrade_makeItem = clif_parse_lapineUpgrade_makeItem;
 	clif->pReqGearOff = clif_parse_reqGearOff;
 }

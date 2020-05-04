@@ -733,6 +733,11 @@ enum lapineddukddak_result {
 	LAPINEDDKUKDDAK_INVALID_ITEM = 7,
 };
 
+enum lapineUpgrade_result {
+	LAPINE_UPGRADE_SUCCESS = 0,
+	LAPINE_UPGRADE_FAILED = 1
+};
+
 enum removeGear_flag {
 	REMOVE_MOUNT_0 = 0,  // unused
 	REMOVE_MOUNT_DRAGON = 1,
@@ -952,6 +957,8 @@ struct clif_interface {
 	void (*mobname_normal_ack) (int fd, struct block_list *bl);
 	void (*chatname_ack) (int fd, struct block_list *bl);
 	void (*elemname_ack) (int fd, struct block_list *bl);
+	void (*skillname_ack) (int fd, struct block_list *bl);
+	void (*itemname_ack) (int fd, struct block_list *bl);
 	void (*unknownname_ack) (int fd, struct block_list *bl);
 	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
 	int (*hpmeter) (struct map_session_data *sd);
@@ -1688,6 +1695,10 @@ struct clif_interface {
 	bool (*lapineDdukDdak_result) (struct map_session_data *sd, enum lapineddukddak_result result);
 	void (*plapineDdukDdak_ack) (int fd, struct map_session_data *sd);
 	void (*plapineDdukDdak_close) (int fd, struct map_session_data *sd);
+	bool (*lapineUpgrade_open) (struct map_session_data *sd, int item_id);
+	bool (*lapineUpgrade_result) (struct map_session_data *sd, enum lapineUpgrade_result result);
+	void (*pLapineUpgrade_close) (int fd, struct map_session_data *sd);
+	void (*pLapineUpgrade_makeItem) (int fd, struct map_session_data *sd);
 	void (*pReqGearOff) (int fd, struct map_session_data *sd);
 };
 
