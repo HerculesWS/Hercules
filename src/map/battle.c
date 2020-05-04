@@ -3750,7 +3750,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 
 				if (sc){
 					if( sc->data[SC_TELEKINESIS_INTENSE] && s_ele == ELE_GHOST )
-						ad.damage += sc->data[SC_TELEKINESIS_INTENSE]->val3;
+						ad.damage += ad.damage * sc->data[SC_TELEKINESIS_INTENSE]->val3 / 100;
 				}
 				switch(skill_id){
 					case MG_FIREBOLT:
@@ -4123,13 +4123,6 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 	case NPC_EVILLAND:
 		md.damage = skill->calc_heal(src,target,skill_id,skill_lv,false);
-		break;
-	case RK_DRAGONBREATH:
-	case RK_DRAGONBREATH_WATER:
-		md.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
-		RE_LVL_MDMOD(150);
-		if (sd) md.damage = md.damage * (95 + 5 * pc->checkskill(sd,RK_DRAGONTRAINING)) / 100;
-		md.flag |= BF_LONG|BF_WEAPON;
 		break;
 	/**
 	 * Ranger
@@ -4957,6 +4950,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					wd.damage = hd->homunculus.intimacy;
 					break;
 				}
+				break;
+			case RK_DRAGONBREATH:
+			case RK_DRAGONBREATH_WATER:
+				wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
+				wd.damage = wd.damage * status->get_lv(src) / 150;
+				if (sd) wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd, RK_DRAGONTRAINING)) / 100;
 				break;
 			default:
 			{

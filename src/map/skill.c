@@ -5019,7 +5019,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			if( (tsc = status->get_sc(bl)) && (tsc->data[SC_HIDING] )) {
 				clif->skill_nodamage(src,src,skill_id,skill_lv,1);
 			} else
-				skill->attack(BF_MISC,src,src,bl,skill_id,skill_lv,tick,flag);
+				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 		}
 			break;
 		case NPC_SELFDESTRUCTION: {
