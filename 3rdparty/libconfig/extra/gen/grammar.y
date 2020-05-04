@@ -315,7 +315,7 @@ simple_value:
     if (IN_ARRAY() || IN_LIST()) {
       struct config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, $1);
 
-      if (!e) {
+      if (e == NULL) {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
         YYABORT;
       } else {
@@ -332,7 +332,7 @@ simple_value:
     if (IN_ARRAY() || IN_LIST()) {
       struct config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, $1);
 
-      if (!e) {
+      if (e == NULL) {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
         YYABORT;
       } else {
@@ -349,7 +349,7 @@ simple_value:
     if (IN_ARRAY() || IN_LIST()) {
       struct config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, $1);
 
-      if (!e) {
+      if (e == NULL) {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
         YYABORT;
       } else {
@@ -366,7 +366,7 @@ simple_value:
     if (IN_ARRAY() || IN_LIST()) {
       struct config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, $1);
 
-      if (!e) {
+      if (e == NULL) {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
         YYABORT;
       } else {

@@ -176,16 +176,21 @@ static void __config_indent(FILE *stream, int depth, unsigned short w)
 
 /**
  * converts an integer to a binary string (because itoa is not in C99)
+ * skips leading zeros, and does not prepend with a 0b prefix
+ *
+ * @param value - the integer to convert to a binary expression
+ * @param buffer - a pointer to the buffer used to build the string
+ * @returns the same buffer
  */
 char *int_tobin(const unsigned long long value, char *buffer) {
   const unsigned long long mask = 1;
-  char nonzero = 0;
+  unsigned char nonzero = 0;
 
   for (char bit = 63; bit >= 0; --bit) {
     if ((value & (mask << bit)) == 1) {
       nonzero = 1;
       *buffer++ = '1';
-    } else if (nonzero) {
+    } else if (nonzero != 0) {
       *buffer++ = '0';
     }
   }
@@ -217,7 +222,7 @@ static void __config_write_value(const struct config_t *config,
 
         case CONFIG_FORMAT_BIN:
         {
-          char buffer[33]; // 32 bits + null
+          char buffer[33]; // 32 individual bits (char '0' and '1') represented as 32 bytes + null
           fprintf(stream, "0b%s", int_tobin((unsigned int)(value->ival), buffer));
           break;
         }
@@ -243,7 +248,7 @@ static void __config_write_value(const struct config_t *config,
 
         case CONFIG_FORMAT_BIN:
         {
-          char buffer[65]; // 64 bits + null
+          char buffer[65]; // 64 individual bits (char '0' and '1') represented as 64 bytes + null
           fprintf(stream, "0b%s", int_tobin((unsigned long long)(value->llval), buffer));
           break;
         }
@@ -1216,15 +1221,15 @@ int config_setting_set_string(struct config_setting_t *setting, const char *valu
 
 int config_setting_set_format(struct config_setting_t *setting, short format)
 {
-  if(((setting->type != CONFIG_TYPE_INT)
-      && (setting->type != CONFIG_TYPE_INT64))
-     || ((format != CONFIG_FORMAT_DEFAULT) && (format != CONFIG_FORMAT_HEX) &&
-         (format != CONFIG_FORMAT_BIN) && (format != CONFIG_FORMAT_OCT)))
-    return(CONFIG_FALSE);
+  if (((setting->type != CONFIG_TYPE_INT) && (setting->type != CONFIG_TYPE_INT64))
+      || ((format != CONFIG_FORMAT_DEFAULT) && (format != CONFIG_FORMAT_HEX)
+           && (format != CONFIG_FORMAT_BIN) && (format != CONFIG_FORMAT_OCT))) {
+    return CONFIG_FALSE;
+  }
 
   setting->format = format;
 
-  return(CONFIG_TRUE);
+  return CONFIG_TRUE;
 }
 
 /* ------------------------------------------------------------------------- */
