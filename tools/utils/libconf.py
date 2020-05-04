@@ -143,7 +143,7 @@ class IntToken(Token):
         self.is_hex = (self.text[1:2].lower() == 'x')
         self.is_oct = (self.text[1:2].lower() == 'o')
         self.is_bin = (self.text[1:2].lower() == 'b')
-        self.value = int(self.text.rstrip('L'), 0)
+        self.value = int(self.text.replace('_', '').rstrip('L'), 0)
 
 
 class BoolToken(Token):
@@ -184,18 +184,18 @@ class Tokenizer:
     token_map = compile_regexes([
         (FltToken,  'float',     r'([-+]?(\d+)?\.\d*([eE][-+]?\d+)?)|'
                                  r'([-+]?(\d+)(\.\d*)?[eE][-+]?\d+)'),
-        (IntToken,  'hex64',     r'0[Xx][0-9A-Fa-f]+(L(L)?)'),
-        (IntToken,  'hex',       r'0[Xx][0-9A-Fa-f]+'),
-        (IntToken,  'oct64',     r'0[Oo][0-7]+(L(L)?)'),
-        (IntToken,  'oct',       r'0[Oo][0-7]+'),
-        (IntToken,  'bin64',     r'0[Bb][01]+(L(L)?)'),
-        (IntToken,  'bin',       r'0[Bb][01]+'),
+        (IntToken,  'hex64',     r'0[Xx][0-9A-Fa-f_]+(L(L)?)'),
+        (IntToken,  'hex',       r'0[Xx][0-9A-Fa-f_]+'),
+        (IntToken,  'oct64',     r'0[Oo][0-7_]+(L(L)?)'),
+        (IntToken,  'oct',       r'0[Oo][0-7_]+'),
+        (IntToken,  'bin64',     r'0[Bb][01_]+(L(L)?)'),
+        (IntToken,  'bin',       r'0[Bb][01_]+'),
         (BoolToken, 'boolean',   r'(?i)(true|false)\b'),
         (StrToken,  'string',    r'"([^"\\]|\\.)*"'),
         (StrToken,  'string',    r'<"(?<=<")([\S\s]*?)(?=">)">'),
         (Token,     'name',      r'[0-9]*[A-Za-z\*][-A-Za-z0-9_\*]*'),
-        (IntToken,  'integer64', r'[-+]?[0-9]+L(L)?'),
-        (IntToken,  'integer',   r'[-+]?[0-9]+'),
+        (IntToken,  'integer64', r'[-+]?[0-9_]+L(L)?'),
+        (IntToken,  'integer',   r'[-+]?[0-9_]+'),
         (Token,     '}',         r'\}'),
         (Token,     '{',         r'\{'),
         (Token,     ')',         r'\)'),
