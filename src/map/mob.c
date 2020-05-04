@@ -2899,18 +2899,26 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				mercenary->kills(sd->md);
 		}
 
-		if( md->npc_event[0] && !md->state.npc_killmonster ) {
-			if( sd && battle_config.mob_npc_event_type ) {
-				pc->setparam(sd, SP_KILLERRID, sd->bl.id);
-				npc->event(sd,md->npc_event,0);
-			} else if( mvp_sd ) {
-				pc->setparam(mvp_sd, SP_KILLERRID, sd?sd->bl.id:0);
-				npc->event(mvp_sd,md->npc_event,0);
-			} else
-				npc->event_do(md->npc_event);
-		} else if( mvp_sd && !md->state.npc_killmonster ) {
-			pc->setparam(mvp_sd, SP_KILLEDRID, md->class_);
-			npc->script_event(mvp_sd, NPCE_KILLNPC); // PCKillNPC [Lance]
+		if (!md->state.npc_killmonster) {
+			if (md->npc_event[0]) {
+				if (sd && battle_config.mob_npc_event_type) {
+					pc->setparam(sd, SP_KILLEDRID, md->class_);
+					pc->setparam(sd, SP_KILLERRID, sd->bl.id);
+					npc->event(sd,md->npc_event,0);
+					if (script->config.kill_mob_event_type)
+						npc->script_event(mvp_sd, NPCE_KILLNPC);
+				} else if (mvp_sd) {
+					pc->setparam(mvp_sd, SP_KILLEDRID, md->class_);
+					pc->setparam(mvp_sd, SP_KILLERRID, sd?sd->bl.id:0);
+					npc->event(mvp_sd,md->npc_event,0);
+					if (script->config.kill_mob_event_type)
+						npc->script_event(mvp_sd, NPCE_KILLNPC);
+				} else
+					npc->event_do(md->npc_event);
+			} else if (mvp_sd) {
+				pc->setparam(mvp_sd, SP_KILLEDRID, md->class_);
+				npc->script_event(mvp_sd, NPCE_KILLNPC); // PCKillNPC [Lance]
+			}
 		}
 
 		md->status.hp = 1;
