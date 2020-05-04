@@ -413,6 +413,7 @@ typedef char bool;
 #define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
 #define ISBDIGIT(c) ((unsigned char)(c) == '0' || (unsigned char)(c) == '1')
 #define ISODIGIT(c) ((unsigned char)(c) >= '0' && (unsigned char)(c) <= '7')
+#define ISNSEPARATOR(c) ((unsigned char)(c) == '_')
 #define ISGRAPH(c) (isgraph((unsigned char)(c)))
 #define ISLOWER(c) (islower((unsigned char)(c)))
 #define ISPRINT(c) (isprint((unsigned char)(c)))
