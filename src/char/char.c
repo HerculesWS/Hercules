@@ -425,8 +425,6 @@ static struct DBData char_create_charstatus(union DBKey key, va_list args)
 
 static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 {
-	int i = 0;
-	int count = 0;
 	int diff = 0;
 	char save_status[128]; //For displaying save information. [Skotlex]
 	struct mmo_charstatus *cp;
@@ -591,8 +589,9 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		//insert here.
 		StrBuf->Clear(&buf);
 		StrBuf->Printf(&buf, "INSERT INTO `%s`(`char_id`,`map`,`x`,`y`) VALUES ", memo_db);
-		for( i = 0, count = 0; i < MAX_MEMOPOINTS; ++i )
-		{
+
+		int count = 0;
+		for (int i = 0; i < MAX_MEMOPOINTS; ++i) {
 			if( p->memo_point[i].map )
 			{
 				if( count )
@@ -624,24 +623,29 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		StrBuf->Clear(&buf);
 		StrBuf->Printf(&buf, "INSERT INTO `%s`(`char_id`,`id`,`lv`,`flag`) VALUES ", skill_db);
 		//insert here.
-		for (i = 0, count = 0; i < MAX_SKILL_DB; ++i) {
-			if( p->skill[i].id != 0 && p->skill[i].flag != SKILL_FLAG_TEMPORARY ) {
-				if( p->skill[i].lv == 0 && ( p->skill[i].flag == SKILL_FLAG_PERM_GRANTED || p->skill[i].flag == SKILL_FLAG_PERMANENT ) )
-					continue;
-				if( p->skill[i].flag != SKILL_FLAG_PERMANENT && p->skill[i].flag != SKILL_FLAG_PERM_GRANTED && (p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0) == 0 )
-					continue;
-				if( count )
-					StrBuf->AppendStr(&buf, ",");
-				StrBuf->Printf(&buf, "('%d','%d','%d','%d')", char_id, p->skill[i].id,
-								 ( (p->skill[i].flag == SKILL_FLAG_PERMANENT || p->skill[i].flag == SKILL_FLAG_PERM_GRANTED) ? p->skill[i].lv : p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0),
-								 p->skill[i].flag == SKILL_FLAG_PERM_GRANTED ? p->skill[i].flag : 0);/* other flags do not need to be saved */
-				++count;
-			}
+		int count = 0;
+		for (int i = 0; i < MAX_SKILL_DB; ++i) {
+			if (p->skill[i].id == 0)
+				continue;
+			if (p->skill[i].flag == SKILL_FLAG_TEMPORARY)
+				continue;
+			if (p->skill[i].lv == 0 && (p->skill[i].flag == SKILL_FLAG_PERM_GRANTED || p->skill[i].flag == SKILL_FLAG_PERMANENT))
+				continue;
+			if (p->skill[i].flag == SKILL_FLAG_REPLACED_LV_0)
+				continue;
+
+			if (Assert_chk(p->skill[i].flag == SKILL_FLAG_PERMANENT || p->skill[i].flag == SKILL_FLAG_PERM_GRANTED || p->skill[i].flag > SKILL_FLAG_REPLACED_LV_0))
+				continue;
+			if (count != 0)
+				StrBuf->AppendStr(&buf, ",");
+			int saved_lv = (p->skill[i].flag > SKILL_FLAG_REPLACED_LV_0) ? p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0 : p->skill[i].lv;
+			int saved_flag = p->skill[i].flag == SKILL_FLAG_PERM_GRANTED ? p->skill[i].flag : 0; // other flags do not need to be saved
+			StrBuf->Printf(&buf, "('%d','%d','%d','%d')", char_id, p->skill[i].id, saved_lv, saved_flag);
+
+			++count;
 		}
-		if( count )
-		{
-			if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
-			{
+		if (count != 0) {
+			if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
@@ -651,7 +655,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 	}
 
 	diff = 0;
-	for(i = 0; i < MAX_FRIENDS; i++){
+	for (int i = 0; i < MAX_FRIENDS; i++) {
 		if(p->friends[i].char_id != cp->friends[i].char_id ||
 			p->friends[i].account_id != cp->friends[i].account_id){
 			diff = 1;
@@ -669,8 +673,8 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 
 		StrBuf->Clear(&buf);
 		StrBuf->Printf(&buf, "INSERT INTO `%s` (`char_id`, `friend_account`, `friend_id`) VALUES ", friend_db);
-		for( i = 0, count = 0; i < MAX_FRIENDS; ++i )
-		{
+		int count = 0;
+		for (int i = 0; i < MAX_FRIENDS; ++i) {
 			if( p->friends[i].char_id > 0 )
 			{
 				if( count )
@@ -695,7 +699,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 	StrBuf->Clear(&buf);
 	StrBuf->Printf(&buf, "REPLACE INTO `%s` (`char_id`, `hotkey`, `type`, `itemskill_id`, `skill_lvl`) VALUES ", hotkey_db);
 	diff = 0;
-	for(i = 0; i < ARRAYLENGTH(p->hotkeys); i++){
+	for (int i = 0; i < ARRAYLENGTH(p->hotkeys); i++) {
 		if(memcmp(&p->hotkeys[i], &cp->hotkeys[i], sizeof(struct hotkey)))
 		{
 			if( diff )
@@ -1369,7 +1373,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 		SqlStmt_ShowDebug(stmt);
 	}
 
-	if( tmp_skill.flag != SKILL_FLAG_PERM_GRANTED )
+	if (tmp_skill.flag != SKILL_FLAG_PERM_GRANTED)
 		tmp_skill.flag = SKILL_FLAG_PERMANENT;
 
 	for (i = 0; i < MAX_SKILL_DB && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i) {

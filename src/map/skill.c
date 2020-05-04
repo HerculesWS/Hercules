@@ -72,6 +72,34 @@ static struct s_skill_dbs skilldbs;
 
 struct skill_interface *skill;
 
+static const struct {
+	int start;
+	int end;
+} skill_idx_ranges[] = {
+	{ NV_BASIC, NPC_LEX_AETERNA },
+	{ KN_CHARGEATK, SA_ELEMENTWIND },
+	{ RK_ENCHANTBLADE, AB_SILENTIUM },
+	{ WL_WHITEIMPRISON, SC_FEINTBOMB },
+	{ LG_CANNONSPEAR, SR_GENTLETOUCH_REVITALIZE },
+	{ WA_SWING_DANCE, WA_MOONLIT_SERENADE },
+	{ MI_RUSH_WINDMILL, MI_HARMONIZE },
+	{ WM_LESSON, WM_UNLIMITED_HUMMING_VOICE },
+	{ SO_FIREWALK, SO_EARTH_INSIGNIA },
+	{ GN_TRAINING_SWORD, GN_SLINGITEM_RANGEMELEEATK },
+	{ AB_SECRAMENT, LG_OVERBRAND_PLUSATK },
+	{ ALL_ODINS_RECALL, ALL_LIGHTGUARD },
+	{ RL_GLITTERING_GREED, RL_GLITTERING_GREED_ATK },
+	{ KO_YAMIKUMO, OB_AKAITSUKI },
+	{ ECL_SNOWFLIP, ALL_THANATOS_RECALL },
+	{ GC_DARKCROW, NC_MAGMA_ERUPTION_DOTDAMAGE },
+	{ SU_BASIC_SKILL, SU_SPIRITOFSEA },
+	{ HLIF_HEAL, MH_VOLCANIC_ASH },
+	{ MS_BASH, MER_INVINCIBLEOFF2 },
+	{ EL_CIRCLE_OF_FIRE, EL_STONE_RAIN },
+	{ GD_APPROVAL, GD_DEVELOPMENT },
+	CUSTOM_SKILL_RANGES
+};
+
 //Since only mob-casted splash skills can hit ice-walls
 static int skill_splash_target(struct block_list *bl)
 {
@@ -96,51 +124,37 @@ static int skill_name2id(const char *name)
 /// Returns the skill's array index, or 0 (Unknown Skill).
 static int skill_get_index(int skill_id)
 {
-	int skillRange[] = { NV_BASIC, NPC_LEX_AETERNA,
-			KN_CHARGEATK, SA_ELEMENTWIND,
-			RK_ENCHANTBLADE, AB_SILENTIUM,
-			WL_WHITEIMPRISON, SC_FEINTBOMB,
-			LG_CANNONSPEAR, SR_GENTLETOUCH_REVITALIZE,
-			WA_SWING_DANCE, WA_MOONLIT_SERENADE,
-			MI_RUSH_WINDMILL, MI_HARMONIZE,
-			WM_LESSON, WM_UNLIMITED_HUMMING_VOICE,
-			SO_FIREWALK, SO_EARTH_INSIGNIA,
-			GN_TRAINING_SWORD, GN_SLINGITEM_RANGEMELEEATK,
-			AB_SECRAMENT, LG_OVERBRAND_PLUSATK,
-			ALL_ODINS_RECALL, ALL_LIGHTGUARD,
-			RL_GLITTERING_GREED, RL_GLITTERING_GREED_ATK,
-			KO_YAMIKUMO, OB_AKAITSUKI,
-			ECL_SNOWFLIP, ALL_THANATOS_RECALL,
-			GC_DARKCROW, NC_MAGMA_ERUPTION_DOTDAMAGE,
-			SU_BASIC_SKILL, SU_SPIRITOFSEA,
-			HLIF_HEAL, MH_VOLCANIC_ASH,
-			MS_BASH, MER_INVINCIBLEOFF2,
-			EL_CIRCLE_OF_FIRE, EL_STONE_RAIN,
-			GD_APPROVAL, GD_DEVELOPMENT
-			CUSTOM_SKILL_RANGES};
-	int length = sizeof(skillRange) / sizeof(int);
-	STATIC_ASSERT(sizeof(skillRange) / sizeof(int) % 2 == 0, "skill_get_index: skillRange should be multiple of 2");
+	int length = ARRAYLENGTH(skill_idx_ranges);
 
 
-	if (skill_id < skillRange[0] || skill_id > skillRange[length - 1]) {
+	if (skill_id < skill_idx_ranges[0].start || skill_id > skill_idx_ranges[length - 1].end) {
 		ShowWarning("skill_get_index: skill id '%d' is not being handled!\n", skill_id);
+		Assert_report(0);
 		return 0;
 	}
 
 	int skill_idx = 0;
+	bool found = false;
 	// Map Skill ID to Skill Indexes (in reverse order)
-	for (int i = 0; i < length; i += 2) {
+	for (int i = 0; i < length; i++) {
 		// Check if SkillID belongs to this range.
-		if (skill_id <= skillRange[i + 1] && skill_id >= skillRange[i]) {
-			skill_idx += (skillRange[i + 1] - skill_id);
+		if (skill_id <= skill_idx_ranges[i].end && skill_id >= skill_idx_ranges[i].start) {
+			skill_idx += (skill_idx_ranges[i].end - skill_id);
+			found = true;
 			break;
 		}
 		// Add the difference of current range
-		skill_idx += (skillRange[i + 1] - skillRange[i] + 1);
+		skill_idx += (skill_idx_ranges[i].end - skill_idx_ranges[i].start + 1);
 	}
 
+	if (!found) {
+		ShowWarning("skill_get_index: skill id '%d' (idx: %d) is not handled as it lies outside the defined ranges!\n", skill_id, skill_idx);
+		Assert_report(0);
+		return 0;
+	}
 	if (skill_idx >= MAX_SKILL_DB) {
 		ShowWarning("skill_get_index: skill id '%d'(idx: %d) is not being handled as it exceeds MAX_SKILL_DB!\n", skill_id, skill_idx);
+		Assert_report(0);
 		return 0;
 	}
 
@@ -10923,6 +10937,37 @@ static int skill_count_wos(struct block_list *bl, va_list ap)
 	nullpo_retr(1, src);
 	if( src->id != bl->id ) {
 		return 1;
+	}
+	return 0;
+}
+
+/**
+ * Returns the linked song/dance skill ID, if any (for the Bard/Dancer Soul Link).
+ *
+ * @param skill_id The skill ID to look up
+ *
+ * @return The linked song or dance's skill ID if any
+ * @retval 0 if the given skill_id doesn't have a linked skill ID
+ */
+static int skill_get_linked_song_dance_id(int skill_id)
+{
+	switch (skill_id) {
+		case BA_WHISTLE:
+			return DC_HUMMING;
+		case BA_ASSASSINCROSS:
+			return DC_DONTFORGETME;
+		case BA_POEMBRAGI:
+			return DC_FORTUNEKISS;
+		case BA_APPLEIDUN:
+			return DC_SERVICEFORYOU;
+		case DC_HUMMING:
+			return BA_WHISTLE;
+		case DC_DONTFORGETME:
+			return BA_ASSASSINCROSS;
+		case DC_FORTUNEKISS:
+			return BA_POEMBRAGI;
+		case DC_SERVICEFORYOU:
+			return BA_APPLEIDUN;
 	}
 	return 0;
 }
@@ -21801,4 +21846,5 @@ void skill_defaults(void)
 	skill->splash_target = skill_splash_target;
 	skill->check_npc_chaospanic = skill_check_npc_chaospanic;
 	skill->count_wos = skill_count_wos;
+	skill->get_linked_song_dance_id = skill_get_linked_song_dance_id;
 }
