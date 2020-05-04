@@ -1026,6 +1026,9 @@ static int skillnotok(uint16 skill_id, struct map_session_data *sd)
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 
+	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNOSKILL))
+		return 1; // block usage on 'noskill' cells [Wolfie]
+
 	if (skill_id == AL_TELEPORT && sd->autocast.type == AUTOCAST_ITEM && sd->autocast.skill_lv > 2)
 		return 0; // Teleport level 3 and higher bypasses this check if cast by itemskill() script commands.
 
