@@ -3395,6 +3395,32 @@ static void set_reg_instance_num(struct script_state *st, int64 num, const char 
 }
 
 /**
+ * Validates if a variable is permanent (stored in database) by passed variable name.
+ *
+ * @param name The variable name to validate.
+ * @return True if variable is permanent, otherwise false.
+ *
+ **/
+static bool script_is_permanent_variable(const char *name)
+{
+	nullpo_retr(false, name);
+
+	if (strlen(name) == 0)
+		return false;
+
+	if (ISALNUM(name[0]) != 0)
+		return true; // Permanent characater variable.
+
+	if (name[0] == '#')
+		return true; // Permanent (global) account variable.
+
+	if (strlen(name) > 1 && name[0] == '$' && ISALNUM(name[1]) != 0)
+		return true; // Permanent server variable.
+
+	return false;
+}
+
+/**
  * Stores the value of a script variable
  *
  * @param st    current script state.
@@ -28250,6 +28276,7 @@ void script_defaults(void)
 	script->load_parameters = script_load_parameters;
 	script->print_line = script_print_line;
 	script->errorwarning_sub = script_errorwarning_sub;
+	script->is_permanent_variable = script_is_permanent_variable;
 	script->set_reg = set_reg;
 	script->set_reg_ref_str = set_reg_npcscope_str;
 	script->set_reg_pc_ref_str = set_reg_pc_ref_str;
