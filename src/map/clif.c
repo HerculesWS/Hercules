@@ -943,12 +943,11 @@ static int clif_clearunit_delayed_sub(int tid, int64 tick, int id, intptr_t data
 
 static void clif_clearunit_delayed(struct block_list *bl, enum clr_type type, int64 tick)
 {
-	struct block_list *tbl;
-
 	nullpo_retv(bl);
-	tbl = ers_alloc(clif->delay_clearunit_ers, struct block_list);
-	memcpy (tbl, bl, sizeof (struct block_list));
-	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)tbl);
+	Assert_retv(bl->type == BL_MOB);
+	struct mob_data *md = ers_alloc(clif->delay_clearunit_ers, struct mob_data);
+	memcpy (md, bl, sizeof (struct mob_data));
+	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)md);
 }
 
 /// Gets weapon view info from sd's inventory_data and points (*rhand,*lhand)
@@ -24192,7 +24191,7 @@ static int do_init_clif(bool minimal)
 	timer->add_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
 	timer->add_func_list(clif->delayquit, "clif_delayquit");
 
-	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
+	clif->delay_clearunit_ers = ers_new(sizeof(struct mob_data), "clif.c::delay_clearunit_ers", ERS_OPT_CLEAR);
 	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
 
 #if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
