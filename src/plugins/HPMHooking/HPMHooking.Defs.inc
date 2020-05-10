@@ -6988,6 +6988,8 @@ typedef const char* (*HPMHOOK_pre_script_print_line) (StringBuf **buf, const cha
 typedef const char* (*HPMHOOK_post_script_print_line) (const char* retVal___, StringBuf *buf, const char *p, const char *mark, int line);
 typedef void (*HPMHOOK_pre_script_errorwarning_sub) (StringBuf **buf, const char **src, const char **file, int *start_line, const char **error_msg, const char **error_pos);
 typedef void (*HPMHOOK_post_script_errorwarning_sub) (StringBuf *buf, const char *src, const char *file, int start_line, const char *error_msg, const char *error_pos);
+typedef bool (*HPMHOOK_pre_script_is_permanent_variable) (const char **name);
+typedef bool (*HPMHOOK_post_script_is_permanent_variable) (bool retVal___, const char *name);
 typedef int (*HPMHOOK_pre_script_set_reg) (struct script_state **st, struct map_session_data **sd, int64 *num, const char **name, const void **value, struct reg_db **ref);
 typedef int (*HPMHOOK_post_script_set_reg) (int retVal___, struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
 typedef void (*HPMHOOK_pre_script_set_reg_ref_str) (struct script_state **st, struct reg_db **n, int64 *num, const char **name, const char **str);

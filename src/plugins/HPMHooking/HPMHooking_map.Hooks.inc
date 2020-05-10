@@ -73473,6 +73473,33 @@ void HP_script_errorwarning_sub(StringBuf *buf, const char *src, const char *fil
 	}
 	return;
 }
+bool HP_script_is_permanent_variable(const char *name) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_script_is_permanent_variable_pre > 0) {
+		bool (*preHookFunc) (const char **name);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_is_permanent_variable_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_script_is_permanent_variable_pre[hIndex].func;
+			retVal___ = preHookFunc(&name);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.is_permanent_variable(name);
+	}
+	if (HPMHooks.count.HP_script_is_permanent_variable_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *name);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_script_is_permanent_variable_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_script_is_permanent_variable_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, name);
+		}
+	}
+	return retVal___;
+}
 int HP_script_set_reg(struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref) {
 	int hIndex = 0;
 	int retVal___ = 0;

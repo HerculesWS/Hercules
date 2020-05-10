@@ -2825,6 +2825,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->load_parameters, HP_script_load_parameters) },
 	{ HP_POP(script->print_line, HP_script_print_line) },
 	{ HP_POP(script->errorwarning_sub, HP_script_errorwarning_sub) },
+	{ HP_POP(script->is_permanent_variable, HP_script_is_permanent_variable) },
 	{ HP_POP(script->set_reg, HP_script_set_reg) },
 	{ HP_POP(script->set_reg_ref_str, HP_script_set_reg_ref_str) },
 	{ HP_POP(script->set_reg_pc_ref_str, HP_script_set_reg_pc_ref_str) },

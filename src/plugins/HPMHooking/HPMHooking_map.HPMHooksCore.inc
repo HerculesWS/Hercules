@@ -5518,6 +5518,8 @@ struct {
 	struct HPMHookPoint *HP_script_print_line_post;
 	struct HPMHookPoint *HP_script_errorwarning_sub_pre;
 	struct HPMHookPoint *HP_script_errorwarning_sub_post;
+	struct HPMHookPoint *HP_script_is_permanent_variable_pre;
+	struct HPMHookPoint *HP_script_is_permanent_variable_post;
 	struct HPMHookPoint *HP_script_set_reg_pre;
 	struct HPMHookPoint *HP_script_set_reg_post;
 	struct HPMHookPoint *HP_script_set_reg_ref_str_pre;
@@ -12417,6 +12419,8 @@ struct {
 	int HP_script_print_line_post;
 	int HP_script_errorwarning_sub_pre;
 	int HP_script_errorwarning_sub_post;
+	int HP_script_is_permanent_variable_pre;
+	int HP_script_is_permanent_variable_post;
 	int HP_script_set_reg_pre;
 	int HP_script_set_reg_post;
 	int HP_script_set_reg_ref_str_pre;
