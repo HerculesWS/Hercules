@@ -218,13 +218,13 @@ static int intif_saveregistry(struct map_session_data *sd)
 			plen += 1;
 
 			if( p->value ) {
-				len = strlen(p->value)+1;
+				len = strlen(p->value);
 
-				WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
+				WFIFOB(inter_fd, plen) = (unsigned char)len; // Won't be higher; the column size is 255.
 				plen += 1;
 
-				safestrncpy(WFIFOP(inter_fd,plen), p->value, len);
-				plen += len;
+				safestrncpy(WFIFOP(inter_fd, plen), p->value, len + 1);
+				plen += len + 1;
 			} else {
 				script->reg_destroy_single(sd,key.i64,&p->flag);
 			}
@@ -1025,7 +1025,7 @@ static void intif_parse_Registers(int fd)
 		 * { keyLength(B), key(<keyLength>), index(L), valLength(B), val(<valLength>) }
 		 **/
 		if (type) {
-			char sval[254];
+			char sval[SCRIPT_STRING_VAR_LENGTH + 1];
 			for (i = 0; i < max; i++) {
 				int len = RFIFOB(fd, cursor);
 				safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
@@ -1035,8 +1035,8 @@ static void intif_parse_Registers(int fd)
 				cursor += 4;
 
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
-				cursor += len + 1;
+				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				cursor += len + 2;
 
 				script->set_reg(NULL,sd,reference_uid(script->add_variable(key), index), key, sval, NULL);
 			}

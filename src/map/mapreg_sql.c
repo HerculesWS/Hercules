@@ -176,9 +176,9 @@ static bool mapreg_setregstr(int64 uid, const char *str)
 
 			if(name[1] != '@' && !mapreg->skip_insert) { //put returned null, so we must insert.
 				char tmp_str[(SCRIPT_VARNAME_LENGTH+1)*2+1];
-				char tmp_str2[255*2+1];
+				char tmp_str2[SCRIPT_STRING_VAR_LENGTH * 2 + 1];
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, SCRIPT_VARNAME_LENGTH+1));
-				SQL->EscapeStringLen(map->mysql_handle, tmp_str2, str, strnlen(str, 255));
+				SQL->EscapeStringLen(map->mysql_handle, tmp_str2, str, strnlen(str, SCRIPT_STRING_VAR_LENGTH));
 				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%u','%s')", mapreg->table, tmp_str, i, tmp_str2) )
 					Sql_ShowDebug(map->mysql_handle);
 			}
@@ -203,7 +203,7 @@ static void script_load_mapreg(void)
 	struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
 	char varname[SCRIPT_VARNAME_LENGTH+1];
 	int index;
-	char value[255+1];
+	char value[SCRIPT_STRING_VAR_LENGTH + 1];
 	uint32 length;
 
 	if ( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `varname`, `index`, `value` FROM `%s`", mapreg->table)
@@ -261,8 +261,8 @@ static void script_save_mapreg(void)
 					if( SQL_ERROR == SQL->Query(map->mysql_handle, "UPDATE `%s` SET `value`='%d' WHERE `varname`='%s' AND `index`='%d' LIMIT 1", mapreg->table, m->u.i, name, i) )
 						Sql_ShowDebug(map->mysql_handle);
 				} else {
-					char tmp_str2[2*255+1];
-					SQL->EscapeStringLen(map->mysql_handle, tmp_str2, m->u.str, safestrnlen(m->u.str, 255));
+					char tmp_str2[SCRIPT_STRING_VAR_LENGTH * 2 + 1];
+					SQL->EscapeStringLen(map->mysql_handle, tmp_str2, m->u.str, safestrnlen(m->u.str, SCRIPT_STRING_VAR_LENGTH));
 					if( SQL_ERROR == SQL->Query(map->mysql_handle, "UPDATE `%s` SET `value`='%s' WHERE `varname`='%s' AND `index`='%d' LIMIT 1", mapreg->table, tmp_str2, name, i) )
 						Sql_ShowDebug(map->mysql_handle);
 				}

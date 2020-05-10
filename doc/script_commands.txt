@@ -536,7 +536,9 @@ variables or an empty string ("", nothing between the quotes) for string
 variables. Once you set it to that, the variable is as good as forgotten
 forever, and no trace remains of it even if it was stored with character
 or account data. The maximum length of variable name including prefix and
-suffix is 32.
+suffix is 32. Permanent string variables (name$, $name$, #name$, ##name$)
+can store text with a maximum length of 255 characters. All other string
+type variables have no such limitation.
 
 Some variables are special, that is, they are already defined for you by
 the scripting engine. You can see the full list somewhere in
@@ -1710,7 +1712,8 @@ The default value of 'min' and 'max' can be set with 'input_min_value' and
 For numeric inputs the value is capped to the range [min, max]. Returns 1
 if the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is
-shorter than 'min' and 0 otherwise.
+shorter than 'min' and 0 otherwise. Note that an input string has a maximum
+length of 70 characters.
 
 ---------------------------------------
 

@@ -8916,13 +8916,17 @@ ACMD(accinfo)
 /* [Ind] */
 ACMD(set)
 {
-	char reg[SCRIPT_VARNAME_LENGTH+1], val[254];
+	char reg[SCRIPT_VARNAME_LENGTH + 1];
+	char val[SCRIPT_STRING_VAR_LENGTH + 1];
 	struct script_data* data;
 	int toset = 0;
 	bool is_str = false;
 	size_t len;
 
-	if (!*message || (toset = sscanf(message, "%32s %253[^\n]", reg, val)) < 1) {
+	char format[20];
+	safesnprintf(format, sizeof(format), "%%%ds %%%d[^\\n]", SCRIPT_VARNAME_LENGTH, SCRIPT_STRING_VAR_LENGTH);
+
+	if (*message == '\0' || (toset = sscanf(message, format, reg, val)) < 1) {
 		clif->message(fd, msg_fd(fd,1367)); // Usage: @set <variable name> <value>
 		clif->message(fd, msg_fd(fd,1368)); // Usage: ex. "@set PoringCharVar 50"
 		clif->message(fd, msg_fd(fd,1369)); // Usage: ex. "@set PoringCharVarSTR$ Super Duper String"
