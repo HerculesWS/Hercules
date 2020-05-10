@@ -60,7 +60,11 @@ struct mapreg_interface {
 	char* (*readregstr) (int64 uid);
 	bool (*setreg) (int64 uid, int val);
 	bool (*setregstr) (int64 uid, const char *str);
+	void (*load_num_db) (void);
+	void (*load_str_db) (void);
 	void (*load) (void);
+	void (*save_num_db) (const char *name, unsigned int index, int value);
+	void (*save_str_db) (const char *name, unsigned int index, const char *value);
 	void (*save) (void);
 	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*destroyreg) (union DBKey key, struct DBData *data, va_list ap);
