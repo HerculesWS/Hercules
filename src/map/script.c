@@ -27918,6 +27918,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMENABLEDNPC_EQUIP", ITEMENABLEDNPC_EQUIP, false, false);
 	script->set_constant("ITEMENABLEDNPC_CONSUME", ITEMENABLEDNPC_CONSUME, false, false);
 
+	script->constdb_comment("NPC allowed skill use constants");
+	script->set_constant("SKILLENABLEDNPC_NONE", SKILLENABLEDNPC_NONE, false, false);
+	script->set_constant("SKILLENABLEDNPC_SELF", SKILLENABLEDNPC_SELF, false, false);
+	script->set_constant("SKILLENABLEDNPC_ALL", SKILLENABLEDNPC_ALL, false, false);
+
 	script->constdb_comment("private airship responds");
 	script->set_constant("P_AIRSHIP_NONE", P_AIRSHIP_NONE, false, false);
 	script->set_constant("P_AIRSHIP_RETRY", P_AIRSHIP_RETRY, false, false);

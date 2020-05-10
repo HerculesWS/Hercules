@@ -12832,7 +12832,11 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
-	if (sd->npc_id || sd->state.workinprogress & 1) {
+	bool allow_self_skill = ((tmp & INF_SELF_SKILL) != 0 && (skill->get_nk(skill_id) & NK_NO_DAMAGE) != 0);
+	allow_self_skill = (allow_self_skill && battle_config.skill_enabled_npc == SKILLENABLEDNPC_SELF);
+
+	if ((sd->npc_id != 0 && !allow_self_skill && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -12841,7 +12845,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		return;
 	}
 
-	if (pc_cant_act(sd)
+	if (pc_cant_act_except_npc(sd)
 		&& skill_id != RK_REFRESH
 		&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN))
 		&& (sd->state.storage_flag != STORAGE_FLAG_CLOSED && !(tmp&INF_SELF_SKILL)) // SELF skills can be used with the storage open, issue: 8027
@@ -12976,7 +12980,8 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		return;
 	}
 
-	if (sd->state.workinprogress & 1) {
+	if ((sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -13046,7 +13051,7 @@ static void clif_parse_UseSkillToPos(int fd, struct map_session_data *sd) __attr
 /// There are various variants of this packet, some of them have padding between fields.
 static void clif_parse_UseSkillToPos(int fd, struct map_session_data *sd)
 {
-	if (pc_cant_act(sd))
+	if (pc_cant_act_except_npc(sd))
 		return;
 	if (pc_issit(sd))
 		return;
@@ -13067,7 +13072,7 @@ static void clif_parse_UseSkillToPosMoreInfo(int fd, struct map_session_data *sd
 /// There are various variants of this packet, some of them have padding between fields.
 static void clif_parse_UseSkillToPosMoreInfo(int fd, struct map_session_data *sd)
 {
-	if (pc_cant_act(sd))
+	if (pc_cant_act_except_npc(sd))
 		return;
 	if (pc_issit(sd))
 		return;
@@ -13096,7 +13101,8 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 		return;
 
 	// It is possible to use teleport with the storage window open issue:8027
-	if (pc_cant_act(sd) && (sd->state.storage_flag == STORAGE_FLAG_CLOSED && skill_id != AL_TELEPORT)) {
+	if ((pc_cant_act_except_npc(sd) && sd->state.storage_flag == STORAGE_FLAG_CLOSED && skill_id != AL_TELEPORT)
+	    || (sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)) {
 		clif_menuskill_clear(sd);
 		return;
 	}

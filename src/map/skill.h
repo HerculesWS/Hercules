@@ -1733,6 +1733,13 @@ enum autocast_type {
 	AUTOCAST_ITEM, // Used for itemskill() script command.
 };
 
+/** Constants for allowed skill use while interacting with NPC. **/
+enum skill_enabled_npc_flags {
+	SKILLENABLEDNPC_NONE = 0, //!< Don't allow using any skills while interacting with NPC.
+	SKILLENABLEDNPC_SELF = 1, //!< Allow using non-damaging self skills while interacting with NPC.
+	SKILLENABLEDNPC_ALL  = 2, //!< Allow using all skills while interacting with NPC.
+};
+
 /**
  * Structures
  **/
