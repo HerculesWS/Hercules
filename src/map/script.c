@@ -27864,6 +27864,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("PCBLOCK_COMMANDS", PCBLOCK_COMMANDS, false, false);
 	script->set_constant("PCBLOCK_NPC",      PCBLOCK_NPC,      false, false);
 
+	script->constdb_comment("NPC item action constants");
+	script->set_constant("ITEMENABLEDNPC_NONE", ITEMENABLEDNPC_NONE, false, false);
+	script->set_constant("ITEMENABLEDNPC_EQUIP", ITEMENABLEDNPC_EQUIP, false, false);
+	script->set_constant("ITEMENABLEDNPC_CONSUME", ITEMENABLEDNPC_CONSUME, false, false);
+
 	script->constdb_comment("private airship responds");
 	script->set_constant("P_AIRSHIP_NONE", P_AIRSHIP_NONE, false, false);
 	script->set_constant("P_AIRSHIP_RETRY", P_AIRSHIP_RETRY, false, false);

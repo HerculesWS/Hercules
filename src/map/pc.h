@@ -103,6 +103,13 @@ enum pc_checkitem_types {
 	PCCHECKITEM_GSTORAGE  = 0x8
 };
 
+/** Bit flags for allowed item actions while interacting with NPC. **/
+enum item_enabled_npc_flags {
+	ITEMENABLEDNPC_NONE    = 0x0, //!< Don't allow any item actions while interacting with NPC.
+	ITEMENABLEDNPC_EQUIP   = 0x1, //!< Allow changing equipment while interacting with NPC.
+	ITEMENABLEDNPC_CONSUME = 0x2, //!< Allow consuming usable items while interacting with NPC.
+};
+
 struct weapon_data {
 	int atkmods[3];
 BEGIN_ZEROED_BLOCK; // all the variables within this block get zero'ed in each call of status_calc_pc
