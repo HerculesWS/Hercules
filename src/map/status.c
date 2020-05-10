@@ -866,6 +866,10 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_WEDDING] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_ARMORPROPERTY] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ARMOR_RESIST] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_WATER] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_GROUND] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_FIRE] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_RESIST_PROPERTY_WIND] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ATKER_BLOOD] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_WALKSPEED] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_TARGET_BLOOD] |= SCB_ALL;
@@ -3029,6 +3033,22 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 			sd->subele[ELE_EARTH] += sc->data[SC_ARMOR_RESIST]->val2;
 			sd->subele[ELE_FIRE] += sc->data[SC_ARMOR_RESIST]->val3;
 			sd->subele[ELE_WIND] += sc->data[SC_ARMOR_RESIST]->val4;
+		}
+		if (sc->data[SC_RESIST_PROPERTY_WATER] != NULL) { // Coldproof Potion
+			sd->subele[ELE_WATER] += sc->data[SC_RESIST_PROPERTY_WATER]->val1;
+			sd->subele[ELE_WIND] += sc->data[SC_RESIST_PROPERTY_WATER]->val2;
+		}
+		if (sc->data[SC_RESIST_PROPERTY_GROUND] != NULL) { // Earthproof Potion
+			sd->subele[ELE_EARTH] += sc->data[SC_RESIST_PROPERTY_GROUND]->val1;
+			sd->subele[ELE_FIRE] += sc->data[SC_RESIST_PROPERTY_GROUND]->val2;
+		}
+		if (sc->data[SC_RESIST_PROPERTY_FIRE] != NULL) { // Fireproof Potion
+			sd->subele[ELE_FIRE] += sc->data[SC_RESIST_PROPERTY_FIRE]->val1;
+			sd->subele[ELE_WATER] += sc->data[SC_RESIST_PROPERTY_FIRE]->val2;
+		}
+		if (sc->data[SC_RESIST_PROPERTY_WIND] != NULL) { // Thunderproof Potion
+			sd->subele[ELE_WIND] += sc->data[SC_RESIST_PROPERTY_WIND]->val1;
+			sd->subele[ELE_EARTH] += sc->data[SC_RESIST_PROPERTY_WIND]->val2;
 		}
 		if (sc->data[SC_FIRE_CLOAK_OPTION]) {
 			i = sc->data[SC_FIRE_CLOAK_OPTION]->val2;
@@ -7754,6 +7774,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_ENCHANTARMS:
 			case SC_ARMORPROPERTY:
 			case SC_ARMOR_RESIST:
+			case SC_RESIST_PROPERTY_WATER:
+			case SC_RESIST_PROPERTY_GROUND:
+			case SC_RESIST_PROPERTY_FIRE:
+			case SC_RESIST_PROPERTY_WIND:
 				break;
 			case SC_GOSPEL:
 				//Must not override a casting gospel char.
@@ -8702,6 +8726,210 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				//associated, and yet are not wrong/unknown. [Skotlex]
 				//break;
 				}
+			case SC_ARMOR_RESIST: {
+				struct status_change_entry *sce_water = sc->data[SC_RESIST_PROPERTY_WATER];
+				struct status_change_entry *sce_ground = sc->data[SC_RESIST_PROPERTY_GROUND];
+				struct status_change_entry *sce_fire = sc->data[SC_RESIST_PROPERTY_FIRE];
+				struct status_change_entry *sce_wind = sc->data[SC_RESIST_PROPERTY_WIND];
+
+				// Water
+				int sum_water = val1 + ((sce_fire != NULL) ? sce_fire->val2 : 0);
+				bool show_icon = true;
+				if (sce_water != NULL && sce_water->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_water->timer);
+					if (td != NULL) {
+						sum_water += sce_water->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_water - val1 > 0)
+							show_icon = false;
+					}
+				}
+				if (val1 > 0 && sum_water > 0 && show_icon) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				} else if (sum_water <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WATER));
+				}
+
+				// Ground
+				int sum_ground = val2 + ((sce_wind != NULL) ? sce_wind->val2 : 0);
+				show_icon = true;
+				if (sce_ground != NULL && sce_ground->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_ground->timer);
+					if (td != NULL) {
+						sum_ground += sce_ground->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_ground - val2 > 0)
+							show_icon = false;
+					}
+				}
+				if (val2 > 0 && sum_ground > 0 && show_icon) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				} else if (sum_ground <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_GROUND));
+				}
+
+				// Fire
+				int sum_fire = val3 + ((sce_ground != NULL) ? sce_ground->val2 : 0);
+				show_icon = true;
+				if (sce_fire != NULL && sce_fire->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_fire->timer);
+					if (td != NULL) {
+						sum_fire += sce_fire->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_fire - val3 > 0)
+							show_icon = false;
+					}
+				}
+				if (val3 > 0 && sum_fire > 0 && show_icon) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				} else if (sum_fire <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_FIRE));
+				}
+
+				// Wind
+				int sum_wind = val4 + ((sce_water != NULL) ? sce_water->val2 : 0);
+				show_icon = true;
+				if (sce_wind != NULL && sce_wind->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_wind->timer);
+					if (td != NULL) {
+						sum_wind += sce_wind->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_wind - val4 > 0)
+							show_icon = false;
+					}
+				}
+				if (val4 > 0 && sum_wind > 0 && show_icon) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
+					clif->status_change(bl, sc_icn, sc_typ, 1, total_tick, 0, 0, 0);
+				} else if (sum_wind <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WIND));
+				}
+
+				break;
+			}
+			case SC_RESIST_PROPERTY_WATER: {
+				struct status_change_entry *sce_all = sc->data[SC_ARMOR_RESIST];
+				struct status_change_entry *sce_fire = sc->data[SC_RESIST_PROPERTY_FIRE];
+				struct status_change_entry *sce_wind = sc->data[SC_RESIST_PROPERTY_WIND];
+
+				// Water
+				int sum_water = val1 + ((sce_fire != NULL) ? sce_fire->val2 : 0);
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_water += sce_all->val1;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_water - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
+				}
+				if (sum_water <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WATER));
+					flag |= SCFLAG_NOICON;
+				}
+
+				// Wind
+				int sum_wind = val2 + ((sce_wind != NULL) ? sce_wind->val1 : 0);
+				sum_wind += (sce_all != NULL) ? sce_all->val4 : 0;
+				if (sum_wind <= 0)
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WIND));
+
+				break;
+			}
+			case SC_RESIST_PROPERTY_GROUND: {
+				struct status_change_entry *sce_all = sc->data[SC_ARMOR_RESIST];
+				struct status_change_entry *sce_wind = sc->data[SC_RESIST_PROPERTY_WIND];
+				struct status_change_entry *sce_fire = sc->data[SC_RESIST_PROPERTY_FIRE];
+
+				// Ground
+				int sum_ground = val1 + ((sce_wind != NULL) ? sce_wind->val2 : 0);
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_ground += sce_all->val2;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_ground - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
+				}
+				if (sum_ground <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_GROUND));
+					flag |= SCFLAG_NOICON;
+				}
+
+				// Fire
+				int sum_fire = val2 + ((sce_fire != NULL) ? sce_fire->val1 : 0);
+				sum_fire += (sce_all != NULL) ? sce_all->val3 : 0;
+				if (sum_fire <= 0)
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_FIRE));
+
+				break;
+			}
+			case SC_RESIST_PROPERTY_FIRE: {
+				struct status_change_entry *sce_all = sc->data[SC_ARMOR_RESIST];
+				struct status_change_entry *sce_ground = sc->data[SC_RESIST_PROPERTY_GROUND];
+				struct status_change_entry *sce_water = sc->data[SC_RESIST_PROPERTY_WATER];
+
+				// Fire
+				int sum_fire = val1 + ((sce_ground != NULL) ? sce_ground->val2 : 0);
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_fire += sce_all->val3;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_fire - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
+				}
+				if (sum_fire <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_FIRE));
+					flag |= SCFLAG_NOICON;
+				}
+
+				// Water
+				int sum_water = val2 + ((sce_water != NULL) ? sce_water->val1 : 0);
+				sum_water += (sce_all != NULL) ? sce_all->val1 : 0;
+				if (sum_water <= 0)
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WATER));
+
+				break;
+			}
+			case SC_RESIST_PROPERTY_WIND: {
+				struct status_change_entry *sce_all = sc->data[SC_ARMOR_RESIST];
+				struct status_change_entry *sce_water = sc->data[SC_RESIST_PROPERTY_WATER];
+				struct status_change_entry *sce_ground = sc->data[SC_RESIST_PROPERTY_GROUND];
+
+				// Wind
+				int sum_wind = val1 + ((sce_water != NULL) ? sce_water->val2 : 0);
+				if (sce_all != NULL && sce_all->timer != INVALID_TIMER) {
+					const struct TimerData *td = timer->get(sce_all->timer);
+					if (td != NULL) {
+						sum_wind += sce_all->val4;
+						int left = (int)DIFF_TICK(td->tick, timer->gettick());
+						if (left > total_tick && sum_wind - val1 > 0)
+							flag |= SCFLAG_NOICON;
+					}
+				}
+				if (sum_wind <= 0) {
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WIND));
+					flag |= SCFLAG_NOICON;
+				}
+
+				// Ground
+				int sum_ground = val2 + ((sce_ground != NULL) ? sce_ground->val1 : 0);
+				sum_ground += (sce_all != NULL) ? sce_all->val2 : 0;
+				if (sum_ground <= 0)
+					clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_GROUND));
+
+				break;
+			}
 			case SC_MER_FLEE:
 			case SC_MER_ATK:
 			case SC_MER_HIT:
@@ -10628,6 +10856,9 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 
 	vd = status->get_viewdata(bl);
 	calc_flag = status->dbs->ChangeFlagTable[type];
+
+	bool remove_icon = true;
+
 	switch(type) {
 		case SC_GRANITIC_ARMOR:
 		{
@@ -11059,6 +11290,202 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 					break;
 			}
 			break;
+		case SC_ARMOR_RESIST: {
+			struct status_change_entry *sce_water = sc->data[SC_RESIST_PROPERTY_WATER];
+			struct status_change_entry *sce_ground = sc->data[SC_RESIST_PROPERTY_GROUND];
+			struct status_change_entry *sce_fire = sc->data[SC_RESIST_PROPERTY_FIRE];
+			struct status_change_entry *sce_wind = sc->data[SC_RESIST_PROPERTY_WIND];
+
+			// Water
+			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WATER));
+			if (sce_water != NULL && sce_water->timer != INVALID_TIMER) {
+				int sum_water = sce_water->val1 + ((sce_fire != NULL) ? sce_fire->val2 : 0);
+				const struct TimerData *td = timer->get(sce_water->timer);
+				if (td != NULL && sce_water->val1 > 0 && sum_water > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sce_water->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			// Ground
+			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_GROUND));
+			if (sce_ground != NULL && sce_ground->timer != INVALID_TIMER) {
+				int sum_ground = sce_ground->val1 + ((sce_wind != NULL) ? sce_wind->val2 : 0);
+				const struct TimerData *td = timer->get(sce_ground->timer);
+				if (td != NULL && sce_ground->val1 > 0 && sum_ground > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sce_ground->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			// Fire
+			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_FIRE));
+			if (sce_fire != NULL && sce_fire->timer != INVALID_TIMER) {
+				int sum_fire = sce_fire->val1 + ((sce_ground != NULL) ? sce_ground->val2 : 0);
+				const struct TimerData *td = timer->get(sce_fire->timer);
+				if (td != NULL && sce_fire->val1 > 0 && sum_fire > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sce_fire->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			// Wind
+			clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_RESIST_PROPERTY_WIND));
+			if (sce_wind != NULL && sce_wind->timer != INVALID_TIMER) {
+				int sum_wind = sce_wind->val1 + ((sce_water != NULL) ? sce_water->val2 : 0);
+				const struct TimerData *td = timer->get(sce_wind->timer);
+				if (td != NULL && sce_wind->val1 > 0 && sum_wind > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sce_wind->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			break;
+		}
+		case SC_RESIST_PROPERTY_WATER:
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
+				// Water
+				int sum_water = sc->data[SC_ARMOR_RESIST]->val1;
+				if (sc->data[SC_RESIST_PROPERTY_FIRE] != NULL)
+					sum_water += sc->data[SC_RESIST_PROPERTY_FIRE]->val2;
+				if (sc->data[SC_ARMOR_RESIST]->val1 > 0 && sum_water > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+					remove_icon = false;
+				}
+
+				// Wind
+				int sum_wind = sc->data[SC_ARMOR_RESIST]->val4;
+				if (sc->data[SC_RESIST_PROPERTY_WIND] != NULL)
+					sum_wind += sc->data[SC_RESIST_PROPERTY_WIND]->val1;
+				if (sc->data[SC_ARMOR_RESIST]->val4 > 0 && sum_wind > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			break;
+		case SC_RESIST_PROPERTY_GROUND:
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
+				// Ground
+				int sum_ground = sc->data[SC_ARMOR_RESIST]->val2;
+				if (sc->data[SC_RESIST_PROPERTY_WIND] != NULL)
+					sum_ground += sc->data[SC_RESIST_PROPERTY_WIND]->val2;
+				if (sc->data[SC_ARMOR_RESIST]->val2 > 0 && sum_ground > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+					remove_icon = false;
+				}
+
+				// Fire
+				int sum_fire = sc->data[SC_ARMOR_RESIST]->val3;
+				if (sc->data[SC_RESIST_PROPERTY_FIRE] != NULL)
+					sum_fire += sc->data[SC_RESIST_PROPERTY_FIRE]->val1;
+				if (sc->data[SC_ARMOR_RESIST]->val3 > 0 && sum_fire > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			break;
+		case SC_RESIST_PROPERTY_FIRE:
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
+				// Fire
+				int sum_fire = sc->data[SC_ARMOR_RESIST]->val3;
+				if (sc->data[SC_RESIST_PROPERTY_GROUND] != NULL)
+					sum_fire += sc->data[SC_RESIST_PROPERTY_GROUND]->val2;
+				if (sc->data[SC_ARMOR_RESIST]->val3 > 0 && sum_fire > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_FIRE);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_FIRE);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+					remove_icon = false;
+				}
+
+				// Water
+				int sum_water = sc->data[SC_ARMOR_RESIST]->val1;
+				if (sc->data[SC_RESIST_PROPERTY_WATER] != NULL)
+					sum_water += sc->data[SC_RESIST_PROPERTY_WATER]->val1;
+				if (sc->data[SC_ARMOR_RESIST]->val1 > 0 && sum_water > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WATER);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WATER);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			break;
+		case SC_RESIST_PROPERTY_WIND:
+			if (sc->data[SC_ARMOR_RESIST] != NULL && sc->data[SC_ARMOR_RESIST]->timer != INVALID_TIMER) {
+				const struct TimerData *td = timer->get(sc->data[SC_ARMOR_RESIST]->timer);
+				if (td == NULL)
+					break;
+
+				// Wind
+				int sum_wind = sc->data[SC_ARMOR_RESIST]->val4;
+				if (sc->data[SC_RESIST_PROPERTY_WATER] != NULL)
+					sum_wind += sc->data[SC_RESIST_PROPERTY_WATER]->val2;
+				if (sc->data[SC_ARMOR_RESIST]->val4 > 0 && sum_wind > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_WIND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_WIND);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+					remove_icon = false;
+				}
+
+				// Ground
+				int sum_ground = sc->data[SC_ARMOR_RESIST]->val2;
+				if (sc->data[SC_RESIST_PROPERTY_GROUND] != NULL)
+					sum_ground += sc->data[SC_RESIST_PROPERTY_GROUND]->val1;
+				if (sc->data[SC_ARMOR_RESIST]->val2 > 0 && sum_ground > 0) {
+					int sc_icn = status->get_sc_icon(SC_RESIST_PROPERTY_GROUND);
+					int sc_typ = status->get_sc_relevant_bl_types(SC_RESIST_PROPERTY_GROUND);
+					int sc_tck = (int)DIFF_TICK(td->tick, timer->gettick());
+					int sc_ttl = sc->data[SC_ARMOR_RESIST]->total_tick;
+					clif->status_change_sub(bl, sc_icn, sc_typ, 1, sc_tck, sc_ttl, 0, 0, 0);
+				}
+			}
+
+			break;
 	}
 
 	opt_flag = 1;
@@ -11272,7 +11699,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 #endif
 
 	//On Aegis, when turning off a status change, first goes the sc packet, then the option packet.
-	clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(type));
+	if (remove_icon)
+		clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(type));
 
 	if( opt_flag&8 ) //bugreport:681
 		clif->changeoption2(bl);
