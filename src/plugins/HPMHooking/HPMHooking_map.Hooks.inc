@@ -50916,33 +50916,6 @@ void HP_mapreg_reload(void) {
 	}
 	return;
 }
-bool HP_mapreg_config_read(const char *filename, const struct config_setting_t *config, bool imported) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_mapreg_config_read_pre > 0) {
-		bool (*preHookFunc) (const char **filename, const struct config_setting_t **config, bool *imported);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_config_read_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mapreg_config_read_pre[hIndex].func;
-			retVal___ = preHookFunc(&filename, &config, &imported);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.mapreg.config_read(filename, config, imported);
-	}
-	if (HPMHooks.count.HP_mapreg_config_read_post > 0) {
-		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_setting_t *config, bool imported);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_config_read_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mapreg_config_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, filename, config, imported);
-		}
-	}
-	return retVal___;
-}
 /* md5_interface */
 void HP_md5_string(const char *string, char *output) {
 	int hIndex = 0;

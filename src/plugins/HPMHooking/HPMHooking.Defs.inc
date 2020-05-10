@@ -5246,8 +5246,6 @@ typedef int (*HPMHOOK_pre_mapreg_destroyreg) (union DBKey *key, struct DBData **
 typedef int (*HPMHOOK_post_mapreg_destroyreg) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef void (*HPMHOOK_pre_mapreg_reload) (void);
 typedef void (*HPMHOOK_post_mapreg_reload) (void);
-typedef bool (*HPMHOOK_pre_mapreg_config_read) (const char **filename, const struct config_setting_t **config, bool *imported);
-typedef bool (*HPMHOOK_post_mapreg_config_read) (bool retVal___, const char *filename, const struct config_setting_t *config, bool imported);
 #endif // MAP_MAPREG_H
 #ifdef COMMON_MD5CALC_H /* md5 */
 typedef void (*HPMHOOK_pre_md5_string) (const char **string, char **output);

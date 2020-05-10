@@ -3850,8 +3850,6 @@ struct {
 	struct HPMHookPoint *HP_mapreg_destroyreg_post;
 	struct HPMHookPoint *HP_mapreg_reload_pre;
 	struct HPMHookPoint *HP_mapreg_reload_post;
-	struct HPMHookPoint *HP_mapreg_config_read_pre;
-	struct HPMHookPoint *HP_mapreg_config_read_post;
 	struct HPMHookPoint *HP_md5_string_pre;
 	struct HPMHookPoint *HP_md5_string_post;
 	struct HPMHookPoint *HP_md5_binary_pre;
@@ -10751,8 +10749,6 @@ struct {
 	int HP_mapreg_destroyreg_post;
 	int HP_mapreg_reload_pre;
 	int HP_mapreg_reload_post;
-	int HP_mapreg_config_read_pre;
-	int HP_mapreg_config_read_post;
 	int HP_md5_string_pre;
 	int HP_md5_string_post;
 	int HP_md5_binary_pre;
