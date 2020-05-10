@@ -4486,6 +4486,10 @@ static bool inter_config_read_database_names(const char *filename, const struct 
 		ShowError("inter_config_read: inter_configuration/database_names/registry was not found in %s!\n", filename);
 		return false;
 	}
+
+	if (!mapreg->config_read_registry(filename, setting, imported))
+		retval = false;
+
 	return retval;
 }
 

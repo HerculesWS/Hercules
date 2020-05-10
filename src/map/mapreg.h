@@ -48,6 +48,8 @@ struct mapreg_interface {
 	struct eri *ers; //[Ind/Hercules]
 	/* */
 	char table[32];
+	char num_db[32]; //!< Name of SQL table which holds permanent global integer variables.
+	char str_db[32]; //!< Name of SQL table which holds permanent global string variables.
 	/* */
 	bool dirty; ///< Whether there are modified regs to be saved
 	/* */
@@ -63,6 +65,7 @@ struct mapreg_interface {
 	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*destroyreg) (union DBKey key, struct DBData *data, va_list ap);
 	void (*reload) (void);
+	bool (*config_read_registry) (const char *filename, const struct config_setting_t *config, bool imported);
 	bool (*config_read) (const char *filename, const struct config_setting_t *config, bool imported);
 };
 
