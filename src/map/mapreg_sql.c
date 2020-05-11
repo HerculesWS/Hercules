@@ -68,90 +68,142 @@ static char *mapreg_readregstr(int64 uid)
 }
 
 /**
- * Modifies the value of an integer variable.
+ * Sets the value of a global integer variable.
  *
- * @param uid variable's unique identifier
- * @param val new value
- * @retval true value was successfully set
- */
-static bool mapreg_setreg(int64 uid, int val)
+ * @param uid The variable's unique ID.
+ * @param name The variable's name.
+ * @param index The variable's array index.
+ * @param value The variable's new value.
+ * @return True on success, otherwise false.
+ *
+ **/
+static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, int value)
 {
-	struct mapreg_save *m;
-	int num = script_getvarid(uid);
-	unsigned int i = script_getvaridx(uid);
-	const char* name = script->get_str(num);
+	nullpo_retr(false, name);
+	Assert_retr(false, *name != '\0');
+	Assert_retr(false, strlen(name) <= SCRIPT_VARNAME_LENGTH);
 
-	nullpo_retr(true, name);
-	if( val != 0 ) {
-		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
-			m->u.i = val;
-			if(name[1] != '@') {
-				m->save = true;
-				mapreg->dirty = true;
-			}
-		} else {
-			if( i )
-				script->array_update(&mapreg->regs, uid, false);
+	if (value == 0)
+		return mapreg->delete_num_db(uid, name, index);
 
-			m = ers_alloc(mapreg->ers, struct mapreg_save);
+	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
 
-			m->u.i = val;
-			m->uid = uid;
-			m->save = false;
-			m->is_string = false;
+	// Update variable.
+	if (var != NULL) {
+		var->u.i = value;
 
-			if (name[1] != '@' && !mapreg->skip_insert) {// write new variable to database
-				struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
-
-				if (stmt == NULL) {
-					SqlStmt_ShowDebug(stmt);
-				} else {
-					const char *query = "INSERT INTO `%s` (`key`, `index`, `value`) VALUES (?, ?, ?)";
-					size_t len = strnlen(name, SCRIPT_VARNAME_LENGTH);
-
-					if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
-					    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, len)
-					    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &i, sizeof(i))
-					    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &val, sizeof(val))
-					    || SQL_ERROR == SQL->StmtExecute(stmt)) {
-						SqlStmt_ShowDebug(stmt);
-					}
-
-					SQL->StmtFree(stmt);
-				}
-			}
-			i64db_put(mapreg->regs.vars, uid, m);
+		if (script->is_permanent_variable(name)) {
+			var->save = true;
+			mapreg->dirty = true;
 		}
-	} else { // val == 0
-		if( i )
-			script->array_update(&mapreg->regs, uid, true);
-		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
-			ers_free(mapreg->ers, m);
+
+		return true;
+	}
+
+	// Add new variable.
+	if (index != 0)
+		script->array_update(&mapreg->regs, uid, false);
+
+	var = ers_alloc(mapreg->ers, struct mapreg_save);
+	var->u.i = value;
+	var->uid = uid;
+	var->save = false;
+	var->is_string = false;
+	i64db_put(mapreg->regs.vars, uid, var);
+
+	if (script->is_permanent_variable(name) && !mapreg->skip_insert) {
+		struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
+
+		if (stmt == NULL) {
+			SqlStmt_ShowDebug(stmt);
+			return false;
 		}
-		i64db_remove(mapreg->regs.vars, uid);
 
-		if( name[1] != '@' ) {// Remove from database because it is unused.
-			struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
+		const char *query = "INSERT INTO `%s` (`key`, `index`, `value`) VALUES (?, ?, ?)";
 
-			if (stmt == NULL) {
-				SqlStmt_ShowDebug(stmt);
-			} else {
-				const char *query = "DELETE FROM `%s` WHERE `key`=? AND `index`=?";
-				size_t len = strnlen(name, SCRIPT_VARNAME_LENGTH);
-
-				if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
-				    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, len)
-				    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &i, sizeof(i))
-				    || SQL_ERROR == SQL->StmtExecute(stmt)) {
-					SqlStmt_ShowDebug(stmt);
-				}
-
-				SQL->StmtFree(stmt);
-			}
+		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
+		    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
+		    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
+		    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &value, sizeof(value))
+		    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+			SqlStmt_ShowDebug(stmt);
+			SQL->StmtFree(stmt);
+			return false;
 		}
+
+		SQL->StmtFree(stmt);
 	}
 
 	return true;
+}
+
+/**
+ * Deletes a global integer variable.
+ *
+ * @param uid The variable's unique ID.
+ * @param name The variable's name.
+ * @param index The variable's array index.
+ * @return True on success, otherwise false.
+ *
+ **/
+static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index)
+{
+	nullpo_retr(false, name);
+	Assert_retr(false, *name != '\0');
+	Assert_retr(false, strlen(name) <= SCRIPT_VARNAME_LENGTH);
+
+	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+
+	if (var != NULL)
+		ers_free(mapreg->ers, var);
+
+	if (index != 0)
+		script->array_update(&mapreg->regs, uid, true);
+
+	i64db_remove(mapreg->regs.vars, uid);
+
+	if (script->is_permanent_variable(name)) {
+		struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
+
+		if (stmt == NULL) {
+			SqlStmt_ShowDebug(stmt);
+			return false;
+		}
+
+		const char *query = "DELETE FROM `%s` WHERE `key`=? AND `index`=?";
+
+		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
+		    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
+		    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
+		    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+			SqlStmt_ShowDebug(stmt);
+			SQL->StmtFree(stmt);
+			return false;
+		}
+
+		SQL->StmtFree(stmt);
+	}
+
+	return true;
+}
+
+/**
+ * Sets the value of a global integer variable or deletes it if passed value is 0.
+ *
+ * @param uid The variable's unique ID.
+ * @param val The variable's new value.
+ * @return True on success, otherwise false.
+ *
+ **/
+static bool mapreg_setreg(int64 uid, int val)
+{
+	unsigned int index = script_getvaridx(uid);
+	const char *name = script->get_str(script_getvarid(uid));
+
+	if (val != 0)
+		return mapreg->set_num_db(uid, name, index, val);
+	else
+		return mapreg->delete_num_db(uid, name, index);
 }
 
 /**
@@ -602,6 +654,8 @@ void mapreg_defaults(void)
 	/* */
 	mapreg->readreg = mapreg_readreg;
 	mapreg->readregstr = mapreg_readregstr;
+	mapreg->set_num_db = mapreg_set_num_db;
+	mapreg->delete_num_db = mapreg_delete_num_db;
 	mapreg->setreg = mapreg_setreg;
 	mapreg->setregstr = mapreg_setregstr;
 	mapreg->load_num_db = mapreg_load_num_db;
