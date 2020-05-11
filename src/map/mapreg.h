@@ -60,6 +60,8 @@ struct mapreg_interface {
 	bool (*set_num_db) (int64 uid, const char *name, unsigned int index, int value);
 	bool (*delete_num_db) (int64 uid, const char *name, unsigned int index);
 	bool (*setreg) (int64 uid, int val);
+	bool (*set_str_db) (int64 uid, const char *name, unsigned int index, const char *value);
+	bool (*delete_str_db) (int64 uid, const char *name, unsigned int index);
 	bool (*setregstr) (int64 uid, const char *str);
 	void (*load_num_db) (void);
 	void (*load_str_db) (void);
