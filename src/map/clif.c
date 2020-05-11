@@ -22298,7 +22298,7 @@ static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id
 	sPacket->Class = class_;
 	sPacket->BaseLevel = base_level;
 #if PACKETVER >= 20160316
-	strncpy(sPacket->Name, name, NAME_LENGTH);
+	safestrncpy(sPacket->Name, name, NAME_LENGTH);
 #endif
 	WFIFOSET(fd, sizeof(*sPacket));
 #endif
