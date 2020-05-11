@@ -22,7 +22,7 @@
 
 #include "mapreg.h"
 
-#include "map/map.h" // map-"mysql_handle
+#include "map/map.h"
 #include "map/script.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
@@ -38,33 +38,33 @@
 #include <stdlib.h>
 #include <string.h>
 
-static struct mapreg_interface mapreg_s;
-struct mapreg_interface *mapreg;
-
-#define MAPREG_AUTOSAVE_INTERVAL (300*1000)
+static struct mapreg_interface mapreg_s; //!< Private interface structure.
+struct mapreg_interface *mapreg; //!< Public interface structure.
 
 /**
- * Looks up the value of an integer variable using its uid.
+ * Looks up the value of a global integer variable using its unique ID.
  *
- * @param uid variable's unique identifier.
- * @return variable's integer value
- */
-static int mapreg_readreg(int64 uid)
+ * @param uid The variable's unique ID.
+ * @return The variable's value or 0 if the variable does not exist.
+ *
+ **/
+static int mapreg_get_num_reg(int64 uid)
 {
-	struct mapreg_save *m = i64db_get(mapreg->regs.vars, uid);
-	return m?m->u.i:0;
+	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	return (var != NULL) ? var->u.i : 0;
 }
 
 /**
- * Looks up the value of a string variable using its uid.
+ * Looks up the value of a global string variable using its unique ID.
  *
- * @param uid variable's unique identifier
- * @return variable's string value
- */
-static char *mapreg_readregstr(int64 uid)
+ * @param uid The variable's unique ID.
+ * @return The variable's value or NULL if the variable does not exist.
+ *
+ **/
+static char *mapreg_get_str_reg(int64 uid)
 {
-	struct mapreg_save *m = i64db_get(mapreg->regs.vars, uid);
-	return m?m->u.str:NULL;
+	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	return (var != NULL) ? var->u.str : NULL;
 }
 
 /**
@@ -195,7 +195,7 @@ static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index
  * @return True on success, otherwise false.
  *
  **/
-static bool mapreg_setreg(int64 uid, int val)
+static bool mapreg_set_num(int64 uid, int val)
 {
 	unsigned int index = script_getvaridx(uid);
 	const char *name = script->get_str(script_getvarid(uid));
@@ -344,7 +344,7 @@ static bool mapreg_delete_str_db(int64 uid, const char *name, unsigned int index
  * @return True on success, otherwise false.
  *
  **/
-static bool mapreg_setregstr(int64 uid, const char *str)
+static bool mapreg_set_str(int64 uid, const char *str)
 {
 	unsigned int index = script_getvaridx(uid);
 	const char *name = script->get_str(script_getvarid(uid));
@@ -458,9 +458,10 @@ static void mapreg_load_str_db(void)
 }
 
 /**
- * Loads permanent variables from database.
- */
-static void script_load_mapreg(void)
+ * Loads permanent global variables from the database.
+ *
+ **/
+static void mapreg_load(void)
 {
 	mapreg->load_num_db();
 	mapreg->load_str_db();
@@ -539,80 +540,94 @@ static void mapreg_save_str_db(const char *name, unsigned int index, const char 
 }
 
 /**
- * Saves permanent variables to database.
- */
-static void script_save_mapreg(void)
+ * Saves permanent global variables to the database.
+ *
+ **/
+static void mapreg_save(void)
 {
 	if (mapreg->dirty) {
 		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
-		struct mapreg_save *m = NULL;
-		for (m = dbi_first(iter); dbi_exists(iter); m = dbi_next(iter)) {
-			if (m->save) {
-				int num = script_getvarid(m->uid);
-				int i   = script_getvaridx(m->uid);
-				const char* name = script->get_str(num);
-				nullpo_retv(name);
+		struct mapreg_save *var = NULL;
 
-				if (!m->is_string)
-					mapreg->save_num_db(name, i, m->u.i);
+		for (var = dbi_first(iter); dbi_exists(iter); var = dbi_next(iter)) {
+			if (var->save) {
+				int index = script_getvaridx(var->uid);
+				const char *name = script->get_str(script_getvarid(var->uid));
+
+				if (!var->is_string)
+					mapreg->save_num_db(name, index, var->u.i);
 				else
-					mapreg->save_str_db(name, i, m->u.str);
+					mapreg->save_str_db(name, index, var->u.str);
 
-				m->save = false;
+				var->save = false;
 			}
 		}
+
 		dbi_destroy(iter);
 		mapreg->dirty = false;
 	}
 }
 
 /**
- * Timer event to auto-save permanent variables.
+ * Timer event to auto-save permanent global variables.
  *
- * @see timer->do_timer
- */
-static int script_autosave_mapreg(int tid, int64 tick, int id, intptr_t data)
+ * @see timer->do_timer()
+ *
+ * @param tid Unused.
+ * @param tick Unused.
+ * @param id Unused.
+ * @param data Unused.
+ * @return Always 0.
+ *
+ **/
+static int mapreg_save_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	mapreg->save();
 	return 0;
 }
 
 /**
- * Destroys a mapreg_save structure, freeing the contained string, if any.
+ * Destroys a mapreg_save structure and frees the contained string, if any.
  *
  * @see DBApply
- */
-static int mapreg_destroyreg(union DBKey key, struct DBData *data, va_list ap)
+ *
+ * @param key Unused.
+ * @param data The DB data holding the mapreg_save data.
+ * @param ap Unused.
+ * @return 0 on success, otherwise 1.
+ *
+ **/
+static int mapreg_destroy_reg(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct mapreg_save *m = NULL;
+	nullpo_retr(1, data);
 
 	if (data->type != DB_DATA_PTR) // Sanity check
-		return 0;
+		return 1;
 
-	m = DB->data2ptr(data);
+	struct mapreg_save *var = DB->data2ptr(data);
 
-	if (m->is_string) {
-		if (m->u.str)
-			aFree(m->u.str);
-	}
-	ers_free(mapreg->ers, m);
+	if (var == NULL)
+		return 1;
 
+	if (var->is_string && var->u.str != NULL)
+		aFree(var->u.str);
+
+	ers_free(mapreg->ers, var);
 	return 0;
 }
 
 /**
- * Reloads mapregs, saving to database beforehand.
+ * Reloads permanent global variables, saving them to the database beforehand.
  *
- * This has the effect of clearing the temporary variables, and
- * reloading the permanent ones.
- */
+ * This has the effect of clearing the temporary global variables and reloading the permanent ones.
+ *
+ **/
 static void mapreg_reload(void)
 {
 	mapreg->save();
-
 	mapreg->regs.vars->clear(mapreg->regs.vars, mapreg->destroyreg);
 
-	if( mapreg->regs.arrays ) {
+	if (mapreg->regs.arrays != NULL) {
 		mapreg->regs.arrays->destroy(mapreg->regs.arrays, script->array_free_db);
 		mapreg->regs.arrays = NULL;
 	}
@@ -657,74 +672,69 @@ static bool mapreg_config_read_registry(const char *filename, const struct confi
 }
 
 /**
- * Finalizer.
- */
+ * Saves permanent global variables to the database and frees all the memory they use afterwards.
+ *
+ **/
 static void mapreg_final(void)
 {
 	mapreg->save();
-
 	mapreg->regs.vars->destroy(mapreg->regs.vars, mapreg->destroyreg);
-
 	ers_destroy(mapreg->ers);
 
-	if( mapreg->regs.arrays )
+	if (mapreg->regs.arrays != NULL)
 		mapreg->regs.arrays->destroy(mapreg->regs.arrays, script->array_free_db);
 }
 
 /**
- * Initializer.
- */
+ * Allocates memory for permanent global variables, loads them from the database and initializes the auto-save timer.
+ *
+ **/
 static void mapreg_init(void)
 {
 	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
 	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.c::mapreg_ers", ERS_OPT_CLEAN);
-
 	mapreg->load();
-
-	timer->add_func_list(mapreg->save_timer, "mapreg_script_autosave_mapreg");
+	timer->add_func_list(mapreg->save_timer, "mapreg_save_timer");
 	timer->add_interval(timer->gettick() + MAPREG_AUTOSAVE_INTERVAL, mapreg->save_timer, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
 }
 
 /**
- * Interface defaults initializer.
- */
+ * Initializes the mapreg interface defaults.
+ *
+ **/
 void mapreg_defaults(void)
 {
+	/** Interface structure. **/
 	mapreg = &mapreg_s;
 
-	/* */
-	mapreg->regs.vars = NULL;
+	/** Interface variables. **/
 	mapreg->ers = NULL;
+	mapreg->regs.vars = NULL;
+	mapreg->regs.arrays = NULL;
+	mapreg->dirty = false;
 	mapreg->skip_insert = false;
-
 	safestrncpy(mapreg->num_db, "map_reg_num_db", sizeof(mapreg->num_db));
 	safestrncpy(mapreg->str_db, "map_reg_str_db", sizeof(mapreg->str_db));
-	mapreg->dirty = false;
 
-	/* */
-	mapreg->regs.arrays = NULL;
-
-	/* */
-	mapreg->init = mapreg_init;
-	mapreg->final = mapreg_final;
-
-	/* */
-	mapreg->readreg = mapreg_readreg;
-	mapreg->readregstr = mapreg_readregstr;
+	/** Interface functions. **/
+	mapreg->readreg = mapreg_get_num_reg;
+	mapreg->readregstr = mapreg_get_str_reg;
 	mapreg->set_num_db = mapreg_set_num_db;
 	mapreg->delete_num_db = mapreg_delete_num_db;
-	mapreg->setreg = mapreg_setreg;
+	mapreg->setreg = mapreg_set_num;
 	mapreg->set_str_db = mapreg_set_str_db;
 	mapreg->delete_str_db = mapreg_delete_str_db;
-	mapreg->setregstr = mapreg_setregstr;
+	mapreg->setregstr = mapreg_set_str;
 	mapreg->load_num_db = mapreg_load_num_db;
 	mapreg->load_str_db = mapreg_load_str_db;
-	mapreg->load = script_load_mapreg;
+	mapreg->load = mapreg_load;
 	mapreg->save_num_db = mapreg_save_num_db;
 	mapreg->save_str_db = mapreg_save_str_db;
-	mapreg->save = script_save_mapreg;
-	mapreg->save_timer = script_autosave_mapreg;
-	mapreg->destroyreg = mapreg_destroyreg;
+	mapreg->save = mapreg_save;
+	mapreg->save_timer = mapreg_save_timer;
+	mapreg->destroyreg = mapreg_destroy_reg;
 	mapreg->reload = mapreg_reload;
 	mapreg->config_read_registry = mapreg_config_read_registry;
+	mapreg->final = mapreg_final;
+	mapreg->init = mapreg_init;
 }

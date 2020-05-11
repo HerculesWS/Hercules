@@ -29,6 +29,8 @@
 struct config_setting_t; // common/conf.h
 struct eri;
 
+#define MAPREG_AUTOSAVE_INTERVAL (300 * 1000)
+
 /** Container for a mapreg value */
 struct mapreg_save {
 	int64 uid;         ///< Unique ID
