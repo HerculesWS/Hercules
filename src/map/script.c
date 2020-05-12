@@ -8764,22 +8764,71 @@ static BUILDIN(delitemidx)
 	return true;
 }
 
-/*==========================================
- * Enables/Disables use of items while in an NPC [Skotlex]
- *------------------------------------------*/
+/**
+ * Enable item actions while interacting with NPC.
+ *
+ * @code{.herc}
+ *	enableitemuse({<flag>});
+ *	enable_items({<flag>});
+ * @endcode
+ *
+ **/
 static BUILDIN(enableitemuse)
 {
+	int flag = battle_config.item_enabled_npc;
+
+	if (script_hasdata(st, 2)) {
+		if (!script_isinttype(st, 2))
+			return true;
+
+		flag = script_getnum(st, 2);
+	}
+
+	if (flag < 0)
+		return true;
+	
 	struct map_session_data *sd = script->rid2sd(st);
-	if (sd != NULL)
-		st->npc_item_flag = sd->npc_item_flag = 1;
+
+	if (sd == NULL)
+		return true;
+
+	st->npc_item_flag |= flag;
+	sd->npc_item_flag |= flag;
+
 	return true;
 }
 
+/**
+ * Disable item actions while interacting with NPC.
+ *
+ * @code{.herc}
+ *	disableitemuse({<flag>});
+ *	disable_items({<flag>});
+ * @endcode
+ *
+ **/
 static BUILDIN(disableitemuse)
 {
+	int flag = battle_config.item_enabled_npc;
+
+	if (script_hasdata(st, 2)) {
+		if (!script_isinttype(st, 2))
+			return true;
+
+		flag = script_getnum(st, 2);
+	}
+
+	if (flag < 0)
+		return true;
+	
 	struct map_session_data *sd = script->rid2sd(st);
-	if (sd != NULL)
-		st->npc_item_flag = sd->npc_item_flag = 0;
+
+	if (sd == NULL)
+		return true;
+
+	st->npc_item_flag &= ~flag;
+	sd->npc_item_flag &= ~flag;
+
 	return true;
 }
 
@@ -26818,8 +26867,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(delitem,"vi?"),
 		BUILDIN_DEF(delitem2,"viiiiiiii?"),
 		BUILDIN_DEF(delitemidx, "i??"),
-		BUILDIN_DEF2(enableitemuse,"enable_items",""),
-		BUILDIN_DEF2(disableitemuse,"disable_items",""),
+		BUILDIN_DEF2(enableitemuse, "enable_items", "?"),
+		BUILDIN_DEF2(disableitemuse, "disable_items", "?"),
 		BUILDIN_DEF(cutin,"si"),
 		BUILDIN_DEF(viewpoint,"iiiii"),
 		BUILDIN_DEF(heal,"ii"),
