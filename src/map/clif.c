@@ -1030,6 +1030,7 @@ static void clif_set_unit_idle2(struct block_list *bl, struct map_session_data *
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = idle_unit2Type;
@@ -1086,6 +1087,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 
 #if PACKETVER < 20091103
 	if (!pc->db_checkid(vd->class)) {
@@ -1196,6 +1198,7 @@ static void clif_spawn_unit2(struct block_list *bl, enum send_target target)
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = spawn_unit2Type;
@@ -1243,6 +1246,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 
 #if PACKETVER < 20091103
 	if (!pc->db_checkid(vd->class)) {
@@ -1356,6 +1360,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 
 	nullpo_retv(bl);
 	nullpo_retv(ud);
+	nullpo_retv(vd);
 
 	sd = BL_CAST(BL_PC, bl);
 
