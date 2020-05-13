@@ -2426,6 +2426,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	nullpo_retr(3, md);
 	m = md->bl.m;
+	Assert_retr(false, m >= 0 && m < map->count);
 	mstatus = &md->status;
 
 	if( md->guardian_data && md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS )
