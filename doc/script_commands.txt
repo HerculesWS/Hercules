@@ -5637,21 +5637,32 @@ Example:
 
 ---------------------------------------
 
-*enable_items()
-*disable_items()
+*enable_items({<flag>})
+*enableitemuse({<flag>})
+*disable_items({<flag>})
+*disableitemuse({<flag>})
 
-These commands enable/disable changing of equipments while an NPC is
-running. When disable_items() is run, equipments cannot be changed
-during scripts until enable_items() is called or the script has
-terminated. To avoid possible exploits, when disable_items() is invoked,
-it will only disable changing equips while running that script in
-particular. Note that if a different script also calls disable_items(),
-it will override the last call (so you may want to call this command at
-the start of your script without assuming the effect is still in
-effect).
-If 'item_enabled_npc' option is set to true in 'conf/map/battle/items.conf' all
-NPC are allowing changing of equipment by default except for those have been
-set with 'disable_items'.
+These commands enable/disable item actions while interacting with a NPC.
+When disable_items() is invoked, item actions defined by <flag> are disabled
+during scripts until enable_items() is called or the script has terminated.
+To avoid possible exploits, when disable_items() is invoked, it will only
+disable item actions while running that script in particular.
+Note that if a different script also invokes disable_items(), it will override
+the last call so you may want to call this command at the start of your
+script without assuming the effect is still in effect.
+If <flag> is omitted all item actions will be disabled.
+The enable_items() command enables item actions defined by <flag> during
+scripts until disable_items() is invoked or the script has terminated.
+If <flag> is omitted it defaults to 'item_enabled_npc' battle flag.
+For a list of supported flags have a look at the description of
+'item_enabled_npc' battle flag in 'conf/map/battle/items.conf'.
+Unless disable_items() or enable_items() is invoked the script will use
+'item_enabled_npc' battle flag by default.
+
+Example:
+
+	// This will disable changing equipment during this script.
+	disable_items(ITEMENABLEDNPC_EQUIP);
 
 ---------------------------------------
 
