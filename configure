@@ -2542,6 +2542,8 @@ ac_config_files="$ac_config_files src/char/Makefile src/login/Makefile"
 
 ac_config_files="$ac_config_files src/map/Makefile src/plugins/Makefile"
 
+ac_config_files="$ac_config_files src/api/Makefile"
+
 ac_config_files="$ac_config_files src/test/Makefile"
 
 ac_config_files="$ac_config_files tools/HPMHookGen/Makefile"
@@ -13218,6 +13220,7 @@ do
     "src/login/Makefile") CONFIG_FILES="$CONFIG_FILES src/login/Makefile" ;;
     "src/map/Makefile") CONFIG_FILES="$CONFIG_FILES src/map/Makefile" ;;
     "src/plugins/Makefile") CONFIG_FILES="$CONFIG_FILES src/plugins/Makefile" ;;
+    "src/api/Makefile") CONFIG_FILES="$CONFIG_FILES src/api/Makefile" ;;
     "src/test/Makefile") CONFIG_FILES="$CONFIG_FILES src/test/Makefile" ;;
     "tools/HPMHookGen/Makefile") CONFIG_FILES="$CONFIG_FILES tools/HPMHookGen/Makefile" ;;
     "tools/doxygen/Makefile") CONFIG_FILES="$CONFIG_FILES tools/doxygen/Makefile" ;;

@@ -23,12 +23,13 @@
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	ALL_DEPENDS=common_sql login_sql char_sql map_sql sysinfo | import
-	SQL_DEPENDS=common_sql login_sql char_sql map_sql sysinfo | import
+	ALL_DEPENDS=common_sql login_sql char_sql map_sql api_sql sysinfo | import
+	SQL_DEPENDS=common_sql login_sql char_sql map_sql api_sql sysinfo | import
 	COMMON_SQL_DEPENDS=mt19937ar libconfig libbacktrace sysinfo
 	LOGIN_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 	CHAR_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 	MAP_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
+	API_SQL_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 	TOOLS_DEPENDS=mt19937ar libconfig libbacktrace common_sql sysinfo
 else
 	ALL_DEPENDS=needs_mysql
@@ -37,6 +38,7 @@ else
 	LOGIN_SQL_DEPENDS=needs_mysql
 	CHAR_SQL_DEPENDS=needs_mysql
 	MAP_SQL_DEPENDS=needs_mysql
+	API_SQL_DEPENDS=needs_mysql
 	TOOLS_DEPENDS=needs_mysql
 endif
 
@@ -65,6 +67,7 @@ export CC
 	login_sql \
 	char_sql \
 	map_sql \
+	api_sql \
 	plugins \
 	import \
 	test \
@@ -127,6 +130,10 @@ map_sql: $(MAP_SQL_DEPENDS) src/map/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/map sql
 
+api_sql: $(API_SQL_DEPENDS) src/api/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C src/api sql
+
 test: src/test/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/test
@@ -159,9 +166,11 @@ clean buildclean: $(MF_TARGETS)
 	@$(MAKE) -C 3rdparty/mt19937ar $@
 	@$(MAKE) -C 3rdparty/libconfig $@
 	@$(MAKE) -C 3rdparty/libbacktrace $@
+	@$(MAKE) -C 3rdparty/http-parser $@
 	@$(MAKE) -C src/login $@
 	@$(MAKE) -C src/char $@
 	@$(MAKE) -C src/map $@
+	@$(MAKE) -C src/api $@
 	@$(MAKE) -C src/plugins $@
 	@$(MAKE) -C src/test $@
 	@$(MAKE) -C tools/HPMHookGen $@
@@ -193,10 +202,11 @@ help: Makefile
 	@echo "'login_sql'    - builds login server"
 	@echo "'char_sql'     - builds char server"
 	@echo "'map_sql'      - builds map server"
+	@echo "'api_sql'      - builds api server"
 	@echo "'import'       - builds conf/import folder from the template conf/import-tmpl"
 	@echo "'all'          - builds all the above targets"
 	@echo "'sql'          - builds sql servers (targets 'common_sql' 'login_sql' 'char_sql'"
-	@echo "                 'map_sql' and 'import')"
+	@echo "                 'map_sql' and 'api_sql' and 'import')"
 	@echo "'plugins'      - builds all available plugins"
 	@echo "'plugin.Name'  - builds plugin named 'Name'"
 	@echo "'test'         - builds tests"

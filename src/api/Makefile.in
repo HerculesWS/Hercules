@@ -1,0 +1,159 @@
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2012-2020 Hercules Dev Team
+# Copyright (C) Athena Dev Teams
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# @configure_input@
+
+CONFIG_D = ../config
+CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
+
+COMMON_D = ../common
+COMMON_H = $(filter-out %.p.h, $(wildcard $(COMMON_D)/*.h)) ../plugins/HPMHooking.h
+SYSINFO_INC = $(COMMON_D)/sysinfo.inc
+COMMON_INCLUDE = -I..
+
+THIRDPARTY_D = ../../3rdparty
+THIRDPARTY_INCLUDE = -I$(THIRDPARTY_D)
+
+LIBCONFIG_D = $(THIRDPARTY_D)/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+                scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+              scanctx.h scanner.h strbuf.h wincompat.h)
+
+HTTPPARSER_D = $(THIRDPARTY_D)/http-parser/
+HTTPPARSER_OBJ = $(addprefix $(HTTPPARSER_D)/, http_parser.o)
+HTTPPARSER_H = $(addprefix $(HTTPPARSER_D)/, http_parser.h)
+
+ifeq (@USE_LIBBACKTRACE@,yes)
+	LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
+	LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
+	              dwarf.o @LIBBACKTRACE_FORMAT_FILE@ fileline.o mmapio.o mmap.o posix.o print.o \
+	              simple.o sort.o state.o)
+	LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
+	              backtrace-supported.h config.h filenames.h internal.h)
+else
+	LIBBACKTRACE_D =
+	LIBBACKTRACE_OBJ =
+	LIBBACKTRACE_H =
+endif
+
+MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
+MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
+MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
+
+API_C = api.c aclif.c HPMapi.c httpparser.c
+API_OBJ = $(addprefix obj_sql/, $(patsubst %c,%o,$(API_C)))
+API_H = api.h aclif.h HPMapi.h apisessiondata.h httpparser.h
+
+HAVE_MYSQL=@HAVE_MYSQL@
+ifeq ($(HAVE_MYSQL),yes)
+	API_SERVER_SQL_DEPENDS=$(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
+else
+	API_SERVER_SQL_DEPENDS=needs_mysql
+endif
+
+@SET_MAKE@
+
+CC = @CC@
+export CC
+
+#####################################################################
+.PHONY: all sql api-server clean buildclean help
+
+all: sql
+
+sql: api-server
+
+buildclean:
+	@echo "	CLEAN	api (build temp files)"
+	@rm -rf *.o obj_sql
+
+clean: buildclean
+	@echo "	CLEAN	api"
+	@rm -rf ../../api-server@EXEEXT@
+
+help:
+	@echo "possible targets are 'api-server' 'all' 'clean' 'help'"
+	@echo "'api-server'   - api server"
+	@echo "'all'          - builds all above targets"
+	@echo "'clean'        - cleans builds and objects"
+	@echo "'buildclean'   - cleans build temporary (object) files, without deleting the"
+	@echo "                 executables"
+	@echo "'help'         - outputs this message"
+
+#####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/api/Makefile
+
+$(SYSINFO_INC): $(API_C) $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(HTTPPARSER_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
+	@echo "	MAKE	$@"
+	@$(MAKE) -C ../.. sysinfo
+
+needs_mysql:
+	@echo "MySQL not found or disabled by the configure script"
+	@exit 1
+
+# object directories
+
+obj_sql:
+	@echo "	MKDIR	obj_sql"
+	@-mkdir obj_sql
+
+# executables
+
+api-server: ../../api-server@EXEEXT@
+
+../../api-server@EXEEXT@: $(API_SERVER_SQL_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
+	@$(CC) @STATIC@ @LDFLAGS@ -o ../../api-server@EXEEXT@ $(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
+
+# missing object files
+$(COMMON_D)/obj_all/common.a:
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(COMMON_D) sql
+
+$(COMMON_D)/obj_sql/common_sql.a:
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(COMMON_D) sql
+
+$(MT19937AR_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(MT19937AR_D)
+
+$(LIBCONFIG_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBCONFIG_D)
+
+$(HTTPPARSER_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(HTTPPARSER_D)
+
+$(LIBBACKTRACE_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBBACKTRACE_D)
+
+.SECONDEXPANSION:
+
+# api object files
+
+obj_sql/%.o: %.c $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(HTTPPARSER_H) $(LIBBACKTRACE_H) | obj_sql
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

@@ -33,6 +33,7 @@ Thumbs.db
 /login-server
 /Makefile
 /Makefile.cache
+/api-server
 /map-server
 /mapcache
 
@@ -92,6 +93,10 @@ Thumbs.db
 /src/map/Makefile
 /src/map/obj_sql
 /src/map/pcre.h
+
+# /src/api/
+/src/api/Makefile
+/src/api/obj_sql
 
 # /src/test/
 /src/test/Makefile
