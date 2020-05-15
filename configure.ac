@@ -994,6 +994,14 @@ if test "$enable_sanitize" != "no" ; then
 		AC_CHECK_SANITIZER_FLAG(bool)
 		AC_CHECK_SANITIZER_FLAG(enum)
 		AC_CHECK_SANITIZER_FLAG(vptr)
+		AC_CHECK_SANITIZER_FLAG(address-use-after-scope)
+		AC_CHECK_SANITIZER_FLAG(pointer-overflow)
+		AC_CHECK_SANITIZER_FLAG(builtin)
+		AC_CHECK_SANITIZER_FLAG(pointer-compare)
+		AC_CHECK_SANITIZER_FLAG(pointer-subtract)
+		AC_CHECK_SANITIZER_FLAG(shift-exponent)
+		AC_CHECK_SANITIZER_FLAG(shift-base)
+		AC_CHECK_SANITIZER_FLAG(sanitize-address-use-after-scope)
 	fi
 fi
 
