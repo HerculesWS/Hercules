@@ -81604,33 +81604,6 @@ void HP_skill_validate_additional_fields(struct config_setting_t *conf, struct s
 	}
 	return;
 }
-bool HP_skill_validate_skilldb(struct s_skill_db *skt, const char *source) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if (HPMHooks.count.HP_skill_validate_skilldb_pre > 0) {
-		bool (*preHookFunc) (struct s_skill_db **skt, const char **source);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skilldb_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_skill_validate_skilldb_pre[hIndex].func;
-			retVal___ = preHookFunc(&skt, &source);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.skill.validate_skilldb(skt, source);
-	}
-	if (HPMHooks.count.HP_skill_validate_skilldb_post > 0) {
-		bool (*postHookFunc) (bool retVal___, struct s_skill_db *skt, const char *source);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skilldb_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_skill_validate_skilldb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skt, source);
-		}
-	}
-	return retVal___;
-}
 int HP_skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *sk) {
 	int hIndex = 0;
 	int retVal___ = 0;

@@ -20122,9 +20122,6 @@ static bool skill_parse_row_changematerialdb(char *split[], int columns, int cur
 	return true;
 }
 
-#define skilldb_duplicate_warning(name, setting, skill) (ShowError("skill_read_skilldb: Duplicate entry '%s' in setting '%s' for Skill Id %d in '%s', skipping...\n", name, setting, skill, "db/"DBPATH"skill_db.conf"))
-#define skilldb_invalid_error(name, setting, skill) (ShowError("skill_read_skilldb: Invalid entry '%s' in setting '%s' for Skill Id %d in '%s', skipping...\n", name, setting, skill, "db/"DBPATH"skill_db.conf"))
-
 /**
  * Sets Level based configuration for skill groups from skill_db.conf [ Smokexyz/Hercules ]
  * @param *conf    pointer to config setting.
@@ -20169,11 +20166,198 @@ static void skill_level_set_value(int *arr, int value)
 	}
 }
 
+/**
+ * Validates a skill's ID when reading the skill DB.
+ * If validating fails, the ID is set to 0.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the ID should be set it.
+ * @param conf_index The 1-based index of the currently processed libconfig settings block.
+ *
+ **/
+static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *sk, int conf_index)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->nameid = 0;
+
+	int id;
+
+	if (libconfig->setting_lookup_int(conf, "Id", &id) == CONFIG_FALSE)
+		ShowError("%s: No skill ID specified in entry %d in %s! Skipping skill...\n",
+			  __func__, conf_index, conf->file);
+	else if (id <= 0)
+		ShowError("%s: Invalid skill ID %d specified in entry %d in %s! Skipping skill...\n",
+			  __func__, id, conf_index, conf->file);
+	else if(skill->get_index(id) == 0)
+		ShowError("%s: Skill ID %d in entry %d in %s is out of range, or within a reserved range (for guild, homunculus, mercenary or elemental skills)! Skipping skill...\n",
+			  __func__, id, conf_index, conf->file);
+	else if (*skill->get_name(id) != '\0')
+		ShowError("%s: Duplicate skill ID %d in entry %d in %s! Skipping skill...\n",
+			  __func__, id, conf_index, conf->file);
+	else
+		sk->nameid = id;
+}
+
+/**
+ * Validates if a skill's name contains invalid characters when reading the skill DB.
+ *
+ * @param name The name to validate.
+ * @return True if the passed name is a NULL pointer or contains at least one invalid character, otherwise false.
+ *
+ **/
+static bool skill_name_contains_invalid_character(const char *name)
+{
+	nullpo_retr(true, name);
+
+	for (int i = 0; i < MAX_SKILL_NAME_LENGTH && name[i] != '\0'; i++) {
+		if (ISALNUM(name[i]) == 0 && name[i] != '_')
+			return true;
+	}
+
+	return false;
+}
+
+/**
+ * Validates a skill's name when reading the skill DB.
+ * If validating fails, the name is set to an enpty string.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the name should be set it.
+ *
+ **/
+static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	*sk->name = '\0';
+
+	const char *name;
+
+	if (libconfig->setting_lookup_string(conf, "Name", &name) == CONFIG_FALSE || *name == '\0')
+		ShowError("%s: No name specified for skill ID %d in %s! Skipping skill...\n",
+			  __func__, sk->nameid, conf->file);
+	else if (strlen(name) >= sizeof(sk->name))
+		ShowError("%s: Specified name %s for skill ID %d in %s is too long: %lu! Maximum is %lu. Skipping skill...\n",
+			  __func__, name, sk->nameid, conf->file, strlen(name), sizeof(sk->name) - 1);
+	else if (skill->name_contains_invalid_character(name))
+		ShowError("%s: Specified name %s for skill ID %d in %s contains invalid characters! Allowed characters are letters, numbers and underscores. Skipping skill...\n",
+			  __func__, name, sk->nameid, conf->file);
+	else if (skill->name2id(name) != 0)
+		ShowError("%s: Duplicate name %s for skill ID %d in %s! Skipping skill...\n",
+			  __func__, name, sk->nameid, conf->file);
+	else
+		safestrncpy(sk->name, name, sizeof(sk->name));
+}
+
+/**
+ * Validates a skill's maximum level when reading the skill DB.
+ * If validating fails, the maximum level is set to 0.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the maximum level should be set it.
+ *
+ **/
+static void skill_validate_max_level(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->max = 0;
+
+	int max_level;
+
+	if (libconfig->setting_lookup_int(conf, "MaxLevel", &max_level) == CONFIG_FALSE)
+		ShowError("%s: No maximum level specified for skill ID %d in %s! Skipping skill...\n",
+			  __func__, sk->nameid, conf->file);
+	else if (max_level < 1 || max_level > MAX_SKILL_LEVEL)
+		ShowError("%s: Invalid maximum level %d specified for skill ID %d in %s! Minimum is 1, maximum is %d. Skipping skill...\n",
+			  __func__, max_level, sk->nameid, conf->file, MAX_SKILL_LEVEL);
+	else
+		sk->max = max_level;
+}
+
+/**
+ * Validates a skill's description when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the description should be set it.
+ *
+ **/
+static void skill_validate_description(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	*sk->desc = '\0';
+
+	const char *description;
+
+	if (libconfig->setting_lookup_string(conf, "Description", &description) == CONFIG_TRUE && *description != '\0') {
+		if (strlen(description) >= sizeof(sk->desc))
+			ShowWarning("%s: Specified description '%s' for skill ID %d in %s is too long: %lu! Maximum is %lu. Trimming...\n",
+				    __func__, description, sk->nameid, conf->file, strlen(description), sizeof(sk->desc) - 1);
+
+		safestrncpy(sk->desc, description, sizeof(sk->desc));
+	}
+}
+
+/**
+ * Validates a skill's range when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the range should be set it.
+ *
+ **/
+static void skill_validate_range(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->range, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Range");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int range;
+
+			if (libconfig->setting_lookup_int(t, lv, &range) == CONFIG_TRUE) {
+				if (range >= SHRT_MIN && range <= SHRT_MAX)
+					sk->range[i] = range;
+				else
+					ShowWarning("%s: Invalid range %d specified in level %d for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 0...\n",
+						    __func__, range, i + 1, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+			}
+		}
+
+		return;
+	}
+
+	int range;
+
+	if (libconfig->setting_lookup_int(conf, "Range", &range) == CONFIG_TRUE) {
+		if (range >= SHRT_MIN && range <= SHRT_MAX)
+			skill->level_set_value(sk->range, range);
+		else
+			ShowWarning("%s: Invalid range %d specified for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 0...\n",
+				    __func__, range, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+	}
+}
+
 static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->hit = BDT_NORMAL;
+
 	const char *type = NULL;
 
-	nullpo_retv(sk);
 	if (libconfig->setting_lookup_string(conf, "Hit", &type)) {
 		if (strcmpi(type, "BDT_SKILL") == 0) {
 			sk->hit = BDT_SKILL;
@@ -20182,8 +20366,8 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
 		} else if (strcmpi(type, "BDT_NORMAL") == 0) {
 			sk->hit = BDT_NORMAL;
 		} else {
-			skilldb_invalid_error(type, "Hit", sk->nameid);
-			return;
+			ShowWarning("%s: Invalid hit type %s specified for skill ID %d in %s! Defaulting to BDT_NORMAL...\n",
+				    __func__, type, sk->nameid, conf->file);
 		}
 	}
 }
@@ -20196,9 +20380,13 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
  */
 static void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->inf = INF_NONE;
+
 	struct config_setting_t *t = NULL, *tt = NULL;
 
-	nullpo_retv(sk);
 	if((t=libconfig->setting_get_member(conf, "SkillType")) && config_setting_is_group(t)) {
 		int j=0;
 		while ((tt = libconfig->setting_get_elem(t, j++))) {
@@ -20236,7 +20424,8 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
 					sk->inf &= ~INF_TARGET_TRAP;
 				}
 			} else if (strcmpi(type, "Passive") != 0) {
-				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
+				ShowWarning("%s: Invalid skill type %s specified for skill ID %d in %s! Skipping type...\n",
+					    __func__, type, sk->nameid, conf->file);
 			}
 		}
 	}
@@ -20250,9 +20439,13 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
  */
 static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->inf2 = INF2_NONE;
+
 	struct config_setting_t *t = NULL, *tt = NULL;
 
-	nullpo_retv(sk);
 	if ((t=libconfig->setting_get_member(conf, "SkillInfo")) && config_setting_is_group(t)) {
 		int j=0;
 		while ((tt = libconfig->setting_get_elem(t, j++))) {
@@ -20386,7 +20579,8 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 					sk->inf2 &= ~INF2_IS_COMBO_SKILL;
 				}
 			} else if (strcmpi(type, "None") != 0) {
-				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
+				ShowWarning("%s: Invalid sub-type %s specified for skill ID %d in %s! Skipping sub-type...\n",
+					    __func__, type, sk->nameid, conf->file);
 			}
 		}
 	}
@@ -20400,9 +20594,13 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
  */
 static void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->skill_type = BF_NONE;
+
 	const char *type = NULL;
 
-	nullpo_retv(sk);
 	if (libconfig->setting_lookup_string(conf, "AttackType", &type)) {
 		if (!strcmpi(type, "Weapon")) {
 			sk->skill_type = BF_WEAPON;
@@ -20410,9 +20608,9 @@ static void skill_validate_attacktype(struct config_setting_t *conf, struct s_sk
 			sk->skill_type = BF_MAGIC;
 		} else if (!strcmpi(type, "Misc")) {
 			sk->skill_type = BF_MISC;
-		} else {
-			skilldb_invalid_error(type, "AttackType", sk->nameid);
-			return;
+		} else if (strcmpi(type, "None") != 0) {
+			ShowWarning("%s: Invalid attack type %s specified for skill ID %d in %s! Defaulting to None...\n",
+				    __func__, type, sk->nameid, conf->file);
 		}
 	}
 }
@@ -20425,16 +20623,21 @@ static void skill_validate_attacktype(struct config_setting_t *conf, struct s_sk
  */
 static void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->element, ELE_NEUTRAL);
+
 	const char *type = NULL;
 	struct config_setting_t *t = NULL;
 
-	nullpo_retv(sk);
 	if ((t=libconfig->setting_get_member(conf, "Element")) && config_setting_is_group(t)) {
 		int j = 0;
 		char lv[6]; // enough to contain "Lv100" in case of custom MAX_SKILL_LEVEL
 
 		for (j=0; j < MAX_SKILL_LEVEL; j++) {
 			sprintf(lv, "Lv%d",j+1);
+
 			if (libconfig->setting_lookup_string(t, lv, &type)) {
 				if (strcmpi(type,"Ele_Weapon") == 0)
 					sk->element[j] = -1;
@@ -20443,12 +20646,13 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
 				else if (strcmpi(type,"Ele_Random") == 0)
 					sk->element[j] = -3;
 				else if (!script->get_constant(type,&sk->element[j]))
-					skilldb_invalid_error(type, config_setting_name(conf), sk->nameid);
+					ShowWarning("%s: Invalid element %s specified in level %d for skill ID %d in %s! Defaulting to Ele_Neutral...\n",
+						    __func__, type, j + 1, sk->nameid, conf->file);
 			}
 		}
 
 	} else if (libconfig->setting_lookup_string(conf, "Element", &type)) {
-		int ele = 0;
+		int ele = ELE_NEUTRAL;
 
 		if (strcmpi(type,"Ele_Weapon") == 0)
 			ele = -1;
@@ -20457,7 +20661,8 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
 		else if (strcmpi(type,"Ele_Random") == 0)
 			ele = -3;
 		else if (!script->get_constant(type, &ele)) {
-			skilldb_invalid_error(type, config_setting_name(conf), sk->nameid);
+			ShowWarning("%s: Invalid element %s specified for skill ID %d in %s! Defaulting to Ele_Neutral...\n",
+				    __func__, type, sk->nameid, conf->file);
 			return;
 		}
 
@@ -20473,9 +20678,13 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
  */
 static void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->nk = NK_NONE;
+
 	struct config_setting_t *t = NULL, *tt = NULL;
 
-	nullpo_retv(sk);
 	if ((t=libconfig->setting_get_member(conf, "DamageType")) && config_setting_is_group(t)) {
 		int j=0;
 		while ((tt = libconfig->setting_get_elem(t, j++))) {
@@ -20531,10 +20740,562 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 					sk->nk &= ~NK_NO_CARDFIX_DEF;
 				}
 			} else {
-				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
+				ShowWarning("%s: Invalid damage type %s specified for skill ID %d in %s! Skipping damage type...\n",
+					    __func__, type, sk->nameid, conf->file);
 			}
 		}
 	}
+
+	if (sk->nk == NK_NONE)
+		sk->nk = NK_NO_DAMAGE;
+}
+
+/**
+ * Validates a skill's splash range when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the splash range should be set it.
+ *
+ **/
+static void skill_validate_splash_range(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->splash, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SplashRange");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int splash_range;
+
+			if (libconfig->setting_lookup_int(t, lv, &splash_range) == CONFIG_TRUE) {
+				if (splash_range >= SHRT_MIN && splash_range <= SHRT_MAX)
+					sk->splash[i] = splash_range;
+				else
+					ShowWarning("%s: Invalid splash range %d specified in level %d for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 0...\n",
+						    __func__, splash_range, i + 1, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+			}
+		}
+
+		return;
+	}
+
+	int splash_range;
+
+	if (libconfig->setting_lookup_int(conf, "SplashRange", &splash_range) == CONFIG_TRUE) {
+		if (splash_range >= SHRT_MIN && splash_range <= SHRT_MAX)
+			skill->level_set_value(sk->splash, splash_range);
+		else
+			ShowWarning("%s: Invalid splash range %d specified for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 0...\n",
+				    __func__, splash_range, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+	}
+}
+
+/**
+ * Validates a skill's number of hits when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the number of hits should be set it.
+ *
+ **/
+static void skill_validate_number_of_hits(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->num, 1);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "NumberOfHits");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int number_of_hits;
+
+			if (libconfig->setting_lookup_int(t, lv, &number_of_hits) == CONFIG_TRUE) {
+				if (number_of_hits >= SHRT_MIN && number_of_hits <= SHRT_MAX)
+					sk->num[i] = number_of_hits;
+				else
+					ShowWarning("%s: Invalid number of hits %d specified in level %d for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 1...\n",
+						    __func__, number_of_hits, i + 1, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+			}
+		}
+
+		return;
+	}
+
+	int number_of_hits;
+
+	if (libconfig->setting_lookup_int(conf, "NumberOfHits", &number_of_hits) == CONFIG_TRUE) {
+		if (number_of_hits >= SHRT_MIN && number_of_hits <= SHRT_MAX)
+			skill->level_set_value(sk->num, number_of_hits);
+		else
+			ShowWarning("%s: Invalid number of hits %d specified for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 1...\n",
+				    __func__, number_of_hits, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+	}
+}
+
+/**
+ * Validates a skill's cast interruptibility when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the cast interruptibility should be set it.
+ *
+ **/
+static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->castcancel = 0;
+
+	int interrupt_cast;
+
+	if (libconfig->setting_lookup_bool(conf, "InterruptCast", &interrupt_cast) == CONFIG_TRUE)
+		sk->castcancel = (interrupt_cast != 0) ? 1 : 0;
+}
+
+/**
+ * Validates a skill's cast defence rate when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the cast defence rate should be set it.
+ *
+ **/
+static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->cast_def_rate = 0;
+
+	int cast_def_rate;
+
+	if (libconfig->setting_lookup_int(conf, "CastDefRate", &cast_def_rate) == CONFIG_TRUE) {
+		if (cast_def_rate >= SHRT_MIN && cast_def_rate <= SHRT_MAX)
+			sk->cast_def_rate = cast_def_rate;
+		else
+			ShowWarning("%s: Invalid cast defence rate %d specified for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 0...\n",
+				    __func__, cast_def_rate, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+	}
+}
+
+/**
+ * Validates a skill's number of instances when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the number of instances should be set it.
+ *
+ **/
+static void skill_validate_number_of_instances(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->maxcount, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillInstances");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int number_of_instances;
+
+			if (libconfig->setting_lookup_int(t, lv, &number_of_instances) == CONFIG_TRUE) {
+				if (number_of_instances >= 0 && number_of_instances <= MAX_SKILLUNITGROUP)
+					sk->maxcount[i] = number_of_instances;
+				else
+					ShowWarning("%s: Invalid number of instances %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+						    __func__, number_of_instances, i + 1, sk->nameid, conf->file, MAX_SKILLUNITGROUP);
+			}
+		}
+
+		return;
+	}
+
+	int number_of_instances;
+
+	if (libconfig->setting_lookup_int(conf, "SkillInstances", &number_of_instances) == CONFIG_TRUE) {
+		if (number_of_instances >= 0 && number_of_instances <= MAX_SKILLUNITGROUP)
+			skill->level_set_value(sk->maxcount, number_of_instances);
+		else
+			ShowWarning("%s: Invalid number of instances %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+				    __func__, number_of_instances, sk->nameid, conf->file, MAX_SKILLUNITGROUP);
+	}
+}
+
+/**
+ * Validates a skill's number of knock back tiles when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the number of knock back tiles should be set it.
+ *
+ **/
+static void skill_validate_knock_back_tiles(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->blewcount, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "KnockBackTiles");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int knock_back_tiles;
+
+			if (libconfig->setting_lookup_int(t, lv, &knock_back_tiles) == CONFIG_TRUE) {
+				if (knock_back_tiles >= 0)
+					sk->blewcount[i] = knock_back_tiles;
+				else
+					ShowWarning("%s: Invalid number of knock back tiles %d specified in level %d for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+						    __func__, knock_back_tiles, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int knock_back_tiles;
+
+	if (libconfig->setting_lookup_int(conf, "KnockBackTiles", &knock_back_tiles) == CONFIG_TRUE) {
+		if (knock_back_tiles >= 0)
+			skill->level_set_value(sk->blewcount, knock_back_tiles);
+		else
+			ShowWarning("%s: Invalid number of knock back tiles %d specified for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+				    __func__, knock_back_tiles, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's cast time when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the cast time should be set it.
+ *
+ **/
+static void skill_validate_cast_time(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->cast, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "CastTime");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int cast_time;
+
+			if (libconfig->setting_lookup_int(t, lv, &cast_time) == CONFIG_TRUE) {
+				if (cast_time >= 0)
+					sk->cast[i] = cast_time;
+				else
+					ShowWarning("%s: Invalid cast time %d specified in level %d for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+						    __func__, cast_time, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int cast_time;
+
+	if (libconfig->setting_lookup_int(conf, "CastTime", &cast_time) == CONFIG_TRUE) {
+		if (cast_time >= 0)
+			skill->level_set_value(sk->cast, cast_time);
+		else
+			ShowWarning("%s: Invalid cast time %d specified for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+				    __func__, cast_time, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's after cast act delay when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the after cast act delay should be set it.
+ *
+ **/
+static void skill_validate_act_delay(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->delay, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "AfterCastActDelay");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int act_delay;
+
+			if (libconfig->setting_lookup_int(t, lv, &act_delay) == CONFIG_TRUE) {
+				if (act_delay >= 0)
+					sk->delay[i] = act_delay;
+				else
+					ShowWarning("%s: Invalid after cast act delay %d specified in level %d for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+						    __func__, act_delay, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int act_delay;
+
+	if (libconfig->setting_lookup_int(conf, "AfterCastActDelay", &act_delay) == CONFIG_TRUE) {
+		if (act_delay >= 0)
+			skill->level_set_value(sk->delay, act_delay);
+		else
+			ShowWarning("%s: Invalid after cast act delay %d specified for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+				    __func__, act_delay, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's after cast walk delay when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the after cast walk delay should be set it.
+ *
+ **/
+static void skill_validate_walk_delay(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->walkdelay, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "AfterCastWalkDelay");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int walk_delay;
+
+			if (libconfig->setting_lookup_int(t, lv, &walk_delay) == CONFIG_TRUE) {
+				if (walk_delay >= 0)
+					sk->walkdelay[i] = walk_delay;
+				else
+					ShowWarning("%s: Invalid after cast walk delay %d specified in level %d for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+						    __func__, walk_delay, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int walk_delay;
+
+	if (libconfig->setting_lookup_int(conf, "AfterCastWalkDelay", &walk_delay) == CONFIG_TRUE) {
+		if (walk_delay >= 0)
+			skill->level_set_value(sk->walkdelay, walk_delay);
+		else
+			ShowWarning("%s: Invalid after cast walk delay %d specified for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+				    __func__, walk_delay, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's stay duration when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the stay duration should be set it.
+ *
+ **/
+static void skill_validate_skill_data1(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->upkeep_time, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillData1");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int skill_data1;
+
+			if (libconfig->setting_lookup_int(t, lv, &skill_data1) == CONFIG_TRUE) {
+				if (skill_data1 >= INFINITE_DURATION)
+					sk->upkeep_time[i] = skill_data1;
+				else
+					ShowWarning("%s: Invalid stay duration %d specified in level %d for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+						    __func__, skill_data1, i + 1, sk->nameid, conf->file, INFINITE_DURATION);
+			}
+		}
+
+		return;
+	}
+
+	int skill_data1;
+
+	if (libconfig->setting_lookup_int(conf, "SkillData1", &skill_data1) == CONFIG_TRUE) {
+		if (skill_data1 >= INFINITE_DURATION)
+			skill->level_set_value(sk->upkeep_time, skill_data1);
+		else
+			ShowWarning("%s: Invalid stay duration %d specified for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+				    __func__, skill_data1, sk->nameid, conf->file, INFINITE_DURATION);
+	}
+}
+
+/**
+ * Validates a skill's effect duration when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the effect duration should be set it.
+ *
+ **/
+static void skill_validate_skill_data2(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->upkeep_time2, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillData2");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int skill_data2;
+
+			if (libconfig->setting_lookup_int(t, lv, &skill_data2) == CONFIG_TRUE) {
+				if (skill_data2 >= INFINITE_DURATION)
+					sk->upkeep_time2[i] = skill_data2;
+				else
+					ShowWarning("%s: Invalid effect duration %d specified in level %d for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+						    __func__, skill_data2, i + 1, sk->nameid, conf->file, INFINITE_DURATION);
+			}
+		}
+
+		return;
+	}
+
+	int skill_data2;
+
+	if (libconfig->setting_lookup_int(conf, "SkillData2", &skill_data2) == CONFIG_TRUE) {
+		if (skill_data2 >= INFINITE_DURATION)
+			skill->level_set_value(sk->upkeep_time2, skill_data2);
+		else
+			ShowWarning("%s: Invalid effect duration %d specified for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+				    __func__, skill_data2, sk->nameid, conf->file, INFINITE_DURATION);
+	}
+}
+
+/**
+ * Validates a skill's cooldown when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the cooldown should be set it.
+ *
+ **/
+static void skill_validate_cooldown(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->cooldown, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "CoolDown");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int cooldown;
+
+			if (libconfig->setting_lookup_int(t, lv, &cooldown) == CONFIG_TRUE) {
+				if (cooldown >= 0)
+					sk->cooldown[i] = cooldown;
+				else
+					ShowWarning("%s: Invalid cooldown %d specified in level %d for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+						    __func__, cooldown, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int cooldown;
+
+	if (libconfig->setting_lookup_int(conf, "CoolDown", &cooldown) == CONFIG_TRUE) {
+		if (cooldown >= 0)
+			skill->level_set_value(sk->cooldown, cooldown);
+		else
+			ShowWarning("%s: Invalid cooldown %d specified for skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+				    __func__, cooldown, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's fixed cast time when reading the skill DB.
+ * If RENEWAL_CAST is not defined, nothing is done.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the fixed cast time should be set it.
+ *
+ **/
+static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+#ifdef RENEWAL_CAST
+	skill->level_set_value(sk->fixed_cast, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "FixedCastTime");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int fixed_cast_time;
+
+			if (libconfig->setting_lookup_int(t, lv, &fixed_cast_time) == CONFIG_TRUE) {
+				if (fixed_cast_time >= INFINITE_DURATION)
+					sk->fixed_cast[i] = fixed_cast_time;
+				else
+					ShowWarning("%s: Invalid fixed cast time %d specified in level %d for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+						    __func__, fixed_cast_time, i + 1, sk->nameid, conf->file, INFINITE_DURATION);
+			}
+		}
+
+		return;
+	}
+
+	int fixed_cast_time;
+
+	if (libconfig->setting_lookup_int(conf, "FixedCastTime", &fixed_cast_time) == CONFIG_TRUE) {
+		if (fixed_cast_time >= INFINITE_DURATION)
+			skill->level_set_value(sk->fixed_cast, fixed_cast_time);
+		else
+			ShowWarning("%s: Invalid fixed cast time %d specified for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+				    __func__, fixed_cast_time, sk->nameid, conf->file, INFINITE_DURATION);
+	}
+#else
+#ifndef RENEWAL /** Check pre-RE skill DB for FixedCastTime. **/
+	if (libconfig->setting_get_member(conf, "FixedCastTime") != NULL)
+		ShowWarning("%s: Fixed cast time was specified for skill ID %d in %s without RENEWAL_CAST being defined! Skipping...\n", __func__, sk->nameid, conf->file);
+#endif /** RENEWAL **/
+#endif /** RENEWAL_CAST **/
 }
 
 /**
@@ -20546,9 +21307,13 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
  */
 static void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *sk, bool delay)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(delay ? sk->delaynodex : sk->castnodex, 0);
+
 	struct config_setting_t *t = NULL, *tt = NULL;
 
-	nullpo_retv(sk);
 	if ((t=libconfig->setting_get_member(conf, delay?"SkillDelayOptions":"CastTimeOptions")) && config_setting_is_group(t)) {
 		int j = 0, tmpopt = 0;
 		while ((tt = libconfig->setting_get_elem(t, j++)) && j < 4) {
@@ -20574,12 +21339,283 @@ static void skill_validate_castnodex(struct config_setting_t *conf, struct s_ski
 					tmpopt &= ~(1<<2);
 				}
 			} else {
-				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);
-				return;
+				const char *option_string = delay ? "skill delay" : "cast time";
+				ShowWarning("%s: Invalid %s option %s specified for skill ID %d in %s! Skipping option...\n",
+					    __func__, option_string, type, sk->nameid, conf->file);
 			}
 
 		}
 		skill->level_set_value(delay?sk->delaynodex:sk->castnodex, tmpopt);
+	}
+}
+
+/**
+ * Validates a skill's HP cost when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the HP cost should be set it.
+ *
+ **/
+static void skill_validate_hp_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->hp, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "HPCost");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int hp_cost;
+
+			if (libconfig->setting_lookup_int(t, lv, &hp_cost) == CONFIG_TRUE) {
+				if (hp_cost >= 0 && hp_cost <= battle_config.max_hp)
+					sk->hp[i] = hp_cost;
+				else
+					ShowWarning("%s: Invalid HP cost %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+						    __func__, hp_cost, i + 1, sk->nameid, conf->file, battle_config.max_hp);
+			}
+		}
+
+		return;
+	}
+
+	int hp_cost;
+
+	if (libconfig->setting_lookup_int(conf, "HPCost", &hp_cost) == CONFIG_TRUE) {
+		if (hp_cost >= 0 && hp_cost <= battle_config.max_hp)
+			skill->level_set_value(sk->hp, hp_cost);
+		else
+			ShowWarning("%s: Invalid HP cost %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+				    __func__, hp_cost, sk->nameid, conf->file, battle_config.max_hp);
+	}
+}
+
+/**
+ * Validates a skill's SP cost when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the SP cost should be set it.
+ *
+ **/
+static void skill_validate_sp_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->sp, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SPCost");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int sp_cost;
+
+			if (libconfig->setting_lookup_int(t, lv, &sp_cost) == CONFIG_TRUE) {
+				if (sp_cost >= 0 && sp_cost <= battle_config.max_sp)
+					sk->sp[i] = sp_cost;
+				else
+					ShowWarning("%s: Invalid SP cost %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+						    __func__, sp_cost, i + 1, sk->nameid, conf->file, battle_config.max_sp);
+			}
+		}
+
+		return;
+	}
+
+	int sp_cost;
+
+	if (libconfig->setting_lookup_int(conf, "SPCost", &sp_cost) == CONFIG_TRUE) {
+		if (sp_cost >= 0 && sp_cost <= battle_config.max_sp)
+			skill->level_set_value(sk->sp, sp_cost);
+		else
+			ShowWarning("%s: Invalid SP cost %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+				    __func__, sp_cost, sk->nameid, conf->file, battle_config.max_sp);
+	}
+}
+
+/**
+ * Validates a skill's HP rate cost when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the HP rate cost should be set it.
+ *
+ **/
+static void skill_validate_hp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->hp_rate, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "HPRateCost");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int hp_rate_cost;
+
+			if (libconfig->setting_lookup_int(t, lv, &hp_rate_cost) == CONFIG_TRUE) {
+				if (hp_rate_cost >= -100 && hp_rate_cost <= 100)
+					sk->hp_rate[i] = hp_rate_cost;
+				else
+					ShowWarning("%s: Invalid HP rate cost %d specified in level %d for skill ID %d in %s! Minimum is -100, maximum is 100. Defaulting to 0...\n",
+						    __func__, hp_rate_cost, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int hp_rate_cost;
+
+	if (libconfig->setting_lookup_int(conf, "HPRateCost", &hp_rate_cost) == CONFIG_TRUE) {
+		if (hp_rate_cost >= -100 && hp_rate_cost <= 100)
+			skill->level_set_value(sk->hp_rate, hp_rate_cost);
+		else
+			ShowWarning("%s: Invalid HP rate cost %d specified for skill ID %d in %s! Minimum is -100, maximum is 100. Defaulting to 0...\n",
+				    __func__, hp_rate_cost, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's SP rate cost when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the SP rate cost should be set it.
+ *
+ **/
+static void skill_validate_sp_rate_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->sp_rate, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SPRateCost");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int sp_rate_cost;
+
+			if (libconfig->setting_lookup_int(t, lv, &sp_rate_cost) == CONFIG_TRUE) {
+				if (sp_rate_cost >= -100 && sp_rate_cost <= 100)
+					sk->sp_rate[i] = sp_rate_cost;
+				else
+					ShowWarning("%s: Invalid SP rate cost %d specified in level %d for skill ID %d in %s! Minimum is -100, maximum is 100. Defaulting to 0...\n",
+						    __func__, sp_rate_cost, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int sp_rate_cost;
+
+	if (libconfig->setting_lookup_int(conf, "SPRateCost", &sp_rate_cost) == CONFIG_TRUE) {
+		if (sp_rate_cost >= -100 && sp_rate_cost <= 100)
+			skill->level_set_value(sk->sp_rate, sp_rate_cost);
+		else
+			ShowWarning("%s: Invalid SP rate cost %d specified for skill ID %d in %s! Minimum is -100, maximum is 100. Defaulting to 0...\n",
+				    __func__, sp_rate_cost, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's maximum HP trigger when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the maximum HP trigger should be set it.
+ *
+ **/
+static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->mhp, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "MaxHPTrigger");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int max_hp_trigger;
+
+			if (libconfig->setting_lookup_int(t, lv, &max_hp_trigger) == CONFIG_TRUE) {
+				if (max_hp_trigger >= 0 && max_hp_trigger <= 100)
+					sk->mhp[i] = max_hp_trigger;
+				else
+					ShowWarning("%s: Invalid maximum HP trigger %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is 100. Defaulting to 0...\n",
+						    __func__, max_hp_trigger, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int max_hp_trigger;
+
+	if (libconfig->setting_lookup_int(conf, "MaxHPTrigger", &max_hp_trigger) == CONFIG_TRUE) {
+		if (max_hp_trigger >= 0 && max_hp_trigger <= 100)
+			skill->level_set_value(sk->mhp, max_hp_trigger);
+		else
+			ShowWarning("%s: Invalid maximum HP trigger %d specified for skill ID %d in %s! Minimum is 0, maximum is 100. Defaulting to 0...\n",
+				    __func__, max_hp_trigger, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's Zeny cost when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the Zeny cost should be set it.
+ *
+ **/
+static void skill_validate_zeny_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->zeny, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "ZenyCost");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int zeny_cost;
+
+			if (libconfig->setting_lookup_int(t, lv, &zeny_cost) == CONFIG_TRUE) {
+				if (zeny_cost >= 0 && zeny_cost <= MAX_ZENY)
+					sk->zeny[i] = zeny_cost;
+				else
+					ShowWarning("%s: Invalid Zeny cost %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+						    __func__, zeny_cost, i + 1, sk->nameid, conf->file, MAX_ZENY);
+			}
+		}
+
+		return;
+	}
+
+	int zeny_cost;
+
+	if (libconfig->setting_lookup_int(conf, "ZenyCost", &zeny_cost) == CONFIG_TRUE) {
+		if (zeny_cost >= 0 && zeny_cost <= MAX_ZENY)
+			skill->level_set_value(sk->zeny, zeny_cost);
+		else
+			ShowWarning("%s: Invalid Zeny cost %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+				    __func__, zeny_cost, sk->nameid, conf->file, MAX_ZENY);
 	}
 }
 
@@ -20593,7 +21629,9 @@ static void skill_validate_castnodex(struct config_setting_t *conf, struct s_ski
  */
 static int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *sk)
 {
-	nullpo_ret(sk);
+	nullpo_retr(1, type);
+	nullpo_retr(1, sk);
+
 	if (strcmpi(type, "NoWeapon") == 0) {
 		if (on) {
 			sk->weapon |= 1<<W_FIST;
@@ -20780,7 +21818,6 @@ static int skill_validate_weapontype_sub(const char *type, bool on, struct s_ski
 	} else if (strcmpi(type, "All") == 0) {
 		sk->weapon = 0;
 	} else {
-		ShowError("Item %d. Unknown weapon type %s\n", sk->nameid, type);
 		return 1; // invalid type
 	}
 
@@ -20796,20 +21833,26 @@ static int skill_validate_weapontype_sub(const char *type, bool on, struct s_ski
  */
 static void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->weapon = 0;
+
 	struct config_setting_t *tt = NULL;
 	const char *type = NULL;
 
-	nullpo_retv(sk);
 	if ((tt = libconfig->setting_get_member(conf, "WeaponTypes")) && config_setting_is_group(tt)) {
 		int j = 0;
 		struct config_setting_t *wpt = NULL;
 		while ((wpt = libconfig->setting_get_elem(tt, j++)) != NULL) {
 			if (skill->validate_weapontype_sub(config_setting_name(wpt), libconfig->setting_get_bool_real(wpt), sk))
-				skilldb_invalid_error(config_setting_name(wpt), config_setting_name(tt), sk->nameid);
+				ShowWarning("%s: Invalid required weapon type %s specified for skill ID %d in %s! Skipping type...\n",
+					    __func__, config_setting_name(wpt), sk->nameid, conf->file);
 		}
 	} else if (libconfig->setting_lookup_string(conf, "WeaponTypes", &type)) {
 		if (skill->validate_weapontype_sub(type, true, sk))
-			skilldb_invalid_error(type, "WeaponTypes", sk->nameid);
+			ShowWarning("%s: Invalid required weapon type %s specified for skill ID %d in %s! Defaulting to All...\n",
+				    __func__, type, sk->nameid, conf->file);
 	}
 }
 
@@ -20823,7 +21866,9 @@ static void skill_validate_weapontype(struct config_setting_t *conf, struct s_sk
  */
 static int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill_db *sk)
 {
-	nullpo_ret(sk);
+	nullpo_retr(1, type);
+	nullpo_retr(1, sk);
+
 	if (strcmpi(type, "A_ARROW") == 0) {
 		if (on) {
 			sk->ammo |= 1<<A_ARROW;
@@ -20900,20 +21945,71 @@ static int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill
  */
 static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->ammo = 0;
+
 	struct config_setting_t *tt = NULL;
 	const char *tstr = NULL;
 
-	nullpo_retv(sk);
 	if ((tt = libconfig->setting_get_member(conf, "AmmoTypes")) && config_setting_is_group(tt)) {
 		int j = 0;
 		struct config_setting_t *amt = { 0 };
 		while ((amt = libconfig->setting_get_elem(tt, j++))) {
 			if (skill->validate_ammotype_sub(config_setting_name(amt), libconfig->setting_get_bool_real(amt), sk))
-				skilldb_invalid_error(config_setting_name(amt), config_setting_name(tt), sk->nameid);
+				ShowWarning("%s: Invalid required ammunition type %s specified for skill ID %d in %s! Skipping type...\n",
+					    __func__, config_setting_name(amt), sk->nameid, conf->file);
 		}
 	} else if( libconfig->setting_lookup_string(conf, "AmmoTypes", &tstr)) {
 		if (skill->validate_ammotype_sub(tstr, true, sk))
-			skilldb_invalid_error(tstr, "AmmoTypes", sk->nameid);
+			ShowWarning("%s: Invalid required ammunition type %s specified for skill ID %d in %s! Defaulting to None...\n",
+				    __func__, tstr, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's required ammunition amount when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required ammunition amount should be set it.
+ *
+ **/
+static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->ammo_qty, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "AmmoAmount");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int ammo_amount;
+
+			if (libconfig->setting_lookup_int(t, lv, &ammo_amount) == CONFIG_TRUE) {
+				if (ammo_amount >= 0 && ammo_amount <= MAX_AMOUNT)
+					sk->ammo_qty[i] = ammo_amount;
+				else
+					ShowWarning("%s: Invalid required ammunition amount %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+						    __func__, ammo_amount, i + 1, sk->nameid, conf->file, MAX_AMOUNT);
+			}
+		}
+
+		return;
+	}
+
+	int ammo_amount;
+
+	if (libconfig->setting_lookup_int(conf, "AmmoAmount", &ammo_amount) == CONFIG_TRUE) {
+		if (ammo_amount >= 0 && ammo_amount <= MAX_AMOUNT)
+			skill->level_set_value(sk->ammo_qty, ammo_amount);
+		else
+			ShowWarning("%s: Invalid required ammunition amount %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+				    __func__, ammo_amount, sk->nameid, conf->file, MAX_AMOUNT);
 	}
 }
 
@@ -20926,9 +22022,13 @@ static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skil
  */
 static void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->state = ST_NONE;
+
 	const char *type = NULL;
 
-	nullpo_retv(sk);
 	if (libconfig->setting_lookup_string(conf, "State", &type) && strcmpi(type,"None") != ST_NONE) {
 		if (     strcmpi(type,"Hiding")           == 0 ) sk->state = ST_HIDING;
 		else if (strcmpi(type,"Cloaking")         == 0 ) sk->state = ST_CLOAKING;
@@ -20954,7 +22054,53 @@ static void skill_validate_state(struct config_setting_t *conf, struct s_skill_d
 		else if (strcmpi(type,"MH_Grappling")     == 0 ) sk->state = ST_MH_GRAPPLING;
 		else if (strcmpi(type,"Peco")             == 0 ) sk->state = ST_PECO;
 		else
-			skilldb_invalid_error(type, "State", sk->nameid);
+			ShowWarning("%s: Invalid required state %s specified for skill ID %d in %s! Defaulting to None...\n",
+				    __func__, type, sk->nameid, conf->file);
+	}
+}
+
+/**
+ * Validates a skill's Spirit Sphere cost when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the Spirit Sphere cost should be set it.
+ *
+ **/
+static void skill_validate_spirit_sphere_cost(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->spiritball, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SpiritSphereCost");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int spirit_sphere_cost;
+
+			if (libconfig->setting_lookup_int(t, lv, &spirit_sphere_cost) == CONFIG_TRUE) {
+				if (spirit_sphere_cost >= 0 && spirit_sphere_cost <= MAX_SPIRITBALL)
+					sk->spiritball[i] = spirit_sphere_cost;
+				else
+					ShowWarning("%s: Invalid Spirit Sphere cost %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+						    __func__, spirit_sphere_cost, i + 1, sk->nameid, conf->file, MAX_SPIRITBALL);
+			}
+		}
+
+		return;
+	}
+
+	int spirit_sphere_cost;
+
+	if (libconfig->setting_lookup_int(conf, "SpiritSphereCost", &spirit_sphere_cost) == CONFIG_TRUE) {
+		if (spirit_sphere_cost >= 0 && spirit_sphere_cost <= MAX_SPIRITBALL)
+			skill->level_set_value(sk->spiritball, spirit_sphere_cost);
+		else
+			ShowWarning("%s: Invalid Spirit Sphere cost %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Defaulting to 0...\n",
+				    __func__, spirit_sphere_cost, sk->nameid, conf->file, MAX_SPIRITBALL);
 	}
 }
 
@@ -20967,9 +22113,14 @@ static void skill_validate_state(struct config_setting_t *conf, struct s_skill_d
  */
 static void skill_validate_item_requirements(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->itemid, 0);
+	skill->level_set_value(sk->amount, 0);
+
 	struct config_setting_t *tt = NULL;
 
-	nullpo_retv(sk);
 	if ((tt=libconfig->setting_get_member(conf, "Items")) && config_setting_is_group(conf)) {
 		int itx=-1;
 		struct config_setting_t *it;
@@ -20977,63 +22128,273 @@ static void skill_validate_item_requirements(struct config_setting_t *conf, stru
 		while((it=libconfig->setting_get_elem(tt, ++itx)) && itx < MAX_SKILL_ITEM_REQUIRE) {
 			const char *type = config_setting_name(it);
 
-			if( type[0] == 'I' && type[1] == 'D' && itemdb->exists(atoi(type+2)) )
-				sk->itemid[itx] = atoi(type+2);
-			else if(!script->get_constant(type, &sk->itemid[itx])) {
-				ShowWarning("skill_read_skilldb: Invalid required Item '%s' given for skill Id %d in '%s', skipping...\n",type, sk->nameid, DBPATH"skill_db.conf");
+			if (strlen(type) < 2) {
+				ShowWarning("%s: Invalid required item %s specified for skill ID %d in %s! Skipping item...\n",
+					    __func__, type, sk->nameid, conf->file);
 				continue;
 			}
+
+			int item_id = 0;
+
+			if (type[0] == 'I' && type[1] == 'D') {
+				item_id = atoi(type + 2);
+
+				if (item_id == 0 || itemdb->exists(item_id) == NULL) {
+					ShowWarning("%s: Invalid required item %s specified for skill ID %d in %s! Skipping item...\n",
+						    __func__, type, sk->nameid, conf->file);
+					continue;
+				}
+			} else if (!script->get_constant(type, &item_id)) {
+				ShowWarning("%s: Invalid required item %s specified for skill ID %d in %s! Skipping item...\n",
+					    __func__, type, sk->nameid, conf->file);
+				continue;
+			}
+
+			int amount = 0;
 
 			if (config_setting_is_group(it)) {
 				// TODO: Per-level item requirements are not implemented yet!
 				// We just take the first level for the time being (old txt behavior)
-				sk->amount[itx] = libconfig->setting_get_int_elem(it, 0);
+				amount = libconfig->setting_get_int_elem(it, 0);
 			} else {
-				sk->amount[itx] = libconfig->setting_get_int(it);
+				amount = libconfig->setting_get_int(it);
 			}
+
+			if (amount < 0 || amount > MAX_AMOUNT) {
+				ShowWarning("%s: Invalid required item amount %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Skipping item...\n",
+					    __func__, amount, sk->nameid, conf->file, MAX_AMOUNT);
+				continue;
+			}
+
+			sk->itemid[itx] = item_id;
+			sk->amount[itx] = amount;
 		}
 	}
 }
 
 /**
- * Validates the "Unit > Target" flag
- * when parsing skill_db.conf
- * @param   conf    struct, pointer to the skill configuration
- * @param   sk      struct, pointer to s_skill_db
- * @return void
- */
-static void skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db *sk)
+ * Validates a skill's requirements when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the requirements should be set it.
+ *
+ **/
+static void skill_validate_requirements(struct config_setting_t *conf, struct s_skill_db *sk)
 {
-	const char *type = NULL;
-
+	nullpo_retv(conf);
 	nullpo_retv(sk);
-	if(libconfig->setting_lookup_string(conf, "Target", &type)) {
 
-		if(!strcmpi(type,"NotEnemy")) sk->unit_target = BCT_NOENEMY;
-		else if(!strcmpi(type,"NotParty")) sk->unit_target = BCT_NOPARTY;
-		else if (!strcmpi(type,"NotGuild")) sk->unit_target = BCT_NOGUILD;
-		else if(!strcmpi(type,"Friend")) sk->unit_target = BCT_NOENEMY;
-		else if(!strcmpi(type,"Party")) sk->unit_target = BCT_PARTY;
-		else if(!strcmpi(type,"Ally")) sk->unit_target = BCT_PARTY|BCT_GUILD;
-		else if(!strcmpi(type,"Guild")) sk->unit_target = BCT_GUILD;
-		else if(!strcmpi(type,"All")) sk->unit_target = BCT_ALL;
-		else if(!strcmpi(type,"Enemy")) sk->unit_target = BCT_ENEMY;
-		else if(!strcmpi(type,"Self")) sk->unit_target = BCT_SELF;
-		else if(!strcmpi(type,"SameGuild")) sk->unit_target = BCT_GUILD|BCT_SAMEGUILD;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Requirements");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		skill->validate_hp_cost(t, sk);
+		skill->validate_sp_cost(t, sk);
+		skill->validate_hp_rate_cost(t, sk);
+		skill->validate_sp_rate_cost(t, sk);
+		skill->validate_max_hp_trigger(t, sk);
+		skill->validate_zeny_cost(t, sk);
+		skill->validate_weapontype(t, sk);
+		skill->validate_ammotype(t, sk);
+		skill->validate_ammo_amount(t, sk);
+		skill->validate_state(t, sk);
+		skill->validate_spirit_sphere_cost(t, sk);
+		skill->validate_item_requirements(t, sk);
+	}
+}
+
+/**
+ * Validates a single unit ID when reading the skill DB.
+ *
+ * @param unit_id The unit ID to validate.
+ * @return A number greater than or equal to 0 if the passed unit ID is valid, otherwise -1.
+ *
+ **/
+static int skill_validate_unit_id_sub(int unit_id)
+{
+	if (unit_id == 0 || (unit_id >= UNT_SAFETYWALL && unit_id <= UNT_SV_ROOTTWIST))
+		return unit_id;
+
+	return -1;
+}
+
+/**
+ * Validates a skill's unit IDs when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit IDs should be set it.
+ *
+ **/
+static void skill_validate_unit_id(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->unit_id[0] = 0;
+	sk->unit_id[1] = 0;
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Id");
+
+	if (t != NULL && config_setting_is_array(t)) {
+		if (libconfig->setting_length(t) == 0) {
+			ShowWarning("%s: No unit ID(s) specified for skill ID %d in %s! Defaulting to 0...\n",
+				    __func__, sk->nameid, conf->file);
+			return;
+		}
+
+		if (libconfig->setting_length(t) > 2)
+			ShowWarning("%s: Specified more than two unit IDs for skill ID %d in %s! Reading only the first two...\n",
+				    __func__, sk->nameid, conf->file);
+
+		int unit_id1 = libconfig->setting_get_int_elem(t, 0);
+
+		if (skill->validate_unit_id_sub(unit_id1) == -1) {
+			ShowWarning("%s: Unknown unit ID %d specified for skill ID %d in %s! Defaulting to 0...\n",
+				    __func__, unit_id1, sk->nameid, conf->file);
+			unit_id1 = 0;
+		}
+
+		int unit_id2 = 0;
+
+		if (libconfig->setting_length(t) > 1) {
+			unit_id2 = libconfig->setting_get_int_elem(t, 1);
+
+			if (skill->validate_unit_id_sub(unit_id2) == -1) {
+				ShowWarning("%s: Unknown unit ID %d specified for skill ID %d in %s! Defaulting to 0...\n",
+					    __func__, unit_id2, sk->nameid, conf->file);
+				unit_id2 = 0;
+			}
+		}
+
+		sk->unit_id[0] = unit_id1;
+		sk->unit_id[1] = unit_id2;
+
+		return;
 	}
 
-	if (sk->unit_flag & UF_DEFNOTENEMY && battle_config.defnotenemy)
-		sk->unit_target = BCT_NOENEMY;
+	int unit_id;
 
-	//By default, target just characters.
-	sk->unit_target |= BL_CHAR;
+	if (libconfig->setting_lookup_int(conf, "Id", &unit_id) == CONFIG_TRUE) {
+		if (skill->validate_unit_id_sub(unit_id) == -1)
+			ShowWarning("%s: Unknown unit ID %d specified for skill ID %d in %s! Defaulting to 0...\n",
+				    __func__, unit_id, sk->nameid, conf->file);
+		else
+			sk->unit_id[0] = unit_id;
+	}
+}
 
-	if (sk->unit_flag & UF_NOPC)
-		sk->unit_target &= ~BL_PC;
-	if (sk->unit_flag & UF_NOMOB)
-		sk->unit_target &= ~BL_MOB;
-	if (sk->unit_flag & UF_SKILL)
-		sk->unit_target |= BL_SKILL;
+/**
+ * Validates a skill's unit layout when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit layout should be set it.
+ *
+ **/
+static void skill_validate_unit_layout(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->unit_layout_type, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Layout");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int unit_layout;
+
+			if (libconfig->setting_lookup_int(t, lv, &unit_layout) == CONFIG_TRUE) {
+				if (unit_layout >= -1 && unit_layout <= MAX_SKILL_UNIT_LAYOUT)
+					sk->unit_layout_type[i] = unit_layout;
+				else
+					ShowWarning("%s: Invalid unit layout %d specified in level %d for skill ID %d in %s! Minimum is -1, maximum is %d. Defaulting to 0...\n",
+						    __func__, unit_layout, i + 1, sk->nameid, conf->file, MAX_SKILL_UNIT_LAYOUT);
+			}
+		}
+
+		return;
+	}
+
+	int unit_layout;
+
+	if (libconfig->setting_lookup_int(conf, "Layout", &unit_layout) == CONFIG_TRUE) {
+		if (unit_layout >= -1 && unit_layout <= MAX_SKILL_UNIT_LAYOUT)
+			skill->level_set_value(sk->unit_layout_type, unit_layout);
+		else
+			ShowWarning("%s: Invalid unit layout %d specified for skill ID %d in %s! Minimum is -1, maximum is %d. Defaulting to 0...\n",
+				    __func__, unit_layout, sk->nameid, conf->file, MAX_SKILL_UNIT_LAYOUT);
+	}
+}
+
+/**
+ * Validates a skill's unit range when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit range should be set it.
+ *
+ **/
+static void skill_validate_unit_range(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->unit_range, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Range");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int unit_range;
+
+			if (libconfig->setting_lookup_int(t, lv, &unit_range) == CONFIG_TRUE) {
+				if (unit_range >= -1 && unit_range <= UCHAR_MAX)
+					sk->unit_range[i] = unit_range;
+				else
+					ShowWarning("%s: Invalid unit range %d specified in level %d for skill ID %d in %s! Minimum is -1, maximum is %d. Defaulting to 0...\n",
+						    __func__, unit_range, i + 1, sk->nameid, conf->file, UCHAR_MAX);
+			}
+		}
+
+		return;
+	}
+
+	int unit_range;
+
+	if (libconfig->setting_lookup_int(conf, "Range", &unit_range) == CONFIG_TRUE) {
+		if (unit_range >= -1 && unit_range <= UCHAR_MAX)
+			skill->level_set_value(sk->unit_range, unit_range);
+		else
+			ShowWarning("%s: Invalid unit range %d specified for skill ID %d in %s! Minimum is -1, maximum is %d. Defaulting to 0...\n",
+				    __func__, unit_range, sk->nameid, conf->file, UCHAR_MAX);
+	}
+}
+
+/**
+ * Validates a skill's unit interval when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit interval should be set it.
+ *
+ **/
+static void skill_validate_unit_interval(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->unit_interval = 0;
+
+	int unit_interval;
+
+	if (libconfig->setting_lookup_int(conf, "Interval", &unit_interval) == CONFIG_TRUE) {
+		if (unit_interval >= INFINITE_DURATION)
+			sk->unit_interval = unit_interval;
+		else
+			ShowWarning("%s: Invalid unit interval %d specified for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+				    __func__, unit_interval, sk->nameid, conf->file, INFINITE_DURATION);
+	}
 }
 
 /**
@@ -21046,8 +22407,8 @@ static void skill_validate_unit_target(struct config_setting_t *conf, struct s_s
  */
 static int skill_validate_unit_flag_sub(const char *type, bool on, struct s_skill_db *sk)
 {
-	nullpo_ret(type);
-	nullpo_ret(sk);
+	nullpo_retr(1, type);
+	nullpo_retr(1, sk);
 	if (strcmpi(type, "UF_DEFNOTENEMY") == 0) {
 		if (on) {
 			sk->unit_flag |= UF_DEFNOTENEMY;
@@ -21142,9 +22503,13 @@ static int skill_validate_unit_flag_sub(const char *type, bool on, struct s_skil
  */
 static void skill_validate_unit_flag(struct config_setting_t *conf, struct s_skill_db *sk)
 {
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->unit_flag = 0;
+
 	struct config_setting_t *t = NULL;
 
-	nullpo_retv(sk);
 	if ((t=libconfig->setting_get_member(conf, "Flag")) && config_setting_is_group(t)) {
 		int j=0;
 		struct config_setting_t *tt = NULL;
@@ -21152,10 +22517,84 @@ static void skill_validate_unit_flag(struct config_setting_t *conf, struct s_ski
 			const char *name = config_setting_name(tt);
 
 			if (skill->validate_unit_flag_sub(name, libconfig->setting_get_bool_real(tt), sk))
-				skilldb_invalid_error(name, config_setting_name(t), sk->nameid);
+				ShowWarning("%s: Invalid unit flag %s specified for skill ID %d in %s! Skipping flag...\n",
+					    __func__, name, sk->nameid, conf->file);
 		}
 	}
 }
+
+/**
+ * Validates the "Unit > Target" flag
+ * when parsing skill_db.conf
+ * @param   conf    struct, pointer to the skill configuration
+ * @param   sk      struct, pointer to s_skill_db
+ * @return void
+ */
+static void skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	sk->unit_target = BCT_NOONE;
+
+	const char *type = NULL;
+
+	if(libconfig->setting_lookup_string(conf, "Target", &type)) {
+
+		if(!strcmpi(type,"NotEnemy")) sk->unit_target = BCT_NOENEMY;
+		else if(!strcmpi(type,"NotParty")) sk->unit_target = BCT_NOPARTY;
+		else if (!strcmpi(type,"NotGuild")) sk->unit_target = BCT_NOGUILD;
+		else if(!strcmpi(type,"Friend")) sk->unit_target = BCT_NOENEMY;
+		else if(!strcmpi(type,"Party")) sk->unit_target = BCT_PARTY;
+		else if(!strcmpi(type,"Ally")) sk->unit_target = BCT_PARTY|BCT_GUILD;
+		else if(!strcmpi(type,"Guild")) sk->unit_target = BCT_GUILD;
+		else if(!strcmpi(type,"All")) sk->unit_target = BCT_ALL;
+		else if(!strcmpi(type,"Enemy")) sk->unit_target = BCT_ENEMY;
+		else if(!strcmpi(type,"Self")) sk->unit_target = BCT_SELF;
+		else if(!strcmpi(type,"SameGuild")) sk->unit_target = BCT_SAMEGUILD;
+		else if(strcmpi(type, "None") != 0)
+			ShowWarning("%s: Invalid unit target %s specified for skill ID %d in %s! Defaulting to None...\n",
+				    __func__, type, sk->nameid, conf->file);
+	}
+
+	if (sk->unit_flag & UF_DEFNOTENEMY && battle_config.defnotenemy)
+		sk->unit_target = BCT_NOENEMY;
+
+	//By default, target just characters.
+	sk->unit_target |= BL_CHAR;
+
+	if (sk->unit_flag & UF_NOPC)
+		sk->unit_target &= ~BL_PC;
+	if (sk->unit_flag & UF_NOMOB)
+		sk->unit_target &= ~BL_MOB;
+	if (sk->unit_flag & UF_SKILL)
+		sk->unit_target |= BL_SKILL;
+}
+
+/**
+ * Validates a skill's unit data when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit data should be set it.
+ *
+ **/
+static void skill_validate_unit(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Unit");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		skill->validate_unit_id(t, sk);
+		skill->validate_unit_layout(t, sk);
+		skill->validate_unit_range(t, sk);
+		skill->validate_unit_interval(t, sk);
+		skill->validate_unit_flag(t, sk);
+		skill->validate_unit_target(t, sk);
+	}
+}
+
 /**
  * Validate additional field settings via plugins
  * when parsing skill_db.conf
@@ -21166,37 +22605,6 @@ static void skill_validate_unit_flag(struct config_setting_t *conf, struct s_ski
 static void skill_validate_additional_fields(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	// Does nothing like a boss. *cough* plugins *cough*
-}
-
-/**
- * Validates a skill entry and adds it to the database. [ Smokexyz/Hercules ]
- * @param  sk        contains skill data to be checked.
- * @param  *source   filepath constant.
- * @return boolean   true on success.
- */
-static bool skill_validate_skilldb(struct s_skill_db *sk, const char *source)
-{
-	int idx;
-
-	nullpo_retr(false, sk);
-	idx = skill->get_index(sk->nameid);
-	if (idx  == 0) {
-		ShowWarning("skill_validate_skilldb: Invalid skill Id %d provided in '%s'! ... skipping\n", sk->nameid, source);
-		ShowInfo("It is possible that the skill Id is 0 or unavailable (interferes with guild/homun/mercenary skill mapping).\n");
-		return false;
-	} else if (sk->max <= 0) {
-		ShowError("skill_validate_skilldb: Invalid Max Level %d specified for skill Id %d in '%s', skipping...\n", sk->max, sk->nameid, source);
-		return false;
-	}
-
-	/* Direct assignment of temporary skill storage to skill db */
-	skill->dbs->db[idx] = *sk;
-	/* Put skill name in name2id DB */
-	strdb_iput(skill->name2id_db, skill->dbs->db[idx].name, skill->dbs->db[idx].nameid);
-	/* Set Name to Id script constants */
-	script->set_constant2(skill->dbs->db[idx].name, (int)skill->dbs->db[idx].nameid, false, false);
-
-	return true;
 }
 
 /**
@@ -21211,7 +22619,6 @@ static bool skill_read_skilldb(const char *filename)
 	struct config_setting_t *sk, *conf;
 	char filepath[256];
 	int count=0, index=0;
-	bool duplicate[MAX_SKILL_DB] = {0};
 
 	nullpo_retr(false, filename);
 
@@ -21229,221 +22636,56 @@ static bool skill_read_skilldb(const char *filename)
 	}
 
 	while ((conf = libconfig->setting_get_elem(sk,index++))) {
-		int idx=0, skill_id=0, temp=0;
-		struct config_setting_t *t = NULL, *tt = NULL;
 		struct s_skill_db tmp_db = { 0 };
 
-		/* Skill ID */
-		if (!libconfig->setting_lookup_int(conf, "Id", &skill_id)) {
-			ShowError("skill_read_skilldb: Skill Id not specified for entry %d in '%s', skipping...\n", index, filepath );
+		/** Validate mandatory fields. **/
+		skill->validate_id(conf, &tmp_db, index);
+		if (tmp_db.nameid == 0)
 			continue;
-		}
 
-		tmp_db.nameid = skill_id;
-
-		if((idx = skill->get_index(skill_id)) == 0) {
-			ShowError("skill_read_skilldb: Skill Id %d is out of range, or within a reserved range (for guild, homunculus, mercenary or elemental skills). skipping...\n", idx);
+		skill->validate_name(conf, &tmp_db);
+		if (*tmp_db.name == '\0')
 			continue;
-		}
 
-		if (duplicate[idx]) {
-			ShowWarning("skill_read_skilldb: Duplicate Skill Id %d in entry %d in '%s', skipping...\n", skill_id, index, filepath);
+		skill->validate_max_level(conf, &tmp_db);
+		if (tmp_db.max == 0)
 			continue;
-		}
 
-		/* Skill Name Constant */
-		if (!libconfig->setting_lookup_mutable_string(conf, "Name", tmp_db.name, sizeof(tmp_db.name))) {
-			ShowError("skill_read_skilldb: Name not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
-			continue;
-		}
-
-		/* Skill Description */
-		libconfig->setting_lookup_mutable_string(conf, "Description", tmp_db.desc, sizeof(tmp_db.desc));
-
-		/* Max Level */
-		if (!libconfig->setting_lookup_int(conf, "MaxLevel", &temp)) {
-			ShowError("skill_read_skilldb: MaxLevel not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
-			continue;
-		} else {
-			tmp_db.max = temp;
-		}
-
-		/* Range */
-		if ((t=libconfig->setting_get_member(conf, "Range")))
-			skill->config_set_level(t, tmp_db.range);
-
-		/* Hit Type */
+		/** Validate optional fields. **/
+		skill->validate_description(conf, &tmp_db);
+		skill->validate_range(conf, &tmp_db);
 		skill->validate_hittype(conf, &tmp_db);
-
-		/* Skill Type */
 		skill->validate_skilltype(conf, &tmp_db);
-
-		/* Skill Info */
 		skill->validate_skillinfo(conf, &tmp_db);
-
-		/* Skill Attack Type */
 		skill->validate_attacktype(conf, &tmp_db);
-
-		/* Skill Element */
 		skill->validate_element(conf, &tmp_db);
-
-		/* Damage Type */
 		skill->validate_damagetype(conf, &tmp_db);
-
-		/* Splash Range */
-		if ((t = libconfig->setting_get_member(conf, "SplashRange")))
-			skill->config_set_level(t, tmp_db.splash);
-
-		/* Number of Hits */
-		if ((t = libconfig->setting_get_member(conf, "NumberOfHits")) && config_setting_is_group(t))
-			skill->config_set_level(t, tmp_db.num);
-		else if ((libconfig->setting_lookup_int(conf, "NumberOfHits", &temp)))
-			skill->level_set_value(tmp_db.num, temp);
-		else
-			skill->level_set_value(tmp_db.num, 1); // Default 1
-
-		/* Interrupt Cast */
-		if (libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel) == CONFIG_FALSE)
-			tmp_db.castcancel = 0;
-
-		/* Cast Defense Rate */
-		libconfig->setting_lookup_int(conf, "CastDefRate", &tmp_db.cast_def_rate);
-
-		/* Skill Instances */
-		if ((t = libconfig->setting_get_member(conf, "SkillInstances")))
-			skill->config_set_level(t, tmp_db.maxcount);
-
-		/* Knock-Back Tiles */
-		if ((t = libconfig->setting_get_member(conf, "KnockBackTiles")))
-			skill->config_set_level(t, tmp_db.blewcount);
-		/**
-		 * Skill Cast / Delay data handling
-		 */
-		/* Cast Time */
-		if ((t=libconfig->setting_get_member(conf, "CastTime")))
-			skill->config_set_level(t, tmp_db.cast);
-
-		/* After Cast Act Delay */
-		if ((t=libconfig->setting_get_member(conf, "AfterCastActDelay")))
-			skill->config_set_level(t, tmp_db.delay);
-
-		/* After Cast Walk Delay */
-		if ((t=libconfig->setting_get_member(conf, "AfterCastWalkDelay")))
-			skill->config_set_level(t, tmp_db.walkdelay);
-
-		/* Skill Data/Duration */
-		if ((t=libconfig->setting_get_member(conf, "SkillData1")))
-			skill->config_set_level(t, tmp_db.upkeep_time);
-
-		/* Skill Data/Duration 2 */
-		if ((t=libconfig->setting_get_member(conf, "SkillData2")))
-			skill->config_set_level(t, tmp_db.upkeep_time2);
-
-		/* Skill Cool Down */
-		if ((t=libconfig->setting_get_member(conf, "CoolDown")))
-			skill->config_set_level(t, tmp_db.cooldown);
-
-#ifdef RENEWAL_CAST
-		/* Fixed Casting Time */
-		if ((t=libconfig->setting_get_member(conf, "FixedCastTime")))
-			skill->config_set_level(t, tmp_db.fixed_cast);
-#endif
-		/* Cast Time Options */
+		skill->validate_splash_range(conf, &tmp_db);
+		skill->validate_number_of_hits(conf, &tmp_db);
+		skill->validate_interrupt_cast(conf, &tmp_db);
+		skill->validate_cast_def_rate(conf, &tmp_db);
+		skill->validate_number_of_instances(conf, &tmp_db);
+		skill->validate_knock_back_tiles(conf, &tmp_db);
+		skill->validate_cast_time(conf, &tmp_db);
+		skill->validate_act_delay(conf, &tmp_db);
+		skill->validate_walk_delay(conf, &tmp_db);
+		skill->validate_skill_data1(conf, &tmp_db);
+		skill->validate_skill_data2(conf, &tmp_db);
+		skill->validate_cooldown(conf, &tmp_db);
+		skill->validate_fixed_cast_time(conf, &tmp_db);
 		skill->validate_castnodex(conf, &tmp_db, false);
 		skill->validate_castnodex(conf, &tmp_db, true);
+		skill->validate_requirements(conf, &tmp_db);
+		skill->validate_unit(conf, &tmp_db);
 
-		/**
-		 * Skill Requirements data handling
-		 */
-		if ((t=libconfig->setting_get_member(conf, "Requirements")) && config_setting_is_group(t)) {
-
-			/* HP Costs */
-			if ((tt = libconfig->setting_get_member(t, "HPCost")))
-				skill->config_set_level(tt, tmp_db.hp);
-
-			/* Max HP Trigger */
-			if ((tt = libconfig->setting_get_member(t, "MaxHPTrigger")))
-				skill->config_set_level(tt, tmp_db.mhp);
-
-			/* SP Cost */
-			if ((tt = libconfig->setting_get_member(t, "SPCost")))
-				skill->config_set_level(tt, tmp_db.sp);
-
-			/* HP Rate */
-			if ((tt = libconfig->setting_get_member(t, "HPRateCost")))
-				skill->config_set_level(tt, tmp_db.hp_rate);
-
-			/* SP Rate */
-			if ((tt = libconfig->setting_get_member(t, "SPRateCost")))
-				skill->config_set_level(tt, tmp_db.sp_rate);
-
-			/* Zeny Cost */
-			if ((tt = libconfig->setting_get_member(t, "ZenyCost")))
-				skill->config_set_level(tt, tmp_db.zeny);
-
-			/* Spirit Sphere Cost */
-			if ((tt = libconfig->setting_get_member(t, "SpiritSphereCost")))
-				skill->config_set_level(tt, tmp_db.spiritball);
-
-			/* Weapon Types */
-			skill->validate_weapontype(t, &tmp_db);
-
-			/* Ammunition Types */
-			skill->validate_ammotype(t, &tmp_db);
-
-			/* Ammunition Amount */
-			if ((tt = libconfig->setting_get_member(t, "AmmoAmount")))
-				skill->config_set_level(tt, tmp_db.ammo_qty);
-
-			/* State */
-			skill->validate_state(t, &tmp_db);
-
-			/* Spirit Sphere Cost */
-			if ((tt = libconfig->setting_get_member(t, "SpiritSphereCost")))
-				skill->config_set_level(tt, tmp_db.spiritball);
-
-			/* Item Requirements and Amounts */
-			skill->validate_item_requirements(t, &tmp_db);
-		}
-
-		/**
-		 * Skill Unit data handling
-		 */
-		if ((t=libconfig->setting_get_member(conf, "Unit")) && config_setting_is_group(t)) {
-
-			/* Unit IDs [1,2] */
-			if ((tt=libconfig->setting_get_member(t, "Id")) && config_setting_is_array(tt)) {
-				tmp_db.unit_id[0] = libconfig->setting_get_int_elem(tt, 0);
-				tmp_db.unit_id[1] = libconfig->setting_get_int_elem(tt, 1);
-			} else {
-				libconfig->setting_lookup_int(t, "Id", &tmp_db.unit_id[0]);
-			}
-
-			/* Layout */
-			if((tt=libconfig->setting_get_member(t, "Layout")))
-				skill->config_set_level(tt, tmp_db.unit_layout_type);
-
-			/* Range */
-			if((tt=libconfig->setting_get_member(t, "Range")))
-				skill->config_set_level(tt, tmp_db.unit_range);
-
-			/* Interval */
-			if(libconfig->setting_lookup_int(t, "Interval", &temp))
-				tmp_db.unit_interval = temp;
-
-			/* Flag */
-			skill->validate_unit_flag(t, &tmp_db);
-
-			/* Target */
-			skill->validate_unit_target(t, &tmp_db);
-		}
-
-		/* Additional Fields for Plugins */
+		/** Validate additional fields for plugins. **/
 		skill->validate_additional_fields(conf, &tmp_db);
 
-		// Validate the skill entry, add it to the duplicate array and increment count on success.
-		if ((duplicate[idx] = skill->validate_skilldb(&tmp_db, filepath)))
-			count++;
+		/** Add the skill. **/
+		skill->dbs->db[skill->get_index(tmp_db.nameid)] = tmp_db;
+		strdb_iput(skill->name2id_db, tmp_db.name, tmp_db.nameid);
+		script->set_constant2(tmp_db.name, tmp_db.nameid, false, false);
+		count++;
 	}
 
 	libconfig->destroy(&skilldb);
@@ -21452,9 +22694,6 @@ static bool skill_read_skilldb(const char *filename)
 
 	return true;
 }
-
-#undef skilldb_duplicate_warning
-#undef skilldb_invalid_error
 
 /*===============================
  * DB reading.
@@ -21785,24 +23024,57 @@ void skill_defaults(void)
 	skill->init_unit_layout = skill_init_unit_layout;
 	skill->init_unit_layout_unknown = skill_init_unit_layout_unknown;
 	/* Skill DB Libconfig */
+	skill->validate_id = skill_validate_id;
+	skill->name_contains_invalid_character = skill_name_contains_invalid_character;
+	skill->validate_name = skill_validate_name;
+	skill->validate_max_level = skill_validate_max_level;
+	skill->validate_description = skill_validate_description;
+	skill->validate_range = skill_validate_range;
 	skill->validate_hittype = skill_validate_hittype;
-	skill->validate_attacktype = skill_validate_attacktype;
-	skill->validate_element = skill_validate_element;
 	skill->validate_skilltype = skill_validate_skilltype;
 	skill->validate_skillinfo = skill_validate_skillinfo;
+	skill->validate_attacktype = skill_validate_attacktype;
+	skill->validate_element = skill_validate_element;
 	skill->validate_damagetype = skill_validate_damagetype;
+	skill->validate_splash_range = skill_validate_splash_range;
+	skill->validate_number_of_hits = skill_validate_number_of_hits;
+	skill->validate_interrupt_cast = skill_validate_interrupt_cast;
+	skill->validate_cast_def_rate = skill_validate_cast_def_rate;
+	skill->validate_number_of_instances = skill_validate_number_of_instances;
+	skill->validate_knock_back_tiles = skill_validate_knock_back_tiles;
+	skill->validate_cast_time = skill_validate_cast_time;
+	skill->validate_act_delay = skill_validate_act_delay;
+	skill->validate_walk_delay = skill_validate_walk_delay;
+	skill->validate_skill_data1 = skill_validate_skill_data1;
+	skill->validate_skill_data2 = skill_validate_skill_data2;
+	skill->validate_cooldown = skill_validate_cooldown;
+	skill->validate_fixed_cast_time = skill_validate_fixed_cast_time;
 	skill->validate_castnodex = skill_validate_castnodex;
-	skill->validate_weapontype = skill_validate_weapontype;
-	skill->validate_ammotype = skill_validate_ammotype;
-	skill->validate_state = skill_validate_state;
-	skill->validate_item_requirements = skill_validate_item_requirements;
-	skill->validate_unit_target = skill_validate_unit_target;
-	skill->validate_unit_flag = skill_validate_unit_flag;
-	skill->validate_additional_fields = skill_validate_additional_fields;
-	skill->validate_skilldb = skill_validate_skilldb;
+	skill->validate_hp_cost = skill_validate_hp_cost;
+	skill->validate_sp_cost = skill_validate_sp_cost;
+	skill->validate_hp_rate_cost = skill_validate_hp_rate_cost;
+	skill->validate_sp_rate_cost = skill_validate_sp_rate_cost;
+	skill->validate_max_hp_trigger = skill_validate_max_hp_trigger;
+	skill->validate_zeny_cost = skill_validate_zeny_cost;
 	skill->validate_weapontype_sub = skill_validate_weapontype_sub;
+	skill->validate_weapontype = skill_validate_weapontype;
 	skill->validate_ammotype_sub = skill_validate_ammotype_sub;
+	skill->validate_ammotype = skill_validate_ammotype;
+	skill->validate_ammo_amount = skill_validate_ammo_amount;
+	skill->validate_state = skill_validate_state;
+	skill->validate_spirit_sphere_cost = skill_validate_spirit_sphere_cost;
+	skill->validate_item_requirements = skill_validate_item_requirements;
+	skill->validate_requirements = skill_validate_requirements;
+	skill->validate_unit_id_sub = skill_validate_unit_id_sub;
+	skill->validate_unit_id = skill_validate_unit_id;
+	skill->validate_unit_layout = skill_validate_unit_layout;
+	skill->validate_unit_range = skill_validate_unit_range;
+	skill->validate_unit_interval = skill_validate_unit_interval;
 	skill->validate_unit_flag_sub = skill_validate_unit_flag_sub;
+	skill->validate_unit_flag = skill_validate_unit_flag;
+	skill->validate_unit_target = skill_validate_unit_target;
+	skill->validate_unit = skill_validate_unit;
+	skill->validate_additional_fields = skill_validate_additional_fields;
 	skill->read_skilldb = skill_read_skilldb;
 	skill->config_set_level = skill_config_set_level;
 	skill->level_set_value = skill_level_set_value;
