@@ -1765,7 +1765,7 @@ struct s_skill_db {
 #endif
 	int upkeep_time[MAX_SKILL_LEVEL],upkeep_time2[MAX_SKILL_LEVEL],cooldown[MAX_SKILL_LEVEL];
 	int castcancel[MAX_SKILL_LEVEL];
-	int cast_def_rate;
+	int cast_def_rate[MAX_SKILL_LEVEL];
 	int inf2;
 	int maxcount[MAX_SKILL_LEVEL];
 	int skill_type[MAX_SKILL_LEVEL];
@@ -1992,7 +1992,7 @@ struct skill_interface {
 	int (*get_time2) (int skill_id, int skill_lv);
 	int (*get_castnodex) (int skill_id, int skill_lv);
 	int (*get_delaynodex) (int skill_id, int skill_lv);
-	int (*get_castdef) (int skill_id);
+	int (*get_castdef) (int skill_id, int skill_lv);
 	int (*get_weapontype) (int skill_id);
 	int (*get_ammotype) (int skill_id);
 	int (*get_ammo_qty) (int skill_id, int skill_lv);

@@ -484,14 +484,26 @@ static int skill_get_time2(int skill_id, int skill_lv)
 	return skill->dbs->db[idx].upkeep_time2[skill_get_lvl_idx(skill_lv)];
 }
 
-static int skill_get_castdef(int skill_id)
+/**
+ * Gets a skill's cast defence rate by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's cast defence rate corresponding to the passed level. Defaults to 0 in case of error.
+ *
+ **/
+static int skill_get_castdef(int skill_id, int skill_lv)
 {
-	int idx;
 	if (skill_id == 0)
 		return 0;
-	idx = skill->get_index(skill_id);
+
+	Assert_ret(skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
 	Assert_ret(idx != 0);
-	return skill->dbs->db[idx].cast_def_rate;
+
+	return skill->dbs->db[idx].cast_def_rate[skill_get_lvl_idx(skill_lv)];
 }
 
 static int skill_get_weapontype(int skill_id)
@@ -20972,13 +20984,33 @@ static void skill_validate_cast_def_rate(struct config_setting_t *conf, struct s
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	sk->cast_def_rate = 0;
+	skill->level_set_value(sk->cast_def_rate, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "CastDefRate");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int cast_def_rate;
+
+			if (libconfig->setting_lookup_int(t, lv, &cast_def_rate) == CONFIG_TRUE) {
+				if (cast_def_rate >= SHRT_MIN && cast_def_rate <= SHRT_MAX)
+					sk->cast_def_rate[i] = cast_def_rate;
+				else
+					ShowWarning("%s: Invalid cast defence rate %d specified in level %d for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 0...\n",
+						    __func__, cast_def_rate, i + 1, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);
+			}
+		}
+
+		return;
+	}
 
 	int cast_def_rate;
 
 	if (libconfig->setting_lookup_int(conf, "CastDefRate", &cast_def_rate) == CONFIG_TRUE) {
 		if (cast_def_rate >= SHRT_MIN && cast_def_rate <= SHRT_MAX)
-			sk->cast_def_rate = cast_def_rate;
+			skill->level_set_value(sk->cast_def_rate, cast_def_rate);
 		else
 			ShowWarning("%s: Invalid cast defence rate %d specified for skill ID %d in %s! Minimum is %d, maximum is %d. Defaulting to 0...\n",
 				    __func__, cast_def_rate, sk->nameid, conf->file, SHRT_MIN, SHRT_MAX);

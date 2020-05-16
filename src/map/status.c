@@ -6503,7 +6503,7 @@ static defType status_get_def(struct block_list *bl)
 	int def = st ? st->def : 0;
 	ud = unit->bl2ud(bl);
 	if (ud && ud->skilltimer != INVALID_TIMER)
-		def -= def * skill->get_castdef(ud->skill_id)/100;
+		def -= def * skill->get_castdef(ud->skill_id, ud->skill_lv) / 100;
 
 	return cap_value(def, DEFTYPE_MIN, DEFTYPE_MAX);
 }
