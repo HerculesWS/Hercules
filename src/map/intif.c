@@ -408,7 +408,7 @@ static void intif_send_account_storage(struct map_session_data *sd, int storage_
 
 	WFIFOSET(inter_fd, len);
 
-	sd->storage.save = false; // Save request has been sent
+	stor->save = false; // Save request has been sent
 }
 
 /**

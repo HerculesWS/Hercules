@@ -5526,7 +5526,6 @@ ACMD(dropall)
  *------------------------------------------*/
 ACMD(storeall)
 {
-	int i = 0;
 	char storage_name[NAME_LENGTH] = "";
 	int storage_id = 0, intval = 0;
 	struct storage_data *stor = NULL;

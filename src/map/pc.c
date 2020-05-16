@@ -1283,7 +1283,6 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	VECTOR_INIT(sd->channels);
 	VECTOR_INIT(sd->script_queues);
 	VECTOR_INIT(sd->achievement); // Achievements [Smokexyz/Hercules]
-	VECTOR_INIT(sd->storage.item); // initialize storage item vector.
 	VECTOR_INIT(sd->hatEffectId);
 
 	// Storage

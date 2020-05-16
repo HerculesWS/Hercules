@@ -190,8 +190,8 @@ static int storage_storageopen(struct map_session_data *sd, struct storage_data 
 	/* Send item list to client if available. */
 	if (stor->aggregate > 0) {
 		storage->sortitem(VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
-		clif->storagelist(sd, VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
 	}
+	clif->storageList(sd, VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
 
 	/* Send storage total items and max amount update. */
 	clif->updatestorageamount(sd, stor->aggregate, stst->capacity);
