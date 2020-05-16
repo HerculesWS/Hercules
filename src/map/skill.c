@@ -539,14 +539,26 @@ static int skill_get_inf2(int skill_id)
 	return skill->dbs->db[idx].inf2;
 }
 
-static int skill_get_castcancel(int skill_id)
+/**
+ * Gets a skill's cast interruptibility by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's cast interruptibility corresponding to the passed level. Defaults to 0 in case of error.
+ *
+ **/
+static int skill_get_castcancel(int skill_id, int skill_lv)
 {
-	int idx;
 	if (skill_id == 0)
 		return 0;
-	idx = skill->get_index(skill_id);
+
+	Assert_ret(skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
 	Assert_ret(idx != 0);
-	return skill->dbs->db[idx].castcancel;
+
+	return skill->dbs->db[idx].castcancel[skill_get_lvl_idx(skill_lv)];
 }
 
 static int skill_get_maxcount(int skill_id, int skill_lv)
@@ -20923,12 +20935,29 @@ static void skill_validate_interrupt_cast(struct config_setting_t *conf, struct 
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	sk->castcancel = 0;
+	skill->level_set_value(sk->castcancel, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "InterruptCast");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int interrupt_cast;
+
+			if (libconfig->setting_lookup_bool(t, lv, &interrupt_cast) == CONFIG_TRUE)
+				sk->castcancel[i] = (interrupt_cast != 0) ? 1 : 0;
+		}
+
+		return;
+	}
 
 	int interrupt_cast;
 
-	if (libconfig->setting_lookup_bool(conf, "InterruptCast", &interrupt_cast) == CONFIG_TRUE)
-		sk->castcancel = (interrupt_cast != 0) ? 1 : 0;
+	if (libconfig->setting_lookup_bool(conf, "InterruptCast", &interrupt_cast) == CONFIG_TRUE) {
+		if (interrupt_cast != 0)
+			skill->level_set_value(sk->castcancel, 1);
+	}
 }
 
 /**

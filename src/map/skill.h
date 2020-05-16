@@ -1764,7 +1764,8 @@ struct s_skill_db {
 	int fixed_cast[MAX_SKILL_LEVEL];
 #endif
 	int upkeep_time[MAX_SKILL_LEVEL],upkeep_time2[MAX_SKILL_LEVEL],cooldown[MAX_SKILL_LEVEL];
-	int castcancel,cast_def_rate;
+	int castcancel[MAX_SKILL_LEVEL];
+	int cast_def_rate;
 	int inf2;
 	int maxcount[MAX_SKILL_LEVEL];
 	int skill_type[MAX_SKILL_LEVEL];
@@ -1997,7 +1998,7 @@ struct skill_interface {
 	int (*get_ammo_qty) (int skill_id, int skill_lv);
 	int (*get_unit_id) (int skill_id, int flag);
 	int (*get_inf2) (int skill_id);
-	int (*get_castcancel) (int skill_id);
+	int (*get_castcancel) (int skill_id, int skill_lv);
 	int (*get_maxcount) (int skill_id, int skill_lv);
 	int (*get_blewcount) (int skill_id, int skill_lv);
 	int (*get_unit_flag) (int skill_id);
