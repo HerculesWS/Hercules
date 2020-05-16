@@ -76769,15 +76769,15 @@ int HP_skill_get_index(int skill_id) {
 	}
 	return retVal___;
 }
-int HP_skill_get_type(int skill_id) {
+int HP_skill_get_type(int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_get_type_pre > 0) {
-		int (*preHookFunc) (int *skill_id);
+		int (*preHookFunc) (int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_type_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_get_type_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id);
+			retVal___ = preHookFunc(&skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -76785,13 +76785,13 @@ int HP_skill_get_type(int skill_id) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.get_type(skill_id);
+		retVal___ = HPMHooks.source.skill.get_type(skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_get_type_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id);
+		int (*postHookFunc) (int retVal___, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_type_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_get_type_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id);
+			retVal___ = postHookFunc(retVal___, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -78119,15 +78119,15 @@ int HP_skill_name2id(const char *name) {
 	}
 	return retVal___;
 }
-int HP_skill_isammotype(struct map_session_data *sd, int skill_id) {
+int HP_skill_isammotype(struct map_session_data *sd, int skill_id, int skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_isammotype_pre > 0) {
-		int (*preHookFunc) (struct map_session_data **sd, int *skill_id);
+		int (*preHookFunc) (struct map_session_data **sd, int *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_isammotype_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_isammotype_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &skill_id);
+			retVal___ = preHookFunc(&sd, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -78135,13 +78135,13 @@ int HP_skill_isammotype(struct map_session_data *sd, int skill_id) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.isammotype(sd, skill_id);
+		retVal___ = HPMHooks.source.skill.isammotype(sd, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_isammotype_post > 0) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int skill_id);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_isammotype_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_isammotype_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, skill_id);
+			retVal___ = postHookFunc(retVal___, sd, skill_id, skill_lv);
 		}
 	}
 	return retVal___;
@@ -80039,14 +80039,14 @@ int HP_skill_check_unit_range2_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-void HP_skill_toggle_magicpower(struct block_list *bl, uint16 skill_id) {
+void HP_skill_toggle_magicpower(struct block_list *bl, uint16 skill_id, int skill_lv) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_skill_toggle_magicpower_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, uint16 *skill_id);
+		void (*preHookFunc) (struct block_list **bl, uint16 *skill_id, int *skill_lv);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_toggle_magicpower_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_toggle_magicpower_pre[hIndex].func;
-			preHookFunc(&bl, &skill_id);
+			preHookFunc(&bl, &skill_id, &skill_lv);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -80054,13 +80054,13 @@ void HP_skill_toggle_magicpower(struct block_list *bl, uint16 skill_id) {
 		}
 	}
 	{
-		HPMHooks.source.skill.toggle_magicpower(bl, skill_id);
+		HPMHooks.source.skill.toggle_magicpower(bl, skill_id, skill_lv);
 	}
 	if (HPMHooks.count.HP_skill_toggle_magicpower_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, uint16 skill_id);
+		void (*postHookFunc) (struct block_list *bl, uint16 skill_id, int skill_lv);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_toggle_magicpower_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_toggle_magicpower_post[hIndex].func;
-			postHookFunc(bl, skill_id);
+			postHookFunc(bl, skill_id, skill_lv);
 		}
 	}
 	return;

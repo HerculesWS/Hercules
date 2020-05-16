@@ -1765,7 +1765,9 @@ struct s_skill_db {
 #endif
 	int upkeep_time[MAX_SKILL_LEVEL],upkeep_time2[MAX_SKILL_LEVEL],cooldown[MAX_SKILL_LEVEL];
 	int castcancel,cast_def_rate;
-	int inf2,maxcount[MAX_SKILL_LEVEL],skill_type;
+	int inf2;
+	int maxcount[MAX_SKILL_LEVEL];
+	int skill_type[MAX_SKILL_LEVEL];
 	int blewcount[MAX_SKILL_LEVEL];
 	int hp[MAX_SKILL_LEVEL],sp[MAX_SKILL_LEVEL],mhp[MAX_SKILL_LEVEL],hp_rate[MAX_SKILL_LEVEL],sp_rate[MAX_SKILL_LEVEL],zeny[MAX_SKILL_LEVEL];
 	int weapon,ammo,ammo_qty[MAX_SKILL_LEVEL],state,spiritball[MAX_SKILL_LEVEL];
@@ -1962,7 +1964,7 @@ struct skill_interface {
 	int unit_group_newid;
 	/* accesssors */
 	int (*get_index) (int skill_id);
-	int (*get_type) (int skill_id);
+	int (*get_type) (int skill_id, int skill_lv);
 	int (*get_hit) (int skill_id, int skill_lv);
 	int (*get_inf) (int skill_id);
 	int (*get_ele) (int skill_id, int skill_lv);
@@ -2013,7 +2015,7 @@ struct skill_interface {
 	int (*get_casttype2) (int index);
 	bool (*is_combo) (int skill_id);
 	int (*name2id) (const char* name);
-	int (*isammotype) (struct map_session_data *sd, int skill_id);
+	int (*isammotype) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*castend_id) (int tid, int64 tick, int id, intptr_t data);
 	int (*castend_pos) (int tid, int64 tick, int id, intptr_t data);
 	int (*castend_map) ( struct map_session_data *sd,uint16 skill_id, const char *mapname);
@@ -2083,7 +2085,7 @@ struct skill_interface {
 	int (*check_unit_range_sub) (struct block_list *bl, va_list ap);
 	int (*check_unit_range2) (struct block_list *bl, int x, int y, uint16 skill_id, uint16 skill_lv);
 	int (*check_unit_range2_sub) (struct block_list *bl, va_list ap);
-	void (*toggle_magicpower) (struct block_list *bl, uint16 skill_id);
+	void (*toggle_magicpower) (struct block_list *bl, uint16 skill_id, int skill_lv);
 	int (*magic_reflect) (struct block_list* src, struct block_list* bl, int type);
 	int (*onskillusage) (struct map_session_data *sd, struct block_list *bl, uint16 skill_id, int64 tick);
 	int (*cell_overlap) (struct block_list *bl, va_list ap);
