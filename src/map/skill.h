@@ -60,6 +60,10 @@ struct status_change_entry;
 #define MAX_SKILLUNITGROUPTICKSET 25
 #define MAX_SKILL_NAME_LENGTH     32
 
+#ifndef MAX_SKILL_DESC_LENGTH
+	#define MAX_SKILL_DESC_LENGTH 50
+#endif
+
 // Custom Skill Ranges is used in skill_get_index, to allocate indexes based on ID and gaps between 2 SkillID
 #ifndef CUSTOM_SKILL_RANGES
 	#define CUSTOM_SKILL_RANGES
@@ -1746,7 +1750,7 @@ struct skill_condition {
 struct s_skill_db {
 	int nameid;
 	char name[MAX_SKILL_NAME_LENGTH + 1];
-	char desc[40];
+	char desc[MAX_SKILL_DESC_LENGTH + 1];
 	int range[MAX_SKILL_LEVEL],hit,inf,element[MAX_SKILL_LEVEL],nk,splash[MAX_SKILL_LEVEL],max;
 	int num[MAX_SKILL_LEVEL];
 	int cast[MAX_SKILL_LEVEL],walkdelay[MAX_SKILL_LEVEL],delay[MAX_SKILL_LEVEL];
