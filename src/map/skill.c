@@ -176,14 +176,26 @@ static const char *skill_get_desc(int skill_id)
 
 // Skill DB
 
-static int skill_get_hit(int skill_id)
+/**
+ * Gets a skill's hit type by its ID and level. (See enum battle_dmg_type.)
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's hit type corresponding to the passed level. Defaults to BDT_NORMAL (0) in case of error.
+ *
+ **/
+static int skill_get_hit(int skill_id, int skill_lv)
 {
-	int idx;
 	if (skill_id == 0)
-		return 0;
-	idx = skill->get_index(skill_id);
-	Assert_ret(idx != 0);
-	return skill->dbs->db[idx].hit;
+		return BDT_NORMAL;
+
+	Assert_retr(BDT_NORMAL, skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_retr(BDT_NORMAL, idx != 0);
+
+	return skill->dbs->db[idx].hit[skill_get_lvl_idx(skill_lv)];
 }
 
 static int skill_get_inf(int skill_id)
@@ -2993,7 +3005,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 	}
 
 	//Skill hit type
-	type=(skill_id==0)?BDT_SPLASH:skill->get_hit(skill_id);
+	type = (skill_id == 0) ? BDT_SPLASH : skill->get_hit(skill_id, skill_lv);
 
 	if(damage < dmg.div_
 		//Only skills that knockback even when they miss. [Skotlex]
@@ -4288,7 +4300,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		sc_type sct = status->skill2sc(skill_id);
 		if(sct != SC_NONE)
 			status_change_end(bl, sct, INVALID_TIMER);
-		clif->skill_damage(src, bl, tick, status_get_amotion(src), status_get_dmotion(bl), 0, 1, skill_id, skill_lv, skill->get_hit(skill_id));
+		clif->skill_damage(src, bl, tick, status_get_amotion(src), status_get_dmotion(bl), 0, 1, skill_id, skill_lv, skill->get_hit(skill_id, skill_lv));
 		return 1;
 	}
 
@@ -5626,7 +5638,7 @@ static bool skill_castend_damage_id_unknown(struct block_list *src, struct block
 	ShowWarning("skill_castend_damage_id: Unknown skill used:%d\n", *skill_id);
 	clif->skill_damage(src, bl, *tick, status_get_amotion(src), tstatus->dmotion,
 		0, abs(skill->get_num(*skill_id, *skill_lv)),
-		*skill_id, *skill_lv, skill->get_hit(*skill_id));
+		*skill_id, *skill_lv, skill->get_hit(*skill_id, *skill_lv));
 	map->freeblock_unlock();
 	return true;
 }
@@ -20361,18 +20373,46 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	sk->hit = BDT_NORMAL;
+	skill->level_set_value(sk->hit, BDT_NORMAL);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Hit");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			const char *hit_type;
+
+			if (libconfig->setting_lookup_string(t, lv, &hit_type) == CONFIG_TRUE) {
+				if (strcmpi(hit_type, "BDT_SKILL") == 0)
+					sk->hit[i] = BDT_SKILL;
+				else if (strcmpi(hit_type, "BDT_MULTIHIT") == 0)
+					sk->hit[i] = BDT_MULTIHIT;
+				else if (strcmpi(hit_type, "BDT_NORMAL") != 0)
+					ShowWarning("%s: Invalid hit type %s specified in level %d for skill ID %d in %s! Defaulting to BDT_NORMAL...\n",
+						    __func__, hit_type, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
 
 	const char *hit_type;
 
 	if (libconfig->setting_lookup_string(conf, "Hit", &hit_type) == CONFIG_TRUE) {
-		if (strcmpi(hit_type, "BDT_SKILL") == 0)
-			sk->hit = BDT_SKILL;
-		else if (strcmpi(hit_type, "BDT_MULTIHIT") == 0)
-			sk->hit = BDT_MULTIHIT;
-		else if (strcmpi(hit_type, "BDT_NORMAL") != 0)
+		int hit = BDT_NORMAL;
+
+		if (strcmpi(hit_type, "BDT_SKILL") == 0) {
+			hit = BDT_SKILL;
+		} else if (strcmpi(hit_type, "BDT_MULTIHIT") == 0) {
+			hit = BDT_MULTIHIT;
+		} else if (strcmpi(hit_type, "BDT_NORMAL") != 0) {
 			ShowWarning("%s: Invalid hit type %s specified for skill ID %d in %s! Defaulting to BDT_NORMAL...\n",
 				    __func__, hit_type, sk->nameid, conf->file);
+			return;
+		}
+
+		skill->level_set_value(sk->hit, hit);
 	}
 }
 

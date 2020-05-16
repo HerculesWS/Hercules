@@ -1751,7 +1751,13 @@ struct s_skill_db {
 	int nameid;
 	char name[MAX_SKILL_NAME_LENGTH + 1];
 	char desc[MAX_SKILL_DESC_LENGTH + 1];
-	int range[MAX_SKILL_LEVEL],hit,inf,element[MAX_SKILL_LEVEL],nk,splash[MAX_SKILL_LEVEL],max;
+	int range[MAX_SKILL_LEVEL];
+	int hit[MAX_SKILL_LEVEL];
+	int inf;
+	int element[MAX_SKILL_LEVEL];
+	int nk;
+	int splash[MAX_SKILL_LEVEL];
+	int max;
 	int num[MAX_SKILL_LEVEL];
 	int cast[MAX_SKILL_LEVEL],walkdelay[MAX_SKILL_LEVEL],delay[MAX_SKILL_LEVEL];
 #ifdef RENEWAL_CAST
@@ -1957,7 +1963,7 @@ struct skill_interface {
 	/* accesssors */
 	int (*get_index) (int skill_id);
 	int (*get_type) (int skill_id);
-	int (*get_hit) (int skill_id);
+	int (*get_hit) (int skill_id, int skill_lv);
 	int (*get_inf) (int skill_id);
 	int (*get_ele) (int skill_id, int skill_lv);
 	int (*get_nk) (int skill_id);
