@@ -20349,6 +20349,13 @@ static void skill_validate_range(struct config_setting_t *conf, struct s_skill_d
 	}
 }
 
+/**
+ * Validates a skill's hit type when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the hit type should be set it.
+ *
+ **/
 static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -20356,28 +20363,26 @@ static void skill_validate_hittype(struct config_setting_t *conf, struct s_skill
 
 	sk->hit = BDT_NORMAL;
 
-	const char *type = NULL;
+	const char *hit_type;
 
-	if (libconfig->setting_lookup_string(conf, "Hit", &type)) {
-		if (strcmpi(type, "BDT_SKILL") == 0) {
+	if (libconfig->setting_lookup_string(conf, "Hit", &hit_type) == CONFIG_TRUE) {
+		if (strcmpi(hit_type, "BDT_SKILL") == 0)
 			sk->hit = BDT_SKILL;
-		} else if (strcmpi(type, "BDT_MULTIHIT") == 0) {
+		else if (strcmpi(hit_type, "BDT_MULTIHIT") == 0)
 			sk->hit = BDT_MULTIHIT;
-		} else if (strcmpi(type, "BDT_NORMAL") == 0) {
-			sk->hit = BDT_NORMAL;
-		} else {
+		else if (strcmpi(hit_type, "BDT_NORMAL") != 0)
 			ShowWarning("%s: Invalid hit type %s specified for skill ID %d in %s! Defaulting to BDT_NORMAL...\n",
-				    __func__, type, sk->nameid, conf->file);
-		}
+				    __func__, hit_type, sk->nameid, conf->file);
 	}
 }
 
 /**
- * Validates "SkillType" when reading skill_db.conf
- * @param conf   struct, pointer to skill configuration
- * @param sk     struct, pointer to s_skill_db
- * @return (void)
- */
+ * Validates a skill's types when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the types should be set it.
+ *
+ **/
 static void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -20385,58 +20390,56 @@ static void skill_validate_skilltype(struct config_setting_t *conf, struct s_ski
 
 	sk->inf = INF_NONE;
 
-	struct config_setting_t *t = NULL, *tt = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillType");
 
-	if((t=libconfig->setting_get_member(conf, "SkillType")) && config_setting_is_group(t)) {
-		int j=0;
-		while ((tt = libconfig->setting_get_elem(t, j++))) {
-			const char *type = config_setting_name(tt);
+	if (t != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *tt;
+		int i = 0;
+
+		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+			const char *skill_type = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(type, "Enemy") == 0) {
-				if (on) {
+			if (strcmpi(skill_type, "Enemy") == 0) {
+				if (on)
 					sk->inf |= INF_ATTACK_SKILL;
-				} else {
+				else
 					sk->inf &= ~INF_ATTACK_SKILL;
-				}
-			} else if (strcmpi(type, "Place") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_type, "Place") == 0) {
+				if (on)
 					sk->inf |= INF_GROUND_SKILL;
-				} else {
+				else
 					sk->inf &= ~INF_GROUND_SKILL;
-				}
-			} else if (strcmpi(type, "Self") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_type, "Self") == 0) {
+				if (on)
 					sk->inf |= INF_SELF_SKILL;
-				} else {
+				else
 					sk->inf &= ~INF_SELF_SKILL;
-				}
-			} else if (strcmpi(type, "Friend") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_type, "Friend") == 0) {
+				if (on)
 					sk->inf |= INF_SUPPORT_SKILL;
-				} else {
+				else
 					sk->inf &= ~INF_SUPPORT_SKILL;
-				}
-			} else if (strcmpi(type, "Trap") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_type, "Trap") == 0) {
+				if (on)
 					sk->inf |= INF_TARGET_TRAP;
-				} else {
+				else
 					sk->inf &= ~INF_TARGET_TRAP;
-				}
-			} else if (strcmpi(type, "Passive") != 0) {
+			} else if (strcmpi(skill_type, "Passive") != 0) {
 				ShowWarning("%s: Invalid skill type %s specified for skill ID %d in %s! Skipping type...\n",
-					    __func__, type, sk->nameid, conf->file);
+					    __func__, skill_type, sk->nameid, conf->file);
 			}
 		}
 	}
 }
 
 /**
- * Validates "SkillInfo" when reading skill_db.conf
- * @param conf   struct, pointer to skill configuration
- * @param sk     struct, pointer to s_skill_db
- * @return (void)
- */
+ * Validates a skill's sub-types when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the sub-types should be set it.
+ *
+ **/
 static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -20444,154 +20447,136 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 
 	sk->inf2 = INF2_NONE;
 
-	struct config_setting_t *t = NULL, *tt = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "SkillInfo");
 
-	if ((t=libconfig->setting_get_member(conf, "SkillInfo")) && config_setting_is_group(t)) {
-		int j=0;
-		while ((tt = libconfig->setting_get_elem(t, j++))) {
-			const char *type = config_setting_name(tt);
+	if (t != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *tt;
+		int i = 0;
+
+		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+			const char *skill_info = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(type, "Quest") == 0) {
-				if (on) {
+			if (strcmpi(skill_info, "Quest") == 0) {
+				if (on)
 					sk->inf2 |= INF2_QUEST_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_QUEST_SKILL;
-				}
-			} else if (strcmpi(type, "NPC") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "NPC") == 0) {
+				if (on)
 					sk->inf2 |= INF2_NPC_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_NPC_SKILL;
-				}
-			} else if (strcmpi(type, "Wedding") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "Wedding") == 0) {
+				if (on)
 					sk->inf2 |= INF2_WEDDING_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_WEDDING_SKILL;
-				}
-			} else if (strcmpi(type, "Spirit") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "Spirit") == 0) {
+				if (on)
 					sk->inf2 |= INF2_SPIRIT_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_SPIRIT_SKILL;
-				}
-			} else if (strcmpi(type, "Guild") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "Guild") == 0) {
+				if (on)
 					sk->inf2 |= INF2_GUILD_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_GUILD_SKILL;
-				}
-			} else if (strcmpi(type, "Song") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "Song") == 0) {
+				if (on)
 					sk->inf2 |= INF2_SONG_DANCE;
-				} else {
+				else
 					sk->inf2 &= ~INF2_SONG_DANCE;
-				}
-			} else if (strcmpi(type, "Ensemble") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "Ensemble") == 0) {
+				if (on)
 					sk->inf2 |= INF2_ENSEMBLE_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_ENSEMBLE_SKILL;
-				}
-			} else if (strcmpi(type, "Trap") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "Trap") == 0) {
+				if (on)
 					sk->inf2 |= INF2_TRAP;
-				} else {
+				else
 					sk->inf2 &= ~INF2_TRAP;
-				}
-			} else if (strcmpi(type, "TargetSelf") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "TargetSelf") == 0) {
+				if (on)
 					sk->inf2 |= INF2_TARGET_SELF;
-				} else {
+				else
 					sk->inf2 &= ~INF2_TARGET_SELF;
-				}
-			} else if (strcmpi(type, "NoCastSelf") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "NoCastSelf") == 0) {
+				if (on)
 					sk->inf2 |= INF2_NO_TARGET_SELF;
-				} else {
+				else
 					sk->inf2 &= ~INF2_NO_TARGET_SELF;
-				}
-			} else if (strcmpi(type, "PartyOnly") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "PartyOnly") == 0) {
+				if (on)
 					sk->inf2 |= INF2_PARTY_ONLY;
-				} else {
+				else
 					sk->inf2 &= ~INF2_PARTY_ONLY;
-				}
-			} else if (strcmpi(type, "GuildOnly") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "GuildOnly") == 0) {
+				if (on)
 					sk->inf2 |= INF2_GUILD_ONLY;
-				} else {
+				else
 					sk->inf2 &= ~INF2_GUILD_ONLY;
-				}
-			} else if (strcmpi(type, "NoEnemy") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "NoEnemy") == 0) {
+				if (on)
 					sk->inf2 |= INF2_NO_ENEMY;
-				} else {
+				else
 					sk->inf2 &= ~INF2_NO_ENEMY;
-				}
-			} else if (strcmpi(type, "IgnoreLandProtector") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "IgnoreLandProtector") == 0) {
+				if (on)
 					sk->inf2 |= INF2_NOLP;
-				} else {
+				else
 					sk->inf2 &= ~INF2_NOLP;
-				}
-			} else if (strcmpi(type, "Chorus") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "Chorus") == 0) {
+				if (on)
 					sk->inf2 |= INF2_CHORUS_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_CHORUS_SKILL;
-				}
-			} else if (strcmpi(type, "FreeCastNormal") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "FreeCastNormal") == 0) {
+				if (on)
 					sk->inf2 |= INF2_FREE_CAST_NORMAL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_FREE_CAST_NORMAL;
-				}
-			} else if (strcmpi(type, "FreeCastReduced") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "FreeCastReduced") == 0) {
+				if (on)
 					sk->inf2 |= INF2_FREE_CAST_REDUCED;
-				} else {
+				else
 					sk->inf2 &= ~INF2_FREE_CAST_REDUCED;
-				}
-			} else if (strcmpi(type, "ShowSkillScale") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "ShowSkillScale") == 0) {
+				if (on)
 					sk->inf2 |= INF2_SHOW_SKILL_SCALE;
-				} else {
+				else
 					sk->inf2 &= ~INF2_SHOW_SKILL_SCALE;
-				}
-			} else if (strcmpi(type, "AllowReproduce") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "AllowReproduce") == 0) {
+				if (on)
 					sk->inf2 |= INF2_ALLOW_REPRODUCE;
-				} else {
+				else
 					sk->inf2 &= ~INF2_ALLOW_REPRODUCE;
-				}
-			} else if (strcmpi(type, "HiddenTrap") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "HiddenTrap") == 0) {
+				if (on)
 					sk->inf2 |= INF2_HIDDEN_TRAP;
-				} else {
+				else
 					sk->inf2 &= ~INF2_HIDDEN_TRAP;
-				}
-			} else if (strcmpi(type, "IsCombo") == 0) {
-				if (on) {
+			} else if (strcmpi(skill_info, "IsCombo") == 0) {
+				if (on)
 					sk->inf2 |= INF2_IS_COMBO_SKILL;
-				} else {
+				else
 					sk->inf2 &= ~INF2_IS_COMBO_SKILL;
-				}
-			} else if (strcmpi(type, "None") != 0) {
+			} else if (strcmpi(skill_info, "None") != 0) {
 				ShowWarning("%s: Invalid sub-type %s specified for skill ID %d in %s! Skipping sub-type...\n",
-					    __func__, type, sk->nameid, conf->file);
+					    __func__, skill_info, sk->nameid, conf->file);
 			}
 		}
 	}
 }
 
 /**
- * Validates "AttackType" when reading skill_db.conf
- * @param conf   struct, pointer to skill configuration
- * @param sk     struct, pointer to s_skill_db
- * @return (void)
- */
+ * Validates a skill's attack type when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the attack type should be set it.
+ *
+ **/
 static void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -20599,28 +20584,28 @@ static void skill_validate_attacktype(struct config_setting_t *conf, struct s_sk
 
 	sk->skill_type = BF_NONE;
 
-	const char *type = NULL;
+	const char *attack_type;
 
-	if (libconfig->setting_lookup_string(conf, "AttackType", &type)) {
-		if (!strcmpi(type, "Weapon")) {
+	if (libconfig->setting_lookup_string(conf, "AttackType", &attack_type) == CONFIG_TRUE) {
+		if (strcmpi(attack_type, "Weapon") == 0)
 			sk->skill_type = BF_WEAPON;
-		} else if (!strcmpi(type, "Magic")) {
+		else if (strcmpi(attack_type, "Magic") == 0)
 			sk->skill_type = BF_MAGIC;
-		} else if (!strcmpi(type, "Misc")) {
+		else if (strcmpi(attack_type, "Misc") == 0)
 			sk->skill_type = BF_MISC;
-		} else if (strcmpi(type, "None") != 0) {
+		else if (strcmpi(attack_type, "None") != 0)
 			ShowWarning("%s: Invalid attack type %s specified for skill ID %d in %s! Defaulting to None...\n",
-				    __func__, type, sk->nameid, conf->file);
-		}
+				    __func__, attack_type, sk->nameid, conf->file);
 	}
 }
 
 /**
- * Validates "Element" when reading skill_db.conf
- * @param ele_t   struct, pointer to skill configuration
- * @param sk     struct, pointer to s_skill_db
- * @return (void)
- */
+ * Validates a skill's element when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the element should be set it.
+ *
+ **/
 static void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -20628,41 +20613,44 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
 
 	skill->level_set_value(sk->element, ELE_NEUTRAL);
 
-	const char *type = NULL;
-	struct config_setting_t *t = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Element");
 
-	if ((t=libconfig->setting_get_member(conf, "Element")) && config_setting_is_group(t)) {
-		int j = 0;
-		char lv[6]; // enough to contain "Lv100" in case of custom MAX_SKILL_LEVEL
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			const char *element;
 
-		for (j=0; j < MAX_SKILL_LEVEL; j++) {
-			sprintf(lv, "Lv%d",j+1);
-
-			if (libconfig->setting_lookup_string(t, lv, &type)) {
-				if (strcmpi(type,"Ele_Weapon") == 0)
-					sk->element[j] = -1;
-				else if (strcmpi(type,"Ele_Endowed") == 0)
-					sk->element[j] = -2;
-				else if (strcmpi(type,"Ele_Random") == 0)
-					sk->element[j] = -3;
-				else if (!script->get_constant(type,&sk->element[j]))
+			if (libconfig->setting_lookup_string(t, lv, &element) == CONFIG_TRUE) {
+				if (strcmpi(element, "Ele_Weapon") == 0)
+					sk->element[i] = -1;
+				else if (strcmpi(element, "Ele_Endowed") == 0)
+					sk->element[i] = -2;
+				else if (strcmpi(element, "Ele_Random") == 0)
+					sk->element[i] = -3;
+				else if (!script->get_constant(element, &sk->element[i]))
 					ShowWarning("%s: Invalid element %s specified in level %d for skill ID %d in %s! Defaulting to Ele_Neutral...\n",
-						    __func__, type, j + 1, sk->nameid, conf->file);
+						    __func__, element, i + 1, sk->nameid, conf->file);
 			}
 		}
 
-	} else if (libconfig->setting_lookup_string(conf, "Element", &type)) {
+		return;
+	}
+
+	const char *element;
+
+	if (libconfig->setting_lookup_string(conf, "Element", &element) == CONFIG_TRUE) {
 		int ele = ELE_NEUTRAL;
 
-		if (strcmpi(type,"Ele_Weapon") == 0)
+		if (strcmpi(element, "Ele_Weapon") == 0) {
 			ele = -1;
-		else if (strcmpi(type,"Ele_Endowed") == 0)
+		} else if (strcmpi(element, "Ele_Endowed") == 0) {
 			ele = -2;
-		else if (strcmpi(type,"Ele_Random") == 0)
+		} else if (strcmpi(element, "Ele_Random") == 0) {
 			ele = -3;
-		else if (!script->get_constant(type, &ele)) {
+		} else if (!script->get_constant(element, &ele)) {
 			ShowWarning("%s: Invalid element %s specified for skill ID %d in %s! Defaulting to Ele_Neutral...\n",
-				    __func__, type, sk->nameid, conf->file);
+				    __func__, element, sk->nameid, conf->file);
 			return;
 		}
 
@@ -20671,11 +20659,12 @@ static void skill_validate_element(struct config_setting_t *conf, struct s_skill
 }
 
 /**
- * Validates "DamageType" when reading skill_db.conf
- * @param conf   struct, pointer to skill configuration
- * @param sk     struct, pointer to s_skill_db
- * @return (void)
- */
+ * Validates a skill's damage types when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the damage types should be set it.
+ *
+ **/
 static void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -20683,65 +20672,59 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 
 	sk->nk = NK_NONE;
 
-	struct config_setting_t *t = NULL, *tt = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "DamageType");
 
-	if ((t=libconfig->setting_get_member(conf, "DamageType")) && config_setting_is_group(t)) {
-		int j=0;
-		while ((tt = libconfig->setting_get_elem(t, j++))) {
-			const char *type = config_setting_name(tt);
+	if (t != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *tt;
+		int i = 0;
+
+		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+			const char *damage_type = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(type, "NoDamage") == 0) {
-				if (on) {
+			if (strcmpi(damage_type, "NoDamage") == 0) {
+				if (on)
 					sk->nk |= NK_NO_DAMAGE;
-				} else {
+				else
 					sk->nk &= ~NK_NO_DAMAGE;
-				}
-			} else if (strcmpi(type, "SplashArea") == 0) {
-				if (on) {
+			} else if (strcmpi(damage_type, "SplashArea") == 0) {
+				if (on)
 					sk->nk |= NK_SPLASH_ONLY;
-				} else {
+				else
 					sk->nk &= ~NK_SPLASH_ONLY;
-				}
-			} else if (strcmpi(type, "SplitDamage") == 0) {
-				if (on) {
+			} else if (strcmpi(damage_type, "SplitDamage") == 0) {
+				if (on)
 					sk->nk |= NK_SPLASHSPLIT;
-				} else {
+				else
 					sk->nk &= ~NK_SPLASHSPLIT;
-				}
-			} else if (strcmpi(type, "IgnoreCards") == 0) {
-				if (on) {
+			} else if (strcmpi(damage_type, "IgnoreCards") == 0) {
+				if (on)
 					sk->nk |= NK_NO_CARDFIX_ATK;
-				} else {
+				else
 					sk->nk &= ~NK_NO_CARDFIX_ATK;
-				}
-			} else if (strcmpi(type, "IgnoreElement") == 0) {
-				if (on) {
+			} else if (strcmpi(damage_type, "IgnoreElement") == 0) {
+				if (on)
 					sk->nk |= NK_NO_ELEFIX;
-				} else {
+				else
 					sk->nk &= ~NK_NO_ELEFIX;
-				}
-			} else if (strcmpi(type, "IgnoreDefense") == 0) {
-				if (on) {
+			} else if (strcmpi(damage_type, "IgnoreDefense") == 0) {
+				if (on)
 					sk->nk |= NK_IGNORE_DEF;
-				} else {
+				else
 					sk->nk &= ~NK_IGNORE_DEF;
-				}
-			} else if (strcmpi(type, "IgnoreFlee") == 0) {
-				if (on) {
+			} else if (strcmpi(damage_type, "IgnoreFlee") == 0) {
+				if (on)
 					sk->nk |= NK_IGNORE_FLEE;
-				} else {
+				else
 					sk->nk &= ~NK_IGNORE_FLEE;
-				}
-			} else if (strcmpi(type, "IgnoreDefCards") == 0) {
-				if (on) {
+			} else if (strcmpi(damage_type, "IgnoreDefCards") == 0) {
+				if (on)
 					sk->nk |= NK_NO_CARDFIX_DEF;
-				} else {
+				else
 					sk->nk &= ~NK_NO_CARDFIX_DEF;
-				}
 			} else {
 				ShowWarning("%s: Invalid damage type %s specified for skill ID %d in %s! Skipping damage type...\n",
-					    __func__, type, sk->nameid, conf->file);
+					    __func__, damage_type, sk->nameid, conf->file);
 			}
 		}
 	}
@@ -21299,12 +21282,13 @@ static void skill_validate_fixed_cast_time(struct config_setting_t *conf, struct
 }
 
 /**
- * Validates "SkillCast/DelayOptions" when reading skill_db.conf
- * @param conf   struct, pointer to skill configuration
- * @param sk     struct, pointer to s_skill_db
- * @param delay  boolean, switch for cast/delay setting
- * @return (void)
- */
+ * Validates a skill's cast time or delay options when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the cast time or delay options should be set it.
+ * @param delay If true, the skill's delay options are validated, otherwise its cast time options.
+ *
+ **/
 static void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *sk, bool delay)
 {
 	nullpo_retv(conf);
@@ -21312,40 +21296,40 @@ static void skill_validate_castnodex(struct config_setting_t *conf, struct s_ski
 
 	skill->level_set_value(delay ? sk->delaynodex : sk->castnodex, 0);
 
-	struct config_setting_t *t = NULL, *tt = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, delay ? "SkillDelayOptions" : "CastTimeOptions");
 
-	if ((t=libconfig->setting_get_member(conf, delay?"SkillDelayOptions":"CastTimeOptions")) && config_setting_is_group(t)) {
-		int j = 0, tmpopt = 0;
-		while ((tt = libconfig->setting_get_elem(t, j++)) && j < 4) {
-			const char *type = config_setting_name(tt);
+	if (t != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *tt;
+		int i = 0;
+		int options = 0;
+
+		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+			const char *value = config_setting_name(tt);
 			bool on = libconfig->setting_get_bool_real(tt);
 
-			if (strcmpi(type, "IgnoreDex") == 0) {
-				if (on) {
-					tmpopt |= 1<<0;
-				} else {
-					tmpopt &= ~(1<<0);
-				}
-			} else if (strcmpi(type, "IgnoreStatusEffect") == 0) {
-				if (on) {
-					tmpopt |= 1<<1;
-				} else {
-					tmpopt &= ~(1<<1);
-				}
-			} else if (strcmpi(type, "IgnoreItemBonus") == 0) {
-				if (on) {
-					tmpopt |= 1<<2;
-				} else {
-					tmpopt &= ~(1<<2);
-				}
+			if (strcmpi(value, "IgnoreDex") == 0) {
+				if (on)
+					options |= 1;
+				else
+					options &= ~1;
+			} else if (strcmpi(value, "IgnoreStatusEffect") == 0) {
+				if (on)
+					options |= 2;
+				else
+					options &= ~2;
+			} else if (strcmpi(value, "IgnoreItemBonus") == 0) {
+				if (on)
+					options |= 4;
+				else
+					options &= ~4;
 			} else {
 				const char *option_string = delay ? "skill delay" : "cast time";
 				ShowWarning("%s: Invalid %s option %s specified for skill ID %d in %s! Skipping option...\n",
-					    __func__, option_string, type, sk->nameid, conf->file);
+					    __func__, option_string, value, sk->nameid, conf->file);
 			}
-
 		}
-		skill->level_set_value(delay?sk->delaynodex:sk->castnodex, tmpopt);
+
+		skill->level_set_value(delay ? sk->delaynodex : sk->castnodex, options);
 	}
 }
 
@@ -21620,217 +21604,186 @@ static void skill_validate_zeny_cost(struct config_setting_t *conf, struct s_ski
 }
 
 /**
- * Validates the "WeaponTypes" flag
- * when parsing skill_db.conf
- * @param   *type    const char, weapon type flag
- * @param   on       boolean, switch for the flag
- * @param   *sk      struct, pointer to s_skill_db
- * @return void
- */
+ * Validates a single weapon type when reading the skill DB.
+ *
+ * @param type The weapon type to validate.
+ * @param on Whether the weapon type is required for the skill.
+ * @param sk The s_skill_db struct where the weapon type should be set it.
+ * @return 0 if the passed weapon type is valid, otherwise 1.
+ *
+ **/
 static int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *sk)
 {
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
 	if (strcmpi(type, "NoWeapon") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_FIST;
-		} else {
-			sk->weapon &= ~(1<<W_FIST);
-		}
+		if (on)
+			sk->weapon |= (1 << W_FIST);
+		else
+			sk->weapon &= ~(1 << W_FIST);
 	} else if (strcmpi(type, "Daggers") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_DAGGER;
-		} else {
-			sk->weapon &= ~(1<<W_DAGGER);
-		}
+		if (on)
+			sk->weapon |= (1 << W_DAGGER);
+		else
+			sk->weapon &= ~(1 << W_DAGGER);
 	} else if (strcmpi(type, "1HSwords") == 0) {
 
-		if (on) {
-			sk->weapon |= 1<<W_1HSWORD;
-		} else {
-			sk->weapon &= ~(1<<W_1HSWORD);
-		}
+		if (on)
+			sk->weapon |= (1 << W_1HSWORD);
+		else
+			sk->weapon &= ~(1 << W_1HSWORD);
 	} else if (strcmpi(type, "2HSwords") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_2HSWORD;
-		} else {
-			sk->weapon &= ~(1<<W_2HSWORD);
-		}
+		if (on)
+			sk->weapon |= (1 << W_2HSWORD);
+		else
+			sk->weapon &= ~(1 << W_2HSWORD);
 	} else if (strcmpi(type, "1HSpears") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_1HSPEAR;
-		} else {
-			sk->weapon &= ~(1<<W_1HSPEAR);
-		}
+		if (on)
+			sk->weapon |= (1 << W_1HSPEAR);
+		else
+			sk->weapon &= ~(1 << W_1HSPEAR);
 	} else if (strcmpi(type, "2HSpears") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_2HSPEAR;
-		} else {
-			sk->weapon &= ~(1<<W_2HSPEAR);
-		}
+		if (on)
+			sk->weapon |= (1 << W_2HSPEAR);
+		else
+			sk->weapon &= ~(1 << W_2HSPEAR);
 	} else if (strcmpi(type, "1HAxes") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_1HAXE;
-		} else {
-			sk->weapon &= ~(1<<W_1HAXE);
-		}
+		if (on)
+			sk->weapon |= (1 << W_1HAXE);
+		else
+			sk->weapon &= ~(1 << W_1HAXE);
 	} else if (strcmpi(type, "2HAxes") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_2HAXE;
-		} else {
-			sk->weapon &= ~(1<<W_2HAXE);
-		}
+		if (on)
+			sk->weapon |= (1 << W_2HAXE);
+		else
+			sk->weapon &= ~(1 << W_2HAXE);
 	} else if (strcmpi(type, "Maces") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_MACE;
-		} else {
-			sk->weapon &= ~(1<<W_MACE);
-		}
+		if (on)
+			sk->weapon |= (1 << W_MACE);
+		else
+			sk->weapon &= ~(1 << W_MACE);
 	} else if (strcmpi(type, "2HMaces") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_2HMACE;
-		} else {
-			sk->weapon &= ~(1<<W_2HMACE);
-		}
+		if (on)
+			sk->weapon |= (1 << W_2HMACE);
+		else
+			sk->weapon &= ~(1 << W_2HMACE);
 	} else if (strcmpi(type, "Staves") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_STAFF;
-		} else {
-			sk->weapon &= ~(1<<W_STAFF);
-		}
+		if (on)
+			sk->weapon |= (1 << W_STAFF);
+		else
+			sk->weapon &= ~(1 << W_STAFF);
 	} else if (strcmpi(type, "Bows") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_BOW;
-		} else {
-			sk->weapon &= ~(1<<W_BOW);
-		}
+		if (on)
+			sk->weapon |= (1 << W_BOW);
+		else
+			sk->weapon &= ~(1 << W_BOW);
 	} else if (strcmpi(type, "Knuckles") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_KNUCKLE;
-		} else {
-			sk->weapon &= ~(1<<W_KNUCKLE);
-		}
+		if (on)
+			sk->weapon |= (1 << W_KNUCKLE);
+		else
+			sk->weapon &= ~(1 << W_KNUCKLE);
 	} else if (strcmpi(type, "Instruments") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_MUSICAL;
-		} else {
-			sk->weapon &= ~(1<<W_MUSICAL);
-		}
+		if (on)
+			sk->weapon |= (1 << W_MUSICAL);
+		else
+			sk->weapon &= ~(1 << W_MUSICAL);
 	} else if (strcmpi(type, "Whips") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_WHIP;
-		} else {
-			sk->weapon &= ~(1<<W_WHIP);
-		}
+		if (on)
+			sk->weapon |= (1 << W_WHIP);
+		else
+			sk->weapon &= ~(1 << W_WHIP);
 	} else if (strcmpi(type, "Books") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_BOOK;
-		} else {
-			sk->weapon &= ~(1<<W_BOOK);
-		}
+		if (on)
+			sk->weapon |= (1 << W_BOOK);
+		else
+			sk->weapon &= ~(1 << W_BOOK);
 	} else if (strcmpi(type, "Katars") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_KATAR;
-		} else {
-			sk->weapon &= ~(1<<W_KATAR);
-		}
+		if (on)
+			sk->weapon |= (1 << W_KATAR);
+		else
+			sk->weapon &= ~(1 << W_KATAR);
 	} else if (strcmpi(type, "Revolvers") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_REVOLVER;
-		} else {
-			sk->weapon &= ~(1<<W_REVOLVER);
-		}
+		if (on)
+			sk->weapon |= (1 << W_REVOLVER);
+		else
+			sk->weapon &= ~(1 << W_REVOLVER);
 	} else if (strcmpi(type, "Rifles") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_RIFLE;
-		} else {
-			sk->weapon &= ~(1<<W_RIFLE);
-		}
+		if (on)
+			sk->weapon |= (1 << W_RIFLE);
+		else
+			sk->weapon &= ~(1 << W_RIFLE);
 	} else if (strcmpi(type, "GatlingGuns") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_GATLING;
-		} else {
-			sk->weapon &= ~(1<<W_GATLING);
-		}
+		if (on)
+			sk->weapon |= (1 << W_GATLING);
+		else
+			sk->weapon &= ~(1 << W_GATLING);
 	} else if (strcmpi(type, "Shotguns") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_SHOTGUN;
-		} else {
-			sk->weapon &= ~(1<<W_SHOTGUN);
-		}
+		if (on)
+			sk->weapon |= (1 << W_SHOTGUN);
+		else
+			sk->weapon &= ~(1 << W_SHOTGUN);
 	} else if (strcmpi(type, "GrenadeLaunchers") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_GRENADE;
-		} else {
-			sk->weapon &= ~(1<<W_GRENADE);
-		}
+		if (on)
+			sk->weapon |= (1 << W_GRENADE);
+		else
+			sk->weapon &= ~(1 << W_GRENADE);
 	} else if (strcmpi(type, "FuumaShurikens") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_HUUMA;
-		} else {
-			sk->weapon &= ~(1<<W_HUUMA);
-		}
+		if (on)
+			sk->weapon |= (1 << W_HUUMA);
+		else
+			sk->weapon &= ~(1 << W_HUUMA);
 	} else if (strcmpi(type, "2HStaves") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_2HSTAFF;
-		} else {
-			sk->weapon &= ~(1<<W_2HSTAFF);
-		}
-	}
-	/*  MAX_SINGLE_WEAPON_TYPE excluded */
-	else if (strcmpi(type, "DWDaggers") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_DOUBLE_DD;
-		} else {
-			sk->weapon &= ~(1<<W_DOUBLE_DD);
-		}
+		if (on)
+			sk->weapon |= (1 << W_2HSTAFF);
+		else
+			sk->weapon &= ~(1 << W_2HSTAFF);
+	} else if (strcmpi(type, "DWDaggers") == 0) {
+		if (on)
+			sk->weapon |= (1 << W_DOUBLE_DD);
+		else
+			sk->weapon &= ~(1 << W_DOUBLE_DD);
 	} else if (strcmpi(type, "DWSwords") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_DOUBLE_SS;
-		} else {
-			sk->weapon &= ~(1<<W_DOUBLE_SS);
-		}
+		if (on)
+			sk->weapon |= (1 << W_DOUBLE_SS);
+		else
+			sk->weapon &= ~(1 << W_DOUBLE_SS);
 	} else if (strcmpi(type, "DWAxes") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_DOUBLE_AA;
-		} else {
-			sk->weapon &= ~(1<<W_DOUBLE_AA);
-		}
+		if (on)
+			sk->weapon |= (1 << W_DOUBLE_AA);
+		else
+			sk->weapon &= ~(1 << W_DOUBLE_AA);
 	} else if (strcmpi(type, "DWDaggerSword") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_DOUBLE_DS;
-		} else {
-			sk->weapon &= ~(1<<W_DOUBLE_DS);
-		}
+		if (on)
+			sk->weapon |= (1 << W_DOUBLE_DS);
+		else
+			sk->weapon &= ~(1 << W_DOUBLE_DS);
 	} else if (strcmpi(type, "DWDaggerAxe") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_DOUBLE_DA;
-		} else {
-			sk->weapon &= ~(1<<W_DOUBLE_DA);
-		}
+		if (on)
+			sk->weapon |= (1 << W_DOUBLE_DA);
+		else
+			sk->weapon &= ~(1 << W_DOUBLE_DA);
 	} else if (strcmpi(type, "DWSwordAxe") == 0) {
-		if (on) {
-			sk->weapon |= 1<<W_DOUBLE_SA;
-		} else {
-			sk->weapon &= ~(1<<W_DOUBLE_SA);
-		}
+		if (on)
+			sk->weapon |= (1 << W_DOUBLE_SA);
+		else
+			sk->weapon &= ~(1 << W_DOUBLE_SA);
 	} else if (strcmpi(type, "All") == 0) {
 		sk->weapon = 0;
 	} else {
-		return 1; // invalid type
+		return 1;
 	}
 
 	return 0;
 }
 
 /**
- * Validates "WeaponTypes"
- * when parsing skill_db.conf
- * @param   conf    struct, pointer to the skill configuration
- * @param   sk      struct, struct, pointer to s_skill_db
- * @return  (void)
- */
+ * Validates a skill's required weapon types when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required weapon types should be set it.
+ *
+ **/
 static void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -21838,111 +21791,110 @@ static void skill_validate_weapontype(struct config_setting_t *conf, struct s_sk
 
 	sk->weapon = 0;
 
-	struct config_setting_t *tt = NULL;
-	const char *type = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "WeaponTypes");
 
-	if ((tt = libconfig->setting_get_member(conf, "WeaponTypes")) && config_setting_is_group(tt)) {
-		int j = 0;
-		struct config_setting_t *wpt = NULL;
-		while ((wpt = libconfig->setting_get_elem(tt, j++)) != NULL) {
-			if (skill->validate_weapontype_sub(config_setting_name(wpt), libconfig->setting_get_bool_real(wpt), sk))
+	if (t != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *tt;
+		int i = 0;
+
+		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+			bool on = libconfig->setting_get_bool_real(tt);
+
+			if (skill->validate_weapontype_sub(config_setting_name(tt), on, sk) != 0)
 				ShowWarning("%s: Invalid required weapon type %s specified for skill ID %d in %s! Skipping type...\n",
-					    __func__, config_setting_name(wpt), sk->nameid, conf->file);
+					    __func__, config_setting_name(tt), sk->nameid, conf->file);
 		}
-	} else if (libconfig->setting_lookup_string(conf, "WeaponTypes", &type)) {
-		if (skill->validate_weapontype_sub(type, true, sk))
+
+		return;
+	}
+
+	const char *weapon_type;
+
+	if (libconfig->setting_lookup_string(conf, "WeaponTypes", &weapon_type) == CONFIG_TRUE) {
+		if (skill->validate_weapontype_sub(weapon_type, true, sk) != 0)
 			ShowWarning("%s: Invalid required weapon type %s specified for skill ID %d in %s! Defaulting to All...\n",
-				    __func__, type, sk->nameid, conf->file);
+				    __func__, weapon_type, sk->nameid, conf->file);
 	}
 }
 
 /**
- * Validates the "AmmoTypes" flag
- * when parsing skill_db.conf
- * @param   type    string, ammo type flag
- * @param   on      boolean, switch for the flag
- * @param   sk      struct, pointer to s_skill_db
- * @return void
- */
+ * Validates a single ammunition type when reading the skill DB.
+ *
+ * @param type The ammunition type to validate.
+ * @param on Whether the ammunition type is required for the skill.
+ * @param sk The s_skill_db struct where the ammunition type should be set it.
+ * @return 0 if the passed ammunition type is valid, otherwise 1.
+ *
+ **/
 static int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill_db *sk)
 {
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
 
 	if (strcmpi(type, "A_ARROW") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_ARROW;
-		} else {
-			sk->ammo &= ~(1<<A_ARROW);
-		}
+		if (on)
+			sk->ammo |= (1 << A_ARROW);
+		else
+			sk->ammo &= ~(1 << A_ARROW);
 	} else if (strcmpi(type, "A_DAGGER") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_DAGGER;
-		} else {
-			sk->ammo &= ~(1<<A_DAGGER);
-		}
+		if (on)
+			sk->ammo |= (1 << A_DAGGER);
+		else
+			sk->ammo &= ~(1 << A_DAGGER);
 	} else if (strcmpi(type, "A_BULLET") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_BULLET;
-		} else {
-			sk->ammo &= ~(1<<A_BULLET);
-		}
+		if (on)
+			sk->ammo |= (1 << A_BULLET);
+		else
+			sk->ammo &= ~(1 << A_BULLET);
 	} else if (strcmpi(type, "A_SHELL") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_SHELL;
-		} else {
-			sk->ammo &= ~(1<<A_SHELL);
-		}
+		if (on)
+			sk->ammo |= (1 << A_SHELL);
+		else
+			sk->ammo &= ~(1 << A_SHELL);
 	} else if (strcmpi(type, "A_GRENADE") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_GRENADE;
-		} else {
-			sk->ammo &= ~(1<<A_GRENADE);
-		}
+		if (on)
+			sk->ammo |= (1 << A_GRENADE);
+		else
+			sk->ammo &= ~(1 << A_GRENADE);
 	} else if (strcmpi(type, "A_SHURIKEN") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_SHURIKEN;
-		} else {
-			sk->ammo &= ~(1<<A_SHURIKEN);
-		}
+		if (on)
+			sk->ammo |= (1 << A_SHURIKEN);
+		else
+			sk->ammo &= ~(1 << A_SHURIKEN);
 	} else if (strcmpi(type, "A_KUNAI") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_KUNAI;
-		} else {
-			sk->ammo &= ~(1<<A_KUNAI);
-		}
+		if (on)
+			sk->ammo |= (1 << A_KUNAI);
+		else
+			sk->ammo &= ~(1 << A_KUNAI);
 	} else if (strcmpi(type, "A_CANNONBALL") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_CANNONBALL;
-		} else {
-			sk->ammo &= ~(1<<A_CANNONBALL);
-		}
+		if (on)
+			sk->ammo |= (1 << A_CANNONBALL);
+		else
+			sk->ammo &= ~(1 << A_CANNONBALL);
 	} else if (strcmpi(type, "A_THROWWEAPON") == 0) {
-		if (on) {
-			sk->ammo |= 1<<A_THROWWEAPON;
-		} else {
-			sk->ammo &= ~(1<<A_THROWWEAPON);
-		}
+		if (on)
+			sk->ammo |= (1 << A_THROWWEAPON);
+		else
+			sk->ammo &= ~(1 << A_THROWWEAPON);
 	} else if (strcmpi(type, "All") == 0) {
-		if (on) {
+		if (on)
 			sk->ammo = 0xFFFFFFFF;
-		} else {
+		else
 			sk->ammo = 0;
-		}
 	} else {
-		return 1; // Invalid Entry
+		return 1;
 	}
 
 	return 0;
 }
 
 /**
- * Validates the "AmmoTypes" flag
- * when parsing skill_db.conf
- * @param   conf    pointer to the skill configuration
- * @param   sk      struct, pointer to s_skill_db
- * @return void
- */
+ * Validates a skill's required ammunition types when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required ammunition types should be set it.
+ *
+ **/
 static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -21950,21 +21902,27 @@ static void skill_validate_ammotype(struct config_setting_t *conf, struct s_skil
 
 	sk->ammo = 0;
 
-	struct config_setting_t *tt = NULL;
-	const char *tstr = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "AmmoTypes");
 
-	if ((tt = libconfig->setting_get_member(conf, "AmmoTypes")) && config_setting_is_group(tt)) {
-		int j = 0;
-		struct config_setting_t *amt = { 0 };
-		while ((amt = libconfig->setting_get_elem(tt, j++))) {
-			if (skill->validate_ammotype_sub(config_setting_name(amt), libconfig->setting_get_bool_real(amt), sk))
+	if (t != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *tt;
+		int i = 0;
+
+		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+			bool on = libconfig->setting_get_bool_real(tt);
+
+			if (skill->validate_ammotype_sub(config_setting_name(tt), on, sk) != 0)
 				ShowWarning("%s: Invalid required ammunition type %s specified for skill ID %d in %s! Skipping type...\n",
-					    __func__, config_setting_name(amt), sk->nameid, conf->file);
+					    __func__, config_setting_name(tt), sk->nameid, conf->file);
 		}
-	} else if( libconfig->setting_lookup_string(conf, "AmmoTypes", &tstr)) {
-		if (skill->validate_ammotype_sub(tstr, true, sk))
+	}
+
+	const char *ammo_type;
+
+	if (libconfig->setting_lookup_string(conf, "AmmoTypes", &ammo_type) == CONFIG_TRUE) {
+		if (skill->validate_ammotype_sub(ammo_type, true, sk) != 0)
 			ShowWarning("%s: Invalid required ammunition type %s specified for skill ID %d in %s! Defaulting to None...\n",
-				    __func__, tstr, sk->nameid, conf->file);
+				    __func__, ammo_type, sk->nameid, conf->file);
 	}
 }
 
@@ -22014,12 +21972,12 @@ static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_s
 }
 
 /**
- * Validates the "State" flag
- * when parsing skill_db.conf
- * @param   conf    struct, pointer to the skill configuration
- * @param   sk      struct, pointer to s_skill_db
- * @return void
- */
+ * Validates a skill's required states when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required states should be set it.
+ *
+ **/
 static void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -22027,35 +21985,58 @@ static void skill_validate_state(struct config_setting_t *conf, struct s_skill_d
 
 	sk->state = ST_NONE;
 
-	const char *type = NULL;
+	const char *state;
 
-	if (libconfig->setting_lookup_string(conf, "State", &type) && strcmpi(type,"None") != ST_NONE) {
-		if (     strcmpi(type,"Hiding")           == 0 ) sk->state = ST_HIDING;
-		else if (strcmpi(type,"Cloaking")         == 0 ) sk->state = ST_CLOAKING;
-		else if (strcmpi(type,"Hidden")           == 0 ) sk->state = ST_HIDDEN;
-		else if (strcmpi(type,"Riding")           == 0 ) sk->state = ST_RIDING;
-		else if (strcmpi(type,"Falcon")           == 0 ) sk->state = ST_FALCON;
-		else if (strcmpi(type,"Cart")             == 0 ) sk->state = ST_CART;
-		else if (strcmpi(type,"Shield")           == 0 ) sk->state = ST_SHIELD;
-		else if (strcmpi(type,"Sight")            == 0 ) sk->state = ST_SIGHT;
-		else if (strcmpi(type,"ExplosionSpirits") == 0 ) sk->state = ST_EXPLOSIONSPIRITS;
-		else if (strcmpi(type,"CartBoost")        == 0 ) sk->state = ST_CARTBOOST;
-		else if (strcmpi(type,"NotOverWeight")    == 0 ) sk->state = ST_RECOV_WEIGHT_RATE;
-		else if (strcmpi(type,"Moveable")         == 0 ) sk->state = ST_MOVE_ENABLE;
-		else if (strcmpi(type,"InWater")          == 0 ) sk->state = ST_WATER;
-		else if (strcmpi(type,"Dragon")           == 0 ) sk->state = ST_RIDINGDRAGON;
-		else if (strcmpi(type,"Warg")             == 0 ) sk->state = ST_WUG;
-		else if (strcmpi(type,"RidingWarg")       == 0 ) sk->state = ST_RIDINGWUG;
-		else if (strcmpi(type,"MadoGear")         == 0 ) sk->state = ST_MADO;
-		else if (strcmpi(type,"ElementalSpirit")  == 0 ) sk->state = ST_ELEMENTALSPIRIT;
-		else if (strcmpi(type,"PoisonWeapon")     == 0 ) sk->state = ST_POISONINGWEAPON;
-		else if (strcmpi(type,"RollingCutter")    == 0 ) sk->state = ST_ROLLINGCUTTER;
-		else if (strcmpi(type,"MH_Fighting")      == 0 ) sk->state = ST_MH_FIGHTING;
-		else if (strcmpi(type,"MH_Grappling")     == 0 ) sk->state = ST_MH_GRAPPLING;
-		else if (strcmpi(type,"Peco")             == 0 ) sk->state = ST_PECO;
-		else
+	if (libconfig->setting_lookup_string(conf, "State", &state) == CONFIG_TRUE) {
+		if (strcmpi(state, "Hiding") == 0)
+			sk->state = ST_HIDING;
+		else if (strcmpi(state, "Cloaking") == 0)
+			sk->state = ST_CLOAKING;
+		else if (strcmpi(state, "Hidden") == 0)
+			sk->state = ST_HIDDEN;
+		else if (strcmpi(state, "Riding") == 0)
+			sk->state = ST_RIDING;
+		else if (strcmpi(state, "Falcon") == 0)
+			sk->state = ST_FALCON;
+		else if (strcmpi(state, "Cart") == 0)
+			sk->state = ST_CART;
+		else if (strcmpi(state, "Shield") == 0)
+			sk->state = ST_SHIELD;
+		else if (strcmpi(state, "Sight") == 0)
+			sk->state = ST_SIGHT;
+		else if (strcmpi(state, "ExplosionSpirits") == 0)
+			sk->state = ST_EXPLOSIONSPIRITS;
+		else if (strcmpi(state, "CartBoost") == 0)
+			sk->state = ST_CARTBOOST;
+		else if (strcmpi(state, "NotOverWeight") == 0)
+			sk->state = ST_RECOV_WEIGHT_RATE;
+		else if (strcmpi(state, "Moveable") == 0)
+			sk->state = ST_MOVE_ENABLE;
+		else if (strcmpi(state, "InWater") == 0)
+			sk->state = ST_WATER;
+		else if (strcmpi(state, "Dragon") == 0)
+			sk->state = ST_RIDINGDRAGON;
+		else if (strcmpi(state, "Warg") == 0)
+			sk->state = ST_WUG;
+		else if (strcmpi(state, "RidingWarg") == 0)
+			sk->state = ST_RIDINGWUG;
+		else if (strcmpi(state, "MadoGear") == 0)
+			sk->state = ST_MADO;
+		else if (strcmpi(state, "ElementalSpirit") == 0)
+			sk->state = ST_ELEMENTALSPIRIT;
+		else if (strcmpi(state, "PoisonWeapon") == 0)
+			sk->state = ST_POISONINGWEAPON;
+		else if (strcmpi(state, "RollingCutter") == 0)
+			sk->state = ST_ROLLINGCUTTER;
+		else if (strcmpi(state, "MH_Fighting") == 0)
+			sk->state = ST_MH_FIGHTING;
+		else if (strcmpi(state, "MH_Grappling") == 0)
+			sk->state = ST_MH_GRAPPLING;
+		else if (strcmpi(state, "Peco") == 0)
+			sk->state = ST_PECO;
+		else if (strcmpi(state, "None") != 0)
 			ShowWarning("%s: Invalid required state %s specified for skill ID %d in %s! Defaulting to None...\n",
-				    __func__, type, sk->nameid, conf->file);
+				    __func__, state, sk->nameid, conf->file);
 	}
 }
 
@@ -22105,12 +22086,12 @@ static void skill_validate_spirit_sphere_cost(struct config_setting_t *conf, str
 }
 
 /**
- * Validates the "Items" flag
- * when parsing skill_db.conf
- * @param   conf    struct, pointer to the skill configuration
- * @param   sk      struct, pointer to s_skill_db
- * @return void
- */
+ * Validates a skill's required items when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required items should be set it.
+ *
+ **/
 static void skill_validate_item_requirements(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -22119,14 +22100,14 @@ static void skill_validate_item_requirements(struct config_setting_t *conf, stru
 	skill->level_set_value(sk->itemid, 0);
 	skill->level_set_value(sk->amount, 0);
 
-	struct config_setting_t *tt = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Items");
 
-	if ((tt=libconfig->setting_get_member(conf, "Items")) && config_setting_is_group(conf)) {
-		int itx=-1;
-		struct config_setting_t *it;
+	if (t != NULL && config_setting_is_group(conf)) {
+		struct config_setting_t *tt;
+		int i = -1;
 
-		while((it=libconfig->setting_get_elem(tt, ++itx)) && itx < MAX_SKILL_ITEM_REQUIRE) {
-			const char *type = config_setting_name(it);
+		while ((tt = libconfig->setting_get_elem(t, ++i)) != NULL && i < MAX_SKILL_ITEM_REQUIRE) {
+			const char *type = config_setting_name(tt);
 
 			if (strlen(type) < 2) {
 				ShowWarning("%s: Invalid required item %s specified for skill ID %d in %s! Skipping item...\n",
@@ -22152,13 +22133,10 @@ static void skill_validate_item_requirements(struct config_setting_t *conf, stru
 
 			int amount = 0;
 
-			if (config_setting_is_group(it)) {
-				// TODO: Per-level item requirements are not implemented yet!
-				// We just take the first level for the time being (old txt behavior)
-				amount = libconfig->setting_get_int_elem(it, 0);
-			} else {
-				amount = libconfig->setting_get_int(it);
-			}
+			if (config_setting_is_group(tt))
+				amount = libconfig->setting_get_int_elem(tt, 0);
+			else
+				amount = libconfig->setting_get_int(tt);
 
 			if (amount < 0 || amount > MAX_AMOUNT) {
 				ShowWarning("%s: Invalid required item amount %d specified for skill ID %d in %s! Minimum is 0, maximum is %d. Skipping item...\n",
@@ -22166,8 +22144,8 @@ static void skill_validate_item_requirements(struct config_setting_t *conf, stru
 				continue;
 			}
 
-			sk->itemid[itx] = item_id;
-			sk->amount[itx] = amount;
+			sk->itemid[i] = item_id;
+			sk->amount[i] = amount;
 		}
 	}
 }
@@ -22398,109 +22376,98 @@ static void skill_validate_unit_interval(struct config_setting_t *conf, struct s
 }
 
 /**
- * Validates the "Unit > Flag" setting
- * when parsing skill_db.conf
- * @param   type     const char, name of the flag being parsed.
- * @param   on       boolean, switch for flag setting
- * @param   sk       struct, pointer to s_skill_db.
- * @return  (void)
- */
+ * Validates a single unit flag when reading the skill DB.
+ *
+ * @param type The unit flag to validate.
+ * @param on Whether the unit flag is set for the skill.
+ * @param sk The s_skill_db struct where the unit flag should be set it.
+ * @return 0 if the passed unit flag is valid, otherwise 1.
+ *
+ **/
 static int skill_validate_unit_flag_sub(const char *type, bool on, struct s_skill_db *sk)
 {
 	nullpo_retr(1, type);
 	nullpo_retr(1, sk);
+
 	if (strcmpi(type, "UF_DEFNOTENEMY") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_DEFNOTENEMY;
-		} else {
+		else
 			sk->unit_flag &= ~UF_DEFNOTENEMY;
-		}
 	} else if (strcmpi(type, "UF_NOREITERATION") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_NOREITERATION;
-		} else {
+		else
 			sk->unit_flag &= ~UF_NOREITERATION;
-		}
 	} else if (strcmpi(type, "UF_NOFOOTSET") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_NOFOOTSET;
-		} else {
+		else
 			sk->unit_flag &= ~UF_NOFOOTSET;
-		}
 	} else if (strcmpi(type, "UF_NOOVERLAP") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_NOOVERLAP;
-		} else {
+		else
 			sk->unit_flag &= ~UF_NOOVERLAP;
-		}
 	} else if (strcmpi(type, "UF_PATHCHECK") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_PATHCHECK;
-		} else {
+		else
 			sk->unit_flag &= ~UF_PATHCHECK;
-		}
 	} else if (strcmpi(type, "UF_NOPC") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_NOPC;
-		} else {
+		else
 			sk->unit_flag &= ~UF_NOPC;
-		}
 	} else if (strcmpi(type, "UF_NOMOB") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_NOMOB;
-		} else {
+		else
 			sk->unit_flag &= ~UF_NOMOB;
-		}
 	} else if (strcmpi(type, "UF_SKILL") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_SKILL;
-		} else {
+		else
 			sk->unit_flag &= ~UF_SKILL;
-		}
 	} else if (strcmpi(type, "UF_DANCE") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_DANCE;
-		} else {
+		else
 			sk->unit_flag &= ~UF_DANCE;
-		}
 	} else if (strcmpi(type, "UF_ENSEMBLE") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_ENSEMBLE;
-		} else {
+		else
 			sk->unit_flag &= ~UF_ENSEMBLE;
-		}
 	} else if (strcmpi(type, "UF_SONG") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_SONG;
-		} else {
+		else
 			sk->unit_flag &= ~UF_SONG;
-		}
 	} else if (strcmpi(type, "UF_DUALMODE") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_DUALMODE;
-		} else {
+		else
 			sk->unit_flag &= ~UF_DUALMODE;
-		}
 	} else if (strcmpi(type, "UF_RANGEDSINGLEUNIT") == 0) {
-		if (on) {
+		if (on)
 			sk->unit_flag |= UF_RANGEDSINGLEUNIT;
-		} else {
+		else
 			sk->unit_flag &= ~UF_RANGEDSINGLEUNIT;
-		}
 	} else {
-		return 1; // Invalid Type
+		return 1;
 	}
 
 	return 0;
 }
 
 /**
- * Validate "Unit > Flag" setting
- * when parsing skill_db.conf
- * @param   conf    struct, pointer to the skill configuration
- * @param   sk      struct, struct, pointer to s_skill_db
- * @return  (void)
- */
+ * Validates a skill's unit flags when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit flags should be set it.
+ *
+ **/
 static void skill_validate_unit_flag(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -22508,28 +22475,29 @@ static void skill_validate_unit_flag(struct config_setting_t *conf, struct s_ski
 
 	sk->unit_flag = 0;
 
-	struct config_setting_t *t = NULL;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Flag");
 
-	if ((t=libconfig->setting_get_member(conf, "Flag")) && config_setting_is_group(t)) {
-		int j=0;
-		struct config_setting_t *tt = NULL;
-		while ((tt = libconfig->setting_get_elem(t, j++))) {
-			const char *name = config_setting_name(tt);
+	if (t != NULL && config_setting_is_group(t)) {
+		struct config_setting_t *tt;
+		int i = 0;
 
-			if (skill->validate_unit_flag_sub(name, libconfig->setting_get_bool_real(tt), sk))
+		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {
+			bool on = libconfig->setting_get_bool_real(tt);
+
+			if (skill->validate_unit_flag_sub(config_setting_name(tt), on, sk))
 				ShowWarning("%s: Invalid unit flag %s specified for skill ID %d in %s! Skipping flag...\n",
-					    __func__, name, sk->nameid, conf->file);
+					    __func__, config_setting_name(tt), sk->nameid, conf->file);
 		}
 	}
 }
 
 /**
- * Validates the "Unit > Target" flag
- * when parsing skill_db.conf
- * @param   conf    struct, pointer to the skill configuration
- * @param   sk      struct, pointer to s_skill_db
- * @return void
- */
+ * Validates a skill's unit target when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the unit target should be set it.
+ *
+ **/
 static void skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	nullpo_retv(conf);
@@ -22537,37 +22505,49 @@ static void skill_validate_unit_target(struct config_setting_t *conf, struct s_s
 
 	sk->unit_target = BCT_NOONE;
 
-	const char *type = NULL;
+	const char *unit_target;
 
-	if(libconfig->setting_lookup_string(conf, "Target", &type)) {
-
-		if(!strcmpi(type,"NotEnemy")) sk->unit_target = BCT_NOENEMY;
-		else if(!strcmpi(type,"NotParty")) sk->unit_target = BCT_NOPARTY;
-		else if (!strcmpi(type,"NotGuild")) sk->unit_target = BCT_NOGUILD;
-		else if(!strcmpi(type,"Friend")) sk->unit_target = BCT_NOENEMY;
-		else if(!strcmpi(type,"Party")) sk->unit_target = BCT_PARTY;
-		else if(!strcmpi(type,"Ally")) sk->unit_target = BCT_PARTY|BCT_GUILD;
-		else if(!strcmpi(type,"Guild")) sk->unit_target = BCT_GUILD;
-		else if(!strcmpi(type,"All")) sk->unit_target = BCT_ALL;
-		else if(!strcmpi(type,"Enemy")) sk->unit_target = BCT_ENEMY;
-		else if(!strcmpi(type,"Self")) sk->unit_target = BCT_SELF;
-		else if(!strcmpi(type,"SameGuild")) sk->unit_target = BCT_SAMEGUILD;
-		else if(strcmpi(type, "None") != 0)
+	if (libconfig->setting_lookup_string(conf, "Target", &unit_target) == CONFIG_TRUE) {
+		if (strcmpi(unit_target, "NotEnemy") == 0)
+			sk->unit_target = BCT_NOENEMY;
+		else if (strcmpi(unit_target, "NotParty") == 0)
+			sk->unit_target = BCT_NOPARTY;
+		else if (strcmpi(unit_target, "NotGuild") == 0)
+			sk->unit_target = BCT_NOGUILD;
+		else if (strcmpi(unit_target, "Friend") == 0)
+			sk->unit_target = BCT_NOENEMY;
+		else if (strcmpi(unit_target, "Party") == 0)
+			sk->unit_target = BCT_PARTY;
+		else if (strcmpi(unit_target, "Ally") == 0)
+			sk->unit_target = BCT_PARTY|BCT_GUILD;
+		else if (strcmpi(unit_target, "Guild") == 0)
+			sk->unit_target = BCT_GUILD;
+		else if (strcmpi(unit_target, "All") == 0)
+			sk->unit_target = BCT_ALL;
+		else if (strcmpi(unit_target, "Enemy") == 0)
+			sk->unit_target = BCT_ENEMY;
+		else if (strcmpi(unit_target, "Self") == 0)
+			sk->unit_target = BCT_SELF;
+		else if (strcmpi(unit_target, "SameGuild") == 0)
+			sk->unit_target = BCT_SAMEGUILD;
+		else if (strcmpi(unit_target, "None") != 0)
 			ShowWarning("%s: Invalid unit target %s specified for skill ID %d in %s! Defaulting to None...\n",
-				    __func__, type, sk->nameid, conf->file);
+				    __func__, unit_target, sk->nameid, conf->file);
 	}
 
-	if (sk->unit_flag & UF_DEFNOTENEMY && battle_config.defnotenemy)
+	if ((sk->unit_flag & UF_DEFNOTENEMY) != 0 && battle_config.defnotenemy != 0)
 		sk->unit_target = BCT_NOENEMY;
 
-	//By default, target just characters.
+	// By default target just characters.
 	sk->unit_target |= BL_CHAR;
 
-	if (sk->unit_flag & UF_NOPC)
+	if ((sk->unit_flag & UF_NOPC) != 0)
 		sk->unit_target &= ~BL_PC;
-	if (sk->unit_flag & UF_NOMOB)
+
+	if ((sk->unit_flag & UF_NOMOB) != 0)
 		sk->unit_target &= ~BL_MOB;
-	if (sk->unit_flag & UF_SKILL)
+
+	if ((sk->unit_flag & UF_SKILL) != 0)
 		sk->unit_target |= BL_SKILL;
 }
 
@@ -22608,35 +22588,44 @@ static void skill_validate_additional_fields(struct config_setting_t *conf, stru
 }
 
 /**
- * Reads skill_db.conf from relative filepath and processes [ Smokexyz/Hercules ]
- * entries into the skill database.
- * @param  filename     contains the file path and name.
- * @return boolean      true on success
- */
+ * Reads a skill DB file from relative path.
+ *
+ * @param filename The skill DB's file name including the DB path.
+ * @return True on success, otherwise false.
+ *
+ **/
 static bool skill_read_skilldb(const char *filename)
 {
-	struct config_t skilldb;
-	struct config_setting_t *sk, *conf;
-	char filepath[256];
-	int count=0, index=0;
-
 	nullpo_retr(false, filename);
+
+	char filepath[256];
 
 	libconfig->format_db_path(filename, filepath, sizeof(filepath));
 
-	if (!libconfig->load_file(&skilldb, filepath)) {
-		return false; // Libconfig error report.
+	if (!exists(filepath)) {
+		ShowError("%s: Can't find file %s! Abort reading skills...\n", __func__, filepath);
+		return false;
 	}
 
-	// Possible Syntax error.
-	if ((sk=libconfig->setting_get_member(skilldb.root, "skill_db")) == NULL) {
-		ShowError("skill_read_skilldb: Skill DB could not be loaded, please check '%s'.\n", filepath);
+	struct config_t skilldb;
+
+	if (libconfig->load_file(&skilldb, filepath) == 0)
+		return false; // Libconfig error report.
+
+	struct config_setting_t *sk = libconfig->setting_get_member(skilldb.root, "skill_db");
+
+	if (sk == NULL) {
+		ShowError("%s: Skill DB could not be loaded! Please check %s.\n", __func__, filepath);
 		libconfig->destroy(&skilldb);
 		return false;
 	}
 
-	while ((conf = libconfig->setting_get_elem(sk,index++))) {
-		struct s_skill_db tmp_db = { 0 };
+	struct config_setting_t *conf;
+	int index = 0;
+	int count = 0;
+
+	while ((conf = libconfig->setting_get_elem(sk, index++)) != NULL) {
+		struct s_skill_db tmp_db = {0};
 
 		/** Validate mandatory fields. **/
 		skill->validate_id(conf, &tmp_db, index);
@@ -22689,9 +22678,7 @@ static bool skill_read_skilldb(const char *filename)
 	}
 
 	libconfig->destroy(&skilldb);
-
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
-
 	return true;
 }
 
