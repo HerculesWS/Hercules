@@ -743,24 +743,48 @@ static int skill_get_unit_range(int skill_id, int skill_lv)
 	return skill->dbs->db[idx].unit_range[skill_get_lvl_idx(skill_lv)];
 }
 
-static int skill_get_unit_target(int skill_id)
+/**
+ * Gets a skill's unit target by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's unit target corresponding to the passed level. Defaults to BCT_NOONE (0) in case of error.
+ *
+ **/
+static int skill_get_unit_target(int skill_id, int skill_lv)
 {
-	int idx;
 	if (skill_id == 0)
 		return BCT_NOONE;
-	idx = skill->get_index(skill_id);
+
+	Assert_retr(BCT_NOONE, skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
 	Assert_retr(BCT_NOONE, idx != 0);
-	return skill->dbs->db[idx].unit_target & BCT_ALL;
+
+	return (skill->dbs->db[idx].unit_target[skill_get_lvl_idx(skill_lv)] & BCT_ALL);
 }
 
-static int skill_get_unit_bl_target(int skill_id)
+/**
+ * Gets a skill's unit target as bl type by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's unit target as bl type corresponding to the passed level. Defaults to BL_NUL (0) in case of error.
+ *
+ **/
+static int skill_get_unit_bl_target(int skill_id, int skill_lv)
 {
-	int idx;
 	if (skill_id == 0)
 		return BL_NUL;
-	idx = skill->get_index(skill_id);
-	Assert_retr(BL_NUL, idx != 0);
-	return skill->dbs->db[idx].unit_target & BL_ALL;
+
+	Assert_retr(BCT_NOONE, skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_retr(BCT_NOONE, idx != 0);
+
+	return (skill->dbs->db[idx].unit_target[skill_get_lvl_idx(skill_lv)] & BL_ALL);
 }
 
 static int skill_get_unit_flag(int skill_id)
@@ -12115,8 +12139,8 @@ static bool skill_dance_switch(struct skill_unit *su, int flag)
 		group->skill_id    = skill_id;
 		group->skill_lv    = 1;
 		group->unit_id     = skill->get_unit_id(skill_id, 1, 0);
-		group->target_flag = skill->get_unit_target(skill_id);
-		group->bl_flag     = skill->get_unit_bl_target(skill_id);
+		group->target_flag = skill->get_unit_target(skill_id, 1);
+		group->bl_flag     = skill->get_unit_bl_target(skill_id, 1);
 		group->interval    = skill->get_unit_interval(skill_id, 1);
 	} else {
 		//Restore
@@ -12151,7 +12175,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 	limit = skill->get_time(skill_id,skill_lv);
 	range = skill->get_unit_range(skill_id,skill_lv);
 	interval = skill->get_unit_interval(skill_id, skill_lv);
-	target = skill->get_unit_target(skill_id);
+	target = skill->get_unit_target(skill_id, skill_lv);
 	unit_flag = skill->get_unit_flag(skill_id);
 	layout = skill->get_unit_layout(skill_id,skill_lv,src,x,y);
 
@@ -12520,7 +12544,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 	group->val2=val2;
 	group->val3=val3;
 	group->target_flag=target;
-	group->bl_flag= skill->get_unit_bl_target(skill_id);
+	group->bl_flag= skill->get_unit_bl_target(skill_id, skill_lv);
 	group->state.ammo_consume = (sd && sd->state.arrow_atk && skill_id != GS_GROUNDDRIFT); //Store if this skill needs to consume ammo.
 	group->state.song_dance = ((unit_flag&(UF_DANCE|UF_SONG)) ? 1 : 0)|((unit_flag&UF_ENSEMBLE) ? 2 : 0); //Signals if this is a song/dance/duet
 	group->state.guildaura = ( skill_id >= GD_LEADERSHIP && skill_id <= GD_HAWKEYES )?1:0;
@@ -22842,10 +22866,51 @@ static void skill_validate_unit_flag(struct config_setting_t *conf, struct s_ski
 }
 
 /**
- * Validates a skill's unit target when reading the skill DB.
+ * Validates a single unit target when reading the skill DB.
+ *
+ * @param target The unit target to validate.
+ * @return A number greater than or equal to 0 if the passed unit target is valid, otherwise -1.
+ *
+ **/
+static int skill_validate_unit_target_sub(const char *target)
+{
+	nullpo_retr(-1, target);
+
+	int ret_val = BCT_NOONE;
+
+	if (strcmpi(target, "NotEnemy") == 0)
+		ret_val = BCT_NOENEMY;
+	else if (strcmpi(target, "NotParty") == 0)
+		ret_val = BCT_NOPARTY;
+	else if (strcmpi(target, "NotGuild") == 0)
+		ret_val = BCT_NOGUILD;
+	else if (strcmpi(target, "Friend") == 0)
+		ret_val = BCT_NOENEMY;
+	else if (strcmpi(target, "Party") == 0)
+		ret_val = BCT_PARTY;
+	else if (strcmpi(target, "Ally") == 0)
+		ret_val = BCT_PARTY|BCT_GUILD;
+	else if (strcmpi(target, "Guild") == 0)
+		ret_val = BCT_GUILD;
+	else if (strcmpi(target, "All") == 0)
+		ret_val = BCT_ALL;
+	else if (strcmpi(target, "Enemy") == 0)
+		ret_val = BCT_ENEMY;
+	else if (strcmpi(target, "Self") == 0)
+		ret_val = BCT_SELF;
+	else if (strcmpi(target, "SameGuild") == 0)
+		ret_val = BCT_SAMEGUILD;
+	else if (strcmpi(target, "None") != 0)
+		ret_val = -1;
+
+	return ret_val;
+}
+
+/**
+ * Validates a skill's unit targets when reading the skill DB.
  *
  * @param conf The libconfig settings block which contains the skill's data.
- * @param sk The s_skill_db struct where the unit target should be set it.
+ * @param sk The s_skill_db struct where the unit targets should be set it.
  *
  **/
 static void skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db *sk)
@@ -22853,52 +22918,56 @@ static void skill_validate_unit_target(struct config_setting_t *conf, struct s_s
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	sk->unit_target = BCT_NOONE;
+	skill->level_set_value(sk->unit_target, BCT_NOONE);
 
-	const char *unit_target;
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Target");
 
-	if (libconfig->setting_lookup_string(conf, "Target", &unit_target) == CONFIG_TRUE) {
-		if (strcmpi(unit_target, "NotEnemy") == 0)
-			sk->unit_target = BCT_NOENEMY;
-		else if (strcmpi(unit_target, "NotParty") == 0)
-			sk->unit_target = BCT_NOPARTY;
-		else if (strcmpi(unit_target, "NotGuild") == 0)
-			sk->unit_target = BCT_NOGUILD;
-		else if (strcmpi(unit_target, "Friend") == 0)
-			sk->unit_target = BCT_NOENEMY;
-		else if (strcmpi(unit_target, "Party") == 0)
-			sk->unit_target = BCT_PARTY;
-		else if (strcmpi(unit_target, "Ally") == 0)
-			sk->unit_target = BCT_PARTY|BCT_GUILD;
-		else if (strcmpi(unit_target, "Guild") == 0)
-			sk->unit_target = BCT_GUILD;
-		else if (strcmpi(unit_target, "All") == 0)
-			sk->unit_target = BCT_ALL;
-		else if (strcmpi(unit_target, "Enemy") == 0)
-			sk->unit_target = BCT_ENEMY;
-		else if (strcmpi(unit_target, "Self") == 0)
-			sk->unit_target = BCT_SELF;
-		else if (strcmpi(unit_target, "SameGuild") == 0)
-			sk->unit_target = BCT_SAMEGUILD;
-		else if (strcmpi(unit_target, "None") != 0)
-			ShowWarning("%s: Invalid unit target %s specified for skill ID %d in %s! Defaulting to None...\n",
-				    __func__, unit_target, sk->nameid, conf->file);
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			const char *unit_target;
+
+			if (libconfig->setting_lookup_string(t, lv, &unit_target) == CONFIG_TRUE) {
+				int target = skill->validate_unit_target_sub(unit_target);
+
+				if (target > BCT_NOONE)
+					sk->unit_target[i] = target;
+				else if (target == -1)
+					ShowWarning("%s: Invalid unit target %s specified in level %d for skill ID %d in %s! Defaulting to None...\n",
+						    __func__, unit_target, i + 1, sk->nameid, conf->file);
+			}
+		}
+	} else {
+		const char *unit_target;
+
+		if (libconfig->setting_lookup_string(conf, "Target", &unit_target) == CONFIG_TRUE) {
+			int target = skill->validate_unit_target_sub(unit_target);
+
+			if (target > BCT_NOONE)
+				skill->level_set_value(sk->unit_target, target);
+			else if (target == -1)
+				ShowWarning("%s: Invalid unit target %s specified for skill ID %d in %s! Defaulting to None...\n",
+					    __func__, unit_target, sk->nameid, conf->file);
+		}
 	}
 
-	if ((sk->unit_flag & UF_DEFNOTENEMY) != 0 && battle_config.defnotenemy != 0)
-		sk->unit_target = BCT_NOENEMY;
+	for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+		if ((sk->unit_flag & UF_DEFNOTENEMY) != 0 && battle_config.defnotenemy != 0)
+			sk->unit_target[i] = BCT_NOENEMY;
 
-	// By default target just characters.
-	sk->unit_target |= BL_CHAR;
+		// By default target just characters.
+		sk->unit_target[i] |= BL_CHAR;
 
-	if ((sk->unit_flag & UF_NOPC) != 0)
-		sk->unit_target &= ~BL_PC;
+		if ((sk->unit_flag & UF_NOPC) != 0)
+			sk->unit_target[i] &= ~BL_PC;
 
-	if ((sk->unit_flag & UF_NOMOB) != 0)
-		sk->unit_target &= ~BL_MOB;
+		if ((sk->unit_flag & UF_NOMOB) != 0)
+			sk->unit_target[i] &= ~BL_MOB;
 
-	if ((sk->unit_flag & UF_SKILL) != 0)
-		sk->unit_target |= BL_SKILL;
+		if ((sk->unit_flag & UF_SKILL) != 0)
+			sk->unit_target[i] |= BL_SKILL;
+	}
 }
 
 /**
@@ -23410,6 +23479,7 @@ void skill_defaults(void)
 	skill->validate_unit_interval = skill_validate_unit_interval;
 	skill->validate_unit_flag_sub = skill_validate_unit_flag_sub;
 	skill->validate_unit_flag = skill_validate_unit_flag;
+	skill->validate_unit_target_sub = skill_validate_unit_target_sub;
 	skill->validate_unit_target = skill_validate_unit_target;
 	skill->validate_unit = skill_validate_unit;
 	skill->validate_additional_fields = skill_validate_additional_fields;

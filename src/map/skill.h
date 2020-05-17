@@ -1782,7 +1782,7 @@ struct s_skill_db {
 	int unit_layout_type[MAX_SKILL_LEVEL];
 	int unit_range[MAX_SKILL_LEVEL];
 	int unit_interval[MAX_SKILL_LEVEL];
-	int unit_target;
+	int unit_target[MAX_SKILL_LEVEL];
 	int unit_flag;
 };
 
@@ -2006,9 +2006,9 @@ struct skill_interface {
 	int (*get_maxcount) (int skill_id, int skill_lv);
 	int (*get_blewcount) (int skill_id, int skill_lv);
 	int (*get_unit_flag) (int skill_id);
-	int (*get_unit_target) (int skill_id);
+	int (*get_unit_target) (int skill_id, int skill_lv);
 	int (*get_unit_interval) (int skill_id, int skill_lv);
-	int (*get_unit_bl_target) (int skill_id);
+	int (*get_unit_bl_target) (int skill_id, int skill_lv);
 	int (*get_unit_layout_type) (int skill_id, int skill_lv);
 	int (*get_unit_range) (int skill_id, int skill_lv);
 	int (*get_cooldown) (int skill_id, int skill_lv);
@@ -2180,6 +2180,7 @@ struct skill_interface {
 	void (*validate_unit_interval) (struct config_setting_t *conf, struct s_skill_db *sk);
 	int (*validate_unit_flag_sub) (const char *type, bool on, struct s_skill_db *sk);
 	void (*validate_unit_flag) (struct config_setting_t *conf,  struct s_skill_db *sk);
+	int (*validate_unit_target_sub) (const char *target);
 	void (*validate_unit_target) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_unit) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk);

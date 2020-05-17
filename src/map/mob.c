@@ -3904,7 +3904,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 				mob_skills[i].state = MSS_IDLE;
 				mob_skills[i].target = MST_AROUND2;
 				mob_skills[i].delay = 60000;
-			} else if (skill->get_unit_target(skill_id) == BCT_ENEMY) { /// Target Enemy.
+			} else if (skill->get_unit_target(skill_id, sd->status.skill[idx].lv) == BCT_ENEMY) { /// Target Enemy.
 				mob_skills[i].state = MSS_ANYTARGET;
 				mob_skills[i].target = MST_TARGET;
 				mob_skills[i].cond1 = MSC_ALWAYS;
