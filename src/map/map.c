@@ -5265,7 +5265,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 
-		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+		if (modifier[0] == '\0' || (skill_id = skill->name2id(skill_name)) == 0 || skill->get_unit_id(skill->name2id(skill_name), 1, 0) == 0 || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX) {
 			;/* we don't mind it, the server will take care of it next. */
 		} else {
 			int idx = map->list[m].unit_count;

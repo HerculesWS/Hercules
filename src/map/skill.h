@@ -1778,7 +1778,7 @@ struct s_skill_db {
 	int spiritball[MAX_SKILL_LEVEL];
 	int itemid[MAX_SKILL_ITEM_REQUIRE],amount[MAX_SKILL_ITEM_REQUIRE];
 	int castnodex[MAX_SKILL_LEVEL], delaynodex[MAX_SKILL_LEVEL];
-	int unit_id[2];
+	int unit_id[MAX_SKILL_LEVEL][2];
 	int unit_layout_type[MAX_SKILL_LEVEL];
 	int unit_range[MAX_SKILL_LEVEL];
 	int unit_interval;
@@ -2000,7 +2000,7 @@ struct skill_interface {
 	int (*get_weapontype) (int skill_id);
 	int (*get_ammotype) (int skill_id);
 	int (*get_ammo_qty) (int skill_id, int skill_lv);
-	int (*get_unit_id) (int skill_id, int flag);
+	int (*get_unit_id) (int skill_id, int skill_lv, int flag);
 	int (*get_inf2) (int skill_id);
 	int (*get_castcancel) (int skill_id, int skill_lv);
 	int (*get_maxcount) (int skill_id, int skill_lv);

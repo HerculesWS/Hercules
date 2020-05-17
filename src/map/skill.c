@@ -682,15 +682,28 @@ static int skill_get_type(int skill_id, int skill_lv)
 	return skill->dbs->db[idx].skill_type[skill_get_lvl_idx(skill_lv)];
 }
 
-static int skill_get_unit_id(int skill_id, int flag)
+/**
+ * Gets a skill's unit ID by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @param flag 
+ * @return The skill's unit ID corresponding to the passed level. Defaults to 0 in case of error.
+ *
+ **/
+static int skill_get_unit_id(int skill_id, int skill_lv, int flag)
 {
-	int idx;
 	if (skill_id == 0)
 		return 0;
-	idx = skill->get_index(skill_id);
+
+	Assert_ret(skill_lv > 0);
+	Assert_ret(flag >= 0 && flag < ARRAYLENGTH(skill->dbs->db[0].unit_id[0]));
+
+	int idx = skill->get_index(skill_id);
+
 	Assert_ret(idx != 0);
-	Assert_ret(flag >= 0 && flag < ARRAYLENGTH(skill->dbs->db[0].unit_id));
-	return skill->dbs->db[idx].unit_id[flag];
+
+	return skill->dbs->db[idx].unit_id[skill_get_lvl_idx(skill_lv)][flag];
 }
 
 static int skill_get_unit_interval(int skill_id)
@@ -6220,7 +6233,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			if (skill->castend_nodamage_id_undead_unknown(src, bl, &skill_id, &skill_lv, &tick, &flag))
 			{
 				//Skill is actually ground placed.
-				if (src == bl && skill->get_unit_id(skill_id,0))
+				if (src == bl && skill->get_unit_id(skill_id, skill_lv, 0) != 0)
 					return skill->castend_pos2(src,bl->x,bl->y,skill_id,skill_lv,tick,0);
 			}
 			break;
@@ -12089,7 +12102,7 @@ static bool skill_dance_switch(struct skill_unit *su, int flag)
 		// replace
 		group->skill_id    = skill_id;
 		group->skill_lv    = 1;
-		group->unit_id     = skill->get_unit_id(skill_id,0);
+		group->unit_id     = skill->get_unit_id(skill_id, 1, 0);
 		group->target_flag = skill->get_unit_target(skill_id);
 		group->bl_flag     = skill->get_unit_bl_target(skill_id);
 		group->interval    = skill->get_unit_interval(skill_id);
@@ -12490,7 +12503,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 	}
 
 	nullpo_retr(NULL, layout);
-	nullpo_retr(NULL, group=skill->init_unitgroup(src,layout->count,skill_id,skill_lv,skill->get_unit_id(skill_id,flag&1)+subunt, limit, interval));
+	nullpo_retr(NULL, group = skill->init_unitgroup(src, layout->count, skill_id, skill_lv, skill->get_unit_id(skill_id, skill_lv, flag & 1) + subunt, limit, interval));
 	group->val1=val1;
 	group->val2=val2;
 	group->val3=val3;
@@ -17768,7 +17781,7 @@ static int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap
 
 			case UNT_WARP_ACTIVE:
 				// warp portal opens (morph to a UNT_WARP_WAITING cell)
-				group->unit_id = skill->get_unit_id(group->skill_id, 1); // UNT_WARP_WAITING
+				group->unit_id = skill->get_unit_id(group->skill_id, group->skill_lv, 1); // UNT_WARP_WAITING
 				clif->changelook(&su->bl, LOOK_BASE, group->unit_id);
 				// restart timers
 				group->limit = skill->get_time(group->skill_id,group->skill_lv);
@@ -22402,6 +22415,135 @@ static int skill_validate_unit_id_sub(int unit_id)
 }
 
 /**
+ * Validates a skill's unit IDs if specified as single value when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's unit ID data.
+ * @param sk The s_skill_db struct where the unit IDs should be set it.
+ * @param index The array index to use. (-1 for whole array.)
+ * @param unit_id The unit ID to validate.
+ *
+ **/
+static void skill_validate_unit_id_value(struct config_setting_t *conf, struct s_skill_db *sk, int index, int unit_id)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	if (skill->validate_unit_id_sub(unit_id) == -1) {
+		char level_string[14]; // Big enough to contain "in level 999 " in case of custom MAX_SKILL_LEVEL.
+
+		if (index == -1)
+			*level_string = '\0';
+		else
+			safesnprintf(level_string, sizeof(level_string), "in level %d ", index + 1);
+
+		ShowWarning("%s: Invalid unit ID %d specified %sfor skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+			    __func__, unit_id, level_string, sk->nameid, conf->file);
+
+		return;
+	}
+
+	if (index == -1) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++)
+			sk->unit_id[i][0] = unit_id;
+	} else {
+		sk->unit_id[index][0] = unit_id;
+	}
+}
+
+/**
+ * Validates a skill's unit IDs if specified as array when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's unit ID data.
+ * @param sk The s_skill_db struct where the unit IDs should be set it.
+ * @param index The array index to use. (-1 for whole array.)
+ *
+ **/
+static void skill_validate_unit_id_array(struct config_setting_t *conf, struct s_skill_db *sk, int index)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	char level_string[14]; // Big enough to contain "in level 999 " in case of custom MAX_SKILL_LEVEL.
+
+	if (index == -1)
+		*level_string = '\0';
+	else
+		safesnprintf(level_string, sizeof(level_string), "in level %d ", index + 1);
+
+	if (libconfig->setting_length(conf) == 0) {
+		ShowWarning("%s: No unit ID(s) specified %sfor skill ID %d in %s! Defaulting to 0...\n",
+			    __func__, level_string, sk->nameid, conf->file);
+		return;
+	}
+
+	if (libconfig->setting_length(conf) > 2)
+		ShowWarning("%s: Specified more than two unit IDs %sfor skill ID %d in %s! Reading only the first two...\n",
+			    __func__, level_string, sk->nameid, conf->file);
+
+	int unit_id1 = libconfig->setting_get_int_elem(conf, 0);
+
+	if (skill->validate_unit_id_sub(unit_id1) == -1) {
+		ShowWarning("%s: Invalid unit ID %d specified %sfor skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+			    __func__, unit_id1, level_string, sk->nameid, conf->file);
+		unit_id1 = 0;
+	}
+
+	int unit_id2 = 0;
+
+	if (libconfig->setting_length(conf) > 1) {
+		unit_id2 = libconfig->setting_get_int_elem(conf, 1);
+
+		if (skill->validate_unit_id_sub(unit_id2) == -1) {
+			ShowWarning("%s: Invalid unit ID %d specified %sfor skill ID %d in %s! Must be greater than or equal to 0. Defaulting to 0...\n",
+				    __func__, unit_id2, level_string, sk->nameid, conf->file);
+			unit_id2 = 0;
+		}
+	}
+
+	if (unit_id1 == 0 && unit_id2 == 0)
+		return;
+
+	if (index == -1) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			sk->unit_id[i][0] = unit_id1;
+			sk->unit_id[i][1] = unit_id2;
+		}
+	} else {
+		sk->unit_id[index][0] = unit_id1;
+		sk->unit_id[index][1] = unit_id2;
+	}
+}
+
+/**
+ * Validates a skill's unit IDs if specified as group when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's unit ID data.
+ * @param sk The s_skill_db struct where the unit IDs should be set it.
+ *
+ **/
+static void skill_validate_unit_id_group(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+		struct config_setting_t *t;
+		char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+		safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+
+		if ((t = libconfig->setting_get_member(conf, lv)) != NULL && config_setting_is_array(t)) {
+			skill_validate_unit_id_array(t, sk, i);
+			continue;
+		}
+
+		int unit_id;
+
+		if (libconfig->setting_lookup_int(conf, lv, &unit_id) == CONFIG_TRUE)
+			skill_validate_unit_id_value(conf, sk, i, unit_id);
+	}
+}
+
+/**
  * Validates a skill's unit IDs when reading the skill DB.
  *
  * @param conf The libconfig settings block which contains the skill's data.
@@ -22413,57 +22555,27 @@ static void skill_validate_unit_id(struct config_setting_t *conf, struct s_skill
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	sk->unit_id[0] = 0;
-	sk->unit_id[1] = 0;
+	for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+		sk->unit_id[i][0] = 0;
+		sk->unit_id[i][1] = 0;
+	}
 
 	struct config_setting_t *t = libconfig->setting_get_member(conf, "Id");
 
+	if (t != NULL && config_setting_is_group(t)) {
+		skill_validate_unit_id_group(t, sk);
+		return;
+	}
+
 	if (t != NULL && config_setting_is_array(t)) {
-		if (libconfig->setting_length(t) == 0) {
-			ShowWarning("%s: No unit ID(s) specified for skill ID %d in %s! Defaulting to 0...\n",
-				    __func__, sk->nameid, conf->file);
-			return;
-		}
-
-		if (libconfig->setting_length(t) > 2)
-			ShowWarning("%s: Specified more than two unit IDs for skill ID %d in %s! Reading only the first two...\n",
-				    __func__, sk->nameid, conf->file);
-
-		int unit_id1 = libconfig->setting_get_int_elem(t, 0);
-
-		if (skill->validate_unit_id_sub(unit_id1) == -1) {
-			ShowWarning("%s: Unknown unit ID %d specified for skill ID %d in %s! Defaulting to 0...\n",
-				    __func__, unit_id1, sk->nameid, conf->file);
-			unit_id1 = 0;
-		}
-
-		int unit_id2 = 0;
-
-		if (libconfig->setting_length(t) > 1) {
-			unit_id2 = libconfig->setting_get_int_elem(t, 1);
-
-			if (skill->validate_unit_id_sub(unit_id2) == -1) {
-				ShowWarning("%s: Unknown unit ID %d specified for skill ID %d in %s! Defaulting to 0...\n",
-					    __func__, unit_id2, sk->nameid, conf->file);
-				unit_id2 = 0;
-			}
-		}
-
-		sk->unit_id[0] = unit_id1;
-		sk->unit_id[1] = unit_id2;
-
+		skill_validate_unit_id_array(t, sk, -1);
 		return;
 	}
 
 	int unit_id;
 
-	if (libconfig->setting_lookup_int(conf, "Id", &unit_id) == CONFIG_TRUE) {
-		if (skill->validate_unit_id_sub(unit_id) == -1)
-			ShowWarning("%s: Unknown unit ID %d specified for skill ID %d in %s! Defaulting to 0...\n",
-				    __func__, unit_id, sk->nameid, conf->file);
-		else
-			sk->unit_id[0] = unit_id;
-	}
+	if (libconfig->setting_lookup_int(conf, "Id", &unit_id) == CONFIG_TRUE)
+		skill_validate_unit_id_value(conf, sk, -1, unit_id);
 }
 
 /**
