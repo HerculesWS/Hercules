@@ -22900,6 +22900,10 @@ static int skill_validate_unit_target_sub(const char *target)
 		ret_val = BCT_SELF;
 	else if (strcmpi(target, "SameGuild") == 0)
 		ret_val = BCT_SAMEGUILD;
+	else if (strcmpi(target, "GuildAlly") == 0)
+		ret_val = BCT_GUILDALLY;
+	else if (strcmpi(target, "Neutral") == 0)
+		ret_val = BCT_NEUTRAL;
 	else if (strcmpi(target, "None") != 0)
 		ret_val = -1;
 
