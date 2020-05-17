@@ -248,7 +248,7 @@ static void initChangeTables(void)
 	status->set_sc( SM_AUTOBERSERK       , SC_AUTOBERSERK  , SCB_NONE );
 	add_sc( TF_SPRINKLESAND      , SC_BLIND           );
 	add_sc( TF_THROWSTONE        , SC_STUN            );
-	status->set_sc( MC_LOUD              , SC_SHOUT        , SCB_STR );
+	status->set_sc( MC_LOUD              , SC_SHOUT        , SCB_STR | SCB_WATK );
 	status->set_sc( MG_ENERGYCOAT        , SC_ENERGYCOAT   , SCB_NONE );
 	status->set_sc( NPC_EMOTION          , SC_MODECHANGE   , SCB_MODE );
 	add_sc( NPC_EMOTION_ON       , SC_MODECHANGE   );
@@ -5008,7 +5008,10 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 		watk += sc->data[SC_FLASHCOMBO]->val2;
 	if (sc->data[SC_CATNIPPOWDER])
 		watk -= watk * sc->data[SC_CATNIPPOWDER]->val2 / 100;
-
+#ifndef RENEWALL
+	if (sc->data[SC_SHOUT])
+		watk += sc->data[SC_SHOUT]->val2;
+#endif
 	return cap_value(watk, battle_config.watk_min, battle_config.watk_max);
 }
 
@@ -9442,6 +9445,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val2 = 50; // WATK%, MATK%
 				val3 = 25 * val1; // Move speed reduction
 				break;
+			case SC_SHOUT:
+				val2 = 30;
+				break;
+
 			default:
 				if (status->change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag)) {
 					return 0;
