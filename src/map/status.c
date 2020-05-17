@@ -5008,7 +5008,7 @@ static int status_calc_watk(struct block_list *bl, struct status_change *sc, int
 		watk += sc->data[SC_FLASHCOMBO]->val2;
 	if (sc->data[SC_CATNIPPOWDER])
 		watk -= watk * sc->data[SC_CATNIPPOWDER]->val2 / 100;
-#ifndef RENEWALL
+#ifdef RENEWAL
 	if (sc->data[SC_SHOUT])
 		watk += sc->data[SC_SHOUT]->val2;
 #endif
@@ -5216,7 +5216,7 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit += sc->data[SC_ACARAJE]->val1;
 	if (sc->data[SC_BUCHEDENOEL])
 		hit += sc->data[SC_BUCHEDENOEL]->val3;
-#ifndef RENEWALL
+#ifdef RENEWAL
 	if (sc->data[SC_BLESSING])
 		hit += sc->data[SC_BLESSING]->val3;
 #endif
@@ -6121,7 +6121,7 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 	if (sc->data[SC_SKF_ASPD] != NULL)
 		aspd_rate -= sc->data[SC_SKF_ASPD]->val1 * 10;
 	//TODO: test the aspd inc
-#ifndef RENEWALL
+#ifdef RENEWAL
 	if (sc->data[SC_INC_AGI])
 			aspd_rate += sc->data[SC_INC_AGI]->val1 * 10;
 #endif
@@ -8477,7 +8477,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_BLESSING:
 				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC){
 					val2 = val1;
-			#ifndef RENEWALL
+			#ifdef RENEWAL
 					val3 = val1*2;
 			#endif
 				}
