@@ -415,6 +415,28 @@ static int skill_get_itemqty(int skill_id, int item_idx, int skill_lv)
 	return skill->dbs->db[idx].req_items.item[item_idx].amount[skill_get_lvl_idx(skill_lv)];
 }
 
+/**
+ * Gets a skill's required items any-flag by the skill's ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's required items any-flag corresponding to the passed level. Defaults to false in case of error.
+ *
+ **/
+static bool skill_get_item_any_flag(int skill_id, int skill_lv)
+{
+	if (skill_id == 0)
+		return false;
+
+	Assert_retr(false, skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_retr(false, idx != 0);
+
+	return skill->dbs->db[idx].req_items.any[skill_get_lvl_idx(skill_lv)];
+}
+
 static int skill_get_zeny(int skill_id, int skill_lv)
 {
 	int idx;
@@ -3906,9 +3928,9 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 {
 	struct status_data *st;
 	struct map_session_data *sd = NULL;
-	int i, hp, sp, hp_rate, sp_rate, state, mhp;
+	int hp, sp, hp_rate, sp_rate, state, mhp;
 	int idx;
-	int itemid[MAX_SKILL_ITEM_REQUIRE], amount[MAX_SKILL_ITEM_REQUIRE], index[MAX_SKILL_ITEM_REQUIRE];
+	int itemid[MAX_SKILL_ITEM_REQUIRE], amount[MAX_SKILL_ITEM_REQUIRE];
 
 	if( lv < 1 || lv > MAX_SKILL_LEVEL )
 		return 0;
@@ -3924,7 +3946,7 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 		return 0;
 
 	// Requirements
-	for (i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+	for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
 		itemid[i] = skill->get_itemid(skill_id, i);
 		amount[i] = skill->get_itemqty(skill_id, i, lv);
 	}
@@ -3981,21 +4003,27 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 	if( !(type&1) )
 		return 1;
 
-	// Check item existences
-	for (i = 0; i < ARRAYLENGTH(itemid); i++) {
-		index[i] = INDEX_NOT_FOUND;
-		if (itemid[i] < 1) continue; // No item
-		index[i] = pc->search_inventory(sd, itemid[i]);
-		if (index[i] == INDEX_NOT_FOUND || sd->status.inventory[index[i]].amount < amount[i]) {
-			clif->skill_fail(sd, skill_id, USESKILL_FAIL_NEED_ITEM, amount[i], itemid[i]);
-			return 0;
-		}
-	}
+	bool items_required = skill->items_required(sd, skill_id, lv);
 
-	// Consume items
-	for (i = 0; i < ARRAYLENGTH(itemid); i++) {
-		if (index[i] != INDEX_NOT_FOUND)
-			pc->delitem(sd, index[i], amount[i], 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
+	if (items_required && skill->check_condition_required_items(sd, skill_id, lv) != 0)
+		return 0;
+
+	int any_item_index = INDEX_NOT_FOUND;
+
+	if (items_required)
+		any_item_index = skill->get_any_item_index(sd, skill_id, lv);
+
+	for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE && items_required; i++) {
+		if (itemid[i] == 0)
+			continue;
+
+		if (any_item_index != INDEX_NOT_FOUND && any_item_index != i)
+			continue;
+
+		int inventory_index = pc->search_inventory(sd, itemid[i]);
+
+		if (inventory_index != INDEX_NOT_FOUND)
+			pc->delitem(sd, inventory_index, amount[i], 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
 	}
 
 	if( type&2 )
@@ -15216,12 +15244,127 @@ static int skill_check_condition_castbegin_unknown(struct status_change *sc, uin
 	return -1;
 }
 
+/**
+ * Checks if a skill's item requirements are fulfilled.
+ *
+ * @param sd The character who casts the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return 0 on success or 1 in case of error.
+ *
+ **/
+static int skill_check_condition_required_items(struct map_session_data *sd, int skill_id, int skill_lv)
+{
+	nullpo_retr(1, sd);
+
+	struct skill_condition req = skill->get_requirement(sd, skill_id, skill_lv);
+
+	if (skill->get_item_any_flag(skill_id, skill_lv)) {
+		for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+			if (req.itemid[i] == 0)
+				continue;
+
+			int inv_idx = pc->search_inventory(sd, req.itemid[i]);
+
+			if (inv_idx == INDEX_NOT_FOUND)
+				continue;
+
+			if ((req.amount[i] > 0 && sd->status.inventory[inv_idx].amount >= req.amount[i])
+			    || (req.amount[i] == 0 && sd->status.inventory[inv_idx].amount > 0)) {
+				return 0;
+			}
+		}
+	}
+
+	/**
+	 * Find first missing item and show skill failed message if item any-flag is false
+	 * or item any-flag check didn't find an item with sufficient amount.
+	 *
+	 **/
+	for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+		if (req.itemid[i] == 0)
+			continue;
+
+		int inv_idx = pc->search_inventory(sd, req.itemid[i]);
+
+		if (inv_idx == INDEX_NOT_FOUND || sd->status.inventory[inv_idx].amount < req.amount[i]) {
+			useskill_fail_cause cause = USESKILL_FAIL_NEED_ITEM;
+
+			switch (skill_id) {
+			case NC_SILVERSNIPER:
+			case NC_MAGICDECOY:
+				cause = USESKILL_FAIL_STUFF_INSUFFICIENT;
+				break;
+			default:
+				switch (req.itemid[i]) {
+				case ITEMID_RED_GEMSTONE:
+					cause = USESKILL_FAIL_REDJAMSTONE;
+					break;
+				case ITEMID_BLUE_GEMSTONE:
+					cause = USESKILL_FAIL_BLUEJAMSTONE;
+					break;
+				case ITEMID_HOLY_WATER:
+					cause = USESKILL_FAIL_HOLYWATER;
+					break;
+				case ITEMID_ANSILA:
+					cause = USESKILL_FAIL_ANCILLA;
+					break;
+				case ITEMID_ACCELERATOR:
+				case ITEMID_HOVERING_BOOSTER:
+				case ITEMID_SUICIDAL_DEVICE:
+				case ITEMID_SHAPE_SHIFTER:
+				case ITEMID_COOLING_DEVICE:
+				case ITEMID_MAGNETIC_FIELD_GENERATOR:
+				case ITEMID_BARRIER_BUILDER:
+				case ITEMID_CAMOUFLAGE_GENERATOR:
+				case ITEMID_REPAIR_KIT:
+				case ITEMID_MONKEY_SPANNER:
+					cause = USESKILL_FAIL_NEED_EQUIPMENT;
+					FALLTHROUGH
+				default:
+					clif->skill_fail(sd, skill_id, cause, max(1, req.amount[i]), req.itemid[i]);
+					return 1;
+				}
+
+				break;
+			}
+
+			clif->skill_fail(sd, skill_id, cause, 0, 0);
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+/**
+ * Checks if a skill has item requirements.
+ *
+ * @param sd The character who casts the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return True if skill has item requirements, otherwise false.
+ *
+ **/
+static bool skill_items_required(struct map_session_data *sd, int skill_id, int skill_lv)
+{
+	nullpo_retr(false, sd);
+
+	struct skill_condition req = skill->get_requirement(sd, skill_id, skill_lv);
+
+	for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+		if (req.itemid[i] != 0)
+			return true;
+	}
+
+	return false;
+}
+
 static int skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
 {
 	struct skill_condition require;
 	struct status_data *st;
 	int i;
-	int index[MAX_SKILL_ITEM_REQUIRE];
 
 	nullpo_ret(sd);
 
@@ -15373,48 +15516,10 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 		}
 	}
 
-	for( i = 0; i < MAX_SKILL_ITEM_REQUIRE; ++i ) {
-		if( !require.itemid[i] )
-			continue;
-		index[i] = pc->search_inventory(sd,require.itemid[i]);
-		if (index[i] == INDEX_NOT_FOUND || sd->status.inventory[index[i]].amount < require.amount[i]) {
-			useskill_fail_cause cause = USESKILL_FAIL_NEED_ITEM;
-			switch( skill_id ){
-				case NC_SILVERSNIPER:
-				case NC_MAGICDECOY:
-					cause = USESKILL_FAIL_STUFF_INSUFFICIENT;
-					break;
-				default:
-					switch(require.itemid[i]){
-						case ITEMID_RED_GEMSTONE:
-							cause = USESKILL_FAIL_REDJAMSTONE; break;
-						case ITEMID_BLUE_GEMSTONE:
-							cause = USESKILL_FAIL_BLUEJAMSTONE; break;
-						case ITEMID_HOLY_WATER:
-							cause = USESKILL_FAIL_HOLYWATER; break;
-						case ITEMID_ANSILA:
-							cause = USESKILL_FAIL_ANCILLA; break;
-						case ITEMID_ACCELERATOR:
-						case ITEMID_HOVERING_BOOSTER:
-						case ITEMID_SUICIDAL_DEVICE:
-						case ITEMID_SHAPE_SHIFTER:
-						case ITEMID_COOLING_DEVICE:
-						case ITEMID_MAGNETIC_FIELD_GENERATOR:
-						case ITEMID_BARRIER_BUILDER:
-						case ITEMID_CAMOUFLAGE_GENERATOR:
-						case ITEMID_REPAIR_KIT:
-						case ITEMID_MONKEY_SPANNER:
-							cause = USESKILL_FAIL_NEED_EQUIPMENT;
-							/* Fall through */
-						default:
-							clif->skill_fail(sd, skill_id, cause, max(1, require.amount[i]), require.itemid[i]);
-							return 0;
-					}
-			}
-			clif->skill_fail(sd, skill_id, cause, 0, 0);
-			return 0;
-		}
-	}
+	bool items_required = skill->items_required(sd, skill_id, skill_lv);
+
+	if (items_required && skill->check_condition_required_items(sd, skill_id, skill_lv) != 0)
+		return 0;
 
 	return 1;
 }
@@ -15422,6 +15527,43 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 static bool skill_check_condition_castend_unknown(struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv)
 {
 	return false;
+}
+
+/**
+ * Gets the array index of the first required item with sufficient amount.
+ *
+ * @param sd The character who casts the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return A number greater than or equal to 0 on success, otherwise INDEX_NOT_FOUND (-1).
+ *
+ **/
+static int skill_get_any_item_index(struct map_session_data *sd, int skill_id, int skill_lv)
+{
+	nullpo_retr(INDEX_NOT_FOUND, sd);
+
+	int any_item_index = INDEX_NOT_FOUND;
+
+	if (skill->get_item_any_flag(skill_id, skill_lv)) {
+		struct skill_condition req = skill->get_requirement(sd, skill_id, skill_lv);
+
+		for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+			if (req.itemid[i] == 0)
+				continue;
+
+			int inv_idx = pc->search_inventory(sd, req.itemid[i]);
+
+			if (inv_idx == INDEX_NOT_FOUND)
+				continue;
+
+			if (req.amount[i] == 0 || sd->status.inventory[inv_idx].amount >= req.amount[i]) {
+				any_item_index = i;
+				break;
+			}
+		}
+	}
+
+	return any_item_index;
 }
 
 // type&2: consume items (after skill was used)
@@ -15476,14 +15618,22 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 	if( type&2 )
 	{
 		struct status_change *sc = &sd->sc;
-		int n,i;
+		int n;
 
 		if( !sc->count )
 			sc = NULL;
 
-		for( i = 0; i < MAX_SKILL_ITEM_REQUIRE; ++i )
-		{
+		bool items_required = skill->items_required(sd, skill_id, skill_lv);
+		int any_item_index = INDEX_NOT_FOUND;
+
+		if (items_required)
+			any_item_index = skill->get_any_item_index(sd, skill_id, skill_lv);
+
+		for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE && items_required; i++) {
 			if( !req.itemid[i] )
+				continue;
+
+			if (any_item_index != INDEX_NOT_FOUND && any_item_index != i)
 				continue;
 
 			if( itemid_isgemstone(req.itemid[i]) && skill_id != HW_GANBANTEIN && sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_WIZARD )
@@ -23386,6 +23536,7 @@ void skill_defaults(void)
 	skill->get_spiritball = skill_get_spiritball;
 	skill->get_itemid = skill_get_itemid;
 	skill->get_itemqty = skill_get_itemqty;
+	skill->get_item_any_flag = skill_get_item_any_flag;
 	skill->get_zeny = skill_get_zeny;
 	skill->get_num = skill_get_num;
 	skill->get_cast = skill_get_cast;
@@ -23445,7 +23596,10 @@ void skill_defaults(void)
 	skill->vf_cast_fix = skill_vfcastfix;
 	skill->delay_fix = skill_delay_fix;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
+	skill->check_condition_required_items = skill_check_condition_required_items;
+	skill->items_required = skill_items_required;
 	skill->check_condition_castend = skill_check_condition_castend;
+	skill->get_any_item_index = skill_get_any_item_index;
 	skill->consume_requirement = skill_consume_requirement;
 	skill->get_requirement = skill_get_requirement;
 	skill->check_pc_partner = skill_check_pc_partner;

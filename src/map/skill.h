@@ -1996,6 +1996,7 @@ struct skill_interface {
 	int (*get_spiritball) (int skill_id, int skill_lv);
 	int (*get_itemid) (int skill_id, int item_idx);
 	int (*get_itemqty) (int skill_id, int item_idx, int skill_lv);
+	bool (*get_item_any_flag) (int skill_id, int skill_lv);
 	int (*get_zeny) (int skill_id, int skill_lv);
 	int (*get_num) (int skill_id, int skill_lv);
 	int (*get_cast) (int skill_id, int skill_lv);
@@ -2055,7 +2056,10 @@ struct skill_interface {
 	int (*vf_cast_fix) ( struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
 	int (*delay_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
 	int (*check_condition_castbegin) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
+	int (*check_condition_required_items) (struct map_session_data *sd, int skill_id, int skill_lv);
+	bool (*items_required) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*check_condition_castend) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
+	int (*get_any_item_index) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*consume_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type);
 	struct skill_condition (*get_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*check_pc_partner) (struct map_session_data *sd, uint16 skill_id, uint16* skill_lv, int range, int cast_flag);
