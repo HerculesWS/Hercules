@@ -1781,7 +1781,7 @@ struct s_skill_db {
 	int unit_id[MAX_SKILL_LEVEL][2];
 	int unit_layout_type[MAX_SKILL_LEVEL];
 	int unit_range[MAX_SKILL_LEVEL];
-	int unit_interval;
+	int unit_interval[MAX_SKILL_LEVEL];
 	int unit_target;
 	int unit_flag;
 };
@@ -2007,7 +2007,7 @@ struct skill_interface {
 	int (*get_blewcount) (int skill_id, int skill_lv);
 	int (*get_unit_flag) (int skill_id);
 	int (*get_unit_target) (int skill_id);
-	int (*get_unit_interval) (int skill_id);
+	int (*get_unit_interval) (int skill_id, int skill_lv);
 	int (*get_unit_bl_target) (int skill_id);
 	int (*get_unit_layout_type) (int skill_id, int skill_lv);
 	int (*get_unit_range) (int skill_id, int skill_lv);

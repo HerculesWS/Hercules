@@ -706,14 +706,26 @@ static int skill_get_unit_id(int skill_id, int skill_lv, int flag)
 	return skill->dbs->db[idx].unit_id[skill_get_lvl_idx(skill_lv)][flag];
 }
 
-static int skill_get_unit_interval(int skill_id)
+/**
+ * Gets a skill's unit interval by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's unit interval corresponding to the passed level. Defaults to 0 in case of error.
+ *
+ **/
+static int skill_get_unit_interval(int skill_id, int skill_lv)
 {
-	int idx;
 	if (skill_id == 0)
 		return 0;
-	idx = skill->get_index(skill_id);
+
+	Assert_ret(skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
 	Assert_ret(idx != 0);
-	return skill->dbs->db[idx].unit_interval;
+
+	return skill->dbs->db[idx].unit_interval[skill_get_lvl_idx(skill_lv)];
 }
 
 static int skill_get_unit_range(int skill_id, int skill_lv)
@@ -11855,7 +11867,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			skill->unitsetting(src, skill_id, skill_lv, x, y, 0); // Set bomb on current Position
 			clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
 			if( skill->blown(src, src, 3 * skill_lv, unit->getdir(src), 0) && sc) {
-				sc_start(src, src, SC__FEINTBOMB_MASTER, 100, 0, skill->get_unit_interval(SC_FEINTBOMB));
+				sc_start(src, src, SC__FEINTBOMB_MASTER, 100, 0, skill->get_unit_interval(SC_FEINTBOMB, skill_lv));
 			}
 			break;
 
@@ -12105,7 +12117,7 @@ static bool skill_dance_switch(struct skill_unit *su, int flag)
 		group->unit_id     = skill->get_unit_id(skill_id, 1, 0);
 		group->target_flag = skill->get_unit_target(skill_id);
 		group->bl_flag     = skill->get_unit_bl_target(skill_id);
-		group->interval    = skill->get_unit_interval(skill_id);
+		group->interval    = skill->get_unit_interval(skill_id, 1);
 	} else {
 		//Restore
 		group->skill_id    = backup.skill_id;
@@ -12138,7 +12150,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 
 	limit = skill->get_time(skill_id,skill_lv);
 	range = skill->get_unit_range(skill_id,skill_lv);
-	interval = skill->get_unit_interval(skill_id);
+	interval = skill->get_unit_interval(skill_id, skill_lv);
 	target = skill->get_unit_target(skill_id);
 	unit_flag = skill->get_unit_flag(skill_id);
 	layout = skill->get_unit_layout(skill_id,skill_lv,src,x,y);
@@ -22680,13 +22692,33 @@ static void skill_validate_unit_interval(struct config_setting_t *conf, struct s
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	sk->unit_interval = 0;
+	skill->level_set_value(sk->unit_interval, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Interval");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int unit_interval;
+
+			if (libconfig->setting_lookup_int(t, lv, &unit_interval) == CONFIG_TRUE) {
+				if (unit_interval >= INFINITE_DURATION)
+					sk->unit_interval[i] = unit_interval;
+				else
+					ShowWarning("%s: Invalid unit interval %d specified in level %d for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
+						    __func__, unit_interval, i + 1, sk->nameid, conf->file, INFINITE_DURATION);
+			}
+		}
+
+		return;
+	}
 
 	int unit_interval;
 
 	if (libconfig->setting_lookup_int(conf, "Interval", &unit_interval) == CONFIG_TRUE) {
 		if (unit_interval >= INFINITE_DURATION)
-			sk->unit_interval = unit_interval;
+			skill->level_set_value(sk->unit_interval, unit_interval);
 		else
 			ShowWarning("%s: Invalid unit interval %d specified for skill ID %d in %s! Must be greater than or equal to %d. Defaulting to 0...\n",
 				    __func__, unit_interval, sk->nameid, conf->file, INFINITE_DURATION);
