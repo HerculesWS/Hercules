@@ -6641,7 +6641,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case CR_REFLECTSHIELD:
 		case MS_REFLECTSHIELD:
 		case AS_POISONREACT:
-	#ifdef RENEWALL
+	#ifndef RENEWAL
 		case MC_LOUD:
 	#endif
 		case MG_ENERGYCOAT:
@@ -7127,7 +7127,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case CASH_BLESSING:
 		case CASH_INCAGI:
 		case CASH_ASSUMPTIO:
-	#ifndef RENEWALL
+	#ifdef RENEWAL
 		case MC_LOUD:
 	#endif
 		case WM_FRIGG_SONG:
