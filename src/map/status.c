@@ -199,11 +199,11 @@ static void initChangeTables(void)
 	add_sc( MG_STONECURSE        , SC_STONE           );
 	add_sc( AL_RUWACH            , SC_RUWACH          );
 	add_sc( AL_PNEUMA            , SC_PNEUMA          );
-	status->set_sc( AL_INCAGI            , SC_INC_AGI         , SCB_AGI|SCB_SPEED );
+	status->set_sc( AL_INCAGI            , SC_INC_AGI         , SCB_AGI|SCB_SPEED);
 	status->set_sc( AL_DECAGI            , SC_DEC_AGI         , SCB_AGI|SCB_SPEED );
 	status->set_sc( AL_CRUCIS            , SC_CRUCIS          , SCB_DEF );
-	status->set_sc( AL_ANGELUS           , SC_ANGELUS         , SCB_DEF2 );
-	status->set_sc( AL_BLESSING          , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
+	status->set_sc( AL_ANGELUS           , SC_ANGELUS         , SCB_DEF2|SCB_MAXHP);
+	status->set_sc( AL_BLESSING          , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX|SCB_HIT );
 	status->set_sc( AC_CONCENTRATION     , SC_CONCENTRATION   , SCB_AGI|SCB_DEX );
 	status->set_sc( TF_HIDING            , SC_HIDING          , SCB_SPEED );
 	add_sc( TF_POISON            , SC_POISON          );
@@ -472,8 +472,8 @@ static void initChangeTables(void)
 	status->set_sc( NPC_INVINCIBLE       , SC_INVINCIBLE      , SCB_SPEED );
 	status->set_sc( NPC_INVINCIBLEOFF    , SC_INVINCIBLEOFF   , SCB_SPEED );
 
-	status->set_sc( CASH_BLESSING        , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
-	status->set_sc( CASH_INCAGI          , SC_INC_AGI         , SCB_AGI|SCB_SPEED );
+	status->set_sc( CASH_BLESSING        , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX|SCB_HIT );
+	status->set_sc( CASH_INCAGI          , SC_INC_AGI         , SCB_AGI|SCB_SPEED|SCB_ASPD );
 	status->set_sc( CASH_ASSUMPTIO       , SC_ASSUMPTIO       , SCB_NONE );
 
 	status->set_sc( ALL_PARTYFLEE        , SC_PARTYFLEE       , SCB_NONE );
@@ -539,8 +539,8 @@ static void initChangeTables(void)
 	status->set_sc( MER_QUICKEN          , SC_MER_QUICKEN    , SCB_ASPD );
 	add_sc( ML_DEVOTION          , SC_DEVOTION        );
 	status->set_sc( MER_KYRIE            , SC_KYRIE           , SCB_NONE );
-	status->set_sc( MER_BLESSING         , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX );
-	status->set_sc( MER_INCAGI           , SC_INC_AGI         , SCB_AGI|SCB_SPEED );
+	status->set_sc( MER_BLESSING         , SC_BLESSING        , SCB_STR|SCB_INT|SCB_DEX|SCB_HIT );
+	status->set_sc( MER_INCAGI           , SC_INC_AGI         , SCB_AGI|SCB_SPEED|SCB_ASPD );
 
 	status->set_sc( GD_LEADERSHIP        , SC_LEADERSHIP      , SCB_STR );
 	status->set_sc( GD_GLORYWOUNDS       , SC_GLORYWOUNDS     , SCB_VIT );
@@ -5216,6 +5216,11 @@ static int status_calc_hit(struct block_list *bl, struct status_change *sc, int 
 		hit += sc->data[SC_ACARAJE]->val1;
 	if (sc->data[SC_BUCHEDENOEL])
 		hit += sc->data[SC_BUCHEDENOEL]->val3;
+#ifndef RENEWALL
+	if (sc->data[SC_BLESSING])
+		hit += sc->data[SC_BLESSING]->val3;
+#endif
+
 
 	return cap_value(hit, battle_config.hit_min, battle_config.hit_max);
 }
@@ -6115,6 +6120,11 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 		aspd_rate += sc->data[SC_STEAMPACK]->val2 * 10;
 	if (sc->data[SC_SKF_ASPD] != NULL)
 		aspd_rate -= sc->data[SC_SKF_ASPD]->val1 * 10;
+	//TODO: test the aspd inc
+#ifndef RENEWALL
+	if (sc->data[SC_INC_AGI])
+			aspd_rate += sc->data[SC_INC_AGI]->val1 * 10;
+#endif
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
@@ -6213,6 +6223,9 @@ static unsigned int status_calc_maxhp(struct block_list *bl, struct status_chang
 		maxhp -= maxhp * sc->data[SC_GM_BATTLE]->val1 / 100;
 	if (sc->data[SC_GM_BATTLE2])
 		maxhp -= maxhp * sc->data[SC_GM_BATTLE2]->val1 / 100;
+	
+	if (sc->data[SC_ANGELUS])
+		maxhp += sc->data[SC_ANGELUS]->val1 * 50;
 
 	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 }
@@ -8462,8 +8475,12 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = INVALID_TIMER; //Kaahi Timer.
 				break;
 			case SC_BLESSING:
-				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC)
+				if ((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC){
 					val2 = val1;
+			#ifndef RENEWALL
+					val3 = val1*2;
+			#endif
+				}
 				else
 					val2 = 0; //0 -> Half stat.
 				break;
@@ -9448,7 +9465,6 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_SHOUT:
 				val2 = 30;
 				break;
-
 			default:
 				if (status->change_start_unknown_sc(src, bl, type, calc_flag, rate, val1, val2, val3, val4, total_tick, flag)) {
 					return 0;
