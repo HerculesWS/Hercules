@@ -936,8 +936,15 @@ static void clif_clearunit_area(struct block_list *bl, enum clr_type type)
 static int clif_clearunit_delayed_sub(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = (struct block_list *)data;
+	nullpo_ret(bl);
+	Assert_ret(bl->m >= 0 && bl->m < map->count);
+	if (map->list[bl->m].block == NULL) {
+		// avoid error report for missing/removed map
+		ers_free(clif->delay_clearunit_ers, bl);
+		return 0;
+	}
 	clif->clearunit_area(bl, (enum clr_type) id);
-	ers_free(clif->delay_clearunit_ers,bl);
+	ers_free(clif->delay_clearunit_ers, bl);
 	return 0;
 }
 
