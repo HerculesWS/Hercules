@@ -1771,7 +1771,11 @@ struct s_skill_db {
 	int skill_type[MAX_SKILL_LEVEL];
 	int blewcount[MAX_SKILL_LEVEL];
 	int hp[MAX_SKILL_LEVEL],sp[MAX_SKILL_LEVEL],mhp[MAX_SKILL_LEVEL],hp_rate[MAX_SKILL_LEVEL],sp_rate[MAX_SKILL_LEVEL],zeny[MAX_SKILL_LEVEL];
-	int weapon,ammo,ammo_qty[MAX_SKILL_LEVEL],state,spiritball[MAX_SKILL_LEVEL];
+	int weapon;
+	int ammo;
+	int ammo_qty[MAX_SKILL_LEVEL];
+	int state[MAX_SKILL_LEVEL];
+	int spiritball[MAX_SKILL_LEVEL];
 	int itemid[MAX_SKILL_ITEM_REQUIRE],amount[MAX_SKILL_ITEM_REQUIRE];
 	int castnodex[MAX_SKILL_LEVEL], delaynodex[MAX_SKILL_LEVEL];
 	int unit_id[2];
@@ -1979,7 +1983,7 @@ struct skill_interface {
 	int (*get_sp) (int skill_id, int skill_lv);
 	int (*get_hp_rate) (int skill_id, int skill_lv);
 	int (*get_sp_rate) (int skill_id, int skill_lv);
-	int (*get_state) (int skill_id);
+	int (*get_state) (int skill_id, int skill_lv);
 	int (*get_spiritball) (int skill_id, int skill_lv);
 	int (*get_itemid) (int skill_id, int item_idx);
 	int (*get_itemqty) (int skill_id, int item_idx);
@@ -2164,6 +2168,7 @@ struct skill_interface {
 	int (*validate_ammotype_sub) (const char *type, bool on, struct s_skill_db *sk);
 	void (*validate_ammotype) (struct config_setting_t *conf,  struct s_skill_db *sk);
 	void (*validate_ammo_amount) (struct config_setting_t *conf,  struct s_skill_db *sk);
+	int (*validate_state_sub) (const char *state);
 	void (*validate_state) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_spirit_sphere_cost) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_item_requirements) (struct config_setting_t *conf, struct s_skill_db *sk);

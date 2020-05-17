@@ -332,14 +332,26 @@ static int skill_get_sp_rate(int skill_id, int skill_lv)
 	return skill->dbs->db[idx].sp_rate[skill_get_lvl_idx(skill_lv)];
 }
 
-static int skill_get_state(int skill_id)
+/**
+ * Gets a skill's required state by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's required state corresponding to the passed level. Defaults to ST_NONE (0) in case of error.
+ *
+ **/
+static int skill_get_state(int skill_id, int skill_lv)
 {
-	int idx;
 	if (skill_id == 0)
 		return ST_NONE;
-	idx = skill->get_index(skill_id);
+
+	Assert_retr(ST_NONE, skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
 	Assert_retr(ST_NONE, idx != 0);
-	return skill->dbs->db[idx].state;
+
+	return skill->dbs->db[idx].state[skill_get_lvl_idx(skill_lv)];
 }
 
 static int skill_get_spiritball(int skill_id, int skill_lv)
@@ -3847,7 +3859,7 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 	sp = skill->dbs->db[idx].sp[lv-1];
 	hp_rate = skill->dbs->db[idx].hp_rate[lv-1];
 	sp_rate = skill->dbs->db[idx].sp_rate[lv-1];
-	state = skill->dbs->db[idx].state;
+	state = skill->dbs->db[idx].state[lv - 1];
 	if( (mhp = skill->dbs->db[idx].mhp[lv-1]) > 0 )
 		hp += (st->max_hp * mhp) / 100;
 	if( hp_rate > 0 )
@@ -5926,7 +5938,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				break;
 			}
 		}
-		if (skill->get_state(ud->skill_id) != ST_MOVE_ENABLE)
+		if (skill->get_state(ud->skill_id, ud->skill_lv) != ST_MOVE_ENABLE)
 			unit->set_walkdelay(src, tick, battle_config.default_walk_delay+skill->get_walkdelay(ud->skill_id, ud->skill_lv), 1);
 
 		if(battle_config.skill_log && battle_config.skill_log&src->type)
@@ -15538,7 +15550,7 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 
 	req.spiritball = skill->dbs->db[idx].spiritball[skill_lv-1];
 
-	req.state = skill->dbs->db[idx].state;
+	req.state = skill->dbs->db[idx].state[skill_lv - 1];
 
 	req.mhp = skill->dbs->db[idx].mhp[skill_lv-1];
 
@@ -22121,6 +22133,71 @@ static void skill_validate_ammo_amount(struct config_setting_t *conf, struct s_s
 }
 
 /**
+ * Validates a single required state when reading the skill DB.
+ *
+ * @param state The required state to validate.
+ * @return A number greater than or equal to 0 if the passed required state is valid, otherwise -1.
+ *
+ **/
+static int skill_validate_state_sub(const char *state)
+{
+	nullpo_retr(-1, state);
+
+	int ret_val = ST_NONE;
+
+	if (strcmpi(state, "Hiding") == 0)
+		ret_val = ST_HIDING;
+	else if (strcmpi(state, "Cloaking") == 0)
+		ret_val = ST_CLOAKING;
+	else if (strcmpi(state, "Hidden") == 0)
+		ret_val = ST_HIDDEN;
+	else if (strcmpi(state, "Riding") == 0)
+		ret_val = ST_RIDING;
+	else if (strcmpi(state, "Falcon") == 0)
+		ret_val = ST_FALCON;
+	else if (strcmpi(state, "Cart") == 0)
+		ret_val = ST_CART;
+	else if (strcmpi(state, "Shield") == 0)
+		ret_val = ST_SHIELD;
+	else if (strcmpi(state, "Sight") == 0)
+		ret_val = ST_SIGHT;
+	else if (strcmpi(state, "ExplosionSpirits") == 0)
+		ret_val = ST_EXPLOSIONSPIRITS;
+	else if (strcmpi(state, "CartBoost") == 0)
+		ret_val = ST_CARTBOOST;
+	else if (strcmpi(state, "NotOverWeight") == 0)
+		ret_val = ST_RECOV_WEIGHT_RATE;
+	else if (strcmpi(state, "Moveable") == 0)
+		ret_val = ST_MOVE_ENABLE;
+	else if (strcmpi(state, "InWater") == 0)
+		ret_val = ST_WATER;
+	else if (strcmpi(state, "Dragon") == 0)
+		ret_val = ST_RIDINGDRAGON;
+	else if (strcmpi(state, "Warg") == 0)
+		ret_val = ST_WUG;
+	else if (strcmpi(state, "RidingWarg") == 0)
+		ret_val = ST_RIDINGWUG;
+	else if (strcmpi(state, "MadoGear") == 0)
+		ret_val = ST_MADO;
+	else if (strcmpi(state, "ElementalSpirit") == 0)
+		ret_val = ST_ELEMENTALSPIRIT;
+	else if (strcmpi(state, "PoisonWeapon") == 0)
+		ret_val = ST_POISONINGWEAPON;
+	else if (strcmpi(state, "RollingCutter") == 0)
+		ret_val = ST_ROLLINGCUTTER;
+	else if (strcmpi(state, "MH_Fighting") == 0)
+		ret_val = ST_MH_FIGHTING;
+	else if (strcmpi(state, "MH_Grappling") == 0)
+		ret_val = ST_MH_GRAPPLING;
+	else if (strcmpi(state, "Peco") == 0)
+		ret_val = ST_PECO;
+	else if (strcmpi(state, "None") != 0)
+		ret_val = -1;
+
+	return ret_val;
+}
+
+/**
  * Validates a skill's required states when reading the skill DB.
  *
  * @param conf The libconfig settings block which contains the skill's data.
@@ -22132,58 +22209,38 @@ static void skill_validate_state(struct config_setting_t *conf, struct s_skill_d
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
-	sk->state = ST_NONE;
+	skill->level_set_value(sk->state, ST_NONE);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "State");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			const char *state;
+
+			if (libconfig->setting_lookup_string(t, lv, &state) == CONFIG_TRUE) {
+				int sta = skill->validate_state_sub(state);
+
+				if (sta > ST_NONE)
+					sk->state[i] = sta;
+				else if (sta == -1)
+					ShowWarning("%s: Invalid required state %s specified in level %d for skill ID %d in %s! Defaulting to None...\n",
+						    __func__, state, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
 
 	const char *state;
 
 	if (libconfig->setting_lookup_string(conf, "State", &state) == CONFIG_TRUE) {
-		if (strcmpi(state, "Hiding") == 0)
-			sk->state = ST_HIDING;
-		else if (strcmpi(state, "Cloaking") == 0)
-			sk->state = ST_CLOAKING;
-		else if (strcmpi(state, "Hidden") == 0)
-			sk->state = ST_HIDDEN;
-		else if (strcmpi(state, "Riding") == 0)
-			sk->state = ST_RIDING;
-		else if (strcmpi(state, "Falcon") == 0)
-			sk->state = ST_FALCON;
-		else if (strcmpi(state, "Cart") == 0)
-			sk->state = ST_CART;
-		else if (strcmpi(state, "Shield") == 0)
-			sk->state = ST_SHIELD;
-		else if (strcmpi(state, "Sight") == 0)
-			sk->state = ST_SIGHT;
-		else if (strcmpi(state, "ExplosionSpirits") == 0)
-			sk->state = ST_EXPLOSIONSPIRITS;
-		else if (strcmpi(state, "CartBoost") == 0)
-			sk->state = ST_CARTBOOST;
-		else if (strcmpi(state, "NotOverWeight") == 0)
-			sk->state = ST_RECOV_WEIGHT_RATE;
-		else if (strcmpi(state, "Moveable") == 0)
-			sk->state = ST_MOVE_ENABLE;
-		else if (strcmpi(state, "InWater") == 0)
-			sk->state = ST_WATER;
-		else if (strcmpi(state, "Dragon") == 0)
-			sk->state = ST_RIDINGDRAGON;
-		else if (strcmpi(state, "Warg") == 0)
-			sk->state = ST_WUG;
-		else if (strcmpi(state, "RidingWarg") == 0)
-			sk->state = ST_RIDINGWUG;
-		else if (strcmpi(state, "MadoGear") == 0)
-			sk->state = ST_MADO;
-		else if (strcmpi(state, "ElementalSpirit") == 0)
-			sk->state = ST_ELEMENTALSPIRIT;
-		else if (strcmpi(state, "PoisonWeapon") == 0)
-			sk->state = ST_POISONINGWEAPON;
-		else if (strcmpi(state, "RollingCutter") == 0)
-			sk->state = ST_ROLLINGCUTTER;
-		else if (strcmpi(state, "MH_Fighting") == 0)
-			sk->state = ST_MH_FIGHTING;
-		else if (strcmpi(state, "MH_Grappling") == 0)
-			sk->state = ST_MH_GRAPPLING;
-		else if (strcmpi(state, "Peco") == 0)
-			sk->state = ST_PECO;
-		else if (strcmpi(state, "None") != 0)
+		int sta = skill->validate_state_sub(state);
+
+		if (sta > ST_NONE)
+			skill->level_set_value(sk->state, sta);
+		else if (sta == -1)
 			ShowWarning("%s: Invalid required state %s specified for skill ID %d in %s! Defaulting to None...\n",
 				    __func__, state, sk->nameid, conf->file);
 	}
@@ -23197,6 +23254,7 @@ void skill_defaults(void)
 	skill->validate_ammotype_sub = skill_validate_ammotype_sub;
 	skill->validate_ammotype = skill_validate_ammotype;
 	skill->validate_ammo_amount = skill_validate_ammo_amount;
+	skill->validate_state_sub = skill_validate_state_sub;
 	skill->validate_state = skill_validate_state;
 	skill->validate_spirit_sphere_cost = skill_validate_spirit_sphere_cost;
 	skill->validate_item_requirements = skill_validate_item_requirements;
