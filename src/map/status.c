@@ -248,7 +248,7 @@ static void initChangeTables(void)
 	status->set_sc( SM_AUTOBERSERK       , SC_AUTOBERSERK  , SCB_NONE );
 	add_sc( TF_SPRINKLESAND      , SC_BLIND           );
 	add_sc( TF_THROWSTONE        , SC_STUN            );
-	status->set_sc( MC_LOUD              , SC_SHOUT        , SCB_STR | SCB_WATK );
+	status->set_sc( MC_LOUD              , SC_SHOUT        , SCB_STR ); // i made a mistake here, aparently SCB_WATAK don`t need to be pass
 	status->set_sc( MG_ENERGYCOAT        , SC_ENERGYCOAT   , SCB_NONE );
 	status->set_sc( NPC_EMOTION          , SC_MODECHANGE   , SCB_MODE );
 	add_sc( NPC_EMOTION_ON       , SC_MODECHANGE   );
