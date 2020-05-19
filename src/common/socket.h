@@ -113,6 +113,7 @@ static inline void *WBUFP_(void *p, int pos)
 typedef int (*RecvFunc)(int fd);
 typedef int (*SendFunc)(int fd);
 typedef int (*ParseFunc)(int fd);
+typedef int (*ConnectedFunc)(int fd);
 
 struct socket_data {
 	struct {
@@ -135,6 +136,7 @@ struct socket_data {
 	RecvFunc func_recv;
 	SendFunc func_send;
 	ParseFunc func_parse;
+	ConnectedFunc func_client_connected;
 
 	void* session_data; // stores application-specific data related to the session
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store.
@@ -217,6 +219,7 @@ struct socket_interface {
 	int (*connect_client) (int listen_fd);
 	void (*set_nonblocking) (int fd, unsigned long yes);
 	void (*set_defaultparse) (ParseFunc defaultparse);
+	void (*set_default_client_connected) (ConnectedFunc defaultparse);
 	/* hostname/ip conversion functions */
 	uint32 (*host2ip) (const char* hostname);
 	const char * (*ip2str) (uint32 ip, char *ip_str);
