@@ -15485,6 +15485,7 @@ static void clif_parse_GMKick(int fd, struct map_session_data *sd)
 			}
 			npc->unload_duplicates(nd, true);
 			npc->unload(nd, true, true);
+			npc->motd = npc->name2id("HerculesMOTD");
 			npc->read_event_script();
 		}
 		break;

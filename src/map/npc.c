@@ -5728,8 +5728,10 @@ static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 
 	dbi_destroy(iter);
 
-	if (found) /// Refresh event cache.
+	if (found) { /// Refresh event cache.
+		npc->motd = npc->name2id("HerculesMOTD");
 		npc->read_event_script();
+	}
 
 	return found;
 }
