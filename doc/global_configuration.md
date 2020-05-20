@@ -37,7 +37,7 @@ settings, you would search in `conf/map/map-server.conf` and
 `conf/char/char-server.conf` for this line:
 
 ```
-	@include "conf/global/sql_connection.conf"
+	@include "conf/global/sql_connections.conf"
 ```
 
 And replace it with:

@@ -1,0 +1,8 @@
+prontera,236,80,5	script	COMA	479,3,3,{
+	sc_start SC_COMA, 60000, 10;
+	end;
+	
+OnTouch:
+	sc_start SC_COMA, 60000, 10;
+	end;
+}

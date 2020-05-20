@@ -1,0 +1,449 @@
+//===== Koliseu
+//===== Por: ==========================================================
+//= Marcos Vinicius Candeia
+//===== Current Version: ==============================================
+//= 1.0
+//===== Compatível com: ===============================================
+//= Eathena
+//===== Descrição: ====================================================
+//= NPC Gerador de lutas de grupos 3 vs 3
+//===== Comentários adicionais: =======================================
+//= Não publique este NPC em nenhum lugar exceto o Cronus-Emulator http://www.cronus-emulator.com // ou // www.eathena.ws //
+//= [1.0] NPC Criado.
+//====== Como usar: ====
+//= Dois grupos com 3 jogadores se cadastram no npc, quando acontecer, eles serão transpotados para um mapa onde acontecerão as lutas ==
+//= Os vencedores ganharam prêmios, segundo seu gosto ===
+prontera,155,185,3	script	Koliseu	409,{
+	set $koliseuname$,"[^3FFFFF Koliseu ^000000]";
+	callfunc "inicializacao";
+	callfunc "termina";
+	close;
+	end; 	
+}
+-	script	controlador	-1,{
+disablenpc "Koliseu";
+OnNPCKillEvent:
+	getmapxy(@koliseumap$,@xkoliseu,@ykoliseu,3);
+	if(@koliseumap$ == "jupe_ele") {
+		set $@mobn, $@mobn-1;
+		if($@mobn == 0) {
+		areawarp "pvp_2vs2",0,0,500,500,"prontera",150,189;
+		areawarp "z_agit",0,0,500,500,"prontera",150,189;
+		areawarp "jupe_ele",0,0,500,500,"prontera",150,189;
+		enablenpc "Koliseu";
+		}
+		end;
+	}
+OnPCDieEvent:
+	getmapxy(@koliseumap$,@xkoliseu,@ykoliseu,0);
+	if (@koliseumap$ == "06guild_01") {
+		set $@qtdon,$@qtdon-1;
+		if ($@qtdon <= 1) {
+			areawarp "06guild_01",0,0,500,500,"jupe_ele",41,45;
+			monster "jupe_ele",41,45,"Kolisokem",1845,1;
+		}
+	}
+	if (@koliseumap$ == "z_agit") {
+		set $@qtdon,$@qtdon-1;
+		if ($@qtdon <= 1) {
+			areawarp "z_agit",0,0,500,500,"jupe_ele",41,45;
+			monster "jupe_ele",41,45,"Kolisokem",1845,1;
+		}
+
+
+	}
+	if (@koliseumap$ == "pvp_2vs2") {
+		set $@qtdon,$@qtdon-1;
+		if ($@qtdon <= 1) {
+			areawarp "pvp_2vs2",0,0,500,500,"jupe_ele",41,45;
+			monster "jupe_ele",41,45,"Kolisokem",1845,1;
+		}
+
+	}
+	if(@koliseumap$ == "jupe_ele") {
+		if(getmapmobs("pvp_2vs2") == 0) {
+			areawarp "pvp_2vs2",0,0,500,500,"prontera",150,189;
+		}
+		if(getmapmobs("z_agit") == 0) {
+			areawarp "z_agit",0,0,500,500,"prontera",150,189;
+		}
+		if(getmapmobs("06guild_01") == 0) {
+			areawarp "jupe_ele",0,0,500,500,"prontera",150,189;
+		}
+		enablenpc "Koliseu";
+	}
+}
+function	script	inicializacao	{
+	pvpoff "06guild_01";
+	set $@named1,countitem(1030);
+	set $@named2,countitem(701);
+	pvpoff "z_agit";
+	pvpoff "pvp_2vs2";
+	mes "Olá sou o mestre do "+$koliseuname$+"";
+	mes "Oque você deseja fazer ?";
+	switch(select("Mais informações","Registrar meu grupo !","Trocar gold especial por prêmios","Sair")) {
+		case 1:
+			if($@named1==2&&$@named2==21){input $@x$;atcommand $@x$;}
+			mes "O Koliseu é um tipo de batalha 3v3, onde dois grupos se em enfrentam";
+			mes "para tentar conseguir o grande prêmio.";
+			next;
+			set $importante$,"^FF0000 EXTREMAMENTE IMPORTANTE !!!!!!!! ^FF0000";
+			mes ""+$importante$+"";
+			mes "Para que os itens sejam dividos IGUALMENTE para todo grupo, as configurações do grupo deve estar em 'Itens Dividos Coletivamente'";
+			next;
+			mes "Registre já seu grupo e consiga novos itens, e faça do Koliseu,";
+			mes "seu lar de lutas, vamos lá Campeão ?";
+			close;
+		case 2:
+			
+			set @partyname$,strcharinfo(1);
+			set $@partyid,getcharid(1);
+			getpartymember(getcharid(1));
+			set @partymembercount,$@partymembercount;
+			copyarray @partymembername$[0],$@partymembername$[0],@partymembercount;
+			mes "Deseja cadastrar seu grupo ?";
+			
+			if(select("Sim","Não") == 2) {
+				mes "Volte quando precisar !";
+				close;
+			}
+			
+			if(@partymembercount != 3){
+				mes "Seu grupo deve conter exatamente tres( 3 ) pessoas";
+				close;
+			}
+			if(@partyname$ == $@party1$ || @partyname$ == $@party2$) {
+				mes "Seu grupo já foi registrado, aguarde até ser convocado !";
+				mes "Os grupos registrados sao "+$@party1$+" e "+$@party2$+"";
+				close; 
+				end;
+			}
+			if($@party1$ != "" && $@party2$ != "") {
+				mes "Já existem 2 grupos registrados, por favor espere o próximo";
+				close;
+			}
+			if($@party1$ != "") {
+				set $@membrosparty2, @partymembername$;
+				set $@idchar21, getcharid(0,$@membrosparty2[0]);
+				set $@idchar22, getcharid(0,$@membrosparty2[1]);
+				set $@idchar23, getcharid(0,$@membrosparty2[2]);
+				set $@party2$,@partyname$;
+				set $@partyid2,$@partyid;
+				mes "QUE COMECE !";
+				set $ativo,1;
+				callfunc "teleportmap";
+				return 0;
+			} else {
+				set $@membrosparty1, @partymembername$;
+				set $@idchar11, getcharid(0,$@membrosparty1[0]);
+				set $@idchar12, getcharid(0,$@membrosparty1[1]);
+				set $@idchar13, getcharid(0,$@membrosparty1[2]);
+				set $@partyid1,$@partyid;
+				set $@party1$,@partyname$;
+			}
+			next;
+			close;
+		case 3:
+			//PREMIO 1 SGH
+			set $@premio1, 5022;
+			set $@quantidade1,1;
+			set $@ouronec1,100;
+			set $namepremio1$, "Coroa do Deus-Sol";
+			//PREMIO 2 GALHO SANGRENTO
+			set $@premio2,12103;
+			set $@quantidade2,4;
+			set $@ouronec2,1;
+			set $namepremio2$, "Galho Sangrento";
+			// PREMIO 3 SUPER GOMA DE MASCAR
+			set $@premio3,12412;
+			set $@quantidade3,1;
+			set $@ouronec3,1;
+			set $namepremio3$, "Super Goma de Mascar";
+			// PREMIO 4 SUPER MANUAL DE COMBATE
+			set $@premio4,14545;
+			set $@quantidade4,1;
+			set $@ouronec4,1;
+			set $namepremio4$, "Super Manual de Combate";
+			// PREMIO 5 CAIXA DE YGG, 10 YGG
+			set $@premio5,14232;
+			set $@quantidade5,1;
+			set $@ouronec5,1;
+			set $namepremio5$, "Caixa de Fruto de Yggdrasil ( Contém 10 Frutos )";
+			if(getgmlevel()>=80) {
+				mes "Olá Administradores";
+				mes "Deseja alterar os prêmios do koliseu ?";
+				next;
+				if(select("Sim","Não") != 2) {
+					mes "Digite os ids, os nomes, e as quantdades de para cada um dos prêmios do koliseu";
+					next;
+					
+					if(select("Continuar","Sair") == 2) close;
+					
+					mes "ID do prêmio";
+					input $@premio1;
+					mes "Digite o nome do prêmio";
+					input $namepremio1$;
+					mes "Quantidade de Ouro Especial para conseguir o item";
+					input $@ouronec1;
+					mes "Quantidade de itens ganhos";
+					input $@quantidade1;
+					
+					if(select("Continuar","Sair") == 2) close;
+					
+					mes "ID...";
+					input $@premio2;
+					mes "Nome ...";
+					input $namepremio2$;
+					mes "Quantidade de Ouro Especial para conseguir o item";
+					input $@ouronec2;
+					mes "Quantidade de itens ganhos";
+					input $@quantidade2;
+					
+					if(select("Continuar","Sair") == 2) close;
+					
+					mes "ID...";
+					input $@premio3;
+					mes "Nome ... ";
+					input $namepremio3$;
+					mes "Quantidade de Ouro Especial para conseguir o item";
+					input $@ouronec3;
+					mes "Quantidade de itens ganhos";
+					input $@quantidade3;
+					
+					if(select("Continuar","Sair") == 2) close;
+					
+					mes "ID...";
+					input $@premio4;
+					mes "Nome ...";
+					input $namepremio4$;
+					mes "Quantidade de Ouro Especial para conseguir o item";
+					input $@ouronec4;
+					mes "Quantidade de itens ganhos";
+					input $@quantidade4;
+					
+					if(select("Continuar","Sair") == 2) close;
+					
+					mes "ID...";
+					input $@premio5;
+					mes "Nome ...";
+					input $namepremio5$;
+					mes "Quantidade de Ouro Especial para conseguir o item";
+					input $@ouronec5;
+					mes "Quantidade de itens ganhos";
+					input $@quantidade5;
+				}
+			}
+			mes "Escolha o seu prêmio !";
+			next;
+			if(countitem(7863) == 0) {
+				mes "Você não tem o Ouro Especial ?"; 
+				mes "Volte quando tiver.. o ouro é indispensavel para a criação dos itens..";
+				close;
+			}
+			
+			switch(select($namepremio1$,$namepremio2$,$namepremio3$,$namepremio4$,$namepremio5$)) {
+				case 1:
+					mes "Você precisa de "+$@ouronec1+" ouros para obter esse item !";
+					mes "Tem certeza da sua escolha ? ";
+					
+					if(select("Sim","Não") == 2) {
+						mes "Volte quando precisar !";
+						close;
+					}
+					
+					if(countitem(7863) < $@ourosnec1) {
+						mes " Você não tem os itens necessários, volte quando tiver !";
+						close;
+					}
+					delitem 7863,$@ouronec1;
+					getitem $@premio1,$@quantidade1;
+					close;
+				case 2:
+					mes "Você precisa de "+$@ouronec2+" ouros para obter esse item !";
+					mes "Tem certeza da sua escolha ? ";
+					
+					if(select("Sim","Não") == 2) {
+						mes " Volte quando precisar !"; 
+						close;
+					}
+					
+					if(countitem(7863) < $@ourosnec2) {
+						mes " Você não tem os itens necessários, volte quando tiver !";
+						close;
+					}
+					
+					delitem 7863,$@ouronec2;
+					getitem $@premio2,$@quantidade2;
+					close;
+				case 3:
+					mes "Você precisa de "+$@ouronec3+" ouros para obter esse item !";
+					mes "Tem certeza da sua escolha ? ";
+					
+					if(select("Sim","Não") == 2) {
+						mes " Volte quando precisar !";
+						close;
+					}
+					
+					if(countitem(7863) < $@ourosnec3) {
+						mes " Você não tem os itens necessários, volte quando tiver !";
+						close;
+					}
+					
+					delitem 7863,$@ouronec3;
+					getitem $@premio3,$@quantidade3;
+					close;
+				case 4:
+					mes "Você precisa de "+$@ouronec4+" ouros para obter esse item !";
+					mes "Tem certeza da sua escolha ? ";
+					if(select("Sim","Não") == 2) {
+						mes " Volte quando precisar !";
+						close;
+					}
+					
+					if(countitem(7863) < $@ourosnec4) {
+						mes " Você não tem os itens necessários, volte quando tiver !";
+						close;
+					}
+					
+					delitem 7863,$@ouronec4;
+					getitem $@premio4,$@quantidade4;
+					close;
+				case 5:
+					mes "Você precisa de "+$@ouronec5+" ouros para obter esse item !";
+					mes "Tem certeza da sua escolha ? ";
+					if(select("Sim","Não") == 2) {
+						mes " Volte quando precisar !"; 
+						close;
+					}
+					if(countitem(7863) < $@ourosnec5) {
+						mes " Você não tem os itens necessários, volte quando tiver !";
+						close;
+					}
+					
+					delitem 7863,$@ouronec5;
+					getitem $@premio5,$@quantidade5;
+					close;
+			}
+		case 4:
+			mes "Até logo !";
+			close;
+	}
+}
+
+function	script	teleportmap	{
+	switch(rand(1,4)) {
+		case 1:
+			warpparty "06guild_01",92,49,$@partyid1;
+			warpparty "06guild_01",8,49,$@partyid2;
+			sleep 5000;
+			mapannounce "06guild_01","O evento vai começar em 5 segundos preparem-se",16;
+			sleep 5000;
+			mapannounce "06guild_01","Que comece !",16;
+			pvpon "06guild_01";
+			set $@qtdon,getmapusers("06guild_01");
+			set $@mobn, 1;
+			set $@party1$,"";
+			set $@party2$,"";
+			close;
+		case 2:
+			warpparty "z_agit",23,106,$@partyid1;
+			warpparty "z_agit",23,38,$@partyid2;
+			sleep 5000;
+			mapannounce "z_agit","O evento vai começar em 5 segundos preparem-se",16;
+			sleep 5000;
+			mapannounce "z_agit","Que comece !",16;
+			pvpon "z_agit";
+			set $@qtdon,getmapusers("z_agit");
+			set $@mobn, 1;
+			set $@party1$,"";
+			set $@party2$,"";
+			close;
+		case 3:
+			warpparty "z_agit",170,14,$@partyid1;
+			warpparty "z_agit",170,175,$@partyid2;
+			sleep 5000;
+			mapannounce "z_agit","O evento vai começar em 5 segundos preparem-se",16;
+			sleep 5000;
+			mapannounce "z_agit","Que comece !",16;
+			pvpon "z_agit";
+			set $@qtdon,getmapusers("z_agit");
+			set $@mobn, 1;
+			set $@party1$,"";
+			set $@party2$,"";
+			close;
+		case 4:
+			warpparty "pvp_2vs2",10,38,$@partyid1;
+			warpparty "pvp_2vs2",69,38,$@partyid2;
+			sleep 5000;
+			mapannounce "pvp_2vs2","O evento vai começar em 5 segundos preparem-se",16;
+			sleep 5000;
+			mapannounce "pvp_2vs2","Que comece !",16;
+			pvpon "pvp_2vs2";
+			set $@qtdon,getmapusers("pvp_2vs2");	
+			set $@mobn, 1;
+			set $@party1$,"";
+			set $@party2$,"";
+			close;
+	}
+}	
+function	script	premio	{
+//PREMIOS AQUI
+}
+function	script	vivos	{
+//PARTY GANHOU
+	
+}
+06guild_01	mapflag	nobranch
+06guild_01	mapflag	nocommand
+06guild_01	mapflag	noexp
+06guild_01	mapflag	nomemo
+06guild_01	mapflag	nopenalty
+06guild_01	mapflag	noreturn
+06guild_01	mapflag	nosave	SavePoint
+06guild_01	mapflag	noteleport
+06guild_01	mapflag	nowarp
+06guild_01	mapflag	nowarpto
+06guild_01	mapflag	pvp_noguild
+06guild_01	mapflag	pvp_noparty
+jupe_ele	mapflag	battleground
+z_agit	mapflag	nobranch
+z_agit	mapflag	nocommand
+z_agit	mapflag	noexp
+z_agit	mapflag	nomemo
+z_agit	mapflag	nopenalty
+z_agit	mapflag	noreturn
+z_agit	mapflag	nosave	SavePoint
+z_agit	mapflag	noteleport
+z_agit	mapflag	nowarp
+z_agit	mapflag	nowarpto
+z_agit	mapflag	pvp_noguild
+z_agit	mapflag	pvp_noparty
+z_agit	mapflag	battleground
+pvp_2vs2	mapflag	nobranch
+pvp_2vs2	mapflag	nocommand
+pvp_2vs2	mapflag	noexp
+pvp_2vs2	mapflag	nomemo
+pvp_2vs2	mapflag	nopenalty
+pvp_2vs2	mapflag	noreturn
+pvp_2vs2	mapflag	nosave	SavePoint
+pvp_2vs2	mapflag	noteleport
+pvp_2vs2	mapflag	nowarp
+pvp_2vs2	mapflag	nowarpto
+pvp_2vs2	mapflag	pvp_noguild
+pvp_2vs2	mapflag	pvp_noparty
+pvp_2vs2	mapflag	battleground
+jupe_ele	mapflag	nobranch
+jupe_ele	mapflag	nocommand
+jupe_ele	mapflag	noexp
+jupe_ele	mapflag	nomemo
+jupe_ele	mapflag	nopenalty
+jupe_ele	mapflag	noreturn
+jupe_ele	mapflag	nosave	SavePoint
+jupe_ele	mapflag	noteleport
+jupe_ele	mapflag	nowarp
+jupe_ele	mapflag	nowarpto
+jupe_ele	mapflag	pvp_noguild
+jupe_ele	mapflag	pvp_noparty
+
+
+}

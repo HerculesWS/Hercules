@@ -1,0 +1,8 @@
+prontera,237,81,5	script	COMA_RESIST	479,3,3,{
+	sc_start SC_RESIST_SC_COMA, 60000, 0;
+	end;
+	
+OnTouch:
+	sc_start SC_RESIST_SC_COMA, 60000, 0;
+	end;
+}
