@@ -52,7 +52,7 @@ HAVE_PERL=@HAVE_PERL@
 HAVE_DOXYGEN=@HAVE_DOXYGEN@
 
 MF_TARGETS = Makefile $(addsuffix /Makefile, src/common 3rdparty/mt19937ar \
-             3rdparty/libconfig 3rdparty/libbacktrace src/char src/login src/map src/plugins \
+             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/http-parser src/char src/login src/map src/api src/plugins \
              src/test tools/HPMHookGen tools/doxygen)
 
 CC = @CC@
@@ -110,6 +110,10 @@ libconfig: 3rdparty/libconfig/Makefile
 libbacktrace: 3rdparty/libbacktrace/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/libbacktrace
+
+http-parser: 3rdparty/http-parser/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/http-parser
 
 login_sql: $(LOGIN_SQL_DEPENDS) src/login/Makefile
 	@echo "	MAKE	$@"
@@ -185,6 +189,7 @@ help: Makefile
 	@echo "'mt19937ar'    - builds object file of Mersenne Twister MT19937"
 	@echo "'libconfig'    - builds object files of libconfig"
 	@echo "'libbacktrace' - builds object files of libbacktrace"
+	@echo "'http-parser'  - builds object files of http-parser"
 	@echo "'login_sql'    - builds login server"
 	@echo "'char_sql'     - builds char server"
 	@echo "'map_sql'      - builds map server"

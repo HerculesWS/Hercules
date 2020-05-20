@@ -56,6 +56,9 @@ Thumbs.db
 /3rdparty/libbacktrace/*.o
 /3rdparty/libbacktrace/backtrace-supported.h
 
+# /3rdparty/http-parser/
+/3rdparty/http-parser/Makefile
+
 # /3rdparty/mt19937ar/
 /3rdparty/mt19937ar/Makefile
 /3rdparty/mt19937ar/*.o
