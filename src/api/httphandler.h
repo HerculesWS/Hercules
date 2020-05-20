@@ -22,10 +22,13 @@
 
 #include "common/hercules.h"
 
+#include <http-parser/http_parser.h>
+
 struct api_session_data;
 typedef bool (*HttpParseHandler)(int, struct api_session_data *);
 
 struct HttpHandler {
+	enum http_method method;
 	HttpParseHandler func;
 };
 

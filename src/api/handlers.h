@@ -22,12 +22,14 @@
 
 #include "common/hercules.h"
 
+#include <http-parser/http_parser.h>
+
 #ifndef handler
-#define handler(url, func)
+#define handler(method, url, func)
 #endif  // handler
 
 // need also method
 
-handler("/userconfig/load", aclif->parse_userconfig_load);
+handler(HTTP_POST, "/userconfig/load", aclif->parse_userconfig_load);
 
 #endif /* API_HANDLERS_H */

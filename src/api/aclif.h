@@ -53,7 +53,7 @@ struct aclif_interface {
 	int (*connected) (int fd);
 	int (*session_delete) (int fd);
 	void (*load_handlers) (void);
-	void (*add_handler) (const char *url, HttpParseHandler func);
+	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func);
 	void (*set_url) (int fd, const char *url, size_t size);
 
 	bool (*parse_userconfig_load) (int fd, struct api_session_data *sd);

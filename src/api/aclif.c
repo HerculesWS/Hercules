@@ -112,18 +112,19 @@ static int aclif_session_delete(int fd)
 static void aclif_load_handlers(void)
 {
 	aclif->handlers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
-#define handler(url, func) aclif->add_handler(url, func)
+#define handler(method, url, func) aclif->add_handler(method, url, func)
 #include "api/handlers.h"
 #undef handler
 }
 
-static void aclif_add_handler(const char *url, HttpParseHandler func)
+static void aclif_add_handler(enum http_method method, const char *url, HttpParseHandler func)
 {
 	nullpo_retv(url);
 	nullpo_retv(func);
 
 	ShowWarning("Add url: %s\n", url);
 	struct HttpHandler *handler = aCalloc(1, sizeof(struct HttpHandler));
+	handler->method = method;
 	handler->func = func;
 	strdb_put(aclif->handlers_db, url, handler);
 }
