@@ -114,6 +114,7 @@ typedef int (*RecvFunc)(int fd);
 typedef int (*SendFunc)(int fd);
 typedef int (*ParseFunc)(int fd);
 typedef int (*ConnectedFunc)(int fd);
+typedef int (*DeleteFunc)(int fd);
 
 struct socket_data {
 	struct {
@@ -137,6 +138,7 @@ struct socket_data {
 	SendFunc func_send;
 	ParseFunc func_parse;
 	ConnectedFunc func_client_connected;
+	DeleteFunc func_delete;
 
 	void* session_data; // stores application-specific data related to the session
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store.
@@ -213,7 +215,7 @@ struct socket_interface {
 	/* */
 	bool (*session_is_valid) (int fd);
 	bool (*session_is_active) (int fd);
-	int (*create_session) (int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected);
+	int (*create_session) (int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected, DeleteFunc func_delete);
 	void (*delete_session) (int fd);
 	/* */
 	void (*flush) (int fd);
@@ -222,6 +224,7 @@ struct socket_interface {
 	void (*set_nonblocking) (int fd, unsigned long yes);
 	void (*set_defaultparse) (ParseFunc defaultparse);
 	void (*set_default_client_connected) (ConnectedFunc defaultparse);
+	void (*set_default_delete) (DeleteFunc defaultdelete);
 	/* hostname/ip conversion functions */
 	uint32 (*host2ip) (const char* hostname);
 	const char * (*ip2str) (uint32 ip, char *ip_str);

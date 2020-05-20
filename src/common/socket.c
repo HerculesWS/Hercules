@@ -340,8 +340,14 @@ static int null_client_connected(int fd)
 	return 0;
 }
 
+static int null_delete(int fd)
+{
+	return 0;
+}
+
 static ParseFunc default_func_parse = null_parse;
 static ParseFunc default_func_client_connected = null_client_connected;
+static ParseFunc default_func_delete = null_delete;
 
 static void set_defaultparse(ParseFunc defaultparse)
 {
@@ -351,6 +357,11 @@ static void set_defaultparse(ParseFunc defaultparse)
 static void set_default_client_connected(ConnectedFunc default_client_connected)
 {
 	default_func_client_connected = default_client_connected;
+}
+
+static void set_default_delete(ConnectedFunc default_delete)
+{
+	default_func_delete = default_delete;
 }
 
 /*======================================
@@ -595,7 +606,7 @@ static int connect_client(int listen_fd)
 
 	if( sockt->fd_max <= fd ) sockt->fd_max = fd + 1;
 
-	sockt->create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse, default_func_client_connected);
+	sockt->create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse, default_func_client_connected, default_func_delete);
 	sockt->session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
 	sockt->session[fd]->flag.validate = sockt->validate;
 	sockt->session[fd]->func_client_connected(fd);
@@ -664,7 +675,7 @@ static int make_listen_bind(uint32 ip, uint16 port)
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
 
-	sockt->create_session(fd, sockt->connect_client, null_send, null_parse, null_parse);
+	sockt->create_session(fd, sockt->connect_client, null_send, null_parse, null_client_connected, null_delete);
 	sockt->session[fd]->client_addr = 0; // just listens
 	sockt->session[fd]->rdata_tick = 0; // disable timeouts on this socket
 	sockt->session[fd]->wdata_tick = 0;
@@ -733,13 +744,13 @@ static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
-	sockt->create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse, null_parse);
+	sockt->create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse, null_parse, null_delete);
 	sockt->session[fd]->client_addr = ntohl(remote_address.sin_addr.s_addr);
 
 	return fd;
 }
 
-static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected)
+static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected, DeleteFunc func_delete)
 {
 	CREATE(sockt->session[fd], struct socket_data, 1);
 	CREATE(sockt->session[fd]->rdata, unsigned char, RFIFO_SIZE);
@@ -750,6 +761,7 @@ static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseF
 	sockt->session[fd]->func_send  = func_send;
 	sockt->session[fd]->func_parse = func_parse;
 	sockt->session[fd]->func_client_connected = func_client_connected;
+	sockt->session[fd]->func_delete = func_delete;
 	sockt->session[fd]->rdata_tick = sockt->last_tick;
 	sockt->session[fd]->wdata_tick = sockt->last_tick;
 	sockt->session[fd]->session_data = NULL;
@@ -764,6 +776,7 @@ static void delete_session(int fd)
 		socket_data_qi -= sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos;
 		socket_data_qo -= sockt->session[fd]->wdata_size;
 #endif  // SHOW_SERVER_STATS
+		sockt->session[fd]->func_delete(fd);
 		aFree(sockt->session[fd]->rdata);
 		aFree(sockt->session[fd]->wdata);
 		if( sockt->session[fd]->session_data )
@@ -1767,7 +1780,7 @@ static void socket_init(void)
 
 	// sockt->session[0] is now currently used for disconnected sessions of the map server, and as such,
 	// should hold enough buffer (it is a vacuum so to speak) as it is never flushed. [Skotlex]
-	sockt->create_session(0, null_recv, null_send, null_parse, null_parse);
+	sockt->create_session(0, null_recv, null_send, null_parse, null_client_connected, null_delete);
 
 	// Delete old connection history every 5 minutes
 	connect_history = uidb_alloc(DB_OPT_RELEASE_DATA);
@@ -2205,6 +2218,7 @@ void socket_defaults(void)
 	sockt->set_nonblocking = set_nonblocking;
 	sockt->set_defaultparse = set_defaultparse;
 	sockt->set_default_client_connected = set_default_client_connected;
+	sockt->set_default_delete = set_default_delete;
 	sockt->host2ip = host2ip;
 	sockt->ip2str = ip2str;
 	sockt->str2ip = str2ip;
