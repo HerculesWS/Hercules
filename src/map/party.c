@@ -677,17 +677,18 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 /// Invoked (from char-server) when a party is disbanded.
 static int party_broken(int party_id)
 {
-	struct party_data* p;
-	int i, j;
+	int i;
 
-	p = party->search(party_id);
-	if( p == NULL )
+	struct party_data *p = party->search(party_id);
+	if (p == NULL)
 		return 0;
 
-	for( j = 0; j < p->instances; j++ ) {
-		if( p->instance[j] >= 0 ) {
-			instance->destroy( p->instance[j] );
-			instance->list[p->instance[j]].owner_id = 0;
+	for (int j = 0; j < p->instances; j++) {
+		const short instance_id = p->instance[j];
+		if (instance_id >= 0) {
+			instance->destroy(instance_id);
+			if (instance_id < instance->instances)
+				instance->list[instance_id].owner_id = 0;
 		}
 	}
 
