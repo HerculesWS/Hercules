@@ -213,6 +213,8 @@ struct socket_interface {
 	/* */
 	bool (*session_is_valid) (int fd);
 	bool (*session_is_active) (int fd);
+	int (*create_session) (int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected);
+	void (*delete_session) (int fd);
 	/* */
 	void (*flush) (int fd);
 	void (*flush_fifos) (void);
