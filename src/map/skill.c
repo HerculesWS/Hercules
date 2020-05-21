@@ -3996,7 +3996,7 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 {
 	struct status_data *st;
 	struct map_session_data *sd = NULL;
-	int hp, sp, hp_rate, sp_rate, state, mhp;
+	int hp, sp, hp_rate, sp_rate, state;
 	int idx;
 	int itemid[MAX_SKILL_ITEM_REQUIRE], amount[MAX_SKILL_ITEM_REQUIRE];
 
@@ -4023,8 +4023,7 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 	hp_rate = skill->dbs->db[idx].hp_rate[lv-1];
 	sp_rate = skill->dbs->db[idx].sp_rate[lv-1];
 	state = skill->dbs->db[idx].state[lv - 1];
-	if( (mhp = skill->dbs->db[idx].mhp[lv-1]) > 0 )
-		hp += (st->max_hp * mhp) / 100;
+
 	if( hp_rate > 0 )
 		hp += (st->hp * hp_rate) / 100;
 	else
@@ -4055,6 +4054,13 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 		}
 		if( sp > 0 && st->sp <= (unsigned int)sp ) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
+			return 0;
+		}
+
+		int mhp = skill->get_mhp(skill_id, lv);
+
+		if (mhp > 0 && get_percentage(st->hp, st->max_hp) > mhp) {
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
 			return 0;
 		}
 	}
