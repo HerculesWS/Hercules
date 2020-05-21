@@ -15130,22 +15130,6 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 					require.sp -= require.sp * 20 * count / 100; //  -20% each W/M in the party.
 			}
 			break;
-		case NC_PILEBUNKER:
-			if (sd->equip_index[EQI_HAND_R] < 0
-			 || !itemid_is_pilebunker(sd->status.inventory[sd->equip_index[EQI_HAND_R]].nameid)
-			 ) {
-				clif->skill_fail(sd, skill_id, USESKILL_FAIL_THIS_WEAPON, 0, 0);
-				return 0;
-			}
-			break;
-		case NC_HOVERING:
-			if (( sd->equip_index[EQI_ACC_L] >= 0 &&  sd->status.inventory[sd->equip_index[EQI_ACC_L]].nameid == ITEMID_HOVERING_BOOSTER ) ||
-				( sd->equip_index[EQI_ACC_R] >= 0 &&  sd->status.inventory[sd->equip_index[EQI_ACC_R]].nameid == ITEMID_HOVERING_BOOSTER ));
-			else {
-				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-			return 0;
-			}
-			break;
 		case SO_FIREWALK:
 		case SO_ELECTRICWALK: // Can't be casted until you've walked all cells.
 			if( sc && sc->data[SC_PROPERTYWALK] &&
