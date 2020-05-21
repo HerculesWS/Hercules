@@ -1752,6 +1752,7 @@ struct skill_required_item_data {
 
 struct skill_condition {
 	int weapon,ammo,ammo_qty,hp,sp,zeny,spiritball,mhp,state;
+	int msp;
 	int itemid[MAX_SKILL_ITEM_REQUIRE],amount[MAX_SKILL_ITEM_REQUIRE];
 	int equip_id[MAX_SKILL_ITEM_REQUIRE];
 	int equip_amount[MAX_SKILL_ITEM_REQUIRE];
@@ -1782,6 +1783,7 @@ struct s_skill_db {
 	int skill_type[MAX_SKILL_LEVEL];
 	int blewcount[MAX_SKILL_LEVEL];
 	int hp[MAX_SKILL_LEVEL],sp[MAX_SKILL_LEVEL],mhp[MAX_SKILL_LEVEL],hp_rate[MAX_SKILL_LEVEL],sp_rate[MAX_SKILL_LEVEL],zeny[MAX_SKILL_LEVEL];
+	int msp[MAX_SKILL_LEVEL];
 	int weapon;
 	int ammo;
 	int ammo_qty[MAX_SKILL_LEVEL];
@@ -1992,6 +1994,7 @@ struct skill_interface {
 	int (*get_splash) (int skill_id, int skill_lv);
 	int (*get_hp) (int skill_id, int skill_lv);
 	int (*get_mhp) (int skill_id, int skill_lv);
+	int (*get_msp) (int skill_id, int skill_lv);
 	int (*get_sp) (int skill_id, int skill_lv);
 	int (*get_hp_rate) (int skill_id, int skill_lv);
 	int (*get_sp_rate) (int skill_id, int skill_lv);
@@ -2182,6 +2185,7 @@ struct skill_interface {
 	void (*validate_hp_rate_cost) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_sp_rate_cost) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_max_hp_trigger) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_max_sp_trigger) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_zeny_cost) (struct config_setting_t *conf, struct s_skill_db *sk);
 	int (*validate_weapontype_sub) (const char *type, bool on, struct s_skill_db *sk);
 	void (*validate_weapontype) (struct config_setting_t *conf,  struct s_skill_db *sk);

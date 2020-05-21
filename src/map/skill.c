@@ -744,6 +744,28 @@ static int skill_get_mhp(int skill_id, int skill_lv)
 	return skill->dbs->db[idx].mhp[skill_get_lvl_idx(skill_lv)];
 }
 
+/**
+ * Gets a skill's maximum SP trigger by its ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's maximum SP trigger corresponding to the passed level. Defaults to 0 in case of error.
+ *
+ **/
+static int skill_get_msp(int skill_id, int skill_lv)
+{
+	if (skill_id == 0)
+		return 0;
+
+	Assert_ret(skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_ret(idx != 0);
+
+	return skill->dbs->db[idx].msp[skill_get_lvl_idx(skill_lv)];
+}
+
 static int skill_get_castnodex(int skill_id, int skill_lv)
 {
 	int idx;
@@ -4061,6 +4083,13 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 
 		if (mhp > 0 && get_percentage(st->hp, st->max_hp) > mhp) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT, 0, 0);
+			return 0;
+		}
+
+		int msp = skill->get_msp(skill_id, lv);
+
+		if (msp > 0 && get_percentage(st->sp, st->max_sp) > msp) {
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 			return 0;
 		}
 	}
@@ -15338,6 +15367,11 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 0;
 	}
 
+	if (require.msp > 0 && get_percentage(st->sp, st->max_sp) > require.msp) {
+		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
+		return 0;
+	}
+
 	if( require.weapon && !pc_check_weapontype(sd,require.weapon) ) {
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_THIS_WEAPON, 0, 0);
 		return 0;
@@ -15924,6 +15958,8 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 	req.state = skill->dbs->db[idx].state[skill_lv - 1];
 
 	req.mhp = skill->dbs->db[idx].mhp[skill_lv-1];
+
+	req.msp = skill->get_msp(skill_id, skill_lv);
 
 	req.weapon = skill->dbs->db[idx].weapon;
 
@@ -22040,6 +22076,51 @@ static void skill_validate_max_hp_trigger(struct config_setting_t *conf, struct 
 }
 
 /**
+ * Validates a skill's maximum SP trigger when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the maximum SP trigger should be set it.
+ *
+ **/
+static void skill_validate_max_sp_trigger(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	skill->level_set_value(sk->msp, 0);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "MaxSPTrigger");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int max_sp_trigger;
+
+			if (libconfig->setting_lookup_int(t, lv, &max_sp_trigger) == CONFIG_TRUE) {
+				if (max_sp_trigger >= 0 && max_sp_trigger <= 100)
+					sk->msp[i] = max_sp_trigger;
+				else
+					ShowWarning("%s: Invalid maximum SP trigger %d specified in level %d for skill ID %d in %s! Minimum is 0, maximum is 100. Defaulting to 0...\n",
+						    __func__, max_sp_trigger, i + 1, sk->nameid, conf->file);
+			}
+		}
+
+		return;
+	}
+
+	int max_sp_trigger;
+
+	if (libconfig->setting_lookup_int(conf, "MaxSPTrigger", &max_sp_trigger) == CONFIG_TRUE) {
+		if (max_sp_trigger >= 0 && max_sp_trigger <= 100)
+			skill->level_set_value(sk->msp, max_sp_trigger);
+		else
+			ShowWarning("%s: Invalid maximum SP trigger %d specified for skill ID %d in %s! Minimum is 0, maximum is 100. Defaulting to 0...\n",
+				    __func__, max_sp_trigger, sk->nameid, conf->file);
+	}
+}
+
+/**
  * Validates a skill's Zeny cost when reading the skill DB.
  *
  * @param conf The libconfig settings block which contains the skill's data.
@@ -22993,6 +23074,7 @@ static void skill_validate_requirements(struct config_setting_t *conf, struct s_
 		skill->validate_hp_rate_cost(t, sk);
 		skill->validate_sp_rate_cost(t, sk);
 		skill->validate_max_hp_trigger(t, sk);
+		skill->validate_max_sp_trigger(t, sk);
 		skill->validate_zeny_cost(t, sk);
 		skill->validate_weapontype(t, sk);
 		skill->validate_ammotype(t, sk);
@@ -23852,6 +23934,7 @@ void skill_defaults(void)
 	skill->get_splash = skill_get_splash;
 	skill->get_hp = skill_get_hp;
 	skill->get_mhp = skill_get_mhp;
+	skill->get_msp = skill_get_msp;
 	skill->get_sp = skill_get_sp;
 	skill->get_hp_rate = skill_get_hp_rate;
 	skill->get_sp_rate = skill_get_sp_rate;
@@ -24042,6 +24125,7 @@ void skill_defaults(void)
 	skill->validate_hp_rate_cost = skill_validate_hp_rate_cost;
 	skill->validate_sp_rate_cost = skill_validate_sp_rate_cost;
 	skill->validate_max_hp_trigger = skill_validate_max_hp_trigger;
+	skill->validate_max_sp_trigger = skill_validate_max_sp_trigger;
 	skill->validate_zeny_cost = skill_validate_zeny_cost;
 	skill->validate_weapontype_sub = skill_validate_weapontype_sub;
 	skill->validate_weapontype = skill_validate_weapontype;
