@@ -1753,6 +1753,8 @@ struct skill_required_item_data {
 struct skill_condition {
 	int weapon,ammo,ammo_qty,hp,sp,zeny,spiritball,mhp,state;
 	int itemid[MAX_SKILL_ITEM_REQUIRE],amount[MAX_SKILL_ITEM_REQUIRE];
+	int equip_id[MAX_SKILL_ITEM_REQUIRE];
+	int equip_amount[MAX_SKILL_ITEM_REQUIRE];
 };
 
 // Database skills
@@ -1793,6 +1795,7 @@ struct s_skill_db {
 	int unit_target[MAX_SKILL_LEVEL];
 	int unit_flag;
 	struct skill_required_item_data req_items;
+	struct skill_required_item_data req_equip;
 };
 
 struct s_skill_unit_layout {
@@ -1997,6 +2000,9 @@ struct skill_interface {
 	int (*get_itemid) (int skill_id, int item_idx);
 	int (*get_itemqty) (int skill_id, int item_idx, int skill_lv);
 	bool (*get_item_any_flag) (int skill_id, int skill_lv);
+	int (*get_equip_id) (int skill_id, int item_idx);
+	int (*get_equip_amount) (int skill_id, int item_idx, int skill_lv);
+	bool (*get_equip_any_flag) (int skill_id, int skill_lv);
 	int (*get_zeny) (int skill_id, int skill_lv);
 	int (*get_num) (int skill_id, int skill_lv);
 	int (*get_cast) (int skill_id, int skill_lv);
@@ -2055,6 +2061,7 @@ struct skill_interface {
 	int (*cast_fix_sc) ( struct block_list *bl, int time);
 	int (*vf_cast_fix) ( struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
 	int (*delay_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
+	int (*check_condition_required_equip) (struct map_session_data *sd, int skill_id, int skill_lv);
 	int (*check_condition_castbegin) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*check_condition_required_items) (struct map_session_data *sd, int skill_id, int skill_lv);
 	bool (*items_required) (struct map_session_data *sd, int skill_id, int skill_lv);
@@ -2188,6 +2195,10 @@ struct skill_interface {
 	void (*validate_item_requirements_sub_items) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_item_requirements_sub_any_flag) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_item_requirements) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_equip_requirements_sub_item_amount) (struct config_setting_t *conf, struct s_skill_db *sk, int item_index);
+	void (*validate_equip_requirements_sub_items) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_equip_requirements_sub_any_flag) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_equip_requirements) (struct config_setting_t *conf, struct s_skill_db *sk);
 	int (*validate_requirements_item_name) (const char *name);
 	void (*validate_requirements) (struct config_setting_t *conf, struct s_skill_db *sk);
 	int (*validate_unit_id_sub) (int unit_id);

@@ -437,6 +437,74 @@ static bool skill_get_item_any_flag(int skill_id, int skill_lv)
 	return skill->dbs->db[idx].req_items.any[skill_get_lvl_idx(skill_lv)];
 }
 
+/**
+ * Gets a skill's required equipment's ID by the skill's ID and the equipment item's index.
+ *
+ * @param skill_id The skill's ID.
+ * @param item_idx The equipment item's index.
+ * @return The skill's required equipment's ID corresponding to the passed index. Defaults to 0 in case of error.
+ *
+ **/
+static int skill_get_equip_id(int skill_id, int item_idx)
+{
+	if (skill_id == 0)
+		return 0;
+
+	Assert_ret(item_idx >= 0 && item_idx < MAX_SKILL_ITEM_REQUIRE);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_ret(idx != 0);
+
+	return skill->dbs->db[idx].req_equip.item[item_idx].id;
+}
+
+/**
+ * Gets a skill's required equipment's amount by the skill's ID and level and the equipment item's index.
+ *
+ * @param skill_id The skill's ID.
+ * @param item_idx The equipment item's index.
+ * @param skill_lv The skill's level.
+ * @return The skill's required equipment item's amount corresponding to the passed index and level. Defaults to 0 in case of error.
+ *
+ **/
+static int skill_get_equip_amount(int skill_id, int item_idx, int skill_lv)
+{
+	if (skill_id == 0)
+		return 0;
+
+	Assert_ret(item_idx >= 0 && item_idx < MAX_SKILL_ITEM_REQUIRE);
+	Assert_ret(skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_ret(idx != 0);
+
+	return skill->dbs->db[idx].req_equip.item[item_idx].amount[skill_get_lvl_idx(skill_lv)];
+}
+
+/**
+ * Gets a skill's required equipment any-flag by the skill's ID and level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The skill's required equipment's any-flag corresponding to the passed level. Defaults to false in case of error.
+ *
+ **/
+static bool skill_get_equip_any_flag(int skill_id, int skill_lv)
+{
+	if (skill_id == 0)
+		return false;
+
+	Assert_retr(false, skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_retr(false, idx != 0);
+
+	return skill->dbs->db[idx].req_equip.any[skill_get_lvl_idx(skill_lv)];
+}
+
 static int skill_get_zeny(int skill_id, int skill_lv)
 {
 	int idx;
@@ -4025,6 +4093,9 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 		if (inventory_index != INDEX_NOT_FOUND)
 			pc->delitem(sd, inventory_index, amount[i], 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
 	}
+
+	if (skill->check_condition_required_equip(sd, skill_id, lv) != 0)
+		return 0;
 
 	if( type&2 )
 		return 1;
@@ -14276,6 +14347,90 @@ static bool skill_is_combo(int skill_id)
 	return false;
 }
 
+/**
+ * Checks if a skill's equipment requirements are fulfilled.
+ *
+ * @param sd The character who casts the skill.
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return 0 on success or 1 in case of error.
+ *
+ **/
+static int skill_check_condition_required_equip(struct map_session_data *sd, int skill_id, int skill_lv)
+{
+	nullpo_retr(1, sd);
+
+	struct skill_condition req = skill->get_requirement(sd, skill_id, skill_lv);
+	bool any_equip_flag = skill->get_equip_any_flag(skill_id, skill_lv);
+	bool any_equip_found = false;
+	int fail_id = 0;
+	int fail_amount = 0;
+
+	for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+		if (req.equip_id[i] == 0)
+			continue;
+
+		int req_id = req.equip_id[i];
+		int req_amount = req.equip_amount[i];
+		int found_amount = 0;
+
+		for (int j = 0; j < EQI_MAX; j++) {
+			int inv_idx = sd->equip_index[j];
+
+			if (inv_idx == INDEX_NOT_FOUND || sd->inventory_data[inv_idx] == NULL)
+				continue;
+
+			if ((j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == inv_idx)
+			    || (j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == inv_idx)
+			    || (j == EQI_HEAD_TOP && sd->equip_index[EQI_HEAD_MID] == inv_idx)
+			    || (j == EQI_HEAD_TOP && sd->equip_index[EQI_HEAD_LOW] == inv_idx)
+			    || (j == EQI_COSTUME_MID && sd->equip_index[EQI_COSTUME_LOW] == inv_idx)
+			    || (j == EQI_COSTUME_TOP && sd->equip_index[EQI_COSTUME_MID] == inv_idx)
+			    || (j == EQI_COSTUME_TOP && sd->equip_index[EQI_COSTUME_LOW] == inv_idx)) {
+				continue; // Equipment uses more than one slot; only process it once!
+			}
+
+			if (itemdb_type(req_id) != IT_CARD) {
+				if (sd->inventory_data[inv_idx]->nameid != req_id)
+					continue;
+
+				if (itemdb_type(req_id) == IT_AMMO)
+					found_amount += sd->status.inventory[inv_idx].amount;
+				else
+					found_amount++;
+			} else {
+				if (itemdb_isspecial(sd->status.inventory[inv_idx].card[0]))
+					continue;
+
+				for (int k = 0; k < sd->inventory_data[inv_idx]->slot; k++) {
+					if (sd->status.inventory[inv_idx].card[k] == req_id)
+						found_amount++;
+				}
+			}
+		}
+
+		if (any_equip_flag) {
+			if (found_amount >= req_amount) {
+				any_equip_found = true;
+				break;
+			} else if (fail_id == 0) { // Save ID/amount of first missing equipment for skill fail message.
+				fail_id = req_id;
+				fail_amount = req_amount;
+			}
+		} else if (found_amount < req_amount) {
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_NEED_EQUIPMENT, req_amount, req_id);
+			return 1;
+		}
+	}
+
+	if (any_equip_flag && !any_equip_found) {
+		clif->skill_fail(sd, skill_id, USESKILL_FAIL_NEED_EQUIPMENT, fail_amount, fail_id);
+		return 1;
+	}
+
+	return 0;
+}
+
 static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv)
 {
 	struct status_data *st;
@@ -15198,6 +15353,9 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 		return 0;
 	}
 
+	if (skill->check_condition_required_equip(sd, skill_id, skill_lv) != 0)
+		return 0;
+
 	if (require.sp > 0 && st->sp < (unsigned int)require.sp && sd->auto_cast_current.type == AUTOCAST_NONE) { // Auto-cast skills don't consume SP.
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SP_INSUFFICIENT, 0, 0);
 		return 0;
@@ -15816,6 +15974,11 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 		if ((amount = skill->get_itemqty(skill_id, i, skill_lv)) >= 0) {
 			req.itemid[i] = skill->get_itemid(skill_id, i);
 			req.amount[i] = amount;
+		}
+
+		if ((amount = skill->get_equip_amount(skill_id, i, skill_lv)) > 0) {
+			req.equip_id[i] = skill->get_equip_id(skill_id, i);
+			req.equip_amount[i] = amount;
 		}
 
 		if (itemid_isgemstone(req.itemid[i]) && skill_id != HW_GANBANTEIN) {
@@ -22621,6 +22784,175 @@ static void skill_validate_item_requirements(struct config_setting_t *conf, stru
 }
 
 /**
+ * Validates a skill's required equipment amounts when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required equipment amounts should be set it.
+ *
+ **/
+static void skill_validate_equip_requirements_sub_item_amount(struct config_setting_t *conf, struct s_skill_db *sk, int item_index)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	for (int i = 0; i < MAX_SKILL_LEVEL; i++)
+		sk->req_equip.item[item_index].amount[i] = 0;
+
+	if (config_setting_is_group(conf)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int amount;
+
+			if (libconfig->setting_lookup_int(conf, lv, &amount) == CONFIG_TRUE) {
+				if (amount > 0) {
+					sk->req_equip.item[item_index].amount[i] = amount;
+				} else {
+					ShowWarning("%s: Invalid required equipment amount %d specified in level %d for skill ID %d in %s! Must be greater than 0. Defaulting to 1...\n",
+						    __func__, amount, i + 1, sk->nameid, conf->file);
+					sk->req_equip.item[item_index].amount[i] = 1;
+				}
+			}
+		}
+
+		return;
+	}
+
+	int amount = libconfig->setting_get_int(conf);
+
+	if (amount <= 0) {
+		ShowWarning("%s: Invalid required equipment amount %d specified for skill ID %d in %s! Must be greater than 0. Defaulting to 1...\n",
+			    __func__, amount, sk->nameid, conf->file);
+		amount = 1;
+	}
+
+	for (int i = 0; i < MAX_SKILL_LEVEL; i++)
+		sk->req_equip.item[item_index].amount[i] = amount;
+}
+
+/**
+ * Validates a skill's required equipment when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required equipment should be set it.
+ *
+ **/
+static void skill_validate_equip_requirements_sub_items(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+		sk->req_equip.item[i].id = 0;
+
+		for (int j = 0; j < MAX_SKILL_LEVEL; j++)
+			sk->req_equip.item[i].amount[j] = 0;
+	}
+
+	int item_index = 0;
+	int count = libconfig->setting_length(conf);
+
+	for (int i = 0; i < count; i++) {
+		struct config_setting_t *t = libconfig->setting_get_elem(conf, i);
+
+		if (t != NULL && strcasecmp(config_setting_name(t), "Any") != 0) {
+			if (item_index >= MAX_SKILL_ITEM_REQUIRE) {
+				ShowWarning("%s: Too many required equipment items specified for skill ID %d in %s! Skipping item %s...\n",
+					    __func__, sk->nameid, conf->file, config_setting_name(t));
+				continue;
+			}
+
+			int item_id = skill->validate_requirements_item_name(config_setting_name(t));
+			struct item_data *it = itemdb->exists(item_id);
+
+			if (item_id == 0 || it == NULL) {
+				ShowWarning("%s: Invalid required equipment item %s specified for skill ID %d in %s! Skipping item...\n",
+					    __func__, config_setting_name(t), sk->nameid, conf->file);
+				continue;
+			}
+
+			if (it->type != IT_WEAPON && it->type != IT_AMMO && it->type != IT_ARMOR && it->type != IT_CARD) {
+				ShowWarning("%s: Non-equipment item %s specified for skill ID %d in %s! Skipping item...\n",
+					    __func__, config_setting_name(t), sk->nameid, conf->file);
+				continue;
+			}
+
+			int j;
+
+			ARR_FIND(0, MAX_SKILL_ITEM_REQUIRE, j, sk->req_equip.item[j].id == item_id);
+
+			if (j < MAX_SKILL_ITEM_REQUIRE) {
+				ShowWarning("%s: Duplicate required equipment item %s specified for skill ID %d in %s! Skipping item...\n",
+					    __func__, config_setting_name(t), sk->nameid, conf->file);
+				continue;
+			}
+
+			sk->req_equip.item[item_index].id = item_id;
+			skill->validate_equip_requirements_sub_item_amount(t, sk, item_index);
+			item_index++;
+		}
+	}
+}
+
+/**
+ * Validates a skill's required equipment any-flag when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required equipment any-flag should be set it.
+ *
+ **/
+static void skill_validate_equip_requirements_sub_any_flag(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	for (int i = 0; i < MAX_SKILL_LEVEL; i++)
+		sk->req_equip.any[i] = false;
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Any");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++) {
+			char lv[6]; // Big enough to contain "Lv999" in case of custom MAX_SKILL_LEVEL.
+			safesnprintf(lv, sizeof(lv), "Lv%d", i + 1);
+			int any_flag;
+
+			if (libconfig->setting_lookup_bool(t, lv, &any_flag) == CONFIG_TRUE)
+				sk->req_equip.any[i] = (any_flag != 0);
+		}
+
+		return;
+	}
+
+	int any_flag;
+
+	if (libconfig->setting_lookup_bool(conf, "Any", &any_flag) == CONFIG_TRUE && any_flag != 0) {
+		for (int i = 0; i < MAX_SKILL_LEVEL; i++)
+			sk->req_equip.any[i] = true;
+	}
+}
+
+/**
+ * Validates a skill's required equipment when reading the skill DB.
+ *
+ * @param conf The libconfig settings block which contains the skill's data.
+ * @param sk The s_skill_db struct where the required equipment should be set it.
+ *
+ **/
+static void skill_validate_equip_requirements(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	nullpo_retv(conf);
+	nullpo_retv(sk);
+
+	struct config_setting_t *t = libconfig->setting_get_member(conf, "Equip");
+
+	if (t != NULL && config_setting_is_group(t)) {
+		skill->validate_equip_requirements_sub_any_flag(t, sk);
+		skill->validate_equip_requirements_sub_items(t, sk);
+	}
+}
+
+/**
  * Validates a required item's config setting name when reading the skill DB.
  *
  * @param name The config setting name to validate.
@@ -22678,6 +23010,7 @@ static void skill_validate_requirements(struct config_setting_t *conf, struct s_
 		skill->validate_state(t, sk);
 		skill->validate_spirit_sphere_cost(t, sk);
 		skill->validate_item_requirements(t, sk);
+		skill->validate_equip_requirements(t, sk);
 	}
 }
 
@@ -23537,6 +23870,9 @@ void skill_defaults(void)
 	skill->get_itemid = skill_get_itemid;
 	skill->get_itemqty = skill_get_itemqty;
 	skill->get_item_any_flag = skill_get_item_any_flag;
+	skill->get_equip_id = skill_get_equip_id;
+	skill->get_equip_amount = skill_get_equip_amount;
+	skill->get_equip_any_flag = skill_get_equip_any_flag;
 	skill->get_zeny = skill_get_zeny;
 	skill->get_num = skill_get_num;
 	skill->get_cast = skill_get_cast;
@@ -23595,6 +23931,7 @@ void skill_defaults(void)
 	skill->cast_fix_sc = skill_castfix_sc;
 	skill->vf_cast_fix = skill_vfcastfix;
 	skill->delay_fix = skill_delay_fix;
+	skill->check_condition_required_equip = skill_check_condition_required_equip;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
 	skill->check_condition_required_items = skill_check_condition_required_items;
 	skill->items_required = skill_items_required;
@@ -23728,6 +24065,10 @@ void skill_defaults(void)
 	skill->validate_item_requirements_sub_items = skill_validate_item_requirements_sub_items;
 	skill->validate_item_requirements_sub_any_flag = skill_validate_item_requirements_sub_any_flag;
 	skill->validate_item_requirements = skill_validate_item_requirements;
+	skill->validate_equip_requirements_sub_item_amount = skill_validate_equip_requirements_sub_item_amount;
+	skill->validate_equip_requirements_sub_items = skill_validate_equip_requirements_sub_items;
+	skill->validate_equip_requirements_sub_any_flag = skill_validate_equip_requirements_sub_any_flag;
+	skill->validate_equip_requirements = skill_validate_equip_requirements;
 	skill->validate_requirements_item_name = skill_validate_requirements_item_name;
 	skill->validate_requirements = skill_validate_requirements;
 	skill->validate_unit_id_sub = skill_validate_unit_id_sub;
