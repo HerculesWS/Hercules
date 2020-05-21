@@ -15640,21 +15640,9 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 	}
 
 	for( i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++ ) {
-		int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
-		if ((skill_id == AM_POTIONPITCHER || skill_id == CR_SLIMPITCHER || skill_id == CR_CULTIVATION) && i != item_idx)
-			continue;
-
 		switch( skill_id ) {
 			case AM_CALLHOMUN:
 				if (sd->status.hom_id) //Don't delete items when hom is already out.
-					continue;
-				break;
-			case NC_SHAPESHIFT:
-				if( i < 4 )
-					continue;
-				break;
-			case WZ_FIREPILLAR: // celest
-				if (skill_lv <= 5) // no gems required at level 1-5
 					continue;
 				break;
 			case AB_ADORAMUS:
@@ -15663,21 +15651,6 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 				break;
 			case WL_COMET:
 				if (itemid_isgemstone(skill->get_itemid(skill_id, i)) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) != 0)
-					continue;
-				break;
-			case GN_FIRE_EXPANSION:
-				if( i < 5 )
-					continue;
-				break;
-			case SO_SUMMON_AGNI:
-			case SO_SUMMON_AQUA:
-			case SO_SUMMON_VENTUS:
-			case SO_SUMMON_TERA:
-			case SO_WATER_INSIGNIA:
-			case SO_FIRE_INSIGNIA:
-			case SO_WIND_INSIGNIA:
-			case SO_EARTH_INSIGNIA:
-				if( i < 3 )
 					continue;
 				break;
 			default:
@@ -15723,39 +15696,6 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 			}
 			break;
 		}
-	}
-
-	/* requirements are level-dependent */
-	switch( skill_id ) {
-		case NC_SHAPESHIFT:
-		case GN_FIRE_EXPANSION:
-		case SO_SUMMON_AGNI:
-		case SO_SUMMON_AQUA:
-		case SO_SUMMON_VENTUS:
-		case SO_SUMMON_TERA:
-		case SO_WATER_INSIGNIA:
-		case SO_FIRE_INSIGNIA:
-		case SO_WIND_INSIGNIA:
-		case SO_EARTH_INSIGNIA:
-			req.itemid[skill_lv - 1] = skill->get_itemid(skill_id, skill_lv - 1);
-			req.amount[skill_lv - 1] = skill->get_itemqty(skill_id, skill_lv - 1, skill_lv);
-			break;
-	}
-	if (skill_id == NC_REPAIR) {
-		switch(skill_lv) {
-			case 1:
-			case 2:
-				req.itemid[1] = ITEMID_REPAIRA;
-				break;
-			case 3:
-			case 4:
-				req.itemid[1] = ITEMID_REPAIRB;
-				break;
-			case 5:
-				req.itemid[1] = ITEMID_REPAIRC;
-				break;
-		}
-		req.amount[1] = 1;
 	}
 
 	// Check for cost reductions due to skills & SCs
