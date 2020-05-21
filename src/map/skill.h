@@ -1741,6 +1741,15 @@ enum autocast_type {
  * Structures
  **/
 
+/** A container holding all required items. **/
+struct skill_required_item_data {
+	struct {
+		int id;
+		int amount[MAX_SKILL_LEVEL];
+	} item[MAX_SKILL_ITEM_REQUIRE];
+	bool any[MAX_SKILL_LEVEL];
+};
+
 struct skill_condition {
 	int weapon,ammo,ammo_qty,hp,sp,zeny,spiritball,mhp,state;
 	int itemid[MAX_SKILL_ITEM_REQUIRE],amount[MAX_SKILL_ITEM_REQUIRE];
@@ -1776,7 +1785,6 @@ struct s_skill_db {
 	int ammo_qty[MAX_SKILL_LEVEL];
 	int state[MAX_SKILL_LEVEL];
 	int spiritball[MAX_SKILL_LEVEL];
-	int itemid[MAX_SKILL_ITEM_REQUIRE],amount[MAX_SKILL_ITEM_REQUIRE];
 	int castnodex[MAX_SKILL_LEVEL], delaynodex[MAX_SKILL_LEVEL];
 	int unit_id[MAX_SKILL_LEVEL][2];
 	int unit_layout_type[MAX_SKILL_LEVEL];
@@ -1784,6 +1792,7 @@ struct s_skill_db {
 	int unit_interval[MAX_SKILL_LEVEL];
 	int unit_target[MAX_SKILL_LEVEL];
 	int unit_flag;
+	struct skill_required_item_data req_items;
 };
 
 struct s_skill_unit_layout {
@@ -1986,7 +1995,7 @@ struct skill_interface {
 	int (*get_state) (int skill_id, int skill_lv);
 	int (*get_spiritball) (int skill_id, int skill_lv);
 	int (*get_itemid) (int skill_id, int item_idx);
-	int (*get_itemqty) (int skill_id, int item_idx);
+	int (*get_itemqty) (int skill_id, int item_idx, int skill_lv);
 	int (*get_zeny) (int skill_id, int skill_lv);
 	int (*get_num) (int skill_id, int skill_lv);
 	int (*get_cast) (int skill_id, int skill_lv);
@@ -2171,7 +2180,11 @@ struct skill_interface {
 	int (*validate_state_sub) (const char *state);
 	void (*validate_state) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_spirit_sphere_cost) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_item_requirements_sub_item_amount) (struct config_setting_t *conf, struct s_skill_db *sk, int item_index);
+	void (*validate_item_requirements_sub_items) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_item_requirements_sub_any_flag) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_item_requirements) (struct config_setting_t *conf, struct s_skill_db *sk);
+	int (*validate_requirements_item_name) (const char *name);
 	void (*validate_requirements) (struct config_setting_t *conf, struct s_skill_db *sk);
 	int (*validate_unit_id_sub) (int unit_id);
 	void (*validate_unit_id) (struct config_setting_t *conf, struct s_skill_db *sk);
