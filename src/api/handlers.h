@@ -28,8 +28,6 @@
 #define handler(method, url, func)
 #endif  // handler
 
-// need also method
-
 handler(HTTP_POST, "/userconfig/load", aclif->parse_userconfig_load);
 
 #endif /* API_HANDLERS_H */

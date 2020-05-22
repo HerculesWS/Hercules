@@ -141,7 +141,7 @@ static int handler_on_url(struct http_parser *parser, const char *at, size_t len
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	aclif->set_url(fd, at, length);
+	aclif->set_url(fd, parser->method, at, length);
 
 	if (isDebug) {
 		ShowInfo("Url: %d: %.*s\n", parser->method, (int)length, at);

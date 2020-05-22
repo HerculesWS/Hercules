@@ -29,6 +29,7 @@
 #include <stdarg.h>
 
 #define MAX_URL_SIZE 30
+#define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 
 /**
  * aclif.c Interface
@@ -40,7 +41,7 @@ struct aclif_interface {
 	uint16 api_port;
 	char api_ip_str[128];
 	int api_fd;
-	struct DBMap *handlers_db;
+	struct DBMap *handlers_db[HTTP_MAX_PROTOCOL];
 
 	/* core */
 	int (*init) (bool minimal);
@@ -54,7 +55,7 @@ struct aclif_interface {
 	int (*session_delete) (int fd);
 	void (*load_handlers) (void);
 	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func);
-	void (*set_url) (int fd, const char *url, size_t size);
+	void (*set_url) (int fd, enum http_method method, const char *url, size_t size);
 
 	bool (*parse_userconfig_load) (int fd, struct api_session_data *sd);
 };

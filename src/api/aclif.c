@@ -73,12 +73,13 @@ static int aclif_parse(int fd)
 	ShowInfo("parse called: %d\n", fd);
 	if (!httpparser->parse(fd))
 	{
-		printf("http parser error\n");
+		ShowError("http parser error: %d\n", fd);
 		sockt->eof(fd);
 		sockt->close(fd);
 		return 0;
 	}
 	if (sockt->session[fd]->flag.eof != 0) {
+		ShowInfo("closed: %d\n", fd);
 		sockt->close(fd);
 	}
 
@@ -111,7 +112,9 @@ static int aclif_session_delete(int fd)
 
 static void aclif_load_handlers(void)
 {
-	aclif->handlers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
+	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
+		aclif->handlers_db[i] = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
+	}
 #define handler(method, url, func) aclif->add_handler(method, url, func)
 #include "api/handlers.h"
 #undef handler
@@ -121,17 +124,21 @@ static void aclif_add_handler(enum http_method method, const char *url, HttpPars
 {
 	nullpo_retv(url);
 	nullpo_retv(func);
+	Assert_retv(method >= 0 && method < HTTP_MAX_PROTOCOL);
 
 	ShowWarning("Add url: %s\n", url);
 	struct HttpHandler *handler = aCalloc(1, sizeof(struct HttpHandler));
 	handler->method = method;
 	handler->func = func;
-	strdb_put(aclif->handlers_db, url, handler);
+
+	strdb_put(aclif->handlers_db[method], url, handler);
 }
 
-void aclif_set_url(int fd, const char *url, size_t size)
+void aclif_set_url(int fd, enum http_method method, const char *url, size_t size)
 {
 	nullpo_retv(url);
+	Assert_retv(method >= 0 && method < HTTP_MAX_PROTOCOL);
+
 	if (size > MAX_URL_SIZE) {
 		sockt->close(fd);
 		return;
@@ -143,14 +150,14 @@ void aclif_set_url(int fd, const char *url, size_t size)
 	sd->url = aMalloc(size + 1);
 	safestrncpy(sd->url, url, size + 1);
 
-	struct HttpHandler *handler = strdb_get(aclif->handlers_db, sd->url);
+	struct HttpHandler *handler = strdb_get(aclif->handlers_db[method], sd->url);
 	if (handler == NULL) {
-		ShowWarning("Unknown url: %s\n", sd->url);
+		ShowWarning("Unknown url %d: %s\n", fd, sd->url);
 		sockt->eof(fd);
 		return;
 	}
 	if (handler->func == NULL) {
-		ShowError("found NULL handler for url: %s\n", url);
+		ShowError("found NULL handler for url %d: %s\n", fd, url);
 		Assert_report(0);
 		sockt->eof(fd);
 		return;
@@ -166,7 +173,8 @@ void aclif_set_url(int fd, const char *url, size_t size)
 
 static bool aclif_parse_userconfig_load(int fd, struct api_session_data *sd)
 {
-	ShowInfo("aclif_parse_userconfig_load called\n");
+	nullpo_retr(false, sd);
+	ShowInfo("aclif_parse_userconfig_load called: %d\n", sd->parser.method);
 	return true;
 }
 
@@ -191,8 +199,10 @@ static int do_init_aclif(bool minimal)
 
 static void do_final_aclif(void)
 {
-	db_destroy(aclif->handlers_db);
-	aclif->handlers_db = NULL;
+	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
+		db_destroy(aclif->handlers_db[i]);
+		aclif->handlers_db[i] = NULL;
+	}
 }
 
 void aclif_defaults(void)
@@ -201,7 +211,9 @@ void aclif_defaults(void)
 	/* vars */
 	aclif->bind_ip = INADDR_ANY;
 	aclif->api_port = 7000;
-	aclif->handlers_db = NULL;
+	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
+		aclif->handlers_db[i] = NULL;
+	}
 	/* core */
 	aclif->init = do_init_aclif;
 	aclif->final = do_final_aclif;
