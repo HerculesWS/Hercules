@@ -194,6 +194,7 @@ static int handler_on_body(struct http_parser *parser, const char *at, size_t le
 		return 0;
 
 	sd->flag.body = 1;
+	sd->flag.ready = 1;
 
 	if (isDebug) {
 		ShowInfo("Body: %.*s\n", (int)length, at);

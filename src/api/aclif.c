@@ -82,31 +82,46 @@ static int aclif_parse(int fd)
 		sockt->close(fd);
 		return 0;
 	}
-	if (sockt->session[fd]->flag.eof != 0) {
+	if (!sockt->session[fd] || sockt->session[fd]->flag.eof != 0) {
 		ShowInfo("closed: %d\n", fd);
 		sockt->close(fd);
 		return 0;
 	}
-	if (sd->flag.body == 1) {
-		if (sd->handler == NULL) {
-			ShowError("http handler is NULL: %d\n", fd);
-			sockt->close(fd);
+	if (sd->flag.ready == 1) {
+		// body already received. all data ready
+		aclif->parse_request(fd, sd);
+	} else if (sd->flag.message_complete == 1) {
+		// headers and message received
+		const char *len = strdb_get(sd->headers_db, "Content-Length");
+		if (len == NULL || !strcmp(len, "0")) {
+			sd->flag.ready = 1;
+			aclif->parse_request(fd, sd);
 			return 0;
 		}
-		if (sd->handler->func == NULL) {
-			ShowError("http handler function is NULL: %d\n", fd);
-			sockt->close(fd);
-			return 0;
-		}
-		if (!sd->handler->func(fd, sd)) {
-			aclif->reportError(fd, sd);
-			sockt->close(fd);
-			return 0;
-		}
-		if (sd->auto_close)
-			sockt->close(fd);
 	}
 
+	return 0;
+}
+
+static int aclif_parse_request(int fd, struct api_session_data *sd)
+{
+	if (sd->handler == NULL) {
+		ShowError("http handler is NULL: %d\n", fd);
+		sockt->close(fd);
+		return 0;
+	}
+	if (sd->handler->func == NULL) {
+		ShowError("http handler function is NULL: %d\n", fd);
+		sockt->close(fd);
+		return 0;
+	}
+	if (!sd->handler->func(fd, sd)) {
+		aclif->reportError(fd, sd);
+		sockt->close(fd);
+		return 0;
+	}
+	if (sd->auto_close)
+		sockt->close(fd);
 	return 0;
 }
 
@@ -171,7 +186,8 @@ void aclif_set_url(int fd, enum http_method method, const char *url, size_t size
 	Assert_retv(method >= 0 && method < HTTP_MAX_PROTOCOL);
 
 	if (size > MAX_URL_SIZE) {
-		sockt->close(fd);
+		ShowWarning("Url size too big %d: %lu\n", fd, size);
+		sockt->eof(fd);
 		return;
 	}
 	struct api_session_data *sd = sockt->session[fd]->session_data;
@@ -206,7 +222,7 @@ void aclif_set_header_name(int fd, const char *name, size_t size)
 
 	if (size > MAX_HEADER_NAME_SIZE) {
 		ShowWarning("Header name size too big %d: %lu\n", fd, size);
-		sockt->close(fd);
+		sockt->eof(fd);
 		return;
 	}
 	struct api_session_data *sd = sockt->session[fd]->session_data;
@@ -222,7 +238,7 @@ void aclif_set_header_value(int fd, const char *value, size_t size)
 
 	if (size > MAX_HEADER_VALUE_SIZE) {
 		ShowWarning("Header value size too big %d: %lu\n", fd, size);
-		sockt->close(fd);
+		sockt->eof(fd);
 		return;
 	}
 	struct api_session_data *sd = sockt->session[fd]->session_data;
@@ -276,6 +292,7 @@ void aclif_defaults(void)
 	aclif->final = do_final_aclif;
 	aclif->setip = aclif_setip;
 	aclif->parse = aclif_parse;
+	aclif->parse_request = aclif_parse_request;
 	aclif->connected = aclif_connected;
 	aclif->session_delete = aclif_session_delete;
 	aclif->load_handlers = aclif_load_handlers;

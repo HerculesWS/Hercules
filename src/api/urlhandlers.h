@@ -33,3 +33,4 @@
 #endif  // handler
 
 handler(HTTP_POST, "/userconfig/load", userconfig_load);
+handler(HTTP_GET, "/test/url", test_url);

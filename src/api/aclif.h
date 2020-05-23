@@ -30,7 +30,7 @@
 
 #define MAX_URL_SIZE 30
 #define MAX_HEADER_NAME_SIZE 30
-#define MAX_HEADER_VALUE_SIZE 100
+#define MAX_HEADER_VALUE_SIZE 200
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 
 /**
@@ -53,6 +53,7 @@ struct aclif_interface {
 	void (*setport) (uint16 port);
 	uint32 (*refresh_ip) (void);
 	int (*parse) (int fd);
+	int (*parse_request) (int fd, struct api_session_data *sd);
 	int (*connected) (int fd);
 	int (*session_delete) (int fd);
 	void (*load_handlers) (void);

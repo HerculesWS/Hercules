@@ -47,11 +47,28 @@ struct handlers_interface *handlers;
 
 HTTPURL(userconfig_load)
 {
-	ShowInfo("handlers_parse_userconfig_load called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("userconfig_load called %d: %d\n", fd, sd->parser.method);
 
-	ShowInfo("user agent: %s\n", (const char*)strdb_get(sd->headers_db, "User-Agent"));
+	char buf[1000];
+	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *format = "<html>Hercules test.<br/>Your user agent is: %s<br/></html>\n";
+	safesnprintf(buf, sizeof(buf), format, user_agent);
 
-	httpsender->send_html(fd, "<html>test line</html>\n");
+	httpsender->send_html(fd, buf);
+
+	return true;
+}
+
+HTTPURL(test_url)
+{
+	ShowInfo("test_url called %d: %d\n", fd, sd->parser.method);
+
+	char buf[1000];
+	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *format = "<html>Hercules test.<br/>Your user agent is: %s<br/></html>\n";
+	safesnprintf(buf, sizeof(buf), format, user_agent);
+
+	httpsender->send_html(fd, buf);
 
 	return true;
 }
