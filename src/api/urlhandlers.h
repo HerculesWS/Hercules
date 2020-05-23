@@ -2,8 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2020 Hercules Dev Team
- * Copyright (C) Athena Dev Teams
+ * Copyright (C) 2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,27 +20,14 @@
 #ifndef API_HANDLERS_H
 #define API_HANDLERS_H
 
-#include "api/api.h"
 #include "common/hercules.h"
-#include "common/db.h"
-#include "api/httphandler.h"
 
-#include <stdarg.h>
+#include <http-parser/http_parser.h>
 
-/**
- * handlers.c Interface
- **/
-struct handlers_interface {
-	int (*init) (bool minimal);
-	void (*final) (void);
+#ifndef handler
+#define handler(method, url, func)
+#endif  // handler
 
-	bool (*parse_userconfig_load) (int fd, struct api_session_data *sd);
-};
-
-#ifdef HERCULES_CORE
-void handlers_defaults(void);
-#endif // HERCULES_CORE
-
-HPShared struct handlers_interface *handlers;
+handler(HTTP_POST, "/userconfig/load", userconfig_load);
 
 #endif /* API_HANDLERS_H */

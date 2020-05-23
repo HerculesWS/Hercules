@@ -32,9 +32,6 @@
 #define MAX_HEADER_NAME_SIZE 30
 #define MAX_HEADER_VALUE_SIZE 100
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
-#define HTTPURL(x) \
-	static bool aclif_parse_ ## x(int fd, struct api_session_data *sd) __attribute__((nonnull (2))); \
-	static bool aclif_parse_ ## x(int fd, struct api_session_data *sd)
 
 /**
  * aclif.c Interface

@@ -39,6 +39,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 #include "api/apisessiondata.h"
+#include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
 
@@ -145,8 +146,8 @@ static void aclif_load_handlers(void)
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
 	}
-#define handler(method, url, func) aclif->add_handler(method, url, aclif->parse_ ## func)
-#include "api/handlers.h"
+#define handler(method, url, func) aclif->add_handler(method, url, handlers->parse_ ## func)
+#include "api/urlhandlers.h"
 #undef handler
 }
 
@@ -234,20 +235,6 @@ void aclif_reportError(int fd, struct api_session_data *sd)
 {
 }
 
-
-// parsers
-
-HTTPURL(userconfig_load)
-{
-	ShowInfo("aclif_parse_userconfig_load called %d: %d\n", fd, sd->parser.method);
-
-	ShowInfo("user agent: %s\n", (const char*)strdb_get(sd->headers_db, "User-Agent"));
-
-	httpsender->send_html(fd, "<html>test line</html>\n");
-
-	return true;
-}
-
 static int do_init_aclif(bool minimal)
 {
 	if (minimal)
@@ -298,6 +285,4 @@ void aclif_defaults(void)
 	aclif->set_header_value = aclif_set_header_value;
 
 	aclif->reportError = aclif_reportError;
-
-	aclif->parse_userconfig_load = aclif_parse_userconfig_load;
 }
