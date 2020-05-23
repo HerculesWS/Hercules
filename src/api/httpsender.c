@@ -52,6 +52,7 @@
 
 static struct httpsender_interface httpsender_s;
 struct httpsender_interface *httpsender;
+static char tmp_buffer[MAX_RESPONSE_SIZE];
 
 static int do_init_httpsender(bool minimal)
 {
@@ -64,20 +65,20 @@ static void do_final_httpsender(void)
 
 static bool httpsender_send_html(int fd, const char *data)
 {
+	ShowError("httpsender_send_html\n");
 	nullpo_retr(false, data);
 
 	const int sz = strlen(data);
-	WFIFOHEAD(fd, 200 + sz);
-	WFIFOADDSTR(fd, "HTTP/1.1 200 OK\n");
-	WFIFOADDSTR(fd, "Server: herc.ws/1.0\n");
-	WFIFOADDSTR(fd, "Content-Type: text/html\n");
-
-	char buf[50];
-	safesnprintf(buf, 50, "Content-Length: %d\n", sz);
-
-	WFIFOADDSTR(fd, buf);
-	WFIFOADDSTR(fd, "\n");
-	WFIFOADDSTR(fd, data);
+	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+		"HTTP/1.1 200 OK\n"
+		"Server: %s\n"
+		"Content-Type: text/html\n"
+		"Content-Length: %d\n"
+		"\n"
+		"%s",
+		httpsender->server_name, sz, data);
+	WFIFOHEAD(fd, buf_sz);
+	WFIFOADDSTR(fd, tmp_buffer);
 	sockt->flush(fd);
 	return true;
 }
@@ -86,8 +87,12 @@ void httpsender_defaults(void)
 {
 	httpsender = &httpsender_s;
 
+	httpsender->tmp_buffer = tmp_buffer;
+	httpsender->server_name = "herc.ws/1.0";
+
 	httpsender->init = do_init_httpsender;
 	httpsender->final = do_final_httpsender;
 
 	httpsender->send_html = httpsender_send_html;
+
 }

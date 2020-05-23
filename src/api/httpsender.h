@@ -24,12 +24,16 @@
 
 #include <stdarg.h>
 
+#define MAX_RESPONSE_SIZE 50000
+
 struct api_session_data;
 
 /**
  * httpsender.c Interface
  **/
 struct httpsender_interface {
+	char *tmp_buffer;
+	char *server_name;
 	int (*init) (bool minimal);
 	void (*final) (void);
 
