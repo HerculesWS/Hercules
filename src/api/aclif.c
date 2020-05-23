@@ -87,17 +87,9 @@ static int aclif_parse(int fd)
 		sockt->close(fd);
 		return 0;
 	}
-	if (sd->flag.ready == 1) {
-		// body already received. all data ready
+	if (sd->flag.message_complete == 1) {
 		aclif->parse_request(fd, sd);
-	} else if (sd->flag.message_complete == 1) {
-		// headers and message received
-		const char *len = strdb_get(sd->headers_db, "Content-Length");
-		if (len == NULL || !strcmp(len, "0")) {
-			sd->flag.ready = 1;
-			aclif->parse_request(fd, sd);
-			return 0;
-		}
+		return 0;
 	}
 
 	return 0;

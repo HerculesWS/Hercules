@@ -39,7 +39,6 @@ struct api_session_data {
 		uint url : 1;               // url parsing complete
 		uint status : 1;            // status code parsing complete
 		uint body : 1;              // body parsing complete
-		uint ready : 1;             // all parsing complete
 	} flag;
 	char *url;
 	struct HttpHandler *handler;
