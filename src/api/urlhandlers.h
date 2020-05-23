@@ -17,17 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef API_HANDLERS_H
-#define API_HANDLERS_H
-
-#warning test
-
-#include "common/hercules.h"
-
-#include <http-parser/http_parser.h>
-
-#endif /* API_HANDLERS_H */
-
 #ifndef handler
 #define handler(method, url, func)
 #endif  // handler
