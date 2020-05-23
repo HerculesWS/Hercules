@@ -24,7 +24,9 @@
 
 #include <stdarg.h>
 
+#ifndef MAX_RESPONSE_SIZE
 #define MAX_RESPONSE_SIZE 50000
+#endif
 
 struct api_session_data;
 

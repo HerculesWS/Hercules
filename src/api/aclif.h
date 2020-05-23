@@ -28,10 +28,18 @@
 
 #include <stdarg.h>
 
+#ifndef MAX_URL_SIZE
 #define MAX_URL_SIZE 30
+#endif
+#ifndef MAX_HEADER_NAME_SIZE
 #define MAX_HEADER_NAME_SIZE 30
+#endif
+#ifndef MAX_HEADER_VALUE_SIZE
 #define MAX_HEADER_VALUE_SIZE 200
+#endif
+#ifndef HTTP_MAX_PROTOCOL
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
+#endif
 
 /**
  * aclif.c Interface
