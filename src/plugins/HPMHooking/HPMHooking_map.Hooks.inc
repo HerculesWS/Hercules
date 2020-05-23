@@ -85816,15 +85816,15 @@ int HP_status_change_start_sub(struct block_list *src, struct block_list *bl, en
 	}
 	return retVal___;
 }
-int HP_status_change_end_(struct block_list *bl, enum sc_type type, int tid, const char *file, int line) {
+int HP_status_change_end_(struct block_list *bl, enum sc_type type, int tid) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_status_change_end__pre > 0) {
-		int (*preHookFunc) (struct block_list **bl, enum sc_type *type, int *tid, const char **file, int *line);
+		int (*preHookFunc) (struct block_list **bl, enum sc_type *type, int *tid);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_end__pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_status_change_end__pre[hIndex].func;
-			retVal___ = preHookFunc(&bl, &type, &tid, &file, &line);
+			retVal___ = preHookFunc(&bl, &type, &tid);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -85832,13 +85832,13 @@ int HP_status_change_end_(struct block_list *bl, enum sc_type type, int tid, con
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.status.change_end_(bl, type, tid, file, line);
+		retVal___ = HPMHooks.source.status.change_end_(bl, type, tid);
 	}
 	if (HPMHooks.count.HP_status_change_end__post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl, enum sc_type type, int tid, const char *file, int line);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, enum sc_type type, int tid);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_end__post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_change_end__post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bl, type, tid, file, line);
+			retVal___ = postHookFunc(retVal___, bl, type, tid);
 		}
 	}
 	return retVal___;

@@ -10788,7 +10788,7 @@ static int status_change_clear(struct block_list *bl, int type)
 /*==========================================
  * Special condition we want to effectuate, check before ending a status.
  *------------------------------------------*/
-static int status_change_end_(struct block_list *bl, enum sc_type type, int tid, const char *file, int line)
+static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 {
 	struct map_session_data *sd;
 	struct status_change *sc;

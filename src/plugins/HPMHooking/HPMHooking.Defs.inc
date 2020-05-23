@@ -7898,8 +7898,8 @@ typedef int (*HPMHOOK_pre_status_change_start) (struct block_list **src, struct 
 typedef int (*HPMHOOK_post_status_change_start) (int retVal___, struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag);
 typedef int (*HPMHOOK_pre_status_change_start_sub) (struct block_list **src, struct block_list **bl, enum sc_type *type, int *rate, int *val1, int *val2, int *val3, int *val4, int *tick, int *total_tick, int *flag);
 typedef int (*HPMHOOK_post_status_change_start_sub) (int retVal___, struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag);
-typedef int (*HPMHOOK_pre_status_change_end_) (struct block_list **bl, enum sc_type *type, int *tid, const char **file, int *line);
-typedef int (*HPMHOOK_post_status_change_end_) (int retVal___, struct block_list *bl, enum sc_type type, int tid, const char *file, int line);
+typedef int (*HPMHOOK_pre_status_change_end_) (struct block_list **bl, enum sc_type *type, int *tid);
+typedef int (*HPMHOOK_post_status_change_end_) (int retVal___, struct block_list *bl, enum sc_type type, int tid);
 typedef bool (*HPMHOOK_pre_status_is_immune_to_status) (struct status_change **sc, enum sc_type *type);
 typedef bool (*HPMHOOK_post_status_is_immune_to_status) (bool retVal___, struct status_change *sc, enum sc_type type);
 typedef bool (*HPMHOOK_pre_status_is_boss_resist_sc) (enum sc_type *type);
