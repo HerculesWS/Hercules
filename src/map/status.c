@@ -1201,7 +1201,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 			if ((sce=sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF) {
 				struct skill_unit_group* sg = skill->id2group(sce->val4);
 				if (sg) {
-					skill->del_unitgroup(sg, ALC_MARK);
+					skill->del_unitgroup(sg);
 					sce->val4 = 0;
 					status_change_end(target, SC_GRAVITATION, INVALID_TIMER);
 				}
@@ -10979,7 +10979,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 					sce->val2 = 0;
 
 					if( group )
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 				}
 
 				if ((sce->val1&0xFFFF) == CG_MOONLIT)
@@ -11083,7 +11083,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				struct skill_unit_group* group = skill->id2group(sce->val3);
 				sce->val3 = 0;
 				if( group )
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_HERMODE:
@@ -11102,7 +11102,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				struct skill_unit_group* group = skill->id2group(sce->val4);
 				sce->val4 = 0;
 				if( group ) /* might have been cleared before status ended, e.g. land protector */
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_KAAHI:
@@ -11200,7 +11200,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				struct skill_unit_group* group = skill->id2group(sce->val2);
 				sce->val2 = 0;
 				if (group) /* might have been cleared before status ended, e.g. land protector */
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_BANDING:
@@ -11208,7 +11208,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				struct skill_unit_group *group = skill->id2group(sce->val4);
 				sce->val4 = 0;
 				if( group ) /* might have been cleared before status ended, e.g. land protector */
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_CURSEDCIRCLE_ATKER:

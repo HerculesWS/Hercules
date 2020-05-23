@@ -2832,18 +2832,18 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				d->dmg_lv = ATK_BLOCK;
 				if(src_skill_id == MH_STEINWAND){
 					if (--group->val2<=0)
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 					if( (group->val3 - damage) > 0 )
 						group->val3 -= (int)cap_value(damage, INT_MIN, INT_MAX);
 					else
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 					return 0;
 				}
 				if( skill_id == SO_ELEMENTAL_SHIELD ) {
 					if ( ( group->val2 - damage) > 0 ) {
 						group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 					} else
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 					return 0;
 				}
 				/**
@@ -2853,12 +2853,12 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				if ( ( group->val2 - damage) > 0 ) {
 					group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 				} else
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 				if (--group->val3<=0)
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			#else
 				if (--group->val2<=0)
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			#endif
 				return 0;
 			}

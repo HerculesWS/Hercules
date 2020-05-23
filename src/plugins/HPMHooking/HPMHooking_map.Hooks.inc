@@ -78235,15 +78235,15 @@ struct skill_unit_group* HP_skill_init_unitgroup(struct block_list *src, int cou
 	}
 	return retVal___;
 }
-int HP_skill_del_unitgroup(struct skill_unit_group *group, const char *file, int line, const char *func) {
+int HP_skill_del_unitgroup(struct skill_unit_group *group) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_skill_del_unitgroup_pre > 0) {
-		int (*preHookFunc) (struct skill_unit_group **group, const char **file, int *line, const char **func);
+		int (*preHookFunc) (struct skill_unit_group **group);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_del_unitgroup_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_skill_del_unitgroup_pre[hIndex].func;
-			retVal___ = preHookFunc(&group, &file, &line, &func);
+			retVal___ = preHookFunc(&group);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -78251,13 +78251,13 @@ int HP_skill_del_unitgroup(struct skill_unit_group *group, const char *file, int
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.del_unitgroup(group, file, line, func);
+		retVal___ = HPMHooks.source.skill.del_unitgroup(group);
 	}
 	if (HPMHooks.count.HP_skill_del_unitgroup_post > 0) {
-		int (*postHookFunc) (int retVal___, struct skill_unit_group *group, const char *file, int line, const char *func);
+		int (*postHookFunc) (int retVal___, struct skill_unit_group *group);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_del_unitgroup_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_skill_del_unitgroup_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, group, file, line, func);
+			retVal___ = postHookFunc(retVal___, group);
 		}
 	}
 	return retVal___;

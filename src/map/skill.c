@@ -12535,7 +12535,7 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 
 	if (!group->alive_count) {
 		//No cells? Something that was blocked completely by Land Protector?
-		skill->del_unitgroup(group,ALC_MARK);
+		skill->del_unitgroup(group);
 		return NULL;
 	}
 
@@ -12651,7 +12651,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 					unsigned short m = sg->val3;
 
 					if( --count <= 0 )
-						skill->del_unitgroup(sg,ALC_MARK);
+						skill->del_unitgroup(sg);
 
 					if ( map->mapindex2mapid(sg->val3) == sd->bl.m && x == sd->bl.x && y == sd->bl.y )
 						working = 1;/* we break it because officials break it, lovely stuff. */
@@ -12957,7 +12957,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 					sg->val1--;
 			}
 			if (sg->val1 <= 0)
-				skill->del_unitgroup(sg, ALC_MARK);
+				skill->del_unitgroup(sg);
 			break;
 
 		case UNT_EVILLAND:
@@ -16644,7 +16644,7 @@ static int skill_clear_group(struct block_list *bl, int flag)
 
 	}
 	for (i=0;i<count;i++)
-		skill->del_unitgroup(group[i],ALC_MARK);
+		skill->del_unitgroup(group[i]);
 	return count;
 }
 
@@ -17292,7 +17292,7 @@ static int skill_delunit(struct skill_unit *su)
 	map->deliddb(&su->bl);
 	idb_remove(skill->unit_db, su->bl.id);
 	if(--group->alive_count==0)
-		skill->del_unitgroup(group,ALC_MARK);
+		skill->del_unitgroup(group);
 
 	return 0;
 }
@@ -17351,7 +17351,7 @@ static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int 
 				j = i;
 			}
 		}
-		skill->del_unitgroup(ud->skillunit[j],ALC_MARK);
+		skill->del_unitgroup(ud->skillunit[j]);
 		//Since elements must have shifted, we use the last slot.
 		i = MAX_SKILLUNITGROUP-1;
 	}
@@ -17390,17 +17390,12 @@ static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int 
 /*==========================================
  *
  *------------------------------------------*/
-static int skill_delunitgroup(struct skill_unit_group *group, const char *file, int line, const char *func)
+static int skill_delunitgroup(struct skill_unit_group *group)
 {
 	struct block_list* src;
 	struct unit_data *ud;
 	int i,j;
 	struct map_session_data *sd = NULL;
-
-	if( group == NULL ) {
-		ShowDebug("skill_delunitgroup: group is NULL (source=%s:%d, %s)! Please report this! (#3504)\n", file, line, func);
-		return 0;
-	}
 
 	src = map->id2bl(group->src_id);
 	ud = unit->bl2ud(src);
@@ -17533,7 +17528,7 @@ static int skill_clear_unitgroup(struct block_list *src)
 	nullpo_ret(ud);
 
 	while (ud->skillunit[0])
-		skill->del_unitgroup(ud->skillunit[0],ALC_MARK);
+		skill->del_unitgroup(ud->skillunit[0]);
 
 	return 1;
 }

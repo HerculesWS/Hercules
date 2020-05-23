@@ -1519,7 +1519,7 @@ static void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id
 	if( !skill_lv )
 		return;
 	if (sd->sc.data[type] && (group = skill->id2group(sd->sc.data[type]->val4)) != NULL) {
-		skill->del_unitgroup(group,ALC_MARK);
+		skill->del_unitgroup(group);
 		status_change_end(&sd->bl,type,INVALID_TIMER);
 	}
 	group = skill->unitsetting(&sd->bl,skill_id,skill_lv,sd->bl.x,sd->bl.y,0);
@@ -2069,7 +2069,7 @@ static int guild_break(struct map_session_data *sd, const char *name)
 			}
 		}
 		for(i = 0; i < count; i++) { // FIXME: Why is this not done in the above loop?
-			skill->del_unitgroup(groups[i],ALC_MARK);
+			skill->del_unitgroup(groups[i]);
 		}
 	}
 
