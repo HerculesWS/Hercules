@@ -44,6 +44,8 @@ struct api_session_data {
 	struct HttpHandler *handler;
 	char *temp_header;
 	struct DBMap *headers_db;
+	char *body;
+	size_t body_size;
 	bool auto_close;
 };
 

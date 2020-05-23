@@ -143,6 +143,8 @@ static int aclif_session_delete(int fd)
 	sd->temp_header = NULL;
 	db_destroy(sd->headers_db);
 	sd->headers_db = NULL;
+	aFree(sd->body);
+	sd->body = NULL;
 
 	httpparser->delete_parser(fd);
 	return 0;
@@ -206,6 +208,25 @@ void aclif_set_url(int fd, enum http_method method, const char *url, size_t size
 	sd->handler = handler;
 
 	ShowWarning("url: %s\n", sd->url);
+}
+
+void aclif_set_body(int fd, const char *body, size_t size)
+{
+	nullpo_retv(body);
+
+	if (size > MAX_BODY_SIZE) {
+		ShowWarning("Body size too big %d: %lu\n", fd, size);
+		sockt->eof(fd);
+		return;
+	}
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_retv(sd);
+
+	aFree(sd->body);
+	sd->body = aMalloc(size + 1);
+	memcpy(sd->body, body, size);
+	sd->body[size] = 0;
+	sd->body_size = size;
 }
 
 void aclif_set_header_name(int fd, const char *name, size_t size)
@@ -290,6 +311,7 @@ void aclif_defaults(void)
 	aclif->load_handlers = aclif_load_handlers;
 	aclif->add_handler = aclif_add_handler;
 	aclif->set_url = aclif_set_url;
+	aclif->set_body = aclif_set_body;
 	aclif->set_header_name = aclif_set_header_name;
 	aclif->set_header_value = aclif_set_header_value;
 

@@ -31,6 +31,9 @@
 #ifndef MAX_URL_SIZE
 #define MAX_URL_SIZE 30
 #endif
+#ifndef MAX_BODY_SIZE
+#define MAX_BODY_SIZE 100000
+#endif
 #ifndef MAX_HEADER_NAME_SIZE
 #define MAX_HEADER_NAME_SIZE 30
 #endif
@@ -67,6 +70,7 @@ struct aclif_interface {
 	void (*load_handlers) (void);
 	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func);
 	void (*set_url) (int fd, enum http_method method, const char *url, size_t size);
+	void (*set_body) (int fd, const char *body, size_t size);
 	void (*set_header_name) (int fd, const char *name, size_t size);
 	void (*set_header_value) (int fd, const char *value, size_t size);
 	void (*reportError) (int fd, struct api_session_data *sd);

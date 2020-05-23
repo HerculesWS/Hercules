@@ -199,6 +199,8 @@ static int handler_on_body(struct http_parser *parser, const char *at, size_t le
 		ShowInfo("Body: %.*s\n", (int)length, at);
 		ShowInfo("end body\n");
 	}
+
+	aclif->set_body(fd, at, length);
 	return 0;
 }
 
