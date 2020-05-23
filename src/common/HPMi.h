@@ -49,7 +49,7 @@ struct s_HPMDataCheck {
 	int type;
 };
 
-#define SERVER_TYPE_ALL (SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP)
+#define SERVER_TYPE_ALL (SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP|SERVER_TYPE_API)
 
 enum hp_event_types {
 	HPET_INIT,/* server starts */

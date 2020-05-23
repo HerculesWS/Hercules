@@ -67,6 +67,28 @@ static bool aclif_setip(const char *ip)
 	return true;
 }
 
+static bool aclif_setbindip(const char *ip)
+{
+	nullpo_retr(false, ip);
+	aclif->bind_ip = sockt->host2ip(ip);
+	if (aclif->bind_ip) {
+		char ip_str[16];
+		ShowInfo("Api Server Bind IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(aclif->bind_ip, ip_str));
+		return true;
+	}
+	ShowWarning("Failed to Resolve Api Server Address! (%s)\n", ip);
+	return false;
+}
+
+/*==========================================
+ * Sets api port to 'port'
+ * is run from api.c upon loading api server configuration
+ *------------------------------------------*/
+static void aclif_setport(uint16 port)
+{
+	aclif->api_port = port;
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -296,7 +318,7 @@ void aclif_defaults(void)
 	aclif = &aclif_s;
 	/* vars */
 	aclif->bind_ip = INADDR_ANY;
-	aclif->api_port = 7000;
+	aclif->api_port = 3000;
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = NULL;
 	}
@@ -304,6 +326,8 @@ void aclif_defaults(void)
 	aclif->init = do_init_aclif;
 	aclif->final = do_final_aclif;
 	aclif->setip = aclif_setip;
+	aclif->setbindip = aclif_setbindip;
+	aclif->setport = aclif_setport;
 	aclif->parse = aclif_parse;
 	aclif->parse_request = aclif_parse_request;
 	aclif->connected = aclif_connected;

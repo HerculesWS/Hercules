@@ -42,6 +42,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "api/achrif.h"
 #include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
@@ -93,7 +94,7 @@ void do_abort(void)
 
 void set_server_type(void)
 {
-	SERVER_TYPE = SERVER_TYPE_MAP;
+	SERVER_TYPE = SERVER_TYPE_API;
 }
 
 /// Called when a terminate signal is received.
@@ -112,6 +113,7 @@ static void api_load_defaults(void)
 {
 	api_defaults();
 	aclif_defaults();
+	achrif_defaults();
 	httpparser_defaults();
 	httpsender_defaults();
 }
@@ -121,6 +123,173 @@ static void api_load_defaults(void)
  */
 void cmdline_args_init_local(void)
 {
+}
+
+/**
+ * Reads 'api_configuration/console' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+static bool api_config_read_console(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "api_configuration/console")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("api_config_read: api_configuration/console was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_bool_real(setting, "stdout_with_ansisequence", &showmsg->stdout_with_ansisequence);
+	if (libconfig->setting_lookup_int(setting, "console_silent", &showmsg->silent) == CONFIG_TRUE) {
+		if (showmsg->silent) // only bother if its actually enabled
+			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
+	}
+	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+	libconfig->setting_lookup_int(setting, "console_msg_log", &showmsg->console_log);
+
+	return true;
+}
+
+/**
+ * Reads 'api_configuration/sql_connection' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+static bool api_config_read_connection(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "api_configuration/sql_connection")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("api_config_read: api_configuration/sql_connection was not found in %s!\n", filename);
+		ShowWarning("api_config_read_connection: Defaulting sql_connection...\n");
+		return false;
+	}
+
+	libconfig->setting_lookup_int(setting, "db_port", &api->server_port);
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", api->server_ip, sizeof(api->server_ip));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", api->server_id, sizeof(api->server_id));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", api->server_pw, sizeof(api->server_pw));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", api->server_db, sizeof(api->server_db));
+	libconfig->setting_lookup_mutable_string(setting, "default_codepage", api->default_codepage, sizeof(api->default_codepage));
+	return true;
+}
+
+/**
+ * Reads 'api_configuration/inter' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+static bool api_config_read_inter(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+	const char *str = NULL;
+	char temp[24];
+	uint16 port;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "api_configuration/inter")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("api_config_read: api_configuration/inter was not found in %s!\n", filename);
+		return false;
+	}
+
+	// Login information
+	if (libconfig->setting_lookup_mutable_string(setting, "userid", temp, sizeof(temp)) == CONFIG_TRUE)
+		achrif->setuserid(temp);
+	if (libconfig->setting_lookup_mutable_string(setting, "passwd", temp, sizeof(temp)) == CONFIG_TRUE)
+		achrif->setpasswd(temp);
+
+	// Char and api-server information
+	if (libconfig->setting_lookup_string(setting, "char_ip", &str) == CONFIG_TRUE)
+		api->char_ip_set = achrif->setip(str);
+	if (libconfig->setting_lookup_uint16(setting, "char_port", &port) == CONFIG_TRUE)
+		achrif->setport(port);
+
+	if (libconfig->setting_lookup_string(setting, "api_ip", &str) == CONFIG_TRUE)
+		api->ip_set = aclif->setip(str);
+	if (libconfig->setting_lookup_uint16(setting, "api_port", &port) == CONFIG_TRUE) {
+		aclif->setport(port);
+		api->port = port;
+	}
+	if (libconfig->setting_lookup_string(setting, "bind_ip", &str) == CONFIG_TRUE)
+		aclif->setbindip(str);
+
+	return true;
+}
+
+/**
+ * Reads api-server configuration files (api-server.conf) and initialises
+ * required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+static bool api_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	struct config_setting_t *setting = NULL;
+	const char *import = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	if ((setting = libconfig->lookup(&config, "api_configuration")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("api_config_read: api_configuration was not found in %s!\n", filename);
+		return false;
+	}
+
+	if (!api_config_read_console(filename, &config, imported))
+		retval = false;
+	if (!api_config_read_connection(filename, &config, imported))
+		retval = false;
+	if (!api_config_read_inter(filename, &config, imported))
+		retval = false;
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, api->API_CONF_NAME) == 0) {
+			ShowWarning("api_config_read: Loop detected! Skipping 'import'...\n");
+		} else {
+			if (!api->config_read(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	return retval;
 }
 
 int do_init(int argc, char *argv[])
@@ -134,14 +303,18 @@ int do_init(int argc, char *argv[])
 	api_load_defaults();
 	handlers_defaults();
 
+	api->API_CONF_NAME = aStrdup("conf/api/api-server.conf");
+
 	HPM_api_do_init();
-//	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
+	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
+	HPM->config_read();
 
 	HPM->event(HPET_PRE_INIT);
 
-	minimal = api->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
+	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
+	minimal = api->minimal;
 	if (!minimal) {
-
+		api->config_read(api->API_CONF_NAME, false);
 		if (!api->ip_set || !api->char_ip_set) {
 			char ip_str[16];
 			sockt->ip2str(sockt->addr_[0], ip_str);
@@ -202,4 +375,8 @@ void api_defaults(void)
 	api->char_ip_set = 0;
 
 	api->do_shutdown = do_shutdown;
+	api->config_read = api_config_read;
+	api->config_read_console = api_config_read_console;
+	api->config_read_connection = api_config_read_connection;
+	api->config_read_inter = api_config_read_inter;
 }

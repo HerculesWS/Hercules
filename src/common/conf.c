@@ -84,6 +84,7 @@ static int config_load_file(struct config_t *config, const char *config_filename
 
 	if (!exists(config_filename)) {
 		ShowError("Unable to load '%s' - File not found\n", config_filename);
+		libconfig->destroy(config);
 		return CONFIG_FALSE;
 	}
 	if (libconfig->read_file_src(config, config_filename) != CONFIG_TRUE) {

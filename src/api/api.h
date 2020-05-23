@@ -57,13 +57,6 @@ struct api_interface {
 	bool ip_set;
 	bool char_ip_set;
 
-	int autosave_interval;
-	int minsave_interval;
-	int save_settings;
-	int agit_flag;
-	int agit2_flag;
-	int night_flag; // 0=day, 1=night [Yor]
-	int enable_spy; //Determines if @spy commands are active.
 	char db_path[256];
 
 	char help_txt[256];
@@ -73,7 +66,7 @@ struct api_interface {
 
 	char *INTER_CONF_NAME;
 	char *LOG_CONF_NAME;
-	char *MAP_CONF_NAME;
+	char *API_CONF_NAME;
 	char *BATTLE_CONF_FILENAME;
 	char *ATCOMMAND_CONF_FILENAME;
 	char *SCRIPT_CONF_NAME;
@@ -100,7 +93,10 @@ struct api_interface {
 	uint16 port;
 
 	int (*setipport) (unsigned short map_index, uint32 ip, uint16 port);
-	/* */
+	bool (*config_read) (const char *filename, bool imported);
+	bool (*config_read_console) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_connection) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);
 
 	void (*do_shutdown) (void);
 };

@@ -36,6 +36,7 @@ enum server_types {
 	SERVER_TYPE_LOGIN   = 0x1,
 	SERVER_TYPE_CHAR    = 0x2,
 	SERVER_TYPE_MAP     = 0x4,
+	SERVER_TYPE_API     = 0x8,
 };
 
 /// The main loop continues until runflag is CORE_ST_STOP
