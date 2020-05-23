@@ -42,6 +42,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
 
@@ -131,6 +132,7 @@ int do_init(int argc, char *argv[])
 #endif
 
 	api_load_defaults();
+	handlers_defaults();
 
 	HPM_api_do_init();
 //	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
@@ -151,6 +153,7 @@ int do_init(int argc, char *argv[])
 		}
 	}
 
+	handlers->init(minimal);
 	aclif->init(minimal);
 	httpparser->init(minimal);
 

@@ -71,5 +71,7 @@ void handlers_defaults(void)
 	handlers->init = do_init_handlers;
 	handlers->final = do_final_handlers;
 
-	handlers->parse_userconfig_load = handlers_parse_userconfig_load;
+#define handler(method, url, func) handlers->parse_ ## func = handlers_parse_ ## func
+#include "api/urlhandlers.h"
+#undef handler
 }

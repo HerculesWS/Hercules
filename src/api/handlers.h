@@ -35,7 +35,9 @@ struct handlers_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 
-	bool (*parse_userconfig_load) (int fd, struct api_session_data *sd);
+#define handler(method, url, func) bool (*parse_ ## func) (int fd, struct api_session_data *sd)
+#include "api/urlhandlers.h"
+#undef handler
 };
 
 #ifdef HERCULES_CORE

@@ -20,14 +20,16 @@
 #ifndef API_HANDLERS_H
 #define API_HANDLERS_H
 
+#warning test
+
 #include "common/hercules.h"
 
 #include <http-parser/http_parser.h>
+
+#endif /* API_HANDLERS_H */
 
 #ifndef handler
 #define handler(method, url, func)
 #endif  // handler
 
 handler(HTTP_POST, "/userconfig/load", userconfig_load);
-
-#endif /* API_HANDLERS_H */
