@@ -87,10 +87,6 @@ static int handler_on_headers_complete(struct http_parser *parser)
 	return 0;
 }
 
-#define WFIFOADDSTR(fd, str) \
-    memcpy(WFIFOP(fd, 0), str, strlen(str)); \
-    WFIFOSET(fd, strlen(str));
-
 static int handler_on_message_complete(struct http_parser *parser)
 {
 	nullpo_ret(parser);
@@ -104,15 +100,6 @@ static int handler_on_message_complete(struct http_parser *parser)
 
 	if (isDebug)
 		ShowInfo("***MESSAGE COMPLETE***\n");
-	WFIFOHEAD(fd, 10000);
-	WFIFOADDSTR(fd, "HTTP/1.1 200 OK\n");
-	WFIFOADDSTR(fd, "Server: herc/1.0\n");
-	WFIFOADDSTR(fd, "Content-Type: text/html\n");
-	WFIFOADDSTR(fd, "Content-Length: 23\n");
-	WFIFOADDSTR(fd, "\n");
-	WFIFOADDSTR(fd, "<html>test line</html>\n");
-	sockt->flush(fd);
-	sockt->eof(fd);
 	return 0;
 }
 

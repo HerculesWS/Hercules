@@ -17,17 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef API_HANDLERS_H
-#define API_HANDLERS_H
+#ifndef API_HTTPPARSEHANDLER_H
+#define API_HTTPPARSEHANDLER_H
 
-#include "common/hercules.h"
+struct api_session_data;
+typedef bool (*HttpParseHandler)(int, struct api_session_data *);
 
-#include <http-parser/http_parser.h>
-
-#ifndef handler
-#define handler(method, url, func)
-#endif  // handler
-
-handler(HTTP_POST, "/userconfig/load", userconfig_load);
-
-#endif /* API_HANDLERS_H */
+#endif /* API_HTTPPARSEHANDLER_H */

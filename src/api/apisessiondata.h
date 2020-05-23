@@ -21,10 +21,13 @@
 #define API_APISESSIONDATA_H
 
 #include "common/hercules.h"
+#include "api/httpparsehandler.h"
 
 #include <http-parser/http_parser.h>
 
 #include <stdarg.h>
+
+struct HttpHandler;
 
 struct api_session_data {
 	int fd;
@@ -38,6 +41,7 @@ struct api_session_data {
 		uint body : 1;
 	} flag;
 	char *url;
+	struct HttpHandler *handler;
 };
 
 #endif /* API_APISESSIONDATA_H */

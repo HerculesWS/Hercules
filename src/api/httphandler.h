@@ -20,12 +20,9 @@
 #ifndef API_HTTPHANDLER_H
 #define API_HTTPHANDLER_H
 
-#include "common/hercules.h"
+#include "api/httpparsehandler.h"
 
-#include <http-parser/http_parser.h>
-
-struct api_session_data;
-typedef bool (*HttpParseHandler)(int, struct api_session_data *);
+#include <http-parser/http_parser.h>  // enum http_method
 
 struct HttpHandler {
 	enum http_method method;

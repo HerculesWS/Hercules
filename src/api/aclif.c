@@ -71,6 +71,8 @@ static bool aclif_setip(const char *ip)
 static int aclif_parse(int fd)
 {
 	ShowInfo("parse called: %d\n", fd);
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_ret(sd);
 	if (!httpparser->parse(fd))
 	{
 		ShowError("http parser error: %d\n", fd);
@@ -81,6 +83,26 @@ static int aclif_parse(int fd)
 	if (sockt->session[fd]->flag.eof != 0) {
 		ShowInfo("closed: %d\n", fd);
 		sockt->close(fd);
+		return 0;
+	}
+	if (sd->flag.body == 1) {
+		if (sd->handler == NULL) {
+			ShowError("http handler is NULL: %d\n", fd);
+			sockt->close(fd);
+			return 0;
+		}
+		if (sd->handler->func == NULL) {
+			ShowError("http handler function is NULL: %d\n", fd);
+			sockt->close(fd);
+			return 0;
+		}
+		if (!sd->handler->func(fd, sd)) {
+			aclif->reportError(fd, sd);
+			sockt->close(fd);
+			return 0;
+		}
+// close should be called from handler
+//		sockt->close(fd);
 	}
 
 	return 0;
@@ -115,7 +137,7 @@ static void aclif_load_handlers(void)
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
 	}
-#define handler(method, url, func) aclif->add_handler(method, url, func)
+#define handler(method, url, func) aclif->add_handler(method, url, aclif->parse_ ## func)
 #include "api/handlers.h"
 #undef handler
 }
@@ -152,7 +174,7 @@ void aclif_set_url(int fd, enum http_method method, const char *url, size_t size
 
 	struct HttpHandler *handler = strdb_get(aclif->handlers_db[method], sd->url);
 	if (handler == NULL) {
-		ShowWarning("Unknown url %d: %s\n", fd, sd->url);
+		ShowWarning("Unhandled url %d: %s\n", fd, sd->url);
 		sockt->eof(fd);
 		return;
 	}
@@ -164,17 +186,36 @@ void aclif_set_url(int fd, enum http_method method, const char *url, size_t size
 	}
 
 	sd->flag.url = 1;
+	sd->handler = handler;
 
 	ShowWarning("url: %s\n", sd->url);
 }
 
+void aclif_reportError(int fd, struct api_session_data *sd)
+{
+}
+
+#define WFIFOADDSTR(fd, str) \
+    memcpy(WFIFOP(fd, 0), str, strlen(str)); \
+    WFIFOSET(fd, strlen(str));
+
 
 // parsers
 
-static bool aclif_parse_userconfig_load(int fd, struct api_session_data *sd)
+HTTPURL(userconfig_load)
 {
-	nullpo_retr(false, sd);
-	ShowInfo("aclif_parse_userconfig_load called: %d\n", sd->parser.method);
+	ShowInfo("aclif_parse_userconfig_load called %d: %d\n", fd, sd->parser.method);
+
+	WFIFOHEAD(fd, 10000);
+	WFIFOADDSTR(fd, "HTTP/1.1 200 OK\n");
+	WFIFOADDSTR(fd, "Server: herc/1.0\n");
+	WFIFOADDSTR(fd, "Content-Type: text/html\n");
+	WFIFOADDSTR(fd, "Content-Length: 23\n");
+	WFIFOADDSTR(fd, "\n");
+	WFIFOADDSTR(fd, "<html>test line</html>\n");
+	sockt->flush(fd);
+	sockt->eof(fd);
+
 	return true;
 }
 
@@ -224,6 +265,8 @@ void aclif_defaults(void)
 	aclif->load_handlers = aclif_load_handlers;
 	aclif->add_handler = aclif_add_handler;
 	aclif->set_url = aclif_set_url;
+
+	aclif->reportError = aclif_reportError;
 
 	aclif->parse_userconfig_load = aclif_parse_userconfig_load;
 }
