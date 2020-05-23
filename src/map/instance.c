@@ -734,7 +734,7 @@ static void instance_force_destroy(struct map_session_data *sd)
 		switch (instance->list[i].owner_type) {
 		case IOT_CHAR:
 		{
-			if (instance->list[i].owner_id != sd->status.char_id)
+			if (instance->list[i].owner_id != sd->status.account_id)
 				continue;
 			break;
 		}
