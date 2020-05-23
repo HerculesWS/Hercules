@@ -102,8 +102,8 @@ static int aclif_parse(int fd)
 			sockt->close(fd);
 			return 0;
 		}
-// close should be called from handler
-//		sockt->close(fd);
+		if (sd->auto_close)
+			sockt->close(fd);
 	}
 
 	return 0;
@@ -118,6 +118,7 @@ static int aclif_connected(int fd)
 	CREATE(sd, struct api_session_data, 1);
 	sd->fd = fd;
 	sd->headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_HEADER_NAME_SIZE);
+	sd->auto_close = true;
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
 	return 0;
@@ -243,7 +244,6 @@ HTTPURL(userconfig_load)
 	ShowInfo("user agent: %s\n", (const char*)strdb_get(sd->headers_db, "User-Agent"));
 
 	httpsender->send_html(fd, "<html>test line</html>\n");
-	sockt->eof(fd);
 
 	return true;
 }
