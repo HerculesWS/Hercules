@@ -11067,6 +11067,19 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 #if PACKETVER >= 20090218
 	quest->questinfo_refresh(sd); // NPC quest/event icon check. [Kisuka]
 #endif
+
+	if (first_time) {
+		int i;
+
+		ARR_FIND(0, instance->instances, i, instance->list[i].owner_type == IOT_CHAR && instance->list[i].owner_id == sd->status.account_id);
+
+		if (i < instance->instances) {
+			sd->instances = 1;
+			CREATE(sd->instance, short, 1);
+			sd->instance[0] = instance->list[i].id;
+			clif->instance_join(sd->fd, instance->list[i].id);
+		}
+	}
 }
 
 /// Server's tick (ZC_NOTIFY_TIME).
