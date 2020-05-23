@@ -33,15 +33,17 @@ struct api_session_data {
 	int fd;
 	struct http_parser parser;
 	struct api_flag {
-		uint message_begin : 1;
-		uint headers_complete : 1;
-		uint message_complete : 1;
-		uint url : 1;
-		uint status : 1;
-		uint body : 1;
+		uint message_begin : 1;     // message parsing started
+		uint headers_complete : 1;  // headers parsing complete
+		uint message_complete : 1;  // message parsing complete
+		uint url : 1;               // url parsing complete
+		uint status : 1;            // status code parsing complete
+		uint body : 1;              // body parsing complete
 	} flag;
 	char *url;
 	struct HttpHandler *handler;
+	char *temp_header;
+	struct DBMap *headers_db;
 };
 
 #endif /* API_APISESSIONDATA_H */

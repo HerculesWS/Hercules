@@ -163,6 +163,8 @@ static int handler_on_header_field(struct http_parser *parser, const char *at, s
 
 	if (isDebug)
 		ShowInfo("Header field: %.*s\n", (int)length, at);
+
+	aclif->set_header_name(fd, at, length);
 	return 0;
 }
 
@@ -177,6 +179,8 @@ static int handler_on_header_value(struct http_parser *parser, const char *at, s
 
 	if (isDebug)
 		ShowInfo("Header value: %.*s\n", (int)length, at);
+
+	aclif->set_header_value(fd, at, length);
 	return 0;
 }
 

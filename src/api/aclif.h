@@ -29,6 +29,8 @@
 #include <stdarg.h>
 
 #define MAX_URL_SIZE 30
+#define MAX_HEADER_NAME_SIZE 30
+#define MAX_HEADER_VALUE_SIZE 100
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 #define HTTPURL(x) \
 	static bool aclif_parse_ ## x(int fd, struct api_session_data *sd) __attribute__((nonnull (2))); \
@@ -59,6 +61,8 @@ struct aclif_interface {
 	void (*load_handlers) (void);
 	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func);
 	void (*set_url) (int fd, enum http_method method, const char *url, size_t size);
+	void (*set_header_name) (int fd, const char *name, size_t size);
+	void (*set_header_value) (int fd, const char *value, size_t size);
 	void (*reportError) (int fd, struct api_session_data *sd);
 
 	bool (*parse_userconfig_load) (int fd, struct api_session_data *sd);

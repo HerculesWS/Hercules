@@ -117,6 +117,7 @@ static int aclif_connected(int fd)
 	struct api_session_data *sd = NULL;
 	CREATE(sd, struct api_session_data, 1);
 	sd->fd = fd;
+	sd->headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_HEADER_NAME_SIZE);
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
 	return 0;
@@ -128,6 +129,11 @@ static int aclif_session_delete(int fd)
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_ret(sd);
 	aFree(sd->url);
+	sd->url = NULL;
+	aFree(sd->temp_header);
+	sd->temp_header = NULL;
+	db_destroy(sd->headers_db);
+	sd->headers_db = NULL;
 
 	httpparser->delete_parser(fd);
 	return 0;
@@ -192,6 +198,37 @@ void aclif_set_url(int fd, enum http_method method, const char *url, size_t size
 	ShowWarning("url: %s\n", sd->url);
 }
 
+void aclif_set_header_name(int fd, const char *name, size_t size)
+{
+	nullpo_retv(name);
+
+	if (size > MAX_HEADER_NAME_SIZE) {
+		ShowWarning("Header name size too big %d: %lu\n", fd, size);
+		sockt->close(fd);
+		return;
+	}
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_retv(sd);
+
+	aFree(sd->temp_header);
+	sd->temp_header = aStrndup(name, size);
+}
+
+void aclif_set_header_value(int fd, const char *value, size_t size)
+{
+	nullpo_retv(value);
+
+	if (size > MAX_HEADER_VALUE_SIZE) {
+		ShowWarning("Header value size too big %d: %lu\n", fd, size);
+		sockt->close(fd);
+		return;
+	}
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_retv(sd);
+	strdb_put(sd->headers_db, sd->temp_header, aStrndup(value, size));
+	sd->temp_header = NULL;
+}
+
 void aclif_reportError(int fd, struct api_session_data *sd)
 {
 }
@@ -202,6 +239,8 @@ void aclif_reportError(int fd, struct api_session_data *sd)
 HTTPURL(userconfig_load)
 {
 	ShowInfo("aclif_parse_userconfig_load called %d: %d\n", fd, sd->parser.method);
+
+	ShowInfo("user agent: %s\n", (const char*)strdb_get(sd->headers_db, "User-Agent"));
 
 	httpsender->send_html(fd, "<html>test line</html>\n");
 	sockt->eof(fd);
@@ -255,6 +294,8 @@ void aclif_defaults(void)
 	aclif->load_handlers = aclif_load_handlers;
 	aclif->add_handler = aclif_add_handler;
 	aclif->set_url = aclif_set_url;
+	aclif->set_header_name = aclif_set_header_name;
+	aclif->set_header_value = aclif_set_header_value;
 
 	aclif->reportError = aclif_reportError;
 
