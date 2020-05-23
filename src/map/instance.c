@@ -68,7 +68,7 @@ static bool instance_is_valid(int instance_id)
 /*--------------------------------------
  * name : instance name
  * Return value could be
- * -4 = already exists | -3 = no free instances | -2 = owner not found | -1 = invalid type
+ * -4 = already exists | -2 = owner not found | -1 = invalid type
  * On success return instance_id
  *--------------------------------------*/
 static int instance_create(int owner_id, const char *name, enum instance_owner_type type)
