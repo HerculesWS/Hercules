@@ -40,6 +40,7 @@
 #include "common/utils.h"
 #include "api/apisessiondata.h"
 #include "api/httpparser.h"
+#include "api/httpsender.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -195,10 +196,6 @@ void aclif_reportError(int fd, struct api_session_data *sd)
 {
 }
 
-#define WFIFOADDSTR(fd, str) \
-    memcpy(WFIFOP(fd, 0), str, strlen(str)); \
-    WFIFOSET(fd, strlen(str));
-
 
 // parsers
 
@@ -206,14 +203,7 @@ HTTPURL(userconfig_load)
 {
 	ShowInfo("aclif_parse_userconfig_load called %d: %d\n", fd, sd->parser.method);
 
-	WFIFOHEAD(fd, 10000);
-	WFIFOADDSTR(fd, "HTTP/1.1 200 OK\n");
-	WFIFOADDSTR(fd, "Server: herc/1.0\n");
-	WFIFOADDSTR(fd, "Content-Type: text/html\n");
-	WFIFOADDSTR(fd, "Content-Length: 23\n");
-	WFIFOADDSTR(fd, "\n");
-	WFIFOADDSTR(fd, "<html>test line</html>\n");
-	sockt->flush(fd);
+	httpsender->send_html(fd, "<html>test line</html>\n");
 	sockt->eof(fd);
 
 	return true;

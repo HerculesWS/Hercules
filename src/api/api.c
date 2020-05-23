@@ -43,6 +43,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 #include "api/httpparser.h"
+#include "api/httpsender.h"
 
 #include <math.h>
 #include <stdarg.h>
@@ -111,6 +112,7 @@ static void api_load_defaults(void)
 	api_defaults();
 	aclif_defaults();
 	httpparser_defaults();
+	httpsender_defaults();
 }
 
 /**
