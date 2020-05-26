@@ -134,6 +134,10 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 		sockt->close(fd);
 		return 0;
 	}
+	if (!aclif->decode_post_headers(fd, sd)) {
+		aclif->terminate_connection(fd);
+		return 0;
+	}
 	if (!sd->handler->func(fd, sd)) {
 		aclif->reportError(fd, sd);
 		sockt->close(fd);
@@ -163,6 +167,7 @@ static int aclif_connected(int fd)
 	CREATE(sd, struct api_session_data, 1);
 	sd->fd = fd;
 	sd->headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_HEADER_NAME_SIZE);
+	sd->post_headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_POST_HEADER_NAME_SIZE);
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
 	return 0;
@@ -179,6 +184,8 @@ static int aclif_session_delete(int fd)
 	sd->temp_header = NULL;
 	db_destroy(sd->headers_db);
 	sd->headers_db = NULL;
+	db_destroy(sd->post_headers_db);
+	sd->post_headers_db = NULL;
 	aFree(sd->body);
 	sd->body = NULL;
 
@@ -313,11 +320,124 @@ void aclif_check_headers(int fd, struct api_session_data *sd)
 	if (size_str != NULL) {
 		const size_t sz = atoll(size_str);
 		if (sz > MAX_BODY_SIZE) {
-			ShowError("Body size too big: %d", fd);
+			ShowError("Body size too big: %d\n", fd);
 			sockt->eof(fd);
 			return;
 		}
 	}
+}
+
+bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
+{
+	nullpo_retr(false, sd);
+	const char *content_type = strdb_get(sd->headers_db, "Content-Type");
+	if (content_type == NULL)
+		return true;
+	const char *post_name = "multipart/form-data; boundary=";
+	const size_t post_name_sz = strlen(post_name);
+	if (strncmp(content_type, post_name, post_name_sz) != 0) {
+		return true;
+	}
+	if (sd->parser.method != HTTP_POST) {
+		ShowError("Form data detected on non POST request: %d\n", fd);
+		sockt->eof(fd);
+		return false;
+	}
+	char *boundary = aMalloc(strlen(content_type + post_name_sz) + 3);
+	strcpy(boundary, "--");
+	strcat(boundary, content_type + post_name_sz);
+	const size_t boundary_sz = strlen(boundary);
+	ShowInfo("boundary: %s\n", boundary);
+	char *ptr = sd->body;
+	if (strncmp(ptr, boundary, boundary_sz) != 0) {
+		ShowError("Wrong form data detected1: %d\n", fd);
+		sockt->eof(fd);
+		aFree(boundary);
+		return false;
+	}
+	ptr += boundary_sz;
+	if (*ptr != '\r' && *(ptr + 1) != '\n') {
+		ShowError("Wrong form data detected2: %d\n", fd);
+		sockt->eof(fd);
+		aFree(boundary);
+		return false;
+	}
+	ptr += 2;
+	while (ptr != NULL) {
+		char *next = strstr(ptr, boundary);
+		if (next != NULL)
+			*next = '\x0';
+		if (!aclif->parse_post_header(fd, sd, ptr)) {
+			*next = boundary[0];
+			aFree(boundary);
+			return false;
+		}
+		if (next != NULL) {
+			*next = boundary[0];
+			ptr = next + strlen(boundary);
+			if (strcmp(ptr, "--\r\n") == 0) {
+				ptr = NULL;
+				break;
+			}
+			if (*ptr != '\r' || *(ptr + 1) != '\n') {
+				ShowError("Wrong form data detected3: %d\n", fd);
+				sockt->eof(fd);
+				aFree(boundary);
+				return false;
+			}
+			ptr += 2;
+		}
+	}
+	aFree(boundary);
+	return true;
+}
+
+bool aclif_parse_post_header(int fd, struct api_session_data *sd, const char *data)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, data);
+	const char *start = "Content-Disposition: form-data; name=\"";
+	const size_t start_sz = strlen(start);
+	if (strncmp(data, start, start_sz) != 0) {
+		ShowError("Detected unknown post header start %d\n", fd);
+		sockt->eof(fd);
+		return false;
+	}
+	data += start_sz;
+	const char *sep = "\"";
+	const char *ptr = strstr(data, sep);
+	if (ptr == NULL) {
+		ShowError("Detected unknown post header body %d\n", fd);
+		sockt->eof(fd);
+		return false;
+	}
+	char *key = aStrndup(data, ptr - data);
+	ptr += strlen(sep);
+	const char *sep2 = "\r\n\r\n";
+	if (strncmp(ptr, sep2, 4) != 0) {
+		ShowError("Detected unknown post header body %d\n", fd);
+		aFree(key);
+		sockt->eof(fd);
+		return false;
+	}
+	ptr += 4;
+	const int sz = strlen(ptr);
+	if (sz < 2) {
+		ShowError("Detected unknown post header body %d\n", fd);
+		aFree(key);
+		sockt->eof(fd);
+		return false;
+	}
+	if (sz > MAX_POST_HEADER_VALUE_SIZE) {
+		ShowError("Post header value size too big %d\n", fd);
+		aFree(key);
+		sockt->eof(fd);
+		return false;
+	}
+	char *value = aStrndup(ptr, sz - 2);
+	ShowInfo("Post header: '%s', '%s'\n", key, value);
+	strdb_put(sd->post_headers_db, key, value);
+	return true;
 }
 
 void aclif_reportError(int fd, struct api_session_data *sd)
@@ -378,6 +498,8 @@ void aclif_defaults(void)
 	aclif->set_header_name = aclif_set_header_name;
 	aclif->set_header_value = aclif_set_header_value;
 	aclif->check_headers = aclif_check_headers;
+	aclif->decode_post_headers = aclif_decode_post_headers;
+	aclif->parse_post_header = aclif_parse_post_header;
 
 	aclif->reportError = aclif_reportError;
 }

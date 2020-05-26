@@ -47,6 +47,12 @@
 #ifndef MAX_HEADER_VALUE_SIZE
 #define MAX_HEADER_VALUE_SIZE 200
 #endif
+#ifndef MAX_POST_HEADER_NAME_SIZE
+#define MAX_POST_HEADER_NAME_SIZE 10
+#endif
+#ifndef MAX_POST_HEADER_VALUE_SIZE
+#define MAX_POST_HEADER_VALUE_SIZE 100000
+#endif
 
 #ifndef HTTP_MAX_PROTOCOL
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
@@ -89,8 +95,8 @@ struct aclif_interface {
 	void (*set_header_value) (int fd, const char *value, size_t size);
 	void (*reportError) (int fd, struct api_session_data *sd);
 	void (*check_headers) (int fd, struct api_session_data *sd);
-
-	bool (*parse_userconfig_load) (int fd, struct api_session_data *sd);
+	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
+	bool (*parse_post_header) (int fd, struct api_session_data *sd, const char *data);
 };
 
 #ifdef HERCULES_CORE
