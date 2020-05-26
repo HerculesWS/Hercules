@@ -34,6 +34,9 @@
 #ifndef MAX_BODY_SIZE
 #define MAX_BODY_SIZE 100000
 #endif
+#ifndef MAX_REQUEST_SIZE
+#define MAX_REQUEST_SIZE 200000
+#endif
 
 #ifndef MAX_HEADER_COUNT
 #define MAX_HEADER_COUNT 10
@@ -44,6 +47,7 @@
 #ifndef MAX_HEADER_VALUE_SIZE
 #define MAX_HEADER_VALUE_SIZE 200
 #endif
+
 #ifndef HTTP_MAX_PROTOCOL
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 #endif
