@@ -39,7 +39,7 @@
 #endif
 
 #ifndef MAX_HEADER_COUNT
-#define MAX_HEADER_COUNT 10
+#define MAX_HEADER_COUNT 20
 #endif
 #ifndef MAX_HEADER_NAME_SIZE
 #define MAX_HEADER_NAME_SIZE 30
@@ -51,6 +51,11 @@
 #ifndef HTTP_MAX_PROTOCOL
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 #endif
+
+enum req_flags {
+	REQ_DEFAULT = 0,
+	REQ_AUTO_CLOSE = 1
+};
 
 /**
  * aclif.c Interface
@@ -73,10 +78,11 @@ struct aclif_interface {
 	uint32 (*refresh_ip) (void);
 	int (*parse) (int fd);
 	int (*parse_request) (int fd, struct api_session_data *sd);
+	void (*terminate_connection) (int fd);
 	int (*connected) (int fd);
 	int (*session_delete) (int fd);
 	void (*load_handlers) (void);
-	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func);
+	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func, int flags);
 	void (*set_url) (int fd, enum http_method method, const char *url, size_t size);
 	void (*set_body) (int fd, const char *body, size_t size);
 	void (*set_header_name) (int fd, const char *name, size_t size);

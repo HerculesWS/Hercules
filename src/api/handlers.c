@@ -70,6 +70,8 @@ HTTPURL(test_url)
 
 	httpsender->send_html(fd, buf);
 
+	sockt->close(fd);
+
 	return true;
 }
 
@@ -88,7 +90,7 @@ void handlers_defaults(void)
 	handlers->init = do_init_handlers;
 	handlers->final = do_final_handlers;
 
-#define handler(method, url, func) handlers->parse_ ## func = handlers_parse_ ## func
+#define handler(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func
 #include "api/urlhandlers.h"
 #undef handler
 }

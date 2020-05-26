@@ -47,7 +47,6 @@ struct api_session_data {
 	int headers_count;
 	char *body;
 	size_t body_size;
-	bool auto_close;
 };
 
 #endif /* API_APISESSIONDATA_H */

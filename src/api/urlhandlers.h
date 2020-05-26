@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef handler
-#define handler(method, url, func)
+#define handler(method, url, func, flags)
 #endif  // handler
 
-handler(HTTP_POST, "/userconfig/load", userconfig_load);
-handler(HTTP_GET, "/test/url", test_url);
+handler(HTTP_POST, "/userconfig/load", userconfig_load, REQ_AUTO_CLOSE);
+handler(HTTP_GET, "/test/url", test_url, REQ_DEFAULT);

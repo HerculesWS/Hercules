@@ -104,9 +104,8 @@ static int aclif_parse(int fd)
 		sockt->close(fd);
 		return 0;
 	}
-	if (!sockt->session[fd] || sockt->session[fd]->flag.eof != 0) {
-		ShowInfo("closed: %d\n", fd);
-		sockt->close(fd);
+	if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
+		aclif->terminate_connection(fd);
 		return 0;
 	}
 	if (sd->parser.nread > MAX_REQUEST_SIZE) {
@@ -140,9 +139,19 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 		sockt->close(fd);
 		return 0;
 	}
-	if (sd->auto_close)
+	if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
+		aclif->terminate_connection(fd);
+		return 0;
+	}
+	if ((sd->handler->flags & REQ_AUTO_CLOSE) != 0)
 		sockt->close(fd);
 	return 0;
+}
+
+static void aclif_terminate_connection(int fd)
+{
+	ShowInfo("closed: %d\n", fd);
+	sockt->close(fd);
 }
 
 static int aclif_connected(int fd)
@@ -154,7 +163,6 @@ static int aclif_connected(int fd)
 	CREATE(sd, struct api_session_data, 1);
 	sd->fd = fd;
 	sd->headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_HEADER_NAME_SIZE);
-	sd->auto_close = true;
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
 	return 0;
@@ -183,12 +191,12 @@ static void aclif_load_handlers(void)
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
 	}
-#define handler(method, url, func) aclif->add_handler(method, url, handlers->parse_ ## func)
+#define handler(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, flags)
 #include "api/urlhandlers.h"
 #undef handler
 }
 
-static void aclif_add_handler(enum http_method method, const char *url, HttpParseHandler func)
+static void aclif_add_handler(enum http_method method, const char *url, HttpParseHandler func, int flags)
 {
 	nullpo_retv(url);
 	nullpo_retv(func);
@@ -198,6 +206,7 @@ static void aclif_add_handler(enum http_method method, const char *url, HttpPars
 	struct HttpHandler *handler = aCalloc(1, sizeof(struct HttpHandler));
 	handler->method = method;
 	handler->func = func;
+	handler->flags = flags;
 
 	strdb_put(aclif->handlers_db[method], url, handler);
 }
@@ -270,7 +279,7 @@ void aclif_set_header_name(int fd, const char *name, size_t size)
 	nullpo_retv(sd);
 
 	if (sd->headers_count >= MAX_HEADER_COUNT) {
-		ShowWarning("Header count too big %d\n", fd);
+		ShowWarning("Header count too big %d: %d\n", fd, sd->headers_count);
 		sockt->eof(fd);
 		return;
 	}
@@ -300,22 +309,14 @@ void aclif_check_headers(int fd, struct api_session_data *sd)
 	nullpo_retv(sd);
 	Assert_retv(sd->flag.headers_complete == 1);
 
-	if (!strdb_exists(sd->headers_db, "Content-Type")) {
-		ShowError("Missing Content-Type header: %d", fd);
-		sockt->eof(fd);
-		return;
-	}
 	const char *size_str = strdb_get(sd->headers_db, "Content-Length");
-	if (size_str == NULL) {
-		ShowError("Missing Content-Length header: %d", fd);
-		sockt->eof(fd);
-		return;
-	}
-	const size_t sz = atoll(size_str);
-	if (sz > MAX_BODY_SIZE) {
-		ShowError("Body size too big: %d", fd);
-		sockt->eof(fd);
-		return;
+	if (size_str != NULL) {
+		const size_t sz = atoll(size_str);
+		if (sz > MAX_BODY_SIZE) {
+			ShowError("Body size too big: %d", fd);
+			sockt->eof(fd);
+			return;
+		}
 	}
 }
 
@@ -367,6 +368,7 @@ void aclif_defaults(void)
 	aclif->setport = aclif_setport;
 	aclif->parse = aclif_parse;
 	aclif->parse_request = aclif_parse_request;
+	aclif->terminate_connection = aclif_terminate_connection;
 	aclif->connected = aclif_connected;
 	aclif->session_delete = aclif_session_delete;
 	aclif->load_handlers = aclif_load_handlers;

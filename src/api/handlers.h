@@ -35,7 +35,7 @@ struct handlers_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 
-#define handler(method, url, func) bool (*parse_ ## func) (int fd, struct api_session_data *sd)
+#define handler(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd)
 #include "api/urlhandlers.h"
 #undef handler
 };

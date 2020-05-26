@@ -27,6 +27,7 @@
 struct HttpHandler {
 	enum http_method method;
 	HttpParseHandler func;
+	int flags;
 };
 
 #endif /* API_HTTPHANDLER_H */
