@@ -96,7 +96,6 @@ struct aclif_interface {
 	void (*reportError) (int fd, struct api_session_data *sd);
 	void (*check_headers) (int fd, struct api_session_data *sd);
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
-	bool (*parse_post_header) (int fd, struct api_session_data *sd, const char *data);
 };
 
 #ifdef HERCULES_CORE
