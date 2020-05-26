@@ -263,6 +263,12 @@ void aclif_set_header_name(int fd, const char *name, size_t size)
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_retv(sd);
 
+	if (sd->headers_count >= MAX_HEADER_COUNT) {
+		ShowWarning("Header count too big %d\n", fd);
+		sockt->eof(fd);
+		return;
+	}
+
 	aFree(sd->temp_header);
 	sd->temp_header = aStrndup(name, size);
 }
@@ -280,6 +286,7 @@ void aclif_set_header_value(int fd, const char *value, size_t size)
 	nullpo_retv(sd);
 	strdb_put(sd->headers_db, sd->temp_header, aStrndup(value, size));
 	sd->temp_header = NULL;
+	sd->headers_count ++;
 }
 
 void aclif_reportError(int fd, struct api_session_data *sd)

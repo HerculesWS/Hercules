@@ -34,6 +34,10 @@
 #ifndef MAX_BODY_SIZE
 #define MAX_BODY_SIZE 100000
 #endif
+
+#ifndef MAX_HEADER_COUNT
+#define MAX_HEADER_COUNT 10
+#endif
 #ifndef MAX_HEADER_NAME_SIZE
 #define MAX_HEADER_NAME_SIZE 30
 #endif
