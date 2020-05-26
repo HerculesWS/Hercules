@@ -81,6 +81,7 @@ static int handler_on_headers_complete(struct http_parser *parser)
 		return 0;
 
 	sd->flag.headers_complete = 1;
+	aclif->check_headers(fd, sd);
 
 	if (isDebug)
 		ShowInfo("***HEADERS COMPLETE***\n");

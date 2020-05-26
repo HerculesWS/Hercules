@@ -295,6 +295,30 @@ void aclif_set_header_value(int fd, const char *value, size_t size)
 	sd->headers_count ++;
 }
 
+void aclif_check_headers(int fd, struct api_session_data *sd)
+{
+	nullpo_retv(sd);
+	Assert_retv(sd->flag.headers_complete == 1);
+
+	if (!strdb_exists(sd->headers_db, "Content-Type")) {
+		ShowError("Missing Content-Type header: %d", fd);
+		sockt->eof(fd);
+		return;
+	}
+	const char *size_str = strdb_get(sd->headers_db, "Content-Length");
+	if (size_str == NULL) {
+		ShowError("Missing Content-Length header: %d", fd);
+		sockt->eof(fd);
+		return;
+	}
+	const size_t sz = atoll(size_str);
+	if (sz > MAX_BODY_SIZE) {
+		ShowError("Body size too big: %d", fd);
+		sockt->eof(fd);
+		return;
+	}
+}
+
 void aclif_reportError(int fd, struct api_session_data *sd)
 {
 }
@@ -351,6 +375,7 @@ void aclif_defaults(void)
 	aclif->set_body = aclif_set_body;
 	aclif->set_header_name = aclif_set_header_name;
 	aclif->set_header_value = aclif_set_header_value;
+	aclif->check_headers = aclif_check_headers;
 
 	aclif->reportError = aclif_reportError;
 }

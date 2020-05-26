@@ -35,7 +35,7 @@
 #define MAX_BODY_SIZE 100000
 #endif
 #ifndef MAX_REQUEST_SIZE
-#define MAX_REQUEST_SIZE 200000
+#define MAX_REQUEST_SIZE 150000
 #endif
 
 #ifndef MAX_HEADER_COUNT
@@ -82,6 +82,7 @@ struct aclif_interface {
 	void (*set_header_name) (int fd, const char *name, size_t size);
 	void (*set_header_value) (int fd, const char *value, size_t size);
 	void (*reportError) (int fd, struct api_session_data *sd);
+	void (*check_headers) (int fd, struct api_session_data *sd);
 
 	bool (*parse_userconfig_load) (int fd, struct api_session_data *sd);
 };
