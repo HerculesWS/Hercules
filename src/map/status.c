@@ -1201,7 +1201,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 			if ((sce=sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF) {
 				struct skill_unit_group* sg = skill->id2group(sce->val4);
 				if (sg) {
-					skill->del_unitgroup(sg, ALC_MARK);
+					skill->del_unitgroup(sg);
 					sce->val4 = 0;
 					status_change_end(target, SC_GRAVITATION, INVALID_TIMER);
 				}
@@ -10788,7 +10788,7 @@ static int status_change_clear(struct block_list *bl, int type)
 /*==========================================
  * Special condition we want to effectuate, check before ending a status.
  *------------------------------------------*/
-static int status_change_end_(struct block_list *bl, enum sc_type type, int tid, const char *file, int line)
+static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 {
 	struct map_session_data *sd;
 	struct status_change *sc;
@@ -10958,22 +10958,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 			break;
 		case SC_DANCING:
 			{
-				const char* prevfile = "<unknown>";
-				int prevline = 0;
 				struct map_session_data *dsd;
 				struct status_change_entry *dsc;
-
-				if (sd) {
-					if (sd->delunit_prevfile) {
-						// initially this is NULL, when a character logs in
-						prevfile = sd->delunit_prevfile;
-						prevline = sd->delunit_prevline;
-					} else {
-						prevfile = "<none>";
-					}
-					sd->delunit_prevfile = file;
-					sd->delunit_prevline = line;
-				}
 
 				if (sce->val4 && sce->val4 != BCT_SELF && (dsd=map->id2sd(sce->val4)) != NULL) {
 					// end status on partner as well
@@ -10990,19 +10976,10 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 					// erase associated land skill
 					struct skill_unit_group *group = skill->id2group(sce->val2);
 
-					if (group == NULL) {
-						ShowDebug("status_change_end: SC_DANCING is missing skill unit group (val1=%d, val2=%d, val3=%d, val4=%d, timer=%d, tid=%d, char_id=%d, map=%s, x=%d, y=%d, prev=%s:%d, from=%s:%d). Please report this! (#3504)\n",
-							sce->val1, sce->val2, sce->val3, sce->val4, sce->timer, tid,
-							sd ? sd->status.char_id : 0,
-							mapindex_id2name(map_id2index(bl->m)), bl->x, bl->y,
-							prevfile, prevline,
-							file, line);
-					}
-
 					sce->val2 = 0;
 
 					if( group )
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 				}
 
 				if ((sce->val1&0xFFFF) == CG_MOONLIT)
@@ -11106,7 +11083,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				struct skill_unit_group* group = skill->id2group(sce->val3);
 				sce->val3 = 0;
 				if( group )
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_HERMODE:
@@ -11125,7 +11102,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				struct skill_unit_group* group = skill->id2group(sce->val4);
 				sce->val4 = 0;
 				if( group ) /* might have been cleared before status ended, e.g. land protector */
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_KAAHI:
@@ -11223,7 +11200,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				struct skill_unit_group* group = skill->id2group(sce->val2);
 				sce->val2 = 0;
 				if (group) /* might have been cleared before status ended, e.g. land protector */
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_BANDING:
@@ -11231,7 +11208,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid,
 				struct skill_unit_group *group = skill->id2group(sce->val4);
 				sce->val4 = 0;
 				if( group ) /* might have been cleared before status ended, e.g. land protector */
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			}
 			break;
 		case SC_CURSEDCIRCLE_ATKER:

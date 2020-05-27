@@ -2020,7 +2020,7 @@ struct skill_interface {
 	struct skill_unit *(*initunit) (struct skill_unit_group *group, int idx, int x, int y, int val1, int val2);
 	int (*delunit) (struct skill_unit *su);
 	struct skill_unit_group *(*init_unitgroup) (struct block_list* src, int count, uint16 skill_id, uint16 skill_lv, int unit_id, int limit, int interval);
-	int (*del_unitgroup) (struct skill_unit_group *group, const char* file, int line, const char* func);
+	int (*del_unitgroup) (struct skill_unit_group *group);
 	int (*clear_unitgroup) (struct block_list *src);
 	int (*clear_group) (struct block_list *bl, int flag);
 	int (*unit_onplace) (struct skill_unit *src, struct block_list *bl, int64 tick);
