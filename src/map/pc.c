@@ -5858,11 +5858,6 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			status_change_end(&sd->bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
 		}
 
-		for (int i = 0; i < EQI_MAX; i++) {
-			if (sd->equip_index[i] >= 0 && pc->isequip(sd , sd->equip_index[i]) == 0)
-				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
-		}
-
 		if ((battle_config.clear_unit_onwarp & BL_PC) != 0)
 			skill->clear_unitgroup(&sd->bl);
 
