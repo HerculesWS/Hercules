@@ -10389,7 +10389,8 @@ static const char *clif_process_chat_message(struct map_session_data *sd, const 
  * @param[in]  sd             The source character.
  * @param[in]  packet         The packet data.
  * @param[out] out_name       The parsed target name buffer (must be a valid
- *                            buffer of size NAME_LENGTH).
+ *                            buffer of size NAME_LENGTH + 1 because the client
+ *                            can send 24 characters without NULL terminator).
  * @param[out] out_message    The output message buffer (must be a valid buffer).
  * @param[in]  out_messagelen The size of out_message.
  * @retval true  if the validation succeeded and the message is a chat message.
@@ -10399,7 +10400,7 @@ static const char *clif_process_chat_message(struct map_session_data *sd, const 
  */
 static bool clif_process_whisper_message(struct map_session_data *sd, const struct packet_whisper_message *packet, char *out_name, char *out_message, int out_messagelen)
 {
-	int namelen = 0, messagelen = 0;
+	int messagelen = 0;
 
 	nullpo_retr(false, sd);
 	nullpo_retr(false, packet);
@@ -10409,15 +10410,6 @@ static bool clif_process_whisper_message(struct map_session_data *sd, const stru
 	if (packet->packet_len < NAME_LENGTH + 4 + 1) {
 		// 4-byte header and at least an empty string is expected
 		ShowWarning("clif_process_whisper_message: Received malformed packet from player '%s' (packet length is incorrect)!\n", sd->status.name);
-		return false;
-	}
-
-	// validate name
-	namelen = (int)strnlen(packet->name, NAME_LENGTH-1); // name length (w/o zero byte)
-
-	if (packet->name[namelen] != '\0') {
-		// only restriction is that the name must be zero-terminated
-		ShowWarning("clif_process_whisper_message: Player '%s' sent an unterminated name!\n", sd->status.name);
 		return false;
 	}
 
@@ -10439,7 +10431,7 @@ static bool clif_process_whisper_message(struct map_session_data *sd, const stru
 		return false;
 	}
 
-	safestrncpy(out_name, packet->name, namelen+1); // [!] packet->name is not NUL terminated
+	safestrncpy(out_name, packet->name, NAME_LENGTH + 1); // [!] packet->name is not NUL terminated
 	safestrncpy(out_message, packet->message, messagelen+1); // [!] packet->message is not necessarily NUL terminated
 
 	if (!pc->process_chat_message(sd, out_message))
@@ -11778,7 +11770,8 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 	struct map_session_data* dstsd;
 	int i;
 
-	char target[NAME_LENGTH], message[CHAT_SIZE_MAX + 1];
+	char target[NAME_LENGTH + 1]; // Client can send 24 characters without NULL terminator.
+	char message[CHAT_SIZE_MAX + 1];
 	const struct packet_whisper_message *packet = RP2PTR(fd);
 
 	if (!clif->process_whisper_message(sd, packet, target, message, sizeof message))
