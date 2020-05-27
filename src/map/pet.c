@@ -404,6 +404,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	if (i != sd->status.inventorySize) {
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
+		sd->status.inventory[i].card[3] = pd->pet.rename_flag;
 	} else {
 		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
 		struct item tmp_item = {0};
