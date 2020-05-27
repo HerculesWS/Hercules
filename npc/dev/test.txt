@@ -148,6 +148,10 @@ function	script	F_TestVarOfAnotherNPC	{
 
 		return set(getarg(0), 1337);
 	}
+
+OnLabel:
+    // to test is_function() with the label of another NPC
+    end;
 }
 
 function	script	HerculesSelfTestHelper	{
@@ -824,6 +828,18 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "public local function ownership",          "export test"::Public(), getnpcid());
 	callsub(OnCheck, "public local function var reference test", .@refTest, 1337);
 	callsub(OnCheck, "programatic public local call",            callfunctionofnpc("export test", "RefTest", .@refTest = 1), 1337);
+
+    private function localFunc {}
+    public  function pubLocalFunc {}
+    callsub(OnCheck, "is_function: not found",                                is_function("does-not-exist"), false);
+    callsub(OnCheck, "is_function: built-in script command",                  is_function("callfunc"), FUNCTION_IS_COMMAND);
+    callsub(OnCheck, "is_function: global function",                          is_function("HerculesSelfTestHelper"), FUNCTION_IS_GLOBAL);
+    callsub(OnCheck, "is_function: local NPC function",                       is_function("localFunc"), FUNCTION_IS_LOCAL);
+    callsub(OnCheck, "is_function: public local NPC function",                is_function("pubLocalFunc"), FUNCTION_IS_PUBLIC);
+    callsub(OnCheck, "is_function: local subroutine",                         is_function("OnCheck"), FUNCTION_IS_LABEL);
+    callsub(OnCheck, "is_function: local NPC function of another NPC",        is_function("Private", "export test"), FUNCTION_IS_LOCAL);
+    callsub(OnCheck, "is_function: public local NPC function of another NPC", is_function("Public", "export test"), FUNCTION_IS_PUBLIC);
+    callsub(OnCheck, "is_function: local subroutine of another NPC",          is_function("OnLabel", "export test"), FUNCTION_IS_LABEL);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
