@@ -5454,6 +5454,8 @@ struct {
 	struct HPMHookPoint *HP_script_parse_syntax_close_sub_post;
 	struct HPMHookPoint *HP_script_parse_syntax_pre;
 	struct HPMHookPoint *HP_script_parse_syntax_post;
+	struct HPMHookPoint *HP_script_parse_syntax_function_pre;
+	struct HPMHookPoint *HP_script_parse_syntax_function_post;
 	struct HPMHookPoint *HP_script_get_com_pre;
 	struct HPMHookPoint *HP_script_get_com_post;
 	struct HPMHookPoint *HP_script_get_num_pre;
@@ -12355,6 +12357,8 @@ struct {
 	int HP_script_parse_syntax_close_sub_post;
 	int HP_script_parse_syntax_pre;
 	int HP_script_parse_syntax_post;
+	int HP_script_parse_syntax_function_pre;
+	int HP_script_parse_syntax_function_post;
 	int HP_script_get_com_pre;
 	int HP_script_get_com_post;
 	int HP_script_get_num_pre;

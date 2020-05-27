@@ -584,6 +584,8 @@ enum itemskill_flag {
 struct Script_Config {
 	bool warn_func_mismatch_argtypes;
 	bool warn_func_mismatch_paramnum;
+	bool functions_private_by_default;
+	bool functions_as_events;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;
@@ -725,8 +727,14 @@ struct str_data_struct {
 	uint8 deprecated : 1;
 };
 
+/** a label within a script (does not use the label db) */
 struct script_label_entry {
-	int key,pos;
+	/** label name (held within str_data) */
+	int key;
+	/** position within the script  */
+	int pos;
+	/** optional flags for the label */
+	enum script_label_flags flags;
 };
 
 struct script_syntax_data {
@@ -917,7 +925,7 @@ struct script_interface {
 	void (*set_constant) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	void (*set_constant2) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	bool (*get_constant) (const char* name, int* value);
-	void (*label_add)(int key, int pos);
+	void (*label_add)(int key, int pos, enum script_label_flags flags);
 	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_pet) (struct script_code *rootscript, int pos, int rid, int oid);
@@ -948,10 +956,11 @@ struct script_interface {
 	int (*queue_create) (void);
 	bool (*queue_clear) (int idx);
 	/* */
-	const char * (*parse_curly_close) (const char *p);
-	const char * (*parse_syntax_close) (const char *p);
-	const char * (*parse_syntax_close_sub) (const char *p, int *flag);
-	const char * (*parse_syntax) (const char *p);
+	const char *(*parse_curly_close) (const char *p);
+	const char *(*parse_syntax_close) (const char *p);
+	const char *(*parse_syntax_close_sub) (const char *p, int *flag);
+	const char *(*parse_syntax) (const char *p);
+	const char *(*parse_syntax_function) (const char *p, bool is_public);
 	c_op (*get_com) (const struct script_buf *scriptbuf, int *pos);
 	int (*get_num) (const struct script_buf *scriptbuf, int *pos);
 	const char* (*op2name) (int op);
