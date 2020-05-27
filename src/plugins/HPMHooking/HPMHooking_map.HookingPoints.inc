@@ -1971,7 +1971,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapreg->save_timer, HP_mapreg_save_timer) },
 	{ HP_POP(mapreg->destroyreg, HP_mapreg_destroyreg) },
 	{ HP_POP(mapreg->reload, HP_mapreg_reload) },
-	{ HP_POP(mapreg->config_read, HP_mapreg_config_read) },
 /* md5_interface */
 	{ HP_POP(md5->string, HP_md5_string) },
 	{ HP_POP(md5->binary, HP_md5_binary) },

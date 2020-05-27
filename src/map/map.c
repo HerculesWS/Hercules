@@ -4459,7 +4459,6 @@ static bool inter_config_read_connection(const char *filename, const struct conf
 static bool inter_config_read_database_names(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
-	bool retval = true;
 
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
@@ -4477,16 +4476,14 @@ static bool inter_config_read_database_names(const char *filename, const struct 
 	libconfig->setting_lookup_mutable_string(setting, "npc_barter_data_db", map->npc_barter_data_db, sizeof(map->npc_barter_data_db));
 	libconfig->setting_lookup_mutable_string(setting, "npc_expanded_barter_data_db", map->npc_expanded_barter_data_db, sizeof(map->npc_expanded_barter_data_db));
 
-	if (!mapreg->config_read(filename, setting, imported))
-		retval = false;
-
 	if ((setting = libconfig->lookup(config, "inter_configuration/database_names/registry")) == NULL) {
 		if (imported)
-			return retval;
+			return true;
 		ShowError("inter_config_read: inter_configuration/database_names/registry was not found in %s!\n", filename);
 		return false;
 	}
-	return retval;
+
+	return mapreg->config_read_registry(filename, setting, imported);
 }
 
 /*=======================================
