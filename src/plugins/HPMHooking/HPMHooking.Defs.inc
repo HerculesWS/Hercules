@@ -5224,20 +5224,32 @@ typedef bool (*HPMHOOK_pre_mapit_exists) (struct s_mapiterator **iter);
 typedef bool (*HPMHOOK_post_mapit_exists) (bool retVal___, struct s_mapiterator *iter);
 #endif // MAP_MAP_H
 #ifdef MAP_MAPREG_H /* mapreg */
-typedef void (*HPMHOOK_pre_mapreg_init) (void);
-typedef void (*HPMHOOK_post_mapreg_init) (void);
-typedef void (*HPMHOOK_pre_mapreg_final) (void);
-typedef void (*HPMHOOK_post_mapreg_final) (void);
 typedef int (*HPMHOOK_pre_mapreg_readreg) (int64 *uid);
 typedef int (*HPMHOOK_post_mapreg_readreg) (int retVal___, int64 uid);
 typedef char* (*HPMHOOK_pre_mapreg_readregstr) (int64 *uid);
 typedef char* (*HPMHOOK_post_mapreg_readregstr) (char* retVal___, int64 uid);
+typedef bool (*HPMHOOK_pre_mapreg_set_num_db) (int64 *uid, const char **name, unsigned int *index, int *value);
+typedef bool (*HPMHOOK_post_mapreg_set_num_db) (bool retVal___, int64 uid, const char *name, unsigned int index, int value);
+typedef bool (*HPMHOOK_pre_mapreg_delete_num_db) (int64 *uid, const char **name, unsigned int *index);
+typedef bool (*HPMHOOK_post_mapreg_delete_num_db) (bool retVal___, int64 uid, const char *name, unsigned int index);
 typedef bool (*HPMHOOK_pre_mapreg_setreg) (int64 *uid, int *val);
 typedef bool (*HPMHOOK_post_mapreg_setreg) (bool retVal___, int64 uid, int val);
+typedef bool (*HPMHOOK_pre_mapreg_set_str_db) (int64 *uid, const char **name, unsigned int *index, const char **value);
+typedef bool (*HPMHOOK_post_mapreg_set_str_db) (bool retVal___, int64 uid, const char *name, unsigned int index, const char *value);
+typedef bool (*HPMHOOK_pre_mapreg_delete_str_db) (int64 *uid, const char **name, unsigned int *index);
+typedef bool (*HPMHOOK_post_mapreg_delete_str_db) (bool retVal___, int64 uid, const char *name, unsigned int index);
 typedef bool (*HPMHOOK_pre_mapreg_setregstr) (int64 *uid, const char **str);
 typedef bool (*HPMHOOK_post_mapreg_setregstr) (bool retVal___, int64 uid, const char *str);
+typedef void (*HPMHOOK_pre_mapreg_load_num_db) (void);
+typedef void (*HPMHOOK_post_mapreg_load_num_db) (void);
+typedef void (*HPMHOOK_pre_mapreg_load_str_db) (void);
+typedef void (*HPMHOOK_post_mapreg_load_str_db) (void);
 typedef void (*HPMHOOK_pre_mapreg_load) (void);
 typedef void (*HPMHOOK_post_mapreg_load) (void);
+typedef void (*HPMHOOK_pre_mapreg_save_num_db) (const char **name, unsigned int *index, int *value);
+typedef void (*HPMHOOK_post_mapreg_save_num_db) (const char *name, unsigned int index, int value);
+typedef void (*HPMHOOK_pre_mapreg_save_str_db) (const char **name, unsigned int *index, const char **value);
+typedef void (*HPMHOOK_post_mapreg_save_str_db) (const char *name, unsigned int index, const char *value);
 typedef void (*HPMHOOK_pre_mapreg_save) (void);
 typedef void (*HPMHOOK_post_mapreg_save) (void);
 typedef int (*HPMHOOK_pre_mapreg_save_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
@@ -5246,6 +5258,12 @@ typedef int (*HPMHOOK_pre_mapreg_destroyreg) (union DBKey *key, struct DBData **
 typedef int (*HPMHOOK_post_mapreg_destroyreg) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef void (*HPMHOOK_pre_mapreg_reload) (void);
 typedef void (*HPMHOOK_post_mapreg_reload) (void);
+typedef bool (*HPMHOOK_pre_mapreg_config_read_registry) (const char **filename, const struct config_setting_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_mapreg_config_read_registry) (bool retVal___, const char *filename, const struct config_setting_t *config, bool imported);
+typedef void (*HPMHOOK_pre_mapreg_final) (void);
+typedef void (*HPMHOOK_post_mapreg_final) (void);
+typedef void (*HPMHOOK_pre_mapreg_init) (void);
+typedef void (*HPMHOOK_post_mapreg_init) (void);
 #endif // MAP_MAPREG_H
 #ifdef COMMON_MD5CALC_H /* md5 */
 typedef void (*HPMHOOK_pre_md5_string) (const char **string, char **output);

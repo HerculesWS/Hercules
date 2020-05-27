@@ -50618,58 +50618,6 @@ bool HP_mapit_exists(struct s_mapiterator *iter) {
 	return retVal___;
 }
 /* mapreg_interface */
-void HP_mapreg_init(void) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_mapreg_init_pre > 0) {
-		void (*preHookFunc) (void);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_init_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mapreg_init_pre[hIndex].func;
-			preHookFunc();
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.mapreg.init();
-	}
-	if (HPMHooks.count.HP_mapreg_init_post > 0) {
-		void (*postHookFunc) (void);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_init_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mapreg_init_post[hIndex].func;
-			postHookFunc();
-		}
-	}
-	return;
-}
-void HP_mapreg_final(void) {
-	int hIndex = 0;
-	if (HPMHooks.count.HP_mapreg_final_pre > 0) {
-		void (*preHookFunc) (void);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_final_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mapreg_final_pre[hIndex].func;
-			preHookFunc();
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.mapreg.final();
-	}
-	if (HPMHooks.count.HP_mapreg_final_post > 0) {
-		void (*postHookFunc) (void);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_final_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mapreg_final_post[hIndex].func;
-			postHookFunc();
-		}
-	}
-	return;
-}
 int HP_mapreg_readreg(int64 uid) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -50724,6 +50672,60 @@ char* HP_mapreg_readregstr(int64 uid) {
 	}
 	return retVal___;
 }
+bool HP_mapreg_set_num_db(int64 uid, const char *name, unsigned int index, int value) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mapreg_set_num_db_pre > 0) {
+		bool (*preHookFunc) (int64 *uid, const char **name, unsigned int *index, int *value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_set_num_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_set_num_db_pre[hIndex].func;
+			retVal___ = preHookFunc(&uid, &name, &index, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapreg.set_num_db(uid, name, index, value);
+	}
+	if (HPMHooks.count.HP_mapreg_set_num_db_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int64 uid, const char *name, unsigned int index, int value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_set_num_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_set_num_db_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, uid, name, index, value);
+		}
+	}
+	return retVal___;
+}
+bool HP_mapreg_delete_num_db(int64 uid, const char *name, unsigned int index) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mapreg_delete_num_db_pre > 0) {
+		bool (*preHookFunc) (int64 *uid, const char **name, unsigned int *index);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_delete_num_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_delete_num_db_pre[hIndex].func;
+			retVal___ = preHookFunc(&uid, &name, &index);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapreg.delete_num_db(uid, name, index);
+	}
+	if (HPMHooks.count.HP_mapreg_delete_num_db_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int64 uid, const char *name, unsigned int index);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_delete_num_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_delete_num_db_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, uid, name, index);
+		}
+	}
+	return retVal___;
+}
 bool HP_mapreg_setreg(int64 uid, int val) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -50747,6 +50749,60 @@ bool HP_mapreg_setreg(int64 uid, int val) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_setreg_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapreg_setreg_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, uid, val);
+		}
+	}
+	return retVal___;
+}
+bool HP_mapreg_set_str_db(int64 uid, const char *name, unsigned int index, const char *value) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mapreg_set_str_db_pre > 0) {
+		bool (*preHookFunc) (int64 *uid, const char **name, unsigned int *index, const char **value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_set_str_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_set_str_db_pre[hIndex].func;
+			retVal___ = preHookFunc(&uid, &name, &index, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapreg.set_str_db(uid, name, index, value);
+	}
+	if (HPMHooks.count.HP_mapreg_set_str_db_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int64 uid, const char *name, unsigned int index, const char *value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_set_str_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_set_str_db_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, uid, name, index, value);
+		}
+	}
+	return retVal___;
+}
+bool HP_mapreg_delete_str_db(int64 uid, const char *name, unsigned int index) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mapreg_delete_str_db_pre > 0) {
+		bool (*preHookFunc) (int64 *uid, const char **name, unsigned int *index);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_delete_str_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_delete_str_db_pre[hIndex].func;
+			retVal___ = preHookFunc(&uid, &name, &index);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapreg.delete_str_db(uid, name, index);
+	}
+	if (HPMHooks.count.HP_mapreg_delete_str_db_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int64 uid, const char *name, unsigned int index);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_delete_str_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_delete_str_db_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, uid, name, index);
 		}
 	}
 	return retVal___;
@@ -50778,6 +50834,58 @@ bool HP_mapreg_setregstr(int64 uid, const char *str) {
 	}
 	return retVal___;
 }
+void HP_mapreg_load_num_db(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapreg_load_num_db_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_load_num_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_load_num_db_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapreg.load_num_db();
+	}
+	if (HPMHooks.count.HP_mapreg_load_num_db_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_load_num_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_load_num_db_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_mapreg_load_str_db(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapreg_load_str_db_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_load_str_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_load_str_db_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapreg.load_str_db();
+	}
+	if (HPMHooks.count.HP_mapreg_load_str_db_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_load_str_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_load_str_db_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 void HP_mapreg_load(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_mapreg_load_pre > 0) {
@@ -50800,6 +50908,58 @@ void HP_mapreg_load(void) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_load_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapreg_load_post[hIndex].func;
 			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_mapreg_save_num_db(const char *name, unsigned int index, int value) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapreg_save_num_db_pre > 0) {
+		void (*preHookFunc) (const char **name, unsigned int *index, int *value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_save_num_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_save_num_db_pre[hIndex].func;
+			preHookFunc(&name, &index, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapreg.save_num_db(name, index, value);
+	}
+	if (HPMHooks.count.HP_mapreg_save_num_db_post > 0) {
+		void (*postHookFunc) (const char *name, unsigned int index, int value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_save_num_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_save_num_db_post[hIndex].func;
+			postHookFunc(name, index, value);
+		}
+	}
+	return;
+}
+void HP_mapreg_save_str_db(const char *name, unsigned int index, const char *value) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapreg_save_str_db_pre > 0) {
+		void (*preHookFunc) (const char **name, unsigned int *index, const char **value);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_save_str_db_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_save_str_db_pre[hIndex].func;
+			preHookFunc(&name, &index, &value);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapreg.save_str_db(name, index, value);
+	}
+	if (HPMHooks.count.HP_mapreg_save_str_db_post > 0) {
+		void (*postHookFunc) (const char *name, unsigned int index, const char *value);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_save_str_db_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_save_str_db_post[hIndex].func;
+			postHookFunc(name, index, value);
 		}
 	}
 	return;
@@ -50911,6 +51071,85 @@ void HP_mapreg_reload(void) {
 		void (*postHookFunc) (void);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_reload_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mapreg_reload_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+bool HP_mapreg_config_read_registry(const char *filename, const struct config_setting_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_mapreg_config_read_registry_pre > 0) {
+		bool (*preHookFunc) (const char **filename, const struct config_setting_t **config, bool *imported);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_config_read_registry_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_config_read_registry_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mapreg.config_read_registry(filename, config, imported);
+	}
+	if (HPMHooks.count.HP_mapreg_config_read_registry_post > 0) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_setting_t *config, bool imported);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_config_read_registry_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_config_read_registry_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
+void HP_mapreg_final(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapreg_final_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_final_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapreg.final();
+	}
+	if (HPMHooks.count.HP_mapreg_final_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_final_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_mapreg_init(void) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_mapreg_init_pre > 0) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_init_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mapreg_init_pre[hIndex].func;
+			preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mapreg.init();
+	}
+	if (HPMHooks.count.HP_mapreg_init_post > 0) {
+		void (*postHookFunc) (void);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_init_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mapreg_init_post[hIndex].func;
 			postHookFunc();
 		}
 	}
