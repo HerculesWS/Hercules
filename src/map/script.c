@@ -28122,6 +28122,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MSC_MASTERATTACKED", MSC_MASTERATTACKED, false, false);
 	script->set_constant("MSC_ALCHEMIST", MSC_ALCHEMIST, false, false);
 	script->set_constant("MSC_SPAWN", MSC_SPAWN, false, false);
+	script->set_constant("MSC_MAGICATTACKED", MSC_MAGICATTACKED, false, false);
 
 	script->constdb_comment("monster skill targets");
 	script->set_constant("MST_TARGET", MST_TARGET, false, false);

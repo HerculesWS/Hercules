@@ -175,6 +175,7 @@ MSC_MASTERHPLTMAXRATE | The monster master's HP in percent is less than `Conditi
 MSC_MASTERATTACKED    | The monster's master is attacked.
 MSC_ALCHEMIST         | The monster was summoned by an Alchemist class character.
 MSC_SPAWN             | The monster spawns.
+MSC_MAGICATTACKED     | The monster has received magic damage.
 
 ### ConditionData
 Additional cast condition data. Meaning depends on the situation. See `CastCondition` table.

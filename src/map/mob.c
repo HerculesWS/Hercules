@@ -3758,6 +3758,8 @@ static int mobskill_event(struct mob_data *md, struct block_list *src, int64 tic
 		res = mob->skill_use(md, tick, MSC_CLOSEDATTACKED);
 	else if (flag&BF_LONG && !(flag&BF_MAGIC)) //Long-attacked should not include magic.
 		res = mob->skill_use(md, tick, MSC_LONGRANGEATTACKED);
+	else if ((flag & BF_MAGIC) != 0)
+		res = mob->skill_use(md, tick, MSC_MAGICATTACKED);
 
 	if (res != 0)
 	//Restore previous target only if skill condition failed to trigger. [Skotlex]
@@ -5679,7 +5681,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 
 	i32 = MSC_ALWAYS;
-	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_SPAWN)) {
+	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_MAGICATTACKED)) {
 		ShowWarning("%s: Invalid skill condition %d for skill id %d (%s) in %s %d, defaulting to MSC_ALWAYS.\n",
 			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
 		i32 = MSC_ALWAYS;
