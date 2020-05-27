@@ -5095,6 +5095,7 @@
 - `MSC_MASTERATTACKED`: 20
 - `MSC_ALCHEMIST`: 21
 - `MSC_SPAWN`: 22
+- `MSC_MAGICATTACKED`: 23
 
 ### monster skill targets
 
