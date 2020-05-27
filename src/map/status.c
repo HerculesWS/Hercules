@@ -10276,21 +10276,27 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 			break;
 		case SC_FOOD_STR:
 			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_AGI:
 			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_VIT:
 			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_INT:
 			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_DEX:
 			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_LUK:
 			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
 			break;
 		case SC_FOOD_STR_CASH:
 			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
