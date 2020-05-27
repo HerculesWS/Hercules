@@ -124,10 +124,10 @@ OnGo:
 				mes "Ah... who's a good puppy?";
 				mes "Ok, where are the others?";
 			}
-			if (compare(strnpcinfo(NPC_NAME_UNIQUE),"1")) setarray .@i[0],2,3;
-			else if (compare(strnpcinfo(NPC_NAME_UNIQUE),"2")) setarray .@i[0],1,3;
+			if (compare(strnpcinfo(NPC_NAME_HIDDEN),"1")) setarray .@i[0],2,3;
+			else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"2")) setarray .@i[0],1,3;
 			else setarray .@i[0],1,2;
-			donpcevent "Puppy#"+charat(strnpcinfo(NPC_NAME_UNIQUE),0)+.@i[rand(2)]+"::OnEnable";
+			donpcevent "Puppy#"+charat(strnpcinfo(NPC_NAME_HIDDEN),0)+.@i[rand(2)]+"::OnEnable";
 			hideonnpc strnpcinfo(NPC_NAME);
 			close;
 		}
