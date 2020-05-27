@@ -863,6 +863,8 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	nullpo_retr(false, sd);
 	chrif_check(false);
 
+	chrif->save(sd, 0);
+
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
