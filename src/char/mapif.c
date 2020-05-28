@@ -559,7 +559,7 @@ static int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int f
 	WBUFL(buf, 6) = account_id;
 	WBUFL(buf, 10) = char_id;
 	WBUFB(buf, 14) = flag;
-	memcpy(WBUFP(buf, 15), mes, 40);
+	safestrncpy(WBUFP(buf, 15), mes, 40);
 	memcpy(WBUFP(buf, 55), name, NAME_LENGTH);
 	mapif->sendall(buf, 55 + NAME_LENGTH);
 	ShowInfo("int_guild: guild withdraw (%d - %d: %s - %s)\n", guild_id, account_id, name, mes);
