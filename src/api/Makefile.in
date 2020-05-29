@@ -40,6 +40,10 @@ HTTPPARSER_D = $(THIRDPARTY_D)/http-parser/
 HTTPPARSER_OBJ = $(addprefix $(HTTPPARSER_D)/, http_parser.o)
 HTTPPARSER_H = $(addprefix $(HTTPPARSER_D)/, http_parser.h)
 
+MULTIPARTPARSER_D = $(THIRDPARTY_D)/multipart-parser/
+MULTIPARTPARSER_OBJ = $(addprefix $(MULTIPARTPARSER_D)/, multipartparser.o)
+MULTIPARTPARSER_H = $(addprefix $(MULTIPARTPARSER_D)/, multipartparser.h)
+
 ifeq (@USE_LIBBACKTRACE@,yes)
 	LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
 	LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
@@ -64,7 +68,7 @@ API_H = api.h aclif.h HPMapi.h apisessiondata.h httpparser.h httpparsehandler.h 
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	API_SERVER_SQL_DEPENDS=$(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
+	API_SERVER_SQL_DEPENDS=$(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(MULTIPARTPARSER_OBJ) $(LIBBACKTRACE_OBJ) $(SYSINFO_INC)
 else
 	API_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -103,7 +107,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/api/Makefile
 
-$(SYSINFO_INC): $(API_C) $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(HTTPPARSER_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
+$(SYSINFO_INC): $(API_C) $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(HTTPPARSER_H) $(MULTIPARTPARSER_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -124,7 +128,7 @@ api-server: ../../api-server@EXEEXT@
 ../../api-server@EXEEXT@: $(API_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$(notdir $@)"
 	@$(CC) @STATIC@ @LDFLAGS@ -o ../../api-server@EXEEXT@ $(API_OBJ) $(COMMON_D)/obj_all/common.a $(COMMON_D)/obj_sql/common_sql.a \
-		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
+		$(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(HTTPPARSER_OBJ) $(MULTIPARTPARSER_OBJ) $(LIBBACKTRACE_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:
@@ -147,6 +151,10 @@ $(HTTPPARSER_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(HTTPPARSER_D)
 
+$(MULTIPARTPARSER_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(MULTIPARTPARSER_D)
+
 $(LIBBACKTRACE_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBBACKTRACE_D)
@@ -155,6 +163,6 @@ $(LIBBACKTRACE_OBJ):
 
 # api object files
 
-obj_sql/%.o: %.c $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(HTTPPARSER_H) $(LIBBACKTRACE_H) | obj_sql
+obj_sql/%.o: %.c $(API_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(HTTPPARSER_H) $(MULTIPARTPARSER_H) $(LIBBACKTRACE_H) | obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
