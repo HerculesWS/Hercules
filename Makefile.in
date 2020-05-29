@@ -54,7 +54,8 @@ HAVE_PERL=@HAVE_PERL@
 HAVE_DOXYGEN=@HAVE_DOXYGEN@
 
 MF_TARGETS = Makefile $(addsuffix /Makefile, src/common 3rdparty/mt19937ar \
-             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/http-parser src/char src/login src/map src/api src/plugins \
+             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/http-parser 3rdparty/multipart-parser \
+             src/char src/login src/map src/api src/plugins \
              src/test tools/HPMHookGen tools/doxygen)
 
 CC = @CC@
@@ -118,6 +119,10 @@ http-parser: 3rdparty/http-parser/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/http-parser
 
+multipart-parser: 3rdparty/multipart-parser/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/multipart-parser
+
 login_sql: $(LOGIN_SQL_DEPENDS) src/login/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/login sql
@@ -167,6 +172,7 @@ clean buildclean: $(MF_TARGETS)
 	@$(MAKE) -C 3rdparty/libconfig $@
 	@$(MAKE) -C 3rdparty/libbacktrace $@
 	@$(MAKE) -C 3rdparty/http-parser $@
+	@$(MAKE) -C 3rdparty/multipart-parser $@
 	@$(MAKE) -C src/login $@
 	@$(MAKE) -C src/char $@
 	@$(MAKE) -C src/map $@
@@ -199,6 +205,7 @@ help: Makefile
 	@echo "'libconfig'    - builds object files of libconfig"
 	@echo "'libbacktrace' - builds object files of libbacktrace"
 	@echo "'http-parser'  - builds object files of http-parser"
+	@echo "'multipart-parser' - builds object files of multipart-parser"
 	@echo "'login_sql'    - builds login server"
 	@echo "'char_sql'     - builds char server"
 	@echo "'map_sql'      - builds map server"
