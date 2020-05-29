@@ -8,6 +8,10 @@ extern "C" {
 #include <stdint.h>
 #include <sys/types.h>
 
+#ifndef MAX_BOUNDARY_SIZE
+#define MAX_BOUNDARY_SIZE 70
+#endif
+
 typedef struct multipartparser multipartparser;
 typedef struct multipartparser_callbacks multipartparser_callbacks;
 
@@ -16,7 +20,7 @@ typedef int (*multipart_data_cb) (multipartparser*, const char* data, size_t siz
 
 struct multipartparser {
     /** PRIVATE **/
-    char        boundary[70];
+    char        boundary[MAX_BOUNDARY_SIZE + 1];
     int         boundary_length;
     int         index;
     uint16_t    state;

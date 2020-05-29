@@ -2,6 +2,22 @@
 
 #include <string.h>
 
+// gcc version (if any) - borrowed from Mana Plus
+#ifdef __GNUC__
+#define GCC_VERSION (__GNUC__ * 10000 \
+		+ __GNUC_MINOR__ * 100 \
+		+ __GNUC_PATCHLEVEL__)
+#else
+#define GCC_VERSION 0
+#endif
+
+// fallthrough attribute only enabled on gcc >= 7.0
+#if defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define FALLTHROUGH __attribute__ ((fallthrough));
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define FALLTHROUGH
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+
 #define CR '\r'
 #define LF '\n'
 #define SP ' '
@@ -93,7 +109,8 @@ void multipartparser_init(multipartparser* parser, const char* boundary)
 {
     memset(parser, 0, sizeof(*parser));
 
-    strncpy(parser->boundary, boundary, sizeof(parser->boundary));
+    strncpy(parser->boundary, boundary, MAX_BOUNDARY_SIZE);
+    parser->boundary[MAX_BOUNDARY_SIZE] = '\x0';
     parser->boundary_length = strlen(parser->boundary);
 
     parser->state = s_preamble;
@@ -160,7 +177,7 @@ reexecute:
                     break;
                 }
                 parser->state = s_header_field;
-                // fallthrough;
+                FALLTHROUGH
 
             case s_header_field:
                 mark = p;
@@ -187,7 +204,7 @@ reexecute:
                     break;
                 }
                 parser->state = s_header_value;
-                // fallthrough;
+                FALLTHROUGH
 
             case s_header_value:
                 mark = p;
@@ -264,7 +281,7 @@ reexecute:
             case s_data_boundary_start:
                 parser->index = 0;
                 parser->state = s_data_boundary;
-                // fallthrough;
+                FALLTHROUGH
 
             case s_data_boundary:
                 if (parser->index == parser->boundary_length) {
