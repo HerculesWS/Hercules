@@ -3,6 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2020 Andrei Karas (4144)
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
