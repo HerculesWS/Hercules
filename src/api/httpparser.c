@@ -41,6 +41,8 @@
 #include "api/aclif.h"
 #include "api/apisessiondata.h"
 
+#include <multipart-parser/multipartparser.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,6 +61,8 @@ static bool isDebug = true;
 	nullpo_ret(sd);
 
 #define GET_FD() (int)(intptr_t)parser->data
+
+// http parser handlers
 
 static int handler_on_message_begin(struct http_parser *parser)
 {
@@ -206,6 +210,65 @@ static int handler_on_body(struct http_parser *parser, const char *at, size_t le
 	return 0;
 }
 
+// multi parser handlers
+
+static int handler_on_multi_body_begin(struct multipartparser *parser)
+{
+	nullpo_ret(parser);
+	if (isDebug)
+		ShowInfo("handler_on_multi_body_begin\n");
+	return 0;
+}
+
+static int handler_on_multi_part_begin(struct multipartparser *parser)
+{
+	if (isDebug)
+		ShowInfo("handler_on_multi_part_begin\n");
+	return 0;
+}
+
+static int handler_on_multi_header_field(struct multipartparser *parser, const char *data, size_t size)
+{
+	if (isDebug)
+		ShowInfo("handler_on_multi_header_field\n");
+	return 0;
+}
+
+static int handler_on_multi_header_value(struct multipartparser *parser, const char *data, size_t size)
+{
+	if (isDebug)
+		ShowInfo("handler_on_multi_header_value\n");
+	return 0;
+}
+
+static int handler_on_multi_headers_complete(struct multipartparser *parser)
+{
+	if (isDebug)
+		ShowInfo("handler_on_multi_headers_complete\n");
+	return 0;
+}
+
+static int handler_on_multi_data(struct multipartparser *parser, const char *data, size_t size)
+{
+	if (isDebug)
+		ShowInfo("handler_on_multi_data\n");
+	return 0;
+}
+
+static int handler_on_multi_part_end(struct multipartparser *parser)
+{
+	if (isDebug)
+		ShowInfo("handler_on_multi_part_end\n");
+	return 0;
+}
+
+static int handler_on_multi_body_end(struct multipartparser *parser)
+{
+	if (isDebug)
+		ShowInfo("handler_on_multi_body_end\n");
+	return 0;
+}
+
 
 static bool httpparser_parse(int fd)
 {
@@ -229,11 +292,8 @@ static void httpparser_delete_parser(int fd)
 {
 }
 
-static int do_init_httpparser(bool minimal)
+static void httpparser_init_settings(void)
 {
-	if (minimal)
-		return 0;
-
 	httpparser->settings = aCalloc(1, sizeof(struct http_parser_settings));
 	httpparser->settings->on_message_begin = httpparser->on_message_begin;
 	httpparser->settings->on_url = httpparser->on_url;
@@ -245,7 +305,28 @@ static int do_init_httpparser(bool minimal)
 	httpparser->settings->on_status = httpparser->on_status;
 	httpparser->settings->on_chunk_header = httpparser->on_chunk_header;
 	httpparser->settings->on_chunk_complete = httpparser->on_chunk_complete;
+}
 
+static void httpparser_init_multi_settings(void)
+{
+	httpparser->multi_settings = aCalloc(1, sizeof(struct multipartparser_callbacks));
+	httpparser->multi_settings->on_body_begin = httpparser->on_multi_body_begin;
+	httpparser->multi_settings->on_part_begin = httpparser->on_multi_part_begin;
+	httpparser->multi_settings->on_header_field = httpparser->on_multi_header_field;
+	httpparser->multi_settings->on_header_value = httpparser->on_multi_header_value;
+	httpparser->multi_settings->on_headers_complete = httpparser->on_multi_headers_complete;
+	httpparser->multi_settings->on_data = httpparser->on_multi_data;
+	httpparser->multi_settings->on_part_end = httpparser->on_multi_part_end;
+	httpparser->multi_settings->on_body_end = httpparser->on_multi_body_end;
+}
+
+static int do_init_httpparser(bool minimal)
+{
+	if (minimal)
+		return 0;
+
+	httpparser->init_settings();
+	httpparser->init_multi_settings();
 	return 0;
 }
 
@@ -265,6 +346,8 @@ void httpparser_defaults(void)
 	httpparser->parse = httpparser_parse;
 	httpparser->init_parser = httpparser_init_parser;
 	httpparser->delete_parser = httpparser_delete_parser;
+	httpparser->init_settings = httpparser_init_settings;
+	httpparser->init_settings = httpparser_init_multi_settings;
 
 	httpparser->on_message_begin = handler_on_message_begin;
 	httpparser->on_url = handler_on_url;
@@ -276,4 +359,13 @@ void httpparser_defaults(void)
 	httpparser->on_status = handler_on_status;
 	httpparser->on_chunk_header = handler_on_chunk_header;
 	httpparser->on_chunk_complete = handler_on_chunk_complete;
+
+	httpparser->on_multi_body_begin = handler_on_multi_body_begin;
+	httpparser->on_multi_part_begin = handler_on_multi_part_begin;
+	httpparser->on_multi_header_field = handler_on_multi_header_field;
+	httpparser->on_multi_header_value = handler_on_multi_header_value;
+	httpparser->on_multi_headers_complete = handler_on_multi_headers_complete;
+	httpparser->on_multi_data = handler_on_multi_data;
+	httpparser->on_multi_part_end = handler_on_multi_part_end;
+	httpparser->on_multi_body_end = handler_on_multi_body_end;
 }

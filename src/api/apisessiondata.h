@@ -29,10 +29,12 @@
 #include <stdarg.h>
 
 struct HttpHandler;
+struct multipartparser;
 
 struct api_session_data {
 	int fd;
 	struct http_parser parser;
+	struct multipartparser *multi_parser;
 	struct api_flag {
 		uint message_begin : 1;     // message parsing started
 		uint headers_complete : 1;  // headers parsing complete

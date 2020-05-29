@@ -28,6 +28,8 @@
 struct api_session_data;
 struct http_parser;
 struct http_parser_settings;
+struct multipartparser;
+struct multipartparser_callbacks;
 
 /**
  * httpparser.c Interface
@@ -35,6 +37,7 @@ struct http_parser_settings;
 struct httpparser_interface {
 	/* vars */
 	struct http_parser_settings *settings;
+	struct multipartparser_callbacks *multi_settings;
 
 	/* core */
 	int (*init) (bool minimal);
@@ -42,6 +45,8 @@ struct httpparser_interface {
 	bool (*parse) (int fd);
 	void (*init_parser) (int fd, struct api_session_data *sd);
 	void (*delete_parser) (int fd);
+	void (*init_settings) (void);
+	void (*init_multi_settings) (void);
 
 	int (*on_message_begin) (struct http_parser* parser);
 	int (*on_headers_complete) (struct http_parser* parser);
@@ -53,6 +58,15 @@ struct httpparser_interface {
 	int (*on_header_field) (struct http_parser* parser, const char* at, size_t length);
 	int (*on_header_value) (struct http_parser* parser, const char* at, size_t length);
 	int (*on_body) (struct http_parser* parser, const char* at, size_t length);
+
+	int (*on_multi_body_begin) (struct multipartparser *parser);
+	int (*on_multi_part_begin) (struct multipartparser *parser);
+	int (*on_multi_header_field) (struct multipartparser *parser, const char *data, size_t size);
+	int (*on_multi_header_value) (struct multipartparser *parser, const char *data, size_t size);
+	int (*on_multi_headers_complete) (struct multipartparser *parser);
+	int (*on_multi_data) (struct multipartparser *parser, const char *data, size_t size);
+	int (*on_multi_part_end) (struct multipartparser *parser);
+	int (*on_multi_body_end) (struct multipartparser *parser);
 };
 
 #ifdef HERCULES_CORE
