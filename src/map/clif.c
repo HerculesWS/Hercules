@@ -20429,10 +20429,7 @@ static void clif_maptypeproperty2(struct block_list *bl, enum send_target t)
 {
 #if PACKETVER >= 20121010
 	struct packet_maptypeproperty2 p;
-	struct map_session_data *sd = NULL;
 	nullpo_retv(bl);
-
-	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = maptypeproperty2Type;
 	p.type = 0x28;
