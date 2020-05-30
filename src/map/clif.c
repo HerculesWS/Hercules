@@ -20439,7 +20439,7 @@ static void clif_maptypeproperty2(struct block_list *bl, enum send_target t)
 	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0; //PARTY
 	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0; // GUILD
 	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1: 0; // SIEGE
-	p.flag.mineffect = map_flag_gvg(bl->m) ? 1 : ( (sd && sd->state.lesseffect) ? 1 : 0); // USE_SIMPLE_EFFECT - Forcing /mineffect in castles during WoE (probably redundant? I'm not sure)
+	p.flag.mineffect = map_flag_gvg2(bl->m) ? 1 : 0; // USE_SIMPLE_EFFECT - Automatically enable /mineffect in guild arenas and castles.
 	p.flag.nolockon = 0; // DISABLE_LOCKON - TODO
 	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0; // COUNT_PK
 	p.flag.nopartyformation = map->list[bl->m].flag.partylock ? 1 : 0; // NO_PARTY_FORMATION
