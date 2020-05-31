@@ -6766,7 +6766,7 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 	struct PACKET_ZC_AUTORUN_SKILL *p = WFIFOP(fd, 0);
 	int type = skill->get_inf(skill_id);
 
-	if (sd->autocast.itemskill_cast_on_self && sd->autocast.type == AUTOCAST_ITEM)
+	if (sd->auto_cast_current.itemskill_cast_on_self && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		type = INF_SELF_SKILL;
 
 	p->packetType = HEADER_ZC_AUTORUN_SKILL;
@@ -12797,13 +12797,15 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 {
 	int64 tick = timer->gettick();
 
+	pc->autocast_set_current(sd, skill_id);
+
 	/**
 	 * According to Skotlex' comment below, the client sometimes passes 0 for the skill level.
 	 * Even though this seems to only affect guild skills, sd->autocast.skill_lv is used
 	 * for the auto-cast data validation if skill_lv is 0.
 	 *
 	 **/
-	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->autocast.skill_lv : skill_lv);
+	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->auto_cast_current.skill_lv : skill_lv);
 
 	if (skill_lv < 1)
 		skill_lv = 1; //No clue, I have seen the client do this with guild skills :/ [Skotlex]
@@ -12855,10 +12857,10 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		target_id = sd->bl.id;
 
 	if (sd->ud.skilltimer != INVALID_TIMER) {
-		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
+		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST && sd->auto_cast_current.type == AUTOCAST_NONE)
 			return;
 	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
-		if (sd->autocast.type == AUTOCAST_NONE) {
+		if (sd->auto_cast_current.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -12876,9 +12878,9 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		} else if (sd->menuskill_id != SA_AUTOSPELL)
 			return; //Can't use skills while a menu is open.
 	}
-	if (sd->autocast.type != AUTOCAST_NONE) {
-		if (skill_lv != sd->autocast.skill_lv)
-			skill_lv = sd->autocast.skill_lv;
+	if (sd->auto_cast_current.type != AUTOCAST_NONE) {
+		if (skill_lv != sd->auto_cast_current.skill_lv)
+			skill_lv = sd->auto_cast_current.skill_lv;
 		if (!(tmp&INF_SELF_SKILL))
 			pc->delinvincibletimer(sd); // Target skills through items cancel invincibility. [Inkfish]
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
@@ -12946,6 +12948,8 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	int64 tick = timer->gettick();
 
 	nullpo_retv(sd);
+	
+	pc->autocast_set_current(sd, skill_id);
 
 	/**
 	 * When using clif_item_skill() to initiate the execution of ground skills,
@@ -12954,7 +12958,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	 * since clif_item_skill() is only used for auto-cast skills.
 	 *
 	 **/
-	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->autocast.skill_lv : skill_lv);
+	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->auto_cast_current.skill_lv : skill_lv);
 
 	if( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) )
 		return; //Using a target skill on the ground? WRONG.
@@ -12992,11 +12996,11 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		safestrncpy(sd->message, RFIFOP(fd, skillmoreinfo), TALKBOX_MESSAGE_SIZE);
 	}
 
-	if( sd->ud.skilltimer != INVALID_TIMER )
+	if (sd->ud.skilltimer != INVALID_TIMER && sd->auto_cast_current.type == AUTOCAST_NONE)
 		return;
 
 	if( DIFF_TICK(tick, sd->ud.canact_tick) < 0 ) {
-		if (sd->autocast.type == AUTOCAST_NONE) {
+		if (sd->auto_cast_current.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -13017,9 +13021,9 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 
 	pc->delinvincibletimer(sd);
 
-	if (sd->autocast.type != AUTOCAST_NONE) {
-		if (skill_lv != sd->autocast.skill_lv)
-			skill_lv = sd->autocast.skill_lv;
+	if (sd->auto_cast_current.type != AUTOCAST_NONE) {
+		if (skill_lv != sd->auto_cast_current.skill_lv)
+			skill_lv = sd->auto_cast_current.skill_lv;
 		unit->skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);
 	} else {
 		int lv;
@@ -13093,6 +13097,8 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
+	
+	pc->autocast_set_current(sd, skill_id);
 
 	/**
 	 * Since no skill level was passed use 0 to notify skill_validate_autocast_data() of this special case.

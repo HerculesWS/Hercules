@@ -1279,6 +1279,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.client_has_bg_data = 0;
 	sd->bg_queue.type = 0;
 
+	VECTOR_INIT(sd->auto_cast); // Initialize auto-cast vector.
 	VECTOR_INIT(sd->channels);
 	VECTOR_INIT(sd->script_queues);
 	VECTOR_INIT(sd->achievement); // Achievements [Smokexyz/Hercules]
@@ -5333,24 +5334,79 @@ static int pc_useitem(struct map_session_data *sd, int n)
 }
 
 /**
+ * Unsets a character's currently processed auto-cast skill data.
+ *
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear_current(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	sd->auto_cast_current.type = AUTOCAST_NONE;
+	sd->auto_cast_current.skill_id = 0;
+	sd->auto_cast_current.skill_lv = 0;
+	sd->auto_cast_current.itemskill_conditions_checked = false;
+	sd->auto_cast_current.itemskill_check_conditions = true;
+	sd->auto_cast_current.itemskill_instant_cast = false;
+	sd->auto_cast_current.itemskill_cast_on_self = false;
+}
+
+/**
  * Unsets a character's auto-cast related data.
  *
- * @param sd The character's session data.
- * @return 0 if parameter sd is NULL, otherwise 1.
- */
-static int pc_autocast_clear(struct map_session_data *sd)
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear(struct map_session_data *sd)
 {
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
-	sd->autocast.type = AUTOCAST_NONE;
-	sd->autocast.skill_id = 0;
-	sd->autocast.skill_lv = 0;
-	sd->autocast.itemskill_conditions_checked = false;
-	sd->autocast.itemskill_check_conditions = false;
-	sd->autocast.itemskill_instant_cast = false;
-	sd->autocast.itemskill_cast_on_self = false;
+	pc->autocast_clear_current(sd);
+	VECTOR_TRUNCATE(sd->auto_cast); // Truncate auto-cast vector.
+}
 
-	return 1;
+/**
+ * Sets a character's currently processed auto-cast skill data by comparing the skill ID.
+ *
+ * @param sd The character.
+ * @param skill_id The skill ID to compare.
+ *
+ **/
+static void pc_autocast_set_current(struct map_session_data *sd, int skill_id)
+{
+	nullpo_retv(sd);
+
+	pc->autocast_clear_current(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id) {
+			sd->auto_cast_current = VECTOR_INDEX(sd->auto_cast, i);
+			break;
+		}
+	}
+}
+
+/**
+ * Removes a specific entry from a character's auto-cast vector.
+ *
+ * @param sd The character.
+ * @param type The entry's auto-cast type.
+ * @param skill_id The entry's skill ID.
+ * @param skill_lv The entry's skill level.
+ *
+ **/
+static void pc_autocast_remove(struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv)
+{
+	nullpo_retv(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).type == type && VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id
+		    && VECTOR_INDEX(sd->auto_cast, i).skill_lv == skill_lv) {
+			VECTOR_ERASE(sd->auto_cast, i);
+			break;
+		}
+	}
 }
 
 /*==========================================
@@ -12883,7 +12939,10 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
+	pc->autocast_clear_current = pc_autocast_clear_current;
 	pc->autocast_clear = pc_autocast_clear;
+	pc->autocast_set_current = pc_autocast_set_current;
+	pc->autocast_remove = pc_autocast_remove;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;

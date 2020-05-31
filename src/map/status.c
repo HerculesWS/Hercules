@@ -1596,7 +1596,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	}
 
 	if( skill_id ) {
-		if (src != NULL && (sd == NULL || sd->autocast.type != AUTOCAST_ITEM)) {
+		if (src != NULL && (sd == NULL || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
 			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;
 
@@ -1640,7 +1640,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				if (src != NULL
 				 && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR)
 				 && !(st->mode&MD_BOSS)
-				 && (src->type != BL_PC || sd->autocast.type != AUTOCAST_ITEM))
+				 && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM))
 					return 0;
 				break;
 			default:
@@ -1719,7 +1719,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				return 0; //Can't amp out of Wand of Hermode :/ [Skotlex]
 		}
 
-		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->autocast.type != AUTOCAST_ITEM)) {
+		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
 			//Skills blocked through status changes...
 			if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
 				sc->data[SC_SILENCE] ||
@@ -1737,6 +1737,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 				(sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
 				(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
 				(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id))
+				|| sc->data[SC_ALL_RIDING] != NULL // New mounts can't attack nor use skills in the client; this check makes it cheat-safe. [Ind]
 				))
 				return 0;
 
@@ -1785,8 +1786,6 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			} else if ( skill_id != ST_CHASEWALK )
 				return 0;
 		}
-		if( sc->data[SC_ALL_RIDING] )
-			return 0;//New mounts can't attack nor use skills in the client; this check makes it cheat-safe [Ind]
 	}
 
 	if (target == NULL || target == src) //No further checking needed.
