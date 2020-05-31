@@ -12401,6 +12401,50 @@ static BUILDIN(mobattached)
 	return true;
 }
 
+/**
+ * Announces a colored text in '<char_name> Shouts : <message>' format.
+ * Default color is white ("FFFFFF").
+ *
+ * This is a special use case of packet 0x009a where the message's first 34 bytes
+ * are reserved for string "micc" (4B) which identifies the broadcast as megaphone shout,
+ * the character's name (24B) and the text color (6B).
+ *
+ * 009a <packet len>.W <micc>.4B <char name>.24B <color>.6B <message>.?B
+ *
+ * @code{.herc}
+ *	loudhailer("<message>"{, "<color>"});
+ * @endcode
+ *
+ **/
+static BUILDIN(loudhailer)
+{
+	const char *mes = script_getstr(st, 2);
+	size_t len_mes = strlen(mes);
+
+	Assert_retr(false, len_mes + 33 < CHAT_SIZE_MAX); // +33 because of the '<char_name> Shouts : ' message prefix.
+
+	const char *color = script_hasdata(st, 3) ? script_getstr(st, 3) : "FFFFFF";
+
+	Assert_retr(false, strlen(color) == 6);
+
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return false;
+
+	char mes_formatted[CHAT_SIZE_MAX + 30] = "";
+
+	strcpy(mes_formatted, sd->status.name);
+	strcpy(mes_formatted + 24, color);
+	safesnprintf(mes_formatted + 30, CHAT_SIZE_MAX, "%s Shouts : %s", sd->status.name, mes);
+
+	size_t len_formatted = 30 + strlen(sd->status.name) + 10 + len_mes + 1;
+
+	clif->broadcast(&sd->bl, mes_formatted, (int)len_formatted, BC_MEGAPHONE, ALL_CLIENT);
+
+	return true;
+}
+
 /*==========================================
  *------------------------------------------*/
 static BUILDIN(announce)
@@ -27213,6 +27257,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(detachnpctimer,"?"), // detached the player id from the npc timer [Celest]
 		BUILDIN_DEF(playerattached,""), // returns id of the current attached player. [Skotlex]
 		BUILDIN_DEF(mobattached, ""),
+		BUILDIN_DEF(loudhailer, "s?"),
 		BUILDIN_DEF(announce,"si?????"),
 		BUILDIN_DEF(mapannounce,"ssi?????"),
 		BUILDIN_DEF(areaannounce,"siiiisi?????"),
