@@ -189,6 +189,8 @@ static int aclif_session_delete(int fd)
 	sd->post_headers_db = NULL;
 	aFree(sd->body);
 	sd->body = NULL;
+	aFree(sd->multi_parser);
+	sd->multi_parser = NULL;
 
 	httpparser->delete_parser(fd);
 	return 0;
@@ -272,6 +274,12 @@ void aclif_set_body(int fd, const char *body, size_t size)
 	memcpy(sd->body, body, size);
 	sd->body[size] = 0;
 	sd->body_size = size;
+
+	if (!httpparser->multi_parse(fd)) {
+		ShowWarning("Post headers parsing error %d\n", fd);
+		sockt->eof(fd);
+		return;
+	}
 }
 
 void aclif_set_header_name(int fd, const char *name, size_t size)
@@ -312,6 +320,49 @@ void aclif_set_header_value(int fd, const char *value, size_t size)
 	sd->headers_count ++;
 }
 
+void aclif_set_post_header_name(int fd, const char *name, size_t size)
+{
+	nullpo_retv(name);
+
+	if (size > MAX_POST_HEADER_NAME_SIZE) {
+		ShowWarning("Post header name size too big %d: %lu\n", fd, size);
+		sockt->eof(fd);
+		return;
+	}
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_retv(sd);
+
+	if (sd->post_headers_count >= MAX_POST_HEADER_COUNT) {
+		ShowWarning("Post header count too big %d: %d\n", fd, sd->post_headers_count);
+		sockt->eof(fd);
+		return;
+	}
+
+	aFree(sd->temp_header);
+	sd->temp_header = aMalloc(size + 1);
+	memcpy(sd->temp_header, name, size);
+	sd->temp_header[size] = '\x0';
+}
+
+void aclif_set_post_header_value(int fd, const char *value, size_t size)
+{
+	nullpo_retv(value);
+
+	if (size > MAX_POST_HEADER_VALUE_SIZE) {
+		ShowWarning("Post header value size too big %d: %lu\n", fd, size);
+		sockt->eof(fd);
+		return;
+	}
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_retv(sd);
+	char *ptr = aMalloc(size + 1);
+	memcpy(ptr, value, size);
+	ptr[size] = '\x0';
+	strdb_put(sd->post_headers_db, sd->temp_header, ptr);
+	sd->temp_header = NULL;
+	sd->post_headers_count ++;
+}
+
 void aclif_check_headers(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
@@ -326,28 +377,43 @@ void aclif_check_headers(int fd, struct api_session_data *sd)
 			return;
 		}
 	}
+
+	const char *content_type = strdb_get(sd->headers_db, "Content-Type");
+	if (content_type == NULL)
+		return;
+	const char *post_name = "multipart/form-data; boundary=";
+	const size_t post_name_sz = strlen(post_name);
+	if (strncmp(content_type, post_name, post_name_sz) != 0) {
+		return;
+	}
+	if (sd->parser.method != HTTP_POST) {
+		ShowError("Form data detected on non POST request: %d\n", fd);
+		sockt->eof(fd);
+		return;
+	}
+	const size_t sz = strlen(content_type + post_name_sz);
+	if (sz < MIN_BOUNDARY_SIZE || sz > MAX_BOUNDARY_SIZE) {
+		ShowError("Form boudary size is wrong %d: %lu\n", fd, sz);
+		sockt->eof(fd);
+		return;
+	}
+
+//	char *boundary = aMalloc(sz + 3);
+//	strcpy(boundary, "--");
+//	strcat(boundary, content_type + post_name_sz);
+	ShowInfo("boundary: %s\n", content_type + post_name_sz);
+
+//	httpparser->init_multi_parser(fd, sd, boundary);
+	httpparser->init_multi_parser(fd, sd, content_type + post_name_sz);
+//	aFree(boundary);
+
 }
 
 bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 {
 	nullpo_retr(false, sd);
-	const char *content_type = strdb_get(sd->headers_db, "Content-Type");
-	if (content_type == NULL)
-		return true;
-	const char *post_name = "multipart/form-data; boundary=";
-	const size_t post_name_sz = strlen(post_name);
-	if (strncmp(content_type, post_name, post_name_sz) != 0) {
-		return true;
-	}
-	if (sd->parser.method != HTTP_POST) {
-		ShowError("Form data detected on non POST request: %d\n", fd);
-		sockt->eof(fd);
-		return false;
-	}
-	char *boundary = aMalloc(strlen(content_type + post_name_sz) + 3);
-	strcpy(boundary, "--");
-	strcat(boundary, content_type + post_name_sz);
-	ShowInfo("boundary: %s\n", boundary);
+
+/// ?????
 
 	return true;
 }
@@ -409,6 +475,8 @@ void aclif_defaults(void)
 	aclif->set_body = aclif_set_body;
 	aclif->set_header_name = aclif_set_header_name;
 	aclif->set_header_value = aclif_set_header_value;
+	aclif->set_post_header_name = aclif_set_post_header_name;
+	aclif->set_post_header_value = aclif_set_post_header_value;
 	aclif->check_headers = aclif_check_headers;
 	aclif->decode_post_headers = aclif_decode_post_headers;
 

@@ -9,7 +9,7 @@ extern "C" {
 #include <sys/types.h>
 
 #ifndef MAX_BOUNDARY_SIZE
-#define MAX_BOUNDARY_SIZE 70
+#define MAX_BOUNDARY_SIZE 50
 #endif
 
 typedef struct multipartparser multipartparser;

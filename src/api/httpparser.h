@@ -43,7 +43,9 @@ struct httpparser_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 	bool (*parse) (int fd);
+	bool (*multi_parse) (int fd);
 	void (*init_parser) (int fd, struct api_session_data *sd);
+	void (*init_multi_parser) (int fd, struct api_session_data *sd, const char *boundary);
 	void (*delete_parser) (int fd);
 	void (*init_settings) (void);
 	void (*init_multi_settings) (void);

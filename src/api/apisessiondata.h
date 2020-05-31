@@ -49,6 +49,7 @@ struct api_session_data {
 	struct DBMap *headers_db;
 	struct DBMap *post_headers_db;
 	int headers_count;
+	int post_headers_count;
 	char *body;
 	size_t body_size;
 };

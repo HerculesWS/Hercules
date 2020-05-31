@@ -207,6 +207,7 @@ static int handler_on_body(struct http_parser *parser, const char *at, size_t le
 	}
 
 	aclif->set_body(fd, at, length);
+
 	return 0;
 }
 
@@ -229,15 +230,31 @@ static int handler_on_multi_part_begin(struct multipartparser *parser)
 
 static int handler_on_multi_header_field(struct multipartparser *parser, const char *data, size_t size)
 {
+	nullpo_ret(parser);
+	nullpo_ret(data);
+	GET_FD_SD;
+
+	if (sockt->session[fd]->flag.eof)
+		return 0;
+
 	if (isDebug)
-		ShowInfo("handler_on_multi_header_field\n");
+		ShowInfo("handler_on_multi_header_field: %lu: %.*s\n", size, (int)size, data);
+	aclif->set_post_header_name(fd, data, size);
 	return 0;
 }
 
 static int handler_on_multi_header_value(struct multipartparser *parser, const char *data, size_t size)
 {
+	nullpo_ret(parser);
+	nullpo_ret(data);
+	GET_FD_SD;
+
+	if (sockt->session[fd]->flag.eof)
+		return 0;
+
 	if (isDebug)
-		ShowInfo("handler_on_multi_header_value\n");
+		ShowInfo("handler_on_multi_header_value: %lu: %.*s\n", size, (int)size, data);
+	aclif->set_post_header_value(fd, data, size);
 	return 0;
 }
 
@@ -250,8 +267,13 @@ static int handler_on_multi_headers_complete(struct multipartparser *parser)
 
 static int handler_on_multi_data(struct multipartparser *parser, const char *data, size_t size)
 {
+	GET_FD_SD;
+
+	if (sockt->session[fd]->flag.eof)
+		return 0;
+
 	if (isDebug)
-		ShowInfo("handler_on_multi_data\n");
+		ShowInfo("handler_on_multi_data: %.*s\n", (int)size, data);
 	return 0;
 }
 
@@ -278,7 +300,25 @@ static bool httpparser_parse(int fd)
 	size_t data_size = RFIFOREST(fd);
 	size_t parsed_size = http_parser_execute(&sd->parser, httpparser->settings, RFIFOP(fd, 0), data_size);
 	RFIFOSKIP(fd, data_size);
+	if (data_size != parsed_size)
+		return false;
+
 	return data_size == parsed_size;
+}
+
+static bool httpparser_multi_parse(int fd)
+{
+	nullpo_ret(sockt->session[fd]);
+
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+
+	if (sd->multi_parser == NULL)
+		return true;
+	size_t parsed_size = multipartparser_execute(sd->multi_parser, httpparser->multi_settings, sd->body, sd->body_size);
+	if (parsed_size != sd->body_size) {
+		return false;
+	}
+	return true;
 }
 
 static void httpparser_init_parser(int fd, struct api_session_data *sd)
@@ -286,6 +326,15 @@ static void httpparser_init_parser(int fd, struct api_session_data *sd)
 	nullpo_retv(sd);
 	http_parser_init(&sd->parser, HTTP_REQUEST);
 	sd->parser.data = (void*)(intptr_t)fd;
+}
+
+static void httpparser_init_multi_parser(int fd, struct api_session_data *sd, const char *boundary)
+{
+	nullpo_retv(sd);
+	nullpo_retv(boundary);
+	sd->multi_parser = aMalloc(sizeof(multipartparser));
+	multipartparser_init(sd->multi_parser, boundary);
+	sd->multi_parser->data = (void*)(intptr_t)fd;
 }
 
 static void httpparser_delete_parser(int fd)
@@ -310,6 +359,7 @@ static void httpparser_init_settings(void)
 static void httpparser_init_multi_settings(void)
 {
 	httpparser->multi_settings = aCalloc(1, sizeof(struct multipartparser_callbacks));
+	multipartparser_callbacks_init(httpparser->multi_settings);
 	httpparser->multi_settings->on_body_begin = httpparser->on_multi_body_begin;
 	httpparser->multi_settings->on_part_begin = httpparser->on_multi_part_begin;
 	httpparser->multi_settings->on_header_field = httpparser->on_multi_header_field;
@@ -344,10 +394,12 @@ void httpparser_defaults(void)
 	httpparser->init = do_init_httpparser;
 	httpparser->final = do_final_httpparser;
 	httpparser->parse = httpparser_parse;
+	httpparser->multi_parse = httpparser_multi_parse;
 	httpparser->init_parser = httpparser_init_parser;
+	httpparser->init_multi_parser = httpparser_init_multi_parser;
 	httpparser->delete_parser = httpparser_delete_parser;
 	httpparser->init_settings = httpparser_init_settings;
-	httpparser->init_settings = httpparser_init_multi_settings;
+	httpparser->init_multi_settings = httpparser_init_multi_settings;
 
 	httpparser->on_message_begin = handler_on_message_begin;
 	httpparser->on_url = handler_on_url;

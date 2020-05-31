@@ -47,11 +47,20 @@
 #ifndef MAX_HEADER_VALUE_SIZE
 #define MAX_HEADER_VALUE_SIZE 200
 #endif
+#ifndef MAX_POST_HEADER_COUNT
+#define MAX_POST_HEADER_COUNT 7
+#endif
 #ifndef MAX_POST_HEADER_NAME_SIZE
-#define MAX_POST_HEADER_NAME_SIZE 10
+#define MAX_POST_HEADER_NAME_SIZE 20
 #endif
 #ifndef MAX_POST_HEADER_VALUE_SIZE
 #define MAX_POST_HEADER_VALUE_SIZE 100000
+#endif
+#ifndef MIN_BOUNDARY_SIZE
+#define MIN_BOUNDARY_SIZE 30
+#endif
+#ifndef MAX_BOUNDARY_SIZE
+#define MAX_BOUNDARY_SIZE 50
 #endif
 
 #ifndef HTTP_MAX_PROTOCOL
@@ -93,6 +102,8 @@ struct aclif_interface {
 	void (*set_body) (int fd, const char *body, size_t size);
 	void (*set_header_name) (int fd, const char *name, size_t size);
 	void (*set_header_value) (int fd, const char *value, size_t size);
+	void (*set_post_header_name) (int fd, const char *name, size_t size);
+	void (*set_post_header_value) (int fd, const char *value, size_t size);
 	void (*reportError) (int fd, struct api_session_data *sd);
 	void (*check_headers) (int fd, struct api_session_data *sd);
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
