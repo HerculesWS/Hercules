@@ -27871,6 +27871,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("P_AIRSHIP_INVALID_END_MAP", P_AIRSHIP_INVALID_END_MAP, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_NOT_ENOUGH", P_AIRSHIP_ITEM_NOT_ENOUGH, false, false);
 	script->set_constant("P_AIRSHIP_ITEM_INVALID", P_AIRSHIP_ITEM_INVALID, false, false);
+	
+	script->constdb_comment("player allowed actions when dead");
+	script->set_constant("PCALLOWACTION_NONE", PCALLOWACTION_NONE, false, false);
+	script->set_constant("PCALLOWACTION_TRADE", PCALLOWACTION_TRADE, false, false);
+	script->set_constant("PCALLOWACTION_CHAT", PCALLOWACTION_CHAT, false, false);
 
 	script->constdb_comment("questinfo types");
 	script->set_constant("QINFO_JOB", QINFO_JOB, false, false);
