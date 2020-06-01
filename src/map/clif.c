@@ -6235,7 +6235,7 @@ static void clif_displaymessage_sprintf(const int fd, const char *mes, ...)
 /// 009a <packet len>.W <message>.?B
 static void clif_broadcast(struct block_list *bl, const char *mes, int len, int type, enum send_target target)
 {
-	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
+	int lp = ((type & BC_COLOR_MASK) != 0 || (type & BC_MEGAPHONE) != 0) ? 4 : 0;
 	unsigned char *buf = NULL;
 	nullpo_retv(mes);
 
@@ -6247,6 +6247,8 @@ static void clif_broadcast(struct block_list *bl, const char *mes, int len, int 
 		WBUFL(buf,4) = 0x65756c62; //If there's "blue" at the beginning of the message, game client will display it in blue instead of yellow.
 	else if( type&BC_WOE )
 		WBUFL(buf,4) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
+	else if ((type & BC_MEGAPHONE) != 0)
+		WBUFL(buf, 4) = 0x6363696d; // If there's "micc" at the beginning of the message, the game client will recognize message as 'Megaphone shout'.
 	memcpy(WBUFP(buf, 4 + lp), mes, len);
 	clif->send(buf, WBUFW(buf,2), bl, target);
 

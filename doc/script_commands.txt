@@ -7527,6 +7527,16 @@ if GID is not given use the attached player.
 //=====================================
 ---------------------------------------
 
+*loudhailer("<message>"{, "<color>"})
+
+Announces a colored text in '<char_name> Shouts : <message>' format.
+<color> must be a string in "RRGGBB" format. If <color> is omitted,
+white ("FFFFFF") will be used.
+This command is specially created for the Megaphone_ item (12221),
+but will work in NPCs, too.
+
+---------------------------------------
+
 *announce("<text>", <flag>{, <fontColor>{, <fontType>{, <fontSize>{, <fontAlign>{, <fontY>}}}}})
 
 This command will broadcast a message to all or most players, similar to
