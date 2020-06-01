@@ -966,6 +966,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "skill_cd_entry", sizeof(struct skill_cd_entry), SERVER_TYPE_MAP },
 		{ "skill_condition", sizeof(struct skill_condition), SERVER_TYPE_MAP },
 		{ "skill_interface", sizeof(struct skill_interface), SERVER_TYPE_MAP },
+		{ "skill_required_item_data", sizeof(struct skill_required_item_data), SERVER_TYPE_MAP },
 		{ "skill_timerskill", sizeof(struct skill_timerskill), SERVER_TYPE_MAP },
 		{ "skill_unit", sizeof(struct skill_unit), SERVER_TYPE_MAP },
 		{ "skill_unit_group", sizeof(struct skill_unit_group), SERVER_TYPE_MAP },
