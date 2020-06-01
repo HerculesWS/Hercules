@@ -132,7 +132,9 @@
 #endif // PACKETVER_RE && (PACKETVER == 20120410 || PACKETVER == 10120418)
 
 // Comment the following line to disable sc_data saving. [Skotlex]
+#ifndef ENABLE_SC_SAVING
 #define ENABLE_SC_SAVING
+#endif
 
 #if PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
 // Comment the following like to disable server-side hot-key saving support. [Skotlex]
@@ -174,7 +176,9 @@
 #else
 	#define MAX_BASE_CARTS 5
 #endif
+#ifndef MAX_CARTS
 #define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
+#endif
 
 #ifndef MAX_INVENTORY
 #if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
@@ -204,19 +208,31 @@
 #endif
 //Number of slots carded equipment can have. Never set to less than 4 as they are also used to keep the data of forged items/equipment. [Skotlex]
 //Note: The client seems unable to receive data for more than 4 slots due to all related packets having a fixed size.
+#ifndef MAX_SLOTS
 #define MAX_SLOTS 4
+#endif
 //Max amount of a single stacked item
+#ifndef MAX_AMOUNT
 #define MAX_AMOUNT 30000
+#endif
+#ifndef MAX_ZENY
 #define MAX_ZENY INT_MAX
+#endif
 
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
+#ifndef MAX_BANK_ZENY
 #define MAX_BANK_ZENY INT_MAX
+#endif
 
 #ifndef MAX_LEVEL
 #define MAX_LEVEL 175
 #endif
+#ifndef MAX_FAME
 #define MAX_FAME 1000000000
+#endif
+#ifndef MAX_CART
 #define MAX_CART 100
+#endif
 #ifndef MAX_SKILL_DB
 #define MAX_SKILL_DB 1314 ///< Maximum number of skills in the skill DB (compacted array size)
 #endif
