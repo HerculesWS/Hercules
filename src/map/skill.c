@@ -12099,7 +12099,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					int tmpx = x - area + rnd()%(area * 2 + 1);
 					int tmpy = y - area + rnd()%(area * 2 + 1);
 
-					skill->addtimerskill(src,tick+r*250,0,tmpx,tmpy,GN_CRAZYWEED_ATK,skill_lv,-1,0);
+					skill->addtimerskill(src, tick + (int64)r * 250, 0, tmpx, tmpy, GN_CRAZYWEED_ATK, skill_lv, 0, 0);
 				}
 			}
 			break;
