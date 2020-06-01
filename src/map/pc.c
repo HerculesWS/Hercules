@@ -5173,7 +5173,7 @@ static int pc_useitem(struct map_session_data *sd, int n)
 		return 0;
 	}
 
-	if (battle_config.storage_use_item == 1 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
+	if (battle_config.storage_use_item == 0 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
 		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 1475));
 		return 0; // You cannot use this item while storage is open.
 	}
