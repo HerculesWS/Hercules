@@ -270,9 +270,8 @@ static int unit_steptimer(int tid, int64 tick, int id, intptr_t data)
 	} else {
 		// If a player has target_id set and target is in range, attempt attack
 		struct block_list *tbl = map->id2bl(target_id);
-		nullpo_retr(2, tbl);
-		if (status->check_visibility(bl, tbl) == 0) // Target not visible
-			return 1;
+		if (tbl == NULL || status->check_visibility(bl, tbl) == 0)
+			return 1; // Target does not exist (player offline, monster died, etc.) or target is not visible to source.
 		if (ud->stepskill_id == 0)
 			unit->attack(bl, tbl->id, ud->state.attack_continue + 2); // Execute normal attack
 		else
