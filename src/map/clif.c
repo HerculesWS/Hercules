@@ -10863,6 +10863,12 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		clif->updatestatus(sd, SP_SKILLPOINT);
 		clif->initialstatus(sd);
 
+		// Unequip items which can't be equipped by the character.
+		for (int i = 0; i < EQI_MAX; i++) {
+			if (sd->equip_index[i] >= 0 && pc->isequip(sd , sd->equip_index[i]) == 0)
+				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
+		}
+
 		if (pc_isfalcon(sd)) {
 			int sc_icn = status->get_sc_icon(SC_FALCON);
 			int sc_typ = status->get_sc_relevant_bl_types(SC_FALCON);
