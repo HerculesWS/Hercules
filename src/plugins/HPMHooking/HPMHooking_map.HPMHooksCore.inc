@@ -6104,8 +6104,6 @@ struct {
 	struct HPMHookPoint *HP_skill_validate_unit_flag_post;
 	struct HPMHookPoint *HP_skill_validate_additional_fields_pre;
 	struct HPMHookPoint *HP_skill_validate_additional_fields_post;
-	struct HPMHookPoint *HP_skill_validate_skilldb_pre;
-	struct HPMHookPoint *HP_skill_validate_skilldb_post;
 	struct HPMHookPoint *HP_skill_validate_weapontype_sub_pre;
 	struct HPMHookPoint *HP_skill_validate_weapontype_sub_post;
 	struct HPMHookPoint *HP_skill_validate_ammotype_sub_pre;
@@ -13029,8 +13027,6 @@ struct {
 	int HP_skill_validate_unit_flag_post;
 	int HP_skill_validate_additional_fields_pre;
 	int HP_skill_validate_additional_fields_post;
-	int HP_skill_validate_skilldb_pre;
-	int HP_skill_validate_skilldb_post;
 	int HP_skill_validate_weapontype_sub_pre;
 	int HP_skill_validate_weapontype_sub_post;
 	int HP_skill_validate_ammotype_sub_pre;

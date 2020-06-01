@@ -19927,9 +19927,9 @@ static int clif_autoshadowspell_list(struct map_session_data *sd)
 	WFIFOHEAD(fd, 2 * 6 + 4);
 	WFIFOW(fd,0) = 0x442;
 	for (i = 0, c = 0; i < MAX_SKILL_DB; i++)
-		if( sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 &&
-				sd->status.skill[i].id < GS_GLITTERING && skill->get_type(sd->status.skill[i].id) == BF_MAGIC )
-		{ // Can't auto cast both Extended class and 3rd class skills.
+		if (sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 && sd->status.skill[i].id < GS_GLITTERING
+		    && skill->get_type(sd->status.skill[i].id, sd->status.skill[i].lv) == BF_MAGIC) {
+			// Can't auto cast both Extended class and 3rd class skills.
 			WFIFOW(fd,8+c*2) = sd->status.skill[i].id;
 			c++;
 		}

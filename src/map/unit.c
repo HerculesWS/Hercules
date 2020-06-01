@@ -1152,7 +1152,7 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv)
 {
 	int casttime = skill->cast_fix(src, skill_id, skill_lv);
-	int castcancel = skill->get_castcancel(skill_id);
+	int castcancel = skill->get_castcancel(skill_id, skill_lv);
 	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
@@ -1567,7 +1567,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	//Check range when not using skill on yourself or is a combo-skill during attack
 	//(these are supposed to always have the same range as your attack)
 	if( src->id != target_id && (!temp || ud->attacktimer == INVALID_TIMER) ) {
-		if( skill->get_state(ud->skill_id) == ST_MOVE_ENABLE ) {
+		if (skill->get_state(ud->skill_id, ud->skill_lv) == ST_MOVE_ENABLE) {
 			if( !unit->can_reach_bl(src, target, range + 1, 1, NULL, NULL) )
 				return 0; // Walk-path check failed.
 		} else if( src->type == BL_MER && skill_id == MA_REMOVETRAP ) {
@@ -1790,7 +1790,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv)
 {
 	int casttime = skill->cast_fix(src, skill_id, skill_lv);
-	int castcancel = skill->get_castcancel(skill_id);
+	int castcancel = skill->get_castcancel(skill_id, skill_lv);
 	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
@@ -1872,7 +1872,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 		return 0; // Attacking will be handled by unit_walk_toxy_timer in this case
 	}
 
-	if( skill->get_state(ud->skill_id) == ST_MOVE_ENABLE ) {
+	if (skill->get_state(ud->skill_id, ud->skill_lv) == ST_MOVE_ENABLE) {
 		if( !unit->can_reach_bl(src, &bl, range + 1, 1, NULL, NULL) )
 			return 0; //Walk-path check failed.
 	} else if( !battle->check_range(src, &bl, range) )

@@ -3121,7 +3121,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->validate_unit_target, HP_skill_validate_unit_target) },
 	{ HP_POP(skill->validate_unit_flag, HP_skill_validate_unit_flag) },
 	{ HP_POP(skill->validate_additional_fields, HP_skill_validate_additional_fields) },
-	{ HP_POP(skill->validate_skilldb, HP_skill_validate_skilldb) },
 	{ HP_POP(skill->validate_weapontype_sub, HP_skill_validate_weapontype_sub) },
 	{ HP_POP(skill->validate_ammotype_sub, HP_skill_validate_ammotype_sub) },
 	{ HP_POP(skill->validate_unit_flag_sub, HP_skill_validate_unit_flag_sub) },
