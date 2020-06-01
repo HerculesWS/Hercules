@@ -3692,8 +3692,8 @@ static int set_reg(struct script_state *st, struct map_session_data *sd, int64 n
 		const char *str = (const char*)value;
 
 		if (script->is_permanent_variable(name) && strlen(str) > SCRIPT_STRING_VAR_LENGTH) {
-			ShowError("script:set_reg: Value of variable %s is too long: %lu! Maximum is %d. Skipping...\n",
-				  name, strlen(str), SCRIPT_STRING_VAR_LENGTH);
+			ShowError("script:set_reg: Value of variable %s is too long: %d! Maximum is %d. Skipping...\n",
+				  name, (int)strlen(str), SCRIPT_STRING_VAR_LENGTH);
 
 			if (st != NULL) {
 				script->reportsrc(st);
