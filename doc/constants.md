@@ -5133,6 +5133,18 @@
 - `PCBLOCK_COMMANDS`: 128
 - `PCBLOCK_NPC`: 256
 
+### NPC item action constants
+
+- `ITEMENABLEDNPC_NONE`: 0
+- `ITEMENABLEDNPC_EQUIP`: 1
+- `ITEMENABLEDNPC_CONSUME`: 2
+
+### NPC allowed skill use constants
+
+- `SKILLENABLEDNPC_NONE`: 0
+- `SKILLENABLEDNPC_SELF`: 1
+- `SKILLENABLEDNPC_ALL`: 2
+
 ### private airship responds
 
 - `P_AIRSHIP_NONE`: 0
