@@ -5163,7 +5163,8 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	nullpo_ret(sd);
 	Assert_ret(n >= 0 && n < sd->status.inventorySize);
 
-	if (sd->npc_id || sd->state.workinprogress & 1) {
+	if ((sd->npc_id != 0 && (sd->npc_item_flag & ITEMENABLEDNPC_CONSUME) == 0)
+	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else

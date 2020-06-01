@@ -580,6 +580,8 @@ struct Battle_Config {
 
 	int magicrod_type;
 
+	int skill_enabled_npc;
+
 	int feature_enable_achievement;
 
 	int ping_timer_interval;
