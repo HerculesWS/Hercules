@@ -10,6 +10,82 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.05.31] `May 31 2020`
+
+### Added
+
+- Added the possibility to declare local NPC functions as public or private. (#2142)
+  - Functions declared as private can be called from other scripts with the syntax `"npc name"::function_name()`.
+  - The configuration option `script_configuration.functions_private_by_default` controls whether functions are public or private when not specified.
+- Added a new cast condition `MSC_MAGICATTACKED` to the mob skill database, allowing mobs to react to magical attacks. (#2733, issue #2578)
+- Added support for level-specific values in the skill database fields `Hit`, `AttackType`, `InterruptCast`, `CastDefRate`, `Requirement.State`, `Unit.Id`, `Unit.Interval`, `Unit.Target`, `Requirements.Items.Amount` (part of #2731)
+  - Removed hardcoded required item amounts for various skills, moving them to the skill database.
+- Added support for `Requirements.Items.Any` in the skill database, allowing skills that require any one of their item conditions to be verified (as opposed to all). (part of #2731, issue #1250)
+- Added support for `Requirements.Equip` in the skill database, allowing to specify a required equipment to cast a skill. (part of #2731)
+  - Removed hardcoded equip requirements for various skills, moving them to the skill database.
+- Added support for `Requirements.MaxSPTrigger` in the skill database, allowing to specify a maximum SP percentage that allows to cast a skill. (part of #2731)
+- Added/updated packets, encryption keys and message tables for clients up to 2020-05-20. (#2713)
+- Added support for the gcc sanitizer flags `address-use-after-scope`, `pointer-overflow`, `builtin`, `pointer-compare`, `pointer-subtract`, `shift-exponent`, `shift-base`, `sanitize-address-use-after-scope`. (part of #2713)
+- Added support for binary and octal number literals in scripts and libconfig configuration files, using the syntax 0b000 / 0o000. (#2671)
+- Added support for number separators in number literals in scripts and libconfig configuration files. The symbol `_` can be used as grouping separator (`1_000_000`, `0x_ffff_ffff`, etc). (part of #2671)
+- Added support for overriding `ENABLE_SC_SAVING`, `MAX_CARTS`, `MAX_SLOTS`, `MAX_AMOUNT`, `MAX_ZENY`, `MAX_BANK_ZENY`, `MAX_FAME`, `MAX_CART` through CFLAGS. (#2220)
+- Added a `skill_enabled_npc` battle flag allowing to specify whether self-targeted or targeted skills can be used while interacting with NPCs. (part of #2718, issue #862)
+- Added the `loudhailer()` script command, as used by the `Megaphone_` item. (#2758, issue #2751)
+
+### Changed
+
+- Added validation for the maximum length of permanent string variables and consolidated it to 255 characters. This requires a database migration. (#2705, issue #1037)
+- Split the `mapreg` SQL table into separate tables for integer and string variables. This requires a database migration. (#2720)
+- Updated the AUTHORS file to include names and emails from every commit so far. A helper script `tools/authors.sh` to extract them has been added. (#2729, issue #245)
+- Updated the drop chance of the Black and White Wing Suits. (#2739, issue #562)
+- Improved validation and bounds checking in the skill database loader. (#2731)
+  - Increased the maximum length of the skill descriptions (display names) to 50. (part of #2731)
+  - Increased the maximum skill level to 20 (to support `NPC_RUN`). (part of #2731)
+  - Capped the SkillInstances values to 25 (`MAX_SKILLUNITGROUP`) in the skill database. (part of #2731)
+- Extended the `item_enabled_npc` battle flag and the `enable_items()`/`disable_items()` script commands with finer grained options to allow the use of usable items or equipment while interacting with NPCs. (#2718)
+- Changed the default setting of `player_warp_keep_direction` to match the official servers' setting. (#2752)
+- Replaced the (failing) gitlab-ci centos6 builds with centos8 (released in september 2019). (#2759)
+
+### Fixed
+
+- Fixed the logic and interaction between the (element)proof Potions and Undead Scrolls and their status icons. (#2708)
+- Fixed an issue in the Lost Puppies quest causing the dogs to be unable to reappear. (#2698)
+- Fixed a possible data corruption caused by gender mismatch after a changesex/changecharsex operation. (#2714, issue #985)
+- Fixed a warning and name truncation when receiving a whisper message with a recipient name with a length of 24 characters. This allows to whisper to scripts with a name length up to 20 (through the `NPC:name` syntax). (#2721, issue #718)
+- Fixed interaction between `itemskill()` other item/skill uses, including other `itemskill()`. The autocast code has been changed to use a vector, to allow multiple concurrent skills. (#2699)
+  - It's now possible to use multiple `itemskill()` calls in the same item, as long there is at most one targeted skill, and it's the last one used.
+  - It's now possible to use items while the target cursor for a previously activated skill is visible, without aborting it. (issue #816)
+  - It's now possible to use a scroll while casting another skill (and the provided skill will be cast after the current one finishes). (issue #1026)
+- Fixed use of Fly Wing/Butterfly Wing while riding a cash shop mount (Boarding Halter) and having a falcon. (part of #2699, issue #2750)
+- Fixed the `Requirements.MaxHPTrigger` conditions for mercenary skills. (part of #2731)
+- Fixed a possible memory corruption or crash in the mob delayed removal function. (part of #2713, issue #2719)
+- Fixed a crash in the `npcshopdelitem()` script command. (part of #2713)
+- Fixed a crash in the achievement progress update code. (part of #2713)
+- Fixed a possible crash in the RODEX check name function. (part of #2713)
+- Added null pointer checks for missing view data in clif and status code. (part of #2713)
+- Added a check for the current map in mob and map code. (part of #2713)
+- Fixed an error or possible crash when a mob dies on an invalid map. (part of #2713)
+- Fixed an incorrect npc ID for the MOTD script after reloading or unloading scripts. (part of #2713)
+- Fixed an use after free in `party->broken()`. (part of #7213)
+- Fixed a possible crash in `mapif->guild_withdraw()`. (part of #2713)
+- Fixed a null pointer error in `unit->steptimer()`. (#2723, issue #2707)
+- Fixed the left-shift of a negative value in `GN_CRAZYWEED_ATK`. (#2734, issue #1151)
+- Fixed a missing "Beloved" attribute on the eggs of renamed pets. (#2744, issue #2743)
+- Fixed an inverted logic in the `storage_use_item` battle flag. (#2746)
+- Fixed the mineffect map property flag so that it's not affected by the character's minimized effects but only by the map type. It's enabled on all the guild castles, regardless of whether WoE is running. (#2754, issue #803)
+- Fixed a crash in the equip check code if a character logs wearing an item that was previously, but is no longer, equippable. (#2745)
+- Fixed a compiler warnings in 32 bit builds. (#2759)
+
+### Deprecated
+
+- Deprecated the (unintended and undocumented) possibility of calling local NPC functions as event labels if their name started with `On`. (part of #2142, issue #2137)
+  - The functionality is now disabled by default, and can be enabled by changing the `script_configuration.functions_as_events` setting.
+
+### Removed
+
+- Removed old debug code from the `SC_DANCING` case of `status_change_end_()`. (#2736, issue #2716)
+- Removed useless `FixedCastTime` values from the pre-re skill database. (part of #2731)
+
 ## [v2020.05.03] `May 03 2020`
 
 ### Added
@@ -1360,6 +1436,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.05.31]: https://github.com/HerculesWS/Hercules/compare/v2020.05.03...v2020.05.31
 [v2020.05.03]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05+1...v2020.05.03
 [v2020.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05...v2020.04.05+1
 [v2020.04.05]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+2...v2020.04.05
