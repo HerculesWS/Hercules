@@ -825,51 +825,12 @@ re:debian-testing:
 pre_re:centos-previous:
   <<: *branch_exceptions
   stage: platforms
-  image: centos:6
-  services:
-    - mysql:5.5
-  variables:
-    <<: *base_vars
-    SQLHOST: mysql
-  before_script:
-    - echo "Building $CI_BUILD_NAME"
-    - uname -a
-    - yum -y update
-    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql centos-release-scl
-    - yum install -y devtoolset-6-toolchain
-    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
-    - ./tools/ci/travis.sh getplugins || true
-  script:
-    - 'source /opt/rh/devtoolset-6/enable && ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal'
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-re:centos-previous:
-  <<: *branch_exceptions
-  stage: platforms
-  image: centos:6
-  services:
-    - mysql:5.5
-  variables:
-    <<: *base_vars
-    SQLHOST: mysql
-  before_script:
-    - echo "Building $CI_BUILD_NAME"
-    - uname -a
-    - yum -y update
-    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql centos-release-scl
-    - yum install -y devtoolset-6-toolchain
-    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
-    - ./tools/ci/travis.sh getplugins || true
-  script:
-    - 'source /opt/rh/devtoolset-6/enable && ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot'
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-pre_re:centos-current:
-  <<: *branch_exceptions
-  stage: platforms
   image: centos:7
   services:
     - mariadb:5.5
+  variables:
+    <<: *base_vars
+    SQLHOST: mariadb
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
@@ -877,9 +838,47 @@ pre_re:centos-current:
     - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
     - ./tools/ci/travis.sh getplugins || true
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:centos-previous:
+  <<: *branch_exceptions
+  stage: platforms
+  image: centos:7
+  services:
+    - mariadb:5.5
   variables:
     <<: *base_vars
     SQLHOST: mariadb
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:centos-current:
+  <<: *branch_exceptions
+  stage: platforms
+  image: centos:8
+  services:
+    - mariadb:10.3
+  variables:
+    <<: *base_vars
+    SQLHOST: mariadb
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb python2
+    - alternatives --set python /usr/bin/python2
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
@@ -887,19 +886,20 @@ pre_re:centos-current:
 re:centos-current:
   <<: *branch_exceptions
   stage: platforms
-  image: centos:7
+  image: centos:8
   services:
-    - mariadb:5.5
+    - mariadb:10.3
+  variables:
+    <<: *base_vars
+    SQLHOST: mariadb
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - yum -y update
-    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb
+    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb python2
+    - alternatives --set python /usr/bin/python2
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
     - ./tools/ci/travis.sh getplugins || true
-  variables:
-    <<: *base_vars
-    SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
