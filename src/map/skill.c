@@ -20662,8 +20662,8 @@ static void skill_validate_name(struct config_setting_t *conf, struct s_skill_db
 		ShowError("%s: No name specified for skill ID %d in %s! Skipping skill...\n",
 			  __func__, sk->nameid, conf->file);
 	else if (strlen(name) >= sizeof(sk->name))
-		ShowError("%s: Specified name %s for skill ID %d in %s is too long: %lu! Maximum is %lu. Skipping skill...\n",
-			  __func__, name, sk->nameid, conf->file, strlen(name), sizeof(sk->name) - 1);
+		ShowError("%s: Specified name %s for skill ID %d in %s is too long: %d! Maximum is %d. Skipping skill...\n",
+			  __func__, name, sk->nameid, conf->file, (int)strlen(name), (int)sizeof(sk->name) - 1);
 	else if (skill->name_contains_invalid_character(name))
 		ShowError("%s: Specified name %s for skill ID %d in %s contains invalid characters! Allowed characters are letters, numbers and underscores. Skipping skill...\n",
 			  __func__, name, sk->nameid, conf->file);
@@ -20719,8 +20719,8 @@ static void skill_validate_description(struct config_setting_t *conf, struct s_s
 
 	if (libconfig->setting_lookup_string(conf, "Description", &description) == CONFIG_TRUE && *description != '\0') {
 		if (strlen(description) >= sizeof(sk->desc))
-			ShowWarning("%s: Specified description '%s' for skill ID %d in %s is too long: %lu! Maximum is %lu. Trimming...\n",
-				    __func__, description, sk->nameid, conf->file, strlen(description), sizeof(sk->desc) - 1);
+			ShowWarning("%s: Specified description '%s' for skill ID %d in %s is too long: %d! Maximum is %d. Trimming...\n",
+				    __func__, description, sk->nameid, conf->file, (int)strlen(description), (int)sizeof(sk->desc) - 1);
 
 		safestrncpy(sk->desc, description, sizeof(sk->desc));
 	}
