@@ -434,16 +434,38 @@ marked as usable in pet scripts to work in there reliably.
 Numbers
 -------
 
+The Hercules scripting engine supports 4 types of number literals:
+
+type          base      syntax
+----------------------------------------------
+decimal       10        255
+hexadecimal   16        0xFF
+octal         8         0o377
+binary        2         0b11111111
+
 Beside the common decimal numbers, which are nothing special whatsoever
 (though do not expect to use fractions, since ALL numbers are integer in
 this language), the script engine also handles hexadecimal numbers, which
 are otherwise identical. Writing a number like '0x<hex digits>' will make
 it recognized as a hexadecimal value. Notice that 0x10 is equal to 16.
-Also notice that if you try to 'mes 0x10' it will print '16'.
+Also notice that if you try to 'mes 0x10' it will print '16'. If you wish
+to make calculations in base 8, you can also use the octal notation like
+'0o<octal digits>'. To make calculations in base 2 (binary), you can use
+the binary notation like '0b<binary digits>'.
+
+The following are all equivalent:
+	255 == 0xFF == 0o377 == 0b11111111
 
 Number values can't exceed the limits of an integer variable: Any number
 greater than INT_MAX (2147483647) or smaller than INT_MIN (-2147483648) will
 be capped to those values and will cause a warning to be reported.
+
+Underscores can also be used as visual separators for digit grouping purposes:
+	2_147_483_647
+	0x7FFF_FFFF
+
+Keep in mind that number literals cannot start or end with a separator and no
+more than one separator can be used in a row (so 12_3___456 is illegal).
 
 Variables
 ---------

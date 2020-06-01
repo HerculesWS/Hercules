@@ -2,4 +2,6 @@
 /config.status
 /gen/*.c
 /gen/*.h
+/gen/*.orig
+/gen/*.rej
 /autom4te.cache

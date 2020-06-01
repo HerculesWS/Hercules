@@ -60,6 +60,8 @@
 
 #define INT64_HEX_FMT "%I64X"
 
+#define INT64_OCT_FMT "%I64o"
+
 #define FILE_SEPARATOR "\\"
 
 #else /* defined(WIN32) || defined(__MINGW32__) */
@@ -68,6 +70,8 @@
 #define UINT64_FMT "%llu"
 
 #define INT64_HEX_FMT "%llX"
+
+#define INT64_OCT_FMT "%llo"
 
 #define FILE_SEPARATOR "/"
 

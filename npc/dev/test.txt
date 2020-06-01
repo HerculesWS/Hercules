@@ -156,6 +156,15 @@ function	script	HerculesSelfTestHelper	{
 	.once = 1;
 	.errors = 0;
 
+	// number literals
+	callsub(OnCheck, "decimal number literal", 255, 255);
+	callsub(OnCheck, "hexadecimal number literal", 0xFF, 255);
+	callsub(OnCheck, "octal number literal", 0o377, 255);
+	callsub(OnCheck, "binary number literal", 0b11111111, 255);
+	callsub(OnCheck, "binary literal bitwise OR", 0b11110000 | 0xF, 255);
+	callsub(OnCheck, "decimal literal with separator", 2_5_5, 255);
+	callsub(OnCheck, "binary literal with separator", 0b_1111_1111, 255);
+
 	// Callsub (basic)
 	callsub(OnCheck, "Callsub", 1, 1);
 	callsub(OnCheck, "Callsub (getarg default values)", 1);

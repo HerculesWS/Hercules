@@ -1240,6 +1240,80 @@ static const char *parse_variable(const char *p)
 	return p;
 }
 
+/**
+ * Converts a number expression literal to an actual integer.
+ * Number separators are skipped.
+ *
+ * expects these formats:
+ *     1337
+ *     0x1337
+ *     0b1001
+ *     0o1337
+ *
+ * example with separating nibbles of a binary literal:
+ *     0b1101_0111_1001_1111
+ *
+ * @param p - a pointer to the first char of the number literal
+ * @param lli - a pointer to the resulting long long integer
+ * @returns a pointer to the first char after the parsed number
+*/
+static const char *parse_number(const char *p, long long *lli) {
+	nullpo_retr(NULL, p);
+
+	const bool unary_plus = (*p == '+');
+	const bool unary_minus = (*p == '-');
+
+	if (unary_plus || unary_minus) {
+		p++;
+	}
+
+	if (ISNSEPARATOR(*p)) {
+		disp_error_message("parse_number: number literals cannot begin with a separator", p);
+	}
+
+#define PARSENUMBER(skip, func, radix) \
+	for (p += skip; func(*p) || (ISNSEPARATOR(*p) && (func(p[1]) || ISNSEPARATOR(p[1]))); ++p) { \
+		if (func(*p)) { \
+			*lli *= radix; \
+			*lli += (*p < 'A') ? (*p & 0xF) : (9 + (*p & 0x7)); \
+		} else if (ISNSEPARATOR(p[1])) { \
+			disp_error_message("parse_number: number literals cannot contain two separators in a row", p + 1); \
+		} \
+	}
+
+	if (*p == '0' && p[1] == 'x') {
+		PARSENUMBER(2, ISXDIGIT, 16);
+	} else if (*p == '0' && p[1] == 'o') {
+		PARSENUMBER(2, ISODIGIT, 8);
+	} else if (*p == '0' && p[1] == 'b') {
+		PARSENUMBER(2, ISBDIGIT, 2);
+	} else {
+		PARSENUMBER(0, ISDIGIT, 10);
+	}
+
+#undef PARSENUMBER
+
+	if (ISNSEPARATOR(*p)) {
+		disp_error_message("parse_number: number literals cannot end with a separator", p);
+	}
+
+	if (unary_minus) {
+		// reverse the sign
+		*lli = -(*lli);
+	}
+
+	// make sure we can't underflow/overflow
+	if (*lli < INT_MIN) {
+		*lli = INT_MIN;
+		script->disp_warning_message("parse_number: underflow detected, capping value to INT_MIN", p);
+	} else if (*lli > INT_MAX) {
+		*lli = INT_MAX;
+		script->disp_warning_message("parse_number: overflow detected, capping value to INT_MAX", p);
+	}
+
+	return p;
+}
+
 /*
  * Checks whether the gives string is a number literal
  *
@@ -1256,24 +1330,44 @@ static const char *parse_variable(const char *p)
 static bool is_number(const char *p)
 {
 	const char *np;
-	if (!p)
-		return false;
-	if (*p == '-' || *p == '+')
+	nullpo_retr(false, p);
+
+	if (*p == '-' || *p == '+') {
 		p++;
-	np = p;
-	if (*p == '0' && p[1] == 'x') {
-		p+=2;
-		np = p;
-		// Hexadecimal
-		while (ISXDIGIT(*np))
-			np++;
-	} else {
-		// Decimal
-		while (ISDIGIT(*np))
-			np++;
 	}
-	if (p != np && *np != '_' && !ISALPHA(*np)) // At least one digit, and next isn't a letter or _
+
+	np = p;
+
+	if (*p == '0' && p[1] == 'x') {
+		// Hexadecimal: 0xFFFF
+		np = (p += 2);
+		while (ISXDIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	} else if (*p == '0' && p[1] == 'b') {
+		// Binary: 0b0001
+		np = (p += 2);
+		while (ISBDIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	} else if (*p == '0' && p[1] == 'o') {
+		// Octal: 0o1500
+		np = (p += 2);
+		while (ISODIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	} else if (ISDIGIT(*p)) {
+		// Decimal: 1234
+		while (ISDIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	}
+
+	if (p != np && *np != '_' && !ISALPHA(*np)) {
+		// At least one digit, and next isn't a letter or _
 		return true;
+	}
+
 	return false;
 }
 
@@ -1367,21 +1461,9 @@ static const char *parse_simpleexpr_paren(const char *p)
 
 static const char *parse_simpleexpr_number(const char *p)
 {
-	char *np = NULL;
-	long long lli;
+	long long lli = 0;
+	const char *np = parse_number(p, &lli);
 
-	nullpo_retr(NULL, p);
-	while (*p == '0' && ISDIGIT(p[1]))
-		p++; // Skip leading zeros, we don't support octal literals
-
-	lli = strtoll(p, &np, 0);
-	if (lli < INT_MIN) {
-		lli = INT_MIN;
-		script->disp_warning_message("parse_simpleexpr: underflow detected, capping value to INT_MIN", p);
-	} else if (lli > INT_MAX) {
-		lli = INT_MAX;
-		script->disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX", p);
-	}
 	script->addi((int)lli); // Cast is safe, as it's already been checked for overflows
 
 	return np;
