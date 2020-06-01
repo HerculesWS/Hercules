@@ -4499,6 +4499,7 @@ ACMD(loadnpc)
 	// add to list of script sources and run it
 	npc->addsrcfile(message);
 	npc->parsesrcfile(message,true);
+	npc->motd = npc->name2id("HerculesMOTD");
 	npc->read_event_script();
 
 	clif->message(fd, msg_fd(fd,262));
@@ -4533,6 +4534,7 @@ ACMD(unloadnpc)
 
 	npc->unload_duplicates(nd, (flag != 0));
 	npc->unload(nd, true, (flag != 0));
+	npc->motd = npc->name2id("HerculesMOTD");
 	npc->read_event_script();
 	clif->message(fd, msg_fd(fd, 112)); /// Npc Disabled.
 	return true;
@@ -4588,6 +4590,7 @@ ACMD(reloadnpc)
 	clif->message(fd, msg_fd(fd, 1386)); /// File unloaded. Be aware that...
 	npc->addsrcfile(file_path);
 	npc->parsesrcfile(file_path, true);
+	npc->motd = npc->name2id("HerculesMOTD");
 	npc->read_event_script();
 	clif->message(fd, msg_fd(fd, 262)); /// Script loaded.
 	return true;

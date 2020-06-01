@@ -6407,13 +6407,24 @@ static int status_get_class(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
-		case BL_PC:  return BL_UCCAST(BL_PC, bl)->status.class;
-		case BL_MOB: return BL_UCCAST(BL_MOB, bl)->vd->class; //Class used on all code should be the view class of the mob.
-		case BL_PET: return BL_UCCAST(BL_PET, bl)->pet.class_;
-		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.class_;
-		case BL_MER: return BL_UCCAST(BL_MER, bl)->mercenary.class_;
-		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->class_;
-		case BL_ELEM: return BL_UCCAST(BL_ELEM, bl)->elemental.class_;
+		case BL_PC:
+			return BL_UCCAST(BL_PC, bl)->status.class;
+		case BL_MOB:
+		{
+			const struct view_data *const vd = BL_UCCAST(BL_MOB, bl)->vd;
+			nullpo_ret(vd);
+			return vd->class; //Class used on all code should be the view class of the mob.
+		}
+		case BL_PET:
+			return BL_UCCAST(BL_PET, bl)->pet.class_;
+		case BL_HOM:
+			return BL_UCCAST(BL_HOM, bl)->homunculus.class_;
+		case BL_MER:
+			return BL_UCCAST(BL_MER, bl)->mercenary.class_;
+		case BL_NPC:
+			return BL_UCCAST(BL_NPC, bl)->class_;
+		case BL_ELEM:
+			return BL_UCCAST(BL_ELEM, bl)->elemental.class_;
 	}
 	return 0;
 }

@@ -936,19 +936,25 @@ static void clif_clearunit_area(struct block_list *bl, enum clr_type type)
 static int clif_clearunit_delayed_sub(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = (struct block_list *)data;
+	nullpo_ret(bl);
+	Assert_ret(bl->m >= 0 && bl->m < map->count);
+	if (map->list[bl->m].block == NULL) {
+		// avoid error report for missing/removed map
+		ers_free(clif->delay_clearunit_ers, bl);
+		return 0;
+	}
 	clif->clearunit_area(bl, (enum clr_type) id);
-	ers_free(clif->delay_clearunit_ers,bl);
+	ers_free(clif->delay_clearunit_ers, bl);
 	return 0;
 }
 
 static void clif_clearunit_delayed(struct block_list *bl, enum clr_type type, int64 tick)
 {
-	struct block_list *tbl;
-
 	nullpo_retv(bl);
-	tbl = ers_alloc(clif->delay_clearunit_ers, struct block_list);
-	memcpy (tbl, bl, sizeof (struct block_list));
-	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)tbl);
+	Assert_retv(bl->type == BL_MOB);
+	struct mob_data *md = ers_alloc(clif->delay_clearunit_ers, struct mob_data);
+	memcpy (md, bl, sizeof (struct mob_data));
+	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)md);
 }
 
 /// Gets weapon view info from sd's inventory_data and points (*rhand,*lhand)
@@ -1031,6 +1037,7 @@ static void clif_set_unit_idle2(struct block_list *bl, struct map_session_data *
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = idle_unit2Type;
@@ -1087,6 +1094,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 
 #if PACKETVER < 20091103
 	if (!pc->db_checkid(vd->class)) {
@@ -1197,6 +1205,7 @@ static void clif_spawn_unit2(struct block_list *bl, enum send_target target)
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = spawn_unit2Type;
@@ -1244,6 +1253,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 
 #if PACKETVER < 20091103
 	if (!pc->db_checkid(vd->class)) {
@@ -1357,6 +1367,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 
 	nullpo_retv(bl);
 	nullpo_retv(ud);
+	nullpo_retv(vd);
 
 	sd = BL_CAST(BL_PC, bl);
 
@@ -15474,6 +15485,7 @@ static void clif_parse_GMKick(int fd, struct map_session_data *sd)
 			}
 			npc->unload_duplicates(nd, true);
 			npc->unload(nd, true, true);
+			npc->motd = npc->name2id("HerculesMOTD");
 			npc->read_event_script();
 		}
 		break;
@@ -22299,7 +22311,7 @@ static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id
 	sPacket->Class = class_;
 	sPacket->BaseLevel = base_level;
 #if PACKETVER >= 20160316
-	strncpy(sPacket->Name, name, NAME_LENGTH);
+	safestrncpy(sPacket->Name, name, NAME_LENGTH);
 #endif
 	WFIFOSET(fd, sizeof(*sPacket));
 #endif
@@ -24192,7 +24204,7 @@ static int do_init_clif(bool minimal)
 	timer->add_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
 	timer->add_func_list(clif->delayquit, "clif_delayquit");
 
-	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
+	clif->delay_clearunit_ers = ers_new(sizeof(struct mob_data), "clif.c::delay_clearunit_ers", ERS_OPT_CLEAR);
 	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
 
 #if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
