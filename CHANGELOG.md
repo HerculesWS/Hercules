@@ -10,6 +10,15 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.05.31+1] `May 31 2020` `PATCH 1`
+
+### Fixed
+
+- Fixed a crash in the db2sql plugin with the MariaDB client library. (#2748)
+- Fixed the job level stat bonuses for the Novice class to match the official servers. (#2747)
+- Fixed an issue that caused the walk-path check to be never executed for skills that require the caster to be able to move. (#2761)
+- Fixed an issue that caused "Unknown Skill" errors to appear while casting skills. The default value for the skill damage type field of the skill database is now `NK_NONE` instead of `NK_NO_DAMAGE`. (#2761, issue #2760)
+
 ## [v2020.05.31] `May 31 2020`
 
 ### Added
@@ -1436,6 +1445,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.05.31+1]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31...v2020.05.31+1
 [v2020.05.31]: https://github.com/HerculesWS/Hercules/compare/v2020.05.03...v2020.05.31
 [v2020.05.03]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05+1...v2020.05.03
 [v2020.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05...v2020.04.05+1
