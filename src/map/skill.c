@@ -21208,9 +21208,6 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 			}
 		}
 	}
-
-	if (sk->nk == NK_NONE)
-		sk->nk = NK_NO_DAMAGE;
 }
 
 /**
