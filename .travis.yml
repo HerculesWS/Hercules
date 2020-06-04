@@ -9,12 +9,17 @@ addons:
 install:
   - ./tools/ci/travis.sh getplugins || true
 
+arch:
+  - amd64
+
 before_script:
   - uname -a
+  - env
   - ulimit -c unlimited -S
-  - ./tools/ci/travis.sh createdb ragnarok root
-  - ./tools/ci/travis.sh importdb ragnarok root
-  - ./tools/ci/travis.sh adduser ragnarok travis travis root
+  - if [[ "$(uname -m)" != "x86_64" ]]; then $SUDO ./tools/ci/travis.sh startmysql; fi
+  - $SUDO ./tools/ci/travis.sh createdb ragnarok root
+  - $SUDO ./tools/ci/travis.sh importdb ragnarok root
+  - $SUDO ./tools/ci/travis.sh adduser ragnarok travis travis root
 
 script:
   - if [[ ! -z "${HPM}" ]]; then ./tools/ci/travis.sh buildhpm $CONFIGURE_FLAGS; fi
@@ -117,9 +122,57 @@ jobs:
   - compiler: clang
     env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
   - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot"
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-packetver=20200304 --enable-buildbot"
   - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror --enable-buildbot"
+    env: CONFIGURE_FLAGS="--enable-debug CC=gcc-10 --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc-10
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug CC=gcc-10 --disable-renewal --enable-Werror --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc-10
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug CC=gcc --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug CC=gcc --disable-renewal --enable-Werror --enable-packetver=20200304 --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    env: CONFIGURE_FLAGS="--enable-debug CC=gcc-10 --enable-packetver-zero --enable-Werror --enable-packetver=20200304 --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc-10
+        - libpcre3-dev
+        - mysql-server
   - compiler: gcc
     env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot"
     addons:
@@ -192,6 +245,87 @@ jobs:
         packages:
         - gdb
         - gcc-8
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-10 --disable-manager --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc-10
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-10 --disable-manager --disable-renewal --enable-Werror --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc-10
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-10 --disable-manager --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc-10
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-10 --disable-manager --disable-renewal --enable-Werror --enable-buildbot" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - gdb
+        - gcc-10
+        - libpcre3-dev
+        - mysql-server
+  - compiler: gcc
+    arch: arm64
+    env: CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-10 --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot --disable-manager" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - libpcre3-dev
+        - gdb
+        - mysql-server
+        - gcc-10
+  - compiler: gcc
+    arch: arm64
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror CC=gcc-10 --enable-packetver=20200304 --enable-packetver-re --enable-buildbot --disable-manager" SUDO="sudo"
+    dist: focal
+    addons:
+      apt:
+        packages:
+        - libpcre3-dev
+        - gdb
+        - mysql-server
+        - gcc-10
+  - compiler: gcc
+    arch: ppc64le
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot --disable-manager" SUDO="sudo"
+    dist: bionic
+    addons:
+      apt:
+        packages:
+        - libpcre3-dev
+        - gdb
+        - mysql-server
+# big endian not supported
+#  - compiler: gcc
+#    arch: s390x
+#    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror --enable-packetver=20200304 --enable-packetver-re --enable-buildbot" ROOT="true"
+#    addons:
+#      apt:
+#        packages:
+#        - libpcre3-dev
+#        - gdb
 
 notifications:
   email: false
