@@ -223,8 +223,16 @@ static int handler_on_multi_body_begin(struct multipartparser *parser)
 
 static int handler_on_multi_part_begin(struct multipartparser *parser)
 {
+	nullpo_ret(parser);
+	GET_FD_SD;
+
+	if (sockt->session[fd]->flag.eof)
+		return 0;
+
 	if (isDebug)
 		ShowInfo("handler_on_multi_part_begin\n");
+
+	aclif->multi_part_start(fd, sd);
 	return 0;
 }
 
@@ -239,6 +247,7 @@ static int handler_on_multi_header_field(struct multipartparser *parser, const c
 
 	if (isDebug)
 		ShowInfo("handler_on_multi_header_field: %lu: %.*s\n", size, (int)size, data);
+
 	aclif->set_post_header_name(fd, data, size);
 	return 0;
 }
@@ -254,6 +263,7 @@ static int handler_on_multi_header_value(struct multipartparser *parser, const c
 
 	if (isDebug)
 		ShowInfo("handler_on_multi_header_value: %lu: %.*s\n", size, (int)size, data);
+
 	aclif->set_post_header_value(fd, data, size);
 	return 0;
 }
@@ -267,6 +277,7 @@ static int handler_on_multi_headers_complete(struct multipartparser *parser)
 
 static int handler_on_multi_data(struct multipartparser *parser, const char *data, size_t size)
 {
+	nullpo_ret(parser);
 	GET_FD_SD;
 
 	if (sockt->session[fd]->flag.eof)
@@ -274,20 +285,40 @@ static int handler_on_multi_data(struct multipartparser *parser, const char *dat
 
 	if (isDebug)
 		ShowInfo("handler_on_multi_data: %.*s\n", (int)size, data);
+
+	aclif->set_post_header_data(fd, data, size);
 	return 0;
 }
 
 static int handler_on_multi_part_end(struct multipartparser *parser)
 {
+	nullpo_ret(parser);
+	GET_FD_SD;
+
+	if (sockt->session[fd]->flag.eof)
+		return 0;
+
 	if (isDebug)
 		ShowInfo("handler_on_multi_part_end\n");
+
+	aclif->multi_part_complete(fd, sd);
+
 	return 0;
 }
 
 static int handler_on_multi_body_end(struct multipartparser *parser)
 {
+	nullpo_ret(parser);
+	GET_FD_SD;
+
+	if (sockt->session[fd]->flag.eof)
+		return 0;
+
 	if (isDebug)
 		ShowInfo("handler_on_multi_body_end\n");
+
+	aclif->multi_body_complete(fd, sd);
+
 	return 0;
 }
 

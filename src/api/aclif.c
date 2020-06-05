@@ -43,6 +43,7 @@
 #include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
+#include "api/mimepart.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -168,9 +169,19 @@ static int aclif_connected(int fd)
 	CREATE(sd, struct api_session_data, 1);
 	sd->fd = fd;
 	sd->headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_HEADER_NAME_SIZE);
-	sd->post_headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_POST_HEADER_NAME_SIZE);
+	sd->post_headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_POST_HEADER_NAME_SIZE);
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
+	return 0;
+}
+
+static int aclif_post_headers_destroy_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct MimePart *part = DB->data2ptr(data);
+	if (part && part->data) {
+		aFree(part->data);
+		part->data = NULL;
+	}
 	return 0;
 }
 
@@ -185,12 +196,14 @@ static int aclif_session_delete(int fd)
 	sd->temp_header = NULL;
 	db_destroy(sd->headers_db);
 	sd->headers_db = NULL;
-	db_destroy(sd->post_headers_db);
+	sd->post_headers_db->destroy(sd->post_headers_db, aclif->post_headers_destroy_sub);
 	sd->post_headers_db = NULL;
 	aFree(sd->body);
 	sd->body = NULL;
 	aFree(sd->multi_parser);
 	sd->multi_parser = NULL;
+	aFree(sd->temp_mime_header);
+	sd->temp_mime_header = NULL;
 
 	httpparser->delete_parser(fd);
 	return 0;
@@ -338,10 +351,13 @@ void aclif_set_post_header_name(int fd, const char *name, size_t size)
 		return;
 	}
 
-	aFree(sd->temp_header);
-	sd->temp_header = aMalloc(size + 1);
-	memcpy(sd->temp_header, name, size);
-	sd->temp_header[size] = '\x0';
+	char *buf = aStrndup(name, size);
+	if (strcmp(buf, "Content-Disposition") == 0) {
+		sd->mime_flag = MIME_FLAG_CONTENT_DISPOSITION;
+	} else if (strcmp(buf, "Content-Type") == 0) {
+		sd->mime_flag = MIME_FLAG_CONTENT_TYPE;
+	}
+	aFree(buf);
 }
 
 void aclif_set_post_header_value(int fd, const char *value, size_t size)
@@ -355,12 +371,97 @@ void aclif_set_post_header_value(int fd, const char *value, size_t size)
 	}
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_retv(sd);
-	char *ptr = aMalloc(size + 1);
-	memcpy(ptr, value, size);
-	ptr[size] = '\x0';
-	strdb_put(sd->post_headers_db, sd->temp_header, ptr);
-	sd->temp_header = NULL;
-	sd->post_headers_count ++;
+
+	if (sd->mime_flag == MIME_FLAG_CONTENT_DISPOSITION) {
+		// form-data; name="myname"
+		char *buf0 = aStrndup(value, size);
+		char *buf = buf0;
+		const char *format = "form-data; name=\"";
+		const size_t sz = strlen(format);
+		if (strncmp(buf, format, sz) != 0) {
+			ShowError("Unknown multi header value %d\n", fd);
+			aFree(buf0);
+			sockt->eof(fd);
+			return;
+		}
+		buf += sz;
+		char *ptr = strchr(buf, '"');
+		if (ptr == NULL || ptr <= buf + 1) {
+			ShowError("Corrupted multi header value %d\n", fd);
+			ShowError("test '%s' %p, '%s' %p\n", buf, (void*)buf, ptr, (void*)ptr);
+			aFree(buf0);
+			sockt->eof(fd);
+			return;
+		}
+		safestrncpy(sd->temp_mime_header->name, buf, ptr - buf + 1);
+		// on file upload here should be also '; filename="filename.txt"' but we ignoring it
+		aFree(buf0);
+	} else if (sd->mime_flag == MIME_FLAG_CONTENT_TYPE) {
+		char *buf = aStrndup(value, size);
+		safestrncpy(sd->temp_mime_header->content_type, buf, sizeof(sd->temp_mime_header->content_type));
+		aFree(buf);
+	} else {
+		ShowError("Unknown multi header value %d\n", fd);
+		sockt->eof(fd);
+		return;
+	}
+}
+
+void aclif_set_post_header_data(int fd, const char *value, size_t size)
+{
+	nullpo_retv(value);
+
+	if (size > MAX_POST_HEADER_DATA_SIZE) {
+		ShowWarning("Post header data size too big %d: %lu\n", fd, size);
+		sockt->eof(fd);
+		return;
+	}
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_retv(sd);
+	sd->temp_mime_header->data = aMalloc(size + 1);
+	memcpy(sd->temp_mime_header->data, value, size);
+	sd->temp_mime_header->data[size] = '\x0';
+}
+
+void aclif_multi_part_start(int fd, struct api_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	sd->flag.multi_part_begin = 1;
+	sd->flag.multi_part_complete = 0;
+	if (sd->temp_mime_header)
+		aFree(sd->temp_mime_header);
+	sd->temp_mime_header = aCalloc(1, sizeof(*sd->temp_mime_header));
+	sd->mime_flag = MIME_FLAG_NONE;
+}
+
+void aclif_multi_part_complete(int fd, struct api_session_data *sd)
+{
+	nullpo_retv(sd);
+	nullpo_retv(sd->temp_mime_header);
+	Assert_retv(sd->flag.multi_part_begin == 1);
+
+	strdb_put(sd->post_headers_db, sd->temp_mime_header->name, sd->temp_mime_header);
+
+	sd->temp_mime_header = NULL;
+
+	sd->flag.multi_part_begin = 0;
+	sd->flag.multi_part_complete = 1;
+	sd->mime_flag = MIME_FLAG_NONE;
+}
+
+void aclif_multi_body_complete(int fd, struct api_session_data *sd)
+{
+	nullpo_retv(sd);
+	struct MimePart *data;
+
+	struct DBIterator *iter = db_iterator(sd->post_headers_db);
+	for (data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+		ShowError("found mime headers: %s, %s, '%s'\n", data->name, data->content_type, data->data);
+	}
+
+	dbi_destroy(iter);
+
 }
 
 void aclif_check_headers(int fd, struct api_session_data *sd)
@@ -477,6 +578,11 @@ void aclif_defaults(void)
 	aclif->set_header_value = aclif_set_header_value;
 	aclif->set_post_header_name = aclif_set_post_header_name;
 	aclif->set_post_header_value = aclif_set_post_header_value;
+	aclif->set_post_header_data = aclif_set_post_header_data;
+	aclif->multi_part_start = aclif_multi_part_start;
+	aclif->multi_part_complete = aclif_multi_part_complete;
+	aclif->multi_body_complete = aclif_multi_body_complete;
+	aclif->post_headers_destroy_sub = aclif_post_headers_destroy_sub;
 	aclif->check_headers = aclif_check_headers;
 	aclif->decode_post_headers = aclif_decode_post_headers;
 

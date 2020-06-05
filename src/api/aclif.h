@@ -54,7 +54,10 @@
 #define MAX_POST_HEADER_NAME_SIZE 20
 #endif
 #ifndef MAX_POST_HEADER_VALUE_SIZE
-#define MAX_POST_HEADER_VALUE_SIZE 100000
+#define MAX_POST_HEADER_VALUE_SIZE 100
+#endif
+#ifndef MAX_POST_HEADER_DATA_SIZE
+#define MAX_POST_HEADER_DATA_SIZE 100000
 #endif
 #ifndef MIN_BOUNDARY_SIZE
 #define MIN_BOUNDARY_SIZE 30
@@ -66,6 +69,9 @@
 #ifndef HTTP_MAX_PROTOCOL
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 #endif
+
+union DBKey;
+struct DBData;
 
 enum req_flags {
 	REQ_DEFAULT = 0,
@@ -104,6 +110,11 @@ struct aclif_interface {
 	void (*set_header_value) (int fd, const char *value, size_t size);
 	void (*set_post_header_name) (int fd, const char *name, size_t size);
 	void (*set_post_header_value) (int fd, const char *value, size_t size);
+	void (*set_post_header_data) (int fd, const char *data, size_t size);
+	void (*multi_part_start) (int fd, struct api_session_data *sd);
+	void (*multi_part_complete) (int fd, struct api_session_data *sd);
+	void (*multi_body_complete) (int fd, struct api_session_data *sd);
+	int (*post_headers_destroy_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*reportError) (int fd, struct api_session_data *sd);
 	void (*check_headers) (int fd, struct api_session_data *sd);
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);

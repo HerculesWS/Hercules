@@ -30,22 +30,33 @@
 
 struct HttpHandler;
 struct multipartparser;
+struct MimePart;
+
+enum e_mime_flag {
+	MIME_FLAG_NONE = 0,
+	MIME_FLAG_CONTENT_DISPOSITION = 1,
+	MIME_FLAG_CONTENT_TYPE = 2
+};
 
 struct api_session_data {
 	int fd;
 	struct http_parser parser;
 	struct multipartparser *multi_parser;
 	struct api_flag {
-		uint message_begin : 1;     // message parsing started
-		uint headers_complete : 1;  // headers parsing complete
-		uint message_complete : 1;  // message parsing complete
-		uint url : 1;               // url parsing complete
-		uint status : 1;            // status code parsing complete
-		uint body : 1;              // body parsing complete
+		uint message_begin : 1;        // message parsing started
+		uint headers_complete : 1;     // headers parsing complete
+		uint message_complete : 1;     // message parsing complete
+		uint url : 1;                  // url parsing complete
+		uint status : 1;               // status code parsing complete
+		uint body : 1;                 // body parsing complete
+		uint multi_part_begin : 1;     // multi part parsing started
+		uint multi_part_complete : 1;  // multi part parsing complete
 	} flag;
 	char *url;
 	struct HttpHandler *handler;
 	char *temp_header;
+	struct MimePart *temp_mime_header;
+	enum e_mime_flag mime_flag;
 	struct DBMap *headers_db;
 	struct DBMap *post_headers_db;
 	int headers_count;
