@@ -71,7 +71,8 @@ function run_server {
 function run_test {
 	echo "Running: test_$1"
 	sysctl -w kernel.core_pattern=core || true
-	./test_$1 2>runlog.txt
+	rm -rf core* || true
+	CRASH_PLEASE=1 ./test_$1 2>runlog.txt
 	export errcode=$?
 	export teststr=$(head -c 10000 runlog.txt)
 	if [[ -n "${teststr}" ]]; then
@@ -83,6 +84,13 @@ function run_test {
 	fi
 	if [ ${errcode} -ne 0 ]; then
 		echo "test $1 terminated with exit code ${errcode}"
+		echo cat runlog.txt
+		cat runlog.txt
+		echo crash dump
+		COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1)
+		if [[ -f "$COREFILE" ]]; then
+			gdb -c "$COREFILE" $1 -ex "thread apply all bt" -ex "set pagination 0" -batch
+		fi
 		aborterror "Test failed"
 	fi
 }
