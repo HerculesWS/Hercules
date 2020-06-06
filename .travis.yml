@@ -24,6 +24,9 @@ script:
 compiler: false # Necessary at the top level because referenced by allow_failures
 env: ignore=this # Necessary at the top level because referenced by allow_failures
 
+git:
+  depth: 1
+
 jobs:
   allow_failures:
   - compiler: clang
