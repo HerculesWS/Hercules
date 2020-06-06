@@ -37,6 +37,7 @@ function usage {
 	echo "    $0 build [configure args]"
 	echo "    $0 test <dbname> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 getplugins"
+	echo "    $0 startmysql"
 	exit 1
 }
 
@@ -154,12 +155,14 @@ case "$MODE" in
 		;;
 	adduser)
 		echo "Adding user $NEWUSER as $DBUSER, with access to database $DBNAME..."
-		echo 'mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';"' || true
 		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
-		echo 'mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';"' || true
 		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
-		echo 'mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';"' || true
 		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
+		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+
 		;;
 	build)
 		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
@@ -250,6 +253,13 @@ EOF
 		#else
 		#	echo "Plugin not found, skipping advanced tests."
 		#fi
+		;;
+	startmysql)
+		echo "Starting mysql..."
+		service mysql status || true
+		service mysql stop || true
+		service mysql start || true
+		service mysql status || true
 		;;
 	*)
 		usage
