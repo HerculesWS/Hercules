@@ -67,6 +67,7 @@ static int inter_party_check_lv(struct party_data *p)
 	if (p->party.exp == 1 && inter_party->check_exp_share(p) == 0) {
 		p->party.exp = 0;
 		mapif->party_optionchanged(0, &p->party, 0, 0);
+		inter_party->tosql(&p->party, PS_BASIC, 0);
 		return 0;
 	}
 
