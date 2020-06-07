@@ -69,12 +69,12 @@ static bool httpsender_send_html(int fd, const char *data)
 	ShowError("httpsender_send_html\n");
 	nullpo_retr(false, data);
 
-	const int sz = strlen(data);
+	const size_t sz = strlen(data);
 	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: text/html\n"
-		"Content-Length: %d\n"
+		"Content-Length: %lu\n"
 		"\n"
 		"%s",
 		httpsender->server_name, sz, data);
