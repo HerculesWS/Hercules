@@ -776,7 +776,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 	Assert_retv(type >= 0 && type < SC_MAX);
 
 	//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
-	if( type == SC_RUN )
+	if (type == SC_RUN)
 		clif->sc_load(bl, bl->id, AREA, status->get_sc_icon(SC_TING), 0, 0, 0);
 
 	struct unit_data *ud = unit->bl2ud(bl);
