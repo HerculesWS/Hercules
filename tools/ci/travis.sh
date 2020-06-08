@@ -223,7 +223,7 @@ EOF
 		[ $? -eq 0 ] || aborterror "Unable to override inter-server configuration, aborting tests."
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
-		PLUGINS="--load-plugin HPMHooking --load-plugin sample"
+		PLUGINS="--load-plugin HPMHooking"
 		echo "run tests"
 		if [[ $DBUSER == "travis" ]]; then
 			echo "Disable leak dection on travis"
@@ -237,10 +237,31 @@ EOF
 		run_server ./login-server
 		run_server ./char-server
 		run_server ./map-server "$ARGS"
-		echo "run all servers wit HPM"
+		echo "run all servers with HPM"
 		run_server ./login-server "$PLUGINS"
 		run_server ./char-server "$PLUGINS"
 		run_server ./map-server "$ARGS $PLUGINS"
+		echo "run all servers with sample plugin"
+		run_server ./login-server "$PLUGINS --load-plugin sample"
+		run_server ./char-server "$PLUGINS --load-plugin sample"
+		run_server ./map-server "$PLUGINS --load-plugin sample"
+		echo "run all servers with constdb2doc"
+		run_server ./map-server "$PLUGINS --load-plugin constdb2doc --constdb2doc"
+		echo "run all servers with db2sql"
+		run_server ./map-server "$PLUGINS --load-plugin db2sql --db2sql"
+		run_server ./map-server "$PLUGINS --load-plugin db2sql --itemdb2sql"
+		run_server ./map-server "$PLUGINS --load-plugin db2sql --mobdb2sql"
+#		echo "run all servers with dbghelpplug"
+#		run_server ./login-server "$PLUGINS --load-plugin dbghelpplug"
+#		run_server ./char-server "$PLUGINS --load-plugin dbghelpplug"
+#		run_server ./map-server "$PLUGINS --load-plugin dbghelpplug"
+		echo "run all servers with generate-translations"
+		run_server ./map-server "$PLUGINS --load-plugin generate-translations --generate-translations"
+		echo "run all servers with mapcache"
+# for other flags need grf or other files
+		run_server ./map-server "$PLUGINS --load-plugin mapcache --fix-md5"
+		echo "run all servers with script_mapquit"
+		run_server ./map-server "$PLUGINS --load-plugin script_mapquit"
 		;;
 	getplugins)
 		echo "Cloning plugins repository..."
