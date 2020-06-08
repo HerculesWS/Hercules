@@ -263,8 +263,8 @@ ve_fild06	mapflag	nightenabled
 ve_fild07	mapflag	nightenabled
 
 //Episode 12 ====================
-poring_c01	mapflag	nightenabled
-poring_c02	mapflag	nightenabled
+//poring_c01	mapflag	nightenabled
+//poring_c02	mapflag	nightenabled
 nameless_i	mapflag	nightenabled
 nameless_n	mapflag	nightenabled
 poring_w01	mapflag	nightenabled

@@ -186,8 +186,8 @@ kh_kiehl01	mapflag	noteleport
 kh_kiehl02	mapflag	noteleport
 que_rachel	mapflag	noteleport
 que_thor	mapflag	noteleport
-poring_c01	mapflag	noteleport
-poring_c02	mapflag	noteleport
+//poring_c01	mapflag	noteleport
+//poring_c02	mapflag	noteleport
 que_job01	mapflag	noteleport
 que_job02	mapflag	noteleport
 que_job03	mapflag	noteleport

@@ -153,8 +153,8 @@ que_god01	mapflag	nobranch
 que_god02	mapflag	nobranch
 que_bingo	mapflag	nobranch
 que_hugel	mapflag	nobranch
-poring_c01	mapflag	nobranch
-poring_c02	mapflag	nobranch
+//poring_c01	mapflag	nobranch
+//poring_c02	mapflag	nobranch
 kh_mansion	mapflag	nobranch
 kh_rossi	mapflag	nobranch
 kh_school	mapflag	nobranch
