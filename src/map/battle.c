@@ -7681,6 +7681,8 @@ static void do_init_battle(bool minimal)
 
 static void do_final_battle(void)
 {
+	if (map->minimal)
+		return;
 	ers_destroy(battle->delay_damage_ers);
 }
 
