@@ -402,7 +402,6 @@ bool fix_md5_truncation_sub(FILE *fp, const char *map_name)
 
 	fseek(fp, 0, SEEK_SET);
 	fwrite(&mheader, sizeof(mheader), 1, fp);
-	fclose(fp);
 
 	return true;
 }
