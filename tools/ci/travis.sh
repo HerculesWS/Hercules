@@ -227,9 +227,9 @@ EOF
 		echo "run tests"
 		if [[ $DBUSER == "travis" ]]; then
 			echo "Disable leak dection on travis"
-			export ASAN_OPTIONS=detect_leaks=0:detect_stack_use_after_return=true:strict_init_order=true
+			export ASAN_OPTIONS=detect_leaks=0:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		else
-			export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true
+			export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		fi
 		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
 		run_test libconfig
