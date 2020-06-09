@@ -122,7 +122,7 @@ jobs:
         - gdb
         - gcc-6
   - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-7 --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
+    env: CONFIGURE_FLAGS="--enable-debug --disable-manager --disable-renewal --enable-Werror --enable-buildbot"
     addons:
       apt:
         sources:
