@@ -817,7 +817,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		return false;
 	}
 
-	// determine destination cell
+	// Determine destination cell
 	int to_x = bl->x;
 	int to_y = bl->y;
 	Assert_retr(false, sc->data[type]->val2 >= UNIT_DIR_FIRST && sc->data[type]->val2 < UNIT_DIR_MAX);
@@ -832,7 +832,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		if (map->getcell(bl->m, bl, step_x, step_y, CELL_CHKPASS) == 0)
 			break;
 
-		//if sprinting and there's a PC/Mob/NPC, block the path [Kevin]
+		// If sprinting and there's a PC/Mob/NPC blocking the path [Kevin]
 		if (map->count_oncell(bl->m, step_x, step_y, BL_PC | BL_MOB | BL_NPC, 0x2) != 0)
 			break;
 
@@ -843,7 +843,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 	if (step_count > 1 && unit->walk_toxy(bl, to_x, to_y, 1) == 0)
 		return true;
 
-	//There must be an obstacle nearby. Attempt walking one cell at a time.
+	// There must be an obstacle nearby. Attempt walking one cell at a time.
 	do {
 		to_x -= dir_x;
 		to_y -= dir_y;
