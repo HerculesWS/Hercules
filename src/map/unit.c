@@ -806,13 +806,9 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
  **/
 static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc_type type)
 {
-	struct status_change *sc;
-	short to_x,to_y,dir_x,dir_y;
-	int i;
-
 	nullpo_retr(false, bl);
-	sc = status->get_sc(bl);
 
+	struct status_change *sc = status->get_sc(bl);
 	if( !(sc && sc->data[type]) )
 		return false;
 
@@ -821,14 +817,15 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		return false;
 	}
 
-	dir_x = dirx[sc->data[type]->val2];
-	dir_y = diry[sc->data[type]->val2];
-
 	// determine destination cell
-	to_x = bl->x;
-	to_y = bl->y;
+	int to_x = bl->x;
+	int to_y = bl->y;
+	Assert_retr(false, sc->data[type]->val2 >= UNIT_DIR_FIRST && sc->data[type]->val2 < UNIT_DIR_MAX);
+	int dir_x = dirx[sc->data[type]->val2];
+	int dir_y = diry[sc->data[type]->val2];
 
 	// Search for available path
+	int i;
 	for(i = 0; i < AREA_SIZE; i++) {
 		if (!map->getcell(bl->m, bl, to_x + dir_x, to_y + dir_y, CELL_CHKPASS))
 			break;
