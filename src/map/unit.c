@@ -827,15 +827,17 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 	// Search for available path
 	int step_count;
 	for (step_count = 0; step_count < AREA_SIZE; step_count++) {
-		if (!map->getcell(bl->m, bl, to_x + dir_x, to_y + dir_y, CELL_CHKPASS))
+		int step_x = to_x + dir_x;
+		int step_y = to_y + dir_y;
+		if (map->getcell(bl->m, bl, step_x, step_y, CELL_CHKPASS) == 0)
 			break;
 
 		//if sprinting and there's a PC/Mob/NPC, block the path [Kevin]
-		if ( map->count_oncell(bl->m, to_x + dir_x, to_y + dir_y, BL_PC | BL_MOB | BL_NPC, 0x2) )
+		if (map->count_oncell(bl->m, step_x, step_y, BL_PC | BL_MOB | BL_NPC, 0x2) != 0)
 			break;
 
-		to_x += dir_x;
-		to_y += dir_y;
+		to_x = step_x;
+		to_y = step_y;
 	}
 
 	if (step_count > 1 && unit->walk_toxy(bl, to_x, to_y, 1) == 0)
