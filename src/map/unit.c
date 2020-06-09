@@ -854,7 +854,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		return false;
 	}
 
-	return 1;
+	return true;
 }
 
 //Makes bl attempt to run dist cells away from target. Uses hard-paths.
