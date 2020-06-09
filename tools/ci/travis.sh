@@ -38,6 +38,7 @@ function usage {
 	echo "    $0 test <dbname> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 getplugins"
 	echo "    $0 startmysql"
+	echo "    $0 extratest"
 	exit 1
 }
 
@@ -251,6 +252,7 @@ EOF
 		run_server ./map-server "$PLUGINS --load-plugin db2sql --db2sql"
 		run_server ./map-server "$PLUGINS --load-plugin db2sql --itemdb2sql"
 		run_server ./map-server "$PLUGINS --load-plugin db2sql --mobdb2sql"
+# look like works on windows only
 #		echo "run all servers with dbghelpplug"
 #		run_server ./login-server "$PLUGINS --load-plugin dbghelpplug"
 #		run_server ./char-server "$PLUGINS --load-plugin dbghelpplug"
@@ -262,6 +264,15 @@ EOF
 		run_server ./map-server "$PLUGINS --load-plugin mapcache --fix-md5"
 		echo "run all servers with script_mapquit"
 		run_server ./map-server "$PLUGINS --load-plugin script_mapquit"
+		;;
+	extratest)
+		export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
+		PLUGINS="--load-plugin HPMHooking"
+		echo "run map server with uncommented old and custom scripts"
+		find ./npc -type f -name "*.conf" -exec ./tools/ci/uncomment.sh {} \;
+		run_server ./login-server "$PLUGINS"
+		run_server ./char-server "$PLUGINS"
+		run_server ./map-server "$ARGS $PLUGINS"
 		;;
 	getplugins)
 		echo "Cloning plugins repository..."

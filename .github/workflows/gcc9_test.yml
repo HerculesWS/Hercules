@@ -40,6 +40,7 @@ jobs:
       SQLHOST: mariadb
       CC: ${{ matrix.CC }}
       CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} --enable-lto
+      PACKET_VERSION: ${{ matrix.PACKET_VERSION }}
     steps:
       - uses: actions/checkout@v1
         with:
@@ -69,3 +70,8 @@ jobs:
       - name: test
         run: |
           ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+      - name: extra test
+        if: env.PACKET_VERSION != '--enable-packetver=20130724'
+        run: |
+          ./tools/ci/travis.sh extratest
