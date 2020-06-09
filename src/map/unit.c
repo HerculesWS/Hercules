@@ -809,10 +809,10 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 	nullpo_retr(false, bl);
 
 	struct status_change *sc = status->get_sc(bl);
-	if( !(sc && sc->data[type]) )
+	if (sc == NULL || sc->data[type] == NULL)
 		return false;
 
-	if( !unit->can_move(bl) ) {
+	if (unit->can_move(bl) == 0) {
 		status_change_end(bl, type, INVALID_TIMER);
 		return false;
 	}
