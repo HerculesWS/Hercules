@@ -800,7 +800,11 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 
 /**
  * Makes character run, used for SC_RUN and SC_WUGDASH
- * @param sd Required only when using SC_WUGDASH
+ *
+ * @param bl block_list of the unit that is running
+ * @param sc @see struct status_change of @p bl
+ * @param sd map_session_data of @p bl. *Required only when using SC_WUGDASH*
+ * @param type sc_type @p bl is affected by while running
  * @retval true Finished running
  * @retval false Hit an object/Couldn't run
  **/
