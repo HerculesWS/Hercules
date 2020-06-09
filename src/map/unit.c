@@ -825,8 +825,8 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 	int dir_y = diry[sc->data[type]->val2];
 
 	// Search for available path
-	int i;
-	for(i = 0; i < AREA_SIZE; i++) {
+	int step_count;
+	for (step_count = 0; step_count < AREA_SIZE; step_count++) {
 		if (!map->getcell(bl->m, bl, to_x + dir_x, to_y + dir_y, CELL_CHKPASS))
 			break;
 
@@ -838,16 +838,16 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		to_y += dir_y;
 	}
 
-	if (i > 1 && unit->walk_toxy(bl, to_x, to_y, 1) == 0)
+	if (step_count > 1 && unit->walk_toxy(bl, to_x, to_y, 1) == 0)
 		return true;
 
 	//There must be an obstacle nearby. Attempt walking one cell at a time.
 	do {
 		to_x -= dir_x;
 		to_y -= dir_y;
-	} while (--i > 0 && unit->walk_toxy(bl, to_x, to_y, 1) != 0);
+	} while (--step_count > 0 && unit->walk_toxy(bl, to_x, to_y, 1) != 0);
 
-	if (i <= 0) {
+	if (step_count <= 0) {
 		unit->run_hit(bl, sc, sd, type);
 		return false;
 	}
