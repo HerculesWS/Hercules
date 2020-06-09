@@ -838,13 +838,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		to_y += dir_y;
 	}
 
-	// Can't run forward
-	if( (to_x == bl->x && to_y == bl->y ) || (to_x == (bl->x+1) || to_y == (bl->y+1)) || (to_x == (bl->x-1) || to_y == (bl->y-1))) {
-		unit->run_hit(bl, sc, sd, type);
-		return false;
-	}
-
-	if (unit->walk_toxy(bl, to_x, to_y, 1) == 0)
+	if (i > 1 && unit->walk_toxy(bl, to_x, to_y, 1) == 0)
 		return true;
 
 	//There must be an obstacle nearby. Attempt walking one cell at a time.
@@ -853,7 +847,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 		to_y -= dir_y;
 	} while (--i > 0 && unit->walk_toxy(bl, to_x, to_y, 1) != 0);
 
-	if ( i == 0 ) {
+	if (i <= 0) {
 		unit->run_hit(bl, sc, sd, type);
 		return false;
 	}
