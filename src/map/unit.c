@@ -930,16 +930,11 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 
 		if (sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > PET_INTIMACY_NONE)
 		{ // Check if pet needs to be teleported. [Skotlex]
-			int flag = 0;
 			struct block_list* pbl = &sd->pd->bl;
-			if( !checkpath && !path->search(NULL,pbl,pbl->m,pbl->x,pbl->y,dst_x,dst_y,0,CELL_CHKNOPASS) )
-				flag = 1;
-			else if (!check_distance_bl(&sd->bl, pbl, AREA_SIZE)) //Too far, teleport.
-				flag = 2;
-			if( flag )
-			{
-				unit->movepos(pbl,sd->bl.x,sd->bl.y, 0, 0);
-				clif->slide(pbl,pbl->x,pbl->y);
+			if ((!checkpath && !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS)) // No path to master
+			    || !check_distance_bl(bl, pbl, AREA_SIZE)) { // Too far, teleport.
+				unit->movepos(pbl, bl->x, bl->y, 0, false);
+				clif->slide(pbl, pbl->x, pbl->y);
 			}
 		}
 	}
