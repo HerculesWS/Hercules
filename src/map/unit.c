@@ -898,14 +898,9 @@ static int unit_attempt_escape(struct block_list *bl, struct block_list *target,
  */
 static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
 {
-	short dx,dy;
-	struct unit_data        *ud = NULL;
-	struct map_session_data *sd = NULL;
-
 	nullpo_ret(bl);
-	sd = BL_CAST(BL_PC, bl);
-	ud = unit->bl2ud(bl);
 
+	struct unit_data *ud = unit->bl2ud(bl);
 	if( ud == NULL) return 0;
 
 	unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
@@ -920,9 +915,10 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	enum unit_dir dir = map->calc_dir(bl, dst_x, dst_y);
 	ud->dir = dir;
 
-	dx = dst_x - bl->x;
-	dy = dst_y - bl->y;
+	int dx = dst_x - bl->x;
+	int dy = dst_y - bl->y;
 
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, sd?BL_ALL:BL_PC, bl);
 
 	map->moveblock(bl, dst_x, dst_y, timer->gettick());
