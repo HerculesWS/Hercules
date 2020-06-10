@@ -916,19 +916,19 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	int dy = dst_y - bl->y;
 
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
-	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, sd?BL_ALL:BL_PC, bl);
+	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, sd != NULL ? BL_ALL : BL_PC, bl);
 
 	map->moveblock(bl, dst_x, dst_y, timer->gettick());
 
 	ud->walktimer = -2; // arbitrary non-INVALID_TIMER value to make the clif code send walking packets
-	map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, sd?BL_ALL:BL_PC, bl);
+	map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, sd != NULL ? BL_ALL : BL_PC, bl);
 	ud->walktimer = INVALID_TIMER;
 
-	if(sd) {
+	if (sd != NULL) {
 		if (npc->handle_touch_events(sd, bl->x, bl->y, true) != 0)
 			return 0;
 
-		if (sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > PET_INTIMACY_NONE)
+		if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE)
 		{ // Check if pet needs to be teleported. [Skotlex]
 			struct block_list* pbl = &sd->pd->bl;
 			if ((!checkpath && !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS)) // No path to master
