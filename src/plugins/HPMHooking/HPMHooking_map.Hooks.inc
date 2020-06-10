@@ -56677,6 +56677,33 @@ int HP_npc_event(struct map_session_data *sd, const char *eventname, int ontouch
 	}
 	return retVal___;
 }
+int HP_npc_handle_touch_events(struct map_session_data *sd, int x, int y, bool check_if_warped) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_npc_handle_touch_events_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd, int *x, int *y, bool *check_if_warped);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_handle_touch_events_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_npc_handle_touch_events_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &x, &y, &check_if_warped);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.handle_touch_events(sd, x, y, check_if_warped);
+	}
+	if (HPMHooks.count.HP_npc_handle_touch_events_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int x, int y, bool check_if_warped);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_npc_handle_touch_events_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_npc_handle_touch_events_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, x, y, check_if_warped);
+		}
+	}
+	return retVal___;
+}
 int HP_npc_touch_areanpc_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;

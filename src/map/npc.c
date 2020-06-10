@@ -907,6 +907,37 @@ static int npc_event(struct map_session_data *sd, const char *eventname, int ont
 	return npc->event_sub(sd,ev,eventname);
 }
 
+/**
+ * Executes OnTouch, OnUnTouch events when necessary. Also unsets `touching_id` of @p sd if not touching anymore.
+ * @remark @p sd and @p bl is expected to be not `NULL`
+ * @param sd map_session_data of BL_PC to check on
+ * @param x int of x-coordinate to check
+ * @param y int of y-coordinate to check
+ * @param check_if_warped set to true if you want to check if BL_PC has been warped by script
+ * @retval 0 Success
+ * @retval 1 only if check check_if_warped == true and OnTouch might have warped @p bl
+ * @retval -1 @p sd or @p bl is `NULL`
+ */
+static int npc_handle_touch_events(struct map_session_data *sd, int x, int y, bool check_if_warped)
+{
+	nullpo_retr(-1, sd);
+	struct block_list *bl = &sd->bl;
+	nullpo_retr(-1, bl);
+
+	if (sd->touching_id != 0)
+		npc->touchnext_areanpc(sd, false);
+
+	if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC) != 0) {
+		npc->touch_areanpc(sd, bl->m, x, y);
+		if (check_if_warped && bl->prev == NULL) // Script could have warped char
+			return 1;
+	} else {
+		npc->untouch_areanpc(sd, bl->m, x, y);
+	}
+
+	return 0;
+}
+
 /*==========================================
  * Sub chk then execute area event type
  *------------------------------------------*/
@@ -5969,6 +6000,7 @@ void npc_defaults(void)
 	npc->gettimerevent_tick = npc_gettimerevent_tick;
 	npc->settimerevent_tick = npc_settimerevent_tick;
 	npc->event = npc_event;
+	npc->handle_touch_events = npc_handle_touch_events;
 	npc->touch_areanpc_sub = npc_touch_areanpc_sub;
 	npc->touchnext_areanpc = npc_touchnext_areanpc;
 	npc->touch_areanpc = npc_touch_areanpc;

@@ -2187,6 +2187,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->gettimerevent_tick, HP_npc_gettimerevent_tick) },
 	{ HP_POP(npc->settimerevent_tick, HP_npc_settimerevent_tick) },
 	{ HP_POP(npc->event, HP_npc_event) },
+	{ HP_POP(npc->handle_touch_events, HP_npc_handle_touch_events) },
 	{ HP_POP(npc->touch_areanpc_sub, HP_npc_touch_areanpc_sub) },
 	{ HP_POP(npc->touchnext_areanpc, HP_npc_touchnext_areanpc) },
 	{ HP_POP(npc->touch_areanpc, HP_npc_touch_areanpc) },

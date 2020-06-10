@@ -4270,6 +4270,8 @@ struct {
 	struct HPMHookPoint *HP_npc_settimerevent_tick_post;
 	struct HPMHookPoint *HP_npc_event_pre;
 	struct HPMHookPoint *HP_npc_event_post;
+	struct HPMHookPoint *HP_npc_handle_touch_events_pre;
+	struct HPMHookPoint *HP_npc_handle_touch_events_post;
 	struct HPMHookPoint *HP_npc_touch_areanpc_sub_pre;
 	struct HPMHookPoint *HP_npc_touch_areanpc_sub_post;
 	struct HPMHookPoint *HP_npc_touchnext_areanpc_pre;
@@ -11335,6 +11337,8 @@ struct {
 	int HP_npc_settimerevent_tick_post;
 	int HP_npc_event_pre;
 	int HP_npc_event_post;
+	int HP_npc_handle_touch_events_pre;
+	int HP_npc_handle_touch_events_post;
 	int HP_npc_touch_areanpc_sub_pre;
 	int HP_npc_touch_areanpc_sub_post;
 	int HP_npc_touchnext_areanpc_pre;

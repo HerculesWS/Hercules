@@ -5678,6 +5678,8 @@ typedef int (*HPMHOOK_pre_npc_settimerevent_tick) (struct npc_data **nd, int *ne
 typedef int (*HPMHOOK_post_npc_settimerevent_tick) (int retVal___, struct npc_data *nd, int newtimer);
 typedef int (*HPMHOOK_pre_npc_event) (struct map_session_data **sd, const char **eventname, int *ontouch);
 typedef int (*HPMHOOK_post_npc_event) (int retVal___, struct map_session_data *sd, const char *eventname, int ontouch);
+typedef int (*HPMHOOK_pre_npc_handle_touch_events) (struct map_session_data **sd, int *x, int *y, bool *check_if_warped);
+typedef int (*HPMHOOK_post_npc_handle_touch_events) (int retVal___, struct map_session_data *sd, int x, int y, bool check_if_warped);
 typedef int (*HPMHOOK_pre_npc_touch_areanpc_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_npc_touch_areanpc_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_npc_touchnext_areanpc) (struct map_session_data **sd, bool *leavemap);

@@ -407,15 +407,8 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 
 	struct mercenary_data *mrd = BL_CAST(BL_MER, bl);
 	if (sd != NULL) {
-		if (sd->touching_id != 0)
-			npc->touchnext_areanpc(sd, false);
-		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC)) {
-			npc->touch_areanpc(sd, bl->m, x, y);
-			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
-				return 0;
-		} else {
-			npc->untouch_areanpc(sd, bl->m, x, y);
-		}
+		if (npc->handle_touch_events(sd, x, y, true) != 0)
+			return 0;
 
 		if (sd->md != NULL) // mercenary should be warped after being 3 seconds too far from the master [greenbox]
 			unit->warpto_master(bl, &sd->md->bl);
@@ -932,14 +925,8 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	ud->walktimer = INVALID_TIMER;
 
 	if(sd) {
-		if( sd->touching_id )
-			npc->touchnext_areanpc(sd,false);
-		if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC)) {
-			npc->touch_areanpc(sd,bl->m,bl->x,bl->y);
-			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
-				return 0;
-		} else
-			npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);
+		if (npc->handle_touch_events(sd, bl->x, bl->y, true) != 0)
+			return 0;
 
 		if (sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > PET_INTIMACY_NONE)
 		{ // Check if pet needs to be teleported. [Skotlex]
@@ -1044,16 +1031,8 @@ static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag
 				clif->blown(bl);
 			}
 
-			if(sd) {
-				if(sd->touching_id) {
-					npc->touchnext_areanpc(sd, false);
-				}
-				if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC)) {
-					npc->touch_areanpc(sd, bl->m, bl->x, bl->y);
-				} else {
-					npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);;
-				}
-			}
+			if (sd != NULL)
+				npc->handle_touch_events(sd, bl->x, bl->y, false);
 		}
 
 		count = path->distance(dx, dy);
