@@ -873,7 +873,7 @@ static int unit_escape(struct block_list *bl, struct block_list *target, short d
 {
 	nullpo_ret(bl);
 	enum unit_dir dir = map->calc_dir(target, bl->x, bl->y);
-	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+	Assert_retr(0, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	while (dist > 0 && map->getcell(bl->m, bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], CELL_CHKNOREACH))
 		dist--;
 	if (dist > 0 && unit->walk_toxy(bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], 0) == 0)
