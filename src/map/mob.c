@@ -1704,7 +1704,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 			    )
 			 && md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
 			 && mob->use_skill(md, tick, MSC_RUDEATTACKED) != 0 // If can't rude Attack
-			 && can_move && unit->escape(&md->bl, tbl, rnd()%10 +1) // Attempt escape
+			 && can_move != 0 && unit->escape(&md->bl, tbl, rnd() % 10 + 1) == 0 // Attempt escape
 			) {
 				//Escaped
 				md->attacked_id = 0;
@@ -1732,7 +1732,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 				// Rude attacked
 				if (md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
 				 && mob->use_skill(md, tick, MSC_RUDEATTACKED) != 0 && can_move != 0
-				 && !tbl && unit->escape(&md->bl, abl, rnd()%10 +1)
+				 && tbl == NULL && unit->escape(&md->bl, abl, rnd() % 10 + 1) == 0
 				) {
 					//Escaped.
 					//TODO: Maybe it shouldn't attempt to run if it has another, valid target?

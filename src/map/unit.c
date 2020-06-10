@@ -867,21 +867,21 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
  * @param bl block_list of the unit that is escaping
  * @param target block_list of the unit that we're escaping from
  * @param dist short of the maximum stay-away distance towards @p target
- * @return 1: success, 0: failure
+ * @return 0: success, 1: failure
  */
 static int unit_escape(struct block_list *bl, struct block_list *target, short dist)
 {
 #define x_dist (bl->x + dist * dirx[dir])
 #define y_dist (bl->y + dist * diry[dir])
-	nullpo_ret(bl);
+	nullpo_retr(1, bl);
 	enum unit_dir dir = map->calc_dir(target, bl->x, bl->y);
-	Assert_retr(0, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	while (dist > 0 && map->getcell(bl->m, bl, x_dist, y_dist, CELL_CHKNOREACH) != 0)
 		dist--;
 	if (dist > 0 && unit->walk_toxy(bl, x_dist, y_dist, 0) == 0)
-		return 1;
-	else
 		return 0;
+	else
+		return 1;
 #undef x_dist
 #undef y_dist
 }
