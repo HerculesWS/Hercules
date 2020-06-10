@@ -906,8 +906,12 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	unit->stop_attack(bl);
 
-	if (checkpath && (map->getcell(bl->m, bl, dst_x, dst_y, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, dst_x, dst_y, easy, CELL_CHKNOREACH)) )
-		return 0; // unreachable
+	if (checkpath) {
+		if (map->getcell(bl->m, bl, dst_x, dst_y, CELL_CHKNOPASS) != 0) // respects cell-stacking mod
+			return 0;
+		if (!path->search(NULL, bl, bl->m, bl->x, bl->y, dst_x, dst_y, easy, CELL_CHKNOREACH)) // unreachable
+			return 0;
+	}
 
 	ud->to_x = dst_x;
 	ud->to_y = dst_y;
