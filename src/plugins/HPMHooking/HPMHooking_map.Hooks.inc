@@ -93638,14 +93638,14 @@ void HP_unit_run_hit(struct block_list *bl, struct status_change *sc, struct map
 	}
 	return;
 }
-int HP_unit_escape(struct block_list *bl, struct block_list *target, short dist) {
+int HP_unit_attempt_escape(struct block_list *bl, struct block_list *target, short dist) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_unit_escape_pre > 0) {
+	if (HPMHooks.count.HP_unit_attempt_escape_pre > 0) {
 		int (*preHookFunc) (struct block_list **bl, struct block_list **target, short *dist);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_escape_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_unit_escape_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_attempt_escape_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_unit_attempt_escape_pre[hIndex].func;
 			retVal___ = preHookFunc(&bl, &target, &dist);
 		}
 		if (*HPMforce_return) {
@@ -93654,12 +93654,12 @@ int HP_unit_escape(struct block_list *bl, struct block_list *target, short dist)
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.unit.escape(bl, target, dist);
+		retVal___ = HPMHooks.source.unit.attempt_escape(bl, target, dist);
 	}
-	if (HPMHooks.count.HP_unit_escape_post > 0) {
+	if (HPMHooks.count.HP_unit_attempt_escape_post > 0) {
 		int (*postHookFunc) (int retVal___, struct block_list *bl, struct block_list *target, short dist);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_escape_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_unit_escape_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_attempt_escape_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_unit_attempt_escape_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, target, dist);
 		}
 	}

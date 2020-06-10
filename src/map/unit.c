@@ -869,7 +869,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
  * @param dist short of the maximum stay-away distance towards @p target
  * @return 0: success, 1: failure
  */
-static int unit_escape(struct block_list *bl, struct block_list *target, short dist)
+static int unit_attempt_escape(struct block_list *bl, struct block_list *target, short dist)
 {
 #define x_dist (bl->x + dist * dirx[dir])
 #define y_dist (bl->y + dist * diry[dir])
@@ -3143,7 +3143,7 @@ void unit_defaults(void)
 	unit->walk_tobl = unit_walk_tobl;
 	unit->run = unit_run;
 	unit->run_hit = unit_run_hit;
-	unit->escape = unit_escape;
+	unit->attempt_escape = unit_attempt_escape;
 	unit->movepos = unit_movepos;
 	unit->set_dir = unit_set_dir;
 	unit->getdir = unit_getdir;

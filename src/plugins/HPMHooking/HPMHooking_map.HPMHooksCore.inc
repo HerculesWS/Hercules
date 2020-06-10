@@ -7000,8 +7000,8 @@ struct {
 	struct HPMHookPoint *HP_unit_run_post;
 	struct HPMHookPoint *HP_unit_run_hit_pre;
 	struct HPMHookPoint *HP_unit_run_hit_post;
-	struct HPMHookPoint *HP_unit_escape_pre;
-	struct HPMHookPoint *HP_unit_escape_post;
+	struct HPMHookPoint *HP_unit_attempt_escape_pre;
+	struct HPMHookPoint *HP_unit_attempt_escape_post;
 	struct HPMHookPoint *HP_unit_movepos_pre;
 	struct HPMHookPoint *HP_unit_movepos_post;
 	struct HPMHookPoint *HP_unit_set_dir_pre;
@@ -14065,8 +14065,8 @@ struct {
 	int HP_unit_run_post;
 	int HP_unit_run_hit_pre;
 	int HP_unit_run_hit_post;
-	int HP_unit_escape_pre;
-	int HP_unit_escape_post;
+	int HP_unit_attempt_escape_pre;
+	int HP_unit_attempt_escape_post;
 	int HP_unit_movepos_pre;
 	int HP_unit_movepos_post;
 	int HP_unit_set_dir_pre;

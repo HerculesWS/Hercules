@@ -115,7 +115,7 @@ struct unit_interface {
 	int (*walk_tobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
 	bool (*run) (struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 	void (*run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
-	int (*escape) (struct block_list *bl, struct block_list *target, short dist);
+	int (*attempt_escape) (struct block_list *bl, struct block_list *target, short dist);
 	int (*movepos) (struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
 	int (*set_dir) (struct block_list *bl, enum unit_dir dir);
 	enum unit_dir (*getdir) (const struct block_list *bl);
