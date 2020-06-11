@@ -985,57 +985,55 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
 //  &1  Do not send position update packets.
 static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag)
 {
-	if(count) {
-		struct map_session_data* sd;
-		struct skill_unit* su = NULL;
-		int nx, ny, result;
+	if (count == 0)
+		return 0;
+	struct map_session_data* sd;
+	struct skill_unit* su = NULL;
+	int nx, ny, result;
 
-		nullpo_ret(bl);
+	nullpo_ret(bl);
 
-		sd = BL_CAST(BL_PC, bl);
-		su = BL_CAST(BL_SKILL, bl);
+	sd = BL_CAST(BL_PC, bl);
+	su = BL_CAST(BL_SKILL, bl);
 
-		result = path->blownpos(bl, bl->m, bl->x, bl->y, dx, dy, count);
+	result = path->blownpos(bl, bl->m, bl->x, bl->y, dx, dy, count);
 
-		nx = result>>16;
-		ny = result&0xffff;
+	nx = result>>16;
+	ny = result&0xffff;
 
-		if(!su) {
-			unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
-		}
-
-		if( sd ) {
-			unit->stop_stepaction(bl); //Stop stepaction when knocked back
-			sd->ud.to_x = nx;
-			sd->ud.to_y = ny;
-		}
-
-		dx = nx-bl->x;
-		dy = ny-bl->y;
-
-		if(dx || dy) {
-			map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
-
-			if(su) {
-				skill->unit_move_unit_group(su->group, bl->m, dx, dy);
-			} else {
-				map->moveblock(bl, nx, ny, timer->gettick());
-			}
-
-			map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
-
-			if(!(flag&1)) {
-				clif->blown(bl);
-			}
-
-			if (sd != NULL)
-				npc->handle_touch_events(sd, bl->x, bl->y, false);
-		}
-
-		count = path->distance(dx, dy);
+	if(!su) {
+		unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
 	}
 
-	return count;  // return amount of knocked back cells
+	if( sd ) {
+		unit->stop_stepaction(bl); //Stop stepaction when knocked back
+		sd->ud.to_x = nx;
+		sd->ud.to_y = ny;
+	}
+
+	dx = nx-bl->x;
+	dy = ny-bl->y;
+
+	if(dx || dy) {
+		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
+
+		if(su) {
+			skill->unit_move_unit_group(su->group, bl->m, dx, dy);
+		} else {
+			map->moveblock(bl, nx, ny, timer->gettick());
+		}
+
+		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
+
+		if(!(flag&1)) {
+			clif->blown(bl);
+		}
+
+		if (sd != NULL)
+			npc->handle_touch_events(sd, bl->x, bl->y, false);
+	}
+
+	return path->distance(dx, dy); // return amount of knocked back cells
 }
 
 //Warps a unit/ud to a given map/position.
