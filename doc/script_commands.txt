@@ -434,16 +434,38 @@ marked as usable in pet scripts to work in there reliably.
 Numbers
 -------
 
+The Hercules scripting engine supports 4 types of number literals:
+
+type          base      syntax
+----------------------------------------------
+decimal       10        255
+hexadecimal   16        0xFF
+octal         8         0o377
+binary        2         0b11111111
+
 Beside the common decimal numbers, which are nothing special whatsoever
 (though do not expect to use fractions, since ALL numbers are integer in
 this language), the script engine also handles hexadecimal numbers, which
 are otherwise identical. Writing a number like '0x<hex digits>' will make
 it recognized as a hexadecimal value. Notice that 0x10 is equal to 16.
-Also notice that if you try to 'mes 0x10' it will print '16'.
+Also notice that if you try to 'mes 0x10' it will print '16'. If you wish
+to make calculations in base 8, you can also use the octal notation like
+'0o<octal digits>'. To make calculations in base 2 (binary), you can use
+the binary notation like '0b<binary digits>'.
+
+The following are all equivalent:
+	255 == 0xFF == 0o377 == 0b11111111
 
 Number values can't exceed the limits of an integer variable: Any number
 greater than INT_MAX (2147483647) or smaller than INT_MIN (-2147483648) will
 be capped to those values and will cause a warning to be reported.
+
+Underscores can also be used as visual separators for digit grouping purposes:
+	2_147_483_647
+	0x7FFF_FFFF
+
+Keep in mind that number literals cannot start or end with a separator and no
+more than one separator can be used in a row (so 12_3___456 is illegal).
 
 Variables
 ---------
@@ -536,7 +558,9 @@ variables or an empty string ("", nothing between the quotes) for string
 variables. Once you set it to that, the variable is as good as forgotten
 forever, and no trace remains of it even if it was stored with character
 or account data. The maximum length of variable name including prefix and
-suffix is 32.
+suffix is 32. Permanent string variables (name$, $name$, #name$, ##name$)
+can store text with a maximum length of 255 characters. All other string
+type variables have no such limitation.
 
 Some variables are special, that is, they are already defined for you by
 the scripting engine. You can see the full list somewhere in
@@ -1710,7 +1734,8 @@ The default value of 'min' and 'max' can be set with 'input_min_value' and
 For numeric inputs the value is capped to the range [min, max]. Returns 1
 if the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is
-shorter than 'min' and 0 otherwise.
+shorter than 'min' and 0 otherwise. Note that an input string has a maximum
+length of 70 characters.
 
 ---------------------------------------
 
@@ -1942,58 +1967,64 @@ will result in error and termination of the script.
 
 ---------------------------------------
 
-*function <function name>;
-*<function name>{(<argument>, ...<argument>)};
-*function <function name> {
+{public | private} *function <function name>;
+{public | private} *function <function name> {
 <code>
 }
 
-This works like callfunc(), and is used for cleaner and faster scripting.
-The function must be defined and used within a script, and works like a
-label with arguments.
-Note that the name may only contain alphanumeric characters and underscore.
+In its first form, this syntax declares a local function so it can later be
+defined. In its second form, the syntax both declares and defines a local
+function. Local functions must be defined before being used. Note that the name
+may only contain alphanumeric characters and underscore. Once defined, they can
+be called from the current script as if they were regular built-in commands, and
+can also be called from other scripts if they are marked as public. Local
+functions may be marked as public by simply adding "public" prior to the
+function definition. Functions not marked as public are private by default and
+cannot be called from another script.
 
 Usage:
 
     1. Declare the function.
 	function <function name>;
     2. Call the function anywhere within the script.
-       It can also return a value when used with parentheses.
-	<function name>;
-    3. Define the function within the script.
+	<function name>();
+    3. Define the function by adding its script.
 	<function name> {<code>}
+
+    Step 1 is optional if the function is defined prior to being called.
 
 Example:
 
-prontera,154,189,4	script	Item Seller	767,{
 	/* Function declaration */
-	function SF_Selling;
+	function MyFunction;
 
-	if (Zeny > 50) {
-		mes("Welcome!");
-		/* Function call */
-		SF_Selling();
-	} else {
-		mes("You need 50z, sorry!");
-	}
-	close();
+	/* Function call */
+	MyFunction();
 
 	/* Function definition */
-	function SF_Selling {
-		mes("Would you like to buy a phracon for 50z?");
-		next();
-		if (select("Yes", "No, thanks") == 1) {
-			Zeny -= 50;
-			getitem(Phracon, 1);
-			mes("Thank you!");
-		}
+	function MyFunction {
+		// (do something)
 		return;
 	}
-}
+
+
+Example with public functions:
+
+	/* Function declaration + definition */
+	public function myFunction {
+		/* notice the "public" before the "function" keyword */
+		return;
+	}
+
+	/* Local call */
+	myFunction();
+
+	/* Call from another script */
+	"npc name"::myFunction();
+
 
 Example with parameters and return value:
 
-prontera,150,150,0	script	TestNPC	123,{
 	/* Function declaration */
 	function MyAdd;
 
@@ -2002,15 +2033,32 @@ prontera,150,150,0	script	TestNPC	123,{
 	input(.@a);
 	input(.@b);
 	/* Function call */
-	mes(.@a+" + "+.@b+" = "+MyAdd(.@a, .@b));
+	mesf("%i + %i = %i", .@a, .@b, MyAdd(.@a, .@b));
 	close();
 
 	/* Function definition */
 	function MyAdd {
-		return(getarg(0)+getarg(1));
+		return (getarg(0) + getarg(1));
 	}
-}
 
+
+---------------------------------------
+
+*<function name>({<arg>...})
+*"<npc name>"::<function name>({<arg>...})
+*callfunctionofnpc("<function name>", "<npc name>"{, <arg>...});
+
+In its first form, calls a previously defined local function. In its second
+form, calls a previously defined public local function of another NPC. If the
+name of the target NPC or the name of the local function is not known
+beforehand, callfunctionofnpc() can be used instead of the second form.
+See function() above for more details.
+
+Example:
+
+	MyFunction(arg1, arg2, arg3);
+	"MyNPC"::MyFunction(arg1, arg2, arg3);
+	callfunctionofnpc("MyNPC", "MyFunction", arg1, arg2, arg3);
 
 ---------------------------------------
 
@@ -5637,21 +5685,32 @@ Example:
 
 ---------------------------------------
 
-*enable_items()
-*disable_items()
+*enable_items({<flag>})
+*enableitemuse({<flag>})
+*disable_items({<flag>})
+*disableitemuse({<flag>})
 
-These commands enable/disable changing of equipments while an NPC is
-running. When disable_items() is run, equipments cannot be changed
-during scripts until enable_items() is called or the script has
-terminated. To avoid possible exploits, when disable_items() is invoked,
-it will only disable changing equips while running that script in
-particular. Note that if a different script also calls disable_items(),
-it will override the last call (so you may want to call this command at
-the start of your script without assuming the effect is still in
-effect).
-If 'item_enabled_npc' option is set to true in 'conf/map/battle/items.conf' all
-NPC are allowing changing of equipment by default except for those have been
-set with 'disable_items'.
+These commands enable/disable item actions while interacting with a NPC.
+When disable_items() is invoked, item actions defined by <flag> are disabled
+during scripts until enable_items() is called or the script has terminated.
+To avoid possible exploits, when disable_items() is invoked, it will only
+disable item actions while running that script in particular.
+Note that if a different script also invokes disable_items(), it will override
+the last call so you may want to call this command at the start of your
+script without assuming the effect is still in effect.
+If <flag> is omitted all item actions will be disabled.
+The enable_items() command enables item actions defined by <flag> during
+scripts until disable_items() is invoked or the script has terminated.
+If <flag> is omitted it defaults to 'item_enabled_npc' battle flag.
+For a list of supported flags have a look at the description of
+'item_enabled_npc' battle flag in 'conf/map/battle/items.conf'.
+Unless disable_items() or enable_items() is invoked the script will use
+'item_enabled_npc' battle flag by default.
+
+Example:
+
+	// This will disable changing equipment during this script.
+	disable_items(ITEMENABLEDNPC_EQUIP);
 
 ---------------------------------------
 
@@ -7466,6 +7525,16 @@ if GID is not given use the attached player.
 //=====================================
 5.1 - End of Time-related commands
 //=====================================
+---------------------------------------
+
+*loudhailer("<message>"{, "<color>"})
+
+Announces a colored text in '<char_name> Shouts : <message>' format.
+<color> must be a string in "RRGGBB" format. If <color> is omitted,
+white ("FFFFFF") will be used.
+This command is specially created for the Megaphone_ item (12221),
+but will work in NPCs, too.
+
 ---------------------------------------
 
 *announce("<text>", <flag>{, <fontColor>{, <fontType>{, <fontSize>{, <fontAlign>{, <fontY>}}}}})

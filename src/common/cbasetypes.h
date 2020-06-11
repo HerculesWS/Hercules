@@ -95,7 +95,7 @@
 // debug function name
 #ifndef __NETBSD__
 #if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
-#	if __GNUC__ >= 2
+#	if __GNUC__ >= 2 || defined(WIN32)
 #		define __func__ __FUNCTION__
 #	else
 #		define __func__ ""
@@ -410,13 +410,16 @@ typedef char bool;
 #define ISALPHA(c) (isalpha((unsigned char)(c)))
 #define ISCNTRL(c) (iscntrl((unsigned char)(c)))
 #define ISDIGIT(c) (isdigit((unsigned char)(c)))
+#define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
+#define ISBDIGIT(c) ((unsigned char)(c) == '0' || (unsigned char)(c) == '1')
+#define ISODIGIT(c) ((unsigned char)(c) >= '0' && (unsigned char)(c) <= '7')
+#define ISNSEPARATOR(c) ((unsigned char)(c) == '_')
 #define ISGRAPH(c) (isgraph((unsigned char)(c)))
 #define ISLOWER(c) (islower((unsigned char)(c)))
 #define ISPRINT(c) (isprint((unsigned char)(c)))
 #define ISPUNCT(c) (ispunct((unsigned char)(c)))
 #define ISSPACE(c) (isspace((unsigned char)(c)))
 #define ISUPPER(c) (isupper((unsigned char)(c)))
-#define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
 #define TOASCII(c) (toascii((unsigned char)(c)))
 #define TOLOWER(c) (tolower((unsigned char)(c)))
 #define TOUPPER(c) (toupper((unsigned char)(c)))

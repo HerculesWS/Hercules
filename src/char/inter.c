@@ -676,13 +676,13 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 		plen += 4;
 
 		SQL->GetData(inter->sql_handle, 2, &data, NULL);
-		len = strlen(data)+1;
+		len = strlen(data);
 
-		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
+		WFIFOB(fd, plen) = (unsigned char)len; // Won't be higher; the column size is 255.
 		plen += 1;
 
-		safestrncpy(WFIFOP(fd,plen), data, len);
-		plen += len;
+		safestrncpy(WFIFOP(fd, plen), data, len + 1);
+		plen += len + 1;
 
 		WFIFOW(fd, 14) += 1;
 

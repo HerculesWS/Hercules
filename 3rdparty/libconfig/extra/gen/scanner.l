@@ -50,38 +50,103 @@
 
 #define YY_NO_INPUT // Suppress generation of useless input() function
 
-static unsigned long long fromhex(const char *s)
+/**
+ * converts a hexadecimal number literal to an ull integer
+ *
+ * @param p - a pointer to the hexacimal expression to parse
+ * @returns the resulting unsigned long long integer
+ */
+static unsigned long long fromhex(const char *p)
 {
-#ifdef __MINGW32__
-
-  /* MinGW's strtoull() seems to be broken; it only returns the lower
-   * 32 bits...
-   */
-
-  const char *p = s;
   unsigned long long val = 0;
 
-  if(*p != '0')
-    return(0);
-
-  ++p;
-
-  if(*p != 'x' && *p != 'X')
-    return(0);
-
-  for(++p; isxdigit(*p); ++p)
-  {
-    val <<= 4;
-    val |= ((*p < 'A') ? (*p & 0xF) : (9 + (*p & 0x7)));
+  if (*p != '0' || (p[1] != 'x' && p[1] != 'X')) {
+    return 0;
   }
 
-  return(val);
+  for (p += 2; isxdigit(*p) || *p == '_'; ++p) {
+    if (*p != '_') {
+      val <<= 4;
+      val |= ((*p < 'A') ? (*p & 0xF) : (9 + (*p & 0x7)));
+    }
+  }
 
-#else /* ! __MINGW32__ */
+  return val;
+}
 
-  return(strtoull(s, NULL, 16));
+/**
+ * converts a binary number literal to an ull integer
+ *
+ * @param p - a pointer to the hexacimal expression to parse
+ * @returns the resulting unsigned long long integer
+ */
+static unsigned long long frombin (const char *p)
+{
+  unsigned long long val = 0;
 
-#endif /* __MINGW32__ */
+  if (*p != '0' || (p[1] != 'b' && p[1] != 'B')) {
+    return 0;
+  }
+
+  for (p += 2; *p == '0' || *p == '1' || *p == '_'; ++p) {
+    if (*p != '_') {
+      val <<= 1;
+      val |= (*p == '0') ? 0 : 1;
+    }
+  }
+
+  return val;
+}
+
+/**
+ * converts an octal number literal to an ull integer
+ *
+ * @param p - a pointer to the hexacimal expression to parse
+ * @returns the resulting unsigned long long integer
+ */
+static unsigned long long fromoct (const char *p)
+{
+  unsigned long long val = 0;
+
+  if (*p != '0' || (p[1] != 'o' && p[1] != 'O')) {
+    return 0;
+  }
+
+  for (p += 2; (*p >= '0' && *p <= '7') || *p == '_'; ++p) {
+    if (*p != '_') {
+      val <<= 3;
+      val |= (*p & 0xF);
+    }
+  }
+
+  return val;
+}
+
+/**
+ * converts a decimal number literal to a ll integer
+ *
+ * @param p - a pointer to the hexacimal expression to parse
+ * @returns the resulting signed long long integer
+ */
+static long long fromdec (const char *p)
+{
+  unsigned char is_neg = 0;
+
+  if (*p == '-') {
+    is_neg = 1;
+    p++;
+  }
+
+  long long val = 0;
+
+  for (; isdigit(*p) || *p == '_'; ++p) {
+    if (*p != '_') {
+      val *= 10;
+      val += (*p & 0xF);
+    }
+  }
+
+  return (is_neg == 1) ? -val : val;
 }
 
 %}
@@ -89,10 +154,14 @@ static unsigned long long fromhex(const char *s)
 true              [Tt][Rr][Uu][Ee]
 false             [Ff][Aa][Ll][Ss][Ee]
 name              [A-Za-z0-9\*][-A-Za-z0-9_\*.]*
-integer           [-+]?[0-9]+
-integer64         [-+]?[0-9]+L(L)?
-hex               0[Xx][0-9A-Fa-f]+
-hex64             0[Xx][0-9A-Fa-f]+L(L)?
+integer           [-+]?[0-9_]+
+integer64         [-+]?[0-9_]+L(L)?
+hex               0[Xx][0-9A-Fa-f_]+
+hex64             0[Xx][0-9A-Fa-f_]+L(L)?
+bin               0[Bb][01_]+
+bin64             0[Bb][01_]+L(L)?
+oct               0[Oo][0-7_]+
+oct64             0[Oo][0-7_]+L(L)?
 hexchar           \\[Xx][0-9A-Fa-f]{2}
 float             ([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]?([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)
 comment           (#|\/\/).*$
@@ -173,29 +242,14 @@ include_open      ^[ \t]*@include[ \t]+\"
 {true}            { yylval->ival = 1; return(TOK_BOOLEAN); }
 {false}           { yylval->ival = 0; return(TOK_BOOLEAN); }
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
-{integer}         {
-                    long long llval;
-                    llval = atoll(yytext);
-                    if((llval < INT_MIN) || (llval > INT_MAX))
-                    {
-	              yylval->llval = llval;
-	              return(TOK_INTEGER64);
-                    }
-                    else
-                    {
-	              yylval->ival = (int)llval;
-	              return(TOK_INTEGER);
-                    }
-                  }
-{integer64}       { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
-{hex}             {
-                    unsigned long ulval = strtoul(yytext, NULL, 16);
-                    if (ulval > INT32_MAX)
-                      ulval &= INT32_MAX;
-                    yylval->ival = (int)ulval;
-                    return(TOK_HEX);
-                  }
-{hex64}           { yylval->llval = fromhex(yytext); return(TOK_HEX64); }
+{integer}         { yylval->ival = (int)fromdec(yytext); return TOK_INTEGER; }
+{integer64}       { yylval->llval = fromdec(yytext); return TOK_INTEGER64; }
+{hex}             { yylval->ival = (int)fromhex(yytext); return TOK_HEX; }
+{hex64}           { yylval->llval = fromhex(yytext); return TOK_HEX64; }
+{bin}             { yylval->ival = (int)frombin(yytext); return TOK_BIN; }
+{bin64}           { yylval->llval = frombin(yytext); return TOK_BIN64; }
+{oct}             { yylval->ival = (int)fromoct(yytext); return TOK_OCT; }
+{oct64}           { yylval->llval = fromoct(yytext); return TOK_OCT64; }
 {name}            { yylval->sval = yytext; return(TOK_NAME); }
 \[                { return(TOK_ARRAY_START); }
 \]                { return(TOK_ARRAY_END); }

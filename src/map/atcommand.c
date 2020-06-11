@@ -962,39 +962,10 @@ ACMD(option)
  *------------------------------------------*/
 ACMD(hide)
 {
-	if (pc_isinvisible(sd)) {
-		sd->sc.option &= ~OPTION_INVISIBLE;
-		if (sd->disguise != -1 )
-			status->set_viewdata(&sd->bl, sd->disguise);
-		else
-			status->set_viewdata(&sd->bl, sd->status.class);
-		clif->message(fd, msg_fd(fd,10)); // Invisible: Off
-
-		// increment the number of pvp players on the map
-		map->list[sd->bl.m].users_pvp++;
-
-		if( map->list[sd->bl.m].flag.pvp && !map->list[sd->bl.m].flag.pvp_nocalcrank ) {
-			// register the player for ranking calculations
-			sd->pvp_timer = timer->add( timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0 );
-		}
-		//bugreport:2266
-		map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
-	} else {
-		clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
-		sd->sc.option |= OPTION_INVISIBLE;
-		sd->vd.class = INVISIBLE_CLASS;
-		clif->message(fd, msg_fd(fd,11)); // Invisible: On
-
-		// decrement the number of pvp players on the map
-		map->list[sd->bl.m].users_pvp--;
-
-		if( map->list[sd->bl.m].flag.pvp && !map->list[sd->bl.m].flag.pvp_nocalcrank && sd->pvp_timer != INVALID_TIMER ) {
-			// unregister the player for ranking
-			timer->delete( sd->pvp_timer, pc->calc_pvprank_timer );
-			sd->pvp_timer = INVALID_TIMER;
-		}
-	}
-	clif->changeoption(&sd->bl);
+	if (pc_isinvisible(sd))
+		pc->unhide(sd, true);
+	else
+		pc->hide(sd, true);
 
 	return true;
 }
@@ -4528,6 +4499,7 @@ ACMD(loadnpc)
 	// add to list of script sources and run it
 	npc->addsrcfile(message);
 	npc->parsesrcfile(message,true);
+	npc->motd = npc->name2id("HerculesMOTD");
 	npc->read_event_script();
 
 	clif->message(fd, msg_fd(fd,262));
@@ -4562,6 +4534,7 @@ ACMD(unloadnpc)
 
 	npc->unload_duplicates(nd, (flag != 0));
 	npc->unload(nd, true, (flag != 0));
+	npc->motd = npc->name2id("HerculesMOTD");
 	npc->read_event_script();
 	clif->message(fd, msg_fd(fd, 112)); /// Npc Disabled.
 	return true;
@@ -4617,6 +4590,7 @@ ACMD(reloadnpc)
 	clif->message(fd, msg_fd(fd, 1386)); /// File unloaded. Be aware that...
 	npc->addsrcfile(file_path);
 	npc->parsesrcfile(file_path, true);
+	npc->motd = npc->name2id("HerculesMOTD");
 	npc->read_event_script();
 	clif->message(fd, msg_fd(fd, 262)); /// Script loaded.
 	return true;
@@ -8945,13 +8919,17 @@ ACMD(accinfo)
 /* [Ind] */
 ACMD(set)
 {
-	char reg[SCRIPT_VARNAME_LENGTH+1], val[254];
+	char reg[SCRIPT_VARNAME_LENGTH + 1];
+	char val[SCRIPT_STRING_VAR_LENGTH + 1];
 	struct script_data* data;
 	int toset = 0;
 	bool is_str = false;
 	size_t len;
 
-	if (!*message || (toset = sscanf(message, "%32s %253[^\n]", reg, val)) < 1) {
+	char format[20];
+	safesnprintf(format, sizeof(format), "%%%ds %%%d[^\\n]", SCRIPT_VARNAME_LENGTH, SCRIPT_STRING_VAR_LENGTH);
+
+	if (*message == '\0' || (toset = sscanf(message, format, reg, val)) < 1) {
 		clif->message(fd, msg_fd(fd,1367)); // Usage: @set <variable name> <value>
 		clif->message(fd, msg_fd(fd,1368)); // Usage: ex. "@set PoringCharVar 50"
 		clif->message(fd, msg_fd(fd,1369)); // Usage: ex. "@set PoringCharVarSTR$ Super Duper String"
@@ -10594,9 +10572,9 @@ static bool atcommand_exec(const int fd, struct map_session_data *sd, const char
 			clif->message(fd, msg_fd(fd,143));
 			return false;
 		}
+		if (sd->block_action.commands) // *pcblock script command
+			return false;
 	}
-	if (sd->block_action.commands) // *pcblock script command
-		return false;
 
 	if (*message == atcommand->char_symbol)
 		is_atcommand = false;

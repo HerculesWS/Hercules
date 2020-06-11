@@ -321,6 +321,14 @@ enum {
 	MSC_MASTERATTACKED,
 	MSC_ALCHEMIST,
 	MSC_SPAWN,
+	MSC_MAGICATTACKED,
+};
+
+/** Special monster(-name) constants used to assign skills to a group of monsters. **/
+enum mob_group {
+	ALL_MOBS_NONBOSS = -1,
+	ALL_MOBS_BOSS = -2,
+	ALL_MOBS = -3,
 };
 
 /**
@@ -566,7 +574,7 @@ struct mob_interface {
 	struct block_list* (*getfriendhprate) (struct mob_data *md, int min_rate, int max_rate);
 	struct block_list* (*getmasterhpltmaxrate) (struct mob_data *md, int rate);
 	int (*getfriendstatus_sub) (struct block_list *bl, va_list ap);
-	struct mob_data* (*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
+	struct block_list *(*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
 	int (*skill_use) (struct mob_data *md, int64 tick, int event);
 	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);

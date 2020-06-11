@@ -10,7 +10,7 @@ index 3595578..26444f8 100644
 -    yymsg = "Deleting";
 -  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 +  YY_SYMBOL_PRINT (yymsg != NULL ? yymsg : "Deleting", yytype, yyvaluep, yylocationp);
- 
+
    YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
    YYUSE (yytype);
 diff --git a/scanner.c b/scanner.c
@@ -22,15 +22,15 @@ index 60882db..8b8af33 100644
  #include <errno.h>
  #include <stdlib.h>
 +#include <assert.h>
- 
+
  /* end standard C headers. */
- 
+
 @@ -1702,6 +1703,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
-             libconfig_yy_create_buffer(yyin,YY_BUF_SIZE ,yyscanner);
+             yy_create_buffer( yyin, YY_BUF_SIZE , yyscanner);
  	}
- 
+
 +	assert(YY_CURRENT_BUFFER != NULL); // Fixes compiler warning -Wnull-dereference on gcc-6 and -O3
 +
- 	libconfig_yy_init_buffer(YY_CURRENT_BUFFER,input_file ,yyscanner);
- 	libconfig_yy_load_buffer_state(yyscanner );
+ 	yy_init_buffer( YY_CURRENT_BUFFER, input_file , yyscanner);
+ 	yy_load_buffer_state( yyscanner );
  }

@@ -323,7 +323,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
-	interval *= battle_config.pet_hungry_delay_rate / 100;
+	interval = interval * battle_config.pet_hungry_delay_rate / 100;
 	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
 
 	return 0;
@@ -404,6 +404,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	if (i != sd->status.inventorySize) {
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
+		sd->status.inventory[i].card[3] = pd->pet.rename_flag;
 	} else {
 		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
 		struct item tmp_item = {0};
@@ -944,7 +945,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	else
 		intimacy += pd->petDB->r_hungry / 2; // Increase intimacy by 50% of FeedIncrement.
 
-	intimacy *= battle_config.pet_friendly_rate / 100;
+	intimacy = intimacy * battle_config.pet_friendly_rate / 100;
 	pet->set_intimate(pd, pd->pet.intimate + intimacy);
 
 	if (pd->pet.intimate == PET_INTIMACY_NONE) {
@@ -1128,12 +1129,22 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 	return 0;
 }
 
+/**
+ * Calls pet_ai_sub_hard() for a character's pet if conditions are fulfilled.
+ *
+ * @param sd The character.
+ * @param ap Additional arguments. In this case only the time stamp of pet AI timer execution.
+ * @return Always 0.
+ *
+ **/
 static int pet_ai_sub_foreachclient(struct map_session_data *sd, va_list ap)
 {
-	int64 tick = va_arg(ap,int64);
 	nullpo_ret(sd);
-	if(sd->status.pet_id && sd->pd)
-		pet->ai_sub_hard(sd->pd,sd,tick);
+
+	int64 tick = va_arg(ap, int64);
+
+	if (sd->bl.prev != NULL && sd->status.pet_id != 0 && sd->pd != NULL && sd->pd->bl.prev != NULL)
+		pet->ai_sub_hard(sd->pd, sd, tick);
 
 	return 0;
 }

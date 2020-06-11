@@ -56,9 +56,15 @@ enum npc_shop_types {
 struct npc_timerevent_list {
 	int timer,pos;
 };
+
+/** list of labels within a NPC (used internally by the label db) */
 struct npc_label_list {
+	/** label name */
 	char name[NAME_LENGTH];
+	/** start point within the script */
 	int pos;
+	/** optional label flags */
+	enum script_label_flags flags;
 };
 
 struct npc_barter_currency {

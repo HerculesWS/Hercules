@@ -10,6 +10,135 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.05.31+1] `May 31 2020` `PATCH 1`
+
+### Fixed
+
+- Fixed a crash in the db2sql plugin with the MariaDB client library. (#2748)
+- Fixed the job level stat bonuses for the Novice class to match the official servers. (#2747)
+- Fixed an issue that caused the walk-path check to be never executed for skills that require the caster to be able to move. (#2761)
+- Fixed an issue that caused "Unknown Skill" errors to appear while casting skills. The default value for the skill damage type field of the skill database is now `NK_NONE` instead of `NK_NO_DAMAGE`. (#2761, issue #2760)
+
+## [v2020.05.31] `May 31 2020`
+
+### Added
+
+- Added the possibility to declare local NPC functions as public or private. (#2142)
+  - Functions declared as private can be called from other scripts with the syntax `"npc name"::function_name()`.
+  - The configuration option `script_configuration.functions_private_by_default` controls whether functions are public or private when not specified.
+- Added a new cast condition `MSC_MAGICATTACKED` to the mob skill database, allowing mobs to react to magical attacks. (#2733, issue #2578)
+- Added support for level-specific values in the skill database fields `Hit`, `AttackType`, `InterruptCast`, `CastDefRate`, `Requirement.State`, `Unit.Id`, `Unit.Interval`, `Unit.Target`, `Requirements.Items.Amount` (part of #2731)
+  - Removed hardcoded required item amounts for various skills, moving them to the skill database.
+- Added support for `Requirements.Items.Any` in the skill database, allowing skills that require any one of their item conditions to be verified (as opposed to all). (part of #2731, issue #1250)
+- Added support for `Requirements.Equip` in the skill database, allowing to specify a required equipment to cast a skill. (part of #2731)
+  - Removed hardcoded equip requirements for various skills, moving them to the skill database.
+- Added support for `Requirements.MaxSPTrigger` in the skill database, allowing to specify a maximum SP percentage that allows to cast a skill. (part of #2731)
+- Added/updated packets, encryption keys and message tables for clients up to 2020-05-20. (#2713)
+- Added support for the gcc sanitizer flags `address-use-after-scope`, `pointer-overflow`, `builtin`, `pointer-compare`, `pointer-subtract`, `shift-exponent`, `shift-base`, `sanitize-address-use-after-scope`. (part of #2713)
+- Added support for binary and octal number literals in scripts and libconfig configuration files, using the syntax 0b000 / 0o000. (#2671)
+- Added support for number separators in number literals in scripts and libconfig configuration files. The symbol `_` can be used as grouping separator (`1_000_000`, `0x_ffff_ffff`, etc). (part of #2671)
+- Added support for overriding `ENABLE_SC_SAVING`, `MAX_CARTS`, `MAX_SLOTS`, `MAX_AMOUNT`, `MAX_ZENY`, `MAX_BANK_ZENY`, `MAX_FAME`, `MAX_CART` through CFLAGS. (#2220)
+- Added a `skill_enabled_npc` battle flag allowing to specify whether self-targeted or targeted skills can be used while interacting with NPCs. (part of #2718, issue #862)
+- Added the `loudhailer()` script command, as used by the `Megaphone_` item. (#2758, issue #2751)
+
+### Changed
+
+- Added validation for the maximum length of permanent string variables and consolidated it to 255 characters. This requires a database migration. (#2705, issue #1037)
+- Split the `mapreg` SQL table into separate tables for integer and string variables. This requires a database migration. (#2720)
+- Updated the AUTHORS file to include names and emails from every commit so far. A helper script `tools/authors.sh` to extract them has been added. (#2729, issue #245)
+- Updated the drop chance of the Black and White Wing Suits. (#2739, issue #562)
+- Improved validation and bounds checking in the skill database loader. (#2731)
+  - Increased the maximum length of the skill descriptions (display names) to 50. (part of #2731)
+  - Increased the maximum skill level to 20 (to support `NPC_RUN`). (part of #2731)
+  - Capped the SkillInstances values to 25 (`MAX_SKILLUNITGROUP`) in the skill database. (part of #2731)
+- Extended the `item_enabled_npc` battle flag and the `enable_items()`/`disable_items()` script commands with finer grained options to allow the use of usable items or equipment while interacting with NPCs. (#2718)
+- Changed the default setting of `player_warp_keep_direction` to match the official servers' setting. (#2752)
+- Replaced the (failing) gitlab-ci centos6 builds with centos8 (released in september 2019). (#2759)
+
+### Fixed
+
+- Fixed the logic and interaction between the (element)proof Potions and Undead Scrolls and their status icons. (#2708)
+- Fixed an issue in the Lost Puppies quest causing the dogs to be unable to reappear. (#2698)
+- Fixed a possible data corruption caused by gender mismatch after a changesex/changecharsex operation. (#2714, issue #985)
+- Fixed a warning and name truncation when receiving a whisper message with a recipient name with a length of 24 characters. This allows to whisper to scripts with a name length up to 20 (through the `NPC:name` syntax). (#2721, issue #718)
+- Fixed interaction between `itemskill()` other item/skill uses, including other `itemskill()`. The autocast code has been changed to use a vector, to allow multiple concurrent skills. (#2699)
+  - It's now possible to use multiple `itemskill()` calls in the same item, as long there is at most one targeted skill, and it's the last one used.
+  - It's now possible to use items while the target cursor for a previously activated skill is visible, without aborting it. (issue #816)
+  - It's now possible to use a scroll while casting another skill (and the provided skill will be cast after the current one finishes). (issue #1026)
+- Fixed use of Fly Wing/Butterfly Wing while riding a cash shop mount (Boarding Halter) and having a falcon. (part of #2699, issue #2750)
+- Fixed the `Requirements.MaxHPTrigger` conditions for mercenary skills. (part of #2731)
+- Fixed a possible memory corruption or crash in the mob delayed removal function. (part of #2713, issue #2719)
+- Fixed a crash in the `npcshopdelitem()` script command. (part of #2713)
+- Fixed a crash in the achievement progress update code. (part of #2713)
+- Fixed a possible crash in the RODEX check name function. (part of #2713)
+- Added null pointer checks for missing view data in clif and status code. (part of #2713)
+- Added a check for the current map in mob and map code. (part of #2713)
+- Fixed an error or possible crash when a mob dies on an invalid map. (part of #2713)
+- Fixed an incorrect npc ID for the MOTD script after reloading or unloading scripts. (part of #2713)
+- Fixed an use after free in `party->broken()`. (part of #7213)
+- Fixed a possible crash in `mapif->guild_withdraw()`. (part of #2713)
+- Fixed a null pointer error in `unit->steptimer()`. (#2723, issue #2707)
+- Fixed the left-shift of a negative value in `GN_CRAZYWEED_ATK`. (#2734, issue #1151)
+- Fixed a missing "Beloved" attribute on the eggs of renamed pets. (#2744, issue #2743)
+- Fixed an inverted logic in the `storage_use_item` battle flag. (#2746)
+- Fixed the mineffect map property flag so that it's not affected by the character's minimized effects but only by the map type. It's enabled on all the guild castles, regardless of whether WoE is running. (#2754, issue #803)
+- Fixed a crash in the equip check code if a character logs wearing an item that was previously, but is no longer, equippable. (#2745)
+- Fixed a compiler warnings in 32 bit builds. (#2759)
+
+### Deprecated
+
+- Deprecated the (unintended and undocumented) possibility of calling local NPC functions as event labels if their name started with `On`. (part of #2142, issue #2137)
+  - The functionality is now disabled by default, and can be enabled by changing the `script_configuration.functions_as_events` setting.
+
+### Removed
+
+- Removed old debug code from the `SC_DANCING` case of `status_change_end_()`. (#2736, issue #2716)
+- Removed useless `FixedCastTime` values from the pre-re skill database. (part of #2731)
+
+## [v2020.05.03] `May 03 2020`
+
+### Added
+
+- Added the new pets (including the jRO exclusive ones) and their related items/monsters to the renewal database. (#2689)
+- Added constants `ALL_MOBS_NONBOSS`, `ALL_MOBS_BOSS`, `ALL_MOBS` for the special mob IDs for global skill assignment in the mob skill database. (part of #2691)
+- Added support for `__func__` on Windows, since it's now available in every supported compiler. (part of #2691)
+- Added documentation for the mob skill database. See `doc/mob_skill_db.conf`. (#2680)
+- Added missing functions for the name ack packets for `BL_ITEM` and `BL_SKILL`. (part of #2695)
+- Added/updated packets and encryption keys for clients up to 2020-04-14. (#2695)
+- Added support for packets `ZC_LAPINEUPGRADE_OPEN`, `CZ_LAPINEUPGRADE_CLOSE` and `ZC_LAPINEUPGRADE_RESULT` and a placeholder for `CZ_LAPINEUPGRADE_MAKE_ITEM`. (part of #2695)
+- Added a new cell type `cell_noskill`, to block skill usage. (#2188)
+
+### Changed
+
+- Removed warning messages about missing elements in the mob db, since it's an optional field. (part of #2689)
+- Updated the renewal pet database with the correct values and bonuses. (part of #2689, issue #2435)
+- Changed `mob_getfriendstatus()` to consider character as friends of their support monsters, for consistency with `mob_getfriendhprate()`. (part of #2691)
+- Changed `MSC_AFTERSKILL` to trigger on any skill when its `ConditionData` is 0, for consistency with `MSC_SKILLUSED`. (part of #2691)
+- Improved data validation and error reporting in the mob skill database. (part of #2691)
+- Changed return values of `mob_skill_use()` and `mobskill_event()`. Any third party code that uses them needs to be updated. (part of #2691)
+- Changed the battle configuration flag `manner_system` to be applied immediately to any existing `SC_NOCHAT`. (#2696, issue #227)
+- Changed the `atcommand()` command to ignore `PCBLOCK_COMMANDS`. (#2062)
+
+### Fixed
+
+- Fixed `SC_AUTOTRADE`, `SC_KSPROTECTED` and `SC_NO_SWITCH_EQUIP` incorrectly recognized as unknown status changes. (#2686, issue #2684)
+- Prevented `SC_KSPROTECTED` from starting on dead monsters. (part of #2686)
+- Fixed character unhiding while disguised or when using `@option 0`. (#2687, issues #1556 and #2104)
+- Fixed an incorrect order of operations causing results too small in various calculations related to free cell search, mob skill chances/delays, exp penalty, pet hunger and friendly rates, cast duration. (#2690)
+- Fixed errors caused by `pet_ai_sub_hard()` called for monsters that haven't been added to a map yet. (#2693)
+- Fixed a wrong packet error displayed when using an incorrect password for the char-login connection. (part of #2695)
+- Fixed a security check in the lapine ack packet handler. (part of #2695)
+- Fixed some incorrect assumptions about the skill index values, causing the Bard/Dancer soul link to grant the wrong skills. (#2710, issue #2670)
+- Fixed some conditions that could cause a skill to be attempted to save to the database with a negative skill level, resulting in query errors and data loss. (part of #2710)
+- Fixed the skill type of `RK_DRAGONBREATH` and `RK_DRAGONBREATH_WATER` to be `BF_WEAPON` and support the `bLongAtkRate` bonus. (#1304)
+- Fixed `SC_TELEKINESIS_INTENSE` to add percent MATK instead of fixed MATK. (part of #1304)
+
+## [v2020.04.05] `April 05 2020` `PATCH 1`
+
+### Fixed
+
+- Fixed a regression that prevented pets from hatching. (#2685, issue #2683)
+
 ## [v2020.04.05] `April 05 2020`
 
 ### Added
@@ -1316,6 +1445,10 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.05.31+1]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31...v2020.05.31+1
+[v2020.05.31]: https://github.com/HerculesWS/Hercules/compare/v2020.05.03...v2020.05.31
+[v2020.05.03]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05+1...v2020.05.03
+[v2020.04.05+1]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05...v2020.04.05+1
 [v2020.04.05]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+2...v2020.04.05
 [v2020.03.08+2]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08+1...v2020.03.08+2
 [v2020.03.08+1]: https://github.com/HerculesWS/Hercules/compare/v2020.03.08...v2020.03.08+1

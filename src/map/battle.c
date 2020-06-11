@@ -2832,18 +2832,18 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				d->dmg_lv = ATK_BLOCK;
 				if(src_skill_id == MH_STEINWAND){
 					if (--group->val2<=0)
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 					if( (group->val3 - damage) > 0 )
 						group->val3 -= (int)cap_value(damage, INT_MIN, INT_MAX);
 					else
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 					return 0;
 				}
 				if( skill_id == SO_ELEMENTAL_SHIELD ) {
 					if ( ( group->val2 - damage) > 0 ) {
 						group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 					} else
-						skill->del_unitgroup(group,ALC_MARK);
+						skill->del_unitgroup(group);
 					return 0;
 				}
 				/**
@@ -2853,12 +2853,12 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 				if ( ( group->val2 - damage) > 0 ) {
 					group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 				} else
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 				if (--group->val3<=0)
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			#else
 				if (--group->val2<=0)
-					skill->del_unitgroup(group,ALC_MARK);
+					skill->del_unitgroup(group);
 			#endif
 				return 0;
 			}
@@ -3750,7 +3750,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 
 				if (sc){
 					if( sc->data[SC_TELEKINESIS_INTENSE] && s_ele == ELE_GHOST )
-						ad.damage += sc->data[SC_TELEKINESIS_INTENSE]->val3;
+						ad.damage += ad.damage * sc->data[SC_TELEKINESIS_INTENSE]->val3 / 100;
 				}
 				switch(skill_id){
 					case MG_FIREBOLT:
@@ -4123,13 +4123,6 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 	case NPC_EVILLAND:
 		md.damage = skill->calc_heal(src,target,skill_id,skill_lv,false);
-		break;
-	case RK_DRAGONBREATH:
-	case RK_DRAGONBREATH_WATER:
-		md.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
-		RE_LVL_MDMOD(150);
-		if (sd) md.damage = md.damage * (95 + 5 * pc->checkskill(sd,RK_DRAGONTRAINING)) / 100;
-		md.flag |= BF_LONG|BF_WEAPON;
 		break;
 	/**
 	 * Ranger
@@ -4955,6 +4948,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					wd.damage = hd->homunculus.intimacy;
 					break;
 				}
+				break;
+			case RK_DRAGONBREATH:
+			case RK_DRAGONBREATH_WATER:
+				wd.damage = ((status_get_hp(src) / 50) + (status_get_max_sp(src) / 4)) * skill_lv;
+				wd.damage = wd.damage * status->get_lv(src) / 150;
+				if (sd) wd.damage = wd.damage * (95 + 5 * pc->checkskill(sd, RK_DRAGONTRAINING)) / 100;
 				break;
 			default:
 			{
@@ -5933,14 +5932,14 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 					enum autocast_type ac_type;
 
 					if (sd != NULL) {
-						ac_type = sd->autocast.type;
-						sd->autocast.type = AUTOCAST_TEMP;
+						ac_type = sd->auto_cast_current.type;
+						sd->auto_cast_current.type = AUTOCAST_TEMP;
 					}
 
 					map->foreachinshootrange(battle->damage_area,target,skill->get_splash(LG_REFLECTDAMAGE,1),BL_CHAR,tick,target,delay,wd->dmotion,rdamage,status_get_race(target));
 
 					if (sd != NULL)
-						sd->autocast.type = ac_type;
+						sd->auto_cast_current.type = ac_type;
 
 					delay += 150;/* gradual increase so the numbers don't clip in the client */
 
@@ -6130,7 +6129,7 @@ static int battle_damage_area(struct block_list *bl, va_list ap)
 		else
 			status_fix_damage(src,bl,damage,0);
 		clif->damage(bl,bl,amotion,dmotion,damage,1,BDT_ENDURE,0);
-		if (src->type != BL_PC || BL_UCCAST(BL_PC, src)->autocast.type != AUTOCAST_TEMP)
+		if (src->type != BL_PC || BL_UCCAST(BL_PC, src)->auto_cast_current.type != AUTOCAST_TEMP)
 			skill->additional_effect(src, bl, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,tick);
 		map->freeblock_unlock();
 	}
@@ -6339,7 +6338,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 				skill_id = AB_DUPLELIGHT_MELEE;
 			else
 				skill_id = AB_DUPLELIGHT_MAGIC;
-			skill->attack(skill->get_type(skill_id), src, src, target, skill_id, sc->data[SC_DUPLELIGHT]->val1, tick, SD_LEVEL);
+			skill->attack(skill->get_type(skill_id, sc->data[SC_DUPLELIGHT]->val1), src, src, target, skill_id, sc->data[SC_DUPLELIGHT]->val1, tick, SD_LEVEL);
 		}
 	}
 
@@ -6454,10 +6453,10 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 					}
 				}
 
-				sd->autocast.type = AUTOCAST_TEMP;
+				sd->auto_cast_current.type = AUTOCAST_TEMP;
 				skill->consume_requirement(sd,r_skill,r_lv,3);
 				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
-				sd->autocast.type = AUTOCAST_NONE;
+				sd->auto_cast_current.type = AUTOCAST_NONE;
 				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
 				clif->status_change(src, status->get_sc_icon(SC_POSTDELAY), status->get_sc_relevant_bl_types(SC_POSTDELAY), 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
@@ -7377,7 +7376,7 @@ static const struct battle_data {
 	{ "item_restricted_consumption_type",   &battle_config.item_restricted_consumption_type,1,      0,      1,              },
 	{ "unequip_restricted_equipment",       &battle_config.unequip_restricted_equipment,    0,      0,      3,              },
 	{ "max_walk_path",                      &battle_config.max_walk_path,                   17,     1,      MAX_WALKPATH,   },
-	{ "item_enabled_npc",                   &battle_config.item_enabled_npc,                1,      0,      1,              },
+	{ "item_enabled_npc",                   &battle_config.item_enabled_npc,                1,      0,      INT_MAX,        },
 	{ "gm_ignore_warpable_area",            &battle_config.gm_ignore_warpable_area,         0,      2,      100,            },
 	{ "packet_obfuscation",                 &battle_config.packet_obfuscation,              1,      0,      3,              },
 	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,        },
@@ -7424,6 +7423,7 @@ static const struct battle_data {
 	{ "min_item_sell_price",                &battle_config.min_item_sell_price,             0,      0,      INT_MAX,        },
 	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1,              },
 	{ "magicrod_type",                      &battle_config.magicrod_type,                   0,      0,      1,              },
+	{ "skill_enabled_npc",                  &battle_config.skill_enabled_npc,               0,      0,      INT_MAX,        },
 	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
 	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999,       },
 	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999,       },

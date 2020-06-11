@@ -1214,7 +1214,7 @@ struct status_change {
 #define sc_start2(src, bl, type, rate, val1, val2, tick)             (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),0,0,(tick),SCFLAG_NONE))
 #define sc_start4(src, bl, type, rate, val1, val2, val3, val4, tick) (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),(val3),(val4),(tick),SCFLAG_NONE))
 
-#define status_change_end(bl,type,tid) (status->change_end_((bl),(type),(tid),__FILE__,__LINE__))
+#define status_change_end(bl,type,tid) (status->change_end_((bl),(type),(tid)))
 
 #define status_calc_bl(bl, flag)        (status->calc_bl_((bl), (enum scb_flag)(flag), SCO_NONE))
 #define status_calc_mob(md, opt)        (status->calc_bl_(&(md)->bl, SCB_ALL, (opt)))
@@ -1308,7 +1308,7 @@ struct status_interface {
 	int (*get_sc_def) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int tick, int flag);
 	int (*change_start) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag);
 	int (*change_start_sub) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag);
-	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid, const char* file, int line);
+	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid);
 	bool (*is_immune_to_status) (struct status_change* sc, enum sc_type type);
 	bool (*is_boss_resist_sc) (enum sc_type type);
 	bool (*end_sc_before_start) (struct block_list *bl, struct status_data *st, struct status_change* sc, enum sc_type type, int undead_flag, int val1, int val2, int val3, int val4);

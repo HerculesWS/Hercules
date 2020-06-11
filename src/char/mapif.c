@@ -559,7 +559,7 @@ static int mapif_guild_withdraw(int guild_id, int account_id, int char_id, int f
 	WBUFL(buf, 6) = account_id;
 	WBUFL(buf, 10) = char_id;
 	WBUFB(buf, 14) = flag;
-	memcpy(WBUFP(buf, 15), mes, 40);
+	safestrncpy(WBUFP(buf, 15), mes, 40);
 	memcpy(WBUFP(buf, 55), name, NAME_LENGTH);
 	mapif->sendall(buf, 55 + NAME_LENGTH);
 	ShowInfo("int_guild: guild withdraw (%d - %d: %s - %s)\n", guild_id, account_id, name, mes);
@@ -2030,7 +2030,8 @@ static int mapif_parse_Registry(int fd)
 
 	if (count != 0) {
 		int cursor = 14, i;
-		char key[SCRIPT_VARNAME_LENGTH+1], sval[254];
+		char key[SCRIPT_VARNAME_LENGTH + 1];
+		char sval[SCRIPT_STRING_VAR_LENGTH + 1];
 		bool isLoginActive = sockt->session_is_active(chr->login_fd);
 
 		if (isLoginActive)
@@ -2057,8 +2058,8 @@ static int mapif_parse_Registry(int fd)
 			/* str */
 			case 2:
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
-				cursor += len + 1;
+				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
+				cursor += len + 2;
 				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
 				break;
 			case 3:

@@ -848,79 +848,134 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 
 	nullpo_retr(NULL, p);
 	// is need add check for arg null pointer below?
-	func = script->add_word(p);
-	if (script->str_data[func].type == C_FUNC) {
-		script->syntax.nested_call++;
-		if (script->syntax.last_func != -1) {
-			if (script->str_data[func].val == script->buildin_lang_macro_offset) {
-				script->syntax.lang_macro_active = true;
-				macro = true;
-			} else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset) {
-				script->syntax.lang_macro_fmtstring_active = true;
-				macro = true;
-			}
+
+	if (*p == '"') {
+		p2 = ++p; // jump to the start of the word
+
+		// find the closing quote
+		while (*p2 != '"') {
+			++p2;
 		}
 
-		if( !macro ) {
-			// buildin function
+		if (p2[1] == ':' && p2[2] == ':') {
+			func = script->add_str("callfunctionofnpc");
+			arg = "*"; // we already take care of the "vs" part of "vs*"
+
+			script->syntax.nested_call++;
 			script->syntax.last_func = script->str_data[func].val;
 			script->addl(func);
 			script->addc(C_ARG);
-		}
 
-		arg = script->buildin[script->str_data[func].val];
-		if (script->str_data[func].deprecated)
-			DeprecationWarning(p);
-		if( !arg ) arg = &null_arg; // Use a dummy, null string
-	} else if( script->str_data[func].type == C_USERFUNC || script->str_data[func].type == C_USERFUNC_POS ) {
-		// script defined function
-		script->addl(script->buildin_callsub_ref);
-		script->addc(C_ARG);
-		script->addl(func);
-		arg = script->buildin[script->str_data[script->buildin_callsub_ref].val];
-		if( *arg == 0 )
-			disp_error_message("parse_callfunc: callsub has no arguments, please review its definition",p);
-		if( *arg != '*' )
-			++arg; // count func as argument
-	} else {
-#ifdef SCRIPT_CALLFUNC_CHECK
-		const char* name = script->get_str(func);
-		if( !is_custom && strdb_get(script->userfunc_db, name) == NULL ) {
-#endif
-			disp_error_message("parse_line: expect command, missing function name or calling undeclared function",p);
-#ifdef SCRIPT_CALLFUNC_CHECK
-		} else {;
-			script->addl(script->buildin_callfunc_ref);
-			script->addc(C_ARG);
 			script->addc(C_STR);
-			while( *name ) script->addb(*name ++);
+			do {
+				script->addb(*p++); // npc name
+			} while (p < p2);
 			script->addb(0);
-			arg = script->buildin[script->str_data[script->buildin_callfunc_ref].val];
-			if( *arg != '*' ) ++ arg;
+
+			p = p2 + 3; // skip to start of func name
+			p2 = script->skip_word(p);
+
+			script->addc(C_STR);
+			do {
+				script->addb(*p++); // func name
+			} while (p < p2);
+			script->addb(0);
+
+			p = p2; // skip to just before the ()
+		} else {
+			disp_error_message("script:parse_callfunc: invalid public function call syntax!", p2 + 1);
 		}
+	} else {
+		func = script->add_word(p);
+		if (script->str_data[func].type == C_FUNC) {
+			script->syntax.nested_call++;
+
+			if (script->syntax.last_func != -1) {
+				if (script->str_data[func].val == script->buildin_lang_macro_offset) {
+					script->syntax.lang_macro_active = true;
+					macro = true;
+				} else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset) {
+					script->syntax.lang_macro_fmtstring_active = true;
+					macro = true;
+				}
+			}
+
+			if (!macro) {
+				// buildin function
+				script->syntax.last_func = script->str_data[func].val;
+				script->addl(func);
+				script->addc(C_ARG);
+			}
+
+			arg = script->buildin[script->str_data[func].val];
+
+			if (script->str_data[func].deprecated == 1) {
+				DeprecationWarning(p);
+			}
+
+			if (arg == NULL) {
+				arg = &null_arg; // Use a dummy, null string
+			}
+		} else if (script->str_data[func].type == C_USERFUNC || script->str_data[func].type == C_USERFUNC_POS) {
+			// script defined function
+			script->addl(script->buildin_callsub_ref);
+			script->addc(C_ARG);
+			script->addl(func);
+			arg = script->buildin[script->str_data[script->buildin_callsub_ref].val];
+
+			if (*arg == 0) {
+				disp_error_message("script:parse_callfunc: callsub has no arguments, please review its definition", p);
+			}
+
+			if (*arg != '*') {
+				++arg; // count func as argument
+			}
+		} else {
+#ifdef SCRIPT_CALLFUNC_CHECK
+			const char *name = script->get_str(func);
+			if (is_custom == 0 && strdb_get(script->userfunc_db, name) == NULL) {
 #endif
+				disp_error_message("script:parse_callfunc: expect command, missing function name or calling undeclared function", p);
+#ifdef SCRIPT_CALLFUNC_CHECK
+			} else {
+				script->addl(script->buildin_callfunc_ref);
+				script->addc(C_ARG);
+				script->addc(C_STR);
+
+				while (*name != '\0') {
+					script->addb(*name++);
+				}
+
+				script->addb(0);
+				arg = script->buildin[script->str_data[script->buildin_callfunc_ref].val];
+
+				if (*arg != '*') {
+					++ arg;
+				}
+			}
+#endif
+		}
 	}
 
 	p = script->skip_word(p);
 	p = script->skip_space(p);
 	script->syntax.curly[script->syntax.curly_count].type = TYPE_ARGLIST;
 	script->syntax.curly[script->syntax.curly_count].count = 0;
-	if( *p == ';' )
-	{// <func name> ';'
+
+	if (*p == ';') {
+		// <func name> ';'
 		script->syntax.curly[script->syntax.curly_count].flag = ARGLIST_NO_PAREN;
-	} else if( *p == '(' && *(p2=script->skip_space(p+1)) == ')' )
-	{// <func name> '(' ')'
+	} else if (*p == '(' && *(p2 = script->skip_space(p + 1)) == ')') {
+		// <func name> '(' ')'
 		script->syntax.curly[script->syntax.curly_count].flag = ARGLIST_PAREN;
 		p = p2;
-	/*
-	} else if( 0 && require_paren && *p != '(' )
-	{// <func name>
-		script->syntax.curly[script->syntax.curly_count].flag = ARGLIST_NO_PAREN;
-	*/
-	} else {// <func name> <arg list>
-		if( require_paren ) {
-			if( *p != '(' )
-				disp_error_message("need '('",p);
+	} else {
+		// <func name> <arg list>
+		if (require_paren == 1) {
+			if (*p != '(') {
+				disp_error_message("script:parse_callfunc: need '('", p);
+			}
+
 			++p; // skip '('
 			script->syntax.curly[script->syntax.curly_count].flag = ARGLIST_PAREN;
 		} else if( *p == '(' ) {
@@ -928,41 +983,65 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 		} else {
 			script->syntax.curly[script->syntax.curly_count].flag = ARGLIST_NO_PAREN;
 		}
-		++script->syntax.curly_count;
-		while( *arg ) {
-			p2=script->parse_subexpr(p,-1);
-			if( p == p2 )
-				break; // not an argument
-			if( *arg != '*' )
-				++arg; // next argument
 
-			p=script->skip_space(p2);
-			if( *arg == 0 || *p != ',' )
-				break; // no more arguments
+		++script->syntax.curly_count;
+
+		while (*arg != '\0') {
+			p2 = script->parse_subexpr(p, -1);
+
+			if (p == p2) {
+				// not an argument
+				break;
+			}
+
+			if (*arg != '*') {
+				// next argument
+				++arg;
+			}
+
+			p = script->skip_space(p2);
+
+			if (*arg == 0 || *p != ',') {
+				// no more arguments
+				break;
+			}
+
 			++p; // skip comma
 		}
+
 		--script->syntax.curly_count;
 	}
-	if( arg && *arg && *arg != '?' && *arg != '*' )
-		disp_error_message2("parse_callfunc: not enough arguments, expected ','", p, script->config.warn_func_mismatch_paramnum);
-	if( script->syntax.curly[script->syntax.curly_count].type != TYPE_ARGLIST )
-		disp_error_message("parse_callfunc: DEBUG last curly is not an argument list",p);
-	if( script->syntax.curly[script->syntax.curly_count].flag == ARGLIST_PAREN ) {
-		if( *p != ')' )
-			disp_error_message("parse_callfunc: expected ')' to close argument list",p);
+
+	if (arg != NULL && *arg != '\0' && *arg != '?' && *arg != '*') {
+		disp_error_message2("script:parse_callfunc: not enough arguments, expected ','", p, script->config.warn_func_mismatch_paramnum);
+	}
+
+	if (script->syntax.curly[script->syntax.curly_count].type != TYPE_ARGLIST) {
+		disp_error_message("parse_callfunc: DEBUG last curly is not an argument list", p);
+	}
+
+	if (script->syntax.curly[script->syntax.curly_count].flag == ARGLIST_PAREN) {
+		if (*p != ')') {
+			disp_error_message("script:parse_callfunc: expected ')' to close argument list", p);
+		}
+
 		++p;
 
-		if (script->str_data[func].val == script->buildin_lang_macro_offset)
+		if (script->str_data[func].val == script->buildin_lang_macro_offset) {
 			script->syntax.lang_macro_active = false;
-		else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset)
+		} else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset) {
 			script->syntax.lang_macro_fmtstring_active = false;
+		}
 	}
 
 	if (!macro) {
-		if (0 == --script->syntax.nested_call)
+		if (0 == --script->syntax.nested_call) {
 			script->syntax.last_func = -1;
+		}
+
 		script->addc(C_FUNC);
 	}
+
 	return p;
 }
 
@@ -1161,6 +1240,80 @@ static const char *parse_variable(const char *p)
 	return p;
 }
 
+/**
+ * Converts a number expression literal to an actual integer.
+ * Number separators are skipped.
+ *
+ * expects these formats:
+ *     1337
+ *     0x1337
+ *     0b1001
+ *     0o1337
+ *
+ * example with separating nibbles of a binary literal:
+ *     0b1101_0111_1001_1111
+ *
+ * @param p - a pointer to the first char of the number literal
+ * @param lli - a pointer to the resulting long long integer
+ * @returns a pointer to the first char after the parsed number
+*/
+static const char *parse_number(const char *p, long long *lli) {
+	nullpo_retr(NULL, p);
+
+	const bool unary_plus = (*p == '+');
+	const bool unary_minus = (*p == '-');
+
+	if (unary_plus || unary_minus) {
+		p++;
+	}
+
+	if (ISNSEPARATOR(*p)) {
+		disp_error_message("parse_number: number literals cannot begin with a separator", p);
+	}
+
+#define PARSENUMBER(skip, func, radix) \
+	for (p += skip; func(*p) || (ISNSEPARATOR(*p) && (func(p[1]) || ISNSEPARATOR(p[1]))); ++p) { \
+		if (func(*p)) { \
+			*lli *= radix; \
+			*lli += (*p < 'A') ? (*p & 0xF) : (9 + (*p & 0x7)); \
+		} else if (ISNSEPARATOR(p[1])) { \
+			disp_error_message("parse_number: number literals cannot contain two separators in a row", p + 1); \
+		} \
+	}
+
+	if (*p == '0' && p[1] == 'x') {
+		PARSENUMBER(2, ISXDIGIT, 16);
+	} else if (*p == '0' && p[1] == 'o') {
+		PARSENUMBER(2, ISODIGIT, 8);
+	} else if (*p == '0' && p[1] == 'b') {
+		PARSENUMBER(2, ISBDIGIT, 2);
+	} else {
+		PARSENUMBER(0, ISDIGIT, 10);
+	}
+
+#undef PARSENUMBER
+
+	if (ISNSEPARATOR(*p)) {
+		disp_error_message("parse_number: number literals cannot end with a separator", p);
+	}
+
+	if (unary_minus) {
+		// reverse the sign
+		*lli = -(*lli);
+	}
+
+	// make sure we can't underflow/overflow
+	if (*lli < INT_MIN) {
+		*lli = INT_MIN;
+		script->disp_warning_message("parse_number: underflow detected, capping value to INT_MIN", p);
+	} else if (*lli > INT_MAX) {
+		*lli = INT_MAX;
+		script->disp_warning_message("parse_number: overflow detected, capping value to INT_MAX", p);
+	}
+
+	return p;
+}
+
 /*
  * Checks whether the gives string is a number literal
  *
@@ -1177,24 +1330,44 @@ static const char *parse_variable(const char *p)
 static bool is_number(const char *p)
 {
 	const char *np;
-	if (!p)
-		return false;
-	if (*p == '-' || *p == '+')
+	nullpo_retr(false, p);
+
+	if (*p == '-' || *p == '+') {
 		p++;
-	np = p;
-	if (*p == '0' && p[1] == 'x') {
-		p+=2;
-		np = p;
-		// Hexadecimal
-		while (ISXDIGIT(*np))
-			np++;
-	} else {
-		// Decimal
-		while (ISDIGIT(*np))
-			np++;
 	}
-	if (p != np && *np != '_' && !ISALPHA(*np)) // At least one digit, and next isn't a letter or _
+
+	np = p;
+
+	if (*p == '0' && p[1] == 'x') {
+		// Hexadecimal: 0xFFFF
+		np = (p += 2);
+		while (ISXDIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	} else if (*p == '0' && p[1] == 'b') {
+		// Binary: 0b0001
+		np = (p += 2);
+		while (ISBDIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	} else if (*p == '0' && p[1] == 'o') {
+		// Octal: 0o1500
+		np = (p += 2);
+		while (ISODIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	} else if (ISDIGIT(*p)) {
+		// Decimal: 1234
+		while (ISDIGIT(*np) || ISNSEPARATOR(*np)) {
+			np++;
+		}
+	}
+
+	if (p != np && *np != '_' && !ISALPHA(*np)) {
+		// At least one digit, and next isn't a letter or _
 		return true;
+	}
+
 	return false;
 }
 
@@ -1230,16 +1403,29 @@ static int script_string_dup(char *str)
  *------------------------------------------*/
 static const char *parse_simpleexpr(const char *p)
 {
-	p=script->skip_space(p);
+	p = script->skip_space(p);
 
 	nullpo_retr(NULL, p);
-	if (*p == ';' || *p == ',')
-		disp_error_message("parse_simpleexpr: unexpected end of expression",p);
+
+	if (*p == ';' || *p == ',') {
+		disp_error_message("script:parse_simpleexpr: unexpected end of expression", p);
+	}
+
 	if (*p == '(') {
 		return script->parse_simpleexpr_paren(p);
 	} else if (is_number(p)) {
 		return script->parse_simpleexpr_number(p);
 	} else if(*p == '"') {
+		const char *p2 = p + 1;
+
+		while (*p2 != '"') {
+			++p2;
+		}
+
+		if (p2[1] == ':' && p2[2] == ':') {
+			return script->parse_callfunc(p, 1, 0); // XXX: why does callfunc use int for booleans?
+		}
+
 		return script->parse_simpleexpr_string(p);
 	} else {
 		return script->parse_simpleexpr_name(p);
@@ -1275,21 +1461,9 @@ static const char *parse_simpleexpr_paren(const char *p)
 
 static const char *parse_simpleexpr_number(const char *p)
 {
-	char *np = NULL;
-	long long lli;
+	long long lli = 0;
+	const char *np = parse_number(p, &lli);
 
-	nullpo_retr(NULL, p);
-	while (*p == '0' && ISDIGIT(p[1]))
-		p++; // Skip leading zeros, we don't support octal literals
-
-	lli = strtoll(p, &np, 0);
-	if (lli < INT_MIN) {
-		lli = INT_MIN;
-		script->disp_warning_message("parse_simpleexpr: underflow detected, capping value to INT_MIN", p);
-	} else if (lli > INT_MAX) {
-		lli = INT_MAX;
-		script->disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX", p);
-	}
 	script->addi((int)lli); // Cast is safe, as it's already been checked for overflows
 
 	return np;
@@ -1573,6 +1747,85 @@ static const char *parse_line(const char *p)
 
 	//Binding decision for if(), for(), while()
 	p = script->parse_syntax_close(p+1);
+
+	return p;
+}
+
+/**
+ * parses a local function expression
+ *
+ * expects these formats:
+ *     function <name>;
+ *     function <name> { <script> }
+ *
+ * this is invoked by script->parse_syntax() after checking whether the function
+ * is public or not
+ *
+ * @param p - a pointer to the start of the function expression
+ * @param is_public - whether this function should be accessible from outside the NPC scope
+ */
+static const char *parse_syntax_function (const char *p, bool is_public)
+{
+	const char *func_name = script->skip_space(p); // the name of the local function
+	p = script->skip_word(func_name);
+
+	if (p == func_name) {
+		disp_error_message("script:parse_syntax_function: function name is missing or invalid", p);
+	}
+
+	const char *p2 = script->skip_space(p);
+
+	if (*p2 == ';') {
+		// function <name> ;
+		// function declaration - just register the name
+		int l = script->add_word(func_name);
+
+		if (script->str_data[l].type == C_NOP) {
+			// register only, if the name was not used by something else
+			script->str_data[l].type = C_USERFUNC;
+		} else if (script->str_data[l].type != C_USERFUNC) {
+			disp_error_message("script:parse_syntax_function: function name is already in use", func_name);
+		}
+
+		// Close condition of if, for, while
+		p = script->parse_syntax_close(p2 + 1);
+		return p;
+	} else if (*p2 == '{') {
+		// function <name> <line/block of code>
+		script->syntax.curly[script->syntax.curly_count].type  = TYPE_USERFUNC;
+		script->syntax.curly[script->syntax.curly_count].count = 1;
+		script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
+		script->syntax.curly[script->syntax.curly_count].flag  = 0;
+		++script->syntax.curly_count;
+
+		// Jump over the function code
+		char label[256];
+		sprintf(label, "goto __FN%x_FIN;", (unsigned int)script->syntax.curly[script->syntax.curly_count - 1].index);
+		script->syntax.curly[script->syntax.curly_count].type = TYPE_NULL;
+		++script->syntax.curly_count;
+		script->parse_line(label);
+		--script->syntax.curly_count;
+
+		// Set the position of the function (label)
+		int l = script->add_word(func_name);
+
+		if (script->str_data[l].type == C_NOP || script->str_data[l].type == C_USERFUNC) {
+			// register only, if the name was not used by something else
+			script->str_data[l].type = C_USERFUNC;
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
+
+			if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
+				script->label_add(l, VECTOR_LENGTH(script->buf),
+					LABEL_IS_USERFUNC | (is_public ? LABEL_IS_EXTERN : 0));
+			}
+		} else {
+			disp_error_message("script:parse_syntax_function: function name is already in use", func_name);
+		}
+
+		return script->skip_space(p);
+	} else {
+		disp_error_message("script:parse_syntax_function: expected ';' or '{' at function syntax", p);
+	}
 
 	return p;
 }
@@ -1920,65 +2173,11 @@ static const char *parse_syntax(const char *p)
 			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			return p;
 		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
-			// internal script function
-			const char *func_name;
-
-			func_name = script->skip_space(p2);
-			p = script->skip_word(func_name);
-			if( p == func_name )
-				disp_error_message("parse_syntax:function: function name is missing or invalid", p);
-			p2 = script->skip_space(p);
-			if( *p2 == ';' )
-			{// function <name> ;
-				// function declaration - just register the name
-				int l;
-				l = script->add_word(func_name);
-				if( script->str_data[l].type == C_NOP )// register only, if the name was not used by something else
-					script->str_data[l].type = C_USERFUNC;
-				else if( script->str_data[l].type == C_USERFUNC )
-					;  // already registered
-				else
-					disp_error_message("parse_syntax:function: function name is invalid", func_name);
-
-				// Close condition of if, for, while
-				p = script->parse_syntax_close(p2 + 1);
-				return p;
-			}
-			else if(*p2 == '{')
-			{// function <name> <line/block of code>
-				char label[256];
-				int l;
-
-				script->syntax.curly[script->syntax.curly_count].type  = TYPE_USERFUNC;
-				script->syntax.curly[script->syntax.curly_count].count = 1;
-				script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
-				script->syntax.curly[script->syntax.curly_count].flag  = 0;
-				++script->syntax.curly_count;
-
-				// Jump over the function code
-				sprintf(label, "goto __FN%x_FIN;", (unsigned int)script->syntax.curly[script->syntax.curly_count-1].index);
-				script->syntax.curly[script->syntax.curly_count].type = TYPE_NULL;
-				++script->syntax.curly_count;
-				script->parse_line(label);
-				--script->syntax.curly_count;
-
-				// Set the position of the function (label)
-				l=script->add_word(func_name);
-				if( script->str_data[l].type == C_NOP || script->str_data[l].type == C_USERFUNC )// register only, if the name was not used by something else
-				{
-					script->str_data[l].type = C_USERFUNC;
-					script->set_label(l, VECTOR_LENGTH(script->buf), p);
-					if( script->parse_options&SCRIPT_USE_LABEL_DB )
-						script->label_add(l, VECTOR_LENGTH(script->buf));
-				}
-				else
-					disp_error_message("parse_syntax:function: function name is invalid", func_name);
-
-				return script->skip_space(p);
-			}
-			else
-			{
-				disp_error_message("expect ';' or '{' at function syntax",p);
+			// local function not marked as public or private
+			if (script->config.functions_private_by_default) {
+				return script->parse_syntax_function(p2, false);
+			} else {
+				return script->parse_syntax_function(p2, true);
 			}
 		}
 		break;
@@ -2004,6 +2203,26 @@ static const char *parse_syntax(const char *p)
 			script->addl(script->add_str(label));
 			script->addc(C_FUNC);
 			return p;
+		}
+		break;
+	case 'p':
+	case 'P':
+		if (p2 - p == 6 && strncmp(p, "public", 6) == 0) {
+			p2 = script->skip_space(p2);
+			const char *p3 = script->skip_word(p2);
+
+			if (p3 - p2 == 8 && strncmp(p2, "function", 8) == 0) {
+				// local function explicitly marked as public
+				return script->parse_syntax_function(p3, true);
+			}
+		} else if (p2 - p == 7 && strncmp(p, "private", 7) == 0) {
+			p2 = script->skip_space(p2);
+			const char *p3 = script->skip_word(p2);
+
+			if (p3 - p2 == 8 && strncmp(p2, "function", 8) == 0) {
+				// local function explicitly marked as private
+				return script->parse_syntax_function(p3, false);
+			}
 		}
 		break;
 	case 's':
@@ -2668,25 +2887,32 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 		}
 	}
 
-	while( script->syntax.curly_count != 0 || *p != end )
-	{
-		if( *p == '\0' )
-			disp_error_message("unexpected end of script",p);
+	while (script->syntax.curly_count != 0 || *p != end) {
+		if (*p == '\0') {
+			disp_error_message("script:parse_script: unexpected end of script", p);
+		}
+
 		// Special handling only label
-		tmpp=script->skip_space(script->skip_word(p));
-		if(*tmpp==':' && !(strncmp(p,"default:",8) == 0 && p + 7 == tmpp)) {
-			i=script->add_word(p);
+		tmpp = script->skip_space(script->skip_word(p));
+
+		if (*tmpp == ':' && !(strncmp(p, "default:", 8) == 0 && p + 7 == tmpp)
+			&& !(strncmp(p, "function", 8) == 0 && script->skip_space(p + 8) == tmpp)) {
+			i = script->add_word(p);
 			script->set_label(i, VECTOR_LENGTH(script->buf), p);
-			if( script->parse_options&SCRIPT_USE_LABEL_DB )
-				script->label_add(i, VECTOR_LENGTH(script->buf));
-			p=tmpp+1;
-			p=script->skip_space(p);
+
+			if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
+				bool is_extern = ((p[0] == 'O' || p[0] == 'o') && (p[1] == 'N' || p[1] == 'n'));
+				script->label_add(i, VECTOR_LENGTH(script->buf), is_extern ? LABEL_IS_EXTERN : 0);
+			}
+
+			p = tmpp + 1;
+			p = script->skip_space(p);
 			continue;
 		}
 
 		// All other lumped
-		p=script->parse_line(p);
-		p=script->skip_space(p);
+		p = script->parse_line(p);
+		p = script->skip_space(p);
 
 		script->parse_nextline(false, p);
 	}
@@ -3395,6 +3621,32 @@ static void set_reg_instance_num(struct script_state *st, int64 num, const char 
 }
 
 /**
+ * Validates if a variable is permanent (stored in database) by passed variable name.
+ *
+ * @param name The variable name to validate.
+ * @return True if variable is permanent, otherwise false.
+ *
+ **/
+static bool script_is_permanent_variable(const char *name)
+{
+	nullpo_retr(false, name);
+
+	if (strlen(name) == 0)
+		return false;
+
+	if (ISALNUM(name[0]) != 0)
+		return true; // Permanent characater variable.
+
+	if (name[0] == '#')
+		return true; // Permanent (global) account variable.
+
+	if (strlen(name) > 1 && name[0] == '$' && ISALNUM(name[1]) != 0)
+		return true; // Permanent server variable.
+
+	return false;
+}
+
+/**
  * Stores the value of a script variable
  *
  * @param st    current script state.
@@ -3438,6 +3690,18 @@ static int set_reg(struct script_state *st, struct map_session_data *sd, int64 n
 
 	if (is_string_variable(name)) {// string variable
 		const char *str = (const char*)value;
+
+		if (script->is_permanent_variable(name) && strlen(str) > SCRIPT_STRING_VAR_LENGTH) {
+			ShowError("script:set_reg: Value of variable %s is too long: %d! Maximum is %d. Skipping...\n",
+				  name, (int)strlen(str), SCRIPT_STRING_VAR_LENGTH);
+
+			if (st != NULL) {
+				script->reportsrc(st);
+				st->state = END;
+			}
+
+			return 0;
+		}
 
 		switch (prefix) {
 		case '@':
@@ -4828,6 +5092,8 @@ static bool script_config_read(const char *filename, bool imported)
 
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_paramnum", &script->config.warn_func_mismatch_paramnum);
 	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_argtypes", &script->config.warn_func_mismatch_argtypes);
+	libconfig->setting_lookup_bool_real(setting, "functions_private_by_default", &script->config.functions_private_by_default);
+	libconfig->setting_lookup_bool_real(setting, "functions_as_events", &script->config.functions_as_events);
 	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
 	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
@@ -6397,6 +6663,111 @@ static BUILDIN(callfunc)
 
 	return true;
 }
+
+/**
+ * Calls a local function within a NPC as if it was part of the current scope.
+ * Resumes execution in the previous scope once the NPC function returns. This
+ * is essentially a clone of buildin_callsub that can run in arbitrary NPCs.
+ *
+ * Usage:
+ *     callfunctionofnpc("<npc name>", "<function name>"{, <arg>...})
+ *     callfunctionofnpc(<npc id>, "<function name>"{, <arg>...})
+ *
+ * This buildin is also used internally by this syntax:
+ *     "<npc name>"::<function name>({<arg>...})
+ */
+static BUILDIN(callfunctionofnpc) {
+	struct npc_data *nd = NULL;
+
+	if (script_isstring(st, 2)) {
+		nd = npc->name2id(script_getstr(st, 2));
+	} else {
+		nd = map->id2nd(script_getnum(st, 2));
+	}
+
+	if (nd == NULL) {
+		ShowError("script:callfunctionofnpc: NPC not found.\n");
+		st->state = END;
+		return false;
+	}
+
+	const char *function_name = script_getstr(st, 3);
+	int pos = -1;
+
+	// find the function label within the label list of the NPC
+	for (int i = 0; i < nd->u.scr.label_list_num; ++i) {
+		if (strcmp(nd->u.scr.label_list[i].name, function_name) == 0) {
+			if ((nd->u.scr.label_list[i].flags & LABEL_IS_EXTERN) != 0
+				&& (nd->u.scr.label_list[i].flags & LABEL_IS_USERFUNC) != 0) {
+				// function label found: set the start location
+				pos = nd->u.scr.label_list[i].pos;
+			} else if ((nd->u.scr.label_list[i].flags & LABEL_IS_USERFUNC) != 0) {
+				ShowError("script:callfunctionofnpc: function '%s' is not marked as public in NPC '%s'.\n", function_name, nd->name);
+				st->state = END;
+				return false;
+			}
+			break;
+		}
+	}
+
+	if (pos < 0) {
+		ShowError("script:callfunctionofnpc: function '%s' not found in NPC '%s'!\n", function_name, nd->name);
+		st->state = END;
+		return false;
+	}
+
+	// alloc a reg_db reference of the current scope for the new scope
+	struct reg_db *ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
+	// scope variables (.@var)
+	ref[0].vars = st->stack->scope.vars;
+	ref[0].arrays = st->stack->scope.arrays;
+	// npc variables (.var)
+	ref[1].vars = st->script->local.vars;
+	ref[1].arrays = st->script->local.arrays;
+
+	int i = 0;
+
+	// make sure the arguments we push retain their current reg_db references:
+	// this allows to do things like set(getarg(0), ...)
+	for (i = st->start + 4; i < st->end; i++) {
+		struct script_data *data = script->push_copy(st->stack, i);
+
+		if (data_isreference(data) && data->ref == NULL) {
+			const char *name = reference_getname(data);
+
+			if (name[0] == '.') {
+				data->ref = (name[1] == '@' ? &ref[0] : &ref[1]);
+			}
+		}
+	}
+
+	// save the previous scope
+	struct script_retinfo *ri = NULL;
+	CREATE(ri, struct script_retinfo, 1);
+	ri->script       = st->script;              // script code
+	ri->scope.vars   = st->stack->scope.vars;   // scope variables
+	ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+	ri->pos          = st->pos;                 // script location
+	ri->nargs        = i - st->start - 4;       // argument count
+	ri->defsp        = st->stack->defsp;        // default stack pointer
+	script->push_retinfo(st->stack, ri, ref);
+
+	// change the current scope to the scope of the function
+	st->pos = pos;
+	st->script = nd->u.scr.script;
+	st->stack->defsp = st->stack->sp;
+	st->state = GOTO;
+	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+
+	// make sure local reg_db of the other NPC is initialized
+	if (st->script->local.vars == NULL) {
+		st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	}
+
+	return true;
+}
+
 /*==========================================
  * subroutine call
  *------------------------------------------*/
@@ -8764,22 +9135,71 @@ static BUILDIN(delitemidx)
 	return true;
 }
 
-/*==========================================
- * Enables/Disables use of items while in an NPC [Skotlex]
- *------------------------------------------*/
+/**
+ * Enable item actions while interacting with NPC.
+ *
+ * @code{.herc}
+ *	enableitemuse({<flag>});
+ *	enable_items({<flag>});
+ * @endcode
+ *
+ **/
 static BUILDIN(enableitemuse)
 {
+	int flag = battle_config.item_enabled_npc;
+
+	if (script_hasdata(st, 2)) {
+		if (!script_isinttype(st, 2))
+			return true;
+
+		flag = script_getnum(st, 2);
+	}
+
+	if (flag < 0)
+		return true;
+	
 	struct map_session_data *sd = script->rid2sd(st);
-	if (sd != NULL)
-		st->npc_item_flag = sd->npc_item_flag = 1;
+
+	if (sd == NULL)
+		return true;
+
+	st->npc_item_flag |= flag;
+	sd->npc_item_flag |= flag;
+
 	return true;
 }
 
+/**
+ * Disable item actions while interacting with NPC.
+ *
+ * @code{.herc}
+ *	disableitemuse({<flag>});
+ *	disable_items({<flag>});
+ * @endcode
+ *
+ **/
 static BUILDIN(disableitemuse)
 {
+	int flag = battle_config.item_enabled_npc;
+
+	if (script_hasdata(st, 2)) {
+		if (!script_isinttype(st, 2))
+			return true;
+
+		flag = script_getnum(st, 2);
+	}
+
+	if (flag < 0)
+		return true;
+	
 	struct map_session_data *sd = script->rid2sd(st);
-	if (sd != NULL)
-		st->npc_item_flag = sd->npc_item_flag = 0;
+
+	if (sd == NULL)
+		return true;
+
+	st->npc_item_flag &= ~flag;
+	sd->npc_item_flag &= ~flag;
+
 	return true;
 }
 
@@ -10998,32 +11418,33 @@ static BUILDIN(itemskill)
 {
 	struct map_session_data *sd = script->rid2sd(st);
 
-	if (sd == NULL || sd->ud.skilltimer != INVALID_TIMER)
+	if (sd == NULL)
 		return true;
 
-	pc->autocast_clear(sd);
-	sd->autocast.type = AUTOCAST_ITEM;
-	sd->autocast.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
-	sd->autocast.skill_lv = script_getnum(st, 3);
+	sd->auto_cast_current.type = AUTOCAST_ITEM;
+	sd->auto_cast_current.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
+	sd->auto_cast_current.skill_lv = script_getnum(st, 3);
 
 	int flag = script_hasdata(st, 4) ? script_getnum(st, 4) : ISF_NONE;
 
-	sd->autocast.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
+	sd->auto_cast_current.itemskill_check_conditions = ((flag & ISF_CHECKCONDITIONS) == ISF_CHECKCONDITIONS);
 
-	if (sd->autocast.itemskill_check_conditions) {
-		if (skill->check_condition_castbegin(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0
-		    || skill->check_condition_castend(sd, sd->autocast.skill_id, sd->autocast.skill_lv) == 0) {
-			pc->autocast_clear(sd);
+	if (sd->auto_cast_current.itemskill_check_conditions) {
+		if (skill->check_condition_castbegin(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv) == 0
+		    || skill->check_condition_castend(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv) == 0) {
 			return true;
 		}
 
-		sd->autocast.itemskill_conditions_checked = true;
+		sd->auto_cast_current.itemskill_conditions_checked = true;
 	}
 
-	sd->autocast.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
-	sd->autocast.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
+	sd->auto_cast_current.itemskill_instant_cast = ((flag & ISF_INSTANTCAST) == ISF_INSTANTCAST);
+	sd->auto_cast_current.itemskill_cast_on_self = ((flag & ISF_CASTONSELF) == ISF_CASTONSELF);
 
-	clif->item_skill(sd, sd->autocast.skill_id, sd->autocast.skill_lv);
+	VECTOR_ENSURE(sd->auto_cast, 1, 1);
+	VECTOR_PUSH(sd->auto_cast, sd->auto_cast_current);
+
+	clif->item_skill(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv);
 
 	return true;
 }
@@ -12109,6 +12530,50 @@ static BUILDIN(mobattached)
 		script_pushint(st, 0);
 	else
 		script_pushint(st, st->rid);
+	return true;
+}
+
+/**
+ * Announces a colored text in '<char_name> Shouts : <message>' format.
+ * Default color is white ("FFFFFF").
+ *
+ * This is a special use case of packet 0x009a where the message's first 34 bytes
+ * are reserved for string "micc" (4B) which identifies the broadcast as megaphone shout,
+ * the character's name (24B) and the text color (6B).
+ *
+ * 009a <packet len>.W <micc>.4B <char name>.24B <color>.6B <message>.?B
+ *
+ * @code{.herc}
+ *	loudhailer("<message>"{, "<color>"});
+ * @endcode
+ *
+ **/
+static BUILDIN(loudhailer)
+{
+	const char *mes = script_getstr(st, 2);
+	size_t len_mes = strlen(mes);
+
+	Assert_retr(false, len_mes + 33 < CHAT_SIZE_MAX); // +33 because of the '<char_name> Shouts : ' message prefix.
+
+	const char *color = script_hasdata(st, 3) ? script_getstr(st, 3) : "FFFFFF";
+
+	Assert_retr(false, strlen(color) == 6);
+
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return false;
+
+	char mes_formatted[CHAT_SIZE_MAX + 30] = "";
+
+	strcpy(mes_formatted, sd->status.name);
+	strcpy(mes_formatted + 24, color);
+	safesnprintf(mes_formatted + 30, CHAT_SIZE_MAX, "%s Shouts : %s", sd->status.name, mes);
+
+	size_t len_formatted = 30 + strlen(sd->status.name) + 10 + len_mes + 1;
+
+	clif->broadcast(&sd->bl, mes_formatted, (int)len_formatted, BC_MEGAPHONE, ALL_CLIENT);
+
 	return true;
 }
 
@@ -16111,7 +16576,6 @@ static BUILDIN(atcommand)
 	struct map_session_data *sd, *dummy_sd = NULL;
 	int fd;
 	const char* cmd;
-	bool ret = true;
 
 	cmd = script_getstr(st,2);
 
@@ -16134,11 +16598,12 @@ static BUILDIN(atcommand)
 
 	if (!atcommand->exec(fd, sd, cmd, false)) {
 		ShowWarning("script: buildin_atcommand: failed to execute command '%s'\n", cmd);
-		script->reportsrc(st);
-		ret = false;
+		if (dummy_sd != NULL)
+			aFree(dummy_sd);
+		return false;
 	}
 	if (dummy_sd) aFree(dummy_sd);
-	return ret;
+	return true;
 }
 
 /**
@@ -18862,7 +19327,14 @@ static BUILDIN(npcshopdelitem)
 		size--;
 	}
 
-	RECREATE(nd->u.shop.shop_item, struct npc_item_list, size);
+	int alloc_size = size;
+	if (size < 0) {
+		size = 0;
+		alloc_size = 1;
+	} else if (size < 1) {
+		alloc_size = 1;
+	}
+	RECREATE(nd->u.shop.shop_item, struct npc_item_list, alloc_size);
 	nd->u.shop.count = size;
 
 	script_pushint(st,1);
@@ -26818,8 +27290,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(delitem,"vi?"),
 		BUILDIN_DEF(delitem2,"viiiiiiii?"),
 		BUILDIN_DEF(delitemidx, "i??"),
-		BUILDIN_DEF2(enableitemuse,"enable_items",""),
-		BUILDIN_DEF2(disableitemuse,"disable_items",""),
+		BUILDIN_DEF2(enableitemuse, "enable_items", "?"),
+		BUILDIN_DEF2(disableitemuse, "disable_items", "?"),
 		BUILDIN_DEF(cutin,"si"),
 		BUILDIN_DEF(viewpoint,"iiiii"),
 		BUILDIN_DEF(heal,"ii"),
@@ -26924,6 +27396,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(detachnpctimer,"?"), // detached the player id from the npc timer [Celest]
 		BUILDIN_DEF(playerattached,""), // returns id of the current attached player. [Skotlex]
 		BUILDIN_DEF(mobattached, ""),
+		BUILDIN_DEF(loudhailer, "s?"),
 		BUILDIN_DEF(announce,"si?????"),
 		BUILDIN_DEF(mapannounce,"ssi?????"),
 		BUILDIN_DEF(areaannounce,"siiiisi?????"),
@@ -27390,6 +27863,8 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(identify, "i"),
 		BUILDIN_DEF(identifyidx, "i"),
 		BUILDIN_DEF(openlapineddukddakboxui, "i"),
+
+		BUILDIN_DEF(callfunctionofnpc, "vs*"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
@@ -27401,7 +27876,7 @@ static void script_parse_builtin(void)
 #undef BUILDIN_DEF
 #undef BUILDIN_DEF2
 
-static void script_label_add(int key, int pos)
+static void script_label_add(int key, int pos, enum script_label_flags flags)
 {
 	int idx = script->label_count;
 
@@ -27412,6 +27887,7 @@ static void script_label_add(int key, int pos)
 
 	script->labels[idx].key = key;
 	script->labels[idx].pos = pos;
+	script->labels[idx].flags = flags;
 	script->label_count++;
 }
 
@@ -27830,6 +28306,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MSC_MASTERATTACKED", MSC_MASTERATTACKED, false, false);
 	script->set_constant("MSC_ALCHEMIST", MSC_ALCHEMIST, false, false);
 	script->set_constant("MSC_SPAWN", MSC_SPAWN, false, false);
+	script->set_constant("MSC_MAGICATTACKED", MSC_MAGICATTACKED, false, false);
 
 	script->constdb_comment("monster skill targets");
 	script->set_constant("MST_TARGET", MST_TARGET, false, false);
@@ -27847,6 +28324,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MST_AROUND4", MST_AROUND4, false, false);
 	script->set_constant("MST_AROUND", MST_AROUND , false, false);
 
+	script->constdb_comment("Monster group constants");
+	script->set_constant("ALL_MOBS_NONBOSS", ALL_MOBS_NONBOSS, false, false);
+	script->set_constant("ALL_MOBS_BOSS", ALL_MOBS_BOSS, false, false);
+	script->set_constant("ALL_MOBS", ALL_MOBS, false, false);
+
 	script->constdb_comment("pc block constants, use with *setpcblock* and *checkpcblock*");
 	script->set_constant("PCBLOCK_NONE",     PCBLOCK_NONE,     false, false);
 	script->set_constant("PCBLOCK_MOVE",     PCBLOCK_MOVE,     false, false);
@@ -27858,6 +28340,16 @@ static void script_hardcoded_constants(void)
 	script->set_constant("PCBLOCK_SITSTAND", PCBLOCK_SITSTAND, false, false);
 	script->set_constant("PCBLOCK_COMMANDS", PCBLOCK_COMMANDS, false, false);
 	script->set_constant("PCBLOCK_NPC",      PCBLOCK_NPC,      false, false);
+
+	script->constdb_comment("NPC item action constants");
+	script->set_constant("ITEMENABLEDNPC_NONE", ITEMENABLEDNPC_NONE, false, false);
+	script->set_constant("ITEMENABLEDNPC_EQUIP", ITEMENABLEDNPC_EQUIP, false, false);
+	script->set_constant("ITEMENABLEDNPC_CONSUME", ITEMENABLEDNPC_CONSUME, false, false);
+
+	script->constdb_comment("NPC allowed skill use constants");
+	script->set_constant("SKILLENABLEDNPC_NONE", SKILLENABLEDNPC_NONE, false, false);
+	script->set_constant("SKILLENABLEDNPC_SELF", SKILLENABLEDNPC_SELF, false, false);
+	script->set_constant("SKILLENABLEDNPC_ALL", SKILLENABLEDNPC_ALL, false, false);
 
 	script->constdb_comment("private airship responds");
 	script->set_constant("P_AIRSHIP_NONE", P_AIRSHIP_NONE, false, false);
@@ -28218,6 +28710,7 @@ void script_defaults(void)
 	script->parse_syntax_close = parse_syntax_close;
 	script->parse_syntax_close_sub = parse_syntax_close_sub;
 	script->parse_syntax = parse_syntax;
+	script->parse_syntax_function = parse_syntax_function;
 	script->get_com = get_com;
 	script->get_num = get_num;
 	script->op2name = script_op2name;
@@ -28250,6 +28743,7 @@ void script_defaults(void)
 	script->load_parameters = script_load_parameters;
 	script->print_line = script_print_line;
 	script->errorwarning_sub = script_errorwarning_sub;
+	script->is_permanent_variable = script_is_permanent_variable;
 	script->set_reg = set_reg;
 	script->set_reg_ref_str = set_reg_npcscope_str;
 	script->set_reg_pc_ref_str = set_reg_pc_ref_str;
@@ -28321,6 +28815,8 @@ void script_defaults(void)
 	script->config.ontouch_name = "OnTouch_";  //ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	script->config.ontouch2_name = "OnTouch";  //ontouch2_name (run whenever a char walks into the OnTouch area)
 	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)
+	script->config.functions_private_by_default = true;
+	script->config.functions_as_events = false;
 
 	// for ENABLE_CASE_CHECK
 	script->calc_hash_ci = calc_hash_ci;

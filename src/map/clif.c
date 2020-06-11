@@ -936,19 +936,25 @@ static void clif_clearunit_area(struct block_list *bl, enum clr_type type)
 static int clif_clearunit_delayed_sub(int tid, int64 tick, int id, intptr_t data)
 {
 	struct block_list *bl = (struct block_list *)data;
+	nullpo_ret(bl);
+	Assert_ret(bl->m >= 0 && bl->m < map->count);
+	if (map->list[bl->m].block == NULL) {
+		// avoid error report for missing/removed map
+		ers_free(clif->delay_clearunit_ers, bl);
+		return 0;
+	}
 	clif->clearunit_area(bl, (enum clr_type) id);
-	ers_free(clif->delay_clearunit_ers,bl);
+	ers_free(clif->delay_clearunit_ers, bl);
 	return 0;
 }
 
 static void clif_clearunit_delayed(struct block_list *bl, enum clr_type type, int64 tick)
 {
-	struct block_list *tbl;
-
 	nullpo_retv(bl);
-	tbl = ers_alloc(clif->delay_clearunit_ers, struct block_list);
-	memcpy (tbl, bl, sizeof (struct block_list));
-	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)tbl);
+	Assert_retv(bl->type == BL_MOB);
+	struct mob_data *md = ers_alloc(clif->delay_clearunit_ers, struct mob_data);
+	memcpy (md, bl, sizeof (struct mob_data));
+	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)md);
 }
 
 /// Gets weapon view info from sd's inventory_data and points (*rhand,*lhand)
@@ -1031,6 +1037,7 @@ static void clif_set_unit_idle2(struct block_list *bl, struct map_session_data *
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = idle_unit2Type;
@@ -1087,6 +1094,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 
 #if PACKETVER < 20091103
 	if (!pc->db_checkid(vd->class)) {
@@ -1197,6 +1205,7 @@ static void clif_spawn_unit2(struct block_list *bl, enum send_target target)
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = spawn_unit2Type;
@@ -1244,6 +1253,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	int g_id = status->get_guild_id(bl);
 
 	nullpo_retv(bl);
+	nullpo_retv(vd);
 
 #if PACKETVER < 20091103
 	if (!pc->db_checkid(vd->class)) {
@@ -1357,6 +1367,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 
 	nullpo_retv(bl);
 	nullpo_retv(ud);
+	nullpo_retv(vd);
 
 	sd = BL_CAST(BL_PC, bl);
 
@@ -6227,7 +6238,7 @@ static void clif_displaymessage_sprintf(const int fd, const char *mes, ...)
 /// 009a <packet len>.W <message>.?B
 static void clif_broadcast(struct block_list *bl, const char *mes, int len, int type, enum send_target target)
 {
-	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
+	int lp = ((type & BC_COLOR_MASK) != 0 || (type & BC_MEGAPHONE) != 0) ? 4 : 0;
 	unsigned char *buf = NULL;
 	nullpo_retv(mes);
 
@@ -6239,6 +6250,8 @@ static void clif_broadcast(struct block_list *bl, const char *mes, int len, int 
 		WBUFL(buf,4) = 0x65756c62; //If there's "blue" at the beginning of the message, game client will display it in blue instead of yellow.
 	else if( type&BC_WOE )
 		WBUFL(buf,4) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
+	else if ((type & BC_MEGAPHONE) != 0)
+		WBUFL(buf, 4) = 0x6363696d; // If there's "micc" at the beginning of the message, the game client will recognize message as 'Megaphone shout'.
 	memcpy(WBUFP(buf, 4 + lp), mes, len);
 	clif->send(buf, WBUFW(buf,2), bl, target);
 
@@ -6769,7 +6782,7 @@ static void clif_item_skill(struct map_session_data *sd, uint16 skill_id, uint16
 	struct PACKET_ZC_AUTORUN_SKILL *p = WFIFOP(fd, 0);
 	int type = skill->get_inf(skill_id);
 
-	if (sd->autocast.itemskill_cast_on_self && sd->autocast.type == AUTOCAST_ITEM)
+	if (sd->auto_cast_current.itemskill_cast_on_self && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		type = INF_SELF_SKILL;
 
 	p->packetType = HEADER_ZC_AUTORUN_SKILL;
@@ -9725,6 +9738,17 @@ static void clif_elemname_ack(int fd, struct block_list *bl)
 	clif->send_selforarea(fd, bl, &packet, sizeof(struct PACKET_ZC_ACK_REQNAME_TITLE));
 }
 
+static void clif_skillname_ack(int fd, struct block_list *bl)
+{
+}
+
+static void clif_itemname_ack(int fd, struct block_list *bl)
+{
+	nullpo_retv(bl);
+	ShowError("clif_itemname_ack: bad type %u(%d)\n", bl->type, bl->id);
+	Assert_retv(0);
+}
+
 static void clif_unknownname_ack(int fd, struct block_list *bl)
 {
 	nullpo_retv(bl);
@@ -9760,6 +9784,12 @@ static void clif_blname_ack(int fd, struct block_list *bl)
 			break;
 		case BL_ELEM:
 			clif->elemname_ack(fd, bl);
+			break;
+		case BL_ITEM:
+			clif->itemname_ack(fd, bl);
+			break;
+		case BL_SKILL:
+			clif->skillname_ack(fd, bl);
 			break;
 		default:
 			clif->unknownname_ack(fd, bl);
@@ -10375,7 +10405,8 @@ static const char *clif_process_chat_message(struct map_session_data *sd, const 
  * @param[in]  sd             The source character.
  * @param[in]  packet         The packet data.
  * @param[out] out_name       The parsed target name buffer (must be a valid
- *                            buffer of size NAME_LENGTH).
+ *                            buffer of size NAME_LENGTH + 1 because the client
+ *                            can send 24 characters without NULL terminator).
  * @param[out] out_message    The output message buffer (must be a valid buffer).
  * @param[in]  out_messagelen The size of out_message.
  * @retval true  if the validation succeeded and the message is a chat message.
@@ -10385,7 +10416,7 @@ static const char *clif_process_chat_message(struct map_session_data *sd, const 
  */
 static bool clif_process_whisper_message(struct map_session_data *sd, const struct packet_whisper_message *packet, char *out_name, char *out_message, int out_messagelen)
 {
-	int namelen = 0, messagelen = 0;
+	int messagelen = 0;
 
 	nullpo_retr(false, sd);
 	nullpo_retr(false, packet);
@@ -10395,15 +10426,6 @@ static bool clif_process_whisper_message(struct map_session_data *sd, const stru
 	if (packet->packet_len < NAME_LENGTH + 4 + 1) {
 		// 4-byte header and at least an empty string is expected
 		ShowWarning("clif_process_whisper_message: Received malformed packet from player '%s' (packet length is incorrect)!\n", sd->status.name);
-		return false;
-	}
-
-	// validate name
-	namelen = (int)strnlen(packet->name, NAME_LENGTH-1); // name length (w/o zero byte)
-
-	if (packet->name[namelen] != '\0') {
-		// only restriction is that the name must be zero-terminated
-		ShowWarning("clif_process_whisper_message: Player '%s' sent an unterminated name!\n", sd->status.name);
 		return false;
 	}
 
@@ -10425,7 +10447,7 @@ static bool clif_process_whisper_message(struct map_session_data *sd, const stru
 		return false;
 	}
 
-	safestrncpy(out_name, packet->name, namelen+1); // [!] packet->name is not NUL terminated
+	safestrncpy(out_name, packet->name, NAME_LENGTH + 1); // [!] packet->name is not NUL terminated
 	safestrncpy(out_message, packet->message, messagelen+1); // [!] packet->message is not necessarily NUL terminated
 
 	if (!pc->process_chat_message(sd, out_message))
@@ -10843,6 +10865,12 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		clif->updatestatus(sd, SP_NEXTJOBEXP);
 		clif->updatestatus(sd, SP_SKILLPOINT);
 		clif->initialstatus(sd);
+
+		// Unequip items which can't be equipped by the character.
+		for (int i = 0; i < EQI_MAX; i++) {
+			if (sd->equip_index[i] >= 0 && pc->isequip(sd , sd->equip_index[i]) == 0)
+				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
+		}
 
 		if (pc_isfalcon(sd)) {
 			int sc_icn = status->get_sc_icon(SC_FALCON);
@@ -11764,7 +11792,8 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 	struct map_session_data* dstsd;
 	int i;
 
-	char target[NAME_LENGTH], message[CHAT_SIZE_MAX + 1];
+	char target[NAME_LENGTH + 1]; // Client can send 24 characters without NULL terminator.
+	char message[CHAT_SIZE_MAX + 1];
 	const struct packet_whisper_message *packet = RP2PTR(fd);
 
 	if (!clif->process_whisper_message(sd, packet, target, message, sizeof message))
@@ -11780,7 +11809,7 @@ static void clif_parse_WisMessage(int fd, struct map_session_data *sd)
 		char *str = target + 4; // Skip the NPC: string part.
 		struct npc_data *nd;
 		if ((nd = npc->name2id(str))) {
-			char split_data[NUM_WHISPER_VAR][CHAT_SIZE_MAX];
+			char split_data[NUM_WHISPER_VAR][SCRIPT_STRING_VAR_LENGTH + 1];
 			char *split;
 			char output[256];
 
@@ -12024,7 +12053,7 @@ static void clif_parse_EquipItem(int fd, struct map_session_data *sd)
 		return; //Out of bounds check.
 
 	if( sd->npc_id ) {
-		if ( !sd->npc_item_flag )
+		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0)
 			return;
 	} else if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->sc.opt1)
 		; //You can equip/unequip stuff while storage is open/under status changes
@@ -12069,7 +12098,7 @@ static void clif_parse_UnequipItem(int fd, struct map_session_data *sd)
 	}
 
 	if( sd->npc_id ) {
-		if ( !sd->npc_item_flag )
+		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0)
 			return;
 	} else if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->sc.opt1)
 		; //You can equip/unequip stuff while storage is open/under status changes
@@ -12790,13 +12819,15 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 {
 	int64 tick = timer->gettick();
 
+	pc->autocast_set_current(sd, skill_id);
+
 	/**
 	 * According to Skotlex' comment below, the client sometimes passes 0 for the skill level.
 	 * Even though this seems to only affect guild skills, sd->autocast.skill_lv is used
 	 * for the auto-cast data validation if skill_lv is 0.
 	 *
 	 **/
-	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->autocast.skill_lv : skill_lv);
+	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->auto_cast_current.skill_lv : skill_lv);
 
 	if (skill_lv < 1)
 		skill_lv = 1; //No clue, I have seen the client do this with guild skills :/ [Skotlex]
@@ -12818,7 +12849,11 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
-	if (sd->npc_id || sd->state.workinprogress & 1) {
+	bool allow_self_skill = ((tmp & INF_SELF_SKILL) != 0 && (skill->get_nk(skill_id) & NK_NO_DAMAGE) != 0);
+	allow_self_skill = (allow_self_skill && battle_config.skill_enabled_npc == SKILLENABLEDNPC_SELF);
+
+	if ((sd->npc_id != 0 && !allow_self_skill && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -12827,7 +12862,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		return;
 	}
 
-	if (pc_cant_act(sd)
+	if (pc_cant_act_except_npc(sd)
 		&& skill_id != RK_REFRESH
 		&& !(skill_id == SR_GENTLETOUCH_CURE && (sd->sc.opt1 == OPT1_STONE || sd->sc.opt1 == OPT1_FREEZE || sd->sc.opt1 == OPT1_STUN))
 		&& (sd->state.storage_flag != STORAGE_FLAG_CLOSED && !(tmp&INF_SELF_SKILL)) // SELF skills can be used with the storage open, issue: 8027
@@ -12848,10 +12883,10 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		target_id = sd->bl.id;
 
 	if (sd->ud.skilltimer != INVALID_TIMER) {
-		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
+		if (skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST && sd->auto_cast_current.type == AUTOCAST_NONE)
 			return;
 	} else if (DIFF_TICK(tick, sd->ud.canact_tick) < 0) {
-		if (sd->autocast.type == AUTOCAST_NONE) {
+		if (sd->auto_cast_current.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -12869,9 +12904,9 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 		} else if (sd->menuskill_id != SA_AUTOSPELL)
 			return; //Can't use skills while a menu is open.
 	}
-	if (sd->autocast.type != AUTOCAST_NONE) {
-		if (skill_lv != sd->autocast.skill_lv)
-			skill_lv = sd->autocast.skill_lv;
+	if (sd->auto_cast_current.type != AUTOCAST_NONE) {
+		if (skill_lv != sd->auto_cast_current.skill_lv)
+			skill_lv = sd->auto_cast_current.skill_lv;
 		if (!(tmp&INF_SELF_SKILL))
 			pc->delinvincibletimer(sd); // Target skills through items cancel invincibility. [Inkfish]
 		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
@@ -12939,6 +12974,8 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	int64 tick = timer->gettick();
 
 	nullpo_retv(sd);
+	
+	pc->autocast_set_current(sd, skill_id);
 
 	/**
 	 * When using clif_item_skill() to initiate the execution of ground skills,
@@ -12947,7 +12984,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	 * since clif_item_skill() is only used for auto-cast skills.
 	 *
 	 **/
-	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->autocast.skill_lv : skill_lv);
+	skill->validate_autocast_data(sd, skill_id, (skill_lv == 0) ? sd->auto_cast_current.skill_lv : skill_lv);
 
 	if( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) )
 		return; //Using a target skill on the ground? WRONG.
@@ -12962,7 +12999,8 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		return;
 	}
 
-	if (sd->state.workinprogress & 1) {
+	if ((sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -12985,11 +13023,11 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		safestrncpy(sd->message, RFIFOP(fd, skillmoreinfo), TALKBOX_MESSAGE_SIZE);
 	}
 
-	if( sd->ud.skilltimer != INVALID_TIMER )
+	if (sd->ud.skilltimer != INVALID_TIMER && sd->auto_cast_current.type == AUTOCAST_NONE)
 		return;
 
 	if( DIFF_TICK(tick, sd->ud.canact_tick) < 0 ) {
-		if (sd->autocast.type == AUTOCAST_NONE) {
+		if (sd->auto_cast_current.type == AUTOCAST_NONE) {
 			clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return;
 		}
@@ -13010,9 +13048,9 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 
 	pc->delinvincibletimer(sd);
 
-	if (sd->autocast.type != AUTOCAST_NONE) {
-		if (skill_lv != sd->autocast.skill_lv)
-			skill_lv = sd->autocast.skill_lv;
+	if (sd->auto_cast_current.type != AUTOCAST_NONE) {
+		if (skill_lv != sd->auto_cast_current.skill_lv)
+			skill_lv = sd->auto_cast_current.skill_lv;
 		unit->skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);
 	} else {
 		int lv;
@@ -13032,7 +13070,7 @@ static void clif_parse_UseSkillToPos(int fd, struct map_session_data *sd) __attr
 /// There are various variants of this packet, some of them have padding between fields.
 static void clif_parse_UseSkillToPos(int fd, struct map_session_data *sd)
 {
-	if (pc_cant_act(sd))
+	if (pc_cant_act_except_npc(sd))
 		return;
 	if (pc_issit(sd))
 		return;
@@ -13053,7 +13091,7 @@ static void clif_parse_UseSkillToPosMoreInfo(int fd, struct map_session_data *sd
 /// There are various variants of this packet, some of them have padding between fields.
 static void clif_parse_UseSkillToPosMoreInfo(int fd, struct map_session_data *sd)
 {
-	if (pc_cant_act(sd))
+	if (pc_cant_act_except_npc(sd))
 		return;
 	if (pc_issit(sd))
 		return;
@@ -13082,10 +13120,13 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 		return;
 
 	// It is possible to use teleport with the storage window open issue:8027
-	if (pc_cant_act(sd) && (sd->state.storage_flag == STORAGE_FLAG_CLOSED && skill_id != AL_TELEPORT)) {
+	if ((pc_cant_act_except_npc(sd) && sd->state.storage_flag == STORAGE_FLAG_CLOSED && skill_id != AL_TELEPORT)
+	    || (sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)) {
 		clif_menuskill_clear(sd);
 		return;
 	}
+	
+	pc->autocast_set_current(sd, skill_id);
 
 	/**
 	 * Since no skill level was passed use 0 to notify skill_validate_autocast_data() of this special case.
@@ -15461,6 +15502,7 @@ static void clif_parse_GMKick(int fd, struct map_session_data *sd)
 			}
 			npc->unload_duplicates(nd, true);
 			npc->unload(nd, true, true);
+			npc->motd = npc->name2id("HerculesMOTD");
 			npc->read_event_script();
 		}
 		break;
@@ -19914,9 +19956,9 @@ static int clif_autoshadowspell_list(struct map_session_data *sd)
 	WFIFOHEAD(fd, 2 * 6 + 4);
 	WFIFOW(fd,0) = 0x442;
 	for (i = 0, c = 0; i < MAX_SKILL_DB; i++)
-		if( sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 &&
-				sd->status.skill[i].id < GS_GLITTERING && skill->get_type(sd->status.skill[i].id) == BF_MAGIC )
-		{ // Can't auto cast both Extended class and 3rd class skills.
+		if (sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 && sd->status.skill[i].id < GS_GLITTERING
+		    && skill->get_type(sd->status.skill[i].id, sd->status.skill[i].lv) == BF_MAGIC) {
+			// Can't auto cast both Extended class and 3rd class skills.
 			WFIFOW(fd,8+c*2) = sd->status.skill[i].id;
 			c++;
 		}
@@ -20422,17 +20464,14 @@ static void clif_maptypeproperty2(struct block_list *bl, enum send_target t)
 {
 #if PACKETVER >= 20121010
 	struct packet_maptypeproperty2 p;
-	struct map_session_data *sd = NULL;
 	nullpo_retv(bl);
-
-	sd = BL_CAST(BL_PC, bl);
 
 	p.PacketType = maptypeproperty2Type;
 	p.type = 0x28;
 	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0; //PARTY
 	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0; // GUILD
 	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1: 0; // SIEGE
-	p.flag.mineffect = map_flag_gvg(bl->m) ? 1 : ( (sd && sd->state.lesseffect) ? 1 : 0); // USE_SIMPLE_EFFECT - Forcing /mineffect in castles during WoE (probably redundant? I'm not sure)
+	p.flag.mineffect = map_flag_gvg2(bl->m) ? 1 : 0; // USE_SIMPLE_EFFECT - Automatically enable /mineffect in guild arenas and castles.
 	p.flag.nolockon = 0; // DISABLE_LOCKON - TODO
 	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0; // COUNT_PK
 	p.flag.nopartyformation = map->list[bl->m].flag.partylock ? 1 : 0; // NO_PARTY_FORMATION
@@ -22286,7 +22325,7 @@ static void clif_rodex_checkname_result(struct map_session_data *sd, int char_id
 	sPacket->Class = class_;
 	sPacket->BaseLevel = base_level;
 #if PACKETVER >= 20160316
-	strncpy(sPacket->Name, name, NAME_LENGTH);
+	safestrncpy(sPacket->Name, name, NAME_LENGTH);
 #endif
 	WFIFOSET(fd, sizeof(*sPacket));
 #endif
@@ -23783,12 +23822,15 @@ static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd) _
 static void clif_parse_lapineDdukDdak_ack(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20160302
+	if (sd->state.lapine_ui == 0)
+		return;
+
 	const struct PACKET_CZ_LAPINEDDUKDDAK_ACK *p = RP2PTR(fd);
 	struct item_data *it = itemdb->exists(p->itemId);
 
 	if (it == NULL || it->lapineddukddak == NULL)
 		return;
-	if (pc_cant_act(sd))
+	if (pc_cant_act_except_lapine(sd))
 		return;
 	if (pc->search_inventory(sd, it->nameid) == INDEX_NOT_FOUND)
 		return;
@@ -23847,6 +23889,55 @@ static void clif_parse_lapineDdukDdak_close(int fd, struct map_session_data *sd)
 #if PACKETVER >= 20160504
 	sd->state.lapine_ui = 0;
 #endif // PACKETVER >= 20160504
+}
+
+static bool clif_lapineUpgrade_open(struct map_session_data *sd, int item_id)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	nullpo_retr(false, itemdb->exists(item_id));
+	struct PACKET_ZC_LAPINEUPGRADE_OPEN p;
+
+	p.packetType = HEADER_ZC_LAPINEUPGRADE_OPEN;
+	p.itemId = item_id;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	return true;
+#else
+	return false;
+#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+}
+
+static void clif_parse_lapineUpgrade_close(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineUpgrade_close(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+}
+
+static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd)
+{
+#if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+	ShowError("Lapin upgrade not implimented yet");
+	clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
+#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+}
+
+static bool clif_lapineUpgrade_result(struct map_session_data *sd, enum lapineUpgrade_result result)
+{
+#if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+	nullpo_retr(false, sd);
+	struct PACKET_ZC_LAPINEUPGRADE_RESULT p;
+
+	p.packetType = HEADER_ZC_LAPINEUPGRADE_RESULT;
+	p.result = result;
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
+
+	return true;
+#else
+	return false;
+#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 }
 
 /*==========================================
@@ -24127,7 +24218,7 @@ static int do_init_clif(bool minimal)
 	timer->add_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
 	timer->add_func_list(clif->delayquit, "clif_delayquit");
 
-	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
+	clif->delay_clearunit_ers = ers_new(sizeof(struct mob_data), "clif.c::delay_clearunit_ers", ERS_OPT_CLEAR);
 	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
 
 #if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
@@ -24349,6 +24440,8 @@ void clif_defaults(void)
 	clif->mobname_normal_ack = clif_mobname_normal_ack;
 	clif->chatname_ack = clif_chatname_ack;
 	clif->elemname_ack = clif_elemname_ack;
+	clif->skillname_ack = clif_skillname_ack;
+	clif->itemname_ack = clif_itemname_ack;
 	clif->unknownname_ack = clif_unknownname_ack;
 	clif->monster_hp_bar = clif_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;
@@ -25092,5 +25185,9 @@ void clif_defaults(void)
 	clif->lapineDdukDdak_result = clif_lapineDdukDdak_result;
 	clif->plapineDdukDdak_ack = clif_parse_lapineDdukDdak_ack;
 	clif->plapineDdukDdak_close = clif_parse_lapineDdukDdak_close;
+	clif->lapineUpgrade_open = clif_lapineUpgrade_open;
+	clif->lapineUpgrade_result = clif_lapineUpgrade_result;
+	clif->pLapineUpgrade_close = clif_parse_lapineUpgrade_close;
+	clif->pLapineUpgrade_makeItem = clif_parse_lapineUpgrade_makeItem;
 	clif->pReqGearOff = clif_parse_reqGearOff;
 }

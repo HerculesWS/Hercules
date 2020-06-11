@@ -194,6 +194,7 @@ static int inter_pet_fromsql(int pet_id, struct s_pet *p)
 	}
 
 	SQL->StmtFree(stmt);
+	p->pet_id = pet_id;
 
 	if (chr->show_save_log)
 		ShowInfo("Pet loaded %d - %s.\n", pet_id, p->name);

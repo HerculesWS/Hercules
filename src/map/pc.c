@@ -1279,6 +1279,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.client_has_bg_data = 0;
 	sd->bg_queue.type = 0;
 
+	VECTOR_INIT(sd->auto_cast); // Initialize auto-cast vector.
 	VECTOR_INIT(sd->channels);
 	VECTOR_INIT(sd->script_queues);
 	VECTOR_INIT(sd->achievement); // Achievements [Smokexyz/Hercules]
@@ -1605,58 +1606,56 @@ static void pc_calc_skilltree_clear(struct map_session_data *sd)
  *------------------------------------------*/
 static int pc_calc_skilltree(struct map_session_data *sd)
 {
-	int i,id=0,flag;
-	int class = 0, classidx = 0;
-
 	nullpo_ret(sd);
-	i = pc->calc_skilltree_normalize_job(sd);
-	class = pc->mapid2jobid(i, sd->status.sex);
+	uint32 job = pc->calc_skilltree_normalize_job(sd);
+	int class = pc->mapid2jobid(job, sd->status.sex);
 	if (class == -1) {
 		//Unable to normalize job??
-		ShowError("pc_calc_skilltree: Unable to normalize job %d for character %s (%d:%d)\n", i, sd->status.name, sd->status.account_id, sd->status.char_id);
+		ShowError("pc_calc_skilltree: Unable to normalize job %u for character %s (%d:%d)\n", job, sd->status.name, sd->status.account_id, sd->status.char_id);
 		return 1;
 	}
-	classidx = pc->class2idx(class);
+	int classidx = pc->class2idx(class);
 
 	pc->calc_skilltree_clear(sd);
 
-	for (i = 0; i < MAX_SKILL_DB; i++) {
-		if( sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED )
-		{ // Restore original level of skills after deleting earned skills.
+	for (int i = 0; i < MAX_SKILL_DB; i++) {
+		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
+			// Restore original level of skills after deleting earned skills.
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 		}
 
-		if( sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER && skill->dbs->db[i].nameid >= DC_HUMMING && skill->dbs->db[i].nameid <= DC_SERVICEFORYOU )
-		{ //Enable Bard/Dancer spirit linked skills.
-			if (sd->status.sex) {
-				// Link dancer skills to bard.
-				if (i < 8) {
-					Assert_report(i >= 8);
-					continue;
-				}
-				if (sd->status.skill[i-8].lv < 10)
-					continue;
-				sd->status.skill[i].id = skill->dbs->db[i].nameid;
-				sd->status.skill[i].lv = sd->status.skill[i-8].lv; // Set the level to the same as the linking skill
-				sd->status.skill[i].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
-			} else {
-				// Link bard skills to dancer.
-				if (i < 8) {
-					Assert_report(i >= 8);
-					continue;
-				}
-				if (sd->status.skill[i].lv < 10)
-					continue;
-				sd->status.skill[i-8].id = skill->dbs->db[i-8].nameid;
-				sd->status.skill[i-8].lv = sd->status.skill[i].lv; // Set the level to the same as the linking skill
-				sd->status.skill[i-8].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
+		if (sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER
+		 && ((skill->dbs->db[i].nameid >= BA_WHISTLE && skill->dbs->db[i].nameid <= BA_APPLEIDUN)
+		  || (skill->dbs->db[i].nameid >= DC_HUMMING && skill->dbs->db[i].nameid <= DC_SERVICEFORYOU))
+		) {
+			//Enable Bard/Dancer spirit linked skills.
+			int linked_nameid = skill->get_linked_song_dance_id(skill->dbs->db[i].nameid);
+			if (linked_nameid == 0) {
+				Assert_report("Linked bard/dance skill not found");
+				continue;
 			}
+			int copy_from_index;
+			int copy_to_index;
+			if (sd->status.sex == SEX_MALE && skill->dbs->db[i].nameid >= BA_WHISTLE && skill->dbs->db[i].nameid <= BA_APPLEIDUN) {
+				copy_from_index = i;
+				copy_to_index = skill->get_index(linked_nameid);
+			} else {
+				copy_from_index = skill->get_index(linked_nameid);
+				copy_to_index = i;
+			}
+			if (copy_from_index < copy_to_index)
+				continue; // Copy only after the source skill has been filled into the tree
+			if (sd->status.skill[copy_from_index].lv < 10)
+				continue; // Copy only if the linked skill has been mastered
+			sd->status.skill[copy_to_index].id = skill->dbs->db[copy_to_index].nameid;
+			sd->status.skill[copy_to_index].lv = sd->status.skill[copy_from_index].lv; // Set the level to the same as the linking skill
+			sd->status.skill[copy_to_index].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
 		}
 	}
 
 	if( pc_has_permission(sd, PC_PERM_ALL_SKILL) ) {
-		for (i = 0; i < MAX_SKILL_DB; i++) {
+		for (int i = 0; i < MAX_SKILL_DB; i++) {
 			switch(skill->dbs->db[i].nameid) {
 				/**
 				 * Dummy skills must be added here otherwise they'll be displayed in the,
@@ -1688,9 +1687,11 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 		return 0;
 	}
 
+	bool changed = false;
 	do {
-		flag = 0;
-		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[classidx][i].id) > 0; i++) {
+		changed = false;
+		int id;
+		for (int i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[classidx][i].id) > 0; i++) {
 			int idx = pc->skill_tree[classidx][i].idx;
 			bool satisfied = true;
 			if (sd->status.skill[idx].id > 0)
@@ -1740,10 +1741,10 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 					sd->status.skill[idx].lv = 1; // need to manually specify a skill level
 					sd->status.skill[idx].flag = SKILL_FLAG_TEMPORARY; //So it is not saved, and tagged as a "bonus" skill.
 				}
-				flag = 1; // skill list has changed, perform another pass
+				changed = true; // skill list has changed, perform another pass
 			}
 		}
-	} while(flag);
+	} while (changed);
 
 	pc->calc_skilltree_bonus(sd, classidx);
 
@@ -4206,7 +4207,7 @@ static int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 			if( sd->status.skill[index].id == id ) {
 				if( sd->status.skill[index].lv >= level )
 					return 0;
-				if( sd->status.skill[index].flag == SKILL_FLAG_PERMANENT ) //Non-granted skill, store it's level.
+				if (sd->status.skill[index].flag == SKILL_FLAG_PERMANENT) // Non-granted skill, store its level.
 					sd->status.skill[index].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[index].lv;
 			} else {
 				sd->status.skill[index].id   = id;
@@ -5162,7 +5163,8 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	nullpo_ret(sd);
 	Assert_ret(n >= 0 && n < sd->status.inventorySize);
 
-	if (sd->npc_id || sd->state.workinprogress & 1) {
+	if ((sd->npc_id != 0 && (sd->npc_item_flag & ITEMENABLEDNPC_CONSUME) == 0)
+	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -5171,7 +5173,7 @@ static int pc_useitem(struct map_session_data *sd, int n)
 		return 0;
 	}
 
-	if (battle_config.storage_use_item == 1 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
+	if (battle_config.storage_use_item == 0 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
 		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 1475));
 		return 0; // You cannot use this item while storage is open.
 	}
@@ -5333,24 +5335,79 @@ static int pc_useitem(struct map_session_data *sd, int n)
 }
 
 /**
+ * Unsets a character's currently processed auto-cast skill data.
+ *
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear_current(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	sd->auto_cast_current.type = AUTOCAST_NONE;
+	sd->auto_cast_current.skill_id = 0;
+	sd->auto_cast_current.skill_lv = 0;
+	sd->auto_cast_current.itemskill_conditions_checked = false;
+	sd->auto_cast_current.itemskill_check_conditions = true;
+	sd->auto_cast_current.itemskill_instant_cast = false;
+	sd->auto_cast_current.itemskill_cast_on_self = false;
+}
+
+/**
  * Unsets a character's auto-cast related data.
  *
- * @param sd The character's session data.
- * @return 0 if parameter sd is NULL, otherwise 1.
- */
-static int pc_autocast_clear(struct map_session_data *sd)
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear(struct map_session_data *sd)
 {
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
-	sd->autocast.type = AUTOCAST_NONE;
-	sd->autocast.skill_id = 0;
-	sd->autocast.skill_lv = 0;
-	sd->autocast.itemskill_conditions_checked = false;
-	sd->autocast.itemskill_check_conditions = false;
-	sd->autocast.itemskill_instant_cast = false;
-	sd->autocast.itemskill_cast_on_self = false;
+	pc->autocast_clear_current(sd);
+	VECTOR_TRUNCATE(sd->auto_cast); // Truncate auto-cast vector.
+}
 
-	return 1;
+/**
+ * Sets a character's currently processed auto-cast skill data by comparing the skill ID.
+ *
+ * @param sd The character.
+ * @param skill_id The skill ID to compare.
+ *
+ **/
+static void pc_autocast_set_current(struct map_session_data *sd, int skill_id)
+{
+	nullpo_retv(sd);
+
+	pc->autocast_clear_current(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id) {
+			sd->auto_cast_current = VECTOR_INDEX(sd->auto_cast, i);
+			break;
+		}
+	}
+}
+
+/**
+ * Removes a specific entry from a character's auto-cast vector.
+ *
+ * @param sd The character.
+ * @param type The entry's auto-cast type.
+ * @param skill_id The entry's skill ID.
+ * @param skill_lv The entry's skill level.
+ *
+ **/
+static void pc_autocast_remove(struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv)
+{
+	nullpo_retv(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).type == type && VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id
+		    && VECTOR_INDEX(sd->auto_cast, i).skill_lv == skill_lv) {
+			VECTOR_ERASE(sd->auto_cast, i);
+			break;
+		}
+	}
 }
 
 /*==========================================
@@ -5856,11 +5913,6 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			status_change_end(&sd->bl, SC_PROPERTYWALK, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKING, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
-		}
-
-		for (int i = 0; i < EQI_MAX; i++) {
-			if (sd->equip_index[i] >= 0 && pc->isequip(sd , sd->equip_index[i]) == 0)
-				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
 		}
 
 		if ((battle_config.clear_unit_onwarp & BL_PC) != 0)
@@ -7568,7 +7620,7 @@ static int pc_allskillup(struct map_session_data *sd)
 	nullpo_ret(sd);
 
 	for (i = 0; i < MAX_SKILL_DB; i++) {
-		if (sd->status.skill[i].flag != SKILL_FLAG_PERMANENT && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED && sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED) {
+		if (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
 			sd->status.skill[i].lv = (sd->status.skill[i].flag == SKILL_FLAG_TEMPORARY) ? 0 : sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 			if (sd->status.skill[i].lv == 0)
@@ -8325,7 +8377,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 					base_penalty *= 2;
 
 				if (sd->status.mod_death != 100)
-					base_penalty *= sd->status.mod_death / 100;
+					base_penalty = base_penalty * sd->status.mod_death / 100;
 
 				sd->status.base_exp -= min(sd->status.base_exp, base_penalty);
 				clif->updatestatus(sd, SP_BASEEXP);
@@ -8350,7 +8402,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 					job_penalty *= 2;
 
 				if (sd->status.mod_death != 100)
-					job_penalty *= sd->status.mod_death / 100;
+					job_penalty = job_penalty * sd->status.mod_death / 100;
 
 				sd->status.job_exp -= min(sd->status.job_exp, job_penalty);
 				clif->updatestatus(sd, SP_JOBEXP);
@@ -9288,6 +9340,72 @@ static int pc_changelook(struct map_session_data *sd, int type, int val)
 	return 0;
 }
 
+/**
+ * Hides a character.
+ *
+ * @param sd The character to hide.
+ * @param show_msg Whether to show message to the character or not.
+ *
+ **/
+static void pc_hide(struct map_session_data *sd, bool show_msg)
+{
+	nullpo_retv(sd);
+
+	clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
+	sd->sc.option |= OPTION_INVISIBLE;
+	sd->vd.class = INVISIBLE_CLASS;
+
+	if (show_msg)
+		clif->message(sd->fd, atcommand->msgsd(sd, 11)); // Invisible: On
+
+	// Decrement the number of pvp players on the map.
+	map->list[sd->bl.m].users_pvp--;
+
+	if (map->list[sd->bl.m].flag.pvp != 0 && map->list[sd->bl.m].flag.pvp_nocalcrank == 0
+	    && sd->pvp_timer != INVALID_TIMER) { // Unregister the player for ranking.
+		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
+		sd->pvp_timer = INVALID_TIMER;
+	}
+
+	clif->changeoption(&sd->bl);
+}
+
+/**
+ * Unhides a character.
+ *
+ * @param sd The character to unhide.
+ * @param show_msg Whether to show message to the character or not.
+ *
+ **/
+static void pc_unhide(struct map_session_data *sd, bool show_msg)
+{
+	nullpo_retv(sd);
+
+	sd->sc.option &= ~OPTION_INVISIBLE;
+
+	if (sd->disguise != -1)
+		status->set_viewdata(&sd->bl, sd->disguise);
+	else
+		status->set_viewdata(&sd->bl, sd->status.class);
+
+	if (show_msg)
+		clif->message(sd->fd, atcommand->msgsd(sd, 10)); // Invisible: Off
+
+	// Increment the number of pvp players on the map.
+	map->list[sd->bl.m].users_pvp++;
+
+	if (map->list[sd->bl.m].flag.pvp != 0 && map->list[sd->bl.m].flag.pvp_nocalcrank == 0) // Register the player for ranking.
+		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
+
+	// bugreport:2266
+	map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
+
+	if (sd->disguise != -1)
+		clif->spawn_unit(&sd->bl, AREA_WOS);
+
+	clif->changeoption(&sd->bl);
+}
+
 /*==========================================
  * Give an option (type) to player (sd) and display it to client
  *------------------------------------------*/
@@ -9299,7 +9417,13 @@ static int pc_setoption(struct map_session_data *sd, int type)
 
 	//Option has to be changed client-side before the class sprite or it won't always work (eg: Wedding sprite) [Skotlex]
 	sd->sc.option=type;
-	clif->changeoption(&sd->bl);
+
+	if ((p_type & OPTION_INVISIBLE) != 0 && (type & OPTION_INVISIBLE) == 0) // Unhide character.
+		pc->unhide(sd, false);
+	else if ((p_type & OPTION_INVISIBLE) == 0 && (type & OPTION_INVISIBLE) != 0) // Hide character.
+		pc->hide(sd, false);
+	else
+		clif->changeoption(&sd->bl);
 
 	if( (type&OPTION_RIDING && !(p_type&OPTION_RIDING)) || (type&OPTION_DRAGON && !(p_type&OPTION_DRAGON) && pc->checkskill(sd,RK_DRAGONTRAINING) > 0) ) {
 		// Mounting
@@ -11256,7 +11380,7 @@ static int pc_charm_timer(int tid, int64 tick, int id, intptr_t data)
  * @param max      Maximum amount of charms to add.
  * @param type     Charm type (@see spirit_charm_types)
  */
-static void pc_add_charm(struct map_session_data *sd, int interval, int max, int type)
+static void pc_add_charm(struct map_session_data *sd, int interval, int max, enum spirit_charm_types type)
 {
 	int tid, i;
 
@@ -11298,7 +11422,7 @@ static void pc_add_charm(struct map_session_data *sd, int interval, int max, int
  * @param count Amount of charms to remove.
  * @param type  Type of charm to remove.
  */
-static void pc_del_charm(struct map_session_data *sd, int count, int type)
+static void pc_del_charm(struct map_session_data *sd, int count, enum spirit_charm_types type)
 {
 	int i;
 
@@ -12811,7 +12935,10 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
+	pc->autocast_clear_current = pc_autocast_clear_current;
 	pc->autocast_clear = pc_autocast_clear;
+	pc->autocast_set_current = pc_autocast_set_current;
+	pc->autocast_remove = pc_autocast_remove;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;
@@ -12824,6 +12951,8 @@ void pc_defaults(void)
 	pc->itemheal = pc_itemheal;
 	pc->percentheal = pc_percentheal;
 	pc->jobchange = pc_jobchange;
+	pc->hide = pc_hide;
+	pc->unhide = pc_unhide;
 	pc->setoption = pc_setoption;
 	pc->setcart = pc_setcart;
 	pc->setfalcon = pc_setfalcon;
