@@ -60718,15 +60718,15 @@ int HP_party_db_final(union DBKey key, struct DBData *data, va_list ap) {
 	return retVal___;
 }
 /* path_interface */
-int HP_path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count) {
+int HP_path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_path_blownpos_pre > 0) {
-		int (*preHookFunc) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
+		int (*preHookFunc) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, enum unit_dir *dir, int *count);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_path_blownpos_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_path_blownpos_pre[hIndex].func;
-			retVal___ = preHookFunc(&bl, &m, &x0, &y0, &dx, &dy, &count);
+			retVal___ = preHookFunc(&bl, &m, &x0, &y0, &dir, &count);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -60734,13 +60734,13 @@ int HP_path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, int16 d
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.path.blownpos(bl, m, x0, y0, dx, dy, count);
+		retVal___ = HPMHooks.source.path.blownpos(bl, m, x0, y0, dir, count);
 	}
 	if (HPMHooks.count.HP_path_blownpos_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_path_blownpos_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_path_blownpos_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bl, m, x0, y0, dx, dy, count);
+			retVal___ = postHookFunc(retVal___, bl, m, x0, y0, dir, count);
 		}
 	}
 	return retVal___;

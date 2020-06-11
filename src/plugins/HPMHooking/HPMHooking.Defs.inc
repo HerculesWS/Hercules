@@ -5984,8 +5984,8 @@ typedef int (*HPMHOOK_pre_party_db_final) (union DBKey *key, struct DBData **dat
 typedef int (*HPMHOOK_post_party_db_final) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 #endif // MAP_PARTY_H
 #ifdef MAP_PATH_H /* path */
-typedef int (*HPMHOOK_pre_path_blownpos) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
-typedef int (*HPMHOOK_post_path_blownpos) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+typedef int (*HPMHOOK_pre_path_blownpos) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, enum unit_dir *dir, int *count);
+typedef int (*HPMHOOK_post_path_blownpos) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count);
 typedef bool (*HPMHOOK_pre_path_search) (struct walkpath_data **wpd, struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
 typedef bool (*HPMHOOK_post_path_search) (bool retVal___, struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
 typedef bool (*HPMHOOK_pre_path_search_long) (struct shootpath_data **spd, struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);

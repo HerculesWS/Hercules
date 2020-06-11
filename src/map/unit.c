@@ -986,7 +986,6 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
 static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int flag)
 {
 	nullpo_ret(bl);
-	Assert_retr(0, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	if (count == 0)
 		return 0;
 	struct map_session_data* sd;
@@ -996,7 +995,7 @@ static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int f
 	sd = BL_CAST(BL_PC, bl);
 	su = BL_CAST(BL_SKILL, bl);
 
-	result = path->blownpos(bl, bl->m, bl->x, bl->y, dirx[dir], diry[dir], count);
+	result = path->blownpos(bl, bl->m, bl->x, bl->y, dir, count);
 
 	nx = result>>16;
 	ny = result&0xffff;
