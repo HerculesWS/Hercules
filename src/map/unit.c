@@ -408,7 +408,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 	struct mercenary_data *mrd = BL_CAST(BL_MER, bl);
 	if (sd != NULL) {
 		if (npc->handle_touch_events(sd, x, y, true) != 0)
-			return 0;
+			return 1;
 
 		if (sd->md != NULL) // mercenary should be warped after being 3 seconds too far from the master [greenbox]
 			unit->warpto_master(bl, &sd->md->bl);
