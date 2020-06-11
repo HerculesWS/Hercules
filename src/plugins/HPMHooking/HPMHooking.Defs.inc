@@ -8512,8 +8512,8 @@ typedef int (*HPMHOOK_pre_unit_set_dir) (struct block_list **bl, enum unit_dir *
 typedef int (*HPMHOOK_post_unit_set_dir) (int retVal___, struct block_list *bl, enum unit_dir dir);
 typedef enum unit_dir (*HPMHOOK_pre_unit_getdir) (const struct block_list **bl);
 typedef enum unit_dir (*HPMHOOK_post_unit_getdir) (enum unit_dir retVal___, const struct block_list *bl);
-typedef int (*HPMHOOK_pre_unit_blown) (struct block_list **bl, int *dx, int *dy, int *count, int *flag);
-typedef int (*HPMHOOK_post_unit_blown) (int retVal___, struct block_list *bl, int dx, int dy, int count, int flag);
+typedef int (*HPMHOOK_pre_unit_blown) (struct block_list **bl, enum unit_dir *dir, int *count, int *flag);
+typedef int (*HPMHOOK_post_unit_blown) (int retVal___, struct block_list *bl, enum unit_dir dir, int count, int flag);
 typedef int (*HPMHOOK_pre_unit_warp) (struct block_list **bl, short *m, short *x, short *y, enum clr_type *type);
 typedef int (*HPMHOOK_post_unit_warp) (int retVal___, struct block_list *bl, short m, short x, short y, enum clr_type type);
 typedef int (*HPMHOOK_pre_unit_warpto_master) (struct block_list **master_bl, struct block_list **slave_bl);

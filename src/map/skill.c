@@ -2976,7 +2976,6 @@ static int skill_strip_equip(struct block_list *bl, unsigned short where, int ra
  */
 static int skill_blown(struct block_list *src, struct block_list *target, int count, enum unit_dir dir, int flag)
 {
-	int dx = 0, dy = 0;
 	struct status_change *tsc = status->get_sc(target);
 
 	nullpo_ret(src);
@@ -3019,16 +3018,12 @@ static int skill_blown(struct block_list *src, struct block_list *target, int co
 	if (dir == UNIT_DIR_UNDEFINED) // <optimized>: do the computation here instead of outside
 		dir = map->calc_dir(target, src->x, src->y); // direction from src to target, reversed
 
-	if (dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX) {
-		// take the reversed 'direction' and reverse it
-		dx = -dirx[dir];
-		dy = -diry[dir];
-	}
+	dir = unit_get_opposite_dir(dir); // take the reversed 'direction' and reverse it
 
 	if (tsc != NULL && tsc->data[SC_SU_STOOP]) // Any knockback will cancel it.
 		status_change_end(target, SC_SU_STOOP, INVALID_TIMER);
 
-	return unit->blown(target, dx, dy, count, flag); // send over the proper flag
+	return unit->blown(target, dir, count, flag); // send over the proper flag
 }
 
 /*

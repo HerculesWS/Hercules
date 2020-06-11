@@ -983,9 +983,10 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
 // map cell restrictions are respected.
 // flag:
 //  &1  Do not send position update packets.
-static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag)
+static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int flag)
 {
 	nullpo_ret(bl);
+	Assert_retr(0, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	if (count == 0)
 		return 0;
 	struct map_session_data* sd;
@@ -995,7 +996,7 @@ static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag
 	sd = BL_CAST(BL_PC, bl);
 	su = BL_CAST(BL_SKILL, bl);
 
-	result = path->blownpos(bl, bl->m, bl->x, bl->y, dx, dy, count);
+	result = path->blownpos(bl, bl->m, bl->x, bl->y, dirx[dir], diry[dir], count);
 
 	nx = result>>16;
 	ny = result&0xffff;
@@ -1010,8 +1011,8 @@ static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag
 		sd->ud.to_y = ny;
 	}
 
-	dx = nx-bl->x;
-	dy = ny-bl->y;
+	int dx = nx - bl->x;
+	int dy = ny - bl->y;
 
 	if(dx || dy) {
 		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);

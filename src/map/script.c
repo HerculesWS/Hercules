@@ -24022,7 +24022,7 @@ static BUILDIN(progressbar_unit)
 }
 static BUILDIN(pushpc)
 {
-	int cells, dx, dy;
+	int cells;
 	struct map_session_data* sd;
 
 	if((sd = script->rid2sd(st))==NULL)
@@ -24050,11 +24050,7 @@ static BUILDIN(pushpc)
 		cells = -cells;
 	}
 
-	Assert_retr(false, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
-	dx = dirx[dir];
-	dy = diry[dir];
-
-	unit->blown(&sd->bl, dx, dy, cells, 0);
+	unit->blown(&sd->bl, dir, cells, 0);
 	return true;
 }
 
