@@ -9157,7 +9157,7 @@ static BUILDIN(enableitemuse)
 
 	if (flag < 0)
 		return true;
-	
+
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
@@ -9191,7 +9191,7 @@ static BUILDIN(disableitemuse)
 
 	if (flag < 0)
 		return true;
-	
+
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
@@ -20361,7 +20361,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			md->status.speed = (unsigned short)val;
@@ -20535,7 +20535,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			hd->base_status.speed = (unsigned short)val;
@@ -20678,7 +20678,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			pd->status.speed = (unsigned short)val;
@@ -20812,7 +20812,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			mc->base_status.size = (unsigned char)val;
@@ -20949,7 +20949,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			ed->base_status.speed = (unsigned short)val;
@@ -21081,7 +21081,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_CLASS:
 			npc->setclass(nd, (short)val);

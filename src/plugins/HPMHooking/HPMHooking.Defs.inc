@@ -8506,8 +8506,8 @@ typedef void (*HPMHOOK_pre_unit_run_hit) (struct block_list **bl, struct status_
 typedef void (*HPMHOOK_post_unit_run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
 typedef int (*HPMHOOK_pre_unit_attempt_escape) (struct block_list **bl, struct block_list **target, short *dist);
 typedef int (*HPMHOOK_post_unit_attempt_escape) (int retVal___, struct block_list *bl, struct block_list *target, short dist);
-typedef int (*HPMHOOK_pre_unit_movepos) (struct block_list **bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
-typedef int (*HPMHOOK_post_unit_movepos) (int retVal___, struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
+typedef int (*HPMHOOK_pre_unit_move_pos) (struct block_list **bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
+typedef int (*HPMHOOK_post_unit_move_pos) (int retVal___, struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
 typedef int (*HPMHOOK_pre_unit_set_dir) (struct block_list **bl, enum unit_dir *dir);
 typedef int (*HPMHOOK_post_unit_set_dir) (int retVal___, struct block_list *bl, enum unit_dir dir);
 typedef enum unit_dir (*HPMHOOK_pre_unit_getdir) (const struct block_list **bl);

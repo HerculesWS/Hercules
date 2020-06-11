@@ -3584,7 +3584,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(unit->run, HP_unit_run) },
 	{ HP_POP(unit->run_hit, HP_unit_run_hit) },
 	{ HP_POP(unit->attempt_escape, HP_unit_attempt_escape) },
-	{ HP_POP(unit->movepos, HP_unit_movepos) },
+	{ HP_POP(unit->move_pos, HP_unit_move_pos) },
 	{ HP_POP(unit->set_dir, HP_unit_set_dir) },
 	{ HP_POP(unit->getdir, HP_unit_getdir) },
 	{ HP_POP(unit->blown, HP_unit_blown) },

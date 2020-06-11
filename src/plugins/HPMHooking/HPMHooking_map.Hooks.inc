@@ -93692,14 +93692,14 @@ int HP_unit_attempt_escape(struct block_list *bl, struct block_list *target, sho
 	}
 	return retVal___;
 }
-int HP_unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath) {
+int HP_unit_move_pos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_unit_movepos_pre > 0) {
+	if (HPMHooks.count.HP_unit_move_pos_pre > 0) {
 		int (*preHookFunc) (struct block_list **bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_movepos_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_unit_movepos_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_move_pos_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_unit_move_pos_pre[hIndex].func;
 			retVal___ = preHookFunc(&bl, &dst_x, &dst_y, &easy, &checkpath);
 		}
 		if (*HPMforce_return) {
@@ -93708,12 +93708,12 @@ int HP_unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, b
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.unit.movepos(bl, dst_x, dst_y, easy, checkpath);
+		retVal___ = HPMHooks.source.unit.move_pos(bl, dst_x, dst_y, easy, checkpath);
 	}
-	if (HPMHooks.count.HP_unit_movepos_post > 0) {
+	if (HPMHooks.count.HP_unit_move_pos_post > 0) {
 		int (*postHookFunc) (int retVal___, struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_movepos_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_unit_movepos_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_move_pos_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_unit_move_pos_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, dst_x, dst_y, easy, checkpath);
 		}
 	}

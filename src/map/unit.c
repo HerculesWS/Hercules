@@ -889,7 +889,7 @@ static int unit_attempt_escape(struct block_list *bl, struct block_list *target,
  * @param checkpath check if path reachable when true
  * @return 0: success 1: failure
  */
-static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
+static int unit_move_pos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
 {
 	nullpo_retr(1, bl);
 
@@ -935,7 +935,7 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 			struct block_list* pbl = &sd->pd->bl;
 			if ((!checkpath && !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS)) // No path to master
 			    || !check_distance_bl(bl, pbl, AREA_SIZE)) { // Too far, teleport.
-				unit->movepos(pbl, bl->x, bl->y, 0, false);
+				unit->move_pos(pbl, bl->x, bl->y, 0, false);
 				clif->slide(pbl, pbl->x, pbl->y);
 			}
 		}
@@ -3129,7 +3129,7 @@ void unit_defaults(void)
 	unit->run = unit_run;
 	unit->run_hit = unit_run_hit;
 	unit->attempt_escape = unit_attempt_escape;
-	unit->movepos = unit_movepos;
+	unit->move_pos = unit_move_pos;
 	unit->set_dir = unit_set_dir;
 	unit->getdir = unit_getdir;
 	unit->blown = unit_blown;

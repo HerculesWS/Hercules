@@ -3274,7 +3274,7 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 		if( (sce = sc->data[SC_LIGHTNINGWALK]) && flag&BF_LONG && rnd()%100 < sce->val1 ) {
 			enum unit_dir dir = map->calc_dir(bl, src->x, src->y);
 			Assert_ret(dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
-			if (unit->movepos(bl, src->x - dirx[dir], src->y - diry[dir], 1, true) == 0) {
+			if (unit->move_pos(bl, src->x - dirx[dir], src->y - diry[dir], 1, true) == 0) {
 				clif->slide(bl, src->x - dirx[dir], src->y - diry[dir]);
 				unit->set_dir(bl, dir);
 			}
