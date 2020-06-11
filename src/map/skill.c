@@ -3366,7 +3366,10 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		case NPC_CRITICALSLASH:
 		case TF_DOUBLE:
 		case GS_CHAINACTION:
-			dmg.dmotion = clif->damage(src,bl,dmg.amotion,dmg.dmotion,damage,dmg.div_,dmg.type,dmg.damage2);
+		case SN_SHARPSHOOTING:
+		case MA_SHARPSHOOTING:
+		case NJ_KIRIKAGE:
+			dmg.dmotion = clif->damage(src, bl, dmg.amotion, dmg.dmotion, damage, dmg.div_, dmg.type, dmg.damage2);
 			break;
 
 		case AS_SPLASHER:
@@ -20602,6 +20605,23 @@ static void skill_validate_id(struct config_setting_t *conf, struct s_skill_db *
 	nullpo_retv(conf);
 	nullpo_retv(sk);
 
+	if (libconfig->setting_lookup_string(conf, "Hit", &type)) {
+		if (strcmpi(type, "BDT_SKILL") == 0) {
+			sk->hit = BDT_SKILL;
+		} else if (strcmpi(type, "BDT_MULTIHIT") == 0) {
+			sk->hit = BDT_MULTIHIT;
+		} else if (strcmpi(type, "BDT_NORMAL") == 0) {
+			sk->hit = BDT_NORMAL;
+		} else if (strcmpi(type, "BDT_MULTICRIT") == 0) {
+			sk->hit = BDT_MULTICRIT;
+		} else if (strcmpi(type, "BDT_CRIT") == 0) {
+			sk->hit = BDT_CRIT;  
+		} else {
+			skilldb_invalid_error(type, "Hit", sk->nameid);
+			return;
+		}
+	}
+
 	sk->nameid = 0;
 
 	int id;
@@ -21202,6 +21222,13 @@ static void skill_validate_damagetype(struct config_setting_t *conf, struct s_sk
 					sk->nk |= NK_NO_CARDFIX_DEF;
 				else
 					sk->nk &= ~NK_NO_CARDFIX_DEF;
+				}
+			} else if (strcmpi(type, "CritDamage") == 0) {
+				if (on != 0) {
+					sk->nk |= NK_CRITICAL;
+				} else {
+					sk->nk &= ~NK_CRITICAL;
+				}
 			} else {
 				ShowWarning("%s: Invalid damage type %s specified for skill ID %d in %s! Skipping damage type...\n",
 					    __func__, damage_type, sk->nameid, conf->file);

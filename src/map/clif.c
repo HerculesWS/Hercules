@@ -4872,7 +4872,8 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 	damage2 = (int)min(in_damage2,INT_MAX);
 #endif
 
-	type = clif_calc_delay(type,div,damage+damage2,ddelay);
+	if (type != BDT_MULTICRIT)
+		type = clif_calc_delay(type, div, damage + damage2, ddelay);
 
 	p.PacketType = damageType;
 	p.GID = src->id;
@@ -4917,8 +4918,10 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 		unit->set_dir(src, unit->getdir(src));
 	}
 
+	// In case this assignment is bypassed by BDT_MULTICRIT
+	type = clif_calc_delay(type, div, damage + damage2, ddelay);
 	//Return adjusted can't walk delay for further processing.
-	return clif->calc_walkdelay(dst,ddelay,type,damage+damage2,div);
+	return clif->calc_walkdelay(dst, ddelay, type, damage + damage2, div);
 }
 
 /*==========================================
