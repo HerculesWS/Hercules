@@ -887,24 +887,24 @@ static int unit_attempt_escape(struct block_list *bl, struct block_list *target,
  * @param dst_y short of destination y-coordinate
  * @param easy 0: hard pathing 1: easy pathing used only when @p checkpath true
  * @param checkpath check if path reachable when true
- * @return 1: success 0: failure
+ * @return 0: success 1: failure
  */
 static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
 {
-	nullpo_ret(bl);
+	nullpo_retr(1, bl);
 
 	struct unit_data *ud = unit->bl2ud(bl);
 	if (ud == NULL)
-		return 0;
+		return 1;
 
 	unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	unit->stop_attack(bl);
 
 	if (checkpath) {
 		if (map->getcell(bl->m, bl, dst_x, dst_y, CELL_CHKNOPASS) != 0) // respects cell-stacking mod
-			return 0;
+			return 1;
 		if (!path->search(NULL, bl, bl->m, bl->x, bl->y, dst_x, dst_y, easy, CELL_CHKNOREACH)) // unreachable
-			return 0;
+			return 1;
 	}
 
 	ud->to_x = dst_x;
@@ -928,7 +928,7 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 
 	if (sd != NULL) {
 		if (npc->handle_touch_events(sd, bl->x, bl->y, true) != 0)
-			return 0;
+			return 1;
 
 		// Check if pet needs to be teleported. [Skotlex]
 		if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
@@ -940,7 +940,7 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 			}
 		}
 	}
-	return 1;
+	return 0;
 }
 
 /**
