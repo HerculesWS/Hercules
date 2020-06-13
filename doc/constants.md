@@ -3657,7 +3657,7 @@
 - `MER_SWORDMAN09`: 6045
 - `MER_SWORDMAN10`: 6046
 
-### checkquest
+### questprogress
 
 - `HAVEQUEST`: 0
 - `PLAYTIME`: 1

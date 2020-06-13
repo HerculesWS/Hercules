@@ -1,6 +1,6 @@
 # Option Drop Group Database
 
-## Description 
+## Description
 Explanation of the `db/option_drop_groups.conf` file and structure.
 
 This database file allows the creation of groups of random options
@@ -23,7 +23,7 @@ options for each of these slots.
 
 		// Possible options for slot 1
 		// min/max value : int, defaults to 0
-		// chance : int, 100 = 1% if not set, will be 100%/number of possibiltiies
+		// chance : int, 100 = 1% if not set, will be 100%/number of possibilities
 		OptionName: value
 		// or
 		OptionName: [min value, max value]
@@ -70,7 +70,7 @@ When chance is not specified in an option, it will be auto calculated by
 the server as being `100%/num`, when `num` is the number of possibilities
 in this option slot.
 
-For example, if you specify 3 possible options, all of them without 
+For example, if you specify 3 possible options, all of them without
 a `chance` defined, all of them will have 33.33% chance of being
 picked (100%/3). If you set the chance of one of them to 50%, you
 will have one option with 50% chance, and each of the others with
