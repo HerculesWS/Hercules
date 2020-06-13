@@ -2007,6 +2007,7 @@ struct skill_interface {
 	int (*get_sp_rate) (int skill_id, int skill_lv);
 	int (*get_state) (int skill_id, int skill_lv);
 	int (*get_spiritball) (int skill_id, int skill_lv);
+	int (*get_item_index) (int skill_id, int skill_lv);
 	int (*get_itemid) (int skill_id, int item_idx);
 	int (*get_itemqty) (int skill_id, int item_idx, int skill_lv);
 	bool (*get_item_any_flag) (int skill_id, int skill_lv);
