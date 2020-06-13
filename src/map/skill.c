@@ -7972,7 +7972,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 				if( sd ) {
 					int bonus = 100, potion = min(500+skill_lv,505);
-					int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
+					int item_idx = skill->get_item_index(skill_id, skill_lv);
+
+					if (item_idx == INDEX_NOT_FOUND) {
+						clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+						map->freeblock_unlock();
+						return 1;
+					}
+
 					int item_id = skill->get_itemid(skill_id, item_idx);
 					int inventory_idx = pc->search_inventory(sd, item_id);
 					if (inventory_idx == INDEX_NOT_FOUND || item_id <= 0) {
@@ -11832,7 +11839,13 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		// Slim Pitcher [Celest]
 		case CR_SLIMPITCHER:
 			if (sd) {
-				int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
+				int item_idx = skill->get_item_index(skill_id, skill_lv);
+
+				if (item_idx == INDEX_NOT_FOUND) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+					return 1;
+				}
+
 				int item_id = skill->get_itemid(skill_id, item_idx);
 				int inventory_idx = pc->search_inventory(sd, item_id);
 				int bonus;
@@ -11865,7 +11878,11 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					                   skill->castend_nodamage_id);
 				}
 			} else {
-				int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
+				int item_idx = skill->get_item_index(skill_id, skill_lv);
+
+				if (item_idx == INDEX_NOT_FOUND)
+					return 1;
+
 				int item_id = skill->get_itemid(skill_id, item_idx);
 				struct item_data *item = itemdb->search(item_id);
 				int bonus;
