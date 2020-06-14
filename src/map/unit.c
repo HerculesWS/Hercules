@@ -979,10 +979,16 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
 	return ud->dir;
 }
 
-// Pushes a unit by given amount of cells into given direction. Only
-// map cell restrictions are respected.
-// flag:
-//  &1  Do not send position update packets.
+/**
+ * Pushes a unit by given amount of cells into given direction.
+ *
+ * @remark Only map cell restrictions are respected.
+ * @param bl unit to push
+ * @param dir direction of the push motion
+ * @param count amount of cells to push
+ * @param flag if flag & 1 != 0x0 do not send position update packets
+ * @return amount of pushed cells.
+ */
 static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int flag)
 {
 	nullpo_ret(bl);
