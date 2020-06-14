@@ -994,22 +994,17 @@ static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int f
 	nullpo_ret(bl);
 	if (count == 0)
 		return 0;
-	struct map_session_data* sd;
-	struct skill_unit* su = NULL;
-	int nx, ny, result;
 
-	sd = BL_CAST(BL_PC, bl);
-	su = BL_CAST(BL_SKILL, bl);
+	int result = path->blownpos(bl, bl->m, bl->x, bl->y, dir, count);
 
-	result = path->blownpos(bl, bl->m, bl->x, bl->y, dir, count);
-
-	nx = result>>16;
-	ny = result&0xffff;
-
+	struct skill_unit *su = BL_CAST(BL_SKILL, bl);
 	if(!su) {
 		unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
 	}
 
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
+	int nx = result >> 16;
+	int ny = result & 0xffff;
 	if( sd ) {
 		unit->stop_stepaction(bl); //Stop stepaction when knocked back
 		sd->ud.to_x = nx;
