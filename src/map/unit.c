@@ -1002,26 +1002,26 @@ static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int f
 		unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
 
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
-	int nx = result >> 16;
-	int ny = result & 0xffff;
+	int pushto_x = result >> 16;
+	int pushto_y = result & 0xffff;
 	if (sd != NULL) {
 		unit->stop_stepaction(bl); //Stop stepaction when knocked back
-		sd->ud.to_x = nx;
-		sd->ud.to_y = ny;
+		sd->ud.to_x = pushto_x;
+		sd->ud.to_y = pushto_y;
 	}
 
-	int dx = nx - bl->x;
-	int dy = ny - bl->y;
+	int delta_x = pushto_x - bl->x;
+	int delta_y = pushto_y - bl->y;
 
-	if (dx != 0 || dy != 0) {
-		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
+	if (delta_x != 0 || delta_y != 0) {
+		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, delta_x, delta_y, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
 
 		if (su != NULL)
-			skill->unit_move_unit_group(su->group, bl->m, dx, dy);
+			skill->unit_move_unit_group(su->group, bl->m, delta_x, delta_y);
 		else
-			map->moveblock(bl, nx, ny, timer->gettick());
+			map->moveblock(bl, pushto_x, pushto_y, timer->gettick());
 
-		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
+		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -delta_x, -delta_y, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
 
 		if ((flag & 1) == 0x0) {
 			clif->blown(bl);
@@ -1031,7 +1031,7 @@ static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int f
 			npc->handle_touch_events(sd, bl->x, bl->y, false);
 	}
 
-	return path->distance(dx, dy); // return amount of knocked back cells
+	return path->distance(delta_x, delta_y); // return amount of knocked back cells
 }
 
 //Warps a unit/ud to a given map/position.
