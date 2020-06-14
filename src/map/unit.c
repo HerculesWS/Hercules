@@ -998,14 +998,13 @@ static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int f
 	int result = path->blownpos(bl, bl->m, bl->x, bl->y, dir, count);
 
 	struct skill_unit *su = BL_CAST(BL_SKILL, bl);
-	if(!su) {
+	if (su == NULL)
 		unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
-	}
 
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	int nx = result >> 16;
 	int ny = result & 0xffff;
-	if( sd ) {
+	if (sd != NULL) {
 		unit->stop_stepaction(bl); //Stop stepaction when knocked back
 		sd->ud.to_x = nx;
 		sd->ud.to_y = ny;
@@ -1014,18 +1013,17 @@ static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int f
 	int dx = nx - bl->x;
 	int dy = ny - bl->y;
 
-	if(dx || dy) {
+	if (dx != 0 || dy != 0) {
 		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
 
-		if(su) {
+		if (su != NULL)
 			skill->unit_move_unit_group(su->group, bl->m, dx, dy);
-		} else {
+		else
 			map->moveblock(bl, nx, ny, timer->gettick());
-		}
 
 		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
 
-		if(!(flag&1)) {
+		if ((flag & 1) == 0x0) {
 			clif->blown(bl);
 		}
 
