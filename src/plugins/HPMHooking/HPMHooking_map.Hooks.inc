@@ -93773,15 +93773,15 @@ enum unit_dir HP_unit_getdir(const struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_unit_blown(struct block_list *bl, enum unit_dir dir, int count, int flag) {
+int HP_unit_blown(struct block_list *bl, enum unit_dir dir, int count, bool update) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_unit_blown_pre > 0) {
-		int (*preHookFunc) (struct block_list **bl, enum unit_dir *dir, int *count, int *flag);
+		int (*preHookFunc) (struct block_list **bl, enum unit_dir *dir, int *count, bool *update);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_blown_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_unit_blown_pre[hIndex].func;
-			retVal___ = preHookFunc(&bl, &dir, &count, &flag);
+			retVal___ = preHookFunc(&bl, &dir, &count, &update);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -93789,13 +93789,13 @@ int HP_unit_blown(struct block_list *bl, enum unit_dir dir, int count, int flag)
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.unit.blown(bl, dir, count, flag);
+		retVal___ = HPMHooks.source.unit.blown(bl, dir, count, update);
 	}
 	if (HPMHooks.count.HP_unit_blown_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl, enum unit_dir dir, int count, int flag);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, enum unit_dir dir, int count, bool update);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_blown_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_unit_blown_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bl, dir, count, flag);
+			retVal___ = postHookFunc(retVal___, bl, dir, count, update);
 		}
 	}
 	return retVal___;

@@ -119,7 +119,7 @@ struct unit_interface {
 	int (*move_pos) (struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
 	int (*set_dir) (struct block_list *bl, enum unit_dir dir);
 	enum unit_dir (*getdir) (const struct block_list *bl);
-	int (*blown) (struct block_list *bl, enum unit_dir dir, int count, int flag);
+	int (*blown) (struct block_list *bl, enum unit_dir dir, int count, bool update);
 	int (*warp) (struct block_list *bl, short m, short x, short y, enum clr_type type);
 	int (*warpto_master) (struct block_list *master_bl, struct block_list *slave_bl);
 	int (*stop_walking) (struct block_list *bl, int type);

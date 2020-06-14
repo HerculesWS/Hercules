@@ -986,10 +986,10 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
  * @param bl unit to push
  * @param dir direction of the push motion
  * @param count amount of cells to push
- * @param flag if flag & 1 != 0x0 do not send position update packets
+ * @param update *only* send position update packets when true
  * @return amount of pushed cells.
  */
-static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int flag)
+static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, bool update)
 {
 	nullpo_ret(bl);
 	if (count == 0)
@@ -1023,9 +1023,8 @@ static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, int f
 
 		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -delta_x, -delta_y, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
 
-		if ((flag & 1) == 0x0) {
+		if (update)
 			clif->blown(bl);
-		}
 
 		if (sd != NULL)
 			npc->handle_touch_events(sd, bl->x, bl->y, false);
