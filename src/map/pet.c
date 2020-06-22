@@ -154,8 +154,10 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 		if (i != sd->status.inventorySize)
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
 
-		pet_stop_attack(pd);
-		unit->remove_map(&pd->bl, CLR_OUTSIGHT, ALC_MARK);
+		if (battle_config.pet_remove_immediately != 0) {
+			pet_stop_attack(pd);
+			unit->remove_map(&pd->bl, CLR_OUTSIGHT, ALC_MARK);
+		}
 	}
 
 	status_calc_pc(sd, SCO_NONE);
