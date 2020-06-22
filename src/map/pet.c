@@ -580,7 +580,6 @@ static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 #if PACKETVER >= 20180704
 		clif->send_petdata(sd, sd->pd, 6, 1);
 #endif
-		clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 		clif->send_petstatus(sd);
 	}
 	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
@@ -626,7 +625,6 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 			clif->spawn(&sd->pd->bl);
 			clif->send_petdata(sd,sd->pd,0,0);
 			clif->send_petdata(sd,sd->pd,5,battle_config.pet_hair_style);
-			clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 			clif->send_petstatus(sd);
 		}
 	}
@@ -865,7 +863,6 @@ static int pet_change_name_ack(struct map_session_data *sd, const char *name, in
 	aFree(newname);
 	clif->blname_ack(0,&pd->bl);
 	pd->pet.rename_flag = 1;
-	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	clif->send_petstatus(sd);
 	return 1;
 }
