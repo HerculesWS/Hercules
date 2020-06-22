@@ -11065,6 +11065,10 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		// Notify everyone that this character logged in. [Skotlex]
 		map->foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 1);
 
+#if PACKETVER >= 20171122
+		clif->open_ui_send(sd, ZC_TIPBOX_UI);
+#endif
+
 		// Run OnPCLoginEvent labels.
 		npc->script_event(sd, NPCE_LOGIN);
 	} else {
