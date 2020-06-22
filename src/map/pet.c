@@ -94,8 +94,11 @@ static int pet_hungry_val(struct pet_data *pd)
 static void pet_set_hunger(struct pet_data *pd, int value)
 {
 	nullpo_retv(pd);
+	nullpo_retv(pd->msd);
 
 	pd->pet.hungry = cap_value(value, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
+
+	clif->send_petdata(pd->msd, pd, 2, pd->pet.hungry);
 }
 
 /**
@@ -357,7 +360,6 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 			interval = pd->petDB->starving_delay;
 	}
 
-	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
 	interval = interval * battle_config.pet_hungry_delay_rate / 100;
 	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
 
@@ -989,7 +991,6 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 
 	status_calc_pet(pd, SCO_NONE);
 	pet->set_hunger(pd, pd->pet.hungry + pd->petDB->fullness);
-	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
 	clif->pet_food(sd, pd->petDB->FoodID, 1);
 
 	return 0;
