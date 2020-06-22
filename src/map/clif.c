@@ -2519,8 +2519,8 @@ static void clif_addcards(struct EQUIPSLOTINFO *buf, struct item *item)
 	if (item->card[0] == CARD0_PET) { //pet eggs
 		buf->card[0] = 0;
 		buf->card[1] = 0;
-		buf->card[2] = 0;
-		buf->card[3] = item->card[3]; //Pet renamed flag.
+		buf->card[2] = (item->card[3] >> 1); // Pet intimacy level.
+		buf->card[3] = (item->card[3] & 1); // Pet renamed flag.
 		return;
 	}
 	if (item->card[0] == CARD0_FORGE || item->card[0] == CARD0_CREATE) { //Forged/created items

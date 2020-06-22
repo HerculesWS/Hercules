@@ -8562,7 +8562,7 @@ ACMD(itemlist)
 
 		if( it->card[0] == CARD0_PET ) {
 			// pet egg
-			if (it->card[3])
+			if ((it->card[3] & 1) != 0)
 				StrBuf->Printf(&buf, msg_fd(fd,1348), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, named)
 			else
 				StrBuf->Printf(&buf, msg_fd(fd,1349), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, unnamed)

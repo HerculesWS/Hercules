@@ -99,6 +99,36 @@ static void pet_set_hunger(struct pet_data *pd, int value)
 }
 
 /**
+ * Calculates the value to store in a pet egg's 4th card slot
+ * based on the passed rename flag and intimacy value.
+ *
+ * @param rename_flag The pet's rename flag.
+ * @param intimacy The pet's intimacy value.
+ * @return The value to store in the pet egg's 4th card slot. (Defaults to 0 in case of error.)
+ *
+ **/
+static int pet_get_card4_value(int rename_flag, int intimacy)
+{
+	Assert_ret(rename_flag == 0 || rename_flag == 1);
+	Assert_ret(intimacy >= PET_INTIMACY_NONE && intimacy <= PET_INTIMACY_MAX);
+
+	int card4 = rename_flag;
+
+	if (intimacy <= PET_INTIMACY_SHY)
+		card4 |= (1 << 1);
+	else if (intimacy <= PET_INTIMACY_NEUTRAL)
+		card4 |= (2 << 1);
+	else if (intimacy <= PET_INTIMACY_CORDIAL)
+		card4 |= (3 << 1);
+	else if (intimacy <= PET_INTIMACY_LOYAL)
+		card4 |= (4 << 1);
+	else
+		card4 |= (5 << 1);
+
+	return card4;
+}
+
+/**
  * Sets a pet's intimacy value.
  * Deletes the pet if its intimacy value reaches PET_INTIMACY_NONE (0).
  *
@@ -404,7 +434,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	if (i != sd->status.inventorySize) {
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
-		sd->status.inventory[i].card[3] = pd->pet.rename_flag;
+		sd->status.inventory[i].card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
 		clif->inventoryList(sd);
 	} else {
 		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
@@ -416,7 +446,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		tmp_item.card[0] = CARD0_PET;
 		tmp_item.card[1] = GetWord(pd->pet.pet_id, 0);
 		tmp_item.card[2] = GetWord(pd->pet.pet_id, 1);
-		tmp_item.card[3] = pd->pet.rename_flag;
+		tmp_item.card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
 		if ((flag = pc->additem(sd, &tmp_item, 1, LOG_TYPE_EGG)) != 0) {
 			clif->additem(sd, 0, 0, flag);
 			map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
@@ -729,7 +759,7 @@ static bool pet_get_egg(int account_id, int pet_class, int pet_id)
 	tmp_item.card[0] = CARD0_PET;
 	tmp_item.card[1] = GetWord(pet_id,0);
 	tmp_item.card[2] = GetWord(pet_id,1);
-	tmp_item.card[3] = 0; //New pets are not named.
+	tmp_item.card[3] = pet->get_card4_value(0, pet->db[i].intimate);
 	if((ret = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
 		clif->additem(sd,0,0,ret);
 		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
@@ -1799,6 +1829,7 @@ void pet_defaults(void)
 
 	pet->hungry_val = pet_hungry_val;
 	pet->set_hunger = pet_set_hunger;
+	pet->get_card4_value = pet_get_card4_value;
 	pet->set_intimate = pet_set_intimate;
 	pet->create_egg = pet_create_egg;
 	pet->unlocktarget = pet_unlocktarget;
