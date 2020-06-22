@@ -330,6 +330,8 @@ static int party_recv_info(const struct party *sp, int char_id)
 		party->member_withdraw(sp->party_id, sd->status.account_id, sd->status.char_id);
 	}
 
+	int option_auto_changed = p->state.option_auto_changed; // Preserve state.
+
 	memcpy(&p->party, sp, sizeof(struct party));
 	memset(&p->state, 0, sizeof(p->state));
 	memset(&p->data, 0, sizeof(p->data));
@@ -342,6 +344,7 @@ static int party_recv_info(const struct party *sp, int char_id)
 			p->party.member[member_id].leader = 1;
 	}
 	party->check_state(p);
+	p->state.option_auto_changed = option_auto_changed;
 	while( added_count > 0 ) { // new in party
 		member_id = added[--added_count];
 		sd = p->data[member_id].sd;
@@ -536,6 +539,11 @@ static int party_member_added(int party_id, int account_id, int char_id, int fla
 
 	clif->party_member_info(p,sd);
 	clif->party_info(p,sd);
+
+	if (p->state.option_auto_changed != 0)
+		clif->party_option(p, sd, 0x04);
+	else
+		clif->party_option(p, sd, 0x08);
 
 	if( sd2 != NULL )
 		clif->party_inviteack(sd2,sd->status.name,2);

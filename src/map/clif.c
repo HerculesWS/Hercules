@@ -7304,6 +7304,7 @@ static void clif_party_inviteack(struct map_session_data *sd, const char *nick, 
 ///     0x01 = Cannot change EXP sharing. (Only set when tried to change options manually.)
 ///     0x02 = Options changed manually.
 ///     0x04 = Options changed automatically.
+///     0x08 = Member added.
 ///     0x20 = Character logged in.
 static void clif_party_option(struct party_data *p, struct map_session_data *sd, int flag)
 {
