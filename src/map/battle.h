@@ -591,6 +591,7 @@ struct Battle_Config {
 
 	int drop_connection_on_quit;
 	int display_rate_messages;
+	int display_config_messages;
 	int enable_refinery_ui;
 	int replace_refine_npcs;
 

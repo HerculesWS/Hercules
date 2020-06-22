@@ -7432,6 +7432,7 @@ static const struct battle_data {
 	{ "option_drop_max_loop",               &battle_config.option_drop_max_loop,            10,     1,      100000,         },
 	{ "drop_connection_on_quit",            &battle_config.drop_connection_on_quit,         0,      0,      1,              },
 	{ "display_rate_messages",              &battle_config.display_rate_messages,           1,      0,      7,              },
+	{ "display_config_messages",            &battle_config.display_config_messages,         0x1F1,  0,      0x1F7,          },
 	{ "features/enable_refinery_ui",        &battle_config.enable_refinery_ui,              1,      0,      1,              },
 	{ "features/replace_refine_npcs",       &battle_config.replace_refine_npcs,             1,      0,      1,              },
 	{ "batk_min_limit",                     &battle_config.batk_min,                        0,      0,      INT_MAX,        },

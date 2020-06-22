@@ -10948,25 +10948,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	bool change_map = (sd->state.changemap != 0);
 
 	if (sd->state.changemap != 0) { // Restore information that gets lost on map-change.
-#if PACKETVER >= 20070918
-		clif->partyinvitationstate(sd);
-		clif->equpcheckbox(sd);
-#endif
-
-#if PACKETVER_MAIN_NUM >= 20171025 || PACKETVER_RE_NUM >= 20170920
-		clif->zc_config(sd, CZ_CONFIG_CALL, sd->status.allow_call);
-
-		if (sd->pd != NULL)
-			clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, sd->pd->pet.autofeed);
-		else
-			clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, false);
-
-		if (sd->hd != NULL)
-			clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
-		else
-			clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
-#endif
-
 		bool flee_penalty = (battle_config.bg_flee_penalty != 100 || battle_config.gvg_flee_penalty != 100);
 		bool is_gvg = (map_flag_gvg2(sd->state.pmap) || map_flag_gvg2(sd->bl.m));
 		bool is_bg = (map->list[sd->state.pmap].flag.battleground != 0 || map->list[sd->bl.m].flag.battleground != 0);
@@ -11014,6 +10995,37 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 	mail->clear(sd);
 	clif->maptypeproperty2(&sd->bl, SELF);
+
+	if (((battle_config.display_config_messages & 0x1) != 0 && first_time)
+	    || ((battle_config.display_config_messages & 0x2) != 0 && !first_time && change_map)
+	    || (battle_config.display_config_messages & 0x4) != 0) {
+#if PACKETVER >= 20070918
+		if ((battle_config.display_config_messages & 0x10) != 0)
+			clif->partyinvitationstate(sd);
+
+		if ((battle_config.display_config_messages & 0x20) != 0)
+			clif->equpcheckbox(sd);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20171025 || PACKETVER_RE_NUM >= 20170920
+		if ((battle_config.display_config_messages & 0x40) != 0)
+			clif->zc_config(sd, CZ_CONFIG_CALL, sd->status.allow_call);
+
+		if ((battle_config.display_config_messages & 0x80) != 0) {
+			if (sd->pd != NULL)
+				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, sd->pd->pet.autofeed);
+			else
+				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, false);
+		}
+
+		if ((battle_config.display_config_messages & 0x100) != 0) {
+			if (sd->hd != NULL)
+				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
+			else
+				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
+		}
+#endif
+	}
 
 	if (((battle_config.display_rate_messages & 0x1) != 0 && first_time)
 	    || ((battle_config.display_rate_messages & 0x2) != 0 && !first_time && change_map)
