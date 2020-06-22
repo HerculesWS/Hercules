@@ -548,6 +548,35 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	return 0;
 }
 
+/**
+ * Spawns a pet.
+ *
+ * @param sd The pet's master.
+ * @param birth_process Whether the pet is spawned during birth process.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
+static int pet_spawn(struct map_session_data *sd, bool birth_process)
+{
+	nullpo_retr(1, sd);
+	nullpo_retr(1, sd->pd);
+
+	if (map->addblock(&sd->pd->bl) != 0 || !clif->spawn(&sd->pd->bl))
+		return 1;
+
+	clif->send_petdata(sd, sd->pd, 0, 0);
+	clif->send_petdata(sd, sd->pd, 5, battle_config.pet_hair_style);
+
+#if PACKETVER >= 20180704
+	if (birth_process)
+		clif->send_petdata(sd, sd->pd, 6, 1);
+#endif
+
+	clif->send_petstatus(sd);
+
+	return 0;
+}
+
 static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	nullpo_retr(1, sd);
@@ -572,16 +601,11 @@ static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 	if (map->save_settings&8)
 		chrif->save(sd,0); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
 
-	if(sd->bl.prev != NULL) {
-		map->addblock(&sd->pd->bl);
-		clif->spawn(&sd->pd->bl);
-		clif->send_petdata(sd,sd->pd, 0,0);
-		clif->send_petdata(sd,sd->pd, 5,battle_config.pet_hair_style);
-#if PACKETVER >= 20180704
-		clif->send_petdata(sd, sd->pd, 6, 1);
-#endif
-		clif->send_petstatus(sd);
+	if (sd->pd != NULL && sd->bl.prev != NULL) {
+		if (pet->spawn(sd, true) != 0)
+			return 1;
 	}
+
 	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	return 0;
@@ -620,12 +644,9 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 		}
 	} else {
 		pet->data_init(sd,p);
-		if(sd->pd && sd->bl.prev != NULL) {
-			map->addblock(&sd->pd->bl);
-			clif->spawn(&sd->pd->bl);
-			clif->send_petdata(sd,sd->pd,0,0);
-			clif->send_petdata(sd,sd->pd,5,battle_config.pet_hair_style);
-			clif->send_petstatus(sd);
+		if (sd->pd != NULL && sd->bl.prev != NULL) {
+			if (pet->spawn(sd, false) != 0)
+				return 1;
 		}
 	}
 
@@ -1843,6 +1864,7 @@ void pet_defaults(void)
 	pet->performance = pet_performance;
 	pet->return_egg = pet_return_egg;
 	pet->data_init = pet_data_init;
+	pet->spawn = pet_spawn;
 	pet->birth_process = pet_birth_process;
 	pet->recv_petdata = pet_recv_petdata;
 	pet->select_egg = pet_select_egg;

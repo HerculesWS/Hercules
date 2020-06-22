@@ -10806,10 +10806,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 			clif->message(sd->fd, msg_sd(sd, 866)); // "Pets are not allowed in Guild Wars."
 			pet->menu(sd, 3); // Option 3 is return to egg.
 		} else {
-			map->addblock(&sd->pd->bl);
-			clif->spawn(&sd->pd->bl);
-			clif->send_petdata(sd,sd->pd, 0, 0);
-			clif->send_petstatus(sd);
+			pet->spawn(sd, false);
 		}
 	}
 
