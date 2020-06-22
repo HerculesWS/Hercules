@@ -471,6 +471,7 @@ struct Battle_Config {
 	int searchstore_querydelay;
 	int searchstore_maxresults;
 	int display_party_name;
+	int send_party_options;
 	int cashshop_show_points;
 	int mail_show_status;
 	int client_limit_unit_lv;

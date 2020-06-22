@@ -7307,13 +7307,48 @@ static void clif_party_inviteack(struct map_session_data *sd, const char *nick, 
 ///     0x08 = Member added.
 ///     0x10 = Member removed.
 ///     0x20 = Character logged in.
+///     0x40 = Character changed map.
+///     0x80 = Character teleported.
 static void clif_party_option(struct party_data *p, struct map_session_data *sd, int flag)
 {
+	int conf = battle_config.send_party_options;
+
+	if (((flag & 0x01) != 0 && (conf & 0x10) == 0)
+	    || ((flag & 0x02) != 0 && (conf & 0x08) == 0)
+	    || ((flag & 0x04) != 0 && (conf & 0x20) == 0)
+	    || ((flag & 0x08) != 0 && (conf & 0x40) == 0)
+	    || ((flag & 0x10) != 0 && (conf & 0x80) == 0)
+	    || ((flag & 0x20) != 0 && (conf & 0x01) == 0)
+	    || ((flag & 0x40) != 0 && (conf & 0x02) == 0)
+	    || ((flag & 0x80) != 0 && (conf & 0x04) == 0)) {
+		return;
+	}
+
+	enum send_target target = SELF;
+
+	if (((flag & 0x01) != 0 && (conf & 0x100) != 0)
+	    || ((flag & 0x01) == 0 && (flag & 0x02) != 0)
+	    || (flag & 0x04) != 0) {
+		target = PARTY;
+	}
+
+	int cmd = 0x101;
+
+	if (((flag & 0x01) != 0 && (conf & 0x02000) != 0)
+	    || ((flag & 0x02) != 0 && (conf & 0x01000) != 0)
+	    || ((flag & 0x04) != 0 && (conf & 0x04000) != 0)
+	    || ((flag & 0x08) != 0 && (conf & 0x08000) != 0)
+	    || ((flag & 0x10) != 0 && (conf & 0x10000) != 0)
+	    || ((flag & 0x20) != 0 && (conf & 0x00200) != 0)
+	    || ((flag & 0x40) != 0 && (conf & 0x00400) != 0)
+	    || ((flag & 0x80) != 0 && (conf & 0x00800) != 0)) {
+		cmd = 0x7d8;
+	}
+
 	unsigned char buf[16];
 #if PACKETVER < 20090603
-	const int cmd = 0x101;
-#else
-	const int cmd = 0x7d8;
+	if (cmd == 0x7d8)
+		cmd = 0x101;
 #endif
 
 	nullpo_retv(p);
@@ -7328,14 +7363,13 @@ static void clif_party_option(struct party_data *p, struct map_session_data *sd,
 	if(!sd) return;
 	WBUFW(buf,0)=cmd;
 	WBUFL(buf, 2) = ((flag & 0x10) != 0) ? 0 : (((flag & 0x01) != 0) ? 2 : p->party.exp);
-#if PACKETVER >= 20090603
-	WBUFB(buf, 6) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 1) != 0) ? 1 : 0);
-	WBUFB(buf, 7) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 2) != 0) ? 1 : 0);
-#endif
-	if ((flag & 0x01) == 0 && ((flag & 0x04) != 0 || (flag & 0x02) != 0))
-		clif->send(buf,packet_len(cmd),&sd->bl,PARTY);
-	else
-		clif->send(buf,packet_len(cmd),&sd->bl,SELF);
+
+	if (cmd == 0x7d8) {
+		WBUFB(buf, 6) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 1) != 0) ? 1 : 0);
+		WBUFB(buf, 7) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 2) != 0) ? 1 : 0);
+	}
+
+	clif->send(buf, packet_len(cmd), &sd->bl, target);
 
 	if ((flag & 0x04) != 0)
 		p->state.option_auto_changed = 0;
@@ -11036,11 +11070,19 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 #endif
 	}
 
-	if (p != NULL && first_time) {
+	if (p != NULL) {
+		int flag;
+
 		if (p->state.option_auto_changed != 0)
-			clif->party_option(p, sd, 0x04);
+			flag = 0x04;
+		else if (first_time)
+			flag = 0x20;
+		else if (change_map)
+			flag = 0x40;
 		else
-			clif->party_option(p, sd, 0x20);
+			flag = 0x80;
+
+		clif->party_option(p, sd, flag);
 	}
 
 	if (((battle_config.display_rate_messages & 0x1) != 0 && first_time)

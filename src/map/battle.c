@@ -7345,6 +7345,7 @@ static const struct battle_data {
 	{ "searchstore_querydelay",             &battle_config.searchstore_querydelay,         10,      0,      INT_MAX,        },
 	{ "searchstore_maxresults",             &battle_config.searchstore_maxresults,         30,      1,      INT_MAX,        },
 	{ "display_party_name",                 &battle_config.display_party_name,              0,      0,      1,              },
+	{ "send_party_options",                 &battle_config.send_party_options,              0x31F9, 0,      0x1FFFF,        },
 	{ "cashshop_show_points",               &battle_config.cashshop_show_points,            0,      0,      1,              },
 	{ "mail_show_status",                   &battle_config.mail_show_status,                0,      0,      2,              },
 	{ "client_limit_unit_lv",               &battle_config.client_limit_unit_lv,            0,      0,      BL_ALL,         },
