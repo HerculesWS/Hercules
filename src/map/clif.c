@@ -7292,25 +7292,48 @@ static void clif_party_inviteack(struct map_session_data *sd, const char *nick, 
 #endif
 }
 
-/// Updates party settings.
-/// 0101 <exp option>.L (ZC_GROUPINFO_CHANGE)
-/// 07d8 <exp option>.L <item pick rule>.B <item share rule>.B (ZC_REQ_GROUPINFO_CHANGE_V2)
-/// exp option:
-///     0 = exp sharing disabled
-///     1 = exp sharing enabled
-///     2 = cannot change exp sharing
-///
-/// flag:
-///     0x01 = Cannot change EXP sharing. (Only set when tried to change options manually.)
-///     0x02 = Options changed manually.
-///     0x04 = Options changed automatically.
-///     0x08 = Member added.
-///     0x10 = Member removed.
-///     0x20 = Character logged in.
-///     0x40 = Character changed map.
-///     0x80 = Character teleported.
+/**
+ * Sends party settings to the client.
+ *
+ * 0101 <exp option>.L (ZC_GROUPINFO_CHANGE)
+ * 07d8 <exp option>.L <item pick rule>.B <item share rule>.B (ZC_REQ_GROUPINFO_CHANGE_V2)
+ * <exp option>:
+ *	0 = EXP sharing disabled.
+ *	1 = EXP sharing enabled.
+ *	2 = Cannot change EXP sharing.
+ *
+ * @param p The related party.
+ * @param sd The related character.
+ * @param flag Reason for sending.
+ * @parblock
+ * Possible flags:
+ *	0x01 = Cannot change EXP sharing. (Only set when tried to change options manually.)
+ *	0x02 = Options changed manually.
+ *	0x04 = Options changed automatically.
+ *	0x08 = Member added.
+ *	0x10 = Member removed.
+ *	0x20 = Character logged in.
+ *	0x40 = Character changed map.
+ *	0x80 = Character teleported.
+ * @endparblock
+ *
+ **/
 static void clif_party_option(struct party_data *p, struct map_session_data *sd, int flag)
 {
+	nullpo_retv(p);
+
+	if (sd == NULL && (flag & 0x01) == 0) {
+		for (int i = 0; i < MAX_PARTY; i++) {
+			if (p->data[i].sd != NULL) {
+				sd = p->data[i].sd;
+				break;
+			}
+		}
+	}
+
+	if (sd == NULL)
+		return;
+
 	int conf = battle_config.send_party_options;
 
 	if (((flag & 0x01) != 0 && (conf & 0x10) == 0)
@@ -7345,23 +7368,14 @@ static void clif_party_option(struct party_data *p, struct map_session_data *sd,
 		cmd = 0x7d8;
 	}
 
-	unsigned char buf[16];
 #if PACKETVER < 20090603
 	if (cmd == 0x7d8)
 		cmd = 0x101;
 #endif
 
-	nullpo_retv(p);
+	unsigned char buf[16];
 
-	if (sd == NULL && (flag & 0x01) == 0) {
-		int i;
-		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++)
-			;
-		if (i < MAX_PARTY)
-			sd = p->data[i].sd;
-	}
-	if(!sd) return;
-	WBUFW(buf,0)=cmd;
+	WBUFW(buf, 0) = cmd;
 	WBUFL(buf, 2) = ((flag & 0x10) != 0) ? 0 : (((flag & 0x01) != 0) ? 2 : p->party.exp);
 
 	if (cmd == 0x7d8) {
