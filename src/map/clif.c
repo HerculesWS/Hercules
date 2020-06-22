@@ -10945,6 +10945,8 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		}
 	}
 
+	bool change_map = (sd->state.changemap != 0);
+
 	if (sd->state.changemap != 0) { // Restore information that gets lost on map-change.
 #if PACKETVER >= 20070918
 		clif->partyinvitationstate(sd);
@@ -10957,8 +10959,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		else
 			clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
 #endif
-
-		clif->show_modifiers(sd);
 
 		bool flee_penalty = (battle_config.bg_flee_penalty != 100 || battle_config.gvg_flee_penalty != 100);
 		bool is_gvg = (map_flag_gvg2(sd->state.pmap) || map_flag_gvg2(sd->bl.m));
@@ -11007,6 +11007,12 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 	mail->clear(sd);
 	clif->maptypeproperty2(&sd->bl, SELF);
+
+	if (((battle_config.display_rate_messages & 0x1) != 0 && first_time)
+	    || ((battle_config.display_rate_messages & 0x2) != 0 && !first_time && change_map)
+	    || (battle_config.display_rate_messages & 0x4) != 0) {
+		clif->show_modifiers(sd);
+	}
 
 	// Init guild aura.
 	if (sd->state.gmaster_flag != 0) {
