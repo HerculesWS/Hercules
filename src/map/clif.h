@@ -750,6 +750,14 @@ enum removeGear_flag {
 	REMOVE_MOUNT_CART = 6,
 };
 
+/** Info types for PACKET_ZC_PERSONAL_INFOMATION (0x097b). **/
+enum detail_exp_info_type {
+	PC_EXP_INFO = 0x0,	//!< PCBang internet cafe modifiers. (http://pcbang.gnjoy.com/) (Unused.)
+	PREMIUM_EXP_INFO = 0x1,	//!< Premium user modifiers. Values aren't displayed in 20161207+ clients.
+	SERVER_EXP_INFO = 0x2,	//!< Server rates.
+	TPLUS_EXP_INFO = 0x3,	//!< Unknown. Values are displayed as "TPLUS" in kRO. (Unused.)
+};
+
 /**
  * Clif.c Interface
  **/

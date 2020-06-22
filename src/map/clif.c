@@ -20923,20 +20923,57 @@ static void clif_bank_withdraw(struct map_session_data *sd, enum e_BANKING_WITHD
 #endif
 }
 
-/* TODO: official response packet (tried 0x8cb/0x97b but the display was quite screwed up.) */
-/* currently mimicing */
+/**
+ * Sends EXP, drop and death-penalty rates.
+ * 0x097b <packet len>.W <exp>.L <death>.L <drop>.L <DETAIL_EXP_INFO>13B (ZC_PERSONAL_INFOMATION2)
+ * <InfoType>.B <Exp>.L <Death>.L <Drop>.L (DETAIL_EXP_INFO)
+ *
+ * @param sd The character which should receive the messages.
+ *
+ **/
 static void clif_show_modifiers(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	if( sd->status.mod_exp != 100 || sd->status.mod_drop != 100 || sd->status.mod_death != 100 ) {
+#if PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
+	int length = sizeof(struct PACKET_ZC_PERSONAL_INFOMATION) + 4 * sizeof(struct PACKET_ZC_PERSONAL_INFOMATION_SUB);
+	WFIFOHEAD(sd->fd, length);
+	struct PACKET_ZC_PERSONAL_INFOMATION *p = WFIFOP(sd->fd, 0);
+
+	p->packetType = HEADER_ZC_PERSONAL_INFOMATION;
+	p->length = length;
+	// Single values.
+	p->details[0].type = PC_EXP_INFO;
+	p->details[0].exp = 0;
+	p->details[0].death = 0;
+	p->details[0].drop = 0;
+	p->details[1].type = TPLUS_EXP_INFO;
+	p->details[1].exp = 0;
+	p->details[1].death = 0;
+	p->details[1].drop = 0;
+	p->details[2].type = PREMIUM_EXP_INFO;
+	p->details[2].exp = (sd->status.mod_exp - 100) * 1000;
+	p->details[2].death = (sd->status.mod_death - 100) * 1000;
+	p->details[2].drop = (sd->status.mod_drop - 100) * 1000;
+	p->details[3].type = SERVER_EXP_INFO;
+	p->details[3].exp = battle_config.base_exp_rate * 1000;
+	p->details[3].death = battle_config.death_penalty_base * 10;
+	p->details[3].drop = battle_config.item_rate_common * 1000;
+	// Total values.
+	p->total_exp = (battle_config.base_exp_rate * sd->status.mod_exp / 100) * 1000;
+	p->total_death = (battle_config.base_exp_rate * sd->status.mod_death / 100) * 10;
+	p->total_drop = (battle_config.base_exp_rate * sd->status.mod_drop / 100) * 1000;
+
+	WFIFOSET(sd->fd, length);
+#else
+	if (sd->status.mod_exp != 100 || sd->status.mod_drop != 100 || sd->status.mod_death != 100) {
 		char output[128];
 
-		snprintf(output,128, msg_sd(sd, 896), // Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%
-				sd->status.mod_exp,sd->status.mod_drop,sd->status.mod_death);
+		// Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%
+		safesnprintf(output, sizeof(output), msg_sd(sd, 896), sd->status.mod_exp, sd->status.mod_drop, sd->status.mod_death);
 		clif->broadcast2(&sd->bl, output, (int)strlen(output) + 1, 0xffbc90, 0x190, 12, 0, 0, SELF);
 	}
-
+#endif  // PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
 }
 
 static void clif_notify_bounditem(struct map_session_data *sd, unsigned short index)
