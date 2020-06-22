@@ -727,6 +727,9 @@ END_ZEROED_BLOCK;
 /// Rune Knight Dragon
 #define pc_isridingdragon(sd) ( (sd)->sc.option&OPTION_DRAGON )
 
+// Check if character has a pet.
+#define pc_has_pet(sd) ( (sd)->status.pet_id != 0 && (sd)->pd != NULL && (sd)->pd->pet.intimate > PET_INTIMACY_NONE )
+
 #define pc_stop_walking(sd, type) (unit->stop_walking(&(sd)->bl, (type)))
 #define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 
