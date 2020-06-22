@@ -2855,7 +2855,7 @@ ACMD(pethungry)
 	}
 
 	if (hungry != pd->pet.hungry) { // No need to update the pet's status if hunger value won't change.
-		pd->pet.hungry = hungry;
+		pet->set_hunger(pd, hungry);
 		clif->send_petstatus(sd);
 	}
 
