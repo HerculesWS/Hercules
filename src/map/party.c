@@ -738,9 +738,8 @@ static int party_optionchanged(int party_id, int account_id, int exp, int item, 
 	//Flag&0x1: Exp change denied. Flag&0x10: Item change denied.
 	if(!(flag&0x01) && p->party.exp != exp)
 		p->party.exp=exp;
-	if(!(flag&0x10) && p->party.item != item) {
+	if (p->party.item != item)
 		p->party.item=item;
-	}
 
 	if (account_id == 0) {
 		flag |= 0x04;
