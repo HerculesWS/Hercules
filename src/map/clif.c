@@ -10954,6 +10954,13 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20171025 || PACKETVER_RE_NUM >= 20170920
+		clif->zc_config(sd, CZ_CONFIG_CALL, sd->status.allow_call);
+
+		if (sd->pd != NULL)
+			clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, sd->pd->pet.autofeed);
+		else
+			clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, false);
+
 		if (sd->hd != NULL)
 			clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
 		else
