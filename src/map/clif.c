@@ -10938,11 +10938,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		} else {
 			sd->state.warp_clean = 1;
 		}
-
-		if (sd->guild != NULL && ((battle_config.guild_notice_changemap == 1 && sd->state.changemap != 0)
-					  || battle_config.guild_notice_changemap == 2)) {
-			clif->guild_notice(sd, sd->guild);
-		}
 	}
 
 	bool change_map = (sd->state.changemap != 0);
@@ -11033,12 +11028,21 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		clif->show_modifiers(sd);
 	}
 
-	// Init guild aura.
-	if (sd->state.gmaster_flag != 0) {
-		guild->aura_refresh(sd, GD_LEADERSHIP, guild->checkskill(sd->guild, GD_LEADERSHIP));
-		guild->aura_refresh(sd, GD_GLORYWOUNDS, guild->checkskill(sd->guild, GD_GLORYWOUNDS));
-		guild->aura_refresh(sd, GD_SOULCOLD, guild->checkskill(sd->guild, GD_SOULCOLD));
-		guild->aura_refresh(sd, GD_HAWKEYES, guild->checkskill(sd->guild, GD_HAWKEYES));
+	if (sd->guild != NULL) {
+		// Show guild notice.
+		if ((battle_config.guild_notice_changemap == 1 && change_map)
+		    || battle_config.guild_notice_changemap == 2
+		    || first_time) {
+			clif->guild_notice(sd, sd->guild);
+		}
+
+		// Init guild aura.
+		if (sd->state.gmaster_flag != 0) {
+			guild->aura_refresh(sd, GD_LEADERSHIP, guild->checkskill(sd->guild, GD_LEADERSHIP));
+			guild->aura_refresh(sd, GD_GLORYWOUNDS, guild->checkskill(sd->guild, GD_GLORYWOUNDS));
+			guild->aura_refresh(sd, GD_SOULCOLD, guild->checkskill(sd->guild, GD_SOULCOLD));
+			guild->aura_refresh(sd, GD_HAWKEYES, guild->checkskill(sd->guild, GD_HAWKEYES));
+		}
 	}
 
 	if (sd->state.vending != 0) { // Character is vending.
@@ -11062,10 +11066,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	}
 
 	clif->weather_check(sd);
-
-	// This should be displayed last.
-	if (sd->guild != NULL && first_time)
-		clif->guild_notice(sd, sd->guild);
 
 	// For automatic triggering of NPCs after map loading. (So you don't need to walk 1 step first.)
 	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNPC) != 0)
