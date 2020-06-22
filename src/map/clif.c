@@ -23125,66 +23125,101 @@ static void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 	clif->open_ui(sd, p->UIType);
 }
 
-static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
+/**
+ * Does the actual packet sending for clif_open_ui().
+ *
+ * @param sd The character who opens the UI.
+ * @param ui_type The UI which should be opened.
+ *
+ **/
+static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_type)
 {
-#if PACKETVER >= 20150128
-	struct PACKET_ZC_OPEN_UI p;
-#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
-	int claimed = 0;
-#endif
-
 	nullpo_retv(sd);
 
+#if PACKETVER >= 20150128
+	struct PACKET_ZC_OPEN_UI p;
+
 	p.PacketType = openUiType;
-	switch (uiType) {
-	case CZ_STYLIST_UI:
-		p.UIType = ZC_STYLIST_UI;
+	p.UIType = ui_type;
+
+	switch (ui_type) {
+	case ZC_BANK_UI:
+	case ZC_STYLIST_UI:
+	case ZC_CAPTCHA_UI:
+	case ZC_MACRO_UI:
 #if PACKETVER >= 20171122
 		p.data = 0;
 #endif
 		break;
-	case CZ_MACRO_REGISTER_UI:
-		p.UIType = ZC_CAPTCHA_UI;
 #if PACKETVER >= 20171122
+	case ZC_TIPBOX_UI:
+	case ZC_RENEWQUEST_UI:
 		p.data = 0;
-#endif
 		break;
-	case CZ_MACRO_DETECTOR_UI:
-		p.UIType = ZC_MACRO_UI;
-#if PACKETVER >= 20171122
-		p.data = 0;
-#endif
-		break;
-	case CZ_ATTENDANCE_UI:
-	{
+	case ZC_ATTENDANCE_UI:
+		if (battle_config.feature_enable_attendance_system == 0)
+			return;
+
 		if (clif->attendance_getendtime() < time(NULL)) {
 #if PACKETVER >= 20180207
 			clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
 #endif
 			return;
 		}
-		if (battle_config.feature_enable_attendance_system != 1)
-			return;
+
 #if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
-		if (clif->attendance_timediff(sd) != true)
+		int claimed = 0;
+
+		if (!clif->attendance_timediff(sd))
 			++claimed;
 		else if (sd->status.attendance_count >= VECTOR_LENGTH(clif->attendance_data))
 			sd->status.attendance_count = 0;
-		p.UIType = ZC_ATTENDANCE_UI;
+
 		p.data = sd->status.attendance_count * 10 + claimed;
 #else
 		ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
 		return;
 #endif
 		break;
-	}
+#endif
 	default:
-		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
+		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", ui_type);
 		return;
 	}
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
+}
+
+static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
+{
+	nullpo_retv(sd);
+
+	enum zc_ui_types send_ui_type;
+
+	switch (uiType) {
+#if PACKETVER >= 20150128
+	case CZ_STYLIST_UI:
+		send_ui_type = ZC_STYLIST_UI;
+		break;
+	case CZ_MACRO_REGISTER_UI:
+		send_ui_type = ZC_CAPTCHA_UI;
+		break;
+	case CZ_MACRO_DETECTOR_UI:
+		send_ui_type = ZC_MACRO_UI;
+		break;
+#endif
+#if PACKETVER >= 20171122
+	case CZ_ATTENDANCE_UI:
+		send_ui_type = ZC_ATTENDANCE_UI;
+		break;
+#endif
+	default:
+		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
+		return;
+	}
+
+	clif->open_ui_send(sd, send_ui_type);
 }
 
 static void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
@@ -25297,6 +25332,7 @@ void clif_defaults(void)
 	clif->attendance_timediff = clif_attendance_timediff;
 	clif->attendance_getendtime = clif_attendance_getendtime;
 	clif->pOpenUIRequest = clif_parse_open_ui_request;
+	clif->open_ui_send = clif_open_ui_send;
 	clif->open_ui = clif_open_ui;
 	clif->pAttendanceRewardRequest = clif_parse_attendance_reward_request;
 	clif->ui_action = clif_ui_action;
