@@ -20518,6 +20518,8 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_LEVEL:
 			pd->pet.level = (short)val;
+			if (pd->msd != NULL)
+				clif->send_petstatus(pd->msd); // Send pet data.
 			break;
 		case UDT_HP:
 			status->set_hp(bl, (unsigned int)val, STATUS_HEAL_DEFAULT);
@@ -20639,7 +20641,6 @@ static BUILDIN(setunitdata)
 			return false;
 		}
 
-		clif->send_petstatus(pd->msd); // Send pet data.
 		break;
 	}
 	case BL_MER: {

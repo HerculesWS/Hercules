@@ -884,7 +884,6 @@ static int pet_change_name_ack(struct map_session_data *sd, const char *name, in
 	aFree(newname);
 	clif->blname_ack(0,&pd->bl);
 	pd->pet.rename_flag = 1;
-	clif->send_petstatus(sd);
 	return 1;
 }
 

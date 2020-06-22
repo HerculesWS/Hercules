@@ -2810,10 +2810,8 @@ ACMD(petfriendly)
 		return false;
 	}
 
-	if (friendly != pd->pet.intimate) { // No need to update the pet's status if intimacy value won't change.
+	if (friendly != pd->pet.intimate) // No need to update the pet's status if intimacy value won't change.
 		pet->set_intimate(pd, friendly);
-		clif->send_petstatus(sd);
-	}
 
 	clif->message(fd, msg_fd(fd, 182)); // Pet intimacy changed. (Send message regardless of value has changed or not.)
 
@@ -2854,10 +2852,8 @@ ACMD(pethungry)
 		return false;
 	}
 
-	if (hungry != pd->pet.hungry) { // No need to update the pet's status if hunger value won't change.
+	if (hungry != pd->pet.hungry) // No need to update the pet's status if hunger value won't change.
 		pet->set_hunger(pd, hungry);
-		clif->send_petstatus(sd);
-	}
 
 	clif->message(fd, msg_fd(fd, 185)); // Pet hunger changed. (Send message regardless of value has changed or not.)
 
