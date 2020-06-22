@@ -11000,10 +11000,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		status_calc_bl(&sd->ed->bl, SCB_SPEED); // Elementals mimic their master's speed on each map change.
 	}
 
-	bool first_time = false;
-
 	if (sd->state.connect_new != 0) {
-		first_time = true;
 		sd->state.connect_new = 0;
 		clif->skillinfoblock(sd);
 		clif->hotkeysAll(sd);
@@ -11090,8 +11087,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 			sd->state.warp_clean = 1;
 		}
 	}
-
-	bool change_map = (sd->state.changemap != 0);
 
 	if (sd->state.changemap != 0) { // Restore information that gets lost on map-change.
 		bool flee_penalty = (battle_config.bg_flee_penalty != 100 || battle_config.gvg_flee_penalty != 100);
