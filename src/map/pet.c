@@ -954,6 +954,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 {
 	nullpo_retr(1, sd);
 	nullpo_retr(1, pd);
+	Assert_retr(1, sd->status.pet_id == pd->pet.pet_id);
 
 	int i = pc->search_inventory(sd, pd->petDB->FoodID);
 
