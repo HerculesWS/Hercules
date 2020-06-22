@@ -594,6 +594,7 @@ struct Battle_Config {
 	int display_rate_messages;
 	int display_config_messages;
 	int display_overweight_messages;
+	int show_tip_window;
 	int enable_refinery_ui;
 	int replace_refine_npcs;
 
