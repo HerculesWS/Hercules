@@ -405,6 +405,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
 		sd->status.inventory[i].card[3] = pd->pet.rename_flag;
+		clif->inventoryList(sd);
 	} else {
 		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
 		struct item tmp_item = {0};
@@ -422,7 +423,6 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		}
 	}
 #if PACKETVER >= 20180704
-	clif->inventoryList(sd);
 	clif->send_petdata(sd, pd, 6, 0);
 #endif
 	pd->pet.incubate = 1;
