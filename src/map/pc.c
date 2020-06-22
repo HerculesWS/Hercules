@@ -8148,10 +8148,8 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 	if (sd->status.pet_id > 0 && sd->pd != NULL) {
 		struct pet_data *pd = sd->pd;
 
-		if (map->list[sd->bl.m].flag.noexppenalty == 0) {
+		if (map->list[sd->bl.m].flag.noexppenalty == 0)
 			pet->set_intimate(pd, pd->pet.intimate - pd->petDB->die);
-			clif->send_petdata(sd, sd->pd, 1, pd->pet.intimate);
-		}
 
 		if (sd->pd != NULL && sd->pd->target_id != 0) // Unlock all targets.
 			pet->unlocktarget(sd->pd);

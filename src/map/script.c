@@ -20629,7 +20629,6 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_INTIMACY:
 			pet->set_intimate(pd, val);
-			clif->send_petdata(pd->msd, pd, 1, pd->pet.intimate);
 			break;
 		case UDT_HUNGER:
 			pet->set_hunger(pd, val);

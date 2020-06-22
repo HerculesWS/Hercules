@@ -158,6 +158,8 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 			pet_stop_attack(pd);
 			unit->remove_map(&pd->bl, CLR_OUTSIGHT, ALC_MARK);
 		}
+	} else {
+		clif->send_petdata(sd, pd, 1, pd->pet.intimate);
 	}
 
 	status_calc_pc(sd, SCO_NONE);
@@ -350,7 +352,6 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 			return 0;
 
 		status_calc_pet(pd, SCO_NONE);
-		clif->send_petdata(sd, pd, 1, pd->pet.intimate);
 
 		if (pd->petDB->starving_delay > 0)
 			interval = pd->petDB->starving_delay;
@@ -989,7 +990,6 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	status_calc_pet(pd, SCO_NONE);
 	pet->set_hunger(pd, pd->pet.hungry + pd->petDB->fullness);
 	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
-	clif->send_petdata(sd, pd, 1, pd->pet.intimate);
 	clif->pet_food(sd, pd->petDB->FoodID, 1);
 
 	return 0;
