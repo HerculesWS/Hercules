@@ -7305,6 +7305,7 @@ static void clif_party_inviteack(struct map_session_data *sd, const char *nick, 
 ///     0x02 = Options changed manually.
 ///     0x04 = Options changed automatically.
 ///     0x08 = Member added.
+///     0x10 = Member removed.
 ///     0x20 = Character logged in.
 static void clif_party_option(struct party_data *p, struct map_session_data *sd, int flag)
 {
@@ -7326,10 +7327,10 @@ static void clif_party_option(struct party_data *p, struct map_session_data *sd,
 	}
 	if(!sd) return;
 	WBUFW(buf,0)=cmd;
-	WBUFL(buf,2)=((flag&0x01)?2:p->party.exp);
+	WBUFL(buf, 2) = ((flag & 0x10) != 0) ? 0 : (((flag & 0x01) != 0) ? 2 : p->party.exp);
 #if PACKETVER >= 20090603
-	WBUFB(buf,6)=(p->party.item&1)?1:0;
-	WBUFB(buf,7)=(p->party.item&2)?1:0;
+	WBUFB(buf, 6) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 1) != 0) ? 1 : 0);
+	WBUFB(buf, 7) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 2) != 0) ? 1 : 0);
 #endif
 	if ((flag & 0x01) == 0 && ((flag & 0x04) != 0 || (flag & 0x02) != 0))
 		clif->send(buf,packet_len(cmd),&sd->bl,PARTY);

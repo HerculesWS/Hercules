@@ -631,6 +631,7 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 				prev_leader_accountId = p->party.member[i].account_id;
 			}
 
+			clif->party_option(p, sd, 0x10);
 			clif->party_withdraw(p,sd,account_id,p->party.member[i].name,0x0);
 			memset(&p->party.member[i], 0, sizeof(p->party.member[0]));
 			memset(&p->data[i], 0, sizeof(p->data[0]));
