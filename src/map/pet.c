@@ -700,8 +700,6 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		return 1;
 	}
 
-	//FIXME: Delete taming item here, if this was an item-invoked capture and the item was flagged as delay-consume. [ultramage]
-
 	// catch_target_class == 0 is used for universal lures (except bosses for now). [Skotlex]
 	if (sd->catch_target_class == 0 && (md->status.mode & MD_BOSS) == 0)
 		sd->catch_target_class = md->class_;
