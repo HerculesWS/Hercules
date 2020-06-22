@@ -145,18 +145,20 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 
 	struct map_session_data *sd = pd->msd;
 
-	status_calc_pc(sd, SCO_NONE);
-
-	if (pd->pet.intimate == PET_INTIMACY_NONE) { /// Pet is lost. Delete the egg.
+	if (pd->pet.intimate == PET_INTIMACY_NONE) { // Pet is lost, delete it.
 		int i;
 
 		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
-			 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1],
-							sd->status.inventory[i].card[2]));
+			 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 		if (i != sd->status.inventorySize)
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
+
+		pet_stop_attack(pd);
+		unit->remove_map(&pd->bl, CLR_OUTSIGHT, ALC_MARK);
 	}
+
+	status_calc_pc(sd, SCO_NONE);
 }
 
 /**
@@ -342,8 +344,8 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 		pet_stop_attack(pd);
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->starving_decrement);
 
-		if (pd->pet.intimate == PET_INTIMACY_NONE)
-			pd->status.speed = pd->db->status.speed;
+		if (sd->pd == NULL)
+			return 0;
 
 		status_calc_pet(pd, SCO_NONE);
 		clif->send_petdata(sd, pd, 1, pd->pet.intimate);
@@ -978,10 +980,8 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	intimacy = intimacy * battle_config.pet_friendly_rate / 100;
 	pet->set_intimate(pd, pd->pet.intimate + intimacy);
 
-	if (pd->pet.intimate == PET_INTIMACY_NONE) {
-		pet_stop_attack(pd);
-		pd->status.speed = pd->db->status.speed;
-	}
+	if (sd->pd == NULL)
+		return 0;
 
 	status_calc_pet(pd, SCO_NONE);
 	pet->set_hunger(pd, pd->pet.hungry + pd->petDB->fullness);

@@ -8153,7 +8153,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			clif->send_petdata(sd, sd->pd, 1, pd->pet.intimate);
 		}
 
-		if (sd->pd->target_id != 0) // Unlock all targets.
+		if (sd->pd != NULL && sd->pd->target_id != 0) // Unlock all targets.
 			pet->unlocktarget(sd->pd);
 	}
 
