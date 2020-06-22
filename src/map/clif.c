@@ -10787,10 +10787,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	// Check for and delete unavailable/disabled items.
 	pc->checkitem(sd);
 
-	// Send the character's weight to the client.
-	clif->updatestatus(sd, SP_WEIGHT);
-	clif->updatestatus(sd, SP_MAXWEIGHT);
-
 	// Send character's guild info to the client. Call this before clif->spawn() to show guild emblems correctly.
 	if (sd->status.guild_id != 0)
 		guild->send_memberinfoshort(sd, 1);
@@ -10818,6 +10814,17 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	sd->state.callshop = 0; // Reset the callshop flag if the character changes map.
 	map->addblock(&sd->bl); // Add the character to the map.
 	clif->spawn(&sd->bl); // Spawn character client side.
+
+	if (((battle_config.display_overweight_messages & 0x1) != 0 && sd->state.connect_new != 0)
+	    || ((battle_config.display_overweight_messages & 0x2) != 0 && sd->state.connect_new == 0 && sd->state.changemap != 0)) {
+		// Send the character's weight to the client. (With displaying overweight messages.)
+		clif->updatestatus(sd, SP_MAXWEIGHT);
+		clif->updatestatus(sd, SP_WEIGHT);
+	} else {
+		// Send the character's weight to the client. (Without displaying overweight messages.)
+		clif->updatestatus(sd, SP_WEIGHT);
+		clif->updatestatus(sd, SP_MAXWEIGHT);
+	}
 
 	struct party_data *p = NULL;
 
