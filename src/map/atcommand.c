@@ -2881,6 +2881,15 @@ ACMD(petrename)
 	}
 
 	pd->pet.rename_flag = 0;
+
+	int i;
+
+	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
+		 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+
+	if (i != sd->status.inventorySize)
+		sd->status.inventory[i].card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
+
 	intif->save_petdata(sd->status.account_id, &pd->pet);
 	clif->send_petstatus(sd);
 	clif->message(fd, msg_fd(fd,187)); // You can now rename your pet.
