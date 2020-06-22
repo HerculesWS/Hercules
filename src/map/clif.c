@@ -7301,8 +7301,10 @@ static void clif_party_inviteack(struct map_session_data *sd, const char *nick, 
 ///     2 = cannot change exp sharing
 ///
 /// flag:
-///     0 = send to party
-///     1 = send to sd
+///     0x01 = Cannot change EXP sharing. (Only set when tried to change options manually.)
+///     0x02 = Options changed manually.
+///     0x04 = Options changed automatically.
+///     0x20 = Character logged in.
 static void clif_party_option(struct party_data *p, struct map_session_data *sd, int flag)
 {
 	unsigned char buf[16];
@@ -7314,7 +7316,7 @@ static void clif_party_option(struct party_data *p, struct map_session_data *sd,
 
 	nullpo_retv(p);
 
-	if(!sd && flag==0){
+	if (sd == NULL && (flag & 0x01) == 0) {
 		int i;
 		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++)
 			;
@@ -7328,10 +7330,13 @@ static void clif_party_option(struct party_data *p, struct map_session_data *sd,
 	WBUFB(buf,6)=(p->party.item&1)?1:0;
 	WBUFB(buf,7)=(p->party.item&2)?1:0;
 #endif
-	if(flag==0)
+	if ((flag & 0x01) == 0 && ((flag & 0x04) != 0 || (flag & 0x02) != 0))
 		clif->send(buf,packet_len(cmd),&sd->bl,PARTY);
 	else
 		clif->send(buf,packet_len(cmd),&sd->bl,SELF);
+
+	if ((flag & 0x04) != 0)
+		p->state.option_auto_changed = 0;
 }
 
 /// 0105 <account id>.L <char name>.24B <result>.B (ZC_DELETE_MEMBER_FROM_GROUP).
@@ -10764,9 +10769,16 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	map->addblock(&sd->bl); // Add the character to the map.
 	clif->spawn(&sd->bl); // Spawn character client side.
 
+	struct party_data *p = NULL;
+
+	if (sd->status.party_id != 0)
+		p = party->search(sd->status.party_id);
+
 	// Send character's party info to the client. Call this after clif->spawn() to show HP bars correctly.
-	if (sd->status.party_id != 0) {
-		party->send_movemap(sd);
+	if (p != NULL) {
+		if (sd->state.connect_new == 0) // Login is handled in party_member_joined().
+			party->send_movemap(sd);
+
 		clif->party_hp(sd); // Show HP after displacement. [LuzZza]
 	}
 
@@ -11020,6 +11032,13 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
 		}
 #endif
+	}
+
+	if (p != NULL && first_time) {
+		if (p->state.option_auto_changed != 0)
+			clif->party_option(p, sd, 0x04);
+		else
+			clif->party_option(p, sd, 0x20);
 	}
 
 	if (((battle_config.display_rate_messages & 0x1) != 0 && first_time)

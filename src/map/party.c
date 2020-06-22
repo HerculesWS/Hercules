@@ -349,7 +349,6 @@ static int party_recv_info(const struct party *sp, int char_id)
 			continue;// not online
 		clif->charnameupdate(sd); //Update other people's display. [Skotlex]
 		clif->party_member_info(p,sd);
-		clif->party_option(p,sd,0x100);
 		clif->party_info(p,NULL);
 		for( j = 0; j < p->instances; j++ ) {
 			if( p->instance[j] >= 0 ) {
@@ -496,6 +495,8 @@ static void party_member_joined(struct map_session_data *sd)
 		}
 	} else
 		sd->status.party_id = 0; //He does not belongs to the party really?
+
+	party->send_movemap(sd);
 }
 
 /// Invoked (from char-server) when a new member is added to the party.
@@ -733,6 +734,16 @@ static int party_optionchanged(int party_id, int account_id, int exp, int item, 
 		p->party.item=item;
 	}
 
+	if (account_id == 0) {
+		flag |= 0x04;
+		p->state.option_auto_changed = 1;
+
+		if (p->state.member_level_changed == 0)
+			return 0; // clif_party_option() is handled in clif_parse_LoadEndAck().
+	} else {
+		flag |= 0x02;
+	}
+
 	clif->party_option(p,sd,flag);
 	return 0;
 }
@@ -811,7 +822,8 @@ static int party_recv_movemap(int party_id, int account_id, int char_id, unsigne
 		ShowError("party_recv_movemap: char %d/%d not found in party %s (id:%d)",account_id,char_id,p->party.name,party_id);
 		return 0;
 	}
-
+	
+	p->state.member_level_changed = 0;
 	m = &p->party.member[i];
 	m->map = mapid;
 	m->online = online;
@@ -860,7 +872,12 @@ static void party_send_movemap(struct map_session_data *sd)
 
 static void party_send_levelup(struct map_session_data *sd)
 {
-	intif->party_changemap(sd,1);
+	struct party_data *p = party->search(sd->status.party_id);
+
+	if (p != NULL)
+		p->state.member_level_changed = 1;
+
+	intif->party_changemap(sd, 1);
 }
 
 static int party_send_logout(struct map_session_data *sd)

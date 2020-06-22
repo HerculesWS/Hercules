@@ -51,6 +51,8 @@ struct party_data {
 		unsigned sg : 1;     ///< There's at least one Star Gladiator in party?
 		unsigned snovice :1; ///< There's a Super Novice
 		unsigned tk : 1;     ///< There's a taekwon
+		unsigned option_auto_changed : 1;  ///< Party options were changed automatically. (inter_party_check_lv())
+		unsigned member_level_changed : 1; ///< A party member's level has changed.
 	} state;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
