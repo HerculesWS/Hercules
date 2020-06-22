@@ -10668,6 +10668,97 @@ static void clif_parse_WantToConnection(int fd, struct map_session_data *sd)
 }
 
 /**
+ * Displays the common server messages upon login, chaning maps or teleporting to a character.
+ *
+ * @param sd The character who should receive the messages.
+ * @param connect_new Whether the character is logging in.
+ * @param change_map Whether the character is changing maps.
+ *
+ **/
+static void clif_load_end_ack_sub_messages(struct map_session_data *sd, bool connect_new, bool change_map)
+{
+	nullpo_retv(sd);
+
+	/** Display overweight messages. **/
+	if (((battle_config.display_overweight_messages & 0x1) != 0 && connect_new)
+	    || ((battle_config.display_overweight_messages & 0x2) != 0 && !connect_new && change_map)) {
+		// Send the character's weight to the client. (With displaying overweight messages.)
+		clif->updatestatus(sd, SP_MAXWEIGHT);
+		clif->updatestatus(sd, SP_WEIGHT);
+	} else {
+		// Send the character's weight to the client. (Without displaying overweight messages.)
+		clif->updatestatus(sd, SP_WEIGHT);
+		clif->updatestatus(sd, SP_MAXWEIGHT);
+	}
+
+	/** Display configuration messages. **/
+	if (((battle_config.display_config_messages & 0x1) != 0 && connect_new)
+	    || ((battle_config.display_config_messages & 0x2) != 0 && !connect_new && change_map)
+	    || (battle_config.display_config_messages & 0x4) != 0) {
+#if PACKETVER >= 20070918
+		if ((battle_config.display_config_messages & 0x10) != 0)
+			clif->partyinvitationstate(sd);
+
+		if ((battle_config.display_config_messages & 0x20) != 0)
+			clif->equpcheckbox(sd);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20171025 || PACKETVER_RE_NUM >= 20170920
+		if ((battle_config.display_config_messages & 0x40) != 0)
+			clif->zc_config(sd, CZ_CONFIG_CALL, sd->status.allow_call);
+
+		if ((battle_config.display_config_messages & 0x80) != 0) {
+			if (sd->pd != NULL)
+				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, sd->pd->pet.autofeed);
+			else
+				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, false);
+		}
+
+		if ((battle_config.display_config_messages & 0x100) != 0) {
+			if (sd->hd != NULL)
+				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
+			else
+				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
+		}
+#endif
+	}
+
+	/** Display party options. **/
+	struct party_data *p = NULL;
+
+	if (sd->status.party_id != 0 && (p = party->search(sd->status.party_id)) != NULL) {
+		int flag;
+
+		if (p->state.option_auto_changed != 0)
+			flag = 0x04;
+		else if (connect_new)
+			flag = 0x20;
+		else if (change_map)
+			flag = 0x40;
+		else
+			flag = 0x80;
+
+		clif->party_option(p, sd, flag);
+	}
+
+	/** Display rate modifier messages. **/
+	if (((battle_config.display_rate_messages & 0x1) != 0 && connect_new)
+	    || ((battle_config.display_rate_messages & 0x2) != 0 && !connect_new && change_map)
+	    || (battle_config.display_rate_messages & 0x4) != 0) {
+		clif->show_modifiers(sd);
+	}
+
+	/** Display guild notice. **/
+	if (sd->guild != NULL) {
+		if (((battle_config.guild_notice_changemap & 0x1) != 0 && connect_new)
+		    || ((battle_config.guild_notice_changemap & 0x2) != 0 && !connect_new && change_map)
+		    || (battle_config.guild_notice_changemap & 0x4) != 0) {
+			clif->guild_notice(sd, sd->guild);
+		}
+	}
+}
+
+/**
  * Notification from the client, that it has finished map loading and is about to display player's character. (CZ_NOTIFY_ACTORINIT)
  *
  * @code
@@ -10815,16 +10906,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	map->addblock(&sd->bl); // Add the character to the map.
 	clif->spawn(&sd->bl); // Spawn character client side.
 
-	if (((battle_config.display_overweight_messages & 0x1) != 0 && sd->state.connect_new != 0)
-	    || ((battle_config.display_overweight_messages & 0x2) != 0 && sd->state.connect_new == 0 && sd->state.changemap != 0)) {
-		// Send the character's weight to the client. (With displaying overweight messages.)
-		clif->updatestatus(sd, SP_MAXWEIGHT);
-		clif->updatestatus(sd, SP_WEIGHT);
-	} else {
-		// Send the character's weight to the client. (Without displaying overweight messages.)
-		clif->updatestatus(sd, SP_WEIGHT);
-		clif->updatestatus(sd, SP_MAXWEIGHT);
-	}
+	clif_load_end_ack_sub_messages(sd, (sd->state.connect_new != 0), (sd->state.changemap != 0));
 
 	struct party_data *p = NULL;
 
@@ -11060,66 +11142,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	mail->clear(sd);
 	clif->maptypeproperty2(&sd->bl, SELF);
 
-	if (((battle_config.display_config_messages & 0x1) != 0 && first_time)
-	    || ((battle_config.display_config_messages & 0x2) != 0 && !first_time && change_map)
-	    || (battle_config.display_config_messages & 0x4) != 0) {
-#if PACKETVER >= 20070918
-		if ((battle_config.display_config_messages & 0x10) != 0)
-			clif->partyinvitationstate(sd);
-
-		if ((battle_config.display_config_messages & 0x20) != 0)
-			clif->equpcheckbox(sd);
-#endif
-
-#if PACKETVER_MAIN_NUM >= 20171025 || PACKETVER_RE_NUM >= 20170920
-		if ((battle_config.display_config_messages & 0x40) != 0)
-			clif->zc_config(sd, CZ_CONFIG_CALL, sd->status.allow_call);
-
-		if ((battle_config.display_config_messages & 0x80) != 0) {
-			if (sd->pd != NULL)
-				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, sd->pd->pet.autofeed);
-			else
-				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, false);
-		}
-
-		if ((battle_config.display_config_messages & 0x100) != 0) {
-			if (sd->hd != NULL)
-				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
-			else
-				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
-		}
-#endif
-	}
-
-	if (p != NULL) {
-		int flag;
-
-		if (p->state.option_auto_changed != 0)
-			flag = 0x04;
-		else if (first_time)
-			flag = 0x20;
-		else if (change_map)
-			flag = 0x40;
-		else
-			flag = 0x80;
-
-		clif->party_option(p, sd, flag);
-	}
-
-	if (((battle_config.display_rate_messages & 0x1) != 0 && first_time)
-	    || ((battle_config.display_rate_messages & 0x2) != 0 && !first_time && change_map)
-	    || (battle_config.display_rate_messages & 0x4) != 0) {
-		clif->show_modifiers(sd);
-	}
-
 	if (sd->guild != NULL) {
-		// Show guild notice.
-		if (((battle_config.guild_notice_changemap & 0x1) != 0 && first_time)
-		    || ((battle_config.guild_notice_changemap & 0x2) != 0 && !first_time && change_map)
-		    || (battle_config.guild_notice_changemap & 0x4) != 0) {
-			clif->guild_notice(sd, sd->guild);
-		}
-
 		// Init guild aura.
 		if (sd->state.gmaster_flag != 0) {
 			guild->aura_refresh(sd, GD_LEADERSHIP, guild->checkskill(sd->guild, GD_LEADERSHIP));
