@@ -11030,9 +11030,9 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 	if (sd->guild != NULL) {
 		// Show guild notice.
-		if ((battle_config.guild_notice_changemap == 1 && change_map)
-		    || battle_config.guild_notice_changemap == 2
-		    || first_time) {
+		if (((battle_config.guild_notice_changemap & 0x1) != 0 && first_time)
+		    || ((battle_config.guild_notice_changemap & 0x2) != 0 && !first_time && change_map)
+		    || (battle_config.guild_notice_changemap & 0x4) != 0) {
 			clif->guild_notice(sd, sd->guild);
 		}
 

@@ -7383,7 +7383,7 @@ static const struct battle_data {
 	{ "packet_obfuscation",                 &battle_config.packet_obfuscation,              1,      0,      3,              },
 	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,        },
 	{ "snovice_call_type",                  &battle_config.snovice_call_type,               0,      0,      1,              },
-	{ "guild_notice_changemap",             &battle_config.guild_notice_changemap,          2,      0,      2,              },
+	{ "guild_notice_changemap",             &battle_config.guild_notice_changemap,          7,      0,      7,              },
 	{ "features/banking",                   &battle_config.feature_banking,                 1,      0,      1,              },
 	{ "features/auction",                   &battle_config.feature_auction,                 0,      0,      2,              },
 	{ "idletime_criteria",                  &battle_config.idletime_criteria,            0x25,      1,      INT_MAX,        },
