@@ -270,9 +270,8 @@ static int unit_steptimer(int tid, int64 tick, int id, intptr_t data)
 	} else {
 		// If a player has target_id set and target is in range, attempt attack
 		struct block_list *tbl = map->id2bl(target_id);
-		nullpo_retr(2, tbl);
-		if (status->check_visibility(bl, tbl) == 0) // Target not visible
-			return 1;
+		if (tbl == NULL || status->check_visibility(bl, tbl) == 0)
+			return 1; // Target does not exist (player offline, monster died, etc.) or target is not visible to source.
 		if (ud->stepskill_id == 0)
 			unit->attack(bl, tbl->id, ud->state.attack_continue + 2); // Execute normal attack
 		else
@@ -1152,14 +1151,13 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 static int unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv)
 {
 	int casttime = skill->cast_fix(src, skill_id, skill_lv);
-	int castcancel = skill->get_castcancel(skill_id);
+	int castcancel = skill->get_castcancel(skill_id, skill_lv);
 	int ret = unit->skilluse_id2(src, target_id, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && ret == 0)
-		pc->autocast_clear(sd); // Error in unit_skilluse_id2().
-	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
-		skill->validate_autocast_data(sd, skill_id, skill_lv);
+	if (sd != NULL)
+		pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
+				    sd->auto_cast_current.skill_lv);
 
 	return ret;
 }
@@ -1568,7 +1566,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	//Check range when not using skill on yourself or is a combo-skill during attack
 	//(these are supposed to always have the same range as your attack)
 	if( src->id != target_id && (!temp || ud->attacktimer == INVALID_TIMER) ) {
-		if( skill->get_state(ud->skill_id) == ST_MOVE_ENABLE ) {
+		if (skill->get_state(skill_id, skill_lv) == ST_MOVE_ENABLE) {
 			if( !unit->can_reach_bl(src, target, range + 1, 1, NULL, NULL) )
 				return 0; // Walk-path check failed.
 		} else if( src->type == BL_MER && skill_id == MA_REMOVETRAP ) {
@@ -1718,7 +1716,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
 		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
 
-	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
+	if (sd != NULL && sd->auto_cast_current.itemskill_instant_cast && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
@@ -1756,7 +1754,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if( casttime <= 0 )
 		ud->state.skillcastcancel = 0;
 
-	if (sd == NULL || sd->autocast.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
+	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
 		ud->canact_tick = tick + casttime + 100;
 	if( sd )
 	{
@@ -1791,14 +1789,13 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 static int unit_skilluse_pos(struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv)
 {
 	int casttime = skill->cast_fix(src, skill_id, skill_lv);
-	int castcancel = skill->get_castcancel(skill_id);
+	int castcancel = skill->get_castcancel(skill_id, skill_lv);
 	int ret = unit->skilluse_pos2(src, skill_x, skill_y, skill_id, skill_lv, casttime, castcancel);
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
-	if (sd != NULL && ret == 0)
-		pc->autocast_clear(sd); // Error in unit_skilluse_pos2().
-	else if (sd != NULL && ret != 0 && skill_id != SA_ABRACADABRA && skill_id != WM_RANDOMIZESPELL)
-		skill->validate_autocast_data(sd, skill_id, skill_lv);
+	if (sd != NULL)
+		pc->autocast_remove(sd, sd->auto_cast_current.type, sd->auto_cast_current.skill_id,
+				    sd->auto_cast_current.skill_lv);
 
 	return ret;
 }
@@ -1874,7 +1871,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 		return 0; // Attacking will be handled by unit_walk_toxy_timer in this case
 	}
 
-	if( skill->get_state(ud->skill_id) == ST_MOVE_ENABLE ) {
+	if (skill->get_state(skill_id, skill_lv) == ST_MOVE_ENABLE) {
 		if( !unit->can_reach_bl(src, &bl, range + 1, 1, NULL, NULL) )
 			return 0; //Walk-path check failed.
 	} else if( !battle->check_range(src, &bl, range) )
@@ -1895,7 +1892,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	}
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
-	if (sd == NULL || sd->autocast.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
+	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
 		ud->canact_tick  = tick + casttime + 100;
 #if 0
 	if (sd) {
@@ -1926,7 +1923,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 
-	if (sd != NULL && sd->autocast.itemskill_instant_cast && sd->autocast.type == AUTOCAST_ITEM)
+	if (sd != NULL && sd->auto_cast_current.itemskill_instant_cast && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		casttime = 0;
 
 	// in official this is triggered even if no cast time.
@@ -2889,6 +2886,8 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 				aFree(sd->instance);
 				sd->instance = NULL;
 			}
+
+			VECTOR_CLEAR(sd->auto_cast); // Clear auto-cast vector.
 			VECTOR_CLEAR(sd->channels);
 			VECTOR_CLEAR(sd->script_queues);
 			VECTOR_CLEAR(sd->achievement); // Achievement [Smokexyz/Hercules]

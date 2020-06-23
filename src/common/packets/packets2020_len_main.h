@@ -4655,5 +4655,25 @@ packetLen(0x0b75, 1026)
 packetLen(0x0b76, 77)
 #endif
 
+// Packet: 0x0b77
+#if PACKETVER >= 20200506
+packetLen(0x0b77, -1)
+#endif
+
+// Packet: 0x0b78
+#if PACKETVER >= 20200506
+packetLen(0x0b78, -1)
+#endif
+
+// Packet: 0x0b79
+#if PACKETVER >= 20200506
+packetLen(0x0b79, -1)
+#endif
+
+// Packet: 0x0b7a
+#if PACKETVER >= 20200506
+packetLen(0x0b7a, -1)
+#endif
+
 
 #endif /* COMMON_PACKETS2020_LEN_MAIN_H */

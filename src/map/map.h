@@ -329,6 +329,14 @@ enum bl_type {
 
 enum npc_subtype { WARP, SHOP, SCRIPT, CASHSHOP, TOMB };
 
+/** optional flags for script labels, used by the label db */
+enum script_label_flags {
+	/** the label can be called from outside the local scope of the NPC */
+	LABEL_IS_EXTERN   = 0x1,
+	/** the label is a public or private local NPC function */
+	LABEL_IS_USERFUNC = 0x2,
+};
+
 /**
  * Race type IDs.
  *

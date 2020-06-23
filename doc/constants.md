@@ -381,6 +381,7 @@
 
 ### Cell checks
 
+- `cell_gettype`: 0
 - `cell_chkwall`: 1
 - `cell_chkwater`: 2
 - `cell_chkcliff`: 3
@@ -388,6 +389,7 @@
 - `cell_chkreach`: 5
 - `cell_chknopass`: 6
 - `cell_chknoreach`: 7
+- `cell_chkstack`: 8
 - `cell_chknpc`: 9
 - `cell_chkbasilica`: 10
 - `cell_chklandprotector`: 11
@@ -5093,6 +5095,7 @@
 - `MSC_MASTERATTACKED`: 20
 - `MSC_ALCHEMIST`: 21
 - `MSC_SPAWN`: 22
+- `MSC_MAGICATTACKED`: 23
 
 ### monster skill targets
 
@@ -5129,6 +5132,18 @@
 - `PCBLOCK_SITSTAND`: 64
 - `PCBLOCK_COMMANDS`: 128
 - `PCBLOCK_NPC`: 256
+
+### NPC item action constants
+
+- `ITEMENABLEDNPC_NONE`: 0
+- `ITEMENABLEDNPC_EQUIP`: 1
+- `ITEMENABLEDNPC_CONSUME`: 2
+
+### NPC allowed skill use constants
+
+- `SKILLENABLEDNPC_NONE`: 0
+- `SKILLENABLEDNPC_SELF`: 1
+- `SKILLENABLEDNPC_ALL`: 2
 
 ### private airship responds
 

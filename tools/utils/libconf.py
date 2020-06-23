@@ -141,7 +141,9 @@ class IntToken(Token):
         super(IntToken, self).__init__(*args, **kwargs)
         self.is_long = self.text.endswith('L')
         self.is_hex = (self.text[1:2].lower() == 'x')
-        self.value = int(self.text.rstrip('L'), 0)
+        self.is_oct = (self.text[1:2].lower() == 'o')
+        self.is_bin = (self.text[1:2].lower() == 'b')
+        self.value = int(self.text.replace('_', '').rstrip('L'), 0)
 
 
 class BoolToken(Token):
@@ -182,14 +184,18 @@ class Tokenizer:
     token_map = compile_regexes([
         (FltToken,  'float',     r'([-+]?(\d+)?\.\d*([eE][-+]?\d+)?)|'
                                  r'([-+]?(\d+)(\.\d*)?[eE][-+]?\d+)'),
-        (IntToken,  'hex64',     r'0[Xx][0-9A-Fa-f]+(L(L)?)'),
-        (IntToken,  'hex',       r'0[Xx][0-9A-Fa-f]+'),
+        (IntToken,  'hex64',     r'0[Xx][0-9A-Fa-f_]+(L(L)?)'),
+        (IntToken,  'hex',       r'0[Xx][0-9A-Fa-f_]+'),
+        (IntToken,  'oct64',     r'0[Oo][0-7_]+(L(L)?)'),
+        (IntToken,  'oct',       r'0[Oo][0-7_]+'),
+        (IntToken,  'bin64',     r'0[Bb][01_]+(L(L)?)'),
+        (IntToken,  'bin',       r'0[Bb][01_]+'),
         (BoolToken, 'boolean',   r'(?i)(true|false)\b'),
         (StrToken,  'string',    r'"([^"\\]|\\.)*"'),
         (StrToken,  'string',    r'<"(?<=<")([\S\s]*?)(?=">)">'),
         (Token,     'name',      r'[0-9]*[A-Za-z\*][-A-Za-z0-9_\*]*'),
-        (IntToken,  'integer64', r'[-+]?[0-9]+L(L)?'),
-        (IntToken,  'integer',   r'[-+]?[0-9]+'),
+        (IntToken,  'integer64', r'[-+]?[0-9_]+L(L)?'),
+        (IntToken,  'integer',   r'[-+]?[0-9_]+'),
         (Token,     '}',         r'\}'),
         (Token,     '{',         r'\{'),
         (Token,     ')',         r'\)'),
@@ -422,7 +428,8 @@ class Parser:
     def scalar_value(self):
         # This list is ordered so that more common tokens are checked first.
         acceptable = [self.string, self.boolean, self.integer, self.float,
-                      self.hex, self.integer64, self.hex64]
+                      self.hex, self.oct, self.bin, self.integer64, self.hex64,
+                      self.oct64, self.bin64]
         return self._parse_any_of(acceptable)
 
     def value_list_or_empty(self):
@@ -454,6 +461,18 @@ class Parser:
 
     def hex64(self):
         return self._create_value_node('hex64')
+
+    def oct(self):
+        return self._create_value_node('oct')
+
+    def oct64(self):
+        return self._create_value_node('oct64')
+
+    def bin(self):
+        return self._create_value_node('bin')
+
+    def bin64(self):
+        return self._create_value_node('bin64')
 
     def float(self):
         return self._create_value_node('float')

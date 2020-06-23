@@ -103,6 +103,13 @@ enum pc_checkitem_types {
 	PCCHECKITEM_GSTORAGE  = 0x8
 };
 
+/** Bit flags for allowed item actions while interacting with NPC. **/
+enum item_enabled_npc_flags {
+	ITEMENABLEDNPC_NONE    = 0x0, //!< Don't allow any item actions while interacting with NPC.
+	ITEMENABLEDNPC_EQUIP   = 0x1, //!< Allow changing equipment while interacting with NPC.
+	ITEMENABLEDNPC_CONSUME = 0x2, //!< Allow consuming usable items while interacting with NPC.
+};
+
 struct weapon_data {
 	int atkmods[3];
 BEGIN_ZEROED_BLOCK; // all the variables within this block get zero'ed in each call of status_calc_pc
@@ -192,7 +199,8 @@ struct map_session_data {
 	struct status_change sc;
 	struct regen_data regen;
 	struct regen_data_sub sregen, ssregen;
-	struct autocast_data autocast;
+	struct autocast_data auto_cast_current; // Currently processed auto-cast skill.
+	VECTOR_DECL(struct autocast_data) auto_cast; // Auto-cast vector.
 	//NOTE: When deciding to add a flag to state or special_state, take into consideration that state is preserved in
 	//status_calc_pc, while special_state is recalculated in each call. [Skotlex]
 	struct {
@@ -629,10 +637,6 @@ END_ZEROED_BLOCK;
 
 	uint8 lang_id;
 
-	// temporary debugging of bug #3504
-	const char* delunit_prevfile;
-	int delunit_prevline;
-
 	// HatEffect
 	VECTOR_DECL(int) hatEffectId;
 
@@ -679,6 +683,7 @@ END_ZEROED_BLOCK;
 #define pc_istrading(sd)      ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->state.trading )
 #define pc_cant_act(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chat_id != 0 || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend || (sd)->state.refine_ui == 1 || (sd)->state.lapine_ui == 1)
 #define pc_cant_act_except_lapine(sd) ((sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chat_id != 0 || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend || (sd)->state.refine_ui == 1)
+#define pc_cant_act_except_npc(sd) ( (sd)->state.vending != 0 || (sd)->state.buyingstore != 0 || (sd)->chat_id != 0 || ((sd)->sc.opt1 != 0 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading != 0 || (sd)->state.storage_flag != 0 || (sd)->state.prevend != 0 || (sd)->state.refine_ui == 1 || (sd)->state.lapine_ui == 1)
 
 /* equals pc_cant_act except it doesn't check for chat rooms */
 #define pc_cant_act2(sd)       ( (sd)->npc_id || (sd)->state.buyingstore || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend || (sd)->state.refine_ui == 1 || (sd)->state.lapine_ui == 1)
@@ -1038,7 +1043,10 @@ END_ZEROED_BLOCK; /* End */
 	void (*unequipitem_pos) (struct map_session_data *sd, int n, int pos);
 	int (*checkitem) (struct map_session_data *sd);
 	int (*useitem) (struct map_session_data *sd,int n);
-	int (*autocast_clear) (struct map_session_data *sd);
+	void (*autocast_clear_current) (struct map_session_data *sd);
+	void (*autocast_clear) (struct map_session_data *sd);
+	void (*autocast_set_current) (struct map_session_data *sd, int skill_id);
+	void (*autocast_remove) (struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv);
 
 	int (*skillatk_bonus) (struct map_session_data *sd, uint16 skill_id);
 	int (*skillheal_bonus) (struct map_session_data *sd, uint16 skill_id);

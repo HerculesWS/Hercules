@@ -389,7 +389,10 @@ static int npc_event_export(struct npc_data *nd, int i)
 	Assert_ret(i >= 0 && i < nd->u.scr.label_list_num);
 	lname = nd->u.scr.label_list[i].name;
 	pos = nd->u.scr.label_list[i].pos;
-	if ((lname[0] == 'O' || lname[0] == 'o') && (lname[1] == 'N' || lname[1] == 'n')) {
+
+	if ((nd->u.scr.label_list[i].flags & LABEL_IS_EXTERN) != 0
+		&& ((nd->u.scr.label_list[i].flags & LABEL_IS_USERFUNC) == 0
+			|| script->config.functions_as_events)) {
 		struct event_data *ev;
 		struct linkdb_node **label_linkdb = NULL;
 		char buf[EVENT_NAME_LENGTH];
@@ -3054,11 +3057,11 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 		aFree(nd->u.shop.shop_item); /// src check for duplicate shops. [Orcao]
 	} else if (nd->subtype == SCRIPT) {
 		char evname[EVENT_NAME_LENGTH];
-		
+
 		snprintf(evname, ARRAYLENGTH(evname), "%s::OnNPCUnload", nd->exname);
 
 		struct event_data *ev = strdb_get(npc->ev_db, evname);
-		
+
 		if (ev != NULL)
 			script->run_npc(nd->u.scr.script, ev->pos, 0, nd->bl.id); /// Run OnNPCUnload.
 
@@ -3665,6 +3668,7 @@ static void npc_convertlabel_db(struct npc_label_list *label_list, const char *f
 	for( i = 0; i < script->label_count; i++ ) {
 		const char* lname = script->get_str(script->labels[i].key);
 		int lpos = script->labels[i].pos;
+		enum script_label_flags flags = script->labels[i].flags;
 		struct npc_label_list* label;
 		const char *p;
 		size_t len;
@@ -3686,6 +3690,7 @@ static void npc_convertlabel_db(struct npc_label_list *label_list, const char *f
 
 		safestrncpy(label->name, lname, sizeof(label->name));
 		label->pos = lpos;
+		label->flags = flags;
 	}
 }
 
@@ -5099,7 +5104,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		else if (modifier[0] == '\0') {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
-		} else if( !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) ) {
+		} else if ((skill_id = skill->name2id(skill_name)) == 0 || skill->get_unit_id(skill->name2id(skill_name), 1, 0) == 0) {
 			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n",skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
@@ -5606,7 +5611,7 @@ static int npc_reload(void)
 	npc->npc_last_npd = NULL;
 	npc->npc_last_path = NULL;
 	npc->npc_last_ref = NULL;
-	
+
 	const int npc_new_min = npc->npc_id;
 	struct s_mapiterator *iter = mapit_geteachiddb();
 
@@ -5723,8 +5728,10 @@ static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 
 	dbi_destroy(iter);
 
-	if (found) /// Refresh event cache.
+	if (found) { /// Refresh event cache.
+		npc->motd = npc->name2id("HerculesMOTD");
 		npc->read_event_script();
+	}
 
 	return found;
 }

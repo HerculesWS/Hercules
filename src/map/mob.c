@@ -2426,6 +2426,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	nullpo_retr(3, md);
 	m = md->bl.m;
+	Assert_retr(false, m >= 0 && m < map->count);
 	mstatus = &md->status;
 
 	if( md->guardian_data && md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS )
@@ -3758,6 +3759,8 @@ static int mobskill_event(struct mob_data *md, struct block_list *src, int64 tic
 		res = mob->skill_use(md, tick, MSC_CLOSEDATTACKED);
 	else if (flag&BF_LONG && !(flag&BF_MAGIC)) //Long-attacked should not include magic.
 		res = mob->skill_use(md, tick, MSC_LONGRANGEATTACKED);
+	else if ((flag & BF_MAGIC) != 0)
+		res = mob->skill_use(md, tick, MSC_MAGICATTACKED);
 
 	if (res != 0)
 	//Restore previous target only if skill condition failed to trigger. [Skotlex]
@@ -3869,7 +3872,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 			continue;
 
 		/// Normal aggressive mob. Disable skills that cannot help fighting against players. (Those with flags UF_NOMOB and UF_NOPC are specific to always aid players!) [Skotlex]
-		if (flag == 0 && skill->get_unit_id(skill_id, 0) != 0 &&
+		if (flag == 0 && skill->get_unit_id(skill_id, sd->status.skill[idx].lv, 0) != 0 &&
 		    (skill->get_unit_flag(skill_id) & (UF_NOMOB | UF_NOPC)) > 0)
 			continue;
 
@@ -3902,7 +3905,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 				mob_skills[i].state = MSS_IDLE;
 				mob_skills[i].target = MST_AROUND2;
 				mob_skills[i].delay = 60000;
-			} else if (skill->get_unit_target(skill_id) == BCT_ENEMY) { /// Target Enemy.
+			} else if (skill->get_unit_target(skill_id, sd->status.skill[idx].lv) == BCT_ENEMY) { /// Target Enemy.
 				mob_skills[i].state = MSS_ANYTARGET;
 				mob_skills[i].target = MST_TARGET;
 				mob_skills[i].cond1 = MSC_ALWAYS;
@@ -5679,7 +5682,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 
 	i32 = MSC_ALWAYS;
-	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_SPAWN)) {
+	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_MAGICATTACKED)) {
 		ShowWarning("%s: Invalid skill condition %d for skill id %d (%s) in %s %d, defaulting to MSC_ALWAYS.\n",
 			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
 		i32 = MSC_ALWAYS;

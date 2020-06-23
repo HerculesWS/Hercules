@@ -1279,6 +1279,7 @@ static bool pc_authok(struct map_session_data *sd, int login_id2, time_t expirat
 	sd->bg_queue.client_has_bg_data = 0;
 	sd->bg_queue.type = 0;
 
+	VECTOR_INIT(sd->auto_cast); // Initialize auto-cast vector.
 	VECTOR_INIT(sd->channels);
 	VECTOR_INIT(sd->script_queues);
 	VECTOR_INIT(sd->achievement); // Achievements [Smokexyz/Hercules]
@@ -5162,7 +5163,8 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	nullpo_ret(sd);
 	Assert_ret(n >= 0 && n < sd->status.inventorySize);
 
-	if (sd->npc_id || sd->state.workinprogress & 1) {
+	if ((sd->npc_id != 0 && (sd->npc_item_flag & ITEMENABLEDNPC_CONSUME) == 0)
+	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -5171,7 +5173,7 @@ static int pc_useitem(struct map_session_data *sd, int n)
 		return 0;
 	}
 
-	if (battle_config.storage_use_item == 1 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
+	if (battle_config.storage_use_item == 0 && sd->state.storage_flag != STORAGE_FLAG_CLOSED) {
 		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 1475));
 		return 0; // You cannot use this item while storage is open.
 	}
@@ -5333,24 +5335,79 @@ static int pc_useitem(struct map_session_data *sd, int n)
 }
 
 /**
+ * Unsets a character's currently processed auto-cast skill data.
+ *
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear_current(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	sd->auto_cast_current.type = AUTOCAST_NONE;
+	sd->auto_cast_current.skill_id = 0;
+	sd->auto_cast_current.skill_lv = 0;
+	sd->auto_cast_current.itemskill_conditions_checked = false;
+	sd->auto_cast_current.itemskill_check_conditions = true;
+	sd->auto_cast_current.itemskill_instant_cast = false;
+	sd->auto_cast_current.itemskill_cast_on_self = false;
+}
+
+/**
  * Unsets a character's auto-cast related data.
  *
- * @param sd The character's session data.
- * @return 0 if parameter sd is NULL, otherwise 1.
- */
-static int pc_autocast_clear(struct map_session_data *sd)
+ * @param sd The character.
+ *
+ **/
+static void pc_autocast_clear(struct map_session_data *sd)
 {
-	nullpo_ret(sd);
+	nullpo_retv(sd);
 
-	sd->autocast.type = AUTOCAST_NONE;
-	sd->autocast.skill_id = 0;
-	sd->autocast.skill_lv = 0;
-	sd->autocast.itemskill_conditions_checked = false;
-	sd->autocast.itemskill_check_conditions = false;
-	sd->autocast.itemskill_instant_cast = false;
-	sd->autocast.itemskill_cast_on_self = false;
+	pc->autocast_clear_current(sd);
+	VECTOR_TRUNCATE(sd->auto_cast); // Truncate auto-cast vector.
+}
 
-	return 1;
+/**
+ * Sets a character's currently processed auto-cast skill data by comparing the skill ID.
+ *
+ * @param sd The character.
+ * @param skill_id The skill ID to compare.
+ *
+ **/
+static void pc_autocast_set_current(struct map_session_data *sd, int skill_id)
+{
+	nullpo_retv(sd);
+
+	pc->autocast_clear_current(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id) {
+			sd->auto_cast_current = VECTOR_INDEX(sd->auto_cast, i);
+			break;
+		}
+	}
+}
+
+/**
+ * Removes a specific entry from a character's auto-cast vector.
+ *
+ * @param sd The character.
+ * @param type The entry's auto-cast type.
+ * @param skill_id The entry's skill ID.
+ * @param skill_lv The entry's skill level.
+ *
+ **/
+static void pc_autocast_remove(struct map_session_data *sd, enum autocast_type type, int skill_id, int skill_lv)
+{
+	nullpo_retv(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(sd->auto_cast); i++) {
+		if (VECTOR_INDEX(sd->auto_cast, i).type == type && VECTOR_INDEX(sd->auto_cast, i).skill_id == skill_id
+		    && VECTOR_INDEX(sd->auto_cast, i).skill_lv == skill_lv) {
+			VECTOR_ERASE(sd->auto_cast, i);
+			break;
+		}
+	}
 }
 
 /*==========================================
@@ -5856,11 +5913,6 @@ static int pc_setpos(struct map_session_data *sd, unsigned short map_index, int 
 			status_change_end(&sd->bl, SC_PROPERTYWALK, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKING, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
-		}
-
-		for (int i = 0; i < EQI_MAX; i++) {
-			if (sd->equip_index[i] >= 0 && pc->isequip(sd , sd->equip_index[i]) == 0)
-				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE);
 		}
 
 		if ((battle_config.clear_unit_onwarp & BL_PC) != 0)
@@ -12883,7 +12935,10 @@ void pc_defaults(void)
 	pc->unequipitem_pos = pc_unequipitem_pos;
 	pc->checkitem = pc_checkitem;
 	pc->useitem = pc_useitem;
+	pc->autocast_clear_current = pc_autocast_clear_current;
 	pc->autocast_clear = pc_autocast_clear;
+	pc->autocast_set_current = pc_autocast_set_current;
+	pc->autocast_remove = pc_autocast_remove;
 
 	pc->skillatk_bonus = pc_skillatk_bonus;
 	pc->skillheal_bonus = pc_skillheal_bonus;

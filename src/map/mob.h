@@ -321,6 +321,7 @@ enum {
 	MSC_MASTERATTACKED,
 	MSC_ALCHEMIST,
 	MSC_SPAWN,
+	MSC_MAGICATTACKED,
 };
 
 /** Special monster(-name) constants used to assign skills to a group of monsters. **/

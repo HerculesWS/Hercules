@@ -261,11 +261,13 @@ static int map_addblock(struct block_list *bl)
 	pos = x/BLOCK_SIZE+(y/BLOCK_SIZE)*map->list[m].bxs;
 
 	if (bl->type == BL_MOB) {
+		Assert_ret(map->list[m].block_mob != NULL);
 		bl->next = map->list[m].block_mob[pos];
 		bl->prev = &map->bl_head;
 		if (bl->next) bl->next->prev = bl;
 		map->list[m].block_mob[pos] = bl;
 	} else {
+		Assert_ret(map->list[m].block != NULL);
 		bl->next = map->list[m].block[pos];
 		bl->prev = &map->bl_head;
 		if (bl->next) bl->next->prev = bl;
@@ -307,8 +309,10 @@ static int map_delblock(struct block_list *bl)
 	if (bl->prev == &map->bl_head) {
 		//Since the head of the list, update the block_list map of []
 		if (bl->type == BL_MOB) {
+			Assert_ret(map->list[bl->m].block_mob != NULL);
 			map->list[bl->m].block_mob[pos] = bl->next;
 		} else {
+			Assert_ret(map->list[bl->m].block != NULL);
 			map->list[bl->m].block[pos] = bl->next;
 		}
 	} else {
@@ -450,6 +454,12 @@ static int map_count_oncell(int16 m, int16 x, int16 y, int type, int flag)
 	struct block_list *bl;
 	int count = 0;
 
+	Assert_ret(m >= -1);
+	if (m < 0)
+		return 0;
+	Assert_ret(m < map->count);
+	Assert_ret(map->list[m].block != NULL);
+
 	if (x < 0 || y < 0 || (x >= map->list[m].xs) || (y >= map->list[m].ys))
 		return 0;
 
@@ -511,6 +521,12 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
 
 	nullpo_retr(NULL, target);
 	m = target->m;
+
+	Assert_ret(m >= -1);
+	if (m < 0)
+		return 0;
+	Assert_ret(m < map->count);
+	Assert_ret(map->list[m].block != NULL);
 
 	if (x < 0 || y < 0 || (x >= map->list[m].xs) || (y >= map->list[m].ys))
 		return NULL;
@@ -586,8 +602,11 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
 	struct block_list *bl;
 	int blockcount = map->bl_list_count;
 
+	Assert_ret(m >= -1);
 	if (m < 0)
 		return 0;
+	Assert_ret(m < map->count);
+	Assert_ret(map->list[m].block != NULL);
 
 	bsize = map->list[m].bxs * map->list[m].bys;
 	for (i = 0; i < bsize; i++) {
@@ -719,24 +738,28 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 	struct block_list *bl;
 	int found = 0;
 
+	Assert_ret(m >= -1);
 	if (m < 0)
 		return 0;
+	Assert_ret(m < map->count);
+	const struct map_data *const listm = &map->list[m];
+	Assert_ret(listm->xs > 0 && listm->ys > 0);
+	Assert_ret(listm->block != NULL);
+
+	// Limit search area to map size
+	x0 = min(max(x0, 0), map->list[m].xs - 1);
+	y0 = min(max(y0, 0), map->list[m].ys - 1);
+	x1 = min(max(x1, 0), map->list[m].xs - 1);
+	y1 = min(max(y1, 0), map->list[m].ys - 1);
 
 	if (x1 < x0) swap(x0, x1);
 	if (y1 < y0) swap(y0, y1);
-
-	// Limit search area to map size
-	x0 = max(x0, 0);
-	y0 = max(y0, 0);
-	x1 = min(x1, map->list[m].xs - 1);
-	y1 = min(y1, map->list[m].ys - 1);
 
 	{
 		const int x0b = x0 / BLOCK_SIZE;
 		const int x1b = x1 / BLOCK_SIZE;
 		const int y0b = y0 / BLOCK_SIZE;
 		const int y1b = y1 / BLOCK_SIZE;
-		const struct map_data *const listm = &map->list[m];
 		const int bxs0 = listm->bxs;
 
 		// duplication for better performance
@@ -4459,7 +4482,6 @@ static bool inter_config_read_connection(const char *filename, const struct conf
 static bool inter_config_read_database_names(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
-	bool retval = true;
 
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
@@ -4477,16 +4499,14 @@ static bool inter_config_read_database_names(const char *filename, const struct 
 	libconfig->setting_lookup_mutable_string(setting, "npc_barter_data_db", map->npc_barter_data_db, sizeof(map->npc_barter_data_db));
 	libconfig->setting_lookup_mutable_string(setting, "npc_expanded_barter_data_db", map->npc_expanded_barter_data_db, sizeof(map->npc_expanded_barter_data_db));
 
-	if (!mapreg->config_read(filename, setting, imported))
-		retval = false;
-
 	if ((setting = libconfig->lookup(config, "inter_configuration/database_names/registry")) == NULL) {
 		if (imported)
-			return retval;
+			return true;
 		ShowError("inter_config_read: inter_configuration/database_names/registry was not found in %s!\n", filename);
 		return false;
 	}
-	return retval;
+
+	return mapreg->config_read_registry(filename, setting, imported);
 }
 
 /*=======================================
@@ -5268,7 +5288,7 @@ static bool map_zone_mf_cache(int m, char *flag, char *params)
 			}
 		}
 
-		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+		if (modifier[0] == '\0' || (skill_id = skill->name2id(skill_name)) == 0 || skill->get_unit_id(skill->name2id(skill_name), 1, 0) == 0 || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX) {
 			;/* we don't mind it, the server will take care of it next. */
 		} else {
 			int idx = map->list[m].unit_count;
