@@ -2861,6 +2861,9 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 		return npc->selllist_sub(sd, item_list, nd->master_nd);
 	}
 
+	if (z + sd->status.zeny > MAX_ZENY && nd->master_nd == NULL)
+		return 1;
+
 	// delete items
 	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
@@ -2878,9 +2881,6 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
 
 	}
-
-	if (z + sd->status.zeny > MAX_ZENY && nd->master_nd == NULL)
-		return 1;
 
 	if (z > MAX_ZENY)
 		z = MAX_ZENY;
