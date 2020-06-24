@@ -2798,88 +2798,81 @@ static int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_l
 	return 0;
 }
 
-/// Player item selling to npc shop.
-///
-/// @param item_list 'n' pairs <index,amount>
-/// @return result code for clif->parse_NpcSellListSend
+/**
+ * Processes a character's request to sell items to a NPC shop.
+ *
+ * @param sd The character who wants to sell the items.
+ * @param item_list The list of items and respective amounts which should be sold.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
 static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 {
-	int64 z;
-	int i,skill_t, skill_idx = skill->get_index(MC_OVERCHARGE);
-	struct npc_data *nd;
-	bool duplicates[MAX_INVENTORY] = { 0 };
-
 	nullpo_retr(1, sd);
 	nullpo_retr(1, item_list);
 
-	if( ( nd = npc->checknear(sd, map->id2bl(sd->npc_shopid)) ) == NULL ) {
-		return 1;
-	}
+	struct npc_data *nd = npc->checknear(sd, map->id2bl(sd->npc_shopid));
 
-	if( nd->subtype != SHOP ) {
-		if (!(nd->subtype == SCRIPT && nd->u.scr.shop && (nd->u.scr.shop->type == NST_ZENY || nd->u.scr.shop->type == NST_MARKET)))
+	if (nd == NULL)
+		return 1;
+
+	if (nd->subtype != SHOP) {
+		if (nd->subtype != SCRIPT || nd->u.scr.shop == NULL || (nd->u.scr.shop->type != NST_ZENY && nd->u.scr.shop->type != NST_MARKET))
 			return 1;
 	}
-
-	z = 0;
 
 	if (sd->status.zeny >= MAX_ZENY && nd->master_nd == NULL)
 		return 1;
 
-	// verify the sell list
-	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+	bool duplicates[MAX_INVENTORY] = { false };
+	int64 z = 0;
+
+	// Verify the sell list.
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); i++) {
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
-		int nameid, value, idx = entry->id;
+		int idx = entry->id;
 
-		if (idx >= sd->status.inventorySize || idx < 0 || entry->amount < 0) {
+		if (idx >= sd->status.inventorySize || idx < 0 || entry->amount < 0)
 			return 1;
-		}
 
-		if (duplicates[idx]) {
-			// Sanity check. The client sends each inventory index at most once [Haru]
+		if (duplicates[idx]) // Sanity check. The client sends each inventory index at most once. [Haru]
 			return 1;
-		}
+
 		duplicates[idx] = true;
 
-		nameid = sd->status.inventory[idx].nameid;
+		int nameid = sd->status.inventory[idx].nameid;
 
-		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < entry->amount) {
+		if (nameid == 0 || sd->inventory_data[idx] == NULL || sd->status.inventory[idx].amount < entry->amount)
 			return 1;
-		}
 
-		if (nd->master_nd) {
-			// Script-controlled shops decide by themselves, what can be sold and at what price.
+		if (nd->master_nd != NULL) // Script-controlled shops decide by themselves, what can be sold and at what price.
 			continue;
-		}
 
-		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
+		int value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
 		z += (int64)value * entry->amount;
 	}
 
-	if( nd->master_nd ) { // Script-controlled shops
+	if (nd->master_nd != NULL) // Script-controlled shops.
 		return npc->selllist_sub(sd, item_list, nd->master_nd);
-	}
 
-	if (z + sd->status.zeny > MAX_ZENY && nd->master_nd == NULL)
+	if (z + sd->status.zeny > MAX_ZENY)
 		return 1;
 
-	// delete items
-	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+	// Delete items.
+	for (int i = 0; i < VECTOR_LENGTH(*item_list); i++) {
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 		int idx = entry->id;
 
 		if (sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET) {
-			if (pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0) {
+			if (pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0)
 				intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
-			}
 		}
 
-		// Achievements [Smokexyz/Hercules]
+		// Achievements. [Smokexyz/Hercules]
 		achievement->validate_item_sell(sd, sd->status.inventory[idx].nameid, entry->amount);
 
 		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
-
 	}
 
 	if (z > MAX_ZENY)
@@ -2887,15 +2880,20 @@ static int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 
 	pc->getzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
 
-	// custom merchant shop exp bonus
-	if( battle_config.shop_exp > 0 && z > 0 && ( skill_t = pc->checkskill2(sd,skill_idx) ) > 0) {
-		if( sd->status.skill[skill_idx].flag >= SKILL_FLAG_REPLACED_LV_0 )
+	int skill_t;
+	int skill_idx = skill->get_index(MC_OVERCHARGE);
+
+	// Custom merchant shop exp bonus.
+	if (battle_config.shop_exp > 0 && z > 0 && (skill_t = pc->checkskill2(sd, skill_idx)) > 0) {
+		if (sd->status.skill[skill_idx].flag >= SKILL_FLAG_REPLACED_LV_0)
 			skill_t = sd->status.skill[skill_idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
-		if( skill_t > 0 ) {
+		if (skill_t > 0) {
 			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+
 			if (z < 1)
 				z = 1;
+
 			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
 	}
