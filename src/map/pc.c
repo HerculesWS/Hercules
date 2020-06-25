@@ -5190,6 +5190,15 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	// Store information for later use before it is lost (via pc->delitem) [Paradox924X]
 	nameid = sd->inventory_data[n]->nameid;
 
+	if (nameid == ITEMID_MEGAPHONE && (sd->state.workinprogress & 2) != 0) {
+#if PACKETVER >= 20110308
+		clif->msgtable(sd, MSG_BUSY);
+#else
+		clif->messagecolor_self(sd->fd, COLOR_WHITE, msg_sd(sd, 48));
+#endif
+		return 0;
+	}
+
 	if (nameid != ITEMID_NAUTHIZ && sd->sc.opt1 > 0 && sd->sc.opt1 != OPT1_STONEWAIT && sd->sc.opt1 != OPT1_BURNING)
 		return 0;
 

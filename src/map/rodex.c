@@ -575,6 +575,7 @@ static void rodex_clean(struct map_session_data *sd, int8 flag)
 	if (flag == 0)
 		VECTOR_CLEAR(sd->rodex.messages);
 
+	sd->state.workinprogress &= ~2;
 	memset(&sd->rodex.tmp, 0x0, sizeof(sd->rodex.tmp));
 }
 
