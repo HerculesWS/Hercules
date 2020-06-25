@@ -11956,7 +11956,7 @@ static void clif_parse_TakeItem(int fd, struct map_session_data *sd)
 			) )
 			break;
 
-		if (pc_cant_act(sd))
+		if (pc_cant_act_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0))
 			break;
 
 		if (!pc->takeitem(sd, fitem))
