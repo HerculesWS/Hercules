@@ -11653,8 +11653,10 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action
 				return;
 			}
 
-			if (pc_cant_act(sd) || pc_issit(sd) || sd->sc.option&OPTION_HIDE || pc_isvending(sd))
+			if (pc_cant_act_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0)
+			    || pc_issit(sd) || (sd->sc.option & OPTION_HIDE) != 0 || pc_isvending(sd)) {
 				return;
+			}
 
 			if (sd->sc.option & OPTION_COSTUME)
 				return;
