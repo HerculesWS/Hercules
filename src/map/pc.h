@@ -224,6 +224,7 @@ struct map_session_data {
 		unsigned int size :2; // for tiny/large types
 		unsigned int night :1; //Holds whether or not the player currently has the SI_NIGHT effect on. [Skotlex]
 		unsigned int using_fake_npc :1;
+		unsigned int using_megaphone : 1; //!< Whether the character is currently using a Megephone (ID=12221).
 		unsigned int rewarp :1; //Signals that a player should warp as soon as he is done loading a map. [Skotlex]
 		unsigned int killer : 1;
 		unsigned int killable : 1;

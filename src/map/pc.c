@@ -5320,6 +5320,9 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	// Update item use time.
 	sd->canuseitem_tick = tick + battle_config.item_use_interval;
 
+	if (nameid == ITEMID_MEGAPHONE)
+		sd->state.using_megaphone = 1;
+
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
 
