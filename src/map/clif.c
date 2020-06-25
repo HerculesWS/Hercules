@@ -2431,23 +2431,26 @@ static void clif_scriptinput(struct map_session_data *sd, int npcid)
 ///   - close inputstr window
 static void clif_scriptinputstr(struct map_session_data *sd, int npcid)
 {
-	int fd;
-	struct block_list *bl = NULL;
-
 	nullpo_retv(sd);
 
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m!=sd->bl.m ||
-						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
-						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
+	struct block_list *bl = map->id2bl(npcid);
+	int x1 = sd->bl.x - AREA_SIZE - 1;
+	int x2 = sd->bl.x + AREA_SIZE + 1;
+	int y1 = sd->bl.y - AREA_SIZE - 1;
+	int y2 = sd->bl.y + AREA_SIZE + 1;
+	bool out_of_sight = (bl != NULL && (bl->m != sd->bl.m || bl->x < x1 || bl->x > x2 || bl->y < y1 || bl->y > y2));
+
+	if (sd->state.using_fake_npc == 0 && sd->state.using_megaphone == 0
+	    && (npcid == npc->fake_nd->bl.id || out_of_sight)) {
 		clif->sendfakenpc(sd, npcid);
+	}
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd, packet_len(0x1d4));
-	WFIFOW(fd,0)=0x1d4;
-	WFIFOL(fd,2)=npcid;
-	WFIFOSET(fd,packet_len(0x1d4));
+	WFIFOHEAD(sd->fd, packet_len(0x1d4));
+	WFIFOW(sd->fd, 0) = 0x1d4;
+	WFIFOL(sd->fd, 2) = (sd->state.using_megaphone == 0) ? npcid : 0;
+	WFIFOSET(sd->fd, packet_len(0x1d4));
 }
 
 /// Marks a position on client's minimap (ZC_COMPASS).
@@ -13334,7 +13337,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 	if (len < 9)
 		return;
 
-	npcid = RFIFOL(fd, 4);
+	npcid = (sd->state.using_megaphone == 0) ? RFIFOL(fd, 4) : sd->npc_id;
 	message = RFIFOP(fd, 8);
 
 	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
