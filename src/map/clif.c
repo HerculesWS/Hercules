@@ -13330,7 +13330,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd) __att
 /// 01d5 <packet len>.W <npc id>.L <string>.?B
 static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 {
-	if ((sd->state.trading != 0 && sd->state.using_megaphone == 0) || pc_isdead(sd) || pc_isvending(sd))
+	if (((sd->state.trading != 0 || pc_isvending(sd)) && sd->state.using_megaphone == 0) || pc_isdead(sd))
 		return;
 
 	int len = RFIFOW(fd, 2);
@@ -14597,7 +14597,7 @@ static void clif_parse_CloseVending(int fd, struct map_session_data *sd) __attri
 /// 012e
 static void clif_parse_CloseVending(int fd, struct map_session_data *sd)
 {
-	if (sd->npc_id || sd->state.buyingstore || sd->state.trading)
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.buyingstore != 0 || sd->state.trading != 0)
 		return;
 
 	vending->close(sd);
@@ -14608,12 +14608,9 @@ static void clif_parse_VendingListReq(int fd, struct map_session_data *sd) __att
 /// 0130 <account id>.L
 static void clif_parse_VendingListReq(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isdead(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isdead(sd))
 		return;
 
-	if( sd->npc_id ) {// using an NPC
-		return;
-	}
 	vending->list(sd,RFIFOL(fd,2));
 }
 
@@ -14675,8 +14672,10 @@ static void clif_parse_OpenVending(int fd, struct map_session_data *sd) __attrib
 ///     1 = open
 static void clif_parse_OpenVending(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isdead(sd) || sd->state.vending || sd->state.buyingstore)
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0)
+	    || pc_isdead(sd) || sd->state.vending != 0 || sd->state.buyingstore != 0) {
 		return;
+	}
 
 	int len = (int)RFIFOW(fd, 2) - 85;
 
