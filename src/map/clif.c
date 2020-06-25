@@ -13702,7 +13702,7 @@ static void clif_parse_CreateParty(int fd, struct map_session_data *sd) __attrib
 /// 01e8 <party name>.24B <item pickup rule>.B <item share rule>.B (CZ_MAKE_GROUP2)
 static void clif_parse_CreateParty(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	char name[NAME_LENGTH];
@@ -13725,7 +13725,7 @@ static void clif_parse_CreateParty(int fd, struct map_session_data *sd)
 static void clif_parse_CreateParty2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_CreateParty2(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	char name[NAME_LENGTH];
@@ -13753,7 +13753,7 @@ static void clif_parse_PartyInvite(int fd, struct map_session_data *sd) __attrib
 /// 02c4 <char name>.24B (CZ_PARTY_JOIN_REQ)
 static void clif_parse_PartyInvite(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	struct map_session_data *t_sd;
@@ -13777,7 +13777,7 @@ static void clif_parse_PartyInvite(int fd, struct map_session_data *sd)
 static void clif_parse_PartyInvite2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	struct map_session_data *t_sd;
@@ -13810,7 +13810,7 @@ static void clif_parse_ReplyPartyInvite(int fd, struct map_session_data *sd) __a
 ///     1 = accept
 static void clif_parse_ReplyPartyInvite(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd)) {
 		party->reply_invite(sd, RFIFOL(fd, 2), 0);
 		return;
 	}
@@ -13821,7 +13821,7 @@ static void clif_parse_ReplyPartyInvite(int fd, struct map_session_data *sd)
 static void clif_parse_ReplyPartyInvite2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_ReplyPartyInvite2(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd)) {
 		party->reply_invite(sd, RFIFOL(fd, 2), 0);
 		return;
 	}
@@ -13834,7 +13834,7 @@ static void clif_parse_LeaveParty(int fd, struct map_session_data *sd) __attribu
 /// 0100
 static void clif_parse_LeaveParty(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (map->list[sd->bl.m].flag.partylock) {
@@ -13850,7 +13850,7 @@ static void clif_parse_RemovePartyMember(int fd, struct map_session_data *sd) __
 /// 0103 <account id>.L <char name>.24B
 static void clif_parse_RemovePartyMember(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (map->list[sd->bl.m].flag.partylock) {
@@ -13867,7 +13867,7 @@ static void clif_parse_PartyChangeOption(int fd, struct map_session_data *sd) __
 /// 07d7 <exp share rule>.L <item pickup rule>.B <item share rule>.B (CZ_GROUPINFO_CHANGE_V2)
 static void clif_parse_PartyChangeOption(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	struct party_data *p;
@@ -13922,7 +13922,7 @@ static void clif_parse_PartyChangeLeader(int fd, struct map_session_data *sd) __
 /// 07da <account id>.L
 static void clif_parse_PartyChangeLeader(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	party->changeleader(sd, map->id2sd(RFIFOL(fd,2)));
