@@ -13937,7 +13937,7 @@ static void clif_parse_PartyBookingRegisterReq(int fd, struct map_session_data *
 static void clif_parse_PartyBookingRegisterReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd,2);
@@ -13982,7 +13982,7 @@ static void clif_parse_PartyBookingSearchReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyBookingSearchReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd,2);
@@ -14036,7 +14036,7 @@ static void clif_parse_PartyBookingDeleteReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyBookingDeleteReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (party->booking_delete(sd))
@@ -14075,7 +14075,7 @@ static void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short job[PARTY_BOOKING_JOBS];
@@ -14094,7 +14094,7 @@ static void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data *sd
 static void clif_PartyBookingInsertNotify(struct map_session_data *sd, struct party_booking_ad_info *pb_ad)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int i;
@@ -14165,7 +14165,7 @@ static void clif_parse_PartyRecruitRegisterReq(int fd, struct map_session_data *
 static void clif_parse_PartyRecruitRegisterReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd, 2);
@@ -14239,7 +14239,7 @@ static void clif_parse_PartyRecruitSearchReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyRecruitSearchReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd, 2);
@@ -14259,7 +14259,7 @@ static void clif_parse_PartyRecruitDeleteReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyRecruitDeleteReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (party->booking_delete(sd))
@@ -14298,7 +14298,7 @@ static void clif_parse_PartyRecruitUpdateReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyRecruitUpdateReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	const char *notice = RFIFOP(fd, 2);
@@ -14374,7 +14374,7 @@ static void clif_parse_PartyBookingAddFilteringList(int fd, struct map_session_d
 static void clif_parse_PartyBookingAddFilteringList(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int index = RFIFOL(fd, 2);
@@ -14391,7 +14391,7 @@ static void clif_parse_PartyBookingSubFilteringList(int fd, struct map_session_d
 static void clif_parse_PartyBookingSubFilteringList(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int gid = RFIFOL(fd, 2);
@@ -14408,7 +14408,7 @@ static void clif_parse_PartyBookingReqVolunteer(int fd, struct map_session_data 
 static void clif_parse_PartyBookingReqVolunteer(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int index = RFIFOL(fd, 2);
@@ -14487,7 +14487,7 @@ static void clif_parse_PartyBookingRefuseVolunteer(int fd, struct map_session_da
 static void clif_parse_PartyBookingRefuseVolunteer(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	unsigned int aid = RFIFOL(fd, 2);
@@ -14519,7 +14519,7 @@ static void clif_parse_PartyBookingCancelVolunteer(int fd, struct map_session_da
 static void clif_parse_PartyBookingCancelVolunteer(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int index = RFIFOL(fd, 2);
