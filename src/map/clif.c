@@ -12548,8 +12548,10 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd) __attr
 static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 {
 	int flag = 0;
-	if (pc_istrading(sd) || sd->state.prevend)
+
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.prevend != 0)
 		return;
+
 	if (!pc_iscarton(sd))
 		return;
 	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
@@ -12563,8 +12565,9 @@ static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd) __at
 /// 0127 <index>.W <amount>.L
 static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || sd->state.prevend)
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.prevend != 0)
 		return;
+
 	if (!pc_iscarton(sd))
 		return;
 	pc->getitemfromcart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4));
