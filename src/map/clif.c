@@ -13330,7 +13330,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd) __att
 /// 01d5 <packet len>.W <npc id>.L <string>.?B
 static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 {
-	if (((sd->state.trading != 0 || pc_isvending(sd)) && sd->state.using_megaphone == 0) || pc_isdead(sd))
+	if ((sd->state.trading != 0 || pc_isvending(sd) || pc_isdead(sd)) && sd->state.using_megaphone == 0)
 		return;
 
 	int len = RFIFOW(fd, 2);
