@@ -682,6 +682,7 @@ END_ZEROED_BLOCK;
 #define pc_issit(sd)          ( (sd)->vd.dead_sit == 2 )
 #define pc_isidle(sd)         ( (sd)->chat_id != 0 || (sd)->state.vending || (sd)->state.buyingstore || DIFF_TICK(sockt->last_tick, (sd)->idletime) >= battle->bc->idle_no_share )
 #define pc_istrading(sd)      ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->state.trading )
+#define pc_istrading_except_npc(sd) ( (sd)->state.vending != 0 || (sd)->state.buyingstore != 0 || (sd)->state.trading != 0 )
 #define pc_cant_act(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chat_id != 0 || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend || (sd)->state.refine_ui == 1 || (sd)->state.lapine_ui == 1)
 #define pc_cant_act_except_lapine(sd) ((sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chat_id != 0 || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend || (sd)->state.refine_ui == 1)
 #define pc_cant_act_except_npc(sd) ( (sd)->state.vending != 0 || (sd)->state.buyingstore != 0 || (sd)->chat_id != 0 || ((sd)->sc.opt1 != 0 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading != 0 || (sd)->state.storage_flag != 0 || (sd)->state.prevend != 0 || (sd)->state.refine_ui == 1 || (sd)->state.lapine_ui == 1)
