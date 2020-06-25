@@ -11982,7 +11982,7 @@ static void clif_parse_DropItem(int fd, struct map_session_data *sd)
 		if (pc_isdead(sd))
 			break;
 
-		if ( pc_cant_act2(sd) || sd->state.vending )
+		if (pc_cant_act_except_npc_chat(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0))
 			break;
 
 		if (sd->sc.count && (
