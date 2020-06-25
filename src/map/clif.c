@@ -12454,7 +12454,7 @@ static void clif_parse_TradeRequest(int fd, struct map_session_data *sd)
 
 	struct map_session_data *t_sd = map->id2sd(RFIFOL(fd, 2));
 
-	if (sd->chat_id == 0 && pc_cant_act(sd))
+	if (pc_cant_act_except_npc_chat(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0))
 		return; //You can trade while in a chatroom.
 
 	// @noask [LuzZza]
@@ -13330,7 +13330,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd) __att
 /// 01d5 <packet len>.W <npc id>.L <string>.?B
 static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if ((sd->state.trading != 0 && sd->state.using_megaphone == 0) || pc_isdead(sd) || pc_isvending(sd))
 		return;
 
 	int len = RFIFOW(fd, 2);

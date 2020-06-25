@@ -63,7 +63,7 @@ static void trade_traderequest(struct map_session_data *sd, struct map_session_d
 		return;
 	}
 
-	if (target_sd->npc_id) {
+	if (target_sd->npc_id != 0 && target_sd->state.using_megaphone == 0) {
 		//Trade fails if you are using an NPC.
 		clif->tradestart(sd, 2);
 		return;
@@ -166,9 +166,10 @@ static void trade_tradeack(struct map_session_data *sd, int type)
 	}
 
 	//Check if you can start trade.
-	if (sd->npc_id || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.storage_flag != STORAGE_FLAG_CLOSED
-	 || tsd->npc_id || tsd->state.vending || tsd->state.prevend || tsd->state.buyingstore || tsd->state.storage_flag != STORAGE_FLAG_CLOSED
-	) {
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.vending != 0 || sd->state.prevend != 0
+	    || sd->state.buyingstore != 0 || sd->state.storage_flag != STORAGE_FLAG_CLOSED
+	    || (tsd->npc_id != 0 && tsd->state.using_megaphone == 0) || tsd->state.vending != 0 || tsd->state.prevend != 0
+	    || tsd->state.buyingstore != 0 || tsd->state.storage_flag != STORAGE_FLAG_CLOSED) {
 		//Fail
 		clif->tradestart(sd, 2);
 		clif->tradestart(tsd, 2);
