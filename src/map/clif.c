@@ -16762,7 +16762,7 @@ static void clif_parse_AutoRevive(int fd, struct map_session_data *sd) __attribu
 /// 0292
 static void clif_parse_AutoRevive(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (!pc_isdead(sd))
