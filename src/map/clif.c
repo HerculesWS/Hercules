@@ -12632,7 +12632,7 @@ static void clif_parse_ChangeCart(int fd, struct map_session_data *sd)
 	if (pc->checkskill(sd, MC_CHANGECART) == 0)
 		return;
 
-	if (sd->npc_id || sd->state.workinprogress & 1) {
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0) || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -12852,7 +12852,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 	bool allow_self_skill = ((tmp & INF_SELF_SKILL) != 0 && (skill->get_nk(skill_id) & NK_NO_DAMAGE) != 0);
 	allow_self_skill = (allow_self_skill && battle_config.skill_enabled_npc == SKILLENABLEDNPC_SELF);
 
-	if ((sd->npc_id != 0 && !allow_self_skill && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0 && !allow_self_skill && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
 	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
@@ -12999,7 +12999,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		return;
 	}
 
-	if ((sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
 	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
@@ -13121,7 +13121,7 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 
 	// It is possible to use teleport with the storage window open issue:8027
 	if ((pc_cant_act_except_npc(sd) && sd->state.storage_flag == STORAGE_FLAG_CLOSED && skill_id != AL_TELEPORT)
-	    || (sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)) {
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)) {
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -13164,7 +13164,8 @@ static void clif_parse_ProduceMix(int fd, struct map_session_data *sd)
 		default:
 			return;
 	}
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13195,7 +13196,8 @@ static void clif_parse_Cooking(int fd, struct map_session_data *sd)
 	if (type == 6 && sd->menuskill_id != GN_MIX_COOKING && sd->menuskill_id != GN_S_PHARMACY)
 		return;
 
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13215,7 +13217,8 @@ static void clif_parse_RepairItem(int fd, struct map_session_data *sd)
 
 	if (sd->menuskill_id != BS_REPAIRWEAPON)
 		return;
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13234,7 +13237,8 @@ static void clif_parse_WeaponRefine(int fd, struct map_session_data *sd)
 
 	if (sd->menuskill_id != WS_WEAPONREFINE) //Packet exploit?
 		return;
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13406,7 +13410,8 @@ static void clif_parse_SelectArrow(int fd, struct map_session_data *sd) __attrib
 static void clif_parse_SelectArrow(int fd, struct map_session_data *sd)
 {
 	int itemId;
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -20019,7 +20024,7 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 	if (sd->menuskill_id != SC_AUTOSHADOWSPELL)
 		return;
 
-	if (pc_istrading(sd) || sd->state.prevend) {
+	if (pc_istrading_except_npc(sd) || sd->state.prevend != 0 || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
