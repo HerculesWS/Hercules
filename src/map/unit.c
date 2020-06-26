@@ -1014,14 +1014,15 @@ static int unit_push(struct block_list *bl, enum unit_dir dir, int count, bool u
 	int delta_y = pushto_y - bl->y;
 
 	if (delta_x != 0 || delta_y != 0) {
-		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, delta_x, delta_y, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
+		enum bl_type receiver_type = (bl->type == BL_PC) ? BL_ALL : BL_PC;
+		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, delta_x, delta_y, receiver_type, bl);
 
 		if (su != NULL)
 			skill->unit_move_unit_group(su->group, bl->m, delta_x, delta_y);
 		else
 			map->moveblock(bl, pushto_x, pushto_y, timer->gettick());
 
-		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -delta_x, -delta_y, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
+		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -delta_x, -delta_y, receiver_type, bl);
 
 		if (update)
 			clif->blown(bl);
