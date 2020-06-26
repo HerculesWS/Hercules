@@ -1005,7 +1005,7 @@ static int unit_push(struct block_list *bl, enum unit_dir dir, int count, bool u
 	int pushto_x = result >> 16;
 	int pushto_y = result & 0xffff;
 	if (sd != NULL) {
-		unit->stop_stepaction(bl); //Stop stepaction when knocked back
+		unit->stop_stepaction(bl);
 		sd->ud.to_x = pushto_x;
 		sd->ud.to_y = pushto_y;
 	}
@@ -1030,7 +1030,7 @@ static int unit_push(struct block_list *bl, enum unit_dir dir, int count, bool u
 			npc->handle_touch_events(sd, bl->x, bl->y, false);
 	}
 
-	return path->distance(delta_x, delta_y); // return amount of knocked back cells
+	return path->distance(delta_x, delta_y);
 }
 
 //Warps a unit/ud to a given map/position.
