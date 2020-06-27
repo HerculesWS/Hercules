@@ -67,6 +67,7 @@ static int inter_party_check_lv(struct party_data *p)
 	if (p->party.exp == 1 && inter_party->check_exp_share(p) == 0) {
 		p->party.exp = 0;
 		mapif->party_optionchanged(0, &p->party, 0, 0);
+		inter_party->tosql(&p->party, PS_BASIC, 0);
 		return 0;
 	}
 
@@ -577,9 +578,9 @@ static bool inter_party_leave(int party_id, int account_id, int char_id)
 	if (p->party.member[i].online == 1)
 		p->party.member[i].online = 0;
 
+	inter_party->tosql(&p->party, PS_DELMEMBER, i);
 	memset(&p->party.member[i], 0, sizeof(struct party_member));
 	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
-	inter_party->tosql(&p->party, PS_DELMEMBER, i);
 
 	if (inter_party->check_empty(p) == 0)
 		mapif->party_info(-1, &p->party, 0);
