@@ -887,6 +887,12 @@ static void guild_member_joined(struct map_session_data *sd)
 			channel->join(g->channel, sd, "", true);
 		}
 
+		for (int j = 0; j < g->instances; j++) {
+			if (g->instance[j] >= 0) {
+				clif->instance_join(sd->fd, g->instance[j]);
+				break;
+			}
+		}
 	}
 }
 
@@ -938,6 +944,13 @@ static int guild_member_added(int guild_id, int account_id, int char_id, int fla
 	// Makes the character join their respective guild's channel for #ally chat
 	if (channel->config->ally && channel->config->ally_autojoin) {
 		channel->join(g->channel, sd, "", true);
+	}
+
+	for (int i = 0; i < g->instances; i++) {
+		if (g->instance[i] >= 0) {
+			clif->instance_join(sd->fd, g->instance[i]);
+			break;
+		}
 	}
 
 	return 0;

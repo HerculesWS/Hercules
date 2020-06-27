@@ -9664,12 +9664,18 @@ For examples of usage, see /doc/sample/npc_rodex.txt
 //=====================================
 ---------------------------------------
 
-*instance_create("<instance name>", <owner id>{, <optional owner_type>})
+*instance_create("<instance_name>", <owner_id>{, <owner_type>})
 
-Create an instance using the name "<instance name>" for the <owner_id> of
-owner_type (when not provided, defaults to IOT_PARTY). Most instance_*
+Creates an instance using the name "<instance_name>" for the <owner_id> of
+<owner_type> (when not provided, defaults to IOT_PARTY). Most instance_*
 commands are used in conjunction with this command and depend on the
 ID this command returns.
+
+Valid <owner_type> values:
+- IOT_NONE  (0) - <owner_id> can be any arbitrary number.
+- IOT_CHAR  (1) - <owner_id> is account ID.
+- IOT_PARTY (2) - <owner_id> is party ID.
+- IOT_GUILD (3) - <owner_id> is guild ID.
 
 Example:
 	// Store the Party ID of the invoking character.
@@ -9681,11 +9687,9 @@ Example:
 		// ...
 	} else if (.@id == -2) { // Invalid Party ID
 		// ...
-	} else if (.@id == -3) { // No free instances (MAX_INSTANCE exceeded)
-		// ...
 	} else if (.@id == -4) { // Already exists
 		// ...
-	} else (.@id < 0) { // Unspecified error while queuing instance.
+	} else if (.@id < 0) { // Unspecified error while queuing instance.
 		// ...
 	}
 
