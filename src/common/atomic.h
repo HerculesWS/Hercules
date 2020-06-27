@@ -103,8 +103,9 @@ forceinline volatile int64 InterlockedExchange64(volatile int64 *target, int64 v
 
 // The __sync functions are available on x86 or ARMv6+
 #if !defined(__x86_64__) && !defined(__i386__) \
+	&& !defined(__ppc64__) && ! defined(__powerpc64__) \
 	&& ( !defined(__ARM_ARCH_VERSION__) || __ARM_ARCH_VERSION__ < 6 )
-//#error Your Target Platfrom is not supported
+#error Target platform currently not supported
 #endif
 
 static forceinline int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment){
