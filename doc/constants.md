@@ -5154,6 +5154,12 @@
 - `P_AIRSHIP_ITEM_NOT_ENOUGH`: 2
 - `P_AIRSHIP_ITEM_INVALID`: 5
 
+### player allowed actions when dead
+
+- `PCALLOWACTION_NONE`: 0
+- `PCALLOWACTION_TRADE`: 1
+- `PCALLOWACTION_CHAT`: 2
+
 ### questinfo types
 
 - `QINFO_JOB`: 0
