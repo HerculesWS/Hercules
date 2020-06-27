@@ -17766,13 +17766,20 @@ static int skill_get_new_group_id(void)
 
 static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int count, uint16 skill_id, uint16 skill_lv, int unit_id, int limit, int interval)
 {
-	struct unit_data* ud = unit->bl2ud( src );
 	struct skill_unit_group* group;
 	int i;
 
 	if(!(skill_id && skill_lv)) return 0;
 
 	nullpo_retr(NULL, src);
+
+	struct unit_data *ud;
+
+	if (src->type == BL_NPC)
+		ud = unit->bl2ud2(src);
+	else
+		ud = unit->bl2ud(src);
+
 	nullpo_retr(NULL, ud);
 
 	// find a free spot to store the new unit group
