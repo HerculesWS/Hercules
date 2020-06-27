@@ -370,6 +370,41 @@ static int skill_get_spiritball(int skill_id, int skill_lv)
 }
 
 /**
+ * Gets the index of the first required item for a skill at given level.
+ *
+ * @param skill_id The skill's ID.
+ * @param skill_lv The skill's level.
+ * @return The required item's index. Defaults to INDEX_NOT_FOUND (-1) in case of error or if no appropriate index was found.
+ *
+ **/
+static int skill_get_item_index(int skill_id, int skill_lv)
+{
+	if (skill_id == 0)
+		return INDEX_NOT_FOUND;
+
+	Assert_retr(INDEX_NOT_FOUND, skill_lv > 0);
+
+	int idx = skill->get_index(skill_id);
+
+	Assert_retr(INDEX_NOT_FOUND, idx != 0);
+
+	int item_index = INDEX_NOT_FOUND;
+	int level_index = skill_get_lvl_idx(skill_lv);
+
+	for (int i = 0; i < MAX_SKILL_ITEM_REQUIRE; i++) {
+		if (skill->dbs->db[idx].req_items.item[i].id == 0)
+			continue;
+
+		if (skill->dbs->db[idx].req_items.item[i].amount[level_index] != -1) {
+			item_index = i;
+			break;
+		}
+	}
+
+	return item_index;
+}
+
+/**
  * Gets a skill's required item's ID by the skill's ID and the item's index.
  *
  * @param skill_id The skill's ID.
@@ -7937,7 +7972,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				}
 				if( sd ) {
 					int bonus = 100, potion = min(500+skill_lv,505);
-					int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
+					int item_idx = skill->get_item_index(skill_id, skill_lv);
+
+					if (item_idx == INDEX_NOT_FOUND) {
+						clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+						map->freeblock_unlock();
+						return 1;
+					}
+
 					int item_id = skill->get_itemid(skill_id, item_idx);
 					int inventory_idx = pc->search_inventory(sd, item_id);
 					if (inventory_idx == INDEX_NOT_FOUND || item_id <= 0) {
@@ -11797,7 +11839,13 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		// Slim Pitcher [Celest]
 		case CR_SLIMPITCHER:
 			if (sd) {
-				int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
+				int item_idx = skill->get_item_index(skill_id, skill_lv);
+
+				if (item_idx == INDEX_NOT_FOUND) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+					return 1;
+				}
+
 				int item_id = skill->get_itemid(skill_id, item_idx);
 				int inventory_idx = pc->search_inventory(sd, item_id);
 				int bonus;
@@ -11830,7 +11878,11 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 					                   skill->castend_nodamage_id);
 				}
 			} else {
-				int item_idx = (skill_lv - 1) % MAX_SKILL_ITEM_REQUIRE;
+				int item_idx = skill->get_item_index(skill_id, skill_lv);
+
+				if (item_idx == INDEX_NOT_FOUND)
+					return 1;
+
 				int item_id = skill->get_itemid(skill_id, item_idx);
 				struct item_data *item = itemdb->search(item_id);
 				int bonus;
@@ -23944,6 +23996,7 @@ void skill_defaults(void)
 	skill->get_sp_rate = skill_get_sp_rate;
 	skill->get_state = skill_get_state;
 	skill->get_spiritball = skill_get_spiritball;
+	skill->get_item_index = skill_get_item_index;
 	skill->get_itemid = skill_get_itemid;
 	skill->get_itemqty = skill_get_itemqty;
 	skill->get_item_any_flag = skill_get_item_any_flag;
