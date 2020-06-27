@@ -2963,6 +2963,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->get_sp_rate, HP_skill_get_sp_rate) },
 	{ HP_POP(skill->get_state, HP_skill_get_state) },
 	{ HP_POP(skill->get_spiritball, HP_skill_get_spiritball) },
+	{ HP_POP(skill->get_item_index, HP_skill_get_item_index) },
 	{ HP_POP(skill->get_itemid, HP_skill_get_itemid) },
 	{ HP_POP(skill->get_itemqty, HP_skill_get_itemqty) },
 	{ HP_POP(skill->get_item_any_flag, HP_skill_get_item_any_flag) },

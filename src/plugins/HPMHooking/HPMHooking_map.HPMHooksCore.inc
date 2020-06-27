@@ -5788,6 +5788,8 @@ struct {
 	struct HPMHookPoint *HP_skill_get_state_post;
 	struct HPMHookPoint *HP_skill_get_spiritball_pre;
 	struct HPMHookPoint *HP_skill_get_spiritball_post;
+	struct HPMHookPoint *HP_skill_get_item_index_pre;
+	struct HPMHookPoint *HP_skill_get_item_index_post;
 	struct HPMHookPoint *HP_skill_get_itemid_pre;
 	struct HPMHookPoint *HP_skill_get_itemid_post;
 	struct HPMHookPoint *HP_skill_get_itemqty_pre;
@@ -12819,6 +12821,8 @@ struct {
 	int HP_skill_get_state_post;
 	int HP_skill_get_spiritball_pre;
 	int HP_skill_get_spiritball_post;
+	int HP_skill_get_item_index_pre;
+	int HP_skill_get_item_index_post;
 	int HP_skill_get_itemid_pre;
 	int HP_skill_get_itemid_post;
 	int HP_skill_get_itemqty_pre;

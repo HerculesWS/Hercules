@@ -7264,6 +7264,8 @@ typedef int (*HPMHOOK_pre_skill_get_state) (int *skill_id, int *skill_lv);
 typedef int (*HPMHOOK_post_skill_get_state) (int retVal___, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_get_spiritball) (int *skill_id, int *skill_lv);
 typedef int (*HPMHOOK_post_skill_get_spiritball) (int retVal___, int skill_id, int skill_lv);
+typedef int (*HPMHOOK_pre_skill_get_item_index) (int *skill_id, int *skill_lv);
+typedef int (*HPMHOOK_post_skill_get_item_index) (int retVal___, int skill_id, int skill_lv);
 typedef int (*HPMHOOK_pre_skill_get_itemid) (int *skill_id, int *item_idx);
 typedef int (*HPMHOOK_post_skill_get_itemid) (int retVal___, int skill_id, int item_idx);
 typedef int (*HPMHOOK_pre_skill_get_itemqty) (int *skill_id, int *item_idx, int *skill_lv);
