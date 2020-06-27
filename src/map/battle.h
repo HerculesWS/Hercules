@@ -609,6 +609,7 @@ struct Battle_Config {
 	int hit_max;
 
 	int autoloot_adjust;
+	int allowed_actions_when_dead;
 };
 
 /* criteria for battle_config.idletime_critera */

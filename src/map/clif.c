@@ -12308,7 +12308,7 @@ static void clif_parse_CreateChatRoom(int fd, struct map_session_data *sd) __att
 ///     1 = public
 static void clif_parse_CreateChatRoom(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
 	int len = (int)RFIFOW(fd, 2) - 15;
@@ -12356,7 +12356,7 @@ static void clif_parse_ChatAddMember(int fd, struct map_session_data *sd) __attr
 /// 00d9 <chat ID>.L <passwd>.8B
 static void clif_parse_ChatAddMember(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
 	int chatid = RFIFOL(fd,2);
@@ -12373,7 +12373,7 @@ static void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data *sd)
 ///     1 = public
 static void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
 	int len = (int)RFIFOW(fd, 2) - 15;
@@ -12408,7 +12408,7 @@ static void clif_parse_ChangeChatOwner(int fd, struct map_session_data *sd) __at
 ///     1 = normal
 static void clif_parse_ChangeChatOwner(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
 	chat->change_owner(sd, RFIFOP(fd,6)); // non null terminated
@@ -12419,7 +12419,7 @@ static void clif_parse_KickFromChat(int fd, struct map_session_data *sd) __attri
 /// 00e2 <name>.24B
 static void clif_parse_KickFromChat(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
 	chat->kick(sd, RFIFOP(fd,2)); // non null terminated
@@ -12430,7 +12430,7 @@ static void clif_parse_ChatLeave(int fd, struct map_session_data *sd) __attribut
 /// 00e3
 static void clif_parse_ChatLeave(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_CHAT) == 0) || pc_isvending(sd))
 		return;
 
 	chat->leave(sd, false);
@@ -12457,7 +12457,7 @@ static void clif_parse_TradeRequest(int fd, struct map_session_data *sd) __attri
 /// 00e4 <account id>.L
 static void clif_parse_TradeRequest(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_TRADE) == 0) || pc_isvending(sd))
 		return;
 
 	struct map_session_data *t_sd = map->id2sd(RFIFOL(fd, 2));
@@ -12487,7 +12487,7 @@ static void clif_parse_TradeAck(int fd, struct map_session_data *sd) __attribute
 ///     4 = rejected
 static void clif_parse_TradeAck(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_TRADE) == 0) || pc_isvending(sd))
 		return;
 
 	trade->ack(sd,RFIFOB(fd,2));
@@ -12498,7 +12498,7 @@ static void clif_parse_TradeAddItem(int fd, struct map_session_data *sd) __attri
 /// 00e8 <index>.W <amount>.L
 static void clif_parse_TradeAddItem(int fd, struct map_session_data *sd)
 {
-	if (!sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if (sd->state.trading == 0 || (pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_TRADE) == 0) || pc_isvending(sd))
 		return;
 
 	short index = RFIFOW(fd,2);
@@ -12515,8 +12515,9 @@ static void clif_parse_TradeOk(int fd, struct map_session_data *sd) __attribute_
 /// 00eb
 static void clif_parse_TradeOk(int fd, struct map_session_data *sd)
 {
-	if (pc_isdead(sd) || pc_isvending(sd))
+	if ((pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_TRADE) == 0) || pc_isvending(sd))
 		return;
+
 	trade->ok(sd);
 }
 
@@ -12525,7 +12526,7 @@ static void clif_parse_TradeCancel(int fd, struct map_session_data *sd) __attrib
 /// 00ed
 static void clif_parse_TradeCancel(int fd, struct map_session_data *sd)
 {
-	if (pc_isdead(sd) || pc_isvending(sd))
+	if ((pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_TRADE) == 0) || pc_isvending(sd))
 		return;
 
 	trade->cancel(sd);
@@ -12536,7 +12537,7 @@ static void clif_parse_TradeCommit(int fd, struct map_session_data *sd) __attrib
 /// 00ef
 static void clif_parse_TradeCommit(int fd, struct map_session_data *sd)
 {
-	if (pc_isdead(sd) || pc_isvending(sd))
+	if ((pc_isdead(sd) && (battle_config.allowed_actions_when_dead & PCALLOWACTION_TRADE) == 0) || pc_isvending(sd))
 		return;
 
 	trade->commit(sd);
