@@ -29508,6 +29508,32 @@ void HP_clif_pOpenUIRequest(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_type) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_open_ui_send_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, enum zc_ui_types *ui_type);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_open_ui_send_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_open_ui_send_pre[hIndex].func;
+			preHookFunc(&sd, &ui_type);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.open_ui_send(sd, ui_type);
+	}
+	if (HPMHooks.count.HP_clif_open_ui_send_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, enum zc_ui_types ui_type);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_open_ui_send_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_open_ui_send_post[hIndex].func;
+			postHookFunc(sd, ui_type);
+		}
+	}
+	return;
+}
 void HP_clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_open_ui_pre > 0) {
