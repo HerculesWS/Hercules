@@ -6540,6 +6540,8 @@ typedef int (*HPMHOOK_pre_pet_hungry_val) (struct pet_data **pd);
 typedef int (*HPMHOOK_post_pet_hungry_val) (int retVal___, struct pet_data *pd);
 typedef void (*HPMHOOK_pre_pet_set_hunger) (struct pet_data **pd, int *value);
 typedef void (*HPMHOOK_post_pet_set_hunger) (struct pet_data *pd, int value);
+typedef int (*HPMHOOK_pre_pet_get_card4_value) (int *rename_flag, int *intimacy);
+typedef int (*HPMHOOK_post_pet_get_card4_value) (int retVal___, int rename_flag, int intimacy);
 typedef void (*HPMHOOK_pre_pet_set_intimate) (struct pet_data **pd, int *value);
 typedef void (*HPMHOOK_post_pet_set_intimate) (struct pet_data *pd, int value);
 typedef int (*HPMHOOK_pre_pet_create_egg) (struct map_session_data **sd, int *item_id);
@@ -6564,6 +6566,8 @@ typedef int (*HPMHOOK_pre_pet_return_egg) (struct map_session_data **sd, struct 
 typedef int (*HPMHOOK_post_pet_return_egg) (int retVal___, struct map_session_data *sd, struct pet_data *pd);
 typedef int (*HPMHOOK_pre_pet_data_init) (struct map_session_data **sd, struct s_pet **petinfo);
 typedef int (*HPMHOOK_post_pet_data_init) (int retVal___, struct map_session_data *sd, struct s_pet *petinfo);
+typedef int (*HPMHOOK_pre_pet_spawn) (struct map_session_data **sd, bool *birth_process);
+typedef int (*HPMHOOK_post_pet_spawn) (int retVal___, struct map_session_data *sd, bool birth_process);
 typedef int (*HPMHOOK_pre_pet_birth_process) (struct map_session_data **sd, struct s_pet **petinfo);
 typedef int (*HPMHOOK_post_pet_birth_process) (int retVal___, struct map_session_data *sd, struct s_pet *petinfo);
 typedef int (*HPMHOOK_pre_pet_recv_petdata) (int *account_id, struct s_pet **p, int *flag);

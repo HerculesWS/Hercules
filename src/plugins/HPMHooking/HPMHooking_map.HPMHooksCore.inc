@@ -5116,6 +5116,8 @@ struct {
 	struct HPMHookPoint *HP_pet_hungry_val_post;
 	struct HPMHookPoint *HP_pet_set_hunger_pre;
 	struct HPMHookPoint *HP_pet_set_hunger_post;
+	struct HPMHookPoint *HP_pet_get_card4_value_pre;
+	struct HPMHookPoint *HP_pet_get_card4_value_post;
 	struct HPMHookPoint *HP_pet_set_intimate_pre;
 	struct HPMHookPoint *HP_pet_set_intimate_post;
 	struct HPMHookPoint *HP_pet_create_egg_pre;
@@ -5140,6 +5142,8 @@ struct {
 	struct HPMHookPoint *HP_pet_return_egg_post;
 	struct HPMHookPoint *HP_pet_data_init_pre;
 	struct HPMHookPoint *HP_pet_data_init_post;
+	struct HPMHookPoint *HP_pet_spawn_pre;
+	struct HPMHookPoint *HP_pet_spawn_post;
 	struct HPMHookPoint *HP_pet_birth_process_pre;
 	struct HPMHookPoint *HP_pet_birth_process_post;
 	struct HPMHookPoint *HP_pet_recv_petdata_pre;
@@ -12149,6 +12153,8 @@ struct {
 	int HP_pet_hungry_val_post;
 	int HP_pet_set_hunger_pre;
 	int HP_pet_set_hunger_post;
+	int HP_pet_get_card4_value_pre;
+	int HP_pet_get_card4_value_post;
 	int HP_pet_set_intimate_pre;
 	int HP_pet_set_intimate_post;
 	int HP_pet_create_egg_pre;
@@ -12173,6 +12179,8 @@ struct {
 	int HP_pet_return_egg_post;
 	int HP_pet_data_init_pre;
 	int HP_pet_data_init_post;
+	int HP_pet_spawn_pre;
+	int HP_pet_spawn_post;
 	int HP_pet_birth_process_pre;
 	int HP_pet_birth_process_post;
 	int HP_pet_recv_petdata_pre;

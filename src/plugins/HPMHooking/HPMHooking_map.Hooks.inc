@@ -68086,6 +68086,33 @@ void HP_pet_set_hunger(struct pet_data *pd, int value) {
 	}
 	return;
 }
+int HP_pet_get_card4_value(int rename_flag, int intimacy) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_pet_get_card4_value_pre > 0) {
+		int (*preHookFunc) (int *rename_flag, int *intimacy);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_get_card4_value_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pet_get_card4_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&rename_flag, &intimacy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pet.get_card4_value(rename_flag, intimacy);
+	}
+	if (HPMHooks.count.HP_pet_get_card4_value_post > 0) {
+		int (*postHookFunc) (int retVal___, int rename_flag, int intimacy);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_get_card4_value_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pet_get_card4_value_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, rename_flag, intimacy);
+		}
+	}
+	return retVal___;
+}
 void HP_pet_set_intimate(struct pet_data *pd, int value) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_pet_set_intimate_pre > 0) {
@@ -68405,6 +68432,33 @@ int HP_pet_data_init(struct map_session_data *sd, struct s_pet *petinfo) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_data_init_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_pet_data_init_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, petinfo);
+		}
+	}
+	return retVal___;
+}
+int HP_pet_spawn(struct map_session_data *sd, bool birth_process) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_pet_spawn_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd, bool *birth_process);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_spawn_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_pet_spawn_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, &birth_process);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pet.spawn(sd, birth_process);
+	}
+	if (HPMHooks.count.HP_pet_spawn_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, bool birth_process);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_pet_spawn_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_pet_spawn_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, birth_process);
 		}
 	}
 	return retVal___;
