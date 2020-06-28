@@ -1596,10 +1596,33 @@ static bool clif_spawn(struct block_list *bl)
 				clif->specialeffect(bl,421,AREA);
 			if (sd->bg_id != 0 && map->list[sd->bl.m].flag.battleground)
 				clif->sendbgemblem_area(sd);
-			for (i = 0; i < sd->sc_display_count; i++) {
-				clif->sc_continue(&sd->bl, sd->bl.id, AREA, status->get_sc_icon(sd->sc_display[i]->type), sd->sc_display[i]->val1, sd->sc_display[i]->val2, sd->sc_display[i]->val3);
 
+			struct status_change *sc = status->get_sc(bl);
+
+			if (sd->sc_display_count > 0 && sc != NULL) {
+				for (i = 0; i < sd->sc_display_count; i++) {
+					enum sc_type type = sd->sc_display[i]->type;
+
+					if (sc->data[type] == NULL)
+						continue;
+
+					int tick = 0;
+					int tid = sc->data[type]->timer;
+					const struct TimerData *td = (tid > 0) ? timer->get(tid) : NULL;
+
+					if (td != NULL)
+						tick = DIFF_TICK32(td->tick, timer->gettick());
+
+					int sc_icon = status->get_sc_icon(type);
+					int sc_types = status->get_sc_relevant_bl_types(type);
+					int val1 = sd->sc_display[i]->val1;
+					int val2 = sd->sc_display[i]->val2;
+					int val3 = sd->sc_display[i]->val3;
+
+					clif->status_change(&sd->bl, sc_icon, sc_types, 1, tick, val1, val2, val3);
+				}
 			}
+
 			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 				clif->spiritcharm(sd);
 			if (sd->status.look.robe != 0)
