@@ -1911,6 +1911,7 @@ static void map_reqnickdb(struct map_session_data  *sd, int charid)
 	}
 	// not in cache, request it
 	CREATE(req, struct charid_request, 1);
+	req->charid = sd->status.char_id;
 	req->next = p->requests;
 	p->requests = req;
 	chrif->searchcharid(charid);
