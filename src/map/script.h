@@ -703,7 +703,7 @@ struct script_state {
 	int bk_npcid;
 	unsigned freeloop : 1;// used by buildin_freeloop
 	unsigned op2ref : 1;// used by op_2
-	unsigned npc_item_flag : 1;
+	unsigned npc_item_flag : 2;
 	unsigned int id;
 };
 
