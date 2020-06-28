@@ -10629,6 +10629,9 @@ static void clif_parse_WantToConnection(int fd, struct map_session_data *sd)
 static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 {
+	if (sd->state.using_megaphone != 0)
+		sd->state.using_megaphone = 0;
+
 	if (sd->bl.prev != NULL)
 		return;
 
