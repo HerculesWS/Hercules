@@ -5163,7 +5163,7 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	nullpo_ret(sd);
 	Assert_ret(n >= 0 && n < sd->status.inventorySize);
 
-	if ((sd->npc_id != 0 && (sd->npc_item_flag & ITEMENABLEDNPC_CONSUME) == 0)
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0 && (sd->npc_item_flag & ITEMENABLEDNPC_CONSUME) == 0)
 	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
@@ -5189,6 +5189,16 @@ static int pc_useitem(struct map_session_data *sd, int n)
 
 	// Store information for later use before it is lost (via pc->delitem) [Paradox924X]
 	nameid = sd->inventory_data[n]->nameid;
+
+	if (nameid == ITEMID_MEGAPHONE && ((sd->state.workinprogress & 2) != 0 || sd->state.using_megaphone != 0
+					   || sd->npc_id != 0)) {
+#if PACKETVER >= 20110308
+		clif->msgtable(sd, MSG_BUSY);
+#else
+		clif->messagecolor_self(sd->fd, COLOR_WHITE, msg_sd(sd, 48));
+#endif
+		return 0;
+	}
 
 	if (nameid != ITEMID_NAUTHIZ && sd->sc.opt1 > 0 && sd->sc.opt1 != OPT1_STONEWAIT && sd->sc.opt1 != OPT1_BURNING)
 		return 0;
@@ -5319,6 +5329,9 @@ static int pc_useitem(struct map_session_data *sd, int n)
 
 	// Update item use time.
 	sd->canuseitem_tick = tick + battle_config.item_use_interval;
+
+	if (nameid == ITEMID_MEGAPHONE)
+		sd->state.using_megaphone = 1;
 
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
@@ -8171,7 +8184,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 			duel->reject(sd->duel_invite, sd);
 	}
 
-	if (sd->npc_id != 0 && sd->st != NULL && sd->st->state != RUN)
+	if (sd->npc_id != 0 && sd->state.using_megaphone == 0 && sd->st != NULL && sd->st->state != RUN)
 		npc->event_dequeue(sd);
 
 	pc_setglobalreg(sd, script->add_variable("PC_DIE_COUNTER"), sd->die_counter + 1);
@@ -8194,7 +8207,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 	npc->script_event(sd, NPCE_DIE);
 
 	// Clear anything NPC-related if character died while interacting with one.
-	if ((sd->npc_id != 0 || sd->npc_shopid != 0) && sd->state.dialog != 0) {
+	if (((sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->npc_shopid != 0) && sd->state.dialog != 0) {
 		if (sd->state.using_fake_npc != 0) {
 			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;

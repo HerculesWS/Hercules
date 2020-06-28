@@ -12574,6 +12574,8 @@ static BUILDIN(loudhailer)
 
 	clif->broadcast(&sd->bl, mes_formatted, (int)len_formatted, BC_MEGAPHONE, ALL_CLIENT);
 
+	sd->state.using_megaphone = 0;
+
 	return true;
 }
 

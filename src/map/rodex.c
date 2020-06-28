@@ -231,7 +231,7 @@ static int rodex_send_mail(struct map_session_data *sd, const char *receiver_nam
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, body);
 	nullpo_retr(RODEX_SEND_MAIL_FATAL_ERROR, title);
 
-	if (!rodex->isenabled() || sd->npc_id > 0) {
+	if (!rodex->isenabled() || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		rodex->clean(sd, 1);
 		return RODEX_SEND_MAIL_FATAL_ERROR;
 	}
@@ -575,6 +575,7 @@ static void rodex_clean(struct map_session_data *sd, int8 flag)
 	if (flag == 0)
 		VECTOR_CLEAR(sd->rodex.messages);
 
+	sd->state.workinprogress &= ~2;
 	memset(&sd->rodex.tmp, 0x0, sizeof(sd->rodex.tmp));
 }
 

@@ -2431,23 +2431,26 @@ static void clif_scriptinput(struct map_session_data *sd, int npcid)
 ///   - close inputstr window
 static void clif_scriptinputstr(struct map_session_data *sd, int npcid)
 {
-	int fd;
-	struct block_list *bl = NULL;
-
 	nullpo_retv(sd);
 
-	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = map->id2bl(npcid)) != NULL && (bl->m!=sd->bl.m ||
-						bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
-						bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
+	struct block_list *bl = map->id2bl(npcid);
+	int x1 = sd->bl.x - AREA_SIZE - 1;
+	int x2 = sd->bl.x + AREA_SIZE + 1;
+	int y1 = sd->bl.y - AREA_SIZE - 1;
+	int y2 = sd->bl.y + AREA_SIZE + 1;
+	bool out_of_sight = (bl != NULL && (bl->m != sd->bl.m || bl->x < x1 || bl->x > x2 || bl->y < y1 || bl->y > y2));
+
+	if (sd->state.using_fake_npc == 0 && sd->state.using_megaphone == 0
+	    && (npcid == npc->fake_nd->bl.id || out_of_sight)) {
 		clif->sendfakenpc(sd, npcid);
+	}
 
 	pc->update_idle_time(sd, BCIDLE_SCRIPT);
 
-	fd=sd->fd;
-	WFIFOHEAD(fd, packet_len(0x1d4));
-	WFIFOW(fd,0)=0x1d4;
-	WFIFOL(fd,2)=npcid;
-	WFIFOSET(fd,packet_len(0x1d4));
+	WFIFOHEAD(sd->fd, packet_len(0x1d4));
+	WFIFOW(sd->fd, 0) = 0x1d4;
+	WFIFOL(sd->fd, 2) = (sd->state.using_megaphone == 0) ? npcid : 0;
+	WFIFOSET(sd->fd, packet_len(0x1d4));
 }
 
 /// Marks a position on client's minimap (ZC_COMPASS).
@@ -10626,6 +10629,9 @@ static void clif_parse_WantToConnection(int fd, struct map_session_data *sd)
 static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 {
+	if (sd->state.using_megaphone != 0)
+		sd->state.using_megaphone = 0;
+
 	if (sd->bl.prev != NULL)
 		return;
 
@@ -11298,7 +11304,7 @@ static void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 		; //You CAN walk on this OPT1 value.
 	/*else if( sd->progressbar.npc_id )
 		clif->progressbar_abort(sd);*/
-	else if (pc_cant_act(sd) || pc_isvending(sd))
+	else if (pc_cant_act_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if(sd->sc.data[SC_RUN] || sd->sc.data[SC_WUGDASH])
@@ -11660,8 +11666,10 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action
 				return;
 			}
 
-			if (pc_cant_act(sd) || pc_issit(sd) || sd->sc.option&OPTION_HIDE || pc_isvending(sd))
+			if (pc_cant_act_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0)
+			    || pc_issit(sd) || (sd->sc.option & OPTION_HIDE) != 0 || pc_isvending(sd)) {
 				return;
+			}
 
 			if (sd->sc.option & OPTION_COSTUME)
 				return;
@@ -11961,7 +11969,7 @@ static void clif_parse_TakeItem(int fd, struct map_session_data *sd)
 			) )
 			break;
 
-		if (pc_cant_act(sd))
+		if (pc_cant_act_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0))
 			break;
 
 		if (!pc->takeitem(sd, fitem))
@@ -11987,7 +11995,7 @@ static void clif_parse_DropItem(int fd, struct map_session_data *sd)
 		if (pc_isdead(sd))
 			break;
 
-		if ( pc_cant_act2(sd) || sd->state.vending )
+		if (pc_cant_act_except_npc_chat(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0))
 			break;
 
 		if (sd->sc.count && (
@@ -12060,7 +12068,7 @@ static void clif_parse_EquipItem(int fd, struct map_session_data *sd)
 		return; //Out of bounds check.
 
 	if( sd->npc_id ) {
-		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0)
+		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0 && sd->state.using_megaphone == 0)
 			return;
 	} else if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->sc.opt1)
 		; //You can equip/unequip stuff while storage is open/under status changes
@@ -12105,7 +12113,7 @@ static void clif_parse_UnequipItem(int fd, struct map_session_data *sd)
 	}
 
 	if( sd->npc_id ) {
-		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0)
+		if ((sd->npc_item_flag & ITEMENABLEDNPC_EQUIP) == 0 && sd->state.using_megaphone == 0)
 			return;
 	} else if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->sc.opt1)
 		; //You can equip/unequip stuff while storage is open/under status changes
@@ -12459,7 +12467,7 @@ static void clif_parse_TradeRequest(int fd, struct map_session_data *sd)
 
 	struct map_session_data *t_sd = map->id2sd(RFIFOL(fd, 2));
 
-	if (sd->chat_id == 0 && pc_cant_act(sd))
+	if (pc_cant_act_except_npc_chat(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0))
 		return; //You can trade while in a chatroom.
 
 	// @noask [LuzZza]
@@ -12554,8 +12562,10 @@ static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd) __attr
 static void clif_parse_PutItemToCart(int fd, struct map_session_data *sd)
 {
 	int flag = 0;
-	if (pc_istrading(sd) || sd->state.prevend)
+
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.prevend != 0)
 		return;
+
 	if (!pc_iscarton(sd))
 		return;
 	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
@@ -12569,8 +12579,9 @@ static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd) __at
 /// 0127 <index>.W <amount>.L
 static void clif_parse_GetItemFromCart(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || sd->state.prevend)
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.prevend != 0)
 		return;
+
 	if (!pc_iscarton(sd))
 		return;
 	pc->getitemfromcart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4));
@@ -12640,7 +12651,7 @@ static void clif_parse_ChangeCart(int fd, struct map_session_data *sd)
 	if (pc->checkskill(sd, MC_CHANGECART) == 0)
 		return;
 
-	if (sd->npc_id || sd->state.workinprogress & 1) {
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0) || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
 #else
@@ -12860,7 +12871,7 @@ static void clif_useSkillToIdReal(int fd, struct map_session_data *sd, int skill
 	bool allow_self_skill = ((tmp & INF_SELF_SKILL) != 0 && (skill->get_nk(skill_id) & NK_NO_DAMAGE) != 0);
 	allow_self_skill = (allow_self_skill && battle_config.skill_enabled_npc == SKILLENABLEDNPC_SELF);
 
-	if ((sd->npc_id != 0 && !allow_self_skill && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0 && !allow_self_skill && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
 	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
@@ -13007,7 +13018,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 		return;
 	}
 
-	if ((sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)
 	    || (sd->state.workinprogress & 1) != 0) {
 #if PACKETVER >= 20110308
 		clif->msgtable(sd, MSG_BUSY);
@@ -13129,7 +13140,7 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 
 	// It is possible to use teleport with the storage window open issue:8027
 	if ((pc_cant_act_except_npc(sd) && sd->state.storage_flag == STORAGE_FLAG_CLOSED && skill_id != AL_TELEPORT)
-	    || (sd->npc_id != 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)) {
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0 && battle_config.skill_enabled_npc != SKILLENABLEDNPC_ALL)) {
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -13172,7 +13183,8 @@ static void clif_parse_ProduceMix(int fd, struct map_session_data *sd)
 		default:
 			return;
 	}
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13203,7 +13215,8 @@ static void clif_parse_Cooking(int fd, struct map_session_data *sd)
 	if (type == 6 && sd->menuskill_id != GN_MIX_COOKING && sd->menuskill_id != GN_S_PHARMACY)
 		return;
 
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13223,7 +13236,8 @@ static void clif_parse_RepairItem(int fd, struct map_session_data *sd)
 
 	if (sd->menuskill_id != BS_REPAIRWEAPON)
 		return;
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13242,7 +13256,8 @@ static void clif_parse_WeaponRefine(int fd, struct map_session_data *sd)
 
 	if (sd->menuskill_id != WS_WEAPONREFINE) //Packet exploit?
 		return;
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13329,7 +13344,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd) __att
 /// 01d5 <packet len>.W <npc id>.L <string>.?B
 static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 {
-	if (sd->state.trading || pc_isdead(sd) || pc_isvending(sd))
+	if ((sd->state.trading != 0 || pc_isvending(sd) || pc_isdead(sd)) && sd->state.using_megaphone == 0)
 		return;
 
 	int len = RFIFOW(fd, 2);
@@ -13345,7 +13360,7 @@ static void clif_parse_NpcStringInput(int fd, struct map_session_data *sd)
 	if (len < 9)
 		return;
 
-	npcid = RFIFOL(fd, 4);
+	npcid = (sd->state.using_megaphone == 0) ? RFIFOL(fd, 4) : sd->npc_id;
 	message = RFIFOP(fd, 8);
 
 	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
@@ -13414,7 +13429,8 @@ static void clif_parse_SelectArrow(int fd, struct map_session_data *sd) __attrib
 static void clif_parse_SelectArrow(int fd, struct map_session_data *sd)
 {
 	int itemId;
-	if (pc_istrading(sd) || pc_isdead(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || pc_isdead(sd) || pc_isvending(sd)
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		//Make it fail to avoid shop exploits where you sell something different than you see.
 		clif->skill_fail(sd, sd->ud.skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 		clif_menuskill_clear(sd);
@@ -13700,7 +13716,7 @@ static void clif_parse_CreateParty(int fd, struct map_session_data *sd) __attrib
 /// 01e8 <party name>.24B <item pickup rule>.B <item share rule>.B (CZ_MAKE_GROUP2)
 static void clif_parse_CreateParty(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	char name[NAME_LENGTH];
@@ -13723,7 +13739,7 @@ static void clif_parse_CreateParty(int fd, struct map_session_data *sd)
 static void clif_parse_CreateParty2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_CreateParty2(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	char name[NAME_LENGTH];
@@ -13751,7 +13767,7 @@ static void clif_parse_PartyInvite(int fd, struct map_session_data *sd) __attrib
 /// 02c4 <char name>.24B (CZ_PARTY_JOIN_REQ)
 static void clif_parse_PartyInvite(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	struct map_session_data *t_sd;
@@ -13775,7 +13791,7 @@ static void clif_parse_PartyInvite(int fd, struct map_session_data *sd)
 static void clif_parse_PartyInvite2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	struct map_session_data *t_sd;
@@ -13808,7 +13824,7 @@ static void clif_parse_ReplyPartyInvite(int fd, struct map_session_data *sd) __a
 ///     1 = accept
 static void clif_parse_ReplyPartyInvite(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd)) {
 		party->reply_invite(sd, RFIFOL(fd, 2), 0);
 		return;
 	}
@@ -13819,7 +13835,7 @@ static void clif_parse_ReplyPartyInvite(int fd, struct map_session_data *sd)
 static void clif_parse_ReplyPartyInvite2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_ReplyPartyInvite2(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd)) {
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd)) {
 		party->reply_invite(sd, RFIFOL(fd, 2), 0);
 		return;
 	}
@@ -13832,7 +13848,7 @@ static void clif_parse_LeaveParty(int fd, struct map_session_data *sd) __attribu
 /// 0100
 static void clif_parse_LeaveParty(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (map->list[sd->bl.m].flag.partylock) {
@@ -13848,7 +13864,7 @@ static void clif_parse_RemovePartyMember(int fd, struct map_session_data *sd) __
 /// 0103 <account id>.L <char name>.24B
 static void clif_parse_RemovePartyMember(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (map->list[sd->bl.m].flag.partylock) {
@@ -13865,7 +13881,7 @@ static void clif_parse_PartyChangeOption(int fd, struct map_session_data *sd) __
 /// 07d7 <exp share rule>.L <item pickup rule>.B <item share rule>.B (CZ_GROUPINFO_CHANGE_V2)
 static void clif_parse_PartyChangeOption(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	struct party_data *p;
@@ -13920,7 +13936,7 @@ static void clif_parse_PartyChangeLeader(int fd, struct map_session_data *sd) __
 /// 07da <account id>.L
 static void clif_parse_PartyChangeLeader(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	party->changeleader(sd, map->id2sd(RFIFOL(fd,2)));
@@ -13935,7 +13951,7 @@ static void clif_parse_PartyBookingRegisterReq(int fd, struct map_session_data *
 static void clif_parse_PartyBookingRegisterReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd,2);
@@ -13980,7 +13996,7 @@ static void clif_parse_PartyBookingSearchReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyBookingSearchReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd,2);
@@ -14034,7 +14050,7 @@ static void clif_parse_PartyBookingDeleteReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyBookingDeleteReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (party->booking_delete(sd))
@@ -14073,7 +14089,7 @@ static void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data *sd)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short job[PARTY_BOOKING_JOBS];
@@ -14092,7 +14108,7 @@ static void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data *sd
 static void clif_PartyBookingInsertNotify(struct map_session_data *sd, struct party_booking_ad_info *pb_ad)
 {
 #ifndef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int i;
@@ -14163,7 +14179,7 @@ static void clif_parse_PartyRecruitRegisterReq(int fd, struct map_session_data *
 static void clif_parse_PartyRecruitRegisterReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd, 2);
@@ -14237,7 +14253,7 @@ static void clif_parse_PartyRecruitSearchReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyRecruitSearchReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	short level = RFIFOW(fd, 2);
@@ -14257,7 +14273,7 @@ static void clif_parse_PartyRecruitDeleteReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyRecruitDeleteReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (party->booking_delete(sd))
@@ -14296,7 +14312,7 @@ static void clif_parse_PartyRecruitUpdateReq(int fd, struct map_session_data *sd
 static void clif_parse_PartyRecruitUpdateReq(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	const char *notice = RFIFOP(fd, 2);
@@ -14372,7 +14388,7 @@ static void clif_parse_PartyBookingAddFilteringList(int fd, struct map_session_d
 static void clif_parse_PartyBookingAddFilteringList(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int index = RFIFOL(fd, 2);
@@ -14389,7 +14405,7 @@ static void clif_parse_PartyBookingSubFilteringList(int fd, struct map_session_d
 static void clif_parse_PartyBookingSubFilteringList(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int gid = RFIFOL(fd, 2);
@@ -14406,7 +14422,7 @@ static void clif_parse_PartyBookingReqVolunteer(int fd, struct map_session_data 
 static void clif_parse_PartyBookingReqVolunteer(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int index = RFIFOL(fd, 2);
@@ -14485,7 +14501,7 @@ static void clif_parse_PartyBookingRefuseVolunteer(int fd, struct map_session_da
 static void clif_parse_PartyBookingRefuseVolunteer(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	unsigned int aid = RFIFOL(fd, 2);
@@ -14517,7 +14533,7 @@ static void clif_parse_PartyBookingCancelVolunteer(int fd, struct map_session_da
 static void clif_parse_PartyBookingCancelVolunteer(int fd, struct map_session_data *sd)
 {
 #ifdef PARTY_RECRUIT
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	int index = RFIFOL(fd, 2);
@@ -14595,7 +14611,7 @@ static void clif_parse_CloseVending(int fd, struct map_session_data *sd) __attri
 /// 012e
 static void clif_parse_CloseVending(int fd, struct map_session_data *sd)
 {
-	if (sd->npc_id || sd->state.buyingstore || sd->state.trading)
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.buyingstore != 0 || sd->state.trading != 0)
 		return;
 
 	vending->close(sd);
@@ -14606,12 +14622,9 @@ static void clif_parse_VendingListReq(int fd, struct map_session_data *sd) __att
 /// 0130 <account id>.L
 static void clif_parse_VendingListReq(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isdead(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isdead(sd))
 		return;
 
-	if( sd->npc_id ) {// using an NPC
-		return;
-	}
 	vending->list(sd,RFIFOL(fd,2));
 }
 
@@ -14673,8 +14686,10 @@ static void clif_parse_OpenVending(int fd, struct map_session_data *sd) __attrib
 ///     1 = open
 static void clif_parse_OpenVending(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isdead(sd) || sd->state.vending || sd->state.buyingstore)
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0)
+	    || pc_isdead(sd) || sd->state.vending != 0 || sd->state.buyingstore != 0) {
 		return;
+	}
 
 	int len = (int)RFIFOW(fd, 2) - 85;
 
@@ -16761,7 +16776,7 @@ static void clif_parse_AutoRevive(int fd, struct map_session_data *sd) __attribu
 /// 0292
 static void clif_parse_AutoRevive(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isvending(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isvending(sd))
 		return;
 
 	if (!pc_isdead(sd))
@@ -19189,7 +19204,7 @@ static void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd) _
 ///     1 = open
 static void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data *sd)
 {
-	if (pc_istrading(sd) || pc_isdead(sd))
+	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || pc_isdead(sd))
 		return;
 
 	const unsigned int blocksize = sizeof(struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub);
@@ -20027,7 +20042,7 @@ static void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd)
 	if (sd->menuskill_id != SC_AUTOSHADOWSPELL)
 		return;
 
-	if (pc_istrading(sd) || sd->state.prevend) {
+	if (pc_istrading_except_npc(sd) || sd->state.prevend != 0 || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
 		clif->skill_fail(sd, sd->ud.skill_id, 0, 0, 0);
 		clif_menuskill_clear(sd);
 		return;
@@ -22187,7 +22202,10 @@ static void clif_parse_rodex_open_write_mail(int fd, struct map_session_data *sd
 		return;
 
 	const struct PACKET_CZ_REQ_OPEN_WRITE_MAIL *rPacket = RFIFOP(fd, 0);
-	int8 result = (rodex->isenabled() == true && sd->npc_id == 0) ? 1 : 0;
+	int8 result = (rodex->isenabled() && (sd->npc_id == 0 || sd->state.using_megaphone != 0)) ? 1 : 0;
+
+	if (result == 1)
+		sd->state.workinprogress |= 2;
 
 	clif->rodex_open_write_mail(fd, rPacket->receiveName, result);
 }
