@@ -23,7 +23,6 @@
 import os
 import re
 import sys
-from sets import Set
 
 interfaceRe = re.compile("struct (?P<name1>[a-z_]+)_interface (?P<name2>[a-z_]+)_s;")
 
@@ -44,7 +43,7 @@ def searchStructStart(r, ifname):
     return False
 
 def readCFile(tracker, cFile):
-    methods = Set()
+    methods = set()
     shortIfName = ""
     with open(cFile, "r") as r:
         for line in r:
@@ -78,7 +77,7 @@ def readCFile(tracker, cFile):
     return (None, shortIfName, methods)
 
 def readHFile(tracker, hFile, ifname):
-    methods = Set()
+    methods = set()
     with open(hFile, "r") as r:
         if searchStructStart(r, ifname) == False:
             return methods
@@ -108,7 +107,7 @@ def checkIfFile(tracker, cFile, hFile):
             tracker.arr[ifname + "_" + method] = list()
             tracker.methods.add(ifname + "_" + method)
             if method not in cMethods:
-                print "Missing initialisation in file {0}: {1}".format(cFile, method)
+                print("Missing initialisation in file {0}: {1}".format(cFile, method))
                 tracker.retCode = 1
 #        for method in cMethods:
 #            if method not in hMethods:
@@ -175,13 +174,13 @@ def processDir(tracker, srcDir):
             checkFile(tracker, cPath)
 
 def reportMethods(tracker):
-    print "\n"
+    print("\n")
     for method in tracker.methods:
         if len(tracker.arr[method]) > 2:
-            print method
+            print(method)
             for t in tracker.arr[method]:
-                print t
-            print "\n"
+                print(t)
+            print("\n")
 
 
 def checkLostFile(tracker, cFile):
@@ -198,7 +197,7 @@ def checkLostFile(tracker, cFile):
                     continue
                 if name not in tracker.fullmethods:
 #                    print "src  : " + line
-                    print name
+                    print(name)
 
 def processLostDir(tracker, srcDir):
     files = os.listdir(srcDir)
@@ -232,9 +231,9 @@ def runLong():
 
 tracker = Tracker()
 tracker.arr = dict()
-tracker.methods = Set()
-tracker.fullmethods = Set()
-tracker.interfaces = Set()
+tracker.methods = set()
+tracker.fullmethods = set()
+tracker.interfaces = set()
 tracker.retCode = 0
 
 if len(sys.argv) > 1:
@@ -245,19 +244,19 @@ else:
 if cmd == "silent":
     runIf()
 elif cmd == "init":
-    print "Checking interfaces initialisation"
+    print("Checking interfaces initialisation")
     runIf()
 elif cmd == "lost":
-    print "Checking not added functions to interfaces"
+    print("Checking not added functions to interfaces")
     runLost();
 elif cmd == "long":
-    print "Checking interfaces usage"
+    print("Checking interfaces usage")
     runLong();
 else:
-    print "Checking interfaces initialisation"
+    print("Checking interfaces initialisation")
     runIf()
-    print "Checking not added functions to interfaces"
+    print("Checking not added functions to interfaces")
     runLost();
-    print "Checking interfaces usage"
+    print("Checking interfaces usage")
     runLong();
 exit(tracker.retCode)

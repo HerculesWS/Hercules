@@ -6691,6 +6691,8 @@ int do_init(int argc, char *argv[])
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
 		logs->config_read(map->LOG_CONF_NAME, false);
+	} else {
+		battle->config_read(map->BATTLE_CONF_FILENAME, false);
 	}
 	script->config_read(map->SCRIPT_CONF_NAME, false);
 
@@ -6741,8 +6743,8 @@ int do_init(int argc, char *argv[])
 		timer->add_func_list(map->removemobs_timer, "map_removemobs_timer");
 		timer->add_interval(timer->gettick()+1000, map->freeblock_timer, 0, 0, 60*1000);
 
-		HPM->event(HPET_INIT);
 	}
+	HPM->event(HPET_INIT);
 
 	atcommand->init(minimal);
 	battle->init(minimal);
@@ -6789,8 +6791,12 @@ int do_init(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 
-	if( minimal ) {
+	if (minimal) {
 		HPM->event(HPET_READY);
+		HPM->event(HPET_FINAL);
+		battle->final();
+		HPM_map_do_final();
+		HPM->event(HPET_POST_FINAL);
 		exit(EXIT_SUCCESS);
 	}
 

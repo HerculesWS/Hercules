@@ -259,8 +259,8 @@ que_hugel	mapflag	nomemo
 que_rachel	mapflag	nomemo
 que_san04	mapflag	nomemo
 que_thor	mapflag	nomemo
-poring_c01	mapflag	nomemo
-poring_c02	mapflag	nomemo
+//poring_c01	mapflag	nomemo
+//poring_c02	mapflag	nomemo
 // Dungeons =================
 alde_dun01	mapflag	nomemo
 alde_dun02	mapflag	nomemo

@@ -23,11 +23,15 @@
 #include "config/core.h"
 #include "common/cbasetypes.h"
 
+#ifdef HERCULES_CORE
+#define HPExport static
+#else  // HERCULES_CORE
 #ifdef WIN32
-	#define HPExport __declspec(dllexport)
-#else
-	#define HPExport __attribute__((visibility("default")))
-#endif
+#define HPExport __declspec(dllexport)
+#else  // WIN32
+#define HPExport __attribute__((visibility("default")))
+#endif  // WIN32
+#endif  // HERCULES_CORE
 
 #define HPShared extern
 

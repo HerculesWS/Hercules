@@ -1098,6 +1098,8 @@ AC_DEFUN([AC_CHECK_COMPILER_WNOFLAG],
 	]
 )
 
+AC_CHECK_FLAG(-fsigned-char)
+
 AC_CHECK_COMPILER_WNOFLAG(unused-parameter, [int foo(int bar) { return 0; }])
 AC_CHECK_COMPILER_WNOFLAG(clobbered)
 AC_CHECK_COMPILER_WFLAG(empty-body)
