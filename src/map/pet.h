@@ -147,6 +147,7 @@ struct pet_interface {
 	/* */
 	int (*hungry_val) (struct pet_data *pd);
 	void (*set_hunger) (struct pet_data *pd, int value);
+	int (*get_card4_value) (int rename_flag, int intimacy);
 	void (*set_intimate) (struct pet_data *pd, int value);
 	int (*create_egg) (struct map_session_data *sd, int item_id);
 	int (*unlocktarget) (struct pet_data *pd);
@@ -159,6 +160,7 @@ struct pet_interface {
 	int (*performance) (struct map_session_data *sd, struct pet_data *pd);
 	int (*return_egg) (struct map_session_data *sd, struct pet_data *pd);
 	int (*data_init) (struct map_session_data *sd, struct s_pet *petinfo);
+	int (*spawn) (struct map_session_data *sd, bool birth_process);
 	int (*birth_process) (struct map_session_data *sd, struct s_pet *petinfo);
 	int (*recv_petdata) (int account_id, struct s_pet *p, int flag);
 	int (*select_egg) (struct map_session_data *sd, int egg_index);

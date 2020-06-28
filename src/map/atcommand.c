@@ -2810,10 +2810,8 @@ ACMD(petfriendly)
 		return false;
 	}
 
-	if (friendly != pd->pet.intimate) { // No need to update the pet's status if intimacy value won't change.
+	if (friendly != pd->pet.intimate) // No need to update the pet's status if intimacy value won't change.
 		pet->set_intimate(pd, friendly);
-		clif->send_petstatus(sd);
-	}
 
 	clif->message(fd, msg_fd(fd, 182)); // Pet intimacy changed. (Send message regardless of value has changed or not.)
 
@@ -2854,10 +2852,8 @@ ACMD(pethungry)
 		return false;
 	}
 
-	if (hungry != pd->pet.hungry) { // No need to update the pet's status if hunger value won't change.
-		pd->pet.hungry = hungry;
-		clif->send_petstatus(sd);
-	}
+	if (hungry != pd->pet.hungry) // No need to update the pet's status if hunger value won't change.
+		pet->set_hunger(pd, hungry);
 
 	clif->message(fd, msg_fd(fd, 185)); // Pet hunger changed. (Send message regardless of value has changed or not.)
 
@@ -2881,6 +2877,15 @@ ACMD(petrename)
 	}
 
 	pd->pet.rename_flag = 0;
+
+	int i;
+
+	ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
+		 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
+
+	if (i != sd->status.inventorySize)
+		sd->status.inventory[i].card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
+
 	intif->save_petdata(sd->status.account_id, &pd->pet);
 	clif->send_petstatus(sd);
 	clif->message(fd, msg_fd(fd,187)); // You can now rename your pet.
@@ -8562,7 +8567,7 @@ ACMD(itemlist)
 
 		if( it->card[0] == CARD0_PET ) {
 			// pet egg
-			if (it->card[3])
+			if ((it->card[3] & 1) != 0)
 				StrBuf->Printf(&buf, msg_fd(fd,1348), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, named)
 			else
 				StrBuf->Printf(&buf, msg_fd(fd,1349), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, unnamed)

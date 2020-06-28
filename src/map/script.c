@@ -20518,6 +20518,8 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_LEVEL:
 			pd->pet.level = (short)val;
+			if (pd->msd != NULL)
+				clif->send_petstatus(pd->msd); // Send pet data.
 			break;
 		case UDT_HP:
 			status->set_hp(bl, (unsigned int)val, STATUS_HEAL_DEFAULT);
@@ -20629,7 +20631,6 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_INTIMACY:
 			pet->set_intimate(pd, val);
-			clif->send_petdata(pd->msd, pd, 1, pd->pet.intimate);
 			break;
 		case UDT_HUNGER:
 			pet->set_hunger(pd, val);
@@ -20640,7 +20641,6 @@ static BUILDIN(setunitdata)
 			return false;
 		}
 
-		clif->send_petstatus(pd->msd); // Send pet data.
 		break;
 	}
 	case BL_MER: {

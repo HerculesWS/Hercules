@@ -94,8 +94,41 @@ static int pet_hungry_val(struct pet_data *pd)
 static void pet_set_hunger(struct pet_data *pd, int value)
 {
 	nullpo_retv(pd);
+	nullpo_retv(pd->msd);
 
 	pd->pet.hungry = cap_value(value, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
+
+	clif->send_petdata(pd->msd, pd, 2, pd->pet.hungry);
+}
+
+/**
+ * Calculates the value to store in a pet egg's 4th card slot
+ * based on the passed rename flag and intimacy value.
+ *
+ * @param rename_flag The pet's rename flag.
+ * @param intimacy The pet's intimacy value.
+ * @return The value to store in the pet egg's 4th card slot. (Defaults to 0 in case of error.)
+ *
+ **/
+static int pet_get_card4_value(int rename_flag, int intimacy)
+{
+	Assert_ret(rename_flag == 0 || rename_flag == 1);
+	Assert_ret(intimacy >= PET_INTIMACY_NONE && intimacy <= PET_INTIMACY_MAX);
+
+	int card4 = rename_flag;
+
+	if (intimacy <= PET_INTIMACY_SHY)
+		card4 |= (1 << 1);
+	else if (intimacy <= PET_INTIMACY_NEUTRAL)
+		card4 |= (2 << 1);
+	else if (intimacy <= PET_INTIMACY_CORDIAL)
+		card4 |= (3 << 1);
+	else if (intimacy <= PET_INTIMACY_LOYAL)
+		card4 |= (4 << 1);
+	else
+		card4 |= (5 << 1);
+
+	return card4;
 }
 
 /**
@@ -115,18 +148,24 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 
 	struct map_session_data *sd = pd->msd;
 
-	status_calc_pc(sd, SCO_NONE);
-
-	if (pd->pet.intimate == PET_INTIMACY_NONE) { /// Pet is lost. Delete the egg.
+	if (pd->pet.intimate == PET_INTIMACY_NONE) { // Pet is lost, delete it.
 		int i;
 
 		ARR_FIND(0, sd->status.inventorySize, i, sd->status.inventory[i].card[0] == CARD0_PET
-			 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1],
-							sd->status.inventory[i].card[2]));
+			 && pd->pet.pet_id == MakeDWord(sd->status.inventory[i].card[1], sd->status.inventory[i].card[2]));
 
 		if (i != sd->status.inventorySize)
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_EGG);
+
+		if (battle_config.pet_remove_immediately != 0) {
+			pet_stop_attack(pd);
+			unit->remove_map(&pd->bl, CLR_OUTSIGHT, ALC_MARK);
+		}
+	} else {
+		clif->send_petdata(sd, pd, 1, pd->pet.intimate);
 	}
+
+	status_calc_pc(sd, SCO_NONE);
 }
 
 /**
@@ -312,17 +351,15 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 		pet_stop_attack(pd);
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->starving_decrement);
 
-		if (pd->pet.intimate == PET_INTIMACY_NONE)
-			pd->status.speed = pd->db->status.speed;
+		if (sd->pd == NULL)
+			return 0;
 
 		status_calc_pet(pd, SCO_NONE);
-		clif->send_petdata(sd, pd, 1, pd->pet.intimate);
 
 		if (pd->petDB->starving_delay > 0)
 			interval = pd->petDB->starving_delay;
 	}
 
-	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
 	interval = interval * battle_config.pet_hungry_delay_rate / 100;
 	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
 
@@ -404,7 +441,8 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	if (i != sd->status.inventorySize) {
 		sd->status.inventory[i].attribute &= ~ATTR_BROKEN;
 		sd->status.inventory[i].bound = IBT_NONE;
-		sd->status.inventory[i].card[3] = pd->pet.rename_flag;
+		sd->status.inventory[i].card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
+		clif->inventoryList(sd);
 	} else {
 		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
 		struct item tmp_item = {0};
@@ -415,14 +453,13 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		tmp_item.card[0] = CARD0_PET;
 		tmp_item.card[1] = GetWord(pd->pet.pet_id, 0);
 		tmp_item.card[2] = GetWord(pd->pet.pet_id, 1);
-		tmp_item.card[3] = pd->pet.rename_flag;
+		tmp_item.card[3] = pet->get_card4_value(pd->pet.rename_flag, pd->pet.intimate);
 		if ((flag = pc->additem(sd, &tmp_item, 1, LOG_TYPE_EGG)) != 0) {
 			clif->additem(sd, 0, 0, flag);
 			map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
 		}
 	}
 #if PACKETVER >= 20180704
-	clif->inventoryList(sd);
 	clif->send_petdata(sd, pd, 6, 0);
 #endif
 	pd->pet.incubate = 1;
@@ -511,6 +548,35 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	return 0;
 }
 
+/**
+ * Spawns a pet.
+ *
+ * @param sd The pet's master.
+ * @param birth_process Whether the pet is spawned during birth process.
+ * @return 1 on failure, 0 on success.
+ *
+ **/
+static int pet_spawn(struct map_session_data *sd, bool birth_process)
+{
+	nullpo_retr(1, sd);
+	nullpo_retr(1, sd->pd);
+
+	if (map->addblock(&sd->pd->bl) != 0 || !clif->spawn(&sd->pd->bl))
+		return 1;
+
+	clif->send_petdata(sd, sd->pd, 0, 0);
+	clif->send_petdata(sd, sd->pd, 5, battle_config.pet_hair_style);
+
+#if PACKETVER >= 20180704
+	if (birth_process)
+		clif->send_petdata(sd, sd->pd, 6, 1);
+#endif
+
+	clif->send_petstatus(sd);
+
+	return 0;
+}
+
 static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	nullpo_retr(1, sd);
@@ -535,17 +601,11 @@ static int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 	if (map->save_settings&8)
 		chrif->save(sd,0); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
 
-	if(sd->bl.prev != NULL) {
-		map->addblock(&sd->pd->bl);
-		clif->spawn(&sd->pd->bl);
-		clif->send_petdata(sd,sd->pd, 0,0);
-		clif->send_petdata(sd,sd->pd, 5,battle_config.pet_hair_style);
-#if PACKETVER >= 20180704
-		clif->send_petdata(sd, sd->pd, 6, 1);
-#endif
-		clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
-		clif->send_petstatus(sd);
+	if (sd->pd != NULL && sd->bl.prev != NULL) {
+		if (pet->spawn(sd, true) != 0)
+			return 1;
 	}
+
 	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	return 0;
@@ -584,13 +644,9 @@ static int pet_recv_petdata(int account_id, struct s_pet *p, int flag)
 		}
 	} else {
 		pet->data_init(sd,p);
-		if(sd->pd && sd->bl.prev != NULL) {
-			map->addblock(&sd->pd->bl);
-			clif->spawn(&sd->pd->bl);
-			clif->send_petdata(sd,sd->pd,0,0);
-			clif->send_petdata(sd,sd->pd,5,battle_config.pet_hair_style);
-			clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
-			clif->send_petstatus(sd);
+		if (sd->pd != NULL && sd->bl.prev != NULL) {
+			if (pet->spawn(sd, false) != 0)
+				return 1;
 		}
 	}
 
@@ -643,8 +699,6 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		sd->itemindex = -1;
 		return 1;
 	}
-
-	//FIXME: Delete taming item here, if this was an item-invoked capture and the item was flagged as delay-consume. [ultramage]
 
 	// catch_target_class == 0 is used for universal lures (except bosses for now). [Skotlex]
 	if (sd->catch_target_class == 0 && (md->status.mode & MD_BOSS) == 0)
@@ -729,7 +783,7 @@ static bool pet_get_egg(int account_id, int pet_class, int pet_id)
 	tmp_item.card[0] = CARD0_PET;
 	tmp_item.card[1] = GetWord(pet_id,0);
 	tmp_item.card[2] = GetWord(pet_id,1);
-	tmp_item.card[3] = 0; //New pets are not named.
+	tmp_item.card[3] = pet->get_card4_value(0, pet->db[i].intimate);
 	if((ret = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
 		clif->additem(sd,0,0,ret);
 		map->addflooritem(&sd->bl, &tmp_item, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
@@ -828,8 +882,6 @@ static int pet_change_name_ack(struct map_session_data *sd, const char *name, in
 	aFree(newname);
 	clif->blname_ack(0,&pd->bl);
 	pd->pet.rename_flag = 1;
-	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
-	clif->send_petstatus(sd);
 	return 1;
 }
 
@@ -920,6 +972,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 {
 	nullpo_retr(1, sd);
 	nullpo_retr(1, pd);
+	Assert_retr(1, sd->status.pet_id == pd->pet.pet_id);
 
 	int i = pc->search_inventory(sd, pd->petDB->FoodID);
 
@@ -948,15 +1001,11 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	intimacy = intimacy * battle_config.pet_friendly_rate / 100;
 	pet->set_intimate(pd, pd->pet.intimate + intimacy);
 
-	if (pd->pet.intimate == PET_INTIMACY_NONE) {
-		pet_stop_attack(pd);
-		pd->status.speed = pd->db->status.speed;
-	}
+	if (sd->pd == NULL)
+		return 0;
 
 	status_calc_pet(pd, SCO_NONE);
 	pet->set_hunger(pd, pd->pet.hungry + pd->petDB->fullness);
-	clif->send_petdata(sd, pd, 2, pd->pet.hungry);
-	clif->send_petdata(sd, pd, 1, pd->pet.intimate);
 	clif->pet_food(sd, pd->petDB->FoodID, 1);
 
 	return 0;
@@ -1799,6 +1848,7 @@ void pet_defaults(void)
 
 	pet->hungry_val = pet_hungry_val;
 	pet->set_hunger = pet_set_hunger;
+	pet->get_card4_value = pet_get_card4_value;
 	pet->set_intimate = pet_set_intimate;
 	pet->create_egg = pet_create_egg;
 	pet->unlocktarget = pet_unlocktarget;
@@ -1811,6 +1861,7 @@ void pet_defaults(void)
 	pet->performance = pet_performance;
 	pet->return_egg = pet_return_egg;
 	pet->data_init = pet_data_init;
+	pet->spawn = pet_spawn;
 	pet->birth_process = pet_birth_process;
 	pet->recv_petdata = pet_recv_petdata;
 	pet->select_egg = pet_select_egg;

@@ -2519,8 +2519,8 @@ static void clif_addcards(struct EQUIPSLOTINFO *buf, struct item *item)
 	if (item->card[0] == CARD0_PET) { //pet eggs
 		buf->card[0] = 0;
 		buf->card[1] = 0;
-		buf->card[2] = 0;
-		buf->card[3] = item->card[3]; //Pet renamed flag.
+		buf->card[2] = (item->card[3] >> 1); // Pet intimacy level.
+		buf->card[3] = (item->card[3] & 1); // Pet renamed flag.
 		return;
 	}
 	if (item->card[0] == CARD0_FORGE || item->card[0] == CARD0_CREATE) { //Forged/created items
@@ -10806,10 +10806,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 			clif->message(sd->fd, msg_sd(sd, 866)); // "Pets are not allowed in Guild Wars."
 			pet->menu(sd, 3); // Option 3 is return to egg.
 		} else {
-			map->addblock(&sd->pd->bl);
-			clif->spawn(&sd->pd->bl);
-			clif->send_petdata(sd,sd->pd, 0, 0);
-			clif->send_petstatus(sd);
+			pet->spawn(sd, false);
 		}
 	}
 
