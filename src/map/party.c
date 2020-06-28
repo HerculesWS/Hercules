@@ -330,6 +330,8 @@ static int party_recv_info(const struct party *sp, int char_id)
 		party->member_withdraw(sp->party_id, sd->status.account_id, sd->status.char_id);
 	}
 
+	int option_auto_changed = p->state.option_auto_changed; // Preserve state.
+
 	memcpy(&p->party, sp, sizeof(struct party));
 	memset(&p->state, 0, sizeof(p->state));
 	memset(&p->data, 0, sizeof(p->data));
@@ -342,6 +344,7 @@ static int party_recv_info(const struct party *sp, int char_id)
 			p->party.member[member_id].leader = 1;
 	}
 	party->check_state(p);
+	p->state.option_auto_changed = option_auto_changed;
 	while( added_count > 0 ) { // new in party
 		member_id = added[--added_count];
 		sd = p->data[member_id].sd;
@@ -349,7 +352,6 @@ static int party_recv_info(const struct party *sp, int char_id)
 			continue;// not online
 		clif->charnameupdate(sd); //Update other people's display. [Skotlex]
 		clif->party_member_info(p,sd);
-		clif->party_option(p,sd,0x100);
 		clif->party_info(p,NULL);
 		for( j = 0; j < p->instances; j++ ) {
 			if( p->instance[j] >= 0 ) {
@@ -492,6 +494,8 @@ static void party_member_joined(struct map_session_data *sd)
 		}
 	} else
 		sd->status.party_id = 0; //He does not belongs to the party really?
+
+	party->send_movemap(sd);
 }
 
 /// Invoked (from char-server) when a new member is added to the party.
@@ -531,6 +535,11 @@ static int party_member_added(int party_id, int account_id, int char_id, int fla
 
 	clif->party_member_info(p,sd);
 	clif->party_info(p,sd);
+
+	if (p->state.option_auto_changed != 0)
+		clif->party_option(p, sd, 0x04);
+	else
+		clif->party_option(p, sd, 0x08);
 
 	if( sd2 != NULL )
 		clif->party_inviteack(sd2,sd->status.name,2);
@@ -616,6 +625,7 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 				prev_leader_accountId = p->party.member[i].account_id;
 			}
 
+			clif->party_option(p, sd, 0x10);
 			clif->party_withdraw(p,sd,account_id,p->party.member[i].name,0x0);
 			memset(&p->party.member[i], 0, sizeof(p->party.member[0]));
 			memset(&p->data[i], 0, sizeof(p->data[0]));
@@ -723,8 +733,17 @@ static int party_optionchanged(int party_id, int account_id, int exp, int item, 
 	//Flag&0x1: Exp change denied. Flag&0x10: Item change denied.
 	if(!(flag&0x01) && p->party.exp != exp)
 		p->party.exp=exp;
-	if(!(flag&0x10) && p->party.item != item) {
+	if (p->party.item != item)
 		p->party.item=item;
+
+	if (account_id == 0) {
+		flag |= 0x04;
+		p->state.option_auto_changed = 1;
+
+		if (p->state.member_level_changed == 0)
+			return 0; // clif_party_option() is handled in clif_parse_LoadEndAck().
+	} else {
+		flag |= 0x02;
 	}
 
 	clif->party_option(p,sd,flag);
@@ -805,7 +824,8 @@ static int party_recv_movemap(int party_id, int account_id, int char_id, unsigne
 		ShowError("party_recv_movemap: char %d/%d not found in party %s (id:%d)",account_id,char_id,p->party.name,party_id);
 		return 0;
 	}
-
+	
+	p->state.member_level_changed = 0;
 	m = &p->party.member[i];
 	m->map = mapid;
 	m->online = online;
@@ -854,7 +874,12 @@ static void party_send_movemap(struct map_session_data *sd)
 
 static void party_send_levelup(struct map_session_data *sd)
 {
-	intif->party_changemap(sd,1);
+	struct party_data *p = party->search(sd->status.party_id);
+
+	if (p != NULL)
+		p->state.member_level_changed = 1;
+
+	intif->party_changemap(sd, 1);
 }
 
 static int party_send_logout(struct map_session_data *sd)

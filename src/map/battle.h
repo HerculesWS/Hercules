@@ -472,6 +472,7 @@ struct Battle_Config {
 	int searchstore_querydelay;
 	int searchstore_maxresults;
 	int display_party_name;
+	int send_party_options;
 	int cashshop_show_points;
 	int mail_show_status;
 	int client_limit_unit_lv;
@@ -591,6 +592,10 @@ struct Battle_Config {
 	int option_drop_max_loop;
 
 	int drop_connection_on_quit;
+	int display_rate_messages;
+	int display_config_messages;
+	int display_overweight_messages;
+	int show_tip_window;
 	int enable_refinery_ui;
 	int replace_refine_npcs;
 

@@ -750,6 +750,14 @@ enum removeGear_flag {
 	REMOVE_MOUNT_CART = 6,
 };
 
+/** Info types for PACKET_ZC_PERSONAL_INFOMATION (0x097b). **/
+enum detail_exp_info_type {
+	PC_EXP_INFO = 0x0,	//!< PCBang internet cafe modifiers. (http://pcbang.gnjoy.com/) (Unused.)
+	PREMIUM_EXP_INFO = 0x1,	//!< Premium user modifiers. Values aren't displayed in 20161207+ clients.
+	SERVER_EXP_INFO = 0x2,	//!< Server rates.
+	TPLUS_EXP_INFO = 0x3,	//!< Unknown. Values are displayed as "TPLUS" in kRO. (Unused.)
+};
+
 /**
  * Clif.c Interface
  **/
@@ -1650,6 +1658,7 @@ struct clif_interface {
 	bool (*attendance_timediff) (struct map_session_data *sd);
 	time_t (*attendance_getendtime) (void);
 	void (*pOpenUIRequest) (int fd, struct map_session_data *sd);
+	void (*open_ui_send) (struct map_session_data *sd, enum zc_ui_types ui_type);
 	void (*open_ui) (struct map_session_data *sd, enum cz_ui_types uiType);
 	void (*pAttendanceRewardRequest) (int fd, struct map_session_data *sd);
 	void (*ui_action) (struct map_session_data *sd, int32 UIType, int32 data);

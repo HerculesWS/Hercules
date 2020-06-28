@@ -12128,7 +12128,6 @@ static void pc_scdata_received(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 	pc->inventory_rentals(sd);
-	clif->show_modifiers(sd);
 
 	if (sd->expiration_time != 0) { // don't display if it's unlimited or unknow value
 		time_t exp_time = sd->expiration_time;

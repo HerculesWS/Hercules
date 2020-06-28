@@ -7295,46 +7295,101 @@ static void clif_party_inviteack(struct map_session_data *sd, const char *nick, 
 #endif
 }
 
-/// Updates party settings.
-/// 0101 <exp option>.L (ZC_GROUPINFO_CHANGE)
-/// 07d8 <exp option>.L <item pick rule>.B <item share rule>.B (ZC_REQ_GROUPINFO_CHANGE_V2)
-/// exp option:
-///     0 = exp sharing disabled
-///     1 = exp sharing enabled
-///     2 = cannot change exp sharing
-///
-/// flag:
-///     0 = send to party
-///     1 = send to sd
+/**
+ * Sends party settings to the client.
+ *
+ * 0101 <exp option>.L (ZC_GROUPINFO_CHANGE)
+ * 07d8 <exp option>.L <item pick rule>.B <item share rule>.B (ZC_REQ_GROUPINFO_CHANGE_V2)
+ * <exp option>:
+ *	0 = EXP sharing disabled.
+ *	1 = EXP sharing enabled.
+ *	2 = Cannot change EXP sharing.
+ *
+ * @param p The related party.
+ * @param sd The related character.
+ * @param flag Reason for sending.
+ * @parblock
+ * Possible flags:
+ *	0x01 = Cannot change EXP sharing. (Only set when tried to change options manually.)
+ *	0x02 = Options changed manually.
+ *	0x04 = Options changed automatically.
+ *	0x08 = Member added.
+ *	0x10 = Member removed.
+ *	0x20 = Character logged in.
+ *	0x40 = Character changed map.
+ *	0x80 = Character teleported.
+ * @endparblock
+ *
+ **/
 static void clif_party_option(struct party_data *p, struct map_session_data *sd, int flag)
 {
-	unsigned char buf[16];
-#if PACKETVER < 20090603
-	const int cmd = 0x101;
-#else
-	const int cmd = 0x7d8;
-#endif
-
 	nullpo_retv(p);
 
-	if(!sd && flag==0){
-		int i;
-		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++)
-			;
-		if (i < MAX_PARTY)
-			sd = p->data[i].sd;
+	if (sd == NULL && (flag & 0x01) == 0) {
+		for (int i = 0; i < MAX_PARTY; i++) {
+			if (p->data[i].sd != NULL) {
+				sd = p->data[i].sd;
+				break;
+			}
+		}
 	}
-	if(!sd) return;
-	WBUFW(buf,0)=cmd;
-	WBUFL(buf,2)=((flag&0x01)?2:p->party.exp);
-#if PACKETVER >= 20090603
-	WBUFB(buf,6)=(p->party.item&1)?1:0;
-	WBUFB(buf,7)=(p->party.item&2)?1:0;
+
+	if (sd == NULL)
+		return;
+
+	int conf = battle_config.send_party_options;
+
+	if (((flag & 0x01) != 0 && (conf & 0x10) == 0)
+	    || ((flag & 0x02) != 0 && (conf & 0x08) == 0)
+	    || ((flag & 0x04) != 0 && (conf & 0x20) == 0)
+	    || ((flag & 0x08) != 0 && (conf & 0x40) == 0)
+	    || ((flag & 0x10) != 0 && (conf & 0x80) == 0)
+	    || ((flag & 0x20) != 0 && (conf & 0x01) == 0)
+	    || ((flag & 0x40) != 0 && (conf & 0x02) == 0)
+	    || ((flag & 0x80) != 0 && (conf & 0x04) == 0)) {
+		return;
+	}
+
+	enum send_target target = SELF;
+
+	if (((flag & 0x01) != 0 && (conf & 0x100) != 0)
+	    || ((flag & 0x01) == 0 && (flag & 0x02) != 0)
+	    || (flag & 0x04) != 0) {
+		target = PARTY;
+	}
+
+	int cmd = 0x101;
+
+	if (((flag & 0x01) != 0 && (conf & 0x02000) != 0)
+	    || ((flag & 0x02) != 0 && (conf & 0x01000) != 0)
+	    || ((flag & 0x04) != 0 && (conf & 0x04000) != 0)
+	    || ((flag & 0x08) != 0 && (conf & 0x08000) != 0)
+	    || ((flag & 0x10) != 0 && (conf & 0x10000) != 0)
+	    || ((flag & 0x20) != 0 && (conf & 0x00200) != 0)
+	    || ((flag & 0x40) != 0 && (conf & 0x00400) != 0)
+	    || ((flag & 0x80) != 0 && (conf & 0x00800) != 0)) {
+		cmd = 0x7d8;
+	}
+
+#if PACKETVER < 20090603
+	if (cmd == 0x7d8)
+		cmd = 0x101;
 #endif
-	if(flag==0)
-		clif->send(buf,packet_len(cmd),&sd->bl,PARTY);
-	else
-		clif->send(buf,packet_len(cmd),&sd->bl,SELF);
+
+	unsigned char buf[16];
+
+	WBUFW(buf, 0) = cmd;
+	WBUFL(buf, 2) = ((flag & 0x10) != 0) ? 0 : (((flag & 0x01) != 0) ? 2 : p->party.exp);
+
+	if (cmd == 0x7d8) {
+		WBUFB(buf, 6) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 1) != 0) ? 1 : 0);
+		WBUFB(buf, 7) = ((flag & 0x10) != 0) ? 0 : (((p->party.item & 2) != 0) ? 1 : 0);
+	}
+
+	clif->send(buf, packet_len(cmd), &sd->bl, target);
+
+	if ((flag & 0x04) != 0)
+		p->state.option_auto_changed = 0;
 }
 
 /// 0105 <account id>.L <char name>.24B <result>.B (ZC_DELETE_MEMBER_FROM_GROUP).
@@ -10616,6 +10671,97 @@ static void clif_parse_WantToConnection(int fd, struct map_session_data *sd)
 }
 
 /**
+ * Displays the common server messages upon login, chaning maps or teleporting to a character.
+ *
+ * @param sd The character who should receive the messages.
+ * @param connect_new Whether the character is logging in.
+ * @param change_map Whether the character is changing maps.
+ *
+ **/
+static void clif_load_end_ack_sub_messages(struct map_session_data *sd, bool connect_new, bool change_map)
+{
+	nullpo_retv(sd);
+
+	/** Display overweight messages. **/
+	if (((battle_config.display_overweight_messages & 0x1) != 0 && connect_new)
+	    || ((battle_config.display_overweight_messages & 0x2) != 0 && !connect_new && change_map)) {
+		// Send the character's weight to the client. (With displaying overweight messages.)
+		clif->updatestatus(sd, SP_MAXWEIGHT);
+		clif->updatestatus(sd, SP_WEIGHT);
+	} else {
+		// Send the character's weight to the client. (Without displaying overweight messages.)
+		clif->updatestatus(sd, SP_WEIGHT);
+		clif->updatestatus(sd, SP_MAXWEIGHT);
+	}
+
+	/** Display configuration messages. **/
+	if (((battle_config.display_config_messages & 0x1) != 0 && connect_new)
+	    || ((battle_config.display_config_messages & 0x2) != 0 && !connect_new && change_map)
+	    || (battle_config.display_config_messages & 0x4) != 0) {
+#if PACKETVER >= 20070918
+		if ((battle_config.display_config_messages & 0x10) != 0)
+			clif->partyinvitationstate(sd);
+
+		if ((battle_config.display_config_messages & 0x20) != 0)
+			clif->equpcheckbox(sd);
+#endif
+
+#if PACKETVER_MAIN_NUM >= 20171025 || PACKETVER_RE_NUM >= 20170920
+		if ((battle_config.display_config_messages & 0x40) != 0)
+			clif->zc_config(sd, CZ_CONFIG_CALL, sd->status.allow_call);
+
+		if ((battle_config.display_config_messages & 0x80) != 0) {
+			if (sd->pd != NULL)
+				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, sd->pd->pet.autofeed);
+			else
+				clif->zc_config(sd, CZ_CONFIG_PET_AUTOFEEDING, false);
+		}
+
+		if ((battle_config.display_config_messages & 0x100) != 0) {
+			if (sd->hd != NULL)
+				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
+			else
+				clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
+		}
+#endif
+	}
+
+	/** Display party options. **/
+	struct party_data *p = NULL;
+
+	if (sd->status.party_id != 0 && (p = party->search(sd->status.party_id)) != NULL) {
+		int flag;
+
+		if (p->state.option_auto_changed != 0)
+			flag = 0x04;
+		else if (connect_new)
+			flag = 0x20;
+		else if (change_map)
+			flag = 0x40;
+		else
+			flag = 0x80;
+
+		clif->party_option(p, sd, flag);
+	}
+
+	/** Display rate modifier messages. **/
+	if (((battle_config.display_rate_messages & 0x1) != 0 && connect_new)
+	    || ((battle_config.display_rate_messages & 0x2) != 0 && !connect_new && change_map)
+	    || (battle_config.display_rate_messages & 0x4) != 0) {
+		clif->show_modifiers(sd);
+	}
+
+	/** Display guild notice. **/
+	if (sd->guild != NULL) {
+		if (((battle_config.guild_notice_changemap & 0x1) != 0 && connect_new)
+		    || ((battle_config.guild_notice_changemap & 0x2) != 0 && !connect_new && change_map)
+		    || (battle_config.guild_notice_changemap & 0x4) != 0) {
+			clif->guild_notice(sd, sd->guild);
+		}
+	}
+}
+
+/**
  * Notification from the client, that it has finished map loading and is about to display player's character. (CZ_NOTIFY_ACTORINIT)
  *
  * @code
@@ -10738,10 +10884,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	// Check for and delete unavailable/disabled items.
 	pc->checkitem(sd);
 
-	// Send the character's weight to the client.
-	clif->updatestatus(sd, SP_WEIGHT);
-	clif->updatestatus(sd, SP_MAXWEIGHT);
-
 	// Send character's guild info to the client. Call this before clif->spawn() to show guild emblems correctly.
 	if (sd->status.guild_id != 0)
 		guild->send_memberinfoshort(sd, 1);
@@ -10770,9 +10912,18 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	map->addblock(&sd->bl); // Add the character to the map.
 	clif->spawn(&sd->bl); // Spawn character client side.
 
+	clif_load_end_ack_sub_messages(sd, (sd->state.connect_new != 0), (sd->state.changemap != 0));
+
+	struct party_data *p = NULL;
+
+	if (sd->status.party_id != 0)
+		p = party->search(sd->status.party_id);
+
 	// Send character's party info to the client. Call this after clif->spawn() to show HP bars correctly.
-	if (sd->status.party_id != 0) {
-		party->send_movemap(sd);
+	if (p != NULL) {
+		if (sd->state.connect_new == 0) // Login is handled in party_member_joined().
+			party->send_movemap(sd);
+
 		clif->party_hp(sd); // Show HP after displacement. [LuzZza]
 	}
 
@@ -10852,10 +11003,7 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		status_calc_bl(&sd->ed->bl, SCB_SPEED); // Elementals mimic their master's speed on each map change.
 	}
 
-	bool first_time = false;
-
 	if (sd->state.connect_new != 0) {
-		first_time = true;
 		sd->state.connect_new = 0;
 		clif->skillinfoblock(sd);
 		clif->hotkeysAll(sd);
@@ -10920,6 +11068,11 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		// Notify everyone that this character logged in. [Skotlex]
 		map->foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 1);
 
+#if PACKETVER >= 20171122
+		if (battle_config.show_tip_window != 0)
+			clif->open_ui_send(sd, ZC_TIPBOX_UI);
+#endif
+
 		// Run OnPCLoginEvent labels.
 		npc->script_event(sd, NPCE_LOGIN);
 	} else {
@@ -10941,26 +11094,9 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		} else {
 			sd->state.warp_clean = 1;
 		}
-
-		if (sd->guild != NULL && ((battle_config.guild_notice_changemap == 1 && sd->state.changemap != 0)
-					  || battle_config.guild_notice_changemap == 2)) {
-			clif->guild_notice(sd, sd->guild);
-		}
 	}
 
 	if (sd->state.changemap != 0) { // Restore information that gets lost on map-change.
-#if PACKETVER >= 20070918
-		clif->partyinvitationstate(sd);
-		clif->equpcheckbox(sd);
-#endif
-
-#if PACKETVER_MAIN_NUM >= 20171025 || PACKETVER_RE_NUM >= 20170920
-		if (sd->hd != NULL)
-			clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, sd->hd->homunculus.autofeed);
-		else
-			clif->zc_config(sd, CZ_CONFIG_HOMUNCULUS_AUTOFEEDING, false);
-#endif
-
 		bool flee_penalty = (battle_config.bg_flee_penalty != 100 || battle_config.gvg_flee_penalty != 100);
 		bool is_gvg = (map_flag_gvg2(sd->state.pmap) || map_flag_gvg2(sd->bl.m));
 		bool is_bg = (map->list[sd->state.pmap].flag.battleground != 0 || map->list[sd->bl.m].flag.battleground != 0);
@@ -11009,12 +11145,14 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	mail->clear(sd);
 	clif->maptypeproperty2(&sd->bl, SELF);
 
-	// Init guild aura.
-	if (sd->state.gmaster_flag != 0) {
-		guild->aura_refresh(sd, GD_LEADERSHIP, guild->checkskill(sd->guild, GD_LEADERSHIP));
-		guild->aura_refresh(sd, GD_GLORYWOUNDS, guild->checkskill(sd->guild, GD_GLORYWOUNDS));
-		guild->aura_refresh(sd, GD_SOULCOLD, guild->checkskill(sd->guild, GD_SOULCOLD));
-		guild->aura_refresh(sd, GD_HAWKEYES, guild->checkskill(sd->guild, GD_HAWKEYES));
+	if (sd->guild != NULL) {
+		// Init guild aura.
+		if (sd->state.gmaster_flag != 0) {
+			guild->aura_refresh(sd, GD_LEADERSHIP, guild->checkskill(sd->guild, GD_LEADERSHIP));
+			guild->aura_refresh(sd, GD_GLORYWOUNDS, guild->checkskill(sd->guild, GD_GLORYWOUNDS));
+			guild->aura_refresh(sd, GD_SOULCOLD, guild->checkskill(sd->guild, GD_SOULCOLD));
+			guild->aura_refresh(sd, GD_HAWKEYES, guild->checkskill(sd->guild, GD_HAWKEYES));
+		}
 	}
 
 	if (sd->state.vending != 0) { // Character is vending.
@@ -11038,10 +11176,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	}
 
 	clif->weather_check(sd);
-
-	// This should be displayed last.
-	if (sd->guild != NULL && first_time)
-		clif->guild_notice(sd, sd->guild);
 
 	// For automatic triggering of NPCs after map loading. (So you don't need to walk 1 step first.)
 	if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKNPC) != 0)
@@ -20949,20 +21083,57 @@ static void clif_bank_withdraw(struct map_session_data *sd, enum e_BANKING_WITHD
 #endif
 }
 
-/* TODO: official response packet (tried 0x8cb/0x97b but the display was quite screwed up.) */
-/* currently mimicing */
+/**
+ * Sends EXP, drop and death-penalty rates.
+ * 0x097b <packet len>.W <exp>.L <death>.L <drop>.L <DETAIL_EXP_INFO>13B (ZC_PERSONAL_INFOMATION2)
+ * <InfoType>.B <Exp>.L <Death>.L <Drop>.L (DETAIL_EXP_INFO)
+ *
+ * @param sd The character which should receive the messages.
+ *
+ **/
 static void clif_show_modifiers(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	if( sd->status.mod_exp != 100 || sd->status.mod_drop != 100 || sd->status.mod_death != 100 ) {
+#if PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
+	int length = sizeof(struct PACKET_ZC_PERSONAL_INFOMATION) + 4 * sizeof(struct PACKET_ZC_PERSONAL_INFOMATION_SUB);
+	WFIFOHEAD(sd->fd, length);
+	struct PACKET_ZC_PERSONAL_INFOMATION *p = WFIFOP(sd->fd, 0);
+
+	p->packetType = HEADER_ZC_PERSONAL_INFOMATION;
+	p->length = length;
+	// Single values.
+	p->details[0].type = PC_EXP_INFO;
+	p->details[0].exp = 0;
+	p->details[0].death = 0;
+	p->details[0].drop = 0;
+	p->details[1].type = TPLUS_EXP_INFO;
+	p->details[1].exp = 0;
+	p->details[1].death = 0;
+	p->details[1].drop = 0;
+	p->details[2].type = PREMIUM_EXP_INFO;
+	p->details[2].exp = (sd->status.mod_exp - 100) * 1000;
+	p->details[2].death = (sd->status.mod_death - 100) * 1000;
+	p->details[2].drop = (sd->status.mod_drop - 100) * 1000;
+	p->details[3].type = SERVER_EXP_INFO;
+	p->details[3].exp = battle_config.base_exp_rate * 1000;
+	p->details[3].death = battle_config.death_penalty_base * 10;
+	p->details[3].drop = battle_config.item_rate_common * 1000;
+	// Total values.
+	p->total_exp = (battle_config.base_exp_rate * sd->status.mod_exp / 100) * 1000;
+	p->total_death = (battle_config.base_exp_rate * sd->status.mod_death / 100) * 10;
+	p->total_drop = (battle_config.base_exp_rate * sd->status.mod_drop / 100) * 1000;
+
+	WFIFOSET(sd->fd, length);
+#else
+	if (sd->status.mod_exp != 100 || sd->status.mod_drop != 100 || sd->status.mod_death != 100) {
 		char output[128];
 
-		snprintf(output,128, msg_sd(sd, 896), // Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%
-				sd->status.mod_exp,sd->status.mod_drop,sd->status.mod_death);
+		// Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%
+		safesnprintf(output, sizeof(output), msg_sd(sd, 896), sd->status.mod_exp, sd->status.mod_drop, sd->status.mod_death);
 		clif->broadcast2(&sd->bl, output, (int)strlen(output) + 1, 0xffbc90, 0x190, 12, 0, 0, SELF);
 	}
-
+#endif  // PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
 }
 
 static void clif_notify_bounditem(struct map_session_data *sd, unsigned short index)
@@ -22988,66 +23159,101 @@ static void clif_parse_open_ui_request(int fd, struct map_session_data *sd)
 	clif->open_ui(sd, p->UIType);
 }
 
-static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
+/**
+ * Does the actual packet sending for clif_open_ui().
+ *
+ * @param sd The character who opens the UI.
+ * @param ui_type The UI which should be opened.
+ *
+ **/
+static void clif_open_ui_send(struct map_session_data *sd, enum zc_ui_types ui_type)
 {
-#if PACKETVER >= 20150128
-	struct PACKET_ZC_OPEN_UI p;
-#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
-	int claimed = 0;
-#endif
-
 	nullpo_retv(sd);
 
+#if PACKETVER >= 20150128
+	struct PACKET_ZC_OPEN_UI p;
+
 	p.PacketType = openUiType;
-	switch (uiType) {
-	case CZ_STYLIST_UI:
-		p.UIType = ZC_STYLIST_UI;
+	p.UIType = ui_type;
+
+	switch (ui_type) {
+	case ZC_BANK_UI:
+	case ZC_STYLIST_UI:
+	case ZC_CAPTCHA_UI:
+	case ZC_MACRO_UI:
 #if PACKETVER >= 20171122
 		p.data = 0;
 #endif
 		break;
-	case CZ_MACRO_REGISTER_UI:
-		p.UIType = ZC_CAPTCHA_UI;
 #if PACKETVER >= 20171122
+	case ZC_TIPBOX_UI:
+	case ZC_RENEWQUEST_UI:
 		p.data = 0;
-#endif
 		break;
-	case CZ_MACRO_DETECTOR_UI:
-		p.UIType = ZC_MACRO_UI;
-#if PACKETVER >= 20171122
-		p.data = 0;
-#endif
-		break;
-	case CZ_ATTENDANCE_UI:
-	{
+	case ZC_ATTENDANCE_UI:
+		if (battle_config.feature_enable_attendance_system == 0)
+			return;
+
 		if (clif->attendance_getendtime() < time(NULL)) {
 #if PACKETVER >= 20180207
 			clif->msgtable_color(sd, MSG_ATTENDANCE_UNAVAILABLE, COLOR_RED);
 #endif
 			return;
 		}
-		if (battle_config.feature_enable_attendance_system != 1)
-			return;
+
 #if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
-		if (clif->attendance_timediff(sd) != true)
+		int claimed = 0;
+
+		if (!clif->attendance_timediff(sd))
 			++claimed;
 		else if (sd->status.attendance_count >= VECTOR_LENGTH(clif->attendance_data))
 			sd->status.attendance_count = 0;
-		p.UIType = ZC_ATTENDANCE_UI;
+
 		p.data = sd->status.attendance_count * 10 + claimed;
 #else
 		ShowWarning("Attendance System available only for PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411.\n");
 		return;
 #endif
 		break;
-	}
+#endif
 	default:
-		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
+		ShowWarning("clif_open_ui_send: Requested UI (%u) is not implemented yet.\n", ui_type);
 		return;
 	}
 
 	clif->send(&p, sizeof(p), &sd->bl, SELF);
 #endif
+}
+
+static void clif_open_ui(struct map_session_data *sd, enum cz_ui_types uiType)
+{
+	nullpo_retv(sd);
+
+	enum zc_ui_types send_ui_type;
+
+	switch (uiType) {
+#if PACKETVER >= 20150128
+	case CZ_STYLIST_UI:
+		send_ui_type = ZC_STYLIST_UI;
+		break;
+	case CZ_MACRO_REGISTER_UI:
+		send_ui_type = ZC_CAPTCHA_UI;
+		break;
+	case CZ_MACRO_DETECTOR_UI:
+		send_ui_type = ZC_MACRO_UI;
+		break;
+#endif
+#if PACKETVER >= 20171122
+	case CZ_ATTENDANCE_UI:
+		send_ui_type = ZC_ATTENDANCE_UI;
+		break;
+#endif
+	default:
+		ShowWarning("clif_open_ui: Requested UI (%u) is not implemented yet.\n", uiType);
+		return;
+	}
+
+	clif->open_ui_send(sd, send_ui_type);
 }
 
 static void clif_parse_attendance_reward_request(int fd, struct map_session_data *sd) __attribute__((nonnull(2)));
@@ -25160,6 +25366,7 @@ void clif_defaults(void)
 	clif->attendance_timediff = clif_attendance_timediff;
 	clif->attendance_getendtime = clif_attendance_getendtime;
 	clif->pOpenUIRequest = clif_parse_open_ui_request;
+	clif->open_ui_send = clif_open_ui_send;
 	clif->open_ui = clif_open_ui;
 	clif->pAttendanceRewardRequest = clif_parse_attendance_reward_request;
 	clif->ui_action = clif_ui_action;
