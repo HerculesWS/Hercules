@@ -916,12 +916,13 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	int dy = dst_y - bl->y;
 
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
-	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, sd != NULL ? BL_ALL : BL_PC, bl);
+	enum bl_type receiver_type = (sd != NULL) ? BL_ALL : BL_PC;
+	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, receiver_type, bl);
 
 	map->moveblock(bl, dst_x, dst_y, timer->gettick());
 
 	ud->walktimer = -2; // arbitrary non-INVALID_TIMER value to make the clif code send walking packets
-	map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, sd != NULL ? BL_ALL : BL_PC, bl);
+	map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, receiver_type, bl);
 	ud->walktimer = INVALID_TIMER;
 
 	if (sd != NULL) {
