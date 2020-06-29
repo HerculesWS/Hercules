@@ -807,7 +807,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
  * @param type sc_type @p bl is affected by while running
  * @retval true Finished running
  * @retval false Hit an object/Couldn't run
- **/
+ */
 static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc_type type)
 {
 	nullpo_retr(false, bl);
