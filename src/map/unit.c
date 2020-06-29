@@ -886,7 +886,16 @@ static int unit_attempt_escape(struct block_list *bl, struct block_list *target,
 #undef y_dist
 }
 
-//Instant warp function.
+/**
+ * _Instantly_ moves / warps @p bl to the coordinates @p dst_x and @p dst_y .
+ *
+ * @param bl block_list of unit to move
+ * @param dst_x short of destination x-coordinate
+ * @param dst_y short of destination y-coordinate
+ * @param easy 0: hard pathing 1: easy pathing used only when @p checkpath true
+ * @param checkpath check if path reachable when true
+ * @return 1: success 0: failure
+ */
 static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
 {
 	short dx,dy;
