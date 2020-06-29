@@ -712,7 +712,8 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 	if (ud == NULL)
 		return 1;
 
-	if (!unit->can_reach_bl(bl, tbl, distance_bl(bl, tbl)+1, flag&1, &ud->to_x, &ud->to_y)) {
+	int walk_easy = ((flag & 1) == 0) ? 0 : 1;
+	if (!unit->can_reach_bl(bl, tbl, distance_bl(bl, tbl) + 1, walk_easy, &ud->to_x, &ud->to_y)) {
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
 		ud->target_to = 0;
@@ -723,10 +724,11 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 		ud->to_y = tbl->y;
 	}
 
-	ud->state.walk_easy = flag&1;
+	ud->state.walk_easy = walk_easy;
 	ud->target_to = tbl->id;
 	ud->chaserange = range; //Note that if flag&2, this SHOULD be attack-range
-	ud->state.attack_continue = (flag&2) ? 1 : 0; //Chase to attack.
+	int attack_continue = ((flag & 2) == 0) ? 0 : 1;
+	ud->state.attack_continue = attack_continue; // Chase to attack.
 	unit->stop_attack(bl); //Sets target to 0
 
 	struct status_change *sc = status->get_sc(bl);
@@ -738,7 +740,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 
 	if(ud->walktimer != INVALID_TIMER) {
 		ud->state.change_walk_target = 1;
-		if ((flag & 2) != 0)
+		if (attack_continue != 0)
 			set_mobstate(bl);
 		return 0;
 	}
@@ -753,7 +755,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 		return 1;
 
 	if (unit->walk_toxy_sub(bl) == 0) {
-		if (flag & 2) != 0)
+		if (attack_continue != 0)
 			set_mobstate(bl);
 		return 0;
 	}
