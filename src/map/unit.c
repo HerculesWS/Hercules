@@ -764,9 +764,13 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 
 
 /**
- * Called by unit_run when an object was hit
- * @param sd Required only when using SC_WUGDASH
- **/
+ * Called by unit->run when an object was hit.
+ *
+ * @param bl block_list of the unit that is running
+ * @param sc @see struct status_change of @p bl
+ * @param sd map_session_data of @p bl. *Required only when using SC_WUGDASH*
+ * @param type sc_type @p bl is affected by while running
+ */
 static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type)
 {
 	int lv;
