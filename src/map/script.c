@@ -24050,7 +24050,7 @@ static BUILDIN(pushpc)
 		cells = -cells;
 	}
 
-	unit->blown(&sd->bl, dir, cells, true);
+	unit->push(&sd->bl, dir, cells, true);
 	return true;
 }
 

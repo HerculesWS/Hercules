@@ -3023,7 +3023,7 @@ static int skill_blown(struct block_list *src, struct block_list *target, int co
 	if (tsc != NULL && tsc->data[SC_SU_STOOP]) // Any knockback will cancel it.
 		status_change_end(target, SC_SU_STOOP, INVALID_TIMER);
 
-	return unit->blown(target, dir, count, (flag & 0x1) == 0x0); // send over the proper flag
+	return unit->push(target, dir, count, (flag & 0x1) == 0x0); // send over the proper flag
 }
 
 /*

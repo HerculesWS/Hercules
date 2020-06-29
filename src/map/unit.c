@@ -989,7 +989,7 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
  * @param update *only* send position update packets when true
  * @return amount of pushed cells.
  */
-static int unit_blown(struct block_list *bl, enum unit_dir dir, int count, bool update)
+static int unit_push(struct block_list *bl, enum unit_dir dir, int count, bool update)
 {
 	nullpo_ret(bl);
 	if (count == 0)
@@ -3127,7 +3127,7 @@ void unit_defaults(void)
 	unit->move_pos = unit_move_pos;
 	unit->set_dir = unit_set_dir;
 	unit->getdir = unit_getdir;
-	unit->blown = unit_blown;
+	unit->push = unit_push;
 	unit->warp = unit_warp;
 	unit->warpto_master = unit_warpto_master;
 	unit->stop_walking = unit_stop_walking;

@@ -7010,8 +7010,8 @@ struct {
 	struct HPMHookPoint *HP_unit_set_dir_post;
 	struct HPMHookPoint *HP_unit_getdir_pre;
 	struct HPMHookPoint *HP_unit_getdir_post;
-	struct HPMHookPoint *HP_unit_blown_pre;
-	struct HPMHookPoint *HP_unit_blown_post;
+	struct HPMHookPoint *HP_unit_push_pre;
+	struct HPMHookPoint *HP_unit_push_post;
 	struct HPMHookPoint *HP_unit_warp_pre;
 	struct HPMHookPoint *HP_unit_warp_post;
 	struct HPMHookPoint *HP_unit_warpto_master_pre;
@@ -14077,8 +14077,8 @@ struct {
 	int HP_unit_set_dir_post;
 	int HP_unit_getdir_pre;
 	int HP_unit_getdir_post;
-	int HP_unit_blown_pre;
-	int HP_unit_blown_post;
+	int HP_unit_push_pre;
+	int HP_unit_push_post;
 	int HP_unit_warp_pre;
 	int HP_unit_warp_post;
 	int HP_unit_warpto_master_pre;

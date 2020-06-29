@@ -3587,7 +3587,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(unit->move_pos, HP_unit_move_pos) },
 	{ HP_POP(unit->set_dir, HP_unit_set_dir) },
 	{ HP_POP(unit->getdir, HP_unit_getdir) },
-	{ HP_POP(unit->blown, HP_unit_blown) },
+	{ HP_POP(unit->push, HP_unit_push) },
 	{ HP_POP(unit->warp, HP_unit_warp) },
 	{ HP_POP(unit->warpto_master, HP_unit_warpto_master) },
 	{ HP_POP(unit->stop_walking, HP_unit_stop_walking) },
