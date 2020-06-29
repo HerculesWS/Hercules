@@ -861,7 +861,14 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 	return true;
 }
 
-//Makes bl attempt to run dist cells away from target. Uses hard-paths.
+/**
+ * Makes @p bl attempt to run at most @p dist cells away from @p target. Uses hard-paths.
+ *
+ * @param bl block_list of the unit that is escaping
+ * @param target block_list of the unit that we're escaping from
+ * @param dist short of the maximum stay-away distance towards @p target
+ * @return 1: success, 0: failure
+ */
 static int unit_escape(struct block_list *bl, struct block_list *target, short dist)
 {
 	nullpo_ret(bl);
