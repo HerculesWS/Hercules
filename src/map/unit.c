@@ -686,8 +686,20 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-// Chases a tbl. If the flag&1, use hard-path seek,
-// if flag&2, start attacking upon arrival within range, otherwise just walk to that character.
+/**
+ * Makes the unit of @p bl walk up to the target @p tbl.
+ *
+ * See @p flag for additional actions or options.
+ *
+ * @param bl block_list of unit to move
+ * @param tbl block_list of target unit to move to
+ * @param range stop walking once within a distance of @p range with @p tbl
+ * @param flag *flag* parameter with following options: @n
+ *  - `& 1` -> 1/0 = easy / hard @n
+ *  - `& 2` -> 1 = chase to attack upon arrival within range.
+ *  .
+ * @return 1: success, 0: failure
+ */
 static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int flag)
 {
 	struct unit_data     *ud = NULL;
