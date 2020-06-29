@@ -985,13 +985,12 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
 //  &1  Do not send position update packets.
 static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag)
 {
+	nullpo_ret(bl);
 	if (count == 0)
 		return 0;
 	struct map_session_data* sd;
 	struct skill_unit* su = NULL;
 	int nx, ny, result;
-
-	nullpo_ret(bl);
 
 	sd = BL_CAST(BL_PC, bl);
 	su = BL_CAST(BL_SKILL, bl);
