@@ -10,6 +10,73 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.06.28] `June 28 2020`
+
+### Added
+
+- Added support to display a pet's intimacy in the egg's item description window. (#2781)
+- Added a convenience macro `pc_has_pet()` to check whether a character has a pet. (part of #2781)
+- Added convenience macros `pc_istrading_except_npc()` and `pc_cant_act_except_npc_chat()`. (part of #2775)
+- Added support for `PACKET_ZC_PERSONAL_INFOMATION`, to replace the old custom status messages about rates and penalties. (#2757)
+- Added a new configuration flag `display_rate_messages` (`conf/map/battle/client.conf`) to control whether and when to display the rate modifiers to players. (part of #2757)
+- Added a new configuration flag `display_config_messages` (`conf/map/battle/client.conf`) to control whether and when to display the configuration messages to players as well as which messages to display. By default, now the pet autofeed and guild urgent call setting are also displayed, along with the others. (part of #2757)
+- Added a new configuration flag `send_party_options` (`conf/map/battle/client.conf`) to control whether and when to display the party option messages to players, including some cases (on login, when options are changed, when a party member is added or removed) that were previously not available. (part of #2757)
+- Added a new configuration flag `display_overweight_messages` (`conf/map/battle/client.conf`) to control whether and when to display the overweight notification message to players. (part of #2757)
+- Added support to display the Tip of the Day message box on login. A new configuration flag `show_tip_window` (`conf/map/battle/client.conf`) is provided, in order to disable this feature. (part of #2757)
+- Added missing plugins to the makefiles. (part of #2778)
+- Added missing mobs and items in the pre-re database, necessary for loading custom scripts. (part of #2778)
+- Added support for GitHub actions and added builds to test different flags and compilers and different MySQL/MariaDB versions. (part of #2778 and 9b89425550)
+- Added/updated packets, encryption keys and message tables for clients up to 2020-06-03. (#2763)
+
+### Changed
+
+- Updated the documentation of the `instance_create()` to clarify the type of ID required to create each type of instance. Notably, instances of type `IOT_CHAR` require an account ID and not a character ID. (part of #2732, issue #2326)
+- Updated the instancing system so that the instance information window is also displayed on login for instances of type `IOT_CHAR`, `IOT_PARTY`, `IOT_GUILD`, even if the instance state is `INSTANCE_IDLE`. (part of #2732)
+- Changed the chatroom creation and trade checks to allow dead characters to perform them. A new configuration flag `allowed_actions_when_dead` (`conf/map/battle/player.conf`) is now available, to allow neither, either or both. (#2755, issue #2740)
+- Changed the behavior when a pet's intimacy drops to 0 to immediately remove the pet rather than leaving it free to roam on the map. A new configuration flag `pet_remove_immediately` (`conf/map/battle/pet.conf`) has been added, to restore the old behavior. (part of #2781)
+- Centralized some repeated code related to pet spawning and consolidated the sending of the pet's intimacy and hunger information to the client when appropriate. (part of #2781)
+- Extended the `guild_notice_changemap` configuration flag with more fine grained settings on when to display the guild notice. Note: if you are currently overriding this setting, you'll need to update its value with the new meaning. (part of #2757)
+- Enforced the use of signed characters on platforms where `char` is unsigned. (part of #2778)
+- Travis-CI scripts and configuration updates: (part of #2778)
+  - Improved the build speed by reducing the clone depth to 1.
+  - Improved error reporting if an error occurs during tests.
+  - Added configurations targeting the arm64 and ppc64le cpu architectures as well as the gcc-10 compiler.
+  - Reduced the total amount of build configurations to improve the CI build time.
+  - Added execution of the servers with all the plugins enabled in order to detect memory violations and errors.
+  - Fixed some build failures caused by a false positive odr violation.
+  - Added execution of the map server with all the custom scripts uncommented.
+  - Disabled asan in the gcc-7 builds, as it's too slow.
+- Converted `validateinterfaces.py` to Python 3. (part of #2778)
+- Changed the plugin handler to call all plugin events even when the server is running in minimal mode. (part of #2778)
+- Updated the friend list related packets for Zero clients. (part of #2763)
+- Changed the storage (account and guild storage) to automatically close when using the teleport skill. A configuration flag `teleport_close_storage` (`conf/map/battle/skill.conf`) has been added to restore the previous behavior. (#2756, issue #1762)
+
+### Fixed
+
+- Fixed an issue when deleting instances of type `IOT_CHAR`. (part of #2732)
+- Fixed an issue that prevented the removal of offline characters from parties to get correctly saved to the database. (#2762)
+- Fixed the deletion of skill units belonging to an NPC when it gets unloaded. (#2712, issue #768)
+- Fixed the selection of required items for various skills, such as Slim Potion Pitcher, for skill levels greater than 2. Required items are now selected through the `skill->get_item_index()` function. (#2774)
+- Fixed the description of the meaning of rows and columns in the documentation for `db/*/attr_fix.txt`. (#2765)
+- Fixed the behavior of the Megaphone item script to remove the normal script restrictions (walking, attacking, using skills and items, dropping and picking up items, trading, etc) while the message input box is present and not to be cancelled on death. (#2775, issue #2751)
+- Fixed a client freeze when talking with an NPC or using a Megaphone while the Rodex window is open. Rodex and NPC scripts (or megaphones) are now mutually exclusive. (part of #2775)
+- Added a workaround in the CI scripts to support MySQL/MariaDB setups where the normal grant code does not work. (part of #2778)
+- Fixed a memory violation between core and plugins in the HPMDataCheck code. (part of #2778)
+- Fixed warnings in the skill database parser when running in minimal mode. The battle configuration is now read in minimal mode. (part of #2778, issue #2776)
+- Fixed warnings about missing maps that were present in the map index and scripts. (part of #2778)
+- Fixed a duplicated `fclose()` call in the mapcache plugin. (part of #2778)
+- Fixed conflicting NPC names in `re/merchants/hd_refiner.txt` and in various custom scripts. (part of #2778)
+- Fixed builds on ARMv8, some ARMv7 versions and PPC64. (part of #2778)
+- Fixed the field size of `struct script_state::npc_item_flag` to support all the possible values and reduced the maximum value of the `item_enabled_npc` configuration flag to 3. (#2784)
+- Fixed the width of the path affected by Focused Arrow Strike to be 1 cell wide instead of 2 on each side. (part of #2785)
+- Fixed a missing character ID in name requests. (part of #2763)
+- Fixed an issue that caused loss of items when selling items to an NPC fails because of the character zeny cap. (#2782, issue #2780)
+- Fixed the disappearance of status icon timers when the character spawns. (#2786, issue #580)
+
+### Removed
+
+- Removed a duplicated function `time2str` from `bg_common.txt`. (part of #2778)
+
 ## [v2020.05.31+1] `May 31 2020` `PATCH 1`
 
 ### Fixed
@@ -1445,6 +1512,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.06.28]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31+1...v2020.06.28
 [v2020.05.31+1]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31...v2020.05.31+1
 [v2020.05.31]: https://github.com/HerculesWS/Hercules/compare/v2020.05.03...v2020.05.31
 [v2020.05.03]: https://github.com/HerculesWS/Hercules/compare/v2020.04.05+1...v2020.05.03
