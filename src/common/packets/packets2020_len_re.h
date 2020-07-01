@@ -4623,7 +4623,9 @@ packetLen(0x0b6f, 177)
 #endif
 
 // Packet: 0x0b70
-#if PACKETVER >= 20200122
+#if PACKETVER >= 20200709
+packetLen(0x0b70, -1)
+#elif PACKETVER >= 20200122
 packetLen(0x0b70, 8)
 #endif
 
@@ -4633,7 +4635,9 @@ packetLen(0x0b71, 177)
 #endif
 
 // Packet: 0x0b72
-#if PACKETVER >= 20200122
+#if PACKETVER >= 20200709
+packetLen(0x0b72, -1)
+#elif PACKETVER >= 20200122
 packetLen(0x0b72, 4)
 #endif
 
@@ -4650,6 +4654,61 @@ packetLen(0x0b74, 1026)
 // Packet: 0x0b75
 #if PACKETVER >= 20200304
 packetLen(0x0b75, 1026)
+#endif
+
+// Packet: 0x0b76
+#if PACKETVER >= 20200709
+packetLen(0x0b76, 77)
+#endif
+
+// Packet: 0x0b77
+#if PACKETVER >= 20200709
+packetLen(0x0b77, -1)
+#endif
+
+// Packet: 0x0b78
+#if PACKETVER >= 20200709
+packetLen(0x0b78, -1)
+#endif
+
+// Packet: 0x0b79
+#if PACKETVER >= 20200709
+packetLen(0x0b79, -1)
+#endif
+
+// Packet: 0x0b7a
+#if PACKETVER >= 20200709
+packetLen(0x0b7a, -1)
+#endif
+
+// Packet: 0x0b7b
+#if PACKETVER >= 20200709
+packetLen(0x0b7b, 118)
+#endif
+
+// Packet: 0x0b7c
+#if PACKETVER >= 20200709
+packetLen(0x0b7c, -1)
+#endif
+
+// Packet: 0x0b7d
+#if PACKETVER >= 20200709
+packetLen(0x0b7d, -1)
+#endif
+
+// Packet: 0x0b7e
+#if PACKETVER >= 20200709
+packetLen(0x0b7e, 60)
+#endif
+
+// Packet: 0x0b7f
+#if PACKETVER >= 20200709
+packetLen(0x0b7f, 10)
+#endif
+
+// Packet: 0x0b80
+#if PACKETVER >= 20200709
+packetLen(0x0b80, 10)
 #endif
 
 
