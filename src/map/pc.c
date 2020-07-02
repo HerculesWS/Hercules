@@ -4031,6 +4031,29 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 				sd->bonus.sp_vanish_trigger = val;
 			}
 			break;
+		case SP_SUB_DEF_ELE:
+			if ((type2 >= ELE_MAX && type2 != ELE_ALL) || type2 < ELE_NEUTRAL) {
+				ShowError("pc_bonus3: SP_SUB_DEF_ELE: Invalid element %d\n", type2);
+				break;
+			}
+
+			if (type2 == ELE_ALL) {
+				for (int j = ELE_NEUTRAL; j < ELE_MAX; j++) {
+					if ((val & 1) != 0)
+						sd->sub_def_ele[j].rate_mob += type3;
+
+					if ((val & 2) != 0)
+						sd->sub_def_ele[j].rate_pc += type3;
+				}
+			} else {
+				if ((val & 1) != 0)
+					sd->sub_def_ele[type2].rate_mob += type3;
+
+				if ((val & 2) != 0)
+					sd->sub_def_ele[type2].rate_pc += type3;
+			}
+
+			break;
 
 		default:
 			ShowWarning("pc_bonus3: unknown type %d %d %d %d!\n",type,type2,type3,val);

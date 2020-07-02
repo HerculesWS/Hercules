@@ -1234,6 +1234,20 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 							}
 							cardfix = cardfix * (100 - ele_fix_lh) / 100;
 						}
+
+						// Apply bSubDefEle damage reduction.
+						switch (src->type) {
+						case BL_MOB:
+							ele_fix = tsd->sub_def_ele[status_get_element(src)].rate_mob;
+							break;
+						case BL_PC:
+							ele_fix = tsd->sub_def_ele[status_get_element(src)].rate_pc;
+							break;
+						default:
+							break;
+						}
+
+						cardfix = cardfix * (100 - ele_fix) / 100;
 					}
 					cardfix = cardfix * (100-tsd->subsize[sstatus->size]) / 100;
 					cardfix = cardfix * (100-tsd->subrace2[s_race2]) / 100;

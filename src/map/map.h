@@ -557,6 +557,7 @@ enum status_point_types { //we better clean up this enum and change it name [Hem
 	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST,  //2055-2058
 	SP_SET_DEF_RACE,SP_SET_MDEF_RACE, //2059-2060
 	SP_RACE_TOLERANCE,SP_ADDMAXWEIGHT, //2061-2062
+	SP_SUB_DEF_ELE, // 2063
 
 	/* must be the last, plugins add bonuses from this value onwards */
 	SP_LAST_KNOWN,
