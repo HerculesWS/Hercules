@@ -275,6 +275,7 @@ bonus3 bAddEle,`e`,`n`,`bf`;         | +n% physical damage against element `e`
 bonus2 bSubEle,`e`,`n`;              | +n% Damage reduction against element `e`
 bonus3 bSubEle,`e`,`n`,`bf`;         | +n% Damage reduction against element `e`.
 bonus3 bSubDefEle,`e`,`n`,`i`;       | +n% Physical damage reduction against defense element `e`.<br/> i: <br/> Flags (bitfield)<br/> &1: Reduce damage from monsters.<br/> &2: Reduce damage from players.
+bonus3 bMagicSubDefEle,`e`,`n`,`i`;  | +n% Magical damage reduction against defense element `e`.<br/> i: <br/> Flags (bitfield)<br/> &1: Reduce damage from monsters.<br/> &2: Reduce damage from players.
 bonus2 bAddDamageClass,`c`,`x`;      | +n% extra physical damage against monsters of class `c`
 bonus2 bAddMagicDamageClass,`c`,`x`; | +n% extra magical damage against monsters of class `c`
 bonus2 bAddDefClass,`c`,`x`;         | +n% physical damage reduction against monsters of class `c`
