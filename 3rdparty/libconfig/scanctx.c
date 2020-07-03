@@ -114,7 +114,17 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
     strcat(full_file, file);
   }
 
-  fp = fopen(full_file ? full_file : file, "rt");
+  if(full_file)
+  {
+    fp = fopen(full_file, "rt");
+    if(fp == NULL)
+      fp = fopen(file, "rt");
+  }
+  else
+  {
+    fp = fopen(file, "rt");
+  }
+
   free(full_file);
 
   if(fp)
