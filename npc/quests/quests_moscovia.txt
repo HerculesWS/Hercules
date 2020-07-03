@@ -1134,7 +1134,7 @@ mosk_ship,101,111,4	script	rudder#ship	HIDDEN_NPC,{
 		mes "Hey! Listen to what I am saying.";
 		mes "How come you go there without my";
 		mes "permission...";
-		next;
+		close;
 	}
 	mes "[Mr. Ibanoff]";
 	mes "What? How did you get on";
