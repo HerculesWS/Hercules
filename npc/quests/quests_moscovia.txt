@@ -1171,7 +1171,10 @@ S_Rud1:
 			mes "ever encountered! Be careful! We";
 			mes "must repulse these monsters!";
 			++$@mos1_edq;
-			donpcevent "Baehideun3#ship::OnEnable";
+			if (mos_whale_edq >= 241)
+				donpcevent "Baehideun4#ship::OnEnable";
+			else
+				donpcevent "Baehideun3#ship::OnEnable";
 		}
 		mos_whale_edq = (getarg(1) == 2)?((mos_whale_edq >= 241)?((.@r != 3)?26:25):((.@r != 3)?10:11)):mos_whale_edq + 1;
 		close;
