@@ -396,13 +396,9 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 		int rate, tick;
 	} def_set_race[RC_MAX], mdef_set_race[RC_MAX];
 	struct {
-		int rate_mob;   //!< Physical damage reduction against monster's defense element.
-		int rate_pc;    //!< Physical damage reduction against player's defense element.
-	} sub_def_ele[ELE_MAX]; //!< Bonus bSubDefEle data structure.
-	struct {
-		int rate_mob;         //!< Magical damage reduction against monster's defense element.
-		int rate_pc;          //!< Magical damage reduction against player's defense element.
-	} magic_sub_def_ele[ELE_MAX]; //!< Bonus bMagicSubDefEle data structure.
+		int rate_mob; //!< Damage reduction rate against monster's defense element.
+		int rate_pc;  //!< Damage reduction rate against player's defense element.
+	} sub_def_ele[ELE_MAX], magic_sub_def_ele[ELE_MAX]; //!< Bonus bSubDefEle/bMagicSubDefEle data structure.
 	struct {
 		int atk_rate;
 		int arrow_atk,arrow_ele,arrow_cri,arrow_hit;
