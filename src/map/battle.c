@@ -1070,16 +1070,14 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 					}
 
 					// Apply bMagicSubDefEle damage reduction.
-					enum elements def_ele = status_get_element(src);
-
 					if ((src->type == BL_MOB || src->type == BL_PC)
-					    && !Assert_chk(def_ele >= ELE_NEUTRAL && def_ele < ELE_MAX)) {
+					    && !Assert_chk(sstatus->def_ele >= ELE_NEUTRAL && sstatus->def_ele < ELE_MAX)) {
 						switch (src->type) {
 						case BL_MOB:
-							ele_fix += tsd->magic_sub_def_ele[def_ele].rate_mob;
+							ele_fix += tsd->magic_sub_def_ele[sstatus->def_ele].rate_mob;
 							break;
 						case BL_PC:
-							ele_fix += tsd->magic_sub_def_ele[def_ele].rate_pc;
+							ele_fix += tsd->magic_sub_def_ele[sstatus->def_ele].rate_pc;
 							break;
 						default:
 							break;
@@ -1254,16 +1252,14 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 						}
 
 						// Apply bSubDefEle damage reduction.
-						enum elements def_ele = status_get_element(src);
-
 						if ((src->type == BL_MOB || src->type == BL_PC)
-						    && !Assert_chk(def_ele >= ELE_NEUTRAL && def_ele < ELE_MAX)) {
+						    && !Assert_chk(sstatus->def_ele >= ELE_NEUTRAL && sstatus->def_ele < ELE_MAX)) {
 							switch (src->type) {
 							case BL_MOB:
-								ele_fix = tsd->sub_def_ele[def_ele].rate_mob;
+								ele_fix = tsd->sub_def_ele[sstatus->def_ele].rate_mob;
 								break;
 							case BL_PC:
-								ele_fix = tsd->sub_def_ele[def_ele].rate_pc;
+								ele_fix = tsd->sub_def_ele[sstatus->def_ele].rate_pc;
 								break;
 							default:
 								break;
