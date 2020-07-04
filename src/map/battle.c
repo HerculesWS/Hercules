@@ -1070,17 +1070,20 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 					}
 
 					// Apply bMagicSubDefEle damage reduction.
-					if ((src->type == BL_MOB || src->type == BL_PC)
-					    && !Assert_chk(sstatus->def_ele >= ELE_NEUTRAL && sstatus->def_ele < ELE_MAX)) {
-						switch (src->type) {
-						case BL_MOB:
-							ele_fix += tsd->magic_sub_def_ele[sstatus->def_ele].rate_mob;
-							break;
-						case BL_PC:
-							ele_fix += tsd->magic_sub_def_ele[sstatus->def_ele].rate_pc;
-							break;
-						default:
-							break;
+					if (src->type == BL_MOB || src->type == BL_PC) {
+						int ele = (int)sstatus->def_ele;
+
+						if (!Assert_chk(ele >= ELE_NEUTRAL && ele < ELE_MAX)) {
+							switch (src->type) {
+							case BL_MOB:
+								ele_fix += tsd->magic_sub_def_ele[ele].rate_mob;
+								break;
+							case BL_PC:
+								ele_fix += tsd->magic_sub_def_ele[ele].rate_pc;
+								break;
+							default:
+								break;
+							}
 						}
 					}
 
@@ -1252,20 +1255,23 @@ static int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct
 						}
 
 						// Apply bSubDefEle damage reduction.
-						if ((src->type == BL_MOB || src->type == BL_PC)
-						    && !Assert_chk(sstatus->def_ele >= ELE_NEUTRAL && sstatus->def_ele < ELE_MAX)) {
-							switch (src->type) {
-							case BL_MOB:
-								ele_fix = tsd->sub_def_ele[sstatus->def_ele].rate_mob;
-								break;
-							case BL_PC:
-								ele_fix = tsd->sub_def_ele[sstatus->def_ele].rate_pc;
-								break;
-							default:
-								break;
-							}
+						if (src->type == BL_MOB || src->type == BL_PC) {
+							int ele = (int)sstatus->def_ele;
 
-							cardfix = cardfix * (100 - ele_fix) / 100;
+							if (!Assert_chk(ele >= ELE_NEUTRAL && ele < ELE_MAX)) {
+								switch (src->type) {
+								case BL_MOB:
+									ele_fix = tsd->sub_def_ele[ele].rate_mob;
+									break;
+								case BL_PC:
+									ele_fix = tsd->sub_def_ele[ele].rate_pc;
+									break;
+								default:
+									break;
+								}
+
+								cardfix = cardfix * (100 - ele_fix) / 100;
+							}
 						}
 					}
 					cardfix = cardfix * (100-tsd->subsize[sstatus->size]) / 100;
