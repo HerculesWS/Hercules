@@ -2715,43 +2715,47 @@ static int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_l
 	char card_slot[NAME_LENGTH];
 	char opt_index_str[NAME_LENGTH];
 	char opt_value_str[NAME_LENGTH];
-	int i, j;
+	char opt_param_str[NAME_LENGTH];
+	int i = 0;
+	int j = 0;
 	int key_nameid = 0;
 	int key_amount = 0;
 	int key_refine = 0;
-	int key_attribute = 0;
+	int key_attribute = ATTR_NONE;
 	int key_identify = 0;
 	int key_card[MAX_SLOTS];
 	int key_opt_idx[MAX_ITEM_OPTIONS];
 	int key_opt_value[MAX_ITEM_OPTIONS];
+	int key_opt_param[MAX_ITEM_OPTIONS];
 
 	nullpo_ret(sd);
 	nullpo_ret(item_list);
 	nullpo_ret(nd);
 
 	// discard old contents
-	script->cleararray_pc(sd, "@sold_nameid", (void*)0);
-	script->cleararray_pc(sd, "@sold_quantity", (void*)0);
-	script->cleararray_pc(sd, "@sold_refine", (void*)0);
-	script->cleararray_pc(sd, "@sold_attribute", (void*)0);
-	script->cleararray_pc(sd, "@sold_identify", (void*)0);
+	script->cleararray_pc(sd, "@sold_nameid", (void *)0);
+	script->cleararray_pc(sd, "@sold_quantity", (void *)0);
+	script->cleararray_pc(sd, "@sold_refine", (void *)0);
+	script->cleararray_pc(sd, "@sold_attribute", (void *)0);
+	script->cleararray_pc(sd, "@sold_identify", (void *)0);
 
-	for( j = 0; j < MAX_SLOTS; j++ )
-	{// clear each of the card slot entries
+	for (j = 0; j < MAX_SLOTS; j++) { // clear each of the card slot entries
 		key_card[j] = 0;
 		snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
-		script->cleararray_pc(sd, card_slot, (void*)0);
+		script->cleararray_pc(sd, card_slot, (void *)0);
 	}
 
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++) { // Clear Each item option entry
 		key_opt_idx[j] = 0;
 		key_opt_value[j] = 0;
+		key_opt_param[j] = 0;
 
-		snprintf(opt_index_str, sizeof(opt_index_str), "@slot_opt_idx%d", j + 1);
-		script->cleararray_pc(sd, opt_index_str, (void*)0);
-
-		snprintf(opt_value_str, sizeof(opt_value_str), "@slot_opt_val%d", j + 1);
-		script->cleararray_pc(sd, opt_value_str, (void*)0);
+		snprintf(opt_index_str, sizeof(opt_index_str), "@sold_opt_idx%d", j + 1);
+		script->cleararray_pc(sd, opt_index_str, (void *)0);
+		snprintf(opt_value_str, sizeof(opt_value_str), "@sold_opt_val%d", j + 1);
+		script->cleararray_pc(sd, opt_value_str, (void *)0);
+		snprintf(opt_param_str, sizeof(opt_param_str), "@sold_opt_param%d", j + 1);
+		script->cleararray_pc(sd, opt_param_str, (void *)0);
 	}
 
 	// save list of to be sold items
@@ -2764,32 +2768,31 @@ static int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_l
 		intptr_t attribute = item->attribute;
 		intptr_t identify = item->identify;
 
-		script->setarray_pc(sd, "@sold_nameid", i, (void*)nameid, &key_nameid);
-		script->setarray_pc(sd, "@sold_quantity", i, (void*)amount, &key_amount);
-
 		// process item based information into the arrays
-		script->setarray_pc(sd, "@sold_refine", i, (void*)refine, &key_refine);
-		script->setarray_pc(sd, "@sold_attribute", i, (void*)attribute, &key_attribute);
-		script->setarray_pc(sd, "@sold_identify", i, (void*)identify, &key_identify);
+		script->setarray_pc(sd, "@sold_nameid", i, (void *)nameid, &key_nameid);
+		script->setarray_pc(sd, "@sold_quantity", i, (void *)amount, &key_amount);
+		script->setarray_pc(sd, "@sold_refine", i, (void *)refine, &key_refine);
+		script->setarray_pc(sd, "@sold_attribute", i, (void *)attribute, &key_attribute);
+		script->setarray_pc(sd, "@sold_identify", i, (void *)identify, &key_identify);
 
 		for (j = 0; j < MAX_SLOTS; j++) {
 			intptr_t card = item->card[j];
-			// store each of the cards/special info from the item in the array
 			snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
-			script->setarray_pc(sd, card_slot, i, (void*)card, &key_card[j]);
+			script->setarray_pc(sd, card_slot, i, (void *)card, &key_card[j]);
 		}
 
 		for (j = 0; j < MAX_ITEM_OPTIONS; j++) {
 			intptr_t opt_idx = item->option[j].index;
 			intptr_t opt_value = item->option[j].value;
+			intptr_t opt_param = item->option[j].param;
 
-			snprintf(opt_index_str, sizeof(opt_index_str), "@slot_opt_idx%d", j + 1);
-			script->setarray_pc(sd, opt_index_str, i, (void*)opt_idx, &key_opt_idx[j]);
-
-			snprintf(opt_value_str, sizeof(opt_value_str), "@slot_opt_val%d", j + 1);
-			script->setarray_pc(sd, opt_value_str, i, (void*)opt_value, &key_opt_value[j]);
+			snprintf(opt_index_str, sizeof(opt_index_str), "@sold_opt_idx%d", j + 1);
+			script->setarray_pc(sd, opt_index_str, i, (void *)opt_idx, &key_opt_idx[j]);
+			snprintf(opt_value_str, sizeof(opt_value_str), "@sold_opt_val%d", j + 1);
+			script->setarray_pc(sd, opt_value_str, i, (void *)opt_value, &key_opt_value[j]);
+			snprintf(opt_param_str, sizeof(opt_param_str), "@sold_opt_param%d", j + 1);
+			script->setarray_pc(sd, opt_param_str, i, (void *)opt_param, &key_opt_param[j]);
 		}
-
 	}
 
 	// invoke event
