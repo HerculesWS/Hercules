@@ -2535,34 +2535,19 @@ static void char_changesex(int account_id, int sex)
 }
 
 /**
- * Performs the necessary operations when changing a character's sex, such as
- * correcting the job class and unequipping items, and propagating the
- * information to the guild data.
+ * Performs the necessary operations when changing a character's gender,
+ * such as correcting the job class and unequipping items,
+ * and propagating the information to the guild data.
  *
- * @param sex      The new sex (SEX_MALE or SEX_FEMALE).
- * @param acc      The character's account ID.
- * @param char_id  The character ID.
- * @param class    The character's current job class.
+ * @param sex The character's new gender (SEX_MALE or SEX_FEMALE).
+ * @param acc The character's account ID.
+ * @param char_id The character ID.
+ * @param class The character's current job class.
  * @param guild_id The character's guild ID.
- */
+ *
+ **/
 static void char_change_sex_sub(int sex, int acc, int char_id, int class, int guild_id)
 {
-	// job modification
-	if (class == JOB_BARD || class == JOB_DANCER)
-		class = (sex == SEX_MALE ? JOB_BARD : JOB_DANCER);
-	else if (class == JOB_CLOWN || class == JOB_GYPSY)
-		class = (sex == SEX_MALE ? JOB_CLOWN : JOB_GYPSY);
-	else if (class == JOB_BABY_BARD || class == JOB_BABY_DANCER)
-		class = (sex == SEX_MALE ? JOB_BABY_BARD : JOB_BABY_DANCER);
-	else if (class == JOB_MINSTREL || class == JOB_WANDERER)
-		class = (sex == SEX_MALE ? JOB_MINSTREL : JOB_WANDERER);
-	else if (class == JOB_MINSTREL_T || class == JOB_WANDERER_T)
-		class = (sex == SEX_MALE ? JOB_MINSTREL_T : JOB_WANDERER_T);
-	else if (class == JOB_BABY_MINSTREL || class == JOB_BABY_WANDERER)
-		class = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
-	else if (class == JOB_KAGEROU || class == JOB_OBORO)
-		class = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
-
 	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	/** If we can't save the data, there's nothing to do. **/
@@ -2581,6 +2566,22 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 		SQL->StmtFree(stmt);
 		return;
 	}
+
+	/** Correct the job class for gender specific jobs according to the passed gender. **/
+	if (class == JOB_BARD || class == JOB_DANCER)
+		class = (sex == SEX_MALE ? JOB_BARD : JOB_DANCER);
+	else if (class == JOB_CLOWN || class == JOB_GYPSY)
+		class = (sex == SEX_MALE ? JOB_CLOWN : JOB_GYPSY);
+	else if (class == JOB_BABY_BARD || class == JOB_BABY_DANCER)
+		class = (sex == SEX_MALE ? JOB_BABY_BARD : JOB_BABY_DANCER);
+	else if (class == JOB_MINSTREL || class == JOB_WANDERER)
+		class = (sex == SEX_MALE ? JOB_MINSTREL : JOB_WANDERER);
+	else if (class == JOB_MINSTREL_T || class == JOB_WANDERER_T)
+		class = (sex == SEX_MALE ? JOB_MINSTREL_T : JOB_WANDERER_T);
+	else if (class == JOB_BABY_MINSTREL || class == JOB_BABY_WANDERER)
+		class = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
+	else if (class == JOB_KAGEROU || class == JOB_OBORO)
+		class = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
 
 #if PACKETVER >= 20141016
 	char gender = (sex == SEX_MALE) ? 'M' : ((sex == SEX_FEMALE) ? 'F' : 'U');
@@ -2604,7 +2605,8 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 
 	SQL->StmtFree(stmt);
 
-	if (guild_id) // If there is a guild, update the guild_member data [Skotlex]
+	/** Update guild member data if a guild ID was passed. **/
+	if (guild_id != 0)
 		inter_guild->sex_changed(guild_id, acc, char_id, sex);
 }
 
