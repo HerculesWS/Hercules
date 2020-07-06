@@ -2563,8 +2563,24 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 	else if (class == JOB_KAGEROU || class == JOB_OBORO)
 		class = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id))
-		Sql_ShowDebug(inter->sql_handle);
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+
+	/** If we can't save the data, there's nothing to do. **/
+	if (stmt == NULL) {
+		SqlStmt_ShowDebug(stmt);
+		return;
+	}
+
+	const char *query_inv = "UPDATE `%s` SET `equip`='0' WHERE `char_id`=?";
+
+	/** Don't change gender if resetting the view data fails to prevent character from being unable to login. **/
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, query_inv, inventory_db)
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &char_id, sizeof(char_id))
+	    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		return;
+	}
 
 #if PACKETVER >= 20141016
 	char gender = (sex == SEX_MALE) ? 'M' : ((sex == SEX_FEMALE) ? 'F' : 'U');
@@ -2572,10 +2588,22 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 	char gender = 'U';
 #endif
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', "
-				    "`head_top`='0', `head_mid`='0', `head_bottom`='0', `robe`='0', `sex`='%c' "
-				    "WHERE `char_id`='%d' ", char_db, class, gender, char_id))
-		Sql_ShowDebug(inter->sql_handle);
+	const char *query_char = "UPDATE `%s` SET `class`=?, `weapon`='0', `shield`='0', `head_top`='0', "
+		"`head_mid`='0', `head_bottom`='0', `robe`='0', `sex`=? WHERE `char_id`=?";
+
+	/** Don't update guild data if changing gender fails to prevent data de-synchronisation. **/
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, query_char, char_db)
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &class, sizeof(class))
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_ENUM, &gender, sizeof(gender))
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &char_id, sizeof(char_id))
+	    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		return;
+	}
+
+	SQL->StmtFree(stmt);
+
 	if (guild_id) // If there is a guild, update the guild_member data [Skotlex]
 		inter_guild->sex_changed(guild_id, acc, char_id, sex);
 }
