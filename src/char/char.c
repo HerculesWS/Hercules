@@ -3538,10 +3538,6 @@ static int char_changecharsex(int char_id, int sex)
 	SQL->GetData(inter->sql_handle, 2, &data, NULL); guild_id = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sex` = '%c' WHERE `char_id` = '%d'", char_db, sex == SEX_MALE ? 'M' : 'F', char_id)) {
-		Sql_ShowDebug(inter->sql_handle);
-		return 1;
-	}
 	char_change_sex_sub(sex, account_id, char_id, class, guild_id);
 
 	// disconnect player if online on char-server
