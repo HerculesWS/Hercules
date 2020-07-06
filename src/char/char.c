@@ -2566,9 +2566,15 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `equip`='0' WHERE `char_id`='%d'", inventory_db, char_id))
 		Sql_ShowDebug(inter->sql_handle);
 
+#if PACKETVER >= 20141016
+	char gender = (sex == SEX_MALE) ? 'M' : ((sex == SEX_FEMALE) ? 'F' : 'U');
+#else
+	char gender = 'U';
+#endif
+
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d', `weapon`='0', `shield`='0', "
-				"`head_top`='0', `head_mid`='0', `head_bottom`='0' WHERE `char_id`='%d'",
-				char_db, class, char_id))
+				    "`head_top`='0', `head_mid`='0', `head_bottom`='0', `robe`='0', `sex`='%c' "
+				    "WHERE `char_id`='%d' ", char_db, class, gender, char_id))
 		Sql_ShowDebug(inter->sql_handle);
 	if (guild_id) // If there is a guild, update the guild_member data [Skotlex]
 		inter_guild->sex_changed(guild_id, acc, char_id, sex);
