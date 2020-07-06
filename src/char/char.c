@@ -3540,19 +3540,17 @@ static void char_ask_name_ack(int fd, int acc, const char *name, int type, int r
 }
 
 /**
- * Changes a character's sex.
- * The information is updated on database, and the character is kicked if it
- * currently is online.
+ * Changes a character's gender.
+ * The information is updated on database, and the character is kicked if it currently is online.
  *
- * @param char_id The character's ID.
- * @param sex     The new sex.
+ * @param char_id The character ID
+ * @param sex The character's new gender (SEX_MALE or SEX_FEMALE).
  * @retval 0 in case of success.
  * @retval 1 in case of failure.
- */
+ *
+ **/
 static int char_changecharsex(int char_id, int sex)
 {
-	int class = 0, guild_id = 0, account_id = 0;
-
 	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	/** If we can't load the data, there's nothing to do. **/
@@ -3562,6 +3560,9 @@ static int char_changecharsex(int char_id, int sex)
 	}
 
 	const char *query = "SELECT `account_id`, `class`, `guild_id` FROM `%s` WHERE `char_id`=?";
+	int account_id;
+	int class;
+	int guild_id;
 
 	/** Abort changing gender if there was an error while loading the data. **/
 	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, char_db)
@@ -3597,14 +3598,10 @@ static int char_changecharsex(int char_id, int sex)
 	}
 
 	SQL->StmtFree(stmt);
-
 	char_change_sex_sub(sex, account_id, char_id, class, guild_id);
+	chr->disconnect_player(account_id); // Disconnect player if online on char-server.
+	chr->changesex(account_id, sex); // Notify all mapservers about this change.
 
-	// disconnect player if online on char-server
-	chr->disconnect_player(account_id);
-
-	// notify all mapservers about this change
-	chr->changesex(account_id, sex);
 	return 0;
 }
 
