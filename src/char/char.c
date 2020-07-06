@@ -3550,21 +3550,51 @@ static void char_ask_name_ack(int fd, int acc, const char *name, int type, int r
 static int char_changecharsex(int char_id, int sex)
 {
 	int class = 0, guild_id = 0, account_id = 0;
-	char *data;
 
-	// get character data
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`class`,`guild_id` FROM `%s` WHERE `char_id` = '%d'", char_db, char_id)) {
-		Sql_ShowDebug(inter->sql_handle);
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+
+	/** If we can't load the data, there's nothing to do. **/
+	if (stmt == NULL) {
+		SqlStmt_ShowDebug(stmt);
 		return 1;
 	}
-	if (SQL->NumRows(inter->sql_handle) != 1 || SQL_ERROR == SQL->NextRow(inter->sql_handle)) {
-		SQL->FreeResult(inter->sql_handle);
+
+	const char *query = "SELECT `account_id`, `class`, `guild_id` FROM `%s` WHERE `char_id`=?";
+
+	/** Abort changing gender if there was an error while loading the data. **/
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, char_db)
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &char_id, sizeof(char_id))
+	    || SQL_ERROR == SQL->StmtExecute(stmt)
+	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT32, &account_id, sizeof(account_id), NULL, NULL)
+	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT32, &class, sizeof(class), NULL, NULL)
+	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT32, &guild_id, sizeof(guild_id), NULL, NULL)) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
 		return 1;
 	}
-	SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
-	SQL->GetData(inter->sql_handle, 1, &data, NULL); class = atoi(data);
-	SQL->GetData(inter->sql_handle, 2, &data, NULL); guild_id = atoi(data);
-	SQL->FreeResult(inter->sql_handle);
+
+	/** Abort changing gender if no character was found. **/
+	if (SQL->StmtNumRows(stmt) < 1) {
+		ShowError("char_changecharsex: Requested non-existant character! (ID: %d)\n", char_id);
+		SQL->StmtFree(stmt);
+		return 1;
+	}
+
+	/** Abort changing gender if more than one character was found. **/
+	if (SQL->StmtNumRows(stmt) > 1) {
+		ShowError("char_changecharsex: There are multiple characters with identical ID! (ID: %d)\n", char_id);
+		SQL->StmtFree(stmt);
+		return 1;
+	}
+
+	/** Abort changing gender if fetching the data fails. **/
+	if (SQL_ERROR == SQL->StmtNextRow(stmt)) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		return 1;
+	}
+
+	SQL->StmtFree(stmt);
 
 	char_change_sex_sub(sex, account_id, char_id, class, guild_id);
 
