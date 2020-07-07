@@ -62,6 +62,15 @@ HTTPURL(userconfig_load)
 	return true;
 }
 
+HTTPURL(userconfig_save)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("userconfig_save called %d: %d\n", fd, sd->parser.method);
+#endif
+
+	return true;
+}
+
 HTTPURL(charconfig_load)
 {
 #ifdef DEBUG_LOG
