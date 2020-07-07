@@ -54,6 +54,8 @@
 static struct aclif_interface aclif_s;
 struct aclif_interface *aclif;
 
+//#define DEBUG_LOG
+
 static bool aclif_setip(const char *ip)
 {
 	char ip_str[16];
@@ -96,7 +98,9 @@ static void aclif_setport(uint16 port)
  *------------------------------------------*/
 static int aclif_parse(int fd)
 {
+#ifdef DEBUG_LOG
 	ShowInfo("parse called: %d\n", fd);
+#endif
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_ret(sd);
 	if (!httpparser->parse(fd))
@@ -156,13 +160,13 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 
 static void aclif_terminate_connection(int fd)
 {
-	ShowInfo("closed: %d\n", fd);
+	ShowInfo("disconnected: %d\n", fd);
 	sockt->close(fd);
 }
 
 static int aclif_connected(int fd)
 {
-	ShowInfo("connected called: %d\n", fd);
+	ShowInfo("connected: %d\n", fd);
 
 	nullpo_ret(sockt->session[fd]);
 	struct api_session_data *sd = NULL;
@@ -225,7 +229,9 @@ static void aclif_add_handler(enum http_method method, const char *url, HttpPars
 	nullpo_retv(func);
 	Assert_retv(method >= 0 && method < HTTP_MAX_PROTOCOL);
 
+#ifdef DEBUG_LOG
 	ShowWarning("Add url: %s\n", url);
+#endif
 	struct HttpHandler *handler = aCalloc(1, sizeof(struct HttpHandler));
 	handler->method = method;
 	handler->func = func;
@@ -267,7 +273,9 @@ void aclif_set_url(int fd, enum http_method method, const char *url, size_t size
 	sd->flag.url = 1;
 	sd->handler = handler;
 
+#ifdef DEBUG_LOG
 	ShowWarning("url: %s\n", sd->url);
+#endif
 }
 
 void aclif_set_body(int fd, const char *body, size_t size)
@@ -388,7 +396,9 @@ void aclif_set_post_header_value(int fd, const char *value, size_t size)
 		char *ptr = strchr(buf, '"');
 		if (ptr == NULL || ptr <= buf + 1) {
 			ShowError("Corrupted multi header value %d\n", fd);
+#ifdef DEBUG_LOG
 			ShowError("test '%s' %p, '%s' %p\n", buf, (void*)buf, ptr, (void*)ptr);
+#endif
 			aFree(buf0);
 			sockt->eof(fd);
 			return;
@@ -453,12 +463,13 @@ void aclif_multi_part_complete(int fd, struct api_session_data *sd)
 void aclif_multi_body_complete(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
-	struct MimePart *data;
 
 	struct DBIterator *iter = db_iterator(sd->post_headers_db);
-	for (data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+#ifdef DEBUG_LOG
+	for (struct MimePart *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
 		ShowError("found mime headers: %s, %s, '%s'\n", data->name, data->content_type, data->data);
 	}
+#endif
 
 	dbi_destroy(iter);
 
@@ -499,14 +510,11 @@ void aclif_check_headers(int fd, struct api_session_data *sd)
 		return;
 	}
 
-//	char *boundary = aMalloc(sz + 3);
-//	strcpy(boundary, "--");
-//	strcat(boundary, content_type + post_name_sz);
+#ifdef DEBUG_LOG
 	ShowInfo("boundary: %s\n", content_type + post_name_sz);
+#endif
 
-//	httpparser->init_multi_parser(fd, sd, boundary);
 	httpparser->init_multi_parser(fd, sd, content_type + post_name_sz);
-//	aFree(boundary);
 
 }
 
