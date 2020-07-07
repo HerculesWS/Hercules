@@ -118,6 +118,8 @@ struct aclif_interface {
 	void (*reportError) (int fd, struct api_session_data *sd);
 	void (*check_headers) (int fd, struct api_session_data *sd);
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
+	int (*print_header) (union DBKey key, struct DBData *data, va_list ap);
+	void (*show_request) (int fd, struct api_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

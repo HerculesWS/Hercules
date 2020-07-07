@@ -68,6 +68,7 @@ HTTPURL(userconfig_save)
 	ShowInfo("userconfig_save called %d: %d\n", fd, sd->parser.method);
 #endif
 
+	aclif->show_request(fd, sd);
 	return true;
 }
 

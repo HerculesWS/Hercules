@@ -533,6 +533,30 @@ void aclif_reportError(int fd, struct api_session_data *sd)
 {
 }
 
+static int aclif_print_header(union DBKey key, struct DBData *data, va_list ap)
+{
+    ShowInfo(" http header: %s = %s\n", key.str, (char*)DB->data2ptr(data));
+    return 0;
+}
+
+void aclif_show_request(int fd, struct api_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	ShowInfo("URL: %s %s\n", http_method_str(sd->parser.method), sd->url);
+
+	sd->headers_db->foreach(sd->headers_db, aclif->print_header);
+
+	struct DBIterator *iter = db_iterator(sd->post_headers_db);
+	for (struct MimePart *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {
+		if (data->content_type == NULL || *data->content_type == '\x0')
+			ShowInfo(" mime header: %s, '%s'\n", data->name, data->data);
+		else
+			ShowInfo(" mime header: %s, %s, '%s'\n", data->name, data->content_type, data->data);
+	}
+	dbi_destroy(iter);
+}
+
 static int do_init_aclif(bool minimal)
 {
 	if (minimal)
@@ -595,6 +619,8 @@ void aclif_defaults(void)
 	aclif->post_headers_destroy_sub = aclif_post_headers_destroy_sub;
 	aclif->check_headers = aclif_check_headers;
 	aclif->decode_post_headers = aclif_decode_post_headers;
+	aclif->show_request = aclif_show_request;
+	aclif->print_header = aclif_print_header;
 
 	aclif->reportError = aclif_reportError;
 }
