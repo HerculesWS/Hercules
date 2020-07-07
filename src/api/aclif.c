@@ -107,7 +107,7 @@ static int aclif_parse(int fd)
 	{
 		httpparser->show_error(fd, sd);
 		sockt->eof(fd);
-		sockt->close(fd);
+		aclif->terminate_connection(fd);
 		return 0;
 	}
 	if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
@@ -117,7 +117,7 @@ static int aclif_parse(int fd)
 	if (sd->parser.nread > MAX_REQUEST_SIZE) {
 		ShowError("http request too big %d: %u\n", fd, sd->parser.nread);
 		sockt->eof(fd);
-		sockt->close(fd);
+		aclif->terminate_connection(fd);
 		return 0;
 	}
 	if (sd->flag.message_complete == 1) {
@@ -132,12 +132,12 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 {
 	if (sd->handler == NULL) {
 		ShowError("http handler is NULL: %d\n", fd);
-		sockt->close(fd);
+		aclif->terminate_connection(fd);
 		return 0;
 	}
 	if (sd->handler->func == NULL) {
 		ShowError("http handler function is NULL: %d\n", fd);
-		sockt->close(fd);
+		aclif->terminate_connection(fd);
 		return 0;
 	}
 	if (!aclif->decode_post_headers(fd, sd)) {
@@ -146,7 +146,7 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 	}
 	if (!sd->handler->func(fd, sd)) {
 		aclif->reportError(fd, sd);
-		sockt->close(fd);
+		aclif->terminate_connection(fd);
 		return 0;
 	}
 	if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
@@ -154,13 +154,12 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 		return 0;
 	}
 	if ((sd->handler->flags & REQ_AUTO_CLOSE) != 0)
-		sockt->close(fd);
+		aclif->terminate_connection(fd);
 	return 0;
 }
 
 static void aclif_terminate_connection(int fd)
 {
-	ShowInfo("disconnected: %d\n", fd);
 	sockt->close(fd);
 }
 
@@ -192,6 +191,9 @@ static int aclif_post_headers_destroy_sub(union DBKey key, struct DBData *data, 
 static int aclif_session_delete(int fd)
 {
 	nullpo_ret(sockt->session[fd]);
+
+	ShowInfo("disconnected: %d\n", fd);
+
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_ret(sd);
 	aFree(sd->url);

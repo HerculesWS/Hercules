@@ -29,6 +29,7 @@
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "api/aclif.h"
 #include "api/apisessiondata.h"
 #include "api/httpsender.h"
 
@@ -77,7 +78,7 @@ HTTPURL(test_url)
 
 	httpsender->send_html(fd, buf);
 
-	sockt->close(fd);
+	aclif->terminate_connection(fd);
 
 	return true;
 }
