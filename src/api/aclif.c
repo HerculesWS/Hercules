@@ -101,7 +101,7 @@ static int aclif_parse(int fd)
 	nullpo_ret(sd);
 	if (!httpparser->parse(fd))
 	{
-		ShowError("http parser error: %d\n", fd);
+		httpparser->show_error(fd, sd);
 		sockt->eof(fd);
 		sockt->close(fd);
 		return 0;

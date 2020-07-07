@@ -329,12 +329,17 @@ static bool httpparser_parse(int fd)
 
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	size_t data_size = RFIFOREST(fd);
+	if (data_size == 0)
+		return true;
 	size_t parsed_size = http_parser_execute(&sd->parser, httpparser->settings, RFIFOP(fd, 0), data_size);
-	RFIFOSKIP(fd, data_size);
-	if (data_size != parsed_size)
-		return false;
 
+	RFIFOSKIP(fd, data_size);
 	return data_size == parsed_size;
+}
+
+static void httpparser_show_error(int fd, struct api_session_data *sd)
+{
+	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno, http_errno_name(sd->parser.http_errno), http_errno_description(sd->parser.http_errno));
 }
 
 static bool httpparser_multi_parse(int fd)
@@ -425,6 +430,7 @@ void httpparser_defaults(void)
 	httpparser->init = do_init_httpparser;
 	httpparser->final = do_final_httpparser;
 	httpparser->parse = httpparser_parse;
+	httpparser->show_error = httpparser_show_error;
 	httpparser->multi_parse = httpparser_multi_parse;
 	httpparser->init_parser = httpparser_init_parser;
 	httpparser->init_multi_parser = httpparser_init_multi_parser;
