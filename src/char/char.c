@@ -3560,9 +3560,9 @@ static int char_changecharsex(int char_id, int sex)
 	}
 
 	const char *query = "SELECT `account_id`, `class`, `guild_id` FROM `%s` WHERE `char_id`=?";
-	int account_id;
-	int class;
-	int guild_id;
+	int account_id = 0;
+	int class = 0;
+	int guild_id = 0;
 
 	/** Abort changing gender if there was an error while loading the data. **/
 	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, char_db)
