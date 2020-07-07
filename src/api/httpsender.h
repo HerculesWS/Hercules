@@ -40,6 +40,7 @@ struct httpsender_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
 
+	bool (*send_plain) (int fd, const char *data);
 	bool (*send_html) (int fd, const char *data);
 };
 

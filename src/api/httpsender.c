@@ -55,6 +55,8 @@ static struct httpsender_interface httpsender_s;
 struct httpsender_interface *httpsender;
 static char tmp_buffer[MAX_RESPONSE_SIZE];
 
+#define DEBUG_LOG
+
 static int do_init_httpsender(bool minimal)
 {
 	return 0;
@@ -66,7 +68,10 @@ static void do_final_httpsender(void)
 
 static bool httpsender_send_html(int fd, const char *data)
 {
-	ShowError("httpsender_send_html\n");
+#ifdef DEBUG_LOG
+	ShowInfo("httpsender_send_html\n");
+#endif  // DEBUG_LOG
+
 	nullpo_retr(false, data);
 
 	const size_t sz = strlen(data);
@@ -74,6 +79,29 @@ static bool httpsender_send_html(int fd, const char *data)
 		"HTTP/1.1 200 OK\n"
 		"Server: %s\n"
 		"Content-Type: text/html\n"
+		"Content-Length: %lu\n"
+		"\n"
+		"%s",
+		httpsender->server_name, sz, data);
+	WFIFOHEAD(fd, buf_sz);
+	WFIFOADDSTR(fd, tmp_buffer);
+	sockt->flush(fd);
+	return true;
+}
+
+static bool httpsender_send_plain(int fd, const char *data)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("httpsender_send_plain\n");
+#endif  // DEBUG_LOG
+
+	nullpo_retr(false, data);
+
+	const size_t sz = strlen(data);
+	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+		"HTTP/1.1 200 OK\n"
+		"Server: %s\n"
+		"Content-Type: text/plain; charset=utf-8\n"
 		"Content-Length: %lu\n"
 		"\n"
 		"%s",
@@ -94,6 +122,6 @@ void httpsender_defaults(void)
 	httpsender->init = do_init_httpsender;
 	httpsender->final = do_final_httpsender;
 
+	httpsender->send_plain = httpsender_send_plain;
 	httpsender->send_html = httpsender_send_html;
-
 }

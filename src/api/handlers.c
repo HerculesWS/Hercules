@@ -48,13 +48,11 @@ struct handlers_interface *handlers;
 HTTPURL(userconfig_load)
 {
 	ShowInfo("userconfig_load called %d: %d\n", fd, sd->parser.method);
-
-	char buf[1000];
-	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
-	const char *format = "<html>Hercules test.<br/>Your user agent is: %s<br/></html>\n";
-	safesnprintf(buf, sizeof(buf), format, user_agent);
-
-	httpsender->send_html(fd, buf);
+	// send hardcoded emotes
+	// korean emotes
+	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/기쁨\",\"/하트\",\"/땀\",\"/아하\",\"/짜증\",\"/화\",\"/돈\",\"/...\"]}}");
+	// english emotes
+//	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
 
 	return true;
 }
