@@ -46,9 +46,13 @@
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
+#define DEBUG_LOG
+
 HTTPURL(userconfig_load)
 {
+#ifdef DEBUG_LOG
 	ShowInfo("userconfig_load called %d: %d\n", fd, sd->parser.method);
+#endif
 	// send hardcoded emotes
 	// korean emotes
 	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/기쁨\",\"/하트\",\"/땀\",\"/아하\",\"/짜증\",\"/화\",\"/돈\",\"/...\"]}}");
@@ -60,7 +64,9 @@ HTTPURL(userconfig_load)
 
 HTTPURL(charconfig_load)
 {
+#ifdef DEBUG_LOG
 	ShowInfo("charconfig_load called %d: %d\n", fd, sd->parser.method);
+#endif
 	// send hardcoded settings
 	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"HomunSkillInfo\":null,\"UseSkillInfo\":null}}");
 
@@ -69,7 +75,9 @@ HTTPURL(charconfig_load)
 
 HTTPURL(test_url)
 {
+#ifdef DEBUG_LOG
 	ShowInfo("test_url called %d: %d\n", fd, sd->parser.method);
+#endif
 
 	char buf[1000];
 	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
