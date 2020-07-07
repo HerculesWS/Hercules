@@ -399,11 +399,14 @@ OnStartArena:
 	enablenpc "Grandma#ama1";
 	enablenpc "Grandpa#ama";
 	warpwaitingpc "ama_test",50,83;
-	donpcevent "Timer#ama::OnEnable";
+	enablenpc("Timer#ama");
+	initnpctimer("Timer#ama");
 	disablewaitingroomevent "Assistant#ama";
 	end;
 
 OnReset:
+	stopnpctimer("Timer#ama");
+	disablenpc("Timer#ama");
 	enablewaitingroomevent "Assistant#ama";
 	end;
 }
@@ -620,7 +623,6 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 		mes "Don't lose your high self-esteem";
 		mes "in the future. Farewell.";
 		close2;
-		donpcevent "Timer#ama::OnDisable";
 		warp "amatsu",223,230;
 		disablenpc "Coach#ama";
 		donpcevent "Assistant#ama::OnReset";
@@ -665,7 +667,6 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 			setquest 8128;
 			warp "amatsu",223,230;
 			disablenpc "Coach#ama";
-			donpcevent "Timer#ama::OnDisable";
 			donpcevent "Assistant#ama::OnReset";
 			end;
 		}
@@ -754,7 +755,6 @@ OnTouch:
 	changequest 8129,8130;
 	warp "amatsu",223,230;
 	disablenpc "Coach#after";
-	donpcevent "Timer#ama::OnDisable";
 	donpcevent "Assistant#ama::OnReset";
 	end;
 }
@@ -762,14 +762,6 @@ OnTouch:
 ama_test,34,18,0	script	Timer#ama	FAKE_NPC,{
 OnInit:
 	disablenpc "Timer#ama";
-	end;
-
-OnEnable:
-	enablenpc "Timer#ama";
-	initnpctimer;
-	end;
-OnDisable:
-	stopnpctimer;
 	end;
 
 OnTimer1000:
@@ -797,7 +789,6 @@ OnTimer362000:
 
 OnTimer362500:
 	donpcevent "Assistant#ama::OnReset";
-	donpcevent "Timer#ama::OnDisable";
 	end;
 }
 
