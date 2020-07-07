@@ -780,25 +780,11 @@ OnTimer361000:
 	end;
 
 OnTimer361500:
-	enablenpc "backwarp#ama";
-	end;
-
-OnTimer362000:
-	disablenpc "backwarp#ama";
+	areawarp("ama_test", 25, 75, 80, 130, "amatsu", 115, 95);
 	end;
 
 OnTimer362500:
 	donpcevent "Assistant#ama::OnReset";
-	end;
-}
-
-ama_test,50,100,0	script	backwarp#ama	FAKE_NPC,25,25,{
-OnInit:
-	disablenpc "backwarp#ama";
-	end;
-
-OnTouch:
-	warp "amatsu",115,95;
 	end;
 }
 
