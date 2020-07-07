@@ -57,6 +57,15 @@ HTTPURL(userconfig_load)
 	return true;
 }
 
+HTTPURL(charconfig_load)
+{
+	ShowInfo("charconfig_load called %d: %d\n", fd, sd->parser.method);
+	// send hardcoded settings
+	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"HomunSkillInfo\":null,\"UseSkillInfo\":null}}");
+
+	return true;
+}
+
 HTTPURL(test_url)
 {
 	ShowInfo("test_url called %d: %d\n", fd, sd->parser.method);

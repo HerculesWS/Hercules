@@ -23,4 +23,5 @@
 #endif  // handler
 
 handler(HTTP_POST, "/userconfig/load", userconfig_load, REQ_AUTO_CLOSE);
+handler(HTTP_POST, "/charconfig/load", charconfig_load, REQ_AUTO_CLOSE);
 handler(HTTP_GET, "/test/url", test_url, REQ_DEFAULT);
