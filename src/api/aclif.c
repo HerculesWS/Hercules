@@ -192,10 +192,13 @@ static int aclif_session_delete(int fd)
 {
 	nullpo_ret(sockt->session[fd]);
 
-	ShowInfo("disconnected: %d\n", fd);
-
 	struct api_session_data *sd = sockt->session[fd]->session_data;
+	if (sd == NULL)
+		ShowInfo("disconnected %d\n", fd);
 	nullpo_ret(sd);
+
+	ShowInfo("disconnected %d: %s\n", fd, sd->url);
+
 	aFree(sd->url);
 	sd->url = NULL;
 	aFree(sd->temp_header);
