@@ -51,7 +51,7 @@
 
 static struct httpparser_interface httpparser_s;
 struct httpparser_interface *httpparser;
-static bool isDebug = true;
+//#define DEBUG_LOG
 
 // parser handlers
 
@@ -73,8 +73,9 @@ static int handler_on_message_begin(struct http_parser *parser)
 
 	sd->flag.message_begin = 1;
 
-	if (isDebug)
-		ShowInfo("***MESSAGE BEGIN***\n");
+#ifdef DEBUG_LOG
+	ShowInfo("***MESSAGE BEGIN***\n");
+#endif
 	return 0;
 }
 
@@ -88,8 +89,9 @@ static int handler_on_headers_complete(struct http_parser *parser)
 	sd->flag.headers_complete = 1;
 	aclif->check_headers(fd, sd);
 
-	if (isDebug)
-		ShowInfo("***HEADERS COMPLETE***\n");
+#ifdef DEBUG_LOG
+	ShowInfo("***HEADERS COMPLETE***\n");
+#endif
 	return 0;
 }
 
@@ -104,24 +106,27 @@ static int handler_on_message_complete(struct http_parser *parser)
 	sd->flag.message_complete = 1;
 	sd->flag.message_begin = 0;
 
-	if (isDebug)
-		ShowInfo("***MESSAGE COMPLETE***\n");
+#ifdef DEBUG_LOG
+	ShowInfo("***MESSAGE COMPLETE***\n");
+#endif
 	return 0;
 }
 
 static int handler_on_chunk_header(struct http_parser *parser)
 {
 	nullpo_ret(parser);
-	if (isDebug)
-		ShowInfo("handler_on_chunk_header\n");
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_chunk_header\n");
+#endif
 	return 0;
 }
 
 static int handler_on_chunk_complete(struct http_parser *parser)
 {
 	nullpo_ret(parser);
-	if (isDebug)
-		ShowInfo("handler_on_chunk_complete\n");
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_chunk_complete\n");
+#endif
 	return 0;
 }
 
@@ -136,9 +141,9 @@ static int handler_on_url(struct http_parser *parser, const char *at, size_t len
 
 	aclif->set_url(fd, parser->method, at, length);
 
-	if (isDebug) {
-		ShowInfo("Url: %d: %.*s\n", parser->method, (int)length, at);
-	}
+#ifdef DEBUG_LOG
+	ShowInfo("Url: %d: %.*s\n", parser->method, (int)length, at);
+#endif
 	return 0;
 }
 
@@ -153,8 +158,9 @@ static int handler_on_status(struct http_parser *parser, const char *at, size_t 
 
 	sd->flag.status = 1;
 
-	if (isDebug)
-		ShowInfo("Status: %.*s\n", (int)length, at);
+#ifdef DEBUG_LOG
+	ShowInfo("Status: %.*s\n", (int)length, at);
+#endif
 	return 0;
 }
 
@@ -167,8 +173,9 @@ static int handler_on_header_field(struct http_parser *parser, const char *at, s
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("Header field: %.*s\n", (int)length, at);
+#ifdef DEBUG_LOG
+	ShowInfo("Header field: %.*s\n", (int)length, at);
+#endif
 
 	aclif->set_header_name(fd, at, length);
 	return 0;
@@ -183,8 +190,9 @@ static int handler_on_header_value(struct http_parser *parser, const char *at, s
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("Header value: %.*s\n", (int)length, at);
+#ifdef DEBUG_LOG
+	ShowInfo("Header value: %.*s\n", (int)length, at);
+#endif
 
 	aclif->set_header_value(fd, at, length);
 	return 0;
@@ -201,10 +209,10 @@ static int handler_on_body(struct http_parser *parser, const char *at, size_t le
 
 	sd->flag.body = 1;
 
-	if (isDebug) {
-		ShowInfo("Body: %.*s\n", (int)length, at);
-		ShowInfo("end body\n");
-	}
+#ifdef DEBUG_LOG
+	ShowInfo("Body: %.*s\n", (int)length, at);
+	ShowInfo("end body\n");
+#endif
 
 	aclif->set_body(fd, at, length);
 
@@ -216,8 +224,9 @@ static int handler_on_body(struct http_parser *parser, const char *at, size_t le
 static int handler_on_multi_body_begin(struct multipartparser *parser)
 {
 	nullpo_ret(parser);
-	if (isDebug)
-		ShowInfo("handler_on_multi_body_begin\n");
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_body_begin\n");
+#endif
 	return 0;
 }
 
@@ -229,8 +238,9 @@ static int handler_on_multi_part_begin(struct multipartparser *parser)
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("handler_on_multi_part_begin\n");
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_part_begin\n");
+#endif
 
 	aclif->multi_part_start(fd, sd);
 	return 0;
@@ -245,8 +255,9 @@ static int handler_on_multi_header_field(struct multipartparser *parser, const c
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("handler_on_multi_header_field: %lu: %.*s\n", size, (int)size, data);
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_header_field: %lu: %.*s\n", size, (int)size, data);
+#endif
 
 	aclif->set_post_header_name(fd, data, size);
 	return 0;
@@ -261,8 +272,9 @@ static int handler_on_multi_header_value(struct multipartparser *parser, const c
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("handler_on_multi_header_value: %lu: %.*s\n", size, (int)size, data);
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_header_value: %lu: %.*s\n", size, (int)size, data);
+#endif
 
 	aclif->set_post_header_value(fd, data, size);
 	return 0;
@@ -270,8 +282,9 @@ static int handler_on_multi_header_value(struct multipartparser *parser, const c
 
 static int handler_on_multi_headers_complete(struct multipartparser *parser)
 {
-	if (isDebug)
-		ShowInfo("handler_on_multi_headers_complete\n");
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_headers_complete\n");
+#endif
 	return 0;
 }
 
@@ -283,8 +296,9 @@ static int handler_on_multi_data(struct multipartparser *parser, const char *dat
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("handler_on_multi_data: %.*s\n", (int)size, data);
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_data: %.*s\n", (int)size, data);
+#endif
 
 	aclif->set_post_header_data(fd, data, size);
 	return 0;
@@ -298,8 +312,9 @@ static int handler_on_multi_part_end(struct multipartparser *parser)
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("handler_on_multi_part_end\n");
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_part_end\n");
+#endif
 
 	aclif->multi_part_complete(fd, sd);
 
@@ -314,8 +329,9 @@ static int handler_on_multi_body_end(struct multipartparser *parser)
 	if (sockt->session[fd]->flag.eof)
 		return 0;
 
-	if (isDebug)
-		ShowInfo("handler_on_multi_body_end\n");
+#ifdef DEBUG_LOG
+	ShowInfo("handler_on_multi_body_end\n");
+#endif
 
 	aclif->multi_body_complete(fd, sd);
 
