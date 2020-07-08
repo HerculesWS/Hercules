@@ -240,6 +240,7 @@ struct login_interface {
 	void (*config_set_md5hash) (struct config_setting_t *setting);
 	uint16 (*convert_users_to_colors) (uint16 users);
 	int (*check_client_version) (struct login_session_data *sd);
+	void (*generate_token) (unsigned char *token);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
 };

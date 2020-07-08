@@ -22,6 +22,7 @@
 #include "lclif.p.h"
 
 #include "login/ipban.h"
+#include "login/lapiif.h"
 #include "login/login.h"
 #include "login/loginlog.h"
 #include "login/packets_ac_struct.h"
@@ -301,6 +302,8 @@ static bool lclif_send_server_list(struct login_session_data *sd)
 	packet->last_login_ip = 0; // Not used anymore
 	memset(packet->last_login_time, '\0', sizeof(packet->last_login_time)); // Not used anymore
 	packet->sex = sex_str2num(sd->sex);
+	login->generate_token(packet->auth_token);
+	lapiif->connect_user(sd, packet->auth_token);
 	for (i = 0, n = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
 		uint32 subnet_char_ip;
 

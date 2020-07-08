@@ -25,6 +25,7 @@
 #include "login/HPMlogin.h"
 #include "login/account.h"
 #include "login/ipban.h"
+#include "login/lapiif.h"
 #include "login/loginlog.h"
 #include "login/lclif.h"
 #include "login/packets_ac_struct.h"
@@ -98,14 +99,15 @@ static struct online_login_data* login_add_online_user(int char_server, int acco
 
 static void login_remove_online_user(int account_id)
 {
-	struct online_login_data* p;
-	p = (struct online_login_data*)idb_get(login->online_db, account_id);
-	if( p == NULL )
+	struct online_login_data* p = (struct online_login_data*)idb_get(login->online_db, account_id);
+	if (p == NULL)
 		return;
-	if( p->waiting_disconnect != INVALID_TIMER )
+	if (p->waiting_disconnect != INVALID_TIMER)
 		timer->delete(p->waiting_disconnect, login->waiting_disconnect_timer);
 
 	idb_remove(login->online_db, account_id);
+
+	lapiif->disconnect_user(account_id);
 }
 
 static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data)
@@ -1998,6 +2000,16 @@ static uint16 login_convert_users_to_colors(uint16 users)
 #endif
 }
 
+static void login_generate_token(unsigned char *token)
+{
+#if PACKETVER >= 20170315
+	nullpo_retv(token);
+	for (int f = 0; f < AUTH_TOKEN_SIZE; f ++) {
+		token[f] = rnd() & 0xff;
+	}
+#endif
+}
+
 //--------------------------------------
 // Function called at exit of the server
 //--------------------------------------
@@ -2018,6 +2030,8 @@ int do_final(void)
 		loginlog->final();
 
 	ipban->final();
+
+	lapiif->final();
 
 	if (login->dbs->account_engine->db)
 	{// destroy account engine
@@ -2152,6 +2166,7 @@ int do_init(int argc, char **argv)
 	lchrif_defaults();
 	lclif_defaults();
 	loginlog_defaults();
+	lapiif_defaults();
 
 	// read login-server configuration
 	login->config_set_defaults();
@@ -2199,6 +2214,8 @@ int do_init(int argc, char **argv)
 
 	// initialize static and dynamic ipban system
 	ipban->init();
+
+	lapiif->init();
 
 	// Online user database init
 	login->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -2316,6 +2333,7 @@ void login_defaults(void)
 	login->char_server_connection_status = login_char_server_connection_status;
 	login->kick = login_kick;
 	login->check_client_version = login_check_client_version;
+	login->generate_token = login_generate_token;
 
 	login->config_set_defaults = login_config_set_defaults;
 	login->config_read = login_config_read;

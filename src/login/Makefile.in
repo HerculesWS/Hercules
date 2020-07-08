@@ -53,9 +53,9 @@ MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 
-LOGIN_C = account.c HPMlogin.c ipban.c lclif.c login.c loginlog.c
+LOGIN_C = account.c HPMlogin.c ipban.c lclif.c login.c loginlog.c lapiif.c
 LOGIN_OBJ = $(addprefix obj_sql/, $(patsubst %.c,%.o,$(LOGIN_C)))
-LOGIN_H = login.h account.h HPMlogin.h ipban.h lclif.h loginlog.h
+LOGIN_H = login.h account.h HPMlogin.h ipban.h lclif.h loginlog.h lapiif.h
 LOGIN_PH = lclif.p.h
 
 HAVE_MYSQL=@HAVE_MYSQL@

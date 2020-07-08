@@ -68,6 +68,10 @@ struct PACKET_AC_REFUSE_LOGIN_R2 {
 	char block_date[20]; ///< Ban expiration date
 } __attribute__((packed));
 
+#if PACKETVER >= 20170315
+#define AUTH_TOKEN_SIZE 16
+#endif
+
 /**
  * Packet structure for AC_ACCEPT_LOGIN.
  *
@@ -83,7 +87,7 @@ struct PACKET_AC_ACCEPT_LOGIN {
 	char last_login_time[26]; ///< Last login timestamp
 	uint8 sex;                ///< Account sex
 #if PACKETVER >= 20170315
-	unsigned char auth_token[16]; ///< Auth token for web services
+	unsigned char auth_token[AUTH_TOKEN_SIZE];
 	uint8 twitter_flag;
 #endif
 	struct {

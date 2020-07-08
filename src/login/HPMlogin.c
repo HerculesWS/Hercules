@@ -26,6 +26,7 @@
 
 #include "login/account.h"
 #include "login/ipban.h"
+#include "login/lapiif.h"
 #include "login/lclif.h"
 #include "login/lclif.p.h"
 #include "login/login.h"
