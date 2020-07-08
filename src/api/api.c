@@ -314,6 +314,8 @@ int do_init(int argc, char *argv[])
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 	minimal = api->minimal;
 	if (!minimal) {
+		achrif->checkdefaultlogin();
+
 		api->config_read(api->API_CONF_NAME, false);
 		if (!api->ip_set || !api->char_ip_set) {
 			char ip_str[16];
@@ -370,7 +372,7 @@ void api_defaults(void)
 	sprintf(api->server_db,"ragnarok");
 	api->mysql_handle = NULL;
 
-	api->port = 7000;
+	api->port = 7121;
 	api->ip_set = 0;
 	api->char_ip_set = 0;
 

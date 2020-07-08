@@ -148,7 +148,7 @@ void achrif_defaults(void)
 	achrif->srvinfo = 0;
 	memset(achrif->ip_str,0,sizeof(achrif->ip_str));
 	achrif->ip = 0;
-	achrif->port = 6121;
+	achrif->port = 7121;
 	memset(achrif->userid,0,sizeof(achrif->userid));
 	memset(achrif->passwd,0,sizeof(achrif->passwd));
 	achrif->state = 0;
