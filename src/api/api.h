@@ -56,6 +56,7 @@ struct api_interface {
 
 	bool ip_set;
 	bool char_ip_set;
+	bool login_ip_set;
 
 	char db_path[256];
 

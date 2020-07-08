@@ -42,6 +42,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "api/aloginif.h"
 #include "api/achrif.h"
 #include "api/handlers.h"
 #include "api/httpparser.h"
@@ -114,6 +115,7 @@ static void api_load_defaults(void)
 	api_defaults();
 	aclif_defaults();
 	achrif_defaults();
+	aloginif_defaults();
 	httpparser_defaults();
 	httpsender_defaults();
 }
@@ -219,16 +221,25 @@ static bool api_config_read_inter(const char *filename, struct config_t *config,
 	}
 
 	// Login information
-	if (libconfig->setting_lookup_mutable_string(setting, "userid", temp, sizeof(temp)) == CONFIG_TRUE)
+	if (libconfig->setting_lookup_mutable_string(setting, "userid", temp, sizeof(temp)) == CONFIG_TRUE) {
 		achrif->setuserid(temp);
-	if (libconfig->setting_lookup_mutable_string(setting, "passwd", temp, sizeof(temp)) == CONFIG_TRUE)
+		aloginif->setuserid(temp);
+	}
+	if (libconfig->setting_lookup_mutable_string(setting, "passwd", temp, sizeof(temp)) == CONFIG_TRUE) {
 		achrif->setpasswd(temp);
+		aloginif->setpasswd(temp);
+	}
 
-	// Char and api-server information
+	// login, char and api-server information
 	if (libconfig->setting_lookup_string(setting, "char_ip", &str) == CONFIG_TRUE)
 		api->char_ip_set = achrif->setip(str);
 	if (libconfig->setting_lookup_uint16(setting, "char_port", &port) == CONFIG_TRUE)
 		achrif->setport(port);
+
+	if (libconfig->setting_lookup_string(setting, "login_ip", &str) == CONFIG_TRUE)
+		api->login_ip_set = aloginif->setip(str);
+	if (libconfig->setting_lookup_uint16(setting, "login_port", &port) == CONFIG_TRUE)
+		aloginif->setport(port);
 
 	if (libconfig->setting_lookup_string(setting, "api_ip", &str) == CONFIG_TRUE)
 		api->ip_set = aclif->setip(str);
@@ -315,9 +326,10 @@ int do_init(int argc, char *argv[])
 	minimal = api->minimal;
 	if (!minimal) {
 		achrif->checkdefaultlogin();
+		aloginif->checkdefaultlogin();
 
 		api->config_read(api->API_CONF_NAME, false);
-		if (!api->ip_set || !api->char_ip_set) {
+		if (!api->ip_set) {
 			char ip_str[16];
 			sockt->ip2str(sockt->addr_[0], ip_str);
 
@@ -374,6 +386,7 @@ void api_defaults(void)
 
 	api->port = 7121;
 	api->ip_set = 0;
+	api->login_ip_set = 0;
 	api->char_ip_set = 0;
 
 	api->do_shutdown = do_shutdown;
