@@ -245,7 +245,7 @@ static void aclif_add_handler(enum http_method method, const char *url, HttpPars
 	strdb_put(aclif->handlers_db[method], url, handler);
 }
 
-void aclif_set_url(int fd, enum http_method method, const char *url, size_t size)
+static void aclif_set_url(int fd, enum http_method method, const char *url, size_t size)
 {
 	nullpo_retv(url);
 	Assert_retv(method >= 0 && method < HTTP_MAX_PROTOCOL);
@@ -283,7 +283,7 @@ void aclif_set_url(int fd, enum http_method method, const char *url, size_t size
 #endif
 }
 
-void aclif_set_body(int fd, const char *body, size_t size)
+static void aclif_set_body(int fd, const char *body, size_t size)
 {
 	nullpo_retv(body);
 
@@ -308,7 +308,7 @@ void aclif_set_body(int fd, const char *body, size_t size)
 	}
 }
 
-void aclif_set_header_name(int fd, const char *name, size_t size)
+static void aclif_set_header_name(int fd, const char *name, size_t size)
 {
 	nullpo_retv(name);
 
@@ -330,7 +330,7 @@ void aclif_set_header_name(int fd, const char *name, size_t size)
 	sd->temp_header = aStrndup(name, size);
 }
 
-void aclif_set_header_value(int fd, const char *value, size_t size)
+static void aclif_set_header_value(int fd, const char *value, size_t size)
 {
 	nullpo_retv(value);
 
@@ -346,7 +346,7 @@ void aclif_set_header_value(int fd, const char *value, size_t size)
 	sd->headers_count ++;
 }
 
-void aclif_set_post_header_name(int fd, const char *name, size_t size)
+static void aclif_set_post_header_name(int fd, const char *name, size_t size)
 {
 	nullpo_retv(name);
 
@@ -373,7 +373,7 @@ void aclif_set_post_header_name(int fd, const char *name, size_t size)
 	aFree(buf);
 }
 
-void aclif_set_post_header_value(int fd, const char *value, size_t size)
+static void aclif_set_post_header_value(int fd, const char *value, size_t size)
 {
 	nullpo_retv(value);
 
@@ -422,7 +422,7 @@ void aclif_set_post_header_value(int fd, const char *value, size_t size)
 	}
 }
 
-void aclif_set_post_header_data(int fd, const char *value, size_t size)
+static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 {
 	nullpo_retv(value);
 
@@ -438,7 +438,7 @@ void aclif_set_post_header_data(int fd, const char *value, size_t size)
 	sd->temp_mime_header->data[size] = '\x0';
 }
 
-void aclif_multi_part_start(int fd, struct api_session_data *sd)
+static void aclif_multi_part_start(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
 
@@ -450,7 +450,7 @@ void aclif_multi_part_start(int fd, struct api_session_data *sd)
 	sd->mime_flag = MIME_FLAG_NONE;
 }
 
-void aclif_multi_part_complete(int fd, struct api_session_data *sd)
+static void aclif_multi_part_complete(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
 	nullpo_retv(sd->temp_mime_header);
@@ -465,7 +465,7 @@ void aclif_multi_part_complete(int fd, struct api_session_data *sd)
 	sd->mime_flag = MIME_FLAG_NONE;
 }
 
-void aclif_multi_body_complete(int fd, struct api_session_data *sd)
+static void aclif_multi_body_complete(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
 
@@ -480,7 +480,7 @@ void aclif_multi_body_complete(int fd, struct api_session_data *sd)
 
 }
 
-void aclif_check_headers(int fd, struct api_session_data *sd)
+static void aclif_check_headers(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
 	Assert_retv(sd->flag.headers_complete == 1);
@@ -523,7 +523,7 @@ void aclif_check_headers(int fd, struct api_session_data *sd)
 
 }
 
-bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
+static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 {
 	nullpo_retr(false, sd);
 
@@ -532,7 +532,7 @@ bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	return true;
 }
 
-void aclif_reportError(int fd, struct api_session_data *sd)
+static void aclif_reportError(int fd, struct api_session_data *sd)
 {
 }
 
@@ -542,7 +542,7 @@ static int aclif_print_header(union DBKey key, struct DBData *data, va_list ap)
     return 0;
 }
 
-void aclif_show_request(int fd, struct api_session_data *sd)
+static void aclif_show_request(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
 
