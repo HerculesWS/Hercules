@@ -48,8 +48,13 @@
 #include "common/sysinfo.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "api/achrif.h"
 #include "api/aclif.h"
+#include "api/aloginif.h"
 #include "api/api.h"
+#include "api/handlers.h"
+#include "api/httpparser.h"
+#include "api/httpsender.h"
 
 // HPMDataCheck comes after all the other includes
 #include "common/HPMDataCheck.h"
