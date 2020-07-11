@@ -84,6 +84,7 @@ struct lclif_interface_private {
 	LoginParseFunc *parse_CA_OTP_CODE;             ///< Packet handler for #PACKET_CA_OTP_CODE.
 	LoginParseFunc *parse_CA_REQ_HASH;             ///< Packet handler for #PACKET_CA_REQ_HASH.
 	LoginParseFunc *parse_CA_CHARSERVERCONNECT;    ///< Packet handler for #PACKET_CA_CHARSERVERCONNECT.
+	LoginParseFunc *parse_CA_APISERVERCONNECT;     ///< Packet handler for #PACKET_CA_APISERVERCONNECT.
 };
 
 #endif // LOGIN_LCLIF_P_H

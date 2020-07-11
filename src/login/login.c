@@ -1439,6 +1439,15 @@ static void login_char_server_connection_status(int fd, struct login_session_dat
 	WFIFOSET2(fd, 3);
 }
 
+static void login_api_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
+static void login_api_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
+{
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x2811;
+	WFIFOB(fd, 2) = status;
+	WFIFOSET2(fd, 3);
+}
+
 // CA_CHARSERVERCONNECT
 static void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
 static void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
@@ -1498,6 +1507,53 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 	} else {
 		ShowNotice("Connection of the char-server '%s' REFUSED.\n", server_name);
 		login->char_server_connection_status(fd, sd, 1);
+	}
+}
+
+// CA_APISERVERCONNECT
+static void login_parse_request_api_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
+static void login_parse_request_api_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
+{
+	char message[256];
+	uint32 server_ip = sockt->session[fd]->client_addr;
+	int result;
+
+	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
+	if (login->config->use_md5_passwds)
+		md5->string(sd->passwd, sd->passwd);
+	sd->passwdenc = PWENC_NONE;
+	sd->version = login->config->client_version_to_connect; // hack to skip version check
+
+	ShowInfo("Connection request of the api-server %u.%u.%u.%u (account: '%s', pass: '%s', ip: '%s')\n", CONVIP(server_ip), sd->userid, sd->passwd, ip);
+	sprintf(message, "apiserver - %u.%u.%u.%u", CONVIP(server_ip));
+	loginlog->log(sockt->session[fd]->client_addr, sd->userid, 100, message);
+
+	result = login->mmo_auth(sd, true);
+
+	if (!sockt->allowed_ip_check(ipl)) {
+		ShowNotice("Connection of the api-server REFUSED (IP not allowed).\n");
+		login->api_server_connection_status(fd, sd, 2);
+	} else if (core->runflag == LOGINSERVER_ST_RUNNING &&
+		result == -1 &&
+		sd->sex == 'S' &&
+		sd->account_id >= 0 &&
+		sd->account_id < ARRAYLENGTH(login->dbs->api_server) &&
+		!sockt->session_is_valid(login->dbs->api_server[sd->account_id].fd))
+	{
+		ShowStatus("Connection of the api-server accepted.\n");
+		login->dbs->api_server[sd->account_id].fd = fd;
+
+		sockt->session[fd]->func_parse = lapiif->parse;
+		sockt->session[fd]->flag.server = 1;
+		sockt->session[fd]->flag.validate = 0;
+		sockt->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+
+		// send connection success
+		login->api_server_connection_status(fd, sd, 0);
+	} else {
+		ShowNotice("Connection of the api-server REFUSED.\n");
+		login->api_server_connection_status(fd, sd, 1);
 	}
 }
 
@@ -2015,8 +2071,6 @@ static void login_generate_token(unsigned char *token)
 //--------------------------------------
 int do_final(void)
 {
-	int i;
-
 	ShowStatus("Terminating...\n");
 
 	HPM->event(HPET_FINAL);
@@ -2043,8 +2097,11 @@ int do_final(void)
 	login->online_db->destroy(login->online_db, NULL);
 	login->auth_db->destroy(login->auth_db, NULL);
 
-	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
 		lchrif->server_destroy(i);
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i)
+		lapiif->server_destroy(i);
 
 	if( login->fd != -1 )
 	{
@@ -2084,12 +2141,13 @@ static void do_shutdown_login(void)
 {
 	if( core->runflag != LOGINSERVER_ST_SHUTDOWN )
 	{
-		int id;
 		core->runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
-		for (id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
+		for (int id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
 			lchrif->server_reset(id);
+		for (int id = 0; id < ARRAYLENGTH(login->dbs->api_server); ++id)
+			lapiif->server_reset(id);
 		sockt->flush_fifos();
 		core->runflag = CORE_ST_STOP;
 	}
@@ -2147,8 +2205,6 @@ void cmdline_args_init_local(void)
 //------------------------------
 int do_init(int argc, char **argv)
 {
-	int i;
-
 	account_defaults();
 	login_defaults();
 
@@ -2205,8 +2261,11 @@ int do_init(int argc, char **argv)
 	login->config_read(login->LOGIN_CONF_NAME, false);
 	sockt->net_config_read(login->NET_CONF_NAME);
 
-	for (i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i)
 		lchrif->server_init(i);
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i)
+		lapiif->server_init(i);
 
 	// initialize logging
 	if (login->config->log_login)
@@ -2327,6 +2386,7 @@ void login_defaults(void)
 	login->client_login_otp = login_client_login_otp;
 	login->client_login_mobile_otp_request = login_client_login_mobile_otp_request;
 	login->parse_request_connection = login_parse_request_connection;
+	login->parse_request_api_connection = login_parse_request_api_connection;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;
 	login->api_server_connection_status = login_api_server_connection_status;

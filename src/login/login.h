@@ -89,6 +89,10 @@ struct mmo_char_server {
 	uint16 new_;  ///< should display as 'new'?
 };
 
+struct mmo_api_server {
+	int fd;
+};
+
 struct client_hash_node {
 	int group_id;
 	uint8 hash[16];
@@ -161,6 +165,7 @@ struct online_login_data {
 
 struct s_login_dbs {
 	struct mmo_char_server server[MAX_SERVERS];
+	struct mmo_api_server api_server[MAX_SERVERS];
 	struct Account_engine *account_engine;
 };
 
@@ -222,8 +227,10 @@ struct login_interface {
 	bool (*client_login) (int fd, struct login_session_data *sd);
 	bool (*client_login_otp) (int fd, struct login_session_data *sd);
 	void (*client_login_mobile_otp_request) (int fd, struct login_session_data *sd);
+	void (*api_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
+	void (*parse_request_api_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	void (*config_set_defaults) (void);
 	bool (*config_read) (const char *filename, bool included);
 	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);

@@ -127,6 +127,28 @@ void cmdline_args_init_local(void)
 {
 }
 
+static int api_check_connect_login_server(int tid, int64 tick, int id, intptr_t data)
+{
+	if (aloginif->fd > 0 && sockt->session[aloginif->fd] != NULL)
+		return 0;
+
+	ShowInfo("Attempt to connect to login-server...\n");
+
+	if ((aloginif->fd = sockt->make_connection(aloginif->ip, aloginif->port, NULL)) == -1) { //Try again later. [Skotlex]
+		aloginif->fd = 0;
+		return 0;
+	}
+
+	sockt->session[aloginif->fd]->func_parse = aloginif->parse;
+	sockt->session[aloginif->fd]->flag.server = 1;
+	sockt->session[aloginif->fd]->flag.validate = 0;
+	sockt->realloc_fifo(aloginif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+
+	aloginif->connect_to_server();
+
+	return 1;
+}
+
 /**
  * Reads 'api_configuration/console' and initializes required variables.
  *
@@ -349,6 +371,8 @@ int do_init(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 
+	aloginif->init(minimal);
+
 	Sql_HerculesUpdateCheck(api->mysql_handle);
 
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", api->port);
@@ -394,4 +418,5 @@ void api_defaults(void)
 	api->config_read_console = api_config_read_console;
 	api->config_read_connection = api_config_read_connection;
 	api->config_read_inter = api_config_read_inter;
+	api->check_connect_login_server = api_check_connect_login_server;
 }

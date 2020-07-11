@@ -93,12 +93,140 @@ static void aloginif_setport(uint16 port)
 	aloginif->port = port;
 }
 
+static void aloginif_connect_to_server(void)
+{
+	Assert_retv(aloginif->fd != -1);
+
+	WFIFOHEAD(aloginif->fd, 50);
+	WFIFOW(aloginif->fd, 0) = 0x2720;
+	memcpy(WFIFOP(aloginif->fd, 2), aloginif->userid, NAME_LENGTH);
+	memcpy(WFIFOP(aloginif->fd, 26), aloginif->passwd, NAME_LENGTH);
+	WFIFOSET(aloginif->fd, 50);
+}
+
 /*==========================================
  *
  *------------------------------------------*/
 static int aloginif_parse(int fd)
 {
+	// only process data from the char-server
+	if (fd != aloginif->fd) {
+		ShowDebug("aloginif_parse: Disconnecting invalid session #%d (is not the login-server)\n", fd);
+		sockt->close(fd);
+		return 0;
+	}
+
+	if (sockt->session[fd]->flag.eof) {
+		sockt->close(fd);
+		aloginif->fd = -1;
+		aloginif->on_disconnect();
+		return 0;
+	} else if (sockt->session[fd]->flag.ping) { /* we've reached stall time */
+		if (DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2)) { /* we can't wait any longer */
+			sockt->eof(fd);
+			return 0;
+		} else if (sockt->session[fd]->flag.ping != 2) { /* we haven't sent ping out yet */
+			aloginif->keepalive(fd);
+			sockt->session[fd]->flag.ping = 2;
+		}
+	}
+
+	while (RFIFOREST(fd) >= 2) {
+		int cmd = RFIFOW(fd, 0);
+
+/*
+		if (VECTOR_LENGTH(HPM->packets[hpChrif_Parse]) > 0) {
+			int result = HPM->parse_packets(fd,cmd,hpChrif_Parse);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
+		}
+*/
+
+		if (cmd < ALOGINIF_PACKET_LEN_TABLE_START || cmd >= ALOGINIF_PACKET_LEN_TABLE_START + ARRAYLENGTH(aloginif->packet_len_table) || aloginif->packet_len_table[cmd - ALOGINIF_PACKET_LEN_TABLE_START] == 0) {
+			ShowWarning("aloginif_parse: session #%d, failed (unrecognized command 0x%.4x).\n", fd, (unsigned int)cmd);
+			sockt->eof(fd);
+			return 0;
+		}
+
+		int packet_len = aloginif->packet_len_table[cmd - ALOGINIF_PACKET_LEN_TABLE_START];
+
+		if (packet_len == -1) { // dynamic-length packet, second WORD holds the length
+			if (RFIFOREST(fd) < 4)
+				return 0;
+			packet_len = RFIFOW(fd, 2);
+		}
+
+		if ((int)RFIFOREST(fd) < packet_len)
+			return 0;
+
+		ShowDebug("Received packet 0x%4x (%d bytes) from login-server (connection %d)\n", (uint32)cmd, packet_len, fd);
+
+		switch (cmd) {
+			case 0x2811: aloginif->parse_connection_state(fd); break;
+			case 0x2812: aloginif->parse_pong(fd); break;
+			default:
+				ShowError("aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
+				sockt->eof(fd);
+				return 0;
+		}
+		if (fd == aloginif->fd) //There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
+			RFIFOSKIP(fd, packet_len);
+	}
+
 	return 0;
+}
+
+static void aloginif_on_ready(void)
+{
+}
+
+static int aloginif_parse_pong(int fd)
+{
+	if (sockt->session[fd])
+		sockt->session[fd]->flag.ping = 0;
+	return 0;
+}
+
+static int aloginif_parse_connection_state(int fd)
+{
+	switch (RFIFOB(fd, 2)) {
+	case 0:
+		ShowStatus("Connected to login-server (connection #%d).\n", fd);
+		aloginif->on_ready();
+		break;
+	case 1: // Invalid username/password
+		ShowError("Can not connect to login-server.\n");
+		ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
+		ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
+		ShowError("The communication passwords are set in /conf/map/map-server.conf and /conf/char/char-server.conf\n");
+		sockt->eof(fd);
+		return 1;
+	case 2: // IP not allowed
+		ShowError("Can not connect to login-server.\n");
+		ShowError("Please make sure your IP is allowed in conf/network.conf\n");
+		sockt->eof(fd);
+		return 1;
+	default:
+		ShowError("Invalid response from the login-server. Error code: %d\n", (int)RFIFOB(fd, 2));
+		sockt->eof(fd);
+		return 1;
+	}
+	return 0;
+}
+
+/// Called when the connection to Login Server is disconnected.
+static void aloginif_on_disconnect(void)
+{
+	ShowWarning("Connection to Login Server lost.\n\n");
+}
+
+static void aloginif_keepalive(int fd)
+{
+	WFIFOHEAD(fd, 2);
+	WFIFOW(fd, 0) = 0x2821;
+	WFIFOSET(fd, 2);
 }
 
 /*==========================================
@@ -120,6 +248,9 @@ static void do_init_aloginif(bool minimal)
 	if (minimal)
 		return;
 
+	// establish api-login connection if not present
+	timer->add_func_list(api->check_connect_login_server, "api->check_connect_login_server");
+	timer->add_interval(timer->gettick() + 1000, api->check_connect_login_server, 0, 0, 10 * 1000);
 }
 
 /*=====================================
@@ -129,16 +260,11 @@ static void do_init_aloginif(bool minimal)
 *-------------------------------------*/
 void aloginif_defaults(void)
 {
-	const int packet_len_table[ALOGINIF_PACKET_LEN_TABLE_SIZE] = { // U - used, F - free
-		60,  3, -1, 27, 10, -1,  6, -1, // 2af8-2aff: U->2af8, U->2af9, U->2afa, U->2afb, U->2afc, U->2afd, U->2afe, U->2aff
-		 6, -1, 18,  7, -1, 39, 30, 10, // 2b00-2b07: U->2b00, U->2b01, U->2b02, U->2b03, U->2b04, U->2b05, U->2b06, U->2b07
-		 6, 30, -1,  0, 86,  7, 44, 34, // 2b08-2b0f: U->2b08, U->2b09, U->2b0a, F->2b0b, U->2b0c, U->2b0d, U->2b0e, U->2b0f
-		11, 10, 10,  0, 11,  0,266, 10, // 2b10-2b17: U->2b10, U->2b11, U->2b12, F->2b13, U->2b14, F->2b15, U->2b16, U->2b17
-		 2, 10,  2, -1, -1, -1,  2,  7, // 2b18-2b1f: U->2b18, U->2b19, U->2b1a, U->2b1b, U->2b1c, U->2b1d, U->2b1e, U->2b1f
-		-1, 10,  8,  2,  2, 14, 19, 19, // 2b20-2b27: U->2b20, U->2b21, U->2b22, U->2b23, U->2b24, U->2b25, U->2b26, U->2b27
-	};
-
 	aloginif = &aloginif_s;
+
+	const int packet_len_table[ALOGINIF_PACKET_LEN_TABLE_SIZE] = {
+		0, 3, 2, 0, 0, 0, 0, 0 // 2810,
+	};
 
 	/* vars */
 	aloginif->connected = 0;
@@ -163,6 +289,12 @@ void aloginif_defaults(void)
 	aloginif->checkdefaultlogin = aloginif_checkdefaultlogin;
 	aloginif->setip = aloginif_setip;
 	aloginif->setport = aloginif_setport;
+	aloginif->connect_to_server = aloginif_connect_to_server;
+	aloginif->on_disconnect = aloginif_on_disconnect;
+	aloginif->keepalive = aloginif_keepalive;
+	aloginif->on_ready = aloginif_on_ready;
 
 	aloginif->parse = aloginif_parse;
+	aloginif->parse_connection_state = aloginif_parse_connection_state;
+	aloginif->parse_pong = aloginif_parse_pong;
 }

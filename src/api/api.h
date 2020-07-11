@@ -99,6 +99,8 @@ struct api_interface {
 	bool (*config_read_connection) (const char *filename, struct config_t *config, bool imported);
 	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);
 
+	int (*check_connect_login_server) (int tid, int64 tick, int id, intptr_t data);
+
 	void (*do_shutdown) (void);
 };
 

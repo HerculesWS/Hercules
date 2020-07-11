@@ -35,7 +35,8 @@ struct api_session_data;
 //Interval at which api server sends number of connected users. [Skotlex]
 #define UPDATE_INTERVAL 10000
 
-#define ALOGINIF_PACKET_LEN_TABLE_SIZE 0x3d
+#define ALOGINIF_PACKET_LEN_TABLE_START 0x2810
+#define ALOGINIF_PACKET_LEN_TABLE_SIZE 0x8
 
 #define aloginif_char_offline(x) aloginif->char_offline_nsd((x)->status.account_id,(x)->status.char_id)
 
@@ -67,8 +68,14 @@ struct aloginif_interface {
 	void (*checkdefaultlogin) (void);
 	bool (*setip) (const char* ip);
 	void (*setport) (uint16 port);
+	void (*connect_to_server) (void);
+	void (*on_disconnect) (void);
+	void (*keepalive) (int fd);
+	void (*on_ready) (void);
 
 	int (*parse) (int fd);
+	int (*parse_connection_state) (int fd);
+	int (*parse_pong) (int fd);
 };
 
 #ifdef HERCULES_CORE

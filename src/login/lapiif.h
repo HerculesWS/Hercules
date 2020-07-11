@@ -26,14 +26,26 @@
 
 struct login_session_data;
 
+#define LAPIIF_PACKET_LEN_TABLE_START 0x2820
+#define LAPIIF_PACKET_LEN_TABLE_SIZE 0x8
+
 /**
  * Lapi.c Interface
  **/
 struct lapiif_interface {
+	int packet_len_table[LAPIIF_PACKET_LEN_TABLE_SIZE];
+
 	void (*init) (void);
 	void (*final) (void);
 	void (*connect_user) (struct login_session_data *sd, const unsigned char* auth_token);
 	void (*disconnect_user) (int account_id);
+	void (*server_init) (int id);
+	void (*server_destroy) (int id);
+	void (*server_reset) (int id);
+	void (*on_disconnect) (int id);
+	void (*pong) (int id);
+	int (*parse) (int fd);
+	void (*parse_ping) (int fd);
 };
 
 #ifdef HERCULES_CORE
