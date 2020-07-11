@@ -190,7 +190,7 @@ sysinfo: config.status
 	@if cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then \
 		rm src/common/sysinfo_new.inc ; \
 	else \
-		mv src/common/sysinfo_new.inc src/common/sysinfo.inc ; \
+		mv src/common/sysinfo_new.inc src/common/sysinfo.inc || true ; \
 	fi
 
 config.status: configure
