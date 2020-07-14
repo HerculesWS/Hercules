@@ -1381,4 +1381,9 @@ enum e_pet_intimacy_level {
 #error MAX_REFINE_REQUIREMENTS is bigger than allowed, this is a hardcoded limit in the client
 #endif
 
+// do not change. related on packet fields
+#ifndef MAX_CHARSERVER_NAME_SIZE
+#define MAX_CHARSERVER_NAME_SIZE 20
+#endif
+
 #endif /* COMMON_MMO_H */

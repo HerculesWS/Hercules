@@ -3,6 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2020 Andrei Karas (4144)
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -29,7 +30,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
-#include "common/sql.h"
+#include "common/strlib.h"
 
 #include <string.h>
 
@@ -168,6 +169,89 @@ static void lapiif_pong(int fd)
 	WFIFOSET(fd, 2);
 }
 
+static void lapiif_add_char_server_to(int char_server_id, int api_server_id)
+{
+	Assert_retv(char_server_id >= 0 && char_server_id < MAX_SERVERS);
+	Assert_retv(api_server_id >= 0 && api_server_id < MAX_SERVERS);
+	Assert_retv(sockt->session_is_active(login->dbs->api_server[api_server_id].fd));
+
+	const int fd = login->dbs->api_server[api_server_id].fd;
+
+	WFIFOHEAD(fd, 4 + MAX_CHARSERVER_NAME_SIZE);
+	WFIFOW(fd, 0) = 0x2817;
+	WFIFOW(fd, 2) = char_server_id;
+	safestrncpy(WFIFOP(fd, 4), login->dbs->server[char_server_id].name, MAX_CHARSERVER_NAME_SIZE);
+	WFIFOSET(fd, 4 + MAX_CHARSERVER_NAME_SIZE);
+}
+
+static void lapiif_add_char_server(int char_server_id)
+{
+	Assert_retv(char_server_id >= 0 && char_server_id < MAX_SERVERS);
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
+		if (!sockt->session_is_valid(login->dbs->api_server[i].fd))
+			continue;
+		lapiif->add_char_server_to(char_server_id, i);
+	}
+}
+
+static void lapiif_remove_char_server_from(int char_server_id, int api_server_id)
+{
+	Assert_retv(char_server_id >= 0 && char_server_id < MAX_SERVERS);
+	Assert_retv(api_server_id >= 0 && api_server_id < MAX_SERVERS);
+	Assert_retv(sockt->session_is_active(login->dbs->api_server[api_server_id].fd));
+
+	const int fd = login->dbs->api_server[api_server_id].fd;
+	WFIFOHEAD(fd, 4);
+	WFIFOW(fd, 0) = 0x2816;
+	WFIFOW(fd, 2) = char_server_id;
+	WFIFOSET(fd, 4);
+}
+
+static void lapiif_remove_char_server(int char_server_id)
+{
+	Assert_retv(char_server_id >= 0 && char_server_id < MAX_SERVERS);
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
+		if (!sockt->session_is_valid(login->dbs->api_server[i].fd))
+			continue;
+		lapiif->remove_char_server_from(char_server_id, i);
+	}
+}
+
+static void lapiif_send_char_servers(int api_server_id)
+{
+	Assert_retv(api_server_id >= 0 && api_server_id < MAX_SERVERS);
+	Assert_retv(sockt->session_is_active(login->dbs->api_server[api_server_id].fd));
+
+	int server_num = 0;
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
+		if (sockt->session_is_active(login->dbs->server[i].fd))
+			server_num++;
+	}
+
+	const int part_size = 2 + MAX_CHARSERVER_NAME_SIZE;
+	int length = 4 + part_size * server_num;
+	const int fd = login->dbs->api_server[api_server_id].fd;
+
+	WFIFOHEAD(fd, length);
+	WFIFOW(fd, 0) = 0x2815;
+	WFIFOW(fd, 2) = length;
+	int offset = 4;
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
+		if (!sockt->session_is_valid(login->dbs->server[i].fd))
+			continue;
+
+		WFIFOW(fd, offset) = i;
+		offset += 2;
+		safestrncpy(WFIFOP(fd, offset), login->dbs->server[i].name, MAX_CHARSERVER_NAME_SIZE);
+		offset += MAX_CHARSERVER_NAME_SIZE;
+	}
+	WFIFOSET(fd, length);
+}
+
 static void lapiif_init(void)
 {
 }
@@ -197,4 +281,9 @@ void lapiif_defaults(void)
 	lapiif->pong = lapiif_pong;
 	lapiif->parse = lapiif_parse;
 	lapiif->parse_ping = lapiif_parse_ping;
+	lapiif->add_char_server = lapiif_add_char_server;
+	lapiif->add_char_server_to = lapiif_add_char_server_to;
+	lapiif->remove_char_server = lapiif_remove_char_server;
+	lapiif->remove_char_server_from = lapiif_remove_char_server_from;
+	lapiif->send_char_servers = lapiif_send_char_servers;
 }

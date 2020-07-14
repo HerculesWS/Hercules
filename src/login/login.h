@@ -80,7 +80,7 @@ struct login_session_data {
 
 struct mmo_char_server {
 
-	char name[20];
+	char name[MAX_CHARSERVER_NAME_SIZE];
 	int fd;
 	uint32 ip;
 	uint16 port;

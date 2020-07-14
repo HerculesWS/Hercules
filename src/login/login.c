@@ -222,6 +222,7 @@ static void lchrif_on_disconnect(int id)
 	Assert_retv(id >= 0 && id < MAX_SERVERS);
 	ShowStatus("Char-server '%s' has disconnected.\n", login->dbs->server[id].name);
 	lchrif->server_reset(id);
+	lapiif->remove_char_server(id);
 }
 
 
@@ -1504,6 +1505,7 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 
 		// send connection success
 		login->char_server_connection_status(fd, sd, 0);
+		lapiif->add_char_server(sd->account_id);
 	} else {
 		ShowNotice("Connection of the char-server '%s' REFUSED.\n", server_name);
 		login->char_server_connection_status(fd, sd, 1);
@@ -1551,6 +1553,7 @@ static void login_parse_request_api_connection(int fd, struct login_session_data
 
 		// send connection success
 		login->api_server_connection_status(fd, sd, 0);
+		lapiif->send_char_servers(sd->account_id);
 	} else {
 		ShowNotice("Connection of the api-server REFUSED.\n");
 		login->api_server_connection_status(fd, sd, 1);

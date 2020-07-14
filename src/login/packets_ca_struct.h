@@ -227,7 +227,7 @@ struct PACKET_CA_CHARSERVERCONNECT {
 	int32 unknown;
 	int32 ip;          ///< Charserver IP
 	int16 port;        ///< Charserver port
-	char name[20];     ///< Charserver name
+	char name[MAX_CHARSERVER_NAME_SIZE];  ///< Charserver name
 	int16 unknown2;
 	int16 type;        ///< Charserver type
 	int16 new;         ///< Whether charserver is to be marked as new

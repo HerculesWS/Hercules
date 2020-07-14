@@ -93,7 +93,7 @@ struct PACKET_AC_ACCEPT_LOGIN {
 	struct {
 		uint32 ip;        ///< Server IP address
 		int16 port;       ///< Server port
-		char name[20];    ///< Server name
+		char name[MAX_CHARSERVER_NAME_SIZE];  ///< Server name
 		uint16 usercount; ///< Online users
 		uint16 state;     ///< Server state
 		uint16 property;  ///< Server property

@@ -3,6 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2020 Andrei Karas (4144)
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -44,6 +45,11 @@ struct lapiif_interface {
 	void (*server_reset) (int id);
 	void (*on_disconnect) (int id);
 	void (*pong) (int id);
+	void (*add_char_server) (int char_server_id);
+	void (*add_char_server_to) (int char_server_id, int api_server_id);
+	void (*remove_char_server) (int char_server_id);
+	void (*remove_char_server_from) (int char_server_id, int api_server_id);
+	void (*send_char_servers) (int api_server_id);
 	int (*parse) (int fd);
 	void (*parse_ping) (int fd);
 };

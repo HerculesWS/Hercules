@@ -3,6 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2020 Andrei Karas (4144)
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -168,6 +169,9 @@ static int aloginif_parse(int fd)
 			case 0x2812: aloginif->parse_pong(fd); break;
 			case 0x2813: aloginif->parse_disconnect_user(fd); break;
 			case 0x2814: aloginif->parse_connect_user(fd); break;
+			case 0x2815: aloginif->parse_char_servers_list(fd); break;
+			case 0x2816: aloginif->parse_remove_char_server(fd); break;
+			case 0x2817: aloginif->parse_add_char_server(fd); break;
 			default:
 				ShowError("aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
@@ -230,6 +234,49 @@ static int aloginif_parse_connection_state(int fd)
 	return 0;
 }
 
+static int aloginif_parse_char_servers_list(int fd)
+{
+	db_clear(aclif->char_servers_db);
+	db_clear(aclif->char_servers_id_db);
+
+	const int part_size = 2 + MAX_CHARSERVER_NAME_SIZE;
+
+	int offset = 4;
+	const int count = (RFIFOW(fd, 2) - offset) / part_size;
+	ShowInfo("Got %d char servers.\n", count);
+	for (int f = 0; f < count; f ++) {
+		struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
+		data->id = RFIFOW(fd, offset);
+		char *name = aStrdup(RFIFOP(fd, offset + 2));
+		strdb_put(aclif->char_servers_db, name, data);
+		idb_put(aclif->char_servers_id_db, data->id, name);
+		offset += part_size;
+	}
+	return 0;
+}
+
+static int aloginif_parse_remove_char_server(int fd)
+{
+	const int char_server_id = RFIFOW(fd, 2);
+	const char *name = idb_get(aclif->char_servers_id_db, char_server_id);
+	nullpo_retr(1, name);
+
+	idb_remove(aclif->char_servers_id_db, char_server_id);
+	strdb_remove(aclif->char_servers_db, name);
+	return 0;
+}
+
+static int aloginif_parse_add_char_server(int fd)
+{
+	const int char_server_id = RFIFOW(fd, 2);
+	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
+	data->id = char_server_id;
+	char *name = aStrdup(RFIFOP(fd, 4));
+	strdb_put(aclif->char_servers_db, name, data);
+	idb_put(aclif->char_servers_id_db, data->id, name);
+	return 0;
+}
+
 /// Called when the connection to Login Server is disconnected.
 static void aloginif_on_disconnect(void)
 {
@@ -277,7 +324,7 @@ void aloginif_defaults(void)
 	aloginif = &aloginif_s;
 
 	const int packet_len_table[ALOGINIF_PACKET_LEN_TABLE_SIZE] = {
-		0,  3,  2,  6, 22,  0,  0,  0 // 2810
+		0,  3,  2,  6, 22, -1,  4, 24 // 2810 - 2817
 	};
 
 	/* vars */
@@ -313,4 +360,7 @@ void aloginif_defaults(void)
 	aloginif->parse_pong = aloginif_parse_pong;
 	aloginif->parse_disconnect_user = aloginif_parse_disconnect_user;
 	aloginif->parse_connect_user = aloginif_parse_connect_user;
+	aloginif->parse_char_servers_list = aloginif_parse_char_servers_list;
+	aloginif->parse_add_char_server = aloginif_parse_add_char_server;
+	aloginif->parse_remove_char_server = aloginif_parse_remove_char_server;
 }

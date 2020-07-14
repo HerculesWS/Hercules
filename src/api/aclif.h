@@ -83,11 +83,14 @@ enum req_flags {
 	REQ_ACCOUNT_ID = 2,
 };
 
-
 struct online_api_login_data {
 	int account_id;
 	int char_id;
 	unsigned char auth_token[AUTH_TOKEN_SIZE];
+};
+
+struct char_server_data {
+	int id;
 };
 
 /**
@@ -102,6 +105,8 @@ struct aclif_interface {
 	int api_fd;
 	struct DBMap *handlers_db[HTTP_MAX_PROTOCOL];
 	struct DBMap *online_db;
+	struct DBMap *char_servers_db;
+	struct DBMap *char_servers_id_db;
 
 	/* core */
 	int (*init) (bool minimal);

@@ -641,6 +641,8 @@ static void do_final_aclif(void)
 		aclif->handlers_db[i] = NULL;
 	}
 	db_destroy(aclif->online_db);
+	db_destroy(aclif->char_servers_db);
+	db_destroy(aclif->char_servers_id_db);
 }
 
 void aclif_defaults(void)
@@ -653,6 +655,8 @@ void aclif_defaults(void)
 		aclif->handlers_db[i] = NULL;
 	}
 	aclif->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	aclif->char_servers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_CHARSERVER_NAME_SIZE);
+	aclif->char_servers_id_db = idb_alloc(DB_OPT_BASE);
 
 	/* core */
 	aclif->init = do_init_aclif;
