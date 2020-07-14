@@ -2061,7 +2061,9 @@ static void login_generate_token(unsigned char *token)
 #if PACKETVER >= 20170315
 	nullpo_retv(token);
 	for (int f = 0; f < AUTH_TOKEN_SIZE; f ++) {
-		token[f] = rnd() & 0xff;
+		int val = 0;
+		while((val = (rnd() & 0x7f)) <= ' ' || val == '"' || val == '&');
+		token[f] = val;
 	}
 #endif
 }
