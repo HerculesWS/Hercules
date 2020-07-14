@@ -59,7 +59,7 @@ HTTPURL(userconfig_load)
 	// english emotes
 //	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
 
-	aclif->show_request(fd, sd);
+	aclif->show_request(fd, sd, false);
 
 	return true;
 }
@@ -70,7 +70,7 @@ HTTPURL(userconfig_save)
 	ShowInfo("userconfig_save called %d: %d\n", fd, sd->parser.method);
 #endif
 
-	aclif->show_request(fd, sd);
+	aclif->show_request(fd, sd, false);
 	return true;
 }
 
@@ -82,7 +82,7 @@ HTTPURL(charconfig_load)
 	// send hardcoded settings
 	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"HomunSkillInfo\":null,\"UseSkillInfo\":null}}");
 
-	aclif->show_request(fd, sd);
+	aclif->show_request(fd, sd, false);
 
 	return true;
 }

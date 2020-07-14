@@ -557,13 +557,14 @@ static int aclif_print_header(union DBKey key, struct DBData *data, va_list ap)
     return 0;
 }
 
-static void aclif_show_request(int fd, struct api_session_data *sd)
+static void aclif_show_request(int fd, struct api_session_data *sd, bool show_http_headers)
 {
 	nullpo_retv(sd);
 
 	ShowInfo("URL: %s %s\n", http_method_str(sd->parser.method), sd->url);
 
-	sd->headers_db->foreach(sd->headers_db, aclif->print_header);
+	if (show_http_headers)
+		sd->headers_db->foreach(sd->headers_db, aclif->print_header);
 
 	struct DBIterator *iter = db_iterator(sd->post_headers_db);
 	for (struct MimePart *data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter)) {

@@ -138,7 +138,7 @@ struct aclif_interface {
 	void (*add_online_player) (int account_id, const unsigned char *auth_token);
 	struct DBData (*create_online_login_data) (union DBKey key, va_list args);
 
-	void (*show_request) (int fd, struct api_session_data *sd);
+	void (*show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 };
 
 #ifdef HERCULES_CORE
