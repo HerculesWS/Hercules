@@ -304,6 +304,8 @@ static bool api_config_read(const char *filename, bool imported)
 		return false;
 	}
 
+	libconfig->setting_lookup_int(setting, "remove_disconnected_delay", &aclif->remove_disconnected_delay);
+
 	if (!api_config_read_console(filename, &config, imported))
 		retval = false;
 	if (!api_config_read_connection(filename, &config, imported))

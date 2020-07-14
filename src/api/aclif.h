@@ -92,6 +92,7 @@ struct online_api_login_data {
 	int account_id;
 	int char_id;
 	unsigned char auth_token[AUTH_TOKEN_SIZE];
+	int64 remove_tick;
 };
 
 struct char_server_data {
@@ -108,6 +109,8 @@ struct aclif_interface {
 	uint16 api_port;
 	char api_ip_str[128];
 	int api_fd;
+	int remove_disconnected_delay;
+
 	struct DBMap *handlers_db[HTTP_MAX_PROTOCOL];
 	struct DBMap *online_db;
 	struct DBMap *char_servers_db;
@@ -146,10 +149,13 @@ struct aclif_interface {
 	bool (*get_post_header_data_str) (struct api_session_data *sd, const char *name, char **data);
 
 	void (*delete_online_player) (int account_id);
+	void (*real_delete_online_player) (int account_id);
 	void (*add_online_player) (int account_id, const unsigned char *auth_token);
 	struct DBData (*create_online_login_data) (union DBKey key, va_list args);
 	void (*add_char_server) (int char_server_id, const char *name);
 	void (*remove_char_server) (int char_server_id, const char *name);
+	int (*purge_disconnected_users) (int tid, int64 tick, int id, intptr_t data);
+	int (*purge_disconnected_user) (union DBKey key, struct DBData *data, va_list ap);
 
 	void (*show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 };

@@ -614,6 +614,15 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 static void aclif_delete_online_player(int account_id)
 {
 	ShowInfo("test disconnect account: %d\n", account_id);
+	struct online_api_login_data *data = idb_get(aclif->online_db, account_id);
+	if (data != NULL) {
+		data->remove_tick = timer->gettick() + aclif->remove_disconnected_delay;
+	}
+}
+
+static void aclif_real_delete_online_player(int account_id)
+{
+	ShowInfo("test real disconnect account: %d\n", account_id);
 	idb_remove(aclif->online_db, account_id);
 }
 
@@ -623,6 +632,8 @@ static void aclif_add_online_player(int account_id, const unsigned char *auth_to
 	ShowInfo("test token: %.*s\n", 16, auth_token);
 
 	struct online_api_login_data *user = idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
+	if (user->remove_tick != 0)
+		user->remove_tick = 0;
 	memcpy(user->auth_token, auth_token, AUTH_TOKEN_SIZE);
 }
 
@@ -631,6 +642,24 @@ static struct DBData aclif_create_online_login_data(union DBKey key, va_list arg
 	struct online_api_login_data *user;
 	CREATE(user, struct online_api_login_data, 1);
 	return DB->ptr2data(user);
+}
+
+static int aclif_purge_disconnected_users(int tid, int64 tick, int id, intptr_t data)
+{
+	aclif->online_db->foreach(aclif->online_db, aclif->purge_disconnected_user, timer->gettick());
+	return 0;
+}
+
+static int aclif_purge_disconnected_user(union DBKey key, struct DBData *data, va_list ap)
+{
+	const int64 tick = va_arg(ap, int64);
+	struct online_api_login_data *user = (struct online_api_login_data *)DB->data2ptr(data);
+	if (user == NULL || user->remove_tick == 0)
+		return 0;
+	if (user->remove_tick < tick)
+		aclif->real_delete_online_player(key.i);
+
+	return 0;
 }
 
 static bool aclif_get_post_header_data_int(struct api_session_data *sd, const char *name, int *account_id)
@@ -695,6 +724,9 @@ static int do_init_aclif(bool minimal)
 
 	aclif->load_handlers();
 
+	timer->add_func_list(aclif->purge_disconnected_users, "aclif->purge_disconnected_users");
+	timer->add_interval(timer->gettick() + aclif->remove_disconnected_delay, aclif->purge_disconnected_users, 0, 0, aclif->remove_disconnected_delay);
+
 	return 0;
 }
 
@@ -715,6 +747,9 @@ void aclif_defaults(void)
 	/* vars */
 	aclif->bind_ip = INADDR_ANY;
 	aclif->api_port = 3000;
+
+	aclif->remove_disconnected_delay = 5000;
+
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = NULL;
 	}
@@ -754,10 +789,13 @@ void aclif_defaults(void)
 	aclif->get_post_header_data_str = aclif_get_post_header_data_str;
 
 	aclif->delete_online_player = aclif_delete_online_player;
+	aclif->real_delete_online_player = aclif_real_delete_online_player;
 	aclif->add_online_player = aclif_add_online_player;
 	aclif->create_online_login_data = aclif_create_online_login_data;
 	aclif->add_char_server = aclif_add_char_server;
 	aclif->remove_char_server = aclif_remove_char_server;
+	aclif->purge_disconnected_users = aclif_purge_disconnected_users;
+	aclif->purge_disconnected_user = aclif_purge_disconnected_user;
 
 	aclif->reportError = aclif_reportError;
 }
