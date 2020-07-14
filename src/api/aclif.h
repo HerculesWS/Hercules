@@ -82,6 +82,7 @@ enum req_flags {
 	REQ_AUTO_CLOSE = 1,
 	REQ_ACCOUNT_ID = 2,
 	REQ_WORLD_NAME = 4,
+	REQ_AUTH_TOKEN = 8,
 };
 
 struct online_api_login_data {

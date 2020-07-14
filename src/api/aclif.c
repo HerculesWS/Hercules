@@ -560,6 +560,25 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		}
 
 	}
+
+	if ((sd->handler->flags & REQ_AUTH_TOKEN) != 0) {
+		// check is auth token present and correct
+		if (login_data == NULL) {
+			ShowError("Account id required for auth token check: %d\n", fd);
+			return false;
+		}
+		char *token = NULL;
+		if (!aclif->get_post_header_data_str(sd, "AuthToken", &token)) {
+			ShowError("Http request without AuthToken %d\n", fd);
+			return false;
+		}
+
+		if (memcmp(login_data->auth_token, token, AUTH_TOKEN_SIZE) != 0) {
+			ShowError("Wrong auth token %d: '%s'\n", fd, token);
+			return false;
+		}
+
+	}
 	return true;
 }
 
