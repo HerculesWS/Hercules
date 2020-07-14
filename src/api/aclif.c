@@ -664,6 +664,21 @@ static bool aclif_get_post_header_data_str(struct api_session_data *sd, const ch
 	return *data != NULL;
 }
 
+static void aclif_add_char_server(int char_server_id, const char *name)
+{
+	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
+	data->id = char_server_id;
+	char *name2 = aStrdup(name);
+	strdb_put(aclif->char_servers_db, name2, data);
+	idb_put(aclif->char_servers_id_db, char_server_id, name2);
+}
+
+static void aclif_remove_char_server(int char_server_id, const char *name)
+{
+	idb_remove(aclif->char_servers_id_db, char_server_id);
+	strdb_remove(aclif->char_servers_db, name);
+}
+
 static int do_init_aclif(bool minimal)
 {
 	if (minimal)
@@ -741,6 +756,8 @@ void aclif_defaults(void)
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->add_online_player = aclif_add_online_player;
 	aclif->create_online_login_data = aclif_create_online_login_data;
+	aclif->add_char_server = aclif_add_char_server;
+	aclif->remove_char_server = aclif_remove_char_server;
 
 	aclif->reportError = aclif_reportError;
 }

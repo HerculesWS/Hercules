@@ -245,11 +245,7 @@ static int aloginif_parse_char_servers_list(int fd)
 	const int count = (RFIFOW(fd, 2) - offset) / part_size;
 	ShowInfo("Got %d char servers.\n", count);
 	for (int f = 0; f < count; f ++) {
-		struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
-		data->id = RFIFOW(fd, offset);
-		char *name = aStrdup(RFIFOP(fd, offset + 2));
-		strdb_put(aclif->char_servers_db, name, data);
-		idb_put(aclif->char_servers_id_db, data->id, name);
+		aclif->add_char_server(RFIFOW(fd, offset), aStrdup(RFIFOP(fd, offset + 2)));
 		offset += part_size;
 	}
 	return 0;
@@ -261,8 +257,7 @@ static int aloginif_parse_remove_char_server(int fd)
 	const char *name = idb_get(aclif->char_servers_id_db, char_server_id);
 	nullpo_retr(1, name);
 
-	idb_remove(aclif->char_servers_id_db, char_server_id);
-	strdb_remove(aclif->char_servers_db, name);
+	aclif->remove_char_server(char_server_id, name);
 	return 0;
 }
 
