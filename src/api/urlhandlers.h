@@ -22,7 +22,7 @@
 #define handler(method, url, func, flags)
 #endif  // handler
 
-handler(HTTP_POST, "/userconfig/load", userconfig_load, REQ_AUTO_CLOSE | REQ_ACCOUNT_ID | REQ_WORLD_NAME);
-handler(HTTP_POST, "/userconfig/save", userconfig_save, REQ_AUTO_CLOSE | REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN);
-handler(HTTP_POST, "/charconfig/load", charconfig_load, REQ_AUTO_CLOSE | REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN);
+handler(HTTP_POST, "/userconfig/load", userconfig_load, REQ_API);
+handler(HTTP_POST, "/userconfig/save", userconfig_save, REQ_API_AUTH);
+handler(HTTP_POST, "/charconfig/load", charconfig_load, REQ_API_AUTH);
 handler(HTTP_GET, "/test/url", test_url, REQ_DEFAULT);
