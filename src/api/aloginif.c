@@ -166,6 +166,8 @@ static int aloginif_parse(int fd)
 		switch (cmd) {
 			case 0x2811: aloginif->parse_connection_state(fd); break;
 			case 0x2812: aloginif->parse_pong(fd); break;
+			case 0x2813: aloginif->parse_disconnect_user(fd); break;
+			case 0x2814: aloginif->parse_connect_user(fd); break;
 			default:
 				ShowError("aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
@@ -186,6 +188,18 @@ static int aloginif_parse_pong(int fd)
 {
 	if (sockt->session[fd])
 		sockt->session[fd]->flag.ping = 0;
+	return 0;
+}
+
+static int aloginif_parse_disconnect_user(int fd)
+{
+	aclif->delete_online_player(RFIFOL(fd, 2));
+	return 0;
+}
+
+static int aloginif_parse_connect_user(int fd)
+{
+	aclif->add_online_player(RFIFOL(fd, 2), RFIFOP(fd, 6));
 	return 0;
 }
 
@@ -263,7 +277,7 @@ void aloginif_defaults(void)
 	aloginif = &aloginif_s;
 
 	const int packet_len_table[ALOGINIF_PACKET_LEN_TABLE_SIZE] = {
-		0, 3, 2, 0, 0, 0, 0, 0 // 2810,
+		0,  3,  2,  6, 22,  0,  0,  0 // 2810
 	};
 
 	/* vars */
@@ -297,4 +311,6 @@ void aloginif_defaults(void)
 	aloginif->parse = aloginif_parse;
 	aloginif->parse_connection_state = aloginif_parse_connection_state;
 	aloginif->parse_pong = aloginif_parse_pong;
+	aloginif->parse_disconnect_user = aloginif_parse_disconnect_user;
+	aloginif->parse_connect_user = aloginif_parse_connect_user;
 }

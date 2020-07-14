@@ -560,6 +560,28 @@ static void aclif_show_request(int fd, struct api_session_data *sd)
 	dbi_destroy(iter);
 }
 
+static void aclif_delete_online_player(int account_id)
+{
+	ShowInfo("test disconnect account: %d\n", account_id);
+	idb_remove(aclif->online_db, account_id);
+}
+
+static void aclif_add_online_player(int account_id, const unsigned char *auth_token)
+{
+	ShowInfo("test connect account: %d\n", account_id);
+	ShowInfo("test token: %.*s\n", 16, auth_token);
+
+	struct online_api_login_data *user = idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
+	memcpy(user->auth_token, auth_token, AUTH_TOKEN_SIZE);
+}
+
+static struct DBData aclif_create_online_login_data(union DBKey key, va_list args)
+{
+	struct online_api_login_data *user;
+	CREATE(user, struct online_api_login_data, 1);
+	return DB->ptr2data(user);
+}
+
 static int do_init_aclif(bool minimal)
 {
 	if (minimal)
@@ -585,6 +607,7 @@ static void do_final_aclif(void)
 		db_destroy(aclif->handlers_db[i]);
 		aclif->handlers_db[i] = NULL;
 	}
+	db_destroy(aclif->online_db);
 }
 
 void aclif_defaults(void)
@@ -596,6 +619,8 @@ void aclif_defaults(void)
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = NULL;
 	}
+	aclif->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
+
 	/* core */
 	aclif->init = do_init_aclif;
 	aclif->final = do_final_aclif;
@@ -624,6 +649,10 @@ void aclif_defaults(void)
 	aclif->decode_post_headers = aclif_decode_post_headers;
 	aclif->show_request = aclif_show_request;
 	aclif->print_header = aclif_print_header;
+
+	aclif->delete_online_player = aclif_delete_online_player;
+	aclif->add_online_player = aclif_add_online_player;
+	aclif->create_online_login_data = aclif_create_online_login_data;
 
 	aclif->reportError = aclif_reportError;
 }

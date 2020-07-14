@@ -70,12 +70,23 @@
 #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 #endif
 
+#ifndef AUTH_TOKEN_SIZE
+#define AUTH_TOKEN_SIZE 16
+#endif
+
 union DBKey;
 struct DBData;
 
 enum req_flags {
 	REQ_DEFAULT = 0,
 	REQ_AUTO_CLOSE = 1
+};
+
+
+struct online_api_login_data {
+	int account_id;
+	int char_id;
+	unsigned char auth_token[AUTH_TOKEN_SIZE];
 };
 
 /**
@@ -89,6 +100,7 @@ struct aclif_interface {
 	char api_ip_str[128];
 	int api_fd;
 	struct DBMap *handlers_db[HTTP_MAX_PROTOCOL];
+	struct DBMap *online_db;
 
 	/* core */
 	int (*init) (bool minimal);
@@ -119,6 +131,11 @@ struct aclif_interface {
 	void (*check_headers) (int fd, struct api_session_data *sd);
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
 	int (*print_header) (union DBKey key, struct DBData *data, va_list ap);
+
+	void (*delete_online_player) (int account_id);
+	void (*add_online_player) (int account_id, const unsigned char *auth_token);
+	struct DBData (*create_online_login_data) (union DBKey key, va_list args);
+
 	void (*show_request) (int fd, struct api_session_data *sd);
 };
 

@@ -59,6 +59,8 @@ HTTPURL(userconfig_load)
 	// english emotes
 //	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
 
+	aclif->show_request(fd, sd);
+
 	return true;
 }
 
@@ -79,6 +81,8 @@ HTTPURL(charconfig_load)
 #endif
 	// send hardcoded settings
 	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"HomunSkillInfo\":null,\"UseSkillInfo\":null}}");
+
+	aclif->show_request(fd, sd);
 
 	return true;
 }

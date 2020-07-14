@@ -23,6 +23,7 @@
 #include "lapiif.h"
 
 #include "login/login.h"
+#include "login/packets_ac_struct.h"
 
 #include "common/cbasetypes.h"
 #include "common/nullpo.h"
@@ -37,10 +38,32 @@ struct lapiif_interface *lapiif;
 
 static void lapiif_disconnect_user(int account_id)
 {
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
+		const int fd = login->dbs->api_server[i].fd;
+		if (!sockt->session_is_active(fd))
+			continue;
+		WFIFOHEAD(fd, 6);
+		WFIFOW(fd, 0) = 0x2813;
+		WFIFOL(fd, 2) = account_id;
+		WFIFOSET(fd, 6);
+	}
 }
 
 static void lapiif_connect_user(struct login_session_data *sd, const unsigned char* auth_token)
 {
+	nullpo_retv(sd);
+	nullpo_retv(auth_token);
+
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
+		const int fd = login->dbs->api_server[i].fd;
+		if (!sockt->session_is_active(fd))
+			continue;
+		WFIFOHEAD(fd, 6 + AUTH_TOKEN_SIZE);
+		WFIFOW(fd, 0) = 0x2814;
+		WFIFOL(fd, 2) = sd->account_id;
+		memcpy(WFIFOP(fd, 6), auth_token, AUTH_TOKEN_SIZE);
+		WFIFOSET(fd, 6 + AUTH_TOKEN_SIZE);
+	}
 }
 
 /// Initializes a server structure.

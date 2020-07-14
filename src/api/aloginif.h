@@ -76,6 +76,8 @@ struct aloginif_interface {
 	int (*parse) (int fd);
 	int (*parse_connection_state) (int fd);
 	int (*parse_pong) (int fd);
+	int (*parse_disconnect_user) (int fd);
+	int (*parse_connect_user) (int fd);
 };
 
 #ifdef HERCULES_CORE
