@@ -528,6 +528,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	nullpo_retr(false, sd);
 
 	struct online_api_login_data *login_data = NULL;
+	struct char_server_data *char_server_data;
 
 	if ((sd->handler->flags & REQ_ACCOUNT_ID) != 0) {
 		// check is account_id logged in
@@ -544,6 +545,21 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		}
 	}
 
+	if ((sd->handler->flags & REQ_WORLD_NAME) != 0) {
+		// check is world name present and correct
+		char *name = NULL;
+		if (!aclif->get_post_header_data_str(sd, "WorldName", &name)) {
+			ShowError("Http request without WorldName %d\n", fd);
+			return false;
+		}
+
+		char_server_data = strdb_get(aclif->char_servers_db, name);
+		if (char_server_data == NULL) {
+			ShowError("Unknown world name %d: %s\n", fd, name);
+			return false;
+		}
+
+	}
 	return true;
 }
 
@@ -613,6 +629,20 @@ static bool aclif_get_post_header_data_int(struct api_session_data *sd, const ch
 		return false;
 	*account_id = atoi(data);
 	return true;
+}
+
+static bool aclif_get_post_header_data_str(struct api_session_data *sd, const char *name, char **data)
+{
+	nullpo_retr(false, data);
+	*data = NULL;
+	nullpo_retr(false, sd);
+	nullpo_retr(false, name);
+
+	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	if (header == NULL)
+		return false;
+	*data = header->data;
+	return *data != NULL;
 }
 
 static int do_init_aclif(bool minimal)
@@ -687,6 +717,7 @@ void aclif_defaults(void)
 	aclif->show_request = aclif_show_request;
 	aclif->print_header = aclif_print_header;
 	aclif->get_post_header_data_int = aclif_get_post_header_data_int;
+	aclif->get_post_header_data_str = aclif_get_post_header_data_str;
 
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->add_online_player = aclif_add_online_player;
