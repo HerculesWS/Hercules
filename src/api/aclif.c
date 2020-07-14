@@ -527,7 +527,22 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 {
 	nullpo_retr(false, sd);
 
-/// ?????
+	struct online_api_login_data *login_data = NULL;
+
+	if ((sd->handler->flags & REQ_ACCOUNT_ID) != 0) {
+		// check is account_id logged in
+		int account_id = 0;
+		if (!aclif->get_post_header_data_int(sd, "AID", &account_id)) {
+			ShowError("Http request without account id %d\n", fd);
+			return false;
+		}
+
+		login_data = idb_get(aclif->online_db, account_id);
+		if (login_data == NULL) {
+			ShowError("Account not logged in %d: %d\n", fd, account_id);
+			return false;
+		}
+	}
 
 	return true;
 }
@@ -580,6 +595,23 @@ static struct DBData aclif_create_online_login_data(union DBKey key, va_list arg
 	struct online_api_login_data *user;
 	CREATE(user, struct online_api_login_data, 1);
 	return DB->ptr2data(user);
+}
+
+static bool aclif_get_post_header_data_int(struct api_session_data *sd, const char *name, int *account_id)
+{
+	nullpo_retr(false, account_id);
+	*account_id = 0;
+	nullpo_retr(false, sd);
+	nullpo_retr(false, name);
+
+	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	if (header == NULL)
+		return false;
+	char *data = header->data;
+	if (data == NULL)
+		return false;
+	*account_id = atoi(data);
+	return true;
 }
 
 static int do_init_aclif(bool minimal)
@@ -649,6 +681,7 @@ void aclif_defaults(void)
 	aclif->decode_post_headers = aclif_decode_post_headers;
 	aclif->show_request = aclif_show_request;
 	aclif->print_header = aclif_print_header;
+	aclif->get_post_header_data_int = aclif_get_post_header_data_int;
 
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->add_online_player = aclif_add_online_player;

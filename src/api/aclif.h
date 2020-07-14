@@ -79,7 +79,8 @@ struct DBData;
 
 enum req_flags {
 	REQ_DEFAULT = 0,
-	REQ_AUTO_CLOSE = 1
+	REQ_AUTO_CLOSE = 1,
+	REQ_ACCOUNT_ID = 2,
 };
 
 
@@ -131,6 +132,7 @@ struct aclif_interface {
 	void (*check_headers) (int fd, struct api_session_data *sd);
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
 	int (*print_header) (union DBKey key, struct DBData *data, va_list ap);
+	bool (*get_post_header_data_int) (struct api_session_data *sd, const char *name, int *account_id);
 
 	void (*delete_online_player) (int account_id);
 	void (*add_online_player) (int account_id, const unsigned char *auth_token);
