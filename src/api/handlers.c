@@ -81,6 +81,11 @@ HTTPURL(userconfig_load)
 	return true;
 }
 
+DATA(userconfig_save)
+{
+	aclif->terminate_connection(fd);
+}
+
 HTTPURL(userconfig_save)
 {
 #ifdef DEBUG_LOG
@@ -88,7 +93,18 @@ HTTPURL(userconfig_save)
 #endif
 
 	aclif->show_request(fd, sd, false);
+
+	LOAD_ASYNC_DATA(userconfig_save);
+
 	return true;
+}
+
+DATA(charconfig_load)
+{
+	// send hardcoded settings
+	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"HomunSkillInfo\":null,\"UseSkillInfo\":null}}");
+
+	aclif->terminate_connection(fd);
 }
 
 HTTPURL(charconfig_load)
@@ -96,10 +112,9 @@ HTTPURL(charconfig_load)
 #ifdef DEBUG_LOG
 	ShowInfo("charconfig_load called %d: %d\n", fd, sd->parser.method);
 #endif
-	// send hardcoded settings
-	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"HomunSkillInfo\":null,\"UseSkillInfo\":null}}");
-
 	aclif->show_request(fd, sd, false);
+
+	LOAD_ASYNC_DATA(charconfig_load);
 
 	return true;
 }

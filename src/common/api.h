@@ -23,6 +23,8 @@
 
 enum API_MSG {
 	API_MSG_userconfig_load = 1,
+	API_MSG_userconfig_save = 2,
+	API_MSG_charconfig_load = 3,
 	API_MSG_MAX
 };
 

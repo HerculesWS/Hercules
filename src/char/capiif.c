@@ -55,6 +55,12 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 		case API_MSG_userconfig_load:
 			capiif->parse_userconfig_load(fd);
 			break;
+		case API_MSG_userconfig_save:
+			capiif->parse_userconfig_save(fd);
+			break;
+		case API_MSG_charconfig_load:
+			capiif->parse_charconfig_load(fd);
+			break;
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
 			sockt->eof(fd);
@@ -76,6 +82,18 @@ void capiif_parse_userconfig_load(int fd)
 	WFIFOSET(chr->login_fd, len);
 }
 
+void capiif_parse_userconfig_save(int fd)
+{
+	WFIFO_APICHAR_PACKET_REPLY(WFIFO_CHARAPI_SIZE)
+	WFIFOSET(chr->login_fd, WFIFO_CHARAPI_SIZE);
+}
+
+void capiif_parse_charconfig_load(int fd)
+{
+	WFIFO_APICHAR_PACKET_REPLY(WFIFO_CHARAPI_SIZE)
+	WFIFOSET(chr->login_fd, WFIFO_CHARAPI_SIZE);
+}
+
 static void do_init_capiif(void)
 {
 }
@@ -91,4 +109,6 @@ void capiif_defaults(void) {
 	capiif->final = do_final_capiif;
 	capiif->parse_fromlogin_api_proxy = capiif_parse_fromlogin_api_proxy;
 	capiif->parse_userconfig_load = capiif_parse_userconfig_load;
+	capiif->parse_userconfig_save = capiif_parse_userconfig_save;
+	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
 }
