@@ -23,8 +23,11 @@
 #define API_ALOGINIF_H
 
 #include "common/hercules.h"
+#include "common/api.h"
 #include "common/db.h"
 #include "common/mmo.h"
+
+#include "api/handlerfunc.h"
 
 struct api_session_data;
 
@@ -37,9 +40,22 @@ struct api_session_data;
 #define UPDATE_INTERVAL 10000
 
 #define ALOGINIF_PACKET_LEN_TABLE_START 0x2810
-#define ALOGINIF_PACKET_LEN_TABLE_SIZE 0x8
+#define ALOGINIF_PACKET_LEN_TABLE_SIZE 0x10
 
 #define aloginif_char_offline(x) aloginif->char_offline_nsd((x)->status.account_id,(x)->status.char_id)
+
+#define WFIFO_APICHAR_SIZE 22
+
+#define WFIFO_APICHAR_PACKET(msg_id, sd, len) \
+	WFIFOHEAD(aloginif->fd, len); \
+	WFIFOW(aloginif->fd, 0) = 0x2842; \
+	WFIFOW(aloginif->fd, 2) = len; \
+	WFIFOW(aloginif->fd, 4) = msg_id; \
+	WFIFOL(aloginif->fd, 6) = aclif->get_char_server_id(sd); \
+	WFIFOL(aloginif->fd, 10) = (sd)->fd; \
+	WFIFOL(aloginif->fd, 14) = (sd)->account_id; \
+	WFIFOL(aloginif->fd, 18) = (sd)->id
+
 
 /*=====================================
 * Interface : aloginif.h
@@ -60,6 +76,9 @@ struct aloginif_interface {
 	uint16 port;
 	char userid[NAME_LENGTH], passwd[NAME_LENGTH];
 	int state;
+
+	Handler_func msg_map[API_MSG_MAX];
+
 	/* */
 	void (*init) (bool minimal);
 	void (*final) (void);
@@ -73,6 +92,7 @@ struct aloginif_interface {
 	void (*on_disconnect) (void);
 	void (*keepalive) (int fd);
 	void (*on_ready) (void);
+	void (*send_to_char) (int fd, struct api_session_data *sd, int msg_id);
 
 	int (*parse) (int fd);
 	int (*parse_connection_state) (int fd);
@@ -82,6 +102,8 @@ struct aloginif_interface {
 	int (*parse_char_servers_list) (int fd);
 	int (*parse_add_char_server) (int fd);
 	int (*parse_remove_char_server) (int fd);
+	int (*parse_proxy_from_char_server) (int fd);
+	void (*parse_from_char) (int fd, Handler_func func);
 };
 
 #ifdef HERCULES_CORE

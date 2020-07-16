@@ -24,6 +24,7 @@
 #include "api/api.h"
 #include "common/hercules.h"
 #include "common/db.h"
+#include "api/handlerfunc.h"
 #include "api/httphandler.h"
 
 #include <stdarg.h>
@@ -84,8 +85,8 @@ enum req_flags {
 	REQ_WORLD_NAME = 4,
 	REQ_AUTH_TOKEN = 8,
 
-	REQ_API = REQ_AUTO_CLOSE | REQ_ACCOUNT_ID | REQ_WORLD_NAME,
-	REQ_API_AUTH = REQ_AUTO_CLOSE | REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN
+	REQ_API = REQ_ACCOUNT_ID | REQ_WORLD_NAME,
+	REQ_API_AUTH = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN
 };
 
 struct online_api_login_data {
@@ -110,6 +111,7 @@ struct aclif_interface {
 	char api_ip_str[128];
 	int api_fd;
 	int remove_disconnected_delay;
+	int id_counter;
 
 	struct DBMap *handlers_db[HTTP_MAX_PROTOCOL];
 	struct DBMap *online_db;
@@ -129,7 +131,7 @@ struct aclif_interface {
 	int (*connected) (int fd);
 	int (*session_delete) (int fd);
 	void (*load_handlers) (void);
-	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func, int flags);
+	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags);
 	void (*set_url) (int fd, enum http_method method, const char *url, size_t size);
 	void (*set_body) (int fd, const char *body, size_t size);
 	void (*set_header_name) (int fd, const char *name, size_t size);
@@ -156,6 +158,7 @@ struct aclif_interface {
 	void (*remove_char_server) (int char_server_id, const char *name);
 	int (*purge_disconnected_users) (int tid, int64 tick, int id, intptr_t data);
 	int (*purge_disconnected_user) (union DBKey key, struct DBData *data, va_list ap);
+	int (*get_char_server_id) (struct api_session_data *sd);
 
 	void (*show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 };

@@ -24,6 +24,7 @@
 #include "char/char.h"
 
 #include "char/HPMchar.h"
+#include "char/capiif.h"
 #include "char/geoip.h"
 #include "char/int_auction.h"
 #include "char/int_clan.h"
@@ -2865,6 +2866,12 @@ static int char_parse_fromlogin(int fd)
 					return 0;
 
 				chr->parse_fromlogin_accinfo2_ok(fd);
+			break;
+
+			case 0x2842:
+				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
+					return 0;
+				capiif->parse_fromlogin_api_proxy(fd);
 			break;
 
 			default:
@@ -6059,6 +6066,7 @@ int do_final(void)
 
 	do_final_mapif();
 	loginif->final();
+	capiif->final();
 	pincode->final();
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s`", ragsrvinfo_db) )
@@ -6276,6 +6284,7 @@ int do_init(int argc, char **argv)
 	}
 
 	loginif->init();
+	capiif->init();
 	do_init_mapif();
 
 	// periodically update the overall user count on all mapservers + login server
@@ -6334,6 +6343,7 @@ void char_load_defaults(void)
 	pincode_defaults();
 	char_defaults();
 	loginif_defaults();
+	capiif_defaults();
 	mapif_defaults();
 	inter_auction_defaults();
 	inter_clan_defaults();

@@ -21,10 +21,12 @@
 #ifndef API_APISESSIONDATA_H
 #define API_APISESSIONDATA_H
 
-#include "common/hercules.h"
+#include "common/cbasetypes.h"
 #include "api/httpparsehandler.h"
 
 #include <http-parser/http_parser.h>
+
+#include "common/hercules.h"
 
 #include <stdarg.h>
 
@@ -40,6 +42,8 @@ enum e_mime_flag {
 
 struct api_session_data {
 	int fd;
+	int id;  // for inter server requests
+	int account_id;
 	struct http_parser parser;
 	struct multipartparser *multi_parser;
 	struct api_flag {
@@ -62,6 +66,7 @@ struct api_session_data {
 	int headers_count;
 	int post_headers_count;
 	char *body;
+	char *world_name;
 	size_t body_size;
 };
 

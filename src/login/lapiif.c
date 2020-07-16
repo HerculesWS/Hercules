@@ -144,7 +144,8 @@ static int lapiif_parse(int fd)
 		ShowDebug("Received packet 0x%4x (%d bytes) from api-server (connection %d)\n", (uint32)cmd, packet_len, fd);
 
 		switch (cmd) {
-			case 0x2821: lapiif->parse_ping(fd); break;
+			case 0x2841: lapiif->parse_ping(fd); break;
+			case 0x2842: lapiif->parse_proxy_api_to_char(fd); break;
 			default:
 				ShowError("lapiif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
@@ -160,6 +161,33 @@ static int lapiif_parse(int fd)
 static void lapiif_parse_ping(int fd)
 {
 	lapiif->pong(fd);
+}
+
+static void lapiif_parse_proxy_api_to_char(int fd)
+{
+	const int char_server_id = RFIFOL(fd, 6);
+
+	Assert_retv(char_server_id >= 0 && char_server_id < MAX_SERVERS);
+	const int char_fd = login->dbs->server[char_server_id].fd;
+	if (!sockt->session_is_valid(fd)) {
+		return;
+	}
+	const int len = RFIFOW(fd, 2);
+	WFIFOHEAD(char_fd, len);
+	memcpy(WFIFOP(char_fd, 0), RFIFOP(fd, 0), len);
+	WFIFOW(char_fd, 0) = 0x2842;
+	WFIFOW(char_fd, 6) = fd;
+	WFIFOSET(char_fd, len);
+}
+
+static void lapiif_parse_proxy_api_from_char(int fd)
+{
+	const int api_fd = RFIFOL(fd, 6);
+	const int len = RFIFOW(fd, 2);
+	WFIFOHEAD(api_fd, len);
+	memcpy(WFIFOP(api_fd, 0), RFIFOP(fd, 0), len);
+	WFIFOW(api_fd, 0) = 0x2818;
+	WFIFOSET(api_fd, len);
 }
 
 static void lapiif_pong(int fd)
@@ -265,7 +293,7 @@ void lapiif_defaults(void)
 	lapiif = &lapiif_s;
 
 	const int packet_len_table[LAPIIF_PACKET_LEN_TABLE_SIZE] = {
-		0, 2, 0, 0, 0, 0, 0, 0 // 2820,
+		0,  2, -1,  0,  0,  0,  0,  0 // 0x2840 - 0x2847
 	};
 
 	memcpy(lapiif->packet_len_table, &packet_len_table, sizeof(lapiif->packet_len_table));
@@ -281,6 +309,8 @@ void lapiif_defaults(void)
 	lapiif->pong = lapiif_pong;
 	lapiif->parse = lapiif_parse;
 	lapiif->parse_ping = lapiif_parse_ping;
+	lapiif->parse_proxy_api_to_char = lapiif_parse_proxy_api_to_char;
+	lapiif->parse_proxy_api_from_char = lapiif_parse_proxy_api_from_char;
 	lapiif->add_char_server = lapiif_add_char_server;
 	lapiif->add_char_server_to = lapiif_add_char_server_to;
 	lapiif->remove_char_server = lapiif_remove_char_server;

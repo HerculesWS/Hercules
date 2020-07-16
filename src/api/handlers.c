@@ -24,12 +24,14 @@
 #include "api/handlers.h"
 
 #include "common/cbasetypes.h"
+#include "common/api.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "api/aclif.h"
+#include "api/aloginif.h"
 #include "api/apisessiondata.h"
 #include "api/httpsender.h"
 
@@ -43,23 +45,38 @@
 	static bool handlers_parse_ ## x(int fd, struct api_session_data *sd) __attribute__((nonnull (2))); \
 	static bool handlers_parse_ ## x(int fd, struct api_session_data *sd)
 
+#define DATA(x) \
+	static void handlers_ ## x(int fd, struct api_session_data *sd, const char *data, int data_size) __attribute__((nonnull (2))); \
+	static void handlers_ ## x(int fd, struct api_session_data *sd, const char *data, int data_size)
+
+#define LOAD_ASYNC_DATA(name) aloginif->send_to_char(fd, sd, API_MSG_ ## name);
+
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
 #define DEBUG_LOG
 
-HTTPURL(userconfig_load)
+DATA(userconfig_load)
 {
-#ifdef DEBUG_LOG
-	ShowInfo("userconfig_load called %d: %d\n", fd, sd->parser.method);
-#endif
 	// send hardcoded emotes
 	// korean emotes
 	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/기쁨\",\"/하트\",\"/땀\",\"/아하\",\"/짜증\",\"/화\",\"/돈\",\"/...\"]}}");
 	// english emotes
 //	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
 
+	ShowInfo("test data: %d\n", *(const int*)data);
+
+	aclif->terminate_connection(fd);
+}
+
+HTTPURL(userconfig_load)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("userconfig_load called %d: %d\n", fd, sd->parser.method);
+#endif
 	aclif->show_request(fd, sd, false);
+
+	LOAD_ASYNC_DATA(userconfig_load);
 
 	return true;
 }
@@ -121,6 +138,9 @@ void handlers_defaults(void)
 	handlers->final = do_final_handlers;
 
 #define handler(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func
+#define handler2(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func; \
+	handlers->func = handlers_ ## func
 #include "api/urlhandlers.h"
 #undef handler
+#undef handler2
 }

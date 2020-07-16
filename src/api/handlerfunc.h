@@ -18,35 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef API_HANDLERS_H
-#define API_HANDLERS_H
+#ifndef API_HANDLERFUNC_H
+#define API_HANDLERFUNC_H
 
-#include "api/api.h"
-#include "common/hercules.h"
-#include "common/db.h"
-#include "api/httphandler.h"
+struct api_session_data;
 
-#include <stdarg.h>
+typedef void (*Handler_func)(int fd, struct api_session_data *sd, const char *data, int data_size);
 
-/**
- * handlers.c Interface
- **/
-struct handlers_interface {
-	int (*init) (bool minimal);
-	void (*final) (void);
-
-#define handler(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd)
-#define handler2(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd); \
-	void (*func) (int fd, struct api_session_data *sd, const char *data, int data_size)
-#include "api/urlhandlers.h"
-#undef handler
-#undef handler2
-};
-
-#ifdef HERCULES_CORE
-void handlers_defaults(void);
-#endif // HERCULES_CORE
-
-HPShared struct handlers_interface *handlers;
-
-#endif /* API_HANDLERS_H */
+#endif /* API_HANDLERFUNC_H */

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2020 Hercules Dev Team
- * Copyright (C) 2020 Andrei Karas (4144)
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,35 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef API_HANDLERS_H
-#define API_HANDLERS_H
+#ifndef CHAR_CAPIIF_H
+#define CHAR_CAPIIF_H
 
-#include "api/api.h"
 #include "common/hercules.h"
-#include "common/db.h"
-#include "api/httphandler.h"
-
-#include <stdarg.h>
 
 /**
- * handlers.c Interface
+ * capiif interface
  **/
-struct handlers_interface {
-	int (*init) (bool minimal);
+struct capiif_interface {
+	void (*init) (void);
 	void (*final) (void);
-
-#define handler(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd)
-#define handler2(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd); \
-	void (*func) (int fd, struct api_session_data *sd, const char *data, int data_size)
-#include "api/urlhandlers.h"
-#undef handler
-#undef handler2
+	void (*parse_userconfig_load) (int fd);
+	int (*parse_fromlogin_api_proxy) (int fd);
 };
 
 #ifdef HERCULES_CORE
-void handlers_defaults(void);
+void capiif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct handlers_interface *handlers;
+HPShared struct capiif_interface *capiif;
 
-#endif /* API_HANDLERS_H */
+#endif /* CHAR_CAPIIF_H */

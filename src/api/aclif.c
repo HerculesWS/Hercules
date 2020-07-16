@@ -25,6 +25,7 @@
 #include "api/aclif.h"
 
 #include "common/HPM.h"
+#include "common/api.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/ers.h"
@@ -39,6 +40,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "api/aloginif.h"
 #include "api/apisessiondata.h"
 #include "api/handlers.h"
 #include "api/httpparser.h"
@@ -173,6 +175,7 @@ static int aclif_connected(int fd)
 	sd->fd = fd;
 	sd->headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_BOTH, MAX_HEADER_NAME_SIZE);
 	sd->post_headers_db = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_POST_HEADER_NAME_SIZE);
+	sd->id = aclif->id_counter++;
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
 	return 0;
@@ -223,12 +226,14 @@ static void aclif_load_handlers(void)
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
 	}
-#define handler(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, flags)
+#define handler(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, NULL, 0, flags)
+#define handler2(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, handlers->func, API_MSG_ ## func, flags)
 #include "api/urlhandlers.h"
 #undef handler
+#undef handler2
 }
 
-static void aclif_add_handler(enum http_method method, const char *url, HttpParseHandler func, int flags)
+static void aclif_add_handler(enum http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags)
 {
 	nullpo_retv(url);
 	nullpo_retv(func);
@@ -243,6 +248,11 @@ static void aclif_add_handler(enum http_method method, const char *url, HttpPars
 	handler->flags = flags;
 
 	strdb_put(aclif->handlers_db[method], url, handler);
+
+	if (func2 != NULL) {
+		Assert_retv(msg_id >= 0 && msg_id < API_MSG_MAX);
+		aloginif->msg_map[msg_id] = func2;
+	}
 }
 
 static void aclif_set_url(int fd, enum http_method method, const char *url, size_t size)
@@ -543,6 +553,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Account not logged in %d: %d\n", fd, account_id);
 			return false;
 		}
+		sd->account_id = account_id;
 	}
 
 	if ((sd->handler->flags & REQ_WORLD_NAME) != 0) {
@@ -559,6 +570,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 
+		sd->world_name = name;
 	}
 
 	if ((sd->handler->flags & REQ_AUTH_TOKEN) != 0) {
@@ -708,6 +720,14 @@ static void aclif_remove_char_server(int char_server_id, const char *name)
 	strdb_remove(aclif->char_servers_db, name);
 }
 
+static int aclif_get_char_server_id(struct api_session_data *sd)
+{
+	nullpo_retr(-1, sd);
+	struct char_server_data *data = strdb_get(aclif->char_servers_db, sd->world_name);
+	nullpo_retr(-1, data);
+	return data->id;
+}
+
 static int do_init_aclif(bool minimal)
 {
 	if (minimal)
@@ -749,6 +769,7 @@ void aclif_defaults(void)
 	aclif->api_port = 3000;
 
 	aclif->remove_disconnected_delay = 5000;
+	aclif->id_counter = 0;
 
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = NULL;
@@ -796,6 +817,7 @@ void aclif_defaults(void)
 	aclif->remove_char_server = aclif_remove_char_server;
 	aclif->purge_disconnected_users = aclif_purge_disconnected_users;
 	aclif->purge_disconnected_user = aclif_purge_disconnected_user;
+	aclif->get_char_server_id = aclif_get_char_server_id;
 
 	aclif->reportError = aclif_reportError;
 }

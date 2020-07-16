@@ -987,6 +987,14 @@ static int login_parse_fromchar(int fd)
 				login->fromchar_parse_accinfo(fd);
 			}
 		break;
+
+		case 0x2818:
+			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
+				return 0;
+			lapiif->parse_proxy_api_from_char(fd);
+			RFIFOSKIP(fd, RFIFOW(fd, 2));
+		break;
+
 		default:
 			ShowError("login_parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
 			sockt->eof(fd);

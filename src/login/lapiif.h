@@ -27,7 +27,7 @@
 
 struct login_session_data;
 
-#define LAPIIF_PACKET_LEN_TABLE_START 0x2820
+#define LAPIIF_PACKET_LEN_TABLE_START 0x2840
 #define LAPIIF_PACKET_LEN_TABLE_SIZE 0x8
 
 /**
@@ -52,6 +52,8 @@ struct lapiif_interface {
 	void (*send_char_servers) (int api_server_id);
 	int (*parse) (int fd);
 	void (*parse_ping) (int fd);
+	void (*parse_proxy_api_to_char) (int fd);
+	void (*parse_proxy_api_from_char) (int fd);
 };
 
 #ifdef HERCULES_CORE

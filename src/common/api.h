@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2020 Hercules Dev Team
- * Copyright (C) 2020 Andrei Karas (4144)
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef handler
-#define handler(method, url, func, flags)
-#define handler2(method, url, func, flags)
-#endif  // handler
+#ifndef COMMON_API_H
+#define COMMON_API_H
 
-handler2(HTTP_POST, "/userconfig/load", userconfig_load, REQ_API);
-handler(HTTP_POST, "/userconfig/save", userconfig_save, REQ_API_AUTH | REQ_AUTO_CLOSE);
-handler(HTTP_POST, "/charconfig/load", charconfig_load, REQ_API_AUTH | REQ_AUTO_CLOSE);
-handler(HTTP_GET, "/test/url", test_url, REQ_DEFAULT);
+enum API_MSG {
+	API_MSG_userconfig_load = 1,
+	API_MSG_MAX
+};
+
+#endif /* COMMON_API_H */

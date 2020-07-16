@@ -24,6 +24,7 @@
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 
+#include "char/capiif.h"
 #include "char/char.h"
 #include "char/geoip.h"
 #include "char/inter.h"

@@ -25,8 +25,8 @@
 #include "aloginif.h"
 
 #include "api/aclif.h"
-#include "api/api.h"
 #include "common/HPM.h"
+#include "common/api.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
@@ -35,6 +35,10 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+
+#include "api/api.h"
+#include "api/apisessiondata.h"
+#include "api/handlers.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -172,6 +176,7 @@ static int aloginif_parse(int fd)
 			case 0x2815: aloginif->parse_char_servers_list(fd); break;
 			case 0x2816: aloginif->parse_remove_char_server(fd); break;
 			case 0x2817: aloginif->parse_add_char_server(fd); break;
+			case 0x2818: aloginif->parse_proxy_from_char_server(fd); break;
 			default:
 				ShowError("aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
@@ -281,8 +286,45 @@ static void aloginif_on_disconnect(void)
 static void aloginif_keepalive(int fd)
 {
 	WFIFOHEAD(fd, 2);
-	WFIFOW(fd, 0) = 0x2821;
+	WFIFOW(fd, 0) = 0x2841;
 	WFIFOSET(fd, 2);
+}
+
+static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id)
+{
+	Assert_retv(aloginif->fd != -1);
+
+	const int len = WFIFO_APICHAR_SIZE;
+	WFIFO_APICHAR_PACKET(msg_id, sd, len);
+
+	WFIFOSET(aloginif->fd, len);
+}
+
+static void aloginif_parse_from_char(int fd, Handler_func func)
+{
+	const int user_fd = RFIFOL(fd, 10);
+	if (!sockt->session_is_active(user_fd))
+		return;
+	struct api_session_data *sd = sockt->session[user_fd]->session_data;
+	nullpo_retv(sd);
+	if (sd->account_id != RFIFOL(fd, 14))
+		return;
+	if (sd->id != RFIFOL(fd, 18))
+		return;
+
+	if (func != NULL) {
+		func(user_fd, sd, RFIFOP(fd, WFIFO_APICHAR_SIZE), RFIFOW(fd, 2) - WFIFO_APICHAR_SIZE);
+	} else {
+		aclif->terminate_connection(user_fd);
+	}
+}
+
+static int aloginif_parse_proxy_from_char_server(int fd)
+{
+	const uint command = RFIFOW(fd, 4);
+	Assert_ret(command > 0 && command < API_MSG_MAX);
+	aloginif->parse_from_char(fd, aloginif->msg_map[command]);
+	return 0;
 }
 
 /*==========================================
@@ -319,7 +361,8 @@ void aloginif_defaults(void)
 	aloginif = &aloginif_s;
 
 	const int packet_len_table[ALOGINIF_PACKET_LEN_TABLE_SIZE] = {
-		0,  3,  2,  6, 22, -1,  4, 24 // 2810 - 2817
+		 0,  3,  2,  6, 22, -1,  4, 24, // 0x2810 - 0x2817
+		-1,  0,  0,  0,  0,  0,  0,  0, // 0x2818 - 0x2825
 	};
 
 	/* vars */
@@ -349,6 +392,7 @@ void aloginif_defaults(void)
 	aloginif->on_disconnect = aloginif_on_disconnect;
 	aloginif->keepalive = aloginif_keepalive;
 	aloginif->on_ready = aloginif_on_ready;
+	aloginif->send_to_char = aloginif_send_to_char;
 
 	aloginif->parse = aloginif_parse;
 	aloginif->parse_connection_state = aloginif_parse_connection_state;
@@ -358,4 +402,6 @@ void aloginif_defaults(void)
 	aloginif->parse_char_servers_list = aloginif_parse_char_servers_list;
 	aloginif->parse_add_char_server = aloginif_parse_add_char_server;
 	aloginif->parse_remove_char_server = aloginif_parse_remove_char_server;
+	aloginif->parse_proxy_from_char_server = aloginif_parse_proxy_from_char_server;
+	aloginif->parse_from_char = aloginif_parse_from_char;
 }
