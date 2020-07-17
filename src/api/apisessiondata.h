@@ -55,6 +55,7 @@ struct api_session_data {
 		uint body : 1;                 // body parsing complete
 		uint multi_part_begin : 1;     // multi part parsing started
 		uint multi_part_complete : 1;  // multi part parsing complete
+		uint handled : 1;              // http request already handled
 	} flag;
 	char *url;
 	struct HttpHandler *handler;

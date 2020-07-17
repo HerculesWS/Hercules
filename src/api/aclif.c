@@ -105,6 +105,12 @@ static int aclif_parse(int fd)
 #endif
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_ret(sd);
+	if (sd->flag.handled == 1) {
+		if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
+			aclif->terminate_connection(fd);
+		}
+		return 0;
+	}
 	if (!httpparser->parse(fd))
 	{
 		httpparser->show_error(fd, sd);
@@ -151,6 +157,7 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 		aclif->terminate_connection(fd);
 		return 0;
 	}
+	sd->flag.handled = 1;
 	if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
 		aclif->terminate_connection(fd);
 		return 0;
