@@ -36,6 +36,7 @@ Thumbs.db
 /api-server
 /map-server
 /mapcache
+*.pyc
 
 # /plugins -- everything
 /plugins/
@@ -130,3 +131,6 @@ Thumbs.db
 /vcproj-*/map-server
 /vcproj-*/mapcache
 /vcproj-*/plugin-*/
+
+# ccache
+/.ccache/
