@@ -291,11 +291,11 @@ static void aloginif_keepalive(int fd)
 	WFIFOSET(fd, 2);
 }
 
-static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id)
+static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len)
 {
 	Assert_retv(aloginif->fd != -1);
 
-	const int len = sizeof(struct PACKET_API_PROXY);
+	const int len = sizeof(struct PACKET_API_PROXY) + data_len;
 	WFIFOHEAD(aloginif->fd, len);
 	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
@@ -305,6 +305,8 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 	p->client_fd = sd->fd;
 	p->account_id = sd->account_id;
 	p->client_random_id = sd->id;
+	if (data_len > 0)
+		memcpy(p->data, data, data_len);
 
 	WFIFOSET(aloginif->fd, len);
 }

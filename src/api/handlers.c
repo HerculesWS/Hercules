@@ -50,7 +50,8 @@
 	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size) __attribute__((nonnull (2))); \
 	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size)
 
-#define LOAD_ASYNC_DATA(name) aloginif->send_to_char(fd, sd, API_MSG_ ## name);
+#define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
+#define LOAD_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
 
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
@@ -65,7 +66,7 @@ DATA(userconfig_load)
 	// english emotes
 //	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
 
-	const struct PACKET_API_userconfig_load *p = (const struct PACKET_API_userconfig_load*)data;
+	GET_DATA(p, userconfig_load);
 	ShowInfo("test data: %d\n", p->data);
 
 	aclif->terminate_connection(fd);
@@ -78,7 +79,7 @@ HTTPURL(userconfig_load)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	LOAD_ASYNC_DATA(userconfig_load);
+	LOAD_ASYNC_DATA(userconfig_load, NULL);
 
 	return true;
 }
@@ -96,7 +97,7 @@ HTTPURL(userconfig_save)
 
 	aclif->show_request(fd, sd, false);
 
-	LOAD_ASYNC_DATA(userconfig_save);
+	LOAD_ASYNC_DATA(userconfig_save, NULL);
 
 	return true;
 }
@@ -116,7 +117,7 @@ HTTPURL(charconfig_load)
 #endif
 	aclif->show_request(fd, sd, false);
 
-	LOAD_ASYNC_DATA(charconfig_load);
+	LOAD_ASYNC_DATA(charconfig_load, NULL);
 
 	return true;
 }

@@ -50,12 +50,12 @@ struct capiif_interface *capiif;
 	packet->packet_len = WFIFO_CHARAPI_SIZE; \
 
 #define WFIFO_APICHAR_PACKET_REPLY(type) \
-	WFIFOHEAD(chr->login_fd, WFIFO_CHARAPI_SIZE + sizeof(struct type)); \
+	WFIFOHEAD(chr->login_fd, WFIFO_CHARAPI_SIZE + sizeof(struct PACKET_API_REPLY_ ## type)); \
 	memcpy(WFIFOP(chr->login_fd, 0), RFIFOP(fd, 0), WFIFO_CHARAPI_SIZE); \
 	struct PACKET_API_PROXY *packet = WFIFOP(chr->login_fd, 0); \
 	packet->packet_id = HEADER_API_PROXY_REPLY; \
-	packet->packet_len = WFIFO_CHARAPI_SIZE + sizeof(struct type); \
-	struct type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
+	packet->packet_len = WFIFO_CHARAPI_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
+	struct PACKET_API_REPLY_ ## type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
@@ -84,7 +84,7 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 
 void capiif_parse_userconfig_load(int fd)
 {
-	WFIFO_APICHAR_PACKET_REPLY(PACKET_API_userconfig_load);
+	WFIFO_APICHAR_PACKET_REPLY(userconfig_load);
 
 	data->data = 0x1122;
 	WFIFOSET(chr->login_fd, packet->packet_len);

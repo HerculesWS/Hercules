@@ -32,6 +32,7 @@
 #define HEADER_API_PROXY_REQUEST 0x2842
 #define HEADER_API_PROXY_REPLY 0x2818
 
+// base
 struct PACKET_API_PROXY {
 	int16 packet_id;
 	int16 packet_len;
@@ -40,13 +41,31 @@ struct PACKET_API_PROXY {
 	int32 client_fd;
 	int32 account_id;
 	int32 client_random_id;
+	char data[];
 } __attribute__((packed));
 
 struct PACKET_API_EMPTY {
 } __attribute__((packed));
 
+// api to char
 struct PACKET_API_userconfig_load {
+} __attribute__((packed));
+
+struct PACKET_API_userconfig_save {
+} __attribute__((packed));
+
+struct PACKET_API_charconfig_load {
+} __attribute__((packed));
+
+// char to api
+struct PACKET_API_REPLY_userconfig_load {
 	int data;
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_userconfig_save {
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_charconfig_load {
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)

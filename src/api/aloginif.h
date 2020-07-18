@@ -80,7 +80,7 @@ struct aloginif_interface {
 	void (*on_disconnect) (void);
 	void (*keepalive) (int fd);
 	void (*on_ready) (void);
-	void (*send_to_char) (int fd, struct api_session_data *sd, int msg_id);
+	void (*send_to_char) (int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len);
 
 	int (*parse) (int fd);
 	int (*parse_connection_state) (int fd);
