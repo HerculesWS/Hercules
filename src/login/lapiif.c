@@ -107,8 +107,20 @@ static void lapiif_on_disconnect(int id)
 
 static int lapiif_parse(int fd)
 {
+	int id;
+	ARR_FIND(0, ARRAYLENGTH(login->dbs->api_server), id, login->dbs->api_server[id].fd == fd);
+	if (id == ARRAYLENGTH(login->dbs->api_server))
+	{  // not an api server
+		ShowDebug("lapiif_parse: Disconnecting invalid session #%d (is not a api-server)\n", fd);
+		sockt->eof(fd);
+		sockt->close(fd);
+		return 0;
+	}
+
 	if (sockt->session[fd]->flag.eof) {
 		sockt->close(fd);
+		login->dbs->api_server[id].fd = -1;
+		lapiif->on_disconnect(id);
 		return 0;
 	}
 
