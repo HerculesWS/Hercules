@@ -44,18 +44,6 @@ struct api_session_data;
 
 #define aloginif_char_offline(x) aloginif->char_offline_nsd((x)->status.account_id,(x)->status.char_id)
 
-#define WFIFO_APICHAR_SIZE 22
-
-#define WFIFO_APICHAR_PACKET(msg_id, sd, len) \
-	WFIFOHEAD(aloginif->fd, len); \
-	WFIFOW(aloginif->fd, 0) = 0x2842; \
-	WFIFOW(aloginif->fd, 2) = len; \
-	WFIFOW(aloginif->fd, 4) = msg_id; \
-	WFIFOL(aloginif->fd, 6) = aclif->get_char_server_id(sd); \
-	WFIFOL(aloginif->fd, 10) = (sd)->fd; \
-	WFIFOL(aloginif->fd, 14) = (sd)->account_id; \
-	WFIFOL(aloginif->fd, 18) = (sd)->id
-
 
 /*=====================================
 * Interface : aloginif.h

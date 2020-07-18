@@ -25,6 +25,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/api.h"
+#include "common/apipackets.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
@@ -46,8 +47,8 @@
 	static bool handlers_parse_ ## x(int fd, struct api_session_data *sd)
 
 #define DATA(x) \
-	static void handlers_ ## x(int fd, struct api_session_data *sd, const char *data, int data_size) __attribute__((nonnull (2))); \
-	static void handlers_ ## x(int fd, struct api_session_data *sd, const char *data, int data_size)
+	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size) __attribute__((nonnull (2))); \
+	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size)
 
 #define LOAD_ASYNC_DATA(name) aloginif->send_to_char(fd, sd, API_MSG_ ## name);
 
@@ -64,7 +65,8 @@ DATA(userconfig_load)
 	// english emotes
 //	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
 
-	ShowInfo("test data: %d\n", *(const int*)data);
+	const struct PACKET_API_userconfig_load *p = (const struct PACKET_API_userconfig_load*)data;
+	ShowInfo("test data: %d\n", p->data);
 
 	aclif->terminate_connection(fd);
 }

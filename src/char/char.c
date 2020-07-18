@@ -46,6 +46,7 @@
 #include "char/pincode.h"
 
 #include "common/HPM.h"
+#include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/console.h"
@@ -2868,7 +2869,7 @@ static int char_parse_fromlogin(int fd)
 				chr->parse_fromlogin_accinfo2_ok(fd);
 			break;
 
-			case 0x2842:
+			case HEADER_API_PROXY_REQUEST:
 				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
 					return 0;
 				capiif->parse_fromlogin_api_proxy(fd);

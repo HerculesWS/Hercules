@@ -27,6 +27,7 @@
 #include "login/packets_ac_struct.h"
 
 #include "common/cbasetypes.h"
+#include "common/apipackets.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -145,7 +146,7 @@ static int lapiif_parse(int fd)
 
 		switch (cmd) {
 			case 0x2841: lapiif->parse_ping(fd); break;
-			case 0x2842: lapiif->parse_proxy_api_to_char(fd); break;
+			case HEADER_API_PROXY_REQUEST: lapiif->parse_proxy_api_to_char(fd); break;
 			default:
 				ShowError("lapiif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
@@ -175,8 +176,9 @@ static void lapiif_parse_proxy_api_to_char(int fd)
 	const int len = RFIFOW(fd, 2);
 	WFIFOHEAD(char_fd, len);
 	memcpy(WFIFOP(char_fd, 0), RFIFOP(fd, 0), len);
-	WFIFOW(char_fd, 0) = 0x2842;
-	WFIFOW(char_fd, 6) = fd;
+	struct PACKET_API_PROXY *p = WFIFOP(char_fd, 0);
+	p->packet_id = HEADER_API_PROXY_REQUEST;
+	p->server_id = fd;
 	WFIFOSET(char_fd, len);
 }
 
@@ -186,7 +188,7 @@ static void lapiif_parse_proxy_api_from_char(int fd)
 	const int len = RFIFOW(fd, 2);
 	WFIFOHEAD(api_fd, len);
 	memcpy(WFIFOP(api_fd, 0), RFIFOP(fd, 0), len);
-	WFIFOW(api_fd, 0) = 0x2818;
+	WFIFOW(api_fd, 0) = HEADER_API_PROXY_REPLY;
 	WFIFOSET(api_fd, len);
 }
 

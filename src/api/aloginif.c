@@ -27,6 +27,7 @@
 #include "api/aclif.h"
 #include "common/HPM.h"
 #include "common/api.h"
+#include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
@@ -176,7 +177,7 @@ static int aloginif_parse(int fd)
 			case 0x2815: aloginif->parse_char_servers_list(fd); break;
 			case 0x2816: aloginif->parse_remove_char_server(fd); break;
 			case 0x2817: aloginif->parse_add_char_server(fd); break;
-			case 0x2818: aloginif->parse_proxy_from_char_server(fd); break;
+			case HEADER_API_PROXY_REPLY: aloginif->parse_proxy_from_char_server(fd); break;
 			default:
 				ShowError("aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
@@ -294,8 +295,16 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 {
 	Assert_retv(aloginif->fd != -1);
 
-	const int len = WFIFO_APICHAR_SIZE;
-	WFIFO_APICHAR_PACKET(msg_id, sd, len);
+	const int len = sizeof(struct PACKET_API_PROXY);
+	WFIFOHEAD(aloginif->fd, len);
+	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
+	p->packet_id = HEADER_API_PROXY_REQUEST;
+	p->packet_len = len;
+	p->msg_id = msg_id;
+	p->server_id = aclif->get_char_server_id(sd);
+	p->client_fd = sd->fd;
+	p->account_id = sd->account_id;
+	p->client_random_id = sd->id;
 
 	WFIFOSET(aloginif->fd, len);
 }

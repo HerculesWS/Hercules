@@ -25,6 +25,7 @@
 #include "char/char.h"
 #include "char/mapif.h"
 #include "common/api.h"
+#include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/core.h"
 #include "common/db.h"
@@ -41,11 +42,20 @@ struct capiif_interface *capiif;
 
 #define WFIFO_CHARAPI_SIZE 22
 
-#define WFIFO_APICHAR_PACKET_REPLY(len) \
-	WFIFOHEAD(chr->login_fd, len); \
+#define WFIFO_APICHAR_PACKET_REPLY_EMPTY() \
+	WFIFOHEAD(chr->login_fd, WFIFO_CHARAPI_SIZE); \
 	memcpy(WFIFOP(chr->login_fd, 0), RFIFOP(fd, 0), WFIFO_CHARAPI_SIZE); \
-	WFIFOW(chr->login_fd, 0) = 0x2818; \
-	WFIFOW(chr->login_fd, 2) = len;
+	struct PACKET_API_PROXY *packet = WFIFOP(chr->login_fd, 0); \
+	packet->packet_id = HEADER_API_PROXY_REPLY; \
+	packet->packet_len = WFIFO_CHARAPI_SIZE; \
+
+#define WFIFO_APICHAR_PACKET_REPLY(type) \
+	WFIFOHEAD(chr->login_fd, WFIFO_CHARAPI_SIZE + sizeof(struct type)); \
+	memcpy(WFIFOP(chr->login_fd, 0), RFIFOP(fd, 0), WFIFO_CHARAPI_SIZE); \
+	struct PACKET_API_PROXY *packet = WFIFOP(chr->login_fd, 0); \
+	packet->packet_id = HEADER_API_PROXY_REPLY; \
+	packet->packet_len = WFIFO_CHARAPI_SIZE + sizeof(struct type); \
+	struct type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
@@ -74,23 +84,21 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 
 void capiif_parse_userconfig_load(int fd)
 {
-	const int len = WFIFO_CHARAPI_SIZE + 4;
-	WFIFO_APICHAR_PACKET_REPLY(len)
+	WFIFO_APICHAR_PACKET_REPLY(PACKET_API_userconfig_load);
 
-	int offset = WFIFO_CHARAPI_SIZE;
-	WFIFOW(chr->login_fd, offset) = 0x1122;
-	WFIFOSET(chr->login_fd, len);
+	data->data = 0x1122;
+	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
 void capiif_parse_userconfig_save(int fd)
 {
-	WFIFO_APICHAR_PACKET_REPLY(WFIFO_CHARAPI_SIZE)
+	WFIFO_APICHAR_PACKET_REPLY_EMPTY();
 	WFIFOSET(chr->login_fd, WFIFO_CHARAPI_SIZE);
 }
 
 void capiif_parse_charconfig_load(int fd)
 {
-	WFIFO_APICHAR_PACKET_REPLY(WFIFO_CHARAPI_SIZE)
+	WFIFO_APICHAR_PACKET_REPLY_EMPTY();
 	WFIFOSET(chr->login_fd, WFIFO_CHARAPI_SIZE);
 }
 

@@ -30,6 +30,7 @@
 #include "login/lclif.h"
 #include "login/packets_ac_struct.h"
 #include "common/HPM.h"
+#include "common/apipackets.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
@@ -988,7 +989,7 @@ static int login_parse_fromchar(int fd)
 			}
 		break;
 
-		case 0x2818:
+		case HEADER_API_PROXY_REPLY:
 			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
 				return 0;
 			lapiif->parse_proxy_api_from_char(fd);

@@ -23,6 +23,6 @@
 
 struct api_session_data;
 
-typedef void (*Handler_func)(int fd, struct api_session_data *sd, const char *data, int data_size);
+typedef void (*Handler_func)(int fd, struct api_session_data *sd, const void *data, size_t data_size);
 
 #endif /* API_HANDLERFUNC_H */
