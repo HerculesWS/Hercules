@@ -251,7 +251,7 @@ static int aloginif_parse_char_servers_list(int fd)
 	const int count = (RFIFOW(fd, 2) - offset) / part_size;
 	ShowInfo("Got %d char servers.\n", count);
 	for (int f = 0; f < count; f ++) {
-		aclif->add_char_server(RFIFOW(fd, offset), aStrdup(RFIFOP(fd, offset + 2)));
+		aclif->add_char_server(RFIFOW(fd, offset), RFIFOP(fd, offset + 2));
 		offset += part_size;
 	}
 	return 0;
