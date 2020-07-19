@@ -263,6 +263,7 @@ static int aloginif_parse_remove_char_server(int fd)
 	const char *name = idb_get(aclif->char_servers_id_db, char_server_id);
 	nullpo_retr(1, name);
 
+	ShowInfo("Char-server '%s' has disconnected.\n", name);
 	aclif->remove_char_server(char_server_id, name);
 	return 0;
 }
@@ -275,6 +276,7 @@ static int aloginif_parse_add_char_server(int fd)
 	char *name = aStrdup(RFIFOP(fd, 4));
 	strdb_put(aclif->char_servers_db, name, data);
 	idb_put(aclif->char_servers_id_db, data->id, name);
+	ShowInfo("Connection of the char-server '%s' accepted.\n", name);
 	return 0;
 }
 
