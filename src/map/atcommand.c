@@ -1169,8 +1169,8 @@ ACMD(item)
 	memset(item_name, '\0', sizeof(item_name));
 
 	if (!strcmpi(info->command, "itembound") && (!*message || (
-		sscanf(message, "\"%99[^\"]\" %12d %12d", item_name, &number, &bound) < 2 &&
-		sscanf(message, "%99s %12d %12d", item_name, &number, &bound) < 2
+		sscanf(message, "\"%99[^\"]\" %12d %12d", item_name, &number, &bound) < 1 &&
+		sscanf(message, "%99s %12d %12d", item_name, &number, &bound) < 1
 		))) {
 		clif->message(fd, msg_fd(fd, 295)); // Please enter an item name or ID (usage: @itembound <item name/ID> <quantity> <bound_type>).
 		return false;
@@ -1254,7 +1254,7 @@ ACMD(item2)
 	struct item_data *item_data;
 	char item_name[100];
 	int item_id, number = 0, bound = 0;
-	int identify = 0, refine_level = 0, attr = 0;
+	int identify = 1, refine_level = 0, attr = ATTR_NONE;
 	int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 
 	memset(item_name, '\0', sizeof(item_name));
@@ -1266,8 +1266,8 @@ ACMD(item2)
 		clif->message(fd, msg_fd(fd, 297)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
 		return false;
 	} else if (!*message
-		|| (sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 9
-			&& sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 9
+		|| (sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 1
+			&& sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 1
 			)) {
 		clif->message(fd, msg_fd(fd, 984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
 		clif->message(fd, msg_fd(fd, 985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
@@ -1293,7 +1293,7 @@ ACMD(item2)
 		loop = 1;
 		get_count = number;
 		if (!strcmpi(info->command, "itembound2"))
-			bound = 1;
+			bound = IBT_ACCOUNT;
 		if (!itemdb->isstackable2(item_data)) {
 			if (bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR)) {
 				clif->message(fd, msg_fd(fd, 498)); // Cannot create bounded pet eggs or pet armors.
