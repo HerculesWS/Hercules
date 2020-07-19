@@ -306,6 +306,7 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 	p->server_id = aclif->get_char_server_id(sd);
 	p->client_fd = sd->fd;
 	p->account_id = sd->account_id;
+	p->char_id = sd->char_id;
 	p->client_random_id = sd->id;
 	if (data_len > 0)
 		memcpy(p->data, data, data_len);
@@ -320,13 +321,16 @@ static void aloginif_parse_from_char(int fd, Handler_func func)
 		return;
 	struct api_session_data *sd = sockt->session[user_fd]->session_data;
 	nullpo_retv(sd);
-	if (sd->account_id != RFIFOL(fd, 14))
+	const struct PACKET_API_PROXY *p = RFIFOP(fd, 0);
+	if (sd->account_id != p->account_id)
 		return;
-	if (sd->id != RFIFOL(fd, 18))
+	if (p->char_id != 0 && sd->char_id != p->char_id)
+		return;
+	if (sd->id != p->client_random_id)
 		return;
 
 	if (func != NULL) {
-		func(user_fd, sd, RFIFOP(fd, WFIFO_APICHAR_SIZE), RFIFOW(fd, 2) - WFIFO_APICHAR_SIZE);
+		func(user_fd, sd, RFIFOP(fd, WFIFO_APICHAR_SIZE), p->packet_len - WFIFO_APICHAR_SIZE);
 	} else {
 		aclif->terminate_connection(user_fd);
 	}

@@ -563,6 +563,21 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		sd->account_id = account_id;
 	}
 
+	if ((sd->handler->flags & REQ_CHAR_ID) != 0) {
+		// check is char_id logged in
+		int char_id = 0;
+		if (!aclif->get_post_header_data_int(sd, "GID", &char_id)) {
+			ShowError("Http request without char id %d\n", fd);
+			return false;
+		}
+
+		if (login_data == NULL || login_data->char_id != char_id) {
+			ShowError("Char not logged in %d: %d\n", fd, char_id);
+			return false;
+		}
+		sd->char_id = char_id;
+	}
+
 	if ((sd->handler->flags & REQ_WORLD_NAME) != 0) {
 		// check is world name present and correct
 		char *name = NULL;

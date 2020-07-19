@@ -40,6 +40,7 @@ struct PACKET_API_PROXY {
 	int32 server_id;
 	int32 client_fd;
 	int32 account_id;
+	int32 char_id;
 	int32 client_random_id;
 	char data[];
 } __attribute__((packed));
