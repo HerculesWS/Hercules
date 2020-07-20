@@ -795,6 +795,12 @@ static void login_fromchar_parse_accinfo(int fd)
 	RFIFOSKIP(fd,22);
 }
 
+static void login_fromchar_parse_set_char_online(int fd)
+{
+	lapiif->set_char_online(RFIFOL(fd, 2), RFIFOL(fd, 6));
+	RFIFOSKIP(fd, 10);
+}
+
 //--------------------------------
 // Packet parsing for char-servers
 //--------------------------------
@@ -876,6 +882,11 @@ static int login_parse_fromchar(int fd)
 			login->fromchar_parse_ping(fd);
 		break;
 
+		case 0x2721:  // char online notification
+			if (RFIFOREST(fd) < 10)
+				return 0;
+			login->fromchar_parse_set_char_online(fd);
+		break;
 		// Map server send information to change an email of an account via char-server
 		case 0x2722: // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
 			if (RFIFOREST(fd) < 86)
@@ -2394,6 +2405,7 @@ void login_defaults(void)
 	login->fromchar_parse_change_pincode = login_fromchar_parse_change_pincode;
 	login->fromchar_parse_wrong_pincode = login_fromchar_parse_wrong_pincode;
 	login->fromchar_parse_accinfo = login_fromchar_parse_accinfo;
+	login->fromchar_parse_set_char_online = login_fromchar_parse_set_char_online;
 
 	login->parse_fromchar = login_parse_fromchar;
 	login->client_login = login_client_login;

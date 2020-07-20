@@ -4561,7 +4561,8 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 
 	/* set char as online prior to loading its data so 3rd party applications will realize the sql data is not reliable */
 	chr->set_char_online(true, char_id, sd->account_id);
-	if( !chr->mmo_char_fromsql(char_id, &char_dat, true) ) { /* failed? set it back offline */
+	loginif->set_char_online(char_id, sd->account_id);
+	if (!chr->mmo_char_fromsql(char_id, &char_dat, true)) { /* failed? set it back offline */
 		chr->set_char_offline(char_id, sd->account_id);
 		/* failed to load something. REJECT! */
 		chr->auth_error(fd, 0); // rejected from server

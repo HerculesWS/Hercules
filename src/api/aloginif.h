@@ -91,6 +91,7 @@ struct aloginif_interface {
 	int (*parse_add_char_server) (int fd);
 	int (*parse_remove_char_server) (int fd);
 	int (*parse_proxy_from_char_server) (int fd);
+	int (*parse_set_char_online) (int fd);
 	void (*parse_from_char) (int fd, Handler_func func);
 };
 

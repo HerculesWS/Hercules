@@ -671,6 +671,17 @@ static void aclif_add_online_player(int account_id, const unsigned char *auth_to
 	memcpy(user->auth_token, auth_token, AUTH_TOKEN_SIZE);
 }
 
+static void aclif_add_online_char(int account_id, int char_id)
+{
+	struct online_api_login_data *user = idb_get(aclif->online_db, account_id);
+	if (user == NULL) {
+		ShowError("Cant set char online. Account not logged in: %d\n", account_id);
+		return;
+	}
+	user->char_id = char_id;
+	ShowInfo("test connect char: %d, %d\n", account_id, char_id);
+}
+
 static struct DBData aclif_create_online_login_data(union DBKey key, va_list args)
 {
 	struct online_api_login_data *user;
@@ -840,6 +851,7 @@ void aclif_defaults(void)
 	aclif->purge_disconnected_users = aclif_purge_disconnected_users;
 	aclif->purge_disconnected_user = aclif_purge_disconnected_user;
 	aclif->get_char_server_id = aclif_get_char_server_id;
+	aclif->add_online_char = aclif_add_online_char;
 
 	aclif->reportError = aclif_reportError;
 }

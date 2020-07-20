@@ -294,6 +294,29 @@ static void lapiif_send_char_servers(int api_server_id)
 	WFIFOSET(fd, length);
 }
 
+static void lapiif_set_char_online(int account_id, int char_id)
+{
+	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
+		if (!sockt->session_is_valid(login->dbs->api_server[i].fd))
+			continue;
+		lapiif->set_char_online_to(account_id, char_id, i);
+	}
+}
+
+static void lapiif_set_char_online_to(int account_id, int char_id, int api_server_id)
+{
+	Assert_retv(api_server_id >= 0 && api_server_id < MAX_SERVERS);
+	Assert_retv(sockt->session_is_active(login->dbs->api_server[api_server_id].fd));
+
+	const int fd = login->dbs->api_server[api_server_id].fd;
+
+	WFIFOHEAD(fd, 10);
+	WFIFOW(fd, 0) = 0x2819;
+	WFIFOL(fd, 2) = account_id;
+	WFIFOL(fd, 6) = char_id;
+	WFIFOSET(fd, 10);
+}
+
 static void lapiif_init(void)
 {
 }
@@ -330,4 +353,6 @@ void lapiif_defaults(void)
 	lapiif->remove_char_server = lapiif_remove_char_server;
 	lapiif->remove_char_server_from = lapiif_remove_char_server_from;
 	lapiif->send_char_servers = lapiif_send_char_servers;
+	lapiif->set_char_online = lapiif_set_char_online;
+	lapiif->set_char_online_to = lapiif_set_char_online_to;
 }

@@ -220,6 +220,7 @@ struct login_interface {
 	void (*fromchar_parse_change_pincode) (int fd);
 	bool (*fromchar_parse_wrong_pincode) (int fd);
 	void (*fromchar_parse_accinfo) (int fd);
+	void (*fromchar_parse_set_char_online) (int fd);
 	int (*parse_fromchar) (int fd);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);

@@ -177,6 +177,7 @@ static int aloginif_parse(int fd)
 			case 0x2815: aloginif->parse_char_servers_list(fd); break;
 			case 0x2816: aloginif->parse_remove_char_server(fd); break;
 			case 0x2817: aloginif->parse_add_char_server(fd); break;
+			case 0x2819: aloginif->parse_set_char_online(fd); break;
 			case HEADER_API_PROXY_REPLY: aloginif->parse_proxy_from_char_server(fd); break;
 			default:
 				ShowError("aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
@@ -280,6 +281,12 @@ static int aloginif_parse_add_char_server(int fd)
 	return 0;
 }
 
+static int aloginif_parse_set_char_online(int fd)
+{
+	aclif->add_online_char(RFIFOL(fd, 2), RFIFOL(fd, 6));
+	return 0;
+}
+
 /// Called when the connection to Login Server is disconnected.
 static void aloginif_on_disconnect(void)
 {
@@ -379,7 +386,7 @@ void aloginif_defaults(void)
 
 	const int packet_len_table[ALOGINIF_PACKET_LEN_TABLE_SIZE] = {
 		 0,  3,  2,  6, 22, -1,  4, 24, // 0x2810 - 0x2817
-		-1,  0,  0,  0,  0,  0,  0,  0, // 0x2818 - 0x2825
+		-1, 10,  0,  0,  0,  0,  0,  0, // 0x2818 - 0x2825
 	};
 
 	/* vars */
@@ -421,4 +428,5 @@ void aloginif_defaults(void)
 	aloginif->parse_remove_char_server = aloginif_parse_remove_char_server;
 	aloginif->parse_proxy_from_char_server = aloginif_parse_proxy_from_char_server;
 	aloginif->parse_from_char = aloginif_parse_from_char;
+	aloginif->parse_set_char_online = aloginif_parse_set_char_online;
 }

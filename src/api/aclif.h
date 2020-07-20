@@ -154,6 +154,7 @@ struct aclif_interface {
 	void (*delete_online_player) (int account_id);
 	void (*real_delete_online_player) (int account_id);
 	void (*add_online_player) (int account_id, const unsigned char *auth_token);
+	void (*add_online_char) (int account_id, int char_id);
 	struct DBData (*create_online_login_data) (union DBKey key, va_list args);
 	void (*add_char_server) (int char_server_id, const char *name);
 	void (*remove_char_server) (int char_server_id, const char *name);

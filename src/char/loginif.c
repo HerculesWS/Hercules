@@ -183,6 +183,17 @@ static void loginif_connect_to_server(void)
 	WFIFOSET(chr->login_fd,86);
 }
 
+// this packet need only for api server
+static void loginif_set_char_online(int char_id, int account_id)
+{
+	Assert_retv(chr->login_fd != -1);
+	WFIFOHEAD(chr->login_fd, 10);
+	WFIFOW(chr->login_fd, 0) = 0x2721;
+	WFIFOL(chr->login_fd, 2) = account_id;
+	WFIFOL(chr->login_fd, 6) = char_id;
+	WFIFOSET(chr->login_fd, 10);
+}
+
 void loginif_defaults(void) {
 	loginif = &loginif_s;
 
@@ -199,4 +210,5 @@ void loginif_defaults(void) {
 	loginif->auth = loginif_auth;
 	loginif->send_users_count = loginif_send_users_count;
 	loginif->connect_to_server = loginif_connect_to_server;
+	loginif->set_char_online = loginif_set_char_online;
 }
