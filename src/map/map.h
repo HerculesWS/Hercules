@@ -168,7 +168,7 @@ enum {
 	//                  = JOBL_BABY | MAPID_XMAS,
 	//                  = JOBL_BABY | MAPID_SUMMER,
 	//                  = JOBL_BABY | MAPID_GANGSI,
-	//                  = JOBL_BABY | MAPID_SUMMONER,
+	MAPID_BABY_SUMMONER = JOBL_BABY | MAPID_SUMMONER,
 
 	//Baby 2-1 Jobs
 	MAPID_SUPER_BABY      = JOBL_BABY | JOBL_2_1 | MAPID_NOVICE,
