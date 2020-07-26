@@ -1758,7 +1758,7 @@ static bool login_config_read_permission_hash(const char *filename, struct confi
 static void login_clear_dnsbl_servers(void)
 {
 	while (VECTOR_LENGTH(login->config->dnsbl_servers) > 0) {
-		aFree(&VECTOR_POP(login->config->dnsbl_servers));
+		aFree(VECTOR_POP(login->config->dnsbl_servers));
 	}
 	VECTOR_CLEAR(login->config->dnsbl_servers);
 }
