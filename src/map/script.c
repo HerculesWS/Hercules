@@ -11272,7 +11272,8 @@ static BUILDIN(gettimetick)
 		case 0:
 		default:
 			//type 0:(System Ticks)
-			script_pushint(st,(int)timer->gettick()); // TODO: change this to int64 when we'll support 64 bit script values
+			// Conjunction with INT_MAX is done to prevent overflow. (Script variables are signed integers.)
+			script_pushint(st, timer->gettick() & INT_MAX); // TODO: change this to int64 when we'll support 64 bit script values
 			break;
 	}
 	return true;
