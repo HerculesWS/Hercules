@@ -1168,17 +1168,17 @@ ACMD(item)
 
 	memset(item_name, '\0', sizeof(item_name));
 
-	if (!strcmpi(info->command,"itembound") && (!*message || (
-		sscanf(message, "\"%99[^\"]\" %12d %12d", item_name, &number, &bound) < 2 &&
-		sscanf(message, "%99s %12d %12d", item_name, &number, &bound) < 2
-	))) {
-		clif->message(fd, msg_fd(fd,295)); // Please enter an item name or ID (usage: @itembound <item name/ID> <quantity> <bound_type>).
+	if (!strcmpi(info->command, "itembound") && (!*message || (
+		sscanf(message, "\"%99[^\"]\" %12d %12d", item_name, &number, &bound) < 1 &&
+		sscanf(message, "%99s %12d %12d", item_name, &number, &bound) < 1
+		))) {
+		clif->message(fd, msg_fd(fd, 295)); // Please enter an item name or ID (usage: @itembound <item name/ID> <quantity> <bound_type>).
 		return false;
 	} else if (!*message
-	       || ( sscanf(message, "\"%99[^\"]\" %12d", item_name, &number) < 1
-		 && sscanf(message, "%99s %12d", item_name, &number) < 1
-	)) {
-		clif->message(fd, msg_fd(fd,983)); // Please enter an item name or ID (usage: @item <item name/ID> <quantity>).
+		|| (sscanf(message, "\"%99[^\"]\" %12d", item_name, &number) < 1
+			&& sscanf(message, "%99s %12d", item_name, &number) < 1
+			)) {
+		clif->message(fd, msg_fd(fd, 983)); // Please enter an item name or ID (usage: @item <item name/ID> <quantity>).
 		return false;
 	}
 
@@ -1186,33 +1186,33 @@ ACMD(item)
 		number = 1;
 
 	if ((item_data = itemdb->search_name(item_name)) == NULL &&
-	    (item_data = itemdb->exists(atoi(item_name))) == NULL)
+		(item_data = itemdb->exists(atoi(item_name))) == NULL)
 	{
-		clif->message(fd, msg_fd(fd,19)); // Invalid item ID or name.
+		clif->message(fd, msg_fd(fd, 19)); // Invalid item ID or name.
 		return false;
 	}
 
-	if(!strcmpi(info->command,"itembound") ) {
-		if( !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
-			clif->message(fd, msg_fd(fd,298)); // Invalid bound type
+	if (!strcmpi(info->command, "itembound")) {
+		if (!(bound >= IBT_MIN && bound <= IBT_MAX)) {
+			clif->message(fd, msg_fd(fd, 298)); // Invalid bound type
 			return false;
 		}
-		switch( (enum e_item_bound_type)bound ) {
-			case IBT_CHARACTER:
-			case IBT_ACCOUNT:
-				break; /* no restrictions */
-			case IBT_PARTY:
-				if( !sd->status.party_id ) {
-					clif->message(fd, msg_fd(fd,1498)); //You can't add a party bound item to a character without party!
-					return false;
-				}
-				break;
-			case IBT_GUILD:
-				if( !sd->status.guild_id ) {
-					clif->message(fd, msg_fd(fd,1499)); //You can't add a guild bound item to a character without guild!
-					return false;
-				}
-				break;
+		switch ((enum e_item_bound_type)bound) {
+		case IBT_CHARACTER:
+		case IBT_ACCOUNT:
+			break; /* no restrictions */
+		case IBT_PARTY:
+			if (!sd->status.party_id) {
+				clif->message(fd, msg_fd(fd, 1498)); //You can't add a party bound item to a character without party!
+				return false;
+			}
+			break;
+		case IBT_GUILD:
+			if (!sd->status.guild_id) {
+				clif->message(fd, msg_fd(fd, 1499)); //You can't add a guild bound item to a character without guild!
+				return false;
+			}
+			break;
 		}
 	}
 
@@ -1220,8 +1220,8 @@ ACMD(item)
 	get_count = number;
 	//Check if it's stackable.
 	if (!itemdb->isstackable2(item_data)) {
-		if( bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR) ) {
-			clif->message(fd, msg_fd(fd,498)); // Cannot create bounded pet eggs or pet armors.
+		if (bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR)) {
+			clif->message(fd, msg_fd(fd, 498)); // Cannot create bounded pet eggs or pet armors.
 			return false;
 		}
 		get_count = 1;
@@ -1241,7 +1241,7 @@ ACMD(item)
 	}
 
 	if (flag == 0)
-		clif->message(fd, msg_fd(fd,18)); // Item created.
+		clif->message(fd, msg_fd(fd, 18)); // Item created.
 	return true;
 }
 
@@ -1254,37 +1254,37 @@ ACMD(item2)
 	struct item_data *item_data;
 	char item_name[100];
 	int item_id, number = 0, bound = 0;
-	int identify = 0, refine_level = 0, attr = 0;
+	int identify = 1, refine_level = 0, attr = ATTR_NONE;
 	int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 
 	memset(item_name, '\0', sizeof(item_name));
 
-	if (!strcmpi(info->command,"itembound2") && (!*message || (
+	if (!strcmpi(info->command, "itembound2") && (!*message || (
 		sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4, &bound) < 10 &&
-		sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4, &bound) < 10 ))) {
-		clif->message(fd, msg_fd(fd,296)); // Please enter all parameters (usage: @itembound2 <item name/ID> <quantity>
-		clif->message(fd, msg_fd(fd,297)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
+		sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4, &bound) < 10))) {
+		clif->message(fd, msg_fd(fd, 296)); // Please enter all parameters (usage: @itembound2 <item name/ID> <quantity>
+		clif->message(fd, msg_fd(fd, 297)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
 		return false;
 	} else if (!*message
-	         || ( sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 9
-	           && sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 9
-	)) {
-		clif->message(fd, msg_fd(fd,984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
-		clif->message(fd, msg_fd(fd,985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
+		|| (sscanf(message, "\"%99[^\"]\" %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 1
+			&& sscanf(message, "%99s %12d %12d %12d %12d %12d %12d %12d %12d", item_name, &number, &identify, &refine_level, &attr, &c1, &c2, &c3, &c4) < 1
+			)) {
+		clif->message(fd, msg_fd(fd, 984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
+		clif->message(fd, msg_fd(fd, 985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
 		return false;
 	}
 
 	if (number <= 0)
 		number = 1;
 
-	if( !strcmpi(info->command,"itembound2") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
-		clif->message(fd, msg_fd(fd,298)); // Invalid bound type
+	if (!strcmpi(info->command, "itembound2") && !(bound >= IBT_MIN && bound <= IBT_MAX)) {
+		clif->message(fd, msg_fd(fd, 298)); // Invalid bound type
 		return false;
 	}
 
 	item_id = 0;
 	if ((item_data = itemdb->search_name(item_name)) != NULL ||
-	    (item_data = itemdb->exists(atoi(item_name))) != NULL)
+		(item_data = itemdb->exists(atoi(item_name))) != NULL)
 		item_id = item_data->nameid;
 
 	if (item_id > 500) {
@@ -1292,11 +1292,11 @@ ACMD(item2)
 		int loop, get_count, i;
 		loop = 1;
 		get_count = number;
-		if( !strcmpi(info->command,"itembound2") )
-			bound = 1;
-		if( !itemdb->isstackable2(item_data) ) {
-			if( bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR) ) {
-				clif->message(fd, msg_fd(fd,498)); // Cannot create bounded pet eggs or pet armors.
+		if (!strcmpi(info->command, "itembound2"))
+			bound = IBT_ACCOUNT;
+		if (!itemdb->isstackable2(item_data)) {
+			if (bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR)) {
+				clif->message(fd, msg_fd(fd, 498)); // Cannot create bounded pet eggs or pet armors.
 				return false;
 			}
 			loop = number;
@@ -1309,7 +1309,8 @@ ACMD(item2)
 				refine_level = 0;
 		} else {
 			identify = 1;
-			refine_level = attr = 0;
+			refine_level = 0;
+			attr = ATTR_NONE;
 		}
 		refine_level = cap_value(refine_level, 0, MAX_REFINE);
 		for (i = 0; i < loop; i++) {
@@ -1329,9 +1330,9 @@ ACMD(item2)
 		}
 
 		if (flag == 0)
-			clif->message(fd, msg_fd(fd,18)); // Item created.
+			clif->message(fd, msg_fd(fd, 18)); // Item created.
 	} else {
-		clif->message(fd, msg_fd(fd,19)); // Invalid item ID or name.
+		clif->message(fd, msg_fd(fd, 19)); // Invalid item ID or name.
 		return false;
 	}
 
