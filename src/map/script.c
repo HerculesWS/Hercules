@@ -14046,6 +14046,7 @@ static BUILDIN(getmapflag)
 			case MF_PAIRSHIP_ENDABLE:   script_pushint(st, map->list[m].flag.pairship_endable); break;
 			case MF_NOSTORAGE:          script_pushint(st, map->list[m].flag.nostorage); break;
 			case MF_NOGSTORAGE:         script_pushint(st, map->list[m].flag.nogstorage); break;
+			case MF_NOPET:              script_pushint(st, map->list[m].flag.nopet); break;
 		}
 	}
 
@@ -14178,6 +14179,7 @@ static BUILDIN(setmapflag)
 			case MF_PAIRSHIP_ENDABLE:   map->list[m].flag.pairship_endable = 1; break;
 			case MF_NOSTORAGE:          map->list[m].flag.nostorage = cap_value(val, 0, 3); break;
 			case MF_NOGSTORAGE:         map->list[m].flag.nogstorage = cap_value(val, 0, 3); break;
+			case MF_NOPET:              map->list[m].flag.nopet = 1; break;
 		}
 	}
 
@@ -14271,6 +14273,7 @@ static BUILDIN(removemapflag)
 			case MF_NOVIEWID:           map->list[m].flag.noviewid = EQP_NONE; break;
 			case MF_NOSTORAGE:          map->list[m].flag.nostorage = 0; break;
 			case MF_NOGSTORAGE:         map->list[m].flag.nogstorage = 0; break;
+			case MF_NOPET:              map->list[m].flag.nopet = 0; break;
 		}
 	}
 

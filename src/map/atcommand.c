@@ -4101,6 +4101,8 @@ ACMD(mapinfo)
 		strcat(atcmd_output, msg_fd(fd, 1292)); // PrivateAirshipStartable |
 	if (map->list[m_id].flag.pairship_endable)
 		strcat(atcmd_output, msg_fd(fd, 1293)); // PrivateAirshipEndable |
+	if (map->list[m_id].flag.nopet != 0)
+		strcat(atcmd_output, msg_fd(fd, 853)); // NoPet |
 	clif->message(fd, atcmd_output);
 
 	switch (list) {
