@@ -1649,11 +1649,15 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 				if( pc_iswug(sd) && (temp=pc->checkskill(sd,RA_WUGSTRIKE)) > 0 && rnd()%1000 <= sstatus->luk*3 )
 					skill->castend_damage_id(src,bl,RA_WUGSTRIKE,temp,tick,0);
 				// Gank
-				if(dstmd && sd->weapontype != W_BOW &&
-					(temp=pc->checkskill(sd,RG_SNATCHER)) > 0 &&
-					(temp*15 + 55) + pc->checkskill(sd,TF_STEAL)*10 > rnd()%1000) {
-					if(pc->steal_item(sd,bl,pc->checkskill(sd,TF_STEAL)))
-						clif->skill_nodamage(src,bl,TF_STEAL,temp,1);
+				if (dstmd && sd->weapontype != W_BOW &&
+					(temp = pc->checkskill(sd, RG_SNATCHER)) > 0 &&
+#ifdef RENEWAL
+					(temp * 10) + pc->checkskill(sd, TF_STEAL) * 10 > rnd() % 1000) {
+#else
+					(temp * 15 + 55) + pc->checkskill(sd, TF_STEAL) * 10 > rnd() % 1000) {
+#endif
+					if (pc->steal_item(sd, bl, pc->checkskill(sd, TF_STEAL)))
+						clif->skill_nodamage(src, bl, TF_STEAL, temp, 1);
 					else
 						clif->skill_fail(sd, RG_SNATCHER, USESKILL_FAIL_LEVEL, 0, 0);
 				}
