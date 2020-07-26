@@ -4551,7 +4551,7 @@ Name is optional, and defaults to the attached player if omitted.
 *agitcheck()
 *agitcheck2()
 
-These function will let you check whether the server is currently in WoE
+These functions will let you check whether the server is currently in WoE
 mode (or WoE SE mode if the second function is called) and will return true
 if War of Emperium is on and false if it isn't.
 
@@ -9641,25 +9641,17 @@ This will open a book item at the specified page.
 ---------------------------------------
 
 *rodex_sendmail(<char id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>{, <item2>, <amount2>{, <item3>, <amount3>{, <item4>, <amount4>{, <item5>, <amount5>}}}}}})
-*rodex_sendmail_acc(<account id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>{, <item2>, <amount2>{, <item3>, <amount3>{, <item4>, <amount4>{, <item5>, <amount5>}}}}}})
-
-This will send a mail using the RoDEX mail system, in newer clients the message will be marked as a NPC mail (that you can't reply).
-If items and zeny are specified, they will be added as attachments to the message.
-
-For examples of usage, see /doc/sample/npc_rodex.txt
-
----------------------------------------
-
 *rodex_sendmail2(<char id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>, <refine1>, <attribute1>, <card0_1>, <card1_1>, <card2_1>, <card3_1>{,<item2>, <amount2>, <refine2>, <attribute2>, <card0_2>, <card1_2>, <card2_2>, <card3_2>{,<item3>, <amount3>, <refine3>, <attribute3>, <card0_3>, <card1_3>, <card2_3>, <card3_3>{,<item4>, <amount4>, <refine4>, <attribute4>, <card0_4>, <card1_4>, <card2_4>, <card3_4>{,<item5>, <amount5>, <refine5>, <attribute5>, <card0_5>, <card1_5>, <card2_5>, <card3_5>}}}}}})
+
+*rodex_sendmail_acc(<account id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>{, <item2>, <amount2>{, <item3>, <amount3>{, <item4>, <amount4>{, <item5>, <amount5>}}}}}})
 *rodex_sendmail_acc2(<account id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>, <refine1>, <attribute1>, <card0_1>, <card1_1>, <card2_1>, <card3_1>{,<item2>, <amount2>, <refine2>, <attribute2>, <card0_2>, <card1_2>, <card2_2>, <card3_2>{,<item3>, <amount3>, <refine3>, <attribute3>, <card0_3>, <card1_3>, <card2_3>, <card3_3>{,<item4>, <amount4>, <refine4>, <attribute4>, <card0_4>, <card1_4>, <card2_4>, <card3_4>{,<item5>, <amount5>, <refine5>, <attribute5>, <card0_5>, <card1_5>, <card2_5>, <card3_5>}}}}}})
 
-These are more flexible versions of rodex_sendmail and rodex_sendmail_acc.
-
 This will send a mail using the RoDEX mail system, in newer clients the message will be marked as a NPC mail (that you can't reply).
 If items and zeny are specified, they will be added as attachments to the message.
-Check getitem2 command for more information of the extra parameters.
-
 For examples of usage, see /doc/sample/npc_rodex.txt
+
+rodex_sendmail2 and rodex_sendmail_acc2 are more flexible versions.
+Check getitem2 command for more information of the extra parameters.
 
 ---------------------------------------
 //=====================================

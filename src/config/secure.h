@@ -60,7 +60,7 @@
  * (Secure) Optional NPC Dialog Timer
  * @requirement : SECURE_NPCTIMEOUT must be enabled
  * Minimum Interval Between timeout checks in seconds
- * Default: 1s
+ * Default: 1
  **/
 #define SECURE_NPCTIMEOUT_INTERVAL 1
 
