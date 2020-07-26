@@ -364,6 +364,7 @@
 - `mf_pairship_endable`: 58
 - `mf_nostorage`: 59
 - `mf_nogstorage`: 60
+- `mf_nopet`: 61
 
 ### Cell Properties
 
