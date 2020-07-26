@@ -807,40 +807,14 @@ OnTimer610000:
 	end;
 
 OnTimer612000:
-	donpcevent "god_wep_warpmaster::OnEnable";
+	areawarp("que_god01", 130, 55, 190, 135, "prontera", 156, 324);
 	end;
 
 OnTimer615000:
-	donpcevent "god_wep_warpmaster::OnDisable";
 	donpcevent "#god_hopewarp1::OnReset";
 	stopnpctimer;
 	end;
 }
-
-que_god01,169,82,0	script	god_wep_warpmaster	FAKE_NPC,{
-OnEnable:
-	for(.@i = 1; .@i<=6; ++.@i)
-		enablenpc "god_failwarp#"+.@i;
-	end;
-OnDisable:
-	for(.@i = 1; .@i<=6; ++.@i)
-		disablenpc "god_failwarp#"+.@i;
-	end;
-}
-
-que_god01,154,67,0	script	god_failwarp#1	FAKE_NPC,4,7,{
-OnInit:
-	disablenpc strnpcinfo(NPC_NAME);
-	end;
-OnTouch:
-	warp "prontera",156,324;
-	end;
-}
-que_god01,154,82,0	duplicate(god_failwarp#1)	god_failwarp#2	FAKE_NPC,4,7
-que_god01,145,99,0	duplicate(god_failwarp#1)	god_failwarp#3	FAKE_NPC,9,9
-que_god01,164,99,0	duplicate(god_failwarp#1)	god_failwarp#4	FAKE_NPC,9,9
-que_god01,145,118,0	duplicate(god_failwarp#1)	god_failwarp#5	FAKE_NPC,9,9
-que_god01,164,118,0	duplicate(god_failwarp#1)	god_failwarp#6	FAKE_NPC,9,9
 
 // Original name: "Godly Item Quests Related#god"
 que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
@@ -864,16 +838,8 @@ que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
 		mes "[Use in case of emergency]";
 		mes "What services would you like to use?";
 		next;
-		switch(select("Turn off Warps.", "Reset Timer.", "Reset chat room.")) {
+		switch(select("Reset Timer.", "Reset chat room.")) {
 		case 1:
-			mes "[Use in case of emergency]";
-			mes "Press the 'Next' button to turn off warps.";
-			next;
-			donpcevent "god_wep_warpmaster::OnDisable";
-			mes "[Use in case of emergency]";
-			mes "You have successfully turned off warps.";
-			close;
-		case 2:
 			mes "[Use in case of emergency]";
 			mes "Press the 'Next' button to reset timer.";
 			next;
@@ -881,7 +847,7 @@ que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
 			mes "[Use in case of emergency]";
 			mes "You have successfully reset timer.";
 			close;
-		case 3:
+		case 2:
 			mes "[Use in case of emergency]";
 			mes "Please press the 'Next' button to reset the arena chat room in que_god01.";
 			next;

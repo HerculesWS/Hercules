@@ -12317,34 +12317,18 @@ OnEnable:
 	end;
 }
 
-que_sign01,196,44,0	script	Warp#serin	FAKE_NPC,35,35,{
-OnDisable:
-OnInit:
-	disablenpc "Warp#serin";
-	end;
-
-OnTouch:
-	warp "niflheim",30,156;
-	end;
-
-OnEnable:
-	enablenpc "Warp#serin";
-	end;
-}
-
 que_sign01,1,0,0	script	Timer#serin	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
 
 OnTimer600000:
-	donpcevent "Warp#serin::OnEnable";
+	areawarp("que_sign01", 161, 9, 231, 79, "niflheim", 30, 156);
 	end;
 
 OnTimer620000:
 	$@sign_w2 = 0;
 	donpcevent "Starter#serin::OnEnable";
-	donpcevent "Warp#serin::OnDisable";
 	donpcevent "Serin#serin::OnEnable";
 	donpcevent "Dark Lord#serin::OnDisable";
 	donpcevent "Serin#dummy::OnDisable";

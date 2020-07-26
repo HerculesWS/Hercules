@@ -9774,27 +9774,17 @@ OnTouch:
 }
 
 lhz_in01,177,44,0	script	Timer_Sneak	FAKE_NPC,8,12,{
-
-OnTouch:
-	warp "lhz_in01",191,49;
-	end;
-
-OnInit:
-	disablenpc "Timer_Sneak";
-	end;
-
 OnEnter:
 	stopnpctimer;
 	initnpctimer;
 	end;
 
 OnTimer180000:
-	enablenpc "Timer_Sneak";
+	areawarp("lhz_in01", 169, 32, 185, 56, "lhz_in01", 191, 49);
 	end;
 
 OnTimer190000:
 	stopnpctimer;
-	disablenpc "Timer_Sneak";
 	end;
 }
 
