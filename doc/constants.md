@@ -578,6 +578,8 @@
 - `bSetMDefRace`: 2060
 - `bAddRaceTolerance`: 2061
 - `bAddMaxWeight`: 2062
+- `bSubDefEle`: 2063
+- `bMagicSubDefEle`: 2064
 
 ### Equip index
 
@@ -9569,6 +9571,8 @@
 - `Svalinn_J`: 2188
 - `Mad_Bunny`: 2189
 - `Ancient_Shield_Of_Aeon`: 2190
+- `Rouban_Shield`: 2194
+- `Lian_Shield`: 2195
 - `Lapine_Shield`: 2198
 - `Ahura_Mazda`: 2199
 - `Sunglasses`: 2201
@@ -9961,8 +9965,10 @@
 - `Boss_Brownie_Manteau`: 2592
 - `Flow_Manteau`: 2593
 - `Wrapping_Manteau`: 2594
+- `Sombre_Manteau`: 2595
 - `Sharel_Manteau`: 2596
 - `Scarlet_Poncho`: 2597
+- `Ramor_Manteau`: 2598
 - `Goibnes_Shoulder_Arms_`: 2599
 - `Ring`: 2601
 - `Earring`: 2602
@@ -18098,11 +18104,14 @@
 - `C_Big_Foxtail`: 20584
 - `Fantastic_Aura`: 20600
 - `Egir_Manteau`: 20700
+- `Sol_Manteau`: 20701
 - `TE_Woe_Muffler`: 20702
 - `TE_Woe_Manteau`: 20703
 - `TE_Woe_Magic_Manteau`: 20704
+- `Lumiere_Manteau`: 20705
 - `Amistr_Bag`: 20706
 - `Kirin_Wing`: 20707
+- `Poison_Manteau`: 20708
 - `Mana_Manteau`: 20709
 - `Impr_Angels_Warmth`: 20710
 - `Manteau_Of_Diego`: 20711
@@ -18121,6 +18130,8 @@
 - `C_Rudra_Wing`: 20746
 - `Manteau_Of_Fallen`: 20748
 - `Manteau_Of_Fallen_`: 20749
+- `Rouban_Manteau`: 20750
+- `Lian_Robe`: 20753
 - `Aegir_Cloak`: 20756
 - `Wing_Of_Happiness`: 20757
 - `Wing_Of_Happiness_`: 20758
@@ -18213,8 +18224,16 @@
 - `Beach_Sandals`: 22045
 - `Airship_Boots`: 22046
 - `Felock_Boots`: 22047
+- `Sombre_Shoes`: 22048
+- `Sol_Shoes`: 22049
+- `Sharel_Shoes`: 22055
+- `Flow_Shoes`: 22057
 - `Aegir_Shoes`: 22059
+- `Lumiere_Shoes`: 22061
+- `Rouban_Shoes`: 22063
+- `Poison_Shoes`: 22065
 - `Witch_Shoes`: 22067
+- `Lian_Shoes`: 22069
 - `Wooden_Slipper`: 22076
 - `Red_Eco_Friendly_Shoes`: 22077
 - `Private_Doram_Shoes`: 22083
