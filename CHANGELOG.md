@@ -10,6 +10,39 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 If you are reading this in a text editor, simply ignore this section
 -->
 
+## [v2020.07.26] `July 26 2020`
+
+### Added
+
+- Added information about the Random Item Options to the `OnSellItem` array list. (#2794, part of issue #2379)
+- Added a new `mf_nopet` mapflag to control pet restrictions on a map by map basis. This supersedes the `pet_disable_in_gvg` battleconf setting. (#2652)
+- Added/updated packets, encryption keys and message tables for clients up to 2020-07-15. (#2788)
+- Added a new pair of item bonuses `bSubDefEle` and `bMagicSubDefEle` to reduce damage (physical and magical respectively) against a specific defense element. (#2790)
+
+### Changed
+
+- Changed the script command `gettimetick(0)` to never return negative values. The tick loop interval is reduced from about 50 to about 25 days, but the values are guaranteed to be positive. Since `gettimetick(0)` is only intended to be used for precise calculation of short durations, it is care of the scripter to account for overflows of the counter, treating it as a 31 bit unsigned integer operating in modulo `2**31`. For most uses, `gettimetick(2)` should be preferred. (#2791, issue #2779)
+- Updated the Renewal formula for the `RG_SNATCHER` skill. (#2802)
+- Refactored the scripts that use `OnTouch` areas and `enablednpc()`/`disablenpc()` logic to warp characters, to use `areawarp()` instead, simplifying the scripts and resolving some possible exploits and issues. (#2798)
+- Changed the `@item2` atcommand's parameters to be optional, except the item ID. Default values of 1 for the Identified and Quantity parameters and 0 for everything else will be used, when not specified. (#2795)
+- Updated/added the script for items that use `bSubDefEle` and `bMagicSubDefEle`. (part of #2790, issue #548)
+
+### Fixed
+
+- Fixed a possible exploit in the Dokebi Battle Quest allowing to spawn a higher than expected amount of Am Muts. (#2797)
+- Fixed the Dokebi Battle Quest becoming impossible to complete until server restart under certain circumstances. (part of #2797)
+- Fixed the `@changecharsex` command not correctly saving the updated gender to the database. (#2796, issue #2789)
+- Fixed an issue that made the Moscovia Whale Island Quest impossible to complete. (#2792, issue #2715)
+- Fixed a missing cleanup of the `dnsbl` vectors on shutdown. (part of #2788)
+- Fixed the experience gain messages printing a literal `%"PRIu64"` instead of the gained amount of experience. (#2647)
+- Fixed several typos in the configuration files. (#2769)
+
+### Deprecated
+
+### Removed
+
+- Removed the `pet_disable_in_gvg` battleconf setting in favor of the new `mf_nopet` mapflag. (part of #2652)
+
 ## [v2020.06.28] `June 28 2020`
 
 ### Added
@@ -1512,6 +1545,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.07.26]: https://github.com/HerculesWS/Hercules/compare/v2020.06.28...v2020.07.26
 [v2020.06.28]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31+1...v2020.06.28
 [v2020.05.31+1]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31...v2020.05.31+1
 [v2020.05.31]: https://github.com/HerculesWS/Hercules/compare/v2020.05.03...v2020.05.31
