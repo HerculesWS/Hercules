@@ -164,7 +164,7 @@ enum {
 	//                  = JOBL_BABY | MAPID_TAEKWON,
 	//                  = JOBL_BABY | MAPID_WEDDING,
 	//                  = JOBL_BABY | MAPID_GUNSLINGER,
-	//                  = JOBL_BABY | MAPID_NINJA,
+	MAPID_BABY_NINJA    = JOBL_BABY | MAPID_NINJA,
 	//                  = JOBL_BABY | MAPID_XMAS,
 	//                  = JOBL_BABY | MAPID_SUMMER,
 	//                  = JOBL_BABY | MAPID_GANGSI,

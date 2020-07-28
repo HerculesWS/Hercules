@@ -28923,6 +28923,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EAJ_BABY_ACOLYTE", MAPID_BABY_ACOLYTE, false, false);
 	script->set_constant("EAJ_BABY_MERCHANT", MAPID_BABY_MERCHANT, false, false);
 	script->set_constant("EAJ_BABY_THIEF", MAPID_BABY_THIEF, false, false);
+	script->set_constant("EAJ_BABY_NINJA", MAPID_BABY_NINJA, false, false);
 	script->set_constant("EAJ_BABY_SUMMONER", MAPID_BABY_SUMMONER, false, false);
 
 	script->set_constant("EAJ_SUPER_BABY", MAPID_SUPER_BABY, false, false);
