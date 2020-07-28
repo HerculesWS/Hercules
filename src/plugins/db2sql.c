@@ -211,6 +211,9 @@ uint64 itemdb2sql_readdb_job_sub(struct config_setting_t *t)
 				case JOB_REBELLION:
 					newmask = 1ULL << 30;
 					break;
+				case JOB_SUMMONER:
+					newmask = 1ULL << 31;
+					break;
 			}
 
 			if (libconfig->setting_get_bool(it)) {
