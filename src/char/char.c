@@ -2584,6 +2584,8 @@ static void char_change_sex_sub(int sex, int acc, int char_id, int class, int gu
 		class = (sex == SEX_MALE ? JOB_BABY_MINSTREL : JOB_BABY_WANDERER);
 	else if (class == JOB_KAGEROU || class == JOB_OBORO)
 		class = (sex == SEX_MALE ? JOB_KAGEROU : JOB_OBORO);
+	else if (class == JOB_BABY_KAGEROU || class == JOB_BABY_OBORO)
+		class = (sex == SEX_MALE ? JOB_BABY_KAGEROU : JOB_BABY_OBORO);
 
 #if PACKETVER >= 20141016
 	char gender = (sex == SEX_MALE) ? 'M' : ((sex == SEX_FEMALE) ? 'F' : 'U');

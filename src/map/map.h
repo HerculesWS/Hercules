@@ -181,7 +181,7 @@ enum {
 	//                    = JOBL_BABY | JOBL_2_1 | MAPID_TAEKWON,
 	//                    = JOBL_BABY | JOBL_2_1 | MAPID_WEDDING,
 	//                    = JOBL_BABY | JOBL_2_1 | MAPID_GUNSLINGER,
-	//                    = JOBL_BABY | JOBL_2_1 | MAPID_NINJA,
+	MAPID_BABY_KAGEROUOBORO = JOBL_BABY | JOBL_2_1 | MAPID_NINJA,
 	//                    = JOBL_BABY | JOBL_2_1 | MAPID_XMAS,
 	//                    = JOBL_BABY | JOBL_2_1 | MAPID_SUMMER,
 	//                    = JOBL_BABY | JOBL_2_1 | MAPID_GANGSI,
