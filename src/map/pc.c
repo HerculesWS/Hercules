@@ -6585,7 +6585,7 @@ static int pc_mapid2jobid(unsigned int class, int sex)
 /*====================================================
  * This function return the name of the job (by [Yor])
  *----------------------------------------------------*/
-static const char *job_name(int class)
+static const char *pc_job_name(int class)
 {
 	switch (class) {
 	case JOB_NOVICE:   // 550
@@ -13068,7 +13068,7 @@ void pc_defaults(void)
 	pc->jobid2mapid = pc_jobid2mapid; // Skotlex
 	pc->mapid2jobid = pc_mapid2jobid; // Skotlex
 
-	pc->job_name = job_name;
+	pc->job_name = pc_job_name;
 
 	pc->setinvincibletimer = pc_setinvincibletimer;
 	pc->delinvincibletimer = pc_delinvincibletimer;
