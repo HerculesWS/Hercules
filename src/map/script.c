@@ -28865,8 +28865,11 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EAJ_MERCHANT", MAPID_MERCHANT, false, false);
 	script->set_constant("EAJ_THIEF", MAPID_THIEF, false, false);
 	script->set_constant("EAJ_TAEKWON", MAPID_TAEKWON, false, false);
+	script->set_constant("EAJ_WEDDING", MAPID_WEDDING, false, false);
 	script->set_constant("EAJ_GUNSLINGER", MAPID_GUNSLINGER, false, false);
 	script->set_constant("EAJ_NINJA", MAPID_NINJA, false, false);
+	script->set_constant("EAJ_XMAS", MAPID_XMAS, false, false);
+	script->set_constant("EAJ_SUMMER", MAPID_SUMMER, false, false);
 	script->set_constant("EAJ_GANGSI", MAPID_GANGSI, false, false);
 	script->set_constant("EAJ_SUMMONER", MAPID_SUMMONER, false, false);
 
@@ -28920,6 +28923,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EAJ_BABY_ACOLYTE", MAPID_BABY_ACOLYTE, false, false);
 	script->set_constant("EAJ_BABY_MERCHANT", MAPID_BABY_MERCHANT, false, false);
 	script->set_constant("EAJ_BABY_THIEF", MAPID_BABY_THIEF, false, false);
+	script->set_constant("EAJ_BABY_SUMMONER", MAPID_BABY_SUMMONER, false, false);
 
 	script->set_constant("EAJ_SUPER_BABY", MAPID_SUPER_BABY, false, false);
 	script->set_constant("EAJ_BABY_KNIGHT", MAPID_BABY_KNIGHT, false, false);
