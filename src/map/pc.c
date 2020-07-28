@@ -1863,7 +1863,9 @@ static int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 
 	skill_point = pc->calc_skillpoint(sd);
 
-	novice_skills = pc->dbs->class_exp_table[pc->class2idx(JOB_NOVICE)][CLASS_EXP_TABLE_JOB]->max_level - 1;
+	const struct class_exp_group *group = pc->dbs->class_exp_table[pc->class2idx(JOB_NOVICE)][CLASS_EXP_TABLE_JOB];
+	nullpo_ret(group);
+	novice_skills = group->max_level - 1;
 
 	sd->sktree.second = sd->sktree.third = 0;
 
@@ -1877,7 +1879,9 @@ static int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 			if ((sd->job & JOBL_THIRD) != 0) {
 				// if neither 2nd nor 3rd jobchange levels are known, we have to assume a default for 2nd
 				if (sd->change_level_3rd == 0) {
-					sd->change_level_2nd = pc->dbs->class_exp_table[pc->class2idx(pc->mapid2jobid(sd->job & MAPID_UPPERMASK, sd->status.sex))][CLASS_EXP_TABLE_JOB]->max_level;
+					const struct class_exp_group *group2 = pc->dbs->class_exp_table[pc->class2idx(pc->mapid2jobid(sd->job & MAPID_UPPERMASK, sd->status.sex))][CLASS_EXP_TABLE_JOB];
+					nullpo_ret(group2);
+					sd->change_level_2nd = group2->max_level;
 				} else {
 					sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
@@ -7304,14 +7308,18 @@ static int pc_maxbaselv(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	return pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_BASE]->max_level;
+	const struct class_exp_group *group = pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_BASE];
+	nullpo_ret(group);
+	return group->max_level;
 }
 
 static int pc_maxjoblv(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	return pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_JOB]->max_level;
+	const struct class_exp_group *group = pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_JOB];
+	nullpo_ret(group);
+	return group->max_level;
 }
 
 /*==========================================
@@ -7387,6 +7395,8 @@ static uint64 pc_thisjobexp(const struct map_session_data *sd)
 		return 0;
 
 	exp_group = pc->dbs->class_exp_table[pc->class2idx(sd->status.class)][CLASS_EXP_TABLE_JOB];
+
+	nullpo_ret(exp_group);
 
 	return VECTOR_INDEX(exp_group->exp, sd->status.job_level - 2);
 }
