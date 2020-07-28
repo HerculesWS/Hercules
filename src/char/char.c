@@ -3011,7 +3011,7 @@ static void char_read_fame_list(void)
 		memcpy(chemist_fame_list[i].name, data, min(len, NAME_LENGTH));
 	}
 	// Build Taekwon ranking list
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class`='%d') ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_TAEKWON, fame_list_size_taekwon) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`fame`,`name` FROM `%s` WHERE `fame`>0 AND (`class` in('%d', '%d')) ORDER BY `fame` DESC LIMIT 0,%d", char_db, JOB_TAEKWON, JOB_BABY_TAEKWON, fame_list_size_taekwon) )
 		Sql_ShowDebug(inter->sql_handle);
 	for( i = 0; i < fame_list_size_taekwon && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); ++i )
 	{

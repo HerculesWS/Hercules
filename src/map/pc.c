@@ -6389,6 +6389,7 @@ static int pc_jobid2mapid(int class)
 		case JOB_BABY_ASSASSIN:         return MAPID_BABY_ASSASSIN;
 		case JOB_BABY_KAGEROU:
 		case JOB_BABY_OBORO:            return MAPID_BABY_KAGEROUOBORO;
+		case JOB_BABY_TAEKWON:          return MAPID_BABY_TAEKWON;
 
 	//Baby 2-2 Jobs
 		case JOB_BABY_CRUSADER:         return MAPID_BABY_CRUSADER;
@@ -6532,6 +6533,7 @@ static int pc_mapid2jobid(unsigned int class, int sex)
 		case MAPID_BABY_BLACKSMITH:       return JOB_BABY_BLACKSMITH;
 		case MAPID_BABY_ASSASSIN:         return JOB_BABY_ASSASSIN;
 		case MAPID_BABY_KAGEROUOBORO:     return sex ? JOB_BABY_KAGEROU : JOB_BABY_OBORO;
+		case MAPID_BABY_TAEKWON:          return JOB_BABY_TAEKWON;
 	//Baby 2-2 Jobs
 		case MAPID_BABY_CRUSADER:         return JOB_BABY_CRUSADER;
 		case MAPID_BABY_SAGE:             return JOB_BABY_SAGE;
@@ -6825,6 +6827,9 @@ static const char *pc_job_name(int class)
 	case JOB_BABY_OBORO:
 		return msg_txt(672 - JOB_BABY_KAGEROU + class);
 
+	case JOB_BABY_TAEKWON:
+		return msg_txt(674);
+
 	default:
 		return msg_txt(620); // "Unknown Job"
 	}
@@ -6904,6 +6909,7 @@ static int pc_check_job_name(const char *name)
 		{ "Baby_Summoner", JOB_BABY_SUMMONER },
 		{ "Baby_Kagerou", JOB_BABY_KAGEROU },
 		{ "Baby_Oboro", JOB_BABY_OBORO },
+		{ "Baby_Taekwon", JOB_BABY_TAEKWON },
 		{ "Super_Baby", JOB_SUPER_BABY },
 		{ "Taekwon", JOB_TAEKWON },
 		{ "Star_Gladiator", JOB_STAR_GLADIATOR },
@@ -9320,6 +9326,7 @@ static int pc_jobchange(struct map_session_data *sd, int class, int upper)
 			case MAPID_BLACKSMITH:
 			case MAPID_ALCHEMIST:
 			case MAPID_TAEKWON:
+			case MAPID_BABY_TAEKWON:
 				chrif->save(sd,0);
 				chrif->buildfamelist();
 			break;
