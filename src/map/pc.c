@@ -6379,6 +6379,7 @@ static int pc_jobid2mapid(int class)
 		case JOB_BABY_THIEF:            return MAPID_BABY_THIEF;
 		case JOB_BABY_NINJA:            return MAPID_BABY_NINJA;
 		case JOB_BABY_SUMMONER:         return MAPID_BABY_SUMMONER;
+		case JOB_BABY_GUNSLINGER:       return MAPID_BABY_GUNSLINGER;
 	//Baby 2-1 Jobs
 		case JOB_SUPER_BABY:            return MAPID_SUPER_BABY;
 		case JOB_BABY_KNIGHT:           return MAPID_BABY_KNIGHT;
@@ -6526,6 +6527,7 @@ static int pc_mapid2jobid(unsigned int class, int sex)
 		case MAPID_BABY_THIEF:            return JOB_BABY_THIEF;
 		case MAPID_BABY_NINJA:            return JOB_BABY_NINJA;
 		case MAPID_BABY_SUMMONER:         return JOB_BABY_SUMMONER;
+		case MAPID_BABY_GUNSLINGER:       return JOB_BABY_GUNSLINGER;
 	//Baby 2-1 Jobs
 		case MAPID_SUPER_BABY:            return JOB_SUPER_BABY;
 		case MAPID_BABY_KNIGHT:           return JOB_BABY_KNIGHT;
@@ -6840,6 +6842,9 @@ static const char *pc_job_name(int class)
 	case JOB_BABY_SOUL_LINKER:
 		return msg_txt(676);
 
+	case JOB_BABY_GUNSLINGER:
+		return msg_txt(677);
+
 	default:
 		return msg_txt(620); // "Unknown Job"
 	}
@@ -6921,6 +6926,7 @@ static int pc_check_job_name(const char *name)
 		{ "Baby_Oboro", JOB_BABY_OBORO },
 		{ "Baby_Taekwon", JOB_BABY_TAEKWON },
 		{ "Baby_Soul_Linker", JOB_BABY_SOUL_LINKER },
+		{ "Baby_Gunslinger", JOB_BABY_GUNSLINGER },
 		{ "Super_Baby", JOB_SUPER_BABY },
 		{ "Baby_Star_Gladiator", JOB_BABY_STAR_GLADIATOR },
 		{ "Taekwon", JOB_TAEKWON },
