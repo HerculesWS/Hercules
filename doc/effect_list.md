@@ -5,7 +5,7 @@ A list of client-side effects sorted by ID in ascending order.
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2012-2018 Hercules Dev Team
+> Copyright (C) 2012-2020 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
 > 
 > Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -21,7 +21,7 @@ The following is a compiled list of visual and sound effects which the client
 can produce. Each list entry contains a number and a short description of the
 effect. You can produce these effects ingame by using the `@effect` atcommand.
 It's also possible to attach effects to item/npc scripts by using the
-`specialeffect()` script command.
+`specialeffect()` or `specialeffectnum()` script commands.
 
   ID | Constant Name                  | Description
  --: | :----------------------------- | :----------------------------------

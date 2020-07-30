@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -103,8 +103,8 @@ enum e_battle_check_target { //New definitions [Skotlex]
 enum battle_dmg_type {
 	BDT_NORMAL      = 0,  // Normal attack
 	//BDT_PICKUP      = 1,  // Pick up item
-	//BDT_SITDOWN     = 2,  // Sit down
-	//BDT_STANDUP     = 3,  // Stand up
+	BDT_SITDOWN     = 2,  // Sit down
+	BDT_STANDUP     = 3,  // Stand up
 	BDT_ENDURE      = 4,  // Damage (endure)
 	BDT_SPLASH      = 5,  // Splash
 	BDT_SKILL       = 6,  // Skill
@@ -149,7 +149,8 @@ struct Battle_Config {
 	int pc_damage_delay_rate;
 	int defnotenemy;
 	int vs_traps_bctall;
-	int traps_setting;
+	int trap_visibility;
+	int trap_trigger;
 	int summon_flora; //[Skotlex]
 	int clear_unit_ondeath; //[Skotlex]
 	int clear_unit_onwarp; //[Skotlex]
@@ -211,16 +212,15 @@ struct Battle_Config {
 	int guild_aura;
 	int pc_invincible_time;
 
+	int pet_catch_rate_official_formula;
 	int pet_catch_rate;
 	int pet_rename;
 	int pet_friendly_rate;
 	int pet_hungry_delay_rate;
-	int pet_hungry_friendly_decrease;
 	int pet_status_support;
 	int pet_attack_support;
 	int pet_damage_support;
 	int pet_support_min_friendly; //[Skotlex]
-	int pet_equip_min_friendly;
 	int pet_support_rate;
 	int pet_attack_exp_to_master;
 	int pet_attack_exp_rate;
@@ -228,8 +228,8 @@ struct Battle_Config {
 	int pet_max_stats; //[Skotlex]
 	int pet_max_atk1; //[Skotlex]
 	int pet_max_atk2; //[Skotlex]
-	int pet_no_gvg; //Disables pets in gvg. [Skotlex]
 	int pet_equip_required;
+	int pet_remove_immediately;
 
 	int skill_min_damage;
 	int finger_offensive_type;
@@ -341,7 +341,6 @@ struct Battle_Config {
 	int skill_removetrap_type;
 	int disp_experience;
 	int disp_zeny;
-	int castle_defense_rate;
 	int backstab_bow_penalty;
 	int hp_rate;
 	int sp_rate;
@@ -404,6 +403,7 @@ struct Battle_Config {
 	int mob_remove_delay; // Dynamic Mobs - delay before removing mobs from a map [Skotlex]
 	int mob_active_time; //Duration through which mobs execute their Hard AI after players leave their area of sight.
 	int boss_active_time;
+	int slave_chase_masters_chasetarget;
 
 	int show_hp_sp_drain, show_hp_sp_gain; //[Skotlex]
 	int show_katar_crit_bonus;
@@ -471,12 +471,14 @@ struct Battle_Config {
 	int searchstore_querydelay;
 	int searchstore_maxresults;
 	int display_party_name;
+	int send_party_options;
 	int cashshop_show_points;
 	int mail_show_status;
 	int client_limit_unit_lv;
 	int client_emblem_max_blank_percent;
 	int hom_max_level;
 	int hom_S_max_level;
+	int hom_bonus_exp_from_master;
 
 	// [BattleGround Settings]
 	int bg_update_interval;
@@ -579,10 +581,41 @@ struct Battle_Config {
 
 	int magicrod_type;
 
+	int skill_enabled_npc;
+
 	int feature_enable_achievement;
 
 	int ping_timer_interval;
 	int ping_time;
+
+	int option_drop_max_loop;
+
+	int drop_connection_on_quit;
+	int display_rate_messages;
+	int display_config_messages;
+	int display_overweight_messages;
+	int show_tip_window;
+	int enable_refinery_ui;
+	int replace_refine_npcs;
+
+	int batk_min;
+	int batk_max;
+	int matk_min;
+	int matk_max;
+	int watk_min;
+	int watk_max;
+	int flee_min;
+	int flee_max;
+	int flee2_min;
+	int flee2_max;
+	int critical_min;
+	int critical_max;
+	int hit_min;
+	int hit_max;
+
+	int autoloot_adjust;
+	int allowed_actions_when_dead;
+	int teleport_close_storage;
 };
 
 /* criteria for battle_config.idletime_critera */

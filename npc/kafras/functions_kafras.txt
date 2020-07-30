@@ -9,26 +9,26 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Dastgir
-//= Copyright (C)  Haru
-//= Copyright (C)  rAthena Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Joseph
-//= Copyright (C)  eAthena Dev Team
-//= Copyright (C)  Daegaladh
-//= Copyright (C)  brianluau
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Evera
-//= Copyright (C)  erKURITA
-//= Copyright (C)  Silentdragon
-//= Copyright (C)  Nexon
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  kobra_k88
-//= Copyright (C)  Lupu
-//= Copyright (C)  Syrus22
-//= Copyright (C)  Darkchild
-//= Copyright (C)  Darlskies
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Dastgir
+//= Copyright (C) Haru
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Daegaladh
+//= Copyright (C) brianluau
+//= Copyright (C) Kisuka
+//= Copyright (C) Evera
+//= Copyright (C) erKURITA
+//= Copyright (C) Silentdragon
+//= Copyright (C) Nexon
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//= Copyright (C) Lupu
+//= Copyright (C) Syrus22
+//= Copyright (C) Darkchild
+//= Copyright (C) Darlskies
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ function	script	F_Kafra	{
 			// Guild Castle Kafra message
 			@GID = getcharid(CHAR_ID_GUILD);
 			mes "[Kafra Employee]";
-			mes "Welcome. ^ff0000" + getguildname(@GID) + "^000000 Member.";
+			mes "Welcome. ^ff0000" + getguildinfo(GUILDINFO_NAME, @GID) + "^000000 Member.";
 			mes "The Kafra Coporation will stay with you wherever you go.";
 			break;
 		case 3:
@@ -490,7 +490,7 @@ function	script	F_CheckKafCode	{
 		return;
 	mes "Enter your storage password:";
 	@code_ = 0;
-	input @code_;
+	input(@code_, 0);
 	if (@code_ != #kafra_code) {
 		dispbottom "Wrong storage password.";
 		close2;
@@ -601,7 +601,7 @@ function	script	F_EntKafCode	{
 		@kafcode_try = 0;
 		logmes "Hack: Tried to fit storage password.";
 	}
-	if (input(@code_) == 1) {
+	if (input(@code_, 0) == 1) {
 		mes "You can't use such big password.";
 		return 0;
 	}

@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  rAthena Dev Team
-//= Copyright (C)  eAthena Dev Team
-//= Copyright (C)  Lupus
-//= Copyright (C)  Nova
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Lupus
+//= Copyright (C) Nova
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -186,8 +186,8 @@ kh_kiehl01	mapflag	noteleport
 kh_kiehl02	mapflag	noteleport
 que_rachel	mapflag	noteleport
 que_thor	mapflag	noteleport
-poring_c01	mapflag	noteleport
-poring_c02	mapflag	noteleport
+//poring_c01	mapflag	noteleport
+//poring_c02	mapflag	noteleport
 que_job01	mapflag	noteleport
 que_job02	mapflag	noteleport
 que_job03	mapflag	noteleport

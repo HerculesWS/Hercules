@@ -9,15 +9,15 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  rAthena Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Masao
-//= Copyright (C)  eAthena Dev Team
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Lupus
-//= Copyright (C)  ultramage
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Lupus
+//= Copyright (C) ultramage
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -102,8 +102,8 @@ function	script	Func_Casing	{
 	mes "the number of Magazines you";
 	mes "want to receive. If you want to cancel, then just enter ''0.''";
 	next;
-	input .@amount;
-	if (.@amount > 50 || .@amount == 0) {
+	input(.@amount);
+	if (.@amount > 50 || .@amount <= 0) {
 		mes "[Kenny]";
 		mes "Hey, I can't give you";
 		mes "that many Magazines.";

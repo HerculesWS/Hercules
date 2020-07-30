@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2017 Hercules Dev Team
+ * Copyright (C) 2017-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,9 @@ struct inter_rodex_interface {
 	bool (*hasnew) (int char_id, int account_id);
 	bool (*checkname) (const char *name, int *target_char_id, int *target_class, int *target_level);
 	int64 (*savemessage) (struct rodex_message* msg);
-	bool (*updatemail) (int64 mail_id, int8 flag);
+	bool (*updatemail) (int fd, int account_id, int char_id, int64 mail_id, uint8 opentype, int8 flag);
+	int64 (*getzeny) (int64 mail_id);
+	int (*getitems) (int64 mail_id, struct rodex_item *items);
 };
 
 #ifdef HERCULES_CORE

@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2013-2018  Hercules Dev Team
-//= Copyright (C)  Ridley
-//= Copyright (C)  Exneval
-//= Copyright (C)  Euphy
-//= Copyright (C)  Heris
-//= Copyright (C)  Ziu
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Ridley
+//= Copyright (C) Exneval
+//= Copyright (C) Euphy
+//= Copyright (C) Heris
+//= Copyright (C) Ziu
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -2744,7 +2744,7 @@ glast_01,188,273,5	script	White Knight#1a	4_WHITEKNIGHT,{
 		close();
 	}
 	mes("I exchange you a White Knight Card for ^0000FF3000 Coagulated Spell^000000 or ^FF000070 Contaminated Magic^000000.");
-	mes("<ITEMLINK>White Knight Card<INFO>4608</INFO></ITEMLINK>");
+	mes(F_MesItemInfo(White_Knightage_Card));
 	next();
 	setarray(.@item[0], Coagulated_Spell, Corrupted_Charm);
 	setarray(.@cost[0], 3000, 70);
@@ -2777,7 +2777,7 @@ glast_01,192,273,3	script	Khalitzburg Knight#1a	4_F_KHALITZBURG,{
 		close();
 	}
 	mes("I exchange you a Khalitzburg Knight Card for ^0000FF5000 Coagulated Spell^000000 or ^FF0000100 Contaminated Magic^000000.");
-	mes("<ITEMLINK>Khalitzburg Knight Card<INFO>4609</INFO></ITEMLINK>");
+	mes(F_MesItemInfo(Khali_Knightage_Card));
 	next();
 	setarray(.@item[0], Coagulated_Spell, Corrupted_Charm);
 	setarray(.@cost[0], 5000, 100);

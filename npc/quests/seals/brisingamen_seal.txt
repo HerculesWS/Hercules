@@ -9,13 +9,13 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Samuray22
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Toms
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Toms
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -2621,7 +2621,7 @@ gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 		next;
 		switch(select("Yes", "No")) {
 		case 1:
-			input @lowenstring$;
+			input(@lowenstring$);
 			if (@lowenstring$ == "Lowen") {
 				if (god_brising == 30) {
 					mes "[Lowen Ellenen]";
@@ -2743,7 +2743,7 @@ gef_dun01,203,48,0	script	#lowentrace1	HIDDEN_NPC,3,3,{
 		next;
 		switch(select("Yes", "No")) {
 		case 1:
-			input @lowenstring$;
+			input(@lowenstring$);
 				if (@lowenstring$ == "Lowen") {
 					if (god_brising == 31) {
 					mes "[Lowen Ellenen]";
@@ -4523,35 +4523,35 @@ mjo_dun02,126,36,0	script	#brisindwarf4	HIDDEN_NPC,3,3,{
 		mes "Um, that song.";
 		mes "What was the first line...?";
 		next;
-		input @dwarfsong1$;
+		input(@dwarfsong1$);
 		if (@dwarfsong1$ == "No jewel in the world can compare.") @point += 1;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes " " + @dwarfsong1$ + "";
 		mes "Then...ummm..";
 		mes "The second line?";
 		next;
-		input @dwarfsong2$;
+		input(@dwarfsong2$);
 		if (@dwarfsong2$ == "Our masterpiece made from love.") @point += 1;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes " " + @dwarfsong2$ + "";
 		mes "Now, what was";
 		mes "the third line...?";
 		next;
-		input @dwarfsong3$;
+		input(@dwarfsong3$);
 		if (@dwarfsong3$ == "She wanted the dazzling necklace.") @point += 1;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes " " + @dwarfsong3$ + "";
 		mes "Now, the fourth";
 		mes "line after that...";
 		next;
-		input @dwarfsong4$;
+		input(@dwarfsong4$);
 		if (@dwarfsong4$ == "We wanted the goddess of beauty.") @point += 1;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes " " + @dwarfsong4$ + "";
 		mes "Alright, now";
 		mes "for the last line...";
 		next;
-		input @dwarfsong5$;
+		input(@dwarfsong5$);
 		if (@dwarfsong5$ == "Our happiest times were with her.") @point += 1;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes " " + @dwarfsong5$ + "";

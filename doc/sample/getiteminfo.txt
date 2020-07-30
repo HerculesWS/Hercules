@@ -37,5 +37,28 @@ prontera,156,179,6	script	test_getiteminfo	4_F_KAFRA1,{
 
 	.@trade$ = callfunc("F_GetTradeRestriction", .@value);
 	mesf("Trade Restriction: %s", .@trade$);
+	
+	mesf("Drop delay: %d", getiteminfo(.@value, ITEMINFO_DELAY));
+	mesf("Drop effect mode: %d", getiteminfo(.@value, ITEMINFO_DROPEFFECT_MODE));
+	mesf("Class base 1: %d", getiteminfo(.@value, ITEMINFO_CLASS_BASE_1));
+	mesf("Class base 2: %d", getiteminfo(.@value, ITEMINFO_CLASS_BASE_2));
+	mesf("Class base 3: %d", getiteminfo(.@value, ITEMINFO_CLASS_BASE_3));
+	mesf("Class Upper: %d", getiteminfo(.@value, ITEMINFO_CLASS_UPPER));
+	mesf("No refine flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_NO_REFINE));
+	mesf("Delay consume flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_DELAY_CONSUME));
+	mesf("Auto equip flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_AUTOEQUIP));
+	mesf("Auto favorite flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_AUTO_FAVORITE));
+	mesf("Buying store flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_BUYINGSTORE));
+	mesf("Bind on equip flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_BINDONEQUIP));
+	mesf("Keep after use flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_KEEPAFTERUSE));
+	mesf("Force serial flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_FORCE_SERIAL));
+	mesf("No random item options flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_NO_OPTIONS));
+	mesf("Drop announce flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_DROP_ANNOUNCE));
+	mesf("Shopw drop effect flag: %d", getiteminfo(.@value, ITEMINFO_FLAG_SHOWDROPEFFECT));
+	mesf("Stack amount: %d", getiteminfo(.@value, ITEMINFO_STACK_AMOUNT));
+	mesf("Stack amount flag: %d", getiteminfo(.@value, ITEMINFO_STACK_FLAG));
+	mesf("Item usage flag: %d", getiteminfo(.@value, ITEMINFO_ITEM_USAGE_FLAG));
+	mesf("Item usage override: %d", getiteminfo(.@value, ITEMINFO_ITEM_USAGE_OVERRIDE));
+	mesf("GM Level override: %d", getiteminfo(.@value, ITEMINFO_GM_LV_TRADE_OVERRIDE));
 	close;
 }

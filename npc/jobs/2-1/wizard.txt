@@ -9,19 +9,19 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Vali
-//= Copyright (C)  Kisuka
-//= Copyright (C)  SoulBlaker
-//= Copyright (C)  Yommy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Zairik
-//= Copyright (C)  Vicious
-//= Copyright (C)  Silentdragon
-//= Copyright (C)  Lupus
-//= Copyright (C)  kobra_k88
-//= Copyright (C)  yoshiki
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Vali
+//= Copyright (C) Kisuka
+//= Copyright (C) SoulBlaker
+//= Copyright (C) Yommy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Zairik
+//= Copyright (C) Vicious
+//= Copyright (C) Silentdragon
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//= Copyright (C) yoshiki
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1527,7 +1527,7 @@ OnTimer183000:
 	end;
 
 OnTimer184000:
-	enablenpc "Room of Fire#Failed";
+	areawarp("job_wiz", 30, 83, 62, 115, "geffen", 120, 110);
 	end;
 
 OnTimer185000:
@@ -1535,8 +1535,6 @@ OnTimer185000:
 	end;
 
 OnTimer186000:
-	disablenpc "Room of Fire#Failed";
-	donpcevent "Room of Fire::OnDisable";
 	donpcevent "Arena Assistant::OnStart";
 	end;
 }
@@ -1604,7 +1602,7 @@ OnTimer120000:
 	end;
 
 OnTimer121000:
-	enablenpc "Room of Fire#Failed";
+	areawarp("job_wiz", 30, 83, 62, 115, "geffen", 120, 110);
 	end;
 
 OnTimer122000:
@@ -1612,19 +1610,8 @@ OnTimer122000:
 	end;
 
 OnTimer123000:
-	disablenpc "Room of Fire#Failed";
 	donpcevent "Room of Fire#Door::OnDisable";
 	donpcevent "Arena Assistant::OnStart";
-}
-
-job_wiz,46,99,0	script	Room of Fire#Failed	FAKE_NPC,16,16,{
-OnInit:
-	disablenpc "Room of Fire#Failed";
-	end;
-
-OnTouch:
-	warp "geffen",120,110;
-	end;
 }
 
 job_wiz,1,7,1	script	Test Helper#wiz	1_F_01,{

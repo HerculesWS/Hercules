@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="php-sqllint" default="phar" basedir=".">
+
+ <!--<property name="version"  value="dev" />-->
+ <loadfile property="version" file="VERSION">
+  <filterchain>
+   <striplinebreaks />
+  </filterchain>
+ </loadfile>
+
+ <property name="pharfile" value="${phing.dir}/dist/${phing.project.name}-${version}.phar" />
+ <property name="pharfilebz2" value="${phing.dir}/dist/${phing.project.name}-${version}.bz2.phar" />
+ <property name="libdir" value="${phing.dir}/lib"/>
+
+ <fileset id="fs.phar" dir="${phing.dir}">
+  <include name="bin/**"/>
+  <include name="lib/**"/>
+  <include name="src/**"/>
+
+  <include name="README.rst"/>
+  <include name="VERSION"/>
+
+  <include name="vendor/autoload.php"/>
+  <include name="vendor/composer/*.php"/>
+  <include name="vendor/pear/console_commandline/Console/**"/>
+  <include name="vendor/pear/pear_exception/PEAR/**"/>
+  <include name="vendor/phpmyadmin/sql-parser/src/**"/>
+ </fileset>
+
+
+ <typedef name="pearPackageFileSet" classname="phing.types.PearPackageFileSet" />
+
+ <target name="phar" depends="collectdeps"
+         description="Create zip file for release"
+ >
+  <!-- strip the shebang from bin script -->
+  <copy file="${phing.dir}/bin/php-sqllint" tofile="${phing.dir}/bin/phar-php-sqllint.php">
+   <filterchain>
+    <striplinecomments>
+     <comment value="#" />
+    </striplinecomments>
+   </filterchain>
+  </copy>
+
+  <mkdir dir="${phing.dir}/dist"/>
+  <delete file="${pharfile}"/>
+  <pharpackage basedir="${phing.dir}"
+   destfile="${pharfile}"
+   stub="${phing.dir}/src/stub-phar.php"
+   alias="php-sqllint.phar"
+   compression="none"
+  >
+   <fileset refid="fs.phar"/>
+  </pharpackage>
+
+  <pharpackage basedir="${phing.dir}"
+   destfile="${pharfilebz2}"
+   stub="${phing.dir}/src/stub-phar.php"
+   alias="php-sqllint.phar"
+   compression="bzip2"
+  >
+   <fileset refid="fs.phar"/>
+  </pharpackage>
+
+  <exec executable="chmod">
+   <arg value="+x"/>
+   <arg value="${pharfile}"/>
+   <arg value="${pharfilebz2}"/>
+  </exec>
+ </target>
+
+
+ <target name="collectdeps" description="Copy package dependencies to lib/">
+  <exec command="composer install"/>
+  <!--
+  <delete dir="${libdir}"/>
+  <mkdir dir="${libdir}"/>
+
+  <pearPackageFileset id="dep-Console_CommandLine" package="pear.php.net/Console_CommandLine"/>
+  <pearPackageFileset id="dep-PEAR" package="pear.php.net/PEAR">
+   <include name="PEAR/Exception.php"/>
+  </pearPackageFileset>
+
+  <copy todir="${libdir}">
+   <fileset refid="dep-Console_CommandLine"/>
+   <fileset refid="dep-PEAR"/>
+  </copy>
+  -->
+ </target>
+
+
+ <target name="docs" description="render documentation">
+  <rst file="README.rst"/>
+ </target>
+
+ <target name="update-website" depends="docs">
+  <exec command="xmlstarlet sel -t -c '/_:html/_:body/_:div' README.html
+   | xmllint --format -
+   |grep -v '?xml version'
+   > ~/Dev/html/cweiske.de/www/php-sqllint.htm"/>
+ </target>
+
+</project>

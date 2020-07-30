@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C)  2016 Hercules Dev Team
-//= Copyright (C)  Asheraf
-//= Copyright (C)  pengc2010
+//= Copyright (C) 2016-2020 Hercules Dev Team
+//= Copyright (C) Asheraf
+//= Copyright (C) pengc2010
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -601,7 +601,7 @@ OnInstanceInit:
 OnStart:
 	stopnpctimer instance_npcname("#gp3control");
 	disablenpc(instance_npcname("#gp3control"));
-	killmonster(instance_mapname("1@spa"), "All");
+	killmonster(instance_mapname("1@spa"), "all");
 	disablenpc(instance_npcname("#gp3warp"));
 	enablenpc(instance_npcname("Lurid Royal Guard#gp5"));
 	enablenpc(instance_npcname("Tiara Princess#gp5"));

@@ -9,29 +9,29 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2016  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Masao
-//= Copyright (C)  Xantara
-//= Copyright (C)  Paradox924X
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Samuray22
-//= Copyright (C)  Silent
-//= Copyright (C)  Kargha
-//= Copyright (C)  Playtester
-//= Copyright (C)  DracoRPG
-//= Copyright (C)  Poki#3
-//= Copyright (C)  Nexon
-//= Copyright (C)  dafide18
-//= Copyright (C)  massdriller
-//= Copyright (C)  shadowlady
-//= Copyright (C)  Shinigami
-//= Copyright (C)  Darkchild
-//= Copyright (C)  kobra_k88
-//= Copyright (C)  Lupus
-//= Copyright (C)  Skotlex
-//= Copyright (C)  dafide18
-//= Copyright (C)  Syrus22
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Xantara
+//= Copyright (C) Paradox924X
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) Silent
+//= Copyright (C) Kargha
+//= Copyright (C) Playtester
+//= Copyright (C) DracoRPG
+//= Copyright (C) Poki#3
+//= Copyright (C) Nexon
+//= Copyright (C) dafide18
+//= Copyright (C) massdriller
+//= Copyright (C) shadowlady
+//= Copyright (C) Shinigami
+//= Copyright (C) Darkchild
+//= Copyright (C) kobra_k88
+//= Copyright (C) Lupus
+//= Copyright (C) Skotlex
+//= Copyright (C) dafide18
+//= Copyright (C) Syrus22
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -120,20 +120,19 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 			mes "It's a much needed tool fer refining metal! So, How many do ye wish to buy? If ye want to quit, just type the number '0.'";
 			next;
 			while(1) {
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Christopher Guillenrow]";
 					mes "Aye, the deal is canceled. Fare ye well.";
 					close;
 				}
-				else if ((.@input < 0) || (.@input > 500)) {
+				if (.@input > 500) {
 					mes "[Christopher Guillenrow]";
 					mes "Ye can buy 500, er less.";
 					next;
+					continue;
 				}
-				else {
-					break;
-				}
+				break;
 			}
 			.@sell = .@input * 150;
 			if (Zeny < .@sell) {
@@ -199,22 +198,21 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 			mes "So, How many do ye wish to buy? If ye dont want anything, just type the number as '0.'";
 			next;
 			while(1) {
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Christopher Guillenrow]";
 					mes "Deal has";
 					mes "been canceled.";
 					mes "Fare ye well.";
 					close;
 				}
-				else if ((.@input < 0) || (.@input > 500)) {
+				if (.@input > 500) {
 					mes "[Christopher Guillenrow]";
 					mes "Ye can buy 500, er less.";
 					next;
+					continue;
 				}
-				else {
-					break;
-				}
+				break;
 			}
 			.@sell = .@input * 200;
 			if (Zeny < .@sell) {
@@ -237,22 +235,21 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 			mes "So, how many do ye wish to buy? If ye dont want anything at all, just type the number as '0.'";
 			next;
 			while(1) {
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Christopher Guillenrow]";
 					mes "Deal has";
 					mes "been canceled.";
 					mes "Fare ye well.";
 					close;
 				}
-				else if ((.@input < 0) || (.@input > 500)) {
+				if (.@input > 500) {
 					mes "[Christopher Guillenrow]";
 					mes "Ye can buy 500, er less.";
 					next;
+					continue;
 				}
-				else {
-					break;
-				}
+				break;
 			}
 			.@sell = .@input * 1000;
 			if (Zeny < .@sell) {
@@ -424,20 +421,19 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 		mes "So, how many do you need? If you want to cancel the trade, enter '0'.";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Paul Spanner]";
 				mes "You have canceled the trade. If you need anything, just let me know.";
 				close;
 			}
-			else if ((.@input < 0) || (.@input > 500)) {
+			if (.@input > 500) {
 				mes "[Paul Spanner]";
 				mes "You can only buy 500 or less at a time.";
 				next;
+				continue;
 			}
-			else {
-				break;
-			}
+			break;
 		}
 		.@sell = .@input * .@item_cost;
 		if (Zeny < .@sell) {
@@ -478,20 +474,19 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 		mes "So, how many of them do you need? If you want to cancel the trade, enter '0'.";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Paul Spanner]";
 				mes "The trade has been canceled. If you need anything, just let me know.";
 				close;
 			}
-			else if ((.@input < 0) || (.@input > 500)) {
+			if (.@input > 500) {
 				mes "[Paul Spanner]";
 				mes "You can buy 500 or less at a time.";
 				next;
+				continue;
 			}
-			else {
-				break;
-			}
+			break;
 		}
 		.@sell = .@input * .@item_price;
 		if (Zeny < .@sell) {
@@ -589,14 +584,19 @@ lhz_in02,282,20,7	script	Fulerr	4_M_LGTMAN,{
 // If you enable this function, be sure to edit the value of .@safe to the max
 // safe refine in refine_db.txt as well.
 function	script	refinemain	{
+	mesf("[%s]", getarg(0));
+	mes("I'm the Armsmith.");
+	mes("I can refine all kinds of weapons, armor and equipment, so let me");
+	mes("know what you want me to refine.");
+
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+	}	
+	next();
+
 	disable_items;
 	.@features = getarg(1);
-	mes "[" + getarg(0) + "]";
-	mes "I'm the Armsmith.";
-	mes "I can refine all kinds of weapons, armor and equipment, so let me";
-	mes "know what you want me to refine.";
-	next;
-
 	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
 	.@menu$ = "";
 	for(.@i = 1; .@i <= 10; ++.@i) {
@@ -803,7 +803,7 @@ function	script	refinemain	{
 		mes "[" + getarg(0) + "]";
 		mes "How many times would you like me to refine your item?";
 		next;
-		input .@refinecnt;
+		input(.@refinecnt);
 		.@refinecheck = .@refinecnt + getequiprefinerycnt(.@part);
 		if (.@refinecnt < 1 || .@refinecheck > 10) {
 			mes "[" + getarg(0) + "]";
@@ -949,24 +949,23 @@ function	script	phramain	{
 	mes "If you don't want any, please enter the number, '0.'";
 	next;
 	while(1) {
-		input .@input;
-		if (.@input == 0) {
+		input(.@input);
+		if (.@input <= 0) {
 			mes "[" + getarg(0) + "]";
 			mes "The deal has";
 			mes "been cancelled.";
 			close;
 		}
-		else if (.@input < 0 || .@input > 500) {
+		if (.@input > 500) {
 			mes "[" + getarg(0) + "]";
 			mes "Alright, you can";
 			mes "puchase up to 500.";
 			mes "No more than that,";
 			mes "got it? Good.";
 			next;
+			continue;
 		}
-		else {
-			break;
-		}
+		break;
 	}
 	.@sell = .@input * .@price;
 	if (Zeny < .@sell) {

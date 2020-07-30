@@ -35,7 +35,7 @@ variables: &base_vars
 pre_re:clang-3.9:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:stretch
   services:
     - mariadb:10.1
@@ -50,7 +50,7 @@ pre_re:clang-3.9:
 re:clang-3.9:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:stretch
   services:
     - mariadb:10.1
@@ -80,7 +80,7 @@ zero-2018:clang-3.9:
 pre_re:clang-4.0:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: secondary
+  stage: primary
   image: debian:stretch
   services:
     - mariadb:10.1
@@ -95,7 +95,7 @@ pre_re:clang-4.0:
 re:clang-4.0:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: secondary
+  stage: primary
   image: debian:stretch
   services:
     - mariadb:10.1
@@ -194,8 +194,8 @@ zero-2018:clang-5.0:
 pre_re:clang-6.0:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
-  image: debian:unstable
+  stage: secondary
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -209,8 +209,8 @@ pre_re:clang-6.0:
 re:clang-6.0:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
-  image: debian:unstable
+  stage: secondary
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -225,7 +225,7 @@ zero-2018:clang-6.0:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -239,8 +239,8 @@ zero-2018:clang-6.0:
 pre_re:clang-7:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: secondary
-  image: debian:unstable
+  stage: primary
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -254,8 +254,8 @@ pre_re:clang-7:
 re:clang-7:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: secondary
-  image: debian:unstable
+  stage: primary
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -270,7 +270,7 @@ zero-2018:clang-7:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -281,94 +281,49 @@ zero-2018:clang-7:
     - ./tools/ci/travis.sh build CC=clang-7 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-pre_re:gcc-4.6:
+pre_re:clang-8:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:wheezy
+  image: debian:unstable
   services:
-    - mysql:5.5
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.6 mysql-client libmysqlclient-dev
-    SQLHOST: mysql
+    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-4.6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-re:gcc-4.6:
+re:clang-8:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:wheezy
+  image: debian:unstable
   services:
-    - mysql:5.5
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.6 mysql-client libmysqlclient-dev
-    SQLHOST: mysql
+    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-4.6 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-zero-2018:gcc-4.6:
+zero-2018:clang-8:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
-  image: debian:wheezy
+  image: debian:unstable
   services:
-    - mysql:5.5
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.6 mysql-client libmysqlclient-dev
-    SQLHOST: mysql
+    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-4.6 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-pre_re:gcc-4.7:
-  <<: *branch_exceptions
-  <<: *prerequisites
-  stage: secondary
-  image: debian:wheezy
-  services:
-    - mysql:5.5
-  variables:
-    <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.7 mysql-client libmysqlclient-dev
-    SQLHOST: mysql
-  script:
-    - ./tools/ci/travis.sh build CC=gcc-4.7 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-re:gcc-4.7:
-  <<: *branch_exceptions
-  <<: *prerequisites
-  stage: secondary
-  image: debian:wheezy
-  services:
-    - mysql:5.5
-  variables:
-    <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.7 mysql-client libmysqlclient-dev
-    SQLHOST: mysql
-  script:
-    - ./tools/ci/travis.sh build CC=gcc-4.7 --enable-debug --enable-Werror --enable-buildbot
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-zero-2018:gcc-4.7:
-  <<: *branch_exceptions
-  <<: *prerequisites
-  stage: clients
-  image: debian:wheezy
-  services:
-    - mysql:5.5
-  variables:
-    <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.7 mysql-client libmysqlclient-dev
-    SQLHOST: mysql
-  script:
-    - ./tools/ci/travis.sh build CC=gcc-4.7 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
+    - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
 pre_re:gcc-4.8:
@@ -419,7 +374,7 @@ zero-2018:gcc-4.8:
 pre_re:gcc-4.9:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:jessie
   services:
     - mysql:5.5
@@ -434,7 +389,7 @@ pre_re:gcc-4.9:
 re:gcc-4.9:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: primary
+  stage: secondary
   image: debian:jessie
   services:
     - mysql:5.5
@@ -459,51 +414,6 @@ zero-2018:gcc-4.9:
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-pre_re:gcc-5:
-  <<: *branch_exceptions
-  <<: *prerequisites
-  stage: secondary
-  image: debian:unstable
-  services:
-    - mariadb:10
-  variables:
-    <<: *base_vars
-    INSTALL_PACKAGES: gcc-5 mariadb-client libmariadbclient-dev-compat
-    SQLHOST: mariadb
-  script:
-    - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-re:gcc-5:
-  <<: *branch_exceptions
-  <<: *prerequisites
-  stage: secondary
-  image: debian:unstable
-  services:
-    - mariadb:10
-  variables:
-    <<: *base_vars
-    INSTALL_PACKAGES: gcc-5 mariadb-client libmariadbclient-dev-compat
-    SQLHOST: mariadb
-  script:
-    - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-zero-2018:gcc-5:
-  <<: *branch_exceptions
-  <<: *prerequisites
-  stage: clients
-  image: debian:unstable
-  services:
-    - mariadb:10
-  variables:
-    <<: *base_vars
-    INSTALL_PACKAGES: gcc-5 mariadb-client libmariadbclient-dev-compat
-    SQLHOST: mariadb
-  script:
-    - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
 pre_re:gcc-6:
@@ -555,7 +465,7 @@ pre_re:gcc-7:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -570,7 +480,7 @@ re:gcc-7:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -585,7 +495,7 @@ zero-2018:gcc-7:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -599,8 +509,8 @@ zero-2018:gcc-7:
 pre_re:gcc-8:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: secondary
-  image: debian:unstable
+  stage: primary
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -614,8 +524,8 @@ pre_re:gcc-8:
 re:gcc-8:
   <<: *branch_exceptions
   <<: *prerequisites
-  stage: secondary
-  image: debian:unstable
+  stage: primary
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -630,7 +540,7 @@ zero-2018:gcc-8:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
-  image: debian:unstable
+  image: debian:buster
   services:
     - mariadb:10
   variables:
@@ -641,179 +551,179 @@ zero-2018:gcc-8:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-pre_re:gcc-6_i386:
+pre_re:gcc-8_i386:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
   image: i386/debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-re:gcc-6_i386:
+re:gcc-8_i386:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: primary
   image: i386/debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-zero-2018:gcc-6_i386:
+zero-2018:gcc-8_i386:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
   image: i386/debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-pre_re:gcc-6_sanitize:
+pre_re:gcc-8_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:stretch
+  image: debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-re:gcc-6_sanitize:
+re:gcc-8_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:stretch
+  image: debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-zero-2018:gcc-6_sanitize:
+zero-2018:gcc-8_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
-  image: debian:stretch
+  image: debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full --enable-packetver-zero --enable-packetver=20180511
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full --enable-packetver-zero --enable-packetver=20180511
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-pre_re:gcc-6_i386_sanitize:
+pre_re:gcc-8_i386_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
   image: i386/debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-re:gcc-6_i386_sanitize:
+re:gcc-8_i386_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
   image: i386/debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-zero-2018:gcc-6_i386_sanitize:
+zero-2018:gcc-8_i386_sanitize:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: clients
   image: i386/debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full --enable-packetver-zero --enable-packetver=20180511
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full --enable-packetver-zero --enable-packetver=20180511
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
 
-pre_re:gcc-6_cov:
+pre_re:gcc-8_cov:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:stretch
+  image: debian:buster
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 gcovr mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 gcovr mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal CFLAGS="-coverage" LDFLAGS="-coverage"
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-    - gcovr -r . --gcov-executable=gcov-6 -o gcov_pre.txt
-    - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_pre.html
+    - gcovr -r . --gcov-executable=gcov-8 -o gcov_pre.txt
+    - gcovr -r . --gcov-executable=gcov-8 --html -o gcov_pre.html
     - cat gcov_pre.txt
   artifacts:
     paths:
       - gcov_pre.*
     when: on_success
 
-re:gcc-6_cov:
+re:gcc-8_cov:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: secondary
-  image: debian:stretch
+  image: debian:buster
   services:
-    - mariadb:10.1
+    - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 gcovr mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 gcovr mariadb-client libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
-    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot CFLAGS="-coverage" LDFLAGS="-coverage"
+    - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-    - gcovr -r . --gcov-executable=gcov-6 -o gcov_re.txt
-    - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_re.html
+    - gcovr -r . --gcov-executable=gcov-8 -o gcov_re.txt
+    - gcovr -r . --gcov-executable=gcov-8 --html -o gcov_re.html
     - cat gcov_re.txt
   artifacts:
     paths:
@@ -828,11 +738,11 @@ pre_re:debian-oldstable:
   stage: platforms
   image: debian:oldstable
   services:
-    - mysql:5.5
+    - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
-    SQLHOST: mysql
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
@@ -843,11 +753,11 @@ re:debian-oldstable:
   stage: platforms
   image: debian:oldstable
   services:
-    - mysql:5.5
+    - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
-    SQLHOST: mysql
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
@@ -858,7 +768,7 @@ pre_re:debian-stable:
   stage: platforms
   image: debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10.3
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
@@ -873,7 +783,7 @@ re:debian-stable:
   stage: platforms
   image: debian:stable
   services:
-    - mariadb:10.1
+    - mariadb:10.3
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
@@ -888,7 +798,7 @@ pre_re:debian-testing:
   stage: platforms
   image: debian:testing
   services:
-    - mariadb:10.1
+    - mariadb:10.3
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
@@ -903,7 +813,7 @@ re:debian-testing:
   stage: platforms
   image: debian:testing
   services:
-    - mariadb:10.1
+    - mariadb:10.3
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
@@ -915,51 +825,12 @@ re:debian-testing:
 pre_re:centos-previous:
   <<: *branch_exceptions
   stage: platforms
-  image: centos:6
-  services:
-    - mysql:5.5
-  variables:
-    <<: *base_vars
-    SQLHOST: mysql
-  before_script:
-    - echo "Building $CI_BUILD_NAME"
-    - uname -a
-    - yum -y update
-    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql centos-release-scl
-    - yum install -y devtoolset-6-toolchain
-    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
-    - ./tools/ci/travis.sh getplugins || true
-  script:
-    - 'source /opt/rh/devtoolset-6/enable && ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal'
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-re:centos-previous:
-  <<: *branch_exceptions
-  stage: platforms
-  image: centos:6
-  services:
-    - mysql:5.5
-  variables:
-    <<: *base_vars
-    SQLHOST: mysql
-  before_script:
-    - echo "Building $CI_BUILD_NAME"
-    - uname -a
-    - yum -y update
-    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql centos-release-scl
-    - yum install -y devtoolset-6-toolchain
-    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
-    - ./tools/ci/travis.sh getplugins || true
-  script:
-    - 'source /opt/rh/devtoolset-6/enable && ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot'
-    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
-
-pre_re:centos-current:
-  <<: *branch_exceptions
-  stage: platforms
   image: centos:7
   services:
     - mariadb:5.5
+  variables:
+    <<: *base_vars
+    SQLHOST: mariadb
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
@@ -967,9 +838,47 @@ pre_re:centos-current:
     - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
     - ./tools/ci/travis.sh getplugins || true
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:centos-previous:
+  <<: *branch_exceptions
+  stage: platforms
+  image: centos:7
+  services:
+    - mariadb:5.5
   variables:
     <<: *base_vars
     SQLHOST: mariadb
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:centos-current:
+  <<: *branch_exceptions
+  stage: platforms
+  image: centos:8
+  services:
+    - mariadb:10.3
+  variables:
+    <<: *base_vars
+    SQLHOST: mariadb
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb python2
+    - alternatives --set python /usr/bin/python2
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+    - ./tools/ci/travis.sh getplugins || true
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
@@ -977,19 +886,20 @@ pre_re:centos-current:
 re:centos-current:
   <<: *branch_exceptions
   stage: platforms
-  image: centos:7
+  image: centos:8
   services:
-    - mariadb:5.5
+    - mariadb:10.3
+  variables:
+    <<: *base_vars
+    SQLHOST: mariadb
   before_script:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - yum -y update
-    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb
+    - yum install -y gcc make mariadb-devel pcre-devel git zlib-devel mariadb python2
+    - alternatives --set python /usr/bin/python2
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
     - ./tools/ci/travis.sh getplugins || true
-  variables:
-    <<: *base_vars
-    SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
@@ -1180,7 +1090,7 @@ pre_re:mariadb-10.1:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stable
+  image: debian:stretch
   services:
     - mariadb:10.1
   variables:
@@ -1195,12 +1105,42 @@ re:mariadb-10.1:
   <<: *branch_exceptions
   <<: *prerequisites
   stage: platforms
-  image: debian:stable
+  image: debian:stretch
   services:
     - mariadb:10.1
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+pre_re:mariadb-10.3:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: platforms
+  image: debian:buster
+  services:
+    - mariadb:10.3
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.3 libmariadbclient-dev-compat
+    SQLHOST: mariadb
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok $SQLHOST
+
+re:mariadb-10.3:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  stage: platforms
+  image: debian:buster
+  services:
+    - mariadb:10.3
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.3 libmariadbclient-dev-compat
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1285,8 +1225,8 @@ pages:
     - mv gcov_*.* public/
     - cp tools/doxygen/pages_index.html public/index.html
   dependencies:
-    - re:gcc-6_cov
-    - pre_re:gcc-6_cov
+    - re:gcc-8_cov
+    - pre_re:gcc-8_cov
   artifacts:
     paths:
       - public

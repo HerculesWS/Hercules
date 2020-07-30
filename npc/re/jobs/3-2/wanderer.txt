@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Joseph
-//= Copyright (C)  Masao
-//= Copyright (C)  Meyraw
-//= Copyright (C)  Muad_Dib
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) Masao
+//= Copyright (C) Meyraw
+//= Copyright (C) Muad_Dib
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -252,7 +252,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "It's because...";
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes "^3131FF" + .@inputstr$ + "^000000";
 		mes "......";
 		next;

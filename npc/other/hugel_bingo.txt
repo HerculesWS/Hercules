@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Samuray22
-//= Copyright (C)  Yommy
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) Yommy
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -481,7 +481,7 @@ OnTouch:
 			mes "Quickly, say ''^FF0000Bingo^000000!''";
 			mes "Remember, you'll only";
 			mes "have one chance to say it!";
-			input @bingoyell$;
+			input(@bingoyell$);
 			if (@bingoyell$ == "Bingo") {
 				if ($@hu_bingoa == 5) {
 					$@hu_bingoa = 6;
@@ -500,14 +500,13 @@ OnTouch:
 					mes "next time, alright?";
 					close;
 				}
-			} else {
-				next;
-				mes "I'm sorry, but you";
-				mes "said it wrong. Next time,";
-				mes "make sure that you yell";
-				mes "out the word, ''^FF0000Bingo^000000,'' okay?";
-				close;
 			}
+			next;
+			mes "I'm sorry, but you";
+			mes "said it wrong. Next time,";
+			mes "make sure that you yell";
+			mes "out the word, ''^FF0000Bingo^000000,'' okay?";
+			close;
 		}
 		close;
 	}
@@ -860,11 +859,17 @@ function	script	Func_Bingo	{
 			}
 		}
 		next;
-		input .@bingoinput;
-		if(.@bingoinput < 1 || .@bingoinput > 25) { @bingo_case = .@i; return 0; }
-		if(.@i > 1) {
-			for(.@j = .@i; .@j > 0; --.@j) {
-				if(.@bingoinput == @bingoplate[.@j -1]) { @bingo_case = .@i; return 0; }
+		input(.@bingoinput);
+		if (.@bingoinput < 1 || .@bingoinput > 25) {
+			@bingo_case = .@i;
+			return 0;
+		}
+		if (.@i > 1) {
+			for (.@j = .@i; .@j > 0; --.@j) {
+				if (.@bingoinput == @bingoplate[.@j -1]) {
+					@bingo_case = .@i;
+					return 0;
+				}
 			}
 		}
 		setarray @bingoplate[.@i],.@bingoinput;

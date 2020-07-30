@@ -1,0 +1,196 @@
+//===== Hercules Documentation ===============================
+//= Pet Database
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20200102
+//===== Description: =========================================
+//= Explanation of the pet_db.conf file and structure.
+//============================================================
+
+pet_db: (
+{
+	// ================ Mandatory fields ==============================
+	Id: ID                               (int)
+	Name: "Pet Name"                     (string)
+	EggItem: "Egg Item Constant"         (string)
+	// ================ Optional fields ===============================
+	TamingItem: "Taming Item Constant"         (string, defaults to 0)
+	FoodItem: "Food Item Constant"             (string, defaults to 537 ("Pet_Food"))
+	AccessoryItem: "Equipment Item Constant"   (string, defaults to 0)
+	FoodEffectiveness: hunger points           (int, defaults to 80)
+	HungerDelay: hunger time                   (int, defaults to 60)
+	HungerDecrement: hunger points             (int, defaults to 1)
+	Intimacy: {
+		Initial: start intimacy                   (int, defaults to 250)
+		FeedIncrement: feeding intimacy           (int, defaults to 10)
+		OverFeedDecrement: overfeeding intimacy   (int, defaults to 100)
+		OwnerDeathDecrement: owner die intimacy   (int, defaults to 20)
+		StarvingDelay: starving time              (int, defaults to 20)
+		StarvingDecrement: starving intimacy      (int, defaults to 20)
+	}
+	CaptureRate: capture rate            (int, defaults to 1000)
+	Speed: speed                         (int, defaults to 150)
+	SpecialPerformance: true/false       (boolean, defaults to false)
+	TalkWithEmotes: convert talk         (boolean, defaults to false)
+	AttackRate: attack rate              (int, defaults to 300)
+	DefendRate: Defence attack           (int, defaults to 300)
+	ChangeTargetRate: change target      (int, defaults to 800)
+	AutoFeed: true/false                 (boolean, defaults to false)
+	PetScript: <" Pet Script (can also be multi-line) ">
+	EquipScript: <" Equip Script (can also be multi-line) ">
+	Evolve: {
+		EggID: {                     (string, Evolved Pet EggID)
+			Name: Amount         (items required to perform evolution)
+			...
+		}
+	}
+},
+...
+)
+
+ * Id:
+	The ID of the monster that should be tamed. See mob_db.conf.
+ * Name:
+	The pet's default name.
+ * EggItem:
+	The name of the pet's egg item. See item_db.conf AegisName field.
+ * TamingItem:
+	The name of the item, which is used to tame the pet.
+	See item_db.conf AegisName field.
+	This field is optional and defaults to 0.
+ * FoodItem:
+	The name of the item, which is used to feed the pet.
+	See item_db.conf AegisName field.
+	This field is optional and defaults to Pet_Food (ID=537).
+ * AccessoryItem:
+	The name of the pet's accesssory item.
+	See item_db.conf AegisName field.
+	This field is optional and defaults to 0.
+ * FoodEffectiveness:
+	This field defines how many hunger points
+	are restored, when feeding the pet.
+	This field is optional and defaults to 80.
+	Minimum value is 1, maximum value is 100.
+ * HungerDelay:
+	This is the interval for consuming hunger points.
+	Every <HungerDelay> seconds, the pet will consume
+	<HungerDecrement> hunger points.
+	In official servers it's 60 seconds for every pet.
+	This field is optional and defaults to 60.
+	Minimum value is 0, maximum value is 2147483.
+	If set to 0, the pet won't consume hunger points.
+ * HungerDecrement:
+	How many hunger points will be consumed every <HungerDelay> seconds.
+	This field is optional and defaults to 1.
+	Minimum value is 0, maximum value is 99.
+	If set to 0, <HungerDelay> is automatically set to 0, too,
+	regardless of what value was defined.
+ * Intimacy: {
+	The <Intimacy> block contains all settings,
+	which affect the pet's intimacy value.
+   * Initial:
+	The amount of intimacy points, the pet will have when tamed.
+	This field is optional and defaults to 250.
+	Minimum value is 1, maximum value is 1000.
+   * FeedIncrement:
+	The amount of intimacy points, gained when feeding the pet.
+	Note: This value is used as base value.
+	      The actual added amount depends on the pet's current hunger.
+	This field is optional and defaults to 10.
+	Minimum value is 1, maximum value is 1000.
+   * OverFeedDecrement:
+	The amount of intimacy points, lost when feeding the pet
+	if it isn't hungry.
+	Note: This value is used as base value.
+	      The actual removed amount depends on the pet's current hunger.
+	This field is optional and defaults to 100.
+	Minimum value is 0, maximum value is 1000.
+   * OwnerDeathDecrement:
+	The amount of intimacy points, lost when its master dies.
+	This field is optional and defaults to 20.
+	Minimum value is 0, maximum value is 1000.
+   * StarvingDelay:
+	This is the interval for loosing intimacy points,
+	when the pet is starving.
+	The pet is starving, if it has no hunger points left.
+	Every <StarvingDelay> seconds, the pet will lose
+	<StarvingDecrement> intimacy points.
+	In official servers it's 20 seconds for all pets.
+	If <HungerDelay> is set to 0, <StarvingDelay> is set to 0, too,
+	regardless of what value was defined.
+	This field is optional and defaults to 20.
+	Minimum value is 0, maximum value is <HungerDelay>.
+	If set to 0, the pet won't lose intimacy points while starving.
+   * StarvingDecrement:
+	How many intimacy points will be lost every <StarvingDelay> seconds,
+	when the pet is starving.
+	This field is optional and defaults to 20.
+	Minimum value is 0, maximum value is 1000.
+	If set to 0, <StarvingDelay> is automatically set to 0, too,
+	regardless of what value was defined.
+   }
+ * CaptureRate:
+	The chance of success when taming the pet.
+	10000 equals 100%.
+	This field is optional and defaults to 1000.
+	Minimum value is 1, maximum value is 10000.
+ * Speed:
+	The pet's moving speed.
+	Note: The lower the value, the higher the speed.
+	This field is optional and defaults to 150.
+	Minimum value is 20, maximum value is 1000.
+ * SpecialPerformance:
+	If 'true', the pet is allowed to do its special performance.
+	This field is optional and defaults to 'false'.
+ * TalkWithEmotes:
+	If 'true', the pet is allowed to talk by using emotes.
+	This field is optional and defaults to 'false'.
+ * AttackRate:
+	Chance for supporting when the master attacks a monster.
+	10000 equals 100%.
+	This field is optional and defaults to 300.
+	Minimum value is 0, maximum value is 10000.
+ * DefendRate:
+	Chance for supporting when the master receives damage from a monster.
+	10000 equals 100%.
+	This field is optional and defaults to 300.
+	Minimum value is 0, maximum value is 10000.
+ * ChangeTargetRate:
+	Chance for the pet changes its target when supporting.
+	10000 equals 100%.
+	This field is optional and defaults to 800.
+	Minimum value is 0, maximum value is 10000.
+ * AutoFeed:
+	If 'true', the pet is fed automatically.
+	This field is optional and defaults to 'false'.
+ * PetScript: <"
+	This field is used for pet AI commands. See doc/script_commands.txt.
+	It will be executed every time, the pet's data gets initialized.
+	Everything you can do in a NPC script should work here, too,
+	but using the <EquipScript> field is recommended, when executing
+	other commands than the pet AI ones.
+	This field is optional and has no default value.
+   ">
+ * EquipScript: <"
+	This field is commonly used to apply bonuses to the the pet's master.
+	See doc/item_bonus.md.
+	It will be executed every time, the pet master's status is calculated.
+	Everything you can do in a NPC script should work here, too.
+	This field is optional and has no default value.
+   ">
+ * Evolve: {
+	The <Evolve> block is used to define which pet(s) can be eveolved
+	from the current pet.
+	This block is optional and has no default value.
+   * Evolved_Egg_Item_Name: {
+	The name of the egg item, which will be created when evolving.
+	You can add multiple <Evolved_Egg_Item_Name> blocks.
+	See item_db.conf AegisName field.
+     * Evolve_Item_Name: Amount
+	This is a pair of an item name and the corresponding amount which is
+	required to evolve the pet into <Evolved_Egg_Item_Name>.
+	You can add multiple <Evolve_Item_Name: Amount> pairs.
+	See item_db.conf AegisName field for item names.
+     }
+   }

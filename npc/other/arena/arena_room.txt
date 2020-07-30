@@ -9,10 +9,10 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -520,9 +520,9 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 				//mes "If not, please enter a value for minutes first and then seconds.";
 				mes "Please enter a value for minutes first and then seconds.";
 				next;
-				input .@arenamin;
+				input(.@arenamin, 0);
 				setd .@min$,.@arenamin;
-				input .@arenasec;
+				input(.@arenasec, 0);
 				setd .@sec$,.@arenasec;
 				mes "[Arena Manager]";
 				mes "Current "+.@mode$+" ranker's play time has been rearranged to ^FF0000"+getd(.@min$)+"^000000 minutes and ^FF0000"+getd(.@sec$)+"^000000 seconds.";
@@ -1011,12 +1011,13 @@ function	script	Func_Are_Rew	{
 	mes "You can exchange ^3131FF"+getarg(2)+" arena points with "+getarg(1)+" "+getitemname(getarg(0))+"^000000.";
 	mes "If you wish to cancel, please enter 0. If you don't, please enter how many ^3131FFtimes^000000 of arena points you wish to spend.";
 	next;
-	input .@reward;
-	if (.@reward == 0) {
+	input(.@reward);
+	if (.@reward <= 0) {
 		mes "[Givu]";
 		mes "You have canceled your request.";
 		close;
-	} else if (.@reward > 1500) {
+	}
+	if (.@reward > 1500) {
 		mes "[Givu]";
 		mes "You have exceeded the maximum capacity.";
 		close;

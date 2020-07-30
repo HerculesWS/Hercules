@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2019  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -245,6 +245,9 @@ struct pincode_interface *pincode;
 #ifdef MAP_QUEST_H /* quest */
 struct quest_interface *quest;
 #endif // MAP_QUEST_H
+#ifdef MAP_REFINE_H /* refine */
+struct refine_interface *refine;
+#endif // MAP_REFINE_H
 #ifdef COMMON_RANDOM_H /* rnd */
 struct rnd_interface *rnd;
 #endif // COMMON_RANDOM_H
@@ -601,6 +604,10 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("quest", quest))
 		return "quest";
 #endif // MAP_QUEST_H
+#ifdef MAP_REFINE_H /* refine */
+	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("refine", refine))
+		return "refine";
+#endif // MAP_REFINE_H
 #ifdef COMMON_RANDOM_H /* rnd */
 	if ((server_type&(SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("rnd", rnd))
 		return "rnd";

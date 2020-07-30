@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2013-2015  Hercules Dev Team
-//= Copyright (C)  Michieru
-//= Copyright (C)  DeadlySilence
-//= Copyright (C)  Euphy
-//= Copyright (C)  Masao
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Michieru
+//= Copyright (C) DeadlySilence
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -2088,13 +2088,14 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				mes "How many Silver Crosses do you need?";
 				mes "I can make up to 50 at a time.";
 				next;
-				input .@amount;
-				if (.@amount == 0) {
+				input(.@amount);
+				if (.@amount <= 0) {
 					mes "[Pandoi]";
 					mes "Don't need Silver Crosses?";
 					mes "Well, I can take a rest then. Ha ha ha ha~";
 					close;
-				} else if (.@amount > 50) {
+				}
+				if (.@amount > 50) {
 					mes "[Pandoi]";
 					mes "A maximum of 50 at a time!";
 					close;
@@ -8317,7 +8318,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "295 - 343 -> Day 7";
 				mes "Global 1 = 1 hr.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 344)
 					close;
 				$malaya_pintados_00 = .@input;
@@ -8326,7 +8327,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value for the Lesser Agimat.";
 				mes "Values can be adjusted between 0 to 1000.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 1000)
 					close;
 				$malaya_pintados_01 = .@input;
@@ -8335,7 +8336,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value of the Silver Cross.";
 				mes "Values can be adjusted between 0 to 1000.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 1000)
 					close;
 				$malaya_pintados_02 = .@input;
@@ -8344,7 +8345,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value for the Dyestuff.";
 				mes "Values can be adjusted between 0 to 300.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 300)
 					close;
 				$malaya_pintados_03 = .@input;
@@ -8577,7 +8578,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 			mes "[Isco]";
 			mes "He he... I'm slow with numbers. I get lost when it's over 50. How many will you give me?";
 			next;
-			input .@amount;
+			input(.@amount);
 			if (.@amount < 1 || .@amount > 50) {
 				mes "[Isco]";
 				mes "Sigh~ I'm lost! I can't count if the numbers are weird.";
@@ -8609,7 +8610,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 			mes "[Isco]";
 			mes "He he... I'm slow with numbers. I get lost when it's over 50. How many will you give me?";
 			next;
-			input .@amount;
+			input(.@amount);
 			if (.@amount < 1 || .@amount > 50) {
 				mes "[Isco]";
 				mes "Sigh~ I told you I'm not good with numbers.";

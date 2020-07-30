@@ -9,17 +9,17 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  DeadlySilence
-//= Copyright (C)  Samuray22
-//= Copyright (C)  Lupus
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Evera
-//= Copyright (C)  Musashiden
-//= Copyright (C)  Silent
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  Nexon
-//= Copyright (C)  massdriller
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) DeadlySilence
+//= Copyright (C) Samuray22
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) Musashiden
+//= Copyright (C) Silent
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Nexon
+//= Copyright (C) massdriller
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -274,8 +274,8 @@ OnTouch:
 		mes "them at a time.";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Suspicious Guy]";
 				if (Sex == SEX_MALE)
 					mes "Ah duuuuuude~ You're breakin' my heart! I mean, at these prices, I'm practically performing charity!";
@@ -283,14 +283,14 @@ OnTouch:
 					mes "W-waaaait! You didn't let me tell you the part about how Red Potions help you lose and gain weight in all the right places! Waaaaait!";
 				close;
 			}
-			else if (.@input > 100) {
+			if (.@input > 100) {
 				mes "[Suspicious Guy]";
 				mes "Whoa...";
 				mes "I can't let you buy that many. I mean, it's not like, you know, there's a trace impurity in these Potions or anything like that...";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@Red_potion_hap = .@input * 500;
 		if (Zeny < .@Red_potion_hap) {
@@ -344,8 +344,8 @@ OnTouch:
 		mes "There's no way you can pass this up! Now, how many do you want?";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Suspicious Guy]";
 				mes "Man, how many chances of a lifetime have you passed up? Man, I hope you win the lottery...";
 				mes "You'd probably";
@@ -353,14 +353,14 @@ OnTouch:
 				close;
 
 			}
-			else if (.@input > 100) {
+			if (.@input > 100) {
 				mes "[Suspicious Guy]";
 				mes "Whoa!";
 				mes "I can't sell that many Daggers! That'll attract the Prontera Chiv--I mean, um, I was gonna donate some Daggers to... Hungry children?";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@Main_gauche_hap = .@input * 9400;
 		if (Zeny < .@Main_gauche_hap) {
@@ -398,21 +398,21 @@ OnTouch:
 		mes "Clearly, this is the deal of the century. So how many do you want?";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Suspicious Guy]";
 				mes "Awww...";
 				mes "It wasn't because of the whole drawstrings thing, was it?";
 				close;
 			}
-			else if (.@input > 100) {
+			if (.@input > 100) {
 				mes "[Suspicious Guy]";
 				mes "Whoa~!";
 				mes "I can't sell you that many! What are you trying to do, take advantage of me?";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@Hood__hap = .@input * 930;
 		if (Zeny < .@Hood__hap) {

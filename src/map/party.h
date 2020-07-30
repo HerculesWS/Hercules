@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,6 +51,8 @@ struct party_data {
 		unsigned sg : 1;     ///< There's at least one Star Gladiator in party?
 		unsigned snovice :1; ///< There's a Super Novice
 		unsigned tk : 1;     ///< There's a taekwon
+		unsigned option_auto_changed : 1;  ///< Party options were changed automatically. (inter_party_check_lv())
+		unsigned member_level_changed : 1; ///< A party member's level has changed.
 	} state;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
@@ -118,7 +120,6 @@ struct party_interface {
 	void (*send_levelup) (struct map_session_data *sd);
 	int (*send_logout) (struct map_session_data *sd);
 	int (*send_message) (struct map_session_data *sd, const char *mes);
-	int (*recv_message) (int party_id,int account_id,const char *mes,int len);
 	int (*skill_check) (struct map_session_data *sd, int party_id, uint16 skill_id, uint16 skill_lv);
 	int (*send_xy_clear) (struct party_data *p);
 	int (*exp_share) (struct party_data *p,struct block_list *src,unsigned int base_exp,unsigned int job_exp,int zeny);

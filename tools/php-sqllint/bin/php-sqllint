@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+/**
+ * SQL linter (syntax checker) written in PHP
+ *
+ * PHP version 5
+ *
+ * @category Tools
+ * @package  PHP-SQLlint
+ * @author   Christian Weiske <cweiske@cweiske.de>
+ * @license  http://www.gnu.org/licenses/agpl.html GNU AGPL v3
+ * @link     http://cweiske.de/php-sqllint.htm
+ */
+namespace phpsqllint;
+
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    //local git checkout
+    include_once __DIR__ . '/../vendor/autoload.php';
+} else if (file_exists('vendor/autoload.php')) {
+    //dependency composer installation
+    include_once 'vendor/autoload.php';
+}
+
+if (file_exists(__DIR__ . '/../src/phpsqllint/Autoloader.php')) {
+    include_once __DIR__ . '/../src/phpsqllint/Autoloader.php';
+    Autoloader::register();
+}
+
+$cli = new Cli();
+$cli->run();
+?>

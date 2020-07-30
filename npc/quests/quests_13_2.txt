@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Joseph
-//= Copyright (C)  Euphy
-//= Copyright (C)  Masao
-//= Copyright (C)  Gepard
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Gepard
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -3866,7 +3866,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 			mes "Now, let's start with the Fairies! What is the fairy's language like? Please write them down here sentence by sentence!";
 			next;
 			.@spl_score00 = 0;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "RLGHLRXLA TKANTLFDMS") {
 				mes "[Linguist Dictionary]";
 				mes ""+ .@input$ +"....";
@@ -3880,7 +3880,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 				.@spl_score01 = .@spl_score00;
 				next;
 			}
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "WJACK TNAHRDNJSDMFH") {
 				mes ""+ .@input$ +"....";
 				mes "And?";
@@ -3893,7 +3893,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 				.@spl_score02 = .@spl_score01;
 				next;
 			}
-			input .@input$;
+			input(.@input$);
 			if ((.@input$ == "WLSGHKWND !!") || (.@input$ == "WLSGHKWND")) {
 				mes ""+ .@input$ +"....";
 				mes "Is that all?";
@@ -3931,7 +3931,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 			mes "Good. then next is the Wooden Giants! What's their language like? Write them down sentence by sentence just as you did with the Fairy's.";
 			next;
 			.@man_score00 = 0;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "TJDTMFJDNS CJFDI") {
 				mes "[Linguist Dictionary]";
 				mes ""+ .@input$ +"....";
@@ -3945,7 +3945,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 				.@man_score01 = .@man_score00;
 				next;
 			}
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "TKADLFDMF QKATOS") {
 				mes ""+ .@input$ +"....";
 				mes "And?";
@@ -3958,8 +3958,8 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 				.@man_score02 = .@man_score01;
 				next;
 			}
-			input .@input$;
-			if ((.@input$ == "EKDTLSDML DLFMADMS..") || (.@input$ == "EKDTLSDML DLFMADMS")) {
+			input(.@input$);
+			if (.@input$ == "EKDTLSDML DLFMADMS.." || .@input$ == "EKDTLSDML DLFMADMS") {
 				mes ""+ .@input$ +"....";
 				mes "This is it?";
 				.@man_score03 = .@man_score02+1;

@@ -67,7 +67,7 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 				mes "Input the number of rounds you want the event to last.";
 				mes "Current number: [^0000FF"+.Rounds+"^000000]";
 				next;
-				input .@Rounds;
+				input(.@Rounds, 0);
 				set .Rounds,.@Rounds;
 				mes .@n$;
 				mes "The number of rounds has been changed to "+.Rounds+".";
@@ -77,7 +77,7 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 				mes "Input the Item ID of the prize given each round.";
 				mes "Current item: [^0000FF"+getitemname(.Prize)+"^000000] (ID #"+.Prize+")";
 				next;
-				input .@Prize;
+				input(.@Prize, 0);
 				mes .@n$;
 				if (getitemname(.@Prize)=="" || getitemname(.@Prize)=="null") {
 					mes "That item does not exist. Please try again.";
@@ -86,11 +86,11 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 				set .Prize,.@Prize;
 				mes "Input the amount to be given.";
 				next;
-				input .@amount;
+				input(.@amount);
 				mes .@n$;
-				if (.@amount<=0 || .@amount>=10000) {
+				if (.@amount <= 0 || .@amount >= 10000) {
 					mes "That amount is invalid. Using default ammount of 1.";
-					set .@amount,1;
+					.@amount = 1;
 					next;
 					mes .@n$;
 				}

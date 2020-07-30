@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -396,7 +396,7 @@ static void irc_userjoin(int fd, char *cmd, char *source, char *target, char *ms
 		ircbot->parse_source(source,source_nick,source_ident,source_host);
 
 	if( ircbot->channel ) {
-		snprintf(send_string, 150, "[ #%s ] User IRC.%s joined the channel.",ircbot->channel->name,source_nick);
+		snprintf(send_string, 150, msg_txt(468), ircbot->channel->name, source_nick); // [ #%s ] User IRC.%s joined the channel.
 		clif->channel_msg2(ircbot->channel,send_string);
 	}
 }
@@ -414,9 +414,9 @@ static void irc_userleave(int fd, char *cmd, char *source, char *target, char *m
 
 	if( ircbot->channel ) {
 		if (!strcmpi(cmd, "QUIT"))
-			snprintf(send_string, 150, "[ #%s ] User IRC.%s left the channel. [Quit: %s]",ircbot->channel->name,source_nick,msg);
+			snprintf(send_string, 150, msg_txt(465), ircbot->channel->name, source_nick, msg); // [ #%s ] User IRC.%s left the channel. [Quit: %s]
 		else
-			snprintf(send_string, 150, "[ #%s ] User IRC.%s left the channel. [%s]",ircbot->channel->name,source_nick,msg);
+			snprintf(send_string, 150, msg_txt(466), ircbot->channel->name, source_nick, msg); // [ #%s ] User IRC.%s left the channel. [%s]
 		clif->channel_msg2(ircbot->channel,send_string);
 	}
 }
@@ -433,7 +433,7 @@ static void irc_usernick(int fd, char *cmd, char *source, char *target, char *ms
 		ircbot->parse_source(source,source_nick,source_ident,source_host);
 
 	if( ircbot->channel ) {
-		snprintf(send_string, 150, "[ #%s ] User IRC.%s is now known as IRC.%s",ircbot->channel->name,source_nick,msg);
+		snprintf(send_string, 150, msg_txt(467), ircbot->channel->name, source_nick, msg); // [ #%s ] User IRC.%s is now known as IRC.%s
 		clif->channel_msg2(ircbot->channel,send_string);
 	}
 }

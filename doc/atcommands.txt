@@ -584,6 +584,12 @@ Opens the Identification window if any unappraised items are in your inventory.
 
 ---------------------------------------
 
+@identifyall
+
+Identifies all unappraised items in your inventory.
+
+---------------------------------------
+
 @trade <player name>
 
 Opens the trade window with the specified player.
@@ -672,17 +678,30 @@ Example:
 @refine <equip position> <+/- amount>
 
 Refines an equipped item by the specified amount.
-0: All Equipment
-1: Lower Headgear
-2: Right Hand
+-3: Refine All Equip (Shadow)
+-2: Refine All Equip (Costume)
+-1: Refine All Equip (General)
+1: Headgear (Low)
+2: Hand (Right)
 4: Garment
-8: Left Accessory
+8: Accessory (Left)
 16: Body Armor
-32: Left Hand
+32: Hand (Left)
 64: Shoes
-128: Right Accessory
-256: Top Headgear
-512: Mid Headgear
+128: Accessory (Right)
+256: Headgear (Top)
+256: Headgear (Mid)
+1024: Costume Headgear (Top)
+2048: Costume Headgear (Mid)
+4096: Costume Headgear (Low)
+8192: Costume Garment
+65536: Shadow Armor
+131072: Shadow Weapon
+262144: Shadow Shield
+524288: Shadow Shoes
+1048576: Shadow Accessory (Right)
+2097152: Shadow Accessory (Left)
+2097152: Shadow Accessory (Left)
 
 ---------------------------------------
 
@@ -692,9 +711,23 @@ Repairs all broken items in your inventory.
 
 ---------------------------------------
 
-@dropall
+@dropall {<item type>}
 
-Drops all inventory and equipped items onto the floor.
+Drops all items based on the item type.
+
+Valid item types:
+    -1 = All Items (default)
+     0 = Healing Items
+     2 = Useable Items
+     3 = Etc Items
+     4 = Weapons
+     5 = Armors
+     6 = Cards
+     7 = Pet Eggs
+     8 = Pet Armors
+    10 = Ammunition Items
+    11 = Delayed-Consumable Items
+    18 = Cash Items
 
 ---------------------------------------
 
@@ -859,6 +892,12 @@ Resets a Star Gladiator's marked maps.
 
 ---------------------------------------
 
+@hatereset
+
+Resets a Star Gladiator's hatred targets.
+
+---------------------------------------
+
 @jobchange <job name/ID>
 
 Changes your job.
@@ -929,10 +968,19 @@ If no position is given, the command defaults to headgear.
 
 ---------------------------------------
 
-@fakename {<text string>}
+@fakename {<options>} {<fake_name>}
 
-Temporarily changes name to the specified string.
-If no string is given, the character's real name will be re-applied.
+Temporarily changes the character's name to <fake_name>.
+If no parameter is passed, the character's real name will be re-applied.
+The <options> parameter is used, to modify which names will be displayed.
+The fake name will always be displayed, regardless of <options>.
+Valid <options> flags (combinable):
+  0 - Only the fake name is displayed. (Default value.)
+  1 - Display party name.
+  2 - Display guild name.
+  4 - Display guild position.
+  8 - Display clan position.
+ 16 - Display title.
 
 ---------------------------------------
 
@@ -1023,6 +1071,12 @@ Success message: Information sent to login-server via char-server.
 @changesex
 
 Changes the gender attached to the player's account.
+
+---------------------------------------
+
+@changecharsex
+
+Changes the gender attached to the player's character.
 
 ---------------------------------------
 
@@ -1228,21 +1282,47 @@ Example:
 
 ---------------------------------------
 
-@unloadnpc <npc name>
+@unloadnpc <NPC_name> {<flag>}
 
-Unloads an NPC.
+Unloads a NPC.
+Flag:
+	0 - do not unload mobs spawned by NPCs in file
+	1 - unload mobs spawned by NPCs in file
+	Default is 1; every number other than 0 will be treaten as 1.
+	Mobs that were spawned with monster/areamonster/guardian/bg_monster/atcommand("@monster xy") are affected.
+Note:
+	Be aware that some changes made by NPC are not reverted on unload.
+	Please use the OnNPCUnload label to clean things up by yourself. Commonly relevant for these script commands:
+	-> setmapflagnosave, setmapflag, removemapflags, setbattleflag, setcell, setwall
+	-> agitstart/agitstart2, agitend/agitend2, gvgon, gvgoff, pvpon, pvpoff
+	-> addmonsterdrop, setitemscript, npcshopitem, npcshopadditem, npcshopdelitem, hateffect, disguise
+	-> pcfollow, pcblockmove, setpcblock, setnpcdir, navigateto, viewpoint, add_group_command, skill/addtoskill
+	-> instance and battleground related stuff (excepting bg_monster)
 
 Example:
-@unloadnpc Job Master
+@unloadnpc Job Master 0
 
 ---------------------------------------
 
-@unloadnpcfile <path>
+@unloadnpcfile <path> {<flag>}
 
 Unloads all NPCs in a file.
+Flag: See @unloadnpc
+Note: See @unloadnpc
 
 Example:
-@unloadnpcfile npc/custom/jobmaster.txt
+@unloadnpcfile npc/custom/jobmaster.txt 0
+
+---------------------------------------
+
+@reloadnpc <path> {<flag>}
+
+Unloads all NPCs in a file and reload it again.
+Flag: See @unloadnpc
+Note: See @unloadnpc
+
+Example:
+@reloadnpc npc/custom/jobmaster.txt 0
 
 ---------------------------------------
 
