@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Capuche
-//= Copyright (C)  Joseph
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Capuche
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -348,7 +348,7 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 				mes "Oh! Congratulations, you";
 				mes "won! May I have your name?";
 				next;
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == strcharinfo(PC_NAME)) {
 					.@insa = rand(1,1000);
 					mes "[Medal Distributor]";
@@ -359,14 +359,15 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 					mes "number now. Your ticket";
 					mes "exchange number is ^FF0000" + .@insa + "^000000.";
 					next;
-					input .@input; //,0,1000;
-					if (!.@input) {
+					input(.@input);
+					if (.@input == 0) {
 						mes "[Medal Distributor]";
 						mes "Oh? You don't want";
 						mes "to exchange your";
 						mes "winning ticket?";
 						close;
-					} else if (.@input == .@insa) {
+					}
+					if (.@input == .@insa) {
 						mes "[Medal Distributor]";
 						mes "Thank you! You entered";
 						mes "the correct number...";
@@ -2534,8 +2535,8 @@ S_Reward:
 				mes "number greater than 100.";
 				next;
 				while (true) {
-					input .@input;
-					if (!.@input) {
+					input(.@input);
+					if (.@input <= 0) {
 						mes "[Ei'felle]";
 						mes "Aw, so you've decided";
 						mes "to cancel? Well, it's your";
@@ -2543,7 +2544,8 @@ S_Reward:
 						mes "disappointed. Please come";
 						mes "back if you change your mind...";
 						close;
-					} else if (.@input < 1 || .@input > 100) {
+					}
+					if (.@input > 100) {
 						mes "[Ei'felle]";
 						mes "Remember, you can only";
 						mes "enter a number from 1 to 100.";
@@ -2551,7 +2553,9 @@ S_Reward:
 						mes "medals, then perhaps you";
 						mes "should just give them all to me~";
 						next;
-					} else break;
+						continue;
+					}
+					break;
 				}
 				if (countitem(Marvelous_Medal) < .@input) {
 					mes "[Ei'felle]";

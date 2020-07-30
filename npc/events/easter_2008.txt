@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Kisuka
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Kisuka
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 			mes "Chicken Eggs so easily!";
 			next;
 			while(1) {
-				input .@input;
+				input(.@input);
 				if (.@input == 0) {
 					mes "[Egg Salesman]";
 					mes "Hey, if you're not";
@@ -101,7 +101,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 					mes "help out my customers?";
 					close;
 				}
-				else if (.@input < 0 || .@input > 1000) {
+				if (.@input < 1 || .@input > 1000) {
 					mes "[Egg Salesman]";
 					mes "Hey, you mind giving";
 					mes "me a real number? I also";
@@ -110,42 +110,37 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 					mes "you know. C'mon, tell me how";
 					mes "many you want for real now.";
 					next;
+					continue;
 				}
-				else {
-					.@egg_zeny = .@input*500;
-					if (Zeny < .@egg_zeny) {
-						mes "[Egg Salesman]";
-						mes "You don't have enough Zeny.";
-						next;
-						mes "[Egg Salesman]";
-						mes "No discount, go and get enough Zeny.";
-						close;
-					}
-					else {
-						if (checkweight(Chicken_Egg,.@input) == 0) {
-							mes "[Egg Salesman]";
-							mes "Hey, I know you really";
-							mes "want to buy some Chicken";
-							mes "Eggs, but you won't be able";
-							mes "to carry that much now. Why";
-							mes "don't you free up some";
-							mes "Inventory space first?.";
-							close;
-						}
-						else {
-							mes "[Egg Salesman]";
-							mes "Here's your Chicken Eggs!";
-							mes "I guess there's some festival";
-							mes "happening where you'll need";
-							mes "them, but I don't know anything";
-							mes "about that. Well, have a good";
-							mes "time, and I'll see you again!";
-							Zeny -= .@egg_zeny;
-							getitem Chicken_Egg,.@input;
-							close;
-						}
-					}
+				.@egg_zeny = .@input*500;
+				if (Zeny < .@egg_zeny) {
+					mes "[Egg Salesman]";
+					mes "You don't have enough Zeny.";
+					next;
+					mes "[Egg Salesman]";
+					mes "No discount, go and get enough Zeny.";
+					close;
 				}
+				if (checkweight(Chicken_Egg,.@input) == 0) {
+					mes "[Egg Salesman]";
+					mes "Hey, I know you really";
+					mes "want to buy some Chicken";
+					mes "Eggs, but you won't be able";
+					mes "to carry that much now. Why";
+					mes "don't you free up some";
+					mes "Inventory space first?.";
+					close;
+				}
+				mes "[Egg Salesman]";
+				mes "Here's your Chicken Eggs!";
+				mes "I guess there's some festival";
+				mes "happening where you'll need";
+				mes "them, but I don't know anything";
+				mes "about that. Well, have a good";
+				mes "time, and I'll see you again!";
+				Zeny -= .@egg_zeny;
+				getitem Chicken_Egg,.@input;
+				close;
 			}
 		case 4:
 			mes "[Egg Salesman]";
@@ -263,8 +258,8 @@ prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 		mes "Enter ''0'' to cancel.";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Nerlen]";
 				mes "Oh, you changed your";
 				mes "mind? Feel free to visit me";
@@ -272,35 +267,32 @@ prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 				mes "make you some Holy Eggs~";
 				close;
 			}
-			else if (.@input < 0 || .@input > 10) {
+			if (.@input > 10) {
 				mes "[Nerlen]";
 				mes "I'm sorry, but I can only";
 				mes "make up to 10 Holy Eggs";
 				mes "at a time. If you wanted to";
 				mes "cancel, then just enter ''0.''";
 				next;
+				continue;
 			}
-			else {
-				if ((countitem(White_Herb) < .@input) || (countitem(Green_Herb) < .@input) || (countitem(Yellow_Herb) < .@input) || (countitem(Holy_Water) < .@input) || (countitem(Chicken_Egg) < .@input)) {
-					mes "[Nerlen]";
-					mes "I'm sorry, but you don't";
-					mes "have enough items to make";
-					mes "Holy Eggs. You need the";
-					mes "following for me to create";
-					mes "each Holy Egg for you.";
-					next;
-					mes "[Nerlen]";
-					mes "^4D4DFF1 White Herb^000000,";
-					mes "^4D4DFF1 Green Herb^000000,";
-					mes "^4D4DFF1 Yellow Herb^000000,";
-					mes "^4D4DFF1 Holy Water^000000, and";
-					mes "^4D4DFF1 Chicken Egg^000000.";
-					close;
-				}
-				else {
-					break;
-				}
+			if ((countitem(White_Herb) < .@input) || (countitem(Green_Herb) < .@input) || (countitem(Yellow_Herb) < .@input) || (countitem(Holy_Water) < .@input) || (countitem(Chicken_Egg) < .@input)) {
+				mes "[Nerlen]";
+				mes "I'm sorry, but you don't";
+				mes "have enough items to make";
+				mes "Holy Eggs. You need the";
+				mes "following for me to create";
+				mes "each Holy Egg for you.";
+				next;
+				mes "[Nerlen]";
+				mes "^4D4DFF1 White Herb^000000,";
+				mes "^4D4DFF1 Green Herb^000000,";
+				mes "^4D4DFF1 Yellow Herb^000000,";
+				mes "^4D4DFF1 Holy Water^000000, and";
+				mes "^4D4DFF1 Chicken Egg^000000.";
+				close;
 			}
+			break;
 		}
 		if (checkweight(Holy_Egg,.@input) == 0) {
 			mes "[Nerlen]";
@@ -311,20 +303,18 @@ prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 			mes "space in your Inventory first.";
 			close;
 		}
-		else {
-			delitem White_Herb,.@input;
-			delitem Green_Herb,.@input;
-			delitem Yellow_Herb,.@input;
-			delitem Holy_Water,.@input;
-			delitem Chicken_Egg,.@input; //Egg
-			getitem Holy_Egg,.@input;
-			mes "[Nerlen]";
-			mes "Thank you!";
-			mes "I hope you enjoy";
-			mes "these Holy Eggs~";
-			mes "Hope you to be with God's love.";
-			close;
-		}
+		delitem White_Herb,.@input;
+		delitem Green_Herb,.@input;
+		delitem Yellow_Herb,.@input;
+		delitem Holy_Water,.@input;
+		delitem Chicken_Egg,.@input; //Egg
+		getitem Holy_Egg,.@input;
+		mes "[Nerlen]";
+		mes "Thank you!";
+		mes "I hope you enjoy";
+		mes "these Holy Eggs~";
+		mes "Hope you to be with God's love.";
+		close;
 	case 3:
 		mes "[Nerlen]";
 		mes "Alright, I understand.";

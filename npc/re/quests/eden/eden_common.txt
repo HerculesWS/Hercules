@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Masao
-//= Copyright (C)  Brian
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Brian
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 				case 1:
 					mes "[Lime Evenor]";
 					mes "Aright. Excellent! Please write down your name here.";
-					input .@input$;
+					input(.@input$);
 					next;
 					mes "[Lime Evenor]";
 					mes "Are you done?";
@@ -113,7 +113,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 					next;
 					mes "[Lime Evenor]";
 					mes "Would you please write your name again? Please write it ^3131FFClearly^000000.";
-					input .@input$;
+					input(.@input$);
 					next;
 					mes "[Lime Evenor]";
 					mes "Ah~ ha. You are ^3131FF"+strcharinfo(PC_NAME)+"^000000.";
@@ -148,7 +148,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 			if(select("Yes, I want to register.", "No, I don't.") == 1) {
 				mes "[Lime Evenor]";
 				mes "Alrigh. Please write down your name on it.";
-				input .@input$;
+				input(.@input$);
 				next;
 				mes "[Lime Evenor]";
 				mes "^3131FF"+strcharinfo(PC_NAME)+"^000000.. Is that your name?";
@@ -157,7 +157,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 				mes "[Lime Evenor]";
 				mes "^3131FF"+strcharinfo(PC_NAME)+"^000000, tell me what you want to register. for";
 				mes "Which map should we go to?";
-				input .@input$;
+				input(.@input$);
 				next;
 				mes "[Lime Evenor]";
 				mes "^3131FFMission Map: "+.@inputstr$+"^000000";
@@ -166,7 +166,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 				mes "[Lime Evenor]";
 				mes "Please let me know what kind of missions your are lookng for.";
 				mes "It should be briefly like 'Hunt 10 Porings.'";
-				input .@input$;
+				input(.@input$);
 				next;
 				mes "[Lime Evenor]";
 				mes "Are you done?";

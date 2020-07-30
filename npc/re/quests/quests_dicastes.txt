@@ -9,14 +9,14 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Frost
-//= Copyright (C)  Dastgir
-//= Copyright (C)  Joseph
-//= Copyright (C)  Masao
-//= Copyright (C)  Euphy
-//= Copyright (C)  Muad_Dib
-//= Copyright (C)  Gennosuke Kouga
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Frost
+//= Copyright (C) Dastgir
+//= Copyright (C) Joseph
+//= Copyright (C) Masao
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
+//= Copyright (C) Gennosuke Kouga
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -131,7 +131,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 		mes "I'll give you a deal and sell it by 500 Zeny each. But, try not to carry it with you into Scaraba Hall.";
 		mes "How many do you want? You can buy up to 100.";
 		next;
-		input .@input;
+		input(.@input);
 		.@deal = 500 * .@input;
 		if (.@deal == 0) {
 			mes "[Curious Sapha]";
@@ -164,7 +164,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 		mes "[Curious Sapha]";
 		mes "Do you have any useful information?";
 		mes "Please let me know!";
-		input .@str$;
+		input(.@str$);
 		next;
 		mes "[Curious Sapha]";
 		mes "It says ^0000FF"+.@str$+"^000000.";
@@ -4588,7 +4588,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 		mes "- BK of the Cat Merchant group is being difficult.";
 		mes "What did Shay tell you to do?-";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "Shay's special drink will be delivered" || .@inputstr$ == "Shay's special drink will be delivered.") {
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmm. If you don't cooperate,";
@@ -7517,7 +7517,7 @@ moc_para01,44,19,3	script	Cat Hand Agent#gekk	4_M_MERCAT2,{
 						mes "If you really mean it, then sign here.";
 						mes "I'm collecting signs to get on Gyareuk's good side... never mind. I will let them know you are my sponsor!";
 						next;
-						input .@inputstr$;
+						input(.@inputstr$);
 						mes "[Agent Geck]";
 						mes "" + strcharinfo(PC_NAME) + "? Human names are strange to me.";
 						next;

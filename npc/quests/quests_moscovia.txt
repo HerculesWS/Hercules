@@ -9,15 +9,15 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2017  Hercules Dev Team
-//= Copyright (C)  Lemongrass
-//= Copyright (C)  Euphy
-//= Copyright (C)  Joseph
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Gepard
-//= Copyright (C)  brianluau
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Asheraf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lemongrass
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Gepard
+//= Copyright (C) brianluau
+//= Copyright (C) Kisuka
+//= Copyright (C) Asheraf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1134,7 +1134,7 @@ mosk_ship,101,111,4	script	rudder#ship	HIDDEN_NPC,{
 		mes "Hey! Listen to what I am saying.";
 		mes "How come you go there without my";
 		mes "permission...";
-		next;
+		close;
 	}
 	mes "[Mr. Ibanoff]";
 	mes "What? How did you get on";
@@ -1171,7 +1171,10 @@ S_Rud1:
 			mes "ever encountered! Be careful! We";
 			mes "must repulse these monsters!";
 			++$@mos1_edq;
-			donpcevent "Baehideun3#ship::OnEnable";
+			if (mos_whale_edq >= 241)
+				donpcevent "Baehideun4#ship::OnEnable";
+			else
+				donpcevent "Baehideun3#ship::OnEnable";
 		}
 		mos_whale_edq = (getarg(1) == 2)?((mos_whale_edq >= 241)?((.@r != 3)?26:25):((.@r != 3)?10:11)):mos_whale_edq + 1;
 		close;
@@ -2903,7 +2906,7 @@ mosk_in,148,274,1	script	Anna#mos	4_F_RUSCHILD,{
 					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "What am I going to ask her?";
 					next;
-					input .@AnnaInfo$;
+					input(.@AnnaInfo$);
 					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Anna,";
 					mes ""+.@AnnaInfo$+"?";
@@ -3995,8 +3998,8 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 	mes "I'll bet you that they are very fresh!";
 	mes "How many acorns do you need?";
 	next;
-	while(.@input <= 0 || .@input > 500) {
-		input .@input;
+	while (true) {
+		input(.@input);
 		if (.@input <= 0) {
 			mes "[Acorn Dealer]";
 			mes "Do you want to cancel this trade?";
@@ -4006,7 +4009,9 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 			mes "[Acorn Dealer]";
 			mes "You can't buy more than 500.";
 			next;
+			continue;
 		}
+		break;
 	}
 	if (!checkweight(Acorn, .@input)) {
 		mes "[Acorn Dealer]";
@@ -5349,7 +5354,7 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 				mes "Ok, I will stir it up this time.";
 				mes "How many times should I..?";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input == 20) {
 					mes "-It must be 20 times.-";
 					next;
@@ -5361,7 +5366,7 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 					++.@maho;
 					++.@nankai;
 					next;
-				} else if (!.@input) {
+				} else if (.@input <= 0) {
 					mes "-I won't stir it up.-";
 					next;
 				} else if (.@input > 100) {
@@ -5453,7 +5458,7 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 					mes "Ok, I will stir it up this time.";
 					mes "How many times should I...?";
 					next;
-					input .@input;
+					input(.@input);
 					if (.@input == 15) {
 						mes "-It must be 15 times.-";
 						next;
@@ -5463,7 +5468,7 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 						++.@maho;
 						++.@nankai;
 						next;
-					} else if (.@input == 0) {
+					} else if (.@input <= 0) {
 						mes "-I won't stir it up.-";
 						next;
 					} else if (.@input > 100) {
@@ -7070,7 +7075,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			mes "Listen very carefully!";
 			mes "Left the key up, and shout '^0000ffThe Free wind blows and gets you wherever you want^000000'.";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "The Free wind blows and gets you wherever you want") {
 				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "^0000ff "+ .@input$ +" !! ^000000";
@@ -7778,7 +7783,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	4_M_05,{
 			mes "[Vassili Grandpapa]";
 			mes "Eh? What do you want to ask me about?";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Red Ring") {
 				mes "[Vassili Grandpapa]";
 				mes "Red Ring?! Why are you looking for that?";
@@ -8126,7 +8131,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 			mes "Ah, I forgot asking you.";
 			mes "Why are you here?";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Red Ring") {
 				mes "[Ryubaba]";
 				mes "A Red Ring?!";
@@ -9036,7 +9041,7 @@ prontera,228,279,3	script	Wanderer#rus24	4_M_RUSMAN2,{
 			mes "Ah, yes. I have been there...";
 			mes "By the way, the important thing is.. are you.....";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Igor") {
 				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Ah, yes. I have been there...";
@@ -9692,7 +9697,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Eh, eh.. I mean.. I say.. spell...";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Spellshield Protection") {
 			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Eh, eh.. I mean.. I say.. spell...";
@@ -10225,19 +10230,22 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					mes "How many do you want me to make? I can only make 100 at a time. If you don't want any, then just say '0'. Kehehehehe.";
 					next;
 					while(1) {
-						input .@input;
-						if (!.@input) {
+						input(.@input);
+						if (.@input <= 0) {
 							mes "[Baba Yaga]";
 							mes "You don't want it?";
 							next;
 							mes "[Baba Yaga]";
 							mes "I don't understand you. What do you want? Kehehehehe.";
 							close;
-						} else if (.@input > 100) {
+						}
+						if (.@input > 100) {
 							mes "[Baba Yaga]";
 							mes "I said no more then 100 at a time. Kehehehehe.";
 							next;
-						} else break;
+							continue;
+						}
+						break;
 					}
 					.@redpotion_send = .@input;
 					.@redtube_send = .@input;
@@ -10312,19 +10320,22 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					mes "How many do you want me to make? Tell me the number less than 100. If you don't want, tell me zero. Kehehehehe.";
 					next;
 					while(1) {
-						input .@input;
-						if (!.@input) {
+						input(.@input);
+						if (.@input <= 0) {
 							mes "[Baba Yaga]";
 							mes "You don't want it?";
 							next;
 							mes "[Baba Yaga]";
 							mes "I don't understand you. What do you want? Kehehehehe.";
 							close;
-						} else if (.@input > 100) {
+						}
+						if (.@input > 100) {
 							mes "[Baba Yaga]";
 							mes "I said no more then 100 at a time. Kehehehehe.";
 							next;
-						} else break;
+							continue;
+						}
+						break;
 					}
 					.@yellpotion_send = .@input;
 					.@yelltube_send = .@input;
@@ -10437,7 +10448,7 @@ OnTouch:
 		if (rand(1,4) == 3) {
 			mes "- You almost get hit and dodge its attack and cast the spell !! -";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Good feed is orange-flavored") {
 				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes ""+ .@input$ +" !!!";
@@ -10536,7 +10547,7 @@ OnTouch:
 		if (rand(1,4) == 3) {
 			mes "- You almost get hit and dodge its attack and cast the spell !! -";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Good feed is orange-flavored") {
 				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes ""+ .@input$ +" !!!";
@@ -10636,7 +10647,7 @@ OnTouch:
 		if (rand(1,4) == 3) {
 			mes "- You almost get hit and dodge its attack and cast the spell !! -";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Good feed is orange-flavored") {
 				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes ""+ .@input$ +" !!!";
@@ -11182,7 +11193,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	4_F_JPN2,{
 		mes "[Momotoro Publisher]";
 		mes "What? Ah, did you come here to pick up the book? Please, let me know your name?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Baba Yaga") {
 			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I am "+ .@input$ +".";
@@ -11643,7 +11654,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 		mes "Ok then, who was the first?!";
 		next;
 		.@rus_kafra01 = 0;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Curly Sue") {
 			++.@rus_kafra01;
 			mes "["+ strcharinfo(PC_NAME) +"]";
@@ -11658,7 +11669,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 		mes "[Ghost Tree]";
 		mes "Who was the second?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Jasmine") {
 			++.@rus_kafra01;
 			mes "["+ strcharinfo(PC_NAME) +"]";
@@ -11673,7 +11684,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 		mes "[Ghost Tree]";
 		mes "Who was the third?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Roxie") {
 			++.@rus_kafra01;
 			mes "["+ strcharinfo(PC_NAME) +"]";
@@ -11688,7 +11699,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 		mes "[Ghost Tree]";
 		mes "And then who was the forth?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Pavianne") {
 			++.@rus_kafra01;
 			mes "["+ strcharinfo(PC_NAME) +"]";
@@ -11703,7 +11714,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 		mes "[Ghost Tree]";
 		mes "And who was the last?!";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Blossom") {
 			++.@rus_kafra01;
 			mes "["+ strcharinfo(PC_NAME) +"]";
@@ -11768,7 +11779,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 		mes "[Ghost Tree]";
 		mes "Have you heard all of them? Who broke the 'Hat of the Sun God'?!";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "Antonio") {
 			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes ""+ .@input$ +" !!";

@@ -324,11 +324,13 @@ The types that a trader object can have are the following:
 		    and need to be refurbished)
 - NST_CUSTOM	(3) Custom Shop (any currency, item/var/etca, check sample)
 - NST_BARTER	(4) Barter Shop (each item with own item currency)
+- NST_EXPANDED_BARTER	(5) Expanded Barter Shop (buy items and spend zeny and items)
 Unless otherwise specified via *tradertype an trader object will be defined as
 NST_ZENY.
 
 Note: NST_MARKET is only available with PACKETVER 20131223 or newer.
-Note: NST_BARTER is only available with PACKETVER 20181226 zero or newer.
+Note: NST_BARTER is only available with PACKETVER 20190116 main or 20190116 RE or 20181226 zero or newer.
+Note: NST_EXPANDED_BARTER is only available with PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
 See '12 - NPC Trader-Related Commands' and /doc/sample/npc_trader_sample.txt for
 more information regarding how to use this NPC type.
 
@@ -432,16 +434,38 @@ marked as usable in pet scripts to work in there reliably.
 Numbers
 -------
 
+The Hercules scripting engine supports 4 types of number literals:
+
+type          base      syntax
+----------------------------------------------
+decimal       10        255
+hexadecimal   16        0xFF
+octal         8         0o377
+binary        2         0b11111111
+
 Beside the common decimal numbers, which are nothing special whatsoever
 (though do not expect to use fractions, since ALL numbers are integer in
 this language), the script engine also handles hexadecimal numbers, which
 are otherwise identical. Writing a number like '0x<hex digits>' will make
 it recognized as a hexadecimal value. Notice that 0x10 is equal to 16.
-Also notice that if you try to 'mes 0x10' it will print '16'.
+Also notice that if you try to 'mes 0x10' it will print '16'. If you wish
+to make calculations in base 8, you can also use the octal notation like
+'0o<octal digits>'. To make calculations in base 2 (binary), you can use
+the binary notation like '0b<binary digits>'.
+
+The following are all equivalent:
+	255 == 0xFF == 0o377 == 0b11111111
 
 Number values can't exceed the limits of an integer variable: Any number
 greater than INT_MAX (2147483647) or smaller than INT_MIN (-2147483648) will
 be capped to those values and will cause a warning to be reported.
+
+Underscores can also be used as visual separators for digit grouping purposes:
+	2_147_483_647
+	0x7FFF_FFFF
+
+Keep in mind that number literals cannot start or end with a separator and no
+more than one separator can be used in a row (so 12_3___456 is illegal).
 
 Variables
 ---------
@@ -534,7 +558,9 @@ variables or an empty string ("", nothing between the quotes) for string
 variables. Once you set it to that, the variable is as good as forgotten
 forever, and no trace remains of it even if it was stored with character
 or account data. The maximum length of variable name including prefix and
-suffix is 32.
+suffix is 32. Permanent string variables (name$, $name$, #name$, ##name$)
+can store text with a maximum length of 255 characters. All other string
+type variables have no such limitation.
 
 Some variables are special, that is, they are already defined for you by
 the scripting engine. You can see the full list somewhere in
@@ -1032,6 +1058,11 @@ will only execute once and will not execute if the map server reconnects
 to the char server later. Note that all those events will be executed upon
 scripts reloading.
 
+OnNPCUnload:
+
+OnNPCUnload will be executed when a NPC is unloaded.
+OnNPCUnload is called when @reloadscript, @reloadnpc, @unloadnpc or @unloadnpcfile is used.
+
 OnAgitStart:
 OnAgitEnd:
 OnAgitInit:
@@ -1231,7 +1262,7 @@ you have to set it back to black unless you want all the rest of the text be in
 that color:
 
     mes("This is ^FF0000 red ^000000 and this is ^00FF00 green, ^000000 so.");
-    mes(callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE");
+    mesf("%sThis message is now in BLUE.", F_MesColor(C_BLUE));
 
 Notice that the text coloring is handled purely by the client. If you use
 non-English characters, the color codes might get screwed if they stick to
@@ -1254,6 +1285,14 @@ This will allow you to visit 'Google' with the in-game browser using default dim
     mes("You can <URL>Bing!<INFO>http://www.bing.com/,800,600</INFO></URL> anything");
 
 Clicking 'Bing!' will open the in-game browser using the specified dimensions. (800x600)
+
+If you're using client from 2013-01-30 onwards, you can also use <ITEMLINK> to show
+the item's description. Gravity changed this into <ITEM> since 2015-07-29 onwards.
+
+    mes("Bring me an <ITEM>Apple<INFO>512</INFO></ITEM>.");
+    mesf("Bring me an %s.", F_MesItemInfo(Apple));
+
+This will show the item name and a clickable link for the item description.
 
 ---------------------------------------
 
@@ -1290,6 +1329,21 @@ and the script will terminate.
     next();
     mes("[Woman]"); // This is needed since it is a new page and the top will now be blank
     mes("This would appear on the 2nd page");
+
+---------------------------------------
+
+*mesclear();
+
+This command will clear the dialog text and continue the script without player interaction.
+
+Example:
+	mes("This is how the 'mesclear' script command works.");
+	sleep2 3000;
+	mesclear(); // This will clear the dialog and continue to the next one.
+	mes("I will show you again.");
+	sleep2 3000;
+	mesclear(); // This will clear the dialog and continue to the next one.
+	mes("Bye!");
 
 ---------------------------------------
 
@@ -1680,7 +1734,8 @@ The default value of 'min' and 'max' can be set with 'input_min_value' and
 For numeric inputs the value is capped to the range [min, max]. Returns 1
 if the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is
-shorter than 'min' and 0 otherwise.
+shorter than 'min' and 0 otherwise. Note that an input string has a maximum
+length of 70 characters.
 
 ---------------------------------------
 
@@ -1912,58 +1967,64 @@ will result in error and termination of the script.
 
 ---------------------------------------
 
-*function <function name>;
-*<function name>{(<argument>, ...<argument>)};
-*function <function name> {
+{public | private} *function <function name>;
+{public | private} *function <function name> {
 <code>
 }
 
-This works like callfunc(), and is used for cleaner and faster scripting.
-The function must be defined and used within a script, and works like a
-label with arguments.
-Note that the name may only contain alphanumeric characters and underscore.
+In its first form, this syntax declares a local function so it can later be
+defined. In its second form, the syntax both declares and defines a local
+function. Local functions must be defined before being used. Note that the name
+may only contain alphanumeric characters and underscore. Once defined, they can
+be called from the current script as if they were regular built-in commands, and
+can also be called from other scripts if they are marked as public. Local
+functions may be marked as public by simply adding "public" prior to the
+function definition. Functions not marked as public are private by default and
+cannot be called from another script.
 
 Usage:
 
     1. Declare the function.
 	function <function name>;
     2. Call the function anywhere within the script.
-       It can also return a value when used with parentheses.
-	<function name>;
-    3. Define the function within the script.
+	<function name>();
+    3. Define the function by adding its script.
 	<function name> {<code>}
+
+    Step 1 is optional if the function is defined prior to being called.
 
 Example:
 
-prontera,154,189,4	script	Item Seller	767,{
 	/* Function declaration */
-	function SF_Selling;
+	function MyFunction;
 
-	if (Zeny > 50) {
-		mes("Welcome!");
-		/* Function call */
-		SF_Selling();
-	} else {
-		mes("You need 50z, sorry!");
-	}
-	close();
+	/* Function call */
+	MyFunction();
 
 	/* Function definition */
-	function SF_Selling {
-		mes("Would you like to buy a phracon for 50z?");
-		next();
-		if (select("Yes", "No, thanks") == 1) {
-			Zeny -= 50;
-			getitem(Phracon, 1);
-			mes("Thank you!");
-		}
+	function MyFunction {
+		// (do something)
 		return;
 	}
-}
+
+
+Example with public functions:
+
+	/* Function declaration + definition */
+	public function myFunction {
+		/* notice the "public" before the "function" keyword */
+		return;
+	}
+
+	/* Local call */
+	myFunction();
+
+	/* Call from another script */
+	"npc name"::myFunction();
+
 
 Example with parameters and return value:
 
-prontera,150,150,0	script	TestNPC	123,{
 	/* Function declaration */
 	function MyAdd;
 
@@ -1972,15 +2033,32 @@ prontera,150,150,0	script	TestNPC	123,{
 	input(.@a);
 	input(.@b);
 	/* Function call */
-	mes(.@a+" + "+.@b+" = "+MyAdd(.@a, .@b));
+	mesf("%i + %i = %i", .@a, .@b, MyAdd(.@a, .@b));
 	close();
 
 	/* Function definition */
 	function MyAdd {
-		return(getarg(0)+getarg(1));
+		return (getarg(0) + getarg(1));
 	}
-}
 
+
+---------------------------------------
+
+*<function name>({<arg>...})
+*"<npc name>"::<function name>({<arg>...})
+*callfunctionofnpc("<function name>", "<npc name>"{, <arg>...});
+
+In its first form, calls a previously defined local function. In its second
+form, calls a previously defined public local function of another NPC. If the
+name of the target NPC or the name of the local function is not known
+beforehand, callfunctionofnpc() can be used instead of the second form.
+See function() above for more details.
+
+Example:
+
+	MyFunction(arg1, arg2, arg3);
+	"MyNPC"::MyFunction(arg1, arg2, arg3);
+	callfunctionofnpc("MyNPC", "MyFunction", arg1, arg2, arg3);
 
 ---------------------------------------
 
@@ -2185,11 +2263,11 @@ Multiple statements can be grouped with { }, curly braces, just like with
 the 'if' statement.
 
 Example 1:
-	while (switch(select("Yes", "No") == 2))
+	while (select("Yes", "No") == 2)
 		mes("You picked no.");
 
 Example 2: multiple statements
-	while (switch(select("Yes", "No") == 2 )) {
+	while (select("Yes", "No") == 2) {
 		mes("Why did you pick no?");
 		mes("You should pick yes instead!");
 	}
@@ -2976,18 +3054,20 @@ of equipment slots see getequipid().
 
 ---------------------------------------
 
-*getequiprefinerycnt(<equipment slot>)
+*getequiprefinerycnt(<equipment slot>{, <equipment slot>{, <equipment slot>}})
 
-Returns the current number of pluses for the item in the specified
-equipment slot. For a list of equipment slots see 'getequipid'.
+Returns the total of refine of item equipped in the equipment slots.
+For a list of equipment slots, see 'getequipid'.
 
-Can be used to check if you have reached a maximum refine value, default
-for this is +10:
+For example:
+	if (getequiprefinerycnt(EQI_HEAD_TOP) > 10) {
+		mes("You equipped a headgear (top) with above 10 refine.");
+	}
 
-	if (getequiprefinerycnt(EQI_HEAD_TOP) < 10)
-		mes("I will now upgrade your "+getequipname(EQI_HEAD_TOP));
-	else
-		mes("Sorry, it's not possible to refine hats better than +10");
+For example:
+	if (getequiprefinerycnt(EQI_ARMOR, EQI_SHOES) > 20) {
+		mes("Total refine of Armor and Shoes exceed 20.");
+	}
 
 ---------------------------------------
 
@@ -3115,22 +3195,24 @@ This command sets a bunch of arrays with a complete list of whatever the
 invoking character has in its inventory, including all the data needed to
 recreate these items perfectly if they are destroyed. Here's what you get:
 
-@inventorylist_id[]        - array of item ids.
-@inventorylist_idx[]       - array of item inventory index.
-@inventorylist_amount[]    - their corresponding item amounts.
-@inventorylist_equip[]     - will return the slot the item is equipped on, if at all.
-@inventorylist_refine[]    - for how much it is refined.
-@inventorylist_identify[]  - whether it is identified.
-@inventorylist_attribute[] - whether it is broken.
-@inventorylist_card1[]     - These four arrays contain card data for the
-@inventorylist_card2[]       items. These data slots are also used to store
-@inventorylist_card3[]       names inscribed on the items, so you can
-@inventorylist_card4[]       explicitly check if the character owns an item
-                             made by a specific craftsman.
-@inventorylist_expire[]    - expire time (Unix time stamp). 0 means never
-                             expires.
-@inventorylist_bound       - whether it is an account bounded item or not.
-@inventorylist_count       - the number of items in these lists.
+@inventorylist_id[]            - array of item ids.
+@inventorylist_idx[]           - array of item inventory index.
+@inventorylist_amount[]        - their corresponding item amounts.
+@inventorylist_equip[]         - will return the slot the item is equipped on, if at all.
+@inventorylist_refine[]        - for how much it is refined.
+@inventorylist_identify[]      - whether it is identified.
+@inventorylist_attribute[]     - whether it is broken.
+@inventorylist_card1[]         - These four arrays contain card data for the items.
+@inventorylist_card2[]           These data slots are also used to store names inscribed
+@inventorylist_card3[]           on the items, so you can explicitly check if the character 
+@inventorylist_card4[]           owns an item made by a specific craftsman.
+@inventorylist_expire[]        - expire time (Unix time stamp). 0 means never expires.
+@inventorylist_bound[]         - whether it is an account bounded item or not.
+@inventorylist_favorite[]      - whether it is favorite (inside favorite tab) or not.
+@inventorylist_opt_id1~5[]     - array of random option id.
+@inventorylist_opt_val1~5[]    - array of random option val.
+@inventorylist_opt_param1~5[]  - array of random option param.
+@inventorylist_count           - the number of items in these lists.
 
 This could be handy to save/restore a character's inventory, since no
 other command returns such a complete set of data, and could also be the
@@ -3158,14 +3240,15 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @cartinventorylist_refine[]    - for how much it is refined.
 @cartinventorylist_identify[]  - whether it is identified.
 @cartinventorylist_attribute[] - whether it is broken.
-@cartinventorylist_card1[]     - These four arrays contain card data for the
-@cartinventorylist_card2[]       items. These data slots are also used to store
-@cartinventorylist_card3[]       names inscribed on the items, so you can
-@cartinventorylist_card4[]       explicitly check if the character owns an item
-                                 made by a specific craftsman.
-@cartinventorylist_expire[]    - expire time (Unix time stamp). 0 means never
-                                 expires.
+@cartinventorylist_card1[]     - These four arrays contain card data for the items.
+@cartinventorylist_card2[]       These data slots are also used to store names inscribed on the items,
+@cartinventorylist_card3[]       so you can explicitly check if the character owns an item
+@cartinventorylist_card4[]       made by a specific craftsman.
+@cartinventorylist_expire[]    - expire time (Unix time stamp). 0 means never expires.
 @cartinventorylist_bound       - whether it is an account bound item or not.
+@inventorylist_opt_id1~5[]     - array of random option id.
+@inventorylist_opt_val1~5[]    - array of random option val.
+@inventorylist_opt_param1~5[]  - array of random option param.
 @cartinventorylist_count       - the number of items in these lists.
 
 This could be handy to save/restore a character's cart_inventory, since no
@@ -3180,6 +3263,30 @@ attached to the character, and integer.
 Be sure to use @cartinventorylist_count to go through these arrays, and not
 getarraysize(), because the arrays are not automatically cleared between
 runs of getcartinventorylist().
+
+---------------------------------------
+
+*setfavoriteitemidx(<idx>, <flag>)
+
+This function will set an item in inventory as favorite or not.
+If its favorite item, it will be moved to favorite tab, else move out from favorite tab.
+Note: Cant change favorite flag of an equipped item.
+
+Valid Parameters:
+	<idx>    - inventory index, refer *getinventorylist()
+	<flag>   - true/false (true = favorite item, false = otherwise)
+
+---------------------------------------
+
+*autofavoriteitem(<item_id>, <flag>)
+
+This function will auto set an item as favorite when <item_id> is obtained.
+If its favorite item, it will be auto moved to favorite tab, else move out from favorite tab.
+This setting affect not only attached player, but also everyone player globally.
+
+Valid Parameters:
+	<item_id> - item ID
+	<flag>    - true/false (true = favorite item, false = otherwise)
 
 ---------------------------------------
 
@@ -3220,6 +3327,7 @@ Example:
 ---------------------------------------
 
 *getiteminfo(<item ID>, <type>)
+*getiteminfo("<item name>", <type>)
 *setiteminfo(<item ID>, <type>, <value>)
 
 This function will look up the item with the specified ID number in the
@@ -3228,26 +3336,52 @@ It will return -1 if there is no such item.
 
 Valid types are:
 
-	ITEMINFO_BUYPRICE   - Buy Price
-	ITEMINFO_SELLPRICE  - Sell Price
-	ITEMINFO_TYPE       - Item Type
-	ITEMINFO_MAXCHANCE  - Max drop chance of this item e.g. 1 = 0.01% , etc..
-		if = 0, then monsters don't drop it at all (rare or a quest item)
-		if = 10000, then this item is sold in NPC shops only
-	ITEMINFO_SEX        - Sex
-	ITEMINFO_LOC        - Equip location
-	ITEMINFO_WEIGHT     - Weight (note: 1/10 of unit)
-	ITEMINFO_ATK        - Attack
-	ITEMINFO_DEF        - Defense
-	ITEMINFO_RANGE      - Range
-	ITEMINFO_SLOTS      - Slots
-	ITEMINFO_SUBTYPE    - Item subtype
-	ITEMINFO_ELV        - Equip min. level
-	ITEMINFO_WLV        - Weapon level
-	ITEMINFO_VIEWID     - View ID ("Sprite" field in the Item DB)
-	ITEMINFO_MATK       - MATK (only relevant if RENEWAL is set)
-	ITEMINFO_VIEWSPRITE - View Sprite ("ViewSprite" field in the Item DB)
-	ITEMINFO_TRADE      - Trade Restriction (see "doc/constant.md": item trade restriction)
+	ITEMINFO_ID                      - Item ID (getiteminfo() only!)
+	ITEMINFO_AEGISNAME               - Unique name to reference the item (getiteminfo() only!)
+	ITEMINFO_NAME                    - Display name (getiteminfo() only!)
+	ITEMINFO_BUYPRICE                - Buy Price
+	ITEMINFO_SELLPRICE               - Sell Price
+	ITEMINFO_TYPE                    - Item Type
+	ITEMINFO_MAXCHANCE               - Max drop chance of this item e.g. 1 = 0.01% , etc..
+		                               if = 0, then monsters don't drop it at all (rare or a quest item)
+		                               if = 10000, then this item is sold in NPC shops only
+	ITEMINFO_SEX                     - Sex
+	ITEMINFO_LOC                     - Equip location
+	ITEMINFO_WEIGHT                  - Weight (note: 1/10 of unit)
+	ITEMINFO_ATK                     - Attack
+	ITEMINFO_DEF                     - Defense
+	ITEMINFO_RANGE                   - Range
+	ITEMINFO_SLOTS                   - Slots
+	ITEMINFO_SUBTYPE                 - Item subtype
+	ITEMINFO_ELV                     - Equip min. level
+	ITEMINFO_ELV_MAX                 - Equip max. level
+	ITEMINFO_WLV                     - Weapon level
+	ITEMINFO_VIEWID                  - View ID ("Sprite" field in the Item DB)
+	ITEMINFO_MATK                    - MATK (only relevant if RENEWAL is set)
+	ITEMINFO_VIEWSPRITE              - View Sprite ("ViewSprite" field in the Item DB)
+	ITEMINFO_TRADE                   - Trade Restriction (see "doc/constant.md": item trade restriction)
+	ITEMINFO_DELAY                   - Delay
+	ITEMINFO_DROPEFFECT_MODE         - Drop effect mode
+	ITEMINFO_CLASS_BASE_1            - Class base 1
+	ITEMINFO_CLASS_BASE_2            - Class base 2
+	ITEMINFO_CLASS_BASE_3            - Class base 3
+	ITEMINFO_CLASS_UPPER             - Class Upper
+	ITEMINFO_FLAG_NO_REFINE          - No refine flag
+	ITEMINFO_FLAG_DELAY_CONSUME      - Delay consume flag
+	ITEMINFO_FLAG_AUTOEQUIP          - Auto equip flag
+	ITEMINFO_FLAG_AUTO_FAVORITE      - Auto favorite flag
+	ITEMINFO_FLAG_BUYINGSTORE        - Buying store flag
+	ITEMINFO_FLAG_BINDONEQUIP        - Bind on equip flag
+	ITEMINFO_FLAG_KEEPAFTERUSE       - Keep after use flag
+	ITEMINFO_FLAG_FORCE_SERIAL       - Force serial flag
+	ITEMINFO_FLAG_NO_OPTIONS         - No random item options flag
+	ITEMINFO_FLAG_DROP_ANNOUNCE      - Drop announce flag
+	ITEMINFO_FLAG_SHOWDROPEFFECT     - Shopw drop effect flag
+	ITEMINFO_STACK_AMOUNT            - Stack amount
+	ITEMINFO_STACK_FLAG              - Stack amount flag (1: inventory, 2:cart, 4:storage: 8:guildstorage)
+	ITEMINFO_ITEM_USAGE_FLAG         - Item usage flag
+	ITEMINFO_ITEM_USAGE_OVERRIDE     - Item usage override
+	ITEMINFO_GM_LV_TRADE_OVERRIDE    - Min. GM level override trade restriction
 
 Check sample in doc/sample/getiteminfo.txt
 
@@ -3321,6 +3455,24 @@ This will set a Hat Effect onto the player. The state field allows you to
 enable (true) or disable (false) the effect on the player.
 
 ---------------------------------------
+
+*identify(<Item ID>)
+
+This function identifies the first <Item ID> item in attached player's inventory.
+
+Returns -2 if an error happens, -1 if no unidentified <Item ID> was found.
+Otherwise, returns the idx of the identified item.
+
+---------------------------------------
+
+*identifyidx(<Inventory Index>)
+
+This will identify item at attached player's <Inventory Index> inventory index.
+
+Returns true if the item was identified, false otherwise.
+Note: If the item was already identified, it returns false.
+
+---------------------------------------
 //=====================================
 2.1 - End of Item-Related Commands
 //=====================================
@@ -3387,11 +3539,12 @@ argument is omitted, it will try to use the map of the attached NPC, or the
 map of the attached player if the NPC can't be found.
 
 Valid <info> are:
-	MAPINFO_NAME     name of the map
-	MAPINFO_ID       numeric ID of the map
-	MAPINFO_ZONE     name of the zone used by the map
-	MAPINFO_SIZE_X   width of the map (cells on the x axis)
-	MAPINFO_SIZE_Y   height of the map (cells on the y axis)
+	MAPINFO_NAME         name of the map
+	MAPINFO_ID           numeric ID of the map
+	MAPINFO_ZONE         name of the zone used by the map
+	MAPINFO_SIZE_X       width of the map (cells on the x axis)
+	MAPINFO_SIZE_Y       height of the map (cells on the y axis)
+	MAPINFO_NPC_COUNT    total number of NPC in the map
 
 Examples:
 	getmapinfo(MAPINFO_ID, "map name"); // ID from name
@@ -3475,7 +3628,7 @@ If the player is not found, returns -1.
 *gettimetick(<type>)
 
 Valid types are :
-	0 - server's tick (milleseconds), unsigned int, loops every ~50 days
+	0 - server's tick (milleseconds), unsigned int, loops every ~25 days
 	1 - time since the start of the current day in seconds
 	2 - UNIX epoch time (number of seconds elapsed since 1st of January 1970)
 
@@ -3612,7 +3765,37 @@ You need to put a 'close' after that yourself.
 //=====================================
 ---------------------------------------
 
+*getguildinfo(<info type>{, <guild id>})
+*getguildinfo(<info type>{, "<guild name>"})
+
+This command returns misc info about the guild of the attached player. If a
+guild id or guild name is specified it will be used instead. If the target guild
+does not exist it returns an empty string or -1 depending on whether a string
+or an integer was requested.
+
+Valid <info type> are:
+	GUILDINFO_NAME          - guild name
+	GUILDINFO_ID            - guild id
+	GUILDINFO_LEVEL         - current level
+	GUILDINFO_EXP           - current exp
+	GUILDINFO_NEXT_EXP      - exp required to reach the next level
+	GUILDINFO_SKILL_POINTS  - available skill points
+	GUILDINFO_ONLINE        - number of online members
+	GUILDINFO_AV_LEVEL      - average member level
+	GUILDINFO_MAX_MEMBERS   - guild capacity
+	GUILDINFO_MASTER_NAME   - name of the guild master
+	GUILDINFO_MASTER_CID    - char id of the guild master
+
+Example:
+	getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD, "Haru"))
+
+---------------------------------------
+
 *getguildname(<guild id>)
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 This function returns a guild's name given an ID number. If there is no
 such guild, "null" will be returned;
@@ -3627,9 +3810,17 @@ such guild, "null" will be returned;
 This is used all over the WoE controlling scripts. You could also use it
 for a guild-based event.
 
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_NAME, <guild id>)
+
 ---------------------------------------
 
 *getguildmaster(<guild id>)
+
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 This function return the name of the master of the guild which has the
 specified ID number. If there is no such guild, "null" will be returned.
@@ -3654,13 +3845,25 @@ Maybe you want to make a room only guild masters can enter:
 	mes("Sorry you don't own the guild you are in");
 	close();
 
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_MASTER_NAME, <guild id>)
+
 ---------------------------------------
 
 *getguildmasterid(<guild id>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This function will return the character ID number of the guild master of
 the guild specified by the ID. 0 if the character is not a guild master of
 any guild.
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use getguildinfo instead:
+	getguildinfo(GUILDINFO_MASTER_CID, <guild id>)
 
 ---------------------------------------
 
@@ -3776,6 +3979,18 @@ getarraysize(), because it is not cleared between runs of getguildmember().
 For usage examples, see getpartymember().
 
 ---------------------------------------
+
+*getguildonline(<guild id>{, <type>});
+
+Returns the amount of players online in the specified guild id.
+Returns -1 if the guild was not found.
+
+Valid <type> are:
+	GUILD_ONLINE_ALL         Returns the total amount of players online in the guild.
+	GUILD_ONLINE_VENDOR      Returns the total amount of vendors online in the guild.
+	GUILD_ONLINE_NO_VENDOR   Returns the total amount of non-vendors online in the guild.
+
+---------------------------------------
 //=====================================
 2.2 - End of Guild-Related Commands
 //=====================================
@@ -3852,7 +4067,7 @@ These fields are associate in 'db/(pre-)re/pet_db.conf'. Valid types are:
 	PETINFO_ACCESSORYFLAG - return 1 if the pet currently equipping accessory, return 0 otherwise.
 	PETINFO_EVO_EGGID     - Pet Evolve EggID
 	PETINFO_AUTOFEED      - Pet AutoFeed flag.
-	
+
 If the invoking player doesn't own a pet, this command will
 return "null" for type PETINFO_NAME, and return 0 for other types.
 
@@ -3890,29 +4105,30 @@ It will return -1 if there is no such monster (or the type value is
 invalid), or "null" if you requested the monster's name.
 
 Valid types are listed in doc/constants.md:
-	MOB_NAME		0
-	MOB_LV			1
-	MOB_MAXHP		2
-	MOB_BASEEXP		3
-	MOB_JOBEXP		4
-	MOB_ATK1		5
-	MOB_ATK2		6
-	MOB_DEF			7
-	MOB_MDEF		8
-	MOB_STR			9
-	MOB_AGI			10
-	MOB_VIT			11
-	MOB_INT			12
-	MOB_DEX			13
-	MOB_LUK			14
-	MOB_RANGE		15
-	MOB_RANGE2		16
-	MOB_RANGE3		17
-	MOB_SIZE		18
-	MOB_RACE		19
-	MOB_ELEMENT		20
-	MOB_MODE		21
-	MOB_MVPEXP		22
+	MOB_NAME               0
+	MOB_LV                 1
+	MOB_MAXHP              2
+	MOB_BASEEXP            3
+	MOB_JOBEXP             4
+	MOB_ATK1               5
+	MOB_ATK2               6
+	MOB_DEF                7
+	MOB_MDEF               8
+	MOB_STR                9
+	MOB_AGI               10
+	MOB_VIT               11
+	MOB_INT               12
+	MOB_DEX               13
+	MOB_LUK               14
+	MOB_RANGE             15
+	MOB_RANGE2            16
+	MOB_RANGE3            17
+	MOB_SIZE              18
+	MOB_RACE              19
+	MOB_ELEMENT           20
+	MOB_MODE              21
+	MOB_MVPEXP            22
+	MOB_DMG_TAKEN_RATE    23
 
 Check sample in doc/sample/getmonsterinfo.txt
 
@@ -4223,7 +4439,7 @@ falcon and false if they don't.
 
 ---------------------------------------
 
-*setmount({<flag>})
+*setmount({<flag>{, <type>}})
 *checkmount()
 
 If <flag> is MOUNT_NONE this command will remove the mount from the
@@ -4258,6 +4474,12 @@ The following flag values are accepted:
 
 Unlike 'setfalcon' and 'setcart' this will not work at all if they aren't of a
 class which can ride a mount.
+
+For clients PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106
+you can pass a <type> flag which specifies the madogear wanted.
+The Available types:
+	MADO_ROBOT
+	MADO_SUITE
 
 The accompanying function will return MOUNT_NONE if the invoking
 character is not on a mount, and a non-zero value (according to the
@@ -4329,7 +4551,7 @@ Name is optional, and defaults to the attached player if omitted.
 *agitcheck()
 *agitcheck2()
 
-These function will let you check whether the server is currently in WoE
+These functions will let you check whether the server is currently in WoE
 mode (or WoE SE mode if the second function is called) and will return true
 if War of Emperium is on and false if it isn't.
 
@@ -4529,13 +4751,13 @@ See also warp().
 
 ---------------------------------------
 
-*warpparty("<to_mapname>", <x>, <y>, <party_id>, "<from_mapname>", <include_leader>)
+*warpparty("<to map name>", <x>, <y>, <party id>{{, <ignore mapflags>}, "<from map name>"{, <include leader>}})
 
 Warps a party to specified map and coordinate given the party ID, which
 you can get with getcharid(CHAR_ID_PARTY). You can also request another party id given
 a member's name with getcharid(CHAR_ID_PARTY, <player_name>).
 
-You can use the following "map names" for special warping behavior:
+You can use the following <to map name> for special warping behavior:
 Random:       All party members are randomly warped in their current map
               (as if they all used a fly wing).
 SavePointAll: All party members are warped to their respective save point.
@@ -4546,8 +4768,10 @@ Leader:       All party members are warped to the leader's position. The
               leader must be online and in the current map-server for
               this to work.
 
-If you specify a from_mapname, warpparty() will only affect those on
-that map.
+If <ignore mapflags> is not 0, warpparty() ignores nowarp/noreturn restrictions
+of the warped character's current map. <ignore mapflags> defaults to 0.
+
+If you specify a <from map name>, warpparty() will only affect those on that map.
 
 You can exclude Party leader from warping, by keeping include_leader option as false.
 
@@ -4575,13 +4799,13 @@ Example:
 
 ---------------------------------------
 
-*warpguild("<mapname>", <x>, <y>, <guild_id>, {"<from_mapname>"})
+*warpguild("<to map name>", <x>, <y>, <guild id>{{, <ignore mapflags>}, "<from map name>"})
 
 Warps a guild to specified map and coordinate given the guild id, which
 you can get with getcharid(CHAR_ID_GUILD). You can also request another guild id given
 the member's name with getcharid(CHAR_ID_GUILD, <player_name>).
 
-You can use the following "map names" for special warping behavior:
+You can use the following <to map name> for special warping behavior:
 Random:       All guild members are randomly warped in their current map
               (as if they all used a fly wing)
 SavePointAll: All guild members are warped to their respective save point.
@@ -4589,12 +4813,19 @@ SavePoint:    All guild members are warped to the save point of the
               currently attached player (will fail if there's no player
               attached).
 
-If you specify a from_mapname, warpguild() will only affect those on that map.
+If <ignore mapflags> is not 0, warpguild() ignores nowarp/noreturn restrictions
+of the warped character's current map. <ignore mapflags> defaults to 0.
+
+If you specify a <from map name>, warpguild() will only affect those on that map.
 
 Example:
 
-	warpguild("prontera", x, y, Guild_ID);
-	warpguild("prontera", x, y, Guild_ID, "payon"); // warp member from Payon map only.
+	warpguild("prontera", x, y, Guild_ID); // Warp all guild members to Prontera,
+					       // but check nowarp/noreturn restriction of their current map.
+	warpguild("prontera", x, y, Guild_ID, 1); // Warp all guild members to Prontera.
+	warpguild("prontera", x, y, Guild_ID, "payon"); // Warp guild members from Payon to Prontera,
+							// but check nowarp/noreturn restriction of Payon.
+	warpguild("prontera", x, y, Guild_ID, 1, "payon"); // Warp guild members from Payon to Prontera.
 
 ---------------------------------------
 
@@ -5096,11 +5327,11 @@ bound to the target character as specified by the bound type. All items created
 in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
 some cases cannot be traded or stored.
 
-Valid bound types are:
- 1 - Account Bound
- 2 - Guild Bound
- 3 - Party Bound
- 4 - Character Bound
+Valid item bound types are:
+ 1 - IBT_ACCOUNT     - Account Bound
+ 2 - IBT_GUILD       - Guild Bound
+ 3 - IBT_PARTY       - Party Bound
+ 4 - IBT_CHARACTER   - Character Bound
 
 ---------------------------------------
 
@@ -5141,12 +5372,12 @@ If a bound type is not specified or a bound type of 0 is used, it will search th
 of any type, so long as the other parameters match. In all cases, this command will return the bound type of the
 item found, or 0 if the specified item was not found.
 
-Valid bound types are:
- 0 - All Bound types.
- 1 - Account Bound
- 2 - Guild Bound
- 3 - Party Bound
- 4 - Character Bound
+Valid item bound types are:
+ 0 - IBT_ANY         - Any Bound
+ 1 - IBT_ACCOUNT     - Account Bound
+ 2 - IBT_GUILD       - Guild Bound
+ 3 - IBT_PARTY       - Party Bound
+ 4 - IBT_CHARACTER   - Character Bound
 
 Optional Parameters:
  bound_type - checks to see if the item has the specified bound type.
@@ -5164,7 +5395,7 @@ Example:
 	close();
 
 	// This will also check if you have a bound (any type) 1205 (Cutter).
-	if (checkbound(Cutter, 0)) {
+	if (checkbound(Cutter, IBT_ANY)) {
 		mes("You have a bound Cutter");
 	} else {
 		mes("You do not have a bound Cutter");
@@ -5179,8 +5410,8 @@ Example:
 	}
 	close();
 
-	// This will check if the item found, has a bound type of 2 (guild_bound)
-	if (checkbound(Cutter) == 2) {
+	// This will check if the item found, has a bound type of IBT_GUILD
+	if (checkbound(Cutter) == IBT_GUILD) {
 		mes("You have a guild_bound Cutter");
 	} else {
 		mes("You do not have a guild_bound Cutter.");
@@ -5188,7 +5419,7 @@ Example:
 	close();
 
 	// This will check if you have a 'guild_bound' +7 1205 (Cutter).
-	if (checkbound(Cutter, 2, 7)) {
+	if (checkbound(Cutter, IBT_GUILD, 7)) {
 		mes("You have a +7 guild_bound Cutter.");
 	} else {
 		mes("You don't have the required item.");
@@ -5336,6 +5567,34 @@ Check getitem2() to understand its expanded parameters.
 
 ---------------------------------------
 
+*delitemidx(<index>{, <amount>{, <account id>}})
+
+This command will remove an item at the given inventory index. Unlike the
+'delitem()' counterpart, this doesn't check invalid Item ID, making it useful to remove
+invalid item IDs in player's inventory.
+
+If <amount> is not specified, this will remove all of the items at the specified index.
+Note that items with the 'ForceSerial' flag, not yet merged through 'mergeitem()', will only
+be removed at the given index.
+
+The only way to get the inventory index is by using 'getinventorylist()'. After deleting
+an item at the given index, that index can remain empty until the player relogs, so you
+should recall 'getinventorylist()' again. If you try to delete an item at an invalid index, the
+script will terminate with an error.
+
+This command is also useful to remove rental/bound items because 'delitem()'
+does not discriminate at choosing which item to remove.
+
+Example:
+
+	// This will remove all invalid Item ID in player's inventory
+	getinventorylist();
+	for (.@i = 0; .@i < @inventorylist_count; ++.@i)
+		if (getiteminfo(@inventorylist_id[.@i], ITEMINFO_TYPE) == -1)
+			delitemidx(@inventorylist_idx[.@i]);
+
+---------------------------------------
+
 *countitem(<item id>)
 *countitem("<item name>")
 
@@ -5428,38 +5687,68 @@ Example:
 
 ---------------------------------------
 
-*enable_items()
-*disable_items()
+*enable_items({<flag>})
+*enableitemuse({<flag>})
+*disable_items({<flag>})
+*disableitemuse({<flag>})
 
-These commands enable/disable changing of equipments while an NPC is
-running. When disable_items() is run, equipments cannot be changed
-during scripts until enable_items() is called or the script has
-terminated. To avoid possible exploits, when disable_items() is invoked,
-it will only disable changing equips while running that script in
-particular. Note that if a different script also calls disable_items(),
-it will override the last call (so you may want to call this command at
-the start of your script without assuming the effect is still in
-effect).
-If 'item_enabled_npc' option is set to true in 'conf/map/battle/items.conf' all
-NPC are allowing changing of equipment by default except for those have been
-set with 'disable_items'.
+These commands enable/disable item actions while interacting with a NPC.
+When disable_items() is invoked, item actions defined by <flag> are disabled
+during scripts until enable_items() is called or the script has terminated.
+To avoid possible exploits, when disable_items() is invoked, it will only
+disable item actions while running that script in particular.
+Note that if a different script also invokes disable_items(), it will override
+the last call so you may want to call this command at the start of your
+script without assuming the effect is still in effect.
+If <flag> is omitted all item actions will be disabled.
+The enable_items() command enables item actions defined by <flag> during
+scripts until disable_items() is invoked or the script has terminated.
+If <flag> is omitted it defaults to 'item_enabled_npc' battle flag.
+For a list of supported flags have a look at the description of
+'item_enabled_npc' battle flag in 'conf/map/battle/items.conf'.
+Unless disable_items() or enable_items() is invoked the script will use
+'item_enabled_npc' battle flag by default.
+
+Example:
+
+	// This will disable changing equipment during this script.
+	disable_items(ITEMENABLEDNPC_EQUIP);
 
 ---------------------------------------
 
-*itemskill(<skill id>, <skill level>, {flag})
-*itemskill("<skill name>", <skill level>, {flag})
+*itemskill(<skill id>, <skill level>{, <flag>})
+*itemskill("<skill name>", <skill level>{, <flag>})
 
 This command meant for item scripts to replicate single-use skills in
 usable items. It will not work properly if there is a visible dialog
 window or menu.
 If the skill is self or auto-targeting, it will be used immediately.
 Otherwise, a target cursor is shown.
-Flag is a optional param and, when present, the command will not check for
-skill requirements.
+By default, all skill requirements are ignored.
+Optional argument <flag> is a bitmask to manipulate how the skill is cast.
+Since <flag> is a bitmask, the flags can be summed up.
+Possible flags are:
+ - 0x00 - ISF_NONE		- Skill is cast as if it has been used from skill tree.
+				  (Same like <flag> was omitted.)
+ - 0x01 - ISF_CHECKCONDITIONS	- Skill requirements are checked and consumed.
+				  (SP are never checked/consumed.)
+ - 0x02 - ISF_INSTANTCAST	- Skill is cast instantaneously.
+ - 0x04 - ISF_CASTONSELF	- Skill is forcefully cast on invoking character,
+				  without showing the target selection cursor.
+
+Important: Items which use itemskill() should be of type IT_USABLE.
+           If the item type is IT_DELAYCONSUME and ISF_CHECKCONDITIONS isn't set,
+           the item won't be consumed when using the item!
 
 // When Anodyne is used, it will cast Endure, Level 1, as if the actual skill
 // has been used from skill tree.
 	itemskill(SM_ENDURE, 1);
+
+// Instantaneously cast Level 10 Increase Agility on invoking character,
+// with checking/consuming skill requirements (15 HP).
+	itemskill(AL_INCAGI, 10, ISF_CHECKCONDITIONS | ISF_INSTANTCAST | ISF_CASTONSELF);
+// Instaed of using the constants, one could also do it like this:
+	itemskill(AL_INCAGI, 10, 7);
 
 ---------------------------------------
 
@@ -5738,6 +6027,10 @@ storage window, to avoid any disruption when both windows overlap.
 	openstorage();
 	end;
 
+The mapflag 'nostorage' when set to type '2' (or 3), will not open the
+account storage. Unless the character group has the permission 'bypass_nostorage'.
+In case blocked by mapflag, returns 0.
+
 ---------------------------------------
 
 *openmail()
@@ -5798,6 +6091,10 @@ time.
 
 This will also fail and return 2 if the attached character does not belong
 to any guild.
+
+The mapflag 'nogstorage' when set to type '2' (or 3), will not open the
+guild storage. Unless the character group has the permission 'bypass_nostorage'.
+In case blocked by mapflag, returns 1.
 
 ---------------------------------------
 
@@ -5887,6 +6184,16 @@ Quest skills will also reset if 'quest_skill_reset' option is set to true in
 points in the quest skills will also count towards the total.
 
 Used in reset NPC's (duh!).
+
+---------------------------------------
+
+*resetfeel({<account id>})
+*resethate({<account id>})
+
+The first resets a character's 'Feeling' maps.
+The second resets a character's 'Hatred' targets.
+
+If no RID is given, will run with the current attached player.
 
 ---------------------------------------
 
@@ -6037,6 +6344,15 @@ Example usage:
 
 	// To make a NPC do an effect and show it only to another player:
 	specialeffect(EF_HIT1, SELF, "John Doe#1", getcharid(CHAR_ID_ACCOUNT, "player"));
+
+---------------------------------------
+
+*specialeffectnum(<effect number>, <num1>, <num2>{, <send_target>{, <unit id>{, <account id>}}})
+*specialeffectnum(<effect number>, <num1>, <num2>{, <send_target>{, "<NPC Name>"{, <account id>}}})
+
+Works same as specialeffect but also send effect numbers to client.
+For PACKETVER >= 20191127 support two numbers (num1, num2).
+For older packet versions only num1 supported.
 
 ---------------------------------------
 
@@ -6320,16 +6636,21 @@ Examples:
 
 ---------------------------------------
 
-*setpcblock(<type>,<option>)
-*checkpcblock()
+*setpcblock(<type>, <option>{, <account id>})
+*checkpcblock({<account id>})
 
-Prevents the player from doing the following action.
+Prevents a character from doing the following action.
 
 For setpcblock, when the <option> is true(1) will block them, and false(0)
 will allow those actions again.
 
+The setpcblock command returns 1 on success or 0 if no character was attached.
+
 The checkpcblock command returned value is a bit mask of the currently
 enabled block flags (or PCBLOCK_NONE when none is set).
+
+Parameter <account id> is optional for both commands.
+If omitted, the currently attached character is used.
 
 The <type> listed are a bit mask of the following:
 	PCBLOCK_NONE (only used by checkpcblock)
@@ -6341,6 +6662,7 @@ The <type> listed are a bit mask of the following:
 	PCBLOCK_IMMUNE
 	PCBLOCK_SITSTAND
 	PCBLOCK_COMMANDS
+	PCBLOCK_NPC
 
 Examples:
 
@@ -6502,7 +6824,7 @@ This command will kill all monsters that were spawned with monster() or
 areamonster() and have a specified event label attached to them. Commonly
 used to get rid of remaining quest monsters once the quest is complete.
 
-If the label is given as "All", all monsters which have their respawn
+If the label is given as "all", all monsters which have their respawn
 times set to -1 (like all the monsters summoned with 'monster' or
 'areamonster' script command, and all monsters summoned with GM commands,
 but no other ones - that is, all non-permanent monsters) on the specified
@@ -6737,6 +7059,37 @@ Examples:
 
 ---------------------------------------
 
+*unitiswalking({<GID>})
+
+This command checks, if a unit is walking or not.
+If <GID> is omitted, the currently attached character is used.
+Returns 1 if the unit is walking, 0 if the unit is not walking and -1 on error.
+
+Note: There's no differentiation between script and client initiated walking.
+
+Example:
+
+prontera,155,185,5	script	Check Walking	1_F_MARIA,{
+	mes("Enter character name.");
+	mes("");
+	input(.@name$);
+	.@GID = getcharid(CHAR_ID_ACCOUNT, .@name$);
+	if (.@GID != 0) {
+		.@iswalking = unitiswalking(.@GID);
+		if (.@iswalking == 1)
+			mesf("%s is walking.", .@name$);
+		else if (.@iswalking == 0)
+			mesf("%s is not walking.", .@name$);
+		else
+			mesf("Can't get %s's walking state.", .@name$);
+	} else {
+		mesf("%s not found!", .@name$);
+	}
+	close();
+}
+
+---------------------------------------
+
 *unitkill(<GID>)
 *unitwarp(<GID>, <Mapname>, <x>, <y>)
 *unitattack(<GID>, <Target ID>)
@@ -6816,6 +7169,18 @@ As they are now, these commands are pointless, it is suggested to use
 NPC sprite location and other accompanying data from memory when it is not
 used. However, you can use these for some quest ideas (such as cloaking
 NPCs talking while hidden then revealing... you can wonder around =P).
+
+---------------------------------------
+
+*cloakonnpc("<NPC object name>"{, <account_id>})
+*cloakoffnpc("<NPC object name>"{, <account_id>})
+
+These commands are used to apply the cloaking effect on npcs
+this is a visual effect only and it does NOT stop the player
+from interacting with the npc.
+
+If an account_id is specified then the effect will only display to the given id,
+otherwise it's displayed to the entire npc area.
 
 ---------------------------------------
 
@@ -7164,6 +7529,16 @@ if GID is not given use the attached player.
 //=====================================
 ---------------------------------------
 
+*loudhailer("<message>"{, "<color>"})
+
+Announces a colored text in '<char_name> Shouts : <message>' format.
+<color> must be a string in "RRGGBB" format. If <color> is omitted,
+white ("FFFFFF") will be used.
+This command is specially created for the Megaphone_ item (12221),
+but will work in NPCs, too.
+
+---------------------------------------
+
 *announce("<text>", <flag>{, <fontColor>{, <fontType>{, <fontSize>{, <fontAlign>{, <fontY>}}}}})
 
 This command will broadcast a message to all or most players, similar to
@@ -7283,7 +7658,8 @@ In the OnBuyItem, two arrays are filled (@bought_nameid and
 and the amount sold of it. Same goes for the OnSellItem label, only the
 variables are named different (@sold_nameid, @sold_quantity, @sold_refine,
 @sold_attribute, @sold_identify, @sold_card1, @sold_card2, @sold_card3,
-@sold_card4). An example on a shop comes with Hercules, and can be found
+@sold_card4, @sold_opt_id1~5, @sold_opt_val1~5, @sold_opt_param1~5). 
+An example on a shop comes with Hercules, and can be found
 in the doc/sample/npc_dynamic_shop.txt file.
 
 This example shows how to use the labels and their set variables to create
@@ -7775,6 +8151,10 @@ solution rather than sending the map and the monster_id.
 
 *debugmes("<format string>"{, <param>{, ...}})
 
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@ /!\ This command is deprecated @
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 This command will print a message in the server console (map-server window),
 after applying the same format-string replacements as sprintf(). It will not be
 displayed anywhere else. Returns true on success.
@@ -7785,6 +8165,29 @@ Example:
 	debugmes("%s has clicked me!", strcharinfo(PC_NAME));
 
 	debugmes("\033[0;32mHello World"); // supports ANSI escape sequences
+
+---------------------------------------
+
+*consolemes("<type>", "<format string>"{,<param>{, ...}})
+
+This command will print a message in the server console (map-server window),
+after applying the same format-string replacements as sprintf(). It will not be
+displayed anywhere else. Returns true on success.
+
+List of available <type> are:
+	CONSOLEMES_DEBUG   = 0
+	CONSOLEMES_ERROR   = 1
+	CONSOLEMES_WARNING = 2
+	CONSOLEMES_INFO    = 3
+	CONSOLEMES_STATUS  = 4
+	CONSOLEMES_NOTICE  = 5
+
+Example:
+
+	// Displays "NAME has clicked me!" in the map-server window.
+	consolemes(CONSOLEMES_DEBUG, "%s has clicked me!", strcharinfo(PC_NAME));
+
+	consolemes(CONSOLEMES_DEBUG, "\033[0;32mHello World"); // supports ANSI escape sequences
 
 ---------------------------------------
 
@@ -8240,6 +8643,7 @@ Valid <permission> are:
 	PERM_DISABLE_STORE
 	PERM_DISABLE_EXP
 	PERM_DISABLE_SKILL_USAGE
+	PERM_BYPASS_NOSTORAGE
 
 Example:
 
@@ -8497,6 +8901,18 @@ Example:
 	.@minimum = min(1, -6, -2, 8, 2); // .@minimum will be equal to -6
 	.@maximum = max(0, 5, 10, 4); // .@maximum will be equal to 10
 	.@level = min(BaseLevel, 70); // .@level will be the character's base level, capped to 70
+
+---------------------------------------
+
+*cap_value(<number>, <min>, <max>)
+
+Returns the number but capped between <min> and <max>.
+
+Example:
+	// capped between 0 ~ 100
+	.@value = cap_value(10, 0, 100);   // .@value will be equal to 10
+	.@value = cap_value(1000, 0, 100); // .@value will be equal to 100
+	.@value = cap_value(-10, 3, 100);  // .@value will be equal to 3
 
 ---------------------------------------
 
@@ -8991,6 +9407,12 @@ currently used font is used, default interface font is used again.
 
 ---------------------------------------
 
+*getfont()
+
+This command return the player's current font.
+if no player is attached it would always return a 0, which is also the default font.
+
+---------------------------------------'
 *showdigit(<value>{, <type>})
 
 Displays given numeric 'value' in large digital clock font on top of the
@@ -9219,25 +9641,17 @@ This will open a book item at the specified page.
 ---------------------------------------
 
 *rodex_sendmail(<char id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>{, <item2>, <amount2>{, <item3>, <amount3>{, <item4>, <amount4>{, <item5>, <amount5>}}}}}})
-*rodex_sendmail_acc(<account id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>{, <item2>, <amount2>{, <item3>, <amount3>{, <item4>, <amount4>{, <item5>, <amount5>}}}}}})
-
-This will send a mail using the RoDEX mail system, in newer clients the message will be marked as a NPC mail (that you can't reply).
-If items and zeny are specified, they will be added as attachments to the message.
-
-For examples of usage, see /doc/sample/npc_rodex.txt
-
----------------------------------------
-
 *rodex_sendmail2(<char id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>, <refine1>, <attribute1>, <card0_1>, <card1_1>, <card2_1>, <card3_1>{,<item2>, <amount2>, <refine2>, <attribute2>, <card0_2>, <card1_2>, <card2_2>, <card3_2>{,<item3>, <amount3>, <refine3>, <attribute3>, <card0_3>, <card1_3>, <card2_3>, <card3_3>{,<item4>, <amount4>, <refine4>, <attribute4>, <card0_4>, <card1_4>, <card2_4>, <card3_4>{,<item5>, <amount5>, <refine5>, <attribute5>, <card0_5>, <card1_5>, <card2_5>, <card3_5>}}}}}})
+
+*rodex_sendmail_acc(<account id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>{, <item2>, <amount2>{, <item3>, <amount3>{, <item4>, <amount4>{, <item5>, <amount5>}}}}}})
 *rodex_sendmail_acc2(<account id>, "<sender name>", "<title>", "<body>"{, <zeny>{, <item1>, <amount1>, <refine1>, <attribute1>, <card0_1>, <card1_1>, <card2_1>, <card3_1>{,<item2>, <amount2>, <refine2>, <attribute2>, <card0_2>, <card1_2>, <card2_2>, <card3_2>{,<item3>, <amount3>, <refine3>, <attribute3>, <card0_3>, <card1_3>, <card2_3>, <card3_3>{,<item4>, <amount4>, <refine4>, <attribute4>, <card0_4>, <card1_4>, <card2_4>, <card3_4>{,<item5>, <amount5>, <refine5>, <attribute5>, <card0_5>, <card1_5>, <card2_5>, <card3_5>}}}}}})
 
-These are more flexible versions of rodex_sendmail and rodex_sendmail_acc.
-
 This will send a mail using the RoDEX mail system, in newer clients the message will be marked as a NPC mail (that you can't reply).
 If items and zeny are specified, they will be added as attachments to the message.
-Check getitem2 command for more information of the extra parameters.
-
 For examples of usage, see /doc/sample/npc_rodex.txt
+
+rodex_sendmail2 and rodex_sendmail_acc2 are more flexible versions.
+Check getitem2 command for more information of the extra parameters.
 
 ---------------------------------------
 //=====================================
@@ -9245,12 +9659,18 @@ For examples of usage, see /doc/sample/npc_rodex.txt
 //=====================================
 ---------------------------------------
 
-*instance_create("<instance name>", <owner id>{, <optional owner_type>})
+*instance_create("<instance_name>", <owner_id>{, <owner_type>})
 
-Create an instance using the name "<instance name>" for the <owner_id> of
-owner_type (when not provided, defaults to IOT_PARTY). Most instance_*
+Creates an instance using the name "<instance_name>" for the <owner_id> of
+<owner_type> (when not provided, defaults to IOT_PARTY). Most instance_*
 commands are used in conjunction with this command and depend on the
 ID this command returns.
+
+Valid <owner_type> values:
+- IOT_NONE  (0) - <owner_id> can be any arbitrary number.
+- IOT_CHAR  (1) - <owner_id> is account ID.
+- IOT_PARTY (2) - <owner_id> is party ID.
+- IOT_GUILD (3) - <owner_id> is guild ID.
 
 Example:
 	// Store the Party ID of the invoking character.
@@ -9262,11 +9682,9 @@ Example:
 		// ...
 	} else if (.@id == -2) { // Invalid Party ID
 		// ...
-	} else if (.@id == -3) { // No free instances (MAX_INSTANCE exceeded)
-		// ...
 	} else if (.@id == -4) { // Already exists
 		// ...
-	} else (.@id < 0) { // Unspecified error while queuing instance.
+	} else if (.@id < 0) { // Unspecified error while queuing instance.
 		// ...
 	}
 
@@ -10024,6 +10442,7 @@ when the optional NPC_Name param is used.
 
 *sellitem(<Item_ID>{, <price>{, <qty>}})
 *sellitem(<Item_ID>, <qty>, <currency_id>, <currency_amount>)
+*sellitem(<Item_ID>, <zeny>, <qty>{, <currency_id1>, <currency_amount1>{, <currency_refine1>}{, ...}})
 
 adds (or modifies) <Item_ID> data to the shop,
 when <price> is not provided (or when it is -1) itemdb default is used.
@@ -10032,7 +10451,37 @@ qty is only necessary for NST_MARKET trader types.
 when <Item_ID> is already in the shop,
 the previous data (price/qty), is overwritten with the new.
 
-currency_id and currency_amount can be used only with shop type NST_BARTER
+currency_id and currency_amount can be used only with shop type NST_BARTER.
+zeny, currency_id1, currency_amount1, currency_refine1, can be used only with
+shop type NST_EXPANDED_BARTER.
+
+---------------------------------------
+
+*startsellitem(<Item_ID>, <zeny>, <qty>)
+
+Starts adding item into expanded barter shop (NST_EXPANDED_BARTER).
+Before this command possible to use commands *sellitemcurrency.
+Need PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
+
+Alternative way for add item to expanded barter shop is *sellitem with
+currency parameters.
+
+---------------------------------------
+
+*sellitemcurrency(<Item_ID>, <qty>{, <refine>})
+
+adds <Item_ID> as currency into expanded barter shop (NST_EXPANDED_BARTER)
+If <refine> set to -1, mean for any refine level.
+if <refine> missing used value -1.
+
+Need PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
+
+---------------------------------------
+
+*endsellitem()
+
+Complete adding item into expanded barter shop (NST_EXPANDED_BARTER).
+Need PACKETVER 20190904 main or 20190904 RE or 20190828 zero or newer.
 
 ---------------------------------------
 
@@ -10085,59 +10534,61 @@ Sets or alters the data in real-time for game objects of the following types -
 NPCs, Pets, Monsters, Homunuculus', Mercenaries, Elementals.
 
 Applicable Data Types (available as constants) -
-	Data Types          Description (parameter type)
-	UDT_SIZE:           Unit Size
-	UDT_LEVEL:          Level
-	UDT_HP:             Current HP
-	UDT_MAXHP:          Max HP
-	UDT_SP:             SP
-	UDT_MAXSP:          MAX SP
-	UDT_MASTERAID:      Master Account ID (for Summons)
-	UDT_MASTERCID:      Master Char ID (for Summons)
-	UDT_SPEED:          Unit Speed.
-	UDT_MODE:           Mode (Mobs only)
-	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
-	UDT_SCOPTION:       Status Options. (see doc/constants.md for Unit Option Types)
-	UDT_SEX:            Gender of the unit. (see doc/constants.md for Genders)
-	UDT_CLASS:          Class of the unit. (Monster ID)
-	UDT_HAIRSTYLE:      Hair Style ID.
-	UDT_HAIRCOLOR:      Hair Color ID.
-	UDT_HEADBOTTOM:     Headgear Bottom Sprite ID.
-	UDT_HEADMIDDLE:     Headgear Middle Sprite ID.
-	UDT_HEADTOP:        Headgear Top Sprite ID.
-	UDT_CLOTHCOLOR:     Cloth Color ID.
-	UDT_SHIELD:         Shield Sprite ID.
-	UDT_WEAPON:         Weapon Sprite ID.
-	UDT_LOOKDIR:        Face direction.
-	UDT_CANMOVETICK:    Stop a unit from move for n seconds.
-	UDT_STR:            Unit STR.
-	UDT_AGI:            Unit AGI.
-	UDT_VIT:            Unit VIT.
-	UDT_INT:            Unit INT.
-	UDT_DEX:            Unit DEX.
-	UDT_LUK:            Unit LUK.
-	UDT_ATKRANGE:       Attack range of a unit.
-	UDT_ATKMIN:         Min Atk of a unit.
-	UDT_ATKMAX:         Max Atk of a unit.
-	UDT_MATKMIN:        Min MATK of a unit.
-	UDT_MATKMAX:        Max MATK of a unit.
-	UDT_DEF:            DEF.
-	UDT_MDEF:           MDEF.
-	UDT_HIT:            HIT.
-	UDT_FLEE:           FLEE.
-	UDT_PDODGE:         Perfect Dodge.
-	UDT_CRIT:           Critical Rate.
-	UDT_RACE:           Race. (Eg. constants RC_DemiHuman or Integer 7).
-	UDT_ELETYPE:        Element. (Eg. constants Ele_Neutral or Integer 0).
-	UDT_ELELEVEL:       Element Level.
-	UDT_AMOTION:        AMotion Rate.
-	UDT_ADELAY:         ADelay Rate.
-	UDT_DMOTION:        DMotion Rate.
-	UDT_HUNGER:         Hunger Rate - for summons.
-	UDT_INTIMACY:       Intimacy Rate - for summons.
-	UDT_LIFETIME:       LifeTime - for summons.
-	UDT_MERC_KILLCOUNT: Kill count for mercenaries
-	UDT_STATADD:        Status Points - for NPCs.
+	Data Types                Description (parameter type)
+	UDT_SIZE:                 Unit Size
+	UDT_LEVEL:                Level
+	UDT_HP:                   Current HP
+	UDT_MAXHP:                Max HP
+	UDT_SP:                   SP
+	UDT_MAXSP:                MAX SP
+	UDT_MASTERAID:            Master Account ID (for Summons)
+	UDT_MASTERCID:            Master Char ID (for Summons)
+	UDT_SPEED:                Unit Speed.
+	UDT_MODE:                 Mode (Mobs only)
+	UDT_AI:                   Unit AI Type (see doc/constants.md for Unit AI Types)
+	UDT_SCOPTION:             Status Options. (see doc/constants.md for Unit Option Types)
+	UDT_SEX:                  Gender of the unit. (see doc/constants.md for Genders)
+	UDT_CLASS:                Class of the unit. (Monster ID)
+	UDT_HAIRSTYLE:            Hair Style ID.
+	UDT_HAIRCOLOR:            Hair Color ID.
+	UDT_HEADBOTTOM:           Headgear Bottom Sprite ID.
+	UDT_HEADMIDDLE:           Headgear Middle Sprite ID.
+	UDT_HEADTOP:              Headgear Top Sprite ID.
+	UDT_CLOTHCOLOR:           Cloth Color ID.
+	UDT_SHIELD:               Shield Sprite ID.
+	UDT_WEAPON:               Weapon Sprite ID.
+	UDT_LOOKDIR:              Face direction.
+	UDT_CANMOVETICK:          Stop a unit from move for n seconds.
+	UDT_STR:                  Unit STR.
+	UDT_AGI:                  Unit AGI.
+	UDT_VIT:                  Unit VIT.
+	UDT_INT:                  Unit INT.
+	UDT_DEX:                  Unit DEX.
+	UDT_LUK:                  Unit LUK.
+	UDT_ATKRANGE:             Attack range of a unit.
+	UDT_ATKMIN:               Min Atk of a unit.
+	UDT_ATKMAX:               Max Atk of a unit.
+	UDT_MATKMIN:              Min MATK of a unit.
+	UDT_MATKMAX:              Max MATK of a unit.
+	UDT_DEF:                  DEF.
+	UDT_MDEF:                 MDEF.
+	UDT_HIT:                  HIT.
+	UDT_FLEE:                 FLEE.
+	UDT_PDODGE:               Perfect Dodge.
+	UDT_CRIT:                 Critical Rate.
+	UDT_RACE:                 Race. (Eg. constants RC_DemiHuman or Integer 7).
+	UDT_ELETYPE:              Element. (Eg. constants Ele_Neutral or Integer 0).
+	UDT_ELELEVEL:             Element Level.
+	UDT_AMOTION:              AMotion Rate.
+	UDT_ADELAY:               ADelay Rate.
+	UDT_DMOTION:              DMotion Rate.
+	UDT_HUNGER:               Hunger Rate - for summons.
+	UDT_INTIMACY:             Intimacy Rate - for summons.
+	UDT_LIFETIME:             LifeTime - for summons.
+	UDT_MERC_KILLCOUNT:       Kill count for mercenaries
+	UDT_STATADD:              Status Points - for NPCs.
+	UDT_GROUP:                group id
+	UDT_DAMAGE_TAKEN_RATE:    damage taken rate of a unit.
 
 returns 0 if value could not be set, 1 if successful.
 
@@ -10148,58 +10599,60 @@ returns 0 if value could not be set, 1 if successful.
 Retrieves real-time data of a game object.
 
 Applicable Data types (available as constants) -
-	Data Types          Description (return type)
-	UDT_SIZE:           Unit Size
-	UDT_LEVEL:          Level
-	UDT_HP:             Current HP
-	UDT_MAXHP:          Max HP
-	UDT_SP:             SP
-	UDT_MAXSP:          MAX SP
-	UDT_MASTERAID:      Master Account ID (for Summons)
-	UDT_MASTERCID:      Master Char ID (for Summons)
-	UDT_SPEED:          Unit Speed.
-	UDT_MODE:           Mode (Mobs only)
-	UDT_AI:             Unit AI Type (see doc/constants.md for Unit AI Types)
-	UDT_SCOPTION:       Status Options. (see doc/constants.md for Unit Option Types)
-	UDT_SEX:            Gender of the unit. (see doc/constants.md for Genders)
-	UDT_CLASS:          Class of the unit. (Monster ID)
-	UDT_HAIRSTYLE:      Hair Style ID.
-	UDT_HAIRCOLOR:      Hair Color ID.
-	UDT_HEADBOTTOM:     Headgear Bottom Sprite ID.
-	UDT_HEADMIDDLE:     Headgear Middle Sprite ID.
-	UDT_HEADTOP:        Headgear Top Sprite ID.
-	UDT_CLOTHCOLOR:     Cloth Color ID.
-	UDT_SHIELD:         Shield Sprite ID.
-	UDT_WEAPON:         Weapon Sprite ID.
-	UDT_LOOKDIR:        Face direction.
-	UDT_CANMOVETICK:    Stop a unit from move for n seconds.
-	UDT_STR:            Unit STR.
-	UDT_AGI:            Unit AGI.
-	UDT_VIT:            Unit VIT.
-	UDT_INT:            Unit INT.
-	UDT_DEX:            Unit DEX.
-	UDT_LUK:            Unit LUK.
-	UDT_ATKRANGE:       Attack range of a unit.
-	UDT_ATKMIN:         Min Atk of a unit.
-	UDT_ATKMAX:         Max Atk of a unit.
-	UDT_MATKMIN:        Min MATK of a unit.
-	UDT_MATKMAX:        Max MATK of a unit.
-	UDT_DEF:            DEF.
-	UDT_MDEF:           MDEF.
-	UDT_HIT:            HIT.
-	UDT_FLEE:           FLEE.
-	UDT_PDODGE:         Perfect Dodge.
-	UDT_CRIT:           Critical Rate.
-	UDT_RACE:           Race. (Eg. constants RC_DemiHuman or Integer 7).
-	UDT_ELETYPE:        Element. (Eg. constants Ele_Neutral or Integer 0).
-	UDT_ELELEVEL:       Element Level.
-	UDT_AMOTION:        AMotion Rate.
-	UDT_ADELAY:         ADelay Rate.
-	UDT_DMOTION:        DMotion Rate.
-	UDT_HUNGER:         Hunger Rate - for summons.
-	UDT_INTIMACY:       Intimacy Rate - for summons.
-	UDT_LIFETIME:       LifeTime - for summons.
-	UDT_MERC_KILLCOUNT: Kill count for mercenaries.
+	Data Types                Description (return type)
+	UDT_SIZE:                 Unit Size
+	UDT_LEVEL:                Level
+	UDT_HP:                   Current HP
+	UDT_MAXHP:                Max HP
+	UDT_SP:                   SP
+	UDT_MAXSP:                MAX SP
+	UDT_MASTERAID:            Master Account ID (for Summons)
+	UDT_MASTERCID:            Master Char ID (for Summons)
+	UDT_SPEED:                Unit Speed.
+	UDT_MODE:                 Mode (Mobs only)
+	UDT_AI:                   Unit AI Type (see doc/constants.md for Unit AI Types)
+	UDT_SCOPTION:             Status Options. (see doc/constants.md for Unit Option Types)
+	UDT_SEX:                  Gender of the unit. (see doc/constants.md for Genders)
+	UDT_CLASS:                Class of the unit. (Monster ID)
+	UDT_HAIRSTYLE:            Hair Style ID.
+	UDT_HAIRCOLOR:            Hair Color ID.
+	UDT_HEADBOTTOM:           Headgear Bottom Sprite ID.
+	UDT_HEADMIDDLE:           Headgear Middle Sprite ID.
+	UDT_HEADTOP:              Headgear Top Sprite ID.
+	UDT_CLOTHCOLOR:           Cloth Color ID.
+	UDT_SHIELD:               Shield Sprite ID.
+	UDT_WEAPON:               Weapon Sprite ID.
+	UDT_LOOKDIR:              Face direction.
+	UDT_CANMOVETICK:          Stop a unit from move for n seconds.
+	UDT_STR:                  Unit STR.
+	UDT_AGI:                  Unit AGI.
+	UDT_VIT:                  Unit VIT.
+	UDT_INT:                  Unit INT.
+	UDT_DEX:                  Unit DEX.
+	UDT_LUK:                  Unit LUK.
+	UDT_ATKRANGE:             Attack range of a unit.
+	UDT_ATKMIN:               Min Atk of a unit.
+	UDT_ATKMAX:               Max Atk of a unit.
+	UDT_MATKMIN:              Min MATK of a unit.
+	UDT_MATKMAX:              Max MATK of a unit.
+	UDT_DEF:                  DEF.
+	UDT_MDEF:                 MDEF.
+	UDT_HIT:                  HIT.
+	UDT_FLEE:                 FLEE.
+	UDT_PDODGE:               Perfect Dodge.
+	UDT_CRIT:                 Critical Rate.
+	UDT_RACE:                 Race. (Eg. constants RC_DemiHuman or Integer 7).
+	UDT_ELETYPE:              Element. (Eg. constants Ele_Neutral or Integer 0).
+	UDT_ELELEVEL:             Element Level.
+	UDT_AMOTION:              AMotion Rate.
+	UDT_ADELAY:               ADelay Rate.
+	UDT_DMOTION:              DMotion Rate.
+	UDT_HUNGER:               Hunger Rate - for summons.
+	UDT_INTIMACY:             Intimacy Rate - for summons.
+	UDT_LIFETIME:             LifeTime - for summons.
+	UDT_MERC_KILLCOUNT:       Kill count for mercenaries.
+	UDT_GROUP:                group id
+	UDT_DAMAGE_TAKEN_RATE:    damage taken rate of a unit.
 
 returns -1 if value could not be retrieved.
 
@@ -10319,6 +10772,14 @@ returns progress on success and false on failure
 
 ---------------------------------------
 
+*achievement_iscompleted(<ach_id>{, <account_id>})
+
+Checks whether the attached player have completed all the given achievement objectives.
+
+returns true if yes and false if no.
+
+---------------------------------------
+
 *itempreview(<index>)
 
 Update already opened preview window with item from
@@ -10350,7 +10811,7 @@ Works for 20170830 RE and main and for any zero clients
 
 ---------------------------------------
 
-*expandInventoryAck(<result>{, <itemId>})
+*expandinventoryack(<result>{, <itemId>})
 
 Send initial inventory expansion result.
 Normally this function should be called from script label
@@ -10368,7 +10829,7 @@ Works for 20181212 zero clients
 
 ---------------------------------------
 
-*expandInventoryResult(<result>)
+*expandinventoryresult(<result>)
 
 Send final inventory expansion result.
 Normally this function should be called from script label
@@ -10385,7 +10846,7 @@ Works for 20181212 zero clients
 
 ---------------------------------------
 
-*expandInventory(<value>)
+*expandinventory(<value>)
 
 Adjust player inventory to given value.
 Maximum inventory size is MAX_INVENTORY.
@@ -10396,10 +10857,44 @@ Current max inventory size can be read by function getInventorySize().
 
 ---------------------------------------
 
-*getInventorySize()
+*getinventorysize()
 
 Return current player max inventory size.
 This value always smaller or equal to MAX_INVENTORY.
 Size can be changed by group of functions expandInventory*
+
+---------------------------------------
+
+*getunittitle(<GID>)
+
+Return unit title string.
+Works for 20180207 main clients, 20171129 re clients, 20171130 zero clients
+
+---------------------------------------
+
+*setunittitle(<GID>, <title>)
+
+Set unit title string.
+Invisible for players, because current implimentation using title id only.
+Works for 20180207 main clients, 20171129 re clients, 20171130 zero clients
+
+---------------------------------------
+
+*closeroulette()
+
+Force close roulette window.
+Works for 20141008 main clients, 20140903 re, any zero.
+
+---------------------------------------
+*openrefineryui()
+
+Opens refinery user interface for the player
+returns true on success and false on failure
+
+---------------------------------------
+*openlapineddukddakboxui(<item_id>)
+
+Opens lapine ddukddak user interface for the player
+returns true on success and false on failure
 
 ---------------------------------------

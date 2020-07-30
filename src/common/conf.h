@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,10 @@
  * The libconfig interface -- specially for plugins, but we enforce it throughout the core to be consistent
  **/
 struct libconfig_interface {
+	char db_path[256];
+	void (*set_db_path) (const char *db_path);
+	void (*format_db_path) (const char *filename, char *path_buf, int buffer_len);
+	/* */
 	int (*read) (struct config_t *config, FILE *stream);
 	void (*write) (const struct config_t *config, FILE *stream);
 	/* */

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,9 +87,9 @@ typedef enum e_log_pick_type {
 	LOG_TYPE_QUEST            = 0x02000000,
 	LOG_TYPE_SKILL            = 0x04000000,
 	LOG_TYPE_REFINE           = 0x08000000,
+	LOG_TYPE_LOOT             = 0x10000000,
+	LOG_TYPE_ACHIEVEMENT      = 0x20000000,
 
-	// combinations
-	LOG_TYPE_LOOT             = LOG_TYPE_PICKDROP_MONSTER|LOG_TYPE_CONSUME,
 	// all
 	LOG_TYPE_ALL              = 0xFFFFFFFF,
 } e_log_pick_type;
@@ -155,7 +155,7 @@ struct log_interface {
 
 	char (*picktype2char) (e_log_pick_type type);
 	char (*chattype2char) (e_log_chat_type type);
-	bool (*should_log_item) (int nameid, int amount, int refine, struct item_data *id);
+	bool (*should_log_item) (int nameid, int amount, int refine_level, struct item_data *id);
 };
 
 #ifdef HERCULES_CORE

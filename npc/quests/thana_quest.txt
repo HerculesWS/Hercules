@@ -9,9 +9,9 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Muad_Dib
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -1048,7 +1048,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 		}
 		while (1) {
 			while (1) {
-				input .@input;
+				input(.@input);
 				if (.@input < 100 || .@input > 999) {
 					mes "[Screen]";
 					mes "Number input";
@@ -1060,8 +1060,8 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 				}
 				.@input100 = .@input / 100;
 				.@input10 = (.@input % 100) / 10;
-				if (((.@input100 > 0) && (.@input10 > 0)) && (.@input % 10 > 0)) {
-					if (((.@input100 != .@input10) && (.@input100 != .@input % 10)) && (.@input10 != .@input % 10))
+				if (.@input100 > 0 && .@input10 > 0 && .@input % 10 > 0) {
+					if (.@input100 != .@input10 && .@input100 != .@input % 10 && .@input10 != .@input % 10)
 						break;
 					mes "[Screen]";
 					mes "Violation of number";
@@ -1082,12 +1082,18 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 			next;
 			.@strike = 0;
 			.@ball = 0;
-			if (.@yagu100 == .@input100) .@strike += 1;
-			if (.@yagu10 == .@input10) .@strike += 1;
-			if (.@yagu1 == .@input % 10) .@strike += 1;
-			if ((.@yagu100 == .@input10) || (.@yagu100 == .@input % 10)) .@ball += 1;
-			if ((.@yagu10 == .@input100) || (.@yagu10 == .@input % 10)) .@ball += 1;
-			if ((.@yagu1 == .@input100) || (.@yagu1 == .@input10)) .@ball += 1;
+			if (.@yagu100 == .@input100)
+				.@strike += 1;
+			if (.@yagu10 == .@input10)
+				.@strike += 1;
+			if (.@yagu1 == .@input % 10)
+				.@strike += 1;
+			if (.@yagu100 == .@input10 || .@yagu100 == .@input % 10)
+				.@ball += 1;
+			if (.@yagu10 == .@input100 || .@yagu10 == .@input % 10)
+				.@ball += 1;
+			if (.@yagu1 == .@input100 || .@yagu1 == .@input10)
+				.@ball += 1;
 			if (.@strike == 3) {
 				mes "[Screen]";
 				mes "Input number accepted.";
@@ -1193,8 +1199,8 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "I'll try the left wing first.";
 			mes "What key should I put in?";
 			next;
-			input .@inputstr$;
-			if ((.@inputstr$ != "Red Key") && (.@inputstr$ != "red key")) {
+			input(.@inputstr$);
+			if (.@inputstr$ != "Red Key" && .@inputstr$ != "red key") {
 				mes "It doesn't fit into the crack.";
 				close;
 			}
@@ -1204,8 +1210,8 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Now the right side...";
 			next;
-			input .@inputstr$;
-			if ((.@inputstr$ != "Yellow Key") && (.@inputstr$ != "yellow key")) {
+			input(.@inputstr$);
+			if (.@inputstr$ != "Yellow Key" && .@inputstr$ != "yellow key") {
 				mes "It doesn't fit into the crack.";
 				close;
 			}
@@ -2143,7 +2149,7 @@ OnTouch:
 	mes "There is a fragment missing from the crest of the Seal.";
 	mes "Surely I saw a familiar fragment before...";
 	next;
-	input .@inputstr$;
+	input(.@inputstr$);
 	.@exact_tt$ = "Fragment of "+.@j$;
 	if (countitem(.@i[0]) > 0 && .@exact_tt$ == .@inputstr$) {
 		mes "^3355FFYou insert the";

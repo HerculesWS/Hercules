@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,11 +128,11 @@ static char *checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char *))
+void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
-	char tmppath[MAX_PATH+1];
+	char tmppath[MAX_DIR_PATH + 1];
 	const char *path    = (p  ==NULL)? "." : p;
 	const char *pattern = (pat==NULL)? "" : pat;
 
@@ -155,21 +155,37 @@ void findfile(const char *p, const char *pat, void (func)(const char *))
 			sprintf(tmppath,"%s%c%s",path,PATHSEP,FindFileData.cFileName);
 
 			if (strstr(FindFileData.cFileName, pattern)) {
-				func( tmppath );
+				func(tmppath, context);
 			}
 
-			if( FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-			{
-				findfile(tmppath, pat, func);
+			if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+				findfile(tmppath, pat, func, context);
 			}
 		}while (FindNextFileA(hFind, &FindFileData) != 0);
 		FindClose(hFind);
 	}
 	return;
 }
-#else
 
-#define MAX_DIR_PATH 2048
+/**
+ * Checks if the passed path points to a file.
+ *
+ * @param path The path which should be checked.
+ * @return true if the passed path points to a file, otherwise false.
+ *
+ **/
+bool is_file(const char *path)
+{
+	nullpo_retr(false, path);
+
+	char path_tmp[MAX_DIR_PATH + 1];
+
+	checkpath(path_tmp, path);
+
+	return ((GetFileAttributesA(path_tmp) & FILE_ATTRIBUTE_DIRECTORY) == 0);
+}
+
+#else
 
 static char *checkpath(char *path, const char *srcpath)
 {
@@ -190,7 +206,7 @@ static char *checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char *))
+void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
 {
 	DIR* dir;             ///< pointer to the scanned directory.
 	struct dirent* entry; ///< pointer to one directory entry.
@@ -220,7 +236,7 @@ void findfile(const char *p, const char *pat, void (func)(const char *))
 
 		// check if the pattern matches.
 		if (strstr(entry->d_name, pattern)) {
-			func( tmppath );
+			func(tmppath, context);
 		}
 		// check if it is a directory.
 		if (stat(tmppath, &dir_stat) == -1) {
@@ -230,12 +246,33 @@ void findfile(const char *p, const char *pat, void (func)(const char *))
 		// is this a directory?
 		if (S_ISDIR(dir_stat.st_mode)) {
 			// decent recursively
-			findfile(tmppath, pat, func);
+			findfile(tmppath, pat, func, context);
 		}
 	}//end while
 
 	closedir(dir);
 }
+
+/**
+ * Checks if the passed path points to a file.
+ *
+ * @param path The path which should be checked.
+ * @return true if the passed path points to a file, otherwise false.
+ *
+ **/
+bool is_file(const char *path)
+{
+	nullpo_retr(false, path);
+
+	char path_tmp[MAX_DIR_PATH + 1];
+
+	checkpath(path_tmp, path);
+
+	struct stat path_stat;
+
+	return (stat(path_tmp, &path_stat) == 0 && S_ISREG(path_stat.st_mode));
+}
+
 #endif
 
 bool exists(const char *filename)

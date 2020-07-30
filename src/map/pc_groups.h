@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ enum e_pc_permission {
 	PC_PERM_DISABLE_STORE       = 0x1000000,
 	PC_PERM_DISABLE_EXP         = 0x2000000,
 	PC_PERM_DISABLE_SKILL_USAGE = 0x4000000,
+	PC_PERM_BYPASS_NOSTORAGE    = 0x8000000,
 };
 
 // Cached config settings for quick lookup

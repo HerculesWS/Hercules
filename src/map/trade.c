@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,6 +50,9 @@ static void trade_traderequest(struct map_session_data *sd, struct map_session_d
 {
 	nullpo_retv(sd);
 
+	if (sd == target_sd)
+		return;
+
 	if (map->list[sd->bl.m].flag.notrade) {
 		clif->message (sd->fd, msg_sd(sd,272)); // You can't trade in this map
 		return;
@@ -60,7 +63,7 @@ static void trade_traderequest(struct map_session_data *sd, struct map_session_d
 		return;
 	}
 
-	if (target_sd->npc_id) {
+	if (target_sd->npc_id != 0 && target_sd->state.using_megaphone == 0) {
 		//Trade fails if you are using an NPC.
 		clif->tradestart(sd, 2);
 		return;
@@ -163,9 +166,10 @@ static void trade_tradeack(struct map_session_data *sd, int type)
 	}
 
 	//Check if you can start trade.
-	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag != STORAGE_FLAG_CLOSED
-	 || tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag != STORAGE_FLAG_CLOSED
-	) {
+	if ((sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->state.vending != 0 || sd->state.prevend != 0
+	    || sd->state.buyingstore != 0 || sd->state.storage_flag != STORAGE_FLAG_CLOSED
+	    || (tsd->npc_id != 0 && tsd->state.using_megaphone == 0) || tsd->state.vending != 0 || tsd->state.prevend != 0
+	    || tsd->state.buyingstore != 0 || tsd->state.storage_flag != STORAGE_FLAG_CLOSED) {
 		//Fail
 		clif->tradestart(sd, 2);
 		clif->tradestart(tsd, 2);
@@ -223,9 +227,9 @@ static int impossible_trade_check(struct map_session_data *sd)
 		if (inventory[index].amount < sd->deal.item[i].amount) {
 			// if more than the player have -> hack
 			snprintf(message_to_gm, sizeof(message_to_gm), msg_txt(538), sd->status.name, sd->status.account_id); // Hack on trade: character '%s' (account: %d) try to trade more items that he has.
-			intif->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
+			pc->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			snprintf(message_to_gm, sizeof(message_to_gm), msg_txt(539), inventory[index].amount, inventory[index].nameid, sd->deal.item[i].amount); // This player has %d of a kind of item (id: %d), and try to trade %d of them.
-			intif->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
+			pc->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			// if we block people
 			if (battle_config.ban_hack_trade < 0) {
 				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BLOCK, 0, 0, 0, 0, 0, 0);
@@ -242,7 +246,7 @@ static int impossible_trade_check(struct map_session_data *sd)
 				// message about the ban
 				safestrncpy(message_to_gm, msg_txt(508), sizeof(message_to_gm)); //  This player hasn't been banned (Ban option is disabled).
 
-			intif->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
+			pc->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			return 1;
 		}
 		inventory[index].amount -= sd->deal.item[i].amount; // remove item from inventory

@@ -2,7 +2,7 @@
 * This file is part of Hercules.
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
-* Copyright (C) 2017  Hercules Dev Team
+* Copyright (C) 2017-2020 Hercules Dev Team
 * Copyright (C) Smokexyz
 * Copyright (C) Dastgir
 *
@@ -194,6 +194,8 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
 		// Check if the Achievement is complete.
 		if (achievement->check_complete(sd, ad)) {
 			achievement->validate_achieve(sd, ad->id);
+			if ((ach = achievement->ensure(sd, ad)) == NULL)
+				return;
 			ach->completed_at = time(NULL);
 		}
 
@@ -232,6 +234,8 @@ static void achievement_progress_set(struct map_session_data *sd, const struct a
 
 		if (achievement->check_complete(sd, ad)) {
 			achievement->validate_achieve(sd, ad->id);
+			if ((ach = achievement->ensure(sd, ad)) == NULL)
+				return;
 			ach->completed_at = time(NULL);
 		}
 
@@ -1051,10 +1055,10 @@ static void achievement_get_rewards_items(struct map_session_data *sd, const str
 		if (!itemdb->isstackable(it.nameid)) {
 			it.amount = 1;
 			for (int j = 0; j < total; ++j)
-				pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT);
+				pc->additem(sd, &it, 1, LOG_TYPE_ACHIEVEMENT);
 		} else {
 			it.amount = total;
-			pc->additem(sd, &it, total, LOG_TYPE_SCRIPT);
+			pc->additem(sd, &it, total, LOG_TYPE_ACHIEVEMENT);
 		}
 	}
 }
@@ -1099,7 +1103,8 @@ static bool achievement_get_rewards(struct map_session_data *sd, const struct ac
  */
 static void achievement_readdb_ranks(void)
 {
-	const char *filename = "db/achievement_rank_db.conf";
+	char filename[256];
+	libconfig->format_db_path("achievement_rank_db.conf", filename, sizeof(filename));
 	struct config_t ar_conf = { 0 };
 	struct config_setting_t *ardb = NULL, *conf = NULL;
 	int entry = 0;
@@ -1777,7 +1782,8 @@ static void achievement_readdb_additional_fields(const struct config_setting_t *
  */
 static void achievement_readb(void)
 {
-	const char *filename = "db/"DBPATH"achievement_db.conf";
+	char filename[256];
+	libconfig->format_db_path(DBPATH"achievement_db.conf", filename, sizeof(filename));
 	struct config_t ach_conf = { 0 };
 	struct config_setting_t *achdb = NULL, *conf = NULL;
 	int entry = 0, count = 0;

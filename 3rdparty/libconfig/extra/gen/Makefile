@@ -19,9 +19,9 @@ LEXCOMPILE = $(LEX) $(LFLAGS) $(AM_LFLAGS)
 YLWRAP = ../aux-build/ylwrap
 YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
 LEX = flex
-LEXLIB = -ll
+LEXLIB = -lfl
 LEX_OUTPUT_ROOT = lex.yy
-SHELL = /bin/sh
+SHELL = /bin/bash
 YACC = bison -y
 YFLAGS = 
 

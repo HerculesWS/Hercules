@@ -9,13 +9,13 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Kisuka
-//= Copyright (C)  Silent
-//= Copyright (C)  massdriller
-//= Copyright (C)  Lupus
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  kobra_k88
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Silent
+//= Copyright (C) massdriller
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -705,7 +705,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			next;
 			while(1) {
 				while(1) {
-					input .@input;
+					input(.@input);
 					if (.@input == 0) {
 						mes "[Union Staff Kay]";
 						mes "Are you sure that you wanna cancel?";
@@ -714,14 +714,15 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 							close;
 						}
 						next;
+						continue;
 					}
-					else if (.@input < 1000000 || .@input > 5000000) {
+					if (.@input < 1000000 || .@input > 5000000) {
 						mes "[Union Staff Kay]";
 						mes "Hey hey. That number's not valid! Enter a value from 1000000 to 5000000. got it?";
 						next;
-					} else {
-						break;
+						continue;
 					}
+					break;
 				}
 				mes "[Union Staff Kay]";
 				if (.@where_village == 1)

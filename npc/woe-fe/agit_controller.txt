@@ -9,16 +9,16 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  ultramage
-//= Copyright (C)  KarLaeda
-//= Copyright (C)  Avaj
-//= Copyright (C)  Lupus
-//= Copyright (C)  kobra_k88
-//= Copyright (C)  Akaru
-//= Copyright (C)  ho|yAnge|
-//= Copyright (C)  kalen
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) ultramage
+//= Copyright (C) KarLaeda
+//= Copyright (C) Avaj
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//= Copyright (C) Akaru
+//= Copyright (C) ho|yAnge|
+//= Copyright (C) kalen
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ S_DisplayOwners:
 	setarray .@maps$[15],"prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05";
 	for (.@i = 0; .@i <= 19; ++.@i) {
 		if (getcastledata(.@maps$[.@i],1))
-			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle has been conquered by the [" + getguildname(getcastledata(.@maps$[.@i],1)) + "] guild.",bc_all|bc_woe;
+			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle has been conquered by the [" + getguildinfo(GUILDINFO_NAME, getcastledata(.@maps$[.@i],1)) + "] guild.",bc_all|bc_woe;
 		else
 			announce "The [" + getcastlename(.@maps$[.@i]) + "] castle is currently unoccupied.",bc_all|bc_woe;
 	}

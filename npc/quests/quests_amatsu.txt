@@ -9,15 +9,15 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  rAthena Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  eAthena Dev Team
-//= Copyright (C)  Gepard
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Lupus
-//= Copyright (C)  Evera
-//= Copyright (C)  MasterOfMuppets
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Gepard
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) Evera
+//= Copyright (C) MasterOfMuppets
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -399,11 +399,14 @@ OnStartArena:
 	enablenpc "Grandma#ama1";
 	enablenpc "Grandpa#ama";
 	warpwaitingpc "ama_test",50,83;
-	donpcevent "Timer#ama::OnEnable";
+	enablenpc("Timer#ama");
+	initnpctimer("Timer#ama");
 	disablewaitingroomevent "Assistant#ama";
 	end;
 
 OnReset:
+	stopnpctimer("Timer#ama");
+	disablenpc("Timer#ama");
 	enablewaitingroomevent "Assistant#ama";
 	end;
 }
@@ -620,7 +623,6 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 		mes "Don't lose your high self-esteem";
 		mes "in the future. Farewell.";
 		close2;
-		donpcevent "Timer#ama::OnDisable";
 		warp "amatsu",223,230;
 		disablenpc "Coach#ama";
 		donpcevent "Assistant#ama::OnReset";
@@ -665,7 +667,6 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 			setquest 8128;
 			warp "amatsu",223,230;
 			disablenpc "Coach#ama";
-			donpcevent "Timer#ama::OnDisable";
 			donpcevent "Assistant#ama::OnReset";
 			end;
 		}
@@ -754,7 +755,6 @@ OnTouch:
 	changequest 8129,8130;
 	warp "amatsu",223,230;
 	disablenpc "Coach#after";
-	donpcevent "Timer#ama::OnDisable";
 	donpcevent "Assistant#ama::OnReset";
 	end;
 }
@@ -762,14 +762,6 @@ OnTouch:
 ama_test,34,18,0	script	Timer#ama	FAKE_NPC,{
 OnInit:
 	disablenpc "Timer#ama";
-	end;
-
-OnEnable:
-	enablenpc "Timer#ama";
-	initnpctimer;
-	end;
-OnDisable:
-	stopnpctimer;
 	end;
 
 OnTimer1000:
@@ -788,26 +780,11 @@ OnTimer361000:
 	end;
 
 OnTimer361500:
-	enablenpc "backwarp#ama";
-	end;
-
-OnTimer362000:
-	disablenpc "backwarp#ama";
+	areawarp("ama_test", 25, 75, 80, 130, "amatsu", 115, 95);
 	end;
 
 OnTimer362500:
 	donpcevent "Assistant#ama::OnReset";
-	donpcevent "Timer#ama::OnDisable";
-	end;
-}
-
-ama_test,50,100,0	script	backwarp#ama	FAKE_NPC,25,25,{
-OnInit:
-	disablenpc "backwarp#ama";
-	end;
-
-OnTouch:
-	warp "amatsu",115,95;
 	end;
 }
 

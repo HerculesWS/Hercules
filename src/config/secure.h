@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@
  * (Secure) Optional NPC Dialog Timer
  * @requirement : SECURE_NPCTIMEOUT must be enabled
  * Minimum Interval Between timeout checks in seconds
- * Default: 1s
+ * Default: 1
  **/
 #define SECURE_NPCTIMEOUT_INTERVAL 1
 

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1856,7 +1856,7 @@ static void socket_datasync(int fd, bool send)
 			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
 		}
 
-		WFIFOSET(fd, p_len);
+		WFIFOSET2(fd, p_len);
 	} else {
 		for( i = 0; i < alen; i++ ) {
 			if( RFIFOL(fd, 4 + (i * 4) ) != data_list[i].length ) {
@@ -1865,7 +1865,7 @@ static void socket_datasync(int fd, bool send)
 				WFIFOW(fd, 0) = 0x2b0a;
 				WFIFOW(fd, 2) = 8;
 				WFIFOL(fd, 4) = 0;
-				WFIFOSET(fd, 8);
+				WFIFOSET2(fd, 8);
 				sockt->flush(fd);
 				/* shut down */
 				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);

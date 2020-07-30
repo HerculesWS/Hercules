@@ -9,15 +9,15 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2016  Hercules Dev Team
-//= Copyright (C)  Epoque
-//= Copyright (C)  eAthena Dev Team
-//= Copyright (C)  Gepard
-//= Copyright (C)  Yommy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Samuray22
-//= Copyright (C)  Lupus
-//= Copyright (C)  Nova
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Epoque
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Gepard
+//= Copyright (C) Yommy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) Lupus
+//= Copyright (C) Nova
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -259,8 +259,8 @@ que_hugel	mapflag	nomemo
 que_rachel	mapflag	nomemo
 que_san04	mapflag	nomemo
 que_thor	mapflag	nomemo
-poring_c01	mapflag	nomemo
-poring_c02	mapflag	nomemo
+//poring_c01	mapflag	nomemo
+//poring_c02	mapflag	nomemo
 // Dungeons =================
 alde_dun01	mapflag	nomemo
 alde_dun02	mapflag	nomemo

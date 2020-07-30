@@ -4,8 +4,8 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2018  Hercules Dev Team
-# Copyright (C) 2018  Asheraf
+# Copyright (C) 2018-2020 Hercules Dev Team
+# Copyright (C) 2018 Asheraf
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import io
-import libconf as libconf
+import sys
+if sys.version_info >= (3, 0):
+	from utils import libconf as libconf
+else:
+	import libconf as libconf
 import os.path
 
 def LoadDBConsts(DBname, mode, serverpath):

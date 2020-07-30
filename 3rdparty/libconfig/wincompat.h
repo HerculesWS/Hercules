@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2018  Hercules Dev Team
-   Copyright (C) 2005-2014  Mark A Lindner
+   Copyright (C) 2013-2020 Hercules Dev Team
+   Copyright (C) 2005-2014 Mark A Lindner
 
    This file is part of libconfig.
 
@@ -60,6 +60,8 @@
 
 #define INT64_HEX_FMT "%I64X"
 
+#define INT64_OCT_FMT "%I64o"
+
 #define FILE_SEPARATOR "\\"
 
 #else /* defined(WIN32) || defined(__MINGW32__) */
@@ -68,6 +70,8 @@
 #define UINT64_FMT "%llu"
 
 #define INT64_HEX_FMT "%llX"
+
+#define INT64_OCT_FMT "%llo"
 
 #define FILE_SEPARATOR "/"
 

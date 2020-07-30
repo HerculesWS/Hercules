@@ -9,14 +9,14 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2016  Hercules Dev Team
-//= Copyright (C)  Kisuka
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Vicious
-//= Copyright (C)  Lupus
-//= Copyright (C)  kobra_k88
-//= Copyright (C)  Darkchild
-//= Copyright (C)  nestor_zulueta (Fusion)
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Vicious
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//= Copyright (C) Darkchild
+//= Copyright (C) nestor_zulueta (Fusion)
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -567,33 +567,39 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 			mes "[Raspuchin Gregory]";
 			mes "12 + 23 + 34 + 45 = ?";
 			next;
-			input .@input;
-			if (.@input != 114) .@w_point += 1;
+			input(.@input);
+			if (.@input != 114)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "1000 - 36 - 227 - 348 = ?";
 			next;
-			input .@input;
-			if (.@input != 389) .@w_point += 1;
+			input(.@input);
+			if (.@input != 389)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "14 * 17 * 3 = ?";
 			next;
-			input .@input;
-			if (.@input != 714) .@w_point += 1;
+			input(.@input);
+			if (.@input != 714)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "9765 / 3 / 5 / 7 = ?";
 			next;
-			input .@input;
-			if (.@input != 93) .@w_point += 1;
+			input(.@input);
+			if (.@input != 93)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(47 * 28) - (1376 / 4) = ?";
 			next;
-			input .@input;
-			if (.@input != 972) .@w_point += 1;
+			input(.@input);
+			if (.@input != 972)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2646 / 7) + (13 * 28) = ?";
 			next;
-			input .@input;
-			if (.@input != 742) .@w_point += 1;
+			input(.@input);
+			if (.@input != 742)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("How much do\r"
 				"12 %s,\r"
@@ -604,8 +610,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Wing_Of_Butterfly),
 				getitemname(Wing_Of_Fly));
 			next;
-			input .@input;
-			if (.@input != 909) .@w_point += 1;
+			input(.@input);
+			if (.@input != 909)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total weight of\r"
@@ -615,8 +622,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Helm),
 				getitemname(Coat));
 			next;
-			input .@input;
-			if (.@input != 450) .@w_point += 1;
+			input(.@input);
+			if (.@input != 450)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total defense of\r"
@@ -632,8 +640,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Boots),
 				getitemname(Ear_Mufs));
 			next;
-			input .@input;
-			if (.@input != 20) .@w_point += 1;
+			input(.@input);
+			if (.@input != 20)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("If you buy 5 %s\r"
 				"with a 24%% discount\r"
@@ -642,45 +651,53 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				"do you earn?",
 				getitemname(Helm));
 			next;
-			input .@input;
-			if (.@input != 8800) .@w_point += 1;
+			input(.@input);
+			if (.@input != 8800)
+				.@w_point += 1;
 			break;
 		case 2:
 			mes "[Raspuchin Gregory]";
 			mes "13 + 25 + 37 + 48 = ?";
 			next;
-			input .@input;
-			if (.@input != 123) .@w_point += 1;
+			input(.@input);
+			if (.@input != 123)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "1000 - 58 - 214 - 416 = ?";
 			next;
-			input .@input;
-			if (.@input != 312) .@w_point += 1;
+			input(.@input);
+			if (.@input != 312)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "12 * 24 * 3 = ?";
 			next;
-			input .@input;
-			if (.@input != 864) .@w_point += 1;
+			input(.@input);
+			if (.@input != 864)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "10530 / 3 / 5 / 2 = ?";
 			next;
-			input .@input;
-			if (.@input != 351) .@w_point += 1;
+			input(.@input);
+			if (.@input != 351)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(35 * 19) - (1792 / 7) = ?";
 			next;
-			input .@input;
-			if (.@input != 409) .@w_point += 1;
+			input(.@input);
+			if (.@input != 409)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2368 / 8) + (24 * 17) = ?";
 			next;
-			input .@input;
-			if (.@input != 704) .@w_point += 1;
+			input(.@input);
+			if (.@input != 704)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2646 / 7) + (13 * 28) = ?";
 			next;
-			input .@input;
-			if (.@input != 742) .@w_point += 1;
+			input(.@input);
+			if (.@input != 742)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total price of\r"
@@ -692,8 +709,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Spectacles),
 				getitemname(Booby_Trap));
 			next;
-			input .@input;
-			if (.@input != 934) .@w_point += 1;
+			input(.@input);
+			if (.@input != 934)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total weight of\r"
@@ -703,8 +721,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Cap),
 				getitemname(Boots));
 			next;
-			input .@input;
-			if (.@input != 550) .@w_point += 1;
+			input(.@input);
+			if (.@input != 550)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total defense of\r"
@@ -720,8 +739,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Sahkkat),
 				getitemname(Glasses));
 			next;
-			input .@input;
-			if (.@input != 16) .@w_point += 1;
+			input(.@input);
+			if (.@input != 16)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("How much profit do you\r"
 				"make if you buy %s\r"
@@ -730,40 +750,47 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				"the normal price?",
 				getitemname(Tights));
 			next;
-			input .@input;
-			if (.@input != 8520) .@w_point += 1;
+			input(.@input);
+			if (.@input != 8520)
+				.@w_point += 1;
 			break;
 		case 3:
 			mes "[Raspuchin Gregory]";
 			mes "12 + 23 + 34 + 45 = ?";
 			next;
-			input .@input;
-			if (.@input != 114) .@w_point += 1;
+			input(.@input);
+			if (.@input != 114)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "1000 - 58 - 214 - 416 = ?";
 			next;
-			input .@input;
-			if (.@input != 312) .@w_point += 1;
+			input(.@input);
+			if (.@input != 312)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "14 * 17 * 3 = ?";
 			next;
-			input .@input;
-			if (.@input != 714) .@w_point += 1;
+			input(.@input);
+			if (.@input != 714)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "10530 / 3 / 5 / 2 = ?";
 			next;
-			input .@input;
-			if (.@input != 351) .@w_point += 1;
+			input(.@input);
+			if (.@input != 351)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(47 * 28) - (1376 / 4) = ?";
 			next;
-			input .@input;
-			if (.@input != 972) .@w_point += 1;
+			input(.@input);
+			if (.@input != 972)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mes "(2646 / 7) + (13 * 28) = ?";
 			next;
-			input .@input;
-			if (.@input != 742) .@w_point += 1;
+			input(.@input);
+			if (.@input != 742)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total cost of\r"
@@ -775,8 +802,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Green_Potion),
 				getitemname(Wing_Of_Fly));
 			next;
-			input .@input;
-			if (.@input != 798) .@w_point += 1;
+			input(.@input);
+			if (.@input != 798)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total weight of\r"
@@ -786,8 +814,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Cap),
 				getitemname(Boots));
 			next;
-			input .@input;
-			if (.@input != 480) .@w_point += 1;
+			input(.@input);
+			if (.@input != 480)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("What is the\r"
 				"total defense of\r"
@@ -800,8 +829,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				getitemname(Muffler),
 				getitemname(Eye_Bandage));
 			next;
-			input .@input;
-			if (.@input != 12) .@w_point += 1;
+			input(.@input);
+			if (.@input != 12)
+				.@w_point += 1;
 			mes "[Raspuchin Gregory]";
 			mesf("If you buy 4 Padded Armors\r"
 				"at a 24%% discount and sell\r"
@@ -810,8 +840,9 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				"you make from this sale?",
 				getitemname(Padded_Armor));
 			next;
-			input .@input;
-			if (.@input != 7680) .@w_point += 1;
+			input(.@input);
+			if (.@input != 7680)
+				.@w_point += 1;
 		}
 		if (.@w_point == 0) {
 			mes "[Raspuchin Gregory]";

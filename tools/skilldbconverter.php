@@ -11,7 +11,8 @@
 * This file is part of Hercules.
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
-* Copyright (C) 2016-  Smokexyz/Hercules Dev Team
+* Copyright (C) 2016-2020 Hercules Dev Team
+* Copyright (C) 2016 Smokexyz
 *
 * Hercules is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -938,7 +939,7 @@ function printcredits()
 	print "     | | | |  __/ | | (__| |_| | |  __/\__ \ \n";
 	print "     \_| |_/\___|_|  \___|\__,_|_|\___||___/\n";
 	print "Hercules Skill Database TXT to Libconfig Converter by Smokexyz\n";
-	print "Copyright (C) 2016  Hercules\n";
+	print "Copyright (C) 2016-2020 Hercules\n";
 	print "-----------------------------------------------\n\n";
 }
 
@@ -955,7 +956,7 @@ function getcomments($re)
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2014-2018  Hercules Dev Team
+//= Copyright (C) 2014-2020 Hercules Dev Team
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by

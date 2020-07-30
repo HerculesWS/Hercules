@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -449,6 +449,7 @@ static void do_init_pc_groups(void)
 		{ "disable_store", PC_PERM_DISABLE_STORE },
 		{ "disable_exp", PC_PERM_DISABLE_EXP },
 		{ "disable_skill_usage", PC_PERM_DISABLE_SKILL_USAGE },
+		{ "bypass_nostorage", PC_PERM_BYPASS_NOSTORAGE },
 	};
 	unsigned char i, len = ARRAYLENGTH(pc_g_defaults);
 

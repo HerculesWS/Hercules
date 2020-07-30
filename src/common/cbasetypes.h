@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
+ * Copyright (C) 2012-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,15 +62,23 @@
 #endif
 
 // Standardize the ARM platform version, if available (the only values we're interested in right now are >= ARMv6)
+#ifdef __ARM_ARCH
+#define __ARM_ARCH_VERSION__ __ARM_ARCH
+#else
 #if defined(__ARMV6__) || defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) \
 	|| defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__) // gcc ARMv6
 #define __ARM_ARCH_VERSION__ 6
-#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
+#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
 #define __ARM_ARCH_VERSION__ 7
+#elif defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__)
+#define __ARM_ARCH_VERSION__ 8
 #elif defined(_M_ARM) // MSVC
 #define __ARM_ARCH_VERSION__ _M_ARM
+#elif defined(__TARGET_ARCH_ARM) // RVCT
+#define __ARM_ARCH_VERSION__ __TARGET_ARCH_ARM
 #else
 #define __ARM_ARCH_VERSION__ 0
+#endif
 #endif
 
 // Necessary for __NetBSD_Version__ (defined as VVRR00PP00) on NetBSD
@@ -95,7 +103,7 @@
 // debug function name
 #ifndef __NETBSD__
 #if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
-#	if __GNUC__ >= 2
+#	if __GNUC__ >= 2 || defined(WIN32)
 #		define __func__ __FUNCTION__
 #	else
 #		define __func__ ""
@@ -313,6 +321,13 @@ typedef uintptr_t uintptr;
 #define PRAGMA_GCC5(str)
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
 
+// Pragma macro only enabled on gcc >= 9
+#if defined(__GNUC__) && (GCC_VERSION >= 90000)
+#define PRAGMA_GCC9(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
+#define PRAGMA_GCC9(str)
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
+
 // fallthrough attribute only enabled on gcc >= 7.0
 #if defined(__GNUC__) && (GCC_VERSION >= 70000)
 #define FALLTHROUGH __attribute__ ((fallthrough));
@@ -403,13 +418,16 @@ typedef char bool;
 #define ISALPHA(c) (isalpha((unsigned char)(c)))
 #define ISCNTRL(c) (iscntrl((unsigned char)(c)))
 #define ISDIGIT(c) (isdigit((unsigned char)(c)))
+#define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
+#define ISBDIGIT(c) ((unsigned char)(c) == '0' || (unsigned char)(c) == '1')
+#define ISODIGIT(c) ((unsigned char)(c) >= '0' && (unsigned char)(c) <= '7')
+#define ISNSEPARATOR(c) ((unsigned char)(c) == '_')
 #define ISGRAPH(c) (isgraph((unsigned char)(c)))
 #define ISLOWER(c) (islower((unsigned char)(c)))
 #define ISPRINT(c) (isprint((unsigned char)(c)))
 #define ISPUNCT(c) (ispunct((unsigned char)(c)))
 #define ISSPACE(c) (isspace((unsigned char)(c)))
 #define ISUPPER(c) (isupper((unsigned char)(c)))
-#define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
 #define TOASCII(c) (toascii((unsigned char)(c)))
 #define TOLOWER(c) (tolower((unsigned char)(c)))
 #define TOUPPER(c) (toupper((unsigned char)(c)))

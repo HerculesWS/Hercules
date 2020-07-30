@@ -3,7 +3,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2013-2018  Hercules Dev Team
+# Copyright (C) 2013-2020 Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -244,6 +244,10 @@ sub parse($$) {
 			$rtinit = ' = DB_OPT_BASE';
 		} elsif ($x =~ /^enum\s+thread_priority$/) { # Known enum thread_priority
 			$rtinit = ' = THREADPRIO_NORMAL';
+		} elsif ($x =~ /^enum\s+market_buy_result$/) { # Known enum market_buy_result
+			$rtinit = ' = MARKET_BUY_RESULT_ERROR';
+		} elsif ($x =~ /^enum\s+unit_dir$/) { # Known enum unit_dir
+			$rtinit = ' = UNIT_DIR_UNDEFINED';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
@@ -371,7 +375,8 @@ foreach my $file (@files) { # Loop through the xml files
 				$t = ')(int fd, struct login_session_data *sd)'; # typedef LoginParseFunc
 				$def =~ s/^LoginParseFunc\s*\*\s*(.*)$/enum parsefunc_rcode(* $1) (int fd, struct login_session_data *sd)/;
 			}
-			next unless ref $t ne 'HASH' and $t =~ /^[^\[]/; # If it's not a string, or if it starts with an array subscript, we can skip it
+			next if ref $t eq 'HASH'; # Skip if it's not a string
+			next if $t =~ /^\)?\[.*\]$/; # Skip arrays or pointers to array
 
 			my $if = parse($t, $def);
 			next unless scalar keys %$if; # If it returns an empty hash reference, an error must've occurred
@@ -471,7 +476,7 @@ my $fileheader = <<"EOF";
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-$year  Hercules Dev Team
+ * Copyright (C) 2013-$year Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

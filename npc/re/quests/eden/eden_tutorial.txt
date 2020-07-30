@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2013-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Euphy
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -319,7 +319,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 			mes "if you really checked it?";
 			mes "Write down what material I asked you to get.";
 			next;
-			input .@inputstr$;
+			input(.@inputstr$);
 			if (.@inputstr$ == "10 Jellopy") {
 				mes "[Tutorial Instructor]";
 				mes "Good, you know.";

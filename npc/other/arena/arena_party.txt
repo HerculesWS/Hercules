@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Inkfish
-//= Copyright (C)  Samuray22
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Inkfish
+//= Copyright (C) Samuray22
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -165,6 +165,8 @@ OnTouch:
 }
 
 force_1-2,99,31,4	script	Slipslowrun#party	4_F_TELEPORTER,{
+	end;
+
 OnStart:
 	initnpctimer;
 	$arena_minptst = gettime(GETTIME_MINUTE);
@@ -1059,7 +1061,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			donpcevent "Ponox::OnStart";
 		}
 		specialeffect(EH_HIT5, AREA, playerattached());
- 		donpcevent "cast#pt::OnNomal1";
+		donpcevent "cast#pt::OnNomal1";
 		warp "arena_room",100,75;
 		end;
 	} else {
@@ -1078,7 +1080,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 			next;
 			switch( select( "Ok.","Let me think." ) )  {
 			case 1:
-				input .@arnparty$;
+				input(.@arnparty$);
 				mes "[Staff]";
 				mes "You have entered ^3131FF"+.@arnparty$+"^000000. Is it correct?";
 				next;

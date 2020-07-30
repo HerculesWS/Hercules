@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -172,26 +172,26 @@ static int homunculus_dead(struct homun_data *hd)
 }
 
 //Vaporize a character's homun. If flag, HP needs to be 80% or above.
-static int homunculus_vaporize(struct map_session_data *sd, enum homun_state flag)
+static int homunculus_vaporize(struct map_session_data *sd, enum homun_state state, bool force)
 {
 	struct homun_data *hd;
 
 	nullpo_ret(sd);
 
 	hd = sd->hd;
-	if (!hd || hd->homunculus.vaporize != HOM_ST_ACTIVE)
+	if (hd == NULL || hd->bl.prev == NULL || hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return 0;
 
 	if (status->isdead(&hd->bl))
 		return 0; //Can't vaporize a dead homun.
 
-	if (flag == HOM_ST_REST && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
+	if (!force && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
 		return 0;
 
 	hd->regen.state.block = 3; //Block regen while vaporized.
 	//Delete timers when vaporized.
 	homun->hunger_timer_delete(hd);
-	hd->homunculus.vaporize = flag;
+	hd->homunculus.vaporize = state;
 	if(battle_config.hom_setting&0x40)
 		memset(hd->blockskill, 0, sizeof(hd->blockskill));
 	clif->hominfo(sd, sd->hd, 0);
@@ -258,7 +258,7 @@ static int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve)
 	for( i = 0; i < MAX_SKILL_TREE && ( id = homun->dbs->skill_tree[c][i].id ) > 0; i++ ) {
 		if( hd->homunculus.hskill[ id - HM_SKILLBASE ].id )
 			continue; //Skill already known.
-		j = ( flag_evolve ) ? 10 : hd->homunculus.intimacy;
+		j = ( flag_evolve ) ? 1000 : hd->homunculus.intimacy;
 		if( j < homun->dbs->skill_tree[c][i].intimacylv )
 			continue;
 		if(!battle_config.skillfree) {
@@ -401,7 +401,7 @@ static bool homunculus_levelup(struct homun_data *hd)
 	if ( battle_config.homunculus_show_growth ) {
 		char output[256] ;
 		sprintf(output,
-			"Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f) ",
+			msg_sd(hd->master, 892), // Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f) 
 			growth_max_hp, growth_max_sp,
 			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
@@ -525,6 +525,21 @@ static bool homunculus_mutate(struct homun_data *hd, int homun_id)
 	return true;
 }
 
+static int homunculus_gainexp_real(struct homun_data *hd, unsigned int exp)
+{
+	nullpo_ret(hd);
+	nullpo_ret(hd->master);
+
+	hd->homunculus.exp += exp;
+
+	if (hd->master->state.showexp && hd->exp_next > 0) {
+		char output[256];
+		sprintf(output, msg_fd(hd->master->fd, 449), exp, ((float)exp / (float)hd->exp_next * (float)100));
+		clif_disp_onlyself(hd->master, output);
+	}
+	return 1;
+}
+
 static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 {
 	enum homun_type htype;
@@ -550,10 +565,10 @@ static int homunculus_gainexp(struct homun_data *hd, unsigned int exp)
 			break;
 	}
 
-	hd->homunculus.exp += exp;
+	homun->gainexp_real(hd, exp);
 
-	if(hd->homunculus.exp < hd->exp_next) {
-		clif->hominfo(hd->master,hd,0);
+	if (hd->homunculus.exp < hd->exp_next) {
+		clif->hominfo(hd->master, hd, 0);
 		return 0;
 	}
 
@@ -820,7 +835,7 @@ static int homunculus_db_search(int key, int type)
  * @param hom The homunculus source data.
  * @retval false in case of errors.
  */
-static bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *hom)
+static bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *hom, bool is_new)
 {
 	struct homun_data *hd;
 	int i = 0;
@@ -864,7 +879,9 @@ static bool homunculus_create(struct map_session_data *sd, const struct s_homunc
 
 	map->addiddb(&hd->bl);
 	status_calc_homunculus(hd,SCO_FIRST);
-	status_percent_heal(&hd->bl, 100, 100);
+	if (is_new) {
+		status_percent_heal(&hd->bl, 100, 100);
+	}
 
 	hd->hungry_timer = INVALID_TIMER;
 	return true;
@@ -921,6 +938,7 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 {
 	struct map_session_data *sd;
 	struct homun_data *hd;
+	bool is_new = false;
 
 	nullpo_retr(false, sh);
 
@@ -936,15 +954,17 @@ static bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, 
 	if (sd->status.char_id != sh->char_id && sd->status.hom_id != sh->hom_id)
 		return false;
 
-	if (sd->status.hom_id == 0) //Hom just created.
+	if (sd->status.hom_id == 0) { // Hom just created.
 		sd->status.hom_id = sh->hom_id;
+		is_new = true;
+	}
 
 	if (sd->hd != NULL) {
 		//uh? Overwrite the data.
 		memcpy(&sd->hd->homunculus, sh, sizeof sd->hd->homunculus);
 		sd->hd->homunculus.char_id = sd->status.char_id; // Correct char id if necessary.
 	} else {
-		homun->create(sd, sh);
+		homun->create(sd, sh, is_new);
 	}
 
 	hd = sd->hd;
@@ -1306,7 +1326,7 @@ static bool homunculus_read_skill_db_sub(char *split[], int columns, int current
 		homun->dbs->skill_tree[classid][j].need[k].lv = atoi(split[3+k*2+minJobLevelPresent+1]);
 	}
 
-	homun->dbs->skill_tree[classid][j].intimacylv = atoi(split[13+minJobLevelPresent]);
+	homun->dbs->skill_tree[classid][j].intimacylv = atoi(split[13+minJobLevelPresent]) * 100;
 
 	return true;
 }
@@ -1369,7 +1389,7 @@ static void homunculus_exp_db_read(void)
 			homun->dbs->exptable[MAX_LEVEL - 1] = 0;
 		}
 		fclose(fp);
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' levels in '"CL_WHITE"%s"CL_RESET"'.\n", j, filename[i]);
+		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' levels in '"CL_WHITE"%s/%s"CL_RESET"'.\n", j, map->db_path, filename[i]);
 	}
 }
 
@@ -1433,6 +1453,7 @@ void homunculus_defaults(void)
 	homun->evolve = homunculus_evolve;
 	homun->mutate = homunculus_mutate;
 	homun->gainexp = homunculus_gainexp;
+	homun->gainexp_real = homunculus_gainexp_real;
 	homun->add_intimacy = homunculus_add_intimacy;
 	homun->consume_intimacy = homunculus_consume_intimacy;
 	homun->healed = homunculus_healed;

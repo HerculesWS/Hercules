@@ -2,7 +2,7 @@
 * This file is part of Hercules.
 * http://herc.ws - http://github.com/HerculesWS/Hercules
 *
-* Copyright (C) 2018-2019  Hercules Dev Team
+* Copyright (C) 2018-2020 Hercules Dev Team
 *
 * Hercules is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,8 @@ static bool stylist_read_db_libconfig(void)
 {
 	struct config_t stylist_conf;
 	struct config_setting_t *stylist_db = NULL, *it = NULL;
-	const char *config_filename = "db/stylist_db.conf"; // FIXME hardcoded name
+	char config_filename[256];
+	libconfig->format_db_path("stylist_db.conf", config_filename, sizeof(config_filename));
 	int i = 0;
 
 	if (!libconfig->load_file(&stylist_conf, config_filename))

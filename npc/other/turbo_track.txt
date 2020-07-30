@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Joseph
-//= Copyright (C)  Elias
-//= Copyright (C)  Kisuka
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) Elias
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -4126,15 +4126,15 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				mes "you wish to have. To cancel,";
 				mes "please enter ''^3355FF0^000000.''";
 				next;
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Item Exchange Helper]";
 					mes "You have";
 					mes "canceled";
 					mes "your request.";
 					close;
 				}
-				else if (.@input < 0 || .@input > 50) {
+				if (.@input > 50) {
 					mes "[Item Exchange Helper]";
 					mes "Your request exceeds";
 					mes "the maximum limit. You";
@@ -4142,28 +4142,26 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					mes "of 50 tickets at once.";
 					close;
 				}
-				else {
-					.@total_point = 10 * .@input;
-					if (.@total_point > tt_point) {
-						mes "[Item Exchange Helper]";
-						mes "I'm sorry, but you do";
-						mes "not have enough Turbo";
-						mes "Track Points. Please check";
-						mes "the amount of Turbo Track";
-						mes "Points you have earned before";
-						mes "redeeming your points again.";
-						close;
-					}
-					tt_point -= .@total_point;
-					getitem Warp_Free_Ticket,.@input;
+				.@total_point = 10 * .@input;
+				if (.@total_point > tt_point) {
 					mes "[Item Exchange Helper]";
-					mes "Thank you for";
-					mes "your patronage.";
-					mes "We hope you enjoy";
-					mes "your time here in";
-					mes "the Turbo Track~";
+					mes "I'm sorry, but you do";
+					mes "not have enough Turbo";
+					mes "Track Points. Please check";
+					mes "the amount of Turbo Track";
+					mes "Points you have earned before";
+					mes "redeeming your points again.";
 					close;
 				}
+				tt_point -= .@total_point;
+				getitem Warp_Free_Ticket,.@input;
+				mes "[Item Exchange Helper]";
+				mes "Thank you for";
+				mes "your patronage.";
+				mes "We hope you enjoy";
+				mes "your time here in";
+				mes "the Turbo Track~";
+				close;
 			case 2:
 				mes "[Item Exchange Helper]";
 				mes "Each Magic Scroll costs";
@@ -4214,15 +4212,15 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				mes "you would like to receive.";
 				mes "To cancel, enter ''^3355FF0^000000.''";
 				next;
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Item Exchange Helper]";
 					mes "You have";
 					mes "canceled";
 					mes "your request.";
 					close;
 				}
-				else if (.@input < 0 || .@input > 50) {
+				if (.@input > 50) {
 					mes "[Item Exchange Helper]";
 					mes "I'm sorry, but your";
 					mes "request has exceeded the";
@@ -4230,28 +4228,26 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					mes "request up to 50 scrolls at once.";
 					close;
 				}
-				else {
-					.@total_point = 12 * .@input;
-					if (.@total_point > tt_point) {
-						mes "[Item Exchange Helper]";
-						mes "I'm sorry, but you do";
-						mes "not have enough Turbo";
-						mes "Track Points. Please check";
-						mes "the amount of Turbo Track";
-						mes "Points you have earned before";
-						mes "redeeming your points again.";
-						close;
-					}
-					tt_point -= .@total_point;
-					getitem .@scroll,.@input;
+				.@total_point = 12 * .@input;
+				if (.@total_point > tt_point) {
 					mes "[Item Exchange Helper]";
-					mes "Thank you for";
-					mes "your patronage.";
-					mes "We hope you enjoy";
-					mes "your time here in";
-					mes "the Turbo Track~";
+					mes "I'm sorry, but you do";
+					mes "not have enough Turbo";
+					mes "Track Points. Please check";
+					mes "the amount of Turbo Track";
+					mes "Points you have earned before";
+					mes "redeeming your points again.";
 					close;
 				}
+				tt_point -= .@total_point;
+				getitem .@scroll,.@input;
+				mes "[Item Exchange Helper]";
+				mes "Thank you for";
+				mes "your patronage.";
+				mes "We hope you enjoy";
+				mes "your time here in";
+				mes "the Turbo Track~";
+				close;
 			case 3:
 				mes "[Item Exchange Helper]";
 				mes "You can exchange";
@@ -4298,15 +4294,15 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				mes "diamonds you would like to receive.";
 				mes "To cancel, enter ''^3355FF0^000000.''";
 				next;
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Item Exchange Helper]";
 					mes "You have";
 					mes "canceled";
 					mes "your request.";
 					close;
 				}
-				else if (.@input < 0 || .@input > 10) {
+				if (.@input > 10) {
 					mes "[Item Exchange Helper]";
 					mes "Your request exceeds";
 					mes "the maximum limit. You";
@@ -4314,28 +4310,26 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					mes "of 10 diamonds at once.";
 					close;
 				}
-				else {
-					.@total_point = 150 * .@input;
-					if (.@total_point > tt_point) {
-						mes "[Item Exchange Helper]";
-						mes "I'm sorry, but you do";
-						mes "not have enough Turbo";
-						mes "Track Points. Please check";
-						mes "the amount of Turbo Track";
-						mes "Points you have earned before";
-						mes "redeeming your points again.";
-						close;
-					}
-					tt_point -= .@total_point;
-					getitem Crystal_Jewel__,.@input;
+				.@total_point = 150 * .@input;
+				if (.@total_point > tt_point) {
 					mes "[Item Exchange Helper]";
-					mes "Thank you for";
-					mes "your patronage.";
-					mes "We hope you enjoy";
-					mes "your time here in";
-					mes "the Turbo Track~";
+					mes "I'm sorry, but you do";
+					mes "not have enough Turbo";
+					mes "Track Points. Please check";
+					mes "the amount of Turbo Track";
+					mes "Points you have earned before";
+					mes "redeeming your points again.";
 					close;
 				}
+				tt_point -= .@total_point;
+				getitem Crystal_Jewel__,.@input;
+				mes "[Item Exchange Helper]";
+				mes "Thank you for";
+				mes "your patronage.";
+				mes "We hope you enjoy";
+				mes "your time here in";
+				mes "the Turbo Track~";
+				close;
 			case 5:
 				mes "[Item Exchange Helper]";
 				mes "You can exchange";
@@ -4345,15 +4339,15 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				mes "that you'd like to receive.";
 				mes "To cancel, enter ''^3355FF0^000000.''";
 				next;
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Item Exchange Helper]";
 					mes "You have";
 					mes "canceled";
 					mes "your request.";
 					close;
 				}
-				else if (.@input < 0 || .@input > 10) {
+				if (.@input > 10) {
 					mes "[Item Exchange Helper]";
 					mes "Your request exceeds";
 					mes "the maximum limit. You";
@@ -4361,28 +4355,26 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					mes "of 10 Gift Boxes at once.";
 					close;
 				}
-				else {
-					.@total_point = 300 * .@input;
-					if (.@total_point > tt_point) {
-						mes "[Item Exchange Helper]";
-						mes "I'm sorry, but you do";
-						mes "not have enough Turbo";
-						mes "Track Points. Please check";
-						mes "the amount of Turbo Track";
-						mes "Points you have earned before";
-						mes "redeeming your points again.";
-						close;
-					}
-					tt_point -= .@total_point;
-					getitem Gift_Box,.@input;
+				.@total_point = 300 * .@input;
+				if (.@total_point > tt_point) {
 					mes "[Item Exchange Helper]";
-					mes "Thank you for";
-					mes "your patronage.";
-					mes "We hope you enjoy";
-					mes "your time here in";
-					mes "the Turbo Track~";
+					mes "I'm sorry, but you do";
+					mes "not have enough Turbo";
+					mes "Track Points. Please check";
+					mes "the amount of Turbo Track";
+					mes "Points you have earned before";
+					mes "redeeming your points again.";
 					close;
 				}
+				tt_point -= .@total_point;
+				getitem Gift_Box,.@input;
+				mes "[Item Exchange Helper]";
+				mes "Thank you for";
+				mes "your patronage.";
+				mes "We hope you enjoy";
+				mes "your time here in";
+				mes "the Turbo Track~";
+				close;
 			case 6:
 				mes "[Item Exchange Helper]";
 				mes "You can exchange";
@@ -4392,15 +4384,15 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				mes "that you'd like to receive.";
 				mes "To cancel, enter ''^3355FF0^000000.''";
 				next;
-				input .@input;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Item Exchange Helper]";
 					mes "You have";
 					mes "canceled";
 					mes "your request.";
 					close;
 				}
-				else if (.@input < 0 || .@input > 10) {
+				if (.@input > 10) {
 					mes "[Item Exchange Helper]";
 					mes "Your request exceeds";
 					mes "the maximum limit. You";
@@ -4408,28 +4400,26 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 					mes "of 10 potions at once.";
 					close;
 				}
-				else {
-					.@total_point = 400 * .@input;
-					if (.@total_point > tt_point) {
-						mes "[Item Exchange Helper]";
-						mes "I'm sorry, but you do";
-						mes "not have enough Turbo";
-						mes "Track Points. Please check";
-						mes "the amount of Turbo Track";
-						mes "Points you have earned before";
-						mes "redeeming your points again.";
-						close;
-					}
-					tt_point -= .@total_point;
-					getitem Speed_Up_Potion,.@input;
+				.@total_point = 400 * .@input;
+				if (.@total_point > tt_point) {
 					mes "[Item Exchange Helper]";
-					mes "Thank you for";
-					mes "your patronage.";
-					mes "We hope you enjoy";
-					mes "your time here in";
-					mes "the Turbo Track~";
+					mes "I'm sorry, but you do";
+					mes "not have enough Turbo";
+					mes "Track Points. Please check";
+					mes "the amount of Turbo Track";
+					mes "Points you have earned before";
+					mes "redeeming your points again.";
 					close;
 				}
+				tt_point -= .@total_point;
+				getitem Speed_Up_Potion,.@input;
+				mes "[Item Exchange Helper]";
+				mes "Thank you for";
+				mes "your patronage.";
+				mes "We hope you enjoy";
+				mes "your time here in";
+				mes "the Turbo Track~";
+				close;
 			case 7:
 				mes "[Item Exchange Helper]";
 				mes "This Item Exchange";
@@ -4506,59 +4496,57 @@ turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 			mes "Please enter the number of times you wish to convert 10 Arena Points into Turbo Track Points. The largest value you may enter";
 			mes "is 20. To cancel, enter '^3355FF0^000000.'";
 			next;
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Turbo Track Point Manager]";
 				mes "You have";
 				mes "canceled";
 				mes "your request.";
 				close;
 			}
-			else if (.@input > 20) {
+			if (.@input > 20) {
 				mes "[Turbo Track Point Manager]";
 				mes "Your request exceeds";
 				mes "the maximum limit. Please";
 				mes "enter a value no greater than 20.";
 				close;
 			}
+			.@want_point1 = 10 * .@input;
+			.@want_point = 5 * .@input;
+			.@my_turbo_all = tt_point+.@want_point;
+			.@my_arena_all = arena_point-.@want_point1;
+			if (.@my_turbo_all > 28999) {
+				mes "[Turbo Track Point Manager]";
+				mes "Unfortunately, your Turbo Track Points will exceed the maximum limit if we proceed with point conversion. Please spend more";
+				mes "of your Turbo Track Points before using this service. Thank you.";
+				close;
+			}
+			if (.@my_arena_all < 0) {
+				mes "[Turbo Track Point Manager]";
+				mes "I am sorry, but you do";
+				mes "not have enough Arena Points";
+				mes "to perform this Turbo Track";
+				mes "Point conversion.";
+				close;
+			}
 			else {
-				.@want_point1 = 10 * .@input;
-				.@want_point = 5 * .@input;
-				.@my_turbo_all = tt_point+.@want_point;
-				.@my_arena_all = arena_point-.@want_point1;
-				if (.@my_turbo_all > 28999) {
-					mes "[Turbo Track Point Manager]";
-					mes "Unfortunately, your Turbo Track Points will exceed the maximum limit if we proceed with point conversion. Please spend more";
-					mes "of your Turbo Track Points before using this service. Thank you.";
-					close;
-				}
-				if (.@my_arena_all < 0) {
-					mes "[Turbo Track Point Manager]";
-					mes "I am sorry, but you do";
-					mes "not have enough Arena Points";
-					mes "to perform this Turbo Track";
-					mes "Point conversion.";
-					close;
-				}
-				else {
-					mes "[Turbo Track Point Manager]";
-					mes "You have converted";
-					mes "10 Arena Points into";
-					mes "Turbo Track Points " + .@input + " times.";
-					mes "A total of " + .@want_point1 + " Arena Points";
-					mes "has been converted into";
-					mes "" + .@want_point +" Turbo Track Points.";
-					arena_point = .@my_arena_all; //arena_point
-					tt_point = .@my_turbo_all;
-					next;
-					mes "[Turbo Track Point Manager]";
-					mes "" + strcharinfo(PC_NAME) + ",";
-					mes "you now have";
-					mes "^00688B" + tt_point + "^000000 Turbo Track Points";
-					mes "and ^4682B4" + arena_point + "^000000 Arena Points.";
-					mes "Thank you for your patronage.";
-					close;
-				}
+				mes "[Turbo Track Point Manager]";
+				mes "You have converted";
+				mes "10 Arena Points into";
+				mes "Turbo Track Points " + .@input + " times.";
+				mes "A total of " + .@want_point1 + " Arena Points";
+				mes "has been converted into";
+				mes "" + .@want_point +" Turbo Track Points.";
+				arena_point = .@my_arena_all; //arena_point
+				tt_point = .@my_turbo_all;
+				next;
+				mes "[Turbo Track Point Manager]";
+				mes "" + strcharinfo(PC_NAME) + ",";
+				mes "you now have";
+				mes "^00688B" + tt_point + "^000000 Turbo Track Points";
+				mes "and ^4682B4" + arena_point + "^000000 Arena Points.";
+				mes "Thank you for your patronage.";
+				close;
 			}
 		case 6:
 			mes "[Turbo Track Point Manager]";
