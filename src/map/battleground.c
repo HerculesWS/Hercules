@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,13 +169,13 @@ static int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type fl
 		switch (flag) {
 			default:
 			case BGTL_QUIT:
-				sprintf(output, "Server : %s has quit the game...", sd->status.name);
+				sprintf(output, msg_txt(464), sd->status.name); // Server : %s has quit the game...
 				break;
 			case BGTL_LEFT:
-				sprintf(output, "Server : %s is leaving the battlefield...", sd->status.name);
+				sprintf(output, msg_txt(454), sd->status.name); // Server : %s is leaving the battlefield...
 				break;
 			case BGTL_AFK:
-				sprintf(output, "Server : %s has been afk-kicked from the battlefield...", sd->status.name);
+				sprintf(output, msg_txt(455), sd->status.name); // Server : %s has been afk-kicked from the battlefield...
 				break;
 		}
 		clif->bg_message(bgd, 0, "Server", output);
@@ -860,9 +860,9 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 	if ( ( tick = pc_readglobalreg(sd, script->add_variable(bg->gdelay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
-			sprintf(response, "You are a deserter! Wait %u minute(s) before you can apply again", (tick - tsec) / 60);
+			sprintf(response, msg_sd(sd, 456), (tick - tsec) / 60); // You are a deserter! Wait %u minute(s) before you can apply again
 		else
-			sprintf(response, "You are a deserter! Wait %u seconds before you can apply again", (tick - tsec));
+			sprintf(response, msg_sd(sd, 457), (tick - tsec)); // You are a deserter! Wait %u seconds before you can apply again
 		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_DESERTER;
 	}
@@ -870,9 +870,9 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 	if ( ( tick = pc_readglobalreg(sd, script->add_variable(arena->delay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
-			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %u minute(s)", (tick - tsec) / 60);
+			sprintf(response, msg_sd(sd, 458), (tick - tsec) / 60); // You can't reapply to this arena so fast. Apply to the different arena or wait %u minute(s)
 		else
-			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %u seconds", (tick - tsec));
+			sprintf(response, msg_sd(sd, 459), (tick - tsec)); // You can't reapply to this arena so fast. Apply to the different arena or wait %u seconds
 		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_COOLDOWN;
 	}
@@ -894,9 +894,9 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 				if ( count < arena->min_team_players ) {
 					char response[121];
 					if( count != sd->guild->connect_member && sd->guild->connect_member >= arena->min_team_players )
-						sprintf(response, "Can't apply: not enough members in your team/guild that have not entered the queue in individual mode, minimum is %d", arena->min_team_players);
+						sprintf(response, msg_sd(sd, 460), arena->min_team_players); // Can't apply: not enough members in your team/guild that have not entered the queue in individual mode, minimum is %d
 					else
-						sprintf(response, "Can't apply: not enough members in your team/guild, minimum is %d", arena->min_team_players);
+						sprintf(response, msg_sd(sd, 461), arena->min_team_players); // Can't apply: not enough members in your team/guild, minimum is %d
 					clif->messagecolor_self(sd->fd, COLOR_RED, response);
 					return BGQA_FAIL_TEAM_COUNT;
 				}
@@ -926,9 +926,9 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 					if( count < arena->min_team_players ) {
 						char response[121];
 						if( count != p->party.count && p->party.count >= arena->min_team_players )
-							sprintf(response, "Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d", arena->min_team_players);
+							sprintf(response, msg_sd(sd, 462), arena->min_team_players); // Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d
 						else
-							sprintf(response, "Can't apply: not enough members in your team/party, minimum is %d",arena->min_team_players);
+							sprintf(response, msg_sd(sd, 463), arena->min_team_players); // Can't apply: not enough members in your team/party, minimum is %d
 						clif->messagecolor_self(sd->fd, COLOR_RED, response);
 						return BGQA_FAIL_TEAM_COUNT;
 					}

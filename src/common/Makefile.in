@@ -1,8 +1,8 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2012-2018  Hercules Dev Team
-# Copyright (C)  Athena Dev Teams
+# Copyright (C) 2012-2020 Hercules Dev Team
+# Copyright (C) Athena Dev Teams
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,6 +32,19 @@ LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
                 scanner.o strbuf.o)
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
+
+ifeq (@USE_LIBBACKTRACE@,yes)
+	LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
+	LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
+	              dwarf.o @LIBBACKTRACE_FORMAT_FILE@ fileline.o mmapio.o mmap.o posix.o print.o \
+	              simple.o sort.o state.o)
+	LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
+	              backtrace-supported.h config.h filenames.h internal.h)
+else
+	LIBBACKTRACE_D =
+	LIBBACKTRACE_OBJ =
+	LIBBACKTRACE_H =
+endif
 
 MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
@@ -95,7 +108,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/common/Makefile
 
-$(SYSINFO_INC): $(COMMON_C) $(COMMON_PH) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(COMMON_C) $(COMMON_PH) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -121,7 +134,7 @@ obj_sql/common_sql.a: $(COMMON_SQL_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_sql/common_sql.a $(COMMON_SQL_OBJ)
 
-common: $(COMMON_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common.a Makefile
+common: $(COMMON_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) obj_all/common.a Makefile
 
 common_sql: $(COMMON_SQL_OBJ) obj_sql/common_sql.a Makefile
 
@@ -134,14 +147,18 @@ $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
 
+$(LIBBACKTRACE_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBBACKTRACE_D)
+
 .SECONDEXPANSION:
 
-obj_all/sysinfo.o: sysinfo.c $(filter sysinfo.p.h, $(COMMON_PH)) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(SYSINFO_INC) | obj_all
+obj_all/sysinfo.o: sysinfo.c $(filter sysinfo.p.h, $(COMMON_PH)) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) $(SYSINFO_INC) | obj_all
 
-obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
+obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | $(SYSINFO_INC) obj_all
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
-obj_sql/%.o: %.c $$(filter %.p.h, $(COMMON_PH)) $(COMMON_H) $(COMMON_SQL_H) $(CONFIG_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_sql
+obj_sql/%.o: %.c $$(filter %.p.h, $(COMMON_PH)) $(COMMON_H) $(COMMON_SQL_H) $(CONFIG_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | $(SYSINFO_INC) obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

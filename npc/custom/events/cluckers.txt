@@ -74,11 +74,11 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 			case 3:
 				mes "[Cluckers]";
 				mes "Cluck cluck? Cluck??? ^FF0000~What should the prize for winning be? Please input the ID.~^000000";
-				input $cluck_item_id;
+				input($cluck_item_id, 0);
 				next;
 				mes "[Cluckers]";
 				mes "Cluck? cluuuck? ^FF0000~How many if this item should I give away?~^000000";
-				input $cluck_item_amount;
+				input($cluck_item_amount, 0);
 				next;
 				mes "[Cluckers]";
 				mes "Cluck cluck..? Cluck. ^FF0000~So, the prize is^000000 ^008000"+ $cluck_item_amount +" "+ getitemname($cluck_item_id) +"^000000? ^FF0000Great.~^000000";

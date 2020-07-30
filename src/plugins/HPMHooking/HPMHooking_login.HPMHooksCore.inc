@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2019  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -212,6 +212,10 @@ struct {
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
 	struct HPMHookPoint *HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post;
+	struct HPMHookPoint *HP_libconfig_set_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_set_db_path_post;
+	struct HPMHookPoint *HP_libconfig_format_db_path_pre;
+	struct HPMHookPoint *HP_libconfig_format_db_path_post;
 	struct HPMHookPoint *HP_libconfig_read_pre;
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
@@ -516,6 +520,10 @@ struct {
 	struct HPMHookPoint *HP_mutex_cond_signal_post;
 	struct HPMHookPoint *HP_mutex_cond_broadcast_pre;
 	struct HPMHookPoint *HP_mutex_cond_broadcast_post;
+	struct HPMHookPoint *HP_nullpo_init_pre;
+	struct HPMHookPoint *HP_nullpo_init_post;
+	struct HPMHookPoint *HP_nullpo_final_pre;
+	struct HPMHookPoint *HP_nullpo_final_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
 	struct HPMHookPoint *HP_packets_init_pre;
@@ -1013,6 +1021,10 @@ struct {
 	int HP_PRIV__lclif_parse_CA_REQ_HASH_post;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_pre;
 	int HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post;
+	int HP_libconfig_set_db_path_pre;
+	int HP_libconfig_set_db_path_post;
+	int HP_libconfig_format_db_path_pre;
+	int HP_libconfig_format_db_path_post;
 	int HP_libconfig_read_pre;
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
@@ -1317,6 +1329,10 @@ struct {
 	int HP_mutex_cond_signal_post;
 	int HP_mutex_cond_broadcast_pre;
 	int HP_mutex_cond_broadcast_post;
+	int HP_nullpo_init_pre;
+	int HP_nullpo_init_post;
+	int HP_nullpo_final_pre;
+	int HP_nullpo_final_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
 	int HP_packets_init_pre;

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,14 @@
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'
 
+#ifndef MAX_DIR_PATH
+#ifdef WIN32
+#define MAX_DIR_PATH MAX_PATH
+#else
+#define MAX_DIR_PATH 2048
+#endif
+#endif
+
 //Caps values to min/max
 #define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
 
@@ -39,7 +47,8 @@
 void WriteDump(FILE* fp, const void* buffer, size_t length);
 void ShowDump(const void* buffer, size_t length);
 
-void findfile(const char *p, const char *pat, void (func)(const char*));
+void findfile(const char *p, const char *pat, void (func)(const char *, void *), void *context);
+bool is_file(const char *path);
 bool exists(const char* filename);
 
 /// calculates the value of A / B, in percent (rounded down)

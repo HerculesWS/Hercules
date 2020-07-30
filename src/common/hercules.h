@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2015  Hercules Dev Team
+ * Copyright (C) 2015-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,15 @@
 #include "config/core.h"
 #include "common/cbasetypes.h"
 
+#ifdef HERCULES_CORE
+#define HPExport static
+#else  // HERCULES_CORE
 #ifdef WIN32
-	#define HPExport __declspec(dllexport)
-#else
-	#define HPExport __attribute__((visibility("default")))
-#endif
+#define HPExport __declspec(dllexport)
+#else  // WIN32
+#define HPExport __attribute__((visibility("default")))
+#endif  // WIN32
+#endif  // HERCULES_CORE
 
 #define HPShared extern
 

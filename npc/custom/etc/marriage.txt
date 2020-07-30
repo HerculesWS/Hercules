@@ -105,7 +105,7 @@ prt_church,100,123,4	script	Vomars	1_M_PASTOR,{
 		npctalk "Ladies and gentlemen, "+strcharinfo(PC_NAME)+" has an objection to the wedding!";
 		SF_wed_end();
 		mes "Why should they not be wed?";
-		input $@msg$;
+		input($@msg$);
 		npctalk strcharinfo(PC_NAME)+"'s objection is: "+$@msg$;
 		emotion e_sob;
 		mes "I see...";

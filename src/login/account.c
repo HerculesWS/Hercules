@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -632,7 +632,8 @@ static void account_mmo_save_accreg2(AccountDB *self, int fd, int account_id, in
 	sql_handle = db->accounts;
 	if (count) {
 		int cursor = 14, i;
-		char key[SCRIPT_VARNAME_LENGTH+1], sval[254];
+		char key[SCRIPT_VARNAME_LENGTH + 1];
+		char sval[SCRIPT_STRING_VAR_LENGTH + 1];
 
 		for (i = 0; i < count; i++) {
 			unsigned int index;
@@ -657,8 +658,8 @@ static void account_mmo_save_accreg2(AccountDB *self, int fd, int account_id, in
 				/* str */
 				case 2:
 					len = RFIFOB(fd, cursor);
-					safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
-					cursor += len + 1;
+					safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len + 1));
+					cursor += len + 2;
 					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", db->global_acc_reg_str_db, account_id, key, index, sval) )
 						Sql_ShowDebug(sql_handle);
 					break;
@@ -719,13 +720,13 @@ static void account_mmo_send_accreg2(AccountDB *self, int fd, int account_id, in
 		plen += 4;
 
 		SQL->GetData(sql_handle, 2, &data, NULL);
-		len = strlen(data)+1;
+		len = strlen(data);
 
-		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
+		WFIFOB(fd, plen) = (unsigned char)len; // Won't be higher; the column size is 255.
 		plen += 1;
 
-		safestrncpy(WFIFOP(fd,plen), data, len);
-		plen += len;
+		safestrncpy(WFIFOP(fd, plen), data, len + 1);
+		plen += len + 1;
 
 		WFIFOW(fd, 14) += 1;
 

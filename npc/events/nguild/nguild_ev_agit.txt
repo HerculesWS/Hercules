@@ -9,10 +9,10 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Lupus
-//= Copyright (C)  kobra_k88
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ function	script	F_AgitBreak	{
 
 	setcastledata .@map$,1, .@GID;
 	mapannounce .@map$,"The emperium has been destroyed.",bc_map,0x00CCFF;
-	announce "The [" + getcastlename(.@map$) + "] castle has been conquered by the [" + getguildname(.@GID) + "] guild.",bc_all;
+	announce "The [" + getcastlename(.@map$) + "] castle has been conquered by the [" + getguildinfo(GUILDINFO_NAME, .@GID) + "] guild.",bc_all;
 	donpcevent "::OnRecvCastle"+.@castle$;
 
 	disablenpc "Kafra Staff#"+.@castle$;

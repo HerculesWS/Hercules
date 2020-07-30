@@ -170,13 +170,13 @@ OnEnd:
 
 function Add {
 	if (getitemname(getarg(1)) == "null") {
-		debugmes "Quest reward #"+getarg(1)+" invalid (skipped).";
+		consolemes(CONSOLEMES_WARNING, "Quest reward #"+getarg(1)+" invalid (skipped).");
 		return;
 	}
 	setarray .@j[0],getarg(2),getarg(3),getarg(4);
 	for(set .@i,5; .@i<getargcount(); set .@i,.@i+2) {
 		if (getitemname(getarg(.@i)) == "null") {
-			debugmes "Quest requirement #"+getarg(.@i)+" invalid (skipped).";
+			consolemes(CONSOLEMES_WARNING,  "Quest requirement #"+getarg(.@i)+" invalid (skipped).");
 			return;
 		} else
 			setarray .@j[.@i-2],getarg(.@i),getarg(.@i+1);

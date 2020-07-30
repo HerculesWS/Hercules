@@ -1,0 +1,78 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Mapflag: Disable pet in map.
+//================= Current Version =======================================
+//= 1.0
+//================= Description ===========================================
+//= Players can't hatch pet in the map, existing pet will return to egg.
+//=========================================================================
+
+// GvG Arenas =============
+// guild_vs1	mapflag	nopet
+// guild_vs2	mapflag	nopet
+// guild_vs3	mapflag	nopet
+// guild_vs4	mapflag	nopet
+// guild_vs5	mapflag	nopet
+
+// Guild Castles ==========
+// aldeg_cas01	mapflag	nopet
+// aldeg_cas02	mapflag	nopet
+// aldeg_cas03	mapflag	nopet
+// aldeg_cas04	mapflag	nopet
+// aldeg_cas05	mapflag	nopet
+// gefg_cas01	mapflag	nopet
+// gefg_cas02	mapflag	nopet
+// gefg_cas03	mapflag	nopet
+// gefg_cas04	mapflag	nopet
+// gefg_cas05	mapflag	nopet
+// payg_cas01	mapflag	nopet
+// payg_cas02	mapflag	nopet
+// payg_cas03	mapflag	nopet
+// payg_cas04	mapflag	nopet
+// payg_cas05	mapflag	nopet
+// prtg_cas01	mapflag	nopet
+// prtg_cas02	mapflag	nopet
+// prtg_cas03	mapflag	nopet
+// prtg_cas04	mapflag	nopet
+// prtg_cas05	mapflag	nopet
+// schg_cas01	mapflag	nopet
+// schg_cas02	mapflag	nopet
+// schg_cas03	mapflag	nopet
+// schg_cas04	mapflag	nopet
+// schg_cas05	mapflag	nopet
+// arug_cas01	mapflag	nopet
+// arug_cas02	mapflag	nopet
+// arug_cas03	mapflag	nopet
+// arug_cas04	mapflag	nopet
+// arug_cas05	mapflag	nopet
+
+// Novice Guild Castles ===
+// n_castle	mapflag	nopet
+// nguild_alde	mapflag	nopet
+// nguild_gef	mapflag	nopet
+// nguild_pay	mapflag	nopet
+// nguild_prt	mapflag	nopet

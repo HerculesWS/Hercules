@@ -9,12 +9,12 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Joseph
-//= Copyright (C)  Euphy
-//= Copyright (C)  Masao
-//= Copyright (C)  Gepard
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Gepard
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -243,7 +243,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hmm, I wanted to tell you...";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "" + .@inputstr$ + "";
 		next;
@@ -483,7 +483,7 @@ OnTouch:
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Pain... What kind of faults have I had?";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I confess my guilt to the Almighty God Odin.";

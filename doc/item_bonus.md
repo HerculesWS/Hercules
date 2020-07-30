@@ -5,7 +5,7 @@
 > This file is part of Hercules.
 > http://herc.ws - http://github.com/HerculesWS/Hercules
 > 
-> Copyright (C) 2012-2018 Hercules Dev Team
+> Copyright (C) 2012-2020 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
 > 
 > Hercules is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -274,6 +274,8 @@ bonus2 bMagicAtkEle,`e`,`n`;         | Increases damage of element `e` magic by 
 bonus3 bAddEle,`e`,`n`,`bf`;         | +n% physical damage against element `e`
 bonus2 bSubEle,`e`,`n`;              | +n% Damage reduction against element `e`
 bonus3 bSubEle,`e`,`n`,`bf`;         | +n% Damage reduction against element `e`.
+bonus3 bSubDefEle,`e`,`n`,`i`;       | +n% Physical damage reduction against defense element `e`.<br/> i: <br/> Flags (bitfield)<br/> &1: Reduce damage from monsters.<br/> &2: Reduce damage from players.
+bonus3 bMagicSubDefEle,`e`,`n`,`i`;  | +n% Magical damage reduction against defense element `e`.<br/> i: <br/> Flags (bitfield)<br/> &1: Reduce damage from monsters.<br/> &2: Reduce damage from players.
 bonus2 bAddDamageClass,`c`,`x`;      | +n% extra physical damage against monsters of class `c`
 bonus2 bAddMagicDamageClass,`c`,`x`; | +n% extra magical damage against monsters of class `c`
 bonus2 bAddDefClass,`c`,`x`;         | +n% physical damage reduction against monsters of class `c`

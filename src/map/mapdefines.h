@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 #ifndef MAP_MAPDEFINES_H
 #define MAP_MAPDEFINES_H
 
+#include "common/mmo.h" // packet versions
+
 #define MAX_NPC_PER_MAP 512
 #define AREA_SIZE (battle->bc->area_size)
 #define CHAT_AREA_SIZE (battle->bc->chat_area_size)
@@ -28,7 +30,15 @@
 #define DAMAGELOG_SIZE 30
 #define LOOTITEM_SIZE 10
 #define MAX_MOBSKILL 50
+
+#ifndef MAX_MOB_LIST_PER_MAP
+#ifdef RENEWAL
 #define MAX_MOB_LIST_PER_MAP 100
+#else
+#define MAX_MOB_LIST_PER_MAP 115
+#endif
+#endif
+
 #define MAX_EVENTQUEUE 2
 #define MAX_EVENTTIMER 32
 #define NATURAL_HEAL_INTERVAL 500
@@ -57,8 +67,14 @@
 #define MAPID_UPPERMASK 0x0fff
 #define MAPID_THIRDMASK (JOBL_THIRD|MAPID_UPPERMASK)
 
-// Max size for inputs to Graffiti, Talkie Box and Vending text prompts
+// Max size for inputs to Vending text prompts
 #define MESSAGE_SIZE (79 + 1)
+// Max size for inputs to Graffiti, Talkie Box text prompts
+#if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
+#define TALKBOX_MESSAGE_SIZE 21
+#else
+#define TALKBOX_MESSAGE_SIZE (79 + 1)
+#endif
 // String length you can write in the 'talking box'
 #define CHATBOX_SIZE (70 + 1)
 // Chatroom-related string sizes

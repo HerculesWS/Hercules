@@ -9,11 +9,11 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Yommy
-//= Copyright (C)  Zephyrus
-//= Copyright (C)  L0ne_W0lf
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Yommy
+//= Copyright (C) Zephyrus
+//= Copyright (C) L0ne_W0lf
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -44,14 +44,19 @@
 //=========================================================================
 
 payon,157,146,6	script	Suhnbi#cash	4_M_03,{
-	disable_items;
-	mes "[Suhnbi]";
-	mes "I am the Armsmith";
-	mes "I can refine all kinds of weapons,";
-	mes "armor and equipment, so let me";
-	mes "know what you want to refine.";
-	next;
+	mes("[Suhnbi]");
+	mes("I am the Armsmith");
+	mes("I can refine all kinds of weapons,");
+	mes("armor and equipment, so let me");
+	mes("know what you want to refine.");
 
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+	}
+	next();
+
+	disable_items;
 	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
 	.@menu$ = "";
 	for(.@i = 1; .@i<=10; ++.@i) {

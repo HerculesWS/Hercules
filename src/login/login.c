@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1406,10 +1406,10 @@ static void login_client_login_mobile_otp_request(int fd, struct login_session_d
 static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
 static void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status)
 {
-	WFIFOHEAD(fd,3);
-	WFIFOW(fd,0) = 0x2711;
-	WFIFOB(fd,2) = status;
-	WFIFOSET(fd,3);
+	WFIFOHEAD(fd, 3);
+	WFIFOW(fd, 0) = 0x2711;
+	WFIFOB(fd, 2) = status;
+	WFIFOSET2(fd, 3);
 }
 
 // CA_CHARSERVERCONNECT
@@ -1758,7 +1758,7 @@ static bool login_config_read_permission_hash(const char *filename, struct confi
 static void login_clear_dnsbl_servers(void)
 {
 	while (VECTOR_LENGTH(login->config->dnsbl_servers) > 0) {
-		aFree(&VECTOR_POP(login->config->dnsbl_servers));
+		aFree(VECTOR_POP(login->config->dnsbl_servers));
 	}
 	VECTOR_CLEAR(login->config->dnsbl_servers);
 }

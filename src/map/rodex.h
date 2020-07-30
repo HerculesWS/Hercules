@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2017 Hercules Dev Team
+ * Copyright (C) 2017-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,6 +74,8 @@ struct rodex_interface {
 	void (*get_items) (struct map_session_data *sd, int8 opentype, int64 mail_id);
 	void (*delete_mail) (struct map_session_data *sd, int64 mail_id);
 	void (*clean) (struct map_session_data *sd, int8 flag);
+	void (*getZenyAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny);
+	void (*getItemsAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int count, const struct rodex_item *items);
 };
 
 #ifdef HERCULES_CORE

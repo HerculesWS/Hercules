@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -330,6 +330,8 @@ static int party_recv_info(const struct party *sp, int char_id)
 		party->member_withdraw(sp->party_id, sd->status.account_id, sd->status.char_id);
 	}
 
+	int option_auto_changed = p->state.option_auto_changed; // Preserve state.
+
 	memcpy(&p->party, sp, sizeof(struct party));
 	memset(&p->state, 0, sizeof(p->state));
 	memset(&p->data, 0, sizeof(p->data));
@@ -342,6 +344,7 @@ static int party_recv_info(const struct party *sp, int char_id)
 			p->party.member[member_id].leader = 1;
 	}
 	party->check_state(p);
+	p->state.option_auto_changed = option_auto_changed;
 	while( added_count > 0 ) { // new in party
 		member_id = added[--added_count];
 		sd = p->data[member_id].sd;
@@ -349,12 +352,9 @@ static int party_recv_info(const struct party *sp, int char_id)
 			continue;// not online
 		clif->charnameupdate(sd); //Update other people's display. [Skotlex]
 		clif->party_member_info(p,sd);
-		clif->party_option(p,sd,0x100);
 		clif->party_info(p,NULL);
 		for( j = 0; j < p->instances; j++ ) {
 			if( p->instance[j] >= 0 ) {
-				if( instance->list[p->instance[j]].idle_timer == INVALID_TIMER && instance->list[p->instance[j]].progress_timer == INVALID_TIMER )
-					continue;
 				clif->instance_join(sd->fd, p->instance[j]);
 				break;
 			}
@@ -424,6 +424,12 @@ static int party_invite(struct map_session_data *sd, struct map_session_data *ts
 		return 0;
 	}
 
+	if ((tsd->status.allow_party & 1) != 0) {
+		// party invite blocked by player
+		clif->party_inviteack(sd, tsd->status.name, 5);
+		return 0;
+	}
+
 	tsd->party_invite=sd->status.party_id;
 	tsd->party_invite_account=sd->status.account_id;
 
@@ -482,14 +488,14 @@ static void party_member_joined(struct map_session_data *sd)
 		p->data[i].sd = sd;
 		for( j = 0; j < p->instances; j++ ) {
 			if( p->instance[j] >= 0 ) {
-				if( instance->list[p->instance[j]].idle_timer == INVALID_TIMER && instance->list[p->instance[j]].progress_timer == INVALID_TIMER )
-					continue;
 				clif->instance_join(sd->fd, p->instance[j]);
 				break;
 			}
 		}
 	} else
 		sd->status.party_id = 0; //He does not belongs to the party really?
+
+	party->send_movemap(sd);
 }
 
 /// Invoked (from char-server) when a new member is added to the party.
@@ -530,6 +536,11 @@ static int party_member_added(int party_id, int account_id, int char_id, int fla
 	clif->party_member_info(p,sd);
 	clif->party_info(p,sd);
 
+	if (p->state.option_auto_changed != 0)
+		clif->party_option(p, sd, 0x04);
+	else
+		clif->party_option(p, sd, 0x08);
+
 	if( sd2 != NULL )
 		clif->party_inviteack(sd2,sd->status.name,2);
 
@@ -545,8 +556,6 @@ static int party_member_added(int party_id, int account_id, int char_id, int fla
 
 	for( j = 0; j < p->instances; j++ ) {
 		if( p->instance[j] >= 0 ) {
-			if( instance->list[p->instance[j]].idle_timer == INVALID_TIMER && instance->list[p->instance[j]].progress_timer == INVALID_TIMER )
-				continue;
 			clif->instance_join(sd->fd, p->instance[j]);
 			break;
 		}
@@ -616,6 +625,7 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 				prev_leader_accountId = p->party.member[i].account_id;
 			}
 
+			clif->party_option(p, sd, 0x10);
 			clif->party_withdraw(p,sd,account_id,p->party.member[i].name,0x0);
 			memset(&p->party.member[i], 0, sizeof(p->party.member[0]));
 			memset(&p->data[i], 0, sizeof(p->data[0]));
@@ -671,17 +681,18 @@ static int party_member_withdraw(int party_id, int account_id, int char_id)
 /// Invoked (from char-server) when a party is disbanded.
 static int party_broken(int party_id)
 {
-	struct party_data* p;
-	int i, j;
+	int i;
 
-	p = party->search(party_id);
-	if( p == NULL )
+	struct party_data *p = party->search(party_id);
+	if (p == NULL)
 		return 0;
 
-	for( j = 0; j < p->instances; j++ ) {
-		if( p->instance[j] >= 0 ) {
-			instance->destroy( p->instance[j] );
-			instance->list[p->instance[j]].owner_id = 0;
+	for (int j = 0; j < p->instances; j++) {
+		const short instance_id = p->instance[j];
+		if (instance_id >= 0) {
+			instance->destroy(instance_id);
+			if (instance_id < instance->instances)
+				instance->list[instance_id].owner_id = 0;
 		}
 	}
 
@@ -689,6 +700,7 @@ static int party_broken(int party_id)
 		if( p->data[i].sd!=NULL ) {
 			clif->party_withdraw(p,p->data[i].sd,p->party.member[i].account_id,p->party.member[i].name,0x10);
 			p->data[i].sd->status.party_id=0;
+			clif->charnameupdate(p->data[i].sd);
 		}
 	}
 
@@ -721,8 +733,17 @@ static int party_optionchanged(int party_id, int account_id, int exp, int item, 
 	//Flag&0x1: Exp change denied. Flag&0x10: Item change denied.
 	if(!(flag&0x01) && p->party.exp != exp)
 		p->party.exp=exp;
-	if(!(flag&0x10) && p->party.item != item) {
+	if (p->party.item != item)
 		p->party.item=item;
+
+	if (account_id == 0) {
+		flag |= 0x04;
+		p->state.option_auto_changed = 1;
+
+		if (p->state.member_level_changed == 0)
+			return 0; // clif_party_option() is handled in clif_parse_LoadEndAck().
+	} else {
+		flag |= 0x02;
 	}
 
 	clif->party_option(p,sd,flag);
@@ -803,7 +824,8 @@ static int party_recv_movemap(int party_id, int account_id, int char_id, unsigne
 		ShowError("party_recv_movemap: char %d/%d not found in party %s (id:%d)",account_id,char_id,p->party.name,party_id);
 		return 0;
 	}
-
+	
+	p->state.member_level_changed = 0;
 	m = &p->party.member[i];
 	m->map = mapid;
 	m->online = online;
@@ -852,7 +874,12 @@ static void party_send_movemap(struct map_session_data *sd)
 
 static void party_send_levelup(struct map_session_data *sd)
 {
-	intif->party_changemap(sd,1);
+	struct party_data *p = party->search(sd->status.party_id);
+
+	if (p != NULL)
+		p->state.member_level_changed = 1;
+
+	intif->party_changemap(sd, 1);
 }
 
 static int party_send_logout(struct map_session_data *sd)
@@ -880,30 +907,24 @@ static int party_send_logout(struct map_session_data *sd)
 
 static int party_send_message(struct map_session_data *sd, const char *mes)
 {
-	int len;
-
 	nullpo_ret(sd);
 	nullpo_ret(mes);
 
-	len = (int)strlen(mes);
-
 	if (sd->status.party_id == 0)
 		return 0;
-	intif->party_message(sd->status.party_id, sd->status.account_id, mes, len);
-	party->recv_message(sd->status.party_id, sd->status.account_id, mes, len);
+
+	struct party_data *p = party->search(sd->status.party_id);
+
+	if (p == NULL)
+		return 0;
+
+	int len = (int)strlen(mes);
+
+	clif->party_message(p, sd->status.account_id, mes, len);
 
 	// Chat logging type 'P' / Party Chat
 	logs->chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
 
-	return 0;
-}
-
-static int party_recv_message(int party_id, int account_id, const char *mes, int len)
-{
-	struct party_data *p;
-	if( (p=party->search(party_id))==NULL)
-		return 0;
-	clif->party_message(p,account_id,mes,len);
 	return 0;
 }
 
@@ -1526,7 +1547,6 @@ void party_defaults(void)
 	party->send_levelup = party_send_levelup;
 	party->send_logout = party_send_logout;
 	party->send_message = party_send_message;
-	party->recv_message = party_recv_message;
 	party->skill_check = party_skill_check;
 	party->send_xy_clear = party_send_xy_clear;
 	party->exp_share = party_exp_share;

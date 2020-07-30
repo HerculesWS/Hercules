@@ -1,0 +1,73 @@
+name: build
+
+on: [push, pull_request]
+
+env:
+  MYSQL_DATABASE: 'ragnarok'
+  MYSQL_USER: 'ragnarok'
+  MYSQL_PASSWORD: 'ragnarok'
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # gcc, clang-8, clang-9 removed for reduce number of jobs
+        CC: ["gcc-10", "clang-10"]
+        RENEWAL: [""]
+        CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
+        SANITIZER: [""]
+        PACKET_VERSION: ["--enable-packetver=20100105", "--enable-packetver=20171018"]
+        LTO: ["", "--enable-lto"]
+        exclude:
+          - PACKET_VERSION: "--enable-packetver=20100105"
+            CLIENT_TYPE: "--enable-packetver-zero"
+          - CC: "clang-10"
+            LTO: "--enable-lto"
+    container:
+      image: debian:unstable
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 33306:3306
+        env:
+          MYSQL_DATABASE: 'ragnarok'
+          MYSQL_USER: 'ragnarok'
+          MYSQL_PASSWORD: 'ragnarok'
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+    env:
+      INSTALL_PACKAGES: ${{ matrix.CC }} mariadb-client libmariadbclient-dev-compat
+      SQLHOST: mariadb
+      CC: ${{ matrix.CC }}
+      CONFIGURE_FLAGS: CC=${{ matrix.CC }} --enable-debug --enable-Werror --enable-buildbot ${{ matrix.RENEWAL }} ${{ matrix.CLIENT_TYPE }} ${{ matrix.SANITIZER }} ${{ matrix.PACKET_VERSION }} --enable-epoll
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: info
+        run: |
+          uname -a
+
+      - name: install packages
+        run: |
+          ./tools/ci/retry.sh apt-get update
+          ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES
+
+      - name: init database
+        run: |
+          ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok $SQLHOST
+
+      - name: get plugins
+        run: |
+          ./tools/ci/travis.sh getplugins || true
+
+      - name: build
+        run: |
+          ./tools/ci/travis.sh build $CONFIGURE_FLAGS
+
+        # for run default config will show warnings

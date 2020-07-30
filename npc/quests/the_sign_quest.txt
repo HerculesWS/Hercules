@@ -9,15 +9,15 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Joseph
-//= Copyright (C)  Euphy
-//= Copyright (C)  tr0n
-//= Copyright (C)  Kisuka
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  Kargha
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  SinSloth
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) tr0n
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Kargha
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) SinSloth
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -2815,7 +2815,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			mes "A-anyway, please tell me";
 			mes "what you think it might be.";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (compare(.@input$,"red gemstone")) {
 				mes "[Sir Jore]";
 				mes "What...! Huh.";
@@ -2848,14 +2848,12 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes ""+ strcharinfo(PC_NAME) +". Farewell~";
 				close;
 			}
-			else {
-				mes "[Sir Jore]";
-				mes "Err...?";
-				mes "I don't think";
-				mes "I quite understood";
-				mes "you. What did you say?";
-				close;
-			}
+			mes "[Sir Jore]";
+			mes "Err...?";
+			mes "I don't think";
+			mes "I quite understood";
+			mes "you. What did you say?";
+			close;
 		}
 		else if (sign_q == 20) {
 			mes "[Sir Jore]";
@@ -3673,7 +3671,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 		mes "a battle of minds.";
 		mes "W-who are you...?";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "[Jesqurienne]";
 		mes ""+.@input$+"...";
 		mes "I will remember that.";
@@ -6947,7 +6945,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 		mes "W-wait!";
 		mes "I'm here to see...";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ != "Engel Howard") {
 			mes "[Brenda Howard]";
 			mes "Huh?";
@@ -6962,23 +6960,21 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 			emotion e_ho;
 			close;
 		}
-		else {
-			mes "[Brenda Howard]";
-			mes "Ah... I see.";
-			mes "You're looking for my husband.";
-			mes "My husband, my daughter and";
-			mes "I just moved to Geffen from";
-			mes "Prontera a while ago.";
-			next;
-			mes "[Brenda Howard]";
-			mes "We moved to Geffen for the sake of my husband's business. Apparently, this town is closest to something he really seems to need. Whatever it is, it must be really important to his smithing work.";
-			next;
-			mes "[Brenda Howard]";
-			mes "Oh, and if you're going to look";
-			mes "for my husband, please talk to my daughter before you go. I think she has something that she wants to give to her father...";
-			sign_q = 55;
-			close;
-		}
+		mes "[Brenda Howard]";
+		mes "Ah... I see.";
+		mes "You're looking for my husband.";
+		mes "My husband, my daughter and";
+		mes "I just moved to Geffen from";
+		mes "Prontera a while ago.";
+		next;
+		mes "[Brenda Howard]";
+		mes "We moved to Geffen for the sake of my husband's business. Apparently, this town is closest to something he really seems to need. Whatever it is, it must be really important to his smithing work.";
+		next;
+		mes "[Brenda Howard]";
+		mes "Oh, and if you're going to look";
+		mes "for my husband, please talk to my daughter before you go. I think she has something that she wants to give to her father...";
+		sign_q = 55;
+		close;
 	}
 	else if (sign_q < 57) {
 		mes "Ho-ho~!";
@@ -7700,8 +7696,8 @@ gef_tower,118,36,4	script	Annoyed Man	1_M_WIZARD,{
 		mes "What are you doing here?!";
 		emotion e_pif;
 		next;
-		input .@input$;
-		if ((.@input$ == "Metz Brayde") || (.@input$ == "Sobbing Starlight")) {
+		input(.@input$);
+		if (.@input$ == "Metz Brayde" || .@input$ == "Sobbing Starlight") {
 			mes "[Dhota]";
 			mes "Eh?";
 			if (.@input$ == "Metz Brayde") {
@@ -7738,15 +7734,13 @@ gef_tower,118,36,4	script	Annoyed Man	1_M_WIZARD,{
 			emotion e_pif;
 			close;
 		}
-		else {
-			mes "[Dhota]";
-			mes "Say what...?";
-			mes "I have no idea what";
-			mes "you're talking about!";
-			mes "If you've got nothing";
-			mes "to say, then leave me alone!";
-			close;
-		}
+		mes "[Dhota]";
+		mes "Say what...?";
+		mes "I have no idea what";
+		mes "you're talking about!";
+		mes "If you've got nothing";
+		mes "to say, then leave me alone!";
+		close;
 	}
 	else {
 		mes "Hmmm...";
@@ -12323,34 +12317,18 @@ OnEnable:
 	end;
 }
 
-que_sign01,196,44,0	script	Warp#serin	FAKE_NPC,35,35,{
-OnDisable:
-OnInit:
-	disablenpc "Warp#serin";
-	end;
-
-OnTouch:
-	warp "niflheim",30,156;
-	end;
-
-OnEnable:
-	enablenpc "Warp#serin";
-	end;
-}
-
 que_sign01,1,0,0	script	Timer#serin	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
 
 OnTimer600000:
-	donpcevent "Warp#serin::OnEnable";
+	areawarp("que_sign01", 161, 9, 231, 79, "niflheim", 30, 156);
 	end;
 
 OnTimer620000:
 	$@sign_w2 = 0;
 	donpcevent "Starter#serin::OnEnable";
-	donpcevent "Warp#serin::OnDisable";
 	donpcevent "Serin#serin::OnEnable";
 	donpcevent "Dark Lord#serin::OnDisable";
 	donpcevent "Serin#dummy::OnDisable";

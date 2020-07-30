@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2018  Hercules Dev Team
+ * Copyright (C) 2013-2020 Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,6 +65,8 @@ struct {
 bool itemdb2sql_torun = false;
 /// Whether the mob_db converter will automatically run.
 bool mobdb2sql_torun = false;
+/// mysql handle for escape strings
+static struct Sql *sql_handle = NULL;
 
 /// Backup of the original item_db parser function pointer.
 int (*itemdb_readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
@@ -104,7 +106,7 @@ void db2sql_fileheader(void)
 			"-- This file is part of Hercules.\n"
 			"-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
 			"--\n"
-			"-- Copyright (C) 2013-%d  Hercules Dev Team\n"
+			"-- Copyright (C) 2013-%d Hercules Dev Team\n"
 			"--\n"
 			"-- Hercules is free software: you can redistribute it and/or modify\n"
 			"-- it under the terms of the GNU General Public License as published by\n"
@@ -249,11 +251,11 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%u',", (uint32)it->nameid);
 
 		// name_english
-		SQL->EscapeString(NULL, e_name, it->name);
+		SQL->EscapeString(sql_handle, e_name, it->name);
 		StrBuf->Printf(&buf, "'%s',", e_name);
 
 		// name_japanese
-		SQL->EscapeString(NULL, e_name, it->jname);
+		SQL->EscapeString(sql_handle, e_name, it->jname);
 		StrBuf->Printf(&buf, "'%s',", e_name);
 
 		// type
@@ -397,7 +399,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 				tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[0].p,char,tosql.buf[0].len);
 			}
-			SQL->EscapeString(NULL, tosql.buf[0].p, str);
+			SQL->EscapeString(sql_handle, tosql.buf[0].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[0].p);
 		} else {
 			StrBuf->AppendStr(&buf, "'',");
@@ -411,7 +413,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 				tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[1].p,char,tosql.buf[1].len);
 			}
-			SQL->EscapeString(NULL, tosql.buf[1].p, str);
+			SQL->EscapeString(sql_handle, tosql.buf[1].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[1].p);
 		} else {
 			StrBuf->AppendStr(&buf, "'',");
@@ -425,7 +427,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 				tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000;
 				RECREATE(tosql.buf[2].p,char,tosql.buf[2].len);
 			}
-			SQL->EscapeString(NULL, tosql.buf[2].p, str);
+			SQL->EscapeString(sql_handle, tosql.buf[2].p, str);
 			StrBuf->Printf(&buf, "'%s'", tosql.buf[2].p);
 		} else {
 			StrBuf->AppendStr(&buf, "''");
@@ -563,15 +565,15 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		StrBuf->Printf(&buf, "%d,", md->mob_id);
 
 		// Sprite
-		SQL->EscapeString(NULL, e_name, md->sprite);
+		SQL->EscapeString(sql_handle, e_name, md->sprite);
 		StrBuf->Printf(&buf, "'%s',", e_name);
 
 		// kName
-		SQL->EscapeString(NULL, e_name, md->name);
+		SQL->EscapeString(sql_handle, e_name, md->name);
 		StrBuf->Printf(&buf, "'%s',", e_name);
 
 		// iName
-		SQL->EscapeString(NULL, e_name, md->jname);
+		SQL->EscapeString(sql_handle, e_name, md->jname);
 		StrBuf->Printf(&buf, "'%s',", e_name);
 
 		// LV
@@ -967,7 +969,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	StrBuf->Printf(&buf, "%d,", mob_id);
 
 	// Info
-	SQL->EscapeString(NULL, e_name, md->name);
+	SQL->EscapeString(sql_handle, e_name, md->name);
 	StrBuf->Printf(&buf, "'%s@%s',", e_name, name);
 
 	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
@@ -1215,8 +1217,15 @@ HPExport void plugin_init(void)
 
 HPExport void server_online(void)
 {
+	sql_handle = SQL->Malloc();
 	if (itemdb2sql_torun)
 		do_itemdb2sql();
 	if (mobdb2sql_torun)
 		do_mobdb2sql();
+}
+
+HPExport void plugin_final (void)
+{
+	SQL->Free(sql_handle);
+	sql_handle = NULL;
 }

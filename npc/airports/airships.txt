@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2016  Hercules Dev Team
-//= Copyright (C)  Athena Dev Teams
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Athena Dev Teams
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -491,9 +491,8 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 			" '0' to cancel your order.");
 		next;
 		while (1) {
-			input .@input;
-			.@pay = .@input * 15;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes("[Fruitz]");
 				mes("Thanks for stopping\r"
 					"by my shop. Farewell!");
@@ -502,7 +501,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 					"Apple to snack on~");
 				close;
 			}
-			else if (.@input < 1 || .@input > 500) {
+			if (.@input > 500) {
 				mes("[Fruitz]");
 				mes("You've entered a number\r"
 					"higher than the maximum\r"
@@ -510,25 +509,25 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 					"the number of Apples you\r"
 					"wish to purchase again.");
 				next;
+				continue;
 			}
-			else {
+			.@pay = .@input * 15;
+			mes("[Fruitz]");
+			mesf("A total of ^FF0000%d^000000 Apples\r"
+				"will cost you ^FF0000%d Zeny^000000.",
+				.@input, .@pay);
+			mes("Would you like to continue?");
+			next;
+			if (select("Yes", "No") == 2) {
 				mes("[Fruitz]");
-				mesf("A total of ^FF0000%d^000000 Apples\r"
-					"will cost you ^FF0000%d Zeny^000000.",
-					.@input, .@pay);
-				mes("Would you like to continue?");
-				next;
-				if (select("Yes", "No") == 2) {
-					mes("[Fruitz]");
-					mes("Thanks for stopping\r"
-						"by my shop. Farewell!");
-					mes("Come by anytime when\r"
-						"you feel like having an\r"
-						"Apple to snack on~");
-					close;
-				}
-				break;
+				mes("Thanks for stopping\r"
+					"by my shop. Farewell!");
+				mes("Come by anytime when\r"
+					"you feel like having an\r"
+					"Apple to snack on~");
+				close;
 			}
+			break;
 		}
 		if (Zeny < .@pay) {
 			mes("[Fruitz]");
@@ -853,9 +852,34 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 			"'0' to cancel your order.");
 		next;
 		while (1) {
-			input .@input;
+			input(.@input);
+			if (.@input <= 0) {
+				mes("[Meltz]");
+				mes("Thanks for stopping\r"
+					"by my shop. Farewell!");
+				mes("Come by anytime when\r"
+					"you feel like having an\r"
+					"Apple to snack on~");
+				close();
+			}
+			if (.@input > 500) {
+				mes("[Meltz]");
+				mes("You've entered a number\r"
+					"higher than the maximum\r"
+					"value of 500. Please enter\r"
+					"the number of Apples you\r"
+					"wish to purchase again.");
+				next();
+				continue;
+			}
 			.@pay = .@input * 15;
-			if (.@input == 0) {
+			mes("[Meltz]");
+			mesf("A total of ^FF0000%d^000000 Apples\r"
+				"will cost you ^FF0000%d Zeny^000000.",
+				.@input, .@pay);
+			mes("Would you like to continue?");
+			next;
+			if (select("Yes", "No") == 2) {
 				mes("[Meltz]");
 				mes("Thanks for stopping\r"
 					"by my shop. Farewell!");
@@ -864,33 +888,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 					"Apple to snack on~");
 				close;
 			}
-			else if (.@input < 1 || .@input > 500) {
-				mes("[Meltz]");
-				mes("You've entered a number\r"
-					"higher than the maximum\r"
-					"value of 500. Please enter\r"
-					"the number of Apples you\r"
-					"wish to purchase again.");
-				next;
-			}
-			else {
-				mes("[Meltz]");
-				mesf("A total of ^FF0000%d^000000 Apples\r"
-					"will cost you ^FF0000%d Zeny^000000.",
-					.@input, .@pay);
-				mes("Would you like to continue?");
-				next;
-				if (select("Yes", "No") == 2) {
-					mes("[Meltz]");
-					mes("Thanks for stopping\r"
-						"by my shop. Farewell!");
-					mes("Come by anytime when\r"
-						"you feel like having an\r"
-						"Apple to snack on~");
-					close;
-				}
-				break;
-			}
+			break;
 		}
 		if (Zeny < .@pay) {
 			mes("[Meltz]");
@@ -1150,7 +1148,7 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 		mes(.@line1_3$[.@wordtest]);
 		.@start_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		next;
-		input .@save1$;
+		input(.@save1$);
 		.@end_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		.@total_time = .@end_time - .@start_time;
 		mes("[Nils]");
@@ -1158,7 +1156,7 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 		mes(.@line2_2$[.@wordtest]);
 		.@start_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		next;
-		input .@save2$;
+		input(.@save2$);
 		.@end_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		.@total_time = .@total_time + (.@start_time - .@end_time);
 		.@tasoo = (.@letters[.@wordtest] / .@total_time) * 6;
@@ -1329,15 +1327,15 @@ function	script	applegamble	{
 		"to cancel, please enter '0'.");
 	next;
 	while(1) {
-		input .@amount;
-		if (.@amount == 0) {
+		input(.@amount);
+		if (.@amount <= 0) {
 			mes(.@n$);
 			mes("Changed your mind?");
 			mes("I understand. Well then,\r"
 				"I hope we can play sometime.");
 			close;
 		}
-		else if (.@amount < 1 || .@amount > 50) {
+		if (.@amount > 50) {
 			mes(.@n$);
 			mes("You can't bet more than\r"
 				"50 Apples. Remember, we\r"

@@ -9,10 +9,10 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  MasterOfMuppets
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) MasterOfMuppets
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 	}
 
 L_Number:
-	input .@input,0,$@god_check2;
+	input(.@input, 0, $@god_check2);
 	mes "[Check]";
 	mes "Would you like to change to "+.@input+"?";
 	mes "Please enter the password.";
@@ -112,7 +112,7 @@ L_Number:
 	}
 
 L_Var:
-	input .@input;
+	input(.@input, 0);
 	setd getarg(0),.@input;
 	next;
 	mes "[Check]";

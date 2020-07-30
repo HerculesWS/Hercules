@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include "map/map.h"
 #include "map/mob.h"    // MAX_MOB_DB
 #include "map/pc.h"     // W_MUSICAL, W_WHIP
+#include "map/refine.h"
 #include "map/script.h" // item script processing
 #include "common/HPM.h"
 #include "common/conf.h"
@@ -116,73 +117,105 @@ static struct item_data *itemdb_name2id(const char *str)
  */
 static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
 {
-	struct item_data *item = DB->data2ptr(&data);
-	char *str;
-	str=va_arg(ap,char *);
+	struct item_data *itd = DB->data2ptr(&data);
+	const char *str = va_arg(ap, const char *);
+	enum item_name_search_flag flag = va_arg(ap, enum item_name_search_flag);
+
 	nullpo_ret(str);
-	if (item == &itemdb->dummy)
+
+	if (itd == &itemdb->dummy)
 		return 1; //Invalid item.
-	if(stristr(item->jname,str))
+
+	if (
+		(flag == IT_SEARCH_NAME_PARTIAL
+		 && (stristr(itd->jname, str) != NULL
+			 || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str))
+			 || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str))
+			 ))
+		|| (flag == IT_SEARCH_NAME_EXACT
+			&& (strcmp(itd->jname, str) == 0
+				|| (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0)
+				|| (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)
+				))
+		) {
+
 		return 0;
-	if(battle_config.case_sensitive_aegisnames && strstr(item->name,str))
-		return 0;
-	if(!battle_config.case_sensitive_aegisnames && stristr(item->name,str))
-		return 0;
-	return strcmpi(item->jname,str);
+	} else {
+		return 1;
+	}
 }
 
-/*==========================================
- * Founds up to N matches. Returns number of matches [Skotlex]
- * search flag :
- * 0 - approximate match
- * 1 - exact match
- *------------------------------------------*/
-static int itemdb_searchname_array(struct item_data **data, int size, const char *str, int flag)
+/**
+ * Finds up to passed size matches
+ * @param data array of struct item_data for returning the results in
+ * @param size size of the array
+ * @param str string used in this search
+ * @param flag search mode refer to enum item_name_search_flag for possible values
+ * @return returns all found matches in the database which could be bigger than size
+ **/
+static int itemdb_searchname_array(struct item_data **data, const int size, const char *str, enum item_name_search_flag flag)
 {
-	struct item_data* item;
-	int i;
-	int count=0;
-
 	nullpo_ret(data);
 	nullpo_ret(str);
-	// Search in the array
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
-	{
-		item = itemdb->array[i];
-		if( item == NULL )
+	Assert_ret(flag >= IT_SEARCH_NAME_PARTIAL && flag < IT_SEARCH_NAME_MAX);
+	Assert_ret(size > 0);
+
+	int
+		results_count = 0,
+		length = 0;
+
+	// Search in array
+	for (int i = 0; i < ARRAYLENGTH(itemdb->array); ++i) {
+		struct item_data *itd = itemdb->array[i];
+
+		if (itd == NULL)
 			continue;
 
-		if(
-		    (!flag
-		    && (stristr(item->jname,str)
-		       || (battle_config.case_sensitive_aegisnames && strstr(item->name,str))
-		       || (!battle_config.case_sensitive_aegisnames && stristr(item->name,str))
-		    ))
-		 || (flag
-		    && (strcmp(item->jname,str) == 0
-		       || (battle_config.case_sensitive_aegisnames && strcmp(item->name,str) == 0)
-		       || (!battle_config.case_sensitive_aegisnames && strcasecmp(item->name,str) == 0)
-		    ))
-		) {
-			if( count < size )
-				data[count] = item;
-			++count;
+		if (
+			(flag == IT_SEARCH_NAME_PARTIAL
+			 && (stristr(itd->jname, str) != NULL
+				 || (battle_config.case_sensitive_aegisnames && strstr(itd->name, str))
+				 || (!battle_config.case_sensitive_aegisnames && stristr(itd->name, str))
+				 ))
+			|| (flag == IT_SEARCH_NAME_EXACT
+				&& (strcmp(itd->jname, str) == 0
+					|| (battle_config.case_sensitive_aegisnames && strcmp(itd->name, str) == 0)
+					|| (!battle_config.case_sensitive_aegisnames && strcasecmp(itd->name, str) == 0)
+					))
+			) {
+			if (length < size) {
+				data[length] = itd;
+				++length;
+			}
+
+			++results_count;
 		}
 	}
 
-	// search in the db
-	if( count < size )
-	{
-		struct DBData *db_data[MAX_SEARCH];
-		int db_count = 0;
-		size -= count;
-		db_count = itemdb->other->getall(itemdb->other, (struct DBData**)&db_data, size, itemdb->searchname_array_sub, str);
-		for (i = 0; i < db_count; i++)
-			data[count++] = DB->data2ptr(db_data[i]);
-		count += db_count;
+	// Search in dbmap
+	int dbmap_size = size - length;
+	if (dbmap_size > 0) {
+		struct DBData **dbmap_data = NULL;
+		int dbmap_count = 0;
+		CREATE(dbmap_data, struct DBData *, dbmap_size);
+
+		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, flag);
+		dbmap_size = min(dbmap_count, dbmap_size);
+
+		for (int i = 0; i < dbmap_size; ++i) {
+			data[length] = DB->data2ptr(dbmap_data[i]);
+			++length;
+		}
+
+		results_count += dbmap_count;
+		aFree(dbmap_data);
+	} else { // We got all matches we can return, so we only need to count now.
+		results_count += itemdb->other->getall(itemdb->other, NULL, 0, itemdb->searchname_array_sub, str, flag);
 	}
-	return count;
+
+	return results_count;
 }
+
 /* [Ind/Hercules] */
 static int itemdb_chain_item(unsigned short chain_id, int *rate)
 {
@@ -813,11 +846,8 @@ static void itemdb_read_groups(void)
 {
 	struct config_t item_group_conf;
 	struct config_setting_t *itg = NULL, *it = NULL;
-#ifdef RENEWAL
-	const char *config_filename = "db/re/item_group.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/item_group.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"item_group.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c;
 	unsigned int *gsize = NULL;
@@ -1111,11 +1141,8 @@ static void itemdb_read_packages(void)
 {
 	struct config_t item_packages_conf;
 	struct config_setting_t *itg = NULL, *it = NULL, *t = NULL;
-#ifdef RENEWAL
-	const char *config_filename = "db/re/item_packages.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/item_packages.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"item_packages.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c = 0, highest_gcount = 0;
 	unsigned int *must = NULL, *random = NULL, *rgroup = NULL, **rgroups = NULL;
@@ -1360,7 +1387,8 @@ static void itemdb_read_options(void)
 	struct config_t item_options_db;
 	struct config_setting_t *ito = NULL, *conf = NULL;
 	int index = 0, count = 0;
-	const char *filepath = "db/item_options.conf";
+	char filepath[256];
+	libconfig->format_db_path("item_options.conf", filepath, sizeof(filepath));
 	VECTOR_DECL(int) duplicate_id;
 
 	if (!libconfig->load_file(&item_options_db, filepath))
@@ -1461,11 +1489,8 @@ static void itemdb_read_chains(void)
 {
 	struct config_t item_chain_conf;
 	struct config_setting_t *itc = NULL;
-#ifdef RENEWAL
-	const char *config_filename = "db/re/item_chain.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/item_chain.conf"; // FIXME hardcoded name
-#endif
+	char config_filename[256];
+	libconfig->format_db_path(DBPATH"item_chain.conf", config_filename, sizeof(config_filename));
 	int i = 0, count = 0;
 
 	if (!libconfig->load_file(&item_chain_conf, config_filename))
@@ -1522,141 +1547,112 @@ static void itemdb_read_chains(void)
 	else
 		itemdb->chain_cache[ECC_ORE] = i;
 
+	if (!script->get_constant("ITMCHAIN_SIEGFRIED", &i))
+		ShowWarning("itemdb_read_chains: failed to find 'ITMCHAIN_SIEGFRIED' chain to link to cache!\n");
+	else
+		itemdb->chain_cache[ECC_SIEGFRIED] = i;
+
+	if (!script->get_constant("ITMCHAIN_NEO_INSURANCE", &i))
+		ShowWarning("itemdb_read_chains: failed to find 'ITMCHAIN_NEO_INSURANCE' chain to link to cache!\n");
+	else
+		itemdb->chain_cache[ECC_NEO_INSURANCE] = i;
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
 }
 
-/**
- * @return: amount of retrieved entries.
- **/
-static int itemdb_combo_split_atoi(char *str, int *val)
+static bool itemdb_read_combodb_libconfig(void)
 {
-	int i;
-
-	nullpo_ret(val);
-
-	for (i=0; i<MAX_ITEMS_PER_COMBO; i++) {
-		if (!str) break;
-
-		val[i] = atoi(str);
-		str = strchr(str,':');
-		if (str)
-			*str++=0;
-	}
-
-	if( i == 0 ) //No data found.
-		return 0;
-
-	return i;
-}
-/**
- * <combo{:combo{:combo:{..}}}>,<{ script }>
- **/
-static void itemdb_read_combos(void)
-{
-	uint32 lines = 0, count = 0;
-	char line[1024];
+	struct config_t combo_conf;
 	char filepath[256];
-	FILE* fp;
+	safesnprintf(filepath, sizeof(filepath), "%s/%s/%s", map->db_path, DBPATH, "item_combo_db.conf");
 
-	safesnprintf(filepath, 256, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
-
-	if ((fp = fopen(filepath, "r")) == NULL) {
-		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
-		return;
+	if (libconfig->load_file(&combo_conf, filepath) == CONFIG_FALSE) {
+		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
+		return false;
 	}
 
-	// process rows one by one
-	while(fgets(line, sizeof(line), fp)) {
-		char *str[2], *p;
-
-		lines++;
-
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-
-		memset(str, 0, sizeof(str));
-
-		p = line;
-		p = trim(p);
-		if (*p == '\0')
-			continue;// empty line
-
-		if (!strchr(p,',')) {
-			/* is there even a single column? */
-			ShowError("itemdb_read_combos: Insufficient columns in line %u of \"%s\", skipping.\n", lines, filepath);
-			continue;
-		}
-
-		str[0] = p;
-		p = strchr(p,',');
-		*p = '\0';
-		p++;
-
-		str[1] = p;
-		p = strchr(p,',');
-		p++;
-
-		if (str[1][0] != '{') {
-			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %u of \"%s\", skipping.\n", lines, filepath);
-			continue;
-		}
-
-		/* no ending key anywhere (missing \}\) */
-		if ( str[1][strlen(str[1])-1] != '}' ) {
-			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %u of \"%s\", skipping.\n", lines, filepath);
-			continue;
-		} else {
-			int items[MAX_ITEMS_PER_COMBO];
-			int v = 0, retcount = 0;
-			struct item_combo *combo = NULL;
-
-			if((retcount = itemdb->combo_split_atoi(str[0], items)) < 2) {
-				ShowError("itemdb_read_combos: line %u of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
-				continue;
-			}
-
-			/* validate */
-			for(v = 0; v < retcount; v++) {
-				if( !itemdb->exists(items[v]) ) {
-					ShowError("itemdb_read_combos: line %u of \"%s\" contains unknown item ID %d, skipping.\n", lines, filepath, items[v]);
-					break;
-				}
-			}
-			/* failed at some item */
-			if( v < retcount )
-				continue;
-
-			RECREATE(itemdb->combos, struct item_combo*, ++itemdb->combo_count);
-
-			CREATE(combo, struct item_combo, 1);
-
-			combo->count = retcount;
-			combo->script = script->parse(str[1], filepath, lines, 0, NULL);
-			combo->id = itemdb->combo_count - 1;
-			/* populate ->nameid field */
-			for( v = 0; v < retcount; v++ ) {
-				combo->nameid[v] = items[v];
-			}
-
-			itemdb->combos[itemdb->combo_count - 1] = combo;
-
-			/* populate the items to refer to this combo */
-			for( v = 0; v < retcount; v++ ) {
-				struct item_data * it;
-				int index;
-
-				it = itemdb->exists(items[v]);
-				index = it->combos_count;
-				RECREATE(it->combos, struct item_combo*, ++it->combos_count);
-				it->combos[index] = combo;
-			}
-		}
-		count++;
+	struct config_setting_t *combo_db = NULL;
+	if ((combo_db = libconfig->setting_get_member(combo_conf.root, "combo_db")) == NULL) {
+		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
+		return false;
 	}
-	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"item_combo_db"CL_RESET"'.\n", count);
 
-	return;
+	int i = 0;
+	int count = 0;
+	struct config_setting_t *it = NULL;
+
+	while ((it = libconfig->setting_get_elem(combo_db, i++)) != NULL) {
+		if (itemdb->read_combodb_libconfig_sub(it, i - 1, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&combo_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool itemdb_read_combodb_libconfig_sub(struct config_setting_t *it, int idx, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+
+	struct config_setting_t *t = NULL;
+
+	if ((t = libconfig->setting_get_member(it, "Items")) == NULL) {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: invalid item list for combo (%d), in (%s), skipping..\n", idx, source);
+		return false;
+	}
+
+	if (!config_setting_is_array(t)) {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: the combo (%d) item list must be an array, in (%s), skipping..\n", idx, source);
+		return false;
+	}
+
+	int len = libconfig->setting_length(t);
+	if (len > MAX_ITEMS_PER_COMBO) {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: the size of combo (%d) item list is too big (%d, max = %d), in (%s), skipping..\n", idx, len, MAX_ITEMS_PER_COMBO, source);
+		return false;
+	}
+
+	struct item_combo *combo = NULL;
+	RECREATE(itemdb->combos, struct item_combo *, ++itemdb->combo_count);
+	CREATE(combo, struct item_combo, 1);
+
+	combo->id = itemdb->combo_count - 1;
+	combo->count = len;
+
+	for (int i = 0; i < len; i++) {
+		struct item_data *item = NULL;
+		const char *name = libconfig->setting_get_string_elem(t, i);
+
+		if ((item = itemdb->name2id(name)) == NULL) {
+			ShowWarning("itemdb_read_combodb_libconfig_sub: unknown item '%s', in (%s), skipping..\n", name, source);
+			--itemdb->combo_count;
+			aFree(combo);
+			return false;
+		}
+		combo->nameid[i] = item->nameid;
+	}
+
+	const char *str = NULL;
+	if (libconfig->setting_lookup_string(it, "Script", &str) == CONFIG_TRUE) {
+		combo->script = *str ? script->parse(str, source, -idx, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	} else {
+		ShowWarning("itemdb_read_combodb_libconfig_sub: invalid script for combo (%d) in (%s), skipping..\n", idx, source);
+		--itemdb->combo_count;
+		aFree(combo);
+		return false;
+	}
+
+	itemdb->combos[combo->id] = combo;
+
+	/* populate the items to refer to this combo */
+	for (int i = 0; i < len; i++) {
+		struct item_data *item = itemdb->exists(combo->nameid[i]);
+		RECREATE(item->combos, struct item_combo *, ++item->combos_count);
+		item->combos[item->combos_count - 1] = combo;
+	}
+	return true;
 }
 
 /*======================================
@@ -1720,6 +1716,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 			script->free_code(entry->unequip_script);
 			entry->unequip_script = NULL;
 		}
+		if (entry->rental_start_script != NULL) {
+			script->free_code(entry->rental_start_script);
+			entry->rental_start_script = NULL;
+		}
+		if (entry->rental_end_script != NULL) {
+			script->free_code(entry->rental_end_script);
+			entry->rental_end_script = NULL;
+		}
 		return 0;
 #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	}
@@ -1749,6 +1753,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 			if (entry->unequip_script) {
 				script->free_code(entry->unequip_script);
 				entry->unequip_script = NULL;
+			}
+			if (entry->rental_start_script != NULL) {
+				script->free_code(entry->rental_start_script);
+				entry->rental_start_script = NULL;
+			}
+			if (entry->rental_end_script != NULL) {
+				script->free_code(entry->rental_end_script);
+				entry->rental_end_script = NULL;
 			}
 			return 0;
 		}
@@ -1877,7 +1889,14 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		script->free_code(item->unequip_script);
 		item->unequip_script = NULL;
 	}
-
+	if (item->rental_start_script != NULL && item->rental_start_script != entry->rental_start_script) { // Don't free if it's inheriting the same script
+		script->free_code(item->rental_start_script);
+		item->rental_start_script = NULL;
+	}
+	if (item->rental_end_script != NULL && item->rental_end_script != entry->rental_end_script) { // Don't free if it's inheriting the same script
+		script->free_code(item->rental_end_script);
+		item->rental_end_script = NULL;
+	}
 	*item = *entry;
 	return item->nameid;
 }
@@ -1993,6 +2012,8 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	 * ">
 	 * OnEquipScript: <" OnEquip Script ">
 	 * OnUnequipScript: <" OnUnequip Script ">
+	 * OnRentalStartScript: <" on renting script ">
+	 * OnRentalEndScript: <" on renting end script ">
 	 * Inherit: inherit or override
 	 */
 	if( !itemdb->lookup_const(it, "Id", &i32) ) {
@@ -2270,6 +2291,12 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 	if( libconfig->setting_lookup_string(it, "OnUnequipScript", &str) )
 		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
+	if (libconfig->setting_lookup_string(it, "OnRentalStartScript", &str) != CONFIG_FALSE)
+		id.rental_start_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+
+	if (libconfig->setting_lookup_string(it, "OnRentalEndScript", &str) != CONFIG_FALSE)
+		id.rental_end_script = (*str != '\0') ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+
 	return itemdb->validate_entry(&id, n, source);
 }
 
@@ -2406,7 +2433,7 @@ static int itemdb_readdb_libconfig(const char *filename)
 	}
 	db_destroy(duplicate_db);
 	libconfig->destroy(&item_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 	return count;
 }
 
@@ -2419,6 +2446,98 @@ static uint64 itemdb_unique_id(struct map_session_data *sd)
 
 	nullpo_ret(sd);
 	return ((uint64)sd->status.char_id << 32) | sd->status.uniqueitem_counter++;
+}
+
+static bool itemdb_read_libconfig_lapineddukddak(void)
+{
+	struct config_t item_lapineddukddak;
+	struct config_setting_t *it = NULL;
+	char filepath[256];
+
+	int i = 0;
+	int count = 0;
+
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineddukddak.conf");
+	if (libconfig->load_file(&item_lapineddukddak, filepath) == CONFIG_FALSE)
+		return false;
+
+	while ((it = libconfig->setting_get_elem(item_lapineddukddak.root, i++)) != NULL) {
+		if (itemdb->read_libconfig_lapineddukddak_sub(it, filepath))
+			++count;
+	}
+
+	libconfig->destroy(&item_lapineddukddak);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	return true;
+}
+
+static bool itemdb_read_libconfig_lapineddukddak_sub(struct config_setting_t *it, const char *source)
+{
+	nullpo_retr(false, it);
+	nullpo_retr(false, source);
+
+	struct item_data *data = NULL;
+	const char *name = config_setting_name(it);
+	const char *str = NULL;
+	int i32 = 0;
+
+	if ((data = itemdb->name2id(name)) == NULL) {
+		ShowWarning("itemdb_read_libconfig_lapineddukddak_sub: unknown item '%s', skipping..\n", name);
+		return false;
+	}
+
+	data->lapineddukddak = aCalloc(1, sizeof(struct item_lapineddukddak));
+	if (libconfig->setting_lookup_int(it, "NeedCount", &i32) == CONFIG_TRUE)
+		data->lapineddukddak->NeedCount = (int16)i32;
+
+	if (libconfig->setting_lookup_int(it, "NeedRefineMin", &i32) == CONFIG_TRUE)
+		data->lapineddukddak->NeedRefineMin = (int8)i32;
+
+	if (libconfig->setting_lookup_int(it, "NeedRefineMax", &i32) == CONFIG_TRUE)
+		data->lapineddukddak->NeedRefineMax = (int8)i32;
+
+	struct config_setting_t *sources = libconfig->setting_get_member(it, "SourceItems");
+	itemdb->read_libconfig_lapineddukddak_sub_sources(sources, data);
+
+	if (libconfig->setting_lookup_string(it, "Script", &str) == CONFIG_TRUE)
+		data->lapineddukddak->script = *str ? script->parse(str, source, -data->nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+	return true;
+}
+
+static bool itemdb_read_libconfig_lapineddukddak_sub_sources(struct config_setting_t *sources, struct item_data *data)
+{
+	nullpo_retr(false, data);
+	nullpo_retr(false, data->lapineddukddak);
+
+	int i = 0;
+	struct config_setting_t *entry = NULL;
+
+	if (sources == NULL || !config_setting_is_group(sources))
+		return false;
+
+	VECTOR_INIT(data->lapineddukddak->SourceItems);
+	while ((entry = libconfig->setting_get_elem(sources, i++)) != NULL) {
+		struct item_data *edata = NULL;
+		struct itemlist_entry item = { 0 };
+		const char *name = config_setting_name(entry);
+		int i32 = 0;
+
+		if ((edata = itemdb->name2id(name)) == NULL) {
+			ShowWarning("itemdb_read_libconfig_lapineddukddak_sub: unknown item '%s', skipping..\n", name);
+			continue;
+		}
+		item.id = edata->nameid;
+
+		if ((i32 = libconfig->setting_get_int(entry)) == CONFIG_TRUE && (i32 <= 0 || i32 > MAX_AMOUNT)) {
+			ShowWarning("itemdb_read_libconfig_lapineddukddak_sub: invalid amount (%d) for source item '%s', skipping..\n", i32, name);
+			continue;
+		}
+		item.amount = i32;
+
+		VECTOR_ENSURE(data->lapineddukddak->SourceItems, 1, 1);
+		VECTOR_PUSH(data->lapineddukddak->SourceItems, item);
+	}
+	return true;
 }
 
 /**
@@ -2448,16 +2567,18 @@ static void itemdb_read(bool minimal)
 
 	itemdb->other->foreach(itemdb->other, itemdb->addname_sub);
 
+	itemdb->read_options();
+	
 	if (minimal)
 		return;
 
 	itemdb->name_constants();
 
-	itemdb->read_combos();
+	itemdb->read_combodb_libconfig();
 	itemdb->read_groups();
 	itemdb->read_chains();
 	itemdb->read_packages();
-	itemdb->read_options();
+	itemdb->read_libconfig_lapineddukddak();
 }
 
 /**
@@ -2512,8 +2633,18 @@ static void destroy_item_data(struct item_data *self, int free_self)
 		script->free_code(self->equip_script);
 	if( self->unequip_script )
 		script->free_code(self->unequip_script);
+	if (self->rental_start_script != NULL)
+		script->free_code(self->rental_start_script);
+	if (self->rental_end_script != NULL)
+		script->free_code(self->rental_end_script);
 	if( self->combos )
 		aFree(self->combos);
+	if (self->lapineddukddak != NULL) {
+		if (self->lapineddukddak->script != NULL)
+			script->free_code(self->lapineddukddak->script);
+		VECTOR_CLEAR(self->lapineddukddak->SourceItems);
+		aFree(self->lapineddukddak);
+	}
 	HPM->data_store_destroy(&self->hdata);
 #if defined(DEBUG)
 	// trash item
@@ -2798,8 +2929,8 @@ void itemdb_defaults(void)
 	itemdb->isrestricted = itemdb_isrestricted;
 	itemdb->isidentified = itemdb_isidentified;
 	itemdb->isidentified2 = itemdb_isidentified2;
-	itemdb->combo_split_atoi = itemdb_combo_split_atoi;
-	itemdb->read_combos = itemdb_read_combos;
+	itemdb->read_combodb_libconfig = itemdb_read_combodb_libconfig;
+	itemdb->read_combodb_libconfig_sub = itemdb_read_combodb_libconfig_sub;
 	itemdb->gendercheck = itemdb_gendercheck;
 	itemdb->validate_entry = itemdb_validate_entry;
 	itemdb->readdb_options_additional_fields = itemdb_readdb_options_additional_fields;
@@ -2818,4 +2949,7 @@ void itemdb_defaults(void)
 	itemdb->lookup_const = itemdb_lookup_const;
 	itemdb->lookup_const_mask = itemdb_lookup_const_mask;
 	itemdb->addname_sub = itemdb_addname_sub;
+	itemdb->read_libconfig_lapineddukddak = itemdb_read_libconfig_lapineddukddak;
+	itemdb->read_libconfig_lapineddukddak_sub = itemdb_read_libconfig_lapineddukddak_sub;
+	itemdb->read_libconfig_lapineddukddak_sub_sources = itemdb_read_libconfig_lapineddukddak_sub_sources;
 }

@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@
 #define NULLPO_CHECK
 // if need disable asserts checks this line can be commented
 #define ASSERT_CHECK
+
+struct backtrace_state;
 
 /** Assert */
 
@@ -148,7 +150,12 @@
 
 
 struct nullpo_interface {
+	void (*init) (void);
+	void (*final) (void);
+
 	void (*assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
+
+	struct backtrace_state *backtrace_state;
 };
 
 #ifdef HERCULES_CORE

@@ -9,13 +9,13 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2017  Hercules Dev Team
-//= Copyright (C)  Euphy
-//= Copyright (C)  Zephyrus
-//= Copyright (C)  L0ne_W0lf
-//= Copyright (C)  SinSloth
-//= Copyright (C)  MasterOfMuppets
-//= Copyright (C)  Capuche
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Zephyrus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Capuche
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -4914,7 +4914,7 @@ OnTouch:
 	case 1:
 		specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
 		close2;
-		stopnpctimer;
+		stopnpctimer(1);
 		warp "juperos_02",130,142;
 		break;
 	case 2:
@@ -4922,7 +4922,7 @@ OnTouch:
 		mes "Not now!";
 		mes "I can't leave yet!";
 		close2;
-		stopnpctimer;
+		stopnpctimer(1);
 		warp "jupe_gate",50,168;
 		break;
 	}
@@ -4930,23 +4930,7 @@ OnTouch:
 
 OnTimer10000:
 	warp "juperos_02",128,278;
-	enablenpc "gate#start#2";
-	disablenpc "gate#start";
-	end;
-}
-
-jupe_gate,50,171,0	script	gate#start#2	FAKE_NPC,2,2,{
-OnInit:
-	disablenpc "gate#start#2";
-	end;
-
-OnTouch:
-	warp "juperos_02",130,142;
-	end;
-
-OnTimer2000:
-	enablenpc "gate#start";
-	disablenpc "gate#start#2";
+	areawarp("jupe_gate", 48, 169, 52, 173, "juperos_02", 130, 142);
 	end;
 }
 

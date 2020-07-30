@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,8 +91,9 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 		return;
 	}
 
-	if( !battle_config.feature_buying_store || pc_istrading(sd) || sd->buyingstore.slots == 0 || count > sd->buyingstore.slots || zenylimit <= 0 || zenylimit > sd->status.zeny || !storename[0] )
-	{// disabled or invalid input
+	if (battle_config.feature_buying_store == 0 || pc_istrading_except_npc(sd) || sd->state.prevend != 0
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->buyingstore.slots == 0
+	    || count > sd->buyingstore.slots || zenylimit <= 0 || zenylimit > sd->status.zeny || *storename == '\0') { // Disabled or invalid input.
 		sd->buyingstore.slots = 0;
 		clif->buyingstore_open_failed(sd, BUYINGSTORE_CREATE, 0);
 		return;
@@ -218,8 +219,8 @@ static void buyingstore_open(struct map_session_data *sd, int account_id)
 	struct map_session_data* pl_sd;
 
 	nullpo_retv(sd);
-	if( !battle_config.feature_buying_store || pc_istrading(sd) )
-	{// not allowed to sell
+	if (battle_config.feature_buying_store == 0 || pc_istrading_except_npc(sd) || sd->state.prevend != 0
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) { // Not allowed to sell.
 		return;
 	}
 
@@ -255,8 +256,8 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 		return;
 	}
 
-	if( !battle_config.feature_buying_store || pc_istrading(sd) )
-	{// not allowed to sell
+	if (battle_config.feature_buying_store == 0 || pc_istrading_except_npc(sd) || sd->state.prevend != 0
+	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) { // Not allowed to sell.
 		clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, 0);
 		return;
 	}

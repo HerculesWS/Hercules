@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include "common/db.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
+#include "map/unitdefines.h"  // enum unit_dir
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -328,6 +329,14 @@ enum bl_type {
 
 enum npc_subtype { WARP, SHOP, SCRIPT, CASHSHOP, TOMB };
 
+/** optional flags for script labels, used by the label db */
+enum script_label_flags {
+	/** the label can be called from outside the local scope of the NPC */
+	LABEL_IS_EXTERN   = 0x1,
+	/** the label is a public or private local NPC function */
+	LABEL_IS_USERFUNC = 0x2,
+};
+
 /**
  * Race type IDs.
  *
@@ -548,6 +557,7 @@ enum status_point_types { //we better clean up this enum and change it name [Hem
 	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST,  //2055-2058
 	SP_SET_DEF_RACE,SP_SET_MDEF_RACE, //2059-2060
 	SP_RACE_TOLERANCE,SP_ADDMAXWEIGHT, //2061-2062
+	SP_SUB_DEF_ELE, SP_MAGIC_SUB_DEF_ELE, // 2063-2064
 
 	/* must be the last, plugins add bonuses from this value onwards */
 	SP_LAST_KNOWN,
@@ -587,6 +597,7 @@ typedef enum {
 	CELL_NOCHAT,
 	CELL_ICEWALL,
 	CELL_NOICEWALL,
+	CELL_NOSKILL,
 
 } cell_t;
 
@@ -611,6 +622,7 @@ typedef enum {
 	CELL_CHKNOCHAT,
 	CELL_CHKICEWALL,
 	CELL_CHKNOICEWALL,
+	CELL_CHKNOSKILL,
 
 } cell_chk;
 
@@ -629,7 +641,8 @@ struct mapcell {
 		novending : 1,
 		nochat : 1,
 		icewall : 1,
-		noicewall : 1;
+		noicewall : 1,
+		noskill : 1;
 
 #ifdef CELL_NOSTACK
 	int cell_bl; //Holds amount of bls in this cell.
@@ -704,41 +717,6 @@ struct map_drop_list {
 	int drop_type;
 	int drop_per;
 };
-
-struct questinfo_qreq {
-	int id;
-	int state;
-};
-
-struct questinfo_itemreq {
-	int nameid;
-	int min;
-	int max;
-};
-
-struct questinfo {
-	struct npc_data *nd;
-	unsigned short icon;
-	unsigned char color;
-	bool hasJob;
-	unsigned int job;/* perhaps a mapid mask would be most flexible? */
-	bool sex_enabled;
-	int sex;
-	struct {
-		int min;
-		int max;
-	} base_level;
-	struct {
-		int min;
-		int max;
-	} job_level;
-	VECTOR_DECL(struct questinfo_itemreq) items;
-	struct s_homunculus homunculus;
-	int homunculus_type;
-	VECTOR_DECL(struct questinfo_qreq) quest_requirement;
-	int mercenary_class;
-};
-
 
 struct map_data {
 	char name[MAP_NAME_LENGTH];
@@ -820,6 +798,9 @@ struct map_data {
 		unsigned noautoloot : 1;
 		unsigned pairship_startable : 1;
 		unsigned pairship_endable : 1;
+		unsigned nostorage : 2;
+		unsigned nogstorage : 2;
+		unsigned nopet : 1;
 		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 	} flag;
 	struct point save;
@@ -877,8 +858,8 @@ struct map_data {
 		int len;
 	} cell_buf;
 
-	/* ShowEvent Data Cache */
-	VECTOR_DECL(struct questinfo) qi_data;
+	/* questinfo entries list */
+	VECTOR_DECL(struct npc_data *) qi_list;
 
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
@@ -1089,6 +1070,7 @@ struct map_interface {
 	char autotrade_data_db[32];
 	char npc_market_data_db[32];
 	char npc_barter_data_db[32];
+	char npc_expanded_barter_data_db[32];
 
 	char default_codepage[32];
 	char default_lang_str[64];
@@ -1241,15 +1223,15 @@ END_ZEROED_BLOCK;
 	void (*addiddb) (struct block_list *bl);
 	void (*deliddb) (struct block_list *bl);
 	/* */
-	struct map_session_data * (*nick2sd) (const char *nick);
+	struct map_session_data * (*nick2sd) (const char *nick, bool allow_partial);
 	struct mob_data * (*getmob_boss) (int16 m);
 	struct mob_data * (*id2boss) (int id);
 	uint32 (*race_id2mask) (int race);
 	// reload config file looking only for npcs
 	void (*reloadnpc) (bool clear);
 
-	int (*check_dir) (int s_dir,int t_dir);
-	uint8 (*calc_dir) (struct block_list *src,int16 x,int16 y);
+	int (*check_dir) (enum unit_dir s_dir, enum unit_dir t_dir);
+	enum unit_dir (*calc_dir) (const struct block_list *src, int16 x, int16 y);
 	int (*random_dir) (struct block_list *bl, short *x, short *y); // [Skotlex]
 
 	int (*cleanup_sub) (struct block_list *bl, va_list ap);
@@ -1312,7 +1294,7 @@ END_ZEROED_BLOCK;
 	int (*abort_sub) (struct map_session_data *sd, va_list ap);
 	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);
-	void (*add_questinfo) (int m, struct questinfo *qi);
+	bool (*add_questinfo) (int m, struct npc_data *nd);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
 	void (*zone_clear_single) (struct map_zone_data *zone);

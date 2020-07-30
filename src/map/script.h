@@ -2,8 +2,8 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2018  Hercules Dev Team
- * Copyright (C)  Athena Dev Teams
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -343,7 +343,10 @@ enum {
 	MF_NOAUTOLOOT,
 	MF_NOVIEWID,
 	MF_PAIRSHIP_STARTABLE,
-	MF_PAIRSHIP_ENDABLE
+	MF_PAIRSHIP_ENDABLE,
+	MF_NOSTORAGE,
+	MF_NOGSTORAGE,
+	MF_NOPET,
 };
 
 enum navigation_service {
@@ -431,6 +434,8 @@ enum script_unit_data_types {
 	UDT_STATPOINT,
 	UDT_ROBE,
 	UDT_BODY2,
+	UDT_GROUP,
+	UDT_DAMAGE_TAKEN_RATE,
 	UDT_MAX
 };
 
@@ -456,7 +461,33 @@ enum script_iteminfo_types {
 	ITEMINFO_MATK,
 	ITEMINFO_VIEWSPRITE,
 	ITEMINFO_TRADE,
-
+	ITEMINFO_ELV_MAX,
+	ITEMINFO_DROPEFFECT_MODE,
+	ITEMINFO_DELAY,
+	ITEMINFO_CLASS_BASE_1,
+	ITEMINFO_CLASS_BASE_2,
+	ITEMINFO_CLASS_BASE_3,
+	ITEMINFO_CLASS_UPPER,
+	// ITEMINFO_FLAG_AVAILABLE,
+	ITEMINFO_FLAG_NO_REFINE,
+	ITEMINFO_FLAG_DELAY_CONSUME,
+	ITEMINFO_FLAG_AUTOEQUIP,
+	ITEMINFO_FLAG_AUTO_FAVORITE,
+	ITEMINFO_FLAG_BUYINGSTORE,
+	ITEMINFO_FLAG_BINDONEQUIP,
+	ITEMINFO_FLAG_KEEPAFTERUSE,
+	ITEMINFO_FLAG_FORCE_SERIAL,
+	ITEMINFO_FLAG_NO_OPTIONS,
+	ITEMINFO_FLAG_DROP_ANNOUNCE,
+	ITEMINFO_FLAG_SHOWDROPEFFECT,
+	ITEMINFO_STACK_AMOUNT,
+	ITEMINFO_STACK_FLAG,
+	ITEMINFO_ITEM_USAGE_FLAG,
+	ITEMINFO_ITEM_USAGE_OVERRIDE,
+	ITEMINFO_GM_LV_TRADE_OVERRIDE,
+	ITEMINFO_ID,
+	ITEMINFO_AEGISNAME,
+	ITEMINFO_NAME,
 	ITEMINFO_MAX
 };
 
@@ -502,16 +533,49 @@ enum script_petinfo_types {
  * Player blocking actions related flags.
  */
 enum pcblock_action_flag {
-	PCBLOCK_NONE     = 0x00,
-	PCBLOCK_MOVE     = 0x01,
-	PCBLOCK_ATTACK   = 0x02,
-	PCBLOCK_SKILL    = 0x04,
-	PCBLOCK_USEITEM  = 0x08,
-	PCBLOCK_CHAT     = 0x10,
-	PCBLOCK_IMMUNE   = 0x20,
-	PCBLOCK_SITSTAND = 0x40,
-	PCBLOCK_COMMANDS = 0x80,
-	PCBLOCK_ALL      = 0xFF,
+	PCBLOCK_NONE     = 0x000,
+	PCBLOCK_MOVE     = 0x001,
+	PCBLOCK_ATTACK   = 0x002,
+	PCBLOCK_SKILL    = 0x004,
+	PCBLOCK_USEITEM  = 0x008,
+	PCBLOCK_CHAT     = 0x010,
+	PCBLOCK_IMMUNE   = 0x020,
+	PCBLOCK_SITSTAND = 0x040,
+	PCBLOCK_COMMANDS = 0x080,
+	PCBLOCK_NPC      = 0x100,
+	PCBLOCK_ALL      = 0x1FF,
+};
+
+/**
+ * Types of Siege (WoE)
+ */
+enum siege_type {
+	SIEGE_TYPE_FE,
+	SIEGE_TYPE_SE,
+	SIEGE_TYPE_TE,
+	SIEGE_TYPE_MAX
+};
+
+/**
+ * Types of MadoGear
+ */
+enum mado_type {
+	MADO_ROBOT = 0x00,
+	// unused  = 0x01,
+	MADO_SUITE = 0x02,
+#ifndef MADO_MAX
+	MADO_MAX
+#endif
+};
+
+/**
+ * Option flags for itemskill() script command.
+ **/
+enum itemskill_flag {
+	ISF_NONE = 0x00,
+	ISF_CHECKCONDITIONS = 0x01, // Check skill conditions and consume them.
+	ISF_INSTANTCAST = 0x02, // Cast skill instantaneously.
+	ISF_CASTONSELF = 0x04, // Forcefully cast skill on invoking character without showing the target selection cursor.
 };
 
 /**
@@ -521,6 +585,8 @@ enum pcblock_action_flag {
 struct Script_Config {
 	bool warn_func_mismatch_argtypes;
 	bool warn_func_mismatch_paramnum;
+	bool functions_private_by_default;
+	bool functions_as_events;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;
@@ -638,7 +704,7 @@ struct script_state {
 	int bk_npcid;
 	unsigned freeloop : 1;// used by buildin_freeloop
 	unsigned op2ref : 1;// used by op_2
-	unsigned npc_item_flag : 1;
+	unsigned npc_item_flag : 2;
 	unsigned int id;
 };
 
@@ -662,8 +728,14 @@ struct str_data_struct {
 	uint8 deprecated : 1;
 };
 
+/** a label within a script (does not use the label db) */
 struct script_label_entry {
-	int key,pos;
+	/** label name (held within str_data) */
+	int key;
+	/** position within the script  */
+	int pos;
+	/** optional flags for the label */
+	enum script_label_flags flags;
 };
 
 struct script_syntax_data {
@@ -854,7 +926,7 @@ struct script_interface {
 	void (*set_constant) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	void (*set_constant2) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	bool (*get_constant) (const char* name, int* value);
-	void (*label_add)(int key, int pos);
+	void (*label_add)(int key, int pos, enum script_label_flags flags);
 	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_pet) (struct script_code *rootscript, int pos, int rid, int oid);
@@ -885,10 +957,11 @@ struct script_interface {
 	int (*queue_create) (void);
 	bool (*queue_clear) (int idx);
 	/* */
-	const char * (*parse_curly_close) (const char *p);
-	const char * (*parse_syntax_close) (const char *p);
-	const char * (*parse_syntax_close_sub) (const char *p, int *flag);
-	const char * (*parse_syntax) (const char *p);
+	const char *(*parse_curly_close) (const char *p);
+	const char *(*parse_syntax_close) (const char *p);
+	const char *(*parse_syntax_close_sub) (const char *p, int *flag);
+	const char *(*parse_syntax) (const char *p);
+	const char *(*parse_syntax_function) (const char *p, bool is_public);
 	c_op (*get_com) (const struct script_buf *scriptbuf, int *pos);
 	int (*get_num) (const struct script_buf *scriptbuf, int *pos);
 	const char* (*op2name) (int op);
@@ -921,6 +994,7 @@ struct script_interface {
 	void (*load_parameters) (void);
 	const char* (*print_line) (StringBuf *buf, const char *p, const char *mark, int line);
 	void (*errorwarning_sub) (StringBuf *buf, const char *src, const char *file, int start_line, const char *error_msg, const char *error_pos);
+	bool (*is_permanent_variable) (const char *name);
 	int (*set_reg) (struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
 	void (*set_reg_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_pc_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
@@ -1002,16 +1076,21 @@ struct script_interface {
 	int (*string_dup) (char *str);
 	void (*load_translations) (void);
 	bool (*load_translation_addstring) (const char *file, uint8 lang_id, const char *msgctxt, const struct script_string_buf *msgid, const struct script_string_buf *msgstr);
-	int (*load_translation) (const char *file, uint8 lang_id);
+	int (*load_translation_file) (const char *file, uint8 lang_id);
+	int (*load_translation) (const char *directory, uint8 lang_id);
 	int (*translation_db_destroyer) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear_translations) (bool reload);
 	int (*parse_cleanup_timer) (int tid, int64 tick, int id, intptr_t data);
 	uint8 (*add_language) (const char *name);
-	const char *(*get_translation_file_name) (const char *file);
+	const char *(*get_translation_dir_name) (const char *directory);
 	void (*parser_clean_leftovers) (void);
 	void (*run_use_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_equip_script) (struct map_session_data *sd, struct item_data *data, int oid);
 	void (*run_item_unequip_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_rental_end_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_rental_start_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_lapineddukddak_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	bool (*sellitemcurrency_add) (struct npc_data *nd, struct script_state* st, int argIndex);
 };
 
 #ifdef HERCULES_CORE

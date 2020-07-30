@@ -3,7 +3,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2014-2015  Hercules Dev Team
+# Copyright (C) 2014-2020 Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,6 +37,8 @@ function usage {
 	echo "    $0 build [configure args]"
 	echo "    $0 test <dbname> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 getplugins"
+	echo "    $0 startmysql"
+	echo "    $0 extratest"
 	exit 1
 }
 
@@ -71,7 +73,8 @@ function run_server {
 function run_test {
 	echo "Running: test_$1"
 	sysctl -w kernel.core_pattern=core || true
-	./test_$1 2>runlog.txt
+	rm -rf core* || true
+	CRASH_PLEASE=1 ./test_$1 2>runlog.txt
 	export errcode=$?
 	export teststr=$(head -c 10000 runlog.txt)
 	if [[ -n "${teststr}" ]]; then
@@ -83,6 +86,13 @@ function run_test {
 	fi
 	if [ ${errcode} -ne 0 ]; then
 		echo "test $1 terminated with exit code ${errcode}"
+		echo cat runlog.txt
+		cat runlog.txt
+		echo crash dump
+		COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1)
+		if [[ -f "$COREFILE" ]]; then
+			gdb -c "$COREFILE" $1 -ex "thread apply all bt" -ex "set pagination 0" -batch
+		fi
 		aborterror "Test failed"
 	fi
 }
@@ -146,7 +156,14 @@ case "$MODE" in
 		;;
 	adduser)
 		echo "Adding user $NEWUSER as $DBUSER, with access to database $DBNAME..."
-		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';"
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="CREATE USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="GRANT SELECT,INSERT,UPDATE,DELETE ON $DBNAME.* TO '$NEWUSER'@'$DBHOST';" || true
+		mysql --defaults-file=/etc/mysql/debian.cnf $DBPASS_ARG $DBHOST_ARG --execute="ALTER USER '$NEWUSER'@'$DBHOST' IDENTIFIED BY '$NEWPASS';" || true
+
 		;;
 	build)
 		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
@@ -207,13 +224,13 @@ EOF
 		[ $? -eq 0 ] || aborterror "Unable to override inter-server configuration, aborting tests."
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
-		PLUGINS="--load-plugin HPMHooking --load-plugin sample"
+		PLUGINS="--load-plugin HPMHooking"
 		echo "run tests"
 		if [[ $DBUSER == "travis" ]]; then
 			echo "Disable leak dection on travis"
-			export ASAN_OPTIONS=detect_leaks=0:detect_stack_use_after_return=true:strict_init_order=true
+			export ASAN_OPTIONS=detect_leaks=0:detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		else
-			export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true
+			export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
 		fi
 		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
 		run_test libconfig
@@ -221,7 +238,38 @@ EOF
 		run_server ./login-server
 		run_server ./char-server
 		run_server ./map-server "$ARGS"
-		echo "run all servers wit HPM"
+		echo "run all servers with HPM"
+		run_server ./login-server "$PLUGINS"
+		run_server ./char-server "$PLUGINS"
+		run_server ./map-server "$ARGS $PLUGINS"
+		echo "run all servers with sample plugin"
+		run_server ./login-server "$PLUGINS --load-plugin sample"
+		run_server ./char-server "$PLUGINS --load-plugin sample"
+		run_server ./map-server "$PLUGINS --load-plugin sample"
+		echo "run all servers with constdb2doc"
+		run_server ./map-server "$PLUGINS --load-plugin constdb2doc --constdb2doc"
+		echo "run all servers with db2sql"
+		run_server ./map-server "$PLUGINS --load-plugin db2sql --db2sql"
+		run_server ./map-server "$PLUGINS --load-plugin db2sql --itemdb2sql"
+		run_server ./map-server "$PLUGINS --load-plugin db2sql --mobdb2sql"
+# look like works on windows only
+#		echo "run all servers with dbghelpplug"
+#		run_server ./login-server "$PLUGINS --load-plugin dbghelpplug"
+#		run_server ./char-server "$PLUGINS --load-plugin dbghelpplug"
+#		run_server ./map-server "$PLUGINS --load-plugin dbghelpplug"
+		echo "run all servers with generate-translations"
+		run_server ./map-server "$PLUGINS --load-plugin generate-translations --generate-translations"
+		echo "run all servers with mapcache"
+# for other flags need grf or other files
+		run_server ./map-server "$PLUGINS --load-plugin mapcache --fix-md5"
+		echo "run all servers with script_mapquit"
+		run_server ./map-server "$PLUGINS --load-plugin script_mapquit"
+		;;
+	extratest)
+		export ASAN_OPTIONS=detect_stack_use_after_return=true:strict_init_order=true:detect_odr_violation=0
+		PLUGINS="--load-plugin HPMHooking"
+		echo "run map server with uncommented old and custom scripts"
+		find ./npc -type f -name "*.conf" -exec ./tools/ci/uncomment.sh {} \;
 		run_server ./login-server "$PLUGINS"
 		run_server ./char-server "$PLUGINS"
 		run_server ./map-server "$ARGS $PLUGINS"
@@ -237,6 +285,13 @@ EOF
 		#else
 		#	echo "Plugin not found, skipping advanced tests."
 		#fi
+		;;
+	startmysql)
+		echo "Starting mysql..."
+		service mysql status || true
+		service mysql stop || true
+		service mysql start || true
+		service mysql status || true
 		;;
 	*)
 		usage

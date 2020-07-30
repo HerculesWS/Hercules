@@ -9,8 +9,8 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Euphy
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -38,7 +38,18 @@
 //=========================================================================
 
 //== Blacksmith Mighty Hammer (+7~9) =======================
--	script	::MightyHammer	FAKE_NPC,{
+-	script	::MightyHammer#re	FAKE_NPC,{
+	mes("[Blacksmith Mighty Hammer]");
+	mes("I'm a blacksmith skilled in refining weapons and armors.");
+	mes("I can refine an item of your choice among the items you are equipped with.");
+	mes("Which item do you want to refine?");
+
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+	}
+	next();
+	
 	disable_items;
 	mes "[Blacksmith Mighty Hammer]";
 	mes "Unlike others, I am a blacksmith who refines a very limited number of items.";
@@ -160,20 +171,20 @@
 	mes "I am sure a person like you would never blame me for a decrease in refine level by 1. Hmm.";
 	close;
 }
-prt_in,59,54,3	duplicate(MightyHammer)	Mighty Hammer#prt	4_M_DWARF
-morocc_in,65,30,3	duplicate(MightyHammer)	Mighty Hammer#morocc	4_M_DWARF
-payon,148,176,3	duplicate(MightyHammer)	Mighty Hammer#pay	4_M_DWARF
-alberta_in,16,56,3	duplicate(MightyHammer)	Mighty Hammer#alb	4_M_DWARF
-yuno_in01,171,18,3	duplicate(MightyHammer)	Mighty Hammer#yuno	4_M_DWARF
-ein_in01,22,82,3	duplicate(MightyHammer)	Mighty Hammer#ein	4_M_DWARF
-lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
+prt_in,59,54,3	duplicate(MightyHammer#re)	Mighty Hammer#prtre	4_M_DWARF
+morocc_in,65,30,3	duplicate(MightyHammer#re)	Mighty Hammer#moroccre	4_M_DWARF
+payon,148,176,3	duplicate(MightyHammer#re)	Mighty Hammer#payre	4_M_DWARF
+alberta_in,16,56,3	duplicate(MightyHammer#re)	Mighty Hammer#albre	4_M_DWARF
+yuno_in01,171,18,3	duplicate(MightyHammer#re)	Mighty Hammer#yunore	4_M_DWARF
+ein_in01,22,82,3	duplicate(MightyHammer#re)	Mighty Hammer#einre	4_M_DWARF
+lhz_in02,280,19,3	duplicate(MightyHammer#re)	Mighty Hammer#lhzre	4_M_DWARF
 
 //- iRO NPC locations -
-//moc_para01,38,185,4	duplicate(MightyHammer)	Mighty Hammer#ed	4_M_DWARF
-//payon,174,133,4	duplicate(MightyHammer)	Mighty Hammer#im	4_M_DWARF
+//moc_para01,38,185,4	duplicate(MightyHammer#re)	Mighty Hammer#edre	4_M_DWARF
+//payon,174,133,4	duplicate(MightyHammer#re)	Mighty Hammer#imre	4_M_DWARF
 
 //== Basta (+10 and up) ====================================
--	script	::Basta	FAKE_NPC,{
+-	script	::Basta#re	FAKE_NPC,{
 	disable_items;
 	mes "[Basta]";
 	mes "I'm the best Blacksmith in the whole world, Basta.";
@@ -316,10 +327,10 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 	mes "I'll do better next time! Don't worry!";
 	close;
 }
-prt_in,57,54,3	duplicate(Basta)	Basta#prt	4_M_DWARF
-morocc_in,68,30,3	duplicate(Basta)	Basta#morocc	4_M_DWARF
-payon,148,174,3	duplicate(Basta)	Basta#payon	4_M_DWARF
-alberta_in,18,56,3	duplicate(Basta)	Basta#alberta	4_M_DWARF
-yuno_in01,173,18,3	duplicate(Basta)	Basta#yuno	4_M_DWARF
-ein_in01,24,82,3	duplicate(Basta)	Basta#einbroch	4_M_DWARF
-lhz_in02,280,17,3	duplicate(Basta)	Basta#lighthalzen	4_M_DWARF
+prt_in,57,54,3	duplicate(Basta#re)	Basta#prtre	4_M_DWARF
+morocc_in,68,30,3	duplicate(Basta#re)	Basta#moroccre	4_M_DWARF
+payon,148,174,3	duplicate(Basta#re)	Basta#payonre	4_M_DWARF
+alberta_in,18,56,3	duplicate(Basta#re)	Basta#albertare	4_M_DWARF
+yuno_in01,173,18,3	duplicate(Basta#re)	Basta#yunore	4_M_DWARF
+ein_in01,24,82,3	duplicate(Basta#re)	Basta#einbrochre	4_M_DWARF
+lhz_in02,280,17,3	duplicate(Basta#re)	Basta#lighthalzenre	4_M_DWARF

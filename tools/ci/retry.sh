@@ -3,8 +3,8 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2016  Hercules Dev Team
-# Copyright (C) 2016  Haru <haru@herc.ws>
+# Copyright (C) 2016-2020 Hercules Dev Team
+# Copyright (C) 2016 Haru <haru@herc.ws>
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
