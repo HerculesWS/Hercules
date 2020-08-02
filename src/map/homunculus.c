@@ -305,27 +305,46 @@ static int homunculus_skill_tree_get_max(int id, int b_class)
 
 static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 {
-	int i = 0 ;
+	int i = 0;
 	nullpo_retv(hd);
 
-	if(hd->homunculus.vaporize != HOM_ST_ACTIVE)
+	if (hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return;
 
 	i = skill_id - HM_SKILLBASE;
 	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL);
-	if(hd->homunculus.skillpts > 0 &&
+	if (hd->homunculus.skillpts > 0 &&
 		hd->homunculus.hskill[i].id &&
 		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
 		hd->homunculus.hskill[i].lv < homun->skill_tree_get_max(skill_id, hd->homunculus.class_)
 		)
 	{
-		hd->homunculus.hskill[i].lv++;
-		hd->homunculus.skillpts-- ;
-		status_calc_homunculus(hd,SCO_NONE);
-		if (hd->master) {
-			clif->homskillup(hd->master, skill_id);
-			clif->hominfo(hd->master,hd,0);
-			clif->homskillinfoblock(hd->master);
+		bool stop = false;
+		// Check if pre-requisites were met
+		if (!battle_config.skillfree) {
+			int c = hd->homunculus.class_ - HM_CLASS_BASE;
+			if (hd->homunculus.intimacy < homun->dbs->skill_tree[c][i].intimacylv)
+				stop = true;
+			if (!stop) {
+				for (int j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
+					if (homun->dbs->skill_tree[c][i].need[j].id &&
+					   homun->checkskill(hd, homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv) {
+						stop = true;
+						break;
+					}
+				}
+			}
+		}
+		// Level up skill if requisites were met
+		if (!stop) {
+			hd->homunculus.hskill[i].lv++;
+			hd->homunculus.skillpts-- ;
+			status_calc_homunculus(hd, SCO_NONE);
+			if (hd->master) {
+				clif->homskillup(hd->master, skill_id);
+				clif->hominfo(hd->master, hd, 0);
+				clif->homskillinfoblock(hd->master);
+			}
 		}
 	}
 }
