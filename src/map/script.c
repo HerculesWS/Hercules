@@ -28954,6 +28954,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("EAJ_ARCH_BISHOP", MAPID_ARCH_BISHOP, false, false);
 	script->set_constant("EAJ_MECHANIC", MAPID_MECHANIC, false, false);
 	script->set_constant("EAJ_GUILLOTINE_CROSS", MAPID_GUILLOTINE_CROSS, false, false);
+	script->set_constant("EAJ_STAR_EMPEROR", MAPID_STAR_EMPEROR, false, false);
 
 	script->set_constant("EAJ_ROYAL_GUARD", MAPID_ROYAL_GUARD, false, false);
 	script->set_constant("EAJ_SORCERER", MAPID_SORCERER, false, false);

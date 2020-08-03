@@ -6411,6 +6411,7 @@ static int pc_jobid2mapid(int class)
 		case JOB_ARCH_BISHOP:           return MAPID_ARCH_BISHOP;
 		case JOB_MECHANIC:              return MAPID_MECHANIC;
 		case JOB_GUILLOTINE_CROSS:      return MAPID_GUILLOTINE_CROSS;
+		case JOB_STAR_EMPEROR:          return MAPID_STAR_EMPEROR;
 	//3-2 Jobs
 		case JOB_ROYAL_GUARD:           return MAPID_ROYAL_GUARD;
 		case JOB_SORCERER:              return MAPID_SORCERER;
@@ -6557,6 +6558,7 @@ static int pc_mapid2jobid(unsigned int class, int sex)
 		case MAPID_ARCH_BISHOP:           return JOB_ARCH_BISHOP;
 		case MAPID_MECHANIC:              return JOB_MECHANIC;
 		case MAPID_GUILLOTINE_CROSS:      return JOB_GUILLOTINE_CROSS;
+		case MAPID_STAR_EMPEROR:          return JOB_STAR_EMPEROR;
 	//3-2 Jobs
 		case MAPID_ROYAL_GUARD:           return JOB_ROYAL_GUARD;
 		case MAPID_SORCERER:              return JOB_SORCERER;
@@ -6851,6 +6853,9 @@ static const char *pc_job_name(int class)
 	case JOB_BABY_REBELLION:
 		return msg_txt(678);
 
+	case JOB_STAR_EMPEROR:
+		return msg_txt(679);
+
 	default:
 		return msg_txt(620); // "Unknown Job"
 	}
@@ -6947,6 +6952,7 @@ static int pc_check_job_name(const char *name)
 		{ "Arch_Bishop", JOB_ARCH_BISHOP },
 		{ "Mechanic", JOB_MECHANIC },
 		{ "Guillotine_Cross", JOB_GUILLOTINE_CROSS },
+		{ "Star_Emperor", JOB_STAR_EMPEROR },
 		{ "Rune_Knight_Trans", JOB_RUNE_KNIGHT_T },
 		{ "Warlock_Trans", JOB_WARLOCK_T },
 		{ "Ranger_Trans", JOB_RANGER_T },
