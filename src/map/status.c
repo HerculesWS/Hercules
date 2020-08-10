@@ -609,6 +609,7 @@ static void initChangeTables(void)
 	status->set_sc( RA_ELECTRICSHOCKER   , SC_ELECTRICSHOCKER , SCB_NONE );
 	status->set_sc( RA_WUGDASH           , SC_WUGDASH         , SCB_SPEED );
 	status->set_sc( RA_CAMOUFLAGE        , SC_CAMOUFLAGE      , SCB_SPEED );
+	status->set_sc( RA_WUGBITE           , SC_WUGBITE         , SCB_NONE );
 	add_sc( RA_MAGENTATRAP       , SC_ARMOR_PROPERTY );
 	add_sc( RA_COBALTTRAP        , SC_ARMOR_PROPERTY );
 	add_sc( RA_MAIZETRAP         , SC_ARMOR_PROPERTY );
