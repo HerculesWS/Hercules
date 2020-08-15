@@ -11098,6 +11098,10 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 		if (battle_config.show_tip_window != 0)
 			clif->open_ui_send(sd, ZC_TIPBOX_UI);
 #endif
+#if PACKETVER_RE_NUM >= 20180307 || PACKETVER_MAIN_NUM >= 20180404 || PACKETVER_ZERO_NUM >= 20180411
+		if (battle_config.feature_enable_attendance_system != 0 && clif->attendance_timediff(sd) == true)
+			clif->open_ui_send(sd, ZC_ATTENDANCE_UI);
+#endif
 
 		// Run OnPCLoginEvent labels.
 		npc->script_event(sd, NPCE_LOGIN);
