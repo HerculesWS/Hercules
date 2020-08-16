@@ -5487,6 +5487,10 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, s
 			bonus += sc->data[SC_STEAMPACK]->val2;
 		if (sc->data[SC_SKF_ASPD] != NULL)
 			bonus += sc->data[SC_SKF_ASPD]->val1;
+#ifdef RENEWAL
+		if (sc->data[SC_INC_AGI] != NULL)
+			bonus += sc->data[SC_INC_AGI]->val1; // + SkillLevel%
+#endif
 	}
 
 	return (bonus + pots);
