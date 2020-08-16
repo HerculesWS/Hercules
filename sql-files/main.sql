@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS `account_data` (
   `base_exp` SMALLINT UNSIGNED NOT NULL DEFAULT '100',
   `base_drop` SMALLINT UNSIGNED NOT NULL DEFAULT '100',
   `base_death` SMALLINT UNSIGNED NOT NULL DEFAULT '100',
+  `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+  `attendance_timer` BIGINT(20) NULL DEFAULT '0',
   PRIMARY KEY (`account_id`)
 ) ENGINE=MyISAM;
 
