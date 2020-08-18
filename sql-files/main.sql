@@ -244,8 +244,6 @@ CREATE TABLE IF NOT EXISTS `char` (
   `sex` ENUM('M','F','U') NOT NULL DEFAULT 'U',
   `hotkey_rowshift` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `hotkey_rowshift2` TINYINT UNSIGNED NOT NULL DEFAULT '0',
-  `attendance_count` TINYINT UNSIGNED NOT NULL DEFAULT '0',
-  `attendance_timer` BIGINT NULL DEFAULT '0',
   `title_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `inventory_size` INT UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`char_id`),
