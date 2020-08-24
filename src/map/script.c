@@ -11433,6 +11433,7 @@ static BUILDIN(itemskill)
 	if (sd->auto_cast_current.itemskill_check_conditions) {
 		if (skill->check_condition_castbegin(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv) == 0
 		    || skill->check_condition_castend(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv) == 0) {
+			pc->autocast_clear_current(sd);
 			return true;
 		}
 
@@ -11446,6 +11447,8 @@ static BUILDIN(itemskill)
 	VECTOR_PUSH(sd->auto_cast, sd->auto_cast_current);
 
 	clif->item_skill(sd, sd->auto_cast_current.skill_id, sd->auto_cast_current.skill_lv);
+
+	pc->autocast_clear_current(sd);
 
 	return true;
 }
