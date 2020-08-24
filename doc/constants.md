@@ -4952,7 +4952,7 @@
 
 ### getmercinfo options
 
-- `MERCINFO_ID,`: 0
+- `MERCINFO_ID`: 0
 - `MERCINFO_CLASS`: 1
 - `MERCINFO_NAME`: 2
 - `MERCINFO_FAITH`: 3
