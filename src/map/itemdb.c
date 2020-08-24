@@ -1564,7 +1564,7 @@ static bool itemdb_read_combodb_libconfig(void)
 {
 	struct config_t combo_conf;
 	char filepath[256];
-	safesnprintf(filepath, sizeof(filepath), "%s/%s/%s", map->db_path, DBPATH, "item_combo_db.conf");
+	safesnprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_combo_db.conf");
 
 	if (libconfig->load_file(&combo_conf, filepath) == CONFIG_FALSE) {
 		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
