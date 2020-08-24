@@ -28242,7 +28242,7 @@ static void script_hardcoded_constants(void)
 	script->set_constant("ITEMINFO_NAME", ITEMINFO_NAME, false, false);
 
 	script->constdb_comment("getmercinfo options");
-	script->set_constant("MERCINFO_ID,", MERCINFO_ID, false, false);
+	script->set_constant("MERCINFO_ID", MERCINFO_ID, false, false);
 	script->set_constant("MERCINFO_CLASS", MERCINFO_CLASS, false, false);
 	script->set_constant("MERCINFO_NAME", MERCINFO_NAME, false, false);
 	script->set_constant("MERCINFO_FAITH", MERCINFO_FAITH, false, false);
