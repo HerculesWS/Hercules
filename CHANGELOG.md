@@ -8,7 +8,39 @@ and this project does not adhere to [Semantic Versioning](http://semver.org/spec
 
 <!--
 If you are reading this in a text editor, simply ignore this section
+
+## [vYYYY.MM.DD] `MMMM DD YYYY`
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
 -->
+
+## [v2020.08.23] `August 23 2020`
+
+### Added
+
+- Added the missing mapflag constants `MF_NOMAPCHANNELAUTOJOIN`, `MF_NOKNOCKBACK`, `MF_CVC`, `MF_SRC4INSTANCE`. (part of #2654)
+- Added official item script for Rune Boots. (#2806)
+
+### Changed
+
+- Refactored the mapflag related code to reduce repetition. The mapflag constants exposed to the script engine `mf_*` have been changed to uppercase `MF_*` to match their source counterparts. Custom scripts may need to be updated to follow. (#2654)
+
+### Fixed
+
+- Corrected the >10+ refine success chance with HD ores to match the normal ores. (#2772, issue #2771)
+- Corrected the duration of the Tao Gunka Scroll to be 3 minutes. (#2804)
+- Updated the Flying Galapago item script to match the official version. (#2799)
+- Fixed a duplicate path separator in the `item_combo_db.conf` loader console messages. (#2814)
+- Fixed an exploit in the autocast system, allowing to bypass the deletion of skill requirements under certain conditions. (#2819)
+- Fixed a typo that made the `MERCINFO_ID` constant unusable from the script engine. (#2817)
 
 ## [v2020.07.26] `July 26 2020`
 
@@ -36,8 +68,6 @@ If you are reading this in a text editor, simply ignore this section
 - Fixed a missing cleanup of the `dnsbl` vectors on shutdown. (part of #2788)
 - Fixed the experience gain messages printing a literal `%"PRIu64"` instead of the gained amount of experience. (#2647)
 - Fixed several typos in the configuration files. (#2769)
-
-### Deprecated
 
 ### Removed
 
@@ -1545,6 +1575,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.08.23]: https://github.com/HerculesWS/Hercules/compare/v2020.07.26...v2020.08.23
 [v2020.07.26]: https://github.com/HerculesWS/Hercules/compare/v2020.06.28...v2020.07.26
 [v2020.06.28]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31+1...v2020.06.28
 [v2020.05.31+1]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31...v2020.05.31+1
