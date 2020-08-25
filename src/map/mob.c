@@ -2380,7 +2380,9 @@ static void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 
 #if PACKETVER >= 20131223
 	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
-	if (battle_config.show_monster_hp_bar)
+	if ((battle_config.show_monster_hp_bar&1 && !(md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM))
+		|| (battle_config.show_monster_hp_bar&2 && (md->class_ == MOBID_EMPELIUM))
+		|| (battle_config.show_monster_hp_bar&4 && (md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM)))
 		clif->set_unit_walking(&md->bl, NULL, unit->bl2ud(&md->bl), AREA);
 #endif
 
@@ -3117,7 +3119,9 @@ static void mob_heal(struct mob_data *md, unsigned int heal)
 		clif->blname_ack(0, &md->bl);
 #if PACKETVER >= 20131223
 	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
-	if (battle_config.show_monster_hp_bar)
+	if ((battle_config.show_monster_hp_bar&1 && !(md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM))
+		|| (battle_config.show_monster_hp_bar&2 && (md->class_ == MOBID_EMPELIUM))
+		|| (battle_config.show_monster_hp_bar&4 && (md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM)))
 		clif->set_unit_walking(&md->bl, NULL, unit->bl2ud(&md->bl), AREA);
 #endif
 

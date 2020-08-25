@@ -1155,10 +1155,20 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+	if (battle_config.show_monster_hp_bar&1 && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) && !(md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-	} else {
+	}
+	else if (battle_config.show_monster_hp_bar&2 && (md->class_ == MOBID_EMPELIUM) && status_get_hp(bl) < status_get_max_hp(bl)) {
+		p.maxHP = status_get_max_hp(bl);
+		p.HP = status_get_hp(bl);
+	}
+	else if (battle_config.show_monster_hp_bar&4 && (md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM) && status_get_hp(bl) < status_get_max_hp(bl)) {
+		p.maxHP = status_get_max_hp(bl);
+		p.HP = status_get_hp(bl);
+	}
+	else {
 		p.maxHP = -1;
 		p.HP = -1;
 	}
@@ -1313,10 +1323,20 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+	if (battle_config.show_monster_hp_bar&1 && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) && !(md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-	} else {
+	}
+	else if (battle_config.show_monster_hp_bar&2 && (md->class_ == MOBID_EMPELIUM) && status_get_hp(bl) < status_get_max_hp(bl)) {
+		p.maxHP = status_get_max_hp(bl);
+		p.HP = status_get_hp(bl);
+	}
+	else if (battle_config.show_monster_hp_bar&4 && (md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM) && status_get_hp(bl) < status_get_max_hp(bl)) {
+		p.maxHP = status_get_max_hp(bl);
+		p.HP = status_get_hp(bl);
+	}
+	else {
 		p.maxHP = -1;
 		p.HP = -1;
 	}
@@ -1417,10 +1437,20 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+	if (battle_config.show_monster_hp_bar&1 && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) && !(md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-	} else {
+	}
+	else if (battle_config.show_monster_hp_bar&2 && (md->class_ == MOBID_EMPELIUM) && status_get_hp(bl) < status_get_max_hp(bl)) {
+		p.maxHP = status_get_max_hp(bl);
+		p.HP = status_get_hp(bl);
+	}
+	else if (battle_config.show_monster_hp_bar&4 && (md->status.mode&MD_BOSS) && !(md->class_ == MOBID_EMPELIUM) && status_get_hp(bl) < status_get_max_hp(bl)) {
+		p.maxHP = status_get_max_hp(bl);
+		p.HP = status_get_hp(bl);
+	}
+	else {
 		p.maxHP = -1;
 		p.HP = -1;
 	}
