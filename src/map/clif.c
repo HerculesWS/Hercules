@@ -1155,7 +1155,7 @@ static void clif_set_unit_idle(struct block_list *bl, struct map_session_data *t
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+	if (clif->show_monster_hp_bar(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 	} else {
@@ -1313,7 +1313,7 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+	if (clif->show_monster_hp_bar(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 	} else {
@@ -1417,7 +1417,7 @@ static void clif_set_unit_walking(struct block_list *bl, struct map_session_data
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+	if (clif->show_monster_hp_bar(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 	} else {
@@ -20388,6 +20388,25 @@ static void clif_monster_hp_bar(struct mob_data *md, struct map_session_data *sd
 #endif
 }
 
+static bool clif_show_monster_hp_bar(struct block_list *bl)
+{
+	nullpo_ret(bl);
+
+	if (bl->type != BL_MOB)
+		return false;
+
+	const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+	if (status_get_hp(bl) < status_get_max_hp(bl)) {
+		if ((battle->bc->show_monster_hp_bar & 1) != 0 && md->class_ != MOBID_EMPELIUM && (md->status.mode & MD_BOSS) == 0)
+			return true;
+		if ((battle->bc->show_monster_hp_bar & 2) != 0 && md->class_ == MOBID_EMPELIUM)
+			return true;
+		if ((battle->bc->show_monster_hp_bar & 4) != 0 && (md->status.mode & MD_BOSS) != 0 && md->class_ != MOBID_EMPELIUM)
+			return true;
+	}
+	return false;
+}
+
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
 static void clif_parse_dull(int fd, struct map_session_data *sd)
 {
@@ -24713,6 +24732,7 @@ void clif_defaults(void)
 	clif->itemname_ack = clif_itemname_ack;
 	clif->unknownname_ack = clif_unknownname_ack;
 	clif->monster_hp_bar = clif_monster_hp_bar;
+	clif->show_monster_hp_bar = clif_show_monster_hp_bar;
 	clif->hpmeter = clif_hpmeter;
 	clif->hpmeter_single = clif_hpmeter_single;
 	clif->hpmeter_sub = clif_hpmeter_sub;

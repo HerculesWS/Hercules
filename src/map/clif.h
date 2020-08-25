@@ -980,7 +980,8 @@ struct clif_interface {
 	void (*skillname_ack) (int fd, struct block_list *bl);
 	void (*itemname_ack) (int fd, struct block_list *bl);
 	void (*unknownname_ack) (int fd, struct block_list *bl);
-	void (*monster_hp_bar) ( struct mob_data* md, struct map_session_data *sd );
+	void (*monster_hp_bar) (struct mob_data *md, struct map_session_data *sd);
+	bool (*show_monster_hp_bar) (struct block_list *bl);
 	int (*hpmeter) (struct map_session_data *sd);
 	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
 	int (*hpmeter_sub) (struct block_list *bl, va_list ap);
