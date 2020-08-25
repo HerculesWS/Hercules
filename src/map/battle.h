@@ -616,6 +616,8 @@ struct Battle_Config {
 	int autoloot_adjust;
 	int allowed_actions_when_dead;
 	int teleport_close_storage;
+
+	int show_attendance_window;
 };
 
 /* criteria for battle_config.idletime_critera */
