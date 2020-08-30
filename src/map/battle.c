@@ -2315,7 +2315,11 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case BA_MUSICALSTRIKE:
 				case DC_THROWARROW:
+#ifndef RENEWAL
 					skillratio += 25 + 25 * skill_lv;
+#else
+					skillratio += 10 + 40 * skill_lv;
+#endif
 					break;
 				case CH_TIGERFIST:
 					skillratio += 100 * skill_lv - 60;
