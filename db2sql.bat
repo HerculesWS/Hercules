@@ -1,7 +1,7 @@
 @ECHO OFF
 
 REM This file is part of Hercules.
-REM http://herc.ws - http://github.com/HerculesWS/Hercules
+REM https://herc.ws - https://github.com/HerculesWS/Hercules
 REM
 REM Copyright (C) 2013-2020 Hercules Dev Team
 REM
@@ -16,9 +16,9 @@ REM MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 REM GNU General Public License for more details.
 REM
 REM You should have received a copy of the GNU General Public License
-REM along with this program.  If not, see <http://www.gnu.org/licenses/>.
+REM along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-REM Base Author: Mumbles @ http://herc.ws
+REM Base Author: Mumbles @ https://herc.ws
 
 COLOR 0F
 
@@ -32,7 +32,7 @@ ECHO                ^| ^| ^| ^|  __/ ^| ^| (__^| ^|_^| ^| ^|  __/\__ \
 ECHO                \_^| ^|_/\___^|_^|  \___^|\__,_^|_^|\___^|^|___/
 ECHO.
 ECHO                     Database to SQL Converter
-ECHO                     http://herc.ws/board/
+ECHO                     https://herc.ws/board/
 ECHO.
 ECHO.
 

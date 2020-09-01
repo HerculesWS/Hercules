@@ -26,7 +26,7 @@
 # General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 PROGRAM=libtool
@@ -89,7 +89,7 @@ scriptversion=2015-01-20.17; # UTC
 # General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 # Please report bugs or propose patches to gary@gnu.org.
 
@@ -1390,7 +1390,7 @@ scriptversion=2014-01-07.03; # UTC
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Please report bugs or propose patches to gary@gnu.org.
 
@@ -2073,8 +2073,8 @@ include the following information:
        autoconf:       `($AUTOCONF --version) 2>/dev/null |$SED 1q`
 
 Report bugs to <bug-libtool@gnu.org>.
-GNU libtool home page: <http://www.gnu.org/s/libtool/>.
-General help using GNU software: <http://www.gnu.org/gethelp/>."
+GNU libtool home page: <https://www.gnu.org/software/libtool/>.
+General help using GNU software: <https://www.gnu.org/software/gethelp.html>."
     exit 0
 }
 
@@ -2416,8 +2416,8 @@ libtool_validate_options ()
     test : = "$debug_cmd" || func_append preserve_args " --debug"
 
     case $host in
-      # Solaris2 added to fix http://debbugs.gnu.org/cgi/bugreport.cgi?bug=16452
-      # see also: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59788
+      # Solaris2 added to fix https://debbugs.gnu.org/cgi/bugreport.cgi?bug=16452
+      # see also: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59788
       *cygwin* | *mingw* | *pw32* | *cegcc* | *solaris2* | *os2*)
         # don't eliminate duplications in $postdeps and $predeps
         opt_duplicate_compiler_generated_deps=:

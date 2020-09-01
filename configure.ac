@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # This file is part of Hercules.
-# http://herc.ws - http://github.com/HerculesWS/Hercules
+# https://herc.ws - https://github.com/HerculesWS/Hercules
 #
 # Copyright (C) 2012-2020 Hercules Dev Team
 # Copyright (C) Athena Dev Teams
@@ -18,7 +18,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 AC_INIT(Hercules)
 AC_REVISION([m4_esyscmd_s([type git >/dev/null 2>&1 && git describe --always 2>/dev/null || echo '(unknown version)'])])
@@ -60,9 +60,9 @@ CYGWIN*)
 			echo "* requires the extra privileges (which Hercules does not.)                     *"
 			echo "*                                                                              *"
 			echo "* More info:                                                                   *"
-			echo "* http://www.tldp.org/HOWTO/Security-HOWTO/local-security.html                 *"
+			echo "* https://tldp.org/HOWTO/Security-HOWTO/local-security.html                    *"
 			echo "* https://wiki.debian.org/sudo                                                 *"
-			echo "* http://wiki.centos.org/TipsAndTricks/BecomingRoot                            *"
+			echo "* https://wiki.centos.org/TipsAndTricks/BecomingRoot                           *"
 			echo "* http://fedoraproject.org/wiki/Configuring_Sudo                               *"
 			echo "* https://help.ubuntu.com/community/RootSudo                                   *"
 			echo "* http://www.freebsdwiki.net/index.php/Root                                    *"

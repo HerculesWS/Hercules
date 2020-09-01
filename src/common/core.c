@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #define HERCULES_CORE
 
@@ -62,9 +62,9 @@
  * never ever run software as root unless it requires the extra privileges
  * (which Hercules does not.)
  * More info:
- * http://www.tldp.org/HOWTO/Security-HOWTO/local-security.html
- * http://www.gentoo.org/doc/en/security/security-handbook.xml?style=printable&part=1&chap=1#doc_chap4
- * http://wiki.centos.org/TipsAndTricks/BecomingRoot
+ * https://tldp.org/HOWTO/Security-HOWTO/local-security.html
+ * https://wiki.debian.org/sudo
+ * https://wiki.centos.org/TipsAndTricks/BecomingRoot
  * http://fedoraproject.org/wiki/Configuring_Sudo
  * https://help.ubuntu.com/community/RootSudo
  * http://www.freebsdwiki.net/index.php/Root
@@ -338,9 +338,9 @@ static CMDLINEARG(help)
  */
 static CMDLINEARG(version)
 {
-	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://herc.ws/\n");
+	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttps://herc.ws/\n");
 	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
-	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
+	ShowInfo("Open "CL_WHITE"readme.md"CL_RESET" for more information.\n");
 	return false;
 }
 

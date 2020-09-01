@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #ifndef CONFIG_RENEWAL_H
 #define CONFIG_RENEWAL_H
 
 /**
- * Hercules configuration file (http://herc.ws)
- * For detailed guidance on these check http://herc.ws/wiki/SRC/config/
+ * Hercules configuration file (https://herc.ws)
+ * For detailed guidance on these check https://herc.ws/wiki/SRC/config/
  **/
 
 /**
@@ -64,7 +64,7 @@
 ///
 /// leave this line to enable renewal item drop rate algorithms
 /// while enabled a special modified based on the difference between the player and monster level is applied
-/// based on the http://irowiki.org/wiki/Drop_System#Level_Factor table
+/// based on the https://irowiki.org/wiki/Drop_System#Level_Factor table
 #define RENEWAL_DROP
 
 /// renewal exp rate algorithms

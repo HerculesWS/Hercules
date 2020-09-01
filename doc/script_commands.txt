@@ -1278,11 +1278,11 @@ labels. For example:
 Will make the [Hat Maker] text clickable in the client and start a navigation
 to that point.
 
-    mes("You can <URL>Google<INFO>http://www.google.com/</INFO></URL> anything");
+    mes("You can <URL>Google<INFO>https://www.google.com/</INFO></URL> anything");
 
 This will allow you to visit 'Google' with the in-game browser using default dimensions.
 
-    mes("You can <URL>Bing!<INFO>http://www.bing.com/,800,600</INFO></URL> anything");
+    mes("You can <URL>Bing!<INFO>https://www.bing.com/,800,600</INFO></URL> anything");
 
 Clicking 'Bing!' will open the in-game browser using the specified dimensions. (800x600)
 
@@ -3693,7 +3693,7 @@ the format string.
 
 This uses the C function 'strftime', which obeys special format
 characters. For a full description see, for example, the description of
-'strftime' at http://www.delorie.com/gnu/docs/glibc/libc_437.html
+'strftime' at https://www.php.net/manual/en/function.strftime.php
 All the format characters given in there should properly work.
 Max length is the maximum length of a time string to generate.
 
@@ -8786,8 +8786,11 @@ Using regular expressions is high wizardry. But with this high wizardry
 comes unparalleled power of text manipulation. For an explanation of what
 a regular expression pattern is, see a few web pages:
 
-http://www.regular-expressions.info/
+https://www.regular-expressions.info/
 http://www.weitz.de/regex-coach/
+
+https://regexr.com/
+RegExr is an online tool to learn, build, & test Regular Expressions.
 
 Additionally, the following temporary variables will be filled (unless the
 command is invoked as '~!'):

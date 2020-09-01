@@ -3,7 +3,7 @@ A list of player group permission, configured in `conf/groups.conf`.
 
 ## Copyright
 > This file is part of Hercules.
-> http://herc.ws - http://github.com/HerculesWS/Hercules
+> https://herc.ws - https://github.com/HerculesWS/Hercules
 > 
 > Copyright (C) 2012-2020 Hercules Dev Team
 > Copyright (C) Athena Dev Teams
@@ -14,7 +14,7 @@ A list of player group permission, configured in `conf/groups.conf`.
 > See the GNU General Public License for more details.
 >
 > You should have received a copy of the GNU General Public License along with this program.  
-> If not, see <http://www.gnu.org/licenses/>.
+> If not, see <https://www.gnu.org/licenses/>.
 
 ## Description
 The Hercules emulator has a permission system that enables certain groups of players to perform certain actions, or have access to certain visual enhancements or in-game activity.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # This file is part of Hercules.
-# http://herc.ws - http://github.com/HerculesWS/Hercules
+# https://herc.ws - https://github.com/HerculesWS/Hercules
 #
 # Copyright (C) 2015-2020 Hercules Dev Team
 #
@@ -16,7 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ./mobdbconverter.py re .. ../db/re/mob_db.txt > ../db/re/mob_db.conf
 ./mobdbconverter.py re .. ../db/mob_db2.txt > ../db/mob_db2.conf

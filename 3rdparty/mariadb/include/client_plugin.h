@@ -12,7 +12,7 @@
    Library General Public License for more details.
    
    You should have received a copy of the GNU Library General Public
-   License along with this library; if not see <http://www.gnu.org/licenses>
+   License along with this library; if not see <https://www.gnu.org/licenses/>
    or write to the Free Software Foundation, Inc., 
    51 Franklin St., Fifth Floor, Boston, MA 02110, USA */
 

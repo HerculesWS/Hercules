@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # This file is part of Hercules.
-# http://herc.ws - http://github.com/HerculesWS/Hercules
+# https://herc.ws - https://github.com/HerculesWS/Hercules
 #
 # Copyright (C) 2014-2020 Hercules Dev Team
 #
@@ -16,9 +16,9 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Base Author: Haru @ http://herc.ws
+# Base Author: Haru @ https://herc.ws
 
 MODE="$1"
 shift
@@ -277,7 +277,7 @@ EOF
 	getplugins)
 		echo "Cloning plugins repository..."
 		# Nothing to clone right now, all relevant plugins are part of the repository.
-		#git clone http://github.com/HerculesWS/StaffPlugins.git || aborterror "Unable to fetch plugin repository"
+		#git clone https://github.com/HerculesWS/StaffPlugins.git || aborterror "Unable to fetch plugin repository"
 		#if [ -f StaffPlugins/Haru/script_mapquit/script_mapquit.c -a -f StaffPlugins/Haru/script_mapquit/examples/ci_test.txt ]; then
 		#	pushd src/plugins || aborterror "Unable to enter plugins directory."
 		#	ln -s ../../StaffPlugins/Haru/script_mapquit/script_mapquit.c ./

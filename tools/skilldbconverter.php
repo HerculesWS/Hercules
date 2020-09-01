@@ -9,7 +9,7 @@
 *
 * * * * * * * * * * * * * * License * * * * * * * * * * * * * * * * * * * * * *
 * This file is part of Hercules.
-* http://herc.ws - http://github.com/HerculesWS/Hercules
+* https://herc.ws - https://github.com/HerculesWS/Hercules
 *
 * Copyright (C) 2016-2020 Hercules Dev Team
 * Copyright (C) 2016 Smokexyz
@@ -25,7 +25,7 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 * Credits : Smokexyz */
 
@@ -954,7 +954,7 @@ function getcomments($re)
 //=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
 //================= License ====================================================
 //= This file is part of Hercules.
-//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//= https://herc.ws - https://github.com/HerculesWS/Hercules
 //=
 //= Copyright (C) 2014-2020 Hercules Dev Team
 //=
@@ -969,7 +969,7 @@ function getcomments($re)
 //= GNU General Public License for more details.
 //=
 //= You should have received a copy of the GNU General Public License
-//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//= along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //==============================================================================
 //= ".($re?"Renewal":"Pre-Renewal")." Skill Database [Hercules]
 //==============================================================================

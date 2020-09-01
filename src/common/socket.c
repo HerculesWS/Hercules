@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #define HERCULES_CORE
 
@@ -383,7 +383,7 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 
 	if (opt && opt->setTimeo) {
 #if defined(WIN32)
-		DWORD timeout = 5000; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms740476(v=vs.85).aspx
+		DWORD timeout = 5000; // https://docs.microsoft.com/pt-br/windows/win32/api/winsock/nf-winsock-setsockopt
 #else // not WIN32
 		struct timeval timeout = { 0 };
 		timeout.tv_sec = 5;

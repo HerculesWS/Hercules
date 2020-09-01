@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #define HERCULES_CORE
 
@@ -5360,7 +5360,7 @@ static int npc_parsesrcfile(const char *filepath, bool runOnInit)
 		// - BOM is discouraged in UTF-8, and the only place where you see it is Notepad and such.
 		// - It's unlikely that the user wants to use UTF-8 data here, since we don't really support it, nor does the client by default.
 		// - If the user really wants to use UTF-8 (instead of latin1, EUC-KR, SJIS, etc), then they can still do it <without BOM>.
-		// More info at http://unicode.org/faq/utf_bom.html#bom5 and http://en.wikipedia.org/wiki/Byte_order_mark#UTF-8
+		// More info at https://unicode.org/faq/utf_bom.html#bom5 and https://en.wikipedia.org/wiki/Byte_order_mark#UTF-8
 		ShowError("npc_parsesrcfile: Detected unsupported UTF-8 BOM in file '%s'. Stopping (please consider using another character set.)\n", filepath);
 		aFree(buffer);
 		return EXIT_FAILURE;

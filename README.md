@@ -16,7 +16,7 @@ Issues and pull requests:
 
 Development and Community:
 [![GitHub Repository](https://img.shields.io/badge/github-HerculesWS/Hercules-green.svg?logo=github)](https://github.com/HerculesWS/Hercules)
-[![Community Forum](https://img.shields.io/badge/forum-herc.ws-orange.svg)](http://herc.ws)
+[![Community Forum](https://img.shields.io/badge/forum-herc.ws-orange.svg)](https://herc.ws)
 [![IRC](https://img.shields.io/badge/IRC-Rizon/Hercules-yellow.svg)](irc://rizon.net/Hercules)
 [![Discord](https://img.shields.io/badge/discord-Hercules%20Emulator-7289da.svg)](https://discord.gg/rqCxS8p)
 [![Twitter](https://img.shields.io/badge/twitter-@HerculesWS-blue.svg?logo=twitter)](https://twitter.com/HerculesWS)
@@ -73,18 +73,18 @@ For a list of supported platforms, please refer to the [Supported Platforms](htt
 
 #### Mac OS X
   - Xcode or the Xcode command-line tools.
-  - MySQL-compatible server (installation of `mysql` or `mariadb` through [Homebrew](http://brew.sh/) is recommended)
-  - PCRE library (installation of `pcre` through [Homebrew](http://brew.sh) is recommended)
+  - MySQL-compatible server (installation of `mysql` or `mariadb` through [Homebrew](https://brew.sh/) is recommended)
+  - PCRE library (installation of `pcre` through [Homebrew](https://brew.sh/) is recommended)
   - *Optional dependencies for development only*
     - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
 
 #### Optional, useful tools
   - MySQL GUI clients
-    - [MySQL Workbench](http://www.mysql.com/downloads/workbench/) (cross-platform)
-    - [HeidiSQL](http://www.heidisql.com/) (Windows)
-    - [DBeaver](http://dbeaver.jkiss.org/) (cross-platform)
-    - [Sequel Pro](http://www.sequelpro.com/) (Mac OS X)
-       - *More options available at [mariadb.com](https://mariadb.com/kb/en/library/graphical-and-enhanced-clients/)*
+    - [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) (cross-platform)
+    - [HeidiSQL](https://www.heidisql.com/) (Windows)
+    - [DBeaver](https://dbeaver.io/) (cross-platform)
+    - [Sequel Pro](https://www.sequelpro.com/) (Mac OS X)
+       - *More options available at [mariadb.com](https://mariadb.com/kb/en/graphical-and-enhanced-clients/)*
   - GUI Git clients
     - [GitHub Desktop](https://desktop.github.com/) (cross-platform)
     - [GitKraken](https://www.gitkraken.com/git-client) (cross-platform)
@@ -204,10 +204,10 @@ The following list of links point to various help files within the repository,
 articles or pages on the Wiki or topics within the Hercules forum.
 
 * Hercules Forums:
-  http://herc.ws/board/
+  https://herc.ws/board/
 
 * Hercules Wiki:
-  http://herc.ws/wiki/Main_Page
+  https://herc.ws/wiki/Main_Page
 
 * Git Repository URL:
   https://github.com/HerculesWS/Hercules

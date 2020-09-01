@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #define HERCULES_CORE
 
@@ -217,7 +217,7 @@ static char *strlib_normalize_name(char *str, const char *delims)
 }
 
 //stristr: Case insensitive version of strstr, code taken from
-//http://www.daniweb.com/code/snippet313.html, Dave Sinkula
+//https://www.daniweb.com/programming/software-development/code/216564/strings-case-insensitive-strstr Dave Sinkula
 //
 static const char *strlib_stristr(const char *haystack, const char *needle)
 {

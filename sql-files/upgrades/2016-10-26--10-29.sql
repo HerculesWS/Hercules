@@ -1,7 +1,7 @@
 #1477434595
 
 -- This file is part of Hercules.
--- http://herc.ws - http://github.com/HerculesWS/Hercules
+-- https://herc.ws - https://github.com/HerculesWS/Hercules
 --
 -- Copyright (C) 2015-2020 Hercules Dev Team
 --
@@ -16,7 +16,7 @@
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ALTER TABLE `zenylog` CHANGE `type` `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B','K')  CHARACTER SET utf8  COLLATE utf8_general_ci  NOT NULL  DEFAULT 'S';
 

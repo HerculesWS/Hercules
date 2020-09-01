@@ -2,7 +2,7 @@
 
 
 -- This file is part of Hercules.
--- http://herc.ws - http://github.com/HerculesWS/Hercules
+-- https://herc.ws - https://github.com/HerculesWS/Hercules
 --
 -- Copyright (C) 2013-2020 Hercules Dev Team
 -- Copyright (C) 2013 Haru <haru@dotalux.com>
@@ -18,7 +18,7 @@
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -- Note: If you're running a MySQL version earlier than 5.0 (or if this scripts fails for you for any reason)
 --       you'll need to run the following queries manually:

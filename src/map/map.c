@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #define HERCULES_CORE
 
@@ -1408,7 +1408,7 @@ static int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m,
 	// path and include it if the range fits and the target is in the line (0<k<1,
 	// as they call it).
 	// The implementation I took as reference is found at
-	// http://web.archive.org/web/20050720125314/http://astronomy.swin.edu.au/~pbourke/geometry/pointline/
+	// https://web.archive.org/web/20050720125314/http://astronomy.swin.edu.au/~pbourke/geometry/pointline/
 	// http://paulbourke.net/geometry/pointlineplane/
 	// I won't use doubles/floats, but pure int math for
 	// speed purposes. The range considered is always the same no matter how

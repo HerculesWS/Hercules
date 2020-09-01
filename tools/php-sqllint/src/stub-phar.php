@@ -9,7 +9,7 @@
  * @package   PHP-SQLlint
  * @author    Christian Weiske <cweiske@cweiske.de>
  * @copyright 2015 Christian Weiske
- * @license   http://www.gnu.org/licenses/agpl.html GNU AGPL v3
+ * @license   https://www.gnu.org/licenses/agpl.html GNU AGPL v3
  * @link      http://cweiske.de/php-sqllint.htm
  */
 Phar::mapPhar('php-sqllint.phar');

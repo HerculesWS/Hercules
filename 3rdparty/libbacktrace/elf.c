@@ -2771,7 +2771,7 @@ elf_add (struct backtrace_state *state, const char *filename, int descriptor,
 	     not handle objects with more than SHN_LORESERVE sections
 	     correctly.  All large section indexes were offset by
 	     0x100.  There is more information at
-	     http://sourceware.org/bugzilla/show_bug.cgi?id-5900 .
+	     https://sourceware.org/bugzilla/show_bug.cgi?keywords=id-5900 .
 	     Fortunately these object files are easy to detect, as the
 	     GNU binutils always put the section header string table
 	     near the end of the list of sections.  Thus if the

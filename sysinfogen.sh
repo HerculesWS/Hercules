@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This file is part of Hercules.
-# http://herc.ws - http://github.com/HerculesWS/Hercules
+# https://herc.ws - https://github.com/HerculesWS/Hercules
 #
 # Copyright (C) 2014-2020 Hercules Dev Team
 #
@@ -16,9 +16,9 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Base Author: Haru @ http://herc.ws
+# Base Author: Haru @ https://herc.ws
 
 do_fail() {
 	echo 'Error writing output file'
@@ -51,7 +51,7 @@ YEAR="$(date +%Y)"
 cat > "$OUTFILE" << EOF
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2014-$YEAR Hercules Dev Team
  *
@@ -66,7 +66,7 @@ cat > "$OUTFILE" << EOF
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 // This file was automatically generated. Any edit to it will be lost.

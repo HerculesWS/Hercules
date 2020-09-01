@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2013-2020 Hercules Dev Team
  *
@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "config/core.h"
 
@@ -104,7 +104,7 @@ void db2sql_fileheader(void)
 
 	fprintf(tosql.fp,
 			"-- This file is part of Hercules.\n"
-			"-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
+			"-- https://herc.ws - https://github.com/HerculesWS/Hercules\n"
 			"--\n"
 			"-- Copyright (C) 2013-%d Hercules Dev Team\n"
 			"--\n"
@@ -119,7 +119,7 @@ void db2sql_fileheader(void)
 			"-- GNU General Public License for more details.\n"
 			"--\n"
 			"-- You should have received a copy of the GNU General Public License\n"
-			"-- along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+			"-- along with this program.  If not, see <https://www.gnu.org/licenses/>.\n\n"
 
 			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
 			"--       as it will get overwritten. If you need to modify this file,\n"

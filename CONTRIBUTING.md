@@ -19,7 +19,7 @@ of users.
 
 If you are unsure of whether your contribution should be implemented as a
 module or part of Hercules Core, you may visit [#Hercules on Rizon
-IRC](http://herc.ws/board/topic/91-hercules-irc/), create an issue on GitHub,
+IRC](https://herc.ws/board/topic/91-hercules-irc/), create an issue on GitHub,
 or drop us an email at dev@herc.ws
 
 ## Getting Started

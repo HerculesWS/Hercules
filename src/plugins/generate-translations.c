@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2016-2020 Hercules Dev Team
  *
@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "config/core.h"
 
@@ -252,7 +252,7 @@ bool translations_enter_file(const char *filepath)
 		strftime(timestring, sizeof(timestring), "%Y-%m-%d %H:%M:%S%z", lt);
 		fprintf(lang_export_fp,
 				"# This file is part of Hercules.\n"
-				"# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
+				"# https://herc.ws - https://github.com/HerculesWS/Hercules\n"
 				"#\n"
 				"# Copyright (C) 2013-%d Hercules Dev Team\n"
 				"#\n"
@@ -267,7 +267,7 @@ bool translations_enter_file(const char *filepath)
 				"# GNU General Public License for more details.\n"
 				"#\n"
 				"# You should have received a copy of the GNU General Public License\n"
-				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+				"# along with this program.  If not, see <https://www.gnu.org/licenses/>.\n\n"
 
 				"#,fuzzy\n"
 				"msgid \"\"\n"

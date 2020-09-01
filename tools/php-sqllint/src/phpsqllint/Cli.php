@@ -7,7 +7,7 @@
  * @category Tools
  * @package  PHP-SQLlint
  * @author   Christian Weiske <cweiske@cweiske.de>
- * @license  http://www.gnu.org/licenses/agpl.html GNU AGPL v3
+ * @license  https://www.gnu.org/licenses/agpl.html GNU AGPL v3
  * @link     http://cweiske.de/php-sqllint.htm
  */
 namespace phpsqllint;
@@ -19,7 +19,7 @@ use PhpMyAdmin\SqlParser\Parser;
  * @category Tools
  * @package  PHP-SQLlint
  * @author   Christian Weiske <cweiske@cweiske.de>
- * @license  http://www.gnu.org/licenses/agpl.html GNU AGPL v3
+ * @license  https://www.gnu.org/licenses/agpl.html GNU AGPL v3
  * @link     http://www.emacswiki.org/emacs/CreatingYourOwnCompileErrorRegexp
  */
 class Cli

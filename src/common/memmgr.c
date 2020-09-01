@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #define HERCULES_CORE
 
@@ -984,7 +984,7 @@ static void malloc_init(void)
 	memmgr_usage_bytes = 0;
 #endif
 #if defined(DMALLOC) && defined(CYGWIN)
-	// http://dmalloc.com/docs/latest/online/dmalloc_19.html
+	// https://dmalloc.com/docs/latest/online/dmalloc_19.html
 	dmalloc_debug_setup(getenv("DMALLOC_OPTIONS"));
 #endif
 #ifdef GCOLLECT

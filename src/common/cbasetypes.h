@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  *
@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #ifndef COMMON_CBASETYPES_H
 #define COMMON_CBASETYPES_H
@@ -339,7 +339,7 @@ typedef uintptr_t uintptr;
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
 // MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
 // but it will support it in Visual Studio 2013 (MSVC version 18.00)
-// http://blogs.msdn.com/b/vcblog/archive/2013/07/19/c99-library-support-in-visual-studio-2013.aspx
+// https://devblogs.microsoft.com/cppblog/c99-library-support-in-visual-studio-2013/
 // GCC and Clang are assumed to be C99 compliant
 #include <stdbool.h> // bool, true, false, __bool_true_false_are_defined
 #endif // ! defined(_MSC_VER) || _MSC_VER >= 1800
@@ -402,7 +402,7 @@ typedef char bool;
 #define PATHSEP '\\'
 #define PATHSEP_STR "\\"
 #elif defined(__APPLE__) && !defined(__MACH__)
-// __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
+// __MACH__ indicates OS X ( https://sourceforge.net/p/predef/wiki/OperatingSystems/ )
 #define PATHSEP ':'
 #define PATHSEP_STR ":"
 #else

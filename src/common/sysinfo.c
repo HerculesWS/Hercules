@@ -1,6 +1,6 @@
 /**
  * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
+ * https://herc.ws - https://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2013-2020 Hercules Dev Team
  * Copyright (C) Athena Dev Teams
@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
  * See sysinfo.h for a description of this file.
  *
- * Base Author: Haru @ http://herc.ws
+ * Base Author: Haru @ https://herc.ws
  */
 #define HERCULES_CORE
 
@@ -74,7 +74,7 @@ struct sysinfo_interface *sysinfo;
  * Values to be used with GetProductInfo.
  *
  * These aren't defined in MSVC2008/WindowsXP, so we gotta define them here.
- * Values from: http://msdn.microsoft.com/en-us/library/windows/desktop/ms724358%28v=vs.85%29.aspx
+ * Values from: https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getproductinfo
  */
 enum windows_product_type {
 	msPRODUCT_UNDEFINED                           = 0x00000000, ///< An unknown product
@@ -164,7 +164,7 @@ enum windows_product_type {
 /**
  * Values to be used with GetSystemMetrics.
  *
- * Values from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724385%28v=vs.85%29.aspx
+ * Values from https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics
  */
 enum windows_metrics {
 	msSM_SERVERR2 = 89, ///< Obtains the build number if the system is Windows Server 2003 R2; otherwise, 0.
@@ -173,7 +173,7 @@ enum windows_metrics {
 /**
  * Values to be used with OSVERSIONINFOEX.wSuiteMask.
  *
- * Values from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724833%28v=vs.85%29.aspx
+ * Values from https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexa
  */
 enum windows_ver_suite {
 	msVER_SUITE_BLADE          = 0x00000400, ///< Windows Server 2003, Web Edition is installed.
@@ -187,7 +187,7 @@ enum windows_ver_suite {
 #include "sysinfo.inc"
 #endif // WIN32
 
-// Compiler detection <http://sourceforge.net/p/predef/wiki/Compilers/>
+// Compiler detection <https://sourceforge.net/p/predef/wiki/Compilers/>
 #if defined(__BORLANDC__)
 #define SYSINFO_COMPILER "Borland C++"
 #elif defined(__clang__)
@@ -613,7 +613,7 @@ typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
 /**
  * Retrieves SYSTEM_INFO (Windows only)
  * System info is not stored anywhere after retrieval
- * @see http://msdn.microsoft.com/en-us/library/windows/desktop/ms724958(v=vs.85).aspx
+ * @see https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info
  **/
 static void sysinfo_systeminfo_retrieve(LPSYSTEM_INFO info)
 {

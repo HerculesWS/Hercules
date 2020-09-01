@@ -1,7 +1,7 @@
 #1383162785
 
 -- This file is part of Hercules.
--- http://herc.ws - http://github.com/HerculesWS/Hercules
+-- https://herc.ws - https://github.com/HerculesWS/Hercules
 --
 -- Copyright (C) 2013-2020 Hercules Dev Team
 --
@@ -16,7 +16,7 @@
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ALTER TABLE `account_data` ADD `base_exp` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';
 ALTER TABLE `account_data` ADD `base_drop` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';

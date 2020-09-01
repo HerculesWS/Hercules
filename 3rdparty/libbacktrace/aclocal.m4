@@ -282,7 +282,7 @@ Oops!
 Your 'rm' program seems unable to run without file operands specified
 on the command line, even when the '-f' option is present.  This is contrary
 to the behaviour of most rm programs out there, and not conforming with
-the upcoming POSIX standard: <http://austingroupbugs.net/view.php?id=542>
+the upcoming POSIX standard: <https://www.austingroupbugs.net/view.php?id=542>
 
 Please tell bug-automake@gnu.org about your system, including the value
 of your $PATH and any error possibly output before this message.  This

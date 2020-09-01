@@ -8,7 +8,7 @@
  * @package   PHP-SQLlint
  * @author    Christian Weiske <cweiske@cweiske.de>
  * @copyright 2014 Christian Weiske
- * @license   http://www.gnu.org/licenses/agpl.html GNU AGPL v3
+ * @license   https://www.gnu.org/licenses/agpl.html GNU AGPL v3
  * @link      http://cweiske.de/php-sqllint.htm
  */
 namespace phpsqllint;
@@ -20,7 +20,7 @@ namespace phpsqllint;
  * @package   PHP-SQLlint
  * @author    Christian Weiske <cweiske@cweiske.de>
  * @copyright 2014 Christian Weiske
- * @license   http://www.gnu.org/licenses/agpl.html GNU AGPL v3
+ * @license   https://www.gnu.org/licenses/agpl.html GNU AGPL v3
  * @version   Release: @package_version@
  * @link      http://cweiske.de/php-sqllint.htm
  */
