@@ -54,7 +54,7 @@ HAVE_PERL=@HAVE_PERL@
 HAVE_DOXYGEN=@HAVE_DOXYGEN@
 
 MF_TARGETS = Makefile $(addsuffix /Makefile, src/common 3rdparty/mt19937ar \
-             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/http-parser 3rdparty/multipart-parser \
+             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/http-parser 3rdparty/multipart-parser 3rdparty/cJSON \
              src/char src/login src/map src/api src/plugins \
              src/test tools/HPMHookGen tools/doxygen)
 
@@ -119,6 +119,10 @@ http-parser: 3rdparty/http-parser/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/http-parser
 
+cJSON: 3rdparty/cJSON/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/cJSON
+
 multipart-parser: 3rdparty/multipart-parser/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/multipart-parser
@@ -168,6 +172,7 @@ import: Makefile
 
 clean buildclean: $(MF_TARGETS)
 	@$(MAKE) -C src/common $@
+	@$(MAKE) -C 3rdparty/cJSON $@
 	@$(MAKE) -C 3rdparty/mt19937ar $@
 	@$(MAKE) -C 3rdparty/libconfig $@
 	@$(MAKE) -C 3rdparty/libbacktrace $@
@@ -201,6 +206,7 @@ help: Makefile
 	@echo "most common targets are 'all' 'sql' 'clean' 'plugins' 'help'"
 	@echo "possible targets are:"
 	@echo "'common_sql'   - builds object files used in SQL servers"
+	@echo "'cJSON'        - builds object files of cJSON"
 	@echo "'mt19937ar'    - builds object file of Mersenne Twister MT19937"
 	@echo "'libconfig'    - builds object files of libconfig"
 	@echo "'libbacktrace' - builds object files of libbacktrace"

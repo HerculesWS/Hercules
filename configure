@@ -2538,7 +2538,7 @@ ac_config_files="$ac_config_files Makefile src/common/Makefile"
 
 ac_config_files="$ac_config_files 3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile 3rdparty/libbacktrace/Makefile 3rdparty/libbacktrace/backtrace-supported.h"
 
-ac_config_files="$ac_config_files 3rdparty/http-parser/Makefile 3rdparty/multipart-parser/Makefile"
+ac_config_files="$ac_config_files 3rdparty/http-parser/Makefile 3rdparty/multipart-parser/Makefile 3rdparty/cJSON/Makefile"
 
 ac_config_files="$ac_config_files src/char/Makefile src/login/Makefile"
 
@@ -13219,6 +13219,7 @@ do
     "3rdparty/libbacktrace/backtrace-supported.h") CONFIG_FILES="$CONFIG_FILES 3rdparty/libbacktrace/backtrace-supported.h" ;;
     "3rdparty/http-parser/Makefile") CONFIG_FILES="$CONFIG_FILES 3rdparty/http-parser/Makefile" ;;
     "3rdparty/multipart-parser/Makefile") CONFIG_FILES="$CONFIG_FILES 3rdparty/multipart-parser/Makefile" ;;
+    "3rdparty/cJSON/Makefile") CONFIG_FILES="$CONFIG_FILES 3rdparty/cJSON/Makefile" ;;
     "src/char/Makefile") CONFIG_FILES="$CONFIG_FILES src/char/Makefile" ;;
     "src/login/Makefile") CONFIG_FILES="$CONFIG_FILES src/login/Makefile" ;;
     "src/map/Makefile") CONFIG_FILES="$CONFIG_FILES src/map/Makefile" ;;

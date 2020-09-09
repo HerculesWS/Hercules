@@ -64,6 +64,9 @@ Thumbs.db
 # /3rdparty/multipart-parser/
 /3rdparty/multipart-parser/Makefile
 
+# /3rdparty/cJSON/
+/3rdparty/cJSON/Makefile
+
 # /3rdparty/mt19937ar/
 /3rdparty/mt19937ar/Makefile
 /3rdparty/mt19937ar/*.o
