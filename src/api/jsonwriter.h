@@ -23,7 +23,12 @@
 
 #include "common/hercules.h"
 
+#include <cJSON/cJSON.h>
+
 #include <stdarg.h>
+
+typedef cJSON JsonW;
+typedef cJSON_bool JsonWBool;
 
 /**
  * jsonwriter.c Interface
@@ -31,6 +36,25 @@
 struct jsonwriter_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
+
+	JsonW *(*create) (const char *text);
+	JsonW *(*new_array) (void);
+	JsonW *(*new_object) (void);
+	JsonW *(*new_string) (const char *str);
+	JsonW *(*new_null) (void);
+	JsonWBool (*add_node) (JsonW *parent, const char *name, JsonW *child);
+	JsonWBool (*add_node_to_array) (JsonW *parent, JsonW *child);
+	JsonW *(*add_new_array) (JsonW *parent, const char *name);
+	JsonW *(*add_new_object) (JsonW *parent, const char *name);
+	JsonW *(*add_new_null) (JsonW *parent, const char *name);
+	JsonW *(*add_string_to_array) (JsonW *parent, const char *str);
+	JsonW *(*add_strings_to_array) (JsonW *parent, ...);
+
+	void (*print) (const JsonW *parent);
+	const char* (*get_string) (const JsonW *parent);
+	const char* (*get_formatted_string) (const JsonW *parent);
+	void (*free) (char *ptr);
+	void (*delete) (JsonW *ptr);
 };
 
 #ifdef HERCULES_CORE
