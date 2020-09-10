@@ -10877,12 +10877,12 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 				if (unit->movepos(src, bl->x, bl->y, 0, 0)) {
 					clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
-					clif->slide(src, bl->x, bl->y) ;
+					clif->blown(src);
 					sc_start(src, src, SC_CONFUSION, 25, skill_lv, skill->get_time(skill_id, skill_lv));
-					if ( !is_boss(bl) && unit->stop_walking(&sd->bl, STOPWALKING_FLAG_FIXPOS) && unit->movepos(bl, x, y, 0, 0) ) {
-						if( dstsd && pc_issit(dstsd) )
+					if (!is_boss(bl) && unit->movepos(bl, x, y, 0, 0) != 0) {
+						if (dstsd != NULL && pc_issit(dstsd))
 							pc->setstand(dstsd);
-						clif->slide(bl, x, y) ;
+						clif->blown(bl);
 						sc_start(src, bl, SC_CONFUSION, 75, skill_lv, skill->get_time(skill_id, skill_lv));
 					}
 				}
