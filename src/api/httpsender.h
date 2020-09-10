@@ -23,6 +23,8 @@
 
 #include "common/hercules.h"
 
+#include "api/jsonwriter.h"
+
 #include <stdarg.h>
 
 #ifndef MAX_RESPONSE_SIZE
@@ -42,6 +44,7 @@ struct httpsender_interface {
 
 	bool (*send_plain) (int fd, const char *data);
 	bool (*send_html) (int fd, const char *data);
+	bool (*send_json) (int fd, const JsonW *json);
 };
 
 #ifdef HERCULES_CORE

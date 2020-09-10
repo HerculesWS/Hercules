@@ -89,6 +89,29 @@ static bool httpsender_send_html(int fd, const char *data)
 	return true;
 }
 
+static bool httpsender_send_json(int fd, const JsonW *json)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("httpsender_send_json\n");
+#endif  // DEBUG_LOG
+
+	char *data = jsonwriter->get_string(json);
+	const size_t sz = strlen(data);
+	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+		"HTTP/1.1 200 OK\n"
+		"Server: %s\n"
+		"Content-Type: text/plain; charset=utf-8\n"
+		"Content-Length: %lu\n"
+		"\n"
+		"%s",
+		httpsender->server_name, sz, data);
+	jsonwriter->free(data);
+	WFIFOHEAD(fd, buf_sz);
+	WFIFOADDSTR(fd, tmp_buffer);
+	sockt->flush(fd);
+	return true;
+}
+
 static bool httpsender_send_plain(int fd, const char *data)
 {
 #ifdef DEBUG_LOG
@@ -124,4 +147,5 @@ void httpsender_defaults(void)
 
 	httpsender->send_plain = httpsender_send_plain;
 	httpsender->send_html = httpsender_send_html;
+	httpsender->send_json = httpsender_send_json;
 }
