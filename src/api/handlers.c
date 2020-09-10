@@ -35,6 +35,7 @@
 #include "api/aloginif.h"
 #include "api/apisessiondata.h"
 #include "api/httpsender.h"
+#include "api/jsonwriter.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,7 +63,21 @@ DATA(userconfig_load)
 {
 	// send hardcoded emotes
 	// korean emotes
-	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/기쁨\",\"/하트\",\"/땀\",\"/아하\",\"/짜증\",\"/화\",\"/돈\",\"/...\"]}}");
+	JsonW *json = jsonwriter->create("{\"Type\":1}");
+	JsonW *dataNode = jsonwriter->add_new_object(json, "data");
+	JsonW *emotionHotkey = jsonwriter->add_new_array(dataNode, "EmotionHotkey");
+	JsonW *whisperBlockList = jsonwriter->add_new_null(dataNode, "WhisperBlockList");
+
+	jsonwriter->add_strings_to_array(emotionHotkey,
+		"/!", "/?", "/기쁨", "/하트", "/땀", "/아하", "/짜증", "/화", "/돈", "/...",
+		NULL);
+#ifdef DEBUG_LOG
+	jsonwriter->print(json);
+#endif
+	httpsender->send_json(fd, json);
+	jsonwriter->delete(json);
+
+//	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/기쁨\",\"/하트\",\"/땀\",\"/아하\",\"/짜증\",\"/화\",\"/돈\",\"/...\"]}}");
 	// english emotes
 //	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
 
