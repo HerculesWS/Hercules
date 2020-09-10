@@ -47,6 +47,7 @@
 #include "api/handlers.h"
 #include "api/httpparser.h"
 #include "api/httpsender.h"
+#include "api/jsonparser.h"
 
 #include <math.h>
 #include <stdarg.h>
@@ -118,6 +119,8 @@ static void api_load_defaults(void)
 	aloginif_defaults();
 	httpparser_defaults();
 	httpsender_defaults();
+	jsonparser_defaults();
+	jsonwriter_defaults();
 }
 
 /**
