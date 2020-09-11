@@ -32,6 +32,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
+#include "common/strlib.h"
 #include "common/timer.h"
 
 #include <stdlib.h>
@@ -84,7 +85,20 @@ void capiif_parse_userconfig_load(int fd)
 {
 	WFIFO_APICHAR_PACKET_REPLY(userconfig_load);
 
-	data->data = 0x1122;
+	safestrncpy(data->emote[0], "/!", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[1], "/?", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[2], "/기쁨", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[3], "/하트", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[4], "/땀", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[5], "/아하", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[6], "/짜증", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[7], "/화", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[8], "/돈", EMOTE_SIZE + 1);
+	safestrncpy(data->emote[9], "/...", EMOTE_SIZE + 1);
+
+	// english emotes
+//	"/!","/?","/ho","/lv","/swt","/ic","/an","/ag","/$","/..."
+
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 

@@ -29,6 +29,14 @@
 #pragma pack(push, 1)
 #endif // not NetBSD < 6 / Solaris
 
+#ifndef EMOTE_SIZE
+#define EMOTE_SIZE 50
+#endif
+
+#ifndef MAX_EMOTES
+#define MAX_EMOTES 10
+#endif
+
 #define HEADER_API_PROXY_REQUEST 0x2842
 #define HEADER_API_PROXY_REPLY 0x2818
 
@@ -59,8 +67,12 @@ struct PACKET_API_charconfig_load {
 } __attribute__((packed));
 
 // char to api
+//struct PACKET_API_REPLY_userconfig_load_emote {
+//	char text[EMOTE_SIZE];
+//} __attribute__((packed));
+
 struct PACKET_API_REPLY_userconfig_load {
-	int data;
+	char emote[MAX_EMOTES][EMOTE_SIZE];
 } __attribute__((packed));
 
 struct PACKET_API_REPLY_userconfig_save {

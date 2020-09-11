@@ -61,28 +61,22 @@ struct handlers_interface *handlers;
 
 DATA(userconfig_load)
 {
-	// send hardcoded emotes
-	// korean emotes
 	JsonW *json = jsonwriter->create("{\"Type\":1}");
 	JsonW *dataNode = jsonwriter->add_new_object(json, "data");
 	JsonW *emotionHotkey = jsonwriter->add_new_array(dataNode, "EmotionHotkey");
-	JsonW *whisperBlockList = jsonwriter->add_new_null(dataNode, "WhisperBlockList");
+	jsonwriter->add_new_null(dataNode, "WhisperBlockList");
+
+	GET_DATA(p, userconfig_load);
 
 	jsonwriter->add_strings_to_array(emotionHotkey,
-		"/!", "/?", "/기쁨", "/하트", "/땀", "/아하", "/짜증", "/화", "/돈", "/...",
+		p->emote[0], p->emote[1], p->emote[2], p->emote[3], p->emote[4],
+		p->emote[5], p->emote[6], p->emote[7], p->emote[8], p->emote[9],
 		NULL);
 #ifdef DEBUG_LOG
 	jsonwriter->print(json);
 #endif
 	httpsender->send_json(fd, json);
 	jsonwriter->delete(json);
-
-//	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/기쁨\",\"/하트\",\"/땀\",\"/아하\",\"/짜증\",\"/화\",\"/돈\",\"/...\"]}}");
-	// english emotes
-//	httpsender->send_plain(fd, "{\"Type\":1,\"data\":{\"EmotionHotkey\":[\"/!\",\"/?\",\"/ho\",\"/lv\",\"/swt\",\"/ic\",\"/an\",\"/ag\",\"/$\",\"/...\"]}}");
-
-	GET_DATA(p, userconfig_load);
-	ShowInfo("test data: %d\n", p->data);
 
 	aclif->terminate_connection(fd);
 }

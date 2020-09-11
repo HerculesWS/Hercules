@@ -51,8 +51,8 @@ struct jsonwriter_interface {
 	JsonW *(*add_strings_to_array) (JsonW *parent, ...);
 
 	void (*print) (const JsonW *parent);
-	const char* (*get_string) (const JsonW *parent);
-	const char* (*get_formatted_string) (const JsonW *parent);
+	char* (*get_string) (const JsonW *parent);
+	char* (*get_formatted_string) (const JsonW *parent);
 	void (*free) (char *ptr);
 	void (*delete) (JsonW *ptr);
 };
