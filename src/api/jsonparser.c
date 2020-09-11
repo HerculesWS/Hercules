@@ -28,7 +28,7 @@
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 
-#include <cJSON/cJSON.h>
+#include <stdlib.h>
 
 static struct jsonparser_interface jsonparser_s;
 struct jsonparser_interface *jsonparser;
@@ -42,10 +42,98 @@ static void do_final_jsonparser(void)
 {
 }
 
+static JsonP *jsonparser_parse(const char *text)
+{
+	nullpo_retr(NULL, text);
+
+	return cJSON_Parse(text);
+}
+
+char* jsonparser_get_formatted_string(const JsonP *parent)
+{
+	nullpo_retr(NULL, parent);
+
+	return cJSON_Print(parent);
+}
+
+char* jsonparser_get_string(const JsonP *parent)
+{
+	nullpo_retr(NULL, parent);
+
+	return cJSON_PrintUnformatted(parent);
+}
+
+void jsonparser_print(const JsonP *parent)
+{
+	nullpo_retv(parent);
+	char *str = jsonparser->get_formatted_string(parent);
+	ShowInfo("Json string: '%s'\n", str);
+	jsonparser->free(str);
+}
+
+JsonP *jsonparser_get(const JsonP *parent, const char *name)
+{
+	nullpo_retr(NULL, parent);
+	nullpo_retr(NULL, name);
+
+	return cJSON_GetObjectItemCaseSensitive(parent, name);
+}
+
+int jsonparser_get_array_size(const JsonP *parent)
+{
+	nullpo_retr(false, parent);
+	Assert_retr(0, cJSON_IsArray(parent));
+
+	return cJSON_GetArraySize(parent);
+}
+
+char *jsonparser_get_string_value(const JsonP *parent)
+{
+	nullpo_retr(false, parent);
+	Assert_retr(0, cJSON_IsString(parent));
+
+	return parent->valuestring;
+}
+
+bool jsonparser_is_null(const JsonP *parent)
+{
+	nullpo_retr(false, parent);
+
+	return cJSON_IsNull(parent);
+}
+
+bool jsonparser_is_null_or_missing(const JsonP *parent)
+{
+	return parent == NULL || cJSON_IsNull(parent);
+}
+
+void jsonparser_free(char *ptr)
+{
+	// need call real free because cJSON using direct malloc/free
+	free(ptr);
+}
+
+void jsonparser_delete(JsonP *ptr)
+{
+	cJSON_Delete(ptr);
+}
+
 void jsonparser_defaults(void)
 {
 	jsonparser = &jsonparser_s;
 	/* core */
 	jsonparser->init = do_init_jsonparser;
 	jsonparser->final = do_final_jsonparser;
+
+	jsonparser->parse = jsonparser_parse;
+	jsonparser->get_string = jsonparser_get_string;
+	jsonparser->get_formatted_string = jsonparser_get_formatted_string;
+	jsonparser->get = jsonparser_get;
+	jsonparser->get_array_size = jsonparser_get_array_size;
+	jsonparser->get_string_value = jsonparser_get_string_value;
+	jsonparser->is_null = jsonparser_is_null;
+	jsonparser->is_null_or_missing = jsonparser_is_null_or_missing;
+	jsonparser->print = jsonparser_print;
+	jsonparser->free = jsonparser_free;
+	jsonparser->delete = jsonparser_delete;
 }

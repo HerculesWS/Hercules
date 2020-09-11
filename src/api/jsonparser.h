@@ -23,7 +23,14 @@
 
 #include "common/hercules.h"
 
+#include <cJSON/cJSON.h>
+
 #include <stdarg.h>
+
+typedef cJSON JsonP;
+typedef cJSON_bool JsonPBool;
+
+#define JSONPARSER_FOR_EACH(element, array) for(JsonP *element = (array != NULL) ? (array)->child : NULL; element != NULL; element = element->next)
 
 /**
  * jsonparser.c Interface
@@ -31,6 +38,17 @@
 struct jsonparser_interface {
 	int (*init) (bool minimal);
 	void (*final) (void);
+	JsonP *(*parse) (const char *text);
+	void (*print) (const JsonP *parent);
+	char* (*get_string) (const JsonP *parent);
+	char* (*get_formatted_string) (const JsonP *parent);
+	bool (*is_null) (const JsonP *parent);
+	bool (*is_null_or_missing) (const JsonP *parent);
+	JsonP *(*get) (const JsonP *parent, const char *name);
+	int (*get_array_size) (const JsonP *parent);
+	char *(*get_string_value) (const JsonP *parent);
+	void (*free) (char *ptr);
+	void (*delete) (JsonP *ptr);
 };
 
 #ifdef HERCULES_CORE
