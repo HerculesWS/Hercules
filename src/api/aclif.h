@@ -26,6 +26,7 @@
 #include "common/db.h"
 #include "api/handlerfunc.h"
 #include "api/httphandler.h"
+#include "api/jsonparser.h"
 
 #include <stdarg.h>
 
@@ -150,6 +151,7 @@ struct aclif_interface {
 	int (*print_header) (union DBKey key, struct DBData *data, va_list ap);
 	bool (*get_post_header_data_int) (struct api_session_data *sd, const char *name, int *account_id);
 	bool (*get_post_header_data_str) (struct api_session_data *sd, const char *name, char **data);
+	bool (*get_post_header_data_json) (struct api_session_data *sd, const char *name, JsonP **json);
 
 	void (*delete_online_player) (int account_id);
 	void (*real_delete_online_player) (int account_id);

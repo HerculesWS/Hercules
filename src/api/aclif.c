@@ -738,6 +738,20 @@ static bool aclif_get_post_header_data_str(struct api_session_data *sd, const ch
 	return *data != NULL;
 }
 
+static bool aclif_get_post_header_data_json(struct api_session_data *sd, const char *name, JsonP **json)
+{
+	nullpo_retr(false, json);
+	*json = NULL;
+	nullpo_retr(false, sd);
+	nullpo_retr(false, name);
+
+	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	if (header == NULL)
+		return false;
+	*json = jsonparser->parse(header->data);
+	return *json != NULL;
+}
+
 static void aclif_add_char_server(int char_server_id, const char *name)
 {
 	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
@@ -841,6 +855,7 @@ void aclif_defaults(void)
 	aclif->print_header = aclif_print_header;
 	aclif->get_post_header_data_int = aclif_get_post_header_data_int;
 	aclif->get_post_header_data_str = aclif_get_post_header_data_str;
+	aclif->get_post_header_data_json = aclif_get_post_header_data_json;
 
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->real_delete_online_player = aclif_real_delete_online_player;
