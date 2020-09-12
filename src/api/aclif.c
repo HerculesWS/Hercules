@@ -636,8 +636,17 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Wrong auth token %d: '%s'\n", fd, token);
 			return false;
 		}
-
 	}
+
+	if ((sd->handler->flags & REQ_GUILD_ID) != 0) {
+		// check is guild id present in request
+		int guild_id = 0;
+		if (!aclif->get_post_header_data_int(sd, "GDID", &guild_id)) {
+			ShowError("Http request without guild id %d\n", fd);
+			return false;
+		}
+	}
+
 	return true;
 }
 
