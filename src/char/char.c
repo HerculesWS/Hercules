@@ -110,6 +110,7 @@ char acc_reg_str_db[32] = "acc_reg_str_db";
 char char_reg_str_db[32] = "char_reg_str_db";
 char char_reg_num_db[32] = "char_reg_num_db";
 char char_achievement_db[256] = "char_achievements";
+char emotes_db[256] = "emotes";
 
 static struct char_interface char_s;
 struct char_interface *chr;

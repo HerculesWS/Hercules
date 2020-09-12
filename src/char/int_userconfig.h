@@ -31,6 +31,9 @@ struct userconfig_emotes;
 struct inter_userconfig_interface {
 	int (*load_emotes) (int account_id, struct userconfig_emotes *emotes);
 	int (*save_emotes) (int account_id, const struct userconfig_emotes *emotes);
+	void (*use_default_emotes) (int account_id, struct userconfig_emotes *emotes);
+	bool (*emotes_from_sql) (int account_id, struct userconfig_emotes *emotes);
+	bool (*emotes_to_sql) (int account_id, const struct userconfig_emotes *emotes);
 };
 
 #ifdef HERCULES_CORE

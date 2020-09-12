@@ -46,6 +46,52 @@ struct inter_userconfig_interface *inter_userconfig;
 
 static int inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *emotes)
 {
+	nullpo_ret(emotes);
+	if (!inter_userconfig->emotes_from_sql(account_id, emotes))
+		inter_userconfig->use_default_emotes(account_id, emotes);
+
+	return 0;
+}
+
+static bool inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes)
+{
+	nullpo_ret(emotes);
+
+	StringBuf buf;
+	StrBuf->Init(&buf);
+	StrBuf->AppendStr(&buf, "SELECT `emote0`");
+	for (int i = 1; i < MAX_EMOTES; i++)
+		StrBuf->Printf(&buf, ", `emote%d`", i);
+	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id` = '%d'", emotes_db, account_id);
+
+	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
+		Sql_ShowDebug(inter->sql_handle);
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+
+	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
+		SQL->FreeResult(inter->sql_handle);
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+
+	char *data = NULL;
+	for (int index = 0; index < MAX_EMOTES; index ++) {
+		SQL->GetData(inter->sql_handle, index, &data, NULL);
+		strncpy(emotes->emote[index], data, EMOTE_SIZE);
+                ShowError("load emote %d: %s\n", index, emotes->emote[index]);
+	}
+
+	SQL->FreeResult(inter->sql_handle);
+	StrBuf->Destroy(&buf);
+	return true;
+}
+
+static void inter_userconfig_use_default_emotes(int account_id, struct userconfig_emotes *emotes)
+{
+	nullpo_retv(emotes);
+
 	// should be used strncpy [4144]
 	strncpy(emotes->emote[0], "/!", EMOTE_SIZE);
 	strncpy(emotes->emote[1], "/?", EMOTE_SIZE);
@@ -60,16 +106,53 @@ static int inter_userconfig_load_emotes(int account_id, struct userconfig_emotes
 
 	// english emotes
 //	"/!","/?","/ho","/lv","/swt","/ic","/an","/ag","/$","/..."
-	return 0;
 }
 
 static int inter_userconfig_save_emotes(int account_id, const struct userconfig_emotes *emotes)
 {
-	for (int f = 0; f < MAX_EMOTES; f ++)
-	{
-		ShowWarning("save emote %d: %s\n", f, emotes->emote[f]);
-	}
+	inter_userconfig->emotes_to_sql(account_id, emotes);
 	return 0;
+}
+
+static bool inter_userconfig_emotes_to_sql(int account_id, const struct userconfig_emotes *emotes)
+{
+	nullpo_retr(false, emotes);
+
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+	StringBuf buf;
+	StrBuf->Init(&buf);
+	StrBuf->Printf(&buf, "REPLACE INTO `%s` (`account_id`", emotes_db);
+	for (int i = 0; i < MAX_EMOTES; i++)
+		StrBuf->Printf(&buf, ", `emote%d`", i);
+	StrBuf->Printf(&buf, ") VALUES(%d", account_id);
+	for (int i = 0; i < MAX_EMOTES; i++)
+		StrBuf->AppendStr(&buf, ", ?");
+	StrBuf->AppendStr(&buf, ")");
+
+	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+	for (int i = 0; i < MAX_EMOTES; i++) {
+		if (SQL_SUCCESS != SQL->StmtBindParam(stmt, i, SQLDT_STRING, emotes->emote[i], strnlen(emotes->emote[i], EMOTE_SIZE))) {
+			SqlStmt_ShowDebug(stmt);
+			SQL->StmtFree(stmt);
+			StrBuf->Destroy(&buf);
+			return false;
+		}
+	}
+
+	if (SQL_SUCCESS != SQL->StmtExecute(stmt)) {
+		SqlStmt_ShowDebug(stmt);
+		SQL->StmtFree(stmt);
+		StrBuf->Destroy(&buf);
+		return false;
+	}
+	SQL->StmtFree(stmt);
+	StrBuf->Destroy(&buf);
+	return true;
 }
 
 void inter_userconfig_defaults(void)
@@ -78,4 +161,7 @@ void inter_userconfig_defaults(void)
 
 	inter_userconfig->load_emotes = inter_userconfig_load_emotes;
 	inter_userconfig->save_emotes = inter_userconfig_save_emotes;
+	inter_userconfig->use_default_emotes = inter_userconfig_use_default_emotes;
+	inter_userconfig->emotes_from_sql = inter_userconfig_emotes_from_sql;
+	inter_userconfig->emotes_to_sql = inter_userconfig_emotes_to_sql;
 }
