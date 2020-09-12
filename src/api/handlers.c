@@ -176,6 +176,23 @@ HTTPURL(charconfig_load)
 	return true;
 }
 
+DATA(umblem_upload)
+{
+	aclif->terminate_connection(fd);
+}
+
+HTTPURL(umblem_upload)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("umblem_upload called %d: %d\n", fd, sd->parser.method);
+#endif
+	aclif->show_request(fd, sd, false);
+
+	LOAD_ASYNC_DATA(umblem_upload, NULL);
+
+	return true;
+}
+
 HTTPURL(test_url)
 {
 #ifdef DEBUG_LOG

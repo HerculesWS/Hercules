@@ -30,6 +30,7 @@ enum API_MSG {
 	API_MSG_userconfig_save_hotkeys_interface = 6,
 	API_MSG_userconfig_save_hotkeys_skill_bar1 = 7,
 	API_MSG_userconfig_save_hotkeys_skill_bar2 = 8,
+	API_MSG_umblem_upload = 9,
 	API_MSG_MAX,
 };
 

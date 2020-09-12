@@ -75,6 +75,9 @@ struct PACKET_API_userconfig_save_emotes {
 struct PACKET_API_charconfig_load {
 } __attribute__((packed));
 
+struct PACKET_API_umblem_upload {
+} __attribute__((packed));
+
 // char to api
 struct PACKET_API_REPLY_userconfig_load {
 	struct userconfig_emotes emotes;
@@ -84,6 +87,9 @@ struct PACKET_API_REPLY_userconfig_save {
 } __attribute__((packed));
 
 struct PACKET_API_REPLY_charconfig_load {
+} __attribute__((packed));
+
+struct PACKET_API_REPLY_umblem_upload {
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)

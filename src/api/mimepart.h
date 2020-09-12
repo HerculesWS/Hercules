@@ -26,13 +26,14 @@
 #endif
 
 #ifndef MAX_MIME_CONTENT_TYPE
-#define MAX_MIME_CONTENT_TYPE 20
+#define MAX_MIME_CONTENT_TYPE 25
 #endif
 
 struct MimePart {
 	char name[MAX_MIME_NAME];
 	char content_type[MAX_MIME_CONTENT_TYPE];
 	char *data;
+	uint32 data_size;
 };
 
 #endif /* API_MIMEPART_H */

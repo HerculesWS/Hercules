@@ -194,6 +194,7 @@ static int aclif_post_headers_destroy_sub(union DBKey key, struct DBData *data, 
 	if (part && part->data) {
 		aFree(part->data);
 		part->data = NULL;
+		part->data_size = 0;
 	}
 	return 0;
 }
@@ -459,9 +460,24 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 	}
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_retv(sd);
-	sd->temp_mime_header->data = aMalloc(size + 1);
-	memcpy(sd->temp_mime_header->data, value, size);
-	sd->temp_mime_header->data[size] = '\x0';
+	if (sd->temp_mime_header->data == NULL) {
+		sd->temp_mime_header->data = aMalloc(size + 1);
+		memcpy(sd->temp_mime_header->data, value, size);
+		sd->temp_mime_header->data_size = size;
+	} else {
+		const uint32 newSize = sd->temp_mime_header->data_size + size;
+		sd->temp_mime_header->data = aRealloc(sd->temp_mime_header->data, newSize + 1);
+		memcpy(sd->temp_mime_header->data + sd->temp_mime_header->data_size, value, size);
+		sd->temp_mime_header->data_size = newSize;
+	}
+	sd->temp_mime_header->data[sd->temp_mime_header->data_size] = '\x0';
+#ifdef DEBUG_LOG
+	printf(" hex: ");
+	for (int f = 0; f < sd->temp_mime_header->data_size; f ++) {
+		printf("%02x ", (uint32)(unsigned char)sd->temp_mime_header->data[f]);
+	}
+	printf("\n");
+#endif
 }
 
 static void aclif_multi_part_start(int fd, struct api_session_data *sd)
@@ -590,7 +606,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	if ((sd->handler->flags & REQ_WORLD_NAME) != 0) {
 		// check is world name present and correct
 		char *name = NULL;
-		if (!aclif->get_post_header_data_str(sd, "WorldName", &name)) {
+		if (!aclif->get_post_header_data_str(sd, "WorldName", &name, NULL)) {
 			ShowError("Http request without WorldName %d\n", fd);
 			return false;
 		}
@@ -611,7 +627,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 		char *token = NULL;
-		if (!aclif->get_post_header_data_str(sd, "AuthToken", &token)) {
+		if (!aclif->get_post_header_data_str(sd, "AuthToken", &token, NULL)) {
 			ShowError("Http request without AuthToken %d\n", fd);
 			return false;
 		}
@@ -650,6 +666,13 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 			ShowInfo(" mime header: %s, '%s'\n", data->name, data->data);
 		else
 			ShowInfo(" mime header: %s, %s, '%s'\n", data->name, data->content_type, data->data);
+#ifdef DEBUG_LOG
+		printf(" Hex: ");
+		for (int f = 0; f < data->data_size; f ++) {
+			printf("%02x ", (uint32)(unsigned char)data->data[f]);
+		}
+		printf("\n");
+#endif
 	}
 	dbi_destroy(iter);
 }
@@ -733,7 +756,7 @@ static bool aclif_get_post_header_data_int(struct api_session_data *sd, const ch
 	return true;
 }
 
-static bool aclif_get_post_header_data_str(struct api_session_data *sd, const char *name, char **data)
+static bool aclif_get_post_header_data_str(struct api_session_data *sd, const char *name, char **data, uint32 *data_size)
 {
 	nullpo_retr(false, data);
 	*data = NULL;
@@ -744,6 +767,8 @@ static bool aclif_get_post_header_data_str(struct api_session_data *sd, const ch
 	if (header == NULL)
 		return false;
 	*data = header->data;
+	if (data_size != NULL)
+		*data_size = header->data_size;
 	return *data != NULL;
 }
 
