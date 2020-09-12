@@ -25,7 +25,12 @@ enum API_MSG {
 	API_MSG_userconfig_load = 1,
 	API_MSG_userconfig_save = 2,
 	API_MSG_charconfig_load = 3,
-	API_MSG_MAX
+	API_MSG_userconfig_save_emotes = 4,
+	API_MSG_userconfig_save_hotkeys_emotion = 5,
+	API_MSG_userconfig_save_hotkeys_interface = 6,
+	API_MSG_userconfig_save_hotkeys_skill_bar1 = 7,
+	API_MSG_userconfig_save_hotkeys_skill_bar2 = 8,
+	API_MSG_MAX,
 };
 
 #endif /* COMMON_API_H */

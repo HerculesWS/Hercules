@@ -70,8 +70,8 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 		case API_MSG_userconfig_load:
 			capiif->parse_userconfig_load(fd);
 			break;
-		case API_MSG_userconfig_save:
-			capiif->parse_userconfig_save(fd);
+		case API_MSG_userconfig_save_emotes:
+			capiif->parse_userconfig_save_emotes(fd);
 			break;
 		case API_MSG_charconfig_load:
 			capiif->parse_charconfig_load(fd);
@@ -97,15 +97,14 @@ void capiif_parse_userconfig_load(int fd)
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
-void capiif_parse_userconfig_save(int fd)
+void capiif_parse_userconfig_save_emotes(int fd)
 {
-	RFIFO_API_DATA(data, userconfig_save_data);
+	RFIFO_API_DATA(data, userconfig_save_emotes_data);
 	RFIFO_API_PROXY_PACKET(p);
 
 	inter_userconfig->save_emotes(p->account_id, &data->emotes);
 
-	WFIFO_APICHAR_PACKET_REPLY_EMPTY();
-	WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
+//	dont need send reply
 }
 
 void capiif_parse_charconfig_load(int fd)
@@ -129,6 +128,6 @@ void capiif_defaults(void) {
 	capiif->final = do_final_capiif;
 	capiif->parse_fromlogin_api_proxy = capiif_parse_fromlogin_api_proxy;
 	capiif->parse_userconfig_load = capiif_parse_userconfig_load;
-	capiif->parse_userconfig_save = capiif_parse_userconfig_save;
+	capiif->parse_userconfig_save_emotes = capiif_parse_userconfig_save_emotes;
 	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
 }

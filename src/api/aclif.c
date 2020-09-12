@@ -235,9 +235,11 @@ static void aclif_load_handlers(void)
 	}
 #define handler(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, NULL, 0, flags)
 #define handler2(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, handlers->func, API_MSG_ ## func, flags)
+#define packet_handler(func) aclif->add_packet_handler(handlers->func, API_MSG_ ## func)
 #include "api/urlhandlers.h"
 #undef handler
 #undef handler2
+#undef packet_handler
 }
 
 static void aclif_add_handler(enum http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags)
@@ -260,6 +262,13 @@ static void aclif_add_handler(enum http_method method, const char *url, HttpPars
 		Assert_retv(msg_id >= 0 && msg_id < API_MSG_MAX);
 		aloginif->msg_map[msg_id] = func2;
 	}
+}
+
+static void aclif_add_packet_handler(Handler_func func2, int msg_id)
+{
+	nullpo_retv(func2);
+	Assert_retv(msg_id >= 0 && msg_id < API_MSG_MAX);
+	aloginif->msg_map[msg_id] = func2;
 }
 
 static void aclif_set_url(int fd, enum http_method method, const char *url, size_t size)
@@ -838,6 +847,7 @@ void aclif_defaults(void)
 	aclif->session_delete = aclif_session_delete;
 	aclif->load_handlers = aclif_load_handlers;
 	aclif->add_handler = aclif_add_handler;
+	aclif->add_packet_handler = aclif_add_packet_handler;
 	aclif->set_url = aclif_set_url;
 	aclif->set_body = aclif_set_body;
 	aclif->set_header_name = aclif_set_header_name;

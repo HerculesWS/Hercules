@@ -134,6 +134,7 @@ struct aclif_interface {
 	int (*session_delete) (int fd);
 	void (*load_handlers) (void);
 	void (*add_handler) (enum http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags);
+	void (*add_packet_handler) (Handler_func func2, int msg_id);
 	void (*set_url) (int fd, enum http_method method, const char *url, size_t size);
 	void (*set_body) (int fd, const char *body, size_t size);
 	void (*set_header_name) (int fd, const char *name, size_t size);

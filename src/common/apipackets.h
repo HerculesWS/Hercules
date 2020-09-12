@@ -64,22 +64,18 @@ struct userconfig_emotes {
 struct PACKET_API_userconfig_load {
 } __attribute__((packed));
 
-struct PACKET_API_userconfig_save_data {
+struct PACKET_API_userconfig_save_emotes_data {
 	struct userconfig_emotes emotes;
 } __attribute__((packed));
 
-struct PACKET_API_userconfig_save {
-	struct PACKET_API_userconfig_save_data data;
+struct PACKET_API_userconfig_save_emotes {
+	struct PACKET_API_userconfig_save_emotes_data data;
 } __attribute__((packed));
 
 struct PACKET_API_charconfig_load {
 } __attribute__((packed));
 
 // char to api
-//struct PACKET_API_REPLY_userconfig_load_emote {
-//	char text[EMOTE_SIZE];
-//} __attribute__((packed));
-
 struct PACKET_API_REPLY_userconfig_load {
 	struct userconfig_emotes emotes;
 } __attribute__((packed));

@@ -96,7 +96,12 @@ HTTPURL(userconfig_load)
 
 DATA(userconfig_save)
 {
-	aclif->terminate_connection(fd);
+	// unused
+}
+
+DATA(userconfig_save_emotes)
+{
+	// unused
 }
 
 HTTPURL(userconfig_save)
@@ -126,7 +131,7 @@ HTTPURL(userconfig_save)
 		return false;
 	}
 
-	CREATE_DATA(data, userconfig_save);
+	CREATE_DATA(data, userconfig_save_emotes);
 
 	JsonP *userHotkeyV2 = jsonparser->get(json, "UserHotkey_V2");
 	if (userHotkeyV2 != NULL) {
@@ -146,11 +151,10 @@ HTTPURL(userconfig_save)
 				strncpy(data.emotes.emote[i], str, EMOTE_SIZE);
 			i++;
 		}
+		LOAD_ASYNC_DATA(userconfig_save_emotes, &data);
 	}
 
 	jsonparser->delete(json);
-
-	LOAD_ASYNC_DATA(userconfig_save, &data);
 
 	return true;
 }
@@ -211,7 +215,9 @@ void handlers_defaults(void)
 #define handler(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func
 #define handler2(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func; \
 	handlers->func = handlers_ ## func
+#define packet_handler(func) handlers->func = handlers_ ## func
 #include "api/urlhandlers.h"
 #undef handler
 #undef handler2
+#undef packet_handler
 }

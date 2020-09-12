@@ -38,9 +38,11 @@ struct handlers_interface {
 #define handler(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd)
 #define handler2(method, url, func, flags) bool (*parse_ ## func) (int fd, struct api_session_data *sd); \
 	void (*func) (int fd, struct api_session_data *sd, const void *data, size_t data_size)
+#define packet_handler(func) void (*func) (int fd, struct api_session_data *sd, const void *data, size_t data_size)
 #include "api/urlhandlers.h"
 #undef handler
 #undef handler2
+#undef packet_handler
 };
 
 #ifdef HERCULES_CORE

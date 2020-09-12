@@ -31,7 +31,7 @@ struct capiif_interface {
 	void (*init) (void);
 	void (*final) (void);
 	void (*parse_userconfig_load) (int fd);
-	void (*parse_userconfig_save) (int fd);
+	void (*parse_userconfig_save_emotes) (int fd);
 	void (*parse_charconfig_load) (int fd);
 	int (*parse_fromlogin_api_proxy) (int fd);
 };
