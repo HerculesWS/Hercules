@@ -963,6 +963,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1628121360); -- 2021-08-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1634838524); -- 2021-10-21--18-49.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1641405640); -- 2022-01-05--19-00.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1665257750); -- 2022-10-08--08-35.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1599908598); -- 2020-09-12--14-02.sql
 
 --
 -- Table structure for table `storage`
@@ -1105,3 +1106,20 @@ CREATE TABLE IF NOT EXISTS `npc_expanded_barter_data` (
     `currencyId4`, `currencyAmount4`, `currencyRefine4`
 )
 ) ENGINE=MyISAM;
+
+-- char server db, but with account_id only
+CREATE TABLE IF NOT EXISTS `emotes` (
+  `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `emote0` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote1` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote2` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote3` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote4` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote5` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote6` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote7` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote8` VARCHAR(50) NOT NULL DEFAULT '',
+  `emote9` VARCHAR(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`account_id`),
+  KEY `account_id` (`account_id`)
+) CHARACTER SET utf8mb4 ENGINE=MyISAM;
