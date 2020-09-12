@@ -39,6 +39,7 @@
 #include "char/int_rodex.h"
 #include "char/int_storage.h"
 #include "char/int_achievement.h"
+#include "char/int_userconfig.h"
 #include "char/inter.h"
 #include "char/loginif.h"
 #include "char/mapif.h"
@@ -6360,6 +6361,7 @@ void char_load_defaults(void)
 	inter_storage_defaults();
 	inter_rodex_defaults();
 	inter_achievement_defaults();
+	inter_userconfig_defaults();
 	inter_defaults();
 	geoip_defaults();
 }

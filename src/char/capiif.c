@@ -3,6 +3,7 @@
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) 2020 Andrei Karas (4144)
  * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -24,6 +25,7 @@
 
 #include "char/char.h"
 #include "char/mapif.h"
+#include "char/int_userconfig.h"
 #include "common/api.h"
 #include "common/apipackets.h"
 #include "common/cbasetypes.h"
@@ -56,6 +58,10 @@ struct capiif_interface *capiif;
 	packet->packet_len = WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
 	struct PACKET_API_REPLY_ ## type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
 
+#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type *var = (const struct PACKET_API_ ## type*)RFIFOP(fd, WFIFO_APICHAR_SIZE)
+#define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
+
+
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
 	const uint command = RFIFOW(fd, 4);
@@ -84,26 +90,20 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 void capiif_parse_userconfig_load(int fd)
 {
 	WFIFO_APICHAR_PACKET_REPLY(userconfig_load);
+	RFIFO_API_PROXY_PACKET(p);
 
-	safestrncpy(data->emote[0], "/!", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[1], "/?", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[2], "/기쁨", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[3], "/하트", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[4], "/땀", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[5], "/아하", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[6], "/짜증", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[7], "/화", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[8], "/돈", EMOTE_SIZE + 1);
-	safestrncpy(data->emote[9], "/...", EMOTE_SIZE + 1);
-
-	// english emotes
-//	"/!","/?","/ho","/lv","/swt","/ic","/an","/ag","/$","/..."
+	inter_userconfig->load_emotes(p->account_id, &data->emotes);
 
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
 
 void capiif_parse_userconfig_save(int fd)
 {
+	RFIFO_API_DATA(data, userconfig_save_data);
+	RFIFO_API_PROXY_PACKET(p);
+
+	inter_userconfig->save_emotes(p->account_id, &data->emotes);
+
 	WFIFO_APICHAR_PACKET_REPLY_EMPTY();
 	WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
 }

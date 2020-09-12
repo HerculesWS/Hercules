@@ -52,6 +52,7 @@
 	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size)
 
 #define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
+#define CREATE_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
 #define LOAD_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
 
 static struct handlers_interface handlers_s;
@@ -69,8 +70,8 @@ DATA(userconfig_load)
 	GET_DATA(p, userconfig_load);
 
 	jsonwriter->add_strings_to_array(emotionHotkey,
-		p->emote[0], p->emote[1], p->emote[2], p->emote[3], p->emote[4],
-		p->emote[5], p->emote[6], p->emote[7], p->emote[8], p->emote[9],
+		p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3], p->emotes.emote[4],
+		p->emotes.emote[5], p->emotes.emote[6], p->emotes.emote[7], p->emotes.emote[8], p->emotes.emote[9],
 		NULL);
 #ifdef DEBUG_LOG
 	jsonwriter->print(json);
@@ -106,7 +107,50 @@ HTTPURL(userconfig_save)
 
 	aclif->show_request(fd, sd, false);
 
-	LOAD_ASYNC_DATA(userconfig_save, NULL);
+	JsonP *json = NULL;
+	aclif->get_post_header_data_json(sd, "data", &json);
+	if (json == NULL) {
+		ShowError("Error parsing json %d: %s\n", fd, sd->url);
+		return false;
+	}
+	JsonP *dataNode = jsonparser->get(json, "data");
+	if (dataNode == NULL) {
+		ShowError("data node is missing in userconfig_save. %d: %s\n", fd, sd->url);
+		return false;
+	}
+
+	JsonP *userHotkey = jsonparser->get(dataNode, "UserHotkey");
+
+	if (!jsonparser->is_null_or_missing(userHotkey)) {
+		ShowError("UserHotkey node in userconfig_save not supporter. %d: %s\n", fd, sd->url);
+		return false;
+	}
+
+	CREATE_DATA(data, userconfig_save);
+
+	JsonP *userHotkeyV2 = jsonparser->get(json, "UserHotkey_V2");
+	if (userHotkeyV2 != NULL) {
+		// send hotkey data to char server
+	}
+	JsonP *emotionHotkey = jsonparser->get(dataNode, "EmotionHotkey");
+
+	// save emotes
+	if (!jsonparser->is_null_or_missing(emotionHotkey)) {
+		const int sz = jsonparser->get_array_size(emotionHotkey);
+		Assert_retr(false, sz == MAX_EMOTES);
+		int i = 0;
+		JSONPARSER_FOR_EACH(emotion, emotionHotkey) {
+			// should be used strncpy [4144]
+			const char *str = jsonparser->get_string_value(emotion);
+			if (str != NULL)
+				strncpy(data.emotes.emote[i], str, EMOTE_SIZE);
+			i++;
+		}
+	}
+
+	jsonparser->delete(json);
+
+	LOAD_ASYNC_DATA(userconfig_save, &data);
 
 	return true;
 }

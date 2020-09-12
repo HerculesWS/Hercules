@@ -56,11 +56,20 @@ struct PACKET_API_PROXY {
 struct PACKET_API_EMPTY {
 } __attribute__((packed));
 
+struct userconfig_emotes {
+	char emote[MAX_EMOTES][EMOTE_SIZE];
+} __attribute__((packed));
+
 // api to char
 struct PACKET_API_userconfig_load {
 } __attribute__((packed));
 
+struct PACKET_API_userconfig_save_data {
+	struct userconfig_emotes emotes;
+} __attribute__((packed));
+
 struct PACKET_API_userconfig_save {
+	struct PACKET_API_userconfig_save_data data;
 } __attribute__((packed));
 
 struct PACKET_API_charconfig_load {
@@ -72,7 +81,7 @@ struct PACKET_API_charconfig_load {
 //} __attribute__((packed));
 
 struct PACKET_API_REPLY_userconfig_load {
-	char emote[MAX_EMOTES][EMOTE_SIZE];
+	struct userconfig_emotes emotes;
 } __attribute__((packed));
 
 struct PACKET_API_REPLY_userconfig_save {

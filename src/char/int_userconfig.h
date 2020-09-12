@@ -4,7 +4,6 @@
  *
  * Copyright (C) 2012-2020 Hercules Dev Team
  * Copyright (C) 2020 Andrei Karas (4144)
- * Copyright (C) Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,27 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CHAR_CAPIIF_H
-#define CHAR_CAPIIF_H
+#ifndef CHAR_INT_USERCONFIG_H
+#define CHAR_INT_USERCONFIG_H
 
 #include "common/hercules.h"
 
+struct userconfig_emotes;
+
 /**
- * capiif interface
+ * inter_userconfig_interface interface
  **/
-struct capiif_interface {
-	void (*init) (void);
-	void (*final) (void);
-	void (*parse_userconfig_load) (int fd);
-	void (*parse_userconfig_save) (int fd);
-	void (*parse_charconfig_load) (int fd);
-	int (*parse_fromlogin_api_proxy) (int fd);
+struct inter_userconfig_interface {
+	int (*load_emotes) (int account_id, struct userconfig_emotes *emotes);
+	int (*save_emotes) (int account_id, const struct userconfig_emotes *emotes);
 };
 
 #ifdef HERCULES_CORE
-void capiif_defaults(void);
+void inter_userconfig_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct capiif_interface *capiif;
+HPShared struct inter_userconfig_interface *inter_userconfig;
 
-#endif /* CHAR_CAPIIF_H */
+#endif /* CHAR_INT_USERCONFIG_H */

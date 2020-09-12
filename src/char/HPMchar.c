@@ -41,6 +41,7 @@
 #include "char/int_quest.h"
 #include "char/int_rodex.h"
 #include "char/int_storage.h"
+#include "char/int_userconfig.h"
 #include "char/loginif.h"
 #include "char/mapif.h"
 #include "char/pincode.h"
