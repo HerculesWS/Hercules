@@ -51,6 +51,11 @@
 	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size) __attribute__((nonnull (2))); \
 	static void handlers_ ## x(int fd, struct api_session_data *sd, const void *data, size_t data_size)
 
+#define IGNORE_DATA(x) \
+	DATA(x) \
+	{ \
+	}
+
 #define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
 #define CREATE_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
 #define LOAD_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
@@ -94,15 +99,7 @@ HTTPURL(userconfig_load)
 	return true;
 }
 
-DATA(userconfig_save)
-{
-	// unused
-}
-
-DATA(userconfig_save_emotes)
-{
-	// unused
-}
+IGNORE_DATA(userconfig_save)
 
 HTTPURL(userconfig_save)
 {
