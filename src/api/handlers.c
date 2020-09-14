@@ -188,6 +188,27 @@ HTTPURL(umblem_upload)
 #endif
 	aclif->show_request(fd, sd, false);
 
+	char *imgType = NULL;
+	aclif->get_post_header_data_str(sd, "ImgType", &imgType, NULL);
+	char *img = NULL;
+	uint32 img_size = 0;
+	aclif->get_post_header_data_str(sd, "Img", &img, &img_size);
+	if (strcmp(imgType, "BMP") == 0) {
+		if (img_size < 10 || strncmp(img, "BM", 2) != 0) {
+			ShowError("wrong bmp image %d: %s\n", fd, sd->url);
+			return false;
+		}
+	} else if (strcmp(imgType, "GIF") == 0) {
+		if (img_size < 10 || strncmp(img, "GIF", 3) != 0 ||
+		    memcmp(img + 3, "87a", 3) != 0 || memcmp(img + 3, "89a", 3) != 0) {
+			ShowError("wrong gif image %d: %s\n", fd, sd->url);
+			return false;
+		}
+	} else {
+		ShowError("unknown image type '%s'. %d: %s\n", imgType, fd, sd->url);
+		return false;
+	}
+
 	LOAD_ASYNC_DATA(umblem_upload, NULL);
 
 	return true;
