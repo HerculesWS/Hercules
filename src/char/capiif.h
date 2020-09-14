@@ -24,15 +24,21 @@
 
 #include "common/hercules.h"
 
+struct online_char_data;
+struct PACKET_API_PROXY;
+
 /**
  * capiif interface
  **/
 struct capiif_interface {
 	void (*init) (void);
 	void (*final) (void);
+	struct online_char_data* (*get_online_character) (const struct PACKET_API_PROXY *p);
 	void (*parse_userconfig_load) (int fd);
 	void (*parse_userconfig_save_emotes) (int fd);
 	void (*parse_charconfig_load) (int fd);
+	void (*parse_umblem_upload) (int fd);
+	void (*parse_umblem_upload_guild_id) (int fd);
 	int (*parse_fromlogin_api_proxy) (int fd);
 };
 

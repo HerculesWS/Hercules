@@ -59,6 +59,7 @@
 #define GET_DATA(var, type) const struct PACKET_API_REPLY_ ## type *var = (const struct PACKET_API_REPLY_ ## type*)data;
 #define CREATE_DATA(var, type) struct PACKET_API_ ## type ## _data var = { 0 };
 #define LOAD_ASYNC_DATA(name, data) aloginif->send_to_char(fd, sd, API_MSG_ ## name, data, sizeof(struct PACKET_API_ ## name));
+#define LOAD_ASYNC_DATA_SPLIT(name, data, size) aloginif->send_split_to_char(fd, sd, API_MSG_ ## name, data, size);
 
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
@@ -209,7 +210,12 @@ HTTPURL(umblem_upload)
 		return false;
 	}
 
-	LOAD_ASYNC_DATA(umblem_upload, NULL);
+	CREATE_DATA(data, umblem_upload_guild_id);
+	int guild_id = 0;
+	aclif->get_post_header_data_int(sd, "GDID", &guild_id);
+	data.guild_id = guild_id;
+	LOAD_ASYNC_DATA(umblem_upload_guild_id, &data);
+	LOAD_ASYNC_DATA_SPLIT(umblem_upload, img, img_size);
 
 	return true;
 }

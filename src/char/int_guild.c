@@ -1629,6 +1629,23 @@ static bool inter_guild_change_leader(int guild_id, const char *name, int len)
 	return true;
 }
 
+static bool inter_guild_is_guild_master(int char_id, int guild_id)
+{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT g.* FROM `%s` g LEFT JOIN `%s` c ON g.`char_id` = c.`char_id` "
+		"WHERE c.char_id = '%d' AND g.guild_id = '%d' AND g.`master` = c.`name`",
+		guild_db, char_db, char_id, guild_id))
+	{
+		Sql_ShowDebug(inter->sql_handle);
+		return false;
+	}
+
+	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle))
+		return false;
+
+	SQL->FreeResult(inter->sql_handle);
+	return true;
+}
+
 // Communication from the map server
 // - Can analyzed only one by one packet
 // Data packet length that you set to inter.c
@@ -1713,4 +1730,5 @@ void inter_guild_defaults(void)
 	inter_guild->update_emblem = inter_guild_update_emblem;
 	inter_guild->update_castle_data = inter_guild_update_castle_data;
 	inter_guild->change_leader = inter_guild_change_leader;
+	inter_guild->is_guild_master = inter_guild_is_guild_master;
 }

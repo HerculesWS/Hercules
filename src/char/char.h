@@ -71,6 +71,13 @@ struct online_char_data {
 	int waiting_disconnect;
 	enum online_char_state mapserver_connection;
 	int pincode_enable;
+	struct online_char_data2 *data;
+};
+
+struct online_char_data2 {
+	int emblem_guild_id;
+	char *emblem_data;
+	int emblem_data_size;
 };
 
 struct mmo_map_server {
@@ -284,6 +291,10 @@ struct char_interface {
 	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	void (*change_sex_sub) (int sex, int acc, int char_id, int class, int guild_id);
+	void (*online_char_destroy) (struct online_char_data *character);
+	int (*online_char_destroy_sub) (union DBKey key, struct DBData *data, va_list ap);
+	void (*ensure_online_char_data) (struct online_char_data *character);
+	void (*clean_online_char_emblem_data) (struct online_char_data *character);
 
 	bool (*sql_config_read) (const char *filename, bool imported);
 	bool (*sql_config_read_registry) (const char *filename, const struct config_t *config, bool imported);

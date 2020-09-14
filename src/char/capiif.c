@@ -25,12 +25,15 @@
 
 #include "char/char.h"
 #include "char/mapif.h"
+#include "char/int_guild.h"
 #include "char/int_userconfig.h"
 #include "common/api.h"
 #include "common/apipackets.h"
 #include "common/cbasetypes.h"
+#include "common/chunked.h"
 #include "common/core.h"
 #include "common/db.h"
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -58,8 +61,12 @@ struct capiif_interface *capiif;
 	packet->packet_len = WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
 	struct PACKET_API_REPLY_ ## type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
 
-#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type *var = (const struct PACKET_API_ ## type*)RFIFOP(fd, WFIFO_APICHAR_SIZE)
+#define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
+#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type *var = (const struct PACKET_API_ ## type*)RFIFO_DATA_PTR()
 #define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
+#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RFIFOP(fd, 0)
+#define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
+#define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY_CHUNKED))
 
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
@@ -75,6 +82,12 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 			break;
 		case API_MSG_charconfig_load:
 			capiif->parse_charconfig_load(fd);
+			break;
+		case API_MSG_umblem_upload_guild_id:
+			capiif->parse_umblem_upload_guild_id(fd);
+			break;
+		case API_MSG_umblem_upload:
+			capiif->parse_umblem_upload(fd);
 			break;
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
@@ -113,6 +126,82 @@ void capiif_parse_charconfig_load(int fd)
 	WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
 }
 
+// debug
+#include "common/utils.h"
+// debug
+
+void capiif_parse_umblem_upload_guild_id(int fd)
+{
+	RFIFO_API_PROXY_PACKET_CHUNKED(p);
+	RFIFO_API_DATA(data, umblem_upload_guild_id_data);
+	ShowError("Upload emblem for guild id: %d\n", data->guild_id);
+
+	struct online_char_data* character = capiif->get_online_character(&p->base);
+	if (character == NULL)
+		return;
+	chr->ensure_online_char_data(character);
+	if (character->data->emblem_data != NULL) {
+		character->data->emblem_guild_id = 0;
+		character->data->emblem_data_size = 0;
+		ShowError("Upload emblem guild id while emblem data transfer in progress.");
+		return;
+	}
+	character->data->emblem_guild_id = data->guild_id;
+}
+
+void capiif_parse_umblem_upload(int fd)
+{
+	RFIFO_API_PROXY_PACKET_CHUNKED(p);
+
+	struct online_char_data* character = capiif->get_online_character(&p->base);
+	if (character == NULL)
+		return;
+
+//	ShowDump(p->data, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd));
+
+	if (character->data->emblem_guild_id == 0) {
+		chr->clean_online_char_emblem_data(character);
+		ShowError("Upload emblem guild data while emblem guild id is not set.");
+		return;
+	}
+
+	RFIFO_CHUNKED_INIT(p, character->data->emblem_data, character->data->emblem_data_size) {
+		ShowError("Wrong guild emblem packets order\n");
+		chr->clean_online_char_emblem_data(character);
+		return;
+	}
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		if (character->data->emblem_data_size > 65000) {
+			ShowError("Big emblems not supported yer");
+			chr->clean_online_char_emblem_data(character);
+			return;
+		}
+
+		if (inter_guild->is_guild_master(p->base.char_id, character->data->emblem_guild_id)) {
+			inter_guild->update_emblem(character->data->emblem_data_size,
+				character->data->emblem_guild_id,
+				character->data->emblem_data);
+		}
+
+		chr->clean_online_char_emblem_data(character);
+	}
+}
+
+static struct online_char_data* capiif_get_online_character(const struct PACKET_API_PROXY *p)
+{
+	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, p->account_id);
+	if (character == NULL) {
+		ShowError("Cant get online character. Account %d is not online.", p->account_id);
+		return NULL;
+	}
+	if (character->char_id != p->char_id) {
+		ShowError("Cant get online character. Character %d is not online.", p->char_id);
+		return NULL;
+	}
+	return character;
+}
+
 static void do_init_capiif(void)
 {
 }
@@ -126,8 +215,11 @@ void capiif_defaults(void) {
 
 	capiif->init = do_init_capiif;
 	capiif->final = do_final_capiif;
+	capiif->get_online_character = capiif_get_online_character;
 	capiif->parse_fromlogin_api_proxy = capiif_parse_fromlogin_api_proxy;
 	capiif->parse_userconfig_load = capiif_parse_userconfig_load;
 	capiif->parse_userconfig_save_emotes = capiif_parse_userconfig_save_emotes;
 	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
+	capiif->parse_umblem_upload = capiif_parse_umblem_upload;
+	capiif->parse_umblem_upload_guild_id = capiif_parse_umblem_upload_guild_id;
 }

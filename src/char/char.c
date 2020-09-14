@@ -227,6 +227,7 @@ static void char_set_char_charselect(int account_id)
 
 	character->char_id = -1;
 	character->mapserver_connection = OCS_NOT_CONNECTED;
+
 	if(character->pincode_enable == -1)
 		character->pincode_enable = pincode->charselect + pincode->enabled;
 
@@ -5361,9 +5362,11 @@ static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va
 		return 0; //Character still connected
 	if (character->mapserver_connection == OCS_UNKNOWN) //Unknown server.. set them offline
 		chr->set_char_offline(character->char_id, character->account_id);
-	if (character->mapserver_connection != OCS_CONNECTED)
+	if (character->mapserver_connection != OCS_CONNECTED) {
 		//Free data from players that have not been online for a while.
+		chr->online_char_destroy(character);
 		db_remove(chr->online_char_db, key);
+	}
 	return 0;
 }
 
@@ -6055,6 +6058,42 @@ static bool char_config_set_ip(const char *type, const char *value, uint32 *out_
 	return true;
 }
 
+static void char_online_char_destroy(struct online_char_data *character)
+{
+	nullpo_retv(character);
+	if (character->data) {
+		aFree(character->data->emblem_data);
+		aFree(character->data);
+	}
+}
+
+static int char_online_char_destroy_sub(union DBKey key, struct DBData *data, va_list ap)
+{
+	struct online_char_data *character = DB->data2ptr(data);
+	nullpo_ret(character);
+	chr->online_char_destroy(character);
+	return 0;
+}
+
+static void char_ensure_online_char_data(struct online_char_data *character)
+{
+	nullpo_retv(character);
+	if (character->data == NULL) {
+		character->data = aCalloc(sizeof(struct online_char_data2), 1);
+	}
+}
+
+static void char_clean_online_char_emblem_data(struct online_char_data *character)
+{
+	nullpo_retv(character);
+	if (character->data == NULL)
+		return;
+	aFree(character->data->emblem_data);
+	character->data->emblem_data = 0;
+	character->data->emblem_data_size = 0;
+	character->data->emblem_guild_id = 0;
+}
+
 int do_final(void)
 {
 	ShowStatus("Terminating...\n");
@@ -6077,7 +6116,7 @@ int do_final(void)
 		Sql_ShowDebug(inter->sql_handle);
 
 	chr->char_db_->destroy(chr->char_db_, NULL);
-	chr->online_char_db->destroy(chr->online_char_db, NULL);
+	chr->online_char_db->destroy(chr->online_char_db, chr->online_char_destroy_sub);
 	auth_db->destroy(auth_db, NULL);
 
 	if( chr->char_fd != -1 ) {
@@ -6547,6 +6586,10 @@ void char_defaults(void)
 	chr->online_data_cleanup_sub = char_online_data_cleanup_sub;
 	chr->online_data_cleanup = char_online_data_cleanup;
 	chr->change_sex_sub = char_change_sex_sub;
+	chr->online_char_destroy = char_online_char_destroy;
+	chr->online_char_destroy_sub = char_online_char_destroy_sub;
+	chr->ensure_online_char_data = char_ensure_online_char_data;
+	chr->clean_online_char_emblem_data = char_clean_online_char_emblem_data;
 	chr->sql_config_read = char_sql_config_read;
 	chr->sql_config_read_registry = char_sql_config_read_registry;
 	chr->sql_config_read_pc = char_sql_config_read_pc;
