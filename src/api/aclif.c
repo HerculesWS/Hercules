@@ -460,11 +460,21 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 	}
 	struct api_session_data *sd = sockt->session[fd]->session_data;
 	nullpo_retv(sd);
-	if (sd->temp_mime_header->data == NULL) {
+
+	if (sd->flag.multi_part_begin == 1) {
+		// initial set header data
+		if (sd->temp_mime_header->data != NULL)
+			aFree(sd->temp_mime_header->data);
 		sd->temp_mime_header->data = aMalloc(size + 1);
 		memcpy(sd->temp_mime_header->data, value, size);
 		sd->temp_mime_header->data_size = size;
+		sd->flag.multi_part_begin = 0;
+	} else if (sd->temp_mime_header->data == NULL) {
+		ShowWarning("Post header data parsing error %d: %lu\n", fd, size);
+		sockt->eof(fd);
+		return;
 	} else {
+		// append header data
 		const uint32 newSize = sd->temp_mime_header->data_size + size;
 		sd->temp_mime_header->data = aRealloc(sd->temp_mime_header->data, newSize + 1);
 		memcpy(sd->temp_mime_header->data + sd->temp_mime_header->data_size, value, size);
@@ -496,7 +506,6 @@ static void aclif_multi_part_complete(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
 	nullpo_retv(sd->temp_mime_header);
-	Assert_retv(sd->flag.multi_part_begin == 1);
 
 	strdb_put(sd->post_headers_db, sd->temp_mime_header->name, sd->temp_mime_header);
 
