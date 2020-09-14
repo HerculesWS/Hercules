@@ -656,6 +656,15 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		}
 	}
 
+	if ((sd->handler->flags & REQ_IMG_TYPE) != 0) {
+		// check is ImgType present in request
+		char *name = NULL;
+		if (!aclif->get_post_header_data_str(sd, "ImgType", &name, NULL)) {
+			ShowError("Http request without ImgType %d\n", fd);
+			return false;
+		}
+	}
+
 	return true;
 }
 

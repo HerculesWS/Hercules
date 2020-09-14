@@ -27,6 +27,6 @@
 handler2(HTTP_POST, "/userconfig/load", userconfig_load, REQ_API);
 handler2(HTTP_POST, "/userconfig/save", userconfig_save, REQ_API_AUTH | REQ_AUTO_CLOSE);
 handler2(HTTP_POST, "/charconfig/load", charconfig_load, REQ_API_AUTH | REQ_CHAR_ID);
-handler2(HTTP_POST, "/emblem/upload", umblem_upload, REQ_API_AUTH | REQ_GUILD_ID);
+handler2(HTTP_POST, "/emblem/upload", umblem_upload, REQ_EMBLEM_UPLOAD);
 handler(HTTP_GET, "/test/url", test_url, REQ_DEFAULT);
 //packet_handler(userconfig_save_emotes);
