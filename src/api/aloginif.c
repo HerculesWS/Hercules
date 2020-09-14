@@ -28,6 +28,7 @@
 #include "common/HPM.h"
 #include "common/api.h"
 #include "common/apipackets.h"
+#include "common/chunked.h"
 #include "common/cbasetypes.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
@@ -48,6 +49,13 @@
 static struct aloginif_interface aloginif_s;
 struct aloginif_interface *aloginif;
 
+#define INIT_PACKET_PROXY_FIELDS(p, sd) \
+	(p)->msg_id = msg_id; \
+	(p)->server_id = aclif->get_char_server_id(sd); \
+	(p)->client_fd = sd->fd; \
+	(p)->account_id = sd->account_id; \
+	(p)->char_id = sd->char_id; \
+	(p)->client_random_id = sd->id
 
 // sets login-server's user id
 static void aloginif_setuserid(char *id)
@@ -302,6 +310,7 @@ static void aloginif_keepalive(int fd)
 
 static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len)
 {
+	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
 
 	const int len = sizeof(struct PACKET_API_PROXY) + data_len;
@@ -309,16 +318,29 @@ static void aloginif_send_to_char(int fd, struct api_session_data *sd, int msg_i
 	struct PACKET_API_PROXY *p = WFIFOP(aloginif->fd, 0);
 	p->packet_id = HEADER_API_PROXY_REQUEST;
 	p->packet_len = len;
-	p->msg_id = msg_id;
-	p->server_id = aclif->get_char_server_id(sd);
-	p->client_fd = sd->fd;
-	p->account_id = sd->account_id;
-	p->char_id = sd->char_id;
-	p->client_random_id = sd->id;
-	if (data_len > 0)
+	INIT_PACKET_PROXY_FIELDS(p, sd);
+	if (data && data_len > 0)
 		memcpy(p->data, data, data_len);
 
 	WFIFOSET(aloginif->fd, len);
+}
+
+static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len)
+{
+	nullpo_retv(sd);
+	Assert_retv(aloginif->fd != -1);
+
+	if (data == NULL)
+		data_len = 0;
+
+	WFIFO_CHUNKED_INIT(p, aloginif->fd, HEADER_API_PROXY_REQUEST, PACKET_API_PROXY_CHUNKED, data, data_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		INIT_PACKET_PROXY_FIELDS(&p->base, sd);
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_START_FINAL(p);
+	INIT_PACKET_PROXY_FIELDS(&p->base, sd);
+	WFIFO_CHUNKED_BLOCK_END();
 }
 
 static void aloginif_parse_from_char(int fd, Handler_func func)
@@ -417,6 +439,7 @@ void aloginif_defaults(void)
 	aloginif->keepalive = aloginif_keepalive;
 	aloginif->on_ready = aloginif_on_ready;
 	aloginif->send_to_char = aloginif_send_to_char;
+	aloginif->send_split_to_char = aloginif_send_split_to_char;
 
 	aloginif->parse = aloginif_parse;
 	aloginif->parse_connection_state = aloginif_parse_connection_state;

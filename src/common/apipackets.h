@@ -53,6 +53,12 @@ struct PACKET_API_PROXY {
 	char data[];
 } __attribute__((packed));
 
+struct PACKET_API_PROXY_CHUNKED {
+	struct PACKET_API_PROXY base;
+	uint8 flag;
+	char data[];
+} __attribute__((packed));
+
 struct PACKET_API_EMPTY {
 } __attribute__((packed));
 
