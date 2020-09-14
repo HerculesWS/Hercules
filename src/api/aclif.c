@@ -580,6 +580,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 
 	struct online_api_login_data *login_data = NULL;
 	struct char_server_data *char_server_data;
+	int handled_count = 0;
 
 	if ((sd->handler->flags & REQ_ACCOUNT_ID) != 0) {
 		// check is account_id logged in
@@ -595,6 +596,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 		sd->account_id = account_id;
+		handled_count ++;
 	}
 
 	if ((sd->handler->flags & REQ_CHAR_ID) != 0) {
@@ -610,6 +612,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			return false;
 		}
 		sd->char_id = char_id;
+		handled_count ++;
 	}
 
 	if ((sd->handler->flags & REQ_WORLD_NAME) != 0) {
@@ -627,6 +630,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		}
 
 		sd->world_name = name;
+		handled_count ++;
 	}
 
 	if ((sd->handler->flags & REQ_AUTH_TOKEN) != 0) {
@@ -645,6 +649,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Wrong auth token %d: '%s'\n", fd, token);
 			return false;
 		}
+		handled_count ++;
 	}
 
 	if ((sd->handler->flags & REQ_GUILD_ID) != 0) {
@@ -654,6 +659,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Http request without guild id %d\n", fd);
 			return false;
 		}
+		handled_count ++;
 	}
 
 	if ((sd->handler->flags & REQ_IMG_TYPE) != 0) {
@@ -663,6 +669,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Http request without ImgType %d\n", fd);
 			return false;
 		}
+		handled_count ++;
 	}
 
 	if ((sd->handler->flags & REQ_IMG) != 0) {
@@ -676,8 +683,12 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Http request without Img with wrong content_type %d\n", fd);
 			return false;
 		}
+		handled_count ++;
 	}
 
+	if (handled_count != aclif->get_post_headers_count(sd)) {
+		ShowError("Handled wrong number of post headers %d\n", fd);
+	}
 	return true;
 }
 
@@ -840,6 +851,11 @@ static bool aclif_get_post_header_content_type(struct api_session_data *sd, cons
 	return *content_type != NULL;
 }
 
+static int aclif_get_post_headers_count(struct api_session_data *sd)
+{
+	return db_size(sd->post_headers_db);
+}
+
 static void aclif_add_char_server(int char_server_id, const char *name)
 {
 	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
@@ -946,6 +962,7 @@ void aclif_defaults(void)
 	aclif->get_post_header_data_str = aclif_get_post_header_data_str;
 	aclif->get_post_header_data_json = aclif_get_post_header_data_json;
 	aclif->get_post_header_content_type = aclif_get_post_header_content_type;
+	aclif->get_post_headers_count = aclif_get_post_headers_count;
 
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->real_delete_online_player = aclif_real_delete_online_player;

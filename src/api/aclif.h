@@ -158,6 +158,7 @@ struct aclif_interface {
 	bool (*get_post_header_data_str) (struct api_session_data *sd, const char *name, char **data, uint32_t *data_size);
 	bool (*get_post_header_data_json) (struct api_session_data *sd, const char *name, JsonP **json);
 	bool (*get_post_header_content_type) (struct api_session_data *sd, const char *name, char **content_type);
+	int (*get_post_headers_count) (struct api_session_data *sd);
 
 	void (*delete_online_player) (int account_id);
 	void (*real_delete_online_player) (int account_id);
