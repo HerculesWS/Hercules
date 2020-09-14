@@ -64,14 +64,8 @@ static bool inter_userconfig_emotes_from_sql(int account_id, struct userconfig_e
 		StrBuf->Printf(&buf, ", `emote%d`", i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id` = '%d'", emotes_db, account_id);
 
-	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
+	if (SQL_SUCCESS != SQL->QueryStrFetch(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
-		StrBuf->Destroy(&buf);
-		return false;
-	}
-
-	if (SQL_SUCCESS != SQL->NextRow(inter->sql_handle)) {
-		SQL->FreeResult(inter->sql_handle);
 		StrBuf->Destroy(&buf);
 		return false;
 	}
