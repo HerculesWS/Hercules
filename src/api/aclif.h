@@ -92,7 +92,7 @@ enum req_flags {
 
 	REQ_API = REQ_ACCOUNT_ID | REQ_WORLD_NAME,
 	REQ_API_AUTH = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN,
-	REQ_EMBLEM_UPLOAD = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN | REQ_API_AUTH | REQ_GUILD_ID | REQ_IMG_TYPE
+	REQ_EMBLEM_UPLOAD = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN | REQ_API_AUTH | REQ_GUILD_ID | REQ_IMG_TYPE | REQ_IMG
 };
 
 struct online_api_login_data {
@@ -157,6 +157,7 @@ struct aclif_interface {
 	bool (*get_post_header_data_int) (struct api_session_data *sd, const char *name, int *account_id);
 	bool (*get_post_header_data_str) (struct api_session_data *sd, const char *name, char **data, uint32_t *data_size);
 	bool (*get_post_header_data_json) (struct api_session_data *sd, const char *name, JsonP **json);
+	bool (*get_post_header_content_type) (struct api_session_data *sd, const char *name, char **content_type);
 
 	void (*delete_online_player) (int account_id);
 	void (*real_delete_online_player) (int account_id);

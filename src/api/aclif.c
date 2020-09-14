@@ -665,6 +665,19 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		}
 	}
 
+	if ((sd->handler->flags & REQ_IMG) != 0) {
+		// check is Img present in request
+		char *content_type = NULL;
+		if (!aclif->get_post_header_content_type(sd, "Img", &content_type)) {
+			ShowError("Http request without Img or empty content_type %d\n", fd);
+			return false;
+		}
+		if (strcmp(content_type, "application/octet-stream") != 0) {
+			ShowError("Http request without Img with wrong content_type %d\n", fd);
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -813,6 +826,20 @@ static bool aclif_get_post_header_data_json(struct api_session_data *sd, const c
 	return *json != NULL;
 }
 
+static bool aclif_get_post_header_content_type(struct api_session_data *sd, const char *name, char **content_type)
+{
+	nullpo_retr(false, content_type);
+	*content_type = NULL;
+	nullpo_retr(false, sd);
+	nullpo_retr(false, name);
+
+	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	if (header == NULL)
+		return false;
+	*content_type = header->content_type;
+	return *content_type != NULL;
+}
+
 static void aclif_add_char_server(int char_server_id, const char *name)
 {
 	struct char_server_data *data = aCalloc(1, sizeof(struct char_server_data));
@@ -918,6 +945,7 @@ void aclif_defaults(void)
 	aclif->get_post_header_data_int = aclif_get_post_header_data_int;
 	aclif->get_post_header_data_str = aclif_get_post_header_data_str;
 	aclif->get_post_header_data_json = aclif_get_post_header_data_json;
+	aclif->get_post_header_content_type = aclif_get_post_header_content_type;
 
 	aclif->delete_online_player = aclif_delete_online_player;
 	aclif->real_delete_online_player = aclif_real_delete_online_player;
