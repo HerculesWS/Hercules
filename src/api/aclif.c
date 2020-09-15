@@ -696,6 +696,16 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		handled_count ++;
 	}
 
+	if ((sd->handler->flags & REQ_VERSION) != 0) {
+		// check is Version present in request
+		int version = 0;
+		if (!aclif->get_post_header_data_int(sd, "Version", &version) || version == 0) {
+			ShowError("Http request without Version %d\n", fd);
+			return false;
+		}
+		handled_count ++;
+	}
+
 	if (handled_count != aclif->get_post_headers_count(sd)) {
 		ShowError("Handled wrong number of post headers %d\n", fd);
 	}
