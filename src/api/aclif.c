@@ -597,6 +597,16 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		}
 		sd->account_id = account_id;
 		handled_count ++;
+
+		if (login_data->char_id != 0)
+			sd->char_id = login_data->char_id;
+
+		if ((sd->handler->flags & REQ_CHAR_LOGGED_IN) != 0) {
+			if (login_data->char_id == 0) {
+				ShowError("Char not logged in %d\n", fd);
+				return false;
+			}
+		}
 	}
 
 	if ((sd->handler->flags & REQ_CHAR_ID) != 0) {

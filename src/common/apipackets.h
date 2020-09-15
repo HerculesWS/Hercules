@@ -84,6 +84,14 @@ struct PACKET_API_charconfig_load {
 struct PACKET_API_umblem_upload {
 } __attribute__((packed));
 
+struct PACKET_API_umblem_upload_guild_id_data {
+	int guild_id;
+} __attribute__((packed));
+
+struct PACKET_API_umblem_upload_guild_id {
+	struct PACKET_API_umblem_upload_guild_id_data data;
+} __attribute__((packed));
+
 // char to api
 struct PACKET_API_REPLY_userconfig_load {
 	struct userconfig_emotes emotes;
