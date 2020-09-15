@@ -220,6 +220,21 @@ HTTPURL(umblem_upload)
 	return true;
 }
 
+DATA(emblem_download)
+{
+	aclif->terminate_connection(fd);
+}
+
+HTTPURL(emblem_download)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("emblem_download called %d: %d\n", fd, sd->parser.method);
+#endif
+	aclif->show_request(fd, sd, false);
+
+	return true;
+}
+
 HTTPURL(test_url)
 {
 #ifdef DEBUG_LOG

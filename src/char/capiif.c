@@ -89,6 +89,9 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 		case API_MSG_umblem_upload:
 			capiif->parse_umblem_upload(fd);
 			break;
+		case API_MSG_emblem_download:
+			capiif->parse_emblem_download(fd);
+			break;
 		default:
 			ShowError("Unknown proxy packet 0x%04x received from login-server, disconnecting.\n", command);
 			sockt->eof(fd);
@@ -189,6 +192,12 @@ void capiif_parse_umblem_upload(int fd)
 
 		chr->clean_online_char_emblem_data(character);
 	}
+}
+
+void capiif_parse_emblem_download(int fd)
+{
+	WFIFO_APICHAR_PACKET_REPLY_EMPTY();
+	WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
 }
 
 static struct online_char_data* capiif_get_online_character(const struct PACKET_API_PROXY *p)
