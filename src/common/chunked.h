@@ -63,4 +63,24 @@
 	if (p ## _left_size > 0) \
 		memcpy((p)->data, p ## data + p ## _offset, p ## _left_size);
 
+#define RFIFO_CHUNKED_INIT(p, dst_data, dst_data_size) \
+	const int p ## _flag = (p)->flag; \
+	char **p ## _dst_data_ptr = &(dst_data); \
+	int *p ## _dst_data_size_ptr = &(dst_data_size); \
+	const char *p ## _src_data = (p)->data; \
+	const size_t p ## _src_data_size = GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd); \
+	if (p ## _flag > 2 || p ## _flag < 0 || (p ## _flag == 0 && *p ## _dst_data_ptr != NULL) || (p ## _flag == 1 && *p ## _dst_data_ptr == NULL))
+
+#define RFIFO_CHUNKED_COMPLETE(p) \
+	if (p ## _flag == 0 || (p ## _flag == 2 && *p ## _dst_data_ptr == NULL)) { \
+		*p ## _dst_data_ptr = aMalloc(p ## _src_data_size); \
+		memcpy(*p ## _dst_data_ptr, p ## _src_data, p ## _src_data_size); \
+		*p ## _dst_data_size_ptr = p ## _src_data_size; \
+	} else if (p ## _flag == 1 || p ## _flag == 2) { \
+		*p ## _dst_data_ptr = aRealloc(*p ## _dst_data_ptr, *p ## _dst_data_size_ptr + p ## _src_data_size); \
+		memcpy(*p ## _dst_data_ptr + *p ## _dst_data_size_ptr, p ## _src_data, p ## _src_data_size); \
+		*p ## _dst_data_size_ptr += p ## _src_data_size; \
+	} \
+	if (p ## _flag == 2)
+
 #endif /* COMMON_CHUNKED_H */
