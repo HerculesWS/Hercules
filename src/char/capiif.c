@@ -134,7 +134,6 @@ void capiif_parse_umblem_upload_guild_id(int fd)
 {
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
 	RFIFO_API_DATA(data, umblem_upload_guild_id_data);
-	ShowError("Upload emblem for guild id: %d\n", data->guild_id);
 
 	struct online_char_data* character = capiif->get_online_character(&p->base);
 	if (character == NULL)
@@ -161,7 +160,7 @@ void capiif_parse_umblem_upload(int fd)
 
 	if (character->data->emblem_guild_id == 0) {
 		chr->clean_online_char_emblem_data(character);
-		ShowError("Upload emblem guild data while emblem guild id is not set.");
+		ShowError("Upload emblem guild data while emblem guild id is not set.\n");
 		return;
 	}
 
@@ -173,12 +172,16 @@ void capiif_parse_umblem_upload(int fd)
 
 	RFIFO_CHUNKED_COMPLETE(p) {
 		if (character->data->emblem_data_size > 65000) {
-			ShowError("Big emblems not supported yer");
+			ShowError("Big emblems not supported yet\n");
 			chr->clean_online_char_emblem_data(character);
 			return;
 		}
 
 		if (inter_guild->is_guild_master(p->base.char_id, character->data->emblem_guild_id)) {
+			if (!inter_guild->validate_emblem(character->data->emblem_data,
+			    character->data->emblem_data_size)) {
+				ShowError("Invalid image uploaded\n");
+			}
 			inter_guild->update_emblem(character->data->emblem_data_size,
 				character->data->emblem_guild_id,
 				character->data->emblem_data);
