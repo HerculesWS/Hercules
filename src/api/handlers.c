@@ -177,15 +177,15 @@ HTTPURL(charconfig_load)
 	return true;
 }
 
-DATA(umblem_upload)
+DATA(emblem_upload)
 {
 	aclif->terminate_connection(fd);
 }
 
-HTTPURL(umblem_upload)
+HTTPURL(emblem_upload)
 {
 #ifdef DEBUG_LOG
-	ShowInfo("umblem_upload called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("emblem_upload called %d: %d\n", fd, sd->parser.method);
 #endif
 	aclif->show_request(fd, sd, false);
 
@@ -210,12 +210,12 @@ HTTPURL(umblem_upload)
 		return false;
 	}
 
-	CREATE_DATA(data, umblem_upload_guild_id);
+	CREATE_DATA(data, emblem_upload_guild_id);
 	int guild_id = 0;
 	aclif->get_post_header_data_int(sd, "GDID", &guild_id);
 	data.guild_id = guild_id;
-	LOAD_ASYNC_DATA(umblem_upload_guild_id, &data);
-	LOAD_ASYNC_DATA_SPLIT(umblem_upload, img, img_size);
+	LOAD_ASYNC_DATA(emblem_upload_guild_id, &data);
+	LOAD_ASYNC_DATA_SPLIT(emblem_upload, img, img_size);
 
 	return true;
 }

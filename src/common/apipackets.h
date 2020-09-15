@@ -81,15 +81,15 @@ struct PACKET_API_userconfig_save_emotes {
 struct PACKET_API_charconfig_load {
 } __attribute__((packed));
 
-struct PACKET_API_umblem_upload {
+struct PACKET_API_emblem_upload {
 } __attribute__((packed));
 
-struct PACKET_API_umblem_upload_guild_id_data {
+struct PACKET_API_emblem_upload_guild_id_data {
 	int guild_id;
 } __attribute__((packed));
 
-struct PACKET_API_umblem_upload_guild_id {
-	struct PACKET_API_umblem_upload_guild_id_data data;
+struct PACKET_API_emblem_upload_guild_id {
+	struct PACKET_API_emblem_upload_guild_id_data data;
 } __attribute__((packed));
 
 // char to api
@@ -103,7 +103,7 @@ struct PACKET_API_REPLY_userconfig_save {
 struct PACKET_API_REPLY_charconfig_load {
 } __attribute__((packed));
 
-struct PACKET_API_REPLY_umblem_upload {
+struct PACKET_API_REPLY_emblem_upload {
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)

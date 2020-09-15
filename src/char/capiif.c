@@ -83,11 +83,11 @@ static int capiif_parse_fromlogin_api_proxy(int fd)
 		case API_MSG_charconfig_load:
 			capiif->parse_charconfig_load(fd);
 			break;
-		case API_MSG_umblem_upload_guild_id:
-			capiif->parse_umblem_upload_guild_id(fd);
+		case API_MSG_emblem_upload_guild_id:
+			capiif->parse_emblem_upload_guild_id(fd);
 			break;
-		case API_MSG_umblem_upload:
-			capiif->parse_umblem_upload(fd);
+		case API_MSG_emblem_upload:
+			capiif->parse_emblem_upload(fd);
 			break;
 		case API_MSG_emblem_download:
 			capiif->parse_emblem_download(fd);
@@ -133,10 +133,10 @@ void capiif_parse_charconfig_load(int fd)
 #include "common/utils.h"
 // debug
 
-void capiif_parse_umblem_upload_guild_id(int fd)
+void capiif_parse_emblem_upload_guild_id(int fd)
 {
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
-	RFIFO_API_DATA(data, umblem_upload_guild_id_data);
+	RFIFO_API_DATA(data, emblem_upload_guild_id_data);
 
 	struct online_char_data* character = capiif->get_online_character(&p->base);
 	if (character == NULL)
@@ -151,7 +151,7 @@ void capiif_parse_umblem_upload_guild_id(int fd)
 	character->data->emblem_guild_id = data->guild_id;
 }
 
-void capiif_parse_umblem_upload(int fd)
+void capiif_parse_emblem_upload(int fd)
 {
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
 
@@ -232,6 +232,6 @@ void capiif_defaults(void) {
 	capiif->parse_userconfig_load = capiif_parse_userconfig_load;
 	capiif->parse_userconfig_save_emotes = capiif_parse_userconfig_save_emotes;
 	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
-	capiif->parse_umblem_upload = capiif_parse_umblem_upload;
-	capiif->parse_umblem_upload_guild_id = capiif_parse_umblem_upload_guild_id;
+	capiif->parse_emblem_upload = capiif_parse_emblem_upload;
+	capiif->parse_emblem_upload_guild_id = capiif_parse_emblem_upload_guild_id;
 }

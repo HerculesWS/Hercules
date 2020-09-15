@@ -37,8 +37,8 @@ struct capiif_interface {
 	void (*parse_userconfig_load) (int fd);
 	void (*parse_userconfig_save_emotes) (int fd);
 	void (*parse_charconfig_load) (int fd);
-	void (*parse_umblem_upload) (int fd);
-	void (*parse_umblem_upload_guild_id) (int fd);
+	void (*parse_emblem_upload) (int fd);
+	void (*parse_emblem_upload_guild_id) (int fd);
 	void (*parse_emblem_download) (int fd);
 	int (*parse_fromlogin_api_proxy) (int fd);
 };
