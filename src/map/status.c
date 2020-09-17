@@ -6123,7 +6123,7 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 	//TODO: test the aspd inc
 #ifdef RENEWAL
 	if (sc->data[SC_INC_AGI])
-			aspd_rate += sc->data[SC_INC_AGI]->val1 * 10;
+		aspd_rate += sc->data[SC_INC_AGI]->val1 * 10;
 #endif
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
