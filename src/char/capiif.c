@@ -61,13 +61,21 @@ struct capiif_interface *capiif;
 	packet->packet_len = WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type); \
 	struct PACKET_API_REPLY_ ## type *data = WFIFOP(chr->login_fd, sizeof(struct PACKET_API_PROXY))
 
+#define INIT_PACKET_REPLY_PROXY_FIELDS(p, p2) \
+	(p)->msg_id = (p2)->msg_id; \
+	(p)->server_id = (p2)->server_id; \
+	(p)->client_fd = (p2)->client_fd; \
+	(p)->account_id = (p2)->account_id; \
+	(p)->char_id = (p2)->char_id; \
+	(p)->client_random_id = (p2)->client_random_id
+
 #define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
 #define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type *var = (const struct PACKET_API_ ## type*)RFIFO_DATA_PTR()
 #define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
 #define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RFIFOP(fd, 0)
 #define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
-#define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY_CHUNKED))
 
+#define DEBUG_LOG
 
 static int capiif_parse_fromlogin_api_proxy(int fd)
 {
@@ -129,10 +137,6 @@ void capiif_parse_charconfig_load(int fd)
 	WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
 }
 
-// debug
-#include "common/utils.h"
-// debug
-
 void capiif_parse_emblem_upload_guild_id(int fd)
 {
 	RFIFO_API_PROXY_PACKET_CHUNKED(p);
@@ -159,15 +163,13 @@ void capiif_parse_emblem_upload(int fd)
 	if (character == NULL)
 		return;
 
-//	ShowDump(p->data, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd));
-
 	if (character->data->emblem_guild_id == 0) {
 		chr->clean_online_char_emblem_data(character);
 		ShowError("Upload emblem guild data while emblem guild id is not set.\n");
 		return;
 	}
 
-	RFIFO_CHUNKED_INIT(p, character->data->emblem_data, character->data->emblem_data_size) {
+	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), character->data->emblem_data, character->data->emblem_data_size) {
 		ShowError("Wrong guild emblem packets order\n");
 		chr->clean_online_char_emblem_data(character);
 		return;
@@ -196,8 +198,33 @@ void capiif_parse_emblem_upload(int fd)
 
 void capiif_parse_emblem_download(int fd)
 {
-	WFIFO_APICHAR_PACKET_REPLY_EMPTY();
-	WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
+	RFIFO_API_DATA(data, emblem_download_data);
+
+#ifdef DEBUG_LOG
+	ShowInfo("download emblem for %d, %d\n", data->guild_id, data->version);
+#endif
+
+	capiif->emblem_download(fd, data->guild_id, data->version);
+}
+
+void capiif_emblem_download(int fd, int guild_id, int emblem_id)
+{
+	struct guild *g = inter_guild->fromsql(guild_id);
+	if (g == NULL) {
+		WFIFO_APICHAR_PACKET_REPLY_EMPTY();
+		WFIFOSET(chr->login_fd, WFIFO_APICHAR_SIZE);
+		return;
+	}
+
+	RFIFO_API_PROXY_PACKET(p2);
+	WFIFO_CHUNKED_INIT(p, chr->login_fd, HEADER_API_PROXY_REPLY, PACKET_API_PROXY_CHUNKED, g->emblem_data, g->emblem_len) {
+		WFIFO_CHUNKED_BLOCK_START(p);
+		INIT_PACKET_REPLY_PROXY_FIELDS(&p->base, p2);
+		WFIFO_CHUNKED_BLOCK_END();
+	}
+	WFIFO_CHUNKED_START_FINAL(p);
+	INIT_PACKET_REPLY_PROXY_FIELDS(&p->base, p2);
+	WFIFO_CHUNKED_BLOCK_END();
 }
 
 static struct online_char_data* capiif_get_online_character(const struct PACKET_API_PROXY *p)
@@ -228,10 +255,12 @@ void capiif_defaults(void) {
 	capiif->init = do_init_capiif;
 	capiif->final = do_final_capiif;
 	capiif->get_online_character = capiif_get_online_character;
+	capiif->emblem_download = capiif_emblem_download;
 	capiif->parse_fromlogin_api_proxy = capiif_parse_fromlogin_api_proxy;
 	capiif->parse_userconfig_load = capiif_parse_userconfig_load;
 	capiif->parse_userconfig_save_emotes = capiif_parse_userconfig_save_emotes;
 	capiif->parse_charconfig_load = capiif_parse_charconfig_load;
 	capiif->parse_emblem_upload = capiif_parse_emblem_upload;
 	capiif->parse_emblem_upload_guild_id = capiif_parse_emblem_upload_guild_id;
+	capiif->parse_emblem_download = capiif_parse_emblem_download;
 }

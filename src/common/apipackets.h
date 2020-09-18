@@ -92,6 +92,15 @@ struct PACKET_API_emblem_upload_guild_id {
 	struct PACKET_API_emblem_upload_guild_id_data data;
 } __attribute__((packed));
 
+struct PACKET_API_emblem_download_data {
+	int guild_id;
+	int version;
+} __attribute__((packed));
+
+struct PACKET_API_emblem_download {
+	struct PACKET_API_emblem_download_data data;
+} __attribute__((packed));
+
 // char to api
 struct PACKET_API_REPLY_userconfig_load {
 	struct userconfig_emotes emotes;
@@ -106,7 +115,13 @@ struct PACKET_API_REPLY_charconfig_load {
 struct PACKET_API_REPLY_emblem_upload {
 } __attribute__((packed));
 
+struct PACKET_API_REPLY_emblem_download {
+	uint8 flag;
+	char data[];
+} __attribute__((packed));
+
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)
+#define CHUNKED_FLAG_SIZE 1
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

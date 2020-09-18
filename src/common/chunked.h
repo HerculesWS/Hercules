@@ -25,16 +25,16 @@
 #define WFIFO_CHUNK_SIZE 65500
 #endif  // WFIFO_CHUNK_SIZE
 
-#define WFIFO_CHUNKED_INIT(p, fd, header, pname, data, data_len) \
+#define WFIFO_CHUNKED_INIT(p, fd, header, pname, pdata, pdata_len) \
 	struct pname *p = NULL; \
 	int p ## _len = 0; \
 	int p ## _offset = 0; \
 	const int p ## _fd = fd; \
 	const int p ## _fixed_len = sizeof(struct pname); \
 	const int p ## _header_id = header; \
-	const char *p ## data = data; \
-	const int p ## data_len = data_len; \
-	const int p ## _full_chunks_count = data_len / WFIFO_CHUNK_SIZE; \
+	const char *p ## data = pdata; \
+	const int p ## data_len = pdata_len; \
+	const int p ## _full_chunks_count = p ## data_len / WFIFO_CHUNK_SIZE; \
 	for (int p ## _cnt = 0; p ## _cnt < p ## _full_chunks_count; p ## _cnt ++, p ## _offset += WFIFO_CHUNK_SIZE)
 
 #define WFIFO_CHUNKED_BLOCK_START(p) \
@@ -63,12 +63,12 @@
 	if (p ## _left_size > 0) \
 		memcpy((p)->data, p ## data + p ## _offset, p ## _left_size);
 
-#define RFIFO_CHUNKED_INIT(p, dst_data, dst_data_size) \
+#define RFIFO_CHUNKED_INIT(p, src_data_size, dst_data, dst_data_size) \
 	const int p ## _flag = (p)->flag; \
 	char **p ## _dst_data_ptr = &(dst_data); \
 	int *p ## _dst_data_size_ptr = &(dst_data_size); \
 	const char *p ## _src_data = (p)->data; \
-	const size_t p ## _src_data_size = GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd); \
+	const size_t p ## _src_data_size = src_data_size; \
 	if (p ## _flag > 2 || p ## _flag < 0 || (p ## _flag == 0 && *p ## _dst_data_ptr != NULL) || (p ## _flag == 1 && *p ## _dst_data_ptr == NULL))
 
 #define RFIFO_CHUNKED_COMPLETE(p) \
@@ -82,5 +82,7 @@
 		*p ## _dst_data_size_ptr += p ## _src_data_size; \
 	} \
 	if (p ## _flag == 2)
+
+#define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY_CHUNKED))
 
 #endif /* COMMON_CHUNKED_H */

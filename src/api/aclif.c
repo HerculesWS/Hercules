@@ -224,6 +224,9 @@ static int aclif_session_delete(int fd)
 	sd->multi_parser = NULL;
 	aFree(sd->temp_mime_header);
 	sd->temp_mime_header = NULL;
+	sd->data = NULL;
+	aFree(sd->data);
+	sd->data_size = 0;
 
 	httpparser->delete_parser(fd);
 	return 0;

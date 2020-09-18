@@ -34,6 +34,7 @@ struct capiif_interface {
 	void (*init) (void);
 	void (*final) (void);
 	struct online_char_data* (*get_online_character) (const struct PACKET_API_PROXY *p);
+	void (*emblem_download) (int fd, int guild_id, int emblem_id);
 	void (*parse_userconfig_load) (int fd);
 	void (*parse_userconfig_save_emotes) (int fd);
 	void (*parse_charconfig_load) (int fd);

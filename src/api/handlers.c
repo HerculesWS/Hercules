@@ -26,11 +26,13 @@
 #include "common/cbasetypes.h"
 #include "common/api.h"
 #include "common/apipackets.h"
+#include "common/chunked.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/utils.h"
 #include "api/aclif.h"
 #include "api/aloginif.h"
 #include "api/apisessiondata.h"
@@ -222,7 +224,28 @@ HTTPURL(emblem_upload)
 
 DATA(emblem_download)
 {
-	aclif->terminate_connection(fd);
+#ifdef DEBUG_LOG
+	ShowError("emblem_download data called\n");
+#endif
+
+	GET_DATA(p, emblem_download);
+	const size_t src_emblem_size = data_size - CHUNKED_FLAG_SIZE;
+
+	RFIFO_CHUNKED_INIT(p, src_emblem_size, sd->data, sd->data_size) {
+		ShowError("Wrong guild emblem packets order\n");
+		aclif->terminate_connection(fd);
+		return;
+	}
+
+	RFIFO_CHUNKED_COMPLETE(p) {
+		if (sd->data_size > 65000) {
+			ShowError("Big emblems not supported yet\n");
+			aclif->terminate_connection(fd);
+			return;
+		}
+		httpsender->send_binary(fd, sd->data, sd->data_size);
+		aclif->terminate_connection(fd);
+	}
 }
 
 HTTPURL(emblem_download)
@@ -231,6 +254,16 @@ HTTPURL(emblem_download)
 	ShowInfo("emblem_download called %d: %d\n", fd, sd->parser.method);
 #endif
 	aclif->show_request(fd, sd, false);
+
+	CREATE_DATA(data, emblem_download);
+
+	int value = 0;
+	aclif->get_post_header_data_int(sd, "GDID", &value);
+	data.guild_id = value;
+	aclif->get_post_header_data_int(sd, "Version", &value);
+	data.version = value;
+
+	LOAD_ASYNC_DATA(emblem_download, &data);
 
 	return true;
 }

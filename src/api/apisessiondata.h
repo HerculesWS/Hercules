@@ -70,6 +70,8 @@ struct api_session_data {
 	char *body;
 	char *world_name;
 	size_t body_size;
+	char *data;
+	int data_size;
 };
 
 #endif /* API_APISESSIONDATA_H */
