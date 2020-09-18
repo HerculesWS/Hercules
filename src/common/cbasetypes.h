@@ -401,13 +401,19 @@ typedef char bool;
 #if defined(WIN32)
 #define PATHSEP '\\'
 #define PATHSEP_STR "\\"
+#define PATHSEP2 '/'
+#define PATHSEP_STR2 "/"
 #elif defined(__APPLE__) && !defined(__MACH__)
 // __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
 #define PATHSEP ':'
 #define PATHSEP_STR ":"
+#define PATHSEP2 ':'
+#define PATHSEP_STR2 ":"
 #else
 #define PATHSEP '/'
 #define PATHSEP_STR "/"
+#define PATHSEP2 '/'
+#define PATHSEP_STR2 "/"
 #endif
 
 //////////////////////////////////////////////////////////////////////////
