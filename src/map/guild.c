@@ -2380,6 +2380,7 @@ static void guild_flag_remove(struct npc_data *nd)
 
 		if( cursor != i ) {
 			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(guild->flags[0]));
+			guild->flags[i] = NULL;
 		}
 		cursor++;
 	}
