@@ -566,13 +566,10 @@ AC_ARG_WITH(
 	[maxconn],
 	AC_HELP_STRING(
 		[--with-maxconn@<:@=ARG@:>@],
-		[optionally set the maximum connections the core can handle (default: 16384) NOT USED YET - EXPERIMENTAL]
+		[optionally set the maximum connections the core can handle (Without epoll enabled, default: 1024. With epol enabled: 3072)]
 	),
 	[
-		if test "$withval" == "no";	 then
-			CPPFLAGS="$CPPFLAGS -DMAXCONN=16384"
-		else
-			
+		if test "$withval" != "no";	 then
 			if ! test "$withval" -ge 0 -o "$withval" -lt 0 2>&- ; then
 				AC_MSG_ERROR([Invalid argument --with-maxconn=$withval ... stopping])
 			else
@@ -581,7 +578,7 @@ AC_ARG_WITH(
 		fi
 	],
 	[
-		CPPFLAGS="$CPPFLAGS -DMAXCONN=16384"
+		AC_MSG_RESULT([Use default MAXCONN value.])
 	]
 )
 
