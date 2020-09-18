@@ -12,7 +12,7 @@ variables: &base_vars
   MYSQL_PASSWORD: 'ragnarok'
   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
   GIT_DEPTH: '3'
-  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python
+  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git
 
 .prerequisites: &prerequisites
   before_script:
@@ -41,7 +41,7 @@ pre_re:clang-3.9:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -56,7 +56,7 @@ re:clang-3.9:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot
@@ -71,7 +71,7 @@ zero-2018:clang-3.9:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-3.9 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -86,7 +86,7 @@ pre_re:clang-4.0:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-4.0 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -101,7 +101,7 @@ re:clang-4.0:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-4.0 --enable-debug --enable-Werror --enable-buildbot
@@ -116,7 +116,7 @@ zero-2018:clang-4.0:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-4.0 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-4.0 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -139,7 +139,7 @@ pre_re:clang-5.0:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -162,7 +162,7 @@ re:clang-5.0:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot
@@ -185,7 +185,7 @@ zero-2018:clang-5.0:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-5.0 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -200,7 +200,7 @@ pre_re:clang-6.0:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-6.0 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -215,7 +215,7 @@ re:clang-6.0:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-6.0 --enable-debug --enable-Werror --enable-buildbot
@@ -230,7 +230,7 @@ zero-2018:clang-6.0:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-6.0 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-6.0 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -245,7 +245,7 @@ pre_re:clang-7:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-7 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -260,7 +260,7 @@ re:clang-7:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-7 --enable-debug --enable-Werror --enable-buildbot
@@ -275,7 +275,7 @@ zero-2018:clang-7:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-7 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-7 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -290,7 +290,7 @@ pre_re:clang-8:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -305,7 +305,7 @@ re:clang-8:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot
@@ -320,7 +320,7 @@ zero-2018:clang-8:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: clang-8 mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=clang-8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -335,7 +335,7 @@ pre_re:gcc-4.8:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -350,7 +350,7 @@ re:gcc-4.8:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.8 --enable-debug --enable-Werror --enable-buildbot
@@ -365,7 +365,7 @@ zero-2018:gcc-4.8:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc-4.8 mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -380,7 +380,7 @@ pre_re:gcc-4.9:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -395,7 +395,7 @@ re:gcc-4.9:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot
@@ -410,7 +410,7 @@ zero-2018:gcc-4.9:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc-4.9 mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -425,7 +425,7 @@ pre_re:gcc-6:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -440,7 +440,7 @@ re:gcc-6:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot
@@ -455,7 +455,7 @@ zero-2018:gcc-6:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-6 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -470,7 +470,7 @@ pre_re:gcc-7:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-7 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -485,7 +485,7 @@ re:gcc-7:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-7 --enable-debug --enable-Werror --enable-buildbot
@@ -500,7 +500,7 @@ zero-2018:gcc-7:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-7 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-7 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -515,7 +515,7 @@ pre_re:gcc-8:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -530,7 +530,7 @@ re:gcc-8:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot
@@ -545,7 +545,7 @@ zero-2018:gcc-8:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -560,7 +560,7 @@ pre_re:gcc-8_i386:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -575,7 +575,7 @@ re:gcc-8_i386:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot
@@ -590,7 +590,7 @@ zero-2018:gcc-8_i386:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --enable-packetver-zero --enable-packetver=20180511
@@ -605,7 +605,7 @@ pre_re:gcc-8_sanitize:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
@@ -620,7 +620,7 @@ re:gcc-8_sanitize:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
@@ -635,7 +635,7 @@ zero-2018:gcc-8_sanitize:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full --enable-packetver-zero --enable-packetver=20180511
@@ -650,7 +650,7 @@ pre_re:gcc-8_i386_sanitize:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
@@ -665,7 +665,7 @@ re:gcc-8_i386_sanitize:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
@@ -680,7 +680,7 @@ zero-2018:gcc-8_i386_sanitize:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full --enable-packetver-zero --enable-packetver=20180511
@@ -695,7 +695,7 @@ pre_re:gcc-8_cov:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 gcovr mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 gcovr mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal CFLAGS="-coverage" LDFLAGS="-coverage"
@@ -717,7 +717,7 @@ re:gcc-8_cov:
     - mariadb:10
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc-8 gcovr mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc-8 gcovr mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build CC=gcc-8 --enable-debug --enable-Werror --enable-buildbot CFLAGS="-coverage" LDFLAGS="-coverage"
@@ -741,7 +741,7 @@ pre_re:debian-oldstable:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -756,7 +756,7 @@ re:debian-oldstable:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -771,7 +771,7 @@ pre_re:debian-stable:
     - mariadb:10.3
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -786,7 +786,7 @@ re:debian-stable:
     - mariadb:10.3
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -801,7 +801,7 @@ pre_re:debian-testing:
     - mariadb:10.3
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -816,7 +816,7 @@ re:debian-testing:
     - mariadb:10.3
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -913,7 +913,7 @@ pre_re:ubuntu-xenial:
     - mysql:5.7
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -928,7 +928,7 @@ re:ubuntu-xenial:
     - mysql:5.7
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -943,7 +943,7 @@ pre_re:ubuntu-bionic:
     - mysql:5.7
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -958,7 +958,7 @@ re:ubuntu-bionic:
     - mysql:5.7
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -975,7 +975,7 @@ pre_re:mysql-5.5:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.5 libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client-5.5 libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -990,7 +990,7 @@ re:mysql-5.5:
     - mysql:5.5
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.5 libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client-5.5 libmysqlclient-dev python
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1005,7 +1005,7 @@ pre_re:mysql-5.6:
     - mysql:5.6
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev python2
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -1020,7 +1020,7 @@ re:mysql-5.6:
     - mysql:5.6
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client libmysqlclient-dev python2
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1035,7 +1035,7 @@ pre_re:mysql-5.7:
     - mysql:5.7
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.7 libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client-5.7 libmysqlclient-dev python2
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -1050,7 +1050,7 @@ re:mysql-5.7:
     - mysql:5.7
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mysql-client-5.7 libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mysql-client-5.7 libmysqlclient-dev python2
     SQLHOST: mysql
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1065,7 +1065,7 @@ pre_re:mariadb-10.0:
     - mariadb:10.0
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.0 libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mariadb-client-10.0 libmysqlclient-dev python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -1080,7 +1080,7 @@ re:mariadb-10.0:
     - mariadb:10.0
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.0 libmysqlclient-dev
+    INSTALL_PACKAGES: gcc mariadb-client-10.0 libmysqlclient-dev python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1095,7 +1095,7 @@ pre_re:mariadb-10.1:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -1110,7 +1110,7 @@ re:mariadb-10.1:
     - mariadb:10.1
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client-10.1 libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1125,7 +1125,7 @@ pre_re:mariadb-10.3:
     - mariadb:10.3
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.3 libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client-10.3 libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -1140,7 +1140,7 @@ re:mariadb-10.3:
     - mariadb:10.3
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client-10.3 libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client-10.3 libmariadbclient-dev-compat python
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1155,7 +1155,7 @@ pre_re:mariadb-latest:
     - mariadb:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -1170,7 +1170,7 @@ re:mariadb-latest:
     - mariadb:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python2
     SQLHOST: mariadb
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
@@ -1185,7 +1185,7 @@ pre_re:percona:
     - percona:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: percona
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
@@ -1200,7 +1200,7 @@ re:percona:
     - percona:latest
   variables:
     <<: *base_vars
-    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat
+    INSTALL_PACKAGES: gcc mariadb-client libmariadbclient-dev-compat python
     SQLHOST: percona
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
