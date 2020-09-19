@@ -5458,7 +5458,7 @@ static void clif_skillinfo(struct map_session_data *sd, int skill_id, int inf)
 	p->packetType = HEADER_ZC_SKILLINFO_UPDATE2;
 	int skill_lv = sd->status.skill[idx].lv;
 	p->id = skill_id;
-	p->inf = skill->get_inf(skill_id);
+	p->inf = inf?inf:skill->get_inf(skill_id);
 	p->level = skill_lv;
 	if (skill_lv > 0) {
 		p->sp = skill->get_sp(skill_id, skill_lv);
