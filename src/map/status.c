@@ -5403,7 +5403,7 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 	if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
 		def += 50;
 	if (sc->data[SC_ODINS_POWER])
-		def -= 20;
+		def -= 20 * sc->data[SC_ODINS_POWER]->val1;
 
 #ifndef RENEWAL
 	if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
@@ -5581,7 +5581,7 @@ static defType status_calc_mdef(struct block_list *bl, struct status_change *sc,
 	if(sc->data[SC_GENTLETOUCH_CHANGE] && sc->data[SC_GENTLETOUCH_CHANGE]->val4)
 		mdef -= mdef * sc->data[SC_GENTLETOUCH_CHANGE]->val4 / 100;
 	if (sc->data[SC_ODINS_POWER])
-		mdef -= 20;
+		mdef -= 20 * sc->data[SC_ODINS_POWER]->val1;
 	if(sc->data[SC_BURNING])
 		mdef -= mdef *25 / 100;
 	if (sc->data[SC_UNLIMIT])
