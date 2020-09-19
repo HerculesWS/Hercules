@@ -3138,6 +3138,8 @@ typedef int (*HPMHOOK_pre_guild_get_alliance_count) (struct guild **g, int *flag
 typedef int (*HPMHOOK_post_guild_get_alliance_count) (int retVal___, struct guild *g, int flag);
 typedef void (*HPMHOOK_pre_guild_castle_reconnect_sub) (void **key, void **data, va_list ap);
 typedef void (*HPMHOOK_post_guild_castle_reconnect_sub) (void *key, void *data, va_list ap);
+typedef int (*HPMHOOK_pre_guild_castle_owner_change_foreach) (struct map_session_data **sd, va_list ap);
+typedef int (*HPMHOOK_post_guild_castle_owner_change_foreach) (int retVal___, struct map_session_data *sd, va_list ap);
 #endif // MAP_GUILD_H
 #ifdef MAP_STORAGE_H /* gstorage */
 typedef struct guild_storage* (*HPMHOOK_pre_gstorage_ensure) (int *guild_id);
@@ -8084,10 +8086,24 @@ typedef int (*HPMHOOK_pre_status_calc_elemental_) (struct elemental_data **ed, e
 typedef int (*HPMHOOK_post_status_calc_elemental_) (int retVal___, struct elemental_data *ed, enum e_status_calc_opt opt);
 typedef void (*HPMHOOK_pre_status_calc_misc) (struct block_list **bl, struct status_data **st, int *level);
 typedef void (*HPMHOOK_post_status_calc_misc) (struct block_list *bl, struct status_data *st, int level);
+typedef void (*HPMHOOK_pre_status_calc_regen_pc) (struct map_session_data **sd, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_pc) (struct map_session_data *sd, struct status_data *st, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_homunculus) (struct homun_data **hd, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_homunculus) (struct homun_data *hd, struct status_data *st, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_mercenary) (struct mercenary_data **md, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_mercenary) (struct mercenary_data *md, struct status_data *st, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_elemental) (struct elemental_data **md, struct status_data **st, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_elemental) (struct elemental_data *md, struct status_data *st, struct regen_data *regen);
 typedef void (*HPMHOOK_pre_status_calc_regen) (struct block_list **bl, struct status_data **st, struct regen_data **regen);
 typedef void (*HPMHOOK_post_status_calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
-typedef void (*HPMHOOK_pre_status_calc_regen_rate) (struct block_list **bl, struct regen_data **regen, struct status_change **sc);
-typedef void (*HPMHOOK_post_status_calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate_pc) (struct map_session_data **sd, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate_pc) (struct map_session_data *sd, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate_elemental) (struct elemental_data **md, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate_elemental) (struct elemental_data *md, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate_homunculus) (struct homun_data **hd, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate_homunculus) (struct homun_data *hd, struct regen_data *regen);
+typedef void (*HPMHOOK_pre_status_calc_regen_rate) (struct block_list **bl, struct regen_data **regen);
+typedef void (*HPMHOOK_post_status_calc_regen_rate) (struct block_list *bl, struct regen_data *regen);
 typedef int (*HPMHOOK_pre_status_check_skilluse) (struct block_list **src, struct block_list **target, uint16 *skill_id, int *flag);
 typedef int (*HPMHOOK_post_status_check_skilluse) (int retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, int flag);
 typedef int (*HPMHOOK_pre_status_check_visibility) (struct block_list **src, struct block_list **target);
