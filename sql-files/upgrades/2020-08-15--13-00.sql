@@ -22,6 +22,13 @@
 ALTER TABLE `account_data` ADD COLUMN `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `base_death`;
 ALTER TABLE `account_data` ADD COLUMN `attendance_timer` BIGINT(20) NULL DEFAULT '0' AFTER `attendance_count`;
 
+-- Migrate data from the char table to the account_data table
+REPLACE INTO `account_data` (`account_id`, `attendance_count`, `attendance_timer`)
+  SELECT `account_id`, MAX(`attendance_count`), MAX(`attendance_timer`)
+    FROM `char`
+    WHERE `attendance_count` <> 0 AND `attendance_timer` <> 0
+    GROUP BY `account_id`;
+
 -- Delete column for attendance at char table
 ALTER TABLE `char` DROP COLUMN `attendance_count`;
 ALTER TABLE `char` DROP COLUMN `attendance_timer`;
