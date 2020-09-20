@@ -22356,6 +22356,34 @@ static BUILDIN(mercenary_create)
 	return true;
 }
 
+/*==========================================
+ * Remove character's mercenary and update loyalty
+ * mercenary_delete({<char_id>, <update>});
+ *------------------------------------------*/
+static BUILDIN(mercenary_delete)
+{
+	struct map_session_data* sd = NULL;
+
+	if (script_hasdata(st, 2))
+		sd = script->charid2sd(st, script_getnum(st, 2));
+	else
+		sd = script->rid2sd(st);
+
+	if (sd != NULL) {
+		struct mercenary_data* md = (sd->status.mer_id && sd->md != NULL) ? sd->md : NULL;
+
+		if (md != NULL) {
+			int update_faith = 0;
+			if (script_hasdata(st, 3))
+				update_faith = cap_value(script_getnum(st, 3), 0, 1);
+
+			mercenary->delete(md, update_faith);
+		}
+	}
+
+	return true;
+}
+
 static BUILDIN(mercenary_heal)
 {
 	struct map_session_data *sd = script->rid2sd(st);
@@ -27685,6 +27713,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(delwall,"s"),
 		BUILDIN_DEF(searchitem,"rs"),
 		BUILDIN_DEF(mercenary_create,"ii"),
+		BUILDIN_DEF(mercenary_delete, "??"),
 		BUILDIN_DEF(mercenary_heal,"ii"),
 		BUILDIN_DEF(mercenary_sc_start,"iii"),
 		BUILDIN_DEF(mercenary_get_calls,"i"),
