@@ -28889,7 +28889,7 @@ void script_defaults(void)
 	script->config.check_cmdcount = 65535;
 	script->config.check_gotocount = 2048;
 	script->config.input_min_value = 0;
-	script->config.input_max_value = INT_MAX;
+	script->config.input_max_value = 10000000;
 	script->config.die_event_name = "OnPCDieEvent";
 	script->config.kill_pc_event_name = "OnPCKillEvent";
 	script->config.kill_mob_event_name = "OnNPCKillEvent";
