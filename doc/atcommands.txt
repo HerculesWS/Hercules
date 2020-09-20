@@ -816,10 +816,10 @@ Additionally, @follow will track the player's movements until turned off.
 
 @recall <player name>
 /recall <player name>
-@recallall
+@recallall <# of seconds>
 
 Warps a character to your position.
-Additionally, @recallall will recall the entire server.
+Additionally, @recallall will recall the entire server except players who are vending, interacting with an NPC, in a chatroom or idle for X number of seconds (X defaults to 300).
 
 ---------------------------------------
 

@@ -3578,13 +3578,22 @@ ACMD(idsearch)
 }
 
 /*==========================================
- * Recall All Characters Online To Your Location
+ * Usage: @recallall [integer value]
+ * Recall all characters online to your location except for users who are:
+ * - Idle for more than [input integer value] (if not provided, defaults to 300 seconds)
+ * - Vending
+ * - Interacting with an NPC
+ * - In a chatroom
+ * e.g. @recallall 30 will recall users who are not idle for the past 30 seconds
  *------------------------------------------*/
 ACMD(recallall)
 {
 	struct map_session_data* pl_sd;
 	struct s_mapiterator* iter;
-	int count;
+	int unauthorised_count, idle_count;
+	int idle_seconds_criteria = 300;
+
+	sscanf(message, "%12d[^\n]", &idle_seconds_criteria); // If the input is not an integer it'll still default to 300
 
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 
@@ -3593,15 +3602,20 @@ ACMD(recallall)
 		return false;
 	}
 
-	count = 0;
+	unauthorised_count = 0;
+	idle_count = 0;
 	iter = mapit_getallusers();
 	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (sd->status.account_id != pl_sd->status.account_id && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
-			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y)
+			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y) {
 				continue; // Don't waste time warping the character to the same place.
-			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
-				count++;
-			else {
+			}
+
+			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+				unauthorised_count++;
+			} else if (pc_cant_act(pl_sd) || DIFF_TICK(sockt->last_tick, (pl_sd)->idletime) >= idle_seconds_criteria) {
+				idle_count++;
+			} else {
 				if (pc_isdead(pl_sd)) { //Wake them up
 					pc->setstand(pl_sd);
 					pc->setrestartvalue(pl_sd,1);
@@ -3613,8 +3627,8 @@ ACMD(recallall)
 	mapit->free(iter);
 
 	clif->message(fd, msg_fd(fd,92)); // All characters recalled!
-	if (count) {
-		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1033), count); // Because you are not authorized to warp from some maps, %d player(s) have not been recalled.
+	if (unauthorised_count || idle_count) {
+		safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1033), idle_count, unauthorised_count); // %d player(s) were not recalled because they were idle, vending, interacting with npc or in a chatroom. %d player(s) have not been recalled because you are not authorized to warp from some maps.
 		clif->message(fd, atcmd_output);
 	}
 
