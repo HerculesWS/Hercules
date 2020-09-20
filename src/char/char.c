@@ -474,8 +474,8 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->look.robe != cp->look.robe) ||
 		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font) ||
 		(p->uniqueitem_counter != cp->uniqueitem_counter) || (p->hotkey_rowshift != cp->hotkey_rowshift) || (p->hotkey_rowshift2 != cp->hotkey_rowshift2) ||
-		(p->clan_id != cp->clan_id) || (p->last_login != cp->last_login) || (p->attendance_count != cp->attendance_count) ||
-		(p->attendance_timer != cp->attendance_timer) || (p->title_id != cp->title_id) || (p->inventorySize != cp->inventorySize) ||
+		(p->clan_id != cp->clan_id) || (p->last_login != cp->last_login) ||
+		(p->title_id != cp->title_id) || (p->inventorySize != cp->inventorySize) ||
 		(p->allow_call != cp->allow_call)
 	) {
 		//Save status
@@ -503,7 +503,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
 			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
-			"`hotkey_rowshift`='%d',`hotkey_rowshift2`='%d',`clan_id`='%d',`last_login`='%"PRId64"',`attendance_count`='%d',`attendance_timer`='%"PRId64"',"
+			"`hotkey_rowshift`='%d',`hotkey_rowshift2`='%d',`clan_id`='%d',`last_login`='%"PRId64"',"
 			"`title_id`='%d', `inventory_size`='%d'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
@@ -516,7 +516,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
 			p->look.robe,p->slotchange,opt,p->font,p->uniqueitem_counter,
-			p->hotkey_rowshift,p->hotkey_rowshift2,p->clan_id,p->last_login, p->attendance_count, p->attendance_timer,
+			p->hotkey_rowshift, p->hotkey_rowshift2, p->clan_id, p->last_login,
 			p->title_id, p->inventorySize,
 			p->account_id, p->char_id) )
 		{
@@ -526,8 +526,8 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			strcat(save_status, " status");
 	}
 
-	if( p->bank_vault != cp->bank_vault || p->mod_exp != cp->mod_exp || p->mod_drop != cp->mod_drop || p->mod_death != cp->mod_death ) {
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`) VALUES ('%d','%d','%d','%d','%d')",account_data_db,p->account_id,p->bank_vault,p->mod_exp,p->mod_drop,p->mod_death) ) {
+	if (p->bank_vault != cp->bank_vault || p->mod_exp != cp->mod_exp || p->mod_drop != cp->mod_drop || p->mod_death != cp->mod_death || p->attendance_count != cp->attendance_count || p->attendance_timer != cp->attendance_timer) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`,`attendance_count`,`attendance_timer`) VALUES ('%d','%d','%d','%d','%d','%d','%"PRId64"')", account_data_db, p->account_id, p->bank_vault, p->mod_exp, p->mod_drop, p->mod_death, p->attendance_count, p->attendance_timer) ) {
 			Sql_ShowDebug(inter->sql_handle);
 			errors++;
 		} else
@@ -1217,7 +1217,7 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`party_id`,`guild_id`,`pet_id`,`homun_id`,`elemental_id`,`hair`,"
 		"`hair_color`,`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
 		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
-		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`hotkey_rowshift2`,`clan_id`,`last_login`, `attendance_count`, `attendance_timer`,"
+		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`hotkey_rowshift2`,`clan_id`,`last_login`,"
 		"`title_id`, `inventory_size`"
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
@@ -1284,10 +1284,8 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 59, SQLDT_UCHAR,  &p->hotkey_rowshift2,   sizeof p->hotkey_rowshift2,   NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 60, SQLDT_INT,    &p->clan_id,            sizeof p->clan_id,            NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 61, SQLDT_INT64,  &p->last_login,         sizeof p->last_login,         NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 62, SQLDT_SHORT,  &p->attendance_count,   sizeof p->attendance_count,   NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 63, SQLDT_INT64,  &p->attendance_timer,   sizeof p->attendance_timer,   NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 64, SQLDT_INT,    &p->title_id,           sizeof p->title_id,           NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 65, SQLDT_INT,    &p->inventorySize,      sizeof p->inventorySize,      NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 62, SQLDT_INT,    &p->title_id,           sizeof p->title_id,           NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 63, SQLDT_INT,    &p->inventorySize,      sizeof p->inventorySize,      NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
@@ -1433,14 +1431,16 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	/* default */
 	p->mod_exp = p->mod_drop = p->mod_death = 100;
 
-	//`account_data` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`)
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `bank_vault`,`base_exp`,`base_drop`,`base_death` FROM `%s` WHERE `account_id`=? LIMIT 1", account_data_db)
+	//`account_data` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`,`attendance_count`, `attendance_timer`)
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `bank_vault`,`base_exp`,`base_drop`,`base_death`,`attendance_count`, `attendance_timer` FROM `%s` WHERE `account_id`=? LIMIT 1", account_data_db)
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &account_id, sizeof account_id)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,    &p->bank_vault, sizeof p->bank_vault, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_USHORT, &p->mod_exp,    sizeof p->mod_exp,    NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_USHORT, &p->mod_drop,   sizeof p->mod_drop,   NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT, &p->mod_death,  sizeof p->mod_death,  NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_SHORT,  &p->attendance_count, sizeof p->attendance_count, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_INT64,  &p->attendance_timer, sizeof p->attendance_timer, NULL, NULL)
 	) {
 		SqlStmt_ShowDebug(stmt);
 	}

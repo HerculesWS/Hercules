@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS `account_data` (
   `base_exp` SMALLINT UNSIGNED NOT NULL DEFAULT '100',
   `base_drop` SMALLINT UNSIGNED NOT NULL DEFAULT '100',
   `base_death` SMALLINT UNSIGNED NOT NULL DEFAULT '100',
+  `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+  `attendance_timer` BIGINT(20) NULL DEFAULT '0',
   PRIMARY KEY (`account_id`)
 ) ENGINE=MyISAM;
 
@@ -242,8 +244,6 @@ CREATE TABLE IF NOT EXISTS `char` (
   `sex` ENUM('M','F','U') NOT NULL DEFAULT 'U',
   `hotkey_rowshift` TINYINT UNSIGNED NOT NULL DEFAULT '0',
   `hotkey_rowshift2` TINYINT UNSIGNED NOT NULL DEFAULT '0',
-  `attendance_count` TINYINT UNSIGNED NOT NULL DEFAULT '0',
-  `attendance_timer` BIGINT NULL DEFAULT '0',
   `title_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `inventory_size` INT UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`char_id`),
@@ -951,6 +951,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1584838560); -- 2020-03-2
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1584842940); -- 2020-03-22--03-09.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1588301040); -- 2020-05-01--04-44.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1589145060); -- 2020-05-10--23-11.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1597467600); -- 2020-08-15--13-00.sql
 
 --
 -- Table structure for table `storage`

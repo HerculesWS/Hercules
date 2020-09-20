@@ -7495,6 +7495,7 @@ static const struct battle_data {
 	{ "hom_bonus_exp_from_master",          &battle_config.hom_bonus_exp_from_master,      10,      0,      100,            },
 	{ "allowed_actions_when_dead",          &battle_config.allowed_actions_when_dead,       0,      0,      3,              },
 	{ "teleport_close_storage",             &battle_config.teleport_close_storage,          1,      0,      1,              },
+	{ "features/show_attendance_window",    &battle_config.show_attendance_window,          1,      0,      1,              },
 };
 
 static bool battle_set_value_sub(int index, int value)
