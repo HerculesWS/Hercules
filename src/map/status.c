@@ -13453,7 +13453,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		}
 	}
 
-	if ((flag & RGN_SHP) != 0 && sregen->sp != 0 && sregen->rate.sp > 0) {
+	if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->rate.sp > 0) {
 		//Skill SP regen
 		int tick = max(battle_config.natural_heal_cap, battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp);
 		sregen->tick.sp += status->natural_heal_diff_tick;
