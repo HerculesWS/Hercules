@@ -22,6 +22,50 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2020.09.20] `September 20 2020`
+
+### Added
+
+- Added a configure option `--with-maxconn=VALUE` to change the maximum number of allowed concurrent connections. (#2837)
+- Added a new script command `mercenary_delete()`, to remove the mercenary from a character. (#2818)
+- Added the `MDAMAGE_SIZE_SMALL_TARGET`, `MDAMAGE_SIZE_MIDIUM_TARGET`, `MDAMAGE_SIZE_LARGE_TARGET` item options to the db. (#2816)
+- Added a configuration flag `features/show_attendance_window` to control whether the attendance window should pop up on login when there are unclaimed rewards. (part of #2812, issue #2101)
+
+### Changed
+
+- Increased the maximum number of concurrent connections to be 3072 by default when epoll is enabled. (part of #2837)
+- Converted the mapcache documentation to the Markdown format and updated to reflect the way the mapcache currently works and is generated. (#2274, issue #2060)
+- Improved, clarified and corrected the documentation comments of the configuration files. (#2827)
+- Changed the attendance system from character bound to account bound. This includes an irreversible database migration, a backup is strongly advised. (#2812, issue #2704)
+- Refactored and improved the natural HP/SP regeneration code. (#2594, cc7e1ecf0a, #2841)
+  - Removed several unused variables from `struct regen_data`.
+  - Renamed the members of `struct regen_data` to be more clear.
+  - Changed the HP/SP heal frequency rate modifiers from a base of 1 to a base of 100 to reduce precision loss due to truncation.
+  - Fixed the natural healing bonus of castle owners, to be correctly applied and removed when a castle changes ownership.
+  - Extended the range of the variables in the regen data structures to int to reduce the possibility of overflows and underflows.
+  - Split the `status_calc_regen` and `status_calc_regen_rate` functions into specialized functions for each affected bl type.
+  - Limited various regeneration related status effects to the bl types that can be affected by them.
+  - Fixed various regeneration related bonuses that were affecting the regeneration rate (time) instead of the regeneration power (amount healed).
+  - Fixed the way different regeneration bonuses are stacked, to match the official behavior.
+  - Added support for different and configurable regeneration rates for different bl types. This can be configured through the `elem_natural_heal_hp`, `elem_natural_heal_sp`, `hom_natural_heal_hp`, `hom_natural_heal_sp`, `merc_natural_heal_hp`, `merc_natural_heal_sp` configuration flags.
+  - Fixed the `HLIF_BRAIN` and `HAMI_SKIN` regeneration bonuses to affect the regeneration rates instead of the regeneration powers.
+  - Added a configurable cap to the regeneration rate. This can be configured through the `elem_natural_heal_cap`, `hom_natural_heal_cap`, `merc_natural_heal_cap`, `natural_heal_cap` configuration flags.
+  - Fixed the behavior or Tension Relax when overweight, to just allow regeneration instead of increasing the regeneration rate and removed its effect on the SP regeneration.
+  - Fixed the Magnificat effect in pre-renewal to only affect SP instead of both HP and SP. It was originally affecting both officially, but it was removed very early (Comodo update).
+  - Made the regeneration data get recalculated on status changes that set the `SCB_REGEN` flag and added it to the 50% and 90% overweight SCs.
+
+### Fixed
+
+- Fixed GitLab and GitHub CI builds broken due to upstream package changes. (#2838)
+- Fixed the `generate_translations` plugin on windows, not generating the output directories correctly. (#2836)
+- Fixed the MDEF and DEF reduction of Odin's Power to depend on the skill level. (#2833)
+- Fixed some skills (such as `MO_EXTREMITYFIST` `TK_JUMPKICK`, `SR_DRAGONCOMBO`, `SR_GATEOFHELL`) not sending the correct target type to the client when used as part of a combo. (#2829)
+- Fixed typos in the documentation comments of several db files. (#2828)
+- Removed duplicate lines in `cash_hair.txt` and `clif.c`. (#2840)
+- Fixed an issue that prevented the "night mode" effect to be displayed. (#2839)
+- Fixed a dangling pointer causing memory corruption when using `@unloadnpc` or any other way to unload NPCs. (#2835)
+- Fixed a wrong IP check in the geoip code. (#2842)
+
 ## [v2020.08.23] `August 23 2020`
 
 ### Added
@@ -1575,6 +1619,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.09.20]: https://github.com/HerculesWS/Hercules/compare/v2020.08.23...v2020.09.20
 [v2020.08.23]: https://github.com/HerculesWS/Hercules/compare/v2020.07.26...v2020.08.23
 [v2020.07.26]: https://github.com/HerculesWS/Hercules/compare/v2020.06.28...v2020.07.26
 [v2020.06.28]: https://github.com/HerculesWS/Hercules/compare/v2020.05.31+1...v2020.06.28
