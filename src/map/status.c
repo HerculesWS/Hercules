@@ -3697,6 +3697,19 @@ static void status_calc_regen_rate(struct block_list *bl, struct regen_data *reg
 		status->calc_regen_rate_homunculus(BL_UCAST(BL_HOM, bl), regen);
 		break;
 	}
+
+	regen->rate.hp = cap_value(regen->rate.hp, 0, INT16_MAX);
+	regen->rate.sp = cap_value(regen->rate.sp, 0, INT16_MAX);
+
+	if (regen->sitting != NULL) {
+		regen->sitting->rate.hp = cap_value(regen->sitting->rate.hp, 0, INT16_MAX);
+		regen->sitting->rate.sp = cap_value(regen->sitting->rate.sp, 0, INT16_MAX);
+	}
+
+	if (regen->skill != NULL) {
+		regen->skill->rate.hp = cap_value(regen->skill->rate.hp, 0, INT16_MAX);
+		regen->skill->rate.sp = cap_value(regen->skill->rate.sp, 0, INT16_MAX);
+	}
 }
 
 #define status_get_homstr(st, hd) ((st)->str + (hd)->homunculus.str_value)
@@ -13261,7 +13274,7 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	struct view_data *vd = NULL;
 	struct regen_data_sub *sregen;
 	struct map_session_data *sd;
-	int val, rate, flag;
+	int flag;
 
 	nullpo_ret(bl);
 	regen = status->get_regen_data(bl);
@@ -13292,39 +13305,43 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 			pc->regen(sd, status->natural_heal_diff_tick);
 	}
 
-	if (flag&(RGN_SHP|RGN_SSP)
+	if ((flag & (RGN_SHP | RGN_SSP)) != 0
 	 && regen->sitting != NULL
 	 && (vd = status->get_viewdata(bl)) != NULL
 	 && vd->dead_sit == 2
 	) {
 		//Apply sitting regen bonus.
 		sregen = regen->sitting;
-		if ((flag & RGN_SHP) != 0 && sregen->hp != 0) {
+
+		if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 			//Sitting HP regen
-			val = status->natural_heal_diff_tick * sregen->rate.hp / 100;
-			if (regen->state.overweight)
-				val>>=1; //Half as fast when overweight.
-			sregen->tick.hp += val;
-			while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-				sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-				if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) {
-					//Full
-					flag&=~(RGN_HP|RGN_SHP);
+			int tick = battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp;
+			sregen->tick.hp += status->natural_heal_diff_tick;
+
+			if (regen->state.overweight != 0)
+				tick *= 2; //Half as fast when overweight.
+
+			while (sregen->tick.hp >= tick) {
+				sregen->tick.hp -= tick;
+				if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) { // Full
+					flag &= ~(RGN_HP | RGN_SHP);
 					break;
 				}
 			}
 		}
-		if ((flag & RGN_SSP) != 0 && sregen->sp != 0) {
+
+		if ((flag & RGN_SSP) != 0 && sregen->sp != 0 && sregen->sp > 0) {
 			//Sitting SP regen
-			val = status->natural_heal_diff_tick * sregen->rate.sp / 100;
-			if (regen->state.overweight)
-				val>>=1; //Half as fast when overweight.
-			sregen->tick.sp += val;
-			while(sregen->tick.sp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-				sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) {
-					//Full
-					flag&=~(RGN_SP|RGN_SSP);
+			int tick = battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp;
+			sregen->tick.sp += status->natural_heal_diff_tick;
+
+			if (regen->state.overweight != 0)
+				tick *= 2; //Half as fast when overweight.
+
+			while (sregen->tick.sp >= tick) {
+				sregen->tick.sp -= tick;
+				if (status->heal(bl, 0, sregen->sp, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->sp) { // Full
+					flag &= ~(RGN_SP | RGN_SSP);
 					break;
 				}
 			}
@@ -13381,40 +13398,40 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	}
 
 	//Natural Hp regen
-	if ((flag & RGN_HP) != 0) {
-		int tick = status->natural_heal_diff_tick * hp_bonus / 100;
+	if ((flag & RGN_HP) != 0 && hp_bonus > 0) {
+		int tick = hp_interval * 100 / hp_bonus;
+		regen->tick.hp += status->natural_heal_diff_tick;
 
 		if (ud != NULL && ud->walktimer != INVALID_TIMER)
-			tick /= 2;
+			tick *= 2;
 
-		regen->tick.hp += tick;
-
-		if (regen->tick.hp >= hp_interval) {
-			val = 0;
+		if (regen->tick.hp >= tick) {
+			int heal_val = 0;
 			do {
-				val += regen->hp;
-				regen->tick.hp -= hp_interval;
-			} while (regen->tick.hp >= hp_interval);
+				heal_val += regen->hp;
+				regen->tick.hp -= tick;
+			} while (regen->tick.hp >= tick);
 
-			if (status->heal(bl, val, 0, STATUS_HEAL_FORCED) < val)
-				flag &= ~RGN_SHP; //full.
+			if (status->heal(bl, heal_val, 0, STATUS_HEAL_FORCED) < heal_val) // Full
+				flag &= ~RGN_SHP;
 		}
 	}
 
 	//Natural SP regen
-	if ((flag & RGN_SP) != 0) {
-		int tick = status->natural_heal_diff_tick * sp_bonus / 100;
+	if ((flag & RGN_SP) != 0 && sp_bonus > 0) {
+		int tick = sp_interval * 100 / sp_bonus;
+		regen->tick.sp += status->natural_heal_diff_tick;
 
-		regen->tick.sp += tick;
+		if (regen->tick.sp >= tick) {
+			int heal_val = 0;
 
-		if (regen->tick.sp >= sp_interval) {
-			val = 0;
 			do {
-				val += regen->sp;
-				regen->tick.sp -= sp_interval;
-			} while (regen->tick.sp >= sp_interval);
-			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED) < val)
-				flag &= ~RGN_SSP; //full.
+				heal_val += regen->sp;
+				regen->tick.sp -= tick;
+			} while (regen->tick.sp >= tick);
+
+			if (status->heal(bl, 0, heal_val, STATUS_HEAL_FORCED) < heal_val) // Full
+				flag &= ~RGN_SSP;
 		}
 	}
 
@@ -13424,39 +13441,45 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 	//Skill regen
 	sregen = regen->skill;
 
-	if ((flag & RGN_SHP) != 0 && sregen->hp != 0) {
+	if ((flag & RGN_SHP) != 0 && sregen->hp != 0 && sregen->rate.hp > 0) {
 		//Skill HP regen
-		sregen->tick.hp += status->natural_heal_diff_tick * sregen->rate.hp / 100;
+		int tick = battle_config.natural_heal_skill_interval * 100 / sregen->rate.hp;
+		sregen->tick.hp += status->natural_heal_diff_tick;
 
-		while(sregen->tick.hp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-			sregen->tick.hp -= battle_config.natural_heal_skill_interval;
-			if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp)
-				break; //Full
+		while (sregen->tick.hp >= tick) {
+			sregen->tick.hp -= tick;
+			if (status->heal(bl, sregen->hp, 0, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < sregen->hp) // Full
+				break;
 		}
 	}
-	if ((flag & RGN_SHP) != 0 && sregen->sp != 0) {
+
+	if ((flag & RGN_SHP) != 0 && sregen->sp != 0 && sregen->rate.sp > 0) {
 		//Skill SP regen
-		sregen->tick.sp += status->natural_heal_diff_tick * sregen->rate.sp / 100;
-		while(sregen->tick.sp >= (unsigned int)battle_config.natural_heal_skill_interval) {
-			val = sregen->sp;
-			if (sd && sd->state.doridori) {
-				val*=2;
+		int tick = battle_config.natural_heal_skill_interval * 100 / sregen->rate.sp;
+		sregen->tick.sp += status->natural_heal_diff_tick;
+
+		while (sregen->tick.sp >= tick) {
+			int heal_val = sregen->sp;
+
+			if (sd != NULL && sd->state.doridori != 0) {
+				heal_val *= 2;
 				sd->state.doridori = 0;
-				if ((rate = pc->checkskill(sd,TK_SPTIME)))
-					sc_start(bl,bl,status->skill2sc(TK_SPTIME),
-					         100,rate,skill->get_time(TK_SPTIME, rate));
+
+				int rate;
+				if ((rate = pc->checkskill(sd,TK_SPTIME)) != 0)
+					sc_start(bl, bl, status->skill2sc(TK_SPTIME), 100, rate, skill->get_time(TK_SPTIME, rate));
+
 				if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
-				 &&rnd()%10000 < battle_config.sg_angel_skill_ratio
-				) {
-					//Angel of the Sun/Moon/Star
+					&& rnd() % 10000 < battle_config.sg_angel_skill_ratio) { //Angel of the Sun/Moon/Star
 					clif->feel_hate_reset(sd);
 					pc->resethate(sd);
 					pc->resetfeel(sd);
 				}
 			}
-			sregen->tick.sp -= battle_config.natural_heal_skill_interval;
-			if (status->heal(bl, 0, val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < val)
-				break; //Full
+
+			sregen->tick.sp -= tick;
+			if (status->heal(bl, 0, heal_val, STATUS_HEAL_FORCED | STATUS_HEAL_SHOWEFFECT) < heal_val)  //Full
+				break;
 		}
 	}
 	return flag;
