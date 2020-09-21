@@ -896,6 +896,8 @@ static void initChangeTables(void)
 	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_SKF_CAST] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_ALMIGHTY] |= SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_WEIGHTOVER50] |= SCB_REGEN;
+	status->dbs->ChangeFlagTable[SC_WEIGHTOVER90] |= SCB_REGEN;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4104,7 +4106,7 @@ static void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag
 		}
 	}
 
-	if(flag&(SCB_VIT|SCB_MAXHP|SCB_INT|SCB_MAXSP) && bl->type&BL_REGEN)
+	if(flag&(SCB_VIT|SCB_MAXHP|SCB_INT|SCB_MAXSP|SCB_REGEN) && bl->type&BL_REGEN)
 		status->calc_regen(bl, st, status->get_regen_data(bl));
 
 	if(flag&SCB_REGEN && bl->type&BL_REGEN)
