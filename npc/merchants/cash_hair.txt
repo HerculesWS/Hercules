@@ -47,7 +47,6 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 		mes "hairstyles for men, the";
 		mes "Emergency Heal Perm";
 		mes "and the Aura Blade Cut.";
-		mes "and aura blade cut.";
 		next;
 		cutin "hair_m_24.bmp",4;
 		mes "[Kaniki]";

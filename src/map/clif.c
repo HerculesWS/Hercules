@@ -9463,7 +9463,6 @@ static void clif_refresh(struct map_session_data *sd)
 static void clif_send_selforarea(int fd, struct block_list *bl, const void *buf, int len)
 {
 	// if no recipient specified just update nearby clients
-	// if no recipient specified just update nearby clients
 	if (fd == 0) {
 		clif->send(buf, len, bl, AREA);
 	} else {
@@ -13153,7 +13152,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	int64 tick = timer->gettick();
 
 	nullpo_retv(sd);
-	
+
 	pc->autocast_set_current(sd, skill_id);
 
 	/**
@@ -13304,7 +13303,7 @@ static void clif_parse_UseSkillMap(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	
+
 	pc->autocast_set_current(sd, skill_id);
 
 	/**
