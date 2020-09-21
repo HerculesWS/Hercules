@@ -2120,6 +2120,18 @@ static void guild_castle_map_init(void)
 	}
 }
 
+static int guild_castle_owner_change_foreach(struct map_session_data *sd, va_list ap)
+{
+	int map_index = va_arg(ap, int);
+
+	if (sd == NULL || sd->bl.m != map_index)
+		return 0;
+
+	status->calc_regen(&sd->bl, &sd->battle_status, &sd->regen);
+	status->calc_regen_rate(&sd->bl, &sd->regen);
+	return 1;
+}
+
 /**
  * Setter function for members of guild_castle struct.
  * Handles all side-effects, like updating guardians.
@@ -2147,6 +2159,9 @@ static int guild_castledatasave(int castle_id, int index, int value)
 			if (gc->guardian[i].visible && (gd = map->id2md(gc->guardian[i].id)) != NULL)
 				mob->guardian_guildchange(gd);
 		}
+
+		if (gc->guild_id > 0)
+			map->foreachpc(guild->castle_owner_change_foreach, gc->mapindex);
 		break;
 	}
 	case 2:
@@ -2580,6 +2595,7 @@ void guild_defaults(void)
 	guild->check_member = guild_check_member;
 	guild->get_alliance_count = guild_get_alliance_count;
 	guild->castle_reconnect_sub = guild_castle_reconnect_sub;
+	guild->castle_owner_change_foreach = guild_castle_owner_change_foreach;
 	/* */
 	guild->retrieveitembound = guild_retrieveitembound;
 }

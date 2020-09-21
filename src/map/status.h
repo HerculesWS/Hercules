@@ -1086,46 +1086,48 @@ struct status_data {
 
 //Additional regen data that only players have.
 struct regen_data_sub {
-	unsigned short
-		hp,sp;
+	int hp;
+	int sp;
 
 	//tick accumulation before healing.
 	struct {
-		unsigned int hp,sp;
+		unsigned int hp;
+		unsigned int sp;
 	} tick;
 
-	//Regen rates (where every 1 means +100% regen)
+	//Regen rates on a base of 100
 	struct {
-		unsigned char hp,sp;
+		int hp;
+		int sp;
 	} rate;
 };
 
 struct regen_data {
-
 	unsigned short flag; //Marks what stuff you may heal or not.
-	unsigned short
-		hp,sp,shp,ssp;
+	int hp;
+	int sp;
 
 	//tick accumulation before healing.
 	struct {
-		unsigned int hp,sp,shp,ssp;
+		unsigned int hp;
+		unsigned int sp;
 	} tick;
 
-	//Regen rates (where every 1 means +100% regen)
+	//Regen rates on a base of 100
 	struct {
-		unsigned char
-		hp,sp,shp,ssp;
+		int hp;
+		int sp;
 	} rate;
 
 	struct {
 		unsigned walk:1;        //Can you regen even when walking?
-		unsigned gc:1;          //Tags when you should have double regen due to GVG castle
 		unsigned overweight :2; //overweight state (1: 50%, 2: 90%)
 		unsigned block :2;      //Block regen flag (1: Hp, 2: Sp)
 	} state;
 
 	//skill-regen, sitting-skill-regen (since not all chars with regen need it)
-	struct regen_data_sub *sregen, *ssregen;
+	struct regen_data_sub *skill;
+	struct regen_data_sub *sitting;
 };
 
 struct sc_display_entry {
@@ -1332,8 +1334,15 @@ struct status_interface {
 	int (*calc_mercenary_) (struct mercenary_data *md, enum e_status_calc_opt opt);
 	int (*calc_elemental_) (struct elemental_data *ed, enum e_status_calc_opt opt);
 	void (*calc_misc) (struct block_list *bl, struct status_data *st, int level);
+	void (*calc_regen_pc) (struct map_session_data *sd, struct status_data *st, struct regen_data *regen);
+	void (*calc_regen_homunculus) (struct homun_data *hd, struct status_data *st, struct regen_data *regen);
+	void (*calc_regen_mercenary) (struct mercenary_data *md, struct status_data *st, struct regen_data *regen);
+	void (*calc_regen_elemental) (struct elemental_data *md, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
-	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
+	void (*calc_regen_rate_pc) (struct map_session_data *sd, struct regen_data *regen);
+	void (*calc_regen_rate_elemental) (struct elemental_data *md, struct regen_data *regen);
+	void (*calc_regen_rate_homunculus) (struct homun_data *hd, struct regen_data *regen);
+	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen);
 	int (*check_skilluse) (struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
 	int (*check_visibility) (struct block_list *src, struct block_list *target); //[Skotlex]
 	int (*change_spread) (struct block_list *src, struct block_list *bl);

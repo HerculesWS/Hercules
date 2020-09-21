@@ -16950,7 +16950,7 @@ static int skill_sit_in(struct block_list *bl, va_list ap)
 	if(type&2 && (pc->checkskill(sd,TK_HPTIME) > 0 || pc->checkskill(sd,TK_SPTIME) > 0 )) {
 		sd->state.rest=1;
 		status->calc_regen(bl, &sd->battle_status, &sd->regen);
-		status->calc_regen_rate(bl, &sd->regen, &sd->sc);
+		status->calc_regen_rate(bl, &sd->regen);
 	}
 
 	return 0;
@@ -16970,7 +16970,7 @@ static int skill_sit_out(struct block_list *bl, va_list ap)
 	if(sd->state.rest && type&2) {
 		sd->state.rest=0;
 		status->calc_regen(bl, &sd->battle_status, &sd->regen);
-		status->calc_regen_rate(bl, &sd->regen, &sd->sc);
+		status->calc_regen_rate(bl, &sd->regen);
 	}
 	return 0;
 }

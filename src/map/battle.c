@@ -7159,6 +7159,7 @@ static const struct battle_data {
 	{ "summer2_ignorepalette",              &battle_config.summer2_ignorepalette,           0,      0,      1,              },
 	{ "natural_healhp_interval",            &battle_config.natural_healhp_interval,         6000,   NATURAL_HEAL_INTERVAL, INT_MAX, },
 	{ "natural_healsp_interval",            &battle_config.natural_healsp_interval,         8000,   NATURAL_HEAL_INTERVAL, INT_MAX, },
+	{ "natural_heal_cap",                   &battle_config.natural_heal_cap,                1000,   1,      INT_MAX,        },
 	{ "natural_heal_skill_interval",        &battle_config.natural_heal_skill_interval,     10000,  NATURAL_HEAL_INTERVAL, INT_MAX, },
 	{ "natural_heal_weight_rate",           &battle_config.natural_heal_weight_rate,        50,     50,     101             },
 	{ "arrow_decrement",                    &battle_config.arrow_decrement,                 1,      0,      2,              },
@@ -7496,6 +7497,15 @@ static const struct battle_data {
 	{ "allowed_actions_when_dead",          &battle_config.allowed_actions_when_dead,       0,      0,      3,              },
 	{ "teleport_close_storage",             &battle_config.teleport_close_storage,          1,      0,      1,              },
 	{ "features/show_attendance_window",    &battle_config.show_attendance_window,          1,      0,      1,              },
+	{ "elem_natural_heal_hp",               &battle_config.elem_natural_heal_hp,           6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "elem_natural_heal_sp",               &battle_config.elem_natural_heal_sp,           8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "elem_natural_heal_cap",              &battle_config.elem_natural_heal_cap,          1000,    1,      INT_MAX,        },
+	{ "hom_natural_heal_hp",                &battle_config.elem_natural_heal_hp,           2000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "hom_natural_heal_sp",                &battle_config.elem_natural_heal_sp,           4000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "hom_natural_heal_cap",               &battle_config.hom_natural_heal_cap,           1000,    1,      INT_MAX,        },
+	{ "merc_natural_heal_hp",               &battle_config.merc_natural_heal_hp,           6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "merc_natural_heal_sp",               &battle_config.merc_natural_heal_sp,           8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
+	{ "merc_natural_heal_cap",              &battle_config.merc_natural_heal_cap,          1000,    1,      INT_MAX,        },
 };
 
 static bool battle_set_value_sub(int index, int value)

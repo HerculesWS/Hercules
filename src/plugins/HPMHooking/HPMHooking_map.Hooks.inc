@@ -35414,6 +35414,39 @@ void HP_guild_castle_reconnect_sub(void *key, void *data, va_list ap) {
 	}
 	return;
 }
+int HP_guild_castle_owner_change_foreach(struct map_session_data *sd, va_list ap) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_guild_castle_owner_change_foreach_pre > 0) {
+		int (*preHookFunc) (struct map_session_data **sd, va_list ap);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_castle_owner_change_foreach_pre; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			preHookFunc = HPMHooks.list.HP_guild_castle_owner_change_foreach_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd, ap___copy);
+			va_end(ap___copy);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		va_list ap___copy; va_copy(ap___copy, ap);
+		retVal___ = HPMHooks.source.guild.castle_owner_change_foreach(sd, ap___copy);
+		va_end(ap___copy);
+	}
+	if (HPMHooks.count.HP_guild_castle_owner_change_foreach_post > 0) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, va_list ap);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_guild_castle_owner_change_foreach_post; hIndex++) {
+			va_list ap___copy; va_copy(ap___copy, ap);
+			postHookFunc = HPMHooks.list.HP_guild_castle_owner_change_foreach_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, ap___copy);
+			va_end(ap___copy);
+		}
+	}
+	return retVal___;
+}
 /* guild_storage_interface */
 struct guild_storage* HP_gstorage_ensure(int guild_id) {
 	int hIndex = 0;
@@ -88278,6 +88311,110 @@ void HP_status_calc_misc(struct block_list *bl, struct status_data *st, int leve
 	}
 	return;
 }
+void HP_status_calc_regen_pc(struct map_session_data *sd, struct status_data *st, struct regen_data *regen) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_calc_regen_pc_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct status_data **st, struct regen_data **regen);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_pc_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_pc_pre[hIndex].func;
+			preHookFunc(&sd, &st, &regen);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_regen_pc(sd, st, regen);
+	}
+	if (HPMHooks.count.HP_status_calc_regen_pc_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct status_data *st, struct regen_data *regen);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_pc_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_regen_pc_post[hIndex].func;
+			postHookFunc(sd, st, regen);
+		}
+	}
+	return;
+}
+void HP_status_calc_regen_homunculus(struct homun_data *hd, struct status_data *st, struct regen_data *regen) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_calc_regen_homunculus_pre > 0) {
+		void (*preHookFunc) (struct homun_data **hd, struct status_data **st, struct regen_data **regen);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_homunculus_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_homunculus_pre[hIndex].func;
+			preHookFunc(&hd, &st, &regen);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_regen_homunculus(hd, st, regen);
+	}
+	if (HPMHooks.count.HP_status_calc_regen_homunculus_post > 0) {
+		void (*postHookFunc) (struct homun_data *hd, struct status_data *st, struct regen_data *regen);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_homunculus_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_regen_homunculus_post[hIndex].func;
+			postHookFunc(hd, st, regen);
+		}
+	}
+	return;
+}
+void HP_status_calc_regen_mercenary(struct mercenary_data *md, struct status_data *st, struct regen_data *regen) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_calc_regen_mercenary_pre > 0) {
+		void (*preHookFunc) (struct mercenary_data **md, struct status_data **st, struct regen_data **regen);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_mercenary_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_mercenary_pre[hIndex].func;
+			preHookFunc(&md, &st, &regen);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_regen_mercenary(md, st, regen);
+	}
+	if (HPMHooks.count.HP_status_calc_regen_mercenary_post > 0) {
+		void (*postHookFunc) (struct mercenary_data *md, struct status_data *st, struct regen_data *regen);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_mercenary_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_regen_mercenary_post[hIndex].func;
+			postHookFunc(md, st, regen);
+		}
+	}
+	return;
+}
+void HP_status_calc_regen_elemental(struct elemental_data *md, struct status_data *st, struct regen_data *regen) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_calc_regen_elemental_pre > 0) {
+		void (*preHookFunc) (struct elemental_data **md, struct status_data **st, struct regen_data **regen);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_elemental_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_elemental_pre[hIndex].func;
+			preHookFunc(&md, &st, &regen);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_regen_elemental(md, st, regen);
+	}
+	if (HPMHooks.count.HP_status_calc_regen_elemental_post > 0) {
+		void (*postHookFunc) (struct elemental_data *md, struct status_data *st, struct regen_data *regen);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_elemental_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_regen_elemental_post[hIndex].func;
+			postHookFunc(md, st, regen);
+		}
+	}
+	return;
+}
 void HP_status_calc_regen(struct block_list *bl, struct status_data *st, struct regen_data *regen) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_status_calc_regen_pre > 0) {
@@ -88304,14 +88441,14 @@ void HP_status_calc_regen(struct block_list *bl, struct status_data *st, struct 
 	}
 	return;
 }
-void HP_status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc) {
+void HP_status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_data *regen) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_status_calc_regen_rate_pre > 0) {
-		void (*preHookFunc) (struct block_list **bl, struct regen_data **regen, struct status_change **sc);
+	if (HPMHooks.count.HP_status_calc_regen_rate_pc_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct regen_data **regen);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_status_calc_regen_rate_pre[hIndex].func;
-			preHookFunc(&bl, &regen, &sc);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_pc_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_rate_pc_pre[hIndex].func;
+			preHookFunc(&sd, &regen);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -88319,13 +88456,91 @@ void HP_status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, 
 		}
 	}
 	{
-		HPMHooks.source.status.calc_regen_rate(bl, regen, sc);
+		HPMHooks.source.status.calc_regen_rate_pc(sd, regen);
+	}
+	if (HPMHooks.count.HP_status_calc_regen_rate_pc_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct regen_data *regen);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_pc_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_regen_rate_pc_post[hIndex].func;
+			postHookFunc(sd, regen);
+		}
+	}
+	return;
+}
+void HP_status_calc_regen_rate_elemental(struct elemental_data *md, struct regen_data *regen) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_calc_regen_rate_elemental_pre > 0) {
+		void (*preHookFunc) (struct elemental_data **md, struct regen_data **regen);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_elemental_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_rate_elemental_pre[hIndex].func;
+			preHookFunc(&md, &regen);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_regen_rate_elemental(md, regen);
+	}
+	if (HPMHooks.count.HP_status_calc_regen_rate_elemental_post > 0) {
+		void (*postHookFunc) (struct elemental_data *md, struct regen_data *regen);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_elemental_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_regen_rate_elemental_post[hIndex].func;
+			postHookFunc(md, regen);
+		}
+	}
+	return;
+}
+void HP_status_calc_regen_rate_homunculus(struct homun_data *hd, struct regen_data *regen) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_calc_regen_rate_homunculus_pre > 0) {
+		void (*preHookFunc) (struct homun_data **hd, struct regen_data **regen);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_homunculus_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_rate_homunculus_pre[hIndex].func;
+			preHookFunc(&hd, &regen);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_regen_rate_homunculus(hd, regen);
+	}
+	if (HPMHooks.count.HP_status_calc_regen_rate_homunculus_post > 0) {
+		void (*postHookFunc) (struct homun_data *hd, struct regen_data *regen);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_homunculus_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_calc_regen_rate_homunculus_post[hIndex].func;
+			postHookFunc(hd, regen);
+		}
+	}
+	return;
+}
+void HP_status_calc_regen_rate(struct block_list *bl, struct regen_data *regen) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_status_calc_regen_rate_pre > 0) {
+		void (*preHookFunc) (struct block_list **bl, struct regen_data **regen);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_calc_regen_rate_pre[hIndex].func;
+			preHookFunc(&bl, &regen);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.status.calc_regen_rate(bl, regen);
 	}
 	if (HPMHooks.count.HP_status_calc_regen_rate_post > 0) {
-		void (*postHookFunc) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
+		void (*postHookFunc) (struct block_list *bl, struct regen_data *regen);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_regen_rate_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_status_calc_regen_rate_post[hIndex].func;
-			postHookFunc(bl, regen, sc);
+			postHookFunc(bl, regen);
 		}
 	}
 	return;
