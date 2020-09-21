@@ -3598,13 +3598,13 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 
 	struct guild_castle *gc = guild->mapindex2gc(sd->bl.m);
 	if (gc != NULL && gc->guild_id == sd->status.guild_id) {
-		regen->rate.hp += regen->rate.hp * 100 / 100;
-		regen->rate.sp += regen->rate.sp * 100 / 100;
+		regen->rate.hp *= 2;
+		regen->rate.sp *= 2;
 	}
 
 	struct status_change *sc = &sd->sc;
 	if (sc->data[SC_MAGNIFICAT] != NULL) {
-		regen->rate.sp += regen->rate.sp * 100 / 100;
+		regen->rate.sp *= 2;
 	}
 
 	if (sc->data[SC_GDSKILL_REGENERATION] != NULL) {
@@ -3616,8 +3616,8 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 	}
 
 	if (sc->data[SC_CATNIPPOWDER] != NULL) {
-		regen->rate.hp += regen->rate.hp * 100 / 100;
-		regen->rate.sp += regen->rate.sp * 100 / 100;
+		regen->rate.hp *= 2;
+		regen->rate.sp *= 2;
 	}
 
 	// According to Aegis Tension relax increases recovery by 3 times
@@ -3625,8 +3625,8 @@ static void status_calc_regen_rate_pc(struct map_session_data *sd, struct regen_
 	// player is non-overweight otherwise it has no affect to formula
 	// it's also applied last right before the actual heal function call [hemagx]
 	if (regen->state.overweight == 0 && sc->data[SC_TENSIONRELAX] != NULL) {
-		regen->rate.hp += regen->rate.hp * 300 / 100;
-		regen->skill->rate.hp += regen->skill->rate.hp * 300 / 100;
+		regen->rate.hp *= 3;
+		regen->skill->rate.hp *= 3;
 	}
 }
 
@@ -3641,7 +3641,7 @@ static void status_calc_regen_rate_elemental(struct elemental_data *md, struct r
 		|| (sc->data[SC_WATER_INSIGNIA] != NULL && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_EARTH_INSIGNIA] != NULL && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_WIND_INSIGNIA] != NULL && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
-		regen->rate.hp += regen->rate.hp * 100 / 100;
+		regen->rate.hp *= 2;
 }
 
 static void status_calc_regen_rate_homunculus(struct homun_data *hd, struct regen_data *regen)
@@ -13371,8 +13371,8 @@ static int status_natural_heal(struct block_list *bl, va_list args)
 		if (vd != NULL && vd->dead_sit == 2) {
 			// In Aegis sit bonus is calculated beofre any other bonuses
 			// Which is also an cumulative additions [Hemagx]
-			hp_bonus += 100 * hp_bonus / 100;
-			sp_bonus += 100 * sp_bonus / 100;
+			hp_bonus *= 2;
+			sp_bonus *= 2;
 		}
 	}
 
