@@ -767,6 +767,8 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type)
 {
 	Assert_retv(type >= 0 && type < SC_MAX);
+	nullpo_retv(sc);
+	nullpo_retv(sc->data[type]);
 
 	//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
 	if (type == SC_RUN)
@@ -804,6 +806,7 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc_type type)
 {
 	nullpo_retr(false, bl);
+	Assert_retr(false, type == SC_RUN || type == SC_WUGDASH);
 
 	struct status_change *sc = status->get_sc(bl);
 	if (sc == NULL || sc->data[type] == NULL)
