@@ -71,6 +71,16 @@ enum merc_id {
 	MERID_MER_SWORDMAN10 = 6046, ///< MER_SWORDMAN10 / Wayne
 };
 
+enum merc_delete_type {
+	MERC_DELETE_EXPIRED = 0, ///< Mercenary soldier's duty fulfilled until contract expiration. Loyalty +1.
+	MERC_DELETE_KILLED,      ///< Mercenary died before fulfilling its contract. Loyalty -1.
+	MERC_DELETE_REMOVED,     ///< Mercenary removed by the user. Loyalty +0.
+	MERC_DELETE_RANAWAY,     ///< Mercenary left because the player died or was hit by the SC__GROOMY status. Loyalty +0.
+#ifndef MERC_DELETE_MAX
+	MERC_DELETE_MAX
+#endif
+};
+
 struct s_mercenary_db {
 	int class_;
 	char sprite[NAME_LENGTH], name[NAME_LENGTH];

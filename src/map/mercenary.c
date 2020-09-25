@@ -260,37 +260,40 @@ static int merc_contract_end_timer(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	md->contract_timer = INVALID_TIMER;
-	mercenary->delete(md, 0); // Mercenary soldier's duty hour is over.
+	mercenary->delete(md, MERC_DELETE_EXPIRED); // Mercenary soldier's duty hour is over.
 
 	return 0;
 }
 
-static int merc_delete(struct mercenary_data *md, int reply)
+/**
+ * Removes a mercenary from a player.
+ *
+ * @param md  Mercenary data belongs to the player
+ * @param type Type of removal (@see enum merc_delete type)
+ */
+static int merc_delete(struct mercenary_data *md, int type)
 {
-	struct map_session_data *sd;
-
 	nullpo_retr(0, md);
-	sd = md->master;
+
+	struct map_session_data *sd = md->master;
 	md->mercenary.life_time = 0;
 
 	mercenary->contract_stop(md);
 
-	if( !sd )
+	if (!sd)
 		return unit->free(&md->bl, CLR_OUTSIGHT);
 
-	if( md->devotion_flag )
-	{
+	if (md->devotion_flag != 0) {
 		md->devotion_flag = 0;
 		status_change_end(&sd->bl, SC_DEVOTION, INVALID_TIMER);
 	}
 
-	switch( reply )
-	{
-		case 0: mercenary->set_faith(md, 1); break; // +1 Loyalty on Contract ends.
-		case 1: mercenary->set_faith(md, -1); break; // -1 Loyalty on Mercenary killed
-	}
+	if (type == MERC_DELETE_EXPIRED)
+		mercenary->set_faith(md, 1); // +1 Loyalty on Contract ends.
+	else if (type == MERC_DELETE_KILLED)
+		mercenary->set_faith(md, -1);// -1 Loyalty on Mercenary killed
 
-	clif->mercenary_message(sd, reply);
+	clif->mercenary_message(sd, type);
 	return unit->remove_map(&md->bl, CLR_OUTSIGHT, ALC_MARK);
 }
 
@@ -387,7 +390,7 @@ static void mercenary_heal(struct mercenary_data *md, int hp, int sp)
 
 static int mercenary_dead(struct mercenary_data *md)
 {
-	mercenary->delete(md, 1);
+	mercenary->delete(md, MERC_DELETE_KILLED);
 	return 0;
 }
 
