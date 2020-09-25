@@ -46,7 +46,7 @@ struct status_data;
 #define MIN_BODY_STYLE (battle->bc->min_body_style)
 #define MAX_BODY_STYLE (battle->bc->max_body_style)
 
-#define is_boss(bl)     (status_get_mode(bl)&MD_BOSS) // Can refine later [Aru]
+#define is_boss(bl)     ((status_get_mode(bl) & MD_BOSS) != 0x0) // Can refine later [Aru]
 
 /**
  * Enumerations

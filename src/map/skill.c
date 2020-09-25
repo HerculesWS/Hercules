@@ -10871,7 +10871,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
 					clif->blown(src);
 					sc_start(src, src, SC_CONFUSION, 25, skill_lv, skill->get_time(skill_id, skill_lv));
-					if (is_boss(bl) == 0x0 && unit->move_pos(bl, x, y, 0, false) == 0) {
+					if (!is_boss(bl) && unit->move_pos(bl, x, y, 0, false) == 0) {
 						if (dstsd != NULL && pc_issit(dstsd))
 							pc->setstand(dstsd);
 						clif->blown(bl);
