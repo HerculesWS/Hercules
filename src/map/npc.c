@@ -5028,7 +5028,7 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		struct map_zone_data *zone;
 		if (state != 0) {
 			if (w4 != NULL && sscanf(w4, "%d", &state) == 1)
-				map->list[m].flag.battleground = (state != 0) ? 1 : 0;
+				map->list[m].flag.battleground = cap_value(state, 0, 2);
 			else
 				map->list[m].flag.battleground = 1; // Default value
 		} else {
