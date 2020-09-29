@@ -625,7 +625,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 
 			if (gc != NULL) {
 				struct guild *g = guild->search(gc->guild_id);
-				
+
 				md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
 				md->guardian_data->castle = gc;
 				md->guardian_data->number = MAX_GUARDIANS;
@@ -1771,9 +1771,8 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 		return true;
 
 	// Scan area for targets
-	if (!tbl && mode&MD_LOOTER && md->lootitem && DIFF_TICK(tick, md->ud.canact_tick) > 0
-	 && (md->lootitem_count < LOOTITEM_SIZE || battle_config.monster_loot_type != 1)
-	) {
+	if (battle_config.monster_loot_type != 1 && tbl == NULL && (mode & MD_LOOTER) != 0x0 && md->lootitem != NULL
+	    && DIFF_TICK(tick, md->ud.canact_tick) > 0 && md->lootitem_count < LOOTITEM_SIZE) {
 		// Scan area for items to loot, avoid trying to loot if the mob is full and can't consume the items.
 		map->foreachinrange (mob->ai_sub_hard_lootsearch, &md->bl, view_range, BL_ITEM, md, &tbl);
 	}
