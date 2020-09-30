@@ -3718,8 +3718,6 @@ struct {
 	struct HPMHookPoint *HP_map_removemobs_sub_post;
 	struct HPMHookPoint *HP_map_gat2cell_pre;
 	struct HPMHookPoint *HP_map_gat2cell_post;
-	struct HPMHookPoint *HP_map_cell2gat_pre;
-	struct HPMHookPoint *HP_map_cell2gat_post;
 	struct HPMHookPoint *HP_map_getcellp_pre;
 	struct HPMHookPoint *HP_map_getcellp_post;
 	struct HPMHookPoint *HP_map_setcell_pre;
@@ -10773,8 +10771,6 @@ struct {
 	int HP_map_removemobs_sub_post;
 	int HP_map_gat2cell_pre;
 	int HP_map_gat2cell_post;
-	int HP_map_cell2gat_pre;
-	int HP_map_cell2gat_post;
 	int HP_map_getcellp_pre;
 	int HP_map_getcellp_post;
 	int HP_map_setcell_pre;

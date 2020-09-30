@@ -1902,7 +1902,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->create_charid2nick, HP_map_create_charid2nick) },
 	{ HP_POP(map->removemobs_sub, HP_map_removemobs_sub) },
 	{ HP_POP(map->gat2cell, HP_map_gat2cell) },
-	{ HP_POP(map->cell2gat, HP_map_cell2gat) },
 	{ HP_POP(map->getcellp, HP_map_getcellp) },
 	{ HP_POP(map->setcell, HP_map_setcell) },
 	{ HP_POP(map->sub_getcellp, HP_map_sub_getcellp) },

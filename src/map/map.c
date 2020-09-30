@@ -3007,17 +3007,6 @@ static struct mapcell map_gat2cell(int gat)
 	return cell;
 }
 
-static int map_cell2gat(struct mapcell cell)
-{
-	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 0 ) return 0;
-	if( cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 ) return 1;
-	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 1 ) return 3;
-	if( cell.walkable == 0 && cell.shootable == 1 && cell.water == 0 ) return 5;
-
-	ShowWarning("map_cell2gat: cell has no matching gat type\n");
-	return 1; // default to 'wall'
-}
-
 /**
  * Extracts a map's cell data from its compressed mapcache.
  *
@@ -3076,7 +3065,7 @@ static int map_getcellp(struct map_data *m, const struct block_list *bl, int16 x
 	switch(cellchk) {
 		// gat type retrieval
 	case CELL_GETTYPE:
-		return map->cell2gat(cell);
+		return 0;
 
 		// base gat type checks
 	case CELL_CHKWALL:
@@ -7153,7 +7142,6 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->create_charid2nick = create_charid2nick;
 	map->removemobs_sub = map_removemobs_sub;
 	map->gat2cell = map_gat2cell;
-	map->cell2gat = map_cell2gat;
 	map->getcellp = map_getcellp;
 	map->setcell = map_setcell;
 	map->sub_getcellp = map_sub_getcellp;

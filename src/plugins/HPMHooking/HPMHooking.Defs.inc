@@ -4794,8 +4794,6 @@ typedef int (*HPMHOOK_pre_map_removemobs_sub) (struct block_list **bl, va_list a
 typedef int (*HPMHOOK_post_map_removemobs_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef struct mapcell (*HPMHOOK_pre_map_gat2cell) (int *gat);
 typedef struct mapcell (*HPMHOOK_post_map_gat2cell) (struct mapcell retVal___, int gat);
-typedef int (*HPMHOOK_pre_map_cell2gat) (struct mapcell *cell);
-typedef int (*HPMHOOK_post_map_cell2gat) (int retVal___, struct mapcell cell);
 typedef int (*HPMHOOK_pre_map_getcellp) (struct map_data **m, const struct block_list **bl, int16 *x, int16 *y, cell_chk *cellchk);
 typedef int (*HPMHOOK_post_map_getcellp) (int retVal___, struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 typedef void (*HPMHOOK_pre_map_setcell) (int16 *m, int16 *x, int16 *y, cell_t *cell, bool *flag);
