@@ -2945,10 +2945,16 @@ static enum unit_dir map_calc_dir(const struct block_list *src, int16 x, int16 y
 	return dir;
 }
 
-/*==========================================
- * Randomizes target cell x,y to a random walkable cell that
- * has the same distance from object as given coordinates do. [Skotlex]
- *------------------------------------------*/
+/**
+ * Randomizes target cell x, y to a random walkable cell that
+ * has the same distance from bl as given coordinates do.
+ *
+ * @param bl object to which we keep the same distance after randomizing the giving cells
+ * @param[in,out] x x-axis pointer of cell for distance to @p bl
+ * @param[in,out] y y-axis pointer of cell for distance to @p bl
+ * @retval 0 failure to randomize coordinates, x and y won't be changed
+ * @retval 1 success
+ */
 static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 {
 	nullpo_ret(bl);
