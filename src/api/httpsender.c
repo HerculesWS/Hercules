@@ -51,6 +51,10 @@
     memcpy(WFIFOP(fd, 0), str, strlen(str)); \
     WFIFOSET(fd, strlen(str));
 
+#define WFIFOADDBUF(fd, buf, buf_size) \
+    memcpy(WFIFOP(fd, 0), buf, buf_size); \
+    WFIFOSET(fd, buf_size);
+
 static struct httpsender_interface httpsender_s;
 struct httpsender_interface *httpsender;
 static char tmp_buffer[MAX_RESPONSE_SIZE];
@@ -135,6 +139,30 @@ static bool httpsender_send_plain(int fd, const char *data)
 	return true;
 }
 
+static bool httpsender_send_binary(int fd, const char *data, const size_t data_len)
+{
+#ifdef DEBUG_LOG
+	ShowInfo("httpsender_send_binary\n");
+#endif  // DEBUG_LOG
+
+	nullpo_retr(false, data);
+
+	size_t buf_sz = safesnprintf(tmp_buffer, sizeof(tmp_buffer),
+		"HTTP/1.1 200 OK\n"
+		"Server: %s\n"
+		"Content-Type: octet-stream\n"
+		"Content-Length: %lu\n"
+		"\n",
+		httpsender->server_name, data_len);
+	WFIFOHEAD(fd, buf_sz);
+	WFIFOADDSTR(fd, tmp_buffer);
+	sockt->flush(fd);
+	WFIFOHEAD(fd, data_len);
+	WFIFOADDBUF(fd, data, data_len);
+	sockt->flush(fd);
+	return true;
+}
+
 void httpsender_defaults(void)
 {
 	httpsender = &httpsender_s;
@@ -148,4 +176,5 @@ void httpsender_defaults(void)
 	httpsender->send_plain = httpsender_send_plain;
 	httpsender->send_html = httpsender_send_html;
 	httpsender->send_json = httpsender_send_json;
+	httpsender->send_binary = httpsender_send_binary;
 }
