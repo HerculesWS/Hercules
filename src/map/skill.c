@@ -6008,7 +6008,6 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			case WE_CALLPARENT:
 			case WE_CALLBABY:
 			case AM_RESURRECTHOMUN:
-			case PF_SPIDERWEB:
 				//Find a random spot to place the skill. [Skotlex]
 				inf2 = skill->get_splash(ud->skill_id, ud->skill_lv);
 				ud->skillx = target->x + inf2;
@@ -6019,6 +6018,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				}
 				ud->skilltimer=tid;
 				return skill->castend_pos(tid,tick,id,data);
+			case PF_SPIDERWEB:
 			case GN_WALLOFTHORN:
 			case SU_CN_POWDERING:
 			case SU_SV_ROOTTWIST:
