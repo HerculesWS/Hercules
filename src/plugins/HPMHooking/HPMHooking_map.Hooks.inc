@@ -48555,6 +48555,33 @@ enum unit_dir HP_map_calc_dir(const struct block_list *src, int16 x, int16 y) {
 	}
 	return retVal___;
 }
+int HP_map_get_random_cell_in_range(struct block_list *bl, int16 m, int16 *x, int16 *y, int16 x_range, int16 y_range) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_map_get_random_cell_in_range_pre > 0) {
+		int (*preHookFunc) (struct block_list **bl, int16 *m, int16 **x, int16 **y, int16 *x_range, int16 *y_range);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_get_random_cell_in_range_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_map_get_random_cell_in_range_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &m, &x, &y, &x_range, &y_range);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.get_random_cell_in_range(bl, m, x, y, x_range, y_range);
+	}
+	if (HPMHooks.count.HP_map_get_random_cell_in_range_post > 0) {
+		int (*postHookFunc) (int retVal___, struct block_list *bl, int16 m, int16 *x, int16 *y, int16 x_range, int16 y_range);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_get_random_cell_in_range_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_map_get_random_cell_in_range_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, m, x, y, x_range, y_range);
+		}
+	}
+	return retVal___;
+}
 int HP_map_random_dir(struct block_list *bl, short *x, short *y) {
 	int hIndex = 0;
 	int retVal___ = 0;
