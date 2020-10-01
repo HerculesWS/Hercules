@@ -1913,7 +1913,7 @@ moc_fild21,178,239,0	script	Group of Evil#edq	CLEAR_NPC,1,1,{
 		mes "You can feel the power of the darkness rise from the gap where light and darkness are mingled.";
 		close;
 	}
-	
+
 OnEnable:
 	enablenpc "Group of Evil#edq";
 	$@re_moc_time$ = "";

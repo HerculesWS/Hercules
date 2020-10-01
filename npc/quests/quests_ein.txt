@@ -594,7 +594,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			close;
 		}
 	}
-	
+
 	function F_ForgeWeapon {
 		mes "[Uwe]";
 		mes "Well...";
@@ -620,7 +620,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "you a good weapon~";
 		close;
 	}
-	
+
 	function F_Cancel {
 		mes "[Uwe]";
 		mes "Oh...?";
@@ -628,9 +628,9 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "free to visit";
 		mes "me whenever";
 		mes "you want, 'kay?";
-		close;	
+		close;
 	}
-	
+
 	function F_RandCloseMsg {
 		switch (rand(1, 3)) {
 		case 1:
@@ -644,7 +644,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			close;
 		}
 	}
-	
+
 	function F_Ingredients {
 		mes "[Uwe]";
 		mes "Now for beginners,";
@@ -679,7 +679,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "the next time~";
 		F_RandCloseMsg();
 	}
-	
+
 	function F_Cooking {
 		mes "[Uwe]";
 		mes "Mm...?";
@@ -731,7 +731,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "come back.";
 		F_RandCloseMsg();
 	}
-	
+
 	function F_Heart {
 		mes "[Uwe]";
 		mes "Ah, heart. Just like forging,";
@@ -749,7 +749,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "whenever you please.";
 		F_RandCloseMsg();
 	}
-	
+
 	function F_Skills {
 		mes "[Uwe]";
 		mes "When you're beginning to learn";
@@ -779,7 +779,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "the next time~";
 		F_RandCloseMsg();
 	}
-	
+
 	function F_Tools {
 		mes "[Uwe]";
 		mes "Cooking is a little";
@@ -822,7 +822,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "you like them~";
 		F_RandCloseMsg();
 	}
-	
+
 	function F_ToolsWithoutReward {
 		mes "[Uwe]";
 		mes "Cooking is a little";
@@ -847,7 +847,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "the next time~";
 		F_RandCloseMsg();
 	}
-	
+
 	function F_OverWeight {
 		mes "[Uwe]";
 		mes "Oh, I was going to give";
@@ -858,7 +858,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "in your Kafra Storage?";
 		close;
 	}
-	
+
 	function F_LargeJellopyForCoal {
 		if (countitem(Large_Jellopy) > 5) {
 			if (checkweight(Spawn, 199) == 0)
@@ -933,7 +933,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			close;
 		}
 	}
-	
+
 	EinUwe = 0;
 	if (BaseJob == Job_Blacksmith) {
 		if (ein_cook > 999) {
