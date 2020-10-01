@@ -510,11 +510,11 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "of warmth or life. So... Just don't live here in your old age.";
 		next;
 		.@choice2$ = "I won't. Thanks for the advice.";
-		if (BaseClass == Job_Blacksmith)
+		if (BaseJob == Job_Blacksmith)
 			.@choice2$ = "But I like the city life~";
 		switch (select("Then why are you here?", .@choice2$)) {
 		case 1:
-			if (BaseClass == Job_Blacksmith) {
+			if (BaseJob == Job_Blacksmith) {
 				mes "[Uwe]";
 				mes "Well, sugar honey,";
 				mes "I've been waiting for";
@@ -545,7 +545,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 			mes "Buhbye for now, cutie~";
 			close;
 		case 2:
-			if (BaseClass != Job_Blacksmith) {
+			if (BaseJob != Job_Blacksmith) {
 				mes "[Uwe]";
 				mes "Oh, that is such";
 				mes "a good decision,";
@@ -668,7 +668,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 		mes "Never cut corners and always";
 		mes "dedicate yourself to make the";
 		mes "very best finished product~";
-		if (ein_cook == 7 && BaseClass == Job_Blacksmith)
+		if (ein_cook == 7 && BaseJob == Job_Blacksmith)
 			ein_cook += 10;
 		next;
 		mes "[Uwe]";
@@ -935,7 +935,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 	}
 	
 	EinUwe = 0;
-	if (BaseClass == Job_Blacksmith) {
+	if (BaseJob == Job_Blacksmith) {
 		if (ein_cook > 999) {
 			if (ein_cook > 1199) {
 				mes "[Uwe]";
