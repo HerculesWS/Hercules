@@ -2947,7 +2947,7 @@ static enum unit_dir map_calc_dir(const struct block_list *src, int16 x, int16 y
 
 /**
  * Randomizes target cell x, y to a random walkable cell that
- * has the same distance from bl as given coordinates do.
+ * has the same distance from bl on a circle as given coordinates do.
  *
  * @warning this function has gaps, especially on the west and east side in relation to @p bl
  * @param bl object to which we keep the same distance after randomizing the giving cells
