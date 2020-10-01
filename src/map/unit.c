@@ -622,8 +622,12 @@ static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
 
 	sc = status->get_sc(bl);
 	if (sc != NULL) {
-		if (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL) // Randomize the target position
-			map->random_dir(bl, &ud->to_x, &ud->to_y);
+		if (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL) { // Randomize the target position
+			// Aegis behavior, yes if it doesn't find a random walkable cell it will not move at all.
+			ud->to_x = bl->x;
+			ud->to_y = bl->y;
+			map->get_random_cell_in_range(bl, bl->m, &ud->to_x, &ud->to_y, AREA_SIZE / 2, AREA_SIZE / 2);
+		}
 		if (sc->data[SC_COMBOATTACK] != NULL)
 			status_change_end(bl, SC_COMBOATTACK, INVALID_TIMER);
 	}
@@ -716,8 +720,12 @@ static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int rang
 	unit->stop_attack(bl); //Sets target to 0
 
 	sc = status->get_sc(bl);
-	if (sc && (sc->data[SC_CONFUSION] || sc->data[SC__CHAOS])) //Randomize the target position
-		map->random_dir(bl, &ud->to_x, &ud->to_y);
+	if (sc != NULL && (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL)) { // Randomize the target position
+		// Aegis behavior, yes if it doesn't find a random walkable cell it will not move at all.
+		ud->to_x = bl->x;
+		ud->to_y = bl->y;
+		map->get_random_cell_in_range(bl, bl->m, &ud->to_x, &ud->to_y, AREA_SIZE / 2, AREA_SIZE / 2);
+	}
 
 	if(ud->walktimer != INVALID_TIMER) {
 		ud->state.change_walk_target = 1;
