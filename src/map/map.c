@@ -2961,22 +2961,22 @@ static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 	nullpo_ret(bl);
 	nullpo_ret(x);
 	nullpo_ret(y);
-	short xi = *x - bl->x;
-	short yi = *y - bl->y;
+	int16 xi = *x - bl->x;
+	int16 yi = *y - bl->y;
 	if (xi == 0 && yi == 0) {
 		// No distance between points, go with distance 1 instead to prevent NaN in second sqrt
 		xi = 1;
 		yi = 1;
 	}
 	int dist2 = xi * xi + yi * yi;
-	short dist = (short)sqrt(dist2);
+	int16 dist = (int16)sqrt(dist2);
 
-	short i = 0;
+	int16 i = 0;
 	do {
 		enum unit_dir dir = unit_get_rnd_diagonal_dir();
-		short segment = 1 + (rnd() % dist); // Pick a random interval from the whole vector in that direction
+		int16 segment = 1 + (rnd() % dist); // Pick a random interval from the whole vector in that direction
 		xi = bl->x + segment * dirx[dir];
-		segment = (short)sqrt(dist2 - segment * segment); // The complement of the previously picked segment
+		segment = (int16)sqrt(dist2 - segment * segment); // The complement of the previously picked segment
 		yi = bl->y + segment * diry[dir];
 	} while ((map->getcell(bl->m, bl, xi, yi, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, xi, yi, 1, CELL_CHKNOREACH))
 	         && (++i) < 100);
