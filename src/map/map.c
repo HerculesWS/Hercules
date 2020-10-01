@@ -2962,10 +2962,13 @@ static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 	nullpo_ret(y);
 	short xi = *x - bl->x;
 	short yi = *y - bl->y;
+	if (xi == 0 && yi == 0) {
+		// No distance between points, go with distance 1 instead to prevent NaN in second sqrt
+		xi = 1;
+		yi = 1;
+	}
 	int dist2 = xi * xi + yi * yi;
 	short dist = (short)sqrt((float)dist2);
-
-	if (dist < 1) dist =1;
 
 	short i = 0;
 	do {
