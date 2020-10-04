@@ -874,7 +874,7 @@ struct clif_interface {
 	void (*map_property) (struct map_session_data* sd, enum map_property property);
 	void (*pvpset) (struct map_session_data *sd, int pvprank, int pvpnum,int type);
 	void (*map_property_mapall) (int mapid, enum map_property property);
-	void (*bossmapinfo) (int fd, struct mob_data *md, short flag);
+	void (*bossmapinfo) (struct map_session_data *sd, struct mob_data *md, short flag);
 	void (*map_type) (struct map_session_data* sd, enum map_type type);
 	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);
 	/* multi-map-server */

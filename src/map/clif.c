@@ -18155,21 +18155,30 @@ static void clif_parse_Adopt_reply(int fd, struct map_session_data *sd)
 ///     1 = Boss is alive (position update) (BOSS_INFO_ALIVE).
 ///     2 = Boss is alive (initial announce) (BOSS_INFO_ALIVE_WITHMSG).
 ///     3 = Boss is dead (BOSS_INFO_DEAD).
-static void clif_bossmapinfo(int fd, struct mob_data *md, short flag)
+static void clif_bossmapinfo(struct map_session_data *sd, struct mob_data *md, short flag)
 {
+	int fd = sd->fd;
+
 	WFIFOHEAD(fd,70);
 	memset(WFIFOP(fd,0),0,70);
 	WFIFOW(fd,0) = 0x293;
 
-	if( md != NULL ) {
-		if( md->bl.prev != NULL ) { // Boss on This Map
-			if( flag ) {
-				WFIFOB(fd,2) = 1;
-				WFIFOL(fd,3) = md->bl.x;
-				WFIFOL(fd,7) = md->bl.y;
-			} else
-				WFIFOB(fd,2) = 2; // First Time
-		} else if (md->spawn_timer != INVALID_TIMER) { // Boss is Dead
+	switch (flag) {
+		case 0:
+			WFIFOB(fd,2) = 0;
+			break; 
+		case 1:
+			WFIFOB(fd,2) = 1;
+			WFIFOL(fd,3) = md->bl.x;
+			WFIFOL(fd,7) = md->bl.y;
+			break;
+		case 2:
+			WFIFOB(fd,2) = 2;
+			WFIFOL(fd,3) = md->bl.x;
+			WFIFOL(fd,7) = md->bl.y;
+			break;
+		case 3:
+		{
 			const struct TimerData * timer_data = timer->get(md->spawn_timer);
 			unsigned int seconds;
 			int hours, minutes;
@@ -18183,8 +18192,11 @@ static void clif_bossmapinfo(int fd, struct mob_data *md, short flag)
 			WFIFOW(fd,11) = hours; // Hours
 			WFIFOW(fd,13) = minutes; // Minutes
 		}
-		safestrncpy(WFIFOP(fd,19), md->db->jname, NAME_LENGTH);
+		break;
 	}
+
+	if (md != NULL)
+		safestrncpy(WFIFOP(fd,19), md->db->jname, NAME_LENGTH);
 
 	WFIFOSET(fd,70);
 }

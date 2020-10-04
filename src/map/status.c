@@ -8282,12 +8282,11 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				tick_time = val2 * 1000; // [GodLesZ] tick time
 				break;
 			case SC_CASH_BOSS_ALARM:
-				if( sd != NULL ) {
+				if (sd != NULL) {
 					struct mob_data *boss_md = map->getmob_boss(bl->m); // Search for Boss on this Map
-					if( boss_md == NULL || boss_md->bl.prev == NULL ) {
-						// No MVP on this map - MVP is dead
-						clif->bossmapinfo(sd->fd, boss_md, 1);
-						return 0; // No need to start SC
+					if (boss_md == NULL) {
+						clif->bossmapinfo(sd, NULL, 0); // No MVP in the Map
+						return 0;
 					}
 					val1 = boss_md->bl.id;
 					if( (val4 = total_tick/1000) < 1 )
@@ -9941,8 +9940,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			}
 			break;
 		case SC_CASH_BOSS_ALARM:
-			if( sd )
-				clif->bossmapinfo(sd->fd, map->id2boss(sce->val1), 0); // First Message
+			if (sd)
+				clif->bossmapinfo(sd, map->id2boss(sce->val1), 2); // First Message
 			break;
 		case SC_MER_HP:
 			status_percent_heal(bl, 100, 0); // Recover Full HP
@@ -12089,15 +12088,22 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 
 		case SC_CASH_BOSS_ALARM:
-			if( sd && --(sce->val4) >= 0 ) {
+			if (sd && --(sce->val4) >= 0) {
 				struct mob_data *boss_md = map->id2boss(sce->val1);
-				if( boss_md && sd->bl.m == boss_md->bl.m ) {
-					clif->bossmapinfo(sd->fd, boss_md, 1); // Update X - Y on minimap
-					if (boss_md->bl.prev != NULL) {
-						sc_timer_next(5000 + tick, status->change_timer, bl->id, data);
+				if (boss_md) {
+					if (sd->bl.m != boss_md->bl.m) // Changed map
+ 						return 0;
+					else if (boss_md->bl.prev != NULL) { // Boss monster still alive, update x and y position on map
+						sce->val2 = 0;
+						clif->bossmapinfo(sd, boss_md, 1);
+					} else if (boss_md->spawn_timer != INVALID_TIMER && !sce->val2) { // Boss monster is dead
+						sce->val2 = 1;
+						clif->bossmapinfo(sd, boss_md, 3);
 						return 0;
 					}
 				}
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+				return 0;
 			}
 			break;
 
