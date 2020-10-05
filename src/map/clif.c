@@ -15476,11 +15476,10 @@ static void clif_parse_GuildRequestEmblem(int fd, struct map_session_data *sd) _
 /// 0151 <guild id>.L
 static void clif_parse_GuildRequestEmblem(int fd, struct map_session_data *sd)
 {
-	struct guild* g;
-	int guild_id = RFIFOL(fd,2);
-
-	if( (g = guild->search(guild_id)) != NULL )
-		clif->guild_emblem(sd,g);
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG *p = RFIFOP(fd, 0);
+	struct guild* g = guild->search(p->guild_id);
+	if (g != NULL)
+		clif->guild_emblem(sd, g);
 }
 
 /// Validates data of a guild emblem (compressed bitmap)
