@@ -121,6 +121,7 @@ HTTPURL(userconfig_save)
 	JsonP *dataNode = jsonparser->get(json, "data");
 	if (dataNode == NULL) {
 		ShowError("data node is missing in userconfig_save. %d: %s\n", fd, sd->url);
+		jsonparser->delete(json);
 		return false;
 	}
 
@@ -128,6 +129,7 @@ HTTPURL(userconfig_save)
 
 	if (!jsonparser->is_null_or_missing(userHotkey)) {
 		ShowError("UserHotkey node in userconfig_save not supporter. %d: %s\n", fd, sd->url);
+		jsonparser->delete(json);
 		return false;
 	}
 
