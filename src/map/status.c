@@ -10712,14 +10712,12 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		case SC_RUSH_WINDMILL:
 		case SC_ECHOSONG:
 		case SC_HARMONIZE:
-		case SC_FRIGG_SONG:
 			if (type != SC_SWING) status_change_end(bl, SC_SWING, INVALID_TIMER);
 			if (type != SC_SYMPHONY_LOVE) status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
 			if (type != SC_MOONLIT_SERENADE) status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
 			if (type != SC_RUSH_WINDMILL) status_change_end(bl, SC_RUSH_WINDMILL, INVALID_TIMER);
 			if (type != SC_ECHOSONG) status_change_end(bl, SC_ECHOSONG, INVALID_TIMER);
 			if (type != SC_HARMONIZE) status_change_end(bl, SC_HARMONIZE, INVALID_TIMER);
-			if (type != SC_FRIGG_SONG) status_change_end(bl, SC_FRIGG_SONG, INVALID_TIMER);
 			break;
 		//Group B Status
 		case SC_SIREN:
