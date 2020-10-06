@@ -8689,17 +8689,17 @@ static void clif_guild_emblem(struct map_session_data *sd, struct guild *g)
 /// 01b4 <id>.L <guild id>.L <emblem id>.W
 static void clif_guild_emblem_area(struct block_list *bl)
 {
-	uint8 buf[12];
-
 	nullpo_retv(bl);
+
+	struct PACKET_ZC_CHANGE_GUILD p = {0};
 
 	// TODO this packet doesn't force the update of ui components that have the emblem visible
 	//      (emblem in the flag npcs and emblem over the head in agit maps) [FlavioJS]
-	WBUFW(buf,0) = 0x1b4;
-	WBUFL(buf,2) = bl->id;
-	WBUFL(buf,6) = status->get_guild_id(bl);
-	WBUFW(buf,10) = status->get_emblem_id(bl);
-	clif->send(buf, 12, bl, AREA_WOS);
+	p.packetType = HEADER_ZC_CHANGE_GUILD;
+	p.AID =  bl->id;
+	p.guild_id = status->get_guild_id(bl);
+	p.emblem_id = status->get_emblem_id(bl);
+	clif->send(&p, sizeof(p), bl, AREA_WOS);
 }
 
 /// Sends guild skills (ZC_GUILD_SKILLINFO).
