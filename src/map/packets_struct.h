@@ -5860,6 +5860,25 @@ struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 {
 DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0b46);
 #endif  // PACKETVER >= 20190724
 
+#if PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
+struct PACKET_ZC_CHANGE_GUILD {
+	int16 packetType;
+	int32 guild_id;
+	uint32 emblem_id;
+	uint32 AID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0b47);
+// 20190619 main exists in first versions, then removed
+// 20190605 re first versions with other packet size
+#elif PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190709
+struct PACKET_ZC_CHANGE_GUILD {
+	int16 packetType;
+	int32 guild_id;
+	uint32 emblem_id;
+	uint32 AID;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0b1f);
+#else  // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
 struct PACKET_ZC_CHANGE_GUILD {
 	int16 packetType;
 	uint32 AID;
@@ -5867,6 +5886,7 @@ struct PACKET_ZC_CHANGE_GUILD {
 	uint16 emblem_id;
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x01b4);
+#endif  // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
