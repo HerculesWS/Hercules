@@ -1,5 +1,5 @@
 <!-- Before you continue, please change "base: stable" to "base: master" and
-     enable the setting "[√] Allow edits from maintainers." when creating your
+     enable the setting "[√] Allow edits and access to secrets by maintainers" when creating your
      pull request if you have not already enabled it. -->
 
 <!-- Note: Lines with this <!-- syntax are comments and will not be visible in
