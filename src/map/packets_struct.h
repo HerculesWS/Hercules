@@ -5845,11 +5845,20 @@ struct PACKET_ZC_DYNAMICNPC_CREATE_RESULT {
 DEFINE_PACKET_HEADER(ZC_DYNAMICNPC_CREATE_RESULT , 0x0a17);
 #endif // PACKETVER >= 20140611
 
-struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG {
+struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 {
 	int16 packetType;
 	int32 guild_id;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG, 0x0151);
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG1, 0x0151);
+
+#if PACKETVER >= 20190724
+struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 {
+	int16 packetType;
+	int32 guild_id;
+	int32 emblem_id;
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0b46);
+#endif  // PACKETVER >= 20190724
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

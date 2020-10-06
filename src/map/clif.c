@@ -15471,12 +15471,22 @@ static void clif_parse_GuildChangeMemberPosition(int fd, struct map_session_data
 	}
 }
 
-static void clif_parse_GuildRequestEmblem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+static void clif_parse_GuildRequestEmblem1(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request for guild emblem data (CZ_REQ_GUILD_EMBLEM_IMG).
 /// 0151 <guild id>.L
-static void clif_parse_GuildRequestEmblem(int fd, struct map_session_data *sd)
+static void clif_parse_GuildRequestEmblem1(int fd, struct map_session_data *sd)
 {
-	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG *p = RFIFOP(fd, 0);
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 *p = RFIFOP(fd, 0);
+	struct guild* g = guild->search(p->guild_id);
+	if (g != NULL)
+		clif->guild_emblem(sd, g);
+}
+
+static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request for guild emblem data (CZ_REQ_GUILD_EMBLEM_IMG2).
+static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd)
+{
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 *p = RFIFOP(fd, 0);
 	struct guild* g = guild->search(p->guild_id);
 	if (g != NULL)
 		clif->guild_emblem(sd, g);
@@ -26789,7 +26799,8 @@ void clif_defaults(void)
 	clif->pGuildRequestInfo = clif_parse_GuildRequestInfo;
 	clif->pGuildChangePositionInfo = clif_parse_GuildChangePositionInfo;
 	clif->pGuildChangeMemberPosition = clif_parse_GuildChangeMemberPosition;
-	clif->pGuildRequestEmblem = clif_parse_GuildRequestEmblem;
+	clif->pGuildRequestEmblem1 = clif_parse_GuildRequestEmblem1;
+	clif->pGuildRequestEmblem2 = clif_parse_GuildRequestEmblem2;
 	clif->pGuildChangeEmblem = clif_parse_GuildChangeEmblem;
 	clif->pGuildChangeNotice = clif_parse_GuildChangeNotice;
 	clif->pGuildInvite = clif_parse_GuildInvite;
