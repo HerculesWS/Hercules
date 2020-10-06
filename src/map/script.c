@@ -27946,6 +27946,7 @@ static void script_hardcoded_constants(void)
 
 	script->constdb_comment("Server defines");
 	script->set_constant("PACKETVER",PACKETVER,false, false);
+	script->set_constant("HERCULES_VERSION",HERCULES_VERSION,false, false);
 	script->set_constant("MAX_LEVEL",MAX_LEVEL,false, false);
 	script->set_constant("MAX_STORAGE",MAX_STORAGE,false, false);
 	script->set_constant("MAX_GUILD_STORAGE",MAX_GUILD_STORAGE,false, false);
