@@ -18175,13 +18175,13 @@ void HP_clif_guild_emblem(struct map_session_data *sd, struct guild *g) {
 	}
 	return;
 }
-void HP_clif_guild_emblem_area(struct block_list *bl) {
+void HP_clif_guild_emblem_id_area(struct block_list *bl) {
 	int hIndex = 0;
-	if (HPMHooks.count.HP_clif_guild_emblem_area_pre > 0) {
+	if (HPMHooks.count.HP_clif_guild_emblem_id_area_pre > 0) {
 		void (*preHookFunc) (struct block_list **bl);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_area_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_clif_guild_emblem_area_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_id_area_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guild_emblem_id_area_pre[hIndex].func;
 			preHookFunc(&bl);
 		}
 		if (*HPMforce_return) {
@@ -18190,12 +18190,12 @@ void HP_clif_guild_emblem_area(struct block_list *bl) {
 		}
 	}
 	{
-		HPMHooks.source.clif.guild_emblem_area(bl);
+		HPMHooks.source.clif.guild_emblem_id_area(bl);
 	}
-	if (HPMHooks.count.HP_clif_guild_emblem_area_post > 0) {
+	if (HPMHooks.count.HP_clif_guild_emblem_id_area_post > 0) {
 		void (*postHookFunc) (struct block_list *bl);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_area_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_clif_guild_emblem_area_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_id_area_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guild_emblem_id_area_post[hIndex].func;
 			postHookFunc(bl);
 		}
 	}

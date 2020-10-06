@@ -721,7 +721,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->guild_positionchanged, HP_clif_guild_positionchanged) },
 	{ HP_POP(clif->guild_memberpositionchanged, HP_clif_guild_memberpositionchanged) },
 	{ HP_POP(clif->guild_emblem, HP_clif_guild_emblem) },
-	{ HP_POP(clif->guild_emblem_area, HP_clif_guild_emblem_area) },
+	{ HP_POP(clif->guild_emblem_id_area, HP_clif_guild_emblem_id_area) },
 	{ HP_POP(clif->guild_notice, HP_clif_guild_notice) },
 	{ HP_POP(clif->guild_message, HP_clif_guild_message) },
 	{ HP_POP(clif->guild_reqalliance, HP_clif_guild_reqalliance) },
