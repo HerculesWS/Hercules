@@ -15066,7 +15066,7 @@ static BUILDIN(flagemblem)
 	} else {
 		bool changed = ( nd->u.scr.guild_id != g_id )?true:false;
 		nd->u.scr.guild_id = g_id;
-		clif->guild_emblem_area(&nd->bl);
+		clif->guild_emblem_id_area(&nd->bl);
 		/* guild flag caching */
 		if( g_id ) /* adding a id */
 			guild->flag_add(nd);

@@ -1365,7 +1365,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 			sd->guild_emblem_id=emblem_id;
 			clif->guild_belonginfo(sd,g);
 			clif->guild_emblem(sd,g);
-			clif->guild_emblem_area(&sd->bl);
+			clif->guild_emblem_id_area(&sd->bl);
 		}
 	}
 	{// update guardians (mobs)
@@ -1381,7 +1381,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
-				clif->guild_emblem_area(&md->bl);
+				clif->guild_emblem_id_area(&md->bl);
 			}
 			// update temporary guardians
 			for( i = 0; i < gc->temp_guardians_max; ++i ) {
@@ -1389,7 +1389,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
-				clif->guild_emblem_area(&md->bl);
+				clif->guild_emblem_id_area(&md->bl);
 			}
 		}
 		dbi_destroy(iter);
@@ -1397,7 +1397,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	{// update npcs (flags or other npcs that used flagemblem to attach to this guild)
 		for( i = 0; i < guild->flags_count; i++ ) {
 			if( guild->flags[i] && guild->flags[i]->u.scr.guild_id == guild_id ) {
-				clif->guild_emblem_area(&guild->flags[i]->bl);
+				clif->guild_emblem_id_area(&guild->flags[i]->bl);
 			}
 		}
 	}

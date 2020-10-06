@@ -8687,7 +8687,7 @@ static void clif_guild_emblem(struct map_session_data *sd, struct guild *g)
 
 /// Sends update of the guild id/emblem id to everyone in the area (ZC_CHANGE_GUILD).
 /// 01b4 <id>.L <guild id>.L <emblem id>.W
-static void clif_guild_emblem_area(struct block_list *bl)
+static void clif_guild_emblem_id_area(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
@@ -26488,7 +26488,7 @@ void clif_defaults(void)
 	clif->guild_positionchanged = clif_guild_positionchanged;
 	clif->guild_memberpositionchanged = clif_guild_memberpositionchanged;
 	clif->guild_emblem = clif_guild_emblem;
-	clif->guild_emblem_area = clif_guild_emblem_area;
+	clif->guild_emblem_id_area = clif_guild_emblem_id_area;
 	clif->guild_notice = clif_guild_notice;
 	clif->guild_message = clif_guild_message;
 	clif->guild_reqalliance = clif_guild_reqalliance;
