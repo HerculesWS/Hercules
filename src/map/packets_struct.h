@@ -5888,6 +5888,15 @@ struct PACKET_ZC_CHANGE_GUILD {
 DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x01b4);
 #endif  // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
 
+struct PACKET_ZC_GUILD_EMBLEM_IMG {
+	int16 packetType;
+	int16 packetLength;
+	int32 guild_id;
+	uint32 emblem_id;
+	char emblem_data[];
+} __attribute__((packed));
+DEFINE_PACKET_HEADER(ZC_GUILD_EMBLEM_IMG, 0x0152);
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

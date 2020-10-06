@@ -8668,21 +8668,22 @@ static void clif_guild_memberpositionchanged(struct guild *g, int idx)
 /// 0152 <packet len>.W <guild id>.L <emblem id>.L <emblem data>.?B
 static void clif_guild_emblem(struct map_session_data *sd, struct guild *g)
 {
-	int fd;
 	nullpo_retv(sd);
 	nullpo_retv(g);
 
-	fd = sd->fd;
-	if( g->emblem_len <= 0 )
+	if (g->emblem_len <= 0)
 		return;
 
-	WFIFOHEAD(fd,g->emblem_len+12);
-	WFIFOW(fd,0)=0x152;
-	WFIFOW(fd,2)=g->emblem_len+12;
-	WFIFOL(fd,4)=g->guild_id;
-	WFIFOL(fd,8)=g->emblem_id;
-	memcpy(WFIFOP(fd,12),g->emblem_data,g->emblem_len);
-	WFIFOSET(fd,WFIFOW(fd,2));
+	const int fd = sd->fd;
+	const int len = g->emblem_len + sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_GUILD_EMBLEM_IMG *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_GUILD_EMBLEM_IMG;
+	p->packetLength = len;
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	memcpy(p->emblem_data, g->emblem_data, g->emblem_len);
+	WFIFOSET(fd, len);
 }
 
 /// Sends update of the guild id/emblem id to everyone in the area (ZC_CHANGE_GUILD).
