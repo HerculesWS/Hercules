@@ -18245,7 +18245,7 @@ static void clif_parse_cz_config(int fd, struct map_session_data *sd)
 		struct pet_data *pd = sd->pd;
 		nullpo_retv(pd);
 		if (pd->petDB->autofeed == 0) {
-			clif->message(fd, "Autofeed is disabled for this pet.");
+			clif->message(fd, msg_sd(sd, 189)); // "Autofeed is disabled for this pet."
 			return;
 		}
 		pd->pet.autofeed = flag;
@@ -22379,7 +22379,7 @@ static void clif_change_title_ack(int fd, struct map_session_data *sd, int title
 	unsigned char failed = 0;
 
 	if (!achievement->check_title(sd, title_id)) {
-		clif->message(fd, "Title is not yet earned.");
+		clif->message(fd, msg_sd(sd, 1485)); // "Title is not yet earned."
 		failed = 1;
 	}
 
@@ -24187,7 +24187,7 @@ static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *s
 static void clif_parse_lapineUpgrade_makeItem(int fd, struct map_session_data *sd)
 {
 #if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
-	ShowError("Lapin upgrade not implimented yet");
+	ShowError("Lapin upgrade not implemented yet.");
 	clif->lapineUpgrade_result(sd, LAPINE_UPGRADE_FAILED);
 #endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 }

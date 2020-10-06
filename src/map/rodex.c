@@ -356,7 +356,7 @@ static void rodex_send_mail_result(struct map_session_data *ssd, struct map_sess
 
 	if (rsd != NULL) {
 		clif->rodex_icon(rsd->fd, true);
-		clif_disp_onlyself(rsd, "You've got a new mail!");
+		clif_disp_onlyself(rsd, msg_sd(rsd, 236)); // "You've got a new mail!"
 	}
 	return;
 }
