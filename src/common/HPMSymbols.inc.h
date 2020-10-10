@@ -35,9 +35,6 @@ struct account_interface *account;
 #ifdef MAP_ACHIEVEMENT_H /* achievement */
 struct achievement_interface *achievement;
 #endif // MAP_ACHIEVEMENT_H
-#ifdef API_ACHRIF_H /* achrif */
-struct achrif_interface *achrif;
-#endif // API_ACHRIF_H
 #ifdef API_ACLIF_H /* aclif */
 struct aclif_interface *aclif;
 #endif // API_ACLIF_H
@@ -366,10 +363,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type&(SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("achievement", achievement))
 		return "achievement";
 #endif // MAP_ACHIEVEMENT_H
-#ifdef API_ACHRIF_H /* achrif */
-	if ((server_type&(SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("achrif", achrif))
-		return "achrif";
-#endif // API_ACHRIF_H
 #ifdef API_ACLIF_H /* aclif */
 	if ((server_type&(SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("aclif", aclif))
 		return "aclif";

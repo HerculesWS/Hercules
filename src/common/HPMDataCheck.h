@@ -36,11 +36,6 @@
 #endif // HPM_SYMBOL
 
 HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
-	#ifdef API_ACHRIF_H
-		{ "achrif_interface", sizeof(struct achrif_interface), SERVER_TYPE_UNKNOWN },
-	#else
-		#define API_ACHRIF_H
-	#endif // API_ACHRIF_H
 	#ifdef API_ACLIF_H
 		{ "aclif_interface", sizeof(struct aclif_interface), SERVER_TYPE_UNKNOWN },
 		{ "char_server_data", sizeof(struct char_server_data), SERVER_TYPE_UNKNOWN },

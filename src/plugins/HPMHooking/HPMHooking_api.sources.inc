@@ -26,7 +26,6 @@
 /* GENERATED FILE DO NOT EDIT */
 
 HPMHooks.source.HCache = *HCache;
-HPMHooks.source.achrif = *achrif;
 HPMHooks.source.aclif = *aclif;
 HPMHooks.source.aloginif = *aloginif;
 HPMHooks.source.api = *api;

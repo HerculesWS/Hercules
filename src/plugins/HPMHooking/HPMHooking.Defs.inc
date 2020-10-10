@@ -183,24 +183,6 @@ typedef void (*HPMHOOK_post_achievement_get_rewards_buffs) (struct map_session_d
 typedef void (*HPMHOOK_pre_achievement_get_rewards_items) (struct map_session_data **sd, const struct achievement_data **ad);
 typedef void (*HPMHOOK_post_achievement_get_rewards_items) (struct map_session_data *sd, const struct achievement_data *ad);
 #endif // MAP_ACHIEVEMENT_H
-#ifdef API_ACHRIF_H /* achrif */
-typedef void (*HPMHOOK_pre_achrif_init) (bool *minimal);
-typedef void (*HPMHOOK_post_achrif_init) (bool minimal);
-typedef void (*HPMHOOK_pre_achrif_final) (void);
-typedef void (*HPMHOOK_post_achrif_final) (void);
-typedef void (*HPMHOOK_pre_achrif_setuserid) (char **id);
-typedef void (*HPMHOOK_post_achrif_setuserid) (char *id);
-typedef void (*HPMHOOK_pre_achrif_setpasswd) (char **pwd);
-typedef void (*HPMHOOK_post_achrif_setpasswd) (char *pwd);
-typedef void (*HPMHOOK_pre_achrif_checkdefaultlogin) (void);
-typedef void (*HPMHOOK_post_achrif_checkdefaultlogin) (void);
-typedef bool (*HPMHOOK_pre_achrif_setip) (const char **ip);
-typedef bool (*HPMHOOK_post_achrif_setip) (bool retVal___, const char *ip);
-typedef void (*HPMHOOK_pre_achrif_setport) (uint16 *port);
-typedef void (*HPMHOOK_post_achrif_setport) (uint16 port);
-typedef int (*HPMHOOK_pre_achrif_parse) (int *fd);
-typedef int (*HPMHOOK_post_achrif_parse) (int retVal___, int fd);
-#endif // API_ACHRIF_H
 #ifdef API_ACLIF_H /* aclif */
 typedef int (*HPMHOOK_pre_aclif_init) (bool *minimal);
 typedef int (*HPMHOOK_post_aclif_init) (int retVal___, bool minimal);

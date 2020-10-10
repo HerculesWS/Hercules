@@ -30,15 +30,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(HCache->init, HP_HCache_init) },
 	{ HP_POP(HCache->check, HP_HCache_check) },
 	{ HP_POP(HCache->open, HP_HCache_open) },
-/* achrif_interface */
-	{ HP_POP(achrif->init, HP_achrif_init) },
-	{ HP_POP(achrif->final, HP_achrif_final) },
-	{ HP_POP(achrif->setuserid, HP_achrif_setuserid) },
-	{ HP_POP(achrif->setpasswd, HP_achrif_setpasswd) },
-	{ HP_POP(achrif->checkdefaultlogin, HP_achrif_checkdefaultlogin) },
-	{ HP_POP(achrif->setip, HP_achrif_setip) },
-	{ HP_POP(achrif->setport, HP_achrif_setport) },
-	{ HP_POP(achrif->parse, HP_achrif_parse) },
 /* aclif_interface */
 	{ HP_POP(aclif->init, HP_aclif_init) },
 	{ HP_POP(aclif->final, HP_aclif_final) },

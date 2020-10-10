@@ -65,11 +65,11 @@ MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 
-API_C = api.c aclif.c aloginif.c HPMapi.c httpparser.c httpsender.c handlers.c achrif.c \
+API_C = api.c aclif.c aloginif.c HPMapi.c httpparser.c httpsender.c handlers.c \
 	jsonparser.c jsonwriter.c
 API_OBJ = $(addprefix obj_sql/, $(patsubst %c,%o,$(API_C)))
 API_H = api.h aclif.h aloginif.h HPMapi.h apisessiondata.h httpparser.h httpparsehandler.h \
-	handlerfunc.h handlers.h achrif.h mimepart.h urlhandlers.h jsonparser.h jsonwriter.h
+	handlerfunc.h handlers.h mimepart.h urlhandlers.h jsonparser.h jsonwriter.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)

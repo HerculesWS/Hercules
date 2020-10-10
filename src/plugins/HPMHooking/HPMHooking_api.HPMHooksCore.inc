@@ -32,22 +32,6 @@ struct {
 	struct HPMHookPoint *HP_HCache_check_post;
 	struct HPMHookPoint *HP_HCache_open_pre;
 	struct HPMHookPoint *HP_HCache_open_post;
-	struct HPMHookPoint *HP_achrif_init_pre;
-	struct HPMHookPoint *HP_achrif_init_post;
-	struct HPMHookPoint *HP_achrif_final_pre;
-	struct HPMHookPoint *HP_achrif_final_post;
-	struct HPMHookPoint *HP_achrif_setuserid_pre;
-	struct HPMHookPoint *HP_achrif_setuserid_post;
-	struct HPMHookPoint *HP_achrif_setpasswd_pre;
-	struct HPMHookPoint *HP_achrif_setpasswd_post;
-	struct HPMHookPoint *HP_achrif_checkdefaultlogin_pre;
-	struct HPMHookPoint *HP_achrif_checkdefaultlogin_post;
-	struct HPMHookPoint *HP_achrif_setip_pre;
-	struct HPMHookPoint *HP_achrif_setip_post;
-	struct HPMHookPoint *HP_achrif_setport_pre;
-	struct HPMHookPoint *HP_achrif_setport_post;
-	struct HPMHookPoint *HP_achrif_parse_pre;
-	struct HPMHookPoint *HP_achrif_parse_post;
 	struct HPMHookPoint *HP_aclif_init_pre;
 	struct HPMHookPoint *HP_aclif_init_post;
 	struct HPMHookPoint *HP_aclif_final_pre;
@@ -895,22 +879,6 @@ struct {
 	int HP_HCache_check_post;
 	int HP_HCache_open_pre;
 	int HP_HCache_open_post;
-	int HP_achrif_init_pre;
-	int HP_achrif_init_post;
-	int HP_achrif_final_pre;
-	int HP_achrif_final_post;
-	int HP_achrif_setuserid_pre;
-	int HP_achrif_setuserid_post;
-	int HP_achrif_setpasswd_pre;
-	int HP_achrif_setpasswd_post;
-	int HP_achrif_checkdefaultlogin_pre;
-	int HP_achrif_checkdefaultlogin_post;
-	int HP_achrif_setip_pre;
-	int HP_achrif_setip_post;
-	int HP_achrif_setport_pre;
-	int HP_achrif_setport_post;
-	int HP_achrif_parse_pre;
-	int HP_achrif_parse_post;
 	int HP_aclif_init_pre;
 	int HP_aclif_init_post;
 	int HP_aclif_final_pre;
@@ -1753,7 +1721,6 @@ struct {
 
 struct {
 	struct HCache_interface HCache;
-	struct achrif_interface achrif;
 	struct aclif_interface aclif;
 	struct aloginif_interface aloginif;
 	struct api_interface api;
