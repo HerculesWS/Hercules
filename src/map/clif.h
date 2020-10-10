@@ -1338,6 +1338,9 @@ struct clif_interface {
 	void (*guild_positionchanged) (struct guild *g,int idx);
 	void (*guild_memberpositionchanged) (struct guild *g,int idx);
 	void (*guild_emblem) (struct map_session_data *sd,struct guild *g);
+	void (*guild_emblem_clear) (struct map_session_data *sd,struct guild *g);
+	void (*guild_emblem_complete) (struct map_session_data *sd,struct guild *g);
+	void (*guild_emblem_body) (struct map_session_data *sd,struct guild *g);
 	void (*guild_emblem_id_area) (struct block_list* bl);
 	void (*guild_notice) (struct map_session_data* sd, struct guild* g);
 	void (*guild_message) (struct guild *g,int account_id,const char *mes,int len);

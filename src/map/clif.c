@@ -8664,15 +8664,61 @@ static void clif_guild_memberpositionchanged(struct guild *g, int idx)
 		clif->send(buf,WBUFW(buf,2),&sd->bl,GUILD);
 }
 
-/// Sends emblems bitmap data to the client that requested it (ZC_GUILD_EMBLEM_IMG).
-/// 0152 <packet len>.W <guild id>.L <emblem id>.L <emblem data>.?B
 static void clif_guild_emblem(struct map_session_data *sd, struct guild *g)
 {
+	nullpo_retv(g);
+	if (g->emblem_len <= 0)
+		return;
+
+	clif->guild_emblem_clear(sd, g);
+	clif->guild_emblem_body(sd, g);
+	clif->guild_emblem_complete(sd, g);
+}
+
+static void clif_guild_emblem_clear(struct map_session_data *sd, struct guild *g)
+{
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 	nullpo_retv(sd);
 	nullpo_retv(g);
 
-	if (g->emblem_len <= 0)
-		return;
+	const int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_GUILD_EMBLEM_IMG *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_GUILD_EMBLEM_IMG;
+	p->packetLength = len;
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	p->result = ZC_GUILD_EMBLEM_TYPE_CLEAR;
+	WFIFOSET(fd, len);
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+}
+
+static void clif_guild_emblem_complete(struct map_session_data *sd, struct guild *g)
+{
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+	nullpo_retv(sd);
+	nullpo_retv(g);
+
+	const int fd = sd->fd;
+	const int len = sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_GUILD_EMBLEM_IMG *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_GUILD_EMBLEM_IMG;
+	p->packetLength = len;
+	p->guild_id = g->guild_id;
+	p->emblem_id = g->emblem_id;
+	p->result = ZC_GUILD_EMBLEM_TYPE_COMPLETE;
+	WFIFOSET(fd, len);
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+}
+
+/// Sends emblems bitmap data to the client that requested it (ZC_GUILD_EMBLEM_IMG).
+/// 0152 <packet len>.W <guild id>.L <emblem id>.L <emblem data>.?B
+static void clif_guild_emblem_body(struct map_session_data *sd, struct guild *g)
+{
+	nullpo_retv(sd);
+	nullpo_retv(g);
 
 	const int fd = sd->fd;
 	const int len = g->emblem_len + sizeof(struct PACKET_ZC_GUILD_EMBLEM_IMG);
@@ -8682,6 +8728,9 @@ static void clif_guild_emblem(struct map_session_data *sd, struct guild *g)
 	p->packetLength = len;
 	p->guild_id = g->guild_id;
 	p->emblem_id = g->emblem_id;
+#if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+	p->result = ZC_GUILD_EMBLEM_TYPE_ADD;
+#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 	memcpy(p->emblem_data, g->emblem_data, g->emblem_len);
 	WFIFOSET(fd, len);
 }
@@ -26489,6 +26538,9 @@ void clif_defaults(void)
 	clif->guild_positionchanged = clif_guild_positionchanged;
 	clif->guild_memberpositionchanged = clif_guild_memberpositionchanged;
 	clif->guild_emblem = clif_guild_emblem;
+	clif->guild_emblem_clear = clif_guild_emblem_clear;
+	clif->guild_emblem_complete = clif_guild_emblem_complete;
+	clif->guild_emblem_body = clif_guild_emblem_body;
 	clif->guild_emblem_id_area = clif_guild_emblem_id_area;
 	clif->guild_notice = clif_guild_notice;
 	clif->guild_message = clif_guild_message;
