@@ -18175,6 +18175,84 @@ void HP_clif_guild_emblem(struct map_session_data *sd, struct guild *g) {
 	}
 	return;
 }
+void HP_clif_guild_emblem_clear(struct map_session_data *sd, struct guild *g) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_guild_emblem_clear_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct guild **g);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_clear_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guild_emblem_clear_pre[hIndex].func;
+			preHookFunc(&sd, &g);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.guild_emblem_clear(sd, g);
+	}
+	if (HPMHooks.count.HP_clif_guild_emblem_clear_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct guild *g);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_clear_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guild_emblem_clear_post[hIndex].func;
+			postHookFunc(sd, g);
+		}
+	}
+	return;
+}
+void HP_clif_guild_emblem_complete(struct map_session_data *sd, struct guild *g) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_guild_emblem_complete_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct guild **g);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_complete_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guild_emblem_complete_pre[hIndex].func;
+			preHookFunc(&sd, &g);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.guild_emblem_complete(sd, g);
+	}
+	if (HPMHooks.count.HP_clif_guild_emblem_complete_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct guild *g);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_complete_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guild_emblem_complete_post[hIndex].func;
+			postHookFunc(sd, g);
+		}
+	}
+	return;
+}
+void HP_clif_guild_emblem_body(struct map_session_data *sd, struct guild *g) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_clif_guild_emblem_body_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd, struct guild **g);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_body_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_guild_emblem_body_pre[hIndex].func;
+			preHookFunc(&sd, &g);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.guild_emblem_body(sd, g);
+	}
+	if (HPMHooks.count.HP_clif_guild_emblem_body_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd, struct guild *g);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_emblem_body_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_guild_emblem_body_post[hIndex].func;
+			postHookFunc(sd, g);
+		}
+	}
+	return;
+}
 void HP_clif_guild_emblem_id_area(struct block_list *bl) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_guild_emblem_id_area_pre > 0) {

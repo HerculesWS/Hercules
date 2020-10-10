@@ -1800,6 +1800,12 @@ typedef void (*HPMHOOK_pre_clif_guild_memberpositionchanged) (struct guild **g, 
 typedef void (*HPMHOOK_post_clif_guild_memberpositionchanged) (struct guild *g, int idx);
 typedef void (*HPMHOOK_pre_clif_guild_emblem) (struct map_session_data **sd, struct guild **g);
 typedef void (*HPMHOOK_post_clif_guild_emblem) (struct map_session_data *sd, struct guild *g);
+typedef void (*HPMHOOK_pre_clif_guild_emblem_clear) (struct map_session_data **sd, struct guild **g);
+typedef void (*HPMHOOK_post_clif_guild_emblem_clear) (struct map_session_data *sd, struct guild *g);
+typedef void (*HPMHOOK_pre_clif_guild_emblem_complete) (struct map_session_data **sd, struct guild **g);
+typedef void (*HPMHOOK_post_clif_guild_emblem_complete) (struct map_session_data *sd, struct guild *g);
+typedef void (*HPMHOOK_pre_clif_guild_emblem_body) (struct map_session_data **sd, struct guild **g);
+typedef void (*HPMHOOK_post_clif_guild_emblem_body) (struct map_session_data *sd, struct guild *g);
 typedef void (*HPMHOOK_pre_clif_guild_emblem_id_area) (struct block_list **bl);
 typedef void (*HPMHOOK_post_clif_guild_emblem_id_area) (struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_guild_notice) (struct map_session_data **sd, struct guild **g);

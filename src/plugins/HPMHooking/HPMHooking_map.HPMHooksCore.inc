@@ -1394,6 +1394,12 @@ struct {
 	struct HPMHookPoint *HP_clif_guild_memberpositionchanged_post;
 	struct HPMHookPoint *HP_clif_guild_emblem_pre;
 	struct HPMHookPoint *HP_clif_guild_emblem_post;
+	struct HPMHookPoint *HP_clif_guild_emblem_clear_pre;
+	struct HPMHookPoint *HP_clif_guild_emblem_clear_post;
+	struct HPMHookPoint *HP_clif_guild_emblem_complete_pre;
+	struct HPMHookPoint *HP_clif_guild_emblem_complete_post;
+	struct HPMHookPoint *HP_clif_guild_emblem_body_pre;
+	struct HPMHookPoint *HP_clif_guild_emblem_body_post;
 	struct HPMHookPoint *HP_clif_guild_emblem_id_area_pre;
 	struct HPMHookPoint *HP_clif_guild_emblem_id_area_post;
 	struct HPMHookPoint *HP_clif_guild_notice_pre;
@@ -8839,6 +8845,12 @@ struct {
 	int HP_clif_guild_memberpositionchanged_post;
 	int HP_clif_guild_emblem_pre;
 	int HP_clif_guild_emblem_post;
+	int HP_clif_guild_emblem_clear_pre;
+	int HP_clif_guild_emblem_clear_post;
+	int HP_clif_guild_emblem_complete_pre;
+	int HP_clif_guild_emblem_complete_post;
+	int HP_clif_guild_emblem_body_pre;
+	int HP_clif_guild_emblem_body_post;
 	int HP_clif_guild_emblem_id_area_pre;
 	int HP_clif_guild_emblem_id_area_post;
 	int HP_clif_guild_notice_pre;
