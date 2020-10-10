@@ -30,7 +30,27 @@
 PRAGMA_GCC5(GCC diagnostic push)
 PRAGMA_GCC5(GCC diagnostic ignored "-Wdiscarded-qualifiers")
 PRAGMA_GCC5(GCC diagnostic ignored "-Wsuggest-attribute=format")
-#if defined (HPMHOOKING_LOGIN)
+#if defined (HPMHOOKING_API)
+#define HPM_SERVER_TYPE SERVER_TYPE_API
+#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_api.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_api.Hooks.inc"
+#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_api.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_api.sources.inc"
+#include "api/achrif.h"
+#include "api/aclif.h"
+#include "api/aloginif.h"
+#include "api/api.h"
+#include "api/apisessiondata.h"
+#include "api/handlerfunc.h"
+#include "api/handlers.h"
+#include "api/httphandler.h"
+#include "api/httpparsehandler.h"
+#include "api/httpparser.h"
+#include "api/httpsender.h"
+#include "api/jsonparser.h"
+#include "api/jsonwriter.h"
+#include "api/mimepart.h"
+#elif defined (HPMHOOKING_LOGIN)
 #define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
 #define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
 #define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"

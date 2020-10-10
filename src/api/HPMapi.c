@@ -72,22 +72,9 @@
 bool HPM_api_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
 	switch (type) {
-	case HPDT_MSD:
-	case HPDT_NPCD:
-	case HPDT_MAP:
-	case HPDT_PARTY:
-	case HPDT_GUILD:
-	case HPDT_INSTANCE:
-	case HPDT_MOBDB:
-	case HPDT_MOBDATA:
-	case HPDT_ITEMDATA:
-	case HPDT_BGDATA:
-	case HPDT_AUTOTRADE_VEND:
-	case HPDT_CLAN:
-		// Initialized by the caller.
-		return true;
-	default:
-		break;
+		// No supported types at the moment.
+		default:
+			break;
 	}
 	return false;
 }
@@ -103,7 +90,7 @@ void HPM_api_do_init(void)
 	HPM->load_sub = HPM_api_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_api_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
-	HPM_shared_symbols(SERVER_TYPE_MAP);
+	HPM_shared_symbols(SERVER_TYPE_API);
 }
 
 void HPM_api_do_final(void)

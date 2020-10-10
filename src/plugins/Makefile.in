@@ -39,11 +39,11 @@ MYPLUGINS := $(MYPLUGINS)
 #########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
 
 # All plugins in the src/plugins directory
-HPMHOOKING = $(addprefix HPMHooking_, login char map)
+HPMHOOKING = $(addprefix HPMHooking_, api login char map)
 ALLPLUGINS = $(filter-out HPMHooking, $(basename $(wildcard *.c))) $(HPMHOOKING)
 
 # Plugins that will be built through 'make plugins' or 'make all'
-PLUGINS = sample db2sql constdb2doc generate-translations mapcache script_mapquit HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUGINS)
+PLUGINS = sample db2sql constdb2doc generate-translations mapcache script_mapquit HPMHooking_api HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUGINS)
 
 COMMON_D = ../common
 # Includes private headers (plugins might need them)
@@ -55,10 +55,11 @@ THIRDPARTY_INCLUDE = -I../../3rdparty
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
+API_H = $(wildcard ../api/*.h)
 MAP_H = $(wildcard ../map/*.h)
 CHAR_H = $(wildcard ../char/*.h)
 LOGIN_H = $(wildcard ../login/*.h)
-ALL_H = $(COMMON_H) $(CONFIG_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
+ALL_H = $(COMMON_H) $(CONFIG_H) $(API_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
 
 @SET_MAKE@
 
@@ -106,6 +107,7 @@ Makefile: Makefile.in
 	$(eval PLUGINFLAGS=$(shell grep " #PLUGINFLAGS" $<))
 	@$(CC) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ $(PLUGINFLAGS) @SOFLAGS@ @LIBS@ @MYSQL_LIBS@ -o $@ $<
 
+../../plugins/HPMHooking_api@DLLEXT@: HPMHOOKINGTYPE = API
 ../../plugins/HPMHooking_login@DLLEXT@: HPMHOOKINGTYPE = LOGIN
 ../../plugins/HPMHooking_char@DLLEXT@: HPMHOOKINGTYPE = CHAR
 ../../plugins/HPMHooking_map@DLLEXT@: HPMHOOKINGTYPE = MAP

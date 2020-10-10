@@ -682,6 +682,10 @@ static void hplugins_config_read(void)
 			plugin_name_suffix = "_char";
 		else if (SERVER_TYPE == SERVER_TYPE_MAP)
 			plugin_name_suffix = "_map";
+		else if (SERVER_TYPE == SERVER_TYPE_API)
+			plugin_name_suffix = "_api";
+		else
+			ShowError("Unsupported server type in hplugins_config_read");
 		snprintf(hooking_plugin_name, sizeof(hooking_plugin_name), "HPMHooking%s", plugin_name_suffix);
 
 		for (i = 0; i < length; i++) {
