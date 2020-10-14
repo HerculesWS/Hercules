@@ -25,7 +25,7 @@
 #endif  // handler
 
 handler2(HTTP_POST, "/userconfig/load", userconfig_load, REQ_API);
-handler2(HTTP_POST, "/userconfig/save", userconfig_save, REQ_API_AUTH | REQ_AUTO_CLOSE);
+handler2(HTTP_POST, "/userconfig/save", userconfig_save, REQ_API_AUTH | REQ_DATA | REQ_AUTO_CLOSE);
 handler2(HTTP_POST, "/charconfig/load", charconfig_load, REQ_API_AUTH | REQ_CHAR_ID);
 handler2(HTTP_POST, "/emblem/upload", emblem_upload, REQ_EMBLEM_UPLOAD);
 handler2(HTTP_POST, "/emblem/download", emblem_download, REQ_API_AUTH | REQ_GUILD_ID | REQ_VERSION);

@@ -80,17 +80,18 @@ union DBKey;
 struct DBData;
 
 enum req_flags {
-	REQ_DEFAULT = 0,
-	REQ_AUTO_CLOSE = 1,
-	REQ_ACCOUNT_ID = 2,
-	REQ_WORLD_NAME = 4,
-	REQ_AUTH_TOKEN = 8,
-	REQ_CHAR_ID = 16,
-	REQ_GUILD_ID = 32,
-	REQ_IMG_TYPE = 64,
-	REQ_IMG = 128,
-	REQ_CHAR_LOGGED_IN = 256,
-	REQ_VERSION = 512,
+	REQ_DEFAULT        = 0x0000,
+	REQ_AUTO_CLOSE     = 0x0001,
+	REQ_ACCOUNT_ID     = 0x0002,
+	REQ_WORLD_NAME     = 0x0004,
+	REQ_AUTH_TOKEN     = 0x0008,
+	REQ_CHAR_ID        = 0x0010,
+	REQ_GUILD_ID       = 0x0020,
+	REQ_IMG_TYPE       = 0x0040,
+	REQ_IMG            = 0x0080,
+	REQ_CHAR_LOGGED_IN = 0x0100,
+	REQ_VERSION        = 0x0200,
+	REQ_DATA           = 0x0400,
 
 	REQ_API = REQ_ACCOUNT_ID | REQ_WORLD_NAME,
 	REQ_API_AUTH = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN,
@@ -156,6 +157,7 @@ struct aclif_interface {
 	void (*check_headers) (int fd, struct api_session_data *sd);
 	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
 	int (*print_header) (union DBKey key, struct DBData *data, va_list ap);
+	bool (*is_post_header_present) (struct api_session_data *sd, const char *name);
 	bool (*get_post_header_data_int) (struct api_session_data *sd, const char *name, int *account_id);
 	bool (*get_post_header_data_str) (struct api_session_data *sd, const char *name, char **data, uint32_t *data_size);
 	bool (*get_post_header_data_json) (struct api_session_data *sd, const char *name, JsonP **json);

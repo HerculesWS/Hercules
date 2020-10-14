@@ -709,6 +709,15 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		handled_count ++;
 	}
 
+	if ((sd->handler->flags & REQ_DATA) != 0) {
+		// check is data present in request
+		if (!aclif->is_post_header_present(sd, "data")) {
+			ShowError("Http request without data %d\n", fd);
+			return false;
+		}
+		handled_count ++;
+	}
+
 	if (handled_count != aclif->get_post_headers_count(sd)) {
 		ShowError("Handled wrong number of post headers %d\n", fd);
 	}
@@ -811,6 +820,17 @@ static int aclif_purge_disconnected_user(union DBKey key, struct DBData *data, v
 		aclif->real_delete_online_player(key.i);
 
 	return 0;
+}
+
+static bool aclif_is_post_header_present(struct api_session_data *sd, const char *name)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, name);
+
+	struct MimePart *header = strdb_get(sd->post_headers_db, name);
+	if (header == NULL)
+		return false;
+	return header->data != NULL && header->data_size != 0;
 }
 
 static bool aclif_get_post_header_data_int(struct api_session_data *sd, const char *name, int *account_id)
@@ -981,6 +1001,7 @@ void aclif_defaults(void)
 	aclif->decode_post_headers = aclif_decode_post_headers;
 	aclif->show_request = aclif_show_request;
 	aclif->print_header = aclif_print_header;
+	aclif->is_post_header_present = aclif_is_post_header_present;
 	aclif->get_post_header_data_int = aclif_get_post_header_data_int;
 	aclif->get_post_header_data_str = aclif_get_post_header_data_str;
 	aclif->get_post_header_data_json = aclif_get_post_header_data_json;
