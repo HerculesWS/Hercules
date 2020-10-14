@@ -122,8 +122,8 @@ static int aclif_parse(int fd)
 		aclif->terminate_connection(fd);
 		return 0;
 	}
-	if (sd->parser.nread > MAX_REQUEST_SIZE) {
-		ShowError("http request too big %d: %u\n", fd, sd->parser.nread);
+	if (sd->request_size > MAX_REQUEST_SIZE) {
+		ShowError("http request too big %d: %lu\n", fd, sd->request_size);
 		sockt->eof(fd);
 		aclif->terminate_connection(fd);
 		return 0;

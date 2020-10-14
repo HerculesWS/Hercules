@@ -54,9 +54,15 @@ HAVE_PERL=@HAVE_PERL@
 HAVE_DOXYGEN=@HAVE_DOXYGEN@
 
 MF_TARGETS = Makefile $(addsuffix /Makefile, src/common 3rdparty/mt19937ar \
-             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/http-parser 3rdparty/multipart-parser 3rdparty/cJSON \
+             3rdparty/libconfig 3rdparty/libbacktrace 3rdparty/multipart-parser 3rdparty/cJSON \
              src/char src/login src/map src/api src/plugins \
              src/test tools/HPMHookGen tools/doxygen)
+
+ifeq ($(USE_HTTP_PARSER),yes)
+MF_TARGETS+=$(addsuffix /Makefile, 3rdparty/http-parser)
+else
+MF_TARGETS+=$(addsuffix /Makefile, 3rdparty/llhttp)
+endif
 
 CC = @CC@
 export CC
@@ -119,6 +125,10 @@ http-parser: 3rdparty/http-parser/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/http-parser
 
+llhttp: 3rdparty/llhttp/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C 3rdparty/llhttp
+
 cJSON: 3rdparty/cJSON/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/cJSON
@@ -177,6 +187,7 @@ clean buildclean: $(MF_TARGETS)
 	@$(MAKE) -C 3rdparty/libconfig $@
 	@$(MAKE) -C 3rdparty/libbacktrace $@
 	@$(MAKE) -C 3rdparty/http-parser $@
+	@$(MAKE) -C 3rdparty/llhttp $@
 	@$(MAKE) -C 3rdparty/multipart-parser $@
 	@$(MAKE) -C src/login $@
 	@$(MAKE) -C src/char $@
@@ -211,6 +222,7 @@ help: Makefile
 	@echo "'libconfig'    - builds object files of libconfig"
 	@echo "'libbacktrace' - builds object files of libbacktrace"
 	@echo "'http-parser'  - builds object files of http-parser"
+	@echo "'llhttp'       - builds object files of llhttp"
 	@echo "'multipart-parser' - builds object files of multipart-parser"
 	@echo "'login_sql'    - builds login server"
 	@echo "'char_sql'     - builds char server"

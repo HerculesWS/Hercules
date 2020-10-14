@@ -36,9 +36,17 @@ LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
 
+ifeq (@USE_HTTP_PARSER@,yes)
 HTTPPARSER_D = $(THIRDPARTY_D)/http-parser/
 HTTPPARSER_OBJ = $(addprefix $(HTTPPARSER_D)/, http_parser.o)
 HTTPPARSER_H = $(addprefix $(HTTPPARSER_D)/, http_parser.h)
+else
+ifeq (@USE_LLHTTP@,yes)
+HTTPPARSER_D = $(THIRDPARTY_D)/llhttp/
+HTTPPARSER_OBJ = $(addprefix $(HTTPPARSER_D)/, api.o http.o llhttp.o)
+HTTPPARSER_H = $(addprefix $(HTTPPARSER_D)/, llhttp.h)
+endif
+endif
 
 MULTIPARTPARSER_D = $(THIRDPARTY_D)/multipart-parser/
 MULTIPARTPARSER_OBJ = $(addprefix $(MULTIPARTPARSER_D)/, multipartparser.o)
@@ -69,7 +77,8 @@ API_C = api.c aclif.c aloginif.c HPMapi.c httpparser.c httpsender.c handlers.c \
 	jsonparser.c jsonwriter.c
 API_OBJ = $(addprefix obj_sql/, $(patsubst %c,%o,$(API_C)))
 API_H = api.h aclif.h aloginif.h HPMapi.h apisessiondata.h httpparser.h httpparsehandler.h \
-	handlerfunc.h handlers.h mimepart.h urlhandlers.h jsonparser.h jsonwriter.h
+	handlerfunc.h handlers.h mimepart.h urlhandlers.h jsonparser.h jsonwriter.h \
+	http_include.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)

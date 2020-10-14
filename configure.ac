@@ -26,7 +26,7 @@ AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src/common/cbasetypes.h])
 AC_CONFIG_FILES([Makefile src/common/Makefile])
 AC_CONFIG_FILES([3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile 3rdparty/libbacktrace/Makefile 3rdparty/libbacktrace/backtrace-supported.h])
-AC_CONFIG_FILES([3rdparty/http-parser/Makefile 3rdparty/multipart-parser/Makefile 3rdparty/cJSON/Makefile])
+AC_CONFIG_FILES([3rdparty/http-parser/Makefile 3rdparty/multipart-parser/Makefile 3rdparty/cJSON/Makefile 3rdparty/llhttp/Makefile])
 AC_CONFIG_FILES([src/char/Makefile src/login/Makefile])
 AC_CONFIG_FILES([src/map/Makefile src/plugins/Makefile])
 AC_CONFIG_FILES([src/api/Makefile])
@@ -668,6 +668,44 @@ AC_ARG_WITH(
 	[manual_MYSQL_LIBS="no"]
 )
 
+
+# Select http parser
+AC_ARG_WITH(
+	[http_parser],
+	AC_HELP_STRING(
+		[--with-http_parser=ARG],
+		[select http parser. Allowed values: http-parser, llhttp)]
+	),
+	[
+		case $withval in
+		http-parser* )
+			HTTP_PARSER_NAME="http-parser"
+			CPPFLAGS="$CPPFLAGS -DUSE_HTTP_PARSER"
+			USE_HTTP_PARSER=yes
+			USE_LLHTTP=no
+			AC_MSG_RESULT([[Use http-parser as http library]])
+			;;
+		llhttp* )
+			HTTP_PARSER_NAME="llhttp"
+			USE_HTTP_PARSER=no
+			USE_LLHTTP=yes
+			AC_MSG_RESULT([[Use llhttp as http library]])
+			;;
+		*)
+			AC_MSG_ERROR([[unknown http_parser selected 'withval'. Allowed values: http-parser, llhttp. ... stopping]])
+			;;
+		esac
+	],
+	[
+		HTTP_PARSER_NAME="http-parser"
+		CPPFLAGS="$CPPFLAGS -DUSE_HTTP_PARSER"
+		USE_HTTP_PARSER=yes
+		USE_LLHTTP=no
+		AC_MSG_RESULT([[Use http-parser as http library]])
+	]
+)
+
+CPPFLAGS="$CPPFLAGS -DHTTP_PARSER_INCLUDE=$HTTP_PARSER_INCLUDE"
 
 ###############################################################################
 # Check for programs and types.
@@ -1783,6 +1821,8 @@ else
 	fi
 fi
 AC_SUBST(USE_LIBBACKTRACE)
+AC_SUBST(USE_HTTP_PARSER)
+AC_SUBST(USE_LLHTTP)
 
 #
 # Buildbot

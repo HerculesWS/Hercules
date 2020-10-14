@@ -21,10 +21,10 @@
 #ifndef API_APISESSIONDATA_H
 #define API_APISESSIONDATA_H
 
+#include "http_include.h"
+
 #include "common/cbasetypes.h"
 #include "api/httpparsehandler.h"
-
-#include <http-parser/http_parser.h>
 
 #include "common/hercules.h"
 
@@ -45,8 +45,9 @@ struct api_session_data {
 	int id;  // for inter server requests
 	int account_id;
 	int char_id;
-	struct http_parser parser;
+	HTTP_PARSER parser;
 	struct multipartparser *multi_parser;
+	size_t request_size;
 	struct api_flag {
 		uint message_begin : 1;        // message parsing started
 		uint headers_complete : 1;     // headers parsing complete

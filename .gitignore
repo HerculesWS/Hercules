@@ -61,6 +61,9 @@ Thumbs.db
 # /3rdparty/http-parser/
 /3rdparty/http-parser/Makefile
 
+# /3rdparty/llhttp/
+/3rdparty/llhttp/Makefile
+
 # /3rdparty/multipart-parser/
 /3rdparty/multipart-parser/Makefile
 

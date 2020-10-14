@@ -18,17 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef API_HTTPHANDLER_H
-#define API_HTTPHANDLER_H
+#ifndef API_HTTP_INCLUDE_H
+#define API_HTTP_INCLUDE_H
 
-#include "http_include.h"  // enum http_method
+#ifdef USE_HTTP_PARSER
+#define HTTP_PARSER struct http_parser
+#include <http-parser/http_parser.h>
+#else  // USE_HTTP_PARSER
+#define http_method llhttp_method
+#define HTTP_PARSER llhttp_t
+#define http_method_str llhttp_method_name
+#define http_errno_name llhttp_errno_name
+#define http_parser_settings llhttp_settings_s
+#include <llhttp/llhttp.h>
+#endif  // USE_HTTP_PARSER
 
-#include "api/httpparsehandler.h"
-
-struct HttpHandler {
-	enum http_method method;
-	HttpParseHandler func;
-	int flags;
-};
-
-#endif /* API_HTTPHANDLER_H */
+#endif /* API_HTTP_INCLUDE_H */

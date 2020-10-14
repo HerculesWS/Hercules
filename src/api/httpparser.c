@@ -64,7 +64,7 @@ struct httpparser_interface *httpparser;
 
 // http parser handlers
 
-static int handler_on_message_begin(struct http_parser *parser)
+static int handler_on_message_begin(HTTP_PARSER *parser)
 {
 	nullpo_ret(parser);
 	GET_FD_SD;
@@ -79,7 +79,7 @@ static int handler_on_message_begin(struct http_parser *parser)
 	return 0;
 }
 
-static int handler_on_headers_complete(struct http_parser *parser)
+static int handler_on_headers_complete(HTTP_PARSER *parser)
 {
 	nullpo_ret(parser);
 	GET_FD_SD;
@@ -95,7 +95,7 @@ static int handler_on_headers_complete(struct http_parser *parser)
 	return 0;
 }
 
-static int handler_on_message_complete(struct http_parser *parser)
+static int handler_on_message_complete(HTTP_PARSER *parser)
 {
 	nullpo_ret(parser);
 	GET_FD_SD;
@@ -112,7 +112,7 @@ static int handler_on_message_complete(struct http_parser *parser)
 	return 0;
 }
 
-static int handler_on_chunk_header(struct http_parser *parser)
+static int handler_on_chunk_header(HTTP_PARSER *parser)
 {
 	nullpo_ret(parser);
 #ifdef DEBUG_LOG
@@ -121,7 +121,7 @@ static int handler_on_chunk_header(struct http_parser *parser)
 	return 0;
 }
 
-static int handler_on_chunk_complete(struct http_parser *parser)
+static int handler_on_chunk_complete(HTTP_PARSER *parser)
 {
 	nullpo_ret(parser);
 #ifdef DEBUG_LOG
@@ -130,7 +130,7 @@ static int handler_on_chunk_complete(struct http_parser *parser)
 	return 0;
 }
 
-static int handler_on_url(struct http_parser *parser, const char *at, size_t length)
+static int handler_on_url(HTTP_PARSER *parser, const char *at, size_t length)
 {
 	nullpo_ret(parser);
 	nullpo_ret(at);
@@ -147,7 +147,7 @@ static int handler_on_url(struct http_parser *parser, const char *at, size_t len
 	return 0;
 }
 
-static int handler_on_status(struct http_parser *parser, const char *at, size_t length)
+static int handler_on_status(HTTP_PARSER *parser, const char *at, size_t length)
 {
 	nullpo_ret(parser);
 	nullpo_ret(at);
@@ -164,7 +164,7 @@ static int handler_on_status(struct http_parser *parser, const char *at, size_t 
 	return 0;
 }
 
-static int handler_on_header_field(struct http_parser *parser, const char *at, size_t length)
+static int handler_on_header_field(HTTP_PARSER *parser, const char *at, size_t length)
 {
 	nullpo_ret(parser);
 	nullpo_ret(at);
@@ -181,7 +181,7 @@ static int handler_on_header_field(struct http_parser *parser, const char *at, s
 	return 0;
 }
 
-static int handler_on_header_value(struct http_parser *parser, const char *at, size_t length)
+static int handler_on_header_value(HTTP_PARSER *parser, const char *at, size_t length)
 {
 	nullpo_ret(parser);
 	nullpo_ret(at);
@@ -198,7 +198,7 @@ static int handler_on_header_value(struct http_parser *parser, const char *at, s
 	return 0;
 }
 
-static int handler_on_body(struct http_parser *parser, const char *at, size_t length)
+static int handler_on_body(HTTP_PARSER *parser, const char *at, size_t length)
 {
 	nullpo_ret(parser);
 	nullpo_ret(at);
@@ -347,15 +347,34 @@ static bool httpparser_parse(int fd)
 	size_t data_size = RFIFOREST(fd);
 	if (data_size == 0)
 		return true;
+#ifdef USE_HTTP_PARSER
 	size_t parsed_size = http_parser_execute(&sd->parser, httpparser->settings, RFIFOP(fd, 0), data_size);
+#else  // USE_HTTP_PARSER
+	enum llhttp_errno err = llhttp_execute(&sd->parser, RFIFOP(fd, 0), data_size);
+#endif  // USE_HTTP_PARSER
 
 	RFIFOSKIP(fd, data_size);
-	return data_size == parsed_size;
+#ifdef USE_HTTP_PARSER
+	if (data_size == parsed_size) {
+		sd->request_size += parsed_size;
+		return true;
+	}
+#else  // USE_HTTP_PARSER
+	if (err == HPE_OK) {
+		sd->request_size += data_size;
+		return true;
+	}
+#endif  // USE_HTTP_PARSER
+	return false;
 }
 
 static void httpparser_show_error(int fd, struct api_session_data *sd)
 {
+#ifdef USE_HTTP_PARSER
 	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno, http_errno_name(sd->parser.http_errno), http_errno_description(sd->parser.http_errno));
+#else  // USE_HTTP_PARSER
+	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.error, http_errno_name(sd->parser.error), sd->parser.reason);
+#endif  // USE_HTTP_PARSER
 }
 
 static bool httpparser_multi_parse(int fd)
@@ -376,7 +395,11 @@ static bool httpparser_multi_parse(int fd)
 static void httpparser_init_parser(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
+#ifdef USE_HTTP_PARSER
 	http_parser_init(&sd->parser, HTTP_REQUEST);
+#else  // USE_HTTP_PARSER
+	llhttp_init(&sd->parser, HTTP_REQUEST, httpparser->settings);
+#endif  // USE_HTTP_PARSER
 	sd->parser.data = (void*)(intptr_t)fd;
 }
 
@@ -396,6 +419,9 @@ static void httpparser_delete_parser(int fd)
 static void httpparser_init_settings(void)
 {
 	httpparser->settings = aCalloc(1, sizeof(struct http_parser_settings));
+#ifndef USE_HTTP_PARSER
+	llhttp_settings_init(httpparser->settings);
+#endif  // USE_HTTP_PARSER
 	httpparser->settings->on_message_begin = httpparser->on_message_begin;
 	httpparser->settings->on_url = httpparser->on_url;
 	httpparser->settings->on_header_field = httpparser->on_header_field;

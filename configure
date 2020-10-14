@@ -659,6 +659,8 @@ MYSQL_VERSION
 HAVE_MYSQL
 MYSQL_CONFIG_HOME
 DLLEXT
+USE_LLHTTP
+USE_HTTP_PARSER
 USE_LIBBACKTRACE
 BACKTRACE_USES_MALLOC
 ALLOC_FILE
@@ -750,6 +752,7 @@ with_maxconn
 with_mysql
 with_MYSQL_CFLAGS
 with_MYSQL_LIBS
+with_http_parser
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1443,6 +1446,8 @@ Optional Packages:
                           "mysql_config --include")
   --with-MYSQL_LIBS=ARG   specify MYSQL_LIBS manually (instead of using
                           "mysql_config --libs")
+  --with-http_parser=ARG  select http parser. Allowed values: http-parser,
+                          llhttp)
 
 Some influential environment variables:
   CC          C compiler command
@@ -2538,7 +2543,7 @@ ac_config_files="$ac_config_files Makefile src/common/Makefile"
 
 ac_config_files="$ac_config_files 3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile 3rdparty/libbacktrace/Makefile 3rdparty/libbacktrace/backtrace-supported.h"
 
-ac_config_files="$ac_config_files 3rdparty/http-parser/Makefile 3rdparty/multipart-parser/Makefile 3rdparty/cJSON/Makefile"
+ac_config_files="$ac_config_files 3rdparty/http-parser/Makefile 3rdparty/multipart-parser/Makefile 3rdparty/cJSON/Makefile 3rdparty/llhttp/Makefile"
 
 ac_config_files="$ac_config_files src/char/Makefile src/login/Makefile"
 
@@ -4345,6 +4350,47 @@ else $as_nop
 fi
 
 
+
+# Select http parser
+
+# Check whether --with-http_parser was given.
+if test "${with_http_parser+set}" = set; then :
+  withval=$with_http_parser;
+		case $withval in
+		http-parser* )
+			HTTP_PARSER_NAME="http-parser"
+			CPPFLAGS="$CPPFLAGS -DUSE_HTTP_PARSER"
+			USE_HTTP_PARSER=yes
+			USE_LLHTTP=no
+			{ $as_echo "$as_me:${as_lineno-$LINENO}: result: Use http-parser as http library" >&5
+$as_echo "Use http-parser as http library" >&6; }
+			;;
+		llhttp* )
+			HTTP_PARSER_NAME="llhttp"
+			USE_HTTP_PARSER=no
+			USE_LLHTTP=yes
+			{ $as_echo "$as_me:${as_lineno-$LINENO}: result: Use llhttp as http library" >&5
+$as_echo "Use llhttp as http library" >&6; }
+			;;
+		*)
+			as_fn_error $? "unknown http_parser selected 'withval'. Allowed values: http-parser, llhttp. ... stopping" "$LINENO" 5
+			;;
+		esac
+
+else
+
+		HTTP_PARSER_NAME="http-parser"
+		CPPFLAGS="$CPPFLAGS -DUSE_HTTP_PARSER"
+		USE_HTTP_PARSER=yes
+		USE_LLHTTP=no
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: Use http-parser as http library" >&5
+$as_echo "Use http-parser as http library" >&6; }
+
+
+fi
+
+
+CPPFLAGS="$CPPFLAGS -DHTTP_PARSER_INCLUDE=$HTTP_PARSER_INCLUDE"
 
 ###############################################################################
 # Check for programs and types.
@@ -11143,6 +11189,8 @@ printf "%s\n" "#define HAVE_GETEXECNAME 1" >>confdefs.h
 fi
 
 
+
+
 #
 # Buildbot
 #
@@ -13220,6 +13268,7 @@ do
     "3rdparty/http-parser/Makefile") CONFIG_FILES="$CONFIG_FILES 3rdparty/http-parser/Makefile" ;;
     "3rdparty/multipart-parser/Makefile") CONFIG_FILES="$CONFIG_FILES 3rdparty/multipart-parser/Makefile" ;;
     "3rdparty/cJSON/Makefile") CONFIG_FILES="$CONFIG_FILES 3rdparty/cJSON/Makefile" ;;
+    "3rdparty/llhttp/Makefile") CONFIG_FILES="$CONFIG_FILES 3rdparty/llhttp/Makefile" ;;
     "src/char/Makefile") CONFIG_FILES="$CONFIG_FILES src/char/Makefile" ;;
     "src/login/Makefile") CONFIG_FILES="$CONFIG_FILES src/login/Makefile" ;;
     "src/map/Makefile") CONFIG_FILES="$CONFIG_FILES src/map/Makefile" ;;
