@@ -357,6 +357,8 @@ int do_init(int argc, char *argv[])
 		}
 	}
 
+	HPM->event(HPET_INIT);
+
 	handlers->init(minimal);
 	aclif->init(minimal);
 	httpparser->init(minimal);
