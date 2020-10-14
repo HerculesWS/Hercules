@@ -26,7 +26,7 @@
 #include "api/httpparsehandler.h"
 
 struct HttpHandler {
-	enum http_method method;
+	http_method method;
 	HttpParseHandler func;
 	int flags;
 };

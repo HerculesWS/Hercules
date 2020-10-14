@@ -427,10 +427,10 @@ void HP_aclif_load_handlers(void) {
 	}
 	return;
 }
-void HP_aclif_add_handler(enum llhttp_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags) {
+void HP_aclif_add_handler(http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_aclif_add_handler_pre > 0) {
-		void (*preHookFunc) (enum llhttp_method *method, const char **url, HttpParseHandler *func, Handler_func *func2, int *msg_id, int *flags);
+		void (*preHookFunc) (http_method *method, const char **url, HttpParseHandler *func, Handler_func *func2, int *msg_id, int *flags);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_add_handler_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_aclif_add_handler_pre[hIndex].func;
@@ -445,7 +445,7 @@ void HP_aclif_add_handler(enum llhttp_method method, const char *url, HttpParseH
 		HPMHooks.source.aclif.add_handler(method, url, func, func2, msg_id, flags);
 	}
 	if (HPMHooks.count.HP_aclif_add_handler_post > 0) {
-		void (*postHookFunc) (enum llhttp_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags);
+		void (*postHookFunc) (http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_add_handler_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_aclif_add_handler_post[hIndex].func;
 			postHookFunc(method, url, func, func2, msg_id, flags);
@@ -479,10 +479,10 @@ void HP_aclif_add_packet_handler(Handler_func func2, int msg_id) {
 	}
 	return;
 }
-void HP_aclif_set_url(int fd, enum llhttp_method method, const char *url, size_t size) {
+void HP_aclif_set_url(int fd, http_method method, const char *url, size_t size) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_aclif_set_url_pre > 0) {
-		void (*preHookFunc) (int *fd, enum llhttp_method *method, const char **url, size_t *size);
+		void (*preHookFunc) (int *fd, http_method *method, const char **url, size_t *size);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_set_url_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_aclif_set_url_pre[hIndex].func;
@@ -497,7 +497,7 @@ void HP_aclif_set_url(int fd, enum llhttp_method method, const char *url, size_t
 		HPMHooks.source.aclif.set_url(fd, method, url, size);
 	}
 	if (HPMHooks.count.HP_aclif_set_url_post > 0) {
-		void (*postHookFunc) (int fd, enum llhttp_method method, const char *url, size_t size);
+		void (*postHookFunc) (int fd, http_method method, const char *url, size_t size);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_set_url_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_aclif_set_url_post[hIndex].func;
 			postHookFunc(fd, method, url, size);
@@ -3322,11 +3322,11 @@ void HP_httpparser_init_multi_settings(void) {
 	}
 	return;
 }
-int HP_httpparser_on_message_begin(llhttp_t *parser) {
+int HP_httpparser_on_message_begin(HTTP_PARSER *parser) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_message_begin_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser);
+		int (*preHookFunc) (HTTP_PARSER **parser);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_message_begin_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_message_begin_pre[hIndex].func;
@@ -3341,7 +3341,7 @@ int HP_httpparser_on_message_begin(llhttp_t *parser) {
 		retVal___ = HPMHooks.source.httpparser.on_message_begin(parser);
 	}
 	if (HPMHooks.count.HP_httpparser_on_message_begin_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_message_begin_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_message_begin_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser);
@@ -3349,11 +3349,11 @@ int HP_httpparser_on_message_begin(llhttp_t *parser) {
 	}
 	return retVal___;
 }
-int HP_httpparser_on_headers_complete(llhttp_t *parser) {
+int HP_httpparser_on_headers_complete(HTTP_PARSER *parser) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_headers_complete_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser);
+		int (*preHookFunc) (HTTP_PARSER **parser);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_headers_complete_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_headers_complete_pre[hIndex].func;
@@ -3368,7 +3368,7 @@ int HP_httpparser_on_headers_complete(llhttp_t *parser) {
 		retVal___ = HPMHooks.source.httpparser.on_headers_complete(parser);
 	}
 	if (HPMHooks.count.HP_httpparser_on_headers_complete_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_headers_complete_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_headers_complete_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser);
@@ -3376,11 +3376,11 @@ int HP_httpparser_on_headers_complete(llhttp_t *parser) {
 	}
 	return retVal___;
 }
-int HP_httpparser_on_message_complete(llhttp_t *parser) {
+int HP_httpparser_on_message_complete(HTTP_PARSER *parser) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_message_complete_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser);
+		int (*preHookFunc) (HTTP_PARSER **parser);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_message_complete_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_message_complete_pre[hIndex].func;
@@ -3395,7 +3395,7 @@ int HP_httpparser_on_message_complete(llhttp_t *parser) {
 		retVal___ = HPMHooks.source.httpparser.on_message_complete(parser);
 	}
 	if (HPMHooks.count.HP_httpparser_on_message_complete_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_message_complete_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_message_complete_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser);
@@ -3403,11 +3403,11 @@ int HP_httpparser_on_message_complete(llhttp_t *parser) {
 	}
 	return retVal___;
 }
-int HP_httpparser_on_chunk_header(llhttp_t *parser) {
+int HP_httpparser_on_chunk_header(HTTP_PARSER *parser) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_chunk_header_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser);
+		int (*preHookFunc) (HTTP_PARSER **parser);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_chunk_header_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_chunk_header_pre[hIndex].func;
@@ -3422,7 +3422,7 @@ int HP_httpparser_on_chunk_header(llhttp_t *parser) {
 		retVal___ = HPMHooks.source.httpparser.on_chunk_header(parser);
 	}
 	if (HPMHooks.count.HP_httpparser_on_chunk_header_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_chunk_header_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_chunk_header_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser);
@@ -3430,11 +3430,11 @@ int HP_httpparser_on_chunk_header(llhttp_t *parser) {
 	}
 	return retVal___;
 }
-int HP_httpparser_on_chunk_complete(llhttp_t *parser) {
+int HP_httpparser_on_chunk_complete(HTTP_PARSER *parser) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_chunk_complete_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser);
+		int (*preHookFunc) (HTTP_PARSER **parser);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_chunk_complete_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_chunk_complete_pre[hIndex].func;
@@ -3449,7 +3449,7 @@ int HP_httpparser_on_chunk_complete(llhttp_t *parser) {
 		retVal___ = HPMHooks.source.httpparser.on_chunk_complete(parser);
 	}
 	if (HPMHooks.count.HP_httpparser_on_chunk_complete_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_chunk_complete_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_chunk_complete_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser);
@@ -3457,11 +3457,11 @@ int HP_httpparser_on_chunk_complete(llhttp_t *parser) {
 	}
 	return retVal___;
 }
-int HP_httpparser_on_url(llhttp_t *parser, const char *at, size_t length) {
+int HP_httpparser_on_url(HTTP_PARSER *parser, const char *at, size_t length) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_url_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser, const char **at, size_t *length);
+		int (*preHookFunc) (HTTP_PARSER **parser, const char **at, size_t *length);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_url_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_url_pre[hIndex].func;
@@ -3476,7 +3476,7 @@ int HP_httpparser_on_url(llhttp_t *parser, const char *at, size_t length) {
 		retVal___ = HPMHooks.source.httpparser.on_url(parser, at, length);
 	}
 	if (HPMHooks.count.HP_httpparser_on_url_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser, const char *at, size_t length);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser, const char *at, size_t length);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_url_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_url_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser, at, length);
@@ -3484,11 +3484,11 @@ int HP_httpparser_on_url(llhttp_t *parser, const char *at, size_t length) {
 	}
 	return retVal___;
 }
-int HP_httpparser_on_status(llhttp_t *parser, const char *at, size_t length) {
+int HP_httpparser_on_status(HTTP_PARSER *parser, const char *at, size_t length) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_status_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser, const char **at, size_t *length);
+		int (*preHookFunc) (HTTP_PARSER **parser, const char **at, size_t *length);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_status_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_status_pre[hIndex].func;
@@ -3503,7 +3503,7 @@ int HP_httpparser_on_status(llhttp_t *parser, const char *at, size_t length) {
 		retVal___ = HPMHooks.source.httpparser.on_status(parser, at, length);
 	}
 	if (HPMHooks.count.HP_httpparser_on_status_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser, const char *at, size_t length);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser, const char *at, size_t length);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_status_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_status_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser, at, length);
@@ -3511,11 +3511,11 @@ int HP_httpparser_on_status(llhttp_t *parser, const char *at, size_t length) {
 	}
 	return retVal___;
 }
-int HP_httpparser_on_header_field(llhttp_t *parser, const char *at, size_t length) {
+int HP_httpparser_on_header_field(HTTP_PARSER *parser, const char *at, size_t length) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_header_field_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser, const char **at, size_t *length);
+		int (*preHookFunc) (HTTP_PARSER **parser, const char **at, size_t *length);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_header_field_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_header_field_pre[hIndex].func;
@@ -3530,7 +3530,7 @@ int HP_httpparser_on_header_field(llhttp_t *parser, const char *at, size_t lengt
 		retVal___ = HPMHooks.source.httpparser.on_header_field(parser, at, length);
 	}
 	if (HPMHooks.count.HP_httpparser_on_header_field_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser, const char *at, size_t length);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser, const char *at, size_t length);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_header_field_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_header_field_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser, at, length);
@@ -3538,11 +3538,11 @@ int HP_httpparser_on_header_field(llhttp_t *parser, const char *at, size_t lengt
 	}
 	return retVal___;
 }
-int HP_httpparser_on_header_value(llhttp_t *parser, const char *at, size_t length) {
+int HP_httpparser_on_header_value(HTTP_PARSER *parser, const char *at, size_t length) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_header_value_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser, const char **at, size_t *length);
+		int (*preHookFunc) (HTTP_PARSER **parser, const char **at, size_t *length);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_header_value_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_header_value_pre[hIndex].func;
@@ -3557,7 +3557,7 @@ int HP_httpparser_on_header_value(llhttp_t *parser, const char *at, size_t lengt
 		retVal___ = HPMHooks.source.httpparser.on_header_value(parser, at, length);
 	}
 	if (HPMHooks.count.HP_httpparser_on_header_value_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser, const char *at, size_t length);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser, const char *at, size_t length);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_header_value_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_header_value_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser, at, length);
@@ -3565,11 +3565,11 @@ int HP_httpparser_on_header_value(llhttp_t *parser, const char *at, size_t lengt
 	}
 	return retVal___;
 }
-int HP_httpparser_on_body(llhttp_t *parser, const char *at, size_t length) {
+int HP_httpparser_on_body(HTTP_PARSER *parser, const char *at, size_t length) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_httpparser_on_body_pre > 0) {
-		int (*preHookFunc) (llhttp_t **parser, const char **at, size_t *length);
+		int (*preHookFunc) (HTTP_PARSER **parser, const char **at, size_t *length);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_body_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_httpparser_on_body_pre[hIndex].func;
@@ -3584,7 +3584,7 @@ int HP_httpparser_on_body(llhttp_t *parser, const char *at, size_t length) {
 		retVal___ = HPMHooks.source.httpparser.on_body(parser, at, length);
 	}
 	if (HPMHooks.count.HP_httpparser_on_body_post > 0) {
-		int (*postHookFunc) (int retVal___, llhttp_t *parser, const char *at, size_t length);
+		int (*postHookFunc) (int retVal___, HTTP_PARSER *parser, const char *at, size_t length);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_on_body_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_httpparser_on_body_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parser, at, length);

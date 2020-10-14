@@ -246,7 +246,7 @@ static void aclif_load_handlers(void)
 #undef packet_handler
 }
 
-static void aclif_add_handler(enum http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags)
+static void aclif_add_handler(http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags)
 {
 	nullpo_retv(url);
 	nullpo_retv(func);
@@ -275,7 +275,7 @@ static void aclif_add_packet_handler(Handler_func func2, int msg_id)
 	aloginif->msg_map[msg_id] = func2;
 }
 
-static void aclif_set_url(int fd, enum http_method method, const char *url, size_t size)
+static void aclif_set_url(int fd, http_method method, const char *url, size_t size)
 {
 	nullpo_retv(url);
 	Assert_retv(method >= 0 && method < HTTP_MAX_PROTOCOL);

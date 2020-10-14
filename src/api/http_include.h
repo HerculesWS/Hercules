@@ -22,15 +22,16 @@
 #define API_HTTP_INCLUDE_H
 
 #ifdef USE_HTTP_PARSER
-#define HTTP_PARSER struct http_parser
 #include <http-parser/http_parser.h>
+typedef enum http_method http_method;
+typedef struct http_parser HTTP_PARSER;
 #else  // USE_HTTP_PARSER
-#define http_method llhttp_method
-#define HTTP_PARSER llhttp_t
+#include <llhttp/llhttp.h>
+typedef enum llhttp_method http_method;
+typedef llhttp_t HTTP_PARSER;
 #define http_method_str llhttp_method_name
 #define http_errno_name llhttp_errno_name
 #define http_parser_settings llhttp_settings_s
-#include <llhttp/llhttp.h>
 #endif  // USE_HTTP_PARSER
 
 #endif /* API_HTTP_INCLUDE_H */
