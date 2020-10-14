@@ -54,8 +54,10 @@ struct {
 	struct HPMHookPoint *HP_aclif_connected_post;
 	struct HPMHookPoint *HP_aclif_session_delete_pre;
 	struct HPMHookPoint *HP_aclif_session_delete_post;
-	struct HPMHookPoint *HP_aclif_load_handlers_pre;
-	struct HPMHookPoint *HP_aclif_load_handlers_post;
+	struct HPMHookPoint *HP_aclif_init_handlers_pre;
+	struct HPMHookPoint *HP_aclif_init_handlers_post;
+	struct HPMHookPoint *HP_aclif_register_handlers_pre;
+	struct HPMHookPoint *HP_aclif_register_handlers_post;
 	struct HPMHookPoint *HP_aclif_add_handler_pre;
 	struct HPMHookPoint *HP_aclif_add_handler_post;
 	struct HPMHookPoint *HP_aclif_add_packet_handler_pre;
@@ -90,6 +92,8 @@ struct {
 	struct HPMHookPoint *HP_aclif_decode_post_headers_post;
 	struct HPMHookPoint *HP_aclif_print_header_pre;
 	struct HPMHookPoint *HP_aclif_print_header_post;
+	struct HPMHookPoint *HP_aclif_is_post_header_present_pre;
+	struct HPMHookPoint *HP_aclif_is_post_header_present_post;
 	struct HPMHookPoint *HP_aclif_get_post_header_data_int_pre;
 	struct HPMHookPoint *HP_aclif_get_post_header_data_int_post;
 	struct HPMHookPoint *HP_aclif_get_post_header_data_str_pre;
@@ -901,8 +905,10 @@ struct {
 	int HP_aclif_connected_post;
 	int HP_aclif_session_delete_pre;
 	int HP_aclif_session_delete_post;
-	int HP_aclif_load_handlers_pre;
-	int HP_aclif_load_handlers_post;
+	int HP_aclif_init_handlers_pre;
+	int HP_aclif_init_handlers_post;
+	int HP_aclif_register_handlers_pre;
+	int HP_aclif_register_handlers_post;
 	int HP_aclif_add_handler_pre;
 	int HP_aclif_add_handler_post;
 	int HP_aclif_add_packet_handler_pre;
@@ -937,6 +943,8 @@ struct {
 	int HP_aclif_decode_post_headers_post;
 	int HP_aclif_print_header_pre;
 	int HP_aclif_print_header_post;
+	int HP_aclif_is_post_header_present_pre;
+	int HP_aclif_is_post_header_present_post;
 	int HP_aclif_get_post_header_data_int_pre;
 	int HP_aclif_get_post_header_data_int_post;
 	int HP_aclif_get_post_header_data_str_pre;
