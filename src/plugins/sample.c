@@ -45,6 +45,9 @@
 #include "common/random.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "api/aclif.h"
+#include "api/apisessiondata.h"
+#include "api/httpsender.h"
 #include "login/login.h"
 #include "login/lclif.p.h"
 #include "map/clif.h"
@@ -60,7 +63,7 @@
 
 HPExport struct hplugin_info pinfo = {
 	"Sample",    // Plugin name
-	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP,// Which server types this plugin works with?
+	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API,// Which server types this plugin works with?
 	"0.1",       // Plugin version
 	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
 };
@@ -195,6 +198,23 @@ int return_my_setting(const char *key)
 	return 0;
 }
 
+bool sample_test_url(int fd, struct api_session_data *sd) __attribute__((nonnull (2)));
+bool sample_test_url(int fd, struct api_session_data *sd)
+{
+	ShowInfo("/sample/test url called %d: %d\n", fd, sd->parser.method);
+
+	char buf[1000];
+	const char *user_agent = (const char*)strdb_get(sd->headers_db, "User-Agent");
+	const char *format = "<html>Hercules test from sample plugin.<br/>Your user agent is: %s<br/></html>\n";
+	safesnprintf(buf, sizeof(buf), format, user_agent);
+
+	httpsender->send_html(fd, buf);
+
+	aclif->terminate_connection(fd);
+
+	return true;
+}
+
 /* run when server starts */
 HPExport void plugin_init (void) {
 	ShowInfo("Server type is ");
@@ -203,6 +223,7 @@ HPExport void plugin_init (void) {
 		case SERVER_TYPE_LOGIN: printf("Login Server\n"); break;
 		case SERVER_TYPE_CHAR: printf("Char Server\n"); break;
 		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
+		case SERVER_TYPE_API: printf ("Api Server\n"); break;
 		case SERVER_TYPE_UNKNOWN: printf ("Unknown Server\n"); break;
 	}
 
@@ -264,9 +285,16 @@ HPExport void server_preinit(void)
 	 * however for battle config to be returned to our script engine we need it to be number (int) so keep use it as int only */
 	addBattleConf("my_setting", parse_my_setting, return_my_setting, false);
 }
+
 /* run when server is ready (online) */
-HPExport void server_online (void) {
+HPExport void server_online (void)
+{
+	// Register url for GET request
+	if (SERVER_TYPE == SERVER_TYPE_API) {
+		addHttpHandler(HTTP_GET, "/sample/test", sample_test_url, REQ_DEFAULT);
+	}
 }
+
 /* run when server is shutting down */
 HPExport void plugin_final (void) {
 	ShowInfo ("%s says ~Bye world\n",pinfo.name);

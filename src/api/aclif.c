@@ -157,11 +157,11 @@ static int aclif_parse_request(int fd, struct api_session_data *sd)
 		aclif->terminate_connection(fd);
 		return 0;
 	}
-	sd->flag.handled = 1;
 	if (sockt->session[fd] == NULL || sockt->session[fd]->flag.eof != 0) {
 		aclif->terminate_connection(fd);
 		return 0;
 	}
+	sd->flag.handled = 1;
 	if ((sd->handler->flags & REQ_AUTO_CLOSE) != 0)
 		aclif->terminate_connection(fd);
 	return 0;
