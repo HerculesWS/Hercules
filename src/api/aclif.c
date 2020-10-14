@@ -232,11 +232,15 @@ static int aclif_session_delete(int fd)
 	return 0;
 }
 
-static void aclif_load_handlers(void)
+static void aclif_init_handlers(void)
 {
 	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
 		aclif->handlers_db[i] = strdb_alloc(DB_OPT_BASE | DB_OPT_RELEASE_DATA, MAX_URL_SIZE);
 	}
+}
+
+static void aclif_register_handlers(void)
+{
 #define handler(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, NULL, 0, flags)
 #define handler2(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, handlers->func, API_MSG_ ## func, flags)
 #define packet_handler(func) aclif->add_packet_handler(handlers->func, API_MSG_ ## func)
@@ -936,7 +940,8 @@ static int do_init_aclif(bool minimal)
 		exit(EXIT_FAILURE);
 	}
 
-	aclif->load_handlers();
+	aclif->init_handlers();
+	aclif->register_handlers();
 
 	timer->add_func_list(aclif->purge_disconnected_users, "aclif->purge_disconnected_users");
 	timer->add_interval(timer->gettick() + aclif->remove_disconnected_delay, aclif->purge_disconnected_users, 0, 0, aclif->remove_disconnected_delay);
@@ -983,7 +988,8 @@ void aclif_defaults(void)
 	aclif->terminate_connection = aclif_terminate_connection;
 	aclif->connected = aclif_connected;
 	aclif->session_delete = aclif_session_delete;
-	aclif->load_handlers = aclif_load_handlers;
+	aclif->init_handlers = aclif_init_handlers;
+	aclif->register_handlers = aclif_register_handlers;
 	aclif->add_handler = aclif_add_handler;
 	aclif->add_packet_handler = aclif_add_packet_handler;
 	aclif->set_url = aclif_set_url;
