@@ -338,6 +338,59 @@ static int handler_on_multi_body_end(struct multipartparser *parser)
 	return 0;
 }
 
+static bool httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, int data_size)
+{
+	nullpo_ret(sd);
+	if (data_size == 0)
+		return true;
+
+#ifdef USE_HTTP_PARSER
+	size_t parsed_size = http_parser_execute(&sd->parser, httpparser->settings, data, data_size);
+	if (data_size == parsed_size) {
+		sd->request_size += parsed_size;
+		return true;
+	}
+#else  // USE_HTTP_PARSER
+	enum llhttp_errno err = llhttp_execute(&sd->parser, data, data_size);
+	if (err == HPE_OK) {
+		sd->request_size += data_size;
+		return true;
+	}
+#endif  // USE_HTTP_PARSER
+
+	return false;
+}
+
+static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, const char *data, int data_size)
+{
+	nullpo_retv(sd);
+	if (sd->request_temp == NULL) {
+		sd->request_temp = aCalloc(1, data_size);
+		sd->request_temp_size = data_size;
+		memcpy(sd->request_temp, data, data_size);
+	} else {
+		const size_t old_size = sd->request_temp_size;
+		sd->request_temp_size += data_size;
+		sd->request_temp = aRealloc(sd->request_temp, sd->request_temp_size);
+		memcpy(sd->request_temp + old_size, data, data_size);
+	}
+}
+
+static int httpparser_search_request_line_end(struct api_session_data *sd)
+{
+	nullpo_retr(-1, sd);
+
+	int idx = -1;
+	const char *data = sd->request_temp;
+	const int data_size = sd->request_temp_size;
+	for (int i = 0; i < data_size - 1; i ++) {
+		if (data[i] == '\r' && data[i + 1] == '\n') {
+			idx = i;
+			i++;
+		}
+	}
+	return idx;
+}
 
 static bool httpparser_parse(int fd)
 {
@@ -347,25 +400,44 @@ static bool httpparser_parse(int fd)
 	size_t data_size = RFIFOREST(fd);
 	if (data_size == 0)
 		return true;
-#ifdef USE_HTTP_PARSER
-	size_t parsed_size = http_parser_execute(&sd->parser, httpparser->settings, RFIFOP(fd, 0), data_size);
-#else  // USE_HTTP_PARSER
-	enum llhttp_errno err = llhttp_execute(&sd->parser, RFIFOP(fd, 0), data_size);
-#endif  // USE_HTTP_PARSER
 
-	RFIFOSKIP(fd, data_size);
-#ifdef USE_HTTP_PARSER
-	if (data_size == parsed_size) {
-		sd->request_size += parsed_size;
-		return true;
+	const char *data = RFIFOP(fd, 0);
+
+	if (sd->flag.headers_complete == 0) {
+		// because parser cant handle part of header, need cache incomplete headers
+		httpparser->add_to_temp_request(fd, sd, data, data_size);
+		RFIFOSKIP(fd, data_size);
+		if (sd->request_temp_size > MAX_TEMP_HEADER_SIZE) {
+			return false;
+		}
+		int idx = httpparser->search_request_line_end(sd);
+		if (idx >= 0) {
+			// in headers found separator and need parse them
+			Assert_retr(false, sd->request_temp_size >= idx + 2);
+			const bool res = httpparser->parse_real(fd, sd, sd->request_temp, idx + 2);
+			if (!res)
+				return false;
+			sd->request_temp_size -= idx + 2;
+			memmove(sd->request_temp, sd->request_temp + idx + 2, sd->request_temp_size);
+			return true;
+		} else {
+			// data cached, but no yet separator
+			return true;
+		}
+		if (sd->flag.headers_complete != 0) {
+			// header was complete in previous parse. try to parse additional data
+			const bool res = httpparser->parse_real(fd, sd, sd->request_temp, sd->request_temp_size);
+			aFree(sd->request_temp);
+			sd->request_temp = NULL;
+			sd->request_temp_size = 0;
+			return res;
+		}
+	} else {
+		// parse received non headers data
+		const bool res = httpparser->parse_real(fd, sd, data, data_size);
+		RFIFOSKIP(fd, data_size);
+		return res;
 	}
-#else  // USE_HTTP_PARSER
-	if (err == HPE_OK) {
-		sd->request_size += data_size;
-		return true;
-	}
-#endif  // USE_HTTP_PARSER
-	return false;
 }
 
 static void httpparser_show_error(int fd, struct api_session_data *sd)
@@ -472,6 +544,9 @@ void httpparser_defaults(void)
 	httpparser->init = do_init_httpparser;
 	httpparser->final = do_final_httpparser;
 	httpparser->parse = httpparser_parse;
+	httpparser->parse_real = httpparser_parse_real;
+	httpparser->add_to_temp_request = httpparser_add_to_temp_request;
+	httpparser->search_request_line_end = httpparser_search_request_line_end;
 	httpparser->show_error = httpparser_show_error;
 	httpparser->multi_parse = httpparser_multi_parse;
 	httpparser->init_parser = httpparser_init_parser;

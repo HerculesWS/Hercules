@@ -46,6 +46,8 @@ struct api_session_data {
 	int account_id;
 	int char_id;
 	HTTP_PARSER parser;
+	char *request_temp;
+	size_t request_temp_size;
 	struct multipartparser *multi_parser;
 	size_t request_size;
 	struct api_flag {

@@ -227,6 +227,8 @@ static int aclif_session_delete(int fd)
 	sd->data = NULL;
 	aFree(sd->data);
 	sd->data_size = 0;
+	aFree(sd->request_temp);
+	sd->request_temp = NULL;
 
 	httpparser->delete_parser(fd);
 	return 0;
