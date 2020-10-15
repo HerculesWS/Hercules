@@ -36,6 +36,7 @@
 #include "api/aclif.h"
 #include "api/aloginif.h"
 #include "api/apisessiondata.h"
+#include "api/httpparser.h"
 #include "api/httpsender.h"
 #include "api/jsonwriter.h"
 
@@ -93,7 +94,7 @@ DATA(userconfig_load)
 HTTPURL(userconfig_load)
 {
 #ifdef DEBUG_LOG
-	ShowInfo("userconfig_load called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("userconfig_load called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
 	aclif->show_request(fd, sd, false);
 
@@ -107,7 +108,7 @@ IGNORE_DATA(userconfig_save)
 HTTPURL(userconfig_save)
 {
 #ifdef DEBUG_LOG
-	ShowInfo("userconfig_save called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("userconfig_save called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
 
 	aclif->show_request(fd, sd, false);
@@ -172,7 +173,7 @@ DATA(charconfig_load)
 HTTPURL(charconfig_load)
 {
 #ifdef DEBUG_LOG
-	ShowInfo("charconfig_load called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("charconfig_load called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
 	aclif->show_request(fd, sd, false);
 
@@ -189,7 +190,7 @@ DATA(emblem_upload)
 HTTPURL(emblem_upload)
 {
 #ifdef DEBUG_LOG
-	ShowInfo("emblem_upload called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("emblem_upload called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
 	aclif->show_request(fd, sd, false);
 
@@ -253,7 +254,7 @@ DATA(emblem_download)
 HTTPURL(emblem_download)
 {
 #ifdef DEBUG_LOG
-	ShowInfo("emblem_download called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("emblem_download called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
 	aclif->show_request(fd, sd, false);
 
@@ -273,7 +274,7 @@ HTTPURL(emblem_download)
 HTTPURL(test_url)
 {
 #ifdef DEBUG_LOG
-	ShowInfo("test_url called %d: %d\n", fd, sd->parser.method);
+	ShowInfo("test_url called %d: %s\n", fd, httpparser->get_method_str(sd));
 #endif
 
 	char buf[1000];

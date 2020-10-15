@@ -563,7 +563,7 @@ static void aclif_check_headers(int fd, struct api_session_data *sd)
 	if (strncmp(content_type, post_name, post_name_sz) != 0) {
 		return;
 	}
-	if (sd->parser.method != HTTP_POST) {
+	if (httpparser->get_method(sd) != HTTP_POST) {
 		ShowError("Form data detected on non POST request: %d\n", fd);
 		sockt->eof(fd);
 		return;
@@ -744,7 +744,7 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 {
 	nullpo_retv(sd);
 
-	ShowInfo("URL: %s %s\n", http_method_str(sd->parser.method), sd->url);
+	ShowInfo("URL: %s %s\n", httpparser->get_method_str(sd), sd->url);
 
 	if (show_http_headers)
 		sd->headers_db->foreach(sd->headers_db, aclif->print_header);

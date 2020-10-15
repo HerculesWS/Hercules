@@ -54,6 +54,8 @@ struct httpparser_interface {
 	void (*delete_parser) (int fd);
 	void (*init_settings) (void);
 	void (*init_multi_settings) (void);
+	const char *(*get_method_str) (struct api_session_data *sd);
+	http_method (*get_method) (struct api_session_data *sd);
 
 	int (*on_message_begin) (HTTP_PARSER* parser);
 	int (*on_headers_complete) (HTTP_PARSER* parser);

@@ -338,6 +338,18 @@ static int handler_on_multi_body_end(struct multipartparser *parser)
 	return 0;
 }
 
+static const char *httpparser_get_method_str(struct api_session_data *sd)
+{
+	nullpo_retr(NULL, sd);
+	return http_method_str(sd->parser.method);
+}
+
+static http_method httpparser_get_method(struct api_session_data *sd)
+{
+	nullpo_retr(0, sd);
+	return sd->parser.method;
+}
+
 static bool httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, int data_size)
 {
 	nullpo_ret(sd);
@@ -559,6 +571,8 @@ void httpparser_defaults(void)
 	httpparser->delete_parser = httpparser_delete_parser;
 	httpparser->init_settings = httpparser_init_settings;
 	httpparser->init_multi_settings = httpparser_init_multi_settings;
+	httpparser->get_method_str = httpparser_get_method_str;
+	httpparser->get_method = httpparser_get_method;
 
 	httpparser->on_message_begin = handler_on_message_begin;
 	httpparser->on_url = handler_on_url;
