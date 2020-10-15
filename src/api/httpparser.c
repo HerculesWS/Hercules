@@ -367,11 +367,15 @@ static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, 
 	if (sd->request_temp == NULL) {
 		sd->request_temp = aCalloc(1, data_size);
 		sd->request_temp_size = data_size;
+		sd->request_temp_alloc_size = data_size;
 		memcpy(sd->request_temp, data, data_size);
 	} else {
 		const size_t old_size = sd->request_temp_size;
 		sd->request_temp_size += data_size;
-		sd->request_temp = aRealloc(sd->request_temp, sd->request_temp_size);
+		if (sd->request_temp_alloc_size < sd->request_temp_size) {
+			sd->request_temp = aRealloc(sd->request_temp, sd->request_temp_size);
+			sd->request_temp_alloc_size = sd->request_temp_size;
+		}
 		memcpy(sd->request_temp + old_size, data, data_size);
 	}
 }
@@ -430,6 +434,7 @@ static bool httpparser_parse(int fd)
 			aFree(sd->request_temp);
 			sd->request_temp = NULL;
 			sd->request_temp_size = 0;
+			sd->request_temp_alloc_size = 0;
 			return res;
 		}
 	} else {
