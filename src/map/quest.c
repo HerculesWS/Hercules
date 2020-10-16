@@ -277,9 +277,10 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
 	int party_id = va_arg(ap, int);
-	int mob_id = va_arg(ap, int);
+	const struct mob_data *md = va_arg(ap, const struct mob_data *);
 
 	nullpo_ret(bl);
+	nullpo_ret(md);
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCAST(BL_PC, bl);
 
@@ -288,7 +289,7 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
 	if( sd->status.party_id != party_id )
 		return 0;
 
-	quest->update_objective(sd, mob_id);
+	quest->update_objective(sd, md);
 
 	return 1;
 }
@@ -300,11 +301,13 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-static void quest_update_objective(struct map_session_data *sd, int mob_id)
+static void quest_update_objective(struct map_session_data *sd, const struct mob_data *md)
 {
 	int i,j;
 
 	nullpo_retv(sd);
+	nullpo_retv(md);
+
 	for (i = 0; i < sd->avail_quests; i++) {
 		struct quest_db *qi = NULL;
 
@@ -314,8 +317,10 @@ static void quest_update_objective(struct map_session_data *sd, int mob_id)
 		qi = quest->db(sd->quest_log[i].quest_id);
 
 		for (j = 0; j < qi->objectives_count; j++) {
-			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == mob_id) &&
-				sd->quest_log[i].count[j] < qi->objectives[j].count) {
+			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == md->class_) &&
+				sd->quest_log[i].count[j] < qi->objectives[j].count &&
+				(qi->objectives[j].level.min == 0 || qi->objectives[j].level.min <= md->level) &&
+				(qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level)) {
 					sd->quest_log[i].count[j]++;
 					sd->save_quest = true;
 					clif->quest_update_objective(sd, &sd->quest_log[i]);
@@ -328,7 +333,7 @@ static void quest_update_objective(struct map_session_data *sd, int mob_id)
 			struct item item;
 			struct item_data *data = NULL;
 			int temp;
-			if (dropitem->mob_id != 0 && dropitem->mob_id != mob_id)
+			if (dropitem->mob_id != 0 && dropitem->mob_id != md->class_)
 				continue;
 			// TODO: Should this be affected by server rates?
 			if (rnd()%10000 >= dropitem->rate)
@@ -519,6 +524,31 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
 			entry->objectives[entry->objectives_count-1].mob = mob_id;
 			entry->objectives[entry->objectives_count-1].count = count;
+
+			const struct config_setting_t *lvt = libconfig->setting_get_member(tt, "Level");
+			if (lvt != NULL) {
+				if (mob_id != 0) {
+					ShowWarning("quest_read_db_sub: Level can't be used when a MobId is defined in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+					continue;
+				}
+
+				if (config_setting_is_aggregate(lvt)) {
+					int min = libconfig->setting_get_int_elem(lvt, 0);
+					int max = libconfig->setting_get_int_elem(lvt, 1);
+					if (min < 0 || max < 0) {
+						ShowWarning("quest_read_db_sub: level can't be a negative value in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+						continue;
+					}
+					if (min > max && max != 0) {
+						ShowWarning("quest_read_db_sub: minimal level (%d) is bigger than the maximal level (%d) in \"%s\", for quest (%d), ignoring.\n", min, max, source, entry->id);
+						continue;
+					}
+					entry->objectives[entry->objectives_count - 1].level.min = min;
+					entry->objectives[entry->objectives_count - 1].level.max = max;
+				} else {
+					ShowWarning("quest_read_db_sub: Invalid format for Level in \"%s\", for quest (%d).\n", source, entry->id);
+				}
+			}
 		}
 	}
 

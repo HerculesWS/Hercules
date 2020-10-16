@@ -29,6 +29,7 @@ struct block_list;
 struct config_setting_t;
 struct map_session_data;
 struct questinfo;
+struct mob_data;
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
 
@@ -41,6 +42,10 @@ struct quest_dropitem {
 struct quest_objective {
 	int mob;
 	int count;
+	struct {
+		int min;
+		int max;
+	} level;
 };
 
 struct quest_db {
@@ -107,7 +112,7 @@ struct quest_interface {
 	int (*change) (struct map_session_data *sd, int qid1, int qid2);
 	int (*delete) (struct map_session_data *sd, int quest_id);
 	int (*update_objective_sub) (struct block_list *bl, va_list ap);
-	void (*update_objective) (struct map_session_data *sd, int mob_id);
+	void (*update_objective) (struct map_session_data *sd, const struct mob_data *md);
 	int (*update_status) (struct map_session_data *sd, int quest_id, enum quest_state qs);
 	int (*check) (struct map_session_data *sd, int quest_id, enum quest_check_type type);
 	void (*clear) (void);

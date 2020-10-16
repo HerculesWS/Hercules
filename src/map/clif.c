@@ -18338,9 +18338,8 @@ static void clif_quest_send_list(struct map_session_data *sd)
 #endif
 			info->objectives[j].mob_id = qi->objectives[j].mob;
 #if PACKETVER >= 20150513
-			// Info Needed
-			info->objectives[j].levelMin = 0;
-			info->objectives[j].levelMax = 0;
+			info->objectives[j].levelMin = qi->objectives[j].level.min;
+			info->objectives[j].levelMax = qi->objectives[j].level.max;
 #endif
 			info->objectives[j].huntCount = sd->quest_log[i].count[j];
 			info->objectives[j].maxCount = qi->objectives[j].count;
@@ -18431,9 +18430,8 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 #endif
 		packet->objectives[i].mob_id = qi->objectives[i].mob;
 #if PACKETVER >= 20150513
-		// Info Needed
-		packet->objectives[i].levelMin = 0;
-		packet->objectives[i].levelMax = 0;
+		packet->objectives[i].levelMin = qi->objectives[i].level.min;
+		packet->objectives[i].levelMax = qi->objectives[i].level.max;
 #endif
 		packet->objectives[i].huntCount = qd->count[i];
 		memcpy(packet->objectives[i].mobName, monster->jname, NAME_LENGTH);
