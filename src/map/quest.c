@@ -320,7 +320,8 @@ static void quest_update_objective(struct map_session_data *sd, const struct mob
 			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == md->class_) &&
 				sd->quest_log[i].count[j] < qi->objectives[j].count &&
 				(qi->objectives[j].level.min == 0 || qi->objectives[j].level.min <= md->level) &&
-				(qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level)) {
+				(qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level) &&
+				(qi->objectives[j].mapid < 0 || qi->objectives[j].mapid == md->bl.m)) {
 					sd->quest_log[i].count[j]++;
 					sd->save_quest = true;
 					clif->quest_update_objective(sd, &sd->quest_log[i]);
@@ -549,6 +550,16 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 					ShowWarning("quest_read_db_sub: Invalid format for Level in \"%s\", for quest (%d).\n", source, entry->id);
 				}
 			}
+			const char *map_name = NULL;
+			int16 mapid = -1;
+
+			if (libconfig->setting_lookup_string(tt, "MapName", &map_name) != CONFIG_FALSE) {
+				if ((mapid = map->mapname2mapid(map_name)) < 0) {
+					ShowWarning("quest_read_db_sub: Invalid MapName \"%s\" in \"%s\", for quest (%d), ignoring.\n", map_name, source, entry->id);
+					continue;
+				}
+			}
+			entry->objectives[entry->objectives_count - 1].mapid = mapid;
 		}
 	}
 

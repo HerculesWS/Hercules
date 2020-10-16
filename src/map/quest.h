@@ -32,6 +32,7 @@ struct questinfo;
 struct mob_data;
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
+#define QUEST_MAPWIDE_ID 10363 // MobId handled by the client to display MapName
 
 struct quest_dropitem {
 	int mob_id;
@@ -46,6 +47,7 @@ struct quest_objective {
 		int min;
 		int max;
 	} level;
+	int16 mapid;
 };
 
 struct quest_db {
