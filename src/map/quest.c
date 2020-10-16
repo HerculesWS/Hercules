@@ -314,10 +314,11 @@ static void quest_update_objective(struct map_session_data *sd, int mob_id)
 		qi = quest->db(sd->quest_log[i].quest_id);
 
 		for (j = 0; j < qi->objectives_count; j++) {
-			if (qi->objectives[j].mob == mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count) {
-				sd->quest_log[i].count[j]++;
-				sd->save_quest = true;
-				clif->quest_update_objective(sd, &sd->quest_log[i]);
+			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == mob_id) &&
+				sd->quest_log[i].count[j] < qi->objectives[j].count) {
+					sd->quest_log[i].count[j]++;
+					sd->save_quest = true;
+					clif->quest_update_objective(sd, &sd->quest_log[i]);
 			}
 		}
 
@@ -509,8 +510,10 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				break;
 			if (!config_setting_is_group(tt))
 				continue;
-			if (!libconfig->setting_lookup_int(tt, "MobId", &mob_id) || mob_id <= 0)
+			if (libconfig->setting_lookup_int(tt, "MobId", &mob_id) != CONFIG_FALSE && mob_id < 0) {
+				ShowWarning("quest_read_db_sub: Invalid monster (%d) in \"%s\", for quest (%d).\n", mob_id, source, entry->id);
 				continue;
+			}
 			if (!libconfig->setting_lookup_int(tt, "Count", &count) || count <= 0)
 				continue;
 			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
