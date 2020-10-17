@@ -2695,6 +2695,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->questinfo_validate_homunculus_type, HP_quest_questinfo_validate_homunculus_type) },
 	{ HP_POP(quest->questinfo_validate_quests, HP_quest_questinfo_validate_quests) },
 	{ HP_POP(quest->questinfo_validate_mercenary_class, HP_quest_questinfo_validate_mercenary_class) },
+	{ HP_POP(quest->mobele2client, HP_quest_mobele2client) },
+	{ HP_POP(quest->mobrace2client, HP_quest_mobrace2client) },
 /* refine_interface */
 	{ HP_POP(refine->init, HP_refine_init) },
 	{ HP_POP(refine->final, HP_refine_final) },
