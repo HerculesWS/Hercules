@@ -2632,18 +2632,19 @@ bStr, bInt, bLuk
 ---------------------------------------
 
 *getcharid(<type>{, "<character name>"})
+*getcharid(<type>{, <account id>})
 
 This function will return a unique ID number of the invoking character,
 or, if a character name is specified, of that player.
 
 Type is the kind of associated ID number required:
 
-(0) CHAR_ID_CHAR - Character ID number.
-(1) CHAR_ID_PARTY - Party ID number.
-(2) CHAR_ID_GUILD - Guild ID number.
+(0) CHAR_ID_CHAR    - Character ID number.
+(1) CHAR_ID_PARTY   - Party ID number.
+(2) CHAR_ID_GUILD   - Guild ID number.
 (3) CHAR_ID_ACCOUNT - Account ID number.
-(4) CHAR_ID_BG - Battle ground ID
-(5) CHAR_ID_CLAN - Clan ID number.
+(4) CHAR_ID_BG      - Battle ground ID
+(5) CHAR_ID_CLAN    - Clan ID number.
 
 For most purposes other than printing it, a number is better to have than
 a name (people do horrifying things to their character names).
