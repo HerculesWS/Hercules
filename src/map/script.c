@@ -9290,10 +9290,15 @@ static BUILDIN(getcharid)
 	int num = script_getnum(st, 2);
 	struct map_session_data *sd;
 
-	if (script_hasdata(st, 3))
-		sd = map->nick2sd(script_getstr(st, 3), false);
-	else
+	if (script_hasdata(st, 3)) {
+		if (script_isstringtype(st, 3)) {
+			sd = map->nick2sd(script_getstr(st, 3), false);
+		} else {
+			sd = map->id2sd(script_getnum(st, 3));
+		}
+	} else {
 		sd = script->rid2sd(st);
+	}
 
 	if (sd == NULL) {
 		script_pushint(st, 0); //return 0, according docs
