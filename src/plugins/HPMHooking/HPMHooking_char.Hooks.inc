@@ -21034,6 +21034,33 @@ const char* HP_sysinfo_vcsrevision_scripts(void) {
 	}
 	return retVal___;
 }
+int HP_sysinfo_build_revision(void) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_sysinfo_build_revision_pre > 0) {
+		int (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_build_revision_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sysinfo_build_revision_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sysinfo.build_revision();
+	}
+	if (HPMHooks.count.HP_sysinfo_build_revision_post > 0) {
+		int (*postHookFunc) (int retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_build_revision_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sysinfo_build_revision_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 void HP_sysinfo_vcsrevision_reload(void) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_sysinfo_vcsrevision_reload_pre > 0) {

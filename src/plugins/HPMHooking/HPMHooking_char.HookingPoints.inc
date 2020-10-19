@@ -850,6 +850,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->vcstypeid, HP_sysinfo_vcstypeid) },
 	{ HP_POP(sysinfo->vcsrevision_src, HP_sysinfo_vcsrevision_src) },
 	{ HP_POP(sysinfo->vcsrevision_scripts, HP_sysinfo_vcsrevision_scripts) },
+	{ HP_POP(sysinfo->build_revision, HP_sysinfo_build_revision) },
 	{ HP_POP(sysinfo->vcsrevision_reload, HP_sysinfo_vcsrevision_reload) },
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },

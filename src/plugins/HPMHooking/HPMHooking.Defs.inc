@@ -8380,6 +8380,8 @@ typedef const char* (*HPMHOOK_pre_sysinfo_vcsrevision_src) (void);
 typedef const char* (*HPMHOOK_post_sysinfo_vcsrevision_src) (const char* retVal___);
 typedef const char* (*HPMHOOK_pre_sysinfo_vcsrevision_scripts) (void);
 typedef const char* (*HPMHOOK_post_sysinfo_vcsrevision_scripts) (const char* retVal___);
+typedef int (*HPMHOOK_pre_sysinfo_build_revision) (void);
+typedef int (*HPMHOOK_post_sysinfo_build_revision) (int retVal___);
 typedef void (*HPMHOOK_pre_sysinfo_vcsrevision_reload) (void);
 typedef void (*HPMHOOK_post_sysinfo_vcsrevision_reload) (void);
 typedef bool (*HPMHOOK_pre_sysinfo_is_superuser) (void);
