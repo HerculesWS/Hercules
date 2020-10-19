@@ -1965,6 +1965,10 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0b1c,clif->pPing);
 #endif
 
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 20190313
+	packet(0x0b1e,clif->pGuildRequestEmblem2);
+#endif
+
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	packet(0x0b21,clif->pHotkey2);
 	packet(0x0b22,clif->pHotkeyRowShift2); // CZ_SHORTCUTKEYBAR_ROTATE
@@ -1984,7 +1988,7 @@ packet(0x96e,clif->ackmergeitems);
 #endif
 
 #if PACKETVER >= 20190724
-	packet(0x0b46,clif->pGuildRequestEmblem2);
+	packet(0x0b46,clif->pGuildRequestEmblem3);
 	packet(0x0b4c,clif->pCashShopLimitedReq);
 #endif
 

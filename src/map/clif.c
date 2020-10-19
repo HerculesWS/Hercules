@@ -15536,10 +15536,24 @@ static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd) 
 /// Request for guild emblem data (CZ_REQ_GUILD_EMBLEM_IMG2).
 static void clif_parse_GuildRequestEmblem2(int fd, struct map_session_data *sd)
 {
+#if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 2019-03-13
 	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 *p = RFIFOP(fd, 0);
 	struct guild* g = guild->search(p->guild_id);
 	if (g != NULL)
 		clif->guild_emblem(sd, g);
+#endif  // PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 2019-03-13
+}
+
+static void clif_parse_GuildRequestEmblem3(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+/// Request for guild emblem data (CZ_REQ_GUILD_EMBLEM_IMG3).
+static void clif_parse_GuildRequestEmblem3(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20190724
+	const struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 *p = RFIFOP(fd, 0);
+	struct guild* g = guild->search(p->guild_id);
+	if (g != NULL)
+		clif->guild_emblem(sd, g);
+#endif  // 20190724
 }
 
 /// Validates data of a guild emblem (compressed bitmap)
@@ -26854,6 +26868,7 @@ void clif_defaults(void)
 	clif->pGuildChangeMemberPosition = clif_parse_GuildChangeMemberPosition;
 	clif->pGuildRequestEmblem1 = clif_parse_GuildRequestEmblem1;
 	clif->pGuildRequestEmblem2 = clif_parse_GuildRequestEmblem2;
+	clif->pGuildRequestEmblem3 = clif_parse_GuildRequestEmblem3;
 	clif->pGuildChangeEmblem = clif_parse_GuildChangeEmblem;
 	clif->pGuildChangeNotice = clif_parse_GuildChangeNotice;
 	clif->pGuildInvite = clif_parse_GuildInvite;

@@ -1648,6 +1648,7 @@ struct clif_interface {
 	void (*pGuildChangeMemberPosition) (int fd, struct map_session_data *sd);
 	void (*pGuildRequestEmblem1) (int fd,struct map_session_data *sd);
 	void (*pGuildRequestEmblem2) (int fd,struct map_session_data *sd);
+	void (*pGuildRequestEmblem3) (int fd,struct map_session_data *sd);
 	void (*pGuildChangeEmblem) (int fd,struct map_session_data *sd);
 	void (*pGuildChangeNotice) (int fd, struct map_session_data* sd);
 	void (*pGuildInvite) (int fd,struct map_session_data *sd);
