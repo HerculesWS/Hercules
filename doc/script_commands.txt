@@ -3235,21 +3235,21 @@ This command sets a bunch of arrays with a complete list of whatever the
 invoking character has in its cart_inventory, including all the data needed to
 recreate these items perfectly if they are destroyed. Here's what you get:
 
-@cartinventorylist_id[]        - array of item ids.
-@cartinventorylist_amount[]    - their corresponding item amounts.
-@cartinventorylist_refine[]    - for how much it is refined.
-@cartinventorylist_identify[]  - whether it is identified.
-@cartinventorylist_attribute[] - whether it is broken.
-@cartinventorylist_card1[]     - These four arrays contain card data for the items.
-@cartinventorylist_card2[]       These data slots are also used to store names inscribed on the items,
-@cartinventorylist_card3[]       so you can explicitly check if the character owns an item
-@cartinventorylist_card4[]       made by a specific craftsman.
-@cartinventorylist_expire[]    - expire time (Unix time stamp). 0 means never expires.
-@cartinventorylist_bound       - whether it is an account bound item or not.
-@inventorylist_opt_id1~5[]     - array of random option id.
-@inventorylist_opt_val1~5[]    - array of random option val.
-@inventorylist_opt_param1~5[]  - array of random option param.
-@cartinventorylist_count       - the number of items in these lists.
+@cartinventorylist_id[]            - array of item ids.
+@cartinventorylist_amount[]        - their corresponding item amounts.
+@cartinventorylist_refine[]        - for how much it is refined.
+@cartinventorylist_identify[]      - whether it is identified.
+@cartinventorylist_attribute[]     - whether it is broken.
+@cartinventorylist_card1[]         - These four arrays contain card data for the items.
+@cartinventorylist_card2[]           These data slots are also used to store names inscribed on the items,
+@cartinventorylist_card3[]           so you can explicitly check if the character owns an item
+@cartinventorylist_card4[]           made by a specific craftsman.
+@cartinventorylist_expire[]        - expire time (Unix time stamp). 0 means never expires.
+@cartinventorylist_bound           - whether it is an account bound item or not.
+@cartinventorylist_opt_id1~5[]     - array of random option id.
+@cartinventorylist_opt_val1~5[]    - array of random option val.
+@cartinventorylist_opt_param1~5[]  - array of random option param.
+@cartinventorylist_count           - the number of items in these lists.
 
 This could be handy to save/restore a character's cart_inventory, since no
 other command returns such a complete set of data, and could also be the
