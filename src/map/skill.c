@@ -20636,6 +20636,48 @@ static bool skill_parse_row_changematerialdb(char *split[], int columns, int cur
 }
 
 /**
+ * Enable Bard/Dancer to learn songs from their counterpart when spirit link
+ * * @param *sd    the actual player gain the skills
+ */
+static void skill_add_bard_dancer_soullink_songs(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+	
+	if (sd->sc.count == 0 || sd->sc.data[SC_SOULLINK] == NULL || sd->sc.data[SC_SOULLINK]->val2 != SL_BARDDANCER)
+		return;
+	
+	const int bard_song_skillid[4] = {BA_WHISTLE, BA_ASSASSINCROSS, BA_POEMBRAGI, BA_APPLEIDUN};
+	const int dancer_song_skillid[4] = {DC_HUMMING, DC_DONTFORGETME, DC_FORTUNEKISS, DC_SERVICEFORYOU};
+	
+	STATIC_ASSERT(ARRAYLENGTH(bard_song_skillid) == ARRAYLENGTH(dancer_song_skillid), "bard_song_skillid and dancer_song_skillid must be the same size");
+
+	int copy_from_index;
+	int copy_to_index;
+	for (int i = 0; i < ARRAYLENGTH(bard_song_skillid); i++) {
+		if (sd->status.sex == SEX_MALE) {
+			copy_from_index = skill->get_index(bard_song_skillid[i]);
+			copy_to_index = skill->get_index(dancer_song_skillid[i]);
+		} else {
+			copy_from_index = skill->get_index(dancer_song_skillid[i]);
+			copy_to_index = skill->get_index(bard_song_skillid[i]);
+		}
+
+		if (copy_from_index == 0 || copy_to_index == 0) {
+			Assert_report("Linked bard/dancer skill not found");
+			continue;
+		}
+
+		if (sd->status.skill[copy_from_index].lv < 10) // Copy only if the linked skill has been mastered
+			continue;
+
+		sd->status.skill[copy_to_index].id = skill->dbs->db[copy_to_index].nameid;
+		sd->status.skill[copy_to_index].lv = sd->status.skill[copy_from_index].lv; // Set the level to the same as the linking skill
+		sd->status.skill[copy_to_index].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
+	}
+	return;
+}
+
+/**
  * Sets Level based configuration for skill groups from skill_db.conf [ Smokexyz/Hercules ]
  * @param *conf    pointer to config setting.
  * @param *arr     pointer to array to be set.
@@ -24308,4 +24350,5 @@ void skill_defaults(void)
 	skill->check_npc_chaospanic = skill_check_npc_chaospanic;
 	skill->count_wos = skill_count_wos;
 	skill->get_linked_song_dance_id = skill_get_linked_song_dance_id;
+	skill->add_bard_dancer_soullink_songs = skill_add_bard_dancer_soullink_songs;
 }
