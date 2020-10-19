@@ -185,7 +185,11 @@ struct aclif_interface {
 #ifdef HERCULES_CORE
 void aclif_defaults(void);
 #else
-#define addHttpHandler(method, url, func, flags) aclif->add_handler(method, url, func, NULL, 0, flags)
+#define addHttpHandler(method, url, func, flags) \
+	( \
+		(void)((bool (*)(int fd, struct api_session_data *sd))0 == (func)), \
+		aclif->add_handler(method, url, func, NULL, 0, flags) \
+	)
 #endif // HERCULES_CORE
 
 HPShared struct aclif_interface *aclif;
