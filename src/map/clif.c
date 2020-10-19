@@ -18151,42 +18151,49 @@ static void clif_parse_Adopt_reply(int fd, struct map_session_data *sd)
 /// Convex Mirror (ZC_BOSS_INFO).
 /// 0293 <infoType>.B <x>.L <y>.L <minHours>.W <minMinutes>.W <maxHours>.W <maxMinutes>.W <monster name>.51B
 /// infoType:
-///     0 = No boss on this map (BOSS_INFO_NOT).
-///     1 = Boss is alive (position update) (BOSS_INFO_ALIVE).
-///     2 = Boss is alive (initial announce) (BOSS_INFO_ALIVE_WITHMSG).
-///     3 = Boss is dead (BOSS_INFO_DEAD).
-static void clif_bossmapinfo(int fd, struct mob_data *md, short flag)
+///     BOSS_INFO_NONE  = No boss on the map
+///     BOSS_INFO_ALIVE = Boss is alive (Update monster position)
+///     BOSS_INFO_ALIVE_WITHMSG = Boss is alive (Initial announce)
+///     BOSS_INFO_DEAD = Boss on the map is dead (Display respawn time)
+static void clif_bossmapinfo(int fd, struct mob_data *md, enum bossmap_info_type flag)
 {
-	WFIFOHEAD(fd,70);
-	memset(WFIFOP(fd,0),0,70);
-	WFIFOW(fd,0) = 0x293;
+	WFIFOHEAD(fd, 70);
+	memset(WFIFOP(fd, 0), 0, 70);
+	WFIFOW(fd, 0) = 0x293;
+	WFIFOB(fd, 2) = flag;
 
-	if( md != NULL ) {
-		if( md->bl.prev != NULL ) { // Boss on This Map
-			if( flag ) {
-				WFIFOB(fd,2) = 1;
-				WFIFOL(fd,3) = md->bl.x;
-				WFIFOL(fd,7) = md->bl.y;
-			} else
-				WFIFOB(fd,2) = 2; // First Time
-		} else if (md->spawn_timer != INVALID_TIMER) { // Boss is Dead
-			const struct TimerData * timer_data = timer->get(md->spawn_timer);
+	switch (flag) {
+	case BOSS_INFO_NONE:
+		break; 
+	case BOSS_INFO_ALIVE:
+	case BOSS_INFO_ALIVE_WITHMSG:
+		if (md != NULL) {
+			WFIFOL(fd, 3) = md->bl.x;
+			WFIFOL(fd, 7) = md->bl.y;
+		}
+		break;
+	case BOSS_INFO_DEAD:
+		if (md != NULL) {
+			const struct TimerData *timer_data = timer->get(md->spawn_timer);
 			unsigned int seconds;
-			int hours, minutes;
+			int hours;
+			int minutes;
 
 			seconds = (unsigned int)(DIFF_TICK(timer_data->tick, timer->gettick()) / 1000 + 60);
 			hours = seconds / (60 * 60);
 			seconds = seconds - (60 * 60 * hours);
 			minutes = seconds / 60;
 
-			WFIFOB(fd,2) = 3;
-			WFIFOW(fd,11) = hours; // Hours
-			WFIFOW(fd,13) = minutes; // Minutes
+			WFIFOW(fd, 11) = hours;
+			WFIFOW(fd, 13) = minutes;
 		}
-		safestrncpy(WFIFOP(fd,19), md->db->jname, NAME_LENGTH);
+		break;
 	}
 
-	WFIFOSET(fd,70);
+	if (md != NULL)
+		safestrncpy(WFIFOP(fd, 19), md->db->jname, NAME_LENGTH);
+
+	WFIFOSET(fd, 70);
 }
 
 static void clif_parse_ViewPlayerEquip(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
