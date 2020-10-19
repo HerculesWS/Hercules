@@ -3245,6 +3245,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->check_npc_chaospanic, HP_skill_check_npc_chaospanic) },
 	{ HP_POP(skill->count_wos, HP_skill_count_wos) },
 	{ HP_POP(skill->get_linked_song_dance_id, HP_skill_get_linked_song_dance_id) },
+	{ HP_POP(skill->add_bard_dancer_soullink_songs, HP_skill_add_bard_dancer_soullink_songs) },
 /* socket_interface */
 	{ HP_POP(sockt->init, HP_sockt_init) },
 	{ HP_POP(sockt->final, HP_sockt_final) },

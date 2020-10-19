@@ -84915,6 +84915,32 @@ int HP_skill_get_linked_song_dance_id(int skill_id) {
 	}
 	return retVal___;
 }
+void HP_skill_add_bard_dancer_soullink_songs(struct map_session_data *sd) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_skill_add_bard_dancer_soullink_songs_pre > 0) {
+		void (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_add_bard_dancer_soullink_songs_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_skill_add_bard_dancer_soullink_songs_pre[hIndex].func;
+			preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.add_bard_dancer_soullink_songs(sd);
+	}
+	if (HPMHooks.count.HP_skill_add_bard_dancer_soullink_songs_post > 0) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_add_bard_dancer_soullink_songs_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_skill_add_bard_dancer_soullink_songs_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
 /* socket_interface */
 void HP_sockt_init(void) {
 	int hIndex = 0;
