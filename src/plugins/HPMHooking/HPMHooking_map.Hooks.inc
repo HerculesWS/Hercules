@@ -10706,10 +10706,10 @@ void HP_clif_map_property_mapall(int mapid, enum map_property property) {
 	}
 	return;
 }
-void HP_clif_bossmapinfo(int fd, struct mob_data *md, short flag) {
+void HP_clif_bossmapinfo(int fd, struct mob_data *md, enum bossmap_info_type flag) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_bossmapinfo_pre > 0) {
-		void (*preHookFunc) (int *fd, struct mob_data **md, short *flag);
+		void (*preHookFunc) (int *fd, struct mob_data **md, enum bossmap_info_type *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bossmapinfo_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_bossmapinfo_pre[hIndex].func;
@@ -10724,7 +10724,7 @@ void HP_clif_bossmapinfo(int fd, struct mob_data *md, short flag) {
 		HPMHooks.source.clif.bossmapinfo(fd, md, flag);
 	}
 	if (HPMHooks.count.HP_clif_bossmapinfo_post > 0) {
-		void (*postHookFunc) (int fd, struct mob_data *md, short flag);
+		void (*postHookFunc) (int fd, struct mob_data *md, enum bossmap_info_type flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_bossmapinfo_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_bossmapinfo_post[hIndex].func;
 			postHookFunc(fd, md, flag);

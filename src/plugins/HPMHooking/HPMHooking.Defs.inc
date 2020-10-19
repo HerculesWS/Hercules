@@ -1232,8 +1232,8 @@ typedef void (*HPMHOOK_pre_clif_pvpset) (struct map_session_data **sd, int *pvpr
 typedef void (*HPMHOOK_post_clif_pvpset) (struct map_session_data *sd, int pvprank, int pvpnum, int type);
 typedef void (*HPMHOOK_pre_clif_map_property_mapall) (int *mapid, enum map_property *property);
 typedef void (*HPMHOOK_post_clif_map_property_mapall) (int mapid, enum map_property property);
-typedef void (*HPMHOOK_pre_clif_bossmapinfo) (int *fd, struct mob_data **md, short *flag);
-typedef void (*HPMHOOK_post_clif_bossmapinfo) (int fd, struct mob_data *md, short flag);
+typedef void (*HPMHOOK_pre_clif_bossmapinfo) (int *fd, struct mob_data **md, enum bossmap_info_type *flag);
+typedef void (*HPMHOOK_post_clif_bossmapinfo) (int fd, struct mob_data *md, enum bossmap_info_type flag);
 typedef void (*HPMHOOK_pre_clif_map_type) (struct map_session_data **sd, enum map_type *type);
 typedef void (*HPMHOOK_post_clif_map_type) (struct map_session_data *sd, enum map_type type);
 typedef void (*HPMHOOK_pre_clif_maptypeproperty2) (struct block_list **bl, enum send_target *t);
