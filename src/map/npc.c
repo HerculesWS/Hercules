@@ -5077,6 +5077,8 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		map->list[m].flag.nostorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
 	else if (strcmpi(w3, "nogstorage") == 0)
 		map->list[m].flag.nogstorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
+	else if (strcmpi(w3, "nopet") == 0)
+		map->list[m].flag.nopet = (state != 0) ? 1 : 0;
 	else if (strcmpi(w3, "nomapchannelautojoin") == 0)
 		map->list[m].flag.chsysnolocalaj = (state != 0) ? 1 : 0;
 	else if (strcmpi(w3, "noknockback") == 0)
@@ -5261,26 +5263,6 @@ static const char *npc_parse_mapflag(const char *w1, const char *w2, const char 
 		map->list[m].short_damage_rate = (state != 0) ? atoi(w4) : 100;
 	} else if (strcmpi(w3, "long_damage_rate") == 0) {
 		map->list[m].long_damage_rate = (state != 0) ? atoi(w4) : 100;
-	} else if (strcmpi(w3,"nomapchannelautojoin") == 0) {
-		map->list[m].flag.chsysnolocalaj = (state != 0) ? 1 : 0;
-	} else if (strcmpi(w3,"noknockback") == 0) {
-		map->list[m].flag.noknockback = (state != 0) ? 1 : 0;
-	} else if (strcmpi(w3,"src4instance") == 0) {
-		map->list[m].flag.src4instance = (state != 0) ? 1 : 0;
-	} else if (strcmpi(w3,"nocashshop") == 0) {
-		map->list[m].flag.nocashshop = (state != 0) ? 1 : 0;
-	} else if (strcmpi(w3,"noviewid") == 0) {
-		map->list[m].flag.noviewid = (state != 0) ? atoi(w4) : 0;
-	} else if (strcmpi(w3, "pairship_startable") == 0) {
-		map->list[m].flag.pairship_startable = (state != 0) ? 1 : 0;
-	} else if (strcmpi(w3, "pairship_endable") == 0) {
-		map->list[m].flag.pairship_endable = (state != 0) ? 1 : 0;
-	} else if (strcmpi(w3, "nostorage") == 0) {
-		map->list[m].flag.nostorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
-	} else if (strcmpi(w3, "nogstorage") == 0) {
-		map->list[m].flag.nogstorage = (state != 0) ? cap_value(atoi(w4), 1, 3) : 0;
-	} else if (strcmpi(w3, "nopet") == 0) {
-		map->list[m].flag.nopet = (state != 0) ? 1 : 0;
 	} else {
 		npc->parse_unknown_mapflag(mapname, w3, w4, start, buffer, filepath, retval);
 	}
