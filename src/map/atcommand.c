@@ -8497,7 +8497,7 @@ ACMD(request)
 ACMD(feelreset)
 {
 	pc->resetfeel(sd);
-	clif->message(fd, msg_fd(fd,1324)); // Reset 'Feeling' maps.
+	clif->message(fd, msg_fd(fd,1324)); // "Reset 'Feeling' maps."
 
 	return true;
 }
@@ -8506,7 +8506,7 @@ ACMD(feelreset)
 ACMD(hatereset)
 {
 	pc->resethate(sd);
-	clif->message(fd, msg_fd(fd, 979)); // Reset 'Hatred' targets.
+	clif->message(fd, msg_fd(fd, 979)); // "Reset 'Hatred' targets."
 
 	return true;
 }
@@ -8517,7 +8517,7 @@ ACMD(hatereset)
 ACMD(auction)
 {
 	if (!battle_config.feature_auction) {
-		clif->messagecolor_self(sd->fd, COLOR_RED, msg_fd(fd,1484));
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_fd(fd,1484)); // "Auction is disabled."
 		return false;
 	}
 
@@ -8950,7 +8950,7 @@ static void atcommand_commands_sub(struct map_session_data *sd, const int fd, At
 					memset(line_buff, ' ', CHATBOX_SIZE);
 					line_buff[CHATBOX_SIZE - 1] = 0;
 					clif->message(fd, "------------------");
-					clif->message(fd, "Custom commands:");
+					clif->message(fd, msg_sd(sd, 275)); // "Custom commands:"
 				}
 				if (slen + cur - line_buff >= CHATBOX_SIZE) {
 					clif->message(fd, line_buff);
@@ -9000,10 +9000,10 @@ ACMD(cashmount)
 		return false;
 	}
 
-	clif->message(sd->fd, msg_fd(fd, 1362)); // NOTICE: If you crash with mount your LUA is outdated.
+	clif->message(sd->fd, msg_fd(fd, 1362)); // NOTICE: If you crash with mount, your Lua files are outdated.
 
 	if (!sd->sc.data[SC_ALL_RIDING]) {
-		clif->message(sd->fd, msg_fd(fd, 1363)); // You have mounted.
+		clif->message(sd->fd, msg_fd(fd, 1363)); // You are mounted now.
 		sc_start(NULL, &sd->bl, SC_ALL_RIDING, 100, battle_config.boarding_halter_speed, INFINITE_DURATION);
 	} else {
 		clif->message(sd->fd, msg_fd(fd, 1364)); // You have released your mount.
@@ -10131,24 +10131,24 @@ ACMD(joinclan)
 	int clan_id;
 
 	if (*message == '\0') {
-		clif->message(fd, "Please enter a Clan ID (usage: @joinclan <clan ID>).");
+		clif->message(fd, msg_sd(sd, 469)); // "Please enter a Clan ID (usage: @joinclan <clan ID>)."
 		return false;
 	}
 	if (sd->status.clan_id != 0) {
-		clif->messagecolor_self(fd, COLOR_RED, "You are already in a clan.");
+		clif->messagecolor_self(fd, COLOR_RED, msg_sd(sd, 470)); // "You are already in a clan."
 		return false;
 	} else if (sd->status.guild_id != 0) {
-		clif->messagecolor_self(fd, COLOR_RED, "You must leave your guild before enter in a clan.");
+		clif->messagecolor_self(fd, COLOR_RED, msg_sd(sd, 471)); // "You must leave your guild before enter in a clan."
 		return false;
 	}
 
 	clan_id = atoi(message);
 	if (clan_id <= 0) {
-		clif->messagecolor_self(fd, COLOR_RED, "Invalid Clan ID.");
+		clif->messagecolor_self(fd, COLOR_RED, msg_sd(sd, 472)); // "Invalid Clan ID."
 		return false;
 	}
 	if (!clan->join(sd, clan_id)) {
-		clif->messagecolor_self(fd, COLOR_RED, "The clan couldn't be joined.");
+		clif->messagecolor_self(fd, COLOR_RED, msg_sd(sd, 473)); // "The clan couldn't be joined."
 		return false;
 	}
 	return true;
@@ -10160,11 +10160,11 @@ ACMD(joinclan)
 ACMD(leaveclan)
 {
 	if (sd->status.clan_id == 0) {
-		clif->messagecolor_self(fd, COLOR_RED, "You aren't in a clan.");
+		clif->messagecolor_self(fd, COLOR_RED, msg_sd(sd, 474)); // "You aren't in a clan."
 		return false;
 	}
 	if (!clan->leave(sd, false)) {
-		clif->messagecolor_self(fd, COLOR_RED, "Failed on leaving clan.");
+		clif->messagecolor_self(fd, COLOR_RED, msg_sd(sd, 475)); // "Failed on leaving clan."
 		return false;
 	}
 	return true;
@@ -10176,7 +10176,7 @@ ACMD(leaveclan)
 ACMD(reloadclans)
 {
 	clan->reload();
-	clif->messagecolor_self(fd, COLOR_DEFAULT, "Clan configuration and database have been reloaded.");
+	clif->messagecolor_self(fd, COLOR_DEFAULT, msg_sd(sd, 476)); // "Clan configuration and database have been reloaded."
 	return true;
 }
 
@@ -10790,7 +10790,7 @@ static bool atcommand_exec(const int fd, struct map_session_data *sd, const char
 		for (i = 0; i < map->list[sd->bl.m].zone->disabled_commands_count; i++) {
 			if (info->func == map->list[sd->bl.m].zone->disabled_commands[i]->cmd) {
 				if (pc_get_group_level(sd) < map->list[sd->bl.m].zone->disabled_commands[i]->group_lv) {
-					clif->messagecolor_self(sd->fd, COLOR_RED, "This command is disabled in this area");
+					clif->messagecolor_self(sd->fd, COLOR_RED, msg_fd(fd, 52)); // "This command is disabled in this area."
 					return true;
 				}
 				break; /* already found the matching command, no need to keep checking -- just go on */

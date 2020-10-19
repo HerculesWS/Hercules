@@ -613,7 +613,7 @@ static void bg_match_over(struct bg_arena *arena, bool canceled)
 			bg->queue_pc_cleanup(sd);
 		}
 		if (canceled)
-			clif->messagecolor_self(sd->fd, COLOR_RED, "BG Match Canceled: not enough players");
+			clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 83)); // "BG Match Canceled: not enough players."
 		else
 			pc_setglobalreg(sd, script->add_variable(arena->delay_var), (unsigned int)time(NULL));
 	}

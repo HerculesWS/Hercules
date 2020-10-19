@@ -472,7 +472,7 @@ static int guild_create(struct map_session_data *sd, const char *name)
 	nullpo_ret(name);
 
 	if (sd->clan != NULL) {
-		clif->messagecolor_self(sd->fd, COLOR_RED, "You cannot create a guild because you are in a clan.");
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 477)); // "You cannot create a guild because you are in a clan."
 		return 0;
 	}
 

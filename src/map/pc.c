@@ -7635,7 +7635,7 @@ static int pc_skillup(struct map_session_data *sd, uint16 skill_id)
 			clif->msgtable_num(sd, MSG_UPGRADESKILLERROR_MORE_SECONDJOBSKILL, sd->sktree.third);
 #endif
 		} else if (pc->calc_skillpoint(sd) < 9) {  /* TODO: official response? */
-			clif->messagecolor_self(sd->fd, COLOR_RED, "You need the basic skills");
+			clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, 164)); // "You need to learn the basic skills first."
 		}
 	}
 	return 0;
