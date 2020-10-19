@@ -262,6 +262,12 @@ struct {
 	struct HPMHookPoint *HP_httpparser_final_post;
 	struct HPMHookPoint *HP_httpparser_parse_pre;
 	struct HPMHookPoint *HP_httpparser_parse_post;
+	struct HPMHookPoint *HP_httpparser_parse_real_pre;
+	struct HPMHookPoint *HP_httpparser_parse_real_post;
+	struct HPMHookPoint *HP_httpparser_add_to_temp_request_pre;
+	struct HPMHookPoint *HP_httpparser_add_to_temp_request_post;
+	struct HPMHookPoint *HP_httpparser_search_request_line_end_pre;
+	struct HPMHookPoint *HP_httpparser_search_request_line_end_post;
 	struct HPMHookPoint *HP_httpparser_multi_parse_pre;
 	struct HPMHookPoint *HP_httpparser_multi_parse_post;
 	struct HPMHookPoint *HP_httpparser_init_parser_pre;
@@ -276,6 +282,10 @@ struct {
 	struct HPMHookPoint *HP_httpparser_init_settings_post;
 	struct HPMHookPoint *HP_httpparser_init_multi_settings_pre;
 	struct HPMHookPoint *HP_httpparser_init_multi_settings_post;
+	struct HPMHookPoint *HP_httpparser_get_method_str_pre;
+	struct HPMHookPoint *HP_httpparser_get_method_str_post;
+	struct HPMHookPoint *HP_httpparser_get_method_pre;
+	struct HPMHookPoint *HP_httpparser_get_method_post;
 	struct HPMHookPoint *HP_httpparser_on_message_begin_pre;
 	struct HPMHookPoint *HP_httpparser_on_message_begin_post;
 	struct HPMHookPoint *HP_httpparser_on_headers_complete_pre;
@@ -818,6 +828,8 @@ struct {
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_src_post;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_scripts_pre;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_scripts_post;
+	struct HPMHookPoint *HP_sysinfo_build_revision_pre;
+	struct HPMHookPoint *HP_sysinfo_build_revision_post;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_reload_pre;
 	struct HPMHookPoint *HP_sysinfo_vcsrevision_reload_post;
 	struct HPMHookPoint *HP_sysinfo_is_superuser_pre;
@@ -1113,6 +1125,12 @@ struct {
 	int HP_httpparser_final_post;
 	int HP_httpparser_parse_pre;
 	int HP_httpparser_parse_post;
+	int HP_httpparser_parse_real_pre;
+	int HP_httpparser_parse_real_post;
+	int HP_httpparser_add_to_temp_request_pre;
+	int HP_httpparser_add_to_temp_request_post;
+	int HP_httpparser_search_request_line_end_pre;
+	int HP_httpparser_search_request_line_end_post;
 	int HP_httpparser_multi_parse_pre;
 	int HP_httpparser_multi_parse_post;
 	int HP_httpparser_init_parser_pre;
@@ -1127,6 +1145,10 @@ struct {
 	int HP_httpparser_init_settings_post;
 	int HP_httpparser_init_multi_settings_pre;
 	int HP_httpparser_init_multi_settings_post;
+	int HP_httpparser_get_method_str_pre;
+	int HP_httpparser_get_method_str_post;
+	int HP_httpparser_get_method_pre;
+	int HP_httpparser_get_method_post;
 	int HP_httpparser_on_message_begin_pre;
 	int HP_httpparser_on_message_begin_post;
 	int HP_httpparser_on_headers_complete_pre;
@@ -1669,6 +1691,8 @@ struct {
 	int HP_sysinfo_vcsrevision_src_post;
 	int HP_sysinfo_vcsrevision_scripts_pre;
 	int HP_sysinfo_vcsrevision_scripts_post;
+	int HP_sysinfo_build_revision_pre;
+	int HP_sysinfo_build_revision_post;
 	int HP_sysinfo_vcsrevision_reload_pre;
 	int HP_sysinfo_vcsrevision_reload_post;
 	int HP_sysinfo_is_superuser_pre;

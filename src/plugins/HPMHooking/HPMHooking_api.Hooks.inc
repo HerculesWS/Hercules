@@ -3192,6 +3192,86 @@ bool HP_httpparser_parse(int fd) {
 	}
 	return retVal___;
 }
+bool HP_httpparser_parse_real(int fd, struct api_session_data *sd, const char *data, int data_size) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_httpparser_parse_real_pre > 0) {
+		bool (*preHookFunc) (int *fd, struct api_session_data **sd, const char **data, int *data_size);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_parse_real_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpparser_parse_real_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, &sd, &data, &data_size);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.httpparser.parse_real(fd, sd, data, data_size);
+	}
+	if (HPMHooks.count.HP_httpparser_parse_real_post > 0) {
+		bool (*postHookFunc) (bool retVal___, int fd, struct api_session_data *sd, const char *data, int data_size);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_parse_real_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpparser_parse_real_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, fd, sd, data, data_size);
+		}
+	}
+	return retVal___;
+}
+void HP_httpparser_add_to_temp_request(int fd, struct api_session_data *sd, const char *data, int data_size) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_httpparser_add_to_temp_request_pre > 0) {
+		void (*preHookFunc) (int *fd, struct api_session_data **sd, const char **data, int *data_size);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_add_to_temp_request_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpparser_add_to_temp_request_pre[hIndex].func;
+			preHookFunc(&fd, &sd, &data, &data_size);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.httpparser.add_to_temp_request(fd, sd, data, data_size);
+	}
+	if (HPMHooks.count.HP_httpparser_add_to_temp_request_post > 0) {
+		void (*postHookFunc) (int fd, struct api_session_data *sd, const char *data, int data_size);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_add_to_temp_request_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpparser_add_to_temp_request_post[hIndex].func;
+			postHookFunc(fd, sd, data, data_size);
+		}
+	}
+	return;
+}
+int HP_httpparser_search_request_line_end(struct api_session_data *sd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_httpparser_search_request_line_end_pre > 0) {
+		int (*preHookFunc) (struct api_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_search_request_line_end_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpparser_search_request_line_end_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.httpparser.search_request_line_end(sd);
+	}
+	if (HPMHooks.count.HP_httpparser_search_request_line_end_post > 0) {
+		int (*postHookFunc) (int retVal___, struct api_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_search_request_line_end_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpparser_search_request_line_end_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
+}
 bool HP_httpparser_multi_parse(int fd) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -3374,6 +3454,61 @@ void HP_httpparser_init_multi_settings(void) {
 		}
 	}
 	return;
+}
+const char* HP_httpparser_get_method_str(struct api_session_data *sd) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if (HPMHooks.count.HP_httpparser_get_method_str_pre > 0) {
+		const char* (*preHookFunc) (struct api_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_get_method_str_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpparser_get_method_str_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.httpparser.get_method_str(sd);
+	}
+	if (HPMHooks.count.HP_httpparser_get_method_str_post > 0) {
+		const char* (*postHookFunc) (const char* retVal___, struct api_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_get_method_str_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpparser_get_method_str_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
+}
+http_method HP_httpparser_get_method(struct api_session_data *sd) {
+/* Unknown return type 'http_method'. Initializing to '0'. */
+	int hIndex = 0;
+	http_method retVal___ = 0;
+	if (HPMHooks.count.HP_httpparser_get_method_pre > 0) {
+		http_method (*preHookFunc) (struct api_session_data **sd);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_get_method_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_httpparser_get_method_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.httpparser.get_method(sd);
+	}
+	if (HPMHooks.count.HP_httpparser_get_method_post > 0) {
+		http_method (*postHookFunc) (http_method retVal___, struct api_session_data *sd);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_httpparser_get_method_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_httpparser_get_method_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
 }
 int HP_httpparser_on_message_begin(HTTP_PARSER *parser) {
 	int hIndex = 0;
@@ -10658,6 +10793,33 @@ const char* HP_sysinfo_vcsrevision_scripts(void) {
 		const char* (*postHookFunc) (const char* retVal___);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_vcsrevision_scripts_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_sysinfo_vcsrevision_scripts_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+int HP_sysinfo_build_revision(void) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_sysinfo_build_revision_pre > 0) {
+		int (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_build_revision_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_sysinfo_build_revision_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sysinfo.build_revision();
+	}
+	if (HPMHooks.count.HP_sysinfo_build_revision_post > 0) {
+		int (*postHookFunc) (int retVal___);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_build_revision_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_sysinfo_build_revision_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);
 		}
 	}
