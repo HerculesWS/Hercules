@@ -84,6 +84,7 @@ static void display_title(void)
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
 
 	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());
+	ShowInfo("Build revision: '"CL_WHITE"%d"CL_RESET"'\n", sysinfo->build_revision());
 	ShowInfo("%s revision (src): '"CL_WHITE"%s"CL_RESET"'\n", vcstype, sysinfo->vcsrevision_src());
 	ShowInfo("%s revision (scripts): '"CL_WHITE"%s"CL_RESET"'\n", vcstype, sysinfo->vcsrevision_scripts());
 	ShowInfo("OS version: '"CL_WHITE"%s"CL_RESET" [%s]'\n", sysinfo->osversion(), sysinfo->arch());

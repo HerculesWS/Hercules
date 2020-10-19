@@ -57,6 +57,7 @@ struct sysinfo_interface {
 	int (*vcstypeid) (void);
 	const char *(*vcsrevision_src) (void);
 	const char *(*vcsrevision_scripts) (void);
+	int (*build_revision) (void);
 	void (*vcsrevision_reload) (void);
 	bool (*is_superuser) (void);
 	void (*init) (void);
