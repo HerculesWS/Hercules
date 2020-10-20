@@ -22,6 +22,31 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2020.10.19] `October 19 2020`
+
+### Added
+
+- Added a `HERCULES_VERSION` constant with the identifier of the current Hercules release, exposed to source and script engine. (#2868)
+- Added a CI script to run a `CodeQL` analysis. (#2861)
+
+### Changed
+
+- Removed `SC_FRIGG_SONG` from the Group A Song Skills list, since it is no longer part of it. (#2864)
+- Improved, clarified and corrected the documentation comments of the `client.conf` configuration file. (#2870)
+- Moved some messages to `messages.conf`. (#2866)
+- Updated the `F_InsertComma()` function to work with numbers that are too large to fit in a numeric variable (such as numbers, larger than a 32 bit signed integer, returned by SQL queries). (#2860)
+- Extended `getcharid()` to optionally accept a character ID as an alternative to the character name. (#2876)
+
+### Fixed
+
+- Fixed a failed assertion in the char server when trying to save a plagiarized skill. (#2877)
+- Fixed the `KO_ZENKAI` AoE, to only trigger one of its status effects per tick. (#2863)
+- Removed duplicated code from the mapflag parser function. (#2857)
+- Fixed incorrect job class checks in several scripts. This fixes the special discount for assassins in the Morocc pub as well as a number of class-specific flavor text that wasn't displayed in various other scripts. (#2856)
+- Fixed a wrong variable name in the `getcartinventorylist()` documentation. (#2850, part of issue #2843)
+- Fixed the effect of Convex Mirror, now properly showing the position of the boss monsters on the map, if any are present. (#2862)
+- Fixed the Dancer Soul Link not granting the associated Bard skills. (#2852, issue #2815)
+
 ## [v2020.09.20] `September 20 2020`
 
 ### Added
