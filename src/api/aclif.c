@@ -366,17 +366,33 @@ static void aclif_set_header_name(int fd, const char *name, size_t size)
 	sd->temp_header = aStrndup(name, size);
 }
 
+static bool aclif_check_header(int fd, struct api_session_data *sd, const char *name, const char *value, size_t value_size)
+{
+	if (value_size > MAX_HEADER_VALUE_SIZE) {
+		ShowWarning("Header value size too big %d: %lu\n", fd, value_size);
+		return false;
+	}
+	if (strcmp(name, "Content-Type") == 0 && httpparser->get_method(sd) == HTTP_POST) {
+		const char *post_name = "multipart/form-data; boundary=";
+		const size_t post_name_sz = strlen(post_name);
+		if (strncmp(value, post_name, post_name_sz) != 0) {
+			ShowWarning("Wrong content type for post request %d\n", fd);
+			return false;
+		}
+	}
+	return true;
+}
+
 static void aclif_set_header_value(int fd, const char *value, size_t size)
 {
 	nullpo_retv(value);
 
-	if (size > MAX_HEADER_VALUE_SIZE) {
-		ShowWarning("Header value size too big %d: %lu\n", fd, size);
+	struct api_session_data *sd = sockt->session[fd]->session_data;
+	nullpo_retv(sd);
+	if (!aclif->check_header(fd, sd, sd->temp_header, value, size)) {
 		sockt->eof(fd);
 		return;
 	}
-	struct api_session_data *sd = sockt->session[fd]->session_data;
-	nullpo_retv(sd);
 	strdb_put(sd->headers_db, sd->temp_header, aStrndup(value, size));
 	sd->temp_header = NULL;
 	sd->headers_count ++;
@@ -1001,6 +1017,7 @@ void aclif_defaults(void)
 	aclif->set_post_header_name = aclif_set_post_header_name;
 	aclif->set_post_header_value = aclif_set_post_header_value;
 	aclif->set_post_header_data = aclif_set_post_header_data;
+	aclif->check_header = aclif_check_header;
 	aclif->multi_part_start = aclif_multi_part_start;
 	aclif->multi_part_complete = aclif_multi_part_complete;
 	aclif->multi_body_complete = aclif_multi_body_complete;

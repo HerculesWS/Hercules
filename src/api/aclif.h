@@ -153,6 +153,7 @@ struct aclif_interface {
 	void (*set_post_header_name) (int fd, const char *name, size_t size);
 	void (*set_post_header_value) (int fd, const char *value, size_t size);
 	void (*set_post_header_data) (int fd, const char *data, size_t size);
+	bool (*check_header) (int fd, struct api_session_data *sd, const char *name, const char *value, size_t value_size);
 	void (*multi_part_start) (int fd, struct api_session_data *sd);
 	void (*multi_part_complete) (int fd, struct api_session_data *sd);
 	void (*multi_body_complete) (int fd, struct api_session_data *sd);
