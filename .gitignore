@@ -107,6 +107,7 @@ Thumbs.db
 # /src/api/
 /src/api/Makefile
 /src/api/obj_sql
+/src/api/handlers.h.dox
 
 # /src/test/
 /src/test/Makefile

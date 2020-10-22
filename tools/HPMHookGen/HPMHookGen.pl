@@ -266,6 +266,8 @@ sub parse($$) {
 			$rtinit = ' = 0';
 		} elsif ($x eq 'JsonWBool') { # bool
 			$rtinit = ' = cJSON_False';
+		} elsif ($x eq 'http_method') {
+			$rtinit = ' = HTTP_GET';
 		} else { # Anything else
 			$notes .= "\n/* Unknown return type '$rt'. Initializing to '0'. */";
 			print "Unknown return type '$rt'. Initializing to '0'.\n";
@@ -326,7 +328,8 @@ foreach my $file (@files) { # Loop through the xml files
 	}
 	my @filepath = split(/[\/\\]/, $loc->{file});
 	my $foldername = uc($filepath[-2]);
-	my $filename = uc($filepath[-1]); $filename =~ s/[.-]/_/g; $filename =~ s/\.[^.]*$//;
+	my $filename = uc($filepath[-1]); $filename =~ s/[.-]/_/g; $filename =~ s/\.[^.]*$//; $filename =~ s/_H_DOX$/_H/;
+
 	my $guardname = "${foldername}_${filename}";
 	my $private = $key =~ /_interface_private$/ ? 1 : 0;
 

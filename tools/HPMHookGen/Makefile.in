@@ -59,7 +59,7 @@ else
 endif
 
 #####################################################################
-.PHONY: hooks clean buildclean generate
+.PHONY: hooks clean buildclean generate preprocess preprocessclean
 
 all: $(ALL_DEPENDS)
 
@@ -78,13 +78,21 @@ hooks: $(HOOK_INC)
 
 $(HOOK_INC): generate
 
-generate: doxyoutput
+generate: doxyoutput preprocessclean
 	@echo "	Regenerating HPM Hook definitions..."
 	@perl HPMHookGen.pl
 	@echo "	Regenerating HPM Data Check definitions..."
 	@perl HPMDataCheckGen.pl
 
-doxyoutput: $(ALL_C) $(ALL_H) doxygen.conf
+preprocess:
+	@echo "	Preprocessing files"
+	@./preprocess.py $(API_D)/handlers.h "api/urlhandlers.h" >$(API_D)/handlers.h.dox
+
+preprocessclean: doxyoutput
+	@echo "	Removing temp preprocessed files"
+	@rm $(API_D)/handlers.h.dox
+
+doxyoutput: preprocess $(ALL_C) $(ALL_H) doxygen.conf
 	@echo "	Extracting functions information..."
 	@doxygen doxygen.conf
 
