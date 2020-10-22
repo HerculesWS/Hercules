@@ -228,6 +228,8 @@ typedef void (*HPMHOOK_pre_aclif_set_post_header_value) (int *fd, const char **v
 typedef void (*HPMHOOK_post_aclif_set_post_header_value) (int fd, const char *value, size_t size);
 typedef void (*HPMHOOK_pre_aclif_set_post_header_data) (int *fd, const char **data, size_t *size);
 typedef void (*HPMHOOK_post_aclif_set_post_header_data) (int fd, const char *data, size_t size);
+typedef bool (*HPMHOOK_pre_aclif_check_header) (int *fd, struct api_session_data **sd, const char **name, const char **value, size_t *value_size);
+typedef bool (*HPMHOOK_post_aclif_check_header) (bool retVal___, int fd, struct api_session_data *sd, const char *name, const char *value, size_t value_size);
 typedef void (*HPMHOOK_pre_aclif_multi_part_start) (int *fd, struct api_session_data **sd);
 typedef void (*HPMHOOK_post_aclif_multi_part_start) (int fd, struct api_session_data *sd);
 typedef void (*HPMHOOK_pre_aclif_multi_part_complete) (int *fd, struct api_session_data **sd);
@@ -3590,6 +3592,28 @@ typedef int (*HPMHOOK_pre_handlers_init) (bool *minimal);
 typedef int (*HPMHOOK_post_handlers_init) (int retVal___, bool minimal);
 typedef void (*HPMHOOK_pre_handlers_final) (void);
 typedef void (*HPMHOOK_post_handlers_final) (void);
+typedef bool (*HPMHOOK_pre_handlers_parse_userconfig_load) (int *fd, struct api_session_data **sd);
+typedef bool (*HPMHOOK_post_handlers_parse_userconfig_load) (bool retVal___, int fd, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_handlers_userconfig_load) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_userconfig_load) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+typedef bool (*HPMHOOK_pre_handlers_parse_userconfig_save) (int *fd, struct api_session_data **sd);
+typedef bool (*HPMHOOK_post_handlers_parse_userconfig_save) (bool retVal___, int fd, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_handlers_userconfig_save) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_userconfig_save) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+typedef bool (*HPMHOOK_pre_handlers_parse_charconfig_load) (int *fd, struct api_session_data **sd);
+typedef bool (*HPMHOOK_post_handlers_parse_charconfig_load) (bool retVal___, int fd, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_handlers_charconfig_load) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_charconfig_load) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+typedef bool (*HPMHOOK_pre_handlers_parse_emblem_upload) (int *fd, struct api_session_data **sd);
+typedef bool (*HPMHOOK_post_handlers_parse_emblem_upload) (bool retVal___, int fd, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_handlers_emblem_upload) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_emblem_upload) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+typedef bool (*HPMHOOK_pre_handlers_parse_emblem_download) (int *fd, struct api_session_data **sd);
+typedef bool (*HPMHOOK_post_handlers_parse_emblem_download) (bool retVal___, int fd, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_handlers_emblem_download) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
+typedef void (*HPMHOOK_post_handlers_emblem_download) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
+typedef bool (*HPMHOOK_pre_handlers_parse_test_url) (int *fd, struct api_session_data **sd);
+typedef bool (*HPMHOOK_post_handlers_parse_test_url) (bool retVal___, int fd, struct api_session_data *sd);
 #endif // API_HANDLERS_H
 #ifdef MAP_HOMUNCULUS_H /* homun */
 typedef void (*HPMHOOK_pre_homun_init) (bool *minimal);

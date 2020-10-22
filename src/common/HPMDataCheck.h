@@ -58,11 +58,6 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define API_API_H
 	#endif // API_API_H
-	#ifdef API_HANDLERS_H
-		{ "handlers_interface", sizeof(struct handlers_interface), SERVER_TYPE_UNKNOWN },
-	#else
-		#define API_HANDLERS_H
-	#endif // API_HANDLERS_H
 	#ifdef API_HTTPHANDLER_H
 		{ "HttpHandler", sizeof(struct HttpHandler), SERVER_TYPE_UNKNOWN },
 	#else
