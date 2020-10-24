@@ -2946,6 +2946,51 @@ static enum unit_dir map_calc_dir(const struct block_list *src, int16 x, int16 y
 }
 
 /**
+ * Randomizes (x, y) to a walkable cell that is at least min_dist away on a square and less than max_dist.
+ *
+ * __Only__ tries each quarter of the square once, doesn't try all possibilities. (Aegis behavior)
+ * The square has a width and height of 2 * max_dist - 1.
+ * The smaller square with (x,y) center has a width and height of 2 * min_dist - 1,
+ * and is not included in the returning random cells.
+ *
+ * @remark e.g. (x + x_range, y + y_range) is not part of the square and won't be randomized.
+ * @param[in] bl optional object to base walkable checks on.
+ * @param[in] m map ID for the walkable cell checks
+ * @param[in,out] x pointer which contains the x-axis center value of the square
+ * @param[in,out] y pointer which contains the y-axis center value of the square
+ * @param[in] min_dist minimum distance of cells from (x, y)
+ * @param[in] max_dist maximum distance of cells from (x, y)
+ * @retval 0 success, random walkable cell found
+ * @retval 1 failure, no cell found, x and y remain unchanged
+ * @retval 2 failure, x or y nullpointer.
+ */
+static int map_get_random_cell(struct block_list *bl, int16 m, int16 *x, int16 *y, int16 min_dist, int16 max_dist)
+{
+	nullpo_retr(2, x);
+	nullpo_retr(2, y);
+	enum unit_dir dir = unit_get_rnd_diagonal_dir();
+
+	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
+		int16 x_rnd_dist = (min_dist + rnd()) % max(1, max_dist);
+		int16 y_rnd_dist = (min_dist + rnd()) % max(1, max_dist);
+		int16 x_rnd = *x + dirx[dir] * x_rnd_dist;
+		int16 y_rnd = *y + diry[dir] * y_rnd_dist;
+
+		// cell walkable?
+		if (map->getcell(m, bl, x_rnd, y_rnd, CELL_CHKNOPASS) != 0)
+			continue;
+		if (!path->search(NULL, bl, m, *x, *y, x_rnd, y_rnd, 1, CELL_CHKNOREACH))
+			continue;
+
+		*x = x_rnd;
+		*y = y_rnd;
+		return 0;
+	}
+
+	return 1;
+}
+
+/**
  * Randomizes (x, y) to a walkable cell on a rectangle with (x, y) being the center cell.
  *
  * __Only__ tries each quarter of the rectangle once, doesn't try all possibilities. (Aegis behavior)
@@ -7175,6 +7220,7 @@ PRAGMA_GCC9(GCC diagnostic pop)
 
 	map->check_dir = map_check_dir;
 	map->calc_dir = map_calc_dir;
+	map->get_random_cell = map_get_random_cell;
 	map->get_random_cell_in_range = map_get_random_cell_in_range;
 	map->random_dir = map_random_dir; // [Skotlex]
 

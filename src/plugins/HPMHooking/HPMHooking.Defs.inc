@@ -4754,6 +4754,8 @@ typedef int (*HPMHOOK_pre_map_check_dir) (enum unit_dir *s_dir, enum unit_dir *t
 typedef int (*HPMHOOK_post_map_check_dir) (int retVal___, enum unit_dir s_dir, enum unit_dir t_dir);
 typedef enum unit_dir (*HPMHOOK_pre_map_calc_dir) (const struct block_list **src, int16 *x, int16 *y);
 typedef enum unit_dir (*HPMHOOK_post_map_calc_dir) (enum unit_dir retVal___, const struct block_list *src, int16 x, int16 y);
+typedef int (*HPMHOOK_pre_map_get_random_cell) (struct block_list **bl, int16 *m, int16 **x, int16 **y, int16 *min_dist, int16 *max_dist);
+typedef int (*HPMHOOK_post_map_get_random_cell) (int retVal___, struct block_list *bl, int16 m, int16 *x, int16 *y, int16 min_dist, int16 max_dist);
 typedef int (*HPMHOOK_pre_map_get_random_cell_in_range) (struct block_list **bl, int16 *m, int16 **x, int16 **y, int16 *x_range, int16 *y_range);
 typedef int (*HPMHOOK_post_map_get_random_cell_in_range) (int retVal___, struct block_list *bl, int16 m, int16 *x, int16 *y, int16 x_range, int16 y_range);
 typedef int (*HPMHOOK_pre_map_random_dir) (struct block_list **bl, short **x, short **y);

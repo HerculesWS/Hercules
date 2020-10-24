@@ -1232,6 +1232,7 @@ END_ZEROED_BLOCK;
 
 	int (*check_dir) (enum unit_dir s_dir, enum unit_dir t_dir);
 	enum unit_dir (*calc_dir) (const struct block_list *src, int16 x, int16 y);
+	int (*get_random_cell) (struct block_list *bl, int16 m, int16 *x, int16 *y, int16 min_dist, int16 max_dist);
 	int (*get_random_cell_in_range) (struct block_list *bl, int16 m, int16 *x, int16 *y, int16 x_range, int16 y_range);
 	int (*random_dir) (struct block_list *bl, short *x, short *y); // [Skotlex]
 
