@@ -6010,12 +6010,9 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			case AM_RESURRECTHOMUN:
 				//Find a random spot to place the skill. [Skotlex]
 				inf2 = skill->get_splash(ud->skill_id, ud->skill_lv);
-				ud->skillx = target->x + inf2;
-				ud->skilly = target->y + inf2;
-				if (inf2 && !map->random_dir(target, &ud->skillx, &ud->skilly)) {
-					ud->skillx = target->x;
-					ud->skilly = target->y;
-				}
+				ud->skillx = target->x;
+				ud->skilly = target->y;
+				map->get_random_cell(target, target->m, &ud->skillx, &ud->skilly, 1, inf2);
 				ud->skilltimer=tid;
 				return skill->castend_pos(tid,tick,id,data);
 			case PF_SPIDERWEB:
