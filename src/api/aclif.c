@@ -815,8 +815,19 @@ static void aclif_add_online_char(int account_id, int char_id)
 		ShowError("Cant set char online. Account not logged in: %d\n", account_id);
 		return;
 	}
-	user->char_id = char_id;
-	ShowInfo("test connect char: %d, %d\n", account_id, char_id);
+	if (char_id == 0) {
+		// reconnect to char server after leave map server
+		if (user->char_id == 0) {
+			ShowError("Cant set char online. Char was not logged in: %d\n", account_id);
+			return;
+		}
+	} else {
+		// probably first login
+		user->char_id = char_id;
+	}
+	if (user->remove_tick != 0)
+		user->remove_tick = 0;
+	ShowInfo("test connect char: %d, %d (%d)\n", account_id, char_id, user->char_id);
 }
 
 static struct DBData aclif_create_online_login_data(union DBKey key, va_list args)

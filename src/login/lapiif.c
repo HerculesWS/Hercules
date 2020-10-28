@@ -68,6 +68,11 @@ static void lapiif_connect_user(struct login_session_data *sd, const unsigned ch
 	}
 }
 
+static void lapiif_connect_user_char(int char_server, int account_id)
+{
+	lapiif->set_char_online(account_id, 0);
+}
+
 /// Initializes a server structure.
 static void lapiif_server_init(int id)
 {
@@ -338,6 +343,7 @@ void lapiif_defaults(void)
 	lapiif->init = lapiif_init;
 	lapiif->final = lapiif_final;
 	lapiif->connect_user = lapiif_connect_user;
+	lapiif->connect_user_char = lapiif_connect_user_char;
 	lapiif->disconnect_user = lapiif_disconnect_user;
 	lapiif->server_init = lapiif_server_init;
 	lapiif->server_destroy = lapiif_server_destroy;

@@ -662,7 +662,8 @@ static void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 static void login_fromchar_parse_account_online(int fd, int id)
 {
 	login->add_online_user(id, RFIFOL(fd,2));
-	RFIFOSKIP(fd,6);
+	lapiif->connect_user_char(id, RFIFOL(fd, 2));
+	RFIFOSKIP(fd, 6);
 }
 
 static void login_fromchar_parse_account_offline(int fd)

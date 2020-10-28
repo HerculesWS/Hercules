@@ -40,6 +40,7 @@ struct lapiif_interface {
 	void (*final) (void);
 	void (*connect_user) (struct login_session_data *sd, const unsigned char* auth_token);
 	void (*disconnect_user) (int account_id);
+	void (*connect_user_char) (int char_server, int account_id);
 	void (*server_init) (int id);
 	void (*server_destroy) (int id);
 	void (*server_reset) (int id);
