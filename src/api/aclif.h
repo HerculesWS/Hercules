@@ -179,6 +179,8 @@ struct aclif_interface {
 	int (*purge_disconnected_users) (int tid, int64 tick, int id, intptr_t data);
 	int (*purge_disconnected_user) (union DBKey key, struct DBData *data, va_list ap);
 	int (*get_char_server_id) (struct api_session_data *sd);
+	void (*add_remove_timer) (struct online_api_login_data *data);
+	void (*remove_remove_timer) (struct online_api_login_data *data);
 
 	void (*show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 };

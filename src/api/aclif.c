@@ -787,7 +787,7 @@ static void aclif_delete_online_player(int account_id)
 	ShowInfo("test disconnect account: %d\n", account_id);
 	struct online_api_login_data *data = idb_get(aclif->online_db, account_id);
 	if (data != NULL) {
-		data->remove_tick = timer->gettick() + aclif->remove_disconnected_delay;
+		aclif->add_remove_timer(data);
 	}
 }
 
@@ -804,7 +804,7 @@ static void aclif_add_online_player(int account_id, const unsigned char *auth_to
 
 	struct online_api_login_data *user = idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
 	if (user->remove_tick != 0)
-		user->remove_tick = 0;
+		aclif->remove_remove_timer(user);
 	memcpy(user->auth_token, auth_token, AUTH_TOKEN_SIZE);
 }
 
@@ -826,7 +826,7 @@ static void aclif_add_online_char(int account_id, int char_id)
 		user->char_id = char_id;
 	}
 	if (user->remove_tick != 0)
-		user->remove_tick = 0;
+		aclif->remove_remove_timer(user);
 	ShowInfo("test connect char: %d, %d (%d)\n", account_id, char_id, user->char_id);
 }
 
@@ -955,6 +955,18 @@ static int aclif_get_char_server_id(struct api_session_data *sd)
 	return data->id;
 }
 
+static void aclif_add_remove_timer(struct online_api_login_data *user)
+{
+	nullpo_retv(user);
+	user->remove_tick = timer->gettick() + aclif->remove_disconnected_delay;
+}
+
+static void aclif_remove_remove_timer(struct online_api_login_data *user)
+{
+	nullpo_retv(user);
+	user->remove_tick = 0;
+}
+
 static int do_init_aclif(bool minimal)
 {
 	if (minimal)
@@ -1054,6 +1066,8 @@ void aclif_defaults(void)
 	aclif->purge_disconnected_user = aclif_purge_disconnected_user;
 	aclif->get_char_server_id = aclif_get_char_server_id;
 	aclif->add_online_char = aclif_add_online_char;
+	aclif->add_remove_timer = aclif_add_remove_timer;
+	aclif->remove_remove_timer = aclif_remove_remove_timer;
 
 	aclif->reportError = aclif_reportError;
 }
