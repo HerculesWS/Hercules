@@ -19750,6 +19750,9 @@ static void clif_parse_SearchStoreInfo(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	if (p->itemsCount < 1)
+		return; // Should never happen
+
 	type       = p->searchType;
 	max_price  = p->maxPrice;
 	min_price  = p->minPrice;
