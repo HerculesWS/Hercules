@@ -83,6 +83,8 @@
 	} \
 	if (p ## _flag == 2)
 
-#define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY_CHUNKED))
+#define GET_RFIFO_PACKET_CHUNKED_SIZE(fd, pname) (RFIFOW(fd, 2) - sizeof(struct pname))
+#define GET_RBUF_PACKET_CHUNKED_SIZE(fd, pname) (RBUFW(fd, 2) - sizeof(struct pname))
+#define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) GET_RFIFO_PACKET_CHUNKED_SIZE(fd, PACKET_API_PROXY_CHUNKED)
 
 #endif /* COMMON_CHUNKED_H */

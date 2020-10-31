@@ -234,6 +234,7 @@ EOF
 		fi
 		# run_test spinlock # Not running the spinlock test for the time being (too time consuming)
 		run_test libconfig
+		run_test chunked
 		echo "run all servers without HPM"
 		run_server ./login-server
 		run_server ./char-server
