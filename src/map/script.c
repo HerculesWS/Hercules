@@ -19717,6 +19717,7 @@ static BUILDIN(rid2name)
 			case BL_PET: script_pushstrcopy(st, BL_UCCAST(BL_PET, bl)->pet.name); break;
 			case BL_HOM: script_pushstrcopy(st, BL_UCCAST(BL_HOM, bl)->homunculus.name); break;
 			case BL_MER: script_pushstrcopy(st, BL_UCCAST(BL_MER, bl)->db->name); break;
+			case BL_ELEM: script_pushstrcopy(st, BL_UCCAST(BL_ELEM, bl)->db->name); break;
 			default:
 				ShowError("buildin_rid2name: BL type unknown.\n");
 				script_pushconststr(st,"");
@@ -27679,7 +27680,7 @@ static void script_parse_builtin(void)
 		/* Unit Data */
 		BUILDIN_DEF(setunitdata,"iiv??"),
 		BUILDIN_DEF(getunitdata,"ii?"),
-		BUILDIN_DEF(getunitname,"i"),
+		BUILDIN_DEF_DEPRECATED(getunitname,"i"), // Deprecated 2019-02-28
 		BUILDIN_DEF(setunitname,"is"),
 		BUILDIN_DEF(getunittitle,"i"),
 		BUILDIN_DEF(setunittitle,"is"),

@@ -10670,9 +10670,16 @@ returns -1 if value could not be retrieved.
 
 *getunitname(<GID>)
 
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @ /!\ This command is deprecated @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 Retrieve the name of a unit.
 
 returns "Unknown" if the value could not be retrieved.
+
+This command is deprecated and it should not be used in new scripts, as it is
+likely to be removed at a later time. Please use rid2name instead.
 
 ---------------------------------------
 
