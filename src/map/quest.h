@@ -164,6 +164,7 @@ struct quest_interface {
 	void (*clear) (void);
 	int (*read_db) (void);
 	struct quest_db *(*read_db_sub) (struct config_setting_t *cs, int n, const char *source);
+	int (*setting_lookup_const) (struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source);
 
 	int (*questinfo_validate_icon) (int icon);
 	void (*questinfo_refresh) (struct map_session_data *sd);
