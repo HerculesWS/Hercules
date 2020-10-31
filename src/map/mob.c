@@ -3474,11 +3474,11 @@ static struct block_list *mob_getfriendstatus(struct mob_data *md, int cond1, in
  **/
 static int mob_skill_use(struct mob_data *md, int64 tick, int event)
 {
-	nullpo_ret(md);
+	nullpo_retr(1, md);
 
 	struct mob_skill *ms = md->db->skill;
 
-	nullpo_ret(ms);
+	nullpo_retr(1, ms);
 
 	if (battle_config.mob_skill_rate == 0 || md->ud.skilltimer != INVALID_TIMER || md->db->maxskill == 0)
 		return 1;
