@@ -3733,7 +3733,7 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 /*==========================================
  * Skill use event processing
  *------------------------------------------*/
-static int mobskill_event(struct mob_data *md, struct block_list *src, int64 tick, int flag)
+static int mob_use_skill_event(struct mob_data *md, struct block_list *src, int64 tick, int flag)
 {
 	int target_id;
 
@@ -6162,7 +6162,7 @@ void mob_defaults(void)
 	mob->getfriendstatus_sub = mob_getfriendstatus_sub;
 	mob->getfriendstatus = mob_getfriendstatus;
 	mob->use_skill = mob_use_skill;
-	mob->skill_event = mobskill_event;
+	mob->use_skill_event = mob_use_skill_event;
 	mob->is_clone = mob_is_clone;
 	mob->clone_spawn = mob_clone_spawn;
 	mob->clone_delete = mob_clone_delete;

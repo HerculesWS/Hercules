@@ -5488,8 +5488,8 @@ typedef struct block_list* (*HPMHOOK_pre_mob_getfriendstatus) (struct mob_data *
 typedef struct block_list* (*HPMHOOK_post_mob_getfriendstatus) (struct block_list* retVal___, struct mob_data *md, int cond1, int cond2);
 typedef int (*HPMHOOK_pre_mob_use_skill) (struct mob_data **md, int64 *tick, int *event);
 typedef int (*HPMHOOK_post_mob_use_skill) (int retVal___, struct mob_data *md, int64 tick, int event);
-typedef int (*HPMHOOK_pre_mob_skill_event) (struct mob_data **md, struct block_list **src, int64 *tick, int *flag);
-typedef int (*HPMHOOK_post_mob_skill_event) (int retVal___, struct mob_data *md, struct block_list *src, int64 tick, int flag);
+typedef int (*HPMHOOK_pre_mob_use_skill_event) (struct mob_data **md, struct block_list **src, int64 *tick, int *flag);
+typedef int (*HPMHOOK_post_mob_use_skill_event) (int retVal___, struct mob_data *md, struct block_list *src, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_mob_is_clone) (int *class_);
 typedef int (*HPMHOOK_post_mob_is_clone) (int retVal___, int class_);
 typedef int (*HPMHOOK_pre_mob_clone_spawn) (struct map_session_data **sd, int16 *m, int16 *x, int16 *y, const char **event, int *master_id, uint32 *mode, int *flag, unsigned int *duration);

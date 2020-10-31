@@ -1725,7 +1725,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	{
 		if (sd != NULL && target->type == BL_MOB) {
 			struct mob_data *md = BL_UCAST(BL_MOB, target);
-			mob->skill_event(md, src, tick, -1); //Cast targeted skill event.
+			mob->use_skill_event(md, src, tick, -1); // Cast targeted skill event.
 			if (tstatus->mode&(MD_CASTSENSOR_IDLE|MD_CASTSENSOR_CHASE) &&
 				battle->check_target(target, src, BCT_ENEMY) > 0)
 			{

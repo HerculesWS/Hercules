@@ -54186,14 +54186,14 @@ int HP_mob_use_skill(struct mob_data *md, int64 tick, int event) {
 	}
 	return retVal___;
 }
-int HP_mob_skill_event(struct mob_data *md, struct block_list *src, int64 tick, int flag) {
+int HP_mob_use_skill_event(struct mob_data *md, struct block_list *src, int64 tick, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if (HPMHooks.count.HP_mob_skill_event_pre > 0) {
+	if (HPMHooks.count.HP_mob_use_skill_event_pre > 0) {
 		int (*preHookFunc) (struct mob_data **md, struct block_list **src, int64 *tick, int *flag);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_skill_event_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_mob_skill_event_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_use_skill_event_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_mob_use_skill_event_pre[hIndex].func;
 			retVal___ = preHookFunc(&md, &src, &tick, &flag);
 		}
 		if (*HPMforce_return) {
@@ -54202,12 +54202,12 @@ int HP_mob_skill_event(struct mob_data *md, struct block_list *src, int64 tick, 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mob.skill_event(md, src, tick, flag);
+		retVal___ = HPMHooks.source.mob.use_skill_event(md, src, tick, flag);
 	}
-	if (HPMHooks.count.HP_mob_skill_event_post > 0) {
+	if (HPMHooks.count.HP_mob_use_skill_event_post > 0) {
 		int (*postHookFunc) (int retVal___, struct mob_data *md, struct block_list *src, int64 tick, int flag);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_skill_event_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_mob_skill_event_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_mob_use_skill_event_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_mob_use_skill_event_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, md, src, tick, flag);
 		}
 	}

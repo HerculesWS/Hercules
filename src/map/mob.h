@@ -576,7 +576,7 @@ struct mob_interface {
 	int (*getfriendstatus_sub) (struct block_list *bl, va_list ap);
 	struct block_list *(*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
 	int (*use_skill) (struct mob_data *md, int64 tick, int event);
-	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
+	int (*use_skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);
 	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, uint32 mode, int flag, unsigned int duration);
 	int (*clone_delete) (struct mob_data *md);

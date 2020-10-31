@@ -11038,7 +11038,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 
 	if (dstmd) { //Mob skill event for no damage skills (damage ones are handled in battle_calc_damage) [Skotlex]
 		mob->log_damage(dstmd, src, 0); //Log interaction (counts as 'attacker' for the exp bonus)
-		mob->skill_event(dstmd, src, tick, MSC_SKILLUSED|(skill_id<<16));
+		mob->use_skill_event(dstmd, src, tick, MSC_SKILLUSED | (skill_id << 16));
 	}
 
 	if( sd && !(flag&1) ) { // ensure that the skill last-cast tick is recorded
@@ -13998,7 +13998,7 @@ static int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *b
 	}
 
 	if (bl->type == BL_MOB && ss != bl)
-		mob->skill_event(BL_UCAST(BL_MOB, bl), ss, tick, MSC_SKILLUSED|(skill_id<<16));
+		mob->use_skill_event(BL_UCAST(BL_MOB, bl), ss, tick, MSC_SKILLUSED | (skill_id << 16));
 
 	return skill_id;
 }

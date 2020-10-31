@@ -2092,7 +2092,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->getfriendstatus_sub, HP_mob_getfriendstatus_sub) },
 	{ HP_POP(mob->getfriendstatus, HP_mob_getfriendstatus) },
 	{ HP_POP(mob->use_skill, HP_mob_use_skill) },
-	{ HP_POP(mob->skill_event, HP_mob_skill_event) },
+	{ HP_POP(mob->use_skill_event, HP_mob_use_skill_event) },
 	{ HP_POP(mob->is_clone, HP_mob_is_clone) },
 	{ HP_POP(mob->clone_spawn, HP_mob_clone_spawn) },
 	{ HP_POP(mob->clone_delete, HP_mob_clone_delete) },
