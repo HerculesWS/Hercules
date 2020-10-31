@@ -1703,7 +1703,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 			    || !mob->can_reach(md, tbl, md->min_chase, MSS_RUSH)
 			    )
 			 && md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
-			 && mob->skill_use(md, tick, MSC_RUDEATTACKED) == 0 // If can't rude Attack
+			 && mob->skill_use(md, tick, MSC_RUDEATTACKED) != 0 // If can't rude Attack
 			 && can_move && unit->escape(&md->bl, tbl, rnd()%10 +1) // Attempt escape
 			) {
 				//Escaped
@@ -1731,7 +1731,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 			) {
 				// Rude attacked
 				if (md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
-				 && mob->skill_use(md, tick, MSC_RUDEATTACKED) == 0 && can_move != 0
+				 && mob->skill_use(md, tick, MSC_RUDEATTACKED) != 0 && can_move != 0
 				 && !tbl && unit->escape(&md->bl, abl, rnd()%10 +1)
 				) {
 					//Escaped.
