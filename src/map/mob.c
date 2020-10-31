@@ -1464,7 +1464,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 			mob_stop_attack(md);
 			const struct mob_data *m_md = BL_CCAST(BL_MOB, bl); // Can be NULL due to master being BL_PC
 			// If master is BL_MOB and in battle, lock & chase to master's target instead, unless configured not to.
-			if ((battle_config.slave_chase_masters_chasetarget == 0 || (m_md != NULL && !mob->is_in_battle_state(m_md)))
+			if ((bl->type == BL_PC || battle_config.slave_chase_masters_chasetarget == 0 || (m_md != NULL && !mob->is_in_battle_state(m_md)))
 			    && map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
 			    && unit->walk_toxy(&md->bl, x, y, 0) == 0)
 				return 1;
