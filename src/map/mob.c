@@ -3735,10 +3735,10 @@ static int mob_skill_use(struct mob_data *md, int64 tick, int event)
  *------------------------------------------*/
 static int mobskill_event(struct mob_data *md, struct block_list *src, int64 tick, int flag)
 {
-	int target_id, res = 0;
+	int target_id;
 
-	nullpo_ret(md);
-	nullpo_ret(src);
+	nullpo_retr(1, md);
+	nullpo_retr(1, src);
 	if(md->bl.prev == NULL || md->status.hp <= 0)
 		return 1;
 
@@ -3750,6 +3750,8 @@ static int mobskill_event(struct mob_data *md, struct block_list *src, int64 tic
 	target_id = md->target_id;
 	if (!target_id || battle_config.mob_changetarget_byskill)
 		md->target_id = src->id;
+
+	int res = 1;
 
 	if (flag == -1)
 		res = mob->skill_use(md, tick, MSC_CASTTARGETED);
