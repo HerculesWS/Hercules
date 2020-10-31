@@ -5486,8 +5486,8 @@ typedef int (*HPMHOOK_pre_mob_getfriendstatus_sub) (struct block_list **bl, va_l
 typedef int (*HPMHOOK_post_mob_getfriendstatus_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef struct block_list* (*HPMHOOK_pre_mob_getfriendstatus) (struct mob_data **md, int *cond1, int *cond2);
 typedef struct block_list* (*HPMHOOK_post_mob_getfriendstatus) (struct block_list* retVal___, struct mob_data *md, int cond1, int cond2);
-typedef int (*HPMHOOK_pre_mob_skill_use) (struct mob_data **md, int64 *tick, int *event);
-typedef int (*HPMHOOK_post_mob_skill_use) (int retVal___, struct mob_data *md, int64 tick, int event);
+typedef int (*HPMHOOK_pre_mob_use_skill) (struct mob_data **md, int64 *tick, int *event);
+typedef int (*HPMHOOK_post_mob_use_skill) (int retVal___, struct mob_data *md, int64 tick, int event);
 typedef int (*HPMHOOK_pre_mob_skill_event) (struct mob_data **md, struct block_list **src, int64 *tick, int *flag);
 typedef int (*HPMHOOK_post_mob_skill_event) (int retVal___, struct mob_data *md, struct block_list *src, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_mob_is_clone) (int *class_);

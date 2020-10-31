@@ -575,7 +575,7 @@ struct mob_interface {
 	struct block_list* (*getmasterhpltmaxrate) (struct mob_data *md, int rate);
 	int (*getfriendstatus_sub) (struct block_list *bl, va_list ap);
 	struct block_list *(*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
-	int (*skill_use) (struct mob_data *md, int64 tick, int event);
+	int (*use_skill) (struct mob_data *md, int64 tick, int event);
 	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);
 	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, uint32 mode, int flag, unsigned int duration);

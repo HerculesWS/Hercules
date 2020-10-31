@@ -381,10 +381,10 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		clif->fixpos(bl);
 		// Monsters in this situation first use a chase skill, then unlock target and then use an idle skill
 		if ((++ud->walk_count % WALK_SKILL_INTERVAL) == 0)
-			mob->skill_use(md, tick, -1);
+			mob->use_skill(md, tick, -1);
 		mob->unlocktarget(md, tick);
 		if ((++ud->walk_count % WALK_SKILL_INTERVAL) != 0)
-			mob->skill_use(md, tick, -1);
+			mob->use_skill(md, tick, -1);
 		return 1;
 	}
 
@@ -435,7 +435,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		// Walk skills are triggered regardless of target due to the idle-walk mob state.
 		// But avoid triggering on stop-walk calls.
 		if (tid != INVALID_TIMER && (ud->walk_count % WALK_SKILL_INTERVAL) == 0
-		    && map->list[bl->m].users > 0 && mob->skill_use(md, tick, -1) == 0) {
+		    && map->list[bl->m].users > 0 && mob->use_skill(md, tick, -1) == 0) {
 			// Walk skills are supposed to be used while walking
 			if (!(ud->skill_id == NPC_SELFDESTRUCTION && ud->skilltimer != INVALID_TIMER)
 			    && md->state.skillstate != MSS_WALK) {
@@ -2342,7 +2342,7 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 		if(md) {
 			//First attack is always a normal attack
 			if(md->state.skillstate == MSS_ANGRY || md->state.skillstate == MSS_BERSERK) {
-				if (mob->skill_use(md, tick, -1) == 0) {
+				if (mob->use_skill(md, tick, -1) == 0) {
 					map->freeblock_unlock();
 					return 1;
 				}

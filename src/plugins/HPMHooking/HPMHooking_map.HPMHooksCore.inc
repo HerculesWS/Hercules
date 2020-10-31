@@ -4084,8 +4084,8 @@ struct {
 	struct HPMHookPoint *HP_mob_getfriendstatus_sub_post;
 	struct HPMHookPoint *HP_mob_getfriendstatus_pre;
 	struct HPMHookPoint *HP_mob_getfriendstatus_post;
-	struct HPMHookPoint *HP_mob_skill_use_pre;
-	struct HPMHookPoint *HP_mob_skill_use_post;
+	struct HPMHookPoint *HP_mob_use_skill_pre;
+	struct HPMHookPoint *HP_mob_use_skill_post;
 	struct HPMHookPoint *HP_mob_skill_event_pre;
 	struct HPMHookPoint *HP_mob_skill_event_post;
 	struct HPMHookPoint *HP_mob_is_clone_pre;
@@ -11143,8 +11143,8 @@ struct {
 	int HP_mob_getfriendstatus_sub_post;
 	int HP_mob_getfriendstatus_pre;
 	int HP_mob_getfriendstatus_post;
-	int HP_mob_skill_use_pre;
-	int HP_mob_skill_use_post;
+	int HP_mob_use_skill_pre;
+	int HP_mob_use_skill_post;
 	int HP_mob_skill_event_pre;
 	int HP_mob_skill_event_post;
 	int HP_mob_is_clone_pre;
