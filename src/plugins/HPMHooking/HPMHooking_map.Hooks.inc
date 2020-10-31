@@ -69834,6 +69834,33 @@ struct quest_db* HP_quest_read_db_sub(struct config_setting_t *cs, int n, const 
 	}
 	return retVal___;
 }
+int HP_quest_setting_lookup_const(struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if (HPMHooks.count.HP_quest_setting_lookup_const_pre > 0) {
+		int (*preHookFunc) (struct config_setting_t **tt, const char **name, int **value, int *quest_id, int *idx, const char **kind, const char **source);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_setting_lookup_const_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_quest_setting_lookup_const_pre[hIndex].func;
+			retVal___ = preHookFunc(&tt, &name, &value, &quest_id, &idx, &kind, &source);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.quest.setting_lookup_const(tt, name, value, quest_id, idx, kind, source);
+	}
+	if (HPMHooks.count.HP_quest_setting_lookup_const_post > 0) {
+		int (*postHookFunc) (int retVal___, struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_quest_setting_lookup_const_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_quest_setting_lookup_const_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, tt, name, value, quest_id, idx, kind, source);
+		}
+	}
+	return retVal___;
+}
 int HP_quest_questinfo_validate_icon(int icon) {
 	int hIndex = 0;
 	int retVal___ = 0;
