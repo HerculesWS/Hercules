@@ -10771,6 +10771,7 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 			status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
 			break;
 		case SC_MAGICPOWER:
+		case SC_IMPOSITIO:
 			status_change_end(bl, type, INVALID_TIMER);
 			break;
 	}
