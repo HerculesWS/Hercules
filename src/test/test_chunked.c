@@ -276,6 +276,8 @@ static void testChunked1Recv(char *buf, int size)
 	recv_cnt++;
 	const size_t src_size = GET_RBUF_PACKET_CHUNKED_SIZE(buf, PACKET_TEST_CHUNKED);
 
+	TEST_INT(p->msg_id, 10);
+
 	RFIFO_CHUNKED_INIT(p, src_size, fake_rbuf, fake_rsize);
 
 	RFIFO_CHUNKED_ERROR(p) {
