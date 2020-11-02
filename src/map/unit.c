@@ -220,7 +220,7 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 		timer_delay = status->get_speed(bl);
 
 	if (timer_delay > 0)
-		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walk_toxy_timer, bl->id, 0); //TODO: check if unit->walk_toxy_timer uses any intptr data
+		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walk_toxy_timer, bl->id, timer_delay);
 	return 0;
 }
 
@@ -479,7 +479,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		timer_delay = status->get_speed(bl);
 
 	if (timer_delay > 0) {
-		ud->walktimer = timer->add(tick + timer_delay, unit->walk_toxy_timer, id, 0);
+		ud->walktimer = timer->add(tick + timer_delay, unit->walk_toxy_timer, id, timer_delay);
 		if (md != NULL && DIFF_TICK(tick, md->dmgtick) < 3000) // not required not damaged recently
 			clif->move(ud);
 	} else if (ud->state.running != 0) {
