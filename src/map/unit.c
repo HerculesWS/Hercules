@@ -420,10 +420,12 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		// Movement was successful, reset walktoxy_fail_count
 		md->walktoxy_fail_count = 0;
 
-		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC) != 0 && npc->touch_areanpc2(md))
-			return 0; // Warped
-		else
+		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC) != 0) {
+			if (npc->touch_areanpc2(md))
+				return 0; // Warped
+		} else {
 			md->areanpc_id = 0;
+		}
 
 		if (md->min_chase > md->db->range3)
 			md->min_chase--;
