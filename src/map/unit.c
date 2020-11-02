@@ -2382,7 +2382,9 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 	}
 
 	if(ud->state.attack_continue) {
-		unit->set_dir(src, map->calc_dir(src, target->x, target->y));
+		enum unit_dir dir = map->calc_dir(src, target->x, target->y);
+		if (dir != ud->dir)
+			unit->set_dir(src, dir);
 		if( src->type == BL_PC )
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
 		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
