@@ -276,7 +276,9 @@ static void testChunked1Recv(char *buf, int size)
 	recv_cnt++;
 	const size_t src_size = GET_RBUF_PACKET_CHUNKED_SIZE(buf, PACKET_TEST_CHUNKED);
 
-	RFIFO_CHUNKED_INIT(p, src_size, fake_rbuf, fake_rsize) {
+	RFIFO_CHUNKED_INIT(p, src_size, fake_rbuf, fake_rsize);
+
+	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Error in testChunked1Recv\n");
 		exit(1);
 	}
@@ -324,9 +326,9 @@ static void testChunkedBuf2(char *data, int sz)
 		p->msg_id = msg_id;
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_START_FINAL(p);
+	WFIFO_CHUNKED_FINAL_START(p);
 	p->msg_id = msg_id;
-	WFIFO_CHUNKED_BLOCK_END();
+	WFIFO_CHUNKED_FINAL_END();
 
 	TEST_INT(recv_complete, true);
 	TEST_BUF(data, fake_rbuf, fake_rsize);

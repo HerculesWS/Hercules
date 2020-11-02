@@ -338,9 +338,9 @@ static void aloginif_send_split_to_char(int fd, struct api_session_data *sd, int
 		INIT_PACKET_PROXY_FIELDS(&p->base, sd);
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_START_FINAL(p);
+	WFIFO_CHUNKED_FINAL_START(p);
 	INIT_PACKET_PROXY_FIELDS(&p->base, sd);
-	WFIFO_CHUNKED_BLOCK_END();
+	WFIFO_CHUNKED_FINAL_END();
 }
 
 static void aloginif_parse_from_char(int fd, Handler_func func)

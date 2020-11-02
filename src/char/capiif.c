@@ -169,7 +169,9 @@ void capiif_parse_emblem_upload(int fd)
 		return;
 	}
 
-	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), character->data->emblem_data, character->data->emblem_data_size) {
+	RFIFO_CHUNKED_INIT(p, GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd), character->data->emblem_data, character->data->emblem_data_size);
+
+	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Wrong guild emblem packets order\n");
 		chr->clean_online_char_emblem_data(character);
 		return;
@@ -222,9 +224,9 @@ void capiif_emblem_download(int fd, int guild_id, int emblem_id)
 		INIT_PACKET_REPLY_PROXY_FIELDS(&p->base, p2);
 		WFIFO_CHUNKED_BLOCK_END();
 	}
-	WFIFO_CHUNKED_START_FINAL(p);
+	WFIFO_CHUNKED_FINAL_START(p);
 	INIT_PACKET_REPLY_PROXY_FIELDS(&p->base, p2);
-	WFIFO_CHUNKED_BLOCK_END();
+	WFIFO_CHUNKED_FINAL_END();
 }
 
 static struct online_char_data* capiif_get_online_character(const struct PACKET_API_PROXY *p)

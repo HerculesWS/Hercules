@@ -234,7 +234,9 @@ DATA(emblem_download)
 	GET_DATA(p, emblem_download);
 	const size_t src_emblem_size = data_size - CHUNKED_FLAG_SIZE;
 
-	RFIFO_CHUNKED_INIT(p, src_emblem_size, sd->data, sd->data_size) {
+	RFIFO_CHUNKED_INIT(p, src_emblem_size, sd->data, sd->data_size);
+
+	RFIFO_CHUNKED_ERROR(p) {
 		ShowError("Wrong guild emblem packets order\n");
 		aclif->terminate_connection(fd);
 		return;

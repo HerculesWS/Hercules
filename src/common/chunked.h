@@ -52,7 +52,7 @@
 #define WFIFO_CHUNKED_BLOCK_END() \
 		WFIFOSET(p ## _fd, p ## _len)
 
-#define WFIFO_CHUNKED_START_FINAL(p) \
+#define WFIFO_CHUNKED_FINAL_START(p) \
 	const uint32 p ## _left_size = p ## data_len - p ## _full_chunks_count * WFIFO_CHUNK_SIZE; \
 	p ## _len = p ## _fixed_len + p ## _left_size; \
 	WFIFOHEAD(p ## _fd, p ## _len); \
@@ -63,12 +63,17 @@
 	if (p ## _left_size > 0) \
 		memcpy((p)->data, p ## data + p ## _offset, p ## _left_size);
 
+#define WFIFO_CHUNKED_FINAL_END() \
+		WFIFOSET(p ## _fd, p ## _len)
+
 #define RFIFO_CHUNKED_INIT(p, src_data_size, dst_data, dst_data_size) \
 	const int p ## _flag = (p)->flag; \
 	char **p ## _dst_data_ptr = &(dst_data); \
 	int *p ## _dst_data_size_ptr = &(dst_data_size); \
 	const char *p ## _src_data = (p)->data; \
-	const size_t p ## _src_data_size = src_data_size; \
+	const size_t p ## _src_data_size = src_data_size
+
+#define RFIFO_CHUNKED_ERROR(p) \
 	if (p ## _flag > 2 || p ## _flag < 0 || (p ## _flag == 0 && *p ## _dst_data_ptr != NULL) || (p ## _flag == 1 && *p ## _dst_data_ptr == NULL))
 
 #define RFIFO_CHUNKED_COMPLETE(p) \
