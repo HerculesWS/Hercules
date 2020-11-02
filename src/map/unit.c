@@ -310,10 +310,12 @@ static int unit_warpto_master(struct block_list *master_bl, struct block_list *s
 			*masterteleport_timer = timer->gettick();
 			return 0;
 		} else if (DIFF_TICK(timer->gettick(), *masterteleport_timer) > 3000) {
+			*masterteleport_timer = 0;
 			unit->warp(slave_bl, master_bl->m, master_bl->x, master_bl->y, CLR_TELEPORT);
 		}
+	} else {
+		*masterteleport_timer = 0; // resets tick in case he isn't far anymore.
 	}
-	*masterteleport_timer = 0; // resets tick in case he isn't far anymore.
 
 	return 0;
 }
