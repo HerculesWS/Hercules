@@ -421,7 +421,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		md->walktoxy_fail_count = 0;
 
 		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC) != 0) {
-			if (npc->touch_areanpc2(md))
+			if (npc->touch_areanpc2(md) != 0)
 				return 0; // Warped
 		} else {
 			md->areanpc_id = 0;
