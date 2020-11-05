@@ -18325,20 +18325,23 @@ static void clif_quest_send_list(struct map_session_data *sd)
 		for (j = 0; j < qi->objectives_count; j++) {
 			Assert_retb(j < MAX_QUEST_OBJECTIVES);
 
-			int mob_id = 0;
-			if (qi->objectives[j].mob == 0 && qi->objectives[j].mapid >= 0)
-				mob_id = QUEST_MAPWIDE_ID;
-			else
-				mob_id = qi->objectives[j].mob;
+			int mob_id = qi->objectives[j].mob;
+			if (mob_id == 0) {
+				if (quest_mobtypeisenabled(qi->objectives[j].mobtype)) {
+					mob_id = QUEST_MOBTYPE_ID;
+				} else if (qi->objectives[j].mapid >= 0) {
+					mob_id = QUEST_MAPWIDE_ID;
+				}
+			}
 			real_len += sizeof(info->objectives[j]);
 
 #if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
 			info->objectives[j].huntIdent = sd->quest_log[i].quest_id;
 			info->objectives[j].huntIdent2 = j;
-			info->objectives[j].mobType = 0; // Info Needed
+			info->objectives[j].mobType = quest_mobtype2client(qi->objectives[j].mobtype);
 #elif PACKETVER >= 20150513
 			info->objectives[j].huntIdent = (sd->quest_log[i].quest_id * 1000) + j;
-			info->objectives[j].mobType = 0; // Info Needed
+			info->objectives[j].mobType = quest_mobtype2client(qi->objectives[j].mobtype);
 #endif
 			info->objectives[j].mob_id = mob_id;
 #if PACKETVER >= 20150513
@@ -18349,6 +18352,8 @@ static void clif_quest_send_list(struct map_session_data *sd)
 			info->objectives[j].maxCount = qi->objectives[j].count;
 			if (mob_id == QUEST_MAPWIDE_ID) {
 				safestrncpy(info->objectives[j].mobName, map->list[qi->objectives[j].mapid].name, NAME_LENGTH);
+			} else if (mob_id == QUEST_MOBTYPE_ID) {
+				safestrncpy(info->objectives[j].mobName, "", NAME_LENGTH);
 			} else {
 				const struct mob_db *monster = mob->db(qi->objectives[j].mob);
 				safestrncpy(info->objectives[j].mobName, monster->jname, NAME_LENGTH);
@@ -18425,19 +18430,22 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 	packet->count = qi->objectives_count;
 
 	for (i = 0; i < qi->objectives_count; i++) {
-		int mob_id = 0;
-		if (qi->objectives[i].mob == 0 && qi->objectives[i].mapid >= 0)
-			mob_id = QUEST_MAPWIDE_ID;
-		else
-			mob_id = qi->objectives[i].mob;
+		int mob_id = qi->objectives[i].mob;
+		if (mob_id == 0) {
+			if (quest_mobtypeisenabled(qi->objectives[i].mobtype)) {
+				mob_id = QUEST_MOBTYPE_ID;
+			} else if (qi->objectives[i].mapid >= 0) {
+				mob_id = QUEST_MAPWIDE_ID;
+			}
+		}
 
 #if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
 		packet->objectives[i].huntIdent = qd->quest_id;
 		packet->objectives[i].huntIdent2 = i;
-		packet->objectives[i].mobType = 0; // Info Needed
+		packet->objectives[i].mobType = quest_mobtype2client(qi->objectives[i].mobtype);
 #elif PACKETVER >= 20150513
 		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
-		packet->objectives[i].mobType = 0; // Info Needed
+		packet->objectives[i].mobType = quest_mobtype2client(qi->objectives[i].mobtype);
 #endif
 		packet->objectives[i].mob_id = mob_id;
 #if PACKETVER >= 20150513
@@ -18448,6 +18456,8 @@ static void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 
 		if (mob_id == QUEST_MAPWIDE_ID) {
 			safestrncpy(packet->objectives[i].mobName, map->list[qi->objectives[i].mapid].name, NAME_LENGTH);
+		} else if (mob_id == QUEST_MOBTYPE_ID) {
+			safestrncpy(packet->objectives[i].mobName, "", NAME_LENGTH);
 		} else {
 			const struct mob_db *monster = mob->db(qi->objectives[i].mob);
 			safestrncpy(packet->objectives[i].mobName, monster->jname, NAME_LENGTH);
