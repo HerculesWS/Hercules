@@ -10961,7 +10961,7 @@ static int pc_calc_pvprank(struct map_session_data *sd)
 	m=&map->list[sd->bl.m];
 	old=sd->pvp_rank;
 	sd->pvp_rank=1;
-	map->foreachinmap(pc_calc_pvprank_sub,sd->bl.m,BL_PC,sd);
+	map->foreachinmap(pc->calc_pvprank_sub,sd->bl.m,BL_PC,sd);
 	if(old!=sd->pvp_rank || sd->pvp_lastusers!=m->users_pvp)
 		clif->pvpset(sd,sd->pvp_rank,sd->pvp_lastusers=m->users_pvp,0);
 	return sd->pvp_rank;
@@ -13008,6 +13008,7 @@ void pc_defaults(void)
 	pc->cleareventtimer = pc_cleareventtimer;
 	pc->addeventtimercount = pc_addeventtimercount;
 
+	pc->calc_pvprank_sub = pc_calc_pvprank_sub;
 	pc->calc_pvprank = pc_calc_pvprank;
 	pc->calc_pvprank_timer = pc_calc_pvprank_timer;
 
