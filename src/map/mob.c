@@ -3464,7 +3464,7 @@ static struct block_list *mob_getfriendstatus(struct mob_data *md, int cond1, in
 }
 
 /**
- * Checks if skill cast condition in fulfilled and executes the skill in case of success.
+ * Checks if skill cast condition is fulfilled and executes the skill in case of success.
  *
  * @param md The monster which tries to cast a skill.
  * @param tick The timestamp of skill execution.
