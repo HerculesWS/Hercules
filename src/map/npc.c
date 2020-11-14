@@ -4352,25 +4352,30 @@ static void npc_setdisplayname(struct npc_data *nd, const char *newname)
 		clif->blname_ack(0, &nd->bl);
 }
 
-/// Changes the display class of the npc.
-///
-/// @param nd Target npc
-/// @param class_ New display class
+/**
+ * Changes an NPC's display class.
+ *
+ * @param[in,out] nd The NPC whose display class should be changed.
+ * @param[in] class_ The NPC's new display class.
+ *
+ **/
 static void npc_setclass(struct npc_data *nd, int class_)
 {
 	nullpo_retv(nd);
 
-	if( nd->class_ == class_ )
+	if (nd->class_ == class_)
 		return;
 
 	Assert_retv(nd->bl.m >= 0 && nd->bl.m < map->count);
 
-	if( map->list[nd->bl.m].users )
-		clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
+	if (map->list[nd->bl.m].users > 0)
+		clif->clearunit_area(&nd->bl, CLR_OUTSIGHT); // Fade out.
+
 	nd->class_ = class_;
 	status->set_viewdata(&nd->bl, class_);
-	if( map->list[nd->bl.m].users )
-		clif->spawn(&nd->bl);// fade in
+
+	if (map->list[nd->bl.m].users > 0)
+		clif->spawn(&nd->bl); // Fade in.
 }
 
 static void npc_refresh(struct npc_data *nd)
