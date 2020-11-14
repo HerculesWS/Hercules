@@ -4363,6 +4363,8 @@ static void npc_setclass(struct npc_data *nd, int class_)
 	if( nd->class_ == class_ )
 		return;
 
+	Assert_retv(nd->bl.m >= 0 && nd->bl.m < map->count);
+
 	if( map->list[nd->bl.m].users )
 		clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
 	nd->class_ = class_;
