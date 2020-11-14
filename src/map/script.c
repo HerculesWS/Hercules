@@ -26454,11 +26454,24 @@ static BUILDIN(navigateto)
 static bool rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
 {
 	const char *sender_name, *title, *body;
+	const char *func_name = script->getfuncname(st);
+	int receiver_id = script_getnum(st, 2);
 
-	if (strcmp(script->getfuncname(st), "rodex_sendmail_acc") == 0 || strcmp(script->getfuncname(st), "rodex_sendmail_acc2") == 0)
-		msg->receiver_accountid = script_getnum(st, 2);
-	else
-		msg->receiver_id = script_getnum(st, 2);
+	if (strcmp(func_name, "rodex_sendmail_acc") == 0 || strcmp(func_name, "rodex_sendmail_acc2") == 0) {
+		if (receiver_id < START_ACCOUNT_NUM || receiver_id > END_ACCOUNT_NUM) {
+			ShowError("script:rodex_sendmail: Invalid receiver account ID %d passed!\n", receiver_id);
+			return false;
+		}
+
+		msg->receiver_accountid = receiver_id;
+	} else {
+		if (receiver_id < START_CHAR_NUM) {
+			ShowError("script:rodex_sendmail: Invalid receiver character ID %d passed!\n", receiver_id);
+			return false;
+		}
+
+		msg->receiver_id = receiver_id;
+	}
 
 	sender_name = script_getstr(st, 3);
 	if (strlen(sender_name) >= NAME_LENGTH) {
