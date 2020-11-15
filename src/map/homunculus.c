@@ -321,13 +321,13 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 	{
 		bool stop = false;
 		// Check if pre-requisites were met
-		if (!battle_config.skillfree) {
+		if (battle_config.skillfree == 0) {
 			int c = hd->homunculus.class_ - HM_CLASS_BASE;
 			if (hd->homunculus.intimacy < homun->dbs->skill_tree[c][i].intimacylv)
 				stop = true;
 			if (!stop) {
 				for (int j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
-					if (homun->dbs->skill_tree[c][i].need[j].id &&
+					if (homun->dbs->skill_tree[c][i].need[j].id != 0 &&
 					   homun->checkskill(hd, homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv) {
 						stop = true;
 						break;
@@ -338,9 +338,9 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 		// Level up skill if requisites were met
 		if (!stop) {
 			hd->homunculus.hskill[i].lv++;
-			hd->homunculus.skillpts-- ;
+			hd->homunculus.skillpts--;
 			status_calc_homunculus(hd, SCO_NONE);
-			if (hd->master) {
+			if (hd->master != NULL) {
 				clif->homskillup(hd->master, skill_id);
 				clif->hominfo(hd->master, hd, 0);
 				clif->homskillinfoblock(hd->master);
