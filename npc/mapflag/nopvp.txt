@@ -1,36 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Disable Player versus Player mode.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
+//================= Current Version =======================================
 //= 1.1a
-//===== Description: =========================================
+//================= Description ===========================================
 //= Prevents PvP mode on a map.
-//===== Additional Comments: =================================
-//= 1.0 - Initial script.
-//============================================================
-
-1@cata	mapflag	pvp	off
-2@cata	mapflag	pvp	off
-1@nyd	mapflag	pvp	off
-2@nyd	mapflag	pvp	off
-1@orcs	mapflag	pvp	off
-2@orcs	mapflag	pvp	off
-1@tower	mapflag	pvp	off
-2@tower	mapflag	pvp	off
-3@tower	mapflag	pvp	off
-4@tower	mapflag	pvp	off
-5@tower	mapflag	pvp	off
-6@tower	mapflag	pvp	off
-1@mist	mapflag	pvp	off
-1@cash	mapflag	pvp	off
-1@pump	mapflag	pvp	off
-2@pump	mapflag	pvp	off
-1@lhz	mapflag	pvp	off
-1@ma_h	mapflag	pvp	off
-1@ma_c	mapflag	pvp	off
-1@ma_b	mapflag	pvp	off
-1@ecl	mapflag	pvp	off
+//=========================================================================
 
 bat_a01	mapflag	pvp	off
 bat_a02	mapflag	pvp	off

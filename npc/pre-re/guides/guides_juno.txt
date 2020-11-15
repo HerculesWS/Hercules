@@ -1,30 +1,49 @@
-//===== Hercules Script ======================================
-//= Yuno Guides
-//===== By: ==================================================
-//= KitsuneStarwind, usul, kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Silent
+//= Copyright (C) Musashiden
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//= Copyright (C) usul
+//= Copyright (C) KitsuneStarwind
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Juno Guides (Pre-Renewal)
+//================= Description ===========================================
 //= Guides for the City of Juno
-//===== Additional Comments: =================================
-//= Edited Miss Yoon text. Added town soldiers by usul. Edited town soldiers
-//= and added map location option for them. [kobra_k88]
-//= 1.1 Changed sprites and cutins to Schwarzwald Republic ones
-//= 1.2 Optimized, updated common guide names [Lupus]
-//= 1.3 Updated the mini map localization function. [Musashiden]
-//= 1.4 Juno Guides are now up to date according to iRO. [Musashiden]
-//= 1.5 Removed Duplicates [Silent].
-//= 1.6 Changed one of the Juno soldier's sprite. [Musashiden]
-//= 1.7 Rescripted to official 10.3 standards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
 yuno,153,47,4	script	Juno Guide#yuno	8_F_GIRL,{
 	mes "[Ms. Yoon]";
 	mes "A place that takes the vision of the future, and gives it form in the present. Welcome to";
 	mes "the city of Juno!";
 	next;
-	switch(select("Armory:Tool Shop:Sage Castle (Sage Job Change Place):Street of Book Stores:Juphero Plaza:Library of the Republic:Schweicherbil Magic Academy:Monster Museum:Forge:Airport:End Conversation")) {
+	switch(select("Armory", "Tool Shop", "Sage Castle (Sage Job Change Place)", "Street of Book Stores", "Juphero Plaza", "Library of the Republic", "Schweicherbil Magic Academy", "Monster Museum", "Forge", "Airport", "End Conversation")) {
 	case 1:
 		viewpoint 1,120,138,0,0xFF3355;
 		mes "[Ms. Yoon]";

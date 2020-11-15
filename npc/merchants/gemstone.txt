@@ -1,24 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Gemstone Trader
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Trade various colors of gemstones for other color gemstones.
-//===== Additional Comments: =================================
-//= 1.0 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Any notes pertaining to the prior trader may be found
-//=     in the cities/payon.txt
-//= 1.1 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.2 Updated input with min/max values. [L0ne_W0lf]
-//=     Added a checkweight.
-//= 1.3 Fixed checks. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 payon,173,238,5	script	Jade#pay	4_M_SAGE_A,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -29,7 +45,7 @@ payon,173,238,5	script	Jade#pay	4_M_SAGE_A,{
 	mes "change them to Gemstones";
 	mes "of a different color.";
 	next;
-	switch(select("Blue Gemstones into Red ones!:Red Gemstones into Yellow ones!:Yellow Gemstones into Blue ones!")) {
+	switch(select("Blue Gemstones into Red ones!", "Red Gemstones into Yellow ones!", "Yellow Gemstones into Blue ones!")) {
 	case 1: callsub S_TradeGems,717,716;
 	case 2: callsub S_TradeGems,716,715;
 	case 3: callsub S_TradeGems,715,717;
@@ -55,7 +71,7 @@ S_TradeGems:
 		mes "that you currently have.";
 		mes "What do you want to do?";
 		next;
-		switch(select("Give me as many as you can.:I want to set the amount.:I quit.")) {
+		switch(select("Give me as many as you can.", "I want to set the amount.", "I quit.")) {
 		case 1:
 			delitem getarg(0),.@gems * 2;
 			getitem getarg(1),.@gems;
@@ -68,31 +84,33 @@ S_TradeGems:
 			mes "that you can enter is 100.";
 			next;
 			while(1) {
-				input .@input,0,101;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Jade]";
 					mes "None at all?";
 					mes "I guess you";
 					mes "changed your mind...";
 					close;
 				}
-				else if (.@input > 100) {
+				if (.@input > 100) {
 					mes "[Jade]";
 					mes "Errm...";
 					mes "I asked you to enter";
 					mes "an amount no greater";
 					mes "than 100, remember...?";
 					next;
+					continue;
 				}
-				else if (.@gems < .@input) {
+				if (.@gems < .@input) {
 					// Custom dialogue
 					mes "[Jade]";
 					mes "Errm...";
 					mes "You don't have that";
 					mes "many gems to trade...";
 					next;
+					continue;
 				}
-				else break;
+				break;
 			}
 			delitem getarg(0),.@input * 2;
 			getitem getarg(1),.@input;

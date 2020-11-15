@@ -1,16 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Gepard
+//= Copyright (C) $ephiroth
+//= Copyright (C) SinSloth
+//= Copyright (C) KarLaeda
+//= Copyright (C) Lupus
+//= Copyright (C) Toms
+//= Copyright (C) Silent
+//= Copyright (C) Musashiden
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Alan
+//= Copyright (C) Au{R}oN
+//= Copyright (C) erKURITA
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Lighthalzen City
-//===== By: ==================================================
-//=  erKURITA, Au{R}oN (Translated by Alan), $ephiroth
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Lighthalzen NPCs
+//================= Current Version =======================================
 //= 2.2
-//===== Description: =========================================
-//= Lighthalzen NPCs (Temporal names for now) [erKURITA]
-//===== Additional Comments: ==================================
-//= 2.0 Added missing Lab Staff#amano08 NPC. (bugreport:4319) [Gepard]
-//= 2.1 Commented out Duplicate NPCs. (bugreport:4555)
-//= 2.2 Added missing NPC found in AEGIS files. [L0ne_W0lf]
-//=============================================================
+//=========================================================================
 
 lighthalzen,198,285,5	script	Jiwon#zen5	4_F_LGTGIRL,{
 	mes "[Jiwon]";
@@ -70,7 +102,7 @@ lighthalzen,261,112,3	script	Ruth#zen4	4_F_LGTGIRL,{
 	mes "happiness. Oh, I love";
 	mes "you so much, Oyoung.";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Whoa...";
 	mes "This couple is";
 	mes "really headed for";
@@ -94,7 +126,7 @@ lighthalzen,259,108,7	script	Oyoung#zen14	4_M_LGTMAN,{
 	mes "they got vitamin deficiency.";
 	mes "I better take care of that~";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Sweet Sister!";
 	mes "I don't know what's";
 	mes "more mind boggling--";
@@ -286,7 +318,7 @@ lighthalzen,230,182,4	script	Klaubis#zen3	4_M_LGTGRAND,{
 	mes "but it can be a little too";
 	mes "quiet and uneventful here.";
 	next;
-	switch(select("Have you lived in here long?:I agree.:Have you heard about the serial killer?")) {
+	switch(select("Have you lived in here long?", "I agree.", "Have you heard about the serial killer?")) {
 	case 1:
 		mes "[Klaubis]";
 		mes "Yes, our family has";
@@ -301,7 +333,7 @@ lighthalzen,230,182,4	script	Klaubis#zen3	4_M_LGTGRAND,{
 		mes "many people stay in their";
 		mes "hometowns. Even if you do";
 		mes "leave, though, you can always";
-		mes "come back. It wouldn't be your^FFFFFF ^000000 hometown if you couldn't, right?";
+		mes "come back. It wouldn't be your hometown if you couldn't, right?";
 		close;
 	case 2:
 		mes "[Klaubis]";
@@ -429,7 +461,7 @@ lighthalzen,132,103,5	script	Sefith#li_01	4_M_JOB_KNIGHT2,{
 	mes "Good looks. Intelligence.";
 	mes "Excellent manners. A strong,";
 	mes "manly chin and overpowering,";
-	mes "piercing eyes. Perfectly balanced^FFFFFF ^000000 passion and charimsma. All the";
+	mes "piercing eyes. Perfectly balanced passion and charimsma. All the";
 	mes "good things that ladies want.";
 	next;
 	mes "[Sefith]";
@@ -521,7 +553,7 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 		mes "make a donation";
 		mes "to help the hungry?";
 		next;
-		if (select("Sure.:No, thanks.") == 1) {
+		if (select("Sure.", "No, thanks.") == 1) {
 			mes "[Lucius]";
 			mes "Now, you can donate 1 to";
 			mes "30,000 zeny that will be used";
@@ -529,16 +561,8 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 			mes "starving children. If you wish";
 			mes "to cancel, please enter ''0.''";
 			next;
-			input .@input;
-			if (.@input > 30000 || .@input < 0) {
-				mes "[Lucius]";
-				mes "Please enter a value";
-				mes "from 1 to 30,000 in";
-				mes "order to make a donation";
-				mes "to the needy, youngster.";
-				close;
-			}
-			else if (.@input == 0) {
+			input(.@input);
+			if (.@input == 0) {
 				mes "[Lucius]";
 				mes "How disappointing,";
 				mes "but I'm sure you have";
@@ -546,6 +570,14 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 				mes "you can afford to give to";
 				mes "the needy, you're welcome";
 				mes "to come back at any time.";
+				close;
+			}
+			if (.@input > 30000 || .@input < 1) {
+				mes "[Lucius]";
+				mes "Please enter a value";
+				mes "from 1 to 30,000 in";
+				mes "order to make a donation";
+				mes "to the needy, youngster.";
 				close;
 			}
 			mes "[Lucius]";
@@ -581,8 +613,8 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 				mes "my gratitude, adventurer. Bless";
 				mes "you, youngster and take care.";
 				$donatedzeny = 0;
-				getitem 603,1; //Old_Blue_Box
-				getitem 12016,1; //Speed_Up_Potion
+				getitem Old_Blue_Box,1;
+				getitem Speed_Up_Potion,1;
 			}
 			close;
 		}
@@ -859,7 +891,7 @@ lhz_in02,283,276,4	script	Customer#amano12	4_F_CHNDRESS1,{
 	mes "to ask me out or something?";
 	next;
 	mes "[Sei]";
-	if (Sex == 1) {
+	if (Sex == SEX_MALE) {
 		mes "Well, if he does,";
 		mes "shouldn't he have";
 		mes "more guts? Or are ";
@@ -891,7 +923,7 @@ lighthalzen,123,212,4	script	Merpi#zen2	8_F_GIRL,{
 	mes "If you have any questions,";
 	mes "feel free to ask me anything.";
 	next;
-	switch(select("Well, I have nothing to ask...:Any news or rumors?:I like laundry too.")) {
+	switch(select("Well, I have nothing to ask...", "Any news or rumors?", "I like laundry too.")) {
 	case 1:
 		mes "[Merpi]";
 		mes "Oh, really?";
@@ -1006,7 +1038,7 @@ OnTouch:
 	mes "Would you give me";
 	mes "some money?";
 	next;
-	if (select("Give him some money.:Ignore him.") == 1) {
+	if (select("Give him some money.", "Ignore him.") == 1) {
 		if (Zeny < 50) {
 			mes "[Beggar]";
 			mes "I appreciate your";
@@ -1017,7 +1049,7 @@ OnTouch:
 			emotion e_heh;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Here you go,";
 		mes "take this.";
 		Zeny -= 50;
@@ -1052,19 +1084,19 @@ OnTouch:
 			mes "[Beggar]";
 			mes "What you can see and";
 			mes "understand might not match";
-			mes "with reality. Like the stars that^FFFFFF ^000000 are always there, but not visible";
-			mes "during the day, we'll always have^FFFFFF ^000000 hope, even if we can't see it.";
+			mes "with reality. Like the stars that are always there, but not visible";
+			mes "during the day, we'll always have hope, even if we can't see it.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
@@ -1081,7 +1113,7 @@ OnTouch:
 			mes "sort of don't. Let me explain";
 			mes "it this way. I take life day by";
 			mes "day, with each day covering its";
-			mes "own spectrum with miracle on^FFFFFF ^000000 one end and tragedy on the other.";
+			mes "own spectrum with miracle on one end and tragedy on the other.";
 			next;
 			mes "[Beggar]";
 			mes "So each day has the capacity";
@@ -1101,21 +1133,21 @@ OnTouch:
 			next;
 			mes "[Beggar]";
 			mes "Stand up when you're down";
-			mes "and live your life with passion.^FFFFFF ^000000 The capacity for miracles will";
+			mes "and live your life with passion. The capacity for miracles will";
 			mes "always be there and know that";
 			mes "you can be someone else's";
 			mes "miracle. Isn't that wonderful?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
@@ -1142,14 +1174,14 @@ OnTouch:
 			mes "isn't so productive. More of";
 			mes "a frustration that you can let";
 			mes "go. Someone cut you off on the";
-			mes "freeway or a friend innocently^FFFFFF ^000000 forgot your birthday? No biggie.";
+			mes "freeway or a friend innocently forgot your birthday? No biggie.";
 			next;
 			mes "[Beggar]";
 			mes "Don't let this kind of";
 			mes "anger get to you or you'll";
 			mes "look like a loser. Think of";
 			mes "the big picture and if you're";
-			mes "still upset, vent appropriately.^FFFFFF ^000000 Be honest without hurting anyone.";
+			mes "still upset, vent appropriately. Be honest without hurting anyone.";
 			next;
 			mes "[Beggar]";
 			mes "The second kind of anger";
@@ -1172,18 +1204,18 @@ OnTouch:
 			mes "righteous anger, say to protect";
 			mes "someone dear to you, will make";
 			mes "you a hero. Fighting with anger";
-			mes "born of frustration will make you^FFFFFF ^000000 a bully. Know the difference.";
+			mes "born of frustration will make you a bully. Know the difference.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
@@ -1197,7 +1229,7 @@ OnTouch:
 			close;
 		}
 	}
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "...";
 	mes "......";
 	close;
@@ -1351,7 +1383,7 @@ lhz_in01,139,40,7	script	Enoz#oz	1_M_INNKEEPER,{
 	mes "[Enoz]";
 	mes "So, the novel I ordered from";
 	mes "the Rune-Midgarts Kingdom";
-	mes "just recently arrived. It's real^FFFFFF ^000000 good, by the guy who wrote";
+	mes "just recently arrived. It's real good, by the guy who wrote";
 	mes "''Roda Frog Adventure''";
 	mes "years ago. Remember?";
 	next;
@@ -1369,14 +1401,14 @@ lhz_in01,124,28,3	script	Ellette#tre	1_F_01,{
 	mes "[Ellette]";
 	mes "...";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Excuse me.";
 	next;
 	mes "[Ellette]";
 	mes "...";
 	mes "......";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Hello?";
 	next;
 	mes "[Ellette]";
@@ -1409,7 +1441,7 @@ lhz_in01,125,40,3	script	Dowbow Ryuei#ryusei	4_M_THAIONGBAK,{
 	mes "you like better? ''Uber-Cool''";
 	mes "or ''Reality?'' Pick one~";
 	next;
-	if (select("Uber-Cool:Reality") == 1) {
+	if (select("Uber-Cool", "Reality") == 1) {
 		mes "[Dowbow Ryuei]";
 		mes "Oh yeah? Me too!";
 		mes "Yeah, we got the same";
@@ -1535,7 +1567,7 @@ lhz_in03,192,19,3	script	Haggar#zen1	4_M_EINMAN,{
 
 lhz_in03,193,25,2	script	Bartender#12	1_M_PUBMASTER,{
 	mes "[Tony]";
-	if (Sex) {
+	if (Sex == SEX_MALE) {
 		mes "Hey man, I know this";
 	}
 	else {
@@ -1790,7 +1822,7 @@ lhz_in01,35,226,5	script	Rekenber Guard#li01	4_M_LGTGUARD2,{
 	mes "area! Please show";
 	mes "some ID immediately!";
 	next;
-	if (select("ID?:Cancel") == 1) {
+	if (select("ID?", "Cancel") == 1) {
 		mes "[Rekenber Guard]";
 		mes "I don't know how you";
 		mes "adventurers do things in";
@@ -1918,7 +1950,7 @@ OnTouch:
 		mes "[Rekenber Guard]";
 		mes "......................";
 		next;
-		if (select("Nice day, huh?:Cancel") == 1) {
+		if (select("Nice day, huh?", "Cancel") == 1) {
 			mes "[Rekenber Guard]";
 			mes "...";
 			emotion e_an;
@@ -1943,7 +1975,7 @@ lhz_in01,25,141,4	script	Regenschirm Guard	4_M_LGTGUARD,{
 		mes "Do you wish to";
 		mes "go underground?";
 		next;
-		if(select("Yes:No")==1){
+		if(select("Yes", "No")==1){
 			if(isequipped(2657)){
 				warp "lhz_dun01",150,288;
 				end;
@@ -1973,8 +2005,7 @@ lhz_in01,25,141,4	script	Regenschirm Guard	4_M_LGTGUARD,{
 }
 
 
-// Lighthalzen Bank Area ------------------------------------------------------
-
+//== Lighthalzen Bank Area =================================
 lhz_in02,34,41,1	script	Arthur#zen16	4_M_DIEMAN,{
 	mes "[Arthur]";
 	mes "The chairs here are";
@@ -2038,8 +2069,7 @@ lhz_in02,21,38,7	script	Bank Clerk#1::BankClerk	4_M_04,{
 lhz_in02,21,25,7	duplicate(BankClerk)	Bank Clerk#2	4_M_04
 lhz_in02,34,22,1	duplicate(BankClerk)	Bank Clerk#3	4_M_SAGE_C
 
-// Lightalzen Prison Area -------------------------------------------------------------
-
+//== Lightalzen Prison Area ================================
 lhz_in02,145,177,0	script	Togii#07	4_M_DIEMAN,{
 	mes "[Togii]";
 	mes "Oooh yeah...";
@@ -2170,8 +2200,7 @@ lhz_in02,147,222,3	script	Officer Guo#06::off_guo	4_M_03,{
 
 lhz_in02,142,222,6	duplicate(off_guo)	Suspect#6	4_M_LGTPOOR
 
-// New -----------------------------------------------------------------------
-
+//== New ===================================================
 lhz_in01,14,28,3	script	Banquet Staff	4_M_MANAGER,{
 	mes "[Banquet Staff]";
 	mes "This Banquet Hall is used";
@@ -2560,7 +2589,7 @@ lighthalzen,107,107,3	script	Kosit#zen1	4_M_LGTMAN,{
 	mes "these rules is because of all";
 	mes "the unruly gangsters that can";
 	mes "sometimes get into the city.";
-	mes "I mean, it's relatively peaceful^FFFFFF ^000000 and all. But these rules...";
+	mes "I mean, it's relatively peaceful and all. But these rules...";
 	next;
 	mes "[Kosit]";
 	mes "It's good to be safe,";
@@ -2637,7 +2666,7 @@ lighthalzen,364,282,3	script	Bodger#zen5	4_M_LGTPOOR,{
 	mes "I hear that the people";
 	mes "who live Uptown eat totally";
 	mes "delicious, gourmet food eight";
-	mes "times a day! Hopefully it's just^FFFFFF ^000000 an exaggeration. 'Cuz if it";
+	mes "times a day! Hopefully it's just an exaggeration. 'Cuz if it";
 	mes "wasn't, I'd be so mad...";
 	close;
 }
@@ -2733,7 +2762,7 @@ lhz_in02,267,22,1	script	Shop Assistant#cobo	4_F_02,{
 	mes "membership fee that's waived when you spend a certain amount every";
 	mes "month in our store. If you invite your friends, you'll receive spe--";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "N-no thank you!";
 	mes "I'm not interested!";
 	close;
@@ -2747,7 +2776,7 @@ lighthalzen,192,63,4	script	Sergei#zen1	4_F_03,{
 	mes "over there. Would you";
 	mes "like me to tell you?";
 	next;
-	if (select("Sure.:No, thanks.") == 1) {
+	if (select("Sure.", "No, thanks.") == 1) {
 		mes "[Sergei]";
 		mes "This previous owner of";
 		mes "this Weapon Shop was";
@@ -2824,7 +2853,7 @@ lighthalzen,40,107,4	script	Vergil#zen4	4_M_LGTMAN,{
 	mes "I just want to ditch work,";
 	mes "run outside and work out.";
 	next;
-	switch(select("Where do you want to go?:But shouldn't you go to work?:Have you heard about the serial killer?")) {
+	switch(select("Where do you want to go?", "But shouldn't you go to work?", "Have you heard about the serial killer?")) {
 	case 1:
 		mes "[Vergil]";
 		mes "Well, those guys in";
@@ -2949,12 +2978,12 @@ lhz_in01,139,48,7	script	Leimi#mimir	1_F_MERCHANT_01,{
 	mes "Um, may I help you?";
 	emotion e_omg;
 	if (BaseJob == Job_Assassin) {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			next;
 			mes "[Leimi]";
 			mes "Oh, you're an Assassin!";
 			mes "Oh, you boys are soooo cute!";
-			mes "And so cool and so mysterious^FFFFFF ^000000 all at the same time! I love you!";
+			mes "And so cool and so mysterious all at the same time! I love you!";
 		}
 		else {
 			next;
@@ -2969,13 +2998,13 @@ lhz_in01,139,48,7	script	Leimi#mimir	1_F_MERCHANT_01,{
 	close;
 }
 
-lhz_in01,138,47,0	script	#mimir_camera	-1,2,2,{
+lhz_in01,138,47,0	script	#mimir_camera	FAKE_NPC,2,2,{
 OnTouch:
 	if (BaseJob == Job_Assassin) {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "^3355FF*Click*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What the...?";
 			mes "That sound. Did...";
 			mes "Did someone just";
@@ -2993,7 +3022,7 @@ lhz_in02,36,274,4	script	Cool Event Staff#Saera	4_F_ZONDAGIRL,{
 	mes "of Cool Event Corporation.";
 	mes "How may I help you today?";
 	next;
-	switch(select("Temporary headquarters?:Voting:No, thanks.")) {
+	switch(select("Temporary headquarters?", "Voting", "No, thanks.")) {
 	case 1:
 		mes "[Saera]";
 		mes "Our headquarters building";
@@ -3178,40 +3207,6 @@ lhz_in01,221,131,7	script	Scientist#li_01	4_LGTSCIENCE,{
 	}
 }
 
-// Lighthalzen Mushroom.
+//== Lighthalzen Mushroom ==================================
 // Don't really understand why it's there, but it's funny regardless.
 lhz_in01,157,54,0,0	monster	Red Mushroom	1085,1,120000,100000,0
-
-//=========================
-// Older Comments
-//=========================
-//= 0.1 Placed temporal names, why there weren't on the SVN before? [erKURITA]
-//= 0.2 Implemented some crap NPCs [MasterOfMuppets]
-//= 0.3 Another load of NPCs. Scripted by Kargha [MasterOfMuppets]
-//= 0.4 More Town NPCs. [Musashiden]
-//= 0.5 Added a BIG load of Lighthalzen NPCs. [musashiden]
-//= 0.6 Fixed some typos+Coordinates. [Musashiden]
-//= 0.7 Implemented some more crap NPCs and the second entrance to biolabs [MasterOfMuppets]
-//= 0.8 Removed Duplicates [Silent]
-//= 0.9 Removed Duplicates [Toms]
-//= 1.0 Added a missing feature to the donation NPC [MasterOfMuppets]
-//= 1.0a added constants to emotions, minor optimization [Lupus]
-//= 1.0b npcid fix [KarLaeda]
-//= 1.1 Added new NPC by $ephiroth and merged other NPCs
-//=	from npc\other\lighthalzen_???.txt [Lupus]
-//= 1.2 Moved some NPCs to Lighthalzen quests. [SinSloth]
-//= 1.3	Moved some other NPCs for quests purposes. [SinSloth]
-//= 1.4 Corrected NPC names to fall within proper resctrictions. [L0ne_W0lf]
-//= 1.5 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 1.6 Massive NPC clean up, includes corrected dialogs and [L0ne_W0lf]
-//=	added missing dialogs, fixed indentation, corrected some NPC
-//=	facing positions, NPC names are more unique now. Removed
-//=	whitespace (empty lines after header and before end curly)
-//=	reduced usage of the command "goto", grammatical corrections.
-//=	Added additional missing NPCs.
-//= 1.7 Removed Auciton Staff as the offical auction file has been added. [L0ne_W0lf]
-//=	Corrected Lucius so he checks the donation variable. (bugreport:1103) [L0ne_W0lf]
-//= 1.7a Another fix to Lucius. (bugreport:1118) [L0ne_W0lf]
-//= 1.7b Another fix to Lucius (trivial). (bugreport:1125)
-//= 1.8 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.9 Added Cool Corp. Event Staff, who oringialy resided in the DTS_warper script file. [L0ne_W0lf]

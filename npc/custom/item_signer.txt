@@ -12,7 +12,6 @@
 //============================================================
 
 prt_in,24,61,7	script	Perchik	1_M_01,{
-	
 	setarray .@item[0],644,3;	// Item requirements: <ID>,<Count>{,...} (0 to disable)
 	setarray .@cost[0],0,5000;	// Zeny requirements: <base price>,<price per refine>
 
@@ -20,7 +19,7 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 	mes "[Perchik]";
 	mes "I can ^0055FFsign your name^000000 on almost any rare item you hold.";
 	next;
-	if(select("Tell me more...:Sign my items, please!") == 1) {
+	if(select("Tell me more...", "Sign my items, please!") == 1) {
 		mes "[Perchik]";
 		mes "I can put your name on any slotless equipment or weapon.";
 		emotion e_ic;
@@ -79,7 +78,7 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 		emotion e_hmm;
 		close;
 	}
-	if (getiteminfo(.@id,10)) {
+	if (getiteminfo(.@id, ITEMINFO_SLOTS) > 0) {
 		mes "Sorry, I don't sign slotted items.";
 		emotion e_sry;
 		close;
@@ -102,7 +101,7 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 	}
 	mes "Shall I sign your ^0055FF"+getitemname(.@id)+"^000000?";
 	next;
-	if(select("Ok!:Leave")==2) {
+	if(select("Ok!", "Leave")==2) {
 		mes "[Perchik]";
 		mes "See you...";
 		emotion e_yawn;
@@ -127,7 +126,7 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 	delitem2 .@id,1,1,.@ref,0,.@slot[0],.@slot[1],.@slot[2],.@slot[3];
 	mes "Done!";
 	emotion e_proud;
-	getitem2 .@id,1,1,.@ref,0,254,0,getcharid(0)&0xffff,(getcharid(0)>>16)&0xffff;
+	getitem2 .@id,1,1,.@ref,0,254,0,getcharid(CHAR_ID_CHAR)&0xffff,(getcharid(CHAR_ID_CHAR)>>16)&0xffff;
 	equip .@id;
 	close;
 }

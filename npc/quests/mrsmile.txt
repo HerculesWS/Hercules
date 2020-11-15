@@ -1,16 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) Akaru
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mr. Smile Quest
-//===== By: ==================================================
-//= kobra_k88, Akaru
-//===== Current Version: =====================================
-//= 1.4a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Trade Clover, Fluff and Jellopy for a Mr. Smile mask.
-//===== Additional Comments: =================================
-//= 1.4 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.4a Fixed a little Typo error in duplicates. (bugreport:749) [Samuray22]
-//============================================================
+//================= Current Version =======================================
+//= 1.4a
+//=========================================================================
 
 -	script	Smile Assistance::SmileHelper	4_F_03,{
 	mes "[Smile Girl]";
@@ -18,7 +42,7 @@
 	mes "This is Smile Assistance.";
 	mes "How may I help you ?";
 	next;
-	switch(select("^3355FFMr. Smile^000000 ?:Construct ^3355FFMr. Smile^000000 :Quit")) {
+	switch(select("^3355FFMr. Smile^000000 ?", "Construct ^3355FFMr. Smile^000000 ", "Quit")) {
 	case 1:
 		mes "[Smile Girl]";
 		mes "National Event held by the command of ^5577FFHis majesty Tristram the 3rd^000000,";
@@ -46,15 +70,15 @@
 		mes "And will try to make Ragnarok the most enjoyable game in the world.";
 		close;
 	case 2:
-		if (countitem(909) > 9 && countitem(914) > 9 && countitem(705) > 9) {
+		if (countitem(Jellopy) > 9 && countitem(Fluff) > 9 && countitem(Clover) > 9) {
 			mes "[Smile Girl]";
 			mes "Congratulations !";
 			mes "Now please take this Mr.Smile.";
 			next;
-			delitem 909,10; //Jellopy
-			delitem 914,10; //Fluff
-			delitem 705,10; //Clover
-			getitem 2278,1; //Mr_Smile
+			delitem Jellopy,10;
+			delitem Fluff,10;
+			delitem Clover,10;
+			getitem Mr_Smile,1;
 			mes "[Smile Girl]";
 			mes "His majesty,Tristram the 3rd";
 			mes "has promised to try his best to make Ragnarok better and more enjoyable.";
@@ -92,18 +116,10 @@
 	}
 }
 
-// Additional Smile Assistance staff
+//== Additional Smile Assistance staff =====================
 alberta,113,53,4	duplicate(SmileHelper)	Smile Assistance#alb	4_F_03
 aldebaran,136,135,4	duplicate(SmileHelper)	Smile Assistance#alde	4_F_03
 geffen,119,107,4	duplicate(SmileHelper)	Smile Assistance#gef	4_F_03
 moc_ruins,59,154,3	duplicate(SmileHelper)	Smile Assistance#moc	4_F_03
 payon,186,104,5	duplicate(SmileHelper)	Smile Assistance#pay	4_F_03
 prontera,157,187,4	duplicate(SmileHelper)	Smile Assistance#prt	4_F_03
-
-//============================================================
-// Old changelog
-//============================================================
-//= Fully working. 1.1 Optimized
-//= 1.2 updated Payon coords [Lupus]
-//= 1.3 fixed exploit [Lupus]
-//============================================================

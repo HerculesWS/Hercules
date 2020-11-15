@@ -1,21 +1,34 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef COMMON_NULLPO_H
 #define COMMON_NULLPO_H
 
-#include "../common/cbasetypes.h"
+#include "common/hercules.h"
 
-// enabled by default on debug builds
-#if defined(DEBUG) && !defined(NULLPO_CHECK)
+// if need disable nullpo checks this line can be commented
 #define NULLPO_CHECK
-#endif
-
-// Skip assert checks on release builds
-#if !defined(RELEASE) && !defined(ASSERT_CHECK)
+// if need disable asserts checks this line can be commented
 #define ASSERT_CHECK
-#endif
+
+struct backtrace_state;
 
 /** Assert */
 
@@ -27,10 +40,23 @@
 #include <crtdbg.h>
 #endif // !DEFCPP && WIN && !MINGW
 #define Assert(EX) assert(EX)
+/**
+ * Reports an assertion failure if the passed expression is false.
+ *
+ * @param EX The expression to test.
+ * @return false if the passed expression is true, false otherwise.
+ */
 #define Assert_chk(EX) ( (EX) ? false : (nullpo->assert_report(__FILE__, __LINE__, __func__, #EX, "failed assertion"), true) )
+/**
+ * Reports an assertion failure (without actually checking it).
+ *
+ * @param EX the expression to report.
+ */
+#define Assert_report(EX) (nullpo->assert_report(__FILE__, __LINE__, __func__, #EX, "failed assertion"))
 #else // ! ASSERT_CHECK
 #define Assert(EX) (EX)
 #define Assert_chk(EX) ((EX), false)
+#define Assert_report(EX) ((void)(EX))
 #endif // ASSERT_CHECK
 
 #if defined(NULLPO_CHECK)
@@ -124,13 +150,18 @@
 
 
 struct nullpo_interface {
-	void (*assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
-};
+	void (*init) (void);
+	void (*final) (void);
 
-struct nullpo_interface *nullpo;
+	void (*assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
+
+	struct backtrace_state *backtrace_state;
+};
 
 #ifdef HERCULES_CORE
 void nullpo_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct nullpo_interface *nullpo;
 
 #endif /* COMMON_NULLPO_H */

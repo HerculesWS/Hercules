@@ -1,36 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) KarLaeda
+//= Copyright (C) Vicious
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//= Copyright (C) Pgro Team (OwNaGe)(Aegis)
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Priest Job Quest
-//===== By: ==================================================
-//= Translated By: Pgro Team (OwNaGe)(Aegis)
-//= Converted by: kobra_k88.
-//= Further bugfixed and tested by Lupus
-//===== Current Version: =====================================
-//= 2.6
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
-//= [Official Conversion]
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= Job Change quest for Priest class.
-//===== Additional Comments: =================================
-//= Fully working.  Changed the way Priests enter the test room to help Acos.
-//= Must use this with the included Acolyte quest to work properely.
-//= 1.3 Added Baby Class support, fixed 3 wrong constants bugs [Lupus]
-//= 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//=     2nd Job Quests again. It also guides adv classes where
-//=     to go. [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Merged JFunc [Lupus]
-//= 2.1a Fixed typo [KarLaeda]
-//= 2.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.3 Several bugfixes with the help of Barron-Monster. [L0ne_W0lf]
-//= 2.3a More bug fixes. [L0ne_W0lf]
-//= 2.4 Changed Marthilda to Mathilda. [L0ne_W0llf]
-//= 2.4a Deleted unused variables. [Samuray22]
-//= 2.4b Corrected a Typo error ";;". [Samuray22]
-//= 2.5 Added Quest Log commands. [Kisuka]
-//= 2.6 Removed the need for use of 'goto.' [L0ne_W0lf]
-//==========================================================
+//================= Current Version =======================================
+//= 2.6
+//=========================================================================
 
 prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 	// Uncomment the following 'if' statement to allow High Priests to assist Acolytes with the job change quest.
@@ -49,15 +62,15 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		if (BaseJob == Job_Priest) {
 			mes "[Bishop Paul]";
 			mes "Ah...";
-			if (Sex)
-				mes "It is good to see you again, Brother " + strcharinfo(0) + ". Once again, God's grace has caused our paths to cross.";
+			if (Sex == SEX_MALE)
+				mes "It is good to see you again, Brother " + strcharinfo(PC_NAME) + ". Once again, God's grace has caused our paths to cross.";
 			else
-				mes "It is good to see you once again, Sister " + strcharinfo(0) + ". The grace of God has brought you once more before me.";
+				mes "It is good to see you once again, Sister " + strcharinfo(PC_NAME) + ". The grace of God has brought you once more before me.";
 			next;
 			mes "[Bishop Paul]";
 			mes "I'm pleased to see that you are continuing to lead the children of God on the right path. Is there anything I can help you with today?";
 			next;
-			switch(select("How is your health?:I want to help this Acolyte.:Father, I need your help.")) {
+			switch(select("How is your health?", "I want to help this Acolyte.", "Father, I need your help.")) {
 			case 1:
 				mes "[Bishop Paul]";
 				mes "Thank you for your concern. I'm doing fine and am in good health. Please give my regards to your brothers and sisters.";
@@ -81,8 +94,8 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 				mes "[Bishop Paul]";
 				mes "Do you wish to help him out during the spiritual training?";
 				next;
-				if (select("Yes, I do.:Give me a second.") == 1) {
-					if (countitem(2608) > 0) {
+				if (select("Yes, I do.", "Give me a second.") == 1) {
+					if (countitem(Rosary) > 0) {
 						mes "[Bishop Paul]";
 						mes "I will now send you to the training place for Acolytes. Please send my regards to Brother Peter...";
 						next;
@@ -116,7 +129,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		else if (BaseClass == Job_Novice) {
 			mes "[Bishop Paul]";
 			mes "May God be";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "with you, brother.";
 			else
 				mes "with you, sister.";
@@ -126,7 +139,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "the Sanctuary.";
 			mes "What brings you here?";
 			next;
-			switch(select("I want to be an Acolyte.:I want to be a Priest.:Nothing, really.")) {
+			switch(select("I want to be an Acolyte.", "I want to be a Priest.", "Nothing, really.")) {
 			case 1:
 				mes "[Bishop Paul]";
 				mes "Oh I see...";
@@ -149,7 +162,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		else {
 			mes "[Bishop Paul]";
 			mes "May God be";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "with you, brother.";
 			else
 				mes "with you, sister.";
@@ -158,7 +171,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "What brings you here";
 			mes "to Prontera Sanctuary?";
 			next;
-			switch(select("Information about Priests.:Nothing.")) {
+			switch(select("Information about Priests.", "Nothing.")) {
 			case 1:
 				mes "[Bishop Paul]";
 				mes "Priests have the authority to perform and administer religious rites.";
@@ -204,14 +217,14 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 	if (PRIEST_Q == 0) {
 		mes "[Bishop Paul]";
 		mes "May God bless";
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "you, Brother.";
 		else
 			mes "you, Sister.";
 		mes "What brings";
 		mes "you to me?";
 		next;
-		switch(select("I want to be a Priest.:How are you, Father?")) {
+		switch(select("I want to be a Priest.", "How are you, Father?")) {
 		case 1:
 			mes "[Bishop Paul]";
 			mes "I see. So you wish to be a Priest. God will be delighted by your decision and will bless you.";
@@ -226,7 +239,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "[Bishop Paul]";
 			mes "If you satisfy the requirements, I suggest that you apply for the Priest job first. Do you wish to apply now?";
 			next;
-			if (select("Yes, I do.:I need some time to think about it...") == 1) {
+			if (select("Yes, I do.", "I need some time to think about it...") == 1) {
 				if (JobLevel < 40) {
 					mes "[Bishop Paul]";
 					mes "You are not yet qualified to be a Priest. Please go out into the world and broaden your experiences.";
@@ -244,10 +257,10 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 				PRIEST_Q = 1;
 				setquest 8009;
 					mes "[Bishop Paul]";
-				if (Sex)
-					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Brother " + strcharinfo(0) + ".";
+				if (Sex == SEX_MALE)
+					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Brother " + strcharinfo(PC_NAME) + ".";
 				else
-					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Sister " + strcharinfo(0) + ".";
+					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Sister " + strcharinfo(PC_NAME) + ".";
 				next;
 				mes "[Bishop Paul]";
 				mes "For the First Trial, you will make a pilgrimage, and visit three acscetic Priests in a specific order.";
@@ -276,7 +289,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 					mes "[Bishop Paul]";
 					mes "Well, are you ready for the Spiritual Training?";
 					next;
-					if (select("I am ready.:Give me a minute.") == 1) {
+					if (select("I am ready.", "Give me a minute.") == 1) {
 						mes "[Bishop Paul]";
 						mes "Good. I will send you to the training ground. When you get there, please speak to Brother Peter who is in charge of the training.";
 						next;
@@ -329,7 +342,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "Thank you for asking.";
 			next;
 			mes "[Bishop Paul]";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "I hope you will continue to go on your mission as God's servant, brother.";
 			else
 				mes "I hope you will continue to go on your mission as God's servant, sister.";
@@ -345,7 +358,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "[Bishop Paul]";
 		mes "May I ask you the reason you're still here? You didn't forget your pilgrimage, did you?";
 		next;
-		if (select("Sorry father, I need to check the order.:No no no, not at all.") == 1) {
+		if (select("Sorry father, I need to check the order.", "No no no, not at all.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Ah, I see. I will let you know the order of pilgrimage again, and hope that you will have a safe journey.";
 			next;
@@ -409,7 +422,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "Well, are you ready for";
 		mes "the spiritual training?";
 		next;
-		if (select("I'm ready.:Give me a minute.") == 1) {
+		if (select("I'm ready.", "Give me a minute.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Good. I will send you to the training ground. When you get there, please speak to Brother Peter who is in charge of the training.";
 			next;
@@ -428,7 +441,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "[Bishop Paul]";
 		mes "You seem confident about the spiritual training. Shall we begin?";
 		next;
-		if (select("I'm ready.:Give me a minute.") == 1) {
+		if (select("I'm ready.", "Give me a minute.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Good. I will send you to the training ground. When you get there, please speak to Brother Peter who is in charge of the training.";
 			next;
@@ -450,7 +463,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "[Bishop Paul]";
 		mes "Please endure these trials for the sake of your dream. Why don't you challenge the spiritual training again?";
 		next;
-		if (select("I'll try again.:Give me a minute.") == 1) {
+		if (select("I'll try again.", "Give me a minute.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Good. I will send you to the training ground. Please ask for help from Brother Peter.";
 			next;
@@ -501,7 +514,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "[Bishop Paul]";
 		mes "God, grant your power to your servant standing before you.";
 		changequest 8015,8016;
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "Let him send your message throughout the ends of the earth.";
 		else
 			mes "Let her send your message throughout the ends of the earth.";
@@ -518,11 +531,11 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		next;
 		mes "[Bishop Paul]";
 		if (.@joblvl < 50) {
-			getitem 1550,1; //Book
+			getitem Book,1;
 			mes "This book is for you. I hope it will aid you in spreading God's message on earth.";
 		}
 		else {
-			getitem 1551,1; //Bible
+			getitem Bible,1;
 			mes "In commemoration of your job change, I am giving you a bible. This will lighten your way to the path of righteousness.";
 		}
 		next;
@@ -536,9 +549,9 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 	mes "[Sister Cecilia]";
 	if (BaseJob != Job_Acolyte) {
 		if (BaseJob == Job_Priest) {
-			mes "May god bless you, "+ (Sex ? "brother":"sister") +". It brings my heart joy to see that you working hard to carry out the will of God.";
+			mes "May god bless you, "+ (Sex == SEX_MALE ? "brother":"sister") +". It brings my heart joy to see that you working hard to carry out the will of God.";
 		} else if (Class == Job_Novice) {
-			mes "May god bless you, "+ (Sex ? "brother":"sister") +".";
+			mes "May god bless you, "+ (Sex == SEX_MALE ? "brother":"sister") +".";
 			mes "Prontera parish welcomes you.";
 			next;
 			mes "[Sister Cecilia]";
@@ -557,10 +570,10 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 			mes "But please...";
 			mes "Take your time, and decide what job will be the best for you.";
 		} else {
-			mes "May god bless you, "+ (Sex ? "brother":"sister") +".";
+			mes "May god bless you, "+ (Sex == SEX_MALE ? "brother":"sister") +".";
 			mes "Welcome to Prontera parish. How may I help you?";
 			next;
-			if (select("Tell me more about Priests.:Nothing.") == 1) {
+			if (select("Tell me more about Priests.", "Nothing.") == 1) {
 				mes "[Sister Cecilia]";
 				mes "Messengers of God are usually known as Priests. After becoming an Acolyte, you can train with the goal of becoming a Priest.";
 				next;
@@ -577,13 +590,13 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		close;
 	}
 	if (PRIEST_Q == 0) {
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "May God bless you, brother.";
 		else
 			mes "May God bless you, sister.";
 		mes "May I ask what brings you here?";
 		next;
-		switch(select("I wish to become a Priest.:Nothing.")) {
+		switch(select("I wish to become a Priest.", "Nothing.")) {
 		case 1:
 			mes "[Sister Cecilia]";
 			mes "I see. You've devoted yourself to God. Many Acolytes wish to become Priests to continue on their personal journey towards holiness.";
@@ -658,10 +671,10 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "Welcome. You demonstrated great effort to accomplish your first trial. Now, speak to Bishop Paul so that you can begin your next trial on your path to Priesthood.";
 		next;
 		mes "[Sister Cecilia]";
-		if (Sex)
-			mes "Brother "+ strcharinfo(0) +"...";
+		if (Sex == SEX_MALE)
+			mes "Brother "+ strcharinfo(PC_NAME) +"...";
 		else
-			mes "Sister "+ strcharinfo(0) +"...";
+			mes "Sister "+ strcharinfo(PC_NAME) +"...";
 		mes "The spiritual training is much more difficult than the pilgrimage, but I believe in you.";
 		next;
 		mes "[Sister Cecilia]";
@@ -704,21 +717,21 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		}
 		next;
 		mes "[Sister Cecilia]";
-		if (Sex)
-			mes "Brother "+ strcharinfo(0) +"...";
+		if (Sex == SEX_MALE)
+			mes "Brother "+ strcharinfo(PC_NAME) +"...";
 		else
-			mes "Sister "+ strcharinfo(0) +"...";
+			mes "Sister "+ strcharinfo(PC_NAME) +"...";
 		mes "We will now begin your formal oath for the Priesthood. Make yourself comfortable, and just answer with your heart.";
 		next;
 		mes "[Sister Cecilia]";
-		if (Sex)
-			mes "Brother "+ strcharinfo(0) +",";
+		if (Sex == SEX_MALE)
+			mes "Brother "+ strcharinfo(PC_NAME) +",";
 		else
-			mes "Sister "+ strcharinfo(0) +",";
+			mes "Sister "+ strcharinfo(PC_NAME) +",";
 		mes "Are you willing";
 		mes "to give your life to God?";
 		next;
-		if (select("Yes.:No!") == 2) {
+		if (select("Yes.", "No!") == 2) {
 			mes "[Sister Cecilia]";
 			mes "Aw...? How could you give me that kind of answer? I assume you're not ready to be a Priest yet...";
 			next;
@@ -730,7 +743,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you take advantage of the holy abilities given by God for selfish, destructive or greedy ends?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Sister Cecilia]";
 			mes "Aw...? God won't grant you the power of holiness if your goals aren't just and pure. Meditate on your motivations for a while, and then come back to me.";
 			next;
@@ -742,7 +755,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you help aid others, even complete strangers, in battles by easing their suffering?";
 		next;
-		if (select("Yes.:No.") == 2) {
+		if (select("Yes.", "No.") == 2) {
 			mes "[Sister Cecilia]";
 			mes "No, no. You've got the wrong idea. God authorizes us to use his power to support his children. You must help people in danger: it is your obligation.";
 			next;
@@ -754,7 +767,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Are you willing to sacrifice yourself for the sake of others?";
 		next;
-		if (select("Yes.:No.") == 2) {
+		if (select("Yes.", "No.") == 2) {
 			mes "[Sister Cecilia]";
 			mes "How can you say no...? That's one of the basic principles of Priesthood. You must value the welfare of others over your own safety.";
 			next;
@@ -766,7 +779,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you repeatly say the same phrase in public in order to send God's message to his children?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Sister Cecilia]";
 			mes "No no no... You've got it wrong. Even though your purpose is to spread God's message, no one will eagerly accept what you say when you spam text.";
 			next;
@@ -780,7 +793,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you lure many monsters to help your party members level up?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Sister Cecilia]";
 			mes "No, you won't. Luring many monsters does more harm than good. There is no exception. That behavior is totally unacceptable.";
 			next;
@@ -792,7 +805,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you follow God, no matter what it takes, even if he demands you to kill yourself?";
 		next;
-		if (select("Yes.:No.") == 2) {
+		if (select("Yes.", "No.") == 2) {
 			mes "[Sister Cecilia]";
 			mes "With that spirit, you can't be a Priest. If it is God's will to sacrifice yourself for a good purpose, you must carry out God's will as his servant.";
 			next;
@@ -802,13 +815,13 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 			close;
 		}
 		mes "[Sister Cecilia]";
-		if (Sex)
-			mes "Brother "+ strcharinfo(0) +"...";
+		if (Sex == SEX_MALE)
+			mes "Brother "+ strcharinfo(PC_NAME) +"...";
 		else
-			mes "Sister "+ strcharinfo(0) +"...";
+			mes "Sister "+ strcharinfo(PC_NAME) +"...";
 		mes "You have demonstrated your devotion to God. Will you swear to adhere to his teachings for the rest of your days?";
 		next;
-		if (select("I do.:No.") == 1) {
+		if (select("I do.", "No.") == 1) {
 			PRIEST_Q = 9;
 			changequest 8014,8015;
 			mes "[Sister Cecilia]";
@@ -842,16 +855,15 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 	}
 }
 
-// 2nd Test
-//==========================================================
+//== 2nd Test ==============================================
 job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 	mes "[Father Peter]";
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
-		if (Sex)
-			mes "Brother "+ strcharinfo(0) +"!";
+		if (Sex == SEX_MALE)
+			mes "Brother "+ strcharinfo(PC_NAME) +"!";
 		else
-			mes "Sister "+ strcharinfo(0) +"!";
+			mes "Sister "+ strcharinfo(PC_NAME) +"!";
 		mes "So good to see you again!";
 		next;
 		mes "[Father Peter]";
@@ -867,7 +879,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "So...";
 		mes "Are you gonna help him right now?";
 		next;
-		switch(select("Yes, I am.:Give me a minute.:I changed my mind.")) {
+		switch(select("Yes, I am.", "Give me a minute.", "I changed my mind.")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Go for it! As your Acolyte enters, the test will begin. Now, I will send you to the testing area.";
@@ -909,7 +921,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "[Father Peter]";
 		mes "Anyway, let me give you a brief explanation of the spiritual training. Are you familiar with what the spiritual training is for Priests?";
 		next;
-		switch(select("Yes, I do.:Sorry...")) {
+		switch(select("Yes, I do.", "Sorry...")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Haha, I like you! But it never hurts to have too much information. The more well informed you are, the more easily you'll pass the test!";
@@ -937,7 +949,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "[Father Peter]";
 		mes "If you are close to a Priest, you'd better ask him to assist you during this trial. Now, are you ready?";
 		next;
-		switch(select("I'm ready.:Please hold on.:I want to go back.")) {
+		switch(select("I'm ready.", "Please hold on.", "I want to go back.")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Now, let the spiritual training begin. It's simple. Just kill them all. Show no mercy to the creatures of darkness!";
@@ -980,7 +992,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "[Father Peter]";
 		mes "Are you ready then?";
 		next;
-		switch(select("I'm ready.:Please hold on.:I want to go back.")) {
+		switch(select("I'm ready.", "Please hold on.", "I want to go back.")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Now, let the spiritual training begin. For the glory of God, for peace on earth, and goodwill towards all men...";
@@ -1036,10 +1048,10 @@ job_prist,23,187,1	script	Peter S. Alberto#2	4_M_MINISTER,{
 	mes "[Father Peter]";
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
-		if (Sex)
-			mes "Brother "+ strcharinfo(0) +"!";
+		if (Sex == SEX_MALE)
+			mes "Brother "+ strcharinfo(PC_NAME) +"!";
 		else
-			mes "Sister "+ strcharinfo(0) +"!";
+			mes "Sister "+ strcharinfo(PC_NAME) +"!";
 		mes "So good to see you!";
 		next;
 		mes "[Father Peter]";
@@ -1154,7 +1166,7 @@ OnTimer302000:
 	end;
 }
 
--	script	Z_C#prst	-1,{
+-	script	Z_C#prst	FAKE_NPC,{
 	end;
 
 OnMyMobDead:
@@ -1162,7 +1174,7 @@ OnMyMobDead:
 	end;
 }
 
-job_prist,24,44,0	script	Zombie Info	-1,1,1,{
+job_prist,24,44,0	script	Zombie Info	FAKE_NPC,1,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		mes "[Father Peter]";
@@ -1189,7 +1201,7 @@ OnTouch:
 	end;
 }
 
-job_prist,24,52,0	script	Zombie1_1	-1,14,1,{
+job_prist,24,52,0	script	Zombie1_1	FAKE_NPC,14,1,{
 OnInit:
 	disablenpc "Zombie1_1";
 	end;
@@ -1210,7 +1222,7 @@ OnDisable:
 	end;
 }
 
-job_prist,21,62,0	script	Zombie2_1	-1,17,1,{
+job_prist,21,62,0	script	Zombie2_1	FAKE_NPC,17,1,{
 OnInit:
 	disablenpc "Zombie2_1";
 	end;
@@ -1231,7 +1243,7 @@ OnDisable:
 	end;
 }
 
-job_prist,24,72,0	script	Zombie3_1	-1,14,1,{
+job_prist,24,72,0	script	Zombie3_1	FAKE_NPC,14,1,{
 OnInit:
 	disablenpc "Zombie3_1";
 	end;
@@ -1252,7 +1264,7 @@ OnDisable:
 	end;
 }
 
-job_prist,21,82,0	script	Zombie4_1	-1,17,1,{
+job_prist,21,82,0	script	Zombie4_1	FAKE_NPC,17,1,{
 OnInit:
 	disablenpc "Zombie4_1";
 	end;
@@ -1272,7 +1284,7 @@ OnDisable:
 	disablenpc "Zombie4_1";
 }
 
-job_prist,24,92,0	script	Zombie5_1	-1,14,1,{
+job_prist,24,92,0	script	Zombie5_1	FAKE_NPC,14,1,{
 OnInit:
 	disablenpc "Zombie5_1";
 	end;
@@ -1306,8 +1318,7 @@ OnTouch:
 	end;
 }
 
-// 3rd Test
-//==========================================================
+//== 3rd Test ==============================================
 job_prist,168,45,4	script	Deviruchi#prst	DEVIRUCHI,8,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
@@ -1346,7 +1357,7 @@ OnTouch:
 		mes "[Deviruchi]";
 		mes "Wouldn't life be so much easier if you weren't a Priest? And it'd be so easy. All you'd have to do is quit right now...";
 		next;
-		if (select("You're right, I quit!:Out of my sight, demon!") == 1) {
+		if (select("You're right, I quit!", "Out of my sight, demon!") == 1) {
 			mes "[Deviruchi]";
 			mes "^660000YES~!^000000 I mean...";
 			mes "Good for you!";
@@ -1376,7 +1387,7 @@ OnTouch:
 		mes "[Deviruchi]";
 		mes "Isn't it everyone's dream to have one of these? Think about it, being a Priest can only bring you suffering...";
 		next;
-		if (select("You're right, I'll take it!:Silence!") == 1) {
+		if (select("You're right, I'll take it!", "Silence!") == 1) {
 			mes "[Deviruchi]";
 			mes "Good choice!";
 			mes "This card can";
@@ -1432,7 +1443,7 @@ OnTouch:
 		mes "[Doppelganger]";
 		mes "Of course, I'll let you redistribute your stat points by your base level. Now, isn't that a sweet deal...?";
 		next;
-		if (select("Deal, Deal!:No deal... Doppelganger.") == 1) {
+		if (select("Deal, Deal!", "No deal... Doppelganger.") == 1) {
 			mes "[Doppelganger]";
 			mes "Good choice~";
 			mes "I shall return your";
@@ -1453,7 +1464,7 @@ OnTouch:
 		mes "[Doppelganger]";
 		mes "Just don't become a Priest. I won't ask you more than once. Then you can choose a better job... perhaps a Swordman like me.";
 		next;
-		if (select("I don't want to be a Priest!:I'll never listen to you!") == 1) {
+		if (select("I don't want to be a Priest!", "I'll never listen to you!") == 1) {
 			mes "[Doppelganger]";
 			mes "Excellent choice. Now, never return to this place. I shall return your job to Novice as you wish.";
 			next;
@@ -1502,7 +1513,7 @@ OnTouch:
 		mes "^330033It would be so easy for me to snap your fragile body in twain and grind your bones to dust.";
 		mes "Now, go back mortal!^000000";
 		next;
-		if (select("I'm so sorry. Spare me!:God will protect me.") == 1) {
+		if (select("I'm so sorry. Spare me!", "God will protect me.") == 1) {
 			mes "[Dark Lord]";
 			mes "^330033Don't ever come back!^000000";
 			close2;
@@ -1515,7 +1526,7 @@ OnTouch:
 		mes "[Dark Lord]";
 		mes "^330033With just a wave of my hand, you will cease to exist. And no one will remember you. Tremble before the might of my infinite magic!^000000";
 		next;
-		if (select("I beg you, don't...!:Begone, vile fiend!") == 1) {
+		if (select("I beg you, don't...!", "Begone, vile fiend!") == 1) {
 			mes "[Dark Lord]";
 			mes "^330033Don't ever come back!^000000";
 			close2;
@@ -1551,7 +1562,7 @@ OnTouch:
 		mes "Greetings.";
 		next;
 		mes "[Baphomet]";
-		mes "..."+ strcharinfo(0) +".";
+		mes "..."+ strcharinfo(PC_NAME) +".";
 		next;
 		mes "[Baphomet]";
 		mes "Yes, human,";
@@ -1574,7 +1585,7 @@ OnTouch:
 		mes "[Baphomet]";
 		mes "Cease this foolishness of pursuing the Priesthood. Make a contract with me. The entire world is yours for the taking.";
 		next;
-		if (select("Deal.:No, Baphomet. You lose.") == 1) {
+		if (select("Deal.", "No, Baphomet. You lose.") == 1) {
 			mes "[Baphomet]";
 			mes "Then we shall form a contract. You won't ever regret this moment...";
 			next;
@@ -1607,8 +1618,7 @@ OnTouch:
 	end;
 }
 
-// 4th Test
-//==========================================================
+//== 4th Test ==============================================
 job_prist,1,2,1	script	Mummy_Generator	4_M_MINISTER,1,1,{
 OnInit:
 	disablenpc "Mummy_Generator";
@@ -1641,7 +1651,7 @@ OnDisable:
 	end;
 }
 
-job_prist,90,55,0	script	Mummy1_1	-1,15,1,{
+job_prist,90,55,0	script	Mummy1_1	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Mummy1_1";
 	end;
@@ -1662,7 +1672,7 @@ OnDisable:
 	end;
 }
 
-job_prist,90,70,0	script	Mummy2_1	-1,15,1,{
+job_prist,90,70,0	script	Mummy2_1	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Mummy2_1";
 	end;
@@ -1683,7 +1693,7 @@ OnDisable:
 	end;
 }
 
-job_prist,90,85,0	script	Mummy3_1	-1,15,1,{
+job_prist,90,85,0	script	Mummy3_1	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Mummy3_1";
 	end;
@@ -1721,8 +1731,7 @@ OnTouch:
 	end;
 }
 
-// Functions
-//==========================================================
+//== Functions =============================================
 function	script	F_FatherRub	{
 	if (PRIEST_Q != 0) {
 		if (PRIEST_Q == 1) {
@@ -1860,4 +1869,3 @@ function	script	F_FatherYos	{
 	mes "...Acolyte, you don't have any business with me here.";
 	close;
 }
-

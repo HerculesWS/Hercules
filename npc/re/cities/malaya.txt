@@ -1,28 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) DeadlySilence
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Port Malaya
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Port Malaya Town Script
-//===== Additional Comments: =================================
-//= 0.1 Alberta sailors only. [Euphy]
-//= 0.2 Adapted from Masao's conversion.
-//= 1.0 Added remaining NPCs.
-//= 1.1 Added Jeepney script. [DeadlySilence]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-// Port Malaya Transportation
-//============================================================
+//== Port Malaya Transportation ============================
 // Old coordinates: alberta (237,71)
 alberta,196,202,3	script	Optamara Crew#alberta	4W_SAILOR,{
 	mes "[Optamara Crew]";
 	mes "Hey, there!";
 	mes "It's 10,000 Zeny to go to Port Malaya. Interested?";
 	next;
-	switch(select("About Port Malaya.:Go to Port Malaya.:Cancel.")) {
+	switch(select("About Port Malaya.", "Go to Port Malaya.", "Cancel.")) {
 	case 1:
 		mes "[Optamara Crew]";
 		mes "Port Malaya is a small village you could reach by sailing southwest from Alberta.";
@@ -74,7 +92,7 @@ malaya,276,55,4	script	Optamara Crew#malaya	4W_SAILOR,{
 		mes "Would you like to go back to Alberta with me?";
 		next;
 	}
-	switch(select("Return.:Do not return.")) {
+	switch(select("Return.", "Do not return.")) {
 	case 1:
 		mes "[Optamara Crew]";
 		mes "Great! Let's leave now for Alberta!!";
@@ -88,8 +106,7 @@ malaya,276,55,4	script	Optamara Crew#malaya	4W_SAILOR,{
 	}
 }
 
-// Generic Port Malaya NPCs
-//============================================================
+//== Generic Port Malaya NPCs ==============================
 ma_in01,30,94,4	script	Inn Keeper#ma	4_F_MALAYA,{
 	if (malaya_hi < 10) {
 		mes "[Inn Keeper]";
@@ -109,7 +126,7 @@ ma_in01,30,94,4	script	Inn Keeper#ma	4_F_MALAYA,{
 	mes "[Inn Keeper]";
 	mes "Come for a rest? Lodging will be 5,000 Zeny.";
 	next;
-	switch(select("Store.:Lodge. - 5,000z:Cancel.")) {
+	switch(select("Store.", "Lodge. - 5,000z", "Cancel.")) {
 	case 1:
 		mes "[Inn Keeper]";
 		mes "Successfully stored. See you next time.";
@@ -133,10 +150,10 @@ ma_in01,30,94,4	script	Inn Keeper#ma	4_F_MALAYA,{
 	}
 }
 
--	script	Unidentified Creature#i	-1,{
+-	script	Unidentified Creature#i	FAKE_NPC,{
 	end;
 OnInit:
-	switch(atoi(strnpcinfo(2))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 1: setarray .@npc$,"01","02","03","04"; break;
 		case 5: setarray .@npc$,"05","06","07","08"; break;
 		case 9: setarray .@npc$,"09","10","11"; break;
@@ -148,13 +165,13 @@ OnInit:
 		donpcevent "Unidentified Creature#"+.@npc$[.@i]+"::"+((.@i == .@rand)?"OnEnable":"OnDisable");
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnBingx2:
-	switch(atoi(strnpcinfo(2))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 1: setarray .@npc$,"02","03","04"; break;
 		case 5: setarray .@npc$,"06","07","08"; break;
 		case 9: setarray .@npc$,"10","11"; break;
@@ -163,27 +180,27 @@ OnBingx2:
 	.@rand = rand(.@size);
 	for(.@i = 0; .@i<.@size; ++.@i)
 		donpcevent "Unidentified Creature#"+.@npc$[.@i]+"::"+((.@i == .@rand)?"OnEnable":"OnDisable");
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 OnTouch:
-	if (getcharid(1)) {
-		if ($ma_name04$ == strcharinfo(0) || $ma_name05$ == strcharinfo(0) || $ma_name06$ == strcharinfo(0)) {
-			donpcevent strnpcinfo(0)+"::OnBingx2";
+	if (getcharid(CHAR_ID_PARTY)) {
+		if ($ma_name04$ == strcharinfo(PC_NAME) || $ma_name05$ == strcharinfo(PC_NAME) || $ma_name06$ == strcharinfo(PC_NAME)) {
+			donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 			mes "The unidentified creature gets a glimpse of you, blushes and then disappears.";
 			close;
 		}
 		if (rand(1,5)%2) {
-			switch(atoi(strnpcinfo(2))) {
-				case 1: $ma_name04$ = strcharinfo(0); break;
-				case 5: $ma_name05$ = strcharinfo(0); break;
-				case 9: $ma_name06$ = strcharinfo(0); break;
+			switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
+				case 1: $ma_name04$ = strcharinfo(PC_NAME); break;
+				case 5: $ma_name05$ = strcharinfo(PC_NAME); break;
+				case 9: $ma_name06$ = strcharinfo(PC_NAME); break;
 			}
 		}
-		donpcevent strnpcinfo(0)+"::OnBingx2";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 		mes "The unidentified creature gets a glimpse of you and disappears.";
 		close;
 	}
-	donpcevent strnpcinfo(0)+"::OnBingx2";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 	mes "The unidentified creature looks at you and runs away.";
 	close;
 }
@@ -191,16 +208,16 @@ ma_fild01,74,367,6	duplicate(Unidentified Creature#i)	Unidentified Creature#01	4
 ma_fild02,282,41,4	duplicate(Unidentified Creature#i)	Unidentified Creature#05	4_MAL_BUDIDAI,2,2
 ma_scene01,195,92,4	duplicate(Unidentified Creature#i)	Unidentified Creature#09	4_MAL_BUDIDAI,2,2
 
--	script	Unidentified Creature#j	-1,{
+-	script	Unidentified Creature#j	FAKE_NPC,{
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnBingx2:
-	switch(atoi(strnpcinfo(2))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 2: setarray .@npc$,"01","03","04"; break;
 		case 3: setarray .@npc$,"01","02","04"; break;
 		case 4: setarray .@npc$,"01","02","03"; break;
@@ -214,12 +231,12 @@ OnBingx2:
 	.@rand = rand(.@size);
 	for(.@i = 0; .@i<.@size; ++.@i)
 		donpcevent "Unidentified Creature#"+.@npc$[.@i]+"::"+((.@i == .@rand)?"OnEnable":"OnDisable");
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 OnTouch:
-	.@i = atoi(strnpcinfo(2));
+	.@i = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	if (.@i%4 == 2) {
-		if (getcharid(0) == getpartyleader(getcharid(1),2))
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(getcharid(CHAR_ID_PARTY),2))
 			.@pass = 1;
 	} else if (.@i%4 == 3) {
 		if (questprogress(4229,PLAYTIME) && questprogress(9223,PLAYTIME) && questprogress(12278,PLAYTIME))
@@ -229,8 +246,8 @@ OnTouch:
 			.@pass = 1;
 	}
 	if (.@pass) {
-		if ($ma_name04$ == strcharinfo(0) || $ma_name05$ == strcharinfo(0) || $ma_name06$ == strcharinfo(0)) {
-			donpcevent strnpcinfo(0)+"::OnBingx2";
+		if ($ma_name04$ == strcharinfo(PC_NAME) || $ma_name05$ == strcharinfo(PC_NAME) || $ma_name06$ == strcharinfo(PC_NAME)) {
+			donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 			mes "The unidentified creature gets a glimpse of you, blushes and then disappears.";
 			close;
 		}
@@ -239,24 +256,24 @@ OnTouch:
 			case 2:
 			case 3:
 			case 4:
-				$ma_name04$ = strcharinfo(0);
+				$ma_name04$ = strcharinfo(PC_NAME);
 				break;
 			case 6:
 			case 7:
 			case 8:
-				$ma_name05$ = strcharinfo(0);
+				$ma_name05$ = strcharinfo(PC_NAME);
 				break;
 			case 10:
 			case 11:
-				$ma_name06$ = strcharinfo(0);
+				$ma_name06$ = strcharinfo(PC_NAME);
 				break;
 			}
 		}
-		donpcevent strnpcinfo(0)+"::OnBingx2";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 		mes "The unidentified creature gets a glimpse of you and disappears.";
 		close;
 	}
-	donpcevent strnpcinfo(0)+"::OnBingx2";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 	mes "The unidentified creature looks at you and runs away.";
 	close;
 }
@@ -408,7 +425,7 @@ malaya,270,59,4	script	Port Guard#ma03	4_MAL_SOLDIER,{
 	mes "[Port Guard]";
 	mes "Huh?! And it says here that a monster named Wokwok especially visits the village often at night and should be avoided.";
 	next;
-	switch(select("I see.:Is there any way to prevent them from coming?")) {
+	switch(select("I see.", "Is there any way to prevent them from coming?")) {
 	case 1:
 		mes "[Port Guard]";
 		mes "Be careful at night!";
@@ -683,8 +700,7 @@ malaya,63,185,4	script	Woman#ma08	4_F_MALAYA,{
 	close;
 }
 
-// Jeepneys
-//============================================================
+//== Jeepneys ==============================================
 function	script	F_Malaya_Jeepney	{
 	.@mapname$        = getarg(0);
 	.@passengers      = getarg(1);
@@ -707,7 +723,7 @@ function	script	F_Malaya_Jeepney	{
 		mes getarg(4);
 		next;
 	}
-	switch(select("Board [Passenger " + getmapusers(.@mapname$) + "/" + .@passengers +"]:Jeepney?:Are there any other Jeepneys?:Ah... Yes...")) {
+	switch(select("Board [Passenger " + getmapusers(.@mapname$) + "/" + .@passengers +"]", "Jeepney?", "Are there any other Jeepneys?", "Ah... Yes...")) {
 	case 1:
 		if (getmapusers(.@mapname$) >= .@passengers) {
 			mes "[Jeepney Driver]";
@@ -742,7 +758,7 @@ function	script	F_Malaya_Jeepney	{
 		mes "[Jeepney Driver]";
 		mes "Would you like to know the location of other cars?";
 		next;
-		switch (select("I'd like to know where the 12 passenger car is.:I'd like to know where the 30 passenger car is.:I'd like to know where the 60 passenger car is.")) {
+		switch (select("I'd like to know where the 12 passenger car is.", "I'd like to know where the 30 passenger car is.", "I'd like to know where the 60 passenger car is.")) {
 		case 1:
 			viewpoint 1, 237, 240, 1, 0xF7E009;
 			viewpoint 1, 67 , 44 , 2, 0xF7E009;

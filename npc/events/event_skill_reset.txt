@@ -1,18 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lupus
+//= Copyright (C) $ephiroth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Official Skill Resetter Event in Yuno (kRO & idRO)
-//===== By: ==================================================
-//= $ephiroth
-//===== Current Version: =====================================
-//= 1.02
-//===== Description: =========================================
-//= 2006 - Edition Skill Reset NPC
-//= 2006/11/16: 1.0 Release and fully working. [$ephiroth]
-//= 1.01 Checked, fixed typos, now uses MISC_QUEST var [Lupus]
-//= 1.02 Added missing message,comment,etc. [$ephiroth]
-//===== Additional Comments: =================================
+//================= Description ===========================================
 //= Skill Reset with payment, minimum BaseLv.60 to reset skill.
 //= Each 1 BaseLv need 20.000 Zeny, so be careful to use skill.
-//============================================================
+//================= Current Version =======================================
+//= 1.02
+//=========================================================================
+
 yuno,138,187,4	script	Hypnotist Teacher	4_F_TELEPORTER,{
 	@npcname$ = "[^D5A500Hypnotist^000000]";
 	mes @npcname$;
@@ -51,7 +72,7 @@ yuno,138,187,4	script	Hypnotist Teacher	4_F_TELEPORTER,{
 		close;
 	}
 	mes "Hello, I am the Skill Resetter.";
-	mes "Your name is ^0080FF"+strcharinfo(0)+"^000000.";
+	mes "Your name is ^0080FF"+strcharinfo(PC_NAME)+"^000000.";
 	mes "How can I help you?";
 	next;
 	switch (select("^009500Information about Reset skills.^000000","^00B6FFReset skills.^000000","^000088Nevermind^000000")) {
@@ -75,7 +96,7 @@ yuno,138,187,4	script	Hypnotist Teacher	4_F_TELEPORTER,{
 		mes "Before skill reset in starting.";
 		mes "You shall have to first tell me your Base Level.";
 		next;
-		mes "^D5A500[" + strcharinfo(0) + "]^000000";
+		mes "^D5A500[" + strcharinfo(PC_NAME) + "]^000000";
 		mes "My Base level is ^AA00AALevel " + BaseLevel + "BaseLv.^000000";
 		next;
 		@zeny = BaseLevel*20000;

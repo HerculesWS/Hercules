@@ -1,26 +1,39 @@
-//===== Hercules Script ======================================
-//= Archer Job Quest
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) massdriller
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Archer Job Quest (Pre-Renewal)
+//================= Description ===========================================
 //= Job quest for Archer classes
-//===== Additional Comments: =================================
-//= 1.0 Fully working.
-//= 1.1 Added instant job change for High Novice [Lupus]
-//= 1.3 Added Baby Class support [Lupus]
-//= 1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
-//= 1.5 Now saves/restores all quest skills [Lupus]
-//= 1.6 Merged back JFunc [Lupus]
-//= 1.7 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     Arrow reward is now equal to the type sof trunks brought.
-//=     No longer uses function "F_ToHigh"
-//= 1.7a Fixed minor dialogue bug at Grade==25 [Lupus]
-//= 1.8 Fixed mistake in condition check. [L0ne_W0lf]
-//= 1.9 Added Quest Log commands. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
 payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	if (Upper == 1) {
@@ -73,7 +86,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	mes "[Archer Guildsman]";
 	mes "Good day. How may I help you?";
 	next;
-	switch(select("I want to be an Archer.:I need the requirements, please.:Nothing, thanks.")) {
+	switch(select("I want to be an Archer.", "I need the requirements, please.", "Nothing, thanks.")) {
 	case 1:
 		if (BaseJob == Job_Archer) {
 			mes "[Archer Guildsman]";
@@ -94,7 +107,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			mes "Do you want to be an Archer?";
 			mes "If so, you need to fill out this application form.";
 			next;
-			if (select("Apply.:Cancel") == 1) {
+			if (select("Apply.", "Cancel") == 1) {
 				job_archer_q = 1;
 				setquest 1004;
 				mes "[Archer Guildsman]";
@@ -104,7 +117,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 				mes "If you think you've met them already, we can check that now.";
 				mes "Are you ready?";
 				next;
-				if (select("Yes, I am.:No, not yet.") == 1) {
+				if (select("Yes, I am.", "No, not yet.") == 1) {
 					mes "[Archer Guildsman]";
 					mes "Alright, let me check.";
 					next;
@@ -121,7 +134,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			close;
 		}
 		mes "[Archer Guildsman]";
-		mes "Are you..." + strcharinfo(0) + "?";
+		mes "Are you..." + strcharinfo(PC_NAME) + "?";
 		next;
 		if (getskilllv("NV_BASIC") < 9) {
 			mes "[Archer Guildsman]";
@@ -132,10 +145,10 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			close;
 		}
 		if (job_archer_q == 1) {
-			.@archer_item1 = countitem(1066) * 5;
-			.@archer_item2 = countitem(1067) * 3;
-			.@archer_item3 = countitem(1068) * 2;
-			.@archer_item4 = countitem(1019);
+			.@archer_item1 = countitem(Tree_Of_Archer_1) * 5;
+			.@archer_item2 = countitem(Tree_Of_Archer_2) * 3;
+			.@archer_item3 = countitem(Tree_Of_Archer_3) * 2;
+			.@archer_item4 = countitem(Wooden_Block);
 			.@total_archer = .@archer_item1 + .@archer_item2 + .@archer_item3 + .@archer_item4;
 			.@total_archer2 = (((.@archer_item2 + .@archer_item3) * 2) + .@archer_item4);
 			mes "[Archer Guildsman]";
@@ -146,17 +159,17 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			mes "[Archer Guildsman]";
 			mes "I will appraise the value of the various types of Trunks, needed to produce a Bow, that you've brought.";
 			next;
-			if (countitem(1066) == 0 && countitem(1067) == 0 && countitem(1068) == 0 && countitem(1019) == 0) {
+			if (countitem(Tree_Of_Archer_1) == 0 && countitem(Tree_Of_Archer_2) == 0 && countitem(Tree_Of_Archer_3) == 0 && countitem(Wooden_Block) == 0) {
 				mes "[Archer Guildsman]";
 				mes "Um...";
 				mes "Unfortunately you didn't bring any of the required items. There's nothing for me to appraise.";
 				close;
 			}
 			mes "[Archer Guildsman]";
-			if (countitem(1066) != 0) mes " Grade S : " + countitem(1066) + " ea, Grade: " + .@archer_item1 + " . ";
-			if (countitem(1067) != 0) mes " Grade A : " + countitem(1067) + " ea, Grade : " + .@archer_item2 + " . ";
-			if (countitem(1068) != 0) mes " Grade B : " + countitem(1068) + " ea, Grade : " + .@archer_item3 + " . ";
-			if (countitem(1019) != 0) mes " Grade C : " + countitem(1019) + " ea, Grade : " + .@archer_item4 + " . ";
+			if (countitem(Tree_Of_Archer_1) != 0) mes " Grade S : " + countitem(Tree_Of_Archer_1) + " ea, Grade: " + .@archer_item1 + " . ";
+			if (countitem(Tree_Of_Archer_2) != 0) mes " Grade A : " + countitem(Tree_Of_Archer_2) + " ea, Grade : " + .@archer_item2 + " . ";
+			if (countitem(Tree_Of_Archer_3) != 0) mes " Grade B : " + countitem(Tree_Of_Archer_3) + " ea, Grade : " + .@archer_item3 + " . ";
+			if (countitem(Wooden_Block) != 0) mes " Grade C : " + countitem(Wooden_Block) + " ea, Grade : " + .@archer_item4 + " . ";
 			if (.@total_archer < 25) {
 				mes "Total Grades: ^FF0000" + .@total_archer + "^000000 / 40";
 				next;
@@ -183,10 +196,10 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			next;
 			mes "[Archer Guildsman]";
 			mes "I'll transfer these Trunks to our Bow Production Department. Now that you've met the requirements, let me promote you right away!";
-			if (countitem(1066) != 0) delitem 1066,countitem(1066); //Tree_Of_Archer_1
-			if (countitem(1067) != 0) delitem 1067,countitem(1067); //Tree_Of_Archer_2
-			if (countitem(1068) != 0) delitem 1068,countitem(1068); //Tree_Of_Archer_3
-			if (countitem(1019) != 0) delitem 1019,countitem(1019); //Wooden_Block
+			if (countitem(Tree_Of_Archer_1) != 0) delitem Tree_Of_Archer_1,countitem(Tree_Of_Archer_1);
+			if (countitem(Tree_Of_Archer_2) != 0) delitem Tree_Of_Archer_2,countitem(Tree_Of_Archer_2);
+			if (countitem(Tree_Of_Archer_3) != 0) delitem Tree_Of_Archer_3,countitem(Tree_Of_Archer_3);
+			if (countitem(Wooden_Block) != 0) delitem Wooden_Block,countitem(Wooden_Block);
 		}
 		next;
 		callfunc "Job_Change",Job_Archer;
@@ -201,8 +214,8 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 		next;
 		mes "[Archer Guildsman]";
 		mes "Ah, your bow has arrived from the Bow Production Department. Here, take it! It's yours~";
-		getitem 1702,1; //Bow_
-		getitem 1750,.@total_archer2; //Arrow
+		getitem Bow_,1;
+		getitem Arrow,.@total_archer2;
 		next;
 		mes "[Archer Guildsman]";
 		mes "Now, off you go. Hunt with pride, knowing you were trained by one of the best!";
@@ -241,4 +254,3 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 		close;
 	}
 }
-

@@ -1,30 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Capuche
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden Group Quest - Quests NPCs
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.1
-//===== Description: =========================================
+//================= Description ===========================================
 //= Eden Group Headquarter NPCs.
-//===== Changelogs: ==========================================
-//= 1.0 First Version. [L0ne_W0lf]
-//= 1.1 Removed unencoded comments (Korean -> Gibberish)
-//=     Readded the GM helper NPC, commented out.
-//= 1.2 Some little optimization here and there. [Masao]
-//= 1.3 Added Instructor Ur and the new Quests which come
-//=     alongside him. Special thanks to Chilly for the base. [Masao]
-//= 1.4 Partial cleaning and bug fixing. [Euphy]
-//= 1.4a Added 'npcskill' command. [Euphy]
-//= 1.4b Added 'disable_items' command. [Euphy]
-//= 1.5 Added GM management function. [Euphy]
-//= 1.6 Kagerou/Oboro support (Class -> BaseClass) [Euphy]
-//= 2.0 Updated Instructor Ur's quests. [Capuche]
-//= 2.1 Updated Blacksmith Thorn and Weapons Expert NPC. [Capuche]
-//============================================================
+//================= Current Version =======================================
+//= 2.1
+//=========================================================================
 
 moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 	mes "[Boya]";
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "You are not in my group are you?";
 		mes "I don't have anything to say to outsiders.";
 		mes "If you want something register with my group.";
@@ -37,7 +50,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 		mes "What's up?";
 		mes "If you have any normal missions use the bulletin board.";
 		next;
-		switch (select("What is your responsibility?:Don't you have equipment?:Ignore.")) {
+		switch (select("What is your responsibility?", "Don't you have equipment?", "Ignore.")) {
 			mes "[Boya]";
 		case 1:
 			mes "I give training missions to members.";
@@ -60,7 +73,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			mes "[Boya]";
 			mes "If you want to join, don't hesitate.";
 			next;
-			switch (select("Participate in the training.:Ignore.")) {
+			switch (select("Participate in the training.", "Ignore.")) {
 				mes "[Boya]";
 			case 1:
 				callsub S_Quest1;
@@ -95,7 +108,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			mes "I look a little bit funny, actually I am really busy I was called shining Rune Knight.";
 			mes "Make a decision, hurry.";
 			next;
-			switch (select("Participate in the training.:Refuse!!")) {
+			switch (select("Participate in the training.", "Refuse!!")) {
 				mes "[Boya]";
 			case 1:
 				callsub S_Quest1;
@@ -103,8 +116,8 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 				callsub S_Quest3;
 			case 2:
 				mes "You are so rude!";
-				specialeffect2 EF_HIT1;
-				percentheal -50,0;
+				specialeffect(EF_HIT1, AREA, playerattached());
+				percentheal -50, 0;
 				next;
 				mes "-Beats quickly and this shining Rune Knight turns invisible.";
 				mes "It hurts too much-";
@@ -187,7 +200,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 			mes "Able to take upper class, now.";
 			mes "What about it, do you want?";
 			next;
-			switch (select("No, way.:Absolutely, I will.")) {
+			switch (select("No, way.", "Absolutely, I will.")) {
 				mes "[Boya]";
 			case 1:
 				mes "Really?";
@@ -260,7 +273,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 		mes "Hey long time no see.";
 		mes "So what's up?";
 		next;
-		switch (select("I want to join training.:Nothing.")) {
+		switch (select("I want to join training.", "Nothing.")) {
 			mes "[Boya]";
 		case 1:
 			mes "Hmm... really?";
@@ -619,7 +632,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 		mes "A member of the Eden Group.";
 		mes "Have you come to give me a meal? I don't like drinks.";
 		next;
-		switch (select("Boya is really perfect.:Boya is really great.:Boya is really soft.")) {
+		switch (select("Boya is really perfect.", "Boya is really great.", "Boya is really soft.")) {
 		case 1:
 			mes "[Talking Dog]";
 			mes "Uhh...";
@@ -699,7 +712,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 		next;
 		mes "-When the dog barked, your HP and SP recovered.-";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 3) {
@@ -737,7 +750,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 		next;
 		mes "-When the dog barked, your HP and SP recovered.-";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 4) {
@@ -793,7 +806,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 		next;
 		mes "-When the dog barked, your HP and SP recovered.-";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 5) {
@@ -826,7 +839,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 	mes "Not a wolf.";
 	mes "I wasn't a dog originally...";
 	next;
-	if (countitem(Para_Team_Mark) > 0) {
+	if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 		mes "[Talking Dog]";
 		mes "Anyway are you a Eden Group member?";
 		mes "Oh good to see you.";
@@ -859,7 +872,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 		mes "Re... really...!";
 		mes "Dear Boya's help is like a giant and...";
 		next;
-		switch (select("Beautiful Saury:Fresh Mackerel:Beautiful Tuna")) {
+		switch (select("Beautiful Saury", "Fresh Mackerel", "Beautiful Tuna")) {
 		case 1:
 			mes "[Timid Cat]";
 			mes "Big and beautiful Saury...";
@@ -939,7 +952,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 		mes "Take care to check your map so you don't get lost.";
 		mes "It's a service meeow.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 8) {
@@ -977,7 +990,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 		mes "I will help you a little.";
 		mes "Here, I have recovered your strengh meow..";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 9) {
@@ -1012,7 +1025,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 		mes "I will help you a little.";
 		mes "Here, I have recovered your strengh meow..";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 >= 10) {
@@ -1034,7 +1047,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 
 pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 	if (para_suv01 < 13) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Karl]";
 			mes "Hey, how are you?";
 			mes "Good to see you~";
@@ -1124,7 +1137,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 		mes "Just in case I will recover all your energy.";
 		mes "It's the last step so be careful.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 15) {
@@ -1155,7 +1168,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 		mes "Just in case I will recover all your energy.";
 		mes "It's the last step so be careful.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 >= 16) {
@@ -1177,7 +1190,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 
 anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 	if (para_suv01 < 17) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Cloud]";
 			mes "Oops.";
 			mes "You are a member of my group.";
@@ -1198,7 +1211,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 		mes "Hello?";
 		mes "Why did you come here, looking for danger?";
 		next;
-		switch (select("Conquer Ant Hell:Just wanted to meet you:Where am I?")) {
+		switch (select("Conquer Ant Hell", "Just wanted to meet you", "Where am I?")) {
 		case 1:
 			mes "[Cloud]";
 			mes "Uh. Conquer Ant Hell? Did you say that?";
@@ -1277,7 +1290,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 		mes "Can you stay longer?";
 		mes "Ok, I will recover your strengh so, keep going.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 19) {
@@ -1316,7 +1329,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 		mes "See, to cheer you up I will heal you until you finish the training.";
 		mes "Chin up and cheer up.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 20) {
@@ -1344,7 +1357,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 		mes "Just Vitata, isn't that an easy opponent?";
 		mes "If you see Maya just run away.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 >= 21) {
@@ -1367,7 +1380,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 
 in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 	if (para_suv01 < 24) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Hooksha]";
 			mes "Unbelievable why did you come here?";
 			mes "Um... You are not on the third step of the training?";
@@ -1459,7 +1472,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		mes "You look tired I will recover your health.";
 		mes "If you are in trouble just come back here to safety.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 26) {
@@ -1490,7 +1503,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		mes "You look tired, I will recover your health.";
 		mes "If you are in trouble just come back here to safety.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 27) {
@@ -1516,7 +1529,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		mes "You look tired, I will recover your health.";
 		mes "If you are in trouble just come back here to safety.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 28) {
@@ -1589,7 +1602,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		mes "You look tired, I will recover your health.";
 		mes "If you are in trouble just come back here to safety.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 31) {
@@ -1613,7 +1626,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 		mes "You look tired I will recover your health.";
 		mes "If you are in trouble just come back here to safety.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 32) {
@@ -1636,7 +1649,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 
 iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 	if (para_suv01 < 33) {
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Callandiva]";
 			mes "How did you get so deep in this ocean city?";
 			mes "Ah, that symbol is of our group.";
@@ -1716,7 +1729,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 		mes "Mermans are not easy opponents.";
 		mes "I will help you recover so cheer up.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 == 35) {
@@ -1750,7 +1763,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 		mes "Strouf are not easy opponents.";
 		mes "I can help you recover so cheer up.";
 		npcskill "AL_HEAL",11,99,60;
-		percentheal 100,100;
+		percentheal 100, 100;
 		close;
 	}
 	if (para_suv01 >= 36) {
@@ -1778,7 +1791,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 	mes "[Michael]";
 	mes "Why did you come here?";
 	next;
-	switch (select("To get supplies:Where is here?:Upgrade equipment")) {
+	switch (select("To get supplies", "Where is here?", "Upgrade equipment")) {
 		mes "[Michael]";
 	case 1:
 		if (para_suv01 == 11) {
@@ -1786,7 +1799,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 			mes "we can supply you with a Eden Group Hat, Uniform, Manteau and Boots.";
 			mes "^4d4dffCheck your inventory first.^000000";
 			next;
-			if (select("Let me check my inventory:I have enough room.") == 1) {
+			if (select("Let me check my inventory", "I have enough room.") == 1) {
 				mes "[Michael]";
 				mes "Make sure you have enough room for the supplies.";
 				close;
@@ -1807,10 +1820,10 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 			mes "A total of 4 supplies, that's all.";
 			para_suv01 = 12;
 			para_suv02 = 1;
-			getitem Para_Team_Hat,1; //Para_Team_Hat1
-			getitem Para_Team_Manteau,1; //Para_Team_Manteau1
-			getitem Para_Team_Boots1,1; //Para_Team_Boots1
-			getitem Para_Team_Uniform1,1; //Para_Team_Uniform1
+			getitem Para_Team_Hat,1;
+			getitem Para_Team_Manteau,1;
+			getitem Para_Team_Boots1,1;
+			getitem Para_Team_Uniform1,1;
 			next;
 			mes "[Michael]";
 			mes "Is that correct?";
@@ -1836,58 +1849,51 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 			mes "[Michael]";
 			mes "^4d4dffPlease check your inventory to get those items.^000000";
 			next;
-			if (select("I will make more space.:I have got enough space.") == 1) {
+			if (select("I will make more space.", "I have got enough space.") == 1) {
 				mes "[Michael]";
 				mes "Make enough space.";
 				close;
 			}
 			mes "[Michael]";
-			if (Class == Job_Swordman || Class == Job_Swordman_High || Class == Job_Knight || Class == Job_Crusader) {
+			if (BaseClass == Job_Swordman) {
 				callsub S_Select,"We have one and Two-handed swords",
-					P_Slayer1,"Eden Slayer I","Two-handed sword","Attack 162","",//P_Slayer1
-					P_Sabre1,"Eden Saber I","One-handed sword","Attack 147","This is what we strive for.";//P_Sabre1
-			}
-			if (Class == Job_Thief || Class == Job_Thief_High || Class == Job_Assassin || Class == Job_Rogue || Class == Job_Ninja || Class == Job_Novice || Class == Job_Novice_High) {
+					P_Slayer1,"Eden Slayer I","Two-handed sword","Attack 162","",
+					P_Sabre1,"Eden Saber I","One-handed sword","Attack 147","This is what we strive for.";
+			} else if (BaseClass == Job_Thief || BaseClass == Job_Ninja || BaseClass == Job_Novice) {
 				callsub S_Select,"",
-					P_Dagger1,"Eden Dagger I","Dagger","MATK+60, attack 124","This is what we strive for.";//P_Dagger1
-			}
-			if (Class == Job_Merchant || Class == Job_Merchant_High || Class == Job_Blacksmith || Class == Job_Alchemist) {
+					P_Dagger1,"Eden Dagger I","Dagger","MATK+60, attack 124","This is what we strive for.";
+			} else if (BaseClass == Job_Merchant) {
 				callsub S_Select,"We have a mace and a One-handed sword",
-					P_Sabre1,"Eden Saber I","One-handed sword","Attack 147","This is what we strive for.",// P_Sabre1
-					P_Mace1,"Eden Mace I","Mace","Attack 142","";// P_Mace1
-			}
-			if (Class == Job_Archer || Class == Job_Archer_High || Class == Job_Hunter || Class == Job_Dancer || Class == Job_Bard) {
+					P_Sabre1,"Eden Saber I","One-handed sword","Attack 147","This is what we strive for.",
+					P_Mace1,"Eden Mace I","Mace","Attack 142","";
+			} else if (BaseClass == Job_Archer) {
 				callsub S_Select,"",
-					P_Bow1,"Eden Bow I","Bow","Attack 82","";//P_Bow1
-			}
-			if (Class == Job_Acolyte || Class == Job_Acolyte_High || Class == Job_Priest || Class == Job_Monk) {
+					P_Bow1,"Eden Bow I","Bow","Attack 82","";
+			} else if (BaseClass == Job_Acolyte) {
 				callsub S_Select,"We have a mace and a staff",
-					P_Mace1,"Eden Mace I","Mace","Attack 142","", //P_Mace1
-					P_Staff1,"Eden Staff I","Staff","INT+2, MATK+125, attack 60",""; //P_Staff1
-			}
-			if (Class == Job_Mage || Class == Job_Mage_High || Class == Job_Wizard || Class == Job_Sage) {
+					P_Mace1,"Eden Mace I","Mace","Attack 142","",
+					P_Staff1,"Eden Staff I","Staff","INT+2, MATK+125, attack 60","";
+			} else if (BaseClass == Job_Mage) {
 				callsub S_Select,"",
-					P_Staff1,"Eden Staff I","Staff","INT+2, MATK+125, attack 60","";//P_Staff1
-			}
-			if (Class == Job_Gunslinger) {
+					P_Staff1,"Eden Staff I","Staff","INT+2, MATK+125, attack 60","";
+			} else if (BaseClass == Job_Gunslinger) {
 				callsub S_Select,"",
-					P_Revolver1,"Eden Revolver I","Revolver","HIT-5, attack 44","";//P_Revolver1
+					P_Revolver1,"Eden Revolver I","Revolver","HIT-5, attack 44","";
 			}
-
 			mes "Let me see... you will receive..";
 			mes "the Eden Group Boots II and Uniform II.";
 			next;
 			mes "[Michael]";
 			para_suv01 = 23;
-			getitem P_Dagger1,1; //P_Dagger1
-			getitem Para_Team_Boots2,1; //Para_Team_Boots2
-			getitem Para_Team_Uniform2,1; //Para_Team_Uniform2
+			getitem P_Dagger1,1;
+			getitem Para_Team_Boots2,1;
+			getitem Para_Team_Uniform2,1;
 			if (para_suv02 == 0) {
 				mes "I don't know what weapon will suit you so, you'll get a Dagger.";
 				mes "You don't have a record of receiving any supplies";
 				mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-				getitem Para_Team_Hat,1; //Para_Team_Hat
-				getitem Para_Team_Manteau,1; //Para_Team_Manteau
+				getitem Para_Team_Hat,1;
+				getitem Para_Team_Manteau,1;
 				para_suv02 = 2;
 				next;
 				mes "[Michael]";
@@ -1914,56 +1920,50 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 			mes "[Michael]";
 			mes "^4d4dffPlease check you inventory to get those supplies.^000000";
 			next;
-			if (select("I'll come back.:I have enough room.") == 1) {
+			if (select("I'll come back.", "I have enough room.") == 1) {
 				mes "[Michael]";
 				mes "Make sure you have enough room.";
 				close;
 			}
 			mes "[Michael]";
-			if (Class == Job_Swordman || Class == Job_Swordman_High || Class == Job_Knight || Class == Job_Crusader) {
+			if (BaseClass == Job_Swordman) {
 				callsub S_Select,"We have one and Two-handed swords",
-					P_Sabre2,"Eden Saber II","One-handed sword","Attack 170","",///P_Sabre2
-					P_Slayer2,"Eden Slayer II","Two-handed sword","Attack 185","";//P_Slayer2
-			}
-			if (Class == Job_Thief || Class == Job_Thief_High || Class == Job_Assassin || Class == Job_Rogue || Class == Job_Novice || Class == Job_Novice_High || Class == Job_SuperNovice || Class == Job_Soul_Linker || Class == Job_Ninja) {
+					P_Sabre2,"Eden Saber II","One-handed sword","Attack 170","",
+					P_Slayer2,"Eden Slayer II","Two-handed sword","Attack 185","";
+			} else if (BaseClass == Job_Thief || BaseClass == Job_Novice || BaseJob == Job_Soul_Linker || BaseClass == Job_Ninja) {
 				callsub S_Select,"",
-					P_Dagger2,"Eden Dagger II","Dagger","MATK+70, attack 158","";//P_Dagger2
-			}
-			if (Class == Job_Acolyte || Class == Job_Acolyte_High || Class == Job_Priest || Class == Job_Monk) {
+					P_Dagger2,"Eden Dagger II","Dagger","MATK+70, attack 158","";
+			} else if (BaseClass == Job_Acolyte) {
 				callsub S_Select,"We have a mace and a staff",
-					P_Mace2,"Eden Mace II","Mace","Attack 163","", //P_Mace2
-					P_Staff2,"Eden Staff II","Staff","INT+3, MATK+150, attack 60",""; //P_Staff2
-			}
-			if (Class == Job_Archer || Class == Job_Archer_High || Class == Job_Hunter || Class == Job_Dancer || Class == Job_Bard) {
+					P_Mace2,"Eden Mace II","Mace","Attack 163","",
+					P_Staff2,"Eden Staff II","Staff","INT+3, MATK+150, attack 60","";
+			} else if (BaseClass == Job_Archer) {
 				callsub S_Select,"",
-					P_Bow2,"Eden Bow II","Bow","Attack 82","";//P_Bow2
-			}
-			if (Class == Job_Mage || Class == Job_Mage_High || Class == Job_Wizard || Class == Job_Sage) {
+					P_Bow2,"Eden Bow II","Bow","Attack 82","";
+			} else if (BaseClass == Job_Mage) {
 				callsub S_Select,"",
-					P_Staff2,"Eden Staff II","Staff","INT+3, MATK+155, attack 60","";//P_Staff2
-			}
-			if (Class == Job_Merchant || Class == Job_Merchant_High || Class == Job_Blacksmith || Class == Job_Alchemist) {
+					P_Staff2,"Eden Staff II","Staff","INT+3, MATK+155, attack 60","";
+			} else if (BaseClass == Job_Merchant) {
 				callsub S_Select,"We have a mace and a One-handed sword",
-					P_Sabre2,"Eden Saber II","One-handed sword","Attack 170","",//P_Sabre2
-					P_Mace2,"Eden Mace II","Mace","Attack 163","";// P_Mace2
-			}
-			if (Class == Job_Gunslinger) {
+					P_Sabre2,"Eden Saber II","One-handed sword","Attack 170","",
+					P_Mace2,"Eden Mace II","Mace","Attack 163","";
+			} else if (BaseClass == Job_Gunslinger) {
 				callsub S_Select,"",
-					P_Revolver2,"Eden Revolver II","Revolver","HIT-5, attack 60","";//P_Revolver2
+					P_Revolver2,"Eden Revolver II","Revolver","HIT-5, attack 60","";
 			}
 			mes "Let me see... you will receive..";
 			mes "the Eden Group Boots III and Uniform III.";
 			next;
 			para_suv01 = 38;
-			getitem Para_Team_Boots3,1; //Para_Team_Boots3
-			getitem Para_Team_Uniform3,1; //Para_Team_Uniform3
+			getitem Para_Team_Boots3,1;
+			getitem Para_Team_Uniform3,1;
 			mes "[Michael]";
 			if (para_suv02 == 0) {
 				mes "You don't have a record of receiving any supplies";
 				mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
 				para_suv02 = 3;
-				getitem Para_Team_Hat,1; //Para_Team_Hat
-				getitem Para_Team_Manteau,1; //Para_Team_Manteau
+				getitem Para_Team_Hat,1;
+				getitem Para_Team_Manteau,1;
 				next;
 				mes "[Michael]";
 				mes "Check your supplies again and look after it.";
@@ -2010,13 +2010,13 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 				disable_items;
 				mes "What status bonus do you want to upgrade?";
 				next;
-				switch (select("Upgrade STR:Upgrade AGI:Upgrade VIT:Upgrade INT:Upgrade DEX:Upgrade LUK:Nevermind.")) {
-				case 1: callsub S_Upgrade,"STR",4701;
-				case 2: callsub S_Upgrade,"AGI",4731;
-				case 3: callsub S_Upgrade,"VIT",4741;
-				case 4: callsub S_Upgrade,"INT",4711;
-				case 5: callsub S_Upgrade,"DEX",4721;
-				case 6: callsub S_Upgrade,"LUK",4751;
+				switch (select("Upgrade STR", "Upgrade AGI", "Upgrade VIT", "Upgrade INT", "Upgrade DEX", "Upgrade LUK", "Nevermind.")) {
+				case 1: callsub S_Upgrade,"STR",Strength2;
+				case 2: callsub S_Upgrade,"AGI",Agility2;
+				case 3: callsub S_Upgrade,"VIT",Vitality2;
+				case 4: callsub S_Upgrade,"INT",Inteligence2;
+				case 5: callsub S_Upgrade,"DEX",Dexterity2;
+				case 6: callsub S_Upgrade,"LUK",Luck2;
 				case 7:
 					mes "[Michael]";
 					mes "Why? It'll be beter than it is.";
@@ -2034,7 +2034,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 		if (para_suv02 == 4) {
 			mes "Umm, didn't you upgrade this already?";
 			mes "According to the records";
-			mes ""+strcharinfo(0)+": Has already upgraded their Hat.";
+			mes ""+strcharinfo(PC_NAME)+": Has already upgraded their Hat.";
 			next;
 			mes "[Michael]";
 			mes "We can only offer 1 upgrade.";
@@ -2054,7 +2054,7 @@ S_Upgrade:
 	mes "I will ^4d4dffUpgrade "+ getarg(0) +"^000000.";
 	mes "Are you sure?";
 	next;
-	switch (select("Yes I am.:No wait.")) {
+	switch (select("Yes I am.", "No wait.")) {
 	case 1:
 		mes "[Michael]";
 		mes "I will start to upgrade.";
@@ -2109,15 +2109,15 @@ S_Select:
 	if (para_suv01 == 22) {
 		mes "Additionally you'll receive the Eden Group Boots II and Uniform II.";
 		next;
-		getitem Para_Team_Boots2,1;	// Para_Team_Boots2
-		getitem Para_Team_Uniform2,1;// Para_Team_Uniform2
+		getitem Para_Team_Boots2,1;
+		getitem Para_Team_Uniform2,1;
 		para_suv01 = 23;
 	}
 	else {
 		mes "Additionally you'll receive the Eden Group Boots III and Uniform III.";
 		next;
-		getitem Para_Team_Boots3,1;// Para_Team_Boots3
-		getitem Para_Team_Uniform3,1;// Para_Team_Uniform3
+		getitem Para_Team_Boots3,1;
+		getitem Para_Team_Uniform3,1;
 		para_suv01 = 38;
 	}
 	getitem getarg(.@i),1;
@@ -2125,8 +2125,8 @@ S_Select:
 	if (para_suv02 == 0) {
 		mes "You don't have a record of receiving any supplies";
 		mes "so, you'll receive the Eden Group Hat and Manteau aswell.";
-		getitem Para_Team_Hat2,1;// Para_Team_Hat2
-		getitem Para_Team_Manteau2,1;	// Para_Team_Manteau2
+		getitem Para_Team_Hat,1;
+		getitem Para_Team_Manteau,1;
 		if (para_suv01 == 22)
 			para_suv02 = 2;
 		else
@@ -2150,23 +2150,23 @@ S_Select:
 	close;
 }
 
-moc_para01,179,44,3	script	Chef	820,{
+moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 	mes "[Chef]";
 	mes "What's up?";
 	mes "Do you want a Meal? Or do you have other business?";
 	next;
-	switch (select("Order a meal.:Talk.")) {
+	switch (select("Order a meal.", "Talk.")) {
 	case 1:
 		mes "[Chef]";
 		mes "Choose one of the three course meals A, B or C.";
 		mes "Do you want a explanation?";
 		next;
-		switch (select("I want a explanation.:Order course meal A:Order course meal B:Order course meal C:End Conversation.")) {
+		switch (select("I want a explanation.", "Order course meal A", "Order course meal B", "Order course meal C", "End Conversation.")) {
 		case 1:
 			mes "[Chef]";
 			mes "Uh? what do you want to know?";
 			next;
-			switch (select("About course meal A.:About course meal B.:About course meal C.:End Conversation.")) {
+			switch (select("About course meal A.", "About course meal B.", "About course meal C.", "End Conversation.")) {
 			case 1:
 				mes "[Chef]";
 				mes "Course meal A is for nomal people.";
@@ -2230,7 +2230,7 @@ moc_para01,179,44,3	script	Chef	820,{
 			mes "Ah, Kim-dduck-soon.";
 			mes "It's the representative meal for normal citizens.";
 			next;
-			if (countitem(Para_Team_Mark) > 0) {
+			if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 				if (Zeny > 2699) {
 					mes "[Chef]";
 					mes "Hey, here you are.";
@@ -2239,8 +2239,7 @@ moc_para01,179,44,3	script	Chef	820,{
 					mes "- After eating the meal, You feel a little bit full.";
 					mes "You've recovered some HP and SP. -";
 					Zeny =  Zeny - 2700;
-					percentheal 50,0;
-					percentheal 0,50;
+					percentheal 50, 50;
 					close;
 				}
 				mes "[Chef]";
@@ -2256,8 +2255,7 @@ moc_para01,179,44,3	script	Chef	820,{
 				mes "- After eating the meal, You feel a little bit full.";
 				mes "You've recovered some HP and SP. -";
 				Zeny =  Zeny - 3000;
-				percentheal 50,0;
-				percentheal 0,50;
+				percentheal 50, 50;
 				close;
 			}
 			mes "[Chef]";
@@ -2269,7 +2267,7 @@ moc_para01,179,44,3	script	Chef	820,{
 			mes "Course meal B?";
 			mes "This food with meat and vegetables in hot soup has it's origins from nomadic life under the cold and dry nature.";
 			next;
-			if (countitem(Para_Team_Mark) > 0) {
+			if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 				if (Zeny > 3599) {
 					mes "[Chef]";
 					mes "Hey, here you are.";
@@ -2278,8 +2276,7 @@ moc_para01,179,44,3	script	Chef	820,{
 					mes "- After eating the meal, You feel a little bit full.";
 					mes "You've recovered some HP and SP. -";
 					Zeny =  Zeny - 3600;
-					percentheal 75,0;
-					percentheal 0,75;
+					percentheal 75, 75;
 					close;
 				}
 				mes "[Chef]";
@@ -2295,8 +2292,7 @@ moc_para01,179,44,3	script	Chef	820,{
 				mes "- After eating the meal, You feel a little bit full.";
 				mes "You've recovered some HP and SP. -";
 				Zeny =  Zeny - 4000;
-				percentheal 75,0;
-				percentheal 0,75;
+				percentheal 75, 75;
 				close;
 			}
 			mes "[Chef]";
@@ -2304,7 +2300,7 @@ moc_para01,179,44,3	script	Chef	820,{
 			mes "How many times do I have to tell you?";
 			close;
 		case 4:
-			if (countitem(Para_Team_Mark) > 0) {
+			if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 				if (Zeny > 4499) {
 					mes "[Chef]";
 					mes "Hey, here you are.";
@@ -2314,8 +2310,7 @@ moc_para01,179,44,3	script	Chef	820,{
 					mes "- After eating the meal, You feel a little bit full.";
 					mes "You've recovered your HP and SP. -";
 					Zeny =  Zeny - 4500;
-					percentheal 100,0;
-					percentheal 0,100;
+					percentheal 100, 100;
 					close;
 				}
 				mes "[Chef]";
@@ -2333,8 +2328,7 @@ moc_para01,179,44,3	script	Chef	820,{
 				mes "- After eating the meal, You feel a little bit full.";
 				mes "You've recovered your HP and SP. -";
 				Zeny =  Zeny - 5000;
-				percentheal 100,0;
-				percentheal 0,100;
+				percentheal 100, 100;
 				close;
 			}
 			mes "[Chef]";
@@ -2347,7 +2341,7 @@ moc_para01,179,44,3	script	Chef	820,{
 			close;
 		}
 	case 2:
-		if (countitem(Para_Team_Mark) > 0) {
+		if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {
 			mes "[Chef]";
 			mes "Most jobs should be managed by yourself. So it might be difficult, right?";
 			mes "Actually it's harmful so they have requested continuously.";
@@ -2402,7 +2396,7 @@ moc_para01,179,44,3	script	Chef	820,{
 			mes "To.. me.. the hat... um.";
 			mes "It goes well with Laime but with Luke... I don't know..";
 			next;
-			switch (select("What about the hat?:Luke?")) {
+			switch (select("What about the hat?", "Luke?")) {
 			case 1:
 				mes "[Chef]";
 				mes "Nothing. It's so cute.";
@@ -2456,7 +2450,7 @@ moc_para01,179,44,3	script	Chef	820,{
 
 moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 	mes "[Instructor Ur]";
-	if (countitem(Para_Team_Mark) < 1) {// Para_Team_Mark
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "Hey there!";
 		mes "I see you're not one of our agents?";
 		mes "Are you interested in joining us?";
@@ -2530,7 +2524,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 			mes "Go there are get the mission from him.";
 			mes "Well, then come back here alive when you're done!";
 			para_2nd01 = 1;
-			setquest 7214;// Advanced Training at Comodo
+			setquest 7214;	// Advanced Training at Comodo
 		}
 		else if (BaseLevel < 80) {
 			mes "Let's see...";
@@ -2547,7 +2541,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 			mes "[Instructor Ur]";
 			mes "Please, come back alive.";
 			para_2nd01 = 7;
-			setquest 7219;// Advanced Training at Glast Heim
+			setquest 7219;	// Advanced Training at Glast Heim
 		}
 		else if (BaseLevel < 90) {
 			mes "Ah, ok so for you...";
@@ -2560,7 +2554,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 			next;
 			mes "[Instructor Ur]";
 			mes "Anyways, go to Einbroch and find the Dispatched Instructor there. He should be in the field south of the main city.";
-			setquest 7223;// Advanced Training in Einbroch
+			setquest 7223;	// Advanced Training in Einbroch
 			para_2nd01 = 12;
 		}
 		else
@@ -2584,7 +2578,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 		mes "Don't forget, I'll be waiting for you.";
 		para_2nd01 = 6;
 		para_2nd02 = 1;
-		erasequest 7218;// Report to Instructor Ur
+		erasequest 7218;	// Report to Instructor Ur
 	}
 	else if (para_2nd01 == 6) {
 		if (BaseLevel > 69) {
@@ -2620,7 +2614,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 					mes "[Instructor Ur]";
 					mes "Please come back alive.";
 					para_2nd01 = 7;
-					setquest 7219;// Advanced Training at Glast Heim
+					setquest 7219;	// Advanced Training at Glast Heim
 				}
 				else if (BaseLevel < 90)
 					callsub S_Quest7990;
@@ -2655,12 +2649,12 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 		mes "Go out through the blue door, to the end of the hallway.";
 		mes "BK is a great blacksmith, he'll make your weapon stronger.";
 		mes "What are you waiting for?";
-		para_2nd01 = 11;// Report to Instructor Ur
+		para_2nd01 = 11;	// Report to Instructor Ur
 		erasequest 7222;
 	}
 	else if (para_2nd01 == 11) {
 		if (BaseLevel > 79) {
-			mes "Ah, ever so improving "+ strcharinfo(0) +"?";
+			mes "Ah, ever so improving "+ strcharinfo(PC_NAME) +"?";
 			mes "To what do I owe this pleasure?";
 			next;
 			switch( select( "I came for more training.", "I'm just visiting." ) ) {
@@ -2703,7 +2697,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 		mes "Go out through the blue door, to the end of the hallway.";
 		mes "BK is a great blacksmith, he'll make your weapon stronger.";
 		mes "What are you waiting for?";
-		erasequest 7228;// Report to Instructor Ur
+		erasequest 7228;	// Report to Instructor Ur
 		para_2nd01 = 16;
 	}
 	else if (para_2nd01 == 16) {
@@ -2740,7 +2734,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 		mes "[Instructor Ur]";
 		mes "Good job!";
 		para_2nd01 = 30;
-		erasequest 7232;//Report to Instructor Ur
+		erasequest 7232;	//Report to Instructor Ur
 	}
 	else if (para_2nd01 == 29) {
 		mes "Congratulations on completing all training stages!";
@@ -2761,7 +2755,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 		mes "Go talk to him, he's at the weapon storage as well.";
 		mes "Go ahead.";
 		para_2nd01 = 30;
-		erasequest 7237;// Report to Instructor Ur
+		erasequest 7237;	// Report to Instructor Ur
 	}
 	else if (para_2nd01 == 30) {
 		mes "Good job.";
@@ -2822,7 +2816,7 @@ S_Quest7990:
 	mes "But the surrounding fields are relatively clean...";
 	mes "This should be pretty easy for you.";
 	para_2nd01 = 12;
-	setquest 7223;// Advanced Training in Einbroch
+	setquest 7223;	// Advanced Training in Einbroch
 	return;
 
 S_Quest89100:
@@ -2835,7 +2829,7 @@ S_Quest89100:
 		mes "North of the city of Rachel is a cave filled with ice.";
 		mes "Find the Dispatched Instructor there.";
 		para_2nd01 = 17;
-		setquest 7229;// Advanced Training in Ice Dungeon
+		setquest 7229;	// Advanced Training in Ice Dungeon
 	}
 	else {
 		mes "Well, well...";
@@ -2867,12 +2861,12 @@ S_Quest89100:
 		mes "Isn't this the easiest mission you've ever had?";
 		mes "Don't forget my present when you come back~!";
 		para_2nd01 = 22;
-		setquest 7233;// Advanced Training at Ash Vacuum
+		setquest 7233;	// Advanced Training at Ash Vacuum
 	}
 	return;
 }
 
-//--60~69
+//- 60~69 -
 comodo,173,354,5	script	Dispatched Instructor#02	1_M_JOBTESTER,{
 	mes "[Romeo]";
 	if (para_2nd01 < 1) {
@@ -2943,8 +2937,8 @@ comodo,173,354,5	script	Dispatched Instructor#02	1_M_JOBTESTER,{
 			mes "I'll be waiting outside.";
 			para_2nd01 = 3;
 			getexp 10000,10000;
-			erasequest 7215;// Stalactic Golem Hunt
-			setquest 7216;// More Golem Hunting
+			erasequest 7215;	// Stalactic Golem Hunt
+			setquest 7216;	// More Golem Hunting
 		}
 		else {
 			mes "As a test of the difficulty of this cave";
@@ -2954,7 +2948,7 @@ comodo,173,354,5	script	Dispatched Instructor#02	1_M_JOBTESTER,{
 			mes "[Romeo]";
 			mes "Let me help you recover if you are tired.";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else if (para_2nd01 == 3) {
@@ -3002,8 +2996,8 @@ um_fild01,34,280,5	script	Instructor Romeo#2nd02	1_M_JOBTESTER,{
 			mes "This is the last test.";
 			mes "Good luck.";
 			para_2nd01 = 4;
-			erasequest 7216;// More Golem Hunting
-			setquest 7217;// Field drops
+			erasequest 7216;	// More Golem Hunting
+			setquest 7217;	// Field drops
 			getexp 10000,10000;
 		}
 		else {
@@ -3014,11 +3008,11 @@ um_fild01,34,280,5	script	Instructor Romeo#2nd02	1_M_JOBTESTER,{
 			mes "[Romeo]";
 			mes "I'll help you recover if you are tired.";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else if (para_2nd01 == 4) {
-		if (countitem(Shoulder_Protection) > 4 && countitem(Sharp_Leaf) > 6) {// Shoulder_Protection, Sharp_Leaf
+		if (countitem(Shoulder_Protection) > 4 && countitem(Sharp_Leaf) > 6) {
 			mes "You really got these by defeating the monsters?";
 			mes "I believe you. I want to get out of here anyways.";
 			next;
@@ -3028,8 +3022,8 @@ um_fild01,34,280,5	script	Instructor Romeo#2nd02	1_M_JOBTESTER,{
 			delitem Shoulder_Protection,5;
 			delitem Sharp_Leaf,7;
 			para_2nd01 = 5;
-			erasequest 7217;// Field drops
-			setquest 7218;// Report to Instructor Ur
+			erasequest 7217;	// Field drops
+			setquest 7218;	// Report to Instructor Ur
 			getexp 10000,10000;
 		}
 		else {
@@ -3044,7 +3038,7 @@ um_fild01,34,280,5	script	Instructor Romeo#2nd02	1_M_JOBTESTER,{
 			mes "[Romeo]";
 			mes "I'll help you recover if you are tired.";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else {
@@ -3054,7 +3048,7 @@ um_fild01,34,280,5	script	Instructor Romeo#2nd02	1_M_JOBTESTER,{
 	close;
 }
 
-//--70~79
+//- 70~79 -
 glast_01,195,131,5	script	Dispatched Instructor#03	4_F_SISTER,{
 	mes "[Johan]";
 	if (para_2nd01 < 7) {
@@ -3102,8 +3096,8 @@ glast_01,195,131,5	script	Dispatched Instructor#03	4_F_SISTER,{
 		mes "Defeat 20 Wraiths.";
 		mes "I'll assist you from here!";
 		para_2nd01 = 8;
-		erasequest 7219;// Advanced Training at Glast Heim
-		setquest 7220;// Wraith Hunt
+		erasequest 7219;	// Advanced Training at Glast Heim
+		setquest 7220;	// Wraith Hunt
 	}
 	else if (para_2nd01 == 8) {
 		if (questprogress(7220,HUNTING) == 2) {
@@ -3122,8 +3116,8 @@ glast_01,195,131,5	script	Dispatched Instructor#03	4_F_SISTER,{
 			mes "You can do it right?";
 			mes "I believe in you!";
 			para_2nd01 = 9;
-			erasequest 7220;// Wraith Hunt
-			setquest 7221;// Evil Druid hunt
+			erasequest 7220;	// Wraith Hunt
+			setquest 7221;	// Evil Druid hunt
 			getexp 20000,20000;
 		}
 		else {
@@ -3131,7 +3125,7 @@ glast_01,195,131,5	script	Dispatched Instructor#03	4_F_SISTER,{
 			mes "I'll watch your back!.";
 			mes "... Of.. Course.. I'll fight too!";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else if (para_2nd01 == 9) {
@@ -3154,8 +3148,8 @@ glast_01,195,131,5	script	Dispatched Instructor#03	4_F_SISTER,{
 			mes "You can go back to Eden now";
 			mes "I'll stay and clean up the rest, hehe";
 			para_2nd01 = 10;
-			erasequest 7221;// Evil Druid hunt
-			setquest 7222;// Report to Instructor Ur
+			erasequest 7221;	// Evil Druid hunt
+			setquest 7222;	// Report to Instructor Ur
 			getexp 20000,20000;
 		}
 		else {
@@ -3163,7 +3157,7 @@ glast_01,195,131,5	script	Dispatched Instructor#03	4_F_SISTER,{
 			mes "I'll watch your back, like last time.";
 			mes "... Of... Course... I'll fight them too!";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else if (para_2nd01 == 10) {
@@ -3183,7 +3177,7 @@ glast_01,195,131,5	script	Dispatched Instructor#03	4_F_SISTER,{
 	close;
 }
 
-//--80~89
+//- 80~89 -
 ein_fild08,172,359,3	script	Dispatched Instructor#04	4_M_4THPRIN1,{
 	mes "[Kiren]";
 	if (para_2nd01 < 12) {
@@ -3217,11 +3211,11 @@ ein_fild08,172,359,3	script	Dispatched Instructor#04	4_M_4THPRIN1,{
 		mes "I'm not holding a grudge just because they ate my lunch.";
 		mes "I'll be resting here until you're done.";
 		para_2nd01 = 13;
-		erasequest 7223;// Advanced Training in Einbroch
-		setquest 7224;// Porcellio hunting
+		erasequest 7223;	// Advanced Training in Einbroch
+		setquest 7224;	// Porcellio hunting
 	}
 	else if (para_2nd01 == 13) {
-		if (questprogress(7224,HUNTING) == 2) {// Porcellio hunting
+		if (questprogress(7224,HUNTING) == 2) {	// Porcellio hunting
 			mes "What, You're done already?";
 			mes "I was just about to fall asleep... Oh well..";
 			mes "It can't be helped, I guess. Let's go to a different spot..";
@@ -3254,9 +3248,9 @@ ein_fild08,172,359,3	script	Dispatched Instructor#04	4_M_4THPRIN1,{
 			mes "Okay then, be safe.";
 			mes "I'm going to take a nap.";
 			para_2nd01 = 14;
-			erasequest 7224;// Porcellio hunting
-			setquest 7226;// Venomous hunting
-			setquest 7227;// Teddy Bear hunting
+			erasequest 7224;	// Porcellio hunting
+			setquest 7226;	// Venomous hunting
+			setquest 7227;	// Teddy Bear hunting
 			getexp 30000,30000;
 		}
 		else {
@@ -3267,7 +3261,7 @@ ein_fild08,172,359,3	script	Dispatched Instructor#04	4_M_4THPRIN1,{
 			mes "If you're hurt I'll heal you a bit.";
 		}
 		npcskill "AL_HEAL",10,99,60;
-		percentheal 0,100;
+		percentheal 0, 100;
 	}
 	else if (para_2nd01 == 14) {
 		if (questprogress(7226,HUNTING) == 2 && questprogress(7227,HUNTING) == 2) {
@@ -3284,9 +3278,9 @@ ein_fild08,172,359,3	script	Dispatched Instructor#04	4_M_4THPRIN1,{
 			mes "I have some things to report to Instructor Ur.";
 			mes "I've been watching you closely and you've done well. Go back to Ur and deliver this report.";
 			para_2nd01 = 15;
-			erasequest 7226;// Venomous hunting
-			erasequest 7227;// Teddy Bear hunting
-			setquest 7228;// Report to Instructor Ur
+			erasequest 7226;	// Venomous hunting
+			erasequest 7227;	// Teddy Bear hunting
+			setquest 7228;	// Report to Instructor Ur
 			getexp 30000,30000;
 		}
 		else {
@@ -3299,7 +3293,7 @@ ein_fild08,172,359,3	script	Dispatched Instructor#04	4_M_4THPRIN1,{
 			mes "Ugh this is difficult.";
 			mes "I'll make you feel better though.";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else if (para_2nd01 == 15) {
@@ -3321,7 +3315,7 @@ ein_fild08,172,359,3	script	Dispatched Instructor#04	4_M_4THPRIN1,{
 	close;
 }
 
-//--90~99
+//- 90~99 -
 ice_dun01,154,13,5	script	Dispatched Instructor#05	4_F_JOB_BLACKSMITH,{
 	mes "[Naomi]";
 	if (para_2nd01 <= 17) {
@@ -3361,8 +3355,8 @@ ice_dun01,154,13,5	script	Dispatched Instructor#05	4_F_JOB_BLACKSMITH,{
 		mes "You be careful in there.";
 		mes "Well, good luck~!";
 		para_2nd01 = 18;
-		erasequest 7229;// Advanced Training in Ice Dungeon
-		setquest 7230;// Siroma hunting
+		erasequest 7229;	// Advanced Training in Ice Dungeon
+		setquest 7230;	// Siroma hunting
 	}
 	else if (para_2nd01 == 18) {
 		if (questprogress(7230,HUNTING) == 2) {
@@ -3401,11 +3395,11 @@ ice_dun01,154,13,5	script	Dispatched Instructor#05	4_F_JOB_BLACKSMITH,{
 			mes "Go now!";
 			mes "Those Siromas are going to just get rowdier by the minute.";
 			para_2nd01 = 19;
-			erasequest 7230;// Siroma hunting
-			setquest 7231;// Hunting and Gathering
+			erasequest 7230;	// Siroma hunting
+			setquest 7231;	// Hunting and Gathering
 			getexp 40000,40000;
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 		else {
 			mes "The biggest stumbling block is dealing with the Siromas.";
@@ -3418,7 +3412,7 @@ ice_dun01,154,13,5	script	Dispatched Instructor#05	4_F_JOB_BLACKSMITH,{
 		}
 	}
 	else if (para_2nd01 == 19) {
-		if (questprogress(7231,HUNTING) == 2 && countitem(Ice_Piece) > 29 && countitem(Sweet_Sauce) > 0 && countitem(Milk) > 0) {// Ice_Piece, Sweet_Sauce, Milk
+		if (questprogress(7231,HUNTING) == 2 && countitem(Ice_Piece) > 29 && countitem(Sweet_Sauce) > 0 && countitem(Milk) > 0) {
 			mes "Ohh!";
 			mes "You've brought everything.";
 			mes "Okay, so just one last thing...!";
@@ -3445,8 +3439,8 @@ ice_dun01,154,13,5	script	Dispatched Instructor#05	4_F_JOB_BLACKSMITH,{
 			delitem Sweet_Sauce,1;
 			delitem Milk,1;
 			para_2nd01 = 20;
-			erasequest 7231;// Hunting and Gathering
-			setquest 7232;// Report to Instructor Ur
+			erasequest 7231;	// Hunting and Gathering
+			setquest 7232;	// Report to Instructor Ur
 			getexp 40000,40000;
 		}
 		else {
@@ -3509,8 +3503,8 @@ mid_camp,212,229,3	script	Dispatched Instructor#06	4_F_HUWOMAN,{
 		mes "[Margaret]";
 		mes "Find him and figure out what the heck he's up to please.";
 		para_2nd01 = 23;
-		erasequest 7233;//  Advanced Training at Ash Vacuum
-		setquest 7234;// Margaret's favor
+		erasequest 7233;	//  Advanced Training at Ash Vacuum
+		setquest 7234;	// Margaret's favor
 	}
 	else if (para_2nd01 < 27) {
 		mes "Can you find those two brothers?";
@@ -3532,8 +3526,8 @@ mid_camp,212,229,3	script	Dispatched Instructor#06	4_F_HUWOMAN,{
 		mes "[Margaret]";
 		mes "Your training is done so go back and talk to Instructor Ur.";
 		para_2nd01 = 29;
-		erasequest 7234;// Margaret's favor
-		setquest 7237;// Report to Instructor Ur
+		erasequest 7234;	// Margaret's favor
+		setquest 7237;	// Report to Instructor Ur
 	}
 	else if (para_2nd01 == 29) {
 		mes "Well, whatever the Nepenthes and Pinguicula proof has been collected.";
@@ -3600,7 +3594,7 @@ man_fild01,43,234,3	script	Dispatched Instructor#07	4_DST_SOLDIER,{
 		mes "[Meeru]";
 		mes "It's really not that difficult to hunt 1 so just go to the field East of here and kill one of them.";
 		para_2nd01 = 24;
-		setquest 7235;// Nepenthes Hunt
+		setquest 7235;	// Nepenthes Hunt
 	}
 	else if (para_2nd01 == 24) {
 		if (questprogress(7235,HUNTING) == 2) {
@@ -3616,7 +3610,7 @@ man_fild01,43,234,3	script	Dispatched Instructor#07	4_DST_SOLDIER,{
 			mes "[Meeru]";
 			mes "I'll just be here making sure other people hunt the Nepenthes. I might ask them to hunt more than 1 who knows.";
 			para_2nd01 = 25;
-			erasequest 7235;// Nepenthes Hunt
+			erasequest 7235;	// Nepenthes Hunt
 			getexp 50000,50000;;
 		}
 		else {
@@ -3624,7 +3618,7 @@ man_fild01,43,234,3	script	Dispatched Instructor#07	4_DST_SOLDIER,{
 			mes "You seem a bit flushed.";
 			mes "Fine I'll heal you!";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else if (para_2nd01 == 25)
@@ -3686,7 +3680,7 @@ spl_fild02,377,149,3	script	Dispatched Instructor#08	4_M_DST_MASTER,{
 		mes "I promise you I'll give you something good.";
 		mes "Thanks.";
 		para_2nd01 = 26;
-		setquest 7236;// Pinguicula Hunt
+		setquest 7236;	// Pinguicula Hunt
 	}
 	else if (para_2nd01 == 26) {
 		if (questprogress(7236,HUNTING) == 2) {
@@ -3699,7 +3693,7 @@ spl_fild02,377,149,3	script	Dispatched Instructor#08	4_M_DST_MASTER,{
 			mes "[Mine]";
 			mes "Oh don't worry she won't mind. I'll just go back to doing what I was doing. Here's your reward.";
 			para_2nd01 = 27;
-			erasequest 7236;// Pinguicula Hunt
+			erasequest 7236;	// Pinguicula Hunt
 			getexp 50000,50000;;
 		}
 		else {
@@ -3709,7 +3703,7 @@ spl_fild02,377,149,3	script	Dispatched Instructor#08	4_M_DST_MASTER,{
 			mes "[Mine]";
 			mes "You're not lying about being a real adventurer are you?";
 			npcskill "AL_HEAL",10,99,60;
-			percentheal 0,100;
+			percentheal 0, 100;
 		}
 	}
 	else if (para_2nd01 == 27) {
@@ -3727,7 +3721,7 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 		close;
 	}
 	mes "[Thorn]";
-	if (countitem(Para_Team_Mark) < 1) {// Para_Team_Mark
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "Hmm, are you a member of Eden Group?";
 		mes "You need to be one of our members to use my services.";
 		close;
@@ -3757,9 +3751,9 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 			mes "So what equipment do you want to enhance?";
 			next;
 			switch( select( "Eden Group Manteau II", "Eden Group Armor IV", "Eden Group Boots IV" ) ) {
-				case 1: callsub S_Enchant,Para_Team_Manteau2,"Manteau";// Para_Team_Manteau2
-				case 2: callsub S_Enchant,Para_Team_Armor,"Armor";// Para_Team_Armor
-				case 3: callsub S_Enchant,Para_Team_Boots4,"Boots";// Para_Team_Boots4
+				case 1: callsub S_Enchant,Para_Team_Manteau2,"Manteau";
+				case 2: callsub S_Enchant,Para_Team_Armor,"Armor";
+				case 3: callsub S_Enchant,Para_Team_Boots4,"Boots";
 			}
 		}
 		else {
@@ -3803,7 +3797,7 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 				mes "I appreciate it.";
 				mes "So take your time and I'll be waiting.";
 				para_2nd04 = 1 + .@add;
-				setquest (7238 + .@add);// Errands for Thorn (easy/hard)
+				setquest (7238 + .@add);	// Errands for Thorn (easy/hard)
 				close;
 			case 2:
 				mes "Eh...?";
@@ -3813,7 +3807,7 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 		}
 		else if (para_2nd04 == 1 || para_2nd04 == 2) {
 			if (para_2nd04 == 1) {
-				setarray .@item[0],Iron_Ore,Iron;// Iron_Ore, Iron
+				setarray .@item[0],Iron_Ore,Iron;
 				setarray .@amount[0],20,10;
 				setarray .@countitem[0],countitem(Iron_Ore),countitem(Iron);
 				.@string$ = "I asked you to get 20 Iron Ore, and 10 Iron.";
@@ -3866,7 +3860,7 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 				mes "Uh-huh...";
 				mes "What are we going to... oh don't worry.";
 				mes "Come to me later.";
-				erasequest 7241;// Errands for Thorn timer
+				erasequest 7241;	// Errands for Thorn timer
 				para_2nd04 = 0;
 			}
 		}
@@ -3902,57 +3896,57 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 					P_Katar1,"Eden Group Katar I","Katar, ATK 155";
 			}
 			else if (BaseJob == Job_Rogue || BaseClass == Job_Novice)
-				getitem P_Dagger3,1;// P.Dagger III
+				getitem P_Dagger3,1;
 			else if (BaseJob == Job_Alchemist || BaseJob == Job_Blacksmith) {
 				callsub L_Select,"Your options are Mace, Saber and Axe.",
-					P_Mace3,"Eden Group Mace III","Mace, Attack 172",// P_Mace3
-					P_Saber3,"Eden Group Saber III","Sword, Attack 185",//P.Saber III
-					P_Two_Handed_Axe1,"Eden Group Axe I","Axe, Attack 195"; //P.Two-Handed Axe I
+					P_Mace3,"Eden Group Mace III","Mace, Attack 172",
+					P_Saber3,"Eden Group Saber III","Sword, Attack 185",
+					P_Two_Handed_Axe1,"Eden Group Axe I","Axe, Attack 195"; 
 			}
 			else if (BaseJob == Job_Wizard)
-				getitem P_Staff3,1;// P.Staff III
+				getitem P_Staff3,1;
 			else if (BaseJob == Job_Sage) {
 				callsub L_Select,"",
-					P_Staff3,"Eden Group Staff III","Staff, MATK + 170, INT +4, Attack 60", //P.Staff III
-					P_Dic1,"Eden Group Dictionary I","Book, MATK +100, Attack 135"; //P.Book I
+					P_Staff3,"Eden Group Staff III","Staff, MATK + 170, INT +4, Attack 60",
+					P_Dic1,"Eden Group Dictionary I","Book, MATK +100, Attack 135";
 			}
 			else if (BaseJob == Job_Priest) {
 				callsub L_Select,"",
-					P_Staff3,"Eden Group Staff III","Staff, MATK + 170, INT +4, Attack 60", //P.Staff III
-					P_Dic1,"Eden Group Dictionary I","Book, MATK +100, Attack 135", //P.Book I
-					P_Mace3,"Eden Group Mace III","Mace, Attack 172"; //P.Mace III
+					P_Staff3,"Eden Group Staff III","Staff, MATK + 170, INT +4, Attack 60",
+					P_Dic1,"Eden Group Dictionary I","Book, MATK +100, Attack 135",
+					P_Mace3,"Eden Group Mace III","Mace, Attack 172";
 			}
 			else if (BaseJob == Job_Monk) {
 				callsub L_Select,"",
-					P_Knuckle1,"Eden Group Knuckles I","Knuckle, Attack 120", //P.Knuckle I
-					P_Mace3,"Eden Group Mace III","Mace, Attack 172"; //P.Mace III
+					P_Knuckle1,"Eden Group Knuckles I","Knuckle, Attack 120",
+					P_Mace3,"Eden Group Mace III","Mace, Attack 172";
 			}
 			else if (BaseJob == Job_Hunter)
-				getitem P_Bow3,1;// P.Bow III
+				getitem P_Bow3,1;
 			else if (BaseJob == Job_Bard) {
 				callsub L_Select,"",
-					P_Bow3,"Eden Group Bow III","Bow, Attack 140", //P.Bow III
-					P_String_Inst1,"Eden Group Guitar I","Guitar, Attack 125"; //P.Guitar I
+					P_Bow3,"Eden Group Bow III","Bow, Attack 140",
+					P_String_Inst1,"Eden Group Guitar I","Guitar, Attack 125";
 			}
 			else if (BaseJob == Job_Dancer) {
 				callsub L_Select,"",
-					P_Bow3,"Eden Group Bow III","Bow, Attack 140", //P.Bow III
-					P_Tail1,"Eden Group Whip I","Whip, Attack 125"; //P.Tail I
+					P_Bow3,"Eden Group Bow III","Bow, Attack 140",
+					P_Tail1,"Eden Group Whip I","Whip, Attack 125";
 			}
-			else if (Class == Job_Ninja) {
+			else if (BaseClass == Job_Ninja) {
 				callsub L_Select,"",
-					P_Dagger3,"Eden Group Dagger III","Dagger, MATK +80, ATK 165", //P.Dagger III
-					P_Huuma_Shuriken1,"Eden Group Huuma Shuriken I","Huuma Suriken, MATK +50, ATK 170"; //P.Huuma Suriken I
+					P_Dagger3,"Eden Group Dagger III","Dagger, MATK +80, ATK 165",
+					P_Huuma_Shuriken1,"Eden Group Huuma Shuriken I","Huuma Suriken, MATK +50, ATK 170";
 			}
-			else if (Class == Job_Star_Gladiator)
-				getitem P_Dic1,1; //P.Book I
-			else if (Class == Job_Soul_Linker) {
+			else if (BaseJob == Job_Star_Gladiator)
+				getitem P_Dic1,1;
+			else if (BaseJob == Job_Soul_Linker) {
 				callsub L_Select,"",
-					P_Dagger3,"Eden Group Dagger III","Dagger, MATK +80, ATK 165", //P.Dagger III
-					P_Staff3,"Eden Group Staff III","Staff, MATK +170, INT +4, ATK 60"; //P.Staff III
+					P_Dagger3,"Eden Group Dagger III","Dagger, MATK +80, ATK 165",
+					P_Staff3,"Eden Group Staff III","Staff, MATK +170, INT +4, ATK 60";
 			}
-			else if (Class == Job_Gunslinger)
-				getitem P_Revolver3,1; //P.Revolver III
+			else if (BaseClass == Job_Gunslinger)
+				getitem P_Revolver3,1;
 			else {
 				mes "Hmm, you are eligible to receive equipment.";
 				mes "Yeah I understand that.";
@@ -3962,10 +3956,10 @@ moc_para01,111,83,3	script	Blacksmith Thorn#2nd10	2_M_OLDBLSMITH,{
 				close;
 			}
 			para_2nd02 = 2;
-			getitem Para_Team_Hat2,1;// Paradise Hat II
-			getitem Para_Team_Manteau2,1;// Paradise Mantle II
-			getitem Para_Team_Boots4,1;// Paradise Boots IV
-			getitem Para_Team_Armor,1;// Paradise Uniform IV
+			getitem Para_Team_Hat2,1;
+			getitem Para_Team_Manteau2,1;
+			getitem Para_Team_Boots4,1;
+			getitem Para_Team_Armor,1;
 			mes "Here's your equipment.";
 			mes "I'll also give you the other gear that comes along with this set.";
 		}
@@ -4003,18 +3997,18 @@ S_Enchant:
 	mes "[Thorn]";
 	if (countitem(getarg(0)) > 0) {
 		setarray .@bonus[1],
-			Luck2,// Luck2
-			Mdef4,// Mdef4
-			Def3,// Def3
-			Strength2,// Strength2
-			Mdef6,// Mdef6
-			Def6,// Def6
-			Agility2,// Agility2
-			Mdef8,// Mdef8
-			Def9,// Def9
-			Dexterity2,// Dexterity2
-			Inteligence2,// Inteligence2
-			Vitality2;// Vitality2
+			Luck2,
+			Mdef4,
+			Def3,
+			Strength2,
+			Mdef6,
+			Def6,
+			Agility2,
+			Mdef8,
+			Def9,
+			Dexterity2,
+			Inteligence2,
+			Vitality2;
 		.@1st = .@bonus[ rand(1,12) ];
 		.@2nd = .@bonus[ rand(1,12) ];
 		mes "Eden Group "+ getarg(1) +"?";
@@ -4037,7 +4031,7 @@ S_Enchant:
 			delitem getarg(0),1;
 			para_2nd04 = 4;
 			changequest 7240,7241;
-			getitem2 getarg(0),1,1,0,0,0,0,.@1st,.@2nd;						
+			getitem2 getarg(0),1,1,0,0,0,0,.@1st,.@2nd;
 			mes "[Thorn]";
 			mes "Ok, seems that the enhancement went well.";
 			mes "If you don't like the result then you can come back again tomorrow.";
@@ -4051,36 +4045,25 @@ S_Enchant:
 
 moc_para01,112,79,3	script	Weapons Expert BK#2nd11	4_M_REPAIR,{
 	setarray .@wplist[0],
-		P_Slayer3,	// P_Slayer3
-		P_Saber3,	// P_Saber3
-		P_Dagger3,	// P_Dagger3
-		P_Katar1,	// P_Katar1
-		P_Two_Handed_Axe1,	// P_Two_Handed_Axe1
-		P_Sphere1,	// P_Spear I
-		P_Staff3,	// P_Staff3
-		P_Mace3,	// P_Mace3
-		P_Bow3,	// P_Bow3
-		P_Dic1,	// P.Book I
-		P_String_Inst1,	// P_Guitar I
-		P_Tail1,	// P_Tail1
-		P_Revolver3,	// P_Revolver3
-		P_Knuckle1,	// P_Knuckle1
-		P_Huuma_Shuriken1;	// P_Huuma_Shuriken1
-	.@menu$ = "Eden Group Slayer III:" +
-		"Eden Group Saber III:" +
-		"Eden Group Dagger III:" +
-		"Eden Group Katar I:" +
-		"Eden Group Axe I:" +
-		"Eden Group Spear I:" +
-		"Eden Group Staff III:" +
-		"Eden Group Mace III:" +
-		"Eden Group Bow III:" +
-		"Eden Group Dictionary I:" +
-		"Eden Group Guitar I:" +
-		"Eden Group Whip I:" +
-		"Eden Group Revolver III:" +
-		"Eden Group Knuckles I:" +
-		"Eden Group Huuma Shuriken I";
+		P_Slayer3,
+		P_Saber3,
+		P_Dagger3,
+		P_Katar1,
+		P_Two_Handed_Axe1,
+		P_Sphere1,
+		P_Staff3,
+		P_Mace3,
+		P_Bow3,
+		P_Dic1,
+		P_String_Inst1,
+		P_Tail1,
+		P_Revolver3,
+		P_Knuckle1,
+		P_Huuma_Shuriken1;
+	.@wplist_size = getarraysize(.@wplist);
+	for ( .@i = 0; .@i < .@wplist_size; ++.@i ) {
+		.@menu$ += getitemname(.@wplist[.@i]) + ":";
+	}
 	mes "[BK]";
 	mes "What's happening?";
 	mes "No way?!";
@@ -4179,27 +4162,27 @@ moc_para01,112,79,3	script	Weapons Expert BK#2nd11	4_M_REPAIR,{
 			next;
 			switch( select( "Brute Type", "Plant Type", "Insect Type", "Fish Type", "Dragon Type", "Increased Heal" ) ) {
 			case 1:
-				setarray .@arg[0],Goblin_Card,Bradium_Goram_Card,111;// Goblin_Card, Bradium_Goram_Card
+				setarray .@arg[0],Goblin_Card,Bradium_Goram_Card,111;
 				.@type$ = "Brute";
 				break;
 			case 2:
-				setarray .@arg[0],Scorpion_Card,Nepenthes_Card,121;// Scorpion_Card, Nepenthes_Card
+				setarray .@arg[0],Scorpion_Card,Nepenthes_Card,121;
 				.@type$ = "Plant";
 				break;
 			case 3:
-				setarray .@arg[0],Caramel_Card,Pinguicula_Card,131;// Caramel_Card, Pinguicula_Card
+				setarray .@arg[0],Caramel_Card,Pinguicula_Card,131;
 				.@type$ = "Insect";
 				break;
 			case 4:
-				setarray .@arg[0],Flora_Card,Naga_Card,141;// Flora_Card, Naga_Card
+				setarray .@arg[0],Flora_Card,Naga_Card,141;
 				.@type$ = "Fish";
 				break;
 			case 5:
-				setarray .@arg[0],Petit_Card,Egg_Of_Draco_Card,151;// Petit_Card, Egg_Of_Draco_Card
+				setarray .@arg[0],Petit_Card,Egg_Of_Draco_Card,151;
 				.@type$ = "Dragon";
 				break;
 			case 6:
-				setarray .@arg[0],Heal_Amount2,Heal_Amount2,161;// Heal_Amount2
+				setarray .@arg[0],Heal_Amount2,Heal_Amount2,161;
 			}
 			mes "[BK]";
 			for ( .@i = 0; .@i < 15; .@i++ ) {
@@ -4260,29 +4243,29 @@ moc_para01,112,79,3	script	Weapons Expert BK#2nd11	4_M_REPAIR,{
 				delitem .@wplist[.@s],1;
 				para_2nd02 = 5;
 				if (para_2nd03 == 111)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Goblin_Card,Goblin_Card,Atk3;// Goblin_Card, Goblin_Card, Atk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Goblin_Card,Goblin_Card,Atk3;
 				else if (para_2nd03 == 121)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Scorpion_Card,Scorpion_Card,Atk3;// Scorpion_Card, Scorpion_Card, Atk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Scorpion_Card,Scorpion_Card,Atk3;
 				else if (para_2nd03 == 131)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Caramel_Card,Caramel_Card,Atk3;// Caramel_Card, Caramel_Card, Atk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Caramel_Card,Caramel_Card,Atk3;
 				else if (para_2nd03 == 141)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Flora_Card,Flora_Card,Atk3;// Flora_Card, Flora_Card, Atk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Flora_Card,Flora_Card,Atk3;
 				else if (para_2nd03 == 151)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Petit_Card,Petit_Card,Atk3;// Petit_Card, Petit_Card, Atk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Petit_Card,Petit_Card,Atk3;
 				else if (para_2nd03 == 161)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Heal_Amount2,Heal_Amount2,Atk3;// Heal_Amount2, Heal_Amount2, Atk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Heal_Amount2,Heal_Amount2,Atk3;
 				else if (para_2nd03 == 211)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Bradium_Goram_Card,Bradium_Goram_Card,Matk3;// Bradium_Goram_Card, Bradium_Goram_Card, Matk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Bradium_Goram_Card,Bradium_Goram_Card,Matk3;
 				else if (para_2nd03 == 221)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Nepenthes_Card,Nepenthes_Card,Matk3;// Nepenthes_Card, Nepenthes_Card, Matk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Nepenthes_Card,Nepenthes_Card,Matk3;
 				else if (para_2nd03 == 231)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Pinguicula_Card,Pinguicula_Card,Matk3;// Pinguicula_Card, Pinguicula_Card, Matk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Pinguicula_Card,Pinguicula_Card,Matk3;
 				else if (para_2nd03 == 241)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Naga_Card,Naga_Card,Matk3;// Naga_Card, Naga_Card, Matk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Naga_Card,Naga_Card,Matk3;
 				else if (para_2nd03 == 251)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Egg_Of_Draco_Card,Egg_Of_Draco_Card,Matk3;// Egg_Of_Draco_Card, Egg_Of_Draco_Card, Matk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Egg_Of_Draco_Card,Egg_Of_Draco_Card,Matk3;
 				else if (para_2nd03 == 261)
-					getitem2 .@wplist[.@s],1,1,0,0,0,Heal_Amount2,Heal_Amount2,Matk3;// Heal_Amount2, Heal_Amount2, Matk3
+					getitem2 .@wplist[.@s],1,1,0,0,0,Heal_Amount2,Heal_Amount2,Matk3;
 				mes "[BK]";
 				mes "Isn't it magnificent?";
 				mes "I know, I know, I'm pretty amazing!";
@@ -4316,10 +4299,10 @@ sec_in02,25,33,4	script	Assistant#para_suvquest	4_M_BABYCAT,{
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		mes "Please select the variable you want to modify.";
 		next;
-		.@var =  select("para_suv01:para_suv02");
+		.@var =  select("para_suv01", "para_suv02");
 		mes "Enter the modified value";
 		next;
-		input .@input,0,9999;
+		input(.@input, 0, 9999);
 		mes "Value of para_suv0"+.@var+" has been changed to "+.@input+".";
 		setd "para_suv0"+.@var,.@input;
 		close;

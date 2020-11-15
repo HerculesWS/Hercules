@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Repeatable EXP Quest (Powder of Butterfly) (Dialog is semi-custom)
+//================= Current Version =======================================
 //= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests. (Dialog is semi-custom)
-//= Repeatable EXP Quest (Powder of Butterfly)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//=========================================================================
 
 prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 	if (questprogress(60122)) {
@@ -18,7 +38,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 			mes "[Laertes]";
 			mes "Have you finished hunting the 50 Creamys?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Laertes]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Laertes]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 			mes "[Laertes]";
 			mes "Have you finished hunting the 50 Creamys?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Laertes]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Laertes]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 			mes "[Laertes]";
 			mes "Have you finished hunting the 150 Creamys?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Laertes]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Laertes]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -144,22 +164,22 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 			mes "Good Morning!";
 			mes "Perhaps you could help me?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Laertes]";
 				mes "I work for an apothecary in Prontera.";
 				mes "I come here to collect materials for medicine.";
 				next;
-				switch(select("Gather Items:Hunt Creamys:Cancel")) {
+				switch(select("Gather Items", "Hunt Creamys", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Laertes]";
 					mes "I need to have a good supply of ^FF0000Powder of Butterfly^000000";
 					next;
-					switch(select("I have Powder of Butterfly:What did you need?")) {
+					switch(select("I have Powder of Butterfly", "What did you need?")) {
 					case 1:
 						/*
-						if (checkweight(502,5) == 0) {
+						if (checkweight(Orange_Potion,5) == 0) {
 							mes "[Laertes]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -167,13 +187,13 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 							close;
 						}
 						*/
-						if (countitem(924) > 24) {
+						if (countitem(Powder_Of_Butterfly) > 24) {
 							mes "[Laertes]";
 							mes "Hey, thank you again.";
 							mes "Here you go, as promised.";
-							delitem 924,25; //Powder_Of_Butterfly
+							delitem Powder_Of_Butterfly,25;
 							getexp 2950,1125;
-							//getitem 502,5; //Orange_Potion
+							//getitem Orange_Potion,5;
 							close;
 						}
 						else {
@@ -197,7 +217,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 					mes "Ah, ok I think you can help me out by hunting some Creamys.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Creamys:100 Creamys:150 Creamys")) {
+					switch(select("50 Creamys", "100 Creamys", "150 Creamys")) {
 					case 1:
 						mes "[Laertes]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

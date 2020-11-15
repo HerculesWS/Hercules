@@ -1,13 +1,31 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_PC_GROUPS_H
 #define MAP_PC_GROUPS_H
 
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
+#include "common/hercules.h"
+
+/* Forward Declarations */
+struct DBMap; // common/db.h
+struct config_setting_t;
 
 /// PC permissions
 enum e_pc_permission {
@@ -39,6 +57,7 @@ enum e_pc_permission {
 	PC_PERM_DISABLE_STORE       = 0x1000000,
 	PC_PERM_DISABLE_EXP         = 0x2000000,
 	PC_PERM_DISABLE_SKILL_USAGE = 0x4000000,
+	PC_PERM_BYPASS_NOSTORAGE    = 0x8000000,
 };
 
 // Cached config settings for quick lookup
@@ -50,11 +69,11 @@ struct GroupSettings {
 	bool log_commands; // groups.[].log_commands
 	int index; // internal index of the group (contiguous range starting at 0) [Ind]
 	/// Following are used/available only during config reading
-	config_setting_t *commands; // groups.[].commands
-	config_setting_t *permissions; // groups.[].permissions
-	config_setting_t *inherit; // groups.[].inherit
+	struct config_setting_t *commands; // groups.[].commands
+	struct config_setting_t *permissions; // groups.[].permissions
+	struct config_setting_t *inherit; // groups.[].inherit
 	bool inheritance_done; // have all inheritance rules been evaluated?
-	config_setting_t *root; // groups.[]
+	struct config_setting_t *root; // groups.[]
 };
 
 typedef struct GroupSettings GroupSettings;
@@ -73,8 +92,8 @@ struct pc_groups_new_permission {
 
 struct pc_groups_interface {
 	/* */
-	DBMap* db; // id -> GroupSettings
-	DBMap* name_db; // name -> GroupSettings
+	struct DBMap *db; // id -> GroupSettings
+	struct DBMap *name_db; // name -> GroupSettings
 	/* */
 	struct pc_groups_permission_table *permissions;
 	unsigned char permission_count;
@@ -96,10 +115,10 @@ struct pc_groups_interface {
 	int (*get_idx) (GroupSettings *group);
 };
 
-struct pc_groups_interface *pcg;
-
 #ifdef HERCULES_CORE
 void pc_groups_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct pc_groups_interface *pcg;
 
 #endif /* MAP_PC_GROUPS_H */

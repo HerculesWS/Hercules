@@ -1,23 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lemongrass
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
+//= Copyright (C) Gennosuke Kouga
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Dewata Quest NPCs
-//===== By: ==================================================
-//= Gennosuke Kouga, Muad_Dib
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest NPCs related to Dewata:
-//== "Dewata Legend"
-//== "Help Out the Old Man"
-//== "Traditional Weapon"
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Standardized. [Euphy]
-//= 1.2 Updated to match the official script. [Lemongrass/Euphy]
-//============================================================
+//= - Dewata Legend
+//= - Help Out the Old Man
+//= - Traditional Weapon
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Dewata Legend Quest :: dewata_legend
-//============================================================
+//== Dewata Legend Quest :: dewata_legend ==================
 dew_fild01,57,274,0	script	#hideout_legend	HIDDEN_NPC,6,6,{
 OnTouch:
 	if (BaseLevel > 59 && dew_legend < 1) {
@@ -96,7 +117,7 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 		mes "that you have something to say";
 		mes "you might as well tell me what it is.";
 		next;
-		if(select("I overheard talk about a crown?:Just looking for the gift shop.") == 2) {
+		if(select("I overheard talk about a crown?", "Just looking for the gift shop.") == 2) {
 			mes "[Tribal Chief Paiko]";
 			mes "Really?";
 			mes "It looked as if your eyes";
@@ -114,7 +135,7 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 		mes "that you are a trustworthy sort... but...";
 		next;
 		mes "There is a brief twinkling of light ^0000FFKasyapa^000000 all of sudden seems to be taken aback.";
-		specialeffect2 EF_PNEUMA;
+		specialeffect(EF_PNEUMA, AREA, playerattached());
 		next;
 		mes "[Sage Kasyapa]";
 		mes "Ah, the feather......!";
@@ -169,8 +190,8 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 		mes "as a reward for your help.";
 		mes "Please, it would honor us if you would take it.";
 		next;
-		if (checkweight(6406,1) == 0) {
-			if (Weight + getiteminfo(6406,6) > MaxWeight) {
+		if (checkweight(Cendrawasih_SF,1) == 0) {
+			if (Weight + getiteminfo(Cendrawasih_SF, ITEMINFO_WEIGHT) > MaxWeight) {
 				mes "[Sage Kasyapa]";
 				mes "You are carrying too much weight over the limit.";
 				mes "I cannot get you your reward unless you reduce the amount of weighty items you are carrying.";
@@ -183,13 +204,13 @@ dew_in01,22,48,3	script	Sage Kasyapa#dew	4_M_DEWZATIMAN,{
 			}
 		}
 		dew_legend = 8;
-		getitem 6406,1; //Cendrawasih_SF
+		getitem Cendrawasih_SF,1;
 		completequest 9157;
 		erasequest 9157;
 		mes "[Sage Kasyapa]";
 		mes "The reason I asked you to embark on this important mission is because of this feather.";
 		mes "Handed down from generation to generation the legendary origin of the crown is this feather...";
-		specialeffect2 EF_PNEUMA;
+		specialeffect(EF_PNEUMA, AREA, playerattached());
 		next;
 		mes "[Sage Kasyapa]";
 		mes "I saw this feather begin to shine when you came here.";
@@ -228,7 +249,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "from another land.";
 		mes "What brings you here?";
 		next;
-		if(select("I overheard the story by accident:I have nothing to say.") == 2) {
+		if(select("I overheard the story by accident", "I have nothing to say.") == 2) {
 			mes "[Tribal Chief Paiko]";
 			mes "You are wasting your time here.";
 			mes "There are many other attractions around our village.";
@@ -276,7 +297,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "Do you think you can help?";
 		mes "Your efforts will not go unrewarded.";
 		next;
-		if(select("Ok, I will help:I am sorry, I cannot help now.") == 2) {
+		if(select("Ok, I will help", "I am sorry, I cannot help now.") == 2) {
 			mes "[Tribal Chief Paiko]";
 			mes "That's really sad.";
 			mes "If you ever change";
@@ -300,7 +321,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		setquest 9155;
 		close;
 	} else if (dew_legend == 5) {
-		if (countitem(6405) < 15) {
+		if (countitem(Cendrawasih_F) < 15) {
 			mes "[Tribal Chief Paiko]";
 			mes "It seems that you have yet to find the materials to make the ^006400Jaty Crown^000000.";
 			next;
@@ -310,14 +331,14 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 			close;
 		}
 		dew_legend = 6;
-		delitem 6405,15; //Cendrawasih_F
+		delitem Cendrawasih_F,15;
 		changequest 9155,9156;
 		mes "[Tribal Chief Paiko]";
 		mes "Oh! You've found all of them. Look! The feathers you have found are sparkling. Aren't they?";
 		mes "Alright, let me begin crafting the ^006400Jaty Crown^000000 I feel that I am ready.";
 		next;
 		mes "Suddenly, a large noise begins to boom as you and ^0000FFPaiko^000000 are surrounded by warm and bright sparkling energy like a thousand tinkling fireflies.";
-		specialeffect2 EF_BASH3D2;
+		specialeffect(EF_BASH3D2, AREA, playerattached());
 		close;
 	} else if (dew_legend == 6) {
 		mes "[Tribal Chief Paiko]";
@@ -356,7 +377,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "[Tribal Chief Paiko]";
 		mes "Are you up for a short delivery job?";
 		next;
-		if(select("Of course, I can help:Sorry, I am too busy to help.") == 2) {
+		if(select("Of course, I can help", "Sorry, I am too busy to help.") == 2) {
 			mes "[Tribal Chief Paiko]";
 			mes "I believed you would definitely help me...";
 			mes "It's a little disappointing.";
@@ -376,7 +397,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "You may be tempted by the aroma of our ^006400Satay^000000 and you may eat one but, if you eat more than that you won't be able to share the ^006400Satay^000000";
 		mes "with our village friends.";
 		dew_legend = 9;
-		getitem 11533,2; //Satay
+		getitem Satay,2;
 		setquest 9158;
 		close;
 	} else if (dew_legend == 9) {
@@ -394,7 +415,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "[Tribal Chief Paiko]";
 		mes "If you are attracted by the aroma of the ^006400Satay^000000, you may eat one but, if you eat more you won't be able to share ^006400Satay^000000 with our friends.";
 		dew_legend = 11;
-		getitem 11533,2; //Satay
+		getitem Satay,2;
 		changequest 9159,9160;
 		close;
 	} else if (dew_legend == 11) {
@@ -416,7 +437,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "[Tribal Chief Paiko]";
 		mes "And just like before, don't give into the smell and try not to eat the ^006400Satay^000000.";
 		dew_legend = 13;
-		getitem 11533,2; //Satay
+		getitem Satay,2;
 		changequest 9161,9162;
 		close;
 	} else if (dew_legend == 13) {
@@ -436,7 +457,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "[Tribal Chief Paiko]";
 		mes "And just like before, don't give into the smell and try not to eat the ^006400Satay^000000.";
 		dew_legend = 15;
-		getitem 11533,2; //Satay
+		getitem Satay,2;
 		changequest 9163,9164;
 		close;
 	} else if (dew_legend == 15) {
@@ -463,7 +484,7 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "[Tribal Chief Paiko]";
 		mes "It's not the same as the original, but it has its own specialty. It is my reward to thank you for what you have done.";
 		next;
-		if (checkweight(18520,1) == 0) {
+		if (checkweight(Jaty_C,1) == 0) {
 			mes "[Tribal Chief Paiko]";
 			mes "You are carrying too much weight to receive your reward.";
 			mes "Please reduce your carried weight and come back again.";
@@ -473,8 +494,8 @@ dew_in01,15,49,4	script	Tribal Chief Paiko#dew	4_M_DEWZATICHIEF,{
 		mes "Made with our tribe's secret marinade try the ^006400Satay^000000.";
 		mes "It was made with all our heart, especially for you, but don't forget to share it with friends.";
 		dew_legend = 17;
-		getitem 18520,1; //Jaty_C
-		getitem 11533,5; //Satay
+		getitem Jaty_C,1;
+		getitem Satay,5;
 		completequest 9165;
 		erasequest 9165;
 		next;
@@ -494,7 +515,7 @@ L_Delivery:
 		mes "Anything go wrong?";
 	}
 	next;
-	switch(select("I ate them all.:Deliver to whom.:Nothing.")) {
+	switch(select("I ate them all.", "Deliver to whom.", "Nothing.")) {
 	case 1:
 		mes "[Tribal Chief Paiko]";
 		mes "Huh... so you couldn't resist yourself, eh?";
@@ -519,7 +540,7 @@ dew_fild01,78,288,6	script	Jaty Tribe Warrior#dew	4_M_DEWZATIMAN,{
 	mes "[Jaty Tribe Warrior]";
 	mes "We revere strength and bravery.";
 	mes "We are ^FF0000Jaty^000000 Tribe.";
-	if (dew_legend != 9 || !countitem(11533))
+	if (dew_legend != 9 || !countitem(Satay))
 		close;
 	next;
 	mes "[Jaty Tribe Warrior]";
@@ -538,7 +559,7 @@ dew_fild01,78,288,6	script	Jaty Tribe Warrior#dew	4_M_DEWZATIMAN,{
 	mes "Also, thank you for the ^006400Satay^000000";
 	mes "My mouth is already watering thank you.";
 	mes "There is something I would like to share with you regarding our tribe.";
-	delitem 11533,1; //Satay
+	delitem Satay,1;
 	dew_legend = 10;
 	changequest 9158,9159;
 	next;
@@ -556,7 +577,7 @@ dew_fild01,78,288,6	script	Jaty Tribe Warrior#dew	4_M_DEWZATIMAN,{
 dew_fild01,185,300,6	script	Tribe Manager#dew	4_M_DEWZATIMAN,{
 	mes "[Tribe Manager]";
 	mes "Keeping our culture and tradition is very important.";
-	if (dew_legend != 11 || !countitem(11533)) {
+	if (dew_legend != 11 || !countitem(Satay)) {
 		if (dew_legend < 11)
 			mes "Although it is a little boring...";
 		close;
@@ -579,7 +600,7 @@ dew_fild01,185,300,6	script	Tribe Manager#dew	4_M_DEWZATIMAN,{
 	mes "Thank you for the meal.";
 	mes "Please give my regards";
 	mes "to our Tribe Leader.";
-	delitem 11533,1; //Satay
+	delitem Satay,1;
 	dew_legend = 12;
 	changequest 9160,9161;
 	next;
@@ -612,9 +633,9 @@ dewata,235,56,4	script	Gatekeeper of Krakatau#1	4_M_DEWOLDMAN,{
 	mes "a very dangerous area";
 	mes "I cannot allow anyone to go in there.";
 	next;
-	if (dew_legend == 13 && countitem(11533))
+	if (dew_legend == 13 && countitem(Satay))
 		.@menu$ = ":^0000FFTribal Chief Paiko^000000";
-	switch(select("Allow me through:I don't want to go in"+.@menu$)) {
+	switch(select("Allow me through", "I don't want to go in"+.@menu$)) {
 	case 1:
 		if (dew_legend < 8) {
 			mes "[Gatekeeper of Krakatau Volcano]";
@@ -649,7 +670,7 @@ dewata,235,56,4	script	Gatekeeper of Krakatau#1	4_M_DEWOLDMAN,{
 		mes "Of course, it's our ^006400Satay^000000!";
 		mes "I was slightly hungry";
 		mes "so this should fill me up.";
-		delitem 11533,1; //Satay
+		delitem Satay,1;
 		dew_legend = 14;
 		changequest 9162,9163;
 		next;
@@ -679,7 +700,7 @@ dew_dun01,292,164,4	script	Gatekeeper of Krakatau#2	4_M_DEWZATIMAN,{
 	mes "Want to go back";
 	mes "to Dewata?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		close2;
 		warp "dewata",232,53;
@@ -696,7 +717,7 @@ dew_dun01,292,164,4	script	Gatekeeper of Krakatau#2	4_M_DEWZATIMAN,{
 dewata,78,192,6	script	Borobudur Temple Manager	4_M_DEWMAN,{
 	mes "[Borobudur Temple Manager]";
 	mes "The weather today is so beautiful.";
-	if (dew_legend != 15 || !countitem(11533))
+	if (dew_legend != 15 || !countitem(Satay))
 		close;
 	next;
 	mes "[Borobudur Temple Manager]";
@@ -715,7 +736,7 @@ dewata,78,192,6	script	Borobudur Temple Manager	4_M_DEWMAN,{
 	mes "[Borobudur Temple Manager]";
 	mes "Good~~ This is the same taste I remember.";
 	mes "To give my thanks I will pass along a story that may interest you";
-	delitem 11533,1; //Satay
+	delitem Satay,1;
 	dew_legend = 16;
 	changequest 9164,9165;
 	next;
@@ -740,10 +761,9 @@ dewata,78,192,6	script	Borobudur Temple Manager	4_M_DEWMAN,{
 	close;
 }
 
-// Help Out the Old Man :: dewata_drink
-//============================================================
+//== Help Out the Old Man :: dewata_drink ==================
 dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 5000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 5000) {
 		if (dew_drink) {
 			mes "[Memo]";
 			mes "Why are you carrying so much? Doesn't that hurt your back?";
@@ -825,7 +845,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 		mes "[Memo]";
 		mes "Ah, right! Are you busy now?";
 		next;
-		if(select("Sorry, I am busy.:No, I am not busy.") == 1) {
+		if(select("Sorry, I am busy.", "No, I am not busy.") == 1) {
 			mes "[Memo]";
 			mes "Hmm, I have no choice.";
 			mes "You don't care that others are in trouble. What has this world come to?";
@@ -895,7 +915,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 		mes "If it is not, wait there and bring ^FF000030 bottles of oil^000000 to me.";
 		close;
 	} else if (dew_drink == 7) {
-		if (countitem(6401) < 30) {
+		if (countitem(Palm_O) < 30) {
 			mes "[Memo]";
 			mes "Oh, didn't I tell you to bring 30 bottles of oil? Did you forget?";
 			next;
@@ -908,7 +928,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 		next;
 		mes "[Memo]";
 		mes "Excuse me, but I have an urgent matter to attend to. Can you wait for a while and talk to me when I'm done?";
-		delitem 6401,30; //Palm_O
+		delitem Palm_O,30;
 		changequest 5042,5043;
 		dew_drink = 8;
 		close;
@@ -960,7 +980,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 		changequest 5043,5044;
 		dew_drink = 10;
 		getexp 50000,10000;
-		getitem 617,1; //Old_Violet_Box
+		getitem Old_Violet_Box,1;
 		next;
 		mes "[Memo]";
 		mes "Will you help me with my work from time to time?";
@@ -972,9 +992,9 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 				.@j |= (1<<.@i);
 		if (.@j == 0) {
 			mes "[Memo]";
-			mes strcharinfo(0)+", to what do I owe the pleasure?";
+			mes strcharinfo(PC_NAME)+", to what do I owe the pleasure?";
 			next;
-			switch(select("Just came by to say hello.:I will help you.")) {
+			switch(select("Just came by to say hello.", "I will help you.")) {
 			case 1:
 				mes "[Memo]";
 				mes "I guess you are busy.";
@@ -1003,7 +1023,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 			else
 				setarray .@i[0],20,5051,3;
 
-			if (countitem(6401) < .@i[0]) {
+			if (countitem(Palm_O) < .@i[0]) {
 				mes "[Memo]";
 				mes "You haven't brought enough oil.";
 				next;
@@ -1018,10 +1038,10 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 			next;
 			mes "[Memo]";
 			mes "You must've had a hard time bringing the oil so here take this drink.";
-			delitem 6401,.@i[0]; //Palm_O
+			delitem Palm_O,.@i[0];
 			erasequest .@i[1];
 			setquest 5044;
-			getitem 11534,.@i[2]; //Coco_Juice
+			getitem Coco_Juice,.@i[2];
 			next;
 			switch(rand(4)) {
 			case 0:
@@ -1069,7 +1089,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 }
 
 dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 5000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 5000) {
 		mes "[Lero]";
 		mes "You're carrying too many things...";
 		close;
@@ -1174,7 +1194,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 			mes "Although he is lazy and rather careless, he is the best worker.";
 			close;
 		} else if (questprogress(5039)) {
-			if (countitem(6402) < 60) {
+			if (countitem(Oil_Palm_F) < 60) {
 				mes "[Lero]";
 				mes "Did you gather the nuts already?";
 				next;
@@ -1197,7 +1217,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 			emotion e_sry;
 			mes "[Lero]";
 			mes "It takes some time, so go back to Mr. Memo and tell him the situation. Also tell him that I'm sorry for the delay.";
-			delitem 6402,60; //Oil_Palm_F
+			delitem Oil_Palm_F,60;
 			dew_drink = 5;
 			changequest 5039,5040;
 			close;
@@ -1207,7 +1227,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 		mes "It takes some time, so go back to Mr. Memo and tell him the situation. Also tell him that I'm sorry for the delay.";
 		close;
 	} else if (dew_drink == 6) {
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 15000) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 15000) {
 			mes "[Lero]";
 			mes "You are carrying too much right now to continue.";
 			close;
@@ -1223,10 +1243,10 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 		mes "Oh, tell Mr. Memo that I'm sorry for the late delivery, and explain that it wasn't my fault.";
 		changequest 5041,5042;
 		dew_drink = 7;
-		getitem 6401,30; //Palm_O
+		getitem Palm_O,30;
 		close;
 	} else if (dew_drink == 7) {
-		if (questprogress(5042) && countitem(6401) > 29) {
+		if (questprogress(5042) && countitem(Palm_O) > 29) {
 			mes "[Lero]";
 			mes "It is heavier than you might think, so be careful when carrying it.";
 			next;
@@ -1235,8 +1255,8 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 			mes "Oh, tell Mr. Memo that I'm sorry for the late delivery, and explain that it wasn't my fault.";
 			close;
 		} else {
-			.@num = 30 - countitem(6401);
-			if (checkweight(6401,.@num) == 0) {
+			.@num = 30 - countitem(Palm_O);
+			if (checkweight(Palm_O,.@num) == 0) {
 				mes "[Lero]";
 				mes "You are carrying too much right now to continue.";
 				close;
@@ -1248,7 +1268,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 			emotion e_an;
 			mes "[Lero]";
 			mes "This is the palm tree oil which was in short supply. Be careful pease. It was really hard to get this...";
-			getitem 6401,.@num; //Palm_O
+			getitem Palm_O,.@num;
 			close;
 		}
 	} else if (dew_drink == 8) {
@@ -1256,7 +1276,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 		mes "What did Mr. Memo say?";
 		emotion e_what;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		emotion e_loud,1;
 		mes "... ... ... ...";
 		next;
@@ -1285,7 +1305,6 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 			mes "Once you bring the oil palm nuts, Mr. Memo will exchange them with oil.";
 			close;
 		} else if ((.@j & 2) || (.@j & 8) || (.@j & 32)) {
-			
 			// .@i[]: <required amount>,<quest ID>,<reward amount>,<free weight>
 			if (.@j & 2)
 				setarray .@i[0],20,5046,10,5000;
@@ -1294,12 +1313,12 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 			else
 				setarray .@i[0],40,5050,20,10000;
 
-			if (countitem(6402) < .@i[0]) {
+			if (countitem(Oil_Palm_F) < .@i[0]) {
 				mes "[Lero]";
 				mes "Once you bring the "+.@i[0]+" pieces of oil palm nuts, Mr. Memo will exchange them with oil.";
 				close;
 			}
-			if (checkweight(1201,1) == 0 || MaxWeight - Weight < .@i[3]) {
+			if (checkweight(Knife,1) == 0 || MaxWeight - Weight < .@i[3]) {
 				mes "[Lero]";
 				mes "You're carrying too much right now to continue.";
 				close;
@@ -1310,8 +1329,8 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 			mes "[Lero]";
 			mes "Exactly "+.@i[0]+" pieces of oil palm nuts. Let you exchange them with oil right now.";
 			changequest .@i[1], .@i[1]+1;
-			delitem 6402,.@i[0]; //Oil_Palm_F
-			getitem 6401,.@i[2]; //Palm_O
+			delitem Oil_Palm_F,.@i[0];
+			getitem Palm_O,.@i[2];
 			next;
 			mes "[Lero]";
 			mes "As I told you before, it is heavier than you might think, so be careful when carrying this.";
@@ -1330,7 +1349,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 }
 
 dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		if (dew_drink > 0) {
 			mes "[Poby]";
 			mes "Why are you carrying so much?";
@@ -1392,7 +1411,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		close;
 	} else if (dew_drink == 4) {
 		if (questprogress(5039)) {
-			if (countitem(6402) > 59) { // Oil_Palm_F
+			if (countitem(Oil_Palm_F) > 59) { // Oil_Palm_F
 				mes "[Poby]";
 				mes "You got all the fruits. Bring them to Mr. Lero.";
 				close;
@@ -1438,7 +1457,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		close;
 	} else if (dew_drink == 10) {
 		mes "[Poby]";
-		mes "Oh! "+strcharinfo(0)+", we meet again. What's going on?";
+		mes "Oh! "+strcharinfo(PC_NAME)+", we meet again. What's going on?";
 
 		if (questprogress(5047))
 			.@count = 10;
@@ -1447,19 +1466,19 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		else if (questprogress(5051))
 			.@count = 20;
 		if (.@count) {
-			if (countitem(6401) >= .@count) {
+			if (countitem(Palm_O) >= .@count) {
 				// Custom translation
 				mes "[Poby]";
 				mes "Good work! Be careful while delivering them~";
 				close;
 			}
-			.@new_count = .@count-countitem(6401);
+			.@new_count = .@count-countitem(Palm_O);
 			mes "- You explain the situation. -";
 			next;
 			mes "[Poby]";
 			mes "Right... I owed Memo's grandfather. Wait, I hid some oil around here.";
 			next;
-			if (checkweight(6401,.@new_count) == 0) {
+			if (checkweight(Palm_O,.@new_count) == 0) {
 				mes "[Poby]";
 				mes "I have some, but you seem to have too much stuff with you.";
 				close;
@@ -1468,14 +1487,14 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 			next;
 			mes "[Poby]";
 			mes "Ah! Here is another one. Take care not to lose it again. And keep it a secret from Mr. Lero.";
-			getitem 6401,.@new_count; //Palm_O
+			getitem Palm_O,.@new_count;
 			next;
 			mes "[Poby]";
-			mes "Please~ "+strcharinfo(0)+".";
+			mes "Please~ "+strcharinfo(PC_NAME)+".";
 			close;
 		}
 		next;
-		switch(select("Why'd you come here?:I want to know how to get fruit.")) {
+		switch(select("Why'd you come here?", "I want to know how to get fruit.")) {
 		case 1:
 			mes "[Poby]";
 			mes "I'm taking a walk because I think it will make my back ache less.";
@@ -1495,8 +1514,8 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 	close;
 }
 
--	script	::DewataPalm	-1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 5000) {
+-	script	::DewataPalm	FAKE_NPC,{
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 5000) {
 		mes "You are carrying too much.";
 		close;
 	}
@@ -1509,7 +1528,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		mes "There's a palm tree";
 		mes "facing the cool wind.";
 		close;
-	} else if (countitem(6402) >= .@count) {
+	} else if (countitem(Oil_Palm_F) >= .@count) {
 		mes "The palm tree denies";
 		mes "your greedy hands.";
 		close;
@@ -1524,7 +1543,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		mes "What do you want to do?";
 	}
 	next;
-	switch(select("Shake the tree:Kick the tree")) {
+	switch(select("Shake the tree", "Kick the tree")) {
 	case 1:
 		specialeffect EF_HITLINE2;
 		.@message$ = "As you shake the palm tree...";
@@ -1545,17 +1564,17 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 	case 2:
 	case 3:
 		mes "a ^FF0000stone^000000 falls out.";
-		getitem 7049,1; //Stone
+		getitem Stone,1;
 		break;
 	case 6:
 	case 7:
 		mes "a ^FF0000Great Leaf^000000 falls out.";
-		getitem 7198,1; //Great_Leaf
+		getitem Great_Leaf,1;
 		break;
 	case 8:
 	case 9:
 		mes "a ^FF0000Worm Peeling^000000 falls out.";
-		getitem 955,1; //Worm_Peelings
+		getitem Worm_Peelings,1;
 		break;
 	case 4:
 	case 5:
@@ -1563,12 +1582,12 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 	case 12:
 	case 13:
 		mes "an ^0000FFOil Palm Fruit^000000 falls out.";
-		getitem 6402,1; //Oil_Palm_F
+		getitem Oil_Palm_F,1;
 		break;
 	case 14:
 	case 16:
 	case 20:
-		specialeffect2 EF_BASH;
+		specialeffect(EF_BASH, AREA, playerattached());
 		if (isequipped(5009)) { //Safety_Helmet
 			mes "something falls on your head, but since you're wearing a Safety Helmet you're safe and sound.";
 			emotion e_no1,1;
@@ -1577,22 +1596,22 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 			mes "something smashes down on your head, right where that soft spot is, $#*@! that's a one in a million shot.";
 			percentheal -30,0;
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			warp "dew_fild01",371,211;
 			end;
 		}
 	case 10:
 	case 17:
-		if (countitem(6402) <= .@count-5) {
+		if (countitem(Oil_Palm_F) <= .@count-5) {
 			mes "tons of ^0000FFOil Palm Fruit^000000 crashes down from the tree.";
-			getitem 6402,1; //Oil_Palm_F
-			getitem 6402,1; //Oil_Palm_F
-			getitem 6402,1; //Oil_Palm_F
-			getitem 6402,1; //Oil_Palm_F
-			getitem 6402,1; //Oil_Palm_F
+			getitem Oil_Palm_F,1;
+			getitem Oil_Palm_F,1;
+			getitem Oil_Palm_F,1;
+			getitem Oil_Palm_F,1;
+			getitem Oil_Palm_F,1;
 		} else {
 			mes "an ^0000FFOil Palm Fruit^000000 falls out.";
-			getitem 6402,1; //Oil_Palm_F
+			getitem Oil_Palm_F,1;
 		}
 		break;
 	default:
@@ -1600,14 +1619,14 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		break;
 	}
 	close2;
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnTimer60000:
@@ -1615,10 +1634,10 @@ OnTimer180000:
 OnTimer120000:
 OnTimer240000:
 	if(rand(2))
-		donpcevent strnpcinfo(0)+"::OnEnable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 OnTimer300000:
-	donpcevent strnpcinfo(0)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 }
 dew_fild01,247,62,0	duplicate(DewataPalm)	Palm Tree#drink01	CLEAR_NPC
@@ -1662,10 +1681,9 @@ dew_fild01,209,137,0	duplicate(DewataPalm)	Palm Tree#drink38	CLEAR_NPC
 dew_fild01,206,156,0	duplicate(DewataPalm)	Palm Tree#drink39	CLEAR_NPC
 dew_fild01,209,201,0	duplicate(DewataPalm)	Palm Tree#drink40	CLEAR_NPC
 
-// Traditional Weapon Quest :: dewata_weapon
-//============================================================
+//== Traditional Weapon Quest :: dewata_weapon =============
 dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 10000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 10000) {
 		mes "- Hold it right there!! -";
 		mes "- You're carrying too many items and don't have enough inventory space to receive any rewards. -";
 		mes "- Please make more inventory space available and come back to take this challenge. -";
@@ -1678,7 +1696,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 	}
 	if (dew_weapon == 0) {
 		mes "[Gatti]";
-		mes "Hey there, young "+((Sex)?"man":"lady")+"~ Are you from around here?";
+		mes "Hey there, young "+ (Sex == SEX_MALE ? "man" : "lady") +"~ Are you from around here?";
 		next;
 		select("No, I'm not.");
 		mes "[Gatti]";
@@ -1688,9 +1706,9 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		next;
 		mes "- He seems to be asking for the Island name. -";
 		next;
-		input .@island_name$;
+		input(.@island_name$);
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It's called "+ .@island_name$ +". What's wrong?";
 		next;
 		if (.@island_name$ == "Dewata Island") {
@@ -1730,13 +1748,13 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "I found a mysterious Weapon blueprint, but I don't remember exactly when I acquired it.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Weapon Blueprint?";
 		next;
 		mes "[Gatti]";
 		mes "Yes! I traveled all around to find the materials for the weapon, but...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "But?";
 		next;
 		mes "[Gatti]";
@@ -1748,7 +1766,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "I don't know why somebody put such an important thing in fine print. Anyway, after reading that, I invested all my fortunes to find that Island.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh... Is that so?";
 		next;
 		mes "[Gatti]";
@@ -1758,7 +1776,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "Last week was so hard, but you saved me by telling me this is Dewata Island.";
 		mes "Thank you for telling me, and thank you for passing here at just the right time.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Uh... No problem.";
 		next;
 		mes "[Gatti]";
@@ -1774,7 +1792,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			mes "[Gatti]";
 			mes "Ah! the material that I am looking for is Comodo Leather.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Comodo Leather?";
 			next;
 			mes "[Gatti]";
@@ -1783,7 +1801,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			mes "[Gatti]";
 			mes "In order to fight the Comodo Dragon, you have to get recognized by the natives. I assume it'll be hard to get the recognition.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Of course, it must be...";
 			next;
 			mes "[Gatti]";
@@ -1794,7 +1812,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			end;
 		}
 		mes "[Gatti]";
-		if(Sex == 0)
+		if (Sex == SEX_FEMALE)
 			mes "Lady, you possess a strong energy.";
 		else
 			mes "You possess a strong energy.";
@@ -1839,7 +1857,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		next;
 		mes "[Gatti]";
 		mes "Oh yes! Finally.";
-		if (Sex == 0)
+		if (Sex == SEX_FEMALE)
 			mes "Lady, you also possess a strong energy.";
 		else
 			mes "You also possess a strong energy.";
@@ -1870,7 +1888,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "Oh! And Comodo Dragon is a very powerful monster, so please be careful.";
 		close;
 	} else if (dew_weapon == 3) {
-		if (countitem(6403) > 99) {
+		if (countitem(Comodo_L) > 99) {
 			mes "[Gatti]";
 			mes "By the looks of your walk, you must have brought me 100 Comodo Leather. Hand it over to me.";
 			delitem 6403,100;
@@ -1879,7 +1897,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			next;
 			mes "- Gatti takes the Comodo Leather from you. -";
 			close;
-		} else if (countitem(6403)) {
+		} else if (countitem(Comodo_L)) {
 			mes "[Gatti]";
 			mes "So, that is the Comodo Leather. But not enough.";
 			next;
@@ -1912,7 +1930,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		dew_weapon = 5;
 		close;
 	} else if (dew_weapon == 5) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well... Gatti?";
 		next;
 		mes "[Gatti]";
@@ -1924,7 +1942,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes ".... .... .... ....";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hilt?";
 		next;
 		mes "[Gatti]";
@@ -1935,7 +1953,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "I tried making it like what's written in the blueprint, but I need more material.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Really?";
 		next;
 		mes "[Gatti]";
@@ -1951,7 +1969,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "I'll make you a best weapon ever.";
 		setquest 5054;
 		dew_weapon = 6;
-		getitem 6404,1; //Caress_H
+		getitem Caress_H,1;
 		next;
 		mes "[Gatti]";
 		mes "Oh! I almost forgot. Don't forget to bring the hilt that I just made you.";
@@ -1968,7 +1986,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes ".... .... ....";
 		next;
-		if (countitem(6403) < 100 || countitem(999) < 20 || countitem(984) < 10 || countitem(6404) < 1) {
+		if (countitem(Comodo_L) < 100 || countitem(Steel) < 20 || countitem(Oridecon) < 10 || countitem(Caress_H) < 1) {
 			mes "[Gatti]";
 			mes "Hmm... I need more of those. If my ship didn't get wrecked, I could made it on my own, but...";
 			next;
@@ -1984,7 +2002,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "Great! We have enough. Wait a little.";
 		next;
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		next;
 		emotion e_swt2;
 		next;
@@ -1998,17 +2016,17 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "Now, I learned how to make the weapon, ask me any time if you need it.";
 		erasequest 5054;
 		dew_weapon = 7;
-		delitem 6403,100; //Comodo_L
-		delitem 999,20; //Steel
-		delitem 984,10; //Oridecon
-		delitem 6404,1; //Caress_H
-		getitem 13067,1; //Caress
+		delitem Comodo_L,100;
+		delitem Steel,20;
+		delitem Oridecon,10;
+		delitem Caress_H,1;
+		getitem Caress,1;
 		close;
 	} else if (dew_weapon >= 7) {
 		mes "[Gatti]";
-		mes "You're "+strcharinfo(0)+",";
+		mes "You're "+strcharinfo(PC_NAME)+",";
 		mes "So, how's the Caress that I made you?";
-		switch(select("It's great!:I need another Caress.:Can I make it stronger?")) {
+		switch(select("It's great!", "I need another Caress.", "Can I make it stronger?")) {
 		case 1:
 			mes "[Gatti]";
 			mes "Yes, yes of course it's great.";
@@ -2016,8 +2034,8 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			close;
 		case 2:
 			disable_items;
-			if (countitem(6404)) {
-				if (countitem(6403) < 70 || countitem(984) < 10 || countitem(999) < 20 || countitem(6404) < 1) {
+			if (countitem(Caress_H)) {
+				if (countitem(Comodo_L) < 70 || countitem(Oridecon) < 10 || countitem(Steel) < 20 || countitem(Caress_H) < 1) {
 					mes "[Gatti]";
 					mes "You only have a Hilt. You'll need to bring me 10 Oridecon, 20 Steel, and 70 Comodo Leather.";
 					next;
@@ -2028,20 +2046,20 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 				mes "[Gatti]";
 				mes "You have all the materials. Wait just a little.";
 				next;
-				specialeffect2 EF_REPAIRWEAPON;
+				specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 				next;
 				emotion e_swt2;
 				next;
 				mes "[Gatti]";
 				mes "Here is the Caress! Ask me any time.";
-				delitem 6403,70; //Comodo_L
-				delitem 999,20; //Steel
-				delitem 984,10; //Oridecon
-				delitem 6404,1; //Caress_H
-				getitem 13067,1; //Caress
+				delitem Comodo_L,70;
+				delitem Steel,20;
+				delitem Oridecon,10;
+				delitem Caress_H,1;
+				getitem Caress,1;
 				close;
 			} else {
-				if (countitem(6403) < 50 || countitem(7201) < 1) {
+				if (countitem(Comodo_L) < 50 || countitem(Log) < 1) {
 					mes "[Gatti]";
 					mes "You want me to make one more Caress for you? In that case I need a Hilt. 50 Comodo Leather, and 1 Log. These are what I need to make a Hilt.";
 					close;
@@ -2054,15 +2072,15 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 				next;
 				mes "[Gatti]";
 				mes "Here you go. I can make a Caress if you bring me 10 Oridecon, 20 Steel, and 70 Comodo Leather.";
-				delitem 6403,50; //Comodo_L
-				delitem 7201,1; //Log
-				getitem 6404,1; //Caress_H
+				delitem Comodo_L,50;
+				delitem Log,1;
+				getitem Caress_H,1;
 				close;
 			}
 		case 3:
 			mes "[Gatti]";
 			mes "So, you want to reinforce your weapon? The weapon gets broken from time to time during the process, but it doesn't happen that often.";
-			if(select("Please reinforce the weapon.:May be next time.") == 2) {
+			if(select("Please reinforce the weapon.", "May be next time.") == 2) {
 				mes "[Gatti]";
 				mes "Whenever you want to reinforce the Caress, just bring me the Caress and 100,000 zeny.";
 				close;
@@ -2082,7 +2100,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			mes "[Gatti]";
 			mes "^FF0000Third!^009977 Sometimes reinfocing fails. The weapon doesn't get destroyed everytime you fail. However you should know that the weapon gets destroyed from time to time if you fail.^000000";
 			next;
-			if(select("Please reinforce the weapon.:Maybe next time.") == 2) {
+			if(select("Please reinforce the weapon.", "Maybe next time.") == 2) {
 				mes "[Gatti]";
 				mes "Whenever you want to reinforce the Caress, just bring me the Caress and 100,000 zeny.";
 				close;
@@ -2090,12 +2108,12 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			break;
 		}
 
-		if (countitem(13067) < 1 || Zeny < 100000) {
+		if (countitem(Caress) < 1 || Zeny < 100000) {
 			mes "[Gatti]";
 			mes "You don't have all the materials. It's impossible to reinforce if you don't have them all. If you want to reinforce, bring 100,000 zeny and 1 Caress.";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		progressbar "0xFFFF00",3;
 		Zeny -= 100000;
 
@@ -2201,7 +2219,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		else if (.@j < 3950) .@s4 = 4754; // LUK + 5
 		else .@s4 = 0;
 
-		delitem 13067,1; //Caress
+		delitem Caress,1;
 		if (.@s3 == 0 && .@s4 == 0) {
 			mes "[Gatti]";
 			mes "Oh my~~ Almost succeeded... But failed. Sorry, sorry...";

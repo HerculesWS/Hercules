@@ -1,22 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Slim
+//= Copyright (C) CalciumKid
+//= Copyright (C) 5511
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Poring War
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Join a team in battle between Angeling and Deviling.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Kisuka][5511]
-//= 1.1 Fixed some typos/bugs. [CalciumKid]
-//= 1.1a Fixed Waiting rooms witht he default MAX_LEVEL [Slim]
-//= 1.1b Fixed incorrect label calls. [Euphy]
-//= 1.2 Added missing barrier resets, credits to Zopokx. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Poring War Recruiter
-//============================================================
+//== Poring War Recruiter ==================================
 prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 	mes "[Poring]";
 	mes "!!!!!";
@@ -34,13 +54,13 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 	mes "I.. I've got some interesting work for ya.. Would you be interested?";
 	mes "We.. we porings need lots and lots of brave human worriers, ring~.";
 	next;
-	switch(select("Alright, I'm with you!:What's that?:Ignore")) {
+	switch(select("Alright, I'm with you!", "What's that?", "Ignore")) {
 	case 1:
 		if (Zeny > 499) {
 			mes "[Poring]";
 			mes "Oh, and there's an entrance fee of 500 zeny, ring.";
 			mes "Have a good time, ring.";
-			delitem 7773,countitem(7773);
+			delitem War_Badge,countitem(War_Badge);
 			Zeny -= 500;
 			close2;
 			warp "poring_w01",112,138;
@@ -65,65 +85,64 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 	}
 }
 
-// Poring Vending Machine
-//============================================================
+//== Poring Vending Machine ================================
 poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
-	if (checkweight(714,3) == 0) {
+	if (checkweight(Emperium,3) == 0) {
 		mes "- You are carrying too much items in order to use the Vending Machine. -";
 		close;
 	}
 	mes "It's a vending machine. You can use Poring Coints to purchase.";
 	next;
-	if(select("Purchase.:Read the descriptions of goods.") == 1) {
+	if(select("Purchase.", "Read the descriptions of goods.") == 1) {
 		mes "You need Poring Coins to purchase items.";
 		mes "You cannot use any zeny.";
 		mes "Item name - Price Poring Coin(P.Co)";
 		next;
-		switch(select("Marvelous Medal - 4 P.Co:Union of Tribe - 20 P.Co:Poring Box - 30 P.Co:Next")) {
+		switch(select("Marvelous Medal - 4 P.Co", "Union of Tribe - 20 P.Co", "Poring Box - 30 P.Co", "Next")) {
 		case 1:
-			callsub S_PoringVending,7515,4;
+			callsub S_PoringVending,Marvelous_Medal,4;
 		case 2:
-			callsub S_PoringVending,658,20;
+			callsub S_PoringVending,Union_Of_Tribe,20;
 		case 3:
-			callsub S_PoringVending,12109,30;
+			callsub S_PoringVending,Poring_Box,30;
 		case 4:
 			mes "This is a special item.";
 			mes "Item name - Poring Coin(P.Co)";
 			next;
-			switch(select("Wild Rose - 15 P.Co:Doppelganger - 20 P.Co:Egnigem Cenia - 20 P.Co:Collection Item")) {
+			switch(select("Wild Rose - 15 P.Co", "Doppelganger - 20 P.Co", "Egnigem Cenia - 20 P.Co", "Collection Item")) {
 			case 1:
-				callsub S_PoringVending,12300,15;
+				callsub S_PoringVending,Wild_Rose_Scroll,15;
 			case 2:
-				callsub S_PoringVending,12301,20;
+				callsub S_PoringVending,Doppelganger_Scroll,20;
 			case 3:
-				callsub S_PoringVending,12302,20;
+				callsub S_PoringVending,Ygnizem_Scroll,20;
 			case 4:
 				mes "Figures of 1st Job Class Characters including Novice are finally on sale!";
 				mes "Figures except for Novice are all ^4d4dffCharacter bound items^000000.";
 				mes "Please be aware before you make a purchase~";
 				mes "Item name - Poring Coin(P.Co)";
 				next;
-				switch(select("Novice Figure - 50 P.Co:Swordman Figure - 100 P.Co:Thief Figure - 100 P.Co:Merchant Figure - 100 P.Co:Acolyte Figure - 100 P.Co:Mage Figure - 100 P.Co:Archer Figure - 100 P.Co:Random Draw - 50 P.Co:Cancel")) {
+				switch(select("Novice Figure - 50 P.Co", "Swordman Figure - 100 P.Co", "Thief Figure - 100 P.Co", "Merchant Figure - 100 P.Co", "Acolyte Figure - 100 P.Co", "Mage Figure - 100 P.Co", "Archer Figure - 100 P.Co", "Random Draw - 50 P.Co", "Cancel")) {
 				case 1:
-					callsub S_PoringVending,2765,50;
+					callsub S_PoringVending,Novice_Figure,50;
 				case 2:
-					callsub S_PoringVending,2766,100;
+					callsub S_PoringVending,Swordman_Figure,100;
 				case 3:
-					callsub S_PoringVending,2770,100;
+					callsub S_PoringVending,Thief_Figure,100;
 				case 4:
-					callsub S_PoringVending,2771,100;
+					callsub S_PoringVending,Merchant_Figure,100;
 				case 5:
-					callsub S_PoringVending,2767,100;
+					callsub S_PoringVending,Acolyte_Figure,100;
 				case 6:
-					callsub S_PoringVending,2768,100;
+					callsub S_PoringVending,Mage_Figure,100;
 				case 7:
-					callsub S_PoringVending,2769,100;
+					callsub S_PoringVending,Archer_Figure,100;
 				case 8:
 					mes "You have chosen Random Draw.";
 					mes "1 of 7 diffeent kinds of figures will be selected.";
 					next;
-					if(select("Draw:Cancel") == 1) {
-						if (countitem(7539) >= 50) {
+					if(select("Draw", "Cancel") == 1) {
+						if (countitem(Poring_Coin) >= 50) {
 							mes "Insert the Poring coin and pull the lever.";
 							mes "Click~ The item came out of the mouth of the Poring with a rumbling sound.";
 							mes "What could it be?";
@@ -138,7 +157,7 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 							default: .@Random_Figure = 2765; break; // Novice_Figure
 							}
 							mes "A nice " + getitemname(.@Random_Figure) + ".";
-							delitem 7539,50; // Poring_Coin
+							delitem Poring_Coin,50; // Poring_Coin
 							getitem .@Random_Figure,1;
 							close;
 						} else {
@@ -146,11 +165,11 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 							close;
 						}
 					}
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "... Maybe next time...";
 					close;
 				case 9:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "... Maybe next time...";
 					close;
 				}
@@ -208,9 +227,9 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 	end;
 
 S_PoringVending:
-	if (countitem(7539) >= getarg(1)) {
+	if (countitem(Poring_Coin) >= getarg(1)) {
 		mes "Click~ The item came out of the mouth of the Poring with a rumbling sound.";
-		delitem 7539,getarg(1); // Poring_Coin
+		delitem Poring_Coin,getarg(1); // Poring_Coin
 		getitem getarg(0),1;
 	} else {
 		mes "Not enough coins.";
@@ -218,10 +237,9 @@ S_PoringVending:
 	close;
 }
 
-// Information
-//============================================================
+//== Information ===========================================
 poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
-	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
+	if (MaxWeight-Weight < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -244,7 +262,7 @@ poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
 	mes "Hehehee, I feel kinda shy now.";
 	mes "Anyway, human. Do you want to join our Poring War?";
 	next;
-	switch(select("Am I qualified to join?:How do I join the war?:Cancel:Let me out of here, please!")) {
+	switch(select("Am I qualified to join?", "How do I join the war?", "Cancel", "Let me out of here, please!")) {
 	case 1:
 		mes "[Deviruchi]";
 		mes "No racial discrimination! Anyone can join if they're willing to fight.";
@@ -281,7 +299,7 @@ poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
 		mes "And you need to make sure you know who's in which party.";
 		close;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "hmm, I see.";
 		close;
 	case 4:
@@ -300,7 +318,7 @@ poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
 	}
 
 OnPCLogoutEvent:
-	getmapxy .@map$,.@x,.@y,0;
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
 	if (.@map$ == "poring_w02") {
 		if (WoP_SaveMap$ != "") {
 			savepoint WoP_SaveMap$,WoP_SaveMap_X,WoP_SaveMap_Y;
@@ -308,13 +326,13 @@ OnPCLogoutEvent:
 			WoP_SaveMap_X = 0;
 			WoP_SaveMap_Y = 0;
 		}
-		delitem 7773,countitem(7773);
+		delitem War_Badge,countitem(War_Badge);
 		wop_team = 0;
 	}
 	end;
 
 OnPCDieEvent:
-	getmapxy .@map$,.@x,.@y,0;
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
 	if (.@map$ == "poring_w02" && wop_team) {
 		if (getsavepoint(0) != "poring_w02" && WoP_SaveMap$ == "") {
 			WoP_SaveMap$ = getsavepoint(0);
@@ -331,17 +349,17 @@ OnPCDieEvent:
 	end;
 
 OnPCKillEvent:
-	getmapxy .@map$,.@x,.@y,0;
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
 	if (.@map$ == "poring_w02" && wop_team) {
-		getnameditem 7773,rid2name(killedrid);
+		getnameditem War_Badge,rid2name(killedrid);
 	}
 	end;
 
 OnInit:
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	$@wop_teamcount = 0;
 	$@wop_deadcount_a = 0;
 	$@wop_deadcount_d = 0;
@@ -352,11 +370,10 @@ OnInit:
 	end;
 }
 
-// Poring Registers
-//============================================================
+//== Poring Registers ======================================
 poring_w01,91,97,3	script	Poring#wop_door_all	PORING,{
 	end;
-	
+
 OnInit:
 	waitingroom "[Recruiting 10 Battle Participants]",11,"Poring#wop_door_all::OnStartArena",10,500,9;
 	enablewaitingroomevent;
@@ -616,10 +633,9 @@ OnTimer65000:
 	end;
 }
 
-// Mr. Doppel
-//============================================================
+//== Mr. Doppel ============================================
 poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
-	if (checkweight(714,3) == 0) {
+	if (checkweight(Emperium,3) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -628,14 +644,14 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 		close;
 	}
 	.@a_tname$ = getpartyname($@wop_team_a);
-	.@pname$ = getpartyname(getcharid(1));
-	if ($@wop_team_a != 0 && $@wop_team_a == getcharid(1)) {
+	.@pname$ = getpartyname(getcharid(CHAR_ID_PARTY));
+	if ($@wop_team_a != 0 && $@wop_team_a == getcharid(CHAR_ID_PARTY)) {
 		mes "[Mr. Doppel]";
 		mes "So, everyone joined the party?";
 		mes "The name of the party is... " + .@pname$ + ", right?";
 		mes "I'll transfer you to the battle staging area.";
 		next;
-		switch(select("No! Wait!:Go to the staging area.")) {
+		switch(select("No! Wait!", "Go to the staging area.")) {
 		case 1:
 			mes "[Mr. Doppel]";
 			mes "What is it now?";
@@ -646,11 +662,11 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 			mes "If you don't get there in time, you won't make it to the battle.";
 			close;
 		case 2:
-			if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+			if ((getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR))) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the leader. Before going to the battlefield, you should check all your members.";
 				next;
-				switch(select("Very well. I'll be the last.:I am the last. Send me to the battlefield.")) {
+				switch(select("Very well. I'll be the last.", "I am the last. Send me to the battlefield.")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "First, make sure all the members are in your party.";
@@ -658,7 +674,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				case 2:
 					mes "[Mr. Doppel]";
 					mes "Very well. Nice you have done everything on time.";
-					delitem 7773,countitem(7773);
+					delitem War_Badge,countitem(War_Badge);
 					close2;
 					wop_team = 0;
 					warp "poring_w02",44,82;
@@ -669,7 +685,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "Right. I'm gonna send you to the battle staging area.";
 				mes "Wait for all the other party members there.";
-				delitem 7773,countitem(7773);
+				delitem War_Badge,countitem(War_Badge);
 				close2;
 				wop_team = 0;
 				warp "poring_w02",44,82;
@@ -678,7 +694,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 		}
 	}
 	else {
-		if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+		if ((getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR))) {
 			if ($@wop_team_a == 0) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the party leader of Angeling Team.";
@@ -692,7 +708,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				mes " ";
 				mes "Right? That is the name you wish?";
 				next;
-				switch(select("No! You're wrong.:Yes. I would like to register that name.:Cancel")) {
+				switch(select("No! You're wrong.", "Yes. I would like to register that name.", "Cancel")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "Hey, I don't have all day! Make your mind and register as fast as you can.";
@@ -703,7 +719,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 					mes "So, I'll register your party name as - " +.@pname$ + " -.";
 					mes "Now, Tell your ^4d4dffmembers to confirm your party^000000.";
 					mes "I'll send you to the battlefield as soon as I confirm your party.";
-					$@wop_team_a = getcharid(1);
+					$@wop_team_a = getcharid(CHAR_ID_PARTY);
 					mapannounce "poring_w02","The registration of the Angeling Team has been confirmed. The party members must confirm their team with Mr. Doppel.",0,0x33FF66;
 					close;
 				case 3:
@@ -750,7 +766,7 @@ OnDisable:
 }
 
 poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
-	if (checkweight(714,3) == 0) {
+	if (checkweight(Emperium,3) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -759,14 +775,14 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 		close;
 	}
 	.@d_tname$ = getpartyname($@wop_team_d);
-	.@pname$ = getpartyname(getcharid(1));
-	if ($@wop_team_d != 0 && $@wop_team_d == getcharid(1)) {
+	.@pname$ = getpartyname(getcharid(CHAR_ID_PARTY));
+	if ($@wop_team_d != 0 && $@wop_team_d == getcharid(CHAR_ID_PARTY)) {
 		mes "[Mr. Doppel]";
 		mes "So, everyone joined the party?";
 		mes "The name of the party is... " + .@pname$ + ", right?";
 		mes "I'll transfer you to the battle staging area.";
 		next;
-		switch(select("No! Wait!:Go to the staging area.")) {
+		switch(select("No! Wait!", "Go to the staging area.")) {
 		case 1:
 			mes "[Mr. Doppel]";
 			mes "What is it now?";
@@ -777,11 +793,11 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 			mes "If you don't get there in time, you won't make it to the battle.";
 			close;
 		case 2:
-			if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+			if ((getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR))) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the leader. Before going to the battlefield, you should check all your members.";
 				next;
-				switch(select("Very well. I'll be the last.:I am the last. Send me to the battlefield.")) {
+				switch(select("Very well. I'll be the last.", "I am the last. Send me to the battlefield.")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "First, make sure all the members are in your party.";
@@ -789,7 +805,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				case 2:
 					mes "[Mr. Doppel]";
 					mes "Very well. Nice you have done everything on time.";
-					delitem 7773,countitem(7773);
+					delitem War_Badge,countitem(War_Badge);
 					close2;
 					wop_team = 0;
 					warp "poring_w02",153,82;
@@ -799,7 +815,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "Right. I'm gonna send you to the battle staging area.";
 				mes "Wait for all the other party members there.";
-				delitem 7773,countitem(7773);
+				delitem War_Badge,countitem(War_Badge);
 				close2;
 				wop_team = 0;
 				warp "poring_w02",153,82;
@@ -807,7 +823,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 			}
 		}
 	} else {
-		if ((getpartyleader(getcharid(1),2) == getcharid(0))) {
+		if ((getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR))) {
 			if ($@wop_team_d == 0) {
 				mes "[Mr. Doppel]";
 				mes "So, you are the party leader of Deviling Team.";
@@ -821,7 +837,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				mes " ";
 				mes "Right? That is the name you wish?";
 				next;
-				switch(select("No! You're wrong.:Yes. I would like to register that name.:Cancel")) {
+				switch(select("No! You're wrong.", "Yes. I would like to register that name.", "Cancel")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "Hey, I don't have all day! Make your mind and register as fast as you can.";
@@ -832,7 +848,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 					mes "So, I'll register your party name as - " + .@pname$ + " -.";
 					mes "Now, Tell your ^4d4dffmembers to confirm your party^000000.";
 					mes "I'll send you to the battlefield as soon as I confirm your party.";
-					$@wop_team_d = getcharid(1);
+					$@wop_team_d = getcharid(CHAR_ID_PARTY);
 					mapannounce "poring_w02","The registration of the Deviling Team has been confirmed. The party members must confirm their team with Mr. Doppel.",0,0x33FF66;
 					close;
 				case 3:
@@ -876,14 +892,14 @@ OnDisable:
 	end;
 }
 
-poring_w02,1,1,0	script	#wop_master	-1,{
+poring_w02,1,1,0	script	#wop_master	FAKE_NPC,{
 	end;
 
 OnReset:
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	mapwarp "poring_w02","poring_w01",112,138;
 	donpcevent "#wop_angellium1::OnReset";
 	donpcevent "#wop_angellium2::OnReset";
@@ -932,10 +948,10 @@ OnStop:
 OnAngelingWin:
 	.@i = 1;
 OnDevilingWin:
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	if (.@i)
 		mapannounce "poring_w02","Mr. Doppel: Angeling Team of party " + getpartyname($@wop_team_a) + " won the battle!",0,0xf08080;
 	else
@@ -997,10 +1013,10 @@ OnTimer95000:
 
 OnTimer100000:
 	mapannounce "poring_w02","Mr. Doppel: In certain areas, you will need War Badges that are obtained by eliminating members of the other team. Alright, lets begin!",0,0xf08080;
-	setmapflag "poring_w02",mf_partylock;
-	setmapflag "poring_w02",mf_pvp;
-	setmapflag "poring_w02",mf_pvp_noguild;
-	setmapflag "poring_w02",mf_pvp_nocalcrank;
+	setmapflag("poring_w02", MF_PARTYLOCK);
+	setmapflag("poring_w02", MF_PVP);
+	setmapflag("poring_w02", MF_PVP_NOGUILD);
+	setmapflag("poring_w02", MF_PVP_NOCALCRANK);
 	donpcevent "#wop_warp_a::OnEnable";
 	donpcevent "#wop_warp_d::OnEnable";
 	donpcevent "#wop_angellium1::OnAngelingSpawn";
@@ -1011,10 +1027,10 @@ OnTimer100000:
 
 OnTimer700000:
 	mapannounce "poring_w02","Mr. Doppel: Time is up. Soon, you will be teleported to the Winners Stage.",0,0xf08080;
-	removemapflag "poring_w02",mf_partylock;
-	removemapflag "poring_w02",mf_pvp;
-	removemapflag "poring_w02",mf_pvp_noguild;
-	removemapflag "poring_w02",mf_pvp_nocalcrank;
+	removemapflag("poring_w02", MF_PARTYLOCK);
+	removemapflag("poring_w02", MF_PVP);
+	removemapflag("poring_w02", MF_PVP_NOGUILD);
+	removemapflag("poring_w02", MF_PVP_NOCALCRANK);
 	donpcevent "#wop_angellium1::OnReset";
 	donpcevent "#wop_angellium2::OnReset";
 	donpcevent "#wop_devillium1::OnReset";
@@ -1036,7 +1052,7 @@ OnInit:
 
 OnEnable:
 	enablenpc "#wop_warp_a";
-	specialeffect EF_MAPPILLAR2,AREA,"#wop_warp_a";
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#wop_warp_a"));
 	end;
 
 OnDisable:
@@ -1058,7 +1074,7 @@ OnInit:
 
 OnEnable:
 	enablenpc "#wop_warp_d";
-	specialeffect EF_MAPPILLAR2,AREA,"#wop_warp_d";
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#wop_warp_d"));
 	end;
 
 OnDisable:
@@ -1071,9 +1087,8 @@ OnTouch:
 	end;
 }
 
-// Poring Spawn
-//============================================================
-poring_w02,80,82,0	script	#wop_angellium1	-1,{
+//== Poring Spawn ==========================================
+poring_w02,80,82,0	script	#wop_angellium1	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1107,7 +1122,7 @@ OnTimer120000:
 	stopnpctimer;
 }
 
-poring_w02,98,41,0	script	#wop_angellium2	-1,{
+poring_w02,98,41,0	script	#wop_angellium2	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1142,7 +1157,7 @@ OnTimer120000:
 	end;
 }
 
-poring_w02,116,82,0	script	#wop_devillium1	-1,{
+poring_w02,116,82,0	script	#wop_devillium1	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1177,7 +1192,7 @@ OnTimer120000:
 	end;
 }
 
-poring_w02,98,124,0	script	#wop_devillium2	-1,{
+poring_w02,98,124,0	script	#wop_devillium2	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1211,10 +1226,9 @@ OnTimer120000:
 	stopnpctimer;
 }
 
-// Deviruchi
-//============================================================
+//== Deviruchi =============================================
 poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
-	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
+	if (MaxWeight-Weight < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1224,7 +1238,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 	}
 	.@a_point = $@wop_deadcount_a;
 	.@d_point = $@wop_deadcount_d;
-	if (getcharid(1) == $@wop_team_a) {
+	if (getcharid(CHAR_ID_PARTY) == $@wop_team_a) {
 		if (.@a_point < .@d_point) {
 			mes "[Devi]";
 			mes "Good work!";
@@ -1235,7 +1249,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,3; // Poring_Coin
+				getitem Poring_Coin,3; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1261,7 +1275,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,1; // Poring_Coin
+				getitem Poring_Coin,1; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1305,7 +1319,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 			}
 		}
 	}
-	else if (getcharid(1) == $@wop_team_d) {
+	else if (getcharid(CHAR_ID_PARTY) == $@wop_team_d) {
 		if (.@a_point > .@d_point) {
 			mes "[Devi]";
 			mes "Good work!";
@@ -1316,7 +1330,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,3; // Poring_Coin
+				getitem Poring_Coin,3; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1342,7 +1356,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,1; // Poring_Coin
+				getitem Poring_Coin,1; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1446,8 +1460,7 @@ OnTimer68100:
 	end;
 }
 
-// Gate Guardian
-//============================================================
+//== Gate Guardian =========================================
 poring_w02,99,52,0	script	Angeling Guardian#wop_da	HIDDEN_NPC,{
 	cutin "wop_emb0" + $@wop_doorcount_a,1;
 	if ($@wop_doorcount_a < 4) {
@@ -1455,12 +1468,12 @@ poring_w02,99,52,0	script	Angeling Guardian#wop_da	HIDDEN_NPC,{
 			mes "There is a device to equip the War Badges.";
 			mes "I can see the empty slots to equip the Badges.";
 			next;
-			switch(select("Equip War Badge.:Cancel.")) {
+			switch(select("Equip War Badge.", "Cancel.")) {
 			case 1:
-				if (countitem(7773)) {
+				if (countitem(War_Badge)) {
 					if ($@wop_doorcount_a < 4) {
 						mes "War Badge equipped.";
-						delitem 7773,1; // War_Badge
+						delitem War_Badge,1; // War_Badge
 						++$@wop_doorcount_a;
 						cutin "wop_emb0" + $@wop_doorcount_a,1;
 						if ($@wop_doorcount_a == 4) {
@@ -1552,12 +1565,12 @@ poring_w02,98,113,0	script	Deviling Guardian#wop_dd	HIDDEN_NPC,{
 			mes "There is a device to equip the War Badges.";
 			mes "I can see the empty slots to equip the Badges.";
 			next;
-			switch(select("Equip War Badge.:Cancel.")) {
+			switch(select("Equip War Badge.", "Cancel.")) {
 			case 1:
-				if (countitem(7773)) {
+				if (countitem(War_Badge)) {
 					if ($@wop_doorcount_d < 4) {
 						mes "War Badge equipped.";
-						delitem 7773,1; // War_Badge
+						delitem War_Badge,1; // War_Badge
 						++$@wop_doorcount_d;
 						cutin "wop_emb0" + $@wop_doorcount_d,1;
 						if ($@wop_doorcount_d == 4) {
@@ -1642,13 +1655,12 @@ OnTouch:
 	end;
 }
 
-// Other NPCs
-//============================================================
--	script	Angeling Side Poring#wpa	-1,{
+//== Other NPCs ============================================
+-	script	Angeling Side Poring#wpa	FAKE_NPC,{
 	end;
 }
 
--	script	Deviling Side Marin#wpd	-1,{
+-	script	Deviling Side Marin#wpd	FAKE_NPC,{
 	end;
 }
 

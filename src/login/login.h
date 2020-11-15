@@ -1,15 +1,39 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef LOGIN_LOGIN_H
 #define LOGIN_LOGIN_H
 
-#include "../common/core.h" // CORE_ST_LAST
-#include "../common/mmo.h" // NAME_LENGTH,SEX_*
+#include "common/hercules.h"
+#include "common/core.h" // CORE_ST_LAST
+#include "common/db.h"
+#include "common/mmo.h" // NAME_LENGTH,SEX_*
+
+/** @file
+ * Login interface.
+ */
 
 struct mmo_account;
 struct AccountDB;
+struct config_t;
+struct config_setting_t;
 
 enum E_LOGINSERVER_ST
 {
@@ -18,8 +42,15 @@ enum E_LOGINSERVER_ST
 	LOGINSERVER_ST_LAST
 };
 
-// supported encryption types: 1- passwordencrypt, 2- passwordencrypt2, 3- both
-#define PASSWORDENC 3
+enum password_enc {
+	PWENC_NONE     = 0x0, ///< No encryption
+	PWENC_ENCRYPT  = 0x1, ///< passwordencrypt
+	PWENC_ENCRYPT2 = 0x2, ///< passwordencrypt2
+	PWENC_BOTH = PWENC_ENCRYPT|PWENC_ENCRYPT2, ///< both the above
+};
+
+#define PASSWORDENC PWENC_BOTH
+
 #define PASSWD_LEN (32+1) // 23+1 for plaintext, 32+1 for md5-ed passwords
 
 struct login_session_data {
@@ -53,9 +84,9 @@ struct mmo_char_server {
 	int fd;
 	uint32 ip;
 	uint16 port;
-	uint16 users;       // user count on this server
-	uint16 type;        // 0=normal, 1=maintenance, 2=over 18, 3=paying, 4=P2P
-	uint16 new_;        // should display as 'new'?
+	uint16 users; ///< user count on this server
+	uint16 type;  ///< 0=normal, 1=maintenance, 2=over 18, 3=paying, 4=P2P (@see e_char_server_type in mmo.h)
+	uint16 new_;  ///< should display as 'new'?
 };
 
 struct client_hash_node {
@@ -68,8 +99,8 @@ struct Login_Config {
 
 	uint32 login_ip;                                ///< the address to bind to
 	uint16 login_port;                              ///< the port to bind to
-	unsigned int ipban_cleanup_interval;            ///< interval (in seconds) to clean up expired IP bans
-	unsigned int ip_sync_interval;                  ///< interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
+	uint32 ipban_cleanup_interval;                  ///< interval (in seconds) to clean up expired IP bans
+	uint32 ip_sync_interval;                        ///< interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
 	bool log_login;                                 ///< whether to log login server actions or not
 	char date_format[32];                           ///< date format used in messages
 	bool new_account_flag,new_acc_length_limit;     ///< auto-registration via _M/_F ? / if yes minimum length is 4?
@@ -84,22 +115,20 @@ struct Login_Config {
 
 	bool ipban;                                     ///< perform IP blocking (via contents of `ipbanlist`) ?
 	bool dynamic_pass_failure_ban;                  ///< automatic IP blocking due to failed login attemps ?
-	unsigned int dynamic_pass_failure_ban_interval; ///< how far to scan the loginlog for password failures
-	unsigned int dynamic_pass_failure_ban_limit;    ///< number of failures needed to trigger the ipban
-	unsigned int dynamic_pass_failure_ban_duration; ///< duration of the ipban
+	uint32 dynamic_pass_failure_ban_interval;       ///< how far to scan the loginlog for password failures
+	uint32 dynamic_pass_failure_ban_limit;          ///< number of failures needed to trigger the ipban
+	uint32 dynamic_pass_failure_ban_duration;       ///< duration of the ipban
 	bool use_dnsbl;                                 ///< dns blacklist blocking ?
-	char dnsbl_servs[1024];                         ///< comma-separated list of dnsbl servers
+	VECTOR_DECL(char *) dnsbl_servers;              ///< dnsbl servers
 
-	int client_hash_check;                          ///< flags for checking client md5
+	bool send_user_count_description;
+	uint32 users_low;
+	uint32 users_medium;
+	uint32 users_high;
+
+	bool client_hash_check;                         ///< flags for checking client md5
+	// TODO: VECTOR candidate
 	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
-
-	/// Advanced subnet check [LuzZza]
-	struct s_subnet {
-		uint32 mask;
-		uint32 char_ip;
-		uint32 map_ip;
-	} subnet[16];
-	int subnet_count;
 };
 
 struct login_auth_node {
@@ -127,35 +156,36 @@ struct online_login_data {
 #define sex_str2num(str) ( ((str) == 'F') ? SEX_FEMALE : ((str) == 'M') ? SEX_MALE : SEX_SERVER )
 
 #define MAX_SERVERS 30
-#ifdef HERCULES_CORE
-extern struct mmo_char_server server[MAX_SERVERS];
-extern struct Login_Config login_config;
-#endif // HERCULES_CORE
+
+struct s_login_dbs {
+	struct mmo_char_server server[MAX_SERVERS];
+	struct Account_engine *account_engine;
+};
 
 /**
  * Login.c Interface
  **/
 struct login_interface {
-	DBMap* auth_db;
-	DBMap* online_db;
+	struct DBMap *auth_db;
+	struct DBMap *online_db;
 	int fd;
-	struct Login_Config *lc;
+	struct Login_Config *config;
 	struct AccountDB* accounts;
+	struct s_login_dbs *dbs;
 
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
 	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
-	DBData (*create_online_user) (DBKey key, va_list args);
+	struct DBData (*create_online_user) (union DBKey key, va_list args);
 	struct online_login_data* (*add_online_user) (int char_server, int account_id);
 	void (*remove_online_user) (int account_id);
-	int (*online_db_setoffline) (DBKey key, DBData *data, va_list ap);
-	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
+	int (*online_db_setoffline) (union DBKey key, struct DBData *data, va_list ap);
+	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
 	bool (*check_encrypted) (const char* str1, const char* str2, const char* passwd);
 	bool (*check_password) (const char* md5key, int passwdenc, const char* passwd, const char* refpass);
-	int (*lan_subnetcheck) (uint32 ip);
-	int (*lan_config_read) (const char *lancfgName);
+	uint32 (*lan_subnet_check) (uint32 ip);
 	void (*fromchar_accinfo) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
 	void (*fromchar_account) (int fd, int account_id, struct mmo_account *acc);
 	void (*fromchar_account_update_other) (int account_id, unsigned int state);
@@ -184,27 +214,49 @@ struct login_interface {
 	bool (*fromchar_parse_wrong_pincode) (int fd);
 	void (*fromchar_parse_accinfo) (int fd);
 	int (*parse_fromchar) (int fd);
-	void (*connection_problem) (int fd, uint8 status);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*login_error) (int fd, uint8 status);
-	void (*parse_ping) (int fd, struct login_session_data* sd);
-	void (*parse_client_md5) (int fd, struct login_session_data* sd);
-	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *ip);
-	void (*send_coding_key) (int fd, struct login_session_data* sd);
-	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
+	bool (*client_login) (int fd, struct login_session_data *sd);
+	bool (*client_login_otp) (int fd, struct login_session_data *sd);
+	void (*client_login_mobile_otp_request) (int fd, struct login_session_data *sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
-	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip);
-	int (*parse_login) (int fd);
+	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
+	void (*config_set_defaults) (void);
+	bool (*config_read) (const char *filename, bool included);
+	bool (*config_read_inter) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_console) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_log) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_account) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission_hash) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_permission_blacklist) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_users) (const char *filename, struct config_t *config, bool imported);
+	void (*clear_dnsbl_servers) (void);
+	void (*config_set_dnsbl_servers) (struct config_setting_t *setting);
+	void (*clear_client_hash_nodes) (void);
+	void (*config_set_md5hash) (struct config_setting_t *setting);
+	uint16 (*convert_users_to_colors) (uint16 users);
 	char *LOGIN_CONF_NAME;
-	char *LAN_CONF_NAME;
+	char *NET_CONF_NAME; ///< Network configuration filename
 };
 
-struct login_interface *login;
+/**
+ * Login.c Interface
+ **/
+struct lchrif_interface {
+	void (*server_init) (int id);
+	void (*server_destroy) (int id);
+	void (*server_reset) (int id);
+	void (*on_disconnect) (int id);
+};
 
 #ifdef HERCULES_CORE
 void login_defaults(void);
+void lchrif_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct login_interface *login;
+HPShared struct lchrif_interface *lchrif;
 
 #endif /* LOGIN_LOGIN_H */

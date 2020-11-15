@@ -1,25 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Doomed Swords Quest
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Doomed Swords Quest:
 //= - Quest for Doomed Swords: Grimtooth, Mysteltain, Executioner.
-//=   Although this quest is enabled on iRO, the Mysteltainn
-//=   portion is NOT completable as the item "Young Twig" does
-//=   not drop.
-//= - Variable in use: event_magum (max 6)
-//= - Variable in use: dmdswrd_Q2 (bits 1 - 32)
-//===== Additional Comments: =================================
-//= 1.1 Fixed items count check. For all 3 swords... [Lupus]
-//= 1.3 Fixed exploit [Lupus]
-//= 1.4 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Moved all non-related NPCs to their repsective files.
-//= 1.5 Added missing checkweight. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//================= Additional Comments ===================================
+//= Although this quest is enabled on iRO, the Mysteltainn portion is NOT
+//= completable as the item "Young Twig" does not drop.
+//================= Variables Used ========================================
+//= event_magum (max 6)
+//= dmdswrd_Q2 (bits 1 - 32)
+//=========================================================================
 
 prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 	if (event_magum == 0) {
@@ -35,8 +55,8 @@ prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 			mes "[Ghatu]";
 			mes "Rumor has it that he's";
 			mes "hiding in the mountains";
-			mes "since too many people want^FFFFFF ^000000 to use his talents for the wrong";
-			mes "purposes. Apparently, there is^FFFFFF ^000000 a godly quality to his weapons...";
+			mes "since too many people want to use his talents for the wrong";
+			mes "purposes. Apparently, there is a godly quality to his weapons...";
 			event_magum = 1;
 			close;
 		}
@@ -61,7 +81,7 @@ prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 		mes "That smith used to be";
 		mes "a pretty easy going guy";
 		mes "until he was forced to work";
-		mes "against his will. Slowly, he^FFFFFF ^000000 became gloomy and intimidating...";
+		mes "against his will. Slowly, he became gloomy and intimidating...";
 		next;
 		mes "[Ghatu]";
 		mes "But I suppose blacksmiths";
@@ -95,7 +115,7 @@ prt_in,162,11,2	script	Ghatu#magum	4_M_04,{
 		mes "That smith used to be";
 		mes "a pretty easy going guy";
 		mes "until he was forced to work";
-		mes "against his will. Slowly, he^FFFFFF ^000000 became gloomy and intimidating...";
+		mes "against his will. Slowly, he became gloomy and intimidating...";
 		next;
 		mes "[Ghatu]";
 		mes "But I suppose blacksmiths";
@@ -231,13 +251,13 @@ izlude_in,173,88,2	script	Nain#magum	8_F,{
 	mes "more criminals, the rage and";
 	mes "bloodlust of its victims began";
 	mes "to accumulate upon the blade.";
-	mes "Although the sword gained great^FFFFFF ^000000 strength, it was tainted by evil.";
+	mes "Although the sword gained great strength, it was tainted by evil.";
 	next;
 	mes "[Nain]";
 	mes "The last person to wield";
 	mes "the Executioner almost lost";
-	mes "his mind to the sword. He saved^FFFFFF ^000000 himself by giving it to a talented";
-	mes "blacksmith who would destroy^FFFFFF ^000000 it for him, thus saving his soul.";
+	mes "his mind to the sword. He saved himself by giving it to a talented";
+	mes "blacksmith who would destroy it for him, thus saving his soul.";
 	next;
 	mes "[Nain]";
 	mes "This mysterious blacksmith";
@@ -253,7 +273,7 @@ izlude_in,173,88,2	script	Nain#magum	8_F,{
 }
 
 pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "[Mysterious Man]";
 		mes "Hold it.";
 		mes "You're carrying";
@@ -270,7 +290,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "What the hell";
 			mes "are you looking at?";
 			next;
-			if (select("Have you heard of the Doomed Swords?:I... I...") == 1) {
+			if (select("Have you heard of the Doomed Swords?", "I... I...") == 1) {
 				mes "[Mysterious Man]";
 				mes "...!";
 				mes "How the hell would";
@@ -295,7 +315,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "What the hell";
 			mes "are you looking at?";
 			next;
-			if (select("Um, er...:Nothing, sir.") == 1) {
+			if (select("Um, er...", "Nothing, sir.") == 1) {
 				mes "[Mysterious Man]";
 				mes "What...?!";
 				next;
@@ -318,7 +338,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 		mes "What the hell";
 		mes "are you looking at?";
 		next;
-		if (select("Do you happen to be a blacksmith?:No-Nothing!") == 1) {
+		if (select("Do you happen to be a blacksmith?", "No-Nothing!") == 1) {
 			mes "[Mysterious Blacksmith]";
 			mes "Hmpf. So you're not";
 			mes "a total fool after all. Yes,";
@@ -342,7 +362,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 		mes "What the hell";
 		mes "are you looking at?";
 		next;
-		if (select("I want you to make me a Doomed Sword.:Er, nothing!") == 1) {
+		if (select("I want you to make me a Doomed Sword.", "Er, nothing!") == 1) {
 			mes "[Mysterious Blacksmith]";
 			mes "Hm. I don't know where";
 			mes "the hell you may have heard";
@@ -351,7 +371,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "enough. Now, which doomed";
 			mes "sword did you wish to possess?";
 			next;
-			switch(select("Mysteltainn.:Grimtooth.:Executioner.:I ch-changed my mind!")) {
+			switch(select("Mysteltainn.", "Grimtooth.", "Executioner.", "I ch-changed my mind!")) {
 			case 1:
 				if (dmdswrd_Q2 & 1) {
 					mes "[Mysterious Blacksmith]";
@@ -416,7 +436,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "[Mysterious Blacksmith]";
 					mes "Freyja suspected nothing and";
 					mes "told Loki about the secret of";
-					mes "Mysteltainn. The next time the^FFFFFF ^000000 gods played their game of throwing";
+					mes "Mysteltainn. The next time the gods played their game of throwing";
 					mes "objects at Baldur, Loki was there with a small Mysteltainn twig.";
 					next;
 					mes "[Mysterious Blacksmith]";
@@ -467,7 +487,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 				mes "I can tell that you don't know";
 				mes "enough about the Mysteltainn";
 				mes "to fully understand all of the";
-				mes "risks that come with wielding^FFFFFF ^000000 that sword. Yes, you're too green.";
+				mes "risks that come with wielding that sword. Yes, you're too green.";
 				next;
 				mes "[Mysterious Blacksmith]";
 				mes "I can't take the risk";
@@ -484,7 +504,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "wondering how such a small";
 					mes "dagger can contain such power.";
 					mes "It's simple. I cast forbidden";
-					mes "curse magic to inbue the dagger^FFFFFF ^000000 with its awesome destructiveness.";
+					mes "curse magic to inbue the dagger with its awesome destructiveness.";
 					next;
 					mes "[Mysterious Blacksmith]";
 					mes "The curse I cast is so";
@@ -499,7 +519,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "fair to warn you that";
 					mes "the power of the curse";
 					mes "is such that the more you";
-					mes "use the Grimtooth, the more^FFFFFF ^000000 it burns away at your very soul...";
+					mes "use the Grimtooth, the more it burns away at your very soul...";
 					next;
 					mes "[Mysterious Blacksmith]";
 					mes "I am willing to forge";
@@ -563,7 +583,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "I created this sword asked";
 					mes "me to destroy it, fearing that";
 					mes "it would corrupt his mind with";
-					mes "its bloodlust. But if you think^FFFFFF ^000000 you can endure, I may forge it...";
+					mes "its bloodlust. But if you think you can endure, I may forge it...";
 					next;
 					mes "[Mysterious Blacksmith]";
 					mes "Just bring me...";
@@ -608,14 +628,14 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 		mes "Or did you forget what";
 		mes "you needed to bring to me?";
 		next;
-		switch(select("Er, what were the items again?:Yes, I brought all the required items.:Oh! Um, never mind!")) {
+		switch(select("Er, what were the items again?", "Yes, I brought all the required items.", "Oh! Um, never mind!")) {
 		case 1:
 			mes "[Mysterious Blacksmith]";
 			mes "Hmpf. I thought so.";
 			mes "Now, which sword did";
 			mes "you want me to forge?";
 			next;
-			switch(select("Mysteltainn.:Grimtooth.:Executioner.:Wait! I just remembered!")) {
+			switch(select("Mysteltainn.", "Grimtooth.", "Executioner.", "Wait! I just remembered!")) {
 			case 1:
 				if (dmdswrd_Q2 & 1 || dmdswrd_Q2 & 8) {
 					mes "[Mysterious Blacksmith]";
@@ -684,7 +704,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "ready. Now, which sword";
 			mes "did you want me to craft?";
 			next;
-			switch(select("Mysteltainn:Grimtooth:Executioner:I ch-changed my mind!")) {
+			switch(select("Mysteltainn", "Grimtooth", "Executioner", "I ch-changed my mind!")) {
 			case 1:
 				if (dmdswrd_Q2 & 8) {
 					mes "[Mysterious Blacksmith]";
@@ -694,42 +714,42 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "everything I need to";
 					mes "create this sword...";
 					next;
-					if (countitem(7018) < 1) {
+					if (countitem(Young_Twig) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "Well, well.";
 						mes "You've forgotten";
 						mes "to bring ^0099FF1 Young Twig^000000,";
 						mes "the embodiment of the";
-						mes "Mysteltainn twig used to^FFFFFF ^000000 kill Baldur. Hurry and bring it...";
+						mes "Mysteltainn twig used to kill Baldur. Hurry and bring it...";
 						close;
 					}
-					if (countitem(7019) < 1) {
+					if (countitem(Lokis_Whispers) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. You forgot to bring";
 						mes "^0099FF1 Loki's Whispers^000000. We need";
 						mes "that to imbue the sword with";
 						mes "immense, evil power. Go and";
-						mes "find that as quickly as you can! ^FFFFFF ^000000";
+						mes "find that as quickly as you can! ";
 						close;
 					}
-					if (countitem(7020) < 1) {
+					if (countitem(Mothers_Nightmare) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm, you still need to";
 						mes "bring ^0099FF1 Mother's Nightmare^000000";
 						mes "to instill the power of misery";
-						mes "and grave portent to this blade... ^FFFFFF ^000000";
+						mes "and grave portent to this blade... ";
 						close;
 					}
-					if (countitem(7021) < 1) {
+					if (countitem(Foolishness_Of_Blind) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm, you still need to";
 						mes "bring ^0099FF1 Foolishness";
 						mes "of the Blind^000000 to instill the";
 						mes "energy of tragic regret into";
-						mes "the curse imbued into the blade... ^FFFFFF ^000000";
+						mes "the curse imbued into the blade... ";
 						close;
 					}
-					if (countitem(714) < 1) {
+					if (countitem(Emperium) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "You have everything";
 						mes "I require to forge the";
@@ -738,7 +758,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "of wielding it. Bring ^0099FF1 Emperium^000000 and I will recognize your worth.";
 						close;
 					}
-					if (countitem(7018) > 0 && countitem(7019) > 0 && countitem(7020) > 0 && countitem(7021) > 0 && countitem(714) > 0) {
+					if (countitem(Young_Twig) > 0 && countitem(Lokis_Whispers) > 0 && countitem(Mothers_Nightmare) > 0 && countitem(Foolishness_Of_Blind) > 0 && countitem(Emperium) > 0) {
 						mes "[Mysterious Blacksmith]";
 						mes "Well done, adventurer.";
 						mes "All seems to be in readiness.";
@@ -752,12 +772,12 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "sword again. Take it,";
 						mes "quickly! I d-don't want";
 						mes "to touch it if I can avoid it.";
-						delitem 7018,1; //Young_Twig
-						delitem 7019,1; //Loki's_Whispers
-						delitem 7020,1; //Mother's_Nightmare
-						delitem 7021,1; //Foolishness_Of_Blind
-						delitem 714,1; //Emperium
-						getitem 1138,1; //Mysteltainn_
+						delitem Young_Twig,1;
+						delitem Lokis_Whispers,1;
+						delitem Mothers_Nightmare,1;
+						delitem Foolishness_Of_Blind,1;
+						delitem Emperium,1;
+						getitem Mysteltainn_,1;
 						next;
 						mes "[Mysterious Blacksmith]";
 						mes "Be very careful.";
@@ -832,7 +852,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "[Mysterious Blacksmith]";
 					mes "Freyja suspected nothing and";
 					mes "told Loki about the secret of";
-					mes "Mysteltainn. The next time the^FFFFFF ^000000 gods played their game of throwing";
+					mes "Mysteltainn. The next time the gods played their game of throwing";
 					mes "objects at Baldur, Loki was there with a small Mysteltainn twig.";
 					next;
 					mes "[Mysterious Blacksmith]";
@@ -882,7 +902,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 				mes "Mysteltainn, I advise you";
 				mes "to learn more about it. You";
 				mes "must know the risks involved";
-				mes "in wielding that sort of power... ^FFFFFF ^000000";
+				mes "in wielding that sort of power... ";
 				close;
 			case 2:
 				if (dmdswrd_Q2 & 16) {
@@ -893,7 +913,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "if you brought all";
 					mes "the items I require.";
 					next;
-					if (countitem(7002) < 100) {
+					if (countitem(Ogre_Tooth) < 100) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. I still need";
 						mes "^0099FF100 Ogre Teeth^000000 to";
@@ -903,7 +923,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "Go and bring them soon.";
 						close;
 					}
-					if (countitem(724) < 5) {
+					if (countitem(Cardinal_Jewel_) < 5) {
 						mes "[Mysterious Blacksmith]";
 						mes "In order to place";
 						mes "the curse that grants";
@@ -913,7 +933,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "and bring them to me soon.";
 						close;
 					}
-					if (countitem(7023) < 10) {
+					if (countitem(Blade_Lost_In_Darkness) < 10) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. I still need";
 						mes "^0099FF10 Blades of Darkness^000000";
@@ -922,7 +942,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "here as soon as you can.";
 						close;
 					}
-					if (countitem(7022) < 1) {
+					if (countitem(Old_Hilt) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. You almost have";
 						mes "everything ready, but";
@@ -932,7 +952,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "bring me one of those...";
 						close;
 					}
-					if (countitem(714) < 1) {
+					if (countitem(Emperium) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "You have everything I need";
 						mes "to create the sword, but I won't forge it until you prove that you";
@@ -941,7 +961,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "as proof of your worthiness.";
 						close;
 					}
-					if (countitem(7002) > 99 && countitem(724) > 4 && countitem(7023) > 9 && countitem(7022) > 0 && countitem(714) > 0) {
+					if (countitem(Ogre_Tooth) > 99 && countitem(Cardinal_Jewel_) > 4 && countitem(Blade_Lost_In_Darkness) > 9 && countitem(Old_Hilt) > 0 && countitem(Emperium) > 0) {
 						mes "[Mysterious Blacksmith]";
 						mes "I see that you have";
 						mes "come fully prepared.";
@@ -957,12 +977,12 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "the Grimtooth longer than";
 						mes "I have to! You'll understand";
 						mes "soon enough once you use it...";
-						delitem 7002,100; //Ogre_Tooth
-						delitem 724,5; //Cardinal_Jewel_
-						delitem 7023,10; //Blade_Lost_In_Darkness
-						delitem 7022,1; //Old_Hilt
-						delitem 714,1; //Emperium
-						getitem 1237,1; //Grimtooth_
+						delitem Ogre_Tooth,100;
+						delitem Cardinal_Jewel_,5;
+						delitem Blade_Lost_In_Darkness,10;
+						delitem Old_Hilt,1;
+						delitem Emperium,1;
+						getitem Grimtooth_,1;
 						next;
 						mes "[Mysterious Blacksmith]";
 						mes "I know that you might";
@@ -980,7 +1000,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "wondering how such a small";
 					mes "dagger can contain such power.";
 					mes "It's simple. I cast forbidden";
-					mes "curse magic to inbue the dagger^FFFFFF ^000000 with its awesome destructiveness.";
+					mes "curse magic to inbue the dagger with its awesome destructiveness.";
 					next;
 					mes "[Mysterious Blacksmith]";
 					mes "The curse I cast is so";
@@ -995,7 +1015,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "fair to warn you that";
 					mes "the power of the curse";
 					mes "is such that the more you";
-					mes "use the Grimtooth, the more^FFFFFF ^000000 it burns away at your very soul...";
+					mes "use the Grimtooth, the more it burns away at your very soul...";
 					next;
 					mes "[Mysterious Blacksmith]";
 					mes "I am willing to forge";
@@ -1038,7 +1058,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "prepared to wield that blade";
 					mes "with your own two hands...";
 					next;
-					if (countitem(7017) < 2) {
+					if (countitem(Executioners_Mitten) < 2) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. In order for me";
 						mes "to forge the Executioner,";
@@ -1046,7 +1066,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "^0099FF2 Executioner's Gloves^000000.";
 						close;
 					}
-					if (countitem(7024) < 10) {
+					if (countitem(Bloody_Edge) < 10) {
 						mes "[Mysterious Blacksmith]";
 						mes "In order to craft the";
 						mes "blade, I need at least";
@@ -1055,7 +1075,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "can and bring them to me.";
 						close;
 					}
-					if (countitem(1008) < 3) {
+					if (countitem(Frozen_Heart) < 3) {
 						mes "[Mysterious Blacksmith]";
 						mes "In order to enchant";
 						mes "the Executioner with";
@@ -1065,7 +1085,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "Go, hurry and get them!";
 						close;
 					}
-					if (countitem(609) < 50) {
+					if (countitem(Amulet) < 50) {
 						mes "[Mysterious Blacksmith]";
 						mes "Hm. You've forgotten to";
 						mes "bring me ^0099FF50 Amulets^000000. I need";
@@ -1075,7 +1095,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "monstrous strength...";
 						close;
 					}
-					if (countitem(714) < 1) {
+					if (countitem(Emperium) < 1) {
 						mes "[Mysterious Blacksmith]";
 						mes "You have everything I need";
 						mes "to forge the Executioner, but";
@@ -1085,7 +1105,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "if you bring ^0099FF1 Emperium^000000.";
 						close;
 					}
-					if (countitem(7017) > 1 && countitem(7024) > 9 && countitem(1008) > 2 && countitem(609) > 49 && countitem(714) > 0) {
+					if (countitem(Executioners_Mitten) > 1 && countitem(Bloody_Edge) > 9 && countitem(Frozen_Heart) > 2 && countitem(Amulet) > 49 && countitem(Emperium) > 0) {
 						mes "[Mysterious Blacksmith]";
 						mes "Great, I see that you've";
 						mes "prepared everything that";
@@ -1100,11 +1120,11 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 						mes "terrifying sword. Now";
 						mes "take it! Be wary, and don't";
 						mes "let its bloodlust consume you!";
-						delitem 7017,2; //Executioner's_Mitten
-						delitem 7024,10; //Bloody_Edge
-						delitem 1008,3; //Frozen_Heart
-						delitem 609,50; //Amulet
-						getitem 1169,1; //Executioner_
+						delitem Executioners_Mitten,2;
+						delitem Bloody_Edge,10;
+						delitem Frozen_Heart,3;
+						delitem Amulet,50;
+						getitem Executioner_,1;
 						close;
 					}
 				}
@@ -1135,7 +1155,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 					mes "I created this sword asked";
 					mes "me to destroy it, fearing that";
 					mes "it would corrupt his mind with";
-					mes "its bloodlust. But if you think^FFFFFF ^000000 you can endure, I may forge it...";
+					mes "its bloodlust. But if you think you can endure, I may forge it...";
 					next;
 					mes "[Mysterious Blacksmith]";
 					mes "Just bring me...";

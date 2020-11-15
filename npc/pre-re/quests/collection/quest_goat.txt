@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Antelope Horns)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 	if (questprogress(60137)) {
@@ -18,7 +38,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 50 Goats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "Hmm, I don't think you've hunted 50 yet.";
@@ -32,7 +52,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Vegetable Farmer]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 100 Goats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "Hmm, I don't think you've hunted 100 yet.";
@@ -72,7 +92,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Vegetable Farmer]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 150 Goats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "Hmm, I don't think you've hunted 150 yet.";
@@ -113,7 +133,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Vegetable Farmer]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -145,22 +165,22 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "You are here to help me right?";
 			mes "If not, then I am in a world of hurt.";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "These Goats keep eating my vegetables.";
 				mes "Can you do what you can to help me?";
 				next;
-				switch(select("Gather Items:Hunt Goats:Cancel")) {
+				switch(select("Gather Items", "Hunt Goats", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Vegetable Farmer]";
 					mes "I need ^FF0000Antelope Horns^000000 to show for your hard work, and I will reward you.";
 					next;
-					switch(select("I have Antelope Horns:What did you need?")) {
+					switch(select("I have Antelope Horns", "What did you need?")) {
 					case 1:
 						/*
-						if (checkweight(504,10) == 0) {
+						if (checkweight(White_Potion,10) == 0) {
 							mes "[Vegetable Farmer]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -168,13 +188,13 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 							close;
 						}
 						*/
-						if (countitem(7106) > 49) {
+						if (countitem(Goats_Horn) > 49) {
 							mes "[Vegetable Farmer]";
 							mes "Amazing, you did that with speed.";
 							mes "I am truly grateful.";
-							delitem 7106,50; //Goat's_Horn
+							delitem Goats_Horn,50;
 							getexp 258489,155155;
-							//getitem 504,10; //White_Potion
+							//getitem White_Potion,10;
 							close;
 						}
 						else {
@@ -196,7 +216,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 					mes "Thank you.";
 					mes "How many Goats would you like to hunt?";
 					next;
-					switch(select("50 Goats:100 Goats:150 Goats")) {
+					switch(select("50 Goats", "100 Goats", "150 Goats")) {
 					case 1:
 						mes "[Vegetable Farmer]";
 						mes "Kill 50 of those Goats and let me know when you're done. I will reward you for your efforts.";
@@ -240,4 +260,3 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 		close;
 	}
 }
-

@@ -24,30 +24,68 @@ item_db: (
 	Def: Defense                  (int, defaults to 0)
 	Range: Attack Range           (int, defaults to 0)
 	Slots: Slots                  (int, defaults to 0)
-	Job: Job mask                 (int, defaults to all jobs = 0xFFFFFFFF)
-	Upper: Upper mask             (int, defaults to any = 0x3f)
-	Gender: Gender                (int, defaults to both = 2)
-	Loc: Equip location           (int, required value for equipment)
+	Job: {                        (defaults to all job)
+		All: true/false               (boolean, defaults to false)
+		Novice: true/false            (boolean, defaults to false)
+		Swordsman: true/false         (boolean, defaults to false)
+		Magician: true/false          (boolean, defaults to false)
+		Archer: true/false            (boolean, defaults to false)
+		Acolyte: true/false           (boolean, defaults to false)
+		Merchant: true/false          (boolean, defaults to false)
+		Thief: true/false             (boolean, defaults to false)
+		Knight: true/false            (boolean, defaults to false)
+		Priest: true/false            (boolean, defaults to false)
+		Wizard: true/false            (boolean, defaults to false)
+		Blacksmith: true/false        (boolean, defaults to false)
+		Hunter: true/false            (boolean, defaults to false)
+		Assassin: true/false          (boolean, defaults to false)
+		Crusader: true/false          (boolean, defaults to false)
+		Monk: true/false              (boolean, defaults to false)
+		Sage: true/false              (boolean, defaults to false)
+		Rogue: true/false             (boolean, defaults to false)
+		Alchemist: true/false         (boolean, defaults to false)
+		Bard: true/false              (boolean, defaults to false)
+		Gunslinger: true/false        (boolean, defaults to false)
+		Ninja: true/false             (boolean, defaults to false)
+		Taekwon: true/false           (boolean, defaults to false)
+		Star_Gladiator: true/false    (boolean, defaults to false)
+		Soul_Linker: true/false       (boolean, defaults to false)
+		Gangsi: true/false            (boolean, defaults to false)
+		Death_Knight: true/false      (boolean, defaults to false)
+		Dark_Collector: true/false    (boolean, defaults to false)
+		Kagerou: true/false           (boolean, defaults to false)
+		Rebellion: true/false         (boolean, defaults to false)
+		Summoner: true/false          (boolean, defaults to false)
+	}
+	Job: Job mask                 (alternate synxtax, int, defaults to all jobs = 0xFFFFFFFF)
+	Upper: Upper mask             (bitmask array, string or int, defaults to "ITEMUPPER_ALL")
+	Gender: Gender                (string, defaults to "SEX_ANY")
+	Loc: Equip location           (bitmask array, string or int, required value for equipment)
 	WeaponLv: Weapon Level        (int, defaults to 0)
 	EquipLv: Equip required level (int, defaults to 0)
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
-	View: View ID                 (int, defaults to 0)
+	Subtype: Item Subtype         (int, defaults to 0)
+	ViewSprite: Sprite view ID    (int, defaults to 0)
 	BindOnEquip: true/false       (boolean, defaults to false)
+	ForceSerial: true/false       (boolean, defaults to false)
 	BuyingStore: true/false       (boolean, defaults to false)
 	Delay: Delay to use item      (int, defaults to 0)
 	KeepAfterUse: true/false      (boolean, defaults to false)
+	DropAnnounce: true/false      (boolean, defaults to false)
+	ShowDropEffect: true/false    (boolean, defaults to false)
+	DropEffectMode: Effect Type   (int, default to 0)
 	Trade: {                      (defaults to no restrictions)
 		override: GroupID             (int, defaults to 100)
 		nodrop: true/false            (boolean, defaults to false)
 		notrade: true/false           (boolean, defaults to false)
-		partneroverride: true/false   (boolean, defaults to false)
-		noselltonpc: true/false       (boolean, defaults to false)
-		nocart: true/false            (boolean, defaults to false)
 		nostorage: true/false         (boolean, defaults to false)
-		nogstorage: true/false        (boolean, defaults to false)
+		nocart: true/false            (boolean, defaults to false)
+		noselltonpc: true/false       (boolean, defaults to false)
 		nomail: true/false            (boolean, defaults to false)
-		noauction: true/false         (boolean, defaults to false)
+		noauction: true/false         (boolean, defaults to false)		
+		nogstorage: true/false        (boolean, defaults to false)
+		partneroverride: true/false   (boolean, defaults to false)
 	}
 	Nouse: {                      (defaults to no restrictions)
 		override: GroupID             (int, defaults to 100)
@@ -71,8 +109,8 @@ item_db: (
 
 Id: Item id
 
-AegisName: Server name to reference the item in scripts and lookups,
-           should use no spaces.
+AegisName: Server name to reference the item in scripts and lookups.
+           Allowed characters: [A-Za-z0-9_]
 
 Name: Name in English for displaying as output for @ and script commands.
 
@@ -108,81 +146,98 @@ Range: Weapon's attack range. When not specified, becomes 0.
 
 Slots: Amount of slots the item possesses. When not specified, becomes 0.
 
-Job: Equippable jobs. Uses the following bitmask table:
+Job:  Job restrictions. If this block is omitted, item can be equipped by all class
+		All the settings in this group are boolean values,
+		Default value is false (restriction not set) for any missing setting.
 
-	(S.) Novice    (2^00): 0x00000001
-	Swordman       (2^01): 0x00000002
-	Magician       (2^02): 0x00000004
-	Archer         (2^03): 0x00000008
-	Acolyte        (2^04): 0x00000010
-	Merchant       (2^05): 0x00000020
-	Thief          (2^06): 0x00000040
-	Knight         (2^07): 0x00000080
-	Priest         (2^08): 0x00000100
-	Wizard         (2^09): 0x00000200
-	Blacksmith     (2^10): 0x00000400
-	Hunter         (2^11): 0x00000800
-	Assassin       (2^12): 0x00001000
-	Unused         (2^13): 0x00002000
-	Crusader       (2^14): 0x00004000
-	Monk           (2^15): 0x00008000
-	Sage           (2^16): 0x00010000
-	Rogue          (2^17): 0x00020000
-	Alchemist      (2^18): 0x00040000
-	Bard/Dancer    (2^19): 0x00080000
-	Unused         (2^20): 0x00100000
-	Taekwon        (2^21): 0x00200000
-	Star Gladiator (2^22): 0x00400000
-	Soul Linker    (2^23): 0x00800000
-	Gunslinger     (2^24): 0x01000000
-	Ninja          (2^25): 0x02000000
-	Gangsi         (2^26): 0x04000000
-	Death Knight   (2^27): 0x08000000
-	Dark Collector (2^28): 0x10000000
-	Kagerou/Oboro  (2^29): 0x20000000
-	Rebellion      (2^30): 0x40000000
-	Some other commonly used values:
-	All except novice:     0xFFFFFFFE
-	All (default value):   0xFFFFFFFF
+	Alternate Format:
+		Equippable jobs. Uses the following bitmask table:
+
+		(S.) Novice    (2^00): 0x00000001
+		Swordman       (2^01): 0x00000002
+		Magician       (2^02): 0x00000004
+		Archer         (2^03): 0x00000008
+		Acolyte        (2^04): 0x00000010
+		Merchant       (2^05): 0x00000020
+		Thief          (2^06): 0x00000040
+		Knight         (2^07): 0x00000080
+		Priest         (2^08): 0x00000100
+		Wizard         (2^09): 0x00000200
+		Blacksmith     (2^10): 0x00000400
+		Hunter         (2^11): 0x00000800
+		Assassin       (2^12): 0x00001000
+		Unused         (2^13): 0x00002000
+		Crusader       (2^14): 0x00004000
+		Monk           (2^15): 0x00008000
+		Sage           (2^16): 0x00010000
+		Rogue          (2^17): 0x00020000
+		Alchemist      (2^18): 0x00040000
+		Bard/Dancer    (2^19): 0x00080000
+		Unused         (2^20): 0x00100000
+		Taekwon        (2^21): 0x00200000
+		Star Gladiator (2^22): 0x00400000
+		Soul Linker    (2^23): 0x00800000
+		Gunslinger     (2^24): 0x01000000
+		Ninja          (2^25): 0x02000000
+		Gangsi         (2^26): 0x04000000
+		Death Knight   (2^27): 0x08000000
+		Dark Collector (2^28): 0x10000000
+		Kagerou/Oboro  (2^29): 0x20000000
+		Rebellion      (2^30): 0x40000000
+		Summoner       (2^31): 0x80000000
+		Some other commonly used values:
+		All except novice:     0xFFFFFFFE
+		All (default value):   0xFFFFFFFF
 
 Upper: Equippable upper-types. Uses the following bitmasks:
-	Normal jobs:      0x01 (1)
-	Upper jobs:       0x02 (2)
-	Baby jobs:        0x04 (4)
-	Third jobs:       0x08 (8)
-	Upper Third jobs: 0x10 (16)
-	Baby Third jobs:  0x20 (32)
+	Normal jobs:      ITEMUPPER_NORMAL     (0x01)
+	Upper jobs:       ITEMUPPER_UPPER      (0x02)
+	Baby jobs:        ITEMUPPER_BABY       (0x04)
+	Third jobs:       ITEMUPPER_THIRD      (0x08)
+	Upper Third jobs: ITEMUPPER_THIRDUPPER (0x10)
+	Baby Third jobs:  ITEMUPPER_THIRDBABY  (0x20)
 
 	Under pre-re mode third classes are considered upper, making use of
-	the 8 and above masks is therefore not necessary unless in renewal
-	mode. When no value is specified, all classes (mask 0x3f) are able to
-	equip the item.
+	the ITEMUPPER_THIRD and above masks is therefore not necessary unless
+	in renewal mode. When no value is specified, all classes (mask
+	ITEMUPPER_ALL = 0x3f) are able to equip the item.
 
-Gender: Gender restriction. 0 is female, 1 is male, 2 for both (default value).
+Gender: Gender restriction.
+	Available genders:
+		SEX_FEMALE: 0
+		SEX_MALE:   1
+		SEX_ANY:    2
+	When not specified, becomes "SEX_ANY".
 
 Loc: Equipment's placement. A value needs to be specified if the item is an
-     equipment piece. Values are:
+     equipment piece. Values are (bitmask arrays are supported):
 
-	2^0  001 = Lower Headgear
-	2^1  002 = Weapon
-	2^2  004 = Garment
-	2^3  008 = Accessory 1
-	2^4  016 = Armor
-	2^5  032 = Shield
-	2^6  064 = Footgear
-	2^7  128 = Accessory 2
-	2^8  256 = Upper Headgear
-	2^9  512 = Middle Headgear
-	2^10 1024 = Costume Top Headgear
-	2^11 2048 = Costume Mid Headgear
-	2^12 4096 = Costume Low Headgear
-	2^13 8192 = Costume Garment/Robe
-	2^16 65536 = Shadow Armor
-	2^17 131072 = Shadow Weapon
-	2^18 262144 = Shadow Shield
-	2^18 524288 = Shadow Shoes
-	2^20 1048576 = Shadow Accessory 2
-	2^21 2097152 = Shadow Accessory 1
+	Lower Headgear:       EQP_HEAD_LOW             (2^00 = 0x000001)
+	Weapon:               EQP_HAND_R or EQP_WEAPON (2^01 = 0x000002)
+	Garment:              EQP_GARMENT              (2^02 = 0x000004)
+	Accessory 1:          EQP_ACC_L                (2^03 = 0x000008)
+	Armor:                EQP_ARMOR                (2^04 = 0x000010)
+	Shield:               EQP_HAND_L or EQP_SHIELD (2^05 = 0x000020)
+	(Both Hands):         EQP_ARMS                 (EQP_HAND_L | EQP_HAND_R = 0x000022)
+	Footgear:             EQP_SHOES                (2^06 = 0x000040)
+	Accessory 2:          EQP_ACC_R                (2^07 = 0x000080)
+	(Both Accessories):   EQP_ACC                  (EQP_ACC_R | EQP_ACC_L = 0x000088)
+	Upper Headgear:       EQP_HEAD_TOP             (2^08 = 0x000100)
+	Middle Headgear:      EQP_HEAD_MID             (2^09 = 0x000200)
+	(T+M+B Headgear):     EQP_HELM                 (EQP_HEAD_LOW | EQP_HEAD_MID | EQP_HEAD_TOP = 0x000301)
+	Costume Top Headgear: EQP_COSTUME_HEAD_TOP     (2^10 = 0x000400)
+	Costume Mid Headgear: EQP_COSTUME_HEAD_MID     (2^11 = 0x000800)
+	Costume Low Headgear: EQP_COSTUME_HEAD_LOW     (2^12 = 0x001000)
+	Costume Garment/Robe: EQP_COSTUME_GARMENT      (2^13 = 0x002000)
+	Ammunition:           EQP_AMMO                 (2^15 = 0x008000)
+	Shadow Armor:         EQP_SHADOW_ARMOR         (2^16 = 0x010000)
+	Shadow Weapon:        EQP_SHADOW_WEAPON        (2^17 = 0x020000)
+	Shadow Shield:        EQP_SHADOW_SHIELD        (2^18 = 0x040000)
+	(Shadow 2H Weapon):   EQP_SHADOW_ARMS          (EQP_SHADOW_WEAPON | EQP_SHADOW_SHIELD = 0x060000)
+	Shadow Shoes:         EQP_SHADOW_SHOES         (2^19 = 0x080000)
+	Shadow Accessory 2:   EQP_SHADOW_ACC_R         (2^20 = 0x100000)
+	Shadow Accessory 1:   EQP_SHADOW_ACC_L         (2^21 = 0x200000)
+	(Shadow Accessories): EQP_SHADOW_ACC           (EQP_SHADOW_ACC_R | EQP_SHADOW_ACC_L = 0x300000)
 
 WeaponLv: Weapon level. Becomes 0 when not specified.
 
@@ -198,53 +253,61 @@ EquipLv: Base level required to be able to equip. It is possible to specify
 Refineable: true if the item can be refined, false otherwise. If no value is
             specified, it defaults to true.
 
-View: For normal items, defines a replacement view-sprite for the item (eg:
-      Making apples look like apple juice). The special case are weapons
-      and ammo where this value indicates the weapon-class of the item.
+ViewSprite: Defines a replacement view-sprite for the item (eg:
+      Making apples look like apple juice).
+
+Subtype: For weapons and ammo, indicates the weapon-class of the item.
 
 	For weapons, the types are:
-		0: bare fist
-		1: Daggers
-		2: One-handed swords
-		3: Two-handed swords
-		4: One-handed spears
-		5: Two-handed spears
-		6: One-handed axes
-		7: Two-handed axes
-		8: Maces
-		9: Unused
-		10: Staves
-		11: Bows
-		12: Knuckles
-		13: Musical Instruments
-		14: Whips
-		15: Books
-		16: Katars
-		17: Revolvers
-		18: Rifles
-		19: Gatling guns
-		20: Shotguns
-		21: Grenade launchers
-		22: Fuuma Shurikens
+		W_FIST      0: Bare fist
+		W_DAGGER    1: Daggers
+		W_1HSWORD   2: One-handed swords
+		W_2HSWORD   3: Two-handed swords
+		W_1HSPEAR   4: One-handed spears
+		W_2HSPEAR   5: Two-handed spears
+		W_1HAXE     6: One-handed axes
+		W_2HAXE     7: Two-handed axes
+		W_MACE      8: Maces
+		W_2HMACE    9: Unused
+		W_STAFF    10: Staves
+		W_BOW      11: Bows
+		W_KNUCKLE  12: Knuckles
+		W_MUSICAL  13: Musical instruments
+		W_WHIP     14: Whips
+		W_BOOK     15: Books
+		W_KATAR    16: Katars
+		W_REVOLVER 17: Reveolvers
+		W_RIFLE    18: Rifles
+		W_GATLING  19: Gatling guns
+		W_SHOTGUN  20: Shotguns
+		W_GRENADE  21: Grenade launchers
+		W_HUUMA    22: Fuuma shurikens
+		W_2HSTAFF  23: Two-handed staves
 
 	For ammo, the types are:
-		1: Arrows
-		2: Throwable daggers
-		3: Bullets
-		4: Shells
-		5: Grenades
-		6: Shuriken
-		7: Kunai
-		8: Cannonballs
-		9: Throwable Items (Sling Item)
+		A_ARROW       1: Arrows
+		A_DAGGER      2: Throwable daggers
+		A_BULLET      3: Bullets
+		A_SHELL       4: Shells
+		A_GRENADE     5: Grenades
+		A_SHURIKEN    6: Shuriken
+		A_KUNAI       7: Kunai
+		A_CANNONBALL  8: Cannon balls
+		A_THROWWEAPON 9: Throwable items (Sling Item)
 
 BindOnEquip: Whether the item will automatically bind to the character when it
              is equipped for the first time. An item that has this field set,
              will display a confirmation dialog the first time it is equipped,
              and, if accepted, the item will become character-bound.
 
+ForceSerial: Whether the item will be given new unique id or not. When the item
+			 have this field as true, the item will be unstackable and new uniqueID
+			 will be given to each item.
+
 BuyingStore: Whether the item can be sold via buyingstore, one must also edit
              data\buyingstoreitemlist.txt for client to accept item.
+
+DropAnnounce: Enables global announcement of the selected item when dropped by monster.
 
 Delay: Delay for an item to be used again. Value is in milliseconds.
        There is a max concurrent number of entries modifiable in
@@ -307,3 +370,12 @@ OnUnequipScript: Script to execute when the item is unequipped.
 Inherit: This can be used only in item_db2.conf, and if set to true, and the
          item already exists in item_db.conf, all the missing fields will be
          inherited from there rather than using their default values.
+
+ShowDropEffect: Allow showing an effect when the item dropped by a monster. [ZERO client or PACKETVER >= 20180418]
+DropEffectMode: Set attribute for ShowDropEffect. [ZERO client or PACKETVER >= 20180418]
+				0 - Client Based (itemInfo EffectID)
+				1 - White effect
+				2 - Blue effect
+				3 - Yellow effect
+				4 - Purple effect
+				5 - Orange effect

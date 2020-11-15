@@ -1,14 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Jail Monster Spawn Script
-//===== By: ==================================================
-//= Masao
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Spawns monsters in Jail.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-sec_in02,139,80,20	monster	Poring	1002,10,0,0,0
+sec_in02,139,80,20,20	monster	Poring	1002,10,0,0,0
 sec_in02,138,54,20,20	monster	Marin	1242,5,0,0,0
 sec_in02,161,46,15,15	monster	Poporing	1031,5,0,0,0
 sec_in02,114,47,10,10	monster	Drops	1113,5,0,0,0

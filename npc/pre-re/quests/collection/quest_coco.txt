@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Acorns)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 	if (questprogress(60113)) {
@@ -18,7 +38,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "[Nutters]";
 			mes "Have you finished hunting the 50 Cocos?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Nutters]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "[Nutters]";
 			mes "Have you finished hunting the 50 Cocos?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Nutters]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "[Nutters]";
 			mes "Have you finished hunting the 150 Cocos?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Nutters]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -145,22 +165,22 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "Pesky Coco's have hidden all the Acorns.";
 			mes "Do you think you could help me?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Oh, that's great! I knew I could count on you, just from looking at you!";
 				next;
-				switch(select("Gather Items:Hunt Cocos:Cancel")) {
+				switch(select("Gather Items", "Hunt Cocos", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Nutters]";
 					mes "Can you help me find ^00CE0025 Acorns^000000.";
 					mes "I will reward you with much if you can.";
 					next;
-					switch(select("I have 25 Acorns:Please come again?")) {
+					switch(select("I have 25 Acorns", "Please come again?")) {
 					case 1:
 						/*
-						if (checkweight(502,5) == 0) {
+						if (checkweight(Orange_Potion,5) == 0) {
 							mes "[Nutters]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -168,7 +188,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 							close;
 						}
 						*/
-						if (countitem(1026) > 24) {
+						if (countitem(Acorn) > 24) {
 							mes "[Nutters]";
 							mes "Oh great you found out where they were hiding them.";
 							mes "Gimme Gimme!!!";
@@ -176,9 +196,9 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 							mes "[Nutters]";
 							mes "Oh that's right, sorry I just love roasting Acorns. Mmm.";
 							mes "Here is what I promised you.";
-							delitem 1026,25; //Acorn
+							delitem Acorn,25;
 							getexp 3600,3905;
-							//getitem 502,5; //Orange_Potion
+							//getitem Orange_Potion,5;
 							close;
 						}
 						else {
@@ -198,7 +218,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 					mes "Ah, ok I think you can help me out by hunting some Cocos.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Cocos:100 Cocos:150 Cocos")) {
+					switch(select("50 Cocos", "100 Cocos", "150 Cocos")) {
 					case 1:
 						mes "[Nutters]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

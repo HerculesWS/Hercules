@@ -1,7 +1,25 @@
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /*****************************************************************************\
- *  Copyright (c) Athena Dev Teams - Licensed under GNU GPL                  *
- *  For more information, see LICENCE in the main folder                     *
- *                                                                           *
  *  <H1>Entry Reusage System</H1>                                            *
  *                                                                           *
  *  There are several root entry managers, each with a different entry size. *
@@ -40,7 +58,7 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *
@@ -71,11 +89,11 @@
 #endif /* not ERS_ALIGN_ENTRY */
 
 enum ERSOptions {
-	ERS_OPT_NONE        = 0x0,
-	ERS_OPT_CLEAR       = 0x1,/* silently clears any entries left in the manager upon destruction */
-	ERS_OPT_WAIT        = 0x2,/* wait for entries to come in order to list! */
-	ERS_OPT_FREE_NAME   = 0x4,/* name is dynamic memory, and should be freed */
-	ERS_OPT_CLEAN       = 0x8,/* clears used memory upon ers_free so that its all new to be reused on the next alloc */
+	ERS_OPT_NONE        = 0x00,
+	ERS_OPT_CLEAR       = 0x01,/* silently clears any entries left in the manager upon destruction */
+	ERS_OPT_WAIT        = 0x02,/* wait for entries to come in order to list! */
+	ERS_OPT_FREE_NAME   = 0x04,/* name is dynamic memory, and should be freed */
+	ERS_OPT_CLEAN       = 0x08,/* clears used memory upon ers_free so that its all new to be reused on the next alloc */
 	ERS_OPT_FLEX_CHUNK  = 0x10,/* signs that it should look for its own cache given it'll have a dynamic chunk size, so that it doesn't affect the other ERS it'd otherwise be sharing */
 
 	/* Compound, is used to determine whether it should be looking for a cache of matching options */
@@ -130,15 +148,15 @@ typedef struct eri {
 
 #ifdef DISABLE_ERS
 // Use memory manager to allocate/free and disable other interface functions
-#	define ers_alloc(obj,type) (type *)aMalloc(sizeof(type))
-#	define ers_free(obj,entry) aFree(entry)
-#	define ers_entry_size(obj) (size_t)0
-#	define ers_destroy(obj)
-#	define ers_chunk_size(obj,size)
+#	define ers_alloc(obj,type) ((void)(obj), (type *)aMalloc(sizeof(type)))
+#	define ers_free(obj,entry) ((void)(obj), aFree(entry))
+#	define ers_entry_size(obj) ((void)(obj), (size_t)0)
+#	define ers_destroy(obj) ((void)(obj), (void)0)
+#	define ers_chunk_size(obj,size) ((void)(obj), (void)(size), (size_t)0)
 // Disable the public functions
 #	define ers_new(size,name,options) NULL
-#	define ers_report()
-#	define ers_final()
+#	define ers_report() (void)0
+#	define ers_final() (void)0
 #else /* not DISABLE_ERS */
 // These defines should be used to allow the code to keep working whenever
 // the system is disabled

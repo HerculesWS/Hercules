@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2020 Hercules Dev Team
+   Copyright (C) 2005-2014 Mark A Lindner
 
    This file is part of libconfig.
 
@@ -23,56 +24,56 @@
 #include "ac_config.h"
 #endif
 
-#include "libconfig.h"
-#include "grammar.h"
-#include "scanner.h"
-#include "scanctx.h"
-#include "parsectx.h"
-#include "wincompat.h"
-
 #include <locale.h>
 
 #ifdef HAVE_XLOCALE_H
 #include <xlocale.h>
 #endif
 
+#include <ctype.h>
+#include <float.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
-#define PATH_TOKENS ":./"
+#include "libconfig.h"
+#include "parsectx.h"
+#include "scanctx.h"
+#include "wincompat.h"
+#include "grammar.h"
+#include "scanner.h"
+
+#define PATH_TOKENS ":/"
 #define CHUNK_SIZE 16
-#define FLOAT_PRECISION 10
+#define FLOAT_PRECISION DBL_DIG
 
-#define _new(T) (T *)calloc(sizeof(T), 1) /* zeroed */
-#define _delete(P) free((void *)(P))
+#define _new(T) calloc(1, sizeof(T)) /* zeroed */
+#define _delete(P) free(P)
 
 /* ------------------------------------------------------------------------- */
 
 #ifndef LIBCONFIG_STATIC
-#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
+#if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)    \
+     || defined(WIN64) || defined(_WIN64))
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
   return(TRUE);
 }
 
-#endif /* WIN32 */
+#endif /* WIN32 || WIN64 */
 #endif /* LIBCONFIG_STATIC */
 
 /* ------------------------------------------------------------------------- */
 
 static const char *__io_error = "file I/O error";
 
-static void __config_list_destroy(config_list_t *list);
-static void __config_write_setting(const config_setting_t *setting,
-                                   FILE *stream, int depth,
-                                   unsigned short tab_width);
-
-extern int libconfig_yyparse(void *scanner, struct parse_context *ctx,
-                             struct scan_context *scan_ctx);
-extern int libconfig_yylex_init_extra(struct scan_context *scan_ctx,
-                                      yyscan_t *scanner);
+static void __config_list_destroy(struct config_list_t *list);
+static void __config_write_setting(const struct config_t *config,
+                                   const struct config_setting_t *setting,
+                                   FILE *stream, int depth);
 
 /* ------------------------------------------------------------------------- */
 
@@ -102,6 +103,11 @@ static void __config_locale_override(void)
 
 #endif
 }
+
+/* ------------------------------------------------------------------------- */
+
+#define __config_has_option(C, O)               \
+  (((C)->options & (O)) != 0)
 
 /* ------------------------------------------------------------------------- */
 
@@ -168,9 +174,34 @@ static void __config_indent(FILE *stream, int depth, unsigned short w)
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_write_value(const config_value_t *value, int type,
-                                 int format, int depth,
-                                 unsigned short tab_width, FILE *stream)
+/**
+ * converts an integer to a binary string (because itoa is not in C99)
+ * skips leading zeros, and does not prepend with a 0b prefix
+ *
+ * @param value - the integer to convert to a binary expression
+ * @param buffer - a pointer to the buffer used to build the string
+ * @returns the same buffer
+ */
+char *int_tobin(const unsigned long long value, char *buffer) {
+  const unsigned long long mask = 1;
+  unsigned char nonzero = 0;
+
+  for (char bit = 63; bit >= 0; --bit) {
+    if ((value & (mask << bit)) == 1) {
+      nonzero = 1;
+      *buffer++ = '1';
+    } else if (nonzero != 0) {
+      *buffer++ = '0';
+    }
+  }
+
+  *buffer = '\0';
+  return buffer;
+}
+
+static void __config_write_value(const struct config_t *config,
+                                 const union config_value_t *value, int type,
+                                 int format, int depth, FILE *stream)
 {
   char fbuf[64];
 
@@ -186,7 +217,18 @@ static void __config_write_value(const config_value_t *value, int type,
       switch(format)
       {
         case CONFIG_FORMAT_HEX:
-          fprintf(stream, "0x%X", value->ival);
+          fprintf(stream, "0x%X", (unsigned int)(value->ival));
+          break;
+
+        case CONFIG_FORMAT_BIN:
+        {
+          char buffer[33]; // 32 individual bits (char '0' and '1') represented as 32 bytes + null
+          fprintf(stream, "0b%s", int_tobin((unsigned int)(value->ival), buffer));
+          break;
+        }
+
+        case CONFIG_FORMAT_OCT:
+          fprintf(stream, "0o%o", (unsigned int)(value->ival));
           break;
 
         case CONFIG_FORMAT_DEFAULT:
@@ -201,7 +243,18 @@ static void __config_write_value(const config_value_t *value, int type,
       switch(format)
       {
         case CONFIG_FORMAT_HEX:
-          fprintf(stream, "0x" INT64_HEX_FMT "L", value->llval);
+          fprintf(stream, "0x" INT64_HEX_FMT "L", (unsigned long long)(value->llval));
+          break;
+
+        case CONFIG_FORMAT_BIN:
+        {
+          char buffer[65]; // 64 individual bits (char '0' and '1') represented as 64 bytes + null
+          fprintf(stream, "0b%s", int_tobin((unsigned long long)(value->llval), buffer));
+          break;
+        }
+
+        case CONFIG_FORMAT_OCT:
+          fprintf(stream, "0o" INT64_OCT_FMT "L", (unsigned long long)(value->llval));
           break;
 
         case CONFIG_FORMAT_DEFAULT:
@@ -285,7 +338,7 @@ static void __config_write_value(const config_value_t *value, int type,
               if(c >= ' ')
                 fputc(c, stream);
               else
-                fprintf(stream, "\\x%02X", c);
+                fprintf(stream, "\\x%02X", (unsigned int)(c));
           }
         }
       }
@@ -296,20 +349,20 @@ static void __config_write_value(const config_value_t *value, int type,
     /* list */
     case CONFIG_TYPE_LIST:
     {
-      config_list_t *list = value->list;
+      struct config_list_t *list = value->list;
 
       fprintf(stream, "( ");
 
       if(list)
       {
         int len = list->length;
-        config_setting_t **s;
+        struct config_setting_t **s;
 
         for(s = list->elements; len--; s++)
         {
-          __config_write_value(&((*s)->value), (*s)->type,
-                               config_setting_get_format(*s),
-                               depth + 1, tab_width, stream);
+          __config_write_value(config, &((*s)->value), (*s)->type,
+                               config_setting_get_format(*s), depth + 1,
+                               stream);
 
           if(len)
             fputc(',', stream);
@@ -325,20 +378,20 @@ static void __config_write_value(const config_value_t *value, int type,
     /* array */
     case CONFIG_TYPE_ARRAY:
     {
-      config_list_t *list = value->list;
+      struct config_list_t *list = value->list;
 
       fprintf(stream, "[ ");
 
       if(list)
       {
         int len = list->length;
-        config_setting_t **s;
+        struct config_setting_t **s;
 
         for(s = list->elements; len--; s++)
         {
-          __config_write_value(&((*s)->value), (*s)->type,
-                               config_setting_get_format(*s),
-                               depth + 1, tab_width, stream);
+          __config_write_value(config, &((*s)->value), (*s)->type,
+                               config_setting_get_format(*s), depth + 1,
+                               stream);
 
           if(len)
             fputc(',', stream);
@@ -354,32 +407,32 @@ static void __config_write_value(const config_value_t *value, int type,
     /* group */
     case CONFIG_TYPE_GROUP:
     {
-      config_list_t *list = value->list;
+      struct config_list_t *list = value->list;
 
       if(depth > 0)
       {
-#ifdef K_AND_R_STYLE /* Horrendous, but many people like it. */
-        fputc(' ', stream);
-#else
-        fputc('\n', stream);
+        if((config->options & CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE) != 0)
+        {
+          fputc('\n', stream);
 
-        if(depth > 1)
-          __config_indent(stream, depth, tab_width);
-#endif
+          if(depth > 1)
+            __config_indent(stream, depth, config->tab_width);
+        }
+
         fprintf(stream, "{\n");
       }
 
       if(list)
       {
         int len = list->length;
-        config_setting_t **s;
+        struct config_setting_t **s;
 
         for(s = list->elements; len--; s++)
-          __config_write_setting(*s, stream, depth + 1, tab_width);
+          __config_write_setting(config, *s, stream, depth + 1);
       }
 
       if(depth > 1)
-        __config_indent(stream, depth, tab_width);
+        __config_indent(stream, depth, config->tab_width);
 
       if(depth > 0)
         fputc('}', stream);
@@ -396,13 +449,13 @@ static void __config_write_value(const config_value_t *value, int type,
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_list_add(config_list_t *list, config_setting_t *setting)
+static void __config_list_add(struct config_list_t *list, struct config_setting_t *setting)
 {
   if((list->length % CHUNK_SIZE) == 0)
   {
-    list->elements = (config_setting_t **)realloc(
+    list->elements = (struct config_setting_t **)realloc(
       list->elements,
-      (list->length + CHUNK_SIZE) * sizeof(config_setting_t *));
+      (list->length + CHUNK_SIZE) * sizeof(struct config_setting_t *));
   }
 
   list->elements[list->length] = setting;
@@ -411,11 +464,11 @@ static void __config_list_add(config_list_t *list, config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-static config_setting_t *__config_list_search(config_list_t *list,
+static struct config_setting_t *__config_list_search(struct config_list_t *list,
                                               const char *name,
                                               unsigned int *idx)
 {
-  config_setting_t **found = NULL;
+  struct config_setting_t **found = NULL;
   unsigned int i;
 
   if(! list)
@@ -440,15 +493,15 @@ static config_setting_t *__config_list_search(config_list_t *list,
 
 /* ------------------------------------------------------------------------- */
 
-static config_setting_t *__config_list_remove(config_list_t *list, int idx)
+static struct config_setting_t *__config_list_remove(struct config_list_t *list, int idx)
 {
-  config_setting_t *removed = *(list->elements + idx);
-  int offset = (idx * sizeof(config_setting_t *));
+  struct config_setting_t *removed = *(list->elements + idx);
+  int offset = (idx * sizeof(struct config_setting_t *));
   int len = list->length - 1 - idx;
   char *base = (char *)list->elements + offset;
 
-  memmove(base, base + sizeof(config_setting_t *),
-          len * sizeof(config_setting_t *));
+  memmove(base, base + sizeof(struct config_setting_t *),
+          len * sizeof(struct config_setting_t *));
 
   list->length--;
 
@@ -459,7 +512,7 @@ static config_setting_t *__config_list_remove(config_list_t *list, int idx)
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_setting_destroy(config_setting_t *setting)
+static void __config_setting_destroy(struct config_setting_t *setting)
 {
   if(setting)
   {
@@ -486,9 +539,9 @@ static void __config_setting_destroy(config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_list_destroy(config_list_t *list)
+static void __config_list_destroy(struct config_list_t *list)
 {
-  config_setting_t **p;
+  struct config_setting_t **p;
   unsigned int i;
 
   if(! list)
@@ -507,7 +560,7 @@ static void __config_list_destroy(config_list_t *list)
 
 /* ------------------------------------------------------------------------- */
 
-static int __config_vector_checktype(const config_setting_t *vector, int type)
+static int __config_vector_checktype(const struct config_setting_t *vector, int type)
 {
   /* if the array is empty, then it has no type yet */
 
@@ -537,12 +590,12 @@ static int __config_validate_name(const char *name)
   if(*p == '\0')
     return(CONFIG_FALSE);
 
-  if(! isalpha((int)*p) && (*p != '*'))
+  if(! isalpha((int)*p) && !isdigit((int)*p) && (*p != '*'))
     return(CONFIG_FALSE);
 
   for(++p; *p; ++p)
   {
-    if(! (isalpha((int)*p) || isdigit((int)*p) || strchr("*_-'", (int)*p)))
+    if(! (isalpha((int)*p) || isdigit((int)*p) || strchr("*_-'.", (int)*p)))
       return(CONFIG_FALSE);
   }
 
@@ -551,20 +604,19 @@ static int __config_validate_name(const char *name)
 
 /* ------------------------------------------------------------------------- */
 
-static int __config_read(config_t *config, FILE *stream, const char *filename,
+static int __config_read(struct config_t *config, FILE *stream, const char *filename,
                          const char *str)
 {
   yyscan_t scanner;
   struct scan_context scan_ctx;
   struct parse_context parse_ctx;
-  /*YY_BUFFER_STATE buffer = NULL;*/
   int r;
 
   /* Reinitialize the config */
   void (*destructor)(void *) = config->destructor;
-  const char *include_dir = config->include_dir;
+  char *include_dir = config->include_dir;
   unsigned short tab_width = config->tab_width;
-  unsigned short flags = config->flags;
+  int options = config->options;
 
   config->include_dir = NULL;
   config_destroy(config);
@@ -573,7 +625,7 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   config->destructor = destructor;
   config->include_dir = include_dir;
   config->tab_width = tab_width;
-  config->flags = flags;
+  config->options = options;
 
   parsectx_init(&parse_ctx);
   parse_ctx.config = config;
@@ -583,13 +635,14 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
   __config_locale_override();
 
   scanctx_init(&scan_ctx, filename);
+  config->root->file = scanctx_current_filename(&scan_ctx);
   scan_ctx.config = config;
   libconfig_yylex_init_extra(&scan_ctx, &scanner);
 
   if(stream)
     libconfig_yyrestart(stream, scanner);
   else /* read from string */
-    /*buffer = */libconfig_yy_scan_string(str, scanner);
+    (void)libconfig_yy_scan_string(str, scanner);
 
   libconfig_yyset_lineno(1, scanner);
   r = libconfig_yyparse(scanner, &parse_ctx, &scan_ctx);
@@ -617,63 +670,91 @@ static int __config_read(config_t *config, FILE *stream, const char *filename,
 
 /* ------------------------------------------------------------------------- */
 
-int config_read(config_t *config, FILE *stream)
+int config_read(struct config_t *config, FILE *stream)
 {
   return(__config_read(config, stream, NULL, NULL));
 }
 
 /* ------------------------------------------------------------------------- */
 
-int config_read_string(config_t *config, const char *str)
+int config_read_string(struct config_t *config, const char *str)
 {
   return(__config_read(config, NULL, NULL, str));
 }
 
 /* ------------------------------------------------------------------------- */
 
-static void __config_write_setting(const config_setting_t *setting,
-                                   FILE *stream, int depth,
-                                   unsigned short tab_width)
+static void __config_write_setting(const struct config_t *config,
+                                   const struct config_setting_t *setting,
+                                   FILE *stream, int depth)
 {
+  char group_assign_char = __config_has_option(
+    config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS) ? ':' : '=';
+
+  char nongroup_assign_char = __config_has_option(
+    config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS) ? ':' : '=';
+
   if(depth > 1)
-    __config_indent(stream, depth, tab_width);
+    __config_indent(stream, depth, config->tab_width);
+
 
   if(setting->name)
   {
     fputs(setting->name, stream);
-    fprintf(stream, " %c ", (setting->type == CONFIG_TYPE_GROUP ? ':' : '='));
+    fprintf(stream, " %c ", ((setting->type == CONFIG_TYPE_GROUP)
+                             ? group_assign_char
+                             : nongroup_assign_char));
   }
 
-  __config_write_value(&(setting->value), setting->type,
-                       config_setting_get_format(setting),
-                       depth, tab_width, stream);
+  __config_write_value(config, &(setting->value), setting->type,
+                       config_setting_get_format(setting), depth, stream);
 
   if(depth > 0)
   {
-    fputc(';', stream);
+    if(__config_has_option(config, CONFIG_OPTION_SEMICOLON_SEPARATORS))
+      fputc(';', stream);
+
     fputc('\n', stream);
   }
 }
 
 /* ------------------------------------------------------------------------- */
 
-void config_write(const config_t *config, FILE *stream)
+void config_write(const struct config_t *config, FILE *stream)
 {
   __config_locale_override();
 
-  __config_write_setting(config->root, stream, 0, config->tab_width);
+  __config_write_setting(config, config->root, stream, 0);
 
   __config_locale_restore();
 }
 
 /* ------------------------------------------------------------------------- */
 
-int config_read_file(config_t *config, const char *filename)
+int config_read_file(struct config_t *config, const char *filename)
 {
-  int ret;
+  int ret, ok = 0;
+
   FILE *stream = fopen(filename, "rt");
-  if(! stream)
+  if(stream != NULL)
   {
+    // On some operating systems, fopen() succeeds on a directory.
+    int fd = fileno(stream);
+    struct stat statbuf;
+
+    if(fstat(fd, &statbuf) == 0)
+    {
+      // Only proceed if this is not a directory.
+      if(!S_ISDIR(statbuf.st_mode))
+        ok = 1;
+    }
+  }
+
+  if(!ok)
+  {
+    if(stream != NULL)
+      fclose(stream);
+
     config->error_text = __io_error;
     config->error_type = CONFIG_ERR_FILE_IO;
     return(CONFIG_FALSE);
@@ -687,28 +768,29 @@ int config_read_file(config_t *config, const char *filename)
 
 /* ------------------------------------------------------------------------- */
 
-int config_write_file(config_t *config, const char *filename)
+int config_write_file(struct config_t *config, const char *filename)
 {
-  FILE *f = fopen(filename, "wt");
-  if(! f)
+  FILE *stream = fopen(filename, "wt");
+  if(stream == NULL)
   {
     config->error_text = __io_error;
     config->error_type = CONFIG_ERR_FILE_IO;
+    config->error_file = filename;
     return(CONFIG_FALSE);
   }
 
-  config_write(config, f);
-  fclose(f);
+  config_write(config, stream);
+  fclose(stream);
   config->error_type = CONFIG_ERR_NONE;
   return(CONFIG_TRUE);
 }
 
 /* ------------------------------------------------------------------------- */
 
-void config_destroy(config_t *config)
+void config_destroy(struct config_t *config)
 {
   unsigned int count = config->num_filenames;
-  const char **f;
+  char **f;
 
   __config_setting_destroy(config->root);
 
@@ -718,52 +800,69 @@ void config_destroy(config_t *config)
   _delete(config->filenames);
   _delete(config->include_dir);
 
-  memset((void *)config, 0, sizeof(config_t));
+  memset((void *)config, 0, sizeof(struct config_t));
 }
 
 /* ------------------------------------------------------------------------- */
 
-void config_init(config_t *config)
+void config_init(struct config_t *config)
 {
-  memset((void *)config, 0, sizeof(config_t));
+  memset((void *)config, 0, sizeof(struct config_t));
 
-  config->root = _new(config_setting_t);
+  config->root = _new(struct config_setting_t);
   config->root->type = CONFIG_TYPE_GROUP;
   config->root->config = config;
+  config->options = (CONFIG_OPTION_SEMICOLON_SEPARATORS
+                     | CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
+                     | CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE);
   config->tab_width = 2;
 }
 
 /* ------------------------------------------------------------------------- */
 
-void config_set_auto_convert(config_t *config, int flag)
+void config_set_auto_convert(struct config_t *config, int flag)
 {
   if(flag)
-    config->flags |= CONFIG_OPTION_AUTOCONVERT;
+    config->options |= CONFIG_OPTION_AUTOCONVERT;
   else
-    config->flags &= ~CONFIG_OPTION_AUTOCONVERT;
+    config->options &= ~CONFIG_OPTION_AUTOCONVERT;
 }
 
 /* ------------------------------------------------------------------------- */
 
-int config_get_auto_convert(const config_t *config)
+int config_get_auto_convert(const struct config_t *config)
 {
-  return((config->flags & CONFIG_OPTION_AUTOCONVERT) != 0);
+  return(__config_has_option(config, CONFIG_OPTION_AUTOCONVERT));
 }
 
 /* ------------------------------------------------------------------------- */
 
-static config_setting_t *config_setting_create(config_setting_t *parent,
+void config_set_options(struct config_t *config, int options)
+{
+  config->options = options;
+}
+
+/* ------------------------------------------------------------------------- */
+
+int config_get_options(const struct config_t *config)
+{
+  return(config->options);
+}
+
+/* ------------------------------------------------------------------------- */
+
+static struct config_setting_t *config_setting_create(struct config_setting_t *parent,
                                                const char *name, int type)
 {
-  config_setting_t *setting;
-  config_list_t *list;
+  struct config_setting_t *setting;
+  struct config_list_t *list;
 
   if((parent->type != CONFIG_TYPE_GROUP)
      && (parent->type != CONFIG_TYPE_ARRAY)
      && (parent->type != CONFIG_TYPE_LIST))
     return(NULL);
 
-  setting = _new(config_setting_t);
+  setting = _new(struct config_setting_t);
   setting->parent = parent;
   setting->name = (name == NULL) ? NULL : strdup(name);
   setting->type = type;
@@ -774,7 +873,7 @@ static config_setting_t *config_setting_create(config_setting_t *parent,
   list = parent->value.list;
 
   if(! list)
-    list = parent->value.list = _new(config_list_t);
+    list = parent->value.list = _new(struct config_list_t);
 
   __config_list_add(list, setting);
 
@@ -783,7 +882,7 @@ static config_setting_t *config_setting_create(config_setting_t *parent,
 
 /* ------------------------------------------------------------------------- */
 
-static int __config_setting_get_int(const config_setting_t *setting,
+static int __config_setting_get_int(const struct config_setting_t *setting,
                                     int *value)
 {
   switch(setting->type)
@@ -801,13 +900,14 @@ static int __config_setting_get_int(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_FLOAT:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         *value = (int)(setting->value.fval);
         return(CONFIG_TRUE);
       }
       else
       { /* fall through */ }
+      return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -816,7 +916,7 @@ static int __config_setting_get_int(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_get_int(const config_setting_t *setting)
+int config_setting_get_int(const struct config_setting_t *setting)
 {
   int value = 0;
   __config_setting_get_int(setting, &value);
@@ -825,7 +925,7 @@ int config_setting_get_int(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-static int __config_setting_get_int64(const config_setting_t *setting,
+static int __config_setting_get_int64(const struct config_setting_t *setting,
                                       long long *value)
 {
   switch(setting->type)
@@ -839,13 +939,14 @@ static int __config_setting_get_int64(const config_setting_t *setting,
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_FLOAT:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         *value = (long long)(setting->value.fval);
         return(CONFIG_TRUE);
       }
       else
       { /* fall through */ }
+      return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -854,7 +955,7 @@ static int __config_setting_get_int64(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-long long config_setting_get_int64(const config_setting_t *setting)
+long long config_setting_get_int64(const struct config_setting_t *setting)
 {
   long long value = 0;
   __config_setting_get_int64(setting, &value);
@@ -863,10 +964,10 @@ long long config_setting_get_int64(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_lookup_int(const config_setting_t *setting,
+int config_setting_lookup_int(const struct config_setting_t *setting,
                               const char *name, int *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  struct config_setting_t *member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -875,10 +976,10 @@ int config_setting_lookup_int(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_lookup_int64(const config_setting_t *setting,
+int config_setting_lookup_int64(const struct config_setting_t *setting,
                                 const char *name, long long *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  struct config_setting_t *member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -887,7 +988,7 @@ int config_setting_lookup_int64(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-static int __config_setting_get_float(const config_setting_t *setting,
+static int __config_setting_get_float(const struct config_setting_t *setting,
                                       double *value)
 {
   switch(setting->type)
@@ -913,6 +1014,7 @@ static int __config_setting_get_float(const config_setting_t *setting,
       }
       else
       { /* fall through */ }
+      return(CONFIG_FALSE);
 
     default:
       return(CONFIG_FALSE);
@@ -921,7 +1023,7 @@ static int __config_setting_get_float(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-double config_setting_get_float(const config_setting_t *setting)
+double config_setting_get_float(const struct config_setting_t *setting)
 {
   double value = 0.0;
   __config_setting_get_float(setting, &value);
@@ -930,10 +1032,10 @@ double config_setting_get_float(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_lookup_float(const config_setting_t *setting,
+int config_setting_lookup_float(const struct config_setting_t *setting,
                                 const char *name, double *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  struct config_setting_t *member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -942,10 +1044,10 @@ int config_setting_lookup_float(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_lookup_string(const config_setting_t *setting,
+int config_setting_lookup_string(const struct config_setting_t *setting,
                                  const char *name, const char **value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  struct config_setting_t *member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -958,10 +1060,10 @@ int config_setting_lookup_string(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_lookup_bool(const config_setting_t *setting,
+int config_setting_lookup_bool(const struct config_setting_t *setting,
                                const char *name, int *value)
 {
-  config_setting_t *member = config_setting_get_member(setting, name);
+  struct config_setting_t *member = config_setting_get_member(setting, name);
   if(! member)
     return(CONFIG_FALSE);
 
@@ -974,7 +1076,7 @@ int config_setting_lookup_bool(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_set_int(config_setting_t *setting, int value)
+int config_setting_set_int(struct config_setting_t *setting, int value)
 {
   switch(setting->type)
   {
@@ -1002,7 +1104,7 @@ int config_setting_set_int(config_setting_t *setting, int value)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_set_int64(config_setting_t *setting, long long value)
+int config_setting_set_int64(struct config_setting_t *setting, long long value)
 {
   switch(setting->type)
   {
@@ -1037,7 +1139,7 @@ int config_setting_set_int64(config_setting_t *setting, long long value)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_set_float(config_setting_t *setting, double value)
+int config_setting_set_float(struct config_setting_t *setting, double value)
 {
   switch(setting->type)
   {
@@ -1050,7 +1152,7 @@ int config_setting_set_float(config_setting_t *setting, double value)
       return(CONFIG_TRUE);
 
     case CONFIG_TYPE_INT:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         setting->value.ival = (int)value;
         return(CONFIG_TRUE);
@@ -1059,7 +1161,7 @@ int config_setting_set_float(config_setting_t *setting, double value)
         return(CONFIG_FALSE);
 
     case CONFIG_TYPE_INT64:
-      if((setting->config->flags & CONFIG_OPTION_AUTOCONVERT) != 0)
+      if(__config_has_option(setting->config, CONFIG_OPTION_AUTOCONVERT))
       {
         setting->value.llval = (long long)value;
         return(CONFIG_TRUE);
@@ -1074,14 +1176,14 @@ int config_setting_set_float(config_setting_t *setting, double value)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_get_bool(const config_setting_t *setting)
+int config_setting_get_bool(const struct config_setting_t *setting)
 {
   return((setting->type == CONFIG_TYPE_BOOL) ? setting->value.ival : 0);
 }
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_set_bool(config_setting_t *setting, int value)
+int config_setting_set_bool(struct config_setting_t *setting, int value)
 {
   if(setting->type == CONFIG_TYPE_NONE)
     setting->type = CONFIG_TYPE_BOOL;
@@ -1094,14 +1196,14 @@ int config_setting_set_bool(config_setting_t *setting, int value)
 
 /* ------------------------------------------------------------------------- */
 
-const char *config_setting_get_string(const config_setting_t *setting)
+const char *config_setting_get_string(const struct config_setting_t *setting)
 {
   return((setting->type == CONFIG_TYPE_STRING) ? setting->value.sval : NULL);
 }
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_set_string(config_setting_t *setting, const char *value)
+int config_setting_set_string(struct config_setting_t *setting, const char *value)
 {
   if(setting->type == CONFIG_TYPE_NONE)
     setting->type = CONFIG_TYPE_STRING;
@@ -1117,21 +1219,22 @@ int config_setting_set_string(config_setting_t *setting, const char *value)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_set_format(config_setting_t *setting, short format)
+int config_setting_set_format(struct config_setting_t *setting, short format)
 {
-  if(((setting->type != CONFIG_TYPE_INT)
-      && (setting->type != CONFIG_TYPE_INT64))
-     || ((format != CONFIG_FORMAT_DEFAULT) && (format != CONFIG_FORMAT_HEX)))
-    return(CONFIG_FALSE);
+  if (((setting->type != CONFIG_TYPE_INT) && (setting->type != CONFIG_TYPE_INT64))
+      || ((format != CONFIG_FORMAT_DEFAULT) && (format != CONFIG_FORMAT_HEX)
+           && (format != CONFIG_FORMAT_BIN) && (format != CONFIG_FORMAT_OCT))) {
+    return CONFIG_FALSE;
+  }
 
   setting->format = format;
 
-  return(CONFIG_TRUE);
+  return CONFIG_TRUE;
 }
 
 /* ------------------------------------------------------------------------- */
 
-short config_setting_get_format(const config_setting_t *setting)
+short config_setting_get_format(const struct config_setting_t *setting)
 {
   return(setting->format != 0 ? setting->format
          : setting->config->default_format);
@@ -1139,11 +1242,11 @@ short config_setting_get_format(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_lookup_from(config_setting_t *setting,
-                                     const char *path)
+struct config_setting_t *config_setting_lookup(struct config_setting_t *setting,
+                                        const char *path)
 {
   const char *p = path;
-  config_setting_t *found;
+  struct config_setting_t *found;
 
   for(;;)
   {
@@ -1172,17 +1275,17 @@ config_setting_t *config_lookup_from(config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_lookup(const config_t *config, const char *path)
+struct config_setting_t *config_lookup(const struct config_t *config, const char *path)
 {
-  return(config_lookup_from(config->root, path));
+  return(config_setting_lookup(config->root, path));
 }
 
 /* ------------------------------------------------------------------------- */
 
-int config_lookup_string(const config_t *config, const char *path,
+int config_lookup_string(const struct config_t *config, const char *path,
                          const char **value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const struct config_setting_t *s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1196,10 +1299,10 @@ int config_lookup_string(const config_t *config, const char *path,
 
 /* ------------------------------------------------------------------------- */
 
-int config_lookup_int(const config_t *config, const char *path,
+int config_lookup_int(const struct config_t *config, const char *path,
                       int *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const struct config_setting_t *s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1208,10 +1311,10 @@ int config_lookup_int(const config_t *config, const char *path,
 
 /* ------------------------------------------------------------------------- */
 
-int config_lookup_int64(const config_t *config, const char *path,
+int config_lookup_int64(const struct config_t *config, const char *path,
                         long long *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const struct config_setting_t *s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1220,10 +1323,10 @@ int config_lookup_int64(const config_t *config, const char *path,
 
 /* ------------------------------------------------------------------------- */
 
-int config_lookup_float(const config_t *config, const char *path,
+int config_lookup_float(const struct config_t *config, const char *path,
                         double *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const struct config_setting_t *s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1232,9 +1335,9 @@ int config_lookup_float(const config_t *config, const char *path,
 
 /* ------------------------------------------------------------------------- */
 
-int config_lookup_bool(const config_t *config, const char *path, int *value)
+int config_lookup_bool(const struct config_t *config, const char *path, int *value)
 {
-  const config_setting_t *s = config_lookup(config, path);
+  const struct config_setting_t *s = config_lookup(config, path);
   if(! s)
     return(CONFIG_FALSE);
 
@@ -1247,19 +1350,19 @@ int config_lookup_bool(const config_t *config, const char *path, int *value)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_get_int_elem(const config_setting_t *vector, int idx)
+int config_setting_get_int_elem(const struct config_setting_t *vector, int idx)
 {
-  const config_setting_t *element = config_setting_get_elem(vector, idx);
+  const struct config_setting_t *element = config_setting_get_elem(vector, idx);
 
   return(element ? config_setting_get_int(element) : 0);
 }
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_set_int_elem(config_setting_t *vector,
+struct config_setting_t *config_setting_set_int_elem(struct config_setting_t *vector,
                                               int idx, int value)
 {
-  config_setting_t *element = NULL;
+  struct config_setting_t *element = NULL;
 
   if((vector->type != CONFIG_TYPE_ARRAY) && (vector->type != CONFIG_TYPE_LIST))
     return(NULL);
@@ -1287,20 +1390,20 @@ config_setting_t *config_setting_set_int_elem(config_setting_t *vector,
 
 /* ------------------------------------------------------------------------- */
 
-long long config_setting_get_int64_elem(const config_setting_t *vector,
+long long config_setting_get_int64_elem(const struct config_setting_t *vector,
                                         int idx)
 {
-  const config_setting_t *element = config_setting_get_elem(vector, idx);
+  const struct config_setting_t *element = config_setting_get_elem(vector, idx);
 
   return(element ? config_setting_get_int64(element) : 0);
 }
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_set_int64_elem(config_setting_t *vector,
+struct config_setting_t *config_setting_set_int64_elem(struct config_setting_t *vector,
                                                 int idx, long long value)
 {
-  config_setting_t *element = NULL;
+  struct config_setting_t *element = NULL;
 
   if((vector->type != CONFIG_TYPE_ARRAY) && (vector->type != CONFIG_TYPE_LIST))
     return(NULL);
@@ -1328,19 +1431,19 @@ config_setting_t *config_setting_set_int64_elem(config_setting_t *vector,
 
 /* ------------------------------------------------------------------------- */
 
-double config_setting_get_float_elem(const config_setting_t *vector, int idx)
+double config_setting_get_float_elem(const struct config_setting_t *vector, int idx)
 {
-  config_setting_t *element = config_setting_get_elem(vector, idx);
+  struct config_setting_t *element = config_setting_get_elem(vector, idx);
 
   return(element ? config_setting_get_float(element) : 0.0);
 }
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_set_float_elem(config_setting_t *vector,
+struct config_setting_t *config_setting_set_float_elem(struct config_setting_t *vector,
                                                 int idx, double value)
 {
-  config_setting_t *element = NULL;
+  struct config_setting_t *element = NULL;
 
   if((vector->type != CONFIG_TYPE_ARRAY) && (vector->type != CONFIG_TYPE_LIST))
     return(NULL);
@@ -1366,9 +1469,9 @@ config_setting_t *config_setting_set_float_elem(config_setting_t *vector,
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_get_bool_elem(const config_setting_t *vector, int idx)
+int config_setting_get_bool_elem(const struct config_setting_t *vector, int idx)
 {
-  config_setting_t *element = config_setting_get_elem(vector, idx);
+  struct config_setting_t *element = config_setting_get_elem(vector, idx);
 
   if(! element)
     return(CONFIG_FALSE);
@@ -1381,10 +1484,10 @@ int config_setting_get_bool_elem(const config_setting_t *vector, int idx)
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_set_bool_elem(config_setting_t *vector,
+struct config_setting_t *config_setting_set_bool_elem(struct config_setting_t *vector,
                                                int idx, int value)
 {
-  config_setting_t *element = NULL;
+  struct config_setting_t *element = NULL;
 
   if((vector->type != CONFIG_TYPE_ARRAY) && (vector->type != CONFIG_TYPE_LIST))
     return(NULL);
@@ -1410,10 +1513,10 @@ config_setting_t *config_setting_set_bool_elem(config_setting_t *vector,
 
 /* ------------------------------------------------------------------------- */
 
-const char *config_setting_get_string_elem(const config_setting_t *vector,
+const char *config_setting_get_string_elem(const struct config_setting_t *vector,
                                            int idx)
 {
-  config_setting_t *element = config_setting_get_elem(vector, idx);
+  struct config_setting_t *element = config_setting_get_elem(vector, idx);
 
   if(! element)
     return(NULL);
@@ -1426,10 +1529,10 @@ const char *config_setting_get_string_elem(const config_setting_t *vector,
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_set_string_elem(config_setting_t *vector,
+struct config_setting_t *config_setting_set_string_elem(struct config_setting_t *vector,
                                                  int idx, const char *value)
 {
-  config_setting_t *element = NULL;
+  struct config_setting_t *element = NULL;
 
   if((vector->type != CONFIG_TYPE_ARRAY) && (vector->type != CONFIG_TYPE_LIST))
     return(NULL);
@@ -1455,10 +1558,10 @@ config_setting_t *config_setting_set_string_elem(config_setting_t *vector,
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_get_elem(const config_setting_t *vector,
+struct config_setting_t *config_setting_get_elem(const struct config_setting_t *vector,
                                           unsigned int idx)
 {
-  config_list_t *list = vector->value.list;
+  struct config_list_t *list = vector->value.list;
 
   if(((vector->type != CONFIG_TYPE_ARRAY)
       && (vector->type != CONFIG_TYPE_LIST)
@@ -1473,7 +1576,7 @@ config_setting_t *config_setting_get_elem(const config_setting_t *vector,
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_get_member(const config_setting_t *setting,
+struct config_setting_t *config_setting_get_member(const struct config_setting_t *setting,
                                             const char *name)
 {
   if(setting->type != CONFIG_TYPE_GROUP)
@@ -1484,14 +1587,14 @@ config_setting_t *config_setting_get_member(const config_setting_t *setting,
 
 /* ------------------------------------------------------------------------- */
 
-void config_set_destructor(config_t *config, void (*destructor)(void *))
+void config_set_destructor(struct config_t *config, void (*destructor)(void *))
 {
   config->destructor = destructor;
 }
 
 /* ------------------------------------------------------------------------- */
 
-void config_set_include_dir(config_t *config, const char *include_dir)
+void config_set_include_dir(struct config_t *config, const char *include_dir)
 {
   _delete(config->include_dir);
   config->include_dir = strdup(include_dir);
@@ -1499,7 +1602,7 @@ void config_set_include_dir(config_t *config, const char *include_dir)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_length(const config_setting_t *setting)
+int config_setting_length(const struct config_setting_t *setting)
 {
   if((setting->type != CONFIG_TYPE_GROUP)
      && (setting->type != CONFIG_TYPE_ARRAY)
@@ -1514,14 +1617,14 @@ int config_setting_length(const config_setting_t *setting)
 
 /* ------------------------------------------------------------------------- */
 
-void config_setting_set_hook(config_setting_t *setting, void *hook)
+void config_setting_set_hook(struct config_setting_t *setting, void *hook)
 {
   setting->hook = hook;
 }
 
 /* ------------------------------------------------------------------------- */
 
-config_setting_t *config_setting_add(config_setting_t *parent,
+struct config_setting_t *config_setting_add(struct config_setting_t *parent,
                                      const char *name, int type)
 {
   if((type < CONFIG_TYPE_NONE) || (type > CONFIG_TYPE_LIST))
@@ -1556,10 +1659,10 @@ config_setting_t *config_setting_add(config_setting_t *parent,
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_remove(config_setting_t *parent, const char *name)
+int config_setting_remove(struct config_setting_t *parent, const char *name)
 {
   unsigned int idx;
-  config_setting_t *setting;
+  struct config_setting_t *setting;
 
   if(! parent)
     return(CONFIG_FALSE);
@@ -1578,10 +1681,10 @@ int config_setting_remove(config_setting_t *parent, const char *name)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_remove_elem(config_setting_t *parent, unsigned int idx)
+int config_setting_remove_elem(struct config_setting_t *parent, unsigned int idx)
 {
-  config_list_t *list;
-  config_setting_t *removed = NULL;
+  struct config_list_t *list;
+  struct config_setting_t *removed = NULL;
 
   if(! parent)
     return(CONFIG_FALSE);
@@ -1604,10 +1707,10 @@ int config_setting_remove_elem(config_setting_t *parent, unsigned int idx)
 
 /* ------------------------------------------------------------------------- */
 
-int config_setting_index(const config_setting_t *setting)
+int config_setting_index(const struct config_setting_t *setting)
 {
-  config_setting_t **found = NULL;
-  config_list_t *list;
+  struct config_setting_t **found = NULL;
+  struct config_list_t *list;
   int i;
 
   if(! setting->parent)
@@ -1625,4 +1728,3 @@ int config_setting_index(const config_setting_t *setting)
 }
 
 /* ------------------------------------------------------------------------- */
-/* eof */

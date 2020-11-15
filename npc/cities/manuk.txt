@@ -1,20 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Manuk Town
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Town-specific NPCs for Manuk.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Added more town NPCs
-//= 1.2 Added more town NPCs
-//= 1.3 Enabled an NPC
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// cat_enhance
+//== cat_enhance ===========================================
 manuk,304,195,5	script	Soldier#ep13pa829	4_MAN_PIOM,{
 	if (isequipped(2782) == 1) {
 		mes "[Food Provider]";
@@ -61,7 +79,7 @@ manuk,107,233,5	script	Soldier#ep13_3	4_MAN_PIOM,{
 	}
 }
 
-// ep13_2_hiki
+//== ep13_2_hiki ===========================================
 manuk,100,100,3	script	Piom	4_MAN_PIOM,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Piom]";
@@ -287,7 +305,7 @@ manuk,245,124,3	script	Piom#ep13_2_4	4_MAN_PIOM2,{
 	}
 }
 
-// ep13_2_npc
+//== ep13_2_npc ============================================
 man_in01,346,135,0	script	 Worker#ep13bsg1	4_MAN_PIOM,{
 	if (isequipped(2782) == 1) {
 		mes "[Worker]";
@@ -378,7 +396,7 @@ man_in01,283,288,3	script	Worker#ep13bsg6	4_MAN_PIOM,{
 	}
 }
 
-// ep13_2_tre
+//== ep13_2_tre ============================================
 manuk,103,354,5	script	Manuk Galtun#door1	4_MAN_GALTUN,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Manuk Galtun]";
@@ -485,7 +503,7 @@ manuk,253,173,3	script	Manuk Benknee#tre5	4_MAN_BENKUNI,{
 	}
 }
 
-// ep12_2_dailybs
+//== ep12_2_dailybs ========================================
 manuk,251,180,5	script	Young Villager#ep13bs	4_MAN_PIOM,{
 	if (isequipped(2782) == 1) {
 		mes "[Young Villager]";

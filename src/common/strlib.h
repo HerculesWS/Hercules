@@ -1,19 +1,74 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef COMMON_STRLIB_H
 #define COMMON_STRLIB_H
+
+#include "common/hercules.h"
 
 #include <stdarg.h>
 #include <string.h>
 
-#include "../common/cbasetypes.h"
+/// Convenience macros
+
+#define remove_control_chars(str)  (strlib->remove_control_chars_(str))
+#define trim(str)                  (strlib->trim_(str))
+#define normalize_name(str,delims) (strlib->normalize_name_((str),(delims)))
+#define stristr(haystack,needle)   (strlib->stristr_((haystack),(needle)))
+
+#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
+	#define strnlen(string,maxlen) (strlib->strnlen_((string),(maxlen)))
+#endif
 
 #ifdef WIN32
 	#define HAVE_STRTOK_R
-	#define strtok_r(s,delim,save_ptr) strtok_r_((s),(delim),(save_ptr))
-	char *strtok_r_(char* s1, const char* s2, char** lasts);
+	#define strtok_r(s,delim,save_ptr) strlib->strtok_r_((s),(delim),(save_ptr))
+#endif
+
+#define e_mail_check(email)          (strlib->e_mail_check_(email))
+#define config_switch(str)           (strlib->config_switch_(str))
+#define safestrncpy(dst,src,n)       (strlib->safestrncpy_((dst),(src),(n)))
+#define safestrnlen(string,maxlen)   (strlib->safestrnlen_((string),(maxlen)))
+#define safesnprintf(buf,sz,fmt,...) (strlib->safesnprintf_((buf),(sz),(fmt),##__VA_ARGS__))
+#define strline(str,pos)             (strlib->strline_((str),(pos)))
+#define bin2hex(output,input,count)  (strlib->bin2hex_((output),(input),(count)))
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L)
+#if defined(__GNUC__) && !defined(__clang__) && GCC_VERSION < 40900
+// _Generic is only supported starting with GCC 4.9
+#else
+#ifdef strchr
+#undef strchr
+#endif // strchr
+#define strchr(src, chr)             _Generic((src), \
+		const char * : ((const char *)(strchr)((src), (chr))), \
+		char *       : ((strchr)((src), (chr))) \
+		)
+#define strrchr(src, chr)            _Generic((src), \
+		const char * : ((const char *)(strrchr)((src), (chr))), \
+		char *       : ((strrchr)((src), (chr))) \
+		)
+#define strstr(haystack, needle)     _Generic((haystack), \
+		const char * : ((const char *)(strstr)((haystack), (needle))), \
+		char *       : ((strstr)((haystack), (needle))) \
+		)
+#endif
 #endif
 
 /// Bitfield determining the behavior of sv_parse and sv_split.
@@ -59,42 +114,40 @@ struct strlib_interface {
 	char *(*jstrescape) (char* pt);
 	char *(*jstrescapecpy) (char* pt, const char* spt);
 	int (*jmemescapecpy) (char* pt, const char* spt, int size);
-	int (*remove_control_chars) (char* str);
-	char *(*trim) (char* str);
-	char *(*normalize_name) (char* str,const char* delims);
-	const char *(*stristr) (const char *haystack, const char *needle);
+	int (*remove_control_chars_) (char* str);
+	char *(*trim_) (char* str);
+	char *(*normalize_name_) (char* str,const char* delims);
+	const char *(*stristr_) (const char *haystack, const char *needle);
 
-	/* only used when '!(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
-	size_t (*strnlen) (const char* string, size_t maxlen);
+	/* only used when '!(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
+	size_t (*strnlen_) (const char* string, size_t maxlen);
 
-	/* only used when 'defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200', needs to be defined at all times however  */
-	uint64 (*strtoull) (const char* str, char** endptr, int base);
+	/* only used when 'WIN32' */
+	char * (*strtok_r_) (char *s1, const char *s2, char **lasts);
 
-	int (*e_mail_check) (char* email);
-	int (*config_switch) (const char* str);
+	int (*e_mail_check_) (char* email);
+	int (*config_switch_) (const char* str);
 
 	/// strncpy that always null-terminates the string
-	char *(*safestrncpy) (char* dst, const char* src, size_t n);
+	char *(*safestrncpy_) (char* dst, const char* src, size_t n);
 
 	/// doesn't crash on null pointer
-	size_t (*safestrnlen) (const char* string, size_t maxlen);
+	size_t (*safestrnlen_) (const char* string, size_t maxlen);
 
 	/// Works like snprintf, but always null-terminates the buffer.
 	/// Returns the size of the string (without null-terminator)
 	/// or -1 if the buffer is too small.
-	int (*safesnprintf) (char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
+	int (*safesnprintf_) (char *buf, size_t sz, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
 
 	/// Returns the line of the target position in the string.
 	/// Lines start at 1.
-	int (*strline) (const char* str, size_t pos);
+	int (*strline_) (const char* str, size_t pos);
 
 	/// Produces the hexadecimal representation of the given input.
 	/// The output buffer must be at least count*2+1 in size.
 	/// Returns true on success, false on failure.
-	bool (*bin2hex) (char* output, unsigned char* input, size_t count);
+	bool (*bin2hex_) (char *output, const unsigned char *input, size_t count);
 };
-
-struct strlib_interface *strlib;
 
 struct stringbuf_interface {
 	StringBuf* (*Malloc) (void);
@@ -109,8 +162,6 @@ struct stringbuf_interface {
 	void (*Destroy) (StringBuf* self);
 	void (*Free) (StringBuf* self);
 };
-
-struct stringbuf_interface *StrBuf;
 
 struct sv_interface {
 	/// Parses a single field in a delim-separated string.
@@ -154,37 +205,12 @@ struct sv_interface {
 	bool (*readdb) (const char* directory, const char* filename, char delim, int mincols, int maxcols, int maxrows, bool (*parseproc)(char* fields[], int columns, int current));
 };
 
-struct sv_interface *sv;
-
 #ifdef HERCULES_CORE
 void strlib_defaults(void);
 #endif // HERCULES_CORE
 
-/* the purpose of these macros is simply to not make calling them be an annoyance */
-#ifndef H_STRLIB_C
-	#define jstrescape(pt)             (strlib->jstrescape(pt))
-	#define jstrescapecpy(pt,spt)      (strlib->jstrescapecpy((pt),(spt)))
-	#define jmemescapecpy(pt,spt,size) (strlib->jmemescapecpy((pt),(spt),(size)))
-	#define remove_control_chars(str)  (strlib->remove_control_chars(str))
-	#define trim(str)                  (strlib->trim(str))
-	#define normalize_name(str,delims) (strlib->normalize_name((str),(delims)))
-	#define stristr(haystack,needle)   (strlib->stristr((haystack),(needle)))
-
-	#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
-		#define strnlen(string,maxlen) (strlib->strnlen((string),(maxlen)))
-	#endif
-
-	#if defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200
-		#define strtoull(str,endptr,base) (strlib->strtoull((str),(endptr),(base)))
-	#endif
-
-	#define e_mail_check(email)          (strlib->e_mail_check(email))
-	#define config_switch(str)           (strlib->config_switch(str))
-	#define safestrncpy(dst,src,n)       (strlib->safestrncpy((dst),(src),(n)))
-	#define safestrnlen(string,maxlen)   (strlib->safestrnlen((string),(maxlen)))
-	#define safesnprintf(buf,sz,fmt,...) (strlib->safesnprintf((buf),(sz),(fmt),##__VA_ARGS__))
-	#define strline(str,pos)             (strlib->strline((str),(pos)))
-	#define bin2hex(output,input,count)  (strlib->bin2hex((output),(input),(count)))
-#endif /* H_STRLIB_C */
+HPShared struct strlib_interface *strlib;
+HPShared struct stringbuf_interface *StrBuf;
+HPShared struct sv_interface *sv;
 
 #endif /* COMMON_STRLIB_H */

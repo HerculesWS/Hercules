@@ -1,6 +1,24 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /*****************************************************************************\
  *  <H1>Entry Reusage System</H1>                                            *
  *                                                                           *
@@ -44,13 +62,13 @@
 
 #include "ers.h"
 
+#include "common/cbasetypes.h"
+#include "common/memmgr.h" // CREATE, RECREATE, aMalloc, aFree
+#include "common/nullpo.h"
+#include "common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h" // CREATE, RECREATE, aMalloc, aFree
-#include "../common/nullpo.h"
-#include "../common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 
 #ifndef DISABLE_ERS
 
@@ -131,7 +149,8 @@ static struct ers_instance_t *InstanceList = NULL;
 /**
  * @param Options the options from the instance seeking a cache, we use it to give it a cache with matching configuration
  **/
-static ers_cache_t *ers_find_cache(unsigned int size, enum ERSOptions Options) {
+static ers_cache_t *ers_find_cache(unsigned int size, enum ERSOptions Options)
+{
 	ers_cache_t *cache;
 
 	for (cache = CacheList; cache; cache = cache->Next)
@@ -169,6 +188,7 @@ static void ers_free_cache(ers_cache_t *cache, bool remove)
 {
 	unsigned int i;
 
+	nullpo_retv(cache);
 	for (i = 0; i < cache->Used; i++)
 		aFree(cache->Blocks[i]);
 
@@ -270,7 +290,7 @@ static void ers_obj_destroy(ERS *self)
 
 	if (instance->Count > 0)
 		if (!(instance->Options & ERS_OPT_CLEAR))
-			ShowWarning("Memory leak detected at ERS '%s', %d objects not freed.\n", instance->Name, instance->Count);
+			ShowWarning("Memory leak detected at ERS '%s', %u objects not freed.\n", instance->Name, instance->Count);
 
 	if (--instance->Cache->ReferenceCount <= 0)
 		ers_free_cache(instance->Cache, true);
@@ -289,22 +309,24 @@ static void ers_obj_destroy(ERS *self)
 	aFree(instance);
 }
 
-void ers_cache_size(ERS *self, unsigned int new_size) {
+static void ers_cache_size(ERS *self, unsigned int new_size)
+{
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
 	nullpo_retv(instance);
 
 	if( !(instance->Cache->Options&ERS_OPT_FLEX_CHUNK) ) {
-		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%d', however ERS_OPT_FLEX_CHUNK is missing!\n",instance->Name,new_size);
+		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%u', however ERS_OPT_FLEX_CHUNK is missing!\n", instance->Name, new_size);
 	}
 
 	instance->Cache->ChunkSize = new_size;
 }
 
-
 ERS *ers_new(uint32 size, char *name, enum ERSOptions options)
 {
 	struct ers_instance_t *instance;
+
+	nullpo_retr(NULL, name);
 	CREATE(instance,struct ers_instance_t, 1);
 
 	size += sizeof(struct ers_list);
@@ -341,7 +363,8 @@ ERS *ers_new(uint32 size, char *name, enum ERSOptions options)
 	return &instance->VTable;
 }
 
-void ers_report(void) {
+void ers_report(void)
+{
 	ers_cache_t *cache;
 	unsigned int cache_c = 0, blocks_u = 0, blocks_a = 0, memory_b = 0, memory_t = 0;
 #ifdef DEBUG
@@ -364,7 +387,7 @@ void ers_report(void) {
 	for (cache = CacheList; cache; cache = cache->Next) {
 		cache_c++;
 		ShowMessage(CL_BOLD"[ERS Cache of size '"CL_NORMAL""CL_WHITE"%u"CL_NORMAL""CL_BOLD"' report]\n"CL_NORMAL, cache->ObjectSize);
-		ShowMessage("\tinstances          : %u\n", cache->ReferenceCount);
+		ShowMessage("\tinstances          : %d\n", cache->ReferenceCount);
 		ShowMessage("\tblocks in use      : %u/%u\n", cache->UsedObjs, cache->UsedObjs+cache->Free);
 		ShowMessage("\tblocks unused      : %u\n", cache->Free);
 		ShowMessage("\tmemory in use      : %.2f MB\n", cache->UsedObjs == 0 ? 0. : (double)((cache->UsedObjs * cache->ObjectSize)/1024)/1024);
@@ -385,7 +408,8 @@ void ers_report(void) {
 /**
  * Call on shutdown to clear remaining entries
  **/
-void ers_final(void) {
+void ers_final(void)
+{
 	struct ers_instance_t *instance = InstanceList, *next;
 
 	while( instance ) {

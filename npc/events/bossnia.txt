@@ -1,19 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Bossnia Warp NPCs
-//===== By: ==================================================
-//= Masao
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Bossnia MVP event.
-//===== Additional Comments: =================================
-//= 1.0 Converted from the official script.
-//= 1.1 Optimized. [Euphy]
-//= 1.2 Moved spawns and warps (by Masao) to this file. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Entrance NPCs
-//============================================================
+//== Entrance NPCs =========================================
 prontera,132,125,4	script	Bossnia Staff#1	4_M_PHILMAN,{
 	mes "[Riss]";
 	mes "Hello?";
@@ -87,19 +107,15 @@ morocc,142,100,4	duplicate(Bossnia Staff#1)	Bossnia Staff#4	4_M_PHILMAN
 lighthalzen,203,140,4	duplicate(Bossnia Staff#1)	Bossnia Staff#5	4_M_PHILMAN
 rachel,132,144,4	duplicate(Bossnia Staff#1)	Bossnia Staff#6	4_M_PHILMAN
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 bossnia_01,204,204,0	warp	bossnia01	1,1,prontera,155,180
 bossnia_02,204,204,0	warp	bossnia02	1,1,prontera,155,180
 bossnia_03,204,204,0	warp	bossnia03	1,1,prontera,155,180
 bossnia_04,204,204,0	warp	bossnia04	1,1,prontera,155,180
 
-// Monster Spawns
-//============================================================
+//== Monster Spawns ========================================
 
-//----------------------------------------------------------------------------
-// bossnia_01 - Bossnia
-//----------------------------------------------------------------------------
+//- bossnia_01 - Bossnia -
 bossnia_01,0,0,0,0	monster	Garm	1252,5,7200000,0,1
 bossnia_01,0,0,0,0	monster	Gloom Under Night	1768,2,7200000,0,1
 bossnia_01,0,0,0,0	monster	Dark Lord	1272,3,7200000,0,1
@@ -141,9 +157,7 @@ bossnia_01,142,61,1,1	monster	Beelzebub	1873,1,0,0,1
 bossnia_01,34,34,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
 bossnia_01,45,118,1,1	monster	Ifrit	1832,1,0,0,1
 
-//----------------------------------------------------------------------------
-// bossnia_02 - Bossnia
-//----------------------------------------------------------------------------
+//- bossnia_02 - Bossnia -
 bossnia_02,0,0,0,0	monster	Garm	1252,5,7200000,0,1
 bossnia_02,0,0,0,0	monster	Gloom Under Night	1768,2,7200000,0,1
 bossnia_02,0,0,0,0	monster	Dark Lord	1272,3,7200000,0,1
@@ -185,9 +199,7 @@ bossnia_02,142,61,1,1	monster	Beelzebub	1873,1,0,0,1
 bossnia_02,34,34,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
 bossnia_02,45,118,1,1	monster	Ifrit	1832,1,0,0,1
 
-//----------------------------------------------------------------------------
-// bossnia_03 - Bossnia
-//----------------------------------------------------------------------------
+//- bossnia_03 - Bossnia -
 bossnia_03,0,0,0,0	monster	Garm	1252,5,7200000,0,1
 bossnia_03,0,0,0,0	monster	Gloom Under Night	1768,2,7200000,0,1
 bossnia_03,0,0,0,0	monster	Dark Lord	1272,3,7200000,0,1
@@ -229,9 +241,7 @@ bossnia_03,142,61,1,1	monster	Beelzebub	1873,1,0,0,1
 bossnia_03,34,34,1,1	monster	Valkyrie Randgris	1751,1,0,0,1
 bossnia_03,45,118,1,1	monster	Ifrit	1832,1,0,0,1
 
-//----------------------------------------------------------------------------
-// bossnia_04 - Bossnia
-//----------------------------------------------------------------------------
+//- bossnia_04 - Bossnia -
 bossnia_04,0,0,0,0	monster	Garm	1252,5,7200000,0,1
 bossnia_04,0,0,0,0	monster	Gloom Under Night	1768,2,7200000,0,1
 bossnia_04,0,0,0,0	monster	Dark Lord	1272,3,7200000,0,1

@@ -1,22 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Lupus
+//= Copyright (C) Jukka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Merchant Class Tutorial and Job Specific Quest
-//===== By: ==================================================
-//= Fix up by Jukka
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Merchant training quest.
-//===== Additional Comments: =================================
-//= 1.0 Fully working
-//= 1.1 Fixed bugs, optimized [Lupus]
-//= 1.2 fixed Weight check
-//= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Guarnien
-//============================================================
+//== Guarnien ==============================================
 alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 	mes "[Guarnien]";
 	if(Class != Job_Merchant && Class != Job_Baby_Merchant){
@@ -142,8 +161,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "For your final assignment, I will ask you to learn the Vending skill up to Skill Level 4. Of course, once you do, I'll give you a little reward. I'll be waiting, so do your best~";
 			tu_merchant = 16;
-			erasequest 8239;
-			setquest 8240;
+			changequest 8239, 8240;
 			close;
 		}
 
@@ -176,8 +194,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "You deserve a little";
 			mes "reward for your effort~";
 			tu_merchant = 15;
-			erasequest 8238;
-			setquest 8239;
+			changequest 8238, 8239;
 			getexp 162,52;
 			next;
 			mes "[Guarnien]";
@@ -188,8 +205,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Excellent!";
 			mes "You've actually went above and beyond mastered the Push Cart skill. Great work!";
 			tu_merchant = 15;
-			erasequest 8238;
-			setquest 8239;
+			changequest 8238, 8239;
 			getexp 186,60;
 			next;
 			mes "[Guarnien]";
@@ -230,8 +246,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "speed, it shouldn't be a big deal.";
 			mes "Well done~";
 			tu_merchant = 15;
-			erasequest 8237;
-			setquest 8238;
+			changequest 8237, 8239;
 			getexp 162,52;
 			next;
 			mes "[Guarnien]";
@@ -243,8 +258,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "mastered the Push Cart skill.";
 			mes "You truly deserve a little bit of a reward~";
 			tu_merchant = 15;
-			erasequest 8237;
-			setquest 8238;
+			changequest 8237, 8239;
 			getexp 186,60;
 			next;
 			mes "[Guarnien]";
@@ -258,6 +272,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "you do that, I can go on to";
 			mes "my next lecture.";
 			tu_merchant = 14;
+			changequest 8237, 8238;
 			close;
 		}
 	case 12:
@@ -275,8 +290,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "as I asked. Please,";
 			mes "take this little reward~";
 			tu_merchant = 13;
-			erasequest 8236;
-			setquest 8237;
+			changequest 8236, 8237;
 			getexp 126,27;
 			next;
 			mes "[Guarnien]";
@@ -289,8 +303,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "mastered Over Charge?";
 			mes "Most impressive! You deserve a small reward for your work!";
 			tu_merchant = 13;
-			erasequest 8236;
-			setquest 8237;
+			changequest 8236, 8237;
 			getexp 142,33;
 			next;
 			mes "[Guarnien]";
@@ -322,8 +335,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Ah, you've already learned Level 4 Over Charge. Perfect! Let me give you a little reward~";
 			tu_merchant = 13;
-			erasequest 8235;
-			setquest 8236;
+			changequest 8235, 8237;
 			getexp 126,27;
 			next;
 			mes "[Guarnien]";
@@ -334,8 +346,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Amazing! You've already mastered the Over Charge skill! You must have wanted this reward badly~";
 			tu_merchant = 13;
-			erasequest 8235;
-			setquest 8236;
+			changequest 8235, 8237;
 			getexp 142,33;
 			next;
 			mes "[Guarnien]";
@@ -346,8 +357,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Personally, I think you should learn this skill for sure! For your next assignment, learn Over Charge up to Level 4. It shouldn't be too difficult to do.";
 			tu_merchant = 12;
-			erasequest 8235;
-			setquest 8236;
+			changequest 8235, 8236;
 			next;
 			mes "[Guarnien]";
 			mes "Once you do that,";
@@ -418,6 +428,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		mes "some reason --to send you there right now. Get ready...!";
 		next;
 		tu_merchant = rand(6,8);
+		changequest 8233, 8234;
 		warp "prontera",155,46;
 		end;
 	case 4:
@@ -430,8 +441,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "how to use the Discount skill";
 			mes "well enough. Good, here's a little reward for your hard work~";
 			tu_merchant = 5;
-			erasequest 8232;
-			setquest 8233;
+			changequest 8232, 8233;
 			getexp 83,11;
 			next;
 			mes "[Guarnien]";
@@ -441,8 +451,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Incredible!";
 			mes "You've actually mastered the Discount skill! You're such a great student. You deserve a bit of a reward!";
 			tu_merchant = 5;
-			erasequest 8232;
-			setquest 8233;
+			changequest 8232, 8233;
 			getexp 97,18;
 			next;
 			mes "[Guarnien]";
@@ -476,8 +485,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Here, take this";
 			mes "small reward~";
 			tu_merchant = 5;
-			erasequest 8231;
-			setquest 8232;
+			changequest 8231, 8233;
 			getexp 83,11;
 			next;
 			mes "[Guarnien]";
@@ -488,8 +496,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "Incredible!";
 			mes "You've actually mastered the Discount skill! You're such a great student. You deserve a bit of a reward!";
 			tu_merchant = 5;
-			erasequest 8231;
-			setquest 8232;
+			changequest 8231, 8233;
 			getexp 97,18;
 			next;
 			mes "[Guarnien]";
@@ -506,8 +513,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Still, you can't ignore the fact that bargaining is an essential skill for a Merchant! Come back to me when you're ready~";
 			tu_merchant = 4;
-			erasequest 8231;
-			setquest 8232;
+			changequest 8231, 8232;
 			close;
 		}
 	case 2:
@@ -530,8 +536,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "[Guarnien]";
 			mes "Well, since you're still green, I feel awfully sorry if you've wasted Zeny. Why don't you take this as compensation?";
 			tu_merchant = 3;
-			erasequest 8230;
-			setquest 8231;
+			changequest 8230, 8231;
 			getexp 70,12;
 			next;
 			mes "[Guarnien]";
@@ -540,8 +545,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		} else {
 			mes "Okay. Now I think we're ready for me to discuss the ^871F78Discount^000000 skill. Come back when you'd like me to tell you more about it, okay?";
 			tu_merchant = 3;
-			erasequest 8230;
-			setquest 8231;
+			changequest 8230,8231;
 			close;
 		}
 	case 1:
@@ -553,7 +557,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		next;
 		mes "[Guarnien]";
 		.@chk_soji = getskilllv(MC_INCCARRY);
-		if(.@chk_soji > 3 && .@chk_soji < 10){
+		if(.@chk_soji > 3 && .@chk_soji <= 10){
 			mes "Ah. I can tell that you have. Not bad! By now you should be able to learn the ^871F78Discount^000000 skill, but I'll teach you about that later.";
 			next;
 			mes "[Guarnien]";
@@ -569,10 +573,9 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 				mes "[Guarnien]";
 				mes "I see in your eyes that you've already learned to appraise items. Haha, although having that knowledge is reward in itself, let me give you something extra!";
 				tu_merchant = 2;
-				erasequest 8229;
-				setquest 8230;
+				changequest 8229, 8230;
 				getexp 58,11;
-				getitem 1351,1; //Battle_Axe
+				getitem Battle_Axe,1;
 				next;
 				mes "[Guarnien]";
 				mes "Alright, next time";
@@ -588,23 +591,21 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		mes "Alright, next time";
 		mes "I'll talk about the Mammonite skill. For now, let me take a little bit of a break from all of this arduous lecture. ^666666*Whew!*^000000";
 		tu_merchant = 2;
-		erasequest 8229;
-		setquest 8230;
+		changequest 8229, 8230;
 		close;
 	}
 
 	mes "You've just started out as a Merchant, haven't you? How would you like to learn the fundamentals of business from an experienced colleague?";
 	next;
-	if(select("Sure!:I'll make it on my own!")==1){
+	if(select("Sure!", "I'll make it on my own!")==1){
 		tu_merchant = 1;
 		if(getskilllv(MC_INCCARRY) < 4){
 			setquest 8229;
 			mes "[Guarnien]";
-			if(Sex == 1){
+			if (Sex == SEX_MALE)
 				mes "Atta boy~!";
-			} else {
+			else
 				mes "Atta girl~!";
-			}
 			mes "But first things first!";
 			mes "You better learn the";
 			mes "^871F78Increase Weight Limit^000000 skill!";
@@ -638,10 +639,9 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			if(getskilllv(MC_IDENTIFY)){
 				mes "I see in your eyes that you've already learned to appraise items. Haha, although having that knowledge is reward in itself, let me give you something extra!";
 				tu_merchant = 2;
-				erasequest 8229;
 				setquest 8230;
 				getexp 58,11;
-				getitem 1351,1; //Battle_Axe
+				getitem Battle_Axe,1;
 				next;
 				mes "[Guarnien]";
 				mes "Alright, next time";
@@ -658,7 +658,6 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 			mes "skill later. I always manage";
 			mes "to forget about that!";
 			tu_merchant = 2;
-			erasequest 8229;
 			setquest 8230;
 			close;
 		}
@@ -674,8 +673,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 	}
 }
 
-// Sagle
-//============================================================
+//== Sagle =================================================
 prontera,66,111,3	script	Sagle	4_KID01,{
 	mes "[Sagle]";
 	if(tu_merchant == 8){
@@ -687,7 +685,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 		mes "[Sagle]";
 		mes "I will sell you 10 Red Potions for ^871F78420 zeny^000000. You'd better get them now while they're still here!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Sagle]";
 			mes "Excellent!";
@@ -712,7 +710,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 			} else {
 				Zeny -= 420;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -734,7 +732,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 		mes "[Sagle]";
 		mes "I will sell you 10 Red Potions for ^871F78410 zeny^000000. You'd better get them now while they're still here!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Sagle]";
 			mes "Excellent!";
@@ -760,7 +758,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 			} else {
 				Zeny -= 410;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -782,7 +780,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 		mes "[Sagle]";
 		mes "I will sell you 10 Red Potions for ^871F78390 zeny^000000. You'd better get them now while they're still here!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Sagle]";
 			mes "Excellent!";
@@ -807,7 +805,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 			} else {
 				Zeny -= 390;
 				tu_merchant = 9;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -833,8 +831,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 	close;
 }
 
-// Kellion
-//============================================================
+//== Kellion ===============================================
 prontera,93,330,3	script	Kellion	4W_M_01,{
 	mes "[Kellion]";
 	if(tu_merchant == 8){
@@ -842,7 +839,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 		mes "10 Red Potions for 340 Zeny.";
 		mes "Would you like some?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Kellion]";
 			mes "Good choice~";
@@ -864,7 +861,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 			} else {
 				Zeny -= 340;
 				tu_merchant = 10;
-				getitem 569,10; //Novice_Potion
+				getitem Novice_Potion,10;
 				close;
 			}
 		case 2:
@@ -881,7 +878,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 		mes "10 Red Potions for 390 Zeny.";
 		mes "Would you like some?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Kellion]";
 			mes "Good choice~";
@@ -903,7 +900,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 			} else {
 				Zeny -= 390;
 				tu_merchant = 9;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -920,7 +917,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 		mes "10 Red Potions for 400 Zeny.";
 		mes "Would you like some?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Kellion]";
 			mes "Good choice~";
@@ -942,7 +939,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 			} else {
 				Zeny -= 400;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -967,8 +964,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 	close;
 }
 
-// Aigie
-//============================================================
+//== Aigie =================================================
 prt_in,169,11,3	script	Aigie	4_F_03,{
 	if(tu_merchant == 8){
 		mes "[Aigie]";
@@ -980,7 +976,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 		mes "to buy 10 Red Potions";
 		mes "for 390 Zeny, kind adventurer?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Aigie]";
 			mes "Thank you so much.";
@@ -1002,7 +998,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 			} else {
 				Zeny -= 390;
 				tu_merchant = 9;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1025,7 +1021,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 		mes "to buy 10 Red Potions";
 		mes "for 420 Zeny, kind adventurer?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Aigie]";
 			mes "Thank you so much.";
@@ -1047,7 +1043,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 			} else {
 				Zeny -= 420;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1070,7 +1066,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 		mes "to buy 10 Red Potions";
 		mes "for 340 Zeny, kind adventurer?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Aigie]";
 			mes "Thank you so much.";
@@ -1092,7 +1088,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 			} else {
 				Zeny -= 340;
 				tu_merchant = 10;
-				getitem 569,10; //Novice_Potion
+				getitem Novice_Potion,10;
 				close;
 			}
 		case 2:
@@ -1113,14 +1109,13 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 	close;
 }
 
-// Jayon
-//============================================================
+//== Jayon =================================================
 prontera,247,129,3	script	Jayon	4_M_03,{
 	if(tu_merchant == 8){
 		mes "[Jayon]";
 		mes "If you've checked out the market for Red Potions, you know that my price is the best. I'm offering 10 Red Potions for only 410 Zeny!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Jayon]";
 			mes "Heh heh...!";
@@ -1147,7 +1142,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 			} else {
 				Zeny -= 410;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1166,7 +1161,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 		mes "[Jayon]";
 		mes "If you've checked out the market for Red Potions, you know that my price is the best. I'm offering 10 Red Potions for only 400 Zeny!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Jayon]";
 			mes "Heh heh...!";
@@ -1193,7 +1188,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 			} else {
 				Zeny -= 400;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1213,7 +1208,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 		mes "[Jayon]";
 		mes "If you've checked out the market for Red Potions, you know that my price is the best. I'm offering 10 Red Potions for only 410 Zeny!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Jayon]";
 			mes "Heh heh...!";
@@ -1240,7 +1235,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 			} else {
 				Zeny -= 410;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1265,8 +1260,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 	close;
 }
 
-// Maos
-//============================================================
+//== Maos ==================================================
 prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 	if(tu_merchant == 8){
 		mes "[Maos]";
@@ -1276,7 +1270,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 		mes "I'll sell them to you";
 		mes "for the low price of 420 Zeny~";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Maos]";
 			mes "Excellent choice!";
@@ -1295,7 +1289,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 			} else {
 				Zeny -= 420;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1312,7 +1306,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 		mes "I'll sell them to you";
 		mes "for the low price of 340 Zeny~";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Maos]";
 			mes "Excellent choice!";
@@ -1330,7 +1324,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 			} else {
 				Zeny -= 340;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1347,7 +1341,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 		mes "I'll sell them to you";
 		mes "for the low price of 400 Zeny~";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Maos]";
 			mes "Excellent choice!";
@@ -1365,7 +1359,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 			} else {
 				Zeny -= 400;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:

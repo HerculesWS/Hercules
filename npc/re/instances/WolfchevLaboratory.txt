@@ -1,31 +1,47 @@
-//===== Hercules Script ========================================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2014-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Wolfchev's Laboratory
-//===== By: ====================================================================
-//= Kisuka (1.0)
-//===== Current Version: =======================================================
-//= 1.0.2
-//===== File Encoding ==========================================================
-//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: ===========================================================
+//================= Description ===========================================
 //= Defeat Wolfchev's human experimentations.
-//===== Additional Comments: ===================================================
-//= 1.0.0 Initial Release. [Kisuka]
-//= 1.0.1 Some Clean-Up and Fixes. [Euphy]
-//= 1.0.2 Fixed a small typo. [Euphy]
-//==============================================================================
+//================= Current Version =======================================
+//= 1.0.2
+//=========================================================================
 
-1@lhz	mapflag	src4instance
-
-// Giacomo Girolam
-//==============================================================================
+//== Giacomo Girolam =======================================
 lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
 	if (lhz_boss > 30) {
 		if (!lght_duk01) {
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				emotion e_pif, "Giacomo Girolamo#kiup2";
 				mes "[Giacomo Girolamo]";
 				mes "....a guy....?";
@@ -168,7 +184,7 @@ lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
 			close;
 		} else {
 			mes "[Giacomo Girolamo]";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				emotion e_paper, "Giacomo Girolamo#kiup2";
 				mes "Take care yourself and don't disappear!";
 			} else {
@@ -178,7 +194,7 @@ lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
 			close;
 		}
 	} else {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			emotion e_ho, "Giacomo Girolamo#kiup2";
 			mes "[Giacomo Girolamo]";
 			mes "Only those beautiful ladies are the reason of my life~!";
@@ -290,14 +306,13 @@ lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
 
 	OnTouch:
 		if (!lght_duk01)
-			emotion (Sex ? e_pif : e_lv2), "Giacomo Girolamo#kiup2";
+			emotion (Sex == SEX_MALE? e_pif : e_lv2), "Giacomo Girolamo#kiup2";
 		end;
 }
 
-// Weird Old Man (Rewards)
-//==============================================================================
+//== Weird Old Man (Rewards) ===============================
 lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
-	if ((MaxWeight - Weight) < 2800 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 2800 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -530,7 +545,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 				} else {
 						.@weapon$[.@i] = "^FF0000";
 				}
-		  	}
+			}
 			while(1) {
 				switch(select(
 					"Show me other items.",
@@ -569,8 +584,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 4:
 					mes "<<Ygnus Stale[1]>>";
-					// FIXME[Haru]: Anyone knows what ¹ßÈ­ means?
-					mes "When doing short distance attack, cast ¹ßÈ­ to the player and to the enemy with a certain chance.";
+					mes "When doing short distance attack, Chance of inflicting o rreceiving Burn status when dealing physical damage.";
 					mes "Two-Handed Axe / ATK 250 / Weight 190 / Fire Property / Weapon Lv 4 / Required Lv 95 / Socket 1 / for High Swordman/Merchant Classes";
 					callsub L_Reward, Ygnus_Stale, 50, 100, 35;
 					break;
@@ -670,10 +684,9 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 		return;
 }
 
-// Sorcerer (Rewards)
-//==============================================================================
+//== Sorcerer (Rewards) ====================================
 lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
-	if ((MaxWeight - Weight) < 1200 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1200 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -837,7 +850,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	mes "[Pudding]";
 	mes "OKAY! In which equipment you want to dwell the power?";
 	next;
-	setarray .@parts[0], EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_LOW;
+	setarray .@parts[0], EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_TOP;
 	for(.@i = 0; .@i < 7; .@i++) {
 		if(!getequipisequiped(.@parts[.@i])) {
 			switch(.@i) {
@@ -936,14 +949,14 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		.@position = EQI_ACC_R;
 		break;
 	case 8:
-		if(!getequipisequiped(EQI_HEAD_LOW)) {
+		if(!getequipisequiped(EQI_HEAD_TOP)) {
 		  mes "[Pudding]";
 		  mes "Hey.. Are you not wearing any Helm?";
 		  close2;
 		  enable_items;
 		  end;
 		}
-		.@position = EQI_HEAD_LOW;
+		.@position = EQI_HEAD_TOP;
 		break;
 	}
 	.@refine_count = getequiprefinerycnt(.@position);
@@ -969,9 +982,9 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		mes "[Pudding]";
 		mes "Before! I need to check if this equipment can accept the power.";
 		next;
-		specialeffect2 EF_SPHERE;
+		specialeffect(EF_SPHERE, AREA, playerattached());
 		progressbar "ffff00", 2;
-		specialeffect2 EF_SUI_EXPLOSION;
+		specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 		emotion e_sob;
 		mes "[Pudding]";
 		mes "Hm.... This equipment cannot accept the power of '^F2766EWill of Warrior^000000' or '^952420Thirst for Blood^000000'.";
@@ -1095,9 +1108,9 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 					if (.@menu==2){ .@equip_card[3] = 0; }
 					else { .@equip_card[2] = 0; }
 					.@equip_item = getequipid(.@position);
-					specialeffect EF_BEGINSPELL2, AREA, "Sorcerer#Bio4Reward";
+					specialeffect(EF_BEGINSPELL2, AREA, getnpcid("Sorcerer#Bio4Reward"));
 					progressbar "ffff00", 2;
-					specialeffect2 EF_FROSTWEAPON;
+					specialeffect(EF_FROSTWEAPON, AREA, playerattached());
 					delitem Goast_Chill, 10;
 					delequip .@position;
 					getitem2 .@equip_item, 1, 1, .@refine_count, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3];
@@ -1290,7 +1303,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 		setarray .@equip_card[0], getequipcardid(.@position,0),getequipcardid(.@position,1),getequipcardid(.@position,2),getequipcardid(.@position,3);
 		.@equip_card[(.@socket_type-1)] = .@enchant;
 		.@equip_item = getequipid(.@position);
-		specialeffect EF_BEGINSPELL3, AREA, "Sorcerer#Bio4Reward";
+		specialeffect(EF_BEGINSPELL3, AREA, getnpcid("Sorcerer#Bio4Reward"));
 		progressbar "ffff00", 2;
 		if (.@socket_type == 3)
 			delitem Blood_Thirst, 10;
@@ -1298,7 +1311,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			delitem Will_Of_Warrior, 10;
 		delequip .@position;
 		if (.@enchant == 0) {
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			emotion e_otl;
 			mes "[Pudding]";
 			mes "...Well....the equipment could not accept the power of "+((.@socket_type==3)?"'^952420Thirst for Blood^000000'":"'^F2766EWill of Warrior^000000'")+" and it got destroyed.";
@@ -1306,7 +1319,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 			enable_items;
 			end;
 		} else {
-			specialeffect2 EF_FIREHIT;
+			specialeffect(EF_FIREHIT, AREA, playerattached());
 			getitem2 .@equip_item, 1, 1, .@refine_count, 0, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3];
 			emotion e_ho;
 			mes "[Pudding]";
@@ -1320,8 +1333,7 @@ lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
 	end;
 }
 
-// Warp portal to the 4th Fl.
-//==============================================================================
+//== Warp portal to the 4th Floor ==========================
 lhz_dun03,239,78,1	script	lhz_dun03_lhz_dun04	WARPNPC,1,1,{
 	end;
 
@@ -1347,13 +1359,11 @@ lhz_dun03,239,78,1	script	lhz_dun03_lhz_dun04	WARPNPC,1,1,{
 		end;
 }
 
-// Warp Portal to the 3rd Fl.
-//==============================================================================
+//== Warp Portal to the 3rd Floor ==========================
 lhz_dun04,244,61,1	warp	lhz_dun04_lhz_dun03	1,1,lhz_dun03,240,75
 
-// Inside the Lab
-//==============================================================================
-que_lhz,242,50,0	script	#01Startpoint	-1,3,3,{
+//== Inside the Lab ========================================
+que_lhz,242,50,0	script	#01Startpoint	FAKE_NPC,3,3,{
 	end;
 
 	OnInit:
@@ -1394,8 +1404,7 @@ que_lhz,242,50,0	script	#01Startpoint	-1,3,3,{
 		end;
 }
 
-// Wolfchev
-//==============================================================================
+//== Wolfchev ==============================================
 que_lhz,206,74,4	script	Researcher#02	4_LGTSCIENCE,3,3,{
 	end;
 
@@ -1438,10 +1447,9 @@ que_lhz,206,74,4	script	Researcher#02	4_LGTSCIENCE,3,3,{
 		end;
 }
 
-// Wolfchev
-//==============================================================================
+//== Wolfchev ==============================================
 que_lhz,94,119,4	script	Researcher#03	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -1480,10 +1488,9 @@ que_lhz,94,119,4	script	Researcher#03	4_LGTSCIENCE,{
 	end;
 }
 
-// Wolfchev
-//==============================================================================
+//== Wolfchev ==============================================
 que_lhz,147,224,4	script	Researcher#04	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -1565,9 +1572,8 @@ que_lhz,147,224,4	script	Researcher#04	4_LGTSCIENCE,{
 	end;
 }
 
-// Warp to lhz_dun04 from Wolfchev's Lab
-//==============================================================================
-que_lhz,148,251,0	script	#Move2lab	-1,12,0,{
+//== Warp to lhz_dun04 from Wolfchev's Lab =================
+que_lhz,148,251,0	script	#Move2lab	FAKE_NPC,12,0,{
 	end;
 
 	OnTouch:
@@ -1582,9 +1588,8 @@ que_lhz,148,251,0	script	#Move2lab	-1,12,0,{
 		}
 }
 
-// Event Controller
-//==============================================================================
-que_lhz,1,1,0	script	#Eventctrl	-1,{
+//== Event Controller ======================================
+que_lhz,1,1,0	script	#Eventctrl	FAKE_NPC,{
 	end;
 
 	OnEnable:
@@ -1603,42 +1608,42 @@ que_lhz,1,1,0	script	#Eventctrl	-1,{
 		end;
 
 	OnTimer1000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#01";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#01"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#01";
 		end;
 
 	OnTimer2000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#02";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#02"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#02";
 		end;
 
 	OnTimer3000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#03";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#03"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#03";
 		end;
 
 	OnTimer4000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#04";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#04"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#04";
 		end;
 
 	OnTimer5000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#05";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#05"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#05";
 		end;
 
 	OnTimer6000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#06";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#06"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#06";
 		end;
 
 	OnTimer7000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#07";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#07"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#07";
 		end;
 
 	OnTimer8000:
-		specialeffect EF_SUI_EXPLOSION,AREA, "#08";
+		specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid("#08"));
 		specialeffect EF_BEGINASURA, "Human Guinea pig#08";
 		stopnpctimer;
 		end;
@@ -1648,31 +1653,30 @@ que_lhz,1,1,0	script	#Eventctrl	-1,{
 			killmonster "que_lhz", "#Eventctrl::OnMyMobDead";
 }
 
-que_lhz,139,232,0	script	#01	-1,{ end; }
-que_lhz,147,232,0	script	#02	-1,{ end; }
-que_lhz,156,232,0	script	#03	-1,{ end; }
-que_lhz,156,224,0	script	#04	-1,{ end; }
-que_lhz,156,215,0	script	#05	-1,{ end; }
-que_lhz,147,215,0	script	#06	-1,{ end; }
-que_lhz,139,215,0	script	#07	-1,{ end; }
-que_lhz,139,224,0	script	#08	-1,{ end; }
+que_lhz,139,232,0	script	#01	FAKE_NPC,{ end; }
+que_lhz,147,232,0	script	#02	FAKE_NPC,{ end; }
+que_lhz,156,232,0	script	#03	FAKE_NPC,{ end; }
+que_lhz,156,224,0	script	#04	FAKE_NPC,{ end; }
+que_lhz,156,215,0	script	#05	FAKE_NPC,{ end; }
+que_lhz,147,215,0	script	#06	FAKE_NPC,{ end; }
+que_lhz,139,215,0	script	#07	FAKE_NPC,{ end; }
+que_lhz,139,224,0	script	#08	FAKE_NPC,{ end; }
 
-// Human Guinea pigs
-//==============================================================================
+//== Human Guinea pigs =====================================
 que_lhz,140,231,1	script	Human Guinea pig#01	CHEN,{
 	end;
 
 	OnInit:
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		end;
 
 	OnEnable:
-		enablenpc strnpcinfo(0);
+		enablenpc strnpcinfo(NPC_NAME);
 		end;
 
 	OnDisable:
 		specialeffect EF_FLASHER;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		end;
 }
 
@@ -1684,10 +1688,9 @@ que_lhz,147,216,4	duplicate(Human Guinea pig#01)	Human Guinea pig#06	CHEN
 que_lhz,140,216,3	duplicate(Human Guinea pig#01)	Human Guinea pig#07	CHEN
 que_lhz,140,224,2	duplicate(Human Guinea pig#01)	Human Guinea pig#08	CHEN
 
-// Wolfchev
-//==============================================================================
+//== Wolfchev ==============================================
 lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000You cannot continue the process due to possessing too many belongings.^000000";
 		close;
 	}
@@ -1763,7 +1766,7 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 		mes "So, please prepare your party members, and take care of those boss creatures. I'm not sure how long this place can hold.";
 		close;
 	} else if (lght_duk01 > 6) {
-		if (getcharid(1) > 0) {
+		if (getcharid(CHAR_ID_PARTY) > 0) {
 			mes "[Wolfchev]";
 			mes "Are you all set there? I will prepare the entrance if you are the leader of that party.";
 			next;
@@ -1854,32 +1857,31 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 						}
 					}
 				}
-				if (getpartyleader(getcharid(1),2) == getcharid(0)) {
-					.@instance = instance_create("Worsef", getcharid(1));
-					if (.@instance < 0) {
-						mes "[Wolfchev]";
-						mes "Hmm.. Lab entering system is a bit weird. Would wait for me to check the system?";
-					} else {
-						mes "[Wolfchev]";
-						mes "Please hold on..";
-						next;
-						mes "Wolfchev starts to control certain gear.";
-						next;
-						progressbar "FF00FF", 2;
-						if (instance_attachmap("1@lhz", .@instance) != "") {
-							instance_set_timeout 14400, 300, .@instance;
-							instance_init(.@instance);
-							mes "[Wolfchev]";
-							mes "Alright! I have marked lan entering system code as";
-							mes "^0000ff"+ strcharinfo(1) +"^000000 party leader's name ^0000ff"+ strcharinfo(PC_NAME) +"^000000!!.";
-							next;
-							mes "[Wolfchev]";
-							mes "Now, your party is free to pass the entrance.";
-						} else {
+				if (getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR)) {
+					.@instance = instance_create("Worsef", getcharid(CHAR_ID_PARTY));
+					if (.@instance >= 0) {
+						if (instance_attachmap("1@lhz", .@instance) == "") {
+							mes("[Wolfchev]");
+							mes("Hmm.. Lab entering system is a bit weird. Would wait for me to check the system?");
 							instance_destroy(.@instance);
+							close();
 						}
+						instance_set_timeout 14400, 300, .@instance;
+						instance_init(.@instance);
 					}
-					close;
+					mes("[Wolfchev]");
+					mes("Please hold on..");
+					next();
+					mes("Wolfchev starts to control certain gear.");
+					next();
+					progressbar("FF00FF", 2);
+					mes("[Wolfchev]");
+					mes("Alright! I have marked lan entering system code as");
+					mesf("^0000ff%s^000000 party leader's name ^0000ff%s^000000!!.", strcharinfo(PC_PARTY), strcharinfo(PC_NAME));
+					next();
+					mes("[Wolfchev]");
+					mes("Now, your party is free to pass the entrance.");
+					close();
 				} else {
 					mes "[Wolfchev]";
 					mes "You are not the ^0000ffLeader of the party^000000, are you? Please go get the leader.";
@@ -1902,10 +1904,9 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 	}
 }
 
-//
-//==============================================================================
+//==========================================================
 lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000You cannot continue the process due to possessing too many belongings.^000000";
 		close;
 	}
@@ -1930,11 +1931,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			pushpc 0, 10;
 			percentheal -5,0;
 			specialeffect EF_AUTOCOUNTER;
-			specialeffect2 EF_BASH;
+			specialeffect(EF_BASH, AREA, playerattached());
 			mes "You have been wounded by laboratory entrance system attack.";
 			close;
 		} else {
-			mapannounce "lhz_dun04","Laboratory entrance system ["+ strcharinfo(1) +"] member ["+ strcharinfo(PC_NAME) +"] access granted..",bc_map,"0x0DF297";
+			mapannounce "lhz_dun04","Laboratory entrance system ["+ strcharinfo(PC_PARTY) +"] member ["+ strcharinfo(PC_NAME) +"] access granted..",bc_map,"0x0DF297";
 			setquest 5112;
 			warp "1@lhz.gat", 45, 148;
 			close;
@@ -1961,8 +1962,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	}
 }
 
-// The Lab No.1 : System 1_1
-//==============================================================================
+//== The Lab No.1 : System 1_1 =============================
 1@lhz,35,108,4	script	Lab1#1_1	CLEAR_NPC,{
 	end;
 
@@ -1994,25 +1994,24 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.1 Monster Control
-//==============================================================================
+//== The Lab No.1 Monster Control ==========================
 1@lhz,37,108,4	script	MobCtrl1#mob01	CLEAR_NPC,{
 	end;
 
 	OnEnable:
 		.@map$ = instance_mapname("1@lhz");
 		mapannounce .@map$,"[Security System] Security system Activated !! Experimental animals are released. The persons concerned have to evacuate.",bc_map,"0xff9977";
-		areamonster .@map$,35,159,50,169,"Starving Lab animal",MD_DESERT_WOLF,rand(10,15),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+		areamonster .@map$,35,159,50,169,"Starving Lab animal",MD_DESERT_WOLF,rand(10,15),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 		initnpctimer;
 		end;
 
 	OnDisable:
-		killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+		killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 		end;
 
 	OnTimer180000:
 		stopnpctimer;
-		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			donpcevent instance_npcname("Lab1#1_1")+"::OnType_02";
 			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,"0xff9977";
 		} else {
@@ -2021,7 +2020,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnMyMobDead:
-		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			donpcevent instance_npcname("Lab1#1_1")+"::OnType_02";
 			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,"0xff9977";
 			stopnpctimer;
@@ -2029,12 +2028,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// Emergency Access Valve Manual
-//==============================================================================
+//== Emergency Access Valve Manual =========================
 1@lhz,39,168,0	script	Manual Sheet#1_1	CLEAR_NPC,{
 	mes "There are valve manual sheets littered on the floor.";
 	next;
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	if (getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR)) {
 		mes "You the party leader, started to read the manual.";
 		next;
 		mes "[Emergency Access Valve Manual]";
@@ -2107,12 +2105,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// Left Valve
-//==============================================================================
+//== Left Valve ============================================
 1@lhz,41,172,0	script	Valve#1_2	CLEAR_NPC,{
 	.@open_portal = 0;
 	mes "This is the left valve for the emergency access.";
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	if (getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR)) {
 		next;
 		mes "To which direction do you wish to turn?";
 		next;
@@ -2170,12 +2167,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// Right Valve
-//==============================================================================
+//== Right Valve ===========================================
 1@lhz,52,172,0	script	Valve#1_3	CLEAR_NPC,{
 	.@open_portal = 0;
 	mes "This is the left valve for the emergency access.";
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+	if (getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR)) {
 		next;
 		mes "To which direction do you wish to turn?";
 		next;
@@ -2234,8 +2230,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 }
 
 
-// The Lab No.1 >> The Lab No.2 Warp portal
-//==============================================================================
+//== The Lab No.1 >> The Lab No.2 Warp portal ==============
 1@lhz,45,173,0	script	#potal_01	WARPNPC,2,2,{
 	end;
 
@@ -2254,9 +2249,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.2
-//==============================================================================
-1@lhz,151,29,0	script	#2_0	-1,1,1,{
+//== The Lab No.2 ==========================================
+1@lhz,151,29,0	script	#2_0	FAKE_NPC,1,1,{
 	end;
 
 	OnEnable:
@@ -2273,8 +2267,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.2 2_1 System - Control of Monster Wave and Pipe right before exploding
-//==============================================================================
+//== The Lab No.2 2_1 System - Control of Monster Wave and Pipe right before exploding =
 1@lhz,35,106,4	script	Lab2#2_1	CLEAR_NPC,{
 	end;
 
@@ -2382,9 +2375,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.2 2_2 System - Pipe Operation Control
+//== The Lab No.2 2_2 System - Pipe Operation Control ======
 // When 3 pipes explode, system will shut down.
-//==============================================================================
 1@lhz,37,106,4	script	Lab2#2_2	CLEAR_NPC,{
 	end;
 
@@ -2449,7 +2441,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 	OnTimer63000:
 		for(.@i = 1; .@i < 7; .@i++) {
-			specialeffect EF_SUI_EXPLOSION, AREA, instance_npcname("Valve#2_"+.@i+"");
+			specialeffect(EF_SUI_EXPLOSION, AREA, getnpcid( instance_npcname("Valve#2_"+.@i+"")));
 			disablenpc instance_npcname("Valve#2_"+.@i+"");
 		}
 		'broken_pipes += 1;
@@ -2462,9 +2454,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.2 2_3 System
-//==============================================================================
-1@lhz,151,48,0	script	#2_3	-1,20,20,{
+//== The Lab No.2 2_3 System ===============================
+1@lhz,151,48,0	script	#2_3	FAKE_NPC,20,20,{
 	end;
 
 	OnInstanceInit:
@@ -2489,8 +2480,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.2 Monster Control
-//==============================================================================
+//== The Lab No.2 Monster Control ==========================
 1@lhz,39,106,4	script	MobCtrl2#mob02	CLEAR_NPC,{
 	end;
 
@@ -2567,14 +2557,13 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.2 Valves
-//==============================================================================
--	script	bio4FLab2Valve	-1,{
-	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
+//== The Lab No.2 Valves ===================================
+-	script	bio4FLab2Valve	FAKE_NPC,{
+	if (getpartyleader(getcharid(CHAR_ID_PARTY),2) == getcharid(CHAR_ID_CHAR)) {
 		progressbar "0xffff00", 20;
 		stopnpctimer;
 		donpcevent instance_npcname("Lab2#2_2")+"::OnDisableValve1";
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		end;
 	} else {
 		mes "Let your party leader handle the valve.";
@@ -2582,16 +2571,16 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	}
 
 	OnInstanceInit:
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		end;
 
 	OnEnable:
-		enablenpc instance_npcname(strnpcinfo(0));
+		enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		initnpctimer;
 		end;
 
 	OnTimer3000:
-		specialeffect EF_DRAGONSMOKE,AREA,instance_npcname(strnpcinfo(0));
+		specialeffect EF_DRAGONSMOKE,AREA,instance_npcname(strnpcinfo(NPC_NAME));
 		stopnpctimer;
 		initnpctimer;
 		end;
@@ -2604,8 +2593,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 1@lhz,165,51,0	duplicate(bio4FLab2Valve)	Valve#2_5	CLEAR_NPC
 1@lhz,137,47,0	duplicate(bio4FLab2Valve)	Valve#2_6	CLEAR_NPC
 
-// The Lab No.2 >> The Lab No.3 Warp portal(General)
-//==============================================================================
+//== The Lab No.2 >> The Lab No.3 Warp portal(General) =====
 1@lhz,151,64,0	script	#potal_02	WARPNPC,2,2,{
 	end;
 
@@ -2627,9 +2615,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.3
-//==============================================================================
-1@lhz,84,28,0	script	#3_0	-1,1,1,{
+//== The Lab No.3 ==========================================
+1@lhz,84,28,0	script	#3_0	FAKE_NPC,1,1,{
 	end;
 
 	OnEnable:
@@ -2646,8 +2633,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.3 3_1 System - Monster wave control
-//==============================================================================
+//== The Lab No.3 3_1 System - Monster wave control ========
 1@lhz,35,104,4	script	Lab3#3_1	CLEAR_NPC,{
 	end;
 
@@ -2699,8 +2685,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.3 Monster Control
-//==============================================================================
+//== The Lab No.3 Monster Control ==========================
 1@lhz,37,104,4	script	MobCtrl3#mob03	CLEAR_NPC,{
 	end;
 
@@ -2806,10 +2791,9 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.3 >> Boss's Room Warp portal
-//==============================================================================
+//== The Lab No.3 >> Boss's Room Warp portal ===============
 1@lhz,83,62,0	script	#potal_03	WARPNPC,2,2,{
-  end;
+	end;
 
 	OnInstanceInit:
 		disablenpc instance_npcname("#potal_03");
@@ -2829,9 +2813,8 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.4
-//==============================================================================
-1@lhz,137,100,0	script	#4_0	-1,1,1,{
+//== The Lab No.4 ==========================================
+1@lhz,137,100,0	script	#4_0	FAKE_NPC,1,1,{
 	end;
 
 	OnEnable:
@@ -2848,8 +2831,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// The Lab No.4 4_1 System - Summon of Boss Monster
-//==============================================================================
+//== The Lab No.4 4_1 System - Summon of Boss Monster ======
 1@lhz,35,102,4	script	Lab4#4_1	CLEAR_NPC,{
 	end;
 
@@ -2863,73 +2845,73 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 	OnTimer1000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Who are you....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Seyren Windsor#boss01");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Seyren Windsor#boss01")));
 		end;
 
 	OnTimer2000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Cecile Damon#boss02");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Cecile Damon#boss02")));
 		end;
 
 	OnTimer3000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Do not approach more...",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Gertie Wie#boss03");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Gertie Wie#boss03")));
 		end;
 
 	OnTimer4000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Eremes Guile#boss04");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Eremes Guile#boss04")));
 		end;
 
 	OnTimer5000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: This is a very dangerous place..",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Trentini#boss05");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Trentini#boss05")));
 		end;
 
 	OnTimer6000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Chen Liu#boss06");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Chen Liu#boss06")));
 		end;
 
 	OnTimer7000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: You won't go out alive....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Alphochio Basil#boss07");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Alphochio Basil#boss07")));
 		end;
 
 	OnTimer8000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Flamel Emul#boss08");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Flamel Emul#boss08")));
 		end;
 
 	OnTimer9000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: If you don't want to be a part of us....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Randel Lawrence#boss09");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Randel Lawrence#boss09")));
 		end;
 
 	OnTimer10000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Celia Alde#boss10");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Celia Alde#boss10")));
 		end;
 
 	OnTimer11000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Leave now....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Kathryne Keyron#boss11");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Kathryne Keyron#boss11")));
 		end;
 
 	OnTimer12000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Margaretha Sorin#boss12");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Margaretha Sorin#boss12")));
 		end;
 
 	OnTimer13000:
 		mapannounce instance_mapname("1@lhz"),"Whisper: Before this place is thoroughly filled with sorrow and pain....",bc_map,"0x7DCBF0";
-		specialeffect EF_SPHERE,AREA,instance_npcname("Howard Alt-Eisen#boss13");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Howard Alt-Eisen#boss13")));
 		end;
 
 	OnTimer14000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Type_**Gren#boss14");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Type_**Gren#boss14")));
 		end;
 
 	OnTimer15000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Type_**Roke#boss15");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Type_**Roke#boss15")));
 		end;
 
 	OnTimer16000:
-		specialeffect EF_SPHERE,AREA,instance_npcname("Type_**Dree#boss16");
+		specialeffect(EF_SPHERE, AREA, getnpcid(instance_npcname("Type_**Dree#boss16")));
 		end;
 
 	OnTimer17000:
@@ -2939,8 +2921,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// Area No. 4 - Boss Summon Control
-//==============================================================================
+//== Area No. 4 - Boss Summon Control ======================
 1@lhz,37,102,4	script	MobCtrl4#mob04	CLEAR_NPC,{
 	end;
 
@@ -2992,99 +2973,97 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 }
 
-// Random Experiments in Tubes
-//==============================================================================
+//== Random Experiments in Tubes ===========================
 1@lhz,156,148,3	script	Type_**Gren#boss14	4_M_03,{ end; }
 1@lhz,152,152,3	script	Type_**Roke#boss15	4_M_HUMAN_01,{ end; }
 1@lhz,148,156,3	script	Type_**Dree#boss16	4_M_DWARF,{ end; }
 
-// Bosses
-//==============================================================================
--	script	bio4FBoss	-1,{
-  end;
-
-  OnEnable:
-	.@map$ = instance_mapname("1@lhz");
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	specialeffect EF_SUI_EXPLOSION;
-	if(strnpcinfo(0) == "Seyren Windsor#boss01") {
-		monster .@map$,129,154,"Load Knight Seyren",B_SEYREN,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Cecile Damon#boss02") {
-		monster .@map$,125,150,"Sniper Cecile",B_SHECIL,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Gertie Wie#boss03") {
-		monster .@map$,121,146,"Stalker Gertie",B_GERTIE,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Eremes Guile#boss04") {
-		monster .@map$,117,142,"Assassin Cross Eremes",B_EREMES,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Trentini#boss05") {
-		monster .@map$,117,125,"Gypsy Trentini",B_TRENTINI,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Chen Liu#boss06") {
-		monster .@map$,121,121,"Champion Chen",B_CHEN,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Alphochio Basil#boss07") {
-		monster .@map$,125,117,"Crown Alphochio",B_ALPHOCCIO,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Flamel Emul#boss08") {
-		monster .@map$,129,113,"Creator Flamel",B_FLAMEL,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Randel Lawrence#boss09") {
-		monster .@map$,146,113,"Paladin Randel",B_RANDEL,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Celia Alde#boss10") {
-		monster .@map$,150,117,"Professor Celia",B_CELIA,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Kathryne Keyron#boss11") {
-		monster .@map$,154,121,"High Wizard Kathryne",B_KATRINN,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Margaretha Sorin#boss12") {
-		monster .@map$,158,125,"High Priest Margaretha",B_MAGALETA,1,.@label$;
-	}
-	if(strnpcinfo(0) == "Howard Alt-Eisen#boss13") {
-		monster .@map$,158,142,"White Smith Howard",B_HARWORD,1,.@label$;
-	}
-	disablenpc instance_npcname(strnpcinfo(0));
+//== Bosses ================================================
+-	script	bio4FBoss	FAKE_NPC,{
 	end;
 
-  OnDisable:
-	killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	disablenpc instance_npcname(strnpcinfo(0));
+OnEnable:
+	.@map$ = instance_mapname("1@lhz");
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	specialeffect EF_SUI_EXPLOSION;
+	if(strnpcinfo(NPC_NAME) == "Seyren Windsor#boss01") {
+		monster .@map$,129,154,"Load Knight Seyren",B_SEYREN,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Cecile Damon#boss02") {
+		monster .@map$,125,150,"Sniper Cecile",B_SHECIL,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Gertie Wie#boss03") {
+		monster .@map$,121,146,"Stalker Gertie",B_GERTIE,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Eremes Guile#boss04") {
+		monster .@map$,117,142,"Assassin Cross Eremes",B_EREMES,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Trentini#boss05") {
+		monster .@map$,117,125,"Gypsy Trentini",B_TRENTINI,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Chen Liu#boss06") {
+		monster .@map$,121,121,"Champion Chen",B_CHEN,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Alphochio Basil#boss07") {
+		monster .@map$,125,117,"Crown Alphochio",B_ALPHOCCIO,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Flamel Emul#boss08") {
+		monster .@map$,129,113,"Creator Flamel",B_FLAMEL,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Randel Lawrence#boss09") {
+		monster .@map$,146,113,"Paladin Randel",B_RANDEL,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Celia Alde#boss10") {
+		monster .@map$,150,117,"Professor Celia",B_CELIA,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Kathryne Keyron#boss11") {
+		monster .@map$,154,121,"High Wizard Kathryne",B_KATRINN,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Margaretha Sorin#boss12") {
+		monster .@map$,158,125,"High Priest Margaretha",B_MAGALETA,1,.@label$;
+	}
+	if(strnpcinfo(NPC_NAME) == "Howard Alt-Eisen#boss13") {
+		monster .@map$,158,142,"White Smith Howard",B_HARWORD,1,.@label$;
+	}
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	end;
+
+OnDisable:
+	killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 	OnMyMobDead:
-		if (mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+		if (mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			.@map$ = instance_mapname("1@lhz");
-			if(strnpcinfo(0) == "Seyren Windsor#boss01")
+			if(strnpcinfo(NPC_NAME) == "Seyren Windsor#boss01")
 				mapannounce .@map$,"Awww... Where are all my fellows....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Cecile Damon#boss02")
+			else if (strnpcinfo(NPC_NAME) == "Cecile Damon#boss02")
 				mapannounce .@map$,"Any..one, please help.. please.....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Gertie Wie#boss03")
+			else if (strnpcinfo(NPC_NAME) == "Gertie Wie#boss03")
 				mapannounce .@map$,".. did I act too.. rashly...?",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Eremes Guile#boss04")
+			else if (strnpcinfo(NPC_NAME) == "Eremes Guile#boss04")
 				mapannounce .@map$,"Ah..... I am absolutely defeated....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Trentini#boss05")
+			else if (strnpcinfo(NPC_NAME) == "Trentini#boss05")
 				mapannounce .@map$,"ah.. If I.. ever can ... dance and.... sing...happily....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Chen Liu#boss06")
+			else if (strnpcinfo(NPC_NAME) == "Chen Liu#boss06")
 				mapannounce .@map$,"I.... am so .. sorry....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Alphochio Basil#boss07")
+			else if (strnpcinfo(NPC_NAME) == "Alphochio Basil#boss07")
 				mapannounce .@map$,"...the new song......was ....for.....her....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Flamel Emul#boss08")
+			else if (strnpcinfo(NPC_NAME) == "Flamel Emul#boss08")
 				mapannounce .@map$,"Ha...I wanted to show.... the new potion....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Randel Lawrence#boss09")
+			else if (strnpcinfo(NPC_NAME) == "Randel Lawrence#boss09")
 				mapannounce .@map$,"Wooooo.. everyone got defeated.....??",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Celia Alde#boss10")
+			else if (strnpcinfo(NPC_NAME) == "Celia Alde#boss10")
 				mapannounce .@map$,"No..... this experiment is.....dang...",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Kathryne Keyron#boss11")
+			else if (strnpcinfo(NPC_NAME) == "Kathryne Keyron#boss11")
 				mapannounce .@map$,"awww.. is everyone Ok....?",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Margaretha Sorin#boss12")
+			else if (strnpcinfo(NPC_NAME) == "Margaretha Sorin#boss12")
 				mapannounce .@map$,"My good boy.. Don't cry... ah.... our Great Odin.. please save us...",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Howard Alt-Eisen#boss13")
+			else if (strnpcinfo(NPC_NAME) == "Howard Alt-Eisen#boss13")
 				mapannounce .@map$,"oh...no.... can't breath.... and my sister...?? sister!!",bc_map,"0xFD3B02";
 			donpcevent instance_npcname("Wolfchev#last")+"::OnEnable";
-			donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
+			donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 		}
 		end;
 }
@@ -3103,10 +3082,9 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 1@lhz,160,123,1	duplicate(bio4FBoss)	Margaretha Sorin#boss12	B_MAGALETA
 1@lhz,160,144,3	duplicate(bio4FBoss)	Howard Alt-Eisen#boss13	B_HARWORD
 
-// Wolfchev - Final encounter
-//==============================================================================
+//== Wolfchev - Final encounter ============================
 1@lhz,137,156,7	script	Wolfchev#last	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}

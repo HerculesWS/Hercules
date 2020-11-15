@@ -19,7 +19,7 @@
 prt_in,159,172,0	warp	thqwrp	3,3,yuno_in01,123,155
 
 // Main configuration object
--	script	THQS#Configuration	-1,{
+-	script	THQS#Configuration	FAKE_NPC,{
 OnInit:
 	// Axes
 	setarray $THQS_menu_weapons_1[0], Sabbath, Slaughter, Tomahawk, Great_Axe, Guillotine;
@@ -67,11 +67,11 @@ function	script	thqs_trade_token	{
 
 	// 10^0, 10^1, 10^2
 	@type -= 1;
-	@price = pow(10, @type);
+	@price = (10 ** @type);
 
 	// 10^3, 10^4, 10^5
 	@type += 3; // So we can use pow later to determine the qt of Zeny
-	@prize = pow(10, @type);
+	@prize = (10 ** @type);
 
 	if( #Treasure_Token < @price ) {
 		mes "You don't have enough tokens!";
@@ -93,7 +93,7 @@ function	script	thqs_trade_token	{
 // getarg(1) - .@mp$ -> PRICE
 function	script	thqs_menu_buy	{
 	if( getargcount() != 2 ) {
-		debugmes "thqs_menu_buy: Wrong number of arguments!!";
+		consolemes(CONSOLEMES_ERROR, "thqs_menu_buy: Wrong number of arguments!!");
 		close;
 	}
 
@@ -101,7 +101,7 @@ function	script	thqs_menu_buy	{
 	.@mp$ = getarg(1);
 
 	if( getarraysize( getd(.@mw$) ) != getarraysize( getd(.@mp$) ) ) {
-		debugmes "thqs_menu_buy: Missing entries in data!";
+		consolemes(CONSOLEMES_ERROR, "thqs_menu_buy: Missing entries in data!");
 		close;
 	}
 
@@ -154,7 +154,7 @@ function	script	ths_menu_weapons	{
 // Main script
 prt_in,164,174,1	script	Treasure Hunter's Shop	1_M_YOUNGKNIGHT,{
 	mes "[Ash]";
-	mes "Ahh, "+strcharinfo(0)+"! Welcome to the Offical Treasure Hunter's Guild Shop.";
+	mes "Ahh, "+strcharinfo(PC_NAME)+"! Welcome to the Offical Treasure Hunter's Guild Shop.";
 	mes "You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!";
 	next;
 	switch( select("How does this place work?","What do you have in stock?","Nevermind") ) {

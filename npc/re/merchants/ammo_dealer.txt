@@ -1,19 +1,36 @@
-//===== Hercules Script ======================================
-//= Bullet Dealers
-//===== By ===================================================
-//= Euphy
-//===== Version ==============================================
-//= 1.1
-//===== Description ==========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Bullet Dealers (Renewal)
+//================= Description ===========================================
 //= Bullet trader.
-//===== Comments =============================================
-//= 1.0 First version, Renewal duplicates.
-//= 1.1 Added Izlude duplicates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 que_ng,187,156,3	duplicate(bdt)	Bullet Dealer Tony#ng	4_M_04
-izlude,77,104,3	duplicate(bdt)	Bullet Dealer Tony#iz	4_M_04	//Official: (74,106) -> in the water
-izlude_a,77,104,3	duplicate(bdt)	Bullet Dealer Tony#a	4_M_04
-izlude_b,77,104,3	duplicate(bdt)	Bullet Dealer Tony#b	4_M_04
-izlude_c,77,104,3	duplicate(bdt)	Bullet Dealer Tony#c	4_M_04
-izlude_d,77,104,3	duplicate(bdt)	Bullet Dealer Tony#d	4_M_04
+izlude_in,74,106,3	duplicate(bdt)	Bullet Dealer Tony#iz	4_M_04

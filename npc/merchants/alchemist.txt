@@ -1,25 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Lupus
+//= Copyright (C) MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Alchemist Shop
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.8
-//===== Description: =========================================
+//================= Description ===========================================
 //= Merchants for Alchemist Materials and Manuals.
-//===== Additional Comments: =================================
-//= 1.1 fixed Medicine Bowl issue, thanx 2 MasterOfMuppets
-//= 1.2 Reddozen's fixes of typos. added optional Elemental
-//=     Potion Guide. [Lupus]
-//= 1.3 Deleted Elemental Potions Guide due to original quest [Lupus]
-//= 1.4 Alchemists can now purchase 2000 Medicine Bowls at once. [SinSloth]
-//= 1.5 Updated to Aegis 10.3 Standards. [L0ne_W0lf]
-//= 1.6 Corrected canceling purchase. [L0ne_W0lf]
-//= 1.7 Updated to match AEGIS script. [Masao]
-//= 1.8 Moved Craft Book Merchant to Renewal path. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
 alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -32,35 +53,38 @@ alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 	mes "Alchemist Union.";
 	mes "How can I assist you today?";
 	next;
-	switch(select("Purchase materials.:Purchase a production manual.:Quit.")) {
+	switch (select("Purchase materials.", "Purchase a production manual.", "Quit.")) {
 	case 1:
 		mes "[Gever Al Sharp]";
 		mes "What would you like?";
 		next;
-		if (select("Medicine Bowl - 8 Zeny:Cancel.") == 1) {
+		if (select("Medicine Bowl - " + (RENEWAL ? "250z" : "8 Zeny"), "Cancel.") == 1) {
 			mes "[Gever Al Sharp]";
 			mes "How many do you want?";
 			mes "Enter '0' if you want to quit.";
 			next;
 			while(1) {
-				input .@input,0,2001;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Gever Al Sharp]";
 					mes "The deal was cancelled.";
 					mes "Come again next time.";
 					close;
 				}
-				else if (.@input < 1 || .@input > 2000) {
+				if (.@input > 2000) {
 					mes "[Gever Al Sharp]";
 					mes "The number must";
 					mes "be less than 2000.";
 					next;
+					continue;
 				}
-				else {
-					break;
-				}
+				break;
 			}
-			.@sell = .@input * 8;
+			if (RENEWAL) {
+				.@sell = .@input * 250;
+			} else {
+				.@sell = .@input * 8;
+			}
 			.@item_weight = .@input * 10;
 			if (Zeny < .@sell) {
 				mes "[Gever Al Sharp]";
@@ -79,7 +103,7 @@ alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 				close;
 			}
 			Zeny -= .@sell;
-			getitem 7134,.@input; //Medicine_Bowl
+			getitem Medicine_Bowl,.@input;
 			mes "[Gever Al Sharp]";
 			mes "Thank you.";
 			mes "Come again.";
@@ -97,30 +121,30 @@ alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 		mes "What do you need?";
 		mes "Manuals are generally 100,000 zeny. But there are a couple of special manuals that will cost more.";
 		next;
-		switch(select("Potion Creation Guide:Alcohol Creation Guide:Bottle Grenade Creation Guide:Acid Bottle Creation Guide:Plant Bottle Creation Guide:Marine Sphere Bottle Creation Guide:Glistening Coat Creation Guide:Condensed Potion Creation Guide:Cancel Deal.")) {
+		switch (select("Potion Creation Guide", "Alcohol Creation Guide", "Bottle Grenade Creation Guide", "Acid Bottle Creation Guide", "Plant Bottle Creation Guide", "Marine Sphere Bottle Creation Guide", "Glistening Coat Creation Guide", "Condensed Potion Creation Guide", "Cancel Deal.")) {
 		case 1:
-			callsub S_SellManual,7144,100000; //Normal_Potion_Book
+			callsub S_SellManual, Normal_Potion_Book, 100000;
 			break;
 		case 2:
-			callsub S_SellManual,7127,100000; //Alcol_Create_Book
+			callsub S_SellManual, Alcol_Create_Book, 100000;
 			break;
 		case 3:
-			callsub S_SellManual,7128,100000; //FireBottle_Create_Book
+			callsub S_SellManual, FireBottle_Create_Book, 100000;
 			break;
 		case 4:
-			callsub S_SellManual,7129,100000; //Acid_Create_Book
+			callsub S_SellManual, Acid_Create_Book, 100000;
 			break;
 		case 5:
-			callsub S_SellManual,7130,100000; //Plant_Create_Book
+			callsub S_SellManual, Plant_Create_Book, 100000;
 			break;
 		case 6:
-			callsub S_SellManual,7131,100000; //Mine_Create_Book
+			callsub S_SellManual, Mine_Create_Book, 100000;
 			break;
 		case 7:
-			callsub S_SellManual,7132,100000; //Coating_Create_Book
+			callsub S_SellManual, Coating_Create_Book, 100000;
 			break;
 		case 8:
-			callsub S_SellManual,7133,240000; //Slim_Potion_Create_Book
+			callsub S_SellManual, Slim_Potion_Create_Book, 240000;
 			break;
 		case 9:
 			mes "[Gever Al Sharp]";
@@ -147,10 +171,10 @@ S_SellManual:
 		close;
 	}
 	mes "[Gever Al Sharp]";
-	mes ""+getitemname(getarg(0))+"?";
-	mes "That'll be "+getarg(1)+" zeny.";
+	mes ""+ getitemname(getarg(0)) +"?";
+	mes "That'll be "+ getarg(1) +" zeny.";
 	next;
-	if (select("Purchase.:Quit.") == 1) {
+	if (select("Purchase.", "Quit.") == 1) {
 		Zeny -= getarg(1);
 		getitem getarg(0),1;
 		mes "[Gever Al Sharp]";

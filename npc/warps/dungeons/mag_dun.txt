@@ -1,16 +1,37 @@
-//===== Hercules Script ======================================
-//= Yuno Dungeon Warp Script
-//===== By: ==================================================
-//= Nana (1.0)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Nana
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Juno Dungeon Warp Script
+//================= Description ===========================================
+//= Warp Points for Juno Dungeon
+//================= Current Version =======================================
 //= 1.0
-//===== Description: =========================================
-//= Warp Points for Yuno Dungeon
-//===== Additional Comments: =================================
-//= No Comment!
-//============================================================
+//=========================================================================
 
-//= Magma Dungeon ============================================
 mag_dun01,126,66,0	warp	mag01-yunfild	1,1,yuno_fild03,34,139
 mag_dun01,242,241,0	warp	mag01-02	1,1,mag_dun02,47,30
 mag_dun02,47,28,0	warp	mag02-01	1,1,mag_dun01,242,239

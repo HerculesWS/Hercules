@@ -18,14 +18,14 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 	mes "With this, you can rest assured your items are safe.";
 	next;
 	mes "What would you like to do?";
-	if(select("Bind:Unbind") == 1) {
+	if(select("Bind", "Unbind") == 1) {
 		if(Zeny < .bindprice) {
 			mes "You don't have enough zeny to bind an item.";
 			close;
 		}
 		mes "What kind of bind?";
-		.@boundtype = 1 << (select("Account:Guild:Character")-1);
-		if(.@boundtype == 2 && (!getcharid(2) || getguildmaster(getcharid(2)) != strcharinfo(0))) {
+		.@boundtype = 1 << (select("Account", "Guild", "Character")-1);
+		if(.@boundtype == IBT_GUILD && (!getcharid(CHAR_ID_GUILD) || getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))) {
 			mes "In order for me to bind an item to a guild you must be the master of one.";
 			close;
 		}
@@ -33,11 +33,12 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		for(.@i = 0; .@i < @inventorylist_count; .@i++) {
 			//We only show the items that you allow to be bound
 			//Allows equipment (default) or non-rental item
-			if( @inventorylist_bound[.@i] || @inventorylist_expire[.@i] )
+			if (@inventorylist_bound[.@i] || @inventorylist_expire[.@i])
 				continue;
-			if(((.allowbind & 1) && (getiteminfo(@inventorylist_id[.@i],2) == (4|5))) ||
-				((.allowbind & 2) && (getiteminfo(@inventorylist_id[.@i],2) == (0|2|11|18))) ||
-				((.allowbind & 4) && (getiteminfo(@inventorylist_id[.@i],2) == (3|6|7|8|10)))
+			.@itemtype = getiteminfo(@inventorylist_id[.@i], ITEMINFO_TYPE);
+			if (((.allowbind & 1) != 0 && (.@itemtype == IT_WEAPON || .@itemtype == IT_ARMOR))
+			 || ((.allowbind & 2) != 0 && (.@itemtype == IT_HEALING || .@itemtype == IT_USABLE || .@itemtype == IT_DELAYCONSUME || .@itemtype == IT_CASH))
+			 || ((.allowbind & 4) != 0 && (.@itemtype == IT_ETC || .@itemtype == IT_CARD || .@itemtype == IT_PETEGG || .@itemtype == IT_PETARMOR || .@itemtype == IT_AMMO))
 			) {
 				set .@bindlist$, .@bindlist$ + ":" + getitemname(@inventorylist_id[.@i]) + " - " + @inventorylist_id[.@i];
 				set .@bindlist[.@j],.@i;
@@ -47,14 +48,14 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		.@item = .@bindlist[select(.@bindlist$)-2];
 		next;
 		mes "Before I continue, I want you to know I can't tell the difference between multiple items.  If you have a specific item you want bounded, please remove any duplicates from inventory.";
-		if(select("I understand, continue:Wait a minute") == 2) {
+		if(select("I understand, continue", "Wait a minute") == 2) {
 			next;
 			mes "I'll be here when you're ready.";
 			close;
 		}
 		next;
 		mes "Are you sure you'd like to bind your "+ getitemname(@inventorylist_id[.@item]) +" to your "+.boundtypes$[.@boundtype]+"?";
-		if(select("Yes:No") == 1) {
+		if(select("Yes", "No") == 1) {
 			Zeny -= .bindprice;
 			delitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
 			getitembound2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item],.@boundtype;
@@ -67,7 +68,7 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 			mes "You don't have any bound items in your inventory.  Not much I can do here.";
 			close;
 		}
-		countbound(2);
+		countbound(IBT_GUILD);
 		if(.unbindprice) {
 			mes "Unbinding an item has a fee of ^0000FF"+.unbindprice+"^000000 zeny.";
 			if(Zeny < .unbindprice) {
@@ -87,21 +88,21 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		next;
 		for(.@i = 0; .@i < getarraysize(@bound_items); .@i++) {
 			if(@inventorylist_id[.@item] == @bound_items[.@i] &&
-				(!getcharid(2) || getguildmaster(getcharid(2)) != strcharinfo(0))
+				(!getcharid(CHAR_ID_GUILD) || getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD)) != strcharinfo(PC_NAME))
 			) {
 				mes "I will only unbind guild bound items that the guild master requests.";
 				close;
 			}
 		}
 		mes "Before I continue, I want you to know I can't tell the difference between multiple items.  If you have a specific item you want unbounded, please remove any duplicates from inventory.";
-		if(select("I understand, continue:Wait a minute") == 2) {
+		if(select("I understand, continue", "Wait a minute") == 2) {
 			next;
 			mes "I'll be here when you're ready.";
 			close;
 		}
 		next;
 		mes "Are you sure you'd like to unbind your "+ getitemname(@inventorylist_id[.@item]) +"?";
-		if(select("Yes:No") == 1) {
+		if(select("Yes", "No") == 1) {
 			Zeny -= .unbindprice;
 			delitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
 			getitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
@@ -126,8 +127,8 @@ OnInit:
 	.logbinds = 1;
 
 	//Other stuff
-	.boundtypes$[1] = "account";
-	.boundtypes$[2] = "guild";
-	.boundtypes$[4] = "character";
+	.boundtypes$[IBT_ACCOUNT] = "account";
+	.boundtypes$[IBT_GUILD] = "guild";
+	.boundtypes$[IBT_CHARACTER] = "character";
 	end;
 }

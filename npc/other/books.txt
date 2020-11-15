@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Prontera Library
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Various Books found in Prontera Library
-//===== Additional Comments: =================================
-//= 1.0 First Version, rescripted to Aegis 10.3 standard. [L0ne_W0lf]
-//= 1.1 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 	mes "^FF0000[Monster Encyclopedia]^000000";
@@ -21,10 +41,10 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 	.@loop1 = 1;
 	while(.@loop1) {
 		.@loop2 = 1;
-		switch(select("Water Property Monsters:Wind Property Monsters:Spritual Property Monsters:Cancel")) {
+		switch(select("Water Property Monsters", "Wind Property Monsters", "Spritual Property Monsters", "Cancel")) {
 		case 1:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 1: Small Water Monsters]^000000";
 					mes "1. Plankton";
@@ -220,7 +240,7 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 
 		case 2:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 4: Small Wind Monsters]^000000";
 					mes "1. Chonchon";
@@ -332,7 +352,7 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 
 		case 3:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 7: Small Ghost Monsters]^000000";
 					mes "1. Whisper";
@@ -391,7 +411,7 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 		}
 	}
 }
-				
+
 prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 	mes "^FF0000[Monster Encyclopedia]^000000";
 	mes "This is a Monster Encyclopedia";
@@ -402,10 +422,10 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 	.@loop1 = 1;
 	while(.@loop1) {
 		.@loop2 = 1;
-		switch(select("Earth Property Monsters:Fire Property Monsters:Neutral Property Monsters:Cancel")) {
+		switch(select("Earth Property Monsters", "Fire Property Monsters", "Neutral Property Monsters", "Cancel")) {
 		case 1:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 10: Small Earth Monsters]^000000";
 					mes "1. Fabre";
@@ -655,7 +675,7 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 
 		case 2:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 13: Small Fire Monsters]^000000";
 					mes "1. Picky";
@@ -790,7 +810,7 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 
 		case 3:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 16: Small Neutral Monsters]^000000";
 					mes "1. Lunatic";
@@ -871,7 +891,7 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 	}
 }
 
-prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
+prt_in,161,50,4	script	Monster Encyclopedia#3pr	HIDDEN_NPC,{
 	mes "^FF0000[Monster Encyclopedia]^000000";
 	mes "This is a Monster Encyclopedia";
 	mes "containing information on Dark,";
@@ -880,10 +900,10 @@ prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
 	.@loop1 = 1;
 	while(.@loop1) {
 		.@loop2 = 1;
-		switch(select("Dark Property Monsters:Poison Property Monsters:Undead Property Monsters:Cancel")) {
+		switch(select("Dark Property Monsters", "Poison Property Monsters", "Undead Property Monsters", "Cancel")) {
 		case 1:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 19: Small Dark Monsters]^000000";
 					mes "1. Thief Bug Egg";
@@ -1017,7 +1037,7 @@ prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
 			}
 		case 2:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 22: Small Poison Monsters]^000000";
 					mes "^0099FF...^000000";
@@ -1106,7 +1126,7 @@ prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
 
 		case 3:
 			while(.@loop2) {
-				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
+				switch(select("Small Sized Monsters", "Medium Sized Monsters", "Great Sized Monsters", "Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 25: Small Undead Monsters]^000000";
 					mes "^0099FF...^000000";
@@ -1245,10 +1265,10 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 	mes "monsters living in Dungeons.";
 	next;
 	.@loop1 = 1;
-	switch(select("Ant Hell:Geffen Tower:Sphinx:Cancel")) {
+	switch(select("Ant Hell", "Geffen Tower", "Sphinx", "Cancel")) {
 	case 1:
 		while(.@loop1) {
-			switch(select("1F:2F:Cancel")) {
+			switch(select("1F", "2F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Ant Hell 1F Monsters]^000000";
 				mes "1. Ant Egg";
@@ -1357,7 +1377,7 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 
 	case 2:
 		while(.@loop1) {
-			switch(select("1F:2F:3F:4F:Cancel")) {
+			switch(select("1F", "2F", "3F", "4F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Geffen Dungeon 1F Monsters]^000000";
 				mes "1. Familiar";
@@ -1554,7 +1574,7 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 
 	case 3:
 		while(.@loop1) {
-			switch(select("1F:2F:3F:4F:5F:Cancel")) {
+			switch(select("1F", "2F", "3F", "4F", "5F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Sphinx 1F Monsters]^000000";
 				mes "1. Familiar";
@@ -1720,17 +1740,16 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 	}
 }
 
-
 prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 	mes "^FF0000[Dungeon Monster Encyclopedia]^000000";
 	mes "This is an Encyclopedia describing";
 	mes "Monsters living in Dungeons.";
 	next;
 	.@loop1 = 1;
-	switch(select("Orc Dungeon:Byalan Cave near Izlude:Prontera Culvert")){
+	switch(select("Orc Dungeon", "Byalan Cave near Izlude", "Prontera Culvert")){
 	case 1:
 		while(.@loop1) {
-			switch(select("1F:2F:Cancel")) {
+			switch(select("1F", "2F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Orc Dungeon 1F Monsters]^000000";
 				mes "1. Chonchon";
@@ -1810,7 +1829,7 @@ prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 
 	case 2:
 		while(.@loop1) {
-			switch(select("1F:2F:3F:4F:5F:Cancel")) {
+			switch(select("1F", "2F", "3F", "4F", "5F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Byalan Cave 1F Monsters]^000000";
 				mes "1. Plankton";
@@ -2072,7 +2091,7 @@ prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 
 	case 3:
 		while(.@loop1) {
-			switch(select("1F.:2F.:3F.:4F.:Cancel.")) {
+			switch(select("1F.", "2F.", "3F.", "4F.", "Cancel.")) {
 			case 1:
 				mes "^FF0000[Prontera Culvert 1F Monsters]^000000";
 				mes "1. Thief Bug Egg";
@@ -2305,10 +2324,10 @@ prt_in,172,102,4	script	Monster Encyclopedia#6pr	HIDDEN_NPC,{
 	mes "Monsters living in Dungeons.";
 	next;
 	.@loop1 = 1;
-	switch(select("Mjolnir Dead Pit:Payon Cave:Pyramid")) {
+	switch(select("Mjolnir Dead Pit", "Payon Cave", "Pyramid")) {
 	case 1:
 		while(.@loop1) {
-			switch(select("1F:2F:3F:Cancel")) {
+			switch(select("1F", "2F", "3F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Dead Pit 1F Monsters]^000000";
 				mes "1. Familiar";
@@ -2412,7 +2431,7 @@ prt_in,172,102,4	script	Monster Encyclopedia#6pr	HIDDEN_NPC,{
 
 	case 2:
 		while(.@loop1) {
-			switch(select("1F:2F:3F:4F:5F:Cancel")) {
+			switch(select("1F", "2F", "3F", "4F", "5F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Payon Cave 1F Monsters]^000000";
 				mes "1. Familiar";
@@ -2590,7 +2609,7 @@ prt_in,172,102,4	script	Monster Encyclopedia#6pr	HIDDEN_NPC,{
 
 	case 3:
 		while(.@loop1) {
-			switch(select("1F:2F:3F:4F:5F:6F:Cancel")) {
+			switch(select("1F", "2F", "3F", "4F", "5F", "6F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Pyramid 1F Monsters]^000000";
 				mes "1. Familiar";
@@ -2813,10 +2832,10 @@ prt_in,164,102,4	script	Monster Encyclopedia#7pr	HIDDEN_NPC,{
 	mes "Monsters living in Dungeons.";
 	next;
 	.@loop1 = 1;
-	switch(select("Sunken Ship near Alberta:Prontera Maze")) {
+	switch(select("Sunken Ship near Alberta", "Prontera Maze")) {
 	case 1:
 		while(.@loop1) {
-			switch(select("1F:2F:Cancel")) {
+			switch(select("1F", "2F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Sunken Ship 1F Monsters]^000000";
 				mes "1. Plankton";
@@ -2954,7 +2973,7 @@ prt_in,164,102,4	script	Monster Encyclopedia#7pr	HIDDEN_NPC,{
 
 	case 2:
 		while(.@loop1) {
-			switch(select("1F:3F:Cancel")) {
+			switch(select("1F", "3F", "Cancel")) {
 			case 1:
 				mes "^FF0000[Prontera Maze 1F Monsters]^000000";
 				mes "1. Poring";
@@ -3458,7 +3477,7 @@ prt_in,162,68,4	script	Vending Guide#pront	HIDDEN_NPC,{
 	mes "so that you can sell items to other";
 	mes "players and make zeny?";
 	next;
-	if (select("Yes, I do!:Close the book.") == 1) {
+	if (select("Yes, I do!", "Close the book.") == 1) {
 		mes "^FF0000[Vending Guide for Dummies]^000000";
 		mes "First, only certain job classes can";
 		mes "open vending shops. As a Merchant,";
@@ -3556,7 +3575,7 @@ prt_in,168,68,4	script	Blacksmith Guide#pront	HIDDEN_NPC,{
 	mes "Weapon Crafting for Blacksmith job";
 	mes "class characters.";
 	next;
-	switch(select("Ore Refining.:Weapon Craft:Cancel.")) {
+	switch(select("Ore Refining.", "Weapon Craft", "Cancel.")) {
 	case 1:
 		mes "^FF0000[Ore Refining for Dummies]^000000";
 		mes "Rough ores, like Iron Ore, and";

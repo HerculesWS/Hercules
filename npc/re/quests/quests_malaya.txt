@@ -1,32 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Michieru
+//= Copyright (C) DeadlySilence
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Port Malaya Quest NPCs
-//===== By: ==================================================
-//= Masao
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest NPCs related to Port Malaya:
-//== Cautious Village, Port Malaya Daily Quests,
-//== Secret in the Woods, Bakonawa Extermination
-//== Nurse in Port Malaya, Pintados Festival
+//= - Cautious Village, Port Malaya Daily Quests,
+//= - Secret in the Woods, Bakonawa Extermination
+//= - Nurse in Port Malaya, Pintados Festival
 //= Merchants:
-//== Traders, Upgrade Boss Equipment
-//===== Additional Comments: =================================
-//= 0.1 Traders only. Adapted from Masao's conversion. [Euphy]
-//= 0.2 Added Tribe Blacksmith [DeadlySilence]
-//= 0.3 Added "Secret in the Woods" quest [DeadlySilence]
-//= 0.4 Added "Cautious Village" and subsequent quests [DeadlySilence]
-//= 0.5 Added "Bakonawa Extermination" quest. [Euphy]
-//= 1.0 Added "Nurse in Port Malaya" and "Pintados Festival" quests. [Euphy]
-//= 1.1 Added GM management function and NPC. [Euphy]
-//= 1.2 Added item Lost_Belongings to Tiyanak mob & fix wrong item id [Michieru]
-//============================================================
+//= - Traders, Upgrade Boss Equipment
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Cautious Village & Daily Quests :: hi_malaya
-//============================================================
+//== Cautious Village & Daily Quests :: hi_malaya ==========
 malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -122,7 +138,7 @@ malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 				mes "We are going to organize an extensive Jejeling hunt this time.";
 				mes "Peddlers going in and out of Baryo are always complaining about Jejelings.";
 				next;
-				if (select("Join the Jejeling hunt.:Refuse.") == 2) {
+				if (select("Join the Jejeling hunt.", "Refuse.") == 2) {
 					mes "[Rodel the Guard]";
 					mes "Is that so? I'm sorry to hear that.";
 					mes "Things would be so much simpler if we had a person like you around.";
@@ -146,14 +162,14 @@ malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 				mes "[Rodel the Guard]";
 				mes "I think there will be more Jejeling hunts in the future. Please join us again next time.";
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				erasequest 7404;
 				setquest 7405;
 				if (rand(2))
-					$malayaNames$[1] = strcharinfo(0);
+					$malayaNames$[1] = strcharinfo(PC_NAME);
 //				SavePPL Jejellopy
 				close;
 			}
@@ -182,7 +198,7 @@ OnInit:
 }
 
 malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -225,7 +241,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 		mes "People are in panic, everyone trembling with fear.^000000";
 		cutin "malaya_ghost01", 4;
 		next;
-		select("Step toward the shadow.:Draw weapon.");
+		select("Step toward the shadow.", "Draw weapon.");
 		mes "[Phong in Mumbaki]";
 		mes "They have followed the trace of the outsider. ";
 		mes "Don't get to close too them.";
@@ -267,7 +283,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 		mes "You look disturbed.";
 		mes "Your clothes also look messed up. Was there some kind of trouble?";
 		next;
-		switch (select("Explain what happened.:There is nothing to talk about.")) {
+		switch (select("Explain what happened.", "There is nothing to talk about.")) {
 		case 1:
 			mes "[Phong in Mumbaki]";
 			mes "Is that so?";
@@ -294,7 +310,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 			mes "^4d4dffAs Mumbaki said, giving out some items to serve as a Spiritual Protection would be a good idea.";
 			mes "What would be adequate as a Spiritual Protection..^000000";
 			next;
-			switch (select("Holy Water!:Holy magical item Blue Gemstone?!:Writing utensils or school supplies")) {
+			switch (select("Holy Water!", "Holy magical item Blue Gemstone?!", "Writing utensils or school supplies")) {
 			case 1:
 				mes "[Phong in Mumbaki]";
 				mes "The name itself suggests holiness.";
@@ -403,7 +419,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 			break;
 		}
 		next;
-		switch (select("Ask for advice.:Bless flowers...")) {
+		switch (select("Ask for advice.", "Bless flowers...")) {
 		case 1:
 			if (malaya_diwata == 2) {
 				mes "[Phong in Mumbaki]";
@@ -436,7 +452,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				setquest 7397;
 				close;
 			} else if (malaya_diwata == 3) {
-				if ((countitem(6509) < 3) || (countitem(6510) < 3) && (countitem(6511) < 3)) {
+				if ((countitem(Mysterious_Flower) < 3) || (countitem(Elegant_Flower) < 3) && (countitem(Beautiful_Flower) < 3)) {
 					mes "[Phong in Mumbaki]";
 					mes "There are ^4d4dff3 Mystic Flowers, 3 Elegant Flowers, 3 Pretty Flowers^000000.";
 					mes "Do you understand?";
@@ -457,10 +473,10 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				mes "[Phong in Mumbaki]";
 				mes "Now, deliver this to that child.";
 				mes "I hope she opens her heart with this and becomes willing to talk to you.";
-				delitem 6509, 3; // Mysterious_Flower
-				delitem 6510, 3; // Elegant_Flower
-				delitem 6511, 3; // Beautiful_Flower
-				getitem 6506, 1; // Memorial_Bouquet
+				delitem Mysterious_Flower, 3; // Mysterious_Flower
+				delitem Elegant_Flower, 3; // Elegant_Flower
+				delitem Beautiful_Flower, 3; // Beautiful_Flower
+				getitem Offering_Bouquet, 1; // Memorial_Bouquet
 				malaya_diwata = 4;
 				erasequest 7397;
 				setquest 7398;
@@ -488,14 +504,14 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				mes "A tribute must be sincere. Don't forget that.";
 				close;
 			}
-			if (countitem(6506) > 0) {
+			if (countitem(Offering_Bouquet) > 0) {
 				mes "[Phong in Mumbaki]";
 				mes "Isn't it already made?";
 				mes "What is that in your hand?";
 				mes "Why are you standing around here? Go and give out those flowers.";
 				close;
 			}
-			if ((countitem(6509) < 3) || (countitem(6510) < 3) || (countitem(6511) < 3)) {
+			if ((countitem(Mysterious_Flower) < 3) || (countitem(Elegant_Flower) < 3) || (countitem(Beautiful_Flower) < 3)) {
 				mes "[Phong in Mumbaki]";
 				mes "Going to Diwata?";
 				mes "You need Mysterious Flowers, Elegant Flowers and Beautiful Flowers, 3 of each, okay?";
@@ -509,17 +525,17 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 			mes "[Phong in Mumbaki]";
 			mes "Hey, here's the Bouquet.";
 			mes "Make offerings with your soul and wish for a fruitful day.";
-			delitem 6509, 3; // Mysterious_Flower
-			delitem 6510, 3; // Elegant_Flower
-			delitem 6511, 3; // Beautiful_Flower
-			getitem 6506, 1; // Memorial_Bouquet
+			delitem Mysterious_Flower, 3; // Mysterious_Flower
+			delitem Elegant_Flower, 3; // Elegant_Flower
+			delitem Beautiful_Flower, 3; // Beautiful_Flower
+			getitem Offering_Bouquet, 1; // Memorial_Bouquet
 			close;
 		}
 	}
 }
 
 malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -549,7 +565,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		mes "This is my job and nobody else's.";
 		mes "Protecting traditions is my job.";
 		next;
-		switch (select("Is that so?:Good luck on your own!")) {
+		switch (select("Is that so?", "Good luck on your own!")) {
 		case 1:
 			if (BaseLevel < 100) {
 				mes "[Imelda]";
@@ -600,7 +616,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			mes "Indeed.";
 			mes "I will protect the village!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Now I haven't seen any Spiritual Protections made with those!";
 			mes "Interesting~";
 			mes "I'm sure you'll do just fine~";
@@ -611,7 +627,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			close;
 		}
 	} else if (malaya_hi == 21) {
-		if ((countitem(6501) < 6) || (countitem(6500) < 6) || (countitem(6502) < 6)) {
+		if ((countitem(Salt_Bag) < 6) || (countitem(Sharp_Bamboo) < 6) || (countitem(Silver_Cross) < 6)) {
 			mes "[Imelda]";
 			mes "I'll approve you as worthy if you bring all the materials for the Spiritual Protection!";
 			next;
@@ -630,9 +646,9 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		mes "Now I'm going through the holy ritual to make a traditional Spiritual Protection.";
 		mes "Give them to me! And don't bother me during the process!";
 		malaya_hi = 22;
-		delitem 6500, 6; // Sharp_Bamboo
-		delitem 6501, 6; // Salt_Bag
-		delitem 6502, 6; // Silver_Cross
+		delitem Sharp_Bamboo, 6; // Sharp_Bamboo
+		delitem Salt_Bag, 6; // Salt_Bag
+		delitem Silver_Cross, 6; // Silver_Cross
 		erasequest 7366;
 		setquest 7367;
 		close;
@@ -656,7 +672,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			mes "Took the Spiritual Protection, despite her ridiculous logic and vigor.";
 			mes "Let's give them to the villagers.";
 			malaya_hi = 23;
-			getitem 6503, 6; // Soul_Protection
+			getitem Soul_Protection, 6; // Soul_Protection
 			erasequest 7367;
 			setquest 7368;
 			setquest 7369;
@@ -699,12 +715,12 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		erasequest 7379;
 		setquest 7375;
 //		if (IsPremiumPcCafe == 10)
-			getitem 6497, 2; // Lesser_Agimat
+			getitem Lesser_Agimat, 2; // Lesser_Agimat
 //		else
-//			getitem 6497, 1; // Lesser_Agimat
+//			getitem Lesser_Agimat, 1; // Lesser_Agimat
 		getexp 200000,200000;
 		if (rand(2))
-			$malayaNames$[0] = strcharinfo(0);
+			$malayaNames$[0] = strcharinfo(PC_NAME);
 		close;
 	} else {
 		mes "[Imelda]";
@@ -712,10 +728,10 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		mes "Did you enjoy the scenery of Malaya?";
 		mes "It's nice to have a chat with friends on a Jeepney.";
 		next;
-		switch (select("I'll help you making Spiritual Protections.:Love and Spiritual Protection for all.")) {
+		switch (select("I'll help you making Spiritual Protections.", "Love and Spiritual Protection for all.")) {
 		case 1:
 			if (questprogress(7380)) {
-				if ((countitem(6501) < 6) || (countitem(6502) < 6) || (countitem(6500) < 6)) {
+				if ((countitem(Salt_Bag) < 6) || (countitem(Silver_Cross) < 6) || (countitem(Sharp_Bamboo) < 6)) {
 					mes "[Imelda]";
 					mes "Materials for making a Spiritual Protection are";
 					mes "Salt Bags, Silver Crosses and Sharpened Bamboos, 6 of each.";
@@ -731,15 +747,15 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 				mes "[Imelda]";
 				mes "It'll be nice if you could help again tomorrow.";
 				mes "Here's something for your trouble.";
-				delitem 6500, 6; // Sharp_Bamboo
-				delitem 6501, 6; // Salt_Bag
-				delitem 6502, 6; // Silver_Cross
+				delitem Sharp_Bamboo, 6; // Sharp_Bamboo
+				delitem Salt_Bag, 6; // Salt_Bag
+				delitem Silver_Cross, 6; // Silver_Cross
 				erasequest 7380;
 				setquest 7381;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				close;
 			} else {
@@ -756,7 +772,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 					mes "Could you go for them now?";
 					erasequest 7381;
 					next;
-					switch (select("Sure.:I need some preparations.")) {
+					switch (select("Sure.", "I need some preparations.")) {
 					case 1:
 						mes "[Imelda]";
 						mes "As usual then.";
@@ -805,12 +821,12 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 				erasequest 7374;
 				erasequest 7379;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (rand(2))
-					$malayaNames$[0] = strcharinfo(0);
+					$malayaNames$[0] = strcharinfo(PC_NAME);
 				close;
 			} else {
 				.@playtime = questprogress(7375, PLAYTIME);
@@ -825,7 +841,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 					mes "Could you deliver Spiritual Protections to the folks today?";
 					erasequest 7375;
 					next;
-					if (select("Of course.:Not today.") == 2) {
+					if (select("Of course.", "Not today.") == 2) {
 						mes "[Imelda]";
 						mes "Yes.";
 						mes "Why not take a stroll in Malaya today?";
@@ -843,7 +859,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 						setquest 7371;
 						setquest 7372;
 						setquest 7373;
-						getitem 6503, 6; // Soul_Protection
+						getitem Soul_Protection, 6; // Soul_Protection
 						close;
 					} else {
 						mes "[Imelda]";
@@ -860,7 +876,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 					mes "[Imelda]";
 					mes "Could you give out these Spiritual Protections to the villagers for me?";
 					next;
-					switch (select("Yes.:Not today.") == 2) {
+					switch (select("Yes.", "Not today.") == 2) {
 						mes "[Imelda]";
 						mes "Yes.";
 						mes "Why not take a stroll in Malaya today?";
@@ -878,7 +894,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 						setquest 7371;
 						setquest 7372;
 						setquest 7373;
-						getitem 6503, 6; // Soul_Protection
+						getitem Soul_Protection, 6; // Soul_Protection
 						close;
 					} else {
 						mes "[Imelda]";
@@ -896,7 +912,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 }
 
 malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -940,7 +956,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 			close;
 		}
 	} else if (malaya_hi == 11) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "He'll rake off all my buttons if I talk to him now.";
 		mes "Must counsel with Mumbaki first!";
 		close;
@@ -956,7 +972,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 			mes "I'm sorry I ignored you.";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -970,8 +986,8 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 		mes "...Peace is always good. Yes.";
 		next;
 		mes "- Gave Holy Water and Blue Gemstone to Old Man Nardo.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1;
+		delitem Holy_Water, 1;
 		setquest 7360;
 		completequest 7360;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1015,7 +1031,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 		}
 		mes "What is it?";
 		next;
-		switch (select("Speak.:Give Spiritual Protection.:The Old Man and the Cast Iron Cauldron")) {
+		switch (select("Speak.", "Give Spiritual Protection.", "The Old Man and the Cast Iron Cauldron")) {
 		case 1:
 			mes "[Old Man Nardo]";
 			mes "Port Malaya is a beautiful city.";
@@ -1028,7 +1044,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 			close;
 		case 2:
 			if (questprogress(7374) && questprogress(7369)) {
-				if (!countitem(6503)) {
+				if (!countitem(Soul_Protection)) {
 					mes "^4d4dffThere's no Spiritual Protection to give to the Old Man.^000000";
 					close;
 				}
@@ -1038,7 +1054,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 				mes "I am always in your and Imelda's debt.";
 				next;
 				mes "-Delivered the Spiritual Protection to Old Man Nardo.-";
-				delitem 6503, 1; // Soul_Protection
+				delitem Soul_Protection, 1; // Soul_Protection
 				erasequest 7369;
 				setquest 7383;
 				if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1090,7 +1106,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 				close;
 			 } else {
 				if (questprogress(7377)) {
-					if (countitem(6503) < 5) {
+					if (countitem(Soul_Protection) < 5) {
 						mes "[Old Man Nardo]";
 						mes "Did you deliver the cauldron in one piece?";
 						mes "Kiko in Mumbaki should have given you a Spiritual Protection. Do you have it?";
@@ -1104,16 +1120,16 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 					mes "[Old Man Nardo]";
 					mes "Please stop by again.";
 					mes "I always prepare the Cast Iron Cauldron needed at Baryo.";
-					delitem 6503, 5; // Soul_Protection
+					delitem Soul_Protection, 5; // Soul_Protection
 					setquest 7378;
 					erasequest 7377;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6497, 2; // Lesser_Agimat
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
 //					else
-//						getitem 6497, 1; // Lesser_Agimat
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					if (!rand(3))
-						$malayaNames$[2] = strcharinfo(0);
+						$malayaNames$[2] = strcharinfo(PC_NAME);
 					close;
 				} else {
 					if (questprogress(7376)) {
@@ -1127,7 +1143,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 						mes "Go to Kiko in Mumbaki at Baryo Mahiwaga and deliver the Cast Iron Cauldron.";
 						mes "I'd like you to do it for me...";
 						next;
-						switch (select("Cast Iron Cauldron??:I'll do it.:I'm busy right now.")) {
+						switch (select("Cast Iron Cauldron??", "I'll do it.", "I'm busy right now.")) {
 						case 1:
 							mes "[Old Man Nardo]";
 							mes "It's because of the Bakonawa.";
@@ -1146,7 +1162,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 							mes "This is the Cast Iron Cauldron. They have fine blacksmiths in Malaya.";
 							mes "Deliver this to Kiko in Mumbaki at the nearby town of Baryo Mahiwaga.";
 							setquest 7376;
-							getitem 6504, 5; // Cast_Iron_Caldron
+							getitem Cast_Iron_Caldron, 5; // Cast_Iron_Caldron
 							close;
 						case 3:
 							mes "[Old Man Nardo]";
@@ -1219,7 +1235,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 			mes "but I am braver with them.";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1236,8 +1252,8 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 		mes "Hey... Could you give some for my daughter as well?";
 		next;
 		mes "- Gave Romel the prepared Holy Water and Blue Gemstone.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1;
+		delitem Holy_Water, 1;
 		setquest 7364;
 		completequest 7364;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1277,7 +1293,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 			break;
 		}
 		next;
-		if (select("Give Spiritual Protection:How are things?") == 2) {
+		if (select("Give Spiritual Protection", "How are things?") == 2) {
 			mes "[Romel]";
 			mes "I am at peace these days.";
 			close;
@@ -1289,7 +1305,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 			mes "I'm okay for now.";
 			close;
 		}
-		if (!countitem(6503)) {
+		if (!countitem(Soul_Protection)) {
 			mes "^4d4dffThere are no Spiritual Protections to give to Romel.^000000";
 			close;
 		}
@@ -1299,7 +1315,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 		mes "This Spiritual Protection will also protect us.";
 		next;
 		mes "- Delivered Romel his Spiritual Protection.-";
-		delitem 6503, 1; // Soul_Protection
+		delitem Soul_Protection, 1; // Soul_Protection
 		erasequest 7373;
 		setquest 7387;
 		if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1370,7 +1386,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 			mes "Daddy's braver now and that makes Talah stronger too.";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1385,8 +1401,8 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 		mes "Is this stone going to keep Talah safe?";
 		next;
 		mes "- Delivered the Holy Water and Blue Gemstone to Talah. -";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1;
+		delitem Holy_Water, 1;
 		setquest 7363;
 		completequest 7363;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1406,14 +1422,14 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 		mes "[Talah]";
 		mes "Hello...";
 		next;
-		if (select("Give Spiritual Protection.:Hi there?") == 2) {
+		if (select("Give Spiritual Protection.", "Hi there?") == 2) {
 			mes "[Talah]";
 			mes "...Hey...Thank you.";
 			mes "You're keeping us safe aren't you?";
 			close;
 		}
 		if (questprogress(7374) && questprogress(7372)) {
-			if (!countitem(6503)) {
+			if (!countitem(Soul_Protection)) {
 				mes "^4d4dffThere is no Spiritual Protection to give to Talah.^000000";
 				close;
 			}
@@ -1424,7 +1440,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 			mes "Daddy likes it too.";
 			next;
 			mes "- Delivered new Spiritual Protection to Talah.-";
-			delitem 6503, 1; // Soul_Protection
+			delitem Soul_Protection, 1; // Soul_Protection
 			erasequest 7372;
 			setquest 7386;
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1453,7 +1469,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 }
 
 malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1461,7 +1477,7 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 		mes "A device to evaporate sea water is buried in the sand...";
 		close;
 	}
-	if (countitem(6501) >= 6) {
+	if (countitem(Salt_Bag) >= 6) {
 		mes "There's enough salt.";
 		close;
 	}
@@ -1471,15 +1487,15 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 	mes "someone scattered on the sea water.";
 	close2;
 	progressbar "0xffff00", 5;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
-	getitem 6501, 1; // Salt_Bag
-	mes "[" + strcharinfo(0) + "]";
+	getitem Salt_Bag, 1; // Salt_Bag
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "This should be enough.";
 	close;
 
 OnTimer30000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -1487,7 +1503,7 @@ malaya,66,277,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya01	4_SOIL
 malaya,70,282,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya02	4_SOIL
 
 ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1495,7 +1511,7 @@ ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 		mes "There's a short and black bamboo tree.";
 		close;
 	}
-	if (countitem(6500) >= 6) {
+	if (countitem(Sharp_Bamboo) >= 6) {
 		mes "There's enough Sharpened Bamboos...";
 		close;
 	}
@@ -1503,10 +1519,10 @@ ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 	mes "If some of it is cut off and sharpened, I think it will suffice for the Sharpened Bamboo Imelda wanted.";
 	close2;
 	progressbar "0xffff00", 3;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
-	getitem 6500, 1; //Sharp_Bamboo
-	mes "[" + strcharinfo(0) + "]";
+	getitem Sharp_Bamboo, 1;
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "I knew I could do this!";
 	close;
 OnTouch:
@@ -1515,7 +1531,7 @@ OnTouch:
 	}
 	end;
 OnTimer30000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -1526,7 +1542,7 @@ ma_fild01,180,273,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya04	CLEAR_N
 ma_fild01,179,145,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya05	CLEAR_NPC,4,4
 
 malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1588,7 +1604,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 			mes "Isn't that so?";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1611,8 +1627,8 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 		mes "I'll call for you first when a job opens up for you.";
 		next;
 		mes "- Gave Woeon the Holy Water and Blue Gemstone.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1;
+		delitem Holy_Water, 1;
 		setquest 7362;
 		completequest 7362;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1633,9 +1649,9 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 		mes "[Woeon]";
 		mes "Oh, hi there!";
 		next;
-		if (select("Give Spiritual Protection.:The Dealer and his Collection") == 1) {
+		if (select("Give Spiritual Protection.", "The Dealer and his Collection") == 1) {
 			if (questprogress(7374) == 1 && questprogress(7371) == 1) {
-				if (!countitem(6503)) {
+				if (!countitem(Soul_Protection)) {
 					mes "^4d4dffThere is no Spiritual Protection to give to Woeon.^000000";
 					close;
 				}
@@ -1645,7 +1661,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 				mes "I'm thankful to you as well, of course.";
 				next;
 				mes "-Delivered Spiritual Protection to Woeon.-";
-				delitem 6503, 1; // Soul_Protection
+				delitem Soul_Protection, 1; // Soul_Protection
 				erasequest 7371;
 				setquest 7385;
 				if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1694,7 +1710,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 				mes "I know it's a difficult job... But you do it so well.";
 				erasequest 7392;
 				next;
-				if (select("I'm too busy today.:Leave it to me!") == 1) {
+				if (select("I'm too busy today.", "Leave it to me!") == 1) {
 					mes "[Woeon]";
 					mes "Is that so? So it is then.";
 					mes "Come stop by when you need some work.";
@@ -1707,7 +1723,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 				close;
 			} else {
 				if (questprogress(7391) == 1) {
-					if (countitem(6498) < 30) {
+					if (countitem(Jejellopy) < 30) {
 						mes "[Woeon]";
 						mes "Hmm? I don't think you have enough.";
 						mes "I asked you for 30 Jejellopys. Business is business I'm afraid.";
@@ -1721,17 +1737,17 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 					mes "[Woeon]";
 					mes "So I have all the Jejellopys...";
 					mes "Come back again!";
-					delitem 6498, countitem(6498); //Jejellopy
+					delitem Jejellopy, countitem(Jejellopy);
 					setquest 7392;
 					erasequest 7391;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6497, 2; // Lesser_Agimat
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
 //					else
-//						getitem 6497, 1; // Lesser_Agimat
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					.@memo_name = rand(1,3);
 					if (!rand(3))
-						$malayaNames$[1] = strcharinfo(0);
+						$malayaNames$[1] = strcharinfo(PC_NAME);
 					close;
 				} else {
 					mes "[Woeon]";
@@ -1746,7 +1762,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 					mes "Jejellopy can be acquired from the Jejeling.";
 					mes "Can you get me 30 Jejellopys?";
 					next;
-					if (select("Yeah, sure.:Nope.") == 2) {
+					if (select("Yeah, sure.", "Nope.") == 2) {
 						mes "[Woeon]";
 						mes "Is that so. Such a shame.";
 						mes "Come back when you need some work.";
@@ -1765,7 +1781,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 }
 
 malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1830,7 +1846,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "Bu... But, I'm too scared...";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1844,8 +1860,8 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 		mes "Yes... Now that I have some of your spirit, I can rest well at night.";
 		next;
 		mes "- Gave Pandoi the Holy Water and Blue Gemstone.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1;
+		delitem Holy_Water, 1;
 		setquest 7361;
 		completequest 7361;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1884,7 +1900,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			break;
 		}
 		next;
-		switch (select("Give Spiritual Protection.:Silver Blade.:Silver Cross")) {
+		switch (select("Give Spiritual Protection.", "Silver Blade.", "Silver Cross")) {
 		case 1:
 			if (!questprogress(7374) || !questprogress(7370)) {
 				mes "[Pandoi]";
@@ -1893,7 +1909,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				mes "When it wear's out, I'll ask you for another one!";
 				close;
 			}
-			if (!countitem(6503)) {
+			if (!countitem(Soul_Protection)) {
 				mes "^4d4dffThere is no Spiritual Protection to give to Pandoi.^000000";
 				close;
 			}
@@ -1902,7 +1918,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "It's always good to know that you won't see those black things again!";
 			next;
 			mes "-Delivered Spiritual Protection to Pandoi.-";
-			delitem 6503, 1; // Soul_Protection
+			delitem Soul_Protection, 1; // Soul_Protection
 			erasequest 7370;
 			setquest 7384;
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1933,7 +1949,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			}
 			.@hunting = questprogress(7393, HUNTING);
 			if (.@hunting == 2) {
-				if (countitem(6508) < 10) {
+				if (countitem(Silver_Bracelet) < 10) {
 					mes "[Pandoi]";
 					mes "Where are the Silver Bracelets?";
 					mes "I know you're invincible...";
@@ -1956,16 +1972,16 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				mes "[Pandoi]";
 				mes "It's not much, but here's something for the troubles you went through to get the Silver Bracelets.";
 				mes "If I fail... I'll ask of you the task again!";
-				delitem 6508, 10; //Silver_Bracelet
+				delitem Silver_Bracelet, 10;
 				setquest 7394;
 				erasequest 7393;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(3))
-					$malayaNames$[1] = strcharinfo(0);
+					$malayaNames$[1] = strcharinfo(PC_NAME);
 				close;
 			} else if (.@hunting == 1) {
 				mes "[Pandoi]";
@@ -1993,7 +2009,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 					mes "Maybe I'm not supposed to be a blacksmith!";
 					mes "I'm good with crafting silver, though!";
 					next;
-					if (select("I'll get you the materials. Cheer up.:Give up. It's a lot easier when you do.") == 2) {
+					if (select("I'll get you the materials. Cheer up.", "Give up. It's a lot easier when you do.") == 2) {
 						mes "[Pandoi]";
 						mes "... You're right...";
 						mes "I'll never be able to make a Silver Blade...";
@@ -2026,7 +2042,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 					mes "[Pandoi]";
 					mes "Could you slay the horrible creepers and get me the Silver Bracelets?";
 					next;
-					if (select("Indeed!:No. Way.") == 2) {
+					if (select("Indeed!", "No. Way.") == 2) {
 						mes "[Pandoi]";
 						mes "... You're right...";
 						mes "I'll never make a Silver Blade...";
@@ -2055,12 +2071,12 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "I could make one Silver Cross for ^4d4dff2 Silver Bracelets^000000 the monsters hold there...";
 			mes "If you have Silver Bracelets, I could make Silver Crosses with them.";
 			next;
-			switch(select("Make 1 Silver Cross:Make 6 Silver Crosses:Input Number:Quit.")) {
+			switch(select("Make 1 Silver Cross", "Make 6 Silver Crosses", "Input Number", "Quit.")) {
 			case 1:
 				.@amount = 1;
 			case 2:
 				if (!.@amount) .@amount = 6;
-				if (countitem(6508) < (.@amount * 2)) {
+				if (countitem(Silver_Bracelet) < (.@amount * 2)) {
 					mes "[Pandoi]";
 					mes "You need at least " + (.@amount * 2) + " Silver Bracelets to make " + .@amount + " Silver " + ((.@amount == 1) ? "Cross" : "Crosses") + ".";
 					close;
@@ -2072,18 +2088,19 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				mes "How many Silver Crosses do you need?";
 				mes "I can make up to 50 at a time.";
 				next;
-				input .@amount;
-				if (.@amount == 0) {
+				input(.@amount);
+				if (.@amount <= 0) {
 					mes "[Pandoi]";
 					mes "Don't need Silver Crosses?";
 					mes "Well, I can take a rest then. Ha ha ha ha~";
 					close;
-				} else if (.@amount > 50) {
+				}
+				if (.@amount > 50) {
 					mes "[Pandoi]";
 					mes "A maximum of 50 at a time!";
 					close;
 				}
-				if (countitem(6508) < (2 * .@amount)) {
+				if (countitem(Silver_Bracelet) < (2 * .@amount)) {
 					mes "[Pandoi]";
 					mes "To make " + .@amount + " Silver " + ((.@amount == 1) ? "Cross" : "Crosses") + ", I need at least " + (2 * .@amount) + " Silver Bracelets.";
 					close;
@@ -2100,8 +2117,8 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "Pandoi can do it in a jiffy!";
 			close2;
 			progressbar "0xffff00", .@time;
-			delitem 6508, .@amount * 2; //Silver_Bracelet
-			getitem 6502, .@amount; // Silver_Cross
+			delitem Silver_Bracelet, .@amount * 2;
+			getitem Silver_Cross, .@amount; // Silver_Cross
 			mes "[Pandoi]";
 			mes "Look at this!";
 			mes "Very nice indeed.";
@@ -2113,7 +2130,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 }
 
 malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -2132,7 +2149,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		mes "Oh, you're th... The one who fends off ghosts at the wave of a hand?!";
 		mes "Could you stay for a bit and hear me out?!";
 		next;
-		if (select("Sorry.:Sure.") == 1) {
+		if (select("Sorry.", "Sure.") == 1) {
 			mes "[Pedro the Sailor]";
 			mes "Oh, a solid denial.";
 			mes "You just impaled my last glimpse of hope.";
@@ -2186,7 +2203,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "Now's the time to charge into my ship...!";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water.^000000";
 			close;
 		}
@@ -2203,8 +2220,8 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		mes "After you're finished with the ghosts here, I'll take on my ship to the end of the world!";
 		next;
 		mes "- Gave Pedro the Sailor the Holy Water and Blue Gemstone. -";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1;
+		delitem Holy_Water, 1;
 		setquest 7359;
 		completequest 7359;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -2228,7 +2245,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		mes "Those black souls just came up and disappeared.";
 		mes "Well, living the dream, eh?";
 		next;
-		if (select("Give Spiritual Protection.:About the Ferry Ride") == 1) {
+		if (select("Give Spiritual Protection.", "About the Ferry Ride") == 1) {
 			if (!questprogress(7374) || !questprogress(7368)) {
 				mes "[Pedro the Sailor]";
 				mes "The Spiritual Protection you gave me before works fine.";
@@ -2236,7 +2253,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				mes "It's still up for the fight!";
 				close;
 			}
-			if (!countitem(6503)) {
+			if (!countitem(Soul_Protection)) {
 				mes "^4d4dffThere is no Spiritual Protection to give to Pedro the Sailor.^000000";
 				close;
 			}
@@ -2245,7 +2262,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "Alright. I'll go at them with this one today.";
 			next;
 			mes "-Delivered the Spiritual Protection to Pedro the Sailor.-";
-			delitem 6503, 1; // Soul_Protection
+			delitem Soul_Protection, 1; // Soul_Protection
 			erasequest 7368;
 			setquest 7382;
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -2287,7 +2304,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "Hmmm..........";
 			mes "It's a long story...";
 			next;
-			if (select("I'm listening.:Maybe later.") == 2) {
+			if (select("I'm listening.", "Maybe later.") == 2) {
 				mes "[Pedro the Sailor]";
 				mes "I knew it.";
 				mes "Though, it's not such a boring story.";
@@ -2373,12 +2390,12 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			erasequest 7399;
 			setquest 7401;
 //			if (IsPremiumPcCafe == 10)
-				getitem 6497, 2; // Lesser_Agimat
+				getitem Lesser_Agimat, 2; // Lesser_Agimat
 //			else
-//				getitem 6497, 1; // Lesser_Agimat
+//				getitem Lesser_Agimat, 1; // Lesser_Agimat
 			getexp 200000,200000;
 			if (!rand(3))
-				$malayaNames$[0] = strcharinfo(0);
+				$malayaNames$[0] = strcharinfo(PC_NAME);
 			close;
 		} else {
 			.@playtime = questprogress(7401, PLAYTIME);
@@ -2388,7 +2405,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				mes "This little one goes to Izlude.";
 				mes "That will be 1000z.";
 				next;
-				if (select("Use.:That's a rip off!") == 2) {
+				if (select("Use.", "That's a rip off!") == 2) {
 					mes "[Pedro the Sailor]";
 					mes "What?!";
 					mes "How much do you pay for the Alberta Liner to get here!?";
@@ -2410,67 +2427,64 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				end;
 			} else if (.@playtime == 2) {
 				erasequest 7401;
-				goto L_SetQuest;
 			} else {
 				if (!questprogress(7403)) {
-					if (!questprogress(7402)) {
-						goto L_SetQuest;
+					if (questprogress(7402)) {
+						mes "[Pedro the Sailor]";
+						mes "You know what to do.";
+						mes "Gather the flowers and take it to Mumbaki to get an Offering Bouquet made.";
+						next;
+						mes "[Pedro the Sailor]";
+						mes "Give the Bouquet to Miss Diwata to cheer her up.";
+						mes "....Thank you.";
+						close;
 					}
+				} else {
 					mes "[Pedro the Sailor]";
-					mes "You know what to do.";
-					mes "Gather the flowers and take it to Mumbaki to get an Offering Bouquet made.";
+					mes "Diwata is calm!";
+					mes "I can even feel the difference out here.";
+					mes "I am always in your debt.";
 					next;
 					mes "[Pedro the Sailor]";
-					mes "Give the Bouquet to Miss Diwata to cheer her up.";
-					mes "....Thank you.";
+					mes "You know what? Why don't you do this on a more regular basis?";
+					mes "I think you kind of like doing it.";
+					setquest 7401;
+					erasequest 7403;
+//					if (IsPremiumPcCafe == 10)
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
+//					else
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
+					getexp 200000,200000;
+					if (!rand(3))
+						$malayaNames$[0] = strcharinfo(PC_NAME);
 					close;
 				}
+			}
+			mes "[Pedro the Sailor]";
+			mes "Ah, the thing is...";
+			mes "We can't go right now..";
+			mes "You see, the ghosts are back...";
+			mes "I'm fed up with nuisance.";
+			next;
+			mes "[Pedro the Sailor]";
+			mes "I mean... Miss Diwata... Isn't feeling very well and, even with the Spiritual Protection";
+			mes "a normal person can't stand it.";
+			next;
+			if (select("I see. Take care then.", "How about a Floral Tribute?") == 1) {
 				mes "[Pedro the Sailor]";
-				mes "Diwata is calm!";
-				mes "I can even feel the difference out here.";
-				mes "I am always in your debt.";
-				next;
-				mes "[Pedro the Sailor]";
-				mes "You know what? Why don't you do this on a more regular basis?";
-				mes "I think you kind of like doing it.";
-				setquest 7401;
-				erasequest 7403;
-//				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
-//				else
-//					getitem 6497, 1; // Lesser_Agimat
-				getexp 200000,200000;
-				if (!rand(3))
-					$malayaNames$[0] = strcharinfo(0);
+				mes "I'm glad you understand.";
+				mes "Sigh...";
 				close;
 			}
+			mes "[Pedro the Sailor]";
+			mes "Hmmm. That would be nice.";
+			mes "If she can be soothed with flowers...!";
+			mes "Good luck.";
+			setquest 7402;
+			close;
 		}
 	}
 	end;
-
-L_SetQuest:
-	mes "[Pedro the Sailor]";
-	mes "Ah, the thing is...";
-	mes "We can't go right now..";
-	mes "You see, the ghosts are back...";
-	mes "I'm fed up with nuisance.";
-	next;
-	mes "[Pedro the Sailor]";
-	mes "I mean... Miss Diwata... Isn't feeling very well and, even with the Spiritual Protection";
-	mes "a normal person can't stand it.";
-	next;
-	if (select("I see. Take care then.:How about a Floral Tribute?") == 1) {
-		mes "[Pedro the Sailor]";
-		mes "I'm glad you understand.";
-		mes "Sigh...";
-		close;
-	}
-	mes "[Pedro the Sailor]";
-	mes "Hmmm. That would be nice.";
-	mes "If she can be soothed with flowers...!";
-	mes "Good luck.";
-	setquest 7402;
-	close;
 }
 
 ma_in01,125,107,3	script	Ghost Diwata	G_SKOGUL,4,4,{
@@ -2507,9 +2521,9 @@ OnTouch:
 		cutin "malaya_ghost01", 4;
 		mes "- Familiar souls are approaching Diwata. -";
 		next;
-		if (select("It's a misunderstanding!:You're from that..!") == 2) {
+		if (select("It's a misunderstanding!", "You're from that..!") == 2) {
 			cutin "malaya_ghost02", 4;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Just as I thought! You're afraid of me?!";
 			mes "Stand aside!";
 			mes "I need to talk to her.";
@@ -2552,7 +2566,7 @@ OnTouch:
 		warp "malaya", 324, 66;
 		end;
 	} else if (malaya_diwata == 4) {
-		if (!countitem(6506)) {
+		if (!countitem(Offering_Bouquet)) {
 			cutin "malaya_diwata01", 2;
 			mes "- The soul of Little Girl Diwata is looking at me fiercely.";
 			mes "No Offering Bouquet...!!!";
@@ -2567,7 +2581,7 @@ OnTouch:
 		mes "- The Offering Bouquet... -";
 		cutin "malaya_diwata01", 2;
 		next;
-		if (select("Throw it to the Little Girl.:Slide it across on the floor.") == 1) {
+		if (select("Throw it to the Little Girl.", "Slide it across on the floor.") == 1) {
 			mes "- I threw the bouquet before she could toss me out, and she catches in surprise...";
 			mes "She won't toss me... far, now that she has the flower.-";
 		} else {
@@ -2619,7 +2633,7 @@ OnTouch:
 		mes "[Diwata]";
 		mes "Now, g... go away!";
 		malaya_diwata = 5;
-		delitem 6506, 1; // Memorial_Boquet
+		delitem Offering_Bouquet, 1; // Memorial_Boquet
 		erasequest 7398;
 		setquest 7399;
 		close;
@@ -2677,7 +2691,7 @@ OnTouch:
 		next;
 		mes "- Diwata reached her hands out as if expecting something. -";
 		next;
-		if (select("Give the Bouquet.:Hold her hand.") == 2) {
+		if (select("Give the Bouquet.", "Hold her hand.") == 2) {
 			mes "[Diwata]";
 			mes "What do you think you're doing?!!??!?!!";
 			mes "Arghhhh - I have enough creeps around here, thank you!!";
@@ -2688,7 +2702,7 @@ OnTouch:
 			warp "malaya", 324, 66;
 			end;
 		}
-		if (!countitem(6506)) {
+		if (!countitem(Offering_Bouquet)) {
 			mes "[Diwata]";
 			mes "What? You want me to wave?";
 			mes "You didn't bring it?";
@@ -2712,7 +2726,7 @@ OnTouch:
 		mes "[Diwata]";
 		mes "Tell Pedro the Sailor!";
 		mes "Diwata will be a goddess of sea, so set sail in my generosity.";
-		delitem 6506, 1; // Memorial_Boquet
+		delitem Offering_Bouquet, 1; // Memorial_Boquet
 		setquest 7403;
 		erasequest 7402;
 		close;
@@ -2722,7 +2736,7 @@ OnTouch:
 }
 
 ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -2731,7 +2745,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 	mes "I am the soul guidance, protector of people and souls here at Baryo.";
 	mes "So, I'm a good leader Kiko in Mumbaki.";
 	next;
-	switch (select("Give Cast-Iron Caldron.:Request Purification Ritual.:Exchange Jellopy for gold.")) {
+	switch (select("Give Cast-Iron Caldron.", "Request Purification Ritual.", "Exchange Jellopy for gold.")) {
 		case 1:
 			if (!questprogress(7376)) {
 				if (!questprogress(7377)) {
@@ -2757,7 +2771,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 				mes "so deliver it well. Okay? Good.";
 				close;
 			}
-			if (countitem(6504) < 5) {
+			if (countitem(Cast_Iron_Caldron) < 5) {
 				mes "[Kiko in Mumbaki]";
 				mes "Oh, must be the cauldron I ordered.";
 				mes "But, where is it?";
@@ -2773,8 +2787,8 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 			mes "I'll give you this for the cauldron.";
 			mes "I hear you're having some trouble with souls?";
 			mes "Take this. It will help you.";
-			delitem 6504, 5; // Cast_Iron_Caldron
-			getitem 6503, 5; // Soul_Protection
+			delitem Cast_Iron_Caldron, 5; // Cast_Iron_Caldron
+			getitem Soul_Protection, 5; // Soul_Protection
 			setquest 7377;
 			erasequest 7376;
 			close;
@@ -2792,7 +2806,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 				mes "Quickly now.";
 				close;
 			}
-			if ((countitem(523) < 10) || (countitem(6507) < 10)) {
+			if ((countitem(Holy_Water) < 10) || (countitem(Evil_Bone) < 10)) {
 				mes "[Kiko in Mumbaki]";
 				mes "Purification of the bones the Guard Dog Vantai needs to gnaw on?";
 				mes "My work here just gets better and better.";
@@ -2817,9 +2831,9 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 			mes "[Kiko in Mumbaki]";
 			mes "Moreover, holding on to Evil Spirit Bones will only do you harm,";
 			mes "so I'll take them all to purify.";
-			delitem 6507, countitem(6507); // Evil_Bone
-			delitem 523, 10; //Holy_Water
-			getitem 6505, 10; //Purified_Bone
+			delitem Evil_Bone, countitem(Evil_Bone); // Evil_Bone
+			delitem Holy_Water, 10;
+			getitem Purified_Bone, 10;
 			setquest 7407;
 			erasequest 7406;
 			close;
@@ -2833,7 +2847,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 }
 
 ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -2841,7 +2855,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 	mes "Hi there!";
 	mes "Welcome to Baryo.";
 	next;
-	if (select("You're job seems so hard~:Guard Dog Vantai") == 1) {
+	if (select("You're job seems so hard~", "Guard Dog Vantai") == 1) {
 		mes "[Dhong the Guard]";
 		mes "Not at all. I just watch who comes and goes from here.";
 		mes "Travelers are the ones who go through more hardship.";
@@ -2900,7 +2914,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 			close;
 		} else {
 			if (questprogress(7407) == 1) {
-				if (countitem(6505) < 10) {
+				if (countitem(Purified_Bone) < 10) {
 					mes "[Dhong the Guard]";
 					mes "Kiko in Mumbaki asked for 10 Purified Spirit Bones.";
 					mes "He needs to have at least 10 at a time. Which of course does not last a day...";
@@ -2923,16 +2937,16 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 				mes "[Dhong the Guard]";
 				mes "This is your reward.";
 				mes "It would be very nice if you could help us again tomorrow.";
-				delitem 6505, 10; // Purified_Bone
+				delitem Purified_Bone, 10; // Purified_Bone
 				setquest 7408;
 				erasequest 7407;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(0, 2))
-					$malayaNames$[2] = strcharinfo(0);
+					$malayaNames$[2] = strcharinfo(PC_NAME);
 				close;
 			} else {
 				mes "[Dhong the Guard]";
@@ -2943,7 +2957,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 				mes "As you can see, I can't move from here,";
 				mes "so I was wondering if you can get the bones for Vantai...";
 				next;
-				if (select("Alright.:Sorry.") == 2) {
+				if (select("Alright.", "Sorry.") == 2) {
 					mes "[Dhong the Guard]";
 					mes "I see.";
 					mes "Vantai!";
@@ -2980,7 +2994,7 @@ ma_fild01,238,257,2	script	Guard Dog Vantai	4_RUS_DWOLF,{
 }
 
 ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -3023,12 +3037,12 @@ ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
 			setquest 7390;
 			erasequest 7389;
 //			if (IsPremiumPcCafe == 10)
-				getitem 6497, 2; // Lesser_Agimat
+				getitem Lesser_Agimat, 2; // Lesser_Agimat
 //			else
-//				getitem 6497, 1; // Lesser_Agimat
+//				getitem Lesser_Agimat, 1; // Lesser_Agimat
 			getexp 200000,200000;
 			if (!rand(3))
-				$malayaNames$[2] = strcharinfo(0);
+				$malayaNames$[2] = strcharinfo(PC_NAME);
 			close;
 		} else {
 			if (questprogress(7388)) {
@@ -3046,7 +3060,7 @@ ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
 				mes "My daughter did not return.";
 				mes "Please help, I think she's lost in the forest.";
 				next;
-				switch (select("Of course.:I'm too busy right now.:You have so many children.")) {
+				switch (select("Of course.", "I'm too busy right now.", "You have so many children.")) {
 				case 1:
 					mes "[Maries]";
 					mes "I'm sure she's lost in the woods because of mischievous spirits.";
@@ -3100,7 +3114,7 @@ ma_fild01,203,189,3	script	Little Girl#malaya	4_F_BARYO_GIRL,{
 
 ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 	if (questprogress(7388)) {
-		if (!countitem(12700)) {
+		if (!countitem(Insideout_Shirt)) {
 			mes "[Little Kid]";
 			mes "Sigh. Are you lost too?";
 			mes "They are so naughty.";
@@ -3130,14 +3144,14 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 		mes "She must be worried..!";
 		mes "I'll go home now!";
 		mes "Thanks' a lot!";
-		delitem 12700, 1; // Insideout_Shirt
+		delitem Insideout_Shirt, 1; // Insideout_Shirt
 		setquest 7389;
 		erasequest 7388;
 		close2;
-		disablenpc strnpcinfo(0);
-		if (strnpcinfo(0) == "Lost Child#malaya01") {
+		disablenpc strnpcinfo(NPC_NAME);
+		if (strnpcinfo(NPC_NAME) == "Lost Child#malaya01") {
 			enablenpc "Lost Child#malaya02";
-		} else if (strnpcinfo(0) == "Lost Child#malaya01") {
+		} else if (strnpcinfo(NPC_NAME) == "Lost Child#malaya01") {
 			enablenpc "Lost Child#malaya03";
 		} else {
 			enablenpc "Lost Child#malaya01";
@@ -3158,17 +3172,17 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 			next;
 			mes "[Little Kid]";
 			mes "Why~ Do I always go in circles here?";
-			mes "Do you why, " + ((Sex) ? "mister" : "ma'am") + "?";
+			mes "Do you why, " + (Sex == SEX_MALE ? "mister" : "ma'am") + "?";
 			mes "What's with this road?";
 			mes "Is somebody trying to trick me?";
 			close;
 		}
 	}
 	end;
-	
+
 OnInit:
-	if (strnpcinfo(0) != "Lost Child#malaya01")
-		disablenpc strnpcinfo(0);
+	if (strnpcinfo(NPC_NAME) != "Lost Child#malaya01")
+		disablenpc strnpcinfo(NPC_NAME);
 }
 ma_fild01,114,141,3	duplicate(Lost Child#malaya01)	Lost Child#malaya02	4_F_BARYO_GIRL
 ma_fild01,130,314,3	duplicate(Lost Child#malaya01)	Lost Child#malaya03	4_F_BARYO_GIRL
@@ -3184,7 +3198,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 	mes "[Budidai]";
 	mes "Hey buddy, You here to hear Budidai singing?";
 	next;
-	switch (select("You like songs?:A profound study of one eyed monsters.:See ya!")) {
+	switch (select("You like songs?", "A profound study of one eyed monsters.", "See ya!")) {
 	case 1:
 		mes "[Budidai]";
 		mes "Yup, Budidai loves singing.";
@@ -3262,12 +3276,12 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 					setquest 7410;
 					erasequest 7409;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6497, 2; // Lesser_Agimat
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
 //					else
-//						getitem 6497, 1; // Lesser_Agimat
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					if (!rand(3))
-						$malayaNames$[1] = strcharinfo(0);
+						$malayaNames$[1] = strcharinfo(PC_NAME);
 					close;
 				} else {
 					mes "[Budidai]";
@@ -3302,7 +3316,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 					mes "Bongisungisu! I get the chills just by being in the same forest with it...";
 					mes "But Budidai is weak.";
 					next;
-					if (select("Shall I take care of it?:That does give the chills.") == 2) {
+					if (select("Shall I take care of it?", "That does give the chills.") == 2) {
 						mes "[Budidai]";
 						mes "Don't remind me.";
 						mes "My friends can't come and listen to my songs because of that behemoth.";
@@ -3337,31 +3351,30 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 	end;
 }
 
-// Traders :: malaya_npc
-//============================================================
+//== Traders :: malaya_npc =================================
 ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
-	if (MaxWeight - Weight < 600 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 600 || checkweight(Knife,1) == 0) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
 	mes "[Old Man in Dilemma]";
 	mes "Oh! Demons are gaining more and more power in this world.";
 	next;
-	switch(select("We need to gather items to fight them off.:Ignore.")) {
+	switch(select("We need to gather items to fight them off.", "Ignore.")) {
 	case 1:
-		if (countitem(6497) >= 3 && Zeny >= 1000) {
+		if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
 			mes "[Old Man in Dilemma]";
 			mes "You don't seem to be strong enough to fight off demons.";
 			next;
 			mes "[Old Man in Dilemma]";
 			mes "Will you create a Greater Agimat of Ancient Spirit with 3 Lesser Agimats and 1,000 Zeny?";
 			next;
-			if(select("Create.:No, thank you.") == 1) {
-				if (countitem(6497) >= 3 && Zeny >= 1000) {
-					specialeffect2 EF_CONE;
+			if(select("Create.", "No, thank you.") == 1) {
+				if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
+					specialeffect(EF_CONE, AREA, playerattached());
 					specialeffect EF_FORESTLIGHT2;
 					Zeny -= 1000;
-					getitem 12775,1; //Ancient_Spirit_Agimat
+					getitem Ancient_Spirit_Agimat,1;
 				} else {
 					mes "[Old Man in Dilemma]";
 					mes "Short on materials.";
@@ -3414,14 +3427,14 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 }
 
 ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
-	if (MaxWeight - Weight < 50 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 50 || checkweight(Knife,1) == 0) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
 	mes "[Tikbalang Expert]";
 	mes "I spent 90% of my life studying Tikbalang.";
 	next;
-	switch(select("But you look young?:What is Tikbalang?:Teach me how to catch a Tikbalang.")) {
+	switch(select("But you look young?", "What is Tikbalang?", "Teach me how to catch a Tikbalang.")) {
 	case 1:
 		mes "[Tikbalang Expert]";
 		mes "What! I might be imagining things.";
@@ -3443,7 +3456,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 		mes "Have you... ever been fooled by anyone around you? Why can't you believe someone's word for it? Really, ask me anything.";
 		next;
 		while(1) {
-			switch(select("I don't have any questions.:Characteristics?:Features?:Rumors?:Habitat?")) {
+			switch(select("I don't have any questions.", "Characteristics?", "Features?", "Rumors?", "Habitat?")) {
 			case 1:
 				mes "[Tikbalang Expert]";
 				mes "I think this is enough explanation for now. You wouldn't understand other highly sophisticated topics with specific terminology and all anyway.";
@@ -3522,17 +3535,17 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 		mes "[Tikbalang Expert]";
 		mes "Ha ha ha. Do you now know how great I am?";
 		next;
-		if (countitem(6496) >= 3 && countitem(6497) >= 5) {
+		if (countitem(Tikbalang_Thick_Spine) >= 3 && countitem(Lesser_Agimat) >= 5) {
 			mes "[Tikbalang Expert]";
 			mes "Oh! Isn't this material to make 'Tikbalang Belt' used to tame Tikbalangs?";
 			next;
 			mes "[Tikbalang Expert]";
 			mes "The '^F80835Tikbalang Belt^000000' is used to capture Tikbalangs without the hassle. But that doesn't mean it's 100% successful. Interested? Do you want me to make one for you?";
 			next;
-			switch(select("Yes, Im interested.:No, I can capture one myself.")) {
+			switch(select("Yes, Im interested.", "No, I can capture one myself.")) {
 			case 1:
-				delitem 6496,3; //Tikbalang_Thick_Spine
-				getitem 12699,1; //Tikbalang_Belt
+				delitem Tikbalang_Thick_Spine,3;
+				getitem Tikbalang_Belt,1;
 				mes "[Tikbalang Expert]";
 				mes "Yiiiiiiiiiiii! Yap!";
 				next;
@@ -3550,7 +3563,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 		mes "[Tikbalang Expert]";
 		mes "There is the easy way and the hard way to capture Tikbalangs. Which one do you prefer?";
 		next;
-		switch(select("Easy way.:Hard way.")) {
+		switch(select("Easy way.", "Hard way.")) {
 		case 1:
 			mes "[Tikbalang Expert]";
 			mes "Ha ha. I've come up with the easy way myself.";
@@ -3598,13 +3611,12 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 	}
 }
 
-// Upgrade Boss Equipment :: malaya_mvpitem
-//============================================================
+//== Upgrade Boss Equipment :: malaya_mvpitem ==============
 ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "I will upgrade your armor if you bring one that holds enormous power.";
 	next;
-	switch (select("What kind of equipment do upgrade?:What are the required materials?:What will it become after an upgrade?:Please upgrade this.")) {
+	switch (select("What kind of equipment do upgrade?", "What are the required materials?", "What will it become after an upgrade?", "Please upgrade this.")) {
 	case 1:
 		mes "[Bayani]";
 		mes "Your questions are too simple, but!";
@@ -3661,7 +3673,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 		mes "Unless the one that holds it doesn't believe it is! Ask about what has changed and decide for yourself!";
 		next;
 		while (1) {
-			switch (select("There is no more.:Bakonawa Scale Armor:Kalasag:Buwaya Sack Cloth:Bangungot Boots of Nightmare")) {
+			switch (select("There is no more.", "Bakonawa Scale Armor", "Kalasag", "Buwaya Sack Cloth", "Bangungot Boots of Nightmare")) {
 			case 1:
 				mes "[Bayani]";
 				mes "Looks like you ran out of questions.";
@@ -3734,13 +3746,13 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "Ha ha ha ha ha ha ha! Good!";
 	mes "You've brought the materials, right?";
 	next;
-	if (select("Oh... sorry...:Preparations are complete!!") == 1) {
+	if (select("Oh... sorry...", "Preparations are complete!!") == 1) {
 		mes "[Bayani]";
 		mes "Oh no!!";
 		mes "I will need an light but sturdy armor with an refinement of +9 or greater and 20 Ancient Grudges!!";
 		close;
 	}
-	if (countitem(6499) < 20) {
+	if (countitem(Ancient_Grudge) < 20) {
 		mes "[Bayani]";
 		mes "You said all preparations are done and you give me this?! I need at least 20 Ancient Grudges to refine your item.";
 		close;
@@ -3748,7 +3760,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "So what armor will it be?";
 	next;
-	switch (select("Bakonawa Scale Armor:Kalasag:Buwaya Sack Cloth:Bangungot Boots of Nightmare")) {
+	switch (select("Bakonawa Scale Armor", "Kalasag", "Buwaya Sack Cloth", "Bangungot Boots of Nightmare")) {
 	case 1:
 		.@part    = EQI_ARMOR;
 		.@item    = 15051;
@@ -3770,7 +3782,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 		.@newItem = 2492;
 		break;
 	}
-	
+
 	if (!(.@item)) {
 		mes "[Bayani]";
 		mes "You should wear the equipment to upgrade and not come without it on you.";
@@ -3791,7 +3803,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "^0000FFOnce your item is refined, the refinement level will be ^FF00000^0000FF and the item will be upgraded.^000000 You get this part?";
 	next;
-	if (select("No.:Yes.") == 1) {
+	if (select("No.", "Yes.") == 1) {
 		mes "[Bayani]";
 		mes "What? You didn't know this? Then, read through my instructions and come back again.";
 		close;
@@ -3801,7 +3813,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "^0000FFEquipping the Kalasag, Buwaya Sack Cloth, Bakonawa Scale Armor, and Bangungot Boots of Nightmare all at once will lose the ^FF0000Set Effects^0000FF.^000000";
 	mes "Do you understand this point?";
 	next;
-	if (select("No.:Yes.") == 1) {
+	if (select("No.", "Yes.") == 1) {
 		mes "[Bayani]";
 		mes "What? You didn't know this? Then, read through my instructions and come back again.";
 		close;
@@ -3813,23 +3825,22 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "Pow!! Wow!! Flip... flop!";
 	next;
-	specialeffect2 EF_TRIPLEATTACK;
+	specialeffect(EF_TRIPLEATTACK, AREA, playerattached());
 	mes "[Bayani]";
 	mes "BAM!!";
 	next;
-	
-	delitem 6499,20; //Ancient_Grudge
+
+	delitem Ancient_Grudge,20;
 	delequip .@part;
 	getitem .@newItem, 1;
-	
+
 	mes "[Bayani]";
 	mes "Ha ha. Perfect.";
 	mes "Congratulations. Your armor is better than ever.";
 	close;
 }
 
-// Secret in the Woods :: malaya_buwaya
-//============================================================
+//== Secret in the Woods :: malaya_buwaya ==================
 malaya,305,281,3	script	Guard#buwaya	4_MAL_SOLDIER,7,7,{
 	if (malaya_hi < 10) {
 		mes "- From the wary looks on the guard's face, it is obvious he is at alert at the sight of you. He won't intimidate you but seems he won't even deal with you either. -";
@@ -3860,7 +3871,7 @@ malaya,305,281,3	script	Guard#buwaya	4_MAL_SOLDIER,7,7,{
 		mes "[Guard]";
 		mes "Is that why there are more outsiders here these days? Now don't be sneaky and a know-it-all. How would you know if I'd offered to take you around?";
 		next;
-		if (select("Treasure?:Ignore.") == 2) {
+		if (select("Treasure?", "Ignore.") == 2) {
 			mes "[Guard]";
 			mes "Are you ignoring me? Bah.";
 			close;
@@ -4001,13 +4012,13 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 	if (malaya_buwaya == 2) {
 		mes "- See someone shaky with dopey eyes. -";
 		next;
-		if (select("Tap him on the shoulder.:Ignore him.") == 2)
+		if (select("Tap him on the shoulder.", "Ignore him.") == 2)
 			close;
 		emotion e_omg;
 		mes "[Totoy]";
 		mes "Wah! No! Go away! Leave me alone!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hey, are you alright?";
 		next;
 		mes "[Totoy]";
@@ -4018,14 +4029,14 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Who's there?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
-		mes "I am " + strcharinfo(0) + ". You are Totoy, right? People say you've found a treasure. Is it true?";
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes "I am " + strcharinfo(PC_NAME) + ". You are Totoy, right? People say you've found a treasure. Is it true?";
 		next;
 		mes "[Totoy]";
 		mes "What treasure?";
 		mes "I can't see. I'm blinded. Please help me. I'm tired and frustrated.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What happened?";
 		next;
 		mes "[Totoy]";
@@ -4034,7 +4045,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		malaya_buwaya = 3;
 		close;
 	} else if (malaya_buwaya == 3) {
-		if (!countitem(506)) {
+		if (!countitem(Green_Potion)) {
 			mes "[Totoy]";
 			mes "Can't talk long. I need to heal my eyes first.";
 			mes "There should be some ^3131FFGreen Potion^000000 left inside the drawer. Will you get it for me?";
@@ -4043,13 +4054,13 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Hello? Hey, are you still there? What happened to the Green Potion? Jeez, this is driving me crazy.";
 		next;
-		if (select("Hand over the Green Potion.:Do not hand over the potion.") == 2) {
+		if (select("Hand over the Green Potion.", "Do not hand over the potion.") == 2) {
 			mes "[Totoy]";
 			mes "Did you really leave? Hey! Darn!";
 		} else {
 			mes "[Totoy]";
 			mes "Gulp, gulp...";
-			delitem 506,1; //Green_Potion
+			delitem Green_Potion,1;
 			malaya_buwaya = 4;
 		}
 		close;
@@ -4083,7 +4094,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "I did go deep in the woods because I wasn't getting anywhere with collecting bugs. But who would have thought I'd get into this mess?";
 		next;
-		if (select("What Totoy saw:About bugs") == 2) {
+		if (select("What Totoy saw", "About bugs") == 2) {
 			mes "[Totoy]";
 			mes "I only wanted to show people my collection of cute bugs. Ha ha.";
 			next;
@@ -4189,7 +4200,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "Thank you so much!";
 		mes "You didn't see the monster, did you?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "The monster is called Buwaya. I told the Guard about the monster. You better not go near the place again.";
 		next;
 		mes "[Totoy]";
@@ -4210,11 +4221,11 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Um... hey!";
 		next;
-		select("You are a " + ((Sex) ? "boy" : "girl") + ", aren't you?");
+		select("You are a " + (Sex == SEX_MALE ? "boy" : "girl") + ", aren't you?");
 		emotion e_omg,1;
 		mes "[Totoy]";
 		mes "Huh?";
-		if (!Sex) {
+		if (Sex == SEX_FEMALE) {
 			mes "Totoy is a girl, and you are a boy.";
 			mes "You're not a boy?";
 		} else {
@@ -4238,7 +4249,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 			.@amount = 10;
 //		else
 //			.@amount = 5;
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 			mes "- Wait!! -";
 			mes "- You have too many items on you. -";
 			mes "- Cannot receive the item. -";
@@ -4262,7 +4273,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Dog]";
 		mes "Woof woof woof!!!!";
 		malaya_buwaya = 14;
-		getitem 6497,5; //Lesser_Agimat
+		getitem Lesser_Agimat,5;
 		disablenpc "Dog#buwaya_totoi";
 		erasequest 2279;
 		setquest 2280;
@@ -4296,7 +4307,7 @@ ma_in01,44,105,3	script	Drawer#buwaya	CLEAR_NPC,{
 		next;
 		mes "- Clunk, clank, crunch. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What? I only see an empty potion bottle.";
 		mes "Does this mean I have to get the potion myself? That Totoy is really a troublemaker.";
 		close;
@@ -4326,7 +4337,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "[Master of Hunting]";
 		mes "So you came here to learn all about my excellent hunting skills? Or to ask me to publish an essay on Master of Hunting? Ho!";
 		next;
-		if (select("About Totoys monster:Interrupt.") == 2) {
+		if (select("About Totoys monster", "Interrupt.") == 2) {
 			mes "[Master of Hunting]";
 			mes "Oh? Hey! Where are you going?!";
 			close;
@@ -4348,7 +4359,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "[Master of Hunting]";
 		mes "You shouldn't lie to an adult. I understand you want the Master of Huntings attention. Ha ha!";
 		next;
-		if (select("I will prove it.:Suspicious of Totoy.") == 2) {
+		if (select("I will prove it.", "Suspicious of Totoy.") == 2) {
 			mes "[Master of Hunting]";
 			mes "Kids tell stories for their own reasons. I'm sure Totoy is the same.";
 			malaya_buwaya = 6;
@@ -4364,7 +4375,10 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "Try collecting 10 Animal Samples from where the kid saw the monster. I will look for traces of that monster from the samples.";
 		next;
 		mes "[Master of Hunting]";
-		mes (Sex) ? "It won't be pleasant but any brave man could easily do it, don't you agree?" : "I don't want the hands of a pretty girl to smell bad but I could care less with someone like you. Ha ha!";
+		if (Sex == SEX_MALE)
+			mes "It won't be pleasant but any brave man could easily do it, don't you agree?";
+		else
+			mes "I don't want the hands of a pretty girl to smell bad but I could care less with someone like you. Ha ha!";
 		malaya_buwaya = 7;
 		erasequest 2273;
 		setquest 2274;
@@ -4373,7 +4387,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "[Master of Hunting]";
 		mes "Oh, you're back!";
 		next;
-		if (select("Let's see if we have a monster in it!:I don't think there is a monster.") == 2) {
+		if (select("Let's see if we have a monster in it!", "I don't think there is a monster.") == 2) {
 			mes "[Master of Hunting]";
 			mes "It was a kid's joke. Ha ha.";
 			close;
@@ -4388,13 +4402,16 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "Try collecting 10 Animal Samples from where the kid saw the monster. I will look for traces of that monster from the samples.";
 		next;
 		mes "[Master of Hunting]";
-		mes (Sex) ? "It won't be pleasant but any brave man could easily do it, don't you agree?" : "I don't want the hands of a pretty girl to smell bad but I could care less with someone like you. Ha ha!";
+		if (Sex == SEX_MALE)
+			mes "It won't be pleasant but any brave man could easily do it, don't you agree?";
+		else
+			mes "I don't want the hands of a pretty girl to smell bad but I could care less with someone like you. Ha ha!";
 		malaya_buwaya = 7;
 		erasequest 2273;
 		setquest 2274;
 		close;
 	} else if (malaya_buwaya == 7) {
-		if (countitem(6519) < 10) {
+		if (countitem(Collected_Sample) < 10) {
 			mes "[Master of Hunting]";
 			mes "Bring me back samples if you want to prove there is a monster with two heads.";
 			close;
@@ -4403,7 +4420,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "Argh! That's so foul.";
 		mes "You've really brought back the samples.";
 		mes "Ho! Leave it there and come back after washing your hands. Even god won't smile down at you with that stench.";
-		delitem 6519,10; //Collected_Sample
+		delitem Collected_Sample,10;
 		malaya_buwaya = 8;
 		erasequest 2274;
 		setquest 2275;
@@ -4460,7 +4477,7 @@ malaya,291,152,3	script	#buwaya_soil	4_SOIL,{
 		mes "- Sway, swag. -";
 		next;
 		if (rand(1,10) <= 5) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I don't see anything.";
 			next;
 			mes "[Master of Hunting]";
@@ -4468,7 +4485,7 @@ malaya,291,152,3	script	#buwaya_soil	4_SOIL,{
 		} else {
 			mes "- Felt something pointy with the end of your fingers. -";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Ouch!";
 			mes "What is this?";
 			next;
@@ -4516,8 +4533,8 @@ OnInit:
 	end;
 }
 
--	script	Unknown Trace#buwaya	-1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
+-	script	Unknown Trace#buwaya	FAKE_NPC,{
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait!! -";
 		mes "- You have too many items on you. -";
 		mes "- Cannot receive the item. -";
@@ -4526,7 +4543,7 @@ OnInit:
 		close;
 	}
 	if (malaya_buwaya == 7) {
-		if (countitem(6519) >= 10) {
+		if (countitem(Collected_Sample) >= 10) {
 			mes "- You don't have to collect any more samples. -";
 			close;
 		}
@@ -4539,16 +4556,16 @@ OnInit:
 		}
 		mes "- You slowing and cautiously collect the squashy and slightly warm substance. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "It's warm as a mother's bosom.";
-		getitem 6519,1; //Collected_Sample
-		disablenpc strnpcinfo(0);
+		getitem Collected_Sample,1;
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	}
 	end;
 OnTimer20000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -4561,7 +4578,7 @@ ma_fild02,300,98,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_6	4_SOIL
 ma_fild02,100,275,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_7	4_SOIL
 
 malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait!! -";
 		mes "- You have too many items on you. -";
 		mes "- Cannot receive the item. -";
@@ -4582,7 +4599,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 	}
 	if (malaya_buwaya == 10) {
 		next;
-		if (select("Tell him about Buwaya.:Done with conversation.") == 2) {
+		if (select("Tell him about Buwaya.", "Done with conversation.") == 2) {
 			close;
 		}
 		mes "[Guard Leader]";
@@ -4597,7 +4614,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 		mes "[Guard Leader]";
 		mes "Hmm... will you be able to help Port Malaya?";
 		next;
-		if (select("Leave it to me!:I'm pretty busy myself.") == 2) {
+		if (select("Leave it to me!", "I'm pretty busy myself.") == 2) {
 			mes "[Guard Leader]";
 			mes "Really? That's no good. All the lives of the villagers will be at stake if we don't do something. How can a youth like you be so heartless. Are all outsiders like you? Hmph! Can't trust young people these days. Hmph.";
 			close;
@@ -4624,7 +4641,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 		mes "^3131FFShoot a smoke bomb^000000 once you reach the area.";
 		mes "Then we will run to where the smoke bomb was shot.";
 	} else if ((malaya_buwaya == 12) || (malaya_buwaya == 13)) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Let's first bring Ed to Totoy.";
 	} else if (malaya_buwaya == 14) {
 		mes "[Guard Leader]";
@@ -4653,7 +4670,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 			mes "They say Buwaya is a very strong and ugly monster with two heads.";
 			mes "Will you help us defeat Buwaya?";
 			next;
-			if (select("Of course.:Nope.") == 2) {
+			if (select("Of course.", "Nope.") == 2) {
 				mes "[Guard Leader]";
 				mes "Buwaya is known to be a very dangerous monster.";
 				mes "There is no shame in rejecting this request.";
@@ -4677,7 +4694,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 			mes "[Guard Leader]";
 			mes "How is it going with the Buwaya situation?";
 			next;
-			if (select("I give up.:Still fighting.") == 2) {
+			if (select("I give up.", "Still fighting.") == 2) {
 				mes "[Guard Leader]";
 				mes "Keep this in mind and be cautious at all times.";
 				mes "I recommend asking trustful colleagues for help.";
@@ -4699,7 +4716,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 			mes "[Guard Leader]";
 			mes "Good work.";
 			erasequest 2281;
-			getitem 6497, .@amount; //Lesser_Agimat
+			getitem Lesser_Agimat, .@amount;
 			getexp 0,600000;
 		} else {
 			mes "[Guard Leader]";
@@ -4729,11 +4746,11 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		mes "[Dog]";
 		mes "Bark bark!!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Why is a dog here?";
 		next;
-		if (select("Look closely at the dog.:Ignore it.") == 2) {
-			mes "[" + strcharinfo(0) + "]";
+		if (select("Look closely at the dog.", "Ignore it.") == 2) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Looks like a lost dog.";
 			close;
 		}
@@ -4741,20 +4758,20 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "- The collar says, 'Forever with Totoy'. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "So you are Ed?";
 		next;
 		mes "[Dog]";
 		mes "Bark bark!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "You didn't get killed by Buwaya. You lucky little dog. Let's go back to your owner.";
 		next;
 		emotion e_ho;
 		mes "[Dog]";
 		mes "Bark bark!!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ah, before we go, do you happen to know where Buwaya's nest is?";
 		next;
 		mes "[Dog]";
@@ -4762,7 +4779,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "- Ed is one smart dog and understood what you asked him. Ed started to bark towards the north. -";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Buwaya is over there!";
 		mes "Then I should shoot the smoke bomb here.";
 		next;
@@ -4770,14 +4787,14 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		next;
 		mes "^FF0000- Shoook-^000000";
 		enablenpc "Guard#buwayacave";
-		specialeffect2 EF_MVP;
+		specialeffect(EF_MVP, AREA, playerattached());
 		next;
 		mes "[Guard]";
 		mes "Job well done!";
 		mes "So Buwaya lives in remote place like this. I will make sure this information goes to the Guard Leader!";
 		disablenpc "Guard#buwayacave";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Should I return Ed to Totoy first and then go see the Guard Leader?";
 		next;
 		mes "[Dog]";
@@ -4788,7 +4805,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		setquest 2278;
 		close;
 	} else if (malaya_buwaya == 12) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Lets first bring Ed to Totoy and then go back to the Guard Leader.";
 		close;
 	}
@@ -4805,8 +4822,7 @@ OnInit:
 	end;
 }
 
-// Bakonawa Extermination :: malaya_bakonawa
-//============================================================
+//== Bakonawa Extermination :: malaya_bakonawa =============
 malaya,280,331,4	script	Singing Man#bako1	4_M_BARYO_MAN,{
 	if (malaya_bakona1 < 5) {
 		mes "[Singing Man]";
@@ -4935,7 +4951,7 @@ malaya,264,338,4	script	Frightened Maiden#bako1	4_F_BARYO_GIRL,{
 		mes "It is said that Bakonawa hates loud noises.";
 		mes "Pound the pot if you want to live!";
 		next;
-		switch(select("Hates loud noises?:What is Bakonawa?")) {
+		switch(select("Hates loud noises?", "What is Bakonawa?")) {
 		case 1:
 			mes "[Frightened Maiden]";
 			mes "You already heard that the old lady";
@@ -5010,7 +5026,7 @@ malaya,272,339,5	script	Old Fortune Teller#bako1	4_F_BARYO_OLD,{
 }
 
 malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
 	}
@@ -5038,7 +5054,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 		mes "We must calm her";
 		mes "if to prevent further destruction...";
 		next;
-		switch(select("Calm Bakonawa?:Further destruction?")) {
+		switch(select("Calm Bakonawa?", "Further destruction?")) {
 		case 1:
 			mes "[Old Legend Teller]";
 			mes "The old lady faced an unjust death";
@@ -5068,7 +5084,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 			mes "it is worth a try?";
 			mes "Please help us and save us from our misery.";
 			next;
-			switch(select("It is no use.:I'll help.")) {
+			switch(select("It is no use.", "I'll help.")) {
 			case 1:
 				mes "[Old Legend Teller]";
 				mes "Yes, you are also right.";
@@ -5146,7 +5162,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 		mes "simply cannot travel there.";
 		mes "Could you visit the place for us?";
 		next;
-		switch(select("Go there yourself!:Your explanation is too vague.:On my way!")) {
+		switch(select("Go there yourself!", "Your explanation is too vague.", "On my way!")) {
 		case 1:
 			mes "[Old Legend Teller]";
 			mes "You twisted youth!";
@@ -5206,7 +5222,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 		mes "before it attacks first.";
 		mes "I believe we can trust you to do this, yes?";
 		next;
-		switch(select("Well...:Of course!")) {
+		switch(select("Well...", "Of course!")) {
 		case 1:
 			mes "[Old Legend Teller]";
 			mes "The atmosphere was really good";
@@ -5222,9 +5238,9 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 			erasequest 1179;
 			malaya_bakona1 = 7;
 //			if (IsPremiumPcCafe == 10)
-				getitem 6499,5; //Ancient_Grudge
+				getitem Ancient_Grudge,5;
 //			else
-//				getitem 6499,3; //Ancient_Grudge
+//				getitem Ancient_Grudge,3;
 			getexp 500000,200000;
 			close;
 		}
@@ -5273,7 +5289,7 @@ ma_fild02,40,240,4	script	Malaya Immigrant#bako1	4_M_BARYO_MAN,{
 		mes "I don't know about the specifics, but";
 		mes "I think it's related to what I heard long time ago.";
 		next;
-		switch(select("What are you doing here?:Do you know about this Slate Piece?:Please tell me the story.:Who is the traveling merchant?")) {
+		switch(select("What are you doing here?", "Do you know about this Slate Piece?", "Please tell me the story.", "Who is the traveling merchant?")) {
 		case 1:
 			mes "[Malaya Immigrant]";
 			mes "I liked the environment here";
@@ -5374,7 +5390,7 @@ ma_fild01,165,237,4	script	Malaya Immigrant#bako2	4_M_MALAYA,{
 		mes "but you didn't come all the way";
 		mes "just to hear some folktale right?";
 		next;
-		switch(select("I just came here to take a break.:Tell me the tale.")) {
+		switch(select("I just came here to take a break.", "Tell me the tale.")) {
 		case 1:
 			mes "[Malaya Immigrant]";
 			mes "You must have a lot of free time on your hands!";
@@ -5427,7 +5443,7 @@ ma_fild01,165,237,4	script	Malaya Immigrant#bako2	4_M_MALAYA,{
 		mes "The stone ahead holds a record that";
 		mes "a swordsman from a long time ago left.";
 		next;
-		switch(select("Where did this swordsman go after?:Tell me the tale again.")) {
+		switch(select("Where did this swordsman go after?", "Tell me the tale again.")) {
 		case 1:
 			mes "[Malaya Immigrant]";
 			mes "Well, there is no story after that so";
@@ -5488,7 +5504,7 @@ OnTouch:
 		mes "Here is the record left by a swordsman";
 		mes "from a hundred years ago.";
 		next;
-		switch(select("I don't need to read it.:Read the record again.")) {
+		switch(select("I don't need to read it.", "Read the record again.")) {
 		case 1:
 			mes "I remember the story clearly.";
 			mes "Let's tell the ^0000FFOld Legend Teller^000000 in Malaya";
@@ -5625,7 +5641,7 @@ malaya,276,262,4	script	Angry Boy#bako2	4_M_BARYO_BOY,{
 }
 
 malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
 	}
@@ -5681,7 +5697,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		mes "are said to be carried by";
 		mes "^FF0000Tiyanak^000000 that roams Baryo Mahiwaga.";
 		next;
-		switch(select("Do it yourself.:I'm on my way.")) {
+		switch(select("Do it yourself.", "I'm on my way.")) {
 		case 1:
 			mes "[Village Chief]";
 			mes "You give me a lot to think about.";
@@ -5742,9 +5758,9 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		setquest 1185;
 		malaya_bakona2 = 6;
 //		if (IsPremiumPcCafe == 10)
-			getitem 12700,7; //Insideout_Shirt
+			getitem Insideout_Shirt,7;
 //		else
-//			getitem 12700,5; //Insideout_Shirt
+//			getitem Insideout_Shirt,5;
 		close;
 	} else if (malaya_bakona2 == 6) {
 		mes "[Village Chief]";
@@ -5776,7 +5792,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		mes "near where traps will be set up,";
 		mes "so you just have to visit about 5 places.";
 		next;
-		switch(select("Sounds like too much work.:Sure thing.")) {
+		switch(select("Sounds like too much work.", "Sure thing.")) {
 		case 1:
 			mes "[Village Chief]";
 			mes "This operation means life and death to us";
@@ -5848,9 +5864,9 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		malaya_bakona2 = 15;
 		getexp 1000000,600000;
 //		if (IsPremiumPcCafe == 10)
-			getitem 6497,7; //Lesser_Agimat
+			getitem Lesser_Agimat,7;
 //		else
-//			getitem 6497,5; //Lesser_Agimat
+//			getitem Lesser_Agimat,5;
 		close;
 	} else if (malaya_bakona2 == 15) {
 		mes "[Village Chief]";
@@ -5869,7 +5885,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 	}
 }
 
-ma_fild01,1,1,0	script	malaya_ma_fild01_mon	-1,{
+ma_fild01,1,1,0	script	malaya_ma_fild01_mon	FAKE_NPC,{
 OnInit:
 	enablenpc "malaya_ma_fild01_mon";
 	donpcevent "malaya_ma_fild01_mon::OnEnable";
@@ -5894,7 +5910,7 @@ OnTimer600000:
 
 OnMyMobDead:
 	if (mobcount("ma_fild01","malaya_ma_fild01_mon::OnMyMobDead") < 5 && (malaya_bakona2 == 1 || malaya_bakona2 == 2 || malaya_bakona2 == 3 || malaya_bakona2 == 4))
-		getitem 6520,1; //Lost_Belongings
+		getitem Lost_Belongings,1;
 	end;
 }
 
@@ -5911,7 +5927,7 @@ malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 		mes "He must be around here somewhere.";
 		close;
 	} else if (malaya_bakona2 == 1) {
-		if (countitem(6520) < 2) {
+		if (countitem(Lost_Belongings) < 2) {
 			mes "[Missing Person's Father]";
 			mes "You are looking for two of his ^FF0000Lost Belongings^000000?";
 			mes "Are you confident that";
@@ -5928,7 +5944,7 @@ malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 		mes "Let's retrieve them from Tiyanak that roams Baryo Mahiwaga Field,";
 		mes "seven ^FF0000Lost Belongings^000000";
 		mes "and deliver them to ^0000FFMissing Person's Friend^000000.";
-		delitem 6520,2; //Lost_Belongings
+		delitem Lost_Belongings,2;
 		erasequest 1180;
 		setquest 1181;
 		malaya_bakona2 = 2;
@@ -5966,7 +5982,7 @@ malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 		mes "somewhere.";
 		close;
 	} else if (malaya_bakona2 == 2) {
-		if (countitem(6520) < 7) {
+		if (countitem(Lost_Belongings) < 7) {
 			mes "[Missing Person's Friend]";
 			mes "You are looking for seven ^FF0000Lost Belongings^000000";
 			mes "of my friend?";
@@ -5979,7 +5995,7 @@ malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 		mes "of my friend... Where is my friend?";
 		mes "Bring him here, bring him here now!";
 		callsub L_Quest;
-		delitem 6520,7; //Lost_Belongings
+		delitem Lost_Belongings,7;
 		erasequest 1181;
 		setquest 1182;
 		malaya_bakona2 = 3;
@@ -6016,7 +6032,7 @@ malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 		mes "Please find my father!";
 		close;
 	} else if (malaya_bakona2 == 3) {
-		if (countitem(6520) < 3) {
+		if (countitem(Lost_Belongings) < 3) {
 			mes "[Missing Person's Son]";
 			mes "You are looking for three ^FF0000Lost Belongings^000000";
 			mes "of my father? Why lost belongings and not my father?";
@@ -6028,7 +6044,7 @@ malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 		mes "These are ^FF0000Lost Belongings^000000 of my father.";
 		mes "Oh dear lord... father!";
 		callsub L_Quest;
-		delitem 6520,3; //Lost_Belongings
+		delitem Lost_Belongings,3;
 		erasequest 1182;
 		setquest 1183;
 		malaya_bakona2 = 4;
@@ -6062,7 +6078,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 		mes "and she still isn't back.";
 		close;
 	} else if (malaya_bakona2 == 4) {
-		if (countitem(6520) < 5) {
+		if (countitem(Lost_Belongings) < 5) {
 			mes "[Missing Person's Mother]";
 			mes "You are looking for five ^FF0000Lost Belongings^000000 of my child?";
 			mes "What does this mean?";
@@ -6083,7 +6099,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 		mes "A mother that has gone mad...";
 		mes "Now that I finished finding the missing people,";
 		mes "I should report back to the Village Chief.";
-		delitem 6520,5; //Lost_Belongings
+		delitem Lost_Belongings,5;
 		erasequest 1183;
 		setquest 1184;
 		malaya_bakona2 = 5;
@@ -6105,7 +6121,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 }
 
 malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
 	}
@@ -6132,7 +6148,7 @@ malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
 		mes "so I need you to hunt fifteen ^FF0000Tikbalang^000000";
 		mes "at Baryo Mahiwaga Field.";
 		next;
-		switch(select("It's none of my business.:You can count on me.")) {
+		switch(select("It's none of my business.", "You can count on me.")) {
 		case 1:
 			mes "[Young Fortune Teller]";
 			mes "You are so selfish!";
@@ -6161,9 +6177,9 @@ malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
 			setquest 1187;
 			malaya_bakona2 = 8;
 //			if (IsPremiumPcCafe == 10)
-				getitem 12699,7; //Tikbalang_Belt
+				getitem Tikbalang_Belt,7;
 //			else
-//				getitem 12699,5; //Tikbalang_Belt
+//				getitem Tikbalang_Belt,5;
 			close;
 		} else {
 			mes "[Young Fortune Teller]";
@@ -6543,7 +6559,7 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	mes "Just boldly tell me";
 	mes "what is it that you want!";
 	next;
-	switch(select("Reset all quests:Just before the end of first quest:Reset secondary quest:Distribution of lost belongings:Just after hunting")) {
+	switch(select("Reset all quests", "Just before the end of first quest", "Reset secondary quest", "Distribution of lost belongings", "Just after hunting")) {
 	case 1:
 		mes "Here you go!";
 		malaya_bakona1 = 0;
@@ -6575,7 +6591,7 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	case 4:
 		mes "[Briquet Scheme]";
 		mes "Here you go!";
-		getitem 6520,17; //Lost_Belongings
+		getitem Lost_Belongings,17;
 		close;
 	case 5:
 		mes "[Briquet Scheme]";
@@ -6590,8 +6606,7 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	}
 }
 
-// Nurse in Port Malaya :: malaya_bang
-//============================================================
+//== Nurse in Port Malaya :: malaya_bang ===================
 function	script	F_Malaya_Nurse	{
 	if (malaya_bang == 30) {
 		mes "[Nurse Las]";
@@ -6670,7 +6685,7 @@ function	script	F_Malaya_Nurse	{
 		mes "[Nurse Maenne]";
 		mes "We were just about to enter Bangungot's room, before we were thrown out...";
 		next;
-		switch(select("Bangungot?:Nurse Maenne?")) {
+		switch(select("Bangungot?", "Nurse Maenne?")) {
 		case 1:
 			callsub L_Bangungot;
 			select("Nurse Maenne");
@@ -6717,7 +6732,7 @@ function	script	F_Malaya_Nurse	{
 		switch(getarg(0)) {
 		case 1:
 			next;
-			switch(select("Enter the hospital.:Quit.")) {
+			switch(select("Enter the hospital.", "Quit.")) {
 			case 1:
 				callsub L_Warp, getarg(0);
 			case 2:
@@ -6734,7 +6749,7 @@ function	script	F_Malaya_Nurse	{
 	return;
 
 L_Weight:
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait !! -";
 		mes "- You have too many items. -";
 		mes "- Cannot receive item. -";
@@ -6762,7 +6777,7 @@ L_Warp:
 		end;
 	case 2:
 		next;
-		switch(select("Go outside.:Quit.")) {
+		switch(select("Go outside.", "Quit.")) {
 		case 1:
 			close2;
 			cutin "",255;
@@ -6779,13 +6794,13 @@ L_Warp:
 
 L_Reward:
 //	if (IsPremiumPcCafe == 10) {
-		getitem 6499,5; //Ancient_Grudge
-		getitem 6497,10; //Lesser_Agimat
+		getitem Ancient_Grudge,5;
+		getitem Lesser_Agimat,10;
 //	} else {
-//		getitem 6499,3; //Ancient_Grudge
-//		getitem 6497,5; //Lesser_Agimat
+//		getitem Ancient_Grudge,3;
+//		getitem Lesser_Agimat,5;
 //	}
-	getitem 617,1; //Old_Violet_Box
+	getitem Old_Violet_Box,1;
 	getexp 1000000,0;
 	return;
 
@@ -6882,7 +6897,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "Are you planning on going inside?";
 		cutin "malaya_nurseA01",2;
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Nurse]";
 			mes "Oh~";
@@ -6890,7 +6905,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			mes "I was literally waiting all day for someone to some by.";
 			cutin "malaya_nurseA02",2;
 			next;
-			switch(select("About the hospital:Reason for stalling me:Ignore.")) {
+			switch(select("About the hospital", "Reason for stalling me", "Ignore.")) {
 			case 1:
 				mes "[Nurse]";
 				mes "This hospital is the only one in town.";
@@ -6988,7 +7003,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "If I knew this was going to happen, I would've worn ER night-shift shoes instead of first-day shoes... *sniff*";
 		emotion e_sob;
 		next;
-		switch(select("Help.:Don't help.")) {
+		switch(select("Help.", "Don't help.")) {
 		case 1:
 			mes "[Nurse]";
 			mes "*Sob*";
@@ -7029,7 +7044,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			end;
 		}
 	} else if (malaya_bang == 1) {
-		if (countitem(930) > 1) {
+		if (countitem(Rotten_Bandage) > 1) {
 			mes "[Nurse Las]";
 			mes "Oh......";
 			mes "I know they're effective but... Not so tempting.";
@@ -7046,7 +7061,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			mes "[Nurse Las]";
 			mes "*Squish*";
 			mes "*Squelch*";
-			delitem 930,2; //Rotten_Bandage
+			delitem Rotten_Bandage,2;
 			malaya_bang = 2;
 			close2;
 			cutin "",255;
@@ -7092,7 +7107,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		cutin "",255;
 		end;
 	} else if (malaya_bang == 4) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "We pushed and pulled, but it won't budge.";
 		emotion e_swt2,1;
 		next;
@@ -7260,10 +7275,10 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		emotion e_what;
 		next;
 		mes "[???]";
-		mes "Hey "+((Sex)?"dude":"missy")+",";
+		mes "Hey "+ (Sex == SEX_MALE ? "dude" : "missy") +",";
 		mes "You're not getting in the hospital.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Who's there?!";
 		next;
 		mes "[???]";
@@ -7273,7 +7288,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "That's a secret~";
 		mes "My mom will kill me if she knew I was here!";
 		next;
-		switch(select("About entering the hospital.:About it's mom.:About ???:Quit.")) {
+		switch(select("About entering the hospital.", "About it's mom.", "About ???", "Quit.")) {
 		case 1:
 			mes "[???]";
 			mes "A few days ago, the old lady who lives near us went around the hospital sticking some kind of sticks into the ground.";
@@ -7316,14 +7331,14 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			close;
 		}
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
-		specialeffect EF_STEAL,AREA,"Bushes#ma";
+		specialeffect(EF_STEAL, AREA, getnpcid("Bushes#ma"));
 		malaya_bang = 13;
 		changequest 11293,11294;
 		close;
 	} else if (malaya_bang == 13) {
 		mes "The voice seems to be coming from the bushes near the entrance of the hospital.";
 		mes "Let's check around.";
-		specialeffect EF_STEAL,AREA,"Bushes#ma";
+		specialeffect(EF_STEAL, AREA, getnpcid("Bushes#ma"));
 		close;
 	} else if (malaya_bang == 14) {
 		mes "[Nurse Las]";
@@ -7347,7 +7362,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "Yes?";
 		mes "Yes?";
 		next;
-		switch(select("Go.:Don't go.")) {
+		switch(select("Go.", "Don't go.")) {
 		case 1:
 			mes "[Nurse Las]";
 			mes "Okay, off you go.";
@@ -7389,7 +7404,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		cutin "malaya_nurseA02",2;
 		next;
 		mes "[Nurse Las]";
-		mes "Oh by the way, when ["+strcharinfo(0)+"], you were gone, I tried the door.";
+		mes "Oh by the way, when ["+strcharinfo(PC_NAME)+"], you were gone, I tried the door.";
 		mes "It did open...";
 		next;
 		mes "[Nurse Las]";
@@ -7449,7 +7464,7 @@ ma_dun01,35,108,4	script	Nurse#ma_n2	4_F_NURSE,{
 		mes "Could you check the 2nd floor door again in case I missed something?";
 		cutin "malaya_nurseA01",2;
 		next;
-		switch(select("Go outside.:Quit.")) {
+		switch(select("Go outside.", "Quit.")) {
 		case 1:
 			close2;
 			cutin "",255;
@@ -7492,7 +7507,7 @@ ma_dun01,152,23,4	script	Suspicious Wooden Stick::MalayaStick0	4_BULLETIN_BOARD2
 		mes "*Snigger*";
 		cutin "malaya_nurseA05",2;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "?!";
 		cutin "",255;
 		next;
@@ -7568,7 +7583,7 @@ malaya,48,76,4	script	Hospital Door#ma_n1	CLEAR_NPC,{
 		mes "Then why is the door not opening?";
 		close;
 	} else if (malaya_bang > 18) {
-		if(select("Enter the hospital.:Quit.") == 1)
+		if(select("Enter the hospital.", "Quit.") == 1)
 			warp "ma_dun01",33,110;
 		end;
 	} else {
@@ -7593,7 +7608,7 @@ malaya,64,78,4	script	Village Woman#mab	4_F_MALAYA,{
 		mes "[Village Woman]";
 		mes "I was born here and never went far away from here, so I always feel like going on my adventures when I hear the stories they bring.";
 		next;
-		switch(select("Ask about the hospital.:End conversation.")) {
+		switch(select("Ask about the hospital.", "End conversation.")) {
 		case 1:
 			mes "[Village Woman]";
 			mes "The hospital?";
@@ -7660,7 +7675,7 @@ malaya,62,37,4	script	Village Man#mab	4_M_MALAYA,{
 		mes "Just a little bit~";
 		mes "far from the village, but I'll give you all the pineapple you want in exchange for a good story of yours!";
 		next;
-		switch(select("Ask about the hospital.:End conversation.")) {
+		switch(select("Ask about the hospital.", "End conversation.")) {
 		case 1:
 			mes "[Village Man]";
 			mes "Ummm......";
@@ -7676,7 +7691,7 @@ malaya,62,37,4	script	Village Man#mab	4_M_MALAYA,{
 			mes "Oh!!!";
 			mes "Did you meet the nurse?!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "She was standing in front of the hospital.";
 			mes "Oh!";
 			mes "She must have gone to contact HQ.";
@@ -7735,7 +7750,7 @@ malaya,210,200,5	script	Dr. Boon#ma	4_LGTSCIENCE,{
 		mes "[Dr. Boon]";
 		mes "So~ You're the new nurse?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Dr. Boon]";
 			mes "Nothing's more important for a nurse than their white uniform.";
@@ -7805,15 +7820,15 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	if (malaya_bang == 13) {
 		mes "[???]";
 		mes "Don't come any closer!";
-		mes "Old "+((Sex)?"man":"lady")+"!";
+		mes "Old "+ (Sex == SEX_MALE ? "man" : "lady") +"!";
 		mes "How'd you know I was here?";
 		emotion e_omg;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm not old.";
 		emotion e_an,1;
 		next;
-		switch(select("About entering the hospital.:About its mom.:About ???.:Ask about the old lady.:Ask about the hospital grounds.:Quit.")) {
+		switch(select("About entering the hospital.", "About its mom.", "About ???.", "Ask about the old lady.", "Ask about the hospital grounds.", "Quit.")) {
 		case 1:
 			mes "[???]";
 			mes "A few days ago, the old lady who lives near us went around the hospital sticking some kind of sticks into the ground.";
@@ -7889,11 +7904,11 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	} else if (malaya_bang == 15) {
 		mes "[???]";
 		mes "Don't come any closer!";
-		mes "Old "+((Sex)?"man":"lady")+"!";
+		mes "Old "+ (Sex == SEX_MALE ? "man" : "lady") +"!";
 		mes "How'd you know I was here?";
 		emotion e_omg;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm not old.";
 		emotion e_an,1;
 		close;
@@ -7904,8 +7919,8 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	}
 }
 
--	script	Suspicious Wooden Stick::MalayaStick	-1,{
-	if (checkweight(1201,1) == 0) {
+-	script	Suspicious Wooden Stick::MalayaStick	FAKE_NPC,{
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait !! -";
 		mes "- You have too many items. -";
 		mes "- Cannot receive item. -";
@@ -7925,7 +7940,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 		mes "A strange stick is planted on the ground.";
 		mes "A mysterious force can be felt.";
 		next;
-		switch(select("Pull it out.:Leave it.")) {
+		switch(select("Pull it out.", "Leave it.")) {
 		case 1:
 			if (rand(1,5) == 4) {
 				mes "Pulled out the deeply planted stick.";
@@ -7933,19 +7948,19 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 				if (rand(2)) {
 					malaya_bang = 15;
 					changequest 11295,11296;
-					getitem 6497,1; //Lesser_Agimat
-					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+					getitem Lesser_Agimat,1;
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 					next;
 					mes "Better show Las the talisman.";
 					close;
 				} else {
-					getitem 6497,1; //Lesser_Agimat
-					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+					getitem Lesser_Agimat,1;
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 					close;
 				}
 			} else {
 				mes "After pulling out the deeply planted stick, an uneasy feeling washes over.";
-				donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+				donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 				close;
 			}
 		case 2:
@@ -7958,10 +7973,10 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	}
 	end;
 OnEnable:
-	enablenpc strnpcinfo(3); // NPC name is too long for strnpcinfo(0).
+	enablenpc strnpcinfo(NPC_NAME_UNIQUE); // NPC name is too long for strnpcinfo(NPC_NAME).
 	end;
 OnDisable:
-	disablenpc strnpcinfo(3);
+	disablenpc strnpcinfo(NPC_NAME_UNIQUE);
 	end;
 }
 malaya,40,52,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick1	4_BULLETIN_BOARD2
@@ -7975,82 +7990,82 @@ malaya,48,79,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick8	4_BU
 malaya,50,46,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick9	4_BULLETIN_BOARD2
 malaya,59,84,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick10	4_BULLETIN_BOARD2
 
--	script	Tent#ma	-1,{ //557
+-	script	Tent#ma	FAKE_NPC,{ //557
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(1),"Tent","")+"::OnDisable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_NAME_VISIBLE),"Tent","")+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(1),"Tent","")+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_NAME_VISIBLE),"Tent","")+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
--	duplicate(Tent#ma)	Tent1#ma	-1
--	duplicate(Tent#ma)	Tent2#ma	-1
--	duplicate(Tent#ma)	Tent3#ma	-1
--	duplicate(Tent#ma)	Tent4#ma	-1
--	duplicate(Tent#ma)	Tent5#ma	-1
--	duplicate(Tent#ma)	Tent6#ma	-1
--	duplicate(Tent#ma)	Tent7#ma	-1
--	duplicate(Tent#ma)	Tent8#ma	-1
--	duplicate(Tent#ma)	Tent9#ma	-1
--	duplicate(Tent#ma)	Tent10#ma	-1
+-	duplicate(Tent#ma)	Tent1#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent2#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent3#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent4#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent5#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent6#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent7#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent8#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent9#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent10#ma	FAKE_NPC
 
 malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 	if (malaya_bang == 16) {
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am, excuse me, but can I ask you a question?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am!!!!!!!!!";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Who? What?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me, but can I ask you something?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "What? I can't hear you.";
 		mes "Speak up!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I! Have! Something! To! Ask! You!";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Oh~Yes dear~";
 		mes "I'll tell you everything I know, dear~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Do you know anything about the hospital?";
 		next;
 		mes "[Bent Old Lady]";
@@ -8067,7 +8082,7 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 		mes "[Bent Old Lady]";
 		mes "The thing took away my poor little girl.";
 		next;
-		switch(select("Ask about the hospital.:Ask about her daughter.")) {
+		switch(select("Ask about the hospital.", "Ask about her daughter.")) {
 		case 1:
 			mes "[Bent Old Lady]";
 			mes "Everybody was happy to hear about the hospital being built.";
@@ -8162,31 +8177,31 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am, excuse me, but can I ask you a question?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am?";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am!!!!!!!!!";
 		next;
 		mes "[Bent Old Lady]";
 		mes "Who? What?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me, but can I ask you something?";
 		next;
 		mes "[Bent Old Lady]";
@@ -8227,8 +8242,7 @@ malaya,276,367,4	script	Bent Shaman#ma	4_F_UMOLDWOMAN,{
 	close;
 }
 
-// Pintados Festival :: malaya_pintados
-//============================================================
+//== Pintados Festival :: malaya_pintados ==================
 /*
 Description
 -----------
@@ -8260,12 +8274,12 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 	mes "Dyestuffs Value: ("+$malaya_pintados_03+"/300)";
 	mes "Recent Tattoo Creator: "+$malaya_pintados_04$;
 	next;
-	switch(select("Eastern Medicine Button ? Start & End:Detail Button ? Adjust Value:Start Timer:End Timer")) {
+	switch(select("Eastern Medicine Button ? Start & End", "Detail Button ? Adjust Value", "Start Timer", "End Timer")) {
 	case 1:
 		mes "This is the Eastern Medicine Control Button.";
 		mes "You can set the Start or End values for the festival.";
 		next;
-		switch(select("Start Pintados Festival:End Pintados Festival:NPC_ON:NPC_OFF")) {
+		switch(select("Start Pintados Festival", "End Pintados Festival", "NPC_ON", "NPC_OFF")) {
 		case 1:
 			$malaya_pintados_00 = 1;
 			donpcevent "Pintados Manager#pin::OnEnable";
@@ -8288,7 +8302,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 		mes "Adjust the global value. Please select the value to adjust.";
 		next;
 		while(1) {
-			switch(select("Complete Adjustment:Time ("+$malaya_pintados_00+"):Lesser Agimat ("+$malaya_pintados_01+"):Silver Cross ("+$malaya_pintados_02+"):Dyestuffs ("+$malaya_pintados_03+")")) {
+			switch(select("Complete Adjustment", "Time ("+$malaya_pintados_00+")", "Lesser Agimat ("+$malaya_pintados_01+")", "Silver Cross ("+$malaya_pintados_02+")", "Dyestuffs ("+$malaya_pintados_03+")")) {
 			case 1:
 				mes "Completed global adjustment.";
 				close;
@@ -8304,7 +8318,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "295 - 343 -> Day 7";
 				mes "Global 1 = 1 hr.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 344)
 					close;
 				$malaya_pintados_00 = .@input;
@@ -8313,7 +8327,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value for the Lesser Agimat.";
 				mes "Values can be adjusted between 0 to 1000.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 1000)
 					close;
 				$malaya_pintados_01 = .@input;
@@ -8322,7 +8336,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value of the Silver Cross.";
 				mes "Values can be adjusted between 0 to 1000.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 1000)
 					close;
 				$malaya_pintados_02 = .@input;
@@ -8331,7 +8345,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 				mes "Adjust the accumulated value for the Dyestuff.";
 				mes "Values can be adjusted between 0 to 300.";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input < 0 || .@input > 300)
 					close;
 				$malaya_pintados_03 = .@input;
@@ -8404,7 +8418,7 @@ OnDisableNPC:
 }
 
 ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
@@ -8473,7 +8487,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	mes "[Isco]";
 	mes "Oh no. What will we do with the festival coming to an end.";
 	next;
-	switch(select("What is it?:How many did you collect?:Brought back a lost belonging.")) {
+	switch(select("What is it?", "How many did you collect?", "Brought back a lost belonging.")) {
 	case 1:
 		mes "[Isco]";
 		mes "There is a traditional festival held since ancient times";
@@ -8510,13 +8524,13 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 		mes "Sigh... We are still short of materials to start the '^7A96E0Pintados Festival^000000'.";
 		close;
 	case 3:
-		.@str$ = (Sex)?"Bro":"Sis";
+		.@str$ = (Sex == SEX_MALE ? "Bro" : "Sis");
 		break;
 	}
 	emotion e_lv;
 	mes "[Isco]";
 	mes "Oh~ Really? Wow!";
-	mes "Thanks! "+strcharinfo(0)+" "+.@str$+"!!";
+	mes "Thanks! "+strcharinfo(PC_NAME)+" "+.@str$+"!!";
 	mes "He he. What did you bring?";
 	next;
 	.@i = select(
@@ -8553,7 +8567,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	if (.@i < 3) {
 		mes "I am "+(.@total - getd("$malaya_pintados_0"+.@i))+" short of "+.@name$+". How many did you bring?";
 		next;
-		switch(select("One?!:Enter quantity.")) {
+		switch(select("One?!", "Enter quantity.")) {
 		case 1:
 			.@amount = 1;
 			mes "[Isco]";
@@ -8564,7 +8578,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 			mes "[Isco]";
 			mes "He he... I'm slow with numbers. I get lost when it's over 50. How many will you give me?";
 			next;
-			input .@amount;
+			input(.@amount);
 			if (.@amount < 1 || .@amount > 50) {
 				mes "[Isco]";
 				mes "Sigh~ I'm lost! I can't count if the numbers are weird.";
@@ -8591,12 +8605,12 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 		mes "[Isco]";
 		mes .@str$+"! How many Scarlet Dyestuffs can you give me from the "+countitem(.@item)+" you have?";
 		next;
-		switch(select("Enter Quantity:All")) {
+		switch(select("Enter Quantity", "All")) {
 		case 1:
 			mes "[Isco]";
 			mes "He he... I'm slow with numbers. I get lost when it's over 50. How many will you give me?";
 			next;
-			input .@amount;
+			input(.@amount);
 			if (.@amount < 1 || .@amount > 50) {
 				mes "[Isco]";
 				mes "Sigh~ I told you I'm not good with numbers.";
@@ -8626,7 +8640,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 }
 
 ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
@@ -8634,7 +8648,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	mes "[Tattooist]";
 	mes "Why do you want a Tattoo?";
 	next;
-	switch(select("What is a Tattoo?:I'm curious about the effect of Tattoos.:I need a Tattoo.")) {
+	switch(select("What is a Tattoo?", "I'm curious about the effect of Tattoos.", "I need a Tattoo.")) {
 	case 1:
 		mes "[Tattooist]";
 		mes "A Tattoo of a powerful monster is said to increase the ability of the holder.";
@@ -8677,7 +8691,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 		mes "Which Tattoo's effect are you curious about?";
 		next;
 		while(1) {
-			switch (select("Bangungot Agimat Tattoo:Buwaya Agimat Tattoo:Bakonawa Agimat Tattoo:I have no questions.")) {
+			switch (select("Bangungot Agimat Tattoo", "Buwaya Agimat Tattoo", "Bakonawa Agimat Tattoo", "I have no questions.")) {
 			case 1:
 				mes "[Tattooist]";
 				mes "Need 10 Ancient Grudges, 1 Piece of Bangungot's Spirit, and 1 Bangungot Doll to create";
@@ -8737,31 +8751,31 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	mes "[Tattooist]";
 	mes "The festival doesn't last long so I should start drawing. What Tattoo do you need?";
 	next;
-	switch(select("I will think it over.:Bangungot Agimat Tattoo:Buwaya Agimat Tattoo:Bakonawa Agimat Tattoo")) {
+	switch(select("I will think it over.", "Bangungot Agimat Tattoo", "Buwaya Agimat Tattoo", "Bakonawa Agimat Tattoo")) {
 	case 1:
 		mes "[Tattooist]";
 		mes "Hope you enjoy the '^7A96E0Pintados Festival^000000'.";
 		close;
 	case 2:
-		.@tattoo = 2911; //Bangungot_Tattoo
-		.@doll = 6517; //Bangungot_Doll
-		.@spirit = 6524; //Bangungot_Spirit_Piece
+		.@tattoo = Bangungot_Tattoo;
+		.@doll = Bangungot_Doll;
+		.@spirit = Bangungot_Spirit_Piece;
 		.@name$ = "Bangungot";
 		break;
 	case 3:
-		.@tattoo = 2907; //Buwaya_Tattoo
-		.@doll = 6518; //Buwaya_Doll
-		.@spirit = 6525; //Buwaya_Spirit_Piece
+		.@tattoo = Buwaya_Tattoo;
+		.@doll = Buwaya_Doll;
+		.@spirit = Buwaya_Spirit_Piece;
 		.@name$ = "Buwaya";
 		break;
 	case 4:
-		.@tattoo = 2910; //Bakonawa_Tattoo
-		.@doll = 6516; //Bakonawa_Doll
-		.@spirit = 6523; //Bakonawa_Spirit_Piece
+		.@tattoo = Bakonawa_Tattoo;
+		.@doll = Bakonawa_Doll;
+		.@spirit = Bakonawa_Spirit_Piece;
 		.@name$ = "Bakonawa";
 		break;
 	}
-	if (countitem(6499) < 10 || countitem(.@spirit) == 0 || countitem(.@doll) == 0) {
+	if (countitem(Ancient_Grudge) < 10 || countitem(.@spirit) == 0 || countitem(.@doll) == 0) {
 		mes "[Tattooist]";
 		mes "I think you are short on materials.";
 		mes "Need 10 Ancient Grudges, 1 Piece of "+.@name$+"'s Spirit, and 1 "+.@name$+" Doll to create a ^EE1D11"+.@name$+" Agimat Tattoo^000000.";
@@ -8776,18 +8790,18 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	next;
 	mes "The Tattooist placed the Ancient Grudges around the workplace.";
 	next;
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#01";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#02";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#03";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#04";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#05";
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#05"));
 	mes "The Ancient Grudge lit up and tools starts to glow. He smiled satisfyingly at the glowing tools and materials.";
 	next;
 	mes "And then "+.@name$+" stared intensely at the doll as if to remember every detail of it in his head.";
 	next;
-	if(select("Aren't you going to start?:... ... ..") == 1) {
+	if(select("Aren't you going to start?", "... ... ..") == 1) {
 		emotion e_an;
-		delitem 6499,5; //Ancient_Grudge
+		delitem Ancient_Grudge,5;
 		mes "[Tattooist]";
 		mes "Oh no, now you ruined it.";
 		mes "I cannot draw a Tattoo for someone like you who doesn't understand art. You can take back the remaining materials.";
@@ -8806,10 +8820,10 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	emotion e_an;
 	mes "But he kept on looking at each corner of the drawing as if he didn't like some of its details.";
 	next;
-	if(select("Looks good to me.:... ... ..") == 1) {
+	if(select("Looks good to me.", "... ... ..") == 1) {
 		emotion e_an;
 		emotion e_ag;
-		delitem 6499,5; //Ancient_Grudge
+		delitem Ancient_Grudge,5;
 		mes "[Tattooist]";
 		mes "Ergh! I told you not to interrupt!";
 		next;
@@ -8828,10 +8842,10 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	emotion e_dum;
 	mes "But now he is staring at the sky without doing anything else. What is he waiting for?";
 	next;
-	if(select("When will it be done?:... ... ..") == 1) {
+	if(select("When will it be done?", "... ... ..") == 1) {
 		emotion e_an;
 		emotion e_ag;
-		delitem 6499,5; //Ancient_Grudge
+		delitem Ancient_Grudge,5;
 		mes "[Tattooist]";
 		mes "Ergh! I told you not to interrupt!";
 		next;
@@ -8872,8 +8886,8 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	specialeffect EF_DETOXICATION;
 	mes "The Piece of "+.@name$+"'s Spirit is shattered into powder. The Tattooist's hands are glowing.";
 	next;
-	if(select("Why did you break the pieces...:... ... ..") == 1) {
-		delitem 6499,5; //Ancient_Grudge
+	if(select("Why did you break the pieces...", "... ... ..") == 1) {
+		delitem Ancient_Grudge,5;
 		delitem .@spirit,1;
 		emotion e_an;
 		emotion e_ag;
@@ -8890,11 +8904,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	}
 	mes "He held up the powder in both hands and then blew it onto the drawing.";
 	next;
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#01";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#02";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#03";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#04";
-	specialeffect EF_FLAMELAUNCHER,AREA,"Ancient Grudge#05";
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#01"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#02"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#03"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#04"));
+	specialeffect(EF_FLAMELAUNCHER, AREA, getnpcid("Ancient Grudge#05"));
 	mes "All Ancient Grudges started to burn and then the glowing light from the "+.@name$+" drawing faded away.";
 	next;
 	specialeffect EF_LIGHTSPHERE;
@@ -8910,11 +8924,11 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	mes "[Tattooist]";
 	mes "Ha ha. It came out great.";
 	next;
-	delitem 6499,10; //Ancient_Grudge
+	delitem Ancient_Grudge,10;
 	delitem .@spirit,1;
 	delitem .@doll,1;
 	getitem .@tattoo,1;
-	$malaya_pintados_04$ = strcharinfo(0);
+	$malaya_pintados_04$ = strcharinfo(PC_NAME);
 	mes "[Tattooist]";
 	mes "I'm sorry you had to wait for a long time. But it was worth it cause I haven't created a Tattoo of this quality in a long time.";
 	next;
@@ -8932,7 +8946,7 @@ ma_fild01,173,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#03	HIDDEN_WARP_N
 ma_fild01,172,222,0	duplicate(Ancient Grudge#01)	Ancient Grudge#04	HIDDEN_WARP_NPC
 ma_fild01,171,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#05	HIDDEN_WARP_NPC
 
-ma_fild01,192,200,8	script	Tourist#pin01	1_M_MERCHANT,{
+ma_fild01,192,200,0	script	Tourist#pin01	1_M_MERCHANT,{
 	mes "[Tourist]";
 	mes "I came from afar and dropped everything to come and enjoy the 'Pintados Festival'.";
 	next;
@@ -9140,13 +9154,13 @@ ma_fild01,164,231,6	script	Beat Catching Boy#pin10	4_M_BARYO_BOY,{
 	close;
 OnInit:
 	if (!$malaya_pintados_00)
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 ma_fild01,170,228,4	duplicate(Beat Catching Boy#pin10)	Beat Catching Boy#pin11	4_M_BARYO_BOY

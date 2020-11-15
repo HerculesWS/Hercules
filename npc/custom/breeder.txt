@@ -14,27 +14,27 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 	/* TODO: This can be optimized with just setmount(), as it can
 		 auto-detect the proper mount for the class/skills. */
 	if (hascashmount()) {
-		message strcharinfo(0),"You must first remove your mount.";
+		message strcharinfo(PC_NAME),"You must first remove your mount.";
 		end;
-	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(Wolf's_Flute)) {
+	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(Wolfs_Flute)) {
 		if (!checkfalcon() && getskilllv(HT_FALCON) && !checkwug()) {
-			if (select(" ~ Falcon: ~ Warg") == 1)
+			if (select(" ~ Falcon", " ~ Warg") == 1)
 				setfalcon;
 			else
-				getitem Wolf's_Flute, 1;
-			specialeffect2 EF_TEIHIT3;
+				getitem Wolfs_Flute, 1;
+			specialeffect(EF_TEIHIT3, AREA, playerattached());
 			close;
 		} else {
-			getitem Wolf's_Flute,1;
+			getitem Wolfs_Flute,1;
 		}
 	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_MECHANIC && !checkcart() && getskilllv(MC_PUSHCART)) {
 		if (!checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
-			if (select(" ~ Cart: ~ Mado") == 1) {
+			if (select(" ~ Cart", " ~ Mado") == 1) {
 				setcart;
 			} else {
 				setmount(MOUNT_MADO);
 			}
-			specialeffect2 EF_TEIHIT3;
+			specialeffect(EF_TEIHIT3, AREA, playerattached());
 			close;
 		} else {
 			setcart;
@@ -48,10 +48,10 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 	} else if (checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
 		setmount(MOUNT_MADO);
 	} else {
-		message strcharinfo(0),"You do not meet requirements to rent.";
+		message strcharinfo(PC_NAME),"You do not meet requirements to rent.";
 		end;
 	}
-	specialeffect2 EF_TEIHIT3;
+	specialeffect(EF_TEIHIT3, AREA, playerattached());
 	end;
 }
 

@@ -1,26 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Player Marriage
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Official Marriage script.
 //= Added isloggedin() check, even though Aegis doesn't do it.
 //= Currently does not support same-Sex marriages.
-//= Old script located in: npc/custom/marriage.txt
-//= - Variable in use: wedding_sign (max 1)
-//= - Variable in use: $@wedding (max 1)
-//= - Variable in use: $@wed_groom$ $@wed_bride$
-//===== Additional Comments: =================================
-//= 1.0 First version. [L0ne_W0lf]
-//= 1.1 Fixed a missing ")" [L0ne_W0lf]
-//= 1.2 Corrected duration of Wedding status. [L0ne_W0lf]
-//= 1.3 Changed permanent global variables to temporary ones. [Euphy]
-//=     Added GM NPCs (commented).
-//= 1.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//================= Variables Used ========================================
+//= - wedding_sign (max 1)
+//= - $@wedding (max 1)
+//= - $@wed_groom$ $@wed_bride$
+//=========================================================================
 
 prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 	cutin "wedding_marry01",2;
@@ -33,7 +50,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "marriage. Now, did you";
 		mes "have any questions?";
 		next;
-		if (select("I want to get married.:I don't need your help!") == 1) {
+		if (select("I want to get married.", "I don't need your help!") == 1) {
 			mes "[Marry Happy]";
 			mes "Oh, I'm sorry, but";
 			mes "adopted characters";
@@ -41,7 +58,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			mes "married. For now, why";
 			mes "don't you enjoy the simple";
 			mes "pleasures of childhood?";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Marry Happy]";
 		mes "Oh, of course you";
@@ -50,7 +67,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "are too many laws against";
 		mes "that~ Aren't you the most";
 		mes "adorable little thing?";
-		goto L_End;
+		callsub L_End;
 	}
 	mes "[Marry Happy]";
 	mes "Marriage is the beautiful";
@@ -60,7 +77,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 	mes "Is there a special someone";
 	mes "like that in your life?";
 	next;
-	switch(select("Ask about Wedding Ceremony:Ask about Procedure:Apply for Wedding:We are the Invincible Single Army!")) {
+	switch(select("Ask about Wedding Ceremony", "Ask about Procedure", "Apply for Wedding", "We are the Invincible Single Army!")) {
 	case 1:
 		mes "[Marry Happy]";
 		mes "Wise and benevolent";
@@ -113,7 +130,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "speak to the Bishop and tell";
 		mes "him the name of her groom.";
 		mes "If these names are correctly";
-		mes "told to the Biship, they will";
+		mes "told to the Bishop, they will";
 		mes "be able to exchange rings.";
 		next;
 		mes "[Marry Happy]";
@@ -141,7 +158,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "Vomars after their grooms";
 		mes "have finished speaking to him.";
 		next;
-		if (select("Thanks, that helps a lot!:Easiest way to say my partner's name?") == 1) {
+		if (select("Thanks, that helps a lot!", "Easiest way to say my partner's name?") == 1) {
 			mes "[Marry Happy]";
 			mes "Well, I'm here to help";
 			mes "weddings proceed as";
@@ -149,7 +166,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			mes "If there was something";
 			mes "you didn't understand,";
 			mes "feel free to ask me again.";
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Marry Happy]";
 		mes "The easiest way to write";
@@ -171,7 +188,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "name of your partner using";
 		mes "the method I just described.";
 		next;
-		input .@partner$;
+		input(.@partner$);
 		mes "[Marry Happy]";
 		mes "Alright, after you've";
 		mes "decided to get married,";
@@ -182,7 +199,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 
 	case 3:
 		cutin "wedding_marry02",2;
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "[Marry Happy]";
 			mes "So you'd like to get married?";
 			mes "As a groom, you need to prepare";
@@ -215,7 +232,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "Now, would you like to";
 		mes "apply for marriage?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			if (getpartnerid()) {
 				cutin "wedding_marry02",2;
 				mes "[Marry Happy]";
@@ -245,9 +262,9 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "you can consider marriage.";
 				mes "After you grow stronger,";
 				mes "come and talk to me again.";
-				goto L_End;
+				callsub L_End;
 			}
-			else if (countitem(2613) < 1) {
+			else if (countitem(Diamond_Ring) < 1) {
 				mes "[Marry Happy]";
 				mes "Mm? Did you forget to";
 				mes "bring the Diamond Ring";
@@ -255,9 +272,8 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "during the wedding ceremony?";
 				mes "Look for it carefully and come";
 				mes "back after you find it, okay?";
-				goto L_End;
-			}
-			else if (Sex) {
+				callsub L_End;
+			} else if (Sex == SEX_MALE) {
 				if (Zeny < 1300000) {
 					mes "[Marry Happy]";
 					mes "I'm sorry, but you don't";
@@ -265,9 +281,9 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "that all grooms must pay";
 					mes "for the wedding ceremony.";
 					mes "Did you misplace your money?";
-					goto L_End;
+					callsub L_End;
 				}
-				else if (countitem(7170) < 1) {
+				else if (countitem(Tuxedo) < 1) {
 					mes "[Marry Happy]";
 					mes "Where's your Tuxedo?";
 					mes "You absolutely have to";
@@ -275,10 +291,9 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "ceremony! Find it, bring it";
 					mes "to me, and then we can finally";
 					mes "begin the wedding, okay?";
-					goto L_End;
+					callsub L_End;
 				}
-			}
-			else if (Sex == 0) {
+			} else if (Sex == SEX_FEMALE) {
 				if (Zeny < 1200000) {
 					mes "[Marry Happy]";
 					mes "I'm sorry, but all brides";
@@ -287,9 +302,9 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "wedding ceremony. Perhaps";
 					mes "you could ask your partner";
 					mes "to help you with the funds?";
-					goto L_End;
+					callsub L_End;
 				}
-				else if (countitem(2338) < 1) {
+				else if (countitem(Wedding_Dress) < 1) {
 					mes "[Marry Happy]";
 					mes "Oh dear, did you forget";
 					mes "your Wedding Dress?";
@@ -297,7 +312,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "bring it to me-- you";
 					mes "absolutely need it";
 					mes "for the wedding!";
-					goto L_End;
+					callsub L_End;
 				}
 			}
 			mes "[Marry Happy]";
@@ -314,8 +329,8 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			mes "down your exact name here.";
 			next;
 			while(1) {
-				input .@name$;
-				if (.@name$ == strcharinfo(0))
+				input(.@name$);
+				if (.@name$ == strcharinfo(PC_NAME))
 					break;
 				mes "[Marry Happy]";
 				mes "Hmmm, you have to write";
@@ -342,7 +357,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 			emotion e_lv;
 			next;
 			mes "[Marry Happy]";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Since you're the groom,";
 				mes "you need to speak to the";
 				mes "Bishop first. When you're";
@@ -350,7 +365,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "bride's turn to speak to";
 				mes "Bishop Vomars.";
 				Zeny -= 1300000;
-				delitem 7170,1; //Tuxedo
+				delitem Tuxedo,1;
 			}
 			else {
 				mes "Since you're the bride,";
@@ -360,11 +375,11 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "finished, it'll be your turn";
 				mes "to speak to Bishop Vomars.";
 				Zeny -= 1200000;
-				delitem 2338,1; //Wedding_Dress
+				delitem Wedding_Dress,1;
 			}
-			delitem 2613,1; //Diamond_Ring
+			delitem Diamond_Ring,1;
 			wedding_sign = 1;
-			goto L_End;
+			callsub L_End;
 		}
 		mes "[Marry Happy]";
 		mes "No...?";
@@ -562,10 +577,10 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 	if (!getpartnerid()) {
 		if (!$@wedding) {
 			if (wedding_sign == 1) {
-				getpartymember(getcharid(1));
+				getpartymember(getcharid(CHAR_ID_PARTY));
 				.@partymembercount = $@partymembercount;
 				if (.@partymembercount == 2) {
-					if (Sex) {
+					if (Sex == SEX_MALE) {
 						$@wedding = 1;
 						initnpctimer;
 						mes "[Vomars]";
@@ -575,7 +590,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 						mes "and joy. May the love you share";
 						mes "grow with each passing day.";
 						next;
-						mapannounce "prt_church","It's the marriage proposal from the groom, Mr. " + strcharinfo(0) + "...",bc_map;
+						mapannounce "prt_church","It's the marriage proposal from the groom, Mr. " + strcharinfo(PC_NAME) + "...",bc_map;
 						mes "[Vomars]";
 						mes "Until the end of the";
 						mes "world, may you stand";
@@ -584,23 +599,23 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 						mes "her and protect her. Now, may";
 						mes "I know the name of your bride?";
 						next;
-						input $@wed_bride$;
+						input($@wed_bride$);
 						mes "[Vomars]";
-						mes "Mr. " + strcharinfo(0) + "...";
+						mes "Mr. " + strcharinfo(PC_NAME) + "...";
 						mes "Do you swear on your life";
 						mes "that you will forever cherish";
 						mes "and care for your bride,";
 						mes "Miss " + $@wed_bride$ + "?";
 						next;
 						select("I do.");
-						$@wed_groom$ = strcharinfo(0);
+						$@wed_groom$ = strcharinfo(PC_NAME);
 						mes "[Vomars]";
 						mes "Now, it is time for";
 						mes "your bride to make";
 						mes "her wedding vows.";
 						mes "If she will come forward...";
 						close2;
-						mapannounce "prt_church","The groom, Mr. " + strcharinfo(0) + ", has made his vows to Miss " + $@wed_bride$ + "...",bc_map;
+						mapannounce "prt_church","The groom, Mr. " + strcharinfo(PC_NAME) + ", has made his vows to Miss " + $@wed_bride$ + "...",bc_map;
 						cutin "",255;
 						end;
 					}
@@ -611,7 +626,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 					mes "It's old fashioned protocol,";
 					mes "but I'll admit that it does";
 					mes "keep things running smoothly.";
-					goto L_End;
+					callsub L_End;
 				}
 				mes "[Vomars]";
 				mes "Before you can be";
@@ -620,7 +635,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				mes "two with your partner.";
 				mes "Then, we can proceed";
 				mes "with the ceremony.";
-				goto L_End;
+				callsub L_End;
 			}
 			mes "[Vomars]";
 			mes "You must apply for";
@@ -629,15 +644,15 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 			mes "Happy Marry will let you know";
 			mes "what else you'll need to do";
 			mes "to prepare for marriage.";
-			goto L_End;
+			callsub L_End;
 		}
 		else if ($@wedding == 1) {
 			if (wedding_sign == 1) {
-				getpartymember(getcharid(1));
+				getpartymember(getcharid(CHAR_ID_PARTY));
 				.@partymembercount = $@partymembercount;
 				if (.@partymembercount == 2) {
-					if (Sex == 0) {
-						if (strcharinfo(0) == $@wed_bride$) {
+					if (Sex == SEX_FEMALE) {
+						if (strcharinfo(PC_NAME) == $@wed_bride$) {
 							mes "[Vomars]";
 							mes "Young lovers, please";
 							mes "remember this moment for";
@@ -653,7 +668,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 							mes "to be by his side, no matter";
 							mes "what the dangers may be?";
 							next;
-							if (select("^FF0000No.^000000:I do.") == 1) {
+							if (select("^FF0000No.^000000", "I do.") == 1) {
 								cutin "wedding_bomars03",2;
 								mapannounce "prt_church","Next couple, please proceed...",bc_map;
 								mes "[Vomars]";
@@ -673,21 +688,21 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 							mes "fidelity and patience?";
 							mes "Will you marry "+$@wed_groom$+"?";
 							next;
-							if (select("Yes, I do.:^FF0000No.^000000") == 1) {
-								if (isloggedin(getcharid(3,$@wed_groom$))) {
+							if (select("Yes, I do.", "^FF0000No.^000000") == 1) {
+								if (isloggedin(getcharid(CHAR_ID_ACCOUNT,$@wed_groom$))) {
 									if (marriage($@wed_groom$)) {
 										//Call Wedding effect
 										wedding;
 										//Give ring to Bride, and change to wedding sprite.
 										sc_start SC_WEDDING,3600000,1;
-										getitem 2635,1; //Bride_Ring
+										getitem Bride_Ring,1;
 										//Give ring to Groom, and change to wedding sprite.
-										attachrid(getcharid(3,$@wed_groom$));
+										attachrid(getcharid(CHAR_ID_ACCOUNT,$@wed_groom$));
 										sc_start SC_WEDDING,3600000,1;
-										getitem 2634,1; //Bridegroom_Ring
+										getitem Bridegroom_Ring,1;
 										detachrid;
 										//Switch Script progression back to Bride
-										attachrid(getcharid(3,$@wed_bride$));
+										attachrid(getcharid(CHAR_ID_ACCOUNT,$@wed_bride$));
 										cutin "wedding_bomars02",2;
 										mapannounce "prt_church","I now pronounce you, "+$@wed_groom$+" and "+$@wed_bride$+", husband and wife.",bc_map;
 										mes "[Vomars]";
@@ -719,7 +734,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 								mes "the ceremony has finished";
 								mes "Please try again once he's";
 								mes "returned.";
-								goto L_End;
+								callsub L_End;
 							}
 							else {
 								cutin "wedding_bomars03",2;
@@ -746,7 +761,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				}
 				callsub S_Busy;
 			}
-			if (strcharinfo(0) == $@wed_bride$) {
+			if (strcharinfo(PC_NAME) == $@wed_bride$) {
 				mes "[Vomars]";
 				mes "Hm? It appears that";
 				mes "Happy Marry still hasn't";
@@ -754,7 +769,7 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 				mes "application. Please speak";
 				mes "to her so that we can begin";
 				mes "the wedding ceremony.";
-				goto L_End;
+				callsub L_End;
 			}
 			callsub S_Busy;
 		}
@@ -781,14 +796,14 @@ S_Busy:
 		mes "Mister "+ $@wed_groom$;
 		mes "is currently in progress.";
 		mes "Please keep your voice down.";
-		goto L_End;
+		callsub L_End;
 	}
 	mes "[Vomars]";
 	mes "I'm conducting a wedding";
 	mes "for another couple now, so";
 	mes "please wait patiently for your";
-	mes "turn. Thanks for understanding... ^FFFFFF ^000000";
-	goto L_End;
+	mes "turn. Thanks for understanding... ";
+	callsub L_End;
 
 OnStop:
 	stopnpctimer;
@@ -830,7 +845,7 @@ prt_church,28,178,4	script	The King of Midgart	1_M_PRON_KING,{
 	mes "I can reset the Bishop";
 	mes "Vomars NPC if you like.";
 	next;
-	switch(select("No, thanks:RESET")) {
+	switch(select("No, thanks", "RESET")) {
 	case 1:
 		mes "[Wedding Switch]";
 		mes "Alright, then.";
@@ -874,9 +889,9 @@ prt_church,20,179,4	script	Divorce Staff	1_F_LIBRARYGIRL,{
 	mes "Wedding Ring in your";
 	mes "inventory?";
 	next;
-	switch(select("Drop 1 Wedding Ring.:Keep it.")) {
+	switch(select("Drop 1 Wedding Ring.", "Keep it.")) {
 	case 1:
-		.@ring = (Sex)?2634:2635; //Bridegroom_Ring, Bride_Ring
+		.@ring = (Sex == SEX_MALE) ? 2634 : 2635; //Bridegroom_Ring, Bride_Ring
 		if (countitem(.@ring)) {
 			delitem .@ring,1;
 			mes "[Bad Ending]";
@@ -929,9 +944,9 @@ prt_church,22,179,4	script	Remarry Staff	1_F_LIBRARYGIRL,{
 	mes "lost your Wedding Ring,";
 	mes "I can make you a new one.";
 	next;
-	switch(select("Make new Wedding Ring.:Cancel.")) {
+	switch(select("Make new Wedding Ring.", "Cancel.")) {
 	case 1:
-		.@ring = (Sex)?2634:2635; //Bridegroom_Ring, Bride_Ring
+		.@ring = (Sex == SEX_MALE) ? 2634 : 2635; //Bridegroom_Ring, Bride_Ring
 		if (countitem(.@ring) || isequipped(.@ring)) {
 			mes "[Wedding Again]";
 			mes "Wait, wait...";

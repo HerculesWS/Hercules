@@ -1,57 +1,35 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Party lock.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
+//================= Current Version =======================================
 //= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Blocks all party modifications on a map:
 //=   /organize, /leave, /invite, @changeleader
-//===== Additional Comments: =================================
-//= 1.0 - Initial script.
-//============================================================
-
-// Sealed Shrine ==================
-1@cata	mapflag	partylock
-2@cata	mapflag	partylock
-
-// Endless Tower ==================
-1@tower	mapflag	partylock
-2@tower	mapflag	partylock
-3@tower	mapflag	partylock
-4@tower	mapflag	partylock
-5@tower	mapflag	partylock
-6@tower	mapflag	partylock
-
-// Orc's Memory ===================
-1@orcs	mapflag	partylock
-2@orcs	mapflag	partylock
-
-// Nidhoggr's Instance ===========
-1@nyd	mapflag	partylock
-2@nyd	mapflag	partylock
-
-// Misty Forest Labyrinth ===========
-1@mist	mapflag	partylock
-
-// Octopus Cave ===========
-1@cash	mapflag	partylock
-
-// Drain ===========
-1@pump	mapflag	partylock
-2@pump	mapflag	partylock
-
-// Somatology Laboratory ===========
-1@lhz	mapflag	partylock
-
-// Bangungot Hospital F2 ===========
-1@ma_h	mapflag	partylock
-
-// Buwaya Cave ===========
-1@ma_c	mapflag	partylock
-
-// Bakonawa Hideout ===========
-1@ma_b	mapflag	partylock
-
-// Inside Eclage ===========
-1@ecl	mapflag	partylock
+//=========================================================================

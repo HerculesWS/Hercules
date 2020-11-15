@@ -1,24 +1,45 @@
-//===== Hercules Script ======================================
-//= Clock Tower Monster Spawn Script
-//===== By: ==================================================
-//= Athena (1.0)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Clock Tower Monster Spawn Script (Pre-Renewal)
+//================= Description ===========================================
+//= Monster Spawns for Clock Tower Dungeon
+//================= Current Version =======================================
 //= 1.0
-//===== Additional Comments: =================================
-//= 1.0 Split from combined Alde and CT spawn file. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-//==================================================
-// c_tower1 - Clock Tower F1
-//==================================================
+//== c_tower1 - Clock Tower F1 =============================
 c_tower1,0,0,0,0	monster	Punk	1199,70,0,0,0
 c_tower1,0,0,0,0	monster	Rideword	1195,70,0,0,0
 c_tower1,0,0,0,0	monster	Clock Tower Manager	1270,1,0,0,0
 c_tower1,0,0,0,0	monster	Bathory	1102,1,0,0,0
 
-//==================================================
-// c_tower2 - Clock Tower F2
-//==================================================
+//== c_tower2 - Clock Tower F2 =============================
 c_tower2,0,0,0,0	monster	Punk	1199,40,0,0,0
 c_tower2,0,0,0,0	monster	Clock	1269,40,0,0,0
 c_tower2,0,0,0,0	monster	Rideword	1195,7,0,0,0
@@ -32,18 +53,14 @@ c_tower2,0,0,0,0	monster	Clock Tower Manager	1270,1,0,0,0
 c_tower2,0,0,0,0	monster	Elder	1377,1,3600000,1800000,0
 c_tower2,0,0,0,0	monster	Elder	1377,1,3600000,1800000,0
 
-//==================================================
-// c_tower3 - Clock Tower F3
-//==================================================
+//== c_tower3 - Clock Tower F3 =============================
 c_tower3,0,0,0,0	monster	Alarm	1193,80,0,0,0
 c_tower3,0,0,0,0	monster	Rideword	1195,5,0,0,0
 c_tower3,153,220,10,10	monster	Rideword	1195,1,126000,100000,0
 c_tower3,0,0,0,0	monster	Mimic	1191,7,0,0,0
 c_tower3,0,0,0,0	monster	Clock Tower Manager	1270,3,0,0,0
 
-//==================================================
-// c_tower4 - Clock Tower F4
-//==================================================
+//== c_tower4 - Clock Tower F4 =============================
 c_tower4,0,0,0,0	monster	Clock Tower Manager	1270,2,1800000,0,0
 c_tower4,0,0,0,0	monster	Clock Tower Manager	1270,1,3600000,0,0
 c_tower4,0,0,0,0	monster	Whisper	1179,5,0,0,0

@@ -1,13 +1,51 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_ELEMENTAL_H
 #define MAP_ELEMENTAL_H
 
-#include "status.h" // struct status_data, struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/mmo.h" // NAME_LENGTH
+#include "map/status.h" // struct status_data, struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/hercules.h"
+#include "common/mmo.h" // NAME_LENGTH
+
+#include <stdarg.h>
+
+/**
+ * Enums
+ */
+/// Elemental IDs
+enum elemental_id {
+	ELEID_EL_AGNI_S   = 2114, ///<   EL_AGNI_S / Agni
+	ELEID_EL_AGNI_M   = 2115, ///<   EL_AGNI_M / Agni
+	ELEID_EL_AGNI_L   = 2116, ///<   EL_AGNI_L / Agni
+	ELEID_EL_AQUA_S   = 2117, ///<   EL_AQUA_S / Aqua
+	ELEID_EL_AQUA_M   = 2118, ///<   EL_AQUA_M / Aqua
+	ELEID_EL_AQUA_L   = 2119, ///<   EL_AQUA_L / Aqua
+	ELEID_EL_VENTUS_S = 2120, ///< EL_VENTUS_S / Ventus
+	ELEID_EL_VENTUS_M = 2121, ///< EL_VENTUS_M / Ventus
+	ELEID_EL_VENTUS_L = 2122, ///< EL_VENTUS_L / Ventus
+	ELEID_EL_TERA_S   = 2123, ///<   EL_TERA_S / Tera
+	ELEID_EL_TERA_M   = 2124, ///<   EL_TERA_M / Tera
+	ELEID_EL_TERA_L   = 2125, ///<   EL_TERA_L / Tera
+};
 
 /**
  * Defines
@@ -21,6 +59,9 @@
 #define EL_SKILLMODE_PASIVE 0x1
 #define EL_SKILLMODE_ASSIST 0x2
 #define EL_SKILLMODE_AGGRESSIVE 0x4
+#define MAX_ELEMENTAL_CLASS 12
+#define EL_CLASS_BASE ELEID_EL_AGNI_S
+#define EL_CLASS_MAX (EL_CLASS_BASE+MAX_ELEMENTAL_CLASS-1)
 
 #define elemental_stop_walking(ed, type) (unit->stop_walking(&(ed)->bl, (type)))
 #define elemental_stop_attack(ed)        (unit->stop_attack(&(ed)->bl))
@@ -81,11 +122,11 @@ struct elemental_interface {
 	struct view_data * (*get_viewdata) (int class_);
 
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);
-	int (*data_received) (struct s_elemental *ele, bool flag);
+	int (*data_received) (const struct s_elemental *ele, bool flag);
 	int (*save) (struct elemental_data *ed);
 
 	int (*change_mode_ack) (struct elemental_data *ed, int mode);
-	int (*change_mode) (struct elemental_data *ed, int mode);
+	int (*change_mode) (struct elemental_data *ed, uint32 mode);
 
 	void (*heal) (struct elemental_data *ed, int hp, int sp);
 	int (*dead) (struct elemental_data *ed);
@@ -117,10 +158,10 @@ struct elemental_interface {
 	int (*read_db) (void);
 };
 
-struct elemental_interface *elemental;
-
 #ifdef HERCULES_CORE
 void elemental_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct elemental_interface *elemental;
 
 #endif /* MAP_ELEMENTAL_H */

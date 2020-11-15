@@ -1,0 +1,581 @@
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2017-2020 Hercules Dev Team
+//= Copyright (C) Ridley
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program. If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Clan System
+//================= Description ===========================================
+//= Join a Clan instead of a guild
+//= Reference: http://ragnarok.wikia.com/wiki/Clans
+//= Todo: Clan Quests
+//= Note: Official npcs can have also a way to stop players joining clans
+//=       that already reached their maximum amount of members. Maybe it
+//=       can be added here after a confirmation.
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
+
+prontera,138,183,7	script	Clan Helper#clan	4_F_KID2,{
+	mes("[Clan Helper]");
+	mes("Do you want to build connections without being in a guild?");
+	next();
+	mes("[Clan Helper]");
+	mes("Can't find the perfect guild for yourself?");
+	next();
+	mes("[Clan Helper]");
+	mes("You can join or leave clan freely! Just join!");
+	next();
+	mes("[Clan Helper]");
+	mes("Now, come on in and meet the masters of the Kingdom's best Clans!");
+	close();
+}
+
+//= Clan Leaders
+//================= Crossbow Clan =========================================
+prt_in,39,114,4	script	Sham Rumi#clan	4_F_SHAM,{
+	mes("[Sham Rumi]");
+	mes("Hi, there! I'm Sham, master of ^3131FF[Crossbow Clan]^000000");
+	mes("What can I do for you?");
+	next();
+	switch (select("Introducing Clan", "Join.", "Leave.")) {
+	case 1:
+		switch (select("Clans are", "About the Crossbow Clan", "Cancel.")) {
+		case 1:
+			mes("[Sham Rumi]");
+			mes("The Clan established by the Rune-Midgarts Kingdom to...");
+			mes("Laperm, why are our ^3131FFclans^000000 made?");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("Did you sleep in class? Gosh.");
+			mes("The Clans help lone adventurers connect with each other and share information.");
+			next();
+			mes("[Sham Rumi]");
+			mes("A-ha, got it! Thank you, Captain!");
+			mes("You heard that too, right?");
+			next();
+			mes("[Sham Rumi]");
+			mes("Run by the Kingdom itself, the Clans are not allowed to participate in the Siege, but the good news is that the members are given some ^3131FFstat bonuses^000000.");
+			next();
+			mes("[Sham Rumi]");
+			mes("In case you wonder if the ^3131FFCrossbow Clan^000000 only recruits Archers, no, it doesn't.");
+			mes("All the Clans accept all classes. You can choose the one that suits your needs best.");
+			next();
+			mes("[Sham Rumi]");
+			mes("That should cover everything there is to know.");
+			mes("Berman, let's go hang out in Glast Heim.");
+			next();
+			mes("[Debon Aire]");
+			mes("You...");
+			next();
+			mes("[Sham Rumi]");
+			mes("Ooh, scary! You're so protective of your brother.");
+			close();
+		case 2:
+			mes("[Sham Rumi]");
+			mes("The ^3131FFCrossbow Clan^000000 is ideal for Ranged classes.");
+			next();
+			mes("[Sham Rumi]");
+			mes("Eh, let me check the Clan manual. Ah, and we offer stat bonuses to new members: ^FF0000<DEX+1, AGI+1, MHP+30, MSP+10>^000000.");
+			next();
+			mes("[Sham Rumi]");
+			mes("The Clans are not allowed to participate in the Siege; you should join a private guild instead for Siege.");
+			mes("The Clans are for adventurers that hate being tied down.");
+			next();
+			mes("[Sham Rumi]");
+			mes("Do you have a question?");
+			close();
+		case 3:
+			close();
+		}
+	case 2:
+		mes("[Sham Rumi]");
+		mes("Oh, yeah? Good choice!");
+		mes("Let's check the Clan policy then take admission procedures.");
+		next();
+		mes("[Sham Rumi]");
+		mes("^3131FFClansmen^000000 cannot participate in the Siege.");
+		mes("As our new member, you'll receive the following stat bonuses: ^FF0000<DEX+1, AGI+1, MHP+30, MSP+10>^000000.");
+		mes("Do you agree?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Sham Rumi]");
+		mes("Join and leave the clans anytime, but if you don't show up at clan for ^FF0000more than 2 weeks^000000, you'll be ^FF0000expelled^000000.");
+		mes("Do you promise you'll maintain good standing?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Sham Rumi]");
+		mes("Good, write your name here.");
+		next();
+		input(.@name$);
+		mes("[Sham Rumi]");
+		mesf("^3131FF%s^000000..!", strcharinfo(PC_NAME));
+		mes("Ugh, your penmanship needs work. Let me process your application.");
+		next();
+		mes("[Sham Rumi]");
+		if (strcharinfo(PC_GUILD) != "") {
+			mes("Did you finish things up with your old guild?");
+			close();
+		}
+		if (getcharid(CHAR_ID_CLAN)) {
+			mes("Eh, you're already in a clan. Hey, this isn't funny.");
+			close();
+		}
+		clan_join(CROSSBOWCLAN);
+		mes("Welcome to the ^3131FFCrossbow Clan^000000!");
+		next();
+		mes("[Sham Rumi]");
+		mes("You can review Clan info with ^3131FFCtrl+G^000000.");
+		next();
+		mes("[Sham Rumi]");
+		mes("Don't pick fights with other clansmen. Be social.");
+		mes("If you need help, you can always whisper me, okay? See you around!");
+		close();
+	case 3:
+		mes("[Sham Rumi]");
+		mes("Why, did you find a better clan?");
+		mes("I'm disappointed, but it's your call. Let me process your withdrawal.");
+		next();
+		if (select("Continue.", "Cancel.") == 2)
+			close();
+		mes("[Sham Rumi]");
+		if (!getcharid(CHAR_ID_CLAN)) {
+			mes("I can't let you leave--you're not even in my clan!");
+			close();
+		} else if (getcharid(CHAR_ID_CLAN) != CROSSBOWCLAN) {
+			mes("Sorry, but I don't meddle with other clans' business.");
+			close();
+		}
+		clan_leave();
+		mes("It's done.");
+		mes("If you ever miss us, don't hesitate to come back, all right?");
+		close();
+	}
+
+L_Nope:
+	mes("[Sham Rumi]");
+	mes("Ah, do you need time to think about this? No problem.");
+	close();
+
+OnInit:
+	clan_master(CROSSBOWCLAN);
+	end;
+}
+
+//================= Goldenmace Clan =======================================
+prt_in,37,114,4	script	Berman Aire	4_M_BIRMAN,{
+	mes("[Berman Aire]");
+	mes("Nice to meet you. I'm Berman Aire, master of ^3131FF[Goldenmace Clan]^000000.");
+	mes("I'm also the older brother of Debon Aire here. Debon looks tough, but he's a sweetheart.");
+	next();
+	switch (select("Introducing Clan", "Join.", "Leave.")) {
+	case 1:
+		switch (select("Clans are", "About the Golden Mace Clan", "Cancel.")) {
+		case 1:
+			mes("[Berman Aire]");
+			mes("The ^3131FFClans^000000 are established by the Kingdom to help adventurers connect and share information.");
+			next();
+			mes("[Berman Aire]");
+			mes("Because the Kingdom runs the clan, no Sieges, but at least the members are given ^3131FFstat bonuses^000000.");
+			mes("The stat bonuses are small, but can be very useful for beginning adventurers.");
+			next();
+			mes("[Berman Aire]");
+			mes("We're named the ^3131FFGolden Mace Clan^000000, but we don't discriminate against applicants based on their classes.");
+			mes("The name is just to help you easily choose your clan.");
+			next();
+			mes("[Sham Rumi]");
+			mes("Berman, enough with the explanation. Let's go hang out in Glast Heim.");
+			next();
+			mes("[Debon Aire]");
+			mes("... Hey.");
+			next();
+			mes("[Sham Rumi]");
+			mes("Ooh, you're scaring me.");
+			mes("Berman, call me when you can!~");
+			next();
+			mes("[Berman Aire]");
+			mes("Hah hah, I apologize for their bickering.");
+			next();
+			mes("[Berman Aire]");
+			mes("Do you have a question?");
+			mes("If you're tired of traveling alone, join us! You can join and leave the Clans anytime you want.");
+			close();
+		case 2:
+			mes("[Berman Aire]");
+			mes("The ^3131FFGolden Mace Clan^000000 mainly supports supportive classes.");
+			mes("We offer ^FF0000<INT+1, LUK+1, MHP+30, MSP+10>^000000 to new members.");
+			next();
+			mes("[Berman Aire]");
+			mes("As I told you earlier, Clans cannot join the Siege because they already belong to the Kingdom.");
+			mes("If you want to be in the Siege, then I recommend you join a regular guild.");
+			next();
+			mes("[Berman Aire]");
+			mes("Do you understand about the Clans now?");
+			close();
+		case 3:
+			close();
+		}
+	case 2:
+		mes("[Berman Aire]");
+		mes("Great!");
+		mes("Let's check the Clan policy then take admission procedures.");
+		next();
+		mes("[Berman Aire]");
+		mes("^3131FFClansmen^000000 cannot participate in the Siege.");
+		mes("As our new member, you'll receive the following stat bonuses: ^FF0000<INT+1, LUK+1, MHP+30, MSP+10>^000000.");
+		mes("Do you agree?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Berman Aire]");
+		mes("Join and leave the clans anytime, but if you don't show up at clan for ^FF0000more than 2 weeks^000000, you'll be ^FF0000expelled^000000.");
+		mes("Do you agree to maintain good standing in Clan?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Berman Aire]");
+		mes("Now, please write your name here.");
+		next();
+		input(.@name$);
+		mes("[Berman Aire]");
+		mesf("^3131FF%s^000000! What a good name!", strcharinfo(PC_NAME));
+		mes("Okay, then...");
+		next();
+		mes("[Berman Aire]");
+		if (strcharinfo(PC_GUILD) != "") {
+			mes("Oh, no.");
+			mes("In order to join, you first have to leave the current guild.");
+			close();
+		}
+		if (getcharid(CHAR_ID_CLAN)) {
+			mes("You're already in a clan.");
+			mes("You're just confused, right?");
+			close();
+		}
+		clan_join(GOLDENMACECLAN);
+		mes("Welcome to the ^3131FFGolden Mace Clan^000000!");
+		next();
+		mes("[Berman Aire]");
+		mes("You can review Clan info with ^3131FFCtrl+G^000000.");
+		next();
+		mes("[Berman Aire]");
+		mes("Please remember the few precautions I gave you, and enjoy your Clan activities!");
+		close();
+	case 3:
+		mes("[Berman Aire]");
+		mes("With meeting, there is parting.");
+		mes("I hope you enjoyed your time in ^3131FFGolden Mace Clan^000000.");
+		mes("Now, should I process your withdrawal?");
+		next();
+		if (select("Continue.", "Cancel.") == 2)
+			close();
+		mes("[Berman Aire]");
+		if (!getcharid(CHAR_ID_CLAN)) {
+			mes("You can't leave the clan without joining it first.");
+			close();
+		} else if (getcharid(CHAR_ID_CLAN) != GOLDENMACECLAN) {
+			mes("I'm sorry, but I can't remove you from another clan..");
+			close();
+		}
+		clan_leave();
+		mes("It's processed.");
+		mes("Come back anytime to ^3131FFGolden Mace Clan^000000. I'll be here.");
+		close();
+	}
+
+L_Nope:
+	mes("[Berman Aire]");
+	mes("I suggest you to think it over.");
+	close();
+
+OnInit:
+	clan_master(GOLDENMACECLAN);
+	end;
+}
+
+//================= Arc Wand Clan =========================================
+prt_in,35,114,4	script	Debon Aire	4_M_DEBON,{
+	mes("[Debon Aire]");
+	mes("I'm Debon, master of ^3131FF[Arc Wand Clan]^000000.");
+	next();
+	switch (select("Introducing Clan", "Join.", "Leave.")) {
+	case 1:
+		switch (select("Clans are", "About the Arc Wand Clan", "Cancel.")) {
+		case 1:
+			mes("[Debon Aire]");
+			mes("The ^3131FFClans^000000 are ran by the Kingdom, not privately like others.");
+			mes("And I manage one of them.");
+			next();
+			mes("[Debon Aire]");
+			mes("...");
+			mes("What's with that look? You got a problem?");
+			next();
+			mes("[Berman Aire]");
+			mes("Brother, you're scaring the potential member, be gentle.");
+			next();
+			mes("[Debon Aire]");
+			mes("...");
+			next();
+			mes("[Debon Aire]");
+			mes("Join if seeking a place to fit in. We give ^3131FFfree bonus stat^000000. But no Siege.");
+			next();
+			mes("[Debon Aire]");
+			mes("Most members are offensive mage classes as the name ^3131FFArc Wand Clan^000000 suggests, but that's no requirement.");
+			next();
+			mes("[Debon Aire]");
+			mes("...Hey, Sham Rumi.");
+			mes("Stop hitting on my brother, and go work.");
+			next();
+			mes("[Sham Rumi]");
+			mes("Whatever!");
+			next();
+			mes("[Debon Aire]");
+			mes("...Hmpf!");
+			mes("Listen, Crossbow Clan's master is an evil.");
+			next();
+			mes("[Sham Rumi]");
+			mes("Get over me, Decon! Don't spread rumors!");
+			next();
+			mes("[Berman Aire]");
+			mes("Haha. stop it. You two are making a scene.");
+			mes("Come on, back to work, guys.");
+			close();
+		case 2:
+			mes("[Debon Aire]");
+			mes("The ^3131FFArc Wand Clan^000000 mainly supports offensive mage classes.");
+			mes("We offer ^FF0000<INT+1, DEX+1, MHP+30, MSP+10>^000000 to new members. Don't ask for more; it's the Kingdom's rule.");
+			next();
+			mes("[Debon Aire]");
+			mes("^3131FFClansmen^000000 can't participate in the Siege.");
+			mes("If you like the Siege, then go join a regular guild.");
+			next();
+			mes("[Debon Aire]");
+			mes("That is all. No questions.");
+			close();
+		case 3:
+			close();
+		}
+	case 2:
+		mes("[Debon Aire]");
+		mes("...");
+		mes("Let's check the Clan policy then take admission procedures.");
+		next();
+		mes("[Debon Aire]");
+		mes("^3131FFClansmen^000000 cannot participate in the Siege.");
+		mes("New members are given these stat bonuses: ^FF0000<INT+1, DEX+1, MHP+30, MSP+10>^000000.");
+		mes("You with me so far?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Debon Aire]");
+		mes("Join and leave the clans anytime, but if you don't show up at clan for ^FF0000more than 2 weeks^000000, you'll be ^FF0000expelled^000000.");
+		mes("Do you agree?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Debon Aire]");
+		mes("Sign your name here.");
+		next();
+		input(.@name$);
+		mes("[Debon Aire]");
+		mesf("^3131FF%s^000000.....", strcharinfo(PC_NAME));
+		mes("Good, let me invite you in.");
+		next();
+		mes("[Debon Aire]");
+		if (strcharinfo(PC_GUILD) != "") {
+			mes("Leave your guild first to join mine, duh.");
+			close();
+		}
+		if (getcharid(CHAR_ID_CLAN)) {
+			mes("You're already in a clan. You joking?!");
+			mes("Oh, I can be funny, too--FIRE PILLAR!");
+			close();
+		}
+		clan_join(ARCWANDCLAN);
+		mes("You have joined the ^3131FFArc Wand Clan^000000.");
+		next();
+		mes("[Debon Aire]");
+		mes("You can review Clan info with ^3131FFCtrl+G^000000.");
+		mes("So don't bother me later.");
+		next();
+		mes("[Debon Aire]");
+		mes("That's all. Visit often or be expelled. Dismissed.");
+		close();
+	case 3:
+		mes("[Debon Aire]");
+		mes("Want to leave, huh?");
+		mes("I understand it it's about Siege. If not, why are..Never mind..");
+		mes("I'll process your withdrawal.");
+		next();
+		if (select("Continue.","Cancel.") == 2)
+			close();
+		mes("[Debon Aire]");
+		if (!getcharid(CHAR_ID_CLAN)) {
+			mes("Naughty children deserve a good Jupitel Thunder.");
+			close();
+		} else if (getcharid(CHAR_ID_CLAN) != ARCWANDCLAN) {
+			mes("You're barking up the wrong tree. Go to your clan master.");
+			close();
+		}
+		clan_leave();
+		mes("You are withdrawn from the clan.");
+		mes("Now leave. I don't feel like talking anymore.");
+		close();
+	}
+
+L_Nope:
+	mes("[Debon Aire]");
+	mes("Gosh, listen to the policy again.");
+	close();
+
+OnInit:
+	clan_master(ARCWANDCLAN);
+	end;
+}
+
+//================= Sword Clan ============================================
+prt_in,33,114,4	script	Laperm Oranpere	4_F_LAPERM,{
+	mes("[Laperm Oranpere]");
+	mes("Hi! I'm Laperm, master of ^3131FF[Sword Clan]^000000, one the Rune-Midgarts Kingdom.");
+	next();
+	switch (select("Introducing Clan", "Join.", "Leave.")) {
+	case 1:
+		switch (select("Clans are", "About the Sword Clan", "Cancel.")) {
+		case 1:
+			mes("[Laperm Oranpere]");
+			mes("The ^3131FFClans^000000 are a type of guild ran by the Kingdom.");
+			mes("They don't participate in the Siege, so members are free to join/leave anytime.");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("I wish we could join the Siege. I'd love flying over on my dragon and burning everyone in my way!");
+			mes("Oops, too thrilled!");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("Join us, if no clan suits your taste.");
+			mes("New members are given ^3131FFfree stat bonus^000000.");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("Melee stats are offered as the name ^3131FFSword Clan^000000 suggests, but not all members are Melee classes.");
+			mes("Don't feel pressured, just count on me!");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("Difference in variety creates the fun");
+			mes("These odd bunches never bore me in the party.");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("And who knows you'll meet your soul mate in the clan? Hahah!");
+			close();
+		case 2:
+			mes("[Laperm Oranpere]");
+			mes("The ^3131FFSword Clan^000000 mainly supports Melee adventurers.");
+			mes("Join for free ^FF0000<STR+1, VIT+1, MHP+30, MSP+10>^000000!");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("Remember, no Siege participation.");
+			mes("You should contact other guilds for Siege.");
+			next();
+			mes("[Laperm Oranpere]");
+			mes("A question?");
+			mes("Excited to join me? Hahah!");
+			close();
+		case 3:
+			close();
+		}
+	case 2:
+		mes("[Laperm Oranpere]");
+		mes("Oh, you'll join? Good choice!");
+		mes("Let's check the Clan policy then take admission procedures.");
+		next();
+		mes("[Laperm Oranpere]");
+		mes("^3131FFClansmen^000000 cannot participate in the Siege.");
+		mes("New members are given these stat bonuses: ^FF0000<STR+1, VIT+1, MHP+30, MSP+10>^000000.");
+		mes("You with me so far?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Laperm Oranpere]");
+		mes("Join and leave the clans anytime, but if you don't show up at clan for ^FF0000longer than 2 weeks^000000, you'll be ^FF0000expelled^000000.");
+		mes("Clan masters exsit for reason, like I.");
+		mes("Understood?");
+		next();
+		if (select("Yes.", "No.") == 2)
+			callsub(L_Nope);
+		mes("[Laperm Oranpere]");
+		mes("Great, sign name here on the register.");
+		next();
+		input(.@name$);
+		mes("[Laperm Oranpere]");
+		mesf("So, you're ^3131FF%s^000000! Nice name!", strcharinfo(PC_NAME));
+		mes("Let me register you.");
+		next();
+		mes("[Laperm Oranpere]");
+		if (strcharinfo(PC_GUILD) != "") {
+			mes("Come back to join after you leave the current guild.");
+			close();
+		}
+		if (getcharid(CHAR_ID_CLAN)) {
+			mes("[Laperm Oranpere]");
+			mes("Eh?");
+			mes("Oh, you're in Clan.");
+			mes("Don't mess with me, it's not cool!");
+			close();
+		}
+		clan_join(SWORDCLAN);
+		mes("Welcome to ^3131FFSword Clan^000000!");
+		mes("You can review Clan info with ^3131FFCtrl+G^000000.");
+		mes("At your service!");
+		close();
+	case 3:
+		mes("[Laperm Oranpere]");
+		mes("You want to leave?");
+		mes("No problem. I hope you'll find more suitable clan.");
+		mes("Ready for withdrawal?");
+		next();
+		if (select("Continue.", "Cancel.") == 2)
+			close();
+		mes("[Laperm Oranpere]");
+		if (!getcharid(CHAR_ID_CLAN)) {
+			mes("Wait, you're not with us! Grr, don't make me breathe fire at you!");
+			close();
+		} else if (getcharid(CHAR_ID_CLAN) != SWORDCLAN) {
+			mes("Hey, talk to your guild master if you want to leave.");
+			close();
+		}
+		clan_leave();
+		mes("Okay, it's done. But let's not be strangers, okay?");
+		mes("It was nice having you!");
+		close();
+	}
+
+L_Nope:
+	mes("[Laperm Oranpere]");
+	mes("Uh, oh. Let's go back to beginning.");
+	close();
+
+OnInit:
+	clan_master(SWORDCLAN);
+	end;
+}

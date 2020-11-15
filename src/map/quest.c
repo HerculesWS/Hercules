@@ -1,10 +1,52 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "quest.h"
+
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/homunculus.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mercenary.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "map/script.h"
+#include "map/unit.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -12,31 +54,10 @@
 #include <string.h>
 #include <time.h>
 
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h"
-#include "npc.h"
-#include "party.h"
-#include "pc.h"
-#include "script.h"
-#include "unit.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
+static struct quest_interface quest_s;
+static struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
 
-struct quest_interface quest_s;
+struct quest_interface *quest;
 
 /**
  * Searches a quest by ID.
@@ -44,7 +65,8 @@ struct quest_interface quest_s;
  * @param quest_id ID to lookup
  * @return Quest entry (equals to &quest->dummy if the ID is invalid)
  */
-struct quest_db *quest_db(int quest_id) {
+static struct quest_db *quest_db(int quest_id)
+{
 	if (quest_id < 0 || quest_id >= MAX_QUEST_DB || quest->db_data[quest_id] == NULL)
 		return &quest->dummy;
 	return quest->db_data[quest_id];
@@ -56,18 +78,25 @@ struct quest_db *quest_db(int quest_id) {
  * @param sd Player's data
  * @return 0 in case of success, nonzero otherwise (i.e. the player has no quests)
  */
-int quest_pc_login(TBL_PC *sd) {
+static int quest_pc_login(struct map_session_data *sd)
+{
+#if PACKETVER < 20141022
 	int i;
+#endif
 
+	nullpo_retr(1, sd);
 	if(sd->avail_quests == 0)
 		return 1;
 
 	clif->quest_send_list(sd);
+
+#if PACKETVER < 20141022
 	clif->quest_send_mission(sd);
 	for( i = 0; i < sd->avail_quests; i++ ) {
 		// TODO[Haru]: is this necessary? Does quest_send_mission not take care of this?
 		clif->quest_update_objective(sd, &sd->quest_log[i]);
 	}
+#endif
 
 	return 0;
 }
@@ -77,31 +106,35 @@ int quest_pc_login(TBL_PC *sd) {
  *
  * New quest will be added as Q_ACTIVE.
  *
- * @param sd       Player's data
- * @param quest_id ID of the quest to add.
+ * @param sd         Player's data
+ * @param quest_id   ID of the quest to add.
+ * @param time_limit Custom time, in UNIX epoch, for this quest
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_add(TBL_PC *sd, int quest_id) {
+static int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit)
+{
 	int n;
 	struct quest_db *qi = quest->db(quest_id);
 
-	if( qi == &quest->dummy ) {
+	nullpo_retr(-1, sd);
+	if (qi == &quest->dummy) {
 		ShowError("quest_add: quest %d not found in DB.\n", quest_id);
 		return -1;
 	}
 
-	if( quest->check(sd, quest_id, HAVEQUEST) >= 0 ) {
+	if (quest->check(sd, quest_id, HAVEQUEST) >= 0) {
 		ShowError("quest_add: Character %d already has quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
 
 	n = sd->avail_quests; // Insertion point
+	Assert_retr(-1, sd->avail_quests <= sd->num_quests);
 
 	sd->num_quests++;
 	sd->avail_quests++;
 	RECREATE(sd->quest_log, struct quest, sd->num_quests);
 
-	if( sd->avail_quests != sd->num_quests ) {
+	if (sd->avail_quests != sd->num_quests) {
 		// The character has some completed quests, make room before them so that they will stay at the end of the array
 		memmove(&sd->quest_log[n+1], &sd->quest_log[n], sizeof(struct quest)*(sd->num_quests-sd->avail_quests));
 	}
@@ -109,17 +142,24 @@ int quest_add(TBL_PC *sd, int quest_id) {
 	memset(&sd->quest_log[n], 0, sizeof(struct quest));
 
 	sd->quest_log[n].quest_id = qi->id;
-	if( qi->time )
+	if (time_limit != 0)
+		sd->quest_log[n].time = time_limit;
+	else if (qi->time != 0)
 		sd->quest_log[n].time = (unsigned int)(time(NULL) + qi->time);
 	sd->quest_log[n].state = Q_ACTIVE;
 
 	sd->save_quest = true;
 
 	clif->quest_add(sd, &sd->quest_log[n]);
+#if PACKETVER >= 20150513
+	clif->quest_notify_objective(sd, &sd->quest_log[n]);
+#else
 	clif->quest_update_objective(sd, &sd->quest_log[n]);
+#endif
+	quest->questinfo_refresh(sd);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if ((map->save_settings & 64) != 0)
+		chrif->save(sd, 0);
 
 	return 0;
 }
@@ -132,10 +172,12 @@ int quest_add(TBL_PC *sd, int quest_id) {
  * @param qid2 New quest to add
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_change(TBL_PC *sd, int qid1, int qid2) {
+static int quest_change(struct map_session_data *sd, int qid1, int qid2)
+{
 	int i;
 	struct quest_db *qi = quest->db(qid2);
 
+	nullpo_retr(-1, sd);
 	if( qi == &quest->dummy ) {
 		ShowError("quest_change: quest %d not found in DB.\n", qid2);
 		return -1;
@@ -167,11 +209,15 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
 
 	clif->quest_delete(sd, qid1);
 	clif->quest_add(sd, &sd->quest_log[i]);
+#if PACKETVER >= 20150513
+	clif->quest_notify_objective(sd, &sd->quest_log[i]);
+#else
 	clif->quest_update_objective(sd, &sd->quest_log[i]);
+#endif
+	quest->questinfo_refresh(sd);
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
-
 	return 0;
 }
 
@@ -182,9 +228,11 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
  * @param quest_id ID of the quest to remove
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_delete(TBL_PC *sd, int quest_id) {
+static int quest_delete(struct map_session_data *sd, int quest_id)
+{
 	int i;
 
+	nullpo_retr(-1, sd);
 	//Search for quest
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
 
@@ -209,6 +257,7 @@ int quest_delete(TBL_PC *sd, int quest_id) {
 	sd->save_quest = true;
 
 	clif->quest_delete(sd, quest_id);
+	quest->questinfo_refresh(sd);
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
@@ -224,15 +273,15 @@ int quest_delete(TBL_PC *sd, int quest_id) {
  *           int Party ID
  *           int Mob ID
  */
-int quest_update_objective_sub(struct block_list *bl, va_list ap) {
-	struct map_session_data *sd;
-	int mob_id, party_id;
+static int quest_update_objective_sub(struct block_list *bl, va_list ap)
+{
+	struct map_session_data *sd = NULL;
+	int party_id = va_arg(ap, int);
+	int mob_id = va_arg(ap, int);
 
 	nullpo_ret(bl);
-	nullpo_ret(sd = (struct map_session_data *)bl);
-
-	party_id = va_arg(ap,int);
-	mob_id = va_arg(ap,int);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	if( !sd->avail_quests )
 		return 0;
@@ -251,10 +300,11 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-void quest_update_objective(TBL_PC *sd, int mob_id)
+static void quest_update_objective(struct map_session_data *sd, int mob_id)
 {
 	int i,j;
 
+	nullpo_retv(sd);
 	for (i = 0; i < sd->avail_quests; i++) {
 		struct quest_db *qi = NULL;
 
@@ -288,7 +338,7 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
 			item.nameid = dropitem->nameid;
 			item.identify = itemdb->isidentified2(data);
 			item.amount = 1;
-			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_OTHER)) != 0) { // TODO: We might want a new log type here?
+			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) { // TODO: We might want a new log type here?
 				// Failed to obtain the item
 				clif->additem(sd, 0, 0, temp);
 			}
@@ -306,9 +356,11 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
  * @param qs       New quest state
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
+static int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_state qs)
+{
 	int i;
 
+	nullpo_retr(-1, sd);
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
 	if( i == sd->avail_quests ) {
 		ShowError("quest_update_status: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
@@ -333,6 +385,7 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
 	}
 
 	clif->quest_delete(sd, quest_id);
+	quest->questinfo_refresh(sd);
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
@@ -355,10 +408,11 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
  *                    1 if the quest's timeout has expired
  *                    0 otherwise
  */
-int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
+static int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type type)
 {
 	int i;
 
+	nullpo_retr(-1, sd);
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
 	if (i == sd->num_quests)
 		return -1;
@@ -380,7 +434,7 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
 			}
 			return 0;
 		default:
-			ShowError("quest_check_quest: Unknown parameter %d",type);
+			ShowError("quest_check_quest: Unknown parameter %u", type);
 			break;
 	}
 
@@ -396,12 +450,13 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
  * @return The parsed quest entry.
  * @retval NULL in case of errors.
  */
-struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *source)
+static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const char *source)
 {
 	struct quest_db *entry = NULL;
-	config_setting_t *t = NULL;
+	struct config_setting_t *t = NULL;
 	int i32 = 0, quest_id;
 	const char *str = NULL;
+	nullpo_retr(NULL, cs);
 	/*
 	 * Id: Quest ID                    [int]
 	 * Name: Quest Name                [string]
@@ -448,7 +503,7 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 		for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
 			// Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
 			//       quest_log (as well as the client) expect this maximum size.
-			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
 			int mob_id = 0, count = 0;
 			if (!tt)
 				break;
@@ -467,7 +522,7 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
 		for (i = 0; i < len; i++) {
-			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
 			int mob_id = 0, nameid = 0, rate = 0;
 			if (!tt)
 				break;
@@ -495,16 +550,19 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
  *
  * @return Number of loaded quests, or -1 if the file couldn't be read.
  */
-int quest_read_db(void)
+static int quest_read_db(void)
 {
 	char filepath[256];
-	config_t quest_db_conf;
-	config_setting_t *qdb = NULL, *q = NULL;
+	struct config_t quest_db_conf;
+	struct config_setting_t *qdb = NULL, *q = NULL;
 	int i = 0, count = 0;
 	const char *filename = "quest_db.conf";
 
-	sprintf(filepath, "%s/%s", map->db_path, filename);
-	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, filename))) {
+	safesnprintf(filepath, 256, "%s/%s", map->db_path, filename);
+	if (!libconfig->load_file(&quest_db_conf, filepath))
+		return -1;
+
+	if ((qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return -1;
 	}
@@ -526,7 +584,8 @@ int quest_read_db(void)
 
 		count++;
 	}
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	libconfig->destroy(&quest_db_conf);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 	return count;
 }
 
@@ -538,7 +597,8 @@ int quest_read_db(void)
  * @see map->foreachpc
  * @param ap Ignored
  */
-int quest_reload_check_sub(struct map_session_data *sd, va_list ap) {
+static int quest_reload_check_sub(struct map_session_data *sd, va_list ap)
+{
 	int i, j;
 
 	nullpo_ret(sd);
@@ -567,7 +627,8 @@ int quest_reload_check_sub(struct map_session_data *sd, va_list ap) {
 /**
  * Clears the quest database for shutdown or reload.
  */
-void quest_clear_db(void) {
+static void quest_clear_db(void)
+{
 	int i;
 
 	for (i = 0; i < MAX_QUEST_DB; i++) {
@@ -582,12 +643,297 @@ void quest_clear_db(void) {
 	}
 }
 
+/*
+* Limit the questinfo icon id to avoid client problems
+*/
+static int quest_questinfo_validate_icon(int icon)
+{
+#if PACKETVER >= 20170315
+	if (icon < 0 || (icon > 10 && icon != 9999))
+		icon = 9999;
+#elif PACKETVER >= 20120410
+	if (icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
+		icon = 9999; // Default to nothing if icon id is invalid.
+#else
+	if (icon < 0 || icon > 7)
+		icon = 0;
+	else
+		icon = icon + 1;
+#endif
+	return icon;
+}
+
+/**
+ * Refresh the questinfo bubbles on the player map.
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ */
+static void quest_questinfo_refresh(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	for (int i = 0; i < VECTOR_LENGTH(map->list[sd->bl.m].qi_list); i++) {
+		struct npc_data *nd = VECTOR_INDEX(map->list[sd->bl.m].qi_list, i);
+
+		int j;
+		ARR_FIND(0, VECTOR_LENGTH(nd->qi_data), j, quest->questinfo_validate(sd, &VECTOR_INDEX(nd->qi_data, j)) == true);
+		if (j != VECTOR_LENGTH(nd->qi_data)) {
+			struct questinfo *qi = &VECTOR_INDEX(nd->qi_data, j);
+			clif->quest_show_event(sd, &nd->bl, qi->icon, qi->color);
+		} else {
+#if PACKETVER >= 20120410
+			clif->quest_show_event(sd, &nd->bl, 9999, 0);
+#else
+			clif->quest_show_event(sd, &nd->bl, 0, 0);
+#endif
+		}
+	}
+}
+
+/**
+ * Validate all possible conditions required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if conditions are correct.
+ * @retval false if one condition or more are in-correct.
+ */
+static bool quest_questinfo_validate(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+	if (qi->hasJob && quest->questinfo_validate_job(sd, qi) == false)
+		return false;
+	if (qi->sex_enabled && quest->questinfo_validate_sex(sd, qi) == false)
+		return false;
+	if ((qi->base_level.min != 0 || qi->base_level.max != 0) && quest->questinfo_validate_baselevel(sd, qi) == false)
+		return false;
+	if ((qi->job_level.min != 0 || qi->job_level.max != 0) && quest->questinfo_validate_joblevel(sd, qi) == false)
+		return false;
+	if (VECTOR_LENGTH(qi->items) > 0 && quest->questinfo_validate_items(sd, qi) == false)
+		return false;
+	if (qi->homunculus.level != 0 && quest->questinfo_validate_homunculus_level(sd, qi) == false)
+		return false;
+	if (qi->homunculus.class_ != 0 && quest->questinfo_validate_homunculus_type(sd, qi) == false)
+		return false;
+	if (VECTOR_LENGTH(qi->quest_requirement) > 0 && quest->questinfo_validate_quests(sd, qi) == false)
+		return false;
+	if (qi->mercenary_class != 0 && quest->questinfo_validate_mercenary_class(sd, qi) == false)
+		return false;
+	return true;
+}
+
+/**
+ * Validate job required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player job is matching the required.
+ * @retval false if player job is NOT matching the required.
+ */
+static bool quest_questinfo_validate_job(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+	if (sd->status.class == qi->job)
+		return true;
+	return false;
+}
+
+/**
+ * Validate sex required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player sex is matching the required.
+ * @retval false if player sex is NOT matching the required.
+ */
+static bool quest_questinfo_validate_sex(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+	if (sd->status.sex == qi->sex)
+		return true;
+	return false;
+}
+
+/**
+ * Validate base level required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player base level is included in the required level range.
+ * @retval false if player base level is NOT included in the required level range.
+ */
+static bool quest_questinfo_validate_baselevel(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+	if (sd->status.base_level >= qi->base_level.min && sd->status.base_level <= qi->base_level.max)
+		return true;
+	return false;
+}
+
+/**
+ * Validate job level required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player job level is included in the required level range.
+ * @retval false if player job level is NOT included in the required level range.
+ */
+static bool quest_questinfo_validate_joblevel(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+	if (sd->status.job_level >= qi->job_level.min && sd->status.job_level <= qi->job_level.max)
+		return true;
+	return false;
+}
+
+/**
+ * Validate items list required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player have all the items required.
+ * @retval false if player is missing one or more of the items required.
+ */
+static bool quest_questinfo_validate_items(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+
+	for (int i = 0; i < VECTOR_LENGTH(qi->items); i++) {
+		struct questinfo_itemreq *item = &VECTOR_INDEX(qi->items, i);
+		int count = 0;
+		for (int j = 0; j < sd->status.inventorySize; j++) {
+			if (sd->status.inventory[j].nameid == item->nameid)
+				count += sd->status.inventory[j].amount;
+		}
+		if (count < item->min || count > item->max)
+			return false;
+	}
+
+	return true;
+}
+
+/**
+ * Validate minimal homunculus level required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if homunculus level >= the required value.
+ * @retval false if homunculus level smaller than the required value.
+ */
+static bool quest_questinfo_validate_homunculus_level(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+
+	if (sd->hd == NULL)
+		return false;
+	if (!homun_alive(sd->hd))
+		return false;
+	if (sd->hd->homunculus.level < qi->homunculus.level)
+		return false;
+	return true;
+}
+
+/**
+ * Validate homunculus type required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player's homunculus is matching the required.
+ * @retval false if player's homunculus is NOT matching the required.
+ */
+static bool quest_questinfo_validate_homunculus_type(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+
+	if (sd->hd == NULL)
+		return false;
+	if (!homun_alive(sd->hd))
+		return false;
+	if (homun->class2type(sd->hd->homunculus.class_) != qi->homunculus_type)
+		return false;
+	return true;
+}
+
+/**
+ * Validate quest list required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player have all the quests required.
+ * @retval false if player is missing one or more of the quests required.
+ */
+static bool quest_questinfo_validate_quests(struct map_session_data *sd, struct questinfo *qi)
+{
+	int i;
+
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+	
+	for (i = 0; i < VECTOR_LENGTH(qi->quest_requirement); i++) {
+		struct questinfo_qreq *quest_requirement = &VECTOR_INDEX(qi->quest_requirement, i);
+		int quest_progress = quest->check(sd, quest_requirement->id, HAVEQUEST);
+		if (quest_progress == -1)
+			quest_progress = 0;
+		else if (quest_progress == 0 || quest_progress == 1)
+			quest_progress = 1;
+		else
+			quest_progress = 2;
+		if (quest_progress != quest_requirement->state)
+			return false;
+	}
+
+	return true;
+}
+
+/**
+ * Validate mercenary class required for the questinfo
+ *
+ * @param sd session data.
+ * @param qi questinfo data.
+ *
+ * @retval true if player have a mercenary with the given class.
+ * @retval false if player does NOT have a mercenary with the given class.
+ */
+static bool quest_questinfo_validate_mercenary_class(struct map_session_data *sd, struct questinfo *qi)
+{
+	nullpo_retr(false, sd);
+	nullpo_retr(false, qi);
+
+	if (sd->md == NULL)
+		return false;
+
+	if (sd->md->mercenary.class_ != qi->mercenary_class)
+		return false;
+
+	return true;
+}
+
 /**
  * Initializes the quest interface.
  *
  * @param minimal Run in minimal mode (skips most of the loading)
  */
-void do_init_quest(bool minimal) {
+static void do_init_quest(bool minimal)
+{
 	if (minimal)
 		return;
 
@@ -597,14 +943,16 @@ void do_init_quest(bool minimal) {
 /**
  * Finalizes the quest interface before shutdown.
  */
-void do_final_quest(void) {
+static void do_final_quest(void)
+{
 	quest->clear();
 }
 
 /**
  * Reloads the quest database.
  */
-void do_reload_quest(void) {
+static void do_reload_quest(void)
+{
 	quest->clear();
 
 	quest->read_db();
@@ -616,8 +964,10 @@ void do_reload_quest(void) {
 /**
  * Initializes default values for the quest interface.
  */
-void quest_defaults(void) {
+void quest_defaults(void)
+{
 	quest = &quest_s;
+	quest->db_data = db_data;
 
 	memset(&quest->db, 0, sizeof(quest->db));
 	memset(&quest->dummy, 0, sizeof(quest->dummy));
@@ -638,4 +988,17 @@ void quest_defaults(void) {
 	quest->clear = quest_clear_db;
 	quest->read_db = quest_read_db;
 	quest->read_db_sub = quest_read_db_sub;
+
+	quest->questinfo_validate_icon = quest_questinfo_validate_icon;
+	quest->questinfo_refresh = quest_questinfo_refresh;
+	quest->questinfo_validate = quest_questinfo_validate;
+	quest->questinfo_validate_job = quest_questinfo_validate_job;
+	quest->questinfo_validate_sex = quest_questinfo_validate_sex;
+	quest->questinfo_validate_baselevel = quest_questinfo_validate_baselevel;
+	quest->questinfo_validate_joblevel = quest_questinfo_validate_joblevel;
+	quest->questinfo_validate_items = quest_questinfo_validate_items;
+	quest->questinfo_validate_homunculus_level = quest_questinfo_validate_homunculus_level;
+	quest->questinfo_validate_homunculus_type = quest_questinfo_validate_homunculus_type;
+	quest->questinfo_validate_quests = quest_questinfo_validate_quests;
+	quest->questinfo_validate_mercenary_class = quest_questinfo_validate_mercenary_class;
 }

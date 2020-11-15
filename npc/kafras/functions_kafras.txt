@@ -1,75 +1,63 @@
-//===== Hercules Script ======================================
-//= Kafra Functions
-//===== By: ==================================================
-//= rAthena Dev Team
-//= Darlskies, Darkchild, Syrus22, Lupus, kobra_k88 (2.0)
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 6.8
-//===== Description: =========================================
-//= These functions handle save, storage, cart rental, teleport,
-//= and Free Teleport/Warp/Rent Cart options for all Kafra NPCs.
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Kafra's will need a lot of work. The Welcome Message argument
-//= may become obsolete, as most kafras have a slightly differing
-//= Welcome message.
-//===== Additional Comments: =================================
-//= 1.1 Now using functions v2.1 Added Cart Rent for Classes: Whitesmith, Professor.
-//=     Replaced checkoption(x) into checkcart(0) [Lupus] v2.1b Added Fix Kafra Pass Func [Kobra_k88]
-//= 2.2 Final fix of the Kafra Pass Exploit! [Lupus] a -Izlude[4] fix
-//= 2.2a Minor changes to function calls.  Using agruments. Added Guild options. [kobra_k88]
-//= 2.2b This version uses arrays for the teleport option. Rearranged next statements to make menu transitions smoother. [kobra_k88]
-//= 2.3 Removed SAVE from Niflheim. [Lupus]
-//= 2.3 removed "fix" by HawkMoon RTFM and check supernovice.txt . There's a SPECIAL Kafra which gives CARTS to SN for a special proce. [Lupus]
-//= 2.4 Added Baby Class Support (Baby Novice check) Removed annoying storage feature where u had to close dialog window to be able to use your storage [Lupus]
-//= 2.5 Added Louyang official Kafra, fixes some Kafras, not letting you to Save your position [Lupus]
-//= 2.6 Reverted Dungeons Kafras (they should offer only Storage). Added temp Ayothaya Kafra
-//= 2.7 Added correct Ayothaya, Louyang & Amatsu Kafras. [Lupus]
-//= 2.8 Fixed Amatsu Storage problems [Lupus] 2.9 Fixed spelling mistakes. [Nexon]
-//= 3.0 Added special "not working teleport menu" for Einbroch Kafras [Lupus]
-//= 3.1 Removed callfunc Is_####_Class in favor of baseClass [Silentdragon]
-//= 3.2 Fixed an exploit [Lupus]
-//= 4.0 Added Kafra storage password protection. [Lupus]
-//=     to block Kafra Password, read comments at 350 line
-//= 5.0 Fixed the close2;....close; end; lines. Who let them slip away? =/ [erKURITA]
-//=     Also, the kafra upon warp was giving back the zeny. Removed. [erKURITA]
-//= 5.1 Optimized a little, added no tele/save arg's [Evera]
-//= 5.1a Temporary? Added F_ClearGarbage to clear unused/outdated variables [Lupus]
-//= 5.2 By default commented out custom Guilds Kafra's "Guild Storage". [Lupus]
-//= 5.3 uncommented Guild Storage. Confirmed kRO feature. [Lupus]
-//= 5.4 added -Guide option (Kafra shows you nearest Guide) Work in progress.
-//=     Need all coords for all guides.. and somehow pass their coords to kafra.
-//=     Removed universal Kafra Pass, added 3 new Kafra Tickets [Lupus]
-//= 5.4b temporary moved "-Guide" from the 1st menu punct [Lupus]
-//= 5.5 Added proper Niflheim welcome message.	[L0ne_W0lf]
-//=     Cleaned up the menus a bit. Got rid of the proceeding "-" prefix.
-//= 5.5b Missed a preceeding hyphen, which was screwing up teleporting. [L0ne_W0lf]
-//= 5.6 Further dialog updates, added  dynamic costs for cart and storage use. [L0ne_W0lf]
-//=     Updated some functions to handle Guild Kafras the way they should.
-//= 5.6a Corrected a few wrong names in the teleport function. [L0ne_W0lf]
-//= 5.7 Correced end message no longer displaying, and the duplicate names [L0ne_W0lf]
-//=     Thanks to Barron-Monster for pointing out the issues.
-//= 5.8 Fixed another double name being shown when "saving" [L0ne_W0lf]
-//= 5.9 Fixed the Kafra Welcome message for guilds. Thanks Barron-Monster. [L0ne_W0lf]
-//= 6.0 Closed Kafra Password exploit in Cool Event Corp. Storages until we got a client/packet based password support.
-//=     Added 2 args into F_SetKafCode to fit it in Cool Evnt Co. NPC [Lupus]
-//= 6.1 Added menu for Turbo Track Kafra Staff. [L0ne_W0lf]
-//= 6.2 Updated/Fixed warp cords. [Kisuka]
-//= 6.3 #kafra_code is now stored as is. [brianluau]
-//= 6.4 Removed unofficial Guide function. [Daegaladh]
-//= 6.5 Optimized. [Joseph]
-//= 6.6 Added Warp Points / View Points Function. [Joseph]
-//= 6.7 Added Rune Knight Kafra. [Euphy]
-//= 6.8 Improved compatibility with Zonda Staff NPCs. Modernized syntax. [Haru]
-//============================================================
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Dastgir
+//= Copyright (C) Haru
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Daegaladh
+//= Copyright (C) brianluau
+//= Copyright (C) Kisuka
+//= Copyright (C) Evera
+//= Copyright (C) erKURITA
+//= Copyright (C) Silentdragon
+//= Copyright (C) Nexon
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//= Copyright (C) Lupu
+//= Copyright (C) Syrus22
+//= Copyright (C) Darkchild
+//= Copyright (C) Darlskies
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Kafra Functions
+//================= Description ===========================================
+//= These functions handle save, storage, cart rental, teleport, and Free
+//= Teleport/Warp/Rent Cart options for all Kafra NPCs.
+//================= Current Version =======================================
+//= 6.9
+//=========================================================================
 
-//=== Main Function ========================================================
-//=   arg(0): Used to determine which welcome message to show.
-//=   arg(1): Used to determine which menu to display.
-//=   arg(2): Used to determine if the info menu is shown in F_KafInfo.
-//=   arg(3): Cost to use Storage
-//=   arg(4): Cost to Rent a Pushcart
-//==========================================================================
+//== Main Function =========================================
+// Arguments:
+// - 0: Used to determine which welcome message to show.
+// - 1: Used to determine which menu to display.
+// - 2: Used to determine if the info menu is shown in F_KafInfo.
+// - 3: Cost to use Storage
+// - 4: Cost to Rent a Pushcart
 function	script	F_Kafra	{
 	callfunc "F_ClearGarbage"; // Clear outdated, unused variables
 	// Display Kafra Welcome Message
@@ -93,9 +81,9 @@ function	script	F_Kafra	{
 			break;
 		case 2:
 			// Guild Castle Kafra message
-			@GID = getcharid(2);
+			@GID = getcharid(CHAR_ID_GUILD);
 			mes "[Kafra Employee]";
-			mes "Welcome. ^ff0000" + getguildname(@GID) + "^000000 Member.";
+			mes "Welcome. ^ff0000" + getguildinfo(GUILDINFO_NAME, @GID) + "^000000 Member.";
 			mes "The Kafra Coporation will stay with you wherever you go.";
 			break;
 		case 3:
@@ -196,19 +184,18 @@ function	script	F_Kafra	{
 	}
 }
 
-//===================================================
-// Storage Function
-//=   arg(0): Specifies the type of storage that has been requested:
-//            0 = Regular storage
-//            1 = Guild storage
-//            2 = Regular storage, in a castle (free of charge)
-//=   arg(1): Cost to use storage.
-//=   arg(2): The type of NPC this is being called from. Notable values:
-//            0,2-5 = Regular Kafra
-//            1 = Niflheim Kafra (special messages)
-//            6 = Zonda/Cool Event Staff (no RESRVPTS)
-//=   arg(3): NPC title to display.
-//===================================================
+//== Storage Function ======================================
+// Arguments:
+// - 0: Specifies the type of storage that has been requested:
+//      0 = Regular storage
+//      1 = Guild storage
+//      2 = Regular storage, in a castle (free of charge)
+// - 1: Cost to use storage.
+// - 2: The type of NPC this is being called from. Notable values:
+//      0,2-5 = Regular Kafra
+//      1 = Niflheim Kafra (special messages)
+//      6 = Zonda/Cool Event Staff (no RESRVPTS)
+// - 3: NPC title to display.
 function	script	F_KafStor	{
 	// Unable to access Guild Storage (Busy)
 	if (getarg(0) == 1) {
@@ -224,19 +211,28 @@ function	script	F_KafStor	{
 		close;
 	}
 	// Unable to access Normal Storage (Insufficient Basic Skills)
-	if (basicskillcheck() && getskilllv(NV_BASIC) < 6) {
+	if (basicskillcheck() && getskilllv(NV_BASIC) < 6 && getskilllv(SU_BASIC_SKILL) == 0) {
 		mes getarg(3);
 		// Niflheim Specific Message
 		if (getarg(2) == 1) {
 			mes "^666666S-s-ssoooorry,";
-			mes "y-you're a-a-aaaa";
-			mes "Nooviiice... N-neeeds";
-			mes "B-basic sssskill l-level 6...^000000";
+			if (Class == Job_Summoner) {
+				mes "y-you n-neeed";
+				mes "N-new b-basic sssskill...^000000";
+			} else {
+				mes "y-you're a-a-aaaa";
+				mes "Nooviiice... N-neeeds";
+				mes "B-basic sssskill l-level 6...^000000";
+			}
 			return;
 		}
 		mes "I'm sorry, but you";
-		mes "need the Novice's";
-		mes "Basic Skill Level 6 to";
+		if (Class == Job_Summoner) {
+			mes "need the New Basic Skill to";
+		} else {
+			mes "need the Novice's";
+			mes "Basic Skill Level 6 to";
+		}
 		mes "use the Storage Service.";
 		return;
 	}
@@ -302,20 +298,19 @@ function	script	F_KafStor	{
 	end;
 }
 
-//===================================================
-// Teleport Function
-//=   arg(2): The type of NPC this is being called from. Notable values:
-//            2 = Guild Castle Kafra (don't consume tickets)
-//            6 = Zonda/Cool Event Staff (no RESRVPTS)
-//=   arg(1): NPC title to display.
-//===================================================
+//== Teleport Function =====================================
+// Arguments:
+// - 1: NPC title to display.
+// - 2: The type of NPC this is being called from. Notable values:
+//      2 = Guild Castle Kafra (don't consume tickets)
+//      6 = Zonda/Cool Event Staff (no RESRVPTS)
 function	script	F_KafTele	{
 	mes getarg(1);
 	mes "Please choose";
 	mes "your destination.";
 	next;
 	.@menu$ = "";
-	for (.@i = 0; .@i <= 6; ++.@i)
+	for (.@i = 0; .@i <= getarraysize(@wrpD$); ++.@i)
 		.@menu$ += @wrpC$[.@i] + ":";
 	.@j = select(.@menu$) - 1;
 	if (@wrpC$[.@j] == "Cancel")
@@ -358,16 +353,14 @@ function	script	F_KafTele	{
 	end;
 }
 
-
-//===================================================
-// Cart Function
-//=   arg(0): The type of NPC this is being called from. Notable values:
-//            0,1,3-5 = Regular Kafra
-//            2 = Guild Castle Kafra (don't consume tickets)
-//            6 = Zonda/Cool Event Staff (no RESRVPTS)
-//=   arg(1): Cost to rent a cart.
-//=   arg(2): NPC title to display.
-//===================================================
+//== Cart Function =========================================
+// Arguments:
+// - 0: The type of NPC this is being called from. Notable values:
+//      0,1,3-5 = Regular Kafra
+//      2 = Guild Castle Kafra (don't consume tickets)
+//      6 = Zonda/Cool Event Staff (no RESRVPTS)
+// - 1: Cost to rent a cart.
+// - 2: NPC title to display.
 function	script	F_KafCart	{
 	// Ensure that the class wanting to rent a pushcart is a merchant
 	if (BaseClass != Job_Merchant) {
@@ -405,7 +398,7 @@ function	script	F_KafCart	{
 		mes "fee is "+getarg(1)+" zeny. Would";
 		mes "you like to rent a Pushcart?";
 		next;
-		if (select("Rent a Pushcart.:Cancel") == 2)
+		if (select("Rent a Pushcart.", "Cancel") == 2)
 			return 0;
 		if (Zeny < getarg(1)) {
 			mes getarg(2);
@@ -423,9 +416,7 @@ function	script	F_KafCart	{
 	return 1;
 }
 
-//===================================================
-// Special Reserve Points Function
-//===================================================
+//== Special Reserve Points Function =======================
 function	script	F_KafInfo	{
 	// Uncomment next line to block Kafra Storage Protection
 	//.@block = 1;
@@ -437,7 +428,7 @@ function	script	F_KafInfo	{
 		if (.@m$[.@j] == "Check Special Reserve Points.") {
 			mes "[Kafra Employee]";
 			mes "Let's see...";
-			mes strcharinfo(0) + "...";
+			mes strcharinfo(PC_NAME) + "...";
 			mes "Ah, you have a total of";
 			mes RESRVPTS+ " Special Reserve Points.";
 			next;
@@ -463,11 +454,11 @@ function	script	F_KafInfo	{
 	}
 }
 
-// === End Function ==================================================
-//  arg(0): used to determine what message to display.
-//  arg(1): used to determine if save message is displayed.
-//  arg(2): used to display the name of the area you're saving in.
-//===================================================================
+//== End Function ==========================================
+// Arguments:
+// - 0: used to determine what message to display.
+// - 1: used to determine if save message is displayed.
+// - 2: used to display the name of the area you're saving in.
 function	script	F_KafEnd	{
 	mes "[Kafra Employee]";
 	if (getarg(1) == 1) {
@@ -493,15 +484,13 @@ function	script	F_KafEnd	{
 	end;
 }
 
-//===================================================
-// Check Storage Password Function
-//===================================================
+//== Check Storage Password Function =======================
 function	script	F_CheckKafCode	{
 	if (!#kafra_code)
 		return;
 	mes "Enter your storage password:";
 	@code_ = 0;
-	input @code_;
+	input(@code_, 0);
 	if (@code_ != #kafra_code) {
 		dispbottom "Wrong storage password.";
 		close2;
@@ -513,16 +502,16 @@ function	script	F_CheckKafCode	{
 	return;
 }
 
-// === Set / Change / Clear Storage Password Function ===
-// getarg(0): NPC Name
-// getarg(1): Company Name
-//=======================================================
+//== Set / Change / Clear Storage Password Function ========
+// Arguments:
+// - 0: NPC Name
+// - 1: Company Name
 function	script	F_SetKafCode	{
 	mes getarg(0);
 	if (#kafra_code) {
 		mes "Your storage is protected with a password. What would you do now?";
 		next;
-		switch (select("Change old password -> 5000z:Remove storage password -> 1000z:Cancel")) {
+		switch (select("Change old password -> 5000z", "Remove storage password -> 1000z", "Cancel")) {
 			case 1:
 				mes getarg(0);
 				mes "At first, please enter your ^0000FFold password^000000.";
@@ -570,7 +559,7 @@ function	script	F_SetKafCode	{
 		mes getarg(1)+" proudly presents you a new service:";
 		mes "Additional storage protection with a password.";
 		next;
-		switch (select("Set new password -> 5000z:Cancel")) {
+		switch (select("Set new password -> 5000z", "Cancel")) {
 			case 1: callsub S_SET,getarg(0),getarg(1); break;
 			case 2: break;
 		}
@@ -603,9 +592,7 @@ S_SET:
 	return;
 }
 
-//===================================================
-// Basic Password Validation Function
-//===================================================
+//== Basic Password Validation Function ====================
 function	script	F_EntKafCode	{
 	mes "Enter a number 1000~10000000:";
 	@code_ = 0;
@@ -614,7 +601,7 @@ function	script	F_EntKafCode	{
 		@kafcode_try = 0;
 		logmes "Hack: Tried to fit storage password.";
 	}
-	if (input(@code_) == 1) {
+	if (input(@code_, 0) == 1) {
 		mes "You can't use such big password.";
 		return 0;
 	}
@@ -625,65 +612,63 @@ function	script	F_EntKafCode	{
 	return @code_;
 }
 
-//===================================================
-// Warp Points / View Points Function
-//===================================================
+//== Warp Points / View Points Function ====================
 function	script	F_KafSet	{
 	deletearray @wrpC$;
 	deletearray @wrpD$;
 	deletearray @wrpP$;
 	deletearray @viewpX;
 	deletearray @viewpY;
-	if (strnpcinfo(4) == "prontera") {
+	if (strnpcinfo(NPC_MAP) == "prontera") {
 		setarray @wrpD$, "Izlude", "Geffen", "Payon", "Morroc", "Orc Dungeon", "Alberta";
 		setarray @wrpP, 600, 1200, 1200, 1200, 1200, 1800;
 		setarray @viewpX, 151, 29, 282, 152;
 		setarray @viewpY, 29, 207, 200, 326;
-	} else if (strnpcinfo(4) == "alberta") {
+	} else if (strnpcinfo(NPC_MAP) == "alberta") {
 		setarray @wrpP, 1200, 1800, 1800;
 		setarray @wrpD$, "Payon", "Morroc", "Prontera";
 		setarray @viewpX, 28, 113, 0, 0;
 		setarray @viewpY, 229, 60, 0, 0;
-	} else if (strnpcinfo(4) == "aldebaran") {
+	} else if (strnpcinfo(NPC_MAP) == "aldebaran") {
 		setarray @wrpP, 1200, 1200, 1800, 1700;
 		setarray @wrpD$, "Geffen", "Juno" , "Izlude", "Mjolnir Dead Pit";
-	} else if (strnpcinfo(4) == "comodo" ) {
+	} else if (strnpcinfo(NPC_MAP) == "comodo" ) {
 		setarray @wrpD$, "Morroc", "Comodo Pharos Beacon", "Umbala";
 		setarray @wrpP, 1800, 1200, 1800;
-	} else if (strnpcinfo(4) == "cmd_fild07") {
+	} else if (strnpcinfo(NPC_MAP) == "cmd_fild07") {
 		setarray @wrpD$, "Comodo", "Morroc";
 		setarray @wrpP, 1200, 1200;
-	} else if (strnpcinfo(4) == "geffen") {
+	} else if (strnpcinfo(NPC_MAP) == "geffen") {
 		setarray @wrpD$, "Prontera", "Al De Baran", "Orc Dungeon", "Mjolnir Dead Pit";
 		setarray @wrpP, 1200, 1200, 1200, 1700;
 		setarray @viewpX, 120, 203;
 		setarray @viewpY, 62, 123;
-	} else if (strnpcinfo(4) == "izlude") {
+	} else if (strnpcinfo(NPC_MAP) == "izlude") {
 		setarray @wrpD$, "Geffen", "Payon", "Morroc", "Al De Baran";
 		setarray @wrpP, 1200, 1200, 1200, 1800;
-	} else if (strnpcinfo(4) == "morocc") {
+	} else if (strnpcinfo(NPC_MAP) == "morocc") {
 		setarray @wrpD$, "Prontera", "Payon", "Alberta", "Comodo", "Comodo Pharos Beacon";
 		setarray @wrpP, 1200, 1200, 1800, 1800, 1200;
 		setarray @viewpX, 156, 163, 28, 292;
 		setarray @viewpY, 97, 260, 167, 211;
-	} else if (strnpcinfo(4) == "umbala") {
+	} else if (strnpcinfo(NPC_MAP) == "umbala") {
 		setarray @wrpD$, "Comodo";
 		setarray @wrpP, 1800;
-	} else if (strnpcinfo(4) == "payon") {
+	} else if (strnpcinfo(NPC_MAP) == "payon") {
 		setarray @wrpD$, "Prontera", "Alberta", "Morroc";
 		setarray @wrpP, 1200, 1200, 1200;
-	} else if (strnpcinfo(4) == "yuno") {
+	} else if (strnpcinfo(NPC_MAP) == "yuno") {
 		setarray @wrpD$, "Al De Baran";
 		setarray @wrpP, 1200;
 		setarray @viewpX, 328, 278, 153, 0;
 		setarray @viewpY, 108, 221, 187, 0;
-	} else if (strnpcinfo(4) == "job3_rune01") {
+	} else if (strnpcinfo(NPC_MAP) == "job3_rune01") {
 		setarray @wrpD$, "Izlude", "Geffen", "Payon", "Morroc", "Alberta";
 		setarray @wrpP, 600, 1200, 1200, 1200, 1800;
-	} else if (strnpcinfo(4) == "rachel") {
+	} else if (strnpcinfo(NPC_MAP) == "rachel") {
 		setarray @wrpD$, "Veins";
 		setarray @wrpP, 2200;
-	} else if (strnpcinfo(4) == "veins") {
+	} else if (strnpcinfo(NPC_MAP) == "veins") {
 		setarray @wrpD$, "Rachel";
 		setarray @wrpP, 2200;
 	}

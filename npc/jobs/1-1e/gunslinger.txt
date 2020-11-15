@@ -1,30 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) ultramage
+//= Copyright (C) Playtester
+//= Copyright (C) KarLaeda
+//= Copyright (C) CBMaster
+//= Copyright (C) Lupus
+//= Copyright (C) Kisuka
+//= Copyright (C) erKURITA
+//= Copyright (C) RockmanEXE
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Gunslinger Job Quest
-//===== By: ==================================================
-//= erKURITA, RockmanEXE, Kisuka
-//===== Current Version: =====================================
-//= 2.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Gunslinger Job Change Quest
-//===== Additional Comments: =================================
-//= 1.0 Made the NPC [erKURITA]
-//= 1.5 Couple fixes to the npc, aswell as adding the missing
-//=     3 green herbs. [erKURITA]
-//= 1.6 job number->const, commonized variable name,
-//=     optimized [Lupus]
-//= 1.7 Now uses only ONE variable GUNS_Q [Lupus]
-//= 1.7a Grammar fixes, few spelling fixes, etc [CBMaster]
-//= 1.7b Parenthesis fixes [KarLaeda]
-//= 1.8 Fixed the reward you can get [Playtester]
-//= 1.9 Removed some 'clever' script constructs [ultramage]
-//= 2.0 Updated to official version - Thanks to Omega for
-//=     his first try [SinSloth] 1.10b - removed .GATs [Lupus]
-//= 2.1 Wise Bull Horn now deletes all items. Thanks to yyCC. [L0ne_W0lf]
-//= 2.1a Corrected a Typo error ";;". [Samuray22]
-//= 2.1b Corrected some typos errors. (bugreport:1549) [Samuray22]
-//= 2.1c Fixed some missing/messed up item checks. (bugreport:2693) [Kisuka]
-//= 2.2 Updated to match AEGIS script and Added Quest Log commands. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 2.2
+//=========================================================================
 
 que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 	if (Upper == 2) {
@@ -55,7 +71,7 @@ que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 			mes "Selena. Now, what do you";
 			mes "need? If it's not important, then I can't make the time for you.";
 			next;
-			if(select("Nothing.:I want to become a Gunslinger.") == 1) {
+			if(select("Nothing.", "I want to become a Gunslinger.") == 1) {
 				mes "[Master Miller]";
 				mes "Don't waste my time.";
 				mes "If you do want to become";
@@ -69,7 +85,7 @@ que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 			mes "pretty ambitious. You'll need to pass our interview and educational";
 			mes "course to become a Gunslinger. Do you want to apply for the job?";
 			next;
-			if(select("Give me some time to think.:Sure!") == 1) {
+			if(select("Give me some time to think.", "Sure!") == 1) {
 				mes "[Master Miller]";
 				mes "Understandable.";
 				mes "If you do decide that";
@@ -182,9 +198,9 @@ que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 			GUNS_Q = 6;
 			completequest 6024;
 			if (rand(1,2) == 1) {
-				getitem 13100,1; // Six_Shooter
+				getitem Six_Shooter,1; // Six_Shooter
 			} else {
-				getitem 13150,1; // Branch
+				getitem Branch,1; // Branch
 			}
 			close;
 		}
@@ -215,7 +231,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 		mes "What business has";
 		mes "brought you before me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Mr. Miller sent me to";
 		mes "deliver this letter to you.";
 		mes "Actually, I'm interested in";
@@ -265,7 +281,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 		close;
 	}
 	else if (GUNS_Q == 2) {
-		if (countitem(912) < 3 || countitem(914) < 3 || countitem(1019) < 1 || countitem(935) < 10 || countitem(511) < 3 || countitem(1013) < 3) {
+		if (countitem(Zargon) < 3 || countitem(Fluff) < 3 || countitem(Wooden_Block) < 1 || countitem(Shell) < 10 || countitem(Green_Herb) < 3 || countitem(Colorful_Shell) < 3) {
 			mes "[Wise Bull Horn]";
 			mes "I can make a voucher that";
 			mes "will demonstrate your desire";
@@ -291,12 +307,12 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 			mes "a Gunslinger.";
 			close;
 		}
-		delitem 912,3; // Zargon
-		delitem 914,3; // Fluff
-		delitem 1019,1; // Wooden_Block
-		delitem 935,10; // Shell
-		delitem 511,3; // Green_Herb
-		delitem 1013,3; // Colorful_Shell
+		delitem Zargon,3; // Zargon
+		delitem Fluff,3; // Fluff
+		delitem Wooden_Block,1; // Wooden_Block
+		delitem Shell,10; // Shell
+		delitem Green_Herb,3; // Green_Herb
+		delitem Colorful_Shell,3; // Colorful_Shell
 		GUNS_Q = 3;
 		changequest 6021,6022;
 		mes "[Wise Bull Horn]";
@@ -349,7 +365,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 		close;
 	}
 	else if (GUNS_Q == 4) {
-		if (countitem(519) < 1) {
+		if (countitem(Milk) < 1) {
 			mes "[Wise Bull Horn]";
 			mes "I'm an old man that will";
 			mes "soon be reunited with mother";
@@ -358,7 +374,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 			mes "a cold glass of Milk, please?";
 			close;
 		}
-		delitem 519,1; // Milk
+		delitem Milk,1; // Milk
 		GUNS_Q = 5;
 		changequest 6023,6024;
 		mes "[Wise Bull Horn]";

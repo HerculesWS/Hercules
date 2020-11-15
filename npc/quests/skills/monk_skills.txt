@@ -1,15 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) DracoRPG
+//= Copyright (C) Samuray22
+//= Copyright (C) Reddozen
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Monk Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen, Samuray22
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for skills: Spiritual Bestowment, Excruciating Palm
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 prt_monk,270,198,3	script	Apprentice Monk#qsk_mo	4_M_MONK,{
 	if (BaseJob == Job_Monk) {
@@ -99,7 +124,7 @@ prt_monk,270,198,3	script	Apprentice Monk#qsk_mo	4_M_MONK,{
 				mes "[Monk]";
 				mes "My test may seem too strict,";
 				mes "but it is impossible to learn";
-				mes "Spiritual Bestowment without^FFFFFF ^000000 the right discipline. As with all";
+				mes "Spiritual Bestowment without the right discipline. As with all";
 				mes "things, readiness and preparation precede all forms of realization.";
 				next;
 				mes "[Monk]";
@@ -162,7 +187,7 @@ prt_monk,270,198,3	script	Apprentice Monk#qsk_mo	4_M_MONK,{
 				mes "meaning of selflessness?";
 				mes "When you abandon greed";
 				mes "and the desires of the world,";
-				mes "you will be ready for my teaching. ^FFFFFF ^000000";
+				mes "you will be ready for my teaching. ";
 				close;
 			}
 		}
@@ -178,7 +203,7 @@ prt_monk,270,198,3	script	Apprentice Monk#qsk_mo	4_M_MONK,{
 			mes "[Monk]";
 			mes "Hm? To what purpose have";
 			mes "you come to visit me? Ah, so";
-			mes "you wish to learn the skill that^FFFFFF ^000000 I have developed. My colleague";
+			mes "you wish to learn the skill that I have developed. My colleague";
 			mes "was right: more and more people have been wanting to learn this.";
 			next;
 			mes "[Monk]";
@@ -261,7 +286,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "for now, my friend.";
 			close;
 		}
-		if (MONK_SK == 4 && countitem(905) > 19 && countitem(711) > 2) {
+		if (MONK_SK == 4 && countitem(Stem) > 19 && countitem(Shoot) > 2) {
 			mes "[Monk]";
 			mes "What's that...?";
 			mes "You've learned the";
@@ -276,8 +301,8 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "good number of Mandragoras.";
 			mes "All right. You seem to be ready. Come back in a little while so";
 			mes "that I can finish preparations.";
-			delitem 905,20; //Stem
-			delitem 711,3; //Shoot
+			delitem Stem,20;
+			delitem Shoot,3;
 			MONK_SK = 5;
 			close;
 		}
@@ -303,7 +328,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "innocents terrorized by";
 			mes "the aggressive Mandragoras.";
 			mes "If you bring me ^FF000020 Stems^000000 and";
-			mes "^FF00003 Shoots^000000, I will be satisfied^FFFFFF ^000000 with this proof of your ability.";
+			mes "^FF00003 Shoots^000000, I will be satisfied with this proof of your ability.";
 			next;
 			mes "[Monk]";
 			mes "Do you understand now?";
@@ -364,7 +389,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "living in seclusion that";
 			mes "can teach the Spiritual";
 			mes "Bestowment skill. However,";
-			mes "he is stubborn, and has refused^FFFFFF ^000000 many who wish to learn from him.";
+			mes "he is stubborn, and has refused many who wish to learn from him.";
 			next;
 			mes "[Monk]";
 			mes "It would be good if";
@@ -430,19 +455,3 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 	mes "be the means to power.";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//= 1.4 Updated to the official one. [Samuray22]
-//= 1.4a replaced item "names" with item id. [Lupus]
-//============================================================

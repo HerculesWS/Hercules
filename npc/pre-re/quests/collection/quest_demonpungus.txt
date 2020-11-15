@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Bacillus)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 	if (questprogress(60125)) {
@@ -18,7 +38,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 50 Demon Pungus?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Local Villager]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 50 Demon Pungus?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Local Villager]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 150 Demon Pungus?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Local Villager]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -144,22 +164,22 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "Hey, you there. Yeah you!";
 			mes "Do you think you can help me with something?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "I am trying to make my way through but I can't seem to get past these Demon Pungus.";
 				next;
-				switch(select("Gather Items:Hunt Demon Pungus:Cancel")) {
+				switch(select("Gather Items", "Hunt Demon Pungus", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Local Villager]";
 					mes "Can you help by collecting ^FF0000Bacillus^000000?";
 					mes "I will reward you for helping clear this out for me.";
 					next;
-					switch(select("I have Bacillus:What did you need?")) {
+					switch(select("I have Bacillus", "What did you need?")) {
 					case 1:
 						/*
-						if (checkweight(504,10) == 0) {
+						if (checkweight(White_Potion,10) == 0) {
 							mes "[Local Villager]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -167,12 +187,12 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 							close;
 						}
 						*/
-						if (countitem(7119) > 49) {
+						if (countitem(Spawns) > 49) {
 							mes "[Local Villager]";
 							mes "I had my doubts, but you have proven me wrong.";
-							delitem 7119,50; //Spawns
+							delitem Spawns,50;
 							getexp 250266,144452;
-							//getitem 504,10; //White_Potion
+							//getitem White_Potion,10;
 							close;
 						}
 						else {
@@ -194,7 +214,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 					mes "Ah, ok I think you can help me out by hunting some Demon Pungus.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Demon Pungus:100 Demon Pungus:150 Demon Pungus")) {
+					switch(select("50 Demon Pungus", "100 Demon Pungus", "150 Demon Pungus")) {
 					case 1:
 						mes "[Local Villager]";
 						mes "Come back when you've finished your task and I will give you a small reward.";
@@ -238,5 +258,3 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 		close;
 	}
 }
-
-

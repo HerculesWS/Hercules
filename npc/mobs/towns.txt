@@ -1,32 +1,48 @@
-//===== Hercules Script ======================================
-//= Town Monster Spawn Script
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Town Monster Spawn Script (Common)
+//================= Description ===========================================
 //= Spawns monsters in towns.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-//==================================================
-// einbech - Einbech, the Mining Village
-//==================================================
+//== einbech - Einbech, the Mining Village =================
 einbech,0,0,0,0	monster	Tarou	1175,5,1800000,1500000,0
 
-//==================================================
-// jawaii - Jawaii, the Honeymoon Island
-//==================================================
+//== jawaii - Jawaii, the Honeymoon Island =================
 jawaii,207,290,10,10	monster	Phen	1158,3,3600000,1800000,0
 jawaii,221,220,30,30	monster	Aster	1266,2,3600000,2400000,0
 jawaii,276,163,20,20	monster	Aster	1266,1,7200000,3600000,0
 jawaii,221,220,30,30	monster	Shellfish	1074,1,4800000,3000000,0
 jawaii,276,163,20,30	monster	Shellfish	1074,2,4200000,2400000,0
 
-//==================================================
-// jawaii_in - Inside Jawaii
-//==================================================
+//== jawaii_in - Inside Jawaii =============================
 jawaii_in,128,121,1,4	monster	Red Mushroom	1085,1,3000000,1200000,0
 jawaii_in,124,76,1,1	monster	Black Mushroom	1084,1,3600000,1200000,0
 jawaii_in,72,74,5,1	monster	Black Mushroom	1084,2,3000000,1200000,0

@@ -1,25 +1,44 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_MAP_H
 #define MAP_MAP_H
 
-#include "../config/core.h"
+#include "map/atcommand.h"
+#include "common/hercules.h"
+#include "common/core.h" // CORE_ST_LAST
+#include "common/db.h"
+#include "common/mapindex.h"
+#include "common/mmo.h"
+#include "map/unitdefines.h"  // enum unit_dir
 
+#include <stdio.h>
 #include <stdarg.h>
 
-#include "atcommand.h"
-#include "../common/cbasetypes.h"
-#include "../common/core.h" // CORE_ST_LAST
-#include "../common/db.h"
-#include "../common/mapindex.h"
-#include "../common/mmo.h"
-#include "../common/sql.h"
-
+/* Forward Declarations */
+struct Sql; // common/sql.h
+struct config_t; // common/conf.h
 struct mob_data;
 struct npc_data;
 struct channel_data;
+struct hplugin_data_store;
 
 enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -27,65 +46,12 @@ enum E_MAPSERVER_ST {
 	MAPSERVER_ST_LAST
 };
 
-#define MAX_NPC_PER_MAP 512
-#define AREA_SIZE (battle->bc->area_size)
-#define DAMAGELOG_SIZE 30
-#define LOOTITEM_SIZE 10
-#define MAX_MOBSKILL 50
-#define MAX_MOB_LIST_PER_MAP 100
-#define MAX_EVENTQUEUE 2
-#define MAX_EVENTTIMER 32
-#define NATURAL_HEAL_INTERVAL 500
-#define MIN_FLOORITEM 2
-#define MAX_FLOORITEM START_ACCOUNT_NUM
-#define MAX_IGNORE_LIST 20 // official is 14
-#define MAX_VENDING 12
-#define MAX_MAP_SIZE (512*512) // Wasn't there something like this already? Can't find it.. [Shinryo]
-
-#define BLOCK_SIZE 8
-#define block_free_max 1048576
-#define BL_LIST_MAX 1048576
-
-
-// Added definitions for WoESE objects. [L0ne_W0lf]
-enum MOBID {
-	MOBID_EMPERIUM = 1288,
-	MOBID_TREAS01 = 1324,
-	MOBID_TREAS40 = 1363,
-	MOBID_BARRICADE1 = 1905,
-	MOBID_BARRICADE2,
-	MOBID_GUARIDAN_STONE1,
-	MOBID_GUARIDAN_STONE2,
-	MOBID_FOOD_STOR,
-	MOBID_BLUE_CRYST = 1914,
-	MOBID_PINK_CRYST,
-	MOBID_TREAS41 = 1938,
-	MOBID_TREAS49 = 1946,
-	MOBID_SILVERSNIPER = 2042,
-	MOBID_MAGICDECOY_WIND = 2046,
-};
-
-// The following system marks a different job ID system used by the map server,
-// which makes a lot more sense than the normal one. [Skotlex]
-// These marks the "level" of the job.
-#define JOBL_2_1 0x100 //256
-#define JOBL_2_2 0x200 //512
-#define JOBL_2 0x300
-#define JOBL_UPPER 0x1000 //4096
-#define JOBL_BABY 0x2000  //8192
-#define JOBL_THIRD 0x4000 //16384
-
-// For filtering and quick checking.
-#define MAPID_BASEMASK 0x00ff
-#define MAPID_UPPERMASK 0x0fff
-#define MAPID_THIRDMASK (JOBL_THIRD|MAPID_UPPERMASK)
-
 //First Jobs
 //Note the oddity of the novice:
 //Super Novices are considered the 2-1 version of the novice! Novices are considered a first class type.
 enum {
 	//Novice And 1-1 Jobs
-	MAPID_NOVICE = 0x0,
+	MAPID_NOVICE = 0,
 	MAPID_SWORDMAN,
 	MAPID_MAGE,
 	MAPID_ARCHER,
@@ -99,138 +65,249 @@ enum {
 	MAPID_XMAS,
 	MAPID_SUMMER,
 	MAPID_GANGSI,
+	MAPID_SUMMONER,
+	MAPID_1_1_MAX,
+
 	//2-1 Jobs
-	MAPID_SUPER_NOVICE = JOBL_2_1|0x0,
-	MAPID_KNIGHT,
-	MAPID_WIZARD,
-	MAPID_HUNTER,
-	MAPID_PRIEST,
-	MAPID_BLACKSMITH,
-	MAPID_ASSASSIN,
-	MAPID_STAR_GLADIATOR,
-	MAPID_REBELLION = JOBL_2_1|0x09,
-	MAPID_KAGEROUOBORO = JOBL_2_1|0x0A,
-	MAPID_DEATH_KNIGHT = JOBL_2_1|0x0E,
+	MAPID_SUPER_NOVICE   = JOBL_2_1 | MAPID_NOVICE,
+	MAPID_KNIGHT         = JOBL_2_1 | MAPID_SWORDMAN,
+	MAPID_WIZARD         = JOBL_2_1 | MAPID_MAGE,
+	MAPID_HUNTER         = JOBL_2_1 | MAPID_ARCHER,
+	MAPID_PRIEST         = JOBL_2_1 | MAPID_ACOLYTE,
+	MAPID_BLACKSMITH     = JOBL_2_1 | MAPID_MERCHANT,
+	MAPID_ASSASSIN       = JOBL_2_1 | MAPID_THIEF,
+	MAPID_STAR_GLADIATOR = JOBL_2_1 | MAPID_TAEKWON,
+	//                   = JOBL_2_1 | MAPID_WEDDING,
+	MAPID_REBELLION      = JOBL_2_1 | MAPID_GUNSLINGER,
+	MAPID_KAGEROUOBORO   = JOBL_2_1 | MAPID_NINJA,
+	//                   = JOBL_2_1 | MAPID_XMAS,
+	//                   = JOBL_2_1 | MAPID_SUMMER,
+	MAPID_DEATH_KNIGHT   = JOBL_2_1 | MAPID_GANGSI,
+	//                   = JOBL_2_1 | MAPID_SUMMONER,
+
 	//2-2 Jobs
-	MAPID_CRUSADER = JOBL_2_2|0x1,
-	MAPID_SAGE,
-	MAPID_BARDDANCER,
-	MAPID_MONK,
-	MAPID_ALCHEMIST,
-	MAPID_ROGUE,
-	MAPID_SOUL_LINKER,
-	MAPID_DARK_COLLECTOR = JOBL_2_2|0x0E,
+	//                   = JOBL_2_1 | MAPID_NOVICE,
+	MAPID_CRUSADER       = JOBL_2_2 | MAPID_SWORDMAN,
+	MAPID_SAGE           = JOBL_2_2 | MAPID_MAGE,
+	MAPID_BARDDANCER     = JOBL_2_2 | MAPID_ARCHER,
+	MAPID_MONK           = JOBL_2_2 | MAPID_ACOLYTE,
+	MAPID_ALCHEMIST      = JOBL_2_2 | MAPID_MERCHANT,
+	MAPID_ROGUE          = JOBL_2_2 | MAPID_THIEF,
+	MAPID_SOUL_LINKER    = JOBL_2_2 | MAPID_TAEKWON,
+	//                   = JOBL_2_2 | MAPID_WEDDING,
+	//                   = JOBL_2_2 | MAPID_GUNSLINGER,
+	//                   = JOBL_2_2 | MAPID_NINJA,
+	//                   = JOBL_2_2 | MAPID_XMAS,
+	//                   = JOBL_2_2 | MAPID_SUMMER,
+	MAPID_DARK_COLLECTOR = JOBL_2_2 | MAPID_GANGSI,
+	//                   = JOBL_2_2 | MAPID_SUMMONER,
+
 	//Trans Novice And Trans 1-1 Jobs
-	MAPID_NOVICE_HIGH = JOBL_UPPER|0x0,
-	MAPID_SWORDMAN_HIGH,
-	MAPID_MAGE_HIGH,
-	MAPID_ARCHER_HIGH,
-	MAPID_ACOLYTE_HIGH,
-	MAPID_MERCHANT_HIGH,
-	MAPID_THIEF_HIGH,
+	MAPID_NOVICE_HIGH   = JOBL_UPPER | MAPID_NOVICE,
+	MAPID_SWORDMAN_HIGH = JOBL_UPPER | MAPID_SWORDMAN,
+	MAPID_MAGE_HIGH     = JOBL_UPPER | MAPID_MAGE,
+	MAPID_ARCHER_HIGH   = JOBL_UPPER | MAPID_ARCHER,
+	MAPID_ACOLYTE_HIGH  = JOBL_UPPER | MAPID_ACOLYTE,
+	MAPID_MERCHANT_HIGH = JOBL_UPPER | MAPID_MERCHANT,
+	MAPID_THIEF_HIGH    = JOBL_UPPER | MAPID_THIEF,
+	//                  = JOBL_UPPER | MAPID_TAEKWON,
+	//                  = JOBL_UPPER | MAPID_WEDDING,
+	//                  = JOBL_UPPER | MAPID_GUNSLINGER,
+	//                  = JOBL_UPPER | MAPID_NINJA,
+	//                  = JOBL_UPPER | MAPID_XMAS,
+	//                  = JOBL_UPPER | MAPID_SUMMER,
+	//                  = JOBL_UPPER | MAPID_GANGSI,
+	//                  = JOBL_UPPER | MAPID_SUMMONER,
+
 	//Trans 2-1 Jobs
-	MAPID_LORD_KNIGHT = JOBL_UPPER|JOBL_2_1|0x1,
-	MAPID_HIGH_WIZARD,
-	MAPID_SNIPER,
-	MAPID_HIGH_PRIEST,
-	MAPID_WHITESMITH,
-	MAPID_ASSASSIN_CROSS,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_NOVICE,
+	MAPID_LORD_KNIGHT    = JOBL_UPPER | JOBL_2_1 | MAPID_SWORDMAN,
+	MAPID_HIGH_WIZARD    = JOBL_UPPER | JOBL_2_1 | MAPID_MAGE,
+	MAPID_SNIPER         = JOBL_UPPER | JOBL_2_1 | MAPID_ARCHER,
+	MAPID_HIGH_PRIEST    = JOBL_UPPER | JOBL_2_1 | MAPID_ACOLYTE,
+	MAPID_WHITESMITH     = JOBL_UPPER | JOBL_2_1 | MAPID_MERCHANT,
+	MAPID_ASSASSIN_CROSS = JOBL_UPPER | JOBL_2_1 | MAPID_THIEF,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_TAEKWON,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_WEDDING,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_GUNSLINGER,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_NINJA,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_XMAS,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_SUMMER,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_GANGSI,
+	//                   = JOBL_UPPER | JOBL_2_1 | MAPID_SUMMONER,
+
 	//Trans 2-2 Jobs
-	MAPID_PALADIN = JOBL_UPPER|JOBL_2_2|0x1,
-	MAPID_PROFESSOR,
-	MAPID_CLOWNGYPSY,
-	MAPID_CHAMPION,
-	MAPID_CREATOR,
-	MAPID_STALKER,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_NOVICE,
+	MAPID_PALADIN    = JOBL_UPPER | JOBL_2_2 | MAPID_SWORDMAN,
+	MAPID_PROFESSOR  = JOBL_UPPER | JOBL_2_2 | MAPID_MAGE,
+	MAPID_CLOWNGYPSY = JOBL_UPPER | JOBL_2_2 | MAPID_ARCHER,
+	MAPID_CHAMPION   = JOBL_UPPER | JOBL_2_2 | MAPID_ACOLYTE,
+	MAPID_CREATOR    = JOBL_UPPER | JOBL_2_2 | MAPID_MERCHANT,
+	MAPID_STALKER    = JOBL_UPPER | JOBL_2_2 | MAPID_THIEF,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_TAEKWON,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_WEDDING,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_GUNSLINGER,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_NINJA,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_XMAS,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_SUMMER,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_GANGSI,
+	//               = JOBL_UPPER | JOBL_2_2 | MAPID_SUMMONER,
+
 	//Baby Novice And Baby 1-1 Jobs
-	MAPID_BABY = JOBL_BABY|0x0,
-	MAPID_BABY_SWORDMAN,
-	MAPID_BABY_MAGE,
-	MAPID_BABY_ARCHER,
-	MAPID_BABY_ACOLYTE,
-	MAPID_BABY_MERCHANT,
-	MAPID_BABY_THIEF,
+	MAPID_BABY          = JOBL_BABY | MAPID_NOVICE,
+	MAPID_BABY_SWORDMAN = JOBL_BABY | MAPID_SWORDMAN,
+	MAPID_BABY_MAGE     = JOBL_BABY | MAPID_MAGE,
+	MAPID_BABY_ARCHER   = JOBL_BABY | MAPID_ARCHER,
+	MAPID_BABY_ACOLYTE  = JOBL_BABY | MAPID_ACOLYTE,
+	MAPID_BABY_MERCHANT = JOBL_BABY | MAPID_MERCHANT,
+	MAPID_BABY_THIEF    = JOBL_BABY | MAPID_THIEF,
+	//                  = JOBL_BABY | MAPID_TAEKWON,
+	//                  = JOBL_BABY | MAPID_WEDDING,
+	//                  = JOBL_BABY | MAPID_GUNSLINGER,
+	//                  = JOBL_BABY | MAPID_NINJA,
+	//                  = JOBL_BABY | MAPID_XMAS,
+	//                  = JOBL_BABY | MAPID_SUMMER,
+	//                  = JOBL_BABY | MAPID_GANGSI,
+	//                  = JOBL_BABY | MAPID_SUMMONER,
+
 	//Baby 2-1 Jobs
-	MAPID_SUPER_BABY = JOBL_BABY|JOBL_2_1|0x0,
-	MAPID_BABY_KNIGHT,
-	MAPID_BABY_WIZARD,
-	MAPID_BABY_HUNTER,
-	MAPID_BABY_PRIEST,
-	MAPID_BABY_BLACKSMITH,
-	MAPID_BABY_ASSASSIN,
+	MAPID_SUPER_BABY      = JOBL_BABY | JOBL_2_1 | MAPID_NOVICE,
+	MAPID_BABY_KNIGHT     = JOBL_BABY | JOBL_2_1 | MAPID_SWORDMAN,
+	MAPID_BABY_WIZARD     = JOBL_BABY | JOBL_2_1 | MAPID_MAGE,
+	MAPID_BABY_HUNTER     = JOBL_BABY | JOBL_2_1 | MAPID_ARCHER,
+	MAPID_BABY_PRIEST     = JOBL_BABY | JOBL_2_1 | MAPID_ACOLYTE,
+	MAPID_BABY_BLACKSMITH = JOBL_BABY | JOBL_2_1 | MAPID_MERCHANT,
+	MAPID_BABY_ASSASSIN   = JOBL_BABY | JOBL_2_1 | MAPID_THIEF,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_TAEKWON,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_WEDDING,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_GUNSLINGER,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_NINJA,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_XMAS,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_SUMMER,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_GANGSI,
+	//                    = JOBL_BABY | JOBL_2_1 | MAPID_SUMMONER,
+
 	//Baby 2-2 Jobs
-	MAPID_BABY_CRUSADER = JOBL_BABY|JOBL_2_2|0x1,
-	MAPID_BABY_SAGE,
-	MAPID_BABY_BARDDANCER,
-	MAPID_BABY_MONK,
-	MAPID_BABY_ALCHEMIST,
-	MAPID_BABY_ROGUE,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_NOVICE,
+	MAPID_BABY_CRUSADER   = JOBL_BABY | JOBL_2_2 | MAPID_SWORDMAN,
+	MAPID_BABY_SAGE       = JOBL_BABY | JOBL_2_2 | MAPID_MAGE,
+	MAPID_BABY_BARDDANCER = JOBL_BABY | JOBL_2_2 | MAPID_ARCHER,
+	MAPID_BABY_MONK       = JOBL_BABY | JOBL_2_2 | MAPID_ACOLYTE,
+	MAPID_BABY_ALCHEMIST  = JOBL_BABY | JOBL_2_2 | MAPID_MERCHANT,
+	MAPID_BABY_ROGUE      = JOBL_BABY | JOBL_2_2 | MAPID_THIEF,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_TAEKWON,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_WEDDING,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_GUNSLINGER,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_NINJA,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_XMAS,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_SUMMER,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_GANGSI,
+	//                    = JOBL_BABY | JOBL_2_2 | MAPID_SUMMONER,
+
 	//3-1 Jobs
-	MAPID_SUPER_NOVICE_E = JOBL_THIRD|JOBL_2_1|0x0,
-	MAPID_RUNE_KNIGHT,
-	MAPID_WARLOCK,
-	MAPID_RANGER,
-	MAPID_ARCH_BISHOP,
-	MAPID_MECHANIC,
-	MAPID_GUILLOTINE_CROSS,
+	MAPID_SUPER_NOVICE_E   = JOBL_THIRD | JOBL_2_1 | MAPID_NOVICE,
+	MAPID_RUNE_KNIGHT      = JOBL_THIRD | JOBL_2_1 | MAPID_SWORDMAN,
+	MAPID_WARLOCK          = JOBL_THIRD | JOBL_2_1 | MAPID_MAGE,
+	MAPID_RANGER           = JOBL_THIRD | JOBL_2_1 | MAPID_ARCHER,
+	MAPID_ARCH_BISHOP      = JOBL_THIRD | JOBL_2_1 | MAPID_ACOLYTE,
+	MAPID_MECHANIC         = JOBL_THIRD | JOBL_2_1 | MAPID_MERCHANT,
+	MAPID_GUILLOTINE_CROSS = JOBL_THIRD | JOBL_2_1 | MAPID_THIEF,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_TAEKWON,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_WEDDING,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_GUNSLINGER,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_NINJA,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_XMAS,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_SUMMER,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_GANGSI,
+	//                     = JOBL_THIRD | JOBL_2_1 | MAPID_SUMMONER,
+
 	//3-2 Jobs
-	MAPID_ROYAL_GUARD = JOBL_THIRD|JOBL_2_2|0x1,
-	MAPID_SORCERER,
-	MAPID_MINSTRELWANDERER,
-	MAPID_SURA,
-	MAPID_GENETIC,
-	MAPID_SHADOW_CHASER,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_NOVICE,
+	MAPID_ROYAL_GUARD      = JOBL_THIRD | JOBL_2_2 | MAPID_SWORDMAN,
+	MAPID_SORCERER         = JOBL_THIRD | JOBL_2_2 | MAPID_MAGE,
+	MAPID_MINSTRELWANDERER = JOBL_THIRD | JOBL_2_2 | MAPID_ARCHER,
+	MAPID_SURA             = JOBL_THIRD | JOBL_2_2 | MAPID_ACOLYTE,
+	MAPID_GENETIC          = JOBL_THIRD | JOBL_2_2 | MAPID_MERCHANT,
+	MAPID_SHADOW_CHASER    = JOBL_THIRD | JOBL_2_2 | MAPID_THIEF,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_TAEKWON,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_WEDDING,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_GUNSLINGER,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_NINJA,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_XMAS,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_SUMMER,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_GANGSI,
+	//                     = JOBL_THIRD | JOBL_2_2 | MAPID_SUMMONER,
+
 	//Trans 3-1 Jobs
-	MAPID_RUNE_KNIGHT_T = JOBL_THIRD|JOBL_UPPER|JOBL_2_1|0x1,
-	MAPID_WARLOCK_T,
-	MAPID_RANGER_T,
-	MAPID_ARCH_BISHOP_T,
-	MAPID_MECHANIC_T,
-	MAPID_GUILLOTINE_CROSS_T,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_NOVICE,
+	MAPID_RUNE_KNIGHT_T      = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_SWORDMAN,
+	MAPID_WARLOCK_T          = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_MAGE,
+	MAPID_RANGER_T           = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_ARCHER,
+	MAPID_ARCH_BISHOP_T      = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_ACOLYTE,
+	MAPID_MECHANIC_T         = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_MERCHANT,
+	MAPID_GUILLOTINE_CROSS_T = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_THIEF,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_TAEKWON,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_WEDDING,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_GUNSLINGER,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_NINJA,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_XMAS,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_SUMMER,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_GANGSI,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_1 | MAPID_SUMMONER,
+
 	//Trans 3-2 Jobs
-	MAPID_ROYAL_GUARD_T = JOBL_THIRD|JOBL_UPPER|JOBL_2_2|0x1,
-	MAPID_SORCERER_T,
-	MAPID_MINSTRELWANDERER_T,
-	MAPID_SURA_T,
-	MAPID_GENETIC_T,
-	MAPID_SHADOW_CHASER_T,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_NOVICE,
+	MAPID_ROYAL_GUARD_T      = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_SWORDMAN,
+	MAPID_SORCERER_T         = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_MAGE,
+	MAPID_MINSTRELWANDERER_T = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_ARCHER,
+	MAPID_SURA_T             = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_ACOLYTE,
+	MAPID_GENETIC_T          = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_MERCHANT,
+	MAPID_SHADOW_CHASER_T    = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_THIEF,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_TAEKWON,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_WEDDING,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_GUNSLINGER,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_NINJA,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_XMAS,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_SUMMER,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_GANGSI,
+	//                       = JOBL_THIRD | JOBL_UPPER | JOBL_2_2 | MAPID_SUMMONER,
+
 	//Baby 3-1 Jobs
-	MAPID_SUPER_BABY_E = JOBL_THIRD|JOBL_BABY|JOBL_2_1|0x0,
-	MAPID_BABY_RUNE,
-	MAPID_BABY_WARLOCK,
-	MAPID_BABY_RANGER,
-	MAPID_BABY_BISHOP,
-	MAPID_BABY_MECHANIC,
-	MAPID_BABY_CROSS,
+	MAPID_SUPER_BABY_E  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_NOVICE,
+	MAPID_BABY_RUNE     = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_SWORDMAN,
+	MAPID_BABY_WARLOCK  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_MAGE,
+	MAPID_BABY_RANGER   = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_ARCHER,
+	MAPID_BABY_BISHOP   = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_ACOLYTE,
+	MAPID_BABY_MECHANIC = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_MERCHANT,
+	MAPID_BABY_CROSS    = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_THIEF,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_TAEKWON,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_WEDDING,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_GUNSLINGER,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_NINJA,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_XMAS,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_SUMMER,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_GANGSI,
+	//                  = JOBL_THIRD | JOBL_BABY | JOBL_2_1 | MAPID_SUMMONER,
+
 	//Baby 3-2 Jobs
-	MAPID_BABY_GUARD = JOBL_THIRD|JOBL_BABY|JOBL_2_2|0x1,
-	MAPID_BABY_SORCERER,
-	MAPID_BABY_MINSTRELWANDERER,
-	MAPID_BABY_SURA,
-	MAPID_BABY_GENETIC,
-	MAPID_BABY_CHASER,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_NOVICE,
+	MAPID_BABY_GUARD            = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_SWORDMAN,
+	MAPID_BABY_SORCERER         = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_MAGE,
+	MAPID_BABY_MINSTRELWANDERER = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_ARCHER,
+	MAPID_BABY_SURA             = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_ACOLYTE,
+	MAPID_BABY_GENETIC          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_MERCHANT,
+	MAPID_BABY_CHASER           = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_THIEF,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_TAEKWON,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_WEDDING,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_GUNSLINGER,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_NINJA,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_XMAS,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_SUMMER,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_GANGSI,
+	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_SUMMONER,
 };
 
-// Max size for inputs to Graffiti, Talkie Box and Vending text prompts
-#define MESSAGE_SIZE (79 + 1)
-// String length you can write in the 'talking box'
-#define CHATBOX_SIZE (70 + 1)
-// Chatroom-related string sizes
-#define CHATROOM_TITLE_SIZE (36 + 1)
-#define CHATROOM_PASS_SIZE (8 + 1)
-// Max allowed chat text length
-#define CHAT_SIZE_MAX (255 + 1)
-// 24 for npc name + 24 for label + 2 for a "::" and 1 for EOS
-#define EVENT_NAME_LENGTH ( NAME_LENGTH * 2 + 3 )
-#define DEFAULT_AUTOSAVE_INTERVAL (5*60*1000)
-// Specifies maps where players may hit each other
-#define map_flag_vs(m) (map->list[m].flag.pvp || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) || map->list[m].flag.battleground)
-// Specifies maps that have special GvG/WoE restrictions
-#define map_flag_gvg(m) (map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle))
-// Specifies if the map is tagged as GvG/WoE (regardless of map->agit_flag status)
-#define map_flag_gvg2(m) (map->list[m].flag.gvg || map->list[m].flag.gvg_castle)
-// No Kill Steal Protection
-#define map_flag_ks(m) (map->list[m].flag.town || map->list[m].flag.pvp || map->list[m].flag.gvg || map->list[m].flag.battleground)
+STATIC_ASSERT(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First class map IDs do not fit into MAPID_BASEMASK");
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]
@@ -250,26 +327,74 @@ enum bl_type {
 	BL_ALL   = 0xFFF,
 };
 
-// For common mapforeach calls. Since pets cannot be affected, they aren't included here yet.
-#define BL_CHAR (BL_PC|BL_MOB|BL_HOM|BL_MER|BL_ELEM)
-
 enum npc_subtype { WARP, SHOP, SCRIPT, CASHSHOP, TOMB };
 
-enum {
-	RC_FORMLESS=0,
-	RC_UNDEAD,
-	RC_BRUTE,
-	RC_PLANT,
-	RC_INSECT,
-	RC_FISH,
-	RC_DEMON,
-	RC_DEMIHUMAN,
-	RC_ANGEL,
-	RC_DRAGON,
-	RC_BOSS,
-	RC_NONBOSS,
-	RC_NONDEMIHUMAN,
-	RC_MAX
+/** optional flags for script labels, used by the label db */
+enum script_label_flags {
+	/** the label can be called from outside the local scope of the NPC */
+	LABEL_IS_EXTERN   = 0x1,
+	/** the label is a public or private local NPC function */
+	LABEL_IS_USERFUNC = 0x2,
+};
+
+/**
+ * Race type IDs.
+ *
+ * Mostly used by scripts/bonuses.
+ */
+enum Race {
+	// Base Races
+	RC_FORMLESS = 0,  ///< Formless
+	RC_UNDEAD,        ///< Undead
+	RC_BRUTE,         ///< Beast/Brute
+	RC_PLANT,         ///< Plant
+	RC_INSECT,        ///< Insect
+	RC_FISH,          ///< Fish
+	RC_DEMON,         ///< Demon
+	RC_DEMIHUMAN,     ///< Demi-Human (not including Player)
+	RC_ANGEL,         ///< Angel
+	RC_DRAGON,        ///< Dragon
+	RC_PLAYER,        ///< Player
+	// Boss
+	RC_BOSS,          ///< Boss
+	RC_NONBOSS,       ///< Non-boss
+
+	RC_MAX,           // Array size delimiter (keep before the combination races)
+
+	// Combination Races
+	RC_NONDEMIHUMAN,   ///< Every race except Demi-Human (including Player)
+	RC_NONPLAYER,      ///< Every non-player race
+	RC_DEMIPLAYER,     ///< Demi-Human (including Player)
+	RC_NONDEMIPLAYER,  ///< Every race except Demi-Human (and except Player)
+	RC_ALL = 0xFF,     ///< Every race (implemented as equivalent to RC_BOSS and RC_NONBOSS)
+};
+
+/**
+ * Race type bitmasks.
+ *
+ * Used by several bonuses internally, to simplify handling of race combinations.
+ */
+enum RaceMask {
+	RCMASK_NONE      = 0,
+	RCMASK_FORMLESS  = 1<<RC_FORMLESS,
+	RCMASK_UNDEAD    = 1<<RC_UNDEAD,
+	RCMASK_BRUTE     = 1<<RC_BRUTE,
+	RCMASK_PLANT     = 1<<RC_PLANT,
+	RCMASK_INSECT    = 1<<RC_INSECT,
+	RCMASK_FISH      = 1<<RC_FISH,
+	RCMASK_DEMON     = 1<<RC_DEMON,
+	RCMASK_DEMIHUMAN = 1<<RC_DEMIHUMAN,
+	RCMASK_ANGEL     = 1<<RC_ANGEL,
+	RCMASK_DRAGON    = 1<<RC_DRAGON,
+	RCMASK_PLAYER    = 1<<RC_PLAYER,
+	RCMASK_BOSS      = 1<<RC_BOSS,
+	RCMASK_NONBOSS   = 1<<RC_NONBOSS,
+	RCMASK_NONDEMIPLAYER = RCMASK_FORMLESS | RCMASK_UNDEAD | RCMASK_BRUTE | RCMASK_PLANT | RCMASK_INSECT | RCMASK_FISH | RCMASK_DEMON | RCMASK_ANGEL | RCMASK_DRAGON,
+	RCMASK_NONDEMIHUMAN = RCMASK_NONDEMIPLAYER | RCMASK_PLAYER,
+	RCMASK_NONPLAYER    = RCMASK_NONDEMIPLAYER | RCMASK_DEMIHUMAN,
+	RCMASK_DEMIPLAYER   = RCMASK_DEMIHUMAN | RCMASK_PLAYER,
+	RCMASK_ALL          = RCMASK_BOSS | RCMASK_NONBOSS,
+	RCMASK_ANY          = RCMASK_NONPLAYER | RCMASK_PLAYER,
 };
 
 enum {
@@ -280,6 +405,8 @@ enum {
 	RC2_GOLEM,
 	RC2_GUARDIAN,
 	RC2_NINJA,
+	RC2_SCARABA,
+	RC2_TURTLE,
 	RC2_MAX
 };
 
@@ -294,7 +421,8 @@ enum elements {
 	ELE_DARK,
 	ELE_GHOST,
 	ELE_UNDEAD,
-	ELE_MAX
+	ELE_MAX,
+	ELE_ALL = 0xFF
 };
 
 /**
@@ -330,7 +458,7 @@ struct block_list {
 // Mob List Held in memory for Dynamic Mobs [Wizputer]
 // Expanded to specify all mob-related spawn data by [Skotlex]
 struct spawn_data {
-	short class_;                ///< Class, used because a mob can change it's class
+	int class_;                ///< Class, used because a mob can change it's class
 	unsigned short m, x, y;      ///< Spawn information (map, point, spawn-area around point)
 	signed short xs, ys;
 	unsigned short num;          ///< Number of mobs using this structure
@@ -343,7 +471,7 @@ struct spawn_data {
 		//0: Normal mob | 1: Standard summon, attacks mobs
 		//2: Alchemist Marine Sphere | 3: Alchemist Summon Flora | 4: Summon Zanzou
 		unsigned int dynamic : 1; ///< Whether this data is indexed by a map's dynamic mob list
-		unsigned int boss : 1;    ///< 0: Non-boss monster | 1: Boss monster
+		uint8 boss;    ///< 0: Non-boss monster | 1: Boss monster | 2: MVP
 	} state;
 	char name[NAME_LENGTH], eventname[EVENT_NAME_LENGTH]; //Name/event
 };
@@ -355,9 +483,11 @@ struct flooritem_data {
 	int first_get_charid,second_get_charid,third_get_charid;
 	int64 first_get_tick,second_get_tick,third_get_tick;
 	struct item item_data;
+	bool showdropeffect;
 };
 
-enum status_point_types {
+enum status_point_types { //we better clean up this enum and change it name [Hemagx]
+	SP_NONE = -1,
 	SP_SPEED,SP_BASEEXP,SP_JOBEXP,SP_KARMA,SP_MANNER,SP_HP,SP_MAXHP,SP_SP, // 0-7
 	SP_MAXSP,SP_STATUSPOINT,SP_0a,SP_BASELEVEL,SP_SKILLPOINT,SP_STR,SP_AGI,SP_VIT, // 8-15
 	SP_INT,SP_DEX,SP_LUK,SP_CLASS,SP_ZENY,SP_SEX,SP_NEXTBASEEXP,SP_NEXTJOBEXP, // 16-23
@@ -377,6 +507,7 @@ enum status_point_types {
 	SP_MOD_EXP=125,
 	SP_MOD_DROP=126,
 	SP_MOD_DEATH=127,
+	SP_BANKVAULT=128,
 
 	// Mercenaries
 	SP_MERCFLEE=165, SP_MERCKILLS=189, SP_MERCFAITH=190,
@@ -407,7 +538,7 @@ enum status_point_types {
 	SP_WEAPON_ATK,SP_WEAPON_ATK_RATE, // 1081-1082
 	SP_DELAYRATE,SP_HP_DRAIN_RATE_RACE,SP_SP_DRAIN_RATE_RACE, // 1083-1085
 	SP_IGNORE_MDEF_RATE,SP_IGNORE_DEF_RATE,SP_SKILL_HEAL2,SP_ADDEFF_ONSKILL, //1086-1089
-	SP_ADD_HEAL_RATE,SP_ADD_HEAL2_RATE, //1090-1091
+	SP_ADD_HEAL_RATE, SP_ADD_HEAL2_RATE, SP_HP_VANISH_RATE, //1090-1092
 
 	SP_RESTART_FULL_RECOVER=2000,SP_NO_CASTCANCEL,SP_NO_SIZEFIX,SP_NO_MAGIC_DAMAGE,SP_NO_WEAPON_DAMAGE,SP_NO_GEMSTONE, // 2000-2005
 	SP_NO_CASTCANCEL2,SP_NO_MISC_DAMAGE,SP_UNBREAKABLE_WEAPON,SP_UNBREAKABLE_ARMOR, SP_UNBREAKABLE_HELM, // 2006-2010
@@ -425,7 +556,8 @@ enum status_point_types {
 	SP_SKILL_COOLDOWN,SP_SKILL_FIXEDCAST, SP_SKILL_VARIABLECAST, SP_FIXCASTRATE, SP_VARCASTRATE, //2050-2054
 	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST,  //2055-2058
 	SP_SET_DEF_RACE,SP_SET_MDEF_RACE, //2059-2060
-	SP_RACE_TOLERANCE, //2061
+	SP_RACE_TOLERANCE,SP_ADDMAXWEIGHT, //2061-2062
+	SP_SUB_DEF_ELE, SP_MAGIC_SUB_DEF_ELE, // 2063-2064
 
 	/* must be the last, plugins add bonuses from this value onwards */
 	SP_LAST_KNOWN,
@@ -445,6 +577,11 @@ enum look {
 	LOOK_BODY,
 	LOOK_FLOOR,
 	LOOK_ROBE,
+	LOOK_BODY2,
+
+#ifndef LOOK_MAX
+	LOOK_MAX
+#endif
 };
 
 // used by map_setcell()
@@ -460,6 +597,7 @@ typedef enum {
 	CELL_NOCHAT,
 	CELL_ICEWALL,
 	CELL_NOICEWALL,
+	CELL_NOSKILL,
 
 } cell_t;
 
@@ -484,6 +622,7 @@ typedef enum {
 	CELL_CHKNOCHAT,
 	CELL_CHKICEWALL,
 	CELL_CHKNOICEWALL,
+	CELL_CHKNOSKILL,
 
 } cell_chk;
 
@@ -502,7 +641,8 @@ struct mapcell {
 		novending : 1,
 		nochat : 1,
 		icewall : 1,
-		noicewall : 1;
+		noicewall : 1,
+		noskill : 1;
 
 #ifdef CELL_NOSTACK
 	int cell_bl; //Holds amount of bls in this cell.
@@ -530,7 +670,7 @@ enum map_zone_skill_subtype {
 };
 
 struct map_zone_disabled_skill_entry {
-	unsigned short nameid;
+	int nameid;
 	enum bl_type type;
 	enum map_zone_skill_subtype subtype;
 };
@@ -540,23 +680,21 @@ struct map_zone_disabled_command_entry {
 };
 
 struct map_zone_skill_damage_cap_entry {
-	unsigned short nameid;
+	int nameid;
 	unsigned int cap;
 	enum bl_type type;
 	enum map_zone_skill_subtype subtype;
 };
 
-#define MAP_ZONE_NAME_LENGTH 60
-#define MAP_ZONE_ALL_NAME "All"
-#define MAP_ZONE_NORMAL_NAME "Normal"
-#define MAP_ZONE_PVP_NAME "PvP"
-#define MAP_ZONE_GVG_NAME "GvG"
-#define MAP_ZONE_BG_NAME "Battlegrounds"
-#define MAP_ZONE_PK_NAME "PK Mode"
-#define MAP_ZONE_MAPFLAG_LENGTH 50
+enum map_zone_merge_type {
+	MZMT_NORMAL = 0, ///< MZMT_MERGEABLE zones can merge *into* MZMT_NORMAL zones (but not the converse).
+	MZMT_MERGEABLE,  ///< Can merge with other MZMT_MERGEABLE zones and *into* MZMT_NORMAL zones.
+	MZMT_NEVERMERGE, ///< Cannot merge with any zones.
+};
 
 struct map_zone_data {
 	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
+	enum map_zone_merge_type merge_type;
 	struct map_zone_disabled_skill_entry **disabled_skills;
 	int disabled_skills_count;
 	int *disabled_items;
@@ -570,7 +708,7 @@ struct map_zone_data {
 	struct map_zone_skill_damage_cap_entry **capped_skills;
 	int capped_skills_count;
 	struct {
-		unsigned int special : 2;/* 1: whether this is a mergeable zone; 2: whether it is a merged zone */
+		unsigned int merged : 1;
 	} info;
 };
 
@@ -579,17 +717,6 @@ struct map_drop_list {
 	int drop_type;
 	int drop_per;
 };
-
-
-struct questinfo {
-	struct npc_data *nd;
-	unsigned short icon;
-	unsigned char color;
-	int quest_id;
-	bool hasJob;
-	unsigned short job;/* perhaps a mapid mask would be most flexible? */
-};
-
 
 struct map_data {
 	char name[MAP_NAME_LENGTH];
@@ -637,6 +764,7 @@ struct map_data {
 		unsigned gvg_dungeon : 1; // Celest
 		unsigned gvg_noparty : 1;
 		unsigned battleground : 2; // [BattleGround System]
+		unsigned cvc : 1;
 		unsigned nozenypenalty : 1;
 		unsigned notrade : 1;
 		unsigned noskill : 1;
@@ -667,6 +795,13 @@ struct map_data {
 		unsigned noknockback : 1;
 		unsigned notomb : 1;
 		unsigned nocashshop : 1;
+		unsigned noautoloot : 1;
+		unsigned pairship_startable : 1;
+		unsigned pairship_endable : 1;
+		unsigned nostorage : 2;
+		unsigned nogstorage : 2;
+		unsigned nopet : 1;
+		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];
@@ -716,20 +851,19 @@ struct map_data {
 	bool custom_name; ///< Whether the instanced map is using a custom name
 
 	/* */
-	int (*getcellp)(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
+	int (*getcellp)(struct map_data* m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
-	char *cellPos;
+	struct {
+		uint8 *data;
+		int len;
+	} cell_buf;
 
-	/* ShowEvent Data Cache */
-	struct questinfo *qi_data;
-	unsigned short qi_count;
+	/* questinfo entries list */
+	VECTOR_DECL(struct npc_data *) qi_list;
 
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).
@@ -763,8 +897,6 @@ struct mapit_interface {
 	bool                    (*exists) (struct s_mapiterator* iter);
 };
 
-struct mapit_interface *mapit;
-
 #define mapit_getallusers() (mapit->alloc(MAPIT_NORMAL,BL_PC))
 #define mapit_geteachpc()   (mapit->alloc(MAPIT_NORMAL,BL_PC))
 #define mapit_geteachmob()  (mapit->alloc(MAPIT_NORMAL,BL_MOB))
@@ -783,8 +915,91 @@ typedef struct homun_data       TBL_HOM;
 typedef struct mercenary_data   TBL_MER;
 typedef struct elemental_data   TBL_ELEM;
 
+/**
+ * Casts a block list to a specific type.
+ *
+ * @remark
+ *   The `bl` argument may be evaluated more than once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ * @retval NULL if bl is the wrong type or NULL.
+ */
 #define BL_CAST(type_, bl) \
-	( ((bl) == (struct block_list*)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
+	( ((bl) == (struct block_list *)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
+
+/**
+ * Casts a const block list to a specific type.
+ *
+ * @remark
+ *   The `bl` argument may be evaluated more than once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ * @retval NULL if bl is the wrong type or NULL.
+ */
+#define BL_CCAST(type_, bl) \
+	( ((bl) == (const struct block_list *)NULL || (bl)->type != (type_)) ? (const T ## type_ *)NULL : (const T ## type_ *)(bl) )
+
+/**
+ * Helper function for `BL_UCAST`.
+ *
+ * @warning
+ *   This function shouldn't be called on it own.
+ *
+ * The purpose of this function is to produce a compile-timer error if a non-bl
+ * object is passed to BL_UCAST. It's declared as static inline to let the
+ * compiler optimize out the function call overhead.
+ */
+static inline struct block_list *BL_UCAST_(struct block_list *bl) __attribute__((unused));
+static inline struct block_list *BL_UCAST_(struct block_list *bl)
+{
+	return bl;
+}
+
+/**
+ * Casts a block list to a specific type, without performing any type checks.
+ *
+ * @remark
+ *   The `bl` argument is guaranteed to be evaluated once and only once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ */
+#define BL_UCAST(type_, bl) \
+	((T ## type_ *)BL_UCAST_(bl))
+
+/**
+ * Helper function for `BL_UCCAST`.
+ *
+ * @warning
+ *   This function shouldn't be called on it own.
+ *
+ * The purpose of this function is to produce a compile-timer error if a non-bl
+ * object is passed to BL_UCAST. It's declared as static inline to let the
+ * compiler optimize out the function call overhead.
+ */
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl) __attribute__((unused));
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl)
+{
+	return bl;
+}
+
+/**
+ * Casts a const block list to a specific type, without performing any type checks.
+ *
+ * @remark
+ *   The `bl` argument is guaranteed to be evaluated once and only once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ */
+#define BL_UCCAST(type_, bl) \
+	((const T ## type_ *)BL_UCCAST_(bl))
 
 struct charid_request {
 	struct charid_request* next;
@@ -795,20 +1010,20 @@ struct charid2nick {
 	struct charid_request* requests;// requests of notification on this nick
 };
 
-// This is the main header found at the very beginning of the map cache
-struct map_cache_main_header {
-	uint32 file_size;
-	uint16 map_count;
-};
-
-// This is the header appended before every compressed map cells info in the map cache
-struct map_cache_map_info {
-	char name[MAP_NAME_LENGTH];
+// New mcache file format header
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
+#pragma pack(push, 1)
+#endif // not NetBSD < 6 / Solaris
+struct map_cache_header {
+	int16 version;
+	uint8 md5_checksum[16];
 	int16 xs;
 	int16 ys;
 	int32 len;
-};
-
+} __attribute__((packed));
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
+#pragma pack(pop)
+#endif // not NetBSD < 6 / Solaris
 
 /*=====================================
 * Interface : map.h
@@ -838,7 +1053,6 @@ struct map_interface {
 	char db_path[256];
 
 	char help_txt[256];
-	char help2_txt[256];
 	char charhelp_txt[256];
 
 	char wisp_server_name[NAME_LENGTH];
@@ -852,20 +1066,11 @@ struct map_interface {
 	char *MSG_CONF_NAME;
 	char *GRF_PATH_FILENAME;
 
-	int db_use_sql_item_db;
-	int db_use_sql_mob_db;
-	int db_use_sql_mob_skill_db;
-
-	char item_db_db[32];
-	char item_db2_db[32];
-	char mob_db_db[32];
-	char mob_db2_db[32];
-	char mob_skill_db_db[32];
-	char mob_skill_db2_db[32];
-	char interreg_db[32];
 	char autotrade_merchants_db[32];
 	char autotrade_data_db[32];
 	char npc_market_data_db[32];
+	char npc_barter_data_db[32];
+	char npc_expanded_barter_data_db[32];
 
 	char default_codepage[32];
 	char default_lang_str[64];
@@ -876,9 +1081,9 @@ struct map_interface {
 	char server_id[32];
 	char server_pw[100];
 	char server_db[32];
-	Sql* mysql_handle;
+	struct Sql *mysql_handle;
 
-	int port;
+	uint16 port;
 	int users;
 	int enable_grf; //To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
 	bool ip_set;
@@ -886,16 +1091,16 @@ struct map_interface {
 
 	int16 index2mapid[MAX_MAPINDEX];
 	/* */
-	DBMap* id_db;     // int id -> struct block_list*
-	DBMap* pc_db;     // int id -> struct map_session_data*
-	DBMap* mobid_db;  // int id -> struct mob_data*
-	DBMap* bossid_db; // int id -> struct mob_data* (MVP db)
-	DBMap* map_db;    // unsigned int mapindex -> struct map_data_other_server*
-	DBMap* nick_db;   // int char_id -> struct charid2nick* (requested names of offline characters)
-	DBMap* charid_db; // int char_id -> struct map_session_data*
-	DBMap* regen_db;  // int id -> struct block_list* (status_natural_heal processing)
-	DBMap* zone_db;   // string => struct map_zone_data
-	DBMap* iwall_db;
+	struct DBMap *id_db;     // int id -> struct block_list*
+	struct DBMap *pc_db;     // int id -> struct map_session_data*
+	struct DBMap *mobid_db;  // int id -> struct mob_data*
+	struct DBMap *bossid_db; // int id -> struct mob_data* (MVP db)
+	struct DBMap *map_db;    // unsigned int mapindex -> struct map_data_other_server*
+	struct DBMap *nick_db;   // int char_id -> struct charid2nick* (requested names of offline characters)
+	struct DBMap *charid_db; // int char_id -> struct map_session_data*
+	struct DBMap *regen_db;  // int id -> struct block_list* (status_natural_heal processing)
+	struct DBMap *zone_db;   // string => struct map_zone_data
+	struct DBMap *iwall_db;
 	struct block_list **block_free;
 	int block_free_count, block_free_lock, block_free_list_size;
 	struct block_list **bl_list;
@@ -910,7 +1115,6 @@ END_ZEROED_BLOCK;
 	struct map_data *list;
 	/* [Ind/Hercules] */
 	struct eri *iterator_ers;
-	char *cache_buffer; // Has the uncompressed gat data of all maps, so just one allocation has to be made
 	/* */
 	struct eri *flooritem_ers;
 	/* */
@@ -920,11 +1124,13 @@ END_ZEROED_BLOCK;
 	/* funcs */
 	void (*zone_init) (void);
 	void (*zone_remove) (int m);
+	void (*zone_remove_all) (int m);
 	void (*zone_apply) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change) (int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
 	void (*zone_change2) (int m, struct map_zone_data *zone);
+	void (*zone_reload) (void);
 
-	int (*getcell) (int16 m,int16 x,int16 y,cell_chk cellchk);
+	int (*getcell) (int16 m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setgatcell) (int16 m, int16 x, int16 y, int gat);
 
 	void (*cellfromcache) (struct map_data *m);
@@ -946,7 +1152,7 @@ END_ZEROED_BLOCK;
 	// search and creation
 	int (*get_new_object_id) (void);
 	int (*search_freecell) (struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag);
-	bool (*closest_freecell) (int16 m, int16 *x, int16 *y, int type, int flag);
+	bool (*closest_freecell) (int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag);
 	//
 	int (*quit) (struct map_session_data *sd);
 	// npc
@@ -955,7 +1161,7 @@ END_ZEROED_BLOCK;
 	int (*clearflooritem_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*removemobs_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*clearflooritem) (struct block_list* bl);
-	int (*addflooritem) (struct item *item_data,int amount,int16 m,int16 x,int16 y,int first_charid,int second_charid,int third_charid,int flags);
+	int (*addflooritem) (const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags, bool showdropeffect);
 	// player to map session
 	void (*addnickdb) (int charid, const char* nick);
 	void (*delnickdb) (int charid, const char* nick);
@@ -992,16 +1198,21 @@ END_ZEROED_BLOCK;
 	int (*foreachinpath) (int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...);
 	int (*vforeachinmap) (int (*func)(struct block_list*,va_list), int16 m, int type, va_list args);
 	int (*foreachinmap) (int (*func)(struct block_list*,va_list), int16 m, int type, ...);
+	int (*forcountinmap) (int (*func)(struct block_list*,va_list), int16 m, int count, int type, ...);
 	int (*vforeachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type, va_list ap);
 	int (*foreachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type,...);
 
-	struct map_session_data * (*id2sd) (int id);
-	struct mob_data * (*id2md) (int id);
-	struct npc_data * (*id2nd) (int id);
-	struct homun_data* (*id2hd) (int id);
-	struct mercenary_data* (*id2mc) (int id);
-	struct chat_data* (*id2cd) (int id);
-	struct block_list * (*id2bl) (int id);
+	struct map_session_data *(*id2sd) (int id);
+	struct npc_data *(*id2nd) (int id);
+	struct mob_data *(*id2md) (int id);
+	struct flooritem_data *(*id2fi) (int id);
+	struct chat_data *(*id2cd) (int id);
+	struct skill_unit *(*id2su) (int id);
+	struct pet_data *(*id2pd) (int id);
+	struct homun_data *(*id2hd) (int id);
+	struct mercenary_data *(*id2mc) (int id);
+	struct elemental_data *(*id2ed) (int id);
+	struct block_list *(*id2bl) (int id);
 	bool (*blid_exists) (int id);
 	int16 (*mapindex2mapid) (unsigned short map_index);
 	int16 (*mapname2mapid) (const char* name);
@@ -1012,24 +1223,25 @@ END_ZEROED_BLOCK;
 	void (*addiddb) (struct block_list *bl);
 	void (*deliddb) (struct block_list *bl);
 	/* */
-	struct map_session_data * (*nick2sd) (const char *nick);
+	struct map_session_data * (*nick2sd) (const char *nick, bool allow_partial);
 	struct mob_data * (*getmob_boss) (int16 m);
 	struct mob_data * (*id2boss) (int id);
+	uint32 (*race_id2mask) (int race);
 	// reload config file looking only for npcs
 	void (*reloadnpc) (bool clear);
 
-	int (*check_dir) (int s_dir,int t_dir);
-	uint8 (*calc_dir) (struct block_list *src,int16 x,int16 y);
+	int (*check_dir) (enum unit_dir s_dir, enum unit_dir t_dir);
+	enum unit_dir (*calc_dir) (const struct block_list *src, int16 x, int16 y);
 	int (*random_dir) (struct block_list *bl, short *x, short *y); // [Skotlex]
 
 	int (*cleanup_sub) (struct block_list *bl, va_list ap);
 
-	int (*delmap) (char* mapname);
+	int (*delmap) (const char *mapname);
 	void (*flags_init) (void);
 
 	bool (*iwall_set) (int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char* wall_name);
 	void (*iwall_get) (struct map_session_data *sd);
-	void (*iwall_remove) (const char *wall_name);
+	bool (*iwall_remove) (const char *wall_name);
 
 	int (*addmobtolist) (unsigned short m, struct spawn_data *spawn); // [Wizputer]
 	void (*spawnmobs) (int16 m); // [Wizputer]
@@ -1042,21 +1254,21 @@ END_ZEROED_BLOCK;
 	void (*do_shutdown) (void);
 
 	int (*freeblock_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*searchrandfreecell) (int16 m, int16 *x, int16 *y, int stack);
+	int (*searchrandfreecell) (int16 m, const struct block_list *bl, int16 *x, int16 *y, int stack);
 	int (*count_sub) (struct block_list *bl, va_list ap);
-	DBData (*create_charid2nick) (DBKey key, va_list args);
+	struct DBData (*create_charid2nick) (union DBKey key, va_list args);
 	int (*removemobs_sub) (struct block_list *bl, va_list ap);
 	struct mapcell (*gat2cell) (int gat);
 	int (*cell2gat) (struct mapcell cell);
-	int (*getcellp) (struct map_data *m, int16 x, int16 y, cell_chk cellchk);
+	int (*getcellp) (struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
-	int (*sub_getcellp) (struct map_data *m, int16 x, int16 y, cell_chk cellchk);
+	int (*sub_getcellp) (struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*sub_setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
 	void (*iwall_nextxy) (int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1);
-	DBData (*create_map_data_other_server) (DBKey key, va_list args);
-	int (*eraseallipport_sub) (DBKey key, DBData *data, va_list va);
-	char* (*init_mapcache) (FILE *fp);
-	int (*readfromcache) (struct map_data *m, char *buffer);
+	struct DBData (*create_map_data_other_server) (union DBKey key, va_list args);
+	int (*eraseallipport_sub) (union DBKey key, struct DBData *data, va_list va);
+	bool (*readfromcache) (struct map_data *m);
+	bool (*readfromcache_v1) (FILE *fp, struct map_data *m, unsigned int file_size);
 	int (*addmap) (const char *mapname);
 	void (*delmapid) (int id);
 	void (*zone_db_clear) (void);
@@ -1064,33 +1276,35 @@ END_ZEROED_BLOCK;
 	int (*waterheight) (char *mapname);
 	int (*readgat) (struct map_data *m);
 	int (*readallmaps) (void);
-	int (*config_read) (char *cfgName);
-	int (*config_read_sub) (char *cfgName);
-	void (*reloadnpc_sub) (char *cfgName);
-	int (*inter_config_read) (char *cfgName);
+	bool (*config_read) (const char *filename, bool imported);
+	bool (*read_npclist) (const char *filename, bool imported);
+	bool (*inter_config_read) (const char *filename, bool imported);
+	bool (*inter_config_read_database_names) (const char *filename, const struct config_t *config, bool imported);
+	bool (*inter_config_read_connection) (const char *filename, const struct config_t *config, bool imported);
 	int (*sql_init) (void);
 	int (*sql_close) (void);
 	bool (*zone_mf_cache) (int m, char *flag, char *params);
-	unsigned short (*zone_str2itemid) (const char *name);
+	int (*zone_str2itemid) (const char *name);
 	unsigned short (*zone_str2skillid) (const char *name);
 	enum bl_type (*zone_bl_type) (const char *entry, enum map_zone_skill_subtype *subtype);
 	void (*read_zone_db) (void);
-	int (*db_final) (DBKey key, DBData *data, va_list ap);
-	int (*nick_db_final) (DBKey key, DBData *data, va_list args);
-	int (*cleanup_db_sub) (DBKey key, DBData *data, va_list va);
+	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
+	int (*nick_db_final) (union DBKey key, struct DBData *data, va_list args);
+	int (*cleanup_db_sub) (union DBKey key, struct DBData *data, va_list va);
 	int (*abort_sub) (struct map_session_data *sd, va_list ap);
 	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);
-	void (*add_questinfo) (int m, struct questinfo *qi);
+	bool (*add_questinfo) (int m, struct npc_data *nd);
 	bool (*remove_questinfo) (int m, struct npc_data *nd);
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
 	void (*zone_clear_single) (struct map_zone_data *zone);
 };
 
-struct map_interface *map;
-
 #ifdef HERCULES_CORE
 void map_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mapit_interface *mapit;
+HPShared struct map_interface *map;
 
 #endif /* MAP_MAP_H */

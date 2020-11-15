@@ -1,31 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) reddozen
+//= Copyright (C) DiviniaRO members
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 2006 Headgear
-//===== By: ==================================================
-//= DiviniaRO members, cleaned by reddozen
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Censor Bar, Feather Beret, Valk. Helm, Hahoe Mask, Mythical Lion Mask,
+//= Bride Mask, Magistrate Hat and Ayam
+//================= Current Version =======================================
 //= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
-//= Censor Bar, Feather Beret, Valk. Helm, Hahoe Mask,
-//= Mythical Lion Mask, Bride Mask, Magistrate Hat and Ayam
-//===== Additional Comments: =================================
-//= NPC id's and dialog are custom, please replace
-//= 1.0a fixed typos, added missing names, more cleaned and
-//=     standartized stuff a bit [Lupus]
-//= 1.0b fixed Helm of Valkyries ingredients
-//= 1.0c corrected item names according to item_db [Lupus]
-//= 1.1 Full update. EuRO (?) dialogs, and positions. [L0ne_W0lf]
-//= 1.2 Fixed bugs in the Hahoe/Lion/Bride Mask NPC. [L0ne_W0lf]
-//=     Fixed some of the names to iRO.
-//= 1.3 Fixed some color code bugs in Ghenirhemin. Thanks to yyCC. [L0ne_W0lf]
-//= 1.3a Fixed wrong item names (due to copy/paste) [Lupus]
-//= 1.4 Chungwolmang now checks if the last item set should be deleted. (bugreport:4719) [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-// Censor Bar
-//============================================================
-rachel,91,273,8	script	?	4_M_RACHMAN2,{
-	if (countitem(983) > 0 && countitem(7111) > 99 && countitem(938) > 98 && Zeny > 99999) {
+//== Censor Bar ============================================
+rachel,91,273,0	script	?	4_M_RACHMAN2,{
+	if (countitem(Black_Dyestuffs) > 0 && countitem(Smooth_Paper) > 99 && countitem(Sticky_Mucus) > 98 && Zeny > 99999) {
 		mes "[?]";
 		mes "Giggle giggle...isn't it my partner, eh?";
 		mes "So, did you bring everything that I asked?";
@@ -47,11 +60,11 @@ rachel,91,273,8	script	?	4_M_RACHMAN2,{
 		mes "- Bzzz Bzzz Click Click -";
 		mes "- Fumble Fumble Fumble Fumble -";
 		next;
-		delitem 983,1; //Black_Dyestuffs
-		delitem 7111,100; //Smooth_Paper
-		delitem 938,99; //Sticky_Mucus
+		delitem Black_Dyestuffs,1;
+		delitem Smooth_Paper,100;
+		delitem Sticky_Mucus,99;
 		Zeny -= 100000;
-		getitem 5175,1; //Anonimity_Request
+		getitem Censor_Bar,1; //Anonimity_Request
 		mes "[?]";
 		mes "Phew...it's done. Well, it was not that difficult to make, but...";
 		mes "Giggle giggle, what is important is that";
@@ -90,10 +103,9 @@ rachel,91,273,8	script	?	4_M_RACHMAN2,{
 	close;
 }
 
-// Feather Beret
-//============================================================
+//== Feather Beret =========================================
 rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
-	if (countitem(5172) > 0 && countitem(7063) > 99 && countitem(982) > 0) {
+	if (countitem(Beret) > 0 && countitem(Soft_Feather) > 99 && countitem(White_Dyestuffs) > 0) {
 		mes "[Sakjul]";
 		mes "Great, you have brought everything";
 		mes "to make ^FF0000Feather Beret^000000!";
@@ -124,9 +136,9 @@ rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 		next;
 		.@result = rand(1,10);
 		if (.@result == 4) {
-			delitem 5172,1; //Beret
-			delitem 7063,100; //Soft_Feather
-			delitem 982,1; //White_Dyestuffs
+			delitem Beret,1;
+			delitem Soft_Feather,100;
+			delitem White_Dyestuffs,1;
 			mes "[Sakjul]";
 			mes "I did succeed in making the hat,";
 			mes "but I cannot let it fall into someone else's hand!";
@@ -148,10 +160,10 @@ rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 			mes "If you understood, now, go, go gather the materials again!";
 			close;
 		}
-		delitem 5172,1; //Beret
-		delitem 7063,100; //Soft_Feather
-		delitem 982,1; //White_Dyestuffs
-		getitem 5170,1; //Feather_Beret
+		delitem Beret,1;
+		delitem Soft_Feather,100;
+		delitem White_Dyestuffs,1;
+		getitem Feather_Beret,1;
 		mes "[Sakjul]";
 		mes "Great, I have made it! Look at this beautiful coordination";
 		mes "between the feather and the beret,";
@@ -172,7 +184,7 @@ rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 	mes "Young men in nowadays are too weak and tender.";
 	mes "Don't you agree with me, young adventurer?";
 	next;
-	if (select("Yes, sir!:No.") == 1) {
+	if (select("Yes, sir!", "No.") == 1) {
 		mes "[Sakjul]";
 		mes "Ah! I like your answer!";
 		mes "Lately, I found it very hard to see a diciplined young man like you.";
@@ -206,8 +218,7 @@ rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 	close;
 }
 
-// Valkyrie Helm
-//============================================================
+//== Valkyrie Helm =========================================
 hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 	if (moza_valkylie == 5) {
 		.@val2 = rand(1,10);
@@ -244,7 +255,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 			mes "do not disgrace this Helm through evil doings.";
 			next;
 			moza_valkylie = 0;
-			getitem 5171,1; //Valkyrie_Helm
+			getitem Valkyrie_Helm,1;
 			mes "[Ghenirhemin]";
 			mes "May God bless this adventurer";
 			mes "who has written new history.";
@@ -289,7 +300,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 		mes "only because you, a human wants it to happen faster.";
 		close;
 	}
-	else if (moza_valkylie == 2 && Zeny > 9999999 && countitem(4219) > 0 && countitem(4114) > 0 && countitem(4177) > 0 && countitem(4259) > 0 && countitem(4212) > 0 && countitem(4073) > 0 && countitem(4112) > 0 && countitem(4081) > 0 && countitem(4251) > 0 && countitem(4166) > 0 && countitem(7511) > 999 && countitem(7563) > 999) {
+	else if (moza_valkylie == 2 && Zeny > 9999999 && countitem(Sageworm_Card) > 0 && countitem(Argiope_Card) > 0 && countitem(Dryad_Card) > 0 && countitem(Wooden_Golem_Card) > 0 && countitem(Bon_Gun_Card) > 0 && countitem(Pirate_Skel_Card) > 0 && countitem(Marduk_Card) > 0 && countitem(Hode_Card) > 0 && countitem(Elder_Card) > 0 && countitem(Nightmare_Terror_Card) > 0 && countitem(Rune_Of_Darkness) > 999 && countitem(Bloody_Rune) > 999) {
 		mes "[Ghenirhemin]";
 		mes "Hmm...I am impressed that you have brought everything";
 		mes "despite of the difficulty in gathering them. It was difficult, wasn't it?";
@@ -302,23 +313,23 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 		mes "I am pretty sure that they will start";
 		mes "being fused into the helm with their own mysterious powers.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Ghenirhemin]";
 			mes "Excellent. Now, all we have to do";
 			mes "is just waiting until they finish being fused into one.";
 			next;
-			delitem 4219,1; //Sageworm_Card
-			delitem 4114,1; //Argiope_Card
-			delitem 4177,1; //Dryad_Card
-			delitem 4259,1; //Wooden_Golem_Card
-			delitem 4212,1; //Bon_Gun_Card
-			delitem 4073,1; //Pirate_Skel_Card
-			delitem 4112,1; //Marduk_Card
-			delitem 4081,1; //Hode_Card
-			delitem 4251,1; //Elder_Card
-			delitem 4166,1; //Nightmare_Terror_Card
-			delitem 7511,1000; //Rune_Of_Darkness
-			delitem 7563,1000; //Bloody_Rune
+			delitem Sageworm_Card,1;
+			delitem Argiope_Card,1;
+			delitem Dryad_Card,1;
+			delitem Wooden_Golem_Card,1;
+			delitem Bon_Gun_Card,1;
+			delitem Pirate_Skel_Card,1;
+			delitem Marduk_Card,1;
+			delitem Hode_Card,1;
+			delitem Elder_Card,1;
+			delitem Nightmare_Terror_Card,1;
+			delitem Rune_Of_Darkness,1000;
+			delitem Bloody_Rune,1000;
 			Zeny -= 10000000;
 			moza_valkylie = 3;
 			mes "[Ghenirhemin]";
@@ -396,7 +407,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 		mes "I feel that you will be able to fully recreate this Valkyre's Helm";
 		mes "as well as use it to its full potential.";
 		next;
-		if (select("Sure.:No, thanks.") == 1) {
+		if (select("Sure.", "No, thanks.") == 1) {
 			mes "[Ghenirhemin]";
 			mes "You are an ambitious young man as I expected.";
 			mes "It is surely a great advantage.";
@@ -477,7 +488,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 		mes "It may or may not be interesting to you,";
 		mes "but I gurantee that it will never bore you in either way.";
 		next;
-		if (select("Listen.:Don't listen.") == 1) {
+		if (select("Listen.", "Don't listen.") == 1) {
 			mes "[Ghenirhemin]";
 			mes "Good, let me introduce myself.";
 			mes "My name is Ghenirhemin.";
@@ -563,19 +574,18 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 	mes "when you show me your money. Hahahaha!";
 	close;
 }
-// Hahoe Mask / Mythical Lion Mask / Bride Mask
-//============================================================
+//== Hahoe Mask / Mythical Lion Mask / Bride Mask ==========
 payon,135,320,3	script	Chungwolmang	4W_M_01,{
 	if (moza_tal == 2) {
-		if (countitem(7015) > 19 && countitem(952) > 99 && countitem(1028) > 99) {
-			//Hahoe_Mask: Bookclip_In_Memory, Cactus_Needle, Wild_Boar's_Mane
+		if (countitem(Bookclip_In_Memory) > 19 && countitem(Cactus_Needle) > 99 && countitem(Wild_Boars_Mane) > 99) {
+			//Hahoe_Mask: Bookclip_In_Memory, Cactus_Needle, Wild_Boars_Mane
 			callsub S_MakeMask,5176,7015,20,952,100,1028,100,0,0;
 		}
-		if (countitem(1048) > 499 && countitem(1053) > 1 && countitem(980) > 0) {
+		if (countitem(Slender_Snake) > 499 && countitem(Tooth_Of_Ancient_Fish) > 1 && countitem(Orange_Dyestuffs) > 0) {
 			//Guardian_Lion_Mask: Slender_Snake, Tooth_Of_Ancient_Fishm Orange_Dyestuffs
 			callsub S_MakeMask,5177,1048,500,1053,2,980,1,0,0;
 		}
-		if (countitem(1049) > 19 && countitem(1059) > 499 && countitem(1054) > 1 && countitem(1024) > 99) {
+		if (countitem(Skirt_Of_Virgin) > 19 && countitem(Transparent_Cloth) > 499 && countitem(Lip_Of_Ancient_Fish) > 1 && countitem(Chinese_Ink) > 99) {
 			//Bride_Mask: Skirt_Of_Virgin, Transparent_Cloth, Lip_Of_Ancient_Fish, Chinese_Ink
 			callsub S_MakeMask,5169,1049,20,1059,500,1054,2,1024,100;
 		}
@@ -584,7 +594,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "You'd better hurry because I can't wait so long!";
 		mes "Wait, what mask did you ask me to make anyways?";
 		next;
-		switch(select("Hahoe Mask:Bride Mask:Mythical Lion Mask")) {
+		switch(select("Hahoe Mask", "Bride Mask", "Mythical Lion Mask")) {
 		case 1:
 			mes "[Chungwolmang]";
 			mes "Oh, yes, you want Hahoe Mask.";
@@ -610,7 +620,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "Bring the exact amount of materials, then I will give you the mask right away.";
 		close;
 	}
-	if (countitem(7201) > 499) && (countitem(7200) > 9 && moza_tal == 1) {
+	if (countitem(Log) > 499) && (countitem(Flexible_String) > 9 && moza_tal == 1) {
 		mes "[Chungwolmang]";
 		mes "Ah, Four Leaf Clover must bring me luck";
 		mes "because you came back faster than I thought! Wow...";
@@ -642,7 +652,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "Hahoe Mask, Bride Mask and Mythical Lion Mask.";
 		mes "Which one whould you like to have? Pick one.";
 		next;
-		switch(select("Hahoe Mask:Bride Mask:Mythical Lion Mask")) {
+		switch(select("Hahoe Mask", "Bride Mask", "Mythical Lion Mask")) {
 		case 1:
 			mes "[Chungwolmang]";
 			mes "Great, you want Hahoe Mask, eh? That's easy!";
@@ -668,8 +678,8 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 			mes "Bring the exact amount of materials, then I will give you the mask right away.";
 			break;
 		}
-		delitem 7201,500; //Log
-		delitem 7200,10; //Flexible_String
+		delitem Log,500;
+		delitem Flexible_String,10;
 		moza_tal = 2;
 		next;
 		mes "[Chungwolmang]";
@@ -698,7 +708,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "Thanks in advance.";
 		close;
 	}
-	if (countitem(706) > 0) {
+	if (countitem(Four_Leaf_Clover) > 0) {
 		mes "[Chungwolmang]";
 		mes "Ah...! Hey! I can tell something unique about you.";
 		mes "Do you have a Four Leaf Clover by any chance?";
@@ -710,7 +720,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "I will be able to pay back your favor sooner or later.";
 		mes "So, can I take it?";
 		next;
-		if (select("Sure.:No, you can't.") == 1) {
+		if (select("Sure.", "No, you can't.") == 1) {
 			mes "[Chungwolmang]";
 			mes "Oh! Thank you so much!";
 			mes "Muhahahahahaha! Now I will become a lucky guy!";
@@ -732,7 +742,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 			mes "Will you be so kind to bring them to me?";
 			mes "In fact, I can't pay you back unless I have them.";
 			next;
-			delitem 706,1; //Four_Leaf_Clover
+			delitem Four_Leaf_Clover,1;
 			moza_tal = 1;
 			mes "[Chungwolmang]";
 			mes "You want me to pay you back, don't you?";
@@ -764,7 +774,7 @@ S_MakeMask:
 	mes "to make a "+getitemname(getarg(0))+". Excellent.";
 	mes "Please give me the materials. I will make the mask right away.";
 	next;
-	if (select("Give him the items.:Don't give him the items.") == 1) {
+	if (select("Give him the items.", "Don't give him the items.") == 1) {
 		mes "[Chungwolmang]";
 		mes "Great, I like your unhesitating attitude!";
 		mes "Alright then, I will make the mask as quickly as I can!";
@@ -806,10 +816,9 @@ S_MakeMask:
 }
 
 
-// Magistrate Hat / Ayam
-//============================================================
+//== Magistrate Hat / Ayam =================================
 payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
-	if (moza_korea == 2 && countitem(954) > 299 && countitem(733) > 4 && countitem(975) > 0 && countitem(7166) > 49) {
+	if (moza_korea == 2 && countitem(Shining_Scales) > 299 && countitem(Crystal_Jewel___) > 4 && countitem(Scarlet_Dyestuffs) > 0 && countitem(Soft_Silk_Cloth) > 49) {
 		mes "[Han Garam]";
 		mes "You came back faster than I expected.";
 		mes "Great, I am also highly motivated for the fact that";
@@ -820,7 +829,7 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "Okay then, I will make the hat as quickly as I can.";
 		mes "Now, hand me all the materials.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Han Garam]";
 			mes "Excellent! I don't have to be mediumized";
 			mes "by the Dragon God for this work";
@@ -849,12 +858,12 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 			mes "Please take this Ayam.";
 			mes "As I promised, this is my gift for you.";
 			next;
-			delitem 954,300; //Shining_Scales
-			delitem 733,5; //Crystal_Jewel___
-			delitem 975,1; //Scarlet_Dyestuffs
-			delitem 7166,50; //Soft_Silk_Cloth
+			delitem Shining_Scales,300;
+			delitem Crystal_Jewel___,5;
+			delitem Scarlet_Dyestuffs,1;
+			delitem Soft_Silk_Cloth,50;
 			moza_korea = 0;
-			getitem 5174,1; //A_yam
+			getitem Ayam,1; //A_yam
 			mes "[Han Garam]";
 			mes "Now I need to meet with the Dragon God again,";
 			mes "if I want to make another hat...umm...";
@@ -871,7 +880,7 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "Can't you just give them to me already?";
 		close;
 	}
-	else if (moza_korea == 2 && countitem(954) > 299 && countitem(733) > 4 && countitem(983) > 0 && countitem(2221) > 0) {
+	else if (moza_korea == 2 && countitem(Shining_Scales) > 299 && countitem(Crystal_Jewel___) > 4 && countitem(Black_Dyestuffs) > 0 && countitem(Hat_) > 0) {
 		mes "[Han Garam]";
 		mes "You came back faster than I expected.";
 		mes "Great, I am also highly motivated for the fact that";
@@ -882,7 +891,7 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "Okay then, I will make the hat as quickly as I can.";
 		mes "Now, hand me all the materials.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Han Garam]";
 			mes "Excellent! I don't have to be mediumized";
 			mes "by the Dragon God for this work";
@@ -911,12 +920,12 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 			mes "Please take this Magistrate Hat.";
 			mes "As I promised, this is my gift for you.";
 			next;
-			delitem 954,300; //Shining_Scales
-			delitem 733,5; //Crystal_Jewel___
-			delitem 983,1; //Black_Dyestuffs
-			delitem 2221,1; //Hat_
+			delitem Shining_Scales,300;
+			delitem Crystal_Jewel___,5;
+			delitem Black_Dyestuffs,1;
+			delitem Hat_,1;
 			moza_korea = 0;
-			getitem 5173,1; //Judge_Hat
+			getitem Satto_Hat,1; //Judge_Hat
 			mes "[Han Garam]";
 			mes "Now I need to meet with the Dragon God again,";
 			mes "if I want to make another hat...umm...";
@@ -1027,7 +1036,7 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "Okay then, I will be waiting you to come back.";
 		close;
 	}
-	if (countitem(7446) > 6 && countitem(7448) > 6 && countitem(7445) > 6 && countitem(7447) > 6) {
+	if (countitem(Dragonball_Blue) > 6 && countitem(Dragonball_Yellow) > 6 && countitem(Dragonball_Green) > 6 && countitem(Dragonball_Red) > 6) {
 		mes "[Han Garam]";
 		mes "My name is Han Garam,";
 		mes "and I am a proud heir of a renown family... eh?";
@@ -1063,17 +1072,17 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "[Han Garam]";
 		mes "Please? I assure you that I can make traditional hats.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Han Garam]";
 			mes "Wow, wow, thank you so much!";
 			mes "As I promised, I will make you a hat in return.";
 			mes "But, can you wait for a while?";
 			mes "To make hat, I have to contact the Dragon God first.";
 			next;
-			delitem 7446,7; //Blue_Orb
-			delitem 7448,7; //Yellow_Orb
-			delitem 7445,7; //Green_Orb
-			delitem 7447,7; //Red_Orb
+			delitem Dragonball_Blue,7; //Blue_Orb
+			delitem Dragonball_Yellow,7; //Yellow_Orb
+			delitem Dragonball_Green,7; //Green_Orb
+			delitem Dragonball_Red,7; //Red_Orb
 			moza_korea = 1;
 			mes "[Han Garam]";
 			mes "...Okay, give me some time to focus.";

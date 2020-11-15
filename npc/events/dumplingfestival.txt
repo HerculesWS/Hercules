@@ -1,16 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lupus
+//= Copyright (C) Massdriller
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Imitation of Dumpling Festival
-//===== By ===================================================
-//= Massdriller
-//===== Version ==============================================
-//= 1.01
-//===== Description ==========================================
+//================= Description ===========================================
 //= A complete redering of the Dumpling Festival.
-//===== Comments =============================================
-//= Ver 1.0- Duplicate of MRO's Dumpling Event
-//= 1.01 fixed bugs [Lupus]
-//============================================================
-  
+//================= Current Version =======================================
+//= 1.01
+//=========================================================================
+
 payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 
 	mes "[Exorcist Master Fahae]";
@@ -45,8 +67,8 @@ payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 	mes "Each costs "+ .@price +"z.";
 	mes "(Type in 0 to cancel)";
 	next;
-	input @input;
-	if (@input == 0)
+	input(@input);
+	if (@input <= 0)
 		close;
 	if (@input > 5) {
 		mes "[Exorcist Master Fahae]";
@@ -64,9 +86,8 @@ payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 	mes "Here you go, I hope you may succeed in my quest.";
 	close;
 }
-  
-// Monsters
-//============================================================
+
+//== Monsters ==============================================
 gef_fild00,0,0,0,0	monster	Dumpling	1520,20,60000,66000
 gef_fild07,0,0,0,0	monster	Dumpling	1520,20,60000,66000
 gef_fild04,0,0,0,0	monster	Dumpling	1520,20,60000,66000

@@ -1,17 +1,37 @@
-//===== Hercules Script ======================================
-//= Comodo Guides
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Comodo Guides (Renewal)
+//================= Description ===========================================
 //= Guides for the city of Comodo.
-//===== Additional Comments: =================================
-//= 1.0 First version, Renewal guide.
-//= 1.1 Fixed and optimized. [Euphy]
-//= 1.2 Navigation system update. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 	mes "[Comodo Guide]";
@@ -21,11 +41,11 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 	F_Navi("[Comodo Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel:About ^8B4513Comodo^000000")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel", "About ^8B4513Comodo^000000")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Tavern ]:[ Casino ]:[ Weapon & Armor Shop ]:[ Tool Shop ]:[ Campsite ]:[ Souvenir Vendor ]:[ East Cave Mao ]:[ West Cave Karu ]:[ North Cave Ruanda ]:[ Hula Dance Stage ]:[ Kafra Co. Western Branch ]:Previous Menu")) {
+				switch(select("[ Tavern ]", "[ Casino ]", "[ Weapon & Armor Shop ]", "[ Tool Shop ]", "[ Campsite ]", "[ Souvenir Vendor ]", "[ East Cave Mao ]", "[ West Cave Karu ]", "[ North Cave Ruanda ]", "[ Hula Dance Stage ]", "[ Kafra Co. Western Branch ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Tavern","comodo,161,315","^FF0000");
 					viewpoint 1,166,298,0,0xFF0000;
@@ -94,7 +114,7 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Chief's House ]:[ Bor Robin ]:[ Kafra Employee ]:[ Roaming Bard ]:Previous Menu")) {
+				switch(select("[ Chief's House ]", "[ Bor Robin ]", "[ Kafra Employee ]", "[ Roaming Bard ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Chief's House","comodo,115,290","^6495ED");
 					viewpoint 1,114,294,11,0x6495ED;

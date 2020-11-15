@@ -1,23 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Team
+//= Copyright (C) eAthena Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ayothaya Dungeon Warp Script
-//===== By: ==================================================
-//= rAthena Team (1.0)
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Ayothaya Dungeon
-//===== Additional Comments: =================================
-//= 1.1 Rescritped to Aegis 10.3 standards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//================= Additional Comments ===================================
+//= Should some warps be disabled due to Dungeon Quest?
+//=========================================================================
 
 ayo_fild02,285,149,0	warp	ayo_dun1-1	1,1,ayo_dun01,275,18
 ayo_dun01,274,14,0	warp	ayo_dun1-2	1,1,ayo_fild02,279,150
 ayo_dun02,24,22,0	warp	ayo_dun2-1	1,1,ayo_dun01,24,279
 ayo_dun02,276,22,0	warp	ayo_dun2-2	1,1,ayo_dun01,24,279
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 Splitted 2 files [Lupus]
-//= Should some warps be disabled due to Dungeon Quest?
-//============================================================

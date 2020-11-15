@@ -1,11 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) akrus
+//= Copyright (C) Samuray22
+//= Copyright (C) Lupus
+//= Copyright (C) Darkchild
+//= Copyright (C) kobra_k88
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Juno
-//===== By: ==================================================
-//= rAthena Dev Team; L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.0a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Metto Quest:
 //= - Not really sure exaclty what it's for. :P
 //= - Variable in use: metto_q (max 9)
@@ -17,24 +45,11 @@
 //= - Part 1: Found in Quests_Comodo.txt
 //= - Part 3: Found in Doomed_Swords.txt
 //= - Variable in use dmdswrd_Q (Max 45)
-//===== Additional Comments: =================================
-//= 1.1 Re-did the text and re-organized the script.  Corrected some items. [kobra_k88]
-//= 1.2 Added part to Bro's for alchemist quest [Darkchild]
-//= 1.3 fixed that part of Alch Job Quest. [Lupus]
-//= 1.4 Fixed exploit [Lupus]
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Merged metto_quest.txt into Juno quest file.
-//=     Added the Juno portion of the Doomed Swords quest.
-//= 1.6 Fixed various errors in the Bajin NPC. [L0ne_W0lf]
-//= 1.7 Changed ALCH_Q check and set to corrispond to new alchemist job quest. [L0ne_W0lf]
-//= 1.8 Fixed metto_q never reaching 2. Made some names more unique. [L0ne_W0lf]
-//= 1.9 Fixed Missing Variables in Metto quest. (bugreport:473) [Samuray22]
-//= 2.0 Added missing checkweights. [L0ne_W0lf]
-//= 2.0a Fixed several typos (bugreport:1786) [akrus]
-//============================================================
+//================= Current Version =======================================
+//= 2.0a
+//=========================================================================
 
-// Metto Quest :: yuno_ryusei
-//============================================================
+//== Metto Quest :: yuno_ryusei ============================
 yuno_in03,26,39,3	script	Metto#juno	4_M_SEAMAN,{
 	mes "[Metto]";
 	if (metto_q == 0) {
@@ -166,7 +181,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 		mes "[Wagan]";
 		mes "I wish there was a way that we could stop him from wrecking it for the rest of us. Some brave, daring soul should be able to do something...";
 		next;
-		if (select("Leave it to me.:I wish your village luck in doing so.") == 1) {
+		if (select("Leave it to me.", "I wish your village luck in doing so.") == 1) {
 			if (Class == Job_Novice) {
 				mes "[Wagan]";
 				mes "Hmm...";
@@ -187,7 +202,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 			mes "[Wagan]";
 			mes "But how do you plan to go about doing this? I'm guessing it's harder than it sounds...";
 			next;
-			if (select("Of course I have a plan.:I guess I need a plan.") == 1) {
+			if (select("Of course I have a plan.", "I guess I need a plan.") == 1) {
 				mes "[Wagan]";
 				mes "I have faith in you. You should know that he believes in fate. Use that to your advantage.";
 				next;
@@ -233,7 +248,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 			}
 			metto_q = 9;
 			mes "I wish you luck in your future endeavors...";
-			getitem 715,10; //Yellow_Gemstone
+			getitem Yellow_Gemstone,10;
 			close;
 		}
 		if (MaxWeight - Weight < 150) {
@@ -242,7 +257,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 		}
 		metto_q = 9;
 		mes "I wish you luck in your future endeavors...";
-		getitem 717,5; //Blue_Gemstone
+		getitem Blue_Gemstone,5;
 		close;
 	}
 	else if (metto_q == 9) {
@@ -260,7 +275,7 @@ yuno_in01,17,95,5	script	Stangckle#juno	4W_M_03,{
 	if (metto_q == 2) {
 		mes "What can I do for you? My colleague Metto is coming here soon, so I don't have much time. So what did you say you needed?";
 		next;
-		if (select("I'm here to stop your research.:I don't need anything.") == 1) {
+		if (select("I'm here to stop your research.", "I don't need anything.") == 1) {
 			metto_q = 3;
 			mes "[Stangckle]";
 			mes "...";
@@ -325,7 +340,7 @@ yuno_in01,19,183,5	script	Kato#juno	1_M_JOBTESTER,{
 		mes "[Kato]";
 		mes "Of course, my research is private and confidential. But is there anything I can do for you?";
 		next;
-		if (select("I want to stop you from making a mistake.:Just saying hello.") == 1) {
+		if (select("I want to stop you from making a mistake.", "Just saying hello.") == 1) {
 			metto_q = 5;
 			mes "[Kato]";
 			mes "What? Metto said, my Great Z is inferior to Stangckles research?!";
@@ -376,7 +391,7 @@ yuno_in03,178,43,0	script	CiCi#juno	2_M_MOLGENSTEIN,{
 		mes "[CiCi]";
 		mes "Well, I think I've bragged a little too much now, what can I do for you?";
 		next;
-		switch(select("I want to warn you.:Nothing, just saying Hi.")) {
+		switch(select("I want to warn you.", "Nothing, just saying Hi.")) {
 		case 1:
 			metto_q = 7;
 			mes "[CiCi]";
@@ -420,10 +435,9 @@ yuno_in03,178,43,0	script	CiCi#juno	2_M_MOLGENSTEIN,{
 	}
 }
 
-// Alchemist Brothers Quest :: yuno_ryusei
-//============================================================
+//== Alchemist Brothers Quest :: yuno_ryusei ===============
 yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -431,7 +445,7 @@ yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
 		mes "- after you loose some weight. -";
 		close;
 	}
-	if (countitem(974) > 0 && countitem(612) > 4 && countitem(1003) > 4 && countitem(7068) > 4 && countitem(7043) > 4 && countitem(757) > 2 && countitem(756) > 2 && Zeny > 2000) {
+	if (countitem(Mixture) > 0 && countitem(Portable_Furnace) > 4 && countitem(Coal) > 4 && countitem(Burn_Tree) > 4 && countitem(Fine_Sand) > 4 && countitem(Elunium_Stone) > 2 && countitem(Oridecon_Stone) > 2 && Zeny > 2000) {
 		if (ALCH_Q == 23) ALCH_Q = 24;
 		.@kyulkwa = rand(1,10);
 		mes "[Bain]";
@@ -492,7 +506,7 @@ yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
 		mes "monsters that are much too";
 		mes "powerful. How will I continue my research?";
 		next;
-		if (select("I'll get them for you.:Good luck.") == 1) {
+		if (select("I'll get them for you.", "Good luck.") == 1) {
 			bros_q = 1;
 			mes "[Bain]";
 			mes "Really? Such benevolence is rare";
@@ -522,13 +536,13 @@ yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
 	}
 
 S_DelItems:
-	delitem 974,1; //Mixture
-	delitem 612,5; //Portable_Furnace
-	delitem 1003,5; //Coal
-	delitem 7068,5; //Burn_Tree
-	delitem 7043,5; //Fine_Sand
-	delitem 757,3; //Elunium_Stone
-	delitem 756,3; //Oridecon_Stone
+	delitem Mixture,1;
+	delitem Portable_Furnace,5;
+	delitem Coal,5;
+	delitem Burn_Tree,5;
+	delitem Fine_Sand,5;
+	delitem Elunium_Stone,3;
+	delitem Oridecon_Stone,3;
 	Zeny -= 2000;
 	getitem getarg(0),getarg(1); //Gold
 	mes "[Bain]";
@@ -555,7 +569,7 @@ S_DelItems:
 }
 
 yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -563,7 +577,7 @@ yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
 		mes "- after you loose some weight. -";
 		close;
 	}
-	if (countitem(974) > 0 && countitem(612) > 4 && countitem(1003) > 4 && countitem(7068) > 4 && countitem(7043) > 4 && countitem(757) > 2 && countitem(756) > 2 && Zeny > 2000) {
+	if (countitem(Mixture) > 0 && countitem(Portable_Furnace) > 4 && countitem(Coal) > 4 && countitem(Burn_Tree) > 4 && countitem(Fine_Sand) > 4 && countitem(Elunium_Stone) > 2 && countitem(Oridecon_Stone) > 2 && Zeny > 2000) {
 		if (ALCH_Q == 23) ALCH_Q = 24;
 		.@kyulkwa = rand(1,10);
 		mes "[Bajin]";
@@ -625,7 +639,7 @@ yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
 		mes "monsters that are much too";
 		mes "powerful. How will I continue my research?";
 		next;
-		if (select("I'll get them for you.:Good luck.") == 1) {
+		if (select("I'll get them for you.", "Good luck.") == 1) {
 			bros_q = 1;
 			mes "[Bajin]";
 			mes "Oh, you are too kind.";
@@ -650,13 +664,13 @@ yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
 	}
 
 S_DelItems:
-	delitem 974,1; //Mixture
-	delitem 612,5; //Portable_Furnace
-	delitem 1003,5; //Coal
-	delitem 7068,5; //Burn_Tree
-	delitem 7043,5; //Fine_Sand
-	delitem 757,3; //Elunium_Stone
-	delitem 756,3; //Oridecon_Stone
+	delitem Mixture,1;
+	delitem Portable_Furnace,5;
+	delitem Coal,5;
+	delitem Burn_Tree,5;
+	delitem Fine_Sand,5;
+	delitem Elunium_Stone,3;
+	delitem Oridecon_Stone,3;
 	Zeny -= 2000;
 	getitem getarg(0),getarg(1); //Gold
 	mes "[Bajin]";
@@ -682,8 +696,7 @@ S_DelItems:
 	close;
 }
 
-// Doomed Swords - Juno Portion :: matnani_yuno
-//============================================================
+//== Doomed Swords - Juno Portion :: matnani_yuno ==========
 yuno,157,87,4	script	A Citizen of Juno#juno	8_F,{
 	mes "[Shalima]";
 	mes "When you go north from Al De Baran, you will arrive at 'Elmeth Plateau,' a place covered with molten rock.";
@@ -736,7 +749,7 @@ yuno,261,99,4	script	Sage Yklah#juno	4_M_JOB_WIZARD,{
 			mes "[Yklah]";
 			mes "Who are you...? Who are you carrying this legendary item for?";
 			next;
-			switch(select("(Show him the slate):I'm a genius!:I'm a GM!")) {
+			switch(select("(Show him the slate)", "I'm a genius!", "I'm a GM!")) {
 			case 1:
 				mes "[Yklah]";
 				mes "...I can't believe my eyes! Only a chosen few can possess the Stamp of Muriniel...";
@@ -787,7 +800,7 @@ yuno,261,99,4	script	Sage Yklah#juno	4_M_JOB_WIZARD,{
 				close;
 			}
 		case 24:
-			if (countitem(7030) > 2 && countitem(913) > 9 && countitem(7032) > 0) {
+			if (countitem(Claw_Of_Desert_Wolf) > 2 && countitem(Tooth_Of_Bat) > 9 && countitem(Piece_Of_Egg_Shell) > 0) {
 				mes "[Yklah]";
 				mes "Hmm! Good job, you brought all of the items. Try inserting them in the grooves.";
 				next;
@@ -796,9 +809,9 @@ yuno,261,99,4	script	Sage Yklah#juno	4_M_JOB_WIZARD,{
 				next;
 				mes "^3355FFYou inserted items";
 				mes "in the grooves .^000000";
-				delitem 7030,3; //Claw_Of_Desert_Wolf
-				delitem 913,10; //Tooth_Of_Bat
-				delitem 7032,1; //Piece_Of_Egg_Shell
+				delitem Claw_Of_Desert_Wolf,3;
+				delitem Tooth_Of_Bat,10;
+				delitem Piece_Of_Egg_Shell,1;
 				next;
 				mes "^3355FF*Crank Crank*^000000";
 				mes "^3355FFYou hear a strange sound come from inside the statue.^000000";
@@ -972,13 +985,13 @@ yuno,305,207,4	script	Sage Syklah#juno	4_M_JOB_WIZARD,{
 			dmdswrd_Q = 26;
 			close;
 		case 26:
-			if (countitem(7049) > 4 && countitem(953) > 0 && countitem(507) > 19) {
+			if (countitem(Stone) > 4 && countitem(Stone_Heart) > 0 && countitem(Red_Herb) > 19) {
 				mes "[Syklah]";
 				mes "Hahaha...!";
 				mes "So you've already gathered the items I've asked for. Good, good. Let's get started...";
-				delitem 7049,5; //Stone
-				delitem 953,1; //Stone_Heart
-				delitem 507,20; //Red_Herb
+				delitem Stone,5;
+				delitem Stone_Heart,1;
+				delitem Red_Herb,20;
 				next;
 				mes "^3355FFSage Syklah grinded the stones and stone heart and molded them into a strange shape.^000000";
 				next;
@@ -1098,16 +1111,16 @@ yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 			dmdswrd_Q = 28;
 			close;
 		case 28:
-			if (countitem(1002) > 1 && countitem(1026) > 9 && countitem(957) > 4) {
+			if (countitem(Iron_Ore) > 1 && countitem(Acorn) > 9 && countitem(Decayed_Nail) > 4) {
 				mes "[Esklah]";
 				mes "Let's see.";
 				mes "2 Iron Ore...";
 				mes "10 Acorn...";
 				mes "5 Decayed Nail...";
 				mes "Good, that's everything!";
-				delitem 1002,2; //Iron_Ore
-				delitem 1026,10; //Acorn
-				delitem 957,5; //Decayed_Nail
+				delitem Iron_Ore,2;
+				delitem Acorn,10;
+				delitem Decayed_Nail,5;
 				next;
 				mes "[Esklah]";
 				mes "Good work. Now, while I make the body of the compass, you can go and bring me the rest of the items I'll need.";
@@ -1135,7 +1148,7 @@ yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 			mes "^3355FF5 Decayed Nail^000000.";
 			close;
 		case 29:
-			if (countitem(7054) > 1 && countitem(1010) > 0) {
+			if (countitem(Brigan) > 1 && countitem(Phracon) > 0) {
 				mes "[Esklah]";
 				mes "Now...";
 				mes "Show me";
@@ -1143,8 +1156,8 @@ yuno,213,298,4	script	Sage Esklah#juno	4_M_JOB_WIZARD,{
 				mes "That's 2 Brigan and...";
 				mes "1 Phracon. Hmm. Very good.";
 				mes "Now let me get to work.";
-				delitem 7054,2; //Brigan
-				delitem 1010,1; //Phracon
+				delitem Brigan,2;
+				delitem Phracon,1;
 				next;
 				mes "[Esklah]";
 				mes "Hmm...";

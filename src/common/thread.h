@@ -1,117 +1,156 @@
-// Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) rAthena Project (www.rathena.org)
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef COMMON_THREAD_H
 #define COMMON_THREAD_H
 
-#include "../common/cbasetypes.h"
+#include "common/hercules.h"
 
-typedef struct rAthread rAthread;
-typedef void* (*rAthreadProc)(void*);
+/** @file
+ * Basic Threading abstraction (for pthread / win32 based systems).
+ */
 
-typedef enum RATHREAD_PRIO {
-	RAT_PRIO_LOW = 0,
-	RAT_PRIO_NORMAL,
-	RAT_PRIO_HIGH
-} RATHREAD_PRIO;
+/* Opaque Types */
+struct thread_handle;                ///< Thread handle.
+typedef void *(*threadFunc)(void *); ///< Thread entry point function.
 
+/* Enums */
+
+/// Thread priority
+enum thread_priority {
+	THREADPRIO_LOW = 0,
+	THREADPRIO_NORMAL,
+	THREADPRIO_HIGH
+};
+
+/// The thread interface
+struct thread_interface {
+	/// Interface initialization.
+	void (*init) (void);
+
+	/// Interface finalization.
+	void (*final) (void);
+
+	/**
+	 * Creates a new Thread.
+	 *
+	 * @param enty_point Thread's entry point.
+	 * @param param      General purpose parameter, would be given as
+	 *                   parameter to the thread's entry point.
+	 *
+	 * @return The created thread object.
+	 * @retval NULL in vase of failure.
+	 */
+	struct thread_handle *(*create) (threadFunc entry_point, void *param);
+
+	/**
+	 * Creates a new Thread (with more creation options).
+	 *
+	 * @param enty_point Thread's entry point.
+	 * @param param      General purpose parameter, would be given as
+	 *                   parameter to the thread's entry point.
+	 * @param stack_size Stack Size in bytes.
+	 * @param prio       Priority of the Thread in the OS scheduler.
+	 *
+	 * @return The created thread object.
+	 * @retval NULL in case of failure.
+	 */
+	struct thread_handle *(*create_opt) (threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio);
+
+	/**
+	 * Destroys the given Thread immediately.
+	 *
+	 * @remark
+	 *   The Handle gets invalid after call! don't use it afterwards.
+	 *
+	 * @param handle The thread to destroy.
+	 */
+	void (*destroy) (struct thread_handle *handle);
+
+	/**
+	 * Returns the thread handle of the thread calling this function.
+	 *
+	 * @remark
+	 *   This won't work in the program's main thread.
+	 *
+	 * @warning
+	 *   The underlying implementation might not perform very well, cache
+	 *   the value received!
+	 *
+	 * @return the thread handle.
+	 * @retval NULL in case of failure.
+	 */
+	struct thread_handle *(*self) (void);
+
+	/**
+	 * Returns own thread id (TID).
+	 *
+	 * @remark
+	 *   This is an unique identifier for the calling thread, and depends
+	 *   on platform/ compiler, and may not be the systems Thread ID!
+	 *
+	 * @return the thread ID.
+	 * @retval -1 in case of failure.
+	 */
+	int (*get_tid) (void);
+
+	/**
+	 * Waits for the given thread to terminate.
+	 *
+	 * @param[in]  handle        The thread to wait (join) for.
+	 * @param[out] out_exit_code Pointer to return the exit code of the
+	 *                           given thread after termination (optional).
+	 *
+	 * @retval true if the given thread has been terminated.
+	 */
+	bool (*wait) (struct thread_handle *handle, void **out_exit_code);
+
+	/**
+	 * Sets the given priority in the OS scheduler.
+	 *
+	 * @param handle The thread to set the priority for.
+	 * @param prio   The priority to set (@see enum thread_priority).
+	 */
+	void (*prio_set) (struct thread_handle *handle, enum thread_priority prio);
+
+	/**
+	 * Gets the current priority of the given thread.
+	 *
+	 * @param handle The thread to get the priority for.
+	 */
+	enum thread_priority (*prio_get) (struct thread_handle *handle);
+
+	/**
+	 * Tells the OS scheduler to yield the execution of the calling thread.
+	 *
+	 * @remark
+	 *   This will not "pause" the thread, it just allows the OS to spend
+	 *   the remaining time of the slice to another thread.
+	 */
+	void (*yield) (void);
+};
 
 #ifdef HERCULES_CORE
-/**
- * Creates a new Thread
- *
- * @param entyPoint  - entryProc,
- * @param param - general purpose parameter, would be given as parameter to the thread's entry point.
- *
- * @return not NULL if success
- */
-rAthread *rathread_create(rAthreadProc entryPoint, void *param);
-
-
-/**
- * Creates a new Thread (with more creation options)
- *
- * @param entyPoint  - entryProc,
- * @param param - general purpose parameter, would be given as parameter to the thread's entry point
- * @param szStack - stack Size in bytes
- * @param prio - Priority of the Thread @ OS Scheduler..
- *
- * @return not NULL if success
- */
-rAthread *rathread_createEx(rAthreadProc entryPoint, void *param, size_t szStack, RATHREAD_PRIO prio);
-
-
-/**
- * Destroys the given Thread immediately
- *
- * @note The Handle gets invalid after call! don't use it afterwards.
- *
- * @param handle - thread to destroy.
- */
-void rathread_destroy(rAthread *handle);
-
-
-/**
- * Returns the thread handle of the thread calling this function
- *
- * @note this wont work @ programs main thread
- * @note the underlying implementation might not perform very well, cache the value received!
- *
- * @return not NULL if success
- */
-rAthread *rathread_self(void);
-
-
-/**
- * Returns own thread id (TID)
- *
- * @note this is an unique identifier for the calling thread, and
- *        depends on platform/ compiler, and may not be the systems Thread ID!
- *
- * @return -1 when fails, otherwise >= 0
- */
-int rathread_get_tid(void);
-
-
-/**
- * Waits for the given thread to terminate
- *
- * @param handle - thread to wait (join) for
- * @param out_Exitcode - [OPTIONAL] - if given => Exitcode (value) of the given thread - if it's terminated
- *
- * @return true - if the given thread has been terminated.
- */
-bool rathread_wait(rAthread *handle, void **out_exitCode);
-
-
-/**
- * Sets the given PRIORITY @ OS Task Scheduler
- *
- * @param handle - thread to set prio for
- * @param rio - the priority (RAT_PRIO_LOW ... )
- */
-void rathread_prio_set(rAthread *handle, RATHREAD_PRIO prio);
-
-
-/**
- * Gets the current Prio of the given thread
- *
- * @param handle - the thread to get the prio for.
- */
-RATHREAD_PRIO rathread_prio_get(rAthread *handle);
-
-
-/**
- * Tells the OS scheduler to yield the execution of the calling thread
- *
- * @note: this will not "pause" the thread,
- *        it just allows the OS to spend the remaining time
- *        of the slice to another thread.
- */
-void rathread_yield(void);
-
-void rathread_init(void);
-void rathread_final(void);
+void thread_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct thread_interface *thread; ///< Pointer to the thread interface.
 
 #endif /* COMMON_THREAD_H */

@@ -1,23 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Flaid
+//= Copyright (C) SuperHulk
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mora Village
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Mora Town Script
-//===== Additional Comments: =================================
-//= 1.0 First version. [SuperHulk]
-//= 1.1 Translations to English. [Flaid]
-//= 1.1a Standardized. [Euphy]
-//= 1.2 Added new NPCs. [Flaid]
-//= 1.3 Replaced with full iRO town NPCs. [Euphy]
-//= 1.4 Updated to match the official scripts. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Set 1 :: mora_resident
-//============================================================
+//== Set 1 :: mora_resident ================================
 mora,52,138,5	script	Mungmung#p	4_M_RAFLE_GR,{
 	mes "[Mungmung]";
 	mes "I'm not the innkeeper!";
@@ -31,7 +48,7 @@ mora,160,123,3	script	Nemnem#p	4_M_RAFLE_OLD,{
 	mes "since the crevice appeared in Bifrost.";
 	mes "Are you responsible for it, young one?";
 	next;
-	switch(select("Of course I am!:That's an unfair accusation!")) {
+	switch(select("Of course I am!", "That's an unfair accusation!")) {
 	case 1:
 		mes "[Nemnem]";
 		mes "Bra~vo!";
@@ -81,8 +98,8 @@ mora,105,100,1	script	Rangrang#p	4_F_RAFLE_PK,{
 }
 
 /*
-// Disabled due to overlapping with RangRang,
-// and is not clickable on official servers.
+// Disabled due to overlapping with RangRang, and is not clickable on official
+// servers.
 mora,105,100,1	script	Gurgur#p	4_M_RAFLE_GR,{
       mes "[Gurgur]";
       mes "He's been crying, falling asleep,";
@@ -208,8 +225,7 @@ mora,108,182,5	script	Worker#mo4	4_M_RAFLE_GR,{
 	close;
 }
 
-// Set 2 :: npc
-//============================================================
+//== Set 2 :: npc ==========================================
 mora,122,97,6	script	Relaxing Raffle#ep14_1	4_M_RAFLE_OLD,{
 	mes "[Relaxing Rafflesia]";
 	mes "The public bath in the center of the village is a symbol of Mora Village.";
@@ -241,7 +257,7 @@ mora,113,185,4	script	Reading Raffle#ep14_1	4_M_RAFLE_GR,{
 	mes "You see a Rafflesia";
 	mes "lost in reading.";
 	next;
-	switch(select("See what he's reading.:Leave him alone.")) {
+	switch(select("See what he's reading.", "Leave him alone.")) {
 	case 1:
 		mes "Curious about what he's reading,";
 		mes "you quietly approach him from behind.";
@@ -331,7 +347,7 @@ mora,99,65,6	script	Banana Rafflesia#ep14_1	4_M_RAFLE_GR,{
 	mes "[Banana Rafflesia]";
 	mes "You want a banana?";
 	next;
-	switch(select("Yes, I do.:No, thanks.")) {
+	switch(select("Yes, I do.", "No, thanks.")) {
 	case 1:
 		mes "[Banana Rafflesia]";
 		mes "Take it if you can.";
@@ -426,7 +442,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "[Raffle Philosopher]";
 	mes "With a little token of appreciation, I will tell you a quote that will help you in your life.";
 	next;
-	if(select("Give him a token of appreciation.:Can't you just tell me?") == 2) {
+	if(select("Give him a token of appreciation.", "Can't you just tell me?") == 2) {
 		mes "[Raffle Philosopher]";
 		mes "You don't get something for nothing.";
 		close;
@@ -436,16 +452,18 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "You can pay me in the currencies listed below.";
 	mes "Enter the sum you're willing to pay. Enter 0 if you don't want to pay anything.";
 	next;
-	input .@input;
+	input(.@input);
 	if (.@input == 0) {
 		mes "[Raffle Philosopher]";
 		mes "So you don't want to hear a quote, eh?";
 		close;
-	} else if (.@input < 100 || .@input > 1000000) {
+	}
+	if (.@input < 100 || .@input > 1000000) {
 		mes "[Raffle Philosopher]";
 		mes "You can pay between ^FF0000100 and 1000000^000000.";
 		close;
-	} else if (Zeny < .@input) {
+	}
+	if (Zeny < .@input) {
 		mes "[Raffle Philosopher]";
 		mes "So you think this is what my time is worth?";
 		close;
@@ -465,7 +483,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "Okay! I think this is the one for you.";
 	next;
 	mes "[Raffle Philosopher]";
-	mes strcharinfo(0)+", the quote I'm going to tell you is...";
+	mes strcharinfo(PC_NAME)+", the quote I'm going to tell you is...";
 	switch(rand(1,70)) {
 	case 1:
 		mes "Nothing is more difficult,";
@@ -892,7 +910,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "I wonder what you think";
 	mes "about what I've told you.";
 	next;
-	input .@inputstr$;
+	input(.@inputstr$);
 	mes "[Raffle Philosopher]";
 	mes "So you think that "+.@inputstr$+".";
 	next;
@@ -906,7 +924,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	close;
 }
 
--	script	#mora_traveler	-1,{
+-	script	#mora_traveler	FAKE_NPC,{
 	mes "[Upset Traveler]";
 	mes "You... you dare play a game with me?";
 	emotion e_ag,0,"Traveler#ep14_1_1";
@@ -933,12 +951,12 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	next;
 	mes "They seem to be calling out to you.";
 	next;
-	if(select("See what the matter is.:I have nothing to do with it.") == 2) {
+	if(select("See what the matter is.", "I have nothing to do with it.") == 2) {
 		mes "You went on your way";
 		mes "leaving the travelers behind you.";
 		close;
 	}
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "What's happening here?";
 	emotion e_what,1;
 	next;
@@ -965,9 +983,9 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "the answer to the question is?";
 	emotion e_ag,0,"Traveler#ep14_1_1";
 	next;
-	switch(select("Roseten.:Rose.:How would I know that?")) {
+	switch(select("Roseten.", "Rose.", "How would I know that?")) {
 	case 1:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The answer to the question is Roseten.";
 		mes "Why are you fighting over such a trivial matter?";
 		next;
@@ -982,7 +1000,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		emotion e_an,0,"Traveler#ep14_1_2";
 		break;
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The answer to the question is Rose.";
 		mes "You said Rose's mother had 10 sons.";
 		mes "So even if the other sons' names are";
@@ -1002,7 +1020,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		emotion e_ag,0,"Traveler#ep14_1_1";
 		break;
 	case 3:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I have no idea.";
 		mes "Try to sort it out yourselves.";
 		next;
@@ -1016,7 +1034,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "*thud*";
 	mes "You feel a sudden impact on the back of your head.";
 	mes "Your sight is going blurry.";
-	specialeffect2 EF_HIT1;
+	specialeffect(EF_HIT1, AREA, playerattached());
 	sc_start SC_BLIND,20000,0;
 	next;
 	mes "You feel somebody rummaging through your pockets before you pass out.";
@@ -1033,8 +1051,7 @@ mora,140,72,4	duplicate(#mora_traveler)	Traveler#ep14_1_1	4_M_DOGTRAVELER	//Upse
 mora,138,72,6	duplicate(#mora_traveler)	Traveler#ep14_1_2	4_M_DOGTRAVELER	//Traveler That Posed the Question
 mora,139,73,4	duplicate(#mora_traveler)	Traveler#ep14_1_3	4_M_DOGTRAVELER	//Traveler Trying to Stop the Fight
 
-// Set 3 :: tre
-//============================================================
+//== Set 3 :: tre ==========================================
 mora,132,185,5	script	Mora Villager#sleep5	4_F_RAFLE_PK,{
 	mes "[Mora Villager]";
 	mes "Phew~ Phew~";
@@ -1062,7 +1079,7 @@ mora,132,184,5	script	Mora Villager#sleep6	4_M_RAFLE_OR,{
 mora,133,184,1	script	Mora Villager#sleep4	G_RAFFLESIA,{
 	mes "[Mora Villager]";
 	mes "Moan...";
-	end;
+	close;
 }
 
 mora,134,184,1	script	Mora Villager#sleep3	4_M_RAFLE_GR,{
@@ -1080,7 +1097,7 @@ mora,132,183,7	script	Mora Villager#sleep7	4_M_RAFLE_VI,{
 mora,133,183,7	script	Mora Villager#sleep8	4_F_RAFLE_PK,{
 	mes "[Mora Villager]";
 	mes "z Z";
-	end;
+	close;
 }
 
 mora,134,183,1	script	Mora Villager#sleep9	4_M_RAFLE_OR,{
@@ -1094,7 +1111,7 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 	mes "Oh~ looks like we have another adventurer.";
 	mes "Where are you from?";
 	next;
-	switch(select("Just save the game.:I'd like to get some rest.:The place I used to live is called...:How can I use the warehouse?")) {
+	switch(select("Just save the game.", "I'd like to get some rest.", "The place I used to live is called...", "How can I use the warehouse?")) {
 	case 1:
 		mes "[Innkeeper]";
 		mes "Wow, what's the rush?";
@@ -1110,7 +1127,7 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 		mes "My my, I need some rest also.";
 		mes "The rate is 5000 zeny. Do you want a room?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			if (Zeny < 5000) {
 				mes "[Innkeeper]";
@@ -1131,8 +1148,8 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 			close;
 		}
 	case 3:
-		input .@inputstr$;
-		mes "["+strcharinfo(0)+"]";
+		input(.@inputstr$);
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I come from a place called "+.@inputstr$+".";
 		next;
 		mes "[Innkeeper]";
@@ -1170,7 +1187,7 @@ mora,48,128,0	script	Drawer#mora_warehouse	HIDDEN_NPC,{
 	}
 	mes "- The figure 1 0 0 is written in small letters on the vegetable-shaped drawer. -";
 	next;
-	switch(select("Insert 100 zeny.:Don't do anything.")) {
+	switch(select("Insert 100 zeny.", "Don't do anything.")) {
 	case 1:
 		if (Zeny < 100) {
 			mes "- You don't seem to have 100 zeny with you. -";

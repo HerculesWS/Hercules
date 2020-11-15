@@ -38,7 +38,6 @@ done:
 	mes "[Thalos]";
 	mes "Go search the 2nd Statue!";
 	close;
-	
 }
 
 tha_t09,84,99,4	script	Mediane	HIDDEN_NPC,{
@@ -240,7 +239,7 @@ tha_t12,128,88,4	script	Sox	HIDDEN_NPC,{
 	mes "[Sox]";
 	mes "You have to give me Red Magic Stone, Yellow Magic Stone, Blue Magic Stone & Green Magic Stone.";
 	next;
-	if(countitem(7426) < 1 || countitem(7427) < 1 || countitem(7428) < 1 || countitem(7429) < 1) goto nostone;
+	if(countitem(Magic_Gem_Red) < 1 || countitem(Magic_Gem_Yellow) < 1 || countitem(Magic_Gem_Blue) < 1 || countitem(Magic_Gem_Green) < 1) goto nostone;
 	delitem 7426,1;
 	delitem 7427,1;
 	delitem 7428,1;

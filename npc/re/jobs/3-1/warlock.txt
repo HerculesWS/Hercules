@@ -1,37 +1,53 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Gepard
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Warlock Job Quest
-//===== By: ==================================================
-//= Muad_Dib, Gepard & L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Wizard / High Wizard -> Warlock.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Masao]
-//= 1.1 Fixed some conversion mistakes, replaced numbers with
-//=     constants, added item names in comments.
-//= 1.2 Fixed the problem where NPC are not enabled and chamber
-//=     will never open for the second try or use.
-//= 1.2a Fixed a typo. [Euphy]
-//= 1.3 Updated script, optimized. [Euphy]
-//= 1.3a Added temporary coordinate fix #distorted_space_1-1. [Euphy]
-//= 1.3b Added official coordinates. [Euphy]
-//= 1.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
--	script	#distorted_space_	-1,{
+-	script	#distorted_space_	FAKE_NPC,{
 OnTouch:
 	if (job_wl > 1) {
 		mes " - There is a strange distortion here - ";
-		if (strnpcinfo(0) == "#distorted_space_1" && (Class == Job_Warlock || Class == Job_Warlock_T || Class == Job_Baby_Warlock)) {
+		if (strnpcinfo(NPC_NAME) == "#distorted_space_1" && (Class == Job_Warlock || Class == Job_Warlock_T || Class == Job_Baby_Warlock)) {
 			close2;
-			if (countitem(6153) > 0)
+			if (countitem(Special_Exchange_Coupon) > 0)
 				warp "spl_in02",79,102;
 			end;
 		}
 		next;
-		switch(select("Extend your hand.:Ignore it.")) {
+		switch(select("Extend your hand.", "Ignore it.")) {
 		case 1:
 			mes " - I extend my arm as a fierce sound resonates in my ear and a cool wave surrounds me - ";
 			close2;
@@ -42,14 +58,14 @@ OnTouch:
 			close;
 		}
 	}
-	if (BaseLevel > 94 && (strnpcinfo(0) == "#distorted_space_2" || BaseJob == Job_Wizard)) {
+	if (BaseLevel > 94 && (strnpcinfo(NPC_NAME) == "#distorted_space_2" || BaseJob == Job_Wizard)) {
 		mes " - There is a strange distortion here - ";
 		next;
-		switch(select("Search the area.:Ignore it.")) {
+		switch(select("Search the area.", "Ignore it.")) {
 		case 1:
 			mes " - There appears to be nothing here. But I can definitely feel something around here... - ";
 			next;
-			switch(select("Extend arm.:Leave it alone.")) {
+			switch(select("Extend arm.", "Leave it alone.")) {
 			case 1:
 				mes " - I extend my arm as a fierce sound resonates in my ear and a cool wave surrounds me - ";
 				close2;
@@ -120,7 +136,7 @@ function	script	F_Warlock	{
 		next;
 		mes " - The fairy with the green hair chants a spell. - ";
 		mes " - I feel like something special surrounds me. - ";
-		specialeffect2 EF_DISPELL;
+		specialeffect(EF_DISPELL, AREA, playerattached());
 		next;
 		mes "[Master]";
 		mes "Oh, that's interesting.";
@@ -158,7 +174,7 @@ function	script	F_Warlock	{
 			mes "[Master Egnoloria]";
 			mes "If you dare to face death, you can try to become one.";
 			next;
-			switch(select("What do I need to do?:Cancel.")) {
+			switch(select("What do I need to do?", "Cancel.")) {
 			case 1:
 				mes "[Master Egnoloria]";
 				mes "Are you serious?";
@@ -213,7 +229,7 @@ spl_in02,77,107,5	script	Assistant#Warlock1	4_M_FAIRYKID5,{
 		mes "Can you imagine how severely I was scolded by my master?!";
 		mes "If you have any business with me, just go away!";
 		next;
-		switch(select("Leave.:Stay.")) {
+		switch(select("Leave.", "Stay.")) {
 		case 1:
 			mes "[Yoop]";
 			mes "Leave me alone...!";
@@ -266,7 +282,7 @@ spl_in02,77,107,5	script	Assistant#Warlock1	4_M_FAIRYKID5,{
 		callsub L_Quest,1;
 		close;
 	} else if (job_wl == 4) {
-		if (countitem(6152) == 0 || countitem(6151) == 0)
+		if (countitem(Glittering_Crystal) == 0 || countitem(Peice_Of_Great_Bradium) == 0)
 			callsub L_Quest,0;
 		else {
 			mes "[Yoop]";
@@ -304,8 +320,8 @@ L_Quest:
 		mes "[Yoop]";
 		mes "Show us how strong you are. And don't forget to wear this.";
 		job_wl = 4;
-		getitem 2796,1; //Magical_Stone
-		getitem 2797,1; //Magical_Stone_
+		getitem Magical_Stone,1;
+		getitem Magical_Stone_,1;
 		changequest 11106,11107;
 		next;
 	}
@@ -330,10 +346,10 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 	} else if (job_wl == 4) {
 		mes "You're back?";
 		next;
-		switch(select("I brought the materials.:I've lost the Magical Stones.:Nothing.")) {
+		switch(select("I brought the materials.", "I've lost the Magical Stones.", "Nothing.")) {
 		case 1:
 			mes "[Yoop]";
-			if (countitem(6152) == 0 || countitem(6151) == 0) {
+			if (countitem(Glittering_Crystal) == 0 || countitem(Peice_Of_Great_Bradium) == 0) {
 				mes "......";
 				mes "......Where?";
 				mes "Don't bother me!";
@@ -353,12 +369,12 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 				mes "Bring these stones with you or else you won't be able to return!";
 				mes "Be careful!";
 				close;
-			} else if (countitem(6152) && countitem(6151)) {
+			} else if (countitem(Glittering_Crystal) && countitem(Peice_Of_Great_Bradium)) {
 				if (isequipped(2796) || isequipped(2797)) {
 					mes "Bring me back the magical stones.";
 					close;
 				}
-				if (countitem(2796) == 0 || countitem(2797) == 0) {
+				if (countitem(Magical_Stone) == 0 || countitem(Magical_Stone_) == 0) {
 					mes "It seems that you don't have it?";
 					mes "You lost it?";
 					next;
@@ -369,10 +385,10 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 				mes "Alright! All the materials are ready!";
 				mes "While I am concentrating on working on this stone. Can you go back to my master?";
 				mes "I will follow up once it's done.";
-				delitem 2796,countitem(2796); //Magical_Stone
-				delitem 2797,countitem(2797); //Magical_Stone_
-				delitem 6152,countitem(6152); //Glittering_Crystal
-				delitem 6151,countitem(6151); //Peice_Of_Great_Bradium
+				delitem Magical_Stone,countitem(Magical_Stone);
+				delitem Magical_Stone_,countitem(Magical_Stone_);
+				delitem Glittering_Crystal,countitem(Glittering_Crystal);
+				delitem Peice_Of_Great_Bradium,countitem(Peice_Of_Great_Bradium);
 				job_wl = 5;
 				changequest 11107,11108;
 				close;
@@ -385,25 +401,25 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 			mes "[Yoop]";
 			mes "Please check whether you misplaced it or if you already have it equipped.";
 			next;
-			switch(select("I found it.:Nah.")) {
+			switch(select("I found it.", "Nah.")) {
 			case 1:
 				mes "[Yoop]";
 				mes "Don't tease me!";
 				mes "It's not hard to tell if you have it or not!";
 				close;
 			case 2:
-				if ((isequipped(2796) == 0 && countitem(2796) == 0) || (isequipped(2797) == 0 && countitem(2797) == 0)) {
-					if (countitem(732) > 0) {
-						switch(select("Give 3 carat diamond.:Just quit it.")) {
+				if ((isequipped(2796) == 0 && countitem(Magical_Stone) == 0) || (isequipped(2797) == 0 && countitem(Magical_Stone_) == 0)) {
+					if (countitem(Crystal_Jewel__) > 0) {
+						switch(select("Give 3 carat diamond.", "Just quit it.")) {
 						case 1:
 							mes "[Yoop]";
 							mes "I will overlook your fault.";
 							mes "Please be careful with it.";
-							delitem 732,1; //Crystal_Jewel__
-							if (isequipped(2796) == 0 && countitem(2796) == 0)
-								getitem 2796,1; //Magical_Stone
-							if (isequipped(2797) == 0 && countitem(2797) == 0)
-								getitem 2797,1; //Magical_Stone_
+							delitem Crystal_Jewel__,1;
+							if (isequipped(2796) == 0 && countitem(Magical_Stone) == 0)
+								getitem Magical_Stone,1;
+							if (isequipped(2797) == 0 && countitem(Magical_Stone_) == 0)
+								getitem Magical_Stone_,1;
 							close;
 						case 2:
 							mes "[Yoop]";
@@ -463,7 +479,7 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "It's not me you are looking for currently.";
 		close;
 	} else if (job_wl == 6) {
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You're carring out too many items.";
 			mes "You'd better minimize your weight.";
 			close;
@@ -481,15 +497,15 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "I will guide you into the magic room.";
 		job_wl = 7;
 		changequest 11109,11110;
-		getitem 12384,5; //Rainbow_Ruby_Water
-		getitem 12386,5; //Rainbow_Ruby_Wind
-		getitem 12387,5; //Rainbow_Ruby_Earth
-		getitem 12385,5; //Rainbow_Ruby_Fire
+		getitem Rainbow_Ruby_Water,5;
+		getitem Rainbow_Ruby_Wind,5;
+		getitem Rainbow_Ruby_Earth,5;
+		getitem Rainbow_Ruby_Fire,5;
 		close2;
 		warp "job3_war01",23,20;
 		end;
 	} else if (job_wl == 7) {
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You're carring out too many items.";
 			mes "You'd better minimize your weight.";
 			close;
@@ -498,14 +514,14 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "Would you like to try it again?";
 		mes "Let me give you more rubies.";
 		next;
-		if (countitem(12384)) delitem 12384,countitem(12384); //Rainbow_Ruby_Water
-		if (countitem(12386)) delitem 12386,countitem(12386); //Rainbow_Ruby_Wind
-		if (countitem(12387)) delitem 12387,countitem(12387); //Rainbow_Ruby_Earth
-		if (countitem(12385)) delitem 12385,countitem(12385); //Rainbow_Ruby_Fire
-		getitem 12384,5; //Rainbow_Ruby_Water
-		getitem 12386,5; //Rainbow_Ruby_Wind
-		getitem 12387,5; //Rainbow_Ruby_Earth
-		getitem 12385,5; //Rainbow_Ruby_Fire
+		if (countitem(Rainbow_Ruby_Water)) delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water);
+		if (countitem(Rainbow_Ruby_Wind)) delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind);
+		if (countitem(Rainbow_Ruby_Earth)) delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth);
+		if (countitem(Rainbow_Ruby_Fire)) delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire);
+		getitem Rainbow_Ruby_Water,5;
+		getitem Rainbow_Ruby_Wind,5;
+		getitem Rainbow_Ruby_Earth,5;
+		getitem Rainbow_Ruby_Fire,5;
 		close2;
 		warp "job3_war01",23,20;
 		end;
@@ -513,10 +529,10 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "[Yoop]";
 		mes "You have successfully crystallized the Hollow Stone.";
 		mes "I'm sorry that I've doubted you.";
-		if (countitem(12384)) delitem 12384,countitem(12384); //Rainbow_Ruby_Water
-		if (countitem(12386)) delitem 12386,countitem(12386); //Rainbow_Ruby_Wind
-		if (countitem(12387)) delitem 12387,countitem(12387); //Rainbow_Ruby_Earth
-		if (countitem(12385)) delitem 12385,countitem(12385); //Rainbow_Ruby_Fire
+		if (countitem(Rainbow_Ruby_Water)) delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water);
+		if (countitem(Rainbow_Ruby_Wind)) delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind);
+		if (countitem(Rainbow_Ruby_Earth)) delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth);
+		if (countitem(Rainbow_Ruby_Fire)) delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire);
 		next;
 		mes "[Yoop]";
 		mes "All of the tests are done. Now talk to Master Engoloria.";
@@ -554,7 +570,7 @@ spl_in02,78,110,5	script	Assistant#Warlock3	4_F_FAIRYKID2,{
 		default: mes "Please be quiet while my master is meditating."; break;
 	}
 	next;
-	switch(select("Leave:Stay")) {
+	switch(select("Leave", "Stay")) {
 	case 1:
 		mes "[Assistant]";
 		mes "Then be careful.";
@@ -576,7 +592,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 		mes "[Master Egnoloria]";
 		mes "Do you have something to ask me?";
 		next;
-		switch(select("How can I be a Warlock?:Cancel.")) {
+		switch(select("How can I be a Warlock?", "Cancel.")) {
 		case 1:
 			mes "[Master Egnoloria]";
 			mes "Are you serious?";
@@ -662,7 +678,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 			mes "How did you come this far...";
 			close;
 		}
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You've got too many items.";
 			mes "Please come back after reducing the number of items you have.";
 			close;
@@ -699,8 +715,8 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 		else job_wl = 10;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11112;
-		getitem 5753,1; //Magic_Stone_Hat
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Magic_Stone_Hat,1;
+		getitem Green_Apple_Ring,1;
 		close;
 	} else if (job_wl > 9) {
 		mes "[Master Egnoloria]";
@@ -725,7 +741,7 @@ job3_war01,29,25,0	script	Ebein#WRR	4_F_FAIRYKID2,{
 	mes "[Ebein]";
 	mes "If there're others inside the room, you just need to wait for a while.";
 	next;
-	switch(select("Go to the waiting room.:Go outside.")) {
+	switch(select("Go to the waiting room.", "Go outside.")) {
 	case 1:
 		mes "[Ebein]";
 		mes "Then please enter the room yourself.";
@@ -783,38 +799,38 @@ OnDisable:
 	end;
 }
 
--	script	The chamber of magic#2	-1,{
+-	script	The chamber of magic#2	FAKE_NPC,{
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
-	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(0)+"::OnMyMobDead";
+	enablenpc strnpcinfo(NPC_NAME);
+	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	initnpctimer;
 	end;
 OnReset:
-	killmonster "job3_war02",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_war02",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnMyMobDead:
-	if (mobcount("job3_war02",strnpcinfo(0)+"::OnMyMobDead") < 1) {
+	if (mobcount("job3_war02",strnpcinfo(NPC_NAME)+"::OnMyMobDead") < 1) {
 		stopnpctimer;
 		mapannounce "job3_war02","The Monster Invasion has been stopped.",bc_map;
-		.@str$ = "The chamber of magic#"+((strnpcinfo(0) == "The chamber of magic#2")?"3":"4");
+		.@str$ = "The chamber of magic#"+((strnpcinfo(NPC_NAME) == "The chamber of magic#2")?"3":"4");
 		donpcevent .@str$+"::OnEnable";
 	}
 	end;
 OnTimer3000:
-	if (strnpcinfo(0) != "The chamber of magic#2") end;
+	if (strnpcinfo(NPC_NAME) != "The chamber of magic#2") end;
 	mapannounce "job3_war02","A Magical Power fragment has been created in the Magic Chamber Room.",bc_map;
 	end;
 OnTimer4000:
@@ -861,9 +877,9 @@ OnTimer305000:
 	stopnpctimer;
 	end;
 }
--	duplicate(The chamber of magic#2)	The chamber of magic#3	-1
+-	duplicate(The chamber of magic#2)	The chamber of magic#3	FAKE_NPC
 
--	script	The chamber of magic#4	-1,{
+-	script	The chamber of magic#4	FAKE_NPC,{
 OnInit:
 	disablenpc "The chamber of magic#4";
 	end;
@@ -928,7 +944,7 @@ OnTimer65000:
 	end;
 }
 
--	script	Hollow Stone#Warlock	-1,{
+-	script	Hollow Stone#Warlock	FAKE_NPC,{
 OnInit:
 	disablenpc "Hollow Stone#Warlock";
 	end;
@@ -1008,7 +1024,7 @@ OnTimer607000:
 	end;
 }
 
--	script	Ebein#E1	-1,{
+-	script	Ebein#E1	FAKE_NPC,{
 OnInit:
 	disablenpc "Ebein#E1";
 	end;
@@ -1031,7 +1047,7 @@ OnTimer6000:
 	end;
 }
 
--	script	Ebein#E2	-1,{
+-	script	Ebein#E2	FAKE_NPC,{
 OnInit:
 	disablenpc "Ebein#E2";
 	end;
@@ -1056,7 +1072,7 @@ OnTimer6000:
 
 job3_war01,1,2,0	script	Button Girl#wl	1_F_01,{
 	callfunc "F_GM_NPC";
-	switch(select("Open Arena:Close Arena:Open the Chamber of Magic:Close the Chamber of Magic:Hollow Stone On:Hollow Stone Off:Cancel")) {
+	switch(select("Open Arena", "Close Arena", "Open the Chamber of Magic", "Close the Chamber of Magic", "Hollow Stone On", "Hollow Stone Off", "Cancel")) {
 	case 1:
 		mes "Opening the Arena.";
 		donpcevent "The chamber of magic#1::OnEnable";

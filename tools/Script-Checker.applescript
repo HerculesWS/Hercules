@@ -1,8 +1,24 @@
 (*
-  Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-  See the LICENSE file
-  Base Author: Haru @ http://hercules.ws
+  This file is part of Hercules.
+  http://herc.ws - http://github.com/HerculesWS/Hercules
+
+  Copyright (C) 2014-2020 Hercules Dev Team
+
+  Hercules is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
+
+-- Base Author: Haru @ http://herc.ws
 
 (*
 	*************************************************************
@@ -69,7 +85,7 @@ on build_hercules(hercules_repo)
 	display dialog "Build successfully completed. Please check the log file for details." with title "Build result" buttons {"Abort", "Continue"} default button 2 cancel button 1
 	set the files_to_copy to {"map-server", "script-checker"}
 	set the conf_files_to_copy to {"inter-server.conf", "import", "packet.conf", "script.conf"}
-	set the db_files_to_copy to {"map_index.txt", "item_db2.txt", "const.txt", "mob_db2.txt"}
+	set the db_files_to_copy to {"map_index.txt", "item_db2.txt", "constants.conf", "mob_db2.txt"}
 	set the db2_files_to_copy to {"map_cache.dat", "item_db.txt", "skill_db.txt", "mob_db.txt"}
 	try
 		set the hercules_path to path to resource "Hercules"

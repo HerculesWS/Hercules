@@ -1,37 +1,57 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Kayla
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Lupus
+//= Copyright (C) shadowlady
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= X-mas Event
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Beat up Antonios and grab his socks.  Get at least 3 and give them to
+//= Santa Claus Claus in exchange for a present.
+//================= Current Version =======================================
 //= 1.4
-//===== Description: =========================================
-//= Beat up Antonios and grab his socks.  Get at least 3 and
-//= give them to Santa Claus Claus in exchange for a present.
+//================= Additional Comments ===================================
 //= Includes X-mas mobs.
 //= This npc will disable, the current Santa Claus npc.
-//===== Additional Comments: =================================
-//= Fixed the spawns [shadowlady]
-//= 1.1 Added Xmas Jakk, fixed 2 exploits, fixed reward Box ID [Lupus]
-//= 1.2 Added monsters to the newer fields, thanks to Muad_Dib [MasterOfMuppets]
-//= 1.2a Fixed a major problem with the monster spawns, thanks to Playtester [MasterOfMuppets]
-//= 1.2b Fixed a minor problem with the mosnter spawns, thanks to Playtester [Kayla]
-//= 1.3 Added Christmas Orc to the places where other orcs spawn [MasterOfMuppets]
-//= Added Christmas goblins to yuno_fild09, thanks to Playtester for pointing it out
-//= 1.4 Added a fix to make Lutie & Bard quests passable during this event [Lupus]
-//============================================================
+//=========================================================================
 
 xmas_in,100,96,4	script	Santa Claus::Santa2	4_M_SANTA,{
 	mes "[Santa Claus]";
 	if(xmas_npc==0) xmas_npc = 1; // For Lutie & Bard quest
-	if(#event_xmas > 0 && #event_xmas < 30 ) goto L_Start;
-	mes "Merry Christmas!";
-	if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
-	mes "I have a gift for you! Ho Ho Ho!";
-	getitem rand(664,667),1; //gives one of 4 gift boxes
-	++#event_xmas;
-	close;
-
-L_Start:
+	if(#event_xmas <= 0 || #event_xmas >= 30 ) {
+		mes "Merry Christmas!";
+		if(Class==0 || #event_xmas>=30 ) close; //anti exploit protection
+		mes "I have a gift for you! Ho Ho Ho!";
+		getitem rand(664,667),1; //gives one of 4 gift boxes
+		++#event_xmas;
+		close;
+	}
 	mes "I'm having a bit of a problem...";
 	mes "Do you care to listen?";
 	next;
@@ -77,25 +97,24 @@ L_Start:
 		close;
 	case 2: // Give proof
 		mes "[Santa Claus]";
-		if(countitem(7034) < 3) goto L_NotEnuf;
+		if(countitem(Red_Socks_With_Holes) < 3) {
+			mes "You don't have enough socks as proof.";
+			mes "Go take down those evil Santas";
+			mes "and get more for me and I'll reward you.";
+			close;
+		}
 		delitem 7034,3;
 		mes "Seems you've been doing a";
 		mes "good job of taking down those";
 		mes "fake Santas. Keep it up!";
 		next;
-		getitem 644,1; //Gift Box Prototype
+		getitem Gift_Box,1; //Gift Box Prototype
 		++#event_xmas;
 		mes "[Santa Claus]";
 		mes "There's your reward.";
 		mes "If you get 3 more, I'll give you another.";
 		mes "Hope you get a good item.";
 		close;
-	
-		L_NotEnuf:
-			mes "You don't have enough socks as proof.";
-			mes "Go take down those evil Santas";
-			mes "and get more for me and I'll reward you.";
-			close;
 	default: // Cancel
 		mes "[Santa Claus]";
 		mes "I see. Well, at the very least";
@@ -108,14 +127,12 @@ OnInit:
 	end;
 }
 
-// Xmas Goblin Spawns
-//============================================================
+//== Xmas Goblin Spawns ====================================
 prt_fild11,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 gef_fild11,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 yuno_fild09,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 
-// Santa Poring Spawns
-//============================================================
+//== Santa Poring Spawns ===================================
 ein_fild03,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 ein_fild04,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 ein_fild06,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
@@ -229,8 +246,7 @@ hu_fild04,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 hu_fild05,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 hu_fild07,0,0,0,0	monster	Santa Poring	1062,15,0,0,0
 
-// Antonio Spawns
-//============================================================
+//== Antonio Spawns ========================================
 ein_fild03,0,0,0,0	monster	Antonio	1247,1,0,0,0
 ein_fild04,0,0,0,0	monster	Antonio	1247,1,0,0,0
 ein_fild06,0,0,0,0	monster	Antonio	1247,1,0,0,0
@@ -344,13 +360,11 @@ hu_fild04,0,0,0,0	monster	Antonio	1247,1,0,0,0
 hu_fild05,0,0,0,0	monster	Antonio	1247,1,0,0,0
 hu_fild07,0,0,0,0	monster	Antonio	1247,1,0,0,0
 
-// Xmas Jakk Spawns
-//============================================================
+//== Xmas Jakk Spawns ======================================
 gef_dun01,0,0,0,0	monster	Xmas Jakk	1244,5,0,0,0
 //gefenia02,0,0,0,0	monster	Xmas Jakk	1244,5,0,0,0
 
-// Xmas Orc Spawns
-//============================================================
+//== Xmas Orc Spawns =======================================
 gef_fild02,0,0,0,0	monster	Christmas Orc	1588,5,0,0,0
 gef_fild03,0,0,0,0	monster	Christmas Orc	1588,5,0,0,0
 gef_fild10,0,0,0,0	monster	Christmas Orc	1588,5,0,0,0

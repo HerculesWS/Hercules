@@ -1,29 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Zephyrus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) Lupus
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= God Item Quest - Mjolnir Seal
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
+//================= Description ===========================================
 //= Quest for breaking the seal of Mjolnir.
-//===== Additional Comments: =================================
-//= 1.0 First version. Thanks to SinSloth for scripting it. [MasterOfMuppets]
-//= 1.1 Fixed wrong label names [Luups]
-//= 1.1a Corrected a a typo error ";;". [Samuray22]
-//= 1.2 Updated several aspects of the script. [L0ne_W0lf]
-//= 1.3 Minor Touchups to quest. [L0ne_W0lf]
-//= 1.4 Optimizing refine method and wrong close2. [Zephyrus]
-//= 1.5 Fixed Trans classes being assigned random reward. [L0ne_W0lf]
-//= 1.6 Fixed checking for Oridecon Hammer. [L0ne_W0lf]
-//=     Corrected Sudi's and player's HP settings.
-//= 1.7 Fixed a copy/paste error in Nordri. [L0ne_W0lf]
-//= 1.8 Fixed item check for Oridecon. [L0ne_W0lf]
-//= 1.8a Added 'disable_items' command. [Euphy]
-//= 1.9 Renewal script update. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
 prontera,124,297,3	script	Tialfi	4_M_KID1,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "- You are carrying too many items! -";
 		close;
 	}
@@ -46,7 +62,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 		}
 		else if (god_mjo_1 == 2 && god_mjo_2 == 2 && god_mjo_3 == 2 && god_mjo_4 == 2) {
 			if (god_mjo_0 == 10) {
-				if ((countitem(756) > 49) && (countitem(757) > 49)) {
+				if ((countitem(Oridecon_Stone) > 49) && (countitem(Elunium_Stone) > 49)) {
 					.@gift = 0;
 					if (BaseJob == Job_Knight) {
 						.@gift = 1;
@@ -102,7 +118,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 					mes "So which treasure";
 					mes "would you like to have?";
 					next;
-					switch(select("An item that I can use.:An item that my friend can use.")) {
+					switch(select("An item that I can use.", "An item that my friend can use.")) {
 					case 1:
 						mes "[Tialfi]";
 						mes "I see...";
@@ -126,47 +142,47 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 					mes "It must be around--Ah!";
 					mes "Here we are~";
 					next;
-					delitem 756,50; //Oridecon_Stone
-					delitem 757,50; //Elunium_Stone
+					delitem Oridecon_Stone,50;
+					delitem Elunium_Stone,50;
 					god_mjo_0 = 11;
 					if (.@gift == 1) {
-						getitem 1471,1; // Hell_Fire
+						getitem Hell_Fire,1; // Hell_Fire
 					}
 					else if (.@gift == 2) {
-						getitem 1526,1; // Slash
+						getitem Slash,1; // Slash
 					}
 					else if (.@gift == 3) {
-						getitem 1231,1; // Bazerald
+						getitem Bazerald,1; // Bazerald
 					}
 					else if (.@gift == 4) {
-						getitem 1367,1; // Slaughter
+						getitem Slaughter,1; // Slaughter
 					}
 					else if (.@gift == 5) {
-						getitem 1722,1; // Balistar
+						getitem Balistar,1; // Balistar
 					}
 					else if (.@gift == 6) {
-						getitem 1230,1; // House_Auger
+						getitem House_Auger,1; // House_Auger
 					}
 					else if (.@gift == 7) {
-						getitem 1141,1; // Immaterial_Sword
+						getitem Immaterial_Sword,1; // Immaterial_Sword
 					}
 					else if (.@gift == 8) {
-						getitem 1813,1; // Kaiser_Knuckle
+						getitem Kaiser_Knuckle,1; // Kaiser_Knuckle
 					}
 					else if (.@gift == 9) {
-						getitem 1557,1; // Book_Of_The_Apocalypse
+						getitem Book_Of_The_Apocalypse,1; // Book_Of_The_Apocalypse
 					}
 					else if (.@gift == 10) {
-						getitem 1235,1; // Azoth
+						getitem Azoth,1; // Azoth
 					}
 					else if (.@gift == 11) {
-						getitem 1227,1; // Weeder_Knife
+						getitem Weeder_Knife,1; // Weeder_Knife
 					}
 					else if (.@gift == 12) {
-						getitem 1913,1; // Electronic_Guitar
+						getitem Electronic_Guitar,1; // Electronic_Guitar
 					}
 					else if (.@gift == 13) {
-						getitem 1963,1; // Rapture_Rose
+						getitem Rapture_Rose,1; // Rapture_Rose
 					}
 					else {
 						mes "Unknown error occurred.";
@@ -328,7 +344,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 				mes "[Tialfi]";
 				mes "If you don't mind, I'd like to ask you to explore this mountain and search for these Dwarven Blacksmiths.";
 				next;
-				switch(select("No.:Okay.")) {
+				switch(select("No.", "Okay.")) {
 				case 1:
 					cutin "god_tialpi02",2;
 					mes "[Tialfi]";
@@ -466,7 +482,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "Why have you";
 				mes "come to me, human?";
 				next;
-				switch(select("Nothing.:Hey, 'sup!")) {
+				switch(select("Nothing.", "Hey, 'sup!")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -486,13 +502,13 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "What has made";
 				mes "you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
 					close;
 				case 2:
-					if (countitem(1005) > 0) { //Hammer_Of_Blacksmith
+					if (countitem(Hammer_Of_Blacksmith) > 0) { //Hammer_Of_Blacksmith
 						mes "[Austri]";
 						mes "Ah, I see that the entire human race is not worthy of scorn. Unlike many of your kind, I see that you respect your elders.";
 						next;
@@ -503,7 +519,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "want to ask";
 								mes "me about?";
 								next;
-								switch(select("...:About Mjolnir.")) {
+								switch(select("...", "About Mjolnir.")) {
 								case 1:
 									.@talk_not = 1;
 									break;
@@ -523,7 +539,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "The hilt of Mjolnir was forged shorter than intended. Are you still listening to me?";
 								next;
-								switch(select("...:Yes, sir!:Huh?")) {
+								switch(select("...", "Yes, sir!", "Huh?")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -539,7 +555,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Frankly his treasures were";
 								mes "made by another Dwarf tribe, but we couldn't tolerate his insult. So my ancestors created three treasures of their own.";
 								next;
-								switch(select("...:Boooring!:Oh, wow.")) {
+								switch(select("...", "Boooring!", "Oh, wow.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -557,7 +573,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "It's very sad. Although Mjolnir is the greatest weapon ever, it was very close to being the epitome of craftsmanship.";
 								next;
-								switch(select("...:Epito--what?:Yes sir, I agree.")) {
+								switch(select("...", "Epito--what?", "Yes sir, I agree.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -575,7 +591,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "I must say, a Blacksmith's greatest pride comes when he creates the weapon and armor that can be considered his life's work.";
 								next;
-								switch(select("...:I agree, sir!:Um, yeah.")) {
+								switch(select("...", "I agree, sir!", "Um, yeah.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -595,7 +611,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "how powerful Mjolnir is.";
 								mes "However, humans can never hope to see or even wield Mjolnir. Only a god can handle that kind of force.";
 								next;
-								switch(select("...:Wah wah wah~!:Ah, I understand sir!")) {
+								switch(select("...", "Wah wah wah~!", "Ah, I understand sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -611,7 +627,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Yes, it's possible to create";
 								mes "a Mjolnir suited to humans. Still, it wouldn't be very easy.";
 								next;
-								switch(select("...:Yes, sir!:Yeah, whatever.")) {
+								switch(select("...", "Yes, sir!", "Yeah, whatever.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -632,7 +648,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Perhaps only the gods can be";
 								mes "sure as to what the future will bring. In any case, we must prepare ourselves for what will happen.";
 								next;
-								switch(select("...:Yes?:Yes, sir!")) {
+								switch(select("...", "Yes?", "Yes, sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -677,7 +693,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "What has made";
 				mes "you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -724,7 +740,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "[Austri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Hey, sup!")) {
+				switch(select("Nothing.", "Hey, sup!")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -742,13 +758,13 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "What has made";
 				mes "you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
 					close;
 				case 2:
-					if (countitem(1005) > 0) {
+					if (countitem(Hammer_Of_Blacksmith) > 0) {
 						mes "[Austri]";
 						mes "Ah, I see that the entire human race is not worthy of scorn. Unlike many of your kind, I see that you respect your elders.";
 						next;
@@ -759,7 +775,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "want to ask";
 								mes "me about?";
 								next;
-								switch(select("...:About Mjolnir.")) {
+								switch(select("...", "About Mjolnir.")) {
 								case 1:
 									.@talk_not = 1;
 									break;
@@ -779,7 +795,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "The hilt of Mjolnir was forged shorter than intended. Are you still listening to me?";
 								next;
-								switch(select("...:Yes, sir!:Huh?")) {
+								switch(select("...", "Yes, sir!", "Huh?")) {
 								default:
 									.@talk_not = 1;
 								break;
@@ -795,7 +811,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Frankly his treasures were";
 								mes "made by another Dwarf tribe, but we couldn't tolerate his insult. So my ancestors created three treasures of their own.";
 								next;
-								switch(select("...:Boooring!:Oh, wow.")) {
+								switch(select("...", "Boooring!", "Oh, wow.")) {
 								case 1:
 									.@talk_not = 1;
 								break;
@@ -816,7 +832,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "It's very sad. Although Mjolnir is the greatest weapon ever, it was very close to being the epitome of craftsmanship.";
 								next;
-								switch(select("...:Epito--what?:Yes sir, I agree.")) {
+								switch(select("...", "Epito--what?", "Yes sir, I agree.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -834,7 +850,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "I must say, a Blacksmith's greatest pride comes when he creates the weapon and armor that can be considered his life's work.";
 								next;
-								switch(select("...:I agree, sir!:Um, yeah.")) {
+								switch(select("...", "I agree, sir!", "Um, yeah.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -854,7 +870,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "how powerful Mjolnir is.";
 								mes "However, humans can never hope to see or even wield Mjolnir. Only a god can handle that kind of force.";
 								next;
-								switch(select("...:Wah wah wah~!:Ah, I understand sir!")) {
+								switch(select("...", "Wah wah wah~!", "Ah, I understand sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -870,7 +886,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Yes, it's possible to create";
 								mes "a Mjolnir suited to humans. Still, it wouldn't be very easy.";
 								next;
-								switch(select("...:Yes, sir!:Yeah, whatever.")) {
+								switch(select("...", "Yes, sir!", "Yeah, whatever.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -891,7 +907,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Perhaps only the gods can be";
 								mes "sure as to what the future will bring. In any case, we must prepare ourselves for what will happen.";
 								next;
-								switch(select("...:Yes?:Yes, sir!")) {
+								switch(select("...", "Yes?", "Yes, sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -934,7 +950,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "[Austri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -1036,7 +1052,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "What brings";
 				mes "you here?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much time on your hands. Why don't you log out and hang out with your friends instead?";
@@ -1061,13 +1077,13 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				.@p_vit = 100;
 				while(1) {
 					mes "Sudri : " + .@n_vit + " HP";
-					mes "" + strcharinfo(0) + " : " + .@p_vit + " HP";
+					mes "" + strcharinfo(PC_NAME) + " : " + .@p_vit + " HP";
 					mes "--------------------";
-					mes "" + strcharinfo(0) + "";
+					mes "" + strcharinfo(PC_NAME) + "";
 					mes "initiated";
 					mes "an attack!";
 					next;
-					switch(select("...?!:Strike Head!:Strike Chest!:Strike Legs!:Take a break.")) {
+					switch(select("...?!", "Strike Head!", "Strike Chest!", "Strike Legs!", "Take a break.")) {
 					case 1:
 						.@p_atk = 0;
 						break;
@@ -1087,23 +1103,23 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					.@n_def = rand(1,3);
 					.@damage = rand(15,25);
 					if (.@p_atk == 1) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "attacks Sudri's head!";
 					}
 					else if (.@p_atk == 2) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "strikes Sudri's chest!";
 					}
 					else if (.@p_atk == 3) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "aims for Sudri's legs!";
 					}
 					else if (.@p_atk == 4) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "requests a break!";
 					}
 					else {
-						mes "" + strcharinfo(0) + "'s";
+						mes "" + strcharinfo(PC_NAME) + "'s";
 						mes "weak point revealed!";
 					}
 					if (.@p_atk == .@n_def) {
@@ -1114,7 +1130,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "your attack by twisting";
 							mes "his small, yet svelte, body.";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " misses!";
+							mes "" + strcharinfo(PC_NAME) + " misses!";
 						}
 						else if (.@n_def == 2) {
 							mes "--------------------";
@@ -1122,7 +1138,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "attack by crossing";
 							mes "his stout arms.";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + "'s attack is blocked!";
+							mes "" + strcharinfo(PC_NAME) + "'s attack is blocked!";
 						}
 						else if (.@n_def == 3) {
 							mes "--------------------";
@@ -1130,14 +1146,14 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "attack with a graceful";
 							mes "leap to the heavens.";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " misses!";
+							mes "" + strcharinfo(PC_NAME) + " misses!";
 						}
 					}
 					else if (.@p_atk == 4) {
-						specialeffect2 EF_HEAL;
+						specialeffect(EF_HEAL, AREA, playerattached());
 						.@p_vit += 10;
 						mes "--------------------";
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "has gained 10 HP!";
 					}
 					else if (.@p_atk == 1) {
@@ -1170,13 +1186,13 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "lost " + .@damage + " HP!";
 					}
 					else if (.@p_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= 10;
 						mes "--------------------";
 						mes "You were hit by";
 						mes "Sudri's counter attack!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost 10 HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost 10 HP!";
 						if (.@p_vit < 1) {
 							mes "Defeated...";
 							next;
@@ -1190,17 +1206,17 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						close;
 					}
 					if (.@n_vit < 1) {
-						mes "" + strcharinfo(0) + " wins!";
+						mes "" + strcharinfo(PC_NAME) + " wins!";
 						next;
 						break;
 					}
 					next;
 					mes "Sudri : " + .@n_vit + " HP";
-					mes "" + strcharinfo(0) + " : " + .@p_vit + " HP";
+					mes "" + strcharinfo(PC_NAME) + " : " + .@p_vit + " HP";
 					mes "--------------------";
 					mes "Sudri attacks...!";
 					next;
-					switch(select("...?!:Dodge!:Block!:Jump!:Counter back!")) {
+					switch(select("...?!", "Dodge!", "Block!", "Jump!", "Counter back!")) {
 					case 1:
 						.@p_def = 0;
 						break;
@@ -1229,10 +1245,10 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "Sudri attacks the legs!";
 					}
 					if (.@n_atk == .@p_def) {
-						specialeffect2 EF_GUARD;
+						specialeffect(EF_GUARD, AREA, playerattached());
 						if (.@p_def == 1) {
 							mes "--------------------";
-							mes "" + strcharinfo(0) + "";
+							mes "" + strcharinfo(PC_NAME) + "";
 							mes "quickly dodged!";
 							mes "Sudri's arms were";
 							mes "too short and missed!";
@@ -1241,7 +1257,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 						else if (.@p_def == 2) {
 							mes "--------------------";
-							mes "" + strcharinfo(0) + "";
+							mes "" + strcharinfo(PC_NAME) + "";
 							mes "barely blocked";
 							mes "Sudri's attack.";
 							mes "--------------------";
@@ -1249,7 +1265,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 						else if (.@p_def == 3) {
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " jumped,";
+							mes "" + strcharinfo(PC_NAME) + " jumped,";
 							mes "dodged Sudri's attack at ease.";
 							mes "--------------------";
 							mes "Sudri has failed to attack.";
@@ -1258,10 +1274,10 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					else if (.@p_def == 4) {
 						.@count = rand(1,4);
 						mes "--------------------";
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "counters!";
 						if (.@count == 1) {
-							specialeffect2 EF_AUTOCOUNTER;
+							specialeffect(EF_AUTOCOUNTER, AREA, playerattached());
 							specialeffect EF_MAGNUMBREAK;
 							.@n_vit -= 20;
 							mes "You successfully";
@@ -1269,61 +1285,61 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "--------------------";
 							mes "Sudri has lost 20 HP!";
 							if (.@n_vit < 1) {
-								mes "" + strcharinfo(0) + " won!";
+								mes "" + strcharinfo(PC_NAME) + " won!";
 								next;
 								break;
 							}
 						}
 						else {
-							specialeffect2 EF_CRASHEARTH;
+							specialeffect(EF_CRASHEARTH, AREA, playerattached());
 							.@p_vit -= 30;
 							mes "You've taken";
 							mes "critical damage";
 							mes "on your weak spot!";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " has lost 30 HP!";
+							mes "" + strcharinfo(PC_NAME) + " has lost 30 HP!";
 						}
 					}
 					else if (.@n_atk == 1) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hit " + strcharinfo(0) + "";
+						mes "hit " + strcharinfo(PC_NAME) + "";
 						mes "on the head!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 2) {
-						specialeffect2 EF_HIT2;
+						specialeffect(EF_HIT2, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hit " + strcharinfo(0) + "";
+						mes "hit " + strcharinfo(PC_NAME) + "";
 						mes "on the chest!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 3) {
-						specialeffect2 EF_HIT4;
+						specialeffect(EF_HIT4, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hit " + strcharinfo(0) + "";
+						mes "hit " + strcharinfo(PC_NAME) + "";
 						mes "on the legs!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hits "+ strcharinfo(0) +"";
+						mes "hits "+ strcharinfo(PC_NAME) +"";
 						mes "during a moment of";
 						mes "absent-mindedness!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else {
 						mes "--------------------";
@@ -1369,7 +1385,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "What brings";
 				mes "you here, human?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much time on your hands. Why don't you log out and hang out with your buddies for a while?";
@@ -1390,7 +1406,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "just talk to you.";
 					mes "How about it?";
 					next;
-					switch(select("...:Yes, I accept your challenge.:No, I'm scared!")) {
+					switch(select("...", "Yes, I accept your challenge.", "No, I'm scared!")) {
 					case 1:
 						god_mjo_2 = 3;
 						mes "[Sudri]";
@@ -1444,7 +1460,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "[Sudri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much";
@@ -1469,13 +1485,13 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				.@p_vit = 100;
 				while(1) {
 					mes "Sudri : " + .@n_vit + " HP";
-					mes "" + strcharinfo(0) + " : " + .@p_vit + " HP";
+					mes "" + strcharinfo(PC_NAME) + " : " + .@p_vit + " HP";
 					mes "--------------------";
-					mes "" + strcharinfo(0) + "";
+					mes "" + strcharinfo(PC_NAME) + "";
 					mes "initiated";
 					mes "an attack!";
 					next;
-					switch(select("...?!:Strike Head!:Strike Chest!:Strike Legs!:Take a break.")) {
+					switch(select("...?!", "Strike Head!", "Strike Chest!", "Strike Legs!", "Take a break.")) {
 					case 1:
 						.@p_atk = 0;
 						break;
@@ -1495,23 +1511,23 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					.@n_def = rand(1,3);
 					.@damage = rand(15,25);
 					if (.@p_atk == 1) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "attacks Sudri's head!";
 					}
 					else if (.@p_atk == 2) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "strikes Sudri's chest!";
 					}
 					else if (.@p_atk == 3) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "aims for Sudri's legs!";
 					}
 					else if (.@p_atk == 4) {
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "requests a break!";
 					}
 					else {
-						mes "" + strcharinfo(0) + "'s";
+						mes "" + strcharinfo(PC_NAME) + "'s";
 						mes "weak point revealed!";
 					}
 					if (.@p_atk == .@n_def) {
@@ -1522,7 +1538,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "your attack by twisting";
 							mes "his small, yet svelte, body.";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " misses!";
+							mes "" + strcharinfo(PC_NAME) + " misses!";
 						}
 						else if (.@n_def == 2) {
 							mes "--------------------";
@@ -1530,7 +1546,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "attack by crossing";
 							mes "his stout arms.";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + "'s attack is blocked!";
+							mes "" + strcharinfo(PC_NAME) + "'s attack is blocked!";
 						}
 						else if (.@n_def == 3) {
 							mes "--------------------";
@@ -1538,14 +1554,14 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "attack with a graceful";
 							mes "leap to the heavens.";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " misses!";
+							mes "" + strcharinfo(PC_NAME) + " misses!";
 						}
 					}
 					else if (.@p_atk == 4) {
-						specialeffect2 EF_HEAL;
+						specialeffect(EF_HEAL, AREA, playerattached());
 						.@p_vit += 10;
 						mes "--------------------";
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "has gained 10 HP!";
 					}
 					else if (.@p_atk == 1) {
@@ -1578,13 +1594,13 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "lost " + .@damage + " HP!";
 					}
 					else if (.@p_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= 10;
 						mes "--------------------";
 						mes "You were hit by";
 						mes "Sudri's counter attack!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost 10 HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost 10 HP!";
 						if (.@p_vit < 1) {
 							mes "Defeated...";
 							next;
@@ -1598,17 +1614,17 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						close;
 					}
 					if (.@n_vit < 1) {
-						mes "" + strcharinfo(0) + " wins!";
+						mes "" + strcharinfo(PC_NAME) + " wins!";
 						next;
 						break;
 					}
 					next;
 					mes "Sudri : " + .@n_vit + " HP";
-					mes "" + strcharinfo(0) + " : " + .@p_vit + " HP";
+					mes "" + strcharinfo(PC_NAME) + " : " + .@p_vit + " HP";
 					mes "--------------------";
 					mes "Sudri attacks...!";
 					next;
-					switch(select("...?!:Dodge!:Block!:Jump!:Counter back!")) {
+					switch(select("...?!", "Dodge!", "Block!", "Jump!", "Counter back!")) {
 					case 1:
 						.@p_def = 0;
 						break;
@@ -1637,10 +1653,10 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						mes "Sudri attacks the legs!";
 					}
 					if (.@n_atk == .@p_def) {
-						specialeffect2 EF_GUARD;
+						specialeffect(EF_GUARD, AREA, playerattached());
 						if (.@p_def == 1) {
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " quickly dodged,";
+							mes "" + strcharinfo(PC_NAME) + " quickly dodged,";
 							mes "Sudri's arms were too";
 							mes "short to reach at you.";
 							mes "--------------------";
@@ -1648,7 +1664,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 						else if (.@p_def == 2) {
 							mes "--------------------";
-							mes "" + strcharinfo(0) + "";
+							mes "" + strcharinfo(PC_NAME) + "";
 							mes "barely blocked";
 							mes "Sudri's attack.";
 							mes "--------------------";
@@ -1656,7 +1672,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 						}
 						else if (.@p_def == 3) {
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " jumped,";
+							mes "" + strcharinfo(PC_NAME) + " jumped,";
 							mes "dodged Sudri's attack at ease.";
 							mes "--------------------";
 							mes "Sudri has failed to attack.";
@@ -1665,10 +1681,10 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					else if (.@p_def == 4) {
 						.@count = rand(1,4);
 						mes "--------------------";
-						mes "" + strcharinfo(0) + "";
+						mes "" + strcharinfo(PC_NAME) + "";
 						mes "counters!";
 						if (.@count == 1) {
-							specialeffect2 EF_AUTOCOUNTER;
+							specialeffect(EF_AUTOCOUNTER, AREA, playerattached());
 							specialeffect EF_MAGNUMBREAK;
 							.@n_vit -= 20;
 							mes "You successfully";
@@ -1676,61 +1692,61 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 							mes "--------------------";
 							mes "Sudri has lost 20 HP!";
 							if (.@n_vit < 1) {
-								mes "" + strcharinfo(0) + " won!";
+								mes "" + strcharinfo(PC_NAME) + " won!";
 								next;
 								break;
 							}
 						}
 						else {
-							specialeffect2 EF_CRASHEARTH;
+							specialeffect(EF_CRASHEARTH, AREA, playerattached());
 							.@p_vit -= 30;
 							mes "You've taken";
 							mes "critical damage";
 							mes "on your weak spot!";
 							mes "--------------------";
-							mes "" + strcharinfo(0) + " has lost 30 HP!";
+							mes "" + strcharinfo(PC_NAME) + " has lost 30 HP!";
 						}
 					}
 					else if (.@n_atk == 1) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hit " + strcharinfo(0) + "";
+						mes "hit " + strcharinfo(PC_NAME) + "";
 						mes "on the head!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 2) {
-						specialeffect2 EF_HIT2;
+						specialeffect(EF_HIT2, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hit " + strcharinfo(0) + "";
+						mes "hit " + strcharinfo(PC_NAME) + "";
 						mes "on the chest!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 3) {
-						specialeffect2 EF_HIT4;
+						specialeffect(EF_HIT4, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hit " + strcharinfo(0) + "";
+						mes "hit " + strcharinfo(PC_NAME) + "";
 						mes "on the legs!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else if (.@n_atk == 0) {
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						.@p_vit -= .@damage;
 						mes "--------------------";
 						mes "Sudri successfully";
-						mes "hits "+ strcharinfo(0) +"";
+						mes "hits "+ strcharinfo(PC_NAME) +"";
 						mes "during a moment of";
 						mes "absent-mindedness!";
 						mes "--------------------";
-						mes "" + strcharinfo(0) + " has lost " + .@damage + " HP!";
+						mes "" + strcharinfo(PC_NAME) + " has lost " + .@damage + " HP!";
 					}
 					else {
 						mes "--------------------";
@@ -1774,7 +1790,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "[Sudri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much";
@@ -1797,7 +1813,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "just talk to you.";
 					mes "How about it?";
 					next;
-					switch(select("...:Yes, I accept your challenge.:No, I'm scared!")) {
+					switch(select("...", "Yes, I accept your challenge.", "No, I'm scared!")) {
 					case 1:
 						god_mjo_3 = 3;
 						mes "[Sudri]";
@@ -1918,7 +1934,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2011,7 +2027,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "If you understand,";
 				mes "then let's get on with it!";
 				next;
-				if(select("Sure, let's do it!:N-no, I changed my mind!") == 2) {
+				if(select("Sure, let's do it!", "N-no, I changed my mind!") == 2) {
 					mes "[Vestri]";
 					mes "Bah...!";
 					mes "How do you survive";
@@ -2025,8 +2041,8 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 					close;
 				}
 
-				if (countitem(984) > 0) {
-					delitem 984,1; //Oridecon
+				if (countitem(Oridecon) > 0) {
+					delitem Oridecon,1;
 				}
 				else {
 					mes "[Vestri]";
@@ -2079,7 +2095,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2135,7 +2151,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2222,7 +2238,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "If you understand,";
 				mes "then let's get on with it!";
 				next;
-				if(select("Sure, let's do it!:...no, I am out.") == 2) {
+				if(select("Sure, let's do it!", "...no, I am out.") == 2) {
 					mes "[Vestri]";
 					mes "Bah...!";
 					mes "How do you survive";
@@ -2235,8 +2251,8 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 					mes "to work!";
 					close;
 				}
-				if (countitem(984) > 0) {
-					delitem 984,1; //Oridecon
+				if (countitem(Oridecon) > 0) {
+					delitem Oridecon,1;
 				}
 				else {
 					mes "[Vestri]";
@@ -2289,7 +2305,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2399,7 +2415,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "Huh.";
@@ -2417,8 +2433,8 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				}
 			}
 			else if (god_mjo_4 == 1) {
-				if (countitem(501) > 0) {
-					delitem 501,1;  //Red_Potion
+				if (countitem(Red_Potion) > 0) {
+					delitem Red_Potion,1;
 					mes "[Nordri]";
 					mes "Ah, you've brought";
 					mes "me a Red Potion, just";
@@ -2444,7 +2460,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "In truth, Thor was tricked, and the opponent that defeated him was not";
 							mes "actually a giant. Illusion was used to disguise Thor's opponent, but I forget was it was. Do you know?";
 							next;
-							switch(select("Greed:Sea:Blaze:Hog")) {
+							switch(select("Greed", "Sea", "Blaze", "Hog")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2464,7 +2480,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "Once again, illusion magic was";
 							mes "used to disguise the competitor. Do you know what Tialfi was really racing against?";
 							next;
-							switch(select("Language:Thoughts:Turtle:Wolf")) {
+							switch(select("Language", "Thoughts", "Turtle", "Wolf")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2483,7 +2499,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "Once again, Thor was the victim";
 							mes "of illusion magic. He didn't realize he wasn't actually wrestling with an old woman. Do you know what his opponent really was?";
 							next;
-							switch(select("Curse:Earth:Heart:Old Age")) {
+							switch(select("Curse", "Earth", "Heart", "Old Age")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2544,7 +2560,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "Huh.";
@@ -2588,7 +2604,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "Huh.";
@@ -2606,9 +2622,9 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				}
 			}
 			else if (god_mjo_1 == 1) {
-				if (countitem(501) > 0) {
+				if (countitem(Red_Potion) > 0) {
 
-					delitem 501,1;  //Red_Potion
+					delitem Red_Potion,1;
 					mes "[Nordri]";
 					mes "Ah, you've brought";
 					mes "me a Red Potion...?";
@@ -2632,7 +2648,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "[Nordri]";
 							mes "So Thor decided to test his knowledge by asking him some questions. The first question was, 'What is the name of the ground in human terms?' Do you know the answer?";
 							next;
-							switch(select("Ymir's body:Earth:Lane:Universe")) {
+							switch(select("Ymir's body", "Earth", "Lane", "Universe")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2647,7 +2663,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "[Nordri]";
 							mes "Thor then gave Alvis another question. What is the giant's term for the round shell that covers the earth?";
 							next;
-							switch(select("Ymir's Head:Sky:Cloud Factory:High House")) {
+							switch(select("Ymir's Head", "Sky", "Cloud Factory", "High House")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2662,7 +2678,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "[Nordri]";
 							mes "So Thor gave him another question. What is the term for the ball that rises in the sky at night, as used by the gods?";
 							next;
-							switch(select("Circling Wheel:Moon:False Sun:Fast Stranger")) {
+							switch(select("Circling Wheel", "Moon", "False Sun", "Fast Stranger")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2730,7 +2746,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "You're funny, leave me alone.";

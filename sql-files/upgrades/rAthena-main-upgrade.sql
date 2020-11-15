@@ -1,3 +1,22 @@
+-- This file is part of Hercules.
+-- http://herc.ws - http://github.com/HerculesWS/Hercules
+--
+-- Copyright (C) 2013-2020 Hercules Dev Team
+--
+-- Hercules is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+--
 -- rAthena to Hercules main database upgrade query.
 -- This upgrades a FULLY UPGRADED rAthena to a FULLY UPGRADED Hercules
 -- Please don't use if either rAthena or Hercules launched a SQL update after last revision date of this file.
@@ -5,6 +24,7 @@
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
 -- Last revised: July 22, 2014 21:45 GMT
+--
 
 -- Drop table contents from `sc_data` since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
@@ -317,3 +337,16 @@ INSERT INTO `global_acc_reg_str_db` (`account_id`, `key`, `index`, `value`) SELE
 -- Dropping now useless table
 DROP TABLE `global_reg_value`;
 
+ALTER TABLE `charlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `interlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `btime` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `rtime` DATETIME NULL;
+ALTER TABLE `login` MODIFY `lastlogin` DATETIME NULL;
+ALTER TABLE `login` MODIFY `birthdate` DATE NULL;
+
+UPDATE `charlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `interlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `btime` = NULL WHERE `btime` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `rtime` = NULL WHERE `rtime` = '0000-00-00 00:00:00';
+UPDATE `login` SET `lastlogin` = NULL WHERE `lastlogin` = '0000-00-00 00:00:00';
+UPDATE `login` SET `birthdate` = NULL WHERE `birthdate` = '0000-00-00';

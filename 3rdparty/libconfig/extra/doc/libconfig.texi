@@ -6,8 +6,8 @@
 @setfilename libconfig.info
 @settitle libconfig
 
-@set edition 1.4.9
-@set update-date 28 September 2012
+@set edition 1.5
+@set update-date 16 May 2015
 @set subtitle-text A Library For Processing Structured Configuration Files
 @set author-text Mark A.@: Lindner
 
@@ -36,7 +36,7 @@
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 2005-2012  Mark A Lindner
+Copyright @copyright{} 2005-2014 Mark A Lindner
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -512,8 +512,11 @@ more hexadecimal digits (@samp{0} - @samp{9}, @samp{A} - @samp{F},
 @section 64-bit Integer Values
 
 Long long (64-bit) integers are represented identically to integers,
-except that an 'L' character is appended to indicate a 64-bit
-value. For example, @samp{0L} indicates a 64-bit integer value 0.
+except that an `L' character is appended to indicate a 64-bit
+value. For example, @samp{0L} indicates a 64-bit integer value 0.  As
+of version 1.5 of the library, the trailing `L' is optional; if the
+integer value exceeds the range of a 32-bit integer, it will
+automatically be interpreted as a 64-bit integer.
 
 @node Floating Point Values, Boolean Values, 64-bit Integer Values, Configuration Files
 @comment  node-name,  next,  previous,  up
@@ -766,21 +769,60 @@ configuration @var{config}, or @code{NULL} if none is set.
 
 @end deftypefun
 
-@deftypefun void config_set_auto_convert (@w{config_t *@var{config}}, @w{int @var{flag}})
-@deftypefunx int config_get_auto_convert (@w{const config_t *@var{config}})
+@deftypefun void config_set_options (@w{config_t *@var{config}}, @w{int @var{options}})
+@deftypefunx int config_get_options (@w{config_t *@var{config}})
 
-@code{config_set_auto_convert()} enables number auto-conversion for
-the configuration @var{config} if @var{flag} is non-zero, and disables
-it otherwise. When this feature is enabled, an attempt to retrieve a
+These functions set and get the options for the configuration
+@var{config}. The options affect how configurations are read and
+written. The following options are defined:
+
+@table @code
+
+@item CONFIG_OPTION_AUTOCONVERT
+Turning this option on enables number auto-conversion for
+the configuration. When this feature is enabled, an attempt to retrieve a
 floating point setting's value into an integer (or vice versa), or
 store an integer to a floating point setting's value (or vice versa)
 will cause the library to silently perform the necessary conversion
 (possibly leading to loss of data), rather than reporting failure. By
-default this feature is disabled.
+default this option is turned off.
 
-@code{config_get_auto_convert()} returns @code{CONFIG_TRUE} if number
-auto-conversion is currently enabled for @var{config}; otherwise it
-returns @code{CONFIG_FALSE}.
+@item CONFIG_OPTION_SEMICOLON_SEPARATORS
+This option controls whether a semicolon (`;') is output after each setting
+when the configuration is written to a file or stream. (The semicolon
+separators are optional in the configuration syntax.) By default this
+option is turned on.
+
+@item CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
+This option controls whether a colon (`:') is output between each
+group setting's name and its value when the configuration is written to
+a file or stream. If the option is turned off, an equals sign (`=') is
+output instead. (These tokens are interchangeable in the configuration
+syntax.) By default this option is turned on.
+
+@item CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS
+This option controls whether a colon (`:') is output between each
+non-group setting's name and its value when the configuration is written
+to a file or stream. If the option is turned off, an equals sign (`=')
+is output instead. (These tokens are interchangeable in the configuration
+syntax.) By default this option is turned off.
+
+@item CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE
+This option controls whether an open brace (`@{') will be written on its own
+line when the configuration is written to a file or stream. If the option is
+turned off, the brace will be written at the end of the previous line.
+By default this option is turned on.
+
+@end table
+
+@end deftypefun
+
+@deftypefun void config_set_auto_convert (@w{config_t *@var{config}}, @w{int @var{flag}})
+@deftypefunx int config_get_auto_convert (@w{const config_t *@var{config}})
+
+These functions get and set the @code{CONFIG_OPTION_AUTO_CONVERT}
+option. They are obsoleted by the @code{config_set_options()} and
+@code{config_get_options()} functions described above.
 
 @end deftypefun
 
@@ -834,6 +876,15 @@ be freed by the caller.
 
 This function locates the setting in the configuration @var{config}
 specified by the path @var{path}. It returns a pointer to the
+@code{config_setting_t} structure on success, or @code{NULL} if the
+setting was not found.
+
+@end deftypefun
+
+@deftypefun {config_setting_t *} config_setting_lookup (@w{const config_setting_t * @var{setting}}, @w{const char * @var{path}})
+
+This function locates a setting by a path @var{path} relative to
+the setting @var{setting}. It returns a pointer to the
 @code{config_setting_t} structure on success, or @code{NULL} if the
 setting was not found.
 
@@ -1146,16 +1197,44 @@ common base exception @code{ConfigException}.
 A @code{SettingTypeException} is thrown when the type of a setting's
 value does not match the type requested.
 
+@deftypemethod SettingTypeException {} SettingTypeException (@w{const Setting &@var{setting}})
+@deftypemethodx SettingTypeException {} SettingTypeException (@w{const Setting &@var{setting}}, @w{int @var{index}})
+@deftypemethodx SettingTypeException {} SettingTypeException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
+
+These methods construct @code{SettingTypeException} objects for the given @var{setting} and/or member @var{index} or @var{name}.
+
+@end deftypemethod
+
 @tindex SettingNotFoundException
 A @code{SettingNotFoundException} is thrown when a setting is not found.
+
+@deftypemethod SettingNotFoundException {} SettingNotFoundException (@w{const Setting &@var{setting}}, @w{int @var{index}})
+@deftypemethodx SettingNotFoundException {} SettingNotFoundException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
+@deftypemethodx SettingNotFoundException {} SettingNotFoundException (@w{const char *@var{path}})
+
+These methods construct @code{SettingTypeException} objects for the given @var{setting} and member @var{index} or @var{name}, or path @var{path}.
+
+@end deftypemethod
 
 @tindex SettingNameException
 A @code{SettingNameException} is thrown when an attempt is made to add
 a new setting with a non-unique or invalid name.
 
+@deftypemethod SettingNameException {} SettingNameException (@w{const Setting &@var{setting}}, @w{const char *@var{name}})
+
+This method constructs a @code{SettingNameExcpetion} object for the given @var{setting} and member name @var{name}.
+
+@end deftypemethod
+
 @tindex ParseException
 A @code{ParseException} is thrown when a parse error occurs while
 reading a configuration from a stream.
+
+@deftypemethod ParseException {} ParseException (@w{const char *@var{file}}, @w{int @var{line}}, @w{const char *@var{error}})
+
+This method constructs a @code{ParseException} object with the given filename @var{file}, line number @var{line}, and error message @var{error}.
+
+@end deftypemethod
 
 @tindex FileIOException
 A @code{FileIOException} is thrown when an I/O error occurs while
@@ -1247,21 +1326,60 @@ configuration, or @code{NULL} if none is set.
 
 @end deftypemethod
 
+@deftypemethod Config void setOptions (int @var{options})
+@deftypemethodx Config int getOptions ()
+
+These methods set and get the options for the configuration. The
+options affect how configurations are read and written. The following
+options are defined:
+
+@table @code
+
+@item OptionAutoConvert
+Turning this option on enables number auto-conversion for
+the configuration. When this feature is enabled, an attempt to retrieve a
+floating point setting's value into an integer (or vice versa), or
+store an integer to a floating point setting's value (or vice versa)
+will cause the library to silently perform the necessary conversion
+(possibly leading to loss of data), rather than reporting failure. By
+default this option is turned off.
+
+@item OptionSemicolonSeparators
+This option controls whether a semicolon (`;') is output after each setting
+when the configuration is written to a file or stream. (The semicolon
+separators are optional in the configuration syntax.) By default this
+option is turned on.
+
+@item OptionColonAssignmentForGroups
+This option controls whether a colon (`:') is output between each
+group setting's name and its value when the configuration is written to
+a file or stream. If the option is turned off, an equals sign (`=') is
+output instead. (These tokens are interchangeable in the configuration
+syntax.) By default this option is turned on.
+
+@item OptionColonAssignmentForNonGroups
+This option controls whether a colon (`:') is output between each
+non-group setting's name and its value when the configuration is written
+to a file or stream. If the option is turned off, an equals sign (`=')
+is output instead. (These tokens are interchangeable in the configuration
+syntax.) By default this option is turned off.
+
+@item OptionOpenBraceOnSeparateLine
+This option controls whether an open brace (`@{') will be written on its own
+line when the configuration is written to a file or stream. If the option is
+turned off, the brace will be written at the end of the previous line.
+By default this option is turned on.
+
+@end table
+
+@end deftypemethod
+
 @deftypemethod Config void setAutoConvert (bool @var{flag})
 @deftypemethodx Config bool getAutoConvert ()
 
-@code{setAutoConvert()} enables number auto-conversion for the
-configuration if @var{flag} is @code{true}, and disables it
-otherwise. When this feature is enabled, an attempt to assign a
-floating point setting to an integer (or vice versa), or
-assign an integer to a floating point setting (or vice versa) will
-cause the library to silently perform the necessary conversion
-(possibly leading to loss of data), rather than throwing a
-@code{SettingTypeException}. By default this feature is disabled.
-
-@code{getAutoConvert()} returns @code{true} if number auto-conversion
-is currently enabled for the configuration; otherwise it returns
-@code{false}.
+These methods get and set the @code{OptionAutoConvert} option. They
+are obsoleted by the @code{setOptions()} and @code{getOptions()}
+methods described above.
 
 @end deftypemethod
 
@@ -1542,6 +1660,15 @@ configuration.
 
 @end deftypemethod
 
+@deftypemethod Setting {Setting &} lookup (@w{const char * @var{path}})
+@deftypemethodx Setting {Setting &} lookup (@w{const std::string &@var{path}})
+
+This function locates a setting by a path @var{path} relative to
+this setting. If requested setting is not found, a
+@code{SettingNotFoundException} is thrown.
+
+@end deftypemethod
+
 @deftypemethod Setting bool lookupValue (@w{const char *@var{name}}, @w{bool &@var{value}})
 @deftypemethodx Setting bool lookupValue (@w{const std::string &@var{name}}, @w{bool &@var{value}})
 
@@ -1744,6 +1871,17 @@ These methods test if the setting has a child setting with the given
 @code{false} otherwise. These methods do not throw exceptions.
 
 @end deftypemethod
+@page
+@deftypemethod Setting iterator begin ()
+@deftypemethodx Setting iterator end ()
+@deftypemethodx Setting const_iterator begin ()
+@deftypemethodx Setting const_iterator end ()
+
+These methods return STL-style iterators that can be used to enumerate
+the child settings of a given setting. If the setting is not an array, list,
+or group, they throw a @code{SettingTypeException}.
+
+@end deftypemethod
 
 @deftypemethod Setting int getLength ()
 
@@ -1878,7 +2016,7 @@ Terminals are defined below as regular expressions:
 @item @code{hex} @tab
 @code{0[Xx][0-9A-Fa-f]+}
 @item @code{hex64} @tab
-@code{0[Xx][0-9A-Fa-f]+L(L)?}
+@code{0[Xx][0-9A-Fa-f]+(L(L)?)?}
 @item @code{float} @tab
 @code{([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]([0-9]+)(\.[0-9]*)?[eE][-+]?[0-9]+)}
 @end multitable

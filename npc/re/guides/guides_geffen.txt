@@ -1,17 +1,37 @@
-//===== Hercules Script ======================================
-//= Geffen Guides
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Geffen Guides (Renewal)
+//================= Description ===========================================
 //= Guides for the city of Geffen.
-//===== Additional Comments: =================================
-//= 1.0 First version, Renewal guide.
-//= 1.1 Fixed and optimized. [Euphy]
-//= 1.2 Navigation system update. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 	cutin "gef_soldier",2;
@@ -22,11 +42,11 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 	F_Navi("[Geffen Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Magic Academy ]:[ Geffen Tower ]:[ Fountain ]:[ Tool Shop ]:[ Buy & Repair Equipment ]:[ Inn ]:[ Tavern ]:[ Christopher's Forge ]:Previous Menu")) {
+				switch(select("[ Magic Academy ]", "[ Geffen Tower ]", "[ Fountain ]", "[ Tool Shop ]", "[ Buy & Repair Equipment ]", "[ Inn ]", "[ Tavern ]", "[ Christopher's Forge ]", "Previous Menu")) {
 				case 1:
 					mes "[Geffen Guide]";
 					mes "The "+F_Navi("Magic Academy","geffen,61,180","^B9062F");
@@ -92,7 +112,7 @@ geffen,203,116,4	script	Guide#01geffen::GuideGeffen	4_M_GEF_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Pet Groomer ]:[ Chef Assistant ]:[ Dimensional Arcanist Guide ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Kafra Employee ]", "[ Pet Groomer ]", "[ Chef Assistant ]", "[ Dimensional Arcanist Guide ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Eden Teleport Officers","geffen,132,66","^B9062F");
 					viewpoint 1,61,180,7,0xFF0000;

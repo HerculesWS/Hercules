@@ -1,28 +1,53 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Chilly
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden Group Quests - Mission [86 - 90]
-//===== By: ==================================================
-//= Chilly
-//===== Current Version: =====================================
-//= 1.3
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞ ============
+//= ============ ============================================= ============
+//= ============ ≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠ ============
+//================= Description ===========================================
 //= Repetable Quests for Players between Baselevel 86 - 90.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Chilly]
-//= 1.1 Some little improvements here and there. [Masao]
-//= 1.2 Optimized. [Euphy]
-//= 1.3 Updated to match the official script. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
-	if (countitem(6219) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "Wait a minute!";
 		mes "-You need to have an-";
 		mes "-^4d4dff'Eden Group Mark'^000000-";
 		mes "-to receive these missions.-";
 		next;
-		switch(select("Just walk away.:^0000FFEden Group^000000 missions?:How can I be a member of the ^0000FFEden Group^000000?")) {
+		switch(select("Just walk away.", "^0000FFEden Group^000000 missions?", "How can I be a member of the ^0000FFEden Group^000000?")) {
 		case 1:
 			close;
 		case 2:
@@ -105,12 +130,12 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 	mes "[86-90 Mission Board]";
 	mes "There are several requests on this board.";
 	next;
-	switch(select("^8B4513Turtle Island^000000:^8B4513Clock Tower Dungeon^000000:^8B4513Expansion Towns^000000:^8B4513Other Regions^000000")) {
+	switch(select("^8B4513Turtle Island^000000", "^8B4513Clock Tower Dungeon^000000", "^8B4513Expansion Towns^000000", "^8B4513Other Regions^000000")) {
 	case 1:
 		mes "^8B4513Turtle Island^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFDragon Tail^000000:^0000FFSpring Rabbit^000000:^0000FFPest^000000")) {
+		switch(select("^0000FFDragon Tail^000000", "^0000FFSpring Rabbit^000000", "^0000FFPest^000000")) {
 			case 1: callsub L_Quest,4167,"Dragon Tail",76000,"드래곤테일카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.","s";
 			case 2: callsub L_Quest,4168,"Spring Rabbit",82000,"스프링래빗카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.","s";
 			case 3: callsub L_Quest,4169,"Pest",82000,"페스트카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.","s";
@@ -119,7 +144,7 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 		mes "^8B4513Clock Tower Dungeon^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFBathory^000000:^0000FFAlarm^000000")) {
+		switch(select("^0000FFBathory^000000", "^0000FFAlarm^000000")) {
 			case 1: callsub L_Quest,4170,"Bathory",72000,"바소리카드","The Clock Tower Dungeon is full of dangerous monsters.";
 			case 2: callsub L_Quest,4171,"Alarm",76000,"알람카드","The Clock Tower Dungeon is full of dangerous monsters.";
 		}
@@ -127,7 +152,7 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 		mes "^8B4513Expansion Cities^000000";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFBaba Yaga^000000:^0000FFYao Jun^000000:^0000FFFirelock Soldier^000000:^0000FFZipper Bear^000000")) {
+		switch(select("^0000FFBaba Yaga^000000", "^0000FFYao Jun^000000", "^0000FFFirelock Soldier^000000", "^0000FFZipper Bear^000000")) {
 			case 1: callsub L_Quest,4172,"Baba Yaga",72000,"","The witch Baba Yaga can be found in the outskirts of Moscovia.";
 			case 2: callsub L_Quest,4173,"Yao Jun",117000,"혜군카드","There are human-like monsters that roam around the dungeon in Louyang.";
 			case 3: callsub L_Quest,4174,"Firelock Soldier",82000,"구식조총병카드","There are human-like monsters that roam around the dungeon in Amatsu.","s";
@@ -138,7 +163,7 @@ moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
 		mes "Here is a list of random requests to hunt monsters in other regions of Rune Midgard.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFGround Petite^000000:^0000FFRafflesia^000000:^0000FFVenomous^000000:^0000FFPitman^000000:^0000FFYellow Novus^000000")) {
+		switch(select("^0000FFGround Petite^000000", "^0000FFRafflesia^000000", "^0000FFVenomous^000000", "^0000FFPitman^000000", "^0000FFYellow Novus^000000")) {
 			case 1: callsub L_Quest,4176,"Ground Petite",72000,"지상쁘띠카드","There are dragon type monsters swarming the western region of Geffen.";
 			case 2: callsub L_Quest,4177,"Rafflesia",72000,"라플레시아카드","There are plant type monsters infesting the fields of Lighthalzen.";
 			case 3: callsub L_Quest,4178,"Venomous",72000,"베노머스","There are formless monsters floating around the fields of Einbroch.";
@@ -187,7 +212,7 @@ L_Quest:
 		mes "Hunt 30 "+getarg(1)+" monsters there and post your success on this board.";
 		next;
 		if (getarg(3) != "") cutin getarg(3),255;
-		if(select("I'll hunt them.:No thanks.") == 1) {
+		if(select("I'll hunt them.", "No thanks.") == 1) {
 			mes "[86-90 Mission Board]";
 			mes "When you have completed the mission, post it on this board and collect your reward.";
 			if (.@playtime) erasequest .@quest2;

@@ -1,25 +1,44 @@
-//===== Hercules Script ======================================
-//= Payon Guides
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
-//= [Official COnversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Silent
+//= Copyright (C) erKURITA
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Lupus
+//= Copyright (C) Darkchild
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Payon Guides (Pre-Renewal)
+//================= Description ===========================================
 //= Guides for the City of Payon
-//===== Additional Comments: =================================
-//= 1.1 Now using duplicate command.New Payon Locations [Darkchild]
-//= 1.2 Optimized, updated common guide names [Lupus]
-//= 1.3 Updated the guide according to how it is on iRO, thanks [MasterOfMuppets]
-//=     to Muad_Dib
-//= 1.3a Fixed some problems with duplicated text, thanks to muad_dib [MasterOfMuppets]
-//= 1.4 Fitted the many lines into 1 or 2, and corrected some typos [erKURITA]
-//= 1.4a Tixed Archer Village Guide [Lupus]
-//= 1.5 Removed Duplicates [Silent]
-//= 1.6 Rescripted to official 10.3 standards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.6.1
+//=========================================================================
 
-payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
+payon,160,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";
@@ -30,7 +49,7 @@ payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice.", "Cancel")) {
 		case 1:
 			mes "[Payon Guide]";
 			mes "Please select";
@@ -41,13 +60,13 @@ payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("^FF0000Archer Guild^000000:Weapon Shop:Tool Shop:Pub:Central Palace:The Empress:Palace Annex:Royal Kitchen:Forge:Cancel")) {
+				switch(select("^FF0000Archer Guild^000000", "Weapon Shop", "Tool Shop", "Pub", "Central Palace", "The Empress", "Palace Annex", "Royal Kitchen", "Forge", "Cancel")) {
 				case 1:
 					mes "[Payon Guide]";
 					mes "The Archer Guild handles";
@@ -184,7 +203,7 @@ payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 			break;
 		}
 	}
-	cutin "pay_soldier",255;
+	cutin "",255;
 	end;
 }
 
@@ -199,20 +218,20 @@ pay_arche,85,30,2	script	Guide#2pay	4_M_PAY_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Payon Guide]";
 			mes "Please, select a menu.";
 			if (.@compass_check == 0) {
 				mes "Would you like to leave indicators on the mini-map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("^FF0000Archer Guild^000000:Tool Shop:Payon Dungeon:Cancel")) {
+				switch(select("^FF0000Archer Guild^000000", "Tool Shop", "Payon Dungeon", "Cancel")) {
 				case 1:
 					mes "[Payon Guide]";
 					mes "The Archer Guild,";
@@ -289,6 +308,6 @@ pay_arche,85,30,2	script	Guide#2pay	4_M_PAY_SOLDIER,{
 			break;
 		}
 	}
-	cutin "pay_soldier",255;
+	cutin "",255;
 	end;
 }

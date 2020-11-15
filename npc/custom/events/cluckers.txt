@@ -21,32 +21,32 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 	set .@GMAccess,80;	// GM level required to access NPC
 
 	if (.startcluck) {
-		specialeffect2 2;
+		specialeffect(EF_HIT3, AREA, playerattached());
 		switch(rand(15)) {
-			case 0: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 0: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 1: npctalk "Cluuuuuck!~"; break;
-			case 2: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
+			case 2: unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; break;
 			case 3: sc_start SC_FREEZE,10000,0; break;
-			case 4: npctalk "CLUUUUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 4: npctalk "CLUUUUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 5: sc_start SC_SLEEP,10000,0; break;
 			case 6: sc_start SC_STONE,10000,0; emotion 29; break;
-			case 7: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
-			case 8: npctalk "Cluck! CLUUUCK!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 7: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 8: npctalk "Cluck! CLUUUCK!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 9: sc_start SC_STUN,10000,0; break;
 			case 10: sc_start SC_SLEEP,10000,0; emotion 29; break;
 			case 11: npctalk "Cluck! Cluck!"; break;
 			case 12: sc_start SC_STUN,10000,0; break;
-			case 13: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
+			case 13: unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; break;
 			default:
 				if (rand(50) < 4) {
 					npctalk "WOOF!...........";
-					specialeffect2 72;
-					announce "[Cluck! Cluck! Boom!] " + strcharinfo(0) + " squeezed out the prize! Well done!",0;
+					specialeffect(EF_SPHERE, AREA, playerattached());
+					announce "[Cluck! Cluck! Boom!] " + strcharinfo(PC_NAME) + " squeezed out the prize! Well done!",0;
 					getitem $cluck_item_id,$cluck_item_amount;
 					set .startcluck,0;
 				} else {
 					npctalk "Cluck! CLUUUCK!!";
-					unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1;
+					unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1;
 				}
 				break;
 		}
@@ -54,10 +54,10 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 	}
 	mes "[Cluckers]";
 	if (getgmlevel() >= .@GMAccess) {
-		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(0) + ", Wanna play today?~^000000";
+		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(PC_NAME) + ", Wanna play today?~^000000";
 		mes "Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000";
 		next;
-		while(1) switch(select("Start Event:Check Prize:Set Prize:Not today Cluckers")) {
+		while(1) switch(select("Start Event", "Check Prize", "Set Prize", "Not today Cluckers")) {
 			case 1:
 				mes "[Cluckers]";
 				mes "CLUCK! ^FF0000~Sure thing!~^000000";
@@ -74,11 +74,11 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 			case 3:
 				mes "[Cluckers]";
 				mes "Cluck cluck? Cluck??? ^FF0000~What should the prize for winning be? Please input the ID.~^000000";
-				input $cluck_item_id;
+				input($cluck_item_id, 0);
 				next;
 				mes "[Cluckers]";
 				mes "Cluck? cluuuck? ^FF0000~How many if this item should I give away?~^000000";
-				input $cluck_item_amount;
+				input($cluck_item_amount, 0);
 				next;
 				mes "[Cluckers]";
 				mes "Cluck cluck..? Cluck. ^FF0000~So, the prize is^000000 ^008000"+ $cluck_item_amount +" "+ getitemname($cluck_item_id) +"^000000? ^FF0000Great.~^000000";

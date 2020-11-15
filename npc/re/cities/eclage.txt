@@ -1,14 +1,36 @@
-//===== Hercules Script ====================================== 
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Dastgir
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= General Eclage NPC.
-//===== By: ================================================== 
-//= Dastgir
-//===== Current Version: ===================================== 
-//= 1.0
-//===== Description: ========================================= 
+//================= Description ===========================================
 //= Eclage Town NPC
-//===== Additional Comments: ================================= 
-//= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================ 
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 ecl_in02,96,22,3	script	sign#prison_inn	2_BOARD1,{
 	mes "[North] Prison";
@@ -26,7 +48,7 @@ ecl_in02,164,56,3	script	Receptionist#Laphine	4_F_FAIRYKID2,{
 	mes "[Receptionist}";
 	mes "Welcome to Eclage Clinic.";
 	next;
-	switch (select("Save Location:Rest:Finish the conversation")) {
+	switch (select("Save Location", "Rest", "Finish the conversation")) {
 		case 1:
 			mes "[Receptionist}";
 			mes "Clinic has been set as your save point. Be careful though~";
@@ -37,7 +59,7 @@ ecl_in02,164,56,3	script	Receptionist#Laphine	4_F_FAIRYKID2,{
 			mes "Restore your mind and body at our clinic. It's filled with Eclage's clean energy.";
 			mes "We charge 1 Splendide Coin normally, but we offer a special discount for travelers. Your total is 5,000 zeny. ";
 			next;
-			switch (select("Pay with Splendide Coin:Pay with Zeny:Forget it")) {
+			switch (select("Pay with Splendide Coin", "Pay with Zeny", "Forget it")) {
 				case 1:
 					if (!countitem(Splendide_Coin)) {
 						mes "[Receptionist}";
@@ -51,7 +73,6 @@ ecl_in02,164,56,3	script	Receptionist#Laphine	4_F_FAIRYKID2,{
 					percentheal 100,100;
 					warp "ecl_in02",167,49;
 					end;
-					
 				case 2:
 					if (Zeny < 5000) {
 						mes "[Receptionist]";

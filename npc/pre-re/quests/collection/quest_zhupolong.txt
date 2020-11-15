@@ -1,15 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= Masao
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Repeatable EXP Quest : Kill 50 Zhu Po Long. Custom Version.
+//================= Current Version =======================================
 //= 1.0
-//===== Description: =========================================
-//= Custom Version.
-//= Repeatable EXP Quest : Kill 50 Zhu Po Long.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//=========================================================================
 
 lou_dun02,161,264,4	script	Dragon Hunter	4_M_JOB_HUNTER,{
 
@@ -18,7 +39,7 @@ lou_dun02,161,264,4	script	Dragon Hunter	4_M_JOB_HUNTER,{
 			mes "[Dragon Hunter]";
 			mes "Have you finished hunting the 50 Zhu Po Long?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Dragon Hunter]";
 				mes "Hmm, I don't think you've hunted 50 yet.";
@@ -32,7 +53,7 @@ lou_dun02,161,264,4	script	Dragon Hunter	4_M_JOB_HUNTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Dragon Hunter]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -57,7 +78,7 @@ lou_dun02,161,264,4	script	Dragon Hunter	4_M_JOB_HUNTER,{
 		mes "You are here to help me right?";
 		mes "If not, i don't know what to do with the Monsters in this Place!";
 		next;
-		switch(select("Sure:No")) {
+		switch(select("Sure", "No")) {
 		case 1:
 			mes "[Dragon Hunter]";
 			mes "Great! I knew the moment i saw you that i can count on you!";
@@ -67,7 +88,7 @@ lou_dun02,161,264,4	script	Dragon Hunter	4_M_JOB_HUNTER,{
 			mes "[Dragon Hunter]";
 			mes "So, would you still like to help me?";
 			next;
-			switch(select("Sure:Cancel")) {
+			switch(select("Sure", "Cancel")) {
 			case 1:
 				if (BaseLevel > 90) {
 					mes "[Dragon Hunter]";

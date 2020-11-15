@@ -1,29 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Haru
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) Lupus
+//= Copyright (C) Gepard
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Cool Event Corp. Staff
-//===== By: ==================================================
-//= Gepard
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Cool Event Corp. Staff (Save, Storage & Pushcart Service) in Arunafeltz
+//= Region.
+//================= Current Version =======================================
 //= 2.0
-//===== Description: =========================================
-//= Cool Event Corp. Staff (Save, Storage & Pushcart Service)
-//= in Arunafeltz Region.
-//===== Additional Comments: =================================
-//= 1.0 First version, iRO Sakray X.4 [Gepard]
-//= 1.1 Optimized, fixed a conditional bug [Lupus]
-//= 1.1a Redo back. It wasn't a bug [Lupus]
-//= 1.2 Added Rachel Cool Event Corp. Staff [Playtester]
-//= 1.3 Added cutins, closed Kafra Password exploit
-//=     until we got a client/packet based password support [Lupus]
-//= 1.4 Added Veins Cool Event Corp. Staff. [L0ne_W0lf]
-//= 1.5 Cool Event Corp staff is now more iRO like. [L0ne_W0lf]
-//= 2.0 Moved duplicate code to a function. Better integrated
-//      the rest with functions_kafra.txt. [Haru]
-//============================================================
+//=========================================================================
 
-//=== Main Function ========================================================
-//=   arg(0): Used to determine which menu to display.
-//=   arg(1): Used to determine the location displayed in the save message.
-//==========================================================================
+//== Main Function =========================================
+// Arguments:
+// - 0: Used to determine which menu to display.
+// - 1: Used to determine the location displayed in the save message.
 function	script	F_ZondaStaff	{
 	cutin "zonda_01",2;
 	mes "[Cool Event Corp. Staff]";

@@ -1,23 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Brainstorm
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Skotlex
+//= Copyright (C) Lance
+//= Copyright (C) Lupus
+//= Copyright (C) Muad-Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Juperos Dungeon Warp Script
-//===== By: ==================================================
-//= Muad-Dib (1.0)
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Juperos Dungeon
-//===== Additional Comments: =================================
-//= 1.0 Converted by Dr.Evil [Lupus]
-//= 1.1 More temp warps to Juperos by Justin84 [Lupus]
-//= 1.2 Justin84's fixed elevator scripts
-//= 1.3 Fixed getting stuck when player relogs in. [Lance]
-//= 1.4 Added attachnpctimer to the initnpctimer calls. [Skotlex]
-//= 1.5 Implemented a part of the Juperos quest [MasterOfMuppets]
-//= 1.6 Removed area1 and area2 warps. These are event warps. [L0ne_W0lf]
-//=     Added static warps for gate -> area1/2/elevator.
-//= 1.6a COrrected new warps [L0ne_W0lf]
-//= 1.7 Removed duplicated quest warp portal [Brainstorm]
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
 yuno_fild07,207,175,0	warp	jupwrp01	1,1,jupe_cave,143,52
 jupe_cave,148,52,0	warp	jupwrp02	1,1,yuno_fild07,212,175

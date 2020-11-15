@@ -1,44 +1,61 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "utils.h"
 
-#include <math.h> // floor()
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h> // cache purposes [Ind/Hercules]
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
 
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 #	ifndef F_OK
 #		define F_OK   0x0
 #	endif  /* F_OK */
 #else
 #	include <dirent.h>
-#	include <sys/stat.h>
 #	include <unistd.h>
 #endif
 
-struct HCache_interface HCache_s;
+#include <math.h> // floor()
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h> // cache purposes [Ind/Hercules]
+
+static struct HCache_interface HCache_s;
+struct HCache_interface *HCache;
 
 /// Dumps given buffer into file pointed to by a handle.
-void WriteDump(FILE* fp, const void* buffer, size_t length)
+void WriteDump(FILE *fp, const void *buffer, size_t length)
 {
 	size_t i;
 	char hex[48+1], ascii[16+1];
+
+	nullpo_retv(fp);
+	nullpo_retv(buffer);
 
 	fprintf(fp, "--- 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F   0123456789ABCDEF\n");
 	ascii[16] = 0;
@@ -63,12 +80,13 @@ void WriteDump(FILE* fp, const void* buffer, size_t length)
 	}
 }
 
-
 /// Dumps given buffer on the console.
-void ShowDump(const void *buffer, size_t length) {
+void ShowDump(const void *buffer, size_t length)
+{
 	size_t i;
 	char hex[48+1], ascii[16+1];
 
+	nullpo_retv(buffer);
 	ShowDebug("--- 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F   0123456789ABCDEF\n");
 	ascii[16] = 0;
 
@@ -89,13 +107,13 @@ void ShowDump(const void *buffer, size_t length) {
 	}
 }
 
-
 #ifdef WIN32
 
-static char* checkpath(char *path, const char *srcpath)
+static char *checkpath(char *path, const char *srcpath)
 {
 	// just make sure the char*path is not const
 	char *p = path;
+
 	if (NULL == path || NULL == srcpath)
 		return path;
 	while(*srcpath) {
@@ -110,11 +128,11 @@ static char* checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char*))
+void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
-	char tmppath[MAX_PATH+1];
+	char tmppath[MAX_DIR_PATH + 1];
 	const char *path    = (p  ==NULL)? "." : p;
 	const char *pattern = (pat==NULL)? "" : pat;
 
@@ -137,28 +155,43 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 			sprintf(tmppath,"%s%c%s",path,PATHSEP,FindFileData.cFileName);
 
 			if (strstr(FindFileData.cFileName, pattern)) {
-				func( tmppath );
+				func(tmppath, context);
 			}
 
-
-			if( FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-			{
-				findfile(tmppath, pat, func);
+			if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+				findfile(tmppath, pat, func, context);
 			}
 		}while (FindNextFileA(hFind, &FindFileData) != 0);
 		FindClose(hFind);
 	}
 	return;
 }
+
+/**
+ * Checks if the passed path points to a file.
+ *
+ * @param path The path which should be checked.
+ * @return true if the passed path points to a file, otherwise false.
+ *
+ **/
+bool is_file(const char *path)
+{
+	nullpo_retr(false, path);
+
+	char path_tmp[MAX_DIR_PATH + 1];
+
+	checkpath(path_tmp, path);
+
+	return ((GetFileAttributesA(path_tmp) & FILE_ATTRIBUTE_DIRECTORY) == 0);
+}
+
 #else
 
-#define MAX_DIR_PATH 2048
-
-static char* checkpath(char *path, const char*srcpath)
+static char *checkpath(char *path, const char *srcpath)
 {
 	// just make sure the char*path is not const
 	char *p=path;
-	
+
 	if(NULL!=path && NULL!=srcpath) {
 		while(*srcpath) {
 			if (*srcpath=='\\') {
@@ -173,7 +206,7 @@ static char* checkpath(char *path, const char*srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void (func)(const char*))
+void findfile(const char *p, const char *pat, void (func)(const char *, void *context), void *context)
 {
 	DIR* dir;             ///< pointer to the scanned directory.
 	struct dirent* entry; ///< pointer to one directory entry.
@@ -199,11 +232,11 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 		if (strcmp(entry->d_name, "..") == 0)
 			continue;
 
-		sprintf(tmppath,"%s%c%s",path, PATHSEP, entry->d_name);
+		safesnprintf(tmppath, sizeof(tmppath), "%s%c%s", path, PATHSEP, entry->d_name);
 
 		// check if the pattern matches.
 		if (strstr(entry->d_name, pattern)) {
-			func( tmppath );
+			func(tmppath, context);
 		}
 		// check if it is a directory.
 		if (stat(tmppath, &dir_stat) == -1) {
@@ -213,15 +246,36 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 		// is this a directory?
 		if (S_ISDIR(dir_stat.st_mode)) {
 			// decent recursively
-			findfile(tmppath, pat, func);
+			findfile(tmppath, pat, func, context);
 		}
 	}//end while
 
 	closedir(dir);
 }
+
+/**
+ * Checks if the passed path points to a file.
+ *
+ * @param path The path which should be checked.
+ * @return true if the passed path points to a file, otherwise false.
+ *
+ **/
+bool is_file(const char *path)
+{
+	nullpo_retr(false, path);
+
+	char path_tmp[MAX_DIR_PATH + 1];
+
+	checkpath(path_tmp, path);
+
+	struct stat path_stat;
+
+	return (stat(path_tmp, &path_stat) == 0 && S_ISREG(path_stat.st_mode));
+}
+
 #endif
 
-bool exists(const char* filename)
+bool exists(const char *filename)
 {
 	return !access(filename, F_OK);
 }
@@ -292,14 +346,14 @@ int32 MakeLongLE(int32 val)
 }
 
 // Reads an uint16 in little-endian from the buffer
-uint16 GetUShort(const unsigned char* buf)
+uint16 GetUShort(const unsigned char *buf)
 {
 	return ( ((uint16)(buf[0]))         )
 	     | ( ((uint16)(buf[1])) << 0x08 );
 }
 
 // Reads an uint32 in little-endian from the buffer
-uint32 GetULong(const unsigned char* buf)
+uint32 GetULong(const unsigned char *buf)
 {
 	return ( ((uint32)(buf[0]))         )
 	     | ( ((uint32)(buf[1])) << 0x08 )
@@ -308,13 +362,13 @@ uint32 GetULong(const unsigned char* buf)
 }
 
 // Reads an int32 in little-endian from the buffer
-int32 GetLong(const unsigned char* buf)
+int32 GetLong(const unsigned char *buf)
 {
 	return (int32)GetULong(buf);
 }
 
 // Reads a float (32 bits) from the buffer
-float GetFloat(const unsigned char* buf)
+float GetFloat(const unsigned char *buf)
 {
 	uint32 val = GetULong(buf);
 	return *((float*)(void*)&val);
@@ -342,25 +396,91 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 	return (unsigned int)floor(result);
 }
 
+/// calculates the value of A / B, in percent (rounded down)
+uint64 get_percentage64(const uint64 A, const uint64 B)
+{
+	double result;
+
+	if( B == 0 )
+	{
+		ShowError("get_percentage(): division by zero! (A=%"PRIu64",B=%"PRIu64")\n", A, B);
+		return ~0U;
+	}
+
+	result = 100 * ((double)A / (double)B);
+
+	if( result > UINT_MAX )
+	{
+		ShowError("get_percentage(): result percentage too high! (A=%"PRIu64",B=%"PRIu64",result=%g)\n", A, B, result);
+		return UINT_MAX;
+	}
+
+	return (uint64)floor(result);
+}
+
+/**
+ * Applies a percentual rate modifier.
+ *
+ * @param value The base value.
+ * @param rate  The rate modifier to apply.
+ * @param stdrate The rate modifier's divider (rate == stdrate => 100%).
+ * @return The modified value.
+ */
+int64 apply_percentrate64(int64 value, int rate, int stdrate)
+{
+	Assert_ret(stdrate > 0);
+	Assert_ret(rate >= 0);
+	if (rate == stdrate)
+		return value;
+	if (rate == 0)
+		return 0;
+	if (INT64_MAX / rate < value) {
+		// Give up some precision to prevent overflows
+		return value / stdrate * rate;
+	}
+	return value * rate / stdrate;
+}
+
+/**
+ * Applies a percentual rate modifier.
+ *
+ * @param value The base value.
+ * @param rate  The rate modifier to apply. Must be <= maxrate.
+ * @param maxrate The rate modifier's divider (maxrate = 100%).
+ * @return The modified value.
+ */
+int apply_percentrate(int value, int rate, int maxrate)
+{
+	Assert_ret(maxrate > 0);
+	Assert_ret(rate >= 0);
+	if (rate == maxrate)
+		return value;
+	if (rate == 0)
+		return 0;
+	return (int)(value * (int64)rate / maxrate);
+}
+
 //-----------------------------------------------------
 // custom timestamp formatting (from eApp)
 //-----------------------------------------------------
-const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format)
+const char *timestamp2string(char *str, size_t size, time_t timestamp, const char *format)
 {
-	size_t len = strftime(str, size, format, localtime(&timestamp));
+	size_t len;
+	nullpo_retr(NULL, str);
+	len = strftime(str, size, format, localtime(&timestamp));
 	memset(str + len, '\0', size - len);
 	return str;
 }
 
-
 /* [Ind/Hercules] Caching */
-bool HCache_check(const char *file)
+static bool HCache_check(const char *file)
 {
 	struct stat bufa, bufb;
 	FILE *first, *second;
 	char s_path[255], dT[1];
 	time_t rtime;
 
+	nullpo_retr(false, file);
 	if (!(first = fopen(file,"rb")))
 		return false;
 
@@ -404,9 +524,13 @@ bool HCache_check(const char *file)
 	return true;
 }
 
-FILE *HCache_open(const char *file, const char *opt) {
+static FILE *HCache_open(const char *file, const char *opt)
+{
 	FILE *first;
 	char s_path[255];
+
+	nullpo_retr(NULL, file);
+	nullpo_retr(NULL, opt);
 
 	if( file[0] == '.' && file[1] == '/' )
 		file += 2;
@@ -433,7 +557,7 @@ FILE *HCache_open(const char *file, const char *opt) {
 	return first;
 }
 
-void HCache_init(void)
+static void HCache_init(void)
 {
 	struct stat buf;
 	if (stat(SERVER_NAME, &buf) != 0) {
@@ -446,15 +570,19 @@ void HCache_init(void)
 }
 
 /* transit to fread, shields vs warn_unused_result */
-size_t hread(void * ptr, size_t size, size_t count, FILE * stream) {
+size_t hread(void *ptr, size_t size, size_t count, FILE *stream)
+{
 	return fread(ptr, size, count, stream);
 }
+
 /* transit to fwrite, shields vs warn_unused_result */
-size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream) {
+size_t hwrite(const void *ptr, size_t size, size_t count, FILE *stream)
+{
 	return fwrite(ptr, size, count, stream);
 }
 
-void HCache_defaults(void) {
+void HCache_defaults(void)
+{
 	HCache = &HCache_s;
 
 	HCache->init = HCache_init;

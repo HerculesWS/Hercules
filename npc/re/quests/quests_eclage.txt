@@ -1,18 +1,38 @@
-//===== Hercules Script ====================================== 
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Dastgir
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eclage Quests
-//===== By: ================================================== 
-//= Dastgir
-//===== Current Version: ===================================== 
-//= 1.0
-//===== Description: ========================================= 
-//= Quests of Eclage
+//================= Description ===========================================
 //= Contains All Quest of Eclage
-//===== Additional Comments: ================================= 
-//= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================ 
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-// Teleport Cats
-//============================================================
+//== Teleport Cats =========================================
 
 ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	mes "[Teleport Cat]";
@@ -22,8 +42,8 @@ ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	mes "[Teleport Cat]";
 	mes "We provide teleport service between various regions based on our accumulated knowledge. We accept Malangdo Canned Specialties or Zeny, so you can pay however you like it~";
 	next;
-	.@index[0] = .index[(atoi(strnpcinfo(2))*2-2)];
-	.@index[1] = .index[(atoi(strnpcinfo(2))*2-1)];
+	.@index[0] = .index[(atoi(strnpcinfo(NPC_NAME_HIDDEN))*2-2)];
+	.@index[1] = .index[(atoi(strnpcinfo(NPC_NAME_HIDDEN))*2-1)];
 	.@menu$ = "Forget it:";
 	for (.@i=0; .@i < getarraysize(.maps$); .@i++){
 		for (.@j=0; .@j<2; .@j++){
@@ -63,7 +83,7 @@ ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	}
 	warp .maps$[.@mindex[.@i]],.x[.@mindex[.@i]],.y[.@mindex[.@i]];
 	end;
-	
+
 OnInit:
 	setarray .maps$,"bif_fild02","ecl_fild01","spl_fild02","mid_camp","man_fild02","dic_fild01";	//Map Names	//2,4,8,16,32,64
 	setarray .x,291,116,51,180,133,159;	//X-Co-ordinate of Maps
@@ -85,11 +105,10 @@ mid_camp,207,234,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.4#4	4_M_BOSSCA
 man_fild02,135,49,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.5#5	4_M_BOSSCAT
 dic_fild01,161,266,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.6#6	4_M_BOSSCAT
 
-// Eclage's Entrance
-//============================================================
-ecl_fild01,97,322,0	script	#ep14_2Entrance	45,3,3,{
+//== Eclage's Entrance =====================================
+ecl_fild01,97,322,0	script	#ep14_2Entrance	WARPNPC,3,3,{
 	end;
-	
+
 OnTouch:
 	if (ep14_2_oliver < 3) {
 		mes "[Security Guard]";
@@ -112,7 +131,7 @@ ecl_fild01,94,322,5	script	Security Guard#ep14_2	4_M_FAIRYSOLDIER,{
 		mes "[Security Guard]";
 		mes "Of course, the documents will be secured away after their use in access regulations, so you don't have to worry.";
 		next;
-		if (select("Fill out the forms.:Forget it.")==2) {
+		if (select("Fill out the forms.", "Forget it.")==2) {
 			mes "[Security Guard]";
 			mes "Please note that you would not be able to enter the city without filling out the forms.";
 			close;
@@ -121,13 +140,13 @@ ecl_fild01,94,322,5	script	Security Guard#ep14_2	4_M_FAIRYSOLDIER,{
 		mes "Please fill out your name, occupation, and level here.";
 		next;
 		mes "Write your name.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "Write your occupation.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "Write your level.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		mes "[Security Guard]";
 		mes "If you completed your forms, please submit them to the administrator over there.";
@@ -462,9 +481,8 @@ ecl_fild01,88,315,5	script	Tourist#ep14_2f12	4_WHITE_COW,{
 	close;
 }
 
-// Oliver Wolf Hood(Dreaming Time)
-//============================================================
-eclage,101,29,0	script	#ep14_2Bridge	139,3,3,{
+//== Oliver Wolf Hood(Dreaming Time) =======================
+eclage,101,29,0	script	#ep14_2Bridge	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (BaseLevel >= 120) {
@@ -511,7 +529,7 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 		mes "This area is kind of broken, so be careful.";
 		mes "Otherwise, you'll fall aaaaaall the way down.";
 		next;
-		switch (select("The work being done right now:The reason for the bridge being broken:Forget it.")) {
+		switch (select("The work being done right now", "The reason for the bridge being broken", "Forget it.")) {
 			case 1:
 				mes "[Fairy Carpenter]";
 				mes "As you can see, I'm doing some carpentry work.";
@@ -530,7 +548,7 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 				mes "Being close to the entrance and all, this really needs to be fixed soon.";
 				mes "I'm trying to decide whether I should put up a warning sign, gather the necessary materials for repair, or call a friend to help.";
 				next;
-				if (select("Give help.:Don't give help.")==2) {
+				if (select("Give help.", "Don't give help.")==2) {
 					mes "[Fairy Carpenter]";
 					mes "You can't get past here until it's repaired, so please be careful.";
 					close;
@@ -552,7 +570,6 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 				ep14_2_oliver = 4;
 				setquest 11312;
 				close;
-				
 			case 3:
 				mes "[Fairy Carpenter]";
 				mes "You can't get past here until it's repaired, so please be careful.";
@@ -607,7 +624,7 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 		next;
 		mes "[Fairy Carpenter]";
 		mes "Please write the number of pieces necessary for each length. If no pieces for that length are necessary, please write 0.";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
 		if (.@inputstr$ != "002") {
 			mes "[Fairy Carpenter]";
@@ -792,7 +809,6 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 		ep14_2_oliver = 7;
 		changequest 11314,11315;
 		close;
-		
 	}
 	else if (ep14_2_oliver == 7) {
 		mes "[Carpenter Fon]";
@@ -1451,7 +1467,7 @@ eclage,191,200,4	script	Yube#ep14_2	4_M_FAIRYKID5,{
 		emotion e_what;
 		cutin "war_y3",2;
 		next;
-		input .@inputnum;
+		input(.@inputnum);
 		if (.@inputnum != 128) {
 			mes "[Yube]";
 			mes "Hmm~ I don't think so.";
@@ -1555,7 +1571,7 @@ eclage,191,200,4	script	Yube#ep14_2	4_M_FAIRYKID5,{
 		cutin "war_y3",2;
 		next;
 		cutin "",255;
-		if (select("Make the candles.:Don't make the candles.")==2) {
+		if (select("Make the candles.", "Don't make the candles.")==2) {
 			mes "[Yube]";
 			mes "Really?";
 			mes "If you need more, just let me know~";
@@ -1575,7 +1591,7 @@ eclage,191,200,4	script	Yube#ep14_2	4_M_FAIRYKID5,{
 		mes "I can make as many as 128. How many do you need?";
 		cutin "war_y4",2;
 		next;
-		input .@input;
+		input(.@input);
 		if (.@input < 1 || .@input > 128) {
 			mes "[Yube]";
 			mes "You aren't going to make them?";
@@ -1753,7 +1769,7 @@ eclage,266,216,4	script	Moreng#ep14_2	4_M_FAIRYKID3,{
 		mes "Hey, wait a minute!";
 		mes "Are you possibly from Midgard?!";
 		next;
-		if (select("Yes, I am.:No, I am not.")==2) {
+		if (select("Yes, I am.", "No, I am not.")==2) {
 			mes "[Moreng]";
 			mes "I see...";
 			mes "You sure looked like it, but I guess not.";
@@ -1920,7 +1936,7 @@ ecl_in01,60,71,4	script	Old Man#ep14_2	4_M_FAIRYKID2,{
 		mes "[Old Man]";
 		mes "Hey!  Have you heard of a Laphine hero named Light Standard?";
 		next;
-		switch (select("No, I don't think so.:Yes, I have.")) {
+		switch (select("No, I don't think so.", "Yes, I have.")) {
 			case 1:
 				mes "[Old Man]";
 				mes "Huhuhu...";
@@ -2310,9 +2326,9 @@ ecl_in01,70,88,4	script	Sack Merchant#ep14_2	4_M_MERCAT1,{
 	close;
 }
 
-eclage,292,265,0	script	#ep14_2Yube Entrance	45,2,2,{
+eclage,292,265,0	script	#ep14_2Yube Entrance	WARPNPC,2,2,{
 	end;
-	
+
 OnTouch:
 	if (ep14_2_oliver < 15) {
 		mes "- Looks like the door is locked. -";
@@ -2791,7 +2807,7 @@ ecl_in04,226,231,4	script	Du Lian#ep14_2in2	4_M_REDMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -2933,7 +2949,7 @@ ecl_in04,224,234,4	script	Mark Esha#ep14_2in2	4_M_BLUEMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3078,7 +3094,7 @@ ecl_in04,223,234,4	script	Maggi Steen#ep14_2in2	4_F_PINKWOMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3214,7 +3230,7 @@ ecl_in04,223,230,4	script	Alp Ocart#ep14_2in2	4_M_BLACKMAN,{
 		emotion e_dots;
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem(Oliver_Wolf_Hood, 1);
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3234,8 +3250,7 @@ ecl_in04,223,230,4	script	Alp Ocart#ep14_2in2	4_M_BLACKMAN,{
 	end;
 }
 
-// Wanted to be Big and Beautiful
-//============================================================
+//== Wanted to be Big and Beautiful ========================
 eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 	if (!checkweight(Knife,1) || (MaxWeight-Weight)<2000){
 		mes "- Stop Here!! -";
@@ -3275,7 +3290,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes "Um... " + strcharinfo(PC_NAME) + " I ask because you look so dependable.";
 		mes "Could I please ask you a favor?";
 		next;
-		switch (select("I'm kind of busy right now...:Of course!")) {
+		switch (select("I'm kind of busy right now...", "Of course!")) {
 			case 1:
 				mes "[Wuhari]";
 				mes "Really? Oh well...";
@@ -3312,7 +3327,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 				mes "[Wuhari]";
 				mes strcharinfo(PC_NAME) + " would you mind ^0000cdvisiting my big brother in my place^000000 to find out what's going on and let me know?";
 				next;
-				switch (select("I would like to help you but...:Sure.")) {
+				switch (select("I would like to help you but...", "Sure.")) {
 					case 1:
 						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "I would really lke to help you, but...";
@@ -3326,7 +3341,6 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 						mes "Oh, no, no. I am sure you are really busy. I'm sorry to have asked such a favor.";
 						ep14_2_big =  1;
 						close;
-						
 					case 2:
 						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "Sure. It's not a big deal.";
@@ -3361,7 +3375,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes strcharinfo(PC_NAME) + " - Hello, what brings you here?";
 		mes "I thought you were busy...";
 		next;
-		switch (select("I wanted to help you.:Just because.")) {
+		switch (select("I wanted to help you.", "Just because.")) {
 			case 1:
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I just couldn't pass by without doing something about it.";
@@ -3403,7 +3417,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes "[Wuhari]";
 		mes "Have you met my brother yet?";
 		next;
-		switch (select("I lost the letter.:Not yet.")) {
+		switch (select("I lost the letter.", "Not yet.")) {
 			case 1:
 				if (countitem(Younger_Bro_Letter) > 0) {	//Younger_Bro_Letter
 				//if (countitem(Mother_Letter) > 0) {
@@ -3481,7 +3495,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes "[Wuhari]";
 		mes "With regards to that, I actually have another ^0000cdfavor^000000 to ask.";
 		next;
-		switch (select("I would like to, but...:Sure thing.")) {
+		switch (select("I would like to, but...", "Sure thing.")) {
 			case 1:
 				mes "[Wuhari]";
 				mes "Yes, of course, you would be very busy. I am grateful for even letting me know about my brother.";
@@ -3515,7 +3529,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes "[Wuhari]";
 		mes "Oh man, even the people we found are so apathetic... What could I possibly do now...?";
 		next;
-		switch (select("Well, I can help you.:Ignore him.")) {
+		switch (select("Well, I can help you.", "Ignore him.")) {
 			case 1:
 				mes "[Wuhari]";
 				mes "Will you really?";
@@ -3651,7 +3665,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes "[Wuhari]";
 		mes "To understand these instructions accurately, we have to ^0000cdfind the Laphine who provided this report^000000.";
 		next;
-		switch (select("That's seems too uncertain.:Shall I look for that Laphine?")) {
+		switch (select("That's seems too uncertain.", "Shall I look for that Laphine?")) {
 			case 1:
 				mes "[Wuhari]";
 				mes "Yes. I know. That's why " + strcharinfo(PC_NAME) + " I asked you to help.";
@@ -3687,7 +3701,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes "[Wuhari]";
 		mes strcharinfo(PC_NAME) + " Are you going to help me?";
 		next;
-		switch (select("It's important to help others.:No, I'm just passing by.")) {
+		switch (select("It's important to help others.", "No, I'm just passing by.")) {
 			case 1:
 				mes "[Wuhari]";
 				mes "Thank you so much!!!";
@@ -3778,7 +3792,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 		mes "[Wuhari]";
 		mes "Did you bring all the ingredients?";
 		next;
-		switch (select("I brought them all.:What were they again?")) {
+		switch (select("I brought them all.", "What were they again?")) {
 			case 1:
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Of course!";
@@ -4132,11 +4146,10 @@ ecl_in02,149,117,4	script	Wuhuru#eclbig	4_M_FAIRYFREAK,{
 		mes "......";
 		close;
 	}
-end;
+	end;
 }
 
-
-eclage,200,272,4	script	Masione#eclbig	437,{
+eclage,200,272,4	script	Masione#eclbig	4_F_FAIRYKID2,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight)<2000) {
 		mes "- Stop Here!! -";
 		mes "- You have too many items. -";
@@ -4285,7 +4298,6 @@ eclage,163,228,4	script	Goatie#eclbig	4_F_FAIRYKID3,{
 	}
 }
 
-
 eclage,170,195,4	script	Svery#eclbig	4_M_FAIRYKID2,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Stop Here!! -";
@@ -4412,7 +4424,6 @@ eclage,170,195,4	script	Svery#eclbig	4_M_FAIRYKID2,{
 	close;
 }
 
-
 eclage,126,151,4	script	Pompe#eclbig	4_M_FAIRYKID3,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Stop Here!! -";
@@ -4502,7 +4513,6 @@ eclage,126,151,4	script	Pompe#eclbig	4_M_FAIRYKID3,{
 	changequest 14135,14136;
 	close;
 }
-
 
 ecl_fild01,70,285,4	script	Giranni#eclbig	4_F_FAIRY2,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
@@ -4608,7 +4618,7 @@ ecl_fild01,70,285,4	script	Giranni#eclbig	4_F_FAIRY2,{
 			next;
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmm? Where did it go? Did I drop it on the way?";
-			close;	
+			close;
 		}
 		mes "- You describe the corpse that you found in the field and show the piece of wing -";
 		next;
@@ -4700,7 +4710,6 @@ ecl_fild01,70,285,4	script	Giranni#eclbig	4_F_FAIRY2,{
 	mes "Where did he go...?";
 	close;
 }
-
 
 ecl_fild01,269,165,4	script	A Laphine corpse#eclbig	4_FAIRYDEADLEAF,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
@@ -4996,9 +5005,7 @@ ecl_in01,50,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig03	4_M_FAI
 ecl_in01,52,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig04	4_M_FAIRYKID
 ecl_in01,54,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig05	4_M_FAIRYKID
 
-
-// Mystery Burglary Quest 
-//============================================================
+//== Mystery Burglary Quest ================================
 eclage,156,51,6	script	#hidden_eclage	HIDDEN_NPC,3,3,{
 	end;
 OnTouch:
@@ -5009,7 +5016,7 @@ OnTouch:
 		mes "Thud thud thud...";
 		mes "Thud Thud!!! Creak~ Thud!";
 		next;
-		switch (select("What are these sounds?:Ignore them and move on.")) {
+		switch (select("What are these sounds?", "Ignore them and move on.")) {
 			case 1:
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "There are weird sounds of some kind...";
@@ -5022,7 +5029,7 @@ OnTouch:
 				mes "- Something hits you";
 				mes "over the head really hard.";
 				mes "Your body loses its strength and your vision goes blurry -";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				sc_start SC_BLIND,30000,0;
 				next;
 				mes "- Oh, I can't lose my consciousness like this -";
@@ -5037,7 +5044,7 @@ OnTouch:
 				mes "It's probably nothing.";
 				mes "I should just go on my way~";
 				close;
-		}	
+		}
 	}
 }
 
@@ -5121,10 +5128,10 @@ OnTouch:
 		mes "who robbed our house.";
 		next;
 		mes "[Mother Rosa]";
-		mes "How can you believe what "+((!Sex)?"s":"")+"he's saying?";
-		mes "How do you know "+((!Sex)?"s":"")+"he's not lying";
-		mes "after robbing our stuff "+((!Sex)?"her":"him")+"self?";
-		mes "Search "+((!Sex)?"her":"his")+" possessions immediately!!";
+		mes "How can you believe what "+ (Sex == SEX_FEMALE ? "she's" : "he's")+ " saying?";
+		mes "How do you know "+ (Sex == SEX_FEMALE ? "she's" : "he's") +" not lying";
+		mes "after robbing our stuff "+ (Sex == SEX_FEMALE ? "herself" : "himself") +"?";
+		mes "Search "+ (Sex == SEX_FEMALE ? "her" : "his") +" possessions immediately!!";
 		next;
 		mes "[Father Dames]";
 		mes "No, how could you say such things?";
@@ -5137,7 +5144,7 @@ OnTouch:
 		mes "Because our house just got robbed,";
 		mes "we don't have the means to take care of you.";
 		next;
-		if (select("I'm not the type to be bullied around.:I'll help you catch the thief.")==1) {
+		if (select("I'm not the type to be bullied around.", "I'll help you catch the thief.")==1) {
 			mes "[Daughter Luen]";
 			mes "Hmm... The way you look";
 			mes "seems like you would have ";
@@ -5341,7 +5348,7 @@ ecl_in04,78,108,5	script	Daughter Luen#eclage	4_F_FAIRYKID2,{
 		mes "so it made me stare at the person ";
 		mes "for a bit, wondering who it was.";
 		next;
-		switch (select("Was the person male or female?:Do you know anyone with short, red hair?")) {
+		switch (select("Was the person male or female?", "Do you know anyone with short, red hair?")) {
 			case 1:
 				mes "[Daughter Luen]";
 				mes "That I'm not sure...";
@@ -5360,7 +5367,7 @@ ecl_in04,78,108,5	script	Daughter Luen#eclage	4_F_FAIRYKID2,{
 				mes "to me..";
 				mes "I'm not exactly sure though.";
 				next;
-				.@menu = select("Who's the first person to find me?:Have you seen short, red hair elsewhere?");
+				.@menu = select("Who's the first person to find me?", "Have you seen short, red hair elsewhere?");
 				switch(.@menu){
 					case 1:
 						mes "[Daughter Luen]";
@@ -5459,7 +5466,7 @@ ecl_in04,78,108,5	script	Daughter Luen#eclage	4_F_FAIRYKID2,{
 				mes "obvious as that,";
 				mes "there is no way I wouldn't remember!";
 				next;
-				.@menu = select("Who's the first person to find me?:Have you seen short, red hair before?");
+				.@menu = select("Who's the first person to find me?", "Have you seen short, red hair before?");
 				switch(.@menu){
 					case 1:
 						mes "[Daughter Luen]";
@@ -5637,7 +5644,7 @@ ecl_in04,78,108,5	script	Daughter Luen#eclage	4_F_FAIRYKID2,{
 		mes "I can help with?";
 	}
 	else if (ep14_2_detect == 8 || ep14_2_detect == 9) {
-		if (select("I found out who the robber was.:I haven't figured things out yet.")==2) {
+		if (select("I found out who the robber was.", "I haven't figured things out yet.")==2) {
 			mes "[Daughter Luen]";
 			mes "I... I see...";
 			mes "Finding the robber is important, but...";
@@ -5741,7 +5748,7 @@ ecl_in04,85,110,3	script	Father Dames#eclage	4_M_FAIRYSOLDIER,{
 			mes "My wife and daughter were devastated.";
 			mes "And you were lying unconscious.";
 			next;
-			.@menu = select("What kind of friend is he?:Did you talk about anything else?");
+			.@menu = select("What kind of friend is he?", "Did you talk about anything else?");
 			switch (.@menu) {
 				case 1:
 					mes "[Father Dames]";
@@ -5784,7 +5791,7 @@ ecl_in04,85,110,3	script	Father Dames#eclage	4_M_FAIRYSOLDIER,{
 					break;
 			}
 			next;
-			.@menu2 = select("Has he been suspicious before?:Do you suspect him after the incident?");
+			.@menu2 = select("Has he been suspicious before?", "Do you suspect him after the incident?");
 			switch (.@menu2) {
 				case 1:
 					mes "[Father Dames]";
@@ -5948,7 +5955,7 @@ ecl_in04,77,104,5	script	Mother Rosa#eclage	4_F_MORAFINE1,{
 			mes "I liked, so I just came back home.";
 			mes "That's all.";
 			next;
-			.@menu = select("Why did you just go into the house?:Was there anything suspicious?");
+			.@menu = select("Why did you just go into the house?", "Was there anything suspicious?");
 			switch (.@menu) {
 				case 1:
 					mes "[Mother Rosa]";
@@ -6003,7 +6010,7 @@ ecl_in04,77,104,5	script	Mother Rosa#eclage	4_F_MORAFINE1,{
 					mes "anything peculiar about it.";
 			}
 			next;
-			.@menu2 = select("Do you suspect anyone?:Is there anything else missing?");
+			.@menu2 = select("Do you suspect anyone?", "Is there anything else missing?");
 			switch (.@menu2) {	//Optimization
 				case 1:
 					mes "[Mother Rosa]";
@@ -6429,7 +6436,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 		mes "stench of alcohol -";
 	}
 	else if (ep14_2_detect == 7) {
-		if (questprogress(9248) == 1) {
+		if (questprogress(9258) == 1) {
 			mes "- Upon getting closer,";
 			mes "I smell a terrible";
 			mes "stench of alcohol -";
@@ -6468,7 +6475,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 			mes "What do you think~! You wanna try?";
 			mes "Hiccup~...";
 			next;
-			switch (select("Try it.:Don't do it.")) {
+			switch (select("Try it.", "Don't do it.")) {
 				case 1:
 					while (1) {
 						disable_items;
@@ -6489,7 +6496,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 						}
 						progressbar "0xFFFF00",3;
 						.@nRand = rand(1,10);
-						specialeffect2 EF_ENHANCE;
+						specialeffect(EF_ENHANCE, AREA, playerattached());
 						Zeny -= 10000;
 						if ((.@nRand > 0) && (.@nRand < 5)) {
 							getitem Center_Potion,1; //Center_Potion
@@ -6505,7 +6512,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 							mes "...";
 							mes "You want to give it a try?";
 							next;
-							if (select("Magic Card Album! Whoaaa!:Is this some kind of fraud? Huh?")==1) {
+							if (select("Magic Card Album! Whoaaa!", "Is this some kind of fraud? Huh?")==1) {
 								continue;
 							}
 						}
@@ -6523,7 +6530,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 							mes "...";
 							mes "You want to give it a try?";
 							next;
-							if (select("Yes.:Is this some kind of fraud?")==1) {
+							if (select("Yes.", "Is this some kind of fraud?")==1) {
 								continue;
 							}
 						}
@@ -6606,7 +6613,7 @@ ecl_in04,85,104,3	script	Poppy#eclage	4_DOG01,{
 		next;
 		.@nRand = rand(1,10);
 		if ((.@nRand > 0) && (.@nRand < 5)) {
-			if (select("Observe it:Forget it")==1) {
+			if (select("Observe it", "Forget it")==1) {
 				progressbar "0xFFFF00",5;
 				mes "[Poppy]";
 				mes "Grrrrrrr.... Bow Wow!!";
@@ -6636,7 +6643,7 @@ ecl_in04,85,104,3	script	Poppy#eclage	4_DOG01,{
 				close;
 			}
 		}
-		else if (select("Observe it:Forgot it")==1) {
+		else if (select("Observe it", "Forgot it")==1) {
 			progressbar "0xFFFF00",5;
 			mes "[Poppy]";
 			mes "Grrrrrrr.... Bow Wow!!";
@@ -6687,7 +6694,7 @@ ecl_in04,80,112,3	script	Messy Bookshelves#eclage	HIDDEN_NPC,{
 			next;
 			.@nRand = rand(1,10);
 			if ((.@nRand < 5) && (.@nRand > 0)) {
-				if (select("Examine them.:Forget it.")==1) {
+				if (select("Examine them.", "Forget it.")==1) {
 					progressbar "0xFFFF00",5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
@@ -6718,7 +6725,7 @@ ecl_in04,80,112,3	script	Messy Bookshelves#eclage	HIDDEN_NPC,{
 					close;
 				}
 			}
-			else if (select("Examine it.:Forget it.") == 1){
+			else if (select("Examine it.", "Forget it.") == 1){
 				progressbar "0xFFFF00",5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
@@ -6779,7 +6786,7 @@ ecl_in04,78,111,3	script	Damaged book#eclage	HIDDEN_NPC,{
 			next;
 			.@nRand = rand(1,10);
 			if ((.@nRand > 0) && (.@nRand < 5)) {
-				if (select("Examine it.:Forget it.")==1) {
+				if (select("Examine it.", "Forget it.")==1) {
 					progressbar "0xFFFF00",5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
@@ -6807,7 +6814,7 @@ ecl_in04,78,111,3	script	Damaged book#eclage	HIDDEN_NPC,{
 					close;
 				}
 			}
-			else if (select("Examine it.:Forget it.")==1) {
+			else if (select("Examine it.", "Forget it.")==1) {
 				progressbar "0xFFFF00",5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
@@ -6870,7 +6877,7 @@ ecl_in04,83,111,3	script	Soda can container#ecl	HIDDEN_NPC,{
 			next;
 			.@nRand = rand(1,10);
 			if ((.@nRand > 0) && (.@nRand < 5)) {
-				if (select("Examine it.:Forget it.")==1) {
+				if (select("Examine it.", "Forget it.")==1) {
 					progressbar "0xFFFF00",5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
@@ -6911,7 +6918,7 @@ ecl_in04,83,111,3	script	Soda can container#ecl	HIDDEN_NPC,{
 					close;
 				}
 			}
-			else if (select("Examine it.:Forget it.") == 1) {
+			else if (select("Examine it.", "Forget it.") == 1) {
 				progressbar "0xFFFF00",5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
@@ -6981,7 +6988,7 @@ ecl_in04,76,107,3	script	A messed up table#eclage	HIDDEN_NPC,{
 			next;
 			.@nRand = rand(1,10);
 			if ((.@nRand > 0) && (.@nRand < 5)) {
-				if (select("Examine it.:Forget it.")==1) {
+				if (select("Examine it.", "Forget it.")==1) {
 					progressbar "0xFFFF00",5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
@@ -7022,7 +7029,7 @@ ecl_in04,76,107,3	script	A messed up table#eclage	HIDDEN_NPC,{
 					close;
 				}
 			}
-			else if (select("Examine it.:Forget it.")==1) {
+			else if (select("Examine it.", "Forget it.")==1) {
 				progressbar "0xFFFF00",5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
@@ -7090,7 +7097,7 @@ ecl_in04,80,105,3	script	A foreign substance#ecl	4_SOIL,{
 			next;
 			.@nRand = rand(1,10);
 			if ((.@nRand < 5) && (.@nRand > 0)) {
-				if (select("Examine it.:Forget it.")==1) {
+				if (select("Examine it.", "Forget it.")==1) {
 					progressbar "0xFFFF00",5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
@@ -7120,7 +7127,7 @@ ecl_in04,80,105,3	script	A foreign substance#ecl	4_SOIL,{
 					close;
 				}
 			}
-			else if (select("Examine it.:Forget it.")==1) {
+			else if (select("Examine it.", "Forget it.")==1) {
 				progressbar "0xFFFF00",5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see!";
@@ -7221,7 +7228,7 @@ ecl_in04,203,196,5	script	Father Dames#eclage2	4_M_FAIRYSOLDIER,{
 
 ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 	if (ep14_2_detect == 9) {
-		switch (select("Now I will track down the robber.:I will think about it a little bit more.:Let's meet outside first.")) {
+		switch (select("Now I will track down the robber.", "I will think about it a little bit more.", "Let's meet outside first.")) {
 			case 1:
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Everyone!";
@@ -7243,7 +7250,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 				mes "The thief who stole ";
 				mes "the necklace is!!";
 				next;
-				switch (select("Rosa:Wandering Merchant:Dames:Balumin:Cruyan:I'll think about it more.")) {
+				switch (select("Rosa", "Wandering Merchant", "Dames", "Balumin", "Cruyan", "I'll think about it more.")) {
 					case 1:
 						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "The robber is none other than";
@@ -7285,14 +7292,14 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 						mes "Why should I do such a thing?";
 						mes "How are you going to explain the stolen liquor?";
 						next;
-						switch (select("That's probably because you like liquor.:I must have gotten something wrong.")) {
+						switch (select("That's probably because you like liquor.", "I must have gotten something wrong.")) {
 							case 1:
 								mes "[Mother Rosa]";
 								mes "I haven't had a single sip of alcohol all of my life.";
 								mes "My family will testify to that.";
 								mes "And do you think a feeble woman like me can knock you out?";
 								next;
-								if (select("Hmm, I don't think so, but...:I must have gotten something wrong.")==1) {
+								if (select("Hmm, I don't think so, but...", "I must have gotten something wrong.")==1) {
 									mes "[Mother Rosa]";
 									mes "Even so, if I really wanted to make it really believable, why would I knock you out and just leave you there?";
 									mes "Wouldn't I place you somewhere afar to be safe?";
@@ -7358,14 +7365,14 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 						mes "My business is going really well!!";
 						mes "I have no reason to rob houses!";
 						next;
-						switch (select("But, the alcohol stench...:I must have gotten something wrong.")) {
+						switch (select("But, the alcohol stench...", "I must have gotten something wrong.")) {
 							case 1:
 								mes "[Wandering Merchant]";
 								mes "I didn't steal any alcohol.";
 								mes "I just drank the ones I bought";
 								mes "with my own money!!";
 								next;
-								if (select("Hmm, But...:I must have gotten something wrong.")==1) {
+								if (select("Hmm, But...", "I must have gotten something wrong.")==1) {
 									mes "[Mother Rosa]";
 									mes "Just because I am a stranger you think you can accuse me without reason?";
 									mes "How could you treat someone like this solely based on the fact that he's a stranger?";
@@ -7432,7 +7439,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 						mes "hiding the necklace that";
 						mes "I bought for her?";
 						next;
-						switch (select("That's... probably for revenge...:I must have gotten something wrong.")) {
+						switch (select("That's... probably for revenge...", "I must have gotten something wrong.")) {
 							case 1:
 								mes "[Father Dames]";
 								mes "For revenge?!";
@@ -7442,7 +7449,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 								mes "a little bit of stress will";
 								mes "ruin everything?";
 								next;
-								if (select("Hmm... I don't think so, but...:I must have gotten something wrong.")==1) {
+								if (select("Hmm... I don't think so, but...", "I must have gotten something wrong.")==1) {
 									mes "[Mother Rosa]";
 									mes "That's such ludicrous logic!!";
 									mes "Why are you blaming my husband?";
@@ -7513,7 +7520,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 						mes "How could I go and";
 						mes "rob the house, too?";
 						next;
-						switch (select("That's because....:I must have gotten something wrong.")) {
+						switch (select("That's because....", "I must have gotten something wrong.")) {
 							case 1:
 								mes "[Balumin]";
 								mes "Besides, Dames and I";
@@ -7522,7 +7529,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 								mes "something like that just";
 								mes "for some money?";
 								next;
-								if (select("Hmm... I don't think so, but...:I must have gotten something wrong.")==1) {
+								if (select("Hmm... I don't think so, but...", "I must have gotten something wrong.")==1) {
 									mes "[Father Dames]";
 									mes "That's right.. There's no way";
 									mes "my friend would do such a thing!!";
@@ -7538,7 +7545,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 									mes "I'll think about it more and";
 									mes "figure out who the robber is...";
 									close;
-								}		
+								}
 							case 2:
 								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "I... I guess";
@@ -7561,7 +7568,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 						mes "Cruyan is definitely the robber!";
 						mes "The reason being~!!";
 						next;
-						switch (select("Revenge on Luen's parents:To prepare for his personal expenses:To gain permission to date Luen")) {
+						switch (select("Revenge on Luen's parents", "To prepare for his personal expenses", "To gain permission to date Luen")) {
 							case 1:
 								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "He must have stolen the ";
@@ -7589,7 +7596,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 								mes "Why would I do such ";
 								mes "a crazy thing?";
 								next;
-								switch (select("Well, that's because...:I must have gotten something wrong.")) {
+								switch (select("Well, that's because...", "I must have gotten something wrong.")) {
 									case 1:
 										mes "[Cruyan]";
 										mes "Besides, if I did such a thing, Luen probably wouldn't like me anymore.";
@@ -7597,7 +7604,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 										mes "that is vindictive against";
 										mes "her own mother?";
 										next;
-										if (select("But...:I must have gotten something wrong.")==1) {
+										if (select("But...", "I must have gotten something wrong.")==1) {
 											mes "[Cruyan]";
 											mes "I want to earn her trust and become a worthy son-in-law.";
 											mes "Why would I do such a reckless thing?";
@@ -7652,14 +7659,14 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 								mes "I've been living a clean life";
 								mes "to earn her trust!";
 								next;
-								switch (select("Why would I believe that?:I must have gotten something wrong.")) {
+								switch (select("Why would I believe that?", "I must have gotten something wrong.")) {
 									case 1:
 										mes "[Cruyan]";
 										mes "While that wandering merchant";
 										mes "smells of alcohol, I don't have the";
 										mes "slightest hint of alcohol smell do I!?";
 										next;
-										if (select("But...:I must have gotten something wrong.")==1) {
+										if (select("But...", "I must have gotten something wrong.")==1) {
 											mes "[Cruyan]";
 											mes "And I have never seen that merchant before!";
 											mes "Should I ask him?";
@@ -7716,7 +7723,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 								mes "I was hunting in the land of blooming flowers during the time of crime.";
 								mes "The Concentration Potion is the proof.";
 								next;
-								if (select("I see... Hmm...:I'm afraid that's not true.")==1) {
+								if (select("I see... Hmm...", "I'm afraid that's not true.")==1) {
 									mes "[Cruyan]";
 									mes "Of course!";
 									mes "I'm innocent!!";
@@ -7727,7 +7734,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 								mes "[Cruyan]";
 								mes "What about it is not true?";
 								next;
-								switch (select("According to Luen's statements...:According to Balumin's statements...")) {
+								switch (select("According to Luen's statements...", "According to Balumin's statements...")) {
 									case 1:
 										mes "[" + strcharinfo(PC_NAME) + "]";
 										mes "Luen said she definitely";
@@ -7773,7 +7780,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 										mes "I don't have the necklace!!";
 										mes "It's true!!";
 										next;
-										if (select("Look through his possessions.:Explain it without looking.")==1) {
+										if (select("Look through his possessions.", "Explain it without looking.")==1) {
 											mes "[Cruyan]";
 											mes "Ok, look through it all you want.";
 											mes "I really don't have the necklace!!";
@@ -7882,7 +7889,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 										ep14_2_detect = 10;
 										break;
 								}
-							break;	
+							break;
 						}
 						break;
 					case 6:
@@ -7916,7 +7923,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 		mes "the rest of this issue.";
 		mes "Would you please go outside now?";
 		next;
-		switch (select("Leave the house.:Leave after a bit.")) {
+		switch (select("Leave the house.", "Leave after a bit.")) {
 			case 1:
 				mes "[Daughter Luen]";
 				mes "Thank you for everything...";
@@ -7939,7 +7946,7 @@ eclage,156,56,3	script	Residence entrance#e_prt	CLEAR_NPC,{
 		mes "but it feels like I could";
 		mes "enter it -";
 		next;
-		if (select("Don't enter the residence.:Enter the residence.")==1) {
+		if (select("Don't enter the residence.", "Enter the residence.")==1) {
 			mes "- Let's check it out later -";
 			close;
 		}
@@ -7950,7 +7957,7 @@ eclage,156,56,3	script	Residence entrance#e_prt	CLEAR_NPC,{
 
 ecl_in04,81,102,3	script	Residence exit#ecl_port2	CLEAR_NPC,{
 	if (ep14_2_detect) {
-		if (select("Don't exit the residence.:Exit the residence.")==1) {
+		if (select("Don't exit the residence.", "Exit the residence.")==1) {
 			mes "- Let's leave a bit later -";
 			close;
 		}
@@ -7959,8 +7966,7 @@ ecl_in04,81,102,3	script	Residence exit#ecl_port2	CLEAR_NPC,{
 	end;
 }
 
-// Troublesome Fairies(Prankster of Eclage)
-//============================================================
+//== Troublesome Fairies(Prankster of Eclage) ==============
 ecl_in02,160,36,4	script	Eirinn#nk	4_F_FAIRYKID6,{
 	if (questprogress(4254) == 0) {
 		if (BaseLevel < 120) {
@@ -7991,7 +7997,7 @@ ecl_in02,160,36,4	script	Eirinn#nk	4_F_FAIRYKID6,{
 		mes "'Even green herbs are difficult to find when you need them.'";
 		mes "Could you go out and find herbs and things like that?";
 		next;
-		if (select("Why should I?:Sure!")==1) {
+		if (select("Why should I?", "Sure!")==1) {
 			mes "[Eirinn]";
 			mes "Fine, then don't bother me";
 			mes "and go away.";
@@ -8010,7 +8016,7 @@ ecl_in02,160,36,4	script	Eirinn#nk	4_F_FAIRYKID6,{
 		mes "Aren't Green Herbs so common?";
 		mes "I can't believe they're not in stock!";
 		next;
-		if (select("Give Herbs:Go somewhere else.")==2) {
+		if (select("Give Herbs", "Go somewhere else.")==2) {
 			close;
 		}
 		if (countitem(Green_Herb) < 10) {
@@ -8107,7 +8113,7 @@ ecl_in02,160,36,4	script	Eirinn#nk	4_F_FAIRYKID6,{
 					mes "Could you bring me a plant stem and Green Herb, one each?";
 					mes "I'm going to do some magic here.";
 					next;
-					if (select("Why should I?:Sure!")==1) {
+					if (select("Why should I?", "Sure!")==1) {
 						mes "[Eirinn]";
 						mes "Umm...I guess I can't help it if you don't want to.";
 						mes "I should look for someone else...";
@@ -8229,7 +8235,7 @@ ecl_in03,175,69,4	script	Bourbon#nk	4_M_FAIRYKID3,{
 		mes "Could you teach the little gangsters outside, a lesson on my behalf?";
 		mes "How does that sound, will you?";
 		next;
-		if (select("Why should I?:Sure!")==1) {
+		if (select("Why should I?", "Sure!")==1) {
 			mes "[Bourbon]";
 			mes "Hmm, I guess I can't force you.";
 			mes "I should look for someone else...";
@@ -8359,7 +8365,7 @@ ecl_in03,175,69,4	script	Bourbon#nk	4_M_FAIRYKID3,{
 					mes "Let me ask you another favor.";
 					mes "This is a matter of my pride. Will you help me?";
 					next;
-					if (select("I'd rather not...:Sure!")==1) {
+					if (select("I'd rather not...", "Sure!")==1) {
 						mes "[Bourbon]";
 						mes "What? How could you!";
 						mes "Can't you hear my heart beating like a drum?";
@@ -8510,7 +8516,7 @@ ecl_in01,26,88,5	script	Cecilia#nk	4_F_FAIRYKID5,{
 		mes "Let's hear what you have to say after putting you in prison first.";
 		mes "Here, you're accused of stealing how do you feel now?";
 		next;
-		switch (select("What are you doing?:......")) {
+		switch (select("What are you doing?", "......")) {
 			case 1:
 				mes "[Cecilia]";
 				mes "You see, we suffer an unforeseen misfortune in life sometimes.";
@@ -8529,7 +8535,7 @@ ecl_in01,26,88,5	script	Cecilia#nk	4_F_FAIRYKID5,{
 				break;
 		}
 		next;
-		if (select("I don't want to!:Fine.")==1) {
+		if (select("I don't want to!", "Fine.")==1) {
 			mes "[Cecilia]";
 			mes "Oh, well!";
 			mes "Then I'll have to hand you over to prove my innocence.";
@@ -8809,7 +8815,7 @@ OnTouch:
 	if (questprogress(4264) == 1) {
 		mes "- Do you want to throw the rat tail? -";
 		next;
-		if (select("No.:Yes.")==1) {
+		if (select("No.", "Yes.")==1) {
 			close;
 		}
 		mes "- The rat tail became a rat even before hitting the ground. -";
@@ -8829,13 +8835,13 @@ OnTouch:
 	}
 }
 
-ecl_in01,79,84,0	script	#kusa	139,3,3,{
+ecl_in01,79,84,0	script	#kusa	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (questprogress(4262) == 1) {
 		mes "- You were told to plant weeds. -";
 		next;
-		if (select("Don't do it.:Do it.")==1) {
+		if (select("Don't do it.", "Do it.")==1) {
 			close;
 		}
 		mes "- Plant weeds secretly . -";
@@ -8862,7 +8868,7 @@ OnTouch:
 	}
 }
 
-ecl_in01,1,1,0	script	#call_ne	139,{
+ecl_in01,1,1,0	script	#call_ne	HIDDEN_WARP_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -8876,7 +8882,7 @@ OnCall:
 	end;
 }
 
-ecl_in01,2,2,0	script	#call_kusa	139,{
+ecl_in01,2,2,0	script	#call_kusa	HIDDEN_WARP_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -8903,7 +8909,7 @@ ecl_in01,80,86,4	script	Midgard Exploration#bok1	HIDDEN_NPC,{
 	mes "- I saw a book and stretched my hand out to reach for it. I think it's about cities in Rune-Midgarts. -";
 	next;
 	while (1) {
-		if (select("Stay away from the bookshelves.:Check out the bookshelves.")==1) {
+		if (select("Stay away from the bookshelves.", "Check out the bookshelves.")==1) {
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I shouldn't read it.";
 			close;
@@ -8988,7 +8994,7 @@ ecl_in01,82,84,4	script	Midgard Exploration#bok2	HIDDEN_NPC,{
 	mes "- I saw a book and stretched my hand out to reach for it. I think it's about cities in Rune-Midgarts. -";
 	next;
 	while (1) {
-		if (select("Stay away from the bookshelves.:Check out the bookshelves.")==1) {
+		if (select("Stay away from the bookshelves.", "Check out the bookshelves.")==1) {
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I shouldn't read it.";
 			close;
@@ -9085,7 +9091,7 @@ ecl_in01,83,84,4	script	Midgard Exploration#bok3	HIDDEN_NPC,{
 	mes "- I saw a book and stretched my hand out to reach for it. I think it's about the northern parts of Midgard. -";
 	next;
 	while (1) {
-		if (select("Stay away from the bookshelves.:Check out the bookshelves.")==1) {
+		if (select("Stay away from the bookshelves.", "Check out the bookshelves.")==1) {
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I shouldn't read it.";
 			close;
@@ -9180,7 +9186,7 @@ ecl_in01,83,81,4	script	Midgard Exploration#bok4	HIDDEN_NPC,{
 	mes "- I saw a book and stretched my hand out to reach for it. I think it's about various regions in Midgard. -";
 	next;
 	while (1) {
-		if (select("Stay away from the bookshelves.:Check out the bookshelves.")==1) {
+		if (select("Stay away from the bookshelves.", "Check out the bookshelves.")==1) {
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I shouldn't read it.";
 			close;
@@ -9266,7 +9272,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "Breaking News! Prontera's Issue Maker!! Exclusive Interview!!";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Reporter]: Hi, everyone. We have Mr. Hollgrehen, the master of refinement, here with us today. Hi, Mr. Hollgrehen.";
@@ -9277,7 +9283,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "[Hollgrehen]: I went to a swimming pool when I was little, and I could just float in the water even though I didn't know how to swim. I could just do it. That's how I started working as a refiner.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Reporter]: What? You float well? Hmm? It sounds weird..";
@@ -9288,14 +9294,14 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "[Hollgrehen]:  I can refine objects with my eyes closed.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Reporter]: Isn't that why you're breaking objects?";
 	next;
 	mes "[Hollgrehen]: Have you ever done refining with your eyes closed? Don't even start if you've never done it.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Reporter]: I see.. Could you show us then? Let's start with something lighter, like...a knife?";
@@ -9308,7 +9314,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "[Reporter]: Huh?! Oh, no..";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "- Clank! Clank! Clank! Shatter!! -";
@@ -9316,7 +9322,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "[Reporter]: ..";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Hollgrehen]: Hahaha, maybe I don't feel very well today. Oh! Today is Sunday, right? I forgot that sundays are not good for refining weapons. Maybe, armors will do. Right, it will definitely float.";
@@ -9324,7 +9330,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	mes "- He takes the reporter's armor. -";
 	mes "[Hollgrehen]: This is a pretty good armor. Is this +7 High Risk Valkyrie's Armor?";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "- Clank! Clank! Clank! Shatter!! -";
@@ -9332,7 +9338,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "[Reporter]: .. ..";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Hollgrehen]: Now that I think about it, today is a even-day. Even-days are not good for armor refining. Right, shoes will float well.";
@@ -9340,7 +9346,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	mes "- He takes the reporter's shoes. -";
 	mes "[Hollgrehen]: Hey, you're pretty well off. These are +9 Dull Black Leather Boots. I'll make you even richer.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "- Clank! Clank! Clank! Shatter!! -";
@@ -9348,7 +9354,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "[Reporter]: .. .. ..";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Hollgrehen]: Oh, now that I see the calendar, today is the first Sunday of this month. For some reason, I couldn't refine shoes well on first sundays. Right, today's perfect for clothes!!";
@@ -9356,7 +9362,7 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	mes "- He takes the reporter's clothes. -";
 	mes "[Hollgrehen]: It's +9 Wandering Valkyrie's Cape. Good, I'll upgrade this to 10 for sure.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "- Clank! Clank! Clank! Shatter!! -";
@@ -9364,14 +9370,14 @@ ecl_in01,82,78,4	script	Magazine#01	HIDDEN_NPC,{
 	next;
 	mes "[Reporter]: .. .. .. ..";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "[Hollgrehen]: Hahaha, I think I had something really important...I should go now.";
 	next;
 	mes "[Reporter]: .. .. .. .. ..";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "We apologize for not completing the interview due to the reporter's condition. - Editors.";
@@ -9392,7 +9398,7 @@ ecl_in01,82,79,4	script	Magazine#02	HIDDEN_NPC,{
 	next;
 	mes "This month's reader's memoir is on Malangdo, an island of cats. Aren't you excited to find out what's going on in Malangdo?!";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "Reader's memoir";
@@ -9400,58 +9406,56 @@ ecl_in01,82,79,4	script	Magazine#02	HIDDEN_NPC,{
 	next;
 	mes "Malangdo, an island of cats. So soft and tender, ah...it's an island filled with lovely cats. Aww, what should I do...they're all so cute and lovely that I wanted to hug...";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "them...yes, I wanted to, until I met these scary father cat and his daughter.";
 	next;
 	mes "Yes, I was waiting to catch the King Octopus. I guess it was when I was passing by a boat? I met a cat with slanted eyes.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "That cat introduced himself and told me that he studied in Morroc.";
 	next;
 	mes "Then he assured me that he could upgrade my +9 Violet Fear to +10 Violet Fear.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "He sounded so reliable since he studied abroad and all that, right? So I trusted him and gave him my +9 Violet Fear.";
 	next;
 	mes "Then my +9 Violet Fear shattered into pieces. I was so shocked because it was the only weapon that I had.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "I spent all of my money to buy a Enriched Oridecon, too. Right, I couldn't trust him 100% even if he studied abroad.";
 	next;
 	mes "So I comforted myself and mourned for my +9 Violet Fear.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "But that wasn't the end. After that, a little cat approached me, saying she has a hammer that can refine even the stars in the sky.";
 	next;
 	mes "A hammer that refines the starts in the sky! Doesn't it sound awesome? Since I lost my only weapon, I thought I should strengthen my armors. So I gave her everything I had.";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "Shoes, clothes, armor, and even helmet...everything I had is just gone...now that I think about it, she said it's a hammer that can refine the stars of the sky.";
 	next;
 	mes "But she didn't say it doesn't break things, right? So, if you ever visit Malando, be aware of those cats called 'Strip' and 'Shatter.' I'm a Rune Knight and I still catch Porings...you don't want to be like me...";
 	next;
-	if (select("Keep reading.:Stop reading.")==2) {
+	if (select("Keep reading.", "Stop reading.")==2) {
 		close;
 	}
 	mes "This is a story of 'Appearing in Morroc Chocheon****.'";
 	close;
 }
 
-
-// Light and Darkness
-//============================================================
+//== Light and Darkness ====================================
 ecl_in02,98,32,3	script	Eclage Guard#tl1b	4_M_FAIRYSOLDIER2,{
 	mes "[Eclage Guard]";
 	if (ep14_2_mylord > 6){
@@ -9467,9 +9471,9 @@ ecl_in02,98,32,3	script	Eclage Guard#tl1b	4_M_FAIRYSOLDIER2,{
 	close;
 }
 
-ecl_in02,133,115,0	script	#pa0829Prison Guard	139,3,3,{
+ecl_in02,133,115,0	script	#pa0829Prison Guard	HIDDEN_WARP_NPC,3,3,{
 	end;
-	
+
 OnTouch:
 	if (ep14_2_etran < 2) {
 		mes "[Clever]";
@@ -9578,7 +9582,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "[Clever]";
 		mes "Hmm, In any case, I've never seen you before. Why are you here to visit me?";
 		next;
-		if (select("I never wanted to visit you either.:What crime did you commit?")==1) {
+		if (select("I never wanted to visit you either.", "What crime did you commit?")==1) {
 			mes "[Clever]";
 			mes "Oh~ Really? Ok, you get out of here. I'm going to start torturing the guard. Let's see... Alright, I'll sing to him!";
 			next;
@@ -9611,7 +9615,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "Hmm? Why? Do you have an interesting story?";
 		while (1) {
 			next;
-			switch (select("Try entertaining him.:Tell him about the journey until now.:Tell him about Rune Midgard.:Ask him what he wants to eat.")) {
+			switch (select("Try entertaining him.", "Tell him about the journey until now.", "Tell him about Rune Midgard.", "Ask him what he wants to eat.")) {
 				case 1:
 				case 2:
 				case 3:
@@ -9626,7 +9630,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 					mes "[Clever]";
 					mes "If you bring me ^0000991 cup of Grape Extract Herb Tea^000000, I'll tell you various gossip stories of Eclage in return. How's that?";
 					next;
-					switch (select("I'll think about it later.:That's no problem.")) {
+					switch (select("I'll think about it later.", "That's no problem.")) {
 						case 1:
 							mes "[Clever]";
 							mes "Alrighty~ It was nice meeting you. I'm going to sing the rest of this tune.";
@@ -9691,7 +9695,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "There's so many. Why don't you choose one among these topics.";
 		while (1) {
 			next;
-			switch (select("A story about the Seneth King's father:A story about Seneth King's arsony:The assistant chief of staff's real name:A dimensional rift in nearby regions")) {
+			switch (select("A story about the Seneth King's father", "A story about Seneth King's arsony", "The assistant chief of staff's real name", "A dimensional rift in nearby regions")) {
 				case 1:
 					mes "[Clever]";
 					mes "This is a secret gossip related to the old king. Have you heard about a first-rate criminal named Florence? He was a first-rate criminal, but he was the father of an old king named Seneth.";
@@ -9789,7 +9793,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "[Clever]";
 		mes "Hey hey, who's this? You're my friend from earlier. Hehehe.";
 		next;
-		if (select("I'm just gonna be on my way.:I think Hiel's experiment succeeded.")==1) {
+		if (select("I'm just gonna be on my way.", "I think Hiel's experiment succeeded.")==1) {
 			mes "[Clever]";
 			mes "What? You don't find any inspiration from hearing my voice? That's sad.";
 			close;
@@ -9857,7 +9861,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "[Clever]";
 		mes "How does it seem from your perspective? Eclage is operating so peacefully. It's way too normal for a city that has been antagonized by high-class Donas.";
 		next;
-		switch (select("Doesn't really seem that way to me.:It does seem peaceful.")) {
+		switch (select("Doesn't really seem that way to me.", "It does seem peaceful.")) {
 			case 1:
 				mes "[Clever]";
 				mes "Really? But at least take a look at this place's home tree. It's doing just so well! And all of the plant life in Bifrost are vividly alive... If there was an antagonist force, it should have been impossible.";
@@ -9894,7 +9898,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "It's not that the journal itself is very systematic, but more so that it's not examined by the superiors because it's so negatively criticized for being a third-rate.";
 		next;
 		while (1) {
-			if (select("I didn't really discover much.:I had a question...")==2) {
+			if (select("I didn't really discover much.", "I had a question...")==2) {
 				break;
 			}
 			mes "[Clever]";
@@ -9906,7 +9910,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "Hoh~ You seem like you discovered something. Great, what did you find there?";
 		next;
 		while (1) {
-			.@select = select("Are Dona and Papang in opposition?:Ask about Etran and Robert.:Do Laphines like Mayor Jun?");
+			.@select = select("Are Dona and Papang in opposition?", "Ask about Etran and Robert.", "Do Laphines like Mayor Jun?");
 			if (.@select == 2){
 				break;
 			}
@@ -9979,7 +9983,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "[Clever]";
 		mes "Could you promise me that you'll keep everything that you hear from me a secret and help me out?";
 		next;
-		if (select("I can't believe you.:Well I got this far, I'll hear you out.")==1) {
+		if (select("I can't believe you.", "Well I got this far, I'll hear you out.")==1) {
 			mes "[Clever]";
 			mes "That's too bad. You are the only adventurer that I ever told this much. I guess I can't do much about it. Come back to me when you change your mind.";
 			close;
@@ -10047,7 +10051,7 @@ ecl_in02,146,114,4	script	Clever#pa0829	4_M_FAIRYSCHOLAR_DIRTY,{
 		mes "[Clever]";
 		mes "Oh, wait... The two friends reunited together again, right?";
 		next;
-		select("That I am not sure.:I'm sure they would sometime soon, right?");
+		select("That I am not sure.", "I'm sure they would sometime soon, right?");
 		mes "[Clever]";
 		mes "Yes, I guess we wouldn't know that at this point.";
 		next;
@@ -10096,19 +10100,17 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "Oh~ Someone referred you to me? Who was it? You better make sense, or I'll be sure to kick you out.";
 		next;
-		input .@inputstr$;
-		if (.@inputstr$ == "Clever"){
-			mes "[" + strcharinfo(PC_NAME) + "]";
-			mes .@inputstr$ + " referred me(" + strcharinfo(PC_NAME) + ") to you.";
-			next;
-		}
-		else {
+		input(.@inputstr$);
+		if (.@inputstr$ != "Clever") {
 			mes "[Hiel]";
 			mes "I don't know that person! Aren't you suspicious!";
 			close2;
 			warp "eclage",152,91;
 			end;
 		}
+		mes "[" + strcharinfo(PC_NAME) + "]";
+		mes .@inputstr$ + " referred me(" + strcharinfo(PC_NAME) + ") to you.";
+		next;
 		mes "[Hiel]";
 		mes "Oh really? Give me a minute. I'm going to wrap up what I am doing and come back.";
 		ep14_2_etran = 11;
@@ -10119,7 +10121,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "I don't really believe that you could have a normal conversation with the socially inept Clever, but I'll at least give you the benefit of the doubt. So, what did he tell you?";
 		next;
 		while (1) {
-			.@select = select("Forget this conversation.:A story about the Seneth King's father:A story about Seneth King's arsony:The assistant chief of staff's real name:A dimensional rift in nearby regions");
+			.@select = select("Forget this conversation.", "A story about the Seneth King's father", "A story about Seneth King's arsony", "The assistant chief of staff's real name", "A dimensional rift in nearby regions");
 			if (.@select==5) {
 				break;
 			}
@@ -10156,7 +10158,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "^000099This is... irritating on a different level from Clever. I have to somehow stop his nonstop talking...^000000";
 		next;
 		while (1) {
-			.@select = select("Ask about using the rift:Ask how the fragment was obtained:So what can you do with this?");
+			.@select = select("Ask about using the rift", "Ask how the fragment was obtained", "So what can you do with this?");
 			if (.@select==3){
 				break;
 			}
@@ -10220,13 +10222,12 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "I would like to go myself, but as you can see, I have to continue my research... And... (Fidget fidget)";
 		next;
-		switch (select("Hmm, I'd like to, but I'm busy myself...:Sure, I'll go check it out.")) {
+		switch (select("Hmm, I'd like to, but I'm busy myself...", "Sure, I'll go check it out.")) {
 			case 1:
 				mes "[Hiel]";
 				mes "Oh... I guess it was too much to ask for. That's too bad then.";
 				ep14_2_etran = 12;
 				close;
-				
 			case 2:
 				mes "[Hiel]";
 				mes "Wow wow! Thank you so much! I'll return the favor by operating it together when the experiments are complete! In the meantime, I'll start preparing for material combination!";
@@ -10239,7 +10240,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "Oh, are you here to help me out? I guess what they said was true. I'm really sorry to ask you this favor, but would you mind retrieving that information from them?";
 		next;
-		switch (select("Hmm, I'd like to, but I'm busy myself...:Sure, I'll go check it out.")) {
+		switch (select("Hmm, I'd like to, but I'm busy myself...", "Sure, I'll go check it out.")) {
 			case 1:
 				mes "[Hiel]";
 				mes "Oh... I guess it was too much to ask for. That's too bad then.";
@@ -10268,7 +10269,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		if ((countitem(Dark_Debris) > 0) && (countitem(Yellow_Gemstone) > 1) && (countitem(Red_Gemstone) > 1) && (countitem(Blue_Gemstone) > 1)) {
 			.@ep_14_chk = 1;
 		}
-		switch (select("It does seem impossible. You should give up.",((.@ep_14_chk==1)?"I already brought them for you.":"I will try obtaining them for you.") )) {
+		switch (select("It does seem impossible. You should give up.", ((.@ep_14_chk==1)?"I already brought them for you.":"I will try obtaining them for you.") )) {
 			case 1:
 				mes "[Hiel]";
 				mes "I see, I guess changing the very physics is an impossible thing...";
@@ -10284,12 +10285,11 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "Ooo, so this is what is called Dark Debris. I'm so glad that I can continue my experiments.";
 		next;
-		switch (select("I didn't say that I'd just give them to you.:Give the materials to him.")) {
+		switch (select("I didn't say that I'd just give them to you.", "Give the materials to him.")) {
 			case 1:
 				mes "[Hiel]";
 				mes "How ruthless... Saying that he won't give them after showing them to me.";
 				close;
-				
 			case 2:
 				if ((countitem(Dark_Debris)) && (countitem(Yellow_Gemstone) > 1) && (countitem(Red_Gemstone) > 1) && (countitem(Blue_Gemstone) > 1)) {
 					mes "[Hiel]";
@@ -10526,7 +10526,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "We could expand this machine's output to increase the range, but at this time it's not possible. We can't do much else for now.";
 		next;
-		if (select("I see, that's too bad.:Would you let me see that reactor for a minute?")==1) {
+		if (select("I see, that's too bad.", "Would you let me see that reactor for a minute?")==1) {
 			mes "[Hiel]";
 			mes "I don't know how long it will take. It would be difficult to meet Etran and Robert simultaneously for now.";
 			close;
@@ -10535,7 +10535,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "You are not thinking of taking this out to Bifrost, are you? I think you are taking things too far. It's probably too dangerous.";
 		next;
 		while (1) {
-			if (select("I am a person who made it all the way here alive and well.:Don't you want to test out your theory?")==2) {
+			if (select("I am a person who made it all the way here alive and well.", "Don't you want to test out your theory?")==2) {
 				break;
 			}
 			mes "[Hiel]";
@@ -10607,7 +10607,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "Let's try channeling our way to Robert. Well... This isn't exactly to test out the machine's new functionality. (Hesitating)";
 		next;
 		while (1) {
-			if (select("I'll look for another way.:Let's try communicating with Robert.")==2) {
+			if (select("I'll look for another way.", "Let's try communicating with Robert.")==2) {
 				break;
 			}
 			mes "[Hiel]";
@@ -10664,7 +10664,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "Oh, hello~ I'm busy as usual, ahah.";
 		next;
-		if (select("I just came by to say hi.:Ask to modify Etran's necklace.")==1) {
+		if (select("I just came by to say hi.", "Ask to modify Etran's necklace.")==1) {
 			mes "[Hiel]";
 			mes "Well, there's really nothing else to improve. I'll let you, " + strcharinfo(PC_NAME) + ", especially to use this whenever you want.";
 			next;
@@ -10675,7 +10675,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 		mes "[Hiel]";
 		mes "You mean Sir Etran's keepsake? I could try to utilize a special magic power stone to imbue the desired effects, but it is an expensive material costing 10 Splendide Coins...";
 		next;
-		switch (select("I guess I'll come back next time...:I have the necessary coins.")) {
+		switch (select("I guess I'll come back next time...", "I have the necessary coins.")) {
 			case 1:
 				mes "[Hiel]";
 				mes "Sure, let me know when you have them ready. I'll imbue the desired effects.";
@@ -10684,7 +10684,7 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 				mes "[Hiel]";
 				mes "Oh ok, then should we try imbuing the effects? This process isn't my specialty so I'm a bit nervous, but... hahaha...";
 				next;
-				.@etran_r = select("I'll do it next time~:Imbue Physical Ability:Imbue Magical Ability:Imbue Ranged Ability:Imbue Recovering Ability");
+				.@etran_r = select("I'll do it next time~", "Imbue Physical Ability", "Imbue Magical Ability", "Imbue Ranged Ability", "Imbue Recovering Ability");
 				if (.@etran_r == 1){
 					mes "[Hiel]";
 					mes "Sure, let me know when you have them ready. I'll restore its effects.";
@@ -10777,7 +10777,7 @@ mid_camp,173,257,5	script	Shelby#pa0829	4_CAT_SAILOR2,{
 		mes "Huh?";
 		mes "Where did you find that canned food?";
 		next;
-		if (select("I got it for myself.:I brought it for you guys.")==1) {
+		if (select("I got it for myself.", "I brought it for you guys.")==1) {
 			mes "[Shelby]";
 			mes "You are a human being and you eat canned food? What are you doing?";
 			next;
@@ -10793,7 +10793,7 @@ mid_camp,173,257,5	script	Shelby#pa0829	4_CAT_SAILOR2,{
 		mes "[Shelby]";
 		mes " should I really receive this from you?......";
 		next;
-		if (select("Forget it if you don't want it.:Yeah of course~")==1) {
+		if (select("Forget it if you don't want it.", "Yeah of course~")==1) {
 			mes "[Shelby]";
 			mes "Nah, I'm just kidding! Why would I?";
 			next;
@@ -10921,22 +10921,20 @@ ecl_in02,133,115,7	script	Prison Guard#pa0829	4_M_FAIRYSOLDIER2,{
 		mes "[Prison Guard]";
 		mes "I see, I don't think I ever saw you on our visitor's list. Who are you visiting?";
 		next;
-		input .@inputstr$;
-		if (.@inputstr$ == "Clever") {
-			mes "[Prison Guard]";
-			mes "^000099" + .@inputstr$ + "^000000? ... That means...";
-			next;
-		}
-		else {
+		input(.@inputstr$);
+		if (.@inputstr$ != "Clever") {
 			mes "[Prison Guard]";
 			mes "Hmm? You want to visit ^000099" + .@inputstr$ + "^000000? I don't see that visitation on the list. Are you sure you made a formal request?";
 			next;
-			if (select("Look inside.:Get me out of here.")==2) {
+			if (select("Look inside.", "Get me out of here.")==2) {
 				warp "ecl_in02",98,29;
 				end;
 			}
 			close;
 		}
+		mes "[Prison Guard]";
+		mes "^000099" + .@inputstr$ + "^000000? ... That means...";
+		next;
 		mes "[Clever]";
 		mes "Huh? I've got a visitor? Yahoo! It's a visit! Yay~";
 		next;
@@ -10986,7 +10984,7 @@ ecl_in02,133,115,7	script	Prison Guard#pa0829	4_M_FAIRYSOLDIER2,{
 		mes "Do you need something else?";
 		next;
 	}
-	if (select("Look inside.:Get me out of here.")==2) {
+	if (select("Look inside.", "Get me out of here.")==2) {
 		warp "ecl_in02",98,29;
 		end;
 	}
@@ -11014,7 +11012,7 @@ ecl_in01,82,80,4	script	Monthly Eclage#pa0829	HIDDEN_NPC,{
 		next;
 		mes "^000099This isn't a history document. It's just a third-rate magazine. Let's look through the table of contents.^000000";
 		next;
-		switch (select("Close the book:Settlement of despair-------7p:Brutality of the Elder Assembly-------48p:Eternal farewell--------132p:(Faded out areas)")) {
+		switch (select("Close the book", "Settlement of despair-------7p", "Brutality of the Elder Assembly-------48p", "Eternal farewell--------132p", "(Faded out areas)")) {
 			case 1:
 				mes "^000099Doesn't seem very interesting.^000000";
 				close;
@@ -11150,7 +11148,7 @@ ecl_tdun01,60,56,4	script	#pa0829EtranInterio	HIDDEN_NPC,{
 		mes "^000099Etran suprisingly looks similar to Clever. Could it be that Clever and Hiel are reincarnations of Etran and Robert? No, that couldn't be...^000000";
 		next;
 		while (1) {
-			.@select = select("Ask about the Elder Assembly.:Ask about the fight with Robert.:Ask about land restoration project.");
+			.@select = select("Ask about the Elder Assembly.", "Ask about the fight with Robert.", "Ask about land restoration project.");
 			if (.@select==3){
 				break;
 			}
@@ -11311,7 +11309,7 @@ ecl_tdun01,60,56,4	script	#pa0829EtranInterio	HIDDEN_NPC,{
 	close;
 }
 
-ecl_tdun01,60,56,0	script	#pa0829EtranInterioTouch	139,4,4,{
+ecl_tdun01,60,56,0	script	#pa0829EtranInterioTouch	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnTouch:
 	disable_items;
@@ -11338,7 +11336,7 @@ OnTouch:
 	end;
 }
 
-ecl_fild01,183,94,0	script	#pa0829EtranExterioTouch	139,3,3,{
+ecl_fild01,183,94,0	script	#pa0829EtranExterioTouch	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11392,7 +11390,7 @@ OnTouch:
 		mes "A proof?";
 		next;
 		while (1) {
-			.@select = select("Bring a cat's canned food.:Bring a Laphine coin.:Bring a home tree leaf.");
+			.@select = select("Bring a cat's canned food.", "Bring a Laphine coin.", "Bring a home tree leaf.");
 			if (.@select == 3){
 				break;
 			}
@@ -11465,7 +11463,7 @@ OnTouch:
 	end;
 }
 
-eclage,291,301,0	script	#pa0829RobertExteriTouch	139,3,3,{
+eclage,291,301,0	script	#pa0829RobertExteriTouch	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11507,7 +11505,7 @@ OnTouch:
 	end;
 }
 
-ecl_fild01,110,240,0	script	#pa0829Reactor1	139,3,3,{
+ecl_fild01,110,240,0	script	#pa0829Reactor1	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11543,9 +11541,9 @@ OnTouch:
 	}
 	end;
 }
-ecl_fild01,234,266,0	duplicate(#pa0829Reactor1)	#pa0829Reactor6	139,3,3
+ecl_fild01,234,266,0	duplicate(#pa0829Reactor1)	#pa0829Reactor6	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,110,198,0	script	#pa0829Reactor2	139,3,3,{
+ecl_fild01,110,198,0	script	#pa0829Reactor2	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11572,7 +11570,6 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran.^000000";
 				close;
-			
 			case 2:
 				mes "[????]";
 				mes "I... I did it. The restricted area!! Absolute zero ductility!!!!!! And they stole it from me. My gravitational pull of 300 grams.";
@@ -11582,7 +11579,6 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran.^000000";
 				close;
-			
 			case 3:
 				mes "[????]";
 				mes "Is this-...(Static static) Is this guy really in the right mind?";
@@ -11594,9 +11590,9 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,179,125,0	duplicate(#pa0829Reactor2)	#pa0829Reactor7	139,3,3
+ecl_fild01,179,125,0	duplicate(#pa0829Reactor2)	#pa0829Reactor7	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,165,158,0	script	#pa0829Reactor3	139,3,3,{
+ecl_fild01,165,158,0	script	#pa0829Reactor3	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11619,14 +11615,12 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran. It's cold somehow.^000000";
 				close;
-				
 			case 2:
 				mes "[????]";
 				mes "Human!! Human Chicken!!!!!!!!";
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran. It smells delicious somehow.^000000";
 				close;
-			
 			case 3:
 				mes "[????]";
 				mes "You don't know why I'm upset, do you?";
@@ -11641,11 +11635,11 @@ OnTouch:
 				close;
 		}
 	}
-end;
+	end;
 }
-ecl_fild01,179,179,0	duplicate(#pa0829Reactor3)	#pa0829Reactor8	139,3,3
+ecl_fild01,179,179,0	duplicate(#pa0829Reactor3)	#pa0829Reactor8	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,237,166,0	script	#pa0829Reactor4	139,3,3,{
+ecl_fild01,237,166,0	script	#pa0829Reactor4	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11665,14 +11659,12 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated but... For some reason, I'm getting lonely.^000000";
 				close;
-			
 			case 2:
 				mes "[???]";
 				mes "3..8..12..33...31..The last number is erased...";
 				next;
 				mes "^000099How intriguing...^000000";
 				close;
-			
 			case 3:
 				mes "[???]";
 				mes "I'm going insane.";
@@ -11687,9 +11679,9 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,187,243,0	duplicate(#pa0829Reactor4)	#pa0829Reactor9	139,3,3
+ecl_fild01,187,243,0	duplicate(#pa0829Reactor4)	#pa0829Reactor9	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,230,206,0	script	#pa0829Reactor5	139,3,3,{
+ecl_fild01,230,206,0	script	#pa0829Reactor5	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11710,14 +11702,12 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated. Somehow it felt like I had to do whatever they said in it.^000000";
 				close;
-			
 			case 2:
 				mes "[???]";
 				mes "3..8..12..33...31..The last number is erased...";
 				next;
 				mes "^000099How intriguing...^000000";
 				close;
-			
 			case 3:
 				mes "[????]";
 				mes "Baby, you don't know why I'm upset, do you?";
@@ -11734,14 +11724,14 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,159,278,0	duplicate(#pa0829Reactor5)	#pa0829Reactor10	139,3,3
+ecl_fild01,159,278,0	duplicate(#pa0829Reactor5)	#pa0829Reactor10	HIDDEN_WARP_NPC,3,3
 
 eclage,155,91,4	script	#pa0829Hiel's Door10	2_BOARD2,3,3,{
 	mes "[Notice]";
 	mes "Pan-galactic ultra genius engineer Hiel's strange and creepy workshop.";
 	mes "Normal Laphines, animals, and Saphas are prohibited.";
 	next;
-	if (select("Continue my way.:Enter this place.")==2) {
+	if (select("Continue my way.", "Enter this place.")==2) {
 		warp "ecl_in04",107,213;
 		end;
 	}
@@ -11751,7 +11741,7 @@ eclage,155,91,4	script	#pa0829Hiel's Door10	2_BOARD2,3,3,{
 ecl_in04,108,215,4	script	Supreme Elec rope#pa0829	HIDDEN_NPC,{
 	mes "If you would like to go down, please press the bell~";
 	next;
-	if (select("Forget it.:Go down.")==2) {
+	if (select("Forget it.", "Go down.")==2) {
 		warp "eclage",152,91;
 		end;
 	}
@@ -11759,12 +11749,12 @@ ecl_in04,108,215,4	script	Supreme Elec rope#pa0829	HIDDEN_NPC,{
 }
 
 sec_in02,85,187,4	script	#pa0829Reactor11	4_M_FAIRYKID,3,3,{
-	input .@input;
+	input(.@input);
 	if (.@input == 1854) {
 		mes "[????]";
 		mes "Baby, you don't know why I'm upset, do you?";
 		mes "Present" + ep14_2_etran + "Dog";
-		input .@input;
+		input(.@input, 0);
 		ep14_2_etran = .@input;
 		if (ep14_2_mylord < 7) {
 			ep14_2_mylord = 7;
@@ -11839,13 +11829,13 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 		next;
 		mes "^000099It was good that Robert appeared in such clarity. But he seems really mad about the time when the communication got cut off last time. Let's first calm his hand holding my collar up.^000000";
 		next;
-		select("You see...:It's a misunderstanding!:This is difficult.:Please give me some time to explain!");
+		select("You see...", "It's a misunderstanding!", "This is difficult.", "Please give me some time to explain!");
 		cutin "EP14_robert1",1;
 		mes "[Robert]";
 		mes "Hmm? The necklace in your right hand...";
 		while (1) {
 			next;
-			.@select = select("I bought it at the market.:I stole it.:I met with Sir Etran.");
+			.@select = select("I bought it at the market.", "I stole it.", "I met with Sir Etran.");
 			if (.@select == 1){
 				next;
 			}
@@ -11953,14 +11943,12 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				next;
 				mes "^000099It's been a while since I felt that about myself. Yes, indeed... This machine is getting on my nerves.^000000";
 				close;
-			
 			case 2:
 				mes "[???]";
 				mes "CHTTTTSTATIC~~~~ ANG!?~~ CHTTTTT ~ oh my shoulder!!";
 				next;
 				mes "^000099Oh, I'm sorry. I'm going to leave this channel.^000000";
 				close;
-			
 			case 3:
 				mes "^000099Etran's sad legend^000000";
 				next;
@@ -12014,7 +12002,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 4:
 				mes "^000099What if Etran and Robert were the priosoner and the guard?^000000";
 				next;
@@ -12032,13 +12019,12 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 5:
 				mes "^000099Etran and Robert were put to work as cat merchants.^000000";
 				next;
 				cutin "EP14_etran1",1;
 				mes "[Etran]";
-				mes "Welcome welcomeow~! We are cat merchants, always serving guests as our kingeow~! Special sale! One piece of meat for 200Á¦´Ï!!";
+				mes "Welcome welcomeow~! We are cat merchants, always serving guests as our kingeow~! Special sale! One piece of meat for 200meow!!";
 				next;
 				cutin "EP14_robert1",1;
 				mes "[Robert]";
@@ -12074,7 +12060,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 6:
 				mes "^000099Etran and Robert were placed in a Flight machine.^000000";
 				next;
@@ -12127,7 +12112,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 7:
 				mes "^000099Iron Chef Robert^000000";
 				next;
@@ -12159,7 +12143,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 8:
 				mes "^000099Robert actually likes beer.^000000";
 				next;
@@ -12206,7 +12189,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 9:
 				mes "^000099Robert the cook^000000";
 				next;
@@ -12244,7 +12226,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 10:
 				mes "^000099Childhood friends, Etran and Robert^000000";
 				next;
@@ -12292,19 +12273,16 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 11:
 				mes "^000099In boiling water~ 3 minutes~ ... Static static^000000";
 				next;
 				mes "^0000993 minutes in boiling water... What after that. Does it mean it will die 3 minutes in boiling water? Do I pour the boiling water over a monster or something?^000000";
 				close;
-				
 			case 12:
 				mes "^000099Houston~ Houston~ This is CHTTTCHTTT~ We see a large tower and a tree. It seems like there are life forms here on this planet as well~ STATIC~ ^000000";
 				next;
 				mes "^000099Some desperate voices are heard. Not sure what the words, planets and life forms, are referring to.^000000";
 				close;
-			
 			default:
 				mes "^000099There's too much static. Try adjusting the frequency. ^000000";
 				close;
@@ -12314,8 +12292,7 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 	close;
 }
 
-// Laphines That Love The Land(Lost Adventurers)
-//============================================================
+//== Laphines That Love The Land (Lost Adventurers) ========
 ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 	if (BaseLevel < 100) {
 		mes "[Fili]";
@@ -12328,7 +12305,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 		mes "It's always so beautiful with flowers blooming everywhere.";
 		emotion e_ho;
 		next;
-		switch (select("Start a conversation:Laphine that loves the earth:Asking after adventurers")) {
+		switch (select("Start a conversation", "Laphine that loves the earth", "Asking after adventurers")) {
 			case 1:
 			.@ran = rand(1,3);
 			switch(rand(1,3)){
@@ -12336,18 +12313,15 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 					mes "[Fili]";
 					mes "What is Eclage like? It's such a nice place.";
 					close;
-					
 				case 2:
 					mes "[Fili]";
 					mes "People wouldn't hate or hold each other at knife point if their hearts are filled with love for flowers and the earth.";
 					close;
-				
 				case 3:
 					mes "[Fili]";
 					mes "You should avoid going into the tower. It's dangerous. We can't do much for the ones who have already entered, though.";
 					close;
 			}
-			
 			case 2:
 				if (questprogress(13059,PLAYTIME) == 2) {
 					mes "[Fili]";
@@ -12365,7 +12339,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 						mes "[Fili]";
 						mes "There are four in the work group. Don't forget to tell everyone.";
 						close;
-					} 
+					}
 					mes "[Fili]";
 					mes "Thanks. Can you hear the earth singing? The sound of flowers and trees dancing in the wind. You'll hear it someday.";
 					emotion e_lv;
@@ -12377,7 +12351,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 				mes "[Fili]";
 				mes "Glad you're here. We're about to start working again. Would you help us?";
 				next;
-				switch (select("Sure!:I'm sorry, I can't")) {
+				switch (select("Sure!", "I'm sorry, I can't")) {
 					case 1:
 						mes "[Fili]";
 						mes "Thanks so much! Tell Laphines to start working!";
@@ -12431,7 +12405,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 				mes "[Fili]";
 				mes "Will you help checking the safety of the adventurers today?";
 				next;
-				switch (select("Sure, I'm an adventurer, too!:Sorry, I'm kind of tired today.")) {
+				switch (select("Sure, I'm an adventurer, too!", "Sorry, I'm kind of tired today.")) {
 					case 1:
 						mes "[Fili]";
 						mes "Thanks! Make sure all three of the adventurers are doing well!";
@@ -12497,7 +12471,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 			mes "[Fili]";
 			mes "I should have tried harder to stop them...Could you go check if they're safe and sound?";
 			next;
-			switch (select("I'll do it! I'm an adventurer, too!:Sorry, I can't do it right now.")) {
+			switch (select("I'll do it! I'm an adventurer, too!", "Sorry, I can't do it right now.")) {
 				case 1:
 					mes "[Fili]";
 					mes "Good. There are three adventurers in the tower right now.";
@@ -12544,7 +12518,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 			mes "[Fili]";
 			mes "I think their work for the field is finished for the day. By the way, ^FF0000there's another work. Ask about it if you're interested.^000000";
 			erasequest 13050;
-			ep14_2_nines = 2; 
+			ep14_2_nines = 2;
 			getitem Splendide_Coin,1; //Splendide_Coin
 			getexp 300000,300000;
 			close;
@@ -12560,7 +12534,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 			mes "[Fili]";
 			mes "It's just a habit, don't mind. Anyway, it's time to start the work for the day...you're a traveler, right? Can you help me?";
 			next;
-			switch (select("See what kind of work it is.:Tell him you're busy.")) {
+			switch (select("See what kind of work it is.", "Tell him you're busy.")) {
 				case 1:
 					mes "[Fili]";
 					mes "Ahng? It's simple. Tell Laphines that are scattered all over the field to start today's work.";
@@ -12588,7 +12562,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 					close2;
 			}
 		}
-	} 
+	}
 	if (ep14_2_oliver > 4) {
 		mes "[Fili]";
 		mes "Look at this beautiful field filled with little blades of grass and twigs breathing!";
@@ -12677,7 +12651,7 @@ ecl_fild01,83,263,5	script	Watering Laphine#1	4_M_FAIRYKID3,{
 			mes "I think this is enough for the day. I have to take a break and draw water, too. Hehe~!";
 			close;
 		}
-		else if ((questprogress(13050) == 1) && (questprogress(13052) == 1)) { 
+		else if ((questprogress(13050) == 1) && (questprogress(13052) == 1)) {
 			mes "[Watering Laphine]";
 			mes "I'll water these dying flowers and grasses again. This brings them back to life! Hehe~!";
 			erasequest 13052;
@@ -12691,7 +12665,6 @@ ecl_fild01,83,263,5	script	Watering Laphine#1	4_M_FAIRYKID3,{
 		mes "[Watering Laphine]";
 		mes "I'm sure Eclage needs a Laphine like me! Hehe~!";
 		close;
-		
 	}
 	else if (ep14_2_nines == 1){
 		if ((questprogress(13050) == 1) && (questprogress(13052) == 1)) {
@@ -12708,7 +12681,6 @@ ecl_fild01,83,263,5	script	Watering Laphine#1	4_M_FAIRYKID3,{
 		mes "[Watering Laphine]";
 		mes "Hehe~! Now that I'm done watering, I should wait for the great Fili.";
 		close;
-		
 	}
 	mes "[Watering Laphine]";
 	mes "It's my job to water the earth.";
@@ -12727,7 +12699,7 @@ ecl_fild01,163,196,5	script	Dancing Laphine#1	4_F_FAIRYKID3,{
 			mes "I would love to see the great Fili next time...";
 			close;
 		}
-		if ((questprogress(13050) == 1) && (questprogress(13053) == 1)) { 
+		if ((questprogress(13050) == 1) && (questprogress(13053) == 1)) {
 			mes "[Dancing Laphine]";
 			mes "Ah, it's you again! You're so insensitive. Anyway, you're here to tell me to start working, right? I see, I see. You can go now.";
 			emotion e_pif;
@@ -12860,13 +12832,13 @@ ecl_fild01,237,181,5	script	Cute Laphine#1	4_M_FAIRYKID5,{
 
 ecl_tdun02,99,63,5	script	Rosi#No.1	4_F_HUWOMAN,1,1,{
 	end;
-	
+
 OnInit:
-	if (atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) ) > 1){
-		disablenpc strnpcinfo(0);
+	if (atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) ) > 1){
+		disablenpc strnpcinfo(NPC_NAME);
 	}
 	end;
-	
+
 OnTouch:
 	if (ep14_2_nines < 2) {
 		mes "[Rosi]";
@@ -12880,7 +12852,7 @@ OnTouch:
 			close;
 		}
 		if ((questprogress(13055) == 1) && (questprogress(13056) == 1)) {
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Rosi]";
 			mes "It's you again! Oh, is it because I'm a woman? Let me make it clear here. I'm going nowhere until I get a news item.";
 			erasequest 13056;
@@ -12902,11 +12874,10 @@ OnTouch:
 		mes "[Rosi]";
 		mes "This tower is very quiet yet mysterious. It's definitely something that adventurers would love, right?";
 		close;
-		
 	}
 	else if (ep14_2_nines == 2) {
 		if ((questprogress(13055) == 1) && (questprogress(13056) == 1)) {
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Rosi]";
 			mes "Oh my gosh! You scared me! What are you doing here?";
 			next;
@@ -12952,10 +12923,10 @@ ecl_tdun02,22,36,5	duplicate(Rosi#No.1)	Rosi#No.3	4_F_HUWOMAN,1,1
 
 ecl_tdun01,11,62,5	script	Euncheong#No.1	4_M_HUBOY,1,1,{
 	end;
-	
+
 OnInit:
-	if (atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) ) > 1){
-		disablenpc strnpcinfo(0);
+	if (atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) ) > 1){
+		disablenpc strnpcinfo(NPC_NAME);
 	}
 	end;
 
@@ -12972,7 +12943,7 @@ OnTouch:
 			close;
 		}
 		if ((questprogress(13055) == 1) && (questprogress(13057) == 1)) {
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Euncheong]";
 			mes "You really shouldn't worry about me. I'll go out when I'm done exploring...Tell him I'm doing okay.";
 			next;
@@ -13000,7 +12971,7 @@ OnTouch:
 	}
 	else if (ep14_2_nines == 2) {
 		if ((questprogress(13055) == 1) && (questprogress(13057) == 1)){
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Euncheong]";
 			mes "Are you an adventurer, too? Don't you dare cut in here. I was here first.";
 			next;
@@ -13098,7 +13069,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 		mes "[New Oz]";
 		mes "Good to see you again, my friend!";
 		next;
-		switch (select("I'm here to see if you're still alive.:Give him food:Brush off the dust:Gifts for friend")) {
+		switch (select("I'm here to see if you're still alive.", "Give him food", "Brush off the dust", "Gifts for friend")) {
 			case 1:
 				mes "[New Oz]";
 				mes "It's from that muscular Laphine, right? He's a good guy. Tell him not to worry about me.";
@@ -13125,7 +13096,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 2:
 				if (questprogress(13062,PLAYTIME) == 1) {
 					cutin "nines02",2;
@@ -13195,7 +13165,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				mes "[New Oz]";
 				mes "...I wouldn't really deny that. But anyway, could you get me something to eat? I'm starving...";
 				next;
-				switch (select("Alright! I'll be back in a second!:Do it yourself!")) {
+				switch (select("Alright! I'll be back in a second!", "Do it yourself!")) {
 					case 1:
 						mes "[New Oz]";
 						mes "Thanks. I prefer meat, if possible...I really liked what you gave me last time, and I think acorns go well with meat. Hahaha.";
@@ -13218,7 +13188,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 3:
 				if (questprogress(13064,PLAYTIME) == 1) {
 					cutin "nines02",2;
@@ -13263,7 +13232,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				mes "Of course I can do it on my own~ But if I do it alone, then I'll end up using too much of my energy, and then I'll get hungry again...";
 				emotion e_dots;
 				next;
-				switch (select("So you want me to help you brushing off the dust?:Do it yourself then!")) {
+				switch (select("So you want me to help you brushing off the dust?", "Do it yourself then!")) {
 					case 1:
 						cutin "nines02",2;
 						mes "[New Oz]";
@@ -13285,7 +13254,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 4:
 				if (questprogress(13066,PLAYTIME) == 1) {
 					cutin "nines03",2;
@@ -13335,7 +13303,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 					mes "[New Oz]";
 					mes "I'm really really sorry, but could you help me again? Just the thought of seeing my friends makes me cry like this. Please~?";
 					next;
-					switch (select("What a poor guy! I'll help him.:I can't take it anymore!")) {
+					switch (select("What a poor guy! I'll help him.", "I can't take it anymore!")) {
 						case 1:
 							mes "[New Oz]";
 							mes "Bookmarks made of fallen leaves...Ah, they bring so many memories back and make my eyes teary. I'm sure my friends will love it!";
@@ -13381,7 +13349,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				mes "[New Oz]";
 				mes "So far so good, right? If you think it's similar to another song, it's just your imagination!";
 				next;
-				switch (select("I think it's excellent.:I think I've heard this before.")) {
+				switch (select("I think it's excellent.", "I think I've heard this before.")) {
 					case 1:
 						mes "[New Oz]";
 						mes "Thanks! If I have a chance, I'll make a song about how you helped me, too!";
@@ -13411,7 +13379,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-			} 
+			}
 			cutin "nines03",2;
 			mes "[New Oz]";
 			mes "Don't worry. I'm pretty much done writing a song. I'm almost done with the lyrics as well as the melody.";
@@ -13421,7 +13389,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 			close2;
 			cutin "",255;
 			end;
-			
 		}
 		cutin "nines02",2;
 		mes "[New Oz]";
@@ -13454,12 +13421,12 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 			mes "I should bring some souvenirs to make them feel better. Is there anything I could use?";
 			emotion e_what;
 			next;
-			switch (select("Jellopy:Lucky Egg:Loots from local monsters")) {
+			switch (select("Jellopy", "Lucky Egg", "Loots from local monsters")) {
 				case 1:
 					mes "[New Oz]";
 					mes "Jellopies are good collectables...but I think it's a little too common. Is there anything else?";
 					next;
-					switch (select("Baphomet Card:Loots from local monsters")) {
+					switch (select("Baphomet Card", "Loots from local monsters")) {
 						case 1:
 							cutin "nines04",2;
 							mes "[New Oz]";
@@ -13479,7 +13446,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 					mes "[New Oz]";
 					mes "I can't get them unless I know what they are. Is there anything else?";
 					next;
-					switch (select("Old Card Album:Loots from local monsters")) {
+					switch (select("Old Card Album", "Loots from local monsters")) {
 						case 1:
 							mes "[New Oz]";
 							mes "Card Album...I can't give my friends something that might be come up with nothing! Anything else?";
@@ -13671,16 +13638,16 @@ sec_in02,16,11,5	script	New Oz Image#1	4_M_MINSTREL1,1,1,{
 	mes "Current Status of Mushroom is -" + .@whatis + "and";
 	mes "Nine status is -" + .@whatho;
 	next;
-	switch (select("Set Item:Quest:Confirm Image")) {
+	switch (select("Set Item", "Quest", "Confirm Image")) {
 		case 1:
 			mes "New Oz";
 			mes "Which set item?";
 			next;
-			switch (select("Nine:Mushroom")) {
+			switch (select("Nine", "Mushroom")) {
 				case 1:
 					mes "Nine status is -" + .@whatho;
 					next;
-					switch (select("+1:-1:Initialization")) {
+					switch (select("+1", "-1", "Initialization")) {
 						case 1:
 							mes "New Oz";
 							mes "Set Item+1";
@@ -13701,7 +13668,7 @@ sec_in02,16,11,5	script	New Oz Image#1	4_M_MINSTREL1,1,1,{
 				case 2:
 					mes "Mushroom status is -" + .@whatis;
 					next;
-					switch (select("+1:-1:I don't want it:Start the Quest(5)")) {
+					switch (select("+1", "-1", "I don't want it", "Start the Quest(5)")) {
 						case 1:
 							mes "New Oz";
 							mes "Set Item+1";
@@ -13775,10 +13742,9 @@ sec_in02,16,11,5	script	New Oz Image#1	4_M_MINSTREL1,1,1,{
 	}
 }
 
-// Memory of Professor Worm
-//============================================================
+//== Memory of Professor Worm ==============================
 sec_in02,10,17,4	script	Professor Aide#worm	4_BULL,{
-	input .@input;
+	input(.@input);
 	if (.@input != 1917) {
 		mes "EEK!";
 		close;
@@ -13786,7 +13752,7 @@ sec_in02,10,17,4	script	Professor Aide#worm	4_BULL,{
 	mes "[Briquet toothpick]";
 	mes "Tell me all that you want!";
 	next;
-	switch (select("Quest Initialization:20 Star Shape Mushrooms:Right before doodle research:Right before final compensation")) {
+	switch (select("Quest Initialization", "20 Star Shape Mushrooms", "Right before doodle research", "Right before final compensation")) {
 		case 1:
 			mes "[Operation Briquet]";
 			mes "There it is!";
@@ -13844,7 +13810,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 		mes "It's coming! It's all coming!";
 		mes "Like a tsunami!!";
 		next;
-		switch (select("What's coming?:What are you doing here?:Please tell me about Bifrost.")) {
+		switch (select("What's coming?", "What are you doing here?", "Please tell me about Bifrost.")) {
 			case 1:
 				mes "[Professor Worm]";
 				mes "EEEK!";
@@ -13855,7 +13821,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 				mes "Are you a monster that I created?";
 				mes "You have to be!";
 				next;
-				switch (select("I want to know about the tower.:It's a talking worm!")) {
+				switch (select("I want to know about the tower.", "It's a talking worm!")) {
 					case 1:
 						mes "[Professor Worm]";
 						mes "A tower? What tower?";
@@ -13883,7 +13849,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 						mes "My goodness, I even forgot the name!";
 						mes "Don't just stand there please go and find my portrait!";
 						next;
-						switch (select("I'm busy!:Why should I!")) {
+						switch (select("I'm busy!", "Why should I!")) {
 							case 1:
 								mes "[Professor Worm]";
 								mes "You came all the way up here in your free time and you are telling me you're busy?!";
@@ -13950,7 +13916,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 		mes "Hey monster, if you go to the land of many blooming flowers and bring me some ^FF0000Star Shape Mushrooms^000000,";
 		mes "I might remember everything you see!";
 		next;
-		switch (select("Please just try to remember things now.:I'll bring them back for you.")) {
+		switch (select("Please just try to remember things now.", "I'll bring them back for you.")) {
 			case 1:
 				mes "[Professor Worm]";
 				mes "Well, I even forgot my name and I can't remember anything right now!";
@@ -14028,7 +13994,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 		mes "But why did I get stuck in this tower?";
 		mes "And for what reason did I put Bifrost to sleep?";
 		next;
-		if (select("Don't ask me that!:Think harder!")==1) {
+		if (select("Don't ask me that!", "Think harder!")==1) {
 			mes "[Professor Worm]";
 			mes "How dare a monster irritate its creator!";
 			close;
@@ -14045,7 +14011,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 		mes "I guess I would have to write a diary then...";
 		mes "Oh that's right, I used to keep a diary!";
 		next;
-		if (select("What did you do with a diary again?:Show it to me.")==1) {
+		if (select("What did you do with a diary again?", "Show it to me.")==1) {
 			mes "[Professor Worm]";
 			mes "I must have written things that I should have never forgotten!";
 			mes "Why are you so sarcastic, anyways?";
@@ -14055,7 +14021,7 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 		mes "Well.. It's not an ordinary notebook... I used a ^0000FFDiary Frog^000000 which is  a frog that can record things.";
 		mes "Everytime I was really mad, I threw it all over the place, so they all scattered.";
 		next;
-		if (select("What a temper you have!:Should I find the Diary Frog?")==1) {
+		if (select("What a temper you have!", "Should I find the Diary Frog?")==1) {
 			mes "[Professor Worm]";
 			mes "Why don't you try living imprisoned yourself?";
 			mes "If you were in my place you wouldn't just throw some frogs, but the entire household!";
@@ -14124,9 +14090,9 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 	}
 }
 
-ecl_tdun04,21,41,0	script	#pf	139,2,2,{
+ecl_tdun04,21,41,0	script	#pf	HIDDEN_WARP_NPC,2,2,{
 	end;
-	
+
 OnTouch:
 .@pro = rand(1,100);
 if (ep14_2_profe == 1) {
@@ -14173,16 +14139,16 @@ if (ep14_2_profe == 1) {
 	}
 }
 
-ecl_tdun04,37,21,0	duplicate(#pf)	#pf3	139,2,2
+ecl_tdun04,37,21,0	duplicate(#pf)	#pf3	HIDDEN_WARP_NPC,2,2
 
-ecl_tdun04,39,27,0	script	#prf1	139,2,2,{
+ecl_tdun04,39,27,0	script	#prf1	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1218) == 0 && ep14_2_profe==4) {
 		mes "The wall is filled with Professor Worm's notes. ";
 		mes "It seems like some of it can be read.";
 		next;
-		if (select("Don't read it!:Read it.")==1) {
+		if (select("Don't read it!", "Read it.")==1) {
 			mes "It doesn't seem very interesting at all!";
 			close;
 		}
@@ -14199,7 +14165,7 @@ OnTouch:
 	else if (questprogress(1218) == 2 && ( ep14_2_profe == 4 || ep14_2_profe == 5) ) {
 		mes "Professor Worm's notes on this wall have already been read.";
 		next;
-		if (select("Stop reading.:Read it again.")==1) {
+		if (select("Stop reading.", "Read it again.")==1) {
 			mes "It's not like it needs to be memorized so I'll just stop reading.";
 			close;
 		}
@@ -14209,10 +14175,9 @@ OnTouch:
 		mes "But why do I have to remain in a place like this, too?";
 		close;
 	}
-	
 }
 
-ecl_tdun04,35,31,0	script	#prf2	139,2,2,{
+ecl_tdun04,35,31,0	script	#prf2	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1219) == 0 && ep14_2_profe==4) {
@@ -14220,7 +14185,7 @@ OnTouch:
 		mes "Professor Worm's notes. ";
 		mes "It seems like some of it can be read.";
 		next;
-		if (select("Don't read it!:Read it.")==1) {
+		if (select("Don't read it!", "Read it.")==1) {
 			mes "It doesn't seem very interesting at all!";
 			close;
 		}
@@ -14239,7 +14204,7 @@ OnTouch:
 	else if (questprogress(1219) == 2 && ( ep14_2_profe == 4 || ep14_2_profe == 5) ) {
 		mes "Professor Worm's notes on this wall have already been read.";
 		next;
-		if (select("Don't read it!:Read it.")==1) {
+		if (select("Don't read it!", "Read it.")==1) {
 			mes "It doesn't seem very interesting at all!";
 			close;
 		}
@@ -14251,17 +14216,16 @@ OnTouch:
 		mes "I wonder if I'll forget even my name... How it worries me...";
 		close;
 	}
-	
 }
 
-ecl_tdun04,28,43,0	script	#prf3	139,2,2,{
+ecl_tdun04,28,43,0	script	#prf3	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1220) == 0 && ep14_2_profe==4) {
 		mes "The wall is filled with Professor Worm's notes. ";
 		mes "It seems like some of it can be read.";
 		next;
-		if (select("Don't read it!:Read it.")==1) {
+		if (select("Don't read it!", "Read it.")==1) {
 			mes "It doesn't seem very interesting at all!";
 			close;
 		}
@@ -14286,7 +14250,7 @@ OnTouch:
 	else if (questprogress(1220) == 2 && ( ep14_2_profe == 4 || ep14_2_profe == 5) ) {
 		mes "Professor Worm's notes on this wall have already been read.";
 		next;
-		if (select("Stop reading.:Read it again.")==1) {
+		if (select("Stop reading.", "Read it again.")==1) {
 			mes "It's not like it needs to be memorized so I'll just stop reading.";
 			close;
 		}
@@ -14306,14 +14270,14 @@ OnTouch:
 	}
 }
 
-ecl_tdun04,39,31,0	script	#prf4	139,2,2,{
+ecl_tdun04,39,31,0	script	#prf4	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1221) == 0 && ep14_2_profe==4) {
 		mes "The wall is filled with Professor Worm's notes. ";
 		mes "It seems like some of it can be read.";
 		next;
-		if (select("Don't read it!:Read it.")==1) {
+		if (select("Don't read it!", "Read it.")==1) {
 			mes "It doesn't seem very interesting at all!";
 			close;
 		}
@@ -14329,7 +14293,7 @@ OnTouch:
 	else if (questprogress(1221) == 2 && ( ep14_2_profe == 4 || ep14_2_profe == 5) ) {
 		mes "Professor Worm's notes on this wall have already been read.";
 		next;
-		if (select("Stop reading.:Read it again.") == 1) {
+		if (select("Stop reading.", "Read it again.") == 1) {
 			mes "It's not like it needs to be memorized so I'll just stop reading.";
 			close;
 		}
@@ -14340,14 +14304,14 @@ OnTouch:
 	}
 }
 
-ecl_tdun04,24,31,0	script	#prf5	139,2,2,{
+ecl_tdun04,24,31,0	script	#prf5	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1222) == 0 && ep14_2_profe == 4 ) {
 		mes "The wall is filled with Professor Worm's notes. ";
 		mes "It seems like some of it can be read.";
 		next;
-		if (select("Don't read it!:Read it.") == 1) {
+		if (select("Don't read it!", "Read it.") == 1) {
 			mes "It doesn't seem very interesting at all!";
 			close;
 		}
@@ -14367,7 +14331,7 @@ OnTouch:
 	else if (questprogress(1222) == 2 && ( ep14_2_profe == 4 || ep14_2_profe == 5) ) {
 		mes "Professor Worm's notes on this wall have already been read.";
 		next;
-		if (select("Stop reading.:Read it again.")==1) {
+		if (select("Stop reading.", "Read it again.")==1) {
 			mes "It's not like it needs to be memorized so I'll just stop reading.";
 			close;
 		}
@@ -14378,7 +14342,7 @@ OnTouch:
 		next;
 		mes "[Wall Note 5]";
 		mes "Monsters, I have to create more monsters to protect me. As many as I could possibly create!";
-		close;	
+		close;
 	}
 }
 
@@ -14394,7 +14358,7 @@ ecl_tdun03,21,69,5	script	Diary Frog No.3#worm	4_FROG,{
 		mes "Professor Worm threw me out here.";
 		mes "He used to chuck us out anytime he was furious.";
 		next;
-		switch (select("A talking frog?:I want to listen to Professor Worm's diary.")) {
+		switch (select("A talking frog?", "I want to listen to Professor Worm's diary.")) {
 			case 1:
 				mes "[Diary Frog No.3]";
 				mes "I am a frog made of wood that can be used for recording.";
@@ -14426,7 +14390,7 @@ ecl_tdun03,21,69,5	script	Diary Frog No.3#worm	4_FROG,{
 		mes "Are you interested in the diary recording?";
 		mes "I don't have much else to do so would you like to hear it again?";
 		next;
-		switch (select("Where are other Diary Frogs?:Please let me hear it again.:Is there any more?")) {
+		switch (select("Where are other Diary Frogs?", "Please let me hear it again.", "Is there any more?")) {
 			case 1:
 				mes "[Diary Frog No.3]";
 				mes ((ep14_2_profe > 7)?"Diary Frog No.6":"Another Diary Frog")+" probably got thrown onto the first floor of the tower.";
@@ -14465,7 +14429,7 @@ ecl_tdun01,23,79,4	script	Diary Frog No. 6#worm	4_FROG,{
 		mes "I thought he threw me out because he didn't need me!";
 		mes "He threw me realy hard, he did!";
 		next;
-		if (select("You look fine.:Please calm down and let me hear the diary.")==1) {
+		if (select("You look fine.", "Please calm down and let me hear the diary.")==1) {
 			mes "[Diary Frog No. 6]";
 			mes "You would only understand if you were abandoned like I am!";
 			close;
@@ -14480,7 +14444,7 @@ ecl_tdun01,23,79,4	script	Diary Frog No. 6#worm	4_FROG,{
 		mes "If you return to me after getting rid of 15 ^FF0000Lichtern(blue)^000000";
 		mes "I'll let you listen to Professor Worm's diary as you wish.";
 		next;
-		if (select("That's a tough favor!:I'll get rid of them.")==1) {
+		if (select("That's a tough favor!", "I'll get rid of them.")==1) {
 			mes "[Diary Frog No. 6]";
 			mes "Well, then I won't say a word about the diary!";
 				close;
@@ -14537,7 +14501,7 @@ ecl_tdun01,23,79,4	script	Diary Frog No. 6#worm	4_FROG,{
 		mes "Do you want to listen to the diary again?";
 		mes "I'll let you hear it as much as you want!";
 		next;
-		if (select("Where are other Diary Frogs?:Please let me hear it again.")==1) {
+		if (select("Where are other Diary Frogs?", "Please let me hear it again.")==1) {
 			mes "[Diary Frog No. 6]";
 			mes "Another Diary Frog would be outside the tower somewhere.";
 			mes "If nothing took it away, you'll probably find it without much difficulty.";
@@ -14584,7 +14548,7 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 		mes "Professor Worm threw me out really hard all the way out here.";
 		mes "I didn't even do anything wrong!";
 		next;
-		if (select("You look fine.:Please calm down and let me hear the diary.")==1) {
+		if (select("You look fine.", "Please calm down and let me hear the diary.")==1) {
 			mes "[Diary Frog No. 30]";
 			mes "Come over here please. Let me break one of your legs.";
 			close;
@@ -14593,7 +14557,7 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 		mes "I got hurt when I was thrown out that I don't have the energy to playback the diary recording.";
 		mes "To help me repair myself, please bring me 10 ^FF0000Star Shape Mushrooms^000000 from the land of blooming flowers.";
 		next;
-		if (select("Just walk it off.:I'll bring them for you.")==1) {
+		if (select("Just walk it off.", "I'll bring them for you.")==1) {
 			mes "[Diary Frog No. 30]";
 			mes "Then, all I can let you hear are my moans and groans.";
 			mes "ARGGGGGG!!!";
@@ -14608,7 +14572,7 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 		mes "If you come back to late, all you'll hear are my moans and groans.";
 		changequest 1226,1227;
 		ep14_2_profe = 10;
-		close;	
+		close;
 	}
 	else if (ep14_2_profe == 10) {
 		if (countitem(Star_Shape_Mushroom) < 10) {
@@ -14650,7 +14614,7 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 		close;
 	}
 	else if (ep14_2_profe >= 11) {
-		if (select("Where are other Diary Frogs?:Please let me hear it again.")==1) {
+		if (select("Where are other Diary Frogs?", "Please let me hear it again.")==1) {
 			mes "[Diary Frog No. 30]";
 			mes "They were either eaten up by monsters or severely broken after being thrown out.";
 			mes "I doubt there are other remaining frogs.";
@@ -14672,12 +14636,11 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 		mes "I'm so mad, I oughta throw this out!";
 		next;
 		mes "It seems that a continued search for diary recordings would be meaningless. I should go back to Professor Worm.";
-		close;	
+		close;
 	}
 }
 
-// Encounter in a Strange Land
-//============================================================
+//== Encounter in a Strange Land ===========================
 mora,103,74,5	script	Expedition Member#tl01	4_M_DST_MASTER,{
 	mes "[Expedition Member]";
 	mes "I've gone through Hazy Forest Maze and come all the way here just to see Eclage and I really don't want to go through that maze ever again.";
@@ -14685,7 +14648,7 @@ mora,103,74,5	script	Expedition Member#tl01	4_M_DST_MASTER,{
 	mes "[Expedition Member]";
 	mes "It horrifies me just thinking about returning to the camp after visiting Eclage.";
 	next;
-	switch (select("Eclage?:Easy way to return to the camp:pat pat...")) {
+	switch (select("Eclage?", "Easy way to return to the camp", "pat pat...")) {
 		case 1:
 			mes "[Expedition Member]";
 			mes "Huh? You didn't know it yet?";
@@ -14735,7 +14698,7 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 		mes "Wait, let me guess!";
 		mes "You're a member of the famous Midgard expedition, right?!";
 		next;
-		select("Yes.:How did he know?");
+		select("Yes.", "How did he know?");
 		mes "[Fome]";
 		mes "Well, it's simple.";
 		mes "There's no one who looks like you or dresses like you around Eclage.";
@@ -14752,7 +14715,7 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 		mes "Eclage is crowded with travelers, and until recently, most of them were from Alpheim.";
 		mes "It's nice to see you. I was about to talk to you just now. ";
 		next;
-		switch (select("Why is Eclage popular among travelers?:What is the main attraction of Eclage?")) {
+		switch (select("Why is Eclage popular among travelers?", "What is the main attraction of Eclage?")) {
 			case 1:
 				mes "[Fome]";
 				mes "Why does this place have so many travelers...?";
@@ -14797,7 +14760,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 				mes "Let's talk to other travelers.";
 				setquest 7411;
 				break;
-			
 			case 2:
 				mes "[Fome]";
 				mes "The main attraction of Eclage?";
@@ -14841,7 +14803,7 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 				mes "[Eclage Guard]";
 				mes "I'll guide you if it's okay.";
 				next;
-				switch (select("Sure. Let's go.:I don't have time for it right now...")) {
+				switch (select("Sure. Let's go.", "I don't have time for it right now...")) {
 					case 1:
 						mes "[Eclage Guard]";
 						mes "Please follow me then. ";
@@ -14855,7 +14817,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 						hideonnpc "Eclage Guard#tl01";
 						warp "ecl_in03",244,89;
 						end;
-						
 					case 2:
 						mes "[Eclage Guard]";
 						mes "Oh, is that right?";
@@ -14875,7 +14836,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 						cutin "",255;
 						hideonnpc "Eclage Guard#tl01";
 						end;
-					
 				}
 			}
 			mes "[Fome]";
@@ -14948,7 +14908,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 			mes "What Fome said is interesting.";
 			mes "A distrusted king...should I listen to what other Laphines say about it?";
 			close;
-			
 		}
 		mes "[Fome]";
 		mes "I'm sure there is something.";
@@ -14959,7 +14918,7 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 	mes "I should start planning on moving to the next region. ";
 	mes "I'm debating whether I should just go back or go to Mora Village...";
 	close;
-	
+
 OnTouch:
 	if (ep14_2_mylord == 0 && BaseLevel > 98) {
 		mes "A group of travelers of Alpheim are having a conversation.";
@@ -14967,11 +14926,10 @@ OnTouch:
 		emotion e_loud,0,"Traveler Litrip#tl02";
 		emotion e_loud,0,"Traveler Chiba#tl03";
 		next;
-		switch (select("Avoid them.:Join the group.")) {
+		switch (select("Avoid them.", "Join the group.")) {
 			case 1:
 				mes "They don't seem to care that much.";
 				close;
-			
 			case 2:
 				mes "When you approach, they stop talking for a second and make a seat for you.";
 				mes "Start a conversation.";
@@ -14997,7 +14955,7 @@ ecl_in01,32,51,7	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 		mes "You're from Mora?";
 		mes "You must have seen Bifrost Tower on the way then?";
 		next;
-		switch (select("I saw it from the outside. :I've gone inside the tower.")) {
+		switch (select("I saw it from the outside. ", "I've gone inside the tower.")) {
 			case 1:
 				mes "[Litrip]";
 				mes "Really? That's too bad.";
@@ -15067,7 +15025,7 @@ ecl_in01,32,51,7	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 				mes "[Eclage Guard]";
 				mes "I'll guide you if it's okay.";
 				next;
-				switch (select("Sure. Let's go.:I don't have time for it right now...")) {
+				switch (select("Sure. Let's go.", "I don't have time for it right now...")) {
 					case 1:
 						mes "[Eclage Guard]";
 						mes "Please follow me then. ";
@@ -15081,7 +15039,6 @@ ecl_in01,32,51,7	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 						cutin "",255;
 						warp "ecl_in03",244,89;
 						end;
-					
 					case 2:
 						mes "[Eclage Guard]";
 						mes "Oh, is that right?";
@@ -15101,7 +15058,6 @@ ecl_in01,32,51,7	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 						hideonnpc "Eclage Guard#tl01";
 						cutin "",255;
 						end;
-					
 				}
 			}
 			mes "[Litrip]";
@@ -15170,7 +15126,7 @@ ecl_in01,35,51,3	script	Traveler Chiba#tl03	4_M_DOGTRAVELER2,{
 		mes "I heard there's a way to avoid a rift that is blocking Jotunheim...";
 		mes "Do people really travel through Hazy Forest?";
 		next;
-		switch (select("Yes.:By magic!")) {
+		switch (select("Yes.", "By magic!")) {
 			case 1:
 				mes "[Chiba]";
 				mes "So it is.";
@@ -15256,7 +15212,7 @@ ecl_in01,35,51,3	script	Traveler Chiba#tl03	4_M_DOGTRAVELER2,{
 				mes "[Eclage Guard]";
 				mes "I'll guide you if it's okay.";
 				next;
-				switch (select("Sure. Let's go.:I don't have time for it right now...")) {
+				switch (select("Sure. Let's go.", "I don't have time for it right now...")) {
 					case 1:
 						mes "[Eclage Guard]";
 						mes "Please follow me then. ";
@@ -15270,7 +15226,6 @@ ecl_in01,35,51,3	script	Traveler Chiba#tl03	4_M_DOGTRAVELER2,{
 						warp "ecl_in03",244,89;
 						cutin "",255;
 						end;
-					
 					case 2:
 						mes "[Eclage Guard]";
 						mes "Oh, is that right?";
@@ -15290,7 +15245,6 @@ ecl_in01,35,51,3	script	Traveler Chiba#tl03	4_M_DOGTRAVELER2,{
 						hideonnpc "Eclage Guard#tl01";
 						cutin "",255;
 						end;
-					
 				}
 			}
 			mes "[Chiba]";
@@ -15338,11 +15292,11 @@ ecl_in01,31,49,7	script	Eclage Guard#tl01	4_M_FAIRYSOLDIER,{
 OnInit:
 	hideonnpc "Eclage Guard#tl01";
 	end;
-	
+
 OnEnable:
 	hideoffnpc "Eclage Guard#tl01";
 	end;
-	
+
 OnDisable:
 	hideonnpc "Eclage Guard#tl01";
 	end;
@@ -15364,7 +15318,7 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 		mes "Oh, you are here!";
 		mes "May I escort take you to the one who wants to meet you?";
 		next;
-		switch (select("Sure. Let's go.:I don't have time for it right now...")) {
+		switch (select("Sure. Let's go.", "I don't have time for it right now...")) {
 			case 1:
 				mes "[Eclage Guard]";
 				mes "Please follow me then. ";
@@ -15375,7 +15329,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				cutin "",255;
 				warp "ecl_in03",244,89;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Ah...is that right?";
@@ -15396,7 +15349,7 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 		mes "I thought you sill had something to do.";
 		mes "May I guide you?";
 		next;
-		switch (select("Yes, please.:No, it's okay.")) {
+		switch (select("Yes, please.", "No, it's okay.")) {
 			case 1:
 				mes "[Eclage Guard]";
 				mes "Please follow me then. ";
@@ -15404,7 +15357,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				warp "ecl_in03",244,89;
 				cutin "",255;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Is that right?";
@@ -15430,7 +15382,7 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 		mes "[Eclage Guard]";
 		mes "Since it's about time, should I lead you in now?";
 		next;
-		switch (select("Yes, please.:I'll come back later.")) {
+		switch (select("Yes, please.", "I'll come back later.")) {
 			case 1:
 				mes "[Eclage Guard]";
 				mes "Follow me, please.";
@@ -15439,7 +15391,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				warp "ecl_in03",58,72;
 				cutin "",255;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Do as you wish although Mayor Jun might be upset if you keep him waiting for too long.";
@@ -15452,7 +15403,7 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 		mes "[Eclage Guard]";
 		mes "May I escort you to the audience chamber?";
 		next;
-		switch (select("Yes, please.:No, it's okay.")) {
+		switch (select("Yes, please.", "No, it's okay.")) {
 			case 1:
 				mes "[Eclage Guard]";
 				mes "Follow me, please.";
@@ -15460,7 +15411,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				warp "ecl_in03",58,72;
 				cutin "",255;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Thank you.";
@@ -15488,7 +15438,7 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 			mes "You've decided to work in Eclage...";
 			cutin "minuel02",2;
 			next;
-			switch (select("It's just a rumor.:Do they have a job for me?")) {
+			switch (select("It's just a rumor.", "Do they have a job for me?")) {
 				case 1:
 					mes "[Minuel]";
 					mes "Eh? Really?";
@@ -15496,7 +15446,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 					mes "Well, I understand.";
 					cutin "minuel01",2;
 					break;
-				
 				case 2:
 					mes "[Minuel]";
 					mes "Actually I don't have any time for myself since I have to be here all the time.";
@@ -15511,7 +15460,7 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 					mes "Since you're free to go anywhere,";
 					mes "could you gather some decorations for Yai?";
 					next;
-					switch (select("Sure.:No.")) {
+					switch (select("Sure.", "No.")) {
 						case 1:
 							mes "[Minuel]";
 							mes "Thank you.";
@@ -15531,7 +15480,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 							mes "I'll be counting on you!";
 							setquest 7418;
 							break;
-						
 						case 2:
 							mes "[Minuel]";
 							mes "Ha, do you really think so?";
@@ -15539,7 +15487,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 							mes "Soon, in the near future. Hehehe";
 							cutin "minuel02",2;
 							break;
-						
 					}
 					close2;
 					cutin "",255;
@@ -15725,13 +15672,12 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 		mes "Do you have a minute?";
 		mes "My friends love the byproducts of monsters that you brought me the other day and I was going to ask you if you could get some more. Is that okay?";
 		next;
-		switch (select("Sorry, I'm busy.:Fine. I'll do it.")) {
+		switch (select("Sorry, I'm busy.", "Fine. I'll do it.")) {
 			case 1:
 				mes "[Minuel]";
 				mes "That's too bad.";
 				mes "Maybe next time!";
 				break;
-				
 			case 2:
 				mes "[Minuel]";
 				mes "Thank you so much.";
@@ -15855,7 +15801,7 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		mes "Promise me that you will not tell anyone ";
 		mes "about the truth that you believe.";
 		next;
-		if (select("No!:Yes, I promise.")==1) {
+		if (select("No!", "Yes, I promise.")==1) {
 			while (1) {
 				mes "[Shenime]";
 				mes "You put me on the spot.";
@@ -15864,7 +15810,7 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 				mes "[Shenime]";
 				mes "Can't you just keep it to yourself before discussing the matter with Mayor Jun?";
 				next;
-				if (select("No, I can't!:Fine, I won't tell anyone.")==2) {
+				if (select("No, I can't!", "Fine, I won't tell anyone.")==2) {
 					mes "[Shenime]";
 					mes "I see that you've made up your mind.";
 					next;
@@ -15981,7 +15927,7 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		mes "If it's okay, can you do me a favor?";
 		mes "Of course I'll give you a big reward.";
 		next;
-		switch (select("Sure.:Sorry, I can't.")) {
+		switch (select("Sure.", "Sorry, I can't.")) {
 			case 1:
 				mes "[Shenime]";
 				mes "I was worried since it's something unexpected for you. I'm so glad.";
@@ -16041,7 +15987,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		mes "A scholar of magics? There's no one with that name among the scholars I know. ";
 		mes "I don't know.";
 		close;
-		
 	}
 	else if ((ep14_2_mylord > 17) && (ep14_2_mylord < 22)) {
 		mes "[Shenime]";
@@ -16096,7 +16041,7 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		mes "Ha...I think I might have been cheated.";
 		mes "He promised to do a research on the topic that I'm interested in, only if I sponsored him for a certain period of time.";
 		next;
-		switch (select("Did you know what he was researching?:What did you want him to research about?")) {
+		switch (select("Did you know what he was researching?", "What did you want him to research about?")) {
 			case 1:
 				mes "[Shenime]";
 				mes "What he asked for was pretty simple. ";
@@ -16148,16 +16093,16 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		mes "Mayor has to be a representative of Laphines as a whole.";
 		mes "If he's planning something on his own, it's unacceptable. ";
 		next;
-		select("There is no such thing.:What do you want to know?");
+		select("There is no such thing.", "What do you want to know?");
 		mes "[Shenime]";
 		mes "It's about the Orb.";
 		mes "He ordered to reinforce the guard around the Orb.";
 		mes "Do you know why?";
 		next;
-		if (select("Tell him why.:I don't know, either.")==1) {
+		if (select("Tell him why.", "I don't know, either.")==1) {
 			mes "To what extent should you tell him?";
 			next;
-			if (select("Tell him all about it.:Make up something.")==1) {
+			if (select("Tell him all about it.", "Make up something.")==1) {
 				mes "[Shenime]";
 				mes "What?";
 				mes "So, you're saying that the scholar I was sponsoring is 'the Avant?'";
@@ -16232,7 +16177,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		ep14_2_mylord =  26;
 		changequest 7445,7447;
 		close;
-		
 	}
 	else if (ep14_2_mylord == 26) {
 		mes "[Shenime]";
@@ -16295,7 +16239,7 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		next;
 		mes "What should I do?";
 		next;
-		switch (select("Ask Kardui first.:Hold his hand.")) {
+		switch (select("Ask Kardui first.", "Hold his hand.")) {
 			case 1:
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I don't understand why you're telling me this important information.";
@@ -16308,7 +16252,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 				ep14_2_mylord =  28;
 				changequest 7448,7449;
 				close;
-			
 			case 2:
 				mes "When you held Shenime's hand, you felt a sharp pain in your hand.";
 				mes "You took your hand off quickly and examined it, but nothing was there.";
@@ -16323,20 +16266,18 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 				close2;
 				warp "ecl_hub01",129,12;
 				end;
-			
 		}
 	}
 	else if (ep14_2_mylord == 28) {
 		mes "Shenime held his hand out with a suspicious smile.";
 		next;
-		switch (select("No, not yet.:Hold his hand.")) {
+		switch (select("No, not yet.", "Hold his hand.")) {
 			case 1:
 				mes "[Shenime]";
 				mes "This is one of the places you should watch carefully.";
 				mes "Shouldn't you, a foreigner, consider it as an honor and receive the offer?";
 				mes "You're hesitating too much.";
 				close;
-			
 			case 2:
 				mes "When you held Shenime's hand, you felt a sharp pain in your hand.";
 				mes "You took your hand off quickly and examined it, but nothing was there.";
@@ -16420,7 +16361,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "Don't you understand?";
 		mes "Here, in Eclage, You have to get more recognition from Laphines.";
 		next;
-		if (select("Do I have to make a contribution?:It's about Yggdrasil!")==1) {
+		if (select("Do I have to make a contribution?", "It's about Yggdrasil!")==1) {
 			mes "[Kardui]";
 			mes "See, you understood it right.";
 			next;
@@ -16523,7 +16464,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "The reason I requested your presence today is";
 		mes "to tell you the unfinished story from the other day. So, I hope you feel better.";
 		next;
-		if (select("I'm not mad.:Unfinished story?")==1) {
+		if (select("I'm not mad.", "Unfinished story?")==1) {
 			cutin "kardui01",1;
 			mes "[Kardui]";
 			mes "Really? What a relief.";
@@ -16655,7 +16596,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "Long time no see.";
 		mes "Is there anything you want from me?";
 		next;
-		switch (select("What is that?:You said I'm a tyrant!:The cause of misery!")) {
+		switch (select("What is that?", "You said I'm a tyrant!", "The cause of misery!")) {
 			case 1:
 				cutin "kardui02",1;
 				mes "[Kardui]";
@@ -16805,7 +16746,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "Have you been to Bifrost Tower?";
 		cutin "kardui01",1;
 		next;
-		if (select("Yes, I have.:No, but I'm thinking about it.:No, I've never thought about it.")==3) {
+		if (select("Yes, I have.", "No, but I'm thinking about it.", "No, I've never thought about it.")==3) {
 			mes "[Kardui]";
 			mes "Ah, that's tood bad.";
 			mes "It's one of the main attractions of Eclage.";
@@ -16887,7 +16828,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "I'll come more often instead. That should be enough.";
 		next;
 		cutin "",255;
-		if (select("Eh...:Get to the point!")==1) {
+		if (select("Eh...", "Get to the point!")==1) {
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I understand that you're so happy to see your brother, but this is enough.";
 			mes "Aren't you embarrassed? I almost felt sick...";
@@ -17028,7 +16969,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 			mes "I will question Avant persistently.";
 			mes "What are you going to do?";
 			next;
-			switch (select("Should I help protecting the Orb?:Come on, I'm a busy person.")) {
+			switch (select("Should I help protecting the Orb?", "Come on, I'm a busy person.")) {
 				case 1:
 					cutin "kardui01",2;
 					mes "[Kardui]";
@@ -17056,7 +16997,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 			mes strcharinfo(PC_NAME) + ".";
 			mes "This is a present for you.";
 			mes "I hope my magical powers help you improve.";
-			specialeffect2 EF_FORESTLIGHT4;
+			specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
 			delitem Avant_Research_Data,1; //Avant_Research_Data
 			if (ep14_2_mylord == 23) {
 				getexp 400000,300000;
@@ -17499,7 +17440,7 @@ ecl_in03,41,90,3	script	Mayor Jun Kardui#tl01	4_M_FARIYKING,{
 		mes "You've been a great help all this time.";
 		mes "Will you stay as my friend now and forever?";
 		mes "May the blessing of Yggdrasil be upon you...";
-		specialeffect2 EF_FORESTLIGHT4;
+		specialeffect(EF_FORESTLIGHT4, AREA, playerattached());
 		npcskill AL_BLESSING,1,0,0;
 		ep14_2_mylord =  33;
 		completequest 7453;
@@ -17588,7 +17529,7 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			mes "[Leo]";
 			mes ".....";
 			next;
-			switch (select("Does he want something?:It's a strange fairy!")) {
+			switch (select("Does he want something?", "It's a strange fairy!")) {
 				case 1:
 					mes "[Leo]";
 					mes "Mayor Jun told us";
@@ -17597,7 +17538,7 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 					mes "[Leo]";
 					mes "In order to take care of the urgent matter...";
 					next;
-					switch (select("No, I refuse!:What do you want me to do?")) {
+					switch (select("No, I refuse!", "What do you want me to do?")) {
 						case 1:
 							mes "[Leo]";
 							mes "Although you have all the rights to say no, this is what I get...";
@@ -17647,7 +17588,7 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			}
 		}
 		else if (questprogress(7420) == 1) {
-			if ((countitem(Pinguicula's_fruit_Jam) < 3) || (countitem(Luciola's_Honey_Jam) < 3)) {
+			if ((countitem(Pinguiculas_fruit_Jam) < 3) || (countitem(Luciolas_Honey_Jam) < 3)) {
 				mes "[Leo]";
 				mes "I need 3 jars of Pinguicula's pickled fruits and another 3 jars of Luciola's honey jam~";
 				mes "They are specialties of the base of Splendide.";
@@ -17666,8 +17607,8 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			mes "It seems like Mayor Jun has an eye for character.";
 			mes "So he is Mayor after all...";
 			next;
-			delitem Pinguicula's_fruit_Jam,3; //Pinguicula's_fruit_Jam
-			delitem Luciola's_Honey_Jam,3; //Luciola's_Honey_Jam
+			delitem Pinguiculas_fruit_Jam,3;
+			delitem Luciolas_Honey_Jam, 3;
 			completequest 7420;
 			getexp 200000,200000;
 			.@alltotal =  questprogress(7420) + questprogress(7419) + questprogress(7418);
@@ -17966,7 +17907,7 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 	mes "There have been many complaints from travelers saying that those guys bother travelers for no reason.";
 	mes "Do you want to do it?";
 	next;
-	switch (select("I'll go! I'll do it! I'll get rid of them!:I don't feel like it today.:Don't you want pickled fruits?")) {
+	switch (select("I'll go! I'll do it! I'll get rid of them!", "I don't feel like it today.", "Don't you want pickled fruits?")) {
 		case 1:
 			mes "[Leo]";
 			mes "Look at your fighting spirit!";
@@ -17993,7 +17934,6 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			mes ".........isn't it depressing.";
 			close;
 	}
-	
 }
 
 ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
@@ -18026,7 +17966,7 @@ ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
 			mes "They say Laphines are nothing without their pride, but since I value my life over pride,";
 			mes "can I ask you a favor?";
 			next;
-			switch (select("What is it?:No.")) {
+			switch (select("What is it?", "No.")) {
 				case 1:
 					mes "[Roy]";
 					mes "It's something difficult for Laphines, but for humans, it's very easy.";
@@ -18044,7 +17984,7 @@ ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
 					mes "There's nothing confidential, so you can do it, too.";
 					mes "Bringing one mail. I'm sure it's easy for you.";
 					next;
-					switch (select("Leave it to me!:I don't want to.")) {
+					switch (select("Leave it to me!", "I don't want to.")) {
 						case 1:
 							mes "[Roy]";
 							mes "Good!";
@@ -18225,7 +18165,7 @@ ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
 		mes "This is a little something for you.";
 		mes "I'll be looking forward to seeing you!";
 		delitem Mail_Package,1; //Mail_Package
-		changequest 7430,4731;
+		changequest 7430,7431;
 		getexp 200000,200000;
 		getitem Splendide_Coin,1; //Splendide_Coin
 		close;
@@ -18235,7 +18175,7 @@ ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
 	mes "but could you go again?";
 	mes "to Splendide, to collect the mails...";
 	next;
-	switch (select("Sure.:I don't feel like it today.")) {
+	switch (select("Sure.", "I don't feel like it today.")) {
 		case 1:
 			mes "[Roy]";
 			mes "Thank you so much.";
@@ -18314,7 +18254,7 @@ splendide,267,368,3	script	Contact Officer#tl	4_M_FAIRYKID5,{
 		mes "You're here to collect the mails again?";
 		mes "I have one mailbox that is filled up...";
 		next;
-		switch (select("Yes, that's what I'm for.:No, that's not why I'm here.")) {
+		switch (select("Yes, that's what I'm for.", "No, that's not why I'm here.")) {
 			case 1:
 				mes "[Contact Officer]";
 				mes "Here, take this.";
@@ -18406,7 +18346,7 @@ OnTalk:
 			mes "That's enough.";
 			mes "That foreigner can hear you.";
 			next;
-			if (select("Actually, I've already heard you. Could you tell me more about it?:What was it about?")==1) {
+			if (select("Actually, I've already heard you. Could you tell me more about it?", "What was it about?")==1) {
 				mes "[Male Laphine]";
 				mes "No, I don't think we should.";
 				mes "Hahaha...";
@@ -18543,7 +18483,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "[Hisie]";
 		mes "If you climbed all the way here out of curiosity, you'd better start going down now.";
 		mes "Professor has been under the weather nowadays.";
-		close;
+		close2;
 	}
 	else if (ep14_2_mylord == 14) {
 		cutin "hisie01",0;
@@ -18620,7 +18560,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "But then...";
 		mes "Why is he looking for Avant now?";
 		next;
-		if (select("Avant?:One more thing?")==2) {
+		if (select("Avant?", "One more thing?")==2) {
 			mes "[Hisie]";
 			mes "He wants me to find Avant.";
 			mes "And he says you'll be a great help?";
@@ -18648,7 +18588,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "So, there can't be any relationship or love between us.";
 		mes "Kar could be looking for Avant in order to eliminate him.";
 		next;
-		select("Experiments? Hypothesis?:Objects that were made?");
+		select("Experiments? Hypothesis?", "Objects that were made?");
 		cutin "hisie01",0;
 		mes "[Hisie]";
 		mes "Do you know about Seneth, who became Mayor even though he was half breed?";
@@ -18825,7 +18765,6 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "I need to see what Avant is researching about.";
 		mes "Let's hurry.";
 		close2;
-		
 	}
 	else if ((ep14_2_mylord == 22) || (ep14_2_mylord == 23)) {
 		cutin "hisie03",0;
@@ -18840,7 +18779,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "I see they are tightening the guard around the Orb...";
 		mes "and I feel like I forgot about something..";
 		next;
-		switch (select("About Avant:About the Chief of Staff")) {
+		switch (select("About Avant", "About the Chief of Staff")) {
 			case 1:
 				mes "[Hisie]";
 				mes "That wicked man is just laughing and not saying anything.";
@@ -18931,7 +18870,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 	end;
 }
 
-eclage,280,290,0	script	#Hisie01	139,0,3,{
+eclage,280,290,0	script	#Hisie01	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
 	if (ep14_2_mylord == 19) {
@@ -18981,7 +18920,7 @@ eclage,307,237,0	script	Normal Yai#tllb	CLEAR_NPC,{
 			mes "But why would a human being want to see me?";
 			mes "If it's something useless, you'll be sorry.";
 			next;
-			select("Delivery...:Shenime told me to...");
+			select("Delivery...", "Shenime told me to...");
 			mes "[Golden-haired Scholar]";
 			mes "What, Shenime sent you?";
 			mes "Dustballs and bookmarks made of fallen leaves.";
@@ -19045,7 +18984,7 @@ eclage,307,237,0	script	Normal Yai#tllb	CLEAR_NPC,{
 		mes "Since it's Avant's Yai, there might be equipped with some devices.";
 		mes "Anyway, let's wait and see if there's any chance.";
 		next;
-		switch (select("Go in right now.:Wait and look all around.")) {
+		switch (select("Go in right now.", "Wait and look all around.")) {
 			case 1:
 				if ($111204_avantlabo == 0) {
 					cutin "",255;
@@ -19103,7 +19042,7 @@ OnTimer400000:
 	end;
 }
 
-que_avan01,26,26,0	script	#tltimer	139,0,1,{
+que_avan01,26,26,0	script	#tltimer	HIDDEN_WARP_NPC,0,1,{
 	end;
 OnTouch:
 	mes "It was definitely a small Yai when first entered, but upon regaining consciousness after being very dizzy, a huge space appeared.";
@@ -19119,18 +19058,18 @@ OnTouch:
 	close2;
 	cutin "",255;
 	end;
-	
+
 OnStop:
 	stopnpctimer;
 	end;
 OnTimer5000:
-	mapannounce "que_avan01","Welcome, Sir Avant. User certification standby for 5 minutes.",bc_map,"0xA8A8A8"; 
+	mapannounce "que_avan01","Welcome, Sir Avant. User certification standby for 5 minutes.",bc_map,"0xA8A8A8";
 	end;
 OnTimer360000:
-	mapannounce "que_avan01","Warning: Long-term use was not certified. Restrictive magic on unauthorized personnel will automatically be executed.",bc_map,"0xA8A8A8"; 
+	mapannounce "que_avan01","Warning: Long-term use was not certified. Restrictive magic on unauthorized personnel will automatically be executed.",bc_map,"0xA8A8A8";
 	end;
 OnTimer365000:
-	mapannounce "que_avan01","Research lab interior space has been distorted. Sweeping in process.",bc_map,"0x7b68ee"; 
+	mapannounce "que_avan01","Research lab interior space has been distorted. Sweeping in process.",bc_map,"0x7b68ee";
 	end;
 OnTimer368000:
 	mapwarp "que_avan01","eclage",265,275;
@@ -19150,7 +19089,7 @@ que_avan01,18,38,0	script	Desk#tl01	CLEAR_NPC,{
 		mes "What should we do?";
 		cutin "avn_desk01",4;
 		next;
-		switch (select("Examine the desk.:Ignore it.")) {
+		switch (select("Examine the desk.", "Ignore it.")) {
 			case 1:
 				mes "I roughtly organized the stuff on the desk.";
 				mes "What should we look into?";
@@ -19163,7 +19102,7 @@ que_avan01,18,38,0	script	Desk#tl01	CLEAR_NPC,{
 					else {
 						cutin "avn_desk02",4;
 					}
-					switch (select("Look at the documents first.:Look at the hinged devices on top of the desk.:Look at the book on the bookshelf.:Try tasting the reagent.:Look at the lighting setup.")) {
+					switch (select("Look at the documents first.", "Look at the hinged devices on top of the desk.", "Look at the book on the bookshelf.", "Try tasting the reagent.", "Look at the lighting setup.")) {
 						case 1:
 							mes "...Can't read a single word of it.";
 							mes "Let's show it to Hisie.";
@@ -19185,8 +19124,8 @@ que_avan01,18,38,0	script	Desk#tl01	CLEAR_NPC,{
 								mes "There are various hinged devices on top of the desk.";
 								mes "In the middle, there is a small numerical panel. A 5-digit number can be inputted.";
 								next;
-								if (select("Input a number.:Look at other parts of the desk.")==1) {
-									input .@input;
+								if (select("Input a number.", "Look at other parts of the desk.")==1) {
+									input(.@input);
 									if (.@input == 31425) {
 										mes "As soon as the number is inputted, a click is heard.";
 										mes "The hinged device can be opened.";
@@ -19209,14 +19148,14 @@ que_avan01,18,38,0	script	Desk#tl01	CLEAR_NPC,{
 							mes "Strange symbols are noticeable.";
 							cutin "avn_book02",4;
 							next;
-							switch (select("Try rearranging the books.:Forget it.")) {
+							switch (select("Try rearranging the books.", "Forget it.")) {
 								case 1:
 									.@book = 0;
 									setarray .@books[0],"First","Second","Third","Fourth","Fifth";
 									for (.@i=1; .@i<6; .@i++){
 										mes "Where should the "+ .@books[.@i-1] +" book be placed?";
 										next;
-										.@select_book = select("First:Second:Third:Fourth:Fifth")-1;
+										.@select_book = select("First", "Second", "Third", "Fourth", "Fifth")-1;
 										mes "Book 1 was placed at the "+ .@books[.@select_book] +" spot.";
 										if ((.@i==1 && .@select_book==1) || (.@i==2 && .@select_book==3) || (.@i==3 && .@select_book==0) || (.@i==4 && .@select_book==2) || (.@i==5 && .@select_book==4)) {
 											.@book += 10;
@@ -19275,7 +19214,7 @@ que_avan01,18,38,0	script	Desk#tl01	CLEAR_NPC,{
 		mes "Why does that man have this?";
 		cutin "hisie01",0;
 		next;
-		switch (select("She's beautiful.:Look at these documents!")) {
+		switch (select("She's beautiful.", "Look at these documents!")) {
 			case 1:
 				cutin "hisie02",0;
 				mes "[Hisie]";
@@ -19332,7 +19271,7 @@ que_avan01,18,38,0	script	Desk#tl01	CLEAR_NPC,{
 		getitem Avant_Research_Data,1; //Avant_Research_Data
 		changequest 7443,7444;
 		next;
-		switch (select("Let Hisie handle it.:I'm taking care of this place!")) {
+		switch (select("Let Hisie handle it.", "I'm taking care of this place!")) {
 			case 1:
 				cutin "hisie04",0;
 				mes "[Hisie]";
@@ -19383,7 +19322,7 @@ OnEnable:
 	monster "que_avan01",29,36,"DARK_PRIEST",DARK_PRIEST,1;
 	monster "que_avan01",29,32,"DARK_PRIEST",DARK_PRIEST,1;
 	end;
-	
+
 OnReset:
 	mapwarp "que_avan01","eclage",265,275;
 	killmonster "que_avan01","#avtmanager::OnMyMobDead";
@@ -19399,10 +19338,10 @@ OnReset:
 	hideoffnpc "#tltimer";
 	$111204_avantlabo =  0;
 	end;
-	
+
 OnMyMobDead:
 	if (mobcount ("que_avan01","#avtmanager::OnMyMobDead") == 0) {
-		mapannounce "que_avan01","Hisie: This is it for you! Avant!!",bc_map,"0x7b68ee"; 
+		mapannounce "que_avan01","Hisie: This is it for you! Avant!!",bc_map,"0x7b68ee";
 		hideonnpc "Hisie#tlspt";
 		hideoffnpc "Hisie#tlhunt";
 	}
@@ -19420,20 +19359,20 @@ que_avan01,26,41,3	script	Avant Magic Scholar#tlac	4_M_FAIRYAVANT,{
 	initnpctimer;
 	monster "que_avan01",26,38,"HIDDEN_MOB",HIDDEN_MOB,1;
 	end;
-	
+
 OnInit:
 	hideonnpc "Avant Magic Scholar#tlac";
 	end;
-	
+
 OnKill:
 	killmonster "que_avan01","Avant Magic Scholar#tlac::OnMyMobDead";
 	stopnpctimer;
 	end;
-	
+
 OnTimer2000:
-	mapannounce "que_avan01","Hisie: Watch out!!!",bc_map,"0x7b68ee"; 
+	mapannounce "que_avan01","Hisie: Watch out!!!",bc_map,"0x7b68ee";
 	end;
-	
+
 OnTimer8000:
 	killmonster "que_avan01","Avant Magic Scholar#tlac::OnMyMobDead";
 	stopnpctimer;
@@ -19443,7 +19382,7 @@ OnTimer8000:
 que_avan01,22,40,3	script	Avant's Summon#tlact01	DARK_PRIEST,{
 	end;
 OnInit:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	end;
 }
 

@@ -1,24 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Malangdo Town
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Malangdo Town Script
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//= 1.1 Added entrance scripts.
-//= 1.2 Moved "Odgnalam" coordinates.
-//= 1.3 Fixed dialogues.
-//= 1.4 Dialogue edits, source iRO.
-//= 1.5 Added Izlude duplicates.
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
-// Malangdo Transportation :: malangdo_go
-//============================================================
--	script	Dolangmal	-1,{
+//== Malangdo Transportation :: malangdo_go ================
+-	script	Dolangmal	FAKE_NPC,{
 	if (!questprogress(5091)) {
 		mes "[Dolangmal]";
 		mes "Hey~! Hi human~ This is Mr. Dolangmal. kakaka~";
@@ -28,19 +44,19 @@
 		next;
 		mes "[Dolangmal]";
 		.@s$ = "Why don't you go to ^A2314BMalangdo^000000?";
-		switch(atoi(strnpcinfo(2))) {
+		switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 			case 1: mes "How is that? The crowded city of Prontera is good, but why don't you go our heaven of the cats, ^A2314BMalangdo^000000?"; break;
 			case 2: mes "Why don't you go to ^A2314BMalangdo^000000? That place is better than Geffen, where there are only crowds of simple honest wizards."; break;
 			case 3: mes "The fresh air of Payon is not bad, but why don't you go better place like the heaven of the cats, ^A2314BMalangdo^000000?"; break;
 			case 4: mes .@s$+"The beautiful and quiet place is better than Aldebaran, where it's so noisy with the tick-tock sound of the clock."; break;
 			case 5: mes .@s$+"The beautiful and quiet place is better than Morroc, with its heat and sandstorms."; break;
-			case 6: mes .@s$+"The beautiful place is better than Yuno, which is full of books and headaches."; break;
+			case 6: mes .@s$+"The beautiful place is better than Juno, which is full of books and headaches."; break;
 			case 7: mes .@s$+"The complex place is better than Rachel, where it's too horribly quiet."; break;
-			case 8: mes .@s$+"The safe place is better than Lighthanlzen, which is too dangerous."; break;
+			case 8: mes .@s$+"The safe place is better than Lighthalzen, which is too dangerous."; break;
 			case 9: mes .@s$+"The smell of this sea place is better than Mora, which is full of a grassy smell."; break;
 		}
 		next;
-		if(select("No:^A2314BMalangdo^000000~ Go~ Go~") == 1) {
+		if(select("No", "^A2314BMalangdo^000000~ Go~ Go~") == 1) {
 			mes "[Dolangmal]";
 			mes "What!? You don't want to go ^A2314BMalangdo^000000? Chet!";
 			next;
@@ -80,7 +96,7 @@
 		mes "[Dolangmal]";
 		mes "Ok! Those are all the warnings!! They're easy and simple... right? Can you remember them?";
 		next;
-		switch(select("Remember his warnings:Can't remember")) {
+		switch(select("Remember his warnings", "Can't remember")) {
 		case 1:
 			mes "[Dolangmal]";
 			mes "Ok! Do not bite two mice with one mouth. ^9E1837Admiral Tomas^000000 is located at the ^A2314Bcenter of the ship in Malangdo^000000.";
@@ -112,7 +128,7 @@
 	mes "[Dolangmal]";
 	mes "Uh? You must be the one from last time...? Alright. Did you visit ^A2314BMalangdo^000000?";
 	next;
-	switch(select("Take me to ^A2314BMalangdo^000000 again:I have visited")) {
+	switch(select("Take me to ^A2314BMalangdo^000000 again", "I have visited")) {
 	case 1:
 		mes "[Dolangmal]";
 		mes "I really want to send you there, but I can't because of the policy. It is difficult to send people who have visited ^A2314BMalangdo^000000 already.";
@@ -157,10 +173,10 @@ rachel,121,126,4	duplicate(Dolangmal)	Dolangmal#7	4_CAT_DOWN
 lighthalzen,254,83,5	duplicate(Dolangmal)	Dolangmal#8	4_CAT_DOWN
 mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 
--	script	::Odgnalam	-1,{
-	mes "This cat is sleeping in the warm "+((strnpcinfo(2) == "albe")?"Alberta":"Izlude")+" sun.";
+-	script	::Odgnalam	FAKE_NPC,{
+	mes "This cat is sleeping in the warm "+((strnpcinfo(NPC_NAME_HIDDEN) == "albe")?"Alberta":"Izlude")+" sun.";
 	next;
-	if(select("Let him sleep:Talk to him") == 1) close;
+	if(select("Let him sleep", "Talk to him") == 1) close;
 	mes "[Odgnalam]";
 	mes "Meow? Huh?";
 	next;
@@ -183,7 +199,7 @@ mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 		mes "[Odgnalam]";
 		mes "As you are a hero of the cat fleet let me send you to ^A2314BMalangdo^000000 for free.";
 		next;
-		if(select("Send me to Malangdo!:Do not go.") == 1) {
+		if(select("Send me to Malangdo!", "Do not go.") == 1) {
 			mes "[Odgnalam]";
 			mes "Have a comfortable trip... Alright let's go~";
 			warp "malangdo",217,85;
@@ -193,7 +209,7 @@ mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 	mes "[Odgnalam]";
 	mes .@s1$;
 	next;
-	if(select("Send me to Malangdo!:Do not go.") == 2) close;
+	if(select("Send me to Malangdo!", "Do not go.") == 2) close;
 	if (Zeny < .@price) {
 		mes "[Odgnalam]";
 		mes "Money? Where is the money? You can't go anywhere without the money. Shame on you.";
@@ -255,7 +271,7 @@ malangdo,219,86,4	script	Kong#malang	4_CAT_SAILOR2,{
 		mes "We can't charge the hero of our fleet. What is your destination?";
 		next;
 	}
-	.@i = select("- Izlude destination --- "+.@s1$+":- Alberta destination --- "+.@s1$+":- Stay on Malangdo");
+	.@i = select("- Izlude destination --- "+.@s1$+"", "- Alberta destination --- "+.@s1$+"", "- Stay on Malangdo");
 	mes "[Kong]";
 	if (.@i == 3) {
 		mes .@s2$;
@@ -282,24 +298,23 @@ malangdo,219,86,4	script	Kong#malang	4_CAT_SAILOR2,{
 	close;
 }
 
-// Generic Malangdo NPCs :: malang_tre
-//============================================================
+//== Generic Malangdo NPCs :: malang_tre ===================
 malangdo,147,117,3	script	Innkeeper#malang	4_CAT_REST,{
 	mes "You see a lazy cat standing on a chair.";
 	mes "You guess that this is the Innkeeper.";
 	next;
-	switch(select("Umm... Can I rest here?:Psst... Can I save here?:Leave.")) {
+	switch(select("Umm... Can I rest here?", "Psst... Can I save here?", "Leave.")) {
 	case 1:
 		mes "[Innkeeper]";
 		mes "Eh?";
 		mes "Uh, sure you can use this hammock if you give me ^FF00005 Malangdo Cans^000000.";
 		next;
-		switch(select("Here you go.:Never mind.")) {
+		switch(select("Here you go.", "Never mind.")) {
 		case 1:
-			if (countitem(12636) > 4) {
-				delitem 12636,5; //Malang_Sp_Can
+			if (countitem(Malang_Sp_Can) > 4) {
+				delitem Malang_Sp_Can,5;
 				percentheal 100,100;
-				specialeffect2 EF_HEALSP;
+				specialeffect(EF_HEALSP, AREA, playerattached());
 				mes "[Innkeeper]";
 				mes "Now relax.";
 				emotion e_kis;

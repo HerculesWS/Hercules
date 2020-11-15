@@ -13,7 +13,7 @@
 //= 2.2 Added missing next;'s [Evera]
 //============================================================
 
-payon,153,43,5	script	itinsetter	-1,{
+payon,153,43,5	script	itinsetter	FAKE_NPC,{
 	//This is just OnInit stuff to set the hourly intinerary.
 OnInit:
 	deletearray $locationsname$[0],500;
@@ -244,7 +244,7 @@ Board:
 L_Yes:
 	if($destination!=getarg(0))goto Notime;
 	warp "airplane", 105, 72;
-	specialeffect2 501;
+	specialeffect(EF_CASTSPIN, AREA, playerattached());
 L_Nope:
 	mes "^FF0000[Porter]^000000";
 	mes "Have a good day.  Thank you for traveling with Airship.";
@@ -252,8 +252,10 @@ L_Nope:
 
 Notime:
 	mes "^FF0000[Porter]^000000";
-	if(Sex==0) mes "Sorry, ma'am, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
-	if(Sex==1) mes "Sorry, sir, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
+	if (Sex == SEX_FEMALE)
+		mes "Sorry, ma'am, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
+	else
+		mes "Sorry, sir, but the plane currently isn't ported.  However, you can view the airplane's hourly itinerary.";
 	next;
 	menu "Yes, please.",Itin,"No thanks.",L_Nope;
 	close;
@@ -291,10 +293,10 @@ glast_01,196,326,1	script	Porter#07	4_M_TWBOY,{
 umbala,188,98,3	script	Porter#08	4_M_TWBOY,{
 	callfunc "F_Porter",8;
 }
-comodo,203,75,8	script	Porter#09	4_M_TWBOY,{
+comodo,203,75,0	script	Porter#09	4_M_TWBOY,{
 	callfunc "F_Porter",9;
 }
-amatsu,115,78,8	script	Porter#10	4_M_TWBOY,{
+amatsu,115,78,0	script	Porter#10	4_M_TWBOY,{
 	callfunc "F_Porter",10;
 }
 niflheim,132,242,5	script	Porter#11	4_M_TWBOY,{
@@ -303,7 +305,7 @@ niflheim,132,242,5	script	Porter#11	4_M_TWBOY,{
 xmas,232,309,5	script	Porter#12	4_M_TWBOY,{
 	callfunc "F_Porter",12;
 }
-louyang,35,279,8	script	Porter#13	4_M_TWBOY,{
+louyang,35,279,0	script	Porter#13	4_M_TWBOY,{
 	callfunc "F_Porter",13;
 }
 gonryun,82,95,7	script	Porter#14	4_M_TWBOY,{
@@ -354,7 +356,7 @@ Lyes:
 	if($destination == 250)goto Notime;
 	if($destination != @dockky)goto Notime;
 	warp $locationsmap$[$destination], $locationsx[$destination], $locationsy[$destination];
-	specialeffect2 501;
+	specialeffect(EF_CASTSPIN, AREA, playerattached());
 
 Lnope:
 	mes "^FF0000[Airplane Attendant]^000000";
@@ -363,8 +365,10 @@ Lnope:
 
 Notime:
 	mes "^FF0000[Airplane Attendant]^000000";
-	if(Sex==0) mes "Sorry, ma'am, but the plane currently isn't docked.  Please wait.";
-	if(Sex==1) mes "Sorry, sir, but the plane currently isn't docked.  Please wait.";
+	if (Sex == SEX_FEMALE)
+		mes "Sorry, ma'am, but the plane currently isn't docked.  Please wait.";
+	else
+		mes "Sorry, sir, but the plane currently isn't docked.  Please wait.";
 	close;
 
 Nowhere:
@@ -385,7 +389,7 @@ function	script	F_Itin	{
 
 seta:
 	set @tempo, @tempo + 1;
-	set @time, gettime(3);
+	set @time, gettime(GETTIME_HOUR);
 	set @minutes, 5 * @tempo - 5;
 	set @minutess, 5 * @tempo - 2;
 	if(@minutes<10)set @minutes$, "0" + @minutes;
@@ -406,7 +410,7 @@ seta:
 setb:
 	if($@currenttime - 1==@tempo)goto setc;
 	set @tempo, @tempo + 1;
-	set @time, gettime(3) + 1;
+	set @time, gettime(GETTIME_HOUR) + 1;
 	set @minutes, 5 * @tempo - 5;
 	set @minutess, 5 * @tempo - 2;
 	if(@minutes<10)set @minutes$, "0" + @minutes;

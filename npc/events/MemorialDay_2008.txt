@@ -1,19 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= In Memory of Heroes
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= iRO Memorial Day (2008)
-//===== Additional Comments: =================================
-//= 1.0 First version. [Kisuka]
-//= 1.1 Many Many Fixes. [Kisuka]
-//= 1.2 Some changes. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Lauds
-//============================================================
+//== Lauds =================================================
 prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 	if (Memorial08 < 1) {
 		mes "[Mad Sago Lauds]";
@@ -32,7 +51,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "[Mad Sago Lauds]";
 		mes "Where is your towel!?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "My what?";
 		next;
 		mes "[Mad Sago Lauds]";
@@ -42,7 +61,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "If you think this is just another holiday, I'm not going to waste my breath.";
 		mes "But if you like to pay a tribute to great soldiers, I will help you ready yourself.";
 		next;
-		if (select("I guess so...:Are you crazy or something?") == 2) {
+		if (select("I guess so...", "Are you crazy or something?") == 2) {
 			mes "[Mad Sago Lauds]";
 			mes "Fine, be unprepared!";
 			next;
@@ -65,10 +84,8 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "Bring me ^FF000030 Fabric and 20 Fluffs^000000.";
 		Memorial08 = 1;
 		close;
-	}
-
-	else if (Memorial08 == 1) {
-		if (countitem(1059) < 30 || countitem(914) < 20) {
+	} else if (Memorial08 == 1) {
+		if (countitem(Transparent_Cloth) < 30 || countitem(Fluff) < 20) {
 			mes "[Mad Sago Lauds]";
 			mes "What are these? They aren't enough?!";
 			mes "*Sigh* Do I really have to tell you again?!";
@@ -90,20 +107,18 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 			delitem 1059,30;
 			delitem 914,20;
 			getitem 6025,1;
-			getnameditem 6025," + strcharinfo(0) + ";
+			getnameditem 6025," + strcharinfo(PC_NAME) + ";
 			Memorial08 = 2;
 			close;
 		}
-	}
-	
-	else if (Memorial08 == 2) {
+	} else if (Memorial08 == 2) {
 		mes "[Mad Sago Lauds]";
 		mes "Ah, you have fluffy new towel now I even put your name on it";
 		next;
 		mes "[Mad Sago Lauds]";
 		mes "Say, how do you like to go on a journey to pay a tribute to Memorial Day?";
 		next;
-		if (select("Sure.:No, I'm Busy.") == 2) {
+		if (select("Sure.", "No, I'm Busy.") == 2) {
 			mes "[Mad Sago Lauds]";
 			mes "Don't come crying to me if someone decides to build a highway through your home!";
 			close;
@@ -116,22 +131,16 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "What a shame! You should go speak to ^FF0000Grast in Prontera^000000.";
 		Memorial08 = 3;
 		close;
-	}
-
-	else if (Memorial08 == 3) {
+	} else if (Memorial08 == 3) {
 		mes "[Mad Sago Lauds]";
 		mes "What are you still doing here?";
 		mes "I told you to go speak to Grast in Prontera!";
 		close;
-	}
-
-	else if (Memorial08 == 4 || Memorial08 == 5 || Memorial08 == 6) {
+	} else if (Memorial08 == 4 || Memorial08 == 5 || Memorial08 == 6) {
 		mes "[Mad Sago Lauds]";
 		mes "Go help Grast, and then come back.";
 		close;
-	}
-
-	else if (Memorial08 == 7) {
+	} else if (Memorial08 == 7) {
 		mes "[Mad Sago Lauds]";
 		mes "Oh, you've brought them all.";
 		mes "Hahaha!";
@@ -151,16 +160,12 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "You should be going to the plaque!";
 		Memorial08 = 8;
 		close;
-	}
-
-	else if (Memorial08 == 8) {
+	} else if (Memorial08 == 8) {
 		mes "[Mad Sago Lauds]";
 		mes "Stop trying to give me your garbage!";
 		mes "Go to the plaque at 12 o'clock direction in Prontera for your journey!";
 		close;
-	}
-	
-	else if (Memorial08 >= 9) {
+	} else if (Memorial08 >= 9) {
 		.@RandomMsg = rand(1,5);
 		if (.@RandomMsg == 1) {
 			mes "[Mad Sago Lauds]";
@@ -191,75 +196,62 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		}
 	}
 }
-		
-// Memorial Plaque
-//============================================================
+
+//== Memorial Plaque =======================================
 prontera,153,286,4	script	Memorial Plaque#Memorial	4_BOARD3,{
 	if (Memorial08 < 8) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "- It's a dusty old plaque.-";
 		close;
-	}
-	
-	else if (Memorial08 == 8) {
-		mes "[" + strcharinfo(0) + "]";
+	} else if (Memorial08 == 8) {
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "- It's a dusty old plaque.-";
 		mes "'This must be what Lauds was talking about.'";
 		mes "'Let's dust it off with the towel.'";
 		next;
 		Memorial08 = 9;
 		getexp 93750,43750;
-		goto L_CleanPlaque;
 	}
-	
-	else if (Memorial08 >= 9) {
-		goto L_CleanPlaque;
+	mes "- You see a message from the cleaned plaque.-";
+	next;
+	mes "-Although no sculptured marble should rise to their memory,-";
+	mes "-nor engraved stone bear record of their deeds,-";
+	mes "-yet will their remembrance be as lasting as the land they honored.-";
+	mes "-Daniel Webster-";
+	if (Memorial08 == 9) {
+		getexp 93750,43750;
 	}
-	
-	L_CleanPlaque:
-		mes "- You see a message from the cleaned plaque.-";
-		next;
-		mes "-Although no sculptured marble should rise to their memory,-";
-		mes "-nor engraved stone bear record of their deeds,-";
-		mes "-yet will their remembrance be as lasting as the land they honored.-";
-		mes "-Daniel Webster-";
-		if (Memorial08 == 9) {
-			getexp 93750,43750;
-		}
-		next;
-		mes "-There's another message.-";
-		next;
-		mes "-I may not have gone where I intended to go,-";
-		mes "-but I think I have ended up where I needed to be.-";
-		mes "- Douglas Adams.-";
-		if (Memorial08 == 9) {
-			getexp 93750,43750;
-		}
-		next;
-		mes "-This is the last message.-";
-		next;
-		mes "-True heroism is remarkably sober, very undramatic.-";
-		mes "-It is not the urge to surpass all others at whatever cost,-";
-		mes "- but the urge to serve others at whatever cost. -";
-		mes "- Arthur Ashe -";
-		if (Memorial08 == 9) {
-			getexp 93750,43750;
-			Memorial08 = 10;
-		}
-		close;
+	next;
+	mes "-There's another message.-";
+	next;
+	mes "-I may not have gone where I intended to go,-";
+	mes "-but I think I have ended up where I needed to be.-";
+	mes "- Douglas Adams.-";
+	if (Memorial08 == 9) {
+		getexp 93750,43750;
+	}
+	next;
+	mes "-This is the last message.-";
+	next;
+	mes "-True heroism is remarkably sober, very undramatic.-";
+	mes "-It is not the urge to surpass all others at whatever cost,-";
+	mes "- but the urge to serve others at whatever cost. -";
+	mes "- Arthur Ashe -";
+	if (Memorial08 == 9) {
+		getexp 93750,43750;
+		Memorial08 = 10;
+	}
+	close;
 }
 
-// Grast
-//============================================================
+//== Grast =================================================
 prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 	if (Memorial08 < 3) {
 		mes "[Grast]";
 		mes "Memorial Day is a sad and yet glorious day.";
 		mes "I wonder how many people remember them...";
 		close;
-	}
-	
-	else if (Memorial08 == 3) {
+	} else if (Memorial08 == 3) {
 		mes "[Grast]";
 		mes "Oh, isn't that a Towel of Memory?";
 		mes "I'm so glad to meet someone who understands the meaning of Memorial Day.";
@@ -275,10 +267,8 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 		mes "I'll be waiting for your return.";
 		Memorial08 = 4;
 		close;
-	}
-
-	else if (Memorial08 == 4) {
-		if (countitem(501) < 1 || countitem(506) < 1 || countitem(656) < 1 || countitem(602) < 1) {
+	} else if (Memorial08 == 4) {
+		if (countitem(Red_Potion) < 1 || countitem(Green_Potion) < 1 || countitem(Awakening_Potion) < 1 || countitem(Wing_Of_Butterfly) < 1) {
 			mes "[Grast]";
 			mes "Oops, you haven't brought all materials.";
 			mes "Please make sure you need to bring me";
@@ -289,10 +279,10 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "If you feel too burdened to gather them all,";
 			mes "I can provide you all the materials.";
 			next;
-			if (select("I'll gather the rest.:Give me the materials.") == 2) {
-				goto L_GiveUp;
+			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
+				callsub L_GiveUp;
 			}
-			goto L_Continue;
+			callsub L_Continue;
 		} else {
 			mes "[Grast]";
 			mes "Oh, you've brought the materials I asked.";
@@ -306,10 +296,8 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			Memorial08 = 5;
 			close;
 		}
-	}
-	
-	else if (Memorial08 == 5) {
-		if (countitem(1065) < 1 || countitem(610) < 1 || countitem(717) < 1 || countitem(747) < 1 || countitem(517) < 1 || countitem(515) < 1) {
+	} else if (Memorial08 == 5) {
+		if (countitem(Booby_Trap) < 1 || countitem(Leaf_Of_Yggdrasil) < 1 || countitem(Blue_Gemstone) < 1 || countitem(Crystal_Mirror) < 1 || countitem(Meat) < 1 || countitem(Carrot) < 1) {
 			mes "[Grast]";
 			mes "Oops, you haven't brought all materials.";
 			mes "Please make sure you'll have to bring me";
@@ -319,10 +307,10 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "You'll have to bring me more materials afterwards.";
 			mes "If you feel too burdened to gather them all, I can provide you all the materials.";
 			next;
-			if (select("I'll gather the rest.:Give me the materials.") == 2) {
-				goto L_GiveUp;
+			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
+				callsub L_GiveUp;
 			}
-			goto L_Continue;
+			callsub L_Continue;
 		} else {
 			mes "[Grast]";
 			mes "Oh, you've brought everything I asked.";
@@ -333,10 +321,8 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			Memorial08 = 6;
 			close;
 		}
-	}
-	
-	else if (Memorial08 == 6) {
-		if (countitem(643) < 1 || countitem(12018) < 1 || countitem(741) < 1 || countitem(745) < 1) {
+	} else if (Memorial08 == 6) {
+		if (countitem(Pet_Incubator) < 1 || countitem(Fire_Cracker) < 1 || countitem(Poring_Doll) < 1 || countitem(Wedding_Bouquet) < 1) {
 			mes "[Grast]";
 			mes "Oops, you haven't brought all materials.";
 			mes "Please make sure you need to bring me";
@@ -348,12 +334,12 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			next;
 			mes "[Grast]";
 			mes "If I provide you all materials, however, I won't have to thank you for your service.";
-			mes "It's your call, " + strcharinfo(0) + ".";
+			mes "It's your call, " + strcharinfo(PC_NAME) + ".";
 			next;
-			if (select("I'll gather the rest.:Give me the materials.") == 2) {
-				goto L_GiveUp;
+			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
+				callsub L_GiveUp;
 			}
-			goto L_Continue;
+			callsub L_Continue;
 		} else {
 			mes "[Grast]";
 			mes "Have you brought the materials I asked?";
@@ -366,12 +352,12 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "[Grast]";
 			mes "You see, I have two different gifts in my each hand.";
 			mes "A best thing would be giving you both of them, but...";
-			mes "How do you like to test your luck, " + strcharinfo(0) + "?";
+			mes "How do you like to test your luck, " + strcharinfo(PC_NAME) + "?";
 			next;
 			mes "[Grast]";
 			mes "Okay, which hand would you like to pick?";
 			next;
-			if (select("Left hand.:Right hand.") == 2) {
+			if (select("Left hand.", "Right hand.") == 2) {
 				mes "[Grast]";
 				mes "You've selected my right hand.";
 				mes "Here's the gift for you.";
@@ -388,42 +374,38 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			getitem 12109,1;
 			close;
 		}
-	}
-	
-	else if (Memorial08 == 7) {
+	} else if (Memorial08 == 7) {
 		mes "[Grast]";
 		mes "Have you met Lauds?";
 		mes "I hope you'll remember your freedom and happiness are built on thousands of lives sacrificed in war.";
 		close;
-	}
-
-	else if (Memorial08 >= 8) {
+	} else if (Memorial08 >= 8) {
 		mes "[Grast]";
 		mes "A towel is about the most massively useful thing an adventurer can have.";
 		close;
 	}
 
-	L_GiveUp:
-		mes "[Grast]";
-		mes "Oh, I see. I guess you're quite busy nowadays, huh?";
-		mes "No problem; I'll give you all the supplies...";
-		next;
-		mes "[Grast]";
-		mes "There you go.";
-		mes "I crushed all the items together into a more compact form for you.";
-		mes "You can thank me later for that extra service.";
-		mes "Please bring them to Lauds.";
-		Memorial08 = 7;
-		getitem 7126,1;
-		next;
-		mes "[Grast]";
-		mes "By the way, he had an unfortunate accident, and has kind of lost his mind.";
-		mes "Please don't be alarmed even if he starts babbling.";
-		close;
-	
-	L_Continue:
-		mes "[Grast]";
-		mes "That's a good idea.";
-		mes "Then I'll be waiting for your return.";
-		close;
+L_GiveUp:
+	mes "[Grast]";
+	mes "Oh, I see. I guess you're quite busy nowadays, huh?";
+	mes "No problem; I'll give you all the supplies...";
+	next;
+	mes "[Grast]";
+	mes "There you go.";
+	mes "I crushed all the items together into a more compact form for you.";
+	mes "You can thank me later for that extra service.";
+	mes "Please bring them to Lauds.";
+	Memorial08 = 7;
+	getitem 7126,1;
+	next;
+	mes "[Grast]";
+	mes "By the way, he had an unfortunate accident, and has kind of lost his mind.";
+	mes "Please don't be alarmed even if he starts babbling.";
+	close;
+
+L_Continue:
+	mes "[Grast]";
+	mes "That's a good idea.";
+	mes "Then I'll be waiting for your return.";
+	close;
 }

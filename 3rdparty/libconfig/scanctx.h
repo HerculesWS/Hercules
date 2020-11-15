@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2020 Hercules Dev Team
+   Copyright (C) 2005-2014 Mark A Lindner
 
    This file is part of libconfig.
 
@@ -32,20 +33,20 @@
 
 struct scan_context
 {
-  config_t *config;
+  struct config_t *config;
   const char *top_filename;
   const char *files[MAX_INCLUDE_DEPTH];
   void *buffers[MAX_INCLUDE_DEPTH];
   FILE *streams[MAX_INCLUDE_DEPTH];
   int depth;
   strbuf_t string;
-  const char **filenames;
+  char **filenames;
   unsigned int num_filenames;
 };
 
 extern void scanctx_init(struct scan_context *ctx, const char *top_filename);
-extern const char **scanctx_cleanup(struct scan_context *ctx,
-                                    unsigned int *num_filenames);
+extern char **scanctx_cleanup(struct scan_context *ctx,
+                              unsigned int *num_filenames);
 
 extern FILE *scanctx_push_include(struct scan_context *ctx, void *prev_buffer,
                                   const char **error);

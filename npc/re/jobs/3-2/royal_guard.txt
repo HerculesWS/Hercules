@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) brAthena
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Royal Guard Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Crusader / Paladin -> Royal Guard.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [brAthena]
-//= 1.1 Updated script. [Euphy]
-//= 1.2 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
 		mes "- and please try again. -";
@@ -61,25 +82,25 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Middle-aged Gentleman]";
 		mes "You're a curious one. Who are you? What do you want?";
 		next;
-		select("Just looking around!:This is my office!:Who am I? Who are you?");
+		select("Just looking around!", "This is my office!", "Who am I? Who are you?");
 		mes "[Middle-aged Gentleman]";
 		mes "Do you want to argue with me? Do you know who I am?";
 		next;
-		if(select("Not really, who are you?:Sorry, I won't hurt your feelings.") == 2) {
-			mes "["+strcharinfo(0)+"]";
+		if(select("Not really, who are you?", "Sorry, I won't hurt your feelings.") == 2) {
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Sorry. I had to be sure. I didn't know that you are from the royal palace.";
 			next;
 			mes "[Middle-aged Gentleman]";
 			mes "That's enough. Don't make this mistake again.";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm a member here and have the authority to find out what your business is here.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You are a stranger and I'm not sure if you belong here.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If you tell me your identity, I will apologize.";
 		next;
 		mes "[Middle-aged Gentleman]";
@@ -105,7 +126,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "BUT!! I want to believe you...";
 		next;
-		switch(select("I want to know more.:Stop talking.")) {
+		switch(select("I want to know more.", "Stop talking.")) {
 		case 1:
 			mes "[Heinrich]";
 			mes "You are impetuous.";
@@ -126,7 +147,6 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 	}
 	mes "[Heinrich]";
 	if (job_royal == 1) {
-		mes "[Heinrich]";
 		mes "You are persistent friend.";
 		mes "Do you have more things to talk to me about?";
 		next;
@@ -143,7 +163,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "Really?";
 		mes "Good. You might have the wrong idea about what a Royal Guard is. So, in your opinion, what do you think is the key to being a Royal Guard?";
 		next;
-		select("Decision and Bravery:Calm Judgment:Sharp wisdom:Benevolent spirit");
+		select("Decision and Bravery", "Calm Judgment", "Sharp wisdom", "Benevolent spirit");
 		mes "[Heinrich]";
 		mes "Good choice.";
 		mes "Actually, the other 3 are also needed to have the Royal Guard spirit, friend.";
@@ -174,7 +194,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "If you want to hear more story, you have to show me your similar attitude.";
 		next;
-		if(select("That's an unfair demand.:I will try.") == 1) {
+		if(select("That's an unfair demand.", "I will try.") == 1) {
 			mes "[Heinrich]";
 			mes "Good idea, it would better to find something more worthy.";
 			close;
@@ -191,7 +211,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		changequest 12090,12091;
 		close;
 	} else if (job_royal == 2) {
-		if (countitem(7097) < 100) {
+		if (countitem(Burning_Heart) < 100) {
 			mes "Don't forget to bring 100 Burning Heart.";
 			close;
 		}
@@ -200,7 +220,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		next;
 		mes "[Heinrich]";
 		mes "Wait while I arrange the stuff that you brought.";
-		delitem 7097,100; //Burning_Heart
+		delitem Burning_Heart,100;
 		job_royal = 3;
 		changequest 12091,12092;
 		close;
@@ -258,7 +278,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "Now I can't tell you why the trace is there.";
 		next;
-		if(select("Interesting. Can I go there?:Seems really dangerous.") == 2) {
+		if(select("Interesting. Can I go there?", "Seems really dangerous.") == 2) {
 			mes "[Heinrich]";
 			mes "Good idea, that's useless work to explore there.";
 			close;
@@ -279,7 +299,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		changequest 12092,12093;
 		close;
 	} else if (job_royal == 4) {
-		if (countitem(6274) == 0) {
+		if (countitem(Saint_Cloth_Piece) == 0) {
 			mes "Our staff has already left to find the last trace, so don't work too hard.";
 			close;
 		}
@@ -317,15 +337,15 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "Ok~~ now.";
 		mes "I'll be deciphering the cloth for now so I will be very busy!";
-		delitem 6274,1; //Saint_Cloth_Piece
-		getitem 6275,1; //King_Shield
+		delitem Saint_Cloth_Piece,1;
+		getitem King_Shield,1;
 		job_royal = 5;
 		changequest 12093,12094;
 		close;
 	} else if (job_royal == 5) {
-		if (countitem(6275) == 0) {
+		if (countitem(King_Shield) == 0) {
 			mes "What? Did you lose the shield? What is the one on your back?";
-			getitem 6275,1; //King_Shield
+			getitem King_Shield,1;
 			close;
 		}
 		mes "Thanks to your help I can finish the excavation work. Thanks a lot.";
@@ -334,7 +354,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 }
 
 glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
 		mes "- and please try again. -";
@@ -345,7 +365,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		close;
 	}
 	if (BaseJob == Job_Crusader && job_royal == 5) {
-		if (countitem(6275) == 0) {
+		if (countitem(King_Shield) == 0) {
 			mes "^000099You seem to have lost the shield. Go back to Heinrich and ask for help^000000.";
 			close;
 		}
@@ -396,7 +416,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "[Memory of King Schmidtz]";
 		mes "I'm planning to accept you as a member of the Royal Guard to continue their lost traditions. Are you ready to do it?";
 		next;
-		if(select("Sure, of course:Not yet") == 2) {
+		if(select("Sure, of course", "Not yet") == 2) {
 			mes "[Memory of King Schmidtz]";
 			mes "Umm, maybe Heinrich had wrong judgement.";
 			close;
@@ -404,7 +424,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "[Memory of King Schmidtz]";
 		mes "If so, I will proceed to making you a Royal Guard.";
 		next;
-		if(select("Great.:Not yet.") == 2) {
+		if(select("Great.", "Not yet.") == 2) {
 			mes "[Memory of King Schmidtz]";
 			mes "Perhaps Heinrich had the wrong image of you.";
 			close;
@@ -421,30 +441,30 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "Congratulations! Young Royal Guard.";
 		mes "Be a symbol of honor and continue the great tradition of your new name.";
 		close2;
-		specialeffect2 EF_MAPPILLAR;
+		specialeffect(EF_MAPPILLAR, AREA, playerattached());
 		progressbar "FFFF00",7;
-		specialeffect2 EF_LORD;
-		delitem 6275,1; //King_Shield
+		specialeffect(EF_LORD, AREA, playerattached());
+		delitem King_Shield,1;
 		erasequest 12094;
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		getitem 5757,1; //Schmidt_Helm
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Schmidt_Helm,1;
+		getitem Green_Apple_Ring,1;
 		end;
 	}
 	end;
 }
 
 gl_church,173,88,0	script	Delicate trace#01	CLEAR_NPC,{
-	if (job_royal == 4 && countitem(6274) == 0) {
+	if (job_royal == 4 && countitem(Saint_Cloth_Piece) == 0) {
 		progressbar "ffff00",5;
 		.@roy_ran = rand(1,70);
 		if (.@roy_ran < 6)
-			getitem 6274,1; //Saint_Cloth_Piece
+			getitem Saint_Cloth_Piece,1;
 		else if (.@roy_ran > 5 && .@roy_ran < 66)
-			getitem 7049,1; //Stone
+			getitem Stone,1;
 		else {
 			mes "While investigating, the topography breaks. It would be better to dig other places for a while.";
-			disablenpc strnpcinfo(0);
+			disablenpc strnpcinfo(NPC_NAME);
 			initnpctimer;
 			close;
 		}
@@ -452,7 +472,7 @@ gl_church,173,88,0	script	Delicate trace#01	CLEAR_NPC,{
 	mes "There is a trace that someone has already dug here.";
 	close;
 OnTimer60000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 OnTimer1000:
 OnTimer20000:
@@ -478,8 +498,8 @@ gl_church,105,115,0	duplicate(Delicate trace#01)	Delicate trace#11	CLEAR_NPC
 gl_church,158,100,0	script	#Clue of traces	HIDDEN_NPC,4,4,{
 	end;
 OnTouch:
-	if (job_royal == 4 && countitem(6274) == 0) {
-		specialeffect2 EF_FREEZE;
+	if (job_royal == 4 && countitem(Saint_Cloth_Piece) == 0) {
+		specialeffect(EF_FREEZE, AREA, playerattached());
 		mes "I can feel strong power around here. It would be better to explore around here.";
 		viewpoint 1,173,88 ,1, 0xFFFF00;
 		viewpoint 1,158,103,2, 0xFFFF00;
@@ -498,10 +518,10 @@ OnTouch:
 
 sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 	callfunc "F_GM_NPC";
-	switch(select("Royal Guard:Rune Knight:Sorcerer")) {
+	switch(select("Royal Guard", "Rune Knight", "Sorcerer")) {
 	case 1:
 		mes "1~5";
-		input .@input;
+		input(.@input);
 		next;
 		if (.@input < 1 || .@input > 5) {
 			mes "Set item to adjust the Royal Guard";
@@ -513,7 +533,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 		close;
 	case 2:
 		mes "1~24";
-		input .@input;
+		input(.@input);
 		next;
 		if (.@input < 1 || .@input > 24) {
 			mes "Set item to adjust the Rune Knight";
@@ -525,7 +545,7 @@ sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 		close;
 	case 3:
 		mes "1~5";
-		input .@input;
+		input(.@input);
 		next;
 		if (.@input < 1 || .@input > 5) {
 			mes "Set item to adjust the Sorcerer";

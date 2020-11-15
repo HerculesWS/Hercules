@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Stone Hearts)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 	if (questprogress(60140)) {
@@ -18,7 +38,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 50 Golems?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Private Jeremy]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 50 Golems?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Private Jeremy]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 150 Golems?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Private Jeremy]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -144,23 +164,23 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "Greetings citizen!";
 			mes "Say, how would you like to help me?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Thanks! I really appreciate it.";
 				next;
-				switch(select("Gather Items:Hunt Golems:Cancel")) {
+				switch(select("Gather Items", "Hunt Golems", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Private Jeremy]";
 					mes "The Morroc Guard needs ^FF0000Stone Hearts^000000 for our training regimen.";
 					next;
-					switch(select("I have Stone Hearts:What did you need?")) {
+					switch(select("I have Stone Hearts", "What did you need?")) {
 					case 1:
-						if (countitem(953) > 24) {
+						if (countitem(Stone_Heart) > 24) {
 							mes "[Private Jeremy]";
 							mes "The Morroc Guard thanks you, citizen.";
-							delitem 953,25; //Stone_Heart
+							delitem Stone_Heart,25;
 							getexp 14000,9000;
 							close;
 						}
@@ -183,7 +203,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 					mes "Ah, ok I think you can help me out by hunting some Golems.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Golems:100 Golems:150 Golems")) {
+					switch(select("50 Golems", "100 Golems", "150 Golems")) {
 					case 1:
 						mes "[Private Jeremy]";
 						mes "Come back when you've finished your task and I will give you a small reward.";
@@ -226,5 +246,3 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 		close;
 	}
 }
-
-

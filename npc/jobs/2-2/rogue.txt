@@ -1,25 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Brainstorm
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Silent
+//= Copyright (C) Vicious
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Rogue Job Quest
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 2.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job quest for Rogue classes
-//===== Additional Comments: =================================
-//= 2.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     No longer uses function "F_BlockHigh"
-//= 2.4a Deleted unused variables. [Samuray22]
-//= 2.4b Changed a Problem with JobLevel what made
-//=     impossible get a Gladius [3]. (bugreport:481) [Samuray22]
-//= 2.4c Corrected a Typo error ";;" and a typo error with "rouge". (bugreport:909) [Samuray22]
-//= 2.5 Added dummy "OnMyMobDead" labels. (bugreport:1100) [L0ne_W0lf]
-//= 2.6 Fixed a few bugs in the Rogue Guildsman. [L0ne_W0lf]
-//= 2.7 Fixed a bug on Markie question 5, bugreport:1600 [Brainstorm]
-//= 2.8 Moved "Thug" to Morroc Ruins. [L0ne_W0lf]
-//= 2.9 Added Quest Log commands. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 2.9
+//=========================================================================
 
 moc_ruins,86,103,1	script	Thug#rg	2_M_THIEFMASTER,{
 	mes "[Thug]";
@@ -34,7 +53,7 @@ moc_ruins,86,103,1	script	Thug#rg	2_M_THIEFMASTER,{
 	mes "What the hell";
 	mes "are you lookin' at?";
 	next;
-	if (select("Me? N-nothing!':........") == 1) {
+	if (select("Me? N-nothing!'", "........") == 1) {
 		mes "[Thug]";
 		mes "Then get the";
 		mes "hell out of my face!";
@@ -82,7 +101,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "[Rogue Guildsman]";
 				mes "So what's a kid";
 				mes "like you doin' here?";
-				if (Sex) {
+				if (Sex == SEX_MALE) {
 					mes "Oh, I get it now...";
 					mes "The widdle boy wants";
 				}
@@ -96,7 +115,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "Eh, nice meetin' you, I guess. I'm Markie, and I do work for the Rogue Guild, a philanthro-- *ahem* a ^800000feelanthropist^000000 group, as you can see. So what's your name?";
 				next;
 				mes "[Markie]";
-				mes "..." + strcharinfo(0) + "?";
+				mes "..." + strcharinfo(PC_NAME) + "?";
 				mes "Heh heh! Cool name.";
 				mes "If it was dorky, we'd";
 				mes "make you change it,";
@@ -183,13 +202,13 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "Enjoy your freedom as a Rogue. Just remember that you gotta be free and responsible at the same time. So treat other guys the way you wanna be treated, kay? Alright, seeya round.";
 				close2;
 				if (.@jlevel == 50) {
-					getitem 1220,1; //Gladius_
+					getitem Gladius_,1;
 				} else {
-					getitem 1219,1; //Gladius
+					getitem Gladius,1;
 				}
 				end;
 			}
-			if (select("I'm ready.:Hold on, I need to get ready!") == 2) {
+			if (select("I'm ready.", "Hold on, I need to get ready!") == 2) {
 				mes "[Markie]";
 				mes "Get ready...?";
 				mes "Fine, fine.";
@@ -211,116 +230,116 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "[Markie]";
 				mes "1. Choose the skill necessary for learning ^880000Stalk^000000.";
 				next;
-				if (select("^880000Hiding^000000:^880000Steal^000000:^880000Improve Dodge^000000:^880000Bash^000000") == 1)
+				if (select("^880000Hiding^000000", "^880000Steal^000000", "^880000Improve Dodge^000000", "^880000Bash^000000") == 1)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "2. In comparison to the Merchant's Level 10 ^880000Discount^000000 skill, how much more of a discount, in terms of percent, can a Rogue get with Level 10 ^880000Haggle^000000 skill?";
 				next;
-				if (select("3 %:2 %:1 %:0 %") == 3)
+				if (select("3 %", "2 %", "1 %", "0 %") == 3)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "3. What is the correct description for the skill, ^880000Mug^000000?";
 				next;
-				if (select("Steal items from players:Steal items from monsters:Steal Zeny from monsters:Steal Zeny from players") == 3)
+				if (select("Steal items from players", "Steal items from monsters", "Steal Zeny from monsters", "Steal Zeny from players") == 3)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "4. How many Rogues does it require to activate the skill, ^880000Slyness^000000?";
 				next;
-				if (select("1 Rogues + 2 Assassin:1 Thief + 2 Rogue:4 Thieves:2 Rogues") == 4)
+				if (select("1 Rogues + 2 Assassin", "1 Thief + 2 Rogue", "4 Thieves", "2 Rogues") == 4)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "5. Choose the skill that you can learn at Level 5 ^880000Divest Helm^000000.";
 				next;
-				if (select("^880000Envenom^000000:^880000Strip Tease^000000:^880000Venom Splasher^000000:^880000Divest Shield^000000") == 4)
+				if (select("^880000Envenom^000000", "^880000Strip Tease^000000", "^880000Venom Splasher^000000", "^880000Divest Shield^000000") == 4)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "6. Choose the skill which allows its user to move while hiding.";
 				next;
-				if (select("^880000Hiding^000000:^880000Back Slide^000000:^880000Stalk^000000:^880000Sand Attack^000000") == 3)
+				if (select("^880000Hiding^000000", "^880000Back Slide^000000", "^880000Stalk^000000", "^880000Sand Attack^000000") == 3)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "7. Choose the card that increases the accuracy rate of its owner.";
 				next;
-				if (select("Andre Card.:Familiar Card.:Mummy Card.:Marina Card.") == 3)
+				if (select("Andre Card.", "Familiar Card.", "Mummy Card.", "Marina Card.") == 3)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "8. Choose the monster that receives more damage when it's attacked by a weapon with the Vadon card (20 % more damage on Fire property).";
 				next;
-				if (select("Vadon:Deviruchi:Elder Willow:Baphomet") == 3)
+				if (select("Vadon", "Deviruchi", "Elder Willow", "Baphomet") == 3)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "9. How much SP does the skill ^880000Double Attack^000000 require when used with a Dagger?";
 				next;
-				if (select("15:Passive skill, no SP required.:Passive skill, 10 SP:54") == 2)
+				if (select("15", "Passive skill, no SP required.", "Passive skill, 10 SP", "54") == 2)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "10. Choose the most efficient dagger to use in the Byalan Dungeon.";
 				next;
-				if (select("Wind Main-Gauche:Ice Main-Gauche:Earth Main-Gauche:Fire Main-Gauche") == 1)
+				if (select("Wind Main-Gauche", "Ice Main-Gauche", "Earth Main-Gauche", "Fire Main-Gauche") == 1)
 					.@assassin_t += 10;
 				break;
 			case 2:
 				mes "[Markie]";
 				mes "1. Which monster drops a slotted Gladius?";
 				next;
-				if (select("Thief Bug:Peco Peco:Desert Wolf:Kobold") == 4)
+				if (select("Thief Bug", "Peco Peco", "Desert Wolf", "Kobold") == 4)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "2. Which monster drops a slotted Main-Gauche?";
 				next;
-				if (select("Hornet:Desert Wolf:Marionette:Myst") == 1)
+				if (select("Hornet", "Desert Wolf", "Marionette", "Myst") == 1)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "3. Choose the class that is able to create unique potions.";
 				next;
-				if (select("Merchant:Alchemist:Blacksmith:Priest") == 2)
+				if (select("Merchant", "Alchemist", "Blacksmith", "Priest") == 2)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "4. Choose the weapon that Rogues aren't allowed to use.";
 				next;
-				if (select("Gakkung:Crossbow:Gladius:Katar") == 4)
+				if (select("Gakkung", "Crossbow", "Gladius", "Katar") == 4)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "5. Choose the property that the monster Hode possesses.";
 				next;
-				if (select("Water:Fire:Wind:Earth") == 4)
+				if (select("Water", "Fire", "Wind", "Earth") == 4)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "6. Choose the monster that is unable to be tamed for as a Cute Pet.";
 				next;
-				if (select("Poporing:Creamy:Orc:Poison Spore") == 2)
+				if (select("Poporing", "Creamy", "Orc", "Poison Spore") == 2)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "7. Choose the monster that receives more damage from a Dagger with the Fire property.";
 				next;
-				if (select("Dagger Goblin:Mace Goblin:Morning Star Goblin:Hammer Goblin") == 4)
+				if (select("Dagger Goblin", "Mace Goblin", "Morning Star Goblin", "Hammer Goblin") == 4)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "8. Choose the town that doesn't have any guild castles.";
 				next;
-				if (select("Prontera:Al De Baran:Alberta:Payon") == 3)
+				if (select("Prontera", "Al De Baran", "Alberta", "Payon") == 3)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "9. Choose the plant that drops Blue Herbs.";
 				next;
-				switch(select("Green Plant:Yellow Plant:Blue Plant:Shining Plant")) {
+				switch(select("Green Plant", "Yellow Plant", "Blue Plant", "Shining Plant")) {
 				default:
 					break;
 				case 3:
@@ -333,50 +352,50 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "[Markie]";
 				mes "10. Choose the monster that does not have the Undead property.";
 				next;
-				if (select("Zombie:Megalodon:Familiar:Khalitzburg") == 3)
+				if (select("Zombie", "Megalodon", "Familiar", "Khalitzburg") == 3)
 					.@assassin_t += 10;
 				break;
 			case 3:
 				mes "[Markie]";
 				mes "1. By what percentage is the flee rate increased when a Thief masters the ^880000Improve Dodge^000000?";
 				next;
-				if (select("30:40:160:20") == 1)
+				if (select("30", "40", "160", "20") == 1)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "2. Choose the monster that detects a characters using the Hiding or Cloaking skill.";
 				next;
-				if (select("Worm Tail:Argos:Mummy:Soldier Skeleton") == 2)
+				if (select("Worm Tail", "Argos", "Mummy", "Soldier Skeleton") == 2)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "3. Choose the location where Thieves can change their jobs to Rogues.";
 				next;
-				if (select("Comodo:Kokomo Beach:Paros Lighthouse:Morroc") == 3)
+				if (select("Comodo", "Kokomo Beach", "Paros Lighthouse", "Morroc") == 3)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "4. In which town can Novices change their jobs to Thieves?";
 				next;
-				if (select("Comodo:Lutie:Alberta:Morroc") == 4)
+				if (select("Comodo", "Lutie", "Alberta", "Morroc") == 4)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "5. Choose the card that does not affect the DEX stat.";
 				next;
-				if (select("Rocker Card:Mummy Card:Zerom Card:Drops Card") == 2)
+				if (select("Rocker Card", "Mummy Card", "Zerom Card", "Drops Card") == 2)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "6. So what's cool about being a Rogue?";
 				next;
-				select("Being totally badass.:The clothes, the style.:Getting to call other people, 'foo'':Excellent attack strength");
+				select("Being totally badass.", "The clothes, the style.", "Getting to call other people, 'foo''", "Excellent attack strength");
 				.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "7. When is it possible to change jobs from Thief to Rogue?";
 				next;
-				switch(select("At job Level 30:At job Level 35:At Job Level 40:At Job Level 50")) {
+				switch(select("At job Level 30", "At job Level 35", "At Job Level 40", "At Job Level 50")) {
 				default:
 					break;
 				case 3:
@@ -389,13 +408,13 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "[Markie]";
 				mes "8. You want to dye your hair blue. What town do you go to, and in which direction, with 12 o' clock being North.";
 				next;
-				if (select("Morroc, 7 o'clock:Prontera, 7 o'clock:Morroc, 5 o'clock:Prontera, 1 o'clock") == 2)
+				if (select("Morroc, 7 o'clock", "Prontera, 7 o'clock", "Morroc, 5 o'clock", "Prontera, 1 o'clock") == 2)
 					.@assassin_t += 10;
 
 				mes "[Markie]";
 				mes "9. Choose the mushroom that is required on the Thief job change quest.";
 				next;
-				switch(select("Orange Gooey Mushroom:Red Hairy Mushroom:Orange Net Mushroom:Orange Sticky Mushroom")) {
+				switch(select("Orange Gooey Mushroom", "Red Hairy Mushroom", "Orange Net Mushroom", "Orange Sticky Mushroom")) {
 				default:
 					break;
 				case 1:
@@ -406,7 +425,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "[Markie]";
 				mes "10. Choose the card that least benefits the Rogue class.";
 				next;
-				if (select("Whisper Card:Elder Willow Card:Zerom Card:Matyr Card") == 2)
+				if (select("Whisper Card", "Elder Willow Card", "Zerom Card", "Matyr Card") == 2)
 					.@assassin_t += 10;
 			}
 			mes "[Markie]";
@@ -566,10 +585,10 @@ in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 			mapannounce "in_rogue","What the--?! What's with this chat filter?! Stop #*!@$ing me! you stupid F#$%*! Let me talk!!!",bc_map;
 			next;
 			mes "[Mr. Smith]";
-			mes "What the f#@k you looking at...? " + strcharinfo(0) + "? That's your name!?";
-			mapannounce "in_rogue","What the f#@k you looking at...? " + strcharinfo(0) + "? That's your name!?",bc_map;
+			mes "What the f#@k you looking at...? " + strcharinfo(PC_NAME) + "? That's your name!?";
+			mapannounce "in_rogue","What the f#@k you looking at...? " + strcharinfo(PC_NAME) + "? That's your name!?",bc_map;
 			mes " ";
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Umm...";
 			mes "Sir...?";
 			mes "I didn't mean to make you upset. I just came here to so I could become a Rogue.";
@@ -654,31 +673,31 @@ in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 		else if (ROGUE_Q == 4) callsub S_CheckItems,511,10,910,10,926,10,964,10;
 		else if (ROGUE_Q == 5) callsub S_CheckItems,508,10,948,10,935,10,940,10;
 		else if (ROGUE_Q == 6) {
-			if (Zeny > 9999 && countitem(915) > 4 && countitem(713) > 4 && countitem(1002) > 4 &&
-			countitem(953) > 4 && countitem(507) > 4 && countitem(919) > 4 && countitem(715) > 4 &&
-			countitem(913) > 4 && countitem(904) > 4 && countitem(942) > 4 && countitem(528) > 4 &&
-			countitem(914) > 4 && countitem(705) > 4 && countitem(916) > 4 && countitem(917) > 4 &&
-			countitem(908) > 4 && countitem(945) > 4) {
+			if (Zeny > 9999 && countitem(Chrysalis) > 4 && countitem(Empty_Bottle) > 4 && countitem(Iron_Ore) > 4 &&
+			countitem(Stone_Heart) > 4 && countitem(Red_Herb) > 4 && countitem(Animals_Skin) > 4 && countitem(Yellow_Gemstone) > 4 &&
+			countitem(Tooth_Of_Bat) > 4 && countitem(Scorpions_Tail) > 4 && countitem(Yoyo_Tail) > 4 && countitem(Monsters_Feed) > 4 &&
+			countitem(Fluff) > 4 && countitem(Clover) > 4 && countitem(Feather_Of_Birds) > 4 && countitem(Talon) > 4 &&
+			countitem(Spawn) > 4 && countitem(Raccoon_Leaf) > 4) {
 				mes "[Mr. Smith]";
 				mes "Ummm...let's see...";
 				Zeny -= 10000;
-				delitem 915,5; //Chrysalis
-				delitem 713,5; //Empty_Bottle
-				delitem 1002,5; //Iron_Ore
-				delitem 953,5; //Stone_Heart
-				delitem 507,5; //Red_Herb
-				delitem 919,5; //Animal's_Skin
-				delitem 715,5; //Yellow_Gemstone
-				delitem 913,5; //Tooth_Of_Bat
-				delitem 904,5; //Scorpion's_Tail
-				delitem 942,5; //Yoyo_Tail
-				delitem 528,5; //Monster's_Feed
-				delitem 914,5; //Fluff
-				delitem 705,5; //Clover
-				delitem 916,5; //Feather_Of_Birds
-				delitem 917,5; //Talon
-				delitem 908,5; //Spawn
-				delitem 945,5; //Raccoon_Leaf
+				delitem Chrysalis,5;
+				delitem Empty_Bottle,5;
+				delitem Iron_Ore,5;
+				delitem Stone_Heart,5;
+				delitem Red_Herb,5;
+				delitem Animals_Skin,5;
+				delitem Yellow_Gemstone,5;
+				delitem Tooth_Of_Bat,5;
+				delitem Scorpions_Tail,5;
+				delitem Yoyo_Tail,5;
+				delitem Monsters_Feed,5;
+				delitem Fluff,5;
+				delitem Clover,5;
+				delitem Feather_Of_Birds,5;
+				delitem Talon,5;
+				delitem Spawn,5;
+				delitem Raccoon_Leaf,5;
 				ROGUE_Q = 8;
 				next;
 				mes "[Mr. Smith]";
@@ -694,7 +713,7 @@ in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 				next;
 				mes "[Mr. Smith]";
 				mes "But I'm sure you'll be a great asset to the Rogue Guild. Hmm, I don't have a blank piece of paper right now, so take this instead...";
-				getitem 1097,1; //Worn_Out_Page
+				getitem Worn_Out_Page,1;
 				next;
 				mes "[Mr. Smith]";
 				mes "*Sigh...*";
@@ -1016,26 +1035,26 @@ OnTouch:
 	mes "Who would dare";
 	mes "intrude my territory?";
 	next;
-	switch(select("My father:Aragham:Aragon:Legolas")) {
+	switch(select("My father", "Aragham", "Aragon", "Legolas")) {
 	case 1:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "My father";
 		break;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragham";
 		.@rogue_t += 10;
 		break;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragon";
 		break;
 	case 4:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Legolas";
 		break;
 	}
-	switch(select("did not:didn't:never:ever")) {
+	switch(select("did not", "didn't", "never", "ever")) {
 	case 1: mes "did not"; break;
 	case 2: mes "didn't"; break;
 	case 3:
@@ -1044,7 +1063,7 @@ OnTouch:
 		break;
 	case 4: mes "ever"; break;
 	}
-	switch(select("hoard:hoarded:hide:took:take")) {
+	switch(select("hoard", "hoarded", "hide", "took", "take")) {
 	case 1: mes "hoard"; break;
 	case 2:
 		mes "hoarded";
@@ -1054,7 +1073,7 @@ OnTouch:
 	case 4: mes "took"; break;
 	case 5: mes "take"; break;
 	}
-	switch(select("upgrade items.:forging items.:refining item.:upgrade item.")) {
+	switch(select("upgrade items.", "forging items.", "refining item.", "upgrade item.")) {
 	case 1:
 		mes "upgrade items.";
 		.@rogue_t += 10;
@@ -1086,26 +1105,26 @@ OnTouch:
 	mes "Who would dare";
 	mes "intrude my territory?";
 	next;
-	switch(select("My father:Aragham:Aragon:Legolas")) {
+	switch(select("My father", "Aragham", "Aragon", "Legolas")) {
 	case 1:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "My father";
 		.@rogue_t += 10;
 		break;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragham";
 		break;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragon";
 		break;
 	case 4:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Legolas";
 		break;
 	}
-	switch(select("did not:didn't:never:ever")) {
+	switch(select("did not", "didn't", "never", "ever")) {
 	case 1: mes "did not"; break;
 	case 2: mes "didn't"; break;
 	case 3:
@@ -1114,7 +1133,7 @@ OnTouch:
 		break;
 	case 4: mes "ever"; break;
 	}
-	switch(select("hoard:takes:hide:took:hoarded")) {
+	switch(select("hoard", "takes", "hide", "took", "hoarded")) {
 	case 1: mes "hoard"; break;
 	case 2: mes "takes"; break;
 	case 3: mes "hide"; break;
@@ -1124,7 +1143,7 @@ OnTouch:
 		.@rogue_t += 10;
 		break;
 	}
-	switch(select("upgrade items.:forging items.:refining item.:upgrade item.")) {
+	switch(select("upgrade items.", "forging items.", "refining item.", "upgrade item.")) {
 	case 1:
 		mes "upgrade items.";
 		.@rogue_t += 10;
@@ -1156,26 +1175,26 @@ OnTouch:
 	mes "Who would dare";
 	mes "intrude my territory?";
 	next;
-	switch(select("Anntonio:Aragham:Antonio:Hollgrehenn")) {
+	switch(select("Anntonio", "Aragham", "Antonio", "Hollgrehenn")) {
 	case 1:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Anntonio";
 		break;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragham";
 		break;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Antonio";
 		.@rogue_t += 10;
 		break;
 	case 4:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hollgrehenn";
 		break;
 	}
-	switch(select("enjoys:doesn't enjoy:likes:doesn't like")) {
+	switch(select("enjoys", "doesn't enjoy", "likes", "doesn't like")) {
 	case 1: mes "enjoys"; break;
 	case 2:
 		mes "doesn't enjoy";
@@ -1184,7 +1203,7 @@ OnTouch:
 	case 3: mes "likes"; break;
 	case 4: mes "doesn't like"; break;
 	}
-	switch(select("damaging:destroying:fixing:forging")) {
+	switch(select("damaging", "destroying", "fixing", "forging")) {
 	case 1: mes "damaging"; break;
 	case 2:
 		mes "destroying";
@@ -1193,7 +1212,7 @@ OnTouch:
 	case 3: mes "fixing"; break;
 	case 4: mes "forging"; break;
 	}
-	switch(select("forging item.:refining items.:upgrade items.:refined items.:upgraded items.:forged items.")) {
+	switch(select("forging item.", "refining items.", "upgrade items.", "refined items.", "upgraded items.", "forged items.")) {
 	case 1: mes "forging item."; break;
 	case 2: mes "refining items."; break;
 	case 3:
@@ -1273,7 +1292,7 @@ in_rogue,270,130,0	script	he_to_rogue#rg	WARPNPC,1,1,{
 OnTouch:
 	mes "^3355FFThe door is locked. You'll need to enter the four number combination to open it.^000000";
 	next;
-	input .@input;
+	input(.@input);
 	if (.@input < 1 || .@input > 10000) {
 		if (ROGUE_Q == 12)
 			mes "^3355FFIt didn't work. Please re-enter the four number combination.^000000";
@@ -1281,7 +1300,7 @@ OnTouch:
 			mes "^3355FFPlease enter a combination of four numbers.^000000";
 		close;
 	}
-	else if (.@input == 3019) {
+	if (.@input == 3019) {
 		if (ROGUE_Q == 12) {
 			mes "^3355FFThe door";
 			mes "has opened.^000000";
@@ -1289,8 +1308,7 @@ OnTouch:
 			warp "in_rogue",10,21;
 			ROGUE_Q = 12;
 			end;
-		}
-		else {
+		} else {
 			mes "[HermanthornJr.]";
 			mes "Well...";
 			mes "Didn't I tell you";
@@ -1299,14 +1317,12 @@ OnTouch:
 			close;
 		}
 	}
-	else {
-		mes "^3355FFThe door";
-		mes "is still locked.^000000";
-		close;
-	}
+	mes "^3355FFThe door";
+	mes "is still locked.^000000";
+	close;
 }
 
-in_rogue,200,389,0	script	gen_ro#1	-1,3,3,{
+in_rogue,200,389,0	script	gen_ro#1	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",200,389,"Zombie",1015,1,"gen_ro#1::OnMyMobDead";
@@ -1327,7 +1343,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,100,389,0	script	gen_ro#2	-1,3,3,{
+in_rogue,100,389,0	script	gen_ro#2	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",100,389,"Mummy",1041,1,"gen_ro#2::OnMyMobDead";
@@ -1345,7 +1361,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,150,389,0	script	gen_ro#3	-1,3,3,{
+in_rogue,150,389,0	script	gen_ro#3	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",145,389,"Zombie",1015,1,"gen_ro#3::OnMyMobDead";
@@ -1364,7 +1380,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,250,389,0	script	gen_ro#4	-1,3,3,{
+in_rogue,250,389,0	script	gen_ro#4	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",200,389,"Abysmal Knight",1219,1,"gen_ro#4::OnMyMobDead";
@@ -1417,7 +1433,7 @@ in_rogue,244,39,1	script	Aragham Junior#rg	4W_M_03,{
 		mes "[Aragham Jr.]";
 		mes "There will be a few monsters, but don't worry. I know you're strong. Alright, are you ready to go or what?";
 		next;
-		if (select("Yes, let's go.:Nah~") == 1) {
+		if (select("Yes, let's go.", "Nah~") == 1) {
 			mes "[Aragham Jr.]";
 			mes "Alright...";
 			mes "Good luck, then.";
@@ -1439,7 +1455,7 @@ in_rogue,244,39,1	script	Aragham Junior#rg	4W_M_03,{
 		mes "Oh, you're back.";
 		mes "I think you'll do well this time. Another motto Rogues have is '^0000FFFailure teaches success^000000.' Well, then again...";
 		next;
-		if (select("Re-Test:Cancel") == 1) {
+		if (select("Re-Test", "Cancel") == 1) {
 			mes "[Aragham Jr.]";
 			mes "Good luck.";
 			close2;
@@ -1499,7 +1515,7 @@ in_rogue,160,34,1	script	Hollgrehenn junior#rg	4_M_03,{
 		mes "[Hollgrehenn Jr.]";
 		mes "There are some monsters there, but that'll be part of your training. Now, are you ready to go or not?";
 		next;
-		if (select("Yes, I am.:Nah~") == 1) {
+		if (select("Yes, I am.", "Nah~") == 1) {
 			mes "[Hollgrehenn Jr.]";
 			mes "Good luck.";
 			close2;
@@ -1520,7 +1536,7 @@ in_rogue,160,34,1	script	Hollgrehenn junior#rg	4_M_03,{
 		mes "You failed.";
 		mes "Gonna try again?";
 		next;
-		if (select("Re-Test:Cancel.") == 1) {
+		if (select("Re-Test", "Cancel.") == 1) {
 			mes "[Hollgrehenn Jr.]";
 			mes "Good luck.";
 			close2;
@@ -1583,7 +1599,7 @@ in_rogue,177,109,1	script	Antonio junior#rg	4_M_ORIENT01,{
 		mes "[Antonio Jr.]";
 		mes "There are monsters there, but if you avoid the strong and be malicious to the weak, you'll be fine.";
 		next;
-		if (select("Let's go!:W-wait~") == 1) {
+		if (select("Let's go!", "W-wait~") == 1) {
 			mes "[Antonio Jr.]";
 			mes "I hope you do";
 			mes "not fail this test";
@@ -1610,7 +1626,7 @@ in_rogue,177,109,1	script	Antonio junior#rg	4_M_ORIENT01,{
 		mes "Are you gonna try";
 		mes "again or what?";
 		next;
-		if (select("Re-test:Cancel") == 1) {
+		if (select("Re-test", "Cancel") == 1) {
 			mes "[Antonio Jr.]";
 			mes "Remember, I'm doing";
 			mes "you a favor here...";
@@ -1654,7 +1670,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,15,184,0	script	mob_rogue#1	-1,8,1,{
+in_rogue,15,184,0	script	mob_rogue#1	FAKE_NPC,8,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",14,187,"Zombie",1015,1,"mob_rogue#1::OnMyMobDead";
@@ -1676,7 +1692,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,15,273,0	script	mob_rogue#2	-1,8,1,{
+in_rogue,15,273,0	script	mob_rogue#2	FAKE_NPC,8,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",15,276,"Mummy",1041,1,"mob_rogue#2::OnMyMobDead";
@@ -1695,7 +1711,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,15,333,0	script	mob_rogue#3	-1,8,1,{
+in_rogue,15,333,0	script	mob_rogue#3	FAKE_NPC,8,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",15,336,"Zombie",1015,1,"mob_rogue#3::OnMyMobDead";
@@ -1718,7 +1734,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,39,341,0	script	mob_rogue#4	-1,1,8,{
+in_rogue,39,341,0	script	mob_rogue#4	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",39,341,"Mummy",1041,1,"mob_rogue#4::OnMyMobDead";
@@ -1738,7 +1754,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,102,334,0	script	mob_rogue#5	-1,1,4,{
+in_rogue,102,334,0	script	mob_rogue#5	FAKE_NPC,1,4,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",92,334,"Khalitzburg",1132,1,"mob_rogue#5::OnMyMobDead";
@@ -1758,7 +1774,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,58,309,0	script	mob_rogue#6	-1,4,1,{
+in_rogue,58,309,0	script	mob_rogue#6	FAKE_NPC,4,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",57,301,"Khalitzburg",1132,1,"mob_rogue#6::OnMyMobDead";
@@ -1778,7 +1794,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,101,264,0	script	mob_rogue#7	-1,5,5,{
+in_rogue,101,264,0	script	mob_rogue#7	FAKE_NPC,5,5,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",101,264,"Abysmal Knight",1219,1,"mob_rogue#7::OnMyMobDead";
@@ -1796,7 +1812,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,140,312,0	script	mob_rogue#8	-1,5,5,{
+in_rogue,140,312,0	script	mob_rogue#8	FAKE_NPC,5,5,{
 OnTouch:
 	if (BaseJob == Job_Thief)
 		monster "in_rogue",140,312,"Abysmal Knight",1219,1,"mob_rogue#8::OnMyMobDead";
@@ -1812,7 +1828,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,139,246,0	script	mob_rogue#9	-1,4,4,{
+in_rogue,139,246,0	script	mob_rogue#9	FAKE_NPC,4,4,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",139,246,"Zombie",1015,1,"mob_rogue#9::OnMyMobDead";
@@ -1834,7 +1850,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,197,249,0	script	mob_rogue#10	-1,1,8,{
+in_rogue,197,249,0	script	mob_rogue#10	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",176,211,"Ghoul",1036,1,"mob_rogue#10::OnMyMobDead";
@@ -1869,7 +1885,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,96,205,0	script	mob_rogue#11	-1,1,8,{
+in_rogue,96,205,0	script	mob_rogue#11	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		donpcevent "mob_rogue#7::OnDisable";
@@ -1882,7 +1898,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,86,187,0	script	mob_rogue#12	-1,1,8,{
+in_rogue,86,187,0	script	mob_rogue#12	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",90,187,"Mummy",1041,1,"mob_rogue#12::OnMyMobDead";
@@ -1901,7 +1917,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,223,187,0	script	mob_rogue#13	-1,1,8,{
+in_rogue,223,187,0	script	mob_rogue#13	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",236,186,"Abysmal Knight",1219,1,"mob_rogue#13::OnMyMobDead";
@@ -1921,7 +1937,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,233,207,0	script	mob_rogue#14	-1,8,3,{
+in_rogue,233,207,0	script	mob_rogue#14	FAKE_NPC,8,3,{
 OnTouch:
 	if (BaseJob == Job_Thief)
 		donpcevent "mob_rogue#13::OnDisable";
@@ -1930,7 +1946,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,244,319,0	script	mob_rogue#15	-1,1,8,{
+in_rogue,244,319,0	script	mob_rogue#15	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",240,319,"Mummy",1041,1,"mob_rogue#15::OnMyMobDead";
@@ -1952,7 +1968,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,334,319,0	script	mob_rogue#16	-1,8,8,{
+in_rogue,334,319,0	script	mob_rogue#16	FAKE_NPC,8,8,{
 OnTouch:
 	if (BaseJob == Job_Thief)
 		donpcevent "mob_rogue#15::OnDisable";
@@ -1961,7 +1977,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,3,3,0	script	resetter#rogue	-1,{
+in_rogue,3,3,0	script	resetter#rogue	FAKE_NPC,{
 OnTimer500000:
 	donpcevent "mob_rogue#1::OnDisable";
 	donpcevent "mob_rogue#2::OnDisable";
@@ -2009,21 +2025,3 @@ in_rogue,399,286,1	script	switch#rogreset	4_M_ORIENT01,{
 	donpcevent "resetter#rogue::OnEnable";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.1 fixed 3 wrong questions, added missing lines [Lupus]
-//= 1.3 Baby Class Support + 40/50 JobLevel Item fix [Lupus]
-//= 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//=     2nd Job Quests again. It also guides adv classes where
-//=     to go. [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Removed Duplicates [Silent]
-//= 2.2 Merged JFunc [Lupus]
-//= 2.3 Added a possibility for players doing Meginjyard quest
-//=     to enter Rogue guild as there's a NPC inside [SinSloth]
-//= 2.3a fixed test4 person interaction, let BABY thieves pass
-//=     the test, too [Lupus]
-//============================================================

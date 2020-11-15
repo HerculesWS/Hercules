@@ -1,16 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) 2013-2020 Haru
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Script engine self-tests
-//===== By: ==================================================
-//= Haru
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Script to test operators and possibly other elements of the script
+//= engine, useful for regression testing.
+//================= Current Version =======================================
 //= 2.0
-//===== Version History: =====================================
-//= 1.0 Initial version.
-//= 2.0 Moved tests to a function to allow them to be called
-//      externally.
-//===== Description: =========================================
-//= Script to test operators and possibly other elements of
-//= the script engine, useful for regression testing.
+//=========================================================================
 
 function	script	F_TestReturnValue	{
 	return getarg(0);
@@ -90,9 +111,43 @@ function	script	F_TestVarOfAnotherNPC	{
 	return getvariableofnpc(.x, getarg(0));
 }
 
--	script	TestVarOfAnotherNPC	-1,{
+-	script	TestVarOfAnotherNPC	FAKE_NPC,{
 	// Used to test getvariableofnpc()
 	end;
+}
+
+-	script	export test	FAKE_NPC,{
+
+	function OnInit {
+		// functions labels should not be able to be called as events
+		// if a regression occurs, this function could end up being called when
+		// Hercules processes OnInit event calls (issue #2137)
+
+		// NOTE: If script_config.functions_as_events is enabled (defaults: off)
+		//       and this this function is marked as public, it will trigger the
+		//       warning and fail the unit test regardless.
+
+		$@something_bad_happened[0] = true;
+		end;
+	}
+
+	private function Private {
+		// function explicitly marked as private
+		return;
+	}
+
+	public function Public {
+		// this is for testing public local functions and ownership of the
+		// script
+
+		return getnpcid();
+	}
+
+	public function RefTest {
+		// this is to check if references are passed around properly
+
+		return set(getarg(0), 1337);
+	}
 }
 
 function	script	HerculesSelfTestHelper	{
@@ -100,6 +155,15 @@ function	script	HerculesSelfTestHelper	{
 		return .errors;
 	.once = 1;
 	.errors = 0;
+
+	// number literals
+	callsub(OnCheck, "decimal number literal", 255, 255);
+	callsub(OnCheck, "hexadecimal number literal", 0xFF, 255);
+	callsub(OnCheck, "octal number literal", 0o377, 255);
+	callsub(OnCheck, "binary number literal", 0b11111111, 255);
+	callsub(OnCheck, "binary literal bitwise OR", 0b11110000 | 0xF, 255);
+	callsub(OnCheck, "decimal literal with separator", 2_5_5, 255);
+	callsub(OnCheck, "binary literal with separator", 0b_1111_1111, 255);
 
 	// Callsub (basic)
 	callsub(OnCheck, "Callsub", 1, 1);
@@ -128,6 +192,20 @@ function	script	HerculesSelfTestHelper	{
 	.@y = --.@x; // .@x = .@x - 1; .@y = .@x;
 	callsub(OnCheck, "Prefix decrement --", .@y);
 	callsub(OnCheck, "Prefix decrement --", .@x);
+
+	// Increment and decrement operators after a condition
+	.@x = 0;
+	if (1) .@x++;
+	callsub(OnCheck, "Suffix increment ++ after (condition)", .@x);
+	.@x = 2;
+	if (1) .@x--;
+	callsub(OnCheck, "Suffix decrement -- after (condition)", .@x);
+	.@x = 0;
+	if (1) ++.@x;
+	callsub(OnCheck, "Prefix increment ++ after (condition)", .@x);
+	.@x = 2;
+	if (1) --.@x;
+	callsub(OnCheck, "Prefix decrement -- after (condition)", .@x);
 
 	// Order of [] and --/++
 	.@a[1] = 0;
@@ -245,6 +323,19 @@ function	script	HerculesSelfTestHelper	{
 	// Order of +, - and *, /, %
 	.@x = 1 + 3 * 2; // .@x = 1 + (3 * 2);
 	callsub(OnCheck, "Order of + and *", .@x, 7);
+
+
+	// Binary ** operator
+	.@x = 2 ** 3; // .@x = 8;
+	callsub(OnCheck, "Binary ** operator", .@x, 8);
+
+	// Associativity of **
+	.@x = 2 ** 3 ** 2; // .@x = (2 ** 3) ** 2;
+	callsub(OnCheck, "Associativity of **", .@x, 64);
+
+	// Order of ** and *
+	.@x = 5 * 2 ** 3 * 2; // .@x = 5 * (2 ** 3) * 2;
+	callsub(OnCheck, "Order of ** and *", .@x, 80);
 
 
 	// << and >> operators
@@ -585,7 +676,7 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "'PORING' mob ID", PORING, 1002);
 	callsub(OnCheck, "'NV_BASIC' skill ID", NV_BASIC, 1);
 	callsub(OnCheck, "'Red_Potion' item ID", Red_Potion, 501);
-	callsub(OnCheck, "'Monster's_Feed' item ID", Monster's_Feed, 528);
+	callsub(OnCheck, "'Monsters_Feed' item ID", Monsters_Feed, 528);
 
 
 	// setd/getd
@@ -602,6 +693,12 @@ function	script	HerculesSelfTestHelper	{
 	.@y = 1;
 	setd(".@x", getd(".@y"));
 	callsub(OnCheck, "setd getd", .@x, .@y);
+
+	// getd types
+	callsub(OnCheck, "Getdatatype (getd: param)",          getdatatype(getd("Hp")), DATATYPE_INT | DATATYPE_PARAM);
+	callsub(OnCheck, "Getdatatype (getd: const)",          getdatatype(getd("DATATYPE_CONST")), DATATYPE_INT | DATATYPE_CONST);
+	callsub(OnCheck, "Getdatatype (getd: numeric var)",    getdatatype(getd(".@foo")), DATATYPE_INT | DATATYPE_VAR);
+	callsub(OnCheck, "Getdatatype (getd: string var)",     getdatatype(getd(".@foo$")), DATATYPE_STR | DATATYPE_VAR);
 
 	// getvariableofnpc
 	.x = 2;
@@ -690,11 +787,58 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callfunc (return NPC variables from another NPC)", callfunc("F_TestVarOfAnotherNPC", "TestVarOfAnotherNPC"), 1);
 	callsub(OnCheck, "Callfunc (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
 
+	callsub(OnCheckStr, "sprintf (%%)",         sprintf("'%%'"), "'%'");
+	callsub(OnCheckStr, "sprintf (%d)",         sprintf("'%d'", 5), "'5'");
+	callsub(OnCheckStr, "sprintf (neg. %d)",    sprintf("'%d'", -5), "'-5'");
+	callsub(OnCheckStr, "sprintf (%u)",         sprintf("'%u'", 5), "'5'");
+	callsub(OnCheckStr, "sprintf (%x)",         sprintf("'%x'", 10), "'a'");
+	callsub(OnCheckStr, "sprintf (%X)",         sprintf("'%X'", 31), "'1F'");
+	callsub(OnCheckStr, "sprintf (%s)",         sprintf("'%s'", "Hello World!"), "'Hello World!'");
+	callsub(OnCheckStr, "sprintf (%c)",         sprintf("'%c'", "Hello World!"), "'H'");
+	callsub(OnCheckStr, "sprintf (%+d)",        sprintf("'%+d'", 5), "'+5'");
+	callsub(OnCheckStr, "sprintf (%{n}d)",      sprintf("'%5d'", 5), "'    5'");
+	callsub(OnCheckStr, "sprintf (%-{n}d)",     sprintf("'%-5d'", 5), "'5    '");
+	callsub(OnCheckStr, "sprintf (%-+{n}d)",    sprintf("'%-+5d'", 5), "'+5   '");
+	callsub(OnCheckStr, "sprintf (%+0{n}d)",    sprintf("'%+05d'", 5), "'+0005'");
+	callsub(OnCheckStr, "sprintf (%0*d)",       sprintf("'%0*d'", 5, 10), "'00010'");
+	callsub(OnCheckStr, "sprintf (Two args)",   sprintf("'%+05d' '%x'", 5, 0x7f), "'+0005' '7f'");
+	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
+	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
+
+	callsub(OnCheck, "Getdatatype (integer)",              getdatatype(5), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (constant string)",      getdatatype("foo"), DATATYPE_STR | DATATYPE_CONST);
+	callsub(OnCheck, "Getdatatype (parameter)",            getdatatype(Hp), DATATYPE_INT | DATATYPE_PARAM);
+	callsub(OnCheck, "Getdatatype (numeric variable)",     getdatatype(.@x), DATATYPE_INT | DATATYPE_VAR);
+	callsub(OnCheck, "Getdatatype (string variable)",      getdatatype(.@x$), DATATYPE_STR | DATATYPE_VAR);
+	callsub(OnCheck, "Getdatatype (label)",                getdatatype(OnTestGetdatatype), DATATYPE_LABEL);
+	callsub(OnCheck, "Getdatatype (constant)",             getdatatype(DATATYPE_CONST), DATATYPE_INT | DATATYPE_CONST);
+	callsub(OnCheck, "Getdatatype (returned integer)",     getdatatype(callsub(OnTestReturnValue, 5)), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (returned string)",      getdatatype(callsub(OnTestReturnValue, "foo")), DATATYPE_STR | DATATYPE_CONST);
+	callsub(OnCheck, "Getdatatype (getarg default value)", callsub(OnTestGetdatatypeDefault), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (getarg integer value)", callsub(OnTestGetdatatype, 5), DATATYPE_INT);
+	callsub(OnCheck, "Getdatatype (getarg string)",        callsub(OnTestGetdatatype, "foo"), DATATYPE_STR | DATATYPE_CONST);
+
+	callsub(OnCheck, "data_to_string (NIL)",              data_to_string(), "");
+	callsub(OnCheck, "data_to_string (empty string)",     data_to_string(""), "");
+	callsub(OnCheck, "data_to_string (string)",           data_to_string("foo"), "foo");
+	callsub(OnCheck, "data_to_string (integer)",          data_to_string(5), "5");
+	callsub(OnCheck, "data_to_string (parameter)",        data_to_string(Hp), "Hp");
+	callsub(OnCheck, "data_to_string (constant)",         data_to_string(DATATYPE_CONST), "DATATYPE_CONST");
+	callsub(OnCheck, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "OnTestGetdatatype");
+	callsub(OnCheck, "data_to_string (string variable)",  data_to_string(.@x$), ".@x$");
+	callsub(OnCheck, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
+
+	"export test"::RefTest(.@refTest = 69);
+	callsub(OnCheck, "function as event (regression)",           $@something_bad_happened[0], false);
+	callsub(OnCheck, "public local function ownership",          "export test"::Public(), getnpcid());
+	callsub(OnCheck, "public local function var reference test", .@refTest, 1337);
+	callsub(OnCheck, "programatic public local call",            callfunctionofnpc("export test", "RefTest", .@refTest = 1), 1337);
+
 	if (.errors) {
-		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
-		debugmes "**** The test was completed with " + .errors + " errors. ****";
+		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
+		consolemes(CONSOLEMES_DEBUG, "**** The test was completed with " + .errors + " errors. ****");
 	} else {
-		debugmes "Script engine self-test   [ \033[0;32mPASSED\033[0m ]";
+		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;32mPASSED\033[0m ]");
 	}
 	return .errors;
 	end;
@@ -734,13 +878,19 @@ OnTestScopeArrays:
 OnTestVarOfAnotherNPC:
 	return getvariableofnpc(.x, getarg(0));
 
+OnTestGetdatatypeDefault:
+	return getdatatype(getarg(0, 0));
+
+OnTestGetdatatype:
+	return getdatatype(getarg(0));
+
 OnReportError:
 	.@msg$ = getarg(0,"Unknown Error");
 	.@val$ = getarg(1,"");
 	.@ref$ = getarg(2,"");
 	if (.errors == 1)
-		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
-	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
+		consolemes(CONSOLEMES_DEBUG, "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****");
+	consolemes(CONSOLEMES_DEBUG, "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)");
 	++.errors;
 	//end;
 	return;
@@ -766,7 +916,7 @@ OnSetReference:
 	return getarg(0);
 }
 
--	script	HerculesSelfTest	-1,{
+-	script	HerculesSelfTest	FAKE_NPC,{
 	end;
 
 OnInit:

@@ -1,11 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) DZeroX
+//= Copyright (C) Evera
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Alberta
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 2.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Dolls Quest
 //= Boy's Cap Quest
 //= Antlers Quest
@@ -13,36 +40,19 @@
 //= Hat of Sun God, Sunday Hat, Mage Hat, Magician Hat Quests
 //= Turtle Island Quests
 //= Alberta Boy
-//===== Additional Comments: =================================
-//= 1.1 Fixed Spore Doll exploit, Gramp's Tiger skin label bug
-//= 1.3 Fixed item ID 7031 -> 7013
-//= 1.4 Fixed a bug, Fixed Exploits, Optimized [Lupus]
-//= 1.6 TEMPESTRA quest uses common quests variable MISC_QUEST
-//=     Condition if done: (MISC_QUEST & 2) [Lupus]
-//= 1.7 Moved quest from cities/albera.txt [Evera]
-//= 1.8 Re-made the Doll Quest, now with official dialogs. [DZeroX]
-//= 1.8a Removed .GATs [Lupus]
-//= 1.9 Updated Turtle Quest to official. [L0ne_W0lf]
-//= 2.0 Turtle Island quest now clears TURTLE var and set
-//=     MISC_QUEST bit (MISC_QUEST & 65536) [Lupus]
-//= 2.1 Added missing close. [L0ne_W0lf]
-//= 2.2 Updated Gotan to be compliant with misc_quiest var. [L0ne_W0lf]
-//= 2.3 Updated heardgear Quest NPCs. [L0ne_W0lf]
-//= 2.4 Updated 'Doll Quest' to match AEGIS script. [Kisuka]
-//= 2.5 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//= 2.6 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.6
+//=========================================================================
 
-// Doll Quest
-//============================================================
+//== Doll Quest ============================================
 alberta,117,135,0	script	Elin	4W_KID,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "[Elin]";
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
 	mes "[Elin]";
-	if (Sex == 1) {
+	if (Sex == SEX_MALE) {
 		mes "Hello~!";
 		mes "Heh heh, you're a boy, so you probably don't like dolls, right? Well, I like dolls very very much!";
 	} else {
@@ -52,7 +62,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 	mes "[Elin]";
 	mes "You know, I really really want a new doll! I hope my daddy will give me one on my birthday...!";
 	next;
-	switch(select("Um, I hope your daddy gives you one too.:How about I give you one now?")) {
+	switch(select("Um, I hope your daddy gives you one too.", "How about I give you one now?")) {
 	case 1:
 		mes "[Elin]";
 		mes "Yeah, I'm hoping";
@@ -62,7 +72,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 	case 2:
 		if (MaxWeight - Weight < 1000) {
 			mes "[Elin]";
-			if (Sex == 1) {
+			if (Sex == SEX_MALE) {
 				mes "Maybe you should put some of your stuff away first, you look like you're carrying too much, hee hee~";
 			} else {
 				mes "Do you always carry so much with you? Put some of your things away first, okay?";
@@ -70,7 +80,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 			close;
 		}
 		mes "[Elin]";
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			mes "Oh my goodness!";
 			mes "Really? You're";
 			mes "such a sweetie~!";
@@ -83,17 +93,17 @@ alberta,117,135,0	script	Elin	4W_KID,{
 		mes "[Elin]";
 		mes "What kind of doll are you going to give me? Are you really gonna give me one?";
 		next;
-		switch(select("Poring Doll:Chonchon Doll:Puppet:Rocker Doll:Spore Doll:Osiris Doll:Baphomet Doll:Raccoon Doll:Yoyo Doll:I'm as adorable as a doll.")) {
+		switch(select("Poring Doll", "Chonchon Doll", "Puppet", "Rocker Doll", "Spore Doll", "Osiris Doll", "Baphomet Doll", "Raccoon Doll", "Yoyo Doll", "I'm as adorable as a doll.")) {
 		case 1:
-			if (countitem(741) >= 1) {
-				delitem 741,1; //Poring_Doll
+			if (countitem(Poring_Doll) >= 1) {
+				delitem Poring_Doll,1;
 				mes "[Elin]";
 				mes "Aww...";
 				mes "I have a lot";
 				mes "of Poring dolls...";
 				next;
 				mes "[Elin]";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "But since a cute boy is giving it to me, I'll happily take it! Hee hee, soft and fluffy Poring doll~";
 				} else {
 					mes "But since a nice girl is giving it to me, I'll take it! Hee he, soft and fluffy Poring doll~";
@@ -102,9 +112,9 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "[Elin]";
 				mes "Ooh, let me give you something as a little thank you. You see, I hid some candy so I can eat it without telling mommy.";
 				next;
-				getitem 529,1; //Candy
+				getitem Candy,1;
 				mes "[Elin]";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "I don't know if you're too old to like candy, but I guess it's okay.";
 				} else {
 					mes "So, try not to eat too much, okay? Otherwise, you might get in trouble!";
@@ -117,7 +127,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			} else {
 				mes "[Elin]";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "Aww...?";
 					mes "Were you only teasing me?";
 				} else {
@@ -130,14 +140,14 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 2:
-			if (countitem(742) >= 1) {
-				delitem 742,1; //Chonchon_Doll
+			if (countitem(Chonchon_Doll) >= 1) {
+				delitem Chonchon_Doll,1;
 				mes "[Elin]";
 				mes "Agh--!";
 				mes "A Ch-Ch, Chonchon doll?!";
 				next;
 				mes "[Elin]";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "But since... You're... Such a nice guy... I better take it...!";
 				} else {
 					mes "But since... Since it's a gift... I guess I'll take it...";
@@ -148,7 +158,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "Let me give you";
 				mes "something in return...";
 				next;
-				getitem 530,1; //Candy_Striper
+				getitem Candy_Striper,1;
 				mes "[Elin]";
 				mes "If you eat too much, your teeth will start to rot... at least, that's what Mommy says.";
 				next;
@@ -167,8 +177,8 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 3:
-			if (countitem(740) >= 1) {
-				delitem 740,1; //Stuffed_Doll
+			if (countitem(Stuffed_Doll) >= 1) {
+				delitem Stuffed_Doll,1;
 				mes "[Elin]";
 				mes "Wow...!";
 				mes "It looks like a bunny!";
@@ -183,7 +193,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "Um, where";
 				mes "did it... Ah!";
 				next;
-				getitem 530,1; //Candy_Striper
+				getitem Candy_Striper,1;
 				mes "[Elin]";
 				mes "Here it is! It's some of the candy Santa gave me. Go ahead and try some! Oh, and thank you so much for the doll!";
 				close;
@@ -199,8 +209,8 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 4:
-			if (countitem(752) >= 1) {
-				delitem 752,1; //Grasshopper_Doll
+			if (countitem(Grasshopper_Doll) >= 1) {
+				delitem Grasshopper_Doll,1;
 				mes "[Elin]";
 				mes "Ooh! Rocker Doll!";
 				mes "It's the Rocker that likes singing and dancing! I don't like grasshoppers, but I like this because it's cute~";
@@ -208,7 +218,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "[Elin]";
 				mes "Hmmm, I should give you something too, huh? Let's see, I have what my grandpa gave me...";
 				next;
-				getitem 532,7; //Banana_Juice
+				getitem Banana_Juice,7;
 				mes "[Elin]";
 				mes "Here you go! We have a lot of this at home, so I'll give it to you, okay? Oh, and thank you so much for the doll~ I love cute dolls!";
 				close;
@@ -223,8 +233,8 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 5:
-			if (countitem(743) >= 1) {
-				delitem 743,1; //Spore_Doll
+			if (countitem(Spore_Doll) >= 1) {
+				delitem Spore_Doll,1;
 				mes "[Elin]";
 				mes "It's a mushroom?";
 				mes "Ewwwwwwwww, yucky!";
@@ -234,7 +244,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "[Elin]";
 				mes "But this doll is cute, so I'll take it. But I'm still not gonna eat mushrooms! Heh heh~";
 				next;
-				getitem 538,5; //Well_Baked_Cookie
+				getitem Well_Baked_Cookie,5;
 				mes "[Elin]";
 				mes "Hehe~ My mommy made this! It's really yummy. I love cookies, too. So try it, you'll like it! Hee hee!";
 				next;
@@ -257,8 +267,8 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 6:
-			if (countitem(751) >= 1) {
-				delitem 751,1; //Osiris_Doll
+			if (countitem(Osiris_Doll) >= 1) {
+				delitem Osiris_Doll,1;
 				mes "[Elin]";
 				mes "Ahhhhh!";
 				mes "What is this";
@@ -270,10 +280,10 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "[Elin]";
 				mes "Here, since you gave me such a nicely made doll, I better give you something good too.";
 				next;
-				getitem 522,2; //Fruit_Of_Mastela
+				getitem Fruit_Of_Mastela,2;
 				mes "[Elin]";
 				mes "I found it when I secretly went to the forest. I took it because it has pretty colors!";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "Since there's two, you can share it with your girlfriend. Hee hee~!";
 				} else {
 					mes "Since there's two, you can share it with your boyfriend. Hee hee~!";
@@ -287,8 +297,8 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 7:
-			if (countitem(750) >= 1) {
-				delitem 750,1; //Baphomet_Doll
+			if (countitem(Baphomet_Doll) >= 1) {
+				delitem Baphomet_Doll,1;
 				mes "[Elin]";
 				mes "Huh?";
 				mes "It's a little goat...";
@@ -296,7 +306,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "[Elin]";
 				mes "It's so weird. It's cute but it's also scary at the same time. Well, since you gave me a pretty doll, I wanna give you something, too.";
 				next;
-				getitem 525,5; //Panacea
+				getitem Panacea,5;
 				mes "[Elin]";
 				mes "My daddy gave me this when I was really sick. I'm not sick anymore so you can use it when you need to. Hehehe~";
 				next;
@@ -311,8 +321,8 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 8:
-			if (countitem(754) >= 1) {
-				delitem 754,1; //Raccoondog_Doll
+			if (countitem(Raccoondog_Doll) >= 1) {
+				delitem Raccoondog_Doll,1;
 				mes "[Elin]";
 				mes "Hehe, it's a";
 				mes "raccoon doll.";
@@ -323,7 +333,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "Smokies in real life,";
 				mes "but this doll is nice!";
 				next;
-				getitem 539,3; //Piece_Of_Cake
+				getitem Piece_Of_Cake,3;
 				mes "[Elin]";
 				mes "Here, let me give you some cake my grandma made. It's really yummy. I don't know if you like sweets or not, but it's really good! Please try some!";
 				next;
@@ -339,8 +349,8 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 9:
-			if (countitem(753) >= 1) {
-				delitem 753,1; //Monkey_Doll
+			if (countitem(Monkey_Doll) >= 1) {
+				delitem Monkey_Doll,1;
 				mes "[Elin]";
 				mes "Woooooooow~!";
 				next;
@@ -353,7 +363,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				mes "I wanna give you";
 				mes "something, too!";
 				next;
-				getitem 608,1; //Seed_Of_Yggdrasil
+				getitem Seed_Of_Yggdrasil,1;
 				mes "[Elin]";
 				mes "My daddy picked it up on his way to another town. It looks like some kind of seed. I tried planting it in front of our house but it won't grow. Do you want to try?";
 				next;
@@ -371,7 +381,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 10:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'm as adorable as a doll...";
 			next;
 			mes "[Elin]";
@@ -385,8 +395,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 	}
 }
 
-// 'Boy's Cap' Quest
-//============================================================
+//== 'Boy's Cap' Quest =====================================
 alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 	mes "[Grampa]";
 	mes "*Gasp*...";
@@ -397,8 +406,8 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 	mes "[Grampa]";
 	mes "But my soul still burns with youthful vigor! It's just... This old body can't keep up anymore... *Hack! Wheeeeze~*";
 	next;
-	if (countitem(1030) > 9) {
-		switch(select("Show him Tiger's Footskin.:Exchange it with Boys Cap.:Cancel")) {
+	if (countitem(Tiger_Footskin) > 9) {
+		switch(select("Show him Tiger's Footskin.", "Exchange it with Boys Cap.", "Cancel")) {
 		case 1:
 			mes "[Grampa]";
 			mes "Ohhh~ !!";
@@ -414,8 +423,8 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 			mes "Will revive my virility!!!! The Tiger's Footskin~!! Ohhhh! Ohh My God !! Please!!! Please give me that... Please...";
 			close;
 		case 2:
-			delitem 1030,10;  //Tiger_Footskin
-			getitem 5016,1; //Boy's_Cap
+			delitem Tiger_Footskin,10;
+			getitem Boys_Cap,1;
 			mes "[Grampa]";
 			mes "T... Thank you !!";
 			mes "With this I can revive my youthful splendor!! I must eat this thing right away !";
@@ -431,7 +440,7 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 			close;
 		}
 	} else {
-		switch(select("Talk:Cancel")) {
+		switch(select("Talk", "Cancel")) {
 		case 1:
 			mes "[Grampa]";
 			mes "Listen well...";
@@ -462,8 +471,7 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 	}
 }
 
-// 'Antlers' Quest
-//============================================================
+//== 'Antlers' Quest =======================================
 alberta_in,122,53,4	script	Cherokee	1_M_01,{
 	mes "[Cherokee]";
 	mes "Hey there~!";
@@ -482,14 +490,14 @@ alberta_in,122,53,4	script	Cherokee	1_M_01,{
 	mes "Do you have ^FF3355Evil Horn^000000?";
 	mes "If you offer me 20 Evil Horns, I will give you an ^3355FFAntler^000000 from my precious collection. So, deal?";
 	next;
-	switch(select("Okay, let's deal.:Shut up, Dumbo.")) {
+	switch(select("Okay, let's deal.", "Shut up, Dumbo.")) {
 	case 1:
-		if (countitem(923) > 19) {
-			delitem 923,20;  //Evil_Horn
+		if (countitem(Evil_Horn) > 19) {
+			delitem Evil_Horn,20;
 			mes "[Cherokee]";
 			mes "Whoah~! This is the first time I've ever seen a real ^FF3355Evil Horn^000000!!";
 			mes "Thank you! Here, this is my Antler for you!";
-			getitem 2284,1; // Antler
+			getitem Antler,1; // Antler
 			next;
 			mes "[Cherokee]";
 			mes "With your great help, I can make my wish come true this time. Finally, I'll be recognized as a serious horn collector. I appreciate this~!";
@@ -508,10 +516,9 @@ alberta_in,122,53,4	script	Cherokee	1_M_01,{
 	}
 }
 
-// 'Bao Bao', 'Crescent Hairpin', 'Fashionable Glasses', 'Heart Hairpin' Quest
-//============================================================
+//== 'Bao Bao', 'Crescent Hairpin', 'Fashionable Glasses', 'Heart Hairpin' Quest =
 alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
-	if ((countitem(10007) > 0) && (countitem(968) > 49)) {
+	if ((countitem(Silk_Ribbon) > 0) && (countitem(Voucher_Of_Orcish_Hero) > 49)) {
 		mes "[Zic]";
 		mes "I know I know, you just want to get a Bao Bao of your own. But I can't concentrate on my work if you keep rushing me like this.";
 		next;
@@ -519,16 +526,16 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 		mes "*Ah! Kek! Smash!*";
 		mes "*Boom Boom!*^000000";
 		next;
-		delitem 10007,1;  //Silk_Ribbon
-		delitem 968,50;  //Voucher_Of_Orcish_Hero
+		delitem Silk_Ribbon,1;
+		delitem Voucher_Of_Orcish_Hero,50;
 		mes "[Zic]";
 		mes "Phew!";
 		mes "There you go~!";
 		mes "Now make good use of it!!";
-		getitem 5042,1; // Hair_Protector
+		getitem Hair_Protector,1; // Hair_Protector
 		close;
 	}
-	else if((countitem(5041) > 0) && (countitem(999) > 9)) {
+	else if((countitem(Heart_Hair_Pin) > 0) && (countitem(Steel) > 9)) {
 		mes "[Zic]";
 		mes "Alright alright! Gosh, your Crescent Hairpin will be ready in a bit, but I can't concentrate my work if you keep rushing me like this!";
 		next;
@@ -536,18 +543,18 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 		mes "*Ah! Kek! Smash!*";
 		mes "*Boom Boom!*^000000";
 		next;
-		delitem 5041,1;  //Heart_Hair_Pin
-		delitem 999,10;  //Steel
+		delitem Heart_Hair_Pin,1;
+		delitem Steel,10;
 		mes "[Zic]";
 		mes "Phew!";
 		mes "It's done~!";
 		mes "Now wear it and";
 		mes "look pretty or";
 		mes "something, yeah?";
-		getitem 5048,1; // First_Moon_Hair_Pin
+		getitem First_Moon_Hair_Pin,1; // First_Moon_Hair_Pin
 		close;
 	}
-	else if((countitem(2271) > 0) && (countitem(975) > 0)) {
+	else if((countitem(Jack_A_Dandy) > 0) && (countitem(Scarlet_Dyestuffs) > 0)) {
 		mes "[Zic]";
 		mes "Yeah yeah, you came for your Fashionable Glasses. Just don't rush me, or I won't be able to concentrate on my work, alright?";
 		next;
@@ -555,15 +562,15 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 		mes "*Ah! Kek! Smash!*";
 		mes "*Boom Boom!*^000000";
 		next;
-		delitem 2271,1;  //Jack_A_Dandy
-		delitem 975,1;  //Scarlet_Dyestuffs
+		delitem Jack_A_Dandy,1;
+		delitem Scarlet_Dyestuffs,1;
 		mes "[Zic]";
 		mes "Phew, it's done!";
 		mes "Now go wear these and look, well, as fashionable as these glasses, I guess.";
-		getitem 5047,1; // Fashion_Sunglass
+		getitem Fashion_Sunglass,1; // Fashion_Sunglass
 		close;
 	}
-	else if(countitem(7013) > 1199){
+	else if(countitem(Coral_Reef) > 1199){
 		mes "[Zic]";
 		mes "Okay okay, you want your Heart hairpin, I'm working on it. Yeesh, I can't concentrate at all if you try to rush me, you know?";
 		next;
@@ -571,13 +578,13 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 		mes "*Ah! Kek! Smash!*";
 		mes "*Boom Boom!*^000000";
 		next;
-		delitem 7013,1200;  //Coral_Reef
+		delitem Coral_Reef,1200;
 		mes "[Zic]";
 		mes "Phew~!";
 		mes "Finally, it's done!";
 		mes "Make me happy and";
 		mes "wear it with pride~";
-		getitem 5041,1; // Heart_Hair_Pin
+		getitem Heart_Hair_Pin,1; // Heart_Hair_Pin
 		close;
 	}
 	else {
@@ -596,7 +603,7 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 		mes "[Zic]";
 		mes "Let me know what item you're interested in, and maybe I'll make it for you...";
 		next;
-		switch(select("Bao Bao:Cresent Hairpin:Fashionable Glasses:Heart Hairpin")) {
+		switch(select("Bao Bao", "Cresent Hairpin", "Fashionable Glasses", "Heart Hairpin")) {
 		case 1:
 			mes "[Zic]";
 			mes "Sooo...";
@@ -641,8 +648,7 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 	}
 }
 
-// 'Hat of the Sun God', 'Sunday Hat', 'Mage Hat', 'Magician Hat' Quest
-//============================================================
+//== 'Hat of the Sun God', 'Sunday Hat', 'Mage Hat', 'Magician Hat' Quest =
 alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 	mes "[Tempestra]";
 	mes "Ah, such a cool breeze. It's good to visit the seashore. I think it was the right choice to come here to take a break from my business.";
@@ -653,20 +659,20 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 	mes "[Tempestra]";
 	mes "Oh, I'm sooo thirsty! A nice, chilled Yellow Potion would be perfect right about now~";
 	next;
-	switch(select("Let me treat you to a Yellow Potion.:What, you expect me to give you one?!")) {
+	switch(select("Let me treat you to a Yellow Potion.", "What, you expect me to give you one?!")) {
 	case 1:
-		if (countitem(503) > 0){
+		if (countitem(Yellow_Potion) > 0){
 			mes "[Tempestra]";
 			mes "Ah, thank you so much. I'm so glad to have met a friendly person like yourself.";
 			next;
 			mes "^3355FF*Gulp, gulp*^000000";
-			delitem 503,1;  //Yellow_Potion
+			delitem Yellow_Potion,1;
 			next;
 			mes "[Tempestra]";
 			mes "Hyaaaaaa~~!!!";
 			mes "It's so cold!! Thank you~~~";
 			next;
-			switch(select("It's really hot, isn't it~?:You should wear your hat...")) {
+			switch(select("It's really hot, isn't it~?", "You should wear your hat...")) {
 			case 1:
 				mes "[Tempestra]";
 				mes "Yeah~ it's really hot....";
@@ -680,7 +686,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 				mes "[Tempestra]";
 				mes "I brought these hats so I can sell them and use the money for my vacation here, but now it looks like I have to wear one~";
 				next;
-				switch(select("Sunday Hat!!?:Mage Hat?!?:Magician Hat??!??")) {
+				switch(select("Sunday Hat!!?", "Mage Hat?!?", "Magician Hat??!??")) {
 				case 1:
 					mes "[Tempestra]";
 					mes "Oh? Didn't you know? I'm a hat merchant. Didn't I tell you that before?";
@@ -695,14 +701,14 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 					mes "^0000FF1 Slotted Cap^000000";
 					mes "^0000FF600 Soft feather^000000";
 					next;
-					if ((countitem(1059) > 249) && (countitem(2221) > 0) && (countitem(2227) > 0) && (countitem(7063) > 599)) {
+					if ((countitem(Transparent_Cloth) > 249) && (countitem(Hat_) > 0) && (countitem(Cap_) > 0) && (countitem(Soft_Feather) > 599)) {
 						mes "[Tempestra]";
 						mes "What?!? ";
 						mes "You have all the items already? If there are forged items or slotted items with monster cards, then put them into your storage.";
 						next;
 						mes "[Tempestra]";
 						mes "I just want to make something for the Yellow Potion, so I won't charge you any zeny for my hat making service.";
-						switch(select("Oh, please do.:No thanks.")) {
+						switch(select("Oh, please do.", "No thanks.")) {
 						case 1:
 							next;
 							mes "[Tempestra]";
@@ -713,14 +719,14 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 							next;
 							mes "^3355FF*Beeeeeeeh~~~*^000000";
 							next;
-							delitem 1059,250; //Transparent_Cloth
-							delitem 2221,1; //Hat_
-							delitem 2227,1; //Cap_
-							delitem 7063,600; //Soft_Feather
+							delitem Transparent_Cloth,250;
+							delitem Hat_,1;
+							delitem Cap_,1;
+							delitem Soft_Feather,600;
 							mes "[Tempestra]";
 							mes "Here it is, tee hee~";
 							mes "How about that? Do you like it?";
-							getitem 5032,1; //Picnic_Hat
+							getitem Picnic_Hat,1;
 							next;
 							mes "[Tempestra]";
 							mes "Once again, thank you for your favour. I'll see you later~";
@@ -759,14 +765,14 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 					mes "^0000FF50 Mould Powder^000000";
 					mes "^0000FF1 Elder Wilow Card^000000";
 					next;
-					if ((countitem(2252) > 0) && (countitem(1036) > 399) && (countitem(4052) > 0) && (countitem(7001) > 49)) {
+					if ((countitem(Star_Sparkling) > 0) && (countitem(Dragon_Scale) > 399) && (countitem(Elder_Wilow_Card) > 0) && (countitem(Mould_Powder) > 49)) {
 						mes "[Tempestra]";
 						mes "What?!? ";
 						mes "You have all the items already? If there are forged items or slotted items with monster cards, then put them into your storage.";
 						next;
 						mes "[Tempestra]";
 						mes "I just want to make something nice for you, so I won't charge you any zeny for my hat making service.";
-						switch(select("Oh, please do.:No thanks.")) {
+						switch(select("Oh, please do.", "No thanks.")) {
 						case 1:
 							next;
 							mes "[Tempestra]";
@@ -777,15 +783,15 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 							next;
 							mes "^3355FF*Beeeeeeeh~~~*^000000";
 							next;
-							delitem 2252,1; //Star_Sparkling
-							delitem 1036,400; //Dragon_Scale
-							delitem 4052,1; //Elder_Wilow_Card
-							delitem 7001,50; //Mould_Powder
+							delitem Star_Sparkling,1;
+							delitem Dragon_Scale,400;
+							delitem Elder_Wilow_Card,1;
+							delitem Mould_Powder,50;
 							mes "[Tempestra]";
 							mes "Here it is, tee hee~";
 							mes "How about that?";
 							mes "Do you like it?";
-							getitem 5027,1; //Wizardry_Hat
+							getitem Wizardry_Hat,1;
 							next;
 							mes "[Tempestra]";
 							mes "Once again, thank you for your favour. I'll see you later~";
@@ -823,7 +829,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 					mes "^0000FF450 Ancient Lips^000000";
 					mes "^0000FF1200 Solid Shell^000000";
 					next;
-					if ((countitem(2252) > 0) && (countitem(1054) > 449) && (countitem(943) > 1199)) {
+					if ((countitem(Star_Sparkling) > 0) && (countitem(Lip_Of_Ancient_Fish) > 449) && (countitem(Solid_Shell) > 1199)) {
 						mes "[Tempestra]";
 						mes "What?!? ";
 						mes "You have all the items already?";
@@ -831,7 +837,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 						next;
 						mes "[Tempestra]";
 						mes "I just want to make something nice for you, so I won't charge you any zeny for my hat making service.";
-						switch(select("Please do:No thanks")) {
+						switch(select("Please do", "No thanks")) {
 						case 1:
 							next;
 							mes "[Tempestra]";
@@ -842,14 +848,14 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 							next;
 							mes "^3355FF*Beeeeeeeh~~~*^000000";
 							next;
-							delitem 2252,1; //Star_Sparkling
-							delitem 1054,450; //Lip_Of_Ancient_Fish
-							delitem 943,1200; //Solid_Shell
+							delitem Star_Sparkling,1;
+							delitem Lip_Of_Ancient_Fish,450;
+							delitem Solid_Shell,1200;
 							mes "[Tempestra]";
 							mes "Here it is, tee hee~";
 							mes "How about that?";
 							mes "Do you like it?";
-							getitem 5045,1; //Magician_Hat
+							getitem Magician_Hat,1;
 							next;
 							mes "[Tempestra]";
 							mes "Once again, thank you for your favour. I'll see you later~";
@@ -883,7 +889,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 				mes "[Tempestra]";
 				mes "I want to make something special for you because you showed me such kindness, but I don't have anything like that right now.";
 				next;
-				if ((countitem(7086) > 0) && (countitem(969) > 9) && (countitem(999) > 39) && (countitem(1003) > 49) && (countitem(984) > 1)) {
+				if ((countitem(Symbol_Of_Sun) > 0) && (countitem(Gold) > 9) && (countitem(Steel) > 39) && (countitem(Coal) > 49) && (countitem(Oridecon) > 1)) {
 					mes "[Tempestra]";
 					mes "Hmm...";
 					mes "I think I can make a special item from the items you already have.";
@@ -895,18 +901,18 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 					mes "Heh heh...";
 					mes "I think I'll make you a Hat of the Sun God~";
 					next;
-					delitem 7086,1; //Symbol_Of_Sun
-					delitem 969,10; //Gold
-					delitem 999,40; //Steel
-					delitem 1003,50; //Coal
-					delitem 984,2; //Oridecon
+					delitem Symbol_Of_Sun,1;
+					delitem Gold,10;
+					delitem Steel,40;
+					delitem Coal,50;
+					delitem Oridecon,2;
 					mes "[Tempestra]";
 					mes "See! Here it is!!";
 					mes "Haha, I made this quicker than the speed of light!";
 					next;
 					mes "[Tempestra]";
 					mes "...Or maybe I just gave you the one I already had, and took your items. Hee hee!";
-					getitem 5022,1; // Helm_Of_Sun
+					getitem Helm_Of_Sun,1; // Helm_Of_Sun
 					next;
 					mes "[Tempestra]";
 					mes "Anyway, I justed want to give something really nice to you...";
@@ -942,8 +948,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 	}
 }
 
-// Turtle Quest
-//============================================================
+//== Turtle Quest ==========================================
 alberta,91,70,4	script	Kinsey#tur	4_M_ORIENT02,{
 	mes "[Kinsey]";
 	mes "What does a man have to do to get a stiff drink around here? I mean, there are absolutely no good bars in Alberta!";
@@ -954,7 +959,7 @@ alberta,91,70,4	script	Kinsey#tur	4_M_ORIENT02,{
 	mes "[Kinsey]";
 	mes "In fact, this old man is always there, telling stories about Turtle Island! But we're not sure if he's been there, or if he's just that drunk.";
 	next;
-	if (select("^3333FF*ting!*^000000:Sounds fun~") == 1) {
+	if (select("^3333FF*ting!*^000000", "Sounds fun~") == 1) {
 		mes "[Kinsey]";
 		mes "Whoa...";
 		mes "Hey, your eyes just lit up right when I said 'Turtle Island!' Hmm, let me try that again.";
@@ -964,7 +969,7 @@ alberta,91,70,4	script	Kinsey#tur	4_M_ORIENT02,{
 		mes "'Tur-tle";
 		mes "Is-land.'";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "^3333FF*ting!*^000000";
 		next;
 		mes "[Kinsey]";
@@ -997,7 +1002,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 	mes "[Grandpa Turtle]";
 	mes "There isn't one decent drinking establishment in all of Alberta! But then again, why did I drink so much? Hmm...";
 	next;
-	switch(select("Tell me about Turtle Island:How can I get there?:Stop talking")) {
+	switch(select("Tell me about Turtle Island", "How can I get there?", "Stop talking")) {
 	case 1:
 		mes "[Grandpa Turtle]";
 		mes "Eh...?";
@@ -1015,11 +1020,11 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 		mes "[Grandpa Turtle]";
 		mes "But only someone with a good heart that's eager for adventure should be able to go to that kind of place.";
 		next;
-		switch(select("^3333FF*ting!*^000000:Tell me more, old man!")) {
+		switch(select("^3333FF*ting!*^000000", "Tell me more, old man!")) {
 		case 1:
 			mes "[Grandpa Turtle]";
 			mes "Ha ha ha~!";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "I like the shine in your eye, my boy! I can see a little bit of myself in those eyes. Yes...";
 			else
 				mes "No use hiding the glint in your eyes, my dear! It's adventure you wish for, that much I can tell...";
@@ -1101,14 +1106,14 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 	}
 }
 
--	script	::Sailor_alberta	-1,{
+-	script	::Sailor_alberta	FAKE_NPC,{
 	if (TURTLE || (MISC_QUEST & 65536)) {
 		mes "[Gotanblue]";
 		mes "Heh...";
 		mes "Your eyes...";
 		mes "I can tell you're curious about Turtle Island. I guess you must have been talking to that drunken old man!";
 		next;
-		switch(select("Do you know about Turtle Island?:How can I get there?:Stop talking.")) {
+		switch(select("Do you know about Turtle Island?", "How can I get there?", "Stop talking.")) {
 		case 1:
 			mes "[Gotanblue]";
 			mes "Turtle Island...?";
@@ -1188,7 +1193,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 			mes "[Gotanblue]";
 			mes "If you wish for me to guide you there, I will charge you 10,000 zeny. I'm the only navigator that can guide you there and back safely.";
 			next;
-			if (select("Turtle island -> 10000 zeny:Cancel") == 1) {
+			if (select("Turtle island -> 10000 zeny", "Cancel") == 1) {
 				if (Zeny > 9999) {
 					mes "[Gotanblue]";
 					mes "Alright!!";
@@ -1229,7 +1234,7 @@ tur_dun01,165,29,4	script	Sailor#tur2	4_M_SEAMAN,{
 	mes "to return";
 	mes "to Alberta?";
 	next;
-	if (select("Go to Alberta:Stop talking") == 1) {
+	if (select("Go to Alberta", "Stop talking") == 1) {
 		mes "[Gotanblue]";
 		mes "Heh heh...";
 		mes "I certainly hope you've found what you were looking for. Alright, I guess there's always a time for an adventurer to return home...";
@@ -1243,7 +1248,7 @@ tur_dun01,165,29,4	script	Sailor#tur2	4_M_SEAMAN,{
 	close;
 }
 
--	script	::Turtle_Scholar_alberta	-1,{
+-	script	::Turtle_Scholar_alberta	FAKE_NPC,{
 	mes "[Jornadan Niliria]";
 	mes "Every single place";
 	mes "has its own unique";
@@ -1258,7 +1263,7 @@ tur_dun01,165,29,4	script	Sailor#tur2	4_M_SEAMAN,{
 	mes "time on Turtle Island.";
 	mes "Hah Hah Hah~";
 	next;
-	switch(select("About Turtle island:You're Jornadan Niliria?!:Stop talking")) {
+	switch(select("About Turtle island", "You're Jornadan Niliria?!", "Stop talking")) {
 	case 1:
 		mes "[Jornadan Niliria]";
 		mes "Turtle...";
@@ -1541,18 +1546,18 @@ tur_dun01,160,81,4	script	Skull Stone#tur	HIDDEN_NPC,{
 		TURTLE = 0;
 		switch(rand(1,3)) {
 		case 1:
-			getitem 532,5; //Banana_Juice
+			getitem Banana_Juice,5;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FF5 Banana Juice^000000";
 			close;
 		case 2:
-			getitem 513,5; //Banana
+			getitem Banana,5;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FF5 Banana^000000";
 			close;
 		case 3:
-			getitem 513,5; //Banana
-			getitem 532,5; //Banana_Juice
+			getitem Banana,5;
+			getitem Banana_Juice,5;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FF5 Banana and^000000";
 			mes "^3355FF5 Banana Juice^000000";
@@ -1721,52 +1726,52 @@ tur_dun02,49,158,4	script	Turtle Pillar#tur	HIDDEN_NPC,{
 		TURTLE = 0;
 		switch(rand(1,10)) {
 		case 1:
-			getitem 702,1; //Animal_Blood
+			getitem Animal_Blood,1;
 			mes "^3355FFYou've gained ^000000";
 			mes "^3355FFAnimal Gore.^000000";
 			close;
 		case 2:
-			getitem 716,1; //Red_Gemstone
+			getitem Red_Gemstone,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Red Gemstone.^000000";
 			close;
 		case 3:
-			getitem 734,1; //Red_Frame
+			getitem Red_Frame,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Red Frame^000000";
 			close;
 		case 4:
-			getitem 10019,1; //Red_Muffler
+			getitem Red_Muffler,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFRed Scarf.^000000";
 			close;
 		case 5:
-			getitem 725,1; //Red_Jewel
+			getitem Red_Jewel,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Sardonyx.^000000";
 			close;
 		case 6:
-			getitem 716,1; //Red_Gemstone
+			getitem Red_Gemstone,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Red Gemstone.^000000";
 			close;
 		case 7:
-			getitem 716,1; //Red_Gemstone
+			getitem Red_Gemstone,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Red Gemstone.^000000";
 			close;
 		case 8:
-			getitem 716,1; //Red_Gemstone
+			getitem Red_Gemstone,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Red Gemstone.^000000";
 			close;
 		case 9:
-			getitem 716,1; //Red_Gemstone
+			getitem Red_Gemstone,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Red Gemstone.^000000";
 			close;
 		case 10:
-			getitem 725,1; //Red_Jewel
+			getitem Red_Jewel,1;
 			mes "^3355FFYou've gained^000000";
 			mes "^3355FFa Sardonyx.^000000";
 			close;
@@ -1950,32 +1955,32 @@ tur_dun04,113,178,4	script	Turtle Statue#tur	HIDDEN_NPC,{
 		if (rand(1,20) == 7) {
 			switch(rand(1,4)) {
 			case 1:
-				getitem 644,1; //Gift_Box
+				getitem Gift_Box,1;
 				mes "^3355FFInside the drawer,";
 				mes "is a Gift Box. This";
 				mes "Gift Box is now yours.^000000";
 				close;
 			case 2:
-				getitem 616,1; //Old_Card_Album
+				getitem Old_Card_Album,1;
 				mes "^3355FFInside the drawer,";
 				mes "is an Old Card Album.";
 				mes "It is now yours to keep.^000000";
 				close;
 			case 3:
-				getitem 617,1; //Old_Violet_Box
+				getitem Old_Violet_Box,1;
 				mes "^3355FFInside the drawer,";
 				mes "is an Old Purple Box.";
 				mes "It is now yours to keep.^000000";
 				close;
 			case 4:
-				getitem 617,1; //Old_Violet_Box
+				getitem Old_Violet_Box,1;
 				mes "^3355FFInside the drawer,";
 				mes "is an Old Purple Box.";
 				mes "It is now yours to keep.^000000";
 				close;
 			}
 		}
-		getitem 604,1; //Branch_Of_Dead_Tree
+		getitem Branch_Of_Dead_Tree,1;
 		mes "^3355FFInside the drawer,";
 		mes "is a Dead Branch.";
 		mes "It is now yours to keep.^000000";
@@ -1999,7 +2004,7 @@ tur_dun03,105,76,4	script	Knight Leader#tur	4_M_MINISTER,5,5,{
 	mes "Finally, another person.";
 	mes "Tell me who you are!";
 	next;
-	switch(select("Who are you to ask?:"+ strcharinfo(0) +"!:What are you doing here?:First, tell me who you are.")) {
+	switch(select("Who are you to ask?", ""+ strcharinfo(PC_NAME) +"!", "What are you doing here?", "First, tell me who you are.")) {
 	case 1:
 		mes "[Takuyaka]";
 		mes "How dare you speak to me in that tone! Don't you know who I am?! I'm Takuyaka, leader of the Security Knights of Alberta! Kobolds and Porings quiver in fear when they hear my name...";
@@ -2009,7 +2014,7 @@ tur_dun03,105,76,4	script	Knight Leader#tur	4_M_MINISTER,5,5,{
 		close;
 	case 2:
 		mes "[Takuyaka]";
-		mes "" + strcharinfo(0) + "?";
+		mes "" + strcharinfo(PC_NAME) + "?";
 		mes "Well, your name sounds better than mine. And you have more hair on your head as well. Hmmm...";
 		next;
 		mes "[Takuyaka]";
@@ -2102,7 +2107,7 @@ tur_dun01,190,115,4	script	Knight#tur	8W_SOLDIER,{
 	mes "Where are they?";
 	mes "Oh hey! You're an adventurer, aren't you? Do you know where my comrades are?";
 	next;
-	switch(select("Who are you?:Sorry, I don't.:Why did you come here?:How did you get here?")) {
+	switch(select("Who are you?", "Sorry, I don't.", "Why did you come here?", "How did you get here?")) {
 	case 1:
 		mes "[Passats]";
 		mes "My name is Passats, a proud Security Knight of Alberta. We've obtained some information that some people came here to seek treasure.";
@@ -2163,7 +2168,7 @@ tur_dun03,189,126,4	script	Knight#tur2	8W_SOLDIER,{
 	mes "[Jayprocat]";
 	mes "Oh? Are you a civilian? Nice to meet you. I'm a mighty Security Knight of Alberta, Jayprocat.";
 	next;
-	if (select("What is that, exactly?:I'm not impressed.") == 1) {
+	if (select("What is that, exactly?", "I'm not impressed.") == 1) {
 		mes "[Jayprocat]";
 		mes "Well...";
 		mes "We're supposed to protect the people of Alberta. That's our job as proud Security Knights.";
@@ -2187,7 +2192,7 @@ tur_dun03,189,126,4	script	Knight#tur2	8W_SOLDIER,{
 	mes "*Sniff*";
 	mes "Why did we have to be attacked by so many monsters on my first mission? I'm... I'm just a new recruit...";
 	next;
-	if (select("Why did you run away?:I don't care.") == 1) {
+	if (select("Why did you run away?", "I don't care.") == 1) {
 		mes "[Jayprocat]";
 		mes "No, I didn't just run away! The monsters were too stong and there were so many of them! Plus, it's our damn leader's fault.";
 		next;
@@ -2211,7 +2216,7 @@ tur_dun03,104,171,4	script	Knight#tur3	8W_SOLDIER,{
 	mes "[Squall]";
 	mes "Am I the only one left? Where are all my comrades?! I... I'm about to go crazy!";
 	next;
-	if(select("Maybe they ran away?:What happened?") == 1) {
+	if(select("Maybe they ran away?", "What happened?") == 1) {
 		mes "[Squall]";
 		mes "No, we would never run away from the face of danger.";
 		next;
@@ -2275,7 +2280,7 @@ tur_dun03,67,130,4	script	Knight#tur4	8W_SOLDIER,{
 			mes "[Nysurea]";
 			mes "Even though you're pretty strong, sooner or later you might need a reprieve. I can send you back to Alberta right now if you want.";
 			next;
-			if (select("Yes, Help me.:No, thanks.") == 1) {
+			if (select("Yes, Help me.", "No, thanks.") == 1) {
 				mes "[Nysurea]";
 				mes "Okay then, let me activate this teleport thingee donated to us by Kafra Corporation...";
 				close2;
@@ -2310,8 +2315,7 @@ tur_dun03,67,130,4	script	Knight#tur4	8W_SOLDIER,{
 	close;
 }
 
-// Alberta Boy
-//============================================================
+//== Alberta Boy ===========================================
 alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 	if (ep13_2_hiki == 13) {
 		mes "[Iromo]";
@@ -2338,7 +2342,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		next;
 		mes "-Silent pause-";
 		next;
-		mes "-"+strcharinfo(0)+" starts to speak-";
+		mes "-"+strcharinfo(PC_NAME)+" starts to speak-";
 		mes "-And tells him of the journeys-";
 		mes "-Adventures, joy, sorrow, and loss-";
 		mes "-One by one to the boy-";
@@ -2419,7 +2423,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "...Thank you for telling me...";
 		mes "They are great friends...";
 		next;
-		if (Sex == 0) {
+		if (Sex == SEX_FEMALE) {
 			mes "[Iromo]";
 			mes "...And? ...What do you...";
 			mes "Want to say to me this time...";
@@ -2589,7 +2593,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 			mes "It is frustrating. But...";
 			mes "Why do you care about me so much?";
 			next;
-			if (Sex == 0) {
+			if (Sex == SEX_FEMALE) {
 				mes "[Iromo]";
 				mes "Really, its not that bad...";
 				mes "I wish I could have a sister like you.";
@@ -2646,7 +2650,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "I should stay at home.";
 		close;
 	}
-	if ((ep13_2_hiki == 6) && (countitem(528) > 0) && (countitem(501) > 0)) {
+	if ((ep13_2_hiki == 6) && (countitem(Monsters_Feed) > 0) && (countitem(Red_Potion) > 0)) {
 		mes "[Iromo]";
 		mes "...Huh? This smell...";
 		mes "This is the one I like the most.";
@@ -2683,8 +2687,8 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		mes "I like cats so I approached him.";
 		mes "Then suddenly he scratched and bit me.";
 		next;
-		delitem 528,1; //Monster's_Feed
-		delitem 501,1; //Red_Potion
+		delitem Monsters_Feed,1;
+		delitem Red_Potion,1;
 		ep13_2_hiki = 7;
 		changequest 10083,10084;
 		getexp RENEWAL_EXP?3750:37500,0;
@@ -2732,7 +2736,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 }
 
 alberta_in,120,93,3	script	Iromo's Mother#ep3_2	1_M_INNKEEPER,{
-	if (ep13_2_hiki == 8) {
+	if (ep13_2_hiki >= 8) {
 		mes "[Mother]";
 		mes "Thank you for helping my son.";
 		mes "But I think we can't do anything";
@@ -2895,7 +2899,7 @@ alberta,45,106,5	script	Little Boy#ep3_2	4_M_KID1,{
 		mes "I love Bananas~~!";
 		close;
 	}
-	if ((ep13_2_hiki == 4) && (countitem(513) > 0)) {
+	if ((ep13_2_hiki == 4) && (countitem(Banana) > 0)) {
 		mes "[Little Boy]";
 		mes "Huh? What a delicious smell!";
 		mes "You brought me Bananas!";
@@ -2910,7 +2914,7 @@ alberta,45,106,5	script	Little Boy#ep3_2	4_M_KID1,{
 		mes "[Little Boy]";
 		mes "Yum Yum...";
 		next;
-		delitem 513,1; //Banana
+		delitem Banana,1;
 		ep13_2_hiki = 5;
 		changequest 10081,10082;
 		mes "[Little Boy]";

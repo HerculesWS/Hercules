@@ -28,7 +28,7 @@ OnEnterBG:
 // Battleground Engine
 // *********************************************************************
 
--	script	Tierra_BG1	-1,{
+-	script	Tierra_BG1	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -69,7 +69,7 @@ OnReadyCheck:
 	bg_monster $@TierraBG1_id1,"bat_a01",176,345,"Food Depot",1909,"Tierra_BG1::OnGuillaumeBreak";
 	bg_monster $@TierraBG1_id2,"bat_a01",167,50,"Food Storage",1910,"Tierra_BG1::OnCroixBreak";
 	bg_monster 0,"bat_a01",273,204,"Neutrality Flag",1911,"Tierra_BG1::OnNeutralBreak";
-	
+
 	set .Neutral_Base, 0;
 	set $@TierraBG1_Victory, 0;
 
@@ -94,18 +94,18 @@ OnReadyCheck:
 	mapannounce "bat_a01","Guillaume Vintenar Axl Rose : Let's attack to burn down Croix's food storage",1,0x0000FF;
 	sleep 2000;
 	mapannounce "bat_a01","Croix Vintenar Swandery : Master of Valhalla! Let us be gifted with unfailing faith and courage",1,0xFF0000;
-	
+
 	initnpctimer;
 	end;
 
 OnNeutralBreak:
-	if( getcharid(4) == $@TierraBG1_id1 )
+	if( getcharid(CHAR_ID_BG) == $@TierraBG1_id1 )
 	{
 		mapannounce "bat_a01","Guillaume obtained a neurality banner, so they have an advantage.",1,0x0000FF;
 		bg_team_setxy $@TierraBG1_id2,42,16;
 		areawarp "bat_a01",52,208,61,217,"bat_a01",42,16;
 	}
-	else if( getcharid(4) == $@TierraBG1_id2 )
+	else if( getcharid(CHAR_ID_BG) == $@TierraBG1_id2 )
 	{
 		mapannounce "bat_a01","Croix obtained a neutrality banner, so they have an advantage.",1,0xFF0000;
 		bg_team_setxy $@TierraBG1_id1,50,374;
@@ -113,14 +113,14 @@ OnNeutralBreak:
 	}
 	else end;
 
-	set .Neutral_Base, getcharid(4);
+	set .Neutral_Base, getcharid(CHAR_ID_BG);
 	bg_team_setxy .Neutral_Base,56,212;
 
 	if( .Guardian_1 == 0 )
 		set .Guardian_1, bg_monster(.Neutral_Base,"bat_a01",280,233,"Guardian",1949,"Tierra_BG1::OnGuardian1");
 	else
 		bg_monster_set_team .Guardian_1, .Neutral_Base;
-	
+
 	if( .Guardian_2 == 0 )
 		set .Guardian_2, bg_monster(.Neutral_Base,"bat_a01",287,203,"Guardian",1950,"Tierra_BG1::OnGuardian2");
 	else
@@ -262,7 +262,7 @@ bat_a01,119,336,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat18	1_FLAG_LION
 // Barricades
 // *********************************************************************
 
--	script	Guillaume_TV1B	-1,{
+-	script	Guillaume_TV1B	FAKE_NPC,{
 	end;
 
 OnBuild:
@@ -288,13 +288,13 @@ OnWall:
 	end;
 }
 
--	script	Croix_TV1B	-1,{
+-	script	Croix_TV1B	FAKE_NPC,{
 	end;
 
 OnBuild:
 	for( set .@i, 0; .@i < 16; set .@i, .@i + 1 )
 		bg_monster 0,"bat_a01",186+.@i,266,"Barricade",1906,"Croix_TV1B::OnWall";
-	
+
 	setwall "bat_a01",186,266,16,6,1,"bat_a01_c1";
 	set .MyMobCount,16;
 	end;
@@ -326,12 +326,12 @@ bat_a01,45,19,3	script	Croix Vintenar#tv1	4_M_CRU_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Croax!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 		} else {
 			set .@reward, 1;
 			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
+			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
 			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
 			close2;
@@ -355,7 +355,7 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Guillaume!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 		} else {
 			set .@reward, 1;
@@ -381,7 +381,7 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 bat_a01,60,216,3	script	Ghost#tv13	4_GHOSTRING,{
 	mes "[Ghost in valley]";
 	mes "Boo...Boo...";
-	specialeffect2 312;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
@@ -389,7 +389,7 @@ bat_a01,53,377,3	script	Therapist in battle#tv12	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect2 312;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
@@ -397,7 +397,7 @@ bat_a01,45,18,3	script	Therapist in battle#tv11	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect2 312;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
@@ -416,7 +416,7 @@ OnBGStop:
 	end;
 
 OnTimer19000:
-	misceffect 83;
+	specialeffect(EF_SANCTUARY);
 	end;
 
 OnTimer20000:
@@ -438,7 +438,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	misceffect 83;
+	specialeffect(EF_SANCTUARY);
 	end;
 
 OnTimer25000:
@@ -460,7 +460,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	misceffect 83;
+	specialeffect(EF_SANCTUARY);
 	end;
 
 OnTimer25000:

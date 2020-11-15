@@ -1,16 +1,39 @@
-//===== Hercules Script ======================================
-//= Renewal Swordman Job Quest
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Streusel
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Renewal Swordsman Job Quest
+//================= Description ===========================================
 //= Job Change to Swordman Class
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Kisuka]
-//= 1.1 Added Baby Job compatibility [Streusel]
-//= 1.2 Rewrote bits [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
+
 izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Lord_Knight || ADVJOB == Job_Paladin)) {
@@ -61,7 +84,7 @@ izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 	mes "This is the Swordman Guild.";
 	mes "Why are you here?";
 	next;
-	switch(select("Tell me about being a Swordman.:I want to be a Swordman.:Nothing.")) {
+	switch(select("Tell me about being a Swordman.", "I want to be a Swordman.", "Nothing.")) {
 	case 1:
 		mes "[Swordman Guildsman]";
 		mes "So you wish to know more about the mighty Swordman? Okay!";
@@ -105,7 +128,7 @@ izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 			mes "Hmm, both your Job Level and Basic Skill Level check out.";
 			mes "Good. Do you want to be a Swordman right away?";
 			next;
-			if(select("Yes, I do.:I'll consider it again.") == 2) {
+			if(select("Yes, I do.", "I'll consider it again.") == 2) {
 				mes "[Swordman Guildsman]";
 				mes "Yeah. Prudent decision is needed for choosing a job.";
 				mes "But I feel sorry... that you consider it again after overcoming all the hardships....";
@@ -118,7 +141,7 @@ izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 			mes "[Swordman Guildsman]";
 			mes "Congratulations again for being a Swordman and I hope that you participate in many activities for the revival of our guild.";
 			callfunc "Job_Change",Job_Swordman;
-			getitem 13415,1; // N_Falchion
+			getitem N_Falchion,1; // N_Falchion
 			close;
 		}
 	case 3:

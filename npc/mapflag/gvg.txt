@@ -1,18 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Guild versus Guild mode.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
+//================= Current Version =======================================
 //= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Players can attack other guilds, and will have their guild
 //= icons shown. WoE damage reductions will also take place.
 //= gvg: Turns on GvG mode
 //= gvg_castle: Describes castle maps for WoE.
-//===== Additional Comments: =================================
-//= 1.1 - Added Novice Guild Castles.
-//= 1.2 - Updated with new meanings of gvg and gvg_castle.
-//============================================================
+//=========================================================================
 
 // GvG Arenas =============
 guild_vs1	mapflag	gvg
@@ -98,9 +120,5 @@ nguild_prt	mapflag	gvg_castle
 //nguild_prt	mapflag	monster_noteleport
 
 // Guild Dungeons =========
-gld_dun01	mapflag	gvg_dungeon
-gld_dun02	mapflag	gvg_dungeon
-gld_dun03	mapflag	gvg_dungeon
-gld_dun04	mapflag	gvg_dungeon
 arug_dun01	mapflag	gvg_dungeon
 schg_dun01	mapflag	gvg_dungeon

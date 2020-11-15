@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2020 Hercules Dev Team
+   Copyright (C) 2005-2014 Mark A Lindner
 
    This file is part of libconfig.
 
@@ -54,4 +55,3 @@ void strbuf_append(strbuf_t *buf, const char *text)
 }
 
 /* ------------------------------------------------------------------------- */
-/* eof */

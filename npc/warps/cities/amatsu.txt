@@ -1,17 +1,39 @@
-//===== Hercules Script =======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) erKURITA
+//= Copyright (C) Nana
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Amatsu Warps Script
-//===== By: ==================================================
-//= Athena (1.0)
-//= Nana (1.1)
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Warp Points for Amatsu
-//===== Additional Comments: =================================
-//= 1.7 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Renamed warps for ease-of-reading.
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
 amatsu,177,138,0	warp	ama_house1-1	1,1,ama_in01,28,176
 ama_in01,31,176,0	warp	ama_house1-2	1,1,amatsu,180,138
@@ -40,12 +62,3 @@ ama_in02,215,149,0	warp	ama_castle4-1	1,1,ama_in02,59,156
 ama_in02,59,160,0	warp	ama_castle4-2	1,1,ama_in02,215,152
 ama_in02,126,164,0	warp	ama_castle5-1	1,1,ama_in02,219,161
 ama_in02,222,161,0	warp	ama_castle5-2	1,1,ama_in02,129,164
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.3 Fixed a warp-back [erKURITA]
-//= 1.4 Added Ninja's Warps. Thanks to RockmanEXE for the info. [erKURITA]
-//= 1.5 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.6 Moved Job Quest related warps to proper file. [L0ne_W0lf]
-//============================================================

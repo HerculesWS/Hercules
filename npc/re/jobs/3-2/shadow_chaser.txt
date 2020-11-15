@@ -1,18 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Oshinoke
+//= Copyright (C) ultragunner
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Shadow Chaser Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Rogue / Stalker -> Shadow Chaser.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [ultragunner, Oshinoke]
-//= 1.1 Standardized. [Euphy]
-//= 1.2 Updated dialogue. [Joseph]
-//= 1.3 Updated to official script. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 morocc,156,70,3	script	Girl#sc00	4_F_04,3,3,{
 	mes "[Girl]";
@@ -96,7 +118,7 @@ in_rogue,376,100,5	script	Guild Member#sc01	4_M_ROGUE,{
 				mes "[Scary man]";
 				mes "Hey there?";
 				next;
-				switch(select("Me?:Sorry, I am busy...")) {
+				switch(select("Me?", "Sorry, I am busy...")) {
 				case 1:
 					mes "[Scary man]";
 					mes "Yes! You there!";
@@ -225,7 +247,7 @@ in_rogue,379,101,3	script	Scary Man#sc03	1_M_SIGNROGUE,{
 		mes "You want one more explanation?";
 		mes "Or do you just want the code?";
 		next;
-		switch(select("More explanation.:Get the code.")) {
+		switch(select("More explanation.", "Get the code.")) {
 		case 1:
 			callsub L_Code,1;
 			mes "[Urupa]";
@@ -299,13 +321,13 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "Damn, there're so many strangers around.";
 		mes "Hey...";
 		next;
-		switch(select("Show the deciphered code!:...")) {
+		switch(select("Show the deciphered code!", "...")) {
 		case 1:
 			mes "[Manager]";
 			mes "Wow, you deciphered it?";
 			mes "So, what's the right answer?";
 			next;
-			input .@inputstr$;
+			input(.@inputstr$);
 			if (.@inputstr$ == "shadows atelier in prontera" || .@inputstr$ == "SHADOWS ATELIER IN PRONTERA") {
 				mes "[Manager]";
 				mes "Good.";
@@ -368,7 +390,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "So I will give you the code.";
 		mes "Please find the treasure!";
 		next;
-		switch(select("No way!:I'll give it a try!")) {
+		switch(select("No way!", "I'll give it a try!")) {
 		case 1:
 			mes "[Graham]";
 			mes "What the hell?";
@@ -387,7 +409,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "[Graham]";
 		mes "Are you interested in it now?";
 		next;
-		switch(select("Not at all.:Hmm, I'll take it.")) {
+		switch(select("Not at all.", "Hmm, I'll take it.")) {
 		case 1:
 			mes "[Graham]";
 			mes "Damn it.";
@@ -404,7 +426,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "[Graham]";
 		mes "Did you find something?";
 		next;
-		switch(select("I need an explanation.:What's the code again?")) {
+		switch(select("I need an explanation.", "What's the code again?")) {
 		case 1:
 			mes "[Graham]";
 			mes "You are so powerful!";
@@ -623,7 +645,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 			mes "Bleh...";
 			close;
 		}
-		switch(select("Give me your password!:I was sent by Graham.")) {
+		switch(select("Give me your password!", "I was sent by Graham.")) {
 		case 1:
 			mes "[Manager]";
 			mes "You need my password?";
@@ -643,7 +665,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 			mes "Graham?";
 			mes "Why?";
 			next;
-			if (countitem(6266) == 0) {
+			if (countitem(Cheat_Key) == 0) {
 				mes "You don't seem to have brought it here.";
 				next;
 				mes "[Manager]";
@@ -697,7 +719,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 			mes "What do you think?";
 			mes "RENNND / LNNWWND means one thing.";
 			next;
-			switch(select("I think I got it.:I have no clue.")) {
+			switch(select("I think I got it.", "I have no clue.")) {
 			case 1:
 				callsub L_Code,7166;
 				close;
@@ -715,7 +737,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 		mes "[Paul]";
 		mes "So did you get what it means?";
 		next;
-		switch(select("Yes!:No, I don't think so.")) {
+		switch(select("Yes!", "No, I don't think so.")) {
 		case 1:
 			callsub L_Code,7167;
 			close;
@@ -772,7 +794,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 		mes "I am dying to wait for you.";
 		mes "So what did you find out?";
 		next;
-		select("I found the key.:Hmm...");
+		select("I found the key.", "Hmm...");
 		mes "- You hand over the 'Illusion Key' that you found in the ice cave. -";
 		next;
 		mes "[Paul]";
@@ -1004,7 +1026,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 		mes "Did you find something?";
 		next;
 		select("Show the key of pleasure.");
-		if (countitem(6268)) {
+		if (countitem(Mirth_Key)) {
 			mes "[Haled]";
 			mes "Ha..........akkk.";
 			mes "Another key?";
@@ -1050,7 +1072,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 			changequest 7176,7177;
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm sorry.";
 		mes "I found one more key but I didn't bring it.";
 		mes "I'll bring it soon.";
@@ -1093,11 +1115,11 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 	mes "An assistant sells some paint and tool.";
 	close;
 L_Code:
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Paul said...";
 	next;
-	input .@inputstr$;
-	mes "["+strcharinfo(0)+"]";
+	input(.@inputstr$);
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Paul said...";
 	mes "'"+.@inputstr$+"' .";
 	next;
@@ -1183,7 +1205,7 @@ s_atelier,25,75,3	script	Manager#sc10_lgt	4_M_HUMAN_02,{
 		mes "Then let's make a point!";
 		mes "Do you know thanatos tower?";
 		next;
-		switch(select("Sure.:The tower of death?")) {
+		switch(select("Sure.", "The tower of death?")) {
 		case 1:
 			mes "[Vicente]";
 			mes "You know that.";
@@ -1246,7 +1268,7 @@ s_atelier,25,75,3	script	Manager#sc10_lgt	4_M_HUMAN_02,{
 		mes "You are back?";
 		mes "Find anything?";
 		next;
-		switch(select("Throw the brush.:Grab him by the collar.:Drop the brush.")) {
+		switch(select("Throw the brush.", "Grab him by the collar.", "Drop the brush.")) {
 		case 1:
 			mes "[Vicente]";
 			mes "Hey, what are you doing?";
@@ -1354,7 +1376,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 		mes "HuhuHuhu...";
 		close;
 	}
-	if (checkweight(1201,4) == 0) {
+	if (checkweight(Knife,4) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -1408,12 +1430,12 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 			mes "It's you? You are the one who found the brush?";
 			next;
 			select("Show the brush to him.");
-			if (countitem(6269)) {
+			if (countitem(Master_Brush)) {
 				mes "[Dumk]";
 				mes "That's it.";
 				mes "Did you find it by yourself?";
 				next;
-				switch(select("Yes.:With my friends")) {
+				switch(select("Yes.", "With my friends")) {
 				case 1:
 					mes "[Dumk]";
 					mes "Hmm...";
@@ -1496,7 +1518,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 				mes "I need it again.";
 				mes "I'm so thirsty.";
 				mes "Wait a minute.";
-				delitem 6269,1; //Master_Brush
+				delitem Master_Brush,1;
 				job_sha = 30;
 				close;
 			}
@@ -1514,7 +1536,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 			mes "[Dumk]";
 			mes "So, do you want me to keep talking about Shadow Chasers?";
 			next;
-			switch(select("What is a Shadow Chaser?:Change me to Shadow Chaser.:I'll come back later.")) {
+			switch(select("What is a Shadow Chaser?", "Change me to Shadow Chaser.", "I'll come back later.")) {
 			case 1:
 				mes "[Dumk]";
 				mes "Most spells are exclusively for Wizards and their kind.";
@@ -1592,11 +1614,11 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 				mes "Congratulations.";
 				mes "Welcome to your new life.";
 				jobchange roclass(eaclass()|EAJL_THIRD);
-				getitem 6121,1; //Makeover_Brush
-				getitem 6122,1; //Paint_Brush
+				getitem Makeover_Brush,1;
+				getitem Paint_Brush,1;
 				job_sha = 32;
-				getitem 2795,1; //Green_Apple_Ring
-				getitem 5750,1; //Shadow_Handicraft
+				getitem Green_Apple_Ring,1;
+				getitem Shadow_Handicraft,1;
 				next;
 				mes "[Dumk]";
 				mes "It's a fashionable uniform.";
@@ -1666,23 +1688,22 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 	close;
 }
 
-// Flames
-//============================================================
+//== Flames ================================================
 tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 	if (job_sha == 5) {
 		mes "A blue flame is roaring.";
 		mes "The deciphered code means...";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		.@dap01$ = "blue fire in turtle island third floor";
 		.@dap02$ = "BLUE FIRE IN TURTLE ISLAND THIRD FLOOR";
 		if (.@inputstr$ != .@dap01$ && .@inputstr$ != .@dap02$) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What was it?";
 			mes "I guess I have to make sure I don't use any capital letters.";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^4d4dff"+.@inputstr$+"^000000";
 		mes "It's clearly pointing to this.";
 		next;
@@ -1825,16 +1846,16 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 		close;
 	}
 	else if (job_sha == 21) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The poem that Haled told me was pointing to Niflheim.";
 		mes "There is a flame that looks like the one from turtle island and ice dungeon.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The end of living tree's roots.";
 		mes "Tears of all living people.";
 		mes "Sign of all dead people.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "They are us but also not us.";
 		next;
 		mes "[Someone's voice]";
@@ -1918,10 +1939,9 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 	close;
 }
 
-// Boxes
-//============================================================
+//== Boxes =================================================
 job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -1929,7 +1949,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 		mes "It's a small box made of a hard turtle's shell.";
 		mes "The middle of it...";
 		next;
-		select("Touch the middle.:Push the middle.");
+		select("Touch the middle.", "Push the middle.");
 		mes "When you touch it, something comes out!";
 		next;
 		setarray .@Codes1$[1],"EFDFJWF","FGEGKXG","GHFHLYH","HIGIMZI","IJHJNAJ","JKIKOBK","KLJLPCL","LMKMQDM";
@@ -1954,7 +1974,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 		mes "And "+.@Codes1$[.@i]+".";
 		next;
 		select("What does it mean?");
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Is it also code.";
 		mes "It must be!";
 		mes "Ah, something is showing up again...?";
@@ -1966,7 +1986,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 		mes " ";
 		mes "And also letters. They are blinking as if waiting for a code to be input.";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == .@Codes2$[.@i] || .@inputstr$ == strtolower(.@Codes2$[.@i])) {
 			mes "When you put the correct answer in there,";
 			mes "the box is opened.";
@@ -1974,7 +1994,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 			next;
 			mes "- You get the Key of Deception. -";
 			job_sha = 8;
-			getitem 6266,1; //Cheat_Key
+			getitem Cheat_Key,1;
 			setquest 7165;
 			close;
 		}
@@ -1985,13 +2005,13 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 	}
 	mes "You don't have to stay in here.";
 	next;
-	if(select("Go outside.:Stay here.") == 1)
+	if(select("Go outside.", "Stay here.") == 1)
 		warp "tur_dun03",40,201;
 	close;
 }
 
 job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -2010,36 +2030,36 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 		mes "When you touched that number, then it moved.";
 		mes "You find the empty space.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I guess I have to put the number in the empty space...";
 		mes "I have two empty squares to put two numbers.";
 		mes "What will it be good for?";
 		next;
 		select("I think it's related with the word given by Paul.");
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I got "+.@Words$[.@i]+".";
 		mes "Now I have to convert it into a number...";
 		next;
-		switch(select("Input the answer.:I can't get it.")) {
+		switch(select("Input the answer.", "I can't get it.")) {
 		case 1:
-			input .@input;
+			input(.@input);
 			if (.@input == .@numbers[.@i]) {
 				mes "You put 2 and "+(.@numbers[.@i]-20)+".";
 				mes "The box opens and you get one key.";
 				next;
 				mes "You got the Key of Illusion.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "It's not a treasure.";
 				mes "The Key of Illusion? Is it related with the Shadow of Illusion?";
 				mes "I got the Key of Deception after I handled Deception...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Anyway, Paul will be disappointed.";
 				mes "Key again...";
 				mes "How can I escape from here...?";
 				job_sha = 17;
-				getitem 6267,1; //Virtual_Key
+				getitem Virtual_Key,1;
 				erasequest 7171;
 				changequest 7168+.@i,7172;
 				next;
@@ -2051,12 +2071,12 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 			mes "When you enter the number, it goes back to the first.";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hmm.";
 			mes "I can't get it...";
 			mes "Is it the same code as the Prontera workplace...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "According to that method...";
 			mes "A means 11 and B means 12.";
 			close;
@@ -2070,7 +2090,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 }
 
 job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -2086,10 +2106,10 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 			mes " 19 8 1 11 5";
 			mes "-----------------";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I think it's another code.";
 		} else {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Let me think again...";
 			mes "20 21 18 14";
 			mes "1 14 4 ";
@@ -2097,29 +2117,29 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 			mes "...";
 		}
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It's the same as before.";
 		mes "There's no code, so 1 should be A.";
 		mes "And the answer is...";
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == "turn and shake" || .@inputstr$ == "TURN AND SHAKE") {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Turn... Turn... and";
 			mes "Shake? Shake?";
 			mes "For what?";
 			next;
 			while(1) {
-				switch(select("Turn the roof.:Turn the house.:Turn the handle.")) {
+				switch(select("Turn the roof.", "Turn the house.", "Turn the handle.")) {
 				case 1:
 					mes "You turn the roof.";
 					next;
-					switch(select("Shake the roof.:Shake the house.")) {
+					switch(select("Shake the roof.", "Shake the house.")) {
 					case 1:
 						mes "Even though you shake the roof but";
 						mes "nothing happens.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "That's not it.";
 						mes "Hmm...";
 						next;
@@ -2128,7 +2148,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "You tried to shake the house but";
 						mes "it doesn't do anything.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "It's wrong.";
 						mes "Put it back";
 						mes "and try it again.";
@@ -2139,13 +2159,13 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 				case 2:
 					mes "You grab the whole house and turn it.";
 					next;
-					switch(select("Shake up and down.:Shake back and forth.:Turn 'round and 'round and shake.:Roll it upside down.")) {
+					switch(select("Shake up and down.", "Shake back and forth.", "Turn 'round and 'round and shake.", "Roll it upside down.")) {
 					case 1:
 					case 2:
 						mes "Nothing happens.";
 						mes "You think there is something inside, but it won't come out.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "That's not it.";
 						mes "Hmm...";
 						next;
@@ -2155,7 +2175,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "You can hear a noise,";
 						mes "but nothing's coming out.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "That's not it.";
 						mes "Hmm...";
 						next;
@@ -2169,13 +2189,13 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						next;
 						mes "- You got the Key of Pleasure. -";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "What? A key again!";
 						mes "Haled will be disappointed.";
 						mes "I better go back.";
 						job_sha = 25;
 						setquest 7176;
-						getitem 6268,1; //Mirth_Key
+						getitem Mirth_Key,1;
 						close;
 					}
 					break;
@@ -2183,14 +2203,14 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 					mes "You tried to turn the small handle";
 					mes "but it doesn't work.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "What should I do now?";
 					next;
 					break;
 				}
 			}
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "..."+.@inputstr$+"...?";
 		if (job_sha == 23) {
 			mes "What does that mean?";
@@ -2207,7 +2227,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 }
 
 job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -2222,8 +2242,8 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 		mes "deception, illusion and pleasure.";
 		next;
 		select("Place the key in the holes.");
-		if (countitem(6266) && countitem(6267) && countitem(6268)) {
-			mes "["+strcharinfo(0)+"]";
+		if (countitem(Cheat_Key) && countitem(Virtual_Key) && countitem(Mirth_Key)) {
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "At first, Deception...";
 			mes "then Illusion...";
 			mes "and Pleasure...";
@@ -2233,30 +2253,30 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 			mes "something comes out.";
 			next;
 			mes "- You got a brush with a fabulous pattern on it. -";
-			delitem 6266,1; //Cheat_Key
-			delitem 6267,1; //Virtual_Key
-			delitem 6268,1; //Mirth_Key
+			delitem Cheat_Key,1;
+			delitem Virtual_Key,1;
+			delitem Mirth_Key,1;
 			job_sha = 28;
-			getitem 6269,1; //Master_Brush
+			getitem Master_Brush,1;
 			changequest 7178,7179;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What???";
 			mes "A brush!!!!";
 			mes "This isn't treasure!!!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ahahhah!!!!";
 			mes "*sniff*";
 			mes "It's not treasure!";
 			next;
 			select("Now I'm pissed off.");
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "*Sigh*";
 			mes "Guess I should bring this to ^4d4dffVicente^000000!";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I didn't bring all of the keys.";
 		mes "How could I be so stupid?";
 		close;
@@ -2265,8 +2285,7 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 	close;
 }
 
-// Brush Shops
-//============================================================
+//== Brush Shops ===========================================
 s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 	mes "[Max]";
 	mes "Welcome~";
@@ -2274,10 +2293,10 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 		mes "You are a member of the Rogue guild!";
 		mes "What can I help you with?";
 		next;
-		.@i = select("I need a make-up brush.:I need a paint brush.:Nothing.");
+		.@i = select("I need a make-up brush.", "I need a paint brush.", "Nothing.");
 		mes "[Max]";
-		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
-		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
+		if (.@i == 1) setarray .@i[1],Makeover_Brush,1,10,100000;
+		else if (.@i == 2) setarray .@i[1],Paint_Brush,2,30,200000;
 		else {
 			mes "If you need more";
 			mes "just visit me!";
@@ -2292,7 +2311,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 			mes "Visit later and use what you have!";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "Oh you brought all the things required.";
 			mes "Hold on a bit.";
 			next;
@@ -2302,8 +2321,8 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 			mes "[Max]";
 			mes "Take it.";
 			mes "Good luck!";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
@@ -2316,7 +2335,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 	}
 	mes "We sell all art related things here~";
 	next;
-	switch(select("Paint!?:Where's the manager?")) {
+	switch(select("Paint!?", "Where's the manager?")) {
 	case 1:
 		mes "[Max]";
 		mes "You are asking for paint?";
@@ -2339,7 +2358,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 		mes "You are in a guild.";
 		mes "What can I help you with?";
 		next;
-		.@i = select("Make a new make-up brush.:Make a new paint brush.:Nothing.");
+		.@i = select("Make a new make-up brush.", "Make a new paint brush.", "Nothing.");
 		mes "[Titika]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2352,11 +2371,11 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 			mes "I think it's enough...";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "You brought all the materials.";
 			mes "I'll exchange it with the goods that I made.";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
@@ -2369,7 +2388,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 	}
 	mes "This is the Shadow Chaser workplace~";
 	next;
-	switch(select("Where is the paint?:Where is the manager?")) {
+	switch(select("Where is the paint?", "Where is the manager?")) {
 	case 1:
 		mes "[Titika]";
 		mes "You mean paint?";
@@ -2389,7 +2408,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
 		mes "What are you looking for?";
 		next;
-		.@i = select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
+		.@i = select("Make a new blush for make-up.", "Make a new blush for painting.", "Nothing.");
 		mes "[RimiGX]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2402,11 +2421,11 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 			mes "Visit here when you lost stuff.";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "You brought stuff you need.";
 			mes "It will be fast when I exchange the stuff made?";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
@@ -2418,7 +2437,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 	}
 	mes "It's the shadow workplace~";
 	next;
-	switch(select("Where is the paint?:Where is the manager?")) {
+	switch(select("Where is the paint?", "Where is the manager?")) {
 	case 1:
 		mes "[RimiGX]";
 		mes "Paint?";
@@ -2438,7 +2457,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
 		mes "What are you looking for?";
 		next;
-		.@i = select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
+		.@i = select("Make a new blush for make-up.", "Make a new blush for painting.", "Nothing.");
 		mes "[Vito]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2452,11 +2471,11 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 			mes "We can't offer extra blushes.";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "You brought all what you need.";
 			mes "I'm going to exchange the blush I made before.";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
@@ -2468,7 +2487,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	}
 	mes "It's the shadow workplace.";
 	next;
-	switch(select("Where is the paint?:Where is the manager?")) {
+	switch(select("Where is the paint?", "Where is the manager?")) {
 	case 1:
 		mes "[Vito]";
 		mes "Paint?";
@@ -2481,8 +2500,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	}
 }
 
-// Warp Portal
-//============================================================
+//== Warp Portal ===========================================
 tha_t01,149,228,0	script	#shadowc02	WARPNPC,2,2,{
 	end;
 OnTouch:
@@ -2497,8 +2515,7 @@ OnTouch:
 	close;
 }
 
-// Quest Mob Spawn
-//============================================================
+//== Quest Mob Spawn =======================================
 tur_dun03,0,0,0,0	monster	Shadow of Deception	2076,1,1000,0,0
 ice_dun02,0,0,0,0	monster	Shadow of Illusion	2077,1,1000,0,0
 niflheim,0,0,0,0	monster	Shadow of Pleasure	2078,1,1000,0,0

@@ -1,22 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) Skotlex
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Disable return warp.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
+//================= Current Version =======================================
 //= 1.6
-//===== Description: =========================================
+//================= Description ===========================================
 //= Disables the following items:
 //=   Butterfly Wing (602), Siege Teleport Scroll (14591),
 //=   Yellow/Green/Red/Blue Butterfly Wings (14582-14585),
 //=   Dungeon Teleport Scrolls (14527/14581)
 //= Also restricts "warpparty" and "warpguild" script commands.
-//===== Additional Comments: =================================
-//= 1.3 - According to the patch, enabled Butterfly wings in the Castles. [Lupus]
-//= 1.4 - Enabled Butterfly wings on PvP maps. [Skotlex]
-//= 1.4a - Added job_knt. [Samuray22]
-//= 1.5 - Commented out new_zone entries. [L0ne_W0lf]
-//= 1.6 - Enabled B. wings on all maps but que_hugel. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
 // Cities ========================
 //ayo_in01	mapflag	noreturn

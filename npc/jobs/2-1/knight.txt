@@ -1,44 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Vali
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Vicious
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//= Copyright (C) PGRO TEAM (Aegis)
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Knight Job Quest
-//===== By: ==================================================
-//= PGRO TEAM (Aegis).
-//= Converted by kobra_k88
-//= Further bugfixed and tested by Lupus
-//===== Current Version: =====================================
-//= 3.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job Change quest for Knight class.
-//===== Additional Comments: =================================
-//= 1.0 Fully working.  Please comment out any pre-existing warps for the
-//= test rooms in any other files so that the ones specified here can work.
-//= 1.1 Fixed a major bug.  Now using the initnpctimer command,
-//= donpcevent, and new waitingroom event commands.  No more addtimer
-//= spamming.  No longer have to talk to the npc to take the test.  Just enter the chat room.
-//= 1.2 More bug fixes.  Changed global variable names to unique ones.
-//= Added second set of items to first test. Added Awake pots award for job change.
-//= 1.3 Added Baby Class support [Lupus]
-//= 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Merged JFunc [Lupus]
-//= 2.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.3 Several bugfixes with the help of Barron-Monster. [L0ne_W0lf]
-//= 2.4 Minor fixes to timer#knt. [L0ne_W0lf]
-//= 2.5 Fixes a small bug with making claymores. [L0ne_W0lf]
-//=     Corrected usages of killmonster and killmonsterall.
-//= 2.6 Corrected an improper areawarp destination. [L0ne_W0lf]
-//= 2.7 Deleted unused variables. [Samuray22]
-//= 2.7a Corrected a Typo error ";;". [Samuray22]
-//= 2.8 Now uses enable and disable waitingroomevent. [L0ne_W0lf]
-//= 2.9 Added Quest Log commands. [Kisuka]
-//= 3.0 Removed the need for use of 'goto.' [L0ne_W0lf]
-//= 3.1 Modified the quest to renewal. [Vali] (Thanks to Muad_Dib for the necessary info).
-//= 3.2 More Renewal updates and some optimization. [Euphy]
-//= 3.3 Fixed missing changequest. [Joseph]
-//============================================================
+//================= Current Version =======================================
+//= 3.3
+//=========================================================================
 
 prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 	mes "[Captain Herman]";
@@ -61,12 +62,12 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 			mes "Prontera Chivalry.";
 			mes "What brings you here?";
 			next;
-			switch(select("I want to change my job to Swordman.:I want to change my job to a Knight.:Just visiting.")) {
+			switch(select("I want to change my job to Swordman.", "I want to change my job to a Knight.", "Just visiting.")) {
 			case 1:
 				mes "[Captain Herman]";
 				mes "A-ha~";
 				mes "A Swordman, you say?";
-				mes "I'm sorry, "+((Sex)?"lad":"lass")+", but you've";
+				mes "I'm sorry, "+ (Sex == SEX_MALE ? "lad" : "lass") +", but you've";
 				mes "come to the wrong place!";
 				next;
 				mes "[Captain Herman]";
@@ -97,10 +98,10 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 		mes "the Prontera Chivalry.";
 		mes "What brings you here?";
 		next;
-		if (select("I want to change my job to a Knight.:Just visiting.") == 1) {
+		if (select("I want to change my job to a Knight.", "Just visiting.") == 1) {
 			mes "[Captain Herman]";
 			mes "Ohh...";
-			mes "A young "+((Sex)?"man":"lady")+" who wishes";
+			mes "A young "+ (Sex == SEX_MALE ? "man" : "lady") +" who wishes";
 			mes "to become a Knight!";
 			mes "Our Prontera Chivalry";
 			mes "will assist you.";
@@ -118,7 +119,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 			mes "you eligible, we will begin the job change procedure. Would you";
 			mes "like to apply now?";
 			next;
-			if (select("Yes, I would like to apply.:I'd like to think about it please.") == 1) {
+			if (select("Yes, I would like to apply.", "I'd like to think about it please.") == 1) {
 				mes "[Captain Herman]";
 				if (JobLevel < 40) {
 					mes "Ah, you are not yet ready to become a Knight! Didn't I specifically mention the Job Level 40 requirement?";
@@ -137,7 +138,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 				setquest 9000;
 				mes "Let me see...";
 				mes "Your name is";
-				mes strcharinfo(0) + "...";
+				mes strcharinfo(PC_NAME) + "...";
 				mes "Is that right?";
 				next;
 				mes "[Captain Herman]";
@@ -179,7 +180,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 	}
 	else if (KNIGHT_Q == 1) {
 		mes "Mmm?";
-		mes strcharinfo(0) + ",";
+		mes strcharinfo(PC_NAME) + ",";
 		mes "what can I do for you?";
 		mes "Ah, you don't know";
 		mes "who to visit?";
@@ -334,7 +335,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 			mes "gathered items";
 			mes "that are troublesome";
 			mes "to obtain. I approve!";
-			mes "I believe "+((Sex)?"":"s")+"he will continue to be loyal after becoming a Knight.";
+			mes "I believe "+ (Sex == SEX_MALE ? "he" : "she") +" will continue to be loyal after becoming a Knight.";
 		}
 		next;
 		mes "[Captain Herman]";
@@ -371,7 +372,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 		mes "to Amy's opinion.";
 		next;
 		mes "[Lady Amy]";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "Mmm~ He's so polite!";
 			mes "He'll grow to be a wonderful Knight. And he's got such cute widdle cheeeeks~ Hee hee!";
 		}
@@ -390,7 +391,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 		mes "your mind.";
 		next;
 		mes "[Sir Edmond]";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "He seems a little rough, but something bright shines within him. With polish and refinement, his true value will shine forth";
 			mes "as the sun.";
 		}
@@ -405,7 +406,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 		mes "to hear your thoughts.";
 		next;
 		mes "[Gray]";
-		mes "A young "+((Sex)?"gentleman":"lady")+" coming here with the determination to become a Knight is enough...";
+		mes "A young "+ (Sex == SEX_MALE ? "gentleman" : "lady") +" coming here with the determination to become a Knight is enough...";
 		next;
 		mes "[Captain Herman]";
 		mes "Everyone";
@@ -434,7 +435,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 		mes "Protect the weak and";
 		mes "live with honor.";
 		next;
-		getitem 656,7; //Awakening_Potion
+		getitem Awakening_Potion,7;
 		mes "[Captain Herman]";
 		mes "Oh...";
 		mes "We have prepared a small gift to congratulate you on your job change. Please use it when you are in battle as you honorably protect others.";
@@ -449,7 +450,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 	}
 L_Mission:
 	mes "Mmm?";
-	mes "Swordman " + strcharinfo(0) + ".";
+	mes "Swordman " + strcharinfo(PC_NAME) + ".";
 	mes "How are the tests?";
 	if (getarg(0)) {
 		mes "Ah~ You do not know";
@@ -522,13 +523,13 @@ prt_in,75,107,4	script	Sir Andrew#knt	1_M_YOUNGKNIGHT,{
 		mes "May I help you";
 		mes "with something?";
 		next;
-		if (select("I would like to take the test.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test.", "Oh, nothing.") == 1) {
 			mes "[Sir Andrew]";
 			mes "Ah...";
 			mes "You wish";
 			mes "to become a Knight.";
 			mes "Your name is";
-			mes strcharinfo(0) + ",";
+			mes strcharinfo(PC_NAME) + ",";
 			mes "correct?";
 			next;
 			mes "[Sir Andrew]";
@@ -572,9 +573,9 @@ prt_in,75,107,4	script	Sir Andrew#knt	1_M_YOUNGKNIGHT,{
 			next;
 			mes "[Sir Andrew]";
 			switch(rand(1,2)) {
-			//Elder_Pixie's_Beard, Wing_Of_Red_Bat, Orcish_Voucher, Moth_Dust, Reptile_Tongue, Wild_Boar's_Mane
+			//Elder_Pixies_Beard, Wing_Of_Red_Bat, Orcish_Voucher, Moth_Dust, Reptile_Tongue, Wild_Boars_Mane
 			case 1: setarray .@items[0], 1040,5, 7006,5, 931,5, 1057,5, 903,5, 1028,5, 2; break;
-			//Short_Leg, Heart_Of_Mermaid. Blossom_Of_Maneater, Flesh_Of_Clam, Old_Frying_Pan, Snail's_Shell
+			//Short_Leg, Heart_Of_Mermaid. Blossom_Of_Maneater, Flesh_Of_Clam, Old_Frying_Pan, Snails_Shell
 			case 2: setarray .@items[0], 1042,5, 950,5, 1032,5, 966,5, 7031,5, 946,5, 3; break;
 			}
 			KNIGHT_Q = .@items[12];
@@ -609,9 +610,9 @@ prt_in,75,107,4	script	Sir Andrew#knt	1_M_YOUNGKNIGHT,{
 		mes "Let's check and see...";
 		next;
 		switch(KNIGHT_Q) {
-		//Elder_Pixie's_Beard, Wing_Of_Red_Bat, Orcish_Voucher, Moth_Dust, Reptile_Tongue, Wild_Boar's_Mane
+		//Elder_Pixies_Beard, Wing_Of_Red_Bat, Orcish_Voucher, Moth_Dust, Reptile_Tongue, Wild_Boars_Mane
 		case 2: setarray .@items[0], 1040,5, 7006,5, 931,5, 1057,5, 903,5, 1028,5, 0; break;
-		//Short_Leg, Heart_Of_Mermaid. Blossom_Of_Maneater, Flesh_Of_Clam, Old_Frying_Pan, Snail's_Shell
+		//Short_Leg, Heart_Of_Mermaid. Blossom_Of_Maneater, Flesh_Of_Clam, Old_Frying_Pan, Snails_Shell
 		case 3: setarray .@items[0], 1042,5, 950,5, 1032,5, 966,5, 7031,5, 946,5, 0; break;
 		}
 		if (countitem(.@items[0]) >= .@items[1] && countitem(.@items[2]) >= .@items[3] && countitem(.@items[4]) >= .@items[5] && countitem(.@items[6]) >= .@items[7] && countitem(.@items[8]) >= .@items[9] && countitem(.@items[10]) >= .@items[11]) {
@@ -743,18 +744,18 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "something to";
 		mes "ask me?";
 		next;
-		if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 			mes "[Sir Siracuse]";
 			mes "Oh, to become";
 			mes "a Knight? Come to";
 			mes "think of it, aren't";
-			mes "you the "+((Sex)?"guy":"girl")+" that";
+			mes "you the "+ (Sex == SEX_MALE ? "guy" : "girl") +" that";
 			mes "just applied?";
 			next;
 			mes "[Sir Siracuse]";
 			mes "Let's see...";
 			mes "Your name was";
-			mes strcharinfo(0) + ".";
+			mes strcharinfo(PC_NAME) + ".";
 			next;
 			mes "[Sir Siracuse]";
 			mes "But, before you come to me, you must visit the others. The way";
@@ -778,7 +779,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "something to";
 		mes "ask me?";
 		next;
-		if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 			mes "[Sir Siracuse]";
 			mes "Hahaha~!";
 			mes "Aren't you supposed to be taking Andrew's test? You can't just skip that, you know! All of our tests are important.";
@@ -804,7 +805,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 			mes "something to";
 			mes "ask me?";
 			next;
-			if (select("Sir Andrew sent me to take your test.:Oh, nothing.") == 1) {
+			if (select("Sir Andrew sent me to take your test.", "Oh, nothing.") == 1) {
 				mes "[Sir Siracuse]";
 				mes "I see, you've passed the first test. Very well, I'll make some time for you. Let me introduce myself. My name is James Siracuse.";
 				next;
@@ -836,7 +837,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 			mes "What...";
 			mes "You again?";
 			next;
-			if (select("I wish to take the test again.:Oh, nothing.") == 1) {
+			if (select("I wish to take the test again.", "Oh, nothing.") == 1) {
 				mes "[Sir Siracuse]";
 				mes "Is that right?";
 				mes "Are you sure you're";
@@ -861,7 +862,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "[Sir Siracuse]";
 		mes "A Knight must possess great strength, defense, speed, and the skill to wield a Two-Handed Sword. Which of the following weapons are not affected by the Two Hand Quicken skill?";
 		next;
-		if (select("Katana:Slayer:Broadsword:Flamberge") != 4) {
+		if (select("Katana", "Slayer", "Broadsword", "Flamberge") != 4) {
 			KNIGHT_Q = 5;
 			mes "[Sir Siracuse]";
 			mes "Wrong!";
@@ -875,7 +876,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "[Sir Siracuse]";
 		mes "Good, now let me ask about some skills. Which of the following is not necessary to learn Bowling Bash?";
 		next;
-		if (select("Two Handed Sword Mastery Lv.5:Magnum Break Lv.3:Provoke Lv.10:Bash Lv.10") != 3) {
+		if (select("Two Handed Sword Mastery Lv.5", "Magnum Break Lv.3", "Provoke Lv.10", "Bash Lv.10") != 3) {
 			KNIGHT_Q = 5;
 			mes "[Sir Siracuse]";
 			mes "Wrong!";
@@ -885,7 +886,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "[Sir Siracuse]";
 		mes "Knights can also use Spears, unlike other jobs, and have skills related to Spears as well. What skills are not necessary to learn the skill Brandish Spear?";
 		next;
-		if (select("Pierce Lv.5:Spear Stab Lv.3:Spear Boomerang Lv.3:Peco Peco Ride Lv.1") != 3) {
+		if (select("Pierce Lv.5", "Spear Stab Lv.3", "Spear Boomerang Lv.3", "Peco Peco Ride Lv.1") != 3) {
 			KNIGHT_Q = 5;
 			mes "[Sir Siracuse]";
 			mes "Wrong! You need to learn that to learn Brandish Spear! How can you not know about Knights if you want to become one?";
@@ -898,7 +899,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "[Sir Siracuse]";
 		mes "Some Spears also have magical attributes, just like spells. Of the following, which can attack a Nightmare, which has the Ghost attribute?";
 		next;
-		if (select("Zephyrus:Lance:Bill Guisarme:Crescent Scythe") != 1) {
+		if (select("Zephyrus", "Lance", "Bill Guisarme", "Crescent Scythe") != 1) {
 			KNIGHT_Q = 5;
 			mes "[Sir Siracuse]";
 			mes "Wrong! You'll be doing absolutely no damage with that type of Spear! Come back after you've learned more about Knights!";
@@ -913,7 +914,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "[Sir Siracuse]";
 		mes "But, you can counter this speed decrease as you learn the Cavalier Mastery skill. What percentage of your normal attack speed will you have after learning Level 3 Cavalier Mastery?";
 		next;
-		if (select("70 % of normal attack speed:80 % of normal attack speed:90 % of normal attack speed:100 % of normal attack speed") != 2) {
+		if (select("70 % of normal attack speed", "80 % of normal attack speed", "90 % of normal attack speed", "100 % of normal attack speed") != 2) {
 			KNIGHT_Q = 5;
 			mes "[Sir Siracuse]";
 			mes "Wrong!";
@@ -930,7 +931,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "[Sir Siracuse]";
 		mes "What should you do when you run into a Novice asking for help in town?";
 		next;
-		switch(select("Tell the Novice of a reasonable hunting area.:Let the Novice fight while you take the damage.:Give the Novice a bunch of Zeny and items.")) {
+		switch(select("Tell the Novice of a reasonable hunting area.", "Let the Novice fight while you take the damage.", "Give the Novice a bunch of Zeny and items.")) {
 		case 1:
 			mes "[Sir Siracuse]";
 			mes "Of course, even a Novice needs to learn how to be independent. Giving good guidance to Novices is one of the best things we can do.";
@@ -953,7 +954,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "you act within";
 		mes "a party?";
 		next;
-		switch(select("Protect everyone in the front of the battle.:Gather monsters and destroy them at once.:Get as many items possible, at all cost.")) {
+		switch(select("Protect everyone in the front of the battle.", "Gather monsters and destroy them at once.", "Get as many items possible, at all cost.")) {
 		case 1:
 			mes "[Sir Siracuse]";
 			mes "That's it! Our strength and attacks are very important in a party. All Knights should engage in a battle with that mindset.";
@@ -977,7 +978,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "important value";
 		mes "a Knight must have?";
 		next;
-		switch(select("Honor:Wealth:Status")) {
+		switch(select("Honor", "Wealth", "Status")) {
 		case 1:
 			mes "[Sir Siracuse]";
 			mes "Right, above all else, Knights must be honorable! We live and die for honor! Always keep that in mind.";
@@ -1016,7 +1017,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 		mes "something to";
 		mes "ask me?";
 		next;
-		if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 			mes "[Sir Siracuse]";
 			mes "Hey...";
 			mes "You already took my test, didn't you? You're done here. You should go visit Sir Windsor now...";
@@ -1078,7 +1079,7 @@ prt_in,79,94,4	script	Sir Windsor#knt	4_M_JOB_KNIGHT1,{
 	else if (KNIGHT_Q >= 1 && KNIGHT_Q <= 5) {
 		mes "...What?";
 		next;
-		if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 			mes "[Sir Windsor]";
 			mes "...";
 			next;
@@ -1147,8 +1148,7 @@ prt_in,79,94,4	script	Sir Windsor#knt	4_M_JOB_KNIGHT1,{
 	}
 }
 
-// Test 2 part 1
-//==========================================================
+//== Test 2 part 1 =========================================
 job_knt,89,106,4	script	Knight Windsor#knt	4_M_JOB_KNIGHT1,{
 	mes "[Sir Windsor]";
 	mes "...";
@@ -1160,7 +1160,7 @@ job_knt,89,106,4	script	Knight Windsor#knt	4_M_JOB_KNIGHT1,{
 	mes "[Sir Windsor]";
 	mes "...Question?";
 	next;
-	.@i = select("What kind of test is this?:How do I take the test?:I'd like to leave.:No.");
+	.@i = select("What kind of test is this?", "How do I take the test?", "I'd like to leave.", "No.");
 	mes "[Sir Windsor]";
 	mes "...";
 	if (.@i == 4) close;
@@ -1245,7 +1245,7 @@ OnStart:
 	end;
 }
 
--	script	Knight1	-1,{
+-	script	Knight1	FAKE_NPC,{
 OnInit:
 	disablenpc "Knight1";
 	end;
@@ -1308,9 +1308,8 @@ OnTimer182000:
 	end;
 }
 
-// Test 2 part 2
-//==========================================================
--	script	Knight2	-1,{
+//== Test 2 part 2 =========================================
+-	script	Knight2	FAKE_NPC,{
 OnInit:
 	disablenpc "Knight2";
 	end;
@@ -1372,9 +1371,8 @@ OnTimer182000:
 	end;
 }
 
-// Test 2 part 3
-//==========================================================
--	script	Knight3	-1,{
+//== Test 2 part 3 =========================================
+-	script	Knight3	FAKE_NPC,{
 OnInit:
 	disablenpc "Knight3";
 	end;
@@ -1439,8 +1437,7 @@ OnTimer182000:
 	end;
 }
 
-// Test 3 (Manners)
-//==========================================================
+//== Test 3 (Manners) ======================================
 prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 	mes "[Lady Amy]";
 	if (BaseJob != Job_Swordman) {
@@ -1512,7 +1509,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "Why did you";
 		mes "come to Amy?";
 		next;
-		if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 			mes "[Lady Amy]";
 			mes "Mmm~";
 			mes "You applied to change jobs! Okay! You'll soon be a Knight with that kind of determination!";
@@ -1541,7 +1538,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 			mes "Why did you";
 			mes "come to Amy?";
 			next;
-			if (select("Sir Windsor told me to--:Oh, nothing.") == 1) {
+			if (select("Sir Windsor told me to--", "Oh, nothing.") == 1) {
 				if (!questprogress(9008))
 					changequest 9007,9008;
 				mes "[Lady Amy]";
@@ -1581,7 +1578,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 			mes "Why did you";
 			mes "come to Amy?";
 			next;
-			if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+			if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 				mes "[Lady Amy]";
 				mes "Mmm~?";
 				mes "Have you learned";
@@ -1612,7 +1609,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "You are a Knight and you are looking for a party in Morroc.";
 		mes "How would you go about doing so?";
 		next;
-		if (select("Shout out that you are looking for a party.:Open a chat room and wait.:Look for people seeking Knights.") != 1)
+		if (select("Shout out that you are looking for a party.", "Open a chat room and wait.", "Look for people seeking Knights.") != 1)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "You have formed a party with equal leveled players. There's a Priest, a Wizard, a Hunter, an Assassin, and a Blacksmith...";
@@ -1626,12 +1623,12 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "with your party.";
 		mes "What should you do?";
 		next;
-		if (select("Check out the area and plan ahead.:Gather monsters for your party members.:Lead the party slowly at the front.") != 2)
+		if (select("Check out the area and plan ahead.", "Gather monsters for your party members.", "Lead the party slowly at the front.") != 2)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "But some rude players came with a group of monsters and disappeared! What should you do?";
 		next;
-		if (select("Keep the monsters from reaching the party.:Defend while the party retreats.:Run away on your Peco Peco.") == 2)
+		if (select("Keep the monsters from reaching the party.", "Defend while the party retreats.", "Run away on your Peco Peco.") == 2)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "Luckily, you all lived through the crisis. But as you walk, you find a person, who is not in your party, collapsed on the ground.";
@@ -1639,7 +1636,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "[Lady Amy]";
 		mes "The person is asking politely for help. What should you do?";
 		next;
-		if (select("Ask your party's Priest to help.:Say you will help for Zeny.:Ignore and move on.") == 1)
+		if (select("Ask your party's Priest to help.", "Say you will help for Zeny.", "Ignore and move on.") == 1)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "You must bid farewell to your party members because you must go somewhere else.";
@@ -1650,7 +1647,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "the battle. What";
 		mes "should you do?";
 		next;
-		if(select("Give it to who deserves it the most.:Pretend like nothing happened and keep it.:Decide with party who gets it.") != 2)
+		if(select("Give it to who deserves it the most.", "Pretend like nothing happened and keep it.", "Decide with party who gets it.") != 2)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "You end up with the item and you go to Prontera to sell it. There are many people with shops and chat rooms opened selling items.";
@@ -1659,7 +1656,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "What should you";
 		mes "do to sell your item?";
 		next;
-		if (select("Shout out loud to everyone.:Open a chat room and wait.:Inquire if there is anyone that is interested.") == 3)
+		if (select("Shout out loud to everyone.", "Open a chat room and wait.", "Inquire if there is anyone that is interested.") == 3)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "While you are waiting,";
@@ -1667,7 +1664,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "for items and zeny.";
 		mes "What do you do?";
 		next;
-		if (select("Give them some Zeny and items.:Simply ignore them.:Give suggestions for a place to hunt.") == 3)
+		if (select("Give them some Zeny and items.", "Simply ignore them.", "Give suggestions for a place to hunt.") == 3)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "Now you decide to go to the Hidden Temple by yourself. You happily ride on your Peco Peco.";
@@ -1677,7 +1674,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "someone that is lost.";
 		mes "What should you do?";
 		next;
-		if(select("Tell the person how to reach the exit.:Lead the person to the exit.:Give a Butterfly Wing.") != 3)
+		if(select("Tell the person how to reach the exit.", "Lead the person to the exit.", "Give a Butterfly Wing.") != 3)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "You've been hunting for a while, and now you're low on HP!";
@@ -1689,7 +1686,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "How would you ask";
 		mes "the Priest for a Heal?";
 		next;
-		if (select("Would it be possible to get a heal please?:Can I have a heal?:Heal plz!!") == 1)
+		if (select("Would it be possible to get a heal please?", "Can I have a heal?", "Heal plz!!") == 1)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "You are now very";
@@ -1703,7 +1700,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 		mes "What should";
 		mes "you do?";
 		next;
-		if (select("Pick it up and keep it.:Ask around to find the owner.:Simply walk by.") != 1)
+		if (select("Pick it up and keep it.", "Ask around to find the owner.", "Simply walk by.") != 1)
 			.@knight_t += 10;
 		mes "[Lady Amy]";
 		mes "Okay,";
@@ -1782,8 +1779,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 	}
 }
 
-// Test 4 (patience)
-//==========================================================
+//== Test 4 (patience) =====================================
 prt_in,70,99,6	script	Sir Edmond#knt	4_M_JOB_KNIGHT2,{
 	mes "[Sir Edmond]";
 	if (BaseJob != Job_Swordman) {
@@ -1826,7 +1822,7 @@ prt_in,70,99,6	script	Sir Edmond#knt	4_M_JOB_KNIGHT2,{
 		mes "What is it...";
 		mes "Wandering Swordman?";
 		next;
-		if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 			mes "[Sir Edmond]";
 			mes "A seed must first be nestled";
 			mes "in the earth before the seed may sprout. Then, the sprout must grow leaves before its buds blossom into flowers...";
@@ -1855,7 +1851,7 @@ prt_in,70,99,6	script	Sir Edmond#knt	4_M_JOB_KNIGHT2,{
 		mes "What is it...";
 		mes "Wandering Swordman.";
 		next;
-		if (select("Lady Amy sent me.:Oh, nothing.") == 1) {
+		if (select("Lady Amy sent me.", "Oh, nothing.") == 1) {
 			mes "[Sir Edmond]";
 			mes "It is now time to take my test. Please do your best, as you have done on the other tests.";
 			next;
@@ -1896,7 +1892,7 @@ prt_in,70,99,6	script	Sir Edmond#knt	4_M_JOB_KNIGHT2,{
 		mes "What is it...";
 		mes "Wandering Swordman?";
 		next;
-		if (select("I'm sorry, I didn't mean to...:Oh, nothing.") == 1) {
+		if (select("I'm sorry, I didn't mean to...", "Oh, nothing.") == 1) {
 			mes "[Sir Edmond]";
 			mes "You were too careless in the last test. A Knight's sword exists to protect others, not to torment weaker monsters.";
 			next;
@@ -1997,8 +1993,7 @@ OnTouch:
 	end;
 }
 
-// Test 5, and creates Claymores for knights
-//==========================================================
+//== Test 5, and creates Claymores for knights =============
 prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 	mes "[Sir Gray]";
 	if (BaseJob != Job_Swordman) {
@@ -2012,7 +2007,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "Every Knight";
 			mes "would want one!";
 			next;
-			switch(select("About ^3355FFClaymore^000000:Buy Claymore:End Conversation")) {
+			switch(select("About ^3355FFClaymore^000000", "Buy Claymore", "End Conversation")) {
 			case 1:
 				mes "[Sir Gray]";
 				mes "Claymore, one of the best among the famous swords you can attain in Rune-Midgarts's Prontera!! Its value is priceless when considered by a Knight.";
@@ -2037,7 +2032,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 					close;
 				}
 				else {
-					if ((Zeny > 73999) && (countitem(999) > 0) && (BaseJob == Job_Knight)) {
+					if ((Zeny > 73999) && (countitem(Steel) > 0) && (BaseJob == Job_Knight)) {
 						mes "[Sir Gray]";
 						mes "You are ready!";
 						mes "You must know the";
@@ -2060,9 +2055,9 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 						mes "a fine ^3355FFClaymore^000000.";
 						mes "You attained a reliable item.";
 						mes "It'll be a good companion on your adventures.";
-						delitem 999,1; //Steel
+						delitem Steel,1;
 						Zeny -= 74000;
-						getitem 1163,1; //Claymore
+						getitem Claymore,1;
 						close;
 					}
 					mes "[Sir Gray]";
@@ -2120,7 +2115,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "Yes, what can";
 			mes "I do for you?";
 			next;
-			if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+			if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 				mes "[Sir Gray]";
 				mes "Hoho, I see.";
 				mes "So you took";
@@ -2156,7 +2151,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "What brings you";
 			mes "to me?";
 			next;
-			if (select("I've been thinking a lot.:Oh, nothing.") == 1) {
+			if (select("I've been thinking a lot.", "Oh, nothing.") == 1) {
 				mes "[Sir Gray]";
 				mes "Is that so...";
 				mes "I wonder if you";
@@ -2183,7 +2178,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 				close;
 			}
 		}
-		switch(select("To become stronger...:To help my guild...:Because I'm unsatisfied with myself right now...")) {
+		switch(select("To become stronger...", "To help my guild...", "Because I'm unsatisfied with myself right now...")) {
 		case 1:
 			mes "[Sir Gray]";
 			mes "To become stronger, you say?";
@@ -2193,7 +2188,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "[Sir Gray]";
 			mes "Is it to show off to others? To attain fame? Or do you have a diferent reason? What do you think is so good about gaining strength as a Knight?";
 			next;
-			switch(select("Gain wealth and fame.:I can protect myself.:I can protect others.")) {
+			switch(select("Gain wealth and fame.", "I can protect myself.", "I can protect others.")) {
 			case 1:
 				.@knight_t += 10;
 				mes "[Sir Gray]";
@@ -2227,7 +2222,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "think you can";
 			mes "help your guild?";
 			next;
-			switch(select("My guild needs me.:I can help gather funds for my guild.:I can protect my guild members.")) {
+			switch(select("My guild needs me.", "I can help gather funds for my guild.", "I can protect my guild members.")) {
 			case 1:
 				mes "[Sir Gray]";
 				mes "Anyone, anywhere in this world,";
@@ -2269,7 +2264,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "are you not satisfied";
 			mes "with right now?";
 			next;
-			switch(select("Skills.:Goal.:Appearance.")) {
+			switch(select("Skills.", "Goal.", "Appearance.")) {
 			case 1:
 				.@knight_t += 5;
 				mes "[Sir Gray]";
@@ -2307,13 +2302,13 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 		mes "[Sir Gray]";
 		mes "If you become a Knight right away, what are you going to do first?";
 		next;
-		switch(select("I am going to go straight to battle.:There are those waiting for me.:I will learn more about Knights.")) {
+		switch(select("I am going to go straight to battle.", "There are those waiting for me.", "I will learn more about Knights.")) {
 		case 1:
 			mes "[Sir Gray]";
 			mes "Battle...?";
 			mes "And then?";
 			next;
-			switch(select("I will grow within a short period of time.:I would like to test my ability as a Knight.:I would like to go to more challenging places.")) {
+			switch(select("I will grow within a short period of time.", "I would like to test my ability as a Knight.", "I would like to go to more challenging places.")) {
 			case 1:
 				.@knight_t += 10;
 				mes "[Sir Gray]";
@@ -2339,7 +2334,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "Who is";
 			mes "waiting for you?";
 			next;
-			switch(select("My friends.:My Guild members.:My Lover.")) {
+			switch(select("My friends.", "My Guild members.", "My Lover.")) {
 			case 1:
 				mes "[Sir Gray]";
 				mes "I see, they would share in the joy of your achievements. Don't ever lose your kind heart, and always give help to your friends.";
@@ -2355,7 +2350,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 				mes "Oh, youth!";
 				mes "Becoming a Knight";
 				mes "for your beloved!";
-				mes "Always protect "+((Sex)?"her":"him")+"...";
+				mes "Always protect "+ (Sex == SEX_MALE ? "her" : "him") +"...";
 				mes "Even at the sacrifice";
 				mes "of your own life!";
 				next;
@@ -2374,7 +2369,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 			mes "What do you plan";
 			mes "on learning?";
 			next;
-			switch(select("Comfortable places for Knights to go...:The different paths of a Knight...:Ways to get more money as a Knight...")) {
+			switch(select("Comfortable places for Knights to go...", "The different paths of a Knight...", "Ways to get more money as a Knight...")) {
 			case 1:
 				.@knight_t += 5;
 				mes "[Sir Gray]";
@@ -2479,7 +2474,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 		mes "A young Swordman.";
 		mes "What can I do for you?";
 		next;
-		if (select("I would like to take the test to change jobs.:Oh, nothing.") == 1) {
+		if (select("I would like to take the test to change jobs.", "Oh, nothing.") == 1) {
 			mes "[Sir Gray]";
 			mes "Hoho~";
 			mes "There are many";

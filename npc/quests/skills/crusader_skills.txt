@@ -1,15 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) DracoRPG
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Reddozen
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Crusader Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for skills: Shrink
-//===== Additional Comments: =================================
-//= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
 geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 	if (BaseJob == Job_Crusader) {
@@ -34,7 +58,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "arrived! Quick, show me";
 			mes "the ^FF0000report^000000 you've brought!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Excuse me...?";
 			mes "Oh, you must have";
 			mes "mistaken me for someone";
@@ -52,12 +76,12 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			else
 				mes "were dressed like a Crusader...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I'm sorry...";
 			mes "What's happening?";
 			mes "Is something the matter?";
 			mes "I'm an adventurer that";
-			mes "goes by the name, "+ strcharinfo(0) +".";
+			mes "goes by the name, "+ strcharinfo(PC_NAME) +".";
 			next;
 			mes "[Ford]";
 			mes "Well, I'm Leslie Ford,";
@@ -91,7 +115,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "I want to ask you if you would";
 			mes "please lend me your aid.";
 			next;
-			switch(select("Sure.:I'm sorry, but I'm busy...")) {
+			switch(select("Sure.", "I'm sorry, but I'm busy...")) {
 			case 1:
 				mes "[Ford]";
 				mes "Great, thank you so much!";
@@ -140,7 +164,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "So how is Sloutii?";
 			mes "Is everything all right?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Here, I've brought";
 			mes "this report as soon as";
 			mes "I could! You better read";
@@ -151,10 +175,10 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "Goodness, there's blood all";
 			mes "over the paper! Let's see...";
 			mes "Oh no. This is an emergency";
-			mes "situation! I need to report this^FFFFFF ^000000 to Sir Arga and request for";
+			mes "situation! I need to report this to Sir Arga and request for";
 			mes "backup immediately!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait, we need to do";
 			mes "something about Sloutii.";
 			mes "He was wounded by the";
@@ -239,7 +263,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "Thanks once again,";
 			mes "and I hope to that you";
 			mes "travel in safety. For now,";
-			mes "this is farewell, "+ strcharinfo(0) +".";
+			mes "this is farewell, "+ strcharinfo(PC_NAME) +".";
 			close;
 			}
 		else if (CRUS_SK == 10) {
@@ -295,7 +319,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "Hopefully, it's saved your";
 				mes "life as many times as it's";
 				mes "saved mine. Anyway, I'll";
-				mes "see you around, "+ strcharinfo(0) +"~";
+				mes "see you around, "+ strcharinfo(PC_NAME) +"~";
 				close;
 			}
 		}
@@ -307,7 +331,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "have they done";
 			mes "to my legs?!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wh-what happened?";
 			mes "Were you attacked?";
 			next;
@@ -319,7 +343,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "I've got to warn my superiors!";
 			mes "They're going to raid Geffen!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I actually spoke to";
 			mes "Sir Ford! You must be";
 			mes "Sloutii, right? He sent me";
@@ -333,7 +357,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "urgent request for backup.";
 			mes "U-ugh! We don't have time!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait...!";
 			mes "But what about";
 			mes "you? You're hurt...";
@@ -346,7 +370,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "Now, if I can just get that";
 			mes "report out of my-- OW! N-no...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "^333333(He's writhing in pain";
 			mes "so much that he can't even";
 			mes "give me his report. I better";
@@ -356,8 +380,8 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			close;
 		}
 		else if (CRUS_SK == 2) {
-			if (countitem(501) > 0) {
-				mes "["+ strcharinfo(0) +"]";
+			if (countitem(Red_Potion) > 0) {
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Here, please take";
 				mes "this Red Potion.";
 				mes "It just might help...";
@@ -382,7 +406,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "patrol report. Some of the";
 				mes "pages are smudged with";
 				mes "the blood from his wound.^000000";
-				delitem 501,1; //Red_Potion
+				delitem Red_Potion,1;
 				CRUS_SK = 3;
 				close;
 			}
@@ -394,11 +418,11 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "Arrrrgh! I-I can't move!";
 				mes "It... It just hurts so much!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "^333333(I better bring him";
 				mes "a Red Potion, otherwise";
 				mes "I have no hope of getting";
-				mes "that report without hurting him!) ^FFFFFF ^000000";
+				mes "that report without hurting him!) ";
 				close;
 			}
 		}
@@ -481,7 +505,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "saved my life! I thought";
 				mes "I was going to die for sure!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Well, it's a good thing";
 				mes "I came in time. Sir Ford";
 				mes "had me visit Father Arthur to";
@@ -611,7 +635,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			mes "How may I be of";
 			mes "service to you today?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Someone was wounded";
 			mes "by Goblins, and I was told";
 			mes "by Sir Ford that you're the";
@@ -626,7 +650,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			mes "out of Goblin Poison Antidote";
 			mes "and must make it from scratch.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Tell me what you";
 			mes "need to make it, and";
 			mes "I'll bring you all of the";
@@ -649,7 +673,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			close;
 		}
 		else if (CRUS_SK == 5) {
-			if (countitem(514) > 0 && countitem(619) > 0 && countitem(1003) > 0 && countitem(7053) > 2 && countitem(713) > 2 && countitem(909) > 4 && countitem(938) > 19) {
+			if (countitem(Grape) > 0 && countitem(Unripe_Apple) > 0 && countitem(Coal) > 0 && countitem(Cyfar) > 2 && countitem(Empty_Bottle) > 2 && countitem(Jellopy) > 4 && countitem(Sticky_Mucus) > 19) {
 				mes "[Father Arthur]";
 				mes "Ah, you've returned.";
 				mes "Now let me check to";
@@ -679,13 +703,13 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 				mes "to worry about collecting";
 				mes "materials again. Now, give";
 				mes "me a moment to distill this...";
-				delitem 938,20; //Sticky_Mucus
-				delitem 619,1; //Unripe_Apple
-				delitem 909,5; //Jellopy
-				delitem 514,1; //Grape
-				delitem 1003,1; //Coal
-				delitem 7053,3; //Cyfar
-				delitem 713,3; //Empty_Bottle
+				delitem Sticky_Mucus,20;
+				delitem Unripe_Apple,1;
+				delitem Jellopy,5;
+				delitem Grape,1;
+				delitem Coal,1;
+				delitem Cyfar,3;
+				delitem Empty_Bottle,3;
 				CRUS_SK = 6;
 				close;
 			}
@@ -808,17 +832,3 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//============================================================

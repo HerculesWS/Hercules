@@ -1,37 +1,69 @@
-# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-# See the LICENSE file
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2012-2020 Hercules Dev Team
+# Copyright (C) Athena Dev Teams
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # @configure_input@
 
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
-LIBCONFIG_D = ../../3rdparty/libconfig
+COMMON_INCLUDE = -I..
+
+THIRDPARTY_D = ../../3rdparty
+THIRDPARTY_INCLUDE = -I$(THIRDPARTY_D)
+
+LIBCONFIG_D = $(THIRDPARTY_D)/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
                 scanner.o strbuf.o)
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
-LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
-MT19937AR_D = ../../3rdparty/mt19937ar
+ifeq (@USE_LIBBACKTRACE@,yes)
+	LIBBACKTRACE_D = $(THIRDPARTY_D)/libbacktrace
+	LIBBACKTRACE_OBJ = $(addprefix $(LIBBACKTRACE_D)/, atomic.o backtrace.o \
+	              dwarf.o @LIBBACKTRACE_FORMAT_FILE@ fileline.o mmapio.o mmap.o posix.o print.o \
+	              simple.o sort.o state.o)
+	LIBBACKTRACE_H = $(addprefix $(LIBBACKTRACE_D)/, backtrace.h \
+	              backtrace-supported.h config.h filenames.h internal.h)
+else
+	LIBBACKTRACE_D =
+	LIBBACKTRACE_OBJ =
+	LIBBACKTRACE_H =
+endif
+
+MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
-MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
 COMMON_SHARED_C = conf.c db.c des.c ers.c grfio.c HPM.c mapindex.c md5calc.c \
-                  mutex.c nullpo.c random.c showmsg.c strlib.c sysinfo.c \
-                  thread.c timer.c utils.c
+                  mutex.c nullpo.c packets.c random.c showmsg.c strlib.c \
+                  sysinfo.c thread.c timer.c utils.c
 COMMON_C = $(COMMON_SHARED_C)
 COMMON_SHARED_OBJ = $(patsubst %.c,%.o,$(COMMON_SHARED_C))
 COMMON_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
-             console.o core.o malloc.o socket.o)
-COMMON_MINI_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
-                  miniconsole.o minicore.o minimalloc.o minisocket.o)
-COMMON_C += console.c core.c malloc.c socket.c
+             console.o core.o memmgr.o socket.o)
+COMMON_C += console.c core.c memmgr.c socket.c
 COMMON_H = atomic.h cbasetypes.h conf.h console.h core.h db.h des.h ers.h \
-           grfio.h HPM.h HPMi.h malloc.h mapindex.h md5calc.h mmo.h mutex.h \
-           nullpo.h random.h showmsg.h socket.h spinlock.h sql.h strlib.h \
-           sysinfo.h thread.h timer.h utils.h winapi.h
+           grfio.h hercules.h HPM.h HPMi.h memmgr.h mapindex.h md5calc.h \
+           mmo.h mutex.h nullpo.h packets.h packets_len.h random.h showmsg.h \
+           socket.h spinlock.h sql.h strlib.h sysinfo.h thread.h timer.h \
+           utils.h winapi.h ../plugins/HPMHooking.h
+COMMON_PH =
 
 COMMON_SQL_OBJ = obj_sql/sql.o
 COMMON_SQL_H = sql.h
@@ -40,7 +72,7 @@ SYSINFO_INC = sysinfo.inc
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	SQL_DEPENDS=common common_sql common_mini
+	SQL_DEPENDS=common common_sql
 else
 	SQL_DEPENDS=needs_mysql
 endif
@@ -51,7 +83,7 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all sql common common_sql common_mini clean buildclean help
+.PHONY: all sql common common_sql clean buildclean help
 
 all: sql
 
@@ -76,7 +108,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/common/Makefile
 
-$(SYSINFO_INC): $(COMMON_C) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(COMMON_C) $(COMMON_PH) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -98,33 +130,13 @@ obj_all/common.a: $(COMMON_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_all/common.a $(COMMON_OBJ)
 
-obj_all/common_mini.a: $(COMMON_MINI_OBJ) Makefile
-	@echo "	AR	$@"
-	@@AR@ rcs obj_all/common_mini.a $(COMMON_MINI_OBJ)
-
 obj_sql/common_sql.a: $(COMMON_SQL_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_sql/common_sql.a $(COMMON_SQL_OBJ)
 
-common: $(COMMON_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common.a Makefile
-
-common_mini: $(COMMON_MINI_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common_mini.a Makefile
+common: $(COMMON_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) $(LIBBACKTRACE_OBJ) obj_all/common.a Makefile
 
 common_sql: $(COMMON_SQL_OBJ) obj_sql/common_sql.a Makefile
-
-obj_all/sysinfo.o: sysinfo.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(SYSINFO_INC) | obj_all
-
-obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
-obj_all/mini%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) -DMINICORE @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
-obj_sql/%.o: %.c $(COMMON_H) $(COMMON_SQL_H) $(CONFIG_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_sql
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(LIBCONFIG_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 $(MT19937AR_OBJ):
@@ -134,3 +146,19 @@ $(MT19937AR_OBJ):
 $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
+
+$(LIBBACKTRACE_OBJ):
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBBACKTRACE_D)
+
+.SECONDEXPANSION:
+
+obj_all/sysinfo.o: sysinfo.c $(filter sysinfo.p.h, $(COMMON_PH)) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) $(SYSINFO_INC) | obj_all
+
+obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | $(SYSINFO_INC) obj_all
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+
+obj_sql/%.o: %.c $$(filter %.p.h, $(COMMON_PH)) $(COMMON_H) $(COMMON_SQL_H) $(CONFIG_H) $(LIBCONFIG_H) $(LIBBACKTRACE_H) | $(SYSINFO_INC) obj_sql
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

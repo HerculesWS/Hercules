@@ -1,5 +1,20 @@
-# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-# See the LICENSE file
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2013-2020 Hercules Dev Team
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # @configure_input@
 
@@ -18,7 +33,7 @@
 #                                                                    #
 # Note: DO NOT include the .c extension!!!                           #
 
-MYPLUGINS = 
+MYPLUGINS := $(MYPLUGINS)
 
 #                                                                    #
 #########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
@@ -28,10 +43,14 @@ HPMHOOKING = $(addprefix HPMHooking_, login char map)
 ALLPLUGINS = $(filter-out HPMHooking, $(basename $(wildcard *.c))) $(HPMHOOKING)
 
 # Plugins that will be built through 'make plugins' or 'make all'
-PLUGINS = sample db2sql HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUGINS)
+PLUGINS = sample db2sql constdb2doc generate-translations mapcache script_mapquit HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUGINS)
 
 COMMON_D = ../common
-COMMON_H = $(wildcard $(COMMON_D)/*.h)
+# Includes private headers (plugins might need them)
+COMMON_H = $(wildcard $(COMMON_D)/*.h) ../plugins/HPMHooking.h
+COMMON_INCLUDE = -I..
+
+THIRDPARTY_INCLUDE = -I../../3rdparty
 
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
@@ -84,7 +103,7 @@ Makefile: Makefile.in
 
 ../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@$(CC) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ @LIBS@ @MYSQL_LIBS@ -o $@ $<
 
 ../../plugins/HPMHooking_login@DLLEXT@: HPMHOOKINGTYPE = LOGIN
 ../../plugins/HPMHooking_char@DLLEXT@: HPMHOOKINGTYPE = CHAR
@@ -92,4 +111,4 @@ Makefile: Makefile.in
 
 ../../plugins/HPMHooking_%@DLLEXT@: HPMHooking.c $(ALL_H) $$(shell ls HPMHooking/*_%* HPMHooking/*_common* 2>/dev/null)
 	@echo "	CC	$< ($(HPMHOOKINGTYPE))"
-	@$(CC) -DHPMHOOKING_$(HPMHOOKINGTYPE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) -DHPMHOOKING_$(HPMHOOKINGTYPE) $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<

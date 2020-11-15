@@ -1,15 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) DracoRPG
+//= Copyright (C) Reddozen
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Knight Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen, Samuray22
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for skills: Charge Attack
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 	if (BaseJob == Job_Knight) {
@@ -121,7 +146,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "strength and courage!";
 			close;
 		}
-		if (KNGT_SK == 7 && countitem(530) > 4 && countitem(748) > 2) {
+		if (KNGT_SK == 7 && countitem(Candy_Striper) > 4 && countitem(Witherless_Rose) > 2) {
 			mes "[Essofeit]";
 			mes "The concept of honor";
 			mes "seems to be lost on today's";
@@ -138,8 +163,8 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "hunting alone! But Knights";
 			mes "these days have grown soft...";
 			next;
-			if (select("Give him Candy Canes and Witherless Roses:Cancel") == 1) {
-				mes "["+ strcharinfo(0) +"]";
+			if (select("Give him Candy Canes and Witherless Roses", "Cancel") == 1) {
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "There are still Knights";
 				mes "out there who believe in";
 				mes "honorably risking our lives";
@@ -176,8 +201,8 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 				mes "been researching recently. Why";
 				mes "don't you come back after I've";
 				mes "completed the preparations?";
-				delitem 530,5; //Candy_Striper
-				delitem 748,3; //Witherless_Rose
+				delitem Candy_Striper,5;
+				delitem Witherless_Rose,3;
 				KNGT_SK = 8;
 				close;
 			}
@@ -234,7 +259,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "I forget all about my old";
 			mes "fashioned ideals. I guess";
 			mes "times have changed, and that";
-			mes "my idea of chivalry may be dead. ^FFFFFF ^000000";
+			mes "my idea of chivalry may be dead. ";
 			close;
 		}
 		if (KNGT_SK == 1) {
@@ -276,7 +301,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "more active, there are too";
 			mes "many regulations that hamper";
 			mes "the good we can do. Over time,";
-			mes "the situation has grown much^FFFFFF ^000000 worse. But don't take my word...";
+			mes "the situation has grown much worse. But don't take my word...";
 			next;
 			mes "[Essofeit]";
 			mes "Perhaps it will be better";
@@ -307,7 +332,6 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 }
 
 prontera,69,351,0	script	#tour	HIDDEN_NPC,5,5,{
-//OnTouch2:
 OnTouch:
 	if (KNGT_SK > 2)
 		end;
@@ -363,7 +387,7 @@ prontera,72,352,7	script	Grand Master	4_M_JOB_KNIGHT1,{
 	mes "men! I know training can";
 	mes "be tough, but it'll make";
 	mes "you harder, better, faster and";
-	mes "stronger! Prontera's safety is^FFFFFF ^000000 your responsibility, Knights!";
+	mes "stronger! Prontera's safety is your responsibility, Knights!";
 	next;
 	mes "[Grand Master]";
 	mes "...";
@@ -485,7 +509,7 @@ prontera,66,358,5	script	Knight#gattack	4_M_JOB_KNIGHT1,{
 		mes "Gosh, I'm sick and tired of";
 		mes "him talking about Knighthood.";
 		mes "Essofeit insists that all Knights, even complete rookies, should be";
-		mes "able to obtain 5 Candy Canes and^FFFFFF ^000000 3 Witherless Roses from hunting.";
+		mes "able to obtain 5 Candy Canes and 3 Witherless Roses from hunting.";
 		next;
 		mes "[Gatack]";
 		mes "Hell, I just hate to hear";
@@ -510,19 +534,3 @@ prontera,66,358,5	script	Knight#gattack	4_M_JOB_KNIGHT1,{
 	mes "I'll be too busy looking good.";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//= 1.4 Updated to the Official One. [Samuray22]
-//= 1.4a replaced item "names" with item id [Lupus]
-//============================================================

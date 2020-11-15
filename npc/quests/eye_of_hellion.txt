@@ -1,30 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) FlavioJS
+//= Copyright (C) MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= The Eye of Hellion Quest
-//===== By: ==================================================
-//= MasterOfMuppets
-//===== Current Version: =====================================
-//= 2.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest for getting a Nile Rose
-//= There are two versions of this quest.
-//= Version 1 (not implemented) was used on iRO as an event
-//= for its anniversary, while version 2 (this version)
-//= is the one that remained active on main servers.
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Tracking variable is not backwards compatable meaning
-//=     you can again repeat this quest from the start.
-//= 1.6 Fixed issue with #prt_key-1-1. [L0ne_W0lf]
-//= 1.7 Corrected remnants from Official Conversion. [L0ne_W0lf]
-//= 1.8 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.9 Removed duplicate text. [Kisuka]
-//= 2.0 Updated EXP rewards.
-//= 2.1 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.1
+//================= Additional Comments ===================================
+//= There are two versions of this quest. Version 1 (not implemented) was
+//= used on iRO as an event for its anniversary, while version 2 (this
+//= version) is the one that remained active on main servers.
+//=========================================================================
 
 morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -37,7 +55,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "Rune-Midgard and I've come";
 		mes "to see and know a lot of things. Power, jealously, hardship...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "So what exactly";
 		mes "brings you here to";
 		mes "the middle of Morroc?";
@@ -57,7 +75,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "I must have the help of one";
 		mes "who is truly pure of heart...";
 		next;
-		if (select("What are you looking for?:Pure of heart? Hah! Good luck!") == 1) {
+		if (select("What are you looking for?", "Pure of heart? Hah! Good luck!") == 1) {
 			if (BaseLevel < 60 ) {
 				mes "[Sir Chilias'Tyus]";
 				mes "Heh heh~ I see your eyes";
@@ -188,7 +206,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "you help an old man for the";
 			mes "sake of all that is good?";
 			next;
-			if (select("Of course, I will.:I'm sorry, but I can't.") == 1) {
+			if (select("Of course, I will.", "I'm sorry, but I can't.") == 1) {
 				mes "[Sir Chilias'Tyus]";
 				mes "Good, good, but first";
 				mes "I must test to see if you";
@@ -242,7 +260,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "help me in sealing away the";
 		mes "Hellion gem's evil forever.";
 		next;
-		if (select("I will help you.:...Sorry about that.") == 1) {
+		if (select("I will help you.", "...Sorry about that.") == 1) {
 			mes "[Sir Chilias'Tyus]";
 			mes "Good, good, but first";
 			mes "I must test to see if you";
@@ -325,7 +343,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 57) {
-		if (countitem(7333) > 0 && countitem(7334) > 0) {
+		if (countitem(Piece_Of_Slate_1) > 0 && countitem(Piece_Of_Slate_2) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "While you were gone,";
 			mes "I felt a little bad that you";
@@ -340,7 +358,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "this piece I found here in";
 			mes "Morroc, and the pieces you";
 			mes "found in Prontera and Payon. There's one more left in Geffen.";
-			specialeffect2 EF_HEAL2;
+			specialeffect(EF_HEAL2, AREA, playerattached());
 			specialeffect EF_HEAL2;
 			next;
 			mes "[Sir Chilias'Tyus]";
@@ -359,7 +377,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "greatest wish and forever";
 			mes "seal away the Hellion's gem.";
 			HELLIONQ = 58;
-			getitem 7335,1; //Piece_Of_Slate_3
+			getitem Piece_Of_Slate_3,1;
 			next;
 			mes "[Sir Chilias'Tyus]";
 			mes "When you get to Geffen,";
@@ -377,7 +395,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "you now before you are";
 		mes "consumed by its darkness!";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	else if (HELLIONQ > 57 && HELLIONQ < 66) {
@@ -390,7 +408,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 66) {
-		if (countitem(7333) > 0 && countitem(7334) > 0 && countitem(7335) > 0 && countitem(7336) > 0) {
+		if (countitem(Piece_Of_Slate_1) > 0 && countitem(Piece_Of_Slate_2) > 0 && countitem(Piece_Of_Slate_3) > 0 && countitem(Piece_Of_Slate_4) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "You have all four";
 			mes "pieces of the tablet?";
@@ -416,8 +434,8 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "for yourself?! I must smite";
 		mes "you now before you are";
 		mes "consumed by its darkness!";
-		close;
-		percentheal -100,0;
+		close2;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	else if (HELLIONQ == 67) {
@@ -431,7 +449,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 68) {
-		if (countitem(7332) > 0 && countitem(7337) > 0) {
+		if (countitem(Slate) > 0 && countitem(Eye_Of_Hellion) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "At long last. We have";
 			mes "everything. The Tablet";
@@ -447,7 +465,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "sort of pain from them.";
 			mes "Did something happen?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I learned the secret of";
 			mes "the Hellion's gem. It...";
 			mes "It turns people into";
@@ -459,7 +477,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "What...";
 			mes "What did you just say?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The tablet had a map that";
 			mes "let me to the chamber where";
 			mes "your grandfather locked himself";
@@ -467,7 +485,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "into the Hellion Revenant.";
 			mes "It was horrible...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "At the entrance, he";
 			mes "left a message that said";
 			mes "that he wanted to be killed.";
@@ -483,7 +501,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "Thank you for finally freeing";
 			mes "his soul and giving him peace.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Here, I think you";
 			mes "should have this Eye";
 			mes "of Hellion, in case you";
@@ -542,11 +560,11 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "in check. I trust that you will";
 			mes "keep its secret and protect it";
 			mes "from those motivated by greed.";
-			delitem 7332,1; //Slate
-			delitem 7337,countitem(7337); //Eye_Of_Hellion
+			delitem Slate,1;
+			delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion);
 			HELLIONQ = 69;
-			getitem 2658,1; //Nile_Rose_
-			getitem 603,1; //Old_Blue_Box
+			getitem Nile_Rose_,1;
+			getitem Old_Blue_Box,1;
 			getexp RENEWAL_EXP?120000:1200000,0;
 			next;
 			mes "[Sir Chilias'Tyus]";
@@ -565,7 +583,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "through its strange powers.^000000";
 			close;
 		}
-		else if (countitem(7332) > 0) {
+		else if (countitem(Slate) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "At long last. We have";
 			mes "everything. The Tablet";
@@ -611,9 +629,9 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "in check. I trust that you will";
 			mes "keep its secret and protect it";
 			mes "from those motivated by greed.";
-			delitem 7332,1; //Slate
+			delitem Slate,1;
 			HELLIONQ = 70;
-			getitem 2658,1; //Nile_Rose_
+			getitem Nile_Rose_,1;
 			getexp RENEWAL_EXP?100000:1000000,0;
 			next;
 			mes "[Sir Chilias'Tyus]";
@@ -633,7 +651,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ > 68 && HELLIONQ < 71) {
-		if (countitem(7337) > 0) {
+		if (countitem(Eye_Of_Hellion) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "Long time no see. So, are you doing well to keep the promise with me?";
 			mes "Please handle it with care";
@@ -643,7 +661,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "You still have the Hellion's Eye.";
 			mes "I can see the pain in your eyes.";
 			mes "Let me lighten your burden. It will be better this way.";
-			delitem 7337,countitem(7337); //Eye_Of_Hellion
+			delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion);
 			next;
 			mes "[Sir Chilias'Tyus]";
 			mes "May God bless you.";
@@ -660,8 +678,8 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 	close;
 
 OnTouch:
-	if (HELLIONQ == 57 && countitem(7334) > 0) {
-		specialeffect2 EF_HEAL2;
+	if (HELLIONQ == 57 && countitem(Piece_Of_Slate_2) > 0) {
+		specialeffect(EF_HEAL2, AREA, playerattached());
 		specialeffect EF_HEAL2;
 		mes "^3355FFOne of the Tablet Pieces";
 		mes "that you have is beginning to";
@@ -673,7 +691,7 @@ OnTouch:
 }
 
 prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -688,7 +706,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		close;
 	}
 	else if (HELLIONQ == 36) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but are";
 		mes "you Clanux Heffron?";
 		next;
@@ -699,7 +717,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "Sent by Chilias, eh?";
 		mes "What does he want?";
 		next;
-		if (select("He wants me to help you.:He wants you to help me.") == 1) {
+		if (select("He wants me to help you.", "He wants you to help me.") == 1) {
 			mes "[Clanux Heffron]";
 			mes "So he sent me an";
 			mes "assistant, huh? Well...";
@@ -723,7 +741,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "Did the old man give you";
 			mes "any hints to help me out?";
 			next;
-			if (select("Where did you find these?:No, I'm sorry.") == 1) {
+			if (select("Where did you find these?", "No, I'm sorry.") == 1) {
 				mes "[Clanux Heffron]";
 				mes "Oh, these I found in Prontera.";
 				mes "That old coot hid these real";
@@ -778,7 +796,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "Hellion's gem on your own,";
 		mes "jerkface! Now getouttahere!";
 		next;
-		if (select("W-wait! Let's work together!:Fine. I don't need your help!") == 1) {
+		if (select("W-wait! Let's work together!", "Fine. I don't need your help!") == 1) {
 			mes "[Clanux Heffron]";
 			mes "Work together, eh? You";
 			mes "know, normally I'd tell you";
@@ -796,7 +814,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			HELLIONQ = 39;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Fine.";
 		mes "I don't need";
 		mes "your help!";
@@ -823,15 +841,15 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "searching? Were you";
 		mes "able to find anything?";
 		next;
-		if (select("Nothing...:In fact, I found this.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+		if (select("Nothing...", "In fact, I found this.") == 1) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333(This guy's a real punk!";
 			mes "I better not share any new";
 			mes "information I've found, just";
 			mes "in case he doesn't already";
 			mes "know about it.)^000000";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I... I wasn't able to";
 			mes "find anything that looked";
 			mes "like a clue. I'm sorry, but";
@@ -853,7 +871,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "And give this to the old guy";
 			mes "to prove I found it, will you?";
 			HELLIONQ = 41;
-			getitem 7093,1; //Wheel
+			getitem Wheel,1;
 			next;
 			mes "[Clanux Heffron]";
 			mes "That's all I know.";
@@ -885,7 +903,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "to me and let me know!";
 		mes "That's an order, got it?";
 		HELLIONQ = 41;
-		getitem 7093,1; //Wheel
+		getitem Wheel,1;
 		close;
 	}
 	else if (HELLIONQ == 41) {
@@ -925,7 +943,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "that clue, the sooner I'll";
 		mes "get that Hellion's gem.";
 		HELLIONQ = 43;
-		getitem 7093,1; //Wheel
+		getitem Wheel,1;
 		close;
 	}
 	else if (HELLIONQ == 43) {
@@ -944,8 +962,8 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "Didja find anything";
 		mes "new in the Tool Shop?";
 		next;
-		if (select("Pretend that nothing happened.:Share what you learned.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+		if (select("Pretend that nothing happened.", "Share what you learned.") == 1) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Nope...";
 			mes "I couldn't find any";
 			mes "new leads. I guess";
@@ -960,7 +978,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "are you anyway, huh?";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I put that cogwheel";
 		mes "into that weird machine in";
 		mes "the Tool Shop and some kind";
@@ -982,14 +1000,14 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "anything from that weird";
 		mes "machine in the Tool Shop?";
 		next;
-		if (select("Tell him just a little bit.:Don't tell him.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+		if (select("Tell him just a little bit.", "Don't tell him.") == 1) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Well, I put that cogwheel";
 			mes "into that weird machine in";
 			mes "the Tool Shop and some kind";
 			mes "of number pad came out. Then...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333(Wait, I can't trust this";
 			mes "guy!)^000000 I put in every single";
 			mes "password that I could think";
@@ -1044,7 +1062,7 @@ prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 		mes "that looks like it was made";
 		mes "by the thrust of a sharp sword.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Didn't Clanux mention that he";
 		mes "found a broken sword around";
 		mes "here? Maybe this was exactly";
@@ -1057,7 +1075,7 @@ prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 		mes "^4d4dff''Veggie Lady N9 W3 BINGO.''^000000";
 		HELLIONQ = 40;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What the heck does this";
 		mes "even mean? A Veggie Lady?";
 		mes "Does Clanux know anything";
@@ -1075,7 +1093,7 @@ prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 prontera,45,67,0	script	 #prt_key-1-1	HIDDEN_NPC,1,1,{
 OnTouch:
 	if (HELLIONQ == 40 || HELLIONQ == 41) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, according to the";
 		mes "message in that old training";
 		mes "dummy, this is where I'm";
@@ -1083,7 +1101,7 @@ OnTouch:
 		mes "north, 3 steps west. And now...";
 		mes "Veggie Lady. Okay, okay...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh. That's creepy.";
 		mes "There's one right there";
 		mes "staring at me. But after";
@@ -1091,9 +1109,9 @@ OnTouch:
 		mes "all the message says is, um,";
 		mes "what was that last word again?";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "BINGO") {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Of course!";
 			mes "''BINGO!'' But";
 			mes "I don't see a hall";
@@ -1108,7 +1126,7 @@ OnTouch:
 			mes "password. Okay, here's";
 			mes "the code number you want...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "C-code number?";
 			mes "Wait, wh-what...?";
 			next;
@@ -1120,7 +1138,7 @@ OnTouch:
 			mes "didn't get it:^4D4DFF 3847147298^000000.";
 			mes "Don't forget it, adventurer.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait... What does";
 			mes "this all mean? Won't";
 			mes "you tell me more?";
@@ -1136,14 +1154,14 @@ OnTouch:
 			else if (HELLIONQ == 41)
 				HELLIONQ = 43;
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Holy cow...";
 			mes "This is all";
 			mes "really cloak and";
 			mes "dagger type stuff!";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes ""+ .@input$ + "!";
 		mes "Hmmm. No, no that couldn't";
 		mes "be it. What in the world was that word and why can't I remember it";
@@ -1154,7 +1172,7 @@ OnTouch:
 }
 
 prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1167,9 +1185,9 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 		mes "cogwheel that you have";
 		mes "would fit perfectly in it...^000000";
 		next;
-		if (countitem(7093) > 0) {
-			if (select("Insert Cogwheel.:Ignore it.") == 1) {
-				mes "[" + strcharinfo(0) + "]";
+		if (countitem(Wheel) > 0) {
+			if (select("Insert Cogwheel.", "Ignore it.") == 1) {
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I just know this";
 				mes "cogwheel will fit";
 				mes "into this machine!";
@@ -1183,17 +1201,17 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 				mes "turned, the device hums";
 				mes "to life and a panel opens,";
 				mes "revealing a numeric keypad.^000000";
-				delitem 7093,1; //Wheel
+				delitem Wheel,1;
 				HELLIONQ = 44;
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I guess that I've got";
 				mes "to input some kind of";
 				mes "numeric password...";
 				mes "Ah, right, the numbers";
 				mes "that Veggie Lady gave me!";
 				next;
-				input .@input$;
+				input(.@input$);
 				if (.@input$ == "3847147298") {
 					mes "^3355FFThe machine responds to";
 					mes "the password with a pleasant";
@@ -1217,7 +1235,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 					mes "and confirm that this was";
 					mes "made by his grandfather...^000000";
 					HELLIONQ = 45;
-					getitem 7333,1; //Piece_Of_Slate_1
+					getitem Piece_Of_Slate_1,1;
 					close;
 				}
 				mes "The machine responds to";
@@ -1226,12 +1244,12 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 				mes "machine shuts down. You'll have to try entering the password again.";
 				close;
 			}
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Eh...";
 			mes "Forget it.";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Uh oh...";
 		mes "Where did I put";
 		mes "the cogwheel that";
@@ -1239,12 +1257,12 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 		close;
 	}
 	else if (HELLIONQ == 44) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Okay, let me see";
 		mes "if I can enter the";
 		mes "right number this time...";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ == "3847147298") {
 			mes "^3355FFThe machine responds to";
 			mes "the password with a pleasant";
@@ -1268,10 +1286,10 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 			mes "and confirm that this was";
 			mes "made by his grandfather...^000000";
 			HELLIONQ = 45;
-			getitem 7333,1; //Piece_Of_Slate_1
+			getitem Piece_Of_Slate_1,1;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "The machine responds to";
 		mes "the password with an abrupt,";
 		mes "screeching beep and the entire";
@@ -1285,7 +1303,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 }
 
 payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1309,7 +1327,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 		mes "and staring at me like";
 		mes "this is your turf?!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I'm sorry, but well...";
 		mes "Chilias'Tyus told me that";
 		mes "you might know something";
@@ -1336,7 +1354,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 		mes "we might as well kill";
 		mes "two birds with one stone...";
 		next;
-		if (select("Alright, I'll buy your clues.:Why the hell should I pay you?!") == 1) {
+		if (select("Alright, I'll buy your clues.", "Why the hell should I pay you?!") == 1) {
 			mes "[Grout'he]";
 			mes "Oh man, thanks a lot.";
 			mes "Alright, all I'm asking";
@@ -1373,10 +1391,10 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 					mes "I guess you can ask me later~";
 					Zeny -= 10000;
 					HELLIONQ = 48;
-					getitem 953,1; //Stone_Heart
-					getitem 511,1; //Green_Herb
-					getitem 533,1; //Grape_Juice
-					getitem 1049,1; //Skirt_Of_Virgin
+					getitem Stone_Heart,1;
+					getitem Green_Herb,1;
+					getitem Grape_Juice,1;
+					getitem Skirt_Of_Virgin,1;
 					close;
 				}
 				mes "[Grout'he]";
@@ -1472,7 +1490,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 		mes "you in making sense of";
 		mes "this weird riddle?";
 		next;
-		if (select("Yes, please!:No, thanks~") == 1) {
+		if (select("Yes, please!", "No, thanks~") == 1) {
 			mes "[Grout'he]";
 			mes "Alright now. All those";
 			mes "messages said stuff about";
@@ -1480,7 +1498,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 			mes "fish and green herbs, wine...";
 			mes "Huh. It doesn't make sense.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What...?";
 			mes "I could have";
 			mes "told you that!";
@@ -1601,10 +1619,10 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 	}
 }
 
-payon,101,190,0	script	 #paypuzz1	-1,1,1,{
+payon,101,190,0	script	 #paypuzz1	FAKE_NPC,1,1,{
 OnTouch:
 	if (HELLIONQ == 48) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, this is where";
 		mes "Grout'he told me to look.";
 		mes "Ooh, there's something";
@@ -1612,7 +1630,7 @@ OnTouch:
 		mes "let's see... ''This garment";
 		mes "is one size fits all.''";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That's it...?";
 		mes "Hopefully this will";
 		mes "make more sense once";
@@ -1625,13 +1643,13 @@ OnTouch:
 
 payon,82,109,3	script	Pile of Stone#paypuzz2	HIDDEN_NPC,{
 	if (HELLIONQ == 49) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, this is the place";
 		mes "that Grout'he told me about.";
 		mes "Let's see, there's an engraving";
 		mes "here that says, ''I used to pray for peaceful days here.'' Okay.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Man...";
 		mes "This better not be";
 		mes "one of those puzzles";
@@ -1645,7 +1663,7 @@ payon,82,109,3	script	Pile of Stone#paypuzz2	HIDDEN_NPC,{
 
 payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 	if (HELLIONQ == 50) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "So... Dried fish all";
 		mes "around me. This is getting";
 		mes "to be nonsense. Let's see,";
@@ -1653,7 +1671,7 @@ payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 		mes "Herbs are very useful for";
 		mes "getting rid of fish smells.''";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I got it...!";
 		mes "Whoever made up";
 		mes "these clues must be";
@@ -1666,7 +1684,7 @@ payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 
 payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 	if (HELLIONQ == 51) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Alright, the last";
 		mes "place I have to check.";
 		mes "It's a big old vat with a";
@@ -1674,14 +1692,14 @@ payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 		mes "let me see, there should";
 		mes "be a message here too. Ah--!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "This says, ''What will it be?";
 		mes "Wine or Grape Juice? Oh,";
 		mes "but I much prefer wine.'' Okay,";
 		mes "what does this have to do with";
 		mes "that Hellion's gem? Weird...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Am I missing something?";
 		mes "I think I really need help in";
 		mes "figuring this out. Hmm...";
@@ -1692,13 +1710,13 @@ payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 
 payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 	if (HELLIONQ == 53) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hey, the floor around";
 		mes "here doesn't seem very";
 		mes "solid. Maybe there's";
 		mes "something underneath?";
 		next;
-		if (select("Just check the floor.:Dig through the dust.") == 1) {
+		if (select("Just check the floor.", "Dig through the dust.") == 1) {
 			mes "^3355FFYou examine the floor,";
 			mes "but are unable to find";
 			mes "anything that resembles";
@@ -1707,21 +1725,21 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			mes "or a tablet piece.^000000";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Oh man, there's";
 		mes "so much dust! What";
 		mes "can I do about all of";
 		mes "this nasty dirt in the air?";
 		next;
-		if (countitem(953) > 0 && countitem(533) > 0 && countitem(511) > 0 && countitem(1049) > 0) {
-			mes "[" + strcharinfo(0) + "]";
+		if (countitem(Stone_Heart) > 0 && countitem(Grape_Juice) > 0 && countitem(Green_Herb) > 0 && countitem(Skirt_Of_Virgin) > 0) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Well, there are all these";
 			mes "clues Grout'he found. It sucks,";
 			mes "but I'll use this Grape Juice";
 			mes "to sort of keep this dust from";
 			mes "kicking up. And if I put my morals^FFFFFFa^000000 on hold, I'll cover my face...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "...With this Skirt of Virgin.";
 			mes "Oh, and I can use this Stone";
 			mes "Heart to prop any floor boards";
@@ -1729,7 +1747,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			mes "this floor. Oh hey! I found it!";
 			mes "It's... It's another clue!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait, wait...";
 			mes "I can't read the";
 			mes "engraving on this";
@@ -1742,10 +1760,10 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			mes "it. Fortunately, the juice from";
 			mes "the Green Herb makes the";
 			mes "engraving appear more clearly.^000000";
-			delitem 953,1; //Stone_Heart
-			delitem 511,1; //Green_Herb
-			delitem 533,1; //Grape_Juice
-			delitem 1049,1; //Skirt_Of_Virgin
+			delitem Stone_Heart,1;
+			delitem Green_Herb,1;
+			delitem Grape_Juice,1;
+			delitem Skirt_Of_Virgin,1;
 			HELLIONQ = 54;
 			next;
 			mes "[Stone Engraving]";
@@ -1758,7 +1776,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			HELLIONQ = 55;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Where did I leave";
 		mes "all that stuff I got from";
 		mes "Grout'he? Let's see,";
@@ -1791,13 +1809,13 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 }
 
 pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
 	}
 	if (HELLIONQ == 56) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hey, here's a huge";
 		mes "stone statue. This";
 		mes "must be what Grout'he";
@@ -1807,7 +1825,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 		mes "^4d4dffYou must...";
 		mes "You must be...^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What the--?";
 		mes "There's a voice";
 		mes "inside my head!";
@@ -1828,14 +1846,14 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 		mes "surely save yourself. So...";
 		mes "What do you do?";
 		next;
-		switch(select("I will kill to survive.:I have no choice, but to die.:I won't kill, but I'll find a way to live!:I'll ask that person if it's okay to kill him.")) {
+		switch(select("I will kill to survive.", "I have no choice, but to die.", "I won't kill, but I'll find a way to live!", "I'll ask that person if it's okay to kill him.")) {
 		case 1:
 			mes "[Echoing Voice]";
 			mes "There is a primal truth";
 			mes "to your answer. However...";
 			mes "You have chosen poorly.";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			end;
 		case 2:
 			mes "[Echoing Voice]";
@@ -1845,7 +1863,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "where is the respect for your";
 			mes "own life? If you are that willing to throw it away, you are no hero.";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			end;
 		case 3:
 			mes "[Echoing Voice]";
@@ -1862,7 +1880,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "tablet that will lead you";
 			mes "to the Hellion's gem.";
 			HELLIONQ = 57;
-			getitem 7334,1; //Piece_Of_Slate_2
+			getitem Piece_Of_Slate_2,1;
 			close;
 		case 4:
 			mes "[Echoing Voice]";
@@ -1871,14 +1889,14 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "your own cowardice. You have";
 			mes "chosen extremely poorly...";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			end;
 		}
 	}
 
 OnTouch:
-	if (HELLIONQ == 56 && countitem(7333) > 0) {
-		specialeffect2 EF_HEAL2;
+	if (HELLIONQ == 56 && countitem(Piece_Of_Slate_1) > 0) {
+		specialeffect(EF_HEAL2, AREA, playerattached());
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe piece of tablet";
 		mes "that you have is shining";
@@ -1890,7 +1908,7 @@ OnTouch:
 }
 
 geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1906,7 +1924,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 58) {
-		specialeffect2 EF_HEAL2;
+		specialeffect(EF_HEAL2, AREA, playerattached());
 		specialeffect EF_HEAL2;
 		mes "[Welshyun]";
 		mes "That...";
@@ -1925,7 +1943,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		mes "to seek my help in finding";
 		mes "the final piece, am I correct?";
 		next;
-		if (select("Shut up, I know you have it, so give it!:Yes, please help me.") == 1) {
+		if (select("Shut up, I know you have it, so give it!", "Yes, please help me.") == 1) {
 			mes "[Welshyun]";
 			mes "Such insolence!";
 			mes "Huh. I suppose Chilias";
@@ -1981,7 +1999,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 61) {
-		if (countitem(504) > 0) {
+		if (countitem(White_Potion) > 0) {
 			mes "[Welshyun]";
 			mes "Oh, a White Potion?";
 			mes "Yes, may I please have";
@@ -2010,7 +2028,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "please remember that.";
 			mes "Ah, and my student's";
 			mes "name is Enoz.";
-			delitem 504,1; //White_Potion
+			delitem White_Potion,1;
 			HELLIONQ = 62;
 			close;
 		}
@@ -2073,7 +2091,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 65) {
-		if (countitem(717) > 0) {
+		if (countitem(Blue_Gemstone) > 0) {
 			mes "[Welshyun]";
 			mes "Thank you. You've";
 			mes "brought the book to Enoz";
@@ -2089,7 +2107,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "in the third part of the ballad";
 			mes "of Grimnir? Well, adventurer?";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Valaskjalf") {
 				mes "[Welshyun]";
 				mes "Ah, well met, well met.";
@@ -2097,9 +2115,9 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 				mes "you are brave. As promised,";
 				mes "you may have this piece of";
 				mes "the tablet, which I've already found. The clues were too simple...";
-				delitem 717,1; //Blue_Gemstone
+				delitem Blue_Gemstone,1;
 				HELLIONQ = 66;
-				getitem 7336,1; //Piece_Of_Slate_4
+				getitem Piece_Of_Slate_4,1;
 				next;
 				mes "[Welshyun]";
 				mes "Please send my regards";
@@ -2136,7 +2154,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 67) {
-		if (countitem(7333) > 0 && countitem(7334) > 0 && countitem(7335) > 0 && countitem(7336) > 0) {
+		if (countitem(Piece_Of_Slate_1) > 0 && countitem(Piece_Of_Slate_2) > 0 && countitem(Piece_Of_Slate_3) > 0 && countitem(Piece_Of_Slate_4) > 0) {
 			mes "[Welshyun]";
 			mes "Hm? Did you need";
 			mes "me to combine all four";
@@ -2170,12 +2188,12 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "complete tablet.";
 			mes "Please bring this";
 			mes "safely back to Chilias.";
-			delitem 7333,1; //Piece_Of_Slate_1
-			delitem 7334,1; //Piece_Of_Slate_2
-			delitem 7335,1; //Piece_Of_Slate_3
-			delitem 7336,1; //Piece_Of_Slate_4
+			delitem Piece_Of_Slate_1,1;
+			delitem Piece_Of_Slate_2,1;
+			delitem Piece_Of_Slate_3,1;
+			delitem Piece_Of_Slate_4,1;
 			HELLIONQ = 68;
-			getitem 7332,1; //Slate
+			getitem Slate,1;
 			next;
 			mes "[Welshyun]";
 			mes "Wait, take a look!";
@@ -2198,7 +2216,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "it was the wish of this tablet's creator for someone to defeat";
 			mes "the Hellion Revenant...";
 			next;
-			if (select("Alright, I'll do it!:I better get this tablet to Chilias...") == 1) {
+			if (select("Alright, I'll do it!", "I better get this tablet to Chilias...") == 1) {
 				mes "[Welshyun]";
 				mes "Well, I'm almost certain";
 				mes "this map will lead you to";
@@ -2246,8 +2264,8 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 	}
 
 OnTouch:
-	if (HELLIONQ == 58 && countitem(7335) > 0) {
-		specialeffect2 EF_HEAL2;
+	if (HELLIONQ == 58 && countitem(Piece_Of_Slate_3) > 0) {
+		specialeffect(EF_HEAL2, AREA, playerattached());
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe piece of tablet";
 		mes "that you have is shining";
@@ -2266,14 +2284,14 @@ gef_tower,116,37,0	script	Enoz#hellion	4_M_ALCHE_A,{
 		mes "Oh man, who could have";
 		mes "taken it? Wait, was it... You?!";
 		next;
-		if (select("Actually, Welshyun sent me.:No way man, don't go nuts.") == 1) {
+		if (select("Actually, Welshyun sent me.", "No way man, don't go nuts.") == 1) {
 			mes "[Enoz]";
 			mes "My mentor, Welshyun?";
 			mes "Huh. Is there a report";
 			mes "I haven't submitted to him";
 			mes "yet? So what was it called?";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ == "Monster Life in the Geffen Area") {
 				mes "[Enoz]";
 				mes "''Monster Life in";
@@ -2377,7 +2395,7 @@ gef_fild09,296,59,0	script	Hidden Cave#hellion	HIDDEN_NPC,3,3,{
 		mes "come closer, you can see a";
 		mes "groove on the rock's surface.^000000";
 		next;
-		if (select("Insert the Tablet.:Ignore.") == 1) {
+		if (select("Insert the Tablet.", "Ignore.") == 1) {
 			mes "^3355FFYou insert the tablet into";
 			mes "the rock's groove and the";
 			mes "Hellion's gem begins to hum";
@@ -2425,8 +2443,8 @@ gef_fild09,296,59,0	script	Hidden Cave#hellion	HIDDEN_NPC,3,3,{
 	}
 
 OnTouch:
-	if (HELLIONQ == 68 && countitem(7332) > 0) {
-		specialeffect2 EF_HEAL2;
+	if (HELLIONQ == 68 && countitem(Slate) > 0) {
+		specialeffect(EF_HEAL2, AREA, playerattached());
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe tablet in your";
 		mes "hands begins to shine";
@@ -2436,13 +2454,3 @@ OnTouch:
 	}
 	end;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 First version [MasterOfMuppets]
-//= 1.1 a ',' that should be ';' [FlavioJS]
-//= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.3 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.4 Moved Enoz from the wizard quest skill to here. [L0ne_W0lf]
-//============================================================

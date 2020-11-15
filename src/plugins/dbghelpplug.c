@@ -1,16 +1,35 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 // Ported from eAthena Dev Team's version @ http://eathena-project.googlecode.com/svn/trunk/src/plugins/dbghelpplug.c
 // Currently supported dbghelp 5.1
 
+#include "common/hercules.h"
+
+#include "common/sysinfo.h"
+
+#include "common/HPMDataCheck.h"
+
 #include <stdio.h>
 #include <string.h>
-#include "../common/sysinfo.h"
-#include "../common/HPMi.h"
-
-#include "../common/HPMDataCheck.h"
 
 /**
  * Plugin basic information
@@ -106,8 +125,6 @@ typedef enum _SymTag {
 } SymTag;
 */
 #endif /* _NO_CVCONST_H */
-
-struct sysinfo_interface *sysinfo;
 
 /////////////////////////////////////////////////////////////////////
 // dbghelp function prototypes
@@ -217,8 +234,8 @@ typedef struct _InternalData {
 
 // Extended information printed in the console
 #define DBG_EXTENDED_INFORMATION \
-		"Please report the crash in the bug tracker:\n" \
-		"http://hercules.ws/board/tracker/\n"
+		"Please report the crash in our Issues tracker:\n" \
+		"https://github.com/HerculesWS/Hercules/issues\n"
 
 // Print object children?
 // WARNING: This will generate huge dump files!
@@ -429,17 +446,17 @@ Dhp__PrintProcessInfo(
 			fprintf(log_file,
 				"eip=%08x esp=%08x ebp=%08x iopl=%1x %s %s %s %s %s %s %s %s %s %s\n",
 				context->Eip, context->Esp, context->Ebp,
-				(context->EFlags >> 12) & 3,                  //  IOPL level value
-				context->EFlags & 0x00100000 ? "vip" : "   ", //  VIP (virtual interrupt pending)
-				context->EFlags & 0x00080000 ? "vif" : "   ", //  VIF (virtual interrupt flag)
-				context->EFlags & 0x00000800 ? "ov"  : "nv",  //  VIF (virtual interrupt flag)
-				context->EFlags & 0x00000400 ? "dn"  : "up",  //  OF (overflow flag)
-				context->EFlags & 0x00000200 ? "ei"  : "di",  //  IF (interrupt enable flag)
-				context->EFlags & 0x00000080 ? "ng"  : "pl",  //  SF (sign flag)
-				context->EFlags & 0x00000040 ? "zr"  : "nz",  //  ZF (zero flag)
-				context->EFlags & 0x00000010 ? "ac"  : "na",  //  AF (aux carry flag)
-				context->EFlags & 0x00000004 ? "po"  : "pe",  //  PF (parity flag)
-				context->EFlags & 0x00000001 ? "cy"  : "nc"); //  CF (carry flag)
+				(context->EFlags >> 12) & 3,                    //  IOPL level value
+				(context->EFlags & 0x00100000) ? "vip" : "   ", //  VIP (virtual interrupt pending)
+				(context->EFlags & 0x00080000) ? "vif" : "   ", //  VIF (virtual interrupt flag)
+				(context->EFlags & 0x00000800) ? "ov"  : "nv",  //  VIF (virtual interrupt flag)
+				(context->EFlags & 0x00000400) ? "dn"  : "up",  //  OF (overflow flag)
+				(context->EFlags & 0x00000200) ? "ei"  : "di",  //  IF (interrupt enable flag)
+				(context->EFlags & 0x00000080) ? "ng"  : "pl",  //  SF (sign flag)
+				(context->EFlags & 0x00000040) ? "zr"  : "nz",  //  ZF (zero flag)
+				(context->EFlags & 0x00000010) ? "ac"  : "na",  //  AF (aux carry flag)
+				(context->EFlags & 0x00000004) ? "po"  : "pe",  //  PF (parity flag)
+				(context->EFlags & 0x00000001) ? "cy"  : "nc"); //  CF (carry flag)
 		}
 		if( context->ContextFlags & CONTEXT_SEGMENTS )
 		{
@@ -450,8 +467,7 @@ Dhp__PrintProcessInfo(
 				context->SegDs,
 				context->SegEs,
 				context->SegFs,
-				context->SegGs,
-				context->EFlags);
+				context->SegGs);
 			if( context->ContextFlags & CONTEXT_CONTROL )
 				fprintf(log_file,
 					"             efl=%08x",
@@ -934,7 +950,6 @@ Dhp__PrintDataValue(
 	//
 	ULONG64 length = 0;
 	DWORD basetype;
-	BOOL isValid = TRUE;
 
 	assert( pInterData != NULL );
 	log_file = pInterData->log_file;
@@ -1243,7 +1258,7 @@ Dhp__PrintDataInfo(
 	}
 	else if( pSymInfo->Flags & SYMFLAG_REGISTER )
 	{
-		scope = ( pSymInfo->Flags & SYMFLAG_PARAMETER ? PARAM : LOCAL ); // register, optimized out(?)
+		scope = (pSymInfo->Flags & SYMFLAG_PARAMETER) ? PARAM : LOCAL; // register, optimized out(?)
 	}
 	else
 	{
@@ -1564,7 +1579,7 @@ typedef BOOL (WINAPI *ISDEBUGGERPRESENT)(void);
 ///
 /// @return TRUE is a debugger is present
 static BOOL
-Dhp__IsDebuggerPresent()
+Dhp__IsDebuggerPresent(void)
 {
 	HANDLE kernel32_dll;
 	ISDEBUGGERPRESENT IsDebuggerPresent_;
@@ -1589,7 +1604,7 @@ Dhp__IsDebuggerPresent()
 ///
 /// @return TRUE is sucessfull
 static BOOL
-Dhp__LoadDbghelpDll()
+Dhp__LoadDbghelpDll(void)
 {
 	dbghelp_dll = LoadLibraryA(DBGHELP_DLL);
 	if( dbghelp_dll != INVALID_HANDLE_VALUE )
@@ -1646,7 +1661,7 @@ Dhp__LoadDbghelpDll()
 
 /// Unloads the dbghelp.dll library.
 static VOID
-Dhp__UnloadDbghlpDll()
+Dhp__UnloadDbghlpDll(void)
 {
 	if( !SymCleanup_(GetCurrentProcess()) )
 		printf("Failed to cleanup symbols! Error: %u\n", GetLastError());
@@ -1799,7 +1814,6 @@ static LPTOP_LEVEL_EXCEPTION_FILTER previousFilter;
  **/
 HPExport void plugin_init (void) {
 	previousFilter = SetUnhandledExceptionFilter(Dhp__UnhandledExceptionFilter);
-	sysinfo = GET_SYMBOL("sysinfo");
 }
 
 /**

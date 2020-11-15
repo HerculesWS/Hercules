@@ -1,17 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Guild dungeon event, Arunafeltz.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Guild dungeon event, Arunafeltz. Retrieve Morestone's pickaxe from
+//= Kublin.
+//================= Current Version =======================================
 //= 1.2
-//===== Description: =========================================
-//= Guild dungeon event, Arunafeltz. Retrieve Morestone's
-//= pickaxe from Kublin.
-//===== Additional Comments: =================================
-//= 1.0 First version
-//= 1.1 Changed spawn timer to 1 hour. [L0ne_w0lf]
-//= 1.2 Added GM management function. [Euphy]
-//============================================================
+//=========================================================================
 
 arug_dun01,1,1,1	script	Monster Controler#aru_gd	4_DOG01,{
 OnInit:
@@ -58,13 +79,13 @@ OnMyMobDead:
 }
 
 arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
-	if (getcharid(2) == 0) {
+	if (getcharid(CHAR_ID_GUILD) == 0) {
 		mes "[Dwarf]";
 		mes "Hey did you see an ugly Goblin come by? He stole something from me!";
 		close;
 	}
 	.@chk_urquest = questprogress(2143,PLAYTIME);
-	.@chk_yourgdname$ = getguildname(getcharid(2));
+	.@chk_yourgdname$ = getguildinfo(GUILDINFO_NAME, getcharid(CHAR_ID_GUILD));
 	if ($@gdeventv_a1 == 0) {
 		if ($@gdevents_a$ == "") {
 			$@gdeventv_a1 = 1;
@@ -73,7 +94,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 			mes "Help me!";
 			mes "Please, help me!";
 			next;
-			switch(select("What happened?:Nevermind.")) {
+			switch(select("What happened?", "Nevermind.")) {
 			case 1:
 				mes "[Dwarf]";
 				mes "I am Morestone and I collect rare gems.";
@@ -101,8 +122,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 				mes "He stole my Pickaxe!";
 				mes "I can't live without it...";
 				next;
-				if (countitem(6010) > 0) {
-					mes "[" + strcharinfo(0) + "]";
+				if (countitem(Pickaxe) > 0) {
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Is this the pickaxe that you've been looking for?";
 					next;
 					mes "[Morestone]";
@@ -117,7 +138,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 					mes "You are great! What guild are you from?";
 					mes "Could it be Gravity or Mercury?";
 					next;
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
 					next;
 					mes "[Morestone]";
@@ -139,7 +160,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 					mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
 					mes "Do you want to go there now?";
 					next;
-					switch(select("Wait! I'm not ready yet.:Let's go!")) {
+					switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 					case 1:
 						$@gdeventv_a1 = 0;
 						$@gdevents_a$ = "";
@@ -151,7 +172,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						mes "Alright! Let's go.";
 						mes "If your friends visit me again later, I will guide them to that area again.";
 						mes "Don't forget, dwarves are grateful beings! Hahaha!";
-						delitem 6010,1; //Pickaxe
+						delitem Pickaxe,1;
 						$@gdeventv_a1 = 1;
 						$@gdevents_a$ = .@chk_yourgdname$;
 						close2;
@@ -184,7 +205,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 				mes "Oh, you are a member.";
 				mes "Would you like to go to the mysterious area?";
 				next;
-				switch(select("Let's go.:No, thanks.")) {
+				switch(select("Let's go.", "No, thanks.")) {
 				case 1:
 					mes "[Morestone]";
 					mes "I hope you enjoy yourself, my friend.";
@@ -205,7 +226,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 				mes "Help me!";
 				mes "Please, help me!";
 				next;
-				switch(select("What happened?:Nevermind.")) {
+				switch(select("What happened?", "Nevermind.")) {
 				case 1:
 					mes "[Dwarf]";
 					mes "I am Morestone and I collect rare gems.";
@@ -233,8 +254,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 					mes "He stole my Pickaxe!";
 					mes "I can't live without it...";
 					next;
-					if (countitem(6010) > 0) {
-						mes "[" + strcharinfo(0) + "]";
+					if (countitem(Pickaxe) > 0) {
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "Is this the pickaxe that you've been looking for?";
 						next;
 						mes "[Morestone]";
@@ -249,7 +270,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						mes "You are great! What guild are you from?";
 						mes "Could it be Gravity or Mercury?";
 						next;
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
 						next;
 						mes "[Morestone]";
@@ -271,7 +292,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
 						mes "Do you want to go there now?";
 						next;
-						switch(select("Wait! I'm not ready yet.:Let's go!")) {
+						switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 						case 1:
 							$@gdeventv_a1 = 0;
 							$@gdevents_a$ = "";
@@ -283,7 +304,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 							mes "Alright! Let's go.";
 							mes "If your friends visit me again later, I will guide them to that area again.";
 							mes "Don't forget, dwarves are grateful beings! Hahaha!";
-							delitem 6010,1; //Pickaxe
+							delitem Pickaxe,1;
 							$@gdeventv_a1 = 1;
 							$@gdevents_a$ = .@chk_yourgdname$;
 							close2;
@@ -327,7 +348,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 				mes "Oh, you are a member.";
 				mes "Would you like to go to the mysterious area?";
 				next;
-				switch(select("Let's go.:No, thanks.")) {
+				switch(select("Let's go.", "No, thanks.")) {
 				case 1:
 					mes "[Morestone]";
 					mes "I hope you enjoy yourself, my friend.";
@@ -348,7 +369,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 				mes "Help me!";
 				mes "Please, help me!";
 				next;
-				switch(select("What happened?:Nevermind.")) {
+				switch(select("What happened?", "Nevermind.")) {
 				case 1:
 					mes "[Dwarf]";
 					mes "I am Morestone and I collect rare gems.";
@@ -376,8 +397,8 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 					mes "He stole my Pickaxe!";
 					mes "I can't live without it...";
 					next;
-					if (countitem(6010) > 0) {
-						mes "[" + strcharinfo(0) + "]";
+					if (countitem(Pickaxe) > 0) {
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "Is this the pickaxe that you've been looking for?";
 						next;
 						mes "[Morestone]";
@@ -392,7 +413,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						mes "You are great! What guild are you from?";
 						mes "Could it be Gravity or Mercury?";
 						next;
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
 						next;
 						mes "[Morestone]";
@@ -414,7 +435,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 						mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
 						mes "Do you want to go there now?";
 						next;
-						switch(select("Wait! I'm not ready yet.:Let's go!")) {
+						switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 						case 1:
 							$@gdeventv_a1 = 0;
 							$@gdevents_a$ = "";
@@ -426,7 +447,7 @@ arug_dun01,199,195,5	script	Dwarf#aru_gd	4_M_DWARF,{
 							mes "Alright! Let's go.";
 							mes "If your friends visit me again later, I will guide them to that area again.";
 							mes "Don't forget, dwarves are grateful beings! Hahaha!";
-							delitem 6010,1; //Pickaxe
+							delitem Pickaxe,1;
 							$@gdeventv_a1 = 1;
 							$@gdevents_a$ = .@chk_yourgdname$;
 							close2;
@@ -492,7 +513,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	else {
 		setnpcdisplay "Pierrot Pier#aru_gd", 4_CAT;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait!! -";
 		mes "- You're carrying too many items, -";
 		mes "- you can't receive the materials. -";
@@ -500,7 +521,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 		mes "- and come back later. -";
 		close;
 	}
-	if (strcharinfo(0) == getguildmaster(getcharid(2))) {
+	if (strcharinfo(PC_NAME) == getguildinfo(GUILDINFO_MASTER_NAME, getcharid(CHAR_ID_GUILD))) {
 		if ($@gdeventv_a2 == 0) {
 			.@que_2143 = questprogress(2143,PLAYTIME);
 			if (!.@que_2143) {
@@ -525,7 +546,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Did you get permission from Gergath?";
 				mapannounce "arug_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
 				next;
-				switch(select("I need to check that.:No.")) {
+				switch(select("I need to check that.", "No.")) {
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "Please give me the palm of your hand.";
@@ -599,7 +620,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "[Pierrot Pier]";
 				mes "Alright, would you like to play the game Gergath has prepared for you?";
 				next;
-				switch(select("Game instructions.:Skip instructions.:Refuse game.")) {
+				switch(select("Game instructions.", "Skip instructions.", "Refuse game.")) {
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "The game prepared by my master is very unique, yet simple and fun!";
@@ -633,7 +654,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Okay, I'm ready to begin.";
 				mes "Shall we start? Beep, beep?";
 				next;
-				switch(select("No.:Start.")) {
+				switch(select("No.", "Start.")) {
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "Let me know when you are ready.";
@@ -672,7 +693,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see...";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
@@ -681,11 +702,11 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Success~!!";
 				mes "What a success~!!";
 				mapannounce "arug_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -707,7 +728,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "What did you think?";
 			next;
-			switch(select("It was pretty hard.:I should've been successful...")) {
+			switch(select("It was pretty hard.", "I should've been successful...")) {
 			case 1:
 				mes "[Pierrot Pier]";
 				mes "It's like trying to find a needle in a haystack!";
@@ -735,7 +756,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "Shall we start? Beep, beep?";
 			mapannounce "arug_que01", "Pierrot Pier: Okay, I'm ready to begin. Shall we start? Beep, beep?",bc_map,"0x99CC00";
 			next;
-			switch(select("No.:Start.")) {
+			switch(select("No.", "Start.")) {
 			case 1:
 				mes "[Pierrot Pier]";
 				mes "Let me know when you are ready.";
@@ -783,7 +804,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mapannounce "arug_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,"0x99CC00";
 			donpcevent "eff_mvp#aru_gd::OnMVP";
 			$@gdeventv_a2 = 5;
-			getitem 14596,10; //Pierre_Treasurebox
+			getitem Pierre_Treasurebox,10;
 			close;
 		}
 		else if ($@gdeventv_a2 == 4) {
@@ -813,7 +834,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see.";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
@@ -821,11 +842,11 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Wow~~!!";
 				mes "Success~!!";
 				mes "What a success~!!";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -863,7 +884,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "Did you get permission from the Gergath?";
 			mapannounce "arug_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
 			next;
-			switch(select("I need to check that.:No.")) {
+			switch(select("I need to check that.", "No.")) {
 			case 1:
 				mes "[Pierrot Pier]";
 				mes "Please give me the palm of your hand.";
@@ -923,7 +944,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see...";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
@@ -932,11 +953,11 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Success~!!";
 				mes "What a success~!!";
 				mapannounce "arug_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -987,7 +1008,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see...";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				$@gdeventv_a2 = 3;
 				donpcevent "eff_mvp#aru_gd::OnMVP";
@@ -995,11 +1016,11 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Wow~~!!";
 				mes "Success~!!";
 				mes "What a success~!!";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -1305,19 +1326,19 @@ OnBingo:
 	end;
 }
 
-arug_que01,100,80,0	script	removepp_aru_gd	-1,5,5,{
+arug_que01,100,80,0	script	removepp_aru_gd	FAKE_NPC,5,5,{
 	end;
 
 OnInit:
 	disablenpc "removepp_aru_gd";
 	end;
 
-OnTouch2:
-	.@paper_aru_gd = countitem(6030);
-	.@spaper_aru_gd = countitem(6031);
+OnTouch:
+	.@paper_aru_gd = countitem(Glitering_PaperA);
+	.@spaper_aru_gd = countitem(Glitering_PaperB);
 	if ((.@paper_aru_gd > 0) || (.@spaper_aru_gd > 0)) {
-		delitem 6030,.@paper_aru_gd; //Glitering_PaperA
-		delitem 6031,.@spaper_aru_gd; //Glitering_PaperB
+		delitem Glitering_PaperA,.@paper_aru_gd;
+		delitem Glitering_PaperB,.@spaper_aru_gd;
 	}
 	end;
 }
@@ -1330,33 +1351,33 @@ OnMVP:
 	end;
 
 OnTimer1000:
-	specialeffect EF_MVP,AREA,"paper_sp_1_a";
-	specialeffect EF_MVP,AREA,"paper_sp_3_a";
-	specialeffect EF_MVP,AREA,"paper_sp_5_a";
-	specialeffect EF_MVP,AREA,"paper_sp_7_a";
-	specialeffect EF_MVP,AREA,"paper_sp_9_a";
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_1_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_3_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_5_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_7_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_9_a"));
 	end;
 
 OnTimer2000:
-	specialeffect EF_MVP,AREA,"paper_sp_2_a";
-	specialeffect EF_MVP,AREA,"paper_sp_4_a";
-	specialeffect EF_MVP,AREA,"paper_sp_6_a";
-	specialeffect EF_MVP,AREA,"paper_sp_8_a";
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_2_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_4_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_6_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_8_a"));
 	end;
 
 OnTimer3000:
-	specialeffect EF_MVP,AREA,"paper_sp_1_a";
-	specialeffect EF_MVP,AREA,"paper_sp_3_a";
-	specialeffect EF_MVP,AREA,"paper_sp_5_a";
-	specialeffect EF_MVP,AREA,"paper_sp_7_a";
-	specialeffect EF_MVP,AREA,"paper_sp_9_a";
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_1_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_3_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_5_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_7_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_9_a"));
 	end;
 
 OnTimer4000:
-	specialeffect EF_MVP,AREA,"paper_sp_2_a";
-	specialeffect EF_MVP,AREA,"paper_sp_4_a";
-	specialeffect EF_MVP,AREA,"paper_sp_6_a";
-	specialeffect EF_MVP,AREA,"paper_sp_8_a";
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_2_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_4_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_6_a"));
+	specialeffect(EF_MVP, AREA, getnpcid("paper_sp_8_a"));
 	stopnpctimer;
 	end;
 }
@@ -1510,7 +1531,7 @@ arug_dun01,5,5,1	script	Event controller#aru_gd	4_DOG01,{
 	} else {
 		mes "How can I help you?";
 		next;
-		switch(select("Reset.:No, thanks.")) {
+		switch(select("Reset.", "No, thanks.")) {
 		case 1:
 			mes "Completed.";
 			donpcevent "Monster Controler1#aru::OnControler1#aru_gd";

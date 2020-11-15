@@ -1,19 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Veins Town script
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Veins Town Npcs
-//===== Additional Comments: =================================
-//= 1.0 First version [L0ne_W0lf]
-//= 1.1 Updated to match AEGIS script. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-// Veins
-//============================================================
+//== Veins =================================================
 veins,162,34,5	script	Towner#ve1	4_M_DESERT,{
 	mes "[Towner]";
 	mes "I love cacti. They're";
@@ -532,8 +553,7 @@ veins,157,123,3	script	Towner#ve15	4_M_DST_MASTER,{
 	close;
 }
 
-// Inside Veins
-//============================================================
+//== Inside Veins ==========================================
 ve_in,119,386,3	script	Prisoner#ve1	4_M_DST_MASTER,{
 	mes "[Prisoner]";
 	mes "Unbelievable!";
@@ -551,7 +571,7 @@ ve_in,119,386,3	script	Prisoner#ve1	4_M_DST_MASTER,{
 	close;
 }
 
-ve_in,111,379,8	script	Ward#ve1	4_M_DST_MASTER,{
+ve_in,111,379,0	script	Ward#ve1	4_M_DST_MASTER,{
 	mes "[Ward]";
 	mes "This place ensures that";
 	mes "dangerous criminals aren't";

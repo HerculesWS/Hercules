@@ -1,27 +1,45 @@
-//===== Hercules Script ======================================
-//= Rachel City NPCs
-//===== By: ==================================================
-//= First Version: Tsuyuki and Harp
-//= iRO Version: L0ne_W0lf
-//===== Current Version: =====================================
-//= 0.9a
-//===== Description: =========================================
-//= [Partial Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Harp
+//= Copyright (C) Tsuyuki
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Rachel City
+//================= Description ===========================================
 //= Arunafeltz NPCs
-//===== Additional Comments: =================================
-//= 0.5 Text translated from Korean > English, incomplete,
-//= possibly missing some NPCs and missing all quests.
-//= 0.6 Removed Inn Keeper (it's in inn.txt), name duplicates [Lupus]
-//= 0.7 Total update of most if not all NPCs. [L0ne_W0lf]
-//= 0.8 Updated "Frozen Boy" dialog. (euRO) [L0ne_W0lf]
-//= 0.9 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 0.9a Added 'consumeitem' command. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 0.9a
+//=========================================================================
 
-//===== Set 1 ================================================
+//== Set 1 =================================================
 ice_dun04,33,166,3	script	Frozen Boy	4_M_FROZEN,{
 	cutin "ra_sboy.bmp",2;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "This boy must be the one who Ktullanux tried to protect.";
 	next;
 	mes "- The boy was frozen inside a giant ice pole, and he looks as if he is in sleep rather than dead. -";
@@ -34,7 +52,7 @@ ice_dun04,33,166,3	script	Frozen Boy	4_M_FROZEN,{
 	mes "- You wondered why a young boy had to be confined within this isolated cave, -";
 	mes "- you instinctively knew that no mage in this world would be able to release him from the ice pole.";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "What happened to this boy?";
 	close2;
 	cutin "",255;
@@ -276,7 +294,7 @@ rachel,206,30,3	script	Freya's Priest#play	4_F_TRAINEE,{
 	mes "Entertain me!";
 	emotion e_ag;
 	next;
-	if (select("What? You can't tell me what to do!:You got it.") == 1) {
+	if (select("What? You can't tell me what to do!", "You got it.") == 1) {
 		mes "[Freya's Priest]";
 		mes "Oh. That much is";
 		mes "true, I suppose.";
@@ -287,11 +305,11 @@ rachel,206,30,3	script	Freya's Priest#play	4_F_TRAINEE,{
 	mes "what will you be";
 	mes "doing to entertain me?";
 	next;
-	if (select("Here's a funny story...:I will do what you want me to do.") == 1) {
+	if (select("Here's a funny story...", "I will do what you want me to do.") == 1) {
 		mes "^3355FFYou told her the first";
 		mes "funny story that you";
 		mes "could think of.^000000";
-		specialeffect2 EF_TALK_FROSTJOKE;
+		specialeffect(EF_TALK_FROSTJOKE, AREA, playerattached());
 		next;
 		mes "[Freya's Priest]";
 		mes "That's supposed to";
@@ -331,7 +349,7 @@ rachel,197,137,3	script	Bard#aru	1_M_BARD,{
 	mes "Yes, I'm talking about the pope~";
 	mes "Pope, yeah~ Pope, yeah~";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "You must be off your";
 	mes "rocker singing that";
 	mes "kind of song here";
@@ -430,15 +448,14 @@ ra_temin,138,64,5	script	Child Follower#in1	4_M_CHILD1,{
 	close;
 }
 
-
-//===== Set 2 ================================================
+//== Set 2 =================================================
 ra_fild12,283,208,3	script	Apprentice Priestess	4_F_CHILD,{
 	if ($rachel_donate < 10000) {
 		mes "[Papaii]";
 		mes "Welcome to Arunafeltz,";
 		mes "adventurer! Enjoy your stay~";
 		next;
-		if (select("Are you a guide?:Thanks, have a good day.") == 1) {
+		if (select("Are you a guide?", "Thanks, have a good day.") == 1) {
 			mes "[Papaii]";
 			mes "Oh, actually, if you";
 			mes "want to speak to a guide,";
@@ -487,7 +504,7 @@ ra_fild12,283,208,3	script	Apprentice Priestess	4_F_CHILD,{
 	mes "rest from your travels, why";
 	mes "don't you visit Rachel?";
 	next;
-	if (select("Are you a guide?:Tell me more about Rachel.") == 1) {
+	if (select("Are you a guide?", "Tell me more about Rachel.") == 1) {
 		mes "[Papaii]";
 		mes "Actually, my name is";
 		mes "Papaii, and I'm stationed";
@@ -578,7 +595,7 @@ ra_temple,167,155,4	script	Child Follower#3	4_F_CHILD,{
 	mes "sees you, I'm gonna";
 	mes "get caught, you jerk!";
 	next;
-	if (select("What are you doing?:Alright.") == 1) {
+	if (select("What are you doing?", "Alright.") == 1) {
 		mes "[Lewei]";
 		mes "Hellooo~?";
 		mes "Can't you see?";

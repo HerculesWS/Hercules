@@ -20,9 +20,9 @@
 
 -	script	Bank Clerk::bankg	4_M_ZONDAOYAJI,{
 	mes"[Maniss]";
-	mes strcharinfo(0)+", welcome to the 2nd Bank of Prontera!";
+	mes strcharinfo(PC_NAME)+", welcome to the 2nd Bank of Prontera!";
 
-	set @kb_int,(gettime(6)*31)+gettime(5); //today's number
+	set @kb_int,(gettime(GETTIME_MONTH)*31)+gettime(GETTIME_DAYOFMONTH); //today's number
 	set @income,0;
 	//calculate %
 	if (#kafrabank<=0 || #kb_int>=@kb_int) goto L_NoIncomeToday;
@@ -44,7 +44,8 @@ L_NoIncomeToday:
 	mes"[Maniss]";
 	mes "Please, tell me how much zeny you would like to deposit.";
 	next;
-	if(input(@kafrabank) == 1) goto L_TOO_BIG_AMOUNT;
+	if (input(@kafrabank, 0) == 1)
+		goto L_TOO_BIG_AMOUNT;
 
 	if(@kafrabank<1000) goto L_LESS_1000;
 	if(@kafrabank>Zeny) goto L_NOT_ENOUGH;
@@ -62,7 +63,8 @@ M_WITHDRAW:
 	mes "Your account: ^135445" + #kafrabank + "^000000 zeny.";
 	mes "How much zeny would you like to withdraw?";
 	next;
-	if(input(@kafrabank) == 1) goto L_TOO_BIG_AMOUNT;
+	if (input(@kafrabank, 0) == 1)
+		goto L_TOO_BIG_AMOUNT;
 
 	if(@kafrabank<1) goto B_EXIT2;
 	if(@kafrabank>#kafrabank) goto L_NOT_ENOUGH;

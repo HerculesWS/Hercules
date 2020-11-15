@@ -1,24 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) DZeroX
+//= Copyright (C) Nexon
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Lutie Town
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Description ===========================================
 //= Lutie - City NPCs
-//===== Additional Comments: =================================
-//= 1.1 Edited some text and updated/enabled some triggers
-//=     for the quest.[kobra_k88]
-//= 1.2 Fixed exploit. Checked for Bard Job Quest compatibility [Lupus]
-//= 1.3 Fixed typos [Nexon]
-//= 1.4 Fixed exploit [Lupus]
-//= 1.5 Fixed a bug that could reset Lutie quest state [Lupus]
-//= 1.6 Heavy optimization to all the NPCs [DZeroX]
-//= 1.7 Updated to match AEGIS script. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
-// Teleport to Lutie
-//============================================================
+//== Teleport to Lutie =====================================
 aldebaran,223,222,4	script	Mr. Claus	4_M_SANTA,{
 	mes "[Mr. Claus]";
 	mes "Ho Ho Ho~";
@@ -26,7 +46,7 @@ aldebaran,223,222,4	script	Mr. Claus	4_M_SANTA,{
 	mes "I wish all of you joy";
 	mes "and Christmas cheer!";
 	next;
-	switch(select("Info about Lutie:Move to 'Lutie':Cancel")) {
+	switch(select("Info about Lutie", "Move to 'Lutie'", "Cancel")) {
 	case 1:
 		mes "[Mr. Claus]";
 		mes "^3355FFLutie^000000, the fantastic Christmas Town! Always filled with the spirit of giving, Lutie is filled with appetizing cakes, tiny toy soldiers, and all sorts of wonderful things~!";
@@ -66,8 +86,7 @@ aldebaran,223,222,4	script	Mr. Claus	4_M_SANTA,{
 	}
 }
 
-// Inside Lutie
-//============================================================
+//== Inside Lutie ==========================================
 xmas_in,100,96,4	script	Santa Claus	4_M_SANTA,{
 	mes "[Santa Claus]";
 	mes "Ho Ho Ho~";
@@ -272,8 +291,7 @@ xmas_in,27,103,4	script	Lenient Aunt	4_F_GODEMOM,{
 	}
 }
 
-// Lutie
-//============================================================
+//== Lutie =================================================
 xmas,117,304,4	script	Poze	4_M_06,{
 	if (xmas_npc == 3 || xmas_npc == 4) {
 		mes "[Poze]";
@@ -320,12 +338,12 @@ xmas,117,304,4	script	Poze	4_M_06,{
 
 xmas,176,236,4	script	Uncle Hairy	4_M_05,{
 	if (xmas_npc == 4) {
-		if (countitem(1024) > 0 && countitem(938) > 0) {
+		if (countitem(Chinese_Ink) > 0 && countitem(Sticky_Mucus) > 0) {
 			mes "[Cantata]";
 			mes "Oh? Y-y-you've got the stuff? Goooooooood. It's been so long since I've been able to have some of this... G-give it to me!";
 			next;
-			delitem 1024,1; // Chinese_Ink
-			delitem 938,1; // Sticky_Mucus
+			delitem Chinese_Ink,1; // Chinese_Ink
+			delitem Sticky_Mucus,1; // Sticky_Mucus
 			mes "^3355FFYou quickly handed him the Squid Ink and Sticky Mucus and watched with a little disgust as he relished the flavor.^000000";
 			next;
 			mes "[Cantata]";
@@ -452,7 +470,7 @@ xmas,176,236,4	script	Uncle Hairy	4_M_05,{
 }
 
 xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
-	if (checkweight(1201,1) == 0 ) {
+	if (checkweight(Knife,1) == 0 ) {
 		cutin "rutie_snownow01.bmp",2;
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -473,7 +491,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 	mes "On the same spot...";
 	mes "Day after day after day after day after day after day after day after day after day after day...";
 	next;
-	switch(select("^3355FFSnowysnow?^000000:Info about the Christmas dungeon:Quit this conversation")) {
+	switch(select("^3355FFSnowysnow?^000000", "Info about the Christmas dungeon", "Quit this conversation")) {
 	case 1:
 		if (xmas_npc < 2) {
 			cutin "rutie_snownow01.bmp",2;
@@ -660,7 +678,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 				switch(.@snownow) {
 				case 1:
 					xmas_npc = 11;
-					getitem 529,5; // Candy
+					getitem Candy,5; // Candy
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Wow~!";
@@ -669,7 +687,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 2:
 					xmas_npc = 11;
-					getitem 529,10; // Candy
+					getitem Candy,10; // Candy
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Ooh~!";
@@ -677,7 +695,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 3:
 					xmas_npc = 11;
-					getitem 530,5; // Candy_Striper
+					getitem Candy_Striper,5; // Candy_Striper
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Hoooraaaay~!";
@@ -685,7 +703,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 4:
 					xmas_npc = 11;
-					getitem 530,10; // Candy_Striper
+					getitem Candy_Striper,10; // Candy_Striper
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Wow, that's so great!";
@@ -693,7 +711,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 5:
 					xmas_npc = 11;
-					getitem 539,1; // Piece_Of_Cake
+					getitem Piece_Of_Cake,1; // Piece_Of_Cake
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Aren't you lucky!";
@@ -701,7 +719,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 6:
 					xmas_npc = 11;
-					getitem 539,2; // Piece_Of_Cake
+					getitem Piece_Of_Cake,2; // Piece_Of_Cake
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Now, isn't that nice?";
@@ -709,7 +727,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 7:
 					xmas_npc = 11;
-					getitem 538,5; // Well_Baked_Cookie
+					getitem Well_Baked_Cookie,5; // Well_Baked_Cookie
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Oh woooooow~!";
@@ -717,7 +735,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 8:
 					xmas_npc = 11;
-					getitem 538,10; // Well_Baked_Cookie
+					getitem Well_Baked_Cookie,10; // Well_Baked_Cookie
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "*Gasp!* Ooh~";
@@ -774,7 +792,7 @@ xmas,146,136,4	script	Hashokii	4_M_PIERROT,{
 	mes "La La La~!";
 	mes "Dum di Dum di Dum!";
 	next;
-	switch(select("Yo Clown boy, what's up?:About Snowysnow:Quit conversation")) {
+	switch(select("Yo Clown boy, what's up?", "About Snowysnow", "Quit conversation")) {
 	case 1:
 		mes "[Hashokii]";
 		mes "La La La~!";

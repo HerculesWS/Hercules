@@ -1,26 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Silent
+//= Copyright (C) Nexon
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Hair Dresser
-//===== By: ==================================================
-//= Muad_Dib, Samuray22, Kisuka
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Allows you to change your hairstyle.
-//===== Additional Comments: =================================
-//= 1.2 Rescripted to the Aegis 10.3 Standards. [Samuray22]
-//= 1.3 Updated to match AEGIS script. [Kisuka]
-//= 1.4 Added Lighthalzen Hair Dresser. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Hair Dresser Veronica
-// ============================================================
+//== Hair Dresser Veronica =================================
 alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 	mes "[Veronica]";
 	mes "Welcome to Veronica's hair salon.";
 	mes "How can I help you?";
 	next;
-	switch(select("See available hair styles.:Change hair style.:End conversation.")) {
+	switch(select("See available hair styles.", "Change hair style.", "End conversation.")) {
 	case 1:
 		mes "[Veronica]";
 		mes "We have a total of 19 styles, available from no.1 to no.19.";
@@ -28,15 +51,8 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 		mes "If you wish to cancel,";
 		mes "please enter 0.";
 		next;
-		input .@style;
-		if(.@style > 19) {
-			mes "[Veronica]";
-			mes "Oops, I'm sorry, but that";
-			mes "style is not available.";
-			mes "Remember to enter a number";
-			mes "from 1 to 19.";
-			next;
-		} else if(.@style == 0) {
+		input(.@style);
+		if(.@style == 0) {
 			mes "[Veronica]";
 			mes "So, how do you like the style?";
 			mes "Feel free to ask me about any";
@@ -45,313 +61,357 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 			mes "hair.";
 			close;
 		}
-		else {
-			callsub L_cutin,.@style;
+		if (.@style < 1 || .@style > 19) {
 			mes "[Veronica]";
-			switch(.@style) {
-			case 1:
-				if(Sex == 1) {
-					mes "Oh, that's 'Play Dead' style!";
-					mes "It's a nice, basic haircut.";
-					mes "I notice that usually the";
-					mes "cute, conversative types seem";
-					mes "to prefer this style.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'First Aid' style!";
-					mes "The shoulder length tresses";
-					mes "are straightened for those";
-					mes "no nonsense adventurers. It";
-					mes "seems to be the style of";
-					mes "choice for Novices.";
-					close2; cutin "",255; end;
-			case 2:
-				if(Sex == 1) {
-					mes "Oh, that's the 'Two Handed Sword";
-					mes "Mastery' style! It's perfect for";
-					mes "for Swordmen who might muss their";
-					mes "hair while swinging their swords";
-					mes "all day long.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Bash' style!";
-					mes "For the powerful woman that's";
-					mes "not afraid to get a little";
-					mes "blood on her hands, but knows";
-					mes "how great her hair will look";
-					mes "while wildly flailing a sword.";
-					close2; cutin "",255; end;
-			case 3:
-				if(Sex == 1) {
-					mes "Oh, that's 'Napalm Beat' style!";
-					mes "It's a unique look with a hint";
-					mes "of eccentricity that's offset";
-					mes "with a helping of elegance.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Frost Diver' style!";
-					mes "The pigtails lend an innocent,";
-					mes "demure look for those Mages";
-					mes "and Wizards that usually scare";
-					mes "off the boys with their spells.";
-					close2; cutin "",255; end;
-			case 4:
-				if(Sex == 1) {
-					mes "Oh, that's the 'Double Strafe'";
-					mes "style! The arrangement of the";
-					mes "hair conducts ambient static";
-					mes "electricity, naturally clearing";
-					mes "the mind. At least, that's what";
-					mes "I was taught in fashion school.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Arrow Shower' style!";
-					mes "For the Bowswoman who doesn't";
-					mes "want fashion to interfere with";
-					mes "her depth perception. Much more";
-					mes "attractive than those horrid";
-					mes "granny-style hairbuns.";
-					close2; cutin "",255; end;
-			case 5:
-				if(Sex == 1) {
-					mes "Oh, that's 'Angelus' style!";
-					mes "It's for calm and devout people,";
-					mes "as well as those bashful,";
-					mes "mild-mannered types.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Heal' style!";
-					mes "This is in trend among";
-					mes "Priests and Acolytes since";
-					mes "this style is appropriate";
-					mes "for formal situations, but";
-					mes "is also practical in battle.";
-					close2; cutin "",255; end;
-			case 6:
-				if(Sex == 1) {
-					mes "Oh, that's 'Push Cart' style!";
-					mes "It was based on the design of a";
-					mes "cart...at least, that's what";
-					mes "I learned in beautician school.";
-					close2; cutin "",255; end;
-				}
-					mes "Ooh, that's 'Vending' style!";
-					mes "It's the hairdo of money";
-					mes "makers...and if I may say so,";
-					mes "it's also economical.";
-					close2; cutin "",255; end;
-			case 7:
-				if(Sex == 1) {
-					mes "Ooh, that's 'Envenom' style!";
-					mes "It looks great on Thieves and";
-					mes "and Assassins when they're";
-					mes "out poisoning people and animals.";
-					mes "It's fashion for the aggressive";
-					mes "and eclectic~!";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Double Attack' style!";
-					mes "The adorable pigtail, paired with";
-					mes "those provacative bangs are sure";
-					mes "to help you steal the heart of";
-					mes "some cute guy.";
-					close2; cutin "",255; end;
-			case 8:
-				if(Sex == 1) {
-					mes "Oh, that's 'Bowling Bash' style!";
-					mes "A popular style for Knights, its";
-					mes "manly, rugged look tends to";
-					mes "attract all of the ladies,";
-					mes "and looks great on men with";
-					mes "strong chins.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Gloria' style!";
-					mes "It's very elegant and looks";
-					mes "great on holy Priests. This";
-					mes "style is most attractive to";
-					mes "ladies who aren't that used";
-					mes "to fighting with their hands.";
-					close2; cutin "",255; end;
-			case 9:
-				if(Sex == 1) {
-					mes "Oh, that's 'Venom Dust' style!";
-					mes "Definitely a look for rebels,";
-					mes "the sweeping, yet decidedly";
-					mes "luxorious locks seems to enchant";
-					mes "girls with a fatal attraction.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'SP Recovery' style!";
-					mes "To add more body to the special";
-					mes "style of these bangs, I use a";
-					mes "special conditioner that makes";
-					mes "you feel like you're regaining SP";
-					mes "...Although, it acutally doesn't.";
-					close2; cutin "",255; end;
-			case 10:
-				if(Sex == 1) {
-					mes "Oh, that's 'Turn Undead' style!";
-					mes "This is popular among Priests";
-					mes "that want a serious, yet a bit";
-					mes "of a wild, agressive look.";
-					mes "Definitely more attractive";
-					mes "than the 'Holy Light' mullet.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Prepare Potion' style!";
-					mes "The flared out tresses are chosen";
-					mes "by beginning Alchemists, since";
-					mes "early, explosive experiments would";
-					mes "make their hair to stick out anyway.";
-					close2; cutin "",255; end;
-			case 11:
-				if(Sex == 1) {
-					mes "Oh, that's 'Dragonology' style!";
-					mes "It's neat and clean cut, perfect";
-					mes "for studious people and looks";
-					mes "great with eyeglasses. This";
-					mes "is a fashion well suited to";
-					mes "intellectual types.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Grand Cross' style!";
-					mes "It's in style among those pious";
-					mes "Crusaders that need hair that";
-					mes "won't muss during fighting, yet";
-					mes "is respectable enough to attend";
-					mes "religious services.";
-					close2; cutin "",255; end;
-			case 12:
-				if(Sex == 1) {
-					mes "Oh, that's 'Mace Mastery' style!";
-					mes "A lot of care goes into making";
-					mes "that tussled hair say, 'I don't";
-					mes "care how I look at all.'";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Intimidate' style!";
-					mes "The Rogue women seem to like";
-					mes "this style...although I imagine";
-					mes "that more of them would prefer";
-					mes "something wilder to match those";
-					mes "stockings...";
-					close2; cutin "",255; end;
-			case 13:
-				if(Sex == 1) {
-					mes "Oh, that's 'Thunder Storm' style!";
-					mes "This hot, flamboyant hairstyle";
-					mes "flares out wildly like thunder.";
-					mes "...And you will too with this new look.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Spiritual Sphere";
-					mes "Absorption' style! There's a";
-					mes "charismatic quality to this";
-					mes "fashion: it's tough, slightly";
-					mes "tomboyish, but not so much";
-					mes "that it can't be cute.";
-					close2; cutin "",255; end;
-			case 14:
-				if(Sex == 1) {
-					mes "Oh, that's 'Encore' style!";
-					mes "The elegant, flowing locks";
-					mes "fit well with Bards, or men who";
-					mes "appreciate the value of male";
-					mes "beauty.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Gypsy's Kiss' style!";
-					mes "Dancers seem to like this style,";
-					mes "although personally, I think";
-					mes "this fashion fits very well";
-					mes "with glasses.";
-					close2; cutin "",255; end;
-			case 15:
-				if(Sex == 1) {
-					mes "Oh, that's 'Grimtooth' style!";
-					mes "Spiky and unkempt, this style";
-					mes "is a popular counterculture";
-					mes "street fashion. You might";
-					mes "not want to wear your hair";
-					mes "this way at a wedding, though.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Counter Attack' style!";
-					mes "This is an intimidating look for";
-					mes "girls that want to say 'You hit";
-					mes "me, I'll hit you back!' It really";
-					mes "emphasizes strong looking";
-					mes "foreheads and cheekbones.";
-					close2; cutin "",255; end;
-			case 16:
-				if(Sex == 1) {
-					mes "Oh, that's 'Blitz Beat' style!";
-					mes "A funky and lively fashion,";
-					mes "this style was developed for a";
-					mes "Hunter who liked really long";
-					mes "bangs and wanted to see";
-					mes "through them at the same time.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Anke Snare' style!";
-					mes "The style style is specially";
-					mes "made for Hunters that don't like";
-					mes "to get their hair tangled...";
-					mes "After all, what kind of Hunter";
-					mes "lets their hair get trapped?";
-					close2; cutin "",255; end;
-			case 17:
-				if(Sex == 1) {
-					mes "Oh, that's 'Find Ore' style!";
-					mes "It's a practical, economical look";
-					mes "that is popular among Blacksmiths.";
-					mes "Some swear that this fashion helps";
-					mes "them in finding ores, but where's";
-					mes "the science in that??";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Hammer Fall' style!";
-					mes "For the woman that doesn't want";
-					mes "her hair to get in the way when";
-					mes "she's savagely swinging heavy";
-					mes "objects. Of course, this is a";
-					mes "Blacksmith favorite.";
-					close2; cutin "",255; end;
-			case 18:
-				if(Sex == 1) {
-					mes "Oh, that's 'Fire Pillar' style!";
-					mes "It's a trendy look, in which";
-					mes "you cover one eye for that";
-					mes "intrigue effect. The element";
-					mes "of mystery is always in";
-					mes "fashion, don't you think?";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Jupitel Thunder'";
-					mes "style! A look that strikes";
-					mes "like lightening, without";
-					mes "any of that annoying static";
-					mes "cling or muss. This fashion";
-					mes "looks great with Mage Hats.";
-					close2; cutin "",255; end;
-			case 19:
-				if(Sex == 1) {
-					mes "Oh, that's 'Guillotine Fist'";
-					mes "style! The smooth, slicked back";
-					mes "pompadour shows that you're";
-					mes "serious about your passion";
-					mes "for brawling... or just your passion.";
-					close2; cutin "",255; end;
-				}
-					mes "Oh, that's 'Whirlwind' style!";
-					mes "A favorite among the studious";
-					mes "Sages, the hair is tied back";
-					mes "in a stylish braid so that";
-					mes "it doesn't fly around after";
-					mes "casting those windy spells.";
-					close2; cutin "",255; end;
+			mes "Oops, I'm sorry, but that";
+			mes "style is not available.";
+			mes "Remember to enter a number";
+			mes "from 1 to 19.";
+			close();
+		}
+		callsub L_cutin,.@style;
+		mes "[Veronica]";
+		switch(.@style) {
+		case 1:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Play Dead' style!";
+				mes "It's a nice, basic haircut.";
+				mes "I notice that usually the";
+				mes "cute, conversative types seem";
+				mes "to prefer this style.";
+			} else {
+				mes "Oh, that's 'First Aid' style!";
+				mes "The shoulder length tresses";
+				mes "are straightened for those";
+				mes "no nonsense adventurers. It";
+				mes "seems to be the style of";
+				mes "choice for Novices.";
 			}
+			close2;
+			cutin "",255;
+			end;
+		case 2:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's the 'Two Handed Sword";
+				mes "Mastery' style! It's perfect for";
+				mes "for Swordmen who might muss their";
+				mes "hair while swinging their swords";
+				mes "all day long.";
+			} else {
+				mes "Oh, that's 'Bash' style!";
+				mes "For the powerful woman that's";
+				mes "not afraid to get a little";
+				mes "blood on her hands, but knows";
+				mes "how great her hair will look";
+				mes "while wildly flailing a sword.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 3:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Napalm Beat' style!";
+				mes "It's a unique look with a hint";
+				mes "of eccentricity that's offset";
+				mes "with a helping of elegance.";
+			} else {
+				mes "Oh, that's 'Frost Diver' style!";
+				mes "The pigtails lend an innocent,";
+				mes "demure look for those Mages";
+				mes "and Wizards that usually scare";
+				mes "off the boys with their spells.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 4:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's the 'Double Strafe'";
+				mes "style! The arrangement of the";
+				mes "hair conducts ambient static";
+				mes "electricity, naturally clearing";
+				mes "the mind. At least, that's what";
+				mes "I was taught in fashion school.";
+			} else {
+				mes "Oh, that's 'Arrow Shower' style!";
+				mes "For the Bowswoman who doesn't";
+				mes "want fashion to interfere with";
+				mes "her depth perception. Much more";
+				mes "attractive than those horrid";
+				mes "granny-style hairbuns.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 5:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Angelus' style!";
+				mes "It's for calm and devout people,";
+				mes "as well as those bashful,";
+				mes "mild-mannered types.";
+			} else {
+				mes "Oh, that's 'Heal' style!";
+				mes "This is in trend among";
+				mes "Priests and Acolytes since";
+				mes "this style is appropriate";
+				mes "for formal situations, but";
+				mes "is also practical in battle.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 6:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Push Cart' style!";
+				mes "It was based on the design of a";
+				mes "cart...at least, that's what";
+				mes "I learned in beautician school.";
+			} else {
+				mes "Ooh, that's 'Vending' style!";
+				mes "It's the hairdo of money";
+				mes "makers...and if I may say so,";
+				mes "it's also economical.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 7:
+			if (Sex == SEX_MALE) {
+				mes "Ooh, that's 'Envenom' style!";
+				mes "It looks great on Thieves and";
+				mes "and Assassins when they're";
+				mes "out poisoning people and animals.";
+				mes "It's fashion for the aggressive";
+				mes "and eclectic~!";
+			} else {
+				mes "Oh, that's 'Double Attack' style!";
+				mes "The adorable pigtail, paired with";
+				mes "those provacative bangs are sure";
+				mes "to help you steal the heart of";
+				mes "some cute guy.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 8:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Bowling Bash' style!";
+				mes "A popular style for Knights, its";
+				mes "manly, rugged look tends to";
+				mes "attract all of the ladies,";
+				mes "and looks great on men with";
+				mes "strong chins.";
+			} else {
+				mes "Oh, that's 'Gloria' style!";
+				mes "It's very elegant and looks";
+				mes "great on holy Priests. This";
+				mes "style is most attractive to";
+				mes "ladies who aren't that used";
+				mes "to fighting with their hands.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 9:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Venom Dust' style!";
+				mes "Definitely a look for rebels,";
+				mes "the sweeping, yet decidedly";
+				mes "luxorious locks seems to enchant";
+				mes "girls with a fatal attraction.";
+			} else {
+				mes "Oh, that's 'SP Recovery' style!";
+				mes "To add more body to the special";
+				mes "style of these bangs, I use a";
+				mes "special conditioner that makes";
+				mes "you feel like you're regaining SP";
+				mes "...Although, it acutally doesn't.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 10:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Turn Undead' style!";
+				mes "This is popular among Priests";
+				mes "that want a serious, yet a bit";
+				mes "of a wild, agressive look.";
+				mes "Definitely more attractive";
+				mes "than the 'Holy Light' mullet.";
+			} else {
+				mes "Oh, that's 'Prepare Potion' style!";
+				mes "The flared out tresses are chosen";
+				mes "by beginning Alchemists, since";
+				mes "early, explosive experiments would";
+				mes "make their hair to stick out anyway.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 11:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Dragonology' style!";
+				mes "It's neat and clean cut, perfect";
+				mes "for studious people and looks";
+				mes "great with eyeglasses. This";
+				mes "is a fashion well suited to";
+				mes "intellectual types.";
+			} else {
+				mes "Oh, that's 'Grand Cross' style!";
+				mes "It's in style among those pious";
+				mes "Crusaders that need hair that";
+				mes "won't muss during fighting, yet";
+				mes "is respectable enough to attend";
+				mes "religious services.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 12:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Mace Mastery' style!";
+				mes "A lot of care goes into making";
+				mes "that tussled hair say, 'I don't";
+				mes "care how I look at all.'";
+			} else {
+				mes "Oh, that's 'Intimidate' style!";
+				mes "The Rogue women seem to like";
+				mes "this style...although I imagine";
+				mes "that more of them would prefer";
+				mes "something wilder to match those";
+				mes "stockings...";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 13:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Thunder Storm' style!";
+				mes "This hot, flamboyant hairstyle";
+				mes "flares out wildly like thunder.";
+				mes "...And you will too with this new look.";
+			} else {
+				mes "Oh, that's 'Spiritual Sphere";
+				mes "Absorption' style! There's a";
+				mes "charismatic quality to this";
+				mes "fashion: it's tough, slightly";
+				mes "tomboyish, but not so much";
+				mes "that it can't be cute.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 14:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Encore' style!";
+				mes "The elegant, flowing locks";
+				mes "fit well with Bards, or men who";
+				mes "appreciate the value of male";
+				mes "beauty.";
+			} else {
+				mes "Oh, that's 'Gypsy's Kiss' style!";
+				mes "Dancers seem to like this style,";
+				mes "although personally, I think";
+				mes "this fashion fits very well";
+				mes "with glasses.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 15:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Grimtooth' style!";
+				mes "Spiky and unkempt, this style";
+				mes "is a popular counterculture";
+				mes "street fashion. You might";
+				mes "not want to wear your hair";
+				mes "this way at a wedding, though.";
+			} else {
+				mes "Oh, that's 'Counter Attack' style!";
+				mes "This is an intimidating look for";
+				mes "girls that want to say 'You hit";
+				mes "me, I'll hit you back!' It really";
+				mes "emphasizes strong looking";
+				mes "foreheads and cheekbones.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 16:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Blitz Beat' style!";
+				mes "A funky and lively fashion,";
+				mes "this style was developed for a";
+				mes "Hunter who liked really long";
+				mes "bangs and wanted to see";
+				mes "through them at the same time.";
+			} else {
+				mes "Oh, that's 'Anke Snare' style!";
+				mes "The style style is specially";
+				mes "made for Hunters that don't like";
+				mes "to get their hair tangled...";
+				mes "After all, what kind of Hunter";
+				mes "lets their hair get trapped?";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 17:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Find Ore' style!";
+				mes "It's a practical, economical look";
+				mes "that is popular among Blacksmiths.";
+				mes "Some swear that this fashion helps";
+				mes "them in finding ores, but where's";
+				mes "the science in that??";
+			} else {
+				mes "Oh, that's 'Hammer Fall' style!";
+				mes "For the woman that doesn't want";
+				mes "her hair to get in the way when";
+				mes "she's savagely swinging heavy";
+				mes "objects. Of course, this is a";
+				mes "Blacksmith favorite.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 18:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Fire Pillar' style!";
+				mes "It's a trendy look, in which";
+				mes "you cover one eye for that";
+				mes "intrigue effect. The element";
+				mes "of mystery is always in";
+				mes "fashion, don't you think?";
+			} else {
+				mes "Oh, that's 'Jupitel Thunder'";
+				mes "style! A look that strikes";
+				mes "like lightening, without";
+				mes "any of that annoying static";
+				mes "cling or muss. This fashion";
+				mes "looks great with Mage Hats.";
+			}
+			close2;
+			cutin "",255;
+			end;
+		case 19:
+			if (Sex == SEX_MALE) {
+				mes "Oh, that's 'Guillotine Fist'";
+				mes "style! The smooth, slicked back";
+				mes "pompadour shows that you're";
+				mes "serious about your passion";
+				mes "for brawling... or just your passion.";
+			} else {
+				mes "Oh, that's 'Whirlwind' style!";
+				mes "A favorite among the studious";
+				mes "Sages, the hair is tied back";
+				mes "in a stylish braid so that";
+				mes "it doesn't fly around after";
+				mes "casting those windy spells.";
+			}
+			close2;
+			cutin "",255;
+			end;
 		}
 	case 2:
 		if(BaseLevel < 60) {
@@ -360,7 +420,7 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 			mes "your current hairstyle. Why don't you";
 			mes "try a new hair accessory rather than changing your look?";
 			close;
-		} else if((countitem(973) < 3) || (countitem(974) < 3) || (countitem(901) <100) || (countitem(1094) <100) || (countitem(1020) <100) || (countitem(1060) <100) || (countitem(7152) <100) || (Zeny < 99800)) {
+		} else if((countitem(Counteragent) < 3) || (countitem(Mixture) < 3) || (countitem(Danggie) <100) || (countitem(Short_Daenggie) <100) || (countitem(Long_Hair) <100) || (countitem(Golden_Hair) <100) || (countitem(Glossy_Hair) <100) || (Zeny < 99800)) {
 			mes "[Veronica]";
 			mes "If you wish to change your";
 			mes "hairstyle, you should meet some";
@@ -390,17 +450,19 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 		mes "no.19.  I will do my best to";
 		mes "make you look your very best.";
 		next;
-		input .@style;
-		if(.@style > 19) {
+		input(.@style);
+		if(.@style == 0) {
+			mes "[Veronica]";
+			mes "You have canceled your request.";
+			close;
+		}
+		if (.@style < 1 || .@style > 19) {
 			mes "[Veronica]";
 			mes "I am sorry, you chose an unavailable style.";
 			mes "Make sure you enter the correct number.";
 			close;
-		} else if(.@style == 0) {
-			mes "[Veronica]";
-			mes "You have canceled your request.";
-			close;
-		} else if(getlook(1) == .@style) {
+		}
+		if(getlook(1) == .@style) {
 			mes "[Veronica]";
 			mes "I am sorry, but you are already";
 			mes "wearing the style you have";
@@ -414,7 +476,7 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 			mes "I shall proceed with your request.";
 			mes "Would you mind?";
 			next;
-			if(select("No, I don't mind.:Yes, let me choose another one.") == 1) {
+			if(select("No, I don't mind.", "Yes, let me choose another one.") == 1) {
 				if(getlook(6) == 0) {
 					mes "[Veronica]";
 					mes "Oh, my, you haven't dyed your hair";
@@ -423,7 +485,7 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 					mes "Oh well, I will do it for free.";
 					mes "So what kind of color would you like?";
 					next;
-					switch(select("Red.:Yellow.:Purple.:Orange.:Green.:Blue.:White.:Dark Brown.:Cancel.")) {
+					switch(select("Red.", "Yellow.", "Purple.", "Orange.", "Green.", "Blue.", "White.", "Dark Brown.", "Cancel.")) {
 					case 1:
 						.@pallete = 8;
 						break;
@@ -471,13 +533,13 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 				mes "- *bzzzzzzz bzzzzzzz bzzzzzzz bzzzzzzz* -";
 				next;
 				Zeny -= 99800;
-				delitem 973,3;	// Counteragent
-				delitem 974,3;	// Mixture
-				delitem 901,100;	// Danggie
-				delitem 1094,100;	// Short_Daenggie
-				delitem 1020,100;	// Long_Hair
-				delitem 1060,100;	// Golden_Hair
-				delitem 7152,100;	// Glossy_Hair
+				delitem Counteragent,3;	// Counteragent
+				delitem Mixture,3;	// Mixture
+				delitem Danggie,100;	// Danggie
+				delitem Short_Daenggie,100;	// Short_Daenggie
+				delitem Long_Hair,100;	// Long_Hair
+				delitem Golden_Hair,100;	// Golden_Hair
+				delitem Glossy_Hair,100;	// Glossy_Hair
 				setlook 1,.@style;
 				setlook 6,.@pallete;
 				cutin "",255;
@@ -506,7 +568,7 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 	}
 
 L_cutin:
-	if(Sex == 1) {
+	if (Sex == SEX_MALE) {
 		if(getarg(0) < 10)
 			cutin "hair_m_0"+getarg(0),4;
 		else
@@ -520,8 +582,7 @@ L_cutin:
 	return;
 }
 
-// Roving Hair Dresser
-// ============================================================
+//== Roving Hair Dresser ===================================
 alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 	mes "[Rui Vishop]";
 	mes "That Veronica...";
@@ -536,7 +597,7 @@ alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 	mes "waiting to be transformed into";
 	mes "works of magnificent art~!";
 	next;
-	switch(select("What are you?:Do my hair, please!:.....")) {
+	switch(select("What are you?", "Do my hair, please!", ".....")) {
 	case 1:
 		mes "[Rui Vishop]";
 		mes "Do you not know that I, Rui";
@@ -636,7 +697,7 @@ alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 		mes "stupid hair dresser to";
 		mes "do her clumsy work on you...";
 		next;
-		if(select("No, please do my hair.:Umm, I changed my mind.") ==1 ) {
+		if(select("No, please do my hair.", "Umm, I changed my mind.") ==1 ) {
 			mes "[Rui Vishop]";
 			mes "O~k~a~y!";
 			mes "Now, let us begin~!";
@@ -682,7 +743,7 @@ alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 }
 
 
-// Lighthalzen
+//== Lighthalzen ===========================================
 lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 	mes "[Prince Shammi]";
 	mes "Welcome to Prince Shammi's";
@@ -691,7 +752,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 	mes "shy, tell me exactly how you";
 	mes "want me to make you glamorous~";
 	next;
-	switch(select("Check all hairstyles:Change hairstyle:Cancel")) {
+	switch(select("Check all hairstyles", "Change hairstyle", "Cancel")) {
 	case 1:
 		mes "[Prince Shammi]";
 		mes "Oh, would you like to";
@@ -701,10 +762,10 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 		mes "[Prince Shammi]";
 		mes "Please, oh please, choose from the following styles and I will show you a preview.";
 		next;
-		switch(select("Old Hairstyles:New Hairstyles")) {
+		switch(select("Old Hairstyles", "New Hairstyles")) {
 		case 1:
-			if (Sex == 1) {
-				switch(select("Petite Style:Executioner Style:Prince Style:Deviace Style:Cancel")) {
+			if (Sex == SEX_MALE) {
+				switch(select("Petite Style", "Executioner Style", "Prince Style", "Deviace Style", "Cancel")) {
 				case 1:
 					cutin "hair_m_20",4;
 					mes "[Prince Shammi]";
@@ -755,7 +816,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 				}
 			}
 			else {
-				switch(select("Spring Rabbit Style:Harpy Style:Medusa Style:Isis Style:Cancel")) {
+				switch(select("Spring Rabbit Style", "Harpy Style", "Medusa Style", "Isis Style", "Cancel")) {
 				case 1:
 					cutin "hair_f_20",4;
 					mes "[Prince Shammi]";
@@ -808,8 +869,8 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			}
 			break;
 		case 2:
-			if (Sex == 1) {
-				switch(select("Emergency Heal Perm:Aura Blade Cut:Power Swing:Renovatio Cut:Cancel")) {
+			if (Sex == SEX_MALE) {
+				switch(select("Emergency Heal Perm", "Aura Blade Cut", "Power Swing", "Renovatio Cut", "Cancel")) {
 				case 1:
 					cutin "hair_m_24",4;
 					mes "[Prince Shammi]";
@@ -848,7 +909,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 				}
 			}
 			else {
-				switch(select("Assumptio Perm:Soul Changer Cut:X Tornado Cut:Oratio Cut:Cancel")) {
+				switch(select("Assumptio Perm", "Soul Changer Cut", "X Tornado Cut", "Oratio Cut", "Cancel")) {
 				case 1:
 					cutin "hair_f_24",4;
 					mes "[Prince Shammi]";
@@ -902,7 +963,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			mes "come back once you do, okay?";
 			close;
 		}
-		else if ((countitem(973) < 3) || (countitem(974) < 3) || (countitem(901) < 100) || (countitem(1094) < 100) || (countitem(1020) < 100) || (countitem(1060) < 100) || (countitem(7152) < 100) || (Zeny < 99800)) {
+		else if ((countitem(Counteragent) < 3) || (countitem(Mixture) < 3) || (countitem(Danggie) < 100) || (countitem(Short_Daenggie) < 100) || (countitem(Long_Hair) < 100) || (countitem(Golden_Hair) < 100) || (countitem(Glossy_Hair) < 100) || (Zeny < 99800)) {
 			mes "[Prince Shammi]";
 			mes "If you've already decided";
 			mes "what hairstyle you'd like,";
@@ -933,7 +994,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 		mes "Here's a list of the style names just in case you need them~";
 		next;
 		mes "[Prince Shammi]";
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			mes "No. 20: Petite Style";
 			mes "No. 21: Executioner Style";
 			mes "No. 22: Prince Style";
@@ -954,7 +1015,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			mes "No. 27: Oratio Cut.";
 		}
 		next;
-		input .@input;
+		input(.@input);
 		if (.@input == 0) {
 			mes "[Prince Shammi]";
 			mes "Oh...?";
@@ -964,7 +1025,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			mes "Still, I'm so disappointed~";
 			close;
 		}
-		else if ((.@input < 20) || (.@input > 27)) {
+		if (.@input < 20 || .@input > 27) {
 			mes "[Prince Shammi]";
 			mes "Dearie, please enter";
 			mes "a number from ''20'' to";
@@ -973,7 +1034,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			mes "you soooooooo beautiful!";
 			close;
 		}
-		else if (getlook(VAR_HEAD) == .@input) {
+		if (getlook(LOOK_HAIR) == .@input) {
 			mes "[Prince Shammi]";
 			mes "Oh dear me, you're not";
 			mes "going to waste money for";
@@ -983,107 +1044,104 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			mes "your hair color, you know.";
 			close;
 		}
-		else {
-			if (Sex == 1)
-				cutin "hair_m_"+.@input+".BMP",4;
-			else
-				cutin "hair_f_"+.@input+".BMP",4;
-			mes "[Prince Shammi]";
-			mes "Oooh! Now, is this the";
-			mes "hairstyle that you wanted?";
-			mes "This is No. "+.@input+", by the way.";
-			next;
-			switch(select("Yes.:No.")) {
-			case 1:
-				if (getlook(VAR_HEADPALETTE) == 0) {
-					mes "[Prince Shammi]";
-					mes "Oh, Sweet Christmas,";
-					mes "I almost forgot! Would";
-					mes "you like me to dye your";
-					mes "hair, free of charge? It's";
-					mes "a part of my service, so";
-					mes "please choose a color~";
-					next;
-					switch(select("Red:Yellow:Purple:Orange:Green:Blue:White:Dark Brown")) {
-					case 1:
-						.@headpalette = 8;
-						break;
-					case 2:
-						.@headpalette = 1;
-						break;
-					case 3:
-						.@headpalette = 2;
-						break;
-					case 4:
-						.@headpalette = 3;
-						break;
-					case 5:
-						.@headpalette = 4;
-						break;
-					case 6:
-						.@headpalette = 5;
-						break;
-					case 7:
-						.@headpalette = 6;
-						break;
-					case 8:
-						.@headpalette = 7;
-						break;
-					}
-				}
+		if (Sex == SEX_MALE)
+			cutin "hair_m_"+.@input+".BMP",4;
+		else
+			cutin "hair_f_"+.@input+".BMP",4;
+		mes "[Prince Shammi]";
+		mes "Oooh! Now, is this the";
+		mes "hairstyle that you wanted?";
+		mes "This is No. "+.@input+", by the way.";
+		next;
+		switch(select("Yes.", "No.")) {
+		case 1:
+			if (getlook(LOOK_HAIR_COLOR) == 0) {
 				mes "[Prince Shammi]";
-				mes "Okay, let's get";
-				mes "started, shall we?";
-				mes "Keep your head still,";
-				mes "now. Yes, that's good...";
+				mes "Oh, Sweet Christmas,";
+				mes "I almost forgot! Would";
+				mes "you like me to dye your";
+				mes "hair, free of charge? It's";
+				mes "a part of my service, so";
+				mes "please choose a color~";
 				next;
-				mes "^3355FF*Snip snip*";
-				mes "*Rustle rustle*";
-				mes "*Clip clip clip clip*";
-				mes "*Bzzzzzzzzzzzzzzzzzzzz*^000000";
-				next;
-				Zeny -= 99800;
-				delitem 973,3; //Counteragent
-				delitem 974,3; //Mixture
-				delitem 901,100; //Danggie
-				delitem 1094,100; //Short_Daenggie
-				delitem 1020,100; //Long_Hair
-				delitem 1060,100; //Golden_Hair
-				delitem 7152,100; //Glossy_Hair
-				setlook VAR_HEAD,.@input;
-				setlook VAR_HEADPALETTE,.@headpalette;
-				mes "[Prince Shammi]";
-				mes "Well, we're all finished!";
-				mes "And my, oh my, you look even";
-				mes "more fabulous that I thought";
-				mes "you would! Oh, I can't believe";
-				if (Sex == 1) {
-					mes "how tough and elegant you are~";
-					mes "So ruggedly manly and handsome!";
+				switch(select("Red", "Yellow", "Purple", "Orange", "Green", "Blue", "White", "Dark Brown")) {
+				case 1:
+					.@headpalette = 8;
+					break;
+				case 2:
+					.@headpalette = 1;
+					break;
+				case 3:
+					.@headpalette = 2;
+					break;
+				case 4:
+					.@headpalette = 3;
+					break;
+				case 5:
+					.@headpalette = 4;
+					break;
+				case 6:
+					.@headpalette = 5;
+					break;
+				case 7:
+					.@headpalette = 6;
+					break;
+				case 8:
+					.@headpalette = 7;
+					break;
 				}
-				else {
-					mes "how graceful and elegant you";
-					mes "look! Absolutely gorgeous!";
-				}
-				emotion e_kis,"Hair Dresser#li";
-				next;
-				mes "[Prince Shammi]";
-				mes "You love your new";
-				mes "hair, don't you? Feel";
-				mes "free to come back anytime.";
-				mes "I'll make you the best looking";
-				mes "person in the entire world!";
-				emotion e_no1,"Hair Dresser#li";
-				close;
-			case 2:
-				mes "[Prince Shammi]";
-				mes "Oh, did you forget which";
-				mes "hairstyle goes with which";
-				mes "number? By all means, please";
-				mes "check again! Find the one that";
-				mes "is perfect just for you, okay?";
-				close;
 			}
+			mes "[Prince Shammi]";
+			mes "Okay, let's get";
+			mes "started, shall we?";
+			mes "Keep your head still,";
+			mes "now. Yes, that's good...";
+			next;
+			mes "^3355FF*Snip snip*";
+			mes "*Rustle rustle*";
+			mes "*Clip clip clip clip*";
+			mes "*Bzzzzzzzzzzzzzzzzzzzz*^000000";
+			next;
+			Zeny -= 99800;
+			delitem Counteragent,3;
+			delitem Mixture,3;
+			delitem Danggie,100;
+			delitem Short_Daenggie,100;
+			delitem Long_Hair,100;
+			delitem Golden_Hair,100;
+			delitem Glossy_Hair,100;
+			setlook LOOK_HAIR,.@input;
+			setlook LOOK_HAIR_COLOR,.@headpalette;
+			mes "[Prince Shammi]";
+			mes "Well, we're all finished!";
+			mes "And my, oh my, you look even";
+			mes "more fabulous that I thought";
+			mes "you would! Oh, I can't believe";
+			if (Sex == SEX_MALE) {
+				mes "how tough and elegant you are~";
+				mes "So ruggedly manly and handsome!";
+			} else {
+				mes "how graceful and elegant you";
+				mes "look! Absolutely gorgeous!";
+			}
+			emotion e_kis,"Hair Dresser#li";
+			next;
+			mes "[Prince Shammi]";
+			mes "You love your new";
+			mes "hair, don't you? Feel";
+			mes "free to come back anytime.";
+			mes "I'll make you the best looking";
+			mes "person in the entire world!";
+			emotion e_no1,"Hair Dresser#li";
+			close;
+		case 2:
+			mes "[Prince Shammi]";
+			mes "Oh, did you forget which";
+			mes "hairstyle goes with which";
+			mes "number? By all means, please";
+			mes "check again! Find the one that";
+			mes "is perfect just for you, okay?";
+			close;
 		}
 		break;
 	case 3:
@@ -1108,7 +1166,7 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 	mes "H-h-h-h-h-hello! Can";
 	mes "I help you with anything?";
 	next;
-	switch(select("What do you do?:Please change my hairstyle.:Who is Prince Shammi?")) {
+	switch(select("What do you do?", "Please change my hairstyle.", "Who is Prince Shammi?")) {
 	case 1:
 		mes "[Assistant Beautician]";
 		mes "Oh! Me...? I'm";
@@ -1169,7 +1227,7 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 			mes "up for the material expenses.";
 			mes "Is that okay with you?";
 			next;
-			switch(select("Of course~:On second thought...")) {
+			switch(select("Of course~", "On second thought...")) {
 			case 1:
 				mes "[Assistant Beautician]";
 				mes "Great! Now, please";
@@ -1178,7 +1236,7 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 				mes "Um, if you need to";
 				mes "cancel, just enter ''0.''";
 				next;
-				input .@input;
+				input(.@input);
 				if (.@input == 0) {
 					mes "[Assistant Beautician]";
 					mes "Awwww...";
@@ -1186,7 +1244,7 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 					mes "trust me after all...";
 					close;
 				}
-				else if ((.@input < 1) || (.@input > 23)) {
+				if (.@input < 1 || .@input > 23) {
 					mes "[Assistant Beautician]";
 					mes "Huh? I thought I asked";
 					mes "you to enter a number from";
@@ -1194,34 +1252,31 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 					mes "wrong this time? Hmmm...";
 					close;
 				}
-				else {
+				mes "[Assistant Beautician]";
+				mes "So this is the";
+				mes "style you want me";
+				mes "to try to do for you?";
+				if (Sex == SEX_MALE) {
+					if (.@input < 10)
+						cutin "hair_m_0"+.@input+".BMP",4;
+					else
+						cutin "hair_m_"+.@input+".BMP",4;
+				} else {
+					if (.@input < 10)
+						cutin "hair_f_0"+.@input+".BMP",4;
+					else
+						cutin "hair_f_"+.@input+".BMP",4;
+				}
+				next;
+				switch(select("Yes, let's try it~", "Cancel.")) {
+				case 1:
+					break;
+				case 2:
 					mes "[Assistant Beautician]";
-					mes "So this is the";
-					mes "style you want me";
-					mes "to try to do for you?";
-					if (Sex == 1) {
-						if (.@input < 10)
-							cutin "hair_m_0"+.@input+".BMP",4;
-						else
-							cutin "hair_m_"+.@input+".BMP",4;
-					}
-					else {
-						if (.@input < 10)
-							cutin "hair_f_0"+.@input+".BMP",4;
-						else
-							cutin "hair_f_"+.@input+".BMP",4;
-					}
-					next;
-					switch(select("Yes, let's try it~:Cancel.")) {
-					case 1:
-						break;
-					case 2:
-						mes "[Assistant Beautician]";
-						mes "Oooh, there must";
-						mes "be some style that";
-						mes "you like, right? Hmmm...";
-						close;
-					}
+					mes "Oooh, there must";
+					mes "be some style that";
+					mes "you like, right? Hmmm...";
+					close;
 				}
 				mes "[Assistant Beautician]";
 				mes "Great, you finally";
@@ -1250,15 +1305,14 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 				mes "^333333*Pant Pant Pant*^000000";
 				next;
 				Zeny -= 250000;
-				setlook VAR_HEAD,.@style_r;
-				setlook VAR_HEADPALETTE,.@color_r;
+				setlook LOOK_HAIR,.@style_r;
+				setlook LOOK_HAIR_COLOR,.@color_r;
 				mes "[Assistant Beautician]";
 				mes "Bwahahaha! Success!";
 				if (.@input == .@style_r) {
 					mes "So... How do you like";
 					mes "your new style? I love it!";
-				}
-				else {
+				} else {
 					mes "Wha...? This isn't what";
 					mes "you wanted? Uh oh... Um...";
 					mes "Well, next time I know I can";
@@ -1293,9 +1347,3 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 		close;
 	}
 }
-
-//===== Old Changelog: =================================
-//= 07/06/05 : Added 1st Version. [Muad_Dib]
-//= Converted to rAthena format by Dr.Evil Fixed typos [Nexon]
-//= 1.1 Removed Duplicates [Silent]
-//============================================================

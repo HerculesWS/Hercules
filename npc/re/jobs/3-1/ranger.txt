@@ -1,25 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Elias
+//= Copyright (C) Masao
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ranger Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Hunter / Sniper -> Ranger.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Updated SC_STONE duration from 2 Seconds to 2 Minutes
-//=     and fixed Mercenary check.
-//= 1.2 Fixed first quest so that when a false poring got killed
-//=     it decreases the total points by 1, commented the SC_STONE
-//=     part until M_DESERT_WOLF_B Mercenary is fully working.
-//= 1.3 Fixed waves not being announced and counted [Elias]
-//= 1.3a Little beauty fix, changed break; to next; . [Masao]
-//= 1.4 Some optimization. [Euphy]
-//= 1.5 Updated script, optimized. [Euphy]
-//= 1.6 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.6
+//=========================================================================
 
 tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 	mes "[Survival Instructor, Rescue]";
@@ -33,7 +47,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			mes "The monsters here are a";
 			mes "little tough so be careful.";
 			next;
-			if(select("I came here to become to a Ranger.:I just came to look around.") == 2) {
+			if(select("I came here to become to a Ranger.", "I just came to look around.") == 2) {
 				mes "[Survival Instructor, Rescue]";
 				mes "Oh ya?";
 				mes "The weather is really great. Shall we take a picture to commemorate it?";
@@ -80,7 +94,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				mes "When you change a job into a Ranger from a Hunter,";
 				mes "you won't get any chance to learn the skills of a Sniper, would that be okay?";
 				next;
-				switch(select("I'll think about it more.:I want to be a Ranger already.")) {
+				switch(select("I'll think about it more.", "I want to be a Ranger already.")) {
 				case 1:
 					mes "[Survival Instructor, Rescue]";
 					mes "Okay.";
@@ -158,7 +172,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			if (Weight < 1) {
 				mes "Um. That you talked to me again means that you are determined to change into a Ranger and take the survival power test.";
 				next;
-				if(select("I'll think about it more:I'll take the test") == 1) {
+				if(select("I'll think about it more", "I'll take the test") == 1) {
 					mes "[Survival Instructor, Rescue]";
 					mes "Prepare yourself very well before taking this test.";
 					next;
@@ -181,7 +195,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				mes "Remember that you don't have any other equipment on, so be careful of the monsters.";
 				mes "Ready to start?";
 				next;
-				if(select("Wait a second:Yes, I'm ready") == 1) {
+				if(select("Wait a second", "Yes, I'm ready") == 1) {
 					mes "[Survival Instructor, Rescue]";
 					mes "What kind of preparation can be so long.";
 					next;
@@ -195,9 +209,9 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				mes "Do your best.";
 				job_ranger01 = 3;
 				changequest 8255,8256;
-				getitem 1703,1; //Bow__
-				getitem 12323,10; //N_Fly_Wing
-				getitem 1750,500; //Arrow
+				getitem Bow__,1;
+				getitem N_Fly_Wing,10;
+				getitem Arrow,500;
 				close;
 			}
 			mes "I knew it.";
@@ -213,7 +227,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			mes "Umm?";
 			mes "What are you waiting for?";
 			next;
-			if(select("Tell me the mission again.:I just wanted to talk.") == 1) {
+			if(select("Tell me the mission again.", "I just wanted to talk.") == 1) {
 				mes "[Survival Instructor, Rescue]";
 				mes "Oh, ya.";
 				mes "Is this the mind of a person who's going to take the test?";
@@ -229,7 +243,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				mes "As you don't have any equipment on, be careful of the monsters in the field.";
 				mes "Well, shall we start?";
 				next;
-				if(select("Wait a minute:I will start") == 1) {
+				if(select("Wait a minute", "I will start") == 1) {
 					mes "[Survival Instructor, Rescue]";
 					mes "What kind of preparation can be so long.";
 					next;
@@ -261,7 +275,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			mes "Because you've disappeared suddenly, the Ranger Master was looking for you.";
 			mes "Do you want to go to him now?";
 			next;
-			switch(select("Don't go:Go")) {
+			switch(select("Don't go", "Go")) {
 			case 1:
 				mes "[Survival Instructor, Rescue]";
 				mes "Are you busy with something else?";
@@ -329,7 +343,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "[Test Instructor, Teardrop]";
 			mes "That you are coming and going bugs me so, would you please stop?!";
 			next;
-			if(select("Ranger practical test building?:I came for the test.") == 1) {
+			if(select("Ranger practical test building?", "I came for the test.") == 1) {
 				mes "[Test Instructor, Teardrop]";
 				mes "What, what are you...?";
 				next;
@@ -385,7 +399,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			close;
 		} else if (job_ranger01 == 4) {
 			if (questprogress(8257,HUNTING) == 2) {
-				if (countitem(7064) > 0) {
+				if (countitem(Dragon_Fly_Wing) > 0) {
 					mes "Oh! Oh! Woooooow!";
 					mes "You've brought it! Let me see...";
 					next;
@@ -399,7 +413,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 					mes "[Test Instructor, Teardrop]";
 					mes "Well, before I explain, could you please give me that Dragonfly wing?";
 					mes "You've heard the saying, 'in any situation, eating comes first'?";
-					delitem 7064,1; //Dragon_Fly_Wing
+					delitem Dragon_Fly_Wing,1;
 					job_ranger01 = 5;
 					changequest 8257,8258;
 					close;
@@ -426,7 +440,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "Eh? What are you looking at?";
 			mes "You want to eat some?";
 			next;
-			switch(select("Oh, just eat up:...")) {
+			switch(select("Oh, just eat up", "...")) {
 			case 1:
 				mes "[Test Instructor, Teardrop]";
 				mes "Why aren't you eating?";
@@ -438,7 +452,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 				next;
 				break;
 			case 2:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "No thanks... anyway...";
 				next;
 				mes "[Test Instructor, Teardrop]";
@@ -485,7 +499,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "[Test Instructor, Teardrop]";
 			mes "Now, I will enter you into the practical test field, is your preparation all done?";
 			next;
-			if(select("Please wait a little:Let's go to the practical test field!") == 1) {
+			if(select("Please wait a little", "Let's go to the practical test field!") == 1) {
 				mes "[Test Instructor, Teardrop]";
 				mes "Um? Aren't you ready?";
 				next;
@@ -511,7 +525,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "[Test Instructor, Teardrop]";
 			mes "So what are you going to do? Try again?";
 			next;
-			switch(select("Wait a minute:Go to the practical test field!:I give up the job change.")) {
+			switch(select("Wait a minute", "Go to the practical test field!", "I give up the job change.")) {
 			case 1:
 				mes "[Test Instructor, Teardrop]";
 				mes "Um? Aren't you ready yet?";
@@ -531,7 +545,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 				mes "Think again.";
 				mes "Do you really want to give up the job change to become a Ranger?";
 				next;
-				switch(select("No, I'll try again:I give up!")) {
+				switch(select("No, I'll try again", "I give up!")) {
 				case 1:
 					mes "[Test Instructor, Teardrop]";
 					mes "Hey. You were kidding after all?";
@@ -544,11 +558,11 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 					mes "You don't have as many guts as I thought.";
 					nude;
 					next;
-					if (countitem(1703) > 0) {
+					if (countitem(Bow__) > 0) {
 						mes "[Test Instructor, Teardrop]";
 						mes "Okay. I'll respect your opinion.";
-						mes "I'll cancel the job change request from "+strcharinfo(0)+".";
-						delitem 1703,1; //Bow__
+						mes "I'll cancel the job change request from "+strcharinfo(PC_NAME)+".";
+						delitem Bow__,1;
 						job_ranger01 = 0;
 						for(.@i = 8254; .@i <= 8262; ++.@i)
 							if (questprogress(.@i))
@@ -570,7 +584,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "Because you've disappeared suddenly, the Ranger Master was looking for you.";
 			mes "Do you want to go to him now?";
 			next;
-			switch(select("Don't go:Go")) {
+			switch(select("Don't go", "Go")) {
 			case 1:
 				mes "[Test Instructor, Teardrop]";
 				mes "Are you busy with something else?";
@@ -599,7 +613,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 	mes "Don't hang around here doing nothing. This is my area!";
 	close;
 L_Start:
-	if (getmercinfo(1)) {
+	if (getmercinfo(MERCINFO_CLASS)) {
 		mes "[Test Instructor, Teardrop]";
 		mes "Stop!";
 		next;
@@ -611,28 +625,28 @@ L_Start:
 		close;
 	}
 	if (getarg(0) == 1) {
-		if (countitem(12380)) {
+		if (countitem(Desert_Wolf_Babe_Scroll)) {
 			mes "[Test Instructor, Teardrop]";
 			mes "What, what is this?";
 			mes "You shouldn't keep this around!";
-			delitem 12380,countitem(12380); //Desert_Wolf_Babe_Scroll
+			delitem Desert_Wolf_Babe_Scroll,countitem(Desert_Wolf_Babe_Scroll);
 			next;
 		}
-		if (countitem(12258)) {
+		if (countitem(Bombring_Box)) {
 			mes "[Test Instructor, Teardrop]";
 			mes "What, what is this, a Bombring Capsule.";
 			mes "You shouldn't keep such a dangerous thing!";
-			delitem 12258,countitem(12258); //Bombring_Box
+			delitem Bombring_Box,countitem(Bombring_Box);
 			next;
 		}
-		if (countitem(6156)) {
+		if (countitem(Approval_Report)) {
 			mes "[Test Instructor, Teardrop]";
 			mes "What, what are all these Documents?";
 			mes "I think I know. You were going to send this to Caution, right?";
 			next;
 			mes "[Test Instructor, Teardrop]";
 			mes "If you hold such thing it would disturb your practical test so I'll take this.";
-			delitem 6156,countitem(6156); //Approval_Report
+			delitem Approval_Report,countitem(Approval_Report);
 			next;
 		}
 	}
@@ -651,7 +665,7 @@ L_Start:
 	mes "[Test Instructor, Teardrop]";
 	mes "See, for the last time, I warn you that cheating is strictly banned.";
 	next;
-	if (countitem(1750) < 100) {
+	if (countitem(Arrow) < 100) {
 		mes "[Test Instructor, Teardrop]";
 		mes "Okay, once again I'll provide you with arrows, then I'll let you in.";
 		.@arrow = 1;
@@ -667,7 +681,7 @@ L_Start:
 		erasequest 8260;
 		erasequest 8261;
 	}
-	if (.@arrow) getitem 1750,100; //Arrow
+	if (.@arrow) getitem Arrow,100;
 	close2;
 	warp "job3_rang01",30,36;
 	end;
@@ -681,7 +695,7 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 	mes "In the order you enter, you can take the practical test one by one.";
 	mes "There's 3 kinds of a Ranger job change practical tests, it takes a total of about 10 minutes.";
 	next;
-	switch(select("Test explanation:Cancel:I give up the Ranger test")) {
+	switch(select("Test explanation", "Cancel", "I give up the Ranger test")) {
 	case 1:
 		break;
 	case 2:
@@ -696,7 +710,7 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 		mes "Please think about it again.";
 		mes "If you give up here, your job change request will be cancelled. Do you really want to give up the job change to a Ranger?";
 		next;
-		switch(select("No, I'll continue with the test:I give up the Ranger job change")) {
+		switch(select("No, I'll continue with the test", "I give up the Ranger job change")) {
 		case 1:
 			mes "[Staff DTS]";
 			mes "If you want to continue with the practical test, please enter into the chat room.";
@@ -706,11 +720,11 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 			mes "You don't have as many guts as I thought.";
 			nude;
 			next;
-			if (countitem(1703) > 0) {
+			if (countitem(Bow__) > 0) {
 				mes "[Staff DTS]";
 				mes "Okay. I'll respect your opinion.";
-				mes "I'll cancel the job change request from "+strcharinfo(0)+".";
-				delitem 1703,1; //Bow__
+				mes "I'll cancel the job change request from "+strcharinfo(PC_NAME)+".";
+				delitem Bow__,1;
 				job_ranger01 = 0;
 				for(.@i = 8254; .@i <= 8262; ++.@i)
 					if (questprogress(.@i))
@@ -733,7 +747,7 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 		mes "I'll explain the Ranger job change practical test.";
 		mes "Among the 1st, 2nd, and 3rd practical tests, which one's test method are you curious of?";
 		next;
-		switch(select("1st Test:2nd Test:3rd Test:Cancel")) {
+		switch(select("1st Test", "2nd Test", "3rd Test", "Cancel")) {
 		case 1:
 			mes "[Staff DTS]";
 			mes "For the 1st test, we test your eyesight and accuracy.";
@@ -965,7 +979,7 @@ OnReset:
 	killmonster "job3_rang02","CallCorrectAnswer#jr::OnMyMobDead";
 	end;
 OnMyMobDead:
-	specialeffect2 EF_POTION_CON;
+	specialeffect(EF_POTION_CON, AREA, playerattached());
 	++$@job_rang_point01;
 	mapannounce "job3_rang02","Test Supervisor, Notice : Correct Target! You have very good eyesight!",bc_map,"0xffb6c1"; //FW_NORMAL 12 0 0
 	end;
@@ -1055,7 +1069,7 @@ OnReset:
 	killmonster "job3_rang02","CallWrongAnswer#jr::OnMyMobDead";
 	end;
 OnMyMobDead:
-	specialeffect2 EF_DEVIL;
+	specialeffect(EF_DEVIL, AREA, playerattached());
 	--$@job_rang_point01;
 	mapannounce "job3_rang02","Test Supervisor, Notice : Wrong Target! Pull yourself together!",bc_map,"0xffb6c1"; //FW_NORMAL 12 0 0
 	end;
@@ -1170,14 +1184,14 @@ OnTimer223000:
 
 job3_rang02,111,56,3	script	Staff Rust#jr_09	4_M_ORIENT02,{
 	if (job_ranger01 == 6) {
-		if (countitem(12258) < 1) {
+		if (countitem(Bombring_Box) < 1) {
 			percentheal 100,0;
-			specialeffect2 EF_ABSORBSPIRITS;
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 			mes "[Staff Rust]";
 			mes "I'll give you the 'Bombring Capsules.";
 			mes "The 'Bombring Capsules' can be given again only for the one who used it all, so please keep that in mind.";
-			if (countitem(6156)) {
-				getitem 12258,5; //Bombring_Box
+			if (countitem(Approval_Report)) {
+				getitem Bombring_Box,5;
 				close;
 			}
 			next;
@@ -1185,9 +1199,9 @@ job3_rang02,111,56,3	script	Staff Rust#jr_09	4_M_ORIENT02,{
 			mes "[Staff Rust]";
 			mes "And the mission is.... to deliver these documents to the supervisor, Caution. He won't take what I give...";
 			setquest 8260;
-			getitem 6156, (MaxWeight-Weight-2000)/10; //Approval_Report
-			getitem 12258,10; //Bombring_Box
-			getitem 569,100; //Novice_Potion
+			getitem Approval_Report, (MaxWeight-Weight-2000)/10;
+			getitem Bombring_Box,10;
+			getitem Novice_Potion,100;
 			close;
 		}
 		mes "[Staff Rust]";
@@ -1255,7 +1269,7 @@ OnDisable:
 	end;
 OnTouch:
 	percentheal 10,0;
-	specialeffect2 EF_ABSORBSPIRITS;
+	specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 	mapannounce "job3_rang02","Test Supervisor, Caution : You are doing well! If you come closer a little more, you should be able to see me.",bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
 	end;
 OnMyMobDead:
@@ -1278,7 +1292,7 @@ OnDisable:
 	end;
 OnTouch:
 	if (job_ranger01 == 6) {
-		if (countitem(12258)) {
+		if (countitem(Bombring_Box)) {
 			mes "[Test Supervisor, Caution]";
 			mes "No, no!";
 			mes "You need to use all the 'Bombring Capsules'?!";
@@ -1288,7 +1302,7 @@ OnTouch:
 			mes "Time is ticking so you'd better hurry.";
 			close;
 		}
-		if (countitem(6156) > 0) {
+		if (countitem(Approval_Report) > 0) {
 			mes "[Test Supervisor, Caution]";
 			mes "You've arrived safely!!!";
 			donpcevent "Second Test Timer#jr_08::OnDisable";
@@ -1304,7 +1318,7 @@ OnTouch:
 			mes "[Test Supervisor, Caution]";
 			mes "Haaaaaaaah!!";
 			mes "I've been avoiding him so much!!";
-			delitem 6156,countitem(6156); //Approval_Report
+			delitem Approval_Report,countitem(Approval_Report);
 			erasequest 8260;
 			next;
 			mes "[Test Supervisor, Caution]";
@@ -1473,11 +1487,11 @@ job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 			next;
 			mes "[Test Supervisor, Freeze]";
 			mes "Well, then first get this Wolf' flutes and after summoning the wolf, talk to me!";
-			getitem 12380,1; //Desert_Wolf_Babe_Scroll
+			getitem Desert_Wolf_Babe_Scroll,1;
 			setquest 8261;
 			close;
 		}
-		if (getmercinfo(1) == 2034) {
+		if (getmercinfo(MERCINFO_CLASS) == M_DESERT_WOLF_B) {
 			erasequest 8261;
 			mes "Good! Then I'll start the test right now!";
 			next;
@@ -1492,7 +1506,7 @@ job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 			donpcevent "Third Test Timer#jr_12::OnEnable";
 			end;
 		}
-		if (countitem(12380) < 1) {
+		if (countitem(Desert_Wolf_Babe_Scroll) < 1) {
 			mes "Huh?! There's no wolf, no Test Flute, where did you get rid of them?!";
 			next;
 			mes "[Test Supervisor, Freeze]";
@@ -1500,7 +1514,7 @@ job3_rang02,251,49,3	script	Test Supervisor#jr_13	4_M_JOB_HUNTER,{
 			next;
 			mes "[Test Supervisor, Freeze]";
 			mes "Summon the wolf quickly, and talk to me again!";
-			getitem 12380,1; //Desert_Wolf_Babe_Scroll
+			getitem Desert_Wolf_Babe_Scroll,1;
 			close;
 		}
 		mes "Ha? What are you doing?";
@@ -1568,16 +1582,16 @@ OnTimer133000:
 	end;
 }
 
--	script	Egg Bomb#0	-1,{
+-	script	Egg Bomb#0	FAKE_NPC,{
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
-	getmapxy(.@map$,.@x,.@y,1);
-	monster "job3_rang02",.@x,.@y,"Egg Bomb",1047,1,strnpcinfo(0)+"::OnMyMobDead";
-	switch(atoi(strnpcinfo(2))%3) {
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+	monster "job3_rang02",.@x,.@y,"Egg Bomb",1047,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))%3) {
 		case 0: .@str$ = "Hey, I am going to explode. What are you going to do?"; break;
 		case 1: .@str$ = "I... no, I can't stand anymore!!"; break;
 		case 2: .@str$ = "I am almost done now... Don't stop me."; break;
@@ -1586,22 +1600,22 @@ OnEnable:
 	end;
 OnDisable:
 	stopnpctimer;
-	killmonster "job3_rang02",strnpcinfo(0)+"::OnMyMobDead";
-	disablenpc strnpcinfo(0);
+	killmonster "job3_rang02",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnMyMobDead:
 	++$@job_rang_point03;
-	switch(atoi(strnpcinfo(2))%3) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))%3) {
 		case 0: .@str$ = "The world is meaningless and my dream is so far away..."; break;
 		case 1: .@str$ = "Don't be relieved. Misery always comes from carelessness."; break;
 		case 2: .@str$ = "Alas, it was only a dream for a short time..."; break;
 	}
 	mapannounce "job3_rang02","Egg Bomb : "+.@str$,bc_map,"0x87ceeb"; //FW_NORMAL 12 0 0
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 OnTimer10000:
 	mapannounce "job3_rang02","Egg Bomb : Ughhhhhhhhhhhhhh!!! So what did I say!!",bc_map,"0xFF9900"; //FW_NORMAL 12 0 0
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 job3_rang02,246,42,0	duplicate(Egg Bomb#0)	Egg Bomb#14	HIDDEN_WARP_NPC
@@ -1659,7 +1673,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		mes "[Ranger Master, Neveragain]";
 		mes "Before you do a job change ^0000ffdismiss your Falcon^000000, and check if you've used all of your ^0000ffSkill Points^000000.";
 		next;
-		if(select("Wait a minute:I am ready") == 1) {
+		if(select("Wait a minute", "I am ready") == 1) {
 			mes "[Ranger Master, Neveragain]";
 			mes "I am not running away so take your time.";
 			close;
@@ -1685,7 +1699,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		mes "Okay, before you really change the job into a ranger, I'll ask you on more time.";
 		mes "Do you really want to become a ranger?";
 		next;
-		if(select("No:Yes!") == 1) {
+		if(select("No", "Yes!") == 1) {
 			mes "[Ranger Master, Neveragain]";
 			mes "...Um? That's not the answer that I was waiting for...";
 			next;
@@ -1718,7 +1732,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		mes "Your firm answer seems very trustworthy!";
 		next;
 		nude;
-		if (countitem(1703) < 1) {
+		if (countitem(Bow__) < 1) {
 			mes "[Ranger Master, Neveragain]";
 			mes "Umm?";
 			mes "You need to return the borrowed stuff.";
@@ -1728,19 +1742,19 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		mes "[Ranger Master, Neveragain]";
 		mes "From now on be active as a splendid Ranger!";
 		mes "I wish you luck in your future!";
-		delitem 1703,1; //Bow__
+		delitem Bow__,1;
 		job_ranger01 = 8;
 		completequest 8262;
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		getitem 5748,1; //Sniper_Goggle
-		getitem 2795,1; //Green_Apple_Ring
-		getitem 6124,1; //Wolf's_Flute
+		getitem Sniper_Goggle,1;
+		getitem Green_Apple_Ring,1;
+		getitem Wolfs_Flute,1;
 		close;
 	}
 	mes "Hey, you look great.";
 	mes "What are you doing here?";
 	next;
-	switch(select("I just came by:Please let me be out")) {
+	switch(select("I just came by", "Please let me be out")) {
 	case 1:
 		mes "[Ranger Master, Neveragain]";
 		mes "Well, there's nothing to see and you came.";
@@ -1761,7 +1775,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 
 job3_rang01,58,1,0	script	Worker#job_ranger	4_M_ORIENT01,{
 	callfunc "F_GM_NPC";
-	switch(select("Enable Waiting Room:Disable Waiting Room:Enable 1st Test:Disable 1st Test:Enable 2nd Test:Disable 2nd Test:Enable 3rd Test:Disable 3rd Test:Cancel")) {
+	switch(select("Enable Waiting Room", "Disable Waiting Room", "Enable 1st Test", "Disable 1st Test", "Enable 2nd Test", "Disable 2nd Test", "Enable 3rd Test", "Disable 3rd Test", "Cancel")) {
 	case 1:
 		mes "Enabled Waiting Room";
 		donpcevent "Test Waiting Room#jr_03::OnEnable";

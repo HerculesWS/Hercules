@@ -1,16 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) 5511
+//= Copyright (C) IVBela
+//= Copyright (C) DracoRPG
+//= Copyright (C) Reddozen
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Sage Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for skills: Create Converter, Elemental Change
-//===== Additional Comments: =================================
-//= 1.4 Rescripted to Aegis 10.3 standards. [5511]
-//= 1.5 Optimized. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 	if(BaseJob != Job_Sage) {
@@ -83,7 +108,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			setarray .@skill[0],1018,1017,1019,1008;
 			setarray .@skill$[0],"Fire","Earth","Wind","Water";
 			while(1) {
-				.@i = select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
+				.@i = select("Fire Elemental Change", "Earth Elemental Change", "Wind Elemental Change", "Water Elemental Change")-1;
 				if(getskilllv(.@ReqSkill[.@i]) == 0) {
 					mes "[Mishuna]";
 					mes "I'm sorry, but you haven't";
@@ -105,11 +130,11 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 					next;
 					mes "[Mishuna]";
 					mes "%$#@!#$% Yap~~";
-					specialeffect2 EF_RUWACH;
+					specialeffect(EF_RUWACH, AREA, playerattached());
 					next;
 					mes "[Mishuna]";
 					mes "Yap!";
-					specialeffect2 EF_BRANDISHSPEAR;
+					specialeffect(EF_BRANDISHSPEAR, AREA, playerattached());
 					next;
 					mes "^3355FFYou've successfully";
 					mes "learned the "+.@skill$[.@i]+" Elemental";
@@ -134,11 +159,11 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			next;
 			mes "[Mishuna]";
 			mes "%$#@!#$% Yap~~";
-			specialeffect2 EF_RUWACH;
+			specialeffect(EF_RUWACH, AREA, playerattached());
 			next;
 			mes "[Mishuna]";
 			mes "Yap!";
-			specialeffect2 EF_BRANDISHSPEAR;
+			specialeffect(EF_BRANDISHSPEAR, AREA, playerattached());
 			next;
 			mes "^3355FFYou successfully recalled";
 			mes "the Elemental Coverter";
@@ -153,7 +178,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "you would. Very well then,";
 		mes "I hope you adeptly use these";
 		mes "talents for the right purposes.";
-		mes "Farewell for now, "+strcharinfo(0)+".";
+		mes "Farewell for now, "+strcharinfo(PC_NAME)+".";
 		close;
 	}
 	else if(SAG_SK == 0) {
@@ -165,7 +190,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		next;
 		select("I seek new knowledge.");
 		mes "[Mishuna]";
-		mes "Ah, you must be "+strcharinfo(0)+".";
+		mes "Ah, you must be "+strcharinfo(PC_NAME)+".";
 		mes "I've looked forward to meeting";
 		mes "you. In the noble pursuit of";
 		mes "knowledge, might I suggest";
@@ -183,14 +208,14 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "The first is called ^FF0000Elemental";
 		mes "Change^000000, which enables you";
 		mes "to change a monster's attribute";
-		mes "according to the specific element^FFFFFF ^000000 of the Elemental Change skill";
+		mes "according to the specific element of the Elemental Change skill";
 		mes "that you have learned.";
 		next;
 		mes "[Mishuna]";
 		mes "The second is called";
 		mes "Elemental Converter Creation,";
 		mes "which enables you to create";
-		mes "converter items that are required^FFFFFF ^000000 to use the Elemental Change skill.";
+		mes "converter items that are required to use the Elemental Change skill.";
 		next;
 		mes "[Mishuna]";
 		mes "Although the knowledge of";
@@ -200,7 +225,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "of it. So, do you think you're";
 		mes "ready to learn these skills?";
 		next;
-		if(select("Maybe later.:Yes, I am.") == 1) {
+		if(select("Maybe later.", "Yes, I am.") == 1) {
 			mes "[Mishuna]";
 			mes "Ah, you must be busy right";
 			mes "now. No problem, just come";
@@ -236,12 +261,12 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "nexting here for your";
 		mes "return. Remember that we";
 		mes "need these items to create";
-		mes "a converter so that you can^FFFFFF ^000000 learn the skill from my example...";
+		mes "a converter so that you can learn the skill from my example...";
 		SAG_SK = 1;
 		close;
 	}
 	else if(SAG_SK == 1) {
-		if (countitem(904) < 10 || countitem(947) < 7 || countitem(1013) < 12 || countitem(946) < 10 || countitem(7433) < 4) {
+		if (countitem(Scorpions_Tail) < 10 || countitem(Horn) < 7 || countitem(Colorful_Shell) < 12 || countitem(Snails_Shell) < 10 || countitem(Scroll) < 4) {
 			mes "[Mishuna]";
 			mes "Hm, you still haven't";
 			mes "gathered all of the materials";
@@ -307,17 +332,17 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			mes "Elemental Converter";
 			mes "Creation skill by reviewing";
 			mes "your copy of Barmundt's scroll.^000000";
-			specialeffect2 EF_ABSORBSPIRITS;
-			delitem 904,10; // Scorpion_Tail
-			delitem 947,7; // Horn
-			delitem 1013,12; // Rainbow_Shell
-			delitem 946,10; // Snail's_Shell
-			delitem 7433,4; // Blank_Scroll
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+			delitem Scorpions_Tail,10;
+			delitem Horn,7; // Horn
+			delitem Colorful_Shell,12; // Rainbow_Shell
+			delitem Snails_Shell,10;
+			delitem Scroll,4; // Blank_Scroll
 			SAG_SK = 2;
 			skill "SA_CREATECON",1,0;
 			next;
 			mes "[Mishuna]";
-			mes "Wow, "+strcharinfo(0)+"!";
+			mes "Wow, "+strcharinfo(PC_NAME)+"!";
 			mes "You learned that skill";
 			mes "really quickly! No wonder";
 			mes "people say that you're one";
@@ -358,7 +383,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		setarray .@ReqItem$[0],"Red Bloods","Green Lives","Wind of Verdure","Crystal Blues";
 		setarray .@skill$[0],"Fire","Earth","Wind","Water";
 		while(1) {
-			.@i = select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
+			.@i = select("Fire Elemental Change", "Earth Elemental Change", "Wind Elemental Change", "Water Elemental Change")-1;
 			if(getskilllv(.@ReqSkill[.@i]) == 0) {
 				mes "[Mishuna]";
 				mes "I'm sorry, but you have not";
@@ -396,7 +421,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		setarray .@ReqItem$[0],"Red Bloods","Green Lives","Wind of Verdure","Crystal Blues";
 		setarray .@skill[0],1018,1017,1019,1008;
 		setarray .@skill$[0],"Fire","Earth","Wind","Water";
-		if (countitem(.@ReqItem[.@i]) < 20 || countitem(1089) < 1 || countitem(1088) < 1) {
+		if (countitem(.@ReqItem[.@i]) < 20 || countitem(Payon_Potion) < 1 || countitem(Morocc_Potion) < 1) {
 			mes "[Mishuna]";
 			mes "Are you having trouble";
 			mes "gathering all the required";
@@ -430,7 +455,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "skill. So be aware of that.";
 		next;
 		mes "[Mishuna]";
-		mes "Now, "+strcharinfo(0)+",";
+		mes "Now, "+strcharinfo(PC_NAME)+",";
 		mes "I'm going to cast a spell";
 		mes "that will help you memorize";
 		mes "the "+.@skill$[.@i]+" Elemental Change";
@@ -441,19 +466,19 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "a soft blue glow surrounds";
 		mes "his body and slowly grows";
 		mes "brighter and more intense.^000000";
-		specialeffect2 EF_RUWACH;
+		specialeffect(EF_RUWACH, AREA, playerattached());
 		next;
 		mes "[Mishuna]";
 		mes "@#$%^~ Yap!";
-		specialeffect2 EF_BRANDISHSPEAR;
+		specialeffect(EF_BRANDISHSPEAR, AREA, playerattached());
 		delitem .@ReqItem[.@i],20;
-		delitem 1089,1; // Payon Potion
-		delitem 1088,1; // Morocc Potion
+		delitem Payon_Potion,1; // Payon Potion
+		delitem Morocc_Potion,1; // Morocc Potion
 		SAG_SK = 100;
 		skill .@skill[.@i],1,0;
 		next;
 		mes "[Mishuna]";
-		mes strcharinfo(0)+"...";
+		mes strcharinfo(PC_NAME)+"...";
 		mes "I'm happy to say that you've";
 		mes "successfully memorized the";
 		mes .@skill$[.@i]+" Elemental Change skill.";
@@ -479,18 +504,3 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//===== Additional Comments: =================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//= 1.3c Fixed some typos [IVBela]
-//============================================================

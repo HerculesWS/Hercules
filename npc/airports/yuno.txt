@@ -1,29 +1,52 @@
-//===== Hercules Script ======================================
-//= Yuno Airport Staff
-//===== By: ==================================================
-//= L0ne_W0lf, Muad_Dib
-//===== Description: =========================================
-//= Yuno Airport Staff
-//===== Additional Comments: =================================
-//= Official NPCs.
-//============================================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Muad_Dib
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Juno Airport Staff
+//================= Description ===========================================
+//= Official Juno Airport Staff
+//=========================================================================
 
 y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	4_F_01,{
-	mes "[Airport Staff]";
-	mes "Welcome to Juno Airport where we offer domestic flights to Einbroch, Lighthalzen and Hugel,";
-	mes "and international flights to Izlude and Rachel.";
-	mes "How may I be of service?";
+	mes("[Airport Staff]");
+	mes("Welcome to Juno Airport where we offer domestic flights to Einbroch, Lighthalzen and Hugel,\r"
+		"and international flights to Izlude and Rachel.");
+	mes("How may I be of service?");
 	next;
-	if (select("Board the Airship.:Cancel.") == 1) {
-		mes "[Airport Staff]";
-		mes "The boarding fee for all";
-		mes "flights is 1,200 zeny. If you";
-		mes "use a Free Ticket for Airship,";
-		mes "the boarding fee will be waived.So would you like to depart?";
+	if (select("Board the Airship.", "Cancel.") == 1) {
+		mes("[Airport Staff]");
+		mes("The boarding fee for all\r"
+			"flights is 1,200 zeny. If you\r"
+			"use a Free Ticket for Airship,\r"
+			"the boarding fee will be waived.So would you like to depart?");
 		next;
-		if (select("Yes:No") == 1) {
-			if (countitem(7311) > 0) {
-				delitem 7311,1; //Free_Flying_Ship_Ticket
+		if (select("Yes", "No") == 1) {
+			if (countitem(Free_Flying_Ship_Ticket) > 0) {
+				delitem Free_Flying_Ship_Ticket,1;
 				warp "y_airport",148,51;
 				end;
 			}
@@ -32,16 +55,16 @@ y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	4_F_01,{
 				warp "y_airport",148,51;
 				end;
 			}
-			mes "[Airport Staff]";
-			mes "I'm sorry, but you don't";
-			mes "have 1,200 zeny to pay";
-			mes "for the boarding fee.";
+			mes("[Airport Staff]");
+			mes("I'm sorry, but you don't\r"
+				"have 1,200 zeny to pay\r"
+				"for the boarding fee.");
 			close;
 		}
 	}
-	mes "[Airport Staff]";
-	mes "Thank you and";
-	mes "have a nice day.";
+	mes("[Airport Staff]");
+	mes("Thank you and\r"
+		"have a nice day.");
 	close;
 }
 
@@ -49,28 +72,28 @@ y_airport,158,43,5	duplicate(y_airport1)	Airport Staff#y_air1b	4_F_01
 y_airport,126,43,5	duplicate(y_airport1)	Airport Staff#y_air1c	4_F_01
 
 y_airport,143,49,3	script	Arrival Staff#y_air2a::y_airport2	4_F_01,{
-	mes "[Airport Staff]";
-	mes "Welcome to Juno Airport. If you've just arrived from your";
-	mes "flight, let me guide you to the main terminal. Otherwise, please";
-	mes "board the departing Airship to reach your intended destination.";
+	mes("[Airport Staff]");
+	mes("Welcome to Juno Airport. If you've just arrived from your\r"
+		"flight, let me guide you to the main terminal. Otherwise, please\r"
+		"board the departing Airship to reach your intended destination.");
 	next;
-	if (select("Exit to main terminal:Cancel") == 1) {
-		mes "[Airport Staff]";
-		mes "Once you're in the main terminal, you must pay the fee once again";
-		mes "to board a departing Airship. You should only exit if your intended";
-		mes "destination is Juno. Proceed to";
-		mes "exit to the main terminal?";
+	if (select("Exit to main terminal", "Cancel") == 1) {
+		mes("[Airport Staff]");
+		mes("Once you're in the main terminal, you must pay the fee once again\r"
+			"to board a departing Airship. You should only exit if your intended\r"
+			"destination is Juno. Proceed to\r"
+			"exit to the main terminal?");
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			warp "y_airport",142,40;
 			end;
 		}
 	}
-	mes "[Airport Staff]";
-	mes "Alright, thank you";
-	mes "for your patronage";
-	mes "and I hope you have";
-	mes "a pleasant flight~";
+	mes("[Airport Staff]");
+	mes("Alright, thank you\r"
+		"for your patronage\r"
+		"and I hope you have\r"
+		"a pleasant flight~");
 	close;
 }
 
@@ -78,80 +101,80 @@ y_airport,126,51,3	duplicate(y_airport2)	Arrival Staff#y_air2b	4_F_01
 y_airport,158,50,3	duplicate(y_airport2)	Arrival Staff#y_air2c	4_F_01
 
 y_airport,145,63,5	script	Domestic Boarding	4_F_02,{
-	mes "[Boarding Staff]";
-	mes "Would you like to board the";
-	mes "Airship that flies to Einbroch,";
-	mes "Lighthalzen and Hugel? If so,";
-	mes "please let me guide you to that";
-	mes "Airship's boarding area.";
+	mes("[Boarding Staff]");
+	mes("Would you like to board the\r"
+		"Airship that flies to Einbroch,\r"
+		"Lighthalzen and Hugel? If so,\r"
+		"please let me guide you to that\r"
+		"Airship's boarding area.");
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		warp "yuno",59,244;
 		end;
 	}
-	mes "[Boarding Staff]";
-	mes "Very well, then.";
-	mes "Thank you for your";
-	mes "patronage, and I hope";
-	mes "you enjoy your travels~";
+	mes("[Boarding Staff]");
+	mes("Very well, then.");
+	mes("Thank you for your\r"
+		"patronage, and I hope\r"
+		"you enjoy your travels~");
 	close;
 }
 
 y_airport,140,63,5	script	International Boarding	4_F_02,{
-	mes "[Boarding Staff]";
-	mes "Would you like to board";
-	mes "the Airship which flies to";
-	mes "Juno, Izlude and Rachel?";
-	mes "If so, let me guide";
-	mes "you to the boarding area.";
+	mes("[Boarding Staff]");
+	mes("Would you like to board\r"
+		"the Airship which flies to\r"
+		"Juno, Izlude and Rachel?");
+	mes("If so, let me guide\r"
+		"you to the boarding area.");
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		warp "yuno",47,244;
 		end;
 	}
-	mes "[Boarding Staff]";
-	mes "Alright, then.";
-	mes "Thank you for flying";
-	mes "with us, and I hope you";
-	mes "enjoy your travels on our";
-	mes "state of the art Airships.";
+	mes("[Boarding Staff]");
+	mes("Alright, then.");
+	mes("Thank you for flying\r"
+		"with us, and I hope you\r"
+		"enjoy your travels on our\r"
+		"state of the art Airships.");
 	close;
 }
 
 yuno,14,262,5	script	Airship Staff#yuno01	4_F_02,{
-	mes "[Airship Staff]";
-	mes "Welcome to Juno Airport.";
-	mes "Please use this door to";
-	mes "board the Airship that will";
-	mes "be flying all the way to Izlude";
-	mes "in the Rune-Midgarts Kingdom,";
-	mes "and to Rachel in the Arunafeltz";
-	mes "Republic.";
+	mes("[Airship Staff]");
+	mes("Welcome to Juno Airport.");
+	mes("Please use this door to\r"
+		"board the Airship that will\r"
+		"be flying all the way to Izlude\r"
+		"in the Rune-Midgarts Kingdom,\r"
+		"and to Rachel in the Arunafeltz\r"
+		"Republic.");
 	next;
-	mes "[Airship Staff]";
-	mes "Otherwise, if Juno is";
-	mes "your intended destination,";
-	mes "please head down the stairs";
-	mes "and ask the Arrival Staff to lead";
-	mes "you to the main terminal. Thank";
-	mes "you, and enjoy your travels.";
+	mes("[Airship Staff]");
+	mes("Otherwise, if Juno is\r"
+		"your intended destination,\r"
+		"please head down the stairs\r"
+		"and ask the Arrival Staff to lead\r"
+		"you to the main terminal. Thank\r"
+		"you, and enjoy your travels.");
 	close;
 }
 
 yuno,88,263,3	script	Airship Staff#yuno02	4_F_02,{
-	mes "[Airship Staff]";
-	mes "Welcome to Juno Airport.";
-	mes "Please use this door to";
-	mes "board the Airship which stops";
-	mes "over Einbroch, Lighthalzen and";
-	mes "Hugel in the Schwaltzvalt Republic.";
+	mes("[Airship Staff]");
+	mes("Welcome to Juno Airport.");
+	mes("Please use this door to\r"
+		"board the Airship which stops\r"
+		"over Einbroch, Lighthalzen and\r"
+		"Hugel in the Schwaltzvalt Republic.");
 	next;
-	mes "[Airship Staff]";
-	mes "Otherwise, if Juno is";
-	mes "your intended destination,";
-	mes "please head down the stairs";
-	mes "and ask the Arrival Staff to lead";
-	mes "you to the main terminal. Thank";
-	mes "you, and enjoy your travels.";
+	mes("[Airship Staff]");
+	mes("Otherwise, if Juno is\r"
+		"your intended destination,\r"
+		"please head down the stairs\r"
+		"and ask the Arrival Staff to lead\r"
+		"you to the main terminal. Thank\r"
+		"you, and enjoy your travels.");
 	close;
 }

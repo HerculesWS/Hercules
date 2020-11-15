@@ -14,67 +14,60 @@ prontera,145,290,5	script	Mason	2_M_SAGE_B,{
 	if(umb_lang==2 || umb_mason==1) goto L_AGAIN;
 
 	mes "Hey there, I came here to Prontera in search of an old lady who can remove cards from slots. Do you know where I can find her?";
-	menu "Yes",-, "No",M_NO;
-
+	if (select("Yes", "No") != 1) {
+		mes "Oh.. Ok.. Thanks anyways.";
+		close;
+	}
 	mes "Oooo, could you please tell me where she's at? I'd be really appreciative.";
-	menu "Swordsman Association",-, "Sanctuary",M_Boo1,"Prontera Chivalry",M_Boo2,"Trading Post",M_Boo3,"Kit Shop",M_Boo4,"Inn",M_Boo5,"Armory",M_DONE,"Library",M_Boo6,"Job Agency",M_Boo7,"Prontera Castle",M_Boo8,"City Hall",M_Boo9;
-
 	next;
-	mes "[Mason]";
-	mes "Hmm... I dunno why she would be there... guess I'll take a look.";
-	close;
-M_Boo1:
-	next;
-	mes "[Mason]";
-	mes "Wow I never knew she was a religious person... I'll see to it thanks.";
-	close;
-M_Boo2:
-	next;
-	mes "[Mason]";
-	mes "Hmm.... are you sure about that?";
-	close;
-M_Boo3:
-	next;
-	mes "[Mason]";
-	mes "Why would she need to go there? I think you might be mistaken.";
-	close;
-M_Boo4:
-	next;
-	mes "[Mason]";
-	mes "The only thing she'd need at a Kit shop is medicine for her rheumatism. She's probably long gone from there by now.";
-	close;
-M_Boo5:
-	next;
-	mes "[Mason]";
-	mes "I don't think she needs to be there, she LIVES here in Prontera.";
-	close;
-M_Boo6:
-	next;
-	mes "[Mason]";
-	mes "Ah I see, if she's studying then I don't want to bother her. Thanks anyways.";
-	close;
-M_Boo7:
-	next;
-	mes "[Mason]";
-	mes "Job Agency?  I don't think so.  Don't lead me all around Prontera please! She's already a teacher here.";
-	close;
-M_Boo8:
-	next;
-	mes "[Mason]";
-	mes "The castle eh, I don't want to step in there... just doesn't feel like my style. I don't like that noble feeling of importance type of thing.";
-	close;
-M_Boo9:
-	next;
-	mes "[Mason]";
-	mes "O wow, did she become an important part of Prontera? I'd think she's too busy for me to visit. I'll try again later.";
-	close;
-M_DONE:
-	next;
-	mes "[Mason]";
-	mes "Ah, I heard that her class was somewhere around there... thanks a lot! Here's a lil something for your help.";
-	getitem 7117,1;//Items: Torn Spell Book,
-	set umb_mason,1;
-	close;
+	switch (select("Swordsman Association", "Sanctuary", "Prontera Chivalry", "Trading Post", "Kit Shop", "Inn", "Armory", "Library", "Job Agency", "Prontera Castle", "City Hall")) {
+	case 1:
+		mes "[Mason]";
+		mes "Hmm... I dunno why she would be there... guess I'll take a look.";
+		close;
+	case 2:
+		mes "[Mason]";
+		mes "Wow I never knew she was a religious person... I'll see to it thanks.";
+		close;
+	case 3:
+		mes "[Mason]";
+		mes "Hmm.... are you sure about that?";
+		close;
+	case 4:
+		mes "[Mason]";
+		mes "Why would she need to go there? I think you might be mistaken.";
+		close;
+	case 5:
+		mes "[Mason]";
+		mes "The only thing she'd need at a Kit shop is medicine for her rheumatism. She's probably long gone from there by now.";
+		close;
+	case 6:
+		mes "[Mason]";
+		mes "I don't think she needs to be there, she LIVES here in Prontera.";
+		close;
+	case 7:
+		mes "[Mason]";
+		mes "Ah, I heard that her class was somewhere around there... thanks a lot! Here's a lil something for your help.";
+		getitem(Rent_Spell_Book, 1);//Items: Torn Spell Book,
+		umb_mason = 1;
+		close;
+	case 8:
+		mes "[Mason]";
+		mes "Ah I see, if she's studying then I don't want to bother her. Thanks anyways.";
+		close;
+	case 9:
+		mes "[Mason]";
+		mes "Job Agency?  I don't think so.  Don't lead me all around Prontera please! She's already a teacher here.";
+		close;
+	case 10:
+		mes "[Mason]";
+		mes "The castle eh, I don't want to step in there... just doesn't feel like my style. I don't like that noble feeling of importance type of thing.";
+		close;
+	case 11:
+		mes "[Mason]";
+		mes "O wow, did she become an important part of Prontera? I'd think she's too busy for me to visit. I'll try again later.";
+		close;
+	}
 
 L_AGAIN:
 	emotion e_thx;
@@ -83,9 +76,6 @@ L_AGAIN:
 
 L_NOT_GOT_QUEST:
 	mes "Hi! I came here to Prontera in search of an old lady... But...";
-	close;
-M_NO:
-	mes "Oh.. Ok.. Thanks anyways.";
 	close;
 }
 
@@ -106,11 +96,14 @@ amatsu,267,189,4	script	Marie	4_F_ALCHE,{
 	mes "[Marie]";
 	if(umb_lang==0) goto L_NOT_GOT_QUEST;
 	if(umb_lang==2 || umb_marie==1) goto L_AGAIN;
-	if(countitem(9001)>0 && countitem(643)>0) goto L_DONE;//Items: Poring Egg, Pet Incubator,
+	if(countitem(Poring_Egg)>0 && countitem(Pet_Incubator)>0) goto L_DONE;//Items: Poring Egg, Pet Incubator,
 	mes "Hello, is there something you need?";
 	next;
-	menu "No nothing at all.",M_NO,"Your teacher sent me.",-;
-
+	if (select("No nothing at all.", "Your teacher sent me.") != 2 ) {
+		mes "[Marie]";
+		mes "Hrrmm okay? Cya then..";
+		close;
+	}
 	mes "[Marie]";
 	mes "What does he want from me?";
 	emotion e_what;
@@ -124,26 +117,22 @@ L_NOT_GOT_QUEST:
 	mes "Hi! What do you want from me?";
 	close;
 
-M_NO:
-	mes "[Marie]";
-	mes "Hrrmm okay? Cya then..";
-	close;
-
 L_DONE:
 	mes "Heyyy there, you have a poring egg and the pet incubator to go with it! Are those for me?";
-	menu "Yep!",-, "Sorry, no.",M_DOH;
-
+	if (select("Yep!", "Sorry, no.") != 1) {
+		mes "Oh.. pooo... sigh...";
+		close;
+	}
 	mes "[Marie]";
-	if(countitem(9001)==0 && countitem(643)==0) goto M_DOH;//Items: Poring Egg, Pet Incubator,
+	if (countitem(Poring_Egg) == 0 && countitem(Pet_Incubator) == 0) {
+		mes "Oh.. pooo... sigh...";
+		close;
+	}
 	mes "Yatta!  Here's a lil something in return.";
-	delitem 9001,1;//Items: Poring Egg,
-	delitem 643,1;//Items: Pet Incubator,
-	getitem 7118,1;//Items: Torn Scroll,
+	delitem Poring_Egg,1;//Items: Poring Egg,
+	delitem Pet_Incubator,1;//Items: Pet Incubator,
+	getitem Rent_Scroll,1;//Items: Torn Scroll,
 	set umb_marie,1; //got Torn Scroll
-	close;
-
-M_DOH:
-	mes "Oh.. pooo... sigh...";
 	close;
 
 L_AGAIN:
@@ -159,10 +148,10 @@ yuno,157,366,2	script	Wise Man Fabius	2_M_SAGE_OLD,{
 	mes "You speak Umbalian fluently! So you will never forget the language of Umbalians!";
 	close;
 L_Quest:
-	if((countitem(1006) < 1) || (countitem(7118) < 1) || (countitem(7117) < 1)) goto L_DONE;//Items: Old Magic Book, Torn Scroll, Torn Spell Book,
-	delitem 1006,1;	//Items: Old Magic Book,
-	delitem 7118,1;	//Items: Torn Scroll,
-	delitem 7117,1;//Items: Torn Spell Book,
+	if((countitem(Old_Magic_Book) < 1) || (countitem(Rent_Scroll) < 1) || (countitem(Rent_Spell_Book) < 1)) goto L_DONE;//Items: Old Magic Book, Torn Scroll, Torn Spell Book,
+	delitem Old_Magic_Book,1;	//Items: Old Magic Book,
+	delitem Rent_Scroll,1;	//Items: Torn Scroll,
+	delitem Rent_Spell_Book,1;//Items: Torn Spell Book,
 	emotion e_thx;
 	mes "Ah, you've done well in retrieving my references. These artifacts holds information about ruins around the world, from the burning hell of the Magma Dungeon, to the strange eerie Hidden Forest of Yggsadril.";
 	next;

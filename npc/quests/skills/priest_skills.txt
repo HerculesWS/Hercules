@@ -1,16 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) DracoRPG
+//= Copyright (C) Reddozen
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Priest Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for skills: Redempito
-//===== Additional Comments: =================================
-//= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 	if (BaseJob == Job_Priest) {
@@ -89,7 +112,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			next;
 			mes "[Sister Linus]";
 			mes "One day, a group of adventurers";
-			mes "came to Prontera Church in hopes^FFFFFF ^000000 of hiring a Priest to accompany";
+			mes "came to Prontera Church in hopes of hiring a Priest to accompany";
 			mes "them to ^3131DDGlast Heim^000000. It must have been fate that she was the only";
 			mes "Priest that was available.";
 			next;
@@ -114,7 +137,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			mes "Surrounded by Wanderers,";
 			mes "the adventurers quickly fell";
 			mes "in defeat, one by one. Soon,";
-			mes "the young nun was the only^FFFFFF ^000000 one of the group still standing.";
+			mes "the young nun was the only one of the group still standing.";
 			next;
 			mes "[Sister Linus]";
 			mes "Alone against impossible";
@@ -166,7 +189,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			mes "always be that spunky";
 			mes "and joyful girl to me.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait, you still haven't";
 			mes "answered my question.";
 			mes "Are you praying for this";
@@ -193,9 +216,9 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			mes "running my mouth! I'm";
 			mes "sorry to keep you, did you";
 			mes "have somewhere to go? Well,";
-			mes "I'll be praying for your safety~ ^FFFFFF ^000000";
+			mes "I'll be praying for your safety~ ";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Before I go, would you";
 			mes "please tell me the name";
 			mes "of that High Priest you were";
@@ -218,7 +241,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			mes "How are you";
 			mes "doing today?";
 			next;
-			if (select("Please teach me ^3131FFRedemptio^000000.:Cancel") == 1) {
+			if (select("Please teach me ^3131FFRedemptio^000000.", "Cancel") == 1) {
 				mes "[Sister Linus]";
 				mes "Ooh, Redemptio would be";
 				mes "a good skill for you to learn~";
@@ -260,7 +283,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 		}
 		else if (PRIEST_SK == 2) {
 			if (getskilllv("ALL_RESURRECTION") > 0) {
-				if (countitem(523) > 29 && countitem(717) > 19) {
+				if (countitem(Holy_Water) > 29 && countitem(Blue_Gemstone) > 19) {
 					mes "[Sister Linus]";
 					mes "Ooh, it seems like you've";
 					mes "brought everything that you";
@@ -297,7 +320,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 					}
 
 					if (.@success) {
-						specialeffect2 EF_HEALSP;
+						specialeffect(EF_HEALSP, AREA, playerattached());
 						mes "[Sister Linus]";
 						mes "Congratulations!";
 						mes "You successfully";
@@ -305,14 +328,14 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 						mes "Please remember to only";
 						mes "use this skill in the most";
 						mes "critical situations.";
-						delitem 717,20; //Blue_Gemstone
-						delitem 523,30; //Holy_Water
+						delitem Blue_Gemstone,20;
+						delitem Holy_Water,30;
 						PRIEST_SK = 100;
 						skill "PR_REDEMPTIO",1,0;
 						close;
 					}
 					else {
-						specialeffect2 EF_POISONHIT;
+						specialeffect(EF_POISONHIT, AREA, playerattached());
 						mes "[Sister Linus]";
 						mes "Oh no! I'm sorry,";
 						mes "but you failed to";
@@ -320,8 +343,8 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 						mes "I'll be waiting right here,";
 						mes "so we can try again when";
 						mes "you're ready, okay?";
-						delitem 717,1; //Blue_Gemstone
-						delitem 523,1; //Holy_Water
+						delitem Blue_Gemstone,1;
+						delitem Holy_Water,1;
 						close;
 					}
 
@@ -360,17 +383,3 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//============================================================

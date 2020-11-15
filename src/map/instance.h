@@ -1,14 +1,31 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_INSTANCE_H
 #define MAP_INSTANCE_H
 
-#include "script.h" // struct reg_db
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // struct point
+#include "map/script.h" // struct reg_db
+#include "common/hercules.h"
+#include "common/mmo.h" // struct point
 
+struct hplugin_data_store;
 struct block_list;
 struct map_session_data;
 
@@ -51,10 +68,7 @@ struct instance_data {
 	unsigned int original_progress_timeout;
 
 	struct point respawn; ///< reload spawn
-
-	/** HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct instance_interface {
@@ -82,12 +96,13 @@ struct instance_interface {
 	void (*set_timeout) (int instance_id, unsigned int progress_timeout, unsigned int idle_timeout);
 	bool (*valid) (int instance_id);
 	int (*destroy_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*force_destroy) (struct map_session_data *sd);
 };
-
-struct instance_interface *instance;
 
 #ifdef HERCULES_CORE
 void instance_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct instance_interface *instance;
 
 #endif /* MAP_INSTANCE_H */

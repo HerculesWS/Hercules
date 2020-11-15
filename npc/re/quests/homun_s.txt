@@ -1,23 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Homunculus S Mutation Quest
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Genetic quest to mutate a level 99 evolved Homunculus into a Homunculus
+//= S.
+//================= Current Version =======================================
 //= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
-//= Genetic quest to mutate a level 99 evolved Homunculus
-//= into a Homunculus S.
-//===== Additional Comments: =================================
-//= 1.0 First Version, entirely custom. [Masao]
-//= 1.1 Cleaning. [Euphy]
-//= 1.2 Replaced with official script. [Euphy]
-//============================================================
+//=========================================================================
 
-// Main NPCs
-//============================================================
+//== Main NPCs =============================================
 job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
-	if (countitem(6415)) {
+	if (countitem(Strange_Embryo)) {
 		if (Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) {
 			disable_items;
 			if (!questprogress(4159) && !questprogress(4160)) {
@@ -32,10 +51,10 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 				setquest 4154;
 				setquest 4159;
 				morphembryo;
-				if (countitem(6415) == 0)
-					getitem 6415,1; //Strange_Embryo
-				else if (countitem(6415) > 1)
-					delitem 6415, (countitem(6415) - 1); //Strange_Embryo
+				if (countitem(Strange_Embryo) == 0)
+					getitem Strange_Embryo,1;
+				else if (countitem(Strange_Embryo) > 1)
+					delitem Strange_Embryo, (countitem(Strange_Embryo) - 1);
 				warp "que_house_s",63,41;
 				end;
 			}
@@ -50,7 +69,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "Come back after you become a ^005DFFGenetic^000000 and have obtained a ^0000FFBioethics^000000.";
 			close;
 		} else {
-			delitem 6415, countitem(6415); //Strange_Embryo
+			delitem Strange_Embryo, countitem(Strange_Embryo);
 			mes "[Viorel]";
 			mes "Wait, that embryo you have seems a little strange.";
 			next;
@@ -73,7 +92,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "Ready to go to my house?";
 			next;
-			switch(select("Go to ^005DFFViorel^000000's house.:Don't go.")) {
+			switch(select("Go to ^005DFFViorel^000000's house.", "Don't go.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "Good choice.";
@@ -96,7 +115,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "Now, ready to go to ^005DFFJeyna^000000?";
 			next;
-			switch(select("Go to ^005DFFJeyna^000000's room.:Don't go.")) {
+			switch(select("Go to ^005DFFJeyna^000000's room.", "Don't go.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "Good choice.";
@@ -138,7 +157,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "I must speak to you in private. Would you mind going to my house with me?";
 			next;
-			switch(select("Go to ^005DFFViorel^000000's home.:Stay here.")) {
+			switch(select("Go to ^005DFFViorel^000000's home.", "Stay here.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "Good choice.";
@@ -160,7 +179,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "in the newly created ^FF4800Homunculus^000000,";
 			mes "born from the new ^006400Homunculus Mutation System^000000?";
 			next;
-			switch(select("Nope. Good bye.:Please, I'm busy.:That's exactly what I wanted to hear.:Why are you always standing there?")) {
+			switch(select("Nope. Good bye.", "Please, I'm busy.", "That's exactly what I wanted to hear.", "Why are you always standing there?")) {
 			case 1:
 				emotion e_heh;
 				mes "[Viorel]";
@@ -225,7 +244,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 	mes "^FF4800Homunculus^000000 research requires a lot of time and funding.";
 	mes "However, I believe passion is the most important factor.";
 	next;
-	switch(select("End conversation.:What are you talking about?:Why are you always standing there?")) {
+	switch(select("End conversation.", "What are you talking about?", "Why are you always standing there?")) {
 	case 1:
 		mes "[Viorel]";
 		mes "So long~!";
@@ -288,7 +307,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "[Viorel]";
 		mes "In order to break the current limitations of the ^FF4800Homunculus^000000, mutations need to happen.";
 		next;
-		switch(select("Like, biological experiments...?!:Well, yeah, naturally.:I don't want to hurt my Homunculus!")) {
+		switch(select("Like, biological experiments...?!", "Well, yeah, naturally.", "I don't want to hurt my Homunculus!")) {
 		case 1:
 			emotion e_swt2;
 			mes "[Viorel]";
@@ -359,7 +378,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "I know it's a little abrupt, but...";
 		mes "How about changing your ^FF4800Homunculus^000000 into something incredible with my marvelous achievement, the ^006400Homunculus Mutation System^000000?";
 		next;
-		switch(select("Explore the ^006400Homunculus Mutation System^000000.:Cancel.")) {
+		switch(select("Explore the ^006400Homunculus Mutation System^000000.", "Cancel.")) {
 		case 1:
 			emotion e_no1;
 			mes "[Viorel]";
@@ -382,7 +401,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "I am not trying to deceive you.";
 			mes "Maybe you need some time to think about it?";
 			next;
-			switch(select("Think about it.:I'm just going to walk away.")) {
+			switch(select("Think about it.", "I'm just going to walk away.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "We'll talk in a bit then.";
@@ -431,7 +450,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "mutation, I can't guarentee what kind of Homunculus you're going to get.";
 		mes "Anyways, it's up to you.";
 		next;
-		switch(select("Mutation stabilization (50,000 zeny):Unstable mutation")) {
+		switch(select("Mutation stabilization (50,000 zeny)", "Unstable mutation")) {
 		case 1:
 			if (Zeny < 50000) {
 				mes "[Viorel]";
@@ -440,7 +459,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 				mes "I'll be waiting.";
 				mes "Want me to send you back to the ^8B4513Laboratory^000000?";
 				next;
-				switch(select("No thanks.:Yes. Send me back to the Lab.")) {
+				switch(select("No thanks.", "Yes. Send me back to the Lab.")) {
 				case 1:
 					mes "[Viorel]";
 					mes "Alright.";
@@ -461,7 +480,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "Good choice.";
 			mes "Choose from the different types of ^0000FFHomunculus^000000.";
 			next;
-			switch(select("Eira:Sera:Dieter:Bayeri:Eleanor")) {
+			switch(select("Eira", "Sera", "Dieter", "Bayeri", "Eleanor")) {
 			case 1:
 				cutin "Mer_Eira_Card",3;
 				.@Homunculus = 6048; //MER_EIRA
@@ -486,7 +505,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "Are you sure?";
 			next;
-			if(select("Yes.:No.") == 2) {
+			if(select("Yes.", "No.") == 2) {
 				cutin "",255;
 				playbgm "33.mp3"; // Yuna Song
 				mes "[Viorel]";
@@ -499,17 +518,17 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "Excellent!";
 			mes "Let's get on with it.";
 			next;
-			specialeffect2 EF_BASH;
+			specialeffect(EF_BASH, AREA, playerattached());
 			mes "[Viorel]";
 			mes "Now focus~!";
 			mes "You... need...";
 			mes "... concentration.";
 			next;
-			specialeffect2 EF_PROVIDENCE;
+			specialeffect(EF_PROVIDENCE, AREA, playerattached());
 			mes "[Viorel]";
 			mes "Good. Almost done!";
 			next;
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			Zeny -= 50000;
 			hommutate .@Homunculus;
 			break;
@@ -522,7 +541,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "Do you really wish to proceed";
 			mes "with the process of random outcome?";
 			next;
-			if(select("Go ahead. (Random Mutation):Cancel.") == 2) {
+			if(select("Go ahead. (Random Mutation)", "Cancel.") == 2) {
 				playbgm "33.mp3"; // Yuna Song
 				mes "[Viorel]";
 				mes "I see.";
@@ -542,21 +561,21 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "Hey, I feel like a Blacksmith!";
 			mes "Now let's get on with it.";
 			next;
-			specialeffect2 EF_BASH;
+			specialeffect(EF_BASH, AREA, playerattached());
 			mes "[Viorel]";
 			mes "Now focus~!";
 			mes "You... need...";
 			mes "... concentration.";
 			next;
-			specialeffect2 EF_PRESSURE;
+			specialeffect(EF_PRESSURE, AREA, playerattached());
 			mes "[Viorel]";
 			mes "Concentrate a little more!";
 			next;
-			specialeffect2 EF_PROVIDENCE;
+			specialeffect(EF_PROVIDENCE, AREA, playerattached());
 			mes "[Viorel]";
 			mes "Good. Almost done!";
 			next;
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			hommutate;
 			break;
 		}
@@ -575,7 +594,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "the path that leads to it.";
 		next;
 		mes "[Viorel]";
-		mes "^0000FF" + strcharinfo(0) + "^000000,";
+		mes "^0000FF" + strcharinfo(PC_NAME) + "^000000,";
 		mes "I haven't known you";
 		mes "for a very long time,";
 		mes "but I get the feeling that";
@@ -624,7 +643,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 		next;
 		mes "[Jeyna]";
 		mes "Anyways~";
-		mes "^0000FF"+strcharinfo(0)+"^000000 and ^005DFFViorel^000000 seem like two peas in a pod.";
+		mes "^0000FF"+strcharinfo(PC_NAME)+"^000000 and ^005DFFViorel^000000 seem like two peas in a pod.";
 		next;
 		emotion e_heh;
 		mes "[Jeyna]";
@@ -676,7 +695,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 		mes "In order to revert the process now, I need the Homunculus in its embryo form.";
 		next;
 		callsub L_CheckHomunculus;
-		if (checkweight(6415,1) == 0) {
+		if (checkweight(Strange_Embryo,1) == 0) {
 			mes "[Jeyna]";
 			mes "But,";
 			mes "You don't have enough space to carry an ^0000FFembryo^000000.";
@@ -707,7 +726,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 		mes "So, please decide.";
 		mes "Do you want to proceed with the new ^0000FFHomunculus Mutation System^000000?";
 		next;
-		switch(select("Yes, I do.:I need to think more.")) {
+		switch(select("Yes, I do.", "I need to think more.")) {
 		case 1:
 			if (checkhomcall() == 1) {
 				mes "[Jeyna]";
@@ -727,22 +746,22 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 			mes "[Jeyna]";
 			mes "Now I need you to focus.";
 			next;
-			specialeffect2 EF_ABSORBSPIRITS;
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 			mes "[Jeyna]";
 			mes "We need to...";
 			mes "Stabilize a little more.";
 			mes ".......";
 			next;
-			specialeffect2 EF_CURE;
+			specialeffect(EF_CURE, AREA, playerattached());
 			mes "[Jeyna]";
 			mes "In a few moments, the ^FF4800Homunculus^000000 will return to its embryo state.";
 			next;
-			specialeffect2 EF_HOLYHIT;
+			specialeffect(EF_HOLYHIT, AREA, playerattached());
 			mes "[Jeyna]";
 			mes "Into a special embryo...";
 			next;
 			callsub L_CheckHomunculus;
-			specialeffect2 EF_BLESSING;
+			specialeffect(EF_BLESSING, AREA, playerattached());
 			morphembryo;
 			setquest 4159;
 			erasequest 4158;
@@ -759,7 +778,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 			next;
 			mes "[Jeyna]";
 			mes "Don't do anything like changing jobs or anything like that before the process is over.";
-			mes "If so, you, ^0000FF"+strcharinfo(0)+"^000000 might lose all the abilities you have over the Homunculus.";
+			mes "If so, you, ^0000FF"+strcharinfo(PC_NAME)+"^000000 might lose all the abilities you have over the Homunculus.";
 			next;
 			mes "[Jeyna]";
 			mes "All that concentration made me tired.";
@@ -825,14 +844,13 @@ L_CheckHomunculus:
 	return;
 }
 
-// Magic Board
-//============================================================
+//== Magic Board ===========================================
 que_house_s,83,47,3	script	Magic Board#homun_s	4_BOARD3,{
 	playbgm "26.mp3"; // Everlasting Wanderers
 	callfunc "F_HomMutateInfo","[Magic Board Posts]";
 	mes "[Magic Board Posts]";
 	mes ":: ^0000FFHomunculus^000000 research is";
- 	mes ":: so much fun.";
+	mes ":: so much fun.";
 	mes ":: Be an Alchemist";
 	mes ":: who always enjoys";
 	mes ":: one's research.";
@@ -990,8 +1008,7 @@ function	script	F_HomMutateInfo	{
 	return;
 }
 
-// Books
-//============================================================
+//== Books =================================================
 que_house_s,13,52,3	script	Open Book#01homun_s	HIDDEN_NPC,{
 	switch(rand(1,7)) {
 	case 1:
@@ -1304,8 +1321,7 @@ que_house_s,16,52,3	script	Open Book#02homun_s	HIDDEN_NPC,{
 	}
 }
 
-// Notifiers
-//============================================================
+//== Notifiers =============================================
 que_house_s,11,52,3	script	#03homun_s	HIDDEN_NPC,{
 	end;
 OnInit:
@@ -1325,8 +1341,7 @@ que_house_s,14,52,3	script	#04homun_s	HIDDEN_NPC,{
 	end;
 }
 
-// Researcher's Pet
-//============================================================
+//== Researcher's Pet ======================================
 que_house_s,24,46,3	script	Jonathan#homun_s	MER_AMISTR,{
 	end;
 }

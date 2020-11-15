@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Huge Leaves)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 	if (questprogress(60143)) {
@@ -18,7 +38,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "[Lella]";
 			mes "Have you finished hunting the 50 Leaf Cats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lella]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lella]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "[Lella]";
 			mes "Have you finished hunting the 50 Leaf Cats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lella]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lella]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "[Lella]";
 			mes "Have you finished hunting the 150 Leaf Cats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lella]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lella]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -145,21 +165,21 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "You look like someone who is willing to help someone who is slowly going mad.";
 			next;
 			mes "[Lella]";
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Lella]";
 				mes "Thanks! You're a life saver!";
 				next;
-				switch(select("Gather Items:Hunt Leaf Cats:Cancel")) {
+				switch(select("Gather Items", "Hunt Leaf Cats", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "I really need to gather ^00CE0050 Huge Leafs^000000 for my sanity.";
 					mes "Do you have any?";
 					next;
-					switch(select("I have 50 Huge Leafs:What, sorry I was day dreaming")) {
+					switch(select("I have 50 Huge Leafs", "What, sorry I was day dreaming")) {
 					case 1:
 						/*
-						if (checkweight(503,10) == 0) {
+						if (checkweight(Yellow_Potion,10) == 0) {
 							mes "[Lella]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -167,15 +187,15 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 							close;
 						}
 						*/
-						if (countitem(7198) > 49) {
+						if (countitem(Great_Leaf) > 49) {
 							mes "[Lella]";
 							mes "Wonderful I can tell it is just a little bit quieter around here!";
 							next;
 							mes "[Lella]";
 							mes "The more leafs I collect the quieter it seems around here.";
-							delitem 7198,50; //Great_Leaf
+							delitem Great_Leaf,50;
 							getexp 25740,31512;
-							//getitem 503,10; //Yellow_Potion
+							//getitem Yellow_Potion,10;
 							close;
 						}
 						else {
@@ -195,7 +215,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 					mes "Ah, ok I think you can help me out by hunting some Leaf Cats.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Leaf Cats:100 Leaf Cats:150 Leaf Cats")) {
+					switch(select("50 Leaf Cats", "100 Leaf Cats", "150 Leaf Cats")) {
 					case 1:
 						mes "[Lella]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

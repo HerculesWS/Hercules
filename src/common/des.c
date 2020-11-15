@@ -1,29 +1,47 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "des.h"
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
+#include "common/nullpo.h"
 
-/// DES (Data Encryption Standard) algorithm, modified version.
-/// @see http://www.eathena.ws/board/index.php?autocom=bugtracker&showbug=5099.
-/// @see http://en.wikipedia.org/wiki/Data_Encryption_Standard
-/// @see http://en.wikipedia.org/wiki/DES_supplementary_material
+/** @file
+ * Implementation of the des interface.
+ */
 
+static struct des_interface des_s;
+struct des_interface *des;
 
 /// Bitmask for accessing individual bits of a byte.
 static const uint8_t mask[8] = {
 	0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01
 };
 
-
-/// Initial permutation (IP).
-static void IP(BIT64* src)
+/**
+ * Initial permutation (IP).
+ */
+static void des_IP(struct des_bit64 *src)
 {
-	BIT64 tmp = {{0}};
-
 	static const uint8_t ip_table[64] = {
 		58, 50, 42, 34, 26, 18, 10,  2,
 		60, 52, 44, 36, 28, 20, 12,  4,
@@ -34,24 +52,24 @@ static void IP(BIT64* src)
 		61, 53, 45, 37, 29, 21, 13,  5,
 		63, 55, 47, 39, 31, 23, 15,  7,
 	};
+	struct des_bit64 tmp = {{0}};
+	int i;
 
-	size_t i;
-	for( i = 0; i < ARRAYLENGTH(ip_table); ++i )
-	{
+	nullpo_retv(src);
+	for(i = 0; i < ARRAYLENGTH(ip_table); ++i) {
 		uint8_t j = ip_table[i] - 1;
-		if( src->b[(j >> 3) & 7] &  mask[j & 7] )
-			tmp .b[(i >> 3) & 7] |= mask[i & 7];
+		if (src->b[(j >> 3) & 7] &  mask[j & 7])
+			tmp.b[(i >> 3) & 7] |= mask[i & 7];
 	}
 
 	*src = tmp;
 }
 
-
-/// Final permutation (IP^-1).
-static void FP(BIT64* src)
+/**
+ * Final permutation (IP^-1).
+ */
+static void des_FP(struct des_bit64 *src)
 {
-	BIT64 tmp = {{0}};
-
 	static const uint8_t fp_table[64] = {
 		40,  8, 48, 16, 56, 24, 64, 32,
 		39,  7, 47, 15, 55, 23, 63, 31,
@@ -62,24 +80,27 @@ static void FP(BIT64* src)
 		34,  2, 42, 10, 50, 18, 58, 26,
 		33,  1, 41,  9, 49, 17, 57, 25,
 	};
+	struct des_bit64 tmp = {{0}};
+	int i;
 
-	size_t i;
-	for( i = 0; i < ARRAYLENGTH(fp_table); ++i )
-	{
+	nullpo_retv(src);
+	for (i = 0; i < ARRAYLENGTH(fp_table); ++i) {
 		uint8_t j = fp_table[i] - 1;
-		if( src->b[(j >> 3) & 7] &  mask[j & 7] )
-			tmp .b[(i >> 3) & 7] |= mask[i & 7];
+		if (src->b[(j >> 3) & 7] &  mask[j & 7])
+			tmp.b[(i >> 3) & 7] |= mask[i & 7];
 	}
 
 	*src = tmp;
 }
 
-
-/// Expansion (E).
-/// Expands upper four 8-bits (32b) into eight 6-bits (48b).
-static void E(BIT64* src)
+/**
+ * Expansion (E).
+ *
+ * Expands upper four 8-bits (32b) into eight 6-bits (48b).
+ */
+static void des_E(struct des_bit64 *src)
 {
-	BIT64 tmp = {{0}};
+	struct des_bit64 tmp = {{0}};
 
 #if 0
 	// original
@@ -93,15 +114,15 @@ static void E(BIT64* src)
 		24, 25, 26, 27, 28, 29,
 		28, 29, 30, 31, 32,  1,
 	};
+	int i;
 
-	size_t i;
-	for( i = 0; i < ARRAYLENGTH(expand_table); ++i )
-	{
+	for (i = 0; i < ARRAYLENGTH(expand_table); ++i) {
 		uint8_t j = expand_table[i] - 1;
-		if( src->b[j / 8 + 4] &  mask[j % 8] )
-			tmp .b[i / 6 + 0] |= mask[i % 6];
+		if (src->b[j / 8 + 4] &  mask[j % 8])
+			tmp.b[i / 6 + 0] |= mask[i % 6];
 	}
 #endif
+	nullpo_retv(src);
 	// optimized
 	tmp.b[0] = ((src->b[7]<<5) | (src->b[4]>>3)) & 0x3f; // ..0 vutsr
 	tmp.b[1] = ((src->b[4]<<1) | (src->b[5]>>7)) & 0x3f; // ..srqpo n
@@ -115,12 +136,11 @@ static void E(BIT64* src)
 	*src = tmp;
 }
 
-
-/// Transposition (P-BOX).
-static void TP(BIT64* src)
+/**
+ * Transposition (P-BOX).
+ */
+static void des_TP(struct des_bit64 *src)
 {
-	BIT64 tmp = {{0}};
-
 	static const uint8_t tp_table[32] = {
 		16,  7, 20, 21,
 		29, 12, 28, 17,
@@ -131,25 +151,28 @@ static void TP(BIT64* src)
 		19, 13, 30,  6,
 		22, 11,  4, 25,
 	};
+	struct des_bit64 tmp = {{0}};
+	int i;
 
-	size_t i;
-	for( i = 0; i < ARRAYLENGTH(tp_table); ++i )
-	{
+	nullpo_retv(src);
+	for (i = 0; i < ARRAYLENGTH(tp_table); ++i) {
 		uint8_t j = tp_table[i] - 1;
-		if( src->b[(j >> 3) + 0] &  mask[j & 7] )
-			tmp .b[(i >> 3) + 4] |= mask[i & 7];
+		if (src->b[(j >> 3) + 0] &  mask[j & 7])
+			tmp.b[(i >> 3) + 4] |= mask[i & 7];
 	}
 
 	*src = tmp;
 }
 
 
-/// Substitution boxes (S-boxes).
-/// NOTE: This implementation was optimized to process two nibbles in one step (twice as fast).
-static void SBOX(BIT64* src)
+/**
+ * Substitution boxes (S-boxes).
+ *
+ * This implementation was optimized to process two nibbles in one step (twice
+ * as fast).
+ */
+static void des_SBOX(struct des_bit64 *src)
 {
-	BIT64 tmp = {{0}};
-
 	static const uint8_t s_table[4][64] = {
 		  {
 			0xef, 0x03, 0x41, 0xfd, 0xd8, 0x74, 0x1e, 0x47,  0x26, 0xef, 0xfb, 0x22, 0xb3, 0xd8, 0x84, 0x1e,
@@ -173,10 +196,11 @@ static void SBOX(BIT64* src)
 			0xa0, 0x9f, 0xf6, 0x5c, 0x6a, 0x09, 0x8d, 0xf0,  0x0f, 0xe3, 0x53, 0x25, 0x95, 0x36, 0x28, 0xcb,
 		}
 	};
+	struct des_bit64 tmp = {{0}};
+	int i;
 
-	size_t i;
-	for( i = 0; i < ARRAYLENGTH(s_table); ++i )
-	{
+	nullpo_retv(src);
+	for (i = 0; i < ARRAYLENGTH(s_table); ++i) {
 		tmp.b[i] = (s_table[i][src->b[i*2+0]] & 0xf0)
 		         | (s_table[i][src->b[i*2+1]] & 0x0f);
 	}
@@ -184,36 +208,49 @@ static void SBOX(BIT64* src)
 	*src = tmp;
 }
 
-
-/// DES round function.
-/// XORs src[0..3] with TP(SBOX(E(src[4..7]))).
-static void RoundFunction(BIT64* src)
+/**
+ * DES round function.
+ *
+ * XORs src[0..3] with TP(SBOX(E(src[4..7]))).
+ */
+static void des_RoundFunction(struct des_bit64 *src)
 {
-	BIT64 tmp = *src;
-	E(&tmp);
-	SBOX(&tmp);
-	TP(&tmp);
+	struct des_bit64 tmp = *src;
+	des_E(&tmp);
+	des_SBOX(&tmp);
+	des_TP(&tmp);
 
+	nullpo_retv(src);
 	src->b[0] ^= tmp.b[4];
 	src->b[1] ^= tmp.b[5];
 	src->b[2] ^= tmp.b[6];
 	src->b[3] ^= tmp.b[7];
 }
 
-
-void des_decrypt_block(BIT64* block)
+/// @copydoc des_interface::decrypt_block()
+static void des_decrypt_block(struct des_bit64 *block)
 {
-	IP(block);
-	RoundFunction(block);
-	FP(block);
+	des_IP(block);
+	des_RoundFunction(block);
+	des_FP(block);
 }
 
-
-void des_decrypt(unsigned char* data, size_t size)
+/// @copydoc des_interface::decrypt()
+static void des_decrypt(unsigned char *data, size_t size)
 {
-	BIT64* p = (BIT64*)data;
+	struct des_bit64 *p = (struct des_bit64 *)data;
 	size_t i;
 
-	for( i = 0; i*8 < size; i += 8 )
-		des_decrypt_block(p);
+	for (i = 0; i*8 < size; i += 8)
+		des->decrypt_block(p);
+}
+
+/**
+ * Interface base initialization.
+ */
+void des_defaults(void)
+{
+	des = &des_s;
+	des->decrypt = des_decrypt;
+	des->decrypt_block = des_decrypt_block;
 }

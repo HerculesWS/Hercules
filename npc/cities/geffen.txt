@@ -1,27 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) DeadlySilence
+//= Copyright (C) Samuray22
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) Musashiden
+//= Copyright (C) Silent
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Nexon
+//= Copyright (C) massdriller
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Geffen Town
-//===== By: ==================================================
-//= Everybody mentioned in the comments
-//===== Current Version: =====================================
-//= 2.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Geffen Town NPCs
-//===== Additional Comments: =================================
-//= Fully working
-//= 1.1 Spell Checked [massdriller]
-//= 1.2 Fixed more typos [Nexon]
-//= 1.3 added a Level 4 weapon quest related NPC [MasterOfMuppets]
-//= 1.4 Removed Duplicates [Silent]
-//= 1.5 Fixed some typos and coordinates [Musashiden]
-//= 1.5a Fixed a small typo [Evera]
-//= 1.6 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.6a Small bug fix. (end -> next) care of Lesbian. [L0ne_W0lf]
-//= 1.7 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 1.8 Fixed character's name and swapped gender dialogues [Lupus]
-//= 1.9 Replaced effect numerics with constants. [Samuray22]
-//= 2.0 Bug fixes (bugreport:7928) [DeadlySilence]
-//============================================================
+//================= Current Version =======================================
+//= 2.0
+//=========================================================================
 
 geffen,59,143,0	script	Meera	4_F_02,{
 	mes "[Meera]";
@@ -129,7 +147,7 @@ geffen,111,48,0	script	Stacey	4W_F_01,{
 		mes "Is that an Orc Helm you're wearing?! That's so cool! Wow...";
 		next;
 		mes "[Stacey]";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "You look so...";
 			mes "Rugged and manly~";
 		}
@@ -150,7 +168,7 @@ geffen,111,48,0	script	Stacey	4W_F_01,{
 		mes "of Orc Hero!";
 		next;
 		mes "[Stacey]";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "It's...";
 			mes "It's like you're surrounded by this incredibly masculine aura! Oooh~! You must be irresistable to all the girls!";
 			next;
@@ -181,7 +199,7 @@ geffen,111,48,0	script	Stacey	4W_F_01,{
 		close;
 	}
 }
-	
+
 geffen_in,34,170,0	script	Theodore	1_M_01,{
 	mes "[Theodore]";
 	mes "Hello!";
@@ -224,7 +242,7 @@ OnTouch:
 	mes "You wanna get your hands on some great stuff? Come on over!^000000";
 	next;
 	mes "[Suspicious Guy]";
-	if (Sex)
+	if (Sex == SEX_MALE)
 		mes "Hey there tough guy. You look smart enough to recognize a bargain when it's right in front of your eyes.";
 	else
 		mes "Well, well, well. Aren't you a pretty girl. Today just happens to be your lucky day!";
@@ -232,7 +250,7 @@ OnTouch:
 	mes "[Suspicious Guy]";
 	mes "So just tell me what you want, and I'll cut you a deal from amongst my valuable, yet affordable, wares.";
 	next;
-	switch(select("Gimme some potion so I can recover HP.:Um, you got a Knife?:Don't you have a good Manteau?:Don't you have something besides this?")) {
+	switch(select("Gimme some potion so I can recover HP.", "Um, you got a Knife?", "Don't you have a good Manteau?", "Don't you have something besides this?")) {
 	case 1:
 		mes "[Suspicious Guy]";
 		mes "Ah, you into Potions, eh?";
@@ -256,23 +274,23 @@ OnTouch:
 		mes "them at a time.";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Suspicious Guy]";
-				if (Sex)
+				if (Sex == SEX_MALE)
 					mes "Ah duuuuuude~ You're breakin' my heart! I mean, at these prices, I'm practically performing charity!";
 				else
 					mes "W-waaaait! You didn't let me tell you the part about how Red Potions help you lose and gain weight in all the right places! Waaaaait!";
 				close;
 			}
-			else if (.@input > 100) {
+			if (.@input > 100) {
 				mes "[Suspicious Guy]";
 				mes "Whoa...";
 				mes "I can't let you buy that many. I mean, it's not like, you know, there's a trace impurity in these Potions or anything like that...";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@Red_potion_hap = .@input * 500;
 		if (Zeny < .@Red_potion_hap) {
@@ -287,11 +305,11 @@ OnTouch:
 			close;
 		}
 		Zeny -= .@Red_potion_hap;
-		getitem 501,.@input; //Red_Potion
+		getitem Red_Potion,.@input;
 		break;
 	case 2:
 		mes "[Suspicious Guy]";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "What would a strong guy like you want a knife for? Those will just break under the force of your incredibly powerful swings!";
 			next;
 			mes "[Suspicious Guy]";
@@ -326,8 +344,8 @@ OnTouch:
 		mes "There's no way you can pass this up! Now, how many do you want?";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Suspicious Guy]";
 				mes "Man, how many chances of a lifetime have you passed up? Man, I hope you win the lottery...";
 				mes "You'd probably";
@@ -335,14 +353,14 @@ OnTouch:
 				close;
 
 			}
-			else if (.@input > 100) {
+			if (.@input > 100) {
 				mes "[Suspicious Guy]";
 				mes "Whoa!";
 				mes "I can't sell that many Daggers! That'll attract the Prontera Chiv--I mean, um, I was gonna donate some Daggers to... Hungry children?";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@Main_gauche_hap = .@input * 9400;
 		if (Zeny < .@Main_gauche_hap) {
@@ -352,11 +370,11 @@ OnTouch:
 			close;
 		}
 		Zeny -= .@Main_gauche_hap;
-		getitem 1207,.@input; //Main_Gauche
+		getitem Main_Gauche,.@input;
 		break;
 	case 3:
 		mes "[Suspicious Guy]";
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "A Manteau? That's old news! You know what's the latest in protective armors?";
 		else
 			mes "Now why would such a beautiful woman wear something out of style? You know what would make you look even better?";
@@ -380,21 +398,21 @@ OnTouch:
 		mes "Clearly, this is the deal of the century. So how many do you want?";
 		next;
 		while(1) {
-			input .@input;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Suspicious Guy]";
 				mes "Awww...";
 				mes "It wasn't because of the whole drawstrings thing, was it?";
 				close;
 			}
-			else if (.@input > 100) {
+			if (.@input > 100) {
 				mes "[Suspicious Guy]";
 				mes "Whoa~!";
 				mes "I can't sell you that many! What are you trying to do, take advantage of me?";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@Hood__hap = .@input * 930;
 		if (Zeny < .@Hood__hap) {
@@ -404,7 +422,7 @@ OnTouch:
 			close;
 		}
 		Zeny -= .@Hood__hap;
-		getitem 2501,.@input; //Hood
+		getitem Hood,.@input;
 		break;
 	case 4:
 		mes "[Suspicious Guy]";
@@ -442,7 +460,7 @@ geffen_in,22,125,1	script	Crumpler	1_M_HOF,{
 		mes "[Crumpler]";
 		mes "Everyone knows Wizards are all intelligence and no strength! Come on, smart man! Show me how tough you are!";
 		next;
-		switch(select("Meteor Storm!:Lord of Vermilion!:Show Mercy.")) {
+		switch(select("Meteor Storm!", "Lord of Vermilion!", "Show Mercy.")) {
 		case 1:
 			mes "[Crumpler]";
 			mes "Huh?";
@@ -479,7 +497,7 @@ geffen_in,22,125,1	script	Crumpler	1_M_HOF,{
 			mes "IT BUUUURNS!";
 			close;
 		case 3:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "No...";
 			mes "I can only use";
 			mes "my powers for good.";
@@ -527,7 +545,7 @@ geffen_in,59,61,1	script	Skyler	1_M_PUBMASTER,{
 	mes "You're not looking";
 	mes "for Eric, are you?";
 	next;
-	if (select("Eric? Who's that?:Yes. Yes, I am.") == 1) {
+	if (select("Eric? Who's that?", "Yes. Yes, I am.") == 1) {
 		mes "[Skyler]";
 		mes "Oh, I see. He's just some guy in the room to the left of me. He's always working on some sort of project.";
 		next;
@@ -560,7 +578,7 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 	mes "What can";
 	mes "I do for you?";
 	next;
-	if (select("May I have a drink?:Is there any interesting gossip?") == 1) {
+	if (select("May I have a drink?", "Is there any interesting gossip?") == 1) {
 		mes "[Elenore]";
 		mes "Well...";
 		mes "If you're looking for alcohol, King Tristram III outlawed it a while ago. Now I hear they only serve it in certain places.";
@@ -610,10 +628,10 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 		mes "I hear there's this person somewhere in Rune-Midgard...";
 		next;
 		mes "[Elenore]";
-		if (Sex)
-			mes "Tell me, have you ever heard of "+strcharinfo(0)+"? He's supposed to be the suavest hero around!";
+		if (Sex == SEX_MALE)
+			mes "Tell me, have you ever heard of "+strcharinfo(PC_NAME)+"? He's supposed to be the suavest hero around!";
 		else
-			mes "Have you ever heard of "+strcharinfo(0)+"? People say she's one of the prettiest girls in all of Rune-Midgard!";
+			mes "Have you ever heard of "+strcharinfo(PC_NAME)+"? People say she's one of the prettiest girls in all of Rune-Midgard!";
 		break;
 	case 4:
 		switch(rand(1,2)) {
@@ -649,8 +667,8 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 			mes "[William's Spirit]";
 			mes "^990000Hey you sex crazed bastard!! Stop looking at my daughter like that before I rip out your eyes, and eat them with pasta!^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
-			if (Sex) {
+			mes "["+strcharinfo(PC_NAME)+"]";
+			if (Sex == SEX_MALE) {
 				mes "Huh...?";
 				mes "C-come again?";
 				next;
@@ -658,7 +676,7 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 				mes "Huh...?";
 				mes "Oh, Dad must have possessed me again. It happens to me and my sister all the time.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "No kidding?";
 				mes "Huh. Total bummer.";
 				next;
@@ -691,7 +709,7 @@ geffen_in,70,67,3	script	Waitress#elise	4_F_01,{
 	mes "Can I help you";
 	mes "with anything?";
 	next;
-	if (select("May I ask for a drink?:Is there any interesting gossip lately?") == 1) {
+	if (select("May I ask for a drink?", "Is there any interesting gossip lately?") == 1) {
 		mes "[Elisa]";
 		mes "A...";
 		mes "Drink?";
@@ -765,8 +783,8 @@ geffen_in,70,67,3	script	Waitress#elise	4_F_01,{
 			mes "[William's Spirit]";
 			mes "^990000Stay away from my daughter, or I'll beat your brains out, punk! Elisa's gonna marry a doctor! Or a lawyer!^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
-			if (Sex) {
+			mes "["+strcharinfo(PC_NAME)+"]";
+			if (Sex == SEX_MALE) {
 				mes "Y-y-y-yes, sir!";
 				next;
 				mes "^3355FFThat was scary...!";
@@ -815,7 +833,7 @@ geffen_in,79,76,2	script	Merchant Daven	2_M_PHARMACIST,{
 	mes "But now there are Mages and Wizards, and a flourishing";
 	mes "economy in this town!";
 	next;
-	switch(select("Mages...?:Economy?:Who are you?")) {
+	switch(select("Mages...?", "Economy?", "Who are you?")) {
 	case 1:
 		if (BaseJob == Job_Mage) {
 			mes "[Merchant Daven]";
@@ -872,7 +890,7 @@ geffen_in,79,76,2	script	Merchant Daven	2_M_PHARMACIST,{
 	}
 	close;
 }
-	
+
 geffen_in,114,73,5	script	Hadenheim	4_M_SEAMAN,{
 	mes "[Hans Hadenheim]";
 	mes "Man, the Rune-Midgard continent sure is big! How's it going, youngster?";
@@ -880,7 +898,7 @@ geffen_in,114,73,5	script	Hadenheim	4_M_SEAMAN,{
 	mes "[Hans Hadenheim]";
 	mes "This Geffen sure is strange. But it was worth it to travel here all the way from the Schubaltzwald Republic.";
 	next;
-	if (select("Schubaltzwald Republic?:So, why are you traveling?") == 1) {
+	if (select("Schubaltzwald Republic?", "So, why are you traveling?") == 1) {
 		mes "[Hans Hadenheim]";
 		mes "You...";
 		mes "Don't know the";
@@ -925,7 +943,7 @@ geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 	mes "Don't tell me! You've come to have your fortune told, yes? I know,";
 	mes "I know... I can see the future! So what kind of fortune do you want?";
 	next;
-	switch(select("Life!:Love!:Money!:Grades!:Future!:Fashion!")) {
+	switch(select("Life!", "Love!", "Money!", "Grades!", "Future!", "Fashion!")) {
 	case 1:
 		mes "[Psychic Advisor]";
 		switch(rand(1,5)) {
@@ -1037,14 +1055,14 @@ geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 			break;
 		case 3:
 			mes "Um...";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "The girl that you";
 			else
 				mes "The boy that you";
 			mes "are currently seeing";
 			mes "is perfect for you!";
 			next;
-			switch(select("How did you know?:You're so wrong!:I'm single!")) {
+			switch(select("How did you know?", "You're so wrong!", "I'm single!")) {
 			case 1:
 				mes "[Psychic Advisor]";
 				mes "Well...";
@@ -1055,7 +1073,7 @@ geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 				mes "You didn't let me finish my sentence. What I meant to say was...";
 				next;
 				mes "[Psychic Advisor]";
-				if (Sex)
+				if (Sex == SEX_MALE)
 					mes "The girl that you";
 				else
 					mes "The boy that you";
@@ -1074,7 +1092,7 @@ geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 				mes "Sometimes, I get the future and the present mixed up. You know, since I'm always looking into the future...?";
 				next;
 				mes "[Psychic Advisor]";
-				if (Sex) {
+				if (Sex == SEX_MALE) {
 					mes "What I meant to say was";
 					mes "^3355FFyou and the perfect woman will soon fall in love^000000. Yes, that's what I meant!";
 				}
@@ -1335,12 +1353,12 @@ geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 		close;
 	}
 }
-	
+
 geffen_in,109,72,2	script	Monster Scholar	4_F_01,{
 	mes "[Estheres]";
 	mes "Hello, I'm the resident expert of Monsterology here in Geffen. Is there anything in particular that you're curious about?";
 	next;
-	switch(select("Monsters in the Area.:Recent Monster News.:Era of Monsters:Jellopy Theory.")) {
+	switch(select("Monsters in the Area.", "Recent Monster News.", "Era of Monsters", "Jellopy Theory.")) {
 	case 1:
 		mes "[Estheres]";
 		mes "Well, as you may already know, since Wizards and Mages train in Geffen, monsters tend to stay away from the city. So tired adventurers are welcome to rest here.";
@@ -1402,8 +1420,7 @@ geffen_in,109,72,2	script	Monster Scholar	4_F_01,{
 	close;
 }
 
-// Lvl 4 weapon quest related NPC ------------------------------------------------------
-
+//== Lvl 4 weapon quest related NPC ========================
 geffen,203,146,5	script	Citizen	4W_M_01,{
 	mes "[Citizen]";
 	mes "There was a skillful weaponsmith";

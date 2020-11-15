@@ -1,19 +1,36 @@
-//===== Hercules Script ======================================
-//= Magazine Dealers
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Magazine Dealers (Renewal)
+//================= Description ===========================================
 //= Turns bullets into magazines/packs.
-//===== Additional Comments: =================================
-//= 1.0 First version, Renewal duplicates.
-//= 1.1 Added Izlude duplicates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 que_ng,187,149,3	duplicate(mdk)	Magazine Dealer Kenny#ng	4_M_01
-izlude,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#iz	4_M_01
-izlude_a,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#a	4_M_01
-izlude_b,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#b	4_M_01
-izlude_c,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#c	4_M_01
-izlude_d,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#d	4_M_01
+izlude_in,74,104,3	duplicate(mdk)	Magazine Dealer Kenny#iz	4_M_01

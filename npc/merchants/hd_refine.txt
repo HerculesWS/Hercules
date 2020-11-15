@@ -1,24 +1,55 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= HD Refiners
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Refiners that use HD ores to refine equipment. Upon
-//= failure, the equipment is not destroyed; rather, its
-//= refine level decreases by 1. The success rate is identical
-//= to that for Enriched ores.
+//================= Description ===========================================
+//= Refiners that use HD ores to refine equipment.
+//================= Additional Comments ===================================
+//= Upon failure, the equipment is not destroyed; rather, its refine level
+//= decreases by 1. The success rate is identical to that for Enriched ores.
 //= - "Blacksmith Mighty Hammer" only refines from +7~9.
 //= - "Basta" only refines from +10 and up.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-// Blacksmith Mighty Hammer (+7~9)
-//============================================================
--	script	::MightyHammer	-1,{
+//== Blacksmith Mighty Hammer (+7~9) =======================
+-	script	::MightyHammer	FAKE_NPC,{
+	mes("[Blacksmith Mighty Hammer]");
+	mes("I'm a blacksmith skilled in refining weapons and armors.");
+	mes("I can refine an item of your choice among the items you are equipped with.");
+	mes("Which item do you want to refine?");
+
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+	}
+	next();
+
 	disable_items;
 	mes "[Blacksmith Mighty Hammer]";
 	mes "Unlike others, I am a blacksmith who refines a very limited number of items.";
@@ -100,7 +131,7 @@
 	mes "In order to refine the gear you selected you need ^ff9999"+getitemname(.@material)+"^000000 and 20,000 zeny as a fee.";
 	mes "Do you have them ready?";
 	next;
-	if(select("Yes:No") == 2) {
+	if(select("Yes", "No") == 2) {
 		mes "[Blacksmith Mighty Hammer]";
 		mes "I will wait until you are ready.";
 		close;
@@ -111,7 +142,7 @@
 		mes "Well, even if it fails, it only decreases by 1 refine level.";
 		mes "Would you like to continue refining?";
 		next;
-		if(select("Yes:No") == 2) {
+		if(select("Yes", "No") == 2) {
 			mes "[Blacksmith Mighty Hammer]";
 			mes "Only those who overcome fear of failure will obtain a masterpiece.";
 			close;
@@ -153,13 +184,16 @@ yuno_in01,171,18,3	duplicate(MightyHammer)	Mighty Hammer#yuno	4_M_DWARF
 ein_in01,22,82,3	duplicate(MightyHammer)	Mighty Hammer#ein	4_M_DWARF
 lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 
-// iRO NPC locations:
-// moc_para01,38,185,4	duplicate(MightyHammer)	Mighty Hammer#ed	4_M_DWARF
-// payon,174,133,4	duplicate(MightyHammer)	Mighty Hammer#im	4_M_DWARF
+//== iRO NPC locations =====================================
+//moc_para01,38,185,4	duplicate(MightyHammer)	Mighty Hammer#ed	4_M_DWARF
+//payon,174,133,4	duplicate(MightyHammer)	Mighty Hammer#im	4_M_DWARF
 
-// Basta (+10 and up)
-//============================================================
--	script	::Basta	-1,{
+//== Basta (+10 and up) ====================================
+-	script	::Basta	FAKE_NPC,{
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			end();
+	}
 	disable_items;
 	mes "[Basta]";
 	mes "I'm the best Blacksmith in the whole world, Basta.";
@@ -247,7 +281,7 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 	mes "To refine this equipment, I need 1 ^ff9999"+getitemname(.@material)+"^000000 and 100,000 zeny as a fee.";
 	mes "Do you really want to refine this?";
 	next;
-	if(select("Yes:No") == 2) {
+	if(select("Yes", "No") == 2) {
 		mes "[Basta]";
 		mes "Okay. If that's what you want...";
 		close;
@@ -266,7 +300,7 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 		mes "Compared to other blacksmiths, the risk is smaller.";
 		mes "I've given all precautions. Do you want to try it?";
 		next;
-		if(select("Yes:No") == 2) {
+		if(select("Yes", "No") == 2) {
 			mes "[Basta]";
 			mes "Well~";
 			mes "Not challenging at all could also be a kind of wisdom in life.";

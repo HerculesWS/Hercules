@@ -1,28 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lemongrass
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
+//= Copyright (C) Gennosuke Kouga
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Dewata Town
-//===== By: ==================================================
-//= Gennosuke Kouga, Muad_Dib
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Dewata Town Script
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Standardized. [Euphy]
-//= 1.2 Fixed Zeny check. [Joseph]
-//= 1.3 Updated to match the official script. [Lemongrass/Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Dewata Transportation
-//============================================================
+//== Dewata Transportation =================================
 alberta,212,202,4	script	Dewata Sailor#alberta	4_M_DEWMAN,{
 	mes "[Dewata Sailor]";
 	mes "Do you want to visit ^8B4513Dewata Island^000000?";
 	mes "With it's dazzling waves and charming views it's a great place to relax.";
 	mes "The transit fee is 10,000 Zeny.";
 	next;
-	switch(select("Yes!:No.")) {
+	switch(select("Yes!", "No.")) {
 	case 1:
 		if (Zeny >= 10000) {
 			mes "[Dewata Sailor]";
@@ -50,7 +71,7 @@ dewata,229,49,6	script	Alberta Sailor#dewata	4_M_DEWMAN,{
 	mes "[Alberta Sailor]";
 	mes "Do you want to go back to Alberta?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		mes "[Alberta Sailor]";
 		mes "I hope you had a lot of fun on";
@@ -67,8 +88,7 @@ dewata,229,49,6	script	Alberta Sailor#dewata	4_M_DEWMAN,{
 	}
 }
 
-// Generic Dewata NPCs
-//============================================================
+//== Generic Dewata NPCs ===================================
 dewata,221,237,5	script	Young Man#dew-1	4_M_DEWMAN,{
 	mes "[Fruit Fancier]";
 	mes "What's wrong with your faaaaaace? You must really be clueless!";
@@ -79,7 +99,7 @@ dewata,221,237,5	script	Young Man#dew-1	4_M_DEWMAN,{
 	mes "[Fruit Fancier]";
 	mes "I may be a youngling, but no one knows more than I do about ^777700Palm fruit^000000. All right! What do you want to know?";
 	next;
-	switch(select("About the shell...:About the pulp...:About the palm kernel...:No thanks.")) {
+	switch(select("About the shell...", "About the pulp...", "About the palm kernel...", "No thanks.")) {
 	case 1:
 		mes "[Fruit Fancier]";
 		mes "So you want to know about Palm fruit's pulp? Let me explain.";
@@ -166,22 +186,22 @@ dewata,221,237,5	script	Young Man#dew-1	4_M_DEWMAN,{
 }
 
 dewata,114,243,6	script	Lazy Young Man#dew	4_M_DEWMAN,1,1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[Lazy Young Man]";
 		mes "Why are you carrying so much? Isn't it heavy?";
 		close;
 	}
-	if (countitem(11534)) {
+	if (countitem(Coco_Juice)) {
 		mes "[Lazy Young Man]";
 		mes "Wewt~!! Isn't that Palm Juice?";
 		mes "Can you give me that? I just woke";
 		mes "up, and my throat is parched!";
 		next;
-		switch(select("Give:Do not give")) {
+		switch(select("Give", "Do not give")) {
 		case 1:
 			mes "[Lazy Young Man]";
 			mes "Really? For me?? I'll give you this in return... Thanks... Hehe~";
-			delitem 11534,1; //Coco_Juice
+			delitem Coco_Juice,1;
 			getrandgroupitem(IG_GiftBox),1;
 			close;
 		case 2:
@@ -195,7 +215,7 @@ dewata,114,243,6	script	Lazy Young Man#dew	4_M_DEWMAN,1,1,{
 	mes "juice for me?~";
 	close;
 OnTouch:
-	if (countitem(11534) == 0) {
+	if (countitem(Coco_Juice) == 0) {
 		mes "[Lazy Young Man]";
 		mes "Arrgg~ I'm thirsty~~ so thirsty~~";
 		mes "Give me Palm juice... Palm Juuiice~~";
@@ -227,7 +247,7 @@ dewata,159,81,4	script	Tourist#dew-1	4_M_SITDOWN,{
 }
 
 dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
-	if (checkweight(11532,1) == 0 || checkweight(11533,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Nasi_Goreng,1) == 0 || checkweight(Satay,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[Restauranteur]";
 		mes "You came to taste my dish? It is always good to eat with an empty stomach.";
 		close;
@@ -238,7 +258,7 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 	mes "traveler, unlike some of these";
 	mes "teenage punks...";
 	next;
-	switch(select("About Dewata dishes:Today's menu?:I'm okay.")) {
+	switch(select("About Dewata dishes", "Today's menu?", "I'm okay.")) {
 	case 1:
 		mes "[Restauranteur]";
 		mes "Need info about our foods? Well... I don't have much to talk about, but feel free to listen if you want.";
@@ -274,7 +294,7 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 		mes "[Restauranteur]";
 		mes "We have 2 items 'Nasi Goreng' and 'Satay'. Which one do you want?";
 		next;
-		switch(select("Nasi Goreng:Satay")) {
+		switch(select("Nasi Goreng", "Satay")) {
 		case 1:
 			mes "[Restauranteur]";
 			mes "This is Nasi Goreng fried with my special sauce plus egg fry on the top. It only costs ^0000FF5000^000000 Zeny.";
@@ -287,7 +307,7 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 			break;
 		}
 		next;
-		switch(select("Taste:Walk away")) {
+		switch(select("Taste", "Walk away")) {
 		case 1:
 			if (Zeny < 5000) {
 				mes "[Restauranteur]";
@@ -418,7 +438,7 @@ dewata,99,203,4	script	Tourist#dew4	4_M_SAGE_C,{
 	close;
 }
 
-dewata,67,186,8	script	Monk#dew1	4_M_BUDDHIST,{
+dewata,67,186,0	script	Monk#dew1	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "I am a monk, content to spend my days in religious study.";
 	next;
@@ -430,7 +450,7 @@ dewata,67,186,8	script	Monk#dew1	4_M_BUDDHIST,{
 	close;
 }
 
-dewata,65,188,8	script	Monk#dew2	4_M_BUDDHIST,{
+dewata,65,188,0	script	Monk#dew2	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "Borobudur temple is one of few temples left for worshiping the Great Buddha.";
 	next;
@@ -439,7 +459,7 @@ dewata,65,188,8	script	Monk#dew2	4_M_BUDDHIST,{
 	close;
 }
 
-dewata,63,190,8	script	Monk#dew3	4_M_BUDDHIST,{
+dewata,63,190,0	script	Monk#dew3	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "Are you a Tourist? You can make an offering and a wish to one of the shrines.";
 	next;
@@ -448,7 +468,7 @@ dewata,63,190,8	script	Monk#dew3	4_M_BUDDHIST,{
 	close;
 }
 
-dewata,62,192,8	script	Monk#dew4	4_M_BUDDHIST,{
+dewata,62,192,0	script	Monk#dew4	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "Our great Buddha is the king of souls and the leader of all good Gods.";
 	next;
@@ -463,17 +483,18 @@ dewata,62,192,8	script	Monk#dew4	4_M_BUDDHIST,{
 dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 	mes "There is a small shrine here. There are many people making wishes.";
 	next;
-	switch(select("Make a donation.:Make a wish.:Walk away.")) {
+	switch(select("Make a donation.", "Make a wish.", "Walk away.")) {
 	case 1:
 		mes "Donation case says:";
 		mes "^FF00001,000 ~ 100,000 Zeny^000000";
 		mes "How much do you want to donate?";
 		next;
-		input .@input,0,100000;
+		input(.@input, 0, 100000);
 		if (.@input < 1000) {
 			mes "- Cancelled. -";
 			close;
-		} else if (.@input <= 50000)
+		}
+		if (.@input <= 50000)
 			.@good_luck = rand(1,10000);
 		else
 			.@good_luck = rand(1,5000);
@@ -496,7 +517,7 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 			"Lover","Girl friend","Boy friend"; //128
 		setarray .@index[0],
 			1,1,2,2,2,2,4,4,8,8,8,16,16,16,16,16,32,32,32,32,32,32,64,64,64,128,128,128;
-			
+
 		if (.@good_luck == 7 || .@good_luck == 77 || .@good_luck == 777 || .@good_luck == 7777)
 			.@bonus = 1;
 		for(.@i = 0; .@i<getarraysize(.@wishes$); ++.@i) {
@@ -523,13 +544,13 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 		else if (.@stat & 32 && .@bonus)
 			consumeitem 12068; //Luk_Dish03
 		else if (.@stat & 64) {
-			specialeffect2 EF_ANGEL;
+			specialeffect(EF_ANGEL, AREA, playerattached());
 			mes "- A celestial entity gives you a blessing. -";
 			next;
 		} else if (.@stat & 128) {
 			mes "- The shrine envelops you in a loving aura. -";
-			if ((Sex == 0 && compare(.@wish$,.@wishes$[26])) || (Sex == 1 && compare(.@wish$,.@wishes$[27])))
-				specialeffect2 EF_LIGHTSPHERE;
+			if ((Sex == SEX_FEMALE && compare(.@wish$,.@wishes$[26])) || (Sex == SEX_MALE && compare(.@wish$,.@wishes$[27])))
+				specialeffect(EF_LIGHTSPHERE, AREA, playerattached());
 			next;
 		}
 		mes "It feels like this wish could come true.";
@@ -537,7 +558,7 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 	case 2:
 		mes "What is your wish?";
 		next;
-		input .@wish$;
+		input(.@wish$);
 		mes "You have made your wish for ^0000FF" + .@wish$ + "^000000 to the small shrine.";
 		next;
 		callsub L_Wish;
@@ -549,13 +570,13 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 
 L_Wish:
 	mes "Mysterious energy comes out from the shrine.";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew1";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew2";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew3";
-	specialeffect EF_FLASHER,AREA,"Small Shrine#dew4";
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew1"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew2"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew3"));
+	specialeffect(EF_FLASHER, AREA, getnpcid("Small Shrine#dew4"));
 	next;
 	mes "You have received the shrine's blessing.";
-	specialeffect2 EF_BLESSING;
+	specialeffect(EF_BLESSING, AREA, playerattached());
 	next;
 	return;
 }
@@ -567,7 +588,7 @@ dewata,75,122,6	script	Monk#dewt1	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "You are a stranger here. What brings here to this quiet place?";
 	next;
-	switch(select("I'm sightseeing.:No reason.")) {
+	switch(select("I'm sightseeing.", "No reason.")) {
 	case 1:
 		mes "[Monk]";
 		mes "Oh, you are a tourist. This is the '^0000FFPagoda^000000' worshiping the great Buddha. Please be respectful of the monks praying here.";
@@ -583,7 +604,7 @@ dewata,69,101,6	script	Monk#dewt2	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "We have a pagoda for the worship of Buddhas. Each temple has one of these towers, though not many people come here besides other monks.";
 	next;
-	switch(select("I see...:Explain about Buddhas:Ah, okay.")) {
+	switch(select("I see...", "Explain about Buddhas", "Ah, okay.")) {
 	case 1:
 		mes "[Monk]";
 		mes "You must feel the compassion of our Buddha!";
@@ -657,7 +678,7 @@ OnTouch:
 	close;
 }
 
-dewata,233,263,8	script	Sweet Married Couple#1	4_M_ROGUE,2,3,{
+dewata,233,263,0	script	Sweet Married Couple#1	4_M_ROGUE,2,3,{
 OnTouch:
 	mes "[Sweet Husband]";
 	mes "You are the most beautiful thing in the world baby~";
@@ -677,7 +698,7 @@ OnTouch:
 	close;
 }
 
-dewata,234,263,8	script	Sweet Married Couple#2	4_F_JOB_HUNTER,2,3,{
+dewata,234,263,0	script	Sweet Married Couple#2	4_F_JOB_HUNTER,2,3,{
 OnTouch:
 	mes "[Sweet Wife]";
 	mes "Baby~ You know what flower that is~?";
@@ -729,7 +750,7 @@ OnTouch:
 dewata,269,208,4	script	Little Kid in Town#dew	4_M_DEWBOY,2,3,{
 OnTouch:
 	mes "[Kid]";
-	mes "Hey "+((Sex)?"bro":"sis")+", look at that man!";
+	mes "Hey "+ (Sex == SEX_MALE ? "bro" : "sis") +", look at that man!";
 	next;
 	mes "[Kid]";
 	mes "He's been lying there for a week doin' nothin'...";
@@ -822,7 +843,7 @@ OnTouch:
 	emotion e_sob;
 	emotion e_swt2;
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Hey, kid...";
 	next;
 	mes "[Ukki]";
@@ -834,7 +855,7 @@ OnTouch:
 	emotion e_sob;
 	emotion e_swt2;
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "... ... ...";
 	emotion e_dots,1;
 	close;
@@ -948,7 +969,7 @@ dewata,139,114,6	script	Semangat's Wife#dew	4_M_DEWOLDWOMAN,{
 	mes "gone off to again?";
 	mes "Have you seen my husband around?";
 	next;
-	switch(select("I think I saw him there..:No I haven't..")) {
+	switch(select("I think I saw him there..", "No I haven't..")) {
 	case 1:
 		mes "[Semangat's Wife]";
 		mes "He ran away when";
@@ -1037,7 +1058,7 @@ dewata,280,236,4	script	Settler#dew	4_F_JOB_BLACKSMITH,{
 }
 
 dewata,204,230,6	script	Dieting Lady#dew	4_M_DEWWOMAN,{
-	if (countitem(11533) == 0) {
+	if (countitem(Satay) == 0) {
 		mes "[Dieting Lady]";
 		mes "Ah~ I'm starving!!";
 		mes "I should be on a diet now.";
@@ -1053,16 +1074,16 @@ dewata,204,230,6	script	Dieting Lady#dew	4_M_DEWWOMAN,{
 	mes "Is that mouth-watering";
 	mes "^006400Satay^000000 for me?";
 	next;
-	switch(select("Yes, want a taste?:No, it's for me!")) {
+	switch(select("Yes, want a taste?", "No, it's for me!")) {
 	case 1:
-		delitem 11533,1; //Satay
+		delitem Satay,1;
 		mes "[Dieting Lady]";
 		mes "Thanks so much!";
 		mes "I've been so hungry~!!";
 		mes "This smell of this ^006400Satay^000000";
 		mes "is so good~!";
 		next;
-		getitem 11533,1; //Satay
+		getitem Satay,1;
 		mes "[Dieting Lady]";
 		mes "Ah... gotta come back to my senses,";
 		mes "too much of a good thing is bad...";

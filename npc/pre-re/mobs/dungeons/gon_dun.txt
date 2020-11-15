@@ -1,17 +1,40 @@
-//===== Hercules Script ======================================
-//= Gonryun Dungeon Monster Spawn Script
-//===== By: ==================================================
-//= Athena (1.0)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Kunlun Dungeon Monster Spawn Script (Pre-Renewal)
+//================= Description ===========================================
+//= Monster Spawns for Kunlun Dungeon
+//================= Current Version =======================================
 //= 1.2
-//===== Additional Comments: =================================
-//= 1.1 Official kRO 10.1 spawns [Playtester]
-//= 1.2 Corrected MVP spawn variance. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-//==================================================
-// gon_dun01 - Shrine of Gonryun Queen
-//==================================================
+//== gon_dun01 - Shrine of Gonryun Queen ===================
 gon_dun01,0,0,0,0	monster	Bloody Butterfly	1408,55,650000,350000,0
 gon_dun01,0,0,0,0	monster	Enchanted Peach Tree	1410,35,0,0,0
 gon_dun01,0,0,0,0	monster	Zipper Bear	1417,30,0,0,0
@@ -19,9 +42,7 @@ gon_dun01,0,0,0,0	monster	Red Plant	1078,5,0,0,0
 gon_dun01,0,0,0,0	monster	Yellow Plant	1081,10,0,0,0
 gon_dun01,0,0,0,0	monster	White Plant	1082,10,0,0,0
 
-//==================================================
-// gon_dun02 - Hermit's Checkers
-//==================================================
+//== gon_dun02 - Hermit's Checkers =========================
 gon_dun02,241,226,15,20	monster	Enchanted Peach Tree	1410,2,300000,150000,0
 gon_dun02,241,226,15,20	monster	Baby Leopard	1415,4,600000,300000,0
 gon_dun02,241,226,15,20	monster	Enchanted Peach Tree	1410,3,120000,60000,0
@@ -32,9 +53,7 @@ gon_dun02,0,0,0,0	monster	Bloody Butterfly	1408,20,0,0,0
 gon_dun02,0,0,0,0	monster	Enchanted Peach Tree	1410,15,0,0,0
 gon_dun02,0,0,0,0	monster	Yellow Plant	1081,10,0,0,0
 
-//==================================================
-// gon_dun03 - Arcadia
-//==================================================
+//== gon_dun03 - Arcadia ===================================
 gon_dun03,0,0,0,0	monster	White Plant	1082,10,0,0,0
 gon_dun03,0,0,0,0	monster	Hermit Plant	1413,20,600000,300000,0
 gon_dun03,0,0,0,0	monster	Evil Nymph	1416,50,600000,300000,0

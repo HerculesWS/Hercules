@@ -1,20 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Doomed Swords Quest Part 3
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Creation of Doomed Swords: Grimtooth, Mysteltain, and Executioner.
+//================= Current Version =======================================
 //= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= - Creation of Doomed Swords: Grimtooth, Mysteltain, and
-//=   Executioner.
-//= - Continuation of the Comodo Quest
-//= - Part 1: Found in Quests_Comodo.txt
-//= - Part 2: Found in Quests_Yuno.txt
-//= - Variable in use: dmdswrd_Q (Max 45)
-//===== Additional Comments: =================================
-//= 1.0 First version. [L0ne_W0lf]
-//============================================================
+//================= Additional Comments ===================================
+//= Continuation of the Comodo Quest
+//= - Part 1: Found in quests_comodo.txt
+//= - Part 2: Found in quests_yuno.txt
+//================= Variables Used ========================================
+//= dmdswrd_Q (Max 45)
+//=========================================================================
 
 mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 	if (dmdswrd_Q > 30) {
@@ -27,7 +49,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			mes "receive visitors. Why don't";
 			mes "you relax and chat for a while?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What are you doing out";
 			mes "here in this secluded";
 			mes "area? You don't have";
@@ -63,7 +85,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			mes "the land, or are you";
 			mes "hunting monsters, or...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Actually, um,";
 			mes "I was led here by";
 			mes "this thing. It's called";
@@ -139,7 +161,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			close;
 		}
 		else if (dmdswrd_Q == 33) {
-			if (countitem(714) > 0 && countitem(962) > 2 && countitem(1003) > 0 && countitem(609) > 24 && countitem(1008) > 0) {
+			if (countitem(Emperium) > 0 && countitem(Tentacle) > 2 && countitem(Coal) > 0 && countitem(Amulet) > 24 && countitem(Frozen_Heart) > 0) {
 				mes "[Walker]";
 				mes "Ah, very good.";
 				mes "You've brought";
@@ -147,11 +169,11 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 				mes "Now, please wait for";
 				mes "a moment while I finish";
 				mes "the preparations...";
-				delitem 714,1; //Emperium
-				delitem 962,3; //Tentacle
-				delitem 1003,1; //Coal
-				delitem 609,25; //Amulet
-				delitem 1008,1; //Frozen_Heart
+				delitem Emperium,1;
+				delitem Tentacle,3;
+				delitem Coal,1;
+				delitem Amulet,25;
+				delitem Frozen_Heart,1;
 				dmdswrd_Q = 34;
 				close;
 			}
@@ -353,7 +375,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		mes "Lemme alone so I can";
 		mes "drink in peace! ^333333*Urp*^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Um, excuse me, but are";
 		mes "you Morf? I'm been sent";
 		mes "by your brother, Walker,";
@@ -368,7 +390,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		mes "A-and that's really the Seal";
 		mes "of Muriel you have there?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh, the Seal!";
 		mes "Here, take a look";
 		mes "if you want. If it's";
@@ -395,7 +417,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		close;
 	}
 	else if (dmdswrd_Q == 36) {
-		if (countitem(503) > 19) {
+		if (countitem(Yellow_Potion) > 19) {
 			mes "[Old Man]";
 			mes "Oh, thank goodness you've";
 			mes "brought me the potions! Now,";
@@ -404,7 +426,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "people call sobriety. Ugh...";
 			mes "I can think clearly... Damn!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "......";
 			mes ".........";
 			mes "............";
@@ -430,7 +452,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "continue forming the doomed";
 			mes "sword pentagram. I'll just be";
 			mes "waiting for you right here.";
-			delitem 503,20; //Yellow_Potion
+			delitem Yellow_Potion,20;
 			dmdswrd_Q = 37;
 			close;
 		}
@@ -443,7 +465,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		close;
 	}
 	else if (dmdswrd_Q == 37) {
-		if (countitem(7022) > 2 && countitem(1003) > 0 && countitem(1019) > 2 && countitem(7021) > 0 && countitem(7002) > 49) {
+		if (countitem(Old_Hilt) > 2 && countitem(Coal) > 0 && countitem(Wooden_Block) > 2 && countitem(Foolishness_Of_Blind) > 0 && countitem(Ogre_Tooth) > 49) {
 			mes "[Morf]";
 			mes "Hey, you've brought";
 			mes "everything? Good, the";
@@ -497,7 +519,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "*Rub-Rub-Rub-Rub*";
 			mes "*Rub Rub Rub Rub*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Excuse me...";
 			mes "But is it almost done?";
 			next;
@@ -530,7 +552,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "*Rub-Rub-Rub-Rub*";
 			mes "*Rub Rub Rub Rub*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "H-hey, when is this";
 			mes "thing going to be finished?";
 			mes "Isn't it about time already?";
@@ -552,11 +574,11 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "Just...";
 			mes "Just give me a";
 			mes "few more minutes...";
-			delitem 7022,3; //Old_Hilt
-			delitem 1003,1; //Coal
-			delitem 1019,3; //Wooden_Block
-			delitem 7021,1; //Foolishness_Of_Blind
-			delitem 7002,50; //Ogre_Tooth
+			delitem Old_Hilt,3;
+			delitem Coal,1;
+			delitem Wooden_Block,3;
+			delitem Foolishness_Of_Blind,1;
+			delitem Ogre_Tooth,50;
 			dmdswrd_Q = 38;
 			close;
 		}
@@ -800,7 +822,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "look like you have";
 		mes "a question for me.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually, I'm looking for";
 		mes "somebody named Huey.";
 		mes "I hear he's the only one";
@@ -816,7 +838,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "of my brothers? I haven't heard";
 		mes "from them in quite a while.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually, I'm trying to";
 		mes "obtain a doomed sword.";
 		mes "To do that, I've already";
@@ -832,7 +854,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "let me see the pentagram? Oh,";
 		mes "my brothers did such good work!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ah, yes. Here.";
 		next;
 		mes "[Huey]";
@@ -840,7 +862,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "appreciate it, but this";
 		mes "pentagram has really good";
 		mes "craftsmanship! Now, if my";
-		mes "older brothers have already^FFFFFF ^000000 helped you, I shall do the same.";
+		mes "older brothers have already helped you, I shall do the same.";
 		next;
 		mes "[Huey]";
 		mes "My older brothers are even";
@@ -854,7 +876,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		mes "would have been for nothing.";
 		mes "And then... They might just";
 		mes "come looking for me. Morf";
-		mes "especially. Oh, right! Materials!^FFFFFF ^000000 I need these for the pentagram!";
+		mes "especially. Oh, right! Materials! I need these for the pentagram!";
 		next;
 		mes "[Huey]";
 		mes "Please bring me";
@@ -874,7 +896,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		close;
 	}
 	else if (dmdswrd_Q == 40) {
-		if (countitem(7024) == 9 && countitem(7023) == 6 && countitem(723) == 9 && countitem(7019) == 1) {
+		if (countitem(Bloody_Edge) == 9 && countitem(Blade_Lost_In_Darkness) == 6 && countitem(Cardinal_Jewel) == 9 && countitem(Lokis_Whispers) == 1) {
 			mes "[Huey]";
 			mes "Oh, you're back. Did";
 			mes "you bring everything";
@@ -889,10 +911,10 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 			mes "time, but trust me, we're";
 			mes "almost done. All your hard";
 			mes "work will pay off soon~";
-			delitem 7024,9; //Bloody_Edge
-			delitem 7023,6; //Blade_Lost_In_Darkness
-			delitem 723,9; //Cardinal_Jewel
-			delitem 7019,1; //Loki's_Whispers
+			delitem Bloody_Edge,9;
+			delitem Blade_Lost_In_Darkness,6;
+			delitem Cardinal_Jewel,9;
+			delitem Lokis_Whispers,1;
 			dmdswrd_Q = 41;
 			close;
 		}
@@ -975,33 +997,33 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		.@random = rand(1,10);
 		if (.@random >= 1 && .@random <= 5) {
 			callsub S_GetSword,1237,0,1,42;
-			getitem 1237,1; //Grimtooth_
+			getitem Grimtooth_,1;
 			close;
 		}
 		else if (.@random >= 6 && .@random <= 8) {
 			callsub S_GetSword,1138,1,1,43;
-			getitem 1138,1; //Mysteltainn_
+			getitem Mysteltainn_,1;
 			close;
 		}
 		else {
 			callsub S_GetSword,1169,2,1,44;
-			getitem 1169,1; //Executioner_
+			getitem Executioner_,1;
 			close;
 		}
 	}
 	else if (dmdswrd_Q == 42) {
 		callsub S_GetSword,1237,0,0,0;
-		getitem 1237,1; //Grimtooth_
+		getitem Grimtooth_,1;
 		close;
 	}
 	else if (dmdswrd_Q == 43) {
 		callsub S_GetSword,1138,1,0,0;
-		getitem 1138,1; //Mysteltainn_
+		getitem Mysteltainn_,1;
 		close;
 	}
 	else if (dmdswrd_Q == 44) {
 		callsub S_GetSword,1169,2,0,0;
-		getitem 1169,1; //Executioner_
+		getitem Executioner_,1;
 		close;
 	}
 	else if (dmdswrd_Q == 45) {

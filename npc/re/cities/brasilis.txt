@@ -1,21 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Brasilis Town
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Brasilis Town Script
-//===== Additional Comments: =================================
-//= 1.0 First version. Transportation and Basic NPCs.
-//= 1.1 Fixed Zeny not being removed for payment. [Kisuka]
-//= 1.2 Updated dialog, added Ice Cream Maker. [L0ne_W0lf]
-//= 1.3 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Brasilis Transportation
-//============================================================
+//== Brasilis Transportation ===============================
 /* Pre-Renewal coordinates: alberta,247,115,3 */
 alberta,246,82,3	script	Crewman#bra2	4W_SAILOR,{
 	mes "[Crewman]";
@@ -26,7 +45,7 @@ alberta,246,82,3	script	Crewman#bra2	4W_SAILOR,{
 	mes "We recently found a new ocean route to get there easily.";
 	mes "It's just 10,000 zeny for a round trip! So do you want to go?";
 	next;
-	switch(select("Take me to Brasilis!:I'll stay here.")) {
+	switch(select("Take me to Brasilis!", "I'll stay here.")) {
 	case 1:
 		if (Zeny > 9999) {
 			mes "[Crewman]";
@@ -52,7 +71,7 @@ brasilis,316,57,3	script	Crewman#bra1	4W_SAILOR,{
 	mes "[Crewman]";
 	mes "My ship is going to back to Alberta, do you want to join us?";
 	next;
-	switch(select("Go back to Alberta.:Not yet~.")) {
+	switch(select("Go back to Alberta.", "Not yet~.")) {
 	case 1:
 		mes "[Crewman]";
 		mes "I sure do miss home.";
@@ -69,14 +88,13 @@ brasilis,316,57,3	script	Crewman#bra1	4W_SAILOR,{
 	}
 }
 
-// Generic Brasilis NPCs
-//============================================================
+//== Generic Brasilis NPCs =================================
 brasilis,155,165,3	script	Signpost#bra1	4_BULLETIN_BOARD2,{
 	mes ":: Art Museum ::";
 	close;
 }
 
-brasilis,195,231,3	script	Signpost#bra2	4_BULLETIN_BOARD2,{
+brasilis,191,239,3	script	Signpost#bra2	4_BULLETIN_BOARD2,{
 	mes ":: Verass Monument ::";
 	close;
 }
@@ -108,29 +126,29 @@ brasilis,137,77,5	script	Ice-Cream Maker	4_M_03,{
 	mes "Ice Cream~";
 	mes "Get 'yer Ice Cream!";
 	next;
-	switch(select("Give me one!:Ice Cream?:Cancel.")) {
+	switch(select("Give me one!", "Ice Cream?", "Cancel.")) {
 	case 1:
 		mes "[Ice Cream Maker]";
 		mes "Since there are so many people want to get a cool ice cream you can order only 5 at a time.";
 		mes "So how many d'ya want?";
 		next;
 		while(1) {
-			input .@input; //,1,5;
-			if (.@input == 0) {
+			input(.@input);
+			if (.@input <= 0) {
 				mes "[Ice Cream Maker]";
 				mes "None?";
 				mes "Fine get outta the way, I have customers to serve.";
 				close;
 			}
-			else if ((.@input < 0) || (.@input > 5)) {
+			if (.@input > 5) {
 				mes "[Ice Cream Maker]";
 				mes "Wow.";
 				mes "You ordered too much.";
 				mes "If you eat over 5 you might need to fight with a monster in your stomach. Calm down buddy.";
 				next;
+				continue;
 			}
-			else
-				break;
+			break;
 		}
 		.@icecream_hap = .@input*100;
 		if (Zeny < .@icecream_hap) {
@@ -139,14 +157,14 @@ brasilis,137,77,5	script	Ice-Cream Maker	4_M_03,{
 			mes "It's only ^3355FF100 Zeny^000000~ Seriously!";
 			close;
 		}
-		if (!checkweight(536,.@input)) {
+		if (!checkweight(Ice_Cream,.@input)) {
 			mes "[Ice Cream Maker]";
 			mes "You seem to have too much stuff.";
 			mes "Lighten your pack before buying this.";
 			close;
 		}
 		Zeny -= .@icecream_hap;
-		getitem 536,.@input; //Ice_Cream
+		getitem Ice_Cream,.@input;
 		close;
 	case 2:
 		mes "[Ice Cream Maker]";

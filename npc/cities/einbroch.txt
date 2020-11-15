@@ -1,34 +1,43 @@
-//===== Hercules Script ======================================
-//= Einbroch Town
-//===== By: ==================================================
-//= Everybody mentioned in the comments
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//===== Additional Comments: =================================
-//= 0.2 Added some NPCs [MasterOfMuppets]
-//= 0.3 Added a few npcs by reddozen [MasterOfMuppets]
-//= 0.4 Added a crappy quest, have fun guys... [MasterOfMuppets]
-//= 0.4a Added exp bonus for the factory quest, borrowed from a Korean fansite.
-//= 0.4b Added missing close [Komurka]
-//= 0.5 Added Temporal Locations of Gunslinger Job Change map.
-//=     Info provided by RockmanEXE [erKURITA]
-//= 0.6 Implemented a crap quest [MasterOfMuppets]
-//= 0.7 Implemented an inn NPC [MasterOfMuppets]
-//= 0.8 Implemented the Shinokas quest, thanks to [MasterOfMuppets]
-//=      Dj-Yhn for scripting it.
-//= 0.9 Removed Duplicates [Silent]
-//= 1.0 Implemented the Lover's quest. [MasterOfMuppets]
-//= 1.1 Split quests into quests/cities_einbroch.txt [Evera]
-//= 1.2 Split more quests into above file [Evera]
-//= 1.3 Added (finally) the Garrison quest npc [erKURITA]
-//= 1.4 Implemented the polution script. [MasterOfMuppets]
-//= 1.5 Updated Hotel Employee to work with Airship Ticket Quest [Samuray22]
-//= 1.6 Optimized several NPCs [DZeroX]
-//= 1.7 Replaced outdated variable with getarg. [L0ne_W0lf]
-//= 1.8 Fixed Occurances of PcName. [L0ne_W0lf]
-//============================================================
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) DZeroX
+//= Copyright (C) Samuray22
+//= Copyright (C) Evera
+//= Copyright (C) Silent
+//= Copyright (C) erKURITA
+//= Copyright (C) Komurka
+//= Copyright (C) MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Einbroch Town
+//================= Description ===========================================
+//= Einbroch Town NPCs
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
 einbroch,218,198,5	script	Mark#ein	4_M_EINMAN,{
 	callfunc "EinTower","Mark";
@@ -49,7 +58,7 @@ einbroch,175,196,5	script	Morei#ein	4_M_EINMAN2,{
 	mes "Would you like to go";
 	mes "back to ground level?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		mes "[Morei]";
 		mes "I see.";
@@ -111,7 +120,7 @@ function	script	EinTower	{
 	mes "Einbroch Tower admission";
 	mes "and an Apple to snack on.";
 	next;
-	switch(select("Tower Admission Only:Apple Combo Set:Cancel")) {
+	switch(select("Tower Admission Only", "Apple Combo Set", "Cancel")) {
 	case 1:
 		if (Zeny < 10) {
 			mes "[" + getarg(0) + "]";
@@ -149,14 +158,14 @@ function	script	EinTower	{
 			mes "your safety before I give";
 			mes "you the Apple Combo Set.";
 			next;
-			if (checkweight(512,1)) {
+			if (checkweight(Apple,1)) {
 				mes "[" + getarg(0) + "]";
 				mes "Thank you for";
 				mes "using our services.";
 				mes "Let me guide you to";
 				mes "the tower right away.";
 				Zeny -= 20;
-				getitem 512,1; //Apple
+				getitem Apple,1;
 				close2;
 				warp "einbroch",174,204;
 				end;
@@ -194,7 +203,7 @@ einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	4_M_EIN_SOLDIE
 	mes "to Einbech line is 200 zeny.";
 	mes "Would you like to buy a ticket?";
 	next;
-	switch(select("Yes.:No.:About the Environment...")) {
+	switch(select("Yes.", "No.", "About the Environment...")) {
 	case 1:
 		if (Zeny > 199) {
 			mes "[Staff]";
@@ -237,7 +246,7 @@ einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	4_M_EIN_SOLDIE
 		close;
 	}
 }
-	
+
 einbroch,252,301,3	duplicate(EinbrochTrain)	Train Station Staff#ein2	4_M_EIN_SOLDIER
 
 einbroch,259,326,3	script	Leslie#ein_1	4_F_EINOLD,{
@@ -285,7 +294,7 @@ einbroch,236,191,3	script	Tan#ein	4_M_EINMAN,{
 	mes "you should carry one with you.";
 	close;
 }
-	
+
 einbroch,228,121,5	script	Little Toby#ein-1	4_M_EINMAN,{
 	mes "[Little Toby]";
 	mes "Excuse me...";
@@ -317,7 +326,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 	mes "her tune-up and now she's";
 	mes "sleeping! J-just step away!";
 	next;
-	switch(select("Who's Burielle?:Sorry about That.")) {
+	switch(select("Who's Burielle?", "Sorry about That.")) {
 	case 1:
 		mes "[Airship Engineer]";
 		mes "Burielle is the prettiest";
@@ -327,9 +336,9 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 		mes "with my healing hands, she'll";
 		mes "conquer the skies again!";
 		next;
-		switch(select("Ah~:Uh huh...")) {
+		switch(select("Ah~", "Uh huh...")) {
 		case 1:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ah~";
 			mes "I see, so you're";
 			mes "working on restoring";
@@ -343,7 +352,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 			mes "fixing up Burielle...";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Uh huh...";
 			mes "Right. For a second";
 			mes "there, I thought you were";
@@ -351,7 +360,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 			mes "then I also assumed that you";
 			mes "weren't, you know, a nutcase.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oh, did you say,";
 			mes "''prettiest model?''";
 			mes "All Airships look the";
@@ -816,7 +825,7 @@ ein_in01,206,224,3	script	Hotel Employee#ein	4_M_EINMAN,{
 		next;
 	}
 	else {
-		switch(select("Save:Take Rest - 5,000 zeny:Cancel")) {
+		switch(select("Save", "Take Rest - 5,000 zeny", "Cancel")) {
 		case 1:
 			mes "[Hotel Employee]";
 			mes "Your Respawn Point";

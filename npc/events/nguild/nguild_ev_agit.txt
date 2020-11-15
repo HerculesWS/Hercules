@@ -1,20 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= War of Emperium - NGuild Wars Events
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= Event Triggers for NGuild Wars
-//===== Additional Comments: =================================
-// Based off existing guild scripts.  Do not know if it is accurate.[kobra_k88]
-//= 1.3 Added code for abandoning captured castles on /breakguild [Lupus]
-//= 1.4 AGIT Functions added, treasure spawning added. [L0ne_W0lf]
-//= 1.5 Emperium should now properly respawn. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
-
-// Function for OnAgitStart =========================================
+//== Function for OnAgitStart ==============================
 function	script	F_AgitStart	{
 	.@map$ = getarg(0);
 	.@castle$ = getarg(1);
@@ -28,7 +48,7 @@ function	script	F_AgitStart	{
 	end;
 }
 
-// Function for OnGuildBreak ======================================
+//== Function for OnGuildBreak =============================
 function	script	F_GuildBreak	{
 	.@map$ = getarg(0);
 	.@castle$ = getarg(1);
@@ -42,12 +62,12 @@ function	script	F_GuildBreak	{
 	return;
 }
 
-// Function for OnAgitBreak ======================================
+//== Function for OnAgitBreak ==============================
 function	script	F_AgitBreak	{
 	.@map$ = getarg(0);
 	.@castle$ = getarg(1);
 
-	.@GID = getcharid(2);
+	.@GID = getcharid(CHAR_ID_GUILD);
 	if (.@GID <= 0) return;
 
 	.@Economy = getcastledata(.@map$,2) - 5;
@@ -60,7 +80,7 @@ function	script	F_AgitBreak	{
 
 	setcastledata .@map$,1, .@GID;
 	mapannounce .@map$,"The emperium has been destroyed.",bc_map,0x00CCFF;
-	announce "The [" + getcastlename(.@map$) + "] castle has been conquered by the [" + getguildname(.@GID) + "] guild.",bc_all;
+	announce "The [" + getcastlename(.@map$) + "] castle has been conquered by the [" + getguildinfo(GUILDINFO_NAME, .@GID) + "] guild.",bc_all;
 	donpcevent "::OnRecvCastle"+.@castle$;
 
 	disablenpc "Kafra Staff#"+.@castle$;
@@ -78,7 +98,7 @@ function	script	F_AgitBreak	{
 }
 
 
-// Function for OnAgitEnd ======================================
+//== Function for OnAgitEnd ================================
 function	script	F_AgitEnd	{
 	.@map$ = getarg(0);
 	.@castle$ = getarg(1);
@@ -92,8 +112,8 @@ function	script	F_AgitEnd	{
 	end;
 }
 
-// Castle 1 ================================================================
-nguild_alde,0,0,0	script	Agit_N01	-1,{
+//== Castle 1 ==============================================
+nguild_alde,0,0,0	script	Agit_N01	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN01";
 	end;
@@ -105,7 +125,7 @@ OnAgitStart:
 	end;
 OnAgitBreak:
 	callfunc "F_AgitBreak","nguild_alde","N01";
-	goto OnAgitEliminate;
+	callsub OnAgitEliminate;
 	end;
 OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_alde","N01";
@@ -119,8 +139,8 @@ OnAgitEnd:
 	end;
 }
 
-// Castle 2 ================================================================
-nguild_gef,0,0,0	script	Agit_N02	-1,{
+//== Castle 2 ==============================================
+nguild_gef,0,0,0	script	Agit_N02	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN02";
 	end;
@@ -132,7 +152,7 @@ OnAgitStart:
 	end;
 OnAgitBreak:
 	callfunc "F_AgitBreak","nguild_gef","N02";
-	goto OnAgitEliminate;
+	callsub OnAgitEliminate;
 	end;
 OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_gef","N02";
@@ -146,8 +166,8 @@ OnAgitEnd:
 	end;
 }
 
-// Castle 3 ================================================================
-nguild_pay,0,0,0	script	Agit_N03	-1,{
+//== Castle 3 ==============================================
+nguild_pay,0,0,0	script	Agit_N03	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN03";
 	end;
@@ -159,7 +179,7 @@ OnAgitStart:
 	end;
 OnAgitBreak:
 	callfunc "F_AgitBreak","nguild_pay","N03";
-	goto OnAgitEliminate;
+	callsub OnAgitEliminate;
 	end;
 OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_pay","N03";
@@ -173,8 +193,8 @@ OnAgitEnd:
 	end;
 }
 
-// Castle 4 ================================================================
-nguild_prt,0,0,0	script	Agit_N04	-1,{
+//== Castle 4 ==============================================
+nguild_prt,0,0,0	script	Agit_N04	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN04";
 	end;
@@ -186,7 +206,7 @@ OnAgitStart:
 	end;
 OnAgitBreak:
 	callfunc "F_AgitBreak","nguild_prt","N04";
-	goto OnAgitEliminate;
+	callsub OnAgitEliminate;
 	end;
 OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_prt","N04";
@@ -200,9 +220,8 @@ OnAgitEnd:
 	end;
 }
 
-// Treasure Spawn Time
-//========================================
--	script	TreasSpawn	-1,{
+//== Treasure Spawn Time ===================================
+-	script	TreasSpawn	FAKE_NPC,{
 	end;
 
 OnClock0005:

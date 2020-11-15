@@ -1,16 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Team
+//= Copyright (C) Euphy
+//= Copyright (C) eAthena Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Elemental Stone Trader
-//===== By: ==================================================
-//= rAthena Team & MasterOfMuppets
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Trade impure types of elemental stones for pure ones.
-//===== Additional Comments: =================================
-//= 1.0 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.1 Optimized. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "[Laspuchin Gregory]";
@@ -37,7 +61,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "Keekeekee... Or else,";
 	mes "I will let you taste my acid bottle...!";
 	next;
-	if (select("Please, excuse me:Do you need help?") == 1) {
+	if (select("Please, excuse me", "Do you need help?") == 1) {
 		mes "[Laspuchin Gregory]";
 		mes "Keheheh... Did you hear";
 		mes "what I said? It would be";
@@ -57,7 +81,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "I will use it efficiently...";
 	mes "Do you have them now?";
 	next;
-	if (select("Nope:I got some") == 1) {
+	if (select("Nope", "I got some") == 1) {
 		mes "[Laspuchin Gregory]";
 		mes "Then, find 8 stones of one kind.";
 		mes "If you bring 8 of one kind of";
@@ -80,7 +104,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "Uh-huh, what did you bring?";
 	next;
 	setarray .@items[1],995,997,994,996;
-	.@i = .@items[select("Mystic Frozen:Great Nature:Flame Heart:Rough Wind")];
+	.@i = .@items[select("Mystic Frozen", "Great Nature", "Flame Heart", "Rough Wind")];
 	mes "[Laspuchin Gregory]";
 	if (countitem(.@i) > 7) {
 		mes "I will take 8 of them and";

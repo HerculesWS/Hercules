@@ -1,36 +1,53 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) tr0n
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Kargha
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= The Sign Quest
-//===== By: ==================================================
-//= SinSloth, MasterOfMuppets, Kargha
-//===== Current Version: =====================================
-//= 3.9
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
-//= [Official Conversion]
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞ ============
+//= ============ ============================================= ============
+//= ============ ≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠ ============
+//================= Description ===========================================
 //= Quest for opening the doors to Geffenia.
-//= This script uses sign_01.bmp - sign_04.bmp, these will be
-//= found in the language of your client.
-//===== Additional Comments: =================================
-//= 3.0 Rewritten based on most recent Aegis script. [L0ne_W0lf]
-//=     Due to the incompatabity of the old script with this
-//=     version, variables will attmept to be translated to the
-//=     new version, however it is untested.
-//= 3.1 Corrected time check for Sir Jore. [L0ne_W0lf]
-//= 3.2 Removed mapannounce used while debugging. [L0ne_W0lf]
-//=     Moved the disablewaitingroomevent in dancing portion.
-//= 3.3 Applied Kazukin's fix for the dancing portion. (bugreport:3966) [L0ne_W0lf]
-//= 3.4 Added Renewal Changes. [Kisuka]
-//= 3.4 Updated 'waitingroom' to support required zeny/lvl. [Kisuka]
-//= 3.5 Fixed two bugs. 4230 & 4404 [CalciumKid]
-//= 3.6 Corrected the Level Requirements for 'Standby Room' [tr0n]
-//= 3.7 Massive cleaning/optimization (more can still be done). [Euphy]
-//= 3.8 Corrected an invalid map name. [Joseph]
-//= 3.9 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================
+//= This script uses sign_01.bmp - sign_04.bmp, these will be found in the
+//= language of your client.
+//================= Current Version =======================================
+//= 3.9
+//=========================================================================
 
-// The Sign (Part 1)
-//============================================================
+//== The Sign (Part 1) =====================================
 -	script	Sign::TheSign	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	cutin "sign_01",4;
@@ -83,7 +100,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "Hm...?";
 			mes "Can I help you?";
 			next;
-			switch(select("I've been following these signs and...:I was just passing by...")) {
+			switch(select("I've been following these signs and...", "I was just passing by...")) {
 			case 1:
 				mes "[Metz]";
 				mes "Great...!";
@@ -104,7 +121,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 					next;
 					mes "[Metz]";
 					mes "Oh right, would you tell";
-					mes "me your name? "+ strcharinfo(0) +"?";
+					mes "me your name? "+ strcharinfo(PC_NAME) +"?";
 					mes "Okay then, I'll remember that.";
 					mes "Talk to you later, alright?";
 					sign_q = 2;
@@ -290,7 +307,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "know right away. For now,";
 		mes "please hold on to these pieces.";
 		sign_q = 54;
-		getitem 7177,1; //Part_Of_Star's_Sob
+		getitem Part_Of_Stars_Sob,1;
 	}
 	else if (sign_q == 54) {
 		if (rand(1,5) == 4) {
@@ -313,7 +330,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "the information that I have";
 			mes "to give you for now. You'll";
 			mes "have to investigate this lead";
-			mes "on your own, "+ strcharinfo(0) +".";
+			mes "on your own, "+ strcharinfo(PC_NAME) +".";
 		}
 		else {
 			mes "Although I've made";
@@ -413,7 +430,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "understand what it says...";
 		next;
 		while(1) {
-			switch(select("Who is Frank?:Where is he?:I see.")) {
+			switch(select("Who is Frank?", "Where is he?", "I see.")) {
 			case 1:
 				mes "[Metz]";
 				mes "Frank Franklin has lived";
@@ -485,7 +502,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Franklin translate the";
 		mes "message in the Record of";
 		mes "Ancient Language. Keep up";
-		mes "the good work, "+ strcharinfo(0) +".";
+		mes "the good work, "+ strcharinfo(PC_NAME) +".";
 	}
 	else if (sign_q == 82) {
 		mes "I get it now!";
@@ -551,9 +568,9 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "proven its existence!";
 		mes "Please let me handle";
 		mes "this and come back later~";
-		delitem 7314,1; //The_Sign
+		delitem The_Sign,1;
 		sign_q = 138;
-		.@stime_s = gettime(3);
+		.@stime_s = gettime(GETTIME_HOUR);
 		if (.@stime_s < 1) sign_sq = 1;
 		else if (.@stime_s < 3) sign_sq = 2;
 		else if (.@stime_s < 5) sign_sq = 3;
@@ -568,7 +585,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		else sign_sq = 12;
 	}
 	else if (sign_q == 138) {
-		.@stime_s1 = gettime(3);
+		.@stime_s1 = gettime(GETTIME_HOUR);
 		if (.@stime_s1 < 1) {
 			if (sign_sq == 11) {
 				.@pass_s = 1;
@@ -658,7 +675,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "Blacksmith.";
 			sign_q = 139;
 			sign_sq = 0;
-			getitem 7314,1; //The_Sign
+			getitem The_Sign,1;
 		}
 		else {
 			mes "I'm sorry, but I'm";
@@ -676,7 +693,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Sign's power for you...";
 	}
 	else if (sign_q == 141) {
-		if (countitem(2644) == 1) {
+		if (countitem(The_Sign_) == 1) {
 			mes "Ah, you're finally";
 			mes "here. I've been waiting";
 			mes "to speak with you. First,";
@@ -719,19 +736,19 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "accept this as a token";
 		mes "of my gratitude. Good luck";
 		mes "on your travels, adventurer.";
-		if (checkweight(7178,1) == 0) {
+		if (checkweight(Stars_Sob,1) == 0) {
 				next;
 				mes "^3355FFWait a second! Right now,";
 				mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 				close;
 		}
-		delitem 7178,1; //Star's_Sob
+		delitem Stars_Sob,1;
 		sign_q = 202;
 		getexp RENEWAL_EXP?10000:100000,0;
-		getitem 617,1; //Old_Violet_Box
+		getitem Old_Violet_Box,1;
 	}
 	else if (sign_q > 201) {
-		if (countitem(7178) == 1) {
+		if (countitem(Stars_Sob) == 1) {
 			mes "I'm sorry...";
 			mes "But I'm taking";
 			mes "back the Sobbing";
@@ -742,7 +759,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "[Metz]";
 			mes "......";
 			mes "Farewell.";
-			delitem 7178,1; //Star's_Sob
+			delitem Stars_Sob,1;
 		}
 		else {
 			mes "I guess I can't";
@@ -762,7 +779,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Well then...";
 		mes "Good luck on";
 		mes "your journeys,";
-		mes "brave "+ strcharinfo(0) +".";
+		mes "brave "+ strcharinfo(PC_NAME) +".";
 	}
 	close2;
 	cutin "mets_alpha",255;
@@ -777,7 +794,7 @@ prt_in,228,26,5	script	Steward#sign	1_M_JOBTESTER,{
 		mes "Brayde Estate. How";
 		mes "may I be of service?";
 		next;
-		switch(select("Nothing.:I'm here to see Metz.:Gimmie your cash!")) {
+		switch(select("Nothing.", "I'm here to see Metz.", "Gimmie your cash!")) {
 		case 1:
 			mes "[Vandez]";
 			mes "If you do not have";
@@ -787,7 +804,7 @@ prt_in,228,26,5	script	Steward#sign	1_M_JOBTESTER,{
 			close;
 		case 2:
 			mes "[Vandez]";
-			mes "Very good, "+((Sex)?"sir.":"madam.");
+			mes "Very good, "+ (Sex == SEX_MALE ? "sir." : "madam.");
 			mes "Please wait a moment";
 			mes "while I consult with";
 			mes "the master in his study.";
@@ -805,11 +822,11 @@ prt_in,228,26,5	script	Steward#sign	1_M_JOBTESTER,{
 		}
 	}
 	else if (sign_q < 14) {
-		mes "Ah, Master "+ strcharinfo(0) +".";
+		mes "Ah, Master "+ strcharinfo(PC_NAME) +".";
 		mes "Welcome. How may I be";
 		mes "of service today?";
 		next;
-		switch(select("Who is Arian?:What is Metz doing?:How is Elle?")) {
+		switch(select("Who is Arian?", "What is Metz doing?", "How is Elle?")) {
 		case 1:
 			mes "[Vandez]";
 			mes "Ah yes, Arian.";
@@ -976,12 +993,12 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 	}
 	else if (sign_q < 14) {
 		mes "Oh...?";
-		mes ""+ strcharinfo(0) +"?";
+		mes ""+ strcharinfo(PC_NAME) +"?";
 		mes "Is there anything that";
 		mes "I can help you with?";
 		next;
-		if (Sex == 1) {
-			switch(select("You wanna have coffee sometime?:Tell me about Metz.")) {
+		if (Sex == SEX_MALE) {
+			switch(select("You wanna have coffee sometime?", "Tell me about Metz.")) {
 			case 1:
 				mes "[Elle]";
 				mes "...?";
@@ -996,7 +1013,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 				mes "to go out with you or";
 				mes "not? Hm, maybe if";
 				mes "you're really nice";
-				mes "to me, , "+ strcharinfo(0) +".";
+				mes "to me, , "+ strcharinfo(PC_NAME) +".";
 				close;
 			case 2:
 				mes "[Elle]";
@@ -1015,7 +1032,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 			}
 		}
 		else {
-			switch(select("You have nice skin, Miss Elle.:Tell me about Metz.")) {
+			switch(select("You have nice skin, Miss Elle.", "Tell me about Metz.")) {
 			case 1:
 				mes "[Elle]";
 				mes "Eh...?";
@@ -1023,7 +1040,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 				mes "Maybe it's because";
 				mes "I don't go out too";
 				mes "often. You have nice";
-				mes "I don't go out too, "+ strcharinfo(0) +"~";
+				mes "I don't go out too, "+ strcharinfo(PC_NAME) +"~";
 				close;
 			case 2:
 				mes "[Elle]";
@@ -1083,14 +1100,14 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 		mes "refreshment, that";
 		mes "would be perfect...";
 		close2;
-		if (countitem(504) > 0) {
+		if (countitem(White_Potion) > 0) {
 			select("Why don't you take this?");
 			mes "[Elle]";
 			mes "Oh, you didn't";
 			mes "need to do this,";
 			mes "but that you soooo";
 			mes "much! Ahhhhhhh~";
-			delitem 504,1; //White_Potion
+			delitem White_Potion,1;
 			close2;
 			emotion e_kis2;
 			end;
@@ -1151,7 +1168,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 		mes "Long time no see.";
 		mes "La la la~~";
 		next;
-		switch(select("What's up?:What happened?")) {
+		switch(select("What's up?", "What happened?")) {
 		case 1:
 			mes "[Elle]";
 			mes "Oh...?";
@@ -1205,7 +1222,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 
 morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
@@ -1220,7 +1237,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		mes "Who the hell";
 		mes "are you, jerkface?";
 		next;
-		switch(select("Metz sent me here.:^0000FF"+ strcharinfo(0) +"^000000.:Who are you then?")) {
+		switch(select("Metz sent me here.", "^0000FF"+ strcharinfo(PC_NAME) +"^000000.", "Who are you then?")) {
 		case 1:
 			mes "[Arian]";
 			mes "Oh yeah...?";
@@ -1233,7 +1250,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 2:
 			mes "[Arian]";
 			mes "Wha...?";
-			mes "^0000FF"+ strcharinfo(0) +"^000000?";
+			mes "^0000FF"+ strcharinfo(PC_NAME) +"^000000?";
 			mes "Yeah, okay. Metz did";
 			mes "mention something about";
 			mes "about you. You're here";
@@ -1284,18 +1301,18 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 4:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(914) > 99) {
-				delitem 914,100; //Fluff
-				if (countitem(7033) > 49) {
-					delitem 7033,50; //Poison_Spore
-					if (countitem(904) > 29) {
-						delitem 904,30; //Scorpion's_Tail
-						if (countitem(930) > 19) {
-							delitem 930,20; //Rotten_Bandage
-							if (countitem(1038) > 14) {
-								delitem 1038,15; //Petite_DiablOfs_Horn
-								if (countitem(7013) > 9) {
-									delitem 7013,10; //Coral_Reef
+			if (countitem(Fluff) > 99) {
+				delitem Fluff,100;
+				if (countitem(Poison_Spore) > 49) {
+					delitem Poison_Spore,50;
+					if (countitem(Scorpions_Tail) > 29) {
+						delitem Scorpions_Tail,30;
+						if (countitem(Rotten_Bandage) > 19) {
+							delitem Rotten_Bandage,20;
+							if (countitem(Petite_DiablOfs_Horn) > 14) {
+								delitem Petite_DiablOfs_Horn,15;
+								if (countitem(Coral_Reef) > 9) {
+									delitem Coral_Reef,10;
 								}
 							}
 						}
@@ -1316,16 +1333,16 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 5:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(7033) > 49) {
-				delitem 7033,50; //Poison_Spore
-				if (countitem(904) > 29) {
-					delitem 904,30; //Scorpion's_Tail
-					if (countitem(930) > 19) {
-						delitem 930,20; //Rotten_Bandage
-						if (countitem(1038) > 14) {
-							delitem 1038,15; //Petite_DiablOfs_Horn
-							if (countitem(7013) > 9) {
-								delitem 7013,10; //Coral_Reef
+			if (countitem(Poison_Spore) > 49) {
+				delitem Poison_Spore,50;
+				if (countitem(Scorpions_Tail) > 29) {
+					delitem Scorpions_Tail,30;
+					if (countitem(Rotten_Bandage) > 19) {
+						delitem Rotten_Bandage,20;
+						if (countitem(Petite_DiablOfs_Horn) > 14) {
+							delitem Petite_DiablOfs_Horn,15;
+							if (countitem(Coral_Reef) > 9) {
+								delitem Coral_Reef,10;
 							}
 						}
 					}
@@ -1347,14 +1364,14 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 6:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(904) > 29) {
-				delitem 904,30; //Scorpion's_Tail
-				if (countitem(930) > 19) {
-					delitem 930,20; //Rotten_Bandage
-					if (countitem(1038) > 14) {
-						delitem 1038,15; //Petite_DiablOfs_Horn
-						if (countitem(7013) > 9) {
-							delitem 7013,10; //Coral_Reef
+			if (countitem(Scorpions_Tail) > 29) {
+				delitem Scorpions_Tail,30;
+				if (countitem(Rotten_Bandage) > 19) {
+					delitem Rotten_Bandage,20;
+					if (countitem(Petite_DiablOfs_Horn) > 14) {
+						delitem Petite_DiablOfs_Horn,15;
+						if (countitem(Coral_Reef) > 9) {
+							delitem Coral_Reef,10;
 						}
 					}
 				}
@@ -1375,12 +1392,12 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 7:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(930) > 19) {
-				delitem 930,20; //Rotten_Bandage
-				if (countitem(1038) > 14) {
-					delitem 1038,15; //Petite_DiablOfs_Horn
-					if (countitem(7013) > 9) {
-						delitem 7013,10; //Coral_Reef
+			if (countitem(Rotten_Bandage) > 19) {
+				delitem Rotten_Bandage,20;
+				if (countitem(Petite_DiablOfs_Horn) > 14) {
+					delitem Petite_DiablOfs_Horn,15;
+					if (countitem(Coral_Reef) > 9) {
+						delitem Coral_Reef,10;
 					}
 				}
 			}
@@ -1401,10 +1418,10 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 8:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(1038) > 14) {
-				delitem 1038,15; //Petite_DiablOfs_Horn
-				if (countitem(7013) > 9) {
-					delitem 7013,10; //Coral_Reef
+			if (countitem(Petite_DiablOfs_Horn) > 14) {
+				delitem Petite_DiablOfs_Horn,15;
+				if (countitem(Coral_Reef) > 9) {
+					delitem Coral_Reef,10;
 				}
 			}
 			else {
@@ -1430,8 +1447,8 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			close;
 		case 9:
 			mes "[Arian]";
-			if (countitem(7013) > 9) {
-				delitem 7013,10; //Coral_Reef
+			if (countitem(Coral_Reef) > 9) {
+				delitem Coral_Reef,10;
 			}
 			else {
 				mes "I don't care how pretty";
@@ -1509,7 +1526,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 				else getexp 18000,0;
 			}
 			sign_q = 14;
-			getitem 7177,1; //Part_Of_Star's_Sob
+			getitem Part_Of_Stars_Sob,1;
 			close;
 		case 14:
 			mes "[Arian]";
@@ -1539,7 +1556,7 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 	mes "[Gaanan]";
 	if (sign_q < 11) {
 		mes "The weather here in";
-		mes "Morocc is too hot for me.";
+		mes "Morroc is too hot for me.";
 		mes "I'm having a hard time just";
 		mes "trying to live here. Do you";
 		mes "know a nice and cool place";
@@ -1568,7 +1585,7 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		mes "island. What is the very first";
 		mes "thing that you should do?";
 		next;
-		switch(select("Look for fresh water.:Just wait for rescue.:Forage for food.:Explore the island.")) {
+		switch(select("Look for fresh water.", "Just wait for rescue.", "Forage for food.", "Explore the island.")) {
 		case 1:
 			.@point_s += 7;
 			break;
@@ -1589,7 +1606,7 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		mes "collapsed building. What";
 		mes "do you plan to do first?";
 		next;
-		switch(select("Scream for help.:Stay quiet.:Wait for death to come.:Find a way out.")) {
+		switch(select("Scream for help.", "Stay quiet.", "Wait for death to come.", "Find a way out.")) {
 		case 1:
 			.@point_s += 3;
 			break;
@@ -1610,7 +1627,7 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		mes "but you got lost somehow.";
 		mes "How do you handle it?";
 		next;
-		switch(select("Try to find my friends.:Find a way out.:Stay put.:Continue exploring the dungeon.")) {
+		switch(select("Try to find my friends.", "Find a way out.", "Stay put.", "Continue exploring the dungeon.")) {
 		case 1:
 			break;
 		case 2:
@@ -1629,7 +1646,7 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		mes "a mansion with no exit. What do";
 		mes "you do first when a murder happens inside the mansion?";
 		next;
-		switch(select("Wait for the case to get solved.:Try to find my friends first.:Find a way out.:Solve the murder case on my own.:Kill the others before they kill me.")) {
+		switch(select("Wait for the case to get solved.", "Try to find my friends first.", "Find a way out.", "Solve the murder case on my own.", "Kill the others before they kill me.")) {
 		case 1:
 			.@point_s += 5;
 			break;
@@ -1653,7 +1670,7 @@ morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 		mes "So what do you do during";
 		mes "this final week?";
 		next;
-		switch(select("Wait to see the end.:Plant an apple tree.:Look to move to a different world.:What else? Save the world.:What else? Go on a crime spree.")) {
+		switch(select("Wait to see the end.", "Plant an apple tree.", "Look to move to a different world.", "What else? Save the world.", "What else? Go on a crime spree.")) {
 		case 1:
 			.@point_s += 5;
 			break;
@@ -1720,7 +1737,7 @@ payon,154,170,3	script	Hagin#sign	1_F_ORIENT_04,{
 	mes "face and charming figure...";
 	mes "I'm gonna seduce him.";
 	next;
-	switch(select("Who are you talking about?:You're freaking me out!")) {
+	switch(select("Who are you talking about?", "You're freaking me out!")) {
 	case 1:
 		mes "[Hagin]";
 		mes "You don't know";
@@ -1737,7 +1754,7 @@ payon,154,170,3	script	Hagin#sign	1_F_ORIENT_04,{
 		select("I'd like to meet this Daewoon.");
 		mes "[Hagin]";
 		mes "Oh, I see~";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "You plan to ask him";
 			mes "to show you some fighting";
 			mes "pointers, do you? You men";
@@ -1884,7 +1901,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 		mes "Oh, a visitor?";
 		mes "I'm sorry, but I believe";
 		mes "you're an uninvited guest~";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "You'll have to forgive me";
 			mes "if I wish to spend my time with maidens as opposed to men.";
 		}
@@ -1893,9 +1910,9 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "Come and drink with me~";
 		}
 		next;
-		if (countitem(7177) > 0) {
+		if (countitem(Part_Of_Stars_Sob) > 0) {
 			.@pay_point = 1;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Sure...";
 			mes "But first, would you";
 			mes "take a look at this?";
@@ -1925,7 +1942,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "idea what that jewel";
 			mes "you're holding actually is?";
 			next;
-			switch(select("Kind of?:How the hell would I know?:No, but would you tell me?")) {
+			switch(select("Kind of?", "How the hell would I know?", "No, but would you tell me?")) {
 			case 1:
 				mes "[Daewoon]";
 				mes "Oh...!";
@@ -1934,7 +1951,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 				mes "So tell me, what do you";
 				mes "understand about this jewel?";
 				next;
-				switch(select("It's handy.:I actually don't know...")) {
+				switch(select("It's handy.", "I actually don't know...")) {
 				case 1:
 					.@pay_point += 2;
 					mes "[Daewoon]";
@@ -1999,7 +2016,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "qualified for this task. Now,";
 			mes "are you ready for my test?";
 			next;
-			switch(select("I'M READY! YEEAH!:I'll do my best!:To hell with this!:Fine. Let's get it over with.")) {
+			switch(select("I'M READY! YEEAH!", "I'll do my best!", "To hell with this!", "Fine. Let's get it over with.")) {
 			case 1:
 				.@pay_point += 5;
 				mes "[Daewoon]";
@@ -2062,7 +2079,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "of friends that you can";
 			mes "constantly party with?";
 			next;
-			switch(select("Yes, I do.:I prefer soloing.:I am lonely.")) {
+			switch(select("Yes, I do.", "I prefer soloing.", "I am lonely.")) {
 			case 1:
 				.@pay_point += 5;
 				emotion e_omg;
@@ -2118,7 +2135,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "around. I believe this is";
 			mes "called ''Mob Training...''";
 			next;
-			switch(select("Awesome~!:I hate people who do that.:I do it sometimes...")) {
+			switch(select("Awesome~!", "I hate people who do that.", "I do it sometimes...")) {
 			case 1:
 				emotion e_an;
 				mes "[Daewoon]";
@@ -2213,13 +2230,13 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "Answer me, adventurer!";
 			mes "Would you still destroy it?!";
 			next;
-			switch(select("Destroy it!:I can't destroy such beauty...:I'd close my eyes, then destroy it.")) {
+			switch(select("Destroy it!", "I can't destroy such beauty...", "I'd close my eyes, then destroy it.")) {
 			case 1:
 				.@pay_point += 3;
 				mes "[Daewoon]";
 				mes "Hmm. You have a truly";
 				mes "strong will. Then again,";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "perhaps you lack a true";
 					mes "appreciation for beauty.";
 					mes "Even in Emperium form, how";
@@ -2273,7 +2290,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "would you give your enemy";
 			mes "the help that he needs?";
 			next;
-			switch(select("Yes, of course!:I'd pretend not to hear anything.:I'd make fun of him, then run off.")) {
+			switch(select("Yes, of course!", "I'd pretend not to hear anything.", "I'd make fun of him, then run off.")) {
 			case 1:
 				.@pay_point += 6;
 				mes "[Daewoon]";
@@ -2315,7 +2332,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "......";
 			mes "Do you enjoy life?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				mes "[Daewoon]";
 				emotion e_heh;
@@ -2364,7 +2381,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			}
 			if (.@pay_point > 29) {
 				sign_q = 15;
-				getitem 7177,1; //Part_Of_Star's_Sob
+				getitem Part_Of_Stars_Sob,1;
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 300,0;
 					else if (BaseLevel < 70) getexp 750,0;
@@ -2408,7 +2425,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			}
 			else if ((.@pay_point > 26) && (.@pay_point < 30)) {
 				sign_q = 15;
-				getitem 7177,1; //Part_Of_Star's_Sob
+				getitem Part_Of_Stars_Sob,1;
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 300,0;
 					else if (BaseLevel < 70) getexp 750,0;
@@ -2491,7 +2508,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 		mes "behind the Sobbing Starlight,";
 		mes "do you like it?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Daewoon]";
 			mes "Ah, how great~!";
@@ -2567,9 +2584,9 @@ aldeba_in,139,103,5	script	Monograph#sign	HIDDEN_NPC,{
 
 aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 	callfunc "F_UpdateSignVars";
-	if ((gettime(3) > 16) && (gettime(3) < 22)) {
+	if (gettime(GETTIME_HOUR) > 16 && gettime(GETTIME_HOUR) < 22) {
 		if (sign_q == 15) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Excuse me...";
 			next;
 			emotion e_omg;
@@ -2603,7 +2620,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			mes "any interruptions. So";
 			mes "why are you here?";
 			next;
-			switch(select("Daewoon sent me.:Oops, sorry. Later~")) {
+			switch(select("Daewoon sent me.", "Oops, sorry. Later~")) {
 			case 1:
 				emotion e_swt;
 				mes "[Sir Jore]";
@@ -2619,7 +2636,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "Er. Then, what...";
 				mes "W-what's your name?";
 				next;
-				select(strcharinfo(0) +", thanks.");
+				select(strcharinfo(PC_NAME) +", thanks.");
 				mes "[Sir Jore]";
 				mes "N-nice to meet you.";
 				mes "My name is Jore. Just";
@@ -2694,10 +2711,10 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			}
 		}
 		else if (sign_q == 16) {
-			if ((countitem(1092) > 9) && (countitem(610) > 1) && (countitem(511) > 9)) {
-				delitem 1092,10; //Empty_Cylinder
-				delitem 610,2; //Leaf_Of_Yggdrasil
-				delitem 511,10; //Green_Herb
+			if ((countitem(Empty_Cylinder) > 9) && (countitem(Leaf_Of_Yggdrasil) > 1) && (countitem(Green_Herb) > 9)) {
+				delitem Empty_Cylinder,10;
+				delitem Leaf_Of_Yggdrasil,2;
+				delitem Green_Herb,10;
 				sign_q = 17;
 				emotion e_thx;
 				mes "[Sir Jore]";
@@ -2712,7 +2729,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "Now, for your assignment.";
 				mes "Have you ever heard about";
 				mes "the ^CE3131Stone of Sage^000000? Rumors about";
-				mes "it have been spreading around, but no one has confirmed the truth about it, "+ strcharinfo(0) +".";
+				mes "it have been spreading around, but no one has confirmed the truth about it, "+ strcharinfo(PC_NAME) +".";
 				next;
 				mes "[Sir Jore]";
 				mes "Although I have no clue";
@@ -2784,7 +2801,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			mes "So, did you learn what";
 			mes "exactly is the Stone of Sage?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Well, I'm not sure,";
 			mes "but I was told that it's";
 			mes "red and can cure people.";
@@ -2798,7 +2815,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			mes "A-anyway, please tell me";
 			mes "what you think it might be.";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (compare(.@input$,"red gemstone")) {
 				mes "[Sir Jore]";
 				mes "What...! Huh.";
@@ -2809,7 +2826,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "relying on a rumor...";
 				next;
 				sign_q = 20;
-				getitem 7177,1; //Part_Of_Star's_Sob
+				getitem Part_Of_Stars_Sob,1;
 				mes "[Sir Jore]";
 				mes "Thank you very much";
 				mes "for helping me. Now I can";
@@ -2828,17 +2845,15 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "Good luck getting";
 				mes "all the pieces of ";
 				mes "Sobbing Starlight,";
-				mes ""+ strcharinfo(0) +". Farewell~";
+				mes ""+ strcharinfo(PC_NAME) +". Farewell~";
 				close;
 			}
-			else {
-				mes "[Sir Jore]";
-				mes "Err...?";
-				mes "I don't think";
-				mes "I quite understood";
-				mes "you. What did you say?";
-				close;
-			}
+			mes "[Sir Jore]";
+			mes "Err...?";
+			mes "I don't think";
+			mes "I quite understood";
+			mes "you. What did you say?";
+			close;
 		}
 		else if (sign_q == 20) {
 			mes "[Sir Jore]";
@@ -2857,17 +2872,16 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			mes "What's the answer?!";
 			close;
 		}
-	}
-	else if ((gettime(3) > 6) && (gettime(3) < 17)) {
+	} else if (gettime(GETTIME_HOUR) > 6 && gettime(GETTIME_HOUR) < 17) {
 		mes "^3355FFYou find a tense man";
 		mes "holding test tubes between";
 		mes "his fingers, standing in a pile";
 		mes "of books. He seems to be in";
 		mes "agony for some reason.";
 		next;
-		switch(select("Speak to him.:Ignore him.")) {
+		switch(select("Speak to him.", "Ignore him.")) {
 		case 1:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Excuse me...";
 			next;
 			mes "[Sir Jore]";
@@ -2878,9 +2892,9 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			mes "his thoughts, this strange";
 			mes "man is unable to hear you.^000000";
 			next;
-			switch(select("Try again.:Ignore him.")) {
+			switch(select("Try again.", "Ignore him.")) {
 			case 1:
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "EXCUSE ME!";
 				next;
 				mes "[Sir Jore]";
@@ -2938,7 +2952,7 @@ OnTouch:
 aldeba_in,156,118,4	script	Piru Piru#sign	8_F,{
 	callfunc "F_UpdateSignVars";
 	mes "[Piru Piru]";
-	if ((gettime(3) >= 12) && (gettime(3) <= 24)) { //235959
+	if (gettime(GETTIME_HOUR) >= 12 && gettime(GETTIME_HOUR) <= 24) { //235959
 		if (sign_q == 17) {
 			emotion e_sob;
 			mes "Oh, I'm sooo tired~";
@@ -2946,7 +2960,7 @@ aldeba_in,156,118,4	script	Piru Piru#sign	8_F,{
 			mes "*Sob* Master, can't we";
 			mes "just call it a day already?";
 			next;
-			switch(select("What do you do in here?:About vanished Alchemists:What is the Stone of Sage?")) {
+			switch(select("What do you do in here?", "About vanished Alchemists", "What is the Stone of Sage?")) {
 			case 1:
 				mes "[Piru Piru]";
 				mes "My master, Sir Jore,";
@@ -3018,7 +3032,7 @@ aldeba_in,156,118,4	script	Piru Piru#sign	8_F,{
 			close;
 		}
 	}
-	else if ((gettime(3) >= 6) && (gettime(3) < 12)) {
+	else if (gettime(GETTIME_HOUR) >= 6 && gettime(GETTIME_HOUR) < 12) {
 		mes "Everyday we study and";
 		mes "take notes and test and";
 		mes "experiment and record";
@@ -3040,7 +3054,7 @@ aldeba_in,156,118,4	script	Piru Piru#sign	8_F,{
 		mes "....Zzz...Zzz...";
 		mes "Zzz....Zzz......";
 		next;
-		switch(select("Wake her up:Leave her sleep")) {
+		switch(select("Wake her up", "Leave her sleep")) {
 		case 1:
 			mes "[Piru Piru]";
 			mes "Wh-wha...?";
@@ -3070,7 +3084,7 @@ prt_maze02,57,151,1	script	Pleur#warp	4_F_02,{
 	end;
 }
 
-prt_maze02,58,150,0	script	#movesign	-1,5,5,{
+prt_maze02,58,150,0	script	#movesign	FAKE_NPC,5,5,{
 OnTouch:
 	mes "^3355FFYou catch a glimpse";
 	mes "of a girl heading directly";
@@ -3085,19 +3099,19 @@ OnTouch:
 	end;
 }
 
-prt_maze02,18,126,0	script	#mazewarp	-1,3,3,{
+prt_maze02,18,126,0	script	#mazewarp	FAKE_NPC,3,3,{
 OnTouch:
 	warp "prt_maze02",90,170;
 	end;
 }
 
-prt_maze02,25,161,0	script	#music	-1,7,7,{
+prt_maze02,25,161,0	script	#music	FAKE_NPC,7,7,{
 OnTouch:
 	soundeffect "effect\\석양의 어쌔신.wav",1;
 	end;
 }
 
-prt_maze02,132,132,0	script	#skill	-1,{
+prt_maze02,132,132,0	script	#skill	FAKE_NPC,{
 OnEnable:
 	monster "prt_maze02",14,177,"Flora",1118,1,"#skill::OnMyMobDead";
 	monster "prt_maze02",17,171,"Flora",1118,1,"#skill::OnMyMobDead";
@@ -3177,7 +3191,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 		if (sign_q < 17) close;
 		else if (sign_q == 17) {
 			next;
-			switch(select("Roar~!:Excuse me.")) {
+			switch(select("Roar~!", "Excuse me.")) {
 			case 1:
 				sign_q = 18;
 				donpcevent "#skill::OnEnable";
@@ -3201,7 +3215,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 				mes "here in the middle of";
 				mes "this forest?";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Actually, I think";
 				mes "I've been looking for";
 				mes "you. I've been sent on";
@@ -3215,7 +3229,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 				mes "do no harm if you had";
 				mes "something to ask us...";
 				next;
-				switch(select("Ask about Stone of Sage:Ask about Alchemy:Quit")) {
+				switch(select("Ask about Stone of Sage", "Ask about Alchemy", "Quit")) {
 				case 1:
 					sign_q = 19;
 					mes "[Gordon]";
@@ -3307,7 +3321,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 		mes "animal! What do you";
 		mes "think you were doing?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Actually, I think";
 		mes "I've been looking for";
 		mes "you. I've been sent on";
@@ -3321,7 +3335,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 		mes "do no harm if you had";
 		mes "something to ask us...";
 		next;
-		switch(select("Ask about Stone of Sage:Ask about Alchemy:Quit")) {
+		switch(select("Ask about Stone of Sage", "Ask about Alchemy", "Quit")) {
 		case 1:
 			sign_q = 19;
 			mes "[Gordon]";
@@ -3437,12 +3451,14 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 			mes "[Jesqurienne]";
 			mes "Ahhhhhh~";
 			mes "Hm? Why hello there,";
-			if (Sex) mes "you fine speciman of a man~";
-			else mes "you precious, adorable girl~";
+			if (Sex == SEX_MALE)
+				mes "you fine speciman of a man~";
+			else
+				mes "you precious, adorable girl~";
 			mes "I'm Jesqurienne. You've heard";
 			mes "of me, haven't you? Aren't you surprised to see me?";
 			next;
-			switch(select("I've never heard of you.:Oh gosh, it's Jesqurienne!")) {
+			switch(select("I've never heard of you.", "Oh gosh, it's Jesqurienne!")) {
 			case 1:
 				mes "[Jesqurienne]";
 				emotion e_swt;
@@ -3450,7 +3466,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 				mes "Surely you";
 				mes "must be joking~";
 				next;
-				switch(select("You got me, you got me.:Nope. Doesn't ring a bell.")) {
+				switch(select("You got me, you got me.", "Nope. Doesn't ring a bell.")) {
 				case 1:
 					emotion e_pif;
 					mes "[Jesqurienne]";
@@ -3519,7 +3535,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 			mes "I haven't met anyone";
 			mes "smarter than me~";
 			next;
-			switch(select("^333333Stuck-up chick.^000000:Take it easy on the drinks...")) {
+			switch(select("^333333Stuck-up chick.^000000", "Take it easy on the drinks...")) {
 			case 1:
 				emotion e_an;
 				mes "[Jesqurienne]";
@@ -3539,7 +3555,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 				mes "your little insult! It's time";
 				mes "for a Quiz Challenge!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Quiz... Challenge?";
 				mes "Like a trivia game?";
 				mes "But who's going to";
@@ -3617,7 +3633,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 		mes "Bwahaha! I can't believe how";
 		mes "simple minded you are...!";
 		next;
-		switch(select("I can't let you win!:Darn it...")) {
+		switch(select("I can't let you win!", "Darn it...")) {
 		case 1:
 			sign_q = 22;
 			mes "[Jesqurienne]";
@@ -3655,14 +3671,14 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 		mes "a battle of minds.";
 		mes "W-who are you...?";
 		next;
-		input .@input$;
+		input(.@input$);
 		mes "[Jesqurienne]";
 		mes ""+.@input$+"...";
 		mes "I will remember that.";
 		next;
 		mes "[Jesqurienne]";
 		sign_q = 25;
-		getitem 7177,1; //Part_Of_Star's_Sob
+		getitem Part_Of_Stars_Sob,1;
 		mes "Here...";
 		mes "My old friend, Metz, told";
 		mes "me to give this to someone";
@@ -3746,14 +3762,14 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "not relevant to the";
 			mes "Blacksmith Job Quest?";
 			next;
-			if (select("Baisulist:Wickebine:Barcardi:Krongast") == 3) .@user_p += 1;
+			if (select("Baisulist", "Wickebine", "Barcardi", "Krongast") == 3) .@user_p += 1;
 			break;
 		case 2:
 			mes "1. Which item is not";
 			mes "relevant to the creation";
 			mes "of a Counteragent?";
 			next;
-			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 1) .@user_p += 1;
+			if (select("Karvodailnirol", "Detrimindexta", "Alcohol") != 1) .@user_p += 1;
 			break;
 		case 3:
 			mes "1. Choose the";
@@ -3761,7 +3777,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "a different size";
 			mes "than the others.";
 			next;
-			if (select("Giant Whisper:Marine:Cornutus:Kobold Archer") == 2) .@user_p += 1;
+			if (select("Giant Whisper", "Marine", "Cornutus", "Kobold Archer") == 2) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 9 ) {
@@ -3788,7 +3804,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "B.S. Sacramenti from the";
 			mes "ones displayed in the list.";
 			next;
-			if (select("Lex Divina:Gloria:Recovery:Sanctuary") == 2) .@user_p += 1;
+			if (select("Lex Divina", "Gloria", "Recovery", "Sanctuary") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -3796,7 +3812,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "is not related to the creation";
 			mes "of a Condensed White Potion.";
 			next;
-			if (select("Medicine Bowl:Witch Starsand:Empty Bottle:Empty Potion Bottle") == 3) .@user_p += 1;
+			if (select("Medicine Bowl", "Witch Starsand", "Empty Bottle", "Empty Potion Bottle") == 3) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -3804,7 +3820,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "necessary for a Blacksmith";
 			mes "to create a Gladius.";
 			next;
-			if (select("Sapphire:Zircon:Topaz:Cursed Ruby") == 1) .@user_p += 1;
+			if (select("Sapphire", "Zircon", "Topaz", "Cursed Ruby") == 1) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 8 ) {
@@ -3833,7 +3849,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "unrelated to the";
 			mes "Mage's Bolt type skills.";
 			next;
-			if (select("Water:Earth:Fire:Wind") == 2) .@user_p += 1;
+			if (select("Water", "Earth", "Fire", "Wind") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -3841,7 +3857,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Bunny Band's DEF";
 			mes "and its added ability?";
 			next;
-			if (select("1 / LUK +2:1 / LUK +5:2 / LUK +2:2 / LUK +5") == 3) .@user_p += 1;
+			if (select("1 / LUK +2", "1 / LUK +5", "2 / LUK +2", "2 / LUK +5") == 3) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -3850,7 +3866,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "matched with its Monster";
 			mes "Card name.";
 			next;
-			if (select("Hornet Card - Martyr:Requiem - Chaos:Wormtail - Clever:Golem - Immortal") == 4) .@user_p += 1;
+			if (select("Hornet Card - Martyr", "Requiem - Chaos", "Wormtail - Clever", "Golem - Immortal") == 4) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 8 ) {
@@ -3910,7 +3926,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "name of the ruler of the";
 			mes "Rune-Midgarts Kingdom.";
 			next;
-			if (select("Tristan lll:Tristram lll:Tristar lll:Trust lll") == 2) .@user_p += 1;
+			if (select("Tristan lll", "Tristram lll", "Tristar lll", "Trust lll") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -3918,7 +3934,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that is a different type";
 			mes "than the others.";
 			next;
-			if (select("Penomena:Hatii:Pest:Explosion") == 1) .@user_p += 1;
+			if (select("Penomena", "Hatii", "Pest", "Explosion") == 1) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 8 ) {
@@ -3970,14 +3986,14 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "which does not drop the";
 			mes "'Yggdrasil Leaf' item.";
 			next;
-			if (select("Marduk:Baphomet Jr.:Angeling:Wanderer") == 1) .@user_p += 1;
+			if (select("Marduk", "Baphomet Jr.", "Angeling", "Wanderer") == 1) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
 			mes "5. Choose the job class";
 			mes "that cannot equip Silk Robe.";
 			next;
-			if (select("Swordman:Merchant:Hunter:Mage") == 3) .@user_p += 1;
+			if (select("Swordman", "Merchant", "Hunter", "Mage") == 3) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -3985,10 +4001,9 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "requirement for entering";
 			mes "the PvP Room.";
 			next;
-			if (select("30:31:32:33") == 2) .@user_p += 1;
+			if (select("30", "31", "32", "33") == 2) .@user_p += 1;
 			break;
 		}
-		zis_5 = rand(1,10);
 		if (rand(1,10) < 9 ) {
 			donpcevent "Jesqurienne#sign::OnHo";
 			mes "[Jesqurienne]";
@@ -4039,7 +4054,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "correct weight";
 			mes "for 1 Empty Bottle?";
 			next;
-			if (select("1:2:3") == 2) .@user_p += 1;
+			if (select("1", "2", "3") == 2) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4047,7 +4062,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "correct DEF for";
 			mes "the Indian Filet item.";
 			next;
-			if (select("0:1:2:3") == 4) .@user_p += 1;
+			if (select("0", "1", "2", "3") == 4) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
@@ -4055,7 +4070,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "city closest to";
 			mes "Turtle Island?";
 			next;
-			if (select("Al De Baran:Alberta:Comodo:Izlude") == 2) .@user_p += 1;
+			if (select("Al De Baran", "Alberta", "Comodo", "Izlude") == 2) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 9 ) {
@@ -4107,20 +4122,20 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "by fifteen, divided by three,";
 			mes "plus five is equal to...?";
 			next;
-			if (select("250:255:260:265") == 3) .@user_p += 1;
+			if (select("250", "255", "260", "265") == 3) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
 			mes "7. Four thousand five hundred sixty divided by four, divided by two, plus three is equal to...?";
 			next;
-			if (select("573:574:575:576") == 1) .@user_p += 1;
+			if (select("573", "574", "575", "576") == 1) .@user_p += 1;
 			break;
 		case 3:
 			mes "[Aaron]";
 			mes "7. Three thousand one hundred";
 			mes "two added to five hundred, plus four, divided by six equals...";
 			next;
-			if (select("600:601:602") == 2) .@user_p += 1;
+			if (select("600", "601", "602") == 2) .@user_p += 1;
 			break;
 		}
 		if (rand(1,10) < 9 ) {
@@ -4177,7 +4192,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that is the closest to the";
 			mes "Item Upgrade Place in Juno.";
 			next;
-			if (select("Tavern:Monster Library:Tool Shop:Weapon Shop") == 4) .@user_p += 1;
+			if (select("Tavern", "Monster Library", "Tool Shop", "Weapon Shop") == 4) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4185,7 +4200,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "Trap skill which does not";
 			mes "inflict Property Damage.";
 			next;
-			if (select("Claymore Trap:Freezing Trap:Shockwave Trap:Land Mine") == 3) .@user_p += 1;
+			if (select("Claymore Trap", "Freezing Trap", "Shockwave Trap", "Land Mine") == 3) .@user_p += 1;
 			break;
 		}
 		if ( rand(1,10) < 9 ) {
@@ -4238,7 +4253,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "receive the most damage";
 			mes "from a Fire Property Dagger?";
 			next;
-			if (select("Dagger Goblin:Mace Goblin:Morning Star Goblin:Hammer Goblin") == 4) .@user_p += 1;
+			if (select("Dagger Goblin", "Mace Goblin", "Morning Star Goblin", "Hammer Goblin") == 4) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4246,7 +4261,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "on which the Mage skill,";
 			mes "''Stone Curse,'' is ineffective. ^FFFFFFaaaaaa aaaaaaa aaaaaa aaaaaaa aaaaaaaaa^000000";
 			next;
-			if (select("Elder Willow:Evil Druid:Magnolia:Marc") == 2) .@user_p += 1;
+			if (select("Elder Willow", "Evil Druid", "Magnolia", "Marc") == 2) .@user_p += 1;
 			break;
 		}
 		if ( rand(1,10) < 9 ) {
@@ -4296,7 +4311,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that looks different";
 			mes "than all the others.";
 			next;
-			if (select("Prontera Hollgrehenn:Prontera Doll Merchant:Izlude Meat Merchant:Morroc Meat Merchant") == 3) .@user_p += 1;
+			if (select("Prontera Hollgrehenn", "Prontera Doll Merchant", "Izlude Meat Merchant", "Morroc Meat Merchant") == 3) .@user_p += 1;
 			break;
 		case 2:
 			mes "[Aaron]";
@@ -4304,7 +4319,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 			mes "that cannot be equipped";
 			mes "by Novice class characters.";
 			next;
-			if (select("Funeral Hat:Shackles:Wooden Mail:Pantie") == 3) .@user_p += 1;
+			if (select("Funeral Hat", "Shackles", "Wooden Mail", "Pantie") == 3) .@user_p += 1;
 			break;
 		}
 		if ( rand(1,10) < 9 ) {
@@ -4332,7 +4347,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 		next;
 		mes "[Aaron]";
 		mes "Umm...";
-		mes ""+ strcharinfo(0) +":";
+		mes ""+ strcharinfo(PC_NAME) +":";
 		mes ""+.@user_p+" points!";
 		next;
 		mes "[Aaron]";
@@ -4379,7 +4394,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 		mes "or you're the most gorgeous";
 		mes "woman I've seen in my life!";
 		next;
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			select("Um, I'm a dude...");
 			emotion e_sob;
 			mes "[Aaron]";
@@ -4448,7 +4463,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 		mes "my lucky streak";
 		mes "gonna start?";
 		next;
-		switch(select("Excuse me...:Just pass by.")) {
+		switch(select("Excuse me...", "Just pass by.")) {
 		case 1:
 			mes "[Dearles]";
 			mes "What is it?!";
@@ -4457,7 +4472,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "and total strangers, so";
 			mes "get to the point~!";
 			next;
-			switch(select("Oh, nothing.:I'm here for Metz...?")) {
+			switch(select("Oh, nothing.", "I'm here for Metz...?")) {
 			case 1:
 				mes "[Dearles]";
 				mes "Wha...? You bother";
@@ -4466,9 +4481,8 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "I'll freakin' beat you to near";
 				mes "freakin' death! Bam bam bam!";
 				close2;
-				percentheal -100,0;
 				soundeffect "effect\\sign_noise.wav",1;
-				percentheal -99,0;
+				Hp = 1;
 				warp "comodo",122,100;
 				end;
 			case 2:
@@ -4502,7 +4516,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 		mes "Soooooo, did you";
 		mes "bring the money?";
 		next;
-		switch(select("Here you are...:Not yet...")) {
+		switch(select("Here you are...", "Not yet...")) {
 		case 1:
 			mes "[Dearles]";
 			mes "Ummm.......";
@@ -4533,7 +4547,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 		}
 	}
 	else if (sign_q == 27) {
-		if ((gettime(3) > 18) && (gettime(3) < 23)) {
+		if (gettime(GETTIME_HOUR) > 18 && gettime(GETTIME_HOUR) < 23) {
 			mes "Nice, you're here";
 			mes "just in time. Well,";
 			mes "all that matters is that";
@@ -4594,21 +4608,21 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "Ah, so is this";
 			mes "the stuff you brought?";
 			mes "Lemme take a look-see...";
-			if (countitem(734)) .@diaris_t += 1;
-			if (countitem(735)) .@diaris_t += 1;
-			if (countitem(736)) .@diaris_t += 1;
-			if (countitem(7149)) .@diaris_t += 1;
-			if (countitem(747)) .@diaris_t += 2;
-			if (countitem(749)) .@diaris_t += 4;
-			if (countitem(740)) .@diaris_t += 1;
-			if (countitem(741)) .@diaris_t += 1;
-			if (countitem(742)) .@diaris_t += 2;
-			if (countitem(743)) .@diaris_t += 3;
-			if (countitem(752)) .@diaris_t += 3;
-			if (countitem(753)) .@diaris_t += 4;
-			if (countitem(754)) .@diaris_t += 4;
-			if (countitem(750)) .@diaris_t += 7;
-			if (countitem(751)) .@diaris_t += 7;
+			if (countitem(Red_Frame)) .@diaris_t += 1;
+			if (countitem(Blue_Porcelain)) .@diaris_t += 1;
+			if (countitem(White_Platter)) .@diaris_t += 1;
+			if (countitem(Yellow_Plate)) .@diaris_t += 1;
+			if (countitem(Crystal_Mirror)) .@diaris_t += 2;
+			if (countitem(Frozen_Rose)) .@diaris_t += 4;
+			if (countitem(Stuffed_Doll)) .@diaris_t += 1;
+			if (countitem(Poring_Doll)) .@diaris_t += 1;
+			if (countitem(Chonchon_Doll)) .@diaris_t += 2;
+			if (countitem(Spore_Doll)) .@diaris_t += 3;
+			if (countitem(Grasshopper_Doll)) .@diaris_t += 3;
+			if (countitem(Monkey_Doll)) .@diaris_t += 4;
+			if (countitem(Raccoondog_Doll)) .@diaris_t += 4;
+			if (countitem(Baphomet_Doll)) .@diaris_t += 7;
+			if (countitem(Osiris_Doll)) .@diaris_t += 7;
 			next;
 			if (.@diaris_t > 10) {
 				mes "[Dearles]";
@@ -4623,21 +4637,21 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "I'm gonna send you to";
 				mes "Lamadin for Part Two";
 				mes "of my test. Yeah, I know...";
-				if (countitem(734)) delitem 734,1; //Red_Frame
-				if (countitem(735)) delitem 735,1; //Blue_Porcelain
-				if (countitem(736)) delitem 736,1; //White_Platter
-				if (countitem(7149)) delitem 7149,1; //Yellow_Plate
-				if (countitem(747)) delitem 747,1; //Crystal_Mirror
-				if (countitem(749)) delitem 749,1; //Frozen_Rose
-				if (countitem(740)) delitem 740,1; //Stuffed_Doll
-				if (countitem(741)) delitem 741,1; //Poring_Doll
-				if (countitem(742)) delitem 742,1; //Chonchon_Doll
-				if (countitem(743)) delitem 743,1; //Spore_Doll
-				if (countitem(752)) delitem 752,1; //Grasshopper_Doll
-				if (countitem(753)) delitem 753,1; //Monkey_Doll
-				if (countitem(754)) delitem 754,1; //Raccoondog_Doll
-				if (countitem(750)) delitem 750,1; //Baphomet_Doll
-				if (countitem(751)) delitem 751,1; //Osiris_Doll
+				if (countitem(Red_Frame)) delitem Red_Frame,1;
+				if (countitem(Blue_Porcelain)) delitem Blue_Porcelain,1;
+				if (countitem(White_Platter)) delitem White_Platter,1;
+				if (countitem(Yellow_Plate)) delitem Yellow_Plate,1;
+				if (countitem(Crystal_Mirror)) delitem Crystal_Mirror,1;
+				if (countitem(Frozen_Rose)) delitem Frozen_Rose,1;
+				if (countitem(Stuffed_Doll)) delitem Stuffed_Doll,1;
+				if (countitem(Poring_Doll)) delitem Poring_Doll,1;
+				if (countitem(Chonchon_Doll)) delitem Chonchon_Doll,1;
+				if (countitem(Spore_Doll)) delitem Spore_Doll,1;
+				if (countitem(Grasshopper_Doll)) delitem Grasshopper_Doll,1;
+				if (countitem(Monkey_Doll)) delitem Monkey_Doll,1;
+				if (countitem(Raccoondog_Doll)) delitem Raccoondog_Doll,1;
+				if (countitem(Baphomet_Doll)) delitem Baphomet_Doll,1;
+				if (countitem(Osiris_Doll)) delitem Osiris_Doll,1;
 				sign_q = 30;
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 300,0;
@@ -4696,7 +4710,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "wanna try again, you're";
 			mes "welcome to another chance...";
 			next;
-			switch(select("Yes.:Maybe later.")) {
+			switch(select("Yes.", "Maybe later.")) {
 			case 1:
 				mes "[Dearles]";
 				mes "Okay...";
@@ -4729,7 +4743,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "go find someone named,";
 			mes "um, ''Bakerlan'' in Alberta.";
 			sign_q = 35;
-			getitem 7177,1; //Part_Of_Star's_Sob
+			getitem Part_Of_Stars_Sob,1;
 			if (RENEWAL_EXP) {
 				if (BaseLevel < 60) getexp 300,0;
 				else if (BaseLevel < 70) getexp 700,0;
@@ -4766,7 +4780,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "go find someone named,";
 			mes "um, ''Bakerlan'' in Alberta.";
 			sign_q = 35;
-			getitem 7177,1; //Part_Of_Star's_Sob
+			getitem Part_Of_Stars_Sob,1;
 			Zeny += 20000;
 			if (RENEWAL_EXP) {
 				if (BaseLevel < 60) getexp 300,0;
@@ -4844,7 +4858,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 		mes "more of your cash!";
 		emotion e_gg;
 		next;
-		switch(select("Okay.:I want to take Part Two again.")) {
+		switch(select("Okay.", "I want to take Part Two again.")) {
 		case 1:
 			mes "[Dearles]";
 			mes "Fine, fine.";
@@ -4935,7 +4949,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 	}
 	else if (sign_q == 32) {
 		mes "Let's see...";
-		mes "You're "+ strcharinfo(0) +"?";
+		mes "You're "+ strcharinfo(PC_NAME) +"?";
 		mes "Oh, what a shame!";
 		mes "You failed this time.";
 		mes "But don't you worry...";
@@ -4950,7 +4964,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 	}
 	else if (sign_q == 33) {
 		mes "Let's see...";
-		mes "You're "+ strcharinfo(0) +"?";
+		mes "You're "+ strcharinfo(PC_NAME) +"?";
 		mes "Congratulations!";
 		mes "You passed the test!";
 		next;
@@ -4963,7 +4977,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 	}
 	else if (sign_q == 34) {
 		mes "Let's see...";
-		mes "You're "+ strcharinfo(0) +"?";
+		mes "You're "+ strcharinfo(PC_NAME) +"?";
 		mes "Congratulations!";
 		mes "You got a perfect";
 		mes "score on this test!";
@@ -4993,7 +5007,7 @@ cmd_in01,16,24,0	script	Emergency Exit	HIDDEN_NPC,{
 	mes "[Exit]";
 	mes "Would you like to go out?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		mes "[Exit]";
 		mes "Farewell.";
@@ -5028,7 +5042,7 @@ OnReset:
 	end;
 }
 
-cmd_in01,1,1,0	script	s_dance_timer	-1,{
+cmd_in01,1,1,0	script	s_dance_timer	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5148,8 +5162,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#up";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5204,8 +5218,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#down";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5281,8 +5295,8 @@ OnInit:
 
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#left";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5349,8 +5363,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#right";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5423,8 +5437,8 @@ OnInit:
 	end;
 
 OnEnable:
-	specialeffect EF_SUMMONSLAVE;
 	enablenpc "s_dance#cen";
+	specialeffect EF_SUMMONSLAVE;
 	end;
 
 OnDisable:
@@ -5465,7 +5479,7 @@ OnTouch:
 	end;
 }
 
-cmd_in01,14,14,0	script	Examiner#sd	-1,6,6,{
+cmd_in01,14,14,0	script	Examiner#sd	FAKE_NPC,6,6,{
 OnInit:
 	disablenpc "Examiner#sd";
 	end;
@@ -5518,7 +5532,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 		mes "?";
 		mes "Who are you?";
 		next;
-		switch(select("Nothing.:Mr. Metz sent me.")) {
+		switch(select("Nothing.", "Mr. Metz sent me.")) {
 		case 1:
 			mes "[Bakerlan]";
 			mes "Hmm...";
@@ -5545,7 +5559,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 		mes "with your pieces of the";
 		mes "Sobbing Starlight...";
 		next;
-		switch(select("Give me a minute...:Here...")) {
+		switch(select("Give me a minute...", "Here...")) {
 		case 1:
 			mes "[Bakerlan]";
 			mes "Well, you better";
@@ -5554,7 +5568,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 			mes "my time is quite precious.";
 			close;
 		case 2:
-			if (countitem(7177) < 5) {
+			if (countitem(Part_Of_Stars_Sob) < 5) {
 				mes "[Bakerlan]";
 				mes "Hmm, I suppose you";
 				mes "still haven't completed";
@@ -5563,7 +5577,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 				mes "Starlight, you know...";
 				close;
 			}
-			else if (countitem(7177) == 5) {
+			else if (countitem(Part_Of_Stars_Sob) == 5) {
 				mes "[Bakerlan]";
 				mes "Ah, now I see that";
 				mes "you speak the truth.";
@@ -5638,7 +5652,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 		mes "Now bring all of the stone pieces to Metz.";
 		mes "He will tell you what you need to do next.";
 		sign_q = 53;
-		getitem 7177,1; //Part_Of_Star's_Sob
+		getitem Part_Of_Stars_Sob,1;
 		if (RENEWAL_EXP) {
 			if (BaseLevel < 60) getexp 500,0;
 			else if (BaseLevel < 70) getexp 800,0;
@@ -5744,7 +5758,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "What can I do";
 			mes "about this...?";
 			next;
-			switch(select("Ignore her.:Excuse me, but Mahatra sent me...")) {
+			switch(select("Ignore her.", "Excuse me, but Mahatra sent me...")) {
 			case 1:
 				mes "[Seylin]";
 				mes "Oh, it's no use";
@@ -5786,7 +5800,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 					mes "I don't know if the master";
 					mes "would approve of this...";
 					next;
-					switch(select("I can't do it.:Let me think about it.:Sure, why not?")) {
+					switch(select("I can't do it.", "Let me think about it.", "Sure, why not?")) {
 					case 1:
 						mes "[Seylin]";
 						mes "Oh, really?";
@@ -5834,7 +5848,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "I'll repay you,";
 			mes "of course.";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Seylin]";
 				mes "Oh really?";
@@ -5870,7 +5884,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "I'll be sure to pay";
 			mes "you back somehow.";
 			next;
-			switch(select("Um, I'm still thinking.:Yes.")) {
+			switch(select("Um, I'm still thinking.", "Yes.")) {
 			case 1:
 				mes "[Seylin]";
 				mes "Oh okay.";
@@ -5911,7 +5925,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "the Vigorgra to me?";
 			close;
 		case 48:
-			if (countitem(7044) < 1) {
+			if (countitem(Vigorgra) < 1) {
 				mes "Oh, you know where";
 				mes "you can get Vigorgra?";
 				mes "That's great news!";
@@ -5940,7 +5954,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 				mes "you also make sure he gets";
 				mes "this? Thank you so much!";
 				sign_q = 49;
-				getitem 7183,1; //Sister_Letter
+				getitem Sister_Letter,1;
 				close;
 			}
 		case 49:
@@ -5957,7 +5971,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "as a token of my gratitude.";
 			mes "You really are a kind person~";
 			sign_q = 51;
-			getitem 525,3; //Panacea
+			getitem Panacea,3;
 			next;
 			emotion e_kis2;
 			close;
@@ -6015,7 +6029,7 @@ prt_castle,107,58,5	script	Soldier#s11	8W_SOLDIER,{
 		close;
 	}
 	else if (sign_q == 49) {
-		if ((countitem(7044) < 1) && (countitem(7183) < 1)) {
+		if ((countitem(Vigorgra) < 1) && (countitem(Sister_Letter) < 1)) {
 			mes "Welcome to";
 			mes "Prontera Castle.";
 			mes "Please be careful";
@@ -6079,8 +6093,8 @@ prt_castle,107,58,5	script	Soldier#s11	8W_SOLDIER,{
 			mes "is replenish your health.";
 			mes "I'm not really supposed to,";
 			mes "but no one will say anything.";
-			delitem 7044,1; //Vigorgra
-			delitem 7183,1; //Sister_Letter
+			delitem Vigorgra,1;
+			delitem Sister_Letter,1;
 			sign_q = 50;
 			percentheal 100,100;
 			next;
@@ -6114,7 +6128,7 @@ prt_castle,107,58,5	script	Soldier#s11	8W_SOLDIER,{
 		mes "again for helping";
 		mes "out my sister, we";
 		mes "really appreciate it.";
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			if (rand(1,5) == 5) {
 				next;
 				mes "[Maruin]";
@@ -6137,7 +6151,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 		mes "Stone of Sage, but in my opinion, their goals are too short sighted. There are more important studies";
 		mes "to be conducted in the name of science for the good of mankind...";
 		next;
-		switch(select("...:So what are you studying?")) {
+		switch(select("...", "So what are you studying?")) {
 		case 1:
 			mes "[Melkaba]";
 			mes "In the end, the ";
@@ -6165,7 +6179,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 		mes "please leave my";
 		mes "laboratory!";
 		next;
-		switch(select("Vigorgra?:Oh, I'm sorry.")) {
+		switch(select("Vigorgra?", "Oh, I'm sorry.")) {
 		case 1:
 			mes "[Melkaba]";
 			mes "What?! Who told you";
@@ -6175,7 +6189,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 			mes "ready for you. Now tell me...";
 			mes "Why do you want it?";
 			next;
-			switch(select("No, I don't want it!:I need Vigorgra for... a friend.")) {
+			switch(select("No, I don't want it!", "I need Vigorgra for... a friend.")) {
 			case 1:
 				mes "[Melkaba]";
 				mes "You immature--!";
@@ -6239,7 +6253,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 		mes "you need for the";
 		mes "Vigorgra...?";
 		next;
-		switch(select("Not yet...:Yes.")) {
+		switch(select("Not yet...", "Yes.")) {
 		case 1:
 			mes "[Melkaba]";
 			mes "Well, let me";
@@ -6270,7 +6284,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 			mes "everything ready...";
 			next;
 			mes "[Melkaba]";
-			if ((countitem(526) < 10) || (countitem(518) < 20) || (countitem(948) < 30) || (countitem(520) < 1) || (countitem(708) < 1) || (countitem(713) < 1)) {
+			if ((countitem(Royal_Jelly) < 10) || (countitem(Honey) < 20) || (countitem(Bears_Foot) < 30) || (countitem(Leaflet_Of_Hinal) < 1) || (countitem(Ment) < 1) || (countitem(Empty_Bottle) < 1)) {
 				mes "Hmm, you're still";
 				mes "missing some of the";
 				mes "ingredients. Now, listen";
@@ -6339,14 +6353,14 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 						mes "stuff is extremely potent!";
 						next;
 						Zeny -= 10000;
-						delitem 526,10; //Royal_Jelly
-						delitem 518,20; //Honey
-						delitem 948,30; //Bear's_Foot
-						delitem 520,1; //Leaflet_Of_Hinal
-						delitem 708,1; //Ment
-						delitem 713,1; //Empty_Bottle
+						delitem Royal_Jelly,10;
+						delitem Honey,20;
+						delitem Bears_Foot,30;
+						delitem Leaflet_Of_Hinal,1;
+						delitem Ment,1;
+						delitem Empty_Bottle,1;
 						sign_q = 48;
-						getitem 7044,1; //Vigorgra
+						getitem Vigorgra,1;
 						mes "[Melkaba]";
 						mes "Um, just remember";
 						mes "not to take too much";
@@ -6357,12 +6371,12 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 					}
 					else {
 						specialeffect EF_PHARMACY_FAIL;
-						delitem 526,10; //Royal_Jelly
-						delitem 518,20; //Honey
-						delitem 948,30; //Bear's_Foot
-						delitem 520,1; //Leaflet_Of_Hinal
-						delitem 708,1; //Ment
-						delitem 713,1; //Empty_Bottle
+						delitem Royal_Jelly,10;
+						delitem Honey,20;
+						delitem Bears_Foot,30;
+						delitem Leaflet_Of_Hinal,1;
+						delitem Ment,1;
+						delitem Empty_Bottle,1;
 						mes "It failed?!";
 						mes "Of course, the mixture";
 						mes "was too vigorous, even";
@@ -6380,7 +6394,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 		mes "Stone of Sage, but in my opinion, their goals are too short sighted. There are more important studies";
 		mes "to be conducted in the name of science for the good of mankind...";
 		next;
-		switch(select("...:So what are you studying?")) {
+		switch(select("...", "So what are you studying?")) {
 		case 1:
 			mes "[Melkaba]";
 			mes "In the end, the";
@@ -6406,7 +6420,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 		mes "Stone of Sage, but in my opinion, their goals are too short sighted. There are more important studies";
 		mes "to be conducted in the name of science for the good of mankind...";
 		next;
-		switch(select("...:So what are you studying?")) {
+		switch(select("...", "So what are you studying?")) {
 		case 1:
 			mes "[Melkaba]";
 			mes "In the end, the";
@@ -6481,10 +6495,10 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "a unique stone that has";
 		mes "your name attached to it.^000000";
 		sign_q = 38;
-		getnameditem 7049,strcharinfo(0);
+		getnameditem 7049,strcharinfo(PC_NAME);
 		close;
 	}
-	else if (sign_q == 38 || (sign_q == 39 && countitem(7181) < 1)) {
+	else if (sign_q == 38 || (sign_q == 39 && countitem(Receipt_01) < 1)) {
 		mes "You haven't delivered";
 		mes "the Stone yet? Please take";
 		mes "good care of it since it's very";
@@ -6500,7 +6514,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "well done. Let me send a";
 		mes "message to the master, so";
 		mes "please visit him later.";
-		delitem 7181,1; //Receipt_01
+		delitem Receipt_01,1;
 		sign_q = 40;
 		close;
 	}
@@ -6517,7 +6531,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "you to perform another";
 		mes "task for him already?";
 		next;
-		switch(select("No.:You have another assignment for me.")) {
+		switch(select("No.", "You have another assignment for me.")) {
 		case 1:
 			mes "[Mahatra]";
 			mes "Very well.";
@@ -6599,7 +6613,7 @@ alberta,98,202,5	script	Guard#s10	8W_SOLDIER,{
 		mes "with the master, please";
 		mes "let me know.";
 		next;
-		switch(select("I'd like to see Mr. Bakerlan.:Have a nice day.")) {
+		switch(select("I'd like to see Mr. Bakerlan.", "Have a nice day.")) {
 		case 1:
 			mes "[Hurubu]";
 			mes "Ah, you've";
@@ -6655,7 +6669,7 @@ alberta,43,49,5	script	Poor-looking Merchant	4_M_ORIENT02,{
 		mes "How did the Alcheshs";
 		mes "become so rich so quickly?";
 		next;
-		switch(select("Alchesh family?:Do you know where Mr. Bakerlan is?")) {
+		switch(select("Alchesh family?", "Do you know where Mr. Bakerlan is?")) {
 		case 1:
 			mes "[Machen]";
 			mes "My family, the Tudas,";
@@ -6749,13 +6763,13 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 		close;
 	}
 	else if (sign_q == 38) {
-		if (countitem(7049) < 1) {
+		if (countitem(Stone) < 1) {
 			mes "Excuse me...";
 			mes "Are you from the Alchesh";
 			mes "Trading Company? I've been";
 			mes "waiting for my order and they";
 			next;
-			switch(select("No, I'm not.:They must be busy.:Yes, I have your order.")) {
+			switch(select("No, I'm not.", "They must be busy.", "Yes, I have your order.")) {
 			case 1:
 				mes "[Leibech]";
 				mes "Oh, I'm sorry.";
@@ -6780,7 +6794,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 				mes "item I ordered?";
 				mes "Where is it?";
 				next;
-				switch(select("I put it somewhere.:Sorry, I lost it.")) {
+				switch(select("I put it somewhere.", "Sorry, I lost it.")) {
 				case 1:
 					mes "[Leibech]";
 					mes "Oh, alright. ";
@@ -6796,7 +6810,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 					mes "That's not funny!";
 					mes "You're joking, right?";
 					next;
-					switch(select("No. I'm not joking.:Okay, you got me~")) {
+					switch(select("No. I'm not joking.", "Okay, you got me~")) {
 					case 1:
 						mes "[Leibech]";
 						mes "I don't believe it!";
@@ -6819,7 +6833,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 			}
 		}
 		else {
-			.@signid = getcharid(0,strcharinfo(0));
+			.@signid = getcharid(CHAR_ID_CHAR,strcharinfo(PC_NAME));
 			.@sign3 = .@signid & 65535;
 			.@sign4 = .@signid >> 16;
 			.@sign1 = 254;
@@ -6852,7 +6866,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 				mes "Thanks again!";
 				delitem2 7049,1,1,0,0,.@sign1,.@sign2,.@sign3,.@sign4;
 				sign_q = 39;
-				getitem 7181,1; //Receipt_01
+				getitem Receipt_01,1;
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 100,0;
 					else if (BaseLevel < 70) getexp 200,0;
@@ -6910,8 +6924,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 	}
 }
 
-// The Sign (Part 2)
-//============================================================
+//== The Sign (Part 2) =====================================
 geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 	callfunc "F_UpdateSignVars";
 	mes "[Brenda Howard]";
@@ -6928,11 +6941,11 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 		mes "enter someone's house without";
 		mes "being invited? Besides, I don't have the time to help strangers while I'm busy making dinner...";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "W-wait!";
 		mes "I'm here to see...";
 		next;
-		input .@input$;
+		input(.@input$);
 		if (.@input$ != "Engel Howard") {
 			mes "[Brenda Howard]";
 			mes "Huh?";
@@ -6947,23 +6960,21 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 			emotion e_ho;
 			close;
 		}
-		else {
-			mes "[Brenda Howard]";
-			mes "Ah... I see.";
-			mes "You're looking for my husband.";
-			mes "My husband, my daughter and";
-			mes "I just moved to Geffen from";
-			mes "Prontera a while ago.";
-			next;
-			mes "[Brenda Howard]";
-			mes "We moved to Geffen for the sake of my husband's business. Apparently, this town is closest to something he really seems to need. Whatever it is, it must be really important to his smithing work.";
-			next;
-			mes "[Brenda Howard]";
-			mes "Oh, and if you're going to look";
-			mes "for my husband, please talk to my daughter before you go. I think she has something that she wants to give to her father...";
-			sign_q = 55;
-			close;
-		}
+		mes "[Brenda Howard]";
+		mes "Ah... I see.";
+		mes "You're looking for my husband.";
+		mes "My husband, my daughter and";
+		mes "I just moved to Geffen from";
+		mes "Prontera a while ago.";
+		next;
+		mes "[Brenda Howard]";
+		mes "We moved to Geffen for the sake of my husband's business. Apparently, this town is closest to something he really seems to need. Whatever it is, it must be really important to his smithing work.";
+		next;
+		mes "[Brenda Howard]";
+		mes "Oh, and if you're going to look";
+		mes "for my husband, please talk to my daughter before you go. I think she has something that she wants to give to her father...";
+		sign_q = 55;
+		close;
 	}
 	else if (sign_q < 57) {
 		mes "Ho-ho~!";
@@ -6988,7 +6999,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 		close;
 	}
 	else if (sign_q < 62) {
-		if (countitem(7278) > 0) {
+		if (countitem(Wellbeing_Letter) > 0) {
 			mes "Thank you so much for bringing";
 			mes "this to me. I'm so happy to hear that he's fine and doing well.";
 			mes "Although he's not here often enough, it's good to know";
@@ -6998,7 +7009,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 			mes "Even so, I should start letting";
 			mes "him know that I want him to spend";
 			mes "a little more time at home. Oh, and why don't you talk to Liana? She's been waiting to tell you something.";
-			delitem 7278,1; //Wellbeing_Letter
+			delitem Wellbeing_Letter,1;
 			sign_q += 4;
 			close;
 		}
@@ -7031,7 +7042,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 
 geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've made more available inventory space.^000000";
 		close;
@@ -7057,18 +7068,18 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 		mes "Everyone says that daddy is the best blacksmith in the whole world! But now he lets his apprentices do";
 		mes "the work so he can go around the world to find a rare ore~ Isn't that amazing?";
 		next;
-		switch(select("What are you drawing by the way?:Apprentices?")) {
+		switch(select("What are you drawing by the way?", "Apprentices?")) {
 		case 1:
 			mes "[Liana]";
 			mes "Oh, this?";
 			mes "It's a letter for my daddy.";
-			mes "Mom said that some "+((Sex)?"guy":"lady")+" is gonna try to find my dad, so I'm making this so "+((Sex)?"":"s")+"he can take it him~";
+			mes "Mom said that some "+ (Sex == SEX_MALE ? "guy" : "lady") +" is gonna try to find my dad, so I'm making this so "+ (Sex == SEX_MALE ? "he":"she")+ " can take it him~";
 			close;
 		case 2:
 			mes "[Liana]";
 			mes "Yeah, Uncle Hollegrehenn and Aragham come to visit sometimes and we all play. But, it's more fun to see my dad, even though he's not back yet. ^333333*Pout*^000000";
 			next;
-			switch(select("Don't you miss your dad?:He also misses you a lot.")) {
+			switch(select("Don't you miss your dad?", "He also misses you a lot.")) {
 			case 1:
 				mes "[Liana]";
 				mes "I miss him sooo much!";
@@ -7086,11 +7097,11 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 				mes "I wrote this letter!";
 				emotion e_dots;
 				next;
-				switch(select("....:I'll bring this to him.")) {
+				switch(select("....", "I'll bring this to him.")) {
 				case 1:
 					mes "[Brenda Howard]";
 					mes "Liana~";
-					mes "This nice "+((Sex)?"man":"lady")+" is going to look for your dad. Why don't you ask "+((Sex)?"him":"her")+" to take your letter to him for you?";
+					mes "This nice "+ (Sex == SEX_MALE ? "man" : "lady") +" is going to look for your dad. Why don't you ask "+ (Sex == SEX_MALE ? "him" : "her") +" to take your letter to him for you?";
 					next;
 					mes "[Liana]";
 					mes "You are...?";
@@ -7103,7 +7114,7 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 					mes "my dad, okay? Promise?";
 					emotion e_ho;
 					sign_q = 56;
-					getitem 7276,1; //Picture_Letter
+					getitem Picture_Letter,1;
 					close;
 				case 2:
 					mes "[Liana]";
@@ -7134,7 +7145,7 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 		mes "Thank you for bringing my letter to my dad. Here, here!";
 		mes "You have to share my treasure with me, 'kay?";
 		sign_q += 4;
-		getitem 529,10; //Candy
+		getitem Candy,10;
 		close;
 	}
 	else {
@@ -7145,14 +7156,14 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 
 mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
 	}
 	mes "[Engel]";
 	if ((sign_q > 1) && (sign_q < 54)) {
-		if(countitem(1002) > 0) {
+		if(countitem(Iron_Ore) > 0) {
 			mes "Just as I suspected...";
 			mes "I didn't bring enough of them.";
 			mes "Hmm, this is serious. What";
@@ -7162,13 +7173,13 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "Oh great! I see that you're";
 			mes "carrying some Iron Ores with you. Would you be so kind as to lend me 1 Iron Ore? Please, I beg of you...";
 			next;
-			switch(select("Sure, why not?:Sorry, I can't.")) {
+			switch(select("Sure, why not?", "Sorry, I can't.")) {
 			case 1:
 				mes "[Engel]";
 				mes "Thank you so much!";
 				mes "If it weren't for your help,";
 				mes "I'd be in big trouble. I really appreciate you stepping in and volunteering your materials like this.";
-				delitem 1002,1; //Iron_Ore
+				delitem Iron_Ore,1;
 				getexp 10,0;
 				close;
 			case 2:
@@ -7197,7 +7208,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		end;
 	}
 	else if (sign_q == 56) {
-		if (countitem(7276) > 0) {
+		if (countitem(Picture_Letter) > 0) {
 			mes "^333333*Sigh*^000000";
 			mes "It's been a long";
 			mes "time since I've seen";
@@ -7208,7 +7219,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "Were you looking for me?";
 			mes "I'm sorry, but I'm busy at the moment. Please don't disturb me while I try to get my work done.";
 			next;
-			switch(select("I need your help.:Here is a letter for you.:I am leaving, leaving.")) {
+			switch(select("I need your help.", "Here is a letter for you.", "I am leaving, leaving.")) {
 			case 1:
 				mes "[Engel]";
 				mes "Well, I'd like to help you,";
@@ -7262,8 +7273,8 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 					next;
 					mes "[Engel]";
 					mes "Right. Let me guide you to a shortcut to the exit of these mines, just in case you don't know your way out of here. Good luck~";
-					delitem 7276,1; //Picture_Letter
-					delitem 7177,7; //Part_Of_Star's_Sob
+					delitem Picture_Letter,1;
+					delitem Part_Of_Stars_Sob,7;
 					sign_q = 57;
 					close2;
 					warp "mjo_dun02",371,344;
@@ -7294,16 +7305,16 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 	else if (sign_q == 57) {
 		mes "As I've told you before, I'm more likely to succeed in my work if I'm able to use a higher quality anvil. Let's me see what you've brought...";
 		next;
-		if ((countitem(612) > 4) && (countitem(615) > 1) && ((countitem(986) > 0) || (countitem(987) > 0) || (countitem(988) > 0) || (countitem(989) > 0))) {
+		if ((countitem(Portable_Furnace) > 4) && (countitem(Oridecon_Hammer) > 1) && ((countitem(Anvil) > 0) || (countitem(Oridecon_Anvil) > 0) || (countitem(Golden_Anvil) > 0) || (countitem(Emperium_Anvil) > 0))) {
 			mes "[Engel]";
-			if (countitem(986) > 0) {
+			if (countitem(Anvil) > 0) {
 				mes "A...";
 				mes "Regular Anvil?";
 				mes "Alright, I guess I'll try it.";
 				mes "But I can't guarantee success.";
 				.@anvil = 0;
 			}
-			else if (countitem(987) > 0) {
+			else if (countitem(Oridecon_Anvil) > 0) {
 				mes "Ah...";
 				mes "An Oridecon Avil.";
 				mes "This isn't too bad,";
@@ -7311,13 +7322,13 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "that this might not work.";
 				.@anvil = 1;
 			}
-			else if (countitem(988) > 0) {
+			else if (countitem(Golden_Anvil) > 0) {
 				mes "Ah...";
 				mes "A Golden Anvil.";
 				mes "This just might be able to do the job. This might take a while, so I have something to ask of you.";
 				.@anvil = 2;
 			}
-			else if (countitem(989) > 0) {
+			else if (countitem(Emperium_Anvil) > 0) {
 				mes "Oh wow, an Emperium Anvil!";
 				mes "And this looks like one I might have actually made. Great, I should be able to do this so long as I don't make any critical mistakes~";
 				.@anvil = 3;
@@ -7330,11 +7341,11 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "Well then...";
 			mes "I wish you safety";
 			mes "in your travels.";
-			delitem 612,5; //Portable_Furnace
-			delitem 615,2; //Oridecon_Hammer
+			delitem Portable_Furnace,5;
+			delitem Oridecon_Hammer,2;
 			delitem (986+.@anvil),1; //Anvil-Oridecon_Anvil-Golden_Anvil-Emperium_Anvil
 			sign_q = (58+.@anvil);
-			getitem 7278,1; //Wellbeing_Letter
+			getitem Wellbeing_Letter,1;
 			close;
 		}
 		else {
@@ -7370,8 +7381,8 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "While you were gone, I managed to restore this Sobbing Starlight. Why don't you go ahead and take a look?";
 			next;
 			sign_q = 71;
-			getitem 7178,1; //Star's_Sob
-			specialeffect2 EF_YUFITELHIT;
+			getitem Stars_Sob,1;
+			specialeffect(EF_YUFITELHIT, AREA, playerattached());
 			next;
 			mes "[Engel]";
 			mes "This was one of the most difficult jobs I've ever done. But look! It was beautiful when broken in fragments but now it's absolutely dazzling! This was really worth my effort.";
@@ -7436,8 +7447,8 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		}
 	}
 	else if (sign_q == 70) {
-		if ((countitem(612) > 4) && (countitem(615) > 1) && ((countitem(986) > 0) || (countitem(987) > 0) || (countitem(988) > 0) || (countitem(989) > 0))) {
-			if ((countitem(986) > 0) || (countitem(987) > 0)) {
+		if ((countitem(Portable_Furnace) > 4) && (countitem(Oridecon_Hammer) > 1) && ((countitem(Anvil) > 0) || (countitem(Oridecon_Anvil) > 0) || (countitem(Golden_Anvil) > 0) || (countitem(Emperium_Anvil) > 0))) {
+			if ((countitem(Anvil) > 0) || (countitem(Oridecon_Anvil) > 0)) {
 				mes "Didn't I tell you to bring me a Golden Anvil or an Emperium Anvil? Anything less isn't good enough to do any restoration work on this Sobbing Starlight.";
 				next;
 				mes "[Engel]";
@@ -7445,11 +7456,11 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "here, bring a Golden or Emperium Anvil and make sure to leave all of your other anvils in Kafra Storage or something, okay?";
 				close;
 			}
-			else if (countitem(988) > 0) {
+			else if (countitem(Golden_Anvil) > 0) {
 				mes "Good, good.";
 				mes "I see that you've brought a Golden Anvil. Now I can get started right away! Still, I'm a little about those monsters showing up again, so would you keep a lookout?";
 			}
-			else if (countitem(989) > 0) {
+			else if (countitem(Emperium_Anvil) > 0) {
 				mes "Excellent! You've brought an Emperium Anvil! Now, keep a lookout for monsters while I repair these ore fragments. We can't have those beasts ruin my work again, right? Thank you.";
 			}
 			next;
@@ -7487,11 +7498,11 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			next;
 			mes "[Engel]";
 			mes "We've both gone through a lot of trouble to make this, so I hope you treasure your Sobbing Starlight. Good luck on your adventures...";
-			if (countitem(988) > 0) delitem 988,1; //Golden_Anvil
-			else if (countitem(989) > 0) delitem 989,1; //Emperium_Anvil
+			if (countitem(Golden_Anvil) > 0) delitem Golden_Anvil,1;
+			else if (countitem(Emperium_Anvil) > 0) delitem Emperium_Anvil,1;
 			sign_q = 71;
-			getitem 7178,1; //Star's_Sob
-			specialeffect2 EF_YUFITELHIT;
+			getitem Stars_Sob,1;
+			specialeffect(EF_YUFITELHIT, AREA, playerattached());
 			close;
 		}
 		else {
@@ -7548,9 +7559,9 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		mes "a while to work on this. Unfortunately, I can't even";
 		mes "give you a time estimate...";
 		mes "But I'll do my best for you.";
-		delitem 7314,1; //The_Sign
+		delitem The_Sign,1;
 		sign_q = 140;
-		.@stime_e = gettime(3);
+		.@stime_e = gettime(GETTIME_HOUR);
 		if (.@stime_e < 2) sign_sq = 1;
 		else if (.@stime_e < 4) sign_sq = 2;
 		else if (.@stime_e < 6) sign_sq = 3;
@@ -7566,7 +7577,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		close;
 	}
 	else if (sign_q == 140) {
-		.@stime_e1 = gettime(3);
+		.@stime_e1 = gettime(GETTIME_HOUR);
 		if (.@stime_e1 < 2) {
 			if (sign_sq == 11) {
 				.@pass_s1 = 1;
@@ -7643,7 +7654,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "honor of working on a worthy";
 			mes "smithing challenge.";
 			sign_q = 141;
-			getitem 2644,1; //The_Sign_
+			getitem The_Sign_,1;
 			close;
 		}
 		else {
@@ -7685,8 +7696,8 @@ gef_tower,118,36,4	script	Annoyed Man	1_M_WIZARD,{
 		mes "What are you doing here?!";
 		emotion e_pif;
 		next;
-		input .@input$;
-		if ((.@input$ == "Metz Brayde") || (.@input$ == "Sobbing Starlight")) {
+		input(.@input$);
+		if (.@input$ == "Metz Brayde" || .@input$ == "Sobbing Starlight") {
 			mes "[Dhota]";
 			mes "Eh?";
 			if (.@input$ == "Metz Brayde") {
@@ -7723,15 +7734,13 @@ gef_tower,118,36,4	script	Annoyed Man	1_M_WIZARD,{
 			emotion e_pif;
 			close;
 		}
-		else {
-			mes "[Dhota]";
-			mes "Say what...?";
-			mes "I have no idea what";
-			mes "you're talking about!";
-			mes "If you've got nothing";
-			mes "to say, then leave me alone!";
-			close;
-		}
+		mes "[Dhota]";
+		mes "Say what...?";
+		mes "I have no idea what";
+		mes "you're talking about!";
+		mes "If you've got nothing";
+		mes "to say, then leave me alone!";
+		close;
 	}
 	else {
 		mes "Hmmm...";
@@ -7764,13 +7773,13 @@ umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 			mes "I think I know him! Yea, I do!";
 			next;
 			mes "[Laotan]";
-			if (countitem(2278) > 0) {
+			if (countitem(Mr_Smile) > 0) {
 				mes "Oh my gosh!";
 				mes "You've got a Mr. Smile mask!";
 				mes "Would you give that to me?";
 				mes "Pretty please...?";
 				next;
-				switch(select("Sure~:^FF0000No.^000000")) {
+				switch(select("Sure~", "^FF0000No.^000000")) {
 				case 1:
 					mes "[Laotan]";
 					mes "Hooooray!";
@@ -7781,7 +7790,7 @@ umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 					mes "[Laotan]";
 					mes "Oh right~!";
 					mes "The weird man in the funny clothes was in our village for a while, but ever since he went into that big tree, nobody's seen him!";
-					delitem 2278,1; //Mr_Smile
+					delitem Mr_Smile,1;
 					sign_q = 74;
 					close;
 				case 2:
@@ -7822,7 +7831,7 @@ umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 
 um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
@@ -7863,7 +7872,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 		mes "that you leave, right now!";
 		emotion e_an;
 		next;
-		switch(select("I'm here for Metz Brayde.:My apologies.:Would you look at this?:...")) {
+		switch(select("I'm here for Metz Brayde.", "My apologies.", "Would you look at this?", "...")) {
 		case 1:
 			mes "[Cyon]";
 			mes "Huh? Brayde?";
@@ -7923,7 +7932,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "Get out here right now!";
 			close2;
 			percentheal -30,0;
-			specialeffect2 EF_MAGNUMBREAK;
+			specialeffect(EF_MAGNUMBREAK, AREA, playerattached());
 			end;
 		}
 	}
@@ -7934,7 +7943,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 		mes "to find some ancient";
 		mes "or really aged paper...";
 		next;
-		if (countitem(1097) > 9) {
+		if (countitem(Worn_Out_Page) > 9) {
 			mes "[Cyon]";
 			mes "How did you find these";
 			mes "Worn Out Pages? This is great,";
@@ -7954,12 +7963,12 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "Just as I thought!";
 			mes "The Sobbing Starlight is responding to these Worn Out Pages! Excellent! I've finally fulfilled my promise to Metz! Now he can leave";
 			mes "me alone!";
-			delitem 1097,10; //Worn_Out_Page
+			delitem Worn_Out_Page,10;
 			sign_q = 76;
-			getitem 7275,1; //Ancient_Document
+			getitem Ancient_Document,1;
 			close;
 		}
-		else if (countitem(1097) > 0) {
+		else if (countitem(Worn_Out_Page) > 0) {
 			mes "[Cyon]";
 			mes "How did you find these";
 			mes "^FF0000Worn Out Pages^000000? This is great,";
@@ -7988,7 +7997,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "make me get violent...";
 			next;
 			percentheal -30,0;
-			specialeffect2 EF_MAGNUMBREAK;
+			specialeffect(EF_MAGNUMBREAK, AREA, playerattached());
 			next;
 			warp "umbala",111,121;
 			end;
@@ -8012,7 +8021,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 
 alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
@@ -8036,14 +8045,14 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 		close;
 	}
 	else if (sign_q == 78) {
-		if ((countitem(2203) > 0) && (countitem(7275) > 0)) {
+		if ((countitem(Glasses) > 0) && (countitem(Ancient_Document) > 0)) {
 			mes "My vision's getting";
 			mes "blurrier and I get headaches";
 			mes "when I read. I guess this old";
 			mes "man's got no choice but to get";
 			mes "some sort of seeing aid...";
 			next;
-			switch(select("Wait, I've got a pair of glasses...:Pass on by.")) {
+			switch(select("Wait, I've got a pair of glasses...", "Pass on by.")) {
 			case 1:
 				mes "[Frank]";
 				mes "Oh, you've brought me";
@@ -8053,7 +8062,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 				mes "I do for you in return?";
 				next;
 				while(1) {
-					switch(select("About Geffen's Hidden Power:About Sobbing Starlight:Interpret Ancient Document")) {
+					switch(select("About Geffen's Hidden Power", "About Sobbing Starlight", "Interpret Ancient Document")) {
 					case 1:
 						mes "[Frank]";
 						mes "Geffen's hidden power?";
@@ -8083,8 +8092,8 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 						next;
 						mes "[Frank]";
 						mes "Hmm, as far as I can tell, this is a sophisticated language spoken by the ancient gods. It's complex and confusing, but I'll do my best for you. Come back to me later, and I'll what I've learned.";
-						delitem 2203,1; //Glasses
-						delitem 7275,1; //Ancient_Document
+						delitem Glasses,1;
+						delitem Ancient_Document,1;
 						sign_q = 79;
 						close;
 					}
@@ -8117,7 +8126,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 			mes "Well, I've written down the best translation that I could for you. It's been a long time since I've had this kind of challenge. Thanks, youngster.";
 			mes "Ha ha ha~";
 			sign_q = 80;
-			getitem 7274,1; //Ancient_Translator
+			getitem Ancient_Translator,1;
 			close;
 		}
 		else {
@@ -8135,7 +8144,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 
 gef_fild07,182,241,0	script	#Valkyrie Warp	HIDDEN_NPC,1,1,{
 	callfunc "F_UpdateSignVars";
-	if ((sign_q == 80) && (countitem(907) > 3) && (countitem(953) > 11) && (countitem(7013) > 364)) {
+	if ((sign_q == 80) && (countitem(Resin) > 3) && (countitem(Stone_Heart) > 11) && (countitem(Coral_Reef) > 364)) {
 		mes "^6B8E23It seems that";
 		mes "something in the";
 		mes "vicinity is reacting";
@@ -8146,11 +8155,11 @@ gef_fild07,182,241,0	script	#Valkyrie Warp	HIDDEN_NPC,1,1,{
 	}
 
 OnTouch:
-	if ((sign_q == 80) && (countitem(907) > 3) && (countitem(953) > 11) && (countitem(7013) > 364)) {
-		mes "["+strcharinfo(0)+"]";
+	if ((sign_q == 80) && (countitem(Resin) > 3) && (countitem(Stone_Heart) > 11) && (countitem(Coral_Reef) > 364)) {
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What the...?";
 		mes "What's happening?!";
-		specialeffect2 EF_BEGINSPELL6;
+		specialeffect(EF_BEGINSPELL6, AREA, playerattached());
 		next;
 		mes "^3355FFFor some reason, in";
 		mes "this particular spot, the";
@@ -8159,18 +8168,18 @@ OnTouch:
 		mes "and Coral Reefs that you're";
 		mes "holding. All the objects are";
 		mes "violently resonating...^000000";
-		specialeffect2 EF_ENHANCE;
+		specialeffect(EF_ENHANCE, AREA, playerattached());
 		next;
 		mes "^3355FFAll of a sudden these";
 		mes "objects emit a bright flash";
 		mes "of light that envelops your";
 		mes "entire body, then you gently";
 		mes "fall into unconsciousness...^000000";
-		specialeffect2 EF_FLASHER;
+		specialeffect(EF_FLASHER, AREA, playerattached());
 		next;
-		delitem 907,4; //Resin
-		delitem 953,12; //Stone_Heart
-		delitem 7013,365; //Coral_Reef
+		delitem Resin,4;
+		delitem Stone_Heart,12;
+		delitem Coral_Reef,365;
 		sign_q = 81;
 		warp "himinn",49,10;
 		end;
@@ -8201,7 +8210,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		end;
 	}
 	else if (sign_q == 81) {
-		mes "Welcome, "+strcharinfo(0)+",";
+		mes "Welcome, "+strcharinfo(PC_NAME)+",";
 		mes "to this realm of holiness.";
 		mes "You have endured great difficulty and tested your courage to obtain the Sobbing Starlight, which will be the certificate for your test.";
 		next;
@@ -8309,11 +8318,11 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		next;
 		mes "[Valkyrie Sandra]";
 		mes "Congratulations,";
-		mes ""+ strcharinfo(0) +". Verily,";
+		mes ""+ strcharinfo(PC_NAME) +". Verily,";
 		mes "you are an honorable";
 		mes "hero worthy of praise!";
 		sign_q = 137;
-		getitem 7314,1; //The_Sign
+		getitem The_Sign,1;
 		close;
 	}
 	else if (sign_q < 150) {
@@ -8347,7 +8356,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		close;
 	}
 	else {
-		if (countitem(7314) < 1) {
+		if (countitem(The_Sign) < 1) {
 			mes "Only the chosen";
 			mes "can enter this place.";
 			mes "I will not ask how you've";
@@ -8368,8 +8377,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 	}
 }
 
-// The Sign (Part 3)
-//============================================================
+//== The Sign (Part 3) =====================================
 que_sign01,196,39,4	script	Serin#dummy	4_F_01,{
 	end;
 
@@ -8447,7 +8455,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		mes "This could be";
 		mes "pretty dangerous";
 		mes "so please step back...";
-		delitem 7305,1; //Authority_Of_Nine_World
+		delitem Authority_Of_Nine_World,1;
 		sign_q = 133;
 		donpcevent "Serin#dummy::OnEnable";
 		donpcevent "Serin#dummy::OnStart";
@@ -8498,7 +8506,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		mes "but I'm begging you. Don't get";
 		mes "in my way.";
 		next;
-		switch(select("Alright. I'll let you go.:No, you have to be stopped.")) {
+		switch(select("Alright. I'll let you go.", "No, you have to be stopped.")) {
 		case 1:
 			mes "[Serin]";
 			mes "Are you really willing";
@@ -8506,7 +8514,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 			mes "my sake? You do understand";
 			mes "that you'll be failing the ordeals set before you by the gods...";
 			next;
-			switch(select("I changed my mind for Rune-Midgard.:I do, and it's alright...")) {
+			switch(select("I changed my mind for Rune-Midgard.", "I do, and it's alright...")) {
 			case 1:
 				mes "[Serin]";
 				mes "...";
@@ -8621,7 +8629,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		.@fail_s3 = rand(1,600);
 		.@fail_s4 = rand(1,500);
 		.@fail_s5 = rand(1,400);
-		if (countitem(2643) == 1) {
+		if (countitem(Serins_Gold_Ring_) == 1) {
 			if (((sign_sq == 0) && (.@fail_s3 == 356)) || ((sign_sq == 1) && (.@fail_s2 == 356)) || (.@fail_s1 == 356)) {
 				sign_q = 200;
 				mes "[Serin]";
@@ -8780,9 +8788,9 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		mes "pity my situation since you've";
 		mes "never been bound to Niflheim,";
 		mes "but I'm begging you. Don't get";
-		mes "in my way, "+strcharinfo(0)+".";
+		mes "in my way, "+strcharinfo(PC_NAME)+".";
 		next;
-		switch(select("I can't let you do this!:Okay, have it your way.")) {
+		switch(select("I can't let you do this!", "Okay, have it your way.")) {
 		case 1:
 			sign_q = 125;
 			close;
@@ -8793,7 +8801,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 			mes "my sake? You do understand";
 			mes "that you'll be failing the ordeals set before you by the gods...";
 			next;
-			switch(select("I changed my mind for Rune-Midgard.:I do, and it's alright...")) {
+			switch(select("I changed my mind for Rune-Midgard.", "I do, and it's alright...")) {
 			case 1:
 				sign_q = 125;
 				close;
@@ -8808,13 +8816,13 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				getexp RENEWAL_EXP?20000:200000,0;
 				$@sign_w1 = 0;
 				close2;
-				warp "umbala,",132,203;
+				warp "umbala",132,203;
 				end;
 			}
 		}
 	}
 	else if (sign_q == 125) {
-		if (countitem(2643) ==1) {
+		if (countitem(Serins_Gold_Ring_) ==1) {
 			mes "[Serin]";
 			mes "If you think that";
 			mes "I can't summon Dark Lord";
@@ -8942,7 +8950,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		mes "Farewell, now.";
 		mes "And good luck on";
 		mes "your travels, my friend...";
-		delitem 7308,1; //Witch's_Potion
+		delitem Witchs_Potion,1;
 		sign_q = 127;
 		close;
 	}
@@ -8962,9 +8970,9 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		.@fail_s3 = rand(1,800);
 		.@fail_s4 = rand(1,700);
 		.@fail_s5 = rand(1,600);
-		if (countitem(2643) == 1) {
+		if (countitem(Serins_Gold_Ring_) == 1) {
 			if (((sign_sq == 0) && (.@fail_s3 == 356)) || ((sign_sq == 1) && (.@fail_s2 == 356)) || (.@fail_s1 == 356)) {
-				delitem 7308,1; //Witch's_Potion
+				delitem Witchs_Potion,1;
 				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
@@ -9011,7 +9019,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		}
 		else {
 			if (((sign_sq == 0) && (.@fail_s5 == 356)) || ((sign_sq == 1) && (.@fail_s4 == 356)) || (.@fail_s3 == 356)) {
-				delitem 7308,1; //Witch's_Potion
+				delitem Witchs_Potion,1;
 				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
@@ -9100,12 +9108,10 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "You're the one I'm looking";
 		mes "for, the one who's been on";
 		mes "a long journey to prove";
-		if (Sex == 1) {
+		if (Sex == SEX_MALE)
 			mes "his courage.";
-		}
-		else {
+		else
 			mes "her courage.";
-		}
 		next;
 		mes "[Serin]";
 		mes "Even in the darkness of";
@@ -9114,7 +9120,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "a star! I beg of you, please";
 		mes "listen to my story...";
 		next;
-		switch(select("I'm busy, sorry.:Sure, go ahead.")) {
+		switch(select("I'm busy, sorry.", "Sure, go ahead.")) {
 		case 1:
 			mes "[Serin]";
 			mes "I know I can't stop";
@@ -9137,7 +9143,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "your help to get out of";
 			mes "here as soon as I can~";
 			next;
-			switch(select("Er, I'm busy, now that I think about it.:Sure, let's do it.")) {
+			switch(select("Er, I'm busy, now that I think about it.", "Sure, let's do it.")) {
 			case 1:
 				mes "[Serin]";
 				mes "I know I can't stop";
@@ -9152,7 +9158,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 				mes "the other unfortunate souls in";
 				mes "this place, I'd be truly grateful. Somehow, I think solving their problems will help me get back.";
 				next;
-				switch(select("Sure, why not?:Why should I help them?")) {
+				switch(select("Sure, why not?", "Why should I help them?")) {
 				case 1:
 					mes "[Serin]";
 					mes "I knew you'd understand!";
@@ -9206,7 +9212,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "I want you to have this ring. It's the only way I can properly express my gratitude for your aid so far.";
 			sign_q = 85;
 			sign_sq = 0;
-			getitem 2642,1; //Serin's_Gold_Ring
+			getitem Serins_Gold_Ring,1;
 			close;
 		}
 		else {
@@ -9251,16 +9257,16 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 	}
 	else if (sign_q < 92) {
 		mes "[Serin]";
-		mes "Hello, "+strcharinfo(0)+",";
+		mes "Hello, "+strcharinfo(PC_NAME)+",";
 		mes "I'm surprised that";
 		mes "you've managed to survive";
 		mes "here all this time. It's no small feat for a mortal to be able to remain alive in Niflheim...";
 		close;
 	}
 	else if (sign_q == 92) {
-		if (countitem(2642) > 0) {
+		if (countitem(Serins_Gold_Ring) > 0) {
 			mes "[Serin]";
-			mes "Ah, "+strcharinfo(0)+"~";
+			mes "Ah, "+strcharinfo(PC_NAME)+"~";
 			mes "How is everything?";
 			mes "Once again, I want to";
 			mes "thank you for helping the";
@@ -9276,7 +9282,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		}
 		else {
 			mes "[Serin]";
-			mes "Ah, "+strcharinfo(0)+"~";
+			mes "Ah, "+strcharinfo(PC_NAME)+"~";
 			mes "How is everything?";
 			next;
 			mes "[Serin]";
@@ -9287,7 +9293,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "you want to ask me?";
 			next;
 		}
-		switch(select("Nothing.:About the Queen of the Dead...")) {
+		switch(select("Nothing.", "About the Queen of the Dead...")) {
 		case 1:
 			mes "[Serin]";
 			mes "Well, if you ever";
@@ -9394,7 +9400,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "the Symbol of the Nine Realms?";
 		mes "It's a very dangerous object that could cause a lot of trouble if it fell into the wrong hands...";
 		next;
-		switch(select("What do you mean??:Don't worry, it won't.")) {
+		switch(select("What do you mean??", "Don't worry, it won't.")) {
 		case 1:
 			mes "[Serin]";
 			mes "There are plenty of dead";
@@ -9402,7 +9408,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "driven by regret and despair.";
 			mes "The rage of being dead may result in some of them performing horrific deeds if they had the symbol.";
 			next;
-			switch(select("Then what should I do?:Thanks for the concern, but I'm not worried.")) {
+			switch(select("Then what should I do?", "Thanks for the concern, but I'm not worried.")) {
 			case 1:
 				mes "[Serin]";
 				mes "I really think that you";
@@ -9447,7 +9453,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "If you obtain the";
 		mes "Symbol of Nine Realms,";
 		mes "please bring it to me";
-		mes "right away, "+strcharinfo(0)+".";
+		mes "right away, "+strcharinfo(PC_NAME)+".";
 		close;
 	}
 	else if (sign_q == 118) {
@@ -9480,7 +9486,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "Then, there's that Metz Brayde.";
 		mes "Do you really believe that after he completes his research, he'll just give it back to you? You can't just trust someone to hold an object of enormous power and give it back!";
 		next;
-		switch(select("W-what should I do?:I can't believe this!")) {
+		switch(select("W-what should I do?", "I can't believe this!")) {
 		case 1:
 			mes "[Serin]";
 			mes "Well, I can't really tell";
@@ -9517,9 +9523,9 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "...";
 		mes "......";
 		mes "..........";
-		if (countitem(2643) == 1) {
+		if (countitem(Serins_Gold_Ring_) == 1) {
 			next;
-			switch(select("Give Serin her ring.:Keep the ring.")) {
+			switch(select("Give Serin her ring.", "Keep the ring.")) {
 			case 1:
 				mes "[Serin]";
 				mes "...";
@@ -9527,7 +9533,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 				mes ".............";
 				next;
 				mes "[Serin]";
-				mes "...."+strcharinfo(0)+".....";
+				mes "...."+strcharinfo(PC_NAME)+".....";
 				mes "I don't want to forget you.";
 				mes "I can forget my obsession with";
 				mes "life and all my other memories,";
@@ -9550,7 +9556,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 				mes "to forget her sadness. The tears streaked across her cheeks and";
 				mes "the faint smile on her lips tell you that her memories of you";
 				mes "will always remain in her heart.^000000";
-				delitem 2643,1; //Serin's_Gold_Ring_
+				delitem Serins_Gold_Ring_,1;
 				getexp RENEWAL_EXP?50000:500000,0;
 				close;
 			case 2:
@@ -9663,7 +9669,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "So are you";
 		mes "ready to leave?";
 		next;
-		switch(select("Yes:Not yet")) {
+		switch(select("Yes", "Not yet")) {
 		case 1:
 			mes "[Serin]";
 			mes "Okay~";
@@ -9690,7 +9696,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "of her soul and memories that";
 		mes "you can still sense somehow.^000000";
 		next;
-		switch(select("Follow the trace.:Ignore it.")) {
+		switch(select("Follow the trace.", "Ignore it.")) {
 		case 1:
 			close2;
 			sign_q = 199;
@@ -9716,23 +9722,23 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "of her soul and memories that";
 		mes "you can still sense somehow.";
 		mes "What could have happened to her?^000000";
-		if (countitem(2642) > 0) {
+		if (countitem(Serins_Gold_Ring) > 0) {
 			next;
 			mes "^33555FFSuddenly, Serin's";
 			mes "gold ring sparkled";
 			mes "with a soft glow and";
 			mes "faded away.^000000";
-			delitem 2642,1; //Serin's_Gold_Ring
+			delitem Serins_Gold_Ring,1;
 			close;
 		}
 		close;
 	}
 	else {
-		if (countitem(2642) > 0) {
+		if (countitem(Serins_Gold_Ring) > 0) {
 			mes "[Serin]";
 			mes "Thank you...";
 			emotion e_sob;
-			delitem 2642,1; //Serin's_Gold_Ring
+			delitem Serins_Gold_Ring,1;
 			next;
 			mes "^3355FFYou returned";
 			mes "Serin's gold ring.^000000";
@@ -9748,7 +9754,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 
 que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -9757,16 +9763,16 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		close;
 	}
 	mes "[Kirkena]";
-	if ((countitem(7313) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
+	if ((countitem(Seal_Of_Witch) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
 		mes "That Witch's Medal...";
 		mes "You must be here to";
 		mes "help your friend take";
 		mes "care of Serin. Are you";
-		mes "ready to go, "+strcharinfo(0)+"?";
+		mes "ready to go, "+strcharinfo(PC_NAME)+"?";
 		next;
-		switch(select("Yes.:Not yet...")) {
+		switch(select("Yes.", "Not yet...")) {
 		case 1:
-			switch(select("Go directly to Serin:Path Towards Serin")) {
+			switch(select("Go directly to Serin", "Path Towards Serin")) {
 			case 1:
 				mes "[Kirkena]";
 				mes "Thank you";
@@ -9796,7 +9802,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	if (sign_q == 90) {
-		if (countitem(2642) == 1) {
+		if (countitem(Serins_Gold_Ring) == 1) {
 			mes "That bastard stole";
 			mes "two spell books from me.";
 			mes "You've brought one of them";
@@ -9821,7 +9827,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	else if (sign_q == 91) {
-		if (countitem(7304) > 0) {
+		if (countitem(Witchs_Spell_Book) > 0) {
 			mes "Once that fool stole my spell";
 			mes "books, he was cursed after he";
 			mes "cast those spells without my";
@@ -9899,7 +9905,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "that the Queen of the Dead";
 			mes "is searching for her lost mother, Angrboda. Now, if you could find where Angrboda has been";
 			mes "sealed away...";
-			delitem 7304,1; //Witch's_Spell_Book
+			delitem Witchs_Spell_Book,1;
 			sign_q = 92;
 			close;
 		}
@@ -9974,7 +9980,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "hand me the symbol, I'll tell";
 		mes "you what we need to do next.";
 		next;
-		switch(select("Give the symbol.:Don't give the symbol.")) {
+		switch(select("Give the symbol.", "Don't give the symbol.")) {
 		case 1:
 			mes "[Kirkena]";
 			mes "Listen carefully.";
@@ -9994,7 +10000,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "sure you can find something";
 			mes "if you can find any remaining";
 			mes "trace of her.";
-			delitem 7305,1; //Authority_Of_Nine_World
+			delitem Authority_Of_Nine_World,1;
 			sign_q = 119;
 			close;
 		case 2:
@@ -10010,12 +10016,12 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	else if (sign_q == 119) {
-		if (countitem(2642) > 0) {
+		if (countitem(Serins_Gold_Ring) > 0) {
 			mes "This is Serin's gold ring?";
 			mes "Excellent, this has been";
 			mes "strongly infused with her";
 			mes "vibes. It's really tough to find something like this that resonates so strongly with its owner.";
-			delitem 2642,1; //Serin's_Gold_Ring
+			delitem Serins_Gold_Ring,1;
 			sign_q = 120;
 			close;
 		}
@@ -10063,7 +10069,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "stop her before it's too late.";
 		next;
 		while(1) {
-			switch(select("What does she want?:What is she going to do?:What should I do?")) {
+			switch(select("What does she want?", "What is she going to do?", "What should I do?")) {
 			case 1:
 				mes "[Kirkena]";
 				mes "Make no mistake:";
@@ -10192,9 +10198,9 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "of the vouchers I've";
 			mes "given you, alright?";
 			sign_q = 124;
-			getitem 7308,1; //Witch's_Potion
-			getitem 2643,1; //Serin's_Gold_Ring_
-			getitem 7313,5; //Seal_Of_Witch
+			getitem Witchs_Potion,1;
+			getitem Serins_Gold_Ring_,1;
+			getitem Seal_Of_Witch,5;
 			close;
 		}
 		else if (sign_q == 123) {
@@ -10228,8 +10234,8 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "the Witch's Medals that";
 			mes "I've lent to you, alright?";
 			sign_q = 124;
-			getitem 7308,1; //Witch's_Potion
-			getitem 7313,5; //Seal_Of_Witch
+			getitem Witchs_Potion,1;
+			getitem Seal_Of_Witch,5;
 			close;
 		}
 	}
@@ -10241,14 +10247,14 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "these preparations...";
 			close;
 		}
-		if (countitem(2643) == 1) {
+		if (countitem(Serins_Gold_Ring_) == 1) {
 			mes "You're finally";
 			mes "back. We might not";
 			mes "have enough time to";
 			mes "stop her, but we have";
 			mes "to try. Are you ready?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				close2;
 				$@sign_w1 = 1;
@@ -10269,12 +10275,12 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "truly horrible. Are";
 			mes "you ready to go?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				mes "[Kirkena]";
 				mes "Okay then.";
 				mes "Good luck,";
-				mes ""+strcharinfo(0)+"...";
+				mes ""+strcharinfo(PC_NAME)+"...";
 				close2;
 				warp "que_sign02",35,313;
 				end;
@@ -10288,8 +10294,8 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	else if ((sign_q == 127) || (sign_q == 128)) {
-		if (countitem(2643) == 1) {
-			if (countitem(7313) < 5) {
+		if (countitem(Serins_Gold_Ring_) == 1) {
+			if (countitem(Seal_Of_Witch) < 5) {
 				mes "Hmmm...?";
 				mes "Where are all the";
 				mes "vouchers I've lent to you?";
@@ -10310,15 +10316,15 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "Once again, thank";
 				mes "you so much for your";
 				mes "help. Once you finish here,";
-				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason, "+strcharinfo(0)+"...";
-				delitem 7313,5; //Seal_Of_Witch
+				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason, "+strcharinfo(PC_NAME)+"...";
+				delitem Seal_Of_Witch,5;
 				sign_q = 129;
 				getexp RENEWAL_EXP?50000:500000,0;
 				close;
 			}
 		}
 		else {
-			if (countitem(7313) < 5) {
+			if (countitem(Seal_Of_Witch) < 5) {
 				mes "Hmmm...?";
 				mes "Where are all the";
 				mes "vouchers I've lent to you?";
@@ -10340,7 +10346,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "you so much for your";
 				mes "help. Once you finish here,";
 				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
-				delitem 7313,5; //Seal_Of_Witch
+				delitem Seal_Of_Witch,5;
 				sign_q = 130;
 				getexp RENEWAL_EXP?30000:300000,0;
 				close;
@@ -10366,7 +10372,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "you so much for your";
 		mes "help. Once you finish here,";
 		mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
-		if (countitem(2643) == 1) sign_q = 129;
+		if (countitem(Serins_Gold_Ring_) == 1) sign_q = 129;
 		else sign_q = 130;
 		getexp RENEWAL_EXP?30000:300000,0;
 		close;
@@ -10395,8 +10401,8 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "her for that. Though, it's";
 		mes "ironic that you failed your";
 		mes "ordeals for her sake...";
-		if (countitem(2642) > 0) delitem 2642,1; //Serin's_Gold_Ring
-		if (countitem(7308) > 0) delitem 7308,1; //Witch's_Potion
+		if (countitem(Serins_Gold_Ring) > 0) delitem Serins_Gold_Ring,1;
+		if (countitem(Witchs_Potion) > 0) delitem Witchs_Potion,1;
 		sign_q = 201;
 		getexp RENEWAL_EXP?20000:200000,0;
 		close;
@@ -10424,12 +10430,12 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 	}
 }
 
-nif_in,186,168,1	script	#witch	-1,1,1,{
+nif_in,186,168,1	script	#witch	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if (sign_q == 83) {
 		if (sign_sq == 2) {
-			if (countitem(7304) > 0) {
+			if (countitem(Witchs_Spell_Book) > 0) {
 				mes "[Kirkena]";
 				mes "W-what's this?";
 				mes "Why is it that";
@@ -10448,7 +10454,7 @@ OnTouch:
 					mes "some reason. Speak";
 					mes "your mind.";
 					next;
-					switch(select("Send me back to my world.:There's a lost child here that I want to help...")) {
+					switch(select("Send me back to my world.", "There's a lost child here that I want to help...")) {
 					case 1:
 						mes "[Kirkena]";
 						mes "Understood.";
@@ -10467,9 +10473,9 @@ OnTouch:
 						mes "give you this. It will send";
 						mes "a living human back to one";
 						mes "of the towns in your realm.";
-						delitem 7304,1; //Witch's_Spell_Book
+						delitem Witchs_Spell_Book,1;
 						sign_sq = 3;
-						getitem 7309,1; //Wing_Of_Crow
+						getitem Wing_Of_Crow,1;
 						close;
 					}
 				}
@@ -10495,14 +10501,14 @@ OnTouch:
 			}
 		}
 		else if (sign_sq == 3) {
-			if (countitem(7309) < 1) {
+			if (countitem(Wing_Of_Crow) < 1) {
 				mes "[Kirkena]";
 				mes "You lost the wing?";
 				mes "Here, let me give you";
 				mes "my last one. Now, hurry";
 				mes "up and save that lost child!";
 				sign_sq = 4;
-				getitem 7309,1; //Wing_Of_Crow
+				getitem Wing_Of_Crow,1;
 				close;
 			}
 			else {
@@ -10574,7 +10580,7 @@ OnTouch:
 		close;
 	}
 	else if (sign_q == 88) {
-		if (countitem(2642) > 0) {
+		if (countitem(Serins_Gold_Ring) > 0) {
 			mes "[Kirkena]";
 			mes "As I expected,";
 			mes "there is something behind";
@@ -10617,7 +10623,7 @@ OnTouch:
 			mes "queen's symbol. Now, please";
 			mes "keep this secret and tell no one that I asked you to bring the symbol to me.";
 			next;
-			switch(select("Alright, I understand.:How am I supposed to get the symbol?")) {
+			switch(select("Alright, I understand.", "How am I supposed to get the symbol?")) {
 			case 1:
 				sign_q = 89;
 				close;
@@ -10648,7 +10654,7 @@ OnTouch:
 				mes "and take the ^FF0000secret passage";
 				mes "through the right side of the";
 				mes "portrait on the second floor^000000";
-				mes "of this castle, "+strcharinfo(0)+".";
+				mes "of this castle, "+strcharinfo(PC_NAME)+".";
 				sign_q = 92;
 				next;
 				mes "[Kirkena]";
@@ -10666,7 +10672,7 @@ OnTouch:
 			mes "Did you need my help?";
 			mes "I know that I'm one of the few in Niflheim that are sympathetic with mortals, I've got a problem of my own that I need to deal with...";
 			next;
-			switch(select("Never mind, sorry!:What happened...?")) {
+			switch(select("Never mind, sorry!", "What happened...?")) {
 			case 1:
 				mes "[Kirkena]";
 				mes "...";
@@ -10750,7 +10756,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "invitation? Insolent mortal!";
 		mes "Go back to where you belong!^000000";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	else if (sign_q == 117) {
@@ -10794,9 +10800,9 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		next;
 		mes "^3355FFYou received the";
 		mes "Symbol of the Nine Realms.^000000";
-		delitem 7307,1; //Whisper_Of_Soul
+		delitem Whisper_Of_Soul,1;
 		sign_q = 118;
-		getitem 7305,1; //Authority_Of_Nine_World
+		getitem Authority_Of_Nine_World,1;
 		close;
 	}
 	else if (sign_q < 142) {
@@ -10812,7 +10818,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "^8C1717Ah.";
 		mes "You are the";
 		mes "mortal called";
-		mes ""+strcharinfo(0)+", are you not?";
+		mes ""+strcharinfo(PC_NAME)+", are you not?";
 		mes "Yes, you are known to me.^000000";
 		next;
 		mes "[Lady Hell]";
@@ -10823,7 +10829,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "have something extraordinarily";
 		mes "special in your possession?^000000";
 		next;
-		switch(select("The Sign:Sobbing Starlight")) {
+		switch(select("The Sign", "Sobbing Starlight")) {
 		case 1:
 			mes "[Lady Hell]";
 			mes "^8C1717The Sign...?";
@@ -10836,7 +10842,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 			mes "^8C1717Yes, that's it!";
 			mes "I never expected a mortal";
 			mes "to have such an interesting";
-			mes "artifact in "+((Sex)?"his":"her")+" possession.^000000";
+			mes "artifact in "+ (Sex == SEX_MALE ? "his" : "her") +" possession.^000000";
 			next;
 			mes "[Lady Hell]";
 			mes "^8C1717As queen of Niflheim,";
@@ -10845,14 +10851,14 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 			mes "not, I shall quickly return it. For a mortal, it must have";
 			mes "taken great pains to obtain this...^000000";
 			next;
-			switch(select("Please take it...:N-no! Don't take it!")) {
+			switch(select("Please take it...", "N-no! Don't take it!")) {
 			case 1:
 				mes "[Lady Hell]";
 				mes "^8C1717Thank you mortal.";
 				mes "Now, I shall show";
 				mes "you something truly";
 				mes "interesting...^000000";
-				delitem 7178,1; //Star's_Sob
+				delitem Stars_Sob,1;
 				sign_q = 143;
 				close;
 			case 2:
@@ -10900,7 +10906,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "Sobbing Starlight.^000000";
 		next;
 		sign_q = 144;
-		getitem 7025,1; //Lucifer's_Lament
+		getitem Lucifers_Lament,1;
 		mes "[Lady Hell]";
 		mes "^8C1717Although you may also know";
 		mes "this object as God's Tear Drop, keep in mind that history, as you humans know it, may actually be different than the truth.^000000";
@@ -10949,7 +10955,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 		close;
 	}
 	else if (sign_q == 87) {
-		if (countitem(2642) > 1) {
+		if (countitem(Serins_Gold_Ring) > 1) {
 			mes "[Gen]";
 			mes "You lookin' for";
 			mes "something? Crayu";
@@ -10962,7 +10968,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 			mes "wanna become one";
 			mes "of Valkyrie's chosen?";
 			next;
-			switch(select("To prove my courage:For honor:To help people")) {
+			switch(select("To prove my courage", "For honor", "To help people")) {
 			case 1:
 				if (sign_sq > 2) sign_sq = 0;
 				else sign_sq += 1;
@@ -10974,7 +10980,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 			mes "Now, did Crayu";
 			mes "tell you why I'm here?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				mes "[Gen]";
 				mes "Good, then you";
@@ -11090,7 +11096,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 		mes "mansion, Eljudnir,";
 		mes "right now?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Gen]";
 			mes "Remember to be";
@@ -11172,7 +11178,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 		mes "mansion once again.";
 		mes "Are you ready to go?";
 		next;
-		switch(select("No, thanks.:Yes.")) {
+		switch(select("No, thanks.", "Yes.")) {
 		case 1:
 			mes "[Gen]";
 			mes "I see.";
@@ -11196,7 +11202,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 
 nif_in,140,177,0	script	#Switch	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	if (countitem(7313) == 1) {
+	if (countitem(Seal_Of_Witch) == 1) {
 		warp "que_sign01",115,135;
 		end;
 	}
@@ -11287,7 +11293,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 		mes "before the gods offed me. Man,";
 		mes "I'd need at least 40,000 Zeny to even have a decent time...";
 		next;
-		switch(select("Pay Laichin 40,000 Zeny:Don't pay Laichin.")) {
+		switch(select("Pay Laichin 40,000 Zeny", "Don't pay Laichin.")) {
 		case 1:
 			if (Zeny < 40000) {
 				mes "[Laichin]";
@@ -11355,7 +11361,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 				mes "well hidden, so you gotta look around, even if you know the general location. And don't";
 				mes "tell anyone else about these locations or there'll be trouble.";
 				next;
-				switch(select("I promise.:What do you mean by big and small?")) {
+				switch(select("I promise.", "What do you mean by big and small?")) {
 				case 1:
 					mes "[Laichin]";
 					mes "Alright, kid.";
@@ -11380,7 +11386,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 					mes "If you wanna know,";
 					mes "cough up the cash!";
 					next;
-					switch(select("Don't pay him.:Pay him.")) {
+					switch(select("Don't pay him.", "Pay him.")) {
 					case 1:
 						mes "[Laichin]";
 						mes "Fine, fine.";
@@ -11461,7 +11467,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 		mes "Right after you pay me,";
 		mes "oh, I don't know, ^FF000020,000 zeny^000000.";
 		next;
-		switch(select("Pay him.:Don't pay him.")) {
+		switch(select("Pay him.", "Don't pay him.")) {
 		case 1:
 			if (Zeny < 20000) {
 				mes "[Laichin]";
@@ -11530,7 +11536,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 		mes "inventory and that they're";
 		mes "not equipped, alright?";
 		next;
-		switch(select("Thanks~!:Where am I supposed to go again?")) {
+		switch(select("Thanks~!", "Where am I supposed to go again?")) {
 		case 1:
 			mes "[Laichin]";
 			mes "Oh no...";
@@ -11648,7 +11654,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 	}
 }
 
-niflheim,348,257,1	script	#Cursed Soul	-1,1,1,{
+niflheim,348,257,1	script	#Cursed Soul	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if ((sign_q == 83) || (sign_q == 90)) {
@@ -11663,7 +11669,7 @@ OnTouch:
 			mes "....Whatever you do...";
 			mes "....Do NOT touch my books...";
 			next;
-			switch(select("Pick up the 1st book.:Pick up the 2nd book.:Pick up the 3rd book.:Leave immediately.")) {
+			switch(select("Pick up the 1st book.", "Pick up the 2nd book.", "Pick up the 3rd book.", "Leave immediately.")) {
 			case 1:
 				monster "niflheim",349,259,"Rideword",1478,1;
 				mes "[Ashe Bruce]";
@@ -11697,9 +11703,9 @@ OnTouch:
 				mes "a fighting chance and let";
 				mes "you cast a spell.";
 				next;
-				if (select("Clover:Klaatu:Kleitos") == 2) .@spell += 1;
-				if (select("Verit:Veritas:Verata") == 3) .@spell += 1;
-				if (select("Necktie:Necklace:Nero:^FFFFFFNictu^000000") == 4) .@spell += 1;
+				if (select("Clover", "Klaatu", "Kleitos") == 2) .@spell += 1;
+				if (select("Verit", "Veritas", "Verata") == 3) .@spell += 1;
+				if (select("Necktie", "Necklace", "Nero", "^FFFFFFNictu^000000") == 4) .@spell += 1;
 				if (.@spell == 3) {
 					if (rand(1,5) == 5) {
 						mes "[Ashe Bruce]";
@@ -11723,12 +11729,12 @@ OnTouch:
 						if (sign_q == 83) {
 							if(sign_sq == 0) {
 								sign_sq = 1;
-								getitem 7304,1; //Witch's_Spell_Book
+								getitem Witchs_Spell_Book,1;
 							}
 						}
 						else if (sign_q == 90) {
 							sign_q = 91;
-							getitem 7304,1; //Witch's_Spell_Book
+							getitem Witchs_Spell_Book,1;
 						}
 						close;
 					}
@@ -11763,7 +11769,7 @@ OnMyMobDead:
 	end;
 }
 
-nif_in,102,81,1	script	#Crayu	-1,1,1,{
+nif_in,102,81,1	script	#Crayu	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if (sign_q < 75) end;
@@ -11788,13 +11794,13 @@ OnTouch:
 		mes "abrupt, but what do";
 		mes "you think of Serin?";
 		next;
-		select("She's good.:She's evil!:She could go either way.");
+		select("She's good.", "She's evil!", "She could go either way.");
 		mes "[Crayu]";
 		mes "Hm...?";
 		mes "And why do";
 		mes "you think so?";
 		next;
-		switch(select("Just my opinion.:It's the truth!")) {
+		switch(select("Just my opinion.", "It's the truth!")) {
 		case 1:
 			if (sign_sq > 1) sign_sq = 0;
 			else sign_sq += 1;
@@ -11805,7 +11811,7 @@ OnTouch:
 		mes "Ah, I understand.";
 		mes "Now, how may I help you?";
 		next;
-		switch(select("What exactly is Niflheim?:How do I become one of the chosen?")) {
+		switch(select("What exactly is Niflheim?", "How do I become one of the chosen?")) {
 		case 1:
 			mes "[Crayu]";
 			mes "Niflheim is commonly";
@@ -11821,7 +11827,7 @@ OnTouch:
 			mes "your point of view.";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What do I need";
 			mes "to do to become one";
 			mes "of the chosen warriors?";
@@ -11855,7 +11861,7 @@ OnTouch:
 	end;
 }
 
-nif_in,156,91,1	script	#kidniff	-1,1,1,{
+nif_in,156,91,1	script	#kidniff	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if (sign_q == 83) {
@@ -11875,7 +11881,7 @@ OnTouch:
 			mes "I don't know how I got here.";
 			mes "^333333*Sniff*^000000";
 			next;
-			switch(select("What can I do?:You can't go back...")) {
+			switch(select("What can I do?", "You can't go back...")) {
 			case 1:
 				mes "[Alakina Ann]";
 				mes "I dunno. I-I think a ";
@@ -11903,12 +11909,12 @@ OnTouch:
 			close;
 		}
 		else if ((sign_sq == 3) || (sign_sq == 4)) {
-			if (countitem(7309) > 0) {
+			if (countitem(Wing_Of_Crow) > 0) {
 				mes "[Alakina Ann]";
 				mes "I... I can use";
 				mes "this to go back home?";
 				mes "Thank you! Thank you so much!";
-				delitem 7309,countitem(7309); //Wing_Of_Crow
+				delitem Wing_Of_Crow,countitem(Wing_Of_Crow);
 				sign_sq = 5;
 				close;
 			}
@@ -11964,41 +11970,41 @@ function	script	F_SignSeal	{
 		mes "more powerful to break the seal...^000000";
 		close;
 	}
-	if (countitem(1558) || countitem(1963)) {
+	if (countitem(Girls_Diary) || countitem(Rapture_Rose)) {
 		if (getarg(0) < 980) F_SealFail; }
-	else if (countitem(1227) || countitem(1228) || countitem(1240) || countitem(1241) || countitem(1962) || countitem(1813)) {
+	else if (countitem(Weeder_Knife) || countitem(Combat_Knife) || countitem(Princess_Knife) || countitem(Cursed_Dagger) || countitem(Lariat) || countitem(Kaiser_Knuckle)) {
 		if (getarg(0) < 960) F_SealFail; }
-	else if (countitem(1719) || countitem(1130) || countitem(1133) || countitem(1223) || countitem(1229) || countitem(1231) || countitem(1413) || countitem(1814) || countitem(1242)) {
+	else if (countitem(Bow_Of_Roguemaster) || countitem(Nagan) || countitem(Fire_Brand) || countitem(Forturn_Sword) || countitem(Mamas_Knife) || countitem(Bazerald) || countitem(Gungnir) || countitem(Berserk) || countitem(Counter_Dagger)) {
 		if (getarg(0) < 940) F_SealFail; }
-	else if (countitem(1131) || countitem(1230) || countitem(1232)) {
+	else if (countitem(Ice_Falchon) || countitem(House_Auger) || countitem(Assasin_Dagger)) {
 		if (getarg(0) < 920) F_SealFail; }
-	else if (countitem(1132) || countitem(1134) || countitem(1233) || countitem(1234) || countitem(1235) || countitem(1414) || countitem(1523) || countitem(1236)) {
+	else if (countitem(Edge) || countitem(Scissores_Sword) || countitem(Exercise) || countitem(Moonlight_Sword) || countitem(Azoth) || countitem(Gelerdria) || countitem(Spike) || countitem(Sucsamad)) {
 		if (getarg(0) < 900) F_SealFail; }
-	else if (countitem(1237) || countitem(1524) || countitem(1525) || countitem(1557) || countitem(1415) || countitem(1964)) {
+	else if (countitem(Grimtooth_) || countitem(Golden_Mace) || countitem(Long_Mace) || countitem(Book_Of_The_Apocalypse) || countitem(Skewer) || countitem(Chemeti)) {
 		if (getarg(0) < 880) F_SealFail; }
-	else if (countitem(1135) || countitem(1140) || countitem(1141) || countitem(1527)) {
+	else if (countitem(Cutlas) || countitem(Byeorrun_Gum) || countitem(Immaterial_Sword) || countitem(Quadrille)) {
 		if (getarg(0) < 860) F_SealFail; }
-	else if (countitem(1164) || countitem(1165) || countitem(1467) || countitem(1138) || countitem(1139) || countitem(1224) || countitem(1225) || countitem(1416) || countitem(1526)) {
+	else if (countitem(Muramasa) || countitem(Masamune) || countitem(Bill_Guisarme) || countitem(Mysteltainn_) || countitem(Tale_Fing_) || countitem(Sword_Breaker) || countitem(Mail_Breaker) || countitem(Tjungkuletti) || countitem(Slash)) {
 		if (getarg(0) < 840) F_SealFail; }
-	else if (countitem(1305) || countitem(1720) || countitem(1136) || countitem(1137) || countitem(1166)) {
+	else if (countitem(Cleaver) || countitem(Bow_Of_Rudra) || countitem(Solar_Sword) || countitem(Excalibur) || countitem(Dragon_Slayer)) {
 		if (getarg(0) < 820) F_SealFail; }
-	else if (countitem(1261) || countitem(1528) || countitem(1167)) {
+	else if (countitem(Infiltrator) || countitem(Grand_Cross) || countitem(Schweizersabel)) {
 		if (getarg(0) < 800) F_SealFail; }
-	else if (countitem(1364) || countitem(1913)) {
+	else if (countitem(Great_Axe) || countitem(Electronic_Guitar)) {
 		if (getarg(0) < 780) F_SealFail; }
-	else if (countitem(1170) || countitem(1468) || countitem(1168) || countitem(1169)) {
+	else if (countitem(Katzbalger) || countitem(Zephyrus) || countitem(Zweihander) || countitem(Executioner_)) {
 		if (getarg(0) < 760) F_SealFail; }
-	else if (countitem(1365) || countitem(1366) || countitem(1473)) {
+	else if (countitem(Sabbath) || countitem(Right_Epsilon) || countitem(Wizardy_Staff)) {
 		if (getarg(0) < 740) F_SealFail; }
-	else if (countitem(1367) || countitem(1368) || countitem(1466) || countitem(1469)) {
+	else if (countitem(Slaughter) || countitem(Tomahawk) || countitem(Crescent_Scythe) || countitem(Longinuss_Spear)) {
 		if (getarg(0) < 720) F_SealFail; }
-	else if (countitem(1369) || countitem(1470)) {
+	else if (countitem(Guillotine) || countitem(Brionac)) {
 		if (getarg(0) < 700) F_SealFail; }
-	else if (countitem(1722) || countitem(1471)) {
+	else if (countitem(Balistar) || countitem(Hell_Fire)) {
 		if (getarg(0) < 680) F_SealFail; }
-	else if (countitem(1363)) {
+	else if (countitem(Brood_Axe)) {
 		if (getarg(0) < 660) F_SealFail; }
-	else if (countitem(1530)) {
+	else if (countitem(Mjolnir)) {
 		if (getarg(0) < 500) F_SealFail; }
 	else {
 		mes "^3355FFThe weapon you're holding";
@@ -12022,9 +12028,9 @@ function	script	F_SignSeal	{
 		mes "I'm leaving my soul";
 		mes "with you. Please guide";
 		mes "me to the queen of the dead...^000000";
-		delitem 7306,3; //Fragment_Of_Soul
+		delitem Fragment_Of_Soul,3;
 		sign_q = 117;
-		getitem 7307,1; //Whisper_Of_Soul
+		getitem Whisper_Of_Soul,1;
 	}
 	else {
 		mes "^3355FFOnce you strike the seal,";
@@ -12033,7 +12039,7 @@ function	script	F_SignSeal	{
 		mes "^3355FFYou have";
 		mes "obtained a^6E7B8B";
 		mes "Piece of Spirit^3355FF.^000000";
-		getitem 7306,1; //Fragment_Of_Soul
+		getitem Fragment_Of_Soul,1;
 	}
 	return;
 }
@@ -12053,7 +12059,7 @@ gl_dun02,262,265,0	script	Mysterious Energy#1	HIDDEN_NPC,{
 	}
 }
 
-// Angrboda's Seal 2 big 4 O'clock 270 198
+//- Angrboda's Seal 2 big 4 O'clock 270 198 -
 gl_dun02,271,100,0	script	Mysterious Energy#2	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	.@crash_s = rand(1,1000);
@@ -12070,7 +12076,7 @@ gl_dun02,271,100,0	script	Mysterious Energy#2	HIDDEN_NPC,{
 	}
 }
 
-// Angrboda's Seal 3 big 5 O'clock 268 32
+//- Angrboda's Seal 3 big 5 O'clock 268 32 -
 gl_dun02,268,32,0	script	Mysterious Energy#3	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	.@crash_s = rand(1,1000);
@@ -12088,7 +12094,7 @@ gl_dun02,268,32,0	script	Mysterious Energy#3	HIDDEN_NPC,{
 	}
 }
 
-// Angrboda's Seal 4 big 7 O'clock 16 26
+//- Angrboda's Seal 4 big 7 O'clock 16 26 -
 gl_dun02,16,26,0	script	Mysterious Energy#4	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	.@crash_s = rand(1,1000);
@@ -12104,7 +12110,7 @@ gl_dun02,16,26,0	script	Mysterious Energy#4	HIDDEN_NPC,{
 	}
 }
 
-// Angrboda's Seal 5 big 11 O'clock 42 251
+//- Angrboda's Seal 5 big 11 O'clock 42 251 -
 gl_dun02,42,251,0	script	Mysterious Energy#5	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	.@crash_s = rand(1,1000);
@@ -12121,7 +12127,7 @@ gl_dun02,42,251,0	script	Mysterious Energy#5	HIDDEN_NPC,{
 	}
 }
 
-// Angrboda's Seal 6 small 11 O'clock 123 234
+//- Angrboda's Seal 6 small 11 O'clock 123 234 -
 gl_dun02,123,234,0	script	Mysterious Energy#6	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	.@crash_s = rand(1,1000);
@@ -12141,7 +12147,7 @@ gl_dun02,123,234,0	script	Mysterious Energy#6	HIDDEN_NPC,{
 	}
 }
 
-// Angrboda's Seal 7 small 6 O'clock 140 72
+//- Angrboda's Seal 7 small 6 O'clock 140 72 -
 gl_dun02,140,72,0	script	Mysterious Energy#7	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	.@crash_s = rand(1,1000);
@@ -12162,7 +12168,7 @@ gl_dun02,140,72,0	script	Mysterious Energy#7	HIDDEN_NPC,{
 	}
 }
 
-// Angrboda's Seal 8 very small 119 182
+//- Angrboda's Seal 8 very small 119 182 -
 gl_dun02,119,182,0	script	Mysterious Energy#8	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	.@crash_s = rand(1,1000);
@@ -12184,11 +12190,11 @@ que_sign01,46,56,0	script	Fountain#sign	HIDDEN_NPC,{
 		mes "fountain looks clean";
 		mes "enough to drink...^000000";
 		next;
-		switch(select("Drink.:Don't Drink.")) {
+		switch(select("Drink.", "Don't Drink.")) {
 		case 1:
 			mes "...";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(CHAR_ID_ACCOUNT);
 			end;
 		case 2:
 			mes "...";
@@ -12200,9 +12206,9 @@ que_sign01,46,56,0	script	Fountain#sign	HIDDEN_NPC,{
 		mes "fountain looks clean";
 		mes "enough to be bottled...^000000";
 		next;
-		switch(select("Bottle the water.:Don't bottle the water.")) {
+		switch(select("Bottle the water.", "Don't bottle the water.")) {
 		case 1:
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes "^3355FFUnfortunately, it";
 				mes "looks like you don't";
 				mes "have enough inventory";
@@ -12210,9 +12216,9 @@ que_sign01,46,56,0	script	Fountain#sign	HIDDEN_NPC,{
 				close;
 			}
 			else {
-				if (countitem(713) > 0) {
-					delitem 713,1; //Empty_Bottle
-					getitem 12020,1; //Water_Of_Darkness
+				if (countitem(Empty_Bottle) > 0) {
+					delitem Empty_Bottle,1;
+					getitem Water_Of_Darkness,1;
 					close;
 				}
 				else {
@@ -12236,11 +12242,12 @@ OnInit:
 	end;
 
 OnTouch:
-	geffenia_warp = rand(1,4);
-	if (geffenia_warp == 1) warp "gefenia01",58,169;
-	else if (geffenia_warp == 2) warp "gefenia02",116,115;
-	else if (geffenia_warp == 3) warp "gefenia03",130,206;
-	else if (geffenia_warp == 4) warp "gefenia04",133,88;
+	callfunc("F_UpdateSignVars");
+	.@geffenia_warp = rand(1,4);
+	if (.@geffenia_warp == 1) warp "gefenia01",58,169;
+	else if (.@geffenia_warp == 2) warp "gefenia02",116,115;
+	else if (.@geffenia_warp == 3) warp "gefenia03",130,206;
+	else if (.@geffenia_warp == 4) warp "gefenia04",133,88;
 	else warp "geffen",116,115;
 	end;
 
@@ -12270,14 +12277,14 @@ OnTimer45000:
 
 geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	if (countitem(7025) > 0) {
+	if (countitem(Lucifers_Lament) > 0) {
 		mes "^3355FFAs you approach the fountain,";
 		mes "a strange light begins to emit from the Lucifer's Lament in your pocket and from something deep within";
 		mes "the fountain's water.^000000";
 		specialeffect EF_LEVEL99;
-		specialeffect2 EF_LEVEL99;
+		specialeffect(EF_LEVEL99, AREA, playerattached());
 		next;
-		switch(select("Throw Lucifer's Lament into the fountain.:Ignore the light.")) {
+		switch(select("Throw Lucifer's Lament into the fountain.", "Ignore the light.")) {
 		case 1:
 			mapannounce "geffen","With a flash of light from Geffen Fountain, the door to Geffenia has opened.",bc_map,"0x9CFF00";
 			mes "^3355FFOnce the Lucifer's Lament";
@@ -12299,7 +12306,7 @@ geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 	}
 }
 
-que_sign01,196,44,0	script	Starter#serin	-1,32,32,{
+que_sign01,196,44,0	script	Starter#serin	FAKE_NPC,32,32,{
 OnTouch:
 	donpcevent "Timer#serin::OnStart";
 	disablenpc "Starter#serin";
@@ -12310,34 +12317,18 @@ OnEnable:
 	end;
 }
 
-que_sign01,196,44,0	script	Warp#serin	-1,35,35,{
-OnDisable:
-OnInit:
-	disablenpc "Warp#serin";
-	end;
-
-OnTouch:
-	warp "niflheim",30,156;
-	end;
-
-OnEnable:
-	enablenpc "Warp#serin";
-	end;
-}
-
-que_sign01,1,0,0	script	Timer#serin	-1,{
+que_sign01,1,0,0	script	Timer#serin	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
 
 OnTimer600000:
-	donpcevent "Warp#serin::OnEnable";
+	areawarp("que_sign01", 161, 9, 231, 79, "niflheim", 30, 156);
 	end;
 
 OnTimer620000:
 	$@sign_w2 = 0;
 	donpcevent "Starter#serin::OnEnable";
-	donpcevent "Warp#serin::OnDisable";
 	donpcevent "Serin#serin::OnEnable";
 	donpcevent "Dark Lord#serin::OnDisable";
 	donpcevent "Serin#dummy::OnDisable";
@@ -12346,7 +12337,7 @@ OnTimer620000:
 	end;
 }
 
-que_sign01,50,1,0	script	CallMonster#serin	-1,{
+que_sign01,50,1,0	script	CallMonster#serin	FAKE_NPC,{
 OnCall:
 	monster "que_sign01",196,44,"Dark Lord Incarnation",1605,1,"CallMonster#serin::OnMyMobDead";
 	end;
@@ -12360,7 +12351,7 @@ OnReset:
 	killmonster "que_sign01","CallMonster#serin::OnMyMobDead";
 }
 
-que_sign01,197,195,0	script	Starter#witch	-1,32,32,{
+que_sign01,197,195,0	script	Starter#witch	FAKE_NPC,32,32,{
 OnTouch:
 	donpcevent "Timer#witch::OnStart";
 	disablenpc "Starter#witch";
@@ -12371,7 +12362,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,1,1,0	script	Timer#witch	-1,{
+que_sign01,1,1,0	script	Timer#witch	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
@@ -12390,7 +12381,7 @@ OnTimer620000:
 	end;
 }
 
-que_sign01,197,195,0	script	Warp#witch	-1,35,35,{
+que_sign01,197,195,0	script	Warp#witch	FAKE_NPC,35,35,{
 OnDisable:
 OnInit:
 	disablenpc "Warp#witch";
@@ -12405,7 +12396,7 @@ OnTouch:
 	end;
 }
 
-que_sign01,1,2,0	script	CallMonster#witch	-1,{
+que_sign01,1,2,0	script	CallMonster#witch	FAKE_NPC,{
 OnCall:
 	monster "que_sign01",196,195,"Dark Lord Incarnation",1605,1,"CallMonster#witch::OnMyMobDead";
 	monster "que_sign01",180,180,"Ancient Mummy",1522,1,"CallMonster#witch::OnMyMobDead";
@@ -12443,7 +12434,7 @@ que_sign02,0,0,0,0	monster	Wraith Dead	1566,8,0,0,0
 que_sign02,378,235,0	script	sign_w6	WARPNPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
-	if ((countitem(7313) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
+	if ((countitem(Seal_Of_Witch) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
 		warp "que_sign01",197,190;
 		end;
 	}
@@ -12493,7 +12484,7 @@ function	script	F_UpdateSignVars	{
 		else if ((signquest >= 14) && (signquest <= 15)) { sign_q = 54; }
 		else if ((signquest >= 16) && (signquest <= 18)) { sign_q = signquest+39; }
 		// signanvil = 58-61
-		else if ((signquest == 19) && (countitem(7278))) { sign_q = 61; }
+		else if ((signquest == 19) && (countitem(Wellbeing_Letter))) { sign_q = 61; }
 		// there is no equivilent to sign_q 62-64
 		else if (signquest == 20) { sign_q = 65; }
 		// there is no equivilent to sign_q 66-68
@@ -12556,25 +12547,25 @@ function	script	F_UpdateSignVars	{
 		// of this step.
 		if (signlaichin >= 1) {
 			mes "^FF0000You stumble and drop the your^000000";
-			if (countitem(7306)) {
+			if (countitem(Fragment_Of_Soul)) {
 				mes "^FF0000"+getitemname(7306)+"^000000";
 			}
-			if (countitem(7306) && countitem(7307)) {
+			if (countitem(Fragment_Of_Soul) && countitem(Whisper_Of_Soul)) {
 				mes "^FF0000and^000000";
 			}
-			if (countitem(7307)) {
+			if (countitem(Whisper_Of_Soul)) {
 				mes "^FF0000"+getitemname(7307)+"^000000";
 			}
 			mes "^FF0000pieces on the ground and they vanish! Perhaps you should talk to Lachin.^000000";
-			delitem 7306,countitem(7306); //Fragment_Of_Soul
-			delitem 7307,countitem(7307); //Whisper_Of_Soul
+			delitem Fragment_Of_Soul,countitem(Fragment_Of_Soul);
+			delitem Whisper_Of_Soul,countitem(Whisper_Of_Soul);
 			sign_q = rand(97,100);
 		}
 
 		// Same BS as above, unable to save pickup time for 'The Sign' from Engel.
 		if (signengelhour) {
 			mes "^FF0000You see that Engel has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Engel that he needs to look at it.^000000";
-			getitem 7314,1; //The_Sign
+			getitem The_Sign,1;
 			sign_q = 139;
 		}
 
@@ -12599,7 +12590,7 @@ function	script	F_UpdateSignVars	{
 		// Unable to save when the Sign should be picked up from Metz
 		if (signmetzhour) {
 			mes "^FF0000You see that Metz has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Metz that he needs to look at it.^000000";
-			getitem 7314,1; //The_Sign
+			getitem The_Sign,1;
 			sign_q = 138;
 		}
 
@@ -12631,43 +12622,7 @@ function	script	F_UpdateSignVars	{
 		Sign_Branch2B = 0;
 		serinring = 0;
 		signmetzhour = 0;
+		geffenia_warp = 0;
 	}
 	return;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 First version, beware of potential nasty bugs :x [MasterOfMuppets]
-//= 1.1 Finalized for stable, might still contain bugs though. [MasterOfMuppets]
-//= 1.1a moved #aldesignwarp to fix enless warp [Lupus]
-//= 1.2 Fixed a minor bug that prevented people from advancing [MasterOfMuppets]
-//= 	quest at one point.
-//= 1.3 Removed duplicates [Toms]
-//= 1.4 Fixed a bug in Dearles script where it was checking for the wrong items.
-//=     Fixed a major bug that was allowing players to continue before
-//=     getting all the Sobbing Starlight pieces.
-//=     Also moved the Alberta sign since another NPC was on top of it. [Llyr]
-//= 1.5 Fixed exploits and bugs. Plus add a removal of exttra sobbing pieces
-//= 	as suggested Tantarian, to let people Reborn [Lupus]
-//= 1.6 Minor fix, thanks to theultramage for pointing it out. [MasterOfMuppets]
-//= 1.7 Fixed exploit [KarLaeda]
-//= 1.7a Fixed wrong dialogue [Lupus]
-//= 1.7b Fixed possible exploit [Lupus]
-//= 1.7c Reformatted for future bughunt. WIP [Lupus]
-//= 1.8 Fixed some bugs and exploit which allowed players helping in the final
-//= fight to finish the quest as well. Completely revamped quiz system. [SinSloth]
-//= 1.9 Made some changes in last event to reflect recent bug exploit fix. [SinSloth]
-//= 2.0 Fixed some various minor bugs. [SinSloth]
-//= 2.1 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 2.2 Fixed a small bug which occured when people had to return The Sign around midnight. [SinSloth]
-//= 2.3 Made some adjustments in last event with dialogs/summoning and fixed a possible exploit earlier. [SinSloth]
-//= 2.4 Optimized/simplified some poorly written code; fixed wrong quiz answers [ultramage]
-//= 2.5 Updated to fall within proper name restrictions. [L0ne_W0lf]
-//= 2.5a Corrected a Typo error ";;". [Samuray22]
-//= 2.6 Fixed Engel giving back 7 Sobbing Starlight on failing to refine it, bugreport:1473 [Brainstorm]
-//= 2.7 Replaced effect numerics with constants. [Samuray22]
-//= 2.8 Fixed some bugs with itemids and leftover questitems [Fish0r]
-//= 2.9 Made a delitem causing script to fault use countitem when deleting. [L0ne_W0lf]
-//= 2.9a Added a check for Sign_Branch8A before attempting to run a delitem on items not needed based on Path taken. [Paradox924X]
-//============================================================

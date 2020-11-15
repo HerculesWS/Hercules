@@ -1,21 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) SkittleNugget
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
+//= Copyright (C) Gennosuke Kouga
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= El Dicastes Town
-//===== By: ==================================================
-//= Gennosuke Kouga, Muad_Dib
-//===== Current Version: =====================================
-//= 1.3
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
-//= [Official Conversion]
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= El Dicastes Town Script
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Standardized. [Euphy]
-//= 1.2 Updated to match the official script. [Joseph]
-//= 1.2a Moved Guide to a separate file. [Euphy]
-//= 1.3 Updated to match official script. [SkittleNugget]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 dicastes01,194,159,5	script	Excited Galten#a	4_MAN_GALTUN1,{
 	mes "[Excited Galten]";
@@ -28,11 +53,11 @@ dicastes01,194,159,5	script	Excited Galten#a	4_MAN_GALTUN1,{
 		mes "will rule this land.";
 		close;
 	}
-	mes "¡ø¢²¢£ ¡Ð ¡ò¡ð¡ð";
-	mes "¡÷¡ø¡ñ ¡ü ¡ü";
-	mes "¡ù¢²¢³ ¢²";
-	mes "¡ó¡õ¡ô ¢£ ¡Ð¡û¡ü ¡ò ¡ð¡ö¢£";
-	mes "¢¤¡õ¡þ ¡÷ ¡ñ";
+	mes sprintf("¡ø¢²¢£ ¡Ð ¡ò¡ð¡ð");
+	mes sprintf("¡÷¡ø¡ñ ¡ü ¡ü");
+	mes sprintf("¡ù¢²¢³ ¢²");
+	mes sprintf("¡ó¡õ¡ô ¢£ ¡Ð¡û¡ü ¡ò ¡ð¡ö¢£");
+	mes sprintf("¢¤¡õ¡þ ¡÷ ¡ñ");
 	close;
 }
 
@@ -51,15 +76,15 @@ dicastes01,202,86,3	script	Sentinel#a	4_MAN_GALTUN1,{
 		mes "Hey, you are an outsider!";
 		close;
 	}
-	mes "¡ô¢±¢± ¡û ¡ó¡Ð¡ñ ¢£ ¢¤¡ú";
-	mes "¡ø¡ó¢² ¢¤ ";
-	mes "¡õ¡ó¡Ð ¢³ ¡Ð¡õ¢£ ¡û ¡ú¡ï";
+	mes sprintf("¡ô¢±¢± ¡û ¡ó¡Ð¡ñ ¢£ ¢¤¡ú");
+	mes sprintf("¡ø¡ó¢² ¢¤ ");
+	mes sprintf("¡õ¡ó¡Ð ¢³ ¡Ð¡õ¢£ ¡û ¡ú¡ï");
 	next;
 	mes "[Sentinel]";
-	mes "¡ù";
+	mes sprintf("¡ù");
 	next;
 	mes "[Sentinel]";
-	mes "¡ñ¡ö¡ï ¡ú ¡ó¢³¡ô";
+	mes sprintf("¡ñ¡ö¡ï ¡ú ¡ó¢³¡ô");
 	close;
 }
 
@@ -71,9 +96,9 @@ dicastes01,194,95,5	script	Sentinel#b	4_MAN_GALTUN,{
 		mes "you won't know what hit you. Beware!";
 		close;
 	}
-	mes "¡ø¡ô¡ü ¡ø ¡ó";
-	mes "¡ø¡ï¡û ¡ó ¡û¢¤¢² ¡÷ ¢£";
-	mes "¢¤¡ô¡ø ¢³ ¡÷¡û¡ö ¡õ ¡ø";
+	mes sprintf("¡ø¡ô¡ü ¡ø ¡ó");
+	mes sprintf("¡ø¡ï¡û ¡ó ¡û¢¤¢² ¡÷ ¢£");
+	mes sprintf("¢¤¡ô¡ø ¢³ ¡÷¡û¡ö ¡õ ¡ø");
 	close;
 }
 
@@ -84,8 +109,8 @@ dicastes01,234,158,0	script	Training Galten#a	4_MAN_GALTUN,{
 		mes "if I keep up with my training every day.";
 		close;
 	}
-	mes "¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø";
-	mes "¡ô ¡ø";
+	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
+	mes sprintf("¡ô ¡ø");
 	next;
 	mes "Don't know what it means.";
 	close;
@@ -98,8 +123,8 @@ dicastes01,244,166,0	script	Training Galten#b	4_MAN_GALTUN,{
 		mes "hard I am training.";
 		close;
 	}
-	mes "¡ø¡ô¡ü ¡ø";
-	mes "¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø";
+	mes sprintf("¡ø¡ô¡ü ¡ø");
+	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
 	next;
 	mes "Don't know what it means.";
 	close;
@@ -113,8 +138,8 @@ dicastes01,272,166,0	script	Training Galten#c	4_MAN_GALTUN,{
 		mes "I am never lazy with my training.";
 		close;
 	}
-	mes "¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø";
-	mes "¡ø¡ô¡ü ¡ø";
+	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
+	mes sprintf("¡ø¡ô¡ü ¡ø");
 	next;
 	mes "Don't know what it means.";
 	close;
@@ -129,8 +154,8 @@ dicastes01,248,129,0	script	Training Galten#d	4_MAN_GALTUN,{
 		mes "for trainees like me.";
 		close;
 	}
-	mes "¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü";
-	mes "¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø";
+	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü");
+	mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü ¡ø");
 	next;
 	mes "Don't know what it means.";
 	close;
@@ -144,8 +169,8 @@ dicastes01,271,152,0	script	Training Galten#e	4_MAN_GALTUN,{
 		mes "if I do my best, right?";
 		close;
 	}
-	mes "¡ø¢²¡û ¡ô ¢£¢³¡ô";
-	mes "¡ü¡ô";
+	mes sprintf("¡ø¢²¡û ¡ô ¢£¢³¡ô");
+	mes sprintf("¡ü¡ô");
 	close;
 }
 */
@@ -157,9 +182,9 @@ dic_in01,349,282,4	script	Waiting Galten#in_1	4_MAN_GALTUN1,{
 		mes "We are all tensed up to be ready for action.";
 		close;
 	}
-	mes "[¢²¡Ð¡û ¡ù ¡Ð]";
-	mes "¡ñ¡õ¡ü ¢£ ¡ó";
-	mes "¢¤¡ó¡õ ¢£ ¢£¡ò¡ô ¡ö ¡ú¢¤¡ú ¢¤ ¡ò¡ö¡õ ¢¤ ";
+	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
+	mes sprintf("¡ñ¡õ¡ü ¢£ ¡ó");
+	mes sprintf("¢¤¡ó¡õ ¢£ ¢£¡ò¡ô ¡ö ¡ú¢¤¡ú ¢¤ ¡ò¡ö¡õ ¢¤ ");
 	close;
 }
 
@@ -169,8 +194,8 @@ dic_in01,370,261,1	script	Waiting Galten#in_2	4_MAN_GALTUN1,{
 		mes "Boring.";
 		close;
 	}
-	mes "[¢²¡Ð¡û ¡ù ¡Ð]";
-	mes "¡ù¢¤¢±";
+	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
+	mes sprintf("¡ù¢¤¢±");
 	close;
 }
 
@@ -180,8 +205,8 @@ dic_in01,381,261,1	script	Waiting Galten#in_3	4_MAN_GALTUN1,{
 		mes "Zzzzz...";
 		close;
 	}
-	mes "[¢²¡Ð¡û ¡ù ¡Ð]";
-	mes "¡ú¡ô";
+	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
+	mes sprintf("¡ú¡ô");
 	close;
 }
 
@@ -191,8 +216,8 @@ dic_in01,370,282,4	script	Waiting Galten#in_4	4_MAN_GALTUN1,{
 		mes "El Dicastes is the most peaceful place in this world as long as I am here.";
 		close;
 	}
-	mes "[¢²¡Ð¡û ¡ù ¡Ð]";
-	mes "¡ï¡ï¢³ ¡þ ¡ö¢³¢£ ¢± ¢³¡û¡õ ¡ø ¡þ¡ï¡ï ¡ø ¡û";
+	mes sprintf("[¢²¡Ð¡û ¡ù ¡Ð]");
+	mes sprintf("¡ï¡ï¢³ ¡þ ¡ö¢³¢£ ¢± ¢³¡û¡õ ¡ø ¡þ¡ï¡ï ¡ø ¡û");
 	close;
 }
 
@@ -202,8 +227,8 @@ dic_in01,354,219,4	script	Resting Galten#in_5	4_MAN_GALTUN1,{
 		mes "Resting is always so sweet.";
 		close;
 	}
-	mes "[¡õ¡ø¡ò ¡ü ¢¤]";
-	mes "¡ï¡õ¡ù ¡ö ¡ò¡ð¢² ¢³ ¡ö";
+	mes sprintf("[¡õ¡ø¡ò ¡ü ¢¤]");
+	mes sprintf("¡ï¡õ¡ù ¡ö ¡ò¡ð¢² ¢³ ¡ö");
 	close;
 }
 
@@ -216,9 +241,9 @@ dic_in01,365,197,1	script	Resting Galten#in_6	4_MAN_GALTUN1,{
 		mes "You say I don't look like I'm resting? But I'm already used to this.";
 		close;
 	}
-	mes "[¡õ¡ø¡ò ¡ü ¢¤]";
-	mes "¡ô¡ï¢¤ ¡ö ¡ù¡ð¡ñ ¡ü ¡ó¡û¡û";
-	mes "¡ï¢£¡ó ¡ù ¢³¡ô¡ð ¢£ ¡Ð¡û¡ô ¡ô ¡Ð¡ú¡ù ¡ô ¡ó";
+	mes sprintf("[¡õ¡ø¡ò ¡ü ¢¤]");
+	mes sprintf("¡ô¡ï¢¤ ¡ö ¡ù¡ð¡ñ ¡ü ¡ó¡û¡û");
+	mes sprintf("¡ï¢£¡ó ¡ù ¢³¡ô¡ð ¢£ ¡Ð¡û¡ô ¡ô ¡Ð¡ú¡ù ¡ô ¡ó");
 	close;
 }
 
@@ -232,8 +257,8 @@ dic_in01,29,119,4	script	Resting Piom#04	4_MAN_PIOM6,{
 		mes "Why is it so noisy when I'm trying to get rest?";
 		close;
 	}
-	mes "[¢£¡ù¡ò ¢¤ ¡ù]";
-	mes "¡ü¢²¡ð ¡Ð ¡ò¡ø¢² ¡ô ¢²¡õ";
+	mes sprintf("[¢£¡ù¡ò ¢¤ ¡ù]");
+	mes sprintf("¡ü¢²¡ð ¡Ð ¡ò¡ø¢² ¡ô ¢²¡õ");
 	close;
 }
 
@@ -243,7 +268,7 @@ dic_in01,91,113,5	script	Suspicious Piom#a	4_MAN_PIOM6,{
 		mes "Have you heard of the";
 		mes "rumor about Ahat?";
 		next;
-		if(select("Nope!:You first.") == 1) {
+		if(select("Nope!", "You first.") == 1) {
 			mes "[Suspicious Piom]";
 			mes "Never mind.";
 			close;
@@ -254,7 +279,7 @@ dic_in01,91,113,5	script	Suspicious Piom#a	4_MAN_PIOM6,{
 		mes "You first.";
 		mes "You heard of the rumor, right?";
 		next;
-		if(select("Something is fishy?:If you're not going to spill it, me neither!") == 1) {
+		if(select("Something is fishy?", "If you're not going to spill it, me neither!") == 1) {
 			mes "[Suspicious Piom]";
 			mes "I'm only a very curious";
 			mes "ordinary Piom.";
@@ -264,10 +289,10 @@ dic_in01,91,113,5	script	Suspicious Piom#a	4_MAN_PIOM6,{
 		mes "I am not going to say anything, either!";
 		close;
 	}
-	mes "¡ó¢³¡ó ¡ó ¡ó¡þ¡ö";
-	mes "¡õ ¢³¢²¡÷ ¡ó¡ó";
+	mes sprintf("¡ó¢³¡ó ¡ó ¡ó¡þ¡ö");
+	mes sprintf("¡õ ¢³¢²¡÷ ¡ó¡ó");
 	next;
-	if(select("Can't tell what it means:Is it a curse??") == 2) {
+	if(select("Can't tell what it means", "Is it a curse??") == 2) {
 		mes "[Suspicious Piom]";
 		mes "Too bad.";
 		close;
@@ -287,10 +312,10 @@ dic_in01,168,116,5	script	Tired Piom#c	4_MAN_PIOM5,{
 		mes "But of course you'll have to pay the price.";
 		close;
 	}
-	mes "¡þ¡õ¡ð ¢³ ¢³¡þ";
-	mes "¡þ¡ø¡ð ¡ö ¡ñ¡ú¡ð ¡ò";
-	mes "¡ï¡ñ¡ú ¡ô ¡ö¡ö¡ò ¡û ¡ó¢¤¡ø ¡ø ¢² ¡ø";
-	mes "¢¤¢²¡ø ¡ò ¡ú¡ó¢±";
+	mes sprintf("¡þ¡õ¡ð ¢³ ¢³¡þ");
+	mes sprintf("¡þ¡ø¡ð ¡ö ¡ñ¡ú¡ð ¡ò");
+	mes sprintf("¡ï¡ñ¡ú ¡ô ¡ö¡ö¡ò ¡û ¡ó¢¤¡ø ¡ø ¢² ¡ø");
+	mes sprintf("¢¤¢²¡ø ¡ò ¡ú¡ó¢±");
 	close;
 }
 
@@ -304,10 +329,10 @@ dic_in01,149,104,5	script	Tired Piom#b	4_MAN_PIOM2,{
 		emotion e_what;
 		close;
 	}
-	mes "¡ð¡Ð¡ú ¡ø ¢²";
-	mes "¡ö¡õ¡ó ¢¤ ¡ò¡ò¢³ ¡ô ¡ô¡ó¡ñ";
-	mes "¢£¡ñ¡þ ¡ü ¢²¡û¡ó ¡ò ¡ð¡þ";
-	mes "¡ö¡ú¡ñ ¢³";
+	mes sprintf("¡ð¡Ð¡ú ¡ø ¢²");
+	mes sprintf("¡ö¡õ¡ó ¢¤ ¡ò¡ò¢³ ¡ô ¡ô¡ó¡ñ");
+	mes sprintf("¢£¡ñ¡þ ¡ü ¢²¡û¡ó ¡ò ¡ð¡þ");
+	mes sprintf("¡ö¡ú¡ñ ¢³");
 	emotion e_what;
 	close;
 }
@@ -329,17 +354,17 @@ dic_in01,341,113,3	script	Tired Piom#a	4_MAN_PIOM5,{
 		mes "I'll be rejected again, right?";
 		close;
 	}
-	mes "¡÷¡ò¡û ¡ó ¡ó¡Ð¢±";
-	mes "¡ó¡õ¡ù ¡þ ¡ò¢±¡ñ ¡õ ¢£";
-	mes "¡ü¡ð¢¤ ¡ù ¡ò¡ô¡õ ¡ò ¡ñ";
-	mes "¢³¡ú¢³ ¡Ð ¡ñ¡õ¡ù ¡÷ ¡÷¢±";
+	mes sprintf("¡÷¡ò¡û ¡ó ¡ó¡Ð¢±");
+	mes sprintf("¡ó¡õ¡ù ¡þ ¡ò¢±¡ñ ¡õ ¢£");
+	mes sprintf("¡ü¡ð¢¤ ¡ù ¡ò¡ô¡õ ¡ò ¡ñ");
+	mes sprintf("¢³¡ú¢³ ¡Ð ¡ñ¡õ¡ù ¡÷ ¡÷¢±");
 	next;
 	mes "[Tired Piom]";
-	mes "¡þ";
+	mes sprintf("¡þ");
 	next;
 	emotion e_swt;
 	mes "[Tired Piom]";
-	mes "¡ø¡ú¡ø ¢± ¡ö¡ò";
+	mes sprintf("¡ø¡ú¡ø ¢± ¡ö¡ò");
 	close;
 }
 
@@ -366,9 +391,9 @@ dic_in01,32,54,5	script	Venknick#el_01	4_MAN_BENKUNI,{
 		mes "The refined Bradium was the best ever. Do you want to try some?";
 		close;
 	}
-	mes "[¡ó¡ò¡ð]";
-	mes "¡ù¡ó¢¤ ¢± ¢£";
-	mes "¡õ¡þ¡ï ¢£ ¡÷¡÷¢¤ ¡ú ¡ó¡ñ¡ö ¢² ¡þ¢²¢¤ ¢² ¢£?";
+	mes sprintf("[¡ó¡ò¡ð]");
+	mes sprintf("¡ù¡ó¢¤ ¢± ¢£");
+	mes sprintf("¡õ¡þ¡ï ¢£ ¡÷¡÷¢¤ ¡ú ¡ó¡ñ¡ö ¢² ¡þ¢²¢¤ ¢² ¢£?");
 	close;
 }
 
@@ -388,17 +413,17 @@ dic_in01,372,116,3	script	Thrilled Piom#a	4_MAN_PIOM4,{
 		mes "blessing?";
 		close;
 	}
-	mes "¡ò¡õ¢³ ¡õ ¡ô";
-	mes "¢£¡ó¡ø ¢² ¡ô¡÷";
-	mes "¡ò¡ô¢³ ¡ù ¢±¡ó¢± ¡õ";
-	mes "¡ó¡ü¡Ð ¡ø ¢²¡ü¡Ð ¡õ ¡ï";
+	mes sprintf("¡ò¡õ¢³ ¡õ ¡ô");
+	mes sprintf("¢£¡ó¡ø ¢² ¡ô¡÷");
+	mes sprintf("¡ò¡ô¢³ ¡ù ¢±¡ó¢± ¡õ");
+	mes sprintf("¡ó¡ü¡Ð ¡ø ¢²¡ü¡Ð ¡õ ¡ï");
 	next;
 	mes "[Thrilled Piom]";
-	mes "¢£";
+	mes sprintf("¢£");
 	next;
 	mes "[Thrilled Piom]";
-	mes "¡Ð¢¤¡ù ¢£ ¡ó¡ó";
-	mes "¡ù¡ó¡÷ ¡û ¡þ¡ô";
+	mes sprintf("¡Ð¢¤¡ù ¢£ ¡ó¡ó");
+	mes sprintf("¡ù¡ó¡÷ ¡û ¡þ¡ô");
 	close;
 }
 
@@ -410,9 +435,9 @@ dic_in01,360,125,5	script	Serious Venknicka	4_MAN_BENKUNI,{
 		mes "I will have to get more factory lines running.";
 		close;
 	}
-	mes "¡û¡õ¡ñ ¢² ¢²¢¤¡Ð ¢² ¡ü¡ñ¡õ";
-	mes "¡þ¡ó¡ö ¢²";
-	mes "¡ö¡÷¡û ¡ú ¡÷¡Ð¢³ ¢³";
+	mes sprintf("¡û¡õ¡ñ ¢² ¢²¢¤¡Ð ¢² ¡ü¡ñ¡õ");
+	mes sprintf("¡þ¡ó¡ö ¢²");
+	mes sprintf("¡ö¡÷¡û ¡ú ¡÷¡Ð¢³ ¢³");
 	close;
 }
 
@@ -442,24 +467,24 @@ dic_in01,42,250,5	script	Guide#diel_1	4_MAN_PIOM6,{
 		mes "- The guide looks at you with an alert expression. -";
 		close;
 	}
-	mes "[¢³¡ñ]";
-	mes "¡õ¢£¡ó ¡Ð ¡õ¡ñ¡ò ¢¤ ¡ø¡ø¢£ ¢± ¢²¢³¡÷ ¢±";
-	mes "¡ö¡ò¡ð ¡ó ¡ô¡ô?";
+	mes sprintf("[¢³¡ñ]");
+	mes sprintf("¡õ¢£¡ó ¡Ð ¡õ¡ñ¡ò ¢¤ ¡ø¡ø¢£ ¢± ¢²¢³¡÷ ¢±");
+	mes sprintf("¡ö¡ò¡ð ¡ó ¡ô¡ô?");
 	next;
-	mes "[¢³¡ñ]";
-	mes "¡Ð¡ù¡ó ¡ù ¡ü¢²¡Ð ¢± ¡÷¡ö¡þ";
-	mes "¡ñ¡þ¢² ¡ø ¡ó¡ï¡ï ¡ù ¡ð¡ñ¡Ð ¡ù ¢³¡ò¡þ ¡ù ¡ø¡ð¡õ ¡õ ¢¤";
+	mes sprintf("[¢³¡ñ]");
+	mes sprintf("¡Ð¡ù¡ó ¡ù ¡ü¢²¡Ð ¢± ¡÷¡ö¡þ");
+	mes sprintf("¡ñ¡þ¢² ¡ø ¡ó¡ï¡ï ¡ù ¡ð¡ñ¡Ð ¡ù ¢³¡ò¡þ ¡ù ¡ø¡ð¡õ ¡õ ¢¤");
 	next;
-	mes "[¢³¡ñ]";
-	mes "¡û¡ù¡ô ¡ø ¡ð¡þ¡÷ ¢³ ¡þ¡ù¡ñ ¡ú ¡ü¢¤¡ò ¡ú ¡ô¢£";
-	mes "¡÷¡ò¢¤ ¡ø ¡û¢³";
+	mes sprintf("[¢³¡ñ]");
+	mes sprintf("¡û¡ù¡ô ¡ø ¡ð¡þ¡÷ ¢³ ¡þ¡ù¡ñ ¡ú ¡ü¢¤¡ò ¡ú ¡ô¢£");
+	mes sprintf("¡÷¡ò¢¤ ¡ø ¡û¢³");
 	next;
-	mes "[¢³¡ñ]";
-	mes "¡ô¡ð¡ñ ¢¤ ¡ó¡÷¢³ ¡þ ¡ó¡õ¡÷ ¡ö ¡ó ¡ö";
+	mes sprintf("[¢³¡ñ]");
+	mes sprintf("¡ô¡ð¡ñ ¢¤ ¡ó¡÷¢³ ¡þ ¡ó¡õ¡÷ ¡ö ¡ó ¡ö");
 	next;
-	mes "[¢³¡ñ]";
-	mes "¡ò¡ô¡ø ¡÷ ¡õ¡ø¡ð ¡ó ¢¤¡Ð¡ô ¡ø ¡ñ¡ñ¡ñ ¡ø ¡ú¡ö¡ø ¡ü";
-	mes "¡ï¢³¡ð ¢¤ ¡ð¡ö¢£ ¢± ¡ô¡ø";
+	mes sprintf("[¢³¡ñ]");
+	mes sprintf("¡ò¡ô¡ø ¡÷ ¡õ¡ø¡ð ¡ó ¢¤¡Ð¡ô ¡ø ¡ñ¡ñ¡ñ ¡ø ¡ú¡ö¡ø ¡ü");
+	mes sprintf("¡ï¢³¡ð ¢¤ ¡ð¡ö¢£ ¢± ¡ô¡ø");
 	close;
 }
 
@@ -474,12 +499,12 @@ dic_in01,335,34,5	script	Talkative Piom#a	4_MAN_PIOM4,{
 		mes "here too.";
 		close;
 	}
-	mes "¡ü¡ù¢± ¢³";
-	mes "¡÷¡ø¡ï ¡þ ¡ó¡ó";
-	mes "¡ñ¡õ¡ò ¡ó ¡÷¡ü¡ù ¡ö";
-	mes "¡ñ¡ø¡ü ¡ú ¡ô";
-	mes "¡þ¡ú¡ò ¢± ¡û¡ò¡ò ¡ù ¡÷";
-	mes "¢³¡ò¡ò ¡ù ¢±¢£¡ò";
+	mes sprintf("¡ü¡ù¢± ¢³");
+	mes sprintf("¡÷¡ø¡ï ¡þ ¡ó¡ó");
+	mes sprintf("¡ñ¡õ¡ò ¡ó ¡÷¡ü¡ù ¡ö");
+	mes sprintf("¡ñ¡ø¡ü ¡ú ¡ô");
+	mes sprintf("¡þ¡ú¡ò ¢± ¡û¡ò¡ò ¡ù ¡÷");
+	mes sprintf("¢³¡ò¡ò ¡ù ¢±¢£¡ò");
 	close;
 }
 
@@ -490,8 +515,8 @@ dic_in01,387,30,1	script	Manuk Piom#a	4_MAN_PIOM,{
 		mes "I've come to pick up the weapon I ordered.";
 		close;
 	}
-	mes "¡ü¡ó¡þ ¡ó ¡ï¡ð¢¤ ¡ü ¡ð¢±";
-	mes "¡ù¡ô¡ï ¡ú ¡ñ¡ù¢³ ¡ó ¡ò¡ö¡ó ¡ô¡ô";
+	mes sprintf("¡ü¡ó¡þ ¡ó ¡ï¡ð¢¤ ¡ü ¡ð¢±");
+	mes sprintf("¡ù¡ô¡ï ¡ú ¡ñ¡ù¢³ ¡ó ¡ò¡ö¡ó ¡ô¡ô");
 	close;
 }
 
@@ -505,11 +530,11 @@ dicastes01,282,210,4	script	Free Knit#a	4_MAN_NITT,{
 		mes "which is short.";
 		close;
 	}
-	mes "¡ñ¡þ¡ð ¡ó ¡ü¡ò¡ö ¡÷";
-	mes "¢³¡ð¡ï ¢£ ¡ù¡ô¡ò ¡ô ¡ó¡þ¡ñ ¢² ¡ñ¡û¢£ ¢²";
-	mes "¡ô¡ó¡ð ¡þ ¢£¡ð¢¤ ¡õ ¡û¢³¡ü";
-	mes "¡ó¢³¡ò ¢± ¡ô¢£¢² ¡÷ ¡÷¡ñ";
-	mes "¡ò¢²¡ï ¢£ ¡ö¡ö";
+	mes sprintf("¡ñ¡þ¡ð ¡ó ¡ü¡ò¡ö ¡÷");
+	mes sprintf("¢³¡ð¡ï ¢£ ¡ù¡ô¡ò ¡ô ¡ó¡þ¡ñ ¢² ¡ñ¡û¢£ ¢²");
+	mes sprintf("¡ô¡ó¡ð ¡þ ¢£¡ð¢¤ ¡õ ¡û¢³¡ü");
+	mes sprintf("¡ó¢³¡ò ¢± ¡ô¢£¢² ¡÷ ¡÷¡ñ");
+	mes sprintf("¡ò¢²¡ï ¢£ ¡ö¡ö");
 	close;
 }
 
@@ -529,17 +554,17 @@ dicastes01,246,210,3	script	Free Venknick#a	4_MAN_BENKUNI,{
 		mes "but why are you interested in it?";
 		close;
 	}
-	mes "¡ô¡ï¢£ ¢¤ ¡÷¡õ¢± ¡ü ¡ñ¡õ";
-	mes "¡ü¢³";
-	mes "¡ö¡ù¢¤ ¢² ¡ù¡ó¡ô";
-	mes "¡ü¢£¢³ ¡ø ¡û¡ð¡ü ¡õ";
+	mes sprintf("¡ô¡ï¢£ ¢¤ ¡÷¡õ¢± ¡ü ¡ñ¡õ");
+	mes sprintf("¡ü¢³");
+	mes sprintf("¡ö¡ù¢¤ ¢² ¡ù¡ó¡ô");
+	mes sprintf("¡ü¢£¢³ ¡ø ¡û¡ð¡ü ¡õ");
 	next;
 	mes "[Free Venknick]";
-	mes "¡ù";
+	mes sprintf("¡ù");
 	next;
 	mes "[Free Venknick]";
-	mes "¡þ¢¤¢£ ¢± ¡ó¡ò¢³ ¡ü ¡ñ¡ð";
-	mes "¢±¡û¢£ ¡ö ¡ü¡ò¡÷ ¡û ¡õ¡ò¡÷ ¢²¢²";
+	mes sprintf("¡þ¢¤¢£ ¢± ¡ó¡ò¢³ ¡ü ¡ñ¡ð");
+	mes sprintf("¢±¡û¢£ ¡ö ¡ü¡ò¡÷ ¡û ¡õ¡ò¡÷ ¢²¢²");
 	close;
 }
 
@@ -552,27 +577,27 @@ dicastes01,235,245,4	script	Excited Piom#a	4_MAN_PIOM4,{
 		close;
 	}
 	mes "[Excited Piom]";
-	mes "¡ú¡þ¡ó ¢³ ¡ü¢²¡ñ ¢±";
+	mes sprintf("¡ú¡þ¡ó ¢³ ¡ü¢²¡ñ ¢±");
 	emotion e_ho;
-	mes "¢³¡ó¡ñ ¡õ ¡ð¡ô¡þ ¡÷ ¡ú¡ò¡õ ¡ø ¢² ¡ø";
+	mes sprintf("¢³¡ó¡ñ ¡õ ¡ð¡ô¡þ ¡÷ ¡ú¡ò¡õ ¡ø ¢² ¡ø");
 	close;
 }
 
 dicastes01,284,262,3	script	Favorable Knit#a	4_MAN_NITT,{
 	mes "[Favorable Knit]";
 	if (isequipped(2782)) {
-		mes "Unlike the Raphine, we Saphas";
+		mes "Unlike the Laphine, we Saphas";
 		mes "are a very close community.";
 		mes "We start by living together in common facilities after we are born.";
 		mes "That is why all Saphas are like family.";
 		mes "We never have any quarrels between classes.";
 		close;
 	}
-	mes "¡ô¢±¡ó ¡õ ¡ú¡÷¡Ð ¡õ";
-	mes "¡ü¡ï¡Ð ¡õ ¡ô¡ó¡ü ¡ó ¢³";
-	mes "¡ñ¡ô¡ü ¡þ ¢¤¡ñ¢¤ ¡ô ¡û¡ï¡ù";
-	mes "¡ú¡ö¡ô ¡ó ¢£¡ú¡þ ¡ø ¡ø¡ò";
-	mes "¢²¢³¡û ¢¤ ¡ú¡ñ¡ù ¡û ¢³¡ò¡ø ¡õ¡õ";
+	mes sprintf("¡ô¢±¡ó ¡õ ¡ú¡÷¡Ð ¡õ");
+	mes sprintf("¡ü¡ï¡Ð ¡õ ¡ô¡ó¡ü ¡ó ¢³");
+	mes sprintf("¡ñ¡ô¡ü ¡þ ¢¤¡ñ¢¤ ¡ô ¡û¡ï¡ù");
+	mes sprintf("¡ú¡ö¡ô ¡ó ¢£¡ú¡þ ¡ø ¡ø¡ò");
+	mes sprintf("¢²¢³¡û ¢¤ ¡ú¡ñ¡ù ¡û ¢³¡ò¡ø ¡õ¡õ");
 	close;
 }
 
@@ -587,11 +612,11 @@ dicastes01,164,180,4	script	Limpy Piom#a	4_MAN_PIOM6,{
 		emotion e_dots;
 		close;
 	}
-	mes "¢²¡ô¡þ ¡ù ¡õ¡Ð";
-	mes "¢³¡ô¡û ¡ú ¡ø";
-	mes "¢³¡þ¢¤ ¡ó ¡õ¡÷¡Ð";
-	mes "¡ñ¡ò¡ü ¡ü ¡ù¡þ¢±";
-	mes "¢¤¡ò¡þ ¢¤ ¢£¡ñ ¢¤ ¢£¡ñ";
+	mes sprintf("¢²¡ô¡þ ¡ù ¡õ¡Ð");
+	mes sprintf("¢³¡ô¡û ¡ú ¡ø");
+	mes sprintf("¢³¡þ¢¤ ¡ó ¡õ¡÷¡Ð");
+	mes sprintf("¡ñ¡ò¡ü ¡ü ¡ù¡þ¢±");
+	mes sprintf("¢¤¡ò¡þ ¢¤ ¢£¡ñ ¢¤ ¢£¡ñ");
 	emotion e_dots;
 	close;
 }
@@ -606,7 +631,7 @@ dicastes01,191,202,4	script	Complaining Galten#fihs	4_MAN_GALTUN,{
 		mes "Have you ever talked";
 		mes "to him?";
 		next;
-		if(select("No:Yes") == 1) {
+		if(select("No", "Yes") == 1) {
 			mes "[Complaining Galten]";
 			mes "Then you don't know about the legend behind the statue?";
 			mes "Then, I don't know what to talk about with you.";
@@ -616,7 +641,7 @@ dicastes01,191,202,4	script	Complaining Galten#fihs	4_MAN_GALTUN,{
 		mes "[Complaining Galten]";
 		mes "You also fell for that crazy man.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Yes";
 		emotion e_sob,1;
 		next;
@@ -624,13 +649,13 @@ dicastes01,191,202,4	script	Complaining Galten#fihs	4_MAN_GALTUN,{
 		mes "Just forget about it quickly for your own good.";
 		close;
 	}
-	mes "[¡õ¢£¡ö ¡ú ]";
-	mes "¡õ¡ò¡û ¡ò ¢£¡û¡÷ ¡÷ ";
-	mes "¡û¡ù¡û ¡÷ ¡ü¡þ¡û ¢³ ¡ó";
+	mes sprintf("[¡õ¢£¡ö ¡ú ]");
+	mes sprintf("¡õ¡ò¡û ¡ò ¢£¡û¡÷ ¡÷ ");
+	mes sprintf("¡û¡ù¡û ¡÷ ¡ü¡þ¡û ¢³ ¡ó");
 	next;
-	mes "[¡õ¢£¡ö ¡ú ]";
-	mes "¡ð¢±¡ü ¡û ¡õ¡÷¢¤";
-	mes "¢¤¡þ¡ø ¢² ¡÷";
+	mes sprintf("[¡õ¢£¡ö ¡ú ]");
+	mes sprintf("¡ð¢±¡ü ¡û ¡õ¡÷¢¤");
+	mes sprintf("¢¤¡þ¡ø ¢² ¡÷");
 	next;
 	mes "Don't know what it means.";
 	close;
@@ -642,7 +667,7 @@ dicastes01,202,197,4	script	Crazy Venknick#fihsing1	4_MAN_BENKUNI,{
 		mes "At only 5000 Zeny";
 		mes "I will tell you the sad legend behind that statue.";
 		next;
-		if(select("Give 5000 Zeny.:Don't give 5000 Zeny.") == 2) {
+		if(select("Give 5000 Zeny.", "Don't give 5000 Zeny.") == 2) {
 			mes "[Crazy Venknick]";
 			mes "Don't come back with regrets.";
 			close;
@@ -659,27 +684,27 @@ dicastes01,202,197,4	script	Crazy Venknick#fihsing1	4_MAN_BENKUNI,{
 		mes "Thanks.";
 		emotion e_gg,0,"Complaining Galten#fihs";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What is the sad legend?";
 		next;
 		emotion e_dots;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I asked what the sad legend is about!";
 		next;
 		mes "[Crazy Venknick]";
 		mes "I don't believe in legends.";
 		next;
 		emotion e_dots,1;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Was I tricked?";
 		sc_start SC_BLIND,20000,0;
 		next;
 		mes "You feel outraged at being tricked.";
 		close;
 	}
-	mes "[¡ö¡ú¡ù ¢³ ]";
-	mes "¢²¡û¡ó ¡ó ¡ù¢¤¡ø";
-	mes "¢¤¡ð¢² ¢± ¡ñ¡ö¢² ¡ø ¡ï¡ö¡ü";
+	mes sprintf("[¡ö¡ú¡ù ¢³ ]");
+	mes sprintf("¢²¡û¡ó ¡ó ¡ù¢¤¡ø");
+	mes sprintf("¢¤¡ð¢² ¢± ¡ñ¡ö¢² ¡ø ¡ï¡ö¡ü");
 	next;
 	mes "Don't know what it means.";
 	close;
@@ -694,9 +719,9 @@ dic_in01,98,110,5	script	Worried Piom#a	4_MAN_PIOM6,{
 		close;
 	}
 	mes "[Worried Piom]";
-	mes "¡û¢±¡÷ ¢² ¡ï¡þ¡ò ¡ü ¡ï¡û¢²";
-	mes "¡ï¡÷¢¤ ¡Ð ¡ï¡ï¡Ð ¢¤ ¢£";
-	mes "¡÷¡þ¡ð ¡ó ¡ñ";
+	mes sprintf("¡û¢±¡÷ ¢² ¡ï¡þ¡ò ¡ü ¡ï¡û¢²");
+	mes sprintf("¡ï¡÷¢¤ ¡Ð ¡ï¡ï¡Ð ¢¤ ¢£");
+	mes sprintf("¡÷¡þ¡ð ¡ó ¡ñ");
 	close;
 }
 
@@ -709,8 +734,8 @@ dic_in01,98,96,3	script	Lost Galten#a	4_MAN_GALTUN1,{
 		close;
 	}
 	mes "[Lost Galten]";
-	mes "¡ó¡ô¡ï ¡û ¢³¡ú";
-	mes "¡ü¡ø¡ñ ¢£ ";
-	mes "¡ö¡ï¢² ¡û ¡ö¡ó";
+	mes sprintf("¡ó¡ô¡ï ¡û ¢³¡ú");
+	mes sprintf("¡ü¡ø¡ñ ¢£ ");
+	mes sprintf("¡ö¡ï¢² ¡û ¡ö¡ó");
 	close;
 }

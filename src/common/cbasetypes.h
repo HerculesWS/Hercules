@@ -1,3 +1,22 @@
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef COMMON_CBASETYPES_H
 #define COMMON_CBASETYPES_H
 
@@ -43,15 +62,23 @@
 #endif
 
 // Standardize the ARM platform version, if available (the only values we're interested in right now are >= ARMv6)
+#ifdef __ARM_ARCH
+#define __ARM_ARCH_VERSION__ __ARM_ARCH
+#else
 #if defined(__ARMV6__) || defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) \
 	|| defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__) // gcc ARMv6
 #define __ARM_ARCH_VERSION__ 6
-#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
+#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
 #define __ARM_ARCH_VERSION__ 7
+#elif defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__)
+#define __ARM_ARCH_VERSION__ 8
 #elif defined(_M_ARM) // MSVC
 #define __ARM_ARCH_VERSION__ _M_ARM
+#elif defined(__TARGET_ARCH_ARM) // RVCT
+#define __ARM_ARCH_VERSION__ __TARGET_ARCH_ARM
 #else
 #define __ARM_ARCH_VERSION__ 0
+#endif
 #endif
 
 // Necessary for __NetBSD_Version__ (defined as VVRR00PP00) on NetBSD
@@ -75,8 +102,8 @@
 
 // debug function name
 #ifndef __NETBSD__
-#if __STDC_VERSION__ < 199901L
-#	if __GNUC__ >= 2
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+#	if __GNUC__ >= 2 || defined(WIN32)
 #		define __func__ __FUNCTION__
 #	else
 #		define __func__ ""
@@ -90,6 +117,14 @@
 #  define  __attribute__(x)
 #endif
 
+/// Feature/extension checking macros
+#ifndef __has_extension /* Available in clang and gcc >= 3 */
+#define __has_extension(x) 0
+#endif
+#ifndef __has_feature /* Available in clang and gcc >= 5 */
+#define __has_feature(x) __has_extension(x)
+#endif
+
 //////////////////////////////////////////////////////////////////////////
 // portable printf/scanf format macros and integer definitions
 // NOTE: Visual C++ uses <inttypes.h> and <stdint.h> provided in /3rdparty
@@ -97,16 +132,7 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <limits.h>
-
-// temporary fix for bugreport:4961 (unintended conversion from signed to unsigned)
-// (-20 >= UCHAR_MAX) returns true
-// (-20 >= USHRT_MAX) returns true
-#if defined(__FreeBSD__) && defined(__x86_64)
-#undef UCHAR_MAX
-#define UCHAR_MAX ((unsigned char)0xff)
-#undef USHRT_MAX
-#define USHRT_MAX ((unsigned short)0xffff)
-#endif
+#include <time.h>
 
 // ILP64 isn't supported, so always 32 bits?
 #ifndef UINT_MAX
@@ -239,9 +265,8 @@ typedef uintptr_t uintptr;
 #define strcasecmp  stricmp
 #define strncasecmp strnicmp
 #define strncmpi    strnicmp
+#if defined(__BORLANDC__) || _MSC_VER < 1900
 #define snprintf    _snprintf
-#if defined(_MSC_VER) && _MSC_VER < 1400
-#define vsnprintf   _vsnprintf
 #endif
 #else
 #define strcmpi     strcasecmp
@@ -249,7 +274,7 @@ typedef uintptr_t uintptr;
 #define strncmpi    strncasecmp
 #define strnicmp    strncasecmp
 #endif
-#if defined(_MSC_VER) && _MSC_VER > 1200
+#if defined(_MSC_VER)
 #define strtoull    _strtoui64
 #define strtoll     _strtoi64
 #endif
@@ -273,6 +298,42 @@ typedef uintptr_t uintptr;
 #define analyzer_noreturn
 #endif
 
+// gcc version (if any) - borrowed from Mana Plus
+#ifdef __GNUC__
+#define GCC_VERSION (__GNUC__ * 10000 \
+		+ __GNUC_MINOR__ * 100 \
+		+ __GNUC_PATCHLEVEL__)
+#else
+#define GCC_VERSION 0
+#endif
+
+// Pragma macro only enabled on gcc >= 4.6 or clang - borrowed from Mana Plus
+#if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
+#define PRAGMA_GCC46(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
+#define PRAGMA_GCC46(str)
+#endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
+
+// Pragma macro only enabled on gcc >= 5 or clang - borrowed from Mana Plus
+#if defined(__GNUC__) && (GCC_VERSION >= 50000)
+#define PRAGMA_GCC5(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
+#define PRAGMA_GCC5(str)
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
+
+// Pragma macro only enabled on gcc >= 9
+#if defined(__GNUC__) && (GCC_VERSION >= 90000)
+#define PRAGMA_GCC9(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
+#define PRAGMA_GCC9(str)
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
+
+// fallthrough attribute only enabled on gcc >= 7.0
+#if defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define FALLTHROUGH __attribute__ ((fallthrough));
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define FALLTHROUGH
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
 
 // boolean types for C
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
@@ -305,24 +366,6 @@ typedef char bool;
 //#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
 // but is vulnerable to 'if (foo) swap(bar, baz); else quux();', causing the else to nest incorrectly.
 #define swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
-#if 0 //to be activated soon, more tests needed on how VS works with the macro above
-#ifdef WIN32
-#undef swap
-#define swap(a,b)__asm { \
-	__asm mov eax, dword ptr [a] \
-	__asm cmp eax, dword ptr [b] \
-	__asm je  _ret               \
-	__asm xor eax, dword ptr [b] \
-	__asm mov dword ptr [a], eax \
-	__asm xor eax, dword ptr [b] \
-	__asm mov dword ptr [b], eax \
-	__asm xor eax, dword ptr [a] \
-	__asm mov dword ptr [a], eax \
-	__asm _ret:                  \
-}
-#endif
-#endif
-
 #define swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
 
 #ifndef max
@@ -358,13 +401,19 @@ typedef char bool;
 #if defined(WIN32)
 #define PATHSEP '\\'
 #define PATHSEP_STR "\\"
+#define PATHSEP2 '/'
+#define PATHSEP_STR2 "/"
 #elif defined(__APPLE__) && !defined(__MACH__)
 // __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
 #define PATHSEP ':'
 #define PATHSEP_STR ":"
+#define PATHSEP2 ':'
+#define PATHSEP_STR2 ":"
 #else
 #define PATHSEP '/'
 #define PATHSEP_STR "/"
+#define PATHSEP2 '/'
+#define PATHSEP_STR2 "/"
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -375,20 +424,23 @@ typedef char bool;
 #define ISALPHA(c) (isalpha((unsigned char)(c)))
 #define ISCNTRL(c) (iscntrl((unsigned char)(c)))
 #define ISDIGIT(c) (isdigit((unsigned char)(c)))
+#define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
+#define ISBDIGIT(c) ((unsigned char)(c) == '0' || (unsigned char)(c) == '1')
+#define ISODIGIT(c) ((unsigned char)(c) >= '0' && (unsigned char)(c) <= '7')
+#define ISNSEPARATOR(c) ((unsigned char)(c) == '_')
 #define ISGRAPH(c) (isgraph((unsigned char)(c)))
 #define ISLOWER(c) (islower((unsigned char)(c)))
 #define ISPRINT(c) (isprint((unsigned char)(c)))
 #define ISPUNCT(c) (ispunct((unsigned char)(c)))
 #define ISSPACE(c) (isspace((unsigned char)(c)))
 #define ISUPPER(c) (isupper((unsigned char)(c)))
-#define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
 #define TOASCII(c) (toascii((unsigned char)(c)))
 #define TOLOWER(c) (tolower((unsigned char)(c)))
 #define TOUPPER(c) (toupper((unsigned char)(c)))
 
 //////////////////////////////////////////////////////////////////////////
 // length of a static array
-#define ARRAYLENGTH(A) ( sizeof(A)/sizeof((A)[0]) )
+#define ARRAYLENGTH(A) ( (int)(sizeof(A)/sizeof((A)[0])) )
 
 //////////////////////////////////////////////////////////////////////////
 // Make sure va_copy exists
@@ -424,5 +476,21 @@ typedef char bool;
 #define END_ZEROED_BLOCK int8 HERC__zeroed_block_END
 #define ZEROED_BLOCK_POS(x) (&(x)->HERC__zeroed_block_BEGIN)
 #define ZEROED_BLOCK_SIZE(x) ((char*)&((x)->HERC__zeroed_block_END) - (char*)&((x)->HERC__zeroed_block_BEGIN) + sizeof((x)->HERC__zeroed_block_END))
+
+/** Support macros for marking structs as unavailable */
+#define UNAVAILABLE_STRUCT int8 HERC__unavailable_struct
+
+/** Static assertion (only on compilers that support it) */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+// C11 version
+#define STATIC_ASSERT(ex, msg) _Static_assert(ex, msg)
+#elif defined(_MSC_VER)
+// MSVC doesn't support it, but it accepts the C++ style version
+#define STATIC_ASSERT(ex, msg) static_assert(ex, msg)
+#else
+// Otherise just ignore it until it's supported
+#define STATIC_ASSERT(ex, msg)
+#endif
+
 
 #endif /* COMMON_CBASETYPES_H */

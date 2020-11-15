@@ -1,23 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Dastgir
+//= Copyright (C) Euphy
+//= Copyright (C) Chilly
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eclage Warp Script
-//===== By: ==================================================
-//= Chilly
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Eclage
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.0a Disabled quest warp. [Euphy]
-//= 1.1 Warps corresponds to official co-ordinates and
-//=	Warp Portal official names. [Dastgir]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 // Town Warps
 ecl_fild01,207,72,0	warp	fild01-1_biffild	1,1,bif_fild02,294,350
 bif_fild02,292,351,0	warp	biffild_fild01-1	1,1,ecl_fild01,205,76
 //ecl_fild01,97,320,0	warp	eclage_field0003	1,1,eclage,100,28
-eclage,98,26,0	warp	eclageS_EclEnter	1,1,eclage,100,28
+eclage,98,26,0	warp	eclageS_EclEnter	1,1,ecl_fild01,99,317
 eclage,299,309,0	warp	eclageN_in01s	1,1,ecl_in01,47,11
 ecl_in01,47,8,0	warp	in01s_eclageN	1,1,eclage,297,307
 ecl_in01,8,67,0	warp	in01w_hub1-1	1,1,ecl_hub01,38,94

@@ -1,16 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Streusel
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Renewal Mage Job Quest
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Job Change to Mage Class
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Kisuka]
-//= 1.1 Added Baby Job compatibility [Streusel]
-//= 1.2 Rewrote bits [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
+
 geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_High_Wizard || ADVJOB == Job_Professor) {
@@ -64,13 +87,13 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 	}else{
 		mes "Hey?";
 		next;
-		switch(select("I want to be a Mage:What are the requirements to be a Mage?:Nothing, thanks.")) {
+		switch(select("I want to be a Mage", "What are the requirements to be a Mage?", "Nothing, thanks.")) {
 		case 1:
 			mes "[Mage Guildsman]";
 			mes "Wanna be a Mage? Eh...";
 			next;
 			mes "[Mage Guildsman]";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Hey, look at you! You're kinda cute~! Not my type though...";
 			}else{
 				mes "Oooh, you're such a hot babe~!";
@@ -78,7 +101,7 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 			}
 			mes "Right, you said that you wanna be a Mage?";
 			next;
-			if(select("I want to be a Mage.:Nothing, thanks.") == 2) {
+			if(select("I want to be a Mage.", "Nothing, thanks.") == 2) {
 				mes "[Mage Guildsman]";
 				mes "Whaaaaat~?! Right after you tell me that you wanna become a Mage, you change your mind?! Be a bit more decisive!";
 				close;
@@ -90,7 +113,7 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 				close;
 			}
 			mes "Alright.. sign the application form.... Wow~ you have good handwriting! Ahh, okay. That's enough.";
-			mes "You are... "+strcharinfo(0)+".";
+			mes "You are... "+strcharinfo(PC_NAME)+".";
 			next;
 			mes "[Mage Guildsman]";
 			mes "Hmm I can see that you've tried hard in your own way. Though it seems to be a little clumsy, but well I think it's okay!";

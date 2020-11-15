@@ -1,18 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Bunny Band Quest
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest to obtain a Bunny Band headgear.
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//	Changed @BUNYBAN back to BUNYBND, it should be this way.
-//	Removed duplicates. NPC is ALberta-only.
-//= 1.6 Cleaning. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.6
+//=========================================================================
 
 alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 	if (BUNYBND == 1) {
@@ -23,7 +45,7 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 		mes "Corporation's special";
 		mes "^529DFFBunny Band Event^000000?";
 		next;
-		switch(select("Sure, I brought the items.:Event Information:Cancel")) {
+		switch(select("Sure, I brought the items.", "Event Information", "Cancel")) {
 		case 1:
 			mes "[Kafra Employee]";
 			mes "Alrighty~";
@@ -60,15 +82,15 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 					mes "Bunny Band together...";
 					close;
 				}
-			delitem 949,100; //Feather
-			delitem 706,1; //Four_Leaf_Clover
-			delitem 722,1; //Scarlet_Jewel
-			delitem 2213,1; //Cat_Hairband
+			delitem Feather,100;
+			delitem Four_Leaf_Clover,1;
+			delitem Scarlet_Jewel,1;
+			delitem Cat_Hairband,1;
 			mes "[Kafra Employee]";
 			mes "Ah, here you go~";
 			mes "The perfect Bunny Band!";
 			mes "Well, I hope you enjoy it.";
-			getitem 2214,1; //Bunny_Band
+			getitem Bunny_Band,1;
 			BUNYBND = 0;
 			next;
 			mes "[Kafra Employee]";
@@ -79,43 +101,43 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 			mes "of the Kafra Services~";
 			close;
 		case 2:
-			goto L_Info;
+			break;
+		case 3:
+			close;
+		}
+	} else {
+		mes "[Kafra Employee]";
+		mes "Hi there~! Would you like";
+		mes "to join our special ^529DFFBunny";
+		mes "Band Event^000000 hosted by the Kafra";
+		mes "Corporation and sponsored by";
+		mes "the Alberta Merchant Guild?";
+		next;
+		switch(select("Join the Event", "Event Information", "Cancel")) {
+		case 1:
+			BUNYBND = 1;
+			mes "[Kafra Employee]";
+			mes "Great! Thanks for";
+			mes "participating! If you";
+			mes "haven't already heard,";
+			mes "you need to collect these";
+			mes "items if you want me put a";
+			mes "Bunny Band together for you...";
+			next;
+			mes "[Kafra Employee]";
+			mes "100 Feathers,";
+			mes "1 Four-Leaf Clover,";
+			mes "1 Kitty Band and";
+			mes "1 Pearl. That's it!";
+			mes "Good luck and I'll be";
+			mes "waiting for you here~";
+			close;
+		case 2:
+			break;
 		case 3:
 			close;
 		}
 	}
-	mes "[Kafra Employee]";
-	mes "Hi there~! Would you like";
-	mes "to join our special ^529DFFBunny";
-	mes "Band Event^000000 hosted by the Kafra";
-	mes "Corporation and sponsored by";
-	mes "the Alberta Merchant Guild?";
-	next;
-	switch(select("Join the Event:Event Information:Cancel")) {
-	case 1:
-		BUNYBND = 1;
-		mes "[Kafra Employee]";
-		mes "Great! Thanks for";
-		mes "participating! If you";
-		mes "haven't already heard,";
-		mes "you need to collect these";
-		mes "items if you want me put a";
-		mes "Bunny Band together for you...";
-		next;
-		mes "[Kafra Employee]";
-		mes "100 Feathers,";
-		mes "1 Four-Leaf Clover,";
-		mes "1 Kitty Band and";
-		mes "1 Pearl. That's it!";
-		mes "Good luck and I'll be";
-		mes "waiting for you here~";
-		close;
-	case 2:
-		break;
-	case 3:
-		close;
-	}
-L_Info:
 	mes "[Kafra Employee]";
 	mes "To thank our valued";
 	mes "customers, Kafra Corporation";
@@ -140,12 +162,3 @@ L_Info:
 	mes "Alberta Merchant Guild).";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.1 using duplicate command
-//= 1.2 Fixed NPC location, removed NPC dupes [Lupus]
-//= 1.3 RE-Fixed exploit V_V, also cleared used VAR [Lupus]
-//= 1.4 replaced BUNYBND with @BUNYBND [Lupus]
-//============================================================

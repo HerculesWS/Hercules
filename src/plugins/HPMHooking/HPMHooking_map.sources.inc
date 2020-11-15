@@ -1,45 +1,97 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-2020 Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-memcpy(&HPMHooks.source.atcommand, atcommand, sizeof(struct atcommand_interface));
-memcpy(&HPMHooks.source.battle, battle, sizeof(struct battle_interface));
-memcpy(&HPMHooks.source.bg, bg, sizeof(struct battleground_interface));
-memcpy(&HPMHooks.source.buyingstore, buyingstore, sizeof(struct buyingstore_interface));
-memcpy(&HPMHooks.source.channel, channel, sizeof(struct channel_interface));
-memcpy(&HPMHooks.source.chat, chat, sizeof(struct chat_interface));
-memcpy(&HPMHooks.source.chrif, chrif, sizeof(struct chrif_interface));
-memcpy(&HPMHooks.source.clif, clif, sizeof(struct clif_interface));
-memcpy(&HPMHooks.source.duel, duel, sizeof(struct duel_interface));
-memcpy(&HPMHooks.source.elemental, elemental, sizeof(struct elemental_interface));
-memcpy(&HPMHooks.source.guild, guild, sizeof(struct guild_interface));
-memcpy(&HPMHooks.source.gstorage, gstorage, sizeof(struct guild_storage_interface));
-memcpy(&HPMHooks.source.homun, homun, sizeof(struct homunculus_interface));
-memcpy(&HPMHooks.source.instance, instance, sizeof(struct instance_interface));
-memcpy(&HPMHooks.source.intif, intif, sizeof(struct intif_interface));
-memcpy(&HPMHooks.source.ircbot, ircbot, sizeof(struct irc_bot_interface));
-memcpy(&HPMHooks.source.itemdb, itemdb, sizeof(struct itemdb_interface));
-memcpy(&HPMHooks.source.logs, logs, sizeof(struct log_interface));
-memcpy(&HPMHooks.source.mail, mail, sizeof(struct mail_interface));
-memcpy(&HPMHooks.source.map, map, sizeof(struct map_interface));
-memcpy(&HPMHooks.source.mapit, mapit, sizeof(struct mapit_interface));
-memcpy(&HPMHooks.source.mapreg, mapreg, sizeof(struct mapreg_interface));
-memcpy(&HPMHooks.source.mercenary, mercenary, sizeof(struct mercenary_interface));
-memcpy(&HPMHooks.source.mob, mob, sizeof(struct mob_interface));
-memcpy(&HPMHooks.source.npc, npc, sizeof(struct npc_interface));
-memcpy(&HPMHooks.source.party, party, sizeof(struct party_interface));
-memcpy(&HPMHooks.source.path, path, sizeof(struct path_interface));
-memcpy(&HPMHooks.source.pcg, pcg, sizeof(struct pc_groups_interface));
-memcpy(&HPMHooks.source.pc, pc, sizeof(struct pc_interface));
-memcpy(&HPMHooks.source.pet, pet, sizeof(struct pet_interface));
-memcpy(&HPMHooks.source.quest, quest, sizeof(struct quest_interface));
-memcpy(&HPMHooks.source.script, script, sizeof(struct script_interface));
-memcpy(&HPMHooks.source.searchstore, searchstore, sizeof(struct searchstore_interface));
-memcpy(&HPMHooks.source.skill, skill, sizeof(struct skill_interface));
-memcpy(&HPMHooks.source.status, status, sizeof(struct status_interface));
-memcpy(&HPMHooks.source.storage, storage, sizeof(struct storage_interface));
-memcpy(&HPMHooks.source.trade, trade, sizeof(struct trade_interface));
-memcpy(&HPMHooks.source.unit, unit, sizeof(struct unit_interface));
-memcpy(&HPMHooks.source.vending, vending, sizeof(struct vending_interface));
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
+
+/* GENERATED FILE DO NOT EDIT */
+
+HPMHooks.source.HCache = *HCache;
+HPMHooks.source.achievement = *achievement;
+HPMHooks.source.atcommand = *atcommand;
+HPMHooks.source.battle = *battle;
+HPMHooks.source.bg = *bg;
+HPMHooks.source.buyingstore = *buyingstore;
+HPMHooks.source.channel = *channel;
+HPMHooks.source.chat = *chat;
+HPMHooks.source.chrif = *chrif;
+HPMHooks.source.clan = *clan;
+HPMHooks.source.clif = *clif;
+HPMHooks.source.cmdline = *cmdline;
+HPMHooks.source.console = *console;
+HPMHooks.source.core = *core;
+HPMHooks.source.DB = *DB;
+HPMHooks.source.des = *des;
+HPMHooks.source.duel = *duel;
+HPMHooks.source.elemental = *elemental;
+HPMHooks.source.grfio = *grfio;
+HPMHooks.source.guild = *guild;
+HPMHooks.source.gstorage = *gstorage;
+HPMHooks.source.homun = *homun;
+HPMHooks.source.instance = *instance;
+HPMHooks.source.intif = *intif;
+HPMHooks.source.ircbot = *ircbot;
+HPMHooks.source.itemdb = *itemdb;
+HPMHooks.source.libconfig = *libconfig;
+HPMHooks.source.logs = *logs;
+HPMHooks.source.mail = *mail;
+HPMHooks.source.map = *map;
+HPMHooks.source.mapindex = *mapindex;
+HPMHooks.source.mapit = *mapit;
+HPMHooks.source.mapreg = *mapreg;
+HPMHooks.source.md5 = *md5;
+HPMHooks.source.mercenary = *mercenary;
+HPMHooks.source.mob = *mob;
+HPMHooks.source.mutex = *mutex;
+HPMHooks.source.npc_chat = *npc_chat;
+HPMHooks.source.npc = *npc;
+HPMHooks.source.nullpo = *nullpo;
+HPMHooks.source.packets = *packets;
+HPMHooks.source.party = *party;
+HPMHooks.source.path = *path;
+HPMHooks.source.pcg = *pcg;
+HPMHooks.source.pc = *pc;
+HPMHooks.source.libpcre = *libpcre;
+HPMHooks.source.pet = *pet;
+HPMHooks.source.quest = *quest;
+HPMHooks.source.refine = *refine;
+HPMHooks.source.PRIV__refine = *refine->p;
+HPMHooks.source.rnd = *rnd;
+HPMHooks.source.rodex = *rodex;
+HPMHooks.source.script = *script;
+HPMHooks.source.searchstore = *searchstore;
+HPMHooks.source.showmsg = *showmsg;
+HPMHooks.source.skill = *skill;
+HPMHooks.source.sockt = *sockt;
+HPMHooks.source.SQL = *SQL;
+HPMHooks.source.status = *status;
+HPMHooks.source.storage = *storage;
+HPMHooks.source.StrBuf = *StrBuf;
+HPMHooks.source.strlib = *strlib;
+HPMHooks.source.stylist = *stylist;
+HPMHooks.source.sv = *sv;
+HPMHooks.source.sysinfo = *sysinfo;
+HPMHooks.source.thread = *thread;
+HPMHooks.source.timer = *timer;
+HPMHooks.source.trade = *trade;
+HPMHooks.source.unit = *unit;
+HPMHooks.source.vending = *vending;

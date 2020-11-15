@@ -1,16 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Streusel
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Renewal Thief Job Quest
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Job Change to Thief Class
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Kisuka]
-//= 1.1 Added Baby Job compatibility [Streusel]
-//= 1.2 Rewrote bits [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
+
 moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_Assassin_Cross || ADVJOB == Job_Stalker) {
@@ -40,7 +63,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 				close;
 			}else{
 				mes "[Thief Guide]";
-				if (Sex)
+				if (Sex == SEX_MALE)
 					mes "Hey, dude.";
 				else
 					mes "Hey, baby~";
@@ -48,7 +71,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 			}
 		}else{
 			mes "[Thief Guide]";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "Hey, dude.";
 			else
 				mes "Hey, baby.";
@@ -58,7 +81,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	}
 	if(q_job_thief == 1) {
 		mes "[Thief Guildsman]";
-		mes "Ehh... Seems like a beloved "+(Sex?"son":"daughter")+" of a rich family, but why are you here in this dirty place?";
+		mes "Ehh... Seems like a beloved "+ (Sex == SEX_MALE ? "son" : "daughter") +" of a rich family, but why are you here in this dirty place?";
 		next;
 		mes "[Thief Guildsman]";
 		mes "Well, I'm not in charge of making you a Thief. I just accept applications, get it?";
@@ -73,7 +96,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 		}else{
 			mes "[Thief Guildsman]";
 			mes "What the heck...?";
-			if(Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Huh.. you are a "+jobname(Class)+" you blockhead...!";
 				next;
 				mes "[Thief Guildsman]";
@@ -88,9 +111,9 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 		}
 	}
 	mes "[Thief Guildsman]";
-	mes "Ehh... Seems like a beloved "+(Sex?"son":"daughter")+" of a rich family, but why are you here in this dirty place?";
+	mes "Ehh... Seems like a beloved "+ (Sex == SEX_MALE ? "son" : "daughter") +" of a rich family, but why are you here in this dirty place?";
 	next;
-	if(select("I want to be a Thief.:Nothing.") == 2) {
+	if(select("I want to be a Thief.", "Nothing.") == 2) {
 		mes "[Thief Guildsman]";
 		mes "You know you cannot be a thief without an application.....";
 		mes "What's on your mind..?";
@@ -104,7 +127,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	mes "[Thief Guildsman]";
 	mes "Do you want to be a thief so badly?";
 	next;
-	switch(select("Yes.:No.:How about you?")) {
+	switch(select("Yes.", "No.", "How about you?")) {
 	case 1:
 		mes "[Thief Guildsman]";
 		mes "Oh, do you...? Huh.. well... I do live and learn to see strange people like you.";
@@ -128,14 +151,14 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	mes "[Thief Guildsman]";
 	mes "So, do you want to apply for being a Thief?";
 	next;
-	if(select("Yes, I do.:No.") == 2) {
+	if(select("Yes, I do.", "No.") == 2) {
 		mes "[Thief Guildsman]";
 		mes "Well... do what you want to do~ Go your way~";
 		close;
 	}
 	mes "[Thief Guildsman]";
 	mes "Alright, tell me your name. Huh? What?";
-	mes ""+strcharinfo(0)+". So "+strcharinfo(0)+", right...?";
+	mes ""+strcharinfo(PC_NAME)+". So "+strcharinfo(PC_NAME)+", right...?";
 	next;
 	if (getskilllv("NV_BASIC") < 9) {
 		mes "[Thief Guildsman]";
@@ -146,7 +169,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	}
 	mes "[Thief Guildsman]";
 	mes "Hmm.... I found your interesting criminal records from the data of the detective agency. Well you seem to have what it takes to be a good thief.";
-	mes ""+strcharinfo(0)+". I now declare that you have passed the job interview!";
+	mes ""+strcharinfo(PC_NAME)+". I now declare that you have passed the job interview!";
 	next;
 	mes "[Thief Guildsman]";
 	mes "Well, I'm not in charge of making you a Thief. I just accept applications, get it?";
@@ -163,11 +186,11 @@ moc_prydb1,42,133,2	script	Thief Guildsman#thief	2_M_THIEFMASTER,{
 		mes "Let's begin the job-changing ceremony of our guild!";
 		next;
 		mes "[Commander of Thief Guild]";
-		mes "'"+strcharinfo(0)+".'";
+		mes "'"+strcharinfo(PC_NAME)+".'";
 		mes "'For those who are ready, the moonlight shall open the way. Now you are fully ready, I now officially allow you to become a member of the Thief Guild.'";
 		callfunc "Job_Change",Job_Thief;
 		q_job_thief = 0;
-		getitem 13041,1; // N_Main_Gauche
+		getitem N_Main_Gauche,1; // N_Main_Gauche
 		next;
 		mes "[Commander of Thief Guild]";
 		mes "'Congratulations on becoming a Thief.'";

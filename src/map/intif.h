@@ -1,11 +1,27 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_INTIF_H
 #define MAP_INTIF_H
 
-#include "../common/cbasetypes.h"
+#include "common/hercules.h"
 
 /**
  * Declarations
@@ -21,6 +37,7 @@ struct s_elemental;
 struct s_homunculus;
 struct s_mercenary;
 struct s_pet;
+struct rodex_message;
 
 /**
  * Defines
@@ -41,34 +58,29 @@ struct intif_interface {
 	int packet_len_table[INTIF_PACKET_LEN_TABLE_SIZE];
 	/* funcs */
 	int (*parse) (int fd);
-	int (*create_pet)(int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id,
-	                  short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
-	int (*broadcast) (const char* mes, size_t len, int type);
-	int (*broadcast2) (const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
-	int (*main_message) (struct map_session_data* sd, const char* message);
-	int (*wis_message) (struct map_session_data *sd,char *nick,char *mes,size_t mes_len);
-	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
+	int (*create_pet)(int account_id, int char_id, int pet_type, int pet_lv, int pet_egg_id,
+	                  int pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
 	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
+	void (*request_account_storage) (const struct map_session_data *sd);
+	void (*send_account_storage) (struct map_session_data *sd);
 	int (*request_guild_storage) (int account_id, int guild_id);
 	int (*send_guild_storage) (int account_id, struct guild_storage *gstor);
-	int (*create_party) (struct party_member *member,char *name,int item,int item2);
+	int (*create_party) (struct party_member *member, const char *name, int item, int item2);
 	int (*request_partyinfo) (int party_id, int char_id);
 	int (*party_addmember) (int party_id,struct party_member *member);
 	int (*party_changeoption) (int party_id, int account_id, int exp, int item);
 	int (*party_leave) (int party_id,int account_id, int char_id);
 	int (*party_changemap) (struct map_session_data *sd, int online);
 	int (*break_party) (int party_id);
-	int (*party_message) (int party_id, int account_id, const char *mes,int len);
 	int (*party_leaderchange) (int party_id,int account_id,int char_id);
 	int (*guild_create) (const char *name, const struct guild_member *master);
 	int (*guild_request_info) (int guild_id);
 	int (*guild_addmember) (int guild_id, struct guild_member *m);
 	int (*guild_leave) (int guild_id, int account_id, int char_id, int flag, const char *mes);
-	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class_);
+	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class);
 	int (*guild_break) (int guild_id);
-	int (*guild_message) (int guild_id, int account_id, const char *mes, int len);
-	int (*guild_change_gm) (int guild_id, const char* name, size_t len);
+	int (*guild_change_gm) (int guild_id, const char *name, int len);
 	int (*guild_change_basicinfo) (int guild_id, int type, const void *data, int len);
 	int (*guild_change_memberinfo) (int guild_id, int account_id, int char_id, int type, const void *data, int len);
 	int (*guild_position) (int guild_id, int idx, struct guild_position *p);
@@ -82,7 +94,7 @@ struct intif_interface {
 	int (*request_petdata) (int account_id, int char_id, int pet_id);
 	int (*save_petdata) (int account_id, struct s_pet *p);
 	int (*delete_petdata) (int pet_id);
-	int (*rename) (struct map_session_data *sd, int type, char *name);
+	int (*rename) (struct map_session_data *sd, int type, const char *name);
 	int (*homunculus_create) (int account_id, struct s_homunculus *sh);
 	bool (*homunculus_requestload) (int account_id, int homun_id);
 	int (*homunculus_requestsave) (int account_id, struct s_homunculus* sh);
@@ -113,18 +125,30 @@ struct intif_interface {
 	int (*elemental_request) (int ele_id, int char_id);
 	int (*elemental_delete) (int ele_id);
 	int (*elemental_save) (struct s_elemental *ele);
+	// RoDEX
+	int(*rodex_requestinbox) (int char_id, int account_id, int8 flag, int8 opentype, int64 mail_id);
+	int(*rodex_checkhasnew) (struct map_session_data *sd);
+	int(*rodex_updatemail) (struct map_session_data *sd, int64 mail_id, uint8 opentype, int8 flag);
+	int(*rodex_sendmail) (struct rodex_message *msg);
+	int(*rodex_checkname) (struct map_session_data *sd, const char *name);
+	void (*pGetZenyAck) (int fd);
+	void (*pGetItemsAck) (int fd);
+	/* Clan System */
+	int (*clan_kickoffline) (int clan_id, int kick_interval);
+	int (*clan_membercount) (int clan_id, int kick_interval);
 	/* @accinfo */
 	void (*request_accinfo) (int u_fd, int aid, int group_lv, char* query);
 	/* */
 	int (*CheckForCharServer) (void);
+	/* Achievement System [Smokexyz/Hercules] */
+	void(*achievements_request) (struct map_session_data *sd);
+	void(*achievements_save) (struct map_session_data *sd);
 	/* */
-	void (*pWisMessage) (int fd);
-	void (*pWisEnd) (int fd);
-	int (*pWisToGM_sub) (struct map_session_data* sd,va_list va);
-	void (*pWisToGM) (int fd);
 	void (*pRegisters) (int fd);
+	void (*pAccountStorage) (int fd);
 	void (*pChangeNameOk) (int fd);
 	void (*pMessageToFD) (int fd);
+	void (*pAccountStorageSaveAck) (int fd);
 	void (*pLoadGuildStorage) (int fd);
 	void (*pSaveGuildStorage) (int fd);
 	void (*pPartyCreated) (int fd);
@@ -134,14 +158,12 @@ struct intif_interface {
 	void (*pPartyMemberWithdraw) (int fd);
 	void (*pPartyMove) (int fd);
 	void (*pPartyBroken) (int fd);
-	void (*pPartyMessage) (int fd);
 	void (*pGuildCreated) (int fd);
 	void (*pGuildInfo) (int fd);
 	void (*pGuildMemberAdded) (int fd);
 	void (*pGuildMemberWithdraw) (int fd);
 	void (*pGuildMemberInfoShort) (int fd);
 	void (*pGuildBroken) (int fd);
-	void (*pGuildMessage) (int fd);
 	void (*pGuildBasicInfoChanged) (int fd);
 	void (*pGuildMemberInfoChanged) (int fd);
 	void (*pGuildPosition) (int fd);
@@ -180,12 +202,21 @@ struct intif_interface {
 	void (*pRecvHomunculusData) (int fd);
 	void (*pSaveHomunculusOk) (int fd);
 	void (*pDeleteHomunculusOk) (int fd);
+	/* RoDEX */
+	void(*pRequestRodexOpenInbox) (int fd);
+	void(*pRodexHasNew) (int fd);
+	void(*pRodexSendMail) (int fd);
+	void(*pRodexCheckName) (int fd);
+	/* Clan System */
+	void (*pRecvClanMemberAction) (int fd);
+	/* Achievements */
+	void (*pAchievementsLoad) (int fd);
 };
-
-struct intif_interface *intif;
 
 #ifdef HERCULES_CORE
 void intif_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct intif_interface *intif;
 
 #endif /* MAP_INTIF_H */

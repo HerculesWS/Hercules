@@ -1,36 +1,56 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Xantara
+//= Copyright (C) Maud_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Headgear Dyer (Cash)
-//===== By: ==================================================
-//= Xantara
-//= Maud_Dib
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Change headgear's color. Cost is a Mysterious Dyestuff
-//===== Additional Comments: =================================
-//= 1.0 First / Optimized Version
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
-
-// Mysterious Dyestuff
+	// Mysterious Dyestuff
 	.@dyeID = 6220;
-// Headgear Choices
+	// Headgear Choices
 	setarray .@hgn$[1], "Mage Hat","Beanie","Drooping Cat","Deviruchi Hat","Wig","Ribbon","Magestic Goat";
-// Mage Hats - Normal, Yellow, Blue, Brown, Gray, Red
+	// Mage Hats - Normal, Yellow, Blue, Brown, Gray, Red
 	setarray .@hg_1[1], 5027, 5242, 5241, 5240, 5239, 5238;
-// Beanies - Normal, Pink, Blue, Brown
+	// Beanies - Normal, Pink, Blue, Brown
 	setarray .@hg_2[1], 5076, 5237, 5236, 5235;
-// Drooping Cats - Normal, Blue, Brown, Gray, Pink, Yellow
+	// Drooping Cats - Normal, Blue, Brown, Gray, Pink, Yellow
 	setarray .@hg_3[1], 5058, 5233, 5231, 5230, 5232, 5234;
-// Deviruchi Hats - Normal, Red, Gray, Brown
+	// Deviruchi Hats - Normal, Red, Gray, Brown
 	setarray .@hg_4[1], 5038, 5227, 5228, 5229;
-// Wigs - Happy, Shiny, Marvelous, Fantastic
+	// Wigs - Happy, Shiny, Marvelous, Fantastic
 	setarray .@hg_5[1], 5273, 5274, 5275, 5276;
-// Ribbons - Normal, Black, Yellow, Green, Pink, Red, Orange, White
+	// Ribbons - Normal, Black, Yellow, Green, Pink, Red, Orange, White
 	setarray .@hg_6[1], 2208, 5191, 5192, 5193, 5194, 5195, 5196, 5197;
-// Magestic Goats - Normal, Evolved
+	// Magestic Goats - Normal, Evolved
 	setarray .@hg_7[1], 2256, 5217;
 
 	mes "[Alora]";
@@ -82,7 +102,7 @@ prt_in,253,168,4	script	Alora	4_F_LGTGIRL,{
 	mes "[Alora]";
 	mes "Any upgrades and cards will be dissolved by the mysterious dye, so be sure you are ok with having a ^0000FF+0 "+ getitemname(.@dyHG) +" without any cards.^000000";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Ok, thanks for the warning, I think I'll give you my";
 	next;
 	.@menu$ = "Nevermind";

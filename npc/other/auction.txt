@@ -1,21 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Auction system
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Auction house releated NPCs, and warps
-//===== Additional Comments: =================================
-//= 1.0 First version, place holders only. [L0ne_W0lf]
-//= 1.1 Moved Morroc Auction NPCs to Morroc Ruins. [L0ne_W0lf]
-//= 1.2 Warp fixed. Dialog in Ruins/Lighthalzen changed. [Kisuka]
-//= 1.3 Duplicates now spawn from floating NPCs. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Auction House warpers
-//============================================================
+//== Auction House warpers =================================
 moc_ruins,78,173,6	script	Auction Hall Guide#moc	4W_M_02,{
 	callfunc "F_AuctionWarper",1;
 }
@@ -38,7 +56,7 @@ function	script	F_AuctionWarper	{
 	mes "like to enter the";
 	mes "Auction Hall?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		if (getarg(0) == 1 || getarg(0) == 4) {
 			mes "[Auction Hall Guide]";
 			mes "Great! Well then,";
@@ -69,9 +87,8 @@ function	script	F_AuctionWarper	{
 	close;
 }
 
-// Sign posts
-//============================================================
--	script	Information Post#dum::AuctionSign	-1,{
+//== Sign posts ============================================
+-	script	Information Post#dum::AuctionSign	FAKE_NPC,{
 	mes "[Information]";
 	mes "Auction Warp Guide";
 	close;
@@ -82,27 +99,30 @@ prontera,216,120,4	duplicate(AuctionSign)	Information Post#prt	2_BULLETIN_BOARD
 yuno,131,116,0	duplicate(AuctionSign)	Information Post#yuno	2_BULLETIN_BOARD
 lighthalzen,207,169,6	duplicate(AuctionSign)	Information Post#lhz	2_BULLETIN_BOARD
 
-// Warps
-//============================================================
+//== Warps =================================================
 auction_01,180,49,0	warp	auction_entrance_moc	1,1,moc_ruins,78,171
 auction_01,22,37,0	warp	auction_entrance_prt	1,1,prontera,214,120
 auction_02,151,17,0	warp	auction_enterance_juno	1,1,yuno,132,119
 auction_02,43,17,0	warp	auction_enterance_lhz	1,1,lighthalzen,209,169
 
-// Auction House NPCs
-//============================================================
--	script	Auction Broker#dum::AuctionBroker	-1,{
+//== Auction House NPCs ====================================
+-	script	Auction Broker#dum::AuctionBroker	FAKE_NPC,{
 	mes "[Auction Broker]";
 	mes "Welcome to the Auction Hall.";
 	mes "Would you like to view the goods?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		mes "[Auction Broker]";
-		mes "Very well.";
-		mes "Please take";
-		mes "a look, and see";
-		mes "What's being offered~";
-		openauction;
+		if (getbattleflag("features/auction")) {
+			mes "Very well.";
+			mes "Please take";
+			mes "a look, and see";
+			mes "What's being offered~";
+			openauction;
+		}
+		else {
+			mes "Auction feature isn't enabled.";
+		}
 		close;
 	}
 	mes "[Auction Broker]";

@@ -1,15 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Disable auto-save.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
+//================= Current Version =======================================
 //= 1.7
-//===== Description: =========================================
+//================= Description ===========================================
 //= Characters logging out on the specified map will be warped
 //= to the map specified in the last field, or "SavePoint".
-//===== Additional Comments: =================================
-//= 1.7 - Updated. [Lupus]
-//============================================================
+//=========================================================================
 
 // Job Quests ====================
 job_sword1	mapflag	nosave	SavePoint
@@ -27,7 +51,6 @@ job_cru	mapflag	nosave	SavePoint
 job_duncer	mapflag	nosave	SavePoint
 job_monk	mapflag	nosave	SavePoint
 monk_test	mapflag	nosave	SavePoint
-monk_in	mapflag	nosave	SavePoint
 in_rogue	mapflag	nosave	SavePoint
 job_sage	mapflag	nosave	SavePoint
 // Ext
@@ -258,18 +281,8 @@ que_qaru03	mapflag	nosave	SavePoint
 que_qaru04	mapflag	nosave	SavePoint
 que_qaru05	mapflag	nosave	SavePoint
 
-// Sealed Shrine ==================
-1@cata	mapflag	nosave	SavePoint
-2@cata	mapflag	nosave	SavePoint
-
 // Endless Tower ==================
 e_tower	mapflag	nosave	SavePoint
-1@tower	mapflag	nosave	SavePoint
-2@tower	mapflag	nosave	SavePoint
-3@tower	mapflag	nosave	SavePoint
-4@tower	mapflag	nosave	SavePoint
-5@tower	mapflag	nosave	SavePoint
-6@tower	mapflag	nosave	SavePoint
 
 // Battle Grounds ==============
 bat_c01	mapflag	nosave	SavePoint
@@ -289,39 +302,8 @@ schg_dun01	mapflag	nosave	SavePoint
 arug_que01	mapflag	nosave	SavePoint
 arug_dun01	mapflag	nosave	SavePoint
 
-// Orc's Memory ===================
-1@orcs	mapflag	nosave	SavePoint
-2@orcs	mapflag	nosave	SavePoint
-
-// Nidhoggr's Instance ===========
-1@nyd	mapflag	nosave	SavePoint
-2@nyd	mapflag	nosave	SavePoint
-
-// Misty Forest Labyrinth ===========
-1@mist	mapflag	nosave	SavePoint
-
-// Octopus Cave ===========
-1@cash	mapflag	nosave	SavePoint
-
-// Drain ===========
-1@pump	mapflag	nosave	SavePoint
-2@pump	mapflag	nosave	SavePoint
-
 // Somatology Laboratory ===========
 que_lhz	mapflag	nosave	SavePoint
-1@lhz	mapflag	nosave	SavePoint
-
-// Bangungot Hospital F2 ===========
-1@ma_h	mapflag	nosave	SavePoint
-
-// Buwaya Cave ===========
-1@ma_c	mapflag	nosave	SavePoint
-
-// Bakonawa Hideout ===========
-1@ma_b	mapflag	nosave	SavePoint
-
-// Inside Eclage ===========
-1@ecl	mapflag	nosave	SavePoint
 
 //evt_zombie	mapflag	nosave	SavePoint
 

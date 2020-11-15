@@ -1,17 +1,37 @@
-//===== Hercules Script ======================================
-//= Niflheim Guide
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Niflheim Guide (Pre-Renewal)
+//================= Description ===========================================
 //= Guides for the City of Niflheim
-//===== Additional Comments: =================================
-//= 1.1 Fixed location command format [Lupus]
-//= 1.2 Optimized, updated common guide names [Lupus]
-//= 1.3 Rescripted to official 10.3 standards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 niflheim,107,156,6	script	Roaming Man#nif	4_M_NFMAN,{
 	mes "[Ricael]";
@@ -31,12 +51,12 @@ niflheim,107,156,6	script	Roaming Man#nif	4_M_NFMAN,{
 	mes "layout might help you escape";
 	mes "if it weren't so futile.";
 	next;
-	switch(select("Ask building locations.:Remove marks on the mini-map.:Cancel.")) {
+	switch(select("Ask building locations.", "Remove marks on the mini-map.", "Cancel.")) {
 	case 1:
 		mes "[Ricael]";
 		mes "So, um, which place do you want to know about?";
 		next;
-		switch(select("Witch's castle:Tool shop:Weapon shop:Pub:Cancel")) {
+		switch(select("Witch's castle", "Tool shop", "Weapon shop", "Pub", "Cancel")) {
 		case 1:
 			mes "[Ricael]";
 			mes "There. I made a ^FF3355+^000000 mark";

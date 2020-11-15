@@ -15,7 +15,7 @@
 //= 1.2.1a fix due to new script engine
 //============================================================
 
--	script	lotterygenerator	-1,{
+-	script	lotterygenerator	FAKE_NPC,{
 OnInit:
 	set $L_TicketPrice,4750; // TICKET COST
 	set $L_Prize_Money,5000000; // JACKPOT AMOUNT
@@ -171,43 +171,64 @@ L_HandPick:
 	set @L5,0;
 	set @L6,0;
 Input1:
-	input @L1;
-	if (@L1 < 1 || @L1 > 40) goto Input1;
+	input(@L1);
+	if (@L1 < 1 || @L1 > 40)
+		goto Input1;
 	mes @L1;
 Input2:
-	input @L2;
-	if (@L2 < 1 || @L2 > 40) goto Input2;
-	if (@L2 == @L1) goto Input2;
+	input(@L2);
+	if (@L2 < 1 || @L2 > 40)
+		goto Input2;
+	if (@L2 == @L1)
+		goto Input2;
 	mes @L2;
 Input3:
-	input @L3;
-	if (@L3 < 1 || @L3 > 40) goto Input3;
-	if (@L3 == @L1) goto Input3;
-	if (@L3 == @L2) goto Input3;
+	input(@L3);
+	if (@L3 < 1 || @L3 > 40)
+		goto Input3;
+	if (@L3 == @L1)
+		goto Input3;
+	if (@L3 == @L2)
+		goto Input3;
 	mes @L3;
 Input4:
-	input @L4;
-	if (@L4 < 1 || @L4 > 40) goto Input4;
-	if (@L4 == @L1) goto Input4;
-	if (@L4 == @L2) goto Input4;
-	if (@L4 == @L3) goto Input4;
+	input(@L4);
+	if (@L4 < 1 || @L4 > 40)
+		goto Input4;
+	if (@L4 == @L1)
+		goto Input4;
+	if (@L4 == @L2)
+		goto Input4;
+	if (@L4 == @L3)
+		goto Input4;
 	mes @L4;
 Input5:
-	input @L5;
-	if (@L5 < 1 || @L5 > 40) goto Input5;
-	if (@L5 == @L1) goto Input5;
-	if (@L5 == @L2) goto Input5;
-	if (@L5 == @L3) goto Input5;
-	if (@L5 == @L4) goto Input5;
+	input(@L5);
+	if (@L5 < 1 || @L5 > 40)
+		goto Input5;
+	if (@L5 == @L1)
+		goto Input5;
+	if (@L5 == @L2)
+		goto Input5;
+	if (@L5 == @L3)
+		goto Input5;
+	if (@L5 == @L4)
+		goto Input5;
 	mes @L5;
 Input6:
-	input @L6;
-	if (@L6 < 1 || @L6 > 40) goto Input6;
-	if (@L6 == @L1) goto Input6;
-	if (@L6 == @L2) goto Input6;
-	if (@L6 == @L3) goto Input6;
-	if (@L6 == @L4) goto Input6;
-	if (@L6 == @L5) goto Input6;
+	input(@L6);
+	if (@L6 < 1 || @L6 > 40)
+		goto Input6;
+	if (@L6 == @L1)
+		goto Input6;
+	if (@L6 == @L2)
+		goto Input6;
+	if (@L6 == @L3)
+		goto Input6;
+	if (@L6 == @L4)
+		goto Input6;
+	if (@L6 == @L5)
+		goto Input6;
 	mes @L6;
 	next;
 	mes "[Lottery]";
@@ -293,7 +314,7 @@ LWinBig:
 	mes "Jackpot!";
 	mes "You've won ^0000FF" + $L_Prize_Money + "z^000000.";
 	Zeny += $L_Prize_Money;
-	announce "Lottery: " + strcharinfo(0) + " has won the JACKPOT of " + $L_Prize_Money + "z!",8;
+	announce "Lottery: " + strcharinfo(PC_NAME) + " has won the JACKPOT of " + $L_Prize_Money + "z!",8;
 	set #LID,0;
 	close;
 
@@ -303,7 +324,7 @@ LWinSmall:
 	mes "You have matched at least 4 numbers!";
 	mes "You've won ^0000FF" + $L_Prize_Money_Small + "z^000000.";
 	Zeny += $L_Prize_Money_Small;
-	announce "Lottery: " + strcharinfo(0) + " has won a prize of " + $L_Prize_Money_Small + "z!",8;
+	announce "Lottery: " + strcharinfo(PC_NAME) + " has won a prize of " + $L_Prize_Money_Small + "z!",8;
 	set #LID,0;
 	close;
 
@@ -406,43 +427,64 @@ L_GM_Rig:
 	set $LR5,0;
 	set $LR6,0;
 GMInput1:
-	input $LR1;
-	if ($LR1 < 1 || $LR1 > 40) goto GMInput1;
+	input($LR1);
+	if ($LR1 < 1 || $LR1 > 40)
+		goto GMInput1;
 	mes $LR1;
 GMInput2:
-	input $LR2;
-	if ($LR2 < 1 || $LR2 > 40) goto GMInput2;
-	if ($LR2 == $LR1) goto GMInput2;
+	input($LR2);
+	if ($LR2 < 1 || $LR2 > 40)
+		goto GMInput2;
+	if ($LR2 == $LR1)
+		goto GMInput2;
 	mes $LR2;
 GMInput3:
-	input $LR3;
-	if ($LR3 < 1 || $LR3 > 40) goto GMInput3;
-	if ($LR3 == $LR1) goto GMInput3;
-	if ($LR3 == $LR2) goto GMInput3;
+	input($LR3);
+	if ($LR3 < 1 || $LR3 > 40)
+		goto GMInput3;
+	if ($LR3 == $LR1)
+		goto GMInput3;
+	if ($LR3 == $LR2)
+		goto GMInput3;
 	mes $LR3;
 GMInput4:
-	input $LR4;
-	if ($LR4 < 1 || $LR4 > 40) goto GMInput4;
-	if ($LR4 == $LR1) goto GMInput4;
-	if ($LR4 == $LR2) goto GMInput4;
-	if ($LR4 == $LR3) goto GMInput4;
+	input($LR4);
+	if ($LR4 < 1 || $LR4 > 40)
+		goto GMInput4;
+	if ($LR4 == $LR1)
+		goto GMInput4;
+	if ($LR4 == $LR2)
+		goto GMInput4;
+	if ($LR4 == $LR3)
+		goto GMInput4;
 	mes $LR4;
 GMInput5:
-	input $LR5;
-	if ($LR5 < 1 || $LR5 > 40) goto GMInput5;
-	if ($LR5 == $LR1) goto GMInput5;
-	if ($LR5 == $LR2) goto GMInput5;
-	if ($LR5 == $LR3) goto GMInput5;
-	if ($LR5 == $LR4) goto GMInput5;
+	input($LR5);
+	if ($LR5 < 1 || $LR5 > 40)
+		goto GMInput5;
+	if ($LR5 == $LR1)
+		goto GMInput5;
+	if ($LR5 == $LR2)
+		goto GMInput5;
+	if ($LR5 == $LR3)
+		goto GMInput5;
+	if ($LR5 == $LR4)
+		goto GMInput5;
 	mes $LR5;
 GMInput6:
-	input $LR6;
-	if ($LR6 < 1 || $LR6 > 40) goto GMInput6;
-	if ($LR6 == $LR1) goto GMInput6;
-	if ($LR6 == $LR2) goto GMInput6;
-	if ($LR6 == $LR3) goto GMInput6;
-	if ($LR6 == $LR4) goto GMInput6;
-	if ($LR6 == $LR5) goto GMInput6;
+	input($LR6);
+	if ($LR6 < 1 || $LR6 > 40)
+		goto GMInput6;
+	if ($LR6 == $LR1)
+		goto GMInput6;
+	if ($LR6 == $LR2)
+		goto GMInput6;
+	if ($LR6 == $LR3)
+		goto GMInput6;
+	if ($LR6 == $LR4)
+		goto GMInput6;
+	if ($LR6 == $LR5)
+		goto GMInput6;
 	mes $LR6;
 	next;
 	mes "[Lottery]";

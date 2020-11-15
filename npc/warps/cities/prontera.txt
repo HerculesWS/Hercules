@@ -1,17 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) shadow
+//= Copyright (C) Nana
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Prontera Warp Script
-//===== By: ==================================================
-//= Athena (1.0)
-//= Nana (1.2)
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Prontera
-//===== Additional Comments: =================================
-//= 1.3 prt19 warp fix [shadow]
-//= 1.4 Added warps for the sign quest [MasterOfMuppets]
-//= 1.5 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 //= Prontera City ============================================
 prontera,107,215,0	warp	prt01	2,2,prt_in,240,139
@@ -72,8 +95,6 @@ prt_church,109,81,0	warp	prtch01	1,2,prt_church,172,19
 prt_church,168,19,0	warp	prtch01-1	1,2,prt_church,105,81
 prt_church,31,19,0	warp	prtch02	1,2,prt_church,94,81
 prt_church,90,81,0	warp	prtch02-1	1,2,prt_church,27,19
-
-
 
 //= Prontera Castle ===========================================
 prt_castle,102,129,0	warp	prtca01	3,2,prt_castle,102,143

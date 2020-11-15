@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Ziu
+//= Copyright (C) Muad_Dib
+//= Copyright (C) Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Falcon & Wolf Flute Trader
-//===== By: ==================================================
-//= Masao, Muad_Dib, Ziu
-//===== Current Version: =====================================
-//= 1.2a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Sells Falcon Flute and Wolf Flute.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Added Baby Hunter and Baby Ranger check. bugreport:5728 [Masao]
-//= 1.2 Added Wolf Flute trader, optimized. [Euphy]
-//= 1.2a Fixed some conditions. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2a
+//=========================================================================
 
--	script	Falcon Flute Trader::fflute	-1,{
+-	script	Falcon Flute Trader::fflute	FAKE_NPC,{
 	mes "[Falcon Flute Trader]";
 	if (BaseJob == Job_Hunter) {
 		mes "Do you need a Falcon?";
@@ -47,13 +68,13 @@
 			next;
 		} else
 			.@price = 12500;
-		if(select("Don't buy one:Buy a Falcon Flute") == 1) {
+		if(select("Don't buy one", "Buy a Falcon Flute") == 1) {
 			mes "[Falcon Flute Trader]";
 			mes "That's too bad. If you need one, come back!";
 			close;
 		}
 		if (Zeny >= .@price) {
-			if (countitem(12848) >= 1) {
+			if (countitem(Falcon_Flute) >= 1) {
 				mes "[Falcon Flute Trader]";
 				mes "As I can see you already have a Falcon Flute!";
 				mes "Don't worry, my young friend, once you've purchased the Falcon Flute you won't need to do so again";
@@ -64,7 +85,7 @@
 			mes "Here, take this flute.";
 			mes "With it you can whistle for your Falcon from anywhere.";
 		  	Zeny -= .@price;
-			getitem 12848,1; //Falcon_Flute
+			getitem Falcon_Flute,1;
 			next;
 			mes "[Falcon Flute Trader]";
 			mes "Just a reminder.";
@@ -89,7 +110,7 @@ pay_arche,91,134,3	duplicate(fflute)	Falcon Flute Trader#fft2	1_M_BARD
 
 tur_dun01,89,170,5	script	Expert Flute Crafter	1_M_ORIENT01,{
 	if (Class == Job_Ranger || Class == Job_Ranger_T || Class == Job_Baby_Ranger) {
-		if (countitem(6124)) {
+		if (countitem(Wolfs_Flute)) {
 			mes "[Expert Flute Crafter]";
 			mes "The Wolf Flute you have is crafted by myself, with wood.";
 			mes "You can come back here and find me if you lose your Wolf flute!";
@@ -103,9 +124,9 @@ tur_dun01,89,170,5	script	Expert Flute Crafter	1_M_ORIENT01,{
 		mes "Do you need anything?";
 		mes "A new Wolf Flute?";
 		next;
-		switch(select("Please give me a new Wolf Flute.:No.")) {
+		switch(select("Please give me a new Wolf Flute.", "No.")) {
 		case 1:
-			if (countitem(7150) && Zeny >= 100000) {
+			if (countitem(Bamboo_Cut) && Zeny >= 100000) {
 				mes "[Expert Flute Crafter]";
 				mes "Have you brought all the materials?";
 				mes "Wow! All your materials are not bad!";
@@ -114,9 +135,9 @@ tur_dun01,89,170,5	script	Expert Flute Crafter	1_M_ORIENT01,{
 				mes "[Expert Flute Crafter]";
 				mes "Here's the new Wolf Flute.";
 				mes "Hope you are ready to use it.";
-				delitem 7150,1; //Bamboo_Cut
+				delitem Bamboo_Cut,1;
 				Zeny -= 100000;
-				getitem 6124,1; //Wolf's_Flute
+				getitem Wolfs_Flute,1;
 				close;
 			}
 			mes "[Expert Flute Crafter]";

@@ -1,24 +1,40 @@
-//===== Hercules Script ======================================
-//= Thief Job Quest
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.8
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) massdriller
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Thief Job Quest (Pre-Renewal)
+//================= Description ===========================================
 //= Job quest for Thief classes
-//===== Additional Comments: =================================
-//= 1.0 Fully working.
-//= 1.1 Added instant job change for High Novice [Lupus]
-//= 1.3 Added Baby Class support [Lupus]
-//= 1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
-//=     Fixed possible EXP abuse [Lupus]
-//= 1.5 Now saves/restores all quest skills [Lupus]
-//= 1.6 Merged back JFunc [Lupus] 1.6a typos
-//= 1.7 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     No longer uses function "F_ToHigh"
-//= 1.8 Added Quest Log commands. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.8
+//=========================================================================
 
 moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 	if (Upper == 1) {
@@ -50,7 +66,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 			}
 			else {
 				mes "[Thief Guide]";
-				if (Sex)
+				if (Sex == SEX_MALE)
 					mes "Hey, dude.";
 				else
 					mes "Hey, baby~";
@@ -59,7 +75,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		}
 		else {
 			mes "[Thief Guide]";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "Hey, dude.";
 			else
 				mes "Hey, baby.";
@@ -135,7 +151,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "*Sigh* Look, there's really no need for you to be in this kind of place. You oughta go where you ought to go.";
 		close;
 	}
-	if (job_thief_q == 3 && countitem(1069) > 0 || countitem(1070) > 0) {
+	if (job_thief_q == 3 && countitem(Mushroom_Of_Thief_1) > 0 || countitem(Mushroom_Of_Thief_2) > 0) {
 		mes "[Thief Guide]";
 		mes "Hmmm?";
 		mes "You gathered Mushrooms for";
@@ -151,7 +167,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "Mushroom Farm?";
 		mes "Have any fun?";
 		next;
-		if (select("Yeah, kinda Cool.:It was horrible.") == 1) {
+		if (select("Yeah, kinda Cool.", "It was horrible.") == 1) {
 			mes "[Thief Guide]";
 			mes "Heh heh! That's a good attitude. In our line of work, you gotta enjoy getting your hands dirty, one way or another.";
 			close;
@@ -164,7 +180,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "[Thief Guide]";
 		mes "Hey, whaddya doin' here? Aren't you supposed to be gathering Mushrooms? Or did you need it explained to you again?";
 		next;
-		if  (select("Yes.:No, that's okay.") == 1) {
+		if  (select("Yes.", "No, that's okay.") == 1) {
 			mes "[Thief Guide]";
 			mes "*Sigh* Well, there's always one in the bunch. Alright, listen carefully.";
 			next;
@@ -209,7 +225,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "ready to try again?";
 	}
 	next;
-	if (select("Hey, I came here to be a Thief!:Nah, I'm just looking around.") == 1) {
+	if (select("Hey, I came here to be a Thief!", "Nah, I'm just looking around.") == 1) {
 		if (job_thief_q == 0) {
 			mes "[Thief Guide]";
 			mes "Heh, I like your confidence. Still, you know being a Thief isn't all what it's cracked up to be.";
@@ -220,7 +236,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 			mes "want to be";
 			mes "a Thief?";
 			next;
-			switch(select("Yeah.:No, just wasting your time.:Why did you become a Thief?")) {
+			switch(select("Yeah.", "No, just wasting your time.", "Why did you become a Thief?")) {
 			case 1:
 				mes "[Thief Guide]";
 				mes "Really...";
@@ -242,21 +258,21 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 			mes "apply to become";
 			mes "a Thief or not?";
 			next;
-			switch(select("Yes, I will.:I'm too scared to be a Thief!")) {
+			switch(select("Yes, I will.", "I'm too scared to be a Thief!")) {
 			case 1:
 				mes "[Thief Guide]";
 				mes "Alright, tell";
 				mes "me your name.";
 				next;
 				mes "[Thief Guide]";
-				mes "" + strcharinfo(0) + "?";
-				mes "What kind of name is " + strcharinfo(0) + "? Anyway, give me a second.";
+				mes "" + strcharinfo(PC_NAME) + "?";
+				mes "What kind of name is " + strcharinfo(PC_NAME) + "? Anyway, give me a second.";
 				job_thief_q = 1;
 				next;
 				mes "[Thief Guide]";
 				mes "Alright, your registration has been processed. Okay, you can begin your test if you're ready.";
 				next;
-				switch(select("Yeah, I'm ready.:No, I'm not ready yet.")) {
+				switch(select("Yeah, I'm ready.", "No, I'm not ready yet.")) {
 				case 1:
 					break;
 				case 2:
@@ -285,7 +301,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		}
 		mes "[Thief Guide]";
 		mes "Your name is...";
-		mes strcharinfo(0) + "? Um, where is it? Ah, here it is. Let's see...";
+		mes strcharinfo(PC_NAME) + "? Um, where is it? Ah, here it is. Let's see...";
 		next;
 		mes "[Thief Guide]";
 		if (getskilllv("NV_BASIC") < 9) {
@@ -302,7 +318,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "[Thief Guide]";
 		mes "Now, your actual abilities will need to be tested. Do you know anything about the test?";
 		next;
-		switch(select("Yes, I do.:Sorry, I don't.")) {
+		switch(select("Yes, I do.", "Sorry, I don't.")) {
 		case 1:
 			mes "[Thief Guide]";
 			mes "Oh yeah? Well, this makes things a lot easier.";
@@ -377,7 +393,7 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 	else if (job_thief_q == 3) {
 		mes "[Comrade]";
 		mes "Ah, the guide told me about you. So, let me check your mushrooms...";
-		if (countitem(1069) == 0 && countitem(1070) == 0) {
+		if (countitem(Mushroom_Of_Thief_1) == 0 && countitem(Mushroom_Of_Thief_2) == 0) {
 			next;
 			mes "[Comrade]";
 			mes "What the hell...";
@@ -385,17 +401,17 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 			close;
 		}
 		next;
-		.@thief_item1 = countitem(1069) * 3;
-		.@thief_item2 = countitem(1070);
+		.@thief_item1 = countitem(Mushroom_Of_Thief_1) * 3;
+		.@thief_item2 = countitem(Mushroom_Of_Thief_2);
 		.@total_thief = .@thief_item1 + .@thief_item2;
 		.@money_thief = ((.@thief_item1 * 5) + (.@thief_item2 * 2)) + 200;
 		mes "[Comrade]";
-		if (countitem(1069) != 0) {
+		if (countitem(Mushroom_Of_Thief_1) != 0) {
 			mes "First, let me check the Orange Net Mushrooms you got.";
-			mes "Huh, " + countitem(1069) + " of them.";
+			mes "Huh, " + countitem(Mushroom_Of_Thief_1) + " of them.";
 		}
-		if (countitem(1070) != 0)
-			mes "Now I'll just check your Orange Gooey Mushrooms. That's " + countitem(1070) + " you gathered.";
+		if (countitem(Mushroom_Of_Thief_2) != 0)
+			mes "Now I'll just check your Orange Gooey Mushrooms. That's " + countitem(Mushroom_Of_Thief_2) + " you gathered.";
 		next;
 		mes "[Comrade]";
 		mes "So that would";
@@ -424,10 +440,10 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 		}
 		next;
 		mes "[Comrade]";
-		mes strcharinfo(0) + "...";
+		mes strcharinfo(PC_NAME) + "...";
 		mes "You have passed the official Thief Test. You are now one of us.";
-		if (countitem(1069) != 0) delitem 1069,countitem(1069); //Mushroom_Of_Thief_1
-		if (countitem(1070) != 0) delitem 1070,countitem(1070); //Mushroom_Of_Thief_2
+		if (countitem(Mushroom_Of_Thief_1) != 0) delitem Mushroom_Of_Thief_1,countitem(Mushroom_Of_Thief_1);
+		if (countitem(Mushroom_Of_Thief_2) != 0) delitem Mushroom_Of_Thief_2,countitem(Mushroom_Of_Thief_2);
 		callfunc "Job_Change",Job_Thief;
 		callfunc "F_ClearJobVar";
 		completequest 1013;
@@ -501,7 +517,7 @@ moc_ruins,141,125,3	script	Mr. Irrelevant	4_M_01,{
 		mes "You've come to take the test, right? I can see in your eyes that you know something.";
 		next;
 		mes "[Mr. Irrelevant]";
-		mes "Your name is " + strcharinfo(0) + "? Ah, it's on the list. Alright, I'll let you into the Mushroom Farm , but I can't guarantee your safety...";
+		mes "Your name is " + strcharinfo(PC_NAME) + "? Ah, it's on the list. Alright, I'll let you into the Mushroom Farm , but I can't guarantee your safety...";
 		close2;
 		job_thief_q = 3;
 		switch(rand(5)) {
@@ -525,13 +541,8 @@ moc_ruins,141,125,3	script	Mr. Irrelevant	4_M_01,{
 	close;
 }
 
-// Monsters
-//============================================================
+//== Monsters ==============================================
 job_thief1,0,0,0,0	monster	Orange Mushroom	1182,180,0,0,0
 job_thief1,0,0,0,0	monster	Fabre	1184,50,0,0,0
 job_thief1,0,0,0,0	monster	Chonchon	1183,50,0,0,0
 job_thief1,0,0,0,0	monster	Spore	1014,30,0,0,0
-
-//============================================================
-// mapflag
-//============================================================

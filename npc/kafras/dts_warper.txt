@@ -1,60 +1,59 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) Silent
+//= Copyright (C) Evera
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Dungeon Teleport Service
-//===== By: ==================================================
-//= Evera
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Cool Event Corp (a.k.a. Zonda Corp) vs. Kafra Dungeon Teleport Service
+//= and voting system.
+//= This is a special event on official servers where there's a big
+//= competition between Kafra Corp. and Cool Event Corp. to warp to
+//= selected levels of certain dungeons.
+//================= Current Version =======================================
 //= 2.9
-//===== Description: =========================================
-//= [Official Conversion]
-//= Cool Event Corp NPCs vs. Kafra Dungeon Teleport Service and voting system.
-//= This is a special event on official servers where there's a
-//= big competition between Kafra Corp. and Cool Event Corp.
-//= To warp to selected levels of certain dungeons.
-//
-// Global Variables in use:
-//	Voting Time check:		$DTS_Time
-//	Cool Event Corp. Vote Numbers:	$DTS_JondaVotes
-//	Kafra Vote Numbers:		$DTS_KafraVotes
-//	Winner:				$DTS_Result
-//	Teleport Service Period Check:	$DTS_PeriodCheck
-//	Kafra Points:			$DTS_KafraWins
-//	Cool Event Corp. Points:	$DTS_JondaWins
-//	Setitem Check:			$DTS_VoteCount
-// For Detailed information on what each varibale does, see
-// the "Vote Globalvar Girl#yuno" NPC at the end of the file.
-// Character Variable in use: lhz_vote (how many times player has voted, keeps htem from re-voting.)
-//===== Additional Comments: =================================
-//= 1.0 Initial release [Evera]
-//= 1.1 SVN release, removed from major town (found true info after research),
-//=     put more arg(2) parameters, fixed a few bugs [Evera]
-//= 1.2 Mushed some variables together, optimized a bit [Evera]
-//= 1.3 Removed selfconfig [Evera]
-//= 1.4 Changed global variables to read from 3 global variables, updated names,
-//=      fixed array bug [Evera]
-//= 1.5 Mushed voting varialbes into 1 variable. [Evera]
-//= 1.6 Removed Duplicates [Silent]
-//= 1.7 Fixed bug of DTS_Admin not running by itself [Evera]
-//= 1.8 Changed requirement to lvl 60 [Evera]
-//= 1.9 Removed global eligibility option [Evera]
-//= 2.0 Fixed zeny bug [Evera]
-//= 2.1 Fixed headers with and updated with newer information [Evera]
-//= 2.2 Changed dtseligible 2 to MISC_QUEST|128, to clean up variable usage. [Evera]
-//=     Also added F_ClearGarbage function to the scripts. [Evera]
-//= 2.3 Changed dtseligible to be $dtsday when MISC_QUEST|128
-//=     Added $dtsday for vote session counter
-//=     Fixed bug that involved having both warpers enabled at the same time. [Evera]
-//=     New $dtsday system and bug fix[Evera]
-//= 2.3a fixed 2 bugs with comparision [Lupus]
-//= 2.3b corrected Glast warp coords [Lupus] 2.3c Bailand -> Bayalan
-//= 2.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.5 Converted from Aegis file. (11.3) [L0ne_W0lf]
-//= 2.6 Moved Morroc NPCs to Morroc Ruins. [L0ne_W0lf]
-//= 2.7 Fixed a typo, a - to a +. Not sure how that happened. [L0ne_w0lf]
-//= 2.8 Corrected another typo this time in a variable.
-//= 2.9 Added GM management function. [Euphy]
-//============================================================
+//================= Variables Used ========================================
+//= - lhz_vote         : How many times player has voted, keeps htem from
+//=                      re-voting.
+//= - $DTS_Time        : Voting Time check
+//= - $DTS_JondaVotes  : Cool Event Corp. Vote Numbers
+//= - $DTS_KafraVotes  : Kafra Vote Numbers
+//= - $DTS_Result      : Winner
+//= - $DTS_PeriodCheck : Teleport Service Period Check
+//= - $DTS_KafraWins   : Kafra Points
+//= - $DTS_JondaWins   : Cool Event Corp. Points
+//= - $DTS_VoteCount   : Setitem Check
+//= For detailed information on what each varibale does, see the
+//= "Vote Globalvar Girl#yuno" NPC at the end of the file.
+//=========================================================================
 
-einbroch,246,70,0	script	Vote Timer#ein	-1,{
+einbroch,246,70,0	script	Vote Timer#ein	FAKE_NPC,{
 OnInit:
 	if ($dts) {
 		$dts = 0;
@@ -226,7 +225,7 @@ OnTimer60000:
 	end;
 }
 
-einbroch,245,71,0	script	Vote Timer2#ein	-1,{
+einbroch,245,71,0	script	Vote Timer2#ein	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -247,7 +246,7 @@ OnTimer60000:
 	end;
 }
 
-einbroch,246,71,0	script	Vote Timer3#ein	-1,{
+einbroch,246,71,0	script	Vote Timer3#ein	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -269,7 +268,7 @@ OnTimer60000:
 	end;
 }
 
-einbroch,247,71,0	script	Vote Timer4#ein	-1,{
+einbroch,247,71,0	script	Vote Timer4#ein	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -291,9 +290,9 @@ OnTimer60000:
 	end;
 }
 
-// Voting Poll NPCs Kafras and Cool Corp.
-// Cool Event Staff should actually be Cool Event Voting Staff
-// names had to be shortened to keep them unique.
+//== Voting Poll NPCs Kafras and Cool Corp. ================
+// Cool Event Staff should actually be Cool Event Voting Staff names had to be
+// shortened to keep them unique.
 function	script	F_VoteKafra	{
 	callfunc "F_ClearGarbage";				//Clear outdated, unused variables
 	switch(getarg(0)){
@@ -315,7 +314,7 @@ function	script	F_VoteKafra	{
 	mes "provide the Dungeon Teleport";
 	mes "Service. How may I help you?";
 	next;
-	switch(select("Reason for Election:Cast a Vote:Use Teleport Service:Cancel")) {
+	switch(select("Reason for Election", "Cast a Vote", "Use Teleport Service", "Cancel")) {
 	case 1:
 		mes "[Kafra Voting Staff]";
 		mes "Cool Event Corp and the";
@@ -392,7 +391,7 @@ function	script	F_VoteKafra	{
 					mes "us. Would you like to vote";
 					mes "for the Kafra Corporation?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Kafra Voting Staff]";
 						mes "I understand. But if you";
@@ -461,7 +460,7 @@ function	script	F_VoteKafra	{
 					mes "us. Would you like to vote";
 					mes "for the Kafra Corporation?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Kafra Voting Staff]";
 						mes "I understand. But if you";
@@ -527,7 +526,7 @@ function	script	F_VoteKafra	{
 			mes "apply in this special service.";
 			next;
 			if ($DTS_KafraWins == 0) {
-				switch(select("Toy Factory, Level 2 -> 4,000 z:Cancel")) {
+				switch(select("Toy Factory, Level 2 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						cutin "",255;
@@ -552,7 +551,7 @@ function	script	F_VoteKafra	{
 				}
 			}
 			else if ($DTS_KafraWins == 1) {
-				switch(select("Toy Factory, Level 2 -> 4,000 z:Clock Tower, Level 3 -> 4,000 z:Cancel")) {
+				switch(select("Toy Factory, Level 2 -> 4,000 z", "Clock Tower, Level 3 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -593,7 +592,7 @@ function	script	F_VoteKafra	{
 				}
 			}
 			else {
-				switch(select("Toy Factory, Level 2 -> 4,000 z:Clock Tower, Level 3 -> 4,000 z:Lava Dungeon, Level 2 -> 4,000 z:Cancel")) {
+				switch(select("Toy Factory, Level 2 -> 4,000 z", "Clock Tower, Level 3 -> 4,000 z", "Lava Dungeon, Level 2 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -714,7 +713,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 	mes "between Cool Event Corp. and";
 	mes "Kafra Corporation for control of the Dungeon Teleport Service!";
 	next;
-	switch(select("Reason for Election:Cast a Vote:Use Teleport Service:Cancel")) {
+	switch(select("Reason for Election", "Cast a Vote", "Use Teleport Service", "Cancel")) {
 	case 1:
 		mes "[Cool Event Corp. Voting Staff]";
 		mes "Cool Event Corp. has been";
@@ -797,7 +796,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 					mes "Would you like to vote";
 					mes "for Cool Event Corp.?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Cool Event Corp. Voting Staff]";
 						mes "Ah, I see... Well, if you";
@@ -869,7 +868,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 					mes "Would you like to vote";
 					mes "for Cool Event Corp.?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Cool Event Corp. Voting Staff]";
 						mes "Ah, I see... Well, if you";
@@ -927,7 +926,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 			mes "choose your destination.";
 			next;
 			if ($DTS_JondaWins == 0) {
-				switch(select("Byalan Dungeon, Level 3 -> 4,000 z:Cancel")) {
+				switch(select("Byalan Dungeon, Level 3 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -955,7 +954,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 				}
 			}
 			else if ($DTS_JondaWins == 1) {
-				switch(select("Byalan Dungeon, Level 3 -> 4,000 z:Clock Tower, 3rd Floor -> 4,000 z:Cancel")) {
+				switch(select("Byalan Dungeon, Level 3 -> 4,000 z", "Clock Tower, 3rd Floor -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -1005,7 +1004,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 				mes "for this service. Now, please";
 				mes "choose your destination.";
 				next;
-				switch(select("Byalan Dungeon, Level 3 -> 4,000 z:Clock Tower, 3rd Floor -> 4,000 z:Glast Heim Entrance -> 4,000 z:Cancel")) {
+				switch(select("Byalan Dungeon, Level 3 -> 4,000 z", "Clock Tower, 3rd Floor -> 4,000 z", "Glast Heim Entrance -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -1105,7 +1104,7 @@ alberta,114,70,6	duplicate(VotingStaffCCE)	Cool Event Staff#alb	4_M_ZONDAMAN
 aldebaran,138,102,6	duplicate(VotingStaffCCE)	Cool Event Staff#alde	4_M_ZONDAMAN
 lighthalzen,154,60,6	duplicate(VotingStaffCCE)	Cool Event Staff#lhz	4_M_ZONDAMAN
 
-yuno,103,225,0	script	Scrutiny Association#5	-1,{
+yuno,103,225,0	script	Scrutiny Association#5	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;
@@ -1123,7 +1122,7 @@ OnTimer7200000:
 	end;
 }
 
-einbroch,248,71,0	script	Scrutiny Association#6	-1,{
+einbroch,248,71,0	script	Scrutiny Association#6	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1146,7 +1145,7 @@ OnTimer15000:
 	end;
 }
 
-einbroch,249,71,0	script	Scrutiny Association#7	-1,{
+einbroch,249,71,0	script	Scrutiny Association#7	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1181,7 +1180,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 		mes "[Christy's Maid]";
 		mes "I am Lady Christy's Maid.";
 		next;
-		switch(select("Globalvar Check:Setitem Zero:Change Glbalvar")) {
+		switch(select("Globalvar Check", "Setitem Zero", "Change Glbalvar")) {
 		case 1:
 			mes "Current GlobalVar are";
 			next;
@@ -1205,13 +1204,13 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 			mes "[Christy's Maid]";
 			mes "Which Globalvar value would you like to change?";
 			next;
-			switch(select("1 - Voting Time:2 - Cool Event Corp. Vote Numbers:3 - Kafra Vote Numbers:4 - Winner:5 - Teleport Service Period:6 - Kafra Warp Number:7 - Cool Event Corp. Warp Number:8 - Setitem Value")) {
+			switch(select("1 - Voting Time", "2 - Cool Event Corp. Vote Numbers", "3 - Kafra Vote Numbers", "4 - Winner", "5 - Teleport Service Period", "6 - Kafra Warp Number", "7 - Cool Event Corp. Warp Number", "8 - Setitem Value")) {
 			case 1:
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1224,8 +1223,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1238,8 +1237,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1252,8 +1251,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 3.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 3)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 3) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1266,8 +1265,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 1000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 1000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1280,8 +1279,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 2.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 2)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 2) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1294,8 +1293,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 2.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 2)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 2) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;
@@ -1308,8 +1307,8 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 10000.";
 				next;
-				input .@input;
-				if ((.@input < 0) || (.@input > 10000)) {
+				input(.@input);
+				if (.@input < 0 || .@input > 10000) {
 					mes "[Christy's Maid]";
 					mes "The value is incorrect.";
 					close;

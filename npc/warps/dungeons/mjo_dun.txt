@@ -1,16 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Nana
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Coal Mine Warp Script
-//===== By: ==================================================
-//= Nana (1.0)
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Coal Mines
-//===== Additional Comments: =================================
-//= No Comment!
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-//= Coal Mine ================================================
 mjo_dun01,14,283,0	warp	mjod01	2,4,mjo_dun02,381,343
 mjo_dun01,52,14,0	warp	mjod001	4,2,mjolnir_02,79,363
 mjo_dun02,31,21,0	warp	mjod02	1,1,mjo_dun03,302,262

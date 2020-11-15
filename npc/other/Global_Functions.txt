@@ -1,51 +1,65 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) AnnieRuru
+//= Copyright (C) Emistry
+//= Copyright (C) Euphy
+//= Copyright (C) Paradox924X
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) kobra_k88
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Global Functions
-//===== By: ==================================================
-//= Lupus, kobra_k88
-//===== Current Version: =====================================
-//= 2.18
-//===== Description: =========================================
+//================= Description ===========================================
 //= General script functions.
-//===== Additional Comments: =================================
-//= Added F_ClearJobVar - on getting a new job it clears all Job Quest variables
-//= Removed individual job check functions as they were redundant [kobra_k88]
-//= 1.3 Added Job Change Function for Baby/Normal Classes
-//= 1.3b a fix, due to const.txt change [Lupus]
-//= 1.4 Added Is_Taekwon_Class: Taekwondo, Star Knight(Gladiator),Soul Linker [Lupus]
-//= 1.5 Added clear of Bard Quest variables. 1.5a updated [Lupus]
-//= 1.6 Added F_RandMes, F_SexMes, F_Hi, F_Bye functions [Lupus]
-//=     Moved here useful function 'getJobName'
-//= 1.7 Added "F_ItemName" function, added a great sample for "F_ItemName"
-//= 1.8 Added Job Vars clear for Extended classes: TK,SL,SG [Lupus]
-//= 1.9 Added "F_ClearGarbage" func that clears outdated, wasted variables [Lupus]
-//= 1.91 Added "F_SaveQuestSkills","F_Load?Skills" functions [Lupus]
-//= 2.0 Fixed F_Save/LoadQuestSkills functions. Had to split in into 2 vars [Lupus]
-//= 2.01 Added $talk to F_ClearGarbage [Evera]
-//= 2.02 Added $dtsglobalelig and $dts|(1<<6) to F_ClearGarbage [Evera]
-//= 2.03 Added Gunslinger vars to F_ClearJobVar [Lupus]
-//= 2.04 Added dtseligible 2 (becomes MISC_QUEST|128) to F_ClearGarbage [Evera]
-//= 2.05 Book of Devil -> MISC_QUEST|256, clear other Niflheim garbage vars [Lupus]
-//=     +more garbage clean
-//= 2.06 Pass to Bio-Lab -> MISC_QUEST|512 [Lupus]
-//= 2.07 Added TK_Q variable clear. 2.08 Added NINJ_Q variable clear [Lupus]
-//= 2.09 Cleared F_ClearGarbage [Lupus]
-//= 2.10 Added F_CheckMaxCount to check count of carrid items. [L0ne_w0lf]
-//= 2.10a Removed function F_CheckMaxCount. Not needed. [L0ne_W0lf]
-//= 2.11 Updated function Job_Change to jobchange based on Upper value. [Paradox924X]
-//= 2.12 Added more unused vars to F_ClearGarbage [Lupus]
-//= 2.13 Added more unused vars to F_ClearGarbage [Lupus]
-//= 2.14 Added old novice variables to F_ClearGarbage. [L0ne_W0lf]
-//= 2.15 Added no unused DTS variables to F_ClearGarbage. [L0ne_W0lf]
-//= 2.16 Added F_GetWeaponType, and F_GetArmorType. [L0ne_W0lf]
-//= 2.17 Renamed 'F_RandMes' to 'F_Rand'. [Euphy]
-//= 2.18 Removed useless 'getJobName' function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.20
+//=========================================================================
 
+//== Function F_InsertComma ================================
+// Returns a number with commas based on precision of digits and custom
+// separator.
+// callfunc "F_InsertComma",<number>{,<precision>,<separator>}
+// Examples:
+//    callfunc("F_InsertComma", 7777777)            // returns "7,777,777"
+//    callfunc("F_InsertComma", 1000000000, 3, ",") // returns "1,000,000,000"
+//    callfunc("F_InsertComma", 1000000000, 3, "_") // returns "1_000_000_000"
+//    callfunc("F_InsertComma", 1000000000, 4)      // returns "10,0000,0000"
+function	script	F_InsertComma	{
+	.@str$ = getarg(0);
+	.@precision = getarg(1, 3);
+	.@separator$ = getarg(2, ",");
+	.@is_negative = (charat(.@str$, 0) == "-");
+	for (.@i = getstrlen(.@str$) - .@precision; .@i > .@is_negative; .@i -= .@precision)
+		.@str$ = insertchar(.@str$, .@separator$, .@i);
+	return .@str$;
+}
 
-//////////////////////////////////////////////////////////////////////////////////
-// Function that clears job quest variables
-//////////////////////////////////////////////////////////////////////////////////
-
+//== Function F_ClearJobVar ================================
+// Clears job quest variables
 function	script	F_ClearJobVar	{
 	// Misc ---------------------------------
 	JBLVL = 0;
@@ -98,10 +112,10 @@ function	script	F_ClearGarbage	{
 		RES_SKILL = 0;
 	//Here you put outdated variables from your outdated EVENTS
 	//e.g. Is XMAS done? Add the EVENT var clearing code here.
-	
+
 	//due to bugs in BS quest:
 	wizard_m2 = 0;
-	
+
 	// Old Novice Ground Variables.
 	NEW_MES_FLAG0 = 0;
 	NEW_MES_FLAG1 = 0;
@@ -112,88 +126,51 @@ function	script	F_ClearGarbage	{
 	NEW_LVUP0 = 0;
 	NEW_LVUP1 = 0;
 	NEW_JOBLVUP = 0;
-	
+
 	// Old DTS variables that are no longer used.
 	dtseligible = 0;
 	MISC_QUEST = MISC_QUEST & ~128;
-	
+
 	return;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
+//== Function Job_Change ===================================
 // Used in REBIRTH scripts
-// Class = Internal Class ID
-// BaseJob = Base Job (0..23)
-// Upper : 0 - Default, 1 - Advanced, 2 - Baby
-//////////////////////////////////////////////////////////////////////////////////
-
 function	script	Job_Change	{
 	jobchange getarg(0),Upper; //Jobchange based on Upper
-	logmes "CLASS CHANGE: " +strcharinfo(0)+ " become a "+jobname(Class);
+	logmes "CLASS CHANGE: " +strcharinfo(PC_NAME)+ " become a "+jobname(Class);
 	return;
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////
-// Functions used to spiff up dialoges [Lupus]
-//////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_Rand"
-//////////////////////////////////////////////////////////////////////////////////
-//returns random argument
-// Example: check F_Bye or F_Hi functions
-// READ AND THINK: You can use it to pick a random number from a list:
-// @itemIDfromList = callfunc("F_Rand",1129,1222,1163,1357,1360,1522,1811,1410);
-
+//== Function F_Rand =======================================
+// Returns a random argument
+// Example: (see also F_Bye or F_Hi functions)
+// .@itemIDfromList = callfunc("F_Rand",1129,1222,1163,1357,1360,1522,1811,1410);
 function	script	F_Rand	{
 	return getarg(rand(getargcount()));
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_Sex"
-//////////////////////////////////////////////////////////////////////////////////
-//returns 1st argument if female, 2nd argument otherwise
-// Example: mes callfunc("F_Sex","What a beautiful lady!","What a handsome man!");
-
-function	script	F_SexMes	{
-	return getarg(Sex);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_Hi"
-//////////////////////////////////////////////////////////////////////////////////
-//returns random HELLO message
-
+//== Function F_Hi =========================================
+// Returns random HELLO message
 function	script	F_Hi	{
 	return callfunc("F_Rand","Hi!","Hello!","Good day!","How are you?","Hello there.");
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_Bye"
-//////////////////////////////////////////////////////////////////////////////////
-//returns random BYE message
-
+//== Function F_Bye ========================================
+// Returns random BYE message
 function	script	F_Bye	{
 	return callfunc("F_Rand","Bye. See you again.","Later.","Goodbye.","Good luck!","Have a nice day!","Byebye!!!");
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_ItemName"
-//////////////////////////////////////////////////////////////////////////////////
+//== Function F_ItemName ===================================
 // Returns expanded item name string
-//Argumentss
-// 0 - Item ID
-// 1 - Element N (0=none,1=Ice,2=Earth,3=Fire,4=Wind)
-// 2 - VVS meter 0...3
-// 3 - Refine
+// Arguments:
+// - 0 - Item ID
+// - 1 - Element N (0=none,1=Ice,2=Earth,3=Fire,4=Wind)
+// - 2 - VVS meter 0...3
+// - 3 - Refine
 // Example: mes "Show me your "+callfunc("F_ItemName",1201,1,2,5)+"...";
 //  is equal to: mes "Show me your ^000090 +5 VVS Fire Knife ^000000..."
-
 function	script	F_ItemName	{
 	if(getarg(3))
 		.@t$ += "+"+getarg(3)+" ";
@@ -214,110 +191,189 @@ function	script	F_ItemName	{
 	return "^000090"+.@t$+getitemname(getarg(0))+"^000000";
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_SaveQuestSkills": Store learnt quest skills
-//////////////////////////////////////////////////////////////////////////////////
+//== Function F_SaveQuestSkills ============================
+// Stores learned quest skills
 function	script	F_SaveQuestSkills	{
 	ADV_QSK = 0; ADV_QSK2 = 0;
 	//1st classes quest skills
 	for (.@i = 0; .@i < 14; ++.@i) {
-		if(getskilllv(144+.@i)) ADV_QSK |= pow(2,.@i);
+		if(getskilllv(144+.@i)) ADV_QSK |= (2 ** .@i);
 	}
 	//2nd classes quest skills
 	for (.@i = 0; .@i < 19; ++.@i) {
-		if(getskilllv(1001+.@i)) ADV_QSK2 |= pow(2,.@i);
+		if(getskilllv(1001+.@i)) ADV_QSK2 |= (2 ** .@i);
 	}
 	return;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_Load1Skills": Restore learnt 1st class quest skills
-//////////////////////////////////////////////////////////////////////////////////
+//== Function F_Load1Skills ================================
+// Restores learned 1st class quest skills
 function	script	F_Load1Skills	{
 	//1st classes quest skills
 	for(.@i = 0; .@i < 14; ++.@i) {
-		if(ADV_QSK|pow(2,.@i) == ADV_QSK) skill 144+.@i,1,0;
+		if(ADV_QSK|(2 ** .@i) == ADV_QSK) skill 144+.@i,1,0;
 	}
 	ADV_QSK = 0; //Clear var
 	return;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_Load2Skills": Restore learnt 2nd class quest skills
-//////////////////////////////////////////////////////////////////////////////////
+//== Function F_Load2Skills ================================
+// Restores learned 2nd class quest skills
 function	script	F_Load2Skills	{
 	//2nd classes quest skills
 	for (.@i = 0; .@i < 19; ++.@i) {
-		if(ADV_QSK2|pow(2,.@i) == ADV_QSK2) skill 1001+.@i,1,0;
+		if(ADV_QSK2|(2 ** .@i) == ADV_QSK2) skill 1001+.@i,1,0;
 	}
 	ADV_QSK2 = 0; //Clear var
 	return;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_GetWeaponType": Determine weapon type by view
-//////////////////////////////////////////////////////////////////////////////////
+//== Function F_GetWeaponType ==============================
+// Determines weapon type by subtype
 function	script	F_GetWeaponType	{
-	switch(getiteminfo(getarg(0),11)) {
-		case 1: return "Dagger"; break;
-		case 2: return "One-handed Sword"; break;
-		case 3: return "Two-handed Sword"; break;
-		case 4: return "One-handed Spear"; break;
-		case 5: return "Two-handed Spear"; break;
-		case 6: return "One-handed Axe"; break;
-		case 7: return "Two-handed Axe"; break;
-		case 8: return "Mace"; break;
-		//case 9: return "Unused"; break;
-		case 10: return "Staff"; break;
-		case 11: return "Bow"; break;
-		case 12: return "Knuckle"; break;
-		case 13: return "Instrument"; break;
-		case 14: return "Whip"; break;
-		case 15: return "Book"; break;
-		case 16: return "Katar"; break;
-		case 17: return "Revolver"; break;
-		case 18: return "Rifle"; break;
-		case 19: return "Gatling gun"; break;
-		case 20: return "Shotgun"; break;
-		case 21: return "Grenade Launcher"; break;
-		case 22: return "Shuriken"; break;
+	if (getiteminfo(getarg(0), ITEMINFO_TYPE) != IT_WEAPON)
+		return "Not a weapon";
+
+	switch (getiteminfo(getarg(0), ITEMINFO_SUBTYPE)) {
+		case W_DAGGER: return "Dagger"; break;
+		case W_1HSWORD: return "One-handed Sword"; break;
+		case W_2HSWORD: return "Two-handed Sword"; break;
+		case W_1HSPEAR: return "One-handed Spear"; break;
+		case W_2HSPEAR: return "Two-handed Spear"; break;
+		case W_1HAXE: return "One-handed Axe"; break;
+		case W_2HAXE: return "Two-handed Axe"; break;
+		case W_MACE: return "Mace"; break;
+		//case W_2HMACE: return "Two-handed Mace"; break; // Unused
+		case W_STAFF: return "Staff"; break;
+		case W_BOW: return "Bow"; break;
+		case W_KNUCKLE: return "Knuckle"; break;
+		case W_MUSICAL: return "Instrument"; break;
+		case W_WHIP: return "Whip"; break;
+		case W_BOOK: return "Book"; break;
+		case W_KATAR: return "Katar"; break;
+		case W_REVOLVER: return "Revolver"; break;
+		case W_RIFLE: return "Rifle"; break;
+		case W_GATLING: return "Gatling gun"; break;
+		case W_SHOTGUN: return "Shotgun"; break;
+		case W_GRENADE: return "Grenade Launcher"; break;
+		case W_HUUMA: return "Shuriken"; break;
+		case W_2HSTAFF: return "Two-handed Staff"; break;
 		default: return "Unable to Determine Equip Type"; break;
 	}
 	end;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-// *** Function "F_GetArmorType": Determine equipment type by equip location
-//////////////////////////////////////////////////////////////////////////////////
-function	script	F_GetArmorType	{
-	switch(getiteminfo(getarg(0),5)) {
-		case 001: return "Lower Headgear"; break;
-		case 2: return "Weapon"; break;
-		case 4: return "Garment"; break;
-		case 8: return "Accessory"; break;
-		case 16: return "Armor"; break;
-		case 32: return "Shield"; break;
-		case 64: return "Shoes"; break;
-		case 128: return "Accessory"; break;
-		case 256: return "Upper Headgear"; break;
-		case 512: return "Middle Headgear"; break;
-		default: return "Unable to Determine Equip Location"; break;
+//== Function F_GetAmmoType ================================
+// Determines ammunition type by subtype
+function	script	F_GetAmmoType	{
+	if (getiteminfo(getarg(0), ITEMINFO_TYPE) != IT_AMMO)
+		return "Not an ammunition";
+
+	switch (getiteminfo(getarg(0), ITEMINFO_SUBTYPE)) {
+		case A_ARROW: return "Arrow"; break;
+		case A_DAGGER: return "Throwing Dagger"; break;
+		case A_BULLET: return "Bullet"; break;
+		case A_SHELL: return "Shell"; break;
+		case A_GRENADE: return "Grenade"; break;
+		case A_SHURIKEN: return "Huuma Shuriken"; break;
+		case A_KUNAI: return "Kunai"; break;
+		case A_CANNONBALL: return "Cannon Ball"; break;
+		case A_THROWWEAPON: return "Throwing Weapon"; break;
+		default: return "Unable to Determine Ammunition Type"; break;
 	}
 	end;
 }
 
+//== Function F_GetArmorType ===============================
+// Determines equipment type by equip location
+function	script	F_GetArmorType	{
+	switch (getiteminfo(getarg(0), ITEMINFO_TYPE)) {
+	case IT_WEAPON:
+		return callfunc("F_GetWeaponType", getarg(0));
+	case IT_AMMO:
+		return callfunc("F_GetAmmoType", getarg(0));
+	case IT_ARMOR:
+		break;
+	default:
+		return "Unknown Equip Type";
+	}
+
+	.@loc = getiteminfo(getarg(0), ITEMINFO_LOC);
+
+	if ((.@loc & EQP_HELM) != 0) {
+		.@name$ = "";
+		if ((.@loc & EQP_HEAD_TOP) != 0) {
+			.@name$ += "Top";
+		}
+		if ((.@loc & EQP_HEAD_MID) != 0) {
+			if ((.@loc & EQP_HEAD_TOP) != 0)
+				.@name$ += " + ";
+			.@name$ += "Middle";
+		}
+		if ((.@loc & EQP_HEAD_LOW) != 0) {
+			if ((.@loc & (EQP_HEAD_TOP | EQP_HEAD_MID)) != 0)
+				.@name$ += " + ";
+			.@name$ += "Lower";
+		}
+		.@name$ += " Headgear";
+		return .@name$;
+	}
+	if ((.@loc & EQP_GARMENT) != 0)
+		return "Garment";
+	if ((.@loc & EQP_ACC) != 0)
+		return "Accessory";
+	if ((.@loc & EQP_ARMOR) != 0)
+		return "Armor";
+	if ((.@loc & EQP_SHIELD) != 0)
+		return "Shield";
+	if ((.@loc & EQP_SHOES) != 0)
+		return "Shoes";
+	if ((.@loc & EQP_COSTUE_GARMENT) != 0)
+		return "Costume Garment";
+	if ((.@loc & EQP_COSTUME) != 0) {
+		.@name = "Costume ";
+		if ((.@loc & EQP_COSTUME_HEAD_TOP) != 0) {
+			.@name$ += "Top";
+		}
+		if ((.@loc & EQP_COSTUME_HEAD_MID) != 0) {
+			if ((.@loc & EQP_COSTUME_HEAD_TOP) != 0)
+				.@name$ += " + ";
+			.@name$ += "Middle";
+		}
+		if ((.@loc & EQP_COSTUME_HEAD_LOW) != 0) {
+			if ((.@loc & (EQP_COSTUME_HEAD_TOP | EQP_COSTUME_HEAD_MID)) != 0)
+				.@name$ += " + ";
+			.@name$ += "Lower";
+		}
+		.@name$ += " Headgear";
+		return .@name$;
+	}
+	if ((.@loc & EQP_SHADOW_ARMOR) != 0)
+		return "Shadow Armor";
+	if ((.@loc & EQP_SHADOW_WEAPON) != 0)
+		return "Shadow Weapon";
+	if ((.@loc & EQP_SHADOW_SHIELD) != 0)
+		return "Shadow Shield";
+	if ((.@loc & EQP_SHADOW_SHOES) != 0)
+		return "Shadow Shoes";
+	if ((.@loc & EQP_SHADOW_ACC) != 0)
+		return "Shadow Accessory";
+
+	return "Unknown Equip Type";
+}
+
+//== Function Time2Str =====================================
 // Time calculation Function
-// *********************************************************************
 function	script	Time2Str	{
 	.@time_left = getarg(0) - gettimetick(2);
-	
+
 	.@Days = .@time_left / 86400;
 	.@time_left -= (.@Days * 86400);
 	.@Hours = .@time_left / 3600;
 	.@time_left -= (.@Hours * 3600);
 	.@Minutes = .@time_left / 60;
 	.@time_left -= (.@Minutes * 60);
-	
+
 	.@Time$ = "";
 	if( .@Days > 1 )
 		.@Time$ += .@Days + " days, ";
@@ -338,6 +394,91 @@ function	script	Time2Str	{
 		.@Time$ += .@time_left + " seconds";
 	else if( .@time_left == 1 )
 		.@Time$ += .@time_left + " second";
-	
+
 	return .@Time$;
+}
+
+//== Function F_ShuffleNumbers =============================
+// Generate a set of numbers in random order that the numbers are not repeated
+//    callfunc "F_ShuffleNumbers",<start num>,<last num>,<output array>{,<count>};
+// Examples: 
+//    callfunc("F_ShuffleNumbers", 0, 5, .@output)      // possible output 4,1,3,2,0,5
+//    callfunc("F_ShuffleNumbers", -5, 1, .@output)     // possible output -3,-5,-4,-2,-1,1,0
+//    callfunc("F_ShuffleNumbers", 0, 100, .@output, 5) // possible output 9,55,27,84,33
+// Reminder: Use *freeloop command when appropriate !
+function	script	F_ShuffleNumbers	{
+	deletearray getarg(2);
+	.@static = getarg(0);
+	.@range = getarg(1) +1 - .@static;
+	.@count = getarg(3, .@range);
+	if (.@range <= 0 || .@count <= 0)
+		return 0;
+	if (.@count > .@range)
+		.@count = .@range;
+	for (.@i = 0; .@i < .@range; ++.@i)
+		.@temparray[.@i] = .@i;
+	for (.@i = 0; .@i < .@count; ++.@i) {
+		.@rand = rand(.@range);
+		set getelementofarray( getarg(2), .@i ), .@temparray[.@rand] + .@static;
+		.@temparray[.@rand] = .@temparray[--.@range];
+	}
+	return .@count;
+}
+
+//== Function F_MesColor ===================================
+// Function to colorize npc dialog without having to memorize the color code
+// Examples:
+//    mesf("%sThis message is now in BLUE.", F_MesColor(C_BLUE));
+function	script	F_MesColor	{
+	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
+}
+
+//== Function F_GetTradeRestriction ========================
+// Function to get item trade restriction
+// Examples:
+//    mes "Red Potion Restriction: "+ callfunc("F_GetTradeRestriction", Red_Potion);
+function	script	F_GetTradeRestriction	{
+	.@trade = getiteminfo(getarg(0), ITEMINFO_TRADE);
+
+	if (.@trade == 0)
+		return "None";
+	.@trade$ = "";
+	if (.@trade & ITR_NODROP)
+		.@trade$ += "NoDrop|";
+	if (.@trade & ITR_NOTRADE)
+		.@trade$ += "NoTrade|";
+	if (.@trade & ITR_PARTNEROVERRIDE)
+		.@trade$ += "PartnerOverride|";
+	if (.@trade & ITR_NOSELLTONPC)
+		.@trade$ += "NoSellToNpc|";
+	if (.@trade & ITR_NOSTORAGE)
+		.@trade$ += "NoStorage|";
+	if (.@trade & ITR_NOGSTORAGE)
+		.@trade$ += "NoGuildStorage|";
+	if (.@trade & ITR_NOMAIL)
+		.@trade$ += "NoMail|";
+	if (.@trade & ITR_NOAUCTION)
+		.@trade$ += "NoAuction|";
+	return .@trade$;
+}
+
+//== Function F_MesItemInfo ===================================
+// Show the item name and a clickable link for the item description
+// Only works with mes and mesf, does not work in menu/select
+function	script	F_MesItemInfo	{
+	.@item = getarg(0);
+	.@itemname$ = getitemname(.@item);
+	if (.@itemname$ != "null") {
+		.@itemslot = getitemslots(.@item);
+		if (.@itemslot)
+			.@itemname$ = sprintf("%s [%d]", .@itemname$, .@itemslot);
+	}
+	else
+		.@itemname$ = "Unknown Item";
+	if (PACKETVER >= 20150729)
+		return sprintf("<ITEM>%s<INFO>%d</INFO></ITEM>", .@itemname$, .@item);
+	else if (PACKETVER >= 20130130)
+		return sprintf("<ITEMLINK>%s<INFO>%d</INFO></ITEMLINK>", .@itemname$, .@item);
+	else
+		return .@itemname$;
 }

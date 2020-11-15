@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Skorm
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Upgrade Weapon Enchants
-//===== By: ==================================================
-//= Skorm
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Adds enchantments to Upgrade weapons.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Standardizing, grammar and bug fixes. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You are carrying too many items, please reduce it and come back again!";
 		close;
 	}
@@ -26,7 +47,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 	mes "Yes?";
 	mes "You are looking for me?";
 	next;
-	switch(select("This is the first time seeing you!:I heard that you are the best!:Please initialize the enchant.")) {
+	switch(select("This is the first time seeing you!", "I heard that you are the best!", "Please initialize the enchant.")) {
 	case 1:
 		mes "[Devil Enchant Master]";
 		mes "Ha ha ha~ Of course, I am not the kind of person that simply deals with people.";
@@ -44,7 +65,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 		mes "Else, I will not enchant for you....";
 		close;
 	case 2:
-		if (!countitem(6484)) {
+		if (!countitem(Enchant_Book)) {
 			mes "[Devil Enchant Master]";
 			mes "Are you listening to me? I will only do for you if you bring the Enchant Book!";
 			close;
@@ -59,7 +80,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 		}
 		mes "Initializing will cost 100,000 zeny and confirming whether the weapon is enchanted!";
 		next;
-		if (select("Let me think about it.:Initialize it now!") == 1) {
+		if (select("Let me think about it.", "Initialize it now!") == 1) {
 			mes "[Devil Enchant Master]";
 			mes "Come back after you have confirmed!";
 			close;
@@ -88,13 +109,13 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 	.@equip_refine = getequiprefinerycnt(.@part);
 
 	if (.@select == 1) {
-		if (!countitem(6484)) {
+		if (!countitem(Enchant_Book)) {
 			mes "Are you listening to me? I will only do for you if you bring the Enchant Book!";
 			close;
 		}
 		mes "Which type of effect do you want to enchant?";
 		next;
-		switch(select("Let me think about it.:Physical Series:Magical Series")) {
+		switch(select("Let me think about it.", "Physical Series", "Magical Series")) {
 		case 1:
 			mes "[Devil Enchant Master]";
 			mes "Come back again after you change your mind!";
@@ -113,7 +134,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 		}
 		mes "The enchant process might fail, and ^ff0000it will reduce partial refine level^000000, but the slotted card and weapon will not be broken! Are you sure you want to continue?";
 		next;
-		if (select("Next time!:Start now!") == 1) {
+		if (select("Next time!", "Start now!") == 1) {
 			mes "[Devil Enchant Master]";
 			mes "Come back again after you have decided!";
 			close;
@@ -210,7 +231,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 			mes "This item has been enchanted!";
 			close;
 		}
-		if (!countitem(6484)) {
+		if (!countitem(Enchant_Book)) {
 			mes "Are you listening to me? I will only do for you if you bring the Enchant Book!";
 			close;
 		}
@@ -223,10 +244,10 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 			specialeffect EF_REPAIRWEAPON;
 			mes "The slot ^9900004^000000 has been enchanted!";
 		}
-		delitem 6484,1; //Enchant_Book
+		delitem Enchant_Book,1;
 		delequip .@part;
 
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@enchant
+		// GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@enchant
 		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@enchant;
 
 		if (.@lost_refine) {
@@ -253,7 +274,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 		Zeny -= 100000;
 		delequip .@part;
 
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] 0
+		// GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] 0
 		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],0;
 
 		close;

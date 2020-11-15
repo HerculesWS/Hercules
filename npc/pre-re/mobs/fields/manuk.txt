@@ -1,33 +1,51 @@
-//===== Hercules Script ======================================
-//= Manuk Fields Monster Spawn Script
-//===== By: ==================================================
-//= alexx, MaC
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) scriptor
+//= Copyright (C) alexx
+//= Copyright (C) MaC
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Manuk Fields Monster Spawn Script (Pre-Renewal)
+//================= Description ===========================================
+//= Monster Spawns for Manuk Fields
+//================= Current Version =======================================
 //= 1.1a
-//===== Additional Comments: =================================
-//= 1.0 Official spawn ammounts from Aegis script [alexx]
-//= 1.1 Added 13.2 mob spawn update [scriptor]
-//= 1.1a Corrected fild2 mobs spawning on fild1. (bugreport:4248)
-//============================================================
+//=========================================================================
 
-//============================================================
-// man_fild01 - Manuk Field
-//============================================================
+//== man_fild01 - Manuk Field ==============================
 man_fild01,0,0,0,0	monster	Nepenthes	1988,105,0,0,0
 man_fild01,0,0,0,0	monster	Hillthion	1989,10,0,0,0
 man_fild01,0,0,0,0	monster	Centipede Larva	1999,30,0,0,0
 man_fild01,0,0,0,0	monster	Centipede	1987,2,0,0,0
 
-//============================================================
-// man_fild02 - Manuk Field
-//============================================================
+//== man_fild02 - Manuk Field ==============================
 man_fild02,0,0,0,0	monster	Bradium Golem	2024,50,0,0,0
 man_fild02,0,0,0,0	monster	Centipede	1987,35,0,0,0
 man_fild02,0,0,0,0	monster	Tatacho	1986,25,0,0,0
 
-//============================================================
-// man_fild03 - Manuk Field
-//============================================================
+//== man_fild03 - Manuk Field ==============================
 man_fild03,0,0,0,0	monster	Hillthion	1989,25,0,0,0
 man_fild03,0,0,0,0	monster	Tatacho	1986,25,0,0,0
 man_fild03,0,0,0,0	monster	Centipede	1987,25,0,0,0

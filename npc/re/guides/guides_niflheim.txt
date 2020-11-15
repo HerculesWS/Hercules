@@ -1,17 +1,37 @@
-//===== Hercules Script ======================================
-//= Niflheim Guide
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Niflheim Guide (Renewal)
+//================= Description ===========================================
 //= Guide for the city of Niflheim.
-//===== Additional Comments: =================================
-//= 1.0 First version, Renewal guide.
-//= 1.1 Optimized. [Euphy]
-//= 1.2 Navigation system update. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 niflheim,201,187,3	script	Niflheim Guide#01nif	4_M_DIEMAN,{
 	mes "[Niflheim Guide]";
@@ -25,7 +45,7 @@ niflheim,201,187,3	script	Niflheim Guide#01nif	4_M_DIEMAN,{
 	}
 	while (1) {
 		next;
-		switch(select("[ Tool Shop ]:[ Pub ]:[ Weapon Shop ]:[ Witch's Castle ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Tool Shop ]", "[ Pub ]", "[ Weapon Shop ]", "[ Witch's Castle ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			callsub L_Mark, F_Navi("Tool Shop","niflheim,218,196","^0000FF");
 			viewpoint 1,218,196,0,0x0A82FF;

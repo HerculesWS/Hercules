@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Silent
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Aldebaran
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= Description ===========================================
 //= 'Doctor Band', 'Feather Bonnet', 'Opera Masque', 'Sakkat Hat' Quests.
-//===== Additional Comments: =================================
-//= Fully working
-//= 1.1 Fixed Doctor Band items [Lupus]
-//= 1.2 Removed Duplicates [Silent]
-//= 1.3 Updated headgear NPC. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// 'Doctor Band', 'Feather Bonnet', 'Opera Masque', 'Sakkat Hat' Quest
-//============================================================
+//== 'Doctor Band', 'Feather Bonnet', 'Opera Masque', 'Sakkat Hat' Quest =
 aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 	mes "[Trader]";
 	mes "Who is this mysterious man?";
@@ -35,19 +56,19 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 	mes " (4) ^3355FFSakkat^000000:";
 	mes "120 Trunks + 10000 Zeny ";
 	next;
-	switch(select(" Doctor Band : Feather Bonnet : Phantom of Opera : Sakkat ")) {
+	switch(select(" Doctor Band ", " Feather Bonnet ", " Phantom of Opera ", " Sakkat ")) {
 	case 1:
-		if ((countitem(2275) > 0) && (countitem(998) > 49) && (countitem(733) > 0) && (Zeny > 3499)) {
-			delitem 2275,1; //Red_Bandana
-			delitem 998,50; //Iron
-			delitem 733,1; //Crystal_Jewel___
+		if ((countitem(Red_Bandana) > 0) && (countitem(Iron) > 49) && (countitem(Crystal_Jewel___) > 0) && (Zeny > 3499)) {
+			delitem Red_Bandana,1;
+			delitem Iron,50;
+			delitem Crystal_Jewel___,1;
 			Zeny -= 3500;
 			mes "[Trader]";
 			mes "Hm! You don't have a medical license, do you? It's alright, I've heard about a rogue, unlicensed physician who performed medical miracles! But... That might have been a comic book.";
 			next;
 			mes "[Trader]";
 			mes "Oh whatever. Just don't get caught.";
-			getitem 2273,1; //Doctor_Cap
+			getitem Doctor_Cap,1;
 			close;
 		}
 		else {
@@ -58,13 +79,13 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			close;
 		}
 	case 2:
-		if ((countitem(2247) > 0) && (countitem(916) > 299) && (Zeny > 499)) {
-			delitem 2247,1; //Oldman's_Romance
-			delitem 916,300; //Feather_Of_Birds
+		if ((countitem(Oldmans_Romance) > 0) && (countitem(Feather_Of_Birds) > 299) && (Zeny > 499)) {
+			delitem Oldmans_Romance,1;
+			delitem Feather_Of_Birds,300;
 			Zeny -= 500;
 			mes "[Trader]";
 			mes "Ooh~! You have good fashion sense. I know you've had a hard time collecting this stuff, but this hat is worth it. Take it. All you need now is a fur coat and a cane!";
-			getitem 5018,1; //Feather_Bonnet
+			getitem Feather_Bonnet,1;
 			close;
 		}
 		else {
@@ -74,13 +95,13 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			close;
 		}
 	case 3:
-		if ((countitem(998) > 19) && (countitem(707) > 0) && (Zeny > 4999)){ //Iron Singing_Plant
-			delitem 998,20; //Iron
-			delitem 707,1; //Singing_Plant
+		if ((countitem(Iron) > 19) && (countitem(Singing_Plant) > 0) && (Zeny > 4999)){ //Iron Singing_Plant
+			delitem Iron,20;
+			delitem Singing_Plant,1;
 			Zeny -= 5000;
 			mes "[Trader]";
 			mes "This one? It's a little bit scary, though it has some sort of romantic quality. What do you think? You like it? Alright, take it, it's yours!";
-			getitem 2281,1; //Phantom_Of_Opera
+			getitem Phantom_Of_Opera,1;
 			close;
 		}
 		else {
@@ -89,15 +110,15 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 			close;
 		}
 	case 4:
-		if ((countitem(1019) > 119) && (Zeny > 9999)){ //Wooden_Block
-			delitem 1019,120; //Wooden_Block
+		if ((countitem(Wooden_Block) > 119) && (Zeny > 9999)){ //Wooden_Block
+			delitem Wooden_Block,120;
 			Zeny -= 10000;
 			mes "[Trader]";
 			mes "If you have a chance to visit the Uplander Village, Payon, please go and meet the Sakkat Craftsman.";
 			next;
 			mes "[Trader]";
 			mes "He's never sold Sakkat to Traders other than me, since only I can recognize its quality. Due to its rarity, Sakkat has become a very unique and exceptional product. Okay! Take it, it's yours!";
-			getitem 2280,1; //Sahkkat
+			getitem Sahkkat,1;
 			close;
 		}
 		else {

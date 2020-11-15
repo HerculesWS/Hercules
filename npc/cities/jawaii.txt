@@ -1,43 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Samuray22
+//= Copyright (C) Evera
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Nexon
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) DNett123
+//= Copyright (C) jAthena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Jawaii (The Lovers' Paradise) Town
-//===== By: ==================================================
-//= jAthena (1.0)
-//= DNett123 (1.1 - 1.5)
-//= L0ne_w0lf
-//===== Current Version: =====================================
-//= 3.7
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Jawaii Town NPCs
-//===== Additional Comments: =================================
-//= 1.0 Done By jAthena
-//= 1.1 Rough Translation [DNett123]
-//= 1.2 Started Grammer Corrections [DNett123]
-//= 1.3 Some Edits Thanks To Vidar & Fusion [DNett123]
-//= 1.4 Edited Dancer, Thanks ceskil [DNett123]
-//= 1.5 Fixed Script, and spelling errors, some thanks to Sparkles [DNett123]
-//= 1.6 Final corrections (not complete), thanks to the public, and DNett123!
-//= 1.6c added missing monsters. Still 1 type is missing [Lupus]
-//= 1.7 Fixed a lot of typos [Nexon]
-//= 1.8 Removed monster spawns, added aegis ep 8.5 spawns to npc/mobs/fields/jawaii.txt [MasterOfMuppets]
-//= 2.0 Updated the npcs according to iRO [MasterOfMuppets]
-//= 2.01 fixed missing @ at randomdrink, thanks to theultramage [Lupus]
-//= 2.02 Fixed Classic Suite NPC warping directly above a warp [Evera]
-//= 3.0 Rescripted to Aegis 10.3 standard. Contains all Jawaii-related NPCs. [L0ne_W0lf]
-//= 3.1 Fixed bugs with getpartnerid() (it never returns 1), fixed some conditons,
-//=     replaced getpartnerid() with ispartneron() at some tri-forks [Lupus]
-//= 3.2 Reverted ispartneron() BACK to getpartnerid(). [L0ne_W0lf]
-//=     None of the NPCs need the player's partner to be online.
-//= 3.3 Just a small fix up on the Bartender. [L0ne_W0lf]
-//= 3.3a Just a little typo error. [Samuray22]
-//= 3.4 Added missing checkweights. [L0ne_W0lf]
-//= 3.5 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 3.6 Fixed bartender so he no longer hangs. [L0ne_W0lf]
-//= 3.7 Added Izlude RE coordinates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 3.7
+//=========================================================================
 
-// Jawaii Transportation
-//============================================================
+//== Jawaii Transportation =================================
 jawaii,239,112,7	script	Mariner#toizu	4W_SAILOR,{
 	mes "[Mariner]";
 	mes "This ship";
@@ -51,7 +54,7 @@ jawaii,239,112,7	script	Mariner#toizu	4W_SAILOR,{
 	mes "Would you like";
 	mes "to go back to Izlude?";
 	next;
-	if (select("Go back.:Cancel.") == 1) {
+	if (select("Go back.", "Cancel.") == 1) {
 		mes "[Mariner]";
 		mes "Now, let me";
 		mes "guide you to";
@@ -86,7 +89,7 @@ jawaii,122,263,5	script	Mariner#toalbe	4W_SAILOR,{
 	mes "ready to go back";
 	mes "to Alberta?";
 	next;
-	if (select("Go back.:Cancel.") == 1) {
+	if (select("Go back.", "Cancel.") == 1) {
 		mes "[Mariner]";
 		mes "Now, let me";
 		mes "take you back";
@@ -105,15 +108,14 @@ jawaii,122,263,5	script	Mariner#toalbe	4W_SAILOR,{
 	close;
 }
 
-// Generic Jawaii NPCs
-//============================================================
+//== Generic Jawaii NPCs ===================================
 jawaii,188,218,7	script	Tavern Lady#Jawaii	1_F_PUBGIRL,{
 	mes "[Lady]";
 	mes "Oh, dear!";
 	mes "You're not going";
 	mes "to the tavern, are you?";
 	next;
-	if (select("No, I am not.:Hell yeah~") == 1) {
+	if (select("No, I am not.", "Hell yeah~") == 1) {
 		mes "[Lady]";
 		mes "Whew~!";
 		mes "Thank goodness!";
@@ -237,7 +239,7 @@ jawaii,141,200,3	script	Employee#sroom	4_M_NFMAN,{
 	mes "[Alowa]";
 	mes "^333333Beat me to death...^000000";
 	next;
-	if (select("Use.:Cancel.") == 1) {
+	if (select("Use.", "Cancel.") == 1) {
 		mes "[Alowa]";
 		if (Zeny > 999) {
 			mes "T-Thank you ssso much!";
@@ -284,7 +286,7 @@ jawaii,108,199,5	script	Employee#antroom	1_F_MERCHANT_02,{
 	mes "Do not hesitate to let me know when you've decided on the Antique Room. Once you've made your choice,";
 	mes "I will guide you there.";
 	next;
-	if (select("Use.:Cancel.") == 1) {
+	if (select("Use.", "Cancel.") == 1) {
 		mes "[Pine Oran]";
 		if (Zeny > 999) {
 			mes "Thank you";
@@ -319,7 +321,7 @@ jawaii,107,189,5	script	Employee#horoom	4_F_04,{
 	mes "[Sharkie Rania]";
 	mes "So you wanna go?";
 	next;
-	if (select("Use.:Cancel.") == 1) {
+	if (select("Use.", "Cancel.") == 1) {
 		mes "[Sharkie Rania]";
 		if (Zeny > 999) {
 			mes "Eh, alright.";
@@ -362,7 +364,7 @@ jawaii,112,173,7	script	Employee#villroom	4_F_04,{
 	mes "right now, if you wish. Would you";
 	mes "like to stay?";
 	next;
-	if (select("Use.:Cancel.") == 1) {
+	if (select("Use.", "Cancel.") == 1) {
 		mes "[Larks Rania]";
 		if (Zeny > 999) {
 			mes "Thank you~";
@@ -410,11 +412,11 @@ jawaii,214,168,5	script	Honeymoon Helper#Jawaii	1_F_LIBRARYGIRL,{
 	mes "It will instantly bring you to the wedding hall with magic power!";
 	mes "And it only costs 50,000 zeny...";
 	next;
-	if (select("I shall buy it.:No, thanks.") == 1) {
+	if (select("I shall buy it.", "No, thanks.") == 1) {
 		mes "[Helper]";
 		if (Zeny > 49999) {
 			Zeny -= 50000;
-			getitem 681,1; //Memory_Of_Wedding
+			getitem Memory_Of_Wedding,1;
 			mes "Thank you very much~!";
 			mes "Please remember, you";
 			mes "should use this with your";
@@ -431,8 +433,7 @@ jawaii,214,168,5	script	Honeymoon Helper#Jawaii	1_F_LIBRARYGIRL,{
 	close;
 }
 
-// Inside Jawaii
-//============================================================
+//== Inside Jawaii =========================================
 jawaii_in,25,94,0	script	Employee#jaw1	4_F_07,{
 	mes "[Employee Tryteh]";
 	mes "Welcome to Jawaii Tavern~";
@@ -501,7 +502,7 @@ jawaii_in,25,98,0	script	Employee#jaw3	4_F_07,{
 		mes "Oh~";
 		mes "Look at you...";
 		mes "You look perfect";
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "for your wife~";
 		else
 			mes "with your husband~";
@@ -515,7 +516,7 @@ jawaii_in,25,98,0	script	Employee#jaw3	4_F_07,{
 		mes "Hmm...?";
 		mes "You don't look like";
 		mes "you're married, are you?";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			next;
 			mes "[Employee Buffy]";
 			mes "I'm pretty good";
@@ -624,7 +625,7 @@ jawaii_in,30,96,4	script	Employee#jaw6	4_F_07,{
 	}
 	mes "I hope you will have a good time.";
 	close;
-	
+
 OnWelcome:
 	emotion e_kis;
 	end;
@@ -691,7 +692,7 @@ OnSolo:
 	end;
 }
 
-jawaii_in,28,96,0	script	jaw_em_order#Jawaii	-1,3,3,{
+jawaii_in,28,96,0	script	jaw_em_order#Jawaii	FAKE_NPC,3,3,{
 OnTouch:
 	if (getpartnerid()) {
 		donpcevent "Employee#jaw8::OnWelcome";
@@ -714,9 +715,9 @@ OnTouch:
 	donpcevent "Employee#jaw1::OnSolo";
 	end;
 }
-	
+
 jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
 		mes "You're carrying too many items with you right now. Please store some of your things into Kafra Storage and try again.^000000";
 		close;
@@ -727,18 +728,18 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 		mes "how can I help you?";
 		emotion e_kis;
 		next;
-		switch(select("Give me food.:Bring me drink.:Where's the bar?")) {
+		switch(select("Give me food.", "Bring me drink.", "Where's the bar?")) {
 		case 1:
 			mes "[Waitress]";
 			mes "You can have";
 			mes "1 Meat for 1,000 zeny.";
 			mes "Would you like one?";
 			next;
-			if (select("Yes.:Wha--! It's too expensive!") == 1) {
+			if (select("Yes.", "Wha--! It's too expensive!") == 1) {
 				mes "[Waitress]";
 				if (Zeny > 999) {
 					Zeny -= 1000;
-					getitem 517,1; //Meat
+					getitem Meat,1;
 					mes "There you go~";
 					mes "Enjoy your meal~!";
 					close;
@@ -760,11 +761,11 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 			mes "at 1,000 zeny.";
 			mes "Would you like one?";
 			next;
-			if (select("Yes.:Wha--! It's too expensive!") == 1) {
+			if (select("Yes.", "Wha--! It's too expensive!") == 1) {
 				mes "[Waitress]";
 				if (Zeny > 999) {
 					Zeny -= 1000;
-					getitem 503,1; //Yelow_Potion
+					getitem Yellow_Potion,1; //Yelow_Potion
 					mes "There you go~";
 					mes "Enjoy your meal~!";
 					close;
@@ -798,7 +799,7 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 	mes "Just have your drink";
 	mes "and then leave!";
 	next;
-	if (select("I'm a member of Single Army!!:...I just wanted to congratulate them...") == 1) {
+	if (select("I'm a member of Single Army!!", "...I just wanted to congratulate them...") == 1) {
 		mes "[Employee]";
 		mes "Yeah, right.";
 		mes "Knock it off already.";
@@ -848,7 +849,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 		}
 		mes "....Hmm...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey...!";
 		mes "Bartender...";
 		mes "Gimmie one more.";
@@ -858,14 +859,14 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 		mes "It's on me.";
 		mes "Have a drink.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thank you.";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	while (1) {
-		switch(select("Follow Bartender's Recommendation.:I want a Gunslinger.:I want a Cobo.:I want a Bomb.:I want a Boogieman.")) {
+		switch(select("Follow Bartender's Recommendation.", "I want a Gunslinger.", "I want a Cobo.", "I want a Bomb.", "I want a Boogieman.")) {
 		case 1:
 			.@roof_jaw += 3;
 			if (.@roof_jaw > 9) {
@@ -875,11 +876,11 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "had enough to drink.";
 				mes "Are you sure you'll be okay?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Bartender,";
 				mes "I'm so depressed";
 				mes "because of...";
-				input .@inputstr$;
+				input(.@inputstr$);
 				mes .@inputstr$+"...";
 				next;
 				mes "[Bartender]";
@@ -888,11 +889,11 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "a ^0000FF'Special J&Z'^000000 for you.";
 				mes "And this is on me.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Thank you...";
 				mes "So much...";
 				close2;
-				percentheal -100,0;
+				unitkill getcharid(CHAR_ID_ACCOUNT);
 				end;
 			}
 			if (Zeny > 99) Zeny -= 100;
@@ -920,7 +921,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "throat is burning.";
 				next;
 				mes "^3355FFYou gulped it down.^000000";
-				specialeffect2 EF_VENOMDUST;
+				specialeffect(EF_VENOMDUST, AREA, playerattached());
 				percentheal -20,0;
 				next;
 				break;
@@ -942,7 +943,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "^3355FFYou drank it sip by sip,";
 				mes "savoring its rich,";
 				mes "robust flavor.^000000";
-				specialeffect2 EF_FIREIVY;
+				specialeffect(EF_FIREIVY, AREA, playerattached());
 				percentheal -20,0;
 				next;
 				break;
@@ -966,7 +967,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "Lick the sugar before taking a sip. That will make it taste a little sweeter and will soften the taste.";
 				next;
 				mes "^3355FFYou carefully took a sip.^000000";
-				specialeffect2 EF_DECAGILITY;
+				specialeffect(EF_DECAGILITY, AREA, playerattached());
 				percentheal -20,0;
 				next;
 				break;
@@ -992,7 +993,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				next;
 				mes "^3355FFYou gulp the delicious";
 				mes "Margarita down in one sip.^000000";
-				specialeffect2 EF_MAGNUMBREAK;
+				specialeffect(EF_MAGNUMBREAK, AREA, playerattached());
 				percentheal -20,0;
 				next;
 			}
@@ -1009,12 +1010,12 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "^3355FFYou slowly drank some";
 			mes "of your Gunslinger drink.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yeeehaw~!";
 			mes "I'm a cowboy hero!";
 			mes "Bang Bang Bang!";
 			next;
-			specialeffect2 EF_STEAL;
+			specialeffect(EF_STEAL, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;
@@ -1035,10 +1036,10 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "with a luxurious, sweet and";
 			mes "sour flavor.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Aaaaaahhhhhh~!";
 			mes "This drink is really good!";
-			specialeffect2 EF_SANCTUARY;
+			specialeffect(EF_SANCTUARY, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;
@@ -1058,7 +1059,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "gulped it down.^000000";
 			next;
 			mes "^3355FFYou feel pretty hammered.^000000";
-			specialeffect2 EF_BLASTMINEBOMB;
+			specialeffect(EF_BLASTMINEBOMB, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;
@@ -1080,13 +1081,13 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "^3355FFYou took a sip of it and sighed.^000000";
 			next;
 			mes "^3355FFAnd promised yourself that you would never drink it ever again.^000000";
-			specialeffect2 EF_HIT6;
+			specialeffect(EF_HIT6, AREA, playerattached());
 			percentheal -10,0;
 			next;
 			break;
 		}
 
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Master...";
 		mes "One more please...";
 		next;
@@ -1098,11 +1099,11 @@ S_KillChar:
 		mes "[Bartender]";
 		mes "It's on me.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thank you...";
 		mes "Mr. Bartender...";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
 		end;
 	}
 	if (Zeny > 99) Zeny -= 100;
@@ -1113,7 +1114,7 @@ S_KillChar:
 	mes "[Bartender]";
 	return;
 }
-	
+
 jawaii_in,43,115,0	script	Customer#jaw_1	4W_M_01,{
 	if (!getpartnerid()) {
 		if (Zeny > 99) {
@@ -1147,14 +1148,15 @@ jawaii_in,43,115,0	script	Customer#jaw_1	4W_M_01,{
 		next;
 		mes "^3355FFHe ordered a JJ special for me.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Damn...!";
 		mes "Damn! I will be";
 		mes "the one who laughs last!";
 		next;
 		mes "^3355FFYou drank to your fill.^000000";
-		close;
-		percentheal -100,0;
+		close2;
+		unitkill getcharid(CHAR_ID_ACCOUNT);
+		end;
 	}
 	mes "[Buchi]";
 	mes "You look happy...";
@@ -1174,7 +1176,7 @@ jawaii_in,41,106,3	script	Customer#Cage	4W_M_02,{
 		mes "After all, everyone knows marriage is a sham for desperate, lonely people!";
 		next;
 		mes "[Cage]";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "I don't trust anybody!";
 			mes "You're a fool for chaining";
 			mes "yourself to some gorgeous";
@@ -1213,8 +1215,7 @@ jawaii_in,41,106,3	script	Customer#Cage	4W_M_02,{
 	close;
 }
 
-// Inside Prontera
-//============================================================
+//== Inside Prontera =======================================
 prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 	mes "[SoloHan]";
 	if (!getpartnerid()) {
@@ -1261,7 +1262,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 		mes "with some real liquor.";
 		while (1) {
 			next;
-			if (select("...One more drink.:...What kind of place is it?") == 1) {
+			if (select("...One more drink.", "...What kind of place is it?") == 1) {
 				mes "[SoloHan]";
 				mes "Yeah~!";
 				mes "That's the spirit!";
@@ -1270,7 +1271,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 				next;
 				mes "[Bachewcca]";
 				mes "^666666*Grunt!*^000000";
-				specialeffect EF_TALK_SCREAM,AREA,"Customer#Bachewcca";
+				specialeffect(EF_TALK_SCREAM, AREA, getnpcid("Customer#Bachewcca"));
 				next;
 				mes "[SoloHan]";
 				mes "To...";
@@ -1290,7 +1291,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 					mes "[SoloHan]";
 					mes "I guess now's the perfect time to have you sign this! Don't worry, I'll send you straight to paradise!";
 					next;
-					if (select("Sign:Refuse to Sign") == 1) {
+					if (select("Sign", "Refuse to Sign") == 1) {
 						mes "[SoloHan]";
 						mes "Alright!";
 						mes "Take care!";
@@ -1314,7 +1315,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 				mes "So you feel like having some";
 				mes "real fun? Okay, then just sign over here. Count on me, I'll send you to paradise.";
 				next;
-				if (select("Sign:Refuse to Sign") == 1) {
+				if (select("Sign", "Refuse to Sign") == 1) {
 					mes "[SoloHan]";
 					mes "Alright~!";
 					mes "Take care and have fun!";
@@ -1357,7 +1358,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 		mes "...Wha!?";
 		mes "Oh man!";
 		mes "Get outta my face!";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "You smell like,";
 			mes "whupped boyfriend";
 			mes "or something!";
@@ -1376,7 +1377,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 		next;
 		mes "[Bachewcca]";
 		mes "^666666*Grrr...!*^000000";
-		specialeffect EF_THROWITEM,AREA,"Customer#Bachewcca";
+		specialeffect(EF_THROWITEM, AREA, getnpcid("Customer#Bachewcca"));
 		close;
 	}
 	mes "Oh man...";
@@ -1388,7 +1389,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 	mes "Is this the third time this week I've gotten plastered? Bachewcca, help me count!";
 	close;
 }
-	
+
 prt_in,170,14,0	script	Customer#Bachewcca	4_M_ORIENT02,{
 	mes "[Bachewcca]";
 	mes "..............";
@@ -1398,16 +1399,15 @@ prt_in,170,14,0	script	Customer#Bachewcca	4_M_ORIENT02,{
 	close;
 }
 
-// Izlude
-//============================================================
--	script	::Honeymoon_Helper_Izlude	-1,{
+//== Izlude ================================================
+-	script	::Honeymoon_Helper_Izlude	FAKE_NPC,{
 	mes "[Helper]";
 	mes "Newlyweds and";
 	mes "long time couples...";
 	mes "We invite you to Jawaii,";
 	mes "the honeymoon resort!";
 	next;
-	switch(select("Jawaii?:Let's go to Jawaii~!:Cancel.")) {
+	switch(select("Jawaii?", "Let's go to Jawaii~!", "Cancel.")) {
 	case 1:
 		mes "[Helper]";
 		mes "There is an island far, far away from the Rune-Midgard continent.";

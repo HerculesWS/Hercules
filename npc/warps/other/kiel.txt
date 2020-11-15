@@ -1,24 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Playtester
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Kiel Warp Script (Kiel Buildings)
-//===== By: ==================================================
-//= Playtester; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for all Kiel Buildings
-//===== Additional Comments: =================================
-//= 1.0 Added Kiel warps thanks to Celestria [Playtester]
-//= 1.1 Added more warps thanks to Celestria [Playtester]
-//= 1.2 Added warps according to Kiel quest [Playtester]
-//= 1.3 Removed and altered exploitable warps for Kiel Hyre Quest. [L0ne_W0lf]
-//= 1.4 Removed FIELD entrance into Kiel Hyre's Villa. [L0ne_W0lf]
-//= 1.5 Rewrite of the warps. No more exploits/bugs should be present after this. [L0ne_W0lf]
-//= 1.6 Thanks Tsuyuki for pointing out that bug! Bah! [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.6
+//=========================================================================
 
-//============================================================
-// Kiel Hyre Academy (kh_school)
-//============================================================
+//== Kiel Hyre Academy (kh_school) =========================
 kh_school,76,156,0	warp	kh_school_01	1,1,yuno_fild08,155,189
 kh_school,30,125,0	warp	kh_school_02a	1,1,kh_school,67,14
 kh_school,71,14,0	warp	kh_school_02b	1,1,kh_school,36,125
@@ -31,9 +46,7 @@ kh_school,153,56,0	warp	kh_school_05b	1,1,kh_school,40,176
 kh_school,30,185,0	warp	kh_school_06a	1,1,kh_school,67,74
 kh_school,71,74,0	warp	kh_school_06b	1,1,kh_school,35,184
 
-//============================================================
-// Kiel Hyre's Cottage (kh_vila)
-//============================================================
+//== Kiel Hyre's Cottage (kh_vila) =========================
 kh_vila,79,11,0	warp	kh_vila_01	1,1,yuno_fild02,92,208
 kh_vila,71,38,0	warp	kh_vila_02a	1,1,kh_vila,42,38
 kh_vila,46,38,0	warp	kh_vila_02b	1,1,kh_vila,75,38
@@ -52,16 +65,12 @@ kh_vila,180,171,0	warp	kh_vila_08b	1,1,kh_vila,126,70
 kh_vila,175,71,0	warp	kh_vila_09	1,1,kh_vila,136,64
 kh_vila,191,19,0	warp	kh_vila_10	1,1,yuno_fild02,74,215
 
-//============================================================
-// Kiel Hyre's Mansion (kh_mansion)
-//============================================================
+//== Kiel Hyre's Mansion (kh_mansion) ======================
 lighthalzen,188,204,0	warp	kh_mansion_01a	1,1,kh_mansion,84,49
 kh_mansion,88,50,0	warp	kh_mansion_01b	1,1,lighthalzen,188,199
 kh_mansion,21,11,0	warp	kh_mansion_02	1,1,kh_mansion,72,49
 
-//============================================================
-// Abandoned Rosimir Mansion (kh_rossi)
-//============================================================
+//== Abandoned Rosimir Mansion (hk_rossi) ==================
 kh_rossi,15,92,0	warp	kh_rossi_01	1,1,yuno,270,139
 kh_rossi,35,87,0	warp	kh_rossi_02a	1,1,kh_rossi,27,37
 kh_rossi,27,42,0	warp	kh_rossi_02b	1,1,kh_rossi,35,91

@@ -1,29 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) Silent
+//= Copyright (C) Nexon
+//= Copyright (C) massdriller
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Comodo Town
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 2.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Comodo Town NPCs
-//===== Additional Comments: =================================
-//= Not complete.
-//= 1.1 Rolled back from the wrong Kashy's fix
-//= Implemented the 'Cheese'/Stone of Awakening quest.  Re-organized stuff. [kobra_k88]
-//= 1.2b Added Baby Class support [Lupus]
-//= 1.3 Spell Checked and Fixed [massdriller]
-//= 1.4 Fixed typos [Nexon]
-//= 1.5 Removed Duplicates [Silent]
-//= 1.6 Split doomed sword quest to quests/quests_comodo.txt [Evera]
-//= 1.7 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.8 Fixed a small bug. (close -> close2) [L0ne_W0lf]
-//= 1.9 Added a missing Kafra NPC. [L0ne_W0lf]
-//= 2.0 Added Izlude RE coordinates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.0
+//=========================================================================
 
-// Inside Comodo
-//============================================================
+//== Inside Comodo =========================================
 cmd_in02,73,81,4	script	Martine#cmd	1_M_02,{
 	mes "[Martine]";
 	mes "Gambling...? The games";
@@ -130,7 +148,7 @@ cmd_in02,172,105,4	script	G . J#cmd	4_M_04,{
 	mes "it seems smarter to make";
 	mes "money in other ways. Sure,";
 	mes "working hard is no fun, but";
-	mes "there are ways to use your^FFFFFF ^000000 money to make more of it, right?";
+	mes "there are ways to use your money to make more of it, right?";
 	next;
 	mes "[G . J]";
 	mes "There's also the matter of";
@@ -215,7 +233,7 @@ cmd_in02,57,62,4	script	Moo#cmd	4_M_MANAGER,{
 		mes "manager of the Comodo";
 		mes "Casino. We pride ourselves in";
 		mes "serving all of our customers'";
-		mes "needs, doing all we can so that^FFFFFF ^000000 your visit here is unforgettable.";
+		mes "needs, doing all we can so that your visit here is unforgettable.";
 		next;
 		mes "[Moo]";
 		mes "All of our guests can enjoy";
@@ -234,8 +252,7 @@ cmd_in02,57,62,4	script	Moo#cmd	4_M_MANAGER,{
 	}
 }
 
-// Comodo Field
-//============================================================
+//== Comodo Field ==========================================
 cmd_fild04,188,74,4	script	Zyosegirl#cmd	4_F_04,{
 	mes "[Zyosegirl]";
 	mes "People call me the";
@@ -249,7 +266,7 @@ cmd_fild04,188,74,4	script	Zyosegirl#cmd	4_F_04,{
 	mes "It's nice to be able to work";
 	mes "outdoors, but someday, I want";
 	mes "to save enough money and move";
-	mes "to the city. I'm still young, you^FFFFFF ^000000 know, and I've got dreams";
+	mes "to the city. I'm still young, you know, and I've got dreams";
 	mes "that I want to fulfill~";
 	close;
 }
@@ -300,7 +317,7 @@ cmd_fild07,192,58,4	script	Rahasu#cmd	4W_SAILOR,{
 	mes "Paros Lighthouse, I'll";
 	mes "be happy to tell you.";
 	next;
-	if (select("Paros Lighthouse?:Cancel") == 1) {
+	if (select("Paros Lighthouse?", "Cancel") == 1) {
 		mes "[Rahasu]";
 		mes "For many years, this";
 		mes "lighthouse guided many";
@@ -338,7 +355,7 @@ cmd_fild07,52,280,4	script	Hallosu#cmd	4W_SAILOR,{
 }
 
 cmd_fild07,299,83,4	script	Zain#cmd	4W_SAILOR,{
-	.@n$ = "["+strnpcinfo(1)+"]";
+	.@n$ = "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
 	mes .@n$;
 	mes "Would you like to";
 	mes "board a ship on the";
@@ -346,7 +363,7 @@ cmd_fild07,299,83,4	script	Zain#cmd	4W_SAILOR,{
 	mes "can travel on Reudelus";
 	mes "to Alberta or Izlude.";
 	next;
-	switch(select("Alberta - 600 Zeny:Izlude - 800 Zeny:Cancel")) {
+	switch(select("Alberta - 600 Zeny", "Izlude - 800 Zeny", "Cancel")) {
 	case 1:
 		if (Zeny < 600) break;
 		Zeny -= 600;
@@ -398,17 +415,16 @@ cmd_in02,146,180,4	script	Kafra Employee::kaf_comodo2	4_F_KAFRA7,{
 	end;
 }
 
-// Morroc Field
-//============================================================
+//== Morroc Field ==========================================
 moc_fild12,35,303,4	script	Serutero#cmd	1_M_ORIENT01,{
 	mes "[Serutero]";
 	mes "Hello, I'm Serutero,";
 	mes "guardian of the roads that";
 	mes "lead to Sandaruman Fortress.";
 	mes "If you really want to go there,";
-	mes "I'll permit you to continue, but^FFFFFF ^000000 you must beware of its dangers...";
+	mes "I'll permit you to continue, but you must beware of its dangers...";
 	next;
-	switch(select("I'm going there!:Sandaruman Fortress?:Cancel")) {
+	switch(select("I'm going there!", "Sandaruman Fortress?", "Cancel")) {
 	case 1:
 		mes "[Serutero]";
 		mes "So you're really going";

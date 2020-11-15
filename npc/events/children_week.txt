@@ -1,15 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Samuray22
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Children Week Event
-//===== By: ==================================================
-//= Samuray22
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Indian Ro: Children Week Event
-//===== Additional Comments: =================================
-//= 1.1 First Beta. [Samuray22]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 	if (BaseLevel > 50) {
@@ -33,7 +54,7 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 		mes "I would like to give the small gift to little adventurer...";
 		mes "What about you? Do you want to take it?";
 		next;
-		if(select("No. I will take it later.:Sure, I want.") == 1) {
+		if(select("No. I will take it later.", "Sure, I want.") == 1) {
 			mes "[Pandit chacha]";
 			mes "That's too bad.... hum...";
 			mes "I gathered some stuffs from far a way world to make it....";
@@ -41,21 +62,21 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 			close;
 		}
 		oversea_event9 = 1;
-		getitem 11705,10; //Special_White_Potion
+		getitem Special_White_Potion,10;
 		mes "[Pandit chacha]";
 		mes "Look. This is a child Potion.";
 		mes "The weight is just 1 but recover much HP.";
 		mes "If you want to get more, bring the 1 Wedding Bouquet and 1 Witherless Rose.";
 		close;
 	} else if (oversea_event9 == 1) {
-		if (countitem(745) > 0 && countitem(748) > 0) {
+		if (countitem(Wedding_Bouquet) > 0 && countitem(Witherless_Rose) > 0) {
 			mes "[Pandit chacha]";
 			mes "Ahha!!";
 			mes "You have remembered my beautiful composition.";
 			mes "You did good work.";
 			mes "Could you give me 1 Wedding Bouquet and 1 Witherless Rose? ";
 			next;
-			if(select("Not yet.:Sure, take it.") == 1) {
+			if(select("Not yet.", "Sure, take it.") == 1) {
 				mes "[Pandit chacha]";
 				mes "If you are not prepared yet, call me when you ready.";
 				close;
@@ -66,10 +87,10 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 			mes "Here, I will exchange to the 50 child potion.";
 			mes "Once you get this 50 child potion, I won't give any more.";
 			close2;
-			delitem 745,1; //Wedding_Bouquet
-			delitem 748,1; //Witherless_Rose
+			delitem Wedding_Bouquet,1;
+			delitem Witherless_Rose,1;
 			oversea_event9 = 2;
-			getitem 11705,50; //Special_White_Potion
+			getitem Special_White_Potion,50;
 			end;
 		}
 		mes "[Pandit chacha]";

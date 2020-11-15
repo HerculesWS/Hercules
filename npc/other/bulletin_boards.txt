@@ -1,27 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Silent
+//= Copyright (C) Kayla
+//= Copyright (C) Nexon
+//= Copyright (C) MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Bulletin Boards
-//===== By: ==================================================
-//= MasterOfMuppets
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
+//================= Description ===========================================
 //= Bulletin Boards for beginners.
-//===== Additional Comments: =================================
-//= 1.0 Added Alberta, Prontera, Izlude, Payon, Byalan Island,
-//=     Archer Village, Payon Cave and Coal Mine
-//= 1.1 Geffen, Orc Dungeon
-//= 1.2 Added 5 more Boards [MasterOfMuppets]
-//= 1.3 Fixed spelling mistakes. [Nexon]
-//= 1.3a Fixed a missing close; [Nexon]
-//= 1.4 Added more BBS MasterOfMuppets
-//= 1.5 Added the last of the bulletin boards, I think... [MasterOfMuppets]
-//= 1.5a Fixed a small screw up with the color codes in the Glastheim BB [MasterOfMuppets]
-//= 1.5b Fixed another small screw up with the color codes in the Glastheim BB [Kayla]
-//= 1.6 Removed Duplicates [Silent]
-//= 1.7 Updated Morroc NPCs to reflect episode 12.1 changes. [L0ne_W0lf]
-//= 1.8 Updated Payon Cave Bulletion Board Locations. [Masao]
-//= 1.9 Moved Izlude NPC to Pre-RE path. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
 alberta,111,59,5	script	Bulletin Board#1	2_BULLETIN_BOARD,{
 	mes "[Alberta: The Port City]";

@@ -1,18 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) Masao
+//= Copyright (C) Gepard
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Sura Job Quest
-//===== By: ==================================================
-//= Muad_Dib, Gepard
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Monk / Champion -> Sura.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Removed disablenpc which causes players stucked in waitingroom. [Joseph]
-//= 1.2 Updated script, optimized. [Euphy]
-//= 1.3 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 	if (job_shu == 0) {
@@ -90,7 +112,7 @@ ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 		mes "Huh! The boss is really mad!";
 		mes "I can beat you up with one blow...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey! How dare you use violence against a lady!?";
 		next;
 		mes "[???]";
@@ -108,8 +130,8 @@ ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 		next;
 		mes "[King Crab & Sludge Worm]";
 		mes "Aaaaaahhhhhhhhk!!!!!!!!";
-		specialeffect EF_FIRESPLASHHIT,AREA,"King Crab#job_shu";
-		specialeffect EF_FIRESPLASHHIT,AREA,"Sludge Worm#job_shu";
+		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid("King Crab#job_shu"));
+		specialeffect(EF_FIRESPLASHHIT, AREA, getnpcid("Sludge Worm#job_shu"));
 		next;
 		mes "- What is that amazing power? -";
 		mes "- I've never seen this -";
@@ -144,7 +166,7 @@ ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 		setquest 11155;
 		close;
 	} else {
-		if (strnpcinfo(0) == "King Crab#job_shu") {
+		if (strnpcinfo(NPC_NAME) == "King Crab#job_shu") {
 			mes "[King Crab]";
 			mes "How come a little rookie knocked me out! Me! The great King Crab...";
 		} else {
@@ -214,7 +236,7 @@ OnTimer600000:
 ve_in,97,149,0	script	#Suraryokan	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (job_shu == 1) {
-		.@n$ = "["+strcharinfo(0)+"]";
+		.@n$ = "["+strcharinfo(PC_NAME)+"]";
 		mes "[???]";
 		mes "Who is it?!";
 		next;
@@ -276,7 +298,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 		mes "Training is so tough and I have a long way to go!";
 		close;
 	} else if (job_shu == 2) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I want to know about the skill you used a while ago.";
 		next;
 		mes "[???]";
@@ -285,7 +307,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 		mes ".........";
 		mes "............ A rookie like you doesn't need to know.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Rookie?!";
 		mes "I have steadily practiced martial arts.";
 		mes "I am confident that I will never lose.";
@@ -293,35 +315,35 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 		mes "[???]";
 		mes "So you can beat me, too?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "No...";
 		mes "I guess that's too much...";
 		mes "Frankly speaking, I was quite amazed by you.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I had thought that I was strong enough but after seeing you fight, I realized that I was full of conceit.";
 		next;
 		mes "[???]";
 		mes "Huuuh~ No matter how strong you are,";
 		mes "you cannot avoid reaching for your true limit.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You are just the person that I expected.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I think you would know";
 		mes "how to overcome this limitation.";
 		next;
 		mes "[???]";
 		mes "Stop it.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What? Why?";
 		next;
 		mes "[???]";
 		mes "Are you a human?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What?";
 		mes "Of course, I am a human.";
 		next;
@@ -329,7 +351,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 		mes "To become stronger is too hard for a mere human.";
 		mes "If you want to, just buy better equipment.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Then, what are you?";
 		mes "You mean you're not a human being?";
 		next;
@@ -338,7 +360,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 		mes "is impossible for a human.";
 		mes "It's a ghost's way...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ghost?";
 		next;
 		mes "[???]";
@@ -349,7 +371,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 		mes "You won't even have time to take a rest if you choose this way.";
 		mes "You'll become a puppet for war...";
 		next;
-		switch(select("But I still want to know more.:Well, I quit then.")) {
+		switch(select("But I still want to know more.", "Well, I quit then.")) {
 		case 1:
 			mes "[???]";
 			mes "Aren't you an idiot?";
@@ -358,7 +380,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 			mes "[???]";
 			mes "You'll regret it, so just be satisfied with your present life.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well, now that I've met you, I won't live my life this way anymore!";
 			next;
 			mes "[???]";
@@ -446,14 +468,14 @@ yuno_fild07,254,176,7	script	Buddy#job_shu	4_M_MONK,{
 		mes "[Buddy]";
 		mes "I don't know why you're here but please don't stand behind me unless you want to die.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "'Bruno' sent me here.";
 		next;
 		mes "[Buddy]";
 		mes "Ah! My colleague introduced me to you!";
 		mes "Anyway, why are you here to see me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I asked Bruno about her strength, and she recommended me to you.";
 		next;
 		mes "[Buddy]";
@@ -475,10 +497,10 @@ yuno_fild07,254,176,7	script	Buddy#job_shu	4_M_MONK,{
 		end;
 	} else if (job_shu == 100) {
 		mes "[Buddy]";
-		mes "Ah, long time no see, "+strcharinfo(0)+".";
+		mes "Ah, long time no see, "+strcharinfo(PC_NAME)+".";
 		mes "Are you here to meet my master?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Buddy]";
 			mes "I'll take you right away.";
@@ -493,7 +515,7 @@ yuno_fild07,254,176,7	script	Buddy#job_shu	4_M_MONK,{
 		}
 	}
 	mes "[Buddy]";
-	mes strcharinfo(0)+", didn't you meet the master yet?";
+	mes strcharinfo(PC_NAME)+", didn't you meet the master yet?";
 	next;
 	mes "[Buddy]";
 	mes "My master doesn't like noise, so please ^f57d7dwait in the living room silently.^000000";
@@ -528,7 +550,7 @@ sword_1-1,223,243,4	script	Buddy#job_shu_Salong	4_M_MONK,{
 	mes "[Buddy]";
 	mes "My master doesn't like noise, so please ^f57d7dwait in the living room silently.^000000";
 	next;
-	switch(select("Go to the living room.:Go outside.")) {
+	switch(select("Go to the living room.", "Go outside.")) {
 	case 1:
 		mes "[Buddy]";
 		mes "Please wait in the living room at the upper side.";
@@ -632,14 +654,14 @@ OnTimer305000:
 OnTimer315000:
 	mapannounce "sword_2-1","Come on here.",bc_map;
 	donpcevent "Buddy#job_shuaneh::OnDisable";
-	donpcevent "#Sura_garajjom::OnEnable";
+	// donpcevent "#Sura_garajjom::OnEnable";	// Commented to prevent #Sura_garajjom allowing player to success the test at any case (even when failing it).
 	end;
 OnTimer320000:
 	mapannounce "sword_2-1","I guess you're not ready to meet the master yet...",bc_map;
-	donpcevent "#Sura_garajjom::OnDisable";
-	donpcevent "Drawing Room::OnEnable";
 	mapwarp "sword_2-1","yuno_fild07",255,178;
-	stopnpctimer;
+	// donpcevent "#Sura_garajjom::OnDisable";
+	donpcevent "Buddy#Sura_Salon::OnDisable";
+	donpcevent "Drawing Room::OnEnable";
 	end;
 }
 
@@ -680,9 +702,9 @@ OnEnable:
 sword_1-1,222,169,5	script	Bruno#job_shu	4_F_SURA,{
 	if (job_shu > 4) {
 		mes "[Bruno]";
-		mes "Hey~ "+strcharinfo(0)+", what's up?";
+		mes "Hey~ "+strcharinfo(PC_NAME)+", what's up?";
 		next;
-		switch(select("Let's have conversation.:Go outside.")) {
+		switch(select("Let's have conversation.", "Go outside.")) {
 		case 1:
 			if (job_shu == 100) {
 				mes "[Bruno]";
@@ -752,7 +774,7 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 			mes "You can't become a Sura unless you use all your skill points.";
 			close;
 		}
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You seem to be heavily burdened. Please remove some of it.";
 			close;
 		}
@@ -772,14 +794,14 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 		mes "Master! This is a wolf fur coat.";
 		mes "Put it on when it's cold.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ahhk! That is the wolf I... caught... Uhh.";
 		next;
 		mes "- Whack -";
 		next;
 		mes "[Bruno]";
 		mes "Ho ho ho~";
-		mes "Do you have something to say, "+strcharinfo(0)+"?";
+		mes "Do you have something to say, "+strcharinfo(PC_NAME)+"?";
 		mes "You became a member of our family, let's get along together ~";
 		next;
 		mes "[Master]";
@@ -805,8 +827,8 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 		job_shu = 100;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11158;
-		getitem 5754,1; //Blazing_Soul
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Blazing_Soul,1;
+		getitem Green_Apple_Ring,1;
 		close;
 	} else if (job_shu > 5) {
 		mes "Once I was also an ordinary young man who traveled a lot and met many friends.";
@@ -830,7 +852,7 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 
 sword_2-1,1,2,0	script	Button Girl#sura	1_F_01,{
 	callfunc "F_GM_NPC";
-	switch(select("Turn on arena.:Turn off arena.:Turn on the living room.:Turn on Buddy.:Turn on Gara.:Turn off all.:Close")) {
+	switch(select("Turn on arena.", "Turn off arena.", "Turn on the living room.", "Turn on Buddy.", "Turn on Gara.", "Turn off all.", "Close")) {
 	case 1:
 		mes "Turn on arena.";
 		donpcevent "Drawing Room::OnEnable";

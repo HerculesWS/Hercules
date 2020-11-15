@@ -1,12 +1,28 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_BUYINGSTORE_H
 #define MAP_BUYINGSTORE_H
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // MAX_SLOTS
+#include "common/hercules.h"
+#include "common/mmo.h" // MAX_SLOTS
 
 struct map_session_data;
 
@@ -14,6 +30,8 @@ struct map_session_data;
  * Declarations
  **/
 struct s_search_store_search;
+struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub;
+struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub;
 
 /**
  * Defines
@@ -45,7 +63,7 @@ enum e_buyingstore_failure {
 struct s_buyingstore_item {
 	int price;
 	unsigned short amount;
-	unsigned short nameid;
+	int nameid;
 };
 
 struct s_buyingstore {
@@ -59,22 +77,23 @@ struct s_buyingstore {
  **/
 struct buyingstore_interface {
 	unsigned int nextid;
-	short blankslots[MAX_SLOTS];  // used when checking whether or not an item's card slots are blank
+	int blankslots[MAX_SLOTS];  // used when checking whether or not an item's card slots are blank
+	struct item_option blankoptions[MAX_ITEM_OPTIONS];  // used for search result temporary.
 	/* */
 	bool (*setup) (struct map_session_data* sd, unsigned char slots);
-	void (*create) (struct map_session_data* sd, int zenylimit, unsigned char result, const char* storename, const uint8* itemlist, unsigned int count);
+	void (*create) (struct map_session_data* sd, int zenylimit, unsigned char result, const char* storename, const struct PACKET_CZ_REQ_OPEN_BUYING_STORE_sub* itemlist, unsigned int count);
 	void (*close) (struct map_session_data* sd);
 	void (*open) (struct map_session_data* sd, int account_id);
-	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const uint8* itemlist, unsigned int count);
-	bool (*search) (struct map_session_data* sd, unsigned short nameid);
+	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const struct PACKET_CZ_REQ_TRADE_BUYING_STORE_sub* itemlist, unsigned int count);
+	bool (*search) (struct map_session_data* sd, int nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
 	unsigned int (*getuid) (void);
 };
 
-struct buyingstore_interface *buyingstore;
-
 #ifdef HERCULES_CORE
 void buyingstore_defaults (void);
 #endif // HERCULES_CORE
+
+HPShared struct buyingstore_interface *buyingstore;
 
 #endif  // MAP_BUYINGSTORE_H

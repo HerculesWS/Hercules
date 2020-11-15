@@ -1,21 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Blessed Refiner
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Refiners that use Blessed ores to refine equipment.
-//= Upon failure, the equipment is not destroyed. The success
-//= rate is identical to that for Enriched ores.
+//================= Additional Comments ===================================
+//= Upon failure, the equipment is not destroyed. The success rate is
+//= identical to that for Enriched ores.
 //= - "Blacksmith Dister" only refines from +6~12.
 //= NOTE: This NPC is currently disabled on official servers.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
--	script	::BlacksmithDister	-1,{
+-	script	::BlacksmithDister	FAKE_NPC,{
 	disable_items;
 	mes "[Blacksmith Dister]";
 	mes "In this highly competitive society, we must be different in order to survive!";
@@ -110,7 +132,7 @@
 	mes "This "+.@type$+" has been refined to "+.@equip_refine+". To refine it, I need "+.@ore$+" and a "+(.@price/1000)+",000 zeny refining fee.";
 	mes "Do you want to proceed?";
 	next;
-	if(select("Yes:No") == 2) {
+	if(select("Yes", "No") == 2) {
 		mes "[Blacksmith Dister]";
 		mes "I am busy, don't joke with me!";
 		close;
@@ -122,7 +144,7 @@
 		mes "[Blacksmith Dister]";
 		mes "Of course, the refining fee will not be returned! Do you want to continue?";
 		next;
-		if(select("Yes:No") == 2) {
+		if(select("Yes", "No") == 2) {
 			mes "[Blacksmith Dister]";
 			mes "Good. I'd be sad if it failed, too.";
 			close;
@@ -150,7 +172,7 @@
 		close;
 	}
 	specialeffect EF_CURSEATTACK;
-	specialeffect2 EF_SUI_EXPLOSION;
+	specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 	next;
 	emotion (!rand(5))?e_ag:e_omg;
 	mes "[Blacksmith Dister]";

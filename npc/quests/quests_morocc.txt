@@ -1,53 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Gepard
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) SinSloth
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Morroc
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 3.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= - Stop Post
 //= - Binoculars Quest
 //= - Assassin Pub NPCs/supporting quest NPCS. [Disabled]
 //= - Resurrection of Satan Morroc
 //= - The Crow of the Fate
 //= - Succession of the Prince
-//===== Additional Comments: =================================
-//= 1.1 Fixed exploits [Lupus]
-//= 1.2 Added Dandelion's Request / Morroc Invasion quest. [SinSloth]
-//= 1.3 Updated dialogs from Binoculars Quest. [Samuray22]
-//= 1.3a added GM lvl check as in other invansion quests [Lupus]
-//= 1.4 Fixed a small bug in Dandelion's Request. [SinSloth]
-//= 1.5 Fixed a little bug with "Job_Alchemist" changed to "Job_Alchem". [Samuray22]
-//= 1.6 Fixed a nasty bug in last part of the quest. [SinSloth]
-//= 1.6a replaced item "names" with item id. [Lupus]
-//= 1.7 Fixed a bug with XP rewards. [SinSloth]
-//= 1.8 Fixed a bug which prevented reset of events. [SinSloth]
-//= 1.9 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.0 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 2.0a Corrected a Typo error ";;". [Samuray22]
-//= 2.1 Assassins will now get their request item. (bugreport:1220) [L0ne_W0lf]
-//= 2.2 Updated Binocular and Stop Post quests. [L0ne_W0lf]
-//= 2.3 Replaced effect numerics with constants. [Samuray22]
-//= 2.4 Implemented Ep. 12.1 Continental Guard Quest. [L0ne_W0lf]
-//=     Moved Dandelion's Request to a it's own file.
-//=     Added support NPCs required to finish Gaebolg quest.
-//= 2.5 Fixed Group of Evil never re-enabling. [L0ne_W0lf]
-//= 2.6 Added quest log commands for Resurrection of Satan Morroc. [L0ne_W0lf]
-//=     Added the two remaining episode 12.1 quests.
-//=     Updated Satan Morroc Quest to allow peopel who have
-//=     finished it to return to the previous map.
-//= 2.7 Corrected weight checks, they only check for inventory slots. [L0ne_W0lf]
-//= 2.8 Disabled Assassin bar pub NPCs, as they are included in the 13.1 quests file. [L0ne_W0lf]
-//= 2.9 Fixed player dying/logging out during conversation could prevent
-//=     summoning of Satan Morroc until server reboot. [Gepard]
-//= 3.0 Updated RE/Pre-RE EXP. [Euphy]
-//= 3.1 Updated to match the latest official scripts. [Euphy]
-//= 3.2 Added GM management NPC and variable $@re_moc_time$. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 3.2
+//=========================================================================
 
-// Stop Post Quest
-// ============================================================
+//== Stop Post Quest =======================================
 moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 	mes "[William]";
 	mes "Welcome to";
@@ -56,7 +52,7 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 	mes "[William]";
 	mes "My family, the MacMillan Clan, has been producing Professional Traffic Signal Posts for more than 250 years. Nowadays, we are booking Special Orders for our unique ornament, ^3355FFStop Post^000000.";
 	next;
-	switch(select("Could I order one ^3355FFStop Post^000000?:Nah...")) {
+	switch(select("Could I order one ^3355FFStop Post^000000?", "Nah...")) {
 	case 1:
 		mes "[William]";
 		mes "This unique ornament, ^3355FFStop Post^000000, is a traffic signal on the road, and doubles as a hair ornament! This, we solemnly promise on the strength of a 100-year guarantee.";
@@ -64,9 +60,9 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 		mes "[William]";
 		mes "To produce a ^3355FFStop Post^000000, we need ^3355FF91100 Zeny^000000, ^3355FF50 Trunk^000000 and ^3355FF1 Black Dyestuffs^000000.";
 		next;
-		if ((countitem(1019) > 49) && (countitem(983) > 0) && (Zeny > 91099)) {
-			delitem 1019,50;  //Wooden_Block
-			delitem 983,1;  //Black_Dyestuffs
+		if ((countitem(Wooden_Block) > 49) && (countitem(Black_Dyestuffs) > 0) && (Zeny > 91099)) {
+			delitem Wooden_Block,50;
+			delitem Black_Dyestuffs,1;
 			Zeny -= 91100;
 			mes "[William]";
 			mes "Here you are~!";
@@ -75,7 +71,7 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 			mes "just for you!";
 			mes "Thank you for stopping by!";
 			mes "...Get the joke?";
-			getitem 2272,1; // Stop_Post
+			getitem Stop_Post,1; // Stop_Post
 			close;
 		}
 		else {
@@ -91,14 +87,13 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 	}
 }
 
-// Binoculars Quest
-// ============================================================
+//== Binoculars Quest ======================================
 moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 	mes "[Marius]";
 	mes "Howdy, new customer!!";
 	mes "I know what you're gonna talk about. You want the Magic Glasses from me, riiiiight?";
 	next;
-	switch(select("What is that?:Manufacture:Ignore him")) {
+	switch(select("What is that?", "Manufacture", "Ignore him")) {
 	case 1:
 		mes "[Marius]";
 		mes "Hmm~!";
@@ -126,19 +121,19 @@ moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 		mes "And ^3355FF50000 Zeny^000000!";
 		close;
 	case 2:
-		if ((countitem(2243) > 0) && (countitem(999) > 99) && (Zeny > 49999)) {
+		if ((countitem(Spinning_Eyes) > 0) && (countitem(Steel) > 99) && (Zeny > 49999)) {
 			mes "[Marius]";
 			mes "Perfect, perfect !";
 			mes "Now my masterpiece will be complete!";
 			mes "Muhahahaha !";
 			next;
-			delitem 2243,1;  //Spinning_Eyes
-			delitem 999,100;  //Steel
+			delitem Spinning_Eyes,1;
+			delitem Steel,100;
 			Zeny -= 50000;
 			mes "[Marius]";
 			mes "Here you are!";
 			mes "Binoculars !";
-			getitem 2296,1; // Binoculars
+			getitem Binoculars,1; // Binoculars
 			next;
 			mes "[Marius]";
 			mes "Just remember...";
@@ -163,11 +158,10 @@ moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 	}
 }
 
-// Morroc Assassin Guild Bar [Disabled]
-// ============================================================
+//== Morroc Assassin Guild Bar [Disabled] ==================
 /*
 morocc,43,108,5	script	Sharp-Looking Kid#dan_07	4_KID01,{
-	if (BaseClass == Job_Assassin) {
+	if (BaseJob == Job_Assassin) {
 		mes "[Jack]";
 		mes "In spite of the chaotic mess in their town, ";
 		mes "there are still some of those who pay visits here.";
@@ -175,7 +169,7 @@ morocc,43,108,5	script	Sharp-Looking Kid#dan_07	4_KID01,{
 		close;
 	}
 	else {
-		if (countitem(7416) > 0) {
+		if (countitem(Letter_Of_Recommend) > 0) {
 			mes "[Jack]";
 			mes "A letter of recommendation?";
 			mes "Oh, boy. Looks like you've brought me a very, very old relic from the past.";
@@ -193,7 +187,7 @@ morocc,43,108,5	script	Sharp-Looking Kid#dan_07	4_KID01,{
 
 morocc,45,110,0	script	que_job01#01	WARPNPC,2,2,{
 OnTouch:
-	if (BaseClass == Job_Assassin) {
+	if (BaseJob == Job_Assassin) {
 		warp "que_job01",9,94;
 		end;
 	}
@@ -218,7 +212,7 @@ que_job01,68,96,0	warp	que_job01#03	2,2,que_job01,17,53
 
 que_job01,80,77,0	script	que_job01#04	WARPNPC,2,2,{
 OnTouch:
-	if (BaseClass == Job_Assassin) {
+	if (BaseJob == Job_Assassin) {
 		warp "que_job01",61,50;
 		end;
 	}
@@ -234,7 +228,7 @@ OnTouch:
 		mes "know this guy?";
 		next;
 		if (prt_curse == 24) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I don't care what you say, I'm coming in!!!";
 			next;
 			mes "[Litheron]";
@@ -252,7 +246,7 @@ OnTouch:
 			mes "Besides, you can't risk making trouble here: this place";
 			mes "is full of deadly Assassins.";
 			next;
-			switch(select("Sure:Why should I?!")) {
+			switch(select("Sure", "Why should I?!")) {
 			case 1:
 				if (Zeny > 999) {
 					mes "[Litheron]";
@@ -286,7 +280,7 @@ OnTouch:
 				}
 			case 2:
 				mes "[Litheron]";
-				mes "Not the saavy type,";
+				mes "Not the savvy type,";
 				mes "are you...? Fine, fine.";
 				mes "If you're not gonna do";
 				mes "me any favors, then why";
@@ -324,7 +318,7 @@ que_job01,81,79,5	script	Idle Knight#dan_08	4_M_JOB_KNIGHT1,{
 	mes "probably wondering why";
 	mes "a Knight like me is in a";
 	mes "secret Assassin's pub.";
-	if (BaseClass == Job_Knight) {
+	if (BaseJob == Job_Knight) {
 		mes "What about you, huh?";
 	}
 	next;
@@ -335,7 +329,7 @@ que_job01,81,79,5	script	Idle Knight#dan_08	4_M_JOB_KNIGHT1,{
 }
 
 que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -344,17 +338,17 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 		mes "to store some of your items.^000000";
 		close;
 	}
-	if (BaseClass == Job_Assassin) {
+	if (BaseJob == Job_Assassin) {
 		mes "[Master]";
 		mes "Please, come in.";
 		mes "Care for a drink?";
 	}
-	else if ((BaseJob == Job_Thief) && (BaseClass != Job_Assassin)) {
+	else if ((BaseClass == Job_Thief) && (BaseJob != Job_Assassin)) {
 		mes "[Master]";
 		mes "......Huh. How did a ruffian like you get in here?";
 		mes "Well, I guess Jack's not doing his job.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hey,master, don't be so harsh. We know each other, don't we?";
 		mes "You don't wanna hurt your old friend's feeling~";
 		next;
@@ -368,16 +362,16 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 		mes "What do you wanna drink?";
 	}
 	next;
-	switch(select("Order a Drink:Ask About Mission:Cancel")) {
+	switch(select("Order a Drink", "Ask About Mission", "Cancel")) {
 	case 1:
 		mes "[Master]";
 		mes "In this place, I only serve two drinks.";
 		mes "You want a Tropical Sograt or";
 		mes "a Vermilion on the Beach?";
 		next;
-		switch(select("Tropical Sograt:Vermilion on the Beach:Do you offer any free drinks?")) {
+		switch(select("Tropical Sograt", "Vermilion on the Beach", "Do you offer any free drinks?")) {
 		case 1:
-			if (checkweight(908,200) == 0) {
+			if (checkweight(Spawn,200) == 0) {
 				mes "[Master]";
 				mes "Hey, why did you bring";
 				mes "so much stuff with you?";
@@ -388,7 +382,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 				close;
 			}
 			else {
-				if (BaseClass == Job_Assassin) {
+				if (BaseJob == Job_Assassin) {
 					if (Zeny < 800) {
 						mes "[Master]";
 						mes "You know...";
@@ -407,7 +401,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
 						Zeny -= 800;
-						getitem 12112,1; //Tropical_Sograt
+						getitem Tropical_Sograt,1;
 					}
 					close;
 				}
@@ -430,13 +424,13 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
 						Zeny -= 1000;
-						getitem 12112,1; //Tropical_Sograt
+						getitem Tropical_Sograt,1;
 						close;
 					}
 				}
 			}
 		case 2:
-			if (checkweight(908,200) == 0) {
+			if (checkweight(Spawn,200) == 0) {
 				mes "[Master]";
 				mes "Hey, why did you bring";
 				mes "so much stuff with you?";
@@ -447,7 +441,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 				close;
 			}
 			else {
-				if (BaseClass == Job_Assassin) {
+				if (BaseJob == Job_Assassin) {
 					if (Zeny < 800) {
 						mes "[Master]";
 						mes "You know...";
@@ -466,7 +460,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
 						Zeny -= 800;
-						getitem 12113,1; //Vermilion_The_Beach
+						getitem Vermilion_The_Beach,1;
 					}
 					close;
 				}
@@ -489,7 +483,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
 						Zeny -= 1000;
-						getitem 12113,1; //Vermilion_The_Beach
+						getitem Vermilion_The_Beach,1;
 						close;
 					}
 				}
@@ -506,7 +500,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 		}
 	case 2:
 		if (mao_request == 1) {
-			if (BaseClass == Job_Assassin) {
+			if (BaseJob == Job_Assassin) {
 				mes "[Master]";
 				mes "A mission...";
 				mes "Don't you think you're little too late?";
@@ -519,7 +513,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 				mes "Huh?";
 				next;
 				select("Show him the Letter of Recommendation.");
-				if (countitem(7416) > 0) {
+				if (countitem(Letter_Of_Recommend) > 0) {
 					mes "[Master]";
 					mes "Ah.. I think you're little too late.";
 					mes "I've got nothing to say if this's about the request sent to each guild.";
@@ -546,7 +540,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 			}
 		}
 		else {
-			if (BaseClass == Job_Assassin) {
+			if (BaseJob == Job_Assassin) {
 				mes "[Master]";
 				mes "Let me take a guess. You haven't been assigned any missions from this joint, eh?";
 				mes "By the way, you like this place?";
@@ -583,13 +577,13 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 }
 
 que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
-	if (BaseClass == Job_Assassin) {
+	if (BaseJob == Job_Assassin) {
 		mes "[Tao]";
 		mes "Welcome, meow~";
 		mes "How's out, meow?";
 		next;
 		if (prt_curse == 24) {
-			switch(select("Is Marjana in?:I'm here to see you,Tao.")) {
+			switch(select("Is Marjana in?", "I'm here to see you,Tao.")) {
 			case 1:
 				mes "[Tao]";
 				mes "She's in the room on your left, meow~";
@@ -622,7 +616,7 @@ que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 		mes "[Tao]";
 		mes "What's up, meow!";
 		next;
-		switch(select("So, it's just you, little brat?:What has gotten into you?!:Hey, stop meowing?!")) {
+		switch(select("So, it's just you, little brat?", "What has gotten into you?!", "Hey, stop meowing?!")) {
 		case 1:
 			mes "[Tao]";
 			mes "What are you talking about, meow!";
@@ -765,7 +759,7 @@ OnTimer250000:
 	end;
 }
 
-que_job01,12,13,0	script	#room1_warp	-1,15,15,{
+que_job01,12,13,0	script	#room1_warp	FAKE_NPC,15,15,{
 OnInit:
 	disablenpc "#room1_warp";
 	end;
@@ -795,7 +789,7 @@ OnTouch:
 que_job01,80,27,0	warp	que_job01#room2_1_out	1,1,que_job01,52,50
 
 que_job01,16,21,5	script	Valdes#moc_master_1	1_M_JOBTESTER,{
-	if (BaseClass == Job_Assassin) {
+	if (BaseJob == Job_Assassin) {
 		mes "[Valdes]";
 		mes "What is it? I have nothing to ask you to do.";
 		mes "Could you please leave me alone? I have a bad headache.";
@@ -810,14 +804,14 @@ que_job01,16,21,5	script	Valdes#moc_master_1	1_M_JOBTESTER,{
 		mes "I'm really stressed out right now.";
 		mes "If you're here for the request that we made earlier, you can just forget about it.";
 	}
-	if (countitem(7417) > 0) {
-		delitem 7417,countitem(7417); //Mission_ScrollA
+	if (countitem(Mission_ScrollA) > 0) {
+		delitem Mission_ScrollA,countitem(Mission_ScrollA);
 	}
-	if (countitem(7418) > 0) {
-		delitem 7418,countitem(7418); //Mission_ScrollB
+	if (countitem(Mission_ScrollB) > 0) {
+		delitem Mission_ScrollB,countitem(Mission_ScrollB);
 	}
-	if (countitem(7416) > 0) {
-		delitem 7416,countitem(7416); //Letter_Of_Recommend
+	if (countitem(Letter_Of_Recommend) > 0) {
+		delitem Letter_Of_Recommend,countitem(Letter_Of_Recommend);
 	}
 	close;
 
@@ -836,7 +830,7 @@ OnDisable:
 */
 
 yuno_in04,180,106,3	script	Reading Girl#moc_girl1	1_F_MERCHANT_01,{
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Excuse me, but may I ask";
 	mes "you a question?";
 	next;
@@ -855,7 +849,7 @@ yuno_in04,180,106,3	script	Reading Girl#moc_girl1	1_F_MERCHANT_01,{
 	mes "Oh.. I can't wait to see Hoein Special..";
 	mes "And this, you could have a look if you want to.";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Oh, now, I shouldn't.";
 	mes "Looks like the cover's rounded with a red strap,";
 	mes "which..I really think is for adults only.";
@@ -880,21 +874,20 @@ que_job01,70,84,1	script	Girl#moc_ex002	4_F_SITDOWN,{
 	mes "Nothing seems to be working now..";
 	emotion e_sob;
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "....Tsk..tsk...";
 	mes "Good heavens.. I can't believe this young girl's drinking with sadness....";
 	close;
 }
 
-// Resurrection of Satan Morroc
-// ============================================================
+//== Resurrection of Satan Morroc ==========================
 moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,3,{
 	if ((rebirth_moc_edq == 0) && (rebirth_moc_edq < 4)) {
 		mes "[Continental Guard]";
 		mes "No commoners are allowed in the area beyond this point.";
 		mes "This place is extremely dangerous so you are restricted from entering.";
 		next;
-		switch(select("Cancel Conversation:Ask What Happened")) {
+		switch(select("Cancel Conversation", "Ask What Happened")) {
 		case 1:
 			close;
 		case 2:
@@ -910,7 +903,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 			mes "[Continental Guard]";
 			mes "If you'd like to know more information, I suggest that you speak to the Continental Guard in charge of the accident site in Morroc Village.";
 			next;
-			switch(select("End Conversation:Ask About Guard's Location")) {
+			switch(select("End Conversation", "Ask About Guard's Location")) {
 			case 1:
 				close;
 			case 2:
@@ -920,7 +913,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				mes "[Continental Guard]";
 				mes "If you'd like, I can send you there directly.";
 				next;
-				switch(select("No, thanks.:Please do.")) {
+				switch(select("No, thanks.", "Please do.")) {
 				case 1:
 					mes "[Continental Guard]";
 					mes "I see. Well then, for your safety, please leave this dangerous area as soon as possible.";
@@ -940,22 +933,22 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		mes "No commoners are allowed in the area beyond this point.";
 		mes "This place is extremely dangerous so you are restricted from entering.";
 		next;
-		switch(select("Cancel Conversation:Enter the Field to Investigate:Move to Morroc's Accident Site")) {
+		switch(select("Cancel Conversation", "Enter the Field to Investigate", "Move to Morroc's Accident Site")) {
 		case 1:
 			close;
 		case 2:
 			if ($@re_moc < 3) {
-				getpartymember(getcharid(1));
+				getpartymember(getcharid(CHAR_ID_PARTY));
 				.@partymembercount = $@partymembercount;
 				copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
 				while (.@partymembercount >= 0) {
 					.@name$ = .@partymembername$[.@partymembercount];
-					if (isloggedin(getcharid(3,.@name$))) {
+					if (isloggedin(getcharid(CHAR_ID_ACCOUNT,.@name$))) {
 						++.@onlinemembers;
 					}
 					--.@partymembercount;
 				}
-				if ((.@onlinemembers > 1) && (countitem(7826) > 0)) {
+				if ((.@onlinemembers > 1) && (countitem(Continental_Guard_Paper) > 0)) {
 					mes "[Continental Guard]";
 					mes "......";
 					next;
@@ -968,7 +961,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 					warp "moc_fild21",38,193;
 					end;
 				}
-				else if ((.@onlinemembers < 2) && (countitem(7826) > 0)) {
+				else if ((.@onlinemembers < 2) && (countitem(Continental_Guard_Paper) > 0)) {
 					mes "[Continental Guard]";
 					mes "Welcome, members of the Continental Guards. I have a special order from Chief Balrog for you, so let me read it for you.";
 					next;
@@ -979,7 +972,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 					mes "...You understand that, right? Please go back to the site, and come back in a party of at least 2 members. Thank you.";
 					close;
 				}
-				else if (countitem(7826) < 1) {
+				else if (countitem(Continental_Guard_Paper) < 1) {
 					mes "[Continental Guard]";
 					mes "Only members of the Continental Guards with Continental Guard Certificates are allowed to proceed beyond this point.";
 					close;
@@ -1008,19 +1001,19 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		mes "[Continental Guard]";
 		mes "Ah, you're an adventurer working for the Continental Guard. Nice to meet you. Feel free to ask me if you need my assistance.";
 		next;
-		getpartymember(getcharid(1));
+		getpartymember(getcharid(CHAR_ID_PARTY));
 		.@partymembercount = $@partymembercount;
 		copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
 		while (.@partymembercount >= 0) {
 			.@name$ = .@partymembername$[.@partymembercount];
-			if (isloggedin(getcharid(3,.@name$))) {
+			if (isloggedin(getcharid(CHAR_ID_ACCOUNT,.@name$))) {
 				++.@onlinemembers;
 			}
 			--.@partymembercount;
 		}
-		switch(select("Enter the First Field to Investigate:Enter the Second Field to Investigate:Return to Morroc's Accident Site:Cancel Conversation")) {
+		switch(select("Enter the First Field to Investigate", "Enter the Second Field to Investigate", "Return to Morroc's Accident Site", "Cancel Conversation")) {
 		case 1:
-			if ((.@onlinemembers > 1) && (countitem(7826) > 0)) {
+			if ((.@onlinemembers > 1) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "......";
 				next;
@@ -1033,7 +1026,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				warp "moc_fild21",38,193;
 				end;
 			}
-			else if ((.@onlinemembers < 2) && (countitem(7826) > 0)) {
+			else if ((.@onlinemembers < 2) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "Welcome, members of the Continental Guards. I have a special order from Chief Balrog for you, so let me read it for you.";
 				next;
@@ -1044,7 +1037,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				mes "...You understand that, right? Please go back to the site, and come back in a party of at least 2 members. Thank you.";
 				close;
 			}
-			else if (countitem(7826) < 1) {
+			else if (countitem(Continental_Guard_Paper) < 1) {
 				mes "[Continental Guard]";
 				mes "Only members of the Continental Guards with Continental Guard Certificates are allowed to proceed beyond this point.";
 				close;
@@ -1053,7 +1046,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				close;
 			}
 		case 2:
-			if ((.@onlinemembers > 1) && (countitem(7826) > 0)) {
+			if ((.@onlinemembers > 1) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "......";
 				next;
@@ -1066,7 +1059,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				warp "moc_fild22",38,193;
 				end;
 			}
-			else if ((.@onlinemembers < 2) && (countitem(7826) > 0)) {
+			else if ((.@onlinemembers < 2) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "Welcome, members of the Continental Guards. I have a special order from Chief Balrog for you, so let me read it for you.";
 				next;
@@ -1077,7 +1070,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				mes "...So please go back to the site, and come back in a party of at least 2 members. Thank you.";
 				close;
 			}
-			else if (countitem(7826) < 1) {
+			else if (countitem(Continental_Guard_Paper) < 1) {
 				mes "[Continental Guard]";
 				mes "Only members of the Continental Guards with Continental Guard Certificates are allowed to proceed beyond this point.";
 				close;
@@ -1099,7 +1092,6 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		end;
 	}
 
-//OnTouch2:
 OnTouch:
 	mes "[Continental Guard]";
 	mes "No commoners are allowed in the area beyond this point.";
@@ -1117,7 +1109,7 @@ moc_fild20,203,336,5	duplicate(MocConGuard)	Continental Guard#07	4_M_MOC_SOLDIER
 moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER,3,3
 
 -	script	Continental Messenger#00::ConMessenger	4_M_MOCASS1,3,3,{
-	.@area$ = strnpcinfo(2);
+	.@area$ = strnpcinfo(NPC_NAME_HIDDEN);
 	if (.@area$ == "01") { .@area$ = "Prontera"; }
 	else if (.@area$ == "02") { .@area$ = "Geffen"; }
 	else if (.@area$ == "03") { .@area$ = "Payon"; }
@@ -1125,10 +1117,10 @@ moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER
 	else if (.@area$ == "05") { .@area$ = "Al De Baran"; }
 	if (BaseLevel > 79) {
 		mes "[Continental Guard Messenger]";
-		mes "Good day, "+ strcharinfo(0) +". We don't have the luxury of time in this dire situation so I'll try to make this quick.";
+		mes "Good day, "+ strcharinfo(PC_NAME) +". We don't have the luxury of time in this dire situation so I'll try to make this quick.";
 		next;
 		mes "[Continental Guard Messenger]";
-		mes "I'm a messenger dispatched here to " + .@area$ + " from the Morroc Continental Guard Headquarters. My duty is to deliver this important message to as many renowned adventurers as I can. I'm glad that I was finally able to find you, "+ strcharinfo(0) +".";
+		mes "I'm a messenger dispatched here to " + .@area$ + " from the Morroc Continental Guard Headquarters. My duty is to deliver this important message to as many renowned adventurers as I can. I'm glad that I was finally able to find you, "+ strcharinfo(PC_NAME) +".";
 		next;
 		select("Morroc Continental Guard Headquarters?");
 		mes "[Continental Guard Messenger]";
@@ -1147,10 +1139,10 @@ moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER
 		mes "The Morroc Continental Guard was immediately organized to fight Satan Morroc and bring relief to this dire situation. I'm here to inform everyone in the Rune-Midgarts Kingdom about this catastrophe.";
 		next;
 		mes "[Continental Guard Messenger]";
-		mes "We need your help, "+ strcharinfo(0) +". We need reputable adventurers like you to seal away Satan Morroc once again.";
+		mes "We need your help, "+ strcharinfo(PC_NAME) +". We need reputable adventurers like you to seal away Satan Morroc once again.";
 		next;
 		mes "[Continental Guard Messenger]";
-		mes "For more information, please speak to the captain of the Morroc Continental Guard. He is waiting for you, "+ strcharinfo(0) +".";
+		mes "For more information, please speak to the captain of the Morroc Continental Guard. He is waiting for you, "+ strcharinfo(PC_NAME) +".";
 		next;
 		mes "[Continental Guard Messenger]";
 		mes "The Continental Guard Headquarters is located near the center palace of Morroc, so please go speak to the chief as soon as you can.";
@@ -1191,7 +1183,7 @@ moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER
 OnTouch:
 	if (BaseLevel > 79) {
 		mes "[Continental Guard Messenger]";
-		mes "Are you... "+ strcharinfo(0) +"?";
+		mes "Are you... "+ strcharinfo(PC_NAME) +"?";
 		mes "Ah, very well. I have an extremely important message for you.";
 		next;
 		mes "[Continental Guard Messenger]";
@@ -1223,7 +1215,7 @@ morocc,176,103,3	script	Continental Official	4_M_SAGE_A,{
 		mes "[Continental Guard Official]";
 		mes "Welcome to the Morroc Subjugation Information Center. How may I help you?";
 		next;
-		switch(select("What is this place for?:I'm here to volunteer.:Tell me about the village situation.")) {
+		switch(select("What is this place for?", "I'm here to volunteer.", "Tell me about the village situation.")) {
 		case 1:
 			mes "[Continental Guard Official]";
 			mes "I'm stationed here to assist adventurers who wish to volunteer and help the Continental Guard fight Satan Morroc.";
@@ -1240,7 +1232,7 @@ morocc,176,103,3	script	Continental Official	4_M_SAGE_A,{
 		case 2:
 			if (BaseLevel > 79) {
 				mes "[Continental Guard Official]";
-				mes "Welcome, " + strcharinfo(0) + ". I've been waiting for you. I assume our messenger informed you of our situation.";
+				mes "Welcome, " + strcharinfo(PC_NAME) + ". I've been waiting for you. I assume our messenger informed you of our situation.";
 				next;
 				mes "[Continental Guard Official]";
 				mes "Let me process your application immediately. Please wait.";
@@ -1300,7 +1292,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "It looks like you have business with me. Please make it brief since I don't have a lot of time on my hands. There's lots of things I need to take care of...";
 		next;
-		switch(select("Ask about Continental Guards:I want to join the Continental Guard.:End Conversation")) {
+		switch(select("Ask about Continental Guards", "I want to join the Continental Guard.", "End Conversation")) {
 		case 1:
 			mes "[Chief Balrog]";
 			mes "The damage that Satan Morroc's resurrection has caused is obvious just by taking a look around this area.";
@@ -1324,7 +1316,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			next;
 			if (BaseLevel > 79) {
 				mes "[Chief Balrog]";
-				mes "What was your name? " + strcharinfo(0) + "? Oh yes, I've heard of you.";
+				mes "What was your name? " + strcharinfo(PC_NAME) + "? Oh yes, I've heard of you.";
 				next;
 				mes "[Chief Balrog]";
 				mes "Hmm, it occurs to me that you don't understand the danger involved in all this. Do you have any idea how powerful Satan Morroc is?";
@@ -1338,7 +1330,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "I'm sorry, but inexperienced adventurers would just get in our way. I hope you understand. If you really want to help us, then please focus on your training for now.";
 				next;
-				switch(select("End Conversation:Ask Again")) {
+				switch(select("End Conversation", "Ask Again")) {
 				case 1:
 					close;
 				case 2:
@@ -1351,7 +1343,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "[Chief Balrog]";
 					mes "Please understand that this is for your own good. Fight some Porings or whatever else might be a good match for your level.";
 					next;
-					switch(select("End Conversation:You've just got to let me join!")) {
+					switch(select("End Conversation", "You've just got to let me join!")) {
 					case 1:
 						close;
 					case 2:
@@ -1364,14 +1356,14 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 						mes "[Chief Balrog]";
 						mes "Stop bothering me. You'd be nothing but a burden.";
 						next;
-						switch(select("Give Up:Give me a chance to prove myself!")) {
+						switch(select("Give Up", "Give me a chance to prove myself!")) {
 						case 1:
 							close;
 						case 2:
 							mes "[Chief Balrog]";
 							mes "Huh? You want a chance to prove yourself?";
 							next;
-							mes "[" + strcharinfo(0) + "]";
+							mes "[" + strcharinfo(PC_NAME) + "]";
 							mes "Yes, I'll do whatever it takes to join the Continental Guard!";
 							next;
 							mes "[Chief Balrog]";
@@ -1389,7 +1381,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 							mes "[Chief Balrog]";
 							mes "I happened to hear that the monsters in the Lava Dungeon have everlasting flame which would solve our bonfire problems. I want you to gather those flames for us.";
 							next;
-							switch(select("That's too hard! Let me think about it!:No problem.")) {
+							switch(select("That's too hard! Let me think about it!", "No problem.")) {
 							case 1:
 								mes "[Chief Balrog]";
 								mes "Hmpf, I was right. I knew you wouldn't be able to handle such a simple task. I shouldn't have wasted my time with you.";
@@ -1430,14 +1422,14 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "So, did you find ^0000FF30 Live Coals^000000? You didn't come empty-handed, did you?";
 		next;
-		if (countitem(7098) > 29) {
+		if (countitem(Live_Coal) > 29) {
 			mes "[Chief Balrog]";
 			mes "Let's see... One, two, three... Thirty, you've brought them all. Well, this was a pretty simple task. All it takes is time and a little effort. Anyone could do it.";
 			next;
 			mes "[Chief Balrog]";
 			mes "Anyways, thank you for bringing the Live Coals. I guess you're stronger than I thought.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Now will you let me join the Continental Guard?";
 			next;
 			mes "[Chief Balrog]";
@@ -1446,7 +1438,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "I'm still not convinced that you're good enough to join us. Let me think... Hmm...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I didn't think you would accept me so easily. I'm ready. Ask me whatever you want.";
 			next;
 			mes "[Chief Balrog]";
@@ -1455,13 +1447,13 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "These mercenaries have never seen the desert, and they're having trouble carrying out operations in the heat, dry air, and sandstorms. It's not their fault, but they could use a little help since they're out of their element.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "(This guy seems threatening, but he seems to have a good heart.)";
 			next;
 			mes "[Chief Balrog]";
 			mes "Now, I remember hearing that the monsters in the Ice Cave to the north have frozen hearts. Those hearts might be able to relieve those soldiers from the heat.";
 			next;
-			switch(select("That's too hard!:No problem. How many do you want?")) {
+			switch(select("That's too hard!", "No problem. How many do you want?")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "I knew that'd be too tough for you. I'm glad you finally realized your limits before it was too late. It takes wisdom to recognize your weakness.";
@@ -1478,7 +1470,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				next;
 				mes "[Chief Balrog]";
 				mes "Please bring me ^0000FF50 Glacial Hearts^000000. The faster you get them here, the better.";
-				delitem 7098,30; //Live_Coal
+				delitem Live_Coal,30;
 				rebirth_moc_edq = 3;
 				changequest 3051,3052;
 				close;
@@ -1497,18 +1489,18 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "So, did you find 50 Glacial Hearts?";
 		next;
-		if (countitem(7561) > 49) {
+		if (countitem(Ice_Heart) > 49) {
 			mes "[Chief Balrog]";
 			mes "Thank you. I'm sure that my soldiers will appreciate these... Those guys aren't used to the desert, and could use the relief.";
 			next;
 			mes "[Chief Balrog]";
 			mes "Well... It looks like you earned this.";
-			delitem 7561,50; //Ice_Heart
-			getitem 7826,1; //Continental_Guard_Paper
+			delitem Ice_Heart,50;
+			getitem Continental_Guard_Paper,1;
 			rebirth_moc_edq = 4;
 			changequest 3052,3053;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What's this?";
 			next;
 			mes "[Chief Balrog]";
@@ -1540,7 +1532,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "I guess you'd benefit from a full situational briefing. Shall I brief you now?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Chief Balrog]";
 			mes "I'm going to tell you some basic information about fighting Satan Morroc as a member of the Continental Guard.";
@@ -1596,7 +1588,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "How? Do you have any proof of your victory?";
 		next;
-		if (countitem(7820) > 0) {
+		if (countitem(Morroc_Skin) > 0) {
 			mes "[Chief Balrog]";
 			mes "Is... Isn't this?";
 			next;
@@ -1615,14 +1607,14 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Once again, I thank you for your distinguished service on behalf of the Continental Guard and the Rune-Midgarts Kingdom. I'll report your great achievement to His Majesty right away.";
 			next;
-			delitem 7820,1; //Morroc_Skin
+			delitem Morroc_Skin,1;
 			getexp RENEWAL_EXP?200000:2000000,0;
 			rebirth_moc_edq = 7;
 			changequest 3055,3056;
 			mes "[Chief Balrog]";
 			mes "I've prepared a few things to give as a reward for you. Let's see... I have three items. Which one do you like to receive?";
 			next;
-			switch(select("1. Seal of Continental Guard:2. Morroc Charm Stone:3. Morroc Ring")) {
+			switch(select("1. Seal of Continental Guard", "2. Morroc Charm Stone", "3. Morroc Ring")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "The Seal of Continental Guard is an extremely valuable reward given directly from the kingdom court. It is a symbol of strength.";
@@ -1633,12 +1625,12 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Do you really want the Seal of Continental Guard?";
 				next;
-				switch(select("1. Yes.:2. No.")) {
+				switch(select("1. Yes.", "2. No.")) {
 				case 1:
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
 					next;
-					getitem 2730,1; //Morroc_Seal
+					getitem Morroc_Seal,1;
 					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
@@ -1665,12 +1657,12 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Do you really want a Morroc Charm Stone?";
 				next;
-				switch(select("1. Yes.:2. No.")) {
+				switch(select("1. Yes.", "2. No.")) {
 				case 1:
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
 					next;
-					getitem 2731,1; //Morroc_Charm_Stone
+					getitem Morroc_Charm_Stone,1;
 					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
@@ -1697,12 +1689,12 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Do you really want a Morroc Ring?";
 				next;
-				switch(select("1. Yes.:2. No.")) {
+				switch(select("1. Yes.", "2. No.")) {
 				case 1:
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
 					next;
-					getitem 2732,1; //Morroc_Ring
+					getitem Morroc_Ring,1;
 					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
@@ -1734,7 +1726,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "I've prepared a few things to give as a reward for you. Let's see... I have three items. Which one do you like to receive?";
 		next;
-		switch(select("1. Seal of Continental Guard:2. Morroc Charm Stone:3. Morroc Ring")) {
+		switch(select("1. Seal of Continental Guard", "2. Morroc Charm Stone", "3. Morroc Ring")) {
 		case 1:
 			mes "[Chief Balrog]";
 			mes "The Seal of Continental Guard is an extremely valuable reward given directly from the kingdom court. It is a symbol of strength.";
@@ -1745,12 +1737,12 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Do you really want the Seal of Continental Guard?";
 			next;
-			switch(select("1. Yes.:2. No.")) {
+			switch(select("1. Yes.", "2. No.")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
 				next;
-				getitem 2730,1; //Morroc_Seal
+				getitem Morroc_Seal,1;
 				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
@@ -1777,12 +1769,12 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Do you really want a Morroc Charm Stone?";
 			next;
-			switch(select("1. Yes.:2. No.")) {
+			switch(select("1. Yes.", "2. No.")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
 				next;
-				getitem 2731,1; //Morroc_Charm_Stone
+				getitem Morroc_Charm_Stone,1;
 				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
@@ -1809,12 +1801,12 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Do you really want a Morroc Ring?";
 			next;
-			switch(select("1. Yes.:2. No.")) {
+			switch(select("1. Yes.", "2. No.")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
 				next;
-				getitem 2732,1; //Morroc_Ring
+				getitem Morroc_Ring,1;
 				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
@@ -1857,7 +1849,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 	}
 }
 
-moc_fild21,38,193,0	script	Morocc Timer#edq	-1,6,6,{
+moc_fild21,38,193,0	script	Morocc Timer#edq	FAKE_NPC,6,6,{
 //OnInit:
 //	$@re_moc = 0;
 //	$@re_moc_time$ = "";
@@ -1895,6 +1887,7 @@ OnTimer25000:
 	end;
 
 OnDisable:
+	stopnpctimer;
 	disablenpc "Satan Broadcast#edq";
 	end;
 }
@@ -1905,7 +1898,7 @@ moc_fild21,178,239,0	script	Group of Evil#edq	CLEAR_NPC,1,1,{
 		next;
 		mes "You can feel the power of the darkness rise from the gap where light and darkness are mingled.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Wah...!";
 		close2;
 		if($@re_moc == 1) {
@@ -1921,18 +1914,9 @@ moc_fild21,178,239,0	script	Group of Evil#edq	CLEAR_NPC,1,1,{
 		close;
 	}
 
-OnInit:
-	enablenpc "Group of Evil#edq";
-	end;
-
 OnEnable:
 	enablenpc "Group of Evil#edq";
 	$@re_moc_time$ = "";
-	end;
-
-OnDisable:
-	disablenpc "Group of Evil#edq";
-	donpcevent "Time-Space Gap#edq::OnEnable";
 	end;
 }
 
@@ -1943,7 +1927,7 @@ moc_fild21,177,239,0	script	Time-Space Gap#edq	CLEAR_NPC,1,1,{
 		mes "You can see the fragments floating in the gap, and the radiating lights are now slowing their movement.";
 		next;
 		mes "You stretch your hand and pick up a lusterless fragment.";
-		getitem 7820,1; //Morroc_Skin
+		getitem Morroc_Skin,1;
 		rebirth_moc_edq = 6;
 		changequest 3053,3055;
 		close;
@@ -1976,8 +1960,6 @@ OnTimer1800000:
 	end;
 
 OnTimer21600000:
-	stopnpctimer;
-	$@re_moc = 0;
 	donpcevent "Time-Space Gap#edq::OnDisable";
 	end;
 }
@@ -2006,7 +1988,9 @@ OnMyMobDead:
 	mapannounce "moc_fild21","I'll let live just a little longer. You'll never find me through this time-space gap!",bc_map,"0xFFFF00";
 	donpcevent "Time-Space Gap#edq::OnEnable";
 	donpcevent "Satan Broadcast#edq::OnDisable";
-	donpcevent "Group of Evil#edq::OnDisable";
+	disablenpc "Group of Evil#edq";
+	stopnpctimer;
+	killmonster "moc_fild21","Satan Summon#edq::OnMyMobDead";
 	disablenpc "Satan Summon#edq";
 	end;
 
@@ -2016,9 +2000,6 @@ OnTimer5400000:
 
 OnTimer5415000:
 	mapannounce "moc_fild21","I don't have time for this! Go away!",bc_map,"0xFFFF00";
-	stopnpctimer;
-	killmonster "moc_fild21","Satan Summon#edq::OnMyMobDead";
-	$@re_moc = 0;
 	donpcevent "Satan Summon#edq::OnDisable";
 	end;
 }
@@ -2075,13 +2056,13 @@ sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 		mes "[Helper]";
 		mes "What do you want?";
 		next;
-		switch(select("Cancel.:Reset")) {
+		switch(select("Cancel.", "Reset")) {
 		case 1:
 			mes "[Helper]";
 			mes "Alright.";
 			close;
 		case 2:
-			if (strnpcinfo(4) == "sec_in02")
+			if (strnpcinfo(NPC_MAP) == "sec_in02")
 				mes "You can reset at moc_fild21 5 5.";
 			else {
 				mes "Reset starts.";
@@ -2101,11 +2082,10 @@ sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 }
 moc_fild21,5,5,5	duplicate(MorrocAdmin_sec)	Morroc GlobalVar Admin::MorrocAdmin_moc	4_F_RUSGREEN
 
-// The Crow of the Fate
-// ============================================================
+//== The Crow of the Fate ==================================
 moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 	if (BaseLevel > 59) {
-		if (checkweight(703,3) == 0) {
+		if (checkweight(Hinalle,3) == 0) {
 			mes "- You have too many items in your inventory to proceed with this quest. -";
 			close;
 		}
@@ -2129,11 +2109,11 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "[Book-Touching Man]";
 			mes "Your smile outshines the aura of the gods of Valhalla. You are a living gospel. Your smile even makes Goddess Freya hide in the shadows in shame! Ah.... Mammi, my Mammi!";
 			next;
-			mes "^660000You wave your hand close to his face to get his attention. He seems, however, to be in his own dreams, completely oblivious of your presense.^000000";
+			mes "^660000You wave your hand close to his face to get his attention. He seems, however, to be in his own dreams, completely oblivious of your presence.^000000";
 			next;
-			switch(select("Speak:Pass Him By")) {
+			switch(select("Speak", "Pass Him By")) {
 			case 1:
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Are you talking to yourself?";
 				next;
 				emotion e_omg;
@@ -2144,7 +2124,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				mes "^660000Surprised by your voice, he yelled at you, which seemed bizarre.";
 				mes "You wonder what he meant by feeling her when he was just watching and touching a book.^000000";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Who's Mammi?";
 				next;
 				emotion e_omg;
@@ -2198,7 +2178,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				mes "[Benjamin]";
 				mes "....Ye... Yes, you!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Huh?";
 				emotion e_swt2,1;
 				next;
@@ -2212,7 +2192,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				mes "All I'm asking is to check out a book from Prontera Library for me. It sounds easy, doesn't it?";
 				mes "Well, you don't look like someone who loves reading, but I hope you at least know how to check out a book from a library.";
 				next;
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "[Benjamin]";
 					mes "If you help me, I'll show you a limited picture book edition of Mammi... Once. Hehehehe.";
 					mes "What do you say? You do want to help me, right?";
@@ -2227,7 +2207,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				}
 				mes "^660000What do you want to do?^000000";
 				next;
-				switch(select("Help him:Don't help him")) {
+				switch(select("Help him", "Don't help him")) {
 				case 1:
 					mes "[Benjamin]";
 					mes "Wow, are you really going to help me?";
@@ -2258,7 +2238,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "[Benjamin]";
 			mes "Oh... Mammi... My Mammi...";
 			next;
-			mes "^660000Just like the last time that you saw him, Bejamin is living in his dreams, rubbing a book on his face.^000000";
+			mes "^660000Just like the last time that you saw him, Benjamin is living in his dreams, rubbing a book on his face.^000000";
 			next;
 			mes "^660000You carefully approached him, and then gave him a pat on the shoulder.^000000";
 			next;
@@ -2272,9 +2252,9 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "Who dares interrupt me from feeling Mammi? Do you want a piece of me... Err?";
 			mes "Gosh, it's you. What took you so long? Wasn't Prontera Library, like, five minutes away?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Ahchoo! Thanks to you, I couldn't find it from the library. So I travelled all the way up to Schwaltzvalt... Ahchoo!";
-			specialeffect2 EF_VENOMDUST;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
 			next;
 			mes "^660000Feeling angry at him, you exaggerated a fit of sneezing which you have had for quite a while.^000000";
 			next;
@@ -2286,7 +2266,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "...No, I can do anything as long as it's for Mammi. Heh heh, you're a kind adventurer. Thanks.";
 			mes "Was it cold up there? I guess it is since Schwaltzvalt is located up north from here.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "..................";
 			next;
 			mes "[Benjamin]";
@@ -2313,7 +2293,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "How could no one shed a tear after watching this sad picture of her?! Argh, Mammi! I'm coming to make you the happiest woman in the world!";
 			next;
 			cutin "mami02",4;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "'She looks different than I thought with these glasses and pony tails... She really looks like someone who loves literature.";
 			mes "Wait, when did people start calling Comodo the City of Lovers? Hmm... This guy really thinks weird things!'";
 			next;
@@ -2322,13 +2302,13 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			next;
 			mes "^660000He is staring at you arrogantly. Obviously, he doesn't care if you like the book or not.^000000";
 			next;
-			switch(select("I'll take it.:No, thanks.")) {
+			switch(select("I'll take it.", "No, thanks.")) {
 			case 1:
 				mes "'^660000Well, if it's for free, and there's no harm keeping it.'^000000";
 				next;
 				break;
 			case 2:
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "No, thanks. I'm not interested in her as much as you.";
 				next;
 				mes "...^660000Was what you were about to say, but you could not refuse his offer. Looking at his fanatical eyes, burning with love for her, even Odin could not refuse...^000000";
@@ -2338,7 +2318,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "^660000Quickly blinking his eyes, he made you take Mammi's picture book in your arms";
 			mes "demanding that you must encase the book so it would not be damaged.^000000";
 			barmunt_crow = 11;
-			getitem 7795,1; //Mami_Photo_Album
+			getitem Mami_Photo_Album,1;
 			next;
 			mes "[Benjamin]";
 			mes "Oh, right. If you're interested in this author, Oliver Hilpert, I suggest you read the prequel of <The Crow of the Fate>, ^3131FF<The Trace of the Fate>^000000 as well as the sequel.";
@@ -2354,7 +2334,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "^660000The Trace of the Fate, huh?";
 			mes "Well, I don't have anything else to do. I might want to read the book...^000000";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait, does it mean that I have to go back to Juno Library?";
 			next;
 			mes "^660000Thinking of travelling back to Juno made you sigh in frustration.^000000";
@@ -2368,8 +2348,8 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			close;
 		}
 		else if (barmunt_crow == 15) {
-			if ((countitem(7797) == 1) && (countitem(7796) == 1)) {
-				mes "["+ strcharinfo(0) +"]";
+			if ((countitem(Author_Memo) == 1) && (countitem(Author_Autograph) == 1)) {
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Hey, Benjamin!";
 				mes "I've got the perfect thing to help you appeal to Mammi. Do you want to see?";
 				next;
@@ -2384,17 +2364,17 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				mes "These will surely help me get closer to Mammi!";
 				mes "Give them to me!";
 				next;
-				switch(select("Give:Don't Give")) {
+				switch(select("Give", "Don't Give")) {
 				case 1:
 					mes "[Benjamin]";
-					mes "Oh, "+ strcharinfo(0) +"!";
+					mes "Oh, "+ strcharinfo(PC_NAME) +"!";
 					mes "You are the best! Thanks!";
 					next;
 					mes "[Benjamin]";
 					mes "Maaaammmiii!";
 					mes "I'm going to see her tomorrow as soon as the morning comes! Mammi, I'm coming!";
-					delitem 7797,1; //Author_Memo
-					delitem 7796,1; //Author_Autograph
+					delitem Author_Memo,1;
+					delitem Author_Autograph,1;
 					barmunt_crow = 16;
 					if (RENEWAL_EXP)
 						getexp 90000,90000;
@@ -2441,19 +2421,19 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 		mes "Our library's Monster Encyclopedia has every monster in the Rune-Midgart Kingdom categorized by dungeon, to help our readers find them easily.";
 		mes "We also have many essential books for adventurers. Why don't you take a look?";
 		next;
-		switch(select("Search books.:Look around the library.")) {
+		switch(select("Search books.", "Look around the library.")) {
 		case 1:
 			mes "[Curator Guys]";
 			mes "Do you have a specific book in mind?";
 			mes "No problem, I'm here to assist you.";
 			mes "What kind of book are you looking for?";
 			next;
-			switch(select("Say the title.:Say the author.:Search by keyword.")) {
+			switch(select("Say the title.", "Say the author.", "Search by keyword.")) {
 			case 1:
 				mes "[Curator Guys]";
 				mes "Oh, do you know the title?";
 				mes "Sure, now what's the name?";
-				input .@input$;
+				input(.@input$);
 				next;
 				if (compare(.@input$,"The Crow of the Fate") == 1) {
 					mes "[Curator Guys]";
@@ -2471,7 +2451,7 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 				mes "[Curator Guys]";
 				mes "Oh, do you know the author?";
 				mes "Sure, now what's the name?";
-				input .@input$;
+				input(.@input$);
 				next;
 				if (compare(.@input$,"Oliver Hilpert") == 1) {
 					mes "[Curator Guys]";
@@ -2490,7 +2470,7 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 				mes "You must be having a hard time remembering the book's title or author.";
 				mes "No problem; why don't you tell me at least a little bit of what you remember?";
 				next;
-				input .@input$;
+				input(.@input$);
 				if ((compare(.@input$,"Fate") == 1) || (compare(.@input$,"Crow") == 1) || (compare(.@input$,"Oliver") == 1) || (compare(.@input$,"Hilpert") == 1)) {
 					mes "[Curator Guys]";
 					mes ""+.@input$+"...?";
@@ -2512,7 +2492,7 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 			mes "^3131FFOliver Hilpert's";
 			mes "<The Crow of the Fate>^000000!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "That's right! That's what I'm looking for!";
 			next;
 			mes "[Curator Guys]";
@@ -2569,7 +2549,7 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 		next;
 		mes "^660000A man is also yelling at the front of the library.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "What's happening here?";
 		next;
 		mes "[Library Master]";
@@ -2609,7 +2589,7 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 		next;
 		mes "^660000You looked down on the ground, and then found a couple of feathers dropped from the crow when it was hit by the pebble.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Wow, look at the size of these feathers. I guess such a huge crow needs big feathers to fly.";
 		next;
 		mes "[Library Master]";
@@ -2622,15 +2602,15 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 		mes "You know the old saying, 'you can memorize Edda after 3 years of working at a library.'";
 		mes "Why don't you keep one of the feathers? Who knows? It may bring you good luck.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I guess so.";
 		next;
 		mes "^660000You picked up one of the big dark feathers from the ground.";
 		mes "Looking at the lustrous feather somehow made you feel so happy, as if you had obtained treasure.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "...Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Library Master]";
 		mes "God bless you. Oh, did you catch cold?";
@@ -2640,7 +2620,7 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 		next;
 		mes "[Library Master]";
 		mes "Try to drink hot Jellopy broth mixed with honey. My mother used to make that for me whenever I caught cold.";
-		mes "I gurantee you that you'll get better quickly.";
+		mes "I guarantee you that you'll get better quickly.";
 		next;
 		mes "^660000He sounded sincere, but it doesn't sound like that kind of broth would even be effective...^000000";
 		emotion e_dots,1;
@@ -2655,7 +2635,6 @@ yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 }
 
 yuno,336,203,0	script	#garas_catch	HIDDEN_WARP_NPC,3,3,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 2) {
 		mes "[Dog]";
@@ -2669,7 +2648,7 @@ OnTouch:
 		next;
 		mes "^660000A man is also yelling at the front of the library.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "What's happening here?";
 		next;
 		mes "[Library Master]";
@@ -2709,7 +2688,7 @@ OnTouch:
 		next;
 		mes "^660000You looked down on the ground, and then found a couple of feathers dropped from the crow when it was hit by the pebble.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Wow, look at the size of these feathers. I guess such a huge crow needs big feathers to fly.";
 		next;
 		mes "[Library Master]";
@@ -2722,15 +2701,15 @@ OnTouch:
 		mes "You know the old saying, 'you can memorize Edda after 3 years of working at a library.'";
 		mes "Why don't you keep one of the feathers? Who knows? It may bring you good luck.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I guess so.";
 		next;
 		mes "^660000You picked up one of the big dark feathers from the ground.";
 		mes "Looking at the lustrous feather somehow made you feel so happy, as if you had obtained treasure.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "...Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Library Master]";
 		mes "God bless you. Oh, did you catch cold?";
@@ -2740,7 +2719,7 @@ OnTouch:
 		next;
 		mes "[Library Master]";
 		mes "Try to drink hot Jellopy broth mixed with honey. My mother used to make that for me whenever I caught cold.";
-		mes "I gurantee you that you'll get better quickly.";
+		mes "I guarantee you that you'll get better quickly.";
 		next;
 		mes "^660000He sounded sincere, but it doesn't sound like that kind of broth would even be effective...^000000";
 		emotion e_dots,1;
@@ -2769,16 +2748,16 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		mes "[Library Part-Timer]";
 		mes "...Now how may I help you?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I'm looking for a book called <The Crow of the Fate> written by Oliver Hilpert... Ahchoo!";
 		emotion e_wah,1;
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Library Part-Timer]";
 		mes "Ah, I remember that one... It's the one most frequently left in the cart.";
 		mes "Please enter the room on the ^3131FFright side^000000. You can find it in the Bestseller corner.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Thanks.";
 		close;
 	}
@@ -2786,17 +2765,17 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		mes "[Library Part-Timer]";
 		mes "How may I help you?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Yes, umm... ahchoo! Where can I find old news articles...? Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Library Part-Timer]";
 		mes "Oh, you can find them in a corner of the right room.";
 		mes "Please be careful when you handle them since most of them are pretty ancient.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Thanks... Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		close;
 	}
 	else if (barmunt_crow == 11) {
@@ -2807,15 +2786,15 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		mes "[Library Part-Timer]";
 		mes "...How may I help you?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Cough... I'm looking for a book called <The Crow of the Fate> written by Oliver Hilpert.";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Library Part-Timer]";
 		mes "Ah, I remember that one... It's the one most frequently left in the cart.";
 		mes "Go ^3131FFupstairs^000000, and check the left shelf.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Thanks.";
 		next;
 		mes "[Library Part-Timer]";
@@ -2827,7 +2806,7 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 		next;
 		mes "[Library Part-Timer]";
 		mes "Right! When the hero was meeting his end in the burning mansion... ^FF0000-- BEEP --^000000";
-		specialeffect2 EF_BASH3D2;
+		specialeffect(EF_BASH3D2, AREA, playerattached());
 		close2;
 		warp "que_ba",264,186;
 		end;
@@ -2854,11 +2833,11 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		mes "^660000It was not that difficult to find 'The Crow of the Fate'";
 		mes "because it was the only book leaning against the wall of an empty shelf.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah, luckily there's one... Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Sniff... So now all I have to do is just check this out and deliver it to that Mammi fanatic.";
 		next;
 		mes "^FF0000-- BEEP --^000000";
@@ -2866,7 +2845,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		mes "^660000You were about to pull out the book, complaining and grumbling, when suddenly it felt as if your brain exploded. You black out...^000000";
 		barmunt_crow = 4;
 		close2;
-		specialeffect2 EF_BASH3D2;
+		specialeffect(EF_BASH3D2, AREA, playerattached());
 		warp "que_ba",247,33;
 		end;
 	}
@@ -2878,18 +2857,18 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		mes "^660000It was not that difficult to find 'The Crow of the Fate'";
 		mes "because it was the only book leaning against the wall of an empty shelf.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah, luckily there's one... Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Sniff... So now all I have to do is just check this out and deliver it to that Mammi fanatic.";
 		next;
 		mes "^FF0000-- BEEP --^000000";
 		next;
 		mes "^660000You were about to pull out the book, complaining and grumbling, when suddenly it felt as if your brain exploded. You black out...^000000";
 		close2;
-		specialeffect2 EF_BASH3D2;
+		specialeffect(EF_BASH3D2, AREA, playerattached());
 		warp "que_ba",247,33;
 		end;
 	}
@@ -2901,18 +2880,18 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 		mes "^660000It was not that difficult to find 'The Crow of the Fate'";
 		mes "because it was the only book leaning against the wall of an empty shelf.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah, luckily there's one... Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Sniff... So now all I have to do is just check this out and deliver it to that Mammi fanatic.";
 		next;
 		mes "^FF0000-- BEEP --^000000";
 		next;
 		mes "^660000You were about to pull out the book, complaining and grumbling, when suddenly it felt as if your brain exploded. You black out...^000000";
 		close2;
-		specialeffect2 EF_BASH3D2;
+		specialeffect(EF_BASH3D2, AREA, playerattached());
 		warp "que_ba",247,33;
 		end;
 	}
@@ -2920,8 +2899,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 }
 
 yuno_in04,100,3,0	script	#garas_path	HIDDEN_WARP_NPC,1,1,{
-//OnTouch2:
-OnTouch2:
+OnTouch:
 	if (barmunt_crow == 6) {
 		mes "...................................";
 		next;
@@ -2937,9 +2915,9 @@ OnTouch2:
 		next;
 		mes "^660000You turned your head toward the bookshelf, and found the bookshelf with the empty shelf.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Phew... I guess I had a dream or something... Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "^660000It was an indescribable dream: a burning laboratory in an unknown place in Schwaltzvalt.";
 		mes "You tried to think hard, but could not figure out what the dream meant.^000000";
@@ -2958,7 +2936,7 @@ OnTouch2:
 		next;
 		mes "^660000The books was telling the exact scene that you have seen in your dream.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Deja Vu? Am I having Deja Vu?";
 		next;
 		mes "^660000Of course, it was just a dream, but still was a very mysterious experience.^000000";
@@ -2974,7 +2952,7 @@ OnTouch2:
 		close;
 	}
 	else if (barmunt_crow == 7) {
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "If I want to read news articles about fires, which section should I go to?";
 		close;
 	}
@@ -3014,7 +2992,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 				mes "saying, 'This is ridiculous.";
 				mes "Assassins must live alone under the shadows.'";
 				mes "Hopefully the fans' reaction won't cause too much worry";
-				mes "to Siglinde and his soon-to-be wife.";
+				mes "to Sieglinde and his soon-to-be wife.";
 				mes " ";
 				next;
 			}
@@ -3054,7 +3032,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 				mes "righteous punishment for trifling with his creations.";
 				mes " ";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "...........................";
 				mes "...........................";
 				mes "This is the place I've seen in my dream!";
@@ -3069,7 +3047,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 				mes "You feel your heart beating faster with excitement.";
 				mes "You are now convinced this was not just your dream or illusion. You had a vision of what really happened in the past.";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "I can't believe this is happening!";
 				mes "Think hard... It was ^FF0000an area connected to a northern cave^000000.";
 				barmunt_crow = 8;
@@ -3121,20 +3099,20 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 }
 
 yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
-	if (checkweight(617,3) == 0) {
+	if (checkweight(Old_Violet_Box,3) == 0) {
 		mes "- You have too many items in your inventory to proceed with this quest. -";
 		close;
 	}
 	if (barmunt_crow > 14) {
 		mes "^660000The writer was writing in the notebook at an extremely fast pace.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Let's not disturb him, especially when he is full of creative ideas. That doesn't happen very often.";
 		close;
 	}
 	else if (barmunt_crow == 13) {
 		cutin "oliver_pre",2;
-		if (countitem(7795) < 1) {
+		if (countitem(Mami_Photo_Album) < 1) {
 			mes "[Oliver Hilpert]";
 			mes "Lady Mammi...";
 			close2;
@@ -3144,7 +3122,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "[Oliver Hilpert]";
 		mes "Did you change your mind about selling Lady Mammi's picture book to me?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			cutin "oliver_smile",2;
 			mes "[Oliver Hilpert]";
@@ -3165,11 +3143,11 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "[Oliver Hilpert]";
 		mes "I haven't had a chance to open it, but my publisher said it has something very rare inside. I hope that it's enough to pay you for your book.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Haha, thanks.";
 		mes "You know, in Morroc... Ahchoo! ...There's someone who's as big a fan of Mammi's as you... Ahchoo! So why don't you go meet him?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I got that book from him as a gift. He may have more rare books of her... Ahchoo!";
 		next;
 		mes "[Oliver Hilpert]";
@@ -3193,21 +3171,21 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "^3131FFSeclusion - A female disciple's letter^000000";
 		mes "^3131FFThe stepmother = Lover from a past life?!^000000";
 		close2;
-		specialeffect2 EF_ENHANCE;
-		delitem 7795,1; //Mami_Photo_Album
+		specialeffect(EF_ENHANCE, AREA, playerattached());
+		delitem Mami_Photo_Album,1;
 		barmunt_crow = 14;
-		getitem 7796,1; //Author_Autograph
-		getitem 7797,1; //Author_Memo
-		getitem 617,1; //Old_Violet_Box
+		getitem Author_Autograph,1;
+		getitem Author_Memo,1;
+		getitem Old_Violet_Box,1;
 		warp "que_ba",270,270;
 		end;
 	}
 	else if (barmunt_crow == 14) {
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "This dream seems pretty meaningful somehow.";
 		mes "I'd better give him this note back.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Excuse me, Mr. Hilpert.";
 		next;
 		cutin "oliver_think",2;
@@ -3219,14 +3197,14 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		cutin "oliver_think",255;
 		mes "You felt sorry for interrupting him from writing.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I think you've dropped this.";
 		next;
 		mes "^660000You rummaged your pocket to find the memo, and then happened to drop the crow feather which you picked up outside the library. Then suddenly...^000000";
 		next;
 		mes "(WHACK)";
 		specialeffect EF_VENOMDUST;
-		specialeffect2 EF_DETOXICATION;
+		specialeffect(EF_DETOXICATION, AREA, playerattached());
 		next;
 		mes "^660000Oliver picked up the feather more quickly than you could, and then tore it into pieces before you could even say anything.^000000";
 		next;
@@ -3249,14 +3227,14 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "I... I don't know how to apologize...";
 		mes "It's just that... I became so angry that I--! Argh, I'm sorry!";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Well, it's okay. I happened to pick it up from the street. You don't have to apologize.";
 		next;
 		mes "[Oliver Hilpert]";
 		mes "If you say so, thank you for your understanding.";
 		mes "Phew, I felt so guilty...";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Here, take your memo back.";
 		next;
 		mes "[Oliver Hilpert]";
@@ -3270,56 +3248,56 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		cutin "oliver_pre",255;
 		mes "^660000As soon as he talked to you, he went back to his writing and became completely absorbed in his work.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "He has such amazing concentration.";
 		mes "I guess not everyone can make bestselling books, huh?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "...Wait, I'm not sneezing anymore...";
 		mes "The headache and the heavy feeling in my chest is gone too!";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "What if it was all caused by that crow feather? What if...?";
 		next;
-		switch(select("It was cursed by the pebble.:The crow has something to do with Oliver.")) {
+		switch(select("It was cursed by the pebble.", "The crow has something to do with Oliver.")) {
 		case 1:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Ah, I see.";
 			mes "I think when the crow was hit by the pebble, its wisdom must have turned into disaster.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Argh, that was all because of the library master!";
-			mes "Luckily the feather is gone, so hopefuly I won't suffer any more disaster.";
+			mes "Luckily the feather is gone, so hopefully I won't suffer any more disaster.";
 			next;
 			break;
 		case 2:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I remember Mr. Zid saying Eva had left a black feather behind her.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Also, the female assistant turned into a crow flying away, and then the crow feather made me sneeze and cough.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "..................";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Yes, Mr. Hilpert's soul is cursed by the Crow!";
 			mes "I wonder if he threw rocks at crows like the library master...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "..................";
 			mes "I guess it's a stupid idea.";
 			next;
 			break;
 		}
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Oh well, whatever.";
 		mes "What matters is that I'm cured!";
 		mes "If I have another dream, I'll deal with it then~";
 		next;
 		mes "^660000As you left the library, you thought that thinking Mr. Oliver is your half would be a better idea.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "That was pretty fun, but also pretty tiring. Where should I head for my next adventure?";
 		barmunt_crow = 15;
 		completequest 2068;
@@ -3334,12 +3312,12 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 }
 
 yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
-	if (checkweight(617,3) == 0) {
+	if (checkweight(Old_Violet_Box,3) == 0) {
 		mes "- You have too many items in your inventory to proceed with this quest. -";
 		close;
 	}
 	if (barmunt_crow == 12) {
-		if (countitem(7795) < 1) {
+		if (countitem(Mami_Photo_Album) < 1) {
 			mes "- You felt as if you have left something important behind. -";
 			close;
 		}
@@ -3376,7 +3354,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "- What's your name? -";
 		mes "-......Al.-";
 		mes "- Do you know why you're on the street? Where do you live? Your parents must be dying to see you.-";
-		mes "Haeji's comment instantly brought the monsterous image of Eva to Al's mind. Inwardly, he screamed in fear.";
+		mes "Haeji's comment instantly brought the monstrous image of Eva to Al's mind. Inwardly, he screamed in fear.";
 		mes "- I live nowhere, and I don't have parents. -";
 		mes "Al had to lie no matter how long, he thought. The old man seemed to understand him: his eyes showed sympathy for the little boy. Haeji insisted that Al could stay in his mansion as long as he wanted.";
 		mes "Later, after learning that Haeji was a professor of Juno City University, Al was convinced that the fates were on his side.>";
@@ -3394,7 +3372,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "Hey, you're reading <The Trace of the Fate>!";
 		mes "Hahaha, nice to meet you. I'm the author of that book. I've come by to check how well my new book, <The Crow of the Fate>, is doing, and it's a great honor to meet a fan of mine! I feel embarrassed, but thanks! Hehe.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Cough, no, I'm not a fa...";
 		next;
 		mes "[Oliver Hilpert]";
@@ -3410,7 +3388,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "[Oliver Hilpert]";
 		mes "You know, I just wrote what I saw in my dream; I didn't know people would love my stories so much! It's very surprising to me.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Dream?";
 		next;
 		cutin "oliver_think",2;
@@ -3421,7 +3399,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "You felt something uncomfortable about this so-called dream. You wanted to understand the meaning of what you've seen while reading the book.";
 		mes "If Oliver was dreaming exactly the same things as you, that might mean he and you are sharing dreams. Then again, you've discovered the cave village in the book actually exists.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "The hero Al was having dreams...";
 		next;
 		cutin "oliver_pre",2;
@@ -3430,14 +3408,14 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "Isn't that over there?!";
 		emotion e_omg;
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Huh?";
 		next;
 		mes "^660000You quickly turned your head following his eyes. There was nothing but your bag.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ah... Ahchoo! Mr. Hilpert, are you interested in my bag? It's just a simple bag I got from the Novice Training Grounds...";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Oliver Hilpert]";
 		mes "No, no!";
@@ -3455,9 +3433,9 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "^660000Yes, it was the picture book of Mammi, an idol whom Benjamin of Morroc insists to be one of the three greatest idols in the Rune-Midgart Kingdom. That must be why Oliver is squealing in delight.^000000";
 		emotion e_dots,1;
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ahchoo! Are you also a Mammi fan?";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Oliver Hilpert]";
 		mes "Are you kidding?! Of course!";
@@ -3489,9 +3467,9 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "Ah... This is why I'm in love with Lady Mammi.";
 		mes "Adventurer, you must be an enthusiastic fan of her as well. Where did you find this rare picture book?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "No, I got it as a gift from someone... Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "[Oliver Hilpert]";
 		mes "What? Now I'm shocked!";
@@ -3501,7 +3479,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "I flew over to the Rune-Midgart Kingdom on the earliest airship";
 		mes "to get this book on the day it was released, but the books were sold out. The person right in front of me got the last one!";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "...............";
 		mes "I... I see...";
 		emotion e_swt,1;
@@ -3514,7 +3492,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "As I told you earlier, it's something I'm willing to cross continents to get. Please?";
 		mes "I really want to buy your book!";
 		next;
-		switch(select("Sell:Don't Sell")) {
+		switch(select("Sell", "Don't Sell")) {
 		case 1:
 			mes "[Oliver Hilpert]";
 			mes "Wow, thanks!";
@@ -3535,11 +3513,11 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "[Oliver Hilpert]";
 		mes "I haven't had a chance to open it, but my publisher said it has something very rare inside. I hope that it's enough to pay you for your book.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Haha, thanks.";
 		mes "You know, in Morroc... Ahchoo! ...There's someone who's as big a fan of Mammi's as you... Ahchoo! So why don't you go meet him?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I got that book from him as a gift. He may have more rare books of her... Ahchoo!";
 		next;
 		mes "[Oliver Hilpert]";
@@ -3563,12 +3541,12 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "^3131FFSeclusion - A female disciple's letter^000000";
 		mes "^3131FFThe stepmother = Lover from a past life?!^000000";
 		close2;
-		specialeffect2 EF_ENHANCE;
-		delitem 7795,1; //Mami_Photo_Album
+		specialeffect(EF_ENHANCE, AREA, playerattached());
+		delitem Mami_Photo_Album,1;
 		barmunt_crow = 14;
-		getitem 7796,1; //Author_Autograph
-		getitem 7797,1; //Author_Memo
-		getitem 617,1; //Old_Violet_Box
+		getitem Author_Autograph,1;
+		getitem Author_Memo,1;
+		getitem Old_Violet_Box,1;
 		warp "que_ba",270,270;
 		cutin "",255;
 		end;
@@ -3579,8 +3557,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 	}
 }
 
-que_ba,247,33,0	script	#bpast_1_1	-1,1,1,{
-//OnTouch2:
+que_ba,247,33,0	script	#bpast_1_1	FAKE_NPC,1,1,{
 OnTouch:
 	if (barmunt_crow < 4) {
 		warp "ama_dun03",119,110;
@@ -3606,17 +3583,17 @@ que_ba,257,39,3	script	Female Researcher#bpast	4_F_ALCHE,{
 	else if (barmunt_crow == 4) {
 		mes "^660000While trying to remember what happened, you encounter a woman who passes by you. You instinctively reach for her shoulder to get her attention.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Ahchoo! Ahchoo! Gosh...";
 		mes "Hey, where am I...?";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
 		mes "- Pzzzz -";
 		specialeffect EF_CLOAKING;
 		next;
 		mes "^660000Surprisingly, your arm passed through her body.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "...Where the hell am I?";
 		close;
 	}
@@ -3644,11 +3621,10 @@ que_ba,181,14,7	script	Researcher#bpast_2_2	4_LGTSCIENCE,{
 	close;
 }
 
-que_ba,183,25,0	warp	#bpast_2to3_1	1,1,que_ba,72,25;
-que_ba,183,52,0	warp	#bpast_2to3_2	1,1,que_ba,72,51;
+que_ba,183,25,0	warp	#bpast_2to3_1	1,1,que_ba,72,25
+que_ba,183,52,0	warp	#bpast_2to3_2	1,1,que_ba,72,51
 
-que_ba,102,56,0	script	#3room_barmunt	-1,3,3,{
-//OnTouch2:
+que_ba,102,56,0	script	#3room_barmunt	FAKE_NPC,3,3,{
 OnTouch:
 	if (barmunt_crow < 4) {
 		warp "yuno_in04",100,3;
@@ -3720,7 +3696,6 @@ que_ba,99,51,7	script	Grotesque Man#zid1	4_M_MUT1,{
 }
 
 que_ba,53,232,0	script	#garas_f_yume	HIDDEN_WARP_NPC,1,1,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 5) {
 		//GetHEALTHSTATE VAR_HEALTHSTATENORMAL 0
@@ -3728,7 +3703,7 @@ OnTouch:
 		next;
 		mes "^660000And you aren't alone: you can now clearly see the man and woman that escaped the laboratory.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Umm...";
 		next;
 		mes "[Grotesque Man]";
@@ -3744,7 +3719,7 @@ OnTouch:
 		next;
 		mes "^660000You were looking at their backs as they left, and then noticed that you were holding the book you were reading in your hands. Then....^000000";
 		barmunt_crow = 6;
-		specialeffect2 EF_FLASHER;
+		specialeffect(EF_FLASHER, AREA, playerattached());
 		close2;
 		warp "yuno_in04",100,3;
 	}
@@ -3765,7 +3740,6 @@ que_ba,48,227,7	script	Grotesque Man#zid2	4_M_MUT1,{
 }
 
 que_ba,264,186,0	script	#barmut_room1	HIDDEN_WARP_NPC,2,2,{
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 11) {
 		mes "^660000You wake up, and look around you. Somehow, you've now ended up in a huge mansion.^000000";
@@ -3805,7 +3779,6 @@ que_ba,270,181,3	script	#barmunt_fire	4_M_SAGE_C,{
 }
 
 que_ba,270,270,0	script	#barmunt_living	HIDDEN_WARP_NPC,1,1,{
-//OnTouch2:
 OnTouch:
 	mes "..................";
 	mes "..................";
@@ -3830,7 +3803,7 @@ OnTouch:
 	next;
 	mes "^660000He mumbled to himself, and brushed back his sweaty hair with a trembling hand.^000000";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "A dream again.";
 	mes "I guess he won't be able to see or hear me, just like the others.";
 	next;
@@ -3840,7 +3813,7 @@ OnTouch:
 	mes "[Mysterious Man]";
 	mes "How the hell did you find me?!";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "...Wah! He can see me! He can see me!";
 	next;
 	enablenpc "#barmut_onna";
@@ -3899,7 +3872,7 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 		mes "[Cave Settler]";
 		mes "No outsiders are allowed beyond this point.";
 		next;
-		switch(select("Step back.:No, listen to me!")) {
+		switch(select("Step back.", "No, listen to me!")) {
 		case 1:
 			mes "[Cave Settler]";
 			mes "Hah, I knew you would be scared of me!";
@@ -3907,17 +3880,17 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 			warp "cave",81,92;
 			end;
 		case 2:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Ah... Ahchoo!";
 			mes "'I'm not like other outsiders... Ahchoo!";
 			mes "I have a goal to achieve in here... Ahchoo!";
-			specialeffect2 EF_VENOMDUST;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
 			next;
 			mes "^660000Although you a bit intimidated by this guard, and your sneezing definitely not helping, you continue.^000000";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I'm here to find somebody!";
-			input .@input$;
+			input(.@input$);
 			mes "Her name is ^FF0000"+.@input$+"^000000!";
 			next;
 			if (compare(.@input$,"Eva") == 0) {
@@ -3927,43 +3900,41 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 				warp "cave",81,92;
 				end;
 			}
-			else {
-				mes "[Cave Settler]";
-				mes "............!!!!";
-				next;
-				mes "[Cave Settler]";
-				mes "Did you just say Eva?";
-				mes "Hmm...";
-				mes "Wait here.";
-				next;
-				emotion e_com;
-				mes "[Cave Settler]";
-				mes "Hey, Jaeda!";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Go upstairs, and tell Eva that she has a visitor.";
-				disablenpc "Jaeda#garas1";
-				next;
-				mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
-				next;
-				mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Hmm... Yeah? I see.";
-				next;
-				disablenpc "Jaeda#garas1";
-				mes "[Cave Settler]";
-				mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
-				next;
-				mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
-				mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
-				barmunt_crow = 9;
-				close2;
-				warp "cave",82,105;
-				end;
-			}
+			mes "[Cave Settler]";
+			mes "............!!!!";
+			next;
+			mes "[Cave Settler]";
+			mes "Did you just say Eva?";
+			mes "Hmm...";
+			mes "Wait here.";
+			next;
+			emotion e_com;
+			mes "[Cave Settler]";
+			mes "Hey, Jaeda!";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Go upstairs, and tell Eva that she has a visitor.";
+			disablenpc "Jaeda#garas1";
+			next;
+			mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
+			next;
+			mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Hmm... Yeah? I see.";
+			next;
+			disablenpc "Jaeda#garas1";
+			mes "[Cave Settler]";
+			mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
+			next;
+			mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
+			mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
+			barmunt_crow = 9;
+			close2;
+			warp "cave",82,105;
+			end;
 		}
 	}
 	else if (barmunt_crow < 8) {
@@ -3982,13 +3953,12 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 		close;
 	}
 
-//OnTouch2:
 OnTouch:
 	if (barmunt_crow == 8) {
 		mes "[Cave Settler]";
 		mes "No outsiders are allowed beyond this point.";
 		next;
-		switch(select("Step back.:No, listen to me!")) {
+		switch(select("Step back.", "No, listen to me!")) {
 		case 1:
 			mes "[Cave Settler]";
 			mes "Hah, I knew you would be scared of me!";
@@ -3996,17 +3966,17 @@ OnTouch:
 			warp "cave",81,92;
 			end;
 		case 2:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Ah... Ahchoo!";
 			mes "'I'm not like other outsiders... Ahchoo!";
 			mes "I have a goal to achieve in here... Ahchoo!";
-			specialeffect2 EF_VENOMDUST;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
 			next;
 			mes "^660000Although you're a bit intimidated by this guard, and your sneezing definitely not helping, you continue.^000000";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I'm here to find somebody!";
-			input .@input$;
+			input(.@input$);
 			mes "Her name is ^FF0000"+.@input$+"^000000!";
 			next;
 			if (compare(.@input$,"Eva") == 0) {
@@ -4016,43 +3986,41 @@ OnTouch:
 				warp "cave",81,92;
 				end;
 			}
-			else {
-				mes "[Cave Settler]";
-				mes "............!!!!";
-				next;
-				mes "[Cave Settler]";
-				mes "Did you just say Eva?";
-				mes "Hmm...";
-				mes "Wait here.";
-				next;
-				emotion e_com;
-				mes "[Cave Settler]";
-				mes "Hey, Jaeda!";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Go upstairs, and tell Eva that she has a visitor.";
-				disablenpc "Jaeda#garas1";
-				next;
-				mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
-				next;
-				mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
-				enablenpc "Jaeda#garas1";
-				next;
-				mes "[Cave Settler]";
-				mes "Hmm... Yeah? I see.";
-				next;
-				disablenpc "Jaeda#garas1";
-				mes "[Cave Settler]";
-				mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
-				next;
-				mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
-				mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
-				barmunt_crow = 9;
-				close2;
-				warp "cave",82,105;
-				end;
-			}
+			mes "[Cave Settler]";
+			mes "............!!!!";
+			next;
+			mes "[Cave Settler]";
+			mes "Did you just say Eva?";
+			mes "Hmm...";
+			mes "Wait here.";
+			next;
+			emotion e_com;
+			mes "[Cave Settler]";
+			mes "Hey, Jaeda!";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Go upstairs, and tell Eva that she has a visitor.";
+			disablenpc "Jaeda#garas1";
+			next;
+			mes "^660000Surprisingly, he seemed to know who Eva is. You still could not believe that she actually exists! It's all so very strange.^000000";
+			next;
+			mes "^660000You can feel the excitement and anticipation well within you. Maybe you're coming closer to learning what your dreams really mean.^000000";
+			enablenpc "Jaeda#garas1";
+			next;
+			mes "[Cave Settler]";
+			mes "Hmm... Yeah? I see.";
+			next;
+			disablenpc "Jaeda#garas1";
+			mes "[Cave Settler]";
+			mes "Hey, you can pass. Go upstairs, but you'd better think twice before trying anything funny. Do you understand me?";
+			next;
+			mes "^660000The stern-looking man examined you, and then stepped to the side, allowing you to pass.";
+			mes "You clenched your fists in nervousness, and then started up the dark stairwell.^000000";
+			barmunt_crow = 9;
+			close2;
+			warp "cave",82,105;
+			end;
 		}
 	}
 	else if (barmunt_crow < 8) {
@@ -4085,7 +4053,7 @@ cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 		next;
 		mes "(WHIZZ)";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Argh...";
 		next;
 		mes "^660000The pain in your chest suddenly hits you...";
@@ -4103,11 +4071,11 @@ cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 		next;
 		mes "^660000He sounded weak, as if he did not have enough energy to talk.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Umm... Ahchoo!";
-		specialeffect2 EF_VENOMDUST;
+		specialeffect(EF_VENOMDUST, AREA, playerattached());
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Do you know a man by the name of Oliver Hilpert?";
 		next;
 		mes "[Monsterous Man]";
@@ -4134,7 +4102,7 @@ cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 			mes "[Zid]";
 			mes "My name is Zid. Tell me what you want from me. I want to know more about this book.";
 			next;
-			switch(select("About the Cave Village:About Himself:About Eva:End Conversation")) {
+			switch(select("About the Cave Village", "About Himself", "About Eva", "End Conversation")) {
 			case 1:
 				mes "[Zid]";
 				mes "Did you notice that our villagers look different?";
@@ -4327,8 +4295,7 @@ cave,105,32,7	script	Cave Settler#f_cave7	4_F_CAVE1,{
 	close;
 }
 
-// Succession of the Prince
-// ============================================================
+//== Succession of the Prince ==============================
 prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 	if (nk_prince == 0) {
 		if (rebirth_moc_edq > 1) {
@@ -4342,7 +4309,7 @@ prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 				mes "[Messenger]";
 				mes "Oh, I don't want you to panic too much... Hmm... what I want to say is, Tristan the third, the ruler of Rune Midgarts...";
 				next;
-				switch(select("Passed away?:Came for a celebration again?")) {
+				switch(select("Passed away?", "Came for a celebration again?")) {
 				case 1:
 					emotion e_gasp;
 					mes "[Messenger]";
@@ -4497,7 +4464,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What's wrong with you?";
 		mes "This is not an open area!";
 		next;
-		switch(select("Alright, Alright.:The Messenger directed me here.")) {
+		switch(select("Alright, Alright.", "The Messenger directed me here.")) {
 		case 1:
 			mes "[Inspector]";
 			mes "If you know it, why are you here? Get out of here!";
@@ -4547,7 +4514,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "most important thing to consider";
 				mes "as a leader of a hunt party?";
 				next;
-				switch(select("Strength and characteristics of the monster.:Efficiency of the hunt.:What we can get from the hunt.")) {
+				switch(select("Strength and characteristics of the monster.", "Efficiency of the hunt.", "What we can get from the hunt.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4562,7 +4529,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What if we lose a party member";
 				mes "during battle?";
 				next;
-				switch(select("Keep fighting until we can do it.:Find a new place and try differently.:Stop hunting and replenish.")) {
+				switch(select("Keep fighting until we can do it.", "Find a new place and try differently.", "Stop hunting and replenish.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4576,7 +4543,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "What you get as a result of the hunt...";
 				next;
-				switch(select("Share it as agreed prior.:I don't want to care for sharing.:Give it to the member that needs it.")) {
+				switch(select("Share it as agreed prior.", "I don't want to care for sharing.", "Give it to the member that needs it.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4591,7 +4558,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What type of job class member";
 				mes "has to be cured while the enemy still lives?";
 				next;
-				switch(select("Priest, healer class.:Hunter, damage dealer.:Lord Knight, tanker.")) {
+				switch(select("Priest, healer class.", "Hunter, damage dealer.", "Lord Knight, tanker.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4605,7 +4572,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "Whom do you want to befriend the most?";
 				next;
-				switch(select("A strong person.:An experienced person.:A kind person.")) {
+				switch(select("A strong person.", "An experienced person.", "A kind person.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4620,7 +4587,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What was your ability that helped";
 				mes "you the most during your training?";
 				next;
-				switch(select("Relationships with people.:Plenty of information gathering.:Discernment and driving force.")) {
+				switch(select("Relationships with people.", "Plenty of information gathering.", "Discernment and driving force.")) {
 				case 1:
 					.@solid += 10;
 					break;
@@ -4634,7 +4601,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "How do you give encouragement to others, usually?";
 				next;
-				switch(select("Refer to a past failure.:Hesitating is the worst thing.:You are not alone.")) {
+				switch(select("Refer to a past failure.", "Hesitating is the worst thing.", "You are not alone.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4649,7 +4616,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What is an ultimate virtue";
 				mes "in your life?";
 				next;
-				switch(select("Growth of oneself.:World peace.:The pursuit of truth.")) {
+				switch(select("Growth of oneself.", "World peace.", "The pursuit of truth.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4665,7 +4632,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "the most if you were on a ";
 				mes "deserted island?";
 				next;
-				switch(select("Map:Flint:Weapon")) {
+				switch(select("Map", "Flint", "Weapon")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4679,7 +4646,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "What type of story do you like the most?";
 				next;
-				switch(select("Love story.:Heroic epic.:Religious tale.")) {
+				switch(select("Love story.", "Heroic epic.", "Religious tale.")) {
 				case 1:
 					.@solid += 10;
 					break;
@@ -4695,7 +4662,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "new monster in a new area.";
 				mes "What do you do?";
 				next;
-				switch(select("Attack first.:Observe from a distance.:Flee away.")) {
+				switch(select("Attack first.", "Observe from a distance.", "Flee away.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4710,7 +4677,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What has to be done first when";
 				mes "ruling the Rune Midgarts kingdom?";
 				next;
-				switch(select("Dominate countries by reinforcing militia.:Advancement of economy and technology.:Keep public security firm.")) {
+				switch(select("Dominate countries by reinforcing militia.", "Advancement of economy and technology.", "Keep public security firm.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4842,14 +4809,14 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "Do you have the 2 reins I mentioned?";
 		next;
-		if (countitem(1064) > 1) {
+		if (countitem(Reins) > 1) {
 			mes "[Inspector]";
 			mes "Ooh!";
 			mes "Frankly, I didn't expect you to bring them. You are great.";
 			next;
 			mes "[Inspector]";
 			mes "Alright, good. You proved your strength for yourself. Now you passed one exam. All but one.";
-			delitem 1064,2; //Reins
+			delitem Reins,2;
 			nk_prince = 3;
 			changequest 10001,10002;
 			next;
@@ -4885,7 +4852,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "most important thing to consider";
 		mes "as a leader of a hunt party?";
 		next;
-		switch(select("Strength and characteristics of the monster.:Efficiency of the hunt.:What we can get from the hunt.")) {
+		switch(select("Strength and characteristics of the monster.", "Efficiency of the hunt.", "What we can get from the hunt.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4900,7 +4867,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What if we lose a party member";
 		mes "during battle?";
 		next;
-		switch(select("Keep fighting until we can do it.:Find a new place and try differently.:Stop hunting and replenish.")) {
+		switch(select("Keep fighting until we can do it.", "Find a new place and try differently.", "Stop hunting and replenish.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -4914,7 +4881,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "What you get as a result of the hunt...";
 		next;
-		switch(select("Share it as agreed prior.:I don't want to care for sharing.:Give it to the member that needs it.")) {
+		switch(select("Share it as agreed prior.", "I don't want to care for sharing.", "Give it to the member that needs it.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4929,7 +4896,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What type of job class member";
 		mes "has to be cured while the enemy still lives?";
 		next;
-		switch(select("Priest, healer class.:Hunter, damage dealer.:Lord Knight, tanker.")) {
+		switch(select("Priest, healer class.", "Hunter, damage dealer.", "Lord Knight, tanker.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4943,7 +4910,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "Whom do you want to befriend the most?";
 		next;
-		switch(select("A strong person.:An experienced person.:A kind person.")) {
+		switch(select("A strong person.", "An experienced person.", "A kind person.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -4958,7 +4925,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What was your ability that helped";
 		mes "you the most during your training?";
 		next;
-		switch(select("Relationships with people.:Plenty of information gathering.:Discernment and driving force.")) {
+		switch(select("Relationships with people.", "Plenty of information gathering.", "Discernment and driving force.")) {
 		case 1:
 			.@solid += 10;
 			break;
@@ -4972,7 +4939,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "How do you give encouragement to others, usually?";
 		next;
-		switch(select("Refer to a past failure.:Hesitating is the worst thing.:You are not alone.")) {
+		switch(select("Refer to a past failure.", "Hesitating is the worst thing.", "You are not alone.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4987,7 +4954,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What is an ultimate virtue";
 		mes "in your life?";
 		next;
-		switch(select("Growth of oneself.:World peace.:The pursuit of truth.")) {
+		switch(select("Growth of oneself.", "World peace.", "The pursuit of truth.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -5003,7 +4970,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "the most if you were on a ";
 		mes "deserted island?";
 		next;
-		switch(select("Map:Flint:Weapon")) {
+		switch(select("Map", "Flint", "Weapon")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -5017,7 +4984,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "What type of story do you like the most?";
 		next;
-		switch(select("Love story.:Heroic epic.:Religious tale.")) {
+		switch(select("Love story.", "Heroic epic.", "Religious tale.")) {
 		case 1:
 			.@solid += 10;
 			break;
@@ -5033,7 +5000,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "new monster in a new area.";
 		mes "What do you do?";
 		next;
-		switch(select("Attack first.:Observe from a distance.:Flee away.")) {
+		switch(select("Attack first.", "Observe from a distance.", "Flee away.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -5048,7 +5015,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What has to be done first when";
 		mes "ruling the Rune Midgarts kingdom?";
 		next;
-		switch(select("Dominate countries by reinforcing militia.:Advancement of economy and technology.:Keep public security firm.")) {
+		switch(select("Dominate countries by reinforcing militia.", "Advancement of economy and technology.", "Keep public security firm.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -5156,7 +5123,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "I will answer your questions first.";
 		next;
 		while(1) {
-			switch(select("What should I do, exactly?:The King died because of his illness?:Is my mission confidential??:I have no more questions.")) {
+			switch(select("What should I do, exactly?", "The King died because of his illness?", "Is my mission confidential??", "I have no more questions.")) {
 			case 1:
 				mes "[Inspector]";
 				mes "We have seven candidates from seven families. One per each family. The candidates are all in the same place, where I will introduce them to you.";
@@ -5210,7 +5177,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 					mes "Behind the soldier, you can find a secret door. If you talk to the soldier, the soldier will allow you to get in.";
 					next;
 					mes "[Inspector]";
-					mes "As I have expressed, this is a very important issue for the Rune Midgarts kingdom. Although I've stressed this point repeateadly, I cannot stress it enough.";
+					mes "As I have expressed, this is a very important issue for the Rune Midgarts kingdom. Although I've stressed this point repeatedly, I cannot stress it enough.";
 					next;
 					mes "[Inspector]";
 					mes "Please behave accordingly.";
@@ -5259,8 +5226,8 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 			mes "adventurer appraiser fully.";
 			mes "I really appreciate your assistance thus far. Due to your help, the future of the kingdom is indebted to you.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
-			mes "(He doesn't seem to be suprised too much.. Could there be a reason? Now I am suspicious...)";
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "(He doesn't seem to be surprised too much.. Could there be a reason? Now I am suspicious...)";
 			next;
 			mes "[Inspector]";
 			mes "Hey, the things you experienced here cannot be disclosed to others. You understand that this situation is fully confidential.";
@@ -5306,7 +5273,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		if (nkprince_eisen != 10)
 			close;
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
 			 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
@@ -5339,7 +5306,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 
 prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 	if (nk_prince > 6) {
-		mes "-Obssessed with making";
+		mes "-Obsessed with making";
 		mes "lock and key.-";
 		close;
 	}
@@ -5351,7 +5318,7 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 	}
 	else if (questprogress(10020) == 1) {
 		mes "[Erich]";
-		mes "These days, I have bad luck... Only harrassments happen to me...";
+		mes "These days, I have bad luck... Only harassments happen to me...";
 		close;
 	}
 	if (nk_prince < 5) {
@@ -5393,7 +5360,7 @@ prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 		mes "......My conscience!";
 		mes "It doesn't work well...";
 		next;
-		mes "-He seems to be so obssessed to care about anything else.-";
+		mes "-He seems to be so obsessed to care about anything else.-";
 		close;
 	}
 }
@@ -5422,7 +5389,7 @@ prt_castle,274,372,4	script	Servant#hans	1_M_02,{
 		mes "[Hans]";
 		mes "What can I do for you?";
 		next;
-		switch(select("Prince Erich told me to meet you.:Nothing much.")) {
+		switch(select("Prince Erich told me to meet you.", "Nothing much.")) {
 		case 1:
 			mes "[Hans]";
 			mes "Did Prince Erich...?";
@@ -5462,7 +5429,7 @@ prt_castle,274,372,4	script	Servant#hans	1_M_02,{
 			mes "...Hmm he cannot even hear...";
 			mes "Oooooh...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			close;
 		case 2:
@@ -5529,7 +5496,7 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 		mes "unforgettable, clear and beautiful voice.";
 		next;
 		while(1) {
-			switch(select("I want to know your background.:Let me know your view of the nation.:What are your hobbies or tastes?:Let me leave.")) {
+			switch(select("I want to know your background.", "Let me know your view of the nation.", "What are your hobbies or tastes?", "Let me leave.")) {
 			case 1:
 				mes "[Urugen]";
 				mes "My dashing face from";
@@ -5609,7 +5576,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 		next;
 		mes "-What subject should I start with?-";
 		next;
-		switch(select("Your background...:Your ambition...:Your view of the nation...:I want to meet others first.")) {
+		switch(select("Your background...", "Your ambition...", "Your view of the nation...", "I want to meet others first.")) {
 		case 1:
 			mes "[Helmut]";
 			mes "I don't know how others react but, I feel very uptight with your question. I shouldn't, but, I don't have a different view!";
@@ -5617,7 +5584,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[Helmut]";
 			mes "I am the prince; if you grumble, you become prince! I feel tiresome with this kind of questioning.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "............";
 			mes "Yes, I understand. Go ahead...";
 			next;
@@ -5641,7 +5608,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[Helmut]";
 			mes "Why are you still standing there? I have nothing else to say to you! Stand back!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			completequest 10010;
 			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
@@ -5656,7 +5623,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[Helmut]";
 			mes "I am the prince; if you grumble, you become prince! I feel tiresome with this kind of questioning.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "............";
 			mes "Yes, I understand. Go ahead...";
 			next;
@@ -5680,7 +5647,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[Helmut]";
 			mes "Why are you still standing there? I have nothing else to say to you! Stand back!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			completequest 10010;
 			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
@@ -5695,7 +5662,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[Helmut]";
 			mes "I am the prince; if you grumble, you become prince! I feel tiresome with this kind of questioning.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "............";
 			mes "Yes, I understand. Go ahead...";
 			next;
@@ -5719,7 +5686,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			mes "[Helmut]";
 			mes "Why are you still standing there? I have nothing else to say to you! Stand back!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			completequest 10010;
 			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
@@ -5728,7 +5695,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 			}
 			close;
 		case 4:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "No, Prince,";
 			mes "I will be back later.";
 			next;
@@ -5815,7 +5782,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 			mes "from higher and lower.";
 			mes "Just one.";
 			next;
-			switch(select("Higher:Lower")) {
+			switch(select("Higher", "Lower")) {
 			case 1:
 				mes "[Poe]";
 				mes "Hmm... higher?...";
@@ -5898,7 +5865,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 		mes "So... What do you want to know?!";
 		next;
 		while(1) {
-			switch(select("Your background story...:Your view of the nation...:Hobbies and interests...:I will come by later.")) {
+			switch(select("Your background story...", "Your view of the nation...", "Hobbies and interests...", "I will come by later.")) {
 			case 1:
 				mes "[Poe]";
 				mes "My background...";
@@ -5982,7 +5949,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 		mes "Appraiser.";
 		mes "Have you met the little girl in Aldebaran?";
 		next;
-		switch(select("Yes, I saw her for you.:No, I don't want to.")) {
+		switch(select("Yes, I saw her for you.", "No, I don't want to.")) {
 		case 1:
 			if (questprogress(10014) == 1) {
 				mes "[Peter]";
@@ -5991,7 +5958,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 				mes "[Peter]";
 				mes "Anyhow, thanks for your good work. I really feel sorry about bothering you with trifle things. This is my sense of gratitude. Don't feel so much burden and take this.";
 				completequest 10014;
-				getitem 644,1; //Gift_Box
+				getitem Gift_Box,1;
 				close;
 			}
 			mes "[Peter]";
@@ -6007,7 +5974,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 				mes "[Peter]";
 				mes "I really feel sorry about bothering you with trifle things. Please take this.";
 				completequest 10014;
-				getitem 644,1; //Gift_Box
+				getitem Gift_Box,1;
 				close;
 			}
 			mes "[Peter]";
@@ -6041,7 +6008,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 			mes "[Peter]";
 			mes "Anyhow, thanks for your good work. I really feel sorry about bothering you with trifle things. This is my sense of gratitude. Don't feel so much burden and take this.";
 			completequest 10014;
-			getitem 644,1; //Gift_Box
+			getitem Gift_Box,1;
 			close;
 		}
 		else {
@@ -6067,7 +6034,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 			mes "Now, where shall we start?";
 			next;
 			while(1) {
-				switch(select("Your background story...:Your view of the nation...:Hobbies and interests...:I will come by later.")) {
+				switch(select("Your background story...", "Your view of the nation...", "Hobbies and interests...", "I will come by later.")) {
 				case 1:
 					mes "[Peter]";
 					mes "My family was not that influential. My childhood was not that abundant; I had to seek jobs and make money from part-time jobs.";
@@ -6117,12 +6084,12 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 					mes "Would you take these flowers and give thanks to that girl somewhere in Al de Baran?";
 					completequest 10008;
 					next;
-					switch(select("Okay, no problem.:Please ask it of another.")) {
+					switch(select("Okay, no problem.", "Please ask it of another.")) {
 					case 1:
 						mes "[Peter]";
 						mes "Yeah, thank you very much.";
 						mes "Please take care.";
-						getitem 744,1; //Bunch_Of_Flowers
+						getitem Bunch_Of_Flowers,1;
 						setquest 10013;
 						if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
 						 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
@@ -6149,9 +6116,9 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 
 aldebaran,132,184,3	script	Girl#prince	4W_KID,{
 	if (questprogress(10013) == 1) {
-		if (countitem(744) > 0) {
+		if (countitem(Bunch_Of_Flowers) > 0) {
 			mes "[Girl]";
-			mes "Wooah, Uncle Peter sent these flowers";
+			mes "Woah, Uncle Peter sent these flowers";
 			mes "for me?";
 			mes "Hmmm~ They smell really good.";
 			next;
@@ -6166,7 +6133,7 @@ aldebaran,132,184,3	script	Girl#prince	4W_KID,{
 			mes "I will go home early and";
 			mes "Put these flowers in a vase.";
 			mes "Lalala~";
-			delitem 744,1; //Bunch_Of_Flowers
+			delitem Bunch_Of_Flowers,1;
 			changequest 10013,10014;
 			close;
 		}
@@ -6283,16 +6250,16 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "You come here so often.";
 			mes "I know you are a faithful person, engaged in a very important issue for the kingdom, but you come here more than is necessary...";
 			next;
-			switch(select("I have something...:Is that so? Then, see you later.")) {
+			switch(select("I have something...", "Is that so? Then, see you later.")) {
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I saw a person from the Walter family.";
 				next;
 				mes "[Ahrum]";
 				mes "Oh! really?";
 				mes "why didn't he come to me?";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "-I tell Ahrum the story.-";
 				next;
 				mes "[Ahrum]";
@@ -6437,14 +6404,14 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "[Ahrum]";
 			mes "If you react wrongfully to this incident, my death will be worthless...kuk... Do you understand?";
 			next;
-			switch(select("... Okay I will follow your will...:......")) {
+			switch(select("... Okay I will follow your will...", "......")) {
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "... Okay, I will follow your will. Don't worry...";
 				next;
 				break;
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "......";
 				next;
 				mes "[Ahrum]";
@@ -6505,10 +6472,10 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 		while(1) {
 			mes "-What shall I ask...-";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I'd like to ask about...";
 			next;
-			switch(select("Your background story...:Your view of the nation...:Your hobbies or interests...:Never mind, I'll come by later.")) {
+			switch(select("Your background story...", "Your view of the nation...", "Your hobbies or interests...", "Never mind, I'll come by later.")) {
 			case 1:
 				mes "[Ahrum]";
 				mes "You aren't just trying to dissolve your curiosity about the king's family, are you?";
@@ -6520,7 +6487,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 				mes "But I am not sensitive to that, and I think a good king should neglect those trifles.";
 				next;
 				mes "[Ahrum]";
-				mes "Others can say that my behavior makes them embarrased, but if something ends well, they are all satisfied in the end. Am I wrong?";
+				mes "Others can say that my behavior makes them embarrassed, but if something ends well, they are all satisfied in the end. Am I wrong?";
 				next;
 				mes "[Ahrum]";
 				mes "Although I've skipped some lessons in life, I can back up missing lessons easily. Who cares who can swear to me as King! This is how I am.";
@@ -6570,7 +6537,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 				next;
 				mes "[Ahrum]";
 				mes "I know quite well about";
-				mes "other king cadidates, personally.";
+				mes "other king candidates, personally.";
 				mes "But I can't find one distinguished person who can lead this kingdom well.";
 				next;
 				mes "[Ahrum]";
@@ -6729,7 +6696,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 	else if (nk_prince > 4) {
 		mes "[Prince]";
 		mes "Hi";
-		mes "you are the judege.";
+		mes "you are the judge.";
 		mes "I am Ernst, prince of Geoborg.";
 		next;
 		mes "[Ernst]";
@@ -6738,13 +6705,13 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 		mes "[Ernst]";
 		mes "Well, thank you.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(He seems to have a polite personality as a candidate for King)";
 		next;
 		while(1) {
 			mes "-Well, what questions.-";
 			next;
-			switch(select("backgroud first.:I want to know your spirit of nationalism.: Your habbit and tastes.:I will be back.")) {
+			switch(select("background first.", "I want to know your spirit of nationalism.", " Your habit and tastes.", "I will be back.")) {
 			case 1:
 				mes "[Ernst]";
 				mes "Since I was young, I have grown up with a royal education. I haven't quarreled with others seriously, but I was not very polite either.";
@@ -6818,8 +6785,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 	}
 }
 
-prt_castle,163,319,0	script	#twonoble	-1,3,3,{
-//OnTouch2:
+prt_castle,163,319,0	script	#twonoble	FAKE_NPC,3,3,{
 OnTouch:
 	if (nkprince_eisen == 7) {
 		donpcevent "Young Noble#valter::OnEnable";
@@ -6881,11 +6847,11 @@ OnTouch:
 		donpcevent "YoungNoble#valter::OnDisable";
 		donpcevent "Aged Noble#rihart::OnDisable";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(Walter is the name of Ahrum.";
 		mes "Richard is the name of Poe.)";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(Is this the conspiracy of two families? What the hell..)";
 		changequest 10016,10017;
 		nkprince_eisen = 8;
@@ -7124,14 +7090,14 @@ prt_castle,314,372,0	script	Prince#another_ern1	4_M_2NDPRIN1,{
 		mes "[Ahrum]";
 		mes "If you react wrongfully to this incident, my death will be worthless...kuk... Do you understand?";
 		next;
-		switch(select("... Okay I will follow your will...:......")) {
+		switch(select("... Okay I will follow your will...", "......")) {
 		case 1:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "... Okay, I will follow your will. Don't worry...";
 			next;
 			break;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			next;
 			mes "[Ahrum]";
@@ -7346,7 +7312,7 @@ OnDisable:
 
 prt_castle,388,205,6	script	Prince#eisen4	4_M_1STPRIN1,{
 	mes "[Ahrum]";
-	mes "You always care about gambling. But, why don't you care about your surrondings first, eh? Young master of Richard?";
+	mes "You always care about gambling. But, why don't you care about your surroundings first, eh? Young master of Richard?";
 	next;
 	mes "[Poe]";
 	mes "Why are you teasing me, now? At least I feel I have dice with higher numbers than you... You don't think so?";
@@ -7571,7 +7537,7 @@ OnTouch:
 			mes "[Ahrum]";
 			mes "What's the capacity of a king? And what is clean politics...? Ahhhhhhhhhhh!!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			close2;
 		}
@@ -7590,7 +7556,7 @@ OnTouch:
 			mes "[Ahrum]";
 			mes "I cannot... cover it anymore... Ern... I hope even you...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			close2;
 		}
@@ -7609,7 +7575,7 @@ OnTouch:
 			mes "[Ahrum]";
 			mes "My ancestor ^FF0000Schmidt^000000... What shall you do with this situation? No...were you just used like me... by others?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			close2;
 		}
@@ -7624,7 +7590,7 @@ OnTouch:
 			mes "[Ahrum]";
 			mes "For the real king's appearance... I am going tonight.... to darkness for you. ...Ahhhhhhhh!!!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......";
 			close2;
 		}
@@ -7732,54 +7698,52 @@ prt_castle,176,170,5	script	Guard#princein	8W_SOLDIER,{
 }
 
 prt_castle,121,168,0	script	#arm	HIDDEN_NPC,4,4,{
-//OnTouch2:
 OnTouch:
 	if (nk_prince == 8) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "..............";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Milk is all spilt.";
 		mes "Just forget about it.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Who is going to have the throne instead of him?";
 		next;
 		nk_prince = 9;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Oh no...";
 		close;
 	}
 }
 
 prt_castle,316,313,0	script	#arm1	HIDDEN_NPC,3,3,{
-//OnTouch2:
 OnTouch:
 	if (nkprince_eisen > 14) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "..............";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What thoughts did he have, and how did he decide to become King in this room?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What situation...";
 		mes "pulled him back to an irreparable place?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I can't ask him anymore, and there are no clues left. Just what's left is...";
 		next;
 		mes "[Ahrum]";
 		mes "~~If you react wrongfully to this incident, my death will be worthless...kuk... Do you understand?~~";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "..............";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "...Keeping silent for him.";
 		mes "Taking the burden that he left... all throughout my life.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "...Rest in peace.";
 		close;
 	}

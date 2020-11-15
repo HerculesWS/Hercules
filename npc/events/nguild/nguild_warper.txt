@@ -1,51 +1,65 @@
-//===== Hercules Script ======================================
-//= Novice's Guild Castles War of Emperium Usher NPC
-//===== By: ==================================================
-//= Lupus
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//===== Additional Comments: =================================
-//= Now you have access to 4 N Guild castles. They don't have
-//= dungeons. And 2nd Classes can't seize these Castles.
-//= These new castles need a new strategy. It would bring some
-//= fun and live to your game.
-//= NOTE: If your Guild Master is 2nd class, then he could
-//=       rule the Castles and gather Treasure Boxes after WoE
-//= 1.1 Now 2nd classes can't enter NC place at all
-//= 1.2 Restricted access of SG/SL. On warp clear some
-//=     unallowed buffs [Lupus]
-//= 1.3 Restricted TK,High classes >=90 BaseLevel,
-//=     updated list of unallowed buffs [Lupus]
-//= 1.4 Restricted it to 80 Base Level [Lupus]
-//= 1.5 According to official info: 1 Treasure Chest per Castle
-//= 1.6 Only 1st Class < 60 BaseLevel Players can participate
-//= 1.7 Guilds with Emergency Call or with 9+ skill points
-//=     can't take part in NWoE. [Lupus]
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Novice's Guild Castles War of Emperium Usher NPC
+//================= Description ===========================================
+//= Novice's Guild Castles War of Emperium Usher NPC
+//================= Current Version =======================================
+//= 1.7
+//================= Additional Comments ===================================
+//= Now you have access to 4 N Guild castles. They don't have dungeons. And
+//= 2nd Classes can't seize these Castles.
+//= These new castles need a new strategy. It would bring some fun and live
+//= to your game.
+//= NOTE: If your Guild Master is 2nd class, then he could rule the Castles
+//= and gather Treasure Boxes after WoE
 //= TODO: The official entrance is in Izlude.
-//============================================================
+//=========================================================================
 
 prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 	mes "[Cita]";
-	if (!getcharid(2)) {
+	if (!getcharid(CHAR_ID_GUILD)) {
 		mes "^FF0000You have to enter a guild to be able to hit Emperium!^000000";
-	} else if (getgdskilllv(getcharid(2),10013) ||
-	         (getgdskilllv(getcharid(2),10000) +
-	          getgdskilllv(getcharid(2),10001) +
-	          getgdskilllv(getcharid(2),10002) +
-	          getgdskilllv(getcharid(2),10003) +
-	          getgdskilllv(getcharid(2),10004) +
-	          getgdskilllv(getcharid(2),10005) +
-	          getgdskilllv(getcharid(2),10006) +
-	          getgdskilllv(getcharid(2),10007) +
-	          getgdskilllv(getcharid(2),10008) +
-	          getgdskilllv(getcharid(2),10009) +
-	          getgdskilllv(getcharid(2),10010) +
-	          getgdskilllv(getcharid(2),10011) +
-	          getgdskilllv(getcharid(2),10012) +
-	          getgdskilllv(getcharid(2),10013) +
-	          getgdskilllv(getcharid(2),10014) > 9)
+	} else if (getgdskilllv(getcharid(CHAR_ID_GUILD),10013) ||
+	         (getgdskilllv(getcharid(CHAR_ID_GUILD),10000) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10001) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10002) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10003) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10004) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10005) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10006) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10007) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10008) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10009) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10010) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10011) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10012) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10013) +
+	          getgdskilllv(getcharid(CHAR_ID_GUILD),10014) > 9)
 	          ) {
 		mes "I see... your guild has Emergency Call mastered.";
 		mes "You cannot enter the Novice Castle area.";
@@ -82,7 +96,7 @@ prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 
 n_castle,102,107,5	script	Cita	4_F_NOVICE,{
 	mes "[Cita]";
-	mes "Hello, "+ strcharinfo(0) +". Can I help you?";
+	mes "Hello, "+ strcharinfo(PC_NAME) +". Can I help you?";
 	next;
 	if (select("Warp me to Prontera!","Cancel") == 1) {
 		warp "prontera",155,177+rand(5);

@@ -1,17 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Silentdragon
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Acolyte Skill Quest
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 1.8
-//===== Description: =========================================
+//================= Description ===========================================
 //= Quest for skills: Holy Light
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//= 1.6 Fixed a typo in job check. (Bugreport:1531) [L0ne_W0lf]
-//= 1.7 Updated to latest available official file. [Masao]
-//= 1.8 Fixed JobLevel requirements. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.8
+//=========================================================================
 
 prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 	mes "[Acolyte Klift]";
@@ -20,7 +44,7 @@ prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 	mes "and tire you ?";
 	mes "I am here to assist you.";
 	next;
-	switch (select("^3355FF' About acolyte's hidden ability '^000000 ..:^3355FF' Holy light '^000000 training:End conversation")) {
+	switch (select("^3355FF' About acolyte's hidden ability '^000000 ..", "^3355FF' Holy light '^000000 training", "End conversation")) {
 	case 1:
 		mes "[Acolyte Klift]";
 		mes "Our members of the clergy";
@@ -66,7 +90,7 @@ prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 			mes "this skill for the work of good . .";
 			close;
 		}
-		if ((countitem(727) > 0) && (countitem(991) > 0) && (countitem(2608) > 0) && (JobLevel > 29 || (BaseJob == Job_Priest || BaseJob == Job_Monk)) && (BaseClass == Job_Acolyte)) {
+		if ((countitem(White_Jewel) > 0) && (countitem(Crystal_Blue) > 0) && (countitem(Rosary) > 0) && (JobLevel > 29 || (BaseJob == Job_Priest || BaseJob == Job_Monk)) && (BaseClass == Job_Acolyte)) {
 			mes "[Acolyte Klift]";
 			mes "Your faith has proven worthy";
 			mes "for you to gain the ' Holy Light ' skill.";
@@ -74,9 +98,9 @@ prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 			mes "to use this skill.";
 			mes "Use it wisely. . .";
 			next;
-			delitem 727,1; //White_Jewel
-			delitem 991,1; //Crystal_Blue
-			delitem 2608,1; //Rosary
+			delitem White_Jewel,1;
+			delitem Crystal_Blue,1;
+			delitem Rosary,1;
 			skill "AL_HOLYLIGHT",1,0;
 			mes "[Acolyte Klift]";
 			mes "You now know ' Holy Light '";
@@ -106,14 +130,3 @@ prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0a Now using functions found in "Global_Functions.txt"
-//=     for class checks.
-//= 1.2 Added Baby Class Support [Lupus]
-//= 1.3 Removed callfunc Is_####_Class in favor of baseClass [Silentdragon]
-//= 1.4 Fixed an exploit [Lupus]
-//= 1.4a changed perm. variables to temp ones [Lupus]
-//============================================================

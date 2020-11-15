@@ -1,27 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Lupus
+//= Copyright (C) Celesta
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Old Blue Box Quest
-//===== By ===================================================
-//= Celesta, Lupus
-//===== Version ==============================================
-//= 2.0
-//===== Description: =========================================
-// [Official Conversion]
+//================= Description ===========================================
 //= Old Blue Box quest (?)
-//= Officially this quest gave an OBB in exhange for a the
-//= required items unlimitedly, however this was changed by
-//= Gravity, who claimed this behavior as a bug.
-//= The exact purpose of this quest is undetermined, but
-//= Gravity claimed that another quest would eventually
-//= branch from this one.
-//===== Additional Comments: =================================
-//= 1.7 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.8 Added missing checkweights. [L0ne_W0lf]
-//= 1.9 Moved Morroc NPCs to Morroc Ruins. [L0ne_W0lf]
-//= 2.0 Removed unused "name" variable. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 2.0
+//================= Additional Comments====================================
+//= Officially this quest gave an OBB in exhange for a the required items
+//= unlimitedly, however this was changed by Gravity, who claimed this
+//= behavior as a bug. The exact purpose of this quest is undetermined, but
+//= Gravity claimed that another quest would eventually branch from this
+//= one.
+//=========================================================================
 
 alberta,43,244,0	script	Tourist#thai	4W_M_03,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -78,7 +99,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "[Tourist]";
 			mes "..........";
 			next;
-			switch(select("So do you have business in Lutie?:You don't want to go to Lutie for a tour.:What made you come over here?")) {
+			switch(select("So do you have business in Lutie?", "You don't want to go to Lutie for a tour.", "What made you come over here?")) {
 			case 1:
 				mes "[Tourist]";
 				mes "Yes.";
@@ -101,7 +122,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "Now I'm running out of money and";
 				mes "food...I can't stay here much longer...";
 				next;
-				if (select("Do you want me to help you?:Well, good luck with everything.") == 1) {
+				if (select("Do you want me to help you?", "Well, good luck with everything.") == 1) {
 					thai_head = 3;
 					mes "[Tourist]";
 					mes "Thank god! Thank you so much.";
@@ -152,7 +173,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "Now I'm running out of money and";
 				mes "food...I can't stay here much longer...";
 				next;
-				if (select("Do you want me to help you?:Well, good luck with everything.") == 1) {
+				if (select("Do you want me to help you?", "Well, good luck with everything.") == 1) {
 					thai_head = 3;
 					mes "[Tourist]";
 					mes "Thank god! Thank you so much.";
@@ -193,7 +214,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				close;
 			}
 		case 3:
-			if (countitem(517) == 0) {
+			if (countitem(Meat) == 0) {
 				mes "[Tourist]";
 				mes "I see...I can understand that you";
 				mes "can't help me. It's alright...";
@@ -207,13 +228,13 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			}
 			.@th_rand = rand(1,100);
 			if (.@th_rand > 0 && .@th_rand < 10) {
-				if (countitem(517) == 10) {
+				if (countitem(Meat) == 10) {
 					mes "[Tourist]";
 					mes "Ah...thanks! Thank you so much!";
-					delitem 517,10; //Meat
+					delitem Meat,10;
 					next;
 				}
-				else if (countitem(517) < 10) {
+				else if (countitem(Meat) < 10) {
 					mes "[Tourist]";
 					mes "I appreciate that you're";
 					mes "helping me out of the";
@@ -228,7 +249,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "more Meat!";
 					close;
 				}
-				else if (countitem(517) > 10) {
+				else if (countitem(Meat) > 10) {
 					mes "[Tourist]";
 					mes "I appreciate you bringing";
 					mes "all this for me but...";
@@ -242,13 +263,13 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				}
 			}
 			else if (.@th_rand > 11 && .@th_rand < 80) {
-				if (countitem(517) == 20) {
+				if (countitem(Meat) == 20) {
 					mes "[Tourist]";
 					mes "Ah...thanks! Thank you so much!";
-					delitem 517,20; //Meat
+					delitem Meat,20;
 					next;
 				}
-				else if (countitem(517) < 20) {
+				else if (countitem(Meat) < 20) {
 					mes "[Tourist]";
 					mes "I appreciate that you're";
 					mes "helping me out of the";
@@ -263,7 +284,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "more Meat!";
 					close;
 				}
-				else if (countitem(517) > 20) {
+				else if (countitem(Meat) > 20) {
 					mes "[Tourist]";
 					mes "I appreciate you bringing";
 					mes "all this for me but...";
@@ -277,13 +298,13 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				}
 			}
 			else {
-				if (countitem(517) == 40) {
+				if (countitem(Meat) == 40) {
 					mes "[Tourist]";
 					mes "Ah...thanks! Thank you so much!";
-					delitem 517,40; //Meat
+					delitem Meat,40;
 					next;
 				}
-				else if (countitem(517) < 40) {
+				else if (countitem(Meat) < 40) {
 					mes "[Tourist]";
 					mes "I appreciate that you're";
 					mes "helping me out of the";
@@ -298,7 +319,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "more Meat!";
 					close;
 				}
-				else if (countitem(517) > 40) {
+				else if (countitem(Meat) > 40) {
 					mes "[Tourist]";
 					mes "Geez, you want I should";
 					mes "choke myself to death?";
@@ -312,9 +333,9 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "starving for a long time.";
 			mes "He ate all the meat I gave him";
 			mes "and it was all gone in a flash.^000000";
-			if (countitem(538) > 0) {
+			if (countitem(Well_Baked_Cookie) > 0) {
 				mes "^0000FF...Oh my! He took my cookies without even asking and ate all of those too!!^000000";
-				delitem 538,countitem(538); //Well_Baked_Cookie
+				delitem Well_Baked_Cookie,countitem(Well_Baked_Cookie);
 			}
 			next;
 			mes "[Tourist]";
@@ -363,14 +384,14 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "For me, it's impossible!!";
 			close;
 		case 4:
-			if (countitem(538) > 19) {
+			if (countitem(Well_Baked_Cookie) > 19) {
 				mes "[Tourist]";
 				mes "Ah~!! Thank you so much!!";
 				mes "There really are many good";
 				mes "people like you in this world.";
 				next;
 				thai_head = 5;
-				delitem 538,20; //Well_Baked_Cookie
+				delitem Well_Baked_Cookie,20;
 				mes "[Tourist]";
 				mes "I appreciate what you've done for";
 				mes "me...now I can see her smile with";
@@ -461,7 +482,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				close;
 			}
 			thai_head = 6;
-			getitem 1205,1; //Cutter_
+			getitem Cutter_,1;
 			next;
 			mes "[Tourist]";
 			mes "Heh...once gain, thanks for";
@@ -559,7 +580,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 		mes "*Sob*...I guess I got lost...";
 		mes "Hey, where is this!?";
 		next;
-		switch(select("Ignore him.:This is Alberta.:This is Al De Baran.")) {
+		switch(select("Ignore him.", "This is Alberta.", "This is Al De Baran.")) {
 		case 1:
 			mes "[Tourist]";
 			mes "..........";
@@ -593,7 +614,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "I was told that I can see a ^FF0000Clock Tower^000000 in Al De Baran.";
 			mes "Can you tell me where I can find the ^FF0000Clock Tower^000000?";
 			next;
-			if (select("It's in the center of the town.:Eh, I think I gave you the wrong town name.") == 1) {
+			if (select("It's in the center of the town.", "Eh, I think I gave you the wrong town name.") == 1) {
 				mes "[Tourist]";
 				mes "..............";
 				mes "You know, I'm beginning";
@@ -651,16 +672,16 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			mes "[Tommy]";
 			mes "^FF0000Munak Munak Munak Munak!!^000000";
 			next;
-			input .@input$;
+			input(.@input$);
 			if (.@input$ != "Pandger Mayer introduced you") {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes ""+.@input$+"";
 				next;
 				mes "[Jacob]";
 				mes "....Sorry, what did you say? I have no idea what you're talking about.";
 				close;
 			}
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Pandger Mayer introduced you.";
 			next;
 			mes "[Jacob]";
@@ -690,8 +711,8 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			mes "^FF0000Munak Munak Munak Munak!!^000000";
 			close;
 		case 7:
-			if (countitem(636) > 0) {
-				delitem 636,1; //No_Recipient
+			if (countitem(No_Recipient) > 0) {
+				delitem No_Recipient,1;
 				mes "[Tommy]";
 				mes "^FF0000Munak Munak Munak Munak!!^000000";
 				next;
@@ -736,12 +757,12 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				mes "to lie to nowadays...^000000";
 				next;
 				mes "[Tommy]";
-				if (Sex)
+				if (Sex == SEX_MALE)
 					mes "So, mister, do you think my Daddy can catch a Munak with this?";
 				else
 					mes "So, lady, do you think my Daddy can catch a Munak with this?";
 				next;
-				switch(select("Yes.:...not sure.:No, ^FF0000never^000000.")) {
+				switch(select("Yes.", "...not sure.", "No, ^FF0000never^000000.")) {
 				case 1:
 					mes "[Tommy]";
 					mes "Heh!! I knew my Daddy";
@@ -753,7 +774,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 					close;
 				case 2:
 					mes "[Tommy]";
-					if (Sex)
+					if (Sex == SEX_MALE)
 						mes "So tell me, mister. Did he lie to me, then?";
 					else
 						mes "So tell me, lady. Did he lie to me, then?";
@@ -766,7 +787,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 					mes "Can we catch a Munak with this or";
 					mes "not, huh? Tell meeeeehhhh~~~!";
 					next;
-					switch(select("Yes, we can.:No, we can't.")) {
+					switch(select("Yes, we can.", "No, we can't.")) {
 					case 1:
 						mes "[Tommy]";
 						mes "Heh heh! I knew it!";
@@ -952,7 +973,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			mes "to behave in front of other people?!";
 			next;
 			mes "[Jacob]";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "Say you're sorry to him!";
 			else
 				mes "Say you're sorry to her!";
@@ -1000,7 +1021,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				mes "Respect your parents when they're";
 				mes "still alive. It's too late to be sorry after you've lost them.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(Hmmm...I just know that there's more that this guy can tell me...)";
 				close;
 			}
@@ -1015,7 +1036,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				mes "'^0000FFTry to be in someone else's shoes before judging that person.^000000'";
 				mes "Do you understand?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(There's more this guy can tell me, I just know it...)";
 				close;
 			}
@@ -1061,7 +1082,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 }
 
 comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1086,7 +1107,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 			mes "[Elder Creek]";
 			mes "Answer me, adventurer!";
 			next;
-			switch(select("I seek fortune!:I seek...wisdom.:I want to finish what I've started.")) {
+			switch(select("I seek fortune!", "I seek...wisdom.", "I want to finish what I've started.")) {
 			case 1:
 				mes "[Elder Creek]";
 				mes "You're honest...!";
@@ -1099,7 +1120,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 				mes "I will give you what you want if";
 				mes "you answer the way I expect you to.";
 				next;
-				switch(select("It's necessary to have a lot!:Too dumb to see the future.:Too much of a good thing can be bad.:Cringe to the powerful.")) {
+				switch(select("It's necessary to have a lot!", "Too dumb to see the future.", "Too much of a good thing can be bad.", "Cringe to the powerful.")) {
 				case 1:
 					mes "[Elder Creek]";
 					mes "...";
@@ -1156,7 +1177,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 				mes "[Elder Creek]";
 				mes "Now, tell me what is bothering right now.";
 				next;
-				switch(select("Boy/girlfriend issue.:Financial problem.:Bored to death.:Career issue.:I want money.:Give me items, old man.")) {
+				switch(select("Boy/girlfriend issue.", "Financial problem.", "Bored to death.", "Career issue.", "I want money.", "Give me items, old man.")) {
 				case 1:
 					mes "[Elder Creek]";
 					mes "I'm envious of you! Still, young";
@@ -1410,20 +1431,20 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 			mes "^3355FFYou feel there may be something you missed.^000000";
 			close;
 		case 15:
-			if (countitem(7054) > 9 && countitem(965) > 14 && countitem(964) > 9 && countitem(7053) > 49) {
+			if (countitem(Brigan) > 9 && countitem(Clam_Shell) > 14 && countitem(Crap_Shell) > 9 && countitem(Cyfar) > 49) {
 				mes "[Elder Creek]";
 				mes "I see you know how the world";
 				mes "works. When you need something";
 				mes "from someone, you must give";
 				mes "in order to receive.";
 				mes "Thank you for your kindness.";
-				delitem 7054,10; //Brigan
-				delitem 965,15; //Clam_Shell
-				delitem 964,10; //Crap_Shell
-				delitem 7053,50; //Cyfar
+				delitem Brigan,10;
+				delitem Clam_Shell,15;
+				delitem Crap_Shell,10;
+				delitem Cyfar,50;
 				next;
 				thai_head = 16;
-				getitem 603,1; //Old_Blue_Box
+				getitem Old_Blue_Box,1;
 				mes "[Elder Creek]";
 				mes "Please, take this first.";
 				mes "If you would, please go talk to my";
@@ -1471,11 +1492,11 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 		mes "[Elder Creek]";
 		mes "Do you wish for me to give you advice, adventurer?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Elder Creek]";
 			mes "Now, tell me what bothers you at the moment.";
 			next;
-			switch(select("Boy/girlfriend issue.:Financial problem.:Bored to death.:Career issue.:Give me items, old man.")) {
+			switch(select("Boy/girlfriend issue.", "Financial problem.", "Bored to death.", "Career issue.", "Give me items, old man.")) {
 			case 1:
 				mes "[Elder Creek]";
 				mes "I'm envious of you! Still, young";
@@ -1664,7 +1685,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 		mes "[Elder Creek]";
 		mes "Now tell me, what bothers you right now?";
 		next;
-		switch(select("Boy/girlfriend issue.:Financial problem.:Bored to death.:Career issue.:Give me items, old man.")) {
+		switch(select("Boy/girlfriend issue.", "Financial problem.", "Bored to death.", "Career issue.", "Give me items, old man.")) {
 		case 1:
 			mes "[Elder Creek]";
 			mes "I'm envious of you! Still, young";
@@ -1935,11 +1956,3 @@ moc_ruins,107,62,0	script	Tommy#thai	4_M_KID2,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= Official OBB Quest. You can pass it any times you want.
-//= 1.6 Updated, fixed, optimized and translated into English [Lupus]
-//= 1.6a Halved the required items to make an obb, thanks to marquis007 [MasterOfMuppets]
-//============================================================

@@ -1,11 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) SinSloth
+//= Copyright (C) Silent
+//= Copyright (C) Nexon
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Misc. Message Boards
-//===== By: ==================================================
-//= kobra_k88
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Description ===========================================
 //= Misc. Message Boards for:
 //=  - Prontera
 //=  - Morroc
@@ -13,19 +40,11 @@
 //=  - Al De Baran
 //=  - Izlude
 //=  - Alberta
-//===== Additional Comments: =================================
-//= Rearranged [Lupus]
-//= Fixed spelling mistakes. [Nexon]
-//= 1.3 Removed Duplicates [Silent]
-//= 1.4 Rescripted to Aegis 10.3 standard. [L0ne_W0lf]
-//= 1.5 Removed a duplicate related to the Sign Quest. [SinSloth]
-//= 1.5 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.6 Commented out conflicting npcs. (bugreport:4093) [L0ne_W0lf]
-//= 1.7 Moved Izlude NPCs to Pre-RE path. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
-// Prontera
-//============================================================
+//== Prontera ==============================================
 prontera,158,213,1	script	Sign Post#Prt1	HIDDEN_NPC,{
 	mes "^993300- The Sign Post Reads -^000000";
 	mes "North to Prontera Castle";
@@ -90,8 +109,7 @@ prontera,145,304,1	script	Sign#Prt7	HIDDEN_NPC,{
 	close;
 }
 
-// Morroc
-//============================================================
+//== Morroc ================================================
 morocc,144,84,1	script	Sign#Moc1	HIDDEN_NPC,{
 	mes "^993300- The Sign Reads -^000000";
 	mes "Wanted: Body guard to protect my shop from thieves";
@@ -144,8 +162,7 @@ morocc,298,211,1	script	Sign#Moc7	HIDDEN_NPC,{
 	close;
 }
 
-// Geffen
-//============================================================
+//== Geffen ================================================
 geffen,116,58,1	script	Geffen Bulletin#Gef1	HIDDEN_NPC,{
 	mes "^993300- The Geffen Bulletin Reads -^000000";
 	mes "Remember Wizard's...It's not how many skills you know, it's the magic that counts!";
@@ -196,8 +213,7 @@ geffen,183,61,1	script	Sign#Gef6	HIDDEN_NPC,{
 	close;
 }
 
-// Al De Baran
-//============================================================
+//== Aldebaran =============================================
 aldebaran,181,172,1	script	Billboard#Alde1	HIDDEN_NPC,{
 	mes "^993300- The Billboard Reads -^000000";
 	mes "In Search of:";
@@ -221,7 +237,7 @@ aldebaran,54,223,1	script	Billboard#Alde3	HIDDEN_NPC,{
 	close;
 }
 
-aldebaran,197,228,1	script	#Alde4	-1,1,1,{
+aldebaran,197,228,1	script	#Alde4	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Home Owner]";
 	mes "Get off my roof you no good leecher!";
@@ -235,8 +251,7 @@ aldebaran,217,222,1	script	Sign#Alde5	HIDDEN_NPC,{
 	close;
 }
 
-// Alberta
-//============================================================
+//== Alberta ===============================================
 alberta,35,241,1	script	Billboard#Alb1	HIDDEN_NPC,{
 	mes "^993300- The Billboard Reads -^000000";
 	mes "Welcome to Alberta, the Merchant's paradise.";

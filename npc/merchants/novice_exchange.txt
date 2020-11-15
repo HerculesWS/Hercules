@@ -1,22 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Team
+//= Copyright (C) eAthena Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) KarLaeda
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Novice Goods Exchanger
-//===== By: ==================================================
-//= ???, rAthena Team
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Exchanges your Basic Monster drops for Red Potions.
-//===== Additional Comments: =================================
-//= 1.2 Rescripted to Aegis 10.standards. [L0ne_W0lf[
-//=     Made it easier to add new items to exhange list
-//=     meaning only the exchange is done in a function now.
-//= 1.3 Fixed dialog mix-up in function. [L0ne_W0lf]
-//= 1.4 Added checkweight, and input min/max values. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
 prontera,123,102,5	script	Merchant#pron	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -37,14 +58,14 @@ prontera,123,102,5	script	Merchant#pron	4_M_03,{
 	mes "to give me that stuff for free. What about if I trade a Red Potion for 5 Shells, 10 Fluff,";
 	mes "or 10 Jellopies?";
 	next;
-	switch(select("Sure!:I think it's a rip-off!:No, thanks.")) {
+	switch(select("Sure!", "I think it's a rip-off!", "No, thanks.")) {
 	case 1:
 		mes "[Merchant]";
 		mes "So which item do";
 		mes "you want to bring me?";
 		mes "Shells, Fluffs, or Jellopies?";
 		next;
-		switch(select("Shells:Jellopies:Fluff:Cancel")) {
+		switch(select("Shells", "Jellopies", "Fluff", "Cancel")) {
 		case 1: callfunc "F_PotExchange",935,5;
 		case 2: callfunc "F_PotExchange",909,10;
 		case 3: callfunc "F_PotExchange",914,10;
@@ -72,7 +93,7 @@ prontera,123,102,5	script	Merchant#pron	4_M_03,{
 }
 
 morocc,180,259,3	script	Merchant#morroc	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -93,7 +114,7 @@ morocc,180,259,3	script	Merchant#morroc	4_M_03,{
 	mes "to give me that stuff for free. What about if I trade a Red Potion for 5 Shells, 7 Feathers of Bird";
 	mes "or 10 Jellopies?";
 	next;
-	switch(select("Sure!:I think it's a rip-off!:No, thanks.")) {
+	switch(select("Sure!", "I think it's a rip-off!", "No, thanks.")) {
 	case 1:
 		mes "[Merchant]";
 		mes "So which item do";
@@ -101,7 +122,7 @@ morocc,180,259,3	script	Merchant#morroc	4_M_03,{
 		mes "Shells, Feathers of Birds,";
 		mes "or Jellopies?";
 		next;
-		switch(select("Shells:Feathers of Birds:Jellopies:Cancel")) {
+		switch(select("Shells", "Feathers of Birds", "Jellopies", "Cancel")) {
 		case 1: callfunc "F_PotExchange",935,5;
 		case 2: callfunc "F_PotExchange",916,7;
 		case 3: callfunc "F_PotExchange",909,10;
@@ -129,7 +150,7 @@ morocc,180,259,3	script	Merchant#morroc	4_M_03,{
 }
 
 payon,200,134,5	script	Merchant#pay	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -149,14 +170,14 @@ payon,200,134,5	script	Merchant#pay	4_M_03,{
 	mes "Of course, I won't ask you";
 	mes "to give me that stuff for free. What about if I trade a Red Potion for 6 Tree Roots or 10 Jellopies?";
 	next;
-	switch(select("Sure!:I think it's a rip-off!:No, thanks.")) {
+	switch(select("Sure!", "I think it's a rip-off!", "No, thanks.")) {
 	case 1:
 		mes "[Merchant]";
 		mes "So which item do";
 		mes "you want to bring me?";
 		mes "Tree Roots, or Jellopies?";
 		next;
-		switch(select("Tree Roots:Jellopies:Cancel")) {
+		switch(select("Tree Roots", "Jellopies", "Cancel")) {
 		case 1: callfunc "F_PotExchange",902,6;
 		case 2: callfunc "F_PotExchange",909,10;
 		case 3:
@@ -183,7 +204,7 @@ payon,200,134,5	script	Merchant#pay	4_M_03,{
 }
 
 aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -203,7 +224,7 @@ aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
 	mes "Of course, I won't ask you";
 	mes "to give me that stuff for free. What about if I trade a Red Potion for 1 Worm Peeling, 7 Feather of Birds, or 10 Jellopies?";
 	next;
-	switch(select("Sure!:I think it's a rip-off!:No, thanks.")) {
+	switch(select("Sure!", "I think it's a rip-off!", "No, thanks.")) {
 	case 1:
 		mes "[Merchant]";
 		mes "So which item do";
@@ -212,7 +233,7 @@ aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
 		mes "Worm Peelings?";
 		mes "Or Jellopies?";
 		next;
-		switch(select("Worm Peelings:Feathers of Birds:Jellopies:Cancel")) {
+		switch(select("Worm Peelings", "Feathers of Birds", "Jellopies", "Cancel")) {
 		case 1: callfunc "F_PotExchange",955,1;
 		case 2: callfunc "F_PotExchange",916,7;
 		case 3: callfunc "F_PotExchange",909,10;
@@ -240,7 +261,7 @@ aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
 }
 
 geffen,173,88,5	script	Merchant#geff	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -260,14 +281,14 @@ geffen,173,88,5	script	Merchant#geff	4_M_03,{
 	mes "Of course, I won't ask you";
 	mes "to give me that stuff for free. What about if I trade a Red Potion for 5 Shells or 6 Chrysalises, or 10 Jellopies?";
 	next;
-	switch(select("Sure!:I think it's a rip-off!:No, thanks.")) {
+	switch(select("Sure!", "I think it's a rip-off!", "No, thanks.")) {
 	case 1:
 		mes "[Merchant]";
 		mes "So which item do";
 		mes "you want to bring me?";
 		mes "Shells, Chrysalises, or Jellopies?";
 		next;
-		switch(select("Shells:Chrysalises:Jellopies:Cancel")) {
+		switch(select("Shells", "Chrysalises", "Jellopies", "Cancel")) {
 		case 1: callfunc "F_PotExchange",935,5;
 		case 2: callfunc "F_PotExchange",915,6;
 		case 3: callfunc "F_PotExchange",909,10;
@@ -319,7 +340,7 @@ function	script	F_PotExchange	{
 		mes "What do you say?";
 		mes "Do we have a deal?";
 		next;
-		if (select("Deal.:No deal.") == 1) {
+		if (select("Deal.", "No deal.") == 1) {
 			mes "[Merchant]";
 			mes "You know the exact";
 			mes "number of Red Potions";
@@ -334,8 +355,8 @@ function	script	F_PotExchange	{
 			mes "mind, just enter '0' to cancel.";
 			next;
 			while(1) {
-				input .@input,0,101;
-				if (.@input == 0) {
+				input(.@input);
+				if (.@input <= 0) {
 					mes "[Merchant]";
 					mes "What...?";
 					mes "Why the hell do you";
@@ -343,17 +364,16 @@ function	script	F_PotExchange	{
 					mes "Pretty indecisive, aren't you?";
 					close;
 				}
-				else if (.@input > 100) {
+				if (.@input > 100) {
 					mes "[Merchant]";
 					mes "I can't give you more";
 					mes "than 100 Red Potions";
 					mes "at once. Let's try";
 					mes "this again.";
 					next;
+					continue;
 				}
-				else {
-					break;
-				}
+				break;
 			}
 			.@put_out_item = .@input * getarg(1);
 			if (countitem(getarg(0)) < .@put_out_item) {
@@ -366,7 +386,7 @@ function	script	F_PotExchange	{
 			mes "Check how many Red Potions";
 			mes "I've given you, it should be good. Thanks, that was a good deal~";
 			delitem getarg(0),.@put_out_item; //Shell
-			getitem 501,.@input; //Red_Potion
+			getitem Red_Potion,.@input;
 			close;
 		}
 		mes "[Merchant]";
@@ -378,10 +398,3 @@ function	script	F_PotExchange	{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.1 Made it as a function. U can add your own Merchs [Lupus]
-//= 1.1a Fixed item select [KarLaeda]
-//============================================================

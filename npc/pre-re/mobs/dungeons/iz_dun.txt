@@ -1,17 +1,39 @@
-//===== Hercules Script ======================================
-//= Byalan Dungeon Monster Spawn Script
-//===== By: ==================================================
-//= Athena (1.0)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Playtester
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Byalan Dungeon Monster Spawn Script (Pre-Renewal)
+//================= Description ===========================================
+//= Monster Spawns for Byalan Dungeon
+//================= Current Version =======================================
 //= 1.2
-//===== Additional Comments: =================================
-//= 1.1 Official kRO 10.1 spawns for 1-4 [Playtester]
-//= 1.2 More accurate spawns [Playtester]
-//============================================================
+//=========================================================================
 
-//==================================================
-// iz_dun00 - Undersea Tunnel F1
-//==================================================
+//== iz_dun00 - Undersea Tunnel F1 =========================
 iz_dun00,0,0,0,0	monster	Plankton	1161,65,0,0,0
 iz_dun00,0,0,0,0	monster	Marina	1141,45,0,0,0
 iz_dun00,0,0,0,0	monster	Kukre	1070,15,0,0,0
@@ -19,9 +41,7 @@ iz_dun00,0,0,0,0	monster	Hydra	1068,15,0,0,0
 iz_dun00,0,0,0,0	monster	Vadon	1066,15,0,0,0
 iz_dun00,0,0,0,0	monster	Black Mushroom	1084,5,180000,90000,1
 
-//==================================================
-// iz_dun01 - Undersea Tunnel F2
-//==================================================
+//== iz_dun01 - Undersea Tunnel F2 =========================
 iz_dun01,0,0,0,0	monster	Plankton	1161,10,0,0,0
 iz_dun01,0,0,0,0	monster	Marina	1141,15,0,0,0
 iz_dun01,0,0,0,0	monster	Kukre	1070,50,0,0,0
@@ -30,9 +50,7 @@ iz_dun01,0,0,0,0	monster	Vadon	1066,60,0,0,0
 iz_dun01,0,0,0,0	monster	Cornutus	1067,15,300000,150000,1
 iz_dun01,0,0,0,0	monster	Black Mushroom	1084,10,180000,90000,1
 
-//==================================================
-// iz_dun02 - Undersea Tunnel F3
-//==================================================
+//== iz_dun02 - Undersea Tunnel F3 =========================
 iz_dun02,0,0,0,0	monster	Hydra	1068,40,0,0,0
 iz_dun02,0,0,0,0	monster	Cornutus	1067,60,0,0,0
 iz_dun02,0,0,0,0	monster	Marse	1144,40,0,0,0
@@ -40,9 +58,7 @@ iz_dun02,0,0,0,0	monster	Obeaune	1044,40,0,0,0
 iz_dun02,0,0,0,0	monster	Merman	1264,1,1800000,1200000,0
 iz_dun02,0,0,0,0	monster	Black Mushroom	1084,15,180000,90000,1
 
-//==================================================
-// iz_dun03 - Undersea Tunnel F4
-//==================================================
+//== iz_dun03 - Undersea Tunnel F4 =========================
 iz_dun03,0,0,0,0	monster	Hydra	1068,10,0,0,0
 iz_dun03,0,0,0,0	monster	Phen	1158,45,0,0,0
 iz_dun03,0,0,0,0	monster	Marine Sphere	1142,20,0,0,0
@@ -80,9 +96,7 @@ iz_dun03,108,249,0,0	monster	Hydra	1068,1,300000,150000,0
 iz_dun03,80,163,0,0	monster	Hydra	1068,1,300000,150000,0
 iz_dun03,0,0,0,0	monster	Merman	1264,3,1800000,1200000,0
 
-//==================================================
-// iz_dun04 - Undersea Tunnel F5
-//==================================================
+//== iz_dun04 - Undersea Tunnel F5 =========================
 iz_dun04,0,0,0,0	monster	Marine Sphere	1142,10,0,0,0
 iz_dun04,0,0,0,0	monster	Swordfish	1069,10,0,0,0
 iz_dun04,0,0,0,0	monster	Merman	1264,40,0,0,0

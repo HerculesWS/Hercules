@@ -1,17 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Samuray22
+//= Copyright (C) SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Izlude Arena Level 50
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= Description ===========================================
 //= Izlude Battle Arena Level 50
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Replaced effect numerics with constants. [Samuray22]
-//= 1.2 Label standardization. [Euphy]
-//= 1.3 Script updates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 arena_room,64,138,5	script	Lv50 Waiting Room	4_F_TELEPORTER,{
 	end;
@@ -37,8 +58,8 @@ force_1-1,99,20,4	script	Heel and Toe#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	$arena_min50st = gettime(2);
-	$arena_sec50st = gettime(1);
+	$arena_min50st = gettime(GETTIME_MINUTE);
+	$arena_sec50st = gettime(GETTIME_SECOND);
 	end;
 
 OnTimer3000:
@@ -185,7 +206,7 @@ On09_End:
 	end;
 }
 
--	script	arena#50	-1,{
+-	script	arena#50	FAKE_NPC,{
 OnReset_01:
 	donpcevent "force_01ex#50::OnReset";
 	donpcevent "force_02start#50::OnEnable";
@@ -362,13 +383,13 @@ OnTouch:
 	end;
 }
 
--	script	force_01start#50	-1,{
+-	script	force_01start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_01mob#50::OnEnable";
 	end;
 }
 
--	script	force_01ex#50	-1,{
+-	script	force_01ex#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_01ex#50::OnMyMobDead";
 	end;
@@ -404,7 +425,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_01mob#50	-1,{
+-	script	force_01mob#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_01ex#50::OnSummonMob1";
 	monster "force_1-1",25,25,"Smokie",1561,1,"force_01mob#50::OnMyMobDead";
@@ -426,13 +447,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_02start#50	-1,{
+-	script	force_02start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_02mob#50::OnSummonMob2";
 	end;
 }
 
--	script	force_02mob#50	-1,{
+-	script	force_02mob#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_02mob#50::OnMyMobDead";
 	end;
@@ -455,13 +476,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_03start#50	-1,{
+-	script	force_03start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_03mob#50::OnEnable";
 	end;
 }
 
--	script	force_03ex#50	-1,{
+-	script	force_03ex#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_03ex#50::OnMyMobDead";
 	end;
@@ -481,7 +502,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_03mob#50	-1,{
+-	script	force_03mob#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_03ex#50::OnSummonMob_03";
 	monster "force_1-1",23,174,"Karakasa",1544,1,"force_03mob#50::OnMyMobDead";
@@ -504,13 +525,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_04start#50	-1,{
+-	script	force_04start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_04mob#50::OnEnable";
 	end;
 }
 
--	script	force_04ex#50	-1,{
+-	script	force_04ex#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_04ex#50::OnMyMobDead";
 	end;
@@ -536,7 +557,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_04mob#50	-1,{
+-	script	force_04mob#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_04ex#50::OnSummonMob_04";
 	monster "force_1-1",85,172,"Kobold",1547,1,"force_04mob#50::OnMyMobDead";
@@ -555,13 +576,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_05start#50	-1,{
+-	script	force_05start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_05mob#50::OnEnable";
 	end;
 }
 
--	script	force_05ex#50	-1,{
+-	script	force_05ex#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_05ex#50::OnMyMobDead";
 	end;
@@ -581,7 +602,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_05mob#50	-1,{
+-	script	force_05mob#50	FAKE_NPC,{
 OnEnable:
 	monster "force_1-1",173,166,"Hydra",1579,1,"force_05mob#50::OnMyMobDead";
 	monster "force_1-1",171,170,"Hydra",1579,1,"force_05mob#50::OnMyMobDead";
@@ -605,13 +626,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_06start#50	-1,{
+-	script	force_06start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_06mob#50::OnEnable";
 	end;
 }
 
--	script	force_06ex#50	-1,{
+-	script	force_06ex#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_06ex#50::OnMyMobDead";
 	end;
@@ -634,7 +655,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_06mob#50	-1,{
+-	script	force_06mob#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_06ex#50::OnSummonMob_06";
 	monster "force_1-1",173,90,"Drops",1572,1,"force_06mob#50::OnMyMobDead";
@@ -656,13 +677,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_07start#50	-1,{
+-	script	force_07start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_07mob#50::OnEnable";
 	end;
 }
 
--	script	force_07ex#50	-1,{
+-	script	force_07ex#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_07ex#50::OnMyMobDead";
 	end;
@@ -696,7 +717,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_07mob#50	-1,{
+-	script	force_07mob#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_07ex#50::OnSummonMob_07";
 	monster "force_1-1",174,25,"Red Plant",1078,1,"force_07mob#50::OnMyMobDead";
@@ -714,25 +735,25 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_08start#50	-1,{
+-	script	force_08start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_08ex#50::OnEnable";
 	end;
 }
 
--	script	force_08ex#50	-1,{
+-	script	force_08ex#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "arena#50::OnReset_08";
 	end;
 }
 
--	script	force_09start#50	-1,{
+-	script	force_09start#50	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_09mob#50::OnEnable";
 	end;
 }
 
--	script	force_09ex#50	-1,{
+-	script	force_09ex#50	FAKE_NPC,{
 OnReset:
 	killmonster "force_1-1","force_09ex#50::OnMyMobDead";
 	end;
@@ -759,7 +780,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_09mob#50	-1,{
+-	script	force_09mob#50	FAKE_NPC,{
 OnEnable:
 	monster "force_1-1",99,99,"Vocal",1581,1,"force_09mob#50::OnMyMobDead";
 	donpcevent "force_09ex#50::OnSummonMob_09";
@@ -774,8 +795,8 @@ OnMyMobDead:
 		donpcevent "Heel and Toe#arena::On09_End";
 		donpcevent "arena#50::OnReset_09";
 		donpcevent "arena#50::OnReset_All";
-		$arena_min50end = gettime(2);
-		$arena_sec50end = gettime(1);
+		$arena_min50end = gettime(GETTIME_MINUTE);
+		$arena_sec50end = gettime(GETTIME_SECOND);
 	}
 	end;
 }
@@ -797,7 +818,7 @@ prt_are_in,129,188,3	script	Staff#50-1	1_F_02,{
 	mes "[Staff]";
 	mes "Let me guide you outside. I hope you had a good time.";
 	close2;
-	specialeffect2 EF_EXIT;
+	specialeffect(EF_EXIT, AREA, playerattached());
 	warp "arena_room",100,75;
 	end;
 }
@@ -823,8 +844,8 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 	@gap50 = (60 * $top_50min + $top_50sec) - (60 * @record_min50 + @record_sec50);
 	mes "[Staff]";
 	mes "Wow, you did a good job~ ";
-	mes "Your name is...^3131FF" + strcharinfo(0) +"^000000, isn't it?";
-	mes "^3131FF"+ strcharinfo(0) +"^000000, total time you spent to pass the battle..";
+	mes "Your name is...^3131FF" + strcharinfo(PC_NAME) +"^000000, isn't it?";
+	mes "^3131FF"+ strcharinfo(PC_NAME) +"^000000, total time you spent to pass the battle..";
 	next;
 	mes "[Staff]";
 	mes "is "+@record_min50+"minutes "+@record_sec50+"seconds.";
@@ -863,7 +884,7 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		specialeffect2 EF_EXIT;
+		specialeffect(EF_EXIT, AREA, playerattached());
  		donpcevent "cast#50::OnNomal1";
 		warp "arena_room",100,75;
 		donpcevent "#arn_timer_50::OnStop";
@@ -877,10 +898,10 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 		mes "What a great job!";
 		next;
 		mes "[Staff]";
-		mes "You have been recorded as the fastest player among people who cleared ^FF0000Arena Time Force Battle lvl 50s^000000, ^3131FF"+strcharinfo(0)+"^000000.";
+		mes "You have been recorded as the fastest player among people who cleared ^FF0000Arena Time Force Battle lvl 50s^000000, ^3131FF"+strcharinfo(PC_NAME)+"^000000.";
 		$top_50min = @record_min50;
 		$top_50sec = @record_sec50;
-		$arena_50topn$ = strcharinfo(0);
+		$arena_50topn$ = strcharinfo(PC_NAME);
 		donpcevent "Vendigos::OnLineRec_50";
 		next;
 		if (arena_point > 29950) {
@@ -910,7 +931,7 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		specialeffect2 EF_HIT5;
+		specialeffect(EF_HIT5, AREA, playerattached());
  		donpcevent "cast#50::OnNomal2";
 		warp "arena_room",100,75;
 		donpcevent "#arn_timer_50::OnStop";
@@ -920,7 +941,7 @@ prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 	}
 }
 
--	script	#arn_timer_50	-1,{
+-	script	#arn_timer_50	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -950,13 +971,13 @@ OnStop:
 	end;
 }
 
--	script	arn_warp_50	-1,{
+-	script	arn_warp_50	FAKE_NPC,{
 OnOut:
 	areawarp "prt_are_in",14,195,29,178,"arena_room",100,75;
 	end;
 }
 
--	script	cast#50	-1,{
+-	script	cast#50	FAKE_NPC,{
 OnTimeOver1:
 	mapannounce "force_1-1","Arena will be reactivated due to an error occurred during battle.",0,0xFFCE00;
 	end;
@@ -971,7 +992,7 @@ OnNomal2:
 	end;
 }
 
--	script	alloff#50	-1,{
+-	script	alloff#50	FAKE_NPC,{
 OnEnable:
 	mapwarp "force_1-1","prt_are_in",126,190,0,0;
 	donpcevent "force_01mob#50::OnReset";

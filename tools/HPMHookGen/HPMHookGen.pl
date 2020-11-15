@@ -1,7 +1,22 @@
 #!/usr/bin/perl
 
-# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-# See the LICENSE file
+# This file is part of Hercules.
+# http://herc.ws - http://github.com/HerculesWS/Hercules
+#
+# Copyright (C) 2013-2020 Hercules Dev Team
+#
+# Hercules is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
 use warnings;
@@ -21,10 +36,11 @@ sub trim($) {
 
 sub parse($$) {
 	my ($p, $d) = @_;
+
 	$p =~ s/^.*?\)\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
 
 	# Retrieve return type
-	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface::([^\)]+)\s*\)\s*\(.*\)$/) {
+	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)]+)\s*\)\s*\(.*\)$/) {
 		print "Error: unable to parse '$d'\n";
 		return {};
 	}
@@ -132,7 +148,7 @@ sub parse($$) {
 					$type1 .= "$1 ";
 					next;
 				}
-				if ($current =~ /^(struct|enum)\s+(.*)$/) { # enum and struct names
+				if ($current =~ /^(struct|enum|union)\s+(.*)$/) { # union, enum and struct names
 					$current = $2 // '';
 					$type1 .= "$1 ";
 				}
@@ -171,28 +187,29 @@ sub parse($$) {
 			$post_code = "va_end(${callvar});";
 			$var = '';
 			$variadic = 1;
-		} elsif (!$indirectionlvl) { # Increase indirection level when necessary
+		} else { # Increase indirection level when necessary
 			$dereference = '*';
 			$addressof = '&';
 		}
 		$indirectionlvl++ if ($array); # Arrays are pointer, no matter how cute you write them
 
 		push(@args, {
-			var     => $var,
-			callvar => $callvar,
-			type    => $type1.$array.$type2,
-			orig    => $type1 eq '...' ? '...' : trim("$type1 $indir$var$array $type2"),
-			indir   => $indirectionlvl,
-			hookf   => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $dereference$indir$var$array $type2"),
-			hookc   => trim("$addressof$callvar"),
-			origc   => trim($callvar),
-			pre     => $pre_code,
-			post    => $post_code,
+			var       => $var,
+			callvar   => $callvar,
+			type      => $type1.$array.$type2,
+			orig      => $type1 eq '...' ? '...' : trim("$type1 $indir$var$array $type2"),
+			indir     => $indirectionlvl,
+			hookpref  => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $dereference$indir$var$array $type2"),
+			hookpostf => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $indir$var$array $type2"),
+			hookprec  => trim("$addressof$callvar"),
+			hookpostc => trim("$callvar"),
+			origc     => trim($callvar),
+			pre       => $pre_code,
+			post      => $post_code,
 		});
 		$lastvar = $var;
 	}
 
-	my $rtmemset = 0;
 	my $rtinit = '';
 	foreach ($rt) { # Decide initialization for the return value
 		my $x = $_;
@@ -221,13 +238,28 @@ sub parse($$) {
 			$rtinit = ' = HCS_STATUS_FAIL';
 		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
 			$rtinit = ' = BGQT_INVALID';
-		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData') { # Structs
-			$rtinit = '';
-			$rtmemset = 1;
+		} elsif ($x =~ /^enum\s+parsefunc_rcode$/) { # Known enum parsefunc_rcode
+			$rtinit = ' = PACKET_UNKNOWN';
+		} elsif ($x =~ /^enum\s+DBOptions$/) { # Known enum DBOptions
+			$rtinit = ' = DB_OPT_BASE';
+		} elsif ($x =~ /^enum\s+thread_priority$/) { # Known enum thread_priority
+			$rtinit = ' = THREADPRIO_NORMAL';
+		} elsif ($x =~ /^enum\s+market_buy_result$/) { # Known enum market_buy_result
+			$rtinit = ' = MARKET_BUY_RESULT_ERROR';
+		} elsif ($x =~ /^enum\s+unit_dir$/) { # Known enum unit_dir
+			$rtinit = ' = UNIT_DIR_UNDEFINED';
+		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
+			$rtinit = ' = NULL';
+		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
+			$rtinit = ' = { 0 }';
+		} elsif ($x =~ /^float|double$/) { # Floating point variables
+			$rtinit = ' = 0.';
 		} elsif ($x =~ /^(?:(?:un)?signed\s+)?(?:char|int|long|short)$/
 		      or $x =~ /^(?:long|short)\s+(?:int|long)$/
 		      or $x =~ /^u?int(?:8|16|32|64)$/
 		      or $x eq 'defType'
+		      or $x eq 'size_t'
+		      or $x eq 'time_t'
 		) { # Numeric variables
 			$rtinit = ' = 0';
 		} else { # Anything else
@@ -242,7 +274,6 @@ sub parse($$) {
 		vname    => $variadic ? "v$name" : $name,
 		type     => $rt,
 		typeinit => $rtinit,
-		memset   => $rtmemset,
 		variadic => $variadic,
 		args     => \@args,
 		notes    => $notes,
@@ -250,13 +281,16 @@ sub parse($$) {
 }
 
 my %key2original;
+my %key2pointer;
 my @files = grep { -f } glob 'doxyoutput/xml/*interface*.xml';
 my %ifs;
 my %keys = (
 	login => [ ],
 	char => [ ],
 	map => [ ],
+	all => [ ],
 );
+my %fileguards = ( );
 foreach my $file (@files) { # Loop through the xml files
 
 	my $xml = new XML::Simple;
@@ -264,44 +298,87 @@ foreach my $file (@files) { # Loop through the xml files
 
 	my $filekey = (keys %{ $data->{compounddef} })[0];
 	my $loc = $data->{compounddef}->{$filekey}->{location}->[0];
-	next unless $loc->{file} =~ /src\/(map|char|login)\//;
+	next unless $loc->{file} =~ /src\/(map|char|login|common)\//;
+	next if $loc->{file} =~ /\/HPM.*\.h/; # Don't allow hooking into the HPM itself
+	next if $loc->{file} =~ /\/memmgr\.h/; # Don't allow hooking into the memory manager
 	my $servertype = $1;
-
 	my $key = $data->{compounddef}->{$filekey}->{compoundname}->[0];
 	my $original = $key;
+	my @servertypes = ();
+	my $servermask = 'SERVER_TYPE_NONE';
+	if ($servertype ne "common") {
+		push @servertypes, $1;
+		$servermask = 'SERVER_TYPE_' . uc($1);
+	} elsif ($key eq "mapindex_interface") {
+		push @servertypes, ("map", "char"); # Currently not used by the login server
+		$servermask = 'SERVER_TYPE_MAP|SERVER_TYPE_CHAR';
+	} elsif ($key eq "grfio_interface") {
+		push @servertypes, ("map"); # Currently not used by the login and char servers
+		$servermask = 'SERVER_TYPE_MAP';
+	} else {
+		push @servertypes, ("map", "char", "login");
+		$servermask = 'SERVER_TYPE_ALL';
+	}
+	my @filepath = split(/[\/\\]/, $loc->{file});
+	my $foldername = uc($filepath[-2]);
+	my $filename = uc($filepath[-1]); $filename =~ s/[.-]/_/g; $filename =~ s/\.[^.]*$//;
+	my $guardname = "${foldername}_${filename}";
+	my $private = $key =~ /_interface_private$/ ? 1 : 0;
 
 	# Some known interfaces with different names
 	if ($key =~ /battleground/) {
 		$key = "bg";
 	} elsif ($key =~ /guild_storage/) {
 		$key = "gstorage";
-	} elsif ($key =~ /inter_homunculus/) { # to avoid replace to homun
-		$key = "inter_homunculus";
-	} elsif ($key =~ /homunculus/) {
+	} elsif ($key eq "homunculus_interface") {
 		$key = "homun";
-	} elsif ($key =~ /irc_bot/) {
+	} elsif ($key eq "irc_bot_interface") {
 		$key = "ircbot";
-	} elsif ($key =~ /log_interface/) {
+	} elsif ($key eq "log_interface") {
 		$key = "logs";
-	} elsif ($key =~ /pc_groups_interface/) {
+	} elsif ($key eq "pc_groups_interface") {
 		$key = "pcg";
-	} elsif ($key =~ /char_interface/) {
+	} elsif ($key eq "pcre_interface") {
+		$key = "libpcre";
+	} elsif ($key eq "char_interface") {
 		$key = "chr";
+	} elsif ($key eq "db_interface") {
+		$key = "DB";
+	} elsif ($key eq "socket_interface") {
+		$key = "sockt";
+	} elsif ($key eq "sql_interface") {
+		$key = "SQL";
+	} elsif ($key eq "stringbuf_interface") {
+		$key = "StrBuf";
+	} elsif ($key eq "console_input_interface") {
+		# TODO
+		next;
 	} else {
 		$key =~ s/_interface//;
 	}
+	$key =~ s/^(.*)_private$/PRIV__$1/ if $private;
+	my $pointername = $key;
+	$pointername =~ s/^PRIV__(.*)$/$1->p/ if $private;
 
-	foreach my $v ($data->{compounddef}->{$filekey}->{sectiondef}->[0]) { # Loop through the sections
+	my $sectiondef = $data->{compounddef}->{$filekey}->{sectiondef};
+	foreach my $v (@$sectiondef) { # Loop through the sections
 		my $memberdef = $v->{memberdef};
 		foreach my $f (sort { # Sort the members in declaration order according to what the xml says
 					my $astart = $a->{location}->[0]->{bodystart} || $a->{location}->[0]->{line};
 					my $bstart = $b->{location}->[0]->{bodystart} || $b->{location}->[0]->{line};
 					$astart <=> $bstart
 				} @$memberdef) { # Loop through the members
+			next unless $f->{kind} eq 'variable'; # Skip macros
 			my $t = $f->{argsstring}->[0];
-			next unless ref $t ne 'HASH' and $t =~ /^[^\[]/; # If it's not a string, or if it starts with an array subscript, we can skip it
+			my $def = $f->{definition}->[0];
+			if ($f->{type}->[0] =~ /^\s*LoginParseFunc\s*\*\s*$/) {
+				$t = ')(int fd, struct login_session_data *sd)'; # typedef LoginParseFunc
+				$def =~ s/^LoginParseFunc\s*\*\s*(.*)$/enum parsefunc_rcode(* $1) (int fd, struct login_session_data *sd)/;
+			}
+			next if ref $t eq 'HASH'; # Skip if it's not a string
+			next if $t =~ /^\)?\[.*\]$/; # Skip arrays or pointers to array
 
-			my $if = parse($t, $f->{definition}->[0]);
+			my $if = parse($t, $def);
 			next unless scalar keys %$if; # If it returns an empty hash reference, an error must've occurred
 
 			# Skip variadic functions, we only allow hooks on their arglist equivalents.
@@ -352,10 +429,10 @@ foreach my $file (@files) { # Loop through the xml files
 					$if->{postcall} .= ', ';
 				}
 				$if->{handlerdef} .= $arg->{orig};
-				$if->{predef} .= $arg->{hookf};
-				$if->{precall} .= $arg->{hookc};
-				$if->{postdef} .= $arg->{hookf};
-				$if->{postcall} .= $arg->{hookc};
+				$if->{predef} .= $arg->{hookpref};
+				$if->{precall} .= $arg->{hookprec};
+				$if->{postdef} .= $arg->{hookpostf};
+				$if->{postcall} .= $arg->{hookpostc};
 				$if->{origcall} .= $arg->{origc};
 				$i++; $j++;
 			}
@@ -376,50 +453,160 @@ foreach my $file (@files) { # Loop through the xml files
 			$if->{origcall} .= ");";
 
 			$key2original{$key} = $original;
+			$key2pointer{$key} = $pointername;
 			$ifs{$key} = [] unless $ifs{$key};
 			push(@{ $ifs{$key} }, $if);
 		}
 	}
-	push(@{ $keys{$servertype} }, $key) if $key2original{$key};
+	foreach $servertype (@servertypes) {
+		push(@{ $keys{$servertype} }, $key) if $key2original{$key};
+	}
+	push(@{ $keys{all} }, $key) if $key2original{$key};
+	$fileguards{$key} = {
+		guard => $guardname,
+		type => $servermask,
+		private => $private,
+	};
 }
+
+my $year = (localtime)[5] + 1900;
+
+my $fileheader = <<"EOF";
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-$year Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
+
+/* GENERATED FILE DO NOT EDIT */
+EOF
 
 foreach my $servertype (keys %keys) {
 	my $keysref = $keys{$servertype};
 	# Some interfaces use different names
 	my %exportsymbols = map {
 		$_ => &{ sub ($) {
-			return 'battlegrounds' if $servertype eq 'map' and $_ =~ /^bg$/;
-			return 'pc_groups' if $servertype eq 'map' and $_ =~ /^pcg$/;
+			return 'battlegrounds' if $_ =~ /^bg$/;
+			return 'pc_groups' if $_ =~ /^pcg$/;
 			return $_;
 		}}($_);
 	} @$keysref;
 
 	my ($maxlen, $idx) = (0, 0);
 	my $fname;
+
+	if ($servertype eq 'all') {
+		$fname = "../../src/common/HPMSymbols.inc.h";
+		open(FH, ">", $fname)
+			or die "cannot open > $fname: $!";
+
+		print FH <<"EOF";
+$fileheader
+#if !defined(HERCULES_CORE)
+EOF
+
+		foreach my $key (@$keysref) {
+			next if $fileguards{$key}->{private};
+			print FH <<"EOF";
+#ifdef $fileguards{$key}->{guard} /* $key */
+struct $key2original{$key} *$key;
+#endif // $fileguards{$key}->{guard}
+EOF
+		}
+
+		print FH <<"EOF";
+#endif // ! HERCULES_CORE
+
+HPExport const char *HPM_shared_symbols(int server_type)
+{
+EOF
+
+		foreach my $key (@$keysref) {
+			next if $fileguards{$key}->{private};
+			print FH <<"EOF";
+#ifdef $fileguards{$key}->{guard} /* $key */
+	if ((server_type&($fileguards{$key}->{type})) != 0 && !HPM_SYMBOL("$exportsymbols{$key}", $key))
+		return "$exportsymbols{$key}";
+#endif // $fileguards{$key}->{guard}
+EOF
+		}
+
+		print FH <<"EOF";
+	return NULL;
+}
+EOF
+		close FH;
+
+		$fname = "../../src/plugins/HPMHooking/HPMHooking.Defs.inc";
+		open(FH, ">", $fname)
+			or die "cannot open > $fname: $!";
+
+		print FH <<"EOF";
+$fileheader
+EOF
+
+		foreach my $key (@$keysref) {
+			print FH <<"EOF";
+#ifdef $fileguards{$key}->{guard} /* $key */
+EOF
+
+			foreach my $if (@{ $ifs{$key} }) {
+				my ($predef, $postdef) = ($if->{predef}, $if->{postdef});
+				$predef =~ s/preHookFunc/HPMHOOK_pre_${key}_$if->{name}/;
+				$postdef =~ s/postHookFunc/HPMHOOK_post_${key}_$if->{name}/;
+
+				print FH <<"EOF";
+typedef $predef
+typedef $postdef
+EOF
+			}
+			print FH <<"EOF";
+#endif // $fileguards{$key}->{guard}
+EOF
+		}
+		close FH;
+
+		next;
+	}
+
 	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.HookingPoints.inc";
 	open(FH, ">", $fname)
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
-
+$fileheader
 struct HookingPointData HookingPoints[] = {
 EOF
 
 	foreach my $key (@$keysref) {
-		print FH "/* ".$key." */\n";
+		print FH "/* $key2original{$key} */\n";
 		foreach my $if (@{ $ifs{$key} }) {
 
 			print FH <<"EOF";
-	{ HP_POP($key\->$if->{name}, $if->{hname}) },
+	{ HP_POP($key2pointer{$key}\->$if->{name}, $if->{hname}) },
 EOF
 
 			$idx += 2;
-			$maxlen = length($key."->".$if->{name}) if( length($key."->".$if->{name}) > $maxlen )
+			$maxlen = length($key."->".$if->{name}) if (length($key."->".$if->{name}) > $maxlen);
 		}
 	}
 	print FH <<"EOF";
@@ -434,37 +621,12 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
-
+$fileheader
 EOF
 	foreach my $key (@$keysref) {
 
 		print FH <<"EOF";
-memcpy(&HPMHooks.source.$key, $key, sizeof(struct $key2original{$key}));
-EOF
-	}
-	close FH;
-
-	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.GetSymbol.inc";
-	open(FH, ">", $fname)
-		or die "cannot open > $fname: $!";
-
-	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
-
-EOF
-	foreach my $key (@$keysref) {
-
-		print FH <<"EOF";
-if( !($key = GET_SYMBOL("$exportsymbols{$key}") ) ) return false;
+HPMHooks.source.$key = *$key2pointer{$key};
 EOF
 	}
 	close FH;
@@ -474,12 +636,7 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
-
+$fileheader
 struct {
 EOF
 
@@ -530,17 +687,12 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-//
-// NOTE: This file was auto-generated and should never be manually edited,
-//       as it will get overwritten.
-
+$fileheader
 EOF
 	foreach my $key (@$keysref) {
 
 		print FH <<"EOF";
-/* $key */
+/* $key2original{$key} */
 EOF
 
 		foreach my $if (@{ $ifs{$key} }) {
@@ -548,7 +700,6 @@ EOF
 
 			unless ($if->{type} eq 'void') {
 				$initialization  = "\n\t$if->{type} retVal___$if->{typeinit};";
-				$initialization .= "\n\tmemset(&retVal___, '\\0', sizeof($if->{type}));" if $if->{memset};
 			}
 
 			$beforeblock3 .= "\n\t\t\t$_" foreach (@{ $if->{before} });
@@ -560,14 +711,14 @@ EOF
 			print FH <<"EOF";
 $if->{handlerdef} {$if->{notes}
 	int hIndex = 0;${initialization}
-	if( HPMHooks.count.$if->{hname}_pre ) {
+	if (HPMHooks.count.$if->{hname}_pre > 0) {
 		$if->{predef}
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++ ) {$beforeblock3
+		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++) {$beforeblock3
 			preHookFunc = HPMHooks.list.$if->{hname}_pre[hIndex].func;
 			$if->{precall}$afterblock3
 		}
-		if( *HPMforce_return ) {
+		if (*HPMforce_return) {
 			*HPMforce_return = false;
 			return$retval;
 		}
@@ -575,9 +726,9 @@ $if->{handlerdef} {$if->{notes}
 	{$beforeblock2
 		$if->{origcall}$afterblock2
 	}
-	if( HPMHooks.count.$if->{hname}_post ) {
+	if (HPMHooks.count.$if->{hname}_post > 0) {
 		$if->{postdef}
-		for(hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_post; hIndex++ ) {$beforeblock3
+		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_post; hIndex++) {$beforeblock3
 			postHookFunc = HPMHooks.list.$if->{hname}_post[hIndex].func;
 			$if->{postcall}$afterblock3
 		}

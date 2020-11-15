@@ -1,22 +1,42 @@
-//===== Hercules Script ======================================
-//= Garden City Hugel Warp Script
-//===== By: ==================================================
-//= Sara-chan (1.1)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) SinSloth
+//= Copyright (C) Playtester
+//= Copyright (C) erKURITA
+//= Copyright (C) Er_Maqui
+//= Copyright (C) Lupus
+//= Copyright (C) Muad_Dib
+//= Copyright (C) Sara-chan
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Hugel Warp Script
+//================= Description ===========================================
+//= Warp Points for Hugel City
+//================= Current Version =======================================
 //= 1.7
-//===== Description: =========================================
-//= Warp Points for Hugel
-//===== Additional Comments: =================================
-//= Initial Release
-//= 12/21/05 : Fixed 2 church warps and hunter house warps. [Muad_Dib]
-//= 1.2 fixed hugel10 [Lupus]
-//= 1.3 Rewrote all warps to relate houses, and fixed it to kRO. [Er_Maqui]
-//= 1.3a Replaced all spaces with TABs [Lupus]
-//= 1.4 Fixed an back warp on hu_in01,15,70 (walk to the warp, then warps you back) [erKURITA]
-//= 1.5 Added Bingo warps [erKURITA]
-//= 1.6 Some official warps [Playtester]
-//= 1.7 Updated warps regarding Odin Temple Excavation Quest. [SinSloth]
-//============================================================
+//=========================================================================
 
 //= Hugel City ===============================================
 

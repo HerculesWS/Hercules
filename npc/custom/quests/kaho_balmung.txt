@@ -12,20 +12,19 @@
 //============================================================
 
 prontera,158,356,4	script	Royal Messenger	8W_SOLDIER,{
-	
 	setarray .@Req1[0],1161,999,120,984,10,996,10,994,10,995,10,997,10;
 	setarray .@Req2[0],5013,2298,1,1001,10,996,10,994,10,995,10,997,10;
-	
+
 	mes "[Royal Messenger]";
 	mes "Welcome to Prontera.";
 	mes "I am the messenger in charge of the Royal Quests.";
 	next;
-	if(select("Listen...:Walk away")==2) close;
+	if(select("Listen...", "Walk away")==2) close;
 	mes "[Royal Messenger]";
 	mes "There are two quests.";
 	mes "Choose the one you like.";
 	next;
-	set .@i, select("Balmung:Lord Kaho's Horns:^777777Never mind.^000000");
+	set .@i, select("Balmung", "Lord Kaho's Horns", "^777777Never mind.^000000");
 	mes "[Royal Messenger]";
 	if (.@i==3) {
 		mes "Have a nice day.";

@@ -1,18 +1,40 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_NPC_H
 #define MAP_NPC_H
 
-#include "map.h" // struct block_list
-#include "status.h" // struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "map/map.h" // struct block_list
+#include "map/status.h" // struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/hercules.h"
+#include "common/db.h"
 
-struct HPluginData;
+#include <pcre.h>
+
+/* Forward declarations */
+struct hplugin_data_store;
+struct itemlist; // map/itemdb.h
 struct view_data;
+
+enum market_buy_result;
 
 enum npc_parse_options {
 	NPO_NONE  = 0x0,
@@ -21,10 +43,12 @@ enum npc_parse_options {
 };
 
 enum npc_shop_types {
-	NST_ZENY,/* default */
-	NST_CASH,/* official npc cash shop */
-	NST_MARKET,/* official npc market type */
+	NST_ZENY,   /* default */
+	NST_CASH,   /* official npc cash shop */
+	NST_MARKET, /* official npc market type */
 	NST_CUSTOM,
+	NST_BARTER, /* official npc barter type */
+	NST_EXPANDED_BARTER, /* official npc expanded barter type */
 	/* */
 	NST_MAX,
 };
@@ -32,36 +56,55 @@ enum npc_shop_types {
 struct npc_timerevent_list {
 	int timer,pos;
 };
+
+/** list of labels within a NPC (used internally by the label db) */
 struct npc_label_list {
+	/** label name */
 	char name[NAME_LENGTH];
+	/** start point within the script */
 	int pos;
+	/** optional label flags */
+	enum script_label_flags flags;
 };
+
+struct npc_barter_currency {
+	int nameid;
+	int refine;
+	int amount;
+};
+
 struct npc_item_list {
-	unsigned short nameid;
-	unsigned int value;
-	unsigned int qty;
+	int nameid;
+	unsigned int value;  // price or barter currency item id
+	int value2;  // barter currency item amount / expanded barter currency size
+	int qty;
+	struct npc_barter_currency *currency;
 };
+
 struct npc_shop_data {
 	unsigned char type;/* what am i */
 	struct npc_item_list *item;/* list */
-	unsigned short items;/* total */
+	unsigned int items;/* total */
+	int shop_last_index;  // only for NST_EXPANDED_BARTER
 };
 struct npc_parse;
 struct npc_data {
 	struct block_list bl;
 	struct unit_data *ud;
-	struct view_data *vd;
+	struct view_data vd;
 	unsigned int option;
 	struct npc_data *master_nd;
-	short class_;
+	int class_;
 	short speed;
 	char name[NAME_LENGTH+1];// display name
 	char exname[NAME_LENGTH+1];// unique npc name
 	int chat_id;
 	int touching_id;
 	int64 next_walktime;
-	uint8 dir;
+	enum unit_dir dir;
 	uint8 area_size;
+
+	int clan_id;
 
 	unsigned size : 2;
 
@@ -70,7 +113,7 @@ struct npc_data {
 	unsigned short stat_point;
 
 	struct npc_parse *chatdb;
-	char* path;/* path dir */
+	const char *path; ///< Source path reference
 	enum npc_subtype subtype;
 	int src_id;
 	union {
@@ -100,19 +143,20 @@ struct npc_data {
 			struct mob_data *md;
 			time_t kill_time;
 			char killer_name[NAME_LENGTH];
+			int spawn_timer;
 		} tomb;
 	} u;
-	/* HPData Support for npc_data */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	VECTOR_DECL(struct questinfo) qi_data;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
-
 
 #define START_NPC_NUM 110000000
 
 enum actor_classes {
+	FAKE_NPC = -1,
 	WARP_CLASS = 45,
 	HIDDEN_WARP_CLASS = 139,
+	MOB_TOMB = 565,
 	WARP_DEBUG_CLASS = 722,
 	FLAG_CLASS = 722,
 	INVISIBLE_CLASS = 32767,
@@ -122,7 +166,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10001
-#define MAX_NPC_CLASS2_END 10110
+#define MAX_NPC_CLASS2_END 10376
 
 //Script NPC events.
 enum npce_event {
@@ -157,10 +201,10 @@ struct npc_path_data {
 struct npc_interface {
 	/* */
 	struct npc_data *motd;
-	DBMap *ev_db; // const char* event_name -> struct event_data*
-	DBMap *ev_label_db; // const char* label_name (without leading "::") -> struct linkdb_node**   (key: struct npc_data*; data: struct event_data*)
-	DBMap *name_db; // const char* npc_name -> struct npc_data*
-	DBMap *path_db;
+	struct DBMap *ev_db; // const char* event_name -> struct event_data*
+	struct DBMap *ev_label_db; // const char* label_name (without leading "::") -> struct linkdb_node**   (key: struct npc_data*; data: struct event_data*)
+	struct DBMap *name_db; // const char* npc_name -> struct npc_data*
+	struct DBMap *path_db;
 	struct eri *timer_event_ers; //For the npc timer data. [Skotlex]
 	struct npc_data *fake_nd;
 	struct npc_src_list *src_files;
@@ -168,6 +212,16 @@ struct npc_interface {
 	/* npc trader global data, for ease of transition between the script, cleared on every usage */
 	bool trader_ok;
 	int trader_funds[2];
+	int npc_id;
+	int npc_warp;
+	int npc_shop;
+	int npc_script;
+	int npc_mob;
+	int npc_delay_mob;
+	int npc_cache_mob;
+	const char *npc_last_path;
+	const char *npc_last_ref;
+	struct npc_path_data *npc_last_npd;
 	/* */
 	int (*init) (bool minimal);
 	int (*final) (void);
@@ -183,7 +237,7 @@ struct npc_interface {
 	int (*enable) (const char *name, int flag);
 	struct npc_data* (*name2id) (const char *name);
 	int (*event_dequeue) (struct map_session_data *sd);
-	DBData (*event_export_create) (DBKey key, va_list args);
+	struct DBData (*event_export_create) (union DBKey key, va_list args);
 	int (*event_export) (struct npc_data *nd, int i);
 	int (*event_sub) (struct map_session_data *sd, struct event_data *ev, const char *eventname);
 	void (*event_doall_sub) (void *key, void *data, va_list ap);
@@ -212,53 +266,61 @@ struct npc_interface {
 	int (*click) (struct map_session_data *sd, struct npc_data *nd);
 	int (*scriptcont) (struct map_session_data *sd, int id, bool closing);
 	int (*buysellsel) (struct map_session_data *sd, int id, int type);
-	int (*cashshop_buylist) (struct map_session_data *sd, int points, int count, unsigned short *item_list);
-	int (*buylist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
+	int (*cashshop_buylist) (struct map_session_data *sd, int points, struct itemlist *item_list);
+	int (*buylist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
 	int (*cashshop_buy) (struct map_session_data *sd, int nameid, int amount, int points);
-	int (*buylist) (struct map_session_data *sd, int n, unsigned short *item_list);
-	int (*selllist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
-	int (*selllist) (struct map_session_data *sd, int n, unsigned short *item_list);
+	int (*buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*selllist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
+	int (*selllist) (struct map_session_data *sd, struct itemlist *item_list);
 	int (*remove_map) (struct npc_data *nd);
-	int (*unload_ev) (DBKey key, DBData *data, va_list ap);
-	int (*unload_ev_label) (DBKey key, DBData *data, va_list ap);
+	int (*unload_ev) (union DBKey key, struct DBData *data, va_list ap);
+	int (*unload_ev_label) (union DBKey key, struct DBData *data, va_list ap);
 	int (*unload_dup_sub) (struct npc_data *nd, va_list args);
-	void (*unload_duplicates) (struct npc_data *nd);
-	int (*unload) (struct npc_data *nd, bool single);
+	void (*unload_duplicates) (struct npc_data *nd, bool unload_mobs);
+	int (*unload_mob) (struct mob_data *md, va_list args);
+	int (*unload) (struct npc_data *nd, bool single, bool unload_mobs);
 	void (*clearsrcfile) (void);
 	void (*addsrcfile) (const char *name);
 	void (*delsrcfile) (const char *name);
+	const char *(*retainpathreference) (const char *filepath);
+	void (*releasepathreference) (const char *filepath);
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
 	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
 	bool (*viewisid) (const char *viewid);
-	struct npc_data* (*create_npc) (int m, int x, int y);
+	struct npc_data *(*create_npc) (enum npc_subtype subtype, int m, int x, int y, enum unit_dir dir, int class_);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
-	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
-	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
-	const char* (*parse_unknown_object) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char *(*parse_warp) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char *(*parse_shop) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char *(*parse_unknown_object) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*convertlabel_db) (struct npc_label_list *label_list, const char *filepath);
 	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath, int *retval);
-	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval);
-	const char* (*parse_duplicate) (char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval);
+	const char *(*parse_script) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval);
+	void (*add_to_location) (struct npc_data *nd);
+	bool (*duplicate_script_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
+	bool (*duplicate_shop_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
+	bool (*duplicate_warp_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
+	bool (*duplicate_sub) (struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options);
+	const char *(*parse_duplicate) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval);
 	int (*duplicate4instance) (struct npc_data *snd, int16 m);
 	void (*setcells) (struct npc_data *nd);
 	int (*unsetcells_sub) (struct block_list *bl, va_list ap);
 	void (*unsetcells) (struct npc_data *nd);
 	void (*movenpc) (struct npc_data *nd, int16 x, int16 y);
 	void (*setdisplayname) (struct npc_data *nd, const char *newname);
-	void (*setclass) (struct npc_data *nd, short class_);
+	void (*setclass) (struct npc_data *nd, int class_);
 	int (*do_atcmd_event) (struct map_session_data *sd, const char *command, const char *message, const char *eventname);
-	const char* (*parse_function) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char *(*parse_function) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*parse_mob2) (struct spawn_data *mobspawn);
-	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
-	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
-	void (*parse_unknown_mapflag) (const char *name, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char *(*parse_mob) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char *(*parse_mapflag) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	void (*parse_unknown_mapflag) (const char *name, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	int (*parsesrcfile) (const char *filepath, bool runOnInit);
 	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);
-	int (*path_db_clear_sub) (DBKey key, DBData *data, va_list args);
-	int (*ev_label_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	int (*path_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
+	int (*ev_label_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
 	int (*reload) (void);
-	bool (*unloadfile) (const char *filepath);
+	bool (*unloadfile) (const char *filepath, bool unload_mobs);
 	void (*do_clear_npc) (void);
 	void (*debug_warps_sub) (struct npc_data *nd);
 	void (*debug_warps) (void);
@@ -266,30 +328,40 @@ struct npc_interface {
 	void (*trader_count_funds) (struct npc_data *nd, struct map_session_data *sd);
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
-	int (*market_buylist) (struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p);
+	enum market_buy_result (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
+	int (*expanded_barter_buylist) (struct map_session_data *sd, struct barteritemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
-	void (*market_tosql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
-	void (*market_delfromsql_sub) (const char *npcname, unsigned short index);
+	void (*market_tosql) (struct npc_data *nd, int index);
+	void (*market_delfromsql) (struct npc_data *nd, int index);
+	void (*market_delfromsql_sub) (const char *npcname, int index);
+	void (*barter_fromsql) (void);
+	void (*barter_tosql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql) (struct npc_data *nd, int index);
+	void (*barter_delfromsql_sub) (const char *npcname, int itemId, int itemId2, int amount2);
+	void (*expanded_barter_fromsql) (void);
+	void (*expanded_barter_tosql) (struct npc_data *nd, int index);
+	void (*expanded_barter_delfromsql) (struct npc_data *nd, int index);
+	void (*expanded_barter_delfromsql_sub) (const char *npcname, int itemId, int zeny, int currencyCount, struct npc_barter_currency* currency);
 	bool (*db_checkid) (const int id);
+	void (*refresh) (struct npc_data* nd);
+	void (*questinfo_clear) (struct npc_data *nd);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
 	int (*secure_timeout_timer) (int tid, int64 tick, int id, intptr_t data);
 };
 
-struct npc_interface *npc;
-
 #ifdef HERCULES_CORE
 void npc_defaults(void);
 #endif // HERCULES_CORE
 
+HPShared struct npc_interface *npc;
 
-/* comes from npc_chat.c */
-#ifdef PCRE_SUPPORT
-#include "../../3rdparty/pcre/include/pcre.h"
-/* Structure containing all info associated with a single pattern block */
+/**
+ * Structure containing all info associated with a single pattern block
+ */
 struct pcrematch_entry {
 	struct pcrematch_entry* next;
 	char* pattern;
@@ -298,7 +370,9 @@ struct pcrematch_entry {
 	char* label;
 };
 
-/* A set of patterns that can be activated and deactived with a single command */
+/**
+ * A set of patterns that can be activated and deactived with a single command
+ */
 struct pcrematch_set {
 	struct pcrematch_set* prev;
 	struct pcrematch_set* next;
@@ -306,7 +380,7 @@ struct pcrematch_set {
 	int setid;
 };
 
-/*
+/**
  * Entire data structure hung off a NPC
  */
 struct npc_parse {
@@ -326,8 +400,6 @@ struct npc_chat_interface {
 	void (*finalize_pcrematch_entry) (struct pcrematch_entry* e);
 };
 
-struct npc_chat_interface *npc_chat;
-
 /**
  * pcre interface (libpcre)
  * so that plugins may share and take advantage of the core's pcre
@@ -344,14 +416,14 @@ struct pcre_interface {
 	int (*get_substring) (const char *subject, int *ovector, int stringcount, int stringnumber, const char **stringptr);
 };
 
-struct pcre_interface *libpcre;
-
 /**
  * Also defaults libpcre
  **/
 #ifdef HERCULES_CORE
 void npc_chat_defaults(void);
 #endif // HERCULES_CORE
-#endif // PCRE_SUPPORT
+
+HPShared struct npc_chat_interface *npc_chat;
+HPShared struct pcre_interface *libpcre;
 
 #endif /* MAP_NPC_H */

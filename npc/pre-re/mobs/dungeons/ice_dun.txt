@@ -1,26 +1,46 @@
-//===== Hercules Script ======================================
-//= Ice Dungeon Monster Spawn Script
-//===== By: ==================================================
-//= Athena (1.0)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Ice Dungeon Monster Spawn Script (Pre-Renewal)
+//================= Description ===========================================
+//= Monster Spawns for Ice Cave Dungeon
+//================= Current Version =======================================
 //= 1.2
-//===== Additional Comments: =================================
-//= 1.0 First version from jAthena [Playtester]
-//= 1.1 More accurate spawns [Playtester]
-//= 1.2 Removed Ktullanux spawn, quest implemented [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-//==================================================
-// ice_dun01 - Ice Cave
-//==================================================
+//== ice_dun01 - Ice Cave ==================================
 ice_dun01,0,0,0,0	monster	Siroma	1776,75,0,0,0
 ice_dun01,0,0,0,0	monster	Roween	1782,5,0,0,0
 ice_dun01,0,0,0,0	monster	Gazeti	1778,2,0,0,0
 ice_dun01,0,0,0,0	monster	Muscipular	1780,5,0,0,0
 
-//==================================================
-// ice_dun02 - Ice Cave
-//==================================================
+//== ice_dun02 - Ice Cave ==================================
 ice_dun02,0,0,0,0	monster	Snowier	1775,70,0,0,0
 ice_dun02,0,0,0,0	monster	Siroma	1776,30,0,0,0
 ice_dun02,0,0,0,0	monster	Gazeti	1778,15,240000,0,0
@@ -42,9 +62,7 @@ ice_dun02,20,20,5,5	monster	Iceicle	1789,1,960000,300000,0
 ice_dun02,143,28,3,3	monster	Iceicle	1789,1,1020000,300000,0
 ice_dun02,280,20,5,5	monster	Iceicle	1789,1,960000,300000,0
 
-//==================================================
-// ice_dun03 - Ice Cave
-//==================================================
+//== ice_dun03 - Ice Cave ==================================
 ice_dun03,0,0,0,0	monster	Ice Titan	1777,12,0,0,0
 ice_dun03,0,0,0,0	monster	Ice Titan	1777,10,7200000,3600000,0
 ice_dun03,0,0,0,0	monster	Gazeti	1778,10,120000,0,0

@@ -1,79 +1,59 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Yommy
+//= Copyright (C) Streusel
+//= Copyright (C) Euphy
+//= Copyright (C) Spre
+//= Copyright (C) Kenpachi
+//= Copyright (C) Masao
+//= Copyright (C) tr0n
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) Musashiden
+//= Copyright (C) erKURITA
+//= Copyright (C) Poki#3
+//= Copyright (C) Lupus
+//= Copyright (C) Yor
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) celest
+//= Copyright (C) Darkchild
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Shops
-//===== Current Version: =====================================
-//= 3.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= Town shop NPCs.
-//===== Additional Comments: =================================
-//= For earlier update notes see the bottom.
-//= 2.0 updated several shop npcs. [L0ne_W0lf]
-//=     Added proper Venom Knife dealer, and consiquently removed wenom Knives from weapon dealers.
-//=     Moved all Cooking related NPCs to their own section.
-//=     Re-alphabetized sections. Some of them were out of place.
-//=     Removed commented out shops.
-//= 2.0b Einbech tool dealer got lost somewhere along the way, re-added. [L0ne_W0lf]
-//= 2.1 Fixed missing item from "Fresh Fish" from cooking addition shops. [L0ne_W0lf]
-//= 2.1a Fixed the second "Line" selling in Comodo Weapon shop. (Should have been Whip) [L0ne_W0lf]
-//= 2.2 Added Veins shops. [L0ne_W0lf]
-//= 2.3 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.4 Fixed Jawaii Ice cream salesman. [L0ne_W0lf]
-//= 2.5 Updated Morroc shops to episode 12.1. [L0ne_W0lf]
-//= 2.6 Added Brasilis shops. [L0ne_W0lf]
-//=     Updated Pet Groomers with four new pet feeds.
-//= 2.7 Added Trading merchants, (ninja& gunslinger) to Izlude and Alberta. [L0ne_W0lf]
-//=     Made Brasilis shop names unique, and uncommented.
-//=     Changed the whip sold in comodo weapon shop. (1956 ->1960)
-//=     Added Fire and Silver arrow to Einbroch tool dealer.
-//=     Re-added Bill of Birds to Morroc Item Collectors.
-//= 2.7a Actually applied the right update to the comodo weapon shop. [L0ne_W0lf]
-//= 2.7b Corrected Brasilis Fruit Merchant. (bugreport:4278) [L0ne_W0lf]
-//= 2.8 Updates to Brasilis Merchants. [L0ne_W0lf]
-//= 2.9 Added missing Cooking Items for Material Seller. [tr0n]
-//= 3.0 Added all new Shops which were available in the latest available official files. [Masao]
-//= 3.1 Moved some merchants to a separate renewal file. [Kenpachi]
-//= 3.2 Added Missing Items to the pet Groomers in prontera, payon, and yuno. BugReport:6680[Spre]
-//= 3.3 Moved more shops to Renewal file. [Euphy]
-//= 3.4 Moved Izlude shops to pre-re/re paths. [Streusel]
-//= 3.5 Converted to trader format [Yommy]
-//============================================================
+//================= Current Version =======================================
+//= 3.9
+//=========================================================================
 
-//=======================================================
-// Alberta
-//=======================================================
-alb2trea,87,65,5	trader	Tool Dealer#alb	4_M_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Silver_Arrow;
-	sellitem Fire_Arrow;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-}
-
+//== Alberta ===============================================
 alberta_in,165,96,0	trader	Item Collector#alb	1_F_MERCHANT_02,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-}
-
-alberta_in,182,97,0	trader	Tool Dealer#alb2	1_F_MERCHANT_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Spinning_Eyes;
+	sellitem Monsters_Feed;
 }
 
 alberta_in,180,15,0	trader	Armor Dealer#alb	4W_F_01,{
@@ -88,7 +68,7 @@ OnInit:
 	sellitem Manteau;
 	sellitem Glasses;
 	sellitem Sunglasses;
-	sellitem Diver's_Goggles;
+	sellitem Divers_Goggles;
 	sellitem Cap;
 	sellitem Cotton_Shirt;
 	sellitem Leather_Jacket;
@@ -128,25 +108,7 @@ OnInit:
 	sellitem Cinquedea;
 }
 
-alberta_in,176,81,3	trader	Trading Merchant#alb	4_M_HUMERCHANT,{
-OnInit:
-	sellitem Bullet;
-	sellitem Silver_Bullet;
-	sellitem Shell_Of_Blood;
-	sellitem Branch;
-	sellitem Crimson_Bolt;
-	sellitem The_Cyclone;
-	sellitem Rolling_Stone;
-	sellitem Black_Rose;
-	sellitem Long_Barrel;
-	sellitem Jungle_Carbine;
-	sellitem Thunder_P;
-}
-
-
-//=======================================================
-// Al De Baran
-//=======================================================
+//== Aldebaran =============================================
 aldeba_in,20,60,0	trader	Armor Dealer#alde	4W_F_01,{
 OnInit:
 	sellitem Helm;
@@ -201,19 +163,18 @@ OnInit:
 	sellitem Life_Force_Pot;
 	sellitem Yggdrasilberry_Dew;
 	sellitem Seed_Of_Life;
-	sellitem Melange_Pot;
-	sellitem Cooking_Skewer;
-	sellitem Black_Charcoal;
-	sellitem Large_Cookpot;
-	sellitem Fine_Noodle;
-	sellitem Cool_Gravy;
-	sellitem Bottle_To_Throw;
+	if (RENEWAL) {
+		sellitem Melange_Pot;
+		sellitem Cooking_Skewer;
+		sellitem Black_Charcoal;
+		sellitem Large_Cookpot;
+		sellitem Fine_Noodle;
+		sellitem Cool_Gravy;
+		sellitem Bottle_To_Throw;
+	}
 }
 
-
-//=======================================================
-// Amatsu
-//=======================================================
+//== Amatsu ================================================
 ama_in01,89,28,5	trader	Armor Dealer#ama	4_F_JPN2,{
 OnInit:
 	sellitem Bandana;
@@ -261,7 +222,7 @@ OnInit:
 	sellitem Booby_Trap;
 }
 
-// Ninja Shops
+//== Ninja Shops ===========================================
 que_ng,72,31,2	trader	Boonji#nin	4_M_01,{
 OnInit:
 	sellitem Shuriken;
@@ -292,10 +253,7 @@ OnInit:
 	}
 }
 
-
-//=======================================================
-// Ayothaya
-//=======================================================
+//== Ayothaya ==============================================
 ayo_in01,18,182,1	trader	Tool Dealer#ayo	4_F_THAISHAMAN,{
 OnInit:
 	sellitem Arrow;
@@ -343,10 +301,7 @@ OnInit:
 	sellitem Belt;
 }
 
-
-//=======================================================
-// Brasilis
-//=======================================================
+//== Brasilis ==============================================
 brasilis,252,257,3	trader	Tool Dealer#bra	4_F_BRZ_WOMAN,{
 OnInit:
 	sellitem Center_Potion;
@@ -380,10 +335,7 @@ OnInit:
 	sellitem Asai_Fruit;
 }
 
-
-//=======================================================
-// Comodo
-//=======================================================
+//== Comodo ================================================
 cmd_in01,117,165,4	trader	Armor Dealer#cmd	4W_F_01,{
 OnInit:
 	sellitem Cap;
@@ -488,10 +440,7 @@ OnInit:
 	sellitem Plate_Armor;
 }
 
-
-//=======================================================
-// Einbroch
-//=======================================================
+//== Einbroch ==============================================
 ein_in01,106,27,4	trader	One Hand Weapon Dealer	4_F_EINWOMAN,{
 OnInit:
 	sellitem Sword;
@@ -558,7 +507,7 @@ ein_in01,119,26,4	trader	Weapon Dealer#ein	4_M_EINMAN,{
 OnInit:
 	sellitem Kindling_Dagger;
 	sellitem Obsidian_Dagger;
-	sellitem Fisherman's_Dagger;
+	sellitem Fishermans_Dagger;
 	sellitem Jujube_Dagger;
 }
 
@@ -594,7 +543,7 @@ OnInit:
 	sellitem Red_Potion;
 }
 
-//Official Gunslingers shops.
+//== Official Gunslingers shops ============================
 que_ng,179,91,3	trader	Chivas Lugal	4_M_HUMERCHANT,{
 OnInit:
 	sellitem Branch;
@@ -614,10 +563,7 @@ OnInit:
 	sellitem Shell_Of_Blood;
 }
 
-
-//=======================================================
-// Geffen
-//=======================================================
+//== Geffen ================================================
 geffen_in,26,178,4	trader	Armor Dealer#gef	1_F_01,{
 OnInit:
 	sellitem Novice_Armlet;
@@ -664,22 +610,6 @@ OnInit:
 	sellitem Zargon;
 }
 
-geffen_in,77,167,0	trader	Tool Dealer#gef	1_F_03,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Granpa_Beard;
-}
-
 geffen_in,77,173,0	trader	Magical Item Seller#gef	1_M_WIZARD,{
 OnInit:
 	sellitem Blue_Gemstone;
@@ -692,28 +622,7 @@ OnInit:
 	sellitem Silver_Robe;
 }
 
-geffen_in,171,123,4	trader	Tool Dealer#gef2	1_M_WIZARD,{
-OnInit:
-	sellitem Empty_Cylinder;
-	sellitem Empty_Potion;
-}
-
-geffen,193,152,4	trader	Pet Groomer#gef	4_F_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Vital_Flower_;
-	sellitem Flame_Gemstone;
-	sellitem Bun_;
-}
-
-
-//=======================================================
-// Gonryun
-//=======================================================
+//== Kunlun ================================================
 gonryun,147,84,5	trader	Tool Dealer#gon	4_M_TWOLDMAN,{
 OnInit:
 	sellitem Arrow;
@@ -761,10 +670,7 @@ OnInit:
 	sellitem Belt;
 }
 
-
-//=======================================================
-// Hugel
-//=======================================================
+//== Hugel =================================================
 hugel,105,169,5	trader	Vendor from Milk Ranch#h	4_F_01,{
 OnInit:
 	sellitem Milk;
@@ -801,7 +707,7 @@ OnInit:
 	sellitem Blue_Gemstone;
 	sellitem Sunglasses;
 	sellitem Garlet;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 }
 
 hu_in01,100,390,3	trader	Bow Dealer#hu	4_M_04,{
@@ -833,10 +739,7 @@ OnInit:
 	sellitem Shield;
 }
 
-
-//=======================================================
-// Izlude
-//=======================================================
+//== Izlude ================================================
 izlude_in,60,127,4	trader	Weapon Dealer#iz	1_F_MARIA,{
 OnInit:
 	sellitem Arrow;
@@ -878,10 +781,7 @@ OnInit:
 	sellitem Novice_Armlet;
 }
 
-
-//=======================================================
-// Jawaii
-//=======================================================
+//== Jawaii ================================================
 jawaii,186,174,3	trader	Ice Cream Guy#ja	4_M_03,{
 OnInit:
 	sellitem Ice_Cream;
@@ -893,10 +793,7 @@ OnInit:
 	sellitem Ice_Cream;
 }
 
-
-//=======================================================
-// Juno
-//=======================================================
+//== Juno ==================================================
 yuno,218,97,5	trader	Tool Dealer#yuno	4_M_02,{
 OnInit:
 	sellitem Arrow;
@@ -1018,10 +915,7 @@ OnInit:
 	sellitem Scroll; //Temp shop in Yuno that sells Blank Scrolls
 }
 
-
-//=======================================================
-// Lighthalzen
-//=======================================================
+//== Lighthalzen ===========================================
 lighthalzen,69,75,5	trader	Fruit Gardener#lhz	8_F,{
 OnInit:
 	sellitem Apple;
@@ -1209,13 +1103,10 @@ OnInit:
 	sellitem Scell;
 	sellitem Garlet;
 	sellitem Zargon;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 }
 
-
-//=======================================================
-// Louyang
-//=======================================================
+//== Louyang ===============================================
 lou_in02,121,182,5	trader	Armor Dealer#lou	4_F_CHNWOMAN,{
 OnInit:
 	sellitem Bandana;
@@ -1263,10 +1154,7 @@ OnInit:
 	sellitem Booby_Trap;
 }
 
-
-//=======================================================
-// Lutie
-//=======================================================
+//== Lutie =================================================
 xmas_in,40,38,5	trader	Tool Dealer#xmas	4_M_01,{
 OnInit:
 	sellitem Red_Potion;
@@ -1319,61 +1207,25 @@ OnInit:
 	sellitem Damascus;
 }
 
-
-//=======================================================
-// Morroc - Post Ep. 12.1
-//=======================================================
+//== Morroc - Post Ep. 12.1 ================================
 in_moc_16,22,20,7	trader	Sepulchral Merchant#moc	4_M_MASKMAN,{
 OnInit:
 	sellitem Venom_Knife;
 }
 
-moc_ruins,91,128,4	trader	Tool Dealer#moc1	4_F_04,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-moc_ruins,114,63,6	trader	Tool Dealer#moc2	4W_M_03,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-	sellitem Luxury_Sunglasses;
-}
-
 moc_ruins,93,53,2	trader	Item Collector#moc1	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 
 moc_ruins,81,113,0	trader	Item Collector#moc2	4_M_03,{
 OnInit:
 	sellitem Scell;
-	sellitem Monster's_Feed;
-	sellitem Animal's_Skin;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
 	sellitem Bill_Of_Birds;
 }
 
@@ -1422,23 +1274,6 @@ OnInit:
 moc_ruins,90,149,6	trader	Trader#moc5	4W_M_03,{
 OnInit:
 	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-}
-
-moc_ruins,118,170,4	trader	Pet Groomer#moc	4_M_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Vital_Flower_;
-	sellitem Flame_Gemstone;
-	sellitem Bun_;
 }
 
 morocc_in,141,67,0	trader	Weapon Dealer#moc1	1_M_MERCHANT,{
@@ -1488,10 +1323,7 @@ OnInit:
 	sellitem Cinquedea;
 }
 
-
-//=======================================================
-// Moscovia
-//=======================================================
+//== Moscovia ==============================================
 mosk_in,21,254,5	trader	Tool Dealer#mosk	4_M_RUSMAN2,{
 OnInit:
 	sellitem Spectacles;
@@ -1551,10 +1383,7 @@ OnInit:
 	sellitem Milk;
 }
 
-
-//=======================================================
-// Niflheim
-//=======================================================
+//== Niflheim ==============================================
 nif_in,37,93,1	trader	Axe Dealer#nif	4_NFCOFFIN,{
 OnInit:
 	sellitem Axe;
@@ -1579,17 +1408,14 @@ OnInit:
 	sellitem Pumpkin;
 	sellitem Pumpkin_Head;
 	sellitem Tree_Root;
-	sellitem Goat's_Horn;
+	sellitem Goats_Horn;
 	sellitem Pet_Food;
 	sellitem Poison_Powder;
 	sellitem Single_Cell;
 	sellitem Mementos;
 }
 
-
-//=======================================================
-// Payon
-//=======================================================
+//== Payon =================================================
 payon_in01,15,119,0	trader	Weapon Dealer#pay	1_F_ORIENT_03,{
 OnInit:
 	sellitem Arrow;
@@ -1639,76 +1465,7 @@ OnInit:
 	sellitem Novice_Armlet;
 }
 
-payon_in01,5,49,7	trader	Tool Dealer#pay	4_M_ORIENT01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-payon_in02,87,34,0	trader	Tool Dealer#pay2	1_F_ORIENT_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Silver_Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-payon,159,96,4	trader	Tool Dealer#pay3	4_M_ORIENT01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Red_Potion;
-	sellitem Center_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-}
-
-payon,177,131,4	trader	Pet Groomer#pay	4_F_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Flame_Gemstone;
-	sellitem Vital_Flower_;
-	sellitem Vital_Flower;
-	sellitem Bun_;
-	sellitem Damp_Darkness;
-	sellitem Small_Snow_Flower;
-	sellitem Fresh_Plant;
-	sellitem Big_Cell;
-	sellitem Apple_Pudding;
-	sellitem Mystic_Stone;
-	sellitem Flavored_Alcohol;
-	sellitem Grilled_Rice_Cake;
-	sellitem Fish_With_Blue_Back;
-	sellitem Pumpkin_Pie_;
-	sellitem Traditional_Cookie;
-}
-
-
-//=======================================================
-// Prontera
-//=======================================================
+//== Prontera ==============================================
 prontera,73,134,0	trader	Vendor from Milk Ranch#p	4_F_01,{
 OnInit:
 	sellitem Milk;
@@ -1723,7 +1480,7 @@ OnInit:
 prontera,64,125,0	trader	Butcher#prt	4_M_BARBER,{
 OnInit:
 	sellitem Meat;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 }
 
 prontera,58,182,0	trader	Flower Girl#prt	4W_KID,{
@@ -1745,30 +1502,6 @@ OnInit:
 	sellitem White_Platter;
 	sellitem Black_Ladle;
 	sellitem Glass_Bead;
-}
-
-prontera,218,211,4	trader	Pet Groomer#prt	4_M_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Flame_Gemstone;
-	sellitem Vital_Flower_;
-	sellitem Vital_Flower;
-	sellitem Bun_;
-	sellitem Damp_Darkness;
-	sellitem Small_Snow_Flower;
-	sellitem Fresh_Plant;
-	sellitem Big_Cell;
-	sellitem Apple_Pudding;
-	sellitem Mystic_Stone;
-	sellitem Flavored_Alcohol;
-	sellitem Grilled_Rice_Cake;
-	sellitem Fish_With_Blue_Back;
-	sellitem Pumpkin_Pie_;
-	sellitem Traditional_Cookie;
 }
 
 prontera,248,153,0	trader	Doll Supplier#prt	4_M_03,{
@@ -1800,18 +1533,6 @@ OnInit:
 	sellitem Chain;
 }
 
-prt_fild05,290,221,2	trader	Tool Dealer#prt	4_M_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-}
-
 prt_in,211,169,0	trader	Wedding Shop Dealer#prt	1_F_LIBRARYGIRL,{
 OnInit:
 	sellitem Bunch_Of_Flowers;
@@ -1819,23 +1540,6 @@ OnInit:
 	sellitem Wedding_Dress;
 	sellitem Wedding_Veil;
 	sellitem Tuxedo;
-}
-
-prt_in,126,76,0	trader	Tool Dealer#prt1	1_M_INNKEEPER,{
-OnInit:
-	sellitem Spectacles;
-	sellitem Arrow;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-	sellitem One_Eyed_Glass;
 }
 
 prt_in,172,130,0	trader	Weapon Dealer#prt	1_M_JOBGUIDER,{
@@ -1909,10 +1613,7 @@ OnInit:
 	sellitem Hora;
 }
 
-
-//=======================================================
-// Rachel
-//=======================================================
+//== Rachel ================================================
 ra_in01,175,364,3	trader	Armor Dealer#ra	4_F_SHABBY,{
 OnInit:
 	sellitem Guard;
@@ -1975,10 +1676,7 @@ OnInit:
 	sellitem Sweet_Potato;
 }
 
-
-//=======================================================
-// Turtle Island
-//=======================================================
+//== Turtle Island =========================================
 tur_dun01,158,54,6	trader	Tool Dealer#tu	4W_M_03,{
 OnInit:
 	sellitem Arrow;
@@ -1994,10 +1692,7 @@ OnInit:
 	sellitem Luxury_Sunglasses;
 }
 
-
-//=======================================================
-// Umbala
-//=======================================================
+//== Umbala ================================================
 um_in,104,124,3	trader	Tool Dealer#um	4_M_UMOLDMAN,{
 OnInit:
 	sellitem Apple;
@@ -2006,7 +1701,7 @@ OnInit:
 	sellitem Sweet_Potato;
 	sellitem Banana;
 	sellitem Meat;
-	sellitem Monster's_Feed;
+	sellitem Monsters_Feed;
 	sellitem Pet_Food;
 	sellitem Wing_Of_Fly;
 	sellitem Wing_Of_Butterfly;
@@ -2028,10 +1723,7 @@ OnInit:
 	sellitem Claw;
 }
 
-
-//=======================================================
-// Veins
-//=======================================================
+//== Veins =================================================
 ve_in,386,245,3	trader	Weapon Dealer#ve	4_M_RACHMAN1,{
 OnInit:
 	sellitem Knife;
@@ -2100,42 +1792,7 @@ OnInit:
 	sellitem Silver_Robe;
 }
 
-
-//=======================================================
-// Cooking Addition
-//=======================================================
-prontera,156,212,1	trader	Chef Assistant#prt	8_F_GIRL,{
-OnInit:
-	sellitem Plain_Sauce;
-	sellitem Red_Spice;
-	sellitem Pot;
-	sellitem Bread;
-}
-
-payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
-OnInit:
-	sellitem Hot_Sauce;
-}
-
-moc_ruins,115,123,5	trader	Chef Assistant#moc	4_M_04,{
-OnInit:
-	sellitem Hot_Sauce;
-	sellitem Sweet_Sauce;
-	sellitem Plain_Sauce;
-	sellitem Red_Spice;
-	sellitem Yellow_Spice;
-}
-
-geffen,196,111,3	trader	Chef Assistant#gef	4_M_03,{
-OnInit:
-	sellitem Pot;
-}
-
-alberta,167,135,5	trader	Chef Assistant#alb	4_M_05,{
-OnInit:
-	sellitem Delicious_Fish;
-}
-
+//== Cooking Addition ======================================
 aldebaran,165,107,2	trader	Chef Assistant#alde	4W_M_01,{
 OnInit:
 	sellitem Red_Spice;
@@ -2208,48 +1865,3 @@ niflheim,209,180,5	trader	Chef Assistant#nif	4_M_01,{
 OnInit:
 	sellitem Mushroom;
 }
-
-
-//===== Additional Comments(old): =================================
-//= swapped shop titles in GONRYUN, thanks to Kashy
-//= 1.3a Fixed Louyang map name. Added additional shops in Yuno. [kobra_k88]
-//= 1.4 Added Niflheim Shops
-//= 1.5 New Payon Locations [Darkchild]
-//=     Moved shops in Umbala.txt here. Commented out the duplicate ones.[kobra_k88]
-//= 1.6 Removed GRAPE ID 514 from shops (caused exploits)
-//= 1.7 Removed juices from custom amatsu shops (it's a quest item + levelup exploit)
-//= 1.8 Corrected Niflheim Shops and Morroc Jewel Merchant [celest]
-//= 1.9 Updated Louyang shops thanks to MasterOfMuppets
-//= 1.10 Lutie Tools coords [Yor]
-//= 1.11 Added Belts to Prontera/Aldebaran shops, thanks to reddozen [Lupus]
-//= 1.12 official Ayothaya Shops, thanks to MasterOfMuppets [Lupus]
-//= 1.13 Added 5092 Coif into Prontera Church shop [Lupus]
-//= 1.14 Added Lighthalzen,Einbroch,Einbech shops. Updated Prontera,Morroc,Payon shops [Lupus]
-//= 1.15 Added Venom Knives into every Weapon Shop (that sells Knife[3]) [Lupus]
-//= 1.15a Fixed a small typo in alberta's weapon shop, thanks to reddozen for the fix [MasterOfMuppets]
-//= 1.16 Added a temp shop in Yuno to sell Blank scrolls, thanks to reddozen [MasterOfMuppets]
-//= 1.17 Added wand of hypnotist to the Lighthalzen weapon shop [MasterOfMuppets]
-//= 1.18 Fixed some shops based on kRO shots [Poki#3]
-//= 1.19 Added Hugel and fixed Payon shops based on kRO shots [Poki#3]
-//= 1.19a Added Food Seller selling Mastela Fruit in Hugel (Update item_db for the correct price!) [Poki#3]
-//= 1.20 Added 3 weapons shops, thx2 Muad_Dib [Lupus]
-//= 1.21 Added another weapon dealer to Einbroch, thanks to Muad_Dib [MasterOfMuppets]
-//=    - Fixed up the missing sprites for you Lupus :)
-//=   -  Guys, I suggest we crop these comments and put them at the bottom soon
-//= 1.22 Thx8) Removed Berserk Potions from all shops but Comodo [Lupus]
-//= 1.3 Added Gunslinger shops. Credits goes to RockmanEXE for the info [erKURITA]
-//=     Added Bucket Hat to Flu Mask dealer and modified it's name to a more logical one :P [erKURITA]
-//= 1.4 Added an ingredient seller to Morroc, thanks to Muad_Dib [MasterOfMuppets]
-//= a Removed doubled Morocc Ing.Seller, arranged the rest Ing.Sellers according to the city names [Lupus]
-//= 1.4b Commented out temp Gunslinger shops. [Lupus]
-//= 1.5 Removed Temp gunslinger shops and moved up the official ones. [erKURITA]
-//=     Added Official Ninja shops in their correct location and commented a few
-//=     shops. Thanks to RockmanEXE and Muad_Dib [erKURITA]
-//= 1.6 Implemented a missing Tool Shop in Lighthalzen [MasterOfMuppets]
-//= 1.7 Added some missing iRO - Lighthalzen NPCs [Musashiden]
-//= 1.8 Added Rachel Official shops. Special Thanks to RockmanEXE. [erKURITA]
-//= 1.9 Uncommented Homunculus shop, since Homunculus is working on trunk now. [Evera]
-//= 1.9a Pet Merchant -> Lighthalzen [erKURITA]
-//= 1.9b Added items to Chivas Regal
-//= 1.9c Slight update for Rachel shop: Tool Dealer -> Fruit Gardener [L0ne_W0lf]
-//============================================================

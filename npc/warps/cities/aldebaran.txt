@@ -1,19 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Justin84
+//= Copyright (C) Nana
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Al de Baran Warp Script
-//===== By: ==================================================
-//= Athena (1.0)
-//= Nana (1.1)
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Al de Baran
-//===== Additional Comments: =================================
-//= 1.2 Added Turbo Room Warps [Justin84]
-//= 1.3 Removed Turbo Track entrance. Scripted warp. [L0ne_W0lf]
-//= 1.4 Added missing warps. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-//===== Al De Baran Warps =====================================
+//== Al De Baran Warps =====================================
 aldebaran,118,63,0	warp	ald01	1,1,aldeba_in,211,117
 aldebaran,139,34,0	warp	ald001	3,2,mjolnir_12,199,375
 aldebaran,197,70,0	warp	ald02	1,1,aldeba_in,94,41
@@ -50,5 +72,5 @@ aldebaran,225,54	warp	aldeb_sign1-1	1,1,aldeba_in,149,120
 aldeba_in,149,123	warp	aldeb_sign1-2	3,2,aldebaran,223,56
 
 
-//Turbo Track Room
+//== Turbo Track Room ======================================
 turbo_room,100,62,0	warp	exit_turbo	1,1,alde_gld,183,198

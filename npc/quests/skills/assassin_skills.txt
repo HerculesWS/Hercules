@@ -1,18 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) DracoRPG
+//= Copyright (C) Reddozen
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Assassin Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen
-//===== Current Version: =====================================
-//= 1.5
-//===== File Encoding ========================================
-//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for skills: Venom Knife, Sonic Acceleration
-//===== Additional Comments: =================================
-//= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 	if (BaseJob == Job_Assassin && ASSN_SK2 == 1) {
@@ -55,7 +76,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 			mes "you forgot how to do this";
 			mes "skill? I suppose that all you";
 			mes "needed was a quick refresher.";
-			specialeffect2 EF_INVENOM;
+			specialeffect(EF_INVENOM, AREA, playerattached());
 			next;
 			mes "[Killtin]";
 			mes "Alright, I think it's";
@@ -116,7 +137,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 			next;
 			select("New skills?");
 			mes "[Killtin]";
-			mes "That's right, "+ strcharinfo(0) +".";
+			mes "That's right, "+ strcharinfo(PC_NAME) +".";
 			mes "The first skill specifically";
 			mes "enhances the Sonic Blow";
 			mes "skill, and the second skill";
@@ -131,7 +152,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 			mes "as I can about them.";
 			next;
 			while(1) {
-				switch(select("^0000FFSonic Blow Enhancement^000000:^990099Venom Knife^000000:Continue Conversation")) {
+				switch(select("^0000FFSonic Blow Enhancement^000000", "^990099Venom Knife^000000", "Continue Conversation")) {
 				case 1:
 					mes "[Killtin]";
 					mes "If you've been an Assassin";
@@ -170,7 +191,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 					mes "the Venom Knife skill from";
 					mes "me first. Then, you can talk";
 					mes "to Esmille, the beautiful";
-					mes "Assassin Cross right next to^FFFFFF ^000000 me, to learn Sonic Acceleration.";
+					mes "Assassin Cross right next to me, to learn Sonic Acceleration.";
 					next;
 					break;
 				case 2:
@@ -186,7 +207,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 					mes "This Venom Knife skill was";
 					mes "developed with this weakness";
 					mes "in long range attacking in mind. Basically, we use the Envenom";
-					mes "skill on a knife and throw it at^FFFFFF ^000000 a distant enemy to poison them.";
+					mes "skill on a knife and throw it at a distant enemy to poison them.";
 					next;
 					break;
 				case 3:
@@ -198,7 +219,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 					mes "you say? You ready to learn?";
 					next;
 					while(1) {
-						if (select("Learn Venom Knife:I d-don't wanna learn!") == 1) {
+						if (select("Learn Venom Knife", "I d-don't wanna learn!") == 1) {
 							mes "[Killtin]";
 							mes "First, you need to equip";
 							mes "a Knife class weapon, and";
@@ -224,7 +245,7 @@ in_moc_16,14,27,5	script	Assassin#realman	4_M_ACROSS,{
 							mes "bit of credit for my excellent";
 							mes "instruction. Ah, very nice.";
 							next;
-							specialeffect2 EF_INVENOM;
+							specialeffect(EF_INVENOM, AREA, playerattached());
 							next;
 							mes "[Killtin]";
 							mes "Alright, you may need";
@@ -309,7 +330,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 				mes "Sonic Blow skill. The skill";
 				mes "I will teach you is completely";
 				mes "useless unless you learn how";
-				mes "to perform a Sonic Blow. I shall^FFFFFF ^000000 be waiting right here till then.";
+				mes "to perform a Sonic Blow. I shall be waiting right here till then.";
 				close;
 			}
 			mes "[Esmille]";
@@ -336,7 +357,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "please try it so I can give";
 			mes "you feedback on your form.";
 			next;
-			specialeffect2 EF_SONICBLOW;
+			specialeffect(EF_SONICBLOW, AREA, playerattached());
 			next;
 			mes "[Esmille]";
 			mes "Hmm, you're shifting";
@@ -345,7 +366,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "help if your center of";
 			mes "gravity was like this...";
 			next;
-			specialeffect2 EF_SONICBLOW;
+			specialeffect(EF_SONICBLOW, AREA, playerattached());
 			next;
 			mes "[Esmille]";
 			mes "Ah, you're so very";
@@ -357,7 +378,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "[Esmille]";
 			mes "Yes, that's it...!";
 			mes "Very well executed.";
-			mes "Good work, "+ strcharinfo(0) +".";
+			mes "Good work, "+ strcharinfo(PC_NAME) +".";
 			skill "AS_SONICACCEL",1,0;
 			ASSN_SK = 7;
 			next;
@@ -423,7 +444,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "please try it so I can give";
 		mes "you feedback on your form.";
 		next;
-		specialeffect2 EF_SONICBLOW;
+		specialeffect(EF_SONICBLOW, AREA, playerattached());
 		next;
 		mes "[Esmille]";
 		mes "Hmm, you're shifting";
@@ -432,7 +453,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "help if your center of";
 		mes "gravity was like this...";
 		next;
-		specialeffect2 EF_SONICBLOW;
+		specialeffect(EF_SONICBLOW, AREA, playerattached());
 		next;
 		mes "[Esmille]";
 		mes "That's a little better.";
@@ -441,7 +462,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "and follow through with";
 		mes "the stabbing motion.";
 		next;
-		specialeffect2 EF_SONICBLOW;
+		specialeffect(EF_SONICBLOW, AREA, playerattached());
 		next;
 		mes "[Esmille]";
 		mes "Ah, you're so very";
@@ -449,12 +470,12 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "Focus more on smoothly";
 		mes "transitioning from your";
 		mes "stance to executed action.";
-		specialeffect2 EF_SONICBLOW;
+		specialeffect(EF_SONICBLOW, AREA, playerattached());
 		next;
 		mes "[Esmille]";
 		mes "Yes, that's it...!";
 		mes "Very well executed.";
-		mes "Good work, "+ strcharinfo(0) +".";
+		mes "Good work, "+ strcharinfo(PC_NAME) +".";
 		skill "AS_SONICACCEL",1,0;
 		ASSN_SK = 7;
 		next;
@@ -474,7 +495,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "I trust that you've completed";
 		mes "that task I assigned for you.";
 		next;
-		if ((ASSN_SK == 5 && countitem(726) > 0) || (ASSN_SK == 5 && countitem(723) > 0) || (ASSN_SK == 5 && countitem(720) > 0)) {
+		if ((ASSN_SK == 5 && countitem(Blue_Jewel) > 0) || (ASSN_SK == 5 && countitem(Cardinal_Jewel) > 0) || (ASSN_SK == 5 && countitem(Skyblue_Jewel) > 0)) {
 			select("How's this for treasure?");
 			mes "[Esmille]";
 			mes "Oh, that jewel...!";
@@ -486,8 +507,8 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "[Esmille]";
 			mes "That jewel is yours";
 			mes "to keep. In truth, I don't";
-			mes "really need any treasure, just^FFFFFF ^000000 some proof of your qualification.";
-			mes "It looks like you're ready for me^FFFFFF ^000000 to teach you Sonic Acceleration.";
+			mes "really need any treasure, just some proof of your qualification.";
+			mes "It looks like you're ready for me to teach you Sonic Acceleration.";
 			ASSN_SK = 6;
 			next;
 			mes "[Esmille]";
@@ -514,7 +535,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "please try it so I can give";
 			mes "you feedback on your form.";
 			next;
-			specialeffect2 EF_SONICBLOW;
+			specialeffect(EF_SONICBLOW, AREA, playerattached());
 			next;
 			mes "[Esmille]";
 			mes "Hmm, you're shifting";
@@ -523,7 +544,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "help if your center of";
 			mes "gravity was like this...";
 			next;
-			specialeffect2 EF_SONICBLOW;
+			specialeffect(EF_SONICBLOW, AREA, playerattached());
 			next;
 			mes "[Esmille]";
 			mes "That's a little better.";
@@ -532,12 +553,12 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 			mes "and follow through with";
 			mes "the stabbing motion.";
 			next;
-			specialeffect2 EF_SONICBLOW;
+			specialeffect(EF_SONICBLOW, AREA, playerattached());
 			next;
 			mes "[Esmille]";
 			mes "Yes, that's it...!";
 			mes "Very well executed.";
-			mes "Good work, "+ strcharinfo(0) +".";
+			mes "Good work, "+ strcharinfo(PC_NAME) +".";
 			skill 1003,1,0;
 			ASSN_SK = 7;
 			next;
@@ -601,7 +622,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "Killtin didn't fully explain.";
 		next;
 		while(1) {
-			switch(select("Please tell me more...:I want to learn Sonic Acceleration!")) {
+			switch(select("Please tell me more...", "I want to learn Sonic Acceleration!")) {
 			case 1:
 				mes "[Esmille]";
 				mes "Sonic Acceleration is";
@@ -642,7 +663,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 				mes "that you're so enthusiastic";
 				mes "about learning this skill.";
 				mes "But first, there we need to";
-				mes "take care of the prerequisites... ^FFFFFF ^000000";
+				mes "take care of the prerequisites... ";
 				next;
 				if (getskilllv("AS_SONICBLOW") == 0) {
 					mes "[Esmille]";
@@ -650,7 +671,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 					mes "Sonic Blow skill. The skill";
 					mes "I will teach you is completely";
 					mes "useless unless you learn how";
-					mes "to perform a Sonic Blow. I shall^FFFFFF ^000000 be waiting right here till then.";
+					mes "to perform a Sonic Blow. I shall be waiting right here till then.";
 					close;
 				}
 				mes "[Esmille]";
@@ -736,7 +757,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 	}
 }
 
-in_sphinx2,259,213,0	script	Old Coffin#qsk_as	-1,7,8,{
+in_sphinx2,259,213,0	script	Old Coffin#qsk_as	FAKE_NPC,7,8,{
 OnTouch:
 	if (ASSN_SK == 2) {
 		mes "^3355FFIt's an ancient coffin";
@@ -747,7 +768,7 @@ OnTouch:
 		specialeffect EF_CONE;
 		next;
 		while(1) {
-			switch(select("Put your hand inside:Inspect the coffin's opening:Lift the lid:Turn the coffin upside down:Ignore it")) {
+			switch(select("Put your hand inside", "Inspect the coffin's opening", "Lift the lid", "Turn the coffin upside down", "Ignore it")) {
 			case 1:
 				mes "^3355FFYou carefully put your";
 				mes "hand inside the coffin";
@@ -800,7 +821,7 @@ OnTouch:
 	}
 }
 
-in_sphinx2,212,267,0	script	Old Coffin#qsk_as2	-1,5,6,{
+in_sphinx2,212,267,0	script	Old Coffin#qsk_as2	FAKE_NPC,5,6,{
 OnTouch:
 	if (ASSN_SK == 2) {
 		mes "^3355FFIt's an ancient coffin";
@@ -811,7 +832,7 @@ OnTouch:
 		specialeffect EF_CONE;
 		next;
 		while(1) {
-			switch(select("Put your hand inside:Inspect the coffin's opening:Lift the lid:Turn the coffin upside down:Ignore it")) {
+			switch(select("Put your hand inside", "Inspect the coffin's opening", "Lift the lid", "Turn the coffin upside down", "Ignore it")) {
 			case 1:
 				mes "^3355FFYou carefully put your";
 				mes "hand inside the coffin";
@@ -843,7 +864,7 @@ OnTouch:
 					mes "coffin. You have obtained";
 					mes "a Sapphire for Esmille.^000000";
 					ASSN_SK = 5;
-					getitem 726,1; //Blue_Jewel
+					getitem Blue_Jewel,1;
 					close;
 				}
 			case 2:
@@ -883,7 +904,7 @@ OnTouch:
 	}
 }
 
-in_sphinx2,13,163,0	script	Stone Statue#qsk_as	-1,7,7,{
+in_sphinx2,13,163,0	script	Stone Statue#qsk_as	FAKE_NPC,7,7,{
 OnTouch:
 	if (ASSN_SK == 3) {
 		specialeffect EF_CONE;
@@ -896,7 +917,7 @@ OnTouch:
 		mes "soft enough to dig through...^000000";
 		specialeffect EF_CONE;
 		next;
-		if (select("Dig to retrieve the shining object:Ignore it") == 1) {
+		if (select("Dig to retrieve the shining object", "Ignore it") == 1) {
 			mes "^3355FFAs your fingers dig into";
 			mes "the soft ground, it emits^000000";
 			if (rand(1,3) != 3){
@@ -912,13 +933,13 @@ OnTouch:
 			mes "to escape its effects. You've";
 			mes "retrieved a Ruby for Esmille.^000000";
 			ASSN_SK = 5;
-			getitem 723,1; //Cardinal_Jewel
+			getitem Cardinal_Jewel,1;
 		}
 		close;
 	}
 }
 
-in_sphinx2,13,146,0	script	Stone Statue#qsk_as2	-1,7,7,{
+in_sphinx2,13,146,0	script	Stone Statue#qsk_as2	FAKE_NPC,7,7,{
 OnTouch:
 	if (ASSN_SK == 3) {
 		specialeffect EF_CONE;
@@ -931,7 +952,7 @@ OnTouch:
 		mes "soft enough to dig through...^000000";
 		specialeffect EF_CONE;
 		next;
-		if (select("Dig to retrieve the shining object:Ignore it") == 1) {
+		if (select("Dig to retrieve the shining object", "Ignore it") == 1) {
 			mes "^3355FFAs your fingers dig into";
 			mes "the soft ground, it emits^000000";
 			if (rand(1,3) != 3) {
@@ -952,9 +973,7 @@ OnTouch:
 	}
 }
 
-// FIXME[Haru]: Why do we have a Korean name here? Can anyone translate it?
-//      Google translate says ¡¡ (jingjing) = Whining, but it doesn't make much sense to me.
-moc_pryd04,85,96,0	script	¡¡#crypt	-1,3,3,{
+moc_pryd04,85,96,0	script	Glimmer#crypt	FAKE_NPC,3,3,{
 OnTouch:
 	if (ASSN_SK == 4) {
 		specialeffect EF_CONE;
@@ -962,7 +981,7 @@ OnTouch:
 		mes "glimmering beneath";
 		mes "the surface of the water...^000000";
 		next;
-		if (select("Pick it up:Ignore it") == 1) {
+		if (select("Pick it up", "Ignore it") == 1) {
 			mes "^3355FFAs soon as you dip your";
 			mes "hand into the water, the";
 			mes "water's freezing chill shoots";
@@ -982,22 +1001,8 @@ OnTouch:
 			mes "freeze you. You obtained";
 			mes "an Aquamarine for Esmille.^000000";
 			ASSN_SK = 5;
-			getitem 720,1; //Skyblue_Jewel
+			getitem Skyblue_Jewel,1;
 		}
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//============================================================

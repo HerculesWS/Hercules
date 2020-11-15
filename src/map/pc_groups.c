@@ -1,33 +1,50 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "pc_groups.h"
 
-#include "atcommand.h" // atcommand->exists(), atcommand->load_groups()
-#include "clif.h"      // clif->GM_kick()
-#include "map.h"       // mapiterator
-#include "pc.h"        // pc->set_group()
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h" // strcmp
+#include "map/atcommand.h" // atcommand-"exists(), atcommand-"load_groups()
+#include "map/clif.h"      // clif-"GM_kick()
+#include "map/map.h"       // mapiterator
+#include "map/pc.h"        // pc-"set_group()
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h" // strcmp
 
 static GroupSettings dummy_group; ///< dummy group used in dummy map sessions @see pc_get_dummy_sd()
 
-struct pc_groups_interface pcg_s;
+static struct pc_groups_interface pcg_s;
+struct pc_groups_interface *pcg;
 
 /**
  * Returns dummy group.
  * Used in dummy map sessions.
  * @see pc_get_dummy_sd()
  */
-GroupSettings* pc_group_get_dummy_group(void)
+static GroupSettings *pc_group_get_dummy_group(void)
 {
 	return &dummy_group;
 }
@@ -36,7 +53,7 @@ GroupSettings* pc_group_get_dummy_group(void)
  * @retval NULL if not found
  * @private
  */
-static inline GroupSettings* name2group(const char* group_name)
+static inline GroupSettings *name2group(const char *group_name)
 {
 	return strdb_get(pcg->name_db, group_name);
 }
@@ -45,20 +62,21 @@ static inline GroupSettings* name2group(const char* group_name)
  * Loads group configuration from config file into memory.
  * @private
  */
-static void read_config(void) {
-	config_t pc_group_config;
-	config_setting_t *groups = NULL;
+static void read_config(void)
+{
+	struct config_t pc_group_config;
+	struct config_setting_t *groups = NULL;
 	const char *config_filename = "conf/groups.conf"; // FIXME hardcoded name
 	int group_count = 0;
-	
-	if (libconfig->read_file(&pc_group_config, config_filename))
+
+	if (!libconfig->load_file(&pc_group_config, config_filename))
 		return;
 
 	groups = libconfig->lookup(&pc_group_config, "groups");
 
 	if (groups != NULL) {
 		GroupSettings *group_settings = NULL;
-		DBIterator *iter = NULL;
+		struct DBIterator *iter = NULL;
 		int i, loop = 0;
 
 		group_count = libconfig->setting_length(groups);
@@ -66,7 +84,7 @@ static void read_config(void) {
 			int id = 0, level = 0;
 			const char *groupname = NULL;
 			int log_commands = 0;
-			config_setting_t *group = libconfig->setting_get_elem(groups, i);
+			struct config_setting_t *group = libconfig->setting_get_elem(groups, i);
 
 			if (!libconfig->setting_lookup_int(group, "id", &id)) {
 				ShowConfigWarning(group, "pc_groups:read_config: \"groups\" list member #%d has undefined id, removing...", i);
@@ -89,11 +107,11 @@ static void read_config(void) {
 
 			if (!libconfig->setting_lookup_string(group, "name", &groupname)) {
 				char temp[20];
-				config_setting_t *name = NULL;
+				struct config_setting_t *name = NULL;
 				snprintf(temp, sizeof(temp), "Group %d", id);
 				if ((name = config_setting_add(group, "name", CONFIG_TYPE_STRING)) == NULL ||
 				    !config_setting_set_string(name, temp)) {
-					ShowError("pc_groups:read_config: failed to set missing group name, id=%d, skipping... (%s:%d)\n",
+					ShowError("pc_groups:read_config: failed to set missing group name, id=%d, skipping... (%s:%u)\n",
 					          id, config_setting_source_file(group), config_setting_source_line(group));
 					--i;
 					--group_count;
@@ -124,15 +142,14 @@ static void read_config(void) {
 
 			strdb_put(pcg->name_db, groupname, group_settings);
 			idb_put(pcg->db, id, group_settings);
-			
 		}
 		group_count = libconfig->setting_length(groups); // Save number of groups
 		assert(group_count == db_size(pcg->db));
-		
+
 		// Check if all commands and permissions exist
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-			config_setting_t *commands = group_settings->commands, *permissions = group_settings->permissions;
+			struct config_setting_t *commands = group_settings->commands, *permissions = group_settings->permissions;
 			int count = 0;
 
 			// Make sure there is "commands" group
@@ -141,7 +158,7 @@ static void read_config(void) {
 			count = libconfig->setting_length(commands);
 
 			for (i = 0; i < count; ++i) {
-				config_setting_t *command = libconfig->setting_get_elem(commands, i);
+				struct config_setting_t *command = libconfig->setting_get_elem(commands, i);
 				const char *name = config_setting_name(command);
 				if (!atcommand->exists(name)) {
 					ShowConfigWarning(command, "pc_groups:read_config: non-existent command name '%s', removing...", name);
@@ -157,7 +174,7 @@ static void read_config(void) {
 			count = libconfig->setting_length(permissions);
 
 			for(i = 0; i < count; ++i) {
-				config_setting_t *permission = libconfig->setting_get_elem(permissions, i);
+				struct config_setting_t *permission = libconfig->setting_get_elem(permissions, i);
 				const char *name = config_setting_name(permission);
 				int j;
 
@@ -177,11 +194,11 @@ static void read_config(void) {
 		while (i < group_count) {
 			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-				config_setting_t *inherit = NULL,
+				struct config_setting_t *inherit = NULL,
 				                 *commands = group_settings->commands,
 					             *permissions = group_settings->permissions;
 				int j, inherit_count = 0, done = 0;
-				
+
 				if (group_settings->inheritance_done) // group already processed
 					continue;
 
@@ -191,7 +208,7 @@ static void read_config(void) {
 					group_settings->inheritance_done = true;
 					continue;
 				}
-				
+
 				for (j = 0; j < inherit_count; ++j) {
 					GroupSettings *inherited_group = NULL;
 					const char *groupname = libconfig->setting_get_string_elem(inherit, j);
@@ -224,7 +241,7 @@ static void read_config(void) {
 
 					++done; // copied commands and permissions from one of inherited groups
 				}
-				
+
 				if (done == inherit_count) { // copied commands from all of inherited groups
 					++i;
 					group_settings->inheritance_done = true; // we're done with this group
@@ -238,15 +255,15 @@ static void read_config(void) {
 				break;
 			}
 		} // while(i < group_count)
-		
+
 		// Pack permissions into GroupSettings.e_permissions for faster checking
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-			config_setting_t *permissions = group_settings->permissions;
+			struct config_setting_t *permissions = group_settings->permissions;
 			int count = libconfig->setting_length(permissions);
 
 			for (i = 0; i < count; ++i) {
-				config_setting_t *perm = libconfig->setting_get_elem(permissions, i);
+				struct config_setting_t *perm = libconfig->setting_get_elem(permissions, i);
 				const char *name = config_setting_name(perm);
 				int val = libconfig->setting_get_bool(perm);
 				int j;
@@ -264,9 +281,9 @@ static void read_config(void) {
 		// to atcommand->load_group() for processing.
 		if (group_count > 0) {
 			GroupSettings **pc_groups = NULL;
-			config_setting_t **commands = NULL;
+			struct config_setting_t **commands = NULL;
 			CREATE(pc_groups, GroupSettings*, group_count);
-			CREATE(commands, config_setting_t*, group_count);
+			CREATE(commands, struct config_setting_t*, group_count);
 			i = 0;
 			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
@@ -292,8 +309,9 @@ static void read_config(void) {
  * @param group group
  * @param permission permission to check
  */
-bool pc_group_has_permission(GroupSettings *group, unsigned int permission)
+static bool pc_group_has_permission(GroupSettings *group, unsigned int permission)
 {
+	nullpo_retr(false, group);
 	return ((group->e_permissions&permission) != 0);
 }
 
@@ -301,8 +319,9 @@ bool pc_group_has_permission(GroupSettings *group, unsigned int permission)
  * Checks if commands used by player group should be logged
  * @param group group
  */
-bool pc_group_should_log_commands(GroupSettings *group)
+static bool pc_group_should_log_commands(GroupSettings *group)
 {
+	nullpo_retr(true, group);
 	return group->log_commands;
 }
 
@@ -311,7 +330,7 @@ bool pc_group_should_log_commands(GroupSettings *group)
  * @param group_id group id
  * @returns true if group exists, false otherwise
  */
-bool pc_group_exists(int group_id)
+static bool pc_group_exists(int group_id)
 {
 	return idb_exists(pcg->db, group_id);
 }
@@ -319,7 +338,7 @@ bool pc_group_exists(int group_id)
 /**
  * @retval NULL if not found
  */
-GroupSettings* pc_group_id2group(int group_id)
+static GroupSettings *pc_group_id2group(int group_id)
 {
 	return idb_get(pcg->db, group_id);
 }
@@ -330,8 +349,9 @@ GroupSettings* pc_group_id2group(int group_id)
  * @return group name
  * @public
  */
-const char* pc_group_get_name(GroupSettings *group)
+static const char *pc_group_get_name(GroupSettings *group)
 {
+	nullpo_retr(NULL, group);
 	return group->name;
 }
 
@@ -341,8 +361,9 @@ const char* pc_group_get_name(GroupSettings *group)
  * @return group level
  * @public
  */
-int pc_group_get_level(GroupSettings *group)
+static int pc_group_get_level(GroupSettings *group)
 {
+	nullpo_ret(group);
 	return group->level;
 }
 
@@ -352,8 +373,9 @@ int pc_group_get_level(GroupSettings *group)
  * @return group index
  * @public
  */
-int pc_group_get_idx(GroupSettings *group)
+static int pc_group_get_idx(GroupSettings *group)
 {
+	nullpo_ret(group);
 	return group->index;
 }
 
@@ -361,38 +383,41 @@ int pc_group_get_idx(GroupSettings *group)
  * Insert a new permission
  * @return inserted key or 0 upon failure.
  **/
-unsigned int pc_groups_add_permission(const char *name) {
+static unsigned int pc_groups_add_permission(const char *name)
+{
 	uint64 key = 0x1;
 	unsigned char i;
-	
+	nullpo_ret(name);
+
 	for(i = 0; i < pcg->permission_count; i++) {
 		if( strcmpi(name,pcg->permissions[i].name) == 0 ) {
 			ShowError("pc_groups_add_permission(%s): failed! duplicate permission name!\n",name);
 			return 0;
 		}
 	}
-	
+
 	if( i != 0 )
 		key = (uint64)pcg->permissions[i - 1].permission << 1;
-	
+
 	if( key >= UINT_MAX ) {
 		ShowError("pc_groups_add_permission(%s): failed! not enough room, too many permissions!\n",name);
 		return 0;
 	}
-	
+
 	i = pcg->permission_count;
 	RECREATE(pcg->permissions, struct pc_groups_permission_table, ++pcg->permission_count);
-	
+
 	pcg->permissions[i].name = aStrdup(name);
 	pcg->permissions[i].permission = (unsigned int)key;
-	
+
 	return (unsigned int)key;
 }
 /**
  * Initialize PC Groups: allocate DBMaps and read config.
  * @public
  */
-void do_init_pc_groups(void) {
+static void do_init_pc_groups(void)
+{
 	const struct {
 		const char *name;
 		unsigned int permission;
@@ -424,34 +449,36 @@ void do_init_pc_groups(void) {
 		{ "disable_store", PC_PERM_DISABLE_STORE },
 		{ "disable_exp", PC_PERM_DISABLE_EXP },
 		{ "disable_skill_usage", PC_PERM_DISABLE_SKILL_USAGE },
+		{ "bypass_nostorage", PC_PERM_BYPASS_NOSTORAGE },
 	};
 	unsigned char i, len = ARRAYLENGTH(pc_g_defaults);
-	
+
 	for(i = 0; i < len; i++) {
 		unsigned int p;
 		if( ( p = pc_groups_add_permission(pc_g_defaults[i].name) ) != pc_g_defaults[i].permission )
-			ShowError("do_init_pc_groups: %s error : %d != %d\n",pc_g_defaults[i].name,p,pc_g_defaults[i].permission);
+			ShowError("do_init_pc_groups: %s error : %u != %u\n", pc_g_defaults[i].name, p, pc_g_defaults[i].permission);
 	}
-	
+
 	/**
 	 * Handle plugin-provided permissions
 	 **/
 	for(i = 0; i < pcg->HPMpermissions_count; i++) {
 		*pcg->HPMpermissions[i].mask = pc_groups_add_permission(pcg->HPMpermissions[i].name);
 	}
-	
+
 	pcg->db = idb_alloc(DB_OPT_RELEASE_DATA);
 	pcg->name_db = stridb_alloc(DB_OPT_DUP_KEY, 0);
-	
+
 	read_config();
 }
 
 /**
  * @see DBApply
  */
-static int group_db_clear_sub(DBKey key, DBData *data, va_list args)
+static int group_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	GroupSettings *group = DB->data2ptr(data);
+	nullpo_ret(group);
 	if (group->name)
 		aFree(group->name);
 	return 0;
@@ -461,13 +488,13 @@ static int group_db_clear_sub(DBKey key, DBData *data, va_list args)
  * Finalize PC Groups: free DBMaps and config.
  * @public
  */
-void do_final_pc_groups(void)
+static void do_final_pc_groups(void)
 {
 	if (pcg->db != NULL)
 		pcg->db->destroy(pcg->db, group_db_clear_sub);
 	if (pcg->name_db != NULL)
 		db_destroy(pcg->name_db);
-	
+
 	if(pcg->permissions != NULL) {
 		unsigned char i;
 		for(i = 0; i < pcg->permission_count; i++)
@@ -483,16 +510,17 @@ void do_final_pc_groups(void)
  * Used in @reloadatcommand
  * @public
  */
-void pc_groups_reload(void) {
+static void pc_groups_reload(void)
+{
 	struct map_session_data *sd = NULL;
 	struct s_mapiterator *iter;
 
 	pcg->final();
 	pcg->init();
-	
+
 	/* refresh online users permissions */
 	iter = mapit_getallusers();
-	for (sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter)) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (pc->set_group(sd, sd->group_id) != 0) {
 			ShowWarning("pc_groups_reload: %s (AID:%d) has unknown group id (%d)! kicking...\n",
 				sd->status.name, sd->status.account_id, pc_get_group_id(sd));
@@ -505,9 +533,9 @@ void pc_groups_reload(void) {
 /**
  * Connect Interface
  **/
-void pc_groups_defaults(void) {
+void pc_groups_defaults(void)
+{
 	pcg = &pcg_s;
-	
 	/* */
 	pcg->db = NULL;
 	pcg->name_db = NULL;

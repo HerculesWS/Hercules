@@ -24,7 +24,12 @@ umbala,126,129,4	script	Bearded Man#bandit	2_M_PHARMACIST,{
 	mes "Beards! Get your wonderful beards!";
 	mes "Would you like a beard?";
 	next;
-	menu "Yes, I'd like some facial hair!",-,"No thanks, thats gross!",M_NO;
+	if (select("Yes, I'd like some facial hair!", "No thanks, thats gross!") != 1) {
+		mes "[Bearded Man]";
+		mes "Fine, be that way!";
+		emotion 7;
+		close;
+	}
 
 	mes "[Bearded Man]";
 	mes "HoHo~ So you want some whiskers.";
@@ -54,12 +59,6 @@ L_List:
 	mes " and one ^8080FF2 Carat Diamond^000000";
 	close;
 
-M_NO:
-	mes "[Bearded Man]";
-	mes "Fine, be that way!";
-	emotion 7;
-	close;
-
 L_DONE:
 	mes "[Bearded Man]";
 	mes "Sorry, I can only make one per person.";
@@ -71,8 +70,8 @@ L_MAKE:
 	mes "[Bearded Man]";
 	mes "Let's make you your beard!";
 	next;
-	if(countitem(7200) < 1 || countitem(919) < 1 ||	countitem(983) < 1 || countitem(2241) < 1 ||
-	countitem(938) < 100 || countitem(973) < 1 || countitem(731) < 1) goto L_NOITEMS;
+	if(countitem(Flexible_String) < 1 || countitem(Animals_Skin) < 1 || countitem(Black_Dyestuffs) < 1 || countitem(Granpa_Beard) < 1 ||
+	countitem(Sticky_Mucus) < 100 || countitem(Counteragent) < 1 || countitem(Crystal_Jewel_) < 1) goto L_NOITEMS;
 	delitem 7200, 1;
 	delitem 919, 1;
 	delitem 983, 1;
@@ -126,11 +125,10 @@ aldeba_in,70,179,5	script	Karfa Clerk#bandit	4_F_KAFRA5,{
 	next;
 	if(BEARD_QUEST == 2 ) goto L_Delivery;
 
-	menu "What's in the boxes?",-,"Nothing.",M_NOPE;
-
+	if (select("What's in the boxes?", "Nothing.") != 1)
+		close;
 	mes "[Karfa Clerk]";
 	mes "They're empty.";
-M_NOPE:
 	close;
 
 L_Delivery:
@@ -174,8 +172,11 @@ alberta,65,123,6	script	Man#bandit	4_M_03,{
 	mes "Are you here to help me?";
 	emotion 1;
 	next;
-	menu "Yes",-,"No",M_NO;
-
+	if (select("Yes", "No") != 1) {
+		mes "[Thread Merchant]";
+		mes "What to do...";
+		close;
+	}
 	mes "[Thread Merchant]";
 	mes "Oh thank the Gods!";
 	mes "If you can only just kill the bugs I would be able to make my delivery.";
@@ -199,15 +200,10 @@ L_DONE:
 	mes "Thank you again!";
 	emotion 15;
 	close;
-
-M_NO:
-	mes "[Thread Merchant]";
-	mes "What to do...";
-	close;
 }
 
 //mobsummons -------
-alberta,1,1,1	script	BRDQ_MOBS	-1,{
+alberta,1,1,1	script	BRDQ_MOBS	FAKE_NPC,{
 OnStart:
 	set $@beardmob,10;
 	set $@beardMobD,0;

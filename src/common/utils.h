@@ -1,17 +1,43 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef COMMON_UTILS_H
 #define COMMON_UTILS_H
 
-#include <stdio.h> // FILE*
-#include <time.h>
+#include "common/hercules.h"
 
-#include "../common/cbasetypes.h"
+#include <stdio.h> // FILE*
+#ifndef WIN32
+#	include <unistd.h> // sleep()
+#endif
 
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'
+
+#ifndef MAX_DIR_PATH
+#ifdef WIN32
+#define MAX_DIR_PATH MAX_PATH
+#else
+#define MAX_DIR_PATH 2048
+#endif
+#endif
 
 //Caps values to min/max
 #define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
@@ -21,11 +47,16 @@
 void WriteDump(FILE* fp, const void* buffer, size_t length);
 void ShowDump(const void* buffer, size_t length);
 
-void findfile(const char *p, const char *pat, void (func)(const char*));
+void findfile(const char *p, const char *pat, void (func)(const char *, void *), void *context);
+bool is_file(const char *path);
 bool exists(const char* filename);
 
 /// calculates the value of A / B, in percent (rounded down)
 unsigned int get_percentage(const unsigned int A, const unsigned int B);
+uint64 get_percentage64(const uint64 A, const uint64 B);
+
+int64 apply_percentrate64(int64 value, int rate, int maxrate);
+int apply_percentrate(int value, int rate, int maxrate);
 
 const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format);
 
@@ -52,6 +83,12 @@ size_t hread(void * ptr, size_t size, size_t count, FILE * stream);
 size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream);
 #endif // HERCULES_CORE
 
+#ifdef WIN32
+#define HSleep(x) Sleep(1000 * (x))
+#else // ! WIN32
+#define HSleep(x) sleep(x)
+#endif
+
 /* [Ind/Hercules] Caching */
 struct HCache_interface {
 	void (*init) (void);
@@ -63,10 +100,10 @@ struct HCache_interface {
 	bool enabled;
 };
 
-struct HCache_interface *HCache;
-
 #ifdef HERCULES_CORE
 void HCache_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct HCache_interface *HCache;
 
 #endif /* COMMON_UTILS_H */

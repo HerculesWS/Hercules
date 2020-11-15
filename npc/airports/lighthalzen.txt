@@ -1,30 +1,53 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Muad_Dib
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Lighthalzen Airport Staff
-//===== By: ==================================================
-//= L0ne_W0lf, Muad_Dib
-//===== Description: =========================================
-//= Lighthalzen Airport Staff
-//===== Additional Comments: =================================
-//= Official NPCs.
-//============================================================
+//================= Description ===========================================
+//= Official Lighthalzen Airport Staff
+//=========================================================================
 
 lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	4_F_01,{
-	mes "[Airport Staff]";
-	mes "Welcome to the";
-	mes "Lighthalzen Airport,";
-	mes "where we offer nonstop";
-	mes "flights to Einbroch, Juno and Hugel.";
+	mes("[Airport Staff]");
+	mes("Welcome to the\r"
+		"Lighthalzen Airport,\r"
+		"where we offer nonstop\r"
+		"flights to Einbroch, Juno and Hugel.");
 	next;
-	if (select("Board the Airship.:Cancel.") == 1) {
-		mes "[Airport Staff]";
-		mes "The boarding fee is";
-		mes "1,200 zeny, but you can";
-		mes "waive the fee if you redeem";
-		mes "a Free Ticket for Airship.";
+	if (select("Board the Airship.", "Cancel.") == 1) {
+		mes("[Airport Staff]");
+		mes("The boarding fee is\r"
+			"1,200 zeny, but you can\r"
+			"waive the fee if you redeem\r"
+			"a Free Ticket for Airship.");
 		next;
-		if (select("Yes:No") == 1) {
-			if (countitem(7311) > 0) {
-				delitem 7311,1; //Free_Flying_Ship_Ticket
+		if (select("Yes", "No") == 1) {
+			if (countitem(Free_Flying_Ship_Ticket) > 0) {
+				delitem Free_Flying_Ship_Ticket,1;
 				warp "lhz_airport",148,51;
 				end;
 			}
@@ -33,17 +56,17 @@ lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	4_F_01,{
 				warp "lhz_airport",148,51;
 				end;
 			}
-			mes "[Airship Staff]";
-			mes "I'm sorry, but you don't";
-			mes "have 1,200 zeny to pay";
-			mes "for the boarding fee.";
+			mes("[Airship Staff]");
+			mes("I'm sorry, but you don't\r"
+				"have 1,200 zeny to pay\r"
+				"for the boarding fee.");
 			close;
 		}
 	}
-	mes "[Airport Staff]";
-	mes "Thank you and";
-	mes "please come again.";
-	mes "Have a good day~";
+	mes("[Airport Staff]");
+	mes("Thank you and\r"
+		"please come again.");
+	mes("Have a good day~");
 	close;
 }
 
@@ -51,29 +74,29 @@ lhz_airport,158,43,5	duplicate(lhz_airport1)	Airship Staff#lhz_air1b	4_F_01
 lhz_airport,126,43,5	duplicate(lhz_airport1)	Airship Staff#lhz_air1c	4_F_01
 
 lhz_airport,143,49,3	script	Arrival Staff#lhz_air2a::lhz_airport2	4_F_01,{
-	mes "[Arrival Staff]";
-	mes "Welcome to Lighthalzen Airport.";
-	mes "Please let me guide you to the";
-	mes "main terminal if you are arriving from your flight. Otherwise, please";
-	mes "board the departing Airship to reach your intended destination.";
+	mes("[Arrival Staff]");
+	mes("Welcome to Lighthalzen Airport.");
+	mes("Please let me guide you to the\r"
+		"main terminal if you are arriving from your flight. Otherwise, please\r"
+		"board the departing Airship to reach your intended destination.");
 	next;
-	if (select("Exit to main terminal.:Cancel.") == 1) {
-		mes "[Arrival Staff]";
-		mes "Once you're in the main terminal, you will need to pay the fee again";
-		mes "to board an Airship. You should";
-		mes "only exit if Lighthalzen is your intended destination. Shall we";
-		mes "proceed to the main terminal?";
+	if (select("Exit to main terminal.", "Cancel.") == 1) {
+		mes("[Arrival Staff]");
+		mes("Once you're in the main terminal, you will need to pay the fee again\r"
+			"to board an Airship. You should\r"
+			"only exit if Lighthalzen is your intended destination. Shall we\r"
+			"proceed to the main terminal?");
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			warp "lhz_airport",142,40;
 			end;
 		}
 	}
-	mes "[Arrival Staff]";
-	mes "Alright, thank you";
-	mes "for your patronage";
-	mes "and I hope you have";
-	mes "a pleasant flight~";
+	mes("[Arrival Staff]");
+	mes("Alright, thank you\r"
+		"for your patronage\r"
+		"and I hope you have\r"
+		"a pleasant flight~");
 	close;
 }
 

@@ -1,25 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) Samuray22
+//= Copyright (C) Celestria
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Soul Linker Job Quest
-//===== By: ==================================================
-//= Celestria & Samuray22
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job quest for Soul Linker class.
-//= [Vars Used]
+//================= Current Version =======================================
+//= 1.6
+//================= Variables Used ========================================
 //= SOUL_Q = Job Change Phase. (Max 4)
-//===== Additional Comments: =================================
-//= 1.2 Rescripted to Aegis 10.3 standards. [Samuray22]
-//= 1.3 Slight updates and fixes to the script. [L0ne_W0lf]
-//=     Removes the use of labels, and corrects other errors.
-//=     Removed the GM-use only NPC from the sec_in map.
-//=     No longer used a global var, uses an NPC var instead.
-//= 1.3a Deleted Empty Color Tag. (bugreport:1572) [Samuray22]
-//= 1.4 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.5 Added Quest Log commands. [Kisuka]
-//= 1.6 Updated to match the latest official script. [Euphy]
-//============================================================
+//=========================================================================
 
 morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 	if (Class == Job_Soul_Linker) {
@@ -34,7 +52,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 	}
 	if (Class == Job_Star_Gladiator) {
 		mes "[Kid]";
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			mes "Aren't you a warrior";
 			mes "of the sun? I'm familiar";
 		}
@@ -73,7 +91,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 			mes "...";
 			mes "Hey you.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Did you call me?";
 			next;
 			mes "[Kid]";
@@ -82,7 +100,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 			mes "raise my voice, and";
 			mes "just get over here.";
 			next;
-			if (select("You're awfully rude for a kid!:Ignore him.") == 1) {
+			if (select("You're awfully rude for a kid!", "Ignore him.") == 1) {
 				mes "[Kid]";
 				mes "You're lucky I'm";
 				mes "taking an interest";
@@ -108,7 +126,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "wanna see wasted. Why don't";
 				mes "you become a ''Soul-Linker?''";
 				next;
-				if (select("Ha! Silly little boy~:Soul Linker?") == 1) {
+				if (select("Ha! Silly little boy~", "Soul Linker?") == 1) {
 					mes "[Kid]";
 					mes "You... You d-don't";
 					mes "believe me? I'm being";
@@ -147,7 +165,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "but I know it'll be possible";
 				mes "for you. So what do you say?";
 				next;
-				if (select("No. At least, not now...:Alright. What do I have to do?") == 1) {
+				if (select("No. At least, not now...", "Alright. What do I have to do?") == 1) {
 					mes "[Kid]";
 					mes "Ah, alright. Well,";
 					mes "if you ever decide to";
@@ -192,11 +210,11 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "^0000FF1 Witherless Rose^000000.";
 				mes "like I asked you to?";
 				next;
-				if (select("There you are.:No, not yet...") == 1) {
-					if (countitem(732) > 0 && countitem(929) > 0 && countitem(748) > 0) {
-						delitem 732,1; //Crystal_Jewel__
-						delitem 929,1; //Immortal_Heart
-						delitem 748,1; //Witherless_Rose
+				if (select("There you are.", "No, not yet...") == 1) {
+					if (countitem(Crystal_Jewel__) > 0 && countitem(Immortal_Heart) > 0 && countitem(Witherless_Rose) > 0) {
+						delitem Crystal_Jewel__,1;
+						delitem Immortal_Heart,1;
+						delitem Witherless_Rose,1;
 						SOUL_Q = 2;
 						changequest 6005,6006;
 						mes "[Kid]";
@@ -294,7 +312,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 			mes "enter the depths";
 			mes "of your mind again?";
 			next;
-			if (select("No:Yes") == 1) {
+			if (select("No", "Yes") == 1) {
 				mes "[Maia]";
 				mes "Well then, come";
 				mes "back to me when you";
@@ -331,7 +349,7 @@ OnInit:
 	end;
 }
 
-job_soul,30,31,0	script	Maia#link2::SLTester	-1,3,3,{
+job_soul,30,31,0	script	Maia#link2::SLTester	FAKE_NPC,3,3,{
 OnTouch:
 	if (Class == Job_Taekwon) {
 		if (JobLevel < 40) {
@@ -388,7 +406,7 @@ OnTouch:
 			mes "speak with the spirits";
 			mes "if that is what you wish.";
 			next;
-			if (select("Converse more with the spirits:Become a Soul Linker") == 1) {
+			if (select("Converse more with the spirits", "Become a Soul Linker") == 1) {
 				mes "[Maia]";
 				mes "Alright. Try to hurry";
 				mes "since we can remain in";
@@ -416,7 +434,7 @@ OnTouch:
 			mes "[Maia]";
 			mes "This Witherless Rose will";
 			mes "wither away instead of you...";
-			specialeffect EF_MAPPILLAR2,AREA,"Maia#link2";
+			specialeffect(EF_MAPPILLAR2, AREA, getnpcid("Maia#link2"));
 			next;
 			mes "[Maia]";
 			mes "This Witherless Rose will";
@@ -683,7 +701,7 @@ sec_in02,35,153,0	script	Soul Linker Var	4_M_OPERATION,{
 		mes "reset the Soul Linker";
 		mes "Global Variable?";
 		next;
-		switch(select("Reset:Cancel")) {
+		switch(select("Reset", "Cancel")) {
 		case 1:
 			mes "[Soul Linker Var]";
 			mes "The Soul Linker";
@@ -699,12 +717,3 @@ sec_in02,35,153,0	script	Soul Linker Var	4_M_OPERATION,{
 		}
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= A temp Soul Linker Job Changer based on the kRO quest.
-//= Quest info from RagnaInfo. Sprites from kRO screenshots
-//= 1.0 Optimized and updated [Lupus]
-//= 1.1 Fixed NPC names according to iRO [Lupus]
-//============================================================

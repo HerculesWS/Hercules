@@ -17,11 +17,10 @@
 sec_pri,36,58,1	script	Chief Warder	8W_SOLDIER,{
 	mes "[Saddeus]";
 	emotion 1;
-	if(Sex) {
+	if (Sex == SEX_MALE)
 		mes "Mr. Prisoner #"+BaseLevel+JobLevel+",";
-	} else {
+	else
 		mes "Ms. Prisoner #"+BaseLevel+JobLevel+",";
-	}
 	mes "what's the noise over there?";
 	next;
 	menu "Let me free, I'll pay!",-, "Let me to work off my freedom!",M_Q1, "Nothing",M_NO_THANKS;
@@ -130,24 +129,24 @@ M_NO_THANKS:
 sec_in02,137,57,1	script	Overseer	4_M_PAY_SOLDIER,{
 	mes "[Oliver]";
 
-	delitem 4002,countitem(4002);//Items: Fabre_Card,
-	delitem 4009,countitem(4009);//Items: Chonchon_Card,
-	delitem 4022,countitem(4022);//Items: Spore_Card,
-	delitem 4048,countitem(4048);//Items: Poison_Spore_Card,
-	
+	delitem Fabre_Card,countitem(Fabre_Card);//Items: Fabre_Card,
+	delitem Chonchon_Card,countitem(Chonchon_Card);//Items: Chonchon_Card,
+	delitem Spore_Card,countitem(Spore_Card);//Items: Spore_Card,
+	delitem Poison_Spore_Card,countitem(Poison_Spore_Card);//Items: Poison_Spore_Card,
+
 	if (PRISON_Q <= 0 ) goto L_GET_Q;
 
 	mes "I want you to gather ^FF0000"+PRISON_Q+" Orange Net Mushroom^000000.";
-	if ( countitem(1069)<PRISON_Q ) close;//Items: Orange_Net_Mushroom,
+	if ( countitem(Mushroom_Of_Thief_1)<PRISON_Q ) close;//Items: Orange_Net_Mushroom,
 	mes "OK... hand me all the shrooms...";
-	mes "Let me see... "+countitem(1069)+" of almost eadible ones...";//Items: Orange_Net_Mushroom,
-	mes "And "+countitem(1070)+" useless deadly ones.";//Items: Orange_Gooey_Mushroom_,
+	mes "Let me see... "+countitem(Mushroom_Of_Thief_1)+" of almost eadible ones...";//Items: Orange_Net_Mushroom,
+	mes "And "+countitem(Mushroom_Of_Thief_2)+" useless deadly ones.";//Items: Orange_Gooey_Mushroom_,
 	next;
 	mes "[Oliver]";
 	mes "Thank you. You are free!";
 	set PRISON_Q,0;
-	delitem 1069,countitem(1069);//Items: Orange_Net_Mushroom,
-	delitem 1070,countitem(1070);//Items: Orange_Gooey_Mushroom_,
+	delitem Mushroom_Of_Thief_1,countitem(Mushroom_Of_Thief_1);//Items: Orange_Net_Mushroom,
+	delitem Mushroom_Of_Thief_2,countitem(Mushroom_Of_Thief_2);//Items: Orange_Gooey_Mushroom_,
 	next;
 	savepoint "izlude",105,112;
 	warp "izlude",105,112;
@@ -157,9 +156,9 @@ L_GET_Q:
 	set PRISON,PRISON+1;
 	if (PRISON > 1) mes "Hmm... You've been here already... Well-well...";
 
-	if ( countitem(1069) || countitem(1070) ) mes "Drop these mushrooms!! They are poisonous!";//Items: Orange_Net_Mushroom, Orange_Gooey_Mushroom_,
-	delitem 1069,countitem(1069);//Items: Orange_Net_Mushroom,
-	delitem 1070,countitem(1070);//Items: Orange_Gooey_Mushroom_,
+	if ( countitem(Mushroom_Of_Thief_1) || countitem(Mushroom_Of_Thief_2) ) mes "Drop these mushrooms!! They are poisonous!";//Items: Orange_Net_Mushroom, Orange_Gooey_Mushroom_,
+	delitem Mushroom_Of_Thief_1,countitem(Mushroom_Of_Thief_1);//Items: Orange_Net_Mushroom,
+	delitem Mushroom_Of_Thief_2,countitem(Mushroom_Of_Thief_2);//Items: Orange_Gooey_Mushroom_,
 
 	set PRISON_Q, PRISON*3 + BaseLevel/3;
 	set PRISON_Q, PRISON_Q * (readparam(bAspd)/55 + 1);
@@ -169,7 +168,6 @@ L_GET_Q:
 	if (rand(10)<4) mes "And you may eat the deadly ones for breakfast.";
 	close;
 }
-
 
 sec_in02	mapflag	nomemo
 sec_in02	mapflag	nosave	SavePoint

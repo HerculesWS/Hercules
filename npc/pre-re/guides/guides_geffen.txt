@@ -1,22 +1,41 @@
-//===== Hercules Script ======================================
-//= Geffen Guides
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.4a
-//===== Description: =========================================
-//= [Official COnversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Samuray22
+//= Copyright (C) Silent
+//= Copyright (C) Poki#3
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Geffen Guides (Pre-Renewal)
+//================= Description ===========================================
 //= Guides for the City of Geffen
-//===== Additional Comments: =================================
-//= Fully working.  Added a guide at every exit.
-//= 1.1 Now using duplicate command.
-//= 1.2 Optimized, updated common guide names [Lupus]
-//= 1.2a Small note that the BS guild moved to Einbroch [Poki#3]
-//= 1.3 Removed Duplicates [Silent]
-//= 1.4a Rescripted to official 10.3 standards. [L0ne_W0lf]
-//= 1.4 Fixed some errors with the loop[Samuray22]
-//=     Thanks to $ephiroth.
-//============================================================
+//================= Current Version =======================================
+//= 1.4a
+//=========================================================================
 
 geffen,203,116,0	script	Guide#gef::GefGuide	4_M_GEF_SOLDIER,{
 	cutin "gef_soldier",2;
@@ -29,7 +48,7 @@ geffen,203,116,0	script	Guide#gef::GefGuide	4_M_GEF_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice.", "Cancel")) {
 		case 1:
 			mes "[Geffen Guide]";
 			mes "Please select";
@@ -40,14 +59,14 @@ geffen,203,116,0	script	Guide#gef::GefGuide	4_M_GEF_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) .@compass_check = 1;
+				if (select("Yes", "No") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while (.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 //				next;
-				switch(select("^FF0000Magic Acedemy^000000:Forge Shop:Weapon Shop:Tool Shop:Pub:Inn:Geffen Tower:Cancel")) {
+				switch(select("^FF0000Magic Acedemy^000000", "Forge Shop", "Weapon Shop", "Tool Shop", "Pub", "Inn", "Geffen Tower", "Cancel")) {
 				case 1:
 					mes "[Geffen Guide]";
 					mes "The Magic Academy in";

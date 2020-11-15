@@ -1,16 +1,37 @@
-//===== Hercules Script ======================================
-//= Louyang Guide
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Louyang Guide (Renewal)
+//================= Description ===========================================
 //= Guide for the city of Louyang.
-//===== Additional Comments: =================================
-//= 1.0 First version, Renewal guide.
-//= 1.1 Navigation system update. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 louyang,224,104,4	script	Louyang Guide#01louyang	4_F_CHNWOMAN,{
 	mes "[Representative]";
@@ -29,7 +50,7 @@ louyang,224,104,4	script	Louyang Guide#01louyang	4_F_CHNWOMAN,{
 	.@str$ = "Is there anything else I can do for you?";
 	while (1) {
 		next;
-		switch(select("[ Dragon Castle ]:[ Doctor's Office ]:[ City Hall ]:[ Weapon Shop ]:[ Tool Shop ]:[ Tavern ]:[ Observatory ]:[ Return to Alberta ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Dragon Castle ]", "[ Doctor's Office ]", "[ City Hall ]", "[ Weapon Shop ]", "[ Tool Shop ]", "[ Tavern ]", "[ Observatory ]", "[ Return to Alberta ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			mes "[Representative]";
 			mes "The "+F_Navi("Dragon Castle","louyang,218,253")+" is located at ^0A82FF+^000000. It is where all the nobles reside, including our lord.";

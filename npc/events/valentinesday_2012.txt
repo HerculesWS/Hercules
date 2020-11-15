@@ -1,16 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Rikimaru
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Valentine's Day Event (2012)
-//===== By: ==================================================
-//= Rikimaru
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= The full NPCs of the Valentine's Day Event 2012 (account-based).
+//================= Current Version =======================================
 //= 1.1
-//===== Description: =========================================
-//= The full Valentine's Day NPCs of the Valentine's Day
-//= Event 2012 (account-based).
-//===== Additional Comments: =================================
-//= 1.0 First version. [Rikimaru]
-//= 1.1 Standardized and fixed. [Euphy]
-//============================================================
+//=========================================================================
 
 mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 	.@n$ = "^0000FF[Pinkamenia]^000000";
@@ -19,7 +40,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		setarray .@SweetsID[0],538,558,539,573,559,560,12062,596,597,12414,12319;
 		setarray .@SweetsCost[0],1,2,5,10,10,10,15,15,15,20,20;
 		mes .@n$;
-		mes "Hello "+strcharinfo(0)+", do";
+		mes "Hello "+strcharinfo(PC_NAME)+", do";
 		mes "you want to buy some items?";
 		mes "You'll have to give me Love";
 		mes "Flowers for them, of course!";
@@ -39,7 +60,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 			close;
 		}
 		mes "Are you sure you want to trade ^00aa00"+.@SweetsCost[.@choice]+"x Love Flower ^000000 for ^0055FF"+getitemname(.@SweetsID[.@choice])+"^000000?";
-		if(select("No, I've changed my mind.:Yes, trade!") == 1) close;
+		if(select("No, I've changed my mind.", "Yes, trade!") == 1) close;
 		.@new = .@LFlowerID - .@SweetsCost[.@choice];
 		if (.@new < 0) .@new = 0;
 		delitem .@LFlowerID, .@SweetsCost[.@choice];
@@ -48,7 +69,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		close;
 	} else if (#V_QUE12==2) {
 		mes .@n$;
-		if (countitem(7864) < 15) {
+		if (countitem(Love_Flower) < 15) {
 			mes "You have to bring me 15 Love Flowers!";
 			close;
 		}
@@ -78,7 +99,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		close;
 	} else if (BaseLevel >= 45) {
 		mes .@n$;
-		mes "Hello "+strcharinfo(0)+", it's";
+		mes "Hello "+strcharinfo(PC_NAME)+", it's";
 		mes "Valentine's Day and we";
 		mes "love to deliver sweet";
 		mes "chocolates.";
@@ -95,7 +116,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		close;
 	}
 	mes .@n$;
-	mes "Hello "+strcharinfo(0)+"!";
+	mes "Hello "+strcharinfo(PC_NAME)+"!";
 	close;
 
 OnInit:
@@ -150,7 +171,7 @@ mosk_in,21,244,3	script	Baker Extraordinaire	4_M_NOVELIST,{
 		}
 	} else {
 		mes .@n$;
-		mes "Hello, "+strcharinfo(0)+"!";
+		mes "Hello, "+strcharinfo(PC_NAME)+"!";
 		close;
 	}
 }

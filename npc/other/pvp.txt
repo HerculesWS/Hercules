@@ -1,31 +1,51 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Elias (og2)
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= PvP NPCs
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf, Elias (og2)
-//===== Current Version: =====================================
-//= 2.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= PvP NPCs that are found in the Inns in major cities.
 //= Includes Yoyo Mode, Nightmare Mode, and Event Mode.
-//===== Additional Comments: =================================
-//= 2.0 Narrators/GateKeepers,etc. Translated from the Official 2011 [Elias]
-//= 2.1 Changed PVP Narrator and GateKeeper to Floating NPC [Elias]
-//= 2.2 Some cleaning. [Euphy]
-//= 2.3 Fixed grammatical errors. [Joseph]
-//= 2.4 Fixed incorrect use of 'close' and some cleaning. [Joseph]
-//= 2.5 Renewal/Pre-Renewal split. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.5
+//=========================================================================
 
-// Information
-//============================================================
--	script	PVP Narrator::pvpe	-1,{
+//== Information ===========================================
+-	script	PVP Narrator::pvpe	FAKE_NPC,{
 	mes "[PVP Narrator]";
 	mes "Hello and welcome!";
 	mes "I am in charge of";
 	mes "explaining the PVP Modes.";
 	mes "I am the PVP Narrator!";
 	next;
-	switch(select("What is PVP?:What are the PVP Modes?:What are the rules for PVP?:Save Position.:End Dialog.")) {
+	switch(select("What is PVP?", "What are the PVP Modes?", "What are the rules for PVP?", "Save Position.", "End Dialog.")) {
 	case 1:
 		mes "[PVP Narrator]";
 		mes "In short, PVP means";
@@ -146,11 +166,11 @@
 		mes "Position successfully saved...";
 		mes "Thank you very much!";
 		mes "We will see you again soon.";
-		if(strnpcinfo(4) == "morocc_in") { savepoint "morocc_in",141,139; }
-		if(strnpcinfo(4) == "alberta_in") { savepoint "alberta_in",22,148; }
-		if(strnpcinfo(4) == "prt_in") { savepoint "prt_in",54,137; }
-		if(strnpcinfo(4) == "geffen_in") { savepoint "geffen_in",70,59; }
-		if(strnpcinfo(4) == "payon_in01") { savepoint "payon_in01",142,46; }
+		if(strnpcinfo(NPC_MAP) == "morocc_in") { savepoint "morocc_in",141,139; }
+		if(strnpcinfo(NPC_MAP) == "alberta_in") { savepoint "alberta_in",22,148; }
+		if(strnpcinfo(NPC_MAP) == "prt_in") { savepoint "prt_in",54,137; }
+		if(strnpcinfo(NPC_MAP) == "geffen_in") { savepoint "geffen_in",70,59; }
+		if(strnpcinfo(NPC_MAP) == "payon_in01") { savepoint "payon_in01",142,46; }
 		break;
 	case 5:
 		mes "[PVP Narrator]";
@@ -171,9 +191,8 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe4	4_M_02
 payon_in01,142,50,4	duplicate(pvpe)	PVP Narrator#pe5	4_M_02
 geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 
-// Mode Select
-//============================================================
--	script	Gate Keeper::gkut	-1,{
+//== Mode Select ===========================================
+-	script	Gate Keeper::gkut	FAKE_NPC,{
 	mes "[Gate Keeper]";
 	mes "Glad to be of service.";
 	mes "I will open the PVP fight";
@@ -182,7 +201,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 	mes "modes or rules, Please ask";
 	mes "the Narrator...";
 	next;
-	switch(select("^FF5533' PvP Nightmare Mode'^000000:^3355FF' PvP Yoyo Mode'^000000:^3355FF' PvP Event Mode'^000000:Quit")) {
+	switch(select("^FF5533' PvP Nightmare Mode'^000000", "^3355FF' PvP Yoyo Mode'^000000", "^3355FF' PvP Event Mode'^000000", "Quit")) {
 		case 1:
 			mes "[Gate Keeper]";
 			mes "I am sorry, but currently the Nightmare mode service is not available.";
@@ -195,7 +214,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 			mes "to the Yoyo Mode";
 			mes "fight square?";
 			next;
-			switch(select("Move:Cancel")) {
+			switch(select("Move", "Cancel")) {
 			case 1:
 				if ((Zeny > 499) && (BaseLevel > 30)) {
 					Zeny -= 500;
@@ -226,7 +245,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 			mes "Please double check";
 			mes "that you have the admission or viewing ticket.";
 			next;
-			if ((countitem(7028) == 0) && (countitem(7029) == 0)) {
+			if ((countitem(Invite_For_Duel) == 0) && (countitem(Admission_For_Duel) == 0)) {
 				mes "[Gate Keeper]";
 				mes "Eh? You don't have it? Then I";
 				mes "am sorry, this fight square is";
@@ -277,10 +296,8 @@ prt_in,52,140,4	duplicate(gkut)	Gate Keeper#gke3	4_M_01
 geffen_in,63,63,4	duplicate(gkut)	Gate Keeper#gke4	4_M_01
 payon_in01,140,53,4	duplicate(gkut)	Gate Keeper#gke5	4_M_01
 
-// PVP Warper Function
-//============================================================
+//== PVP Warper Function ===================================
 // Note: The warper NPCs are in the pre-re/re paths.
-
 //callfunc "F_PVP_FSRS"{,<min_lvl>,<max_lvl>};
 function	script	F_PVP_FSRS	{
 	if (getargcount()) {
@@ -290,8 +307,8 @@ function	script	F_PVP_FSRS	{
 			close;
 		}
 	}
-	if (strnpcinfo(4) == "pvp_y_room") {
-		.@base$ = "pvp_y_"+strnpcinfo(2);
+	if (strnpcinfo(NPC_MAP) == "pvp_y_room") {
+		.@base$ = "pvp_y_"+strnpcinfo(NPC_NAME_HIDDEN);
 		setarray .@maps$[0],	.@base$+"-1",	.@base$+"-2",	.@base$+"-3",	.@base$+"-4",	.@base$+"-5";
 		setarray .@name$[0],	"Prontera",		"Izlude",		"Payon",		"Alberta",		"Morroc";
 		setarray .@Limit[0],	128,			128,			128,			128,			128;
@@ -314,12 +331,9 @@ function	script	F_PVP_FSRS	{
 	end;
 }
 
-
-
-// Event Contestant Entrance
-//============================================================
+//== Event Contestant Entrance =============================
 pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
-	if (countitem(7028) == 0) {
+	if (countitem(Invite_For_Duel) == 0) {
 		mes "[PVP Combat Square Register Staff]";
 		mes "Eh? How did you get in here?";
 		mes "This is the entrance for players only.";
@@ -331,17 +345,17 @@ pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 		setarray .warp_x,40,59,20,40;
 		setarray .warp_y,59,40,40,20;
 	}
-	if (select("Combat Square one:Cancel") == 1) {
+	if (select("Combat Square one", "Cancel") == 1) {
 		mes "[PVP Combat Square Register Staff]";
-		mes "'"+ strcharinfo(0) +"'";
+		mes "'"+ strcharinfo(PC_NAME) +"'";
 		mes "Are you ready?!";
 		next;
-		if (select("Yes!:No!") == 1) {
+		if (select("Yes!", "No!") == 1) {
 			mes "[PVP Combat Square Register Staff]";
 			mes "OK! I will send you inside";
 			mes "Good luck!";
 			close2;
-			delitem 7028,1; //Invite_For_Duel
+			delitem Invite_For_Duel,1;
 			.@rand = rand(.@size);
 			warp "pvp_2vs2", .warp_x[.@rand], .warp_y[.@rand];
 			deletearray .warp_x[.@rand],1;
@@ -359,20 +373,19 @@ OnInit:
 	end;
 }
 
-// Spectator Entrance
-//============================================================
--	script	Spectator's Entrance#dum::PVPSpectator	-1,{
-	if (countitem(7029) == 0) {
+//== Spectator Entrance ====================================
+-	script	Spectator's Entrance#dum::PVPSpectator	FAKE_NPC,{
+	if (countitem(Admission_For_Duel) == 0) {
 		mes "[PVP Compete Square Register Staff]";
 		mes "This is the entrance for viewers.";
 		mes "For details about players entrance please proceed to the Register Staff on your left.";
 		close;
 	}
-	if (select("Compete Square one:Cancel") == 1) {
+	if (select("Compete Square one", "Cancel") == 1) {
 		mes "[PVP Combat Square Register Staff]";
 		mes "You got it, thanks for participating. Have fun!";
 		close2;
-		delitem 7029,1; //Admission_For_Duel
+		delitem Admission_For_Duel,1;
 		switch(rand(1,4)) {
 			case 1: warp "pvp_2vs2",39,7; end;
 			case 2: warp "pvp_2vs2",39,73; end;
@@ -391,13 +404,12 @@ pvp_room,70,85,4	duplicate(PVPSpectator)	Spectator's Entrance#2	8W_SOLDIER
 pvp_room,78,85,4	duplicate(PVPSpectator)	Spectator's Entrance#3	8W_SOLDIER
 pvp_room,86,85,4	duplicate(PVPSpectator)	Spectator's Entrance#4	8W_SOLDIER
 
-// Spectator Warps
-//============================================================
--	script	Combat Square Staff#dum::PVPSpecWarp	-1,{
+//== Spectator Warps =======================================
+-	script	Combat Square Staff#dum::PVPSpecWarp	FAKE_NPC,{
 OnTouch:
 	mes "[Combat Square Staff]";
 	mes "May I help you?";
-	if (select("To the center viewer seat.:Leave Combat Square.") == 1) {
+	if (select("To the center viewer seat.", "Leave Combat Square.") == 1) {
 		warp "pvp_2vs2",38,38;
 		end;
 	}
@@ -412,7 +424,7 @@ pvp_2vs2,74,5,0	duplicate(PVPSpecWarp)	Combat Square Staff#4	WARPNPC,1,1
 pvp_2vs2,40,40,0	script	Combat Square Staff#5	WARPNPC,1,1,{
 	mes "[Combat Square Staff]";
 	mes "May I help you?";
-	switch(select("To the side viewer seat.:Leave Combat Square.")) {
+	switch(select("To the side viewer seat.", "Leave Combat Square.")) {
 	case 1:
 		switch(rand(1,4)) {
 			case 1: warp "pvp_2vs2",39,7; end;
@@ -426,15 +438,14 @@ pvp_2vs2,40,40,0	script	Combat Square Staff#5	WARPNPC,1,1,{
 	}
 }
 
-// PVP Area Exit warp
-//============================================================
+//== PVP Area Exit warp ====================================
 pvp_room,51,19,0	script	out#eventpvp	WARPNPC,4,2,{
 OnTouch:
 	mes "[Combat Square Staff]";
 	mes "Did you have fun in Combat Square?";
 	mes "May I ask where you want to go?";
 	next;
-	switch(select("Prontera.:Morocc.:Geffen.:Payon.:Alberta.:Cancel.")) {
+	switch(select("Prontera.", "Morocc.", "Geffen.", "Payon.", "Alberta.", "Cancel.")) {
 		case 1: warp "prontera",107,60; end;
 		case 2: warp "morocc",157,96; end;
 		case 3: warp "geffen",120,36; end;

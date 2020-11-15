@@ -1,26 +1,48 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_PET_H
 #define MAP_PET_H
 
-#include "map.h" // struct block_list
-#include "status.h" // enum sc_type
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // NAME_LENGTH, struct s_pet
+#include "map/map.h" // struct block_list
+#include "map/status.h" // enum sc_type
+#include "map/unit.h" // struct unit_data
+#include "common/hercules.h"
+#include "common/mmo.h" // NAME_LENGTH, struct s_pet
 
 #define MAX_PET_DB       300
 #define MAX_PETLOOT_SIZE 30
 
+/** Pet Evolution [Dastgir/Hercules] */
+struct pet_evolve_data {
+	int petEggId;
+	VECTOR_DECL(struct itemlist_entry) items;
+};
+
 struct s_pet_db {
-	short class_;
+	int class_;
 	char name[NAME_LENGTH],jname[NAME_LENGTH];
-	short itemID;
-	short EggID;
-	short AcceID;
-	short FoodID;
+	int itemID;
+	int EggID;
+	int AcceID;
+	int FoodID;
 	int fullness;
 	int hungry_delay;
 	int r_hungry;
@@ -34,8 +56,15 @@ struct s_pet_db {
 	int attack_rate;
 	int defence_attack_rate;
 	int change_target_rate;
+	int autofeed;
+	int hunger_decrement;
+	int starving_delay;
+	int starving_decrement;
 	struct script_code *equip_script;
 	struct script_code *pet_script;
+
+	/* Pet Evolution */
+	VECTOR_DECL(struct pet_evolve_data) evolve_data;
 };
 
 enum { PET_CLASS,PET_CATCH,PET_EGG,PET_EQUIP,PET_FOOD };
@@ -111,11 +140,14 @@ struct pet_interface {
 	struct s_pet_db db[MAX_PET_DB];
 	struct eri *item_drop_ers; //For loot drops delay structures.
 	struct eri *item_drop_list_ers;
+
 	/* */
 	int (*init) (bool minimal);
 	int (*final) (void);
 	/* */
 	int (*hungry_val) (struct pet_data *pd);
+	void (*set_hunger) (struct pet_data *pd, int value);
+	int (*get_card4_value) (int rename_flag, int intimacy);
 	void (*set_intimate) (struct pet_data *pd, int value);
 	int (*create_egg) (struct map_session_data *sd, int item_id);
 	int (*unlocktarget) (struct pet_data *pd);
@@ -128,18 +160,19 @@ struct pet_interface {
 	int (*performance) (struct map_session_data *sd, struct pet_data *pd);
 	int (*return_egg) (struct map_session_data *sd, struct pet_data *pd);
 	int (*data_init) (struct map_session_data *sd, struct s_pet *petinfo);
+	int (*spawn) (struct map_session_data *sd, bool birth_process);
 	int (*birth_process) (struct map_session_data *sd, struct s_pet *petinfo);
 	int (*recv_petdata) (int account_id, struct s_pet *p, int flag);
-	int (*select_egg) (struct map_session_data *sd, short egg_index);
+	int (*select_egg) (struct map_session_data *sd, int egg_index);
 	int (*catch_process1) (struct map_session_data *sd, int target_class);
 	int (*catch_process2) (struct map_session_data *sd, int target_id);
-	bool (*get_egg) (int account_id, short pet_class, int pet_id );
+	bool (*get_egg) (int account_id, int pet_class, int pet_id );
 	int (*unequipitem) (struct map_session_data *sd, struct pet_data *pd);
 	int (*food) (struct map_session_data *sd, struct pet_data *pd);
 	int (*ai_sub_hard_lootsearch) (struct block_list *bl, va_list ap);
 	int (*menu) (struct map_session_data *sd, int menunum);
-	int (*change_name) (struct map_session_data *sd, char *name);
-	int (*change_name_ack) (struct map_session_data *sd, char *name, int flag);
+	int (*change_name) (struct map_session_data *sd, const char *name);
+	int (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
 	int (*equipitem) (struct map_session_data *sd, int index);
 	int (*randomwalk) (struct pet_data *pd, int64 tick);
 	int (*ai_sub_hard) (struct pet_data *pd, struct map_session_data *sd, int64 tick);
@@ -150,13 +183,22 @@ struct pet_interface {
 	int (*skill_bonus_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*recovery_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*skill_support_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*read_db) ();
-};
 
-struct pet_interface *pet;
+	void (*read_db) (void);
+	int (*read_db_libconfig) (const char *filename, bool ignore_missing);
+	int (*read_db_sub) (struct config_setting_t *it, int n, const char *source);
+	bool (*read_db_sub_intimacy) (int idx, struct config_setting_t *t);
+	void (*read_db_clear) (void);
+
+	/* Pet Evolution [Dastgir/Hercules] */
+	void (*read_db_sub_evolution) (struct config_setting_t *t, int n);
+
+};
 
 #ifdef HERCULES_CORE
 void pet_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct pet_interface *pet;
 
 #endif /* MAP_PET_H */

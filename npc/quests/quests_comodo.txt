@@ -1,10 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Brainstorm
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Comodo
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.5b
-//===== Description: =========================================
+//================= Description ===========================================
 //= Headgear Quests 1 [Official Conversion]:
 //= - 'Cross Hat', 'Bulb Hairband'
 //= - 'Striped Hairband', 'Blue Hairband'
@@ -16,24 +43,15 @@
 //= - Part 2: Found in Quests_Yuno.txt
 //= - Part 3: Found in Doomed_Swords.txt
 //= - Variable in use: dmdswrd_Q (Max 45)
-//===== Additional Comments: =================================
-//= 1.1 Fixed exploits [Lupus]
-//= 1.2 Added more quest from cities/comodo.txt [Evera]
-//= 1.2a missing label [Lupus]
-//= 1.3 Doomed sword quest rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.5 Rescripted Headgear Quests 1 to Aegis 10.3 Standards. [Samuray22]
-//= 1.5a Fixed a bad countitem. (bugreport:840) [Samuray22]
-//= 1.5b Fixed stripped hairband and blue hairband checking the wrong amount of items, bugreport:1674 [Brainstorm]
-//= 1.6 Updated headgear quest NPCs. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5b
+//=========================================================================
 
-// Headgear Quests 1
+//== Headgear Quests 1 =====================================
 // Cross Hat, Bulb Hairband, Striped Hairband, Blue Hairband
-//============================================================
 comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 	mes "[Hair Ornament Girl]";
-	if (Sex == 1) {
+	if (Sex == SEX_MALE) {
 		mes "Oh, hello!";
 		mes "Would you like to order a hairband? They're great presents to give to your girlfriend, and show that you're thinking of her.";
 	}
@@ -45,9 +63,9 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 	mes "[Hair Ornament Girl]";
 	mes "If you give me a few simple items then I can make a gorgeous Hair Band. If you have any questions, go ahead and have a look.";
 	next;
-	switch(select("Cross Hat:Bulb Band:Stripe Hairband:Blue Hairband")) {
+	switch(select("Cross Hat", "Bulb Band", "Stripe Hairband", "Blue Hairband")) {
 	case 1:
-		if ((countitem(2608) > 0) && (countitem(7069) > 499)) {
+		if ((countitem(Rosary) > 0) && (countitem(Broken_Armor_Piece) > 499)) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen the Cross Hat?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -59,7 +77,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "It's better to bring just to keep the requested items in your inventory. Did you check? Then let's make it, okay?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "Ah, alright. I guess you should put all your other things into Kafra Storage first. Okay then, see you soon.";
@@ -68,12 +86,12 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 2608,1;  //Rosary
-				delitem 7069,500;  //Broken_Armor_Piece
+				delitem Rosary,1;
+				delitem Broken_Armor_Piece,500;
 				mes "[Hair Ornament Girl]";
 				mes "Look at this! Well done~";
 				mes "Please come again~ hoooo!";
-				getitem 5036,1; // Cross_Band
+				getitem Cross_Band,1; // Cross_Band
 				close;
 			}
 		}
@@ -93,7 +111,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			close;
 		}
 	case 2:
-		if ((countitem(2233) > 0) && (countitem(746) > 19)) {
+		if ((countitem(Circlet_) > 0) && (countitem(Glass_Bead) > 19)) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen Bulb band?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -105,7 +123,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "It's better to bring just to keep the requested items in your inventory. Did you check? Then let's make it, okay?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "Ah, alright. I guess you should put all your other things into Kafra Storage first. Okay then, see you soon.";
@@ -113,12 +131,12 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 2233,1;  //Circlet_
-				delitem 746,20;  //Glass_Bead
+				delitem Circlet_,1;
+				delitem Glass_Bead,20;
 				mes "[Hair Ornament Girl]";
 				mes "Look at this! Well done~";
 				mes "Please come again~ hoooo!";
-				getitem 5034,1; // Light_Bulb_Band
+				getitem Light_Bulb_Band,1; // Light_Bulb_Band
 				close;
 			}
 		}
@@ -138,7 +156,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			close;
 		}
 	case 3:
-		if (countitem(1099) > 1499) {
+		if (countitem(Worn_Out_Prison_Uniform) > 1499) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen Stripe band?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -146,7 +164,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "You want me to make it now?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "See you later then~";
@@ -154,11 +172,11 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 1099,1500;  //Worn_Out_Prison_Uniform
+				delitem Worn_Out_Prison_Uniform,1500;
 				mes "[Hair Ornament Girl]";
 				mes "Look at this! Well done~";
 				mes "Please come again~";
-				getitem 5049,1; // Stripe_Band
+				getitem Stripe_Band,1; // Stripe_Band
 				close;
 			}
 		}
@@ -176,7 +194,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			close;
 		}
 	case 4:
-		if ((countitem(2211) > 0) && (countitem(978) > 0) && (countitem(7003) > 299)) {
+		if ((countitem(Bandana) > 0) && (countitem(Cobaltblue_Dyestuffs) > 0) && (countitem(Anolian_Skin) > 299)) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen Blue Hairband?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -188,7 +206,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "It's better to bring just to keep the requested items in your inventory. Did you check? Then let's make it, okay?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "Ah, alright. I guess you should put all your other things into Kafra Storage first. Okay then, see you soon.";
@@ -196,13 +214,13 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 2211,1;  //Bandana
-				delitem 978,1;  //Cobaltblue_Dyestuffs
-				delitem 7003,300;  //Anolian_Skin
+				delitem Bandana,1;
+				delitem Cobaltblue_Dyestuffs,1;
+				delitem Anolian_Skin,300;
 				mes "[Hair Ornament Girl]";
 				mes "Look, at this! Well done!";
 				mes "Please come again~ ";
-				getitem 5052,1; // Blue_Hair_Band
+				getitem Blue_Hair_Band,1; // Blue_Hair_Band
 				close;
 			}
 		}
@@ -225,9 +243,8 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 	}
 }
 
-// Headgear Quests 2
+//== Headgear Quests 2 =====================================
 // 'Mine Helmet', 'Parcel Hat', 'Money Loser's Grief', 'Phantom of the Opera Mask'
-//============================================================
 comodo,273,137,4	script	Traveler#head	4_F_GON,{
 	mes "[Isac Mari]";
 	mes "I travel around the world, and collect many interesting stories from people. Sometimes they teach me how to make special items.";
@@ -235,9 +252,9 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 	mes "[Isac Mari]";
 	mes "I know how to make all sorts of worldly hats. But right now, I can't make these since I don't have the right items.";
 	next;
-	switch(select("Mine Helmet:Parcel Hat:Grief for Greed:Opera Phantom Mask")) {
+	switch(select("Mine Helmet", "Parcel Hat", "Grief for Greed", "Opera Phantom Mask")) {
 	case 1:
-		if ((countitem(5009) > 0) && (countitem(5028) > 0) && (countitem(999) > 24) && (countitem(747) > 0)) {
+		if ((countitem(Safety_Helmet) > 0) && (countitem(Candle) > 0) && (countitem(Steel) > 24) && (countitem(Crystal_Mirror) > 0)) {
 			mes "[Isac Mari]";
 			mes "Mine Helmet was designed for the miners in the coal mines to have light in the dark. If you brought all the required items, I will go ahead and make it for you~";
 			next;
@@ -247,7 +264,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Mine Hat in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Mine Hat.")) {
+			switch(select("Give me a minute~!", "Let's make the Mine Hat.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -259,13 +276,13 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "[Isac Mari]";
 				mes "Whew! This is pretty hard!";
 				next;
-				delitem 5009,1;  //Safety_Helmet
-				delitem 5028,1;  //Candle
-				delitem 747,1;  //Crystal_Mirror
-				delitem 999,25;  //Steel
+				delitem Safety_Helmet,1;
+				delitem Candle,1;
+				delitem Crystal_Mirror,1;
+				delitem Steel,25;
 				mes "[Isac Mari]";
 				mes "I'm not quite sure if this is the right one, but it looks about right. Ha ha~";
-				getitem 5031,1; // Mine_Helm
+				getitem Mine_Helm,1; // Mine_Helm
 				close;
 			}
 		}
@@ -289,7 +306,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			close;
 		}
 	case 2:
-		if ((countitem(1059) > 149) && (countitem(907) > 99) && (countitem(978) > 0)) {
+		if ((countitem(Transparent_Cloth) > 149) && (countitem(Resin) > 99) && (countitem(Cobaltblue_Dyestuffs) > 0)) {
 			mes "[Isac Mari]";
 			mes "Parcel Hat seems to be useful for business people to carry around their products. If you brought everything I need, I will make it for you.";
 			mes "If you brought all the required items, I will make it for you~";
@@ -300,7 +317,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Parcel Hat in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Parcel Hat.")) {
+			switch(select("Give me a minute~!", "Let's make the Parcel Hat.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -314,13 +331,13 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "I think I messed up!";
 				mes "No, wait, I think I can fix this...";
 				next;
-				delitem 1059,150;  //Transparent_Cloth
-				delitem 907,100;  //Resin
-				delitem 978,1;  //Cobaltblue_Dyestuffs
+				delitem Transparent_Cloth,150;
+				delitem Resin,100;
+				delitem Cobaltblue_Dyestuffs,1;
 				mes "[Isac Mari]";
 				mes "Well...";
 				mes "Um, it looks like a Parcel Hat. So that's good enough for me! Ha ha~";
-				getitem 5023,1; // Hat_Of_Bundle
+				getitem Hat_Of_Bundle,1; // Hat_Of_Bundle
 				close;
 			}
 		}
@@ -346,7 +363,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			close;
 		}
 	case 3:
-		if ((countitem(2233) > 0) && (countitem(969) > 0) && (countitem(949) > 79) && (countitem(999) > 19) && (countitem(938) > 799)) {
+		if ((countitem(Circlet_) > 0) && (countitem(Gold) > 0) && (countitem(Feather) > 79) && (countitem(Steel) > 19) && (countitem(Sticky_Mucus) > 799)) {
 			mes "[Isac Mari]";
 			mes "Grief for Greed...";
 			mes "If you brought all the required items, I'll go ahead and make it for you~";
@@ -357,7 +374,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Grief for Greed in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Grief for Greed.")) {
+			switch(select("Give me a minute~!", "Let's make the Grief for Greed.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -369,14 +386,14 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "[Isac Mari]";
 				mes "Whew! This is pretty hard!";
 				next;
-				delitem 2233,1;  //Circlet_
-				delitem 969,1;  //Gold
-				delitem 949,80;  //Feather
-				delitem 999,20;  //Steel
-				delitem 938,800;  //Sticky_Mucus
+				delitem Circlet_,1;
+				delitem Gold,1;
+				delitem Feather,80;
+				delitem Steel,20;
+				delitem Sticky_Mucus,800;
 				mes "[Isac Mari]";
 				mes "I might have made a few mistakes, but it looks good enough. Here you go, your own Grief for Greed hat!";
-				getitem 5021,1; // Bankruptcy_Of_Heart
+				getitem Bankruptcy_Of_Heart,1; // Bankruptcy_Of_Heart
 				close;
 			}
 		}
@@ -407,7 +424,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			close;
 		}
 	case 4:
-		if ((countitem(2281) > 0) && (countitem(1048) > 49)) {
+		if ((countitem(Phantom_Of_Opera) > 0) && (countitem(Slender_Snake) > 49)) {
 			mes "[Isac Mari]";
 			mes "Opera Phantom Mask...";
 			mes "Frightening, but also tragic and romantic. If you brought all the required items, I will make it for you~";
@@ -418,7 +435,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Opera Mask in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Opera Masque.")) {
+			switch(select("Give me a minute~!", "Let's make the Opera Masque.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -430,12 +447,12 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "[Isac Mari]";
 				mes "Whew! This is pretty hard!";
 				next;
-				delitem 2281,1;  //Phantom_Of_Opera
-				delitem 1048,50;  //Slender_Snake
+				delitem Phantom_Of_Opera,1;
+				delitem Slender_Snake,50;
 				mes "[Isac Mari]";
 				mes "I'm not quite sure if this is the right one.";
 				mes "But it looks fine. Ha ha";
-				getitem 5043,1; // Opera_Ghost_Mask
+				getitem Opera_Ghost_Mask,1; // Opera_Ghost_Mask
 				close;
 			}
 		}
@@ -469,8 +486,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 	}
 }
 
-// Doomed Swords - Comodo Portion. (Continued in Juno)
-//============================================================
+//== Doomed Swords - Comodo Portion. (Continued in Juno) ===
 comodo,206,310,4	script	Campground Boy#cmd	4_M_BIBI,{
 	switch (dmdswrd_Q) {
 	case 0:
@@ -482,7 +498,7 @@ comodo,206,310,4	script	Campground Boy#cmd	4_M_BIBI,{
 		mes "BBQ camping in Comodo is";
 		mes "heaven to a meat lover like me~";
 		next;
-		if (select("BBQ Camping...?:Cancel") == 1) {
+		if (select("BBQ Camping...?", "Cancel") == 1) {
 			mes "[Rochito]";
 			mes "Yeah man... You can eat";
 			mes "Komodoru meat all day when";
@@ -532,8 +548,8 @@ comodo,206,310,4	script	Campground Boy#cmd	4_M_BIBI,{
 		mes "[Rochito]";
 		mes "Long before Comodo was";
 		mes "built inside this huge cave,";
-		mes "this witch used to live in here.^FFFFFF ^000000 A lot of people died trying to";
-		mes "get rid of her, but there're^FFFFFF ^000000 rumors that she's still around...";
+		mes "this witch used to live in here. A lot of people died trying to";
+		mes "get rid of her, but there're rumors that she's still around...";
 		break;
 	case 1:
 		mes "[Rochito]";
@@ -643,7 +659,7 @@ comodo,204,310,4	script	Camping Youth#cmd	1_M_YOUNGKNIGHT,{
 		mes "together for this barbeque";
 		mes "for such a long time~";
 		next;
-		if(select("Buddies...?:Cancel") == 1) {
+		if(select("Buddies...?", "Cancel") == 1) {
 			mes "[Rockha]";
 			mes "Yeah, some of us know";
 			mes "each other when we fought";
@@ -688,7 +704,7 @@ comodo,204,310,4	script	Camping Youth#cmd	1_M_YOUNGKNIGHT,{
 		mes "that wine to Tausupa, the";
 		mes "Village Chief, would you let";
 		mes "him know that we miss the guy?";
-		mes "He may be busy, but he'll always^FFFFFF ^000000 be our irreplaceable buddy.";
+		mes "He may be busy, but he'll always be our irreplaceable buddy.";
 		break;
 	case 4:
 		mes "[Rockha]";
@@ -730,7 +746,7 @@ comodo,204,310,4	script	Camping Youth#cmd	1_M_YOUNGKNIGHT,{
 		mes "would make our barbeque";
 		mes "absolutely perfect--having";
 		mes "the Village Chief here, and";
-		mes "some of that legendary Comodo^FFFFFF ^000000 Cheese that ^3355FFToruna^000000 told me about.";
+		mes "some of that legendary Comodo Cheese that ^3355FFToruna^000000 told me about.";
 		break;
 	}
 	close;
@@ -745,7 +761,7 @@ comodo,209,305,4	script	Camping Maiden#cmd	1_F_LIBRARYGIRL,{
 	mes "Having a good time, all of us";
 	mes "together in a time of peace~";
 	next;
-	if (select("War of the Witch?:Cancel") == 1) {
+	if (select("War of the Witch?", "Cancel") == 1) {
 		mes "[Emralhandas]";
 		mes "Before I tell you about the";
 		mes "War of the Witch, I guess";
@@ -1003,17 +1019,17 @@ cmd_in02,32,140,4	script	Chief#cmd	1_M_03,{
 		mes "[Tausupa]";
 		mes "Greetings, adventurer,";
 		mes "I am Tausupa, the Chief of";
-		mes "Comodo, a city famous for its^FFFFFF ^000000 beauty and nightlife. I hope you";
-		mes "enjoy your stay, whether you are^FFFFFF ^000000 seeking excitement or relaxation~";
+		mes "Comodo, a city famous for its beauty and nightlife. I hope you";
+		mes "enjoy your stay, whether you are seeking excitement or relaxation~";
 		next;
-		switch(select("About Casino:About Banished Witch:Cancel")) {
+		switch(select("About Casino", "About Banished Witch", "Cancel")) {
 		case 1:
 			mes "[Tausupa]";
 			mes "Ah yes, Comodo is world";
 			mes "famous for its Casino. There";
 			mes "are many games that you can";
 			mes "enjoy, but you'll need to use";
-			mes "the Casino's special Eulwo^FFFFFF ^000000 currency and conversion system...";
+			mes "the Casino's special Eulwo currency and conversion system...";
 			break;
 		case 2:
 			switch (dmdswrd_Q) {
@@ -1031,7 +1047,7 @@ cmd_in02,32,140,4	script	Chief#cmd	1_M_03,{
 				mes "of BBQ meat on your clothes,";
 				mes "I'm guessing that you ran into";
 				mes "Rochito in the campgrounds, ";
-				mes "right? He must have told you^FFFFFF ^000000 that old story about the witch...";
+				mes "right? He must have told you that old story about the witch...";
 				next;
 				mes "[Tausupa]";
 				mes "I'd like nothing better";
@@ -1065,7 +1081,7 @@ cmd_in02,32,140,4	script	Chief#cmd	1_M_03,{
 				mes "Koserserah seasoning to";
 				mes "my friend ^3355FFRochito^000000 at the";
 				mes "barbeque campground. Thanks";
-				mes "again for your help, adventurer. ^FFFFFF ^000000";
+				mes "again for your help, adventurer. ";
 				break;
 			}
 			break;
@@ -1100,7 +1116,7 @@ comodo,88,97,4	script	Toruna#cmd	4_M_MANAGER,{
 	mes "you believe this entire city";
 	mes "is built inside a natural cave?";
 	next;
-	switch(select("This cave is huge!:This place sure is strange...:Cancel")) {
+	switch(select("This cave is huge!", "This place sure is strange...", "Cancel")) {
 	case 1:
 		mes "[Toruna]";
 		mes "Oh, this is a huge cave,";
@@ -1140,7 +1156,7 @@ comodo,88,97,4	script	Toruna#cmd	4_M_MANAGER,{
 			mes "Yes, that is rather";
 			mes "peculiar. What's also";
 			mes "strange is this rumor I've";
-			mes "been hearing about. Now, are^FFFFFF ^000000 you familiar with Comodo Cheese?";
+			mes "been hearing about. Now, are you familiar with Comodo Cheese?";
 			next;
 			mes "[Toruna]";
 			mes "It's this urban legend";
@@ -1189,7 +1205,7 @@ comodo,88,97,4	script	Toruna#cmd	4_M_MANAGER,{
 			mes "before it was an exotic";
 			mes "village of excitement and";
 			mes "leisure, Comodo was once";
-			mes "a haven for evil creatures, ruled^FFFFFF ^000000 by a witch named Meropusum?";
+			mes "a haven for evil creatures, ruled by a witch named Meropusum?";
 			next;
 			mes "[Toruna]";
 			mes "This witch lay dormant for";
@@ -1301,7 +1317,7 @@ comodo,169,284,4	script	Kichiri#cmd	4W_M_02,{
 		mes "got me wondering! I mean,";
 		mes "just because I've never seen";
 		mes "Comodo Cheese doesn't mean";
-		mes "it doesn't exist, right? Curses!^FFFFFF ^000000 Now I'm thinking about it too!";
+		mes "it doesn't exist, right? Curses! Now I'm thinking about it too!";
 		break;
 	default:
 		mes "[Kichiri]";
@@ -1388,7 +1404,7 @@ comodo,163,280,4	script	Magatu#cmd	1_M_JOBTESTER,{
 cmd_in02,189,99,4	script	Manzi#cmd	4_M_03,{
 	switch (dmdswrd_Q) {
 	case 9:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse, but I'm";
 		mes "looking for someone";
 		mes "named Manzi. Do you";
@@ -1432,7 +1448,7 @@ cmd_in02,189,99,4	script	Manzi#cmd	4_M_03,{
 		mes "Ah, she won't take you";
 		mes "very seriously unless you";
 		mes "show her this. Magatsu gave";
-		mes "you his lucky bottle cap, so I'm^FFFFFF ^000000 gonna give you my lucky coin!";
+		mes "you his lucky bottle cap, so I'm gonna give you my lucky coin!";
 		mes "The old crone'll recognize it~";
 		next;
 		dmdswrd_Q = 10;
@@ -1465,7 +1481,7 @@ cmd_in02,189,99,4	script	Manzi#cmd	4_M_03,{
 		mes "Hey, have a good time in";
 		mes "the Casino, but don't go buck";
 		mes "wild. You wanna walk out of";
-		mes "here with the shirt on your back,^FFFFFF ^000000 you know? Some people don't";
+		mes "here with the shirt on your back, you know? Some people don't";
 		mes "even leave here with that...";
 		break;
 	}
@@ -1482,7 +1498,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 		mes "Love togther, love together,";
 		mes "we've living on the floor~";
 		next;
-		if (select("Present Muzi's Coin:Um... Comodo Cheese?") == 1) {
+		if (select("Present Muzi's Coin", "Um... Comodo Cheese?") == 1) {
 			mes "^3355FFYou present Muzi's lucky";
 			mes "coin to the old woman.^000000";
 			next;
@@ -1510,7 +1526,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 			mes "oldest elders, I know more";
 			mes "about this village than most...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Actually, I was hoping";
 			mes "you can tell me about";
 			mes "Comodo Cheese. If it really";
@@ -1522,7 +1538,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 			mes "Comodo Cheese does exist,";
 			mes "and it's as precious as the";
 			mes "legends say. However, it's";
-			mes "not a true cheese, although^FFFFFF ^000000 you may think so from its taste.";
+			mes "not a true cheese, although you may think so from its taste.";
 			next;
 			mes "[Hullaris]";
 			mes "Yes, it's a very rare, natural";
@@ -1577,7 +1593,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 		mes "Love together~";
 		mes "Love! Love!";
 		mes "Love togeth-hm?";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "Boy, you're ruining";
 			mes "my groove! Now beat it!";
 		}
@@ -1748,7 +1764,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	4_M_BIBI,{
 		mes "I'd expect nothing less of";
 		mes "a brave and daring adventurer.";
 		mes "Now hold still as I gauge your";
-		mes "body's internal energies and see^FFFFFF ^000000 if it can handle Comodo Cheese...";
+		mes "body's internal energies and see if it can handle Comodo Cheese...";
 		next;
 		mes "[Nigirboran]";
 		mes "Alright.";
@@ -1845,7 +1861,7 @@ beach_dun3,30,220,4	script	Nigirboran#cmd	4_M_BIBI,{
 				mes "but I do know that you'll need";
 				mes "the ^3355FFAwakening Stone^000000, the ^3355FFBook^000000";
 				mes "^3355FFof the Lamb^000000 and the ^3355FFSlate of^000000";
-				mes "^3355FFMurniel^000000 to even have a chance^FFFFFF ^000000 of obtaining one of those swords.";
+				mes "^3355FFMurniel^000000 to even have a chance of obtaining one of those swords.";
 				next;
 				mes "[Nigirboran]";
 				mes "Let's see... After you";
@@ -2013,7 +2029,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 		dmdswrd_Q = 15;
 		break;
 	case 15:
-		if (countitem(717) > 0 && countitem(726) > 0 && countitem(721) > 0 && countitem(640) > 0 && countitem(757) > 0) {
+		if (countitem(Blue_Gemstone) > 0 && countitem(Blue_Jewel) > 0 && countitem(Azure_Jewel) > 0 && countitem(Shining_Stone) > 0 && countitem(Elunium_Stone) > 0) {
 			mes "[Meteurengut]";
 			mes "You've already found";
 			mes "all of the items I require to";
@@ -2021,11 +2037,11 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			mes "Fantastic. Now I can begin work";
 			mes "on this. However, there is one";
 			mes "more thing I must ask of you.";
-			delitem 717,1; //Blue_Gemstone
-			delitem 726,1; //Blue_Jewel
-			delitem 721,1; //Azure_Jewel
-			delitem 640,1; //Shining_Stone
-			delitem 757,1; //Elunium_Stone
+			delitem Blue_Gemstone,1;
+			delitem Blue_Jewel,1;
+			delitem Azure_Jewel,1;
+			delitem Shining_Stone,1;
+			delitem Elunium_Stone,1;
 			dmdswrd_Q = 16;
 			next;
 			mes "[Meteurengut]";
@@ -2040,7 +2056,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			mes "sooner, but I need to prepare";
 			mes "all of these stones, and I need";
 			mes "the freshest Cobwebs I can get.";
-			mes "I'll make sure that these stones^FFFFFF ^000000 are ready when you return.";
+			mes "I'll make sure that these stones are ready when you return.";
 			close;
 		}
 		mes "[Meteurengut]";
@@ -2060,7 +2076,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 		mes "^3355FF1 Blue Gemstone^000000.";
 		break;
 	case 16:
-		if (countitem(1025) > 0) {
+		if (countitem(Spiderweb) > 0) {
 			mes "[Meteurengut]";
 			mes "I see that you've brought";
 			mes "me a Cobweb. It's hard to";
@@ -2069,7 +2085,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			mes "Now, if you'll wait a moment,";
 			mes "I shall complete the slate...";
 			next;
-			delitem 1025,1; //Spiderweb
+			delitem Spiderweb,1;
 			mes "*^3355FFClang Clang Clang!*";
 			mes "*Zaaaaaaaaaaaaaap*";
 			mes "*Ching tink t-t-t-tap*^000000";
@@ -2099,14 +2115,14 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			mes "that artifact, and its secrets";
 			mes "are as well guarded as that of";
 			mes "the Slate of Muriniel. However,";
-			mes "I do know that a man in Morroc^FFFFFF ^000000 can create the Book of the Lamb...";
+			mes "I do know that a man in Morroc can create the Book of the Lamb...";
 			next;
 			mes "[Meteurengut]";
 			mes "If that man is still in";
 			mes "Morroc, then he will probably";
 			mes "recognize the subtle emanation";
 			mes "of the Awakening Stone and the";
-			mes "Slate of Muriniel from you. Best^FFFFFF ^000000 of luck to you, adventurer...";
+			mes "Slate of Muriniel from you. Best of luck to you, adventurer...";
 			close;
 		}
 		mes "[Meteurengut]";
@@ -2145,7 +2161,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 		next;
 		mes "[Meteurengut]";
 		mes "I'm responsible for guarding";
-		mes "the secrets of its creation, but^FFFFFF ^000000 I must also share the power";
+		mes "the secrets of its creation, but I must also share the power";
 		mes "of the slate with those that";
 		mes "prove themselves worthy of it.";
 		next;
@@ -2177,7 +2193,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "those that seek to own one";
 		mes "of the doomed swords would";
 		mes "trouble themselve to obtain";
-		mes "those items. All that is left for^FFFFFF ^000000 you is the Book of the Lamb...";
+		mes "those items. All that is left for you is the Book of the Lamb...";
 		next;
 		mes "[Zaka]";
 		mes "I've been waiting for so";
@@ -2204,8 +2220,8 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		dmdswrd_Q = 18;
 		break;
 	case 18:
-		if (countitem(926) > 1) {
-			delitem 926,2; //Scale_Of_Snakes
+		if (countitem(Scale_Of_Snakes) > 1) {
+			delitem Scale_Of_Snakes,2;
 			dmdswrd_Q = 19;
 			mes "[Zaka]";
 			mes "Ah, you've brought";
@@ -2233,7 +2249,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "alright? I'll be right here.";
 		break;
 	case 19:
-		if (countitem(936) > 0) {
+		if (countitem(Scales_Shell) > 0) {
 			mes "[Zaka]";
 			mes "Oh, nice! You've brought";
 			mes "this Scale Shell for me,";
@@ -2248,7 +2264,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "and bring you to me before";
 			mes "I finish this part of the process, okay? Wait, actually, I think";
 			mes "you can take your time...";
-			delitem 936,1; //Scales_Shell
+			delitem Scales_Shell,1;
 			dmdswrd_Q = 20;
 			close;
 		}
@@ -2261,7 +2277,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "finish this Book of the Lamb.";
 		break;
 	case 20:
-		if (countitem(954) > 0) {
+		if (countitem(Shining_Scales) > 0) {
 			mes "[Zaka]";
 			mes "Ah, you're just in time!";
 			mes "Have you got the Shining";
@@ -2269,7 +2285,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "is just one more item that";
 			mes "I want to ask you to bring me:";
 			mes "^3355FF1 Stinky Scale^000000. Easy, right?";
-			delitem 954,1; //Shining_Scales
+			delitem Shining_Scales,1;
 			dmdswrd_Q = 21;
 			next;
 			mes "[Zaka]";
@@ -2290,7 +2306,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "no way to work around it...";
 		break;
 	case 21:
-		if (countitem(959) > 0) {
+		if (countitem(Rotten_Scale) > 0) {
 			mes "[Zaka]";
 			mes "What's that sme--?";
 			mes "Oh, right. I asked you to";
@@ -2302,7 +2318,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "^3355FFZaka completes";
 			mes "the creation of the";
 			mes "Book of the Lamb.^000000";
-			delitem 959,1; //Rotten_Scale
+			delitem Rotten_Scale,1;
 			dmdswrd_Q = 22;
 			next;
 			mes "[Zaka]";
@@ -2369,7 +2385,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "Ogretooth, and Executioner";
 		mes "have all been sealed away.";
 		mes "Only a truly great adventurer";
-		mes "can release these doomed^FFFFFF ^000000 swords and actually wield them...";
+		mes "can release these doomed swords and actually wield them...";
 		break;
 	}
 	close;
@@ -2390,7 +2406,7 @@ comodo,232,87,4	script	Won#cmd	1_M_MOC_LORD,{
 		mes "presenses of the Book of the";
 		mes "Lamb, the Slate of Muriniel,";
 		mes "and one that has eaten of the";
-		mes "Awakening Stone are unmistakable. ^FFFFFF ^000000";
+		mes "Awakening Stone are unmistakable. ";
 		next;
 		mes "[Won]";
 		mes "Now, listen. I personally";
@@ -2413,7 +2429,7 @@ comodo,232,87,4	script	Won#cmd	1_M_MOC_LORD,{
 		mes "a look into your eyes...";
 		mes "Yeah, alright. You seem to";
 		mes "understand the value of the";
-		mes "Awakening Stone, Book of the^FFFFFF ^000000 Lamb, and the Slate of Muriniel.";
+		mes "Awakening Stone, Book of the Lamb, and the Slate of Muriniel.";
 		next;
 		mes "[Won]";
 		mes "Yeah, I can't sense any";
@@ -2496,7 +2512,7 @@ comodo,232,87,4	script	Won#cmd	1_M_MOC_LORD,{
 		mes "Comodo can afford to relax";
 		mes "so easily. I, for one, have";
 		mes "the responsibility of seeking";
-		mes "out those that are worthy of,^FFFFFF ^000000 well, I don't know if I can say...";
+		mes "out those that are worthy of, well, I don't know if I can say...";
 		next;
 		mes "[Won]";
 		mes "You just have to";

@@ -1,20 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Advanced Refiner
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Refiner that uses Enriched ores to increase upgrade success.
-//= After a conversation with Doddler, it's been established that
-//= the advanced refiner works similar the the "Bubble Gum" item.
-//= The success percentage is not "increased" however, if it fails
-//= You get a second try. This tries twice at the same time,
-//= effectively giving you a re-roll on your attempt.
-//===== Additional Comments: =================================
-//= 1.0 Added Malangdo Refiner "Holink". [Euphy]
-//============================================================
+//================= Additional Comments ===================================
+//= After a conversation with Doddler, it's been established that the
+//= advanced refiner works similar the the "Bubble Gum" item.
+//= The success percentage is not "increased" however, if it fails you get
+//= a second try. This tries twice at the same time, effectively giving you
+//= a re-roll on your attempt.
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 	disable_items;
@@ -112,13 +134,13 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 	mes "You need ^ff9999"+getitemname(.@material)+"^000000 and ^ff9999"+.@price+"^000000 Zeny for this refine, meow~";
 	mes "Want to continue, meow?~";
 	next;
-	if(select("Yes!!:No!!") == 2) {
+	if(select("Yes!!", "No!!") == 2) {
 		mes "[Holink]";
 		mes "Kyack!!";
 		mes "You don't belive in refine master Holink, meow?~";
 		close;
 	}
-	if (getequippercentrefinery(.@part) < 100) {
+	if (getequippercentrefinery(.@part, REFINE_CHANCE_TYPE_ENRICHED) < 100) {
 		mes "[Holink]";
 		mes "Meow!!";
 		if (.@type$ == "armor")
@@ -138,7 +160,7 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 		mes "^ff0000cards and enchantments will vanish for sure^000000.";
 		mes "You still want to try, meow~?";
 		next;
-		if(select("Yes, I do!!:Forget about it!!") == 2) {
+		if(select("Yes, I do!!", "Forget about it!!") == 2) {
 			mes "[Holink]";
 			mes "Meow! Wise choice, meow.";
 			mes "But!!";
@@ -155,7 +177,7 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 	}
 	delitem .@material,1;
 	Zeny -= .@price;
-	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
+	if (getequippercentrefinery(.@part, REFINE_CHANCE_TYPE_ENRICHED) > rand(100)) {
 		successrefitem .@part;
 		mes "[Holink]";
 		mes "Me~ Me~ Meow! Fun fun refining~";

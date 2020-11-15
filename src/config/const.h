@@ -1,13 +1,29 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef CONFIG_CONSTANTS_H
 #define CONFIG_CONSTANTS_H
 
 /**
- * Hercules configuration file (http://hercules.ws)
- * For detailed guidance on these check http://hercules.ws/wiki/SRC/config/
+ * Hercules configuration file (http://herc.ws)
+ * For detailed guidance on these check http://herc.ws/wiki/SRC/config/
  **/
 
 /**
@@ -33,10 +49,13 @@
 /**
  * Path within the /db folder to (non-)renewal specific db files
  **/
+#define DBPATH_RE "re/"
+#define DBPATH_PRE "pre-re/"
+
 #ifdef RENEWAL
-	#define DBPATH "re/"
+	#define DBPATH DBPATH_RE
 #else
-	#define DBPATH "pre-re/"
+	#define DBPATH DBPATH_PRE
 #endif
 
 /**
@@ -85,9 +104,9 @@
 		md.damage = md.damage * 150 / 100 + md.damage * status->get_lv(src) / 100; \
 	} while(0)
 #else
-	#define RE_LVL_DMOD(val)
-	#define RE_LVL_MDMOD(val)
-	#define RE_LVL_TMDMOD()
+	#define RE_LVL_DMOD(val) (void)(val)
+	#define RE_LVL_MDMOD(val) (void)(val)
+	#define RE_LVL_TMDMOD() (void)0
 #endif
 
 // Renewal variable cast time reduction
@@ -96,11 +115,6 @@
 		if( (varcast_r += (val)) != 0 && varcast_r >= 0 ) \
 			time = time * (1 - (float)min((val), 100) / 100); \
 	} while(0)
-#endif
-
-/* console_input doesn't go well with minicore */
-#ifdef MINICORE
-	#undef CONSOLE_INPUT
 #endif
 
 /**

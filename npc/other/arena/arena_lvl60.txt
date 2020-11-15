@@ -1,18 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Izlude Arena Level 60
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
+//================= Description ===========================================
 //= Izlude Battle Arena Level 60
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Fixed coordinate typo. (bugreport:1663) [L0ne_W0lf]
-//= 1.2 Replaced effect numerics with constants. [Samuray22]
-//= 1.3 Label standardization. [Euphy]
-//= 1.4 Script updates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
 arena_room,38,88,5	script	Lv60 Waiting Room	4_F_TELEPORTER,{
 	end;
@@ -38,8 +59,8 @@ force_2-1,99,20,4	script	Minilover#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	$arena_min60st = gettime(2);
-	$arena_sec60st = gettime(1);
+	$arena_min60st = gettime(GETTIME_MINUTE);
+	$arena_sec60st = gettime(GETTIME_SECOND);
 	end;
 
 OnTimer3000:
@@ -193,7 +214,7 @@ On09_End:
 	end;
 }
 
--	script	arena#60	-1,{
+-	script	arena#60	FAKE_NPC,{
 OnReset_01:
 	donpcevent "force_01ex#60::OnReset";
 	donpcevent "force_01mob#60::OnReset";
@@ -372,13 +393,13 @@ OnTouch:
 	end;
 }
 
--	script	force_01start#60	-1,{
+-	script	force_01start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_01mob#60::OnEnable";
 	end;
 }
 
--	script	force_01ex#60	-1,{
+-	script	force_01ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_01ex#60::OnMyMobDead";
 	end;
@@ -391,7 +412,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_01mob#60	-1,{
+-	script	force_01mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_01mob#60::OnMyMobDead";
 	end;
@@ -418,13 +439,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_02start#60	-1,{
+-	script	force_02start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_02mob#60::OnEnable";
 	end;
 }
 
--	script	force_02mob#60	-1,{
+-	script	force_02mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_02mob#60::OnMyMobDead";
 	end;
@@ -465,13 +486,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_03start#60	-1,{
+-	script	force_03start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_03mob#60::OnEnable";
 	end;
 }
 
--	script	force_03ex#60	-1,{
+-	script	force_03ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_03ex#60::OnMyMobDead";
 	end;
@@ -493,7 +514,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_03mob#60	-1,{
+-	script	force_03mob#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_03ex#60::OnEnable";
 	monster "force_2-1",23,174,"Mantis",1457,1,"force_03mob#60::OnMyMobDead";
@@ -514,13 +535,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_04start#60	-1,{
+-	script	force_04start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_04mob#60::OnEnable";
 	end;
 }
 
--	script	force_04ex#60	-1,{
+-	script	force_04ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_04ex#60::OnMyMobDead";
 	end;
@@ -539,7 +560,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_04mob#60	-1,{
+-	script	force_04mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_04mob#60::OnMyMobDead";
 	end;
@@ -559,13 +580,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_05start#60	-1,{
+-	script	force_05start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_05mob#60::OnEnable";
 	end;
 }
 
--	script	force_05ex#60	-1,{
+-	script	force_05ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_05ex#60::OnMyMobDead";
 	end;
@@ -589,7 +610,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_05mob#60	-1,{
+-	script	force_05mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_05mob#60::OnMyMobDead";
 	end;
@@ -611,13 +632,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_06start#60	-1,{
+-	script	force_06start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_06mob#60::OnEnable";
 	end;
 }
 
--	script	force_06ex#60	-1,{
+-	script	force_06ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_06ex#60::OnMyMobDead";
 	end;
@@ -667,7 +688,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_06mob#60	-1,{
+-	script	force_06mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_06mob#60::OnMyMobDead";
 	end;
@@ -687,13 +708,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_07start#60	-1,{
+-	script	force_07start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_07mob#60::OnEnable";
 	end;
 }
 
--	script	force_07mob#60	-1,{
+-	script	force_07mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_07mob#60::OnMyMobDead";
 	end;
@@ -713,25 +734,25 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_08start#60	-1,{
+-	script	force_08start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_08ex#60::OnEnable";
 	end;
 }
 
--	script	force_08ex#60	-1,{
+-	script	force_08ex#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "arena#60::OnReset_08";
 	end;
 }
 
--	script	force_09start#60	-1,{
+-	script	force_09start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_09mob#60::OnEnable";
 	end;
 }
 
--	script	force_09ex#60	-1,{
+-	script	force_09ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_09ex#60::OnMyMobDead";
 	end;
@@ -769,7 +790,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_09mob#60	-1,{
+-	script	force_09mob#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_09ex#60::OnSummonMob_09";
 	monster "force_2-1",99,99,"Goblin Leader",1539,1,"force_09mob#60::OnMyMobDead";
@@ -784,8 +805,8 @@ OnMyMobDead:
 		donpcevent "Minilover#arena::On09_End";
 		donpcevent "arena#60::OnReset_09";
 		donpcevent "arena#60::OnReset_All";
-		$arena_min60end = gettime(2);
-		$arena_sec60end = gettime(1);
+		$arena_min60end = gettime(GETTIME_MINUTE);
+		$arena_sec60end = gettime(GETTIME_SECOND);
 	}
 	end;
 }
@@ -807,7 +828,7 @@ prt_are_in,129,135,3	script	Staff#60-1	1_F_02,{
 	mes "[Staff]";
 	mes "Let me guide you outside. I hope you had a good time.";
 	close2;
-	specialeffect2 EF_EXIT;
+	specialeffect(EF_EXIT, AREA, playerattached());
 	warp "arena_room",100,75;
 	end;
 }
@@ -833,8 +854,8 @@ prt_are_in,25,135,3	script	Staff#60-2	1_F_02,{
 	@gap60 = (60 * $top_60min + $top_60sec) - (60 * @record_min60 + @record_sec60);
 	mes "[Staff]";
 	mes "Wow, you did a good job~ ";
-	mes "Your name is...^3131FF" + strcharinfo(0) +"^000000, isn't it?";
-	mes "^3131FF"+ strcharinfo(0) +"^000000, total time you spent to pass the battle..";
+	mes "Your name is...^3131FF" + strcharinfo(PC_NAME) +"^000000, isn't it?";
+	mes "^3131FF"+ strcharinfo(PC_NAME) +"^000000, total time you spent to pass the battle..";
 	next;
 	mes "[Staff]";
 	mes "is "+@record_min60+"minutes "+@record_sec60+"seconds.";
@@ -873,7 +894,7 @@ prt_are_in,25,135,3	script	Staff#60-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		specialeffect2 EF_EXIT;
+		specialeffect(EF_EXIT, AREA, playerattached());
  		donpcevent "cast#60::OnNomal1";
 		warp "arena_room",100,75;
 		donpcevent "#arn_timer_60::OnStop";
@@ -887,10 +908,10 @@ prt_are_in,25,135,3	script	Staff#60-2	1_F_02,{
 		mes "What a great job!";
 		next;
 		mes "[Staff]";
-		mes "You have been recorded as the fastest player among people who cleared ^FF0000Arena Time Force Battle lvl 60s^000000, ^3131FF"+strcharinfo(0)+"^000000.";
+		mes "You have been recorded as the fastest player among people who cleared ^FF0000Arena Time Force Battle lvl 60s^000000, ^3131FF"+strcharinfo(PC_NAME)+"^000000.";
 		$top_60min = @record_min60;
 		$top_60sec = @record_sec60;
-		$arena_60topn$ = strcharinfo(0);
+		$arena_60topn$ = strcharinfo(PC_NAME);
 		donpcevent "Vendigos::OnLineRec_60";
 		next;
 		if (arena_point > 29950) {
@@ -920,7 +941,7 @@ prt_are_in,25,135,3	script	Staff#60-2	1_F_02,{
 			mes "See you later~";
 			close2;
 		}
-		specialeffect2 EF_HIT5;
+		specialeffect(EF_HIT5, AREA, playerattached());
  		donpcevent "cast#60::OnNomal2";
 		warp "arena_room",100,75;
 		donpcevent "#arn_timer_60::OnStop";
@@ -930,7 +951,7 @@ prt_are_in,25,135,3	script	Staff#60-2	1_F_02,{
 	}
 }
 
--	script	#arn_timer_60	-1,{
+-	script	#arn_timer_60	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -960,13 +981,13 @@ OnStop:
 	end;
 }
 
--	script	arn_warp_60	-1,{
+-	script	arn_warp_60	FAKE_NPC,{
 OnOut:
 	areawarp "prt_are_in",14,143,29,126,"arena_room",100,75;
 	end;
 }
 
--	script	cast#60	-1,{
+-	script	cast#60	FAKE_NPC,{
 OnTimeOver1:
 	mapannounce "force_2-1","Arena will be reactivated due to an error occurred during battle.",0,0xFFCE00;
 	end;
@@ -984,7 +1005,7 @@ OnTimeOver2:
 	end;
 }
 
--	script	alloff#60	-1,{
+-	script	alloff#60	FAKE_NPC,{
 OnEnable:
 	mapwarp "force_2-1","prt_are_in",126,139,0,0;
 	donpcevent "force_01mob#60::OnReset";

@@ -1,17 +1,40 @@
-//===== Hercules Script ======================================
-//= Yggdrasil Tree Monster Spawn Script
-//===== By: ==================================================
-//= Athena (1.0)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Playtester
+//= Copyright (C) DracoRPG
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Yggdrasil Tree Monster Spawn Script (Renewal)
+//================= Description ===========================================
+//= Yggdrasil Tree Monster Spawn Script (Renewal)
+//================= Current Version =======================================
 //= 1.1
-//===== Additional Comments: =================================
-//= 1.0 Splitted from Nifflheim fields [DracoRPG]
-//= 1.1 Official kRO 10.1 spawns [Playtester]
-//============================================================
+//=========================================================================
 
-//==================================================
-// yggdrasil01 - Hvergelmir's Fountain (Trunk of Yggdrasil)
-//==================================================
+//== yggdrasil01 - Hvergelmir's Fountain (Trunk of Yggdrasil) =
 yggdrasil01,234,256,10,10	monster	Blue Plant	1079,5,1800000,600000,0
 yggdrasil01,273,234,3,3	monster	Shining Plant	1083,1,1800000,600000,0
 yggdrasil01,143,257,20,10	monster	Shining Plant	1083,5,1200000,600000,0

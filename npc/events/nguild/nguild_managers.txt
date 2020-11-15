@@ -1,26 +1,44 @@
-//===== Hercules Script ======================================
-//= War of Emperium Managers for N Guild Castles
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//==============================================
-//= Break down of arguments used in the function:
-//=   arg(0): name of Castle Manager
-//=   arg(1): name of guild castle.
-//=   arg(2): x1 coordinate for warp to treasure room
-//=   arg(3): y1 coordinate for warp to treasure room
-//=   arg(4): guild script suffix for kafra, etc.
-//===== Additional Comments: =================================
-//= 1.0 Based off existing guild scripts.  Do not know if it is accurate.[kobra_k88]
-//= 1.1 Added modified guild manager function. [L0ne_W0lf]
-//= 	Removed guardian summoning.
-//= 1.2 Corrected function name. (bugreport:1728) [L0ne_W0lf]
-//============================================================
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium Managers for N Guild Castles
+//================= Description ===========================================
+//= War of Emperium Managers for Novice Guild Castles
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-//==============================================
+// Arguments:
+// - 0: name of Castle Manager
+// - 1: name of guild castle.
+// - 2: x1 coordinate for warp to treasure room
+// - 3: y1 coordinate for warp to treasure room
+// - 4: guild script suffix for kafra, etc.
 function	script	F_GldManager	{
 
 	@GID = getcastledata(getarg(1),1);
@@ -29,23 +47,50 @@ function	script	F_GldManager	{
 		mes "I am waiting for my master.  Brave adventurer, follow your destiny!";
 		return;
 	}
-	if (getcharid(2) != @GID){
-		mes "I am here to follow ^5533FF" + getguildmaster(@GID) + "^000000's command! Hey! Your not even a part of the guild!!";
+	if (getcharid(CHAR_ID_GUILD) != @GID){
+		mes "I am here to follow ^5533FF" + getguildinfo(GUILDINFO_MASTER_NAME, @GID) + "^000000's command! Hey! Your not even a part of the guild!!";
 		mes "Where are the guardians? Destroy these intruders!";
 		return;
 	}
-	if (strcharinfo(0) != getguildmaster(@GID)){
-		mes "You're not ^5533FF" + getguildmaster(@GID) + "^000000! I am here to follow ^5533FF" + getguildmaster(@GID) + "^000000's command only";
+	if (strcharinfo(PC_NAME) != getguildinfo(GUILDINFO_MASTER_NAME, @GID)){
+		mes "You're not ^5533FF" + getguildinfo(GUILDINFO_MASTER_NAME, @GID) + "^000000! I am here to follow ^5533FF" + getguildinfo(GUILDINFO_MASTER_NAME, @GID) + "^000000's command only";
 		return 0;
 	}
 
-	mes "Welcome Master ^5533FF" + getguildmaster(@GID) + "^000000 ! I will assist you in any way I can!";
+	mes "Welcome Master ^5533FF" + getguildinfo(GUILDINFO_MASTER_NAME, @GID) + "^000000 ! I will assist you in any way I can!";
 	next;
 
 	switch (select("Kafra Staff Employment / Dismissal","Enter Treasure Room","Cancel")) {
 	case 1: // Employment / Dismissal
 		mes "[ "+getarg(0)+" ]";
-		if (getcastledata(getarg(1),9) == 1) goto L_Dismiss;
+		if (getcastledata(getarg(1),9) == 1) {
+			mes "Would you like to dismiss the current Kafra?";
+			next;
+			if (select("Dismissal","Cancel") != 1) {
+				mes "[ "+getarg(0)+" ]";
+				mes "Master, I think you should keep the current Kafra Staff because she is already trying her best to serve us";
+				return;
+			}
+			cutin "kafra_01",2;
+			mes "[ Kafra Staff ]";
+			mes "Have I done anything wrong? If I did, will you please forgive me?";
+			next;
+			if (select("Dismiss","Cancel") != 1) {
+				mes "[ Kafra Staff ]";
+				mes "Thank you master, I'll do my best! ^^.";
+				cutin "kafra_01",255;
+				return;
+			}
+			mes "[ Kafra Staff ]";
+			mes "It's unfortunate that I won't be able to serve your guild anymore....";
+			next;
+			disablenpc "Kafra Staff#"+getarg(4);
+			setcastledata getarg(1),9,0;
+			cutin "kafra_01",255;
+			mes "[ "+getarg(0)+" ]";
+			mes "The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!";
+			return;
+		}
 		if (getgdskilllv(@GID,10001) == 0){
 			mes "Master, you don't have a contract with the Kafra Staff Company.";
 			mes "In order to hire a Kafra, you must first learn the Guild skill ^5533FFContract With Kafra^000000.";
@@ -79,33 +124,6 @@ function	script	F_GldManager	{
 			//mes "Your employment contract lasts ^5533FF1 month^000000.  After this term is over you will have to create a new contract.";
 			mes "I think the Kafra Staff will benefit our guild members.";
 			return;
-		L_Dismiss:
-			mes "Would you like to dismiss the current Kafra?";
-			next;
-			if (select("Dismissal","Cancel") != 1) {
-				mes "[ "+getarg(0)+" ]";
-				mes "Master, I think you should keep the current Kafra Staff because she is already trying her best to serve us";
-				return;
-			}
-			cutin "kafra_01",2;
-			mes "[ Kafra Staff ]";
-			mes "Have I done anything wrong? If I did, will you please forgive me?";
-			next;
-			if (select("Dismiss","Cancel") != 1) {
-				mes "[ Kafra Staff ]";
-				mes "Thank you master, I'll do my best! ^^.";
-				cutin "kafra_01",255;
-				return;
-			}
-			mes "[ Kafra Staff ]";
-			mes "It's unfortunate that I won't be able to serve your guild anymore....";
-			next;
-			disablenpc "Kafra Staff#"+getarg(4);
-			setcastledata getarg(1),9,0;
-			cutin "kafra_01",255;
-			mes "[ "+getarg(0)+" ]";
-			mes "The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!";
-			return;
 	case 2: // Enter Treasure Room
 		mes "[ "+getarg(0)+" ]";
 		mes "Would you to go to our Treasure Room? Only you, the Guild Master, are allowed to enter this room.";
@@ -129,28 +147,28 @@ function	script	F_GldManager	{
 	}
 }
 
-// Castle 1 ==================================================================================
+//== Castle 1 ==============================================
 nguild_alde,218,175,0	script	Frolo	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Frolo","nguild_alde",119,223,"N01";
 	close;
 }
 
 
-// Castle 2 ==================================================================================
+//== Castle 2 ==============================================
 nguild_gef,40,48,5	script	Leiber	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Leiber","nguild_gef",155,112,"N02";
 	close;
 }
 
 
-// Castle 3 ==================================================================================
+//== Castle 3 ==============================================
 nguild_pay,120,58,4	script	Dundar	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Dundar","nguild_pay",290,7,"N03";
 	close;
 }
 
 
-// Castle 4 ==================================================================================
+//== Castle 4 ==============================================
 nguild_prt,112,181,0	script	Thefton	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Thefton","nguild_prt",15,209,"N04";
 	close;

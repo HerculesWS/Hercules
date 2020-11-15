@@ -1,29 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Lupus
+//= Copyright (C) Jukka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Magician Class Tutorial and Job Specific Quest
-//===== By: ==================================================
-//= Fix up by Jukka
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Magician training quest.
-//===== Additional Comments: =================================
-//= 1.0 Fully working
-//= 1.1 Optimized [Lupus]
-//= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.3 Misc. updates. [L0ne_W0lf]
-//= 1.4 Updated to match the official script. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Sign
-//============================================================
+//== Sign ==================================================
 geffen,61,174,4	script	Sign#M	HIDDEN_NPC,{
 	mes "- Mage Job Change -";
 	close;
 }
 
-// New Mage Manager
-//============================================================
+//== New Mage Manager ======================================
 geffen,67,180,4	script	New Mage Manager#M	8_F,{
 	mes "[Mana]";
 	if(Class == Job_Novice){
@@ -70,7 +89,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "you want to learn more on";
 		mes "the basics of the Mage job.";
 		next;
-		switch(select("Will you teach me?:Perhaps later...")) {
+		switch(select("Will you teach me?", "Perhaps later...")) {
 		case 1:
 			mes "[Mana]";
 			mes "Of course!";
@@ -136,7 +155,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			getexp BaseLevel*3,BaseLevel*2;
 		else
 			getexp BaseLevel*30,BaseLevel*15;
-		specialeffect2 EF_HIT5;
+		specialeffect(EF_HIT5, AREA, playerattached());
 		close;
 	case 1:
 		mes "Are you ready";
@@ -364,13 +383,13 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "ready, we'll cover some new";
 				mes "material for you to learn.";
 				next;
-				if(select("W-wait, not yet!:I'm ready to go on.") == 2) {
+				if(select("W-wait, not yet!", "I'm ready to go on.") == 2) {
 					mes "[Mana]";
 					mes "Alrighty, we'll";
 					mes "move on to the next";
 					mes "subject then. Ho ho ho~!";
 					tu_magician01 = 2;
-					specialeffect2 EF_HIT5;
+					specialeffect(EF_HIT5, AREA, playerattached());
 					if(.@eread_1) getexp 150,70;
 					if(.@eread_2) getexp 150,70;
 					if(.@eread_3) getexp 150,70;
@@ -396,7 +415,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "Napalm Beat. Learning these";
 		mes "enables Mages to learn their";
 		mes "more advanced skills.";
-		specialeffect2 EF_NAPALMBEAT;
+		specialeffect(EF_NAPALMBEAT, AREA, playerattached());
 		next;
 		mes "[Mana]";
 		mes "Increasing the levels of";
@@ -404,7 +423,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "access to other spells, but";
 		mes "the damage of those basic";
 		mes "attack skills is also increased.";
-		specialeffect2 EF_LIGHTBOLT;
+		specialeffect(EF_LIGHTBOLT, AREA, playerattached());
 		next;
 		mes "[Mana]";
 		mes "Other skills that are";
@@ -413,7 +432,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "Increase SP Recovery. They're";
 		mes "not really attack spells, but are useful in certain situations.";
 		next;
-		specialeffect2 EF_SIGHT;
+		specialeffect(EF_SIGHT, AREA, playerattached());
 		mes "[Mana]";
 		mes "Sight is used to";
 		mes "reveal enemies that";
@@ -421,7 +440,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "mind that this skill's";
 		mes "range doesn't go too far.";
 		next;
-		specialeffect2 EF_STONECURSE;
+		specialeffect(EF_STONECURSE, AREA, playerattached());
 		mes "[Mana]";
 		mes "Stone Curse has the chance";
 		mes "to curse a target, temporarily";
@@ -458,7 +477,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "Then bring them to me, okay?";
 		tu_magician01 = 3;
 		getexp 400,200;
-		specialeffect2 EF_HIT5;
+		specialeffect(EF_HIT5, AREA, playerattached());
 		close;
 	case 3:
 		mes "Ah, you're back?";
@@ -466,7 +485,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "all 10 Chrysalis from hunting";
 		mes "all of those Pupa. Hmmmm...";
 		next;
-		if (countitem(915) < 10) {
+		if (countitem(Chrysalis) < 10) {
 			mes "[Mana]";
 			mes "Aw, you don't";
 			mes "have enough of";
@@ -486,7 +505,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "Anyway, let me know when you're ready for the next lesson, okay?";
 			tu_magician01 = 5;
 			getexp 400,200;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close;
 		}
 	case 4:
@@ -497,7 +516,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "like I asked? I hope so...";
 		mes "Because I'm going to check~";
 		next;
-		if(countitem(915) < 10){
+		if(countitem(Chrysalis) < 10){
 			mes "[Mana]";
 			mes "Whoa, you need";
 			mes "more than just this.";
@@ -514,7 +533,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 			mes "Anyway, let me know when you're ready for the next lesson, okay?";
 			tu_magician01 = 5;
 			getexp 400,200;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close;
 		}
 	case 5:
@@ -525,7 +544,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "you like me to explain?";
 		next;
 		while(1){
-			switch(select("Soul Strike:Safety Wall:Fire Ball:Frost Diver:Thunderstorm:Fire Wall:Energy Coat:Quit.")) {
+			switch(select("Soul Strike", "Safety Wall", "Fire Ball", "Frost Diver", "Thunderstorm", "Fire Wall", "Energy Coat", "Quit.")) {
 			case 1:
 				mes "[Mana]";
 				mes "Soul Strike is a ^CFB53BGhost^000000";
@@ -535,7 +554,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "a certain level. It attacks";
 				mes "with ancient spiritual power~";
 				next;
-				specialeffect2 EF_SOULSTRIKE;
+				specialeffect(EF_SOULSTRIKE, AREA, playerattached());
 				next;
 				mes "[Mana]";
 				mes "As you train in the use";
@@ -553,7 +572,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "Safety Wall protects against";
 				mes "most close range attacks.";
 				next;
-				specialeffect2 EF_GLASSWALL;
+				specialeffect(EF_GLASSWALL, AREA, playerattached());
 				next;
 				mes "[Mana]";
 				mes "However, Safety Wall";
@@ -572,7 +591,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "can learn after training";
 				mes "in the use of Fire Bolt.";
 				next;
-				specialeffect2 EF_FIREBALL;
+				specialeffect(EF_FIREBALL, AREA, playerattached());
 				next;
 				mes "[Mana]";
 				mes "Fire Ball can actually";
@@ -591,9 +610,9 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "learned after increasing";
 				mes "the Cold Bolt skill to";
 				mes "a certain level.";
-				specialeffect2 EF_FROSTDIVER;
+				specialeffect(EF_FROSTDIVER, AREA, playerattached());
 				next;
-				specialeffect2 EF_FROSTDIVER2;
+				specialeffect(EF_FROSTDIVER2, AREA, playerattached());
 				mes "[Mana]";
 				mes "Frost Diver will damage";
 				mes "enemies and has the chance";
@@ -619,7 +638,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "increasing the Lightning";
 				mes "Bolt skill to a certain level.";
 				next;
-				specialeffect2 EF_THUNDERSTORM;
+				specialeffect(EF_THUNDERSTORM, AREA, playerattached());
 				mes "[Mana]";
 				mes "Thunderstorm is similar";
 				mes "to Fire Ball in that it can";
@@ -639,7 +658,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "Sight. Unlike other skills,";
 				mes "Fire Wall targets an area.";
 				next;
-				specialeffect2 EF_FIREWALL;
+				specialeffect(EF_FIREWALL, AREA, playerattached());
 				mes "[Mana]";
 				mes "So you can place";
 				mes "a Fire Wall in locations";
@@ -650,7 +669,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				next;
 				mes "[Mana]";
 				mes "So if you can use";
-				mes "Fire Well strategically";
+				mes "Fire Wall strategically";
 				mes "and effectively, it can";
 				mes "be a very powerful skill~";
 				.@skill_e6 = 1;
@@ -665,7 +684,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "inside the Mage Guild to";
 				mes "teach you how to use it.";
 				next;
-				specialeffect2 EF_ENERGYCOAT;
+				specialeffect(EF_ENERGYCOAT, AREA, playerattached());
 				next;
 				mes "[Mana]";
 				mes "If you do decide to";
@@ -691,8 +710,8 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "training. I hope it comes";
 				mes "in handy when fighting...";
 				tu_magician01 = 6;
-				getitem 1604,1; //Wand
-				specialeffect2 EF_HIT5;
+				getitem Wand,1;
+				specialeffect(EF_HIT5, AREA, playerattached());
 				if(.@skill_e1) getexp 300,100;
 				if(.@skill_e2) getexp 300,100;
 				if(.@skill_e3) getexp 300,100;
@@ -722,7 +741,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "give you some support.";
 		mes "So what do you think?";
 		next;
-		switch(select("I'll do it.:Sorry, but...")) {
+		switch(select("I'll do it.", "Sorry, but...")) {
 		case 1:
 			mes "[Mana]";
 			mes "Great! Alright,";
@@ -762,7 +781,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "a message, saying that";
 		mes "you've done a great job in";
 		mes "completing your mission.";
-		mes "Very nice work, "+PcName+"~";
+		mes "Very nice work, "+strcharinfo(PC_NAME)+"~";
 		next;
 		mes "[Mana]";
 		mes "It seems like there are";
@@ -785,7 +804,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "out both of our guilds. Once";
 		mes "again, thanks very much~";
 		tu_magician01 = 28;
-		getitem 2321,1; //Silk_Robe
+		getitem Silk_Robe,1;
 		Zeny += 3000;
 		getexp 3000,1000;
 		close;

@@ -1,34 +1,57 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Zopokx
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mage Solutions
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Traders for Morroc Solution and Payon Solution, used in the Sage skill
+//= quests and the Pre-Renewal Mage job quest.
+//================= Current Version =======================================
 //= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Traders for Morroc Solution and Payon Solution, used in
-//= the Sage skill quests and the Pre-Renewal Mage job quest.
-//===== Additional Comments: =================================
-//= 1.0 Split from Pre-Renewal Mage job quest. [Zopokx]
-//============================================================
+//=========================================================================
 
 pay_arche,122,100,0	script	Dollshoi	4_M_ORIENT01,{
 	mes "[Mage Guildsman]";
 	mes "You want a Solution? Hmm, give me 50 Zeny and at least 1 Empty Test Tube.";
 	next;
-	if (select("Alright, Deal.:Nah, forget it.") == 1) {
+	if (select("Alright, Deal.", "Nah, forget it.") == 1) {
 		mes "[Mage Guildsman]";
 		if (Zeny < 50) {
 			mes "Hey! You don't have enough money to cover my 50 Zeny charge.";
 			close;
 		}
-		if (countitem(1092) == 0) {
+		if (countitem(Empty_Cylinder) == 0) {
 			mes "You can't carry solutions without a bottle! Bring me an Empty Test Tube.";
 			close;
 		}
-		delitem 1092,1; //Empty_Cylinder
+		delitem Empty_Cylinder,1;
 		Zeny -= 50;
-		getitem 1089,1; //Payon_Potion
+		getitem Payon_Potion,1;
 	}
 	close;
 }
@@ -37,19 +60,19 @@ moc_ruins,91,150,0	script	Ponka-Hontas	4_F_04,{
 	mes "[Mage Guildsman]";
 	mes "Would you like a Solution? Then please give me 50 Zeny and at least 1 Empty Test Tube.";
 	next;
-	if (select("Alright, Deal.:Nah, forget it.") == 1) {
+	if (select("Alright, Deal.", "Nah, forget it.") == 1) {
 		mes "[Mage Guildsman]";
 		if (Zeny < 50) {
 			mes "I'm sorry, but you don't have enough money to cover the 50 Zeny fee.";
 			close;
 		}
-		if (countitem(1092) == 0) {
+		if (countitem(Empty_Cylinder) == 0) {
 			mes "You can't carry liquids without using a bottle. Bring an Empty Test Tube the next time you see me.";
 			close;
 		}
-		delitem 1092,1; //Empty_Cylinder
+		delitem Empty_Cylinder,1;
 		Zeny -= 50;
-		getitem 1088,1; //Morocc_Potion
+		getitem Morocc_Potion,1;
 	}
 	close;
 }

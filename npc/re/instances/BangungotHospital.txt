@@ -1,27 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Bangungot Hospital 2F
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Save the hospital in Port Malaya from Bangungot.
 //= Part of the "Nurse in Port Malaya" quest.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//= 1.1 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-1@ma_h	mapflag	src4instance
-//============================================================
-
-// Instance Creation
-//============================================================
+//== Instance Creation =====================================
 ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	if (BaseLevel < 100) end;
 
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 	cutin "malaya_nurseB",2;
 	if (!questprogress(9223)) {
 		.@quest = questprogress(9222);
@@ -32,7 +48,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 				else if (malaya_bang == 31)
 					callsub L_Closed,0;
 				else
-					goto L_NoParty;
+					callsub L_NoParty;
 			}
 			if (questprogress(11309,HUNTING) != 2) {
 				.@playtime = questprogress(9224,PLAYTIME);
@@ -42,7 +58,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					else if (malaya_bang == 31)
 						callsub L_Closed,0;
 					else if (malaya_bang > 39)
-						callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,0,0;
+						callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,0,0;
 					else {
 						mes "[Nurse Maenne]";
 						mes "..........";
@@ -84,9 +100,9 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						cutin "",255;
 						end;
 					} else {
-						//if (!.@party_id) goto L_NoParty; //unneeded
+						//if (!.@party_id) callsub L_NoParty; //unneeded
 						if (malaya_bang > 39)
-							callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,1,1;
+							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
 							mes "[Nurse Maenne]";
 							mes ".......";
@@ -106,7 +122,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 				end;
 			}
 		} else if (.@quest == 1) {
-			if (!.@party_id) goto L_NoParty;
+			if (!.@party_id) callsub L_NoParty;
 			if (malaya_bang > 39) {
 				if (questprogress(9222,HUNTING) == 1) {
 					.@playtime = questprogress(9224,PLAYTIME);
@@ -116,9 +132,9 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						next;
 						callsub L_Enter,0,0;
 					} else if (.@playtime == 2) {
-						//if (!.@party_id) goto L_NoParty; //unneeded
+						//if (!.@party_id) callsub L_NoParty; //unneeded
 						if (malaya_bang > 39)
-							callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,1,1;
+							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
 							mes "[Nurse Maenne]";
 							mes ".......";
@@ -135,7 +151,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						end;
 					}
 				} else {
-					if (checkweight(607,1) == 0) {
+					if (checkweight(Yggdrasilberry,1) == 0) {
 						mes "[Nurse Maenne]";
 						mes "You have too much stuff.";
 						mes "Please reduce your stuff and";
@@ -144,7 +160,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						cutin "",255;
 						end;
 					}
-					if (checkweight(607,11) == 0) {
+					if (checkweight(Yggdrasilberry,11) == 0) {
 						mes "[Nurse Maenne]";
 						mes "It's too heavy.";
 						mes "Please reduce the weight and";
@@ -161,9 +177,9 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					setquest 9223;
 					getexp 500000,0;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6499,7; //Ancient_Grudge
+						getitem Ancient_Grudge,7;
 //					else
-//						getitem 6499,5; //Ancient_Grudge
+//						getitem Ancient_Grudge,5;
 					close2;
 					cutin "",255;
 					end;
@@ -195,9 +211,9 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 			cutin "",255;
 			end;
 		} else {
-			if (!.@party_id) goto L_NoParty;
+			if (!.@party_id) callsub L_NoParty;
 			if (malaya_bang > 39)
-				callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,1,1;
+				callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 			else {
 				mes "[Nurse Maenne]";
 				mes ".......";
@@ -249,30 +265,28 @@ L_Enter:
 		mes "appeared again.";
 		next;
 		mes "[Nurse Maenne]";
-		mes strcharinfo(0) + "'s help";
+		mes strcharinfo(PC_NAME) + "'s help";
 		mes "is needed again.";
 		mes "Please, could you give me";
 		mes "one more chance?";
 	}
 	next;
-	switch(select(((getarg(0))?"Prepare to enter the second floor.":"")+":Enter the second floor.:Do not enter.")) {
+	switch(select(((getarg(0))?"Prepare to enter the second floor.":""), "Enter the second floor.", "Do not enter.")) {
 	case 1:
-		.@instance = instance_create(.@md_name$,getcharid(1));
-		if (.@instance < 0) {
-			mes "[Nurse Maenne]";
-			mes "A critical situation has happened.";
-			mes "You can't go up to the 2nd floor.";
-			close2;
-			cutin "",255;
-			end;
+		.@instance = instance_create(.@md_name$,getcharid(CHAR_ID_PARTY));
+		if (.@instance >= 0) {
+			if (instance_attachmap("1@ma_h", .@instance) == "") {
+				mes("[Nurse Maenne]");
+				mes("A critical situation has happened.");
+				mes("You can't go up to the 2nd floor.");
+				instance_destroy(.@instance);
+				close2();
+				cutin("", 255);
+				end;
+			}
+			instance_set_timeout(3600, 300, .@instance);
+			instance_init(.@instance);
 		}
-		if (instance_attachmap("1@ma_h",.@instance) == "") {
-			mes "^0000ff"+.@md_name$+"^000000 - Reservation Failed!";
-			instance_destroy(.@instance);
-			close;
-		}
-		instance_set_timeout 3600,300,.@instance;
-		instance_init(.@instance);
 		mes "[Nurse Maenne]";
 		mes "We are preparing to go up";
 		mes "to the second floor.";
@@ -294,7 +308,7 @@ L_Enter:
 			mes "The party leader did not generate the dungeon yet.";
 			close;
 		} else {
-			mapannounce "ma_dun01", getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member entered "+.@md_name$+".",bc_map,"0x00ff99";
+			mapannounce "ma_dun01", getpartyname(getcharid(CHAR_ID_PARTY))+" party's "+strcharinfo(PC_NAME)+" member entered "+.@md_name$+".",bc_map,"0x00ff99";
 			if (getarg(1)) {
 				if (questprogress(9223)) {
 					completequest 9223;
@@ -344,7 +358,7 @@ sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 		mes "Good Luck.";
 		close;
 	}
-	switch(select("Receive 9222:Receive 9223:Erase 9222:Erase 9223:Receive 9224:Erase 9224:Receive malaya_bang 30:Receive malaya_bang 40:Receive 11309:Erase 11309:Cancel")) {
+	switch(select("Receive 9222", "Receive 9223", "Erase 9222", "Erase 9223", "Receive 9224", "Erase 9224", "Receive malaya_bang 30", "Receive malaya_bang 40", "Receive 11309", "Erase 11309", "Cancel")) {
 		case 1: setquest 9222; close;
 		case 2: setquest 9223; close;
 		case 3: erasequest 9222; close;
@@ -359,13 +373,12 @@ sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 	}
 }
 
-// Instance Scripts
-//============================================================
+//== Instance Scripts ======================================
 1@ma_h,43,157,0	script	#Memorial Start	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	.@map$ = instance_mapname("1@ma_h");
-	mapannounce .@map$,"Bangungot: You silly "+strcharinfo(0)+" ....",bc_map,"0xFF82FF";
+	mapannounce .@map$,"Bangungot: You silly "+strcharinfo(PC_NAME)+" ....",bc_map,"0xFF82FF";
 	mapannounce .@map$,"Bangungot: Get out before you die...",bc_map,"0xFF82FF";
 	areamonster .@map$,44,156,46,158,"Bangungot's Mangkukulam",2339,1,instance_npcname("#Memorial Start")+"::OnMyMobDead";
 	donpcevent instance_npcname("#Memorial Start_time")+"::OnEnable";
@@ -391,7 +404,7 @@ OnInstanceInit:
 	disablenpc instance_npcname("#Memorial Start_time");
 	end;
 OnEnable:
-	specialeffect EF_BAT2,AREA,instance_npcname("#Memorial Start");
+	specialeffect(EF_BAT2, AREA, getnpcid(instance_npcname("#Memorial Start")));
 	initnpctimer;
 	end;
 OnDisable:
@@ -409,14 +422,14 @@ OnTimer10000:
 1@ma_h,46,165,0	script	#Ward1 Entry	HIDDEN_WARP_NPC,{ //3,3
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable1:
 	.@map$ = instance_mapname("1@ma_h");
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	enablenpc instance_npcname(strnpcinfo(0));
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	specialeffect EF_BAT2;
-	switch(atoi(charat(strnpcinfo(2),4))) {
+	switch(atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),4))) {
 	case 1:
 		areamonster .@map$,49,171,51,173,"Bangungot's Mangkukulam",2339,1,.@label$;
 		areamonster .@map$,51,171,53,173,"Bangungot's Mangkukulam",2339,1,.@label$;
@@ -449,19 +462,19 @@ OnEnable2:
 	end;
 */
 OnEnable3:
-	.@i = atoi(charat(strnpcinfo(2),4))+1;
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),4))+1;
 	donpcevent instance_npcname("#Ward"+.@i+" Entry")+"::OnEnable1";
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnMyMobDead:
 	initnpctimer;
 	end;
 OnTimer1000:
 	.@map$ = instance_mapname("1@ma_h");
-	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 		specialeffect EF_BAT2;
-		donpcevent instance_npcname(strnpcinfo(0))+"::OnEnable3";
-		switch(atoi(charat(strnpcinfo(2),4))) {
+		donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnEnable3";
+		switch(atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),4))) {
 			case 1: .@str$ = "Bangungot: I will let you see the pain and the agony actually be real....."; break;
 			case 2: .@str$ = "Bangungot: Diseased spirits are the source of my energy, and my life..."; break;
 			case 3: .@str$ = "Bangungot: Scream more....and more...... your pain..."; break;
@@ -877,19 +890,19 @@ OnStopTimer:
 	end;
 OnTimer1000:
 	mapannounce instance_mapname("1@ma_h"),"- Bangungot's Pillar of Spirit is curing Bangungot. If you don't hunt it now, he will fully recover!! -",bc_map,"0xFF8200";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer7000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: I never die!!!!",bc_map,"0xFF82FF";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer14000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: If you dare, kill me!! I will revive soon!!!",bc_map,"0xFF82FF";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer21000:
 	mapannounce instance_mapname("1@ma_h"),"Bangungot: I cannot die this way...!!!!",bc_map,"0xFF82FF";
-	specialeffect EF_MAPPILLAR2,AREA,instance_npcname("#Patternwarp45");
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid(instance_npcname("#Patternwarp45")));
 	end;
 OnTimer30000:
 	donpcevent instance_npcname("#Summon Pillar")+"::OnReset";
@@ -908,7 +921,7 @@ OnTimer36000:
 1@ma_h,118,171,0	script	#Boss Room Entry_a	HIDDEN_WARP_NPC,10,10,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	specialeffect EF_GHOST;
@@ -967,7 +980,7 @@ OnTimer30000:
 1@ma_h,60,87,4	script	Screaming Patient#2	4_M_PATIENT,{
 	end;
 OnEnable:
-	switch(atoi(strnpcinfo(2))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 2: .@str$ = "Screaming Patient: Aaaaargh!!"; break;
 		case 3: .@str$ = "Patient in Pain: Oooooowwww!! It's killing me!!!"; break;
 		case 4: .@str$ = "Passed Out Patient: ........"; break;
@@ -1024,8 +1037,7 @@ OnTimer30000:
 1@ma_h,99,132,7	script	Patient in Cold Sweat#b	4_F_PATIENT,{ end; }
 1@ma_h,87,132,7	script	Howling Patient#b	4_M_PATIENT,{ end; }
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 1@ma_h,35,156,0	warp	#Boss Room Exit	2,2,ma_dun01,150,9
 1@ma_h,105,157,0	warp	#Boss Room Door	2,2,1@ma_h,116,157
 1@ma_h,112,157,0	warp	#Boss Room Door1	2,2,1@ma_h,100,157
@@ -1080,7 +1092,7 @@ OnTimer30000:
 1@ma_h,131,49,0	warp	#Patternwarp32	10,10,1@ma_h,116,157
 1@ma_h,146,49,0	warp	#Patternwarp33	10,10,1@ma_h,116,157
 
-// Disable select warps.
+//- Disable select warps -
 // Custom, but saves processing and lines.
 1@ma_h,1,1,0	script	#ma_hos_warp_init	CLEAR_NPC,{
 	end;

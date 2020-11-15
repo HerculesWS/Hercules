@@ -1,18 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Komurka
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Darkchild
+//= Copyright (C) Muad Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Jawaii Warp Script
-//===== By: ==================================================
-//= Muad Dib (1.0)
-//= Darkchild (1.1)
-//= MasterOfMuppets (1.2)
-//===== Current Version: =====================================
-//= 1.2b
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Jawaii
-//===== Additional Comments: =================================
-//= Split off npc_warp.txt
-//= 1.2a Added a missing warp, thanks to Zoc [MasterOfMuppets]
-//= 1.2b Added a missing warp [Komurka]
-//============================================================
+//================= Current Version =======================================
+//= 1.2b
+//=========================================================================
 
 jawaii_in,90,78,0	warp	jawaiiwarp001	1,1,jawaii,115,172
 jawaii_in,113,61,0	warp	jawaiiwarp002	1,1,jawaii,138,202
@@ -20,5 +41,5 @@ jawaii_in,133,107,0	warp	jawaiiwarp003	1,1,jawaii,111,199
 jawaii_in,88,117,0	warp	jawaiiwarp004	1,1,jawaii,109,186
 jawaii,192,215,0	warp	jawaiiwarp005	1,1,jawaii_in,28,94
 jawaii_in,27,91,4	script	jawaiiwarp006	WARPNPC,1,1,{
-if (getpartnerid() > 0) warp "jawaii",192,218; else warp "jawaii_in",27,94;
+	if (getpartnerid() > 0) warp "jawaii",192,218; else warp "jawaii_in",27,94;
 }

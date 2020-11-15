@@ -1,38 +1,52 @@
-//===== Hercules Script ======================================
-//= PvP Nightmare Rooms Monster Spawn Script
-//===== By: ==================================================
-//= Athena (1.0)
-//===== Current Version: =====================================
-//= 1.0
-//===== Additional Comments: =================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//============================================================
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= PvP Nightmare Rooms Monster Spawn Script
+//================= Description ===========================================
+//= Monster Spawns for the PvP Nightmare Rooms
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-//==================================================
-// pvp_n_8-1 - PvP : Room Sandwich
-//==================================================
+//== pvp_n_8-1 - PvP : Room Sandwich =======================
 pvp_n_8-1,0,0,0,0	monster	Side Winder	1037,2,360000,180000,1
 pvp_n_8-1,0,0,0,0	monster	Bigfoot	1060,2,360000,180000,1
 
-//==================================================
-// pvp_n_8-2 - PvP : Room Rock On
-//==================================================
+//== pvp_n_8-2 - PvP : Room Rock On ========================
 pvp_n_8-2,0,0,0,0	monster	Cramp	1209,4,360000,180000,1
 
-//==================================================
-// pvp_n_8-3 - PvP : Four Room
-//==================================================
+//== pvp_n_8-3 - PvP : Four Room ===========================
 pvp_n_8-3,0,0,0,0	monster	Whisper	1179,3,360000,180000,1
 pvp_n_8-3,0,0,0,0	monster	Giant Whisper	1186,2,360000,180000,1
 
-//==================================================
-// pvp_n_8-4 - PvP : Room Undercross
-//==================================================
+//== pvp_n_8-4 - PvP : Room Undercross =====================
 pvp_n_8-4,0,0,0,0	monster	Zombie	1015,4,360000,180000,1
 pvp_n_8-4,0,0,0,0	monster	Ghoul	1036,3,360000,180000,1
 
-//==================================================
-// pvp_n_8-5 - PvP : Room Copass
-//==================================================
+//== pvp_n_8-5 - PvP : Room Copass =========================
 pvp_n_8-5,0,0,0,0	monster	Khalitzburg	1132,1,360000,180000,1
 pvp_n_8-5,0,0,0,0	monster	Raydric	1163,2,360000,180000,1

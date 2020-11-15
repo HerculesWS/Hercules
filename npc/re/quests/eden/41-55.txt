@@ -1,23 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden Group Quests - Mission [41 - 55]
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Repetable Quests for Players between Baselevel 41 - 55.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Some little optimization here and there. [Masao]
-//= 1.2 Optimized. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
-	if (countitem(6219) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "You are not an Eden group member. You are not qualified to access the bulletin board.";
 		close;
 	}
-	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 1000) {
+	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 1000) {
 		mes "^008800Wait a sec!!";
 		mes "You cannot receive any more items because you're carrying too many items. Please try again after you lighten up.^000000";
 		close;
@@ -30,11 +52,11 @@ moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
 		mes "[Mission Board]";
 		mes "Mission bulletin board.";
 		next;
-		if(select("Check the Missions.:Cancel.") == 2) {
+		if(select("Check the Missions.", "Cancel.") == 2) {
 			mes "^000077Ok. Let's check the missions next time.^000000.";
 			close;
 		}
-		switch(select("Thara Frog Hunting:Cruiser Hunting:Kukre Hunting:Orc Baby Hunting:Orc Warrior Hunting:Vadon Hunting:Megalodon Hunting:Marse Hunting:Cornutus Hunting:Myst Hunting:Shellfish Hunting:Marine Sphere Hunting")) {
+		switch(select("Thara Frog Hunting", "Cruiser Hunting", "Kukre Hunting", "Orc Baby Hunting", "Orc Warrior Hunting", "Vadon Hunting", "Megalodon Hunting", "Marse Hunting", "Cornutus Hunting", "Myst Hunting", "Shellfish Hunting", "Marine Sphere Hunting")) {
 			case 1: callsub L_Quest,12072,"Have you seen a red frog? It is called Thara Frog and it's very rare. We are trying to verify where it inhabits. So please hunt 20 Thara Frogs.";
 			case 2: callsub L_Quest,12073,"I heard of some toys attacking people. It is ridiculous! Let's show them our power! We have to hunt 15 Cruisers!";
 			case 3: callsub L_Quest,12074,"Someone got robbed near the beach! The possible suspect is a criminal monster called Kukre. Please hunt 30 Kukre.";
@@ -62,7 +84,7 @@ moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
 			mes "Here is your reward.";
 			erasequest 12088;
 			erasequest 12072+.@i;
-			specialeffect2 EF_STEAL;
+			specialeffect(EF_STEAL, AREA, playerattached());
 			getexp .@exp[.@i],0;
 			close;
 		}
@@ -80,7 +102,7 @@ L_Quest:
 	mes "[Mission Board Memo]";
 	mes getarg(1);
 	next;
-	if(select("Accept the mission.:Cancel.") == 1) {
+	if(select("Accept the mission.", "Cancel.") == 1) {
 		mes "[Mission Board]";
 		mes "You have accepted the mission. For more details, please press 'alt + u' keys, you can get information from the Quest Window.";
 		setquest 12088;

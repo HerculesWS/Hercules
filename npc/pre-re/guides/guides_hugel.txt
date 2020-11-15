@@ -1,17 +1,38 @@
-//===== Hercules Script ======================================
-//= Hugel Guides
-//===== By: ==================================================
-//= erKURITA; L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official COnversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Silent
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) erKURITA
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Hugel Guides (Pre-Renewal)
+//================= Description ===========================================
 //= Guides for the City of Hugel.
-//===== Additional Comments: =================================
-//= 1.0 Started the script. [erKURITA]
-//= 1.1 Removed Duplicates [Silent]
-//= 1.2 Rescripted to official 10.3 standards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 	mes "[Hugel Guide Granny]";
@@ -20,7 +41,7 @@ hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 	mes "If this is the first time for you to use the guide services, why don't you check the ''Notice'' menu first?";
 	while(1) {
 		next;
-		switch(select("Village Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("Village Guide", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Hugel Guide Granny]";
 			mes "I can tell you any building location as long as it is in Hugel.";
@@ -30,13 +51,13 @@ hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop = 1;
 			while(.@loop) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("Church:Inn:Pub:Airport:Weapon Shop:Tool Shop:Party Supplies Shop:^3131FFHunter Job Change Place^000000:^3131FFShrine Expedition's Place^000000:Monster Race Arena:Bingo Game Room:Cancel")) {
+				switch(select("Church", "Inn", "Pub", "Airport", "Weapon Shop", "Tool Shop", "Party Supplies Shop", "^3131FFHunter Job Change Place^000000", "^3131FFShrine Expedition's Place^000000", "Monster Race Arena", "Bingo Game Room", "Cancel")) {
 				case 1:
 					mes "[Hugel Guide Granny]";
 					mes "Well, to me, this Church is rather like a place for old folks like me, you know...";

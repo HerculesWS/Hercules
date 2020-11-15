@@ -55,7 +55,7 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 		while (true) {
 			mes "Select an option.";
 			next;
-			.@choice = select(" ~ ^0055FFRebirth^000000:"+(.third_classes ? " ~ ^FF0000Third Class^000000" : "")+": ~ ^777777Cancel^000000");
+			.@choice = select(" ~ ^0055FFRebirth^000000", (.third_classes ? " ~ ^FF0000Third Class^000000":""), " ~ ^777777Cancel^000000");
 			if (.@choice == 3)
 				close;
 			mes "[Job Master]";
@@ -73,7 +73,7 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 	if ((.@eac&EAJ_UPPERMASK) == EAJ_SUPER_NOVICE) {
 		.@newclass = roclass(.@eac|EAJL_THIRD);
 		.@required_jlevel = 99;
-	} else if (Class == Job_Ninja) {
+	} else if (Class == Job_Ninja || Class == Job_Gunslinger) {
 		.@newclass = .@job1;
 		.@required_jlevel = 70;
 	}
@@ -150,7 +150,7 @@ function Job_Menu {
 		} else {
 			.@newjob = getarg(0);
 		}
-		if (select(" ~ Change into ^0055FF"+jobname(.@newjob)+"^000000 class: ~ ^777777"+(getargcount() > 1 ? "Go back" : "Cancel")+"^000000") == 1) {
+		if (select(" ~ Change into ^0055FF"+ jobname(.@newjob) +"^000000 class", " ~ ^777777"+(getargcount() > 1 ? "Go back": "Cancel")+"^000000") == 1) {
 			mes "[Job Master]";
 			mes "You are now "+A_An(jobname(.@newjob))+"!";
 			if (.@newjob == Job_Novice_High && .linear_jobchange)
@@ -162,8 +162,8 @@ function Job_Menu {
 				resetlvl(4);
 				SkillPoint = 0;
 			}
-			specialeffect2 EF_ANGEL2;
-			specialeffect2 EF_ELECTRIC;
+			specialeffect(EF_ANGEL2, AREA, playerattached());
+			specialeffect(EF_ELECTRIC, AREA, playerattached());
 			if (.platinum)
 				callsub Get_Platinum;
 			close;
@@ -253,7 +253,7 @@ OnInit:
 	.rebirth_jlevel = 50;    // Minimum base job level to reborn OR change to third class
 	.jobchange_first = 10;   // Minimum job level to turn into 1st class
 	.jobchange_second = 40;  // Minimum job level to turn into 2nd class
-	.third_classes = 1;      // Enable third classes? (1: yes / 0: no)
+	.third_classes = 1;      // Enable third classes/Extended Classes? (1: yes / 0: no)
 	.supernovice_level = 45; // Minimum base level to turn into Super Novice
 	.linear_jobchange = 1;   // Enforce linear class changes? (1: yes / 0: no)
 	.skill_point_check = 1;  // Force player to use up all skill points? (1: yes / 0: no)

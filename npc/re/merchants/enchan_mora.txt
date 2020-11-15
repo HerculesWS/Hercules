@@ -1,24 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) DeadlySilence
+//= Copyright (C) Lemongrass
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mora Enchants
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Adds enchantments to various items in exchange for Mora coins.
+//================= Current Version =======================================
 //= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
-//= Adds enchantments to various items in exchange for
-//= Mora coins.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Euphy]
-//= 1.1 Optimized. [Euphy]
-//= 1.1a Bug fixes. [Lemongrass]
-//= 1.2 Bug fixes (bugreport:7930) [DeadlySilence]
-//============================================================
+//=========================================================================
 
-// Arch Bishop Enchants :: coin_arc
-//============================================================
+//== Arch Bishop Enchants :: coin_arc ======================
 mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -27,7 +45,7 @@ mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
 		close;
 	}
 	disable_items;
-	if (countitem(6380) < 10) {
+	if (countitem(Mora_Coin) < 10) {
 		mes "[Artifice]";
 		mes "Relics for Archbishops are meant for defense and support!";
 		next;
@@ -51,7 +69,7 @@ mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
 	mes "[Artifice]";
 	mes "All I need is 10 Mora Coins of yours to grant you a relic!";
 	next;
-	switch(select("I don't think I'm ready.:I'm ready to exchange my Mora Coins.:Exchange my Ring.")) {
+	switch(select("I don't think I'm ready.", "I'm ready to exchange my Mora Coins.", "Exchange my Ring.")) {
 	case 1:
 		mes "[Artifice]";
 		mes "See you next time!";
@@ -62,13 +80,13 @@ mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
 		//mes "You influence what part are you?";
 		mes "What kind of relic do you want?";
 		next;
-		switch(select("I'm not ready.:Ring:Shoes:Shawl:Robe:Shield:Weapon")) {
+		switch(select("I'm not ready.", "Ring", "Shoes", "Shawl", "Robe", "Shield", "Weapon")) {
 		case 1:
 			mes "[Artifice]";
 			mes "Go with the light.";
 			close;
 		case 2:
-			if (countitem(2864) || countitem(2865) || countitem(2866)) {
+			if (countitem(Light_Of_Cure) || countitem(Seal_Of_Cathedral) || countitem(Ring_Of_Archbishop)) {
 				mes "[Artifice]";
 				mes "You are already allowed access to our relics by your possession of a Ring!";
 				close;
@@ -98,7 +116,7 @@ mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
 			break;
 		}
 		.@item = .@items[rand(getarraysize(.@items))];
-		delitem 6380,10; //Mora_Coin
+		delitem Mora_Coin,10;
 		getitem .@item,1;
 		mes "[Artifice]";
 		mes "You have obtained ^aa00aa"+getitemname(.@item)+"^000000. May the Blessing of the Light be with you.";
@@ -112,9 +130,9 @@ mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
 			mes "It seems that you have power to control the ring so I cannot exchange it into coins.";
 			close;
 		}
-		     if (countitem(2864)) .@item = 2864; //Light_Of_Cure
-		else if (countitem(2865)) .@item = 2865; //Seal_Of_Cathedral
-		else if (countitem(2866)) .@item = 2866; //Ring_Of_Archbishop
+		     if (countitem(Light_Of_Cure)) .@item = 2864; //Light_Of_Cure
+		else if (countitem(Seal_Of_Cathedral)) .@item = 2865; //Seal_Of_Cathedral
+		else if (countitem(Ring_Of_Archbishop)) .@item = 2866; //Ring_Of_Archbishop
 		else {
 			mes "[Artifice]";
 			mes "Did you change something?";
@@ -123,14 +141,14 @@ mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
 		mes "[Artifice]";
 		mes "You have a "+getitemname(.@item)+". Do you really want to trade it for 10 Mora Coins?";
 		next;
-		switch(select("I'm not ready:Exchange my "+getitemname(.@item))) {
+		switch(select("I'm not ready", "Exchange my "+getitemname(.@item))) {
 		case 1:
 			mes "[Artifice]";
 			mes "If you change your mind, please stop by again.";
 			close;
 		case 2:
 			delitem .@item,1;
-			getitem 6380,10; //Mora_Coin
+			getitem Mora_Coin,10;
 			mes "[Artifice]";
 			mes "I think that was an even trade.";
 			close;
@@ -139,7 +157,7 @@ mora,88,89,5	script	Keeper of Secrets#pa082	4_M_MERCAT1,{
 }
 
 mora,96,74,5	script	Master of Relics#pa0829	4_M_MERCAT1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -151,7 +169,7 @@ mora,96,74,5	script	Master of Relics#pa0829	4_M_MERCAT1,{
 	mes "[Relice]";
 	mes "I enhance Relics that holy Arch-Bishops use, it will take 2 Mora Coins and the relic to allow me to attempt to enhance it.";
 	next;
-	switch(select("More details please.:Please Enhance my Relic.")) {
+	switch(select("More details please.", "Please Enhance my Relic.")) {
 	case 1:
 		mes "[Relice]";
 		mes "Let me briefly explain, for 2 Mora Coins and the relic I can give you a single Enchantment on that relic.";
@@ -172,7 +190,7 @@ mora,96,74,5	script	Master of Relics#pa0829	4_M_MERCAT1,{
 		mes "[Relice]";
 		mes "If you have a ritual for luck, you should use it now!";
 		next;
-		.@select = select("Wait a minute!:Light of Cure:Seal of Cathedral:Ring of Archbishop:Shoes of Affection:Shoes of Judgement:Shawl of Affection:Shawl of Judgement:Robe of Affection:Robe of Judgement:Bible of Promise 1st Vol:Wand of Affection:Mace of Judgement");
+		.@select = select("Wait a minute!", "Light of Cure", "Seal of Cathedral", "Ring of Archbishop", "Shoes of Affection", "Shoes of Judgement", "Shawl of Affection", "Shawl of Judgement", "Robe of Affection", "Robe of Judgement", "Bible of Promise 1st Vol", "Wand of Affection", "Mace of Judgement");
 		switch(.@select) {
 		case 1:
 			mes "[Relice]";
@@ -207,13 +225,13 @@ mora,96,74,5	script	Master of Relics#pa0829	4_M_MERCAT1,{
 			.@enchant_type = 4;
 			break;
 		}
-		if (countitem(6380) < 2 || countitem(.@item) == 0) {
+		if (countitem(Mora_Coin) < 2 || countitem(.@item) == 0) {
 			mes "[Relice]";
 			mes "For 2 Mora Coins I can strengthen the relic you have in many ways!";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
-		delitem 6380,2; //Mora_Coin
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+		delitem Mora_Coin,2;
 		delitem .@item,1;
 		switch(.@enchant_type) {
 		case 1:
@@ -315,10 +333,9 @@ mora,96,74,5	script	Master of Relics#pa0829	4_M_MERCAT1,{
 	}
 }
 
-// Warlock Enchants :: coin_warrock
-//============================================================
+//== Warlock Enchants :: coin_warrock ======================
 mora,104,76,4	script	Guardian of Artifacts#p	4_M_MERCAT1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -326,7 +343,7 @@ mora,104,76,4	script	Guardian of Artifacts#p	4_M_MERCAT1,{
 		mes "You are carrying too much weight to do that. Reduce the weight and try again.";
 		close;
 	}
-	if (countitem(6380) < 10) {
+	if (countitem(Mora_Coin) < 10) {
 		mes "[Guardian of Artifacts]";
 		mes "My job is to guard the Warlock's ancient artifacts.";
 		next;
@@ -350,7 +367,7 @@ mora,104,76,4	script	Guardian of Artifacts#p	4_M_MERCAT1,{
 	mes "[Guardian of Artifacts]";
 	mes "Do you want to buy an artifact with your Mora Coins?";
 	next;
-	if(select("Maybe later... I have things to do.:Yes, I do.") == 1) {
+	if(select("Maybe later... I have things to do.", "Yes, I do.") == 1) {
 		mes "[Guardian of Artifacts]";
 		mes "Okay, see you later then.";
 		close;
@@ -358,7 +375,7 @@ mora,104,76,4	script	Guardian of Artifacts#p	4_M_MERCAT1,{
 	mes "[Guardian of Artifacts]";
 	mes "What type of item do you want to buy?";
 	next;
-	switch(select("Quit:Shoes:Orbs:Robes:Staves")) {
+	switch(select("Quit", "Shoes", "Orbs", "Robes", "Staves")) {
 	case 1:
 		mes "[Guardian of Artifacts]";
 		mes "Okay, see you later then.";
@@ -377,13 +394,13 @@ mora,104,76,4	script	Guardian of Artifacts#p	4_M_MERCAT1,{
 		setarray .@items[0],2007,2008,2009,2010; //Golden_Rod_Staff,Aqua_Staff,Crimson_Staff,Forest_Staff
 		break;
 	}
-	if (countitem(6380) < 10) {
+	if (countitem(Mora_Coin) < 10) {
 		mes "[Guardian of Artifacts]";
 		mes "Would you please come back when you have enough Coins?";
 		close;
 	}
 	.@item = .@items[rand(getarraysize(.@items))];
-	delitem 6380,10; //Mora_Coin
+	delitem Mora_Coin,10;
 	getitem .@item,1;
 	mes "[Guardian of Artifacts]";
 	mes "I have ^aa00aa"+getitemname(.@item)+"^000000 available today. I hope "+((.@plural)?"they":"it")+" will come in handy...";
@@ -391,7 +408,7 @@ mora,104,76,4	script	Guardian of Artifacts#p	4_M_MERCAT1,{
 }
 
 mora,99,93,5	script	Artifact Crafter#pa0829	4_M_MERCAT1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -403,7 +420,7 @@ mora,99,93,5	script	Artifact Crafter#pa0829	4_M_MERCAT1,{
 	mes "[Artifact Crafter]";
 	mes "My job is to imbue artifacts with new power. If you have enough Coins, you can have one of the following items reinforced.";
 	next;
-	if(select("Tell me more.:I want to have my item reinforced.") == 1) {
+	if(select("Tell me more.", "I want to have my item reinforced.") == 1) {
 		mes "[Artifact Crafter]";
 		mes "Let me explain. One reinforcement costs you two Coins.";
 		next;
@@ -420,7 +437,7 @@ mora,99,93,5	script	Artifact Crafter#pa0829	4_M_MERCAT1,{
 	if (.@info_only)
 		close;
 	next;
-	.@select = select("Maybe next time.:Golden Rod Staff:Aqua Staff:Crimson Staff:Forest Staff:Golden Rod Shoes:Aqua Shoes:Crimson Shoes:Forest Shoes:Golden Rod Orb:Aqua Orb:Crimson Orb:Forest Orb:Golden Rod Robe:Aqua Robe:Crimson Robe:Forest Robe");
+	.@select = select("Maybe next time.", "Golden Rod Staff", "Aqua Staff", "Crimson Staff", "Forest Staff", "Golden Rod Shoes", "Aqua Shoes", "Crimson Shoes", "Forest Shoes", "Golden Rod Orb", "Aqua Orb", "Crimson Orb", "Forest Orb", "Golden Rod Robe", "Aqua Robe", "Crimson Robe", "Forest Robe");
 	switch(.@select) {
 	case 1:
 		mes "[Artifact Crafter]";
@@ -456,13 +473,13 @@ mora,99,93,5	script	Artifact Crafter#pa0829	4_M_MERCAT1,{
 		break;
 	}
 	.@item = .@items[(.@select-2)%4];
-	if (countitem(6380) < 2 || countitem(.@item) == 0) {
+	if (countitem(Mora_Coin) < 2 || countitem(.@item) == 0) {
 		mes "[Artifact Crafter]";
 		mes "You have to have 2 Mora Coins and an item to be reinforced before I can do my work.";
 		close;
 	}
-	specialeffect2 EF_REPAIRWEAPON;
-	delitem 6380,2; //Mora_Coin
+	specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
+	delitem Mora_Coin,2;
 	delitem .@item,1;
 	switch(.@enchant_type) {
 	case 1:
@@ -520,10 +537,9 @@ mora,99,93,5	script	Artifact Crafter#pa0829	4_M_MERCAT1,{
 	close;
 }
 
-// Rune Knight, Guillotine Cross, & Ranger Enchants :: new_artifact
-//============================================================
+//== Rune Knight, Guillotine Cross, & Ranger Enchants :: new_artifact =
 mora,152,97,5	script	Guardian of Power#pa082	4_F_DOGTRAVELER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Reduce the amount of items that you have in your inventory before continuing.";
 		close;
 	}
@@ -531,7 +547,7 @@ mora,152,97,5	script	Guardian of Power#pa082	4_F_DOGTRAVELER,{
 		mes "You are carrying too much in your inventory.";
 		close;
 	}
-	if (countitem(6380) < 10) {
+	if (countitem(Mora_Coin) < 10) {
 		mes "[Guardian of Power]";
 		mes "I give Rune Knights, Guillotine Crosses, and Rangers ancient artifacts to help them carry out their missions.";
 		next;
@@ -552,7 +568,7 @@ mora,152,97,5	script	Guardian of Power#pa082	4_F_DOGTRAVELER,{
 	mes "^ff0000Choose carefully because these artifacts aren't easy to come by^000000. So what class do you want it for?";
 	next;
 	setarray .@jobs$[0],"Rune Knight","Guillotine Cross","Ranger";
-	.@job = select("Cancel:Rune Knight:Guillotine Cross:Ranger")-2;
+	.@job = select("Cancel", "Rune Knight", "Guillotine Cross", "Ranger")-2;
 	if (.@job == -1) {
 		mes "[Guardian of Power]";
 		mes "Talk to me later then.";
@@ -564,16 +580,16 @@ mora,152,97,5	script	Guardian of Power#pa082	4_F_DOGTRAVELER,{
 	next;
 	switch(.@job) {
 	case 0: // Rune Knight
-		setarray .@items[0],2475,2476,2574,2575;
-		.@i = select("Cancel:Ur's Greaves (Shoes):Peuz's Greaves (Shoes):Ur's Manteau (Garment):Peuz's Manteau (Garment)")-2;
+		setarray .@items[0],2475,2574,2883,15036,2575,2476,2884,15037;
+		.@i = select("Cancel", "Ur's Greaves (Shoes)",  "Ur's Manteau (Garment)", "Ur's Seal (Accessory)",  "Ur's Plate (Armor)", "Peuz's Greaves (Shoes)", "Peuz's Manteau (Garment)",  "Peuz's Seal (Accessory)", "Peuz's Plate (Armor)" )-2;
 		break;
 	case 1: // Guillotine Cross
-		setarray .@items[0],2477,2478,2577,2578;
-		.@i = select("Cancel:Sapha Shoes (Shoes):Nab Shoes (Shoes):Sapha Hood (Garment):Nab Hood (Garment)")-2;
+		setarray .@items[0],2477,2577,2886,15038,2478,2578,2887,15039;
+		.@i = select("Cancel", "Sapha Shoes (Shoes)",  "Sapha Hood (Garment)",  "Sapha Ring (Accessory)", "Sapha's Cloth (Armor)", "Nab Shoes (Shoes)", "Nab Hood (Garment)", "Nab Ring (Accessory)", "Nab's Cloth (Armor)" )-2;
 		break;
 	case 2: // Ranger
-		setarray .@items[0],2479,2480,2580,2581;
-		.@i = select("Cancel:White Wing Boots (Shoes):Black Wing Boots (Shoes):White Wing Manteau (Garment):Black Wing Manteau (Garment)")-2;
+		setarray .@items[0],2479,2580,2890,15042,2480,2581,2891,15043;
+        .@i = select("Cancel", "White Wing Boots (Shoes)",  "White Wing Manteau (Garment)", "White Wing Brooch (Accessory)", "White Wing Suit (Armor)", "Black Wing Boots (Shoes)","Black Wing Manteau (Garment)",  "Black Wing Brooch (Accessory)", "Black Wing Suit (Armor)" )-2;
 		break;
 	}
 	if (.@i == -1) {
@@ -581,12 +597,12 @@ mora,152,97,5	script	Guardian of Power#pa082	4_F_DOGTRAVELER,{
 		mes "Talk to me later then.";
 		close;
 	}
-	if (countitem(6380) < 10) {
+	if (countitem(Mora_Coin) < 10) {
 		mes "[Guardian of Power]";
 		mes "Didn't I tell you to bring the correct amount of Mora Coins?";
 		close;
 	}
-	delitem 6380,10; //Mora_Coin
+	delitem Mora_Coin,10;
 	getitem .@items[.@i],1;
 	mes "[Guardian of Power]";
 	mes "Thank you for the 10 Mora Coins. Here is your artifact for the "+.@jobs$[.@job]+" job. Come back whenever you get more Mora Coins.";
@@ -594,7 +610,7 @@ mora,152,97,5	script	Guardian of Power#pa082	4_F_DOGTRAVELER,{
 }
 
 mora,148,98,3	script	Artifact Researcher#new	4_F_MORAFINE2,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Reduce the amount of items that you have in your inventory before continuing.";
 		close;
 	}
@@ -607,7 +623,7 @@ mora,148,98,3	script	Artifact Researcher#new	4_F_MORAFINE2,{
 	mes "Nice to meet you.";
 	mes "I'm here in Mora studying ancient relics and artifacts. The new discoveries of Adventurers has made this village very exciting for me.";
 	next;
-	switch(select("Tell me more...:Give abilities to artifacts.:Reset Enhanced abilities.")) {
+	switch(select("Tell me more...", "Give abilities to artifacts.", "Reset Enhanced abilities.")) {
 	case 1:
 		mes "[Artifact Researcher]";
 		mes "New artifacts have been found here in Mora village, haven't you heard the news?";
@@ -631,7 +647,7 @@ mora,148,98,3	script	Artifact Researcher#new	4_F_MORAFINE2,{
 		@mora_enchant_select = 2;
 		break;
 	}
-	if (Zeny < 100000 || countitem(6380) == 0) {
+	if (Zeny < 100000 || countitem(Mora_Coin) == 0) {
 		mes "[Artifact Researcher]";
 		mes "I'm not giving these services out for free pal. 100,000 zeny and 1 Mora Coin. Is that too much to ask?";
 		close;
@@ -639,7 +655,7 @@ mora,148,98,3	script	Artifact Researcher#new	4_F_MORAFINE2,{
 	mes "[Artifact Researcher]";
 	mes "Ok, so are you ready? Before I start working on this, what kind of equipment did you want me to enhance?";
 	next;
-	.@i = select("I'm not wearing the equipment:1. Weapon:2. Shoes:3. Garment:4. Armor:5. Accessory")-2;
+	.@i = select("I'm not wearing the equipment", "1. Weapon", "2. Shoes", "3. Garment", "4. Armor", "5. Accessory")-2;
 	if (.@i == -1) {
 		mes "[Artifact Researcher]";
 		mes "Make sure you're wearing the equipment first.";
@@ -768,7 +784,7 @@ L_Socket:
 			close;
 		}
 		next;
-		if(select("I'll come back later.:Please continue!") == 1) {
+		if(select("I'll come back later.", "Please continue!") == 1) {
 			mes "[Artifact Researcher]";
 			mes "If you change your mind, please come back.";
 			close;
@@ -1094,51 +1110,51 @@ L_Socket:
 			mes "I think there was an enhancing limit to the artifacts.";
 			close;
 		}
-		if (Zeny < 100000 || countitem(6380) == 0) {
+		if (Zeny < 100000 || countitem(Mora_Coin) == 0) {
 			mes "[Artifact Researcher]";
 			mes "I'm not going to do the work unless you pay the fee.";
 			close;
 		}
-		delitem 6380,1; //Mora_Coin
+		delitem Mora_Coin,1;
 		Zeny -= 100000;
 		delequip .@part;
 		if (.@enchant == 9) {
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			mes "[Artifact Researcher]";
 			mes "This!";
 			mes "I... I'm sorry but the equipment has been destroyed.";
 			close;
 		}
 		if (.@enchant == 0) {
-			specialeffect2 EF_SHIELDCHARGE;
+			specialeffect(EF_SHIELDCHARGE, AREA, playerattached());
 			mes "[Artifact Researcher]";
 			mes "Since the balance of power does not match, the given existing ability has been destroyed. It is unfortunate but please try again next time.";
 		} else {
-			specialeffect2 EF_REPAIRWEAPON;
+			specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 			mes "[Artifact Researcher]";
 			// Replacing original dialogue since it doesn't make sense.
 			//mes "The artifact ^990000"+.@slot+" will have the first enhancement retained.";
 			mes "I've successfully enhanced the artifact ^990000"+.@equip_name$+"^000000 at socket "+.@slot+".";
 		}
 
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
+		// GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
 		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@equip_card[3];
 
 		close;
 	} else if (.@select == 2) {
-		if (Zeny < 100000 || countitem(6380) == 0) {
+		if (Zeny < 100000 || countitem(Mora_Coin) == 0) {
 			mes "[Artifact Researcher]";
 			mes "You've got to pay if you want the services.";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		mes "[Artifact Researcher]";
 		mes "The ability to enhance remains.";
-		delitem 6380,1; //Mora_Coin
+		delitem Mora_Coin,1;
 		Zeny -= 100000;
 		delequip .@part;
 
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
+		// GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
 		for(.@i = 0; .@i<4; ++.@i) {
 			if (.@equip_card[.@i] >= 4700) // Armor Enchant System
 				.@equip_card[.@i] = 0;
@@ -1149,10 +1165,9 @@ L_Socket:
 	}
 }
 
-// Arch Bishop & Warlock Empowering :: relic_change
-//============================================================
+//== Arch Bishop & Warlock Empowering :: relic_change ======
 mora,124,82,4	script	Artifact Collector#blan	4_M_RAFLE_OR,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Reduce the amount of items that you have in your inventory before continuing.";
 		close;
 	}
@@ -1168,7 +1183,7 @@ mora,124,82,4	script	Artifact Collector#blan	4_M_RAFLE_OR,{
 	mes "[Artifact Collector]";
 	mes "Greetings Adventurer. We will be great friends in a moment after I tell you how to Empower your Artifacts!";
 	next;
-	switch(select("Let's do this!:Empower Artifacts?:Nope, not for me!")) {
+	switch(select("Let's do this!", "Empower Artifacts?", "Nope, not for me!")) {
 	case 1:
 		break;
 	case 2:
@@ -1271,7 +1286,7 @@ mora,124,82,4	script	Artifact Collector#blan	4_M_RAFLE_OR,{
 		setarray .@artifacts[0],1657,16013,2007,2008,2009,2010;
 		setarray .@empowered[0],1660,16018,2011,2012,2013,2014;
 		while(1) {
-			.@i = select("I don't think I'm interested:Staff of Mercy:Mace of Judgement:Golden Rod Staff:Aqua Staff:Crimson Staff:Forest Staff")-2;
+			.@i = select("I don't think I'm interested", "Staff of Mercy", "Mace of Judgement", "Golden Rod Staff", "Aqua Staff", "Crimson Staff", "Forest Staff")-2;
 			if (.@i == -1) {
 				emotion e_what;
 				mes "[Artifact Collector]";
@@ -1372,7 +1387,7 @@ mora,124,82,4	script	Artifact Collector#blan	4_M_RAFLE_OR,{
 	mes "[Artifact Collector]";
 	mes "I'm going to take your ^FF0000"+getequipname(EQI_HAND_R)+"^000000 and exchange it, are you ready?";
 	next;
-	switch(select("NOOO!:Yes, I'm ready!:What will it be after?")) {
+	switch(select("NOOO!", "Yes, I'm ready!", "What will it be after?")) {
 	case 1:
 		emotion e_an;
 		mes "[Artifact Collector]";
@@ -1385,7 +1400,7 @@ mora,124,82,4	script	Artifact Collector#blan	4_M_RAFLE_OR,{
 		mes "[Artifact Collector]";
 		mes "Surely you want to go on?";
 		next;
-		if(select("No, I don't.:Yes, do it!") == 1) {
+		if(select("No, I don't.", "Yes, do it!") == 1) {
 			emotion e_an;
 			mes "[Artifact Collector]";
 			mes "You've got to be kidding... you got my hopes up...";
@@ -1470,12 +1485,11 @@ L_ShowInfo:
 	return;
 }
 
-// Other Enchants :: sangjo
-//============================================================
+//== Other Enchants :: sangjo ==============================
 function	script	F_Mora_Enchant	{
-	specialeffect2 EF_REPAIRWEAPON;
+	specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 	progressbar "ffff00",3;
-	delitem 6380,5; //Mora_Coin
+	delitem Mora_Coin,5;
 	delitem getarg(0),1;
 	.@i = rand(1,4568);
 	if (.@i <= 3168) {
@@ -1505,7 +1519,7 @@ function	script	F_Mora_Enchant	{
 	return 1;
 }
 mora,105,176,4	script	Master Tailor#pa0829	4_ELEPHANT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -1513,26 +1527,26 @@ mora,105,176,4	script	Master Tailor#pa0829	4_ELEPHANT,{
 		mes "You are carrying too much weight to do that. Reduce the weight and try again.";
 		close;
 	}
-	if (countitem(6380) < 5 || countitem(15024) < 1) {
+	if (countitem(Mora_Coin) < 5 || countitem(Army_Padding) < 1) {
 		mes "[Master Tailor]";
 		mes "With my touch, I can turn a typical army padding into a piece of art. I'm Kay the Master Tailor, creating art with army paddings.";
 		next;
 		mes "[Master Tailor]";
 		mes "Well, what's in a name? I can turn your army padding into a piece of art if you bring ^ff00005 Mora Coins and an Army Padding^000000.";
-		if (countitem(6380)) {
+		if (countitem(Mora_Coin)) {
 			next;
 			mes "[Master Tailor]";
 			mes "I happen to have a few army paddings in stock. Would you like to buy one? The price is 1 Mora Coin. So cheap.";
 			next;
-			switch(select("Maybe next time.:I'll buy one now.")) {
+			switch(select("Maybe next time.", "I'll buy one now.")) {
 			case 1:
 				mes "[Master Tailor]";
 				mes "Okay, I understand.";
 				mes "Come back for one if you change your mind.";
 				close;
 			case 2:
-				delitem 6380,1; //Mora_Coin
-				getitem 15024,1; //Army_Padding
+				delitem Mora_Coin,1;
+				getitem Army_Padding,1;
 				mes "[Master Tailor]";
 				mes "Here it is.";
 				mes "It's very nice and fluffy. Please come back.";
@@ -1544,7 +1558,7 @@ mora,105,176,4	script	Master Tailor#pa0829	4_ELEPHANT,{
 	mes "[Master Tailor]";
 	mes "Have you come to add art to one of your army paddings?";
 	next;
-	switch(select("Please tell me more.:Yes, I have.")) {
+	switch(select("Please tell me more.", "Yes, I have.")) {
 	case 1:
 		mes "[Master Tailor]";
 		mes "A typical army padding isn't warm enough. It feels rough on your skin and doesn't look good. And artistic value? It has next to none.";
@@ -1565,14 +1579,14 @@ mora,105,176,4	script	Master Tailor#pa0829	4_ELEPHANT,{
 		mes "[Master Tailor]";
 		mes "And another thing - once I fail to add art to it, it becomes unusable... you'll need to buy a new one in that case.";
 		next;
-		switch(select("Come on, what's the rush?:Okay! Let's do it!!")) {
+		switch(select("Come on, what's the rush?", "Okay! Let's do it!!")) {
 		case 1:
 			mes "[Master Tailor]";
 			mes "What's wrong with you?";
 			mes "The villagers keep me busy enough.";
 			close;
 		case 2:
-			if (countitem(6380) < 5 || countitem(15024) == 0) {
+			if (countitem(Mora_Coin) < 5 || countitem(Army_Padding) == 0) {
 				mes "[Master Tailor]";
 				mes "It looks like you don't have everything you need.";
 				next;
@@ -1597,7 +1611,7 @@ mora,105,176,4	script	Master Tailor#pa0829	4_ELEPHANT,{
 }
 
 mora,123,177,6	script	Pendant Crafter#pa0829	4_ELEPHANT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -1605,7 +1619,7 @@ mora,123,177,6	script	Pendant Crafter#pa0829	4_ELEPHANT,{
 		mes "You are carrying too much weight to do that. Reduce the weight and try again.";
 		close;
 	}
-	if (countitem(6380) < 5 || countitem(2858) == 0) {
+	if (countitem(Mora_Coin) < 5 || countitem(Pendant_Of_Guardian) == 0) {
 		mes "[Pendant Crafter]";
 		mes "My job is to polish the stone in a Guardian's Pendant, and then carve a symbol with special power on it.";
 		next;
@@ -1619,7 +1633,7 @@ mora,123,177,6	script	Pendant Crafter#pa0829	4_ELEPHANT,{
 	mes "[Pendant Crafter]";
 	mes "Have you come to have your Guardian's Pendant upgraded?";
 	next;
-	switch(select("Please tell me more.:Yes, I have.")) {
+	switch(select("Please tell me more.", "Yes, I have.")) {
 	case 1:
 		mes "[Pendant Crafter]";
 		mes "My job is to polish the stone in a Guardian's Pendant, and then carve a symbol with special power on it.";
@@ -1638,13 +1652,13 @@ mora,123,177,6	script	Pendant Crafter#pa0829	4_ELEPHANT,{
 		mes "[Pendant Crafter]";
 		mes "And worse, it can lose its power and become an ordinary pendant. Of course, stone is not as susceptible to damage as cloth, so you won't lose the pendant itself.";
 		next;
-		switch(select("Come on, what's the rush?:Okay! Let's do it!!")) {
+		switch(select("Come on, what's the rush?", "Okay! Let's do it!!")) {
 		case 1:
 			mes "[Pendant Crafter]";
 			mes "Come back when you're not in a hurry. I always have a lot of time on my hands.";
 			close;
 		case 2:
-			if (countitem(6380) < 5 || countitem(2858) == 0) {
+			if (countitem(Mora_Coin) < 5 || countitem(Pendant_Of_Guardian) == 0) {
 				mes "[Pendant Crafter]";
 				mes "It looks like you don't have everything you need.";
 				next;
@@ -1653,7 +1667,7 @@ mora,123,177,6	script	Pendant Crafter#pa0829	4_ELEPHANT,{
 				close;
 			}
 			if (callfunc("F_Mora_Enchant",2858) == 0) {
-				getitem 2858,1; //Pendant_Of_Guardian
+				getitem Pendant_Of_Guardian,1;
 				mes "[Pendant Crafter]";
 				mes "What~!!";
 				mes "What on earth is wrong with it!!";
@@ -1667,7 +1681,7 @@ mora,123,177,6	script	Pendant Crafter#pa0829	4_ELEPHANT,{
 }
 
 mora,134,166,4	script	Bulberry Westhood#pa0829	4_ELEPHANT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -1675,7 +1689,7 @@ mora,134,166,4	script	Bulberry Westhood#pa0829	4_ELEPHANT,{
 		mes "You are carrying too much weight to do that. Reduce the weight and try again.";
 		close;
 	}
-	if (countitem(6380) < 5 || countitem(2568) == 0) {
+	if (countitem(Mora_Coin) < 5 || countitem(Muffler_Of_Roki) == 0) {
 		mes "[Bulberry Westhood]";
 		mes "I'm Bulberry Westhood, keeping the tradition of quality hoods alive.";
 		next;
@@ -1692,7 +1706,7 @@ mora,134,166,4	script	Bulberry Westhood#pa0829	4_ELEPHANT,{
 	mes "[Bulberry Westhood]";
 	mes "So you have a Loki's Scarf 1042 Special Edition. You really have an eye for quality. Can I start working on it right away?";
 	next;
-	switch(select("I don't get it.:Yes, please.")) {
+	switch(select("I don't get it.", "Yes, please.")) {
 	case 1:
 		mes "[Bulberry Westhood]";
 		mes "Like I said, I only handle quality items - not random scarfs from a marketplace.";
@@ -1718,14 +1732,14 @@ mora,134,166,4	script	Bulberry Westhood#pa0829	4_ELEPHANT,{
 		mes "[Bulberry Westhood]";
 		mes "Of course, the Loki's Scarf is a quality item, so you won't lose the scarf itself in the process.";
 		next;
-		switch(select("Maybe later, sir...:I'd like to own a quality item!")) {
+		switch(select("Maybe later, sir...", "I'd like to own a quality item!")) {
 		case 1:
 			mes "[Bulberry Westhood]";
 			mes "Ha...!";
 			mes "You say 'later' when you can have the best quality item right away? Well, have it your own way.";
 			close;
 		case 2:
-			if (countitem(6380) < 5 || countitem(2568) == 0) {
+			if (countitem(Mora_Coin) < 5 || countitem(Muffler_Of_Roki) == 0) {
 				mes "[Bulberry Westhood]";
 				mes "It looks like you don't everything you need.";
 				next;
@@ -1734,7 +1748,7 @@ mora,134,166,4	script	Bulberry Westhood#pa0829	4_ELEPHANT,{
 				close;
 			}
 			if (callfunc("F_Mora_Enchant",2568) == 0) {
-				getitem 2568,1; //Muffler_Of_Roki
+				getitem Muffler_Of_Roki,1;
 				mes "[Bulberry Westhood]";
 				mes "Aaarrgghh, this is impossible!";
 				mes "My! My Loki's Scarf!....";

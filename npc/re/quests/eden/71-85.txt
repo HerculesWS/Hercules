@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden Group Quests - Mission [71 - 85]
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= Description ===========================================
 //= Repetable Quests for Players between Baselevel 71 - 85.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Some little optimization here and there. [Masao]
-//= 1.2 Optimized. [Euphy]
-//= 1.3 Updated to match the official scripts. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
 moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
-	if (countitem(6219) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "- Only members of the -";
 		mes "- Eden Group can read -";
 		mes "- this bulletin board. -";
@@ -53,13 +74,13 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			if (questprogress(.@quests[.@i],HUNTING) == 2)
 				.@complete[getarraysize(.@complete)] = .@quests[.@i];
 		}
-		if (questprogress(5057) && countitem(7187) >= 30)
+		if (questprogress(5057) && countitem(Festival_Mask) >= 30)
 			.@complete[getarraysize(.@complete)] = 5057;
 		if (getarraysize(.@complete)) {
 			mes "You have quests in progress.";
 			mes "Do you want to turn them in?";
 			next;
-			if(select("Of course.:No.") == 2)
+			if(select("Of course.", "No.") == 2)
 				close;
 			for(.@i = 0; .@i<getarraysize(.@complete); ++.@i)
 				callsub L_Quest,.@complete[.@i];
@@ -75,7 +96,7 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 	mes "- Choose where you -";
 	mes "- would like to hunt. -";
 	next;
-	switch(select("Sphinx Dungeon:Glast Heim:Juno Area:Clock Tower:Localized Islands")) {
+	switch(select("Sphinx Dungeon", "Glast Heim", "Juno Area", "Clock Tower", "Localized Islands")) {
 	case 1:
 		mes "- There are several requests -";
 		mes "- related to the Sphinx Dungeon -";
@@ -83,7 +104,7 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 		next;
 		.@str1$ = "The villagers of Morroc are worried by the increasing number of monsters in the Sphinx Dungeon. ";
 		.@str2$ = "- Meidi from Morroc -";
-		switch(select("Hunt Requiem:Hunt Marduk:Hunt Pasana")) {
+		switch(select("Hunt Requiem", "Hunt Marduk", "Hunt Pasana")) {
 			case 1: callsub L_Quest,10107,.@str1$+"Hunt 10 Requiems.",.@str2$;
 			case 2: callsub L_Quest,10108,.@str1$+"Hunt 10 Marduks.",.@str2$;
 			case 3: callsub L_Quest,10109,.@str1$+"Hunt 10 Pasanas.",.@str2$;
@@ -95,7 +116,7 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 		next;
 		.@str1$ = "I am very afraid that the monsters from Glast Heim will attack us. ";
 		.@str2$ = "- Ancellia from Geffen -";
-		switch(select("Hunt Dark Frame:Hunt Evil Druid:Hunt Wraith:Hunt Raydric Archer")) {
+		switch(select("Hunt Dark Frame", "Hunt Evil Druid", "Hunt Wraith", "Hunt Raydric Archer")) {
 			case 1: callsub L_Quest,10110,.@str1$+"Hunt 10 Dark Frames.",.@str2$;
 			case 2: callsub L_Quest,10111,.@str1$+"Hunt 10 Evil Druids.",.@str2$;
 			case 3: callsub L_Quest,10112,.@str1$+"Hunt 10 Wraiths.",.@str2$;
@@ -108,7 +129,7 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 		next;
 		.@str1$ = "Those who can't fight, like me, find it much more difficult to travel due to the large number of monsters. ";
 		.@str2$ = "- Jeanbai, traveler -";
-		switch(select("Hunt Grand Peco:Hunt Sleeper:Hunt Goat:Hunt Harpy")) {
+		switch(select("Hunt Grand Peco", "Hunt Sleeper", "Hunt Goat", "Hunt Harpy")) {
 			case 1: callsub L_Quest,10114,.@str1$+"Hunt 20 Grand Pecos.",.@str2$;
 			case 2: callsub L_Quest,10115,.@str1$+"Hunt 20 Sleepers.",.@str2$;
 			case 3: callsub L_Quest,10116,.@str1$+"Hunt 20 Goats.",.@str2$;
@@ -121,7 +142,7 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 		next;
 		.@str1$ = "I used to love listening to the sweet melody of the Al De Baran Clock Tower but I can't hear anything anymore because of all the noises the monsters are making. ";
 		.@str2$ = "- Rizingsetter, President of the Love Clock community -";
-		switch(select("Hunt Clock:Hunt Punk:Hunt Rideword")) {
+		switch(select("Hunt Clock", "Hunt Punk", "Hunt Rideword")) {
 			case 1: callsub L_Quest,10118,.@str1$+"Hunt 15 Clocks before it breaks.",.@str2$;
 			case 2: callsub L_Quest,10119,.@str1$+"Hunt 15 Punks before it breaks.",.@str2$;
 			case 3: callsub L_Quest,10120,.@str1$+"Hunt 15 Ridewords before it breaks.",.@str2$;
@@ -133,12 +154,12 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 		next;
 		.@str1$ = "I want to go on an adventure but there are so many things I have to deal with. If I can't, then others can't either! ";
 		.@str2$ = "- Funfy, who wants to go on an adventure -";
-		switch(select("Hunt Kikimora:Hunt Miyabi Doll:Hunt Mi Gao:Hunt Headless Mule:Hunt Tamruan:Gather Festival Masks for the Festival")) {
+		switch(select("Hunt Kikimora", "Hunt Miyabi Doll", "Hunt Mi Gao", "Hunt Headless Mule", "Hunt Tamruan", "Gather Festival Masks for the Festival")) {
 			case 1: callsub L_Quest,10121,.@str1$+"Hunt 15 Kikimoras in Moscovia!",.@str2$;
 			case 2: callsub L_Quest,10122,.@str1$+"Hunt 15 Miyabi Dolls in Amatsu!",.@str2$;
 			case 3: callsub L_Quest,10123,.@str1$+"Hunt 15 Mi Gaos in Louyang!",.@str2$;
 			case 4: callsub L_Quest,5055,"I know there are many terrifying monsters outside the city, but what terrifies me are these Headless Mules lurking around. I hope they will never venture into town. Hunt 15 Headless Mules!","- Mariana from Brasilis -";
-			case 5: callsub L_Quest,5056,"Tamruans make a lot of noise. I don't mind in the morning but they keep me from falling asleep at night. I want to sleep. Hunt 15 Tamruans!","- Shaman Pumo from Ayotaya -";
+			case 5: callsub L_Quest,5056,"Tamruans make a lot of noise. I don't mind in the morning but they keep me from falling asleep at night. I want to sleep. Hunt 15 Tamruans!","- Shaman Pumo from Ayothaya -";
 			case 6: callsub L_Quest,5057,"The Dumpling Childs stole all the masks that I had prepared for the festival. Try to get a hold of 30 masks! I'll owe you~","- SaYumMoon Chief of Kunlun -";
 		}
 	}
@@ -172,8 +193,8 @@ L_Quest:
 	if (getargcount() == 1) {
 		mes "'"+.@name$+"' completed. Do you want to turn it in and receive your reward?";
 		next;
-		if(select("Turn in quest.:Cancel.") == 1) {
-			if (.@quest == 5057) delitem 7187,30; //Festival_Mask
+		if(select("Turn in quest.", "Cancel.") == 1) {
+			if (.@quest == 5057) delitem Festival_Mask,30;
 			erasequest .@quest;
 			getexp .@exp,0;
 			mes "You've received EXP for finishing the quest.";
@@ -186,7 +207,7 @@ L_Quest:
 			// Quest 5057 is the only collection quest, so separate conditions are unnecessary.
 			if (!questprogress(5057))
 				.@hunting = 0;
-			else if (countitem(7187) >= 30)
+			else if (countitem(Festival_Mask) >= 30)
 				.@hunting = 2;
 		} else {
 			.@hunting = questprogress(.@quest,HUNTING);
@@ -199,8 +220,8 @@ L_Quest:
 		} else if (.@hunting == 2) {
 			mes "You have completed the quest.";
 			next;
-			if(select("Turn in quest.:Cancel.") == 1) {
-				if (.@quest == 5057) delitem 7187,30; //Festival_Mask
+			if(select("Turn in quest.", "Cancel.") == 1) {
+				if (.@quest == 5057) delitem Festival_Mask,30;
 				erasequest .@quest;
 				getexp .@exp,0;
 				mes "You've received EXP for finishing the quest.";
@@ -215,7 +236,7 @@ L_Quest:
 			next;
 			mes "Do you want to accept the quest?";
 			next;
-			if(select("Yes.:No.") == 1) {
+			if(select("Yes.", "No.") == 1) {
 				mes "You've received the quest '"+.@name$+"'. View your quest info for more details.";
 				setquest .@quest;
 			}

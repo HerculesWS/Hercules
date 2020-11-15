@@ -1,21 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) x[tsk]
+//= Copyright (C) Lupus
+//= Copyright (C) Toms
+//= Copyright (C) Silent
+//= Copyright (C) Nexon
+//= Copyright (C) KarLaeda
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Kunlun Town
-//===== By: ==================================================
-//= x[tsk], KarLaeda
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Kunlun Town Script
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Moved Lost Knife mini-quest to quest file.
-//= 1.6 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.6
+//=========================================================================
 
-// Kunlun Transportation
-//============================================================
--	script	::Kunlun_Envoy_gonryun	-1,{
+//== Kunlun Transportation =================================
+-	script	::Kunlun_Envoy_gonryun	FAKE_NPC,{
 	mes "[Wa Bai Hu]";
 	mes "Good day~";
 	mes "Let me invite you all";
@@ -24,7 +49,7 @@
 	mes "such distinguished quests from";
 	mes "the Rune-Midgard kingdom.";
 	next;
-	switch(select("About Kunlun:Visit Kunlun:Cancel")) {
+	switch(select("About Kunlun", "Visit Kunlun", "Cancel")) {
 	case 1:
 		mes "[Wa Bai Hu]";
 		mes "Kunlun is a beautiful place,";
@@ -95,7 +120,7 @@
 		mes "[Wa Bai Hu]";
 		mes "Would you like to board?";
 		next;
-		if (select("To Kunlun~!:No.") == 1) {
+		if (select("To Kunlun~!", "No.") == 1) {
 			if (Zeny > 9999) {
 				mes "[Wa Bai Hu]";
 				mes "Thank you, let me guide you there immediately.";
@@ -134,7 +159,7 @@ gon_fild01,255,79,7	script	Kunlun Envoy#gon2	4_M_TWMIDMAN,{
 	mes "I guess it's the time for you to";
 	mes "go home. The ship to Rune-Midgard is ready to depart at any time.";
 	next;
-	if (select("Go back to Alberta:Cancel") == 1) {
+	if (select("Go back to Alberta", "Cancel") == 1) {
 		mes "[Wa Bai Hu]";
 		mes "Please come again.";
 		mes "I hope you will let your friends";
@@ -170,7 +195,7 @@ gonryun,153,64,7	script	Kunlun Envoy#gon4	4_M_TWMIDMAN,{
 	mes "be more than happy to guide you";
 	mes "to the ship to Alberta.";
 	next;
-	if (select("Go back to the harbor:Cancel") == 1) {
+	if (select("Go back to the harbor", "Cancel") == 1) {
 		mes "[Zhang Quing Long]";
 		mes "I hope you enjoyed your trip.";
 		mes "Now, let me guide you back";
@@ -186,8 +211,7 @@ gonryun,153,64,7	script	Kunlun Envoy#gon4	4_M_TWMIDMAN,{
 	close;
 }
 
-// Generic Kunlun NPCs
-//============================================================
+//== Generic Kunlun NPCs ===================================
 gonryun,200,82,3	script	Jian Chung Xun#gon	4_M_TWBOY,{
 	mes "[Jian Chung Xun]";
 	mes "I simply adore festivals.";
@@ -409,14 +433,3 @@ gonryun,169,71,3	script	Guidev#gon	4_F_TWGIRL,{
 	mes "sights throughout the town.";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-// May be missing npc's and dialogue.
-//= 1.1 Fixed Typos [Nexon]
-//= 1.2 Removed Duplicates [Silent]
-//= 1.3 Max NPC Name is 23 [Toms]
-//= 1.3a Removed temp NPC plugs due Broken Sword quest [Lupus]
-//= 1.4 Added missing NPC [KarLaeda]
-//============================================================

@@ -1,17 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Thanatos Tower Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Episode 13.1 Thanatos Tower quest.
-//===== Additional Comments: =================================
-//= 1.0 Adapted from official release. [Euphy]
-//= 1.0a Added 'npcskill' command. [Euphy]
-//= 1.1 Kagerou/Oboro support (Class -> BaseClass) [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 	mes "[Gatei]";
@@ -20,7 +40,7 @@ hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 	mes "of this Thanatos Tower.";
 	mes "How may I help you?";
 	next;
-	switch(select("Thanatos Tower?:Entrance Fee?:Enter the tower:Cancel")) {
+	switch(select("Thanatos Tower?", "Entrance Fee?", "Enter the tower", "Cancel")) {
 	case 1:
 		mes "[Gatei]";
 		mes "Yes, the tower in front";
@@ -74,17 +94,17 @@ hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 		mes "enter Thanatos Tower?";
 		mes "The entry fee is ^FF00005,000 zeny^000000.";
 		next;
-		switch(select("Enter:Maybe next time.")) {
+		switch(select("Enter", "Maybe next time.")) {
 		case 1:
 			if (thana_tower > 0) {
 				mes "[Gatei]";
-				mes "Oh, "+strcharinfo(0)+"!";
+				mes "Oh, "+strcharinfo(PC_NAME)+"!";
 				mes "Welcome back! Since you've";
 				mes "got a temporary Rekenber";
 				mes "work contract, your entrance";
 				mes "fee is only 3,000 zeny.";
 				next;
-				switch(select("Enter:No, thanks.")) {
+				switch(select("Enter", "No, thanks.")) {
 				case 1:
 					if (Zeny > 2999) {
 						mes "[Gatei]";
@@ -169,7 +189,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 		mes "now open to the public. So";
 		mes "how may I help you today?";
 		next;
-		switch(select("Tower Information:Temporary Work Contract:Cancel")) {
+		switch(select("Tower Information", "Temporary Work Contract", "Cancel")) {
 		case 1:
 			mes "[Ditze]";
 			mes "When this tower was built,";
@@ -206,7 +226,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 			mes "the near future, bringing us";
 			mes "closer to our goal of opening all 12 floors of Thanatos Tower.";
 			next;
-			switch(select("Tower Monsters?:Temp Contract Work?:......")) {
+			switch(select("Tower Monsters?", "Temp Contract Work?", "......")) {
 			case 1:
 				mes "[Ditze]";
 				mes "Yes, when we began";
@@ -245,7 +265,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 				mes "to access the higher levels";
 				mes "here in Thanatos Tower.";
 				next;
-				goto L_Contract;
+				break;
 			case 3:
 				mes "[Ditze]";
 				mes "To develop the floors above";
@@ -256,6 +276,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 				mes "for us under a temp contract?";
 				close;
 			}
+			break;
 		case 2:
 			mes "[Ditze]";
 			mes "You may have already heard";
@@ -271,7 +292,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 			mes "to access the higher levels";
 			mes "here in Thanatos Tower.";
 			next;
-			goto L_Contract;
+			break;
 		case 3:
 			mes "[Ditze]";
 			mes "Well, if you have any";
@@ -280,17 +301,16 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 			mes "Ditze Lappa. Have a good day!";
 			close;
 		}
+	} else {
+		mes "[Ditze]";
+		mes "For more detailed information";
+		mes "about monster exterminations,";
+		mes "please ask the 2nd Floor Guide";
+		mes "and the Guide next to me. Well,";
+		mes "we hope you enjoy your experience working with Rekenber Corporation~";
+		close;
 	}
-	mes "[Ditze]";
-	mes "For more detailed information";
-	mes "about monster exterminations,";
-	mes "please ask the 2nd Floor Guide";
-	mes "and the Guide next to me. Well,";
-	mes "we hope you enjoy your experience working with Rekenber Corporation~";
-	close;
-
-L_Contract:
-	switch(select("Maybe next time:Sure, I'd like to work for you.")) {
+	switch(select("Maybe next time", "Sure, I'd like to work for you.")) {
 	case 1:
 		mes "[Ditze]";
 		mes "Well, alright.";
@@ -307,7 +327,7 @@ L_Contract:
 		mes "out this employment";
 		mes "agreement first? Let's";
 		mes "see. Your name is...";
-		mes strcharinfo(0) + ", right?";
+		mes strcharinfo(PC_NAME) + ", right?";
 		next;
 		select("Yes");
 		mes "[Ditze]";
@@ -325,7 +345,7 @@ L_Contract:
 		mes " ";
 		mes "1. This employment agreement";
 		mes "is effective between Rekenber";
-		mes "Corporation (''Employer'') and "+strcharinfo(0)+"(''Employee'').";
+		mes "Corporation (''Employer'') and "+strcharinfo(PC_NAME)+"(''Employee'').";
 		mes "1-1. This employment agreement";
 		mes "is classified as a Mercernary";
 		mes "contract between both parties.";
@@ -366,7 +386,7 @@ L_Contract:
 		mes "Employer Signature____________";
 		mes "Employee Signature____________";
 		next;
-		switch(select("Sign:Don't Sign")) {
+		switch(select("Sign", "Don't Sign")) {
 		case 1:
 			mes "^3355FFYou sign two copies of the";
 			mes "Employment Agreement.^000000";
@@ -417,7 +437,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 		mes "Reward Department";
 		mes "here in Thanatos Tower.";
 		next;
-		switch(select("Employee's mission reward?:Keep up the good work.")) {
+		switch(select("Employee's mission reward?", "Keep up the good work.")) {
 		case 1:
 			mes "[Liei]";
 			mes "Currently, Rekenber Corporation";
@@ -438,7 +458,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "Ah, hello~";
 	mes "How may I help you?";
 	next;
-	if(select("Reward:Nothing") == 2) {
+	if(select("Reward", "Nothing") == 2) {
 		mes "[Liei]";
 		mes "Alright, then.";
 		mes "Please do your best";
@@ -449,7 +469,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 		close;
 	}
 	mes "[Liei]";
-	mes "You're "+strcharinfo(0)+", yes?";
+	mes "You're "+strcharinfo(PC_NAME)+", yes?";
 	mes "Let me check our temp";
 	mes "employee records for--ah.";
 	mes "Here it is. Alright, so would";
@@ -457,7 +477,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "of mission proof you brought?";
 	next;
 	setarray .@items[1],7435,7440,7441,7442;
-	.@i = select("Golden Ornament:Red Feather:Blue Feather:Cursed Seal");
+	.@i = select("Golden Ornament", "Red Feather", "Blue Feather", "Cursed Seal");
 	mes "[Liei]";
 	if (!countitem(.@items[.@i])) {
 		mes "I'm sorry, but you are not";
@@ -488,7 +508,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "all of your "+getitemname(.@items[.@i])+"s";
 	mes "for your reward right now?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 		case 1:
 			mes "[Liei]";
 			mes "Great! Here is your";
@@ -524,13 +544,13 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 	mes "Only the contracted staff are allowed to enter.";
 	mes "How can I help you?";
 	next;
-	switch(select("Let me go to 3rd floor.:Tower Information.:Start a conversation.")) {
+	switch(select("Let me go to 3rd floor.", "Tower Information.", "Start a conversation.")) {
 	case 1:
 		mes "[Burled]";
 		mes "Oh, alright. Let me";
 		mes "check and see if you're";
 		mes "on our temp list. Hmmm...";
-		mes "Ah, you're "+strcharinfo(0)+", right?";
+		mes "Ah, you're "+strcharinfo(PC_NAME)+", right?";
 		next;
 		mes "[Burled]";
 		if (getareausers("tha_t02",226,156,236,166) < 5) {
@@ -613,7 +633,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "...?";
 			mes "Do you have any questions?";
 			next;
-			if(select("About the development.:The relationship of Cool Event Corporation and Rekenber Corporation.:Nope.") == 3) {
+			if(select("About the development.", "The relationship of Cool Event Corporation and Rekenber Corporation.", "Nope.") == 3) {
 				mes "[Burled]";
 				mes "Take care.";
 				close;
@@ -623,7 +643,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "If you want to know more, would you do me a favor?";
 			mes "Since you asked for our confidential info...";
 			next;
-			if(select("Really? Don't make me afraid of it.:Just tell me about it.:I'll listen about it later.") == 3) {
+			if(select("Really? Don't make me afraid of it.", "Just tell me about it.", "I'll listen about it later.") == 3) {
 				mes "[Burled]";
 				mes "As you wish...";
 				mes "Take care!";
@@ -674,7 +694,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "No matter what happened there, they wouldn't be hurt.";
 			mes "Even if they don't get at the root of the accident....";
 			next;
-			switch(select("Oh...:What accident are you referring to?")) {
+			switch(select("Oh...", "What accident are you referring to?")) {
 			case 1:
 				mes "[Burled]";
 				mes "Yes, it's not that big of a deal. Haha....";
@@ -701,11 +721,11 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 				mes "If you promise me that";
 				mes "you will do me a favor...";
 				next;
-				switch(select("Ok! I will.:No, I won't.")) {
+				switch(select("Ok! I will.", "No, I won't.")) {
 				case 1:
 					callsub L_Request;
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "(What's the accident...?";
 					mes "He might let me know later...)";
 					close;
@@ -785,13 +805,13 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "This is supposed to theirs, but...";
 			next;
 			mes "[Burled]";
-			mes "How would you like to keep this, "+strcharinfo(0)+"?";
+			mes "How would you like to keep this, "+strcharinfo(PC_NAME)+"?";
 			mes "Definitely this should be a secret.";
 			mes "...um, this is a little revenge for them.";
 			next;
 			mes "[Burled]";
 			mes "I can guess that there are several secrets in this tower through this note.";
-			mes "This secret should be disclosed by you, "+strcharinfo(0)+", before Rekenber does.";
+			mes "This secret should be disclosed by you, "+strcharinfo(PC_NAME)+", before Rekenber does.";
 			next;
 			mes "[Burled]";
 			mes "No matter how much power they obtain... they won't get to know about this tower...";
@@ -804,7 +824,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "This isn't much, but here's a return present.";
 			next;
 			mes "[Burled]";
-			mes "I hope that these will be useful for you, "+strcharinfo(0)+".";
+			mes "I hope that these will be useful for you, "+strcharinfo(PC_NAME)+".";
 			next;
 			mes "- Burled gives you the note and an Old Violet Box. -";
 			mes " ";
@@ -813,7 +833,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			thana_tower = 10;
 			completequest 7053;
 			getexp 120000,10000;
-			getitem 617,1; //Old_Violet_Box
+			getitem Old_Violet_Box,1;
 			close;
 		}
 		else {
@@ -889,16 +909,16 @@ OnTimer30000:
 }
 
 tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
-	if ((countitem(7421) == 0) && (countitem(7426) == 0)) {
+	if ((countitem(Key_Red) == 0) && (countitem(Magic_Gem_Red) == 0)) {
 		mes "^3355FFA mysterious field of";
 		mes "energy seems to surround";
 		mes "the mechanical device and";
 		mes "its power prevents you from";
 		mes "approaching the machine.^000000";
 		next;
-		switch(select("Investigate it.:I don't care about it.")) {
+		switch(select("Investigate it.", "I don't care about it.")) {
 		case 1:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This seems mysterious...";
 			mes "Let me investigate.";
 			next;
@@ -910,7 +930,6 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 				mes "field fizzles out with a soft,";
 				mes "gentle ''pzzzzzh'' sound.^000000";
 				next;
-				goto L_Key;
 			}
 			else if (getequipweaponlv(4) == 4) {
 				mes "^3355FFWith your "+getequipname(4)+" in";
@@ -919,7 +938,6 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 				mes "field fizzles out with a soft,";
 				mes "gentle ''pzzzzzh'' sound.^000000";
 				next;
-				goto L_Key;
 			}
 			else {
 				mes "^3355FFYou smash the energy";
@@ -931,33 +949,28 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 				mes "powerful weapon...^000000";
 				close;
 			}
+			break;
 		case 2:
 			mes "^3355FFYou decide to leave";
 			mes "the machine alone.^000000";
 			close;
 		}
+	} else {
+		mes "You've acquired everything you need from this rune device.";
+		close;
 	}
-	mes "You've acquired everything you need from this rune device.";
-	close;
-
-OnTouch:
-	if ((countitem(7421) == 0) && (countitem(7426) == 0))
-		specialeffect EF_LEVEL99_4;
-	end;
-
-L_Key:
 	specialeffect EF_BRANDISH2;
 	mes "After breaking the device, the exterior shatters.";
 	mes "The energy field begins to disappear,";
 	mes "and you see that a red object inside was the origin of the magical power.";
 	next;
 	mes "- You acquired the powerful Red Key. -";
-	getitem 7421,1; //Key_Red
+	getitem Key_Red,1;
 	if (thana_tower != 4) close;
 	mes "^4d4dffOnce you hold the key, a shocking feeling passes through your head.";
 	mes "You see an illusion of light...^000000";
 	next;
-	switch(select("Ignore it.:Concentrate on it.")) {
+	switch(select("Ignore it.", "Concentrate on it.")) {
 	case 1:
 		mes "^3355FFYou decide to leave";
 		mes "the machine alone.^000000";
@@ -1001,13 +1014,18 @@ L_Key:
 		mes "The letters fly away in the form of a red key...";
 		thana_tower = 5;
 		changequest 7048,7049;
-		specialeffect2 EF_COMBOATTACK1;
+		specialeffect(EF_COMBOATTACK1, AREA, playerattached());
 		close;
 	}
+
+OnTouch:
+	if ((countitem(Key_Red) == 0) && (countitem(Magic_Gem_Red) == 0))
+		specialeffect EF_LEVEL99_4;
+	end;
 }
 
 tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
-	if ((countitem(7422) == 0) && (countitem(7427) == 0)) {
+	if ((countitem(Key_Yellow) == 0) && (countitem(Magic_Gem_Yellow) == 0)) {
 		mes "^3355FFYou find a screen";
 		mes "with three tiny panels and";
 		mes "a numeric keypad underneath.";
@@ -1030,7 +1048,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 		}
 		while (1) {
 			while (1) {
-				input .@input;
+				input(.@input);
 				if (.@input < 100 || .@input > 999) {
 					mes "[Screen]";
 					mes "Number input";
@@ -1042,8 +1060,8 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 				}
 				.@input100 = .@input / 100;
 				.@input10 = (.@input % 100) / 10;
-				if (((.@input100 > 0) && (.@input10 > 0)) && (.@input % 10 > 0)) {
-					if (((.@input100 != .@input10) && (.@input100 != .@input % 10)) && (.@input10 != .@input % 10))
+				if (.@input100 > 0 && .@input10 > 0 && .@input % 10 > 0) {
+					if (.@input100 != .@input10 && .@input100 != .@input % 10 && .@input10 != .@input % 10)
 						break;
 					mes "[Screen]";
 					mes "Violation of number";
@@ -1064,12 +1082,18 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 			next;
 			.@strike = 0;
 			.@ball = 0;
-			if (.@yagu100 == .@input100) .@strike += 1;
-			if (.@yagu10 == .@input10) .@strike += 1;
-			if (.@yagu1 == .@input % 10) .@strike += 1;
-			if ((.@yagu100 == .@input10) || (.@yagu100 == .@input % 10)) .@ball += 1;
-			if ((.@yagu10 == .@input100) || (.@yagu10 == .@input % 10)) .@ball += 1;
-			if ((.@yagu1 == .@input100) || (.@yagu1 == .@input10)) .@ball += 1;
+			if (.@yagu100 == .@input100)
+				.@strike += 1;
+			if (.@yagu10 == .@input10)
+				.@strike += 1;
+			if (.@yagu1 == .@input % 10)
+				.@strike += 1;
+			if (.@yagu100 == .@input10 || .@yagu100 == .@input % 10)
+				.@ball += 1;
+			if (.@yagu10 == .@input100 || .@yagu10 == .@input % 10)
+				.@ball += 1;
+			if (.@yagu1 == .@input100 || .@yagu1 == .@input10)
+				.@ball += 1;
 			if (.@strike == 3) {
 				mes "[Screen]";
 				mes "Input number accepted.";
@@ -1082,12 +1106,12 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 				mes "surface. An object forms...^000000";
 				next;
 				mes "^4d4dffThe powerful Yellow Key appears.^000000";
-				getitem 7422,1; //Key_Yellow
+				getitem Key_Yellow,1;
 				if (thana_tower != 5) close;
 				mes "^4d4dffA fierce feeling passes through your head.";
 				mes "You seen an illusion of light, like when you acquired the first key.^000000";
 				next;
-				switch(select("Ignore it.:Concentrate on it.")) {
+				switch(select("Ignore it.", "Concentrate on it.")) {
 				case 1:
 					mes "You decide to ignore it.";
 					close;
@@ -1118,7 +1142,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 					mes "It suddenly shakes, then disappears.";
 					thana_tower = 6;
 					changequest 7049,7050;
-					specialeffect2 EF_COMBOATTACK1;
+					specialeffect(EF_COMBOATTACK1, AREA, playerattached());
 					close;
 				}
 			}
@@ -1152,42 +1176,42 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7422) == 0) && (countitem(7427) == 0))
+	if ((countitem(Key_Yellow) == 0) && (countitem(Magic_Gem_Yellow) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
 
 tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
-	if ((countitem(7423) == 0) && (countitem(7428) == 0)) {
+	if ((countitem(Key_Blue) == 0) && (countitem(Magic_Gem_Blue) == 0)) {
 		mes "I can feel some magical power from this beautiful stone statue.";
 		mes "There's a little crack between the wings.";
 		next;
 		mes "Red light is shining on a crack in the left wing, and gold light on a crack in the right one.";
 		mes "What will you do?";
 		next;
-		if(select("Stick the key into the crack...:Ignore it.") == 2) {
+		if(select("Stick the key into the crack...", "Ignore it.") == 2) {
 			mes "^3355FFYou decide to leave";
 			mes "the statue alone.^000000";
 			close;
 		}
-		if ((countitem(7421) > 0) && (countitem(7422) > 0)) {
-			mes "["+strcharinfo(0)+"]";
+		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0)) {
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'll try the left wing first.";
 			mes "What key should I put in?";
 			next;
-			input .@inputstr$;
-			if ((.@inputstr$ != "Red Key") && (.@inputstr$ != "red key")) {
+			input(.@inputstr$);
+			if (.@inputstr$ != "Red Key" && .@inputstr$ != "red key") {
 				mes "It doesn't fit into the crack.";
 				close;
 			}
 			mes "The key fits and makes a click.";
 			mes "You feel the magical power growing stronger...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Now the right side...";
 			next;
-			input .@inputstr$;
-			if ((.@inputstr$ != "Yellow Key") && (.@inputstr$ != "yellow key")) {
+			input(.@inputstr$);
+			if (.@inputstr$ != "Yellow Key" && .@inputstr$ != "yellow key") {
 				mes "It doesn't fit into the crack.";
 				close;
 			}
@@ -1196,12 +1220,12 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "There's a key-shaped object inside...";
 			next;
 			mes "^4d4dffThe powerful Blue Key appears.^000000";
-			getitem 7423,1; //Key_Blue
+			getitem Key_Blue,1;
 			if (thana_tower != 6) close;
 			mes "^4d4dffOnce you hold the key, a shocking feeling passes through your head.";
 			mes "You see an illusion of light...^000000";
 			next;
-			switch(select("Concentrate on it.:Ignore it.")) {
+			switch(select("Concentrate on it.", "Ignore it.")) {
 			case 1:
 				mes "This part isn't as clear as before.";
 				mes "You try to figure out what it's saying...";
@@ -1223,7 +1247,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 				mes "The illusion shakes, then melts on the surface of the key as light.";
 				thana_tower = 7;
 				changequest 7050,7051;
-				specialeffect2 EF_COMBOATTACK1;
+				specialeffect(EF_COMBOATTACK1, AREA, playerattached());
 				close;
 			case 2:
 				mes "You decide to ignore it.";
@@ -1237,13 +1261,13 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7423) == 0) && (countitem(7428) == 0))
+	if ((countitem(Key_Blue) == 0) && (countitem(Magic_Gem_Blue) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
 
 tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
-	if ((countitem(7424) == 0) && (countitem(7429) == 0)) {
+	if ((countitem(Key_Green) == 0) && (countitem(Magic_Gem_Green) == 0)) {
 		mes "I can feel some magical power from this brilliant statue.";
 		mes "This must be one of the seals.";
 		next;
@@ -1251,18 +1275,18 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 		mes "There're red, yellow, and blue light in a row.";
 		mes "What will you do?";
 		next;
-		if(select("Investigate.:Ignore it.") == 2) {
+		if(select("Investigate.", "Ignore it.") == 2) {
 			mes "^3355FFYou don't see the need to";
 			mes "investigate if nothing seems";
 			mes "peculiar or out of place...^000000";
 			close;
 		}
-		if ((countitem(7421) > 0) && (countitem(7422) > 0) && (countitem(7423) > 0)) {
+		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0) && (countitem(Key_Blue) > 0)) {
 			mes "When you insert the key into the keyhole of the ornament";
 			mes "and match them by corresponding color, the Stone Statue will snap open.";
 			mes "You can see small wheels are moving inside.";
 			next;
-			switch(select("Investigate the Machine Chasis:Investigate the Wheels:Cancel")) {
+			switch(select("Investigate the Machine Chasis", "Investigate the Wheels", "Cancel")) {
 			case 1:
 				mes "^3355FFThe key in your inventory";
 				mes "does not seem to be affecting";
@@ -1298,9 +1322,9 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					next;
 					mes "^3355FFWhich wheel do";
 					mes "you want to shift?^000000";
-					switch(select("1st Small Wheel:2nd Small Wheel:1st Big Wheel:2nd Big Wheel:3rd Big Wheel:Check Current Wheel Configuration:Reset Wheels to Default Configuration")) {
+					switch(select("1st Small Wheel", "2nd Small Wheel", "1st Big Wheel", "2nd Big Wheel", "3rd Big Wheel", "Check Current Wheel Configuration", "Reset Wheels to Default Configuration")) {
 					case 1:
-						switch(select("Raise Wheel:Lower Wheel:Press Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Press Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
 							.@small_1 = 2;
@@ -1319,7 +1343,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 2:
-						switch(select("Raise Wheel:Lower Wheel:Press Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Press Wheel")) {
 						case 1:
 							mes "^5C246E*Mrreeem*^000000";
 							.@small_2 = 3;
@@ -1338,7 +1362,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 3:
-						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Vertically Shift Wheel")) {
 						case 1:
 							mes "^00B2EE*Sneeeep*^000000";
 							.@big_1 = 1;
@@ -1357,7 +1381,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 4:
-						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Vertically Shift Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
 							.@big_2 = 2;
@@ -1376,7 +1400,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 5:
-						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Vertically Shift Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
 							.@big_3 = 2;
@@ -1441,14 +1465,14 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 				specialeffect EF_POTION6;
 				next;
 				mes "^4d4dffAll of a sudden, the Green Key appears and you can feel great power from it.^000000";
-				getitem 7424,1; //Key_Green
+				getitem Key_Green,1;
 				if (thana_tower != 7) close;
 				mes "^4d4dffWhen you pick up the key,";
 				mes "your body trembles";
 				mes "with an unknown power";
 				mes "and you see a hallucination with some text.^000000";
 				next;
-				switch(select("Concentrate on it.:Ignore it.")) {
+				switch(select("Concentrate on it.", "Ignore it.")) {
 				case 1:
 					mes "^b22222...You found 4 keys";
 					mes "and finally released 4 spells...";
@@ -1470,7 +1494,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					mes "but it was incomplete...";
 					mes "the guard of the gate was...^000000";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "It is hard to read.";
 					next;
 					mes "^b22222...So I changed the location";
@@ -1490,8 +1514,8 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					mes "and fades into the key.";
 					thana_tower = 8;
 					changequest 7051,7052;
-					specialeffect2 EF_BEGINSPELL6;
-					specialeffect2 EF_SPELLBREAKER;
+					specialeffect(EF_BEGINSPELL6, AREA, playerattached());
+					specialeffect(EF_SPELLBREAKER, AREA, playerattached());
 					close;
 				case 2:
 					mes "It was too intense to see the hallucination, so you gave up reading.";
@@ -1509,22 +1533,22 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7424) == 0) && (countitem(7429) == 0))
+	if ((countitem(Key_Green) == 0) && (countitem(Magic_Gem_Green) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
 
 tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
-	if ((countitem(7425) == 0) && (countitem(7430) == 0)) {
+	if ((countitem(Key_Black) == 0) && (countitem(Magic_Gem_Black) == 0)) {
 		mes "An old, worn sword hangs above the splendid table.";
 		mes "It emits a gloomy aura.";
 		next;
-		if ((countitem(7421) > 0) && (countitem(7422) > 0) && (countitem(7423) > 0) && (countitem(7424) > 0)) {
+		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0) && (countitem(Key_Blue) > 0) && (countitem(Key_Green) > 0)) {
 			mes "As you approach, the keys in your pocket";
 			mes "suddenly respond with a mysterious power.";
-			specialeffect2 EF_ABSORBSPIRITS;
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 			next;
-			if(select("Observe it.:Ignore it.") == 2) {
+			if(select("Observe it.", "Ignore it.") == 2) {
 				mes "^3355FFYou decide to leave";
 				mes "the sword alone.^000000";
 				close;
@@ -1533,11 +1557,11 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 			mes "Your eyes keep getting drawn to the sword's hilt.";
 			mes "Then you lose control of your hands, and they stretch forth to grasp the handle...";
 			next;
-			switch(select("Towards the blade of the sword:Towards the hilt of the sword:Towards the table")) {
+			switch(select("Towards the blade of the sword", "Towards the hilt of the sword", "Towards the table")) {
 			case 1:
 				mes "By an unknown calling you decide to grab the blade of the sword.";
 				mes "Your hands get wounded and begin to bleed.";
-				specialeffect2 EF_HIT1;
+				specialeffect(EF_HIT1, AREA, playerattached());
 				percentheal -20,0;
 				close;
 			case 2:
@@ -1548,13 +1572,13 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 				mes "Now, you hold the sword and...";
 				specialeffect EF_EXIT2;
 				next;
-				switch(select("Strike the table:Insert the sword into the hole:Bring the sword safely")) {
+				switch(select("Strike the table", "Insert the sword into the hole", "Bring the sword safely")) {
 				case 1:
 					mes "You strike the table with the sword.";
 					mes "Numerous conflicting spells act upon it, and you can tell that you chose incorrectly.";
 					mes "The sword automatically returns to the table, as it was before.";
 					specialeffect EF_HIT1;
-					specialeffect2 EF_HIT1;
+					specialeffect(EF_HIT1, AREA, playerattached());
 					percentheal -20,0;
 					close;
 				case 2:
@@ -1563,7 +1587,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 					specialeffect EF_CHANGEDARK;
 					next;
 					mes "^4d4dff All of a sudden, a Black Key appears from the smoke and you feel a great cursed power from it.^000000";
-					getitem 7425,1; //Key_Black
+					getitem Key_Black,1;
 					if (thana_tower != 8) close;
 					next;
 					mes "A drawer had snapped open under the table while you picked up the key and observed it.";
@@ -1576,7 +1600,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 					mes "You received Varmunt's Journal.^000000";
 					thana_tower = 9;
 					changequest 7052,7053;
-					getitem 11011,1; //Barmund_Note
+					getitem Barmund_Note,1;
 					close;
 				case 3:
 					mes "When you lift the sword, you feel a shock from numerous conflicting spells.";
@@ -1599,7 +1623,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7425) == 0) && (countitem(7430) == 0))
+	if ((countitem(Key_Black) == 0) && (countitem(Magic_Gem_Black) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
@@ -1656,7 +1680,7 @@ OnTimer2400000:
 }
 
 tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
-	if (countitem(7421) > 0) {
+	if (countitem(Key_Red) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1669,8 +1693,8 @@ tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
 		mes "You feel isolated and depressed deep inside your heart...";
 		next;
 		mes "^4d4dffYou have found a Red Charm Stone that is concentrated with cruel fate and a deep darkness.^000000";
-		delitem 7421,1; //Key_Red
-		getitem 7426,1; //Magic_Gem_Red
+		delitem Key_Red,1;
+		getitem Magic_Gem_Red,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1679,10 +1703,10 @@ tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,90,62,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r2	CLEAR_NPC
@@ -1690,7 +1714,7 @@ tha_t08,49,59,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r3	CLEAR_NPC
 tha_t08,49,144,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r4	CLEAR_NPC
 
 tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
-	if (countitem(7422) > 0) {
+	if (countitem(Key_Yellow) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1703,8 +1727,8 @@ tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
 		mes "Your heart begins to throb as though you are suffering from a broken heart.";
 		next;
 		mes "^4d4dffYou have found a Yellow Charm Stone that is concentrated with grief and mysterious power.^000000";
-		delitem 7422,1; //Key_Yellow
-		getitem 7427,1; //Magic_Gem_Yellow
+		delitem Key_Yellow,1;
+		getitem Magic_Gem_Yellow,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1713,10 +1737,10 @@ tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,90,150,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y2	CLEAR_NPC
@@ -1724,7 +1748,7 @@ tha_t08,90,59,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y3	CLEAR_NPC
 tha_t08,49,56,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y4	CLEAR_NPC
 
 tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
-	if (countitem(7423) > 0) {
+	if (countitem(Key_Blue) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1737,8 +1761,8 @@ tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
 		mes "Someone's sobbing comes into your ears as you smell blood on the wind and suddenly you become angry.";
 		next;
 		mes "^4d4dffYou have found a Blue Charm Stone that is concentrated with grudge and mysterious power.^000000";
-		delitem 7423,1; //Key_Blue
-		getitem 7428,1; //Magic_Gem_Blue
+		delitem Key_Blue,1;
+		getitem Magic_Gem_Blue,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1747,10 +1771,10 @@ tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,49,150,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b2	CLEAR_NPC
@@ -1758,7 +1782,7 @@ tha_t08,90,147,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b3	CLEAR_NP
 tha_t08,90,56,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b4	CLEAR_NPC
 
 tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
-	if (countitem(7424) > 0) {
+	if (countitem(Key_Green) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1771,8 +1795,8 @@ tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
 		mes "Your head starts to ache and you feel worried and anxious about something.";
 		next;
 		mes "^4d4dffYou have found a Green Charm Stone that is concentrated with deep suffering.^000000";
-		delitem 7424,1; //Key_Green
-		getitem 7429,1; //Magic_Gem_Green
+		delitem Key_Green,1;
+		getitem Magic_Gem_Green,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1781,10 +1805,10 @@ tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,49,62,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g2	CLEAR_NPC
@@ -1793,18 +1817,18 @@ tha_t08,90,144,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g4	CLEAR_NP
 
 tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 0) {
-		if (countitem(7427) > 0) {
+		if (countitem(Magic_Gem_Yellow) > 0) {
 			mes "It's a statue giving off a golden light.";
 			mes "The sword appears to be missing a gem.";
 			mes "As I draw closer to the statue, the Yellow Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL5;
-			specialeffect2 EF_BEGINSPELL5;
+			specialeffect(EF_BEGINSPELL5, AREA, playerattached());
 			next;
-			if(select("Insert the Yellow Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Yellow Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 0) {
 				mes "After inserting the Yellow Charm Stone into the sword, the statue begins to react.";
 				specialeffect EF_BEGINSPELL5;
-				delitem 7427,1; //Magic_Gem_Yellow
+				delitem Magic_Gem_Yellow,1;
 				$@thana_summon = 1;
 				donpcevent "#tteffect01::OnEnable";
 				mapannounce "tha_t12","The golden magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1823,18 +1847,18 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 
 tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 1) {
-		if (countitem(7429) > 0) {
+		if (countitem(Magic_Gem_Green) > 0) {
 			mes "A statue gives off green light.";
 			mes "The wiseman's wand seems to be missing a gem.";
 			mes "As I draw closer to the statue, the Green Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL4;
-			specialeffect2 EF_BEGINSPELL4;
+			specialeffect(EF_BEGINSPELL4, AREA, playerattached());
 			next;
-			if(select("Insert the Green Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Green Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 1) {
 				mes "After inserting the Green Charm Stone into the wand, the statue begins to react.";
 				specialeffect EF_BEGINSPELL4;
-				delitem 7429,1; //Magic_Gem_Green
+				delitem Magic_Gem_Green,1;
 				$@thana_summon = 2;
 				donpcevent "#tteffect02::OnEnable";
 				mapannounce "tha_t12","The green magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1853,18 +1877,18 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 
 tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 2) {
-		if (countitem(7428) > 0) {
+		if (countitem(Magic_Gem_Blue) > 0) {
 			mes "An angel statue is covered with a blue light.";
 			mes "A gem seems to be missing from the statue's belt.";
 			mes "As I draw closer to the statue, the Blue Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL2;
-			specialeffect2 EF_BEGINSPELL2;
+			specialeffect(EF_BEGINSPELL2, AREA, playerattached());
 			next;
-			if(select("Insert the Blue Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Blue Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 2) {
 				mes "After inserting the Blue Charm Stone into the belt, the statue begins to react.";
 				specialeffect EF_BEGINSPELL2;
-				delitem 7428,1; //Magic_Gem_Blue
+				delitem Magic_Gem_Blue,1;
 				$@thana_summon = 3;
 				donpcevent "#tteffect03::OnEnable";
 				mapannounce "tha_t12","The blue magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1883,18 +1907,18 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 
 tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 3) {
-		if (countitem(7426) > 0) {
+		if (countitem(Magic_Gem_Red) > 0) {
 			mes "A statue is shining like blood.";
 			mes "A gem seems to be missing from the heart area of its armor.";
 			mes "As I draw closer to the statue, the Red Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL3;
-			specialeffect2 EF_BEGINSPELL3;
+			specialeffect(EF_BEGINSPELL3, AREA, playerattached());
 			next;
-			if(select("Insert the Red Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Red Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 3) {
 				mes "After inserting the Red Charm Stone into the armor, the statue begins to react.";
 				specialeffect EF_BEGINSPELL3;
-				delitem 7426,1; //Magic_Gem_Red
+				delitem Magic_Gem_Red,1;
 				$@thana_summon = 4;
 				donpcevent "#tteffect04::OnEnable";
 				mapannounce "tha_t12","The red magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1913,18 +1937,18 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 
 tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 4) {
-		if (countitem(7430) > 0) {
+		if (countitem(Magic_Gem_Black) > 0) {
 			mes "A devil statue emits dark light.";
 			mes "The right eye seems to be missing a gem.";
 			mes "As I draw closer to the statue, the Black Charm Stone emits a bright light.";
 			specialeffect EF_BEGINSPELL7;
-			specialeffect2 EF_BEGINSPELL7;
+			specialeffect(EF_BEGINSPELL7, AREA, playerattached());
 			next;
-			if(select("Insert the Black Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Black Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 4) {
 				mes "After inserting the Red Charm Stone into the eye socket, the statue begins to react.";
 				specialeffect EF_BEGINSPELL7;
-				delitem 7430,1; //Magic_Gem_Black
+				delitem Magic_Gem_Black,1;
 				$@thana_summon = 5;
 				donpcevent "#gateto_thanatos::OnEnable";
 				donpcevent "#tteffect01::OnStop";
@@ -2070,11 +2094,11 @@ OnTimer1000:
 OnTimer5000:
 	.@pillar = 1;
 OnTimer3000:
-	specialeffect EF_BEGINSPELL7,AREA,"#tteffect05";
-	specialeffect EF_BEGINSPELL3,AREA,"#tteffect04";
-	specialeffect EF_BEGINSPELL2,AREA,"#tteffect03";
-	specialeffect EF_BEGINSPELL4,AREA,"#tteffect02";
-	specialeffect EF_BEGINSPELL5,AREA,"#tteffect01";
+	specialeffect(EF_BEGINSPELL7, AREA, getnpcid("#tteffect05"));
+	specialeffect(EF_BEGINSPELL3, AREA, getnpcid("#tteffect04"));
+	specialeffect(EF_BEGINSPELL2, AREA, getnpcid("#tteffect03"));
+	specialeffect(EF_BEGINSPELL4, AREA, getnpcid("#tteffect02"));
+	specialeffect(EF_BEGINSPELL5, AREA, getnpcid("#tteffect01"));
 	if (.@pillar) specialeffect EF_MAPPILLAR2;
 	end;
 }
@@ -2082,15 +2106,15 @@ OnTimer3000:
 thana_boss,217,167,3	script	Memory Seal#tt1	G_THA_MAERO,3,3,{
 	end;
 OnEnable:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	.hide = 0;
 	end;
 OnDisable:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	.hide = 0;
 	end;
 OnTouch:
-	.@seal = atoi(charat(strnpcinfo(2),2));
+	.@seal = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),2));
 	if (.hide & (1<<.@seal)) end;
 
 	//  .@i: ItemID,MobID,MapX,MapY,EffectNum
@@ -2125,7 +2149,7 @@ OnTouch:
 	mes "There is a fragment missing from the crest of the Seal.";
 	mes "Surely I saw a familiar fragment before...";
 	next;
-	input .@inputstr$;
+	input(.@inputstr$);
 	.@exact_tt$ = "Fragment of "+.@j$;
 	if (countitem(.@i[0]) > 0 && .@exact_tt$ == .@inputstr$) {
 		mes "^3355FFYou insert the";
@@ -2133,11 +2157,11 @@ OnTouch:
 		mes "into the crest, causing";
 		mes "its glow to intensify.^000000";
 		close2;
-		hideonnpc strnpcinfo(0);
+		hideonnpc strnpcinfo(NPC_NAME);
 		.hide |= (1<<.@seal);
 		delitem .@i[0],1;
 		specialeffect .@i[4];
-		monster "thana_boss",.@i[2],.@i[3],.@j$,.@i[1],1,strnpcinfo(0)+"::OnMyMobDead";
+		monster "thana_boss",.@i[2],.@i[3],.@j$,.@i[1],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 		switch($@thana_summon2) {
 			case 0: .@str$ = "... who... released... the... Memory... of... "+.@j$+"...?"; break;
 			case 1: .@str$ = "... why... did you... release... the... Memory... of... "+.@j$+"...?"; break;
@@ -2215,10 +2239,10 @@ OnDisable:
 	end;
 }
 
-thana_boss,141,218,0	script	#sommon_thanatos	-1,{
+thana_boss,141,218,0	script	#sommon_thanatos	FAKE_NPC,{
 OnEnable:
-	specialeffect EF_MAPPILLAR2,AREA,"#sommon_thanatos";
-	specialeffect EF_SEISMICWEAPON,AREA,"#sommon_thanatos";
+	specialeffect(EF_MAPPILLAR2, AREA, getnpcid("#sommon_thanatos"));
+	specialeffect(EF_SEISMICWEAPON, AREA, getnpcid("#sommon_thanatos"));
 	monster "thana_boss",141,218,"Thanatos Phantom",1708,1,"#sommon_thanatos::OnMyMobDead";
 	end;
 OnMyMobDead:
@@ -2291,7 +2315,7 @@ tha_t06,119,120,0	script	to 7th Floor	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (eaclass()&(EAJL_2|EAJL_UPPER) || eaclass()&EAJL_THIRD || ((Class == Job_SuperNovice || Class == Job_Taekwon || Class == Job_Star_Gladiator || Class == Job_Soul_Linker || BaseClass == Job_Ninja || Class == Job_Gunslinger) && BaseLevel > 94)) {
-		if (countitem(7425) > 0) {
+		if (countitem(Key_Black) > 0) {
 			mes "The shadow of a Black Key is gleaming in the center of the portal.";
 			mes "To pass this way, looks like I need something.";
 			next;
@@ -2300,8 +2324,8 @@ OnTouch:
 			mes "The key seems to separate into many particles and suddenly collapses into a ball.";
 			mes "The barricade is removed through the power from newly formed black magic gem.";
 			close2;
-			delitem 7425,1; //Key_Black
-			getitem 7430,1; //Magic_Gem_Black
+			delitem Key_Black,1;
+			getitem Magic_Gem_Black,1;
 			warp "thana_step",69,369;
 			end;
 		}

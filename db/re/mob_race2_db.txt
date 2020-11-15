@@ -13,5 +13,9 @@
 4,1040,1278,1366,1497,2024
 // Guardians
 5,1285,1286,1287
-// Ninja Classes (Pirate's_Pride)
+// Ninja Classes (Pirates_Pride)
 6,1315,1364,1401,1560
+// Scarabas
+7,2083,2084,2085,2086,2087,2088,2089,2090,2091,2144,2145
+// Turtles (Drooping_Permeter)
+8,1312,1314,1315,1316,1318,1319

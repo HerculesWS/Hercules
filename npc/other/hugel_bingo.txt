@@ -1,24 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) Yommy
+//= Copyright (C) SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Hugel Bingo script
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
+//================= Description ===========================================
 //= Hugel Bingo game
-//===== Additional Comments: =================================
-//= 1.0 First version. Please report bugs you find out. [SinSloth]
-//= 1.1 Fixed a minor bug. [SinSloth]
-//= 1.2 Added some Bingo Staff NPCs. [SinSloth]
-//= 1.3 Fixed a bug where an AFK-player wasn't warped out of the game,
-//=     preventing players from launching another. [SinSloth]
-//= 1.4 Fixed a minor bug added in the last revision. [SinSloth]
-//= 1.5 Applied a fix to players locations which were not rotating properly. [SinSloth]
-//= 1.6 Removed nescesity to win to proceed with quest [Yommy]
-//= 1.7 Replaced effect numerics with constants. [Samuray22]
-//= 1.8 Updated 'waitingroom' to support required zeny/lvl. [Kisuka]
-//= 1.9 Some optimization/standardization. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
 que_bingo,48,84,5	script	Bingo Waiting Room	4_F_TELEPORTER,{
 	end;
@@ -80,26 +96,25 @@ OnTouch:
 	@bingo_e4$ = 0;
 	@bingo_e5$ = 0;
 	@bingo_case = 1;
-L_Fill:
-	@bingo_fill = callfunc("Func_Bingo",@bingo_case);
-	if (!@bingo_fill) {
-		mes "The numbers you have entered";
-  		mes "exceed the limit, or you have";
-		mes "already entered these numbers.";
-		mes "Please enter your numbers again.";
-		next;
-	} else if (@bingo_fill) {
-		if(@bingoplate[25] < 10) @bingo_e5$ = "0"+@bingoplate[25]+""; else @bingo_e5$ = @bingoplate[25];
-		donpcevent "start#bingo::OnEnter";
-		mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]";
-		mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]";
-		mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]";
-		mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]";
-		mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]";
-		close;
-
+	while (true) {
+		@bingo_fill = callfunc("Func_Bingo",@bingo_case);
+		if (!@bingo_fill) {
+			mes "The numbers you have entered";
+			mes "exceed the limit, or you have";
+			mes "already entered these numbers.";
+			mes "Please enter your numbers again.";
+			next;
+		} else if (@bingo_fill) {
+			if(@bingoplate[25] < 10) @bingo_e5$ = "0"+@bingoplate[25]+""; else @bingo_e5$ = @bingoplate[25];
+			donpcevent "start#bingo::OnEnter";
+			mes "["+@bingo_a1$+"] ["+@bingo_a2$+"] ["+@bingo_a3$+"] ["+@bingo_a4$+"] ["+@bingo_a5$+"]";
+			mes "["+@bingo_b1$+"] ["+@bingo_b2$+"] ["+@bingo_b3$+"] ["+@bingo_b4$+"] ["+@bingo_b5$+"]";
+			mes "["+@bingo_c1$+"] ["+@bingo_c2$+"] ["+@bingo_c3$+"] ["+@bingo_c4$+"] ["+@bingo_c5$+"]";
+			mes "["+@bingo_d1$+"] ["+@bingo_d2$+"] ["+@bingo_d3$+"] ["+@bingo_d4$+"] ["+@bingo_d5$+"]";
+			mes "["+@bingo_e1$+"] ["+@bingo_e2$+"] ["+@bingo_e3$+"] ["+@bingo_e4$+"] ["+@bingo_e5$+"]";
+			close;
+		}
 	}
-	goto L_Fill;
 }
 
 que_bingo,53,121,0	duplicate(plate1#bingo)	plate2#bingo	HIDDEN_WARP_NPC,1,1
@@ -406,7 +421,7 @@ OnInit:
 	disablenpc "24e#bingo";
 	disablenpc "25e#bingo";
 	end;
-	
+
 OnTouch:
 	if(@bingoplate[1] == $bingo[$@bingoresult -1]){ @bingo_a1$ = "^ff0000-  -^000000"; setarray @bingoplate[1],99; }
 	else if(@bingoplate[2] == $bingo[$@bingoresult -1]){ @bingo_a2$ = "^ff0000-  -^000000"; setarray @bingoplate[2],99; }
@@ -466,12 +481,12 @@ OnTouch:
 			mes "Quickly, say ''^FF0000Bingo^000000!''";
 			mes "Remember, you'll only";
 			mes "have one chance to say it!";
-			input @bingoyell$;
+			input(@bingoyell$);
 			if (@bingoyell$ == "Bingo") {
 				if ($@hu_bingoa == 5) {
 					$@hu_bingoa = 6;
 					donpcevent "start2#bingo::OnStop";
-					$@bingowinner$ = strcharinfo(0);
+					$@bingowinner$ = strcharinfo(PC_NAME);
 					donpcevent "win1a#bingo::OnWin";
 					close;
 
@@ -485,14 +500,13 @@ OnTouch:
 					mes "next time, alright?";
 					close;
 				}
-			} else {
-				next;
-				mes "I'm sorry, but you";
-				mes "said it wrong. Next time,";
-				mes "make sure that you yell";
-				mes "out the word, ''^FF0000Bingo^000000,'' okay?";
-				close;
 			}
+			next;
+			mes "I'm sorry, but you";
+			mes "said it wrong. Next time,";
+			mes "make sure that you yell";
+			mes "out the word, ''^FF0000Bingo^000000,'' okay?";
+			close;
 		}
 		close;
 	}
@@ -653,7 +667,7 @@ OnInit:
 	end;
 
 OnTouch:
-	if ($@bingowinner$ != strcharinfo(0)) end;
+	if ($@bingowinner$ != strcharinfo(PC_NAME)) end;
 	specialeffect EF_SUI_EXPLOSION;
 	soundeffect "tming_success.wav",1;
 	if ($@bingoresult == 16) getitem 7515,50;
@@ -845,11 +859,17 @@ function	script	Func_Bingo	{
 			}
 		}
 		next;
-		input .@bingoinput;
-		if(.@bingoinput < 1 || .@bingoinput > 25) { @bingo_case = .@i; return 0; }
-		if(.@i > 1) {
-			for(.@j = .@i; .@j > 0; --.@j) {
-				if(.@bingoinput == @bingoplate[.@j -1]) { @bingo_case = .@i; return 0; }
+		input(.@bingoinput);
+		if (.@bingoinput < 1 || .@bingoinput > 25) {
+			@bingo_case = .@i;
+			return 0;
+		}
+		if (.@i > 1) {
+			for (.@j = .@i; .@j > 0; --.@j) {
+				if (.@bingoinput == @bingoplate[.@j -1]) {
+					@bingo_case = .@i;
+					return 0;
+				}
 			}
 		}
 		setarray @bingoplate[.@i],.@bingoinput;
@@ -889,7 +909,7 @@ que_bingo,54,17,5	script	Arcade Owner	4_M_05,{
 	mes "bingo? If you have any";
 	mes "questions, feel free to ask.";
 	next;
-	switch(select("Rules for Bingo:Bingo Room:Marvelous Medals")) {
+	switch(select("Rules for Bingo", "Bingo Room", "Marvelous Medals")) {
 	case 1:
 		mes "[Arcade Owner]";
 		mes "The rules for playing bingo";
@@ -951,7 +971,7 @@ que_bingo,54,17,5	script	Arcade Owner	4_M_05,{
 		mes "game, you will be rewarded";
 		mes "with ''Marvelous Medals,''";
 		mes "which can only be used within";
-		mes "this arcade. You also can't^FFFFFF ^000000 trade medals with other players.";
+		mes "this arcade. You also can't trade medals with other players.";
 		next;
 		mes "[Arcade Owner]";
 		mes "You usually get 1 Marvelous";
@@ -964,8 +984,8 @@ que_bingo,54,17,5	script	Arcade Owner	4_M_05,{
 		mes "[Arcade Owner]";
 		mes "Collect as many Marvelous";
 		mes "Medals as you can, and trade";
-		mes "them for products in the Monster^FFFFFF ^000000 Racing Arena. I hear there's also";
-		mes "a place in Einbroch where you can^FFFFFF ^000000 use them, but I wouldn't know.";
+		mes "them for products in the Monster Racing Arena. I hear there's also";
+		mes "a place in Einbroch where you can use them, but I wouldn't know.";
 		close;
 	}
 }

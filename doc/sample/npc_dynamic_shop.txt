@@ -9,7 +9,7 @@
 //============================================================
 
 // Dummy shop to insert items into:
--	shop	dyn_shop1	-1,501:50.
+-	shop	dyn_shop1	FAKE_NPC,501:50.
 
 prontera,181,200,4	script	Dynamic Shop	2_F_MAGICMASTER,{
 	callshop "dyn_shop1",0;

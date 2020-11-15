@@ -1,19 +1,42 @@
-//===== Hercules Script ======================================
-//= Izlude Warp Script
-//===== By: ==================================================
-//= Athena (1.0), Nana (1.1)
-//===== Current Version: =====================================
-//= 1.8
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Ridley
+//= Copyright (C) Euphy
+//= Copyright (C) Streusel
+//= Copyright (C) Masao
+//= Copyright (C) Justin84
+//= Copyright (C) Nana
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Izlude Warp Script (Renewal)
+//================= Description ===========================================
 //= Warp Points for Izlude
-//===== Additional Comments: =================================
-//= 1.3 Added warps to Izlude Airship [Justin84]
-//= 1.4 Minor correction on airport warps
-//= 1.5 Updated to match the new Izlude Map. [Masao]
-//= 1.6 Added new warps. [Streusel]
-//= 1.7 Updated to match the official scripts. [Euphy]
-//= 1.8 Added Izlude & Prontera Field 8 duplicates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.8
+//=========================================================================
 
 //= Izlude City ==============================================
 prt_fild08,371,212,0	warp	prtf005	3,3,izlude,24,98
@@ -50,6 +73,88 @@ izlude_b,52,172,0	warp	iz04_b	2,2,izlude_in,74,161
 izlude_c,52,172,0	warp	iz04_c	2,2,izlude_in,74,161
 izlude_d,52,172,0	warp	iz04_d	2,2,izlude_in,74,161
 
+//= iz_int(Intro) & int_land(Secluded Island) ================
+iz_int,27,30,0	script	noviship#room1-1	WARPNPC,2,2,{
+	end;
+
+OnTouch:
+	warp(strnpcinfo(NPC_MAP), 51, 30);
+	end;
+
+OnInit:
+	questinfo(QTYPE_QUEST, 1);
+	setquestinfo(QINFO_JOB, Job_Novice);
+	setquestinfo(QINFO_QUEST, 21001, 1);
+	end;
+}
+
+iz_int,47,30,3	script	noviship#room1-2	WARPNPC,2,2,{
+	end;
+
+OnTouch:
+	@display = 0;
+	warp(strnpcinfo(NPC_MAP), 22, 30);
+	end;
+}
+
+iz_int,56,15,0	script	noviship	WARPNPC,2,2,{
+	end;
+
+OnTouch:
+	savepoint("int_land"+strnpcinfo(NPC_NAME_HIDDEN), 77, 101);
+	warp("int_land"+strnpcinfo(NPC_NAME_HIDDEN), 85, 107);
+	end;
+}
+
+int_land,49,57,0	script	noviship#izlude	WARPNPC,2,2,{
+	end;
+
+OnTouch:
+	mes("^4d4dffOnce you left this island there is no way back.");
+	mes("Are you sure you want to go directly to Izlude?^000000");
+	next();
+	mes("^4d4dffIf you do, the quest got deleted from your Quest Log.^000000");
+	next();
+	if (select("Do not go to Izlude yet", "Sail to Izlude!") == 1) {
+		mes("[Sailor]");
+		mes("You want to stay here longer?");
+		mes("Good, then I wait until you're ready~");
+		close();
+	}
+	mes("[Sailor]");
+	mes("Lets head toward Izlude!");
+	close2();
+	if (questprogress(21001))
+		erasequest(21001);
+	if (questprogress(21002))
+		erasequest(21002);
+
+	.@map$ = "izlude";
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "izlude")
+		.@map$ = .@map$ + strnpcinfo(NPC_NAME_HIDDEN);
+
+	warp(.@map$, 196, 209);
+	end;
+}
+
+//= iz_int(Intro) & int_land(Secluded Island) Duplicates =====
+iz_int01,27,30,0	duplicate(noviship#room1-1)	noviship#room1-1a	WARPNPC,2,2
+iz_int02,27,30,0	duplicate(noviship#room1-1)	noviship#room1-1b	WARPNPC,2,2
+iz_int03,27,30,0	duplicate(noviship#room1-1)	noviship#room1-1c	WARPNPC,2,2
+iz_int04,27,30,0	duplicate(noviship#room1-1)	noviship#room1-1d	WARPNPC,2,2
+iz_int01,47,30,0	duplicate(noviship#room1-2)	noviship#room1-2a	WARPNPC,2,2
+iz_int02,47,30,0	duplicate(noviship#room1-2)	noviship#room1-2b	WARPNPC,2,2
+iz_int03,47,30,0	duplicate(noviship#room1-2)	noviship#room1-2c	WARPNPC,2,2
+iz_int04,47,30,0	duplicate(noviship#room1-2)	noviship#room1-2d	WARPNPC,2,2
+iz_int01,56,15,0	duplicate(noviship)	noviship#01	WARPNPC,2,2
+iz_int02,56,15,0	duplicate(noviship)	noviship#02	WARPNPC,2,2
+iz_int03,56,15,0	duplicate(noviship)	noviship#03	WARPNPC,2,2
+iz_int04,56,15,0	duplicate(noviship)	noviship#04	WARPNPC,2,2
+int_land01,49,57,0	duplicate(noviship#izlude)	noviship#_a	WARPNPC,2,2
+int_land02,49,57,0	duplicate(noviship#izlude)	noviship#_b	WARPNPC,2,2
+int_land03,49,57,0	duplicate(noviship#izlude)	noviship#_c	WARPNPC,2,2
+int_land04,49,57,0	duplicate(noviship#izlude)	noviship#_d	WARPNPC,2,2
+
 //= Izlude Academy ===========================================
 izlude,125,257,0	warp	#to_ac01	2,2,iz_ac01,99,29
 izlude,130,257,0	warp	#to_ac02	2,2,iz_ac01,99,29
@@ -58,6 +163,7 @@ iz_ac01,78,25,0	warp	#to_ac2f01	2,2,iz_ac02,104,27
 iz_ac01,122,25,0	warp	#to_ac2f02	2,2,iz_ac02,104,27
 iz_ac02,94,27,0	warp	#to_ac1f01	2,2,iz_ac01,78,28
 iz_ac02,113,27,0	warp	#to_ac1f02	2,2,iz_ac01,122,28
+new_1-3,96,176,0	warp	#to_ac01-2	1,1,iz_ac01,49,73
 
 //= Izlude Academy Duplicates ================================
 izlude_a,125,257,0	warp	#to_ac01_a	2,2,iz_ac01_a,99,29

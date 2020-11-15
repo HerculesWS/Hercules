@@ -1,17 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Expanded Super Novice Job Quest
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1a
-//===== Description: =========================================
+//================= Description ===========================================
 //= Job Change quest for Expanded Super Novice class.
-//===== Additional Comments: =================================
-//= 1.0 All dialogue is custom, contains some incorrect behaviors.
-//= 1.1 Switched to a translated copy of the official script
-//=     by Gennosuke Kouga, but vastly edited its content. [Euphy]
-//= 1.1a Replaced effect numerics with constants. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1a
+//=========================================================================
 
 function	script	Esseray_Ex	{
 	if (BaseLevel > 98 && JobLevel > 98) {
@@ -36,7 +55,7 @@ function	script	Esseray_Ex	{
 		mes "[Esseray]";
 		mes "I know a way to become stronger. Are you willing you try it?";
 		next;
-		if(select("No, I'm okay now.:I want to be stronger!") == 1) {
+		if(select("No, I'm okay now.", "I want to be stronger!") == 1) {
 			mes "[Esseray]";
 			mes "If you are satisfied with mediocrity, I can't help you.";
 			mes "Live a normal life then.";
@@ -94,7 +113,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "^0000FFA member of Novice Society in Aldebaran.^000000";
 		mes "Esseray, right? Wrong?";
 		next;
-		if(select("No he isn't:Yes, right") == 2) {
+		if(select("No he isn't", "Yes, right") == 2) {
 			mes "[Fishing Novice]";
 			mes "Hu hu~ my sense is still alive...";
 			next;
@@ -141,7 +160,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "Too ~ hard. Hey, little kid!";
 		mes "What's your name?";
 		next;
-		select(strcharinfo(0)+", how about you?");
+		select(strcharinfo(PC_NAME)+", how about you?");
 		mes "[Nodor]";
 		mes "My name is Nodor! Nodor.";
 		next;
@@ -193,7 +212,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "I will make you stronger!";
 		mes "So will you believe what I tell you?";
 		next;
-		if(select("I won't follow you.:Why not? kehehe~") == 1) {
+		if(select("I won't follow you.", "Why not? kehehe~") == 1) {
 			mes "[Nodor]";
 			mes "Refusing? Don't you want to be strong?";
 			mes "I'd love to do nothing too.";
@@ -226,7 +245,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "How about it?";
 		mes "Are you willing to do this?";
 		next;
-		if(select("No, I will not!:Let's do this!") == 1) {
+		if(select("No, I will not!", "Let's do this!") == 1) {
 			mes "[Nodor]";
 			mes "To be strong is the only way to live!";
 			mes "Do you want to be a weakling forever?";
@@ -269,7 +288,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		close;
 	}
 	else if (questprogress(5094) || questprogress(5095) || questprogress(5096) || questprogress(5097)) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey, Nodor!";
 		next;
 		emotion e_omg;
@@ -291,7 +310,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "You are better than I thought.";
 		mes "Anyway, what was the monster that I told you to hunt?";
 		next;
-		.@i = select("Poring:Lunatic:Fabre:Picky:Baphomet")-1;
+		.@i = select("Poring", "Lunatic", "Fabre", "Picky", "Baphomet")-1;
 		if (.@i == 4) {
 			mes "[Nodor]";
 			mes "Heheh? Can you seriously hunt Baphomet alone?";
@@ -338,13 +357,13 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "Oh sorry! Sorry!";
 		mes "I got a letter from my brother a long time ago, will you read my letter for your information?";
 		next;
-		if(select("Yes, I will:No, I won't") == 2) {
+		if(select("Yes, I will", "No, I won't") == 2) {
 			mes "[Nodor]";
 			mes "You should read more!";
 			next;
 		}
 		else {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Tsk*... Ok...";
 			next;
 		}
@@ -371,7 +390,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		next;
 		changequest 5098,5099;
 		mes "[Nodor]";
-		mes "Hey- Super Novice "+strcharinfo(0)+"!";
+		mes "Hey- Super Novice "+strcharinfo(PC_NAME)+"!";
 		next;
 		mes "[Nodor]";
 		mes "You can give some to my bro. He's up in the airship.";
@@ -449,7 +468,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "We... have to run...!!!";
 		next;
 		emotion e_omg,1;
-		if(select("What?!:Um?") == 2) {
+		if(select("What?!", "Um?") == 2) {
 			mes "- You look around, and -";
 			mes "- there is nothing behind you. -";
 			mes "- When you are about to doubt... -";
@@ -465,9 +484,9 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 			mes "I can't make you stronger until you use those points.";
 			close;
 		}
-		specialeffect2 EF_LORD;
-		specialeffect2 EF_SIGHTRASHER;
-		specialeffect2 EF_STORMGUST;
+		specialeffect(EF_LORD, AREA, playerattached());
+		specialeffect(EF_SIGHTRASHER, AREA, playerattached());
+		specialeffect(EF_STORMGUST, AREA, playerattached());
 		erasequest 5100;
 		mes "[Nodor]";
 		mes "Haha ------------- !!";
@@ -507,7 +526,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "you are a little dull...";
 		mes "Don't you feel different now?";
 		next;
-		if(select("What are you talking about?:I got it!") == 1) {
+		if(select("What are you talking about?", "I got it!") == 1) {
 			mes "[Nodor]";
 			mes "Eh--- right, you are dull, aren't you?";
 			mes "You already exceeded your limit.";
@@ -535,7 +554,7 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "Don't forget to make sure that you have enough ^FF0000inventory^000000 to take these items from me.";
 		mes "And don't say I didn't warn you either.";
 		next;
-		if(select("Yes, let me check my inventory.:I'm good, show me.") == 1) {
+		if(select("Yes, let me check my inventory.", "I'm good, show me.") == 1) {
 			mes "[Nodor]";
 			mes "Well, well!";
 			mes "You know! Have no regrets.";
@@ -544,16 +563,16 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "[Nodor]";
 		mes "There are what I used to wear when I was younger,";
 		mes "but they are still good.";
-		if (EXSUPNOV_Q_ == 3) getitem 2522,1; // Undershirt
+		if (EXSUPNOV_Q_ == 3) getitem Undershirt,1; // Undershirt
 		else if (EXSUPNOV_Q_ == 4) {
-			getitem 2628,1; // Novice Armlet [1]
-			getitem 2113,1; // Novice Shield [1]
-			getitem 2416,1; // Novice Shoes [1]
-			getitem 5119,1; // Super Novice Hat [1]
-			getitem 2512,1; // Novice Manteau [1]
-			getitem 2340,1; // Novice Breastplate [1]
+			getitem Novice_Armlet,1; // Novice Armlet [1]
+			getitem Novice_Shield,1; // Novice Shield [1]
+			getitem Novice_Shoes,1; // Novice Shoes [1]
+			getitem Super_Novice_Hat_,1; // Super Novice Hat [1]
+			getitem Novice_Manteau,1; // Novice Manteau [1]
+			getitem Novice_Breast,1; // Novice Breastplate [1]
 		}
-		else getitem 2340,1; // Novice Breastplate [1]
+		else getitem Novice_Breast,1; // Novice Breastplate [1]
 		next;
 		select("Second-hand stuff, huh?");
 		mes "[Nodor]";
@@ -567,9 +586,9 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "[Nodor]";
 		mes "Now I am going to say greetings again.";
 		next;
-		specialeffect2 EF_RECOVERY;
+		specialeffect(EF_RECOVERY, AREA, playerattached());
 		mes "[Nodor]";
-		mes "Let Super Novice "+strcharinfo(0)+" be blessed with the Super Novice Guardian!";
+		mes "Let Super Novice "+strcharinfo(PC_NAME)+" be blessed with the Super Novice Guardian!";
 		EXSUPNOV_Q = 6;
 		close;
 	}
@@ -610,7 +629,7 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		mes "- eyes, holding out his hands. -";
 		mes "- How much do you want to give? -";
 		next;
-		.@i = select("I have no money:Give 100,000 Zeny:Give 300,000 Zeny:Give 1,000,000 Zeny:Give all the money you have");
+		.@i = select("I have no money", "Give 100,000 Zeny", "Give 300,000 Zeny", "Give 1,000,000 Zeny", "Give all the money you have");
 		mes "[Nudor]";
 		if (.@i == 1) {
 			mes "- crying -";
@@ -637,7 +656,7 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		else {
 			mes "Oh... oh my gosh, are you really giving me all the Zeny you have? Really?";
 			next;
-			if(select("No, not really...:Give it all") == 1) {
+			if(select("No, not really...", "Give it all") == 1) {
 				mes "[Nudor]";
 				mes "Pshaw! How disappointing!";
 				close;
@@ -662,8 +681,10 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		}
 		next;
 		mes "[Nudor]";
-		if (Sex) mes "Did you know? You're really handsome~";
-		else mes "I need to tell you, you are really... really~ beautiful.";
+		if (Sex == SEX_MALE)
+			mes "Did you know? You're really handsome~";
+		else
+			mes "I need to tell you, you are really... really~ beautiful.";
 		next;
 		mes "[Nudor]";
 		mes "- You feel like you're being -";
@@ -676,7 +697,7 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		next;
 		mes "[Nudor]";
 		mes "Ooooops!";
-		mes strcharinfo(0)+", hush --- !!";
+		mes strcharinfo(PC_NAME)+", hush --- !!";
 		next;
 		mes "[Nudor]";
 		mes "Don't tell Nodor about this~~";

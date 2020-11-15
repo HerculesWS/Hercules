@@ -1,13 +1,33 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_MERCENARY_H
 #define MAP_MERCENARY_H
 
-#include "status.h" // struct status_data, struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
+#include "map/status.h" // struct status_data, struct status_change
+#include "map/unit.h" // struct unit_data
+#include "common/hercules.h"
 
+struct map_session_data;
+
+#define MAX_MERCENARY_CLASS 61
 // number of cells that a mercenary can walk to from it's master before being warped
 #define MAX_MER_DISTANCE 15
 
@@ -15,6 +35,40 @@ enum {
 	ARCH_MERC_GUILD,
 	SPEAR_MERC_GUILD,
 	SWORD_MERC_GUILD,
+};
+
+/// Mercenary IDs
+enum merc_id {
+	MERID_MER_ARCHER01   = 6017, ///<   MER_ARCHER01 / Mina
+	MERID_MER_ARCHER02   = 6018, ///<   MER_ARCHER02 / Dororu
+	MERID_MER_ARCHER03   = 6019, ///<   MER_ARCHER03 / Nami
+	MERID_MER_ARCHER04   = 6020, ///<   MER_ARCHER04 / Elfin
+	MERID_MER_ARCHER05   = 6021, ///<   MER_ARCHER05 / Clara
+	MERID_MER_ARCHER06   = 6022, ///<   MER_ARCHER06 / Dali
+	MERID_MER_ARCHER07   = 6023, ///<   MER_ARCHER07 / Karaya
+	MERID_MER_ARCHER08   = 6024, ///<   MER_ARCHER08 / Hiyori
+	MERID_MER_ARCHER09   = 6025, ///<   MER_ARCHER09 / Kero
+	MERID_MER_ARCHER10   = 6026, ///<   MER_ARCHER10 / Sukye
+	MERID_MER_LANCER01   = 6027, ///<   MER_LANCER01 / Rodin
+	MERID_MER_LANCER02   = 6028, ///<   MER_LANCER02 / Lancer
+	MERID_MER_LANCER03   = 6029, ///<   MER_LANCER03 / Nathan
+	MERID_MER_LANCER04   = 6030, ///<   MER_LANCER04 / Roan
+	MERID_MER_LANCER05   = 6031, ///<   MER_LANCER05 / Orizaro
+	MERID_MER_LANCER06   = 6032, ///<   MER_LANCER06 / Thyla
+	MERID_MER_LANCER07   = 6033, ///<   MER_LANCER07 / Ben
+	MERID_MER_LANCER08   = 6034, ///<   MER_LANCER08 / Pinaka
+	MERID_MER_LANCER09   = 6035, ///<   MER_LANCER09 / Kuhlmann
+	MERID_MER_LANCER10   = 6036, ///<   MER_LANCER10 / Roux
+	MERID_MER_SWORDMAN01 = 6037, ///< MER_SWORDMAN01 / David
+	MERID_MER_SWORDMAN02 = 6038, ///< MER_SWORDMAN02 / Ellen
+	MERID_MER_SWORDMAN03 = 6039, ///< MER_SWORDMAN03 / Luise
+	MERID_MER_SWORDMAN04 = 6040, ///< MER_SWORDMAN04 / Frank
+	MERID_MER_SWORDMAN05 = 6041, ///< MER_SWORDMAN05 / Ryan
+	MERID_MER_SWORDMAN06 = 6042, ///< MER_SWORDMAN06 / Paolo
+	MERID_MER_SWORDMAN07 = 6043, ///< MER_SWORDMAN07 / Jens
+	MERID_MER_SWORDMAN08 = 6044, ///< MER_SWORDMAN08 / Thierry
+	MERID_MER_SWORDMAN09 = 6045, ///< MER_SWORDMAN09 / Steven
+	MERID_MER_SWORDMAN10 = 6046, ///< MER_SWORDMAN10 / Wayne
 };
 
 struct s_mercenary_db {
@@ -38,7 +92,7 @@ struct mercenary_data {
 	struct regen_data regen;
 	struct s_mercenary_db *db;
 	struct s_mercenary mercenary;
-	char blockskill[MAX_SKILL];
+	char blockskill[MAX_SKILL_DB];
 
 	struct map_session_data *master;
 	int contract_timer;
@@ -56,7 +110,7 @@ struct mercenary_interface {
 
 	/* vars */
 
-	struct s_mercenary_db db[MAX_MERCENARY_CLASS];
+	struct s_mercenary_db *db;
 
 	/* funcs */
 
@@ -66,7 +120,7 @@ struct mercenary_interface {
 	struct view_data * (*get_viewdata) (int class_);
 
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);
-	int (*data_received) (struct s_mercenary *merc, bool flag);
+	int (*data_received) (const struct s_mercenary *merc, bool flag);
 	int (*save) (struct mercenary_data *md);
 
 	void (*heal) (struct mercenary_data *md, int hp, int sp);
@@ -95,10 +149,10 @@ struct mercenary_interface {
 	bool (*read_skill_db_sub) (char* str[], int columns, int current);
 };
 
-struct mercenary_interface *mercenary;
-
 #ifdef HERCULES_CORE
 void mercenary_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mercenary_interface *mercenary;
 
 #endif /* MAP_MERCENARY_H */

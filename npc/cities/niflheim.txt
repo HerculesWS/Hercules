@@ -1,29 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) Silent
+//= Copyright (C) Vicious_Pucca
+//= Copyright (C) Nexon
+//= Copyright (C) Lupus
+//= Copyright (C) Celest
+//= Copyright (C) PKGINGO
+//= Copyright (C) Dizzy
+//= Copyright (C) Fyrien
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Niflheim Script
-//===== By: ==================================================
-//= Fyrien, Dizzy, PKGINGO
-//= Official NPCs translated and re-edited by Celest
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Official NPCs for Niflheim
+//================= Current Version =======================================
 //= 1.5
-//===== Description: =========================================
-//= Official NPC's for Niflheim
-//= 1.01 Splitted file(guides, shops). Fixed rand() bugs,
-//=      missing labels bugs, optimization [Lupus]
-//= 1.03 fixed end; -> close;
-//= 1.04-1.05 fixed several bugs with missing CLOSE button, wrong var name
-//=     in Piano Keys quest
-//=     fixed zeny/item, exploit in Sairin, some optimizations [Lupus]
-//= 1.06 some typos in some variables fixed (thx 2 Dr.Evil) [Lupus]
-//= 1.07 Fixed typos [Nexon]
-//= 1.08 Commented "Traveler" out as it is not official & we have correct Bungee quest in.
-//=     Also removed TODO, as they are already done. [Vicious_Pucca]
-//= 1.1 Replaced nif_q_done with MISC_QUEST & 32. nif_t -> @nif_t [Lupus]
-//= 1.2 Removed Duplicates [Silent]
-//= 1.3 Moved Book of Devil and Piano quest to quests/quests_niflheim.txt [Evera]
-//= 1.4 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Removed Cursed Spirits as they were custom.
-//= 1.5 Added dummy "OnMyMobDead" event to Cursed Spirit. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
 niflheim,52,147,3	script	Keedz#nif	4_M_NFDEADSWDMAN,{
 	mes "[Keedz]";
@@ -34,7 +50,7 @@ niflheim,52,147,3	script	Keedz#nif	4_M_NFDEADSWDMAN,{
 
 niflheim,195,211,6	script	Gigantia#nif	4_M_NFDEADSWDMAN,3,3,{
 	if (isequipped(5038) || isequipped(2257) || isequipped(2256)) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What's up?";
 		next;
 		mes "[Gigantia]";
@@ -72,7 +88,7 @@ nif_in,16,27,1	script	Undead Chicken#nif	4_NFCOCK,{
 	mes "[Undead Chicken]";
 	mes "I lived a peaceful life as a normal chicken. But then came the day I was tragically killed and eaten by humans. Well... Heh heh~! Now it's my turn! *Cackles*";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Ouch...!";
 	mes "A chicken...";
 	mes "It bit me!";
@@ -94,7 +110,7 @@ nif_in,16,30,4	script	Undead Familiar#nif	4_NFBAT,{
 	mes "always tasty...! I think I'll just";
 	mes "take a liiittle sip.";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Ow! My vein!";
 	mes "Did you just";
 	mes "suck my blood?!";
@@ -114,7 +130,7 @@ nif_in,156,93,5	script	Child#niflheim	4_F_NFLOSTGIRL,{
 	mes "Mommy, have you seen my mommy?";
 	mes "I wanna go home...*Sob*";
 	next;
-	switch(select("About the witch:About the curse:Cancel.")) {
+	switch(select("About the witch", "About the curse", "Cancel.")) {
 	case 1:
 		mes "[Alakina Ann]";
 		mes "Witch...? I've never seen a witch, but I've read about them in books. I'm not sure if they exist or not, but it would be so horrifying if they did...";
@@ -190,7 +206,7 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 	mes "....Whatever you do...";
 	mes "....Do NOT touch my books...";
 	next;
-	switch(select("Touch the first book.:Touch the second book.:Touch the third book.:Okay, I am leaving.")) {
+	switch(select("Touch the first book.", "Touch the second book.", "Touch the third book.", "Okay, I am leaving.")) {
 	case 1:
 		monster "niflheim",349,259,"Rideword",1478,1,"Cursed Spirit#nif::OnMyMobDead";
 		mes "[Ashe Bruce]";
@@ -232,13 +248,13 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 		mes "lost to the ages~!";
 		emotion e_gg;
 		next;
-		if (select("Clover:Klaatu:Klaytos") == 2) {
+		if (select("Clover", "Klaatu", "Klaytos") == 2) {
 			++.@spell;
 		}
-		if (select("Verit:Veritas:Verata") == 3) {
+		if (select("Verit", "Veritas", "Verata") == 3) {
 			++.@spell;
 		}
-		if (select("Necktie:Necklace:Nero:^FFFFFFNictu!!!^000000") == 4) {
+		if (select("Necktie", "Necklace", "Nero", "^FFFFFFNictu!!!^000000") == 4) {
 			++.@spell;
 		}
 		if (.@spell == 3) {

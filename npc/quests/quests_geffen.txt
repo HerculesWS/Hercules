@@ -1,22 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) silent
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Geffen
-//===== By: ==================================================
-//= kobra_k88 & Samuray22
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= Welding Mask and Headset Quests.
-//===== Additional Comments: =================================
-//= 1.1 Fixed exploits [Lupus]
-//= 1.2 Removed Duplicates [Silent]
-//= 1.3 Updated "Welding Mask" Quest to the Official one. [Samuray22]
-//= 1.3a replaced item "names" with item id. Added missing [Lupus]
-//= 1.4 Updated welding mask and headset quests. [L0ne_W0lf]
-//= 1.5 Added Number Match Game. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
-// Blacksmith: 'Welding Mask' Quest
-//============================================================
+//== Blacksmith: 'Welding Mask' Quest ======================
 geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 	mes "[Blacksmith]";
 	mes "You've never heard of me? Why, I'm the Veteran Blacksmith of this land. I've spent 30 years in this hot and bloody hellfire, bending steel to my iron will!";
@@ -25,7 +46,7 @@ geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 	mes "But...";
 	mes "I am growing older and my prowess begins to fade with age. So I've invented something for young, hot, upcoming Blacksmiths, in hopes that they too will master my craft...";
 	next;
-	switch(select("What is it?:...")) {
+	switch(select("What is it?", "...")) {
 	case 1:
 		mes "[Blacksmith]";
 		mes "We Blacksmiths must always manipulate steel under extreme heat, and the hot air and melted metals are more than most people can stand.";
@@ -42,15 +63,15 @@ geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 		mes "[Blacksmith]";
 		mes "So how about it ? If you give me ^2244FF50 Steel^000000 and ^4422FFonly 2000 Zeny^000000, I will make it for you right away~!!";
 		next;
-		switch(select("Hm... Not bad. Alright.:How does it work again?")) {
+		switch(select("Hm... Not bad. Alright.", "How does it work again?")) {
 		case 1:
-			if ((countitem(999) > 49) && (Zeny > 1999)){
+			if ((countitem(Steel) > 49) && (Zeny > 1999)){
 				mes "[Blacksmith]";
 				mes "Ah, I see that you appreciate a Blacksmith's work! Alright, I'll do it right away !!";
 				next;
-				delitem 999,50;  //Steel
+				delitem Steel,50;
 				Zeny -= 2000;
-				getitem 2292,1; // Welding_Mask
+				getitem Welding_Mask,1; // Welding_Mask
 				mes "[Blacksmith]";
 				mes "Hahaha~! Make good use of that!";
 				close;
@@ -81,8 +102,7 @@ geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 	}
 }
 
-// Eric: 'Headset' Quest
-//============================================================
+//== Eric: 'Headset' Quest =================================
 geffen_in,30,71,4	script	Eric	4_M_01,{
 	mes "[Eric]";
 	mes "Please listen";
@@ -90,7 +110,7 @@ geffen_in,30,71,4	script	Eric	4_M_01,{
 	mes "of my blessed";
 	mes "grandfather.";
 	next;
-	switch(select("Talk:Ask about Items needed:Manufacture:Quit")) {
+	switch(select("Talk", "Ask about Items needed", "Manufacture", "Quit")) {
 	case 1:
 		mes "[Eric]";
 		mes "My Grandfather, who passed away a few years ago, was special to me. He always stayed with me, and took care of me. He was much better than my old man, who was always busy working.";
@@ -130,12 +150,12 @@ geffen_in,30,71,4	script	Eric	4_M_01,{
 		mes "These are the things I need for Grandfather's masterpiece.";
 		close;
 	case 3:
-		if ((countitem(999) > 39) && (countitem(984) > 0) && (countitem(970) > 0) && (countitem(1003) > 0)) {
-			delitem 999,40; //Steel
-			delitem 984,1; //Oridecon
-			delitem 970,1; //Alchol
-			delitem 1003,1; //Coal
-			getitem 5001,1; //Headset
+		if ((countitem(Steel) > 39) && (countitem(Oridecon) > 0) && (countitem(Alchol) > 0) && (countitem(Coal) > 0)) {
+			delitem Steel,40;
+			delitem Oridecon,1;
+			delitem Alchol,1;
+			delitem Coal,1;
+			getitem Headset,1;
 			mes "*Tap! Tap! Tap!*";
 			next;
 			mes "[Eric]";
@@ -162,8 +182,7 @@ geffen_in,30,71,4	script	Eric	4_M_01,{
 	}
 }
 
-// Number Match Game :: gef_yagu
-//============================================================
+//== Number Match Game :: gef_yagu =========================
 geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 	mes "[Nia]";
 	mes "Hello, I'm Nia, the fifth";
@@ -172,7 +191,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 	mes "how would you like to play a";
 	mes "Number Match game with me?";
 	next;
-	switch(select("Number Match Game?:Practice Number Match:Play Number Match:Record Holder:Cancel")) {
+	switch(select("Number Match Game?", "Practice Number Match", "Play Number Match", "Record Holder", "Cancel")) {
 	case 1:
 		mes "[Nia]";
 		mes "Ah, well, the objective of";
@@ -287,7 +306,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 
 		// Guess a number that meets all conditions.
 		while(1) {
-			if (input(.@input,100,999) != 0) {
+			if (input(.@input, 100, 999) != 0) {
 				mes "[Nia]";
 				mes "You've canceled the";
 				mes "Number Match game.";
@@ -311,7 +330,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 
 		.@retry = .@retry+1;
 		mes "[Nia]";
-		mes "^ff0000"+strcharinfo(0)+"^000000,";
+		mes "^ff0000"+strcharinfo(PC_NAME)+"^000000,";
 		mes "your guess is ^0000ff"+.@input+"^000000.";
 		mes "Give me a moment to";
 		mes "come up with your results.";
@@ -362,7 +381,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 				.@score_sec = .@score_record % 60;
 
 				if (.@score_record >= .@total_time || !.@score_record) { //custom (second condition)
-					$050908_minus1_yagu$ = strcharinfo(0);
+					$050908_minus1_yagu$ = strcharinfo(PC_NAME);
 					$050908_minus1_yagu = .@total_time;
 					mes "[Nia]";
 					mes "Great! You guessed";

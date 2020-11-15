@@ -1,78 +1,89 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "inter.h"
 
+#include "char/char.h"
+#include "char/geoip.h"
+#include "char/int_auction.h"
+#include "char/int_clan.h"
+#include "char/int_elemental.h"
+#include "char/int_guild.h"
+#include "char/int_homun.h"
+#include "char/int_mail.h"
+#include "char/int_mercenary.h"
+#include "char/int_party.h"
+#include "char/int_pet.h"
+#include "char/int_quest.h"
+#include "char/int_rodex.h"
+#include "char/int_storage.h"
+#include "char/int_achievement.h"
+#include "char/mapif.h"
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/memmgr.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "char.h"
-#include "geoip.h"
-#include "int_auction.h"
-#include "int_elemental.h"
-#include "int_guild.h"
-#include "int_homun.h"
-#include "int_mail.h"
-#include "int_mercenary.h"
-#include "int_party.h"
-#include "int_pet.h"
-#include "int_quest.h"
-#include "int_storage.h"
-#include "mapif.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
+static struct inter_interface inter_s;
+struct inter_interface *inter;
 
-#define WISDATA_TTL (60*1000) // Wis data Time To Live (60 seconds)
-#define WISDELLIST_MAX 256    // Number of elements in the list Delete data Wis
+static int char_server_port = 3306;
+static char char_server_ip[32] = "127.0.0.1";
+static char char_server_id[32] = "ragnarok";
+static char char_server_pw[100] = "ragnarok";
+static char char_server_db[32] = "ragnarok";
+static char default_codepage[32] = ""; //Feature by irmin.
 
-struct inter_interface inter_s;
-
-int char_server_port = 3306;
-char char_server_ip[32] = "127.0.0.1";
-char char_server_id[32] = "ragnarok";
-char char_server_pw[100] = "ragnarok";
-char char_server_db[32] = "ragnarok";
-char default_codepage[32] = ""; //Feature by irmin.
-
-unsigned int party_share_level = 10;
+int party_share_level = 10;
 
 // recv. packet list
-int inter_recv_packet_length[] = {
-	-1,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
-	 6,-1, 0, 0,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010-
-	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
-	-1, 6,-1,-1, 55,19, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
-	-1, 9, 0, 0,  0, 0, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040-
+static int inter_recv_packet_length[] = {
+	 0, 0, 0, 0, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
+	 6,-1, 6,-1,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage, Achievements [Smokexyz]
+	-1,10,-1,14, 14,19, 6, 0, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
+	-1, 6,-1,-1, 55,23, 6, 0, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
+	-1, 9, 0, 0, 10,10, 0, 0,  7, 6,10,10, 10,-1,  0, 0,    // 3040- Clan System(3044-3045)
 	-1,-1,10,10,  0,-1,12, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3050-  Auction System [Zephyrus], Item Bound [Mhalicot]
 	 6,-1, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3060-  Quest system [Kevin] [Inkfish]
 	-1,10, 6,-1,  0, 0, 0, 0,  0, 0, 0, 0, -1,10,  6,-1,    // 3070-  Mercenary packets [Zephyrus], Elemental packets [pakpil]
-	48,14,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3080-
-	-1,10,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator]
+	56,14,-1, 6,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0,    // 3080-
+	-1,10,-1, 6,  0, 20,10,20, -1,6 + NAME_LENGTH, 0, 0,  0, 0,  0, 0,    // 3090-  Homunculus packets [albator], RoDEX packets
 };
-
-struct WisData {
-	int id, fd, count, len;
-	int64 tick;
-	unsigned char src[24], dst[24], msg[512];
-};
-static DBMap* wis_db = NULL; // int wis_id -> struct WisData*
-static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
 #define MAX_JOB_NAMES 150
-static char* msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
+static char *msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
 
-const char* inter_msg_txt(int msg_number) {
+static const char *inter_msg_txt(int msg_number)
+{
 	msg_number -= 550;
 	if (msg_number >= 0 && msg_number < MAX_JOB_NAMES &&
 	    msg_table[msg_number] != NULL && msg_table[msg_number][0] != '\0')
@@ -91,7 +102,7 @@ const char* inter_msg_txt(int msg_number) {
  * @param[in] allow_override whether to allow duplicate message IDs to override the original value.
  * @return success state.
  */
-bool inter_msg_config_read(const char *cfg_name, bool allow_override)
+static bool inter_msg_config_read(const char *cfg_name, bool allow_override)
 {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
@@ -143,16 +154,16 @@ bool inter_msg_config_read(const char *cfg_name, bool allow_override)
 /*==========================================
  * Cleanup Message Data
  *------------------------------------------*/
-void inter_do_final_msg(void)
+static void inter_do_final_msg(void)
 {
 	int i;
 	for (i = 0; i < MAX_JOB_NAMES; i++)
 		aFree(msg_table[i]);
 }
 /* from pc.c due to @accinfo. any ideas to replace this crap are more than welcome. */
-const char* inter_job_name(int class_)
+static const char *inter_job_name(int class)
 {
-	switch (class_) {
+	switch (class) {
 		case JOB_NOVICE:   // 550
 		case JOB_SWORDMAN: // 551
 		case JOB_MAGE:     // 552
@@ -160,7 +171,7 @@ const char* inter_job_name(int class_)
 		case JOB_ACOLYTE:  // 554
 		case JOB_MERCHANT: // 555
 		case JOB_THIEF:    // 556
-			return inter->msg_txt(550 - JOB_NOVICE+class_);
+			return inter->msg_txt(550 - JOB_NOVICE + class);
 
 		case JOB_KNIGHT:     // 557
 		case JOB_PRIEST:     // 558
@@ -168,7 +179,7 @@ const char* inter_job_name(int class_)
 		case JOB_BLACKSMITH: // 560
 		case JOB_HUNTER:     // 561
 		case JOB_ASSASSIN:   // 562
-			return inter->msg_txt(557 - JOB_KNIGHT+class_);
+			return inter->msg_txt(557 - JOB_KNIGHT + class);
 
 		case JOB_KNIGHT2:
 			return inter->msg_txt(557);
@@ -180,7 +191,7 @@ const char* inter_job_name(int class_)
 		case JOB_ALCHEMIST: // 567
 		case JOB_BARD:      // 568
 		case JOB_DANCER:    // 569
-			return inter->msg_txt(563 - JOB_CRUSADER+class_);
+			return inter->msg_txt(563 - JOB_CRUSADER + class);
 
 		case JOB_CRUSADER2:
 			return inter->msg_txt(563);
@@ -190,7 +201,7 @@ const char* inter_job_name(int class_)
 		case JOB_GUNSLINGER:   // 572
 		case JOB_NINJA:        // 573
 		case JOB_XMAS:         // 574
-			return inter->msg_txt(570 - JOB_WEDDING+class_);
+			return inter->msg_txt(570 - JOB_WEDDING + class);
 
 		case JOB_SUMMER:
 			return inter->msg_txt(621);
@@ -202,7 +213,7 @@ const char* inter_job_name(int class_)
 		case JOB_ACOLYTE_HIGH:  // 579
 		case JOB_MERCHANT_HIGH: // 580
 		case JOB_THIEF_HIGH:    // 581
-			return inter->msg_txt(575 - JOB_NOVICE_HIGH+class_);
+			return inter->msg_txt(575 - JOB_NOVICE_HIGH + class);
 
 		case JOB_LORD_KNIGHT:    // 582
 		case JOB_HIGH_PRIEST:    // 583
@@ -210,7 +221,7 @@ const char* inter_job_name(int class_)
 		case JOB_WHITESMITH:     // 585
 		case JOB_SNIPER:         // 586
 		case JOB_ASSASSIN_CROSS: // 587
-			return inter->msg_txt(582 - JOB_LORD_KNIGHT+class_);
+			return inter->msg_txt(582 - JOB_LORD_KNIGHT + class);
 
 		case JOB_LORD_KNIGHT2:
 			return inter->msg_txt(582);
@@ -222,7 +233,7 @@ const char* inter_job_name(int class_)
 		case JOB_CREATOR:   // 592
 		case JOB_CLOWN:     // 593
 		case JOB_GYPSY:     // 594
-			return inter->msg_txt(588 - JOB_PALADIN + class_);
+			return inter->msg_txt(588 - JOB_PALADIN + class);
 
 		case JOB_PALADIN2:
 			return inter->msg_txt(588);
@@ -234,7 +245,7 @@ const char* inter_job_name(int class_)
 		case JOB_BABY_ACOLYTE:  // 599
 		case JOB_BABY_MERCHANT: // 600
 		case JOB_BABY_THIEF:    // 601
-			return inter->msg_txt(595 - JOB_BABY + class_);
+			return inter->msg_txt(595 - JOB_BABY + class);
 
 		case JOB_BABY_KNIGHT:     // 602
 		case JOB_BABY_PRIEST:     // 603
@@ -242,7 +253,7 @@ const char* inter_job_name(int class_)
 		case JOB_BABY_BLACKSMITH: // 605
 		case JOB_BABY_HUNTER:     // 606
 		case JOB_BABY_ASSASSIN:   // 607
-			return inter->msg_txt(602 - JOB_BABY_KNIGHT + class_);
+			return inter->msg_txt(602 - JOB_BABY_KNIGHT + class);
 
 		case JOB_BABY_KNIGHT2:
 			return inter->msg_txt(602);
@@ -254,7 +265,7 @@ const char* inter_job_name(int class_)
 		case JOB_BABY_ALCHEMIST: // 612
 		case JOB_BABY_BARD:      // 613
 		case JOB_BABY_DANCER:    // 614
-			return inter->msg_txt(608 - JOB_BABY_CRUSADER + class_);
+			return inter->msg_txt(608 - JOB_BABY_CRUSADER + class);
 
 		case JOB_BABY_CRUSADER2:
 			return inter->msg_txt(608);
@@ -273,7 +284,7 @@ const char* inter_job_name(int class_)
 		case JOB_GANGSI:         // 622
 		case JOB_DEATH_KNIGHT:   // 623
 		case JOB_DARK_COLLECTOR: // 624
-			return inter->msg_txt(622 - JOB_GANGSI+class_);
+			return inter->msg_txt(622 - JOB_GANGSI + class);
 
 		case JOB_RUNE_KNIGHT:      // 625
 		case JOB_WARLOCK:          // 626
@@ -281,7 +292,7 @@ const char* inter_job_name(int class_)
 		case JOB_ARCH_BISHOP:      // 628
 		case JOB_MECHANIC:         // 629
 		case JOB_GUILLOTINE_CROSS: // 630
-			return inter->msg_txt(625 - JOB_RUNE_KNIGHT+class_);
+			return inter->msg_txt(625 - JOB_RUNE_KNIGHT + class);
 
 		case JOB_RUNE_KNIGHT_T:      // 656
 		case JOB_WARLOCK_T:          // 657
@@ -289,7 +300,7 @@ const char* inter_job_name(int class_)
 		case JOB_ARCH_BISHOP_T:      // 659
 		case JOB_MECHANIC_T:         // 660
 		case JOB_GUILLOTINE_CROSS_T: // 661
-			return inter->msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
+			return inter->msg_txt(656 - JOB_RUNE_KNIGHT_T + class);
 
 		case JOB_ROYAL_GUARD:   // 631
 		case JOB_SORCERER:      // 632
@@ -298,7 +309,7 @@ const char* inter_job_name(int class_)
 		case JOB_SURA:          // 635
 		case JOB_GENETIC:       // 636
 		case JOB_SHADOW_CHASER: // 637
-			return inter->msg_txt(631 - JOB_ROYAL_GUARD+class_);
+			return inter->msg_txt(631 - JOB_ROYAL_GUARD + class);
 
 		case JOB_ROYAL_GUARD_T:   // 662
 		case JOB_SORCERER_T:      // 663
@@ -307,7 +318,7 @@ const char* inter_job_name(int class_)
 		case JOB_SURA_T:          // 666
 		case JOB_GENETIC_T:       // 667
 		case JOB_SHADOW_CHASER_T: // 668
-			return inter->msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
+			return inter->msg_txt(662 - JOB_ROYAL_GUARD_T + class);
 
 		case JOB_RUNE_KNIGHT2:
 			return inter->msg_txt(625);
@@ -346,7 +357,7 @@ const char* inter_job_name(int class_)
 		case JOB_BABY_SURA:     // 648
 		case JOB_BABY_GENETIC:  // 649
 		case JOB_BABY_CHASER:   // 650
-			return inter->msg_txt(638 - JOB_BABY_RUNE+class_);
+			return inter->msg_txt(638 - JOB_BABY_RUNE + class);
 
 		case JOB_BABY_RUNE2:
 			return inter->msg_txt(638);
@@ -362,14 +373,17 @@ const char* inter_job_name(int class_)
 
 		case JOB_SUPER_NOVICE_E: // 651
 		case JOB_SUPER_BABY_E:   // 652
-			return inter->msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
+			return inter->msg_txt(651 - JOB_SUPER_NOVICE_E + class);
 
 		case JOB_KAGEROU: // 653
 		case JOB_OBORO:   // 654
-			return inter->msg_txt(653 - JOB_KAGEROU+class_);
+			return inter->msg_txt(653 - JOB_KAGEROU + class);
 
 		case JOB_REBELLION:
 			return inter->msg_txt(655);
+
+		case JOB_SUMMONER:
+			return inter->msg_txt(669);
 
 		default:
 			return inter->msg_txt(620); // "Unknown Job"
@@ -380,7 +394,7 @@ const char* inter_job_name(int class_)
  * Argument-list version of inter_msg_to_fd
  * @see inter_msg_to_fd
  */
-void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
+static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap)
 {
 	char msg_out[512];
 	va_list apcopy;
@@ -397,7 +411,7 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
 	WFIFOW(fd,2) = 12 + (unsigned short)len;
 	WFIFOL(fd,4) = u_fd;
 	WFIFOL(fd,8) = aid;
-	safestrncpy((char*)WFIFOP(fd,12), msg_out, len);
+	safestrncpy(WFIFOP(fd,12), msg_out, len);
 
 	WFIFOSET(fd,12 + len);
 
@@ -413,8 +427,8 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
  * @param msg  Message format string
  * @param ...  Additional parameters for (v)sprinf
  */
-void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
-void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
+static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
+static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
 {
 	va_list ap;
 	va_start(ap,msg);
@@ -423,14 +437,11 @@ void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
 }
 
 /* [Dekamaster/Nightroad] */
-void mapif_parse_accinfo(int fd)
+static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query, int map_fd)
 {
-	int u_fd = RFIFOL(fd,2), aid = RFIFOL(fd,6), castergroup = RFIFOL(fd,10);
-	char query[NAME_LENGTH], query_esq[NAME_LENGTH*2+1];
+	char query_esq[NAME_LENGTH*2+1];
 	int account_id;
 	char *data;
-
-	safestrncpy(query, (char*) RFIFOP(fd,14), NAME_LENGTH);
 
 	SQL->EscapeString(inter->sql_handle, query_esq, query);
 
@@ -441,10 +452,10 @@ void mapif_parse_accinfo(int fd)
 		if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq)
 				|| SQL->NumRows(inter->sql_handle) == 0 ) {
 			if( SQL->NumRows(inter->sql_handle) == 0 ) {
-				inter->msg_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
+				inter->msg_to_fd(map_fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
 			} else {
 				Sql_ShowDebug(inter->sql_handle);
-				inter->msg_to_fd(fd, u_fd, aid, "An error occurred, bother your admin about it.");
+				inter->msg_to_fd(map_fd, u_fd, aid, "An error occurred, bother your admin about it.");
 			}
 			SQL->FreeResult(inter->sql_handle);
 			return;
@@ -454,20 +465,20 @@ void mapif_parse_accinfo(int fd)
 				SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
 				SQL->FreeResult(inter->sql_handle);
 			} else {// more than one, listing... [Dekamaster/Nightroad]
-				inter->msg_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
+				inter->msg_to_fd(map_fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
-					int class_;
-					short base_level, job_level, online;
+					int class;
+					int base_level, job_level, online;
 					char name[NAME_LENGTH];
 
 					SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
 					SQL->GetData(inter->sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
-					SQL->GetData(inter->sql_handle, 2, &data, NULL); class_ = atoi(data);
+					SQL->GetData(inter->sql_handle, 2, &data, NULL); class = atoi(data);
 					SQL->GetData(inter->sql_handle, 3, &data, NULL); base_level = atoi(data);
 					SQL->GetData(inter->sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(inter->sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter->msg_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class_), base_level, job_level, online?"Online":"Offline");
+					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class), base_level, job_level, online?"Online":"Offline");
 				}
 				SQL->FreeResult(inter->sql_handle);
 				return;
@@ -478,12 +489,13 @@ void mapif_parse_accinfo(int fd)
 	/* it will only get here if we have a single match */
 	/* and we will send packet with account id to login server asking for account info */
 	if( account_id ) {
-		mapif->on_parse_accinfo(account_id, u_fd, aid, castergroup, fd);
+		mapif->on_parse_accinfo(account_id, u_fd, aid, castergroup, map_fd);
 	}
 
 	return;
 }
-void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
+
+static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
 		const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate,
 		int group_id, int logincount, int state)
 {
@@ -493,7 +505,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	nullpo_retv(last_ip);
 	nullpo_retv(lastlogin);
 	nullpo_retv(birthdate);
-	if (map_fd <= 0 || !session_isActive(map_fd))
+	if (map_fd <= 0 || !sockt->session_is_active(map_fd))
 		return; // check if we have a valid fd
 
 	if (!success) {
@@ -504,15 +516,18 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Account %d --", account_id);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "User: %s | GM Group: %d | State: %d", userid, group_id, state);
 
-	if (user_pass && *user_pass != '\0') { /* password is only received if your gm level is greater than the one you're searching for */
+// enable this if you really know what you doing.
+#if 0
+	if (*user_pass != '\0') { /* password is only received if your gm level is greater than the one you're searching for */
 		if (pin_code && *pin_code != '\0')
 			inter->msg_to_fd(map_fd, u_fd, u_aid, "Password: %s (PIN:%s)", user_pass, pin_code);
 		else
 			inter->msg_to_fd(map_fd, u_fd, u_aid, "Password: %s", user_pass );
 	}
+#endif
 
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
-	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip->getcountry(str2ip(last_ip)));
+	inter->msg_to_fd(map_fd, u_fd, u_aid, "Last IP: %s (%s)", last_ip, geoip->getcountry(sockt->str2ip(last_ip)));
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Character Details --");
 
@@ -528,19 +543,19 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 	} else {
 		while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 			char *data;
-			int char_id, class_;
-			short char_num, base_level, job_level, online;
+			int char_id, class;
+			int char_num, base_level, job_level, online;
 			char name[NAME_LENGTH];
 
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); char_id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); char_num = atoi(data);
-			SQL->GetData(inter->sql_handle, 3, &data, NULL); class_ = atoi(data);
+			SQL->GetData(inter->sql_handle, 3, &data, NULL); class = atoi(data);
 			SQL->GetData(inter->sql_handle, 4, &data, NULL); base_level = atoi(data);
 			SQL->GetData(inter->sql_handle, 5, &data, NULL); job_level = atoi(data);
 			SQL->GetData(inter->sql_handle, 6, &data, NULL); online = atoi(data);
 
-			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class_), base_level, job_level, online?"On":"Off");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class), base_level, job_level, online?"On":"Off");
 		}
 	}
 	SQL->FreeResult(inter->sql_handle);
@@ -553,12 +568,13 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
  * @param val either str or int, depending on type
  * @param type false when int, true otherwise
  **/
-void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
+static void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
 {
+	char val_esq[1000];
 	nullpo_retv(key);
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
-		if( session_isValid(chr->login_fd) )
+		if (sockt->session_is_valid(chr->login_fd))
 			chr->global_accreg_to_login_add(key,index,val,is_string);
 		else {
 			ShowError("Login server unavailable, cant perform update on '%s' variable for AID:%d CID:%d\n",key,account_id,char_id);
@@ -566,7 +582,8 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	} else if ( key[0] == '#' ) {/* local account reg */
 		if( is_string ) {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, (char*)val) )
+				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
 				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_str_db, account_id, key, index) )
@@ -584,7 +601,8 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	} else { /* char reg */
 		if( is_string ) {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, (char*)val) )
+				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
 				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_str_db, char_id, key, index) )
@@ -603,7 +621,7 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 }
 
 // Load account_reg from sql (type=2)
-int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
+static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 {
 	char* data;
 	size_t len;
@@ -649,7 +667,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -658,13 +676,13 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 		plen += 4;
 
 		SQL->GetData(inter->sql_handle, 2, &data, NULL);
-		len = strlen(data)+1;
+		len = strlen(data);
 
-		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
+		WFIFOB(fd, plen) = (unsigned char)len; // Won't be higher; the column size is 255.
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
-		plen += len;
+		safestrncpy(WFIFOP(fd, plen), data, len + 1);
+		plen += len + 1;
 
 		WFIFOW(fd, 14) += 1;
 
@@ -730,7 +748,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -771,57 +789,121 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 	return 1;
 }
 
-/*==========================================
- * read config file
- *------------------------------------------*/
-static int inter_config_read(const char* cfgName)
+/**
+ * Reads the 'inter_configuration/log' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+static bool inter_config_read_log(const char *filename, const struct config_t *config, bool imported)
 {
-	char line[1024], w1[1024], w2[1024];
-	FILE* fp;
+	const struct config_setting_t *setting = NULL;
 
-	nullpo_retr(1, cfgName);
-	fp = fopen(cfgName, "r");
-	if(fp == NULL) {
-		ShowError("File not found: %s\n", cfgName);
-		return 1;
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/log")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("sql_config_read: inter_configuration/log was not found in %s!\n", filename);
+		return false;
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		int i = sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2);
-		if(i != 2)
-			continue;
+	libconfig->setting_lookup_bool_real(setting, "log_inter", &inter->enable_logs);
 
-		if(!strcmpi(w1,"char_server_ip")) {
-			safestrncpy(char_server_ip, w2, sizeof(char_server_ip));
-		} else if(!strcmpi(w1,"char_server_port")) {
-			char_server_port = atoi(w2);
-		} else if(!strcmpi(w1,"char_server_id")) {
-			safestrncpy(char_server_id, w2, sizeof(char_server_id));
-		} else if(!strcmpi(w1,"char_server_pw")) {
-			safestrncpy(char_server_pw, w2, sizeof(char_server_pw));
-		} else if(!strcmpi(w1,"char_server_db")) {
-			safestrncpy(char_server_db, w2, sizeof(char_server_db));
-		} else if(!strcmpi(w1,"default_codepage")) {
-			safestrncpy(default_codepage, w2, sizeof(default_codepage));
-		} else if(!strcmpi(w1,"party_share_level"))
-			party_share_level = atoi(w2);
-		else if(!strcmpi(w1,"log_inter"))
-			log_inter = atoi(w2);
-		else if(!strcmpi(w1,"import"))
-			inter->config_read(w2);
+	return true;
+}
+
+/**
+ * Reads the 'char_configuration/sql_connection' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+static bool inter_config_read_connection(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "char_configuration/sql_connection")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("char_config_read: char_configuration/sql_connection was not found in %s!\n", filename);
+		ShowWarning("inter_config_read_connection: Defaulting sql_connection...\n");
+		return false;
 	}
-	fclose(fp);
 
-	ShowInfo ("Done reading %s.\n", cfgName);
+	libconfig->setting_lookup_int(setting, "db_port", &char_server_port);
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", char_server_ip, sizeof(char_server_ip));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", char_server_id, sizeof(char_server_id));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", char_server_pw, sizeof(char_server_pw));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", char_server_db, sizeof(char_server_db));
+	libconfig->setting_lookup_mutable_string(setting, "default_codepage", default_codepage, sizeof(default_codepage));
 
-	return 0;
+	return true;
+}
+
+/**
+ * Reads the 'inter_configuration' config file and initializes required variables.
+ *
+ * @param filename Path to configuration file
+ * @param imported Whether the current config is from an imported file.
+ *
+ * @retval false in case of error.
+ */
+static bool inter_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	const struct config_setting_t *setting = NULL;
+	const char *import = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	if ((setting = libconfig->lookup(&config, "inter_configuration")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("inter_config_read: inter_configuration was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_int(setting, "party_share_level", &party_share_level);
+
+	if (!inter->config_read_log(filename, &config, imported))
+		retval = false;
+
+	ShowInfo("Done reading %s.\n", filename);
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, chr->INTER_CONF_NAME) == 0) {
+			ShowWarning("inter_config_read: Loop detected in %s! Skipping 'import'...\n", filename);
+		} else {
+			if (!inter->config_read(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	return retval;
 }
 
 /**
  * Save interlog into sql (arglist version)
  * @see inter_log
  */
-int inter_vlog(char* fmt, va_list ap)
+static int inter_vlog(char *fmt, va_list ap)
 {
 	char str[255];
 	char esc_str[sizeof(str)*2+1];// escaped str
@@ -844,7 +926,7 @@ int inter_vlog(char* fmt, va_list ap)
  * @param ... Additional (printf-like) arguments
  * @return Always 0 // FIXME
  */
-int inter_log(char* fmt, ...)
+static int inter_log(char *fmt, ...)
 {
 	va_list ap;
 	int ret;
@@ -857,11 +939,9 @@ int inter_log(char* fmt, ...)
 }
 
 // initialize
-int inter_init_sql(const char *file)
+static int inter_init_sql(const char *file)
 {
-	//int i;
-
-	inter->config_read(file);
+	inter->config_read(file, false);
 
 	//DB connection initialized
 	inter->sql_handle = SQL->Malloc();
@@ -878,7 +958,6 @@ int inter_init_sql(const char *file)
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
-	wis_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	inter_guild->sql_init();
 	inter_storage->sql_init();
 	inter_party->sql_init();
@@ -888,6 +967,8 @@ int inter_init_sql(const char *file)
 	inter_elemental->sql_init();
 	inter_mail->sql_init();
 	inter_auction->sql_init();
+	inter_rodex->sql_init();
+	inter_achievement->sql_init();
 
 	geoip->init();
 	inter->msg_config_read("conf/messages.conf", false);
@@ -895,10 +976,8 @@ int inter_init_sql(const char *file)
 }
 
 // finalize
-void inter_final(void)
+static void inter_final(void)
 {
-	wis_db->destroy(wis_db, NULL);
-
 	inter_guild->sql_final();
 	inter_storage->sql_final();
 	inter_party->sql_final();
@@ -908,369 +987,16 @@ void inter_final(void)
 	inter_elemental->sql_final();
 	inter_mail->sql_final();
 	inter_auction->sql_final();
+	inter_rodex->sql_final();
+	inter_achievement->sql_final();
 
 	geoip->final(true);
 	inter->do_final_msg();
 	return;
 }
 
-int inter_mapif_init(int fd)
+static int inter_mapif_init(int fd)
 {
-	return 0;
-}
-
-
-//--------------------------------------------------------
-
-// broadcast sending
-int mapif_broadcast(unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
-{
-	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
-
-	nullpo_ret(mes);
-	Assert_ret(len >= 16);
-	WBUFW(buf,0) = 0x3800;
-	WBUFW(buf,2) = len;
-	WBUFL(buf,4) = fontColor;
-	WBUFW(buf,8) = fontType;
-	WBUFW(buf,10) = fontSize;
-	WBUFW(buf,12) = fontAlign;
-	WBUFW(buf,14) = fontY;
-	memcpy(WBUFP(buf,16), mes, len - 16);
-	mapif->sendallwos(sfd, buf, len);
-
-	aFree(buf);
-	return 0;
-}
-
-// Wis sending
-int mapif_wis_message(struct WisData *wd)
-{
-	unsigned char buf[2048];
-	nullpo_ret(wd);
-	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
-	if (wd->len < 0)
-		wd->len = 0;
-	if (wd->len >= sizeof(wd->msg) - 1)
-		wd->len = sizeof(wd->msg) - 1;
-	
-	WBUFW(buf, 0) = 0x3801;
-	WBUFW(buf, 2) = 56 +wd->len;
-	WBUFL(buf, 4) = wd->id;
-	memcpy(WBUFP(buf, 8), wd->src, NAME_LENGTH);
-	memcpy(WBUFP(buf,32), wd->dst, NAME_LENGTH);
-	memcpy(WBUFP(buf,56), wd->msg, wd->len);
-	wd->count = mapif->sendall(buf,WBUFW(buf,2));
-
-	return 0;
-}
-
-void mapif_wis_response(int fd, unsigned char *src, int flag)
-{
-	unsigned char buf[27];
-	nullpo_retv(src);
-	WBUFW(buf, 0)=0x3802;
-	memcpy(WBUFP(buf, 2),src,24);
-	WBUFB(buf,26)=flag;
-	mapif->send(fd,buf,27);
-}
-
-// Wis sending result
-int mapif_wis_end(struct WisData *wd, int flag)
-{
-	nullpo_ret(wd);
-	mapif->wis_response(wd->fd, wd->src, flag);
-	return 0;
-}
-
-#if 0
-// Account registry transfer to map-server
-static void mapif_account_reg(int fd, unsigned char *src)
-{
-	nullpo_retv(src);
-	WBUFW(src,0)=0x3804; //NOTE: writing to RFIFO
-	mapif->sendallwos(fd, src, WBUFW(src,2));
-}
-#endif // 0
-
-// Send the requested account_reg
-int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
-{
-	inter->accreg_fromsql(account_id,char_id,fd,type);
-	return 0;
-}
-
-//Request to kick char from a certain map server. [Skotlex]
-int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
-{
-	if (fd >= 0)
-	{
-		WFIFOHEAD(fd,7);
-		WFIFOW(fd,0) = 0x2b1f;
-		WFIFOL(fd,2) = account_id;
-		WFIFOB(fd,6) = reason;
-		WFIFOSET(fd,7);
-		return 0;
-	}
-	return -1;
-}
-
-//--------------------------------------------------------
-
-/**
- * Existence check of WISP data
- * @see DBApply
- */
-int inter_check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
-{
-	int64 tick;
-	struct WisData *wd = DB->data2ptr(data);
-	nullpo_ret(wd);
-	tick = va_arg(ap, int64);
-
-	if (DIFF_TICK(tick, wd->tick) > WISDATA_TTL && wis_delnum < WISDELLIST_MAX)
-		wis_dellist[wis_delnum++] = wd->id;
-
-	return 0;
-}
-
-int inter_check_ttl_wisdata(void)
-{
-	int64 tick = timer->gettick();
-	int i;
-
-	do {
-		wis_delnum = 0;
-		wis_db->foreach(wis_db, inter->check_ttl_wisdata_sub, tick);
-		for(i = 0; i < wis_delnum; i++) {
-			struct WisData *wd = (struct WisData*)idb_get(wis_db, wis_dellist[i]);
-			ShowWarning("inter: wis data id=%d time out : from %s to %s\n", wd->id, wd->src, wd->dst);
-			// removed. not send information after a timeout. Just no answer for the player
-			//mapif->wis_end(wd, 1); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-			idb_remove(wis_db, wd->id);
-		}
-	} while(wis_delnum >= WISDELLIST_MAX);
-
-	return 0;
-}
-
-//--------------------------------------------------------
-
-// broadcast sending
-int mapif_parse_broadcast(int fd)
-{
-	mapif->broadcast(RFIFOP(fd,16), RFIFOW(fd,2), RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), fd);
-	return 0;
-}
-
-
-// Wisp/page request to send
-int mapif_parse_WisRequest(int fd)
-{
-	struct WisData* wd;
-	static int wisid = 0;
-	char name[NAME_LENGTH];
-	char esc_name[NAME_LENGTH*2+1];// escaped name
-	char* data;
-	size_t len;
-
-
-	if ( fd <= 0 ) {return 0;} // check if we have a valid fd
-
-	if (RFIFOW(fd,2)-52 >= sizeof(wd->msg)) {
-		ShowWarning("inter: Wis message size too long.\n");
-		return 0;
-	} else if (RFIFOW(fd,2)-52 <= 0) { // normally, impossible, but who knows...
-		ShowError("inter: Wis message doesn't exist.\n");
-		return 0;
-	}
-
-	safestrncpy(name, (char*)RFIFOP(fd,28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
-
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `name` FROM `%s` WHERE `name`='%s'", char_db, esc_name) )
-		Sql_ShowDebug(inter->sql_handle);
-
-	// search if character exists before to ask all map-servers
-	if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-	{
-		mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-	}
-	else
-	{// Character exists. So, ask all map-servers
-		// to be sure of the correct name, rewrite it
-		SQL->GetData(inter->sql_handle, 0, &data, &len);
-		memset(name, 0, NAME_LENGTH);
-		memcpy(name, data, min(len, NAME_LENGTH));
-		// if source is destination, don't ask other servers.
-		if( strncmp((const char*)RFIFOP(fd,4), name, NAME_LENGTH) == 0 )
-		{
-			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-		}
-		else
-		{
-			CREATE(wd, struct WisData, 1);
-
-			// Whether the failure of previous wisp/page transmission (timeout)
-			inter->check_ttl_wisdata();
-
-			wd->id = ++wisid;
-			wd->fd = fd;
-			wd->len= RFIFOW(fd,2)-52;
-			memcpy(wd->src, RFIFOP(fd, 4), NAME_LENGTH);
-			memcpy(wd->dst, RFIFOP(fd,28), NAME_LENGTH);
-			memcpy(wd->msg, RFIFOP(fd,52), wd->len);
-			wd->tick = timer->gettick();
-			idb_put(wis_db, wd->id, wd);
-			mapif->wis_message(wd);
-		}
-	}
-
-	SQL->FreeResult(inter->sql_handle);
-	return 0;
-}
-
-
-// Wisp/page transmission result
-int mapif_parse_WisReply(int fd)
-{
-	int id, flag;
-	struct WisData *wd;
-
-	id = RFIFOL(fd,2);
-	flag = RFIFOB(fd,6);
-	wd = (struct WisData*)idb_get(wis_db, id);
-	if (wd == NULL)
-		return 0; // This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
-
-	if ((--wd->count) <= 0 || flag != 1) {
-		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-		idb_remove(wis_db, id);
-	}
-
-	return 0;
-}
-
-// Received wisp message from map-server for ALL gm (just copy the message and resends it to ALL map-servers)
-int mapif_parse_WisToGM(int fd)
-{
-	unsigned char buf[2048]; // 0x3003/0x3803 <packet_len>.w <wispname>.24B <min_gm_level>.w <message>.?B
-
-	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2));
-	WBUFW(buf, 0) = 0x3803;
-	mapif->sendall(buf, RFIFOW(fd,2));
-
-	return 0;
-}
-
-// Save account_reg into sql (type=2)
-int mapif_parse_Registry(int fd)
-{
-	int account_id = RFIFOL(fd, 4), char_id = RFIFOL(fd, 8), count = RFIFOW(fd, 12);
-
-	if( count ) {
-		int cursor = 14, i;
-		char key[32], sval[254];
-		bool isLoginActive = session_isActive(chr->login_fd);
-
-		if( isLoginActive )
-			chr->global_accreg_to_login_start(account_id,char_id);
-
-		for(i = 0; i < count; i++) {
-			unsigned int index;
-			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
-			cursor += RFIFOB(fd, cursor) + 1;
-
-			index = RFIFOL(fd, cursor);
-			cursor += 4;
-
-			switch (RFIFOB(fd, cursor++)) {
-				/* int */
-				case 0:
-					inter->savereg(account_id,char_id,key,index,RFIFOL(fd, cursor),false);
-					cursor += 4;
-					break;
-				case 1:
-					inter->savereg(account_id,char_id,key,index,0,false);
-					break;
-				/* str */
-				case 2:
-					safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
-					cursor += RFIFOB(fd, cursor) + 1;
-					inter->savereg(account_id,char_id,key,index,(intptr_t)sval,true);
-					break;
-				case 3:
-					inter->savereg(account_id,char_id,key,index,0,true);
-					break;
-				default:
-					ShowError("mapif->parse_Registry: unknown type %d\n",RFIFOB(fd, cursor - 1));
-					return 1;
-			}
-
-		}
-
-		if (isLoginActive)
-			chr->global_accreg_to_login_send();
-	}
-	return 0;
-}
-
-// Request the value of all registries.
-int mapif_parse_RegistryRequest(int fd)
-{
-	//Load Char Registry
-	if (RFIFOB(fd,12)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),3);
-	//Load Account Registry
-	if (RFIFOB(fd,11)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2);
-	//Ask Login Server for Account2 values.
-	if (RFIFOB(fd,10)) chr->request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
-	return 1;
-}
-
-void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name)
-{
-	nullpo_retv(name);
-	WFIFOHEAD(fd, NAME_LENGTH+13);
-	WFIFOW(fd, 0) = 0x3806;
-	WFIFOL(fd, 2) = account_id;
-	WFIFOL(fd, 6) = char_id;
-	WFIFOB(fd,10) = type;
-	WFIFOB(fd,11) = flag;
-	memcpy(WFIFOP(fd, 12), name, NAME_LENGTH);
-	WFIFOSET(fd, NAME_LENGTH+13);
-}
-
-int mapif_parse_NameChangeRequest(int fd)
-{
-	int account_id, char_id, type;
-	char* name;
-	int i;
-
-	account_id = RFIFOL(fd,2);
-	char_id = RFIFOL(fd,6);
-	type = RFIFOB(fd,10);
-	name = (char*)RFIFOP(fd,11);
-
-	// Check Authorized letters/symbols in the name
-	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
-		for (i = 0; i < NAME_LENGTH && name[i]; i++)
-		if (strchr(char_name_letters, name[i]) == NULL) {
-			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
-			return 0;
-		}
-	} else if (char_name_option == 2) { // letters/symbols in char_name_letters are forbidden
-		for (i = 0; i < NAME_LENGTH && name[i]; i++)
-		if (strchr(char_name_letters, name[i]) != NULL) {
-			mapif->namechange_ack(fd, account_id, char_id, type, 0, name);
-			return 0;
-		}
-	}
-	//TODO: type holds the type of object to rename.
-	//If it were a player, it needs to have the guild information and db information
-	//updated here, because changing it on the map won't make it be saved [Skotlex]
-
-	//name allowed.
-	mapif->namechange_ack(fd, account_id, char_id, type, 1, name);
 	return 0;
 }
 
@@ -1280,7 +1006,7 @@ int mapif_parse_NameChangeRequest(int fd)
 /// or 0 if no complete packet exists in the queue.
 ///
 /// @param length The minimum allowed length, or -1 for dynamic lookup
-int inter_check_length(int fd, int length)
+static int inter_check_length(int fd, int length)
 {
 	if( length == -1 )
 	{// variable-length packet
@@ -1295,7 +1021,7 @@ int inter_check_length(int fd, int length)
 	return length;
 }
 
-int inter_parse_frommap(int fd)
+static int inter_parse_frommap(int fd)
 {
 	int cmd;
 	int len = 0;
@@ -1309,15 +1035,10 @@ int inter_parse_frommap(int fd)
 		return 2;
 
 	switch(cmd) {
-	case 0x3000: mapif->parse_broadcast(fd); break;
-	case 0x3001: mapif->parse_WisRequest(fd); break;
-	case 0x3002: mapif->parse_WisReply(fd); break;
-	case 0x3003: mapif->parse_WisToGM(fd); break;
 	case 0x3004: mapif->parse_Registry(fd); break;
 	case 0x3005: mapif->parse_RegistryRequest(fd); break;
 	case 0x3006: mapif->parse_NameChangeRequest(fd); break;
 	case 0x3007: mapif->parse_accinfo(fd); break;
-	/* 0x3008 is used by the report stuff */
 	default:
 		if(  inter_party->parse_frommap(fd)
 		  || inter_guild->parse_frommap(fd)
@@ -1329,6 +1050,9 @@ int inter_parse_frommap(int fd)
 		  || inter_mail->parse_frommap(fd)
 		  || inter_auction->parse_frommap(fd)
 		  || inter_quest->parse_frommap(fd)
+		  || inter_rodex->parse_frommap(fd)
+		  || inter_clan->parse_frommap(fd)
+		  || inter_achievement->parse_frommap(fd)
 		   )
 			break;
 		else
@@ -1343,6 +1067,7 @@ void inter_defaults(void)
 {
 	inter = &inter_s;
 
+	inter->enable_logs = true;
 	inter->sql_handle = NULL;
 
 	inter->msg_txt = inter_msg_txt;
@@ -1358,9 +1083,11 @@ void inter_defaults(void)
 	inter->log = inter_log;
 	inter->init_sql = inter_init_sql;
 	inter->mapif_init = inter_mapif_init;
-	inter->check_ttl_wisdata_sub = inter_check_ttl_wisdata_sub;
-	inter->check_ttl_wisdata = inter_check_ttl_wisdata;
 	inter->check_length = inter_check_length;
 	inter->parse_frommap = inter_parse_frommap;
 	inter->final = inter_final;
+	inter->config_read_log = inter_config_read_log;
+	inter->config_read_connection = inter_config_read_connection;
+	inter->accinfo = inter_accinfo;
+	inter->accinfo2 = inter_accinfo2;
 }

@@ -1,17 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Masao
+//= Copyright (C) IVBela
+//= Copyright (C) Silentdragon
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Archer Skill Quest
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Description ===========================================
 //= Quest for skills: Arrow Crafting, Arrow Repel
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//= 1.6 Updated to latest available official file.
-//=     also fixed Item issue [bugreport:5607]. [Masao]
-//= 1.7 Fixed JobLevel requirements. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
 moc_ruins,118,99,5	script	Roberto	4_M_ORIENT01,{
 	if (BaseClass == Job_Archer) {
@@ -38,17 +65,17 @@ moc_ruins,118,99,5	script	Roberto	4_M_ORIENT01,{
 			mes " ";
 			mes "You are...";
 			next;
-			if ((countitem(907) > 19) && (countitem(921) > 6) && (countitem(906) > 40) && (countitem(1019) > 12) && (countitem(501) > 0)) {
+			if ((countitem(Resin) > 19) && (countitem(Mushroom_Spore) > 6) && (countitem(Pointed_Scale) > 40) && (countitem(Wooden_Block) > 12) && (countitem(Red_Potion) > 0)) {
 				mes "[Roberto]";
 				mes "You brought them!";
 				mes "Thank you very much.";
 				mes "Then, as I promised, I will teach you the skill.";
 				next;
-				delitem 907,20; //Resin
-				delitem 921,7; //Mushroom_Spore
-				delitem 906,41; //Tough_Scalelike_Stem
-				delitem 1019,13; //Wooden_Block
-				delitem 501,1; //Red_Potion
+				delitem Resin,20;
+				delitem Mushroom_Spore,7;
+				delitem Pointed_Scale,41; //Tough_Scalelike_Stem
+				delitem Wooden_Block,13;
+				delitem Red_Potion,1;
 				skill "AC_MAKINGARROW",1,0;
 				mes "[Roberto]";
 				mes "No need to worry about arrows now.";
@@ -71,7 +98,7 @@ moc_ruins,118,99,5	script	Roberto	4_M_ORIENT01,{
 			mes "but I was a newcomer, and the pressure... waaah~";
 			mes "I was very lonely~";
 			next;
-			switch (select("It must be hard. It's ok have faith.:Keep suffering.")) {
+			switch (select("It must be hard. It's ok have faith.", "Keep suffering.")) {
 			case 1:
 				mes "[Roberto]";
 				mes "Yes. Thank you...";
@@ -118,7 +145,7 @@ moc_ruins,118,99,5	script	Roberto	4_M_ORIENT01,{
 				close;
 			case 2:
 				mes "[Roberto]";
-				mes "...hey "+((Sex)?"mister":"miss")+".";
+				mes "...hey "+ (Sex == SEX_MALE ? "mister" : "miss") +".";
 				mes "...be careful at night.";
 				close;
 			}
@@ -166,7 +193,7 @@ payon,103,63,3	script	Jason	4_M_ORIENT01,3,3,{
 			mes "Someone like you would definitely be";
 			mes "able to know how to use Arrow Repel.";
 			next;
-			switch (select("What is that?:Teach me.")) {
+			switch (select("What is that?", "Teach me.")) {
 			case 1:
 				mes "[Jason]";
 				mes "...you're kidding, right?";
@@ -211,17 +238,17 @@ payon,103,63,3	script	Jason	4_M_ORIENT01,3,3,{
 				mes "(I'm going to be mad if you don't bring the Banana Juice.)";
 				close;
 			case 2:
-				if ((countitem(721) > 1) && (countitem(942) > 2) && (countitem(962) > 9) && (countitem(925) > 9) && (countitem(532) > 35)) {
+				if ((countitem(Azure_Jewel) > 1) && (countitem(Yoyo_Tail) > 2) && (countitem(Tentacle) > 9) && (countitem(Bill_Of_Birds) > 9) && (countitem(Banana_Juice) > 35)) {
 					mes "[Jason]";
 					mes "Ok! Perfect!";
 					mes "I shall teach you the nationally";
 					mes "renowned skill, Arrow Repel!";
 					next;
-					delitem 721,2; //Azure_Jewel
-					delitem 942,3; //Yoyo_Tail
-					delitem 962,10; //Tentacle
-					delitem 925,10; //Bill_Of_Birds
-					delitem 532,36; //Banana_Juice
+					delitem Azure_Jewel,2;
+					delitem Yoyo_Tail,3;
+					delitem Tentacle,10;
+					delitem Bill_Of_Birds,10;
+					delitem Banana_Juice,36;
 					skill "AC_CHARGEARROW",1,0;
 					mes "[Jason]";
 					mes "Oh, works better than I expected!";
@@ -263,18 +290,3 @@ OnTouch:
 	mes "Errrrrrr...";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 Roberto message text is based off RO npc.  Jason message
-//=     text is custom from old version.
-//=     All items are from official quests though.[kobra_k88]
-//= 1.0a Now using functions found in "Global_Functions.txt"
-//=     for class checks.[kobra_k88]
-//= 1.2 Added Baby Class Support [Lupus]
-//= 1.3 Removed callfunc Is_####_Class in favor of baseClass [Silentdragon]
-//= 1.4 Fixed exploits [Lupus]
-//= 1.4a Fixed some typos [IVBela]
-//= 1.4b changed perm. variables to temp ones [Lupus]
-//============================================================

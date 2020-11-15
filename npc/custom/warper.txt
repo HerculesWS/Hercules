@@ -18,7 +18,7 @@
 //= 1.4b Added Wolfchev's Laboratory warp.
 //============================================================
 
--	script	Warper	-1,{
+-	script	Warper	FAKE_NPC,{
 function Go; function Disp; function Pick; function Restrict;
 
 // --------------------------------------------------
@@ -35,7 +35,7 @@ menu	"Last Warp ^777777["+lastwarp$+"]^000000",-,
 		" ~ Special Areas",Special;
 
 	if (lastwarp$ == "")
-		message strcharinfo(0),"You haven't warped anywhere yet.";
+		message strcharinfo(PC_NAME),"You haven't warped anywhere yet.";
 	else
 		warp lastwarp$,lastwarpx,lastwarpy;
 	end;
@@ -92,7 +92,7 @@ function Pick {
 		.@map$ = getarg(0)+((.@i<10)?"0":"")+.@i;
 	}
 	if (.@warp_block & (1<<.@select)) {
-		message strcharinfo(0),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
+		message strcharinfo(PC_NAME),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
 		end;
 	}
 	.@x = @c[.@i*2];
@@ -107,7 +107,7 @@ function Restrict {
 			for (.@i = 1; .@i < getargcount(); .@i++)
 				@warp_block = @warp_block | (1<<getarg(.@i));
 		} else {
-			message strcharinfo(0),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
+			message strcharinfo(PC_NAME),"This map is not enabled in "+(RENEWAL?"":"Pre-")+"Renewal.";
 			end;
 		}
 	}

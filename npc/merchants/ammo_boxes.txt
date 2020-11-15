@@ -1,20 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Lupus
+//= Copyright (C) ultramage
+//= Copyright (C) SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Magazine Dealers
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= Turns bullets into magazines/packs.
-//===== Additional Comments: =================================
-//= 1.0 First version. [SinSloth]
-//= 1.1 Optimized version - Reduced to only one function [SinSloth]
-//= 1.2 Optimized^2, corrected npc's name [ultramage]
-//= 1.2a Optimized. Please, ommit extra NPC names [Lupus]
-//= 1.3 Updated to match AEGIS script. [Kisuka]
-//= 1.4 Updated to match AEGIS script again. [Masao]
-//= 1.5 Moved Izlude duplicate to pre-re/re paths. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 alberta,118,157,3	script	Magazine Dealer Kenny::mdk	4_M_01,{
 	if (BaseJob == Job_Gunslinger) {
@@ -25,7 +48,7 @@ alberta,118,157,3	script	Magazine Dealer Kenny::mdk	4_M_01,{
 		mes "easily when they're in Magazines. Now, can I interest you in";
 		mes "anything in particular?";
 		next;
-		switch(select("Wind Sphere Pack:Shadow Sphere Pack:Poison Sphere Pack:Water Sphere Pack:Fire Sphere Pack:Cartridge:Blood Cartridge:Silver Cartridge:Cancel")) {
+		switch(select("Wind Sphere Pack", "Shadow Sphere Pack", "Poison Sphere Pack", "Water Sphere Pack", "Fire Sphere Pack", "Cartridge", "Blood Cartridge", "Silver Cartridge", "Cancel")) {
 		case 1: callfunc "Func_Casing",13204,12144; break;
 		case 2: callfunc "Func_Casing",13206,12145; break;
 		case 3: callfunc "Func_Casing",13205,12146; break;
@@ -79,8 +102,8 @@ function	script	Func_Casing	{
 	mes "the number of Magazines you";
 	mes "want to receive. If you want to cancel, then just enter ''0.''";
 	next;
-	input .@amount;
-	if (.@amount > 50 || .@amount == 0) {
+	input(.@amount);
+	if (.@amount > 50 || .@amount <= 0) {
 		mes "[Kenny]";
 		mes "Hey, I can't give you";
 		mes "that many Magazines.";

@@ -1,17 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) JayPee
+//= Copyright (C) Masao
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mechanic Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Jobchange Quest from Blacksmith / Whitesmith -> Mechanic.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Fixed the Door NPC [JayPee].
-//= 1.2 Updated script. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 	mes "[Chainheart]";
@@ -73,11 +95,11 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 			next;
 			job__mechanic = 12;
 			completequest 10101;
-			if (Sex)
-				getitem 5749,1; //Driver_Band
+			if (Sex == SEX_MALE)
+				getitem Driver_Band,1;
 			else
-				getitem 5760,1; //Driver_Band_
-			getitem 2795,1; //Green_Apple_Ring
+				getitem Driver_Band_,1;
+			getitem Green_Apple_Ring,1;
 			jobchange roclass(eaclass()|EAJL_THIRD);
 			mes "[Chainheart]";
 			mes "This is a gift that I give to you.";
@@ -109,7 +131,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 	} else if (job__mechanic == 2) {
 		mes "I think I've done all the explanations, is there anything else you want to know?";
 		next;
-		switch(select("I want to know more.:Nothing.")) {
+		switch(select("I want to know more.", "Nothing.")) {
 		case 1:
 			mes "[Chainheart]";
 			mes "Um..? You want to know more about magic machinery. Is that it?";
@@ -294,7 +316,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 }
 
 jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 300) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 300) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
 		mes "- and please try again. -";
@@ -320,7 +342,7 @@ jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
 		mes "to go to the midway point";
 		mes "at Juperos?";
 		next;
-		switch(select("I am ready!:Not yet")) {
+		switch(select("I am ready!", "Not yet")) {
 		case 1:
 			mes "[Scholar]";
 			mes "Uh... you are acting so firmly that I regret a little that I haven't gone there.";
@@ -432,7 +454,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later.:Focus.") == 1) close;
+		if(select("Well then, later.", "Focus.") == 1) close;
 		mes "[?]";
 		mes "I was once a human scholar.";
 		mes "I wanted to know the limitation of science that humankind didn't know of, so I learned a lot of things, studied,";
@@ -485,7 +507,7 @@ jupe_core2,53,75,3	script	Ghostfire#2	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later:Focus") == 1) close;
+		if(select("Well then, later", "Focus") == 1) close;
 		mes "[?]";
 		mes "When I had a body";
 		mes "I wanted to prove the";
@@ -547,7 +569,7 @@ jupe_core2,242,62,3	script	Ghostfire#3	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later:Focus") == 1) close;
+		if(select("Well then, later", "Focus") == 1) close;
 		mes "[?]";
 		mes "I wasn't satisfied with my success so I came back here time and time again.";
 		next;

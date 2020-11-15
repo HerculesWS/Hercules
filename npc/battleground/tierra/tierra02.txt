@@ -1,29 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 // BattleGround System - Tierra Gorge 2
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Second Tierra Gorge Battleground.
 //= - Winning Team: 3 badges
 //= - Losing Team: 1 badge
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Updated 'waitingroom' to support required zeny/lvl. [Kisuka]
-//= 1.2 Removed MaxLvl check in waitingrooms.
-//= 1.3 Label standardization. [Euphy]
-//= 1.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Waiting Room NPCs
-//============================================================
+//== Waiting Room NPCs =====================================
 bat_room,114,227,5	script	Lieutenant Rundel	4_M_KY_KNT,{
 	end;
 
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_a02::OnReadyCheck",1,0,80;
+	waitingroom("Battle Station", 11, "start#bat_a02::OnReadyCheck", 1, 0, 80);
 	end;
 
 OnEnterBG:
@@ -35,7 +53,7 @@ bat_room,114,204,1	script	Lieutenant Guerrit	4_M_CRU_KNT,{
 	end;
 
 OnInit:
-	waitingroom "Battle Station",11,"start#bat_a02::OnReadyCheck",1,0,80;
+	waitingroom("Battle Station", 11, "start#bat_a02::OnReadyCheck", 1, 0, 80);
 	end;
 
 OnEnterBG:
@@ -68,7 +86,7 @@ OnTimer1000:
 	end;
 }
 
-bat_a02,352,342,0	script	#bat_a02_quest_a	-1,5,5,{
+bat_a02,352,342,0	script	#bat_a02_quest_a	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -77,7 +95,7 @@ OnTouch:
 	end;
 }
 
-bat_a02,353,52,0	script	#bat_a02_quest_b	-1,5,5,{
+bat_a02,353,52,0	script	#bat_a02_quest_b	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -89,8 +107,7 @@ OnTouch:
 bat_room,113,220,0	warp	back_bgrooma02a	1,1,bat_room,154,150
 bat_room,113,211,0	warp	back_bgrooma02b	1,1,bat_room,154,150
 
-// Tierra Gorge Battleground Engine
-//============================================================
+//== Tierra Gorge Battleground Engine ======================
 bat_a02,15,15,3	script	start#bat_a02	CLEAR_NPC,{
 OnInit:
 	mapwarp "bat_a02","bat_room",154,150;
@@ -151,7 +168,7 @@ OnTimer10000:
 
 bat_a02,15,16,3	script	OBJ#bat_a02_a	CLEAR_NPC,{
 OnEnable:
-	bg_monster $@TierraBG2_id1,"bat_a02",177,345,"Food Storage",1909,"OBJ#bat_a02_a::OnMyMobDead";
+	bg_monster($@TierraBG2_id1, "bat_a02", 177, 345, _("Food Storage"), 1909, "OBJ#bat_a02_a::OnMyMobDead");
 	end;
 
 OnKill:
@@ -165,7 +182,7 @@ OnMyMobDead:
 		$@TierraBG2_Victory = 2;
 		enablenpc "Guillaume Vintenar#a02_a";
 		enablenpc "Croix Vintenar#a02_b";
-		mapannounce "bat_a02", "Croix Vintenar Swandery: We destroyed Guillaume's Food Storage. We won that! Wow!",bc_map,"0xFFCE00";
+		mapannounce("bat_a02", _("Croix Vintenar Swandery: We destroyed Guillaume's Food Storage. We won that! Wow!"), bc_map, "0xFFCE00");
 		bg_warp $@TierraBG2_id1,"bat_a02",50,374;
 		bg_warp $@TierraBG2_id2,"bat_a02",42,16;
 	}
@@ -174,7 +191,7 @@ OnMyMobDead:
 
 bat_a02,15,17,3	script	OBJ#bat_a02_b	CLEAR_NPC,{
 OnEnable:
-	bg_monster $@TierraBG2_id2,"bat_a02",167,50,"Food Depot",1910,"OBJ#bat_a02_b::OnMyMobDead";
+	bg_monster($@TierraBG2_id2, "bat_a02", 167, 50, _("Food Depot"), 1910, "OBJ#bat_a02_b::OnMyMobDead");
 	end;
 
 OnKill:
@@ -188,7 +205,7 @@ OnMyMobDead:
 		$@TierraBG2_Victory = 1;
 		enablenpc "Guillaume Vintenar#a02_a";
 		enablenpc "Croix Vintenar#a02_b";
-		mapannounce "bat_a02", "Guillaume Vintenar Axl Rose : We destroyed Croix's Food Storage. We won that! Wow!",bc_map,"0xFFCE00";
+		mapannounce("bat_a02", _("Guillaume Vintenar Axl Rose : We destroyed Croix's Food Storage. We won that! Wow!"), bc_map, "0xFFCE00");
 		bg_warp $@TierraBG2_id1,"bat_a02",50,374;
 		bg_warp $@TierraBG2_id2,"bat_a02",42,16;
 	}
@@ -198,7 +215,7 @@ OnMyMobDead:
 bat_a02,15,18,3	script	barricade#bat_a02_a	CLEAR_NPC,{
 OnEnable:
 	for (.@i = 185; .@i < 202; ++.@i)
-		bg_monster $@TierraBG2_id1,"bat_a02",.@i,266,"Barricade",1906,"barricade#bat_a02_a::OnMyMobDead";
+		bg_monster($@TierraBG2_id1, "bat_a02", .@i, 266, _("Barricade"), 1906, "barricade#bat_a02_a::OnMyMobDead");
 	setwall "bat_a02",186,266,16,6,1,"bat_a02_c1";
 	end;
 
@@ -212,7 +229,7 @@ OnMyMobDead:
 		killmonster "bat_a02","barricade#bat_a02_a::OnMyMobDead";
 		delwall "bat_a02_c1";
 		enablenpc "Guillaume Blacksmith#a02";
-		mapannounce "bat_a02", "Guillaume Vintenar Axl Rose : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!",bc_map,"0xFFCE00";
+		mapannounce("bat_a02", _("Guillaume Vintenar Axl Rose : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!"), bc_map, "0xFFCE00");
 	}
 	end;
 }
@@ -220,7 +237,7 @@ OnMyMobDead:
 bat_a02,15,19,3	script	barricade#bat_a02_b	CLEAR_NPC,{
 OnEnable:
 	for (.@i = 169; .@i < 186; ++.@i)
-		bg_monster $@TierraBG2_id2,"bat_a02",.@i,129,"Barricade",1906,"barricade#bat_a02_b::OnMyMobDead";
+		bg_monster($@TierraBG2_id2, "bat_a02", .@i, 129, _("Barricade"), 1906, "barricade#bat_a02_b::OnMyMobDead");
 	setwall "bat_a02",170,129,16,6,1,"bat_a02_g1";
 	end;
 
@@ -234,14 +251,14 @@ OnMyMobDead:
 		killmonster "bat_a02","barricade#bat_a02_b::OnMyMobDead";
 		delwall "bat_a02_g1";
 		enablenpc "Croix Blacksmith#bat_a02";
-		mapannounce "bat_a02", "Croix Vintenar Swandery : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!",bc_map,"0xFFCE00";
+		mapannounce("bat_a02", _("Croix Vintenar Swandery : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!"), bc_map, "0xFFCE00");
 	}
 	end;
 }
 
 bat_a02,15,20,3	script	OBJ#bat_a02_n	CLEAR_NPC,{
 OnEnable:
-	monster "bat_a02",273,203,"Neutrality Flag",1911,1,"OBJ#bat_a02_n::OnMyMobDead";
+	monster("bat_a02", 273, 203, _("Neutrality Flag"), 1911, 1, "OBJ#bat_a02_n::OnMyMobDead");
 	end;
 
 OnKill:
@@ -250,14 +267,14 @@ OnKill:
 
 OnMyMobDead:
 	if (mobcount("bat_a02","OBJ#bat_a02_n::OnMyMobDead") < 17) {
-		bg_team_setxy getcharid(4),56,212;
-		if (getcharid(4) == $@TierraBG2_id1) {
+		bg_team_setxy getcharid(CHAR_ID_BG),56,212;
+		if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1) {
 			donpcevent "NOBJ_mob#bat_a02_a::OnEnable";
-			mapannounce "bat_a02", "Guillaume captured a Neutrality Flag, so they have an advantage.",bc_map,"0xFFCE00";
+			mapannounce("bat_a02", _("Guillaume captured a Neutrality Flag, so they have an advantage."), bc_map, "0xFFCE00");
 		}
 		else {
 			donpcevent "NOBJ_mob#bat_a02_b::OnEnable";
-			mapannounce "bat_a02", "Croix captured a Neutrality Flag, so they have an advantage.",bc_map,"0xFFCE00";
+			mapannounce("bat_a02", _("Croix captured a Neutrality Flag, so they have an advantage."), bc_map, "0xFFCE00");
 		}
 	}
 	end;
@@ -266,9 +283,9 @@ OnMyMobDead:
 bat_a02,15,21,3	script	NOBJ_mob#bat_a02_a	CLEAR_NPC,{
 OnEnable:
 	donpcevent "NOBJ_mob#bat_a02_b::OnKill";
-	bg_monster $@TierraBG2_id1,"bat_a02",272,204,"Guillaume Camp Guardian",1949,"NOBJ_mob#bat_a02_a::OnMyMobDead";
-	bg_monster $@TierraBG2_id1,"bat_a02",272,213,"Guillaume Camp Guardian",1949,"NOBJ_mob#bat_a02_a::OnMyMobDead";
-	bg_monster $@TierraBG2_id1,"bat_a02",273,197,"Guillaume Camp Guardian",1950,"NOBJ_mob#bat_a02_a::OnMyMobDead";
+	bg_monster($@TierraBG2_id1, "bat_a02", 272, 204, _("Guillaume Camp Guardian"), 1949, "NOBJ_mob#bat_a02_a::OnMyMobDead");
+	bg_monster($@TierraBG2_id1, "bat_a02", 272, 213, _("Guillaume Camp Guardian"), 1949, "NOBJ_mob#bat_a02_a::OnMyMobDead");
+	bg_monster($@TierraBG2_id1, "bat_a02", 273, 197, _("Guillaume Camp Guardian"), 1950, "NOBJ_mob#bat_a02_a::OnMyMobDead");
 	end;
 
 OnKill:
@@ -282,9 +299,9 @@ OnMyMobDead:
 bat_a02,15,22,3	script	NOBJ_mob#bat_a02_b	CLEAR_NPC,{
 OnEnable:
 	donpcevent "NOBJ_mob#bat_a02_a::OnKill";
-	bg_monster $@TierraBG2_id2,"bat_a02",272,204,"Croix Camp Guardian",1949,"NOBJ_mob#bat_a02_a::OnMyMobDead";
-	bg_monster $@TierraBG2_id2,"bat_a02",272,213,"Croix Camp Guardian",1949,"NOBJ_mob#bat_a02_a::OnMyMobDead";
-	bg_monster $@TierraBG2_id2,"bat_a02",273,197,"Croix Camp Guardian",1950,"NOBJ_mob#bat_a02_a::OnMyMobDead";
+	bg_monster($@TierraBG2_id2, "bat_a02", 272, 204, _("Croix Camp Guardian"), 1949, "NOBJ_mob#bat_a02_a::OnMyMobDead");
+	bg_monster($@TierraBG2_id2, "bat_a02", 272, 213, _("Croix Camp Guardian"), 1949, "NOBJ_mob#bat_a02_a::OnMyMobDead");
+	bg_monster($@TierraBG2_id2, "bat_a02", 273, 197, _("Croix Camp Guardian"), 1950, "NOBJ_mob#bat_a02_a::OnMyMobDead");
 	end;
 
 OnKill:
@@ -296,81 +313,81 @@ OnMyMobDead:
 }
 
 bat_a02,185,270,1	script	Guillaume Blacksmith#a02	4_M_REPAIR,{
-	if (getcharid(4) == $@TierraBG2_id1) {
-		mes "[Guillaume Blacksmith]";
-		mes "We are in urgency! The Barricade has been destroyed!";
-		mes "We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000";
-		mes "We have it all except for the 50 Stones!";
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1) {
+		mes("[Guillaume Blacksmith]");
+		mes("We are in urgency! The Barricade has been destroyed!");
+		mes("We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000");
+		mes("We have it all except for the 50 Stones!");
 		next;
-		switch(select("Repair.:Leave it.")) {
+		switch(select("Repair.", "Leave it.")) {
 		case 1:
-			if (countitem(7049) > 49) {
-				mes "[Guillaume Blacksmith]";
-				mes "You brought enough stones! Let's go and repair.";
+			if (countitem(Stone) > 49) {
+				mes("[Guillaume Blacksmith]");
+				mes("You brought enough stones! Let's go and repair.");
 				next;
-				mes "..";
+				mes("..");
 				next;
-				mes "....";
+				mes("....");
 				next;
-				mes "......";
+				mes("......");
 				next;
-				mes "........";
+				mes("........");
 				next;
-				mes "..........";
+				mes("..........");
 				next;
-				mes "............";
+				mes("............");
 				next;
-				mes "..............";
+				mes("..............");
 				next;
-				mes "[Guillaume Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage.";
+				mes("[Guillaume Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage.");
 				next;
-				mes "[Guillaume Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade.";
+				mes("[Guillaume Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade.");
 				next;
-				mes "[Guillaume Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger.";
+				mes("[Guillaume Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger.");
 				next;
-				mes "[Guillaume Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Now decorate with Metal Fragments.";
+				mes("[Guillaume Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Now decorate with Metal Fragments.");
 				next;
-				mes "[Guillaume Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Decorate with Metal Fragments, and plait stones with Sinew of Bear!";
+				mes("[Guillaume Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Decorate with Metal Fragments, and plait stones with Sinew of Bear!");
 				next;
-				mes "..............";
-				mes "..............";
-				mes "..............";
-				mes "..............";
-				mes "..............";
+				mes("..............");
+				mes("..............");
+				mes("..............");
+				mes("..............");
+				mes("..............");
 				next;
 				specialeffect EF_REPAIRWEAPON;
-				mes "[Guillaume Blacksmith]";
-				mes "Wow! It's done.";
-				mes "We are relieved.";
-				delitem 7049,50; //Stone
+				mes("[Guillaume Blacksmith]");
+				mes("Wow! It's done.");
+				mes("We are relieved.");
+				delitem Stone,50;
 				donpcevent "barricade#bat_a02_a::OnEnable";
 				close2;
 				disablenpc "Guillaume Blacksmith#a02";
 				end;
 			}
 			else {
-				mes "[Guillaume Blacksmith]";
-				mes "You don't have enough Stones!";
+				mes("[Guillaume Blacksmith]");
+				mes("You don't have enough Stones!");
 				next;
-				mes "[Guillaume Blacksmith]";
-				mes "^3131FFWe need 50 Stones.^000000";
-				mes "We are busy, so please hurry.";
+				mes("[Guillaume Blacksmith]");
+				mes("^3131FFWe need 50 Stones.^000000");
+				mes("We are busy, so please hurry.");
 				close;
 			}
 		case 2:
-			mes "[Guillaume Blacksmith]";
-			mes "There are enemies coming! Let's evacuate from here!";
+			mes("[Guillaume Blacksmith]");
+			mes("There are enemies coming! Let's evacuate from here!");
 			close;
 		}
 	}
 	else {
-		mes "[Guillaume Blacksmith]";
-		mes "There the enemy is coming!";
+		mes("[Guillaume Blacksmith]");
+		mes("There the enemy is coming!");
 		close;
 	}
 
@@ -380,81 +397,81 @@ OnInit:
 }
 
 bat_a02,170,121,5	script	Croix Blacksmith#bat_a02	4_M_REPAIR,{
-	if (getcharid(4) == $@TierraBG2_id2) {
-		mes "[Croix Blacksmith]";
-		mes "We are in urgency! The Barricade has been destroyed!";
-		mes "We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000";
-		mes "We have it all except for the 50 Stones!";
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2) {
+		mes("[Croix Blacksmith]");
+		mes("We are in urgency! The Barricade has been destroyed!");
+		mes("We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000");
+		mes("We have it all except for the 50 Stones!");
 		next;
-		switch(select("Repair.:Leave it.")) {
+		switch(select("Repair.", "Leave it.")) {
 		case 1:
-			if (countitem(7049) > 49) {
-				mes "[Croix Blacksmith]";
-				mes "You brought enough stones! Let's go and repair.";
+			if (countitem(Stone) > 49) {
+				mes("[Croix Blacksmith]");
+				mes("You brought enough stones! Let's go and repair.");
 				next;
-				mes "..";
+				mes("..");
 				next;
-				mes "....";
+				mes("....");
 				next;
-				mes "......";
+				mes("......");
 				next;
-				mes "........";
+				mes("........");
 				next;
-				mes "..........";
+				mes("..........");
 				next;
-				mes "............";
+				mes("............");
 				next;
-				mes "..............";
+				mes("..............");
 				next;
-				mes "[Croix Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage.";
+				mes("[Croix Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage.");
 				next;
-				mes "[Croix Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade.";
+				mes("[Croix Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade.");
 				next;
-				mes "[Croix Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger.";
+				mes("[Croix Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger.");
 				next;
-				mes "[Croix Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Now decorate with Metal Fragments.";
+				mes("[Croix Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Now decorate with Metal Fragments.");
 				next;
-				mes "[Croix Blacksmith]";
-				mes "Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Decorate with Metal Fragments, and plait stones with Sinew of Bear!";
+				mes("[Croix Blacksmith]");
+				mes("Combine Stones and Gold in the proper percentage and shape the Barricade, then add Rough Elunium to make it stronger. Decorate with Metal Fragments, and plait stones with Sinew of Bear!");
 				next;
-				mes "..............";
-				mes "..............";
-				mes "..............";
-				mes "..............";
-				mes "..............";
+				mes("..............");
+				mes("..............");
+				mes("..............");
+				mes("..............");
+				mes("..............");
 				next;
 				specialeffect EF_REPAIRWEAPON;
-				mes "[Croix Blacksmith]";
-				mes "Wow! It's done.";
-				mes "We are relieved.";
-				delitem 7049,50; //Stone
+				mes("[Croix Blacksmith]");
+				mes("Wow! It's done.");
+				mes("We are relieved.");
+				delitem Stone,50;
 				donpcevent "barricade#bat_a02_b::OnEnable";
 				close2;
 				disablenpc "Croix Blacksmith#bat_a02";
 				end;
 			}
 			else {
-				mes "[Croix Blacksmith]";
-				mes "You don't have enough Stones!";
+				mes("[Croix Blacksmith]");
+				mes("You don't have enough Stones!");
 				next;
-				mes "[Croix Blacksmith]";
-				mes "^3131FFWe need 50 Stone.^000000";
-				mes "We are busy, so please hurry.";
+				mes("[Croix Blacksmith]");
+				mes("^3131FFWe need 50 Stone.^000000");
+				mes("We are busy, so please hurry.");
 				close;
 			}
 		case 2:
-			mes "[Croix Blacksmith]";
-			mes "There are enemies coming! Let's evacuate from here!";
+			mes("[Croix Blacksmith]");
+			mes("There are enemies coming! Let's evacuate from here!");
 			close;
 		}
 	}
 	else {
-		mes "[Croix Blacksmith]";
-		mes "There, the enemy is coming!";
+		mes("[Croix Blacksmith]");
+		mes("There, the enemy is coming!");
 		close;
 	}
 
@@ -464,11 +481,11 @@ OnInit:
 }
 
 bat_a02,53,377,3	script	Battle Therapist#a02_a	4_F_SISTER,{
-	specialeffect2 EF_HEAL;
-	mes "[Battle Therapist]";
-	mes "Just close your eyes,";
-	mes "and take a deep breath.";
-	mes "You can be free from pain.";
+	specialeffect(EF_HEAL, AREA, playerattached());
+	mes("[Battle Therapist]");
+	mes("Just close your eyes,\r"
+		"and take a deep breath.");
+	mes("You can be free from pain.");
 	close;
 	end;
 
@@ -502,7 +519,7 @@ OnTimer26500:
 	end;
 }
 
-bat_a02,51,375,0	script	bat_a02_rp1_a_warp	-1,10,10,{
+bat_a02,51,375,0	script	bat_a02_rp1_a_warp	FAKE_NPC,10,10,{
 OnInit:
 	disablenpc "bat_a02_rp1_a_warp";
 	end;
@@ -514,11 +531,11 @@ OnTouch_:
 }
 
 bat_a02,45,19,3	script	Battle Therapist#a02_b	4_F_SISTER,{
-	specialeffect2 EF_HEAL;
-	mes "[Battle Therapist]";
-	mes "Just close your eyes,";
-	mes "and take a deep breath.";
-	mes "You can be free from pain.";
+	specialeffect(EF_HEAL, AREA, playerattached());
+	mes("[Battle Therapist]");
+	mes("Just close your eyes,\r"
+		"and take a deep breath.");
+	mes("You can be free from pain.");
 	close;
 	end;
 
@@ -552,7 +569,7 @@ OnTimer26500:
 	end;
 }
 
-bat_a02,43,17,0	script	bat_a02_rp1_b_warp	-1,10,10,{
+bat_a02,43,17,0	script	bat_a02_rp1_b_warp	FAKE_NPC,10,10,{
 OnInit:
 	disablenpc "bat_a02_rp1_b_warp";
 	end;
@@ -564,9 +581,9 @@ OnTouch:
 }
 
 bat_a02,60,216,3	script	Valley Ghost#bat_a02_n	4_GHOSTRING,{
-	specialeffect2 EF_HEAL;
-	mes "[Valley Ghost]";
-	mes "Boo...Boo...";
+	specialeffect(EF_HEAL, AREA, playerattached());
+	mes("[Valley Ghost]");
+	mes("Boo...Boo...");
 	close;
 
 OnInit:
@@ -592,7 +609,7 @@ OnTimer26500:
 	end;
 }
 
-bat_a02,55,213,0	script	bat_a02_rp1_n_warp	-1,10,10,{
+bat_a02,55,213,0	script	bat_a02_rp1_n_warp	FAKE_NPC,10,10,{
 OnInit:
 	disablenpc "bat_a02_rp1_n_warp";
 	end;
@@ -603,42 +620,42 @@ OnTouch:
 	end;
 }
 
-bat_a02,194,267,0	script	barri_warp_up#bat_a02_a	-1,7,0,{
+bat_a02,194,267,0	script	barri_warp_up#bat_a02_a	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id1)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1)
 		warp "bat_a02",194,261;
 	end;
 }
 
-bat_a02,194,265,0	script	barri_warp_down#bat_a02a	-1,7,0,{
+bat_a02,194,265,0	script	barri_warp_down#bat_a02a	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id1)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1)
 		warp "bat_a02",194,270;
 	end;
 }
 
-bat_a02,177,130,0	script	barri_warp_up#bat_a02_b	-1,7,0,{
+bat_a02,177,130,0	script	barri_warp_up#bat_a02_b	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id2)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2)
 		warp "bat_a02",178,125;
 	end;
 }
 
-bat_a02,177,128,0	script	barri_warp_down#bat_a02b	-1,7,0,{
+bat_a02,177,128,0	script	barri_warp_down#bat_a02b	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id2)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2)
 		warp "bat_a02",178,134;
 	end;
 }
 
-bat_a02,352,342,0	script	A_CODE#bat_a02	-1,5,5,{
+bat_a02,352,342,0	script	A_CODE#bat_a02	FAKE_NPC,5,5,{
 OnTouch:
 	if (questprogress(2069) == 1)
 		setquest 2069;
 	end;
 }
 
-bat_a02,353,52,0	script	B_CODE#bat_a02	-1,5,5,{
+bat_a02,353,52,0	script	B_CODE#bat_a02	FAKE_NPC,5,5,{
 OnTouch:
 	if (questprogress(2069) == 1)
 		setquest 2069;
@@ -678,87 +695,87 @@ bat_a02,357,74,3	script	Croix Camp#flag18	1_FLAG_EAGLE,{ end; }
 bat_a02,348,74,3	script	Croix Camp#flag19	1_FLAG_EAGLE,{ end; }
 
 bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	4_M_KY_HEAD,{
-	if (getcharid(4) == $@TierraBG2_id1) {
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1) {
 		if ($@TierraBG2_Victory == 1) {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,3; //BF_Badge1
+				getitem BF_Badge1,3;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 		else {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 0) {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, and next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, and next time you will definitely win.");
 				close2;
-				getitem 7828,1; //BF_Badge1
+				getitem BF_Badge1,1;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, and next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, and next time you will definitely win.");
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 	}
 	else {
 		if ($@TierraBG2_Victory == 2) {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 0) {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, and next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, and next time you will definitely win.");
 				close2;
-				getitem 7828,1; //BF_Badge1
+				getitem BF_Badge1,1;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "You lost, but you're dedicated to this battle.";
-				mes "This is a reward for your great dedication by Guillaume Marollo!";
-				mes "Just take this defeat as a lesson, and next time you will definitely win.";
+				mes("[Axl Rose]");
+				mes("You lost, but you're dedicated to this battle.");
+				mes("This is a reward for your great dedication by Guillaume Marollo!");
+				mes("Just take this defeat as a lesson, and next time you will definitely win.");
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 		else {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,3; //BF_Badge1
+				getitem BF_Badge1,3;
 			}
 			else {
-				mes "[Axl Rose]";
-				mes "Blessed Guillaume!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign of victory.";
+				mes("[Axl Rose]");
+				mes("Blessed Guillaume!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign of victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 	}
@@ -772,87 +789,87 @@ OnInit:
 }
 
 bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
-	if (getcharid(4) == $@TierraBG2_id2) {
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2) {
 		if ($@TierraBG2_Victory == 2) {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,3; //BF_Badge1
+				getitem BF_Badge1,3;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 		else {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 0) {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(0)+" Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
-				getitem 7828,1; //BF_Badge1
+				getitem BF_Badge1,1;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(0)+" Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 	}
 	else {
 		if ($@TierraBG2_Victory == 1) {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 0) {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(0)+" Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
-				getitem 7828,1; //BF_Badge1
+				getitem BF_Badge1,1;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Oh, "+strcharinfo(0)+" Don't be sad.";
-				mes "Even though we didn't win, we did our best.";
-				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
+				mes("[Swandery]");
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
+				mes("Even though we didn't win, we did our best.");
+				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 		else {
-			.@your_medal = countitem(7828);
+			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 2) {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,3; //BF_Badge1
+				getitem BF_Badge1,3;
 			}
 			else {
-				mes "[Swandery]";
-				mes "Blessed Croix!";
-				mes "Let's enjoy our glorious victory!";
-				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
+				mes("[Swandery]");
+				mes("Blessed Croix!");
+				mes("Let's enjoy our glorious victory!");
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
-				getitem 7828,.@medal_gap; //BF_Badge1
+				getitem BF_Badge1,.@medal_gap;
 			}
 		}
 	}
@@ -875,31 +892,31 @@ OnStop:
 	end;
 
 OnTimer7000:
-	mapannounce "bat_a02", "Guillaume Vintenar Axl Rose : Let's attack to burn down Croix's Food Depot!",bc_map,"0xFF9900";
+	mapannounce("bat_a02", _("Guillaume Vintenar Axl Rose : Let's attack to burn down Croix's Food Depot!"), bc_map, "0xFF9900");
 	end;
 
 OnTimer8000:
-	mapannounce "bat_a02", "Croix Vintenar Swandery : Master of Valhalla! Let us be gifted with unfailing faith and courage!",bc_map,"0xFF99CC";
+	mapannounce("bat_a02", _("Croix Vintenar Swandery : Master of Valhalla! Let us be gifted with unfailing faith and courage!"), bc_map, "0xFF99CC");
 	end;
 
 OnTimer1800000:
-	mapannounce "bat_a02", "Marollo VII : Guillaume Marollo, Croix Marollo! Marollo followers!",bc_map,"0x99CC00";
+	mapannounce("bat_a02", _("Marollo VII : Guillaume Marollo, Croix Marollo! Marollo followers!"), bc_map, "0x99CC00");
 	end;
 
 OnTimer1803000:
-	mapannounce "bat_a02", "Marollo VII : Both camps are competitive, so no camp would be destroyed easily. That means the Marollo kingdoms will never be defeated!",bc_map,"0x99CC00";
+	mapannounce("bat_a02", _("Marollo VII : Both camps are competitive, so no camp would be destroyed easily. That means the Marollo kingdoms will never be defeated!"), bc_map, "0x99CC00");
 	end;
 
 OnTimer1808000:
-	mapannounce "bat_a02", "Marollo VII : I think we'd better terminate the battle, and call it a draw.",bc_map,"0x99CC00";
+	mapannounce("bat_a02", _("Marollo VII : I think we'd better terminate the battle, and call it a draw."), bc_map, "0x99CC00");
 	end;
 
 OnTimer1822000:
-	mapannounce "bat_a02", "Marollo VII : Hold your royalty and faith for a moment, and let's settle up the battle of Tierra Gorge.",bc_map,"0x99CC00";
+	mapannounce("bat_a02", _("Marollo VII : Hold your royalty and faith for a moment, and let's settle up the battle of Tierra Gorge."), bc_map, "0x99CC00");
 	end;
 
 OnTimer1825000:
-	mapannounce "bat_a02", "Axl Rose, Swandery : Yes sir.",bc_map,"0x99CC00";
+	mapannounce("bat_a02", _("Axl Rose, Swandery : Yes sir."), bc_map, "0x99CC00");
 	end;
 
 OnTimer1830000:
@@ -910,12 +927,12 @@ OnTimer1830000:
 
 /*
 bat_a02,351,75,3	script	Croix Camp Soldier#bat_a02_guide	4_M_RASWORD,{
-	mes "Loading...";
+	mes("Loading...");
 	close;
 }
 
 bat_a02,356,326,3	script	Guillaume Camp Soldier#bat_a02_guide	4_M_RASWORD,{
-	mes "Loading...";
+	mes("Loading...");
 	close;
 }
 */
@@ -923,21 +940,21 @@ bat_a02,356,326,3	script	Guillaume Camp Soldier#bat_a02_guide	4_M_RASWORD,{
 bat_a02,1,1,3	script	Release all#a02	4_DOG01,{
 	.@i = callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
-		mes "Cancelled.";
+		mes("Cancelled.");
 		close;
 	} else if (.@i == 0) {
 		end;
 	} else {
-		mes "May I help you?";
+		mes("May I help you?");
 		next;
-		switch(select("Release all.:Cancel.")) {
+		switch(select("Release all.", "Cancel.")) {
 		case 1:
-			mes "Bye.";
+			mes("Bye.");
 			close2;
 			mapwarp "bat_a02","bat_room",154,150;
 			end;
 		case 2:
-			mes "Cancelled.";
+			mes("Cancelled.");
 			close;
 		}
 	}

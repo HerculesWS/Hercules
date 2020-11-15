@@ -26,7 +26,7 @@ prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 	mes "Reset Both: "+ .@ResetBoth +"z";
 	mes "Please select the service you want:";
 	next;
-	switch(select("^FF3355Reset Skills:Reset Stats:Reset Both^000000:Cancel")) {
+	switch(select("^FF3355Reset Skills", "Reset Stats", "Reset Both^000000", "Cancel")) {
 	case 1:
 		mes "[Reset Girl]";
 		if (Zeny < .@ResetSkill) {

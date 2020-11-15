@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Porcupine Quills)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 	if (questprogress(60116)) {
@@ -18,7 +38,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "[Yullo]";
 			mes "Have you finished hunting the 50 Caramels?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Yullo]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Yullo]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "[Yullo]";
 			mes "Have you finished hunting the 50 Caramels?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Yullo]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Yullo]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "[Yullo]";
 			mes "Have you finished hunting the 150 Caramels?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Yullo]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Yullo]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -144,13 +164,13 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "I can't, no more and I mean it.";
 			mes "Look at me I am serious I can't kill any more of these things.";
 			next;
-			switch(select("What things?:Ignore.")) {
+			switch(select("What things?", "Ignore.")) {
 			case 1:
 				mes "[Yullo]";
 				mes "You know what, here is an idea.";
 				mes "You can gather them and I can give you a reward for your efforts!";
 				next;
-				switch(select("Gather Items:Hunt Caramels:Cancel")) {
+				switch(select("Gather Items", "Hunt Caramels", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Yullo]";
@@ -159,10 +179,10 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 					mes "Please tell me you have some or can";
 					mes "help me";
 					next;
-					switch(select("I have Porcupine Quills:Well I don't think I can help.")) {
+					switch(select("I have Porcupine Quills", "Well I don't think I can help.")) {
 					case 1:
 						/*
-						if (checkweight(501,10) == 0) {
+						if (checkweight(Red_Potion,10) == 0) {
 							mes "[Yullo]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -170,13 +190,13 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 							close;
 						}
 						*/
-						if (countitem(1027) > 24) {
+						if (countitem(Porcupine_Spike) > 24) {
 							mes "[Yullo]";
 							mes "Great, you have enough!";
 							mes "Just like I promised a little reward.";
-							delitem 1027,25; //Porcupine_Spike
+							delitem Porcupine_Spike,25;
 							getexp 10425,6272;
-							//getitem 501,10; //Red_Potion
+							//getitem Red_Potion,10;
 							close;
 						}
 						else {
@@ -196,7 +216,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 					mes "Ah, ok I think you can help me out by hunting some Caramels.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Caramels:100 Caramels:150 Caramels")) {
+					switch(select("50 Caramels", "100 Caramels", "150 Caramels")) {
 					case 1:
 						mes "[Yullo]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

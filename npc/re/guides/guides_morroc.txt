@@ -1,17 +1,37 @@
-//===== Hercules Script ======================================
-//= Morroc Guides
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Morroc Guides (Renewal)
+//================= Description ===========================================
 //= Guides for the city of Morroc and Morroc Ruins.
-//===== Additional Comments: =================================
-//= 1.0 First version, Renewal guide.
-//= 1.1 Fixed and optimized. [Euphy]
-//= 1.2 Navigation system update. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 	cutin "moc_soldier",2;
@@ -22,11 +42,11 @@ morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 	F_Navi("[Morroc Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Thief Guild ]:[ Sphinx Dungeon ]:[ Oasis Entrance ]:[ Forge ]:[ Weapon & Armor Shop ]:[ Inn ]:[ Tavern ]:Previous Menu")) {
+				switch(select("[ Thief Guild ]", "[ Sphinx Dungeon ]", "[ Oasis Entrance ]", "[ Forge ]", "[ Weapon & Armor Shop ]", "[ Inn ]", "[ Tavern ]", "Previous Menu")) {
 				case 1:
 					mes "[Morroc Guide]";
 					mes "The "+F_Navi("Thief Guild","morocc,26,294","^B9062F")+" is located";
@@ -86,7 +106,7 @@ morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Kafra Employee ]:[ Poison Herb Salesman ]:[ Dye Maker ]:[ Seiyablem ]:Previous Menu")) {
+				switch(select("[ Kafra Employee ]", "[ Poison Herb Salesman ]", "[ Dye Maker ]", "[ Seiyablem ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark,"^0000FFKafra Employees^000000";
 					viewpoint 1,156,97,7,0x0A82FF;
@@ -174,11 +194,11 @@ moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 	F_Navi("[Morroc Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Thief Guild ]:[ Sphinx Dungeon ]:[ Morroc Entrance ]:Previous Menu")) {
+				switch(select("[ Thief Guild ]", "[ Sphinx Dungeon ]", "[ Morroc Entrance ]", "Previous Menu")) {
 				case 1:
 					mes "[Morroc Guide]";
 					mes "The "+F_Navi("Thief Guild","moc_ruins,56,161","^B9062F")+" is located";
@@ -216,7 +236,7 @@ moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Tool Dealer ]:[ Kafra Employee ]:[ Repairman ]:[ Pet Groomer ]:[ Chef Assistant ]:[ Leablem ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Tool Dealer ]", "[ Kafra Employee ]", "[ Repairman ]", "[ Pet Groomer ]", "[ Chef Assistant ]", "[ Leablem ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Eden Teleport Officer","moc_ruins,68,164","^006400");
 					viewpoint 1,68,164,3,0xAAFF00;

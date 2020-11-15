@@ -1,122 +1,1057 @@
-//===== Hercules Script ======================================
-//= Shops
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Frost
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Lemongrass
+//= Copyright (C) Streusel
+//= Copyright (C) Euphy
+//= Copyright (C) Joseph
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Kenpachi
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Shops (Renewal)
+//================= Description ===========================================
 //= Renewal-specific town shop NPCs.
-//===== Additional Comments: =================================
-//= 1.0 Moved some merchants to a separate renewal file. [Kenpachi]
-//= 1.1 Added Dicastes merchants. [Joseph]
-//= 1.2 Moved more shops to Renewal file. [Euphy]
-//= 1.3 Added Malangdo tool dealer. [Euphy]
-//= 1.4 Moved Izlude merchants. [Streusel]
-//= 1.5 Added Dewata merchants. [Lemongrass]
-//= 1.6 Added Mora and Port Malaya merchants.
-//= 1.7 Added Izlude duplicates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.4
+//=========================================================================
 
-//=======================================================
-// Comodo
-//=======================================================
-comodo,106,213,5	shop	Tropic Fruit Dealer	4_F_07,6258:-1
-comodo,196,162,3	shop	Harive#candy	4_M_MINSTREL,11513:-1,6144:-1
+//== Comodo ================================================
+comodo,106,213,5	trader	Tropic Fruit Dealer	4_F_07,{
+OnInit:
+	sellitem Comodo_Tropic_Fruit;
+}
 
-//=======================================================
-// Dewata
-//=======================================================
-dewata,218,164,4	shop	Weapon Dealer	4_M_DEWMAN,1207:-1,1216:-1,1107:-1,1122:-1,1116:-1,1154:-1,1407:-1,1457:-1,1354:-1,1519:-1
-dewata,182,164,6	shop	Tool Dealer	4_M_DEWMAN,611:-1,1750:-1,501:-1,502:-1,503:-1,504:-1,645:-1,656:-1,601:-1,602:-1,1065:-1,2239:-1,713:-1
-dewata,145,267,6	shop	Fruit Gardener	4_M_DEWOLDWOMAN,512:-1,513:-1,515:-1,516:-1,535:-1
-dewata,158,182,6	shop	Armor Dealer	4_M_DEWMAN,2211:-1,2401:-1,2403:-1,2501:-1,2503:-1,2101:-1,2103:-1,2305:-1,2321:-1,2332:-1,2328:-1,2627:-1
+comodo,196,162,3	trader	Harive#candy	4_M_MINSTREL,{
+OnInit:
+	sellitem Protect_Neck_Candy;
+	sellitem Heartbroken_Tears;
+}
 
-//=======================================================
-// Einbroch
-//=======================================================
-einbroch,122,250,4	shop	Black Marketeer#ein	1_M_03,2139:-1,2800:-1,2801:-1,2802:-1,2803:-1,2804:-1,2805:-1,2806:-1,2807:-1,18000:-1,18001:-1,18002:-1,18003:-1,18004:-1,12392:-1,12393:-1,12394:-1,6145:-1,6146:-1,6147:-1,6186:-1,2808:-1
+//== Dewata ================================================
+dewata,218,164,4	trader	Weapon Dealer	4_M_DEWMAN,{
+OnInit:
+	sellitem Main_Gauche;
+	sellitem Stiletto;
+	sellitem Blade;
+	sellitem Ring_Pommel_Saber;
+	sellitem Katana;
+	sellitem Bastard_Sword;
+	sellitem Pike;
+	sellitem Partizan;
+	sellitem Hammer;
+	sellitem Chain;
+}
 
-//=======================================================
-// El Dicastes
-//=======================================================
-dic_in01,238,107,5	shop	Peddler#dic	4_M_HUMERCHANT,601:-1,602:-1,611:-1,610:-1
-dicastes01,207,200,6	shop	Points Merchant#dic	1_F_01,6360:-1,6361:-1,6362:-1,6363:-1
+dewata,182,164,6	trader	Tool Dealer	4_M_DEWMAN,{
+OnInit:
+	sellitem Spectacles;
+	sellitem Arrow;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem One_Eyed_Glass;
+	sellitem Empty_Bottle;
+}
 
-//=======================================================
-// Izlude
-//=======================================================
-izlude,124,165,4	shop	Fruit Gardener#iz	1_M_INNKEEPER,512:-1,513:-1,515:-1,516:-1
+dewata,145,267,6	trader	Fruit Gardener	4_M_DEWOLDWOMAN,{
+OnInit:
+	sellitem Apple;
+	sellitem Banana;
+	sellitem Carrot;
+	sellitem Sweet_Potato;
+	sellitem Pumpkin;
+}
+
+dewata,158,182,6	trader	Armor Dealer	4_M_DEWMAN,{
+OnInit:
+	sellitem Bandana;
+	sellitem Sandals;
+	sellitem Shoes;
+	sellitem Hood;
+	sellitem Muffler;
+	sellitem Guard;
+	sellitem Buckler;
+	sellitem Adventure_Suit;
+	sellitem Silk_Robe;
+	sellitem Silver_Robe;
+	sellitem Wooden_Mail;
+	sellitem Belt;
+}
+
+//== Einbroch ==============================================
+einbroch,122,250,4	trader	Black Marketeer#ein	1_M_03,{
+OnInit:
+	sellitem Flame_Thrower;
+	sellitem Accelerator;
+	sellitem Hovering_Booster;
+	sellitem Suicidal_Device;
+	sellitem Shape_Shifter;
+	sellitem Cooling_Device;
+	sellitem Mag_Field_Generator;
+	sellitem Barrier_Builder;
+	sellitem Repair_Kit;
+	sellitem Cannon_Ball;
+	sellitem Holy_Cannon_Ball;
+	sellitem Dark_Cannon_Ball;
+	sellitem Soul_Cannon_Ball;
+	sellitem Iron_Cannon_Ball;
+	sellitem Vulcan_Bullet;
+	sellitem Magic_Gear_Fuel;
+	sellitem Liquid_Condensed_Bullet;
+	sellitem Monkey_Wrench;
+	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
+}
+
+//== El Dicastes ===========================================
+dic_in01,238,107,5	trader	Peddler#dic	4_M_HUMERCHANT,{
+OnInit:
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Spectacles;
+	sellitem Leaf_Of_Yggdrasil;
+}
+
+dicastes01,207,200,6	trader	Points Merchant#dic	1_F_01,{
+OnInit:
+	sellitem Scarlet_Pts;
+	sellitem Indigo_Pts;
+	sellitem Yellow_Wish_Pts;
+	sellitem Lime_Green_Pts;
+}
+
+//== Izlude ================================================
+izlude,124,165,4	trader	Fruit Gardener#iz	1_M_INNKEEPER,{
+OnInit:
+	sellitem Apple;
+	sellitem Banana;
+	sellitem Carrot;
+	sellitem Sweet_Potato;
+}
+
 izlude_a,124,165,4	duplicate(Fruit Gardener#iz)	Fruit Gardener#iz_a	1_M_INNKEEPER
 izlude_b,124,165,4	duplicate(Fruit Gardener#iz)	Fruit Gardener#iz_b	1_M_INNKEEPER
 izlude_c,124,165,4	duplicate(Fruit Gardener#iz)	Fruit Gardener#iz_c	1_M_INNKEEPER
 izlude_d,124,165,4	duplicate(Fruit Gardener#iz)	Fruit Gardener#iz_d	1_M_INNKEEPER
-izlude,160,186,0	shop	Butcher#iz	1_M_JOBGUIDER,517:-1
+
+izlude,160,186,0	trader	Butcher#iz	1_M_JOBGUIDER,{
+OnInit:
+	sellitem Meat;
+}
+
 izlude_a,160,186,0	duplicate(Butcher#iz)	Butcher#iz_a	1_M_JOBGUIDER
 izlude_b,160,186,0	duplicate(Butcher#iz)	Butcher#iz_b	1_M_JOBGUIDER
 izlude_c,160,186,0	duplicate(Butcher#iz)	Butcher#iz_c	1_M_JOBGUIDER
 izlude_d,160,186,0	duplicate(Butcher#iz)	Butcher#iz_d	1_M_JOBGUIDER
-izlude,128,158,7	shop	Vendor from Milk Ranch#i	4_F_01,519:-1
+
+izlude,128,158,7	trader	Vendor from Milk Ranch#i	4_F_01,{
+OnInit:
+	sellitem Milk;
+}
+
 izlude_a,128,158,7	duplicate(Vendor from Milk Ranch#i)	Vendor from Milk Ranch#a	4_F_01
 izlude_b,128,158,7	duplicate(Vendor from Milk Ranch#i)	Vendor from Milk Ranch#b	4_F_01
 izlude_c,128,158,7	duplicate(Vendor from Milk Ranch#i)	Vendor from Milk Ranch#c	4_F_01
 izlude_d,128,158,7	duplicate(Vendor from Milk Ranch#i)	Vendor from Milk Ranch#d	4_F_01
-izlude_in,72,98,4	shop	Pet Groomer#iz	4_F_TELEPORTER,537:-1,643:-1,10013:-1,10014:-1,554:-1,6113:-1,6114:-1,6115:-1
-izlude_in,57,110,0	shop	Tool Dealer#iz	1_M_01,611:-1,501:-1,502:-1,503:-1,504:-1,506:-1,645:-1,656:-1,601:-1,602:-1,1065:-1,1750:-1
-izlude_in,72,110,3	shop	Trading Merchant#iz	4_M_HUMERCHANT,13200:-1,13201:-1,13202:-1,13150:-1,13102:-1,13151:-1,13154:-1,13155:-1,13163:-1,13165:-1,13168:-1
 
-//=======================================================
-// Juno
-//=======================================================
-s_atelier,114,117,1	shop	Part-Timer#sc_yuno	4_F_03,6123:-1,6120:-1
+izlude_in,72,98,3	trader	Pet Groomer#iz	4_F_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
 
-//=======================================================
-// Lighthalzen
-//=======================================================
-lighthalzen,337,240,4	shop	Trap Specialist#lhz	1_F_01,7940:-1,12341:-1
-lhz_in03,181,17,4	shop	Black Marketeer#lhz	1_M_03,2139:-1,2800:-1,2801:-1,2802:-1,2803:-1,2804:-1,2805:-1,2806:-1,2807:-1,18000:-1,18001:-1,18002:-1,18003:-1,18004:-1,12392:-1,12393:-1,12394:-1,6145:-1,6146:-1,6147:-1,6186:-1,2808:-1
-s_atelier,15,65,5	shop	Part-Timer#sc_lgt	4_M_ORIENT02,6123:-1,6120:-1
+izlude_in,57,110,0	trader	Tool Dealer#iz	1_M_01,{
+OnInit:
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem Arrow;
+}
 
-//=======================================================
-// Malangdo
-//=======================================================
-malangdo,232,163,5	shop	Tool Dealer Myo	4_CAT_ADV2,611:-1,1750:-1,645:-1,656:-1,601:-1,602:-1,1065:-1,713:-1
+izlude_in,72,110,3	trader	Trading Merchant#iz	4_M_HUMERCHANT,{
+OnInit:
+	sellitem Bullet;
+	sellitem Silver_Bullet;
+	sellitem Shell_Of_Blood;
+	sellitem Branch;
+	sellitem Crimson_Bolt;
+	sellitem The_Cyclone;
+	sellitem Rolling_Stone;
+	sellitem Black_Rose;
+	sellitem Long_Barrel;
+	sellitem Jungle_Carbine;
+	sellitem Thunder_P;
+}
 
-//=======================================================
-// Mora
-//=======================================================
-mora,100,118,4	shop	Tool Dealer#mora	4_M_RAFLE_OLD,11522:-1,11523:-1,11524:-1,602:-1,601:-1,611:-1,1773:-1,1774:-1
-mora,138,110,4	shop	Mora Chef	4_F_RAFLE_PK,11519:-1
+//== Juno ==================================================
+s_atelier,114,117,1	trader	Part-Timer#sc_yuno	4_F_03,{
+OnInit:
+	sellitem Surface_Paint;
+	sellitem Face_Paint;
+}
 
-//=======================================================
-// Mid Camp
-//=======================================================
-mid_camp,129,284,4	shop	Trap Specialist#mid	1_F_01,7940:-1,12341:-1
-mid_camp,184,263,4	shop	Black Marketeer#mid	1_M_03,2139:-1,2800:-1,2801:-1,2802:-1,2803:-1,2804:-1,2805:-1,2806:-1,2807:-1,18000:-1,18001:-1,18002:-1,18003:-1,18004:-1,12392:-1,12393:-1,12394:-1,6145:-1,6146:-1,6147:-1,6186:-1,2808:-1
+//== Lighthalzen ===========================================
+lighthalzen,337,240,4	trader	Trap Specialist#lhz	1_F_01,{
+OnInit:
+	sellitem Special_Alloy_Trap;
+	sellitem Special_Alloy_Trap_Box;
+}
 
-//=======================================================
-// Payon
-//=======================================================
-payon,123,109,4	shop	Trap Specialist#pay	1_F_01,7940:-1,12341:-1
+lhz_in03,181,17,4	trader	Black Marketeer#lhz	1_M_03,{
+OnInit:
+	sellitem Flame_Thrower;
+	sellitem Accelerator;
+	sellitem Hovering_Booster;
+	sellitem Suicidal_Device;
+	sellitem Shape_Shifter;
+	sellitem Cooling_Device;
+	sellitem Mag_Field_Generator;
+	sellitem Barrier_Builder;
+	sellitem Repair_Kit;
+	sellitem Cannon_Ball;
+	sellitem Holy_Cannon_Ball;
+	sellitem Dark_Cannon_Ball;
+	sellitem Soul_Cannon_Ball;
+	sellitem Iron_Cannon_Ball;
+	sellitem Vulcan_Bullet;
+	sellitem Magic_Gear_Fuel;
+	sellitem Liquid_Condensed_Bullet;
+	sellitem Monkey_Wrench;
+	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
+}
 
-//=======================================================
-// Port Malaya
-//=======================================================
-ma_in01,73,22,3	shop	Weapon Dealer#ma	4_M_DEWMAN,1207:-1,1216:-1,1107:-1,1122:-1,1116:-1,1154:-1,1407:-1,1457:-1,1354:-1,1519:-1
-ma_in01,22,23,3	shop	Tool Dealer#ma	4_M_DEWMAN,611:-1,1750:-1,501:-1,502:-1,503:-1,504:-1,645:-1,656:-1,601:-1,602:-1,1065:-1,2239:-1
-malaya,150,261,3	shop	Fruit Gardener#ma	4_M_DEWOLDWOMAN,512:-1,513:-1,515:-1,516:-1,535:-1
-ma_in01,67,13,5	shop	Armor Dealer#ma	4_M_DEWMAN,2211:-1,2401:-1,2403:-1,2501:-1,2503:-1,2101:-1,2103:-1,2305:-1,2321:-1,2332:-1,2328:-1,2627:-1
+s_atelier,15,65,5	trader	Part-Timer#sc_lgt	4_M_ORIENT02,{
+OnInit:
+	sellitem Surface_Paint;
+	sellitem Face_Paint;
+}
 
-//=======================================================
-// Prontera
-//=======================================================
-//prontera,104,88,5	shop	Stuff Gimme	4_M_MASKMAN,616:-1
-prt_in,109,68,4	shop	Trap Specialist#prt	1_F_01,7940:-1,12341:-1
-prt_in,175,137,4	shop	Black Marketeer#prt	1_M_03,2139:-1,2800:-1,2801:-1,2802:-1,2803:-1,2804:-1,2805:-1,2806:-1,2807:-1,18000:-1,18001:-1,18002:-1,18003:-1,18004:-1,12392:-1,12393:-1,12394:-1,6145:-1,6146:-1,6147:-1,6186:-1,2808:-1
-s_atelier,17,110,1	shop	Part-Timer#sc_prt	1_F_02,6123:-1,6120:-1
+//== Malangdo ==============================================
+malangdo,232,163,5	trader	Tool Dealer Myo	4_CAT_ADV2,{
+OnInit:
+	sellitem Spectacles;
+	sellitem Arrow;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem Empty_Bottle;
+}
 
-//=======================================================
-// Rachel
-//=======================================================
-ra_in01,263,281,4	shop	Trap Specialist#ra	1_F_01,7940:-1,12341:-1
-ra_in01,257,266,4	shop	Black Marketeer#ra	1_M_03,2139:-1,2800:-1,2801:-1,2802:-1,2803:-1,2804:-1,2805:-1,2806:-1,2807:-1,18000:-1,18001:-1,18002:-1,18003:-1,18004:-1,12392:-1,12393:-1,12394:-1,6145:-1,6146:-1,6147:-1,6186:-1,2808:-1
-s_atelier,137,60,3	shop	Part-Timer#sc_ra	1_F_GYPSY,6123:-1,6120:-1
+//== Mora ==================================================
+mora,100,118,4	trader	Tool Dealer#mora	4_M_RAFLE_OLD,{
+OnInit:
+	sellitem Red_Raffle_Sap;
+	sellitem Yellow_Raffle_Sap;
+	sellitem White_Raffle_Sap;
+	sellitem Wing_Of_Butterfly;
+	sellitem Wing_Of_Fly;
+	sellitem Spectacles;
+	sellitem Arrow_Of_Elf;
+	sellitem Hunting_Arrow;
+}
+
+mora,138,110,4	trader	Mora Chef	4_F_RAFLE_PK,{
+OnInit:
+	sellitem Beef_Toast;
+}
+
+//== Mid Camp ==============================================
+mid_camp,129,284,4	trader	Trap Specialist#mid	1_F_01,{
+OnInit:
+	sellitem Special_Alloy_Trap;
+	sellitem Special_Alloy_Trap_Box;
+}
+
+mid_camp,184,263,4	trader	Black Marketeer#mid	1_M_03,{
+OnInit:
+	sellitem Flame_Thrower;
+	sellitem Accelerator;
+	sellitem Hovering_Booster;
+	sellitem Suicidal_Device;
+	sellitem Shape_Shifter;
+	sellitem Cooling_Device;
+	sellitem Mag_Field_Generator;
+	sellitem Barrier_Builder;
+	sellitem Repair_Kit;
+	sellitem Cannon_Ball;
+	sellitem Holy_Cannon_Ball;
+	sellitem Dark_Cannon_Ball;
+	sellitem Soul_Cannon_Ball;
+	sellitem Iron_Cannon_Ball;
+	sellitem Vulcan_Bullet;
+	sellitem Magic_Gear_Fuel;
+	sellitem Liquid_Condensed_Bullet;
+	sellitem Monkey_Wrench;
+	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
+}
+
+//== Payon =================================================
+payon,123,109,4	trader	Trap Specialist#pay	1_F_01,{
+OnInit:
+	sellitem Special_Alloy_Trap;
+	sellitem Special_Alloy_Trap_Box;
+}
+
+//== Port Malaya ===========================================
+ma_in01,73,22,3	trader	Weapon Dealer#ma	4_M_DEWMAN,{
+OnInit:
+	sellitem Main_Gauche;
+	sellitem Stiletto;
+	sellitem Blade;
+	sellitem Ring_Pommel_Saber;
+	sellitem Katana;
+	sellitem Bastard_Sword;
+	sellitem Pike;
+	sellitem Partizan;
+	sellitem Hammer;
+	sellitem Chain;
+}
+
+ma_in01,22,23,3	trader	Tool Dealer#ma	4_M_DEWMAN,{
+OnInit:
+	sellitem Spectacles;
+	sellitem Arrow;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+	sellitem One_Eyed_Glass;
+}
+
+malaya,150,261,3	trader	Fruit Gardener#ma	4_M_DEWOLDWOMAN,{
+OnInit:
+	sellitem Apple;
+	sellitem Banana;
+	sellitem Carrot;
+	sellitem Sweet_Potato;
+	sellitem Pumpkin;
+}
+
+ma_in01,67,13,5	trader	Armor Dealer#ma	4_M_DEWMAN,{
+OnInit:
+	sellitem Bandana;
+	sellitem Sandals;
+	sellitem Shoes;
+	sellitem Hood;
+	sellitem Muffler;
+	sellitem Guard;
+	sellitem Buckler;
+	sellitem Adventure_Suit;
+	sellitem Silk_Robe;
+	sellitem Silver_Robe;
+	sellitem Wooden_Mail;
+	sellitem Belt;
+}
+
+//== Prontera ==============================================
+/*
+prontera,104,88,5	trader	Stuff Gimme	4_M_MASKMAN,{
+OnInit:
+	sellitem Old_Card_Album;
+}
+*/
+
+prt_in,126,76,0	trader	Tool Dealer#prt1	1_M_INNKEEPER,{
+OnInit:
+	sellitem Spectacles;
+	sellitem Arrow;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+prt_in,117,79,5	trader	Toy Supplier#prt	4_M_PIERROT,{
+OnInit:
+	sellitem One_Eyed_Glass;
+	sellitem Sunglasses;
+	sellitem Spinning_Eyes;
+	sellitem Eye_Bandage;
+	sellitem Luxury_Sunglasses;
+	sellitem Granpa_Beard;
+}
+
+prt_fild05,290,221,2	trader	Tool Dealer#prt	4_M_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Center_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
+prt_in,109,68,4	trader	Trap Specialist#prt	1_F_01,{
+OnInit:
+	sellitem Special_Alloy_Trap;
+	sellitem Special_Alloy_Trap_Box;
+}
+
+prt_in,175,137,4	trader	Black Marketeer#prt	1_M_03,{
+OnInit:
+	sellitem Flame_Thrower;
+	sellitem Accelerator;
+	sellitem Hovering_Booster;
+	sellitem Suicidal_Device;
+	sellitem Shape_Shifter;
+	sellitem Cooling_Device;
+	sellitem Mag_Field_Generator;
+	sellitem Barrier_Builder;
+	sellitem Repair_Kit;
+	sellitem Cannon_Ball;
+	sellitem Holy_Cannon_Ball;
+	sellitem Dark_Cannon_Ball;
+	sellitem Soul_Cannon_Ball;
+	sellitem Iron_Cannon_Ball;
+	sellitem Vulcan_Bullet;
+	sellitem Magic_Gear_Fuel;
+	sellitem Liquid_Condensed_Bullet;
+	sellitem Monkey_Wrench;
+	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
+}
+
+s_atelier,17,110,1	trader	Part-Timer#sc_prt	1_F_02,{
+OnInit:
+	sellitem Surface_Paint;
+	sellitem Face_Paint;
+}
+
+//- Ninja Shops -
+prontera,178,244,3	trader	Amatsu Trader#nin	4_M_01,{
+OnInit:
+	sellitem Shuriken;
+	sellitem Nimbus_Shuriken;
+	sellitem Flash_Shuriken;
+	sellitem Sharp_Leaf_Shuriken;
+	sellitem Thorn_Needle_Shuriken;
+	sellitem Explosive_Kunai;
+	sellitem Makibishi;
+	sellitem Arm_Guard;
+	sellitem Fox_Armguard;
+	sellitem Special_Ninja_Suit;
+	sellitem Flame_Stone;
+	sellitem Ice_Stone;
+	sellitem Wind_Stone;
+	sellitem Shadow_Orb;
+	sellitem Charm_Fire;
+	sellitem Charm_Ice;
+	sellitem Charm_Wind;
+	sellitem Charm_Earth;
+}
+
+prontera,218,211,4	trader	Pet Groomer#prt	4_M_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
+prontera,92,209,4	trader	Rebellion Weapon Vending	2_VENDING_MACHINE1,{
+OnInit:
+	sellitem H_FEATHER_H_FIRE;
+	sellitem ALTAIR_ARES;
+	sellitem COLORSCOPE;
+	sellitem RAG203;
+	sellitem DEATHFIRE;
+	sellitem R_THUNDER;
+	sellitem P_BREAKER;
+	sellitem MINIMAY;
+	sellitem TEMPEST;
+	sellitem END_OF_HORIZON;
+	sellitem Southern_Cross_R;
+}
+
+prontera,96,209,4	trader	Rebellion Prop Vending	2_VENDING_MACHINE1,{
+OnInit:
+	sellitem Slug_Bullet_1;
+	sellitem Slug_Bullet_2;
+	sellitem Slug_Bullet_3;
+	sellitem Fullmetal_Jacket_Bullet;
+	sellitem Mine_Projectile;
+	sellitem Dragon_Tail_Missile;
+	sellitem Special_Alloy_Trap;
+	sellitem Bullet;
+	sellitem Silver_Bullet_;
+	sellitem Shell_Of_Blood_;
+	sellitem AP_Ammo;
+	sellitem Blaze_Bullet;
+	sellitem Freezing_Bullet;
+	sellitem Electric_Shock_Bullet;
+	sellitem Magical_Stone_Bullet;
+	sellitem Sanctified_Bullet;
+	sellitem Flare_Sphere_;
+	sellitem Lighting_Sphere_;
+	sellitem Poison_Sphere_;
+	sellitem Blind_Sphere_;
+	sellitem Freezing_Sphere_;
+}
+
+//== Morroc ===============================================
+morocc,156,76,4	trader	Butcher#moc1	1_M_MERCHANT,{
+OnInit:
+	sellitem Meat;
+}
+
+moc_ruins,91,128,4	trader	Tool Dealer#moc1	4_F_04,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+moc_ruins,114,63,6	trader	Tool Dealer#moc2	4W_M_03,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+morocc,147,103,6	trader	Tool Dealer#moc3	4W_M_03,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+morocc,151,241,4	trader	Tool Dealer#moc4	4_F_04,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+moc_ruins,118,170,4	trader	Pet Groomer#moc	4_M_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
+morocc,203,87,4	trader	Pet Groomer#moc1	4_M_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
+morocc,154,55,6	trader	Jeweler#moc3	4W_M_03,{
+OnInit:
+	sellitem Crystal_Jewel;
+	sellitem Diamond_Ring;
+}
+
+morocc,171,103,4	trader	Item Collector#moc3	4_M_03,{
+OnInit:
+	sellitem Scell;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
+	sellitem Bill_Of_Birds;
+}
+
+morocc,205,247,2	trader	Item Collector#moc4	4_M_03,{
+OnInit:
+	sellitem Scell;
+	sellitem Monsters_Feed;
+	sellitem Animals_Skin;
+	sellitem Bill_Of_Birds;
+}
+
+morocc,140,90,6	trader	Trader#moc6	4W_M_03,{
+OnInit:
+	sellitem Banana;
+}
+
+morocc,166,54,2	trader	Jeweler#moc4	8_F,{
+OnInit:
+	sellitem Azure_Jewel;
+	sellitem Cardinal_Jewel;
+	sellitem Blue_Jewel;
+	sellitem Golden_Jewel;
+	sellitem Bluish_Green_Jewel;
+}
+
+morocc,34,68,0	trader	Trader#moc7	4_F_04,{
+OnInit:
+	sellitem Witherless_Rose;
+}
+
+morocc,269,193,4	trader	Trader#moc8	4_M_ORIENT02,{
+OnInit:
+	sellitem Skul_Ring;
+	sellitem Sword_Mace;
+	sellitem Stunner;
+}
+
+morocc,256,191,5	trader	Trader#moc9	4_F_04,{
+OnInit:
+	sellitem Flower_Ring;
+}
+
+//== Geffen ================================================
+geffen_in,77,167,0	trader	Tool Dealer#gef	1_F_03,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
+geffen,193,152,4	trader	Pet Groomer#gef	4_F_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
+geffen_in,171,123,4	trader	Tool Dealer#gef2	1_M_WIZARD,{
+OnInit:
+	sellitem Empty_Cylinder;
+	sellitem Empty_Potion;
+	sellitem Empty_Bottle;
+}
+
+//== Alberta ===============================================
+alb2trea,87,65,5	trader	Tool Dealer#alb	4_M_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Silver_Arrow;
+	sellitem Fire_Arrow;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+}
+
+alberta_in,182,97,0	trader	Tool Dealer#alb2	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
+alberta_in,176,81,3	trader	Trading Merchant#alb	4_M_HUMERCHANT,{
+OnInit:
+	sellitem Bullet;
+	sellitem Silver_Bullet_;
+	sellitem Shell_Of_Blood_;
+	sellitem Branch;
+	sellitem Crimson_Bolt;
+	sellitem The_Cyclone;
+	sellitem Rolling_Stone;
+	sellitem Black_Rose;
+	sellitem Long_Barrel;
+	sellitem Jungle_Carbine;
+	sellitem Thunder_P;
+}
+
+//== Payon =================================================
+payon,159,96,4	trader	Tool Dealer#pay3	4_M_ORIENT01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Red_Potion;
+	sellitem Center_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
+payon_in01,5,49,7	trader	Tool Dealer#pay	4_M_ORIENT01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+payon,177,131,4	trader	Pet Groomer#pay	4_F_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
+payon_in02,87,34,0	trader	Tool Dealer#pay2	1_F_ORIENT_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Silver_Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+//== Rachel ================================================
+ra_in01,263,281,4	trader	Trap Specialist#ra	1_F_01,{
+OnInit:
+	sellitem Special_Alloy_Trap;
+	sellitem Special_Alloy_Trap_Box;
+}
+
+ra_in01,257,266,4	trader	Black Marketeer#ra	1_M_03,{
+OnInit:
+	sellitem Flame_Thrower;
+	sellitem Accelerator;
+	sellitem Hovering_Booster;
+	sellitem Suicidal_Device;
+	sellitem Shape_Shifter;
+	sellitem Cooling_Device;
+	sellitem Mag_Field_Generator;
+	sellitem Barrier_Builder;
+	sellitem Repair_Kit;
+	sellitem Cannon_Ball;
+	sellitem Holy_Cannon_Ball;
+	sellitem Dark_Cannon_Ball;
+	sellitem Soul_Cannon_Ball;
+	sellitem Iron_Cannon_Ball;
+	sellitem Vulcan_Bullet;
+	sellitem Magic_Gear_Fuel;
+	sellitem Liquid_Condensed_Bullet;
+	sellitem Monkey_Wrench;
+	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
+}
+
+s_atelier,137,60,3	trader	Part-Timer#sc_ra	1_F_GYPSY,{
+OnInit:
+	sellitem Surface_Paint;
+	sellitem Face_Paint;
+}
+
+//== Cooking Addition ======================================
+prontera,156,212,1	trader	Chef Assistant#prt	8_F_GIRL,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+	sellitem Cookbook01;
+	sellitem Cookbook02;
+	sellitem Cookbook03;
+	sellitem Cookbook04;
+	sellitem Cookbook05;
+}
+
+moc_ruins,115,123,5	trader	Chef Assistant#moc	4_M_04,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+geffen,196,111,3	trader	Chef Assistant#gef	4_M_03,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+alberta,167,135,5	trader	Chef Assistant#alb	4_M_05,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}

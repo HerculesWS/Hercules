@@ -1,22 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Silent
+//= Copyright (C) Lupus
+//= Copyright (C) Nana
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Al de Baran Dungeon Warp Script
-//===== By: ==================================================
-//= Nana (1.0)
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Al De Baran Dungeon
-//===== Additional Comments: =================================
-//= Split off Aldebaran.txt
-//= 1.1 fixed clt007 warp
-//= 1.3 Optimized [Lupus]
-//= 1.4 Removed Duplicates [Silent]
-//= 1.5 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.6 Moved Clock Tower warps to unique file. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.6
+//=========================================================================
 
-//============================================================
-//============================================================
+//==========================================================
 alde_dun01,292,306,0	warp	aldd01	2,1,alde_dun02,43,24
 alde_dun01,167,158,0	warp	ald002a	2,2,c_tower2,148,283
 alde_dun01,302,25,0	warp	ald003a	2,2,c_tower1,125,22
@@ -24,8 +43,8 @@ alde_dun02,43,20,0	warp	aldd04	1,1,alde_dun01,292,300
 alde_dun02,279,250,0	warp	aldd05	2,2,alde_dun03,18,267
 alde_dun02,122,169,0	warp	ald006	2,2,c_tower3,47,41
 alde_dun02,187,234,0	warp	ald007	2,2,c_tower3,65,147
-//============================================================
-//= Random B2 ================================================
+
+//== Random B2 =============================================
 alde_dun02,267,41,4	script	ald008r	WARPNPC,1,1,{
 	if (rand(2))
 		warp "c_tower3",168,252;
@@ -37,9 +56,8 @@ alde_dun03,12,267,0	warp	aldd09	2,2,alde_dun02,273,250
 alde_dun03,277,183,0	warp	ald010	2,2,c_tower2,27,27
 alde_dun03,191,31,0	warp	ald011	2,2,c_tower3,217,159
 alde_dun03,276,48,0	warp	ald012	2,2,c_tower1,235,223
-//============================================================
-//7(npc)
-//= Random B3-1 ================================================
+
+//== Random B3-1 ===========================================
 alde_dun03,130,125,4	script	ald014r	WARPNPC,1,1,{
 	switch(rand(3)) {
 		case 0: warp "c_tower2",228,267; end;
@@ -47,8 +65,8 @@ alde_dun03,130,125,4	script	ald014r	WARPNPC,1,1,{
 		case 2: warp "c_tower3",252,29; end;
 	}
 }
-//============================================================
-//= Random 3-2 ===============================================
+
+//== Random 3-2 ============================================
 alde_dun03,171,127,4	script	ald015r	WARPNPC,1,1,{
 	switch(rand(3)) {
 		case 0: warp "c_tower2",13,282; end;
@@ -70,4 +88,3 @@ alde_dun04,80,34,4	script	ald022r	WARPNPC,1,1,{
 		case 3: warp "alde_dun04",84,36; end;
 	}
 }
-//============================================================

@@ -1,21 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Magic Book Seller
-//===== By: ==================================================
-//= Masao
-//= Credits to Muad_Dib for the translation.
-//===== Current Version: =====================================
-//= 1.1a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= An NPC which sells you different kinds of Magic Books.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Optimized. [Euphy]
-//= 1.1a Updated NPC name to "Master Velofos". [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1a
+//=========================================================================
 
 geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
 	}
@@ -59,7 +79,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 		mes "[Master Velofos]";
 		mes "By the way, what brings you to me today?";
 		next;
-		switch (select("Nothing.:Do you know the Reading Spell Book?:What's the Freezing Spell?:Can I have a Magic Book?:Can I use the Reading Spell Book without the Freezing Spell?:About the Ultimate Magic Book")) {
+		switch (select("Nothing.", "Do you know the Reading Spell Book?", "What's the Freezing Spell?", "Can I have a Magic Book?", "Can I use the Reading Spell Book without the Freezing Spell?", "About the Ultimate Magic Book")) {
 		case 1:
 			mes "[Master Velofos]";
 			mes "Hah! You're silly.";
@@ -68,7 +88,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 			mes "[Master Velofos]";
 			mes "Reading Spell Book literally means 'read a spell book.' Do you know how to use Magic Books?";
 			next;
-			switch (select("Yes, I do.:No, I don't.")) {
+			switch (select("Yes, I do.", "No, I don't.")) {
 			case 1:
 				mes "[Master Velofos]";
 				mes "Well then, you don't need an additional lecture.";
@@ -165,7 +185,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 			mes "[Master Velofos]";
 			mes "I'm sorry, but I only have Magic Books for beginners, but they're obviously not suitable for you. Do you still want one?";
 			next;
-			switch (select("Sure thing.:Where can I find advanced books?")) {
+			switch (select("Sure thing.", "Where can I find advanced books?")) {
 			case 1:
 				mes "[Master Velofos]";
 				mes "Please go talk to [Lea] in the Archive. Tell her that you need one of the Magic Books that I've stored in there.";
@@ -269,7 +289,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 }
 
 geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
 	}
@@ -288,7 +308,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 		mes "[Lea]";
 		mes "Are you borrowing a book?";
 		next;
-		switch (select("Let me think.:I want the Beginner's Magic Books.:I want the Intermediate Magic Books.:I want the Superior Magic Books.:I want the Ultimate Magic Book.")) {
+		switch (select("Let me think.", "I want the Beginner's Magic Books.", "I want the Intermediate Magic Books.", "I want the Superior Magic Books.", "I want the Ultimate Magic Book.")) {
 		case 1:
 			mes "[Lea]";
 			mes "No problem.";
@@ -304,7 +324,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			mes "[Lea]";
 			mes "Yes. You may pay a minimum of 10,000 Rune-Midgarts zeny. Alternatively, you can bring 2 Old Magic Books or 50 Old Pages. Once you pay the deposit, I'll let you borrow some Magic Books.";
 			next;
-			.@Payment = select("Where can I find Old Magic Books and Old Pages?:I'll pay with zeny.:I'll pay with Old Magic Books.:I'll pay with Old Pages.")-1;
+			.@Payment = select("Where can I find Old Magic Books and Old Pages?", "I'll pay with zeny.", "I'll pay with Old Magic Books.", "I'll pay with Old Pages.")-1;
 			mes "[Lea]";
 			if (!.@Payment) {
 				mes "I heard that you can find them from Ride Words, Death Words, Bathorys, and other monsters. I ask that you please don't strain yourself to find those items.";
@@ -313,10 +333,10 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 				mes "Your life is more important than anything else, you know?";
 				close;
 			}
-			if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(1006) > 1) || (.@Payment == 3 && countitem(1097) > 49)) {
+			if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(Old_Magic_Book) > 1) || (.@Payment == 3 && countitem(Worn_Out_Page) > 49)) {
 				mes "What kind of Magic Book do you want?";
 				next;
-				.@i = select("Let me think.:Magic Book (Fire Bolt):Magic Book (Cold Bolt):Magic Book (Lightning Bolt)")-1;
+				.@i = select("Let me think.", "Magic Book (Fire Bolt)", "Magic Book (Cold Bolt)", "Magic Book (Lightning Bolt)")-1;
 				mes "[Lea]";
 				if (!.@i) {
 					mes "No problem.";
@@ -329,14 +349,14 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					mes "Don't you know how many others would want the book you already have? It's a bit selfish to want more than one, you know.";
 					close;
 				}
-				if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(1006) > 1) || (.@Payment == 3 && countitem(1097) > 49)) {
+				if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(Old_Magic_Book) > 1) || (.@Payment == 3 && countitem(Worn_Out_Page) > 49)) {
 					mes "The book's return date is written on the lending card on the back cover of the book.";
 					next;
 					mes "[Lea]";
 					mes "Please try not to lose or damage the book to avoid paying any extra charges.";
 					if (.@Payment == 1) Zeny -= 10000;
-					else if (.@Payment == 2) delitem 1006,2; //Old_Magic_Book
-					else delitem 1097,50; //Worn_Out_Page
+					else if (.@Payment == 2) delitem Old_Magic_Book,2;
+					else delitem Worn_Out_Page,50;
 					getitem 6188+.@i,1; //Magic_Book_FB, Magic_Book_CB, Magic_Book_LB
 					close;
 				}
@@ -347,7 +367,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			mes "[Lea]";
 			mes "Ah, so you want the Intermediate Magic Books. Please pay 50,000 Rune-Midgartian zeny, or you can bring me 2 Old Blue Boxes or 9 Eluniums to borrow the Intermediate Magic Books.";
 			next;
-			.@Payment = select("Where can I find Old Blue Boxes and Eluniums?:I'll pay 50,000 zeny.:I'll pay with Old Blue Boxes.:I'll pay with Eluniums.")-1;
+			.@Payment = select("Where can I find Old Blue Boxes and Eluniums?", "I'll pay 50,000 zeny.", "I'll pay with Old Blue Boxes.", "I'll pay with Eluniums.")-1;
 			mes "[Lea]";
 			if (!.@Payment) {
 				mes "Old Blue Boxes are quite rare to find, but they can be obtained from monsters everywhere in the world, including Myst Cases, Megalogons, Mimics, Nightmares, Krabens, Requiems, Nine Tails, Noxiouses, and Byorgues.";
@@ -357,10 +377,10 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 				mes "Eluniums can be obtained from Hyeguns, Zombie Prisoners, Teddy Bears, Obsedians, and Loli Ruris. Or you can refine Rough Eluniums to Eluniums at the Forge in town, and that may be easier.";
 				close;
 			}
-			if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(603) > 1) || (.@Payment == 3 && countitem(985) > 8)) {
+			if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(Old_Blue_Box) > 1) || (.@Payment == 3 && countitem(Elunium) > 8)) {
 				mes "What kind of Magic Book do you want?";
 				next;
-				.@i = select("Let me think.:Magic Book (Storm Gust):Magic Book (Lord of Vermillion):Magic Book (Meteor Storm):Magic Book (Thunderstorm):Magic Book (Jupitel Thunder):Magic Book (Water Ball):Magic Book (Heaven's Drive):Magic Book (Earth Spike)")-1;
+				.@i = select("Let me think.", "Magic Book (Storm Gust)", "Magic Book (Lord of Vermillion)", "Magic Book (Meteor Storm)", "Magic Book (Thunderstorm)", "Magic Book (Jupitel Thunder)", "Magic Book (Water Ball)", "Magic Book (Heaven's Drive)", "Magic Book (Earth Spike)")-1;
 				setarray .@Books[0],6192,6193,6194,6197,6198,6199,6200,6201;
 				mes "[Lea]";
 				if (!.@i) {
@@ -374,14 +394,14 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					mes "Don't you know how many others would want the book you already have? It's a bit selfish to want more than one, you know.";
 					close;
 				}
-				if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(603) > 1) || (.@Payment == 3 && countitem(985) > 8)) {
+				if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(Old_Blue_Box) > 1) || (.@Payment == 3 && countitem(Elunium) > 8)) {
 					mes "Thank you for your deposit. The book's return date is written on the lending card on the back cover of the book. Please try not to lose or damage the book and avoid paying compensation.";
 					next;
 					mes "[Lea]";
 					mes "The Intermediate and Superior Magic Books must be returned upon borrowing the Ultimate Magic Book. Remember that you're just borrowing them, so make sure you take good care of those books.";
 					if (.@Payment == 1) Zeny -= 50000;
-					else if (.@Payment == 2) delitem 603,2; //Old_Blue_Box
-					else delitem 985,9; //Elunium
+					else if (.@Payment == 2) delitem Old_Blue_Box,2;
+					else delitem Elunium,9;
 					getitem .@Books[.@i-1],1; //Magic_Book_SG, Magic_Book_LOV, Magic_Book_MS, Magic_Book_TS, Magic_Book_JT, Magic_Book_WB, Magic_Book_HD, Magic_Book_ES
 					close;
 				}
@@ -399,7 +419,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			mes "[Lea]";
 			mes "[12 Mystery Pieces and 100,000 zeny], [7 Oridecons and 100,000 zeny], or [1 Old Violet Box and 100,000 zeny]. Now how would you like to pay your deposit?";
 			next;
-			.@Payment = select("Where can I find those items?:Let me think.:I'll pay with 12 Mystery Pieces and 100,000 zeny.:I'll pay with 7 Oridecons and 100,000 zeny.:I'll pay with 1 Old Violet Box and 100,000 zeny.")-1;
+			.@Payment = select("Where can I find those items?", "Let me think.", "I'll pay with 12 Mystery Pieces and 100,000 zeny.", "I'll pay with 7 Oridecons and 100,000 zeny.", "I'll pay with 1 Old Violet Box and 100,000 zeny.")-1;
 			mes "[Lea]";
 			if (!.@Payment) {
 				mes "Mystery Pieces can be obtained from machine creatures in the Juperos Dungeon, and they're the fountain of knowledge from the ancient civilization. Ah, I get excited thinking about those artifacts.";
@@ -423,17 +443,17 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 				mes "[Lea]";
 				mes "How does 200,000 Rune-Midgartian zeny sound?";
 				next;
-				if(select("I'm sorry, but I can't pay that much.:Sounds good.") == 1) {
+				if(select("I'm sorry, but I can't pay that much.", "Sounds good.") == 1) {
 					mes "[Lea]";
 					mes "I see.";
 					close;
 				}
 				mes "[Lea]";
 			}
-			if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(7094) > 11) || (.@Payment == 3 && countitem(984) > 6) || (.@Payment == 4 && countitem(617))))) {
+			if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(Mystery_Piece) > 11) || (.@Payment == 3 && countitem(Oridecon) > 6) || (.@Payment == 4 && countitem(Old_Violet_Box))))) {
 				mes "What kind of Magic Book do you want?";
 				next;
-				.@i = select("Let me think.:Magic Book (Earth Strain):Magic Book (Chain Lightning):Magic Book (Crimson Rock):Magic Book (Drain Life)")-1;
+				.@i = select("Let me think.", "Magic Book (Earth Strain)", "Magic Book (Chain Lightning)", "Magic Book (Crimson Rock)", "Magic Book (Drain Life)")-1;
 				mes "[Lea]";
 				if (!.@i) {
 					mes "No problem.";
@@ -446,15 +466,15 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					mes "Don't you know how many others would want the book you already have? It's a bit selfish to want more than one, you know.";
 					close;
 				}
-				if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(7094) > 11) || (.@Payment == 3 && countitem(984) > 6) || (.@Payment == 4 && countitem(617))))) {
+				if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(Mystery_Piece) > 11) || (.@Payment == 3 && countitem(Oridecon) > 6) || (.@Payment == 4 && countitem(Old_Violet_Box))))) {
 					mes "Thank you for your deposit. The book's return date is written on the lending card on the back cover of the book. Please try not to lose or damage the book and avoid paying compensation.";
 					next;
 					mes "[Lea]";
 					mes "The Intermediate and Superior Magic Books must be returned upon borrowing the Ultimate Magic Book. Remember that you're just borrowing them, so make sure you take good care of those books.";
 					if (.@Payment == 1) Zeny -= 200000;
-					else if (.@Payment == 2) delitem 7094,12; //Mystery_Piece
-					else if (.@Payment == 3) delitem 984,7; //Oridecon
-					else delitem 617,1; //Old_Violet_Box
+					else if (.@Payment == 2) delitem Mystery_Piece,12;
+					else if (.@Payment == 3) delitem Oridecon,7;
+					else delitem Old_Violet_Box,1;
 					if (.@Payment > 1) Zeny -= 100000;
 					getitem 6201+.@i,1; //Magic_Book_ES_, Magic_Book_CL, Magic_Book_CR, Magic_Book_DL
 					close;
@@ -505,7 +525,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 }
 
 mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
 	}
@@ -620,9 +640,9 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 		mes "Oh, did you find";
 		mes "anything useful?";
 		next;
-		.@i = select("I've discovered everything about Comet.:I've mastered the zenith of Tetra Vortex.");
+		.@i = select("I've discovered everything about Comet.", "I've mastered the zenith of Tetra Vortex.");
 		mes "[Galfos]";
-		if ((.@i == 1 && countitem(6195)) || (.@i == 2 && countitem(6196))) {
+		if ((.@i == 1 && countitem(Magic_Book_CM)) || (.@i == 2 && countitem(Magic_Book_TV))) {
 			mes "Are you kidding me? You already have the book!";
 			close;
 		}
@@ -635,7 +655,7 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 			mes "[Galfos]";
 			mes "I need at least ^0000aa1,000,000 zeny^000000 to buy all the necessary tools. Do you have the money?";
 			next;
-			if(select("Wh-what? No!:Sure.") == 1) {
+			if(select("Wh-what? No!", "Sure.") == 1) {
 				mes "[Galfos]";
 				mes "Aw, you don't? It's disappointing, but there's nothing I can do. Come back when you have enough money, okay?";
 				close;
@@ -644,9 +664,9 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 			if (Zeny >= 1000000) {
 				mes "Alright then, let's get started!";
 				next;
-				specialeffect2 EF_DISPELL;
+				specialeffect(EF_DISPELL, AREA, playerattached());
 				progressbar "ffff00",4;
-				specialeffect2 EF_LORD;
+				specialeffect(EF_LORD, AREA, playerattached());
 				Zeny -= 1000000;
 				getitem 6194+.@i,1; //Magic_Book_CM, Magic_Book_TV
 				mes "[Galfos]";
@@ -689,7 +709,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 		mes "The documents in this container aren't legible. It's no use trying to read them.";
 		close;
 	}
-	specialeffect2 EF_DISPELL;
+	specialeffect(EF_DISPELL, AREA, playerattached());
 	progressbar "ffff00",4;
 	if (mac_book < 3) {
 		mes "You have discovered records about magic, acceleration, and particle waves.";
@@ -711,7 +731,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 				mes "^660066You must do this by using the greatest power in that place. The Humans have used this method to study the acceleration of magic particles since ancient times.^000000";
 				next;
 				mes "You have discovered the ^990099Lava Essence Creation Method^000000. Please check your Quest window for more details.";
-				specialeffect2 EF_STEAL;
+				specialeffect(EF_STEAL, AREA, playerattached());
 				close2;
 				setquest 12218;
 				end;
@@ -729,7 +749,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 				mes "^660066According to Humans' information, this essence constitutes one of the four natural elements.^000000";
 				next;
 				mes "You have discovered the ^990099Flame Essence Creation Method^000000. Please check your Quest window for more details.";
-				specialeffect2 EF_STEAL;
+				specialeffect(EF_STEAL, AREA, playerattached());
 				close2;
 				setquest 12219;
 				end;
@@ -746,7 +766,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 				mes "^660066I succeeded in refining the essence of glacier deep inside the 3rd floor of the Ice Cave. If you'd like to try, prepare 10 Ice Hearts and go to the following location.^000000";
 				next;
 				mes "You have discovered the ^990099Glacier Essence Creation Method^000000. Please check your Quest window for more details.";
-				specialeffect2 EF_STEAL;
+				specialeffect(EF_STEAL, AREA, playerattached());
 				close2;
 				setquest 12220;
 				end;
@@ -764,7 +784,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 				mes "If you'd like to try, prepare 10 Jubilees and go to the dungeon. Good luck.^000000";
 				next;
 				mes "You have discovered the ^990099Fossil Essence Creation Method^000000. Please check your Quest window for more details.";
-				specialeffect2 EF_STEAL;
+				specialeffect(EF_STEAL, AREA, playerattached());
 				close2;
 				setquest 12221;
 				end;
@@ -782,7 +802,7 @@ dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 				mes "The refining process was easy, but I had a hard time finding the catalyst, Dragon Teeth.^000000";
 				next;
 				mes "You have discovered the ^990099Storm Essence Creation Method^000000. Please check your Quest window for more details.";
-				specialeffect2 EF_STEAL;
+				specialeffect(EF_STEAL, AREA, playerattached());
 				close2;
 				setquest 12222;
 				end;
@@ -808,8 +828,8 @@ function	script	Magic_Book_Essence	{
 		close;
 	}
 	if (questprogress(getarg(0)) == 1 && countitem(getarg(1)) >= getarg(2)) {
-		specialeffect2 EF_BLIND;
-		specialeffect2 EF_BEGINSPELL;
+		specialeffect(EF_BLIND, AREA, playerattached());
+		specialeffect(EF_BEGINSPELL, AREA, playerattached());
 		progressbar "ffff00",4;
 		delitem getarg(1),getarg(2);
 		if (rand(2)) {
@@ -817,7 +837,7 @@ function	script	Magic_Book_Essence	{
 			next;
 			mes "^008800The "+getarg(3)+" Essence will last permanently, unless there's a problem.^000000";
 			completequest getarg(0);
-			specialeffect2 EF_LORD;
+			specialeffect(EF_LORD, AREA, playerattached());
 			close;
 		}
 		mes "^008888You have failed to refine the essence using "+getarg(2)+" "+getitemname(getarg(1))+"s.^000000";

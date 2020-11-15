@@ -11,7 +11,7 @@
 //= 1.2 Optimized. [Euphy]
 //============================================================
 
-prontera,165,178,8	script	Old Woman	8_F_GRANDMOTHER,{
+prontera,165,178,0	script	Old Woman	8_F_GRANDMOTHER,{
 
 	setarray .@items[0],714,25,1061,100,1095,200,618,10,1551,2,1614,1,727,20;
 	set .@n$,"[Old Woman]";
@@ -22,7 +22,7 @@ prontera,165,178,8	script	Old Woman	8_F_GRANDMOTHER,{
 		close; }
 	mes "Greeting, lad. I found a really nifty item while I was picking mushrooms near Glast Heim.";
 	next;
-	if(select("Keep Talking:Leave")==2) goto M_Leave;
+	if(select("Keep Talking", "Leave")==2) goto M_Leave;
 
 	mes .@n$;
 	mes "I have never seen an item like this before. I am told it can be placed inside any accessory with a slot available.";
@@ -30,7 +30,7 @@ prontera,165,178,8	script	Old Woman	8_F_GRANDMOTHER,{
 	mes .@n$;
 	mes "If you're interested in this item, I'll tell you what you need for me to make you one of your own. I can only give one of these to each player, so once you finish this quest, you may not do it again.";
 	next;
-	if(select("Tell me more about it:Nah, I don't care about it")==2) goto M_Leave;
+	if(select("Tell me more about it", "Nah, I don't care about it")==2) goto M_Leave;
 
 	mes .@n$;
 	mes "I believe the item is called a ^FF0000Berzebub Card^000000. It makes you cast spells really fast!";
@@ -41,7 +41,7 @@ prontera,165,178,8	script	Old Woman	8_F_GRANDMOTHER,{
 		mes " ~ "+.@items[.@i+1]+"x "+getitemname(.@items[.@i]);
 		if (countitem(.@items[.@i]) < .@items[.@i+1]) set .@nr,1; }
 	next;
-	if(select("I have all of that!:I'll get those ASAP")==2) goto M_Leave;
+	if(select("I have all of that!", "I'll get those ASAP")==2) goto M_Leave;
 
 	mes .@n$;
 	if (.@nr) {

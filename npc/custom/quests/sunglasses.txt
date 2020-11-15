@@ -25,14 +25,14 @@ alberta,88,193,5	script	Sunglasses Trader	1_F_MERCHANT_01,{
 		close; }
 	mes "Hello. What can I do for you?";
 	next;
-	if(select("I heard that you can make ^0000FFSlotted Sunglasses^000000.:Nothing, sorry to bother you.")==2) {
+	if(select("I heard that you can make ^0000FFSlotted Sunglasses^000000.", "Nothing, sorry to bother you.")==2) {
 		mes "[Sunglasses Trader]";
 		mes "Come back to me than you are ready.";
 		close; }
 	mes "[Sunglasses Trader]";
 	mes "I do not make them, but I can tell you where to find the person who does. For a small fee...";
 	next;
-	if(select("How much?:No way, I will find her myself!")==2) {
+	if(select("How much?", "No way, I will find her myself!")==2) {
 		mes "[Sunglasses Trader]";
 		mes "Suit yourself, the Maker will not make you ^0000FFSlotted Sunglasses^000000 unless she knows that you are coming.";
 		mes "Only I can tell her you are coming.";
@@ -46,12 +46,12 @@ alberta,88,193,5	script	Sunglasses Trader	1_F_MERCHANT_01,{
 	mes " - ^00008850 Feathers^000000";
 	mes " - ^000088100000z^000000";
 	next;
-	if(select("Alright, here.:That's too much!")==2) {
+	if(select("Alright, here.", "That's too much!")==2) {
 		mes "[Sunglasses Trader]";
 		mes "Suit yourself.";
 		close; }
 	mes "[Sunglasses Trader]";
-	if (countitem(730) < 1 || countitem(949) < 50 || Zeny < 100000) {
+	if (countitem(Crystal_Jewel) < 1 || countitem(Feather) < 50 || Zeny < 100000) {
 		mes "You're missing something. Come back when you've gathered all the materials.";
 		close; }
 	delitem 730,1;
@@ -75,19 +75,19 @@ moc_fild07,334,186,5	script	Maseph	4_F_GON,{
 	mes "Hello there.";
 	mes "You came for the ^000088Slotted Sunglasses^000000, right?";
 	next;
-	if(select("Yes:No, sorry to bother you.")==2) {
+	if(select("Yes", "No, sorry to bother you.")==2) {
 		mes "[Maseph]";
 		mes "Off you go, then.";
 		close; }
 	mes "[Maseph]";
 	mes "To make one, I will need one pair of ^000088Sunglasses^000000 and 400000z.";
 	next;
-	if(select("Here you go.:No, thanks.")==2) {
+	if(select("Here you go.", "No, thanks.")==2) {
 		mes "[Maseph]";
 		mes "As you wish.";
 		close; }
 	mes "[Maseph]";
-	if (countitem(2201) < 1) {
+	if (countitem(Sunglasses) < 1) {
 		mes "I need one pair of ^000088Sunglasses^000000. Come back to me when you have one.";
 		close; }
 	if (Zeny < 400000) {

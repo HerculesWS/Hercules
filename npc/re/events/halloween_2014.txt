@@ -1,24 +1,49 @@
-//===== Hercules Script ========================================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2014-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) erKURITA
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Halloween Event (2014)
-//===== By: ====================================================================
-//= Kisuka
-//===== Current Version: =======================================================
-//= 1.0.0
-//===== File Encoding ==========================================================
-//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: ===========================================================
+//================= Description ===========================================
 //= The Official 2014 Halloween Event
 //=
 //= Help an Exhausted Priest collect souls in exchange for Candy Holders.
-//= Help some spirits in Niflheim figure out which one among them isn't dead.
-//= Collect 10 Red Scarf and 10 Hanging Doll for a spirit by the name of Loru.
-//= Hunt 20 Hylozoists and 20 Bloody Murderers for a spirit by the name of Devi.
-//===== Additional Comments: ===================================================
-//= 1.0.0 Initial Release. [Kisuka]
-//==============================================================================
+//= Help some spirits in Niflheim figure out which one among them isn't
+//= dead.
+//= Collect 10 Red Scarf and 10 Hanging Doll for a spirit by the name of
+//= Loru.
+//= Hunt 20 Hylozoists and 20 Bloody Murderers for a spirit by the name of
+//= Devi.
+//================= Current Version =======================================
+//= 1.0.0
+//=========================================================================
 
-//= Exhausted Priest
-//==============================================================================
+//== Exhausted Priest ======================================
 -	script	Exhausted Priest#14hal::Hal14Priest	4_M_MINISTER,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Exhausted Priest]";
@@ -37,7 +62,7 @@
 	} else {
 		if (questprogress(14450) ==  2) {
 			mes "[Mighty Priest]";
-			mes ""+(Sex ? "Brother" : "Sister")+", it's good to see you again!";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", it's good to see you again!";
 			mes "came here to see me because of that?";
 			next;
 			mes "[Mighty Priest]";
@@ -45,7 +70,6 @@
 			mes "Let's take a look at it.";
 			next;
 			if (countitem("Captured_Soul") > 4 && countitem("Black_Soul") > 0) {
-			
 				mes "[Mighty Priest]";
 				mes "Wow, this is so strong!";
 				mes "You may be better than our priests!";
@@ -136,7 +160,7 @@
 			mes "Ha... no time to rest!";
 			mes "My arms and legs hurt~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "If you're so tired... why don't you heal?";
 			next;
 			mes "[Mighty Priest]";
@@ -146,20 +170,20 @@
 			mes "[Mighty Priest]";
 			mes "Dear Odin, show me your love!";
 			mes "Heal me with your love! Great!! Bam!!!!!";
-			specialeffect EF_HEAL2,AREA,"Exhausted Priest#pron14hal";
+			specialeffect(EF_HEAL2, AREA, getnpcid("Exhausted Priest#pron14hal"));
 			emotion e_swt, 1;
 			next;
 			mes "[Mighty Priest]";
 			mes "I feel much better now!";
-			mes ""+(Sex ? "Brother" : "Sister")+", thank you so much for waking me up.";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", thank you so much for waking me up.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What made you so tired?";
 			next;
 			mes "[Mighty Priest]";
-			mes ""+(Sex ? "Brother" : "Sister")+", you didn't have any damage yet?";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", you didn't have any damage yet?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What happened to you?";
 			next;
 			mes "[Mighty Priest]";
@@ -183,7 +207,7 @@
 			mes "Could you maybe help me out?";
 			next;
 			mes "[Mighty Priest]";
-			mes "They would not damage you at all, "+(Sex ? "brother" : "sister")+".";
+			mes "They would not damage you at all, "+ (Sex == SEX_MALE ? "brother" : "sister") +".";
 			mes "I would also give you a reward for the trouble.";
 			next;
 			mes "[Mighty Priest]";
@@ -237,8 +261,7 @@ payon,179,107,3	duplicate(Hal14Priest)	Exhausted Priest#pay14h	4_M_MINISTER
 prontera,156,194,3	duplicate(Hal14Priest)	Exhausted Priest#pron14h	4_M_MINISTER
 yuno,162,192,3	duplicate(Hal14Priest)	Exhausted Priest#yuno14h	4_M_MINISTER
 
-//= Bolak
-//==============================================================================
+//== Bolak =================================================
 niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Bolak]";
@@ -271,7 +294,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "[Bolak]";
 			mes "Who?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I came back!";
 			next;
 			mes "[Bolak]";
@@ -296,7 +319,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "[Nathan]";
 			mes "Aww~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yes, I've had help from church this time as well.";
 			mes "His body is still alive. His soul is not supposed to come here yet.";
 			next;
@@ -324,7 +347,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "[Bolak]";
 			mes "No, I said no! Anyway, maybe having hard time for good deed.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "By the way, that guy.. Richard? Why is he still here?";
 			next;
 			mes "[Loru]";
@@ -380,13 +403,13 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "[Bolak]";
 			mes "Sorry to give you such a small gift, please take this as a sign of our gratitude.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "wow... I don't know what to say...";
 			next;
 			mes "[Bolak]";
 			mes "It's nothing special, just take it!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Thank you so much, see you around.";
 			next;
 			mes "[Loru]";
@@ -421,7 +444,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			close;
 		} else if (questprogress(14453) == 1) {
 			if (countitem("Sacred_Rosary") > 0)  {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Will this really work...?";
 				next;
 				mes "[Jack]";
@@ -456,7 +479,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "[Jack]";
 				mes "Dead men are already dead-";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "W..Wait, There's a situation!!";
 				mes "Calm down..!";
 				next;
@@ -469,17 +492,17 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "[Richard]";
 				mes "What is going on? what happened?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "^0000cdThat man is a living man^000000!!!";
 				mes "Living men don't react to a halidom!";
 				next;
 				mes "[Loru]";
 				mes "Anyway, get that thing out of my sight!";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Okay.";
 				mes "I will get that thing away from here.";
-				specialeffect2 EF_SPRINKLESAND;
+				specialeffect(EF_SPRINKLESAND, AREA, playerattached());
 				next;
 				mes "[Bolak]";
 				mes "Much better.";
@@ -511,7 +534,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "I died!! The fact that I am here is proof!";
 				mes "Isn't that a fake halidom?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Hey, calm down. Thaink clearly.";
 				next;
 				mes "[Richard]";
@@ -555,13 +578,13 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "[Jack]";
 				mes "There may be someone we can ask a favor from...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Why... why are you guys looking at me like that?";
 				next;
 				mes "[Bolak]";
 				mes "I am sorry but, you should go there for us.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Why should I?";
 				next;
 				mes "[Loru]";
@@ -570,7 +593,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "[Devi]";
 				mes "Totally.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Hold on! I am here traveling.";
 				mes "I'm just trying to have fun!";
 				next;
@@ -580,7 +603,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "[Nathan]";
 				mes "Aww~";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Hmm... it seems like I have no choice. I'll go, but where am I going?";
 				next;
 				mes "[Richard]";
@@ -597,7 +620,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				mes "a cold place... snow all year long...";
 				mes "^0000cdWarm place... behind Lutie Santa Clause..^000000";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I will go find it.";
 				next;
 				mes "[Jack]";
@@ -663,7 +686,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "You could be a 'fake'!";
 			next;
 			mes "[Nathan]";
-			mes "Da...d¡¦?";
+			mes "Da...d...?";
 			next;
 			mes "[Bolak]";
 			mes "Nathan!! Even you doubt your own father?";
@@ -676,7 +699,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "No, I am not your mother!";
 			mes "I am your father!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What is all this about?";
 			next;
 			mes "[Loru]";
@@ -700,7 +723,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "[Devi]";
 			mes "There is a ^0000cdliving man^000000 among us.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Who is that?";
 			next;
 			mes "[Loru]";
@@ -793,7 +816,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 				next;
 				break;
 			}
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hmm.. everyone.. please calm down.";
 			next;
 			mes "[Loru]";
@@ -811,7 +834,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "[Bolak]";
 			mes "Hey, you adventurer. You figure out how to distinguish ^0000cddead men with living men in living men's country^000000.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Me? why??";
 			next;
 			mes "[Bolak]";
@@ -824,7 +847,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "[Devi]";
 			mes "What? Cathedral? It will kill us all!!!!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hmm, okay then I will go and figure this out.";
 			next;
 			mes "[Nathan]";
@@ -843,14 +866,13 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 	}
 }
 
-//= Nathan
-//==============================================================================
+//== Nathan ================================================
 niflheim,195,183,1	script	Nathan#14hal	4_LUDE,{
 	mes "[Nathan]";
 	mes "Ma?";
 	mes "Dada!!";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "How cute!!~";
 	next;
 	mes "[Nathan]";
@@ -864,8 +886,7 @@ niflheim,195,183,1	script	Nathan#14hal	4_LUDE,{
 	close;
 }
 
-//= Jack
-//==============================================================================
+//== Jack ==================================================
 niflheim,192,182,7	script	Jack#14hal	4_JACK,{
 	mes "[Jack]";
 	mes "Come empty, return empty...";
@@ -876,8 +897,7 @@ niflheim,192,182,7	script	Jack#14hal	4_JACK,{
 	close;
 }
 
-//= Richard
-//==============================================================================
+//== Richard ===============================================
 niflheim,190,185,5	script	Richard#14hal01	4_M_NFDEADSWDMAN,{
 	if (questprogress(14457)) {
 		mes "A doll which resembles Richard.";
@@ -888,8 +908,7 @@ niflheim,190,185,5	script	Richard#14hal01	4_M_NFDEADSWDMAN,{
 	close;
 }
 
-//= Loru
-//==============================================================================
+//== Loru ==================================================
 niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Loru]";
@@ -965,7 +984,7 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 					mes "In additon, it looks more special and beautiful?";
 					mes "You selected beautiful ones for me? huh??";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Hmm.. no..t.. really...";
 					next;
 					mes "[Loru]";
@@ -976,14 +995,14 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 					mes "Anyway, thank you.";
 					mes "Here's your reward. Then, see you ^0000cd tomorrow^000000!.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Tomorrow? again??";
 					next;
 					mes "[Loru]";
 					mes "Ah, you didn't know. Here, we give away decoration when people leave the party.";
 					mes "We should put new decoration everyday.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I've never heard of it..";
 					next;
 					mes "[Loru]";
@@ -994,7 +1013,7 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 					getitem Trans_Candy_Yellow, 10;
 					getitem Trans_Candy_Green, 10;
 					erasequest 14461;
-					setquest 14464;                    
+					setquest 14464;
 					close;
 				} else {
 					mes "[Loru]";
@@ -1019,7 +1038,7 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 					mes "[Loru]";
 					mes "It's not much but hope you like it! then see you ^0000cdtomorrow^000000 again!";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Tomorrow.. again??";
 					next;
 					mes "[Loru]";
@@ -1060,7 +1079,7 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 				mes "You know, everyone gets really excited because of Halloween?";
 				mes "And people here are just gathering around and having fun.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Yes.";
 				next;
 				if (BaseLevel < 100) {
@@ -1068,14 +1087,14 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 					mes "But people, who were supposed to have party together, have gone to living man's country.";
 					mes "You know, party is fun when there's many people. so... Could you bring them here.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Who? and how many??";
 					next;
 					mes "[Loru]";
 					mes "Oh, You do my favor?? ^0000cd10 Wandering Soul^000000!";
 					mes "Once you hunt them all, Niflheim comes along as well. get me 10 of them.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I can do that.";
 					next;
 					mes "[Loru]";
@@ -1088,20 +1107,20 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 					mes "Look around. It looks so empty.";
 					mes "Nobody would dance and have fun in a place like this?";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "What can I do for you?";
 					next;
 					mes "[Loru]";
 					mes "^0000cd 10 Red Scarf and 10 Hanging Doll^000000! Could you bring me all this??";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Are you decorating with those? Your taste...seems....";
 					next;
 					mes "[Loru]";
 					mes "What? do you have any problem with that!";
 					mes "You don't know nothing about latest trend. you've been living only  for decades!";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Sorry, I made a mistake.";
 					mes "so, 10 Red Scarf and 10 Hanging Doll, right??";
 					next;
@@ -1121,8 +1140,7 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 	}
 }
 
-//= Devi
-//==============================================================================
+//== Devi ==================================================
 niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Devi]";
@@ -1168,7 +1186,7 @@ niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 					mes "You escape from here and bring troublemakers in living man's country.";
 					mes "I can't go anywhere as I am too busy.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Okay. I don't want dead men create chaos in living man's country.";
 					next;
 					mes "[Devi]";
@@ -1185,7 +1203,7 @@ niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 					mes "Please catch them. they are making a chaos.";
 					mes "I can't go anywhere as I am too busy.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Okay.";
 					next;
 					mes "[Devi]";
@@ -1294,7 +1312,7 @@ niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 					mes "You escape from here and bring troublemakers in living man's country.";
 					mes "I can't go anywhere as I am too busy.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Okay. I don't want dead men create chaos in living man's country.";
 					next;
 					mes "[Devi]";
@@ -1311,7 +1329,7 @@ niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 					mes "Please catch them. they are making a chaos.";
 					mes "I can't go anywhere as I am too busy.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Okay.";
 					next;
 					mes "[Devi]";
@@ -1334,8 +1352,7 @@ niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 	}
 }
 
-//= Bonfire
-//==============================================================================
+//== Bonfire ===============================================
 niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 	mes "[Bonfire Spirit]";
 	mes "Ahahah! Don't touch me with such cold hands!!!";
@@ -1356,8 +1373,8 @@ niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 	OnTimer21000:
 	OnTimer23000:
 	OnTimer25000:
-		specialeffect EF_TORCH,AREA,"Bonfire Spirit#14hal";
-		specialeffect EF_DRAGONSMOKE,AREA,"Bonfire Spirit#14hal";
+		specialeffect(EF_TORCH, AREA, getnpcid("Bonfire Spirit#14hal"));
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer5000:
@@ -1366,25 +1383,24 @@ niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 	OnTimer13000:
 	OnTimer14000:
 	OnTimer16000:
-		specialeffect EF_DRAGONSMOKE,AREA,"Bonfire Spirit#14hal";
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer19000:
 		npctalk "Oh, No! The fire is dying!!!! Fire!!!!!!!!!!!!";
-		specialeffect EF_DRAGONSMOKE,AREA,"Bonfire Spirit#14hal";
+		specialeffect(EF_DRAGONSMOKE, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer20000:
-		specialeffect EF_SIGHTRASHER,AREA,"Bonfire Spirit#14hal";
+		specialeffect(EF_SIGHTRASHER, AREA, getnpcid("Bonfire Spirit#14hal"));
 		end;
 
 	OnTimer27000:
 		donpcevent "Bonfire Spirit#14hal::OnEnable";
-		end;    
+		end;
 }
 
-//= Sister / Nun
-//==============================================================================
+//== Sister / Nun ==========================================
 prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Spiritual Sister]";
@@ -1404,15 +1420,15 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 	} else if (questprogress(14455) == 1) {
 		mes "[Sister Haley]";
 		mes "I hope all is well with everyone visiting here~";
-		mes "Oh! Is it you, "+(Sex ? "brother" : "sister")+"? How is it going with the thing you need to do?";
+		mes "Oh! Is it you, "+ (Sex == SEX_MALE ? "brother" : "sister") +"? How is it going with the thing you need to do?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well.. I could identify the live ones.";
 		next;
 		mes "[Sister Haley]";
 		mes "I knew it! Any side effects?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "But then there was another problem.";
 		mes "this is the reason I came here..";
 		next;
@@ -1420,7 +1436,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		mes "Oh? What happen?";
 		mes "Tell me anything!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "There was a person who did not react on the halidom, but he insisted that he is dead.";
 		mes "So I went the place he lived, the body is alive. Just in a comma.";
 		next;
@@ -1430,14 +1446,14 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		mes "Oh, dear, I can't believe it!!";
 		mes "Sometimes the soul is separated from the body if there was some big impact on the body, and ^0000cdsome spirits think they forget they are alive and move to the death's land^000000.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Is there anything I can do about?";
 		next;
 		mes "[Sister Haley]";
 		mes "Simple! ";
 		mes "Make them to realize that they have their living body.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "So, How..";
 		mes "They believe they are dead, but I should talk to them to make them return?";
 		next;
@@ -1445,21 +1461,21 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		mes "Of course not. There are secret method in this church.";
 		mes "We have been trough lots of stuff, we have all kinds of solution.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "So How..";
 		next;
 		mes "[Sister Haley]";
 		mes "You know Leaf Of Yggdrasil is good for resurrection?";
 		mes "Leaf Of Yggdrasil is a leaf from Yggdrasil and has a strong power of life.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, That is like common sense, so just tell me the materials and method to do that..";
 		next;
 		mes "[Sister Haley]";
 		mes "There is nothing else than Leaf of Yggdrasil to resurrect the character.";
 		mes "Even our priest used Leaf Of Yggdrasil!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "so, I mean! tell me the material I need and the method!";
 		next;
 		mes "[Sister Haley]";
@@ -1469,13 +1485,13 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		mes "[Sister Haley]";
 		mes "the material and the method is quite simple.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Yes, I like simple thing, so tell me briefly.";
 		next;
 		mes "[Sister Haley]";
 		mes "^0000cd1 Leaf Of Yggdrasil and 1 live Coal^000000 are what you need.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Only that?";
 		next;
 		mes "[Sister Haley]";
@@ -1485,14 +1501,14 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		mes "[Sister Haley]";
 		mes "Once they breathe in the smoke, they will remember where their bodies are and come back to real life.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Is that all?";
 		next;
 		mes "[Sister Haley]";
 		mes "Yes. Indeed~";
 		mes "One think you must remember: The longer the soul left their body, the less chance he will get to come back.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You should have told me earlier!";
 		next;
 		mes "[Sister Haley]";
@@ -1527,12 +1543,12 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 			mes "This is enough. I can make it soon.";
 			mes "Odin Crystal power! with Holy light!!!!";
 			next;
-			specialeffect EF_HOLYHIT,AREA,"Spiritual Sister#14hal";
+			specialeffect(EF_HOLYHIT, AREA, getnpcid("Spiritual Sister#14hal"));
 			mes "[Sister Haley]";
 			mes "Whoa~ It's done.";
 			mes "Hold  ^0000cd this in your pocket^000000 and go to the crowd with live and dead ones, you will see who is dead or live.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Is that it? Awesome.";
 			mes "But.. Um.. you know.. is.. it affecting to me.. like in bad way?";
 			next;
@@ -1544,7 +1560,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 			mes "But, For those who are dead.. Oh! I don't mean it's deadly threat, but it will give them little bit of pain.";
 			mes "So use it carefully not to damage the good dead people.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ok.";
 			mes "Thank you for making this!";
 			next;
@@ -1558,7 +1574,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 			delitem Holy_Water, 6;
 			getitem Sacred_Rosary, 1;
 			erasequest 14452;
-			setquest 14453;            
+			setquest 14453;
 			close;
 		} else {
 			mes "[Sister Haley]";
@@ -1576,18 +1592,18 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 	} else if (questprogress(14451) == 1) {
 		mes "[Sister Haley]";
 		mes "I hope all is well with everyone visiting here~";
-		mes "What makes you come here, "+(Sex ? "brother" : "sister")+"?";
+		mes "What makes you come here, "+ (Sex == SEX_MALE? "brother" : "sister") +"?";
 		next;
 		mes "[I told her what happened in Nifflheim.]";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "So I came here.";
 		mes "But, I cannot tell who is dead and who is alive, is there any way ^0000cdto check that^000000?";
 		next;
 		mes "[Sister Haley]";
 		mes "Of course, there is. Very ^0000cdgood method^000000!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Really? I was not sure if I found the right place.";
 		mes "I think I found well!";
 		next;
@@ -1595,20 +1611,20 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		mes "We study everything to make dead and live ones to peace.";
 		mes "There is secret way to do that, it kept secretly in our church.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Tell me the way..";
 		next;
 		mes "[Sister Haley]";
 		mes "That is simple! Make ^0000cdspecial halidom^000000!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "S, so how..?";
 		next;
 		mes "[Sister Haley]";
 		mes "How you make it? Bring ^0000cd1 Rosary and 6 Holy Water^000000 to me.";
 		mes "Then I will make it for you. It's simple";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Y, yes!!";
 		erasequest 14451;
 		setquest 14452;
@@ -1629,8 +1645,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		end;
 }
 
-//= Richard's Wife
-//==============================================================================
+//== Richard's Wife ========================================
 xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 	if (questprogress(14456) == 1) {
 		if (countitem("Leaf_Of_Yggdrasil") > 0 && countitem("Live_Coal") > 0) {
@@ -1638,21 +1653,21 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			mes "Dad, Dad~ Wake up! It's time to wake up!";
 			mes "I even made the stew for you. Wake and eat it.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Everyone, I am here.";
 			next;
 			mes "[Richard's Wife]";
 			mes "Oh, dear, Adventurer! Welcome!";
 			mes "Did you find the way to make him back?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yes! But I need your help to do this.";
 			next;
 			mes "[Richard's Wife]";
 			mes "How can I help you?";
 			mes "I will do my best to do it!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Just pray hard to get him back.";
 			next;
 			mes "[Richard's Daughter]";
@@ -1663,20 +1678,20 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			mes "I will pray hard!";
 			mes "Please!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well, So I will burn.. this.";
-			specialeffect2 EF_TORCH;
+			specialeffect(EF_TORCH, AREA, playerattached());
 			sleep2 1000;
-			specialeffect2 EF_SMOKE;
+			specialeffect(EF_SMOKE, AREA, playerattached());
 			sleep2 1000;
-			specialeffect2 EF_SMOKE;
+			specialeffect(EF_SMOKE, AREA, playerattached());
 			sleep2 1000;
-			specialeffect2 EF_SMOKE;
+			specialeffect(EF_SMOKE, AREA, playerattached());
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It's almost ran out.. Why not he wakes up..";
 			mes "Oh!!";
-			specialeffect EF_RESURRECTION,AREA,"Richard#14hal02";
+			specialeffect(EF_RESURRECTION, AREA, getnpcid("Richard#14hal02"));
 			next;
 			mes "[Richard]";
 			mes "Uhh.. Umm..";
@@ -1711,7 +1726,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			next;
 			mes "[Richard's Daughter]";
 			mes "Dad!!!";
-			specialeffect EF_SONICBLOWHIT,AREA,"Richard#14hal02";
+			specialeffect(EF_SONICBLOWHIT, AREA, getnpcid("Richard#14hal02"));
 			next;
 			mes "[Richard]";
 			mes "O, Ouch!!!";
@@ -1732,7 +1747,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			mes "[Richard]";
 			mes "I.. came back.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Thank god. Seriously.";
 			mes "It would have been really dangerous if I was a little late.";
 			next;
@@ -1746,7 +1761,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			mes "[Richard]";
 			mes "Yes, yes. You and your mom are the best!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "You can go to Niflheim later.";
 			mes "Why were you in a rush? You have a family.";
 			next;
@@ -1754,7 +1769,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			mes "I know. How could I forget my family?";
 			mes "Anyway I could not even say good bye when I leave..";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I will go and send your regards.";
 			next;
 			mes "[Richard]";
@@ -1775,14 +1790,14 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 			mes "Dad, Dad~ Wake up! It's time to wake up!";
 			mes "I even made the stew for you. Wake and eat it.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Everyone, I am here.";
 			next;
 			mes "[Richard's Wife]";
 			mes "Oh, dear, Adventurer! Welcome!";
 			mes "Did you find a way to bring him back?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yes! Oh, w.wait..";
 			mes "There is something missing. I will get it and come back.";
 			close;
@@ -1793,7 +1808,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 		mes "My sweet heart.. can he come back?";
 		close;
 	} else if (questprogress(14454) == 1) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If it's correct, it should be around here..";
 		next;
 		mes "[Richard's Wife]";
@@ -1806,7 +1821,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 		mes "Play with me~";
 		emotion e_sob, "Worried Daughter#14hal";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hi, Is this Richard's house?";
 		mes "I think I am right..";
 		next;
@@ -1820,7 +1835,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 		mes "Did you find my husband?";
 		mes "But he is right now.. he hasn't waken up since after the accident..";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "So, he is still alive?";
 		mes "And.. his... arm is attached to his body?";
 		next;
@@ -1836,7 +1851,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 		mes "Is there anything I can help you with..?";
 		mes "You seem to know my husband.. Do you know something?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I think we should find out why he is like this.";
 		next;
 		mes "[Richard's Wife]";
@@ -1860,7 +1875,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 		mes "But for some reason, he is not waking up.";
 		mes "The doctor said it's nothing but a concussion and that he'll wake up soon..";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I see.";
 		mes "His soul is in Niflhiem. He thinks he is dead.";
 		next;
@@ -1875,7 +1890,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 		mes "He wanted to be a swordsman.. He must have wanted it so deeply.";
 		mes "He never showed it to us..";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It seems he went there even though he is not dead.";
 		mes "Something must be wrong.";
 		next;
@@ -1883,14 +1898,14 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 		mes "Can.. can he come back?";
 		mes "He is still alive here..";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hmm.. what should I do..?";
 		mes "Oh, yes! I should go to ^0000cdProntera Church^000000.";
 		next;
 		mes "[Richard's Daughter]";
 		mes "Prontera?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "There is ^0000cda nun I get help from sometimes^000000, I should ask if she can help me.";
 		next;
 		mes "[Richard's Wife]";
@@ -1907,8 +1922,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 	}
 }
 
-//= Richard's Daughter
-//==============================================================================
+//== Richard's Daughter ====================================
 xmas_in,163,178,3	script	Worried Daughter#14hal	4_F_NFLOSTGIRL,{
 	mes "[Richard's Daughter]";
 	if (questprogress(14457)) {
@@ -1927,8 +1941,7 @@ xmas_in,163,178,3	script	Worried Daughter#14hal	4_F_NFLOSTGIRL,{
 	close;
 }
 
-//= Richard
-//==============================================================================
+//== Richard ===============================================
 xmas_in,160,178,3	script	Richard#14hal02	4_M_DIEMAN,{
 	mes "[Richard]";
 	if (questprogress(14457) == 2) {
@@ -1944,8 +1957,7 @@ xmas_in,160,178,3	script	Richard#14hal02	4_M_DIEMAN,{
 	close;
 }
 
-//= Event Monsters
-//==============================================================================
+//== Event Monsters ========================================
 gld_dun01_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
 gld_dun02_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
 gld_dun03_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0

@@ -1,16 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Disable Ice Wall.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
+//================= Current Version =======================================
 //= 1.8
-//===== Description: =========================================
+//================= Description ===========================================
 //= Blocks usage of WZ_ICEWALL.
-//===== Additional Comments: =================================
-//= 1.6a - Re-enabled icewalls for cities [Lupus]
-//= 1.7 - Officially icewall is allowed on interiors. [L0ne_w0lf]
-//= 1.8 - Fixed arug_cas map names.
-//============================================================
+//=========================================================================
 
 //ayo_in01	mapflag	noicewall
 //ayo_in02	mapflag	noicewall
@@ -135,47 +158,6 @@ nguild_alde	mapflag	noicewall
 nguild_gef	mapflag	noicewall
 nguild_pay	mapflag	noicewall
 nguild_prt	mapflag	noicewall
-
-//Endless Tower ==================
-1@tower	mapflag	noicewall
-2@tower	mapflag	noicewall
-3@tower	mapflag	noicewall
-4@tower	mapflag	noicewall
-5@tower	mapflag	noicewall
-6@tower	mapflag	noicewall
-
-// Orc's Memory ===================
-1@orcs	mapflag	noicewall
-2@orcs	mapflag	noicewall
-
-// Nidhoggr's Instance ===========
-1@nyd	mapflag	noicewall
-2@nyd	mapflag	noicewall
-
-// Misty Forest Labyrinth ===========
-1@mist	mapflag	noicewall
-
-// Octopus Cave ===========
-1@cash	mapflag	noicewall
-
-// Drain ===========
-1@pump	mapflag	noicewall
-2@pump	mapflag	noicewall
-
-// Somatology Laboratory ===========
-1@lhz	mapflag	noicewall
-
-// Bangungot Hospital F2 ===========
-1@ma_h	mapflag	noicewall
-
-// Buwaya Cave ===========
-1@ma_c	mapflag	noicewall
-
-// Bakonawa Hideout ===========
-1@ma_b	mapflag	noicewall
-
-// Inside Eclage ===========
-1@ecl	mapflag	noicewall
 
 // Poring War ====================
 poring_w01	mapflag	noicewall

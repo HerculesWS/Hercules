@@ -1,17 +1,41 @@
-//===== Hercules Script ======================================
-//= Official Gonryun Power Arena
-//===== By: ==================================================
-//= KarLaeda
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) KarLeada
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Official Kunlun Power Arena
+//================= Description ===========================================
+//= Official Kunlun Power Arena
+//================= Current Version =======================================
 //= 1.2
-//===== Additional Comments: =================================
-//= [Official Conversion]
-//= 1.1 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.2 Cleaning. [Euphy]
-//============================================================
+//=========================================================================
 
 gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -32,7 +56,7 @@ gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 		mes "Oh~ you look strong!";
 		mes "Wanna try?";
 		next;
-		switch(select("Why not?:?????:No thanks.")){
+		switch(select("Why not?", "?????", "No thanks.")){
 		case 1:
 			mes "[Songmoodoo]";
 			mes "Haha~ I knew you would try.";
@@ -64,7 +88,7 @@ gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 		mes "Good to see you again!";
 		mes "Wanna go??";
 		next;
-		if (select("Sure:Maybe next time") == 1) {
+		if (select("Sure", "Maybe next time") == 1) {
 			mes "[Songmoodoo]";
 			mes "Good! Haha.";
 			mes "I like your confidence.";
@@ -89,10 +113,10 @@ gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 	close;
 
 L_Lifting:
-	if (checkweight(7049,getarg(0))) {
+	if (checkweight(Stone,getarg(0))) {
 		mes "You lifted the Stone lightly.^000000";
 		in_battle = 1;
-		getitem 7049, getarg(0); // Stone
+		getitem Stone, getarg(0); // Stone
 		next;
 		emotion e_no1;
 		mes "[Songmoodoo]";
@@ -127,7 +151,7 @@ gon_test,50,14,4	script	Administrator#gnp	8_M_TWSOLDIER,{
 	mes "Remember, you have to pay";
 	mes "500z to fight.";
 	next;
-	if (select("Yes, let me fight!:One moment, please.") == 2) {
+	if (select("Yes, let me fight!", "One moment, please.") == 2) {
 		mes "[Administrator]";
 		mes "Ok, see you later.";
 		close;
@@ -161,7 +185,7 @@ gon_test,42,89,4	script	Summoner#gnp	4_M_TWBOY,{
 	mes "Welcome.";
 	mes "Which monster will you recall?";
 	next;
-	.@gnpGroup = select("Group 1:Group 2:Group 3:Group 4:Group 5:Group 6:Group 7:Group 8:Group 9:Group 10:Group 11");
+	.@gnpGroup = select("Group 1", "Group 2", "Group 3", "Group 4", "Group 5", "Group 6", "Group 7", "Group 8", "Group 9", "Group 10", "Group 11");
 	.@gnpGroupMob$ = .gnpMobsName$[(.@gnpGroup-1)*6];
 	for (.@i = 1; .@i < 6; ++.@i)
 		.@gnpGroupMob$ += ":" + .gnpMobsName$[(.@gnpGroup-1)*6 + .@i];
@@ -230,7 +254,7 @@ gon_test,46,14,3	script	Guide of field of fight	4_F_TWGIRL,{
 	mes "This is a field of fight.";
 	mes "Got any questions?";
 	next;
-	switch(select("A field of fight?:You got a minute lady?:Get in.:Out.:Nope.")){
+	switch(select("A field of fight?", "You got a minute lady?", "Get in.", "Out.", "Nope.")){
 	case 1:
 		mes "[SongHeeYeon]";
 		mes "Just like the name of this place,";
@@ -276,7 +300,7 @@ gon_test,70,103,3	script	ChowAnAn#gnp	4_F_TWMIDWOMAN,{
 	mes "[ChowAnAn]";
 	mes "Want to go back?";
 	next;
-	if (select("Yes.:No.") == 1) {
+	if (select("Yes.", "No.") == 1) {
 		mes "[ChowAnAn]";
 		mes "Thank you.";
 		mes "Please come again.";

@@ -1,28 +1,42 @@
-//===== Hercules Script ======================================
-//= Einbech Town
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//===== Additional Comments: =================================
-//= 0.1  Started writing Einbech npc's. [Muad_Dib]
-//= 0.1a Conversion to eA format [MasterOfMuppets]
-//= 0.1b Added missing tabs. [Mass Zero] 0.1c more missing tabs [Lupus]
-//= 0.2 Added reddozen's NPCs, fixedmissing '";' [Lupus]
-//= 0.2a Removed a few npcs never intended to be there [MasterOfMuppets]
-//= 0.3 Added some more npcs, thanks to Muad_Dib [MasterOfMuppets]
-//= 1.0 Added the last of the town npcs, [MasterOfMuppets]
-//=     all credits to muad_dib for scripting them.
-//= 1.1 Made some changes according to the Shinokas quest, [MasterOfMuppets]
-//=     thanks to Dj-Yhn for scripting them.
-//= 1.2 Removed Duplicates [Silent]
-//= 1.3 Implemented the Lover's quest. [MasterOfMuppets]
-//= 1.4 Moved quests to quests/quests_ein.txt [Evera]
-//= 1.5 Optimized some of the NPCs and fixed some typos [DZeroX]
-//= 1.6 Replaced occurances of PcName. [L0ne_W0lf]
-//============================================================
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) DZeroX
+//= Copyright (C) Evera
+//= Copyright (C) Silent
+//= Copyright (C) Lupus
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Einbech Town
+//================= Description ===========================================
+//= Einbech Town NPCs
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 einbech,172,113,4	script	Nemuk#ein	4_M_EINMAN,{
 	mes "[Nemuk]";
@@ -32,7 +46,7 @@ einbech,172,113,4	script	Nemuk#ein	4_M_EINMAN,{
 	mes "What do you think ";
 	mes "of Einbech?";
 	next;
-	switch(select("It's fine.:It looks tough to live here.")) {
+	switch(select("It's fine.", "It looks tough to live here.")) {
 	case 1:
 		mes "[Nemuk]";
 		mes "Huh...?";
@@ -204,7 +218,7 @@ einbech,39,215,5	script	Train Station Staff#ein3	4_M_EIN_SOLDIER,{
 	mes "200 zeny. Would";
 	mes "you like to ride?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		if (Zeny > 199) {
 			mes "[Staff]";
@@ -429,7 +443,7 @@ ein_in01,279,92,3	script	Tavern Lady#ein	4_M_EINMAN2,{
 	mes "freshly knit doilies?";
 	close;
 }
-	
+
 ein_in01,277,95,7	script	Ryan Danger#air#einbech	4_M_EINMAN,{
 	mes "[R.D. Kim]";
 	mes "Oooh...";
@@ -455,7 +469,7 @@ ein_in01,277,95,7	script	Ryan Danger#air#einbech	4_M_EINMAN,{
 	mes "clothes? I'll buy you whatever";
 	mes "you want, it's on me! C'mon~";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "N-no...!";
 	mes "I-I-I-I...";
 	mes "^666666(This is the";
@@ -475,13 +489,13 @@ ein_in01,277,95,7	script	Ryan Danger#air#einbech	4_M_EINMAN,{
 	mes "Or am I?";
 	mes "Bwahahahaha!";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "(Th-this guy";
 	mes "must be drunk out";
 	mes "of his freakin' mind!)";
 	close;
 }
-	
+
 ein_in01,281,85,3	script	Drunken Man#einbech	4_M_DIEMAN,{
 	mes "[Drunken Man]";
 	mes "...^333333*Hiccup*^000000...";
@@ -506,7 +520,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 	mes "but I'm surprised that elder";
 	mes "people would know so much~";
 	next;
-	switch(select("What are you guys talking about?:Pass on by")) {
+	switch(select("What are you guys talking about?", "Pass on by")) {
 	case 1:
 		mes "[Shena]";
 		mes "Oh? Well, well!";
@@ -514,7 +528,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 		mes "adorable little girl?";
 		mes "Hello, dearie~";
 		next;
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			select("Excuse me, but I'm actually a guy.");
 			mes "[Shena]";
 			mes "Oh, oh are you now?";
@@ -540,7 +554,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 		mes "about the monsters around";
 		mes "here, young lady?";
 		next;
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			select("I told you, I'm a dude...!");
 			mes "[Shena]";
 			mes "Hmm. ''Dude.'' I think";
@@ -558,7 +572,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 			next;
 		}
 		while(1) {
-			switch(select("Metalling:Mineral:Pit Man:Old Stove:Quit")) {
+			switch(select("Metalling", "Mineral", "Pit Man", "Old Stove", "Quit")) {
 			case 1:
 				mes "[Shena]";
 				mes "Well, the Metallings";
@@ -662,7 +676,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 				mes "It's just an evil,";
 				mes "man-eating stove.";
 				next;
-				switch(select("...That's it?:H-horrifying!")) {
+				switch(select("...That's it?", "H-horrifying!")) {
 				case 1:
 					mes "[Shena]";
 					mes "Now, you know the importance";
@@ -740,7 +754,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 		close;
 	}
 }
-	
+
 einbech,48,107,4	duplicate(EinMonsters)	Luda#ein	4_F_EINWOMAN,{
 
 einbech,148,242,5	script	Jung#ein	4_M_EINMAN,{
@@ -759,14 +773,14 @@ einbech,148,242,5	script	Jung#ein	4_M_EINMAN,{
 	mes "the monsters in that place so";
 	mes "that you'll be better prepared.";
 	next;
-	switch(select("Sure, why not?:No, thanks.")) {
+	switch(select("Sure, why not?", "No, thanks.")) {
 	case 1:
 		mes "[Jung]";
 		mes "Let's see. Ah, the monsters that are unique to the Mine Dungeon";
 		mes "are Noxious, Venomous, Pollcellio and Obsidian. Which one do you";
 		mes "want to know more about?";
 		next;
-		switch(select("Noxious and Venomous:Pollcellio:Obsidian")) {
+		switch(select("Noxious and Venomous", "Pollcellio", "Obsidian")) {
 		case 1:
 			mes "[Jung]";
 			mes "You know, no one seems";
@@ -891,7 +905,7 @@ einbech,148,246,5	script	Franz#ein	4_M_REPAIR,{
 	mes "the Mine Dungeon or the fields";
 	mes "around here? Let's chat for a bit and maybe you'll learn something.";
 	next;
-	switch(select("Okay, fine.:No, thanks.")) {
+	switch(select("Okay, fine.", "No, thanks.")) {
 	case 1:
 		mes "[Franz]";
 		mes "Ooh, have you heard";
@@ -901,7 +915,7 @@ einbech,148,246,5	script	Franz#ein	4_M_REPAIR,{
 		mes "Which would you like to";
 		mes "know more about?";
 		next;
-		switch(select("Creature of Mine Dungeon:Town Incident")) {
+		switch(select("Creature of Mine Dungeon", "Town Incident")) {
 		case 1:
 			mes "[Franz]";
 			mes "The creature I'm talking about is Ungoliant, which also called the Master of the Caves around here.";

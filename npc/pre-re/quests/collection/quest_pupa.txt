@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Chrysalis)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 	if (questprogress(60110)) {
@@ -18,7 +38,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Hmm, I don't think you've gotten rid of 50 Pupa yet...";
@@ -32,7 +52,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Halgus]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -59,7 +79,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Hmm, I don't think you've gotten rid of 100 Pupa yet...";
@@ -73,7 +93,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Halgus]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -101,7 +121,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Hmm, I don't think you've gotten rid of 150 Pupa yet...";
@@ -115,7 +135,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Halgus]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -152,24 +172,24 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "None-the-less my daughter thought it would be fun to gather pupa around this field and it's becoming unsightly.";
 			mes "Do you mind helping me get rid of some Pupa to clear out this field?";
 			next;
-			switch(select("Sure, I don't mind:No")) {
+			switch(select("Sure, I don't mind", "No")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Really? What would you like to do to help?";
 				next;
-				switch(select("Gather Items:Get rid of Pupa:Cancel")) {
+				switch(select("Gather Items", "Get rid of Pupa", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Halgus]";
 					mes "Can you collect ^00CE0025 Chrysalis^000000 and return them to me, I promise to reward you well.";
 					next;
-					switch(select("I have Chrysalis:What did you need?")) {
+					switch(select("I have Chrysalis", "What did you need?")) {
 					case 1:
-						if (countitem(915) > 24) {
+						if (countitem(Chrysalis) > 24) {
 							mes "[Halgus]";
 							mes "Amazing you found so many that fast.";
 							mes "Like I promised, give me the Chrysalis and I will reward you with my wisdom.";
-							delitem 915,25; //Chrysalis
+							delitem Chrysalis,25;
 							getexp 385,30;
 							close;
 						}
@@ -189,7 +209,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 					mes "Thank you so much!";
 					mes "How many would you like to get rid of?";
 					next;
-					switch(select("50 Pupa:100 Pupa:150 Pupa")) {
+					switch(select("50 Pupa", "100 Pupa", "150 Pupa")) {
 					case 1:
 						mes "[Halgus]";
 						mes "If you can get rid of 50 of those Pupa from the field I will be grateful.";

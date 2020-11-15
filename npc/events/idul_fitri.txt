@@ -1,23 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Samuray22
+//= Copyright (C) $ephiroth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Feast Day Of Ramadan Idul Fitri Event
-//===== By: ==================================================
-//= $ephiroth
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Official idRO Feast Day of Ramadan Idul Fitri Event.
+//================= Current Version =======================================
 //= 1.1
-//===== Description: =========================================
-//= Info : Official idRO
-//= 2006/10/16: 1.0 Release and fully working. [$ephiroth]
-//= 1.1 Replaced effect numerics with constants. [Samuray22]
-//============================================================
+//=========================================================================
 
 prontera,146,92,3	script	Cellerb	1_M_MERCHANT,{
 	mes "[Staff Idul Fitri]";
-	if((gettime(6)==10 && (gettime(5)==24 || gettime(5)==25))==0) {
+	if ((gettime(GETTIME_MONTH)==OCTOBER && (gettime(GETTIME_DAYOFMONTH)==24 || gettime(GETTIME_DAYOFMONTH)==25))==0) {
 		mes "Congratulation! Celebrate Feast Day Of Ramadan Idul Fitri 1427 H.";
 		specialeffect EF_SANDMAN;
 		close;
 	}
-	mes "Haii......^FF8800"+strcharinfo(0)+"^000000!!";
+	mes "Haii......^FF8800"+strcharinfo(PC_NAME)+"^000000!!";
 	mes "First day of Idul Fitri has arrived.";
 	mes "Congratulation celebrate him.";
 	mes "There is event special today.";
@@ -39,7 +62,7 @@ prontera,146,92,3	script	Cellerb	1_M_MERCHANT,{
 		mes "^000088~2 Green Herb, 5 Stem~.^000000";
 		next;
 		mes "[Staff Idul Fitri]";
-		if ( (countitem(552)<5 || countitem(515)<5 ||countitem(516)<5 || countitem(517)<10 || countitem(511)<2 || countitem(905)<5) ) {
+		if ( (countitem(KETUPAT)<5 || countitem(Carrot)<5 ||countitem(Sweet_Potato)<5 || countitem(Meat)<10 || countitem(Green_Herb)<2 || countitem(Stem)<5) ) {
 			mes "You don't have enough items.";
 			mes "Come back when you have them all.";
 			close;

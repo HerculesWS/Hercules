@@ -26,7 +26,7 @@ prontera,164,203,6	script	Quest Shop#1	4_M_MOCASS2,{ callfunc "qshop"; }
 
 // Script Core
 //============================================================
--	script	quest_shop	-1,{
+-	script	quest_shop	FAKE_NPC,{
 function Add; function Chk; function Slot; function A_An;
 OnInit:
 	freeloop(1);
@@ -96,7 +96,7 @@ OnMenu:
 	}
 	deletearray @i[0],getarraysize(@i);
 	if (.Shops$[.@i] == "") {
-		message strcharinfo(0),"An error has occurred.";
+		message strcharinfo(PC_NAME),"An error has occurred.";
 		end;
 	}
 	dispbottom "Select one item at a time.";
@@ -110,7 +110,7 @@ OnBuyItem:
 	copyarray .@q[3],getd(".q_"+.@q[0]+"[0]"),getarraysize(getd(".q_"+.@q[0]));
 	set .@q[2],.@q[1]*.@q[3];
 	if (!.@q[2] || .@q[2] > 30000) {
-		message strcharinfo(0),"You can't purchase that many "+getitemname(.@q[0])+".";
+		message strcharinfo(PC_NAME),"You can't purchase that many "+getitemname(.@q[0])+".";
 		end;
 	}
 	mes "[Quest Shop]";
@@ -121,12 +121,12 @@ OnBuyItem:
 	if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
 		mes " > "+Chk(countitem(.@q[.@i]),.@q[.@i+1]*.@q[1])+((.ShowID)?"{"+.@q[.@i]+"} ":"")+Slot(.@q[.@i])+" ("+countitem(.@q[.@i])+"/"+(.@q[.@i+1]*.@q[1])+")^000000";
 	next;
-	setarray @qe[1], getiteminfo(.@q[0],5), getiteminfo(.@q[0],11);
-	if (@qe[2] > 0 && ((@qe[1] & 1) || (@qe[1] & 256) || (@qe[1] & 512) || (@qe[1] & 1024) || (@qe[1] & 2048) || (@qe[1] & 4096) || (@qe[1] & 4) || (@qe[1] & 8192)))
+	setarray @qe[1], getiteminfo(.@q[0], ITEMINFO_LOC), getiteminfo(.@q[0], ITEMINFO_VIEWSPRITE);
+	if (@qe[2] > 0 && ((@qe[1] & EQP_HEAD_LOW) || (@qe[1] & EQP_HEAD_TOP) || (@qe[1] & EQP_HEAD_MID) || (@qe[1] & EQP_COSTUME_HEAD_TOP) || (@qe[1] & EQP_COSTUME_HEAD_MID) || (@qe[1] & EQP_COSTUME_HEAD_LOW) || (@qe[1] & EQP_GARMENT) || (@qe[1] & EQP_COSTUME_GARMENT)))
 		set .@preview,1;
-	addtimer 1000, strnpcinfo(0)+"::OnEnd";
+	addtimer 1000, strnpcinfo(NPC_NAME)+"::OnEnd";
 	while(1) {
-		switch(select(" ~ Purchase ^0055FF"+getitemname(.@q[0])+"^000000:"+((.@preview && !@qe[7])?" ~ Preview...":"")+": ~ ^777777Cancel^000000")) {
+		switch(select(" ~ Purchase ^0055FF"+ getitemname(.@q[0]) +"^000000", ((.@preview && !@qe[7])?" ~ Preview...": ""), " ~ ^777777Cancel^000000")) {
 		case 1:
 			if (@qe[0]) {
 				mes "[Quest Shop]";
@@ -135,7 +135,7 @@ OnBuyItem:
 			}
 			if (!checkweight(.@q[0],.@q[2])) {
 				mes "[Quest Shop]";
-				mes "^FF0000You need "+(((.@q[2]*getiteminfo(.@q[0],6))+Weight-MaxWeight)/10)+" additional weight capacity to complete this trade.^000000";
+				mes "^FF0000You need "+(((.@q[2] * getiteminfo(.@q[0], ITEMINFO_WEIGHT)) + Weight - MaxWeight) / 10)+" additional weight capacity to complete this trade.^000000";
 				close;
 			}
 			if (.@q[4]) Zeny -= (.@q[4]*.@q[1]);
@@ -143,8 +143,8 @@ OnBuyItem:
 			if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
 				delitem .@q[.@i],.@q[.@i+1]*.@q[1];
 			getitem .@q[0],.@q[2];
-			if (.Announce) announce strcharinfo(0)+" has created "+((.@q[2] > 1)?.@q[2]+"x "+getitemname(.@q[0]):A_An(getitemname(.@q[0])))+"!",0;
-			specialeffect2 EF_FLOWERLEAF;
+			if (.Announce) announce strcharinfo(PC_NAME)+" has created "+((.@q[2] > 1)?.@q[2]+"x "+getitemname(.@q[0]):A_An(getitemname(.@q[0])))+"!",0;
+			specialeffect(EF_FLOWERLEAF, AREA, playerattached());
 			close;
 		case 2:
 			setarray @qe[3], getlook(LOOK_HEAD_BOTTOM), getlook(LOOK_HEAD_TOP), getlook(LOOK_HEAD_MID), getlook(LOOK_ROBE), 1;
@@ -170,13 +170,13 @@ OnEnd:
 
 function Add {
 	if (getitemname(getarg(1)) == "null") {
-		debugmes "Quest reward #"+getarg(1)+" invalid (skipped).";
+		consolemes(CONSOLEMES_WARNING, "Quest reward #"+getarg(1)+" invalid (skipped).");
 		return;
 	}
 	setarray .@j[0],getarg(2),getarg(3),getarg(4);
 	for(set .@i,5; .@i<getargcount(); set .@i,.@i+2) {
 		if (getitemname(getarg(.@i)) == "null") {
-			debugmes "Quest requirement #"+getarg(.@i)+" invalid (skipped).";
+			consolemes(CONSOLEMES_WARNING,  "Quest requirement #"+getarg(.@i)+" invalid (skipped).");
 			return;
 		} else
 			setarray .@j[.@i-2],getarg(.@i),getarg(.@i+1);
@@ -198,7 +198,7 @@ function Slot {
 	set .@s$,getitemname(getarg(0));
 	switch(.ShowSlot) {
 		case 1: if (!getitemslots(getarg(0))) return .@s$;
-		case 2: if (getiteminfo(getarg(0),2) == 4 || getiteminfo(getarg(0),2) == 5) return .@s$+" ["+getitemslots(getarg(0))+"]";
+		case 2: if (getiteminfo(getarg(0), ITEMINFO_TYPE) == IT_WEAPON || getiteminfo(getarg(0), ITEMINFO_TYPE) == IT_ARMOR) return .@s$+" ["+getitemslots(getarg(0))+"]";
 		default: return .@s$;
 	}
 }
@@ -223,8 +223,8 @@ function	script	qshop	{
 
 // Dummy shop data -- copy as needed.
 //============================================================
--	shop	qshop1	-1,909:-1
--	shop	qshop2	-1,909:-1
--	shop	qshop3	-1,909:-1
--	shop	qshop4	-1,909:-1
--	shop	qshop5	-1,909:-1
+-	shop	qshop1	FAKE_NPC,909:-1
+-	shop	qshop2	FAKE_NPC,909:-1
+-	shop	qshop3	FAKE_NPC,909:-1
+-	shop	qshop4	FAKE_NPC,909:-1
+-	shop	qshop5	FAKE_NPC,909:-1

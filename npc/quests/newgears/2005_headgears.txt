@@ -1,23 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) ultramage
+//= Copyright (C) MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 2005 Headgear Quests
-//===== By: ==================================================
-//= MasterOfMuppets
-//===== Current Version: =====================================
-//= 1.3a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= 2005 Headgears Official Quest.
-//===== Additional Comments: =================================
-//= 1.0 First version, converted from the official aegis script. [MasterOfMuppets]
-//= 1.1 Updated item ids in the zealotus mask npc, now requires a whip [ultramage]
-//= 1.2 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.3 Fixed item check bugs, added missing airport NPC,
-//      and took out unneeded breaks [Xantara] [Muad_Dib]
-//= 1.3a Added 'disable_items' command. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3a
+//=========================================================================
 
 yuno,222,116,3	script	Kasis#LhzHat	4_M_REPAIR,{
-	if(countitem(519) > 49 && countitem(7031) > 49 && countitem(548) > 49 && countitem(539) > 49)
+	if(countitem(Milk) > 49 && countitem(Old_Frying_Pan) > 49 && countitem(Cheese) > 49 && countitem(Piece_Of_Cake) > 49)
 	{
 		mes "[Kasis]";
 		mes "Milk, Cheese,";
@@ -496,7 +516,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				mes "look through your Inventory...";
 				next;
 				@lhzhatfailed = 0;
-				if(countitem(611) < 10)
+				if(countitem(Spectacles) < 10)
 				{
 					mes "[Morris]";
 					mes "Wait. You don't have";
@@ -507,7 +527,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(7301) < 1887 && @lhzhatfailed == 0)
+				if(countitem(Sword_Accessory) < 1887 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -515,7 +535,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(5120) < 1 && @lhzhatfailed == 0)
+				if(countitem(Fedora_) < 1 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -663,7 +683,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				mes "brought everything...";
 				next;
 				@lhzhatfailed = 0;
-				if(countitem(611) < 10)
+				if(countitem(Spectacles) < 10)
 				{
 					mes "[Morris]";
 					mes "Hmm, you don't have";
@@ -674,7 +694,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(7301) < 1887 && @lhzhatfailed == 0)
+				if(countitem(Sword_Accessory) < 1887 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -682,7 +702,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(5120) < 1 && @lhzhatfailed == 0)
+				if(countitem(Fedora_) < 1 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -748,14 +768,14 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 
 lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 	mes "[Kid]";
-	if(Sex)
+	if (Sex == SEX_MALE)
 		mes "Hello, mister!";
 	else
 		mes "Hello, ma'am!";
 	mes "Um, would you do";
 	mes "me a favor, please?";
 	next;
-	if(countitem(526) && countitem(7270) && countitem(941) && countitem(10004))
+	if(countitem(Royal_Jelly) && countitem(Milk_Bottle) && countitem(Nose_Ring) && countitem(Pacifier))
 	{
 		mes "[Kid]";
 		mes "Oh! You brought me";
@@ -809,7 +829,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 			switch( select( "Help him.", "Refuse to help." ) )
 			{
 				case 1:
-					if(!countitem(526))
+					if(!countitem(Royal_Jelly))
 					{
 						mes "[Kid]";
 						mes "If you would, do you think";
@@ -872,7 +892,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 }
 
 einbech,70,222,5	script	Metelle#LhzHat	4_F_02,{
-	if(countitem(983) && countitem(7267) > 998 && countitem(749) && Zeny > 49999)
+	if(countitem(Black_Dyestuffs) && countitem(Tiger_Skin_Panties) > 998 && countitem(Frozen_Rose) && Zeny > 49999)
 	{
 		mes "[Metelle]";
 		mes "Oh, hello, what's this?";
@@ -993,7 +1013,7 @@ lhz_in02,91,38,5	script	Margaret Mary#LhzHat	4_F_01,{
 	switch( select( "Make a Mystic Rose.", "End Conversation." ) )
 	{
 		case 1:
-			if(countitem(731) > 9 && countitem(748) > 2 && countitem(982) && Zeny > 49999)
+			if(countitem(Crystal_Jewel_) > 9 && countitem(Witherless_Rose) > 2 && countitem(White_Dyestuffs) && Zeny > 49999)
 			{
 				mes "[Margaret Mary]";
 				mes "Ah, I see that you've brought";
@@ -1116,8 +1136,8 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 				mes "That is, if you don't";
 				mes "mind me asking you.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
-				mes "My name is " + strcharinfo(0) + "";
+				mes "[" + strcharinfo(PC_NAME) + "]";
+				mes "My name is " + strcharinfo(PC_NAME) + "";
 				mes "and I'm an adventurer~";
 				next;
 				mes "[Achiha]";
@@ -1246,7 +1266,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 		switch( select( "Yes.", "I forgot what I need." ) )
 		{
 			case 1:
-				if(countitem(10015) < 1 || countitem(10007) < 1 || countitem(975) < 1 || countitem(5032) < 1 || Zeny < 50000)
+				if(countitem(Green_Lace) < 1 || countitem(Silk_Ribbon) < 1 || countitem(Scarlet_Dyestuffs) < 1 || countitem(Picnic_Hat) < 1 || Zeny < 50000)
 				{
 					mes "[Achiha]";
 					mes "Uh oh.";
@@ -1319,7 +1339,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 		switch( select( "Yes.", "I forgot what I need." ) )
 		{
 			case 1:
-				if(countitem(10015) < 1 || countitem(10007) < 1 || countitem(975) < 1 || countitem(5032) < 1 || Zeny < 50000)
+				if(countitem(Green_Lace) < 1 || countitem(Silk_Ribbon) < 1 || countitem(Scarlet_Dyestuffs) < 1 || countitem(Picnic_Hat) < 1 || Zeny < 50000)
 				{
 					mes "[Achiha]";
 					mes "Uh oh.";
@@ -1493,7 +1513,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 	}
 	else if(ZLMASKQ == 7)
 	{
-		if(countitem(7263) && countitem(660) && countitem(7099) > 29)
+		if(countitem(Cat_Eyed_Stone) && countitem(Prohibition_Red_Candle) && countitem(Old_Magic_Circle) > 29)
 		{
 			mes "[Zealotus]";
 			mes "I see that you have";
@@ -1533,11 +1553,11 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 					mes "Forbidden Red Candle.";
 					next;
 					mes "[Zealotus]";
-					mes "" + strcharinfo(0) + " will";
+					mes "" + strcharinfo(PC_NAME) + " will";
 					mes "forever have a share";
 					mes "in my power. Those that";
 					mes "bow to me must also bow";
-					mes "to " + strcharinfo(0) + ". It shall be done.";
+					mes "to " + strcharinfo(PC_NAME) + ". It shall be done.";
 					specialeffect EF_DEVIL;
 					specialeffect EF_POISONHIT;
 					next;
@@ -1551,7 +1571,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 					delitem 7263,1;
 					delitem 660,1;
 					delitem 7099,30;
-					getnameditem 5121,strcharinfo(0);
+					getnameditem 5121,strcharinfo(PC_NAME);
 					ZLMASKQ = 8;
 					close;
 			}
@@ -1624,19 +1644,19 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		emotion e_sob;
 
 		if(!(
-			countitem(1950) || countitem(1951) || countitem(1952) ||
-			countitem(1953) || countitem(1954) || countitem(1955) ||
-			countitem(1956) || countitem(1957) || countitem(1958) ||
-			countitem(1959) || countitem(1960) || countitem(1961) ||
-			countitem(1962) || countitem(1963) || countitem(1964) ||
-			countitem(1965) || countitem(1966) || countitem(1967) ||
-			countitem(1968) || countitem(1969) || countitem(1970) ||
-			countitem(1971)
+			countitem(Rope) || countitem(Rope_) || countitem(Line) ||
+			countitem(Line_) || countitem(Wire) || countitem(Wire_) ||
+			countitem(Rante) || countitem(Rante_) || countitem(Tail) ||
+			countitem(Tail_) || countitem(Whip) || countitem(Whip_) ||
+			countitem(Lariat) || countitem(Rapture_Rose) || countitem(Chemeti) ||
+			countitem(Whip_Of_Red_Flame) || countitem(Whip_Of_Ice_Piece) || countitem(Whip_Of_Earth) ||
+			countitem(Jump_Rope) || countitem(Bladed_Whip) || countitem(Queens_Whip) ||
+			countitem(Electric_Wire)
 		))
 			close; // no whip equipped or in inventory
 
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "You're pathetic!";
 		mes "Aren't you supposed";
 		mes "to be a monster? You know";
@@ -1651,7 +1671,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		mes "^3355FFYou nonchalantly^000000";
 		mes "^3355FFbrandish your Whip.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That's right.";
 		next;
 		mes "^3355FF*Snap!*";
@@ -1676,7 +1696,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 	}
 	else if(ZLMASKQ == 2 || ZLMASKQ == 3)
 	{
-		if(countitem(7315) > 368 && ZLMASKQ == 3)
+		if(countitem(Dark_Crystal_Fragment) > 368 && ZLMASKQ == 3)
 		{
 			mes "[Phendark]";
 			mes "Y-you again!";
@@ -1731,7 +1751,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 					delitem 7315,369;
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "So what happens";
 					mes "if I don't decide not";
 					mes "to hurt you? Whatcha";
@@ -1773,7 +1793,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		mes "me or make me eat those";
 		mes "weird crystals again, are you?";
 		next;
-		mes "^3131FF[" + strcharinfo(0) + "]^000000";
+		mes "^3131FF[" + strcharinfo(PC_NAME) + "]^000000";
 		switch( select( "Rybio", "Injustice", "Zealotus" ) )
 		{
 			case 1:
@@ -1866,7 +1886,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		switch( select( "Insult him.", "Apologize." ) )
 		{
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "First of all,";
 				mes "what exactly sets";
 				mes "you apart from all the";
@@ -1881,7 +1901,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 				switch( select( "Break his pride.", "Tell him you were joking." ) )
 				{
 					case 1:
-						mes "^3131FF[" + strcharinfo(0) + "]^000000";
+						mes "^3131FF[" + strcharinfo(PC_NAME) + "]^000000";
 						mes "I mean, there are guys";
 						mes "like Bloody Murderer out";
 						mes "there who are more evil";
@@ -1891,7 +1911,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 						switch( select( "Go for the low blow.", "Try to salvage his confidence." ) )
 						{
 							case 1:
-								mes "[" + strcharinfo(0) + "]";
+								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "You know, me and Zealotus";
 								mes "were actually talking about";
 								mes "you recently. She told me that";
@@ -1899,7 +1919,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 								mes "feel sick! I mean, what kind";
 								mes "of monster is afraid of humans?";
 								next;
-								mes "[" + strcharinfo(0) + "]";
+								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "Now you've reached the";
 								mes "point where even Injustice";
 								mes "is manlier than you now,";
@@ -1936,7 +1956,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 								emotion e_an;
 								close;
 							case 2:
-								mes "^3131FF[" + strcharinfo(0) + "]^000000";
+								mes "^3131FF[" + strcharinfo(PC_NAME) + "]^000000";
 								mes "But know that I think";
 								mes "about it, maybe you look";
 								mes "much tougher than that";
@@ -1949,12 +1969,12 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 								mes "...";
 								mes "......";
 								next;
-								mes "[" + strcharinfo(0) + "]";
+								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "...Yeeeeeah.";
 								close;
 						}
 					case 2:
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "But now that I think";
 						mes "about it, you actually";
 						mes "are much better than all";
@@ -1969,7 +1989,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 						close;
 				}
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I...";
 				mes "I was just kidding!";
 				mes "How could she hate";
@@ -2115,7 +2135,7 @@ airport,148,41,3	script	Freight Manager#toast	4_M_EIN_SOLDIER,{
 	mes "yet. Where could h--Oh!";
 	mes "Hello, welcome to Einbroch~";
 	next;
-	if (isequipped(5107) || countitem(5107)) {
+	if (isequipped(5107) || countitem(Well_Baked_Toast)) {
 		mes "[Kirishu]";
 		mes "Wait a sec, that";
 		mes "Crunch Toast! You must";

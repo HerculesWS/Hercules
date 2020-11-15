@@ -1,20 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015-2020 Hercules Dev Team
+//= Copyright (C) Dastgir
+//= Copyright (C) Capuche
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden Group Quests - Mission [100-110]
-//===== By: ==================================================
-//= Capuche
-//===== Current Version: =====================================
-//= 1.1
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Compatible With: =====================================
-//= Hercules
-//===== Description: =========================================
-//= [Official Conversion]
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= Repeatable quests for players between BaseLevel 100 - 110.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Some CleanUps. [Dastgir]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 	cutin "gelca01",2;
@@ -29,7 +52,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 		end;
 	}
 	mes "[Gelkah]";
-	if (!countitem(Para_Team_Mark)) {
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		mes "- You need to have an -";
 		mes "- ^4d4dff'Eden Group Mark'^000000 -";
 		mes "- to receive these missions. -";
@@ -64,7 +87,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 				mes "That person standing next to me is my master... He came back after long journey of practice.";
 				next;
 				mes "[Gelkah]";
-				mes "I understand you might	wonder why a Sura wants an Archbishop as a teacher...";
+				mes "I understand you might wonder why a Sura wants an Archbishop as a teacher...";
 			}
 			else {
 				cutin "gelca03",2;
@@ -133,7 +156,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 				mes "I think that's what a true master would sound like right?";
 				next;
 				mes "[Gelkah]";
-				mes strcharinfo(0) +" will make a request list for you so go talk to my Master now and show your respects.";
+				mes strcharinfo(PC_NAME) +" will make a request list for you so go talk to my Master now and show your respects.";
 				delitem Brigan,50;// Brigan
 				completequest 13002;// Brigan collecting
 				para_100lv01 = 2;
@@ -650,7 +673,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 						mes "Adventurers sometimes bring special things or trophies from where they visited for a request. It is very good!";
 					}
 					else if (.@ran == 2)
-						mes "If there is something good "+ strcharinfo(0) +" I will try to give you a couple things. I am not sure if there will be enough to give because of so many adventurers.";
+						mes "If there is something good "+ strcharinfo(PC_NAME) +" I will try to give you a couple things. I am not sure if there will be enough to give because of so many adventurers.";
 					else
 						mes "Handling documents must be difficult. It's so much easier to just be out in the field.";
 				}
@@ -666,7 +689,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 					}
 					else {
 						cutin "gelca03",2;
-						mes "I am busy but clearing a lot of requests "+ strcharinfo(0) +" I appreciate it. Lets see. I got some good food from an adventurer that he received during a request.";
+						mes "I am busy but clearing a lot of requests "+ strcharinfo(PC_NAME) +" I appreciate it. Lets see. I got some good food from an adventurer that he received during a request.";
 						next;
 						mes "[Gelkah]";
 						mes "Oops I ate all? Okay just one left. Please drop by later!";
@@ -677,7 +700,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 				else if (para_100lv02 < 80) {
 					cutin "gelca03",2;
 					if (para_100lv01 > 4)
-						mes "Cheer up! "+ strcharinfo(0) +" I'm not sure if he thinks of you as his pupil. He is just out of control.";
+						mes "Cheer up! "+ strcharinfo(PC_NAME) +" I'm not sure if he thinks of you as his pupil. He is just out of control.";
 					else {
 						mes "There are a lot of presents coming in whenever the requests are done efficiently. Here, take this as a prize.";
 						para_100lv01 = 5;
@@ -685,7 +708,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 					}
 				}
 				else if (para_100lv02 > 100) {
-					mes "It is tough work but also fun to with master right "+ strcharinfo(0) +"?";
+					mes "It is tough work but also fun to with master right "+ strcharinfo(PC_NAME) +"?";
 					next;
 					switch( select( "I hate that hot-tempered fool.", "I want you to be the master.", "I would follow you to any battle." ) ) {
 						mes "[Gelkah]";
@@ -697,7 +720,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 						emotion e_heh;
 						break;
 					case 2:
-						if (Sex == 1)
+						if (Sex == SEX_MALE)
 							mes "I'm not sure if I'm cut out for that job. Besides...";
 						else
 							mes "I am sorry to say this but I am the only pupil of master now and forever... He said ^FF0000I don't need an ugly female pupil^000000 but I still stick to him.";
@@ -782,7 +805,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 								.@ran = rand(1,1000);
 								if (.@amount == 1) {
 									if (.@ran <= 100)
-										setarray .@item[0],Blue_Potion,2; 
+										setarray .@item[0],Blue_Potion,2;
 									else if (.@ran <= 200)
 										setarray .@item[0],White_Slim_Potion,10;
 									else if (.@ran == 333)
@@ -940,7 +963,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 	else {
 		cutin "gelca03",2;
 		if (para_100lv02 > 100)
-			mes strcharinfo(0) +"! You did a good job! There are more requests but reserve them for the other adventurers.";
+			mes strcharinfo(PC_NAME) +"! You did a good job! There are more requests but reserve them for the other adventurers.";
 		if (para_100lv02 < 101)
 			mes "I do not think you are suitable to the request I can give. Please find other adventures.";
 		callsub S_Hunting,13003,106000,148000,"Carat";// <quest id>, <job exp if joblevel < 6>, <job exp>, <quest name>
@@ -1019,11 +1042,12 @@ S_Hunting:
 		break;
 	}
 	erasequest getarg(0);
+	return;
 }
 
 moc_para01,41,95,5	script	Rohtert#12	4_M_ROTERT,{
 	mes "[Rohtert]";
-	if (!countitem(Para_Team_Mark)) {// Para_Team_Mark
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		cutin "rote01",2;
 		mes "You are not even a member of Eden Group. What are you doing here?";
 		mes "I'm only dealing with base level ^FF0000100 - 110^000000 adventurers.";
@@ -1223,7 +1247,7 @@ moc_para01,41,95,5	script	Rohtert#12	4_M_ROTERT,{
 					next;
 					cutin "gelca02",2;
 					mes "[^FF0000Gelkah^000000]";
-					mes "......."+ strcharinfo(0) +" wait...";
+					mes "......."+ strcharinfo(PC_NAME) +" wait...";
 					next;
 					cutin "gelca01",2;
 					mes "[^FF0000Gelkah^000000]";

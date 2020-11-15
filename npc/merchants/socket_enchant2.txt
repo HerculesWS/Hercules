@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Gepard
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Episode 12 Socket Enchant NPC
-//===== By: ==================================================
-//= Gepard
-//===== Current Version: =====================================
-//= 1.1a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Adds slots to selected weapons and armor.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Duplicates now spawn from floating NPCs. [L0ne_W0lf]
-//= 1.1a Added 'disable_items' command. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1a
+//=========================================================================
 
--	script	Leablem#dummy::SocketEnchant2	-1,{
-	if (checkweight(1201,1) == 0)
+-	script	Leablem#dummy::SocketEnchant2	FAKE_NPC,{
+	if (checkweight(Knife,1) == 0)
 	{
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -62,7 +83,7 @@
 	mes "and the success chance all depend on";
 	mes "the specific item I'm working on.";
 	next;
-	switch(select("Weapon:Armor:About that thing you skipped:More information:Quit"))
+	switch(select("Weapon", "Armor", "About that thing you skipped", "More information", "Quit"))
 	{
 		case 1:
 			mes "[Leablem]";
@@ -72,14 +93,14 @@
 			mes "C class is the easiest one, and S class is the hardest one.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C:B:A:S"))
+			switch(select("C", "B", "A", "S"))
 			{
 				case 1:
 					mes "[Leablem]";
 					mes "C class, I see.";
 					mes "So, what kind of weapon do you have?";
 					next;
-					switch(select("Book of Mother Earth:Book of Billows:Book of Gust of Wind:Book of the Blazing Sun"))
+					switch(select("Book of Mother Earth", "Book of Billows", "Book of Gust of Wind", "Book of the Blazing Sun"))
 					{
 						case 1: callfunc "Func_Socket2",1554,1569,40,66,200,1010,10;
 						case 2: callfunc "Func_Socket2",1553,1568,40,66,200,1010,10;
@@ -91,7 +112,7 @@
 					mes "You have chosen average B class.";
 					mes "So, what kind of weapon do you have?";
 					next;
-					switch(select("Orcish Axe:Scimiter:Spike"))
+					switch(select("Orcish Axe", "Scimiter", "Spike"))
 					{
 						case 1: callfunc "Func_Socket2",1304,1309,40,66,200,984,1;
 						case 2: callfunc "Func_Socket2",1113,1114,40,66,200,984,1;
@@ -102,7 +123,7 @@
 					mes "A class? You seem to want little too much. But, no problem.";
 					mes "So, what kind of weapon do you have?";
 					next;
-					switch(select("Dragon Killer:Katar of Quaking:Katar of Raging Blaze:Katar of Frozen Icicle:Katar of Piercing Wind:Golden Mace:Oriental Lute:Queen's Whip:Spectral Spear:Gae Bolg:Schweizersabel"))
+					switch(select("Dragon Killer", "Katar of Quaking", "Katar of Raging Blaze", "Katar of Frozen Icicle", "Katar of Piercing Wind", "Golden Mace", "Oriental Lute", "Queen's Whip", "Spectral Spear", "Gae Bolg", "Schweizersabel"))
 					{
 						case 1:  callfunc "Func_Socket2",13001,13030,40,61,500,984,2;
 						case 2:  callfunc "Func_Socket2", 1257, 1276,40,66,500,984,2;
@@ -121,7 +142,7 @@
 					mes "Huh, S Class?! Oh my god, are you serious?*Tremble*";
 					mes "So...which S class weapon would you like to make a slot?!";
 					next;
-					switch(select("Zephyrus:Mailbreaker:Dragon Slayer:Swordbreaker:Assasin Dagger:Grand Cross:Executioner"))
+					switch(select("Zephyrus", "Mailbreaker", "Dragon Slayer", "Swordbreaker", "Assasin Dagger", "Grand Cross", "Executioner"))
 					{
 						case 1: callfunc "Func_Socket2",1468, 1481,40,51,1000,984,5,999,10;
 						case 2: callfunc "Func_Socket2",1225,13032,40,51,1000,984,5,999,10;
@@ -140,14 +161,14 @@
 			mes "C class is the easiest one, and S class is the hardest one.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C:B:A:S"))
+			switch(select("C", "B", "A", "S"))
 			{
 				case 1:
 					mes "[Leablem]";
 					mes "C class, I see.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch(select("Sunflower:Ph.D Hat:Big Ribbon:Boys Cap"))
+					switch(select("Sunflower", "Ph.D Hat", "Big Ribbon", "Boys Cap"))
 					{
 						case 1: callfunc "Func_Socket2",2253,5351,40,66,100,999,3;
 						case 2: callfunc "Func_Socket2",5012,5347,40,66,100,999,3;
@@ -159,7 +180,7 @@
 					mes "You have chosen average B class.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch(select("Skull Ring:High Heels"))
+					switch(select("Skull Ring", "High Heels"))
 					{
 						case 1: callfunc "Func_Socket2",2609,2715,40,61,300,999,5;
 						case 2: callfunc "Func_Socket2",2409,2432,40,61,300,999,5;
@@ -169,7 +190,7 @@
 					mes "A class? You seem to want little too much. But, no problem.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch (select("Pirate Bandana:Black Leather Boots"+(RENEWAL?":Special Ninja Suit":""))) {
+					switch (select("Pirate Bandana", "Black Leather Boots", (RENEWAL?"Special Ninja Suit": ""))) {
 						case 1: callfunc "Func_Socket2",2287,5350,50,61,500,985,1; // 50,61 - it's not a typo
 						case 2: callfunc "Func_Socket2",2425,2434,40,51,500,985,1;
 						case 3: callfunc "Func_Socket2",15053,15056,50,61,500,985,1;
@@ -179,7 +200,7 @@
 					mes "Huh, S Class?! Oh my god, are you serious?*Tremble*";
 					mes "So...which S class armor would you like to make a slot?!";
 					next;
-					switch(select("Mage Coat:Holy Robe:Sacred Mission:Undershirt:Pantie"))
+					switch(select("Mage Coat", "Holy Robe", "Sacred Mission", "Undershirt", "Pantie"))
 					{
 						case 1: callfunc "Func_Socket2",2334,2372,40,51,1000,985,1; // Mage Coat has 10% success chance
 						case 2: callfunc "Func_Socket2",2327,2373,45,51,1000,985,1; // the rest has 5%
@@ -271,7 +292,7 @@
 					mes "We don't have time to waste,";
 					mes "so let's get down to business right away.";
 					next;
-					if ((Zeny > 199999999) && (countitem(969) > 1) && (countitem(5022) > 0))
+					if ((Zeny > 199999999) && (countitem(Gold) > 1) && (countitem(Helm_Of_Sun) > 0))
 					{
 						mes "[Leablem]";
 						mes "Shall we start now?";
@@ -285,10 +306,10 @@
 							mes "Excellent! Wow, I guess the 90% success chance is true!";
 							mes "Look, the slot was added in the perfect place.";
 							mes "Congratulations.";
-							delitem 5022,1; //Helm_Of_Sun
-							delitem 969,2; //Gold
+							delitem Helm_Of_Sun,1;
+							delitem Gold,2;
 							Zeny -= 200000000;
-							getitem 5353,1; //Helm_Of_Sun_
+							getitem Helm_Of_Sun_,1;
 							next;
 							mes "[Leablem]";
 							mes "This is the first and last time I will do this for you.";
@@ -304,8 +325,8 @@
 							mes "My god, I guess we had the worst kind of luck...";
 							mes "What should we do? ...This is why";
 							mes "I didn't want to do in the first place!";
-							delitem 5022,1; //Helm_Of_Sun
-							delitem 969,2; //Gold
+							delitem Helm_Of_Sun,1;
+							delitem Gold,2;
 							Zeny -= 200000000;
 							next;
 							mes "[Leablem]";
@@ -404,11 +425,11 @@ function	script	Func_Socket2	{
 	mes "[Leablem]";
 	mes "Did you already bring all of them?";
 	mes "For your information, if you fail to create a slot,";
-	mes "you will lose all the item requirement as well as the target " + (getiteminfo(getarg(0),5)&2 ? "weapon" : "armor") + "."; // EQP_HAND_R = 2, it's a weapon, otherwise armor
-	mes "Also remember, if the " + (getiteminfo(getarg(0),5)&2 ? "weapon" : "armor") + " has been upgraded, and has been inserted with a card,";
+	mes "you will lose all the item requirement as well as the target " + ((getiteminfo(getarg(0), ITEMINFO_LOC) & EQP_HAND_R) ? "weapon" : "armor") + "."; // EQP_HAND_R = 2, it's a weapon, otherwise armor
+	mes "Also remember, if the " + ((getiteminfo(getarg(0), ITEMINFO_LOC) & EQP_HAND_R) ? "weapon" : "armor") + " has been upgraded, and has been inserted with a card,";
 	mes "you will lose them even if you succeed in creating a slot.";
 	next;
-	switch(select("Ask for slot creation.:Try next time."))
+	switch(select("Ask for slot creation.", "Try next time."))
 	{
 		case 1:
 			if ((Zeny >= getarg(4)*1000) && (countitem(getarg(5)) >= getarg(6)) && (countitem(getarg(7,512)) >= getarg(8,0)) && (countitem(getarg(0)) > 0)) // if there's no getarg(7) and getarg(8) provided, check itemcount against 0 (we still need a valid item ID though)

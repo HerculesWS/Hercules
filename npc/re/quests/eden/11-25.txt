@@ -1,26 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden Group Quests - Mission [11 - 25]
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Repetable Quests for Players between Baselevel 11 - 25.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Some little optimization here and there. [Masao]
-//= 1.2 Optimized. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
-	if (countitem(6219) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "- You need to have an -";
 		mes "- ^4d4dff'Eden Group Mark'^000000 -";
 		mes "- to receive these missions. -";
 		close;
 	}
 	for(.@i = 11124; .@i<11134; ++.@i)
-		if (questprogress(.@i,PLAYTIME) == 2) erasequest .@i;
+		if (questprogress(.@i,PLAYTIME) == 2)
+			erasequest .@i;
 	for(.@i = 11114; .@i<11123; ++.@i) {
 		.@state = questprogress(.@i,HUNTING);
 		if (.@state == 2) {
@@ -56,7 +79,7 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	mes " ";
 	mes " - Manager : Spike -";
 	next;
-	switch(select("Hornet Hunting:Condor Hunting:Grasshopper's Leg:Worm Tail Hunting:Spore Hunting:Pest Control:Muka Hunting:Familiar Hunting:Collect Feathers:Collect Poison Spores:Cancel")) {
+	switch(select("Hornet Hunting", "Condor Hunting", "Grasshopper's Leg", "Worm Tail Hunting", "Spore Hunting", "Pest Control", "Muka Hunting", "Familiar Hunting", "Collect Feathers", "Collect Poison Spores", "Cancel")) {
 		case 1: callsub L_Quest,11114,"Hornet Hunting"," - Hunt 10 ^4d4dff'Hornets'^000000 - "," - northwest of Prontera. - ";
 		case 2: callsub L_Quest,11115,"Condor Hunting"," - Hunt 20 ^4d4dff'Condors'^000000 - "," - south of Morroc. - ";
 		case 3: callsub L_Quest,11116,"Grasshopper's Leg"," - Hunt 10 ^4d4dff'Rockers'^000000 - "," - southwest of Prontera and - "," - bring 10 ^4d4dffGrasshopper's Legs^000000. - ";
@@ -71,7 +94,7 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	}
 	end;
 L_Quest:
-	if (questprogress(getarg(0),PLAYTIME) == 1) {
+	if (questprogress(getarg(0)+10,PLAYTIME) == 1) {
 		mes " - Mission ^4d4dff"+getarg(1)+"^000000 - ";
 		mes " - is already finished for today. - ";
 		mes " ";
@@ -84,7 +107,7 @@ L_Quest:
 	mes " ";
 	mes " - Manager : Spike - ";
 	next;
-	if(select("I will do this mission.:Look for other missions.") == 2) {
+	if(select("I will do this mission.", "Look for other missions.") == 2) {
 		mes " - Let's search for -";
 		mes " - other missions. - ";
 		close;

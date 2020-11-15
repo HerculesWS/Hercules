@@ -1,18 +1,41 @@
-//===== Hercules Script ======================================
-//= Counteragent and Mixture Quest(Morgenstein)
-//===== By: ==================================================
-//= kobra_k88
-//= added some dialogs for Morgenstein by Komurka
-//===== Current Version: =====================================
-//= 2.2b
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Nexon
+//= Copyright (C) Darkchild
+//= Copyright (C) Lupus
+//= Copyright (C) Komurka
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Counteragent and Mixture Quest (Morgenstein)
+//================= Description ===========================================
 //= Counteragent and Mixtures for making dyes & Alchemist Job Quest
-//===== Additional Comments: =================================
-//= 2.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.2a A few minor fixes. (bugreport:1122) [L0ne_W0lf]
-//= 2.2b Follow up fixes to bugreport:1122 [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 2.2b
+//=========================================================================
 
 alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 	if (molgenstain == 2) {
@@ -22,7 +45,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 		mes "that nutcase scientist";
 		mes "who lives over in Geffen?";
 		next;
-		if (select("Talk About Molgenstein:Cancel") == 1) {
+		if (select("Talk About Molgenstein", "Cancel") == 1) {
 			mes "[Merchant Louitz]";
 			mes "You know where he lives";
 			mes "but didn't check it out? Hey,";
@@ -51,8 +74,8 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 	mes "Heya.";
 	mes "What's up?";
 	next;
-	if (countitem(971) > 0 && countitem(972) > 0) {
-		switch(select("Talk:Talk about the solutions.:Cancel")) {
+	if (countitem(Detrimindexta) > 0 && countitem(Karvodailnirol) > 0) {
+		switch(select("Talk", "Talk about the solutions.", "Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
 			mes "When I was in Geffen";
@@ -106,7 +129,6 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "[Merchant Louitz]";
 			mes "Hmm... You better";
 			mes "go around Geffen and";
-			mes "around first. I know for";
 			mes "ask around first. I know for";
 			mes "sure that somebody knows";
 			mes "where you can find Molgenstein.";
@@ -121,8 +143,8 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			close;
 		}
 	}
-	if (countitem(972) > 0) {
-		switch(select("Talk:Talk about Karvodailnirol:Cancel")) {
+	if (countitem(Karvodailnirol) > 0) {
+		switch(select("Talk", "Talk about Karvodailnirol", "Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
 			mes "When I was in Geffen";
@@ -176,7 +198,6 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "[Merchant Louitz]";
 			mes "Hmm... You better";
 			mes "go around Geffen and";
-			mes "around first. I know for";
 			mes "ask around first. I know for";
 			mes "sure that somebody knows";
 			mes "where you can find Molgenstein.";
@@ -191,8 +212,8 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			close;
 		}
 	}
-	if (countitem(971) > 0) {
-		switch(select("Talk:Talk about Detrimindexta:Cancel")) {
+	if (countitem(Detrimindexta) > 0) {
+		switch(select("Talk", "Talk about Detrimindexta", "Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
 			mes "When I was in Geffen";
@@ -246,7 +267,6 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			mes "[Merchant Louitz]";
 			mes "Hmm... You better";
 			mes "go around Geffen and";
-			mes "around first. I know for";
 			mes "ask around first. I know for";
 			mes "sure that somebody knows";
 			mes "where you can find Molgenstein.";
@@ -261,7 +281,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			close;
 		}
 	}
-	if (select("Talk:Cancel") == 1) {
+	if (select("Talk", "Cancel") == 1) {
 		mes "[Merchant Louitz]";
 		mes "When I was in Geffen";
 		mes "looking for magic items,";
@@ -311,7 +331,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 		mes "Coincidence? It's more";
 		mes "than that. This is ^0000FFfate^000000.";
 		next;
-		if (select("Talk About Molgenstein:Cancel") == 1) {
+		if (select("Talk About Molgenstein", "Cancel") == 1) {
 			mes "[Aure Dupon]";
 			mes "Have you not met";
 			mes "Molgenstein yet? He";
@@ -337,7 +357,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 	mes "mote in the grand scheme.";
 	next;
 	if (molgenstain > 0) {
-		switch(select("Talk:Ask About Molgenstein:Cancel")) {
+		switch(select("Talk", "Ask About Molgenstein", "Cancel")) {
 		case 1:
 			mes "[Aure Dupon]";
 			mes "To have goals and focus";
@@ -374,7 +394,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 			close;
 		}
 	}
-	if (select("Talk:Cancel") == 1) {
+	if (select("Talk", "Cancel") == 1) {
 		mes "[Aure Dupon]";
 		mes "To have goals and focus";
 		mes "is good, but to be obsessive";
@@ -393,7 +413,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 }
 
 geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -408,7 +428,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 		mes "Hehehehe....";
 		mes "Heeheeheeheehee....";
 		next;
-		switch(select("Ask about his research:Ask him to make a new solution.:Cancel")) {
+		switch(select("Ask about his research", "Ask him to make a new solution.", "Cancel")) {
 		case 1:
 			mes "[Chemist Molgenstein]";
 			mes "Heeheeheeheee...";
@@ -437,7 +457,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 			mes "So...";
 			mes "You want me to make something totally new, huh? Hehhehheh! I love your sense of scientific adventure!";
 			next;
-			switch(select("Counteragent:Mixture")) {
+			switch(select("Counteragent", "Mixture")) {
 			case 1:
 				mes "[Chemist Molgenstein]";
 				mes "Ooh...!";
@@ -450,8 +470,8 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 				mes "Bwahahahah!";
 				mes "Oh, I just can't wait to make this! Are you ready to begin?";
 				next;
-				if (select("Make:Cancel") == 1) {
-					if (countitem(970) == 0 || countitem(971) == 0 || countitem(713) == 0 || Zeny < 3000) {
+				if (select("Make", "Cancel") == 1) {
+					if (countitem(Alchol) == 0 || countitem(Detrimindexta) == 0 || countitem(Empty_Bottle) == 0 || Zeny < 3000) {
 						mes "[Chemist Molgenstein]";
 						mes "Heuheuheuheuh.... not enough... not enough.. Haah...Haah... Go..... get the rest of the materials!";
 						mes "We'll postpone the fun until then... Heuheuheuheuheuh.";
@@ -461,16 +481,16 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 					mes "Ooooooooh...... heeheeheeheehee...... yes... like that...... yes... more... more........ heeheeheehee.";
 					mes ".... Aaah.... ahah... ha....ahahooooooooohoh!";
 					next;
-					if (countitem(970) < 1 || countitem(971) < 1 || countitem(713) < 1) {
+					if (countitem(Alchol) < 1 || countitem(Detrimindexta) < 1 || countitem(Empty_Bottle) < 1) {
 						mes "[Chemist Molgenstein]";
 						mes "Hohohoho.... not enough... not enough... haah...haah... go..... go get the rest of the materials!!";
 						close;
 					}
-					delitem 970,1; //Alchol
-					delitem 971,1; //Detrimindexta
-					delitem 713,1; //Empty_Bottle
+					delitem Alchol,1;
+					delitem Detrimindexta,1;
+					delitem Empty_Bottle,1;
 					Zeny -= 3000;
-					getitem 973,1; //Counteragent
+					getitem Counteragent,1;
 					mes "[Chemist Molgenstein]";
 					mes "Hee hee hee...";
 					mes "Haaaaah......";
@@ -494,8 +514,8 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 				mes "Bwahahahah!";
 				mes "Oh, I just can't wait to make this! Are you ready to begin?";
 				next;
-				if (select("Make:Cancel") == 1) {
-					if (countitem(970) == 0 || countitem(972) == 0 || countitem(713) == 0 || Zeny < 4000) {
+				if (select("Make", "Cancel") == 1) {
+					if (countitem(Alchol) == 0 || countitem(Karvodailnirol) == 0 || countitem(Empty_Bottle) == 0 || Zeny < 4000) {
 						mes "[Chemist Molgenstein]";
 						mes "Hohohoho.... not enough... not enough... haah...haah... go..... go get the rest of the materials!!";
 						mes "We'll have to postpone the fun for later... Hehehehe";
@@ -505,16 +525,16 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 					mes "Ooooooooh... heehee...... yes... like that...... yes... more... more........ heeheeheehee";
 					mes ".... Aaah.... ahah... ha....ahah...oooooooooooooooooh!!!...!!!!!!";
 					next;
-					if (countitem(970) < 1 || countitem(972) < 1 || countitem(713) < 1) {
+					if (countitem(Alchol) < 1 || countitem(Karvodailnirol) < 1 || countitem(Empty_Bottle) < 1) {
 						mes "[Chemist Molgenstein]";
 						mes "Hohohoho.... not enough... not enough... haah...haah... go..... go get the rest of the materials!!";
 						close;
 					}
-					delitem 970,1; //Alchol
-					delitem 972,1; //Karvodailnirol
-					delitem 713,1; //Empty_Bottle
+					delitem Alchol,1;
+					delitem Karvodailnirol,1;
+					delitem Empty_Bottle,1;
 					Zeny -= 4000;
-					getitem 974,1; //Mixture
+					getitem Mixture,1;
 					mes "[Chemist Molgenstein]";
 					mes "Hee hee hee...";
 					mes "Haaaaah......";
@@ -545,7 +565,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 		mes "Ah...?!";
 		mes "So sorry if I weirded you out. It's just... I haven't seen a living person in soooo long. So, er, what can I do for you??";
 		next;
-		if (select("Ask about his research.:Cancel.") == 1) {
+		if (select("Ask about his research.", "Cancel.") == 1) {
 			mes "[Chemist Molgenstein]";
 			mes "Heeheeheeheee...";
 			mes "You must have heard the rumors about my research. Yes! But since you probably know already, I'll tell you without hiding, I mean, there's nothing to hide.";
@@ -576,18 +596,3 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 	mes "You're not here to be a test subject, are you? Probably not though. Not since my little 'accident.' Heeheeheeee~!";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 Fully working
-//= 1.1 Update for Alchemist Quest.
-//= 1.2 added check for Empty Bottle [Lupus]
-//= 1.3 Fixed some lil thingys [Darkchild]
-//= 1.4 More li'l thing, added comments for items IDs [Lupus]
-//= 1.5 Fixed Spelling mistakes. [Nexon]
-//= 1.6 Fixed some bugs, also related to Alch Job quest [Lupus]
-//= 1,7 Fixed exploit
-//= 1.8 Got rid of 'al_morgen' var [Lupus]
-//= 2.1 now uses (MISC_QUEST & 4) bit instead of al_morgen [Lupus]
-//============================================================

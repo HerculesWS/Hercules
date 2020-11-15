@@ -1,53 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) JayPee
+//= Copyright (C) Kisuka
+//= Copyright (C) brianluau
+//= Copyright (C) Zephyrus
+//= Copyright (C) Zephyrus_cr
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Toms
+//= Copyright (C) Silent
+//= Copyright (C) Vicious
+//= Copyright (C) Lupus
+//= Copyright (C) Pgro Team (OwNaGe)
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Assassin Job Quest
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 3.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job Change quest for Assassin class.
-//===== Additional Comments: =================================
-//= 1.0 Used some dialogue from the aegis Assassin script translated By: Pgro Team (OwNaGe)
-//=     Also converted the booby traps from the aegis script.[kobra_k88]
-//= 1.1 Made adjustments to ontouch npcs to work with the new "ontouch" functionality.
-//=     Fixed some duplicate npc names.  Added missing waitingroom triggers.
-//=     Fixed warp in "TimerSin", was supposed to be an areawarp.
-//=     For some reason sometimes the "Nameless One" would have message windows
-//=     without controls.  Changed the doevent that triggers him to an
-//=     addtimer and that seemed make the prob. go away[kobra_k88]
-//= 1.2 Fixed WRONG skillpoint check! [Lupus]
-//= 1.2b Fixed missing commands and typos [Lupus]
-//= 1.3 Baby class Support added [Lupus]
-//= 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//=     2nd Job Quests again. It also guides adv classes where
-//=     to go. [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Removed Duplicates [Silent]
-//= 2.2 Merged back JFunc. Fixed missing dialogue [Lupus]
-//= 2.3 Fixed typo and change Nameless addtimer to 100 (with 700ms I
-//=     was still able to bypass it) [Toms]
-//= 2.4 Fixed skipping of Nameless NPC [Lupus]
-//= 2.5 Fixed a Rogue exploit [Lupus]
-//= 2.6 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.7 Several bugfixes with the help of Samuray22 and Barron-Monster. [L0ne_W0lf]
-//= 2.8 Removed duplicate warps. [L0ne_W0lf]
-//= 2.8a Deleted unused variables. [Samuray22]
-//= 2.8b Fixed error caused in last updated, removed useless variable 'joblvl'. [L0ne_W0lf]
-//= 2.9 Fixed an indent and added a 'break;' in hopes of 'fixing' an error [L0ne_W0lf]
-//= 2.9a Corrected a Typo error ";;". [Samuray22]
-//= 2.9b Moved a wrong 'break'. [Zephyrus_cr]
-//= 3.0 Now uses enable and disable waitingroomevent. [L0ne_W0lf]
-//= 3.1 Fixed problem with waiting room. (bugreport:1099) [L0ne_W0lf]
-//= 3.1a Follow up fix. Forgot to replace a label. [L0ne_W0lf]
-//= 3.1b Fixed waiting room not enabled in some situations [Zephyrus]
-//= 3.2 Fixed a question having all correct answers. [brianluau]
-//= 3.3 Added Quest Log commands. [Kisuka]
-//= 3.4 Removed the need for use of 'goto.' [L0ne_W0lf]
-//= 3.5 Fixed the waitingroom where player can enter the Test Area without passing the written exam. Now player will not be warp inside the Test Area when did not passed the written exam instead the player will be warp back to the written exam entrance [JayPee]
-//= 3.6 Fixed broken event calls. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 3.6
+//=========================================================================
 
 in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 	if (Upper == 1) {
@@ -76,7 +72,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "Is it that hard to stay alive?";
 		mes "Why don't you try harder next time? You can't force yourself too hard to become an Assassin...";
 		next;
-		if (select("I will become an Assassin no matter what!:Oh man, I gotta take a break.") == 1) {
+		if (select("I will become an Assassin no matter what!", "Oh man, I gotta take a break.") == 1) {
 			mes "[Ferocious-looking guy]";
 			mes "Oh...";
 			mes "Well then,";
@@ -99,7 +95,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		warp "in_moc_16",18,14;
 		end;
 	}
-	if (BaseJob == Job_Thief && countitem(1008) == 0 && ASSIN_Q > 7) {
+	if (BaseJob == Job_Thief && countitem(Frozen_Heart) == 0 && ASSIN_Q > 7) {
 		mes "[Assassin Expert 'Huey']";
 		mes "Hey, what happened...? How come you didn't bring the ^006699Necklace of Oblivion^000000? You're supposed to carry that with you, so where is it?";
 		next;
@@ -110,7 +106,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "When you finally succeed in getting it, bring it to me! ^666666*Sigh...*^000000";
 		close;
 	}
-	if (BaseJob == Job_Thief && countitem(1008) > 0 && ASSIN_Q > 7) {
+	if (BaseJob == Job_Thief && countitem(Frozen_Heart) > 0 && ASSIN_Q > 7) {
 		mes "[Assassin Expert 'Huey']";
 		mes "Well well well, you got it. Congratulations! But since it's been clearly scratched, I can't accept it. You'll never become an Assassin!";
 		next;
@@ -124,7 +120,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "...";
 		mes "......";
 		next;
-		delitem 1008,1; //Frozen_Heart
+		delitem Frozen_Heart,1;
 		changequest 8007,8008;
 		mes "[Assassin Expert 'Huey']";
 		mes "Alright!";
@@ -137,7 +133,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "Now! Do your best to be a great Assassin! Travel with faith and kill with dignity. Come by anytime and pay us a visit. Once again, congratulations.";
 		close;
 	}
-	else if (countitem(1008) > 0 && BaseJob == Job_Thief && ASSIN_Q < 7) {
+	else if (countitem(Frozen_Heart) > 0 && BaseJob == Job_Thief && ASSIN_Q < 7) {
 		mes "[Ferocious-looking guy]";
 		mes "Eh?";
 		mes "What do you want?";
@@ -224,7 +220,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 			mes "Wasn't your name, umm, I remember 'cause it sounded funny to me...";
 			next;
 			mes "[Assassin Expert 'Huey']";
-			mes ":+:" + strcharinfo(0) + ":+:, right? No wait, just "+ strcharinfo(0) +". Yeah, how's it goin'?";
+			mes ":+:" + strcharinfo(PC_NAME) + ":+:, right? No wait, just "+ strcharinfo(PC_NAME) +". Yeah, how's it goin'?";
 			next;
 			mes "[Assassin Expert 'Huey']";
 			mes "Unfortunately, I don't have any requests for you at this time from the guild. Just keep focusing on your training. Till then, see ya.";
@@ -247,7 +243,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 				mes "[Ferocious-looking guy]";
 				mes "So how about taking the next step and becoming an Assassin?";
 				next;
-				switch(select("Yes. I've picked my last pocket.:What's the requirements?:Maybe later, I need to steal some things first.")) {
+				switch(select("Yes. I've picked my last pocket.", "What's the requirements?", "Maybe later, I need to steal some things first.")) {
 				case 1:
 					mes "[Ferocious-looking guy]";
 					mes "It's been a while since I've received a guest. I'm sending";
@@ -327,7 +323,7 @@ OnTouch:
 		mes "[Assassin 'Khai']";
 		mes "Sorry for laughing, but this is hilarious! Hahaha~ So do you want me to give you some hints?";
 		next;
-		switch(select("I beg you, give me hints.:Don't laugh at me! Now, give me hints!:...Shut up, I don't need your help!")) {
+		switch(select("I beg you, give me hints.", "Don't laugh at me! Now, give me hints!", "...Shut up, I don't need your help!")) {
 		case 1:
 			mes "[Assassin 'Khai']";
 			mes "Haaahahahaha!!!";
@@ -381,7 +377,7 @@ OnTouch:
 			close;
 		case 2:
 			mes "[Assassin 'Khai']";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Huh. You must have a lot of self confidence to be a Thief nowadays.";
 				next;
 				mes "[Assassin 'Khai']";
@@ -424,7 +420,7 @@ OnTouch:
 			mes "Along with keeping your pride,";
 			mes "I want that you respect the blood that may stain your Katar or Dagger.";
 			next;
-			if (select("...Got you.:...I'm confused.") == 1) {
+			if (select("...Got you.", "...I'm confused.") == 1) {
 				mes "[Assassin 'Khai']";
 				mes "Yeah, I can trust you now. Let me give you some important tips.";
 				next;
@@ -528,14 +524,14 @@ OnTouch:
 		mes "Oh, you must be an Assassin trainee. You are here to become";
 		mes "an Assassin, aren't you?";
 		next;
-		if (select("Yes, I am. :...No, I'm not.") == 1) {
+		if (select("Yes, I am. ", "...No, I'm not.") == 1) {
 			mes "[Assassin 'Khai']";
 			mes "Okay, good. Let's fill out the application form. Please sign your name and include your job level.";
 			next;
 			mes "[Assassin 'Khai']";
 			mes "Let's see.";
 			mes "Your name is";
-			mes "" + strcharinfo(0) + "...";
+			mes "" + strcharinfo(PC_NAME) + "...";
 			mes "Job level " + JobLevel + "...";
 			next;
 			if (JobLevel > 48) {
@@ -593,7 +589,7 @@ OnTouch:
 			mes "Huh...?";
 			mes "What, are you trying to trick me or something? Don't you wanna be an Assassin?";
 			next;
-			if (select("No.:Yes, I want to be an Assassin.") == 1) {
+			if (select("No.", "Yes, I want to be an Assassin.") == 1) {
 				mes "[Assassin 'Khai']";
 				mes "Eh, get outta here.";
 				mes "Stop wastin' my time...";
@@ -614,7 +610,7 @@ OnTouch:
 			mes "Fill out the application form with your name and job level.";
 			next;
 			mes "[Assassin 'Khai']";
-			mes "" + strcharinfo(0) + "?";
+			mes "" + strcharinfo(PC_NAME) + "?";
 			mes "That's your name?";
 			mes "It sounds funny.";
 			mes "Let's see... Job Level " + JobLevel + "...";
@@ -659,7 +655,7 @@ OnTouch:
 	}
 }
 
-in_moc_16,19,154,0	script	nameless_one	-1,8,2,{
+in_moc_16,19,154,0	script	nameless_one	FAKE_NPC,8,2,{
 OnTouch:
 	if (ASSIN_Q2 < 5) {
 		if (ASSIN_Q2 < 3) {
@@ -675,7 +671,7 @@ OnTouch:
 			mes "[The Anonymous One]";
 			mes "Aren't you scared that you can't see me? I could kill you at any time and it would be so easy...";
 			next;
-			if (select("I think I crapped my pants!:You're all talk. I challenge you!") == 1) {
+			if (select("I think I crapped my pants!", "You're all talk. I challenge you!") == 1) {
 				mes "[The Anonymous One]";
 				mes "Now I see that";
 				mes "you're nothing";
@@ -709,7 +705,7 @@ OnTouch:
 			next;
 			ASSIN_Q2 = 0;
 			while(ASSIN_Q2 < 3) {
-				switch(select("...Skills?:...Stats?:Hmpf, I know it all.")) {
+				switch(select("...Skills?", "...Stats?", "Hmpf, I know it all.")) {
 				case 1:
 					mes "[The Anonymous One]";
 					mes "Skills...?";
@@ -814,7 +810,7 @@ OnTouch:
 			mes "You should have";
 			mes "known better.";
 			next;
-			if (select("Help me, how do I pass?:I challenge you again!") == 1) {
+			if (select("Help me, how do I pass?", "I challenge you again!") == 1) {
 				mes "[The Anonymous One]";
 				mes "Well, that's a damn good question. But you're banished from the Assassin Guild, so it's no concern of mine...";
 				close2;
@@ -842,53 +838,53 @@ OnTouch:
 			mes "[The Anonymous One]";
 			mes "1. Choose skill that is not required to learn Grimtooth.";
 			next;
-			if (select("Cloaking level 2:Sonic Blow level 5:Katar Mastery level 4:Right hand Mastery level 2") == 4)
+			if (select("Cloaking level 2", "Sonic Blow level 5", "Katar Mastery level 4", "Right hand Mastery level 2") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "2. What property does Enchant Poison possess?";
 			next;
-			if (select("Poison:Earth:Fire:Wind") == 1)
+			if (select("Poison", "Earth", "Fire", "Wind") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "3. How does Level 4 Right Hand Mastery work?";
 			next;
-			if (select("Recover 80% of damage decrease:Recover 90% of damage decrease:Increase 90% of damage:Increase 108% of damage") == 2)
+			if (select("Recover 80% of damage decrease", "Recover 90% of damage decrease", "Increase 90% of damage", "Increase 108% of damage") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "4. What is the item required for using Venom Dust?";
 			next;
-			if (select("Red Blood:Blue Gemstone:Yellow Gemstone:Red Gemstone") == 4)
+			if (select("Red Blood", "Blue Gemstone", "Yellow Gemstone", "Red Gemstone") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "5. Which skill can you learn when you reach Level 5 Enchant Poison?";
 			next;
-			if (select("Envenom:Sonic Blow:Venom Splasher:Venom Dust") == 4)
+			if (select("Envenom", "Sonic Blow", "Venom Splasher", "Venom Dust") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "6. Among the following skills, which allows you to walk while invisible?";
 			next;
-			if (select("Hiding:Back Slide:Cloaking:Sand Attack") == 3)
+			if (select("Hiding", "Back Slide", "Cloaking", "Sand Attack") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "7. Choose the condition that is unrelated to Venom Splasher.";
 			next;
-			if (select("Poisoned target.:Red Gemstone.:Remaing HP of Target.") == 2)
+			if (select("Poisoned target.", "Red Gemstone.", "Remaing HP of Target.") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "8. Which monster is weak to a weapon with Vadon card (adds 20% damage on Fire property monster)?";
 			next;
-			if (select("Steel Chonchon:Deviruchi:Elder Willow:Baphomet") == 3)
+			if (select("Steel Chonchon", "Deviruchi", "Elder Willow", "Baphomet") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "9. How much SP does";
 			mes "Double Attack need?";
 			next;
-			if (select("15:It's a passive skill, so SP use is 0.:It's passive skill, so SP use is 10.:54") == 2)
+			if (select("15", "It's a passive skill, so SP use is 0.", "It's passive skill, so SP use is 10.", "54") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "10. What is the best elemental Main Gauche weapon for hunting in Izlude dungeon?";
 			next;
-			if (select("Wind Main Gauche:Ice Main Gauche:Earth Main Gauche:Fire Main Gauche") == 1)
+			if (select("Wind Main Gauche", "Ice Main Gauche", "Earth Main Gauche", "Fire Main Gauche") == 1)
 				.@assassin_t += 10;
 			break;
 		case 2:
@@ -896,102 +892,102 @@ OnTouch:
 			mes "1. Which monster";
 			mes "drops a slotted Katar?";
 			next;
-			if (select("Thief Bug:Peco Peco:Desert Wolf:Hammer Cobolt") == 3)
+			if (select("Thief Bug", "Peco Peco", "Desert Wolf", "Hammer Cobolt") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "2. Which monster";
 			mes "drops a slotted Jur?";
 			next;
-			if (select("Martin:Desert Wolf:Marionette:Myst") == 1)
+			if (select("Martin", "Desert Wolf", "Marionette", "Myst") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "3. Which class is allowed to craft elemental weapons?";
 			next;
-			if (select("Merchant:Blacksmith:Thief:Priest") == 2)
+			if (select("Merchant", "Blacksmith", "Thief", "Priest") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "4. Choose the weapon which is not in the Katar class.";
 			next;
-			if (select("Jamadhar:Jur:Katar:Gladius") == 4)
+			if (select("Jamadhar", "Jur", "Katar", "Gladius") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "5. What property do Izlude dungeon monsters posses?";
 			next;
-			if (select("Water:Fire:Wind:Earth") == 1)
+			if (select("Water", "Fire", "Wind", "Earth") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "6. Which monster";
 			mes "cannot be a Cute Pet?";
 			next;
-			if (select("Poporing:Roda Frog:Smokie:Poison Spore") == 2)
+			if (select("Poporing", "Roda Frog", "Smokie", "Poison Spore") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "7. Choose a monster that Fire property Daggers work the best on.";
 			next;
-			if (select("Dagger Goblin:Mace Goblin:Morning Star Goblin:Hammer Goblin") == 4)
+			if (select("Dagger Goblin", "Mace Goblin", "Morning Star Goblin", "Hammer Goblin") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "8. Choose the non-elemental Katar from the following:";
 			next;
-			if (select("Katar of Raging Blaze:Katar of Dusty Thornbush:Sharpened Legbone of Ghoul:Infiltrator") == 4)
+			if (select("Katar of Raging Blaze", "Katar of Dusty Thornbush", "Sharpened Legbone of Ghoul", "Infiltrator") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "9. Which is the uncommon monster?";
 			next;
-			if (select("Poring:Mastering:Ghostring:Spore") == 3)
+			if (select("Poring", "Mastering", "Ghostring", "Spore") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "10. Choose the monster";
 			mes "that is not Undead.";
 			next;
-			if (select("Drake:Megalodon:Spore:Khalitzburg") == 3)
+			if (select("Drake", "Megalodon", "Spore", "Khalitzburg") == 3)
 				.@assassin_t += 10;
 			break;
 		case 3:
 			mes "[The Anonymous One]";
 			mes "1. Choose the correct amount of the maximum dodge rate increase from the 'Increase Dodge' skill when at level 10.";
 			next;
-			if (select("30:40:160:20") == 1)
+			if (select("30", "40", "160", "20") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "2. Choose a monster which detects hiding/cloaking Thieves and Assassins.";
 			next;
-			if (select("Worm Tail:Andre:Mummy:Soldier Skeleton") == 2)
+			if (select("Worm Tail", "Andre", "Mummy", "Soldier Skeleton") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "3. Choose a group of weapons that cannot be used by an Assassin at once.";
 			next;
-			if (select("Main Gaughe + Gladius:Stiletto + Main Gauche:Katar + Maingauche:Hammer + Stiletto") == 3)
+			if (select("Main Gaughe + Gladius", "Stiletto + Main Gauche", "Katar + Maingauche", "Hammer + Stiletto") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "4. Choose the town where Thieves can change their jobs.";
 			next;
-			if (select("Prontera:Lutie:Alberta:Morocc") == 4)
+			if (select("Prontera", "Lutie", "Alberta", "Morocc") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "5. Choose a card that does not affect the AGI stat.";
 			next;
-			if (select("Baphomet Jr. card:Whisper Card:Female Thiefbug card:Male Thiefbug card") == 2)
+			if (select("Baphomet Jr. card", "Whisper Card", "Female Thiefbug card", "Male Thiefbug card") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "6. Choose the correct specialty of the Assassin class.";
 			next;
-			if (select("Excellent singing talent:Excellent reading talent:Excellent dancing talent:Excellent dodge ability") == 4)
+			if (select("Excellent singing talent", "Excellent reading talent", "Excellent dancing talent", "Excellent dodge ability") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "7. Choose the maximum AGI bonus an Assassin can get at job level 50.";
 			next;
-			if (select("7:8:9:10") == 4)
+			if (select("7", "8", "9", "10") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "8. Choose the item that an Assassin cannot equip.";
 			next;
-			if (select("Dagger:Helm:Boots:Brooch") == 2)
+			if (select("Dagger", "Helm", "Boots", "Brooch") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "9. Choose the job change item for Thief.";
 			next;
-			switch(select("Orange Gooey Mushroom:Red Gooey Mushroom:Orange Net Mushroom:Orange Hair Mushroom")) {
+			switch(select("Orange Gooey Mushroom", "Red Gooey Mushroom", "Orange Net Mushroom", "Orange Hair Mushroom")) {
 			case 1:
 			case 3:
 				.@assassin_t += 10;
@@ -1002,7 +998,7 @@ OnTouch:
 			mes "[The Anonymous One]";
 			mes "10. Choose a card that would typically benefit an Assassin the least.";
 			next;
-			if (select("Whisper card:Elder Willow card:Soldier Skeleton card:Cobold card") == 2)
+			if (select("Whisper card", "Elder Willow card", "Soldier Skeleton card", "Cobold card") == 2)
 				.@assassin_t += 10;
 			break;
 		}
@@ -1107,7 +1103,7 @@ OnStartArena:
 	warpwaitingpc "in_moc_16", 66, 151;
 	attachrid($@warpwaitingpc[0]);
 	if (ASSIN_Q2 < 5) {
-		warpchar "in_moc_16",20,145,getcharid(0);
+		warpchar "in_moc_16",20,145,getcharid(CHAR_ID_CHAR);
 		end;
 	}
 	donpcevent "Beholder#ASNTEST::OnEnable";
@@ -1134,7 +1130,7 @@ OnTouch:
 	}
 	if (ASSIN_Q == 1 && ASSIN_Q2 == 5) {
 		mes "[Barcardi]";
-		mes "" + strcharinfo(0) + "...";
+		mes "" + strcharinfo(PC_NAME) + "...";
 		mes "You passed the test..?";
 		next;
 		mes "[Barcardi]";
@@ -1175,7 +1171,7 @@ OnTouch:
 		mes "[Barcardi]";
 		mes "Hmm, if you're exhausted, I'm willing to bring you back. Of course, if you leave, you'll have to take the job test over again. So what do you want to do?";
 		next;
-		if (select("Continue!:Quit the job change test for now.") == 1) {
+		if (select("Continue!", "Quit the job change test for now.") == 1) {
 			mes "[Barcardi]";
 			mes "Good choice!";
 			mes "Remember, you";
@@ -1198,7 +1194,7 @@ OnTouch:
 	}
 }
 
-in_moc_16,1,1,0	script	Beholder#ASNTEST	-1,{
+in_moc_16,1,1,0	script	Beholder#ASNTEST	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1279,7 +1275,7 @@ OnMyMobDead:
 	end;
 
 OnMyMobDead2:
-	mapannounce "in_moc_16",strcharinfo(0) + "! You made a mistake! I'm bringing you back!",bc_map;
+	mapannounce "in_moc_16",strcharinfo(PC_NAME) + "! You made a mistake! I'm bringing you back!",bc_map;
 	ASSIN_Q = 2;
 	warp "in_moc_16",19,161;
 	donpcevent "Beholder#ASNTEST::OnReset";
@@ -1348,10 +1344,10 @@ OnTimer187000:
 	end;
 }
 
-in_moc_16,68,158,0	script	01_1::SinTrap	-1,0,0,{
+in_moc_16,68,158,0	script	01_1::SinTrap	FAKE_NPC,0,0,{
 OnTouch:
 	if (getvariableofnpc(.DisableTraps,"Beholder#ASNTEST")  < 1) {
-		mapannounce "in_moc_16",strcharinfo(0) + ", you're trapped. You will be sent back.",bc_map;
+		mapannounce "in_moc_16",strcharinfo(PC_NAME) + ", you're trapped. You will be sent back.",bc_map;
 		ASSIN_Q = 2;
 		warp "in_moc_16",19,161;
 		donpcevent "Beholder#ASNTEST::OnResetMob";
@@ -1360,89 +1356,89 @@ OnTouch:
 	end;
 }
 
-in_moc_16,69,158,0	duplicate(SinTrap)	01_2	-1,0,0
-in_moc_16,68,159,0	duplicate(SinTrap)	01_3	-1,0,0
-in_moc_16,69,159,0	duplicate(SinTrap)	01_4	-1,0,0
-in_moc_16,64,162,0	duplicate(SinTrap)	02_1	-1,0,0
-in_moc_16,65,162,0	duplicate(SinTrap)	02_2	-1,0,0
-in_moc_16,64,163,0	duplicate(SinTrap)	02_3	-1,0,0
-in_moc_16,65,163,0	duplicate(SinTrap)	02_4	-1,0,0
-in_moc_16,62,168,0	duplicate(SinTrap)	03_1	-1,0,0
-in_moc_16,63,168,0	duplicate(SinTrap)	03_2	-1,0,0
-in_moc_16,62,169,0	duplicate(SinTrap)	03_3	-1,0,0
-in_moc_16,63,169,0	duplicate(SinTrap)	03_4	-1,0,0
-in_moc_16,66,170,0	duplicate(SinTrap)	04_1	-1,0,0
-in_moc_16,67,170,0	duplicate(SinTrap)	04_2	-1,0,0
-in_moc_16,66,171,0	duplicate(SinTrap)	04_3	-1,0,0
-in_moc_16,67,171,0	duplicate(SinTrap)	04_4	-1,0,0
-in_moc_16,64,174,0	duplicate(SinTrap)	05_1	-1,0,0
-in_moc_16,64,175,0	duplicate(SinTrap)	05_2	-1,0,0
-in_moc_16,65,174,0	duplicate(SinTrap)	05_3	-1,0,0
-in_moc_16,65,175,0	duplicate(SinTrap)	05_4	-1,0,0
-in_moc_16,72,174,0	duplicate(SinTrap)	06_1	-1,0,0
-in_moc_16,72,175,0	duplicate(SinTrap)	06_2	-1,0,0
-in_moc_16,73,174,0	duplicate(SinTrap)	06_3	-1,0,0
-in_moc_16,73,175,0	duplicate(SinTrap)	06_4	-1,0,0
-in_moc_16,72,166,0	duplicate(SinTrap)	07_1	-1,0,0
-in_moc_16,72,167,0	duplicate(SinTrap)	07_2	-1,0,0
-in_moc_16,73,166,0	duplicate(SinTrap)	07_3	-1,0,0
-in_moc_16,73,167,0	duplicate(SinTrap)	07_4	-1,0,0
-in_moc_16,72,168,0	duplicate(SinTrap)	08_1	-1,0,0
-in_moc_16,72,169,0	duplicate(SinTrap)	08_2	-1,0,0
-in_moc_16,73,168,0	duplicate(SinTrap)	08_3	-1,0,0
-in_moc_16,73,169,0	duplicate(SinTrap)	08_4	-1,0,0
-in_moc_16,78,168,0	duplicate(SinTrap)	09_1	-1,0,0
-in_moc_16,78,169,0	duplicate(SinTrap)	09_2	-1,0,0
-in_moc_16,79,168,0	duplicate(SinTrap)	09_3	-1,0,0
-in_moc_16,79,169,0	duplicate(SinTrap)	09_4	-1,0,0
-in_moc_16,80,172,0	duplicate(SinTrap)	10_1	-1,0,0
-in_moc_16,81,172,0	duplicate(SinTrap)	10_2	-1,0,0
-in_moc_16,82,172,0	duplicate(SinTrap)	10_3	-1,0,0
-in_moc_16,83,172,0	duplicate(SinTrap)	10_4	-1,0,0
-in_moc_16,80,173,0	duplicate(SinTrap)	10_5	-1,0,0
-in_moc_16,81,173,0	duplicate(SinTrap)	10_6	-1,0,0
-in_moc_16,82,173,0	duplicate(SinTrap)	10_7	-1,0,0
-in_moc_16,83,173,0	duplicate(SinTrap)	10_8	-1,0,0
-in_moc_16,88,174,0	duplicate(SinTrap)	11_1	-1,0,0
-in_moc_16,88,175,0	duplicate(SinTrap)	11_2	-1,0,0
-in_moc_16,89,174,0	duplicate(SinTrap)	11_3	-1,0,0
-in_moc_16,89,175,0	duplicate(SinTrap)	11_4	-1,0,0
-in_moc_16,86,166,0	duplicate(SinTrap)	12_1	-1,0,0
-in_moc_16,86,167,0	duplicate(SinTrap)	12_2	-1,0,0
-in_moc_16,87,166,0	duplicate(SinTrap)	12_3	-1,0,0
-in_moc_16,87,167,0	duplicate(SinTrap)	12_4	-1,0,0
-in_moc_16,90,164,0	duplicate(SinTrap)	13_1	-1,0,0
-in_moc_16,90,165,0	duplicate(SinTrap)	13_2	-1,0,0
-in_moc_16,91,164,0	duplicate(SinTrap)	13_3	-1,0,0
-in_moc_16,91,165,0	duplicate(SinTrap)	13_4	-1,0,0
-in_moc_16,84,160,0	duplicate(SinTrap)	14_1	-1,0,0
-in_moc_16,85,160,0	duplicate(SinTrap)	14_2	-1,0,0
-in_moc_16,86,160,0	duplicate(SinTrap)	14_3	-1,0,0
-in_moc_16,87,160,0	duplicate(SinTrap)	14_4	-1,0,0
-in_moc_16,88,160,0	duplicate(SinTrap)	14_5	-1,0,0
-in_moc_16,89,160,0	duplicate(SinTrap)	14_6	-1,0,0
-in_moc_16,84,161,0	duplicate(SinTrap)	14_7	-1,0,0
-in_moc_16,85,161,0	duplicate(SinTrap)	14_8	-1,0,0
-in_moc_16,86,161,0	duplicate(SinTrap)	14_9	-1,0,0
-in_moc_16,87,161,0	duplicate(SinTrap)	14_10	-1,0,0
-in_moc_16,88,161,0	duplicate(SinTrap)	14_11	-1,0,0
-in_moc_16,89,161,0	duplicate(SinTrap)	14_12	-1,0,0
-in_moc_16,86,154,0	duplicate(SinTrap)	15_1	-1,0,0
-in_moc_16,86,155,0	duplicate(SinTrap)	15_2	-1,0,0
-in_moc_16,87,154,0	duplicate(SinTrap)	15_3	-1,0,0
-in_moc_16,87,155,0	duplicate(SinTrap)	15_4	-1,0,0
-in_moc_16,84,150,0	duplicate(SinTrap)	16_1	-1,0,0
-in_moc_16,84,151,0	duplicate(SinTrap)	16_2	-1,0,0
-in_moc_16,85,150,0	duplicate(SinTrap)	16_3	-1,0,0
-in_moc_16,85,151,0	duplicate(SinTrap)	16_4	-1,0,0
-in_moc_16,90,150,0	duplicate(SinTrap)	17_1	-1,0,0
-in_moc_16,90,151,0	duplicate(SinTrap)	17_2	-1,0,0
-in_moc_16,91,150,0	duplicate(SinTrap)	17_3	-1,0,0
-in_moc_16,91,151,0	duplicate(SinTrap)	17_4	-1,0,0
-in_moc_16,86,146,0	duplicate(SinTrap)	18_1	-1,0,0
-in_moc_16,86,147,0	duplicate(SinTrap)	18_2	-1,0,0
-in_moc_16,87,146,0	duplicate(SinTrap)	18_3	-1,0,0
-in_moc_16,87,147,0	duplicate(SinTrap)	18_4	-1,0,0
+in_moc_16,69,158,0	duplicate(SinTrap)	01_2	FAKE_NPC,0,0
+in_moc_16,68,159,0	duplicate(SinTrap)	01_3	FAKE_NPC,0,0
+in_moc_16,69,159,0	duplicate(SinTrap)	01_4	FAKE_NPC,0,0
+in_moc_16,64,162,0	duplicate(SinTrap)	02_1	FAKE_NPC,0,0
+in_moc_16,65,162,0	duplicate(SinTrap)	02_2	FAKE_NPC,0,0
+in_moc_16,64,163,0	duplicate(SinTrap)	02_3	FAKE_NPC,0,0
+in_moc_16,65,163,0	duplicate(SinTrap)	02_4	FAKE_NPC,0,0
+in_moc_16,62,168,0	duplicate(SinTrap)	03_1	FAKE_NPC,0,0
+in_moc_16,63,168,0	duplicate(SinTrap)	03_2	FAKE_NPC,0,0
+in_moc_16,62,169,0	duplicate(SinTrap)	03_3	FAKE_NPC,0,0
+in_moc_16,63,169,0	duplicate(SinTrap)	03_4	FAKE_NPC,0,0
+in_moc_16,66,170,0	duplicate(SinTrap)	04_1	FAKE_NPC,0,0
+in_moc_16,67,170,0	duplicate(SinTrap)	04_2	FAKE_NPC,0,0
+in_moc_16,66,171,0	duplicate(SinTrap)	04_3	FAKE_NPC,0,0
+in_moc_16,67,171,0	duplicate(SinTrap)	04_4	FAKE_NPC,0,0
+in_moc_16,64,174,0	duplicate(SinTrap)	05_1	FAKE_NPC,0,0
+in_moc_16,64,175,0	duplicate(SinTrap)	05_2	FAKE_NPC,0,0
+in_moc_16,65,174,0	duplicate(SinTrap)	05_3	FAKE_NPC,0,0
+in_moc_16,65,175,0	duplicate(SinTrap)	05_4	FAKE_NPC,0,0
+in_moc_16,72,174,0	duplicate(SinTrap)	06_1	FAKE_NPC,0,0
+in_moc_16,72,175,0	duplicate(SinTrap)	06_2	FAKE_NPC,0,0
+in_moc_16,73,174,0	duplicate(SinTrap)	06_3	FAKE_NPC,0,0
+in_moc_16,73,175,0	duplicate(SinTrap)	06_4	FAKE_NPC,0,0
+in_moc_16,72,166,0	duplicate(SinTrap)	07_1	FAKE_NPC,0,0
+in_moc_16,72,167,0	duplicate(SinTrap)	07_2	FAKE_NPC,0,0
+in_moc_16,73,166,0	duplicate(SinTrap)	07_3	FAKE_NPC,0,0
+in_moc_16,73,167,0	duplicate(SinTrap)	07_4	FAKE_NPC,0,0
+in_moc_16,72,168,0	duplicate(SinTrap)	08_1	FAKE_NPC,0,0
+in_moc_16,72,169,0	duplicate(SinTrap)	08_2	FAKE_NPC,0,0
+in_moc_16,73,168,0	duplicate(SinTrap)	08_3	FAKE_NPC,0,0
+in_moc_16,73,169,0	duplicate(SinTrap)	08_4	FAKE_NPC,0,0
+in_moc_16,78,168,0	duplicate(SinTrap)	09_1	FAKE_NPC,0,0
+in_moc_16,78,169,0	duplicate(SinTrap)	09_2	FAKE_NPC,0,0
+in_moc_16,79,168,0	duplicate(SinTrap)	09_3	FAKE_NPC,0,0
+in_moc_16,79,169,0	duplicate(SinTrap)	09_4	FAKE_NPC,0,0
+in_moc_16,80,172,0	duplicate(SinTrap)	10_1	FAKE_NPC,0,0
+in_moc_16,81,172,0	duplicate(SinTrap)	10_2	FAKE_NPC,0,0
+in_moc_16,82,172,0	duplicate(SinTrap)	10_3	FAKE_NPC,0,0
+in_moc_16,83,172,0	duplicate(SinTrap)	10_4	FAKE_NPC,0,0
+in_moc_16,80,173,0	duplicate(SinTrap)	10_5	FAKE_NPC,0,0
+in_moc_16,81,173,0	duplicate(SinTrap)	10_6	FAKE_NPC,0,0
+in_moc_16,82,173,0	duplicate(SinTrap)	10_7	FAKE_NPC,0,0
+in_moc_16,83,173,0	duplicate(SinTrap)	10_8	FAKE_NPC,0,0
+in_moc_16,88,174,0	duplicate(SinTrap)	11_1	FAKE_NPC,0,0
+in_moc_16,88,175,0	duplicate(SinTrap)	11_2	FAKE_NPC,0,0
+in_moc_16,89,174,0	duplicate(SinTrap)	11_3	FAKE_NPC,0,0
+in_moc_16,89,175,0	duplicate(SinTrap)	11_4	FAKE_NPC,0,0
+in_moc_16,86,166,0	duplicate(SinTrap)	12_1	FAKE_NPC,0,0
+in_moc_16,86,167,0	duplicate(SinTrap)	12_2	FAKE_NPC,0,0
+in_moc_16,87,166,0	duplicate(SinTrap)	12_3	FAKE_NPC,0,0
+in_moc_16,87,167,0	duplicate(SinTrap)	12_4	FAKE_NPC,0,0
+in_moc_16,90,164,0	duplicate(SinTrap)	13_1	FAKE_NPC,0,0
+in_moc_16,90,165,0	duplicate(SinTrap)	13_2	FAKE_NPC,0,0
+in_moc_16,91,164,0	duplicate(SinTrap)	13_3	FAKE_NPC,0,0
+in_moc_16,91,165,0	duplicate(SinTrap)	13_4	FAKE_NPC,0,0
+in_moc_16,84,160,0	duplicate(SinTrap)	14_1	FAKE_NPC,0,0
+in_moc_16,85,160,0	duplicate(SinTrap)	14_2	FAKE_NPC,0,0
+in_moc_16,86,160,0	duplicate(SinTrap)	14_3	FAKE_NPC,0,0
+in_moc_16,87,160,0	duplicate(SinTrap)	14_4	FAKE_NPC,0,0
+in_moc_16,88,160,0	duplicate(SinTrap)	14_5	FAKE_NPC,0,0
+in_moc_16,89,160,0	duplicate(SinTrap)	14_6	FAKE_NPC,0,0
+in_moc_16,84,161,0	duplicate(SinTrap)	14_7	FAKE_NPC,0,0
+in_moc_16,85,161,0	duplicate(SinTrap)	14_8	FAKE_NPC,0,0
+in_moc_16,86,161,0	duplicate(SinTrap)	14_9	FAKE_NPC,0,0
+in_moc_16,87,161,0	duplicate(SinTrap)	14_10	FAKE_NPC,0,0
+in_moc_16,88,161,0	duplicate(SinTrap)	14_11	FAKE_NPC,0,0
+in_moc_16,89,161,0	duplicate(SinTrap)	14_12	FAKE_NPC,0,0
+in_moc_16,86,154,0	duplicate(SinTrap)	15_1	FAKE_NPC,0,0
+in_moc_16,86,155,0	duplicate(SinTrap)	15_2	FAKE_NPC,0,0
+in_moc_16,87,154,0	duplicate(SinTrap)	15_3	FAKE_NPC,0,0
+in_moc_16,87,155,0	duplicate(SinTrap)	15_4	FAKE_NPC,0,0
+in_moc_16,84,150,0	duplicate(SinTrap)	16_1	FAKE_NPC,0,0
+in_moc_16,84,151,0	duplicate(SinTrap)	16_2	FAKE_NPC,0,0
+in_moc_16,85,150,0	duplicate(SinTrap)	16_3	FAKE_NPC,0,0
+in_moc_16,85,151,0	duplicate(SinTrap)	16_4	FAKE_NPC,0,0
+in_moc_16,90,150,0	duplicate(SinTrap)	17_1	FAKE_NPC,0,0
+in_moc_16,90,151,0	duplicate(SinTrap)	17_2	FAKE_NPC,0,0
+in_moc_16,91,150,0	duplicate(SinTrap)	17_3	FAKE_NPC,0,0
+in_moc_16,91,151,0	duplicate(SinTrap)	17_4	FAKE_NPC,0,0
+in_moc_16,86,146,0	duplicate(SinTrap)	18_1	FAKE_NPC,0,0
+in_moc_16,86,147,0	duplicate(SinTrap)	18_2	FAKE_NPC,0,0
+in_moc_16,87,146,0	duplicate(SinTrap)	18_3	FAKE_NPC,0,0
+in_moc_16,87,147,0	duplicate(SinTrap)	18_4	FAKE_NPC,0,0
 
 in_moc_16,87,137,0	script	Keeper of the Door#ASN	WARPNPC,2,1,{
 OnInit:
@@ -1469,7 +1465,7 @@ OnDisable:
 	end;
 }
 
-in_moc_16,3,3,0	script	timestopper#1	-1,{
+in_moc_16,3,3,0	script	timestopper#1	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1482,7 +1478,7 @@ OnTimer187000:
 OnDisable:
 	stopnpctimer;
 	end;
-	
+
 OnMyMobDead:
 	mapannounce "in_moc_16","Hey, what the hell was that?! I told you: No killing monsters!",bc_map;
 	mapannounce "in_moc_16","I'm bringing you back... *Sigh...*",bc_map;
@@ -1505,7 +1501,7 @@ OnTouch:
 		mes "It looks like you're having a tough time. You're either trying too hard, or not trying hard";
 		mes "enough, kid.";
 		next;
-		switch(select("I'm gonna try it again!:I... I quit!")) {
+		switch(select("I'm gonna try it again!", "I... I quit!")) {
 		case 1:
 			mes "[Thomas]";
 			mes "Hmm. Well, okay.";
@@ -1519,7 +1515,7 @@ OnTouch:
 			mes "[Thomas]";
 			mes "Oh hey, don't forget to save your respawn point in town.";
 			close2;
-			mapannounce "in_moc_16",strcharinfo(0) + " got scared and quit the test...Who's Next?!",bc_map;
+			mapannounce "in_moc_16",strcharinfo(PC_NAME) + " got scared and quit the test...Who's Next?!",bc_map;
 			ASSIN_Q = 0;
 			ASSIN_Q2 = 0;
 			ASSIN_Q3 = 0;
@@ -1604,7 +1600,7 @@ OnTouch:
 		changequest 8005,8006;
 	}
 	else {
-		mapannounce "in_moc_16",strcharinfo(0)+" has entered 'Guildmaster's room.'",bc_map;
+		mapannounce "in_moc_16",strcharinfo(PC_NAME)+" has entered 'Guildmaster's room.'",bc_map;
 		savepoint "in_moc_16",181,183;
 		donpcevent "Guildmaster#ASN1::OnCast";
 		warp "in_moc_16",167,113;
@@ -1612,7 +1608,7 @@ OnTouch:
 	}
 }
 
-in_moc_16,167,110,0	script	Guildmaster#ASN1	-1,3,1,{
+in_moc_16,167,110,0	script	Guildmaster#ASN1	FAKE_NPC,3,1,{
 OnTouch:
 	savepoint "in_moc_16",167,110;
 	mes "[Guildmaster]";
@@ -1653,7 +1649,7 @@ OnTouch:
 		mes "[Guildmaster]";
 		mes "First off, what do you think is the priority of an Assassin?";
 		next;
-		switch(select("More power.:An Assassin's pride.:Endless practice.")) {
+		switch(select("More power.", "An Assassin's pride.", "Endless practice.")) {
 		case 1:
 			mes "[Guildmaster]";
 			mes "More power...";
@@ -1669,7 +1665,7 @@ OnTouch:
 			mes "to be stronger";
 			mes "than you are now?";
 			next;
-			switch(select("Revenge...!:Money~:I want to travel.")) {
+			switch(select("Revenge...!", "Money~", "I want to travel.")) {
 			case 1:
 				ASSIN_Q = 8;
 				mes "[Guildmaster]";
@@ -1723,7 +1719,7 @@ OnTouch:
 			mes "[Guildmaster]";
 			mes "I can understand why their pride and dignity would be so important to them. Now, for what reason do you wish to become an Assassin?";
 			next;
-			switch(select("I like the solitude.:Making money being an Assassin.:They just look interesting.")) {
+			switch(select("I like the solitude.", "Making money being an Assassin.", "They just look interesting.")) {
 			case 1:
 				ASSIN_Q = 11;
 				mes "[Guildmaster]";
@@ -1769,7 +1765,7 @@ OnTouch:
 			mes "Unlike the Thief class, the Assassin job doesn't allow self-indulgence. Tell me the";
 			mes "reason you train endlessly.";
 			next;
-			switch(select("To broaden my skills.:It's a goal of mine.:For spiritual improvement.")) {
+			switch(select("To broaden my skills.", "It's a goal of mine.", "For spiritual improvement.")) {
 			case 1:
 				ASSIN_Q = 14;
 				mes "[Guildmaster]";
@@ -1818,13 +1814,13 @@ OnTouch:
 		mes "[Guildmaster]";
 		mes "So if you could become an Assassin right now, what is the first thing you would do?";
 		next;
-		switch(select("I would go hunt right away.:There are people waiting for me.:Check how I can help as an Assassin.")) {
+		switch(select("I would go hunt right away.", "There are people waiting for me.", "Check how I can help as an Assassin.")) {
 		case 1:
 			mes "[Guildmaster]";
 			mes "Hunt...";
 			mes "Is that all...?";
 			next;
-			switch(select("I would level up fast.:I want to explore my Assassin skills.:I will go where I couldn't go as a Thief.")) {
+			switch(select("I would level up fast.", "I want to explore my Assassin skills.", "I will go where I couldn't go as a Thief.")) {
 			case 1:
 				.@assassin_sangdam += 10;
 				mes "[Guildmaster]";
@@ -1858,7 +1854,7 @@ OnTouch:
 			mes "Who is waiting";
 			mes "for you, might I ask?";
 			next;
-			switch(select("My friends.:My Guildsmen.:My lover.")) {
+			switch(select("My friends.", "My Guildsmen.", "My lover.")) {
 			case 1:
 				.@assassin_sangdam += 5;
 				mes "[Guildmaster]";
@@ -1881,7 +1877,7 @@ OnTouch:
 				mes "Haha, the needs of the body are sometimes hard to ignore. It's best to accept that part of human nature.";
 				next;
 				mes "[Guildmaster]";
-				if (Sex)
+				if (Sex == SEX_MALE)
 					mes "But you must never reveal to her the Assassin side of your life. No matter what it takes.";
 				else
 					mes "But you must never reveal to him the Assassin side of your life, no matter what it takes.";
@@ -1896,7 +1892,7 @@ OnTouch:
 			mes "[Guildmaster]";
 			mes "That's most admirable. Is there anything that you would like to ask me about?";
 			next;
-			switch(select("Places where Assassins can level up...:Main goals as an Assassin.:Financial consulting.")) {
+			switch(select("Places where Assassins can level up...", "Main goals as an Assassin.", "Financial consulting.")) {
 			case 1:
 				.@assassin_sangdam += 5;
 				mes "[Guildmaster]";
@@ -1935,9 +1931,9 @@ OnTouch:
 		mes "Please give me";
 		mes "one second...";
 		next;
-		mapannounce "in_moc_16","Those involved with the testing of " + strcharinfo(0) + ", please gather before me.",bc_map;
+		mapannounce "in_moc_16","Those involved with the testing of " + strcharinfo(PC_NAME) + ", please gather before me.",bc_map;
 		mes "[Guildmaster]";
-		mes "Those involved with the testing of " + strcharinfo(0) + ", please gather before me.";
+		mes "Those involved with the testing of " + strcharinfo(PC_NAME) + ", please gather before me.";
 		next;
 		mes "[Guildmaster]";
 		mes "They will";
@@ -1954,12 +1950,12 @@ OnTouch:
 		mes "I am here.";
 		next;
 		mes "[Guildmaster]";
-		mes "I would like to listen to your opinion of " + strcharinfo(0) + " for the job change test.";
+		mes "I would like to listen to your opinion of " + strcharinfo(PC_NAME) + " for the job change test.";
 		next;
 		mes "[The Anonymous One]";
 		mes "Ah yeah...";
 		mes "I think";
-		mes ""+ strcharinfo(0) +"";
+		mes ""+ strcharinfo(PC_NAME) +"";
 		mes "is decent.";
 		next;
 		mes "[Guildmaster]";
@@ -1980,7 +1976,7 @@ OnTouch:
 		}
 		else {
 			mes "[Huey]";
-			mes "Although "+ strcharinfo(0) +" looks too mellow and gentle, kind of like a pussycat, "+ strcharinfo(0) +" has the stuff.";
+			mes "Although "+ strcharinfo(PC_NAME) +" looks too mellow and gentle, kind of like a pussycat, "+ strcharinfo(PC_NAME) +" has the stuff.";
 			next;
 			mes "[Huey]";
 			mes "If it's alright with you, I'd like to get back to my job.";
@@ -2001,7 +1997,7 @@ OnTouch:
 		next;
 		mes "[Guildmaster]";
 		mes "Hmm...";
-		mes "It seems we are all in agreement. Good. I don't have any problem with "+ strcharinfo(0) +" as well...";
+		mes "It seems we are all in agreement. Good. I don't have any problem with "+ strcharinfo(PC_NAME) +" as well...";
 		next;
 		switch(ASSIN_Q) {
 		case 8:
@@ -2062,12 +2058,12 @@ OnTouch:
 			mes "[Guildmaster]";
 			mes "You can choose a Jur, Katar, Main Gauche, or a Gladius. As a master, I love them all.";
 			next;
-			switch(select("Jur:Katar:Main Gauche:Gladius")) {
+			switch(select("Jur", "Katar", "Main Gauche", "Gladius")) {
 			case 1:
 				mes "[Guildmaster]";
 				mes "A Jur...";
 				mes "Good choice. There you are. I hope it will serve you well.";
-				getitem 1251,1; //Jur_
+				getitem Jur_,1;
 				break;
 			case 2:
 				mes "[Guildmaster]";
@@ -2076,18 +2072,18 @@ OnTouch:
 				mes "Although it's used,";
 				mes "I know it will";
 				mes "serve you well.";
-				getitem 1253,1; //Katar_
+				getitem Katar_,1;
 				break;
 			case 3:
 				mes "[Guildmaster]";
 				mes "I see. You want to use both hands. Here, take your Main Gauche.";
-				getitem 1208,1; //Main_Gauche_
+				getitem Main_Gauche_,1;
 				break;
 			case 4:
 				mes "[Guildmaster]";
 				mes "A Gladius...";
 				mes "It used to rule over the Assassin weapon market. Please take care of my gladius.";
-				getitem 1220,1; //Gladius_
+				getitem Gladius_,1;
 			}
 			next;
 		}
@@ -2099,19 +2095,19 @@ OnTouch:
 			next;
 			switch(rand(1,5)) {
 			case 1:
-				getitem 1207,1; //Main_Gauche
+				getitem Main_Gauche,1;
 				break;
 			case 2:
-				getitem 1250,1; //Jur
+				getitem Jur,1;
 				break;
 			case 3:
-				getitem 1216,1; //Stiletto
+				getitem Stiletto,1;
 				break;
 			case 4:
-				getitem 1201,1; //Knife
+				getitem Knife,1;
 				break;
 			case 5:
-				getitem 1252,1; //Katar
+				getitem Katar,1;
 			}
 		}
 		mes "[Guildmaster]";
@@ -2121,9 +2117,9 @@ OnTouch:
 		mes "Upon receiving this token, Huey will promote you to an Assassin.";
 		next;
 		mes "[Guildmaster]";
-		mes "You, " + strcharinfo(0) + ", have chosen to live as an Assassin. May you learn our ways and be an honorable example to others.";
+		mes "You, " + strcharinfo(PC_NAME) + ", have chosen to live as an Assassin. May you learn our ways and be an honorable example to others.";
 		savepoint "morocc",100,100;
-		getitem 1008,1; //Frozen_Heart
+		getitem Frozen_Heart,1;
 		changequest 8006,8007;
 		next;
 		mes "[Guildmaster]";
@@ -2178,7 +2174,7 @@ in_moc_16,186,81,1	script	Master Assist	1_M_JOBTESTER,1,1,{
 	close;
 }
 
-in_moc_16,170,90,0	script	info 1	-1,{
+in_moc_16,170,90,0	script	info 1	FAKE_NPC,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "Huh.";
@@ -2186,14 +2182,14 @@ OnTouch:
 	close;
 }
 
-in_moc_16,153,85,0	script	info 2	-1,1,1,{
+in_moc_16,153,85,0	script	info 2	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "You're getting warmer. You're almost there. Just, turn around a little bit.";
 	close;
 }
 
-in_moc_16,160,85,0	script	info 3	-1,1,1,{
+in_moc_16,160,85,0	script	info 3	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "Hmm.";
@@ -2202,7 +2198,7 @@ OnTouch:
 	close;
 }
 
-in_moc_16,175,89,0	script	info 4	-1,1,1,{
+in_moc_16,175,89,0	script	info 4	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "Umm...";
@@ -2210,7 +2206,7 @@ OnTouch:
 	close;
 }
 
-in_moc_16,164,88,0	script	info 5	-1,{
+in_moc_16,164,88,0	script	info 5	FAKE_NPC,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "Well done...";
@@ -2218,32 +2214,32 @@ OnTouch:
 	close;
 }
 
-in_moc_16,149,95,0	script	info 6	-1,1,1,{
+in_moc_16,149,95,0	script	info 6	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "Hm? Not bad. You're almost here.";
 	close;
 }
 
-in_moc_16,180,101,0	script	info 7	-1,1,1,{
+in_moc_16,180,101,0	script	info 7	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "I don't think you're going the right way.";
 	close;
 }
 
-in_moc_16,186,107,0	script	info 8	-1,1,1,{
+in_moc_16,186,107,0	script	info 8	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "No sense of direction, eh?";
 	close;
 }
 
--	script	#moc_assin_dup	-1,{
+-	script	#moc_assin_dup	FAKE_NPC,{
 	end;
 
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 in_moc_16,156,87,1	duplicate(#moc_assin_dup)	[Huey]	1_M_JOBTESTER

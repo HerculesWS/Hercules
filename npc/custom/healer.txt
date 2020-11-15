@@ -12,7 +12,7 @@
 //= 1.2 Fix variables and character stuck at healing
 //============================================================
 
--	script	Healer	-1,{
+-	script	Healer	FAKE_NPC,{
 
 	.@price = 0;	// Zeny required for heal
 	.@Buffs = 0;	// Also buff players? (1: yes / 0: no)
@@ -20,15 +20,15 @@
 
 	if (@HD > gettimetick(2)) end;
 	if (.@price) {
-		message strcharinfo(0),"Healing costs "+.@price+" Zeny.";
+		message strcharinfo(PC_NAME),"Healing costs "+.@price+" Zeny.";
 		if (Zeny < .@price) end;
-		if(select("^0055FFHeal^000000:^777777Cancel^000000") == 2) close;
+		if(select("^0055FFHeal^000000", "^777777Cancel^000000") == 2) close;
 		Zeny -= .@price;
 	}
-	specialeffect2 EF_HEAL2; percentheal 100,100;
+	specialeffect(EF_HEAL2, AREA, playerattached()); percentheal 100,100;
 	if (.@Buffs) {
-		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
-		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+		specialeffect(EF_INCAGILITY, AREA, playerattached()); sc_start SC_INC_AGI,240000,10;
+		specialeffect(EF_BLESSING, AREA, playerattached()); sc_start SC_BLESSING,240000,10;
 	}
 	if (.@Delay) @HD = gettimetick(2)+.@Delay;
 	end;

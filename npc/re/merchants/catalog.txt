@@ -1,20 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Scriptor
+//= Copyright (C) skyiing
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Catalog Magician
-//===== By: ==================================================
-//= skyiing, Scriptor
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Catalogs allow players to easily search for items in-game, and to
+//= buy/sell directly from the catalog interface.
+//================= Current Version =======================================
 //= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
-//= Catalogs allow players to easily search for items in-game,
-//= and to buy/sell directly from the catalog interface.
-//===== Additional Comments: =================================
-//= 1.0 Moved from root directory. [Euphy]
-//= 1.1 Updated dialogue. [Euphy]
-//============================================================
+//=========================================================================
 
 moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
-	if (!checkweight(1301,3)) {
+	if (!checkweight(Axe,3)) {
 		mes "- You have too many items. Please make space. -";
 		close;
 	}
@@ -43,26 +65,28 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 	mes "costs only 200z!";
 	mes "You can buy up to 50 pieces at once!";
 	next;
-	switch(select("Buy a ^007777Universal Catalog Silver^000000:I don't need it!:You don't look like a vendor!")) {
+	switch(select("Buy a ^007777Universal Catalog Silver^000000", "I don't need it!", "You don't look like a vendor!")) {
 	case 1:
 		mes "[Catalog Magician]";
 		mes "You... want all 50 pieces?";
 		mes "Or how many do you need?";
 		next;
 		while (1) {
-			input .@input;
+			input(.@input);
 			mes "[Catalog Magician]";
-			if (.@input == 0) {
+			if (.@input <= 0) {
 				mes "The trade has been stopped!";
 				mes "I don't know what to do next...";
 				mes "What should I do?";
 				emotion e_swt2,1;
 				close;
-			} else if (.@input < 1 || .@input > 50) {
+			}
+			if (.@input > 50) {
 				mes "It should be less than 50 pieces.";
 				next;
-			} else
-				break;
+				continue;
+			}
+			break;
 		}
 		.@sell = .@ticket_cost * .@input;
 		mes "The total number of catalog(s) that you're trying to purchase is " + .@input + " pieces.";
@@ -75,7 +99,7 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 		}
 		mes "Ok, here you go.";
 		Zeny -= .@sell;
-		getitem 12580,.@input; //Vending_Search_Scroll
+		getitem Vending_Search_Scroll,.@input;
 		close;
 	case 2:
 		mes "[Catalog Magician]";

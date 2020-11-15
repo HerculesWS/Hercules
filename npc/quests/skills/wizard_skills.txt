@@ -1,16 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Toms
+//= Copyright (C) DracoRPG
+//= Copyright (C) Reddozen
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Wizard Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for skills: Sight Blaster
-//===== Additional Comments: =================================
-//= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 	if (BaseJob == Job_Wizard) {
@@ -25,7 +49,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 				mes "Alright, here's your lesson!";
 				next;
 				mes "^3355FF*BAM! BOOM! CRASH!*^000000";
-				specialeffect2 EF_SUI_EXPLOSION;
+				specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 				next;
 				mes "[Meow]";
 				mes "Don't you dare get";
@@ -39,7 +63,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 				mes "the Sight Blaster skill before";
 				mes "Meow can administer another";
 				mes "vicious beating to you.";
-				specialeffect2 EF_ABSORBSPIRITS;
+				specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
 				skill "WZ_SIGHTBLASTER",1,0;
 				next;
 				mes "[Meow]";
@@ -70,7 +94,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "bother me if you've";
 			mes "got nothing to say!";
 			next;
-			if (select("A cat?:Now I'm sleepy, too...") == 1) {
+			if (select("A cat?", "Now I'm sleepy, too...") == 1) {
 				mes "[Meow]";
 				mes "Yeah. Yeah, I'm a cat.";
 				mes "For now, anyway. Damn that";
@@ -100,9 +124,9 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "teaching Wizards this new";
 			mes "skill on behalf of the Wizard";
 			mes "Guild. Although I don't really";
-			mes "want to, I pretty much don't have^FFFFFF ^000000 a choice. So what do you say?";
+			mes "want to, I pretty much don't have a choice. So what do you say?";
 			next;
-			if (select("Nah, I'm too sleepy...:Sure, I'd like to learn a new skill.") == 1) {
+			if (select("Nah, I'm too sleepy...", "Sure, I'd like to learn a new skill.") == 1) {
 				mes "[Meow]";
 				mes "^333333*Yaaaawn*^000000";
 				mes "Alright. If you wanna";
@@ -216,7 +240,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			close;
 		}
 		else if (WIZ_SK == 3) {
-			if (countitem(991) < 10 || countitem(993) < 10 || countitem(990) < 10 || countitem(992) < 10) {
+			if (countitem(Crystal_Blue) < 10 || countitem(Yellow_Live) < 10 || countitem(Boody_Red) < 10 || countitem(Wind_Of_Verdure) < 10) {
 				mes "[Meow]";
 				mes "^333333*Yaaaaaawn~*^000000 Hm?";
 				mes "H-how dare you come";
@@ -263,7 +287,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "you to cast Sight before you";
 			mes "can activate it. Now try it.";
 			next;
-			specialeffect2 EF_SUI_EXPLOSION;
+			specialeffect(EF_SUI_EXPLOSION, AREA, playerattached());
 			mes "^3355FF*BAM! BOOM!*^000000";
 			next;
 			mes "[Meow]";
@@ -287,11 +311,11 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "You actually learned it!";
 			mes "That took way too much effort,";
 			mes "but at least we're done here.";
-			specialeffect2 EF_ABSORBSPIRITS;
-			delitem 991,10; //Crystal_Blue
-			delitem 993,10; //Yellow_Live
-			delitem 990,10; //Boody_Red
-			delitem 992,10; //Wind_Of_Verdure
+			specialeffect(EF_ABSORBSPIRITS, AREA, playerattached());
+			delitem Crystal_Blue,10;
+			delitem Yellow_Live,10;
+			delitem Boody_Red,10;
+			delitem Wind_Of_Verdure,10;
 			WIZ_SK = 100;
 			skill "WZ_SIGHTBLASTER",1,0;
 			next;
@@ -323,7 +347,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 		mes "bother me if you've";
 		mes "got nothing to say!";
 		next;
-		if (select("A cat?:Now I'm sleepy, too...") == 1) {
+		if (select("A cat?", "Now I'm sleepy, too...") == 1) {
 			mes "[Meow]";
 			mes "Yeah. Yeah, I'm a cat.";
 			mes "For now, anyway. Damn that";
@@ -361,12 +385,12 @@ prt_in,82,98,3	script	Simon Mayace#q_wiz	1_ETC_01,{
 		mes "tell the difference. Ah, may";
 		mes "I be of service to you?";
 		next;
-		if (select("I'm fine, thank you.:I want to learn about push backs.") == 1) {
+		if (select("I'm fine, thank you.", "I want to learn about push backs.") == 1) {
 			mes "[Simon]";
 			mes "I'm surprised that you chose";
 			mes "to practice magic: judging";
 			mes "from your build, I'd say that";
-			mes "you'd be well suited to wielding^FFFFFF ^000000 a sword. Haha, but that's just";
+			mes "you'd be well suited to wielding a sword. Haha, but that's just";
 			mes "a humble Knight's opinion.";
 			close;
 		}
@@ -416,7 +440,7 @@ prt_in,82,98,3	script	Simon Mayace#q_wiz	1_ETC_01,{
 		mes "pushing as best as I can.";
 		mes "Concentrate and practice the";
 		mes "theory on your own, and you";
-		mes "should be able to do it. Good^FFFFFF ^000000luck on your travels, adventurer~";
+		mes "should be able to do it. Good luck on your travels, adventurer~";
 		WIZ_SK = 2;
 		close;
 	}
@@ -431,18 +455,3 @@ prt_in,82,98,3	script	Simon Mayace#q_wiz	1_ETC_01,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//= 1.3c Removed duplicates [Toms]
-//============================================================

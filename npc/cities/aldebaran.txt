@@ -1,42 +1,51 @@
-//===== Hercules Script ======================================
-//= Al De Baran Town
-//===== By: ==================================================
-//= rAthena Dev Team; L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.3
-//===== Description: =========================================
-//= [Official Conversion]
-//= Al De Baran Town NPCs
-//===== Additional Comments: =================================
-//= 1.1 Added RS125 NPC.  Added another Kafra Reserve points agent.
-//=     The 2nd reserve points agent is not complete yet.
-//= 1.2 Lottery input number fix [Lupus], 1.2a - label typo fixed
-//= 1.3 Gatekeeper's bug fixed (wrong check and wrong item ID
-//=     for underground), fixed some typos [Lupus]
-//= 1.4 Fixed Typos & Spellcheck [massdriller]
-//= 1.5 Finally added the Special Reserve 2 Lotto 8))
-//=  with official prizes (80% official, 4-5 entries are made up)
-//=  also changed typo Orange Potions -> Red Potions [Lupus]
-//= 1.6 Fixed bug (missing label), optimized all menus [Lupus]
-//= 1.7 Fixed exploits [Lupus] 1.8 Removed Duplicates [Silent]
-//= 1.9 Fixed a bunch of typos with information from Crono/Hollengrhen [Evera]
-//= 1.9a Now Pavianne doesn't sell Kafra Passes. She refunds them [Lupus]
-//= 2.0 Re-made all the dialog-only NPCs with official dialogs.
-//=     Kafra and Clock Tower NPCs pending remake. [DZeroX]
-//= 2.01 removed all .GATs [Lupus]
-//= 2.1 Rescripted most NPCs to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.2 Corrected NPC names to fall within proper resctrictions. [L0ne_W0lf]
-//= 2.3 Fixed exploit with kafra pass
-//============================================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) DZeroX
+//= Copyright (C) Evera
+//= Copyright (C) Silent
+//= Copyright (C) massdriller
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Aldebaran Town
+//================= Description ===========================================
+//= Aldebaran Town NPCs
+//================= Current Version =======================================
+//= 2.4
+//=========================================================================
 
-// Al De Baran
-//============================================================
+//== Aldebaran =============================================
 aldebaran,113,70,4	script	Forger Munster#alde	1_M_02,{
 	mes "[Munster]";
 	mes "My family used to live in Geffen. So I guess it was natural that we studied forging and eventually became Blacksmiths. Then, we finally moved to this town,";
 	mes "Al De Baran.";
 	next;
-	if (select("About ^3355FFItem Upgrade^000000:Quit") == 1) {
+	if (select("About ^3355FFItem Upgrade^000000", "Quit") == 1) {
 		mes "[Munster]";
 		mes "My father was a famous blacksmith in Geffen, and he taught me a lot about forging equipment.";
 		next;
@@ -60,7 +69,7 @@ aldebaran,64,104,4	script	Smithing Guy#alde	1_M_JOBTESTER,{
 	mes "[Quatro]";
 	mes "Have you heard that a famous Blacksmith moved here from Geffen?";
 	next;
-	if (select("Famous Blacksmith?:End Conversation") == 1) {
+	if (select("Famous Blacksmith?", "End Conversation") == 1) {
 		mes "[Quatro]";
 		mes "From what I've heard, he's one of those Blacksmiths that can upgrade your weapons and armor. When you upgrade a weapon, its attack strength is increased.";
 		next;
@@ -94,7 +103,7 @@ aldebaran,81,61,4	script	Shell Gathering Lady#ald	4W_F_01,{
 	mes "[Joanne]";
 	mes "I enjoy gathering shells from the sea. It's really fun and relaxing~";
 	next;
-	if (select("Shell Gathering?:End Conversation") == 1) {
+	if (select("Shell Gathering?", "End Conversation") == 1) {
 		mes "[Joanne]";
 		mes "When you see bubbles popping up from the sand or muddy puddles, try digging into the ground a bit. You might find some shells underneath the ground!";
 		next;
@@ -124,7 +133,7 @@ aldebaran,46,129,4	script	Canal Guy#alde	4W_M_01,{
 	mes "[Panama]";
 	mes "Al De Baran is known world wide as the City of Canals. The waterways really add a sophisticated, romantic touch to our fair city.";
 	next;
-	switch(select("About the Canals:End Conversation")) {
+	switch(select("About the Canals", "End Conversation")) {
 	case 1:
 		mes "[Panama]";
 		mes "Well, a canal is an artificial waterway used for travel,";
@@ -148,7 +157,7 @@ aldebaran,67,154,4	script	Forest Guy#alde	4W_M_02,{
 	mes "Both of those places are tough";
 	mes "to travel through.";
 	next;
-	switch(select("Mt.Mjolnir?:Payon Forest...?:End Conversation")) {
+	switch(select("Mt.Mjolnir?", "Payon Forest...?", "End Conversation")) {
 	case 1:
 		mes "[Isenberg]";
 		mes "To arrive here from Prontera or Geffen, you've got to cross the Mjolnir Mountains.";
@@ -185,7 +194,7 @@ aldebaran,90,170,4	script	Slot Guy#alde	1_M_01,{
 	mes "[Epthiel]";
 	mes "Some weapons or armor have Slots where you can insert Cards obtained from monsters.";
 	next;
-	switch(select("About the number of Slots:Relation between Cards and Slots:End Conversation")) {
+	switch(select("About the number of Slots", "Relation between Cards and Slots", "End Conversation")) {
 	case 1:
 		mes "[Epthiel]";
 		mes "Items dropped by monsters possess more Slots than ordinary weapons or armor sold in NPC shops.";
@@ -217,7 +226,7 @@ aldebaran,117,181,4	script	Phracon Guy#alde	1_M_02,{
 	mes "[Joy]";
 	mes "Level 1 weapons, which are the lowest grade, need a metal named ^3355FFPhracon^000000 in order to be upgraded.";
 	next;
-	switch(select("About Phracon:Advice about Phracon:End Conversation")) {
+	switch(select("About Phracon", "Advice about Phracon", "End Conversation")) {
 	case 1:
 		mes "[Joy]";
 		mes "Phracon is a pretty common metal and can be found all over the Rune-Midgard continent.";
@@ -246,7 +255,7 @@ aldebaran,121,231,4	script	Alchemy Guy#alde	1_M_03,{
 	mes "[Chemirre]";
 	mes "Alchemists, one of the 2nd Jobs, are able to create items out of several materials using knowledge from the ancient age of Al De Baran.";
 	next;
-	switch(select("About Alchemy in Payon:Definition of Alchemy:. . . . .:End Conversation")) {
+	switch(select("About Alchemy in Payon", "Definition of Alchemy", ". . . . .", "End Conversation")) {
 	case 1:
 		mes "[Chemirre]";
 		mes "Most people don't know that there was an oriental form of Alchemy that developed in Payon.";
@@ -318,7 +327,7 @@ aldebaran,86,228,4	script	Little Kid#alde	1_M_SIZ,{
 	mes "A while ago I went out for a walk toward Mt. Mjolnir with my pet Savage Bebe. His name is NukNuk!";
 	mes "We got attacked, but luckily we weren't hurt.";
 	next;
-	switch(select("Attacked?:About Mt.Mjolnir:End Conversation")) {
+	switch(select("Attacked?", "About Mt.Mjolnir", "End Conversation")) {
 	case 1:
 		mes "[Bebe]";
 		mes "I was walking up a narrow path, and out of the blue, a giant and ugly plant started to attack me and NukNuk!";
@@ -351,7 +360,7 @@ aldebaran,159,242,4	script	Insect Guy#alde	2_M_SWORDMASTER,{
 	mes "[Stromme]";
 	mes "Even to a strong Swordman, the Insects or Mt. Mjolnir pose a considerable threat. You've got to know your enemy before engaging it in battle!";
 	next;
-	if (select("About Insects:End Conversation") == 1) {
+	if (select("About Insects", "End Conversation") == 1) {
 		mes "[Stromme]";
 		mes "Honey Bees, Butterflies and Moths seem like simple creatures, but that doesn't mean you should underestimate them.";
 		next;
@@ -386,7 +395,7 @@ aldebaran,60,70,4	script	Sylvia#alde	1_F_04,{
 	mes "[Sylvia]";
 	mes "If that wasn't bad enough, I left my Magnifiers back in Prontera, so now I have to find someone to help me with these weapons I've got to appraise!";
 	next;
-	if (select("Appraise?:That's very nice.") == 1) {
+	if (select("Appraise?", "That's very nice.") == 1) {
 		mes "[Sylvia]";
 		mes "Equipment that is dropped by monsters can't be equipped right away.";
 		next;
@@ -410,7 +419,7 @@ aldebaran,93,80,4	script	Issei#alde	1_M_02,{
 	mes "[Issei]";
 	mes "Al De Baran is such a wonderful place with its romantic canals and classic architecture. I love nothing more than to stroll through this city with my beautiful girlfriend.";
 	next;
-	if (select("You have a girlfriend?:End Conversation.") == 1) {
+	if (select("You have a girlfriend?", "End Conversation.") == 1) {
 		mes "[Issei]";
 		mes "Hey...";
 		mes "Is that so hard to believe?! Yeah, ask anyone! She really exists! Although, sometimes, just sometimes mind you, she gets too excited about weapons and armor.";
@@ -444,7 +453,7 @@ aldebaran,180,46,4	script	Joo Jahk#alde	4_M_ORIENT01,{
 	mes "[Joo Jahk]";
 	mes "Well, it's too late for me, since I already drank some. Still, I'm a little worried...";
 	next;
-	if (select("Continue.:End conversation.") == 1) {
+	if (select("Continue.", "End conversation.") == 1) {
 		mes "[Joo Jahk]";
 		mes "On one of my travels around Rune-Midgard, I've heard from a really high level Mage that physical attacks, or magic with Neutral Property, won't damage Spiritual Property monsters.";
 		next;
@@ -468,7 +477,7 @@ aldebaran,212,122,4	script	Citizen#alde	4W_M_01,{
 	mes "Well, that might be an exaggeration. After all, it's just me that's welcoming you.";
 	mes "Hey there!";
 	next;
-	if (select("Now, tell me about monsters.:End conversation.") == 1) {
+	if (select("Now, tell me about monsters.", "End conversation.") == 1) {
 		mes "[Gavin]";
 		mes "Monsters...?";
 		mes "Aren't we straying off topic a little bit? Ah, you must be one of those adventurers!";
@@ -496,7 +505,7 @@ aldebaran,146,124,4	script	Town Girl#alde	4W_F_01,{
 	mes "[Nastasia]";
 	mes "But isn't killing illegal? And do they even collect educational tutition?";
 	next;
-	if (select("Continue conversation.:End Conversation.") == 1) {
+	if (select("Continue conversation.", "End Conversation.") == 1) {
 		mes "[Nastasia]";
 		mes "Although Assassins benefit from being very quick and having lots of AGI, they should still have some DEX.";
 		next;
@@ -516,7 +525,7 @@ aldebaran,143,136,4	script	Bell Keeper#A	4_M_ORIENT02,{
 	mes "[Bell Keeper]";
 	mes "I have been charged by the Committee of 'Heaven on Earth' to guard this entrance of the Clock Tower.";
 	next;
-	if (select("About Clock Tower.:Quit.") == 1) {
+	if (select("About Clock Tower.", "Quit.") == 1) {
 		mes "[Bell Keeper]";
 		mes "Every floor of this tower is connected to each other by a certain device we like to call 'Warp Gear.'";
 		next;
@@ -535,8 +544,7 @@ aldebaran,143,136,4	script	Bell Keeper#A	4_M_ORIENT02,{
 	close;
 }
 
-// Inside Al De Baran
-//============================================================
+//== Inside Aldebaran ======================================
 aldeba_in,232,241,4	script	RS125#alde	1_M_02,{
 	mes "[RS125]";
 	mes "I may sound unhuman rather robotic";
@@ -546,7 +554,7 @@ aldeba_in,232,241,4	script	RS125#alde	1_M_02,{
 	mes "I may have a machine heart and I may disturb you with loud noises from the heart,";
 	mes "that will never stop me from running for future of Al De Baran.";
 	next;
-	if (select("Listen to his story.:End Conversation") == 1) {
+	if (select("Listen to his story.", "End Conversation") == 1) {
 		mes "[RS125]";
 		mes "It's been 3 years already.";
 		mes "My brother 996 used to be a short track athlete in the Al De Baran city field team.";
@@ -589,7 +597,7 @@ aldeba_in,223,121,4	script	Threatening-Looking Man	1_M_SMITH,{
 	mes "[Threatening-Looking Man]";
 	mes "Hahahaha...chill out, I was just joking.";
 	next;
-	if (select("Continue:Quit") == 1) {
+	if (select("Continue", "Quit") == 1) {
 		mes "[Threatening-Looking Man]";
 		mes "You may know this already, but";
 		mes "we have a system called, the mercenary system in this world.";
@@ -644,13 +652,13 @@ aldeba_in,152,47,4	script	Fussy Man#alde	4W_M_01,{
 	mes "My little chicken has left me!";
 	mes "Oh, my god! Oh, my god!";
 	next;
-	if (select("What do you call the chicken?:. . . . .") == 1) {
+	if (select("What do you call the chicken?", ". . . . .") == 1) {
 		mes "[Fussy Man]";
 		mes "I used to call it 'Amazing Picky'...";
 		mes "*Sob* What should I do! How could this happen!";
 		mes "Please, please help me to find my sweet little chicken!";
 		next;
-		if (select("What? That is such a boring name!:. . . . .") == 1) {
+		if (select("What? That is such a boring name!", ". . . . .") == 1) {
 			mes "[Fussy Man]";
 			mes "Don't be so ridiculous!";
 			mes "'Amazing Picky' is the most wonderful and the most unique name";
@@ -685,12 +693,12 @@ aldeba_in,156,179,4	script	Master#alde	1_M_PUBMASTER,{
 	mes "Who's your";
 	mes "favorite Kafra girl?";
 	next;
-	if (Sex == 0) {
+	if (Sex == SEX_FEMALE) {
 		mes "[Master]";
 		mes "Oh, and don't worry. I know that girls have some kind of opinion about how pretty other girls are.";
 		next;
 	}
-	if (select("Awesome!:No way, I ain't a perv.") == 1) {
+	if (select("Awesome!", "No way, I ain't a perv.") == 1) {
 		mes "[Master]";
 		mes "Alright, here we go!";
 		mes "Choose your favorite Kafra Lady!";
@@ -714,7 +722,7 @@ aldeba_in,156,179,4	script	Master#alde	1_M_PUBMASTER,{
 		mes "Pretty, cute and fresh faced. Although She looks young and immature,She's the best staff!";
 		mes "Candidate Number (6) ^AAAA00Curly Sue^000000 !!";
 		next;
-		switch(select("(1) Pavianne:(2) Blossom:(3) Jasmine:(4) Roxie:(5) Leilah:(6) Curly Sue")) {
+		switch(select("(1) Pavianne", "(2) Blossom", "(3) Jasmine", "(4) Roxie", "(5) Leilah", "(6) Curly Sue")) {
 		case 1:
 			mes "[Master]";
 			mes "Oh~";
@@ -768,8 +776,8 @@ aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 	mes "[Kafra Pavianne]";
 	mes "Due to a change in customer support policy, we no longer accept Kafra Passes. However, we are offering refunds for our customers who still possess these passes.";
 	next;
-	if (select("Sell Kafra Pass:Alright, bye~") == 1) {
-		if (countitem(1084) == 0) {
+	if (select("Sell Kafra Pass", "Alright, bye~") == 1) {
+		if (countitem(Kapras_Pass) == 0) {
 			mes "[Kafra Pavianne]";
 			mes "I'm sorry,";
 			mes "but you don't";
@@ -779,27 +787,27 @@ aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 			end;
 		}
 		else {
-			.@kafrapassmoney = countitem(1084)*2000;
+			.@kafrapassmoney = countitem(Kapras_Pass)*2000;
 			mes "[Kafra Pavianne]";
 			mes "Let's see...";
-			if (countitem(1084) == 1) {
+			if (countitem(Kapras_Pass) == 1) {
 				mes "You have 1 Kafra Pass.";
 				mes "You can sell that pass to us for 2000 zeny. Would you like to sell this Kafra Pass back to the Kafra Corporation?";
 			}
 			else {
-				mes "You have "+ countitem(1084) +" Kafra Passes.";
+				mes "You have "+ countitem(Kapras_Pass) +" Kafra Passes.";
 				mes "If you want to sell them to us, you will receive "+ .@kafrapassmoney +" zeny. Would you like to sell these back to the Kafra Corporation?";
 			}
 			next;
-			if (select("Yes:No") == 1) {
-				if (countitem(1084) == 0) {
+			if (select("Yes", "No") == 1) {
+				if (countitem(Kapras_Pass) == 0) {
 					mes "[Kafra Pavianne]";
 					mes "I'm sorry, but you don't have any Kafra Passes.";
 					close2;
 					cutin "",255;
 					end;
 				}
-				delitem 1084,countitem(1084); //Kapra's_Pass
+				delitem Kapras_Pass,countitem(Kapras_Pass);
 				Zeny += .@kafrapassmoney;
 				mes "[Kafra Pavianne]";
 				mes "Thank you.";
@@ -828,7 +836,7 @@ aldeba_in,83,245,4	script	Kafra Service#2alde	4_F_KAFRA2,{
 	mes "[Kafra Blossom]";
 	mes "We appreciate your continued use of the Kafra Service. Please feel free to ask me if you have any questions.";
 	next;
-	switch(select("How does Kafra Storage work?:How do you teleport people?")) {
+	switch(select("How does Kafra Storage work?", "How do you teleport people?")) {
 	case 1:
 		mes "[Kafra Blossom]";
 		mes "Well, adventurers like yourself can place items into Kafra Storage, so that you don't have to carry all of your stuff around.";
@@ -896,14 +904,14 @@ aldeba_in,24,245,4	script	Kafra Jasmine#alde	4_F_KAFRA3,{
 	mes "[Kafra Jasmine]";
 	mes "The Kafra Service is always behind our customers with a dependable reputation that has been established over five thousand, eight hundred years...";
 	next;
-	switch(select("What?! I can't believe that!:Ahh~ Shut Up!:Your service is great!")) {
+	switch(select("What?! I can't believe that!", "Ahh~ Shut Up!", "Your service is great!")) {
 	case 1:
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "What?!";
 		mes "I can't";
 		mes "believe that!";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "FIVE THOUSAND AND EIGHT HUNDRED YEARS?! THAT'S INSANE!";
 		next;
 		mes "[Kafra Jasmine]";
@@ -959,12 +967,12 @@ aldeba_in,142,238,4	script	Kafra Service#3alde	4_F_KAFRA4,{
 	mes "[Kafra Roxie]";
 	mes "I'm here to answer any of your questions regarding Kafra Corporations policies, as well as take note of any of your feedback.";
 	next;
-	switch(select("Kafra Policies:I love Kafra!")) {
+	switch(select("Kafra Policies", "I love Kafra!")) {
 	case 1:
 		mes "[Kafra Roxie]";
 		mes "So, you'd like more details on our policies and eligibility for our services? What would you like me to explain?";
 		next;
-		switch(select("Kafra Storage:Cart Rental:Actually, never mind.")) {
+		switch(select("Kafra Storage", "Cart Rental", "Actually, never mind.")) {
 		case 1:
 			mes "[Kafra Roxie]";
 			mes "As you probably already know, our customers must have at least Basic Skill level 6 in order to use the Kafra Storage.";
@@ -1030,7 +1038,7 @@ aldeba_in,91,244,4	script	Kafra Service#4alde	4_F_KAFRA6,{
 	mes "[Kafra Curly Sue]";
 	mes "I may still need to learn more about serving our customers, but I'm always doing my best!";
 	next;
-	if (select("Where's your mommy, kid?:End conversation.") == 1) {
+	if (select("Where's your mommy, kid?", "End conversation.") == 1) {
 		mes "[Kafra Curly Sue]";
 		mes "Waaaaaaah~!";
 		mes "I'm not a kid!";
@@ -1045,13 +1053,12 @@ aldeba_in,91,244,4	script	Kafra Service#4alde	4_F_KAFRA6,{
 	end;
 }
 
-// Kafra Special Reserve Point NPCs
-//============================================================
-// Special Reserve ----------------------------------------------
+//== Kafra Special Reserve Point NPCs ======================
+//- Special Reserve -
 aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
-	mes "Welcome, ^6666FF" + strcharinfo(0) + "^000000.  This is where you can trade in your special reserve points for useful items and cool prizes.";
+	mes "Welcome, ^6666FF" + strcharinfo(PC_NAME) + "^000000.  This is where you can trade in your special reserve points for useful items and cool prizes.";
 	next;
 	mes "[Kafra]";
 	mes "Each Kafra will allow you to trade in reserve points of varying amounts.  I can trade in reserve points starting from ^2222FF100 pts up to 3000 pts^000000.";
@@ -1091,7 +1098,7 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 		.@list$ = "";
 		.@numitemchoices = 0;
 		for (.@i = 0; .@i < getarraysize(.@choices) - 3; .@i += 3) { // Skip the last entry as it's handled separately
-			.@list$ += .@choices[i] + "- " + getitemname(.@choices[.@i+1]) + " " + .@choices[.@i+2] + " ea:";
+			.@list$ += .@choices[.@i] + "- " + getitemname(.@choices[.@i+1]) + " " + .@choices[.@i+2] + " ea:";
 			++.@numitemchoices;
 		}
 		.@list$ += .@choices[.@i] + "- " + .@ordinal$ + " Lottery Chance!:" + .@changepage$ +":Cancel";
@@ -1104,7 +1111,7 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 				continue;
 			}
 			RESRVPTS -= .@choices[.@chosen * 3];
-			if (.@chosen < .@numitemchances) {
+			if (.@chosen < .@numitemchoices) {
 				// Item
 				mes "[Kafra]";
 				mes "Here you are.";
@@ -1131,11 +1138,11 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 	close;
 }
 
-// Special Reserve 2 ----------------------------------------------
+//- Special Reserve 2 -
 aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
-	mes "Welcome ^5577FF"+strcharinfo(0)+"^000000.  We are currently having a special event for our customers.";
+	mes "Welcome ^5577FF"+strcharinfo(PC_NAME)+"^000000.  We are currently having a special event for our customers.";
 	mes "You can get free gifts by using your ^FF5533special reserve points^000000 in the ^3355FFSpecial Kafra Gift Event^000000!!";
 	next;
 	mes "[Kafra]";
@@ -1182,7 +1189,7 @@ aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 	close;
 }
 
-// Function F_Lottery ------------------------------------------------------------------------------------------
+//- Function F_Lottery -
 function	script	F_Lottery	{
 	mes "[Kafra]";
 	mes "You have the unique opportunity to win a prize sent down from the heavens themselves!!";
@@ -1193,8 +1200,9 @@ function	script	F_Lottery	{
 	mes "[Kafra]";
 	mes "How many times do you want the Lottery Machine to spin? You can choose up to 5 times.";
 	next;
-	input @input;
-	if(@input < 1 || @input > 5) @input = rand(1,5); //Lupus's fix
+	input(@input);
+	if (@input < 1 || @input > 5)
+		@input = rand(1,5); // Lupus's fix
 	callsub sF_Spin;
 	mes "[Kafra]";
 	mes "Ok~ Let me check the results~ guess what it is?";
@@ -1202,79 +1210,77 @@ function	script	F_Lottery	{
 	mes "[Kafra]";
 	mes "^FF0000Lets see.... This is...!!^000000";
 	next;
-	if(@temp <  1) goto sL_Prize1;
-	if(@temp <  2) goto sL_Prize2;
-	if(@temp <  3) goto sL_Prize3;
-	if(@temp <=  4) goto sL_Prize4;
-	goto sL_Prize5;
-
-	sL_Prize1:
+	switch (@temp) {
+	case 0:
 		mes "[Kafra]";
 		mes "WOW!!!!..... You win!!! 1st Prize~! Congratulations~~ You got the 1st prize~~";
-		if(@Lotto == 1) getitem 2328,1;//Items: Wooden_Mail,
-		if(@Lotto == 2) getitem 2307,1;//Items: Mantle,
-		if(@Lotto == 3) getitem 657,10;//Items: Berserk_Potion,
+		if(@Lotto == 1) getitem Wooden_Mail,1;//Items: Wooden_Mail,
+		if(@Lotto == 2) getitem Mantle,1;//Items: Mantle,
+		if(@Lotto == 3) getitem Berserk_Potion,10;//Items: Berserk_Potion,
 		if(@Lotto == 4) {
-			getitem 607,2;//Items: Yggdrasilberry,
-			getitem 608,1;//Items: Yggdrasil_Seed,
+			getitem Yggdrasilberry,2;//Items: Yggdrasilberry,
+			getitem Seed_Of_Yggdrasil,1;//Items: Yggdrasil_Seed,
 		}
-		if(@Lotto == 5) getitem 607,3;//Items: Yggdrasilberry,
+		if(@Lotto == 5) getitem Yggdrasilberry,3;//Items: Yggdrasilberry,
 		return;
-	sL_Prize2:
+	case 1:
 		mes "[Kafra]";
 		mes "Oh! WOW! You've won the 2nd prize! Congratulations!!";
-		if(@Lotto == 1) getitem 2403,1;//Items: Shoes,
-		if(@Lotto == 2) getitem 2226,1;//Items: Cap,
-		if(@Lotto == 3) getitem 2201,1;//Items: Sunglasses,
-		if(@Lotto == 4) getitem 526,3;//Items: Royal_Jelly,
+		if(@Lotto == 1) getitem Shoes,1;//Items: Shoes,
+		if(@Lotto == 2) getitem Cap,1;//Items: Cap,
+		if(@Lotto == 3) getitem Sunglasses,1;//Items: Sunglasses,
+		if(@Lotto == 4) getitem Royal_Jelly,3;//Items: Royal_Jelly,
 		if(@Lotto == 5) {
-			getitem 608,1;//Items: Yggdrasil_Seed,
-			getitem 526,10;//Items: Royal_Jelly,
+			getitem Seed_Of_Yggdrasil,1;//Items: Yggdrasil_Seed,
+			getitem Royal_Jelly,10;//Items: Royal_Jelly,
 		}
 		return;
-	sL_Prize3:
+	case 2:
 		mes "[Kafra]";
 		mes "Congratulations! You've won the 3rd prize.";
-		if(@Lotto == 1) getitem 602,4;//Items: Butterfly_Wing,
-		if(@Lotto == 2) getitem 505,3;//Items: Blue_Potion,
-		if(@Lotto == 3) getitem 2203,1;//Items: Glasses,
-		if(@Lotto == 4) getitem 504,15;//Items: White_Potion,
-		if(@Lotto == 5) getitem 504,30;//Items: White_Potion,
+		if(@Lotto == 1) getitem Wing_Of_Butterfly,4;//Items: Butterfly_Wing,
+		if(@Lotto == 2) getitem Blue_Potion,3;//Items: Blue_Potion,
+		if(@Lotto == 3) getitem Glasses,1;//Items: Glasses,
+		if(@Lotto == 4) getitem White_Potion,15;//Items: White_Potion,
+		if(@Lotto == 5) getitem White_Potion,30;//Items: White_Potion,
 		return;
-	sL_Prize4:
+	case 3:
+	case 4:
 		mes "[Kafra]";
 		mes "You've won the 4th prize.";
-		if(@Lotto == 1) getitem 516,100;//Items: Sweet_Potato,
-		if(@Lotto == 2) getitem 501,150;//Items: Red_Potion,
-		if(@Lotto == 3) getitem 502,150;//Items: Orange_Potion,
-		if(@Lotto == 4) getitem 505,5;//Items: Blue_Potion,
-		if(@Lotto == 5) getitem 505,10;//Items: Blue_Potion,
+		if(@Lotto == 1) getitem Sweet_Potato,100;//Items: Sweet_Potato,
+		if(@Lotto == 2) getitem Red_Potion,150;//Items: Red_Potion,
+		if(@Lotto == 3) getitem Orange_Potion,150;//Items: Orange_Potion,
+		if(@Lotto == 4) getitem Blue_Potion,5;//Items: Blue_Potion,
+		if(@Lotto == 5) getitem Blue_Potion,10;//Items: Blue_Potion,
 		return;
-	sL_Prize5:
+	default:
 		mes "[Kafra]";
 		mes "You've won the 5th prize.";
-		if(@Lotto == 1) getitem 516,50;//Items: Sweet_Potato,
-		if(@Lotto == 2) getitem 501,100;//Items: Red_Potion,
-		if(@Lotto == 3) getitem 501,200;//Items: Red_Potion,
-		if(@Lotto == 4) getitem 501,250;//Items: Red_Potion,
-		if(@Lotto == 5) getitem 501,300;//Items: Red_Potion,
+		if(@Lotto == 1) getitem Sweet_Potato,50;//Items: Sweet_Potato,
+		if(@Lotto == 2) getitem Red_Potion,100;//Items: Red_Potion,
+		if(@Lotto == 3) getitem Red_Potion,200;//Items: Red_Potion,
+		if(@Lotto == 4) getitem Red_Potion,250;//Items: Red_Potion,
+		if(@Lotto == 5) getitem Red_Potion,300;//Items: Red_Potion,
 		return;
+	}
 
 sF_Spin:
-	mes "[Lottery Machine]";
-	mes "Number of spins remaining: "+@input;
-	next;
-	mes "[Lottery Machine]";
-	mes "(rumble~rumble~rumble~)...";
-	next;
-	@temp = rand(10);
-	--@input;
-	if(@input <= 0) return;
-	goto sF_Spin;
+	while (true) {
+		mes "[Lottery Machine]";
+		mes "Number of spins remaining: "+@input;
+		next;
+		mes "[Lottery Machine]";
+		mes "(rumble~rumble~rumble~)...";
+		next;
+		@temp = rand(10);
+		--@input;
+		if (@input <= 0)
+			return;
+	}
 }
 
-// Inside Clock Tower
-//============================================================
+//== Inside Clock Tower ====================================
 c_tower3,10,249,4	script	Gatekeeper#ct	4_M_02,{
 	//Key_Of_Clock_Tower
 	callfunc "F_ClockTowerGate","4th",7026,"c_tower4",185,44;
@@ -1293,7 +1299,7 @@ function	script	F_ClockTowerGate	{
 	mes "You can't go through from "+getarg(0)+" Floor,";
 	mes "Please go back.";
 	next;
-	switch(select("About Clock Tower:About the "+getarg(0)+" Floor:Move to the "+getarg(0)+" Floor:End Dialogue")) {
+	switch(select("About Clock Tower", "About the "+getarg(0)+" Floor", "Move to the "+getarg(0)+" Floor", "End Dialogue")) {
 	case 1:
 		mes "[Gatekeeper Boy]";
 		mes "Homeland of Alchemy,Aldebaran!";

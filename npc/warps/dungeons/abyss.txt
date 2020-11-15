@@ -1,15 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Lupus
+//= Copyright (C) Muad-Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Abyss Lake Dungeon Warp Script
-//===== By: ==================================================
-//= Muad-Dib (1.0)
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Abyss Lake Dungeon
-//===== Additional Comments: =================================
-//= 1.0 Thanks to Muad-Dib for the temp warps [Lupus]
-//= 1.1 Corrected warp placements.
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 abyss_01,25,24,0	warp	abysslakedunwarp001	1,1,abyss_02,271,270
 abyss_02,145,280,0	warp	abysslakedunwarp002	1,1,abyss_03,115,30

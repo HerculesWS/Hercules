@@ -14,15 +14,14 @@ prontera,164,161,5	script	Lupus	WOLF,{
 	switch (select("Make Knife[3] Edible", "Make Apple Equippable", "Edible Knife = Full SP", "Knife = Weapon + 3 Notes")) {
 	case 1:
 		mes "Ok. We made Knife[3] edible.";
-		setiteminfo(Knife, 2, IT_HEALING); //type = 0 : potion
+		setiteminfo(Knife, ITEIMINFO_TYPE, IT_HEALING);
 		setitemscript(Knife, "{dispbottom \"* You used Knife[3]\";}");
 		break;
 	case 2:
 		mes "Ok. We made Apple equippable.";
-		setiteminfo(Apple, 2, IT_ARMOR); //item type -> headgear (type = 5 -> IT_ARMOR)
-		setiteminfo(Apple, 5, 512); //where to equip to (equip = 512)
-		setiteminfo(Apple, 11, 256); //set as headgear location (loc = 256)
-		setiteminfo(Apple, 14, 85); //set Headgear Sprite ID (view id = 85)
+		setiteminfo(Apple, ITEMINFO_TYPE, IT_ARMOR);
+		setiteminfo(Apple, ITEMINFO_LOC, EQP_HEAD_MID); //where to equip to (equip = 512)
+		setiteminfo(Apple, ITEMINFO_VIEWID, 85); //set Headgear Sprite ID (view id = 85)
 		setitemscript(Apple, "{dispbottom \"* Other item's changed\";}", 0);
 		setitemscript(Apple, "{dispbottom \"* Equipped\";}", 1);
 		setitemscript(Apple, "{dispbottom \"* Unequipped\";}", 2);
@@ -34,7 +33,7 @@ prontera,164,161,5	script	Lupus	WOLF,{
 		break;
 	case 4:
 		mes "Ok. We made Knife a weapon, but added 3 notes.";
-		setiteminfo(Knife, 2, IT_WEAPON); //type = 4 -> IT_WEAPON
+		setiteminfo(Knife, ITEIMINFO_TYPE, IT_WEAPON);
 		setitemscript(Knife, "{dispbottom \"* 1 Used\";}", 0);
 		setitemscript(Knife, "{dispbottom \"* 2 Equipped\";}", 1);
 		setitemscript(Knife, "{dispbottom \"* 3 Unequipped\";}", 2);

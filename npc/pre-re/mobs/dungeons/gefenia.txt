@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
-//= Geffenia Dungeon Monster Spawn Script
-//===== By: ==================================================
-//= Muad_Dib, rAthena Dev Team
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Geffenia Dungeon Monster Spawn Script (Pre-Renewal)
+//================= Description ===========================================
+//= Monster Spawns for Geffenia Dungeon
+//================= Current Version =======================================
 //= 1.1
-//===== Additional Comments: =================================
-//= Added 1st Version. [Muad_Dib]
-//= Conversion to eA [MasterOfMuppets]
-//= Updated spawns, information from emperium.org [MasterOfMuppets]
-//= Kept the old spawns incase someone would want them.
-//= Aegis ep 10.1 spawns [MasterOfMuppets]
-//============================================================
+//=========================================================================
 
-//==================================================
-// gefenia01 - Geffenia
-//==================================================
+//== gefenia01 - Geffenia ==================================
 gefenia01,0,0,0,0	monster	False Angel	1371,60,0,0,0
 gefenia01,0,0,0,0	monster	Succubus	1370,10,0,0,0
 gefenia01,0,0,0,0	monster	Incubus	1374,10,0,0,0
@@ -26,9 +47,7 @@ gefenia01,0,0,0,0	monster	Mysteltainn	1203,1,10800000,7200000,0
 gefenia01,0,0,0,0	monster	Executioner	1205,1,18000000,14400000,0
 gefenia01,0,0,0,0	monster	Ogretooth	1204,1,18000000,14400000,0
 
-//==================================================
-// gefenia02 - Geffenia
-//==================================================
+//== gefenia02 - Geffenia ==================================
 gefenia02,0,0,0,0	monster	False Angel	1371,30,0,0,0
 gefenia02,0,0,0,0	monster	Succubus	1370,20,0,0,0
 gefenia02,0,0,0,0	monster	Incubus	1374,10,0,0,0
@@ -40,9 +59,7 @@ gefenia02,0,0,0,0	monster	Mysteltainn	1203,1,18000000,14400000,0
 gefenia02,0,0,0,0	monster	Executioner	1205,1,18000000,14400000,0
 gefenia02,0,0,0,0	monster	Ogretooth	1204,1,10800000,7200000,0
 
-//==================================================
-// gefenia03 - Geffenia
-//==================================================
+//== gefenia03 - Geffenia ==================================
 gefenia03,0,0,0,0	monster	False Angel	1371,40,0,0,0
 gefenia03,0,0,0,0	monster	Succubus	1370,10,0,0,0
 gefenia03,0,0,0,0	monster	Incubus	1374,20,0,0,0
@@ -54,9 +71,7 @@ gefenia03,0,0,0,0	monster	Mysteltainn	1203,1,18000000,14400000,0
 gefenia03,0,0,0,0	monster	Executioner	1205,1,10800000,7200000,0
 gefenia03,0,0,0,0	monster	Ogretooth	1204,1,18000000,14400000,0
 
-//==================================================
-// gefenia04 - Geffenia
-//==================================================
+//== gefenia04 - Geffenia ==================================
 gefenia04,0,0,0,0	monster	False Angel	1371,30,0,0,0
 gefenia04,0,0,0,0	monster	Succubus	1370,10,600000,300000,0
 gefenia04,0,0,0,0	monster	Incubus	1374,10,600000,300000,0
@@ -69,13 +84,11 @@ gefenia04,0,0,0,0	monster	Executioner	1205,1,18000000,14400000,0
 gefenia04,0,0,0,0	monster	Ogretooth	1204,1,18000000,14400000,0
 
 
-//The spawns bellow, are old ones that were used in events.
-//==================================================
-// gefenia01 - Geffenia (Old)
-//==================================================
-//gefenia01,0,0,0,0	monster	Fake Angel	1371,10,0,0,0
+//== The spawns bellow, are old ones that were used in events. ==
+
+//- gefenia01 - Geffenia (Old) -
 //gefenia01,0,0,0,0	monster	Mini Demon	1292,6,300000,0,0
-//gefenia01,0,0,0,0	monster	Apolcalips	1365,4,300000,0,0
+//gefenia01,0,0,0,0	monster	Apocalypse	1365,4,300000,0,0
 //gefenia01,0,0,0,0	monster	Elder	1377,10,300000,0,1
 //gefenia01,0,0,0,0	monster	Abyssmal Knight	1219,3,1800000,900000,1
 //gefenia01,0,0,0,0	monster	Bloody Knight	1268,2,300000,0,0
@@ -83,28 +96,24 @@ gefenia04,0,0,0,0	monster	Ogretooth	1204,1,18000000,14400000,0
 //gefenia01,0,0,0,0	monster	Executioner	1205,1,3600000,1800000,0
 //gefenia01,0,0,0,0	monster	Mysteltainn	1203,1,7200000,3600000,1
 
-//==================================================
-// gefenia02 - Geffenia (Old)
-//==================================================
+//- gefenia02 - Geffenia (Old) -
 //gefenia02,0,0,0,0	monster	Fake Angel	1371,10,0,0,0
 //gefenia02,0,0,0,0	monster	Succubus	1370,6,0,0,0
 //gefenia02,0,0,0,0	monster	Incubus	1374,6,0,0,0
 //gefenia02,0,0,0,0	monster	Mini Demon	1292,10,300000,0,0
-//gefenia02,0,0,0,0	monster	Apolcalips	1365,8,300000,0,0
+//gefenia02,0,0,0,0	monster	Apocalypse	1365,8,300000,0,0
 //gefenia02,0,0,0,0	monster	Abyssmal Knight	1219,2,1800000,900000,1
 //gefenia02,0,0,0,0	monster	Bloody Knight	1268,5,300000,0,0
 //gefenia02,0,0,0,0	monster	Poring	1502,1,0,0,0
 //gefenia02,0,0,0,0	monster	Gryphon	1259,1,3600000,1800000,0
 //gefenia02,0,0,0,0	monster	Chimera	1283,1,7200000,3600000,1
 
-//==================================================
-// gefenia03 - Geffenia (Old)
-//==================================================
+//- gefenia03 - Geffenia (Old) -
 //gefenia03,0,0,0,0	monster	Fake Angel	1371,4,0,0,0
 //gefenia03,0,0,0,0	monster	Succubus	1370,5,0,0,0
 //gefenia03,0,0,0,0	monster	Incubus	1374,5,0,0,0
 //gefenia03,0,0,0,0	monster	Mini Demon	1292,10,300000,0,0
-//gefenia03,0,0,0,0	monster	Apolcalips	1365,6,300000,0,0
+//gefenia03,0,0,0,0	monster	Apocalypse	1365,6,300000,0,0
 //gefenia03,0,0,0,0	monster	Elder	1377,10,300000,0,1
 //gefenia03,0,0,0,0	monster	Abyssmal Knight	1219,3,1800000,900000,1
 //gefenia03,0,0,0,0	monster	Bloody Knight	1268,2,300000,0,0
@@ -112,13 +121,11 @@ gefenia04,0,0,0,0	monster	Ogretooth	1204,1,18000000,14400000,0
 //gefenia03,0,0,0,0	monster	Dark Illusion	1302,1,300000,0,0
 //gefenia03,0,0,0,0	monster	Owl Baron	1295,1,0,0,0
 
-//==================================================
-// gefenia04 - Geffenia (Old)
-//==================================================
+//- gefenia04 - Geffenia (Old) -
 //gefenia04,0,0,0,0	monster	Fake Angel	1371,10,0,0,0
 //gefenia04,0,0,0,0	monster	Succubus	1370,5,0,0,0
 //gefenia04,0,0,0,0	monster	Incubus	1374,3,0,0,0
-//gefenia04,0,0,0,0	monster	Apolcalips	1365,4,300000,0,0
+//gefenia04,0,0,0,0	monster	Apocalypse	1365,4,300000,0,0
 //gefenia04,0,0,0,0	monster	Abyssmal Knight	1219,5,1800000,900000,1
 //gefenia04,0,0,0,0	monster	Bloody Knight	1268,2,300000,0,0
 //gefenia04,0,0,0,0	monster	Poring	1502,1,0,0,0

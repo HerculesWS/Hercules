@@ -1,31 +1,52 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "mapindex.h"
 
+#include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
 
 /* mapindex.c interface source */
-struct mapindex_interface mapindex_s;
+static struct mapindex_interface mapindex_s;
+struct mapindex_interface *mapindex;
 
 /// Retrieves the map name from 'string' (removing .gat extension if present).
 /// Result gets placed either into 'buf' or in a static local buffer.
-const char* mapindex_getmapname(const char* string, char* output) {
+static const char *mapindex_getmapname(const char *string, char *output)
+{
 	static char buf[MAP_NAME_LENGTH];
 	char* dest = (output != NULL) ? output : buf;
 
-	size_t len = strnlen(string, MAP_NAME_LENGTH_EXT);
+	size_t len;
+	nullpo_retr(buf, string);
+	len = strnlen(string, MAP_NAME_LENGTH_EXT);
 	if (len == MAP_NAME_LENGTH_EXT) {
 		ShowWarning("(mapindex_normalize_name) Map name '%*s' is too long!\n", 2*MAP_NAME_LENGTH_EXT, string);
 		len--;
@@ -42,11 +63,14 @@ const char* mapindex_getmapname(const char* string, char* output) {
 
 /// Retrieves the map name from 'string' (adding .gat extension if not already present).
 /// Result gets placed either into 'buf' or in a static local buffer.
-const char* mapindex_getmapname_ext(const char* string, char* output) {
+static const char *mapindex_getmapname_ext(const char *string, char *output)
+{
 	static char buf[MAP_NAME_LENGTH_EXT];
 	char* dest = (output != NULL) ? output : buf;
 
 	size_t len;
+
+	nullpo_retr(buf, string);
 
 	safestrncpy(buf,string, sizeof(buf));
 	sscanf(string, "%*[^#]%*[#]%15s", buf);
@@ -71,7 +95,8 @@ const char* mapindex_getmapname_ext(const char* string, char* output) {
 
 /// Adds a map to the specified index
 /// Returns 1 if successful, 0 otherwise
-int mapindex_addmap(int index, const char* name) {
+static int mapindex_addmap(int index, const char *name)
+{
 	char map_name[MAP_NAME_LENGTH];
 
 	if (index == -1){
@@ -112,7 +137,8 @@ int mapindex_addmap(int index, const char* name) {
 	return index;
 }
 
-unsigned short mapindex_name2id(const char* name) {
+static unsigned short mapindex_name2id(const char *name)
+{
 	int i;
 	char map_name[MAP_NAME_LENGTH];
 
@@ -125,7 +151,8 @@ unsigned short mapindex_name2id(const char* name) {
 	return 0;
 }
 
-const char* mapindex_id2name_sub(unsigned short id,const char *file, int line, const char *func) {
+static const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const char *func)
+{
 	if (id >= MAX_MAPINDEX || !mapindex_exists(id)) {
 		ShowDebug("mapindex_id2name: Requested name for non-existant map index [%d] in cache. %s:%s:%d\n", id,file,func,line);
 		return mapindex->list[0].name; // dummy empty string so that the callee doesn't crash
@@ -133,7 +160,61 @@ const char* mapindex_id2name_sub(unsigned short id,const char *file, int line, c
 	return mapindex->list[id].name;
 }
 
-int mapindex_init(void) {
+/**
+ * Reads the db_path config of mapindex configuration file
+ * @param filename File being read (used when displaying errors)
+ * @param config Config structure being read
+ * @returns true if it read the all the configs, false otherwise
+ */
+static bool mapindex_config_read_dbpath(const char *filename, const struct config_t *config)
+{
+	nullpo_retr(false, config);
+
+	const struct config_setting_t *setting = NULL;
+
+	if ((setting = libconfig->lookup(config, "mapindex_configuration")) == NULL) {
+		ShowError("mapindex_config_read: mapindex_configuration was not found in %s!\n", filename);
+		return false;
+	}
+
+	// mapindex_configuration/file_path
+	if (libconfig->setting_lookup_mutable_string(setting, "file_path", mapindex->config_file, sizeof(mapindex->config_file)) == CONFIG_TRUE) {
+		ShowInfo("map_index file %s\n", mapindex->config_file);
+	} else {
+		ShowInfo("Failed to load map_index path, defaulting to db/map_index.txt\n");
+		safestrncpy(mapindex->config_file, "db/map_index.txt", sizeof(mapindex->config_file));
+	}
+
+	return true;
+}
+
+/**
+ * Reads conf/common/map-index.conf config file
+ * @returns true if it successfully read the file and configs, false otherwise
+ */
+static bool mapindex_config_read(void)
+{
+	struct config_t config;
+	const char *filename = "conf/common/map-index.conf";
+	
+	if (!libconfig->load_file(&config, filename))
+		return false; // Error message is already shown by libconfig->load_file
+
+	if (!mapindex_config_read_dbpath(filename, &config)) {
+		libconfig->destroy(&config);
+		return false;
+	}
+
+	ShowInfo("Done reading %s.\n", filename);
+	libconfig->destroy(&config);
+	return true;
+}
+
+static int mapindex_init(void)
+{
+	if (!mapindex_config_read())
+		ShowError("Failed to load map_index configuration. Continuing with default values...\n");
+
 	FILE *fp;
 	char line[1024];
 	int last_index = -1;
@@ -171,7 +252,7 @@ int mapindex_init(void) {
 	return total;
 }
 
-bool mapindex_check_default(void)
+static bool mapindex_check_default(void)
 {
 	if (!strdb_iget(mapindex->db, mapindex->default_map)) {
 		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n", mapindex->default_map);
@@ -180,20 +261,24 @@ bool mapindex_check_default(void)
 	return true;
 }
 
-void mapindex_removemap(int index){
+static void mapindex_removemap(int index)
+{
+	Assert_retv(index < MAX_MAPINDEX);
 	strdb_remove(mapindex->db, mapindex->list[index].name);
 	mapindex->list[index].name[0] = '\0';
 }
 
-void mapindex_final(void) {
+static void mapindex_final(void)
+{
 	db_destroy(mapindex->db);
 }
 
-void mapindex_defaults(void) {
+void mapindex_defaults(void)
+{
 	mapindex = &mapindex_s;
 
 	/* TODO: place it in inter-server.conf? */
-	snprintf(mapindex->config_file, 80, "%s","db/map_index.txt");
+	snprintf(mapindex->config_file, sizeof(mapindex->config_file), "%s","db/map_index.txt");
 	/* */
 	mapindex->db = NULL;
 	mapindex->num = 0;
@@ -202,6 +287,9 @@ void mapindex_defaults(void) {
 	mapindex->default_y = MAP_DEFAULT_Y;
 	memset (&mapindex->list, 0, sizeof (mapindex->list));
 
+	/* */
+	mapindex->config_read = mapindex_config_read;
+	mapindex->config_read_dbpath = mapindex_config_read_dbpath;
 	/* */
 	mapindex->init = mapindex_init;
 	mapindex->final = mapindex_final;

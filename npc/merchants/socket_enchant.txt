@@ -1,35 +1,50 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Gepard
+//= Copyright (C) Kisuka
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) ultramage
+//= Copyright (C) SinSloth
+//= Copyright (C) Evera
+//= Copyright (C) Toms
+//= Copyright (C) Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Episode 11.1 Socket Enchant NPC
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 2.0a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Adds slots to selected weapons and armor.
-//===== Additional Comments: =================================
-//= 0.1a added missing L_No: to 2 funcs [Lupus]
-//= 0.1b Removed duplicates [Toms]
-//= 0.2 Added missing next;'s [Evera]
-//= 0.3 Fixed Zweihander[+] id [Lupus]
-//= 1.0 Fixed ingredients check [Lupus]
-//= 1.1 Updated to official. [SinSloth]
-//= 1.1b Optimized/cleaned [ultramage]
-//= 1.2 Fixed some typos and a nasty bug. [SinSloth]
-//= 1.3 Fixed a wrong item ID with Sphinx Hat. [SinSloth]
-//= 1.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.5 Removed OnTouch trigger area from NPCs. [L0ne_W0lf]
-//= 1.6 Replaced effect numerics with constants. [Samuray22]
-//= 1.7 Adjusted prices on some armor and weapons. [L0ne_W0lf]
-//= 1.8 Added missing Gae Bolg and Dragon Slayer. [Kisuka]
-//= 1.9 Moved Episode 12 items to separate NPC.
-//=     Some cleanup & optimization. [Gepard]
-//= 2.0 Duplicates now spawn from floating NPCs. [L0ne_W0lf]
-//= 2.0a Added 'disable_items' command. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.0a
+//=========================================================================
 
--	script	Seiyablem#dummy::SocketEnchant	-1,{
-	if (checkweight(1201,1) == 0)
+-	script	Seiyablem#dummy::SocketEnchant	FAKE_NPC,{
+	if (checkweight(Knife,1) == 0)
 	{
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -46,7 +61,7 @@
 	mes "Adding Slots may seem simple, but it's far more complicated than it looks.";
 	mes "If you're interested in my service, let me know.";
 	next;
-	switch(select("Add Slot to Weapon:Add Slot to Armor:Slot Attempt Info:Cancel"))
+	switch(select("Add Slot to Weapon", "Add Slot to Armor", "Slot Attempt Info", "Cancel"))
 	{
 		case 1:
 			mes "[Seiyablem]";
@@ -54,14 +69,14 @@
 			mes "I categorize weapons by their difficulty in adding a Slot, C Class being easiest and S Class the most difficult.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C Class:B Class:A Class:S Class"))
+			switch(select("C Class", "B Class", "A Class", "S Class"))
 			{
 				case 1:
 					mes "[Seiyablem]";
 					mes "C Class, eh?";
 					mes "Now, I can only upgrade certain equipment in that class, so please choose one of the following items, so we can try to add a Slot to it.";
 					next;
-					switch(select("Trident:Rope:Violin"))
+					switch(select("Trident", "Rope", "Violin"))
 					{
 						case 1: callfunc "Func_Socket",1460,1461,40,66,200,1010,10;
 						case 2: callfunc "Func_Socket",1950,1951,40,66,200,1010,10;
@@ -73,7 +88,7 @@
 					mes "Alright, this is the average equipment category.";
 					mes "Please choose the weapon to which you'd like me to try to add a Slot.";
 					next;
-					switch(select("Chain:Gladius:Gakkung Bow:Pike:Haedonggum:Lute:Wire:Waghnakh:Arbalest Bow"))
+					switch(select("Chain", "Gladius", "Gakkung Bow", "Pike", "Haedonggum", "Lute", "Wire", "Waghnakh", "Arbalest Bow"))
 					{
 						case 1: callfunc "Func_Socket",1519,1520,40,61,300,1010,10;
 						case 2: callfunc "Func_Socket",1219,1220,40,61,300, 984, 1,999,5;
@@ -91,7 +106,7 @@
 					mes "This is some high risk territory!";
 					mes "Alright, which weapon would you like me to try adding a Slot?";
 					next;
-					switch(select("Hunter Bow:Survivor's Rod(INT):Zweihander:Flamberge:Infiltrator:Ballista:Stunner:Berserk:Claymore"))
+					switch(select("Hunter Bow", "Survivor's Rod(INT)", "Zweihander", "Flamberge", "Infiltrator", "Ballista", "Stunner", "Berserk", "Claymore"))
 					{
 						case 1: callfunc "Func_Socket",1718,1726,40,61,500,984,2,999,10;
 						case 2: callfunc "Func_Socket",1619,1620,40,61,500,984,5,999,10;
@@ -110,7 +125,7 @@
 					mes "It'd be a near miracle if I can actually pull this off.";
 					mes "Okay... Which weapon shall we try adding a Slot to?";
 					next;
-					switch(select("Gungnir:Poison Knife:Ice Pick:Sucsamad:Ginnungagap:Cutlas:Crescent Scythe:Survivor's Rod(DEX)"))
+					switch(select("Gungnir", "Poison Knife", "Ice Pick", "Sucsamad", "Ginnungagap", "Cutlas", "Crescent Scythe", "Survivor's Rod(DEX)"))
 					{
 						case 1: callfunc "Func_Socket", 1413, 1418,40,51,1000,984,5,999,10;
 						case 2: callfunc "Func_Socket", 1239,13016,40,51,1000,984,5,999,10;
@@ -127,10 +142,10 @@
 			mes "Armor, you said?";
 			mes "Sure, no problem.";
 			mes "Armor is divided into 4 different classes, depending on the work difficulty.";
-			mes "C Class is the easiest one, and S Class he hardest one.";
+			mes "C Class is the easiest one, and S Class is the hardest one.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C Class:B Class:A Class:S Class"))
+			switch(select("C Class", "B Class", "A Class", "S Class"))
 			{
 				case 1:
 					mes "[Seiyablem]";
@@ -138,7 +153,7 @@
 					mes "Sounds reasonable.";
 					mes "Which armor would you like to try adding a Slot?";
 					next;
-					switch(select("Mantle:Coat:Circlet:Biretta"))
+					switch(select("Mantle", "Coat", "Circlet", "Biretta"))
 					{
 						case 1: callfunc "Func_Socket",2307,2308,40,66,200,999,3;
 						case 2: callfunc "Func_Socket",2309,2310,40,66,200,999,3;
@@ -150,7 +165,7 @@
 					mes "You have chosen average B Class.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch(select("Mirror Shield:Chain Mail:Saint Robe:Silk Robe:Boots:Shoes:Muffler:Guard:Buckler:Shield:Bongun Hat"))
+					switch(select("Mirror Shield", "Chain Mail", "Saint Robe", "Silk Robe", "Boots", "Shoes", "Muffler", "Guard", "Buckler", "Shield", "Bongun Hat"))
 					{
 						case 1:  callfunc "Func_Socket",2107,2108,40,61,250,999,5;
 						case 2:  callfunc "Func_Socket",2314,2315,40,61,250,999,5;
@@ -170,7 +185,7 @@
 					mes "This is some high risk territory!";
 					mes "Alright, which armor would you like me to try adding a Slot?";
 					next;
-					switch(select("Gemmed Sallet:Bucket Hat:Memory Book:Tights:Legion Plate Armor:Full Plate:Thief Clothes:Greaves:Coif:Manteau:Helm:Ninja Suit:Orc Helm:Ancient Cape:Monk Hat:Golden Gear:Brooch:Munak Hat"))
+					switch(select("Gemmed Sallet", "Bucket Hat", "Memory Book", "Tights", "Legion Plate Armor", "Full Plate", "Thief Clothes", "Greaves", "Coif", "Manteau", "Helm", "Ninja Suit", "Orc Helm", "Ancient Cape", "Monk Hat", "Golden Gear", "Brooch", "Munak Hat"))
 					{
 						case 1:  callfunc "Func_Socket",2230,2231,40,61,400,985,1;
 						case 2:  callfunc "Func_Socket",5114,5120,40,61,400,985,1;
@@ -197,7 +212,7 @@
 					mes "You sure about this?";
 					mes "Alright... Let me know the Armor to which you'd like to add a Slot, and I'll tell what I need to try it.";
 					next;
-					switch(select("Majestic Goat:Spiky Band:Bone Helm:Corsair:Crown:Tiara:Sphinx Hat:Robe of Cast:Earring:Ring:Bow Thimble"))
+					switch(select("Majestic Goat", "Spiky Band", "Bone Helm", "Corsair", "Crown", "Tiara", "Sphinx Hat", "Robe of Cast", "Earring", "Ring", "Bow Thimble"))
 					{
 						case 1:  callfunc "Func_Socket",2256,5160,40,51,2000,985,2;
 						case 2:  callfunc "Func_Socket",2258,5161,40,51,2000,985,2;
@@ -221,7 +236,7 @@
 			mes "[Seiyablem]";
 			mes "In some towns, Slot addition attempts are more successful for equipment with fewer upgrades.";
 			mes "In other towns, the opposite is true.";
-			mes "isn't that really peculiar?";
+			mes "Isn't that really peculiar?";
 			next;
 			mes "[Seiyablem]";
 			mes "Oh, there's also something really important that you should know.";
@@ -253,17 +268,16 @@ function	script	Func_Socket	{
 	mes "Ah, and don't forget to bring that " + getitemname(getarg(0)) + "!";
 	next;
 	mes "[Seiyablem]";
-	if (getiteminfo(getarg(0),5)&2) // EQP_HAND_R = 2, it's a weapon
-	{
+	if (getiteminfo(getarg(0), ITEMINFO_LOC) & EQP_HAND_R) {
+		// EQP_HAND_R = 2, it's a weapon
 		mes "I can try to add a slot now if you have the required items and zeny.";
 		mes "However, you should know that there's a chance that I might fail.";
 		mes "Therefore, I need to give you a fair warning...";
 		next;
 		mes "[Seiyablem]";
 		mes "If this attempt to add a Slot to your Weapon fails, then the ^FF0000Weapon^000000, ^FF0000and any Cards compounded to it will be destroyed^000000.";
-	}
-	else // armor
-	{
+	} else {
+		// armor
 		mes "If you have all the required materials, my zeny service fee and the Armor, then we can go ahead with the Slot Addition attempt.";
 		mes "But before that, I must warn you of the risk.";
 		next;
@@ -272,7 +286,7 @@ function	script	Func_Socket	{
 	}
 	mes "Do you still want to try to add a Slot?";
 	next;
-	switch(select("Attempt Slot Addition:Cancel"))
+	switch(select("Attempt Slot Addition", "Cancel"))
 	{
 		case 1:
 			if ((Zeny >= getarg(4)*1000) && (countitem(getarg(5)) >= getarg(6)) && (countitem(getarg(7,512)) >= getarg(8,0)) && (countitem(getarg(0)) > 0)) // if there's no getarg(7) and getarg(8) provided, check itemcount against 0 (we still need a valid item ID though)
@@ -339,7 +353,7 @@ lhz_in02,281,35,5	duplicate(SocketEnchant)	Seiyablem#lhz	4_M_02
 prt_in,33,70,5	duplicate(SocketEnchant)	Seiyablem#prt	4_M_02
 morocc,51,41,4	duplicate(SocketEnchant)	Seiyablem#moc	4_M_02
 
--	script	Young Man#dummy::SocketMan	-1,{
+-	script	Young Man#dummy::SocketMan	FAKE_NPC,{
 	mes "[Young Man]";
 	mes "I'm considering becoming a Slotting Engineer.";
 	mes "It's a new field where you can add Slots to equipment, and it'd be cool if I can work in such a lucrative career.";

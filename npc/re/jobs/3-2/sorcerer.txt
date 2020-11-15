@@ -1,21 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Sorcerer Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Sage / Professor -> Sorcerer.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Masao]
-//= 1.1 Cleaning. [Euphy]
-//= 1.2 Updated script, optimized. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 	mes "[Merito]";
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "You packed so much in your bag. Try again after emptying your bag.";
 		close;
 	}
@@ -41,7 +62,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "What made you want to be a sorcerer?";
 		next;
-		if(select("The spirit of fire led me here.:The spirit of water led me here.:The spirit of earth led me here:The spirit of meat led me here.") == 4) {
+		if(select("The spirit of fire led me here.", "The spirit of water led me here.", "The spirit of earth led me here", "The spirit of meat led me here.") == 4) {
 			mes "[Merito]";
 			mes "That kind of spirit doesn't exist!";
 			close;
@@ -53,13 +74,13 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "Hmm... Then first, can you write down your name on this list?";
 		next;
-		if(select("Write name.:I won't.") == 2) {
+		if(select("Write name.", "I won't.") == 2) {
 			mes "[Merito]";
 			mes "Well, okay. See you again when you get a chance.";
 			close;
 		}
 		mes "[Merito]";
-		mes "So, you are [" + strcharinfo(0) + "].";
+		mes "So, you are [" + strcharinfo(PC_NAME) + "].";
 		next;
 		mes "[Merito]";
 		mes "Give me a second to register your name.";
@@ -70,9 +91,9 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "Good, then I'll give you a short explanation about the Sorcerer.";
 		next;
 		mes "[Merito]";
-		mes "[" + strcharinfo(0) + "], can you handle magic skillfully?";
+		mes "[" + strcharinfo(PC_NAME) + "], can you handle magic skillfully?";
 		next;
-		if(select("Yes, I can.:No, I'm not really good at it.") == 2) {
+		if(select("Yes, I can.", "No, I'm not really good at it.") == 2) {
 			mes "[Merito]";
 			mes "What!? You don't know how to use magic?";
 			mes "What are you doing here then? Get out of here. Right now!";
@@ -82,7 +103,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "Okay, that should be obvious.";
 		mes "Of course, Sorcerers use magic, too. But, do you know the main difference Sorcerers have from other magical jobs?";
 		next;
-		switch(select("They know how to sing.:They're all old fogies.:They can deal with the spirits.")) {
+		switch(select("They know how to sing.", "They're all old fogies.", "They can deal with the spirits.")) {
 		case 1:
 			mes "[Merito]";
 			mes "Well maybe some but that's not the main difference.";
@@ -106,7 +127,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "Well, it's all up to you. What are you going to do?";
 		next;
-		switch(select("I will take the test.:I'll do it later.")) {
+		switch(select("I will take the test.", "I'll do it later.")) {
 		case 1:
 			mes "[Merito]";
 			mes "Okay. ";
@@ -127,7 +148,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 
 gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 	mes "[Karacas]";
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Oh, it seems that you're too heavy. Empty your bag and then come again.";
 		close;
 	}
@@ -167,9 +188,9 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "The list... has already arrived.";
 		next;
 		mes "[Karacas]";
-		mes "So, you are [" + strcharinfo(0) + "]... right?";
+		mes "So, you are [" + strcharinfo(PC_NAME) + "]... right?";
 		next;
-		if(select("Yes, I am.:No, I'm not!") == 2) {
+		if(select("Yes, I am.", "No, I'm not!") == 2) {
 			mes "[Karacas]";
 			mes "Oh, there must be some mistake in the list, I think. Will you come again later?";
 			close;
@@ -228,7 +249,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		changequest 12096,12097;
 		close;
 	} else if (job_soc == 3) {
-		if (countitem(992) > 2 && countitem(991) > 2 && countitem(990) > 2 && countitem(993) > 2) {
+		if (countitem(Wind_Of_Verdure) > 2 && countitem(Crystal_Blue) > 2 && countitem(Boody_Red) > 2 && countitem(Yellow_Live) > 2) {
 			mes "Oh, you have all the materials.";
 			next;
 			select("What should I do next?");
@@ -286,7 +307,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 			mes "[Karacas]";
 			mes "Have any questions?";
 			next;
-			if(select("No.:Please explain it again.") == 2) {
+			if(select("No.", "Please explain it again.") == 2) {
 				mes "[Karacas]";
 				mes "Haha, then can I have a cup of water for a minute? Please come and find me again later.";
 				next;
@@ -311,16 +332,16 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "When you bring these basic things, I'll guide you to the next step.";
 		close;
 	} else if (job_soc == 4) {
-		if (countitem(6276) && countitem(6278) && countitem(6277)) {
+		if (countitem(Clear_Reagent) && countitem(Black_Reagent) && countitem(Red_Reagent)) {
 			mes "Wow~ your skill is good.";
 			mes "I thought you'd be overwhelmed by the spirits but you've managed to get the effective medicine!";
 			next;
 			select("Is this all I need to do?");
 			mes "[Karacas]";
 			mes "Well done. First, I will organize the miraculous medicine so please wait a moment.";
-			delitem 6276,1; //Clear_Reagent
-			delitem 6278,1; //Black_Reagent
-			delitem 6277,1; //Red_Reagent
+			delitem Clear_Reagent,1;
+			delitem Black_Reagent,1;
+			delitem Red_Reagent,1;
 			job_soc = 5;
 			completequest 12098;
 			close;
@@ -334,14 +355,14 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "Originally my teacher needs to check the Sorcerer job change but after he went out to find the spirit of fish, I can't see him. So I'll check it myself.";
 		next;
 		mes "[Karacas]";
-		mes "Dear [" + strcharinfo(0) + "],";
+		mes "Dear [" + strcharinfo(PC_NAME) + "],";
 		mes "you went around the rough wilds to open the door as a Sorcerer and passed all the requirements that our Academy has given.";
 		next;
 		mes "[Karacas]";
 		mes "Of course it is just a beginning, we don't know which spirit you're going to commune with or what kind of hardships await you.";
 		next;
 		mes "[Karacas]";
-		mes "But with the ability you've shown until now, you will be capable to do anything from now on. Dear [" + strcharinfo(0) + "]";
+		mes "But with the ability you've shown until now, you will be capable to do anything from now on. Dear [" + strcharinfo(PC_NAME) + "]";
 		next;
 		mes "[Kalakas]";
 		if (BaseLevel < 99 || JobLevel < 50 || SkillPoint) {
@@ -359,22 +380,22 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "Moreover, I formally acknowledge that you've completed all the job transfer tests of the Sorcerer Academy.";
 		next;
 		mes "[Karacas]";
-		mes "Congratulations, [" + strcharinfo(0) + "]";
+		mes "Congratulations, [" + strcharinfo(PC_NAME) + "]";
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		getitem 5756,1; //Wind_Whisper
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Wind_Whisper,1;
+		getitem Green_Apple_Ring,1;
 		next;
 		mes "[Karacas]";
 		mes "I hope that you gain more communion with spirits from now on.";
 		close;
 	}
 }
--	script	Spirit Detecting Staff#0	-1,{
+-	script	Spirit Detecting Staff#0	FAKE_NPC,{
 
-	if (strnpcinfo(4) == "thor_v01") setarray .@id[0],990,994,6276,6278;
-	else if (strnpcinfo(4) == "ice_dun01") setarray .@id[0],991,995,6278,6276;
-	else if (strnpcinfo(4) == "mjo_dun03") setarray .@id[0],993,997,6277,6276;
-	else if (strnpcinfo(4) == "gon_dun02") setarray .@id[0],992,996,6277,6278;
+	if (strnpcinfo(NPC_MAP) == "thor_v01") setarray .@id[0],990,994,6276,6278;
+	else if (strnpcinfo(NPC_MAP) == "ice_dun01") setarray .@id[0],991,995,6278,6276;
+	else if (strnpcinfo(NPC_MAP) == "mjo_dun03") setarray .@id[0],993,997,6277,6276;
+	else if (strnpcinfo(NPC_MAP) == "gon_dun02") setarray .@id[0],992,996,6277,6278;
 
 	if (job_soc == 4 && countitem(.@id[0]) > 2) {
 		progressbar "ffff00",5;

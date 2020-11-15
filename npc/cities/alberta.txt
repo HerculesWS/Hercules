@@ -1,21 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Kisuka
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) DZeroX
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Alberta Town
-//===== By: ==================================================
-//= DZeroX
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
+//================= Description ===========================================
 //= Town-specific Alberta NPCs
-//===== Additional Comments: =================================
-//= 1.0 Converted from Aegis 10.4 [DZeroX]
-//= 1.1 Optimized, missing next, REMOVED .GATs! again [Lupus]
-//= 1.2 Implemented progression fixes provided by $ephiroth. [L0ne_W0lf]
-//= 1.2b More pregression clean up provided by Barron-Monster. [L0ne_W0lf]
-//= 1.3 Removed npc "Tourist#al" as it's a quest NPC. [L0ne_W0lf]
-//= 1.4 Removed "Fastidious Old Man" duplicate. [L0ne_W0lf]
-//= 1.5 Updated to match AEGIS script. [Kisuka]
-//= 1.6 Added Izlude RE coordinates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.6
+//=========================================================================
 
 alberta,97,51,0	script	Fabian	4_M_02,{
 	mes "[Fabian]";
@@ -310,25 +329,25 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 			mes "what'cha got...";
 			next;
 			mes "[Phelix]";
-			if (countitem(909) < 10) {
+			if (countitem(Jellopy) < 10) {
 				mes "Hey! Weren't you listening?. I said 10 jellopies for 1 Red Potion.. are ya deaf?";
 				close;
 			} else {
-				.@max = countitem(909)/10;
+				.@max = countitem(Jellopy)/10;
 				mes "Hmm, not bad...";
 				mes "How many potions";
 				mes "do you want to get?";
 				next;
 				switch(select("As many as I can, please.","I want this many.","Never mind, I like my jellopy.")) {
 				case 1:
-					delitem 909,.@max*10;	// Jellopy
-					getitem 501,.@max;	// Red_Potion
+					delitem Jellopy,.@max*10;	// Jellopy
+					getitem Red_Potion,.@max;	// Red_Potion
 					break;
 				case 2:
 					mes "[Phelix]";
 					mes "I'm not giving you more then 100 at a time so don't bother, OK? If you don't want any, just say '0'.";
 					mes "Right now, the most you can get is " + .@max + " but remember, 100 at most, you want to break my back?.";
-					input .@amount;
+					input(.@amount);
 					next;
 					mes "[Phelix]";
 					if (.@amount <= 0) {
@@ -339,12 +358,12 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 						mes "Hey, what'd I say? 100 at a time at most, you're trying to kill me aren't you!";
 						close;
 					}
-					if (countitem(909) < .@amount*10) {
+					if (countitem(Jellopy) < .@amount*10) {
 						mes "Hmm, it looks like you don't have enough. Go get more jellopies if you want anything else from me.";
 						close;
 					}
-					delitem 909,.@amount*10;	// Jellopy
-					getitem 501,.@amount;	// Red_Potion
+					delitem Jellopy,.@amount*10;	// Jellopy
+					getitem Red_Potion,.@amount;	// Red_Potion
 					break;
 				case 3:
 					mes "[Phelix]";
@@ -361,26 +380,26 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 			mes "Alright, let's see what ya got...";
 			next;
 			mes "[Phelix]";
-			if (countitem(909) < 3) {
+			if (countitem(Jellopy) < 3) {
 				mes "Hmm, look pansy ass, I said 3 jellopies for 1 Carrot.. got it?";
 				close;
 			} else {
-				.@max = countitem(909)/3;
+				.@max = countitem(Jellopy)/3;
 				mes "Not too bad pansy...";
 				mes "How many do you want?";
 				next;
 				switch(select("As many as I can get, please","I want this many.","Never mind, I like my jellopy.")) {
 				case 1:
-					delitem 909,.@max*3;	// Jellopy
-					getitem 515,.@max;	// Carrot
+					delitem Jellopy,.@max*3;	// Jellopy
+					getitem Carrot,.@max;	// Carrot
 					break;
 				case 2:
 					mes "[Phelix]";
 					mes "Right I'm not giving you more then 100 at a time so don't bother, okay? If you don't want any, just say '0'.";
-					input .@amount;
+					input(.@amount);
 					next;
 					mes "[Phelix]";
-					if (.@amount == 0) {
+					if (.@amount <= 0) {
 						mes "Alright then, see you next time.";
 						close;
 					}
@@ -388,12 +407,12 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 						mes "Hey pansy ass, I said 100 at most, no more then that! I'm not going to break my back for the likes of you!";
 						close;
 					}
-					if (countitem(909) < .@amount*10) {
+					if (countitem(Jellopy) < .@amount*10) {
 						mes "Seems you don't have enough. Go get some more if you want anything else.";
 						close;
 					}
-					delitem 909,.@amount*3;	// Jellopy
-					getitem 515,.@amount;	// Carrot
+					delitem Jellopy,.@amount*3;	// Jellopy
+					getitem Carrot,.@amount;	// Carrot
 					break;
 				case 3:
 					mes "[Phelix]";

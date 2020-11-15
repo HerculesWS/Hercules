@@ -1,19 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= War of Emperium - nguild guardians script
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Re-spawns guardians on server start if they have been purchased.  Also
+//= announces when a guardian dies.
+//================= Current Version =======================================
 //= 1.0
-//===== Description: =========================================
-//= Re-spawns guardians on server start if they have been
-//= purchased.  Also announces when a guardian dies.
-//===== Additional Comments: =================================
-//= Based off existing guild scripts.  Do not know if it is accurate.[kobra_k88]
-//============================================================
+//=========================================================================
 
-
-//------------------------------------------------------------------------------
-nguild_alde,216,24,0	script	Guardian_N01	-1,{
+nguild_alde,216,24,0	script	Guardian_N01	FAKE_NPC,{
 OnAgitInit:
 	if (getcastledata("nguild_alde",10) == 1) guardian "nguild_alde",18,219,"Soldier Guardian",1287,"Guardian_N01::OnGuardianDied",0;
 	if (getcastledata("nguild_alde",11) == 1) guardian "nguild_alde",117,42,"Soldier Guardian",1287,"Guardian_N01::OnGuardianDied",1;
@@ -31,8 +51,7 @@ OnGuardianDied:
 	end;
 }
 
-//------------------------------------------------------------------------------
-nguild_gef,198,182,0	script	Guardian_N02	-1,{
+nguild_gef,198,182,0	script	Guardian_N02	FAKE_NPC,{
 OnAgitInit:
 	if (getcastledata("nguild_gef",10) == 1) guardian "nguild_gef",30,178,"Soldier Guardian",1287,"Guardian_N02::OnGuardianDied",0;
 	if (getcastledata("nguild_gef",11) == 1) guardian "nguild_gef",64,180,"Soldier Guardian",1287,"Guardian_N02::OnGuardianDied",1;
@@ -49,8 +68,8 @@ OnGuardianDied:
 	mapannounce "nguild_gef","A Guardian Has Fallen",17;
 	end;
 }
-//------------------------------------------------------------------------------
-nguild_pay,139,139,0	script	Guardian_N03	-1,{
+
+nguild_pay,139,139,0	script	Guardian_N03	FAKE_NPC,{
 OnAgitInit:
 	if (getcastledata("nguild_pay",10) == 1) guardian "nguild_pay",210,120,"Soldier Guardian",1287,"Guardian_N03::OnGuardianDied",0;
 	if (getcastledata("nguild_pay",11) == 1) guardian "nguild_pay",69,26,"Soldier Guardian",1287,"Guardian_N03::OnGuardianDied",1;
@@ -67,8 +86,8 @@ OnGuardianDied:
 	mapannounce "nguild_pay","A Guardian Has Fallen",17;
 	end;
 }
-//------------------------------------------------------------------------------
-nguild_prt,197,197,0	script	Guardian_N04	-1,{
+
+nguild_prt,197,197,0	script	Guardian_N04	FAKE_NPC,{
 OnAgitInit:
 	if (getcastledata("nguild_prt",10) == 1) guardian "nguild_prt",196,92,"Soldier Guardian",1287,"Guardian_N04::OnGuardianDied",0;
 	if (getcastledata("nguild_prt",11) == 1) guardian "nguild_prt",113,200,"Soldier Guardian",1287,"Guardian_N04::OnGuardianDied",1;

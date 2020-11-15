@@ -1,13 +1,34 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_BATTLEGROUND_H
 #define MAP_BATTLEGROUND_H
 
-#include "clif.h"
-#include "guild.h"
-#include "../common/mmo.h" // struct party
+#include "map/map.h" // EVENT_NAME_LENGTH
+#include "common/hercules.h"
+#include "common/db.h"
+#include "common/mmo.h" // struct party
+
+struct hplugin_data_store;
+struct block_list;
+struct map_session_data;
 
 /**
  * Defines
@@ -48,9 +69,7 @@ struct battleground_data {
 	// Logout Event
 	char logout_event[EVENT_NAME_LENGTH];
 	char die_event[EVENT_NAME_LENGTH];
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct bg_arena {
@@ -83,13 +102,13 @@ struct battleground_interface {
 	struct bg_arena **arena;
 	unsigned char arenas;
 	/* */
-	DBMap *team_db; // int bg_id -> struct battleground_data*
+	struct DBMap *team_db; // int bg_id -> struct battleground_data*
 	unsigned int team_counter; // Next bg_id
 	/* */
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	struct bg_arena *(*name2arena) (char *name);
+	struct bg_arena *(*name2arena) (const char *name);
 	void (*queue_add) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
 	enum BATTLEGROUNDS_QUEUE_ACK (*can_queue) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
 	int (*id2pos) (int queue_id, int account_id);
@@ -111,21 +130,21 @@ struct battleground_interface {
 	bool (*member_respawn) (struct map_session_data *sd);
 	int (*create) (unsigned short map_index, short rx, short ry, const char *ev, const char *dev);
 	int (*team_get_id) (struct block_list *bl);
-	bool (*send_message) (struct map_session_data *sd, const char *mes, int len);
-	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
+	bool (*send_message) (struct map_session_data *sd, const char *mes);
+	int (*send_xy_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*afk_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*team_db_final) (DBKey key, DBData *data, va_list ap);
+	int (*team_db_final) (union DBKey key, struct DBData *data, va_list ap);
 	/* */
 	enum bg_queue_types (*str2teamtype) (const char *str);
 	/* */
 	void (*config_read) (void);
 };
 
-struct battleground_interface *bg;
-
 #ifdef HERCULES_CORE
 void battleground_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct battleground_interface *bg;
 
 #endif /* MAP_BATTLEGROUND_H */

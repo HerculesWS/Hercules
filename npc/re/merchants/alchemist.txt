@@ -1,16 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Alchemist Shop
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Merchants for Alchemist Materials and Manuals.
-//===== Additional Comments: =================================
-//= 1.0 Split Geneticist shop from main file. [Euphy]
-//=     Updated dialogue to match the official script.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "[Craft Book Merchant]";
@@ -34,13 +56,13 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "[Craft Book Merchant]";
 	mes "Would you like to take a look at my craft books?";
 	next;
-	if(select("Sure.:No.") == 2) {
+	if(select("Sure.", "No.") == 2) {
 		mes "[Craft Book Merchant]";
 		mes "Thank you for visiting my shop.";
 		mes "Please be safe on your travels.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "[Craft Book Merchant]";
 		mes "I'm sorry, but your inventory is almost full.";
 		mes "Please empty your inventory first.";
@@ -54,7 +76,7 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "[Craft Book Merchant]";
 	mes "Okay then, here's the list of available craft books.";
 	next;
-	switch(select("[Apple Bomb Craft Book] 100,000 zeny:[Pineapple Bomb Craft Book] 100,000 zeny:[Coconut Bomb Craft Book] 100,000 zeny:[Melon Bomb Craft Book] 100,000 zeny:[Banana Bomb Craft Book] 100,000 zeny:[Plant Gene Cultivation Method] 100,000 zeny:[Superior Potion Craft Manual] 100,000 zeny:[Mix Cooking Book] 100,000 zeny:[Health Improvement Research Book] 100,000 zeny:[Vigor Drink Recipe] 100,000 zeny:Close")){
+	switch(select("[Apple Bomb Craft Book] 100,000 zeny", "[Pineapple Bomb Craft Book] 100,000 zeny", "[Coconut Bomb Craft Book] 100,000 zeny", "[Melon Bomb Craft Book] 100,000 zeny", "[Banana Bomb Craft Book] 100,000 zeny", "[Plant Gene Cultivation Method] 100,000 zeny", "[Superior Potion Craft Manual] 100,000 zeny", "[Mix Cooking Book] 100,000 zeny", "[Health Improvement Research Book] 100,000 zeny", "[Vigor Drink Recipe] 100,000 zeny", "Close")){
 	case 1: .@item = 6279; break;
 	case 2: .@item = 6280; break;
 	case 3: .@item = 6281; break;
@@ -76,13 +98,13 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "100,000 zeny.";
 	mes "How many would you like to purchase?";
 	next;
-	input .@amount;
-	if (.@amount == 0) {
+	input(.@amount);
+	if (.@amount <= 0) {
 		mes "[Craft Book Merchant]";
 		mes "Would you like to see some different books?";
 		close;
 	}
-	if (.@amount < 1 || .@amount > 99 ){
+	if (.@amount > 99 ){
 		mes "[Craft Book Merchant]";
 		mes "You cannot purchase more than 100 at a time.";
 		close;
@@ -91,7 +113,7 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "You've entered "+.@amount+"x ^0000FF["+getitemname(.@item)+"]^000000 to be purchased.";
 	mes "Would you like to continue?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		.@total = .@amount * 100000;
 		if (Zeny < .@total) {
 			mes "[Craft Book Merchant]";

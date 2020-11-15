@@ -1,39 +1,62 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Yommy
+//= Copyright (C) Zephyrus
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Advanced Refiner
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Refiner that uses Enriched ores to increase upgrade success.
-//= After a conversation with Doddler, it's been established that
-//= the advanced refiner works similar the the "Bubble Gum" item.
-//= The success percentage is not "increased" however, if it fails
-//= You get a second try. This tries twice at the same time,
-//= effectively giving you a re-roll on your attempt.
+//================= Additional Comments ===================================
+//= After a conversation with Doddler, it's been established that the
+//= advanced refiner works similar the the "Bubble Gum" item.
+//= The success percentage is not "increased" however, if it fails you get
+//= a second try. This tries twice at the same time, effectively giving you
+//= a re-roll on your attempt.
 //= - Dialog is only partly official to iRO.
 //= - Uses the iRO position for this NPC.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [L0ne_W0lf]
-//= 1.1 Fixed a weird carriage return. o_o [L0ne_W0lf]
-//= 1.2 Optimizing refine method [Zephyrus]
-//= 1.3 Typo fixes [Yommy]
-//= 1.4 Removed unnecessary dialogs [Zephyrus]
-//= 1.4a Added 'disable_items' command. [Euphy]
-//= 1.4b Fixed coordinates. [Euphy]
-//= 1.5 Some official script updates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 payon,157,146,6	script	Suhnbi#cash	4_M_03,{
-	disable_items;
-	mes "[Suhnbi]";
-	mes "I am the Armsmith";
-	mes "I can refine all kinds of weapons,";
-	mes "armor and equipment, so let me";
-	mes "know what you want to refine.";
-	next;
+	mes("[Suhnbi]");
+	mes("I am the Armsmith");
+	mes("I can refine all kinds of weapons,");
+	mes("armor and equipment, so let me");
+	mes("know what you want to refine.");
 
+	if (getbattleflag("features/replace_refine_npcs") == 1) {
+		if (openrefineryui())
+			close();
+	}
+	next();
+
+	disable_items;
 	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
 	.@menu$ = "";
 	for(.@i = 1; .@i<=10; ++.@i) {
@@ -75,7 +98,7 @@ payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 
 	mes "[Suhnbi]";
 	mes "Clang! Clang! Clang!";
-	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
+	if (getequippercentrefinery(.@part, REFINE_CHANCE_TYPE_ENRICHED) > rand(100)) {
 		successrefitem .@part;
 		next;
 		emotion e_no1;
@@ -104,8 +127,8 @@ S_RefineValidate:
 	mes "To refine that, you'll need to have one ^ff9999" + getitemname(getarg(1)) + "^000000 and " + getarg(2) + " zeny.";
 	mes "Would you like to continue?";
 	next;
-	if(select("Yes:No") == 1) {
-		if (getequippercentrefinery(getarg(3)) < 100) {
+	if(select("Yes", "No") == 1) {
+		if (getequippercentrefinery(getarg(3), REFINE_CHANCE_TYPE_ENRICHED) < 100) {
 			if (getarg(0)) {
 				mes "[Suhnbi]";
 				mes "Wow!!";
@@ -121,7 +144,7 @@ S_RefineValidate:
 				mes "^ff0000Besides, the equipment will break!^000000";
 				mes "Are you sure you still want to continue?";
 				next;
-				if(select("Yes:No") == 2) {
+				if(select("Yes", "No") == 2) {
 					mes "[Suhnbi]";
 					mes "Good.";
 					mes "Because if the weapon breaks from unreasonable refining, then I get a bad mood, too.";
@@ -137,7 +160,7 @@ S_RefineValidate:
 				//mes "Everything will disappear. As in... GONE!";
 				mes "Do you really wish to continue?";
 				next;
-				if(select("Yes:No") == 2) {
+				if(select("Yes", "No") == 2) {
 					mes "[Suhnbi]";
 					mes "What nonsense. You waste my precious time.";
 					mes "Get lost, punk.";

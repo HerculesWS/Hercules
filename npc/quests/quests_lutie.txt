@@ -1,27 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) Samuray22
+//= Copyright (C) TonyMan
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Lutie
-//===== By: ==================================================
-//= TonyMan & Samuray22
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Blush, Cake Hat, Candle, Chef Hat, Raccoon Hat, Rainbow Eggshell, Spore
+//= Hat, Wonder Nutshell Quests
+//================= Current Version =======================================
 //= 1.3b
-//===== Description: =========================================
-//= Blush, Cake Hat, Candle, Chef Hat, Raccoon Hat, Rainbow Eggshell,
-//= Spore Hat, Wonder Nutshell Quests
-//===== Additional Comments: =================================
-//= 1.1 Optimized [Lupus]
-//= 1.2 Fixed Chef Hat items [Lupus]
-//= 1.3 Update NPC to the Official One. [Samuray22]
-//= 1.3a Changed item names to item IDs. [Samuray22]
-//= 1.3b Removed a scrap " left in a delitem. [L0ne_W0lf]
-//= 1.4 Updated NPCs once again. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
 xmas,117,295,4	script	Vending Machine Man	4_M_BIBI,{
 	mes "[Titicupe]";
 	mes "Hmm...?";
 	mes "I, Titicupe, esteemed manager of the Toy Factory and genius inventor, has done it again! I've just created the world's most sophisticated vending machine!";
 	next;
-	switch(select("Talk to him about the Vending Machine:Items in the Vending Machine:Stop talking")) {
+	switch(select("Talk to him about the Vending Machine", "Items in the Vending Machine", "Stop talking")) {
 	case 1:
 		mes "[Titicupe]";
 		mes "Can you see the little snowman to the left side of me? Can you? If you look at his mouth closely, you'll see that it's been built quite largely. You might say, a bit too large for normal purposes...";
@@ -50,7 +70,7 @@ xmas,117,295,4	script	Vending Machine Man	4_M_BIBI,{
 		mes "Oh right! You need to know what kind of items to put into the Vending Machine to get what you want, yes? Go ahead... Ask me~";
 		emotion e_ic;
 		next;
-		switch(select("Raccoon Hat:Spore Hat:Wonder Nutshell:Ranbow Eggshell:Blush:Chef Hat:Candle:Cake Hat:End Conversation")) {
+		switch(select("Raccoon Hat", "Spore Hat", "Wonder Nutshell", "Ranbow Eggshell", "Blush", "Chef Hat", "Candle", "Cake Hat", "End Conversation")) {
 		case 1:
 			mes "[Titicupe]";
 			mes "Raccoon Hat?";
@@ -142,7 +162,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 	mes "[Audi]";
 	mes "^555555Exciting item vending machine. Invented by great Titicupe. Select the desired item and place required items into snowmouth receptacle.^000000";
 	next;
-	switch(select("^FF3355Notice (Must Read)^000000:Raccoon Hat:Spore Hat:Wonder Nutshell:Rainbow Eggshell:Blush:Chef Hat:Candle:Cake Hat:Cancel")) {
+	switch(select("^FF3355Notice (Must Read)^000000", "Raccoon Hat", "Spore Hat", "Wonder Nutshell", "Rainbow Eggshell", "Blush", "Chef Hat", "Candle", "Cake Hat", "Cancel")) {
 	case 1:
 		mes "[Audi]";
 		mes "Hi~ !";
@@ -162,19 +182,19 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		mes "Thank you!";
 		close;
 	case 2:
-		if ((countitem(2213) > 0) && (countitem(1036) > 19) && (countitem(7012) > 199) && (countitem(7065) > 299)) {
+		if ((countitem(Cat_Hairband) > 0) && (countitem(Dragon_Scale) > 19) && (countitem(Tough_Scalelike_Stem) > 199) && (countitem(Sea_Otter_Leather) > 299)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
-			delitem 2213,1;  //Cat_Hairband
-			delitem 1036,20;  //Dragon_Scale
-			delitem 7012,200;  //Tough_Scalelike_Stem
-			delitem 7065,300;  //Sea_Otter_Leather
+			delitem Cat_Hairband,1;
+			delitem Dragon_Scale,20;
+			delitem Tough_Scalelike_Stem,200;
+			delitem Sea_Otter_Leather,300;
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
 			mes "*Kapang!*^000000";
-			getitem 5033,1; // Smokie_Hat
+			getitem Smokie_Hat,1; // Smokie_Hat
 			next;
 			mes "[Audi]";
 			mes "^555555Thank you for coming by.";
@@ -184,19 +204,19 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 3:
-		if ((countitem(7033) > 849) && (countitem(7068) > 299) && (countitem(1015) > 0)) {
+		if ((countitem(Poison_Spore) > 849) && (countitem(Burn_Tree) > 299) && (countitem(Thin_N_Long_Tongue) > 0)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
-			delitem 7033,850;  //Poison_Spore
-			delitem 7068,300;  //Burn_Tree
-			delitem 1015,1;  //Thin_N'_Long_Tongue
+			delitem Poison_Spore,850;
+			delitem Burn_Tree,300;
+			delitem Thin_N_Long_Tongue,1;
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
 			mes "*Kapang!*";
 			mes "*Wek Wek*^000000";
-			getitem 5029,1; // Spore_Hat
+			getitem Spore_Hat,1; // Spore_Hat
 			next;
 			mes "^555555Thank you for coming by.";
 			mes "Please come again!";
@@ -205,11 +225,11 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 4:
-		if ((countitem(5037) > 0) && (countitem(7064) > 499)) {
+		if ((countitem(Fruit_Shell) > 0) && (countitem(Dragon_Fly_Wing) > 499)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
-			delitem 5037,1;  //Fruit_Shell
-			delitem 7064,500;  //Dragon_Fly_Wing
+			delitem Fruit_Shell,1;
+			delitem Dragon_Fly_Wing,500;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
@@ -217,7 +237,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 			mes "*BeepBoopBeepBoop*";
 			mes "*Beeeeeeoop*^000000";
 			emotion e_oh;
-			getitem 5050,1; // Mystery_Fruit_Shell
+			getitem Mystery_Fruit_Shell,1; // Mystery_Fruit_Shell
 			next;
 			mes "[Audi]";
 			mes "^555555Thank you for coming by.";
@@ -227,18 +247,18 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 5:
-		if ((countitem(5015) > 0) && (countitem(978) > 0) && (countitem(7030) > 49)){
+		if ((countitem(Egg_Shell) > 0) && (countitem(Cobaltblue_Dyestuffs) > 0) && (countitem(Claw_Of_Desert_Wolf) > 49)){
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
-			delitem 5015,1;  //Egg_Shell
-			delitem 978,1;  //Cobaltblue_Dyestuffs
-			delitem 7030,50;  //Claw_Of_Desert_Wolf
+			delitem Egg_Shell,1;
+			delitem Cobaltblue_Dyestuffs,1;
+			delitem Claw_Of_Desert_Wolf,50;
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
 			mes "*OoooEeeeeeee~*^000000";
-			getitem 5039,1; // Mottled_Egg_Shell
+			getitem Mottled_Egg_Shell,1; // Mottled_Egg_Shell
 			next;
 			mes "[Audi]";
 			mes "^555555Thank you for coming by.";
@@ -248,10 +268,10 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 6:
-		if (countitem(7047) > 99) {
+		if (countitem(Alices_Apron) > 99) {
 			mes "^3355FFYou gingerly place all 100 Aprons into the snowman's mouth.^000000";
 			next;
-			delitem 7047,100;  //Alice's_Apron
+			delitem(Alices_Apron, 100);
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
@@ -259,7 +279,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 			mes "*Kapang!*";
 			mes "*ChoopChoop*";
 			mes "*Chaaawah!*^000000";
-			getitem 5040,1; // Blush
+			getitem Blush,1; // Blush
 			mes "[Audi]";
 			mes "^555555Thank you for coming by.";
 			mes "Please come again!";
@@ -271,20 +291,20 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 7:
-		if ((countitem(539) > 119) && (countitem(982) > 0) && (countitem(949) > 329) && (countitem(1036) > 449)) {
+		if ((countitem(Piece_Of_Cake) > 119) && (countitem(White_Dyestuffs) > 0) && (countitem(Feather) > 329) && (countitem(Dragon_Scale) > 449)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
-			delitem 539,120;  //Piece_Of_Cake
-			delitem 982,1;  //White_Dyestuffs
-			delitem 949,330;  //Feather
-			delitem 1036,450;  //Dragon_Scale
+			delitem Piece_Of_Cake,120;
+			delitem White_Dyestuffs,1;
+			delitem Feather,330;
+			delitem Dragon_Scale,450;
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
 			mes "*Kapang!*";
 			mes "*Muuuuuuugeeee*^000000";
-			getitem 5026,1; // Hat_Of_Cook
+			getitem Hat_Of_Cook,1; // Hat_Of_Cook
 			next;
 			mes "[Audi]";
 			mes "^555555Thank you for coming by.";
@@ -294,18 +314,18 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 8:
-		if ((countitem(2279) > 0) && (countitem(7035) > 49) && (countitem(526) > 99)) {
+		if ((countitem(Bomb_Wick) > 0) && (countitem(Matchstick) > 49) && (countitem(Royal_Jelly) > 99)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
-			delitem 2279,1;  //Bomb_Wick
-			delitem 7035,50;  //Matchstick
-			delitem 526,100;  //Royal_Jelly
+			delitem Bomb_Wick,1;
+			delitem Matchstick,50;
+			delitem Royal_Jelly,100;
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
 			mes "*Kapang!*^000000";
-			getitem 5028,1; // Candle
+			getitem Candle,1; // Candle
 			next;
 			mes "[Audi]";
 			mes "^555555Thank you for coming by.";
@@ -315,20 +335,20 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		}
 		break;
 	case 9:
-		if ((countitem(529) > 9) && (countitem(530) > 4) && (countitem(538) > 14) && (countitem(539) > 19) && (countitem(999) > 9)) {
+		if ((countitem(Candy) > 9) && (countitem(Candy_Striper) > 4) && (countitem(Well_Baked_Cookie) > 14) && (countitem(Piece_Of_Cake) > 19) && (countitem(Steel) > 9)) {
 			mes "^3355FFYou gingerly place the items into the snowman's mouth.^000000";
 			next;
-			delitem 529,10;  //Candy
-			delitem 530,5;  //Candy_Striper
-			delitem 538,15;  //Well_Baked_Cookie
-			delitem 539,20;  //Piece_Of_Cake
-			delitem 999,10;  //Steel
+			delitem Candy,10;
+			delitem Candy_Striper,5;
+			delitem Well_Baked_Cookie,15;
+			delitem Piece_Of_Cake,20;
+			delitem Steel,10;
 			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
 			mes "*Kapang!*^000000";
-			getitem 5024,1; // Hat_Of_Cake
+			getitem Hat_Of_Cake,1; // Hat_Of_Cake
 			next;
 			mes "[Audi]";
 			mes "^555555Thank you for coming by.";

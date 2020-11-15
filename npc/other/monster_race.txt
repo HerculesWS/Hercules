@@ -1,42 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Capuche
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Hugel Monster Races
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= - Hugel Monster Races (Single and Double)
 //= - Prize Medal Exchanging, and Monster Track NPCs.
 //= - Contains both euRO and iRO dialog.
-//===== Additional Comments: =================================
-//= 1.0 First version. Please report bugs. [L0ne_W0lf]
-//= 1.1 Corrected a minor typo. [L0ne_W0lf]
-//= 1.2 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.3 Ei'felle now gives Exercise. (Bugreport:4092) [L0ne_W0lf]
-//= 1.4 Fixed call to a non-existant event. [L0ne_W0lf]
-//= 1.5 Updated Dialog. [L0ne_W0lf]
-//= 1.6 Updated experience rewards. [L0ne_W0lf]
-//= 1.7 Optimization, -4000 lines (more can still be done). [Euphy]
-//= 1.8 Optimized.
-//=     Fixed Medal Distributor (Dual Race) disappears accordingly. [Joseph]
-//= 1.9 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.0 Added GM management NPC. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.1
+//=========================================================================
 
-// Monster Race - Single Monster Race
-//============================================================
-hugel,51,61,0	script	#race_timer1-1	-1,{
-OnInit:
+//== Monster Race - Single Monster Race ====================
+hugel,51,61,0	script	#race_timer1-1	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer1-1";
+OnInit:
 	$@mon_time_1_1 = 2;
 	initnpctimer;
-	end;
-
-OnDisable:
-	disablenpc "#race_timer1-1";
-	stopnpctimer;
 	end;
 
 OnTimer10000:
@@ -68,76 +75,62 @@ OnTimer272000:
 OnTimer330000:
 	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,"0x87ceeb";
 	$@mon_time_1_1 = 0;
-	donpcevent "#race_timer1-1::OnDisable";
+	disablenpc "#race_timer1-1";
 	stopnpctimer;
 	end;
 }
 
-p_track01,58,0,0	script	Race Progress Timer	-1,{
+p_track01,58,0,0	script	Race Progress Timer	FAKE_NPC,{
 OnEnable:
-	enablenpc "Race Progress Timer";
 	initnpctimer;
-	for (.@i = 1; .@i <= 6; ++.@i)
-		enablenpc "starting#"+.@i;
-	.@c = 1;
-	while (.@c <= 6) {
-		setd ".@line_"+.@c,rand(1,70);
-		if (getd(".@line_"+.@c) <= 10) {
-			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
+	enablenpc "Race Progress Timer";
+	for (.@c = 1; .@c <= 6; ++.@c) {
+		.@line = rand(1,70);
+		enablenpc "starting#"+.@c;
+		enablenpc "Tire"+.@c+"#1";
+		if (.@line <= 10) {
+			.@tired = rand(50,60);
 			enablenpc "Luk"+.@c+"#5";
 			enablenpc "Luk"+.@c+"#6";
-			setd "$@mr_1_tire"+.@c,rand(50,60);
-			enablenpc "Tire"+.@c+"#1";
-		} else if (getd(".@line_"+.@c) <= 30) {
-			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
+		} else if (.@line <= 30) {
+			.@tired = rand(40,60);
 			enablenpc "Luk"+.@c+"#5";
-			set getd(".@tired"+.@c),rand(40,60);
-			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			enablenpc "Tire"+.@c+"#1";
-			if (getd(".@tired"+.@c) >= 50)	enablenpc "Tire"+.@c+"#2";
-		} else if (getd(".@line_"+.@c) <= 40) {
-			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
+			if (.@tired >= 50)
+				enablenpc "Tire"+.@c+"#2";
+		} else if (.@line <= 40) {
+			.@tired = rand(30,50);
 			enablenpc "Luk"+.@c+"#1";
-			set getd(".@tired"+.@c),rand(30,50);
-			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			enablenpc "Tire"+.@c+"#1";
 			enablenpc "Tire"+.@c+"#2";
-			if (getd(".@tired"+.@c) < 40) enablenpc "Tire"+.@c+"#3";
-		} else if (getd(".@line_"+.@c) <= 50) {
-			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
+			if (.@tired < 40)
+				enablenpc "Tire"+.@c+"#3";
+		} else if (.@line <= 50) {
+			.@tired = rand(20,40);
 			enablenpc "Luk"+.@c+"#1";
 			enablenpc "Luk"+.@c+"#2";
-			set getd(".@tired"+.@c),rand(20,40);
-			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			for (.@i = 1; .@i <= 3; ++.@i)
-				enablenpc "Tire"+.@c+"#"+.@i;
-			if (getd(".@tired"+.@c) < 30) enablenpc "Tire"+.@c+"#4";
-		} else if (getd(".@line_"+.@c)) <= 60 {
-			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
+			enablenpc "Tire"+.@c+"#2";
+			enablenpc "Tire"+.@c+"#3";
+			if (.@tired < 30)
+				enablenpc "Tire"+.@c+"#4";
+		} else if (.@line <= 60) {
+			.@tired = rand(10,30);
 			for (.@i = 1; .@i <= 3; ++.@i)
 				enablenpc "Luk"+.@c+"#"+.@i;
-			set getd(".@tired"+.@c),rand(10,30);
-			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			for (.@i = 1; .@i <= 4; ++.@i)
+			for (.@i = 2; .@i <= 4; ++.@i)
 				enablenpc "Tire"+.@c+"#"+.@i;
-			if (getd(".@tired"+.@c) < 20) enablenpc "Tire"+.@c+"#5";
-		} else if (getd(".@line_"+.@c) <= 70) {
-			setd "$@mr_1_luk"+.@c,getd(".@line_"+.@c);
+			if (.@tired < 20)
+				enablenpc "Tire"+.@c+"#5";
+		} else if (.@line <= 70) {
+			.@tired = rand(0,20);
 			for (.@i = 1; .@i <= 4; ++.@i)
 				enablenpc "Luk"+.@c+"#"+.@i;
-			set getd(".@tired"+.@c),rand(0,20);
-			setd "$@mr_1_tire"+.@c,getd(".@tired"+.@c);
-			for (.@i = 1; .@i <= 5; ++.@i)
+			for (.@i = 2; .@i <= 5; ++.@i)
 				enablenpc "Tire"+.@c+"#"+.@i;
-			if (getd(".@tired"+.@c) < 10) enablenpc "Tire"+.@c+"#6";
+			if (.@tired < 10)
+				enablenpc "Tire"+.@c+"#6";
 		}
-		++.@c;
+		$@mr_1_luk[.@c] = .@line;
+		$@mr_1_tire[.@c] = .@tired;
 	}
-	end;
-
-OnDisable:
-	disablenpc "Race Progress Timer";
-	stopnpctimer;
 	end;
 
 OnTimer1000:
@@ -170,14 +163,14 @@ OnTimer243000:
 
 OnTimer300000:
 	mapannounce "p_track01","The Monster Race has already begun. Good luck to all the participants.",bc_map,"0xffb6c1";
-	$@mon_time_1_1 = 0;
 	$@monster_race = 0;
 	disablenpc "Ticket Helper#single";
 	for (.@i = 1; .@i <= 6; ++.@i)
-		donpcevent "Runner No. "+.@i+"::OnEnable";
+		donpcevent "Runner No. "+.@i+"#"+ .@i +"::OnEnable";
 	stopnpctimer;
 	end;
-	
+
+OnDisable:
 OnInit:
 	disablenpc "Race Progress Timer";
 	end;
@@ -192,7 +185,7 @@ p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 	mes "then please select 1 out of";
 	mes "the 6 monsters from the list.";
 	next;
-	if (!checkweight(908,200)) {
+	if (!checkweight(Spawn,200)) {
 		mes "[Ticket Helper]";
 		mes "Wait, wait...";
 		mes "I can't give you";
@@ -201,12 +194,10 @@ p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 		mes "too many things...";
 		close;
 	}
-	for (.@i = 1; .@i <= 6; ++.@i)
-		.@m$ += "Monster "+.@i+":";
-	.@m = select ("Monster Status:"+.@m$) - 1;
-	if (!.@m) {
+	.@m = select ("Monster Status", "Monster 1", "Monster 2", "Monster 3", "Monster 4", "Monster 5", "Monster 6") - 1;
+	if (.@m == 0) {
 		for (.@i = 1; .@i <= 6; ++.@i)
-			mes "Monster "+.@i+" [^CC6600Luck^000000: " + getd("$@mr_1_luk"+.@i) + "] [^EE0000HP^000000: " + getd("$@mr_1_tire"+.@i) + "]";
+			mes "Monster "+.@i+" [^CC6600Luck^000000: " + $@mr_1_luk[.@i] + "] [^EE0000HP^000000: " + $@mr_1_tire[.@i] + "]";
 		close;
 	} else {
 		if ($@mon_time_1_1 == 1) {
@@ -226,7 +217,7 @@ p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 			mes "until the start of the race is";
 			mes "announced. If the monster you";
 			mes "picked wins, then please use this ticket to redeem your prize.";
-			getitem 7514,1; //Monster_Ticket
+			getitem Monster_Ticket,1;
 			monster_race_1 = .@m;
 			close;
 		}
@@ -242,74 +233,74 @@ OnInit:
 	end;
 }
 
--	script	Runner#main	-1,{
-	function	WN;
+-	script	Runner_main	FAKE_NPC,{
+	function F_Num;
+	function F_Ord;
+	end;
+
 OnEnable:
 	emotion e_gasp;
-	enablenpc strnpcinfo(0);
-	getmapxy(.@m$,.@x,.@y,1);
-	setarray .@mob[1], 1725,1726,1727,1728,1730,1729;
-	monster "p_track01",58,.@y,"The "+WN(1)+" Racer",.@mob[WN(0)],1,strnpcinfo(0)+"::OnMyMobDead";
+	enablenpc strnpcinfo(NPC_NAME);
+	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC);
+	setarray .@mob[1], R_PORING,R_LUNATIC,R_SAVAGE_BABE,R_DESERT_WOLF_B,R_DEVIRUCHI,R_BAPHOMET_;
+	monster "p_track01",58,.@y,"The "+ F_Ord() +" Racer", .@mob[F_Num()],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
 OnDisable:
-	disablenpc strnpcinfo(0);
-	killmonster "p_track01",strnpcinfo(0)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
+	killmonster "p_track01",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
 OnTouchNPC:
-	initnpctimer;
-	.@n = WN(0);
+	.@n = F_Num();
 	$@monster_race = .@n;
 	for (.@i = 1; .@i <= 6; ++.@i) {
 		if (.@n == .@i) continue;
-		donpcevent "Runner No. "+.@i+"::OnDisable";
+		donpcevent "Runner No. "+.@i+"#"+.@i+"::OnDisable";
 	}
-	end;
-
-OnTimer1000:
+	sleep 1000;
 	mapannounce "p_track01","We have a winner...!",bc_map,"0x33FF66";
-	end;
-
-OnTimer2000:
-	mapannounce "p_track01","Monster "+WN(0)+" is the winner of this race!",bc_map,"0x33FF66";
-	end;
-
-OnTimer6000:
-	mapannounce "p_track01","If you wagered on Monster "+WN(0)+" in this race, talk to the Medal Distributor to receive your prize!",bc_map,"0x33FF66";
-	end;
-
-OnTimer8000:
+	sleep 1000;
+	mapannounce "p_track01","Monster "+.@n+" is the winner of this race!",bc_map,"0x33FF66";
+	sleep 4000;
+	mapannounce "p_track01","If you wagered on Monster "+.@n+" in this race, talk to the Medal Distributor to receive your prize!",bc_map,"0x33FF66";
+	sleep 2000;
 	mapannounce "p_track01","Please remember that we can distribute Prize Medals for only 5 minutes after each race.",bc_map,"0x33FF66";
+	sleep 1000;
+	donpcevent "Medal Distributor#single::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
+	killmonster "p_track01",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
-OnTimer9000:
-	donpcevent "Medal Distributor#single::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
-	killmonster "p_track01",strnpcinfo(0)+"::OnMyMobDead";
-	stopnpctimer;
-	end;
-	
-	function	WN	{
-		.@n = charat(strnpcinfo(0),getstrlen(strnpcinfo(0))-1);
-		if (!getarg(0)) return .@n;
-		return ((.@n <= 3)?((.@n == 1)?"1st":((.@n == 2)?"2nd":"3rd")):.@n+"th");
+	function	F_Num	{
+		return atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	}
-	
+
+	function	F_Ord	{
+		.@n = F_Num();
+		if (.@n == 1)
+			return "1st";
+		if (.@n == 2)
+			return "2nd";
+		if (.@n == 3)
+			return "3rd";
+		return .@n + "th";
+	}
+
 OnInit:
-	if (compare(strnpcinfo(0),"main")) end;
-	disablenpc strnpcinfo(0);
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "" )
+		disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
-p_track01,30,38,0	duplicate(Runner#main)	Runner No. 1	-1,1,0
-p_track01,30,36,0	duplicate(Runner#main)	Runner No. 2	-1,1,0
-p_track01,30,34,0	duplicate(Runner#main)	Runner No. 3	-1,1,0
-p_track01,30,32,0	duplicate(Runner#main)	Runner No. 4	-1,1,0
-p_track01,30,30,0	duplicate(Runner#main)	Runner No. 5	-1,1,0
-p_track01,30,28,0	duplicate(Runner#main)	Runner No. 6	-1,1,0
+p_track01,30,38,0	duplicate(Runner_main)	Runner No. 1#1	FAKE_NPC,1,0
+p_track01,30,36,0	duplicate(Runner_main)	Runner No. 2#2	FAKE_NPC,1,0
+p_track01,30,34,0	duplicate(Runner_main)	Runner No. 3#3	FAKE_NPC,1,0
+p_track01,30,32,0	duplicate(Runner_main)	Runner No. 4#4	FAKE_NPC,1,0
+p_track01,30,30,0	duplicate(Runner_main)	Runner No. 5#5	FAKE_NPC,1,0
+p_track01,30,28,0	duplicate(Runner_main)	Runner No. 6#6	FAKE_NPC,1,0
 
 p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
-	if (!checkweight(908,200)) {
+	if (!checkweight(Spawn,200)) {
 		mes "[Medal Distributor]";
 		mes "I'm sorry, but I can't";
 		mes "reward you with any medals";
@@ -317,8 +308,7 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 		mes "available in your Inventory.";
 		close;
 	}
-	.@insa = rand(1,1000);
-	if (countitem(7514)) {
+	if (countitem(Monster_Ticket)) { // 7514
 		mes "[Medal Distributor]";
 		mes "Hello there~";
 		mes "If you've wagered on the";
@@ -344,7 +334,7 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 				mes "would you like to exchange your";
 				mes "Racing Ticket for Prize Medals?";
 				next;
-				if (select("Yes, please.:No, thanks.") == 2) {
+				if (select("Yes, please.", "No, thanks.") == 2) {
 					mes "[Medal Distributor]";
 					mes "Um, are you sure? You ";
 					mes "can only exchange a winning";
@@ -358,24 +348,26 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 				mes "Oh! Congratulations, you";
 				mes "won! May I have your name?";
 				next;
-				input .@input$;
-				if (.@input$ == strcharinfo(0)) {
+				input(.@input$);
+				if (.@input$ == strcharinfo(PC_NAME)) {
+					.@insa = rand(1,1000);
 					mes "[Medal Distributor]";
-					mes "Ah, "+strcharinfo(0)+".";
+					mes "Ah, "+strcharinfo(PC_NAME)+".";
 					mes "You can exchange this";
 					mes "ticket for a Prize Medal by";
 					mes "entering your ticket exchange";
 					mes "number now. Your ticket";
 					mes "exchange number is ^FF0000" + .@insa + "^000000.";
 					next;
-					input .@input; //,0,1000;
-					if (!.@input) {
+					input(.@input);
+					if (.@input == 0) {
 						mes "[Medal Distributor]";
 						mes "Oh? You don't want";
 						mes "to exchange your";
 						mes "winning ticket?";
 						close;
-					} else if (.@input == .@insa) {
+					}
+					if (.@input == .@insa) {
 						mes "[Medal Distributor]";
 						mes "Thank you! You entered";
 						mes "the correct number...";
@@ -388,9 +380,9 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 						mes "exchange these with";
 						mes "Wayne in Hugel for some";
 						mes "interesting items. Thank you~";
-						delitem 7514,1; //Monster_Ticket
+						delitem Monster_Ticket,1;
 						monster_race_1 = 0;
-						getitem 7515,4; //Marvelous_Medal
+						getitem Marvelous_Medal,4;
 						close;
 					}
 					mes "[Medal Distributor]";
@@ -435,8 +427,8 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 	close;
 
 OnEnable:
-	emotion e_gasp;
 	enablenpc "Medal Distributor#single";
+	emotion e_gasp;
 	initnpctimer;
 	end;
 
@@ -479,36 +471,25 @@ OnTimer249000:
 OnTimer252000:
 	mapannounce "p_track01","We hope that you enjoyed the Monster Race arena. Come back again soon~",bc_map,"0xFFFF00";
 	for (.@i = 1; .@i <= 6; ++.@i) {
-		donpcevent "starting#"+.@i+"::OnDisable";
-		setd "$@mr_1_luk"+.@i,0;
-		setd "$@mr_1_tire"+.@i,0;
-	}
-	.@c = 1;
-	while (.@c <= 6) {
-		for (.@i = 1; .@i <= 6; ++.@i) {
-			disablenpc "Tire"+.@c+"#"+.@i;
-			disablenpc "Luk"+.@c+"#"+.@i;
+		for (.@j = 2; .@j <= 6; ++.@j) {
+			disablenpc "Tire"+.@j+"#"+.@i;
+			disablenpc "Luk"+.@j+"#"+.@i;
 		}
-		++.@c;
+		enablenpc "Luk1#"+.@i;
+		enablenpc "Tire1#"+.@i;
+		$@mr_1_luk[.@i] = 0;
+		$@mr_1_tire[.@i] = 0;
 	}
 	end;
 
 OnTimer300000:
 	donpcevent "#race_timer1-1::OnEnable";
-	$@mon_time_1_1 = 2;
 	$@monster_race = 0;
 	mapwarp "p_track01","hugel",63,73;
 	end;
 
-OnTimer306000:
-	donpcevent "Race Progress Timer::OnEnable";
-	end;
-
 OnTimer342000:
-	disablenpc "Medal Distributor#single";
 	stopnpctimer;
-	end;
-
 OnInit:
 	disablenpc "Medal Distributor#single";
 	end;
@@ -528,7 +509,7 @@ p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 	mes "you outside. Would you like";
 	mes "to leave the arena right now?";
 	next;
-	if (select("Yes:No") == 2) {
+	if (select("Yes", "No") == 2) {
 		mes "[Exit Guide]";
 		mes "Alright, then.";
 		mes "Just let me know";
@@ -536,7 +517,7 @@ p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 		mes "ready to leave.";
 		close;
 	}
-	if (!countitem(7514)) {
+	if (!countitem(Monster_Ticket)) {
 		mes "[Exit Guide]";
 		mes "Thank you for";
 		mes "your patronage, and";
@@ -550,7 +531,7 @@ p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 		mes "Thank you for your patronage,";
 		mes "and I hope you enjoy your time";
 		mes "here in the Monster Race Arena.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 	}
 	monster_race_1 = 0;
 	close2;
@@ -565,7 +546,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 	mes "Monster Race Arena.";
 	mes "How may I help you today?";
 	next;
-	if (select("Monster Race Info:Enter Monster Race") == 1) {
+	if (select("Monster Race Info", "Enter Monster Race") == 1) {
 		mes "[Eckar Ellebird]";
 		mes "Monster Races originated from";
 		mes "simple children's games in which";
@@ -619,14 +600,14 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 	mes "Would you like wager on";
 	mes "a Single Monster Race?";
 	next;
-	if (select("Yes, please.:No, thanks.") == 2) {
+	if (select("Yes, please.", "No, thanks.") == 2) {
 		mes "[Eckar Ellebird]";
 		mes "Very well. I hope that";
 		mes "you enjoy your time here";
 		mes "in the Monster Race Arena~";
 		close;
 	}
-	if (!checkweight(908,700)) {
+	if (!checkweight(Spawn,700)) {
 		mes "[Eckar Ellebird]";
 		mes "Oh, wow. You're carrying";
 		mes "an awful lot of stuff... Yeah,";
@@ -642,15 +623,23 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 		mes "2,000 zeny entrance fee. ";
 		close;
 	}
-	if (countitem(7514)) {
+	if (countitem(Monster_Ticket)) {
 		mes "[Eckar Ellebird]";
 		mes "Hm? What are you doing";
 		mes "with an expired Racing Ticket?";
 		mes "Well, I better get rid of it for you before it can get mixed up";
 		mes "with your new Racing Ticket.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 		next;
 		if ($@mon_time_1_1 == 1) {
+			if (Zeny < 2000) {
+				mes "[Eckar Ellebird]";
+				mes "I'm sorry, but you";
+				mes "don't have enough";
+				mes "money to pay the";
+				mes "2,000 zeny entrance fee. ";
+				close;
+			}
 			mes "[Eckar Ellebird]";
 			mes "Alright, I think you";
 			mes "should be all set. I hope";
@@ -662,45 +651,44 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			close2;
 			warp "p_track01",75,41;
 			end;
-		} else if ($@mon_time_1_1 == 2) {
+		}
+	} else if ($@mon_time_1_1 == 1) {
+		if (Zeny < 2000) {
 			mes "[Eckar Ellebird]";
-			mes "We're still finishing our";
-			mes "preparations for the next";
-			mes "Single Monster Race, so";
-			mes "we ask that you please";
-			mes "wait a little while longer.";
+			mes "I'm sorry, but you";
+			mes "don't have enough";
+			mes "money to pay the";
+			mes "2,000 zeny entrance fee. ";
 			close;
 		}
-	} else {
-		if ($@mon_time_1_1 == 1) {
-			mes "[Eckar Ellebird]";
-			mes "Thanks, I hope that";
-			mes "you enjoy this race.";
-			mes "Let me guide you now";
-			mes "to the Monster Race Arena.";
-			Zeny -= 2000;
-			monster_race_1 = 0;
-			close2;
-			warp "p_track01",75,41;
-			end;
-		} else if ($@mon_time_1_1 == 2) {
-			mes "[Eckar Ellebird]";
-			mes "We're still finishing our";
-			mes "preparations for the next";
-			mes "Single Monster Race, so";
-			mes "we ask that you please";
-			mes "wait a little while longer...";
-			close;
-		}
+		mes "[Eckar Ellebird]";
+		mes "Thanks, I hope that";
+		mes "you enjoy this race.";
+		mes "Let me guide you now";
+		mes "to the Monster Race Arena.";
+		Zeny -= 2000;
+		monster_race_1 = 0;
+		close2;
+		warp "p_track01",75,41;
+		end;
 	}
-	if (!.@monster_race) {
+	if ($@mon_time_1_1 == 2) {
+		mes "[Eckar Ellebird]";
+		mes "We're still finishing our";
+		mes "preparations for the next";
+		mes "Single Monster Race, so";
+		mes "we ask that you please";
+		mes "wait a little while longer...";
+		close;
+	}
+	if (!$@monster_race) {
 		mes "[Eckar Ellebird]";
 		mes "Right now, a Monster Race";
 		mes "is in progress. It's too late to place a wager, but if you'd like";
 		mes "to watch, the fee is 500 zeny";
 		mes "for spectators. Would you like to enter the Monster Race Arena?";
 		next;
-		if (select("Enter:Cancel") == 2) {
+		if (select("Enter", "Cancel") == 2) {
 			mes "[Eckar Ellebird]";
 			mes "Alright, then. If you'd like";
 			mes "to wager on a monster";
@@ -749,7 +737,7 @@ p_track01,39,49,3	script	Game Guide#single	4_F_RACING,{
 	mes "Monster Race Arena.";
 	mes "How can I help you?";
 	next;
-	switch(select("Monster Race Info:Wager Info:Ticket Redemption Info")) {
+	switch(select("Monster Race Info", "Wager Info", "Ticket Redemption Info")) {
 	case 1:
 		mes "[Game Guide]";
 		mes "Monster Races originated from";
@@ -841,16 +829,7 @@ p_track01,39,49,3	script	Game Guide#single	4_F_RACING,{
 	close;
 }
 
--	script	starting_1	-1,{
-OnDisable:
-	for(.@i = 1; .@i<7; ++.@i)
-		enablenpc "Luk1#"+.@i;
-	for(.@i = 1; .@i<7; ++.@i)
-		enablenpc "Tire1#"+.@i;
-	setd "$@mr_1_luk"+strnpcinfo(2),0;
-	setd "$@mr_1_tire"+strnpcinfo(2),0;
-	end;
-
+-	script	starting_1	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 11) .@speed = 60;
@@ -865,14 +844,13 @@ OnTouchNPC:
 	else .@speed = 150;
 	sc_start SC_WALKSPEED,5000,.@speed;
 	end;
-	
-OnInit:
-	disablenpc strnpcinfo(0);
-	end;
 
+OnInit:
+	disablenpc strnpcinfo(NPC_NAME);
+	end;
 }
 
--	script	Luk_1	-1,{
+-	script	Luk_1	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 61) .@speed = 110;
@@ -882,13 +860,13 @@ OnTouchNPC:
 	else .@speed = 150;
 	sc_start SC_WALKSPEED,10000,.@speed;
 	end;
-	
+
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
--	script	Luk_2	-1,{
+-	script	Luk_2	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 61) .@time = 1000;
@@ -897,13 +875,13 @@ OnTouchNPC:
 	else if (.@start < 91) .@time = 4000;
 	if (.@time) sc_start SC_STUN,.@time,0;
 	end;
-	
+
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
--	script	Tire_1	-1,{
+-	script	Tire_1	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 61) .@time = 1000;
@@ -912,106 +890,101 @@ OnTouchNPC:
 	else if (.@start < 91) .@time = 4000;
 	if (.@time) sc_start SC_SLEEP,.@time,0;
 	end;
-	
+
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
-p_track01,56,38,0	duplicate(starting_1)	starting#1	-1,0,0
-p_track01,56,36,0	duplicate(starting_1)	starting#2	-1,0,0
-p_track01,56,34,0	duplicate(starting_1)	starting#3	-1,0,0
-p_track01,56,32,0	duplicate(starting_1)	starting#4	-1,0,0
-p_track01,56,30,0	duplicate(starting_1)	starting#5	-1,0,0
-p_track01,56,28,0	duplicate(starting_1)	starting#6	-1,0,0
+p_track01,56,38,0	duplicate(starting_1)	starting#1	FAKE_NPC,0,0
+p_track01,56,36,0	duplicate(starting_1)	starting#2	FAKE_NPC,0,0
+p_track01,56,34,0	duplicate(starting_1)	starting#3	FAKE_NPC,0,0
+p_track01,56,32,0	duplicate(starting_1)	starting#4	FAKE_NPC,0,0
+p_track01,56,30,0	duplicate(starting_1)	starting#5	FAKE_NPC,0,0
+p_track01,56,28,0	duplicate(starting_1)	starting#6	FAKE_NPC,0,0
 
-p_track01,33,38,0	duplicate(Luk_1)	Luk1#1	-1,0,0
-p_track01,37,38,0	duplicate(Luk_1)	Luk1#2	-1,0,0
-p_track01,53,38,0	duplicate(Luk_1)	Luk1#3	-1,0,0
-p_track01,45,38,0	duplicate(Luk_1)	Luk1#4	-1,0,0
-p_track01,33,36,0	duplicate(Luk_1)	Luk2#1	-1,0,0
-p_track01,37,36,0	duplicate(Luk_1)	Luk2#2	-1,0,0
-p_track01,53,36,0	duplicate(Luk_1)	Luk2#3	-1,0,0
-p_track01,45,36,0	duplicate(Luk_1)	Luk2#4	-1,0,0
-p_track01,33,34,0	duplicate(Luk_1)	Luk3#1	-1,0,0
-p_track01,37,34,0	duplicate(Luk_1)	Luk3#2	-1,0,0
-p_track01,53,34,0	duplicate(Luk_1)	Luk3#3	-1,0,0
-p_track01,45,34,0	duplicate(Luk_1)	Luk3#4	-1,0,0
-p_track01,33,32,0	duplicate(Luk_1)	Luk4#1	-1,0,0
-p_track01,37,32,0	duplicate(Luk_1)	Luk4#2	-1,0,0
-p_track01,53,32,0	duplicate(Luk_1)	Luk4#3	-1,0,0
-p_track01,45,32,0	duplicate(Luk_1)	Luk4#4	-1,0,0
-p_track01,33,30,0	duplicate(Luk_1)	Luk5#1	-1,0,0
-p_track01,37,30,0	duplicate(Luk_1)	Luk5#2	-1,0,0
-p_track01,53,30,0	duplicate(Luk_1)	Luk5#3	-1,0,0
-p_track01,45,30,0	duplicate(Luk_1)	Luk5#4	-1,0,0
-p_track01,33,28,0	duplicate(Luk_1)	Luk6#1	-1,0,0
-p_track01,37,28,0	duplicate(Luk_1)	Luk6#2	-1,0,0
-p_track01,53,28,0	duplicate(Luk_1)	Luk6#3	-1,0,0
-p_track01,45,28,0	duplicate(Luk_1)	Luk6#4	-1,0,0
+p_track01,33,38,0	duplicate(Luk_1)	Luk1#1	FAKE_NPC,0,0
+p_track01,37,38,0	duplicate(Luk_1)	Luk1#2	FAKE_NPC,0,0
+p_track01,53,38,0	duplicate(Luk_1)	Luk1#3	FAKE_NPC,0,0
+p_track01,45,38,0	duplicate(Luk_1)	Luk1#4	FAKE_NPC,0,0
+p_track01,33,36,0	duplicate(Luk_1)	Luk2#1	FAKE_NPC,0,0
+p_track01,37,36,0	duplicate(Luk_1)	Luk2#2	FAKE_NPC,0,0
+p_track01,53,36,0	duplicate(Luk_1)	Luk2#3	FAKE_NPC,0,0
+p_track01,45,36,0	duplicate(Luk_1)	Luk2#4	FAKE_NPC,0,0
+p_track01,33,34,0	duplicate(Luk_1)	Luk3#1	FAKE_NPC,0,0
+p_track01,37,34,0	duplicate(Luk_1)	Luk3#2	FAKE_NPC,0,0
+p_track01,53,34,0	duplicate(Luk_1)	Luk3#3	FAKE_NPC,0,0
+p_track01,45,34,0	duplicate(Luk_1)	Luk3#4	FAKE_NPC,0,0
+p_track01,33,32,0	duplicate(Luk_1)	Luk4#1	FAKE_NPC,0,0
+p_track01,37,32,0	duplicate(Luk_1)	Luk4#2	FAKE_NPC,0,0
+p_track01,53,32,0	duplicate(Luk_1)	Luk4#3	FAKE_NPC,0,0
+p_track01,45,32,0	duplicate(Luk_1)	Luk4#4	FAKE_NPC,0,0
+p_track01,33,30,0	duplicate(Luk_1)	Luk5#1	FAKE_NPC,0,0
+p_track01,37,30,0	duplicate(Luk_1)	Luk5#2	FAKE_NPC,0,0
+p_track01,53,30,0	duplicate(Luk_1)	Luk5#3	FAKE_NPC,0,0
+p_track01,45,30,0	duplicate(Luk_1)	Luk5#4	FAKE_NPC,0,0
+p_track01,33,28,0	duplicate(Luk_1)	Luk6#1	FAKE_NPC,0,0
+p_track01,37,28,0	duplicate(Luk_1)	Luk6#2	FAKE_NPC,0,0
+p_track01,53,28,0	duplicate(Luk_1)	Luk6#3	FAKE_NPC,0,0
+p_track01,45,28,0	duplicate(Luk_1)	Luk6#4	FAKE_NPC,0,0
 
-p_track01,49,38,0	duplicate(Luk_2)	Luk1#5	-1,0,0
-p_track01,41,38,0	duplicate(Luk_2)	Luk1#6	-1,0,0
-p_track01,49,36,0	duplicate(Luk_2)	Luk2#5	-1,0,0
-p_track01,41,36,0	duplicate(Luk_2)	Luk2#6	-1,0,0
-p_track01,49,34,0	duplicate(Luk_2)	Luk3#5	-1,0,0
-p_track01,41,34,0	duplicate(Luk_2)	Luk3#6	-1,0,0
-p_track01,49,32,0	duplicate(Luk_2)	Luk4#5	-1,0,0
-p_track01,41,32,0	duplicate(Luk_2)	Luk4#6	-1,0,0
-p_track01,49,30,0	duplicate(Luk_2)	Luk5#5	-1,0,0
-p_track01,41,30,0	duplicate(Luk_2)	Luk5#6	-1,0,0
-p_track01,49,28,0	duplicate(Luk_2)	Luk6#5	-1,0,0
-p_track01,41,28,0	duplicate(Luk_2)	Luk6#6	-1,0,0
+p_track01,49,38,0	duplicate(Luk_2)	Luk1#5	FAKE_NPC,0,0
+p_track01,41,38,0	duplicate(Luk_2)	Luk1#6	FAKE_NPC,0,0
+p_track01,49,36,0	duplicate(Luk_2)	Luk2#5	FAKE_NPC,0,0
+p_track01,41,36,0	duplicate(Luk_2)	Luk2#6	FAKE_NPC,0,0
+p_track01,49,34,0	duplicate(Luk_2)	Luk3#5	FAKE_NPC,0,0
+p_track01,41,34,0	duplicate(Luk_2)	Luk3#6	FAKE_NPC,0,0
+p_track01,49,32,0	duplicate(Luk_2)	Luk4#5	FAKE_NPC,0,0
+p_track01,41,32,0	duplicate(Luk_2)	Luk4#6	FAKE_NPC,0,0
+p_track01,49,30,0	duplicate(Luk_2)	Luk5#5	FAKE_NPC,0,0
+p_track01,41,30,0	duplicate(Luk_2)	Luk5#6	FAKE_NPC,0,0
+p_track01,49,28,0	duplicate(Luk_2)	Luk6#5	FAKE_NPC,0,0
+p_track01,41,28,0	duplicate(Luk_2)	Luk6#6	FAKE_NPC,0,0
 
-p_track01,43,38,0	duplicate(Tire_1)	Tire1#1	-1,0,0
-p_track01,39,38,0	duplicate(Tire_1)	Tire1#2	-1,0,0
-p_track01,35,38,0	duplicate(Tire_1)	Tire1#3	-1,0,0
-p_track01,55,38,0	duplicate(Tire_1)	Tire1#4	-1,0,0
-p_track01,51,38,0	duplicate(Tire_1)	Tire1#5	-1,0,0
-p_track01,47,38,0	duplicate(Tire_1)	Tire1#6	-1,0,0
-p_track01,43,36,0	duplicate(Tire_1)	Tire2#1	-1,0,0
-p_track01,39,36,0	duplicate(Tire_1)	Tire2#2	-1,0,0
-p_track01,35,36,0	duplicate(Tire_1)	Tire2#3	-1,0,0
-p_track01,55,36,0	duplicate(Tire_1)	Tire2#4	-1,0,0
-p_track01,51,36,0	duplicate(Tire_1)	Tire2#5	-1,0,0
-p_track01,47,36,0	duplicate(Tire_1)	Tire2#6	-1,0,0
-p_track01,43,34,0	duplicate(Tire_1)	Tire3#1	-1,0,0
-p_track01,39,34,0	duplicate(Tire_1)	Tire3#2	-1,0,0
-p_track01,35,34,0	duplicate(Tire_1)	Tire3#3	-1,0,0
-p_track01,55,34,0	duplicate(Tire_1)	Tire3#4	-1,0,0
-p_track01,51,34,0	duplicate(Tire_1)	Tire3#5	-1,0,0
-p_track01,47,34,0	duplicate(Tire_1)	Tire3#6	-1,0,0
-p_track01,43,32,0	duplicate(Tire_1)	Tire4#1	-1,0,0
-p_track01,39,32,0	duplicate(Tire_1)	Tire4#2	-1,0,0
-p_track01,35,32,0	duplicate(Tire_1)	Tire4#3	-1,0,0
-p_track01,55,32,0	duplicate(Tire_1)	Tire4#4	-1,0,0
-p_track01,51,32,0	duplicate(Tire_1)	Tire4#5	-1,0,0
-p_track01,47,32,0	duplicate(Tire_1)	Tire4#6	-1,0,0
-p_track01,43,30,0	duplicate(Tire_1)	Tire5#1	-1,0,0
-p_track01,39,30,0	duplicate(Tire_1)	Tire5#2	-1,0,0
-p_track01,35,30,0	duplicate(Tire_1)	Tire5#3	-1,0,0
-p_track01,55,30,0	duplicate(Tire_1)	Tire5#4	-1,0,0
-p_track01,51,30,0	duplicate(Tire_1)	Tire5#5	-1,0,0
-p_track01,47,30,0	duplicate(Tire_1)	Tire5#6	-1,0,0
-p_track01,43,28,0	duplicate(Tire_1)	Tire6#1	-1,0,0
-p_track01,39,28,0	duplicate(Tire_1)	Tire6#2	-1,0,0
-p_track01,35,28,0	duplicate(Tire_1)	Tire6#3	-1,0,0
-p_track01,55,28,0	duplicate(Tire_1)	Tire6#4	-1,0,0
-p_track01,51,28,0	duplicate(Tire_1)	Tire6#5	-1,0,0
-p_track01,47,28,0	duplicate(Tire_1)	Tire6#6	-1,0,0
+p_track01,43,38,0	duplicate(Tire_1)	Tire1#1	FAKE_NPC,0,0
+p_track01,39,38,0	duplicate(Tire_1)	Tire1#2	FAKE_NPC,0,0
+p_track01,35,38,0	duplicate(Tire_1)	Tire1#3	FAKE_NPC,0,0
+p_track01,55,38,0	duplicate(Tire_1)	Tire1#4	FAKE_NPC,0,0
+p_track01,51,38,0	duplicate(Tire_1)	Tire1#5	FAKE_NPC,0,0
+p_track01,47,38,0	duplicate(Tire_1)	Tire1#6	FAKE_NPC,0,0
+p_track01,43,36,0	duplicate(Tire_1)	Tire2#1	FAKE_NPC,0,0
+p_track01,39,36,0	duplicate(Tire_1)	Tire2#2	FAKE_NPC,0,0
+p_track01,35,36,0	duplicate(Tire_1)	Tire2#3	FAKE_NPC,0,0
+p_track01,55,36,0	duplicate(Tire_1)	Tire2#4	FAKE_NPC,0,0
+p_track01,51,36,0	duplicate(Tire_1)	Tire2#5	FAKE_NPC,0,0
+p_track01,47,36,0	duplicate(Tire_1)	Tire2#6	FAKE_NPC,0,0
+p_track01,43,34,0	duplicate(Tire_1)	Tire3#1	FAKE_NPC,0,0
+p_track01,39,34,0	duplicate(Tire_1)	Tire3#2	FAKE_NPC,0,0
+p_track01,35,34,0	duplicate(Tire_1)	Tire3#3	FAKE_NPC,0,0
+p_track01,55,34,0	duplicate(Tire_1)	Tire3#4	FAKE_NPC,0,0
+p_track01,51,34,0	duplicate(Tire_1)	Tire3#5	FAKE_NPC,0,0
+p_track01,47,34,0	duplicate(Tire_1)	Tire3#6	FAKE_NPC,0,0
+p_track01,43,32,0	duplicate(Tire_1)	Tire4#1	FAKE_NPC,0,0
+p_track01,39,32,0	duplicate(Tire_1)	Tire4#2	FAKE_NPC,0,0
+p_track01,35,32,0	duplicate(Tire_1)	Tire4#3	FAKE_NPC,0,0
+p_track01,55,32,0	duplicate(Tire_1)	Tire4#4	FAKE_NPC,0,0
+p_track01,51,32,0	duplicate(Tire_1)	Tire4#5	FAKE_NPC,0,0
+p_track01,47,32,0	duplicate(Tire_1)	Tire4#6	FAKE_NPC,0,0
+p_track01,43,30,0	duplicate(Tire_1)	Tire5#1	FAKE_NPC,0,0
+p_track01,39,30,0	duplicate(Tire_1)	Tire5#2	FAKE_NPC,0,0
+p_track01,35,30,0	duplicate(Tire_1)	Tire5#3	FAKE_NPC,0,0
+p_track01,55,30,0	duplicate(Tire_1)	Tire5#4	FAKE_NPC,0,0
+p_track01,51,30,0	duplicate(Tire_1)	Tire5#5	FAKE_NPC,0,0
+p_track01,47,30,0	duplicate(Tire_1)	Tire5#6	FAKE_NPC,0,0
+p_track01,43,28,0	duplicate(Tire_1)	Tire6#1	FAKE_NPC,0,0
+p_track01,39,28,0	duplicate(Tire_1)	Tire6#2	FAKE_NPC,0,0
+p_track01,35,28,0	duplicate(Tire_1)	Tire6#3	FAKE_NPC,0,0
+p_track01,55,28,0	duplicate(Tire_1)	Tire6#4	FAKE_NPC,0,0
+p_track01,51,28,0	duplicate(Tire_1)	Tire6#5	FAKE_NPC,0,0
+p_track01,47,28,0	duplicate(Tire_1)	Tire6#6	FAKE_NPC,0,0
 
-// Monster Race - Dual Monster Race
-//============================================================
-hugel,47,56,0	script	#race_timer2-1	-1,{
+//== Monster Race - Dual Monster Race ======================
+hugel,47,56,0	script	#race_timer2-1	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer2-1";
+OnInit:
 	$@mon_time_2_1 = 2;
 	initnpctimer;
-	end;
-
-OnDisable:
-	disablenpc "#race_timer2-1";
-	stopnpctimer;
 	end;
 
 OnTimer10000:
@@ -1022,8 +995,8 @@ OnTimer30000:
 	mapannounce "hugel","The Dual Monster Race Arena has just opened.",bc_map,"0xffb6c1";
 	$@mon_time_2_1 = 1;
 	donpcevent "#race_timer2-2::OnEnable";
-	enablenpc "Ticket Helper#2";
 	donpcevent "TrapGlobal#race02::OnEnable";
+	enablenpc "Ticket Helper#2";
 	end;
 
 OnTimer90000:
@@ -1045,27 +1018,16 @@ OnTimer272000:
 OnTimer330000:
 	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,"0xffb6c1";
 	$@mon_time_2_1 = 0;
-	donpcevent "#race_timer2-1::OnDisable";
+	disablenpc "#race_timer2-1";
 	stopnpctimer;
-	end;
-	
-OnInit:
-	enablenpc "#race_timer2-1";
-	$@mon_time_2_1 = 2;
-	initnpctimer;
 	end;
 }
 
-p_track02,42,23,0	script	#race_timer2-2	-1,{
+p_track02,42,23,0	script	#race_timer2-2	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer2-2";
 	$@mon_time_2_2 = 0;
 	initnpctimer;
-	end;
-
-OnDisable:
-	disablenpc "#race_timer2-2";
-	stopnpctimer;
 	end;
 
 OnTimer5000:
@@ -1095,8 +1057,6 @@ OnTimer242000:
 OnTimer300000:
 	mapannounce "p_track02","The Monster Race is starting now. Good luck, everybody!",bc_map,"0x87ceeb";
 	$@mon_time_2_2 = 1;
-	$@mon_race_2_1 = 0;
-	$@mon_race_2_2 = 0;
 	disablenpc "Ticket Helper#2";
 	donpcevent "#poring1::OnEnable";
 	donpcevent "#lunatic1::OnEnable";
@@ -1105,27 +1065,19 @@ OnTimer300000:
 	donpcevent "#deviruchi1::OnEnable";
 	donpcevent "#baphomet1::OnEnable";
 	stopnpctimer;
+	disablenpc "#race_timer2-2";
 	end;
-	
+
 OnInit:
 	disablenpc "#race_timer2-2";
 	$@mon_time_2_2 = 0;
 	end;
 }
 
-p_track02,80,43,0	script	#race_timer2-3	-1,{
-OnInit:
-	disablenpc "#race_timer2-3";
-	end;
-
+p_track02,80,43,0	script	#race_timer2-3	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer2-3";
 	initnpctimer;
-	end;
-
-OnDisable:
-	disablenpc "#race_timer2-3";
-	stopnpctimer;
 	end;
 
 OnTimer3000:
@@ -1172,10 +1124,11 @@ OnTimer300000:
 	mapwarp "p_track02","hugel",63,73;
 	disablenpc "Medal Distributor#medal";
 	donpcevent "#race_timer2-1::OnEnable";
+	stopnpctimer;
+OnInit:
 	$@mon_race_2_1 = 0;
 	$@mon_race_2_2 = 0;
-	donpcevent "#race_timer2-3::OnDisable";
-	stopnpctimer;
+	disablenpc "#race_timer2-3";
 	end;
 }
 
@@ -1187,7 +1140,7 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 	mes "the village of Hugel!";
 	mes "How may I help you?";
 	next;
-	if (select("Monster Race Info:Enter Monster Race") == 1) {
+	if (select("Monster Race Info", "Enter Monster Race") == 1) {
 		mes "[Eckar Erenes]";
 		mes "Monster Races originated from";
 		mes "simple children's games in which";
@@ -1241,14 +1194,14 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 	mes "Would you like to wager";
 	mes "on a Dual Monster Race?";
 	next;
-	if (select("Yes, please.:No, thanks.") == 2) {
+	if (select("Yes, please.", "No, thanks.") == 2) {
 		mes "[Eckar Erenes]";
 		mes "Very well. I hope that";
 		mes "you enjoy your time here";
 		mes "in the Monster Race Arena~";
 		close;
 	}
-	if (!checkweight(909,700)) {
+	if (!checkweight(Jellopy,700)) {
 		mes "[Eckar Erenes]";
 		mes "Hmm... You're toting";
 		mes "too many things with you";
@@ -1266,13 +1219,13 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 		mes "2,000 zeny entrance fee. ";
 		close;
 	}
-	if (countitem(7514)) {
+	if (countitem(Monster_Ticket)) {
 		mes "[Eckar Erenes]";
 		mes "Hm? What are you doing";
 		mes "with an expired Racing Ticket?";
 		mes "Well, I better get rid of it for you before it can get mixed up";
 		mes "with your new Racing Ticket.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 		next;
 		if ($@mon_time_2_1 == 1) {
 			mes "[Eckar Erenes]";
@@ -1320,14 +1273,14 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 			close;
 		}
 	}
-	if (!$@mon_time_2_1 || !$@mon_time_2_2) {
+	if (!$@mon_time_2_2) {
 		mes "[Eckar Erenes]";
 		mes "Right now, a Monster Race";
 		mes "is in progress. It's too late to place a wager, but if you'd like";
 		mes "to watch, the fee is 500 zeny";
 		mes "for spectators. Would you like to enter the Monster Race Arena?";
 		next;
-		if (select("Enter:Cancel") == 2) {
+		if (select("Enter", "Cancel") == 2) {
 			mes "[Eckar Erenes]";
 			mes "Alright, then. If you'd like";
 			mes "to wager on a monster";
@@ -1372,7 +1325,7 @@ OnDisable:
 }
 
 p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
-	if (!checkweight(908,200)) {
+	if (!checkweight(Spawn,200)) {
 		mes "[Ticket Helper]";
 		mes "Welcome to the";
 		mes "Monster Race Arena.";
@@ -1398,10 +1351,10 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 		mes "got any questions, or if you";
 		mes "want to place your wager.";
 		next;
-		switch(select("Check Monster Status:Wager on Race:Monster Race?:Cancel")) {
+		switch(select("Check Monster Status", "Wager on Race", "Monster Race?", "Cancel")) {
 		case 1:
 			for (.@i = 1; .@i <= 6; ++.@i)
-				mes "Monster "+.@i+" [^CC6600Luck^000000: " + getd("$@mon_r02_Luk"+.@i) + "] [^EE0000HP^000000: " + getd("$@mon_r02_tire"+.@i) + "]";
+				mes "Monster "+.@i+" [^CC6600Luck^000000: " + $@mon_r02_luk[.@i] + "] [^EE0000HP^000000: " + $@mon_r02_tire[.@i] + "]";
 			close;
 		case 2:
 			mes "[Ticket Helper]";
@@ -1418,26 +1371,27 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 			mes "of the monsters that";
 			mes "will win this race.";
 			next;
-			while (1) {
-				.@m$ = "";
+			while (true) {
+				.@list$ = "";
 				for (.@i = 1; .@i <= 6; ++.@i)
-					.@m$ += ((.@i != .@m1)?"Monster "+.@i:"")+":";
-				.@m = select (.@m$);
+					.@list$ += (.@i != .@m1 ? "Monster " + .@i:"") + ":";
+				.@m = select (.@list$);
 				switch (.@m) {
-					case 1: setarray .@w$, "a friendly","Poring type monster"; break;
-					case 2: setarray .@w$, "an adorable","Lunatic type monster"; break;
-					case 3: setarray .@w$, "a darling","Savage Babe monster"; break;
-					case 4: setarray .@w$, "a gentle baby","Desert Wolf monster"; break;
-					case 5: setarray .@w$, "a small, yet","demonic, Deviruchi"; break;
-					case 6: setarray .@w$, "a naughty","Baphomet Jr. monster"; break;
+					case 1: setarray .@string$, "a friendly","Poring type monster"; break;
+					case 2: setarray .@string$, "an adorable","Lunatic type monster"; break;
+					case 3: setarray .@string$, "a darling","Savage Babe monster"; break;
+					case 4: setarray .@string$, "a gentle baby","Desert Wolf monster"; break;
+					case 5: setarray .@string$, "a small, yet","demonic, Deviruchi"; break;
+					case 6: setarray .@string$, "a naughty","Baphomet Jr. monster"; break;
 				}
 				mes "[Ticket Helper]";
 				mes "You've chosen";
-				mes "^0000FFMonster "+.@m+"^000000, "+.@w$[0];
-				mes .@w$[1]+".";
+				mes "^0000FFMonster "+.@m+"^000000, "+.@string$[0];
+				mes .@string$[1]+".";
 				mes "Are you sure you want";
 				mes "to choose this monster?";
-				if (select("Yes:No") == 2) {
+				next;
+				if (select("Yes", "No") == 2) {
 					mes "[Ticket Helper]";
 					mes "You have canceled";
 					mes "your wager. Okay,";
@@ -1446,7 +1400,6 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 					mes "checking the monsters first?";
 					close;
 				}
-				next;
 				if (!.@m1) {
 					mes "[Ticket Helper]";
 					mes "Now, please make";
@@ -1456,28 +1409,27 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 					mes "1st or 2nd in this race.";
 					next;
 					.@m1 = .@m;
-				} else {
-					if (!$@mon_time_2_2) {
-						mes "[Ticket Helper]";
-						mes "You've wagered on";
-						mes "^0000FFMonster "+.@m1+"^000000 and ^0000FFMonster "+.@m+"^000000";
-						mes "to win this race. Good luck!";
-						mes "I really hope that the odds";
-						mes "work out in your favor~";
-						emotion e_kis;
-						monster_race_2_1 = .@m1;
-						monster_race_2_2 = .@m;
-						getitem 7514,1; //Monster_Ticket
-						close;
-					} else {
-						mes "[Ticket Helper]";
-						mes "I'm very sorry, but a";
-						mes "monster race is underway.";
-						mes "Please wait, and then place";
-						mes "your wager for the next race.";
-						close;
-					}
+					continue;
 				}
+				if ($@mon_time_2_2 != 0) {
+					mes "[Ticket Helper]";
+					mes "I'm very sorry, but a";
+					mes "monster race is underway.";
+					mes "Please wait, and then place";
+					mes "your wager for the next race.";
+					close;
+				}
+				mes "[Ticket Helper]";
+				mes "You've wagered on";
+				mes "^0000FFMonster "+.@m1+"^000000 and ^0000FFMonster "+.@m+"^000000";
+				mes "to win this race. Good luck!";
+				mes "I really hope that the odds";
+				mes "work out in your favor~";
+				emotion e_kis;
+				monster_race_2_1 = .@m1;
+				monster_race_2_2 = .@m;
+				getitem Monster_Ticket,1;
+				close;
 			}
 		case 3:
 			mes "[Ticket Helper]";
@@ -1535,7 +1487,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 			close;
 		}
 	} else {
-		if (countitem(7514)) {
+		if (countitem(Monster_Ticket)) {
 			mes "[Ticket Helper]";
 			mes "You've wagered on";
 			mes "^0000FFMonster " + monster_race_2_1 + "^000000 and ^0000FFMonster " + monster_race_2_2 + "^000000";
@@ -1564,7 +1516,7 @@ p_track02,39,49,3	script	Game Guide#double	4_F_RACING,{
 	mes "Monster Race Arena.";
 	mes "How can I help you?";
 	next;
-	switch(select("Monster Race Info:Wager Info:Ticket Redemption Info")) {
+	switch(select("Monster Race Info", "Wager Info", "Ticket Redemption Info")) {
 	case 1:
 		mes "[Game Guide]";
 		mes "Monster Races originated from";
@@ -1657,7 +1609,7 @@ p_track02,39,49,3	script	Game Guide#double	4_F_RACING,{
 }
 
 p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
-	if (!checkweight(909,20)) {
+	if (!checkweight(Jellopy,20)) {
 		mes "[Medal Distributor]";
 		mes "I'm sorry, but I can't";
 		mes "reward you with any medals";
@@ -1673,7 +1625,7 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 	mes "your game ticket here for";
 	mes "some Prize Medals.";
 	next;
-	if (!countitem(7514)) {
+	if (!countitem(Monster_Ticket)) {
 		mes "[Medal Distributor]";
 		mes "Please remember that you can";
 		mes "only exchange winning Game";
@@ -1700,7 +1652,7 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 		mes "like to exchange your winning";
 		mes "Racing Ticket for Prize Medals?";
 		next;
-		if (select("Yes, please.:No, thanks.") == 1) {
+		if (select("Yes, please.", "No, thanks.") == 1) {
 			mes "[Medal Distributor]";
 			mes "Okay, everything looks good,";
 			mes "so here's your Prize Medals~";
@@ -1708,10 +1660,10 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 			mes "medals for items, please";
 			mes "visit Wayne in Hugel. We hope";
 			mes "you enjoyed the Monster Race~";
-			delitem 7514,1; //Monster_Ticket
+			delitem Monster_Ticket,1;
 			monster_race_2_1 = 7;
 			monster_race_2_2 = 7;
-			getitem 7515,15; //Marvelous_Medal
+			getitem Marvelous_Medal,15;
 			close;
 		}
 		mes "[Medal Distributor]";
@@ -1743,7 +1695,7 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 		mes "you get lucky next time~";
 		close;
 	}
-		
+
 OnInit:
 	disablenpc "Medal Distributor#medal";
 	end;
@@ -1763,7 +1715,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 	mes "you outside. Would you like";
 	mes "to leave the arena right now?";
 	next;
-	if (select("Yes:No") == 2) {
+	if (select("Yes", "No") == 2) {
 		mes "[Exit Guide]";
 		mes "Alright, then.";
 		mes "Just let me know";
@@ -1771,7 +1723,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 		mes "ready to leave.";
 		close;
 	}
-	if (!countitem(7514)) {
+	if (!countitem(Monster_Ticket)) {
 		mes "[Exit Guide]";
 		mes "Thank you for";
 		mes "your patronage, and";
@@ -1785,7 +1737,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 		mes "Thank you for your patronage,";
 		mes "and I hope you enjoy your time";
 		mes "here in the Monster Race Arena.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 	}
 	monster_race_2_1 = 0;
 	monster_race_2_2 = 0;
@@ -1794,34 +1746,29 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 	end;
 }
 
--	script	mob1#main	-1,{
+-	script	mob1#main	FAKE_NPC,{
 	function	MN;
 OnEnable:
-	enablenpc strnpcinfo(0);
-	setarray .@n[1], 1725,1726,1727,1728,1730,1729;
-	getmapxy(.@m$,.@x,.@y,1);
-	.@i = MN;
-	monster "p_track02",58,.@y,"Monster "+.@i,.@n[.@i],1,strnpcinfo(0)+"::OnMyMobDead";
-	end;
-
-OnDisable:
-	killmonster "p_track02",strnpcinfo(0)+"::OnMyMobDead";
-	disablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
+	setarray .@mob[1], R_PORING,R_LUNATIC,R_SAVAGE_BABE,R_DESERT_WOLF_B,R_DEVIRUCHI,R_BAPHOMET_;
+	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC);
+	.@num = MN();
+	monster "p_track02",58,.@y,"Monster "+.@num,.@mob[.@num],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
 OnTouchNPC:
-	.@i = MN;
+	.@i = MN();
 	if (!$@mon_race_2_1) {
 		emotion e_lv;
 		specialeffect EF_MVP;
 		mapannounce "p_track02","Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
-		$@mon_race_2_1 = 1;
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		$@mon_race_2_1 = .@i;
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	} else {
 		emotion e_lv;
 		specialeffect EF_MVP;
 		mapannounce "p_track02","The race is over! Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
-		$@mon_race_2_2 = 1;
+		$@mon_race_2_2 = .@i;
 		donpcevent "#poring1::OnDisable";
 		donpcevent "#lunatic1::OnDisable";
 		donpcevent "#savagebebe1::OnDisable";
@@ -1836,20 +1783,26 @@ OnTouchNPC:
 
 OnMyMobDead:
 	end;
-	
+
+OnDisable:
+	killmonster "p_track02",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
+	end;
+
+OnInit:
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "main")
+		disablenpc strnpcinfo(NPC_NAME);
+	end;
+
 	function	MN	{
 		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
 		for (.@i = 1; .@i <= getarraysize(.@n$); ++.@i) {
-			if (compare(strnpcinfo(0),.@n$[.@i]))
+			if (compare(strnpcinfo(NPC_NAME),.@n$[.@i]))
 				break;
 		}
 		return .@i;
 	}
 
-OnInit:
-	if (compare(strnpcinfo(0),"main")) end;
-	disablenpc strnpcinfo(0);
-	end;
 }
 p_track02,30,38,0	duplicate(mob1#main)	#poring1	HIDDEN_WARP_NPC,0,0
 p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	HIDDEN_WARP_NPC,0,0
@@ -1858,65 +1811,55 @@ p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	HIDDEN_WARP_NPC,0,0
 p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	HIDDEN_WARP_NPC,0,0
 p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,0,0
 
-p_track02,19,48,0	script	TrapGlobal#race02	-1,{
+p_track02,19,48,0	script	TrapGlobal#race02	FAKE_NPC,{
 OnEnable:
 	enablenpc "TrapGlobal#race02";
-	for (.@i = 1; .@i <= 6; ++.@i)
-		enablenpc "starting#race02_"+.@i;
-	.@c = 1;
-	while (.@c <= 6) {
-		setd ".@line_"+.@c,rand(1,70);
-		if (getd(".@line_"+.@c) <= 10) {
-			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
+	for (.@c = 1; .@c <= 6; ++.@c) {
+		.@line = rand(1,70);
+		enablenpc "starting#race02_"+.@c;
+		enablenpc "Tire#race02_"+.@c+"_1";
+		if (.@line <= 10) {
+			.@tired = rand(50,60);
 			enablenpc "Luk#race02_"+.@c+"_5";
 			enablenpc "Luk#race02_"+.@c+"_6";
-			setd ".@tired_"+.@c,rand(50,60);
-			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			enablenpc "Tire#race02_"+.@c+"_1";
-		} else if (getd(".@line_"+.@c) <= 30) {
-			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
+		} else if (.@line <= 30) {
+			.@tired = rand(40,60);
 			enablenpc "Luk#race02_"+.@c+"_5";
-			setd ".@tired_"+.@c,rand(40,60);
-			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			enablenpc "Tire#race02_"+.@c+"_1";
-			if (getd(".@tired_"+.@c) < 50) enablenpc "Tire#race02_"+.@c+"_2";
-		} else if (getd(".@line_"+.@c) <= 40) {
-			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
+			if (.@tired < 50)
+				enablenpc "Tire#race02_"+.@c+"_2";
+		} else if (.@line <= 40) {
+			.@tired = rand(30,50);
 			enablenpc "Luk#race02_"+.@c+"_1";
-			setd ".@tired_"+.@c,rand(30,50);
-			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			enablenpc "Tire#race02_"+.@c+"_1";
 			enablenpc "Tire#race02_"+.@c+"_2";
-			if (getd(".@tired_"+.@c) < 40) enablenpc "Tire#race02_"+.@c+"_3";
-		} else if (getd(".@line_"+.@c) <= 50) {
-			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
+			if (.@tired < 40)
+				enablenpc "Tire#race02_"+.@c+"_3";
+		} else if (.@line <= 50) {
+			.@tired = rand(20,40);
 			enablenpc "Luk#race02_"+.@c+"_1";
 			enablenpc "Luk#race02_"+.@c+"_2";
-			setd ".@tired_"+.@c,rand(20,40);
-			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			for (.@i = 1; .@i <= 3; ++.@i)
-				enablenpc "Tire#race02_"+.@c+"_"+.@i;
-			if (getd(".@tired_"+.@c) < 30) enablenpc "Tire#race02_"+.@c+"_4";
-		} else if (getd(".@line_"+.@c) <= 60) {
-			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
+			enablenpc "Tire#race02_"+.@c+"_2";
+			enablenpc "Tire#race02_"+.@c+"_3";
+			if (.@tired < 30)
+				enablenpc "Tire#race02_"+.@c+"_4";
+		} else if (.@line <= 60) {
+			.@tired = rand(10,30);
 			for (.@i = 1; .@i <= 3; ++.@i)
 				enablenpc "Luk#race02_"+.@c+"_"+.@i;
-			setd ".@tired_"+.@c,rand(10,30);
-			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			for (.@i = 1; .@i <= 4; ++.@i)
+			for (.@i = 2; .@i <= 4; ++.@i)
 				enablenpc "Tire#race02_"+.@c+"_"+.@i;
-			if (getd(".@tired_"+.@c) < 20) enablenpc "Tire#race02_"+.@c+"_5";
-		}	else if (getd(".@line_"+.@c) <= 70) {
-			setd "$@mon_r02_luk"+.@c,getd(".@line_"+.@c);
+			if (.@tired < 20)
+				enablenpc "Tire#race02_"+.@c+"_5";
+		} else if (.@line <= 70) {
+			.@tired = rand(0,20);
 			for (.@i = 1; .@i <= 4; ++.@i)
 				enablenpc "Luk#race02_"+.@c+"_"+.@i;
-			setd ".@tired_"+.@c,rand(0,20);
-			setd "$@mon_r02_tire"+.@c,getd(".@tired_"+.@c);
-			for (.@i = 1; .@i <= 5; ++.@i)
+			for (.@i = 2; .@i <= 5; ++.@i)
 				enablenpc "Tire#race02_"+.@c+"_"+.@i;
-			if (getd(".@tired_"+.@c) < 10) enablenpc "Tire#race02_"+.@c+"_6";
+			if (.@tired < 10)
+				enablenpc "Tire#race02_"+.@c+"_6";
 		}
-		++.@c;
+		$@mon_r02_luk[.@c] = .@line;
+		$@mon_r02_tire[.@c] = .@tired;
 	}
 	end;
 
@@ -1925,24 +1868,16 @@ OnDisable:
 	for (.@i = 1; .@i <= 6; ++.@i)
 		donpcevent "starting#race02_"+.@i+"::OnDisable";
 	end;
-	
+
 OnInit:
 	for (.@i = 1; .@i <= 6; ++.@i) {
-		setd "$@mon_r02_luk"+.@i,0;
-		setd "$@mon_r02_tire"+.@i,0;
+		$@mon_r02_luk[.@i] = 0;
+		$@mon_r02_tire[.@i] = 0;
 	}
 	end;
 }
 
--	script	starting_2	-1,{
-OnDisable:
-	disablenpc strnpcinfo(0);
-	for(.@i = 1; .@i<7; ++.@i)
-		disablenpc "Luk#"+strnpcinfo(2)+"_"+.@i;
-	for(.@i = 1; .@i<7; ++.@i)
-		disablenpc "Tire#"+strnpcinfo(2)+"_"+.@i;
-	end;
-
+-	script	starting_2	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 11) .@speed = 60;
@@ -1957,96 +1892,103 @@ OnTouchNPC:
 	else .@speed = 150;
 	sc_start SC_WALKSPEED,5000,.@speed;
 	end;
-	
+
+OnDisable:
+	for(.@i = 1; .@i < 7; ++.@i) {
+		disablenpc "Luk#"+strnpcinfo(NPC_NAME_HIDDEN)+"_"+.@i;
+		disablenpc "Tire#"+strnpcinfo(NPC_NAME_HIDDEN)+"_"+.@i;
+	}
+	disablenpc strnpcinfo(NPC_NAME);
+	end;
+
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
-p_track02,56,38,0	duplicate(starting_2)	starting#race02_1	-1,0,0
-p_track02,56,36,0	duplicate(starting_2)	starting#race02_2	-1,0,0
-p_track02,56,34,0	duplicate(starting_2)	starting#race02_3	-1,0,0
-p_track02,56,32,0	duplicate(starting_2)	starting#race02_4	-1,0,0
-p_track02,56,30,0	duplicate(starting_2)	starting#race02_5	-1,0,0
-p_track02,56,28,0	duplicate(starting_2)	starting#race02_6	-1,0,0
+p_track02,56,38,0	duplicate(starting_2)	starting#race02_1	FAKE_NPC,0,0
+p_track02,56,36,0	duplicate(starting_2)	starting#race02_2	FAKE_NPC,0,0
+p_track02,56,34,0	duplicate(starting_2)	starting#race02_3	FAKE_NPC,0,0
+p_track02,56,32,0	duplicate(starting_2)	starting#race02_4	FAKE_NPC,0,0
+p_track02,56,30,0	duplicate(starting_2)	starting#race02_5	FAKE_NPC,0,0
+p_track02,56,28,0	duplicate(starting_2)	starting#race02_6	FAKE_NPC,0,0
 
-p_track02,33,38,0	duplicate(Luk_1)	Luk#race02_1_1	-1,0,0
-p_track02,37,38,0	duplicate(Luk_1)	Luk#race02_1_2	-1,0,0
-p_track02,53,38,0	duplicate(Luk_1)	Luk#race02_1_3	-1,0,0
-p_track02,45,38,0	duplicate(Luk_1)	Luk#race02_1_4	-1,0,0
-p_track02,33,36,0	duplicate(Luk_1)	Luk#race02_2_1	-1,0,0
-p_track02,37,36,0	duplicate(Luk_1)	Luk#race02_2_2	-1,0,0
-p_track02,53,36,0	duplicate(Luk_1)	Luk#race02_2_3	-1,0,0
-p_track02,45,36,0	duplicate(Luk_1)	Luk#race02_2_4	-1,0,0
-p_track02,33,34,0	duplicate(Luk_1)	Luk#race02_3_1	-1,0,0
-p_track02,37,34,0	duplicate(Luk_1)	Luk#race02_3_2	-1,0,0
-p_track02,53,34,0	duplicate(Luk_1)	Luk#race02_3_3	-1,0,0
-p_track02,45,34,0	duplicate(Luk_1)	Luk#race02_3_4	-1,0,0
-p_track02,33,32,0	duplicate(Luk_1)	Luk#race02_4_1	-1,0,0
-p_track02,37,32,0	duplicate(Luk_1)	Luk#race02_4_2	-1,0,0
-p_track02,53,32,0	duplicate(Luk_1)	Luk#race02_4_3	-1,0,0
-p_track02,45,32,0	duplicate(Luk_1)	Luk#race02_4_4	-1,0,0
-p_track02,33,30,0	duplicate(Luk_1)	Luk#race02_5_1	-1,0,0
-p_track02,37,30,0	duplicate(Luk_1)	Luk#race02_5_2	-1,0,0
-p_track02,53,30,0	duplicate(Luk_1)	Luk#race02_5_3	-1,0,0
-p_track02,45,30,0	duplicate(Luk_1)	Luk#race02_5_4	-1,0,0
-p_track02,33,28,0	duplicate(Luk_1)	Luk#race02_6_1	-1,0,0
-p_track02,37,28,0	duplicate(Luk_1)	Luk#race02_6_2	-1,0,0
-p_track02,53,28,0	duplicate(Luk_1)	Luk#race02_6_3	-1,0,0
-p_track02,45,28,0	duplicate(Luk_1)	Luk#race02_6_4	-1,0,0
+p_track02,33,38,0	duplicate(Luk_1)	Luk#race02_1_1	FAKE_NPC,0,0
+p_track02,37,38,0	duplicate(Luk_1)	Luk#race02_1_2	FAKE_NPC,0,0
+p_track02,53,38,0	duplicate(Luk_1)	Luk#race02_1_3	FAKE_NPC,0,0
+p_track02,45,38,0	duplicate(Luk_1)	Luk#race02_1_4	FAKE_NPC,0,0
+p_track02,33,36,0	duplicate(Luk_1)	Luk#race02_2_1	FAKE_NPC,0,0
+p_track02,37,36,0	duplicate(Luk_1)	Luk#race02_2_2	FAKE_NPC,0,0
+p_track02,53,36,0	duplicate(Luk_1)	Luk#race02_2_3	FAKE_NPC,0,0
+p_track02,45,36,0	duplicate(Luk_1)	Luk#race02_2_4	FAKE_NPC,0,0
+p_track02,33,34,0	duplicate(Luk_1)	Luk#race02_3_1	FAKE_NPC,0,0
+p_track02,37,34,0	duplicate(Luk_1)	Luk#race02_3_2	FAKE_NPC,0,0
+p_track02,53,34,0	duplicate(Luk_1)	Luk#race02_3_3	FAKE_NPC,0,0
+p_track02,45,34,0	duplicate(Luk_1)	Luk#race02_3_4	FAKE_NPC,0,0
+p_track02,33,32,0	duplicate(Luk_1)	Luk#race02_4_1	FAKE_NPC,0,0
+p_track02,37,32,0	duplicate(Luk_1)	Luk#race02_4_2	FAKE_NPC,0,0
+p_track02,53,32,0	duplicate(Luk_1)	Luk#race02_4_3	FAKE_NPC,0,0
+p_track02,45,32,0	duplicate(Luk_1)	Luk#race02_4_4	FAKE_NPC,0,0
+p_track02,33,30,0	duplicate(Luk_1)	Luk#race02_5_1	FAKE_NPC,0,0
+p_track02,37,30,0	duplicate(Luk_1)	Luk#race02_5_2	FAKE_NPC,0,0
+p_track02,53,30,0	duplicate(Luk_1)	Luk#race02_5_3	FAKE_NPC,0,0
+p_track02,45,30,0	duplicate(Luk_1)	Luk#race02_5_4	FAKE_NPC,0,0
+p_track02,33,28,0	duplicate(Luk_1)	Luk#race02_6_1	FAKE_NPC,0,0
+p_track02,37,28,0	duplicate(Luk_1)	Luk#race02_6_2	FAKE_NPC,0,0
+p_track02,53,28,0	duplicate(Luk_1)	Luk#race02_6_3	FAKE_NPC,0,0
+p_track02,45,28,0	duplicate(Luk_1)	Luk#race02_6_4	FAKE_NPC,0,0
 
-p_track02,49,38,0	duplicate(Luk_2)	Luk#race02_1_5	-1,0,0
-p_track02,41,38,0	duplicate(Luk_2)	Luk#race02_1_6	-1,0,0
-p_track02,49,36,0	duplicate(Luk_2)	Luk#race02_2_5	-1,0,0
-p_track02,41,36,0	duplicate(Luk_2)	Luk#race02_2_6	-1,0,0
-p_track02,49,34,0	duplicate(Luk_2)	Luk#race02_3_5	-1,0,0
-p_track02,41,34,0	duplicate(Luk_2)	Luk#race02_3_6	-1,0,0
-p_track02,49,32,0	duplicate(Luk_2)	Luk#race02_4_5	-1,0,0
-p_track02,41,32,0	duplicate(Luk_2)	Luk#race02_4_6	-1,0,0
-p_track02,49,30,0	duplicate(Luk_2)	Luk#race02_5_5	-1,0,0
-p_track02,41,30,0	duplicate(Luk_2)	Luk#race02_5_6	-1,0,0
-p_track02,49,28,0	duplicate(Luk_2)	Luk#race02_6_5	-1,0,0
-p_track02,41,28,0	duplicate(Luk_2)	Luk#race02_6_6	-1,0,0
+p_track02,49,38,0	duplicate(Luk_2)	Luk#race02_1_5	FAKE_NPC,0,0
+p_track02,41,38,0	duplicate(Luk_2)	Luk#race02_1_6	FAKE_NPC,0,0
+p_track02,49,36,0	duplicate(Luk_2)	Luk#race02_2_5	FAKE_NPC,0,0
+p_track02,41,36,0	duplicate(Luk_2)	Luk#race02_2_6	FAKE_NPC,0,0
+p_track02,49,34,0	duplicate(Luk_2)	Luk#race02_3_5	FAKE_NPC,0,0
+p_track02,41,34,0	duplicate(Luk_2)	Luk#race02_3_6	FAKE_NPC,0,0
+p_track02,49,32,0	duplicate(Luk_2)	Luk#race02_4_5	FAKE_NPC,0,0
+p_track02,41,32,0	duplicate(Luk_2)	Luk#race02_4_6	FAKE_NPC,0,0
+p_track02,49,30,0	duplicate(Luk_2)	Luk#race02_5_5	FAKE_NPC,0,0
+p_track02,41,30,0	duplicate(Luk_2)	Luk#race02_5_6	FAKE_NPC,0,0
+p_track02,49,28,0	duplicate(Luk_2)	Luk#race02_6_5	FAKE_NPC,0,0
+p_track02,41,28,0	duplicate(Luk_2)	Luk#race02_6_6	FAKE_NPC,0,0
 
-p_track02,43,38,0	duplicate(Tire_1)	Tire#race02_1_1	-1,0,0
-p_track02,39,38,0	duplicate(Tire_1)	Tire#race02_1_2	-1,0,0
-p_track02,35,38,0	duplicate(Tire_1)	Tire#race02_1_3	-1,0,0
-p_track02,55,38,0	duplicate(Tire_1)	Tire#race02_1_4	-1,0,0
-p_track02,51,38,0	duplicate(Tire_1)	Tire#race02_1_5	-1,0,0
-p_track02,47,38,0	duplicate(Tire_1)	Tire#race02_1_6	-1,0,0
-p_track02,43,36,0	duplicate(Tire_1)	Tire#race02_2_1	-1,0,0
-p_track02,39,36,0	duplicate(Tire_1)	Tire#race02_2_2	-1,0,0
-p_track02,35,36,0	duplicate(Tire_1)	Tire#race02_2_3	-1,0,0
-p_track02,55,36,0	duplicate(Tire_1)	Tire#race02_2_4	-1,0,0
-p_track02,51,36,0	duplicate(Tire_1)	Tire#race02_2_5	-1,0,0
-p_track02,47,36,0	duplicate(Tire_1)	Tire#race02_2_6	-1,0,0
-p_track02,43,34,0	duplicate(Tire_1)	Tire#race02_3_1	-1,0,0
-p_track02,39,34,0	duplicate(Tire_1)	Tire#race02_3_2	-1,0,0
-p_track02,35,34,0	duplicate(Tire_1)	Tire#race02_3_3	-1,0,0
-p_track02,55,34,0	duplicate(Tire_1)	Tire#race02_3_4	-1,0,0
-p_track02,51,34,0	duplicate(Tire_1)	Tire#race02_3_5	-1,0,0
-p_track02,47,34,0	duplicate(Tire_1)	Tire#race02_3_6	-1,0,0
-p_track02,43,32,0	duplicate(Tire_1)	Tire#race02_4_1	-1,0,0
-p_track02,39,32,0	duplicate(Tire_1)	Tire#race02_4_2	-1,0,0
-p_track02,35,32,0	duplicate(Tire_1)	Tire#race02_4_3	-1,0,0
-p_track02,55,32,0	duplicate(Tire_1)	Tire#race02_4_4	-1,0,0
-p_track02,51,32,0	duplicate(Tire_1)	Tire#race02_4_5	-1,0,0
-p_track02,47,32,0	duplicate(Tire_1)	Tire#race02_4_6	-1,0,0
-p_track02,43,30,0	duplicate(Tire_1)	Tire#race02_5_1	-1,0,0
-p_track02,39,30,0	duplicate(Tire_1)	Tire#race02_5_2	-1,0,0
-p_track02,35,30,0	duplicate(Tire_1)	Tire#race02_5_3	-1,0,0
-p_track02,55,30,0	duplicate(Tire_1)	Tire#race02_5_4	-1,0,0
-p_track02,51,30,0	duplicate(Tire_1)	Tire#race02_5_5	-1,0,0
-p_track02,47,30,0	duplicate(Tire_1)	Tire#race02_5_6	-1,0,0
-p_track02,43,28,0	duplicate(Tire_1)	Tire#race02_6_1	-1,0,0
-p_track02,39,28,0	duplicate(Tire_1)	Tire#race02_6_2	-1,0,0
-p_track02,35,28,0	duplicate(Tire_1)	Tire#race02_6_3	-1,0,0
-p_track02,55,28,0	duplicate(Tire_1)	Tire#race02_6_4	-1,0,0
-p_track02,51,28,0	duplicate(Tire_1)	Tire#race02_6_5	-1,0,0
-p_track02,47,28,0	duplicate(Tire_1)	Tire#race02_6_6	-1,0,0
+p_track02,43,38,0	duplicate(Tire_1)	Tire#race02_1_1	FAKE_NPC,0,0
+p_track02,39,38,0	duplicate(Tire_1)	Tire#race02_1_2	FAKE_NPC,0,0
+p_track02,35,38,0	duplicate(Tire_1)	Tire#race02_1_3	FAKE_NPC,0,0
+p_track02,55,38,0	duplicate(Tire_1)	Tire#race02_1_4	FAKE_NPC,0,0
+p_track02,51,38,0	duplicate(Tire_1)	Tire#race02_1_5	FAKE_NPC,0,0
+p_track02,47,38,0	duplicate(Tire_1)	Tire#race02_1_6	FAKE_NPC,0,0
+p_track02,43,36,0	duplicate(Tire_1)	Tire#race02_2_1	FAKE_NPC,0,0
+p_track02,39,36,0	duplicate(Tire_1)	Tire#race02_2_2	FAKE_NPC,0,0
+p_track02,35,36,0	duplicate(Tire_1)	Tire#race02_2_3	FAKE_NPC,0,0
+p_track02,55,36,0	duplicate(Tire_1)	Tire#race02_2_4	FAKE_NPC,0,0
+p_track02,51,36,0	duplicate(Tire_1)	Tire#race02_2_5	FAKE_NPC,0,0
+p_track02,47,36,0	duplicate(Tire_1)	Tire#race02_2_6	FAKE_NPC,0,0
+p_track02,43,34,0	duplicate(Tire_1)	Tire#race02_3_1	FAKE_NPC,0,0
+p_track02,39,34,0	duplicate(Tire_1)	Tire#race02_3_2	FAKE_NPC,0,0
+p_track02,35,34,0	duplicate(Tire_1)	Tire#race02_3_3	FAKE_NPC,0,0
+p_track02,55,34,0	duplicate(Tire_1)	Tire#race02_3_4	FAKE_NPC,0,0
+p_track02,51,34,0	duplicate(Tire_1)	Tire#race02_3_5	FAKE_NPC,0,0
+p_track02,47,34,0	duplicate(Tire_1)	Tire#race02_3_6	FAKE_NPC,0,0
+p_track02,43,32,0	duplicate(Tire_1)	Tire#race02_4_1	FAKE_NPC,0,0
+p_track02,39,32,0	duplicate(Tire_1)	Tire#race02_4_2	FAKE_NPC,0,0
+p_track02,35,32,0	duplicate(Tire_1)	Tire#race02_4_3	FAKE_NPC,0,0
+p_track02,55,32,0	duplicate(Tire_1)	Tire#race02_4_4	FAKE_NPC,0,0
+p_track02,51,32,0	duplicate(Tire_1)	Tire#race02_4_5	FAKE_NPC,0,0
+p_track02,47,32,0	duplicate(Tire_1)	Tire#race02_4_6	FAKE_NPC,0,0
+p_track02,43,30,0	duplicate(Tire_1)	Tire#race02_5_1	FAKE_NPC,0,0
+p_track02,39,30,0	duplicate(Tire_1)	Tire#race02_5_2	FAKE_NPC,0,0
+p_track02,35,30,0	duplicate(Tire_1)	Tire#race02_5_3	FAKE_NPC,0,0
+p_track02,55,30,0	duplicate(Tire_1)	Tire#race02_5_4	FAKE_NPC,0,0
+p_track02,51,30,0	duplicate(Tire_1)	Tire#race02_5_5	FAKE_NPC,0,0
+p_track02,47,30,0	duplicate(Tire_1)	Tire#race02_5_6	FAKE_NPC,0,0
+p_track02,43,28,0	duplicate(Tire_1)	Tire#race02_6_1	FAKE_NPC,0,0
+p_track02,39,28,0	duplicate(Tire_1)	Tire#race02_6_2	FAKE_NPC,0,0
+p_track02,35,28,0	duplicate(Tire_1)	Tire#race02_6_3	FAKE_NPC,0,0
+p_track02,55,28,0	duplicate(Tire_1)	Tire#race02_6_4	FAKE_NPC,0,0
+p_track02,51,28,0	duplicate(Tire_1)	Tire#race02_6_5	FAKE_NPC,0,0
+p_track02,47,28,0	duplicate(Tire_1)	Tire#race02_6_6	FAKE_NPC,0,0
 
-// NPCs for Redeeming Prize Medals (Einbroch and Hugel)
-//============================================================
+//== NPCs for Redeeming Prize Medals (Einbroch and Hugel) ==
 ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 	if (!ein_medal01) {
 		mes "[Ei'felle]";
@@ -2081,8 +2023,8 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 		mes "but so far, none of us have";
 		mes "been able to get any medals...";
 		next;
-		if (countitem(7515)) {
-			mes "["+ strcharinfo(0) +"]";
+		if (countitem(Marvelous_Medal)) {
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Oh! Are you talking";
 			mes "about the medals that";
 			mes "they give as rewards in";
@@ -2117,7 +2059,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 		mes "research. Still, I need more";
 		mes "and more of them everyday...";
 		next;
-		if (countitem(7515)) {
+		if (countitem(Marvelous_Medal)) {
 			mes "[Ei'felle]";
 			mes "The other Blacksmith";
 			mes "Guildsmen are doing their";
@@ -2138,7 +2080,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 		mes "you for your kindness...";
 		close;
 	}
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "[Ei'felle]";
 		mes "Goodness, you're carrying";
 		mes "so many things with you!";
@@ -2165,8 +2107,8 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			mes "receive this Glittering Jacket";
 			mes "as my way of repaying you?";
 			next;
-			if (select("Accept:Wait for Further Development") == 1) {
-				callsub S_BonusReward,500,2319;
+			if (select("Accept", "Wait for Further Development") == 1) {
+				callsub S_BonusReward,500,Glittering_Clothes;
 				end;
 			}
 			mes "[Ei'felle]";
@@ -2193,7 +2135,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			mes "medals until I can develop";
 			mes "something else for you.";
 			next;
-			switch(select("Accept Armor:Can I have something else?:Wait for Further Development")) {
+			switch(select("Accept Armor", "Can I have something else?", "Wait for Further Development")) {
 				case 1:
 					mes "[Ei'felle]";
 					mes "I can manufacture one set of";
@@ -2202,11 +2144,11 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 					mes "property. Which property would";
 					mes "you like your armor to have?";
 					next;
-					switch(select("Fire Property:Earth Property:Wind Property:Water Property")) {
-						case 1: callsub S_BonusReward,1000,2345; end;
-						case 2: callsub S_BonusReward,1000,2351; end;
-						case 3: callsub S_BonusReward,1000,2349; end;
-						case 4: callsub S_BonusReward,1000,2347; end;
+					switch(select("Fire Property", "Earth Property", "Wind Property", "Water Property")) {
+						case 1: callsub S_BonusReward,1000,Flame_Sprits_Armor_; end;
+						case 2: callsub S_BonusReward,1000,Earth_Sprits_Armor_; end;
+						case 3: callsub S_BonusReward,1000,Wind_Sprits_Armor_; end;
+						case 4: callsub S_BonusReward,1000,Water_Sprits_Armor_; end;
 					}
 				case 2:
 					mes "[Ei'felle]";
@@ -2231,7 +2173,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 					break;
 			}
 		}
-		if (countitem(7515)) {
+		if (countitem(Marvelous_Medal)) {
 			mes "[Ei'felle]";
 			mes "The other Blacksmith";
 			mes "Guildsmen are doing their";
@@ -2266,7 +2208,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 		mes "as my way of repaying you for";
 		mes "your help. What do you think?";
 		next;
-		if (select("Yes, I want a Level 4 Weapon.:Can I have something else?") == 2) {
+		if (select("Yes, I want a Level 4 Weapon.", "Can I have something else?") == 2) {
 			mes "[Ei'felle]";
 			mes "Something else?";
 			mes "Oh, alright then, would";
@@ -2275,7 +2217,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			mes "elemental Armor? Please go";
 			mes "ahead and make your choice~";
 			next;
-			switch (select("Glittering Jacket:Fire Property Armor:Earth Property Armor:Wind Property Armor:Water Property Armor:Cancel")) {
+			switch (select("Glittering Jacket", "Fire Property Armor", "Earth Property Armor", "Wind Property Armor", "Water Property Armor", "Cancel")) {
 				case 1: callsub S_BonusReward,500,2319; end;
 				case 2: callsub S_BonusReward,1000,2345; end;
 				case 3: callsub S_BonusReward,1000,2351; end;
@@ -2284,76 +2226,76 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 				case 6: close;
 			}
 		}
-		setarray .@m$, "Dagger","One Handed Sword","Two Handed Sword","Axe","Mace","Bow","Staff","Book","Spear","Katar","Knuckle","Whip","Musical Instrument";
-		.@m = select (implode(.@m$,":")) - 1;
+		setarray .@type$, "Dagger","One Handed Sword","Two Handed Sword","Axe","Mace","Bow","Staff","Book","Spear","Katar","Knuckle","Whip","Musical Instrument";
+		.@m = select(implode(.@type$,":")) - 1;
 		mes "[Ei'felle]";
 		mes "So you'd like to have a";
-		mes .@m$[.@m]+"? Please choose";
+		mes .@type$[.@m]+"? Please choose";
 		mes "which Level 4 Weapon";
 		mes "that you want me to create.";
 		next;
 		switch (.@m) {
 			case 0:
-				setarray .@mw$, "Ginnungagap:Grimtooth:Dragon Killer:Mail Breaker:Bazerald:Sword Breaker:Ice Pick:Sucsamad:Kitchen Knife:Azoth:Exorciser:Assassin Dagger:Moonlight Dagger:Weeder Knife:Cursed Dagger:Dagger of Counter:Combat Knife:Fortune Sword";
-				setarray .@mw, 13002,1237,13001,1225,1231,1224,1230,1236,1229,1235,1233,1232,1234,1227,1241,1242,1228,1223;
+				.@weapon$ = "Ginnungagap:Grimtooth:Dragon Killer:Mail Breaker:Bazerald:Sword Breaker:Ice Pick:Sucsamad:Kitchen Knife:Azoth:Exorciser:Assassin Dagger:Moonlight Dagger:Weeder Knife:Cursed Dagger:Dagger of Counter:Combat Knife:Fortune Sword";
+				setarray .@weapon_id, 13002,1237,13001,1225,1231,1224,1230,1236,1229,1235,1233,1232,1234,1227,1241,1242,1228,1223;
 				break;
 			case 1:
-				setarray .@mw$, "Nagan:Immaterial Sword:Mysteltainn:Byeollungum:Star Dust Blade:Caesar's Sword:Ice Falchion:Excalibur:Edge:Cutlus:Solar Sword:Tirfing:Fireblend";
-				setarray .@mw, 1130,1141,1138,1140,1148,1134,1131,1137,1132,1135,1136,1139,1133;
+				.@weapon$ = "Nagan:Immaterial Sword:Mysteltainn:Byeollungum:Star Dust Blade:Caesar's Sword:Ice Falchion:Excalibur:Edge:Cutlus:Solar Sword:Tirfing:Fireblend";
+				setarray .@weapon_id, 1130,1141,1138,1140,1148,1134,1131,1137,1132,1135,1136,1139,1133;
 				break;
 			case 2:
-				setarray .@mw$, "Dragon Slayer:Masamune:Muramasa:Schweizersabel:Executioner:Zweihander:Katzbalger";
-				setarray .@mw, 1166,1165,1164,1167,1169,1168,1170;
+				.@weapon$ = "Dragon Slayer:Masamune:Muramasa:Schweizersabel:Executioner:Zweihander:Katzbalger";
+				setarray .@weapon_id, 1166,1165,1164,1167,1169,1168,1170;
 				break;
 			case 3:
-				setarray .@mw$, "Great Axe:Guillotine:Light Epsilon:Bloody Axe:Sabbath:Slaughter:Cleaver:Tomahawk";
-				setarray .@mw, 1364,1369,1366,1363,1365,1367,1305,1368;
+				.@weapon$ = "Great Axe:Guillotine:Light Epsilon:Bloody Axe:Sabbath:Slaughter:Cleaver:Tomahawk";
+				setarray .@weapon_id, 1364,1369,1366,1363,1365,1367,1305,1368;
 				break;
 			case 4:
-				setarray .@mw$, "Golden Mace:Grand Cross:Long Mace:Spike:Slash:Quadrille";
-				setarray .@mw, 1524,1528,1525,1523,1526,1527;
+				.@weapon$ = "Golden Mace:Grand Cross:Long Mace:Spike:Slash:Quadrille";
+				setarray .@weapon_id, 1524,1528,1525,1523,1526,1527;
 				break;
 			case 5:
-				setarray .@mw$, "Roguemaster's Bow:Dragon Wing:Rudra's Bow:Ballista";
-				setarray .@mw, 1719,1724,1720,1722;
+				.@weapon$ = "Roguemaster's Bow:Dragon Wing:Rudra's Bow:Ballista";
+				setarray .@weapon_id, 1719,1724,1720,1722;
 				break;
 			case 6:
-				setarray .@mw$, "Wing Staff:Wizardry Staff";
-				setarray .@mw, 1616,1473;
+				.@weapon$ = "Wing Staff:Wizardry Staff";
+				setarray .@weapon_id, 1616,1473;
 			case 7:
-				setarray .@mw$, "Legacy of Dragon:Book of the Apocalypse:Girl's Diary:Hardcover Book";
-				setarray .@mw, 1559,1557,1558,1561;
+				.@weapon$ = "Legacy of Dragon:Book of the Apocalypse:Girl's Diary:Hardcover Book";
+				setarray .@weapon_id, 1559,1557,1558,1561;
 				break;
 			case 8:
-				setarray .@mw$, "Gae Bolg:Gelerdria:Gungnir:Skewer:Longinus's Spear:Brionac:Bill Guisarme:Zephyrus:Crescent Scythe:Tjungkuletti:Hellfire";
-				setarray .@mw, 1474,1414,1413,1415,1469,1470,1467,1468,1466,1416,1471;
+				.@weapon$ = "Gae Bolg:Gelerdria:Gungnir:Skewer:Longinus's Spear:Brionac:Bill Guisarme:Zephyrus:Crescent Scythe:Tjungkuletti:Hellfire";
+				setarray .@weapon_id, 1474,1414,1413,1415,1469,1470,1467,1468,1466,1416,1471;
 				break;
 			case 9:
-				setarray .@mw$, "Infiltrator:Bloody Roar:Unholy Touch";
-				setarray .@mw, 1261,1265,1263;
+				.@weapon$ = "Infiltrator:Bloody Roar:Unholy Touch";
+				setarray .@weapon_id, 1261,1265,1263;
 				break;
 			case 10:
-				setarray .@mw$, "Hatii Claw:Berserk:Kaiser Knuckle";
-				setarray .@mw, 1815,1814,1813;
+				.@weapon$ = "Hatii Claw:Berserk:Kaiser Knuckle";
+				setarray .@weapon_id, 1815,1814,1813;
 				break;
 			case 11:
-				setarray .@mw$, "Lariat:Rapture Rose:Blade Whip:Chemeti:Queen's Whip";
-				setarray .@mw, 1962,1963,1969,1964,1970;
+				.@weapon$ = "Lariat:Rapture Rose:Blade Whip:Chemeti:Queen's Whip";
+				setarray .@weapon_id, 1962,1963,1969,1964,1970;
 				break;
 			case 12:
-				setarray .@mw$, "Oriental Lute:Electric Guitar";
-				setarray .@mw, 1918,1913;
+				.@weapon$ = "Oriental Lute:Electric Guitar";
+				setarray .@weapon_id, 1918,1913;
 				break;
 		}
-		.@j = select (.@mw$+":Cancel") - 1;
-		explode(.@mw$,.@mw$,":");
-		if (.@j == getarraysize(.@mw$)) close;
-		callsub S_BonusReward,1500,.@mw[.@j];
+		.@choice = select (.@weapon$+":Cancel") - 1;
+		if (.@choice == getarraysize(.@weapon_id))
+			close;
+		callsub S_BonusReward,1500,.@weapon_id[.@choice];
 		end;
 	}
-	
+
 S_Reward:
-	if (select("Sure:No") == 2) {
+	if (select("Sure", "No") == 2) {
 		mes "[Ei'felle]";
 		mes "Oh, alright...";
 		mes "Still, I really need";
@@ -2371,7 +2313,7 @@ S_Reward:
 	mes "shall I repay you for giving me";
 	mes "some of your Prize Medals?";
 	next;
-	switch(select("Base Experience:Job Experience:No, I'm just glad to help.:How's your research progressing?")) {
+	switch(select("Base Experience", "Job Experience", "No, I'm just glad to help.", "How's your research progressing?")) {
 		case 1:
 			mes "[Ei'felle]";
 			mes "You just want to improve";
@@ -2394,7 +2336,7 @@ S_Reward:
 			mes "*Phew* How's that?";
 			mes "Now do you see the";
 			mes "power of hope?";
-			delitem 7515,1; //Marvelous_Medal
+			delitem Marvelous_Medal,1;
 			if (RENEWAL_EXP) {
 				if (BaseLevel < 21) getexp 110,0;
 				else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 280,0;
@@ -2456,7 +2398,7 @@ S_Reward:
 			mes "Your mind will work on";
 			mes "whatever you feed it.";
 			mes "Placebos and psychosomatic symptoms-- it all ties together.";
-			delitem 7515,1; //Marvelous_Medal
+			delitem Marvelous_Medal,1;
 			if (RENEWAL_EXP) {
 				if (Class == Job_Novice) {
 					getexp 0,15;
@@ -2548,7 +2490,7 @@ S_Reward:
 			mes "you anything in return, so...";
 			mes "Think of something. Quick.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Er, just use the medals";
 			mes "to further your manufacturing";
 			mes "research, and then you can";
@@ -2571,7 +2513,7 @@ S_Reward:
 			mes "medals do you think you";
 			mes "can give me right now?";
 			next;
-			switch(select("Take them all.:How about this much?:No, I changed my mind.")) {
+			switch(select("Take them all.", "How about this much?", "No, I changed my mind.")) {
 			case 1:
 				mes "[Ei'felle]";
 				mes "Th-thank you!";
@@ -2580,8 +2522,8 @@ S_Reward:
 				mes "advance my research,";
 				mes "and I promise to repay";
 				mes "you as soon as I can!";
-				.@medals = countitem(7515);
-				delitem 7515,.@medals; //Marvelous_Medal
+				.@medals = countitem(Marvelous_Medal);
+				delitem Marvelous_Medal,.@medals;
 				ein_medal01 += .@medals;
 				close;
 			case 2:
@@ -2592,9 +2534,9 @@ S_Reward:
 				mes "Please don't enter any";
 				mes "number greater than 100.";
 				next;
-				while(1) {
-					input .@input;
-					if (!.@input) {
+				while (true) {
+					input(.@input);
+					if (.@input <= 0) {
 						mes "[Ei'felle]";
 						mes "Aw, so you've decided";
 						mes "to cancel? Well, it's your";
@@ -2602,7 +2544,8 @@ S_Reward:
 						mes "disappointed. Please come";
 						mes "back if you change your mind...";
 						close;
-					} else if (.@input < 1 || .@input > 100) {
+					}
+					if (.@input > 100) {
 						mes "[Ei'felle]";
 						mes "Remember, you can only";
 						mes "enter a number from 1 to 100.";
@@ -2610,9 +2553,11 @@ S_Reward:
 						mes "medals, then perhaps you";
 						mes "should just give them all to me~";
 						next;
-					} else break;
+						continue;
+					}
+					break;
 				}
-				if (countitem(7515) < .@input) {
+				if (countitem(Marvelous_Medal) < .@input) {
 					mes "[Ei'felle]";
 					mes "I'm sorry, but I don't";
 					mes "think you have that many";
@@ -2621,18 +2566,17 @@ S_Reward:
 					mes "medals that you actually have.";
 					emotion e_heh;
 					close;
-				} else {
-					mes "[Ei'felle]";
-					mes "Th-thank you!";
-					mes "Thank you so much!";
-					mes "Your help will greatly";
-					mes "advance my research,";
-					mes "and I promise to repay";
-					mes "you as soon as I can!";
-					delitem 7515,.@input; //Marvelous_Medal
-					ein_medal01 += .@input;
-					close;
 				}
+				mes "[Ei'felle]";
+				mes "Th-thank you!";
+				mes "Thank you so much!";
+				mes "Your help will greatly";
+				mes "advance my research,";
+				mes "and I promise to repay";
+				mes "you as soon as I can!";
+				delitem Marvelous_Medal,.@input;
+				ein_medal01 += .@input;
+				close;
 			case 3:
 				mes "[Ei'felle]";
 				mes "Oh, alright...";
@@ -2661,40 +2605,41 @@ S_Reward:
 
 S_BonusReward:
 	mes "[Ei'felle]";
-	if (getarg(1) == 2319) {
+	.@arg1 = getarg(1);
+	if (.@arg1 == 2319) {
 		mes "Do you really want";
-		mes "this "+getitemname(getarg(1))+"?";
+		mes "this "+getitemname(.@arg1)+"?";
 		mes "You may want to forego this";
 		mes "reward in favor of getting";
 		mes "something better later...";
-	} else if ((getarg(1) == 2345) || (getarg(1) == 2347) || (getarg(1) == 2349) || (getarg(1) == 2351)) {
+	} else if (.@arg1 == 2345 || .@arg1 == 2347 || .@arg1 == 2349 || .@arg1 == 2351) {
 		mes "Are you sure that you want";
 		mes "to accept this set of slotted";
-		if (getarg(1) == 2345) mes "Fire property Armor? If you do,";
-		else if (getarg(1) == 2351) mes "Earth property Armor? If you do,";
-		else if (getarg(1) == 2349) mes "Wind property Armor? If you do,";
-		else if (getarg(1) == 2347) mes "Water property Armor? If you do,";
+		if (.@arg1 == 2345) mes "Fire property Armor? If you do,";
+		else if (.@arg1 == 2351) mes "Earth property Armor? If you do,";
+		else if (.@arg1 == 2349) mes "Wind property Armor? If you do,";
+		else if (.@arg1 == 2347) mes "Water property Armor? If you do,";
 		mes "I'll need more medals from you";
 		mes "to make further advancements";
 		mes "in my manufacturing research.";
 	} else {
 		mes "So you wish to have a";
-		mes getitemname(getarg(1))+"? If you choose";
+		mes getitemname(.@arg1)+"? If you choose";
 		mes "to have this Level 4 Weapon,";
 		mes "I'll need to melt many of the";
 		mes "medals that you've donated";
 		mes "to me. Shall we proceed?";
 	}
 	next;
-	if (select("Decline:Accept") == 1) {
-		mes "["+ strcharinfo(0) +"]";
+	if (select("Decline", "Accept") == 1) {
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "W-wait, I changed my";
 		mes "mind. Would it be fine";
 		mes "if I asked you to give";
 		mes "me a reward later?";
 		next;
 		mes "[Ei'felle]";
-		if (!getiteminfo(getarg(1),13)) { //use item level to determine if the item is armor (no weapon level)
+		if (!getiteminfo(.@arg1, ITEMINFO_WLV)) { // use item level to determine if the item is armor (no weapon level)
 			mes "Of course, of course.";
 			mes "Remember, if you donate";
 			mes "more medals to me, then";
@@ -2708,20 +2653,19 @@ S_BonusReward:
 		close;
 	}
 	mes "[Ei'felle]";
-	if (getarg(1) == 2319) {
+	if (.@arg1 == 2319) {
 		mes "Here you are, I trust that";
-		mes "this "+getitemname(getarg(1))+" will";
+		mes "this "+getitemname(.@arg1)+" will";
 		mes "serve you well. Thank you";
 		mes "for your help, and I hope that";
 		mes "you'll continue to donate your";
 		mes "medals for my metal research~";
-	}
-	else if ((getarg(1) == 2345) || (getarg(1) == 2347) || (getarg(1) == 2349) || (getarg(1) == 2351)) {
+	} else if (.@arg1 == 2345 || .@arg1 == 2347 || .@arg1 == 2349 || .@arg1 == 2351) {
 		mes "Great choice! I'm sure";
-		if (getarg(1) == 2345) mes "that this set of slotted Fire";
-		else if (getarg(1) == 2351) mes "that this set of slotted Earth";
-		else if (getarg(1) == 2349) mes "that this set of slotted Wind";
-		else if (getarg(1) == 2347) mes "that this set of slotted Water";
+		if (.@arg1 == 2345) mes "that this set of slotted Fire";
+		else if (.@arg1 == 2351) mes "that this set of slotted Earth";
+		else if (.@arg1 == 2349) mes "that this set of slotted Wind";
+		else if (.@arg1 == 2347) mes "that this set of slotted Water";
 		mes "property Armor will serve you";
 		mes "well. Thank you for your help,";
 		mes "and if you get more medals,";
@@ -2735,12 +2679,12 @@ S_BonusReward:
 		mes "appreciate your continued help~";
 	}
 	ein_medal01 -= getarg(0);
-	getitem getarg(1),1;
+	getitem .@arg1,1;
 	close;
 }
-	
+
 hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "[Wayne]";
 		mes "Hold on a second...";
 		mes "If you want to exchange";
@@ -2763,7 +2707,7 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 	mes "now, with me. As always, the";
 	mes "choice is really up to you.";
 	next;
-	if (select("Prize Medal Exchange:Cancel") == 2) {
+	if (select("Prize Medal Exchange", "Cancel") == 2) {
 		mes "[Wayne]";
 		mes "Well, just keep in mind";
 		mes "that you can always come";
@@ -2781,7 +2725,7 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 		mes "all your effort, you know?";
 		close;
 	}
-	if (!checkweight(909,550)) {
+	if (!checkweight(Jellopy,550)) {
 		mes "[Wayne]";
 		mes "Hold on a second...";
 		mes "If you want to exchange";
@@ -2789,84 +2733,83 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 		mes "you'd better free up more space";
 		mes "in your Inventory first. Why don't you use your Kafra Storage?";
 		close;
-	} else {
+	}
+	mes "[Wayne]";
+	mes "Now, how many Prize Medals";
+	mes "would you like to exchange?";
+	mes "It doesn't take a genius to";
+	mes "figure out that you can get";
+	mes "more valuable items by trading";
+	mes "more Prize Medals at a time.";
+	next;
+	setarray .@pm, 1,3,7,8,16,25,42,59;
+	.@list$ = "";
+	for (.@i = 0; .@i < getarraysize(.@pm); ++.@i)
+		.@list$ += .@pm[.@i] + " Prize medal:";
+	.@m = select(.@list$) - 1;
+	switch (.@m) {
+		case 0:
+			.@items$ = "2 Hinale Leaflets:2 Aloe Leaflets:1 Mastela Fruit:5 Witch Starsands:4 Condensed Red Potions";
+			setarray .@item_array, 520,2,521,2,522,1,1061,5,545,4;
+			break;
+		case 1:
+			.@items$ = "1 Royal Jelly:6 Holy Waters";
+			setarray .@item_array, 526,1,523,6;
+			break;
+		case 2:
+			.@items$ = "1 Cookie Bag:1 First Aid Kit";
+			setarray .@item_array, 12130,1,12110,1;
+			break;
+		case 3:
+			.@items$ = "1 Gift Box";
+			setarray .@item_array, 644,1;
+			break;
+		case 4:
+			.@items$ = "1 Old Blue Box";
+			setarray .@item_array, 603,1;
+			break;
+		case 5:
+			.@items$ = "1 Taming Gift Set";
+			setarray .@item_array, 12105,1;
+			break;
+		case 6:
+			.@items$ = "1 Old Purple Box";
+			setarray .@item_array, 617,1;
+			break;
+		case 7:
+			.@items$ = "1 Poring Box";
+			setarray .@item_array, 12109,1;
+			break;
+	}
+	mes "[Wayne]";
+	mes "Now, please choose";
+	mes "which of the following item";
+	mes "sets that you'd like to receive";
+	mes "in exchange for "+.@pm[.@m]+" Prize Medal."+((getarraysize(.@item_array)<3)?" Well, we have only 1 set, but...":"");
+	next;
+	.@m2 = select(.@items$) - 1;
+	if (countitem(Marvelous_Medal) < .@pm[.@m]) {
 		mes "[Wayne]";
-		mes "Now, how many Prize Medals";
-		mes "would you like to exchange?";
-		mes "It doesn't take a genius to";
-		mes "figure out that you can get";
-		mes "more valuable items by trading";
-		mes "more Prize Medals at a time.";
-		next;
-		setarray .@pm, 1,3,7,8,16,25,42,59;
-		for (.@i = 0; .@i < getarraysize(.@pm); ++.@i)
-			.@m$ += .@pm[.@i] + " Prize medal:";
-		.@m = select (.@m$) - 1;
-		switch (.@m) {
-			case 0:
-				setarray .@mr$, "2 Hinale Leaflets:2 Aloe Leaflets:1 Mastela Fruit:5 Witch Starsands:4 Condensed Red Potions";
-				setarray .@mr, 520,2,521,2,522,1,1061,5,545,4;
-				break;
-			case 1:
-				setarray .@mr$, "1 Royal Jelly:6 Holy Waters";
-				setarray .@mr, 526,1,523,6;
-				break;
-			case 2:
-				setarray .@mr$, "1 Cookie Bag:1 First Aid Kit";
-				setarray .@mr, 12130,1,12110,1;
-				break;
-			case 3:
-				.@mr$ = "1 Gift Box";
-				setarray .@mr, 644,1;
-				break;
-			case 4:
-				.@mr$ = "1 Old Blue Box";
-				setarray .@mr, 603,1;
-				break;
-			case 5:
-				.@mr$ = "1 Taming Gift Set";
-				setarray .@mr, 12105,1;
-				break;
-			case 6:
-				.@mr$ = "1 Old Purple Box";
-				setarray .@mr, 617,1;
-				break;
-			case 7:
-				.@mr$ = "1 Poring Box";
-				setarray .@mr, 12109,1;
-				break;
-		}
-		mes "[Wayne]";
-		mes "Now, please choose";
-		mes "which of the following item";
-		mes "sets that you'd like to receive";
-		mes "in exchange for "+.@pm[.@m]+" Prize Medal."+((getarraysize(.@mr)<3)?" Well, we have only 1 set, but...":"");
-		next;
-		.@m2 = select (.@mr$) - 1;
-		if (countitem(7515) < .@pm[.@m]) {
-			mes "[Wayne]";
-			mes "Hey, you don't have";
-			mes "enough Prize Medals with";
-			mes "you. Go and get some more";
-			mes "if you want to exchange";
-			mes "them with me for anything.";
-			close;
-		}
-		mes "[Wayne]";
-		mes "There you go~";
-		mes "Thanks for using my";
-		mes "service, and I hope that";
-		mes "you come visit me again";
-		mes "soon. Enjoy the monster";
-		mes "races, fair adventurer~";
-		delitem 7515,.@pm[.@m];
-		getitem .@mr[.@m2*2],.@mr[((.@m2*2)+1)];
+		mes "Hey, you don't have";
+		mes "enough Prize Medals with";
+		mes "you. Go and get some more";
+		mes "if you want to exchange";
+		mes "them with me for anything.";
 		close;
 	}
+	mes "[Wayne]";
+	mes "There you go~";
+	mes "Thanks for using my";
+	mes "service, and I hope that";
+	mes "you come visit me again";
+	mes "soon. Enjoy the monster";
+	mes "races, fair adventurer~";
+	delitem Marvelous_Medal,.@pm[.@m];
+	getitem .@item_array[.@m2*2], .@item_array[.@m2*2+1];
+	close;
 }
 
-// Monster Race Affiliated NPCs
-//============================================================
+//== Monster Race Affiliated NPCs ==========================
 airplane,246,47,1	script	Eocatt#decoy01	4_M_OILMAN,{
 	mes "[Eocatt]";
 	mes "There's an old, humble";
@@ -2934,7 +2877,7 @@ p_track02,32,45,5	script	Eccentric Scholar#double	4_M_SAGE_C,{
 	mes "Ah, right, 7, to account for x,";
 	mes "a value representing--";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Excuse me, but";
 	mes "what are you doing?";
 	next;
@@ -3010,7 +2953,7 @@ p_track01,27,47,5	script	Drunkard#single	4_M_YURI,{
 	mes "Hey, you! Which number is";
 	mes "your lucky number? Huh?";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "I, er...";
 	next;
 	mes "[Familiar Drunkard]";
@@ -3073,7 +3016,7 @@ hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
 	mes "Entry NPCs for the Single";
 	mes "and Dual Monster Races.";
 	next;
-	.@select = select("Single Race Entry - ON:Dual Race Entry - ON:Single Race Entry - OFF:Dual Race Entry - OFF");
+	.@select = select("Single Race Entry - ON", "Dual Race Entry - ON", "Single Race Entry - OFF", "Dual Race Entry - OFF");
 	mes "[Monster Race Manager]";
 	mes "Please enter";
 	mes "the password.";
@@ -3083,35 +3026,37 @@ hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
 		mes "[Monster Race Manager]";
 		mes "Error.";
 		close;
-	} else if (.@i == -1) {
+	}
+	if (.@i == -1) {
 		mes "[Monster Race Manager]";
 		mes "Incorrect password.";
 		close;
-	} else if (.@i == 0) {
-		close;
-	} else {
-		mes "[Monster Race Manager]";
-		switch(.@select) {
-		case 1:
-			mes "The Single Monster";
-			mes "Race Entry NPC is ON.";
-			donpcevent "Eckar Ellebird#single::OnEnable";
-			close;
-		case 2:
-			mes "The Dual Monster";
-			mes "Race Entry NPC is ON.";
-			donpcevent "Eckar Erenes#double::OnEnable";
-			close;
-		case 3:
-			mes "The Single Monster";
-			mes "Race Entry NPC is OFF.";
-			donpcevent "Eckar Ellebird#single::OnDisable";
-			close;
-		case 4:
-			mes "The Dual Monster";
-			mes "Race Entry NPC is OFF.";
-			donpcevent "Eckar Erenes#double::OnDisable";
-			close;
-		}
 	}
+	if (.@i == 0) {
+		close;
+	}
+	mes "[Monster Race Manager]";
+	switch(.@select) {
+	case 1:
+		mes "The Single Monster";
+		mes "Race Entry NPC is ON.";
+		donpcevent "Eckar Ellebird#single::OnEnable";
+		close;
+	case 2:
+		mes "The Dual Monster";
+		mes "Race Entry NPC is ON.";
+		donpcevent "Eckar Erenes#double::OnEnable";
+		close;
+	case 3:
+		mes "The Single Monster";
+		mes "Race Entry NPC is OFF.";
+		donpcevent "Eckar Ellebird#single::OnDisable";
+		close;
+	case 4:
+		mes "The Dual Monster";
+		mes "Race Entry NPC is OFF.";
+		donpcevent "Eckar Erenes#double::OnDisable";
+		close;
+	}
+	close;
 }

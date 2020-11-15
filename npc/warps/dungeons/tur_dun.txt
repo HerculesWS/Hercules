@@ -1,16 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Nana
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Turtle Island warp Script
-//===== By: ==================================================
-//= Nana (1.0)
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Turtle Island
-//===== Additional Comments: =================================
-//= 1.0 Split from combined warp file alberta_duns. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-//Turtle Island Warp's
 tur_dun01,154,241,0	warp	ttl01	1,1,tur_dun02,148,264
 tur_dun02,148,268,0	warp	ttl01-1	1,1,tur_dun01,154,237
 tur_dun02,167,19,0	warp	ttl02	1,1,tur_dun03,132,189

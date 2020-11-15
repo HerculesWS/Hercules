@@ -1,15 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) erKURITA
+//= Copyright (C) Lupus
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) massdriller
+//= Copyright (C) Muad_Dib
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ayothaya Town Warps Script
-//===== By: ==================================================
-//= Muad_Dib, L0ne_W0lf (1.0)
-//===== Current Version: =====================================
-//= 1.5a
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Ayothaya
-//===== Additional Comments: =================================
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.5a Cleared up a few misnamed warps. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.5a
+//=========================================================================
 
 ayothaya,130,97,0	warp	ayo_tool1-1	1,1,ayo_in01,43,183
 ayo_in01,46,183,0	warp	ayo_tool1-2	1,1,ayothaya,132,99
@@ -49,12 +75,3 @@ ayothaya,208,283,0	warp	ayo_shrine1-1	1,1,ayo_in02,100,152
 ayo_in02,100,148,0	warp	ayo_shrine1-2	1,1,ayothaya,208,280
 ayothaya,276,176,0	warp	ayo_fild1-1	1,1,ayo_fild01,37,241
 ayo_fild01,32,240,0	warp	ayo_fild1-2	1,1,ayothaya,273,176
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.1 Fixed Armory part by massdriller [Thanks to akusarujin]
-//= 1.2 Revised warps, due to official Ayothaya Town NPC [MasterOfMuppets]
-//= 1.3 Fixed swapped Inn Exits, thanks to Sir_Loon [Lupus]
-//= 1.4 Fixed a warp-back. [erKURITA]
-//============================================================

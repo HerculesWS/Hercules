@@ -1,24 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) KirieZ
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) SinSloth
+//= Copyright (C) Lupus
+//= Copyright (C) Jukka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Swordman Class Tutorial and Job Specific Quest
-//===== By: ==================================================
-//= Fix up by Jukka
-//===== Current Version: =====================================
-//= 1.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Swordman training quest.
-//===== Additional Comments: =================================
-//= 1.0 Fully working
-//= 1.1 optimized [Lupus]
-//= 1.2 Fixed a typo on NPC name. [SinSloth]
-//= 1.3 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.4 Misc. updates. [L0ne_W0lf]
-//= 1.5 Added Renewal Izlude coordinates.
-//= 1.6 Added Pre-Renewal support. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
-// Shurank
-//============================================================
+//== Shurank ===============================================
 izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 	mes "[Shurank]";
 	if(Class == Job_Novice || Class == Job_Baby){
@@ -44,7 +63,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 	if(BaseClass == Job_Swordman && eaclass()&(EAJL_2|EAJL_UPPER|EAJL_THIRD)){
 		mes "From your raiment,";
 		mes "I see that you are";
-		if(Sex)
+		if (Sex == SEX_MALE)
 			mes "a man of the sword.";
 		else
 			mes "a woman of the sword.";
@@ -112,7 +131,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 				getexp 186,0;
 			else
 				getexp 1860,0;
-			getitem 1113,1; //Scimiter
+			getitem Scimiter,1;
 			next;
 			mes "[Shurank]";
 			mes "That is all I have to teach you about Swordman skills. Hopefully, I've been able to clear up anything you haven't understood about your job and skills.";
@@ -167,7 +186,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 		mes "I hope that you make good use of it as you train to become stronger and stronger. Good luck out there.";
 		tu_swordman = 23;
 		completequest 8228;
-		getitem 1113,1; //Scimiter
+		getitem Scimiter,1;
 		close;
 	case 21:
 		mes "Ah, you've returned. I've just received a communique from";
@@ -213,6 +232,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 		mes "Next time, I will tell you more about the Magnum Break skill.";
 		mes "I'll be here when you're ready to learn more.";
 		tu_swordman = 22;
+		changequest 8227,8228;
 		close;
 	case 13:
 		mes "You should leave as soon as possible to meet Dequ'ee in Geffen. You do remember where to find him, don't you?";
@@ -227,8 +247,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "From that gleen of toughness upon your skin, I see now that I was foolish to ask. Well done~";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
+			changequest 8221, 8222;
 			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
@@ -275,8 +294,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			next;
 			mes "[Shurank]";
 			mes "Since you've learned the Endure skill already, I don't think I need to explain it any further. You've done well.";
-			erasequest 8221;
-			setquest 8222;
+			changequest 8221, 8222;
 			tu_swordman = 13;
 			next;
 			mes "[Shurank]";
@@ -292,8 +310,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "From that gleen of toughness upon your skin, I see now that I was foolish to ask. Well done~";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
+			changequest 8221, 8222;
 			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
@@ -357,8 +374,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Since you've learned the Endure skill already, I don't think I need to explain it any further. You've done well.";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
+			changequest 8220, 8222;
 			next;
 			mes "[Shurank]";
 			mes "Ah, once again, I have";
@@ -372,8 +388,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Hm. But judging from the gleen of toughness on your skin, I suppose teaching you about Endure would be a waste of your time. Well done!";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
+			changequest 8220, 8222;
 			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
@@ -398,6 +413,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Ah, I see that you have a fairly good understanding of the Provoke skill. Let me reward you in this small way for your efforts.";
 			tu_swordman = 10;
+			changequest 8219, 8220;
 			if (RENEWAL_EXP)
 				getexp 112,0;
 			else
@@ -415,6 +431,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "an outstanding Swordman.";
 			mes "Here is a small reward...";
 			tu_swordman = 10;
+			changequest 8219, 8220;
 			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
@@ -462,11 +479,13 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Alright, come back to me when you become sufficiently skilled in the use of Provoke. In the meantime, keep training.";
 			tu_swordman = 9;
+			changequest 8218,8219;
 			close;
 		} else if((.@chk_provoke > 4) && (.@chk_provoke < 10)){
 			mes "[Shurank]";
 			mes "Ah, I see that you have a fairly good understanding of the Provoke skill. Let me reward you in this small way for your efforts.";
 			tu_swordman = 10;
+			changequest 8218,8220;
 			if (RENEWAL_EXP)
 				getexp 112,0;
 			else
@@ -484,6 +503,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "an outstanding Swordman.";
 			mes "Here is a small reward...";
 			tu_swordman = 10;
+			changequest 8218,8220;
 			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
@@ -562,13 +582,13 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Now I ask that you train yourself in the use of Provoke. Come back";
 			mes "to me when you have a sufficient understanding of the use of the Provoke skill.";
 			tu_swordman = 9;
-			changequest 8218,8219;
+			changequest 8217,8219;
 			close;
 		} else if((.@chk_provoke > 4) && (.@chk_provoke < 10)){
 			mes "[Shurank]";
 			mes "Ah, I see that you have a fairly good understanding of the Provoke skill. Let me reward you in this small way for your efforts.";
 			tu_swordman = 10;
-			changequest 8219,8220;
+			changequest 8217,8220;
 			if (RENEWAL_EXP)
 				getexp 112,0;
 			else
@@ -586,10 +606,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "an outstanding Swordman.";
 			mes "Here is a small reward...";
 			tu_swordman = 10;
-			completequest 8218;
-			completequest 8219;
-			completequest 8220;
-			setquest 8221;
+			changequest 8217,8220;
 			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
@@ -706,6 +723,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 		}
 		mes "[Shurank]";
 		mes "By now, I believe that you know enough about the Increase HP Recovery skill. Next time, I shall teach you what I know about the Provoke skill.";
+		changequest 8214, 8215;
 		close;
 	case 3:
 		mes "If you want to be";
@@ -725,11 +743,12 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
+			changequest 8213, 8214;
 			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		} else {
 			mes "[Shurank]";
@@ -763,6 +782,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a little reward for all of your hard work. I hope you realize the importance of using Bash as";
 			mes "you grow stronger.";
 			tu_swordman = 3;
+			changequest 8212, 8213;
 			if (RENEWAL_EXP)
 				getexp 83,0;
 			else
@@ -777,11 +797,12 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
+			changequest 8212, 8214;
 			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		} else {
 			mes "[Shurank]";
@@ -815,6 +836,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Still, for your training efforts, let me give you a humble reward. But remember, we still have more";
 			mes "of the fundamentals to cover!";
 			tu_swordman = 2;
+			changequest 8211, 8212;
 			if (RENEWAL_EXP)
 				getexp 58,0;
 			else
@@ -847,7 +869,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "For your efforts and patience, I offer you this small reward. Please take it and grow even stronger...";
 			tu_swordman = 3;
-			setquest 8211;
+			changequest 8211, 8213;
 			if (RENEWAL_EXP)
 				getexp 83,0;
 			else
@@ -865,11 +887,12 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
+			changequest 8211, 8214;
 			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		} else {
 			mes "[Shurank]";
@@ -928,7 +951,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Still, for your training efforts, let me give you a humble reward. But remember, we still have more";
 			mes "of the fundamentals to cover!";
 			tu_swordman = 2;
-			changequest 8211,8212;
+			setquest 8212;
 			if (RENEWAL_EXP)
 				getexp 58,0;
 			else
@@ -954,7 +977,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Still, for your training efforts, let me give you a humble reward. But remember, we still have more";
 			mes "of the fundamentals to cover!";
 			tu_swordman = 3;
-			changequest 8212,8213;
+			setquest 8213;
 			if (RENEWAL_EXP)
 				getexp 83,0;
 			else
@@ -972,15 +995,12 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
-			completequest 8211;
-			completequest 8212;
-			completequest 8213;
 			setquest 8214;
 			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		}
 	}
@@ -989,8 +1009,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 	close;
 }
 
-// Daqu'ee
-//============================================================
+//== Daqu'ee ===============================================
 geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 	if(BaseJob == Job_Novice){
 		mes "[Dequ'ee]";
@@ -1106,7 +1125,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "This is a complex transposition cipher in which we remove one person's code from the rest of them. So who do you think is";
 		mes "the murderer?";
 		next;
-		switch(select("Hans:Bankley:Geil:Muetro")) {
+		switch(select("Hans", "Bankley", "Geil", "Muetro")) {
 		case 1:
 			mes "[Dequ'ee]";
 			mes "Hans...?";
@@ -1166,7 +1185,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "[Dequ'ee]";
 		mes "Hm, you guess the order and I'll try to formulate a cryptanalysis based on your guess.";
 		next;
-		switch(select("Muetro:Hans:Geil:Bankley")) {
+		switch(select("Muetro", "Hans", "Geil", "Bankley")) {
 		case 1:
 			mes "[Dequ'ee]";
 			mes "Okay, Muetro's";
@@ -1175,7 +1194,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Hans:Geil:Bankley")) {
+			switch(select("Hans", "Geil", "Bankley")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Hans...?";
@@ -1184,7 +1203,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Geil:Bankley")) {
+				switch(select("Geil", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Muetro, Hans,";
@@ -1236,7 +1255,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Bankley")) {
+				switch(select("Hans", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Muetro, Geil,";
@@ -1288,7 +1307,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Geil")) {
+				switch(select("Hans", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Muetro, Bankley,";
@@ -1342,7 +1361,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Muetro:Geil:Bankley")) {
+			switch(select("Muetro", "Geil", "Bankley")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Muestro's...?";
@@ -1351,7 +1370,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Geil:Bankley")) {
+				switch(select("Geil", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Hans, Muetro,";
@@ -1403,7 +1422,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Bankley")) {
+				switch(select("Muetro", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Hans, Geil,";
@@ -1455,7 +1474,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Geil")) {
+				switch(select("Muetro", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Hans, Bankley,";
@@ -1509,7 +1528,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Muetro:Hans:Bankley")) {
+			switch(select("Muetro", "Hans", "Bankley")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Muestro's...?";
@@ -1518,7 +1537,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Bankley")) {
+				switch(select("Hans", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Geil, Muetro,";
@@ -1577,7 +1596,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Bankley")) {
+				switch(select("Muetro", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Geil, Hans,";
@@ -1629,7 +1648,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Hans")) {
+				switch(select("Muetro", "Hans")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Geil, Bankley,";
@@ -1683,7 +1702,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Muetro:Hans:Geil")) {
+			switch(select("Muetro", "Hans", "Geil")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Muestro's...?";
@@ -1692,7 +1711,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Geil")) {
+				switch(select("Hans", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Bankley, Muetro,";
@@ -1744,7 +1763,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Geil")) {
+				switch(select("Muetro", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Bankley, Hans,";
@@ -1794,7 +1813,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Hans")) {
+				switch(select("Muetro", "Hans")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Bankley, Geil,";
@@ -1869,69 +1888,8 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "from all the suspects? First,";
 		mes "tell me the code that Hans had.";
 		next;
-		input .@inputstr$;
-		if(.@inputstr$ == .@hans$){
-			mes "[Dequ'ee]";
-			mes "victkleyundncem?";
-			mes "That's certainly";
-			mes "strange sounding.";
-			mes "Now, tell me Bankley's.";
-			next;
-			input .@inputstr$;
-			if(.@inputstr$ == .@bang$){
-				mes "[Dequ'ee]";
-				mes "hekdlfiDrindkelsd..";
-				mes "What the hell is that...?";
-				mes "It's certainly cryptic.";
-				mes "What about Muetro's?";
-				next;
-				input .@inputstr$;
-				if(.@inputstr$ == .@mutr$){
-					mes "[Dequ'ee]";
-					mes "ConBanfoevidehi.";
-					mes "This is going to";
-					mes "be tough to figure";
-					mes "out. Alright, now";
-					mes "tell me Geil's.";
-					next;
-					input .@inputstr$;
-					if(.@inputstr$ == .@geil$){
-						mes "[Dequ'ee]";
-						mes "TheisWesomeof...";
-						mes "Alright, great.";
-						mes "Now all we have to";
-						mes "do is figure out what";
-						mes "all of this means.";
-						next;
-						mes "[Dequ'ee]";
-						mes "This is going to";
-						mes "be really difficult.";
-						mes "Do you have any ideas?";
-						mes "We have to figure this";
-						mes "out, it's the only clue";
-						mes "that we have...";
-						tu_swordman = 16;
-						changequest 8223,8224;
-						close;
-					} else {
-						mes "[Dequ'ee]";
-						mes "...Are you sure that you heard";
-						mes "him right? Why don't you go check it out again?";
-						close;
-					}
-				} else {
-					mes "[Dequ'ee]";
-					mes "...Are you sure that you heard";
-					mes "him right? Why don't you go check it out again?";
-					close;
-				}
-			} else {
-				mes "[Dequ'ee]";
-				mes "...Are you sure that you heard";
-				mes "him right? Why don't you go check it out again?";
-				close;
-			}
-		} else {
+		input(.@inputstr$);
+		if(.@inputstr$ != .@hans$) {
 			mes "[Dequ'ee]";
 			mes "Are you sure that's right?";
 			mes "No, no, I don't think it is.";
@@ -1939,6 +1897,63 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "if you need to?";
 			close;
 		}
+		mes "[Dequ'ee]";
+		mes "victkleyundncem?";
+		mes "That's certainly";
+		mes "strange sounding.";
+		mes "Now, tell me Bankley's.";
+		next;
+		input(.@inputstr$);
+		if(.@inputstr$ != .@bang$) {
+			mes "[Dequ'ee]";
+			mes "...Are you sure that you heard";
+			mes "him right? Why don't you go check it out again?";
+			close;
+		}
+		mes "[Dequ'ee]";
+		mes "hekdlfiDrindkelsd..";
+		mes "What the hell is that...?";
+		mes "It's certainly cryptic.";
+		mes "What about Muetro's?";
+		next;
+		input(.@inputstr$);
+		if(.@inputstr$ != .@mutr$) {
+			mes "[Dequ'ee]";
+			mes "...Are you sure that you heard";
+			mes "him right? Why don't you go check it out again?";
+			close;
+		}
+		mes "[Dequ'ee]";
+		mes "ConBanfoevidehi.";
+		mes "This is going to";
+		mes "be tough to figure";
+		mes "out. Alright, now";
+		mes "tell me Geil's.";
+		next;
+		input(.@inputstr$);
+		if(.@inputstr$ != .@geil$) {
+			mes "[Dequ'ee]";
+			mes "...Are you sure that you heard";
+			mes "him right? Why don't you go check it out again?";
+			close;
+		}
+		mes "[Dequ'ee]";
+		mes "TheisWesomeof...";
+		mes "Alright, great.";
+		mes "Now all we have to";
+		mes "do is figure out what";
+		mes "all of this means.";
+		next;
+		mes "[Dequ'ee]";
+		mes "This is going to";
+		mes "be really difficult.";
+		mes "Do you have any ideas?";
+		mes "We have to figure this";
+		mes "out, it's the only clue";
+		mes "that we have...";
+		tu_swordman = 16;
+		changequest 8223,8224;
+		close;
 	}
 	if(tu_swordman == 14){
 		mes "[Dequ'ee]";
@@ -2026,22 +2041,22 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "What message does";
 		mes "Shurank have for me?";
 		next;
-		switch(select("Killer...:Murderer...")) {
+		switch(select("Killer...", "Murderer...")) {
 		case 1:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What happened";
 			mes "to the killer?";
 			next;
-			switch(select("Who he is...:Who is behind...")) {
+			switch(select("Who he is...", "Who is behind...")) {
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you find";
 				mes "out who he is?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2057,7 +2072,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;
@@ -2074,14 +2089,14 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					close;
 				}
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you figure out";
 				mes "who's behind all this?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2097,7 +2112,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;
@@ -2116,20 +2131,20 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			}
 			break;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What happened";
 			mes "to the murderer?";
 			next;
-			switch(select("Who he is...:Who is behind...")) {
+			switch(select("Who he is...", "Who is behind...")) {
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you find";
 				mes "out who he is?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2148,7 +2163,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;
@@ -2194,14 +2209,14 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					close;
 				}
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you figure out";
 				mes "who's behind all this?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2219,7 +2234,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;
@@ -2248,8 +2263,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 	close;
 }
 
-// Geil
-//============================================================
+//== Geil ==================================================
 morocc_in,51,101,3	script	Geil	4_M_ORIENT02,{
 	mes "[Geil]";
 	if(tu_swordman == 15){
@@ -2299,8 +2313,7 @@ morocc_in,51,101,3	script	Geil	4_M_ORIENT02,{
 	close;
 }
 
-// Meutro
-//============================================================
+//== Meutro ================================================
 morocc,82,292,5	script	Muetro	4_M_02,{
 	mes "[Muetro]";
 	if(tu_swordman == 15){
@@ -2340,8 +2353,7 @@ morocc,82,292,5	script	Muetro	4_M_02,{
 	close;
 }
 
-// Hans
-//============================================================
+//== Hans ==================================================
 morocc,240,72,3	script	Hans	4_M_04,{
 	mes "[Hans]";
 	if(tu_swordman == 15){
@@ -2398,8 +2410,7 @@ morocc,240,72,3	script	Hans	4_M_04,{
 	close;
 }
 
-// Bankley
-//============================================================
+//== Bankley ===============================================
 morocc_in,12,156,3	script	Bankley	4W_M_01,{
 	if(tu_swordman > 19){
 		mes "^3355FFBankley had a pitiable";

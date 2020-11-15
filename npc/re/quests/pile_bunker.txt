@@ -1,23 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) JayPee Mateo
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Pile Bunker Quest
-//===== By: ==================================================
-//= JayPee Mateo
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= A Pile Bunker Quest.
+//================= Current Version =======================================
 //= 2.2
-//===== Description: =========================================
-//= 1.0 A Pile Bunker quest based on iRO WiKi. [JayPee Mateo]
-//= 2.0 Rewrited the Script a little so it looks a bit better. [Masao]
-//= 2.1 Switched to official script, coded by Gennosuke Kouga. [Euphy]
-//= 2.2 Updated to match the official script. [Euphy]
-//============================================================
+//=========================================================================
 
 yuno,179,174,4	script	Gomer	4_M_REPAIR,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "[Gomer]";
 		mes "You are carrying so much. Drop off some of your luggage and come back to me.";
 		close;
 	}
-	if (countitem(1549)) {
+	if (countitem(Pilebuncker)) {
 		mes "[Gomer]";
 		mes "So how's that Pilebuncker working out for you?";
 		close;
@@ -47,7 +70,7 @@ yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 	mes "[Gomer]";
 	mes "That makes me feel good and I am about to make a new gear. I want you to help me. What do you say?";
 	next;
-	switch(select("I am not that interested.:What are you going to make?:Where do you get the materials?:I brought the materials.")) {
+	switch(select("I am not that interested.", "What are you going to make?", "Where do you get the materials?", "I brought the materials.")) {
 	case 1:
 		mes "[Gomer]";
 		mes "Nothing I can do";
@@ -82,7 +105,7 @@ yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 		mes "Lastly, finding a Brocca is very hard, but you should be able to do something about it. Haha, go get it!";
 		close;
 	case 4:
-		if (countitem(999) < 200 || countitem(7325) < 30 || countitem(1415) < 1) {
+		if (countitem(Steel) < 200 || countitem(Tube) < 30 || countitem(Skewer) < 1) {
 			mes "[Gomer]";
 			mes "You haven't brought all of the materials that I asked for.";
 			next;
@@ -109,11 +132,11 @@ yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 			next;
 			mes "[Gomer]";
 			mes "Oh, and it turns out that I didn't need all that Steel after all. So here, take most of it back.";
-			delitem 999,50; //Steel
-			delitem 7325,30; //Tube
-			delitem 1415,1; //Skewer
-			getitem 1549,1; //Pilebuncker
-			getitem 1360,1; //Two_Handed_Axe
+			delitem Steel,50;
+			delitem Tube,30;
+			delitem Skewer,1;
+			getitem Pilebuncker,1;
+			getitem Two_Handed_Axe,1;
 			close;
 		}
 	}

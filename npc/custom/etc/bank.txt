@@ -18,7 +18,7 @@ set @cost,500;
 mes "[Banker]";
 mes "Welcome to the First Bank of Prontera. How can I help you today?";
 next;
-switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's my current balance?:Cancel")) {
+switch(select("I'd like to make a deposit.", "I'd like to make a withdrawl.", "What's my current balance?", "Cancel")) {
 	case 1:
 		mes "[Banker]";
 		mes "Very well... How much would you like to deposit? The maximum you can deposit at once is 999,999 Zeny.";
@@ -28,27 +28,25 @@ switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's 
 			mes "Oh, and do realize there is a " +@cost + " Zeny charge on all transactions!";
 			next;
 		}
-		input @deposit;
+		input(@deposit);
 		if (@deposit < 1) {
 			mes "Make sure you ask me to deposit a real amount.";
 			close;
 		}
-		else if (@deposit > Zeny) {
+		if (@deposit > Zeny) {
 			mes "It does not appear like you have the amount of zeny you're trying to deposit!";
 			close;
 		}
-		else if (@deposit > (Zeny - @cost)) {
+		if (@deposit > Zeny - @cost) {
 			mes "You need " + @cost + " Zeny to cover the transaction fee!";
 			close;
 		}
-		else {
 		Zeny -= @deposit;
 		Zeny -= @cost;
-		set #bankstorage,#bankstorage + @deposit;
+		#bankstorage += @deposit;
 		mes "[Banker]";
 		mes "Thank you very much... Your zeny is in good hands.";
 		close;
-		}
 
 	case 2:
 		mes "[Banker]";
@@ -59,30 +57,30 @@ switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's 
 			mes "Oh, and do realize there is a " +@cost + " Zeny charge on all transactions!";
 			next;
 		}
-		input @withdrawl;
+		input(@withdrawl);
 		if (@withdrawl < 1) {
 			mes "Please don't play games. I need a real amount to withdraw.";
 			close;
 		}
-		else if (@withdrawl > #bankstorage) {
+		if (@withdrawl > #bankstorage) {
 			mes "I show you only have ^00FF00" + #bankstorage +"^000000 zeny in your account!";
 			close;
 		}
-		else if ((@cost > Zeny) && ((Zeny + @withdrawl) > @cost)) {
+		if (@cost > Zeny && Zeny + @withdrawl > @cost) {
 			mes "[Banker]";
 			mes "You don't have the Zeny for the transaction fee right now. Would you like me to take the fee directly from your withdrawl?";
 			next;
-			switch(select("Yes please.:No, Thanks")){
+			switch(select("Yes please.", "No, Thanks")){
 			case 1:
 				mes "[Banker]";
 				mes "Removing " + @cost + " from your withdrawl to cover the deposit fee...";
-				set @withdrawl,@withdrawl - @cost;
-				set #bankstorage,#bankstorage - @cost;
-				set @cost,0;
+				@withdrawl -= @cost;
+				#bankstorage -= @cost;
+				@cost = 0;
 				next;
 				Zeny -= @cost;
 				Zeny += @withdrawl;
-				set #bankstorage,#bankstorage - @withdrawl;
+				#bankstorage -= @withdrawl;
 				mes "[Banker]";
 				mes "There's your Zeny. Have a good day.";
 				close;
@@ -92,14 +90,12 @@ switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's 
 				close;
 			}
 		}
-		else {
-			Zeny -= @cost;
-			Zeny += @withdrawl;
-			set #bankstorage,#bankstorage - @withdrawl;
-			mes "[Banker]";
-			mes "There's your Zeny. Have a good day.";
-			close;
-		}
+		Zeny -= @cost;
+		Zeny += @withdrawl;
+		#bankstorage -= @withdrawl;
+		mes "[Banker]";
+		mes "There's your Zeny. Have a good day.";
+		close;
 	case 3:
 		mes "[Banker]";
 		mes "Hmmmm let me check some paper work.";

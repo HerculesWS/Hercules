@@ -1,23 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Party Relay Quest
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Party Relay Quest.
-//===== Additional Comments: =================================
-//= 1.0 First version. [L0ne_W0lf]
-//= 1.1 Fixed a couple typos, npcs check area for PCs. [L0ne_W0lf]
-//= 1.2 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(CHAR_ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
-	if (checkweight(907,300) == 0) {
+	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
+	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
 		mes "right now: store some of";
@@ -25,7 +45,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "Storage, and then come back.^000000";
 		close;
 	}
-	if ((countitem(7731) > 0) || (countitem(7732) > 0) || (countitem(7735) > 0) || (countitem(7736) > 0) || (countitem(7739) > 0) || (countitem(7740) > 0)) {
+	if ((countitem(Mission_Certificate2) > 0) || (countitem(Mission_Certificate3) > 0) || (countitem(Mission_Certificate6) > 0) || (countitem(Mission_Certificate7) > 0) || (countitem(Mission_Certificate10) > 0) || (countitem(Mission_Certificate11) > 0)) {
 		mes "[Ledrion]";
 		mes "Hm? I'm afraid that you've";
 		mes "misunderstood me earlier...";
@@ -34,7 +54,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "of your group members with you.";
 		close;
 	}
-	if ((countitem(7741) > 0) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+	if ((countitem(Mission_Certificate12) > 0) && (.@partyleader == getcharid(CHAR_ID_CHAR)) && (getcharid(CHAR_ID_GUILD) > 0) && (.@partymembercount > 5)) {
 		mes "[Ledrion]";
 		mes "Ah, you've brought the";
 		mes "last ticket from Rospii.";
@@ -58,21 +78,21 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "You deserve a real reward!";
 		next;
 		.@present = rand(1,7);
-		delitem 7741,1; //Mission_Certificate12
+		delitem Mission_Certificate12,1;
 		party_relay = 0;
-		getitem 644,6; //Gift_Box
-		getitem 603,3; //Old_Blue_Box
+		getitem Gift_Box,6;
+		getitem Old_Blue_Box,3;
 		if (.@present == 2) {
-			getitem 1365,1; //Sabbath
+			getitem Sabbath,1;
 		}
 		else if (.@present == 4) {
-			getitem 1367,1; //Slaughter
+			getitem Slaughter,1;
 		}
 		else if (.@present == 6) {
-			getitem 1527,1; //Quadrille
+			getitem Quadrille,1;
 		}
 		else {
-			getitem 617,3; //Old_Violet_Box
+			getitem Old_Violet_Box,3;
 		}
 		callfunc "F_PartyRelay_Exp";
 		mes "[Ledrion]";
@@ -91,7 +111,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "you go on your adventures.";
 		close;
 	}
-	if (countitem(7741) > 0) {
+	if (countitem(Mission_Certificate12) > 0) {
 		mes "[Ledrion]";
 		mes "Hm? Why aren't your";
 		mes "comrades with you?";
@@ -109,7 +129,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "over to Gatan right now?";
 		close;
 	}
-	if ((countitem(7737) > 0) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+	if ((countitem(Mission_Certificate8) > 0) && (.@partyleader == getcharid(CHAR_ID_CHAR)) && (getcharid(CHAR_ID_GUILD) > 0) && (.@partymembercount > 5)) {
 		mes "[Ledrion]";
 		mes "Great, you've brought";
 		mes "me the eighth ticket from";
@@ -125,11 +145,11 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "a little reward for your";
 		mes "effort thus far, and the";
 		mes "nineth ticket for your guild.";
-		delitem 7737,1; //Mission_Certificate8
+		delitem Mission_Certificate8,1;
 		party_relay = 23;
-		getitem 603,3; //Old_Blue_Box
-		getitem 617,1; //Old_Violet_Box
-		getitem 7738,1; //Mission_Certificate9
+		getitem Old_Blue_Box,3;
+		getitem Old_Violet_Box,1;
+		getitem Mission_Certificate9,1;
 		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Ledrion]";
@@ -141,7 +161,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "Okay? I'll be seeing you.";
 		close;
 	}
-	if (countitem(7737) > 0) {
+	if (countitem(Mission_Certificate8) > 0) {
 		mes "[Ledrion]";
 		mes "Hm? Why aren't your";
 		mes "comrades with you?";
@@ -158,7 +178,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "a ticket to Gatan?";
 		close;
 	}
-	if ((countitem(7733) > 0) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+	if ((countitem(Mission_Certificate4) > 0) && (.@partyleader == getcharid(CHAR_ID_CHAR)) && (getcharid(CHAR_ID_GUILD) > 0) && (.@partymembercount > 5)) {
 		mes "[Ledrion]";
 		mes "I see that you've brought";
 		mes "me the fourth ticket from";
@@ -174,15 +194,15 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "give this ticket to a Mage";
 		mes "Class character, and tell";
 		mes "him to bring it to Gatan.";
-		delitem 7733,1; //Mission_Certificate4
+		delitem Mission_Certificate4,1;
 		party_relay = 12;
-		getitem 644,3; //Gift_Box
-		getitem 603,1; //Old_Blue_Box
-		getitem 7734,1; //Mission_Certificate5
+		getitem Gift_Box,3;
+		getitem Old_Blue_Box,1;
+		getitem Mission_Certificate5,1;
 		callfunc "F_PartyRelay_Exp";
 		close;
 	}
-	if (countitem(7733) > 0) {
+	if (countitem(Mission_Certificate4) > 0) {
 		mes "[Ledrion]";
 		mes "Hm? Why aren't your";
 		mes "comrades with you?";
@@ -199,7 +219,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "come to me, not yet.";
 		close;
 	}
-	if ((BaseLevel > 39) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5) && (party_relay == 1)) {
+	if ((BaseLevel > 39) && (.@partyleader == getcharid(CHAR_ID_CHAR)) && (getcharid(CHAR_ID_GUILD) > 0) && (.@partymembercount > 5) && (party_relay == 1)) {
 		mes "[Ledrion]";
 		mes "As I mentioned earlier,";
 		mes "I'm challenging guild";
@@ -241,7 +261,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "The relay has started~";
 		next;
 		party_relay = 2;
-		getitem 7730,1; //Mission_Certificate1
+		getitem Mission_Certificate1,1;
 		mes "[Ledrion]";
 		mes "Now, since you're the";
 		mes "one that started the relay,";
@@ -251,7 +271,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "once the time is right.";
 		close;
 	}
-	if ((.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5) && (party_relay > 0)) {
+	if ((.@partyleader == getcharid(CHAR_ID_CHAR)) && (getcharid(CHAR_ID_GUILD) > 0) && (.@partymembercount > 5) && (party_relay > 0)) {
 		mes "[Ledrion]";
 		mes "As leader of your";
 		mes "Party, you should";
@@ -260,7 +280,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 		mes "of your partners.";
 		close;
 	}
-	if ((.@partyleader != getcharid(0)) && (getcharid(2) > 0)) {
+	if ((.@partyleader != getcharid(CHAR_ID_CHAR)) && (getcharid(CHAR_ID_GUILD) > 0)) {
 		mes "[Ledrion]";
 		mes "I'm sorry, but there's";
 		mes "nothing I can really offer";
@@ -283,7 +303,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	mes "a meaningful contribution";
 	mes "to all of Rune Midgard, which";
 	mes "brings me to why I am here.";
-	mes "There are many adventurers^FFFFFF ^000000 like you, but we have a problem.";
+	mes "There are many adventurers like you, but we have a problem.";
 	next;
 	mes "[Ledrion]";
 	mes "So many adventurers have";
@@ -341,9 +361,9 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	mes "incentive for your group.";
 	mes "Would you like to participate?";
 	next;
-	switch(select("Sure!:No.")) {
+	switch(select("Sure!", "No.")) {
 	case 1:
-		if ((BaseLevel > 39) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
+		if ((BaseLevel > 39) && (.@partyleader == getcharid(CHAR_ID_CHAR)) && (getcharid(CHAR_ID_GUILD) > 0) && (.@partymembercount > 5)) {
 			mes "[Ledrion]";
 			mes "Great! Let's see...";
 			mes "Well, you meet all the";
@@ -382,10 +402,10 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 }
 
 payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(CHAR_ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
-	if (checkweight(907,300) == 0) {
+	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
+	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
 		mes "right now: store some of";
@@ -393,7 +413,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "Storage, and then come back.^000000";
 		close;
 	}
-	if ((countitem(7732) > 0) || (countitem(7733) > 0) || (countitem(7736) > 0) || (countitem(7737) > 0) || (countitem(7740) > 0) || (countitem(7741) > 0)) {
+	if ((countitem(Mission_Certificate3) > 0) || (countitem(Mission_Certificate4) > 0) || (countitem(Mission_Certificate7) > 0) || (countitem(Mission_Certificate8) > 0) || (countitem(Mission_Certificate11) > 0) || (countitem(Mission_Certificate12) > 0)) {
 		mes "[Gatan]";
 		mes "Say, aren't you forgetting";
 		mes "something? Try to remember...";
@@ -401,7 +421,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "instructions, didn't you?";
 		close;
 	}
-	.@relaytime = gettime(3);
+	.@relaytime = gettime(GETTIME_HOUR);
 	if (party_relay == 28) {
 		mes "[Gatan]";
 		mes "Say, I don't think it's";
@@ -421,9 +441,9 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "to bring it to Bafhail. Ah, and";
 		mes "here's a little reward for you~";
 		party_relay = 28;
-		getitem 7739,1; //Mission_Certificate10
-		getitem 610,2; //Leaf_Of_Yggdrasil
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate10,1;
+		getitem Leaf_Of_Yggdrasil,2;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
@@ -548,7 +568,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "come here too late, alright?";
 		close;
 	}
-	if ((countitem(7738) > 0) && ((BaseClass == Job_Swordman) || (BaseClass == Job_Mage))) {
+	if ((countitem(Mission_Certificate9) > 0) && ((BaseClass == Job_Swordman) || (BaseClass == Job_Mage))) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -572,7 +592,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "finished my test, alright?";
 			mes "Just don't tell anyone!";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 27;
 			mes "[Gatan]";
 			mes "Hold on a second...";
@@ -589,7 +609,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 24;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -608,7 +628,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 24;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -627,7 +647,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 25;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -646,7 +666,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 25;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -665,7 +685,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 26;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -684,7 +704,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 26;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -696,7 +716,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			close;
 		}
 	}
-	else if ((countitem(7738) > 0) && ((BaseClass == Job_Swordman) || (BaseClass == Job_Mage))) {
+	else if ((countitem(Mission_Certificate9) > 0) && ((BaseClass == Job_Swordman) || (BaseClass == Job_Mage))) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -720,7 +740,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "finished my test, alright?";
 			mes "Just don't tell anyone!";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 27;
 			mes "[Gatan]";
 			mes "Hold on a second...";
@@ -737,7 +757,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 24;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -756,7 +776,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 24;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -775,7 +795,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 25;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -794,7 +814,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 25;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -813,7 +833,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 26;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -832,7 +852,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7738,1; //Mission_Certificate9
+			delitem Mission_Certificate9,1;
 			party_relay = 26;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -844,7 +864,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			close;
 		}
 	}
-	if ((countitem(7738) > 0) && ((BaseClass == Job_Swordman) || (BaseClass == Job_Mage))) {
+	if ((countitem(Mission_Certificate9) > 0) && ((BaseClass == Job_Swordman) || (BaseClass == Job_Mage))) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -887,8 +907,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "to bring it to Bafhail. Ah, and";
 		mes "here's a little reward for you~";
 		party_relay = 17;
-		getitem 7735,1; //Mission_Certificate6
-		getitem 610,2; //Leaf_Of_Yggdrasil
+		getitem Mission_Certificate6,1;
+		getitem Leaf_Of_Yggdrasil,2;
 		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
@@ -1013,7 +1033,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "times. A bit confusing, I know~";
 		close;
 	}
-	if ((BaseLevel > 39) && (countitem(7734) > 0) && (.@relaytime >= 8) && (.@relaytime < 11) && (BaseClass == Job_Mage)) {
+	if ((BaseLevel > 39) && (countitem(Mission_Certificate5) > 0) && (.@relaytime >= 8) && (.@relaytime < 11) && (BaseClass == Job_Mage)) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -1037,7 +1057,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "finished my test, alright?";
 			mes "Just don't tell anyone!";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 16;
 			mes "[Gatan]";
 			mes "Hold on a second...";
@@ -1054,7 +1074,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 13;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1073,7 +1093,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 13;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1092,7 +1112,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 14;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1111,7 +1131,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 14;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1130,7 +1150,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 15;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1149,7 +1169,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 15;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1161,7 +1181,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			close;
 		}
 	}
-	else if ((BaseLevel > 39) && (countitem(7734) > 0) && (.@relaytime >= 21) && (BaseClass == Job_Mage)) {
+	else if ((BaseLevel > 39) && (countitem(Mission_Certificate5) > 0) && (.@relaytime >= 21) && (BaseClass == Job_Mage)) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -1185,7 +1205,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "finished my test, alright?";
 			mes "Just don't tell anyone!";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 16;
 			mes "[Gatan]";
 			mes "Hold on a second...";
@@ -1202,7 +1222,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 13;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1221,7 +1241,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 13;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1240,7 +1260,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 14;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1259,7 +1279,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 14;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1278,7 +1298,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 15;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1297,7 +1317,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7734,1; //Mission_Certificate5
+			delitem Mission_Certificate5,1;
 			party_relay = 15;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1309,7 +1329,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			close;
 		}
 	}
-	if ((BaseLevel > 39) && (countitem(7734) > 0) && (BaseClass == Job_Mage)) {
+	if ((BaseLevel > 39) && (countitem(Mission_Certificate5) > 0) && (BaseClass == Job_Mage)) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -1358,8 +1378,8 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "something for";
 		mes "your troubles~";
 		party_relay = 6;
-		getitem 7731,1; //Mission_Certificate2
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate2,1;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Gatan]";
@@ -1487,7 +1507,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "Good luck to you, alright?";
 		close;
 	}
-	if ((BaseLevel > 39) && (countitem(7730) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && (BaseClass == Job_Swordman)) {
+	if ((BaseLevel > 39) && (countitem(Mission_Certificate1) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && (BaseClass == Job_Swordman)) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -1512,7 +1532,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "finished my test, alright?";
 			mes "Just don't tell anyone!";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 5;
 			mes "[Gatan]";
 			mes "Hold on a second...";
@@ -1529,7 +1549,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 99;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1548,7 +1568,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 99;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1567,7 +1587,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 3;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1586,7 +1606,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 3;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1605,7 +1625,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 4;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1624,7 +1644,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 4;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1636,7 +1656,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			close;
 		}
 	}
-	else if ((BaseLevel > 39) && (countitem(7730) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && (BaseClass == Job_Swordman)) {
+	else if ((BaseLevel > 39) && (countitem(Mission_Certificate1) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && (BaseClass == Job_Swordman)) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -1661,7 +1681,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "finished my test, alright?";
 			mes "Just don't tell anyone!";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 5;
 			mes "[Gatan]";
 			mes "Hold on a second...";
@@ -1678,7 +1698,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 99;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1697,7 +1717,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Level. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 99;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1716,7 +1736,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 3;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1735,7 +1755,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "Base Levels. Go ahead";
 			mes "and do that, alright?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 3;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1754,7 +1774,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 4;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1773,7 +1793,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			mes "go out and gain 3 Base";
 			mes "Levels for me, okay?";
 			next;
-			delitem 7730,1; //Mission_Certificate1
+			delitem Mission_Certificate1,1;
 			party_relay = 4;
 			party_relay_lv = BaseLevel;
 			mes "[Gatan]";
@@ -1782,7 +1802,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 			close;
 		}
 	}
-	else if ((BaseLevel > 39) && (countitem(7730) > 0) && (BaseClass == Job_Swordman)) {
+	else if ((BaseLevel > 39) && (countitem(Mission_Certificate1) > 0) && (BaseClass == Job_Swordman)) {
 		mes "[Gatan]";
 		mes "Oh, um... Is that...?";
 		mes "That's a ticket from";
@@ -1817,10 +1837,10 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 }
 
 payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(CHAR_ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
-	if (checkweight(907,300) == 0) {
+	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
+	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
 		mes "right now: store some of";
@@ -1828,7 +1848,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Storage, and then come back.^000000";
 		close;
 	}
-	if (countitem(7730) > 0) || (countitem(7733) > 0) || (countitem(7734) > 0) || (countitem(7737) > 0) || (countitem(7738) > 0) || (countitem(7741) > 0) {
+	if (countitem(Mission_Certificate1) > 0) || (countitem(Mission_Certificate4) > 0) || (countitem(Mission_Certificate5) > 0) || (countitem(Mission_Certificate8) > 0) || (countitem(Mission_Certificate9) > 0) || (countitem(Mission_Certificate12) > 0) {
 		mes "[Bafhail]";
 		mes "You must be confused...";
 		mes "It's not time for you";
@@ -1837,7 +1857,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "with any of the other guys?";
 		close;
 	}
-	.@relaytime = gettime(3);
+	.@relaytime = gettime(GETTIME_HOUR);
 	if (party_relay == 30) {
 		mes "[Bafhail]";
 		mes "Did you give that ticket";
@@ -1847,7 +1867,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "you've already forgotten.";
 		close;
 	}
-	if ((party_relay == 29) && (.@relaytime >= 0) && (.@relaytime < 3) && (countitem(1012) > 19) && (countitem(1048) > 19) && (countitem(7003) > 19)) {
+	if ((party_relay == 29) && (.@relaytime >= 0) && (.@relaytime < 3) && (countitem(Lizard_Scruff) > 19) && (countitem(Slender_Snake) > 19) && (countitem(Anolian_Skin) > 19)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -1855,13 +1875,13 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 1012,20; //Lizard_Scruff
-		delitem 1048,20; //Slender_Snake
-		delitem 7003,20; //Anolian_Skin
+		delitem Lizard_Scruff,20;
+		delitem Slender_Snake,20;
+		delitem Anolian_Skin,20;
 		party_relay = 30;
-		getitem 7740,1; //Mission_Certificate11
-		getitem 610,2; //Leaf_Of_Yggdrasil
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate11,1;
+		getitem Leaf_Of_Yggdrasil,2;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Make sure that you give";
@@ -1872,7 +1892,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Goodbye now, and good luck~";
 		close;
 	}
-	else if ((party_relay == 29) && (.@relaytime >= 11) && (.@relaytime < 14) && (countitem(1012) > 19) && (countitem(1048) > 19) && (countitem(7003) > 19)) {
+	else if ((party_relay == 29) && (.@relaytime >= 11) && (.@relaytime < 14) && (countitem(Lizard_Scruff) > 19) && (countitem(Slender_Snake) > 19) && (countitem(Anolian_Skin) > 19)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -1880,13 +1900,13 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 1012,20; //Lizard_Scruff
-		delitem 1048,20; //Slender_Snake
-		delitem 7003,20; //Anolian_Skin
+		delitem Lizard_Scruff,20;
+		delitem Slender_Snake,20;
+		delitem Anolian_Skin,20;
 		party_relay = 30;
-		getitem 7740,1; //Mission_Certificate11
-		getitem 610,2; //Leaf_Of_Yggdrasil
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate11,1;
+		getitem Leaf_Of_Yggdrasil,2;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Make sure that you give";
@@ -1914,7 +1934,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Don't forget now, alright?";
 		close;
 	}
-	if ((countitem(7739) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	if ((countitem(Mission_Certificate10) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -1930,7 +1950,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "^4D4DFF20 Anolian Skins^000000, and";
 		mes "^4D4DFF20 Horrendous Hairs^000000.";
 		next;
-		delitem 7739,1; //Mission_Certificate10
+		delitem Mission_Certificate10,1;
 		party_relay = 29;
 		mes "[Bafhail]";
 		mes "Understood?";
@@ -1941,7 +1961,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I'll see you later~";
 		close;
 	}
-	else if ((countitem(7739) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	else if ((countitem(Mission_Certificate10) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -1957,7 +1977,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "^4D4DFF20 Anolian Skins^000000, and";
 		mes "^4D4DFF20 Horrendous Hairs^000000.";
 		next;
-		delitem 7739,1; //Mission_Certificate10
+		delitem Mission_Certificate10,1;
 		party_relay = 29;
 		mes "[Bafhail]";
 		mes "Understood?";
@@ -1969,7 +1989,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I'll see you later~";
 		close;
 	}
-	if ((countitem(7739) > 0) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
+	if ((countitem(Mission_Certificate10) > 0) && ((BaseClass == Job_Thief) || (BaseClass == Job_Acolyte))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -1995,7 +2015,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "you've already forgotten.";
 		close;
 	}
-	if ((party_relay == 19) && (.@relaytime >= 14) && (.@relaytime < 17) && (countitem(1015) > 9) && (countitem(7172) > 9) && (countitem(7155) > 9)) {
+	if ((party_relay == 19) && (.@relaytime >= 14) && (.@relaytime < 17) && (countitem(Thin_N_Long_Tongue) > 9) && (countitem(Leopard_Talon) > 9) && (countitem(Poison_Toads_Skin) > 9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2003,12 +2023,12 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 1015,10; //Thin_N'_Long_Tongue
-		delitem 7172,10; //Leopard_Talon
-		delitem 7155,10; //Poison_Toad's_Skin
+		delitem Thin_N_Long_Tongue,10;
+		delitem Leopard_Talon,10;
+		delitem Poison_Toads_Skin,10;
 		party_relay = 20;
-		getitem 7736,1; //Mission_Certificate7
-		getitem 610,2; //Leaf_Of_Yggdrasil
+		getitem Mission_Certificate7,1;
+		getitem Leaf_Of_Yggdrasil,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
@@ -2019,7 +2039,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I'll see you later, then.";
 		close;
 	}
-	else if ((party_relay == 19) && (.@relaytime >= 18) && (.@relaytime < 21) && (countitem(1015) > 9) && (countitem(7172) > 9) && (countitem(7155) > 9)) {
+	else if ((party_relay == 19) && (.@relaytime >= 18) && (.@relaytime < 21) && (countitem(Thin_N_Long_Tongue) > 9) && (countitem(Leopard_Talon) > 9) && (countitem(Poison_Toads_Skin) > 9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2027,12 +2047,12 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 1015,10; //Thin_N'_Long_Tongue
-		delitem 7172,10; //Leopard_Talon
-		delitem 7155,10; //Poison_Toad's_Skin
+		delitem Thin_N_Long_Tongue,10;
+		delitem Leopard_Talon,10;
+		delitem Poison_Toads_Skin,10;
 		party_relay = 20;
-		getitem 7736,1; //Mission_Certificate7
-		getitem 610,2; //Leaf_Of_Yggdrasil
+		getitem Mission_Certificate7,1;
+		getitem Leaf_Of_Yggdrasil,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
@@ -2061,7 +2081,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "when the time is right.";
 		close;
 	}
-	if ((party_relay == 18) && (.@relaytime >= 14) && (.@relaytime < 17) && (countitem(7157) > 9) && (countitem(1021) > 9) && (countitem(7101) >9)) {
+	if ((party_relay == 18) && (.@relaytime >= 14) && (.@relaytime < 17) && (countitem(Black_Mask) > 9) && (countitem(Dokkaebi_Horn) > 9) && (countitem(Peco_Wing_Feather) >9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2069,12 +2089,12 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 7157,10; //Black_Mask
-		delitem 1021,10; //Dokkaebi_Horn
-		delitem 7101,10; //Peco_Wing_Feather
+		delitem Black_Mask,10;
+		delitem Dokkaebi_Horn,10;
+		delitem Peco_Wing_Feather,10;
 		party_relay = 20;
-		getitem 7736,1; //Mission_Certificate7
-		getitem 610,2; //Leaf_Of_Yggdrasil
+		getitem Mission_Certificate7,1;
+		getitem Leaf_Of_Yggdrasil,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
@@ -2085,7 +2105,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I'll see you later, then.";
 		close;
 	}
-	else if ((party_relay == 18) && (.@relaytime >= 18) && (.@relaytime < 21) && (countitem(7157) > 9) && (countitem(1021) > 9) && (countitem(7101) >9)) {
+	else if ((party_relay == 18) && (.@relaytime >= 18) && (.@relaytime < 21) && (countitem(Black_Mask) > 9) && (countitem(Dokkaebi_Horn) > 9) && (countitem(Peco_Wing_Feather) >9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2093,12 +2113,12 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 7157,10; //Black_Mask
-		delitem 1021,10; //Dokkaebi_Horn
-		delitem 7101,10; //Peco_Wing_Feather
+		delitem Black_Mask,10;
+		delitem Dokkaebi_Horn,10;
+		delitem Peco_Wing_Feather,10;
 		party_relay = 20;
-		getitem 7736,1; //Mission_Certificate7
-		getitem 610,2; //Leaf_Of_Yggdrasil
+		getitem Mission_Certificate7,1;
+		getitem Leaf_Of_Yggdrasil,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Do me a favor and make";
@@ -2134,7 +2154,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I just described, okay?";
 		close;
 	}
-	if ((countitem(7735) > 0) && (.@relaytime >= 14) && (.@relaytime < 17) && (BaseClass == Job_Acolyte)) {
+	if ((countitem(Mission_Certificate6) > 0) && (.@relaytime >= 14) && (.@relaytime < 17) && (BaseClass == Job_Acolyte)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2155,7 +2175,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "^4D4DFF10 Dokebi Horns^000000, and";
 		mes "^4D4DFF10 PecoPeco Feathers^000000.";
 		next;
-		delitem 7735,1; //Mission_Certificate6
+		delitem Mission_Certificate6,1;
 		party_relay = 18;
 		mes "[Bafhail]";
 		mes "Understood?";
@@ -2166,7 +2186,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I'll see you later~";
 		close;
 	}
-	else if ((countitem(7735) > 0) && (.@relaytime >= 18) && (.@relaytime < 21) && (BaseClass == Job_Acolyte)) {
+	else if ((countitem(Mission_Certificate6) > 0) && (.@relaytime >= 18) && (.@relaytime < 21) && (BaseClass == Job_Acolyte)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2187,7 +2207,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "^4D4DFF10 Leopard Claws^000000, and";
 		mes "^4D4DFF10 Poisonous Toad Skins^000000.";
 		next;
-		delitem 7735,1; //Mission_Certificate6
+		delitem Mission_Certificate6,1;
 		party_relay = 19;
 		mes "[Bafhail]";
 		mes "Understood?";
@@ -2198,7 +2218,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "I'll see you later~";
 		close;
 	}
-	if ((countitem(7735) > 0) && (BaseClass == Job_Acolyte)) {
+	if ((countitem(Mission_Certificate6) > 0) && (BaseClass == Job_Acolyte)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2225,7 +2245,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "for a while, I suppose.";
 		close;
 	}
-	if ((party_relay == 8) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (countitem(7196) > 9) && (countitem(7184) > 9) && (countitem(920) > 9)) {
+	if ((party_relay == 8) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (countitem(Shoulder_Protection) > 9) && (countitem(Piano_Keyboard) > 9) && (countitem(Claw_Of_Wolves) > 9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2233,12 +2253,12 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 7196,10; //Shoulder_Protection
-		delitem 7189,10; //Heart_Of_Tree
-		delitem 920,10; //Claw_Of_Wolves
+		delitem Shoulder_Protection,10;
+		delitem Heart_Of_Tree,10;
+		delitem Claw_Of_Wolves,10;
 		party_relay = 9;
-		getitem 7732,1; //Mission_Certificate3
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate3,1;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Bafhail]";
 		mes "Please give that";
@@ -2249,19 +2269,19 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Good luck on your travels~";
 		close;
 	}
-	else if ((party_relay == 8) && ((.@relaytime >= 21) && (countitem(7196) > 9) && (countitem(7184) > 9) && (countitem(920) > 9))) {
+	else if ((party_relay == 8) && ((.@relaytime >= 21) && (countitem(Shoulder_Protection) > 9) && (countitem(Piano_Keyboard) > 9) && (countitem(Claw_Of_Wolves) > 9))) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
 		mes "everything I asked. Good work.";
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
-		delitem 7196,10; //Shoulder_Protection
-		delitem 7189,10; //Heart_Of_Tree
-		delitem 920,10; //Claw_Of_Wolves
+		delitem Shoulder_Protection,10;
+		delitem Heart_Of_Tree,10;
+		delitem Claw_Of_Wolves,10;
 		party_relay = 9;
-		getitem 7732,1; //Mission_Certificate3
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate3,1;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		next;
 		mes "[Bafhail]";
@@ -2290,7 +2310,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Standard Time. Don't forget!";
 		close;
 	}
-	if ((party_relay == 7) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (countitem(1027) > 9) && (countitem(1040) > 9) && (countitem(1023) > 9)) {
+	if ((party_relay == 7) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (countitem(Porcupine_Spike) > 9) && (countitem(Elder_Pixies_Beard) > 9) && (countitem(Fish_Tail) > 9)) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2298,11 +2318,11 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 1027,10; //Porcupine_Spike
-		delitem 1040,10; //Elder_Pixie's_Beard
-		delitem 1023,10; //Fish_Tail
+		delitem Porcupine_Spike,10;
+		delitem Elder_Pixies_Beard,10;
+		delitem Fish_Tail,10;
 		party_relay = 9;
-		getitem 7732,1; //Mission_Certificate3
+		getitem Mission_Certificate3,1;
 		mes "[Bafhail]";
 		mes "Please give that";
 		mes "ticket to the Archer";
@@ -2312,7 +2332,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Good luck on your travels~";
 		close;
 	}
-	else if ((party_relay == 7) && ((.@relaytime >= 21) && (countitem(1027) > 9) && (countitem(1040) > 9) && (countitem(1023) > 9))) {
+	else if ((party_relay == 7) && ((.@relaytime >= 21) && (countitem(Porcupine_Spike) > 9) && (countitem(Elder_Pixies_Beard) > 9) && (countitem(Fish_Tail) > 9))) {
 		mes "[Bafhail]";
 		mes "Well, it looks like you came";
 		mes "at the right time and brought";
@@ -2320,11 +2340,11 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Please take your next ticket";
 		mes "and this small reward for you.";
 		next;
-		delitem 1027,10; //Porcupine_Spike
-		delitem 1040,10; //Elder_Pixie's_Beard
-		delitem 1023,10; //Fish_Tail
+		delitem Porcupine_Spike,10;
+		delitem Elder_Pixies_Beard,10;
+		delitem Fish_Tail,10;
 		party_relay = 9;
-		getitem 7732,1; //Mission_Certificate3
+		getitem Mission_Certificate3,1;
 		mes "[Bafhail]";
 		mes "Please give that";
 		mes "ticket to the Archer";
@@ -2351,7 +2371,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "Standard Time. Don't forget!";
 		close;
 	}
-	if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (BaseClass == Job_Thief)) {
+	if ((countitem(Mission_Certificate2) > 0) && (BaseLevel > 39) && ((.@relaytime >= 8) && (.@relaytime < 11)) && (BaseClass == Job_Thief)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2372,7 +2392,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "^4D4DFF10 Wolf Claws^000000, and";
 		mes "^4D4DFF10 Shoulder Protectors^000000";
 		next;
-		delitem 7731,1; //Mission_Certificate2
+		delitem Mission_Certificate2,1;
 		party_relay = 8;
 		mes "[Bafhail]";
 		mes "Remember that I won't";
@@ -2383,7 +2403,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "items for missions, okay?";
 		close;
 	}
-	else if ((countitem(7731) > 0) && (BaseLevel > 39) && ((.@relaytime >= 21) && (BaseClass == Job_Thief))) {
+	else if ((countitem(Mission_Certificate2) > 0) && (BaseLevel > 39) && ((.@relaytime >= 21) && (BaseClass == Job_Thief))) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2404,7 +2424,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "^4D4DFF10 Porcupine Quills^000000, and";
 		mes "^4D4DFF10 Elder Pixie's Moustaches^000000";
 		next;
-		delitem 7731,1; //Mission_Certificate2
+		delitem Mission_Certificate2,1;
 		party_relay = 7;
 		mes "[Bafhail]";
 		mes "Remember that I won't";
@@ -2415,7 +2435,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "items for missions, okay?";
 		close;
 	}
-	if ((countitem(7731) > 0) && (BaseLevel > 39) && (BaseClass == Job_Thief)) {
+	if ((countitem(Mission_Certificate2) > 0) && (BaseLevel > 39) && (BaseClass == Job_Thief)) {
 		mes "[Bafhail]";
 		mes "Oh, isn't that ticket...?";
 		mes "Ah, good, good. Judging";
@@ -2450,10 +2470,10 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 }
 
 payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
-	getpartymember(getcharid(1));
+	getpartymember(getcharid(CHAR_ID_PARTY));
 	.@partymembercount = $@partymembercount;
-	.@partyleader = getpartyleader(getcharid(1),2);
-	if (checkweight(907,300) == 0) {
+	.@partyleader = getpartyleader(getcharid(CHAR_ID_PARTY),2);
+	if (checkweight(Resin,300) == 0) {
 		mes "^3355FFWait a minute! You're";
 		mes "carrying too many items";
 		mes "right now: store some of";
@@ -2461,7 +2481,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "Storage, and then come back.^000000";
 		close;
 	}
-	if (countitem(7730) > 0) || (countitem(7731) > 0) || (countitem(7734) > 0) || (countitem(7735) > 0) || (countitem(7738) > 0) || (countitem(7739) > 0) {
+	if (countitem(Mission_Certificate1) > 0) || (countitem(Mission_Certificate2) > 0) || (countitem(Mission_Certificate5) > 0) || (countitem(Mission_Certificate6) > 0) || (countitem(Mission_Certificate9) > 0) || (countitem(Mission_Certificate10) > 0) {
 		mes "[Lospii]";
 		mes "Hey, didn't you figure";
 		mes "out what you need to do?";
@@ -2471,8 +2491,8 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "have to meet either, but...";
 		close;
 	}
-	.@relaytime = gettime(3);
-	getmapxy(.@m$,.@x,.@y,1,strnpcinfo(3));
+	.@relaytime = gettime(GETTIME_HOUR);
+	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC, strnpcinfo(NPC_NAME_UNIQUE));
 	.@juwi = getareausers(.@m$,.@x-8,.@y-8,.@x+8,.@y+8);
 	if (party_relay == 32) {
 		mes "[Lospii]";
@@ -2499,9 +2519,9 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "gift from me. Cool, huh?";
 		next;
 		party_relay = 32;
-		getitem 7741,1; //Mission_Certificate12
-		getitem 610,2; //Leaf_Of_Yggdrasil
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate12,1;
+		getitem Leaf_Of_Yggdrasil,2;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
@@ -2536,9 +2556,9 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "gift from me. Cool, huh?";
 		next;
 		party_relay = 32;
-		getitem 7741,1; //Mission_Certificate12
-		getitem 610,2; //Leaf_Of_Yggdrasil
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate12,1;
+		getitem Leaf_Of_Yggdrasil,2;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
@@ -2567,7 +2587,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "Just only those times, okay?";
 		close;
 	}
-	if ((countitem(7740) > 0) && (.@relaytime >= 8) && (.@relaytime < 11) && ((BaseJob == Job_Archer) || (BaseJob == Job_Merchant))) {
+	if ((countitem(Mission_Certificate11) > 0) && (.@relaytime >= 8) && (.@relaytime < 11) && ((BaseJob == Job_Archer) || (BaseJob == Job_Merchant))) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -2598,7 +2618,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "close so I know they're your";
 		mes "friends, not some other guys.";
 		next;
-		delitem 7740,1; //Mission_Certificate11
+		delitem Mission_Certificate11,1;
 		party_relay = 31;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
@@ -2608,7 +2628,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "important to know!";
 		close;
 	}
-	else if ((countitem(7740) > 0) && (.@relaytime >= 21) && ((BaseClass == Job_Archer) || (BaseClass == Job_Merchant))) {
+	else if ((countitem(Mission_Certificate11) > 0) && (.@relaytime >= 21) && ((BaseClass == Job_Archer) || (BaseClass == Job_Merchant))) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -2639,7 +2659,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "close so I know they're your";
 		mes "friends, not some other guys.";
 		next;
-		delitem 7740,1; //Mission_Certificate11
+		delitem Mission_Certificate11,1;
 		party_relay = 31;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
@@ -2649,7 +2669,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "important to know!";
 		close;
 	}
-	if ((countitem(7740) > 0) && ((BaseClass == Job_Archer) || (BaseClass == Job_Merchant))) {
+	if ((countitem(Mission_Certificate11) > 0) && ((BaseClass == Job_Archer) || (BaseClass == Job_Merchant))) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -2698,8 +2718,8 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "gift from me. Cool, huh?";
 		next;
 		party_relay = 22;
-		getitem 7737,1; //Mission_Certificate8
-		getitem 610,2; //Leaf_Of_Yggdrasil
+		getitem Mission_Certificate8,1;
+		getitem Leaf_Of_Yggdrasil,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
@@ -2734,8 +2754,8 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "gift from me. Cool, huh?";
 		next;
 		party_relay = 22;
-		getitem 7737,1; //Mission_Certificate8
-		getitem 610,2; //Leaf_Of_Yggdrasil
+		getitem Mission_Certificate8,1;
+		getitem Leaf_Of_Yggdrasil,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
@@ -2764,7 +2784,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "Just only those times, okay?";
 		close;
 	}
-	if ((countitem(7736) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && (BaseClass == Job_Merchant)) {
+	if ((countitem(Mission_Certificate7) > 0) && (.@relaytime >= 11) && (.@relaytime < 14) && (BaseClass == Job_Merchant)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -2795,7 +2815,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "close so I know they're your";
 		mes "friends, not some other guys.";
 		next;
-		delitem 7736,1; //Mission_Certificate7
+		delitem Mission_Certificate7,1;
 		party_relay = 21;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
@@ -2805,7 +2825,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "important to know!";
 		close;
 	}
-	else if ((countitem(7736) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && (BaseClass == Job_Merchant)) {
+	else if ((countitem(Mission_Certificate7) > 0) && (.@relaytime >= 0) && (.@relaytime < 3) && (BaseClass == Job_Merchant)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -2836,7 +2856,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "close so I know they're your";
 		mes "friends, not some other guys.";
 		next;
-		delitem 7736,1; //Mission_Certificate7
+		delitem Mission_Certificate7,1;
 		party_relay = 21;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
@@ -2846,7 +2866,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "important to know!";
 		close;
 	}
-	if ((countitem(7736) > 0) && (BaseClass == Job_Merchant)) {
+	if ((countitem(Mission_Certificate7) > 0) && (BaseClass == Job_Merchant)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -2895,8 +2915,8 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "gift from me. Cool, huh?";
 		next;
 		party_relay = 11;
-		getitem 7733,1; //Mission_Certificate4
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate4,1;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
@@ -2931,8 +2951,8 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "gift from me. Cool, huh?";
 		next;
 		party_relay = 11;
-		getitem 7733,1; //Mission_Certificate4
-		getitem 607,2; //Yggdrasilberry
+		getitem Mission_Certificate4,1;
+		getitem Yggdrasilberry,2;
 		callfunc "F_PartyRelay_Exp";
 		mes "[Lospii]";
 		mes "Okay, now take this";
@@ -2961,7 +2981,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "I... I can't read watches...";
 		close;
 	}
-	if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 14) && (.@relaytime < 17)) && (BaseClass == Job_Archer)) {
+	if ((countitem(Mission_Certificate3) > 0) && (BaseLevel > 39) && ((.@relaytime >= 14) && (.@relaytime < 17)) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -2992,7 +3012,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "close so I know they're your";
 		mes "friends, not some other guys.";
 		next;
-		delitem 7732,1; //Mission_Certificate3
+		delitem Mission_Certificate3,1;
 		party_relay = 10;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
@@ -3002,7 +3022,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "important to know!";
 		close;
 	}
-	else if ((countitem(7732) > 0) && (BaseLevel > 39) && ((.@relaytime >= 18) && (.@relaytime < 21)) && (BaseClass == Job_Archer)) {
+	else if ((countitem(Mission_Certificate3) > 0) && (BaseLevel > 39) && ((.@relaytime >= 18) && (.@relaytime < 21)) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3033,7 +3053,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "close so I know they're your";
 		mes "friends, not some other guys.";
 		next;
-		delitem 7732,1; //Mission_Certificate3
+		delitem Mission_Certificate3,1;
 		party_relay = 10;
 		mes "[Lospii]";
 		mes "Okay, I'll be right";
@@ -3043,7 +3063,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "important to know!";
 		close;
 	}
-	if ((countitem(7732) > 0) && (BaseLevel > 39) && (BaseClass == Job_Archer)) {
+	if ((countitem(Mission_Certificate3) > 0) && (BaseLevel > 39) && (BaseClass == Job_Archer)) {
 		mes "[Lospii]";
 		mes "Hi, I'm Lospii! Maybe";
 		mes "I'm younger than you, but";
@@ -3075,7 +3095,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 	close;
 }
 
-// EXP Rewards
+//== EXP Rewards ===========================================
 function	script	F_PartyRelay_Exp	{
 	if (RENEWAL_EXP) { //unconfirmed
 		if (BaseLevel > 94) getexp 104760,0;
@@ -3097,31 +3117,31 @@ function	script	F_PartyRelay_Exp	{
 	return;
 }
 
-// Comodo Relay
+//== Comodo Relay ==========================================
 comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	4_M_MANAGER
 comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	4_M_04
 comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	4_M_JOB_BLACKSMITH
 comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	4_M_KID1
 
-// Einbroch Relay
+//== Einbroch Relay ========================================
 einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	4_M_MANAGER
 einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	4_M_04
 einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	4_M_JOB_BLACKSMITH
 einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	4_M_KID1
 
-// Relay Hugel
+//== Relay Hugel ===========================================
 hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	4_M_MANAGER
 hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	4_M_04
 hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	4_M_JOB_BLACKSMITH
 hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	4_M_KID1
 
-// Relay Rachel
+//== Relay Rachel ==========================================
 rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	4_M_MANAGER
 rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	4_M_04
 rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	4_M_JOB_BLACKSMITH
 rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	4_M_KID1
 
-// Relay Veins
+//== Relay Veins ===========================================
 veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	4_M_MANAGER
 veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	4_M_04
 veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	4_M_JOB_BLACKSMITH

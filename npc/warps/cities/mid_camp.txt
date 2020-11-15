@@ -1,21 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) brianluau
+//= Copyright (C) Brainstorm
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Another World Warp Script
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Warp Points for Another World
+//================= Current Version =======================================
+//= 1.5
+//================= Additional Comments ===================================
 //= Warp points to and from fild22b and mid_camp are temporary.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Fixed a small bug by brianlew, bugreport:1824 [Brainstorm]
-//= 1.2 Corrected the observatory warp portal, thanks to Ziu. [brianluau]
-//= 1.3 Added warps, and also Updated warp positions. [L0ne_W0lf]
-//= 1.4 Removed the warp from midgard camp to morroc field. [L0ne_W0lf]
-//= 1.5 Remove a warp. [Joseph]
-//============================================================
+//=========================================================================
 
 mid_camp,205,211,0	warp	mid_weapon1-1	1,1,mid_campin,229,123
 mid_campin,232,123,0	warp	mid_weapon1-2	1,1,mid_camp,208,211
@@ -42,4 +62,3 @@ mid_camp,266,260,0	warp	mid_house1-1	1,1,mid_campin,284,124
 mid_campin,282,124,0	warp	mid_house1-2	1,1,mid_camp,263,260
 mid_camp,163,231,0	warp	mid_house2-1	1,1,mid_campin,376,133
 mid_campin,376,136,0	warp	mid_house2-2	1,1,mid_camp,163,234
-

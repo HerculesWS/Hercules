@@ -1,17 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= God Item Quest - Variable Management
-//===== By: ==================================================
-//= MasterOfMuppets
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Use this NPC if the seals quest variables get messed up.
-//===== Additional Comments: =================================
-//= 1.0 First version. [MasterOfMuppets]
-//= 1.1 Updated several aspects of the script. [L0ne_W0lf]
-//= 1.2 Renewal script update. [Euphy]
-//=    Added GM management function.
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 	callfunc "F_GM_NPC";
@@ -22,7 +43,7 @@ sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 		mes "[Check]";
 		mes "Please choose a menu.";
 		next;
-		switch(select("Now:No.1:No.2:No.3:No.4:Reset:god_sl_1:god_eremes:god_brising:god_mjo_0:god_mjo_1:god_mjo_2:god_mjo_3:god_mjo_4")) {
+		switch(select("Now", "No.1", "No.2", "No.3", "No.4", "Reset", "god_sl_1", "god_eremes", "god_brising", "god_mjo_0", "god_mjo_1", "god_mjo_2", "god_mjo_3", "god_mjo_4")) {
 		case 1:
 			mes "^0000FF$God1^000000 = ^FF0000" + $God1 + "^000000.";
 			mes "^0000FF$God2^000000 = ^FF0000" + $God2 + "^000000.";
@@ -72,7 +93,7 @@ sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 	}
 
 L_Number:
-	input .@input,0,$@god_check2;
+	input(.@input, 0, $@god_check2);
 	mes "[Check]";
 	mes "Would you like to change to "+.@input+"?";
 	mes "Please enter the password.";
@@ -91,7 +112,7 @@ L_Number:
 	}
 
 L_Var:
-	input .@input;
+	input(.@input, 0);
 	setd getarg(0),.@input;
 	next;
 	mes "[Check]";

@@ -1,21 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Muad_Dib
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Rune Knight Job Quest
-//===== By: ==================================================
-//= L0ne_W0lf, Muad_Dib
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= Job change Quest from Knight / Lord Knight -> Rune Knight.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Added forgoten Header. [Masao]
-//= 1.2 Added Energy Rune item reward. [Masao]
-//= 1.3 Updated script, optimized. [Euphy]
-//= 1.3a Added 'npcskill' command. [Euphy]
-//= 1.4 Fixed a few bugs. [Euphy]
-//= 1.4a Moved Kafra to main file. [Euphy]
-//= 1.5 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 prt_in,162,24,3	script	Splendid-Looking Knight	4_M_KNIGHT_SILVER,2,2,{
 	mes "[Rune Knight Manuel]";
@@ -35,7 +53,7 @@ prt_in,162,24,3	script	Splendid-Looking Knight	4_M_KNIGHT_SILVER,2,2,{
 		mes "[Rune Knight Manuel]";
 		mes "Anyway the drinks here are really good. Would you like to have one?";
 		next;
-		if(select("Sure, let's have a drink.:I refuse.") == 2) {
+		if(select("Sure, let's have a drink.", "I refuse.") == 2) {
 			mes "[Rune Knight Manuel]";
 			mes "Are you sure? You don't know the true elegance of these drinks...";
 			close;
@@ -67,7 +85,7 @@ prt_in,162,24,3	script	Splendid-Looking Knight	4_M_KNIGHT_SILVER,2,2,{
 				mes "[Rune Knight Manuel]";
 				mes "If you are interested, I'll introduce you to the masters who will guide you to the way of the Rune Knight with my recommendation.";
 				next;
-				switch(select("I am not ready yet.:I'm ready to be a Rune Knight.")) {
+				switch(select("I am not ready yet.", "I'm ready to be a Rune Knight.")) {
 				case 1:
 					mes "[Rune Knight Manuel]";
 					mes "Right. Every challenge always needs preparation. Okay, I'll wait for you.";
@@ -128,7 +146,7 @@ prt_in,162,24,3	script	Splendid-Looking Knight	4_M_KNIGHT_SILVER,2,2,{
 glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 	mes "[Guide, Jungberg]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
-		mes "Oh, you must be "+strcharinfo(0)+".";
+		mes "Oh, you must be "+strcharinfo(PC_NAME)+".";
 		mes "Welcome.";
 		next;
 		mes "[Guide, Jungberg]";
@@ -137,7 +155,7 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 		mes "[Guide, Jungberg]";
 		mes "So, What can I help you with?";
 		next;
-		switch(select("I want to go to the gathering place.:Nothing.")) {
+		switch(select("I want to go to the gathering place.", "Nothing.")) {
 		case 1:
 			mes "[Guide, Jungberg]";
 			mes "Right. I'll send you right now. I'll see you soon.";
@@ -162,7 +180,7 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 		mes "If you are a breathing human, then listen to me carefullly. I wouldn't risk my life here by hesitating to talk to just anyone.";
 		next;
 		if (job_rune_edq == 0) {
-			switch(select("Who are you?:What are you doing here?:Cancel.")) {
+			switch(select("Who are you?", "What are you doing here?", "Cancel.")) {
 			case 1:
 				mes "[Guide, Jungberg]";
 				mes "I am the only knight who's keeping the way of the Swordsman in this cursed place Glast Heim.";
@@ -193,13 +211,13 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 				close;
 			}
 		} else if (job_rune_edq == 1) {
-			switch(select("I came to be a Rune Knight.:Cancel.")) {
+			switch(select("I came to be a Rune Knight.", "Cancel.")) {
 			case 1:
 				mes "[Guide, Jungberg]";
 				mes "Um... Are you the Rune Knight candidate that Manuel talked about?";
 				next;
 				mes "[Guide, Jungberg]";
-				mes "Your name is "+strcharinfo(0)+", right? I can see clearly that you are qualified to become our comrade.";
+				mes "Your name is "+strcharinfo(PC_NAME)+", right? I can see clearly that you are qualified to become our comrade.";
 				next;
 				mes "[Guide, Jungberg]";
 				mes "Good. I don't have to ask any more about your qualification to join our brethren....1.S... Now I'll give you your first assignment.";
@@ -237,7 +255,7 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 	}
 	mes "It seems that you are still taking the test. Do your best and pass all the tests.";
 	next;
-	switch(select("I want to go to the gathering place.:Quit the conversation.")) {
+	switch(select("I want to go to the gathering place.", "Quit the conversation.")) {
 	case 1:
 		mes "[Guide, Jungberg]";
 		mes "All right. I'll send you right away. I'll check you later.";
@@ -252,9 +270,9 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 gl_knt02,150,55,3	script	Rune Knight Staff	4_M_01,2,2,{
 	mes "[Rune Knight Staff]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
-		mes "Welcome, "+strcharinfo(0)+". Are you going to the gathering place?";
+		mes "Welcome, "+strcharinfo(PC_NAME)+". Are you going to the gathering place?";
 		next;
-		switch(select("Yes, take me there.:I'm on other business.:Cancel.")) {
+		switch(select("Yes, take me there.", "I'm on other business.", "Cancel.")) {
 		case 1:
 			mes "[Rune Knight Staff]";
 			mes "Okay, come in. I'll guide you.";
@@ -297,7 +315,7 @@ gl_knt02,150,55,3	script	Rune Knight Staff	4_M_01,2,2,{
 }
 
 job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "You've got too many things. You cannot proceed anymore. Please try again after losing some weight.";
 		close;
 	}
@@ -330,7 +348,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			job_rune_edq = 24;
 			close;
 		}
-		mes "Hey, long time no see, "+strcharinfo(0)+". I don't think you've got any important matters to discuss but make yourself comfortable.";
+		mes "Hey, long time no see, "+strcharinfo(PC_NAME)+". I don't think you've got any important matters to discuss but make yourself comfortable.";
 		close;
 	}
 	if (BaseJob == Job_Knight) {
@@ -343,7 +361,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			mes "Hey, are you the Rune Knight candidate that Manuel recommended? I am Captain Tigris from the Rune Knights, and your name is?";
 			next;
 			mes "[Captain Tigris]";
-			mes "Oh, I've heard it before but I've forgotten it. Right, were you "+strcharinfo(0)+"? I truly welcome you from the heart for coming here.";
+			mes "Oh, I've heard it before but I've forgotten it. Right, were you "+strcharinfo(PC_NAME)+"? I truly welcome you from the heart for coming here.";
 			next;
 			mes "[Captain Tigris]";
 			mes "Let's see. How many candidates have come to this room? Hey, Lunarea, which candidate is this one here?";
@@ -502,7 +520,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			mes "[Captain Tigris]";
 			mes "Well, my job is done now. Would you like to start your new life as a Rune Knight?";
 			next;
-			switch(select("Every preparation is done.:I need more time to think.")) {
+			switch(select("Every preparation is done.", "I need more time to think.")) {
 			case 1:
 				if (SkillPoint != 0 || checkmount() == MOUNT_PECO) {
 					mes "[Captain Tigris]";
@@ -529,8 +547,8 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 				mes "[Captain Tigris]";
 				mes "This Knight is going to walk the way of the Rune Knights with us, so please give your blessing.";
 				next;
-				getitem 5746,1; //Rune_Circlet
-				getitem 2795,1; //Green_Apple_Ring
+				getitem Rune_Circlet,1;
+				getitem Green_Apple_Ring,1;
 				job_rune_edq = 23;
 				completequest 3219;
 				jobchange roclass(eaclass()|EAJL_THIRD);
@@ -600,7 +618,7 @@ job3_rune01,90,50,3	script	Rune Knight Lunarea	4_M_KNIGHT_GOLD,2,2,{
 			mes "[Rune Knight, Lunarea]";
 			mes "When you are ready to go to the test field talk to me.";
 			next;
-			switch(select("Move to the test field now.:Give me time to get ready.")) {
+			switch(select("Move to the test field now.", "Give me time to get ready.")) {
 			case 1:
 				callsub L_Test,0;
 				close;
@@ -620,7 +638,7 @@ job3_rune01,90,50,3	script	Rune Knight Lunarea	4_M_KNIGHT_GOLD,2,2,{
 			mes "[Rune Knight, Lunarea]";
 			mes "If you are ready to move to the test field talk to me.";
 			next;
-			switch(select("Move to the test field now.:Please give me time to prepare.")) {
+			switch(select("Move to the test field now.", "Please give me time to prepare.")) {
 			case 1:
 				if (questprogress(3220,PLAYTIME) == 1) {
 					mes "[Rune Knight, Lunarea]";
@@ -691,7 +709,7 @@ L_Test:
 job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 	mes "[Rune Knight, Renoa]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
-		mes "Congratulations for becoming one of us. Junior Rune Knight, "+strcharinfo(0)+".";
+		mes "Congratulations for becoming one of us. Junior Rune Knight, "+strcharinfo(PC_NAME)+".";
 		next;
 		mes "[Rune Knight, Renoa]";
 		mes "Soon you'll see the way we need to go clearly.";
@@ -787,7 +805,7 @@ job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 		} else if (job_rune_edq > 11 && job_rune_edq < 14) {
 			mes "If you are ready I'll open the way to the sage, Serpeone who's in the Rune-Midgard post at Ash-Vacuum. Are you prepared?";
 			next;
-			switch(select("Yes, I am prepared.:Not yet.")) {
+			switch(select("Yes, I am prepared.", "Not yet.")) {
 			case 1:
 				mes "[Rune Knight, Renoa]";
 				mes "Good. Then I'll send you there now. But, there's one thing I need to tell you.";
@@ -853,7 +871,7 @@ job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 			mes "[Rune Knight, Renoa]";
 			mes "The number of total rune stones you need to make is exactly 20. Remember that well.";
 			next;
-			switch(select("Check number of made runes?:I've made all the 20 rune stones.")) {
+			switch(select("Check number of made runes?", "I've made all the 20 rune stones.")) {
 			case 1:
 				mes "[Rune Knight, Renoa]";
 				mes "The number of rune stones made 'til now is " + job_rune_edq2 + ".";
@@ -912,7 +930,7 @@ job3_rune01,58,51,1	script	Rune Furnace	CLEAR_NPC,{
 	} else if (job_rune_edq == 15) {
 		mes "I can see a hole under the huge Rune Stone Statue behind Renoa. Clearly this is a mass-produced rune heating furnace that I read in the book.";
 		next;
-		if(select("Use the Rune Heating Furnace:Stop.") == 2) close;
+		if(select("Use the Rune Heating Furnace", "Stop.") == 2) close;
 		switch(rand(24)) {
 			case 0: setarray .@str$[0],"Ehwaz","This red hot spiral is..."; break;
 			case 1: setarray .@str$[0],"Osilla","The rune flashing with this violet oblique line shape is..."; break;
@@ -944,7 +962,7 @@ job3_rune01,58,51,1	script	Rune Furnace	CLEAR_NPC,{
 		next;
 		mes .@str$[1];
 		next;
-		input .@inputstr$;
+		input(.@inputstr$);
 		if (.@inputstr$ == .@str$[0]) {
 			mes "[Rune Knight Renoa]";
 			mes "Wow! This is great. The image of the rune stone in my head and the modeled rune stone match perfectly. It's well made.";
@@ -986,7 +1004,7 @@ job3_rune01,40,54,1	script	Runes and Rune Knights	CLEAR_NPC,{
 		close;
 	}
 	while(1) {
-		switch(select("The birth of Rune Knights:Runes and Magic Energy:Stop Reading")) {
+		switch(select("The birth of Rune Knights", "Runes and Magic Energy", "Stop Reading")) {
 		case 1:
 			.@book1 = 1;
 			mes "Rune Knights are the gathering of evolved swordmen who have achieved the harmony of sword and magic.";
@@ -1045,7 +1063,7 @@ job3_rune01,43,44,1	script	The Principles of Runes	CLEAR_NPC,{
 		close;
 	}
 	while(1) {
-		switch(select("The principle use of Runes:The types of Runes:Stop Reading")) {
+		switch(select("The principle use of Runes", "The types of Runes", "Stop Reading")) {
 		case 1:
 			.@book1 = 1;
 			mes "A rune is a kind of symbol that's been used on the Rune-Midgard continent since ancient times. Up until now it has only been used by occult circles.";
@@ -1092,7 +1110,7 @@ job3_rune01,50,36,1	script	Runes, Make & Use	CLEAR_NPC,{
 		close;
 	}
 	while(1) {
-		switch(select("The Making of Rune Stones:Rune Stone Ability Details:Stop Reading")) {
+		switch(select("The Making of Rune Stones", "Rune Stone Ability Details", "Stop Reading")) {
 		case 1:
 			.@book1 = 1;
 			mes "The making of Rune stones is achieved through a skill called rune mastery which is learned when one becomes a Rune Knight.";
@@ -1110,7 +1128,7 @@ job3_rune01,50,36,1	script	Runes, Make & Use	CLEAR_NPC,{
 			break;
 		case 2:
 			.@book2 = 1;
-			switch(select("Chapter One:Chapter Two:Chapter Three:Chapter Four:Stop Reading")) {
+			switch(select("Chapter One", "Chapter Two", "Chapter Three", "Chapter Four", "Stop Reading")) {
 			case 1:
 				mes "Ehwaz - This rune means the enhancement of luck and positive power. It shapes the source in the form of a red spiral in a Rune Furnace.";
 				next;
@@ -1218,16 +1236,16 @@ mid_camp,13,138,3	script	Dispatched Rune Knight#1	4_M_01,2,2,{
 		mes "I've been waiting for you Rune Knight candidate. I'm helping the candidates as a favor to Ms. Serpeone.";
 		next;
 		mes "[Dispatched Rune Knight]";
-		if (strnpcinfo(0) == "Dispatched Rune Knight#1") {
+		if (strnpcinfo(NPC_NAME) == "Dispatched Rune Knight#1") {
 			mes "Do you want to go out to the Splendide field?";
 			next;
-			if(select("Move to Splendide field:Cancel.") == 1)
+			if(select("Move to Splendide field", "Cancel.") == 1)
 				warp "spl_fild01",355,325;
 			close;
-		} else if (strnpcinfo(0) == "Dispatched Rune Knight#2") {
+		} else if (strnpcinfo(NPC_NAME) == "Dispatched Rune Knight#2") {
 			mes "Do you want to go back to the expeditionary team's post?";
 			next;
-			if(select("Yes please.:Not yet.") == 1)
+			if(select("Yes please.", "Not yet.") == 1)
 				warp "mid_camp",50,153;
 			close;
 		}
@@ -1341,7 +1359,7 @@ mid_camp,235,250,3	script	Sage Serpeone	4_F_FAIRY,2,2,{
 		} else if (job_rune_edq == 13) {
 			mes "Are you gathering enough magical energy? Or do you have any questions?";
 			next;
-			switch(select("I've gathered enough energy.:To the gathering place.:Stop the conversation.")) {
+			switch(select("I've gathered enough energy.", "To the gathering place.", "Stop the conversation.")) {
 			case 1:
 				mes "[Sage Serpeone]";
 				mes "Is it so? Then let's check this out.";
@@ -1379,7 +1397,7 @@ mid_camp,235,250,3	script	Sage Serpeone	4_F_FAIRY,2,2,{
 				mes "[Sage Serpeone]";
 				mes "Do you want to go back the Rune Knight gathering place?";
 				next;
-				if(select("I want to go back.:I want to cancel.") == 1)
+				if(select("I want to go back.", "I want to cancel.") == 1)
 					warp "job3_rune01",80,65;
 				close;
 			case 3:
@@ -1388,7 +1406,7 @@ mid_camp,235,250,3	script	Sage Serpeone	4_F_FAIRY,2,2,{
 		} else if (job_rune_edq == 14) {
 			mes "Are you ready to go back to the Rune Knight gathering place?";
 			next;
-			if(select("I want to go back now.:I am not ready yet.") == 1)
+			if(select("I want to go back now.", "I am not ready yet.") == 1)
 				warp "job3_rune01",80,65;
 			close;
 		}
@@ -1400,7 +1418,7 @@ mid_camp,235,250,3	script	Sage Serpeone	4_F_FAIRY,2,2,{
 		mes "[Sage Serpeone]";
 		mes "Then I'll send you to the Rune Knight gathering place where you should be.";
 		next;
-		if(select("I'll go back now.:I'll stay.") == 1)
+		if(select("I'll go back now.", "I'll stay.") == 1)
 			warp "job3_rune01",80,65;
 		close;
 	}
@@ -1469,12 +1487,12 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			changequest 3216,3217;
 			close;
 		} else if (job_rune_edq > 17 && job_rune_edq < 21) {
-			if (countitem(12388)+countitem(12389)+countitem(12390) == 0) {
+			if (countitem(Runstone_Crush)+countitem(Runstone_Storm)+countitem(Runstone_Millennium) == 0) {
 				mes "[Rune Knight Velpino]";
 				mes "If all of your preparations are done, I'll send you to the final test field.";
 				job_rune_edq = 18;
 				next;
-				if(select("Enter the final test field.:I'm not ready yet.") == 2) close;
+				if(select("Enter the final test field.", "I'm not ready yet.") == 2) close;
 				if (getequipisequiped(EQI_HEAD_TOP) || getequipisequiped(EQI_ARMOR) || getequipisequiped(EQI_GARMENT) || getequipisequiped(EQI_SHOES) ||
 				    getequipisequiped(EQI_ACC_L) || getequipisequiped(EQI_ACC_R) || getequipisequiped(EQI_HEAD_MID) || getequipisequiped(EQI_HEAD_LOW)) {
 					mes "[Rune Knight Velpino]";
@@ -1493,8 +1511,8 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 					if (Weight < 4001) {
 						$@job_rune_test1 = 1;
 						sc_start SC_INCINT,300000,40;
-						getitem 12389,30; //Runstone_Storm
-						getitem 12390,30; //Runstone_Millennium
+						getitem Runstone_Storm,30;
+						getitem Runstone_Millennium,30;
 						if (questprogress(3220)) erasequest 3220;
 						setquest 3220;
 						warp "job3_rune02",38,40;
@@ -1517,9 +1535,9 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			}
 			mes "[Rune Knight Velpino]";
 			mes "Wait, I'll collect all the rune stones provided before. There's a certain limit on using the rune stones that's made for the test.";
-			if (countitem(12388)) delitem 12388,countitem(12388); //Runstone_Crush
-			if (countitem(12389)) delitem 12389,countitem(12389); //Runstone_Storm
-			if (countitem(12390)) delitem 12390,countitem(12390); //Runstone_Millennium
+			if (countitem(Runstone_Crush)) delitem Runstone_Crush,countitem(Runstone_Crush);
+			if (countitem(Runstone_Storm)) delitem Runstone_Storm,countitem(Runstone_Storm);
+			if (countitem(Runstone_Millennium)) delitem Runstone_Millennium,countitem(Runstone_Millennium);
 			next;
 			mes "[Rune Knight Velpino]";
 			mes "I'll get new rune stones so if your preparation is all done, please talk to me again.";
@@ -1528,7 +1546,7 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			mes "[Rune Knight Velpino]";
 			mes "You've been very successful up to the last test.";
 			next;
-			if (countitem(12388)+countitem(12389)+countitem(12390) == 0) {
+			if (countitem(Runstone_Crush)+countitem(Runstone_Storm)+countitem(Runstone_Millennium) == 0) {
 				mes "[Rune Knight Velpino]";
 				mes "Now all the tests you need to take are over. Go back to Captain Tigris and inform him of this test result, and then feel the deep emotion of being born again as a Rune Knight.";
 				next;
@@ -1541,9 +1559,9 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			}
 			mes "[Rune Knight Velpino]";
 			mes "Wait, I'll collect all the rune stones provided before. There's a certain limit on using the rune stones that's made for the test.";
-			if (countitem(12388)) delitem 12388,countitem(12388); //Runstone_Crush
-			if (countitem(12389)) delitem 12389,countitem(12389); //Runstone_Storm
-			if (countitem(12390)) delitem 12390,countitem(12390); //Runstone_Millennium
+			if (countitem(Runstone_Crush)) delitem Runstone_Crush,countitem(Runstone_Crush);
+			if (countitem(Runstone_Storm)) delitem Runstone_Storm,countitem(Runstone_Storm);
+			if (countitem(Runstone_Millennium)) delitem Runstone_Millennium,countitem(Runstone_Millennium);
 			next;
 			mes "[Rune Knight Velpino]";
 			mes "I'll need to re-use these unused rune stones. Talk to me again once I have taken all the test rune stones.";
@@ -1819,7 +1837,7 @@ job3_rune02,34,46,5	script	Captain Tigris#jrt1	4_M_KNIGHT_SILVER,2,2,{
 		break;
 	case 3:
 		mapannounce "job3_rune02","Captain Tigris : Evil demons! I will send you back to your graves!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
-		specialeffect2 EF_METEORSTORM;
+		specialeffect(EF_METEORSTORM, AREA, playerattached());
 		donpcevent "job_rune_edq#1st_tcmc::OnReset";
 		break;
 	case 4:
@@ -1910,7 +1928,7 @@ job3_rune02,43,34,1	script	Rune Knight Renoa#jrt1	4_M_KNIGHT_GOLD,2,2,{
 		break;
 	case 3:
 		mapannounce "job3_rune02","Rune Knight Renoa : I am faster than all of them! Different then the others!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
-		specialeffect2 EF_PIERCESELF;
+		specialeffect(EF_PIERCESELF, AREA, playerattached());
 		donpcevent "job_rune_edq#1st_tcmc::OnReset";
 		break;
 	case 4:
@@ -2141,7 +2159,7 @@ sec_in02,34,167,3	script	R.Knight Job Manager	4_M_KNIGHT_SILVER,1,1,{
 	if (callfunc("F_GM_NPC","1854",1) == 1) {
 		mes "Rune Knight Job Change Managing Module Start";
 		next;
-		switch(select("GlobalVar check:GlobalVar Oneshot Modification")) {
+		switch(select("GlobalVar check", "GlobalVar Oneshot Modification")) {
 		case 1:
 			mes "Rune Knight Job Change GlobalVar right now is " + $@job_rune_test1 + ".";
 			mes "The number of Rune Knight Test field right now is... " + getmapusers("job3_rune02") + ".";

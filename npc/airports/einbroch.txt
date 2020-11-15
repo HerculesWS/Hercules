@@ -1,32 +1,53 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Muad_Dib
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Einbroch Airport Staff
-//===== By: ==================================================
-//= L0ne_W0lf, Muad_Dib
-//===== Description: =========================================
-//= Einbroch Airport Staff
-//===== Additional Comments: =================================
-//= Official NPCs.
-//============================================================
+//=========================================================================
 
 airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
-	mes "[Airport Staff]";
-	mes "Welcome to the";
-	mes "Einbroch Airport,";
-	mes "where we offer nonstop";
-	mes "flights to the cities of";
-	mes "Juno, Lighthalzen and Hugel.";
+	mes("[Airport Staff]");
+	mes("Welcome to the\r"
+		"Einbroch Airport,\r"
+		"where we offer nonstop\r"
+		"flights to the cities of\r"
+		"Juno, Lighthalzen and Hugel.");
 	next;
-	if (select("Board the Airship:Cancel") == 1) {
-		mes "[Airport Staff]";
-		mes "The Airship boarding fee";
-		mes "is 1,200 zeny, but if you've";
-		mes "got a Free Ticket for Airship,";
-		mes "the fee will be waived. Will";
-		mes "you board the Airship?";
+	if (select("Board the Airship", "Cancel") == 1) {
+		mes("[Airport Staff]");
+		mes("The Airship boarding fee\r"
+			"is 1,200 zeny, but if you've\r"
+			"got a Free Ticket for Airship,\r"
+			"the fee will be waived. Will\r"
+			"you board the Airship?");
 		next;
-		if (select("Yes:No") == 1) {
-			if (countitem(7311) > 0) {
-				delitem 7311,1; //Free_Flying_Ship_Ticket
+		if (select("Yes", "No") == 1) {
+			if (countitem(Free_Flying_Ship_Ticket) > 0) {
+				delitem Free_Flying_Ship_Ticket,1;
 				warp "airport",148,51;
 				end;
 			}
@@ -35,19 +56,19 @@ airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
 				warp "airport",148,51;
 				end;
 			}
-			mes "[Airport Staff]";
-			mes "I'm sorry, but you don't";
-			mes "have a Free Ticket for";
-			mes "Airship and you don't have";
-			mes "enough zeny for boarding";
-			mes "the Airship. Remember, the";
-			mes "boarding fee is 1,200 zeny.";
+			mes("[Airport Staff]");
+			mes("I'm sorry, but you don't\r"
+				"have a Free Ticket for\r"
+				"Airship and you don't have\r"
+				"enough zeny for boarding\r"
+				"the Airship. Remember, the\r"
+				"boarding fee is 1,200 zeny.");
 			close;
 		}
 	}
-	mes "[Airport Staff]";
-	mes "Thank you and";
-	mes "have a nice day.";
+	mes("[Airport Staff]");
+	mes("Thank you and\r"
+		"have a nice day.");
 	close;
 }
 
@@ -55,31 +76,31 @@ airport,158,43,5	duplicate(airport1)	Airport Staff#airport1b	4_F_01
 airport,126,43,5	duplicate(airport1)	Airport Staff#airport1c	4_F_01
 
 airport,143,49,3	script	Arrival Staff#airport2a::airport2	4_F_01,{
-	mes "[Arrival Staff]";
-	mes "Welcome to Einbroch Airport.";
-	mes "If you are arriving from your";
-	mes "flight, let me guide you to the";
-	mes "main terminal. Otherwise, please board the Airship to depart to";
-	mes "Juno, Lighthalzen and Hugel.";
+	mes("[Arrival Staff]");
+	mes("Welcome to Einbroch Airport.");
+	mes("If you are arriving from your\r"
+		"flight, let me guide you to the\r"
+		"main terminal. Otherwise, please board the Airship to depart to\r"
+		"Juno, Lighthalzen and Hugel.");
 	next;
-	if (select("Exit to main terminal.:Cancel.") == 1) {
-		mes "[Arrival Staff]";
-		mes "Once you're in the main terminal, you will need to pay the fee again";
-		mes "to board an Airship. You should";
-		mes "only exit if the city of Einbroch";
-		mes "is your intended destination.";
-		mes "Proceed to the main terminal?";
+	if (select("Exit to main terminal.", "Cancel.") == 1) {
+		mes("[Arrival Staff]");
+		mes("Once you're in the main terminal, you will need to pay the fee again\r"
+			"to board an Airship. You should\r"
+			"only exit if the city of Einbroch\r"
+			"is your intended destination.");
+		mes("Proceed to the main terminal?");
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			warp "airport",142,40;
 			end;
 		}
 	}
-	mes "[Arrival Staff]";
-	mes "Alright, thank you";
-	mes "for your patronage";
-	mes "and I hope you have";
-	mes "a pleasant flight~";
+	mes("[Arrival Staff]");
+	mes("Alright, thank you\r"
+		"for your patronage\r"
+		"and I hope you have\r"
+		"a pleasant flight~");
 	close;
 }
 
@@ -87,20 +108,20 @@ airport,126,51,3	duplicate(airport2)	Arrival Staff#airport2b	4_F_01
 airport,158,50,3	duplicate(airport2)	Arrival Staff#airport2c	4_F_01
 
 einbroch,94,267,3	script	Airship Staff#ein01	4_F_02,{
-	mes "[Airship Staff]";
-	mes "Welcome to the";
-	mes "Einbroch Airport.";
-	mes "Please use this door to";
-	mes "board the Airship which stops";
-	mes "over Juno, Lighthalzen and";
-	mes "Hugel in the Schwaltzvalt Republic.";
+	mes("[Airship Staff]");
+	mes("Welcome to the\r"
+		"Einbroch Airport.");
+	mes("Please use this door to\r"
+		"board the Airship which stops\r"
+		"over Juno, Lighthalzen and\r"
+		"Hugel in the Schwaltzvalt Republic.");
 	next;
-	mes "[Airship Staff]";
-	mes "Otherwise, if Einbroch is";
-	mes "your intended destination,";
-	mes "please head down the stairs";
-	mes "and ask the Arrival Staff to lead";
-	mes "you to the main terminal. Thank";
-	mes "you, and enjoy your travels.";
+	mes("[Airship Staff]");
+	mes("Otherwise, if Einbroch is\r"
+		"your intended destination,\r"
+		"please head down the stairs\r"
+		"and ask the Arrival Staff to lead\r"
+		"you to the main terminal. Thank\r"
+		"you, and enjoy your travels.");
 	close;
 }

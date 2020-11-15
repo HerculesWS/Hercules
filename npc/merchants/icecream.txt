@@ -1,27 +1,48 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) Kisuka
+//= Copyright (C) KOOK SWU
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ice Cream Maker
-//===== By: ==================================================
-//= KOOK SWU, Kisuka
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= A man makes you ice-cream
-//===== Additional Comments: =================================
-//= 1.1 Optimized, changed overlapping coords in Alberta [Lupus]
-//= 1.2 According to the patch, IceCream seller has been removed from Morocc [Lupus]
-//= 1.3 No more label menu and updated to match AEGIS script. [Kisuka]
-//= 1.4 Duplicates now spawn from floating NPCs. [L0ne_W0lf]
-//= 1.5 Fixed small checkweight issue. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
--	script	Ice Cream Maker::IceCreamer	-1,{
+-	script	Ice Cream Maker::IceCreamer	FAKE_NPC,{
 	mes "[Ice Cream Maker]";
 	mes "Fresh Ice Cream made with snow from Lutie!";
 	mes "Enjoy it now, it won't be on sale for long!";
 	mes "^3355FF100 Zeny^000000 Ice Cream,";
 	mes "Ice Cream!";
 	next;
-	if(select("Gimme Ice Cream!:Cancel Trade") == 2) {
+	if(select("Gimme Ice Cream!", "Cancel Trade") == 2) {
 		mes "Are you sure you don't want any?";
 		mes "I won't be selling it for long,";
 		mes "and once I run out,";
@@ -35,8 +56,8 @@
 	mes "so you can only purchase 5 at a time!!";
 	next;
 	while(1) {
-		input .@input;
-		if(.@input < 1) {
+		input(.@input);
+		if (.@input <= 0) {
 			mes "[Ice Cream Maker]";
 			mes "If you don't want to buy any,";
 			mes "could you please let the next customer";
@@ -44,7 +65,7 @@
 			mes "Thank you.";
 			close;
 		}
-		if(.@input > 5) {
+		if (.@input > 5) {
 			mes "[Ice Cream Maker]";
 			mes "Ouch";
 			mes "You expect too much.";
@@ -53,7 +74,9 @@
 			mes "If you might haveto make a lot of trips";
 			mes "to the bathroom tonight.";
 			next;
+			continue;
 		}
+		break;
 	}
 	if(Zeny<.@input*100) {
 		mes "[Ice Cream Maker]";
@@ -61,7 +84,7 @@
 		mes "Price is ^3355FF100 Zeny^000000 per ice cream.";
 		close;
 	}
-	if(checkweight(536,.@input) == 0) {
+	if(checkweight(Ice_Cream,.@input) == 0) {
 		mes "[Ice Cream Maker]";
 		mes "Dear customer,you look like you're carrying a lot.";
 		mes "Ice Cream is fine,";
@@ -70,15 +93,15 @@
 		close;
 	}
 	Zeny -= 100*.@input;
-	getitem 536,.@input;	// Ice_Cream
+	getitem Ice_Cream,.@input;	// Ice_Cream
 	close;
 }
 
-// Alberta
+//== Alberta ===============================================
 alberta,120,45,2	duplicate(IceCreamer)	Ice Cream Maker#1	4_M_03
 
-// Morroc Field
+//== Morroc Field ==========================================
 moc_fild16,88,304,4	duplicate(IceCreamer)	Ice Cream Maker#2	4_M_03
 
-// Morroc
+//== Morroc ================================================
 //morocc,160,144,4	duplicate(IceCreamer)	Ice Cream Maker#3	4_M_03

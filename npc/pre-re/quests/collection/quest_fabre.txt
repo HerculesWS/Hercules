@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Fluffs)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 	if (questprogress(60107)) {
@@ -18,7 +38,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "[Langry]";
 			mes "Have you finished hunting the 50 Fabres?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Langry]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Langry]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "[Langry]";
 			mes "Have you finished hunting the 50 Fabres?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Langry]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Langry]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "[Langry]";
 			mes "Have you finished hunting the 150 Fabres?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Langry]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Langry]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -144,13 +164,13 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "Do you think you can help me?";
 			mes "Please?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Langry]";
 				mes "Really?!";
 				mes "That's great!";
 				next;
-				switch(select("Gather Items:Hunt Fabres:Cancel")) {
+				switch(select("Gather Items", "Hunt Fabres", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Langry]";
@@ -158,13 +178,13 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 					mes "complete this community service project.";
 					mes "You know what? I can even reward you a little for helping me.";
 					next;
-					switch(select("I have some Fluff:What was that again?")) {
+					switch(select("I have some Fluff", "What was that again?")) {
 					case 1:
-						if (countitem(914) > 24) {
+						if (countitem(Fluff) > 24) {
 							mes "[Langry]";
 							mes "Thank you for the Fluff. This helps me out greatly.";
 							mes "Oh and here you go, this should help you get stronger, faster!";
-							delitem 914,25; //Fluff
+							delitem Fluff,25;
 							getexp 385,30;
 							close;
 						}
@@ -184,7 +204,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 					mes "Ah, ok I think you can help me out by hunting some Fabres.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Fabres:100 Fabres:150 Fabres")) {
+					switch(select("50 Fabres", "100 Fabres", "150 Fabres")) {
 					case 1:
 						mes "[Langry]";
 						mes "Come back when you've finished your task and I will give you a small reward.";
@@ -225,5 +245,3 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 		close;
 	}
 }
-
-

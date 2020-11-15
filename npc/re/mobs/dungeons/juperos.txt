@@ -1,23 +1,44 @@
-//===== Hercules Script ======================================
-//= Juperos Dungeon Monster Spawn Script
-//===== By: ==================================================
-// The Prometheus Project, Hercules Dev Team
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) rAthena Dev Team
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) The Prometheus Project
+//= Copyright (C) Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Juperos Dungeon Monster Spawn Script (Renewal)
+//================= Description ===========================================
+//= Juperos Dungeon Monster Spawn Script (Renewal)
+//================= Current Version =======================================
 //= 1.4
-//===== Additional Comments: =================================
-//= 0.1 Added 1st version. [Muad_Dib]
-//= 0.2 Updated the spawns according to current info [MasterOfMuppets]
-//= 0.3 Updated the spawns according to own info from iRO [MasterOfMuppets]
-//= 1.0 More exact numbers thanks to Tharis [Playtester]
-//= 1.1 Official X.3 spawns [Playtester]
-//= 1.2 Some 11.1 spawn changes [Playtester]
-//= 1.3 More accurate spawns [Playtester]
-//= 1.4 Corrected MVP spawn variance. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-//==================================================
-// juperos_01 - Ruins of Juperos
-//==================================================
+//== juperos_01 - Ruins of Juperos =========================
 juperos_01,0,0,0,0	monster	Venatu	1676,70,5000,0,0
 juperos_01,0,0,0,0	monster	Venatu	1677,70,5000,0,0
 juperos_01,0,0,0,0	monster	Venatu	1678,70,5000,0,0
@@ -27,18 +48,14 @@ juperos_01,0,0,0,0	monster	Dimik	1671,5,5000,0,0
 juperos_01,0,0,0,0	monster	Dimik	1672,5,5000,0,0
 juperos_01,0,0,0,0	monster	Dimik	1673,5,5000,0,0
 
-//==================================================
-// juperos_02 - Ruins of Juperos
-//==================================================
+//== juperos_02 - Ruins of Juperos =========================
 juperos_02,0,0,0,0	monster	Apocalypse	1365,70,5000,0,0
 juperos_02,0,0,0,0	monster	Venatu	1676,65,5000,0,0
 juperos_02,0,0,0,0	monster	Venatu	1677,65,5000,0,0
 juperos_02,0,0,0,0	monster	Venatu	1678,65,5000,0,0
 juperos_02,0,0,0,0	monster	Venatu	1679,50,5000,0,0
 
-//==================================================
-// jupe_core - Center of Juperos
-//==================================================
+//== jupe_core - Center of Juperos =========================
 jupe_core,0,0,0,0	monster	Dimik	1670,40,5000,0,0
 jupe_core,0,0,0,0	monster	Dimik	1671,40,5000,0,0
 jupe_core,0,0,0,0	monster	Dimik	1672,40,5000,0,0

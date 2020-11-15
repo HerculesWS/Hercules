@@ -1,16 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Repeatable EXP Quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
-//= Added Monster Killing quests.
+//================= Description ===========================================
 //= Repeatable EXP Quest (Sharp Leaves)
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 	if (questprogress(60131)) {
@@ -18,7 +38,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 			mes "[Lilla]";
 			mes "Have you finished hunting the 50 Dryads?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lilla]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -32,7 +52,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lilla]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -58,7 +78,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 			mes "[Lilla]";
 			mes "Have you finished hunting the 50 Dryads?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lilla]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -72,7 +92,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lilla]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -99,7 +119,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 			mes "[Lilla]";
 			mes "Have you finished hunting the 150 Dryads?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lilla]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -113,7 +133,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lilla]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -144,23 +164,23 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 			mes "Why hello!";
 			mes "You look like someone who is willing to help a lil thing like myself out.";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Lilla]";
 				mes "Really?!";
 				mes "That's great!";
 				next;
-				switch(select("Gather Items:Hunt Dryads:Cancel")) {
+				switch(select("Gather Items", "Hunt Dryads", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Lilla]";
 					mes "I really need to gather ^00CE0050 Sharp Leafs^000000 for my garden tea party.";
 					mes "Do you have any?";
 					next;
-					switch(select("I have some Sharp Leafs:What did you need?")) {
+					switch(select("I have some Sharp Leafs", "What did you need?")) {
 					case 1:
 						/*
-						if (checkweight(504,10) == 0) {
+						if (checkweight(White_Potion,10) == 0) {
 							mes "[Lilla]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -168,7 +188,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 							close;
 						}
 						*/
-						if (countitem(7100) > 49) {
+						if (countitem(Sharp_Leaf) > 49) {
 							mes "[Lilla]";
 							mes "Hey, your a sweet little thing.";
 							mes "Thanks so much for helping me!";
@@ -176,9 +196,9 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 							mes "[Lilla]";
 							mes "Oh, I almost forgot. I have something for you ^_^";
 							mes "Thank you so much again for your help.";
-							delitem 7100,50; //Sharp_Leaf
+							delitem Sharp_Leaf,50;
 							getexp 262485,141835;
-							//getitem 504,10; //White_Potion
+							//getitem White_Potion,10;
 							close;
 						}
 						else {
@@ -197,7 +217,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 					mes "Ah, ok I think you can help me out by hunting some Dryads.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Dryads:100 Dryads:150 Dryads")) {
+					switch(select("50 Dryads", "100 Dryads", "150 Dryads")) {
 					case 1:
 						mes "[Lilla]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

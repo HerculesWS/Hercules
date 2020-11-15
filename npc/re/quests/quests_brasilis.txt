@@ -1,29 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Panikon
+//= Copyright (C) Michieru
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Brasilis Quests
-//===== By ===================================================
-//= L0ne_W0lf
-//===== Version ==============================================
-//= 1.2c
-//===== Description ==========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Lost Puppies (Repeatable, 24 hours.)
 //= Suspicious Beach (Repeatable, 24 hours. iRO/cRO version.)
 //= Guarana Candy Quest
 //= Brasilis Water Lily Quest
 //= Brasilis Dungeon Access Quest
 //= Iara (Buff reward. Repeatable, 24 hours.)
-//===== Comments =============================================
-//= 1.0 First version.
-//= 1.1 Hydra Ball (12408)
-//= 1.2 Optimization. [Euphy]
-//= 1.2a Added 'consumeitem' command. [Euphy]
-//= 1.2b Updated RE EXP. [Michieru]
-//= 1.2c Put end; before OnTouch events in npcs that
-//= have view id of a mob [Panikon]
-//============================================================
+//================= Current Version =======================================
+//= 1.2c
+//=========================================================================
 
-// Lost Puppies :: dogdog.sc
-//============================================================
+//== Lost Puppies :: dogdog.sc =============================
 brasilis,297,307,5	script	Angelo#br	1_M_04,{
 	if (BaseLevel < 40) {
 		mes "[Angelo]";
@@ -55,11 +72,11 @@ brasilis,297,307,5	script	Angelo#br	1_M_04,{
 		getexp .@randexp,0;
 		erasequest 9031;
 		setquest 9032;
-		specialeffect2 EF_ASSUMPTIO;
+		specialeffect(EF_ASSUMPTIO, AREA, playerattached());
 		consumeitem 607; //Yggdrasilberry
 		.@rand = rand(1,10);
-		if (.@rand > 4 && .@rand < 9) getitem 504,2; //White_Potion
-		else if (.@rand > 8) getitem 608,1; //Seed_Of_Yggdrasil
+		if (.@rand > 4 && .@rand < 9) getitem White_Potion,2;
+		else if (.@rand > 8) getitem Seed_Of_Yggdrasil,1;
 		close;
 	}
 	mes "[Angelo]";
@@ -88,14 +105,14 @@ OnGo:
 	end;
 }
 
--	script	Puppy#bra	-1,{
+-	script	Puppy#bra	FAKE_NPC,{
 	if (questprogress(9030) == 1) {
 		if (brazil_kid < 3) {
 			mes "[Puppy]";
 			mes "bow wow bow wow!!";
 			next;
 			++brazil_kid;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			if (brazil_kid == 3) {
 				mes "Good. I found all 3 puppies.";
 				mes "Now I need to go tell Angelo.";
@@ -107,11 +124,11 @@ OnGo:
 				mes "Ah... who's a good puppy?";
 				mes "Ok, where are the others?";
 			}
-			if (compare(strnpcinfo(2),"1")) setarray .@i[0],2,3;
-			else if (compare(strnpcinfo(2),"2")) setarray .@i[0],1,3;
+			if (compare(strnpcinfo(NPC_NAME_HIDDEN),"1")) setarray .@i[0],2,3;
+			else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"2")) setarray .@i[0],1,3;
 			else setarray .@i[0],1,2;
-			donpcevent "Puppy#"+charat(strnpcinfo(2),0)+.@i[rand(2)]+"::OnEnable";
-			hideonnpc strnpcinfo(0);
+			donpcevent "Puppy#"+charat(strnpcinfo(NPC_NAME_HIDDEN),0)+.@i[rand(2)]+"::OnEnable";
+			hideonnpc strnpcinfo(NPC_NAME);
 			close;
 		}
 	}
@@ -120,15 +137,15 @@ OnGo:
 	close;
 
 OnInit:
-	if (!compare(strnpcinfo(2),"1")) hideonnpc strnpcinfo(0);
+	if (!compare(strnpcinfo(NPC_NAME_UNIQUE),"1")) hideonnpc strnpcinfo(NPC_NAME);
 	end;
 
 OnEnable:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -145,17 +162,16 @@ bra_fild01,234,101,3	duplicate(Puppy#bra)	Puppy#d1	4_DOG01
 bra_fild01,200,84,3	duplicate(Puppy#bra)	Puppy#d2	4_DOG01
 bra_fild01,176,63,5	duplicate(Puppy#bra)	Puppy#d3	4_DOG01
 
-// Suspicious Beach :: Suspicious_Beach.sc
-//============================================================
+//== Suspicious Beach :: Suspicious_Beach.sc ===============
 brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 	/* -------------- Hydra Ball -------------------------
-	if (countitem(12408) > 0) {
-		delitem 12408,1; //Leaf_Cat_Ball
-		getitem 12408,1; //Leaf_Cat_Ball
+	if (countitem(Leaf_Cat_Ball) > 0) {
+		delitem Leaf_Cat_Ball,1;
+		getitem Leaf_Cat_Ball,1;
 	}
-	else if (countitem(6221) > 0) {
-		delitem 6221,1; //Mystic_Leaf_Cat_Ball
-		getitem 6221,1; //Mystic_Leaf_Cat_Ball
+	else if (countitem(Mystic_Leaf_Cat_Ball) > 0) {
+		delitem Mystic_Leaf_Cat_Ball,1;
+		getitem Mystic_Leaf_Cat_Ball,1;
 	}
 	--------------------------------------------------- */
 	if (BaseLevel < 40) {
@@ -175,10 +191,10 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			mes "Hello.";
 			mes "Have you come here to hunt ^FF0000Strange Hydra^000000s?";
 			next;
-			switch(select("Yes.:No.:^006400What is happening here?^000000")) {
+			switch(select("Yes.", "No.", "^006400What is happening here?^000000")) {
 			case 1:
 				setquest 9028;
-				getitem 12408,1; //Hydra_Ball
+				getitem Leaf_Cat_Ball,1; //Hydra_Ball
 				mes "[Lucia]";
 				mes "Here, take this ^006400Hydra Ball^000000.";
 				mes "Use it to capture a ^FF0000Strange Hydra^8B4513.^000000";
@@ -215,15 +231,15 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			}
 		}
 		else if (.@nQState == 1) {
-			if (countitem(6221) > 0) {
+			if (countitem(Mystic_Leaf_Cat_Ball) > 0) {
 				mes "[Lucia]";
 				mes "Hello, you really did it!";
-				if (checkweight(11502,3)) {
+				if (checkweight(Light_Blue_Pot,3)) {
 					//mes "I don't have enough ^006400Hydra Ball^000000s to give you."; //Poorly translated by iRO?
 					mes "I hope you will come";
 					mes "again to help me.";
 					mes "Have a nice day~!";
-					delitem 6221,1; //Mystic_Leaf_Cat_Ball
+					delitem Mystic_Leaf_Cat_Ball,1;
 					completequest 9028;
 					//recall_completequest 9029;
 					if (questprogress(9029)) erasequest 9029;
@@ -232,7 +248,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 					consumeitem 12070; //Luk_Dish05
 					consumeitem 12055; //Vit_Dish05
 					consumeitem 12065; //Dex_Dish05
-					getitem 11502,3; //Light_Blue_Pot
+					getitem Light_Blue_Pot,3;
 					close;
 				}
 				else {
@@ -245,16 +261,16 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			}
 			else {
 				mes "[Lucia]";
-				if (countitem(12408) < 1) {
+				if (countitem(Leaf_Cat_Ball) < 1) {
 					mes "Did you need another ^006400Hydra Ball^000000?";
 					mes "I will give you one more.";
-					getitem 12408,1; //Leaf_Cat_Ball
+					getitem Leaf_Cat_Ball,1;
 					close;
 				}
 				else {
 					mes "Any problems?";
 					next;
-					switch(select("No.:^006400Tell me again what happened^000000")) {
+					switch(select("No.", "^006400Tell me again what happened^000000")) {
 					case 1:
 						mes "[Lucia]";
 						mes "Ok, please do me a favor.";
@@ -288,7 +304,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 		}
 		else {
 			mes "[Lucia]";
-			mes "Oh, ^0000FF"+strcharinfo(0)+"^000000 you're back.";
+			mes "Oh, ^0000FF"+strcharinfo(PC_NAME)+"^000000 you're back.";
 			if (questprogress(9029,PLAYTIME) == 1) {
 				mes "I'm so grateful for your help.";
 				mes "Each ^006400Hydra Ball^000000 is provided ^006400every 24 hours^000000";
@@ -301,10 +317,10 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 				completequest 9029;
 				mes "Did you come here to hunt ^FF0000Strange Hydra^000000s?";
 				next;
-				switch(select("Yes.:No.:^006400What is happening here?^000000")) {
+				switch(select("Yes.", "No.", "^006400What is happening here?^000000")) {
 				case 1:
 					setquest 9028;
-					getitem 12408,1; //Leaf_Cat_Ball
+					getitem Leaf_Cat_Ball,1;
 					mes "[Lucia]";
 					mes "Here, take this ^006400Hydra Ball^000000.";
 					mes "Use it to capture a ^FF0000Strange Hydra^8B4513.^000000";
@@ -355,10 +371,9 @@ OnTimer7000:
 	end;
 }
 
-// Guarana Quest :: brazil_tre.sc
-//============================================================
+//== Guarana Quest :: brazil_tre.sc ========================
 brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "- You can't start the quest. Please reduce the weight in your inventory. -";
 		close;
 	}
@@ -376,7 +391,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		mes "[Candy Maker]";
 		mes "Since then, the output of that fruit has reduced and the price has gone up so now candy ingredients were changed to coconuts or other tropical fruits instead. I miss the guarana candy.";
 		next;
-		switch(select("How can I taste this guarana candy?:End conversation.")) {
+		switch(select("How can I taste this guarana candy?", "End conversation.")) {
 		case 1:
 			mes "[Candy Maker]";
 			mes "Hmm? I already sold out of all my old supply.";
@@ -384,7 +399,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 			mes "[Candy Maker]";
 			mes "But if you can find some guarana, I can make it for you.";
 			next;
-			switch(select("How do I find guarana?:End conversation.")) {
+			switch(select("How do I find guarana?", "End conversation.")) {
 			case 1:
 				mes "[Candy Maker]";
 				mes "Will you find the guarana?? Hoooooh~";
@@ -424,11 +439,11 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		close;
 	}
 	else if (brazil_gua == 10) {
-		if (!countitem(6237)) {
+		if (!countitem(Guarana_Fruit)) {
 			mes "- The guarana that I had has disappeared. -";
 			close;
 		}
-		delitem 6237,1; //Guarana_Fruit
+		delitem Guarana_Fruit,1;
 		mes "[Candy Maker]";
 		mes "Did you get the guarana?";
 		next;
@@ -450,7 +465,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		mes "Try to savor its amazing taste hey~ take it easy. hahaha!!";
 		brazil_gua = 11;
 		completequest 2200;
-		getitem 12414,1; //Guarana_Candy
+		getitem Guarana_Candy,1;
 		getexp 70000,10000;
 		close;
 	}
@@ -466,13 +481,13 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		mes "What about it? Wanna buy some?";
 		mes "It's 4000 zeny each.";
 		next;
-		switch(select("Buy a Guarana Candy.:Cancel.")) {
+		switch(select("Buy a Guarana Candy.", "Cancel.")) {
 		case 1:
 			if (Zeny > 3999) {
 				mes "[Candy Maker]";
 				mes "Here is a delicious guarana candy.";
 				Zeny -= 4000;
-				getitem 12414,1; //Guarana_Candy
+				getitem Guarana_Candy,1;
 				close;
 			}
 			else {
@@ -629,7 +644,7 @@ bra_in01,95,179,3	script	Cherto	4_M_BRZ_MAN2,{
 		mes "[Cherto]";
 		mes "If he can make crying sounds of animals, they might be able to converse!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Now, what can I do?";
 		mes "If he is the kid from the legend, is there any way to raise the guarana again?";
 		next;
@@ -665,7 +680,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "[Strange Kid]";
 		mes "................";
 		next;
-		if(select("Try to talk.:Pretend to pass by.") == 2) {
+		if(select("Try to talk.", "Pretend to pass by.") == 2) {
 			mes "[Strange Kid]";
 			mes "................";
 			close;
@@ -673,7 +688,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "What can I say to him?";
 		next;
 		while(1) {
-			switch(select("What's your name?:How old are you?:What are you doing?:End conversation.")) {
+			switch(select("What's your name?", "How old are you?", "What are you doing?", "End conversation.")) {
 			case 1:
 				mes "[Strange Kid]";
 				mes "Kaaaaaaao~";
@@ -697,7 +712,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 				mes "Kaaaaaaao~";
 				mes "Grrrrrrrrr - kaaan-";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "He makes strange sound like an animals.";
 				mes "Should I ask advice from Cherto?";
 				brazil_gua = 4;
@@ -707,7 +722,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		}
 	}
 	else if (brazil_gua == 4) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "He makes strange sounds like an animal.";
 		mes "Should I ask advice from Cherto?";
 		close;
@@ -721,7 +736,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "[Strange Kid]";
 		mes "ah... ahah.....";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I don't have a story but there are lots of friends waiting outside.";
 		next;
 		mes "- You give the feather, fresh meat and branch of grapes to the kid -";
@@ -739,7 +754,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "mon, mon, mon...key......";
 		mes "boo, booow...........";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Dog?!";
 		mes "kkk yes. Lots of friends want to meet you.";
 		mes "Don't be lonely anymore and be happy with your friends.";
@@ -753,20 +768,20 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "Ye......yes.......";
 		mes "tha... than......thank......yo.........you.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Alright such a cute smile!";
 		mes "Be a happy kid as always.";
 		next;
 		mes "[Strange Kid]";
 		mes "Uh......";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "what?";
 		next;
 		mes "[Strange Kid]";
 		mes "hey..........";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Do you want to say anything?";
 		next;
 		mes "- You get closer and pretend to take caution. -";
@@ -781,25 +796,25 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "[Strange Kid]";
 		mes "ga...ra..........na...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oops, guarana berry?";
 		mes "Ah! Thank you very much!";
 		emotion e_kis2,1;
 		emotion e_heh;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If I have this, I can make a guarana candy.";
 		mes "I better find that Candy Maker!";
 		brazil_gua = 10;
 		changequest 2199,2200;
-		getitem 6237,1; //Guarana_Fruit
+		getitem Guarana_Fruit,1;
 		close;
 	}
 	else if (brazil_gua == 10) {
-		if (!countitem(6237)) {
+		if (!countitem(Guarana_Fruit)) {
 			mes "[Strange Kid]";
 			mes "He.........";
-			getitem 6237,1; //Guarana_Fruit
+			getitem Guarana_Fruit,1;
 			close;
 		}
 	}
@@ -813,7 +828,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "[Mage Paje]";
 	mes "Abracadabra~";
-	specialeffect EF_POISONHIT,AREA,"Poring#bra";
+	specialeffect(EF_POISONHIT, AREA, getnpcid("Poring#bra"));
 	setarray .@display[0], 4_NFCOCK, 4_CAT, 4_PORING;
 	setnpcdisplay "Poring#bra",.@display[rand(3)];
 	if (brazil_gua != 5) close;
@@ -824,7 +839,7 @@ brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "Good to see you.";
 	mes "I am the Mage Paje.";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Hello. Mr. Cherto told me to find you.";
 	next;
 	mes "[Mage Paje]";
@@ -853,7 +868,7 @@ brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "Good luck~!";
 	brazil_gua = 6;
 	changequest 2195,2196;
-	specialeffect2 EF_ASSUMPTIO;
+	specialeffect(EF_ASSUMPTIO, AREA, playerattached());
 	close;
 }
 
@@ -910,7 +925,7 @@ OnTouch:
 		mes "Fly fly far away. bbaaaeeeccckkk--!";
 		brazil_gua = 7;
 		changequest 2196,2197;
-		specialeffect2 EF_SEISMICWEAPON;
+		specialeffect(EF_SEISMICWEAPON, AREA, playerattached());
 		close2;
 		warp "bra_fild01",68,146;
 		end;
@@ -935,7 +950,7 @@ OnTouch_:
 		mes "Smelling! This smell is from a human!";
 		mes "Somewhere, a human!";
 		mes "I got it. You are!!!";
-		specialeffect EF_HIT1,AREA,"Jaguar#bra";
+		specialeffect(EF_HIT1, AREA, getnpcid("Jaguar#bra"));
 		emotion e_omg,1;
 		next;
 		mes "[Jaguar]";
@@ -1002,7 +1017,7 @@ bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 		mes "I can smell Jaguar from you, who are you?";
 		mes "Gosh, maybe there's no jaguar without fur and weird shape!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "........................";
 		mes "Are you saying that I look like an animal?!?!";
 		next;
@@ -1024,7 +1039,7 @@ bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 		next;
 		mes "- You get a bunch of grapes from Monkey. -";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Good~ Now it's time to go back to the kid~!!";
 		brazil_gua = 9;
 		changequest 2198,2199;
@@ -1037,8 +1052,7 @@ bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 	}
 }
 
-// Water Lily Quest :: brazil_tre.sc
-//============================================================
+//== Water Lily Quest :: brazil_tre.sc =====================
 brasilis,203,286,3	script	Botanist Karmen#bra	4_F_HUWOMAN,{
 	if (brazil_regia == 0) {
 		mes "[Karmen]";
@@ -1053,7 +1067,7 @@ brasilis,203,286,3	script	Botanist Karmen#bra	4_F_HUWOMAN,{
 		mes "One of them, a Water Lily, is a really gorgeous and unique plant.";
 		mes "This flower is quite sensitive so it doesn't bloom everywhere.";
 		next;
-		if(select("Interesting.:End conversation.") == 2) {
+		if(select("Interesting.", "End conversation.") == 2) {
 			mes "[Karmen]";
 			mes "I guess you aren't interested in botany.";
 			close;
@@ -1124,8 +1138,8 @@ bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 		mes "I am Kaka!!";
 		mes "Whats your name?";
 		next;
-		mes "["+strcharinfo(0)+"]";
-		mes "I am "+strcharinfo(0)+".";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "I am "+strcharinfo(PC_NAME)+".";
 		next;
 		mes "[Brasilis Boy]";
 		mes "The outsider has a weird name!";
@@ -1135,7 +1149,7 @@ bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 		mes "Hehe...";
 		mes "So, why have you come here stranger~?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I heard you knows lots of stories, is that true?";
 		next;
 		mes "[Kaka]";
@@ -1155,7 +1169,7 @@ bra_in01,142,27,5	script	Marta#bra	4_F_BRZ_INDOLD,{
 		mes "[Marta]";
 		mes "Hey~ do you have special story that you want to listen to?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "About the mysterious water lily?";
 		next;
 		mes "[Marta]";
@@ -1275,8 +1289,8 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 		mes "I am Kaka!!";
 		mes "Whats your name?";
 		next;
-		mes "["+strcharinfo(0)+"]";
-		mes "I am "+strcharinfo(0)+".";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "I am "+strcharinfo(PC_NAME)+".";
 		next;
 		mes "[Brasilis Boy]";
 		mes "The outsider has a weird name!";
@@ -1286,7 +1300,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 		mes "Hehe...";
 		mes "So, why have you come here stranger~?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I heard you knows lots of stories, is that true?";
 		next;
 		mes "[Kaka]";
@@ -1306,7 +1320,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 		mes "[Marta]";
 		mes "Hey~ do you have special story that you want to listen to?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "About the mysterious water lily?";
 		next;
 		mes "[Marta]";
@@ -1413,7 +1427,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 }
 
 brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "- wait a second!! -";
 		mes "- you have too many items -";
 		mes "- so you can't get any more items. -";
@@ -1441,7 +1455,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "What's up? Why are you looking at me?";
 		mes "I don't want to be a showgirl!! Get out!!";
 		next;
-		if(select("Nothing, sorry.:What's wrong?") == 1) {
+		if(select("Nothing, sorry.", "What's wrong?") == 1) {
 			mes "[Brasilis Girl]";
 			mes "I am so sad!!!";
 			close;
@@ -1450,21 +1464,21 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "It's not your business.";
 		mes "You are just an outsider!";
 		next;
-		if(select("How rude!:Just trying to help.") == 1) {
+		if(select("How rude!", "Just trying to help.") == 1) {
 			mes "[Brasilis Girl]";
 			mes "What's it matter to you that I'm rude??!!";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I know that I'm just passing by but I might be able to help you. What do you think?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This kind of meeting could be more than just a coincidence.";
 		next;
 		mes "[Brasilis Girl]";
 		mes "......................";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hmm can you tell me your name?";
 		next;
 		mes "[Brasilis Girl]";
@@ -1472,7 +1486,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Jasira.";
 		mes "My name is Jasira.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Nice name~.";
 		mes "Jasira what's going on?";
 		next;
@@ -1482,7 +1496,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "[Jasira]";
 		mes "I have to meet 'Jasi' but I can't go out....";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "who is Jasi?";
 		mes "Your.... lover?";
 		next;
@@ -1498,7 +1512,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Jasi is......";
 		mes "the great moon.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The moon?";
 		mes "Maybe... are you talking about the moon from the story?";
 		next;
@@ -1506,14 +1520,14 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Yeah!";
 		mes "Dear Jasi is from the moon from the sky!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Why are you thinking like that?";
 		next;
 		mes "[Jasira]";
 		mes "Cuz' Jasi is really gorgeous and the most important thing is he is taking care of the water lily in Brasilis.";
 		next;
 		emotion e_omg,1;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Brasilis water lily??!!";
 		mes "Isn't it the uniqe flower?";
 		next;
@@ -1522,7 +1536,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "But around Jasi there are lots of water lilies.";
 		mes "That's why I believe Jasi is the moon.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Where is Jasi?";
 		next;
 		mes "[Jasira]";
@@ -1538,39 +1552,39 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Since I came back home, my parents punished me.";
 		mes "I can understand why they are worrying but i missed Jasi a lot!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Why don't you meet him after recovering your strength?";
 		next;
 		mes "[Jasira]";
 		mes ".................";
 		mes "I wanna see him right now...";
 		next;
-		if(select("Help Jasira.:Ignore her.") == 2) {
-			mes "["+strcharinfo(0)+"]";
+		if(select("Help Jasira.", "Ignore her.") == 2) {
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Sorry I can't help you. Cheer up!";
 			next;
 			mes "[Jasira]";
 			mes "Crying........";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Jasira I came here to find the Brasilis water lily.";
 		mes "Don't you think fate has brought us together?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If you tell me how to find Jasi, I can help you.";
 		next;
 		mes "[Jasira]";
 		mes "Really? But I don't know exactly how to get there. I was just wandering around when I met him.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Can't you remember anything?";
 		mes "If you know something you've gotta tell me.";
 		next;
 		mes "[Jasira]";
 		mes "Let's see... I was wandering around a waterfall then fell down into the water then I was sucked into somewhere.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Good, that's better than nothing! I will look for a similar place.";
 		next;
 		mes "[Jasira]";
@@ -1604,7 +1618,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Did you talk about me?";
 		mes "You didn't? Uh? Stupid! Gosh~!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey girl~ you've got a short temper.";
 		mes "I did see him and I talked about you!";
 		next;
@@ -1613,7 +1627,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "What did he say?";
 		mes "Does he remember me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "That you have a really good heart~";
 		mes "I told him that you will try to meet him when your condition gets better.";
 		next;
@@ -1621,7 +1635,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Yeahhhhh!!";
 		mes "Thank you! You are more reliable than I thought you would be.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Anyway, I'm looking for a fruit that's brown and has a hard shell.";
 		mes "It has juice inside and can be used as a cup to drink out of.";
 		next;
@@ -1629,7 +1643,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Duh! You mean a coconut right?!";
 		mes "They're everywhere here in Brasilis.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thanks Jasira!";
 		brazil_regia = 6;
 		changequest 2204,2205;
@@ -1653,7 +1667,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "Gosh! Gosh!!!";
 		mes "Kkkkkaaaaa - !!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thanks to you, I was able to get a flower.";
 		mes "Thanks a lot!!";
 		next;
@@ -1669,7 +1683,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		next;
 		mes "[Jasira]";
 		mes "I know, I know! I'm the best...";
-		delitem 7553,1; //Lotus_Flower
+		delitem Lotus_Flower,1;
 		brazil_regia = 9;
 		changequest 2206,2207;
 		setarray .@card[0],4195,4177,4188; //Leaf_Cat_Card, Dryad_Card, Leib_Olmai_Card
@@ -1706,7 +1720,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "[Recluse]";
 		mes "Oh, I haven't seen another person in such a long time.";
 		next;
-		if(select("Keep going.:Are you the moon?") == 1) {
+		if(select("Keep going.", "Are you the moon?") == 1) {
 			mes "[Recluse]";
 			mes "You don't have specific business with me.";
 			close;
@@ -1722,7 +1736,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "[Jasi]";
 		mes "My family has taken care of the water lily calmly to prevent harm from people's hand or monsters.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Do you remember a girl named Jasi.";
 		next;
 		mes "[Jasi]";
@@ -1730,7 +1744,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "Ah!! a hurry scurry girl. ";
 		mes "Gosh.. I was in trouble due to that girl.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Trouble?";
 		next;
 		mes "[Jasi]";
@@ -1740,11 +1754,11 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "I was barely able to calm down and send her to the village.";
 		mes "My life is that water lily so I didn't want anything embarrassing to happen.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This is a gift from Jasira to say sorry for that time.";
 		mes "She is really sad that can't come here by herself due to private difficulties.";
 		next;
-		if (countitem(513) < 10) {
+		if (countitem(Banana) < 10) {
 			mes "[Jasi]";
 			mes "What are you saying?";
 			next;
@@ -1757,7 +1771,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "[Jasi]";
 		mes "Anyway is that all the business you have with me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Umm honestly I was wondering to find water lily and met you by coincidence. Jasira told me her sad story so that's what led me here.";
 		next;
 		mes "[Jasi]";
@@ -1779,7 +1793,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		close;
 	}
 	else if (brazil_regia == 6) {
-		if (countitem(11515) < 5) {
+		if (countitem(Coconut) < 5) {
 			mes "[Jasi]";
 			mes "I forgot what the name of that fruit was...";
 			close;
@@ -1789,7 +1803,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 			mes "Did you find the fruit?";
 			mes "Oh right this is....?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It's called a 'coconut'.";
 			next;
 			mes "[Jasi]";
@@ -1807,7 +1821,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 			mes "[Jasi]";
 			mes "Oh, can you tell that girl Jasira something for me?";
 			mes "Tell her that I am not the moon from the story, but I want to become the moon to shine only for her.";
-			delitem 11515,5; //Coconut
+			delitem Coconut,5;
 			brazil_regia = 7;
 			changequest 2205,2206;
 			close;
@@ -1829,24 +1843,24 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 	if (brazil_regia == 4) {
 		mes "An unusual Water lily is blooming here. You can't stop staring at it, knowing that few people have seen this flower bloom.";
 		next;
-		if(select("Pick up the flower.:Keep gazing.") == 2) {
+		if(select("Pick up the flower.", "Keep gazing.") == 2) {
 			mes "- You can't avoid staring at it's beauty. -";
 			close;
 		}
 		mes "[Jasi]";
 		mes "Uh! What are you doing??!!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "There is a person who really needs this flower, can I just take one of 'em?";
 		next;
 		mes "[Jasi]";
 		mes "As I said earlier, I am the guardian of this water lily.";
 		mes "I can't just stand by here and watch you pluck even a single flower from it.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey man~ I brought these delicious fruits for you... try it! They are really well matured and fresh bananas.";
 		next;
-		if (countitem(513) < 10) {
+		if (countitem(Banana) < 10) {
 			mes "[Jasi]";
 			mes "What are you saying?";
 			next;
@@ -1861,7 +1875,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		next;
 		mes "- munch -";
 		mes "- mumble mumble mumble -";
-		specialeffect EF_POTION7,AREA,"Recluse#bra";
+		specialeffect(EF_POTION7, AREA, getnpcid("Recluse#bra"));
 		next;
 		mes "[Jasi]";
 		mes "Uh, this taste... is!";
@@ -1881,13 +1895,13 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		mes "But rules are rules!";
 		mes "I must do my duty.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Please! I just need one flower~ What can I do to convince you?";
 		next;
 		mes "[Jasi]";
 		mes "Rules are rules, what do you want from me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Didn't that banana remind you of your childhood? What can I get for you?";
 		next;
 		mes "[Jasi]";
@@ -1900,11 +1914,11 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		next;
 		mes "[Jasi]";
 		mes "If you bring 5 of those things, I will reconsider your suggestion.";
-		delitem 513,10; //Banana
+		delitem Banana,10;
 		brazil_regia = 5;
 		changequest 2203,2204;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ok so I have to bring 5 fruits with hard shells.";
 		mes "Hmm what is it?";
 		close;
@@ -1919,7 +1933,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		close;
 	}
 	else if (brazil_regia == 7) {
-		if (!checkweight(1201,1)) {
+		if (!checkweight(Knife,1)) {
 			mes "- wait a second!! -";
 			mes "- you have too many items -";
 			mes "- so you can't get any more items. -";
@@ -1929,13 +1943,12 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		}
 		mes "- You take a beautiful water lily carefully in your hands. -";
 		brazil_regia = 8;
-		getitem 7553,1; //Lotus_Flower
+		getitem Lotus_Flower,1;
 		close;
 	}
 }
 
-// Dungeon Access Quest :: brazil_tre.sc
-//============================================================
+//== Dungeon Access Quest :: brazil_tre.sc =================
 brasilis,185,246,5	script	Pedro#bra	1_M_SIZ,{
 	if (brazil_ghost == 0) {
 		OnTalk:
@@ -2009,7 +2022,7 @@ brasilis,185,246,5	script	Pedro#bra	1_M_SIZ,{
 		mes "[Daniel]";
 		mes "kkkickkkkkkkk";
 		next;
-		if(select("Walk by.:Ask about the gossip.") == 1) {
+		if(select("Walk by.", "Ask about the gossip.") == 1) {
 			mes "[Fabio]";
 			mes "Mariana~ smells~ Nya nya~";
 			next;
@@ -2218,449 +2231,400 @@ brasilis,180,249,5	script	Daniel#bra	4_M_KID1,{
 }
 
 bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- A key is inserted in the locked door.-";
+	mes "- A key is inserted in the locked door.-";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Turn the key.", "Ignore it.")) {
+	case 1:
+		mes "You start saying the first line of the magic words.";
+		input(.@input$);
 		next;
-		switch(select("Turn the key.:Ignore it.")) {
-		case 1:
-			mes "You start saying the first line of the magic words.";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(0)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother the door won't open!";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 2) {
-					mes "[Sobbing Voice]";
-					mes "'^FF0000Turn the key as many times as there are colors in the rainbow.^000000'";
-					next;
-					switch(select("Open the door:Knock on the door.:Turn the key.:Take the key out.")) {
-					case 1:
-						mes "The door is locked.";
-						mes "So nothing happens.";
-						close;
-					case 2:
-						mes "How many times should I try to knock?";
-						input .@input,0,999;
-						next;
-						mes "You knocked on the door "+.@input+" times.";
-						next;
-						mes "But, nothing happens.";
-						close;
-					case 3:
-						mes "How many times should I turn the key?";
-						input .@input,0,999;
-						next;
-						if (.@input == 7) {
-							mes "You turn the key 7 times.";
-							next;
-							mes "Click! Click! Click!";
-							mes "Click! Click! Click!";
-							mes "Click...!";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							mes "You hear water flushing.";
-							next;
-							specialeffect2 EF_VENOMDUST;
-							mes "Faint laughing can be heard off in the direction of the toilet.";
-							brazil_ghost = 3;
-							changequest 2208,60351;
-							close;
-						}
-						else {
-							mes "You turned over the key "+.@input+" times.";
-							next;
-							mes "But nothing doesn't happened.";
-							close;
-						}
-					case 4:
-						mes "How many times should I insert the key into the door?";
-						input .@input,0,999;
-						next;
-						mes "You inserted the key "+.@input+" times.";
-						next;
-						mes "But nothing happened.";
-						close;
-					}
-				}
-				else {
-					mes "Mother the door won't open!";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother the door won't open!";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- A key is inserted in the locked door.-";
+		if (brazil_ghost != 2) {
+			mes "Mother the door won't open!";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "'^FF0000Turn the key as many times as there are colors in the rainbow.^000000'";
+		next;
+		switch(select("Open the door", "Knock on the door.", "Turn the key.", "Take the key out.")) {
+		case 1:
+			mes "The door is locked.";
+			mes "So nothing happens.";
+			close;
+		case 2:
+			mes "How many times should I try to knock?";
+			input(.@input, 0, 999);
+			next;
+			mes "You knocked on the door "+.@input+" times.";
+			next;
+			mes "But, nothing happens.";
+			close;
+		case 3:
+			mes "How many times should I turn the key?";
+			input(.@input, 0, 999);
+			next;
+			mes "You turned over the key "+.@input+" times.";
+			next;
+			if (.@input != 7) {
+				mes "But nothing doesn't happened.";
+				close;
+			}
+			mes "Click! Click! Click!";
+			mes "Click! Click! Click!";
+			mes "Click...!";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			mes "You hear water flushing.";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the toilet.";
+			brazil_ghost = 3;
+			changequest 2208,60351;
+			close;
+		case 4:
+			mes "How many times should I insert the key into the door?";
+			input(.@input, 0, 999);
+			next;
+			mes "You inserted the key "+.@input+" times.";
+			next;
+			mes "But nothing happened.";
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- Looks like an ordinary toilet -";
-		next;
-		if (brazil_ghost > 6) {
-			switch(select("Flush the toilet.:Doing nothing.")) {
-			case 1:
-				mes "After flushing the toilet, you suddenly feel dizzy and are suddenly swept away somewhere.";
-				specialeffect2 EF_WATERFALL_SMALL_T2_90;
-				close2;
-				warp "bra_in01",206,102;
-				end;
-			case 2:
-				mes "The water in the toilet looks gross.";
-				close;
-			}
-		}
-		switch(select("Use the toilet:Ignore.")) {
+	mes "- Looks like an ordinary toilet -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	if (brazil_ghost > 6) {
+		switch(select("Flush the toilet.", "Doing nothing.")) {
 		case 1:
-			mes "- What was the second line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(0)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother the water is flooding!";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 3) {
-					mes "[Sobbing Voice]";
-					mes "^FF0000If the moon disappears 3 times... don't worry.....^000000";
-					next;
-					switch(select("Flush the toilet.:Close the lid.")) {
-					case 1:
-						mes "How many times should I flush?";
-						input .@input,0,999;
-						next;
-						if (.@input == 3) {
-							mes "You flush the toilet 3 times.";
-							next;
-							mes "qwaaaaaaaaa!";
-							mes "kwaaaaaaaaaa!";
-							mes "kwaaaaaaaaaaaaaaaaaaa!";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							mes "Suddenly the sink sounds like water is flowing freely from it.";
-							next;
-							specialeffect2 EF_VENOMDUST;
-							mes "Faint laughing can be heard off in the direction of the faucet.";
-							brazil_ghost = 4;
-							changequest 60351,60352;
-							close;
-						}
-						else {
-							mes "You flush the toilet "+.@input+" times.";
-							next;
-							mes "But nothing happens.";
-							close;
-						}
-					case 2:
-						mes "You close the lid of the toilet.";
-						mes "Nothing seems to be happening.";
-						close;
-					}
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
+			mes "After flushing the toilet, you suddenly feel dizzy and are suddenly swept away somewhere.";
+			specialeffect(EF_WATERFALL_SMALL_T2_90, AREA, playerattached());
+			close2;
+			warp "bra_in01",206,102;
+			end;
 		case 2:
-			mes "You do nothing.";
+			mes "The water in the toilet looks gross.";
 			close;
 		}
 	}
-	else {
-		mes "- Looks like an ordinary toilet -";
+	switch(select("Use the toilet", "Ignore.")) {
+	case 1:
+		mes "- What was the second line to that spell now? -";
+		input(.@input$);
+		next;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother the water is flooding!";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
+			close;
+		}
+		if (brazil_ghost != 3) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "^FF0000If the moon disappears 3 times... don't worry.....^000000";
+		next;
+		switch(select("Flush the toilet.", "Close the lid.")) {
+		case 1:
+			mes "How many times should I flush?";
+			input(.@input, 0, 999);
+			next;
+			mes "You flush the toilet "+.@input+" times.";
+			next;
+			if (.@input != 3) {
+				mes "But nothing happens.";
+				close;
+			}
+			mes "qwaaaaaaaaa!";
+			mes "kwaaaaaaaaaa!";
+			mes "kwaaaaaaaaaaaaaaaaaaa!";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			mes "Suddenly the sink sounds like water is flowing freely from it.";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the faucet.";
+			brazil_ghost = 4;
+			changequest 60351,60352;
+			close;
+		case 2:
+			mes "You close the lid of the toilet.";
+			mes "Nothing seems to be happening.";
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- It seems like an ordinary faucet -";
+	mes "- It seems like an ordinary faucet -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Examine it.", "Ignore.")) {
+	case 1:
+		mes "- What was the next line to that spell now? -";
+		input(.@input$);
 		next;
-		switch(select("Examine it.:Ignore.")) {
-		case 1:
-			mes "- What was the next line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(0)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother the drought has started!";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 4) {
-					mes "[Sobbing Voice]";
-					mes "^FF0000Don't worry... the waterfall will help it....^000000";
-					next;
-					switch(select("Tap on the faucet.:Turn on the water.")) {
-					case 1:
-						mes "How many times will you tap the faucet?";
-						input .@input,0,999;
-						next;
-						mes "You tap the faucet "+.@input+" times.";
-						next;
-						mes "But nothing happens.";
-						close;
-					case 2:
-						mes "How many times should I turn the water on?";
-						input .@input,0,999;
-						next;
-						if (.@input == 1) {
-							mes "You turn the faucet on once.";
-							next;
-							mes "swwwaaaaaaa-";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							mes "You see the carpet move.";
-							next;
-							specialeffect2 EF_VENOMDUST;
-							mes "Faint laughing can be heard off in the direction of the carpet.";
-							brazil_ghost = 5;
-							changequest 60352,60353;
-							close;
-						}
-						else {
-							mes "You turn the faucet on "+.@input+" times.";
-							next;
-							mes "But nothing happens.";
-							close;
-						}
-					}
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother the drought has started!";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- It seems like an ordinary faucet -";
+		if (brazil_ghost != 4) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "^FF0000Don't worry... the waterfall will help it....^000000";
+		next;
+		switch(select("Tap on the faucet.", "Turn on the water.")) {
+		case 1:
+			mes "How many times will you tap the faucet?";
+			input(.@input, 0, 999);
+			next;
+			mes "You tap the faucet "+.@input+" times.";
+			next;
+			mes "But nothing happens.";
+			close;
+		case 2:
+			mes "How many times should I turn the water on?";
+			input(.@input, 0, 999);
+			next;
+			if (.@input != 1) {
+				mes "You turn the faucet on "+.@input+" times.";
+				next;
+				mes "But nothing happens.";
+				close;
+			}
+			mes "You turn the faucet on once.";
+			next;
+			mes "swwwaaaaaaa-";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			mes "You see the carpet move.";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the carpet.";
+			brazil_ghost = 5;
+			changequest 60352,60353;
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- A carpet with an intricate pattern on it -";
+	mes "- A carpet with an intricate pattern on it -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Examine it.", "Ignore.")) {
+	case 1:
+		mes "- What was the next line to that spell now? -";
+		input(.@input$);
 		next;
-		switch(select("Examine it.:Ignore.")) {
-		case 1:
-			mes "- What was the next line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(0)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Mother where are my friends?";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 5) {
-					mes "[Sobbing Voice]";
-					mes "^FF0000your 7 friends....are...sleeping... now it...'s time ....to wake them........^000000";
-					next;
-					switch(select("Jump on the carpet.:Lie on the carpet.:Shake the carpet.")) {
-					case 1:
-						mes "How many times should I jump?";
-						input .@input,0,999;
-						next;
-						mes "You jump on the carpet "+.@input+" times.";
-						next;
-						mes "But nothing happens.";
-						close;
-					case 2:
-						mes "How many times should I lie on the carpet?";
-						input .@input,0,999;
-						next;
-						mes "You lie on the carpet "+.@input+" times.";
-						next;
-						mes "But nothing happens.";
-						close;
-					case 3:
-						mes "How many times should I shake the carpet?";
-						input .@input,0,999;
-						next;
-						if (.@input == 7) {
-							mes "You shake the carpet 7 times.";
-							next;
-							mes "- fly~ fly~ fly~ fly~ fly~ fly~ fly~ -";
-							next;
-							mes "[Distant Sound]";
-							mes "^FF0000kkkkhee- hihihihi!!!^000000";
-							next;
-							specialeffect2 EF_VENOMDUST;
-							mes "Faint laughing can be heard off in the direction of the mirror.";
-							brazil_ghost = 6;
-							changequest 60353,60354;
-							close;
-						}
-						else {
-							mes "You shake the carpet "+.@input+" times.";
-							next;
-							mes "But nothing happens.";
-							close;
-						}
-					}
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Mother where are my friends?";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- A carpet with an intricate pattern on it -";
+		if (brazil_ghost != 5) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Sobbing Voice]";
+		mes "^FF0000your 7 friends....are...sleeping... now it...'s time ....to wake them........^000000";
+		next;
+		switch(select("Jump on the carpet.", "Lie on the carpet.", "Shake the carpet.")) {
+		case 1:
+			mes "How many times should I jump?";
+			input(.@input, 0, 999);
+			next;
+			mes "You jump on the carpet "+.@input+" times.";
+			next;
+			mes "But nothing happens.";
+			close;
+		case 2:
+			mes "How many times should I lie on the carpet?";
+			input(.@input, 0, 999);
+			next;
+			mes "You lie on the carpet "+.@input+" times.";
+			next;
+			mes "But nothing happens.";
+			close;
+		case 3:
+			mes "How many times should I shake the carpet?";
+			input(.@input, 0, 999);
+			next;
+			mes "You shake the carpet "+.@input+" times.";
+			next;
+			if (.@input != 7) {
+				mes "But nothing happens.";
+				close;
+			}
+			mes "- fly~ fly~ fly~ fly~ fly~ fly~ fly~ -";
+			next;
+			mes "[Distant Sound]";
+			mes "^FF0000kkkkhee- hihihihi!!!^000000";
+			next;
+			specialeffect(EF_VENOMDUST, AREA, playerattached());
+			mes "Faint laughing can be heard off in the direction of the mirror.";
+			brazil_ghost = 6;
+			changequest 60353,60354;
+			close;
+		}
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
 
 bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
-	if (brazil_ghost > 0) {
-		mes "- You can see a clean mirror without any marks or dust -";
+	mes "- You can see a clean mirror without any marks or dust -";
+	if (brazil_ghost == 0) {
+		close;
+	}
+	next;
+	switch(select("Examine it.", "Ignore.")) {
+	case 1:
+		mes "- What was the next line to that spell now? -";
+		input(.@input$);
 		next;
-		switch(select("Examine it.:Ignore.")) {
-		case 1:
-			mes "- What was the next line to that spell now? -";
-			input .@input$;
-			next;
-			mes "["+strcharinfo(0)+"]";
-			mes .@input$;
-			next;
-			.@braspell$ = "Where are you mom?";
-			.@chkspell = compare(.@braspell$,.@input$);
-			if (!.@chkspell) {
-				mes "Seems like you said something wrong.";
-				close;
-			}
-			else {
-				if (brazil_ghost == 6) {
-					mes "[Distant Sound]";
-					mes "^FF0000kihe! hit! hit! hit! hit!^000000";
-					next;
-					mes "[Distant Sound]";
-					mes "^FF0000kihe! hit! hit! hit! hit!^000000";
-					mes "^FF0000kihe! hit! hit! hit! hit!^000000";
-					next;
-					mes "[Distant Sound]";
-					mes "Behind you...";
-					enablenpc "Ghost#bra";
-					next;
-					emotion e_omg,1;
-					mes "["+strcharinfo(0)+"]";
-					mes "The stories about the ghost are true~!";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000my baby....^000000";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000I can't see.... my eye....^000000";
-					mes "^FF0000What's going on....?^000000";
-					next;
-					mes "- You take a deep breath and then look at the Ghost and notice it has an eye patch -";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000My eyes are so tight... can you take this off?^000000";
-					next;
-					mes "You step carefully towards the ghost.";
-					next;
-					mes "His face was covered with dust making strange contortions with it's face.";
-					next;
-					mes "[Ghost]";
-					mes "^FF0000Come on help mom.....^000000";
-					next;
-					switch(select("Take the eye bandage off.:Run away~.")) {
-					case 1:
-						while(1) {
-							.@cpudice = rand(1,6);
-							.@pcdice = rand(1,6);
-							if (.@cpudice != .@pcdice) {
-								emotion (57+.@cpudice),0,"Ghost#bra";
-								emotion (57+.@cpudice),1;
-								break;
-							}
-						}
-						if (.@cpudice > .@pcdice) {
-							specialeffect2 EF_DEVIL;
-							mes "[Ghost]";
-							mes "^FF0000Go away!^000000";
-							brazil_ghost = 1;
-							changequest 60354,2208;
-							percentheal -50,-50;
-							close2;
-							disablenpc "Ghost#bra";
-							warp "bra_in01",12,183;
-							end;
-						}
-						else {
-							emotion e_bzz,1;
-							mes "[Ghost]";
-							mes "^FF0000Ahh!^000000";
-							mes "The Ghost disappeared into the toilet.";
-							brazil_ghost = 7;
-							changequest 60354,60355;
-							close2;
-							disablenpc "Ghost#bra";
-							warp "bra_in01",206,100;
-							end;
-						}
-					case 2:
-						mes "You run away from the ghost.";
-						close2;
-						brazil_ghost = 1;
-						changequest 60354,2208;
-						warp "bra_in01",12,183;
-						disablenpc "Ghost#bra";
-						end;
-					}
-					close;
-				}
-				else {
-					mes "Nothing happens.";
-					close;
-				}
-			}
-		case 2:
-			mes "You do nothing.";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes .@input$;
+		next;
+		.@braspell$ = "Where are you mom?";
+		.@chkspell = compare(.@braspell$,.@input$);
+		if (!.@chkspell) {
+			mes "Seems like you said something wrong.";
 			close;
 		}
-	}
-	else {
-		mes "- You can see a clean mirror without any marks or dust -";
+		if (brazil_ghost != 6) {
+			mes "Nothing happens.";
+			close;
+		}
+		mes "[Distant Sound]";
+		mes "^FF0000kihe! hit! hit! hit! hit!^000000";
+		next;
+		mes "[Distant Sound]";
+		mes "^FF0000kihe! hit! hit! hit! hit!^000000";
+		mes "^FF0000kihe! hit! hit! hit! hit!^000000";
+		next;
+		mes "[Distant Sound]";
+		mes "Behind you...";
+		enablenpc "Ghost#bra";
+		next;
+		emotion e_omg,1;
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "The stories about the ghost are true~!";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000my baby....^000000";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000I can't see.... my eye....^000000";
+		mes "^FF0000What's going on....?^000000";
+		next;
+		mes "- You take a deep breath and then look at the Ghost and notice it has an eye patch -";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000My eyes are so tight... can you take this off?^000000";
+		next;
+		mes "You step carefully towards the ghost.";
+		next;
+		mes "His face was covered with dust making strange contortions with it's face.";
+		next;
+		mes "[Ghost]";
+		mes "^FF0000Come on help mom.....^000000";
+		next;
+		switch(select("Take the eye bandage off.", "Run away~.")) {
+		case 1:
+			while(1) {
+				.@cpudice = rand(1,6);
+				.@pcdice = rand(1,6);
+				if (.@cpudice != .@pcdice) {
+					emotion (57+.@cpudice),0,"Ghost#bra";
+					emotion (57+.@cpudice),1;
+					break;
+				}
+			}
+			if (.@cpudice > .@pcdice) {
+				specialeffect(EF_DEVIL, AREA, playerattached());
+				mes "[Ghost]";
+				mes "^FF0000Go away!^000000";
+				brazil_ghost = 1;
+				changequest 60354,2208;
+				percentheal -50,-50;
+				close2;
+				disablenpc "Ghost#bra";
+				warp "bra_in01",12,183;
+				end;
+			}
+			else {
+				emotion e_bzz,1;
+				mes "[Ghost]";
+				mes "^FF0000Ahh!^000000";
+				mes "The Ghost disappeared into the toilet.";
+				brazil_ghost = 7;
+				changequest 60354,60355;
+				close2;
+				disablenpc "Ghost#bra";
+				warp "bra_in01",206,100;
+				end;
+			}
+		case 2:
+			mes "You run away from the ghost.";
+			close2;
+			brazil_ghost = 1;
+			changequest 60354,2208;
+			warp "bra_in01",12,183;
+			disablenpc "Ghost#bra";
+			end;
+		}
+		close;
+	case 2:
+		mes "You do nothing.";
 		close;
 	}
 }
@@ -2680,7 +2644,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 		close;
 	}
 	if ((brazil_ghost > 0) && (brazil_ghost < 7)) {
-		if (countitem(11515) > 0) {
+		if (countitem(Coconut) > 0) {
 			mes "[Curator]";
 			mes "What can I do for you?";
 			next;
@@ -2689,7 +2653,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 			mes "Sorry we are remodeling inside right now so, it's closed.";
 			mes "Please use the other one.";
 			next;
-			switch(select("But I forgot something inside.:Give up.")) {
+			switch(select("But I forgot something inside.", "Give up.")) {
 			case 1:
 				mes "[Curator]";
 				mes "That's tooooo bad.";
@@ -2711,7 +2675,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 				mes "Ok I'll let you through this one time.";
 				next;
 				mes "The curator looks around calmly then opens the door.";
-				delitem 11515,1; //Coconut
+				delitem Coconut,1;
 				brazil_ghost = 2;
 				close2;
 				warp "bra_in01",138,176;
@@ -2730,7 +2694,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 			mes "Sorry we are remodeling inside right now so, it's closed.";
 			mes "Please use the other one.";
 			next;
-			switch(select("But I forgot something inside.:Give up.")) {
+			switch(select("But I forgot something inside.", "Give up.")) {
 			case 1:
 				mes "[Curator]";
 				mes "That's tooooo bad.";
@@ -2819,7 +2783,7 @@ bra_fild01,323,136,1	script	Pipe#brafild	CLEAR_NPC,{
 	if (brazil_ghost > 6) {
 		mes "You see a rusty pipe. It seems to be linked to somewhere beneath the jungle.";
 		next;
-		switch(select("Examine it:Ignore.")) {
+		switch(select("Examine it", "Ignore.")) {
 		case 1:
 			mes "You swim through a gap in the pipe and are swept by a sudden rush of water.";
 			close2;
@@ -2844,8 +2808,7 @@ OnInit:
 	end;
 }
 
-// Iara :: iara.sc
-//============================================================
+//== Iara :: iara.sc =======================================
 brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 	if (questprogress(4135,PLAYTIME) == 1) {
 		mes "[Anori]";
@@ -2866,7 +2829,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 			mes "Did you bring the materials";
 			mes "to make the purifying potion?";
 			next;
-			if ((countitem(950) > 19) && (countitem(7172) > 9) && (countitem(1054) > 2)) {
+			if ((countitem(Heart_Of_Mermaid) > 19) && (countitem(Leopard_Talon) > 9) && (countitem(Lip_Of_Ancient_Fish) > 2)) {
 				mes "[Anori]";
 				mes "Um... it seems to be okay.";
 				mes "I'll make you a potion which will";
@@ -2881,10 +2844,10 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				erasequest 4133;
 				setquest 4134;
 				completequest 4134;
-				delitem 950,20; //Heart_Of_Mermaid
-				delitem 7172,10; //Leopard_Talon
-				delitem 1054,3; //Lip_Of_Ancient_Fish
-				getitem 11517,2; //Puri_Potion
+				delitem Heart_Of_Mermaid,20;
+				delitem Leopard_Talon,10;
+				delitem Lip_Of_Ancient_Fish,3;
+				getitem Puri_Potion,2;
 				mes "[Anori]";
 				mes "Here, it's completed.";
 				mes "Take this.";
@@ -2925,7 +2888,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				mes "materials as before...";
 				mes "I need your power.";
 				next;
-				switch(select("No.:Okay, I'll do it.")) {
+				switch(select("No.", "Okay, I'll do it.")) {
 				case 1:
 					mes "[Anori]";
 					mes "This, ah...";
@@ -2964,7 +2927,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				mes "Could you listen to my stories for a moment.";
 				mes "There's an emergency in our tribe.";
 				next;
-				if(select("No.:Okay.") == 1) {
+				if(select("No.", "Okay.") == 1) {
 					mes "[Anori]";
 					mes "You are a heartless person...";
 					mes "You don't seem the helpful type.";
@@ -2999,7 +2962,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				mes "the purification potion.";
 				mes "Could you do that for me?";
 				next;
-				switch(select("No.:Yes, I can.")) {
+				switch(select("No.", "Yes, I can.")) {
 				case 1:
 					mes "[Anori]";
 					mes "Hm...";
@@ -3044,11 +3007,11 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 }
 
 bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
-	if (countitem(11517) > 0) {
-		mes "[" + strcharinfo(0) + "]";
+	if (countitem(Puri_Potion) > 0) {
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Should I use a Purification Potion?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			specialeffect EF_MAPPILLAR;
 			mes "[Iara]";
@@ -3067,7 +3030,7 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 			mes "Ah... Thank you for helping me recover my consciousness for a while.";
 			mes "But... I think that the curse has been with me too long.";
 			mes "Get away from me quickly.";
-			delitem 11517,1; //Puri_Potion
+			delitem Puri_Potion,1;
 			percentheal 100,100;
 			sc_start SC_INCFLEE,3600000,20;
 			sc_start SC_CRITICALPERCENT,3600000,10;
@@ -3087,7 +3050,7 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 			mes "Leave now while you are safe.";
 			close;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "(I guess I should ignore her.)";
 			close;
 		}
@@ -3102,14 +3065,14 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 		else
 			sc_start SC_CONFUSION,60000,0;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ugh! What's this strange voice?";
 		close;
 	}
 	end;
 
 OnTouch:
-	if (countitem(11517) < 1) {
+	if (countitem(Puri_Potion) < 1) {
 		mes "[Iara]";
 		mes "Aaaaaaaaaaaaaaaaaaaaaah.";
 		mes "Eeeeeeeeeeeeeeeeeeeh.";
@@ -3119,7 +3082,7 @@ OnTouch:
 		else
 			sc_start SC_CONFUSION,60000,0;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ugh! What's this strange voice?";
 		close;
 	}
@@ -3134,11 +3097,11 @@ bra_fild01,188,301,5	script	Native Warrior#nk	4_M_BRZ_INDIAN,{
 	mes "When will she come out of the waterfall again...?";
 	next;
 	if (questprogress(4133) || questprogress(4134)) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(Wh...what's this guy?)";
 	}
 	else {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(This guy will never";
 		mes "get over Iara's curse...)";
 	}

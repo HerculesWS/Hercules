@@ -28,7 +28,7 @@ OnEnterBG:
 // Battleground Engine
 // *********************************************************************
 
--	script	Flavius_BG1	-1,{
+-	script	Flavius_BG1	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -54,7 +54,7 @@ OnReadyCheck:
 		end;
 	set .@Guillaume, getwaitingroomstate(0,"Fl1R_Guillaume");
 	set .@Croix, getwaitingroomstate(0,"Fl1R_Croix");
-	
+
 	if( .@Guillaume < 10 || .@Croix < 10 )
 	{
 		mapannounce "bat_room","Battleground -- Flavius [80-99] G: " + .@Guillaume + "/10, C: " + .@Croix + "/10",1,0x006400;
@@ -276,7 +276,7 @@ bat_b01,390,13,5	script	Guillaume Vintenar#fl1	4_M_KY_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Guillaume!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 			set .@reward, 9;
 		} else {
@@ -305,12 +305,12 @@ bat_b01,10,293,5	script	Croix Vintenar#fl1	4_M_CRU_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Croax!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 			set .@reward, 9;
 		} else {
 			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
+			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
 			mes "This is a Royal gift from Croix, and please don't forget this battle. We can win the next.";
 			close2;
@@ -333,7 +333,7 @@ bat_b01,390,13,5	script	Therapist in battle#fl12	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect2 312;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
@@ -341,7 +341,7 @@ bat_b01,10,293,5	script	Therapist in battle#fl11	4_F_SISTER,{
 	mes "[Therapist in battle]";
 	mes "Just close your eyes, and take a deep breathe.";
 	mes "You can be free from pain.";
-	specialeffect2 312;
+	specialeffect(EF_HEAL, AREA, playerattached());
 	close;
 }
 
@@ -360,7 +360,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	misceffect 83;
+	specialeffect(EF_SANCTUARY);
 	end;
 
 OnTimer25000:
@@ -382,7 +382,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	misceffect 83;
+	specialeffect(EF_SANCTUARY);
 	end;
 
 OnTimer25000:

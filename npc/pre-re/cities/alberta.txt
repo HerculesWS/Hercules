@@ -1,41 +1,55 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Alberta Town Pre-Renewal
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Alberta town NPCs.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-// cities/amatsu.txt
-//============================================================
+//== cities/amatsu.txt =====================================
 alberta,245,93,3	duplicate(Sea_Captain_amatsu)	Sea Captain#ama1	4_M_SEAMAN
 
-// cities/ayothaya.txt
-//============================================================
+//== cities/ayothaya.txt ===================================
 alberta,247,42,3	duplicate(Aibakthing_ayothaya)	Aibakthing#ayo	4_M_THAIONGBAK
 
-// cities/gonryun.txt
-//============================================================
+//== cities/gonryun.txt ====================================
 alberta,245,69,3	duplicate(Kunlun_Envoy_gonryun)	Kunlun Envoy#gon	4_M_TWMIDMAN
 
-// cities/louyang.txt
-//============================================================
+//== cities/louyang.txt ====================================
 alberta,245,45,3	duplicate(Girl_louyang)	Girl#0lou	4_F_CHNDRESS1
 
-// cities/moscovia.txt
-//============================================================
+//== cities/moscovia.txt ===================================
 alberta,245,66,4	duplicate(PR_Officer_moscovia)	Moscovia P.R. Officer#1	4_F_RUSWOMAN2
 
-// quests/quests_alberta.txt
-//============================================================
+//== quests/quests_alberta.txt =============================
 alberta,247,122,4	duplicate(Sailor_alberta)	Sailor#tur	4_M_SEAMAN
 alberta,248,89,4	duplicate(Turtle_Scholar_alberta)	Turtle Island Scholar	2_M_MOLGENSTEIN
 
-// quests/skills/merchant_skills.txt
-//============================================================
+//== quests/skills/merchant_skills.txt =====================
 alberta,232,106,6	duplicate(Gershaun_alberta)	Gershaun	1_M_LIBRARYMASTER

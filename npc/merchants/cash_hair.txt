@@ -1,14 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Cash Hair Stylist
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Exchange cash item, New_Style_Coupon, for new hair styles.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 	mes "[Stylist]";
@@ -19,13 +41,12 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 	mes "Give me a ^FF0000New Style Coupon^000000,";
 	mes "and I'll change your hair~";
 	next;
-	if (Sex == 1) {
+	if (Sex == SEX_MALE) {
 		mes "[Kaniki]";
 		mes "I have two special";
 		mes "hairstyles for men, the";
 		mes "Emergency Heal Perm";
 		mes "and the Aura Blade Cut.";
-		mes "and aura blade cut.";
 		next;
 		cutin "hair_m_24.bmp",4;
 		mes "[Kaniki]";
@@ -71,28 +92,28 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 	mes "if you'd like me to";
 	mes "change your hairstyle?";
 	next;
-	if(select("Change Hairstyle:Don't Change") == 1) {
-		if (countitem(7622) > 0) {
+	if(select("Change Hairstyle", "Don't Change") == 1) {
+		if (countitem(New_Style_Coupon) > 0) {
 			mes "[Kaniki]";
 			mes "Great, you brought";
 			mes "a New Style Coupon!";
 			mes "Alright, which hairstyle";
 			mes "did you want to have?";
 			next;
-			if (Sex == 1) {
-				if(select("Emergency Heal Perm:Aura Blade Cut") == 1) {
-					delitem 7622,1;	// New_Style_Coupon
+			if (Sex == SEX_MALE) {
+				if(select("Emergency Heal Perm", "Aura Blade Cut") == 1) {
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,24;
 				}else{
-					delitem 7622,1;	// New_Style_Coupon
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,25;
 				}
 			}else{
-				if(select("Assumptio Perm:Soul Changer Cut") == 1) {
-					delitem 7622,1;	// New_Style_Coupon
+				if(select("Assumptio Perm", "Soul Changer Cut") == 1) {
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,24;
 				}else{
-					delitem 7622,1;	// New_Style_Coupon
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,25;
 				}
 			}

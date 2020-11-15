@@ -1,19 +1,40 @@
-//===== Hercules Script ======================================
-//= RWC 2012 Enchants
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Adds slots and enchantments to 2012 RWC Memory accessories.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
 prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items in your inventory. Visit Kafra storage and try again.";
 		close;
 	}
@@ -42,7 +63,7 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	mes "[Driller]";
 	mes "You should also know that making a card slot it extremely dangerous. ^ff0000Chances to succeed are about 50%.^000000 Do you wish to proceed?";
 	next;
-	if(select("Cancel:Let's go!") == 1) {
+	if(select("Cancel", "Let's go!") == 1) {
 		mes "[Driller]";
 		mes "See ya then.";
 		close;
@@ -68,12 +89,12 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	delequip .@part;
 	if (rand(1,10) > 5) {
 		getitem .@slotted,1;
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		mes "[Driller]";
 		mes "Yay! Success! Your "+.@name$+" now has a card slot. Check it out!";
 		close;
 	} else {
-		specialeffect2 EF_LORD;
+		specialeffect(EF_LORD, AREA, playerattached());
 		mes "[Driller]";
 		mes "Awww... Damn weak "+.@str$+"... It broke during the procedure. I'm sorry.";
 		close;
@@ -82,7 +103,7 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 
 prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You are carrying too many items. Come back after you have organized your inventory.";
 		close;
 	}
@@ -105,7 +126,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		mes "However, I can see that the accessory you are wearing is not something I can work on. Please equip a RWC Memorial accessory.";
 		close;
 	}
-	.@select = select("Sorry, not interested.:Please, empower my accessory.:Remove the Enchant.")-1;
+	.@select = select("Sorry, not interested.", "Please, empower my accessory.", "Remove the Enchant.")-1;
 	if (.@select == 0) {
 		mes "[Goldberg]";
 		mes "Alright, then, see you next time...";
@@ -146,25 +167,25 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],1,2,3,4;
-			.@i = select("Cancel:Fighting Spirit:ATK (%):Max HP:HP")-2;
+			.@i = select("Cancel", "Fighting Spirit", "ATK (%)", "Max HP", "HP")-2;
 			break;
 		case 3:
 			setarray .@enchant_select[0],5,6,7;
-			.@i = select("Cancel:Spell:MATK (%):SP")-2;
+			.@i = select("Cancel", "Spell", "MATK (%)", "SP")-2;
 			break;
 		case 2:
 			mes "[Goldberg]";
 			mes "^ff0000Be careful! There is about a 25% chance that the enchantment will fail. If this happens, the item will be destroyed.^000000 Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],8,9,10,11,12,13,14;
-			.@i = select("Cancel:STR:AGI:VIT:INT:DEX:LUK:SP")-2;
+			.@i = select("Cancel", "STR", "AGI", "VIT", "INT", "DEX", "LUK", "SP")-2;
 			break;
 		case 1:
 			mes "[Goldberg]";
 			mes "^ff0000There is about a 25% chance that the enchantment will fail. If this happens, the item will be destroyed.^000000 Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],8,9,10,11,12,13,15,16;
-			.@i = select("Cancel:STR:AGI:VIT:INT:DEX:LUK:MHP:HP")-2;
+			.@i = select("Cancel", "STR", "AGI", "VIT", "INT", "DEX", "LUK", "MHP", "HP")-2;
 			break;
 		case 0:
 			mes "[Goldberg]";
@@ -179,7 +200,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		mes "[Goldberg]";
 		mes "The power of the enchantment will be randomly chosen. ^ff0000Once infused, the enchantment cannot be removed.^000000 Shall we continue?";
 		next;
-		if(select("No, please stop.:Yes, please proceed.") == 1) {
+		if(select("No, please stop.", "Yes, please proceed.") == 1) {
 			mes "[Goldberg]";
 			mes "Alright, then, see you next time...";
 			close;
@@ -272,7 +293,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "[Goldberg]";
 			mes "Oh gosh!";
  			mes "The item was not strong enough to bear the enchantment and thus got destroyed. I am sorry.";
-			specialeffect2 EF_LORD;
+			specialeffect(EF_LORD, AREA, playerattached());
 			close;
 		}
 		if (.@enchant == 0) { // Should never happen.
@@ -282,10 +303,10 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "[Goldberg]";
 			mes "Great!";
 			mes "The enchantment is a success! It will be applied in socket No.^990000"+(.@slot+1)+"^000000.";
-			specialeffect2 EF_REPAIRWEAPON;
+			specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		}
 
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
+		//GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
 		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@equip_card[3];
 
 		close;
@@ -293,12 +314,12 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		mes "[Goldberg]";
 		mes "I will just initialize the enchant option without doing anything to the slotted card. You wanna continue?";
 		next;
-		if(select("I will stop.:Yep, sure, go on.") == 1) {
+		if(select("I will stop.", "Yep, sure, go on.") == 1) {
 			mes "[Goldberg]";
 			mes "Come back if you change your mind.";
 			close;
 		}
-		if (countitem(6665) == 0) {
+		if (countitem(RWC_Inicializer) == 0) {
 			mes "[Goldberg]";
 			mes "I'm sorry. But you don't have the RWC Initialization coupon. Can you check your inventory?";
 			close;
@@ -308,19 +329,19 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "Hm... this equipment is clean. I cannot initialize it if there's nothing! Check it again.";
 			close;
 		}
-		specialeffect2 EF_REPAIRWEAPON;
+		specialeffect(EF_REPAIRWEAPON, AREA, playerattached());
 		mes "[Goldberg]";
 		mes "The enchant option in your item will be initialized.";
-		delitem 6665,1; //RWC_Inicializer
+		delitem RWC_Inicializer,1;
 		delequip .@part;
-	
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
+
+		//GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
 		for(.@i = 0; .@i < 4; ++.@i) {
 			if (.@equip_card[.@i] >= 4700) // Armor Enchant System
 				.@equip_card[.@i] = 0;
 		}
 		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@equip_card[3];
-		
+
 		close;
 	}
 }

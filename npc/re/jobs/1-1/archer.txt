@@ -1,16 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Streusel
+//= Copyright (C) Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Renewal Archer Job Quest
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Job Change to Archer Class
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Kisuka]
-//= 1.1 Added Baby Job compatibility [Streusel]
-//= 1.2 Rewrote bits [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
+
 payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Sniper || ADVJOB == Job_Clown || ADVJOB == Job_Gypsy)) {
@@ -61,7 +84,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	mes "[Archer Guildsman]";
 	mes "Nice to meet you. How may I help you?";
 	next;
-	switch(select("I want to be an Archer.:I need the requirements, please.:Nothing, thanks.")) {
+	switch(select("I want to be an Archer.", "I need the requirements, please.", "Nothing, thanks.")) {
 	case 1:
 		if(BaseJob != Job_Novice) {
 			mes "[Archer Guildsman]";
@@ -74,7 +97,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			close;
 		}else{
 			mes "[Archer Guildsman]";
-			mes "You are... "+strcharinfo(0)+". right?";
+			mes "You are... "+strcharinfo(PC_NAME)+". right?";
 			next;
 			if (getskilllv("NV_BASIC") < 9) {
 				mes "[Archer Guildsman]";
@@ -93,10 +116,10 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			mes "Congratulations! You are now an Archer! Also, we hope that you actively participate in many programs for the revival of the Archer Guild.";
 			mes "Ah, items have arrived from the Production Department. Here, take these! These are all yours!";
 			callfunc "Job_Change",Job_Archer;
-			getitem 1742,1;	// N_Composite_Bow
-			getitem 12004,1;	// Arrow_Container
-			getitem 12009,1;	// Silver_Arrow_Container
-			getitem 12008,1;	// Fire_Arrow_Container
+			getitem N_Composite_Bow,1;	// N_Composite_Bow
+			getitem Arrow_Container,1;	// Arrow_Container
+			getitem Silver_Arrow_Container,1;	// Silver_Arrow_Container
+			getitem Fire_Arrow_Container,1;	// Fire_Arrow_Container
 			next;
 			mes "[Archer Guildsman]";
 			mes "Having a bow and arrows, now you became a real Archer.";

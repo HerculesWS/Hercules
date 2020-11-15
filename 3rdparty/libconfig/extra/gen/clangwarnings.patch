@@ -2,35 +2,35 @@ diff --git a/grammar.c b/grammar.c
 index 3595578..26444f8 100644
 --- a/grammar.c
 +++ b/grammar.c
-@@ -1187,9 +1187,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
+@@ -1084,9 +1084,7 @@ void libconfig_yyerror(void *scanner, struct parse_context *ctx,
+   YYUSE (scanner);
    YYUSE (ctx);
    YYUSE (scan_ctx);
- 
 -  if (!yymsg)
 -    yymsg = "Deleting";
 -  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
-+  YY_SYMBOL_PRINT (yymsg ? yymsg : "Deleting", yytype, yyvaluep, yylocationp);
- 
-   switch (yytype)
-     {
++  YY_SYMBOL_PRINT (yymsg != NULL ? yymsg : "Deleting", yytype, yyvaluep, yylocationp);
+
+   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
+   YYUSE (yytype);
 diff --git a/scanner.c b/scanner.c
-index aebd34c..c3a717f 100644
+index 60882db..8b8af33 100644
 --- a/scanner.c
 +++ b/scanner.c
-@@ -1500,6 +1500,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
- 	else
- 		ret_val = EOB_ACT_CONTINUE_SCAN;
- 
-+#ifndef __clang_analyzer__
-+	// FIXME: Clang's static analyzer complains about leaking the result of libconfig_yyrealloc
- 	if ((yy_size_t) (yyg->yy_n_chars + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
- 		/* Extend the array by 50%, plus the number we really need. */
- 		yy_size_t new_size = yyg->yy_n_chars + number_to_move + (yyg->yy_n_chars >> 1);
-@@ -1507,6 +1509,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
- 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
- 			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
+@@ -21,6 +21,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <stdlib.h>
++#include <assert.h>
+
+ /* end standard C headers. */
+
+@@ -1702,6 +1703,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
+             yy_create_buffer( yyin, YY_BUF_SIZE , yyscanner);
  	}
-+#endif // __clang_analyzer__
- 
- 	yyg->yy_n_chars += number_to_move;
- 	YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] = YY_END_OF_BUFFER_CHAR;
+
++	assert(YY_CURRENT_BUFFER != NULL); // Fixes compiler warning -Wnull-dereference on gcc-6 and -O3
++
+ 	yy_init_buffer( YY_CURRENT_BUFFER, input_file , yyscanner);
+ 	yy_load_buffer_state( yyscanner );
+ }

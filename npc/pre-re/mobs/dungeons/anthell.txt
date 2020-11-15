@@ -1,17 +1,40 @@
-//===== Hercules Script =======================================
-//= Ant Hell Monster Spawn Script
-//===== By: ==================================================
-//= Athena (1.0)
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Ant Hell Monster Spawn Script (Pre-Renewal)
+//================= Description ===========================================
+//= Monster Spawns for Ant Hell
+//================= Current Version =======================================
 //= 1.2
-//===== Additional Comments: =================================
-//= 1.1 Official kRO 10.1 spawns [Playtester]
-//= 1.2 Corrected MVP spawn variance. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-//==================================================
-// anthell01 - Ant Hell F1
-//==================================================
+//== anthell01 - Ant Hell F1 ===============================
 anthell01,0,0,0,0	monster	Familiar	1005,20,0,0,0
 anthell01,0,0,0,0	monster	Andre	1095,15,0,0,0
 anthell01,0,0,0,0	monster	Piere	1160,50,0,0,0
@@ -107,9 +130,7 @@ anthell01,103,121,0,0	monster	Ant Egg	1097,1,60000,30000,0
 anthell01,102,121,0,0	monster	Ant Egg	1097,1,60000,30000,0
 anthell01,105,124,0,0	monster	Ant Egg	1097,1,60000,30000,0
 
-//==================================================
-// anthell02 - Ant Hell F2
-//==================================================
+//== anthell02 - Ant Hell F2 ===============================
 anthell02,0,0,0,0	monster	Ant Egg	1097,15,0,0,0
 anthell02,0,0,0,0	monster	Familiar	1005,20,0,0,0
 anthell02,0,0,0,0	monster	Andre	1095,50,0,0,0

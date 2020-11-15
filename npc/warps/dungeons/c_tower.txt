@@ -1,16 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Nana
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Al de Baran Clock Tower Warp Script
-//===== By: ==================================================
-//= Nana (1.0)
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Clock Tower
-//===== Additional Comments: =================================
-//= 1.0 Split from combined warp file alberta_duns. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-//= Al De Baran Clock Tower
 aldebaran,139,135,0	warp	ald002	1,1,c_tower1,199,159
 c_tower1,200,157,0	warp	ald003	1,1,aldebaran,139,131
 c_tower1,235,226,0	warp	clt001	1,1,c_tower2,268,26
@@ -19,9 +41,8 @@ c_tower2,142,283,0	warp	clt003	1,1,c_tower3,65,147
 c_tower2,24,24,0	warp	clt004	1,1,alde_dun03,277,178
 c_tower2,273,26,0	warp	clt005	1,1,c_tower1,235,223
 
-//============================================================
-//= Level 2 ==================================================
-//= Random 2-1 ===============================================
+//== Level 2 ===============================================
+//- Random 2-1 -
 c_tower2,13,288,4	script	clt006r	WARPNPC,1,1,{
 	switch(rand(3)) {
 		case 0: warp "c_tower2",13,282; end;
@@ -29,8 +50,8 @@ c_tower2,13,288,4	script	clt006r	WARPNPC,1,1,{
 		case 2: warp "c_tower3",235,7; end;
 	}
 }
-//============================================================
-//= Random 2-2 ===============================================
+
+//- Random 2-2 -
 c_tower2,223,267,4	script	clt007r	WARPNPC,1,1,{
 	switch(rand(3)) {
 		case 0: warp "c_tower2",288,267; end;
@@ -38,15 +59,15 @@ c_tower2,223,267,4	script	clt007r	WARPNPC,1,1,{
 		case 2: warp "c_tower3",252,29; end;
 	}
 }
-//============================================================
-//= Level 3 ==================================================
+
+//== Level 3 ===============================================
 c_tower3,60,147,0	warp	clt009	1,1,c_tower2,148,283
 c_tower3,212,159,0	warp	clt010	1,1,alde_dun03,276,53
 c_tower3,7,39,0	warp	clt011	1,1,alde_dun01,171,158
 c_tower3,42,41,0	warp	clt012	1,1,alde_dun02,127,169
 c_tower3,146,8,0	warp	clt013	1,1,c_tower1,235,223
-//============================================================
-//= Random 3-1 ===============================================
+
+//- Random 3-1 -
 c_tower3,163,252,4	script	clt014r	WARPNPC,1,1,{
 	if (rand(2))
 		warp "c_tower3",168,252;
@@ -54,8 +75,8 @@ c_tower3,163,252,4	script	clt014r	WARPNPC,1,1,{
 		warp "alde_dun02",262,41;
 	end;
 }
-//============================================================
-//= Random 3-2 ===============================================
+
+//- Random 3-2 -
 c_tower3,240,7,4	script	clt015r	WARPNPC,1,1,{
 	switch(rand(3)) {
 		case 0: warp "c_tower2",13,282; end;
@@ -63,8 +84,8 @@ c_tower3,240,7,4	script	clt015r	WARPNPC,1,1,{
 		case 2: warp "c_tower3",235,7; end;
 	}
 }
-//============================================================
-//= Random 3-3 ===============================================
+
+//- Random 3-3 -
 c_tower3,252,24,4	script	clt016r	WARPNPC,1,1,{
 	switch(rand(3)) {
 		case 0: warp "c_tower2",228,267; end;
@@ -72,8 +93,8 @@ c_tower3,252,24,4	script	clt016r	WARPNPC,1,1,{
 		case 2: warp "c_tower3",252,29; end;
 	}
 }
-//============================================================
-//= Level 4 ==================================================
+
+//== Level 4 ==============================================
 c_tower4,37,70,0	warp	clt017	1,1,alde_dun03,277,54
 c_tower4,51,156,0	warp	clt018	1,1,alde_dun01,171,158
 c_tower4,68,46,0	warp	clt019	1,1,c_tower4,73,154
@@ -84,8 +105,8 @@ c_tower4,153,107,0	warp	clt023	1,1,c_tower2,228,267
 c_tower4,171,179,0	warp	clt024	1,1,alde_dun03,276,53
 c_tower4,198,59,0	warp	clt025	1,1,c_tower4,152,98
 c_tower4,204,57,0	warp	clt026	1,1,c_tower4,65,77
-//============================================================
-//= Random 4-1 ===============================================
+
+//- Random 4-1 -
 c_tower4,75,156,4	script	clt027r	WARPNPC,0,0,{
 	switch(rand(4)) {
 		case 0: warp "c_tower3",168,252; end;
@@ -94,8 +115,8 @@ c_tower4,75,156,4	script	clt027r	WARPNPC,0,0,{
 		case 3: warp "c_tower4",140,149; end;
 	}
 }
-//============================================================
-//= Random 4-2 ===============================================
+
+//- Random 4-2 -
 c_tower4,68,79,4	script	clt028r	WARPNPC,0,0,{
 	switch(rand(4)) {
 		case 0: warp "c_tower2",13,282; end;
@@ -104,8 +125,8 @@ c_tower4,68,79,4	script	clt028r	WARPNPC,0,0,{
 		case 3: warp "c_tower4",65,77; end;
 	}
 }
-//============================================================
-//= Random 4-3 ===============================================
+
+//- Random 4-3 -
 c_tower4,142,151,4	script	clt029r	WARPNPC,0,0,{
 	switch(rand(4)) {
 		case 0: warp "c_tower3",168,252; end;
@@ -114,8 +135,8 @@ c_tower4,142,151,4	script	clt029r	WARPNPC,0,0,{
 		case 3: warp "c_tower4",140,149; end;
 	}
 }
-//============================================================
-//= Random 4-4 ===============================================
+
+//- Random 4-4 -
 c_tower4,151,96,4	script	clt030r	WARPNPC,0,0,{
 	switch(rand(4)) {
 		case 0: warp "c_tower2",228,267; end;
@@ -124,8 +145,8 @@ c_tower4,151,96,4	script	clt030r	WARPNPC,0,0,{
 		case 3: warp "c_tower4",152,95; end;
 	}
 }
-//============================================================
-//= Random 4-5 ===============================================
+
+//- Random 4-5 -
 c_tower4,189,40,4	script	clt031r	WARPNPC,2,2,{
 	switch(rand(4)) {
 		case 0: warp "c_tower2",228,267; end;

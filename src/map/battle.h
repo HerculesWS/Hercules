@@ -1,12 +1,28 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_BATTLE_H
 #define MAP_BATTLE_H
 
-#include "map.h" //ELE_MAX
-#include "../common/cbasetypes.h"
+#include "map/map.h" //ELE_MAX
+#include "common/hercules.h"
 
 /**
  * Declarations
@@ -27,6 +43,8 @@ struct status_data;
 #define MAX_HAIR_COLOR  (battle->bc->max_hair_color)
 #define MIN_CLOTH_COLOR (battle->bc->min_cloth_color)
 #define MAX_CLOTH_COLOR (battle->bc->max_cloth_color)
+#define MIN_BODY_STYLE (battle->bc->min_body_style)
+#define MAX_BODY_STYLE (battle->bc->max_body_style)
 
 #define is_boss(bl)     (status_get_mode(bl)&MD_BOSS) // Can refine later [Aru]
 
@@ -36,6 +54,7 @@ struct status_data;
 
 enum {
 	// Flag of the final calculation
+	BF_NONE       = 0x0000,
 	BF_WEAPON     = 0x0001,
 	BF_MAGIC      = 0x0002,
 	BF_MISC       = 0x0004,
@@ -77,6 +96,27 @@ enum e_battle_check_target { //New definitions [Skotlex]
 };
 
 /**
+ * Values used by (struct Damage).type, as well as clif->damage(type) and clif->skill_damage(type)
+ *
+ * Note: some values may not apply in some contexts.
+ */
+enum battle_dmg_type {
+	BDT_NORMAL      = 0,  // Normal attack
+	//BDT_PICKUP      = 1,  // Pick up item
+	BDT_SITDOWN     = 2,  // Sit down
+	BDT_STANDUP     = 3,  // Stand up
+	BDT_ENDURE      = 4,  // Damage (endure)
+	BDT_SPLASH      = 5,  // Splash
+	BDT_SKILL       = 6,  // Skill
+	//BDT_REPEAT      = 7,  // (repeat damage?)
+	BDT_MULTIHIT    = 8,  // Multi-hit damage
+	BDT_MULTIENDURE = 9,  // Multi-hit damage (endure)
+	BDT_CRIT        = 10, // Critical hit
+	BDT_PDODGE      = 11, // Lucky dodge
+	//BDT_TOUCH       = 12, // (touch skill?)
+};
+
+/**
  * Structures
  **/
 
@@ -109,7 +149,8 @@ struct Battle_Config {
 	int pc_damage_delay_rate;
 	int defnotenemy;
 	int vs_traps_bctall;
-	int traps_setting;
+	int trap_visibility;
+	int trap_trigger;
 	int summon_flora; //[Skotlex]
 	int clear_unit_ondeath; //[Skotlex]
 	int clear_unit_onwarp; //[Skotlex]
@@ -171,16 +212,15 @@ struct Battle_Config {
 	int guild_aura;
 	int pc_invincible_time;
 
+	int pet_catch_rate_official_formula;
 	int pet_catch_rate;
 	int pet_rename;
 	int pet_friendly_rate;
 	int pet_hungry_delay_rate;
-	int pet_hungry_friendly_decrease;
 	int pet_status_support;
 	int pet_attack_support;
 	int pet_damage_support;
 	int pet_support_min_friendly; //[Skotlex]
-	int pet_equip_min_friendly;
 	int pet_support_rate;
 	int pet_attack_exp_to_master;
 	int pet_attack_exp_rate;
@@ -188,8 +228,8 @@ struct Battle_Config {
 	int pet_max_stats; //[Skotlex]
 	int pet_max_atk1; //[Skotlex]
 	int pet_max_atk2; //[Skotlex]
-	int pet_no_gvg; //Disables pets in gvg. [Skotlex]
 	int pet_equip_required;
+	int pet_remove_immediately;
 
 	int skill_min_damage;
 	int finger_offensive_type;
@@ -201,14 +241,16 @@ struct Battle_Config {
 	int combo_delay_rate;
 	int item_check;
 	int item_use_interval; //[Skotlex]
-	int cashfood_use_interval;
 	int wedding_modifydisplay;
 	int wedding_ignorepalette; //[Skotlex]
 	int xmas_ignorepalette; // [Valaris]
 	int summer_ignorepalette; // [Zephyrus]
 	int hanbok_ignorepalette;
+	int oktoberfest_ignorepalette;
+	int summer2_ignorepalette;
 	int natural_healhp_interval;
 	int natural_healsp_interval;
+	int natural_heal_cap;
 	int natural_heal_skill_interval;
 	int natural_heal_weight_rate;
 	int arrow_decrement;
@@ -258,6 +300,7 @@ struct Battle_Config {
 	int show_steal_in_same_party;
 	int party_share_type;
 	int party_hp_mode;
+	int party_change_leader_same_map;
 	int party_show_share_picker;
 	int show_picker_item_type;
 	int attack_attr_none;
@@ -299,7 +342,6 @@ struct Battle_Config {
 	int skill_removetrap_type;
 	int disp_experience;
 	int disp_zeny;
-	int castle_defense_rate;
 	int backstab_bow_penalty;
 	int hp_rate;
 	int sp_rate;
@@ -323,6 +365,8 @@ struct Battle_Config {
 
 	int castrate_dex_scale; // added by [MouseJstr]
 	int area_size; // added by [MouseJstr]
+	int chat_area_size; // added by [gumi]
+	int dead_area_size; // Monster die area [KirieZ]
 
 	int max_def, over_def_bonus; //added by [Skotlex]
 
@@ -360,13 +404,14 @@ struct Battle_Config {
 	int mob_remove_delay; // Dynamic Mobs - delay before removing mobs from a map [Skotlex]
 	int mob_active_time; //Duration through which mobs execute their Hard AI after players leave their area of sight.
 	int boss_active_time;
+	int slave_chase_masters_chasetarget;
 
 	int show_hp_sp_drain, show_hp_sp_gain; //[Skotlex]
+	int show_katar_crit_bonus;
 
 	int mob_npc_event_type; //Determines on who the npc_event is executed. [Skotlex]
 
 	int character_size; // if riders have size=2, and baby class riders size=1 [Lupus]
-	int rare_drop_announce; // chance <= to show rare drops global announces
 
 	int retaliate_to_master; //Whether when a mob is attacked by another mob, it will retaliate versus the mob or the mob's master. [Skotlex]
 
@@ -427,12 +472,14 @@ struct Battle_Config {
 	int searchstore_querydelay;
 	int searchstore_maxresults;
 	int display_party_name;
+	int send_party_options;
 	int cashshop_show_points;
 	int mail_show_status;
 	int client_limit_unit_lv;
 	int client_emblem_max_blank_percent;
 	int hom_max_level;
 	int hom_S_max_level;
+	int hom_bonus_exp_from_master;
 
 	// [BattleGround Settings]
 	int bg_update_interval;
@@ -447,9 +494,11 @@ struct Battle_Config {
 	int vcast_stat_scale;
 
 	int mvp_tomb_enabled;
+	int mvp_tomb_spawn_delay;
 
 	int atcommand_suggestions_enabled;
 	int min_npc_vendchat_distance;
+	int vendchat_near_hiddennpc;
 	int atcommand_mobinfo_type;
 
 	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
@@ -460,6 +509,7 @@ struct Battle_Config {
 
 	/** Hercules **/
 	int skill_trap_type;
+	int trap_reflect;
 	int item_restricted_consumption_type;
 	int unequip_restricted_equipment;
 	int max_walk_path;
@@ -486,11 +536,100 @@ struct Battle_Config {
 	int stormgust_knockback;
 
 	int feature_roulette;
-};
 
-#ifdef HERCULES_CORE
-extern struct Battle_Config battle_config;
-#endif // HERCULES_CORE
+	int show_monster_hp_bar; // [Frost]
+
+	int fix_warp_hit_delay_abuse;
+
+	// Refine Def/Atk
+	int costume_refine_def, shadow_refine_def;
+	int shadow_refine_atk;
+
+	// BodyStyle
+	int min_body_style, max_body_style;
+	int save_body_style;
+
+	// Warp Face Direction
+	int player_warp_keep_direction;
+
+	int atcommand_levelup_events; // Enable atcommands trigger level up events for NPCs
+
+	int bow_unequip_arrow;
+
+	int max_summoner_parameter; // Summoner Max Stats
+	int mvp_exp_reward_message;
+
+	int mob_eye_range_bonus; //Vulture's Eye and Snake's Eye range bonus
+
+	int prevent_logout_trigger;
+	int boarding_halter_speed;
+
+	int feature_rodex;
+	int feature_rodex_use_accountmail;
+
+	int feature_enable_homun_autofeed;
+	int feature_enable_pet_autofeed;
+
+	int storage_use_item;
+
+	int feature_enable_attendance_system;
+	int feature_attendance_endtime;
+
+	int min_item_buy_price;
+	int min_item_sell_price;
+
+	int display_fake_hp_when_dead;
+
+	int magicrod_type;
+
+	int skill_enabled_npc;
+
+	int feature_enable_achievement;
+
+	int ping_timer_interval;
+	int ping_time;
+
+	int option_drop_max_loop;
+
+	int drop_connection_on_quit;
+	int display_rate_messages;
+	int display_config_messages;
+	int display_overweight_messages;
+	int show_tip_window;
+	int enable_refinery_ui;
+	int replace_refine_npcs;
+
+	int batk_min;
+	int batk_max;
+	int matk_min;
+	int matk_max;
+	int watk_min;
+	int watk_max;
+	int flee_min;
+	int flee_max;
+	int flee2_min;
+	int flee2_max;
+	int critical_min;
+	int critical_max;
+	int hit_min;
+	int hit_max;
+
+	int autoloot_adjust;
+	int allowed_actions_when_dead;
+	int teleport_close_storage;
+
+	int show_attendance_window;
+
+	int elem_natural_heal_hp;
+	int elem_natural_heal_sp;
+	int elem_natural_heal_cap;
+	int hom_natural_heal_hp;
+	int hom_natural_heal_sp;
+	int hom_natural_heal_cap;
+	int merc_natural_heal_hp;
+	int merc_natural_heal_sp;
+	int merc_natural_heal_cap;
+};
 
 /* criteria for battle_config.idletime_critera */
 enum e_battle_config_idletime {
@@ -504,6 +643,7 @@ enum e_battle_config_idletime {
 	BCIDLE_EMOTION       = 0x080,
 	BCIDLE_DROPITEM      = 0x100,
 	BCIDLE_ATCOMMAND     = 0x200,
+	BCIDLE_SCRIPT        = 0x400,
 };
 
 // Damage delayed info
@@ -538,12 +678,16 @@ struct battle_interface {
 	struct Damage (*calc_attack) (int attack_type, struct block_list *bl, struct block_list *target, uint16 skill_id, uint16 skill_lv, int count);
 	/* generic final damage calculation */
 	int64 (*calc_damage) (struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv);
+	/* pc special damage calculation */
+	int64 (*calc_pc_damage) (struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv);
 	/* gvg final damage calculation */
 	int64 (*calc_gvg_damage) (struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag);
 	/* battlegrounds final damage calculation */
 	int64 (*calc_bg_damage) (struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag);
 	/* normal weapon attack */
 	enum damage_lv (*weapon_attack) (struct block_list *bl, struct block_list *target, int64 tick, int flag);
+	/* check is equipped ammo and this ammo allowed */
+	bool (*check_arrows) (struct map_session_data *sd);
 	/* calculate weapon attack */
 	struct Damage (*calc_weapon_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int wflag);
 	/* delays damage or skills by a timer */
@@ -552,6 +696,8 @@ struct battle_interface {
 	void (*drain) (struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss);
 	/* damage reflect */
 	void (*reflect_damage) (struct block_list *target, struct block_list *src, struct Damage *wd,uint16 skill_id);
+	/* trap reflect */
+	void(*reflect_trap) (struct block_list *target, struct block_list *src, struct Damage *md, uint16 skill_id);
 	/* attribute rate */
 	int (*attr_ratio) (int atk_elem, int def_type, int def_lv);
 	/* applies attribute modifiers */
@@ -605,11 +751,12 @@ struct battle_interface {
 	int (*adjust_skill_damage) (int m, unsigned short skill_id);
 	int64 (*add_mastery) (struct map_session_data *sd,struct block_list *target,int64 dmg,int type);
 	int (*calc_drain) (int64 damage, int rate, int per);
-	/* - battle_config                           */
-	int (*config_read) (const char *cfgName);
+	/* battle_config */
+	bool (*config_read) (const char *filename, bool imported);
 	void (*config_set_defaults) (void);
-	int (*config_set_value) (const char* w1, const char* w2);
-	int (*config_get_value) (const char* w1);
+	bool (*config_set_value_sub) (int index, int value);
+	bool (*config_set_value) (const char *param, const char *value);
+	bool (*config_get_value) (const char *w1, int *value);
 	void (*config_adjust) (void);
 	/* ----------------------------------------- */
 	/* picks a random enemy within the specified range */
@@ -622,10 +769,12 @@ struct battle_interface {
 	void (*calc_misc_attack_unknown) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *mflag, struct Damage *md);
 };
 
-struct battle_interface *battle;
-
 #ifdef HERCULES_CORE
+extern struct Battle_Config battle_config;
+
 void battle_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct battle_interface *battle;
 
 #endif /* MAP_BATTLE_H */

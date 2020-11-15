@@ -1,34 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Daegaladh
+//= Copyright (C) Elias
+//= Copyright (C) Zephyrus
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mail Boxes
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.8
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Pickup and write mail from/to players in game.
-//===== Additional Comments: =================================
-//= 1.0 First version, place holders only. [L0ne_W0lf]
-//= 1.1 Dialog updated to Official. [L0ne_W0lf]
-//= 1.2 Swapped "atcommand" for "Openmail". [L0ne_W0lf]
-//= 1.3 Added Veins mail box. [L0ne_W0lf]
-//= 1.3a Corrected a typo error. (bugreport:798) [Samuray22]
-//= 1.4 Added a Mapflag to prevent mail operations in other maps [Zephyrus]
-//= 1.5 Moved Morroc Mail boxes to Morroc Ruins. [L0ne_W0lf]
-//= 1.6 Duplicates now spawn from floating NPCs. [L0ne_W0lf]
-//= 1.7 Updated Script from the Official. [Elias]
-//= 1.8 Optimized a bit. [Daegaladh]
-//============================================================
+//================= Current Version =======================================
+//= 1.8
+//=========================================================================
 
-// Floating mailbox npc that all NPCs duplicate from.
-//============================================================
--	script	Mailbox#dummy::MailBox	-1,{
+//== Floating mailbox npc that all NPCs duplicate from =====
+-	script	Mailbox#dummy::MailBox	FAKE_NPC,{
 	mes "[Mailbox]";
 	mes "To use the mailbox service,";
 	mes "you are required to pay 130 zeny.";
 	mes "Would you like to use the service?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		mes "[Mailbox]";
 		if (Zeny < 130) {
@@ -49,89 +64,70 @@
 	}
 }
 
-// Prontera
-//============================================================
+//== Prontera ==============================================
 prontera,146,86,0	duplicate(MailBox)	Mailbox#prt	2_POSTBOX
 prontera,275,213,0	duplicate(MailBox)	Mailbox#2prt	2_POSTBOX
 prontera,34,212,0	duplicate(MailBox)	Mailbox#3prt	2_POSTBOX
 
-// Izlude
-//============================================================
+//== Izlude ================================================
 izlude,136,94,0	duplicate(MailBox)	Mailbox#iz	2_POSTBOX
 
-// Morroc
-//============================================================
+//== Morroc ================================================
 moc_ruins,72,166,0	duplicate(MailBox)	Mailbox#1moc	2_POSTBOX
 moc_ruins,156,52,0	duplicate(MailBox)	Mailbox#2moc	2_POSTBOX
 
-// Geffen
-//============================================================
+//== Geffen ================================================
 geffen,115,67,0	duplicate(MailBox)	Mailbox#gef	2_POSTBOX
 geffen,199,125,0	duplicate(MailBox)	Mailbox#2gef	2_POSTBOX
 
-// Payon
-//============================================================
+//== Payon =================================================
 payon,191,104,0	duplicate(MailBox)	Mailbox#pay	2_POSTBOX
 payon,171,226,0	duplicate(MailBox)	Mailbox#2pay	2_POSTBOX
 pay_arche,55,127,0	duplicate(MailBox)	Mailbox#3pay	2_POSTBOX
 
-// Alberta
-//============================================================
+//== Alberta ===============================================
 alberta,90,60,0	duplicate(MailBox)	Mailbox#alb	2_POSTBOX
 alberta,30,240,0	duplicate(MailBox)	Mailbox#2alb	2_POSTBOX
 
-// Al De Baran
-//============================================================
+//== Aldebaran =============================================
 aldebaran,135,122,0	duplicate(MailBox)	Mailbox#alde	2_POSTBOX
 
-// Juno
-//============================================================
+//== Juno ==================================================
 yuno,148,187,0	duplicate(MailBox)	Mailbox#yuno	2_POSTBOX
 yuno,332,108,0	duplicate(MailBox)	Mailbox#2yuno	2_POSTBOX
 
-// Lightalzen
-//============================================================
+//== Lightalzen ============================================
 lighthalzen,164,85,0	duplicate(MailBox)	Mailbox#lht	2_POSTBOX
 lighthalzen,196,320,0	duplicate(MailBox)	Mailbox#2lht	2_POSTBOX
 
-// Einbroch and Einbech
-//============================================================
+//== Einbroch and Einbech ==================================
 einbroch,231,215,0	duplicate(MailBox)	Mailbox#ein	2_POSTBOX
 einbroch,77,202,0	duplicate(MailBox)	Mailbox#2ein	2_POSTBOX
 einbech,182,124,0	duplicate(MailBox)	Mailbox#3ein	2_POSTBOX
 
-// Comodo
-//============================================================
+//== Comodo ================================================
 comodo,200,150,0	duplicate(MailBox)	Mailbox#cmd	2_POSTBOX
 
-// Umbala
-//============================================================
+//== Umbala ================================================
 umbala,104,155,0	duplicate(MailBox)	Mailbox#um	2_POSTBOX
 
-// Amatsu
-//============================================================
+//== Amatsu ================================================
 amatsu,102,146,0	duplicate(MailBox)	Mailbox#ama	2_POSTBOX
 
-// Gonryun
-//============================================================
+//== Kunlun ================================================
 gonryun,152,117,0	duplicate(MailBox)	Mailbox#gon	2_POSTBOX
 
-// Ayothaya
-//============================================================
+//== Ayothaya ==============================================
 ayothaya,205,169,0	duplicate(MailBox)	Mailbox#ayo	2_POSTBOX
 
-// Louyang
-//============================================================
+//== Louyang ===============================================
 louyang,204,100,0	duplicate(MailBox)	Mailbox#lou	2_POSTBOX
 
-// Hugel
-//============================================================
+//== Hugel =================================================
 hugel,86,168,0	duplicate(MailBox)	Mailbox#hu	HIDDEN_NPC
 
-// Rachel
-//============================================================
+//== Rachel ================================================
 rachel,122,146,0	duplicate(MailBox)	Post Box#ra	2_POSTBOX
 
-// Veins
-//============================================================
+//== Veins =================================================
 veins,218,123,0	duplicate(MailBox)	Post Box#ve	2_POSTBOX

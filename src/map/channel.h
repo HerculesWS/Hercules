@@ -1,18 +1,34 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-2020 Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef MAP_CHANNEL_H
 #define MAP_CHANNEL_H
 
-#include <stdarg.h>
+#include "common/hercules.h"
+#include "common/mmo.h"
 
-#include "map.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "map/map.h" // EVENT_NAME_LENGTH, MAX_EVENTQUEUE
 
 /**
  * Declarations
  **/
+struct DBMap; // common/db.h
 struct map_session_data;
 struct guild;
 
@@ -59,6 +75,7 @@ struct Channel_Config {
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
 	bool irc_use_ghost;
+	int channel_opt_msg_delay;
 };
 
 struct channel_ban_entry {
@@ -69,8 +86,9 @@ struct channel_data {
 	char name[HCS_NAME_LENGTH];
 	char password[HCS_NAME_LENGTH];
 	unsigned char color;
-	DBMap *users;
-	DBMap *banned;
+	struct DBMap *users;
+	struct DBMap *banned;
+	char handlers[MAX_EVENTQUEUE][EVENT_NAME_LENGTH];
 	unsigned int options;
 	unsigned int owner;
 	enum channel_types type;
@@ -80,7 +98,7 @@ struct channel_data {
 
 struct channel_interface {
 	/* vars */
-	DBMap *db;
+	struct DBMap *db;
 	struct Channel_Config *config;
 
 	int (*init) (bool minimal);
@@ -111,10 +129,10 @@ struct channel_interface {
 	void (*config_read) (void);
 };
 
-struct channel_interface *channel;
-
 #ifdef HERCULES_CORE
 void channel_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct channel_interface *channel;
 
 #endif /* MAP_CHANNEL_H */

@@ -1,16 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Vicious
+//= Copyright (C) DracoRPG
+//= Copyright (C) Sara-chan
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Lighthalzen Field Warp Script
-//===== By: ==================================================
-//= Sara-chan (1.0)
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for Lighthalzen Field
-//===== Additional Comments: =================================
-//= 1.1 Applied Poki#3's fix for lhz001 & lhz001a [DracoRPG]
-//= 1.2 Updated the warp, according to korean eA site [Vicious]
-//= 1.3 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 lhz_fild01,210,18,0	warp	lhz043-1	1,1,lighthalzen,214,324
 lighthalzen,214,329,0	warp	lhz043a-1	1,1,lhz_fild01,210,23

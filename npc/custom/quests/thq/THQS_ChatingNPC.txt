@@ -30,14 +30,14 @@ yuno_in01,32,178,3	script	Ahlma	4_F_MAID,{
 	mes "Welcome to The Treasure Hunter Guild.";
 	mes "How may I help you?";
 	next;
-	menu "Save",-,"Quit",N_Quit;
+	if (select("Save", "Quit") != 1) {
+		mes "[Ahlma]";
+		mes "Well if you think you are safe, good on you.";
+		close;
+	}
 	mes "[Ahlma]";
 	mes "Ok, saved. Thank you ~ See you soon~";
 	savepoint "yuno_in01",34,176;
-	close;
-N_Quit:
-	mes "[Ahlma]";
-	mes "Well if you think you are safe, good on you.";
 	close;
 N_Member:
 	mes "Sorry, members only.";
@@ -66,11 +66,11 @@ N_Member:
 	mes "Well unless you are reading the code :)";
 	close;
 N_Chat1:
-	mes "Ahh welcome fellow Treasure Hunter "+strcharinfo(0)+".";
+	mes "Ahh welcome fellow Treasure Hunter "+strcharinfo(PC_NAME)+".";
 	mes "Did you hear about that brave man that went into Glast Heim alone?! He must be crazy.";
 	close;
 N_Chat2:
-	mes ""+strcharinfo(0)+" don't you have something better you could be doing? Like a quest.";
+	mes ""+strcharinfo(PC_NAME)+" don't you have something better you could be doing? Like a quest.";
 	close;
 }
 //another usless member
@@ -82,12 +82,12 @@ yuno_in01,25,162,6	script	Female Wizard	2_F_MAGICMASTER,{
 N_Member:
 	set @temp,rand(2);
 	if (@temp == 1) goto N_Chat;
-	mes "Ahh welcome fellow Treasure Hunter "+strcharinfo(0)+".";
+	mes "Ahh welcome fellow Treasure Hunter "+strcharinfo(PC_NAME)+".";
 	mes "Did you hear about that goat man running around in the trees?";
 	mes " ";
 	mes "Aperently his name is Baphomet and he has been runing around the Forest Maze out side of prontera for quite some time now.";
 	close;
 N_Chat:
-	mes ""+strcharinfo(0)+" don't you have something better you could be doing? Like a quest.";
+	mes ""+strcharinfo(PC_NAME)+" don't you have something better you could be doing? Like a quest.";
 	close;
 }

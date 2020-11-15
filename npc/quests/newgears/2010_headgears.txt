@@ -1,16 +1,38 @@
-//===== Hercules Script ====================================== 
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015-2020 Hercules Dev Team
+//= Copyright (C) Dastgir
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 2010 Headgear Quest
-//===== By: ================================================== 
-//= Dastgir
-//===== Current Version: ===================================== 
-//= 1.0
-//===== Description: ========================================= 
+//================= Description ===========================================
 //= Quests For Headgears:
 //=     Flower Of Fairy, NeckTie, Hair Brush
 //=     Status Of Baby Angel, Frog Cap, Solo Play Box
-//===== Additional Comments: ================================= 
-//= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================ 
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	mes "[Yotang]";
@@ -22,7 +44,7 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	mes "Of course, I am the master of the fan club.";
 	mes "How about joining the fairy fan club?";
 	next;
-	if (select("I'm not that interested!!:I'll join it right away!!") == 1) {
+	if (select("I'm not that interested!!", "I'll join it right away!!") == 1) {
 		mes "[Yotang]";
 		mes "What! I'm going to tell on you!";
 		close;
@@ -41,7 +63,7 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 		mes "^FF0000the refinement on the matereials will all disapper^000000";
 		mes "^FF0000if you once combine those.^000000";
 		next;
-		if (select("No, next time.:Make it right now!!") == 1) {
+		if (select("No, next time.", "Make it right now!!") == 1) {
 			mes "[Yotang]";
 			mes "You'll regret it!";
 			close;
@@ -129,7 +151,7 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	mes "^FF0000the refinement on the matereials will all disapper^000000";
 	mes "^FF0000if you once combine those.^000000";
 	next;
-	if (select("I won't do it.:Here, I have the materials!")==1) {
+	if (select("I won't do it.", "Here, I have the materials!")==1) {
 		mes "[Yotang]";
 		mes "You'll regret it!";
 		close;
@@ -145,15 +167,14 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	close;
 }
 
-// 2. Making the new headgear Necktie(5442)
-
+//== 2. Making the new headgear Necktie(5442) ==============
 lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	mes "[Drunken Man]";
 	mes "Hey.. you wanna fight?!";
 	next;
 	mes "He seems to be drunken badly. What should I do?";
 	next;
-	if (select("Just ignore him.:Fight!") == 1) {
+	if (select("Just ignore him.", "Fight!") == 1) {
 		mes "[Drunken Man]";
 		mes "Why are you ignoring me?";
 		mes "Are you afraid of me?";
@@ -174,15 +195,15 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	mes "[Drunken Man]";
 	mes "Once I wear the Necktie on my head,";
 	mes "I will be no match for you!";
-	mes "You must be nervous¡¦";
-	mes "Hmm¡¦ where is the Necktie?";
+	mes "You must be nervous...";
+	mes "Hmm... where is the Necktie?";
 	next;
 	// If having the materials
 	if ((countitem(Cobaltblue_Dyestuffs) > 0) && (countitem(Oil_Paper) > 29) && (countitem(Transparent_Cloth) > 99) && (countitem(Spool) > 19)) {
 		mes "[Drunken Man]";
 		mes "Oh, you're having the materials for Necktie! give them to me!!";
 		next;
-		if (select("No way!:Here you are.")==1) {
+		if (select("No way!", "Here you are.")==1) {
 			mes "[Drunken Man]";
 			mes "Ohh, you are scared!";
 			mes "I won again!!";
@@ -236,7 +257,7 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	mes "[Drunken Man]";
 	mes "I will beat you off wearing the legendary Necktie!";
 	next;
-	if (select("I won't.:Let's go and get them.") == 1) {
+	if (select("I won't.", "Let's go and get them.") == 1) {
 		mes "[Drunken Man]";
 		mes "Are you dropping out?";
 		mes "Did I win again?";
@@ -253,13 +274,13 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	close;
 }
 
-// 3. Making the new headgear Hair Brush(5444)
+//== 3. Making the new headgear Hair Brush(5444) ===========
 comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 	mes "[Hat Girl]";
 	mes "Isn't the unique hat much better";
 	mes "than the common hairbands?";
 	next;
-	if (select("I still prefer hairbands!:Hat is the best!") == 1) {
+	if (select("I still prefer hairbands!", "Hat is the best!") == 1) {
 		mes "[Hat Girl]";
 		mes "Wear your boring hairband for the whole lifetime!";
 		emotion e_pif;
@@ -280,7 +301,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 		mes "Oh! you're bringing ^0000FFthe materials for Hair Brush^000000.";
 		mes "Do you want me to make it now?";
 		next;
-		if (select("I think the hairband is better...:Yes, please make it!") == 1) {
+		if (select("I think the hairband is better...", "Yes, please make it!") == 1) {
 			mes "[Hat Girl]";
 			mes "Wear your boring hairband for the whole lifetime!";
 			emotion e_pif;
@@ -289,7 +310,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 		mes "[Hat Girl]";
 		mes "Okay, I'll do it right away!";
 		next;
-		mes "Ch ch ch... combining...ch ch¡¦";
+		mes "Ch ch ch... combining...ch ch...";
 		emotion e_swt2,1;
 		next;
 		mes "[Hat Girl]";
@@ -313,7 +334,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 				mes "- after emptying some of it. -";
 				close;
 			}
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I got the Hair Brush.";
 			mes "...but it makes me sad.";
 			delitem Mixture,1; //Mixture
@@ -345,10 +366,10 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 	close;
 }
 
-// 4. Making the new headgear Statue Of Baby Angel(5443)
+//== 4. Making the new headgear Statue Of Baby Angel(5443) =
 alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
-	// Check if wearing Ear_Of_Angel's_Wing, Angelic_Chain, Flying_Angel
-	if (!isequipped(Ear_Of_Angel's_Wing) && !isequipped(Angelic_Chain) && !isequipped(Flying_Angel)) {
+	// Check if wearing Ear_Of_Angels_Wing, Angelic_Chain, Flying_Angel
+	if (!isequipped(Ear_Of_Angels_Wing) && !isequipped(Angelic_Chain) && !isequipped(Flying_Angel)) {
 		mes "[Bebete]";
 		mes "A fake angel? Go away!!";
 		next;
@@ -386,7 +407,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 		mes "Did you lose it?";
 		mes "Do you want me to make it for you?";
 		next;
-		if (select("No, thanks.:Yes, I want it now.") == 1) {
+		if (select("No, thanks.", "Yes, I want it now.") == 1) {
 			mes "[Bebete]";
 			mes "Oh... it's not easy to make a living!";
 			close;
@@ -429,11 +450,11 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 			mes "See you again, my angel~!";
 			emotion e_thx;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "... ...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
-			mes "Hmm... I guess I was fooled by that little	kid.";
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "Hmm... I guess I was fooled by that little kid.";
 			close;
 		}
 		mes "[Bebete]";
@@ -452,11 +473,11 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 	mes "[Bebete]";
 	mes "Are you a real angel? Have you been to heaven?";
 	next;
-	if (select("What a bullshit!:Let's keep the childhood innocence!") == 1) {
-		mes "[" + strcharinfo(0) + "]";
+	if (select("What a bullshit!", "Let's keep the childhood innocence!") == 1) {
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Angel and heaven? It's all made up! ";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "There's nothing. Everything is lie!";
 		emotion e_gg,1;
 		next;
@@ -465,7 +486,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 		emotion e_sigh;
 		close;
 	}
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Of course. I used to dance with the dragon and zebra";
 	mes "on the vanilla-taste clouds.";
 	next;
@@ -493,7 +514,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 	end;
 }
 
-// 5. Making the new headgear Frog_Cap(5447)
+//== 5. Making the new headgear Frog_Cap(5447) =============
 
 gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 	if (2009_hat == 0) {
@@ -501,7 +522,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "Hmm..Hm..";
 		mes "It seems my transformation into the child's appearance is succeessful.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "... ... ... ...";
 		next;
 		mes "[???]";
@@ -528,11 +549,11 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "I am the great king, Froggie Vll..";
 		mes "I need your help!";
 		next;
-		if (select("Just ignore it.:Let's help him.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+		if (select("Just ignore it.", "Let's help him.") == 1) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Talking frog...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Now I've seen everything.";
 			next;
 			mes "[King Froggie Vll]";
@@ -541,7 +562,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			donpcevent "Roda Frog#Frog_Cap::OnDisable";
 			end;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What can I help you?";
 		next;
 		mes "[King Froggie Vll]";
@@ -549,7 +570,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		setquest 5000;
 		2009_hat = 1;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Sure, I will.";
 		next;
 		mes "[King Froggie Vll]";
@@ -571,7 +592,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "Oh, you brought all of them!";
 		next;
 		mes "[King Froggie Vll]";
-		mes "Thank you so much, " + strcharinfo(0) + ".";
+		mes "Thank you so much, " + strcharinfo(PC_NAME) + ".";
 		emotion e_thx;
 		next;
 		mes "[King Froggie Vll]";
@@ -580,7 +601,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "[King Froggie Vll]";
 		mes "Frogs are healthy food to the snakes.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I know well.";
 		next;
 		mes "[King Froggie Vll]";
@@ -609,7 +630,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			end;
 		}
 		else if (questprogress(5001,HUNTING) == 2) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I'm back.";
 			next;
 			mes "[King Froggie Vll]";
@@ -627,7 +648,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			changequest 5001,5002;
 			2009_hat = 3;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I'm happy to be added in the history book. I'll go and get them.";
 			next;
 			mes "[King Froggie Vll]";
@@ -650,7 +671,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "[King Froggie Vll]";
 		mes "Oh, you brought Poisonous Canines! Now, I'm able to put you in the frog history book officially.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That's good for me.";
 		next;
 		mes "[King Froggie Vll]";
@@ -690,7 +711,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "[King Froggie Vll]";
 		mes "You are already the hero for our frogs! If I have a child, I would marry you up with my child.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ah.. No, thanks.";
 		mes "^FF0000(Are you telling me to marry with A Frog???)^000000";
 		next;
@@ -709,7 +730,6 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		close2;
 		donpcevent "Roda Frog#Frog_Cap::OnDisable";
 		end;
-		
 	}
 	else if (2009_hat == 5) {
 		if (questprogress(5004,HUNTING) == 1) {
@@ -745,7 +765,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			}
 			mes "[King Froggie Vll]";
 			mes "Frogs, do you have any objection";
-			mes "to give our hero, " + strcharinfo(0) + "";
+			mes "to give our hero, " + strcharinfo(PC_NAME) + "";
 			mes "a Frog Hat which is one of our precious treasures?";
 			next;
 			mes "[Sounds from somewhere]";
@@ -757,9 +777,9 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			mes "Hmm, there is no objection.";
 			next;
 			mes "[King Froggie Vll]";
-			mes "I hearby give " + strcharinfo(0) + ", our hero, this Frog Hat.";
-			specialeffect2 EF_MAPPILLAR2;
-			specialeffect2 EF_BLESSING;
+			mes "I hearby give " + strcharinfo(PC_NAME) + ", our hero, this Frog Hat.";
+			specialeffect(EF_MAPPILLAR2, AREA, playerattached());
+			specialeffect(EF_BLESSING, AREA, playerattached());
 			erasequest 5004;
 			2009_hat = 6;
 			getitem Frog_Cap,1; //Frog_Cap
@@ -774,7 +794,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 	}
 	else if (2009_hat == 6) {
 		mes "[King Froggie Vll]";
-		mes "All the frogs in the world, praise " + strcharinfo(0) + ", our eternal hero!";
+		mes "All the frogs in the world, praise " + strcharinfo(PC_NAME) + ", our eternal hero!";
 		emotion e_thx;
 		close2;
 		donpcevent "Roda Frog#Frog_Cap::OnDisable";
@@ -808,7 +828,7 @@ OnTimer2000:
 OnTouch:
 	mes "There is a frog. What should I do?";
 	next;
-	if (select("Throw it a stone.:Have a conversation.") == 1) {
+	if (select("Throw it a stone.", "Have a conversation.") == 1) {
 		donpcevent "Roda Frog#Frog_Cap::OnDisable";
 		mes "Ouch~";
 		close;
@@ -816,19 +836,18 @@ OnTouch:
 	donpcevent "Roda Frog#Frog_Cap::OnEnable";
 	if (2009_hat > 0) {
 		emotion e_dots,1;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "It's so amazing to see";
 		mes "the frog which transforms itself.";
 		close;
 	}
 	emotion e_omg,1;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Oh my.. the frog transformed into a child...";
 	close;
 }
 
-
-// 6. Making the new headgear Solo Playing Box 1,2 ()5448,5449)
+//== 6. Making the new headgear Solo Playing Box 1,2 (5448,5449) =
 alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 	if (2009_1_hat == 0) {
 		mes "[Alonie]";
@@ -840,7 +859,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "I can feel your admiration for me.";
 		mes "Wanna be my student?";
 		next;
-		if (select("You're out of your mind!:Please let me be your disciple!") == 1) {
+		if (select("You're out of your mind!", "Please let me be your disciple!") == 1) {
 			mes "[Alonie]";
 			mes "Yes, I'm out of my mind.";
 			mes "Huhu, Yapyap!";
@@ -858,7 +877,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "^FF000020 Zeroms, 20 Requiems^000000!";
 		mes "Hurry!";
 		next;
-		if (select("What a bullshit!:Let's go!") == 1) {
+		if (select("What a bullshit!", "Let's go!") == 1) {
 			mes "[Alonie]";
 			mes "Of course, I don't care.";
 			mes "Huhu, Yapyap!";
@@ -888,7 +907,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "Get around and kill";
 			mes "^FF000040 Arclouses and 30 High Orcs^000000";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 				mes "[Alonie]";
 				mes "Of course, I don't care.";
 				mes "Huhu, Yapyap!";
@@ -924,9 +943,9 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "For make it";
 			mes "the fruitful training,";
 			mes "Get around and kill";
-			mes "^FF000020 Chung E and 50	Civil Servant^000000!";
+			mes "^FF000020 Chung E and 50 Civil Servant^000000!";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 					mes "[Alonie]";
 					mes "Of course, I don't care.";
 					mes "Huhu, Yapyap!";
@@ -948,7 +967,6 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "Go and kill";
 		mes "^FF000040 Arclouses and 30 High Orcs^000000!";
 		close;
-		
 	}
 	else if (2009_1_hat == 3) {
 		if ((questprogress(1108,HUNTING) == 2) && (questprogress(1105,HUNTING) == 2)) {
@@ -965,7 +983,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "Get around and kill";
 			mes "^FF000020 The Papers and 40 Antique Firelocks^000000!";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 				mes "[Alonie]";
 				mes "Of course, I don't care.";
 				mes "huhu, Yapyap!";
@@ -995,7 +1013,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "Get around and kill";
 			mes "^FF000020 The Papers and 40 Antique Firelocks^000000!";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 				mes "[Alonie]";
 				mes "Of course, I don't care.";
 				mes "huhu, Yapyap!";
@@ -1015,7 +1033,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "Hmm, It's not enough.";
 		mes "Playing alone is not that easy!";
 		mes "Go and kill";
-		mes "^FF000020 Chung E and 50	Civil Servant^000000!";
+		mes "^FF000020 Chung E and 50 Civil Servant^000000!";
 		if (questprogress(1104,HUNTING) == 1) {
 			erasequest 1104;
 			setquest 1108;
@@ -1039,7 +1057,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "My affection-lacked student!";
 			mes "This is the end of your training!";
 			next;
-			if (gettime(3) < 12) {
+			if (gettime(GETTIME_HOUR) < 12) {
 				if (checkweight(Solo_Play_Box1,1) == 0) {
 					 mes "[Alonie]";
 					 mes "Playing outside with this heavy bag?";
@@ -1109,5 +1127,4 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		close;
 	}
 	end;
-	
 }

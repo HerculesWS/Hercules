@@ -1,22 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Lupus
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Evera
+//= Copyright (C) Silent
+//= Copyright (C) MasterOfMuppets
+//= Copyright (C) ZoDIaC
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ayotaya Town
-//===== By: ==================================================
-//= MasterOfMuppets
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Ayotaya Town Script
-//===== Additional Comments: =================================
-//= 1.6 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.7 Fixed character's anme bugs [Lupus]
-//= 1.8 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//= 1.9 Updated Renewal warp coordinates.
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
-// Ayothaya Transportation
-//============================================================
--	script	::Aibakthing_ayothaya	-1,{
+//== Ayothaya Transportation ===============================
+-	script	::Aibakthing_ayothaya	FAKE_NPC,{
 	mes "[Aibakthing]";
 	mes "Hoo! Hah! Hoo! Hah!";
 	mes "Let me take you away to";
@@ -24,7 +47,7 @@
 	mes "a land of exotic mystery,";
 	mes "my hometown Ayotaya!";
 	next;
-	switch(select("About Ayotaya.:Go to Ayotaya.:Cancel.")) {
+	switch(select("About Ayotaya.", "Go to Ayotaya.", "Cancel.")) {
 	case 1:
 		mes "[Aibakthing]";
 		mes "We Ayotayans are a pious people who value peace and sincerity. We endeavor to lead simple, yet noble, lives in harmony with nature.";
@@ -49,7 +72,7 @@
 		mes "If you're ready, we can leave";
 		mes "right now~";
 		next;
-		if (select("I'm ready, let's go!:No.") == 1) {
+		if (select("I'm ready, let's go!", "No.") == 1) {
 			if (Zeny > 9999) {
 				mes "[Aibakthing]";
 				mes "Hoo! Hah! Hoo! Hah!";
@@ -87,7 +110,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	4_M_THAIONGBAK,{
 	mes "Hoo! Hah! Hmm! Hah!";
 	mes "So, how did you like Ayotaya? Did you get a chance to try Tom Yum Goong? When you're ready, I shall take you back home.";
 	next;
-	if (select("Go back to Alberta.:Cancel.") == 1) {
+	if (select("Go back to Alberta.", "Cancel.") == 1) {
 		mes "[Aibakthing]";
 		mes "You will be welcome to come back whenever you please. I hope that we will see each other again sometime soon. Thank you~";
 		close2;
@@ -103,8 +126,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	4_M_THAIONGBAK,{
 	close;
 }
 
-// Generic Ayothaya NPCs
-//============================================================
+//== Generic Ayothaya NPCs =================================
 ayothaya,189,120,3	script	Young Man#Thang	4_M_THAIONGBAK,{
 	mes "[Thang]";
 	mes "There's an ancient,";
@@ -120,7 +142,7 @@ ayothaya,189,120,3	script	Young Man#Thang	4_M_THAIONGBAK,{
 	mes "I think.";
 	close;
 }
-	
+
 ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 	.@sit = rand(1,5);
 	if (.@sit > 0 && .@sit < 3) {
@@ -145,7 +167,7 @@ ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 		mes "You know, like the dresses and jewelry that ladies wear in other countries, whether or not the men are good looking, what kind of songs you have, what kind of girls that guys over there like...";
 		emotion e_what;
 		next;
-		mes "[" +strcharinfo(0)+ "]";
+		mes "[" +strcharinfo(PC_NAME)+ "]";
 		mes ".........";
 		next;
 		mes "[Lalitha]";
@@ -174,7 +196,7 @@ ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 		mes "my Black Knight is~";
 		emotion e_lv;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Don't you mean...";
 		mes "Knight in shining armor";
 		mes "riding a white horse?";
@@ -191,7 +213,7 @@ ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 	mes "What's up?";
 	close;
 }
-	
+
 ayothaya,143,102,5	script	Old Man#ayothaya	4_M_THAIOLD,{
 	mes "[Villager]";
 	mes "Ummm.";
@@ -236,7 +258,7 @@ ayothaya,143,102,5	script	Old Man#ayothaya	4_M_THAIOLD,{
 	mes "at least once.";
 	close;
 }
-	
+
 ayothaya,197,189,5	script	Young Man#1ayothaya	4_M_THAIAYO,{
 	mes "[Kwan]";
 	mes "Phew, isn't it";
@@ -262,7 +284,7 @@ ayothaya,197,189,5	script	Young Man#1ayothaya	4_M_THAIAYO,{
 	mes "Well, anyway, it's still a really good idea to stay away from that place. I hope you enjoy visiting Ayotaya, and that you keep safe~";
 	close;
 }
-	
+
 ayothaya,214,142,5	script	Young Man#5ayothaya	4_M_THAIONGBAK,{
 	mes "[Detzi]";
 	mes "In Ayotaya, we have our own traditional martial arts. We, the young men of the village, practice our traditional martial arts in order to become strong.";
@@ -271,7 +293,7 @@ ayothaya,214,142,5	script	Young Man#5ayothaya	4_M_THAIONGBAK,{
 	mes "Why don't you learn our martial arts? I guarantee that it will help you greatly in your travels.";
 	close;
 }
-	
+
 ayothaya,241,264,5	script	Young Man#5ayothaya2	4_M_THAIONGBAK,{
 	mes "[Eik]";
 	mes "Hey...";
@@ -279,7 +301,7 @@ ayothaya,241,264,5	script	Young Man#5ayothaya2	4_M_THAIONGBAK,{
 	mes "You wanna challenge";
 	mes "me to a match?";
 	next;
-	if (select("Sure!:Nah~") == 1) {
+	if (select("Sure!", "Nah~") == 1) {
 		mes "[Eik]";
 		mes "Ow ow ow!";
 		mes "I was just";
@@ -295,23 +317,3 @@ ayothaya,241,264,5	script	Young Man#5ayothaya2	4_M_THAIONGBAK,{
 	emotion e_pif;
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 0.1 Added a Sailor NPC to get back to Alberta [ZoDIaC]
-//= 0.2 fixed coords, dialogues
-//= 0.3 Fixed Warp name, ayotaya doesn't exist, even though iRO
-//=     decided to call it Ayotaya, it really is Ayothaya, like
-//=     that Yuno/Juno thing
-//= 0.4 Added the official warp npc for Ayothaya. [MasterOfMuppets]
-//= 1.0 Added most of the official npcs. The following quests were added: [MasterOfMuppets]
-//=     Tom Yum Goong quest, Holy Threads quest and Holier threads quest.
-//= 1.0a some checks, optimization [Lupus]
-//= 1.1 Missing delitem fixed by Poki#3 [Lupus]
-//= 1.1a Fixed a typo and clarified a comment at the bottom of the script [MasterOfMuppets]
-//= 1.2 Fixed exploits [Lupus]
-//= 1.3 Removed Duplicates [Silent]
-//= 1.4 Moved quests to quests/quests_ayothaya.txt [Evera]
-//= 1.5 Moved a few NPC's to quests/quests_ayothaya.txt [MasterOfMuppets]
-//============================================================

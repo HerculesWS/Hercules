@@ -1,20 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Job Repairs
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Removes potentially conflicting job data.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Added GM management function. [Euphy]
-//= 1.2 Removed pointless comment. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "I think you have too many items. Let's try it again after you take some out.";
 		close;
 	}
@@ -28,7 +48,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 	mes "[Valerie]";
 	mes "If both abnormalities disappear then we must start the test over from scratch. What would you like to do?";
 	next;
-	switch(select("I don't have any abnormalities:I think my body has some abnormalities")) {
+	switch(select("I don't have any abnormalities", "I think my body has some abnormalities")) {
 	case 1:
 		mes "[Valerie]";
 		mes "That's a relief. Then please take care.";
@@ -37,7 +57,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "Are you sure you want to intialize it and start over?";
 		next;
-		if(select("Nope:Yes, I want to start completely over") == 1) {
+		if(select("Nope", "Yes, I want to start completely over") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I'll see you next time";
 			close;
@@ -45,7 +65,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "All items related to the existing conditions will disappear. Are you okay with this?";
 		next;
-		if(select("Nope:Yes, I want to start completely over.") == 1) {
+		if(select("Nope", "Yes, I want to start completely over.") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I'll see you next time.";
 			close;
@@ -53,7 +73,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "It seems that there are a sea of people who seemed to be cursed of not being able to get a significant other after going through with this. Are you still okay with this? ";
 		next;
-		if(select("Nope:I still want to intialize.") == 1) {
+		if(select("Nope", "I still want to intialize.") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I will see you next time.";
 			close;
@@ -61,12 +81,12 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "In extreme cases, some become crippled and can get ulcers. Do you still want to intilize former processes?";
 		next;
-		if(select("Nope:Please intilize the former processes") == 1) {
+		if(select("Nope", "Please intilize the former processes") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I will see you next time";
 			close;
 		}
-		specialeffect2 EF_INVENOM;
+		specialeffect(EF_INVENOM, AREA, playerattached());
 		progressbar "0xffff00",3;
 
 		// Warlock - quest items
@@ -75,7 +95,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 			mes "Please unequip the Magical Stone or Magical Stone Ring and try again.";
 			close;
 		}
-		if (countitem(2796) || countitem(2797)) {
+		if (countitem(Magical_Stone) || countitem(Magical_Stone_)) {
 			if (isequipped(2796) || isequipped(2797)) {
 				mes "[Valerie]";
 				mes "Please talk to me after your replace all Magical Stones.";
@@ -205,7 +225,7 @@ L_Third:
 		return;
 }
 
--	script	Valerie#sign	-1,{
+-	script	Valerie#sign	FAKE_NPC,{
 	mes "^ff00ffI couldn't pay the office rent so I am temporarily relocating to the building across from the Prontera Refinery.^000000";
 	mes " ";
 	mes "^ff00ffValerie^000000";

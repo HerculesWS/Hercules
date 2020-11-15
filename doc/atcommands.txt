@@ -50,7 +50,7 @@ Other Drop Rates: MvP 1.00x / Card-Based 1.00x / Treasure 1.00x
 @time
 
 Displays the local server time, along with day/night information.
- 
+
 ---------------------------------------
 
 @uptime
@@ -79,8 +79,8 @@ Toggles the display of experience gain messages.
 @showzeny
 
 Toggles the display of Zeny gain messages.
-Configuration for zeny being dropped by mobs is in '/conf/battle/monster.conf':
-zeny_from_mobs: yes
+Configuration for zeny being dropped by mobs is in 'conf/map/battle/monster.conf':
+zeny_from_mobs: true
 
 ---------------------------------------
 
@@ -192,6 +192,12 @@ Sets a mapflag for the current map (1 = On, 0 = Off).
 
 ---------------------------------------
 
+@setzone <new zone>
+
+Changes the zone of the current map.
+
+---------------------------------------
+
 @addwarp <map> <x> <y> <npc name>
 
 Creates a warp portal on the character's current coordinates that lasts until the next reboot.
@@ -209,7 +215,7 @@ New warp NPC 'my_warp_sample' created.
 @effect <effect ID>
 
 Creates a visual effect on or around the character.
-A list of IDs can be found in '/db/const.txt'.
+A list of IDs can be found in '/db/constants.conf'.
 Descriptions of the effects can be found in '/doc/effect_list.txt'.
 
 ---------------------------------------
@@ -256,13 +262,13 @@ Map Name: prontera | Players In Map: 1 | NPCs In Map: 127 | Chats In Map: 0
 ------ Map Flags ------
 Town Map
 Autotrade Enabled
-PvP Flags: 
-GvG Flags: 
-Teleport Flags: 
+PvP Flags:
+GvG Flags:
+Teleport Flags:
 No Exp Penalty: On | No Zeny Penalty: On
-Weather Flags: Displays Night | 
-Other Flags: NoBranch | Reset | 
-Other Flags: 
+Weather Flags: Displays Night |
+Other Flags: NoBranch | Reset |
+Other Flags:
 
 ---------------------------------------
 
@@ -270,7 +276,7 @@ Other Flags:
 
 Gives information about terrain/area (debug function).
 
-Output Example: 
+Output Example:
 prontera (x= 165, y= 202) 00 00 00 00 00
 prontera (x= 165, y= 201) 01 00 00 00 00
 prontera (x= 165, y= 200) 01 00 00 00 00
@@ -297,7 +303,7 @@ DEF:2 MDEF:5 STR:6 AGI:1 VIT:1 INT:1 DEX:6 LUK:5
 ATK:8~9 Range:1~10~12 Size:Medium Race:Plant Element:Water (Lv:1)
 Drops:
  - Jellopy 70.00% - Knife[4] 1.00% etc...
- 
+
 ---------------------------------------
 
 @iteminfo <item name/ID>
@@ -317,7 +323,7 @@ NPC Buy:6z, Sell:3z | Weight: 1.0
 @whodrops <item name/ID>
 
 Displays a list of mobs which drop the specified item.
-Only the highest drop rates are shown. 
+Only the highest drop rates are shown.
 
 ---------------------------------------
 
@@ -557,7 +563,7 @@ Using the command without a message will enable or disable main chat.
 @storage
 
 Opens your Kafra storage.
- 
+
 ---------------------------------------
 
 @mail
@@ -575,6 +581,12 @@ Opens the auction window.
 @identify
 
 Opens the Identification window if any unappraised items are in your inventory.
+
+---------------------------------------
+
+@identifyall
+
+Identifies all unappraised items in your inventory.
 
 ---------------------------------------
 
@@ -636,7 +648,7 @@ identify_flag: 0 = unidentified, 1 = identified
 attribute: 0 = not broken, 1 = broken
 
 ---------------------------------------
- 
+
 @itembound <item name/ID> <amount> <bound_type>
 
 Creates the specified item and bounds it to the account.
@@ -666,17 +678,30 @@ Example:
 @refine <equip position> <+/- amount>
 
 Refines an equipped item by the specified amount.
-0: All Equipment
-1: Lower Headgear
-2: Right Hand
+-3: Refine All Equip (Shadow)
+-2: Refine All Equip (Costume)
+-1: Refine All Equip (General)
+1: Headgear (Low)
+2: Hand (Right)
 4: Garment
-8: Left Accessory
+8: Accessory (Left)
 16: Body Armor
-32: Left Hand
+32: Hand (Left)
 64: Shoes
-128: Right Accessory
-256: Top Headgear
-512: Mid Headgear
+128: Accessory (Right)
+256: Headgear (Top)
+256: Headgear (Mid)
+1024: Costume Headgear (Top)
+2048: Costume Headgear (Mid)
+4096: Costume Headgear (Low)
+8192: Costume Garment
+65536: Shadow Armor
+131072: Shadow Weapon
+262144: Shadow Shield
+524288: Shadow Shoes
+1048576: Shadow Accessory (Right)
+2097152: Shadow Accessory (Left)
+2097152: Shadow Accessory (Left)
 
 ---------------------------------------
 
@@ -686,9 +711,23 @@ Repairs all broken items in your inventory.
 
 ---------------------------------------
 
-@dropall
+@dropall {<item type>}
 
-Drops all inventory and equipped items onto the floor.
+Drops all items based on the item type.
+
+Valid item types:
+    -1 = All Items (default)
+     0 = Healing Items
+     2 = Useable Items
+     3 = Etc Items
+     4 = Weapons
+     5 = Armors
+     6 = Cards
+     7 = Pet Eggs
+     8 = Pet Armors
+    10 = Ammunition Items
+    11 = Delayed-Consumable Items
+    18 = Cash Items
 
 ---------------------------------------
 
@@ -853,6 +892,12 @@ Resets a Star Gladiator's marked maps.
 
 ---------------------------------------
 
+@hatereset
+
+Resets a Star Gladiator's hatred targets.
+
+---------------------------------------
+
 @jobchange <job name/ID>
 
 Changes your job.
@@ -905,7 +950,7 @@ Changes Kafra Points by the specified amount.
 @dye <default: 0-4>
 
 Changes appearance based on the given parameters.
-The min/max values are set in '/conf/battle/client.conf'.
+The min/max values are set in 'conf/map/battle/client.conf'.
 
 ---------------------------------------
 
@@ -923,10 +968,19 @@ If no position is given, the command defaults to headgear.
 
 ---------------------------------------
 
-@fakename {<text string>}
+@fakename {<options>} {<fake_name>}
 
-Temporarily changes name to the specified string.
-If no string is given, the character's real name will be re-applied.
+Temporarily changes the character's name to <fake_name>.
+If no parameter is passed, the character's real name will be re-applied.
+The <options> parameter is used, to modify which names will be displayed.
+The fake name will always be displayed, regardless of <options>.
+Valid <options> flags (combinable):
+  0 - Only the fake name is displayed. (Default value.)
+  1 - Display party name.
+  2 - Display guild name.
+  4 - Display guild position.
+  8 - Display clan position.
+ 16 - Display title.
 
 ---------------------------------------
 
@@ -945,13 +999,13 @@ Additionally, @sizeall will change the size of all online players.
 @leave
 
 Duel-organizing commands.
-Some options can be found in '/conf/battle/misc.conf'.
+Some options can be found in 'conf/map/battle/misc.conf'.
 
 ---------------------------------------
 
 @heal
 
-Fully heals HP and SP. 
+Fully heals HP and SP.
 
 ---------------------------------------
 
@@ -1017,6 +1071,12 @@ Success message: Information sent to login-server via char-server.
 @changesex
 
 Changes the gender attached to the player's account.
+
+---------------------------------------
+
+@changecharsex
+
+Changes the gender attached to the player's character.
 
 ---------------------------------------
 
@@ -1188,7 +1248,7 @@ Changes a battle_config flag without rebooting the server.
 @adjgroup <group ID>
 
 Changes the group of a character (lasts until relog).
-The groups are specified in '/conf/groups.conf'.
+The groups are specified in 'conf/groups.conf'.
 
 ---------------------------------------
 
@@ -1222,21 +1282,47 @@ Example:
 
 ---------------------------------------
 
-@unloadnpc <npc name>
+@unloadnpc <NPC_name> {<flag>}
 
-Unloads an NPC.
+Unloads a NPC.
+Flag:
+	0 - do not unload mobs spawned by NPCs in file
+	1 - unload mobs spawned by NPCs in file
+	Default is 1; every number other than 0 will be treaten as 1.
+	Mobs that were spawned with monster/areamonster/guardian/bg_monster/atcommand("@monster xy") are affected.
+Note:
+	Be aware that some changes made by NPC are not reverted on unload.
+	Please use the OnNPCUnload label to clean things up by yourself. Commonly relevant for these script commands:
+	-> setmapflagnosave, setmapflag, removemapflags, setbattleflag, setcell, setwall
+	-> agitstart/agitstart2, agitend/agitend2, gvgon, gvgoff, pvpon, pvpoff
+	-> addmonsterdrop, setitemscript, npcshopitem, npcshopadditem, npcshopdelitem, hateffect, disguise
+	-> pcfollow, pcblockmove, setpcblock, setnpcdir, navigateto, viewpoint, add_group_command, skill/addtoskill
+	-> instance and battleground related stuff (excepting bg_monster)
 
 Example:
-@unloadnpc Job Master
+@unloadnpc Job Master 0
 
 ---------------------------------------
 
-@unloadnpcfile <path>
+@unloadnpcfile <path> {<flag>}
 
 Unloads all NPCs in a file.
+Flag: See @unloadnpc
+Note: See @unloadnpc
 
 Example:
-@unloadnpcfile npc/custom/jobmaster.txt
+@unloadnpcfile npc/custom/jobmaster.txt 0
+
+---------------------------------------
+
+@reloadnpc <path> {<flag>}
+
+Unloads all NPCs in a file and reload it again.
+Flag: See @unloadnpc
+Note: See @unloadnpc
+
+Example:
+@reloadnpc npc/custom/jobmaster.txt 0
 
 ---------------------------------------
 
@@ -1247,7 +1333,7 @@ Example:
 @party <party_name>
 
 Organizes a new party, with the attached character as leader.
- 
+
 ---------------------------------------
 
 @partyoption <pickup share: yes/no> <item distribution: yes/no>
@@ -1273,7 +1359,7 @@ Warps all online characters of a party to your location.
 
 Allows you to spy on any party's Party Chat.
 At least one member of that party must be online.
-NOTE: map server needs to be configured to enable spying to use this command (enable_spy: yes)
+NOTE: map server needs to be configured to enable spying to use this command (enable_spy: true)
 
 ---------------------------------------
 
@@ -1317,7 +1403,7 @@ Changes guild level by the specified amount.
 @undisguiseguild
 
 Disguises or undisguises all online characters of a guild.
- 
+
 ---------------------------------------
 
 @sizeguild <size> <guild name>
@@ -1334,9 +1420,9 @@ Warps all online characters of a guild to your location.
 
 @guildspy <guild name>
 
-Allows you to spy on any guild's Guild Chat. 
+Allows you to spy on any guild's Guild Chat.
 At least one member of that guild must be online.
-NOTE: map server needs to be configured to enable spying to use this command (enable_spy: yes)
+NOTE: map server needs to be configured to enable spying to use this command (enable_spy: true)
 
 ---------------------------------------
 
@@ -1453,5 +1539,48 @@ Sets the intimacy level of your homunculus, with 1000 being "Loyal".
 @homhungry <0-100>
 
 Sets the hunger level of your homunculus, with 100 being "Stuffed".
+
+---------------------------------------
+
+@cvcon
+
+Set the mapflag cvc on the map (Turn on Clans vs Clans mode)
+
+---------------------------------------
+
+@cvcoff
+
+Unset the mapflag cvc on the map (Turn off Clans vs Clans mode)
+
+---------------------------------------
+
+@claninfo
+
+Lists all informations of all clans
+
+---------------------------------------
+
+@joinclan <ClanID>
+
+Joins the Clan with the given ID if it exists.
+
+---------------------------------------
+
+@leaveclan
+
+Leaves the Clan if any.
+
+---------------------------------------
+
+@reloadclans
+
+Reloads the 'conf/clans.conf' file.
+Obs: it will reload 'db/clans.conf' too since it's included inside 'conf/clans.conf'
+
+---------------------------------------
+
+@camerainfo {<range>, <rotation>, <latitude>}
+
+Allow show/hide or change client camera parameters
 
 ---------------------------------------

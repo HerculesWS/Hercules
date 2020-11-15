@@ -1,28 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Joseph
+//= Copyright (C) Euphy
+//= Copyright (C) Masao
+//= Copyright (C) Gepard
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Arch Bishop Job Quest
-//===== By: ==================================================
-//= L0ne_W0lf
-//= Credits: Gepard
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Priest / High Priest -> Arch Bishop.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Fixed class checks for arch bishops.
-//= 1.2 Fixed Job tags typos.
-//= 1.3 Made some NPC's into duplicates and fixed some && / || checks. [Masao]
-//= 1.4 Fixed Job_Archbishop/Job_Archbishop_T typos. [Euphy]
-//= 1.5 Redone the whole Script. [Masao]
-//= 1.5a Fixed little typo in Baby Priest & Baby Arch Bishop checks. [Masao]
-//= 1.5b More small fixes. [Euphy]
-//= 1.6 Fixed bugs where players unable to continue the quest. [Joseph]
-//= 1.7 Updated script, many bugs fixed. [Euphy]
-//= 1.7a Moved warps to separate file. [Euphy]
-//= 1.8 Bug fixes and corrections. [Euphy]
-//= 1.9 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
 prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 	if (BaseJob != Job_Priest) {
@@ -52,7 +64,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 		mes "I'm going to make them ministers worthy of serving Odin.";
 		close;
 	}
-	if ((BaseLevel == 99) && (JobLevel > 49)) {
+	if ((BaseLevel >= 99) && (JobLevel > 49)) {
 		if (job_arch == 0) {
 			if (SkillPoint) {
 				mes "You can't change jobs without using all your skill points. Please use all of your skill points before applying to change jobs~";
@@ -67,7 +79,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 			mes "All ministers of Odin should be diligent. They should never be too lazy to serve Odin.";
 			next;
 			mes "[Praying Minister]";
-			mes (Sex?"Brother":"Sister")+", how has your life been? Have you lived it to its fullest?";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", how has your life been? Have you lived it to its fullest?";
 			mes "Have you served your life in the light of Odin?";
 			next;
 			mes "[Praying Minister]";
@@ -79,7 +91,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 			mes "We should not fall prey to lies and deceit.";
 			next;
 			mes "[Praying Minister]";
-			mes (Sex?"Brother":"Sister")+"...";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +"...";
 			mes "Even though we serve Odin, we are normal people.";
 			mes "We can be degraded in spite of ourselves and we must realize that.";
 			next;
@@ -103,7 +115,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 			mes "What do you think?";
 			mes "Would you like to do a Holy Pilgrimage?";
 			next;
-			switch(select("Yes I want to.:I'll think about it.")) {
+			switch(select("Yes I want to.", "I'll think about it.")) {
 			case 1:
 				mes "[Praying Minister]";
 				mes "That's the correct attitude.";
@@ -200,7 +212,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "hahahahaha.";
 		mes "huhuhuhu. humhum.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hello. are you... Priest Dayan?";
 		next;
 		mes "[Priest]";
@@ -208,19 +220,19 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		next;
 		mes "He turns his head towards you.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aren't you Priest Dayan?";
 		next;
 		mes "[Priest]";
 		mes "muttering...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Priest! Da~yan! Right!?";
 		next;
 		mes "[Priest Dayan]";
 		mes "Ah~, yes.";
 		mes "Yes, I am.";
-		mes "I'm Dayan. Nice to meet you "+(Sex?"Brother.":"Sister.");
+		mes "I'm Dayan. Nice to meet you "+ (Sex == SEX_MALE ? "Brother." : "Sister.");
 		next;
 		mes "The old priest gives you an ear to ear grin. ";
 		next;
@@ -228,11 +240,11 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "I forgot to wear my hearing aid. hehe.";
 		mes "Anyway, why have you come here?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hmm, I wanted to tell you...";
 		next;
-		input .@inputstr$;
-		mes "[" + strcharinfo(0) + "]";
+		input(.@inputstr$);
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "" + .@inputstr$ + "";
 		next;
 		if (.@inputstr$ != "I'm here for the Holy Pilgrimage") {
@@ -247,7 +259,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		next;
 		mes "He cups his ears towards you.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "^FF0000I'm here for the Holy Pilgrimage!^000000";
 		mes "^FF0000I'm here for the Holy Pilgrimage!^000000";
 		mes "^FF0000I'm here for the Holy Pilgrimage!^000000";
@@ -257,7 +269,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "Eh... are you?";
 		mes "A pilgrimage to the Holy Land...";
 		mes "It has been a long time since I've seen such a devout minister.";
-		mes "Welcome. "+(Sex?"Brother.":"Sister.");
+		mes "Welcome. "+ (Sex == SEX_MALE ? "Brother." : "Sister.");
 		next;
 		mes "The old priest gives you a gracious smile.";
 		next;
@@ -281,7 +293,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "Mimir's spring wells with intelligence, myth says that if Odin lets you have his eye that you will gain all of the knowledge within that spring.";
 		next;
 		mes "[Priest Dayan]";
-		mes Sex?"Brother.":"Sister.";
+		mes Sex == SEX_MALE ? "Brother." : "Sister.";
 		mes "Through the Holy Pilgrimage, we can make ourselves pious by cleansing our bodies and souls.";
 		next;
 		mes "[Priest Dayan]";
@@ -316,7 +328,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "This place is the holiest place in the world, Yggdrasil.";
 		mes "This holy ceremony will brighten your soul.";
 		next;
-		switch(select("How should I pray?:Cancel.")) {
+		switch(select("How should I pray?", "Cancel.")) {
 		case 1:
 			mes "[Priest Dayan]";
 			mes "Through prayer, we can follow four paths.";
@@ -371,7 +383,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "I can feel that you have a fresh energy.";
 		mes "Maybe you did pray truthfully.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I feel light-hearted. Like I was just reborn...";
 		next;
 		mes "[Priest Dayan]";
@@ -379,11 +391,11 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "A smile from a peaceful mind will easily rid people of their wariness.";
 		mes "Please, inspire people with love and energy.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Thanks for your kind words.";
 		next;
 		mes "[Priest Dayan]";
-		mes Sex?"Brother.":"Sister.";
+		mes Sex == SEX_MALE ? "Brother." : "Sister.";
 		mes "Now, there is a place you should go to.";
 		next;
 		mes "[Priest Dayan]";
@@ -397,13 +409,13 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "I think she is exhausted due to praying too much.";
 		mes "I hope the air of Yggdrasil will be helpful to her.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Don't worry.";
 		mes "I'll go and meet her.";
 		next;
 		mes "[Priest Dayan]";
 		mes "Thank you very much.";
-		mes "Feel free to visit here when you want to pray, "+(Sex?"brother.":"sister.");
+		mes "Feel free to visit here when you want to pray, "+ (Sex == SEX_MALE ? "brother." : "sister.");
 		mes "A visit from a friend always makes me happy.";
 		job_arch = 4;
 		changequest 2188,2189;
@@ -417,32 +429,32 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 yggdrasil01,220,47,0	script	#arch_pilgrimage	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
 	if (job_arch == 2) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Is it the spring of Hvergelmir.";
 		mes "This place is a very vivid and peaceful place.";
 		mes "It's proper to pray.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Time to genuflect...";
 		mes "Time to start...";
 		mes "Hmm, what did that priest say to me?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hmm... What is the first way?";
 		next;
-		switch(select("The way of silence.:The way of confession.:The way of meditation.")) {
+		switch(select("The way of silence.", "The way of confession.", "The way of meditation.")) {
 		case 1:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The way of silence...?";
 			mes "I don't think so.";
 			close;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The way of confession...?";
 			mes "I don't think so.";
 			close;
 		case 3:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The way of meditation...?";
 			mes "Yes, it's the way of meditation.";
 			next;
@@ -457,7 +469,7 @@ OnTouch:
 		mes "- You close your eyes slowly and take a deep breath. -";
 		next;
 		mes "- * BLESSING! * -";
-		specialeffect2 EF_BLESSING;
+		specialeffect(EF_BLESSING, AREA, playerattached());
 		next;
 		mes "Your mind is refreshed with the blessing effect.";
 		mes "You continue to meditate trying to rid your mind of any ill feelings.";
@@ -469,17 +481,17 @@ OnTouch:
 		mes "^3131FF[Priest Dayan]^000000";
 		mes "^3131FFDon't be afraid of pain. That is a necessity and will be a first step to enter a way to liquidate past wounds.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Pain... What kind of faults have I had?";
-		input .@inputstr$;
+		input(.@inputstr$);
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I confess my guilt to the Almighty God Odin.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "^3131FF" + .@inputstr$ + ".^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Oh benevolent Odin, Take mercy on me and pity me because I'm remiss in the discharge of my duties as a minister.";
 		mes "Please, lead the way and save a foolish minister with your wisdom.";
 		next;
@@ -505,17 +517,17 @@ OnTouch:
 		mes "^3131FF[Priest Dayan]^000000";
 		mes "^3131FFYou're drinking the Holy Water.^000000";
 		next;
-		if (countitem(523) == 0) {
-			mes "[" + strcharinfo(0) + "]";
+		if (countitem(Holy_Water) == 0) {
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Oh no! I forgot to bring a Holy Water!";
 			close;
 		}
 		mes "- You bow respectfully holding up a Holy Water and put the glass to your lips. -";
 		next;
 		mes "- * ASPERSIO ! * -";
-		specialeffect2 EF_ASPERSIO;
+		specialeffect(EF_ASPERSIO, AREA, playerattached());
 		next;
-		specialeffect2 EF_RECOVERY;
+		specialeffect(EF_RECOVERY, AREA, playerattached());
 		mes ".............................";
 		next;
 		mes ".............................";
@@ -534,29 +546,29 @@ OnTouch:
 		next;
 		mes "- You breath in deep and start to sing a Gloria.";
 		mes "A chord crashes out in the spring of Hvergelmir and a waterfall sound gives you a refreshing feeling. -";
-		specialeffect2 EF_GLORIA;
+		specialeffect(EF_GLORIA, AREA, playerattached());
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~Descendants of Heimdal gather under the Ash tree Yggdrasil.~";
 		mes "~The Curdan bird which sits on a branch brings me the wisdom of whole world.~";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~The Curdan wolf protects me from all threats in the world.~";
-		specialeffect2 EF_GLORIA;
+		specialeffect(EF_GLORIA, AREA, playerattached());
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~The host of ballascalf, rise up from your seat. The whole world shouts for joy.~";
 		mes "~The father of light, the poet of wisdom, sing for me.~";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "~The host of a glittering glass, give me a holy prediction.~";
-		specialeffect2 EF_GLORIA;
+		specialeffect(EF_GLORIA, AREA, playerattached());
 		next;
 		mes "- After you finish the song, you feel light and strong with abundant devotion. -";
-		specialeffect2 EF_BLESSING;
-		specialeffect2 EF_RESURRECTION;
+		specialeffect(EF_BLESSING, AREA, playerattached());
+		specialeffect(EF_RESURRECTION, AREA, playerattached());
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That was refreshing.";
 		mes "I guess I should go back to Priest Dayan.";
 		job_arch = 3;
@@ -564,7 +576,7 @@ OnTouch:
 		warp "umbala",138,219;
 		end;
 	} else if (job_arch == 3) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "The song is over. It's time to go back to Priest Dayan.";
 		close2;
 		warp "umbala",138,219;
@@ -577,19 +589,19 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 	if (job_arch == 4) {
 		mes "- There is a nun closing her eyes as she murmurs something which sounds like a prayer. -";
 		next;
-		if(select("Talk to her.:Stay Quiet.") == 2) {
+		if(select("Talk to her.", "Stay Quiet.") == 2) {
 			mes "- You don't feel like disturbing her -";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Umm, hello sister?";
 		next;
 		mes "[Vinue]";
 		mes "Ah, Welcome.";
 		mes "It's not time to have a service yet...";
-		mes "Are you here to pray, "+(Sex?"brother":"sister")+"?";
+		mes "Are you here to pray, "+ (Sex == SEX_MALE ? "brother" : "sister") +"?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I came here to say hello from Priest Dayan from Prontera.";
 		next;
 		mes "[Vinue]";
@@ -597,16 +609,16 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "Is he good?";
 		mes "He is so cute even though he's old.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "He told me that he was worried because when he saw you last time, you seemed sad.";
 		mes "He asks you to go on a Holy Pilgrimage.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Umbala has the vital power of nature!";
 		next;
 		mes "[Vinue]";
 		mes "Ah...";
-		mes "He's very kind. As are you "+(Sex?"brother":"sister")+".";
+		mes "He's very kind. As are you "+ (Sex == SEX_MALE ? "brother" : "sister") +".";
 		next;
 		mes "[Vinue]";
 		mes "But don't worry.";
@@ -616,7 +628,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "Evil is always watching for our souls.";
 		mes "If you are indifferent to praying, it never misses an opportunity.";
 		next;
-		if(select("A dream? What kind of dream?:Your soul should be fine.") == 2) {
+		if(select("A dream? What kind of dream?", "Your soul should be fine.") == 2) {
 			mes "[Vinue]";
 			mes "Oh but that's where you're wrong.";
 			mes "My soul may be the most at risk.";
@@ -631,7 +643,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "[Vinue]";
 		mes "At first, it was a dream that Valkyrie was sad and in darkness.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Valkyrie?";
 		next;
 		mes "[Vinue]";
@@ -645,7 +657,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "[Vinue]";
 		mes "What a cruel performance! I suddenly can't breathe properly and then I wake up.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "To have to see the death of Valkyrie, must be a tormenting dream.";
 		next;
 		mes "[Vinue]";
@@ -655,7 +667,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "[Vinue]";
 		mes "I've been wanting to pray at Odin's shrine to make the dream go away. But that shrine became a den of evil a long time ago.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "The shrine?";
 		mes "Nobody tried to subdue the evil?";
 		next;
@@ -666,7 +678,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "[Vinue]";
 		mes "These days, there are a lot of people because of the development of the Odin shrine, but their situation is not so good.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Is the dream related with the evil in the Odin shrine?";
 		next;
 		mes "[Vinue]";
@@ -674,7 +686,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "I don't have any way to find out.";
 		mes "I don't have a method, so I just pray.";
 		next;
-		if(select("I'll investgate for you.:I'll pray with you.") == 2) {
+		if(select("I'll investgate for you.", "I'll pray with you.") == 2) {
 			mes "[Vinue]";
 			mes "Thank you.";
 			mes "I'll pray that the darkness stays away.";
@@ -686,7 +698,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "But, it'll be scary inside!";
 		mes "There are lots of devils inside!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "But I can't pretend to ignore a Sister who is in trouble?";
 		mes "I'm a minister who copes with lots of asceticism!";
 		mes "Entrust me.";
@@ -695,13 +707,13 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "Ah... I'm so worried....";
 		mes "I'll never forget your warm heart.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "How do I get to Odin shrine?";
 		next;
 		mes "[Vinue]";
 		mes "There is a ferry on the right side of the church.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ok, wait for good news!";
 		next;
 		mes "[Vinue]";
@@ -733,11 +745,11 @@ odin_tem02,281,275,3	script	Valkyrie Illusion#arch	4_F_VALKYRIE2,{
 	if ((job_arch > 4) && (job_arch < 100)) {
 		mes "You can see Valkyrie who has a despairing face.";
 		next;
-		switch(select("Touch Valkyrie's Illusion.:Turn away.")) {
+		switch(select("Touch Valkyrie's Illusion.", "Turn away.")) {
 		case 1:
 			mes "You lose your consciousness while getting a closer view of Valkyrie's Illusion.";
 			close2;
-			specialeffect2 EF_CLOAKING;
+			specialeffect(EF_CLOAKING, AREA, playerattached());
 			warp "job3_arch01",29,29;
 			hideonnpc "Valkyrie Illusion#arch";
 			end;
@@ -755,7 +767,7 @@ OnInit:
 }
 
 job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
-	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 2000) {
+	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Wait a Sec !! -";
 		mes "- You are carrying too many items, -";
 		mes "- you won't be able to obtain any new items. -";
@@ -763,11 +775,11 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 		mes "- and come for the challenge again. -";
 		close;
 	}
-	if ((BaseLevel != 99) || (JobLevel < 50) || (BaseJob != Job_Priest)) {
+	if ((BaseLevel < 99) || (JobLevel < 50) || (BaseJob != Job_Priest)) {
 		warp "odin_tem02",282,263;
 		end;
 	}
-	if (getmercinfo(1)) {
+	if (getmercinfo(MERCINFO_CLASS)) {
 		mes "[Valkyrie]";
 		mes "If you want to talk with me, you have to ^3131FFcancel all contracts^000000 with any mercenaries you have.";
 		close;
@@ -794,7 +806,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "You are a descendant of Heimdal living in pain as a mortal, why are you in here?";
 			mes "Are you here to ridicule my grim fate?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "No way!";
 			mes "But it's true that I'm here for you.";
 			next;
@@ -810,7 +822,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "I was already expelled from Asgard.";
 			mes "My duty is protecting this small island from humans trying to take it from the Gods and even I don't have any energy to do so.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "It's not that kind of problem.";
 			mes "But someone who perceives your painful situation has sent me here.";
 			next;
@@ -828,7 +840,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "[Valkyrie Anguhilde]";
 			mes "Human, answer me. Are you here to sincerely help me?";
 			next;
-			if(select("Yes:No") == 2) {
+			if(select("Yes", "No") == 2) {
 				mes "[Valkyrie Anguhilde]";
 				mes "I knew that I couldn't trust a human!";
 				close2;
@@ -863,11 +875,11 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "[Valkyrie Anguhilde]";
 			mes "Mortal one, what is your name?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
-			mes "My name is " + strcharinfo(0) + ".";
+			mes "[" + strcharinfo(PC_NAME) + "]";
+			mes "My name is " + strcharinfo(PC_NAME) + ".";
 			next;
 			mes "[Valkyrie Anguhilde]";
-			mes "" + strcharinfo(0) + ",";
+			mes "" + strcharinfo(PC_NAME) + ",";
 			mes "You told me that you want to help me, right? Even though it disgraces me, I am asking for your help.";
 			next;
 			mes "[Valkyrie Anguhilde]";
@@ -907,7 +919,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			if ($@archbs == 0) {
 				$@archbs = 1;
 				mes "[Valkyrie Anguhilde]";
-				mes "" + strcharinfo(0) + " Did you finish preparing for your way of asceticism?";
+				mes "" + strcharinfo(PC_NAME) + " Did you finish preparing for your way of asceticism?";
 				next;
 				if (getmapusers("job3_arch02") > 0) {
 					mes "[Valkyrie Anguhilde]";
@@ -922,8 +934,8 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 				$@archbs = 0;
 				close2;
 				nude;
-				if (countitem(2798))
-					delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
+				if (countitem(Will_Of_Exhausted_Angel))
+					delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
 				donpcevent "start#arch::OnEnable";
 				job_arch = 7;
 				changequest 2190,2191;
@@ -935,8 +947,8 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "I'm talking with another person now, so give me a second.";
 			close;
 		} else if (job_arch == 7) {
-			if (countitem(12381)) delitem 12381,countitem(12381); //ValkyrieA_Scroll
-			if (countitem(12382)) delitem 12382,countitem(12382); //ValkyrieB_Scroll
+			if (countitem(ValkyrieA_Scroll)) delitem ValkyrieA_Scroll,countitem(ValkyrieA_Scroll);
+			if (countitem(ValkyrieB_Scroll)) delitem ValkyrieB_Scroll,countitem(ValkyrieB_Scroll);
 			if ($@archbs == 0) {
 				$@archbs = 1;
 				mes "[Valkyrie Anguhilde]";
@@ -959,8 +971,8 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 				mes "But you have to be careful if an impersonation falls down.";
 				close2;
 				nude;
-				if (countitem(2798))
-					delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
+				if (countitem(Will_Of_Exhausted_Angel))
+					delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
 				donpcevent "start#arch::OnEnable";
 				job_arch = 7;
 				warp "job3_arch02",119,49;
@@ -982,20 +994,20 @@ OnBc:
 
 job3_arch02,119,49,0	script	#arch_1_start	HIDDEN_WARP_NPC,6,6,{
 OnTouch:
-	if (countitem(12381) == 0)
-		getitem 12381,1; //ValkyrieA_Scroll
+	if (countitem(ValkyrieA_Scroll) == 0)
+		getitem ValkyrieA_Scroll,1;
 	mapannounce "job3_arch02","Whispering of an impersonation: I feel heavy! Set me free!",bc_map,"0xFFCE00";
 	disablenpc "#arch_1_start";
 	end;
 }
 
--	script	#arch_1_01_0::archbjcq	-1,{
+-	script	#arch_1_01_0::archbjcq	FAKE_NPC,{
 OnTouch:
-	if (countitem(12381)) {
-		delitem 12381,1; //ValkyrieA_Scroll
+	if (countitem(ValkyrieA_Scroll)) {
+		delitem ValkyrieA_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2037) {
-		if (strnpcinfo(0) == "#arch_1_10")
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_A) {
+		if (strnpcinfo(NPC_NAME) == "#arch_1_10")
 			viewpoint 1,113,327,1,0xFF9900;
 		.@randht = rand(1,10);
 		if (.@randht < 8)
@@ -1023,10 +1035,10 @@ job3_arch02,245,289,0	duplicate(archbjcq)	#arch_1_12	HIDDEN_WARP_NPC,5,5
 
 job3_arch02,203,286,0	script	#arch_1_boss	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
-	if (countitem(12381)) {
-		delitem 12381,1; //ValkyrieA_Scroll
+	if (countitem(ValkyrieA_Scroll)) {
+		delitem ValkyrieA_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2037) {
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_A) {
 		mapannounce "job3_arch02","Valkyrie's Nightmare: An incompetent illusion of Valkyrie came here with the assistance of humans. You wanna have that nightmare?",bc_map,"0xFF0000";
 		donpcevent "mob#arch_1::OnKill";
 		end;
@@ -1036,7 +1048,7 @@ OnTouch:
 	end;
 }
 
--	script	#arch_redcell	-1,{
+-	script	#arch_redcell	FAKE_NPC,{
 OnInit:
 	setcell "job3_arch02",276,290,280,294,cell_walkable,0;
 	setcell "job3_arch02",276,290,280,294,cell_shootable,0;
@@ -1101,7 +1113,7 @@ OnKill:
 }
 
 job3_arch02,113,327,5	script	Valkyrie#arch_01	4_F_VALKYRIE2,{
-	if (getmercinfo(1)) {
+	if (getmercinfo(MERCINFO_CLASS)) {
 		mes "[Valkyrie]";
 		mes "If you want to talk with me, you have to ^3131FFcancel all contracts^000000 with any mercenaries you have.";
 		close;
@@ -1128,7 +1140,7 @@ job3_arch02,113,327,5	script	Valkyrie#arch_01	4_F_VALKYRIE2,{
 	mes "[Valkyrie Anguhilde]";
 	mes "Then I look forward a good news.";
 	close2;
-	getitem 12382,1; //ValkyrieB_Scroll
+	getitem ValkyrieB_Scroll,1;
 	viewpoint 1,244,46,1,0xFFFF99;
 	hideonnpc "Valkyrie#arch_01";
 	donpcevent "#arch_2_start::OnEnable";
@@ -1139,11 +1151,11 @@ job3_arch02,244,46,5	script	Valkyrie#arch_02	4_F_VALKYRIE2,{
 	mes "[Valkyrie Anguhilde]";
 	mes "Did you find the rest of the pieces?";
 	next;
-	if (countitem(6154) < 2) {
+	if (countitem(Broken_Horn_Pipe) < 2) {
 		mes "[Valkyrie Anguhilde]";
 		mes "Hum?";
 		mes "I can see this one beside you.";
-		getitem 6154,2; //Broken_Horn_Pipe
+		getitem Broken_Horn_Pipe,2;
 		next;
 	}
 	mes "[Valkyrie Anguhilde]";
@@ -1166,7 +1178,7 @@ job3_arch02,244,46,5	script	Valkyrie#arch_02	4_F_VALKYRIE2,{
 	mes "Take care.";
 	mes "Please, hurry up!";
 	close2;
-	getitem 2798,1; //Will_Of_Exhausted_Angel
+	getitem Will_Of_Exhausted_Angel,1;
 	hideonnpc "Valkyrie#arch_02";
 	donpcevent "#arch_3_start::OnEnable";
 	end;
@@ -1180,7 +1192,7 @@ OnTouch:
 	donpcevent "#arch_3_03::OnKill";
 	donpcevent "mob#arch_2::OnKill";
 	hideoffnpc "Valkyrie Anguhilde#end";
-	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 2000) {
+	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Wait a Sec !! -";
 		mes "- You are carrying too many items, -";
 		mes "- you won't be able to obtain any new items. -";
@@ -1194,7 +1206,7 @@ OnTouch:
 		mes "Please unequip your riding pet and try again!";
 		close;
 	}
-	if (countitem(6154) < 2) {
+	if (countitem(Broken_Horn_Pipe) < 2) {
 		mes "[Valkyrie Anguhilde]";
 		mes "Did you collect all of the pieces of my horn pipe?";
 		next;
@@ -1205,9 +1217,9 @@ OnTouch:
 		mes "It can be dangerous, so let's go back.";
 		close2;
 		nude;
-		if (countitem(2798))
-			delitem 2798,(2798); //Will_Of_Exhausted_Angel
-		delitem 6154,countitem(6154); //Broken_Horn_Pipe
+		if (countitem(Will_Of_Exhausted_Angel))
+			delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
+		delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe);
 		mapwarp "job3_arch02","job3_arch01",29,29;
 		end;
 	}
@@ -1250,7 +1262,7 @@ OnTouch:
 	mes "So bright and warm....";
 	next;
 	mes "- Shoooo -";
-	specialeffect EF_CLOAKING,AREA,"Valkyrie Anguhilde#end";
+	specialeffect(EF_CLOAKING, AREA, getnpcid("Valkyrie Anguhilde#end"));
 	hideonnpc "Valkyrie Anguhilde#end";
 	emotion e_omg,1;
 	next;
@@ -1290,13 +1302,13 @@ OnTouch:
 	mes "Don't forget an altruistic minister's spirit like today forever.";
 	mes "I hope we see each other in Valhalla sometime.";
 	nude;
-	if (countitem(2798))
-		delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
-	delitem 6154,countitem(6154); //Broken_Horn_Pipe
+	if (countitem(Will_Of_Exhausted_Angel))
+		delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
+	delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe);
 	job_arch = 100;
 	completequest 2191;
-	getitem 5747,1; //Mitra
-	getitem 2795,1; //Green_Apple_Ring
+	getitem Mitra,1;
+	getitem Green_Apple_Ring,1;
 	jobchange roclass(eaclass()|EAJL_THIRD);
 	close;
 OnInit:
@@ -1333,17 +1345,17 @@ OnInit:
 job3_arch02,132,323,0	script	#arch_2_01	HIDDEN_WARP_NPC,5,5,{
 	end;
 OnTouch:
-	if (countitem(12382))
+	if (countitem(ValkyrieB_Scroll))
 		mapannounce "job3_arch02","Whispering of Valkyrie: I see a new ancient scroll!",bc_map;
 	end;
 }
 
--	script	#arch_2_02_0::archbjcq2	-1,{
+-	script	#arch_2_02_0::archbjcq2	FAKE_NPC,{
 OnTouch:
-	if (countitem(12382)) {
-		delitem 12382,1; //ValkyrieB_Scroll
+	if (countitem(ValkyrieB_Scroll)) {
+		delitem ValkyrieB_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2038) {
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_B) {
 		.@randht = rand(1,10);
 		if (.@randht < 8)
 			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits. Can you hear? The sound of gathering in crowds.",bc_map,"0xFFCE00";
@@ -1385,10 +1397,10 @@ OnTouch:
 
 job3_arch02,206,113,0	script	#arch_2_boss	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
-	if (countitem(12382)) {
-		delitem 12382,1; //ValkyrieB_Scroll
+	if (countitem(ValkyrieB_Scroll)) {
+		delitem ValkyrieB_Scroll,1;
 		// fall through
-	} else if (getmercinfo(1) == 2038) {
+	} else if (getmercinfo(MERCINFO_CLASS) == VALKYRIE_B) {
 		mapannounce "job3_arch02","A shout of devil: You are so childish. I invite you a party of devil. I'll make you have a fun!",bc_map,"0xFF0000";
 		end;
 	}
@@ -1635,10 +1647,10 @@ OnTouch:
 /*
 job_arch01,26,25,0	script	#archremove	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
-	if (countitem(6154)) delitem 6154, countitem(6154); //Broken_Horn_Pipe
-	if (countitem(12381)) delitem 12381, countitem(12381); //ValkyrieA_Scroll
-	if (countitem(12382)) delitem 12382, countitem(12382); //ValkyrieB_Scroll
-	if (countitem(2798)) delitem 2798, countitem(2798); //Will_Of_Exhausted_Angel
+	if (countitem(Broken_Horn_Pipe)) delitem Broken_Horn_Pipe, countitem(Broken_Horn_Pipe);
+	if (countitem(ValkyrieA_Scroll)) delitem ValkyrieA_Scroll, countitem(ValkyrieA_Scroll);
+	if (countitem(ValkyrieB_Scroll)) delitem ValkyrieB_Scroll, countitem(ValkyrieB_Scroll);
+	if (countitem(Will_Of_Exhausted_Angel)) delitem Will_Of_Exhausted_Angel, countitem(Will_Of_Exhausted_Angel);
 	end;
 }
 */
@@ -1654,7 +1666,7 @@ job3_arch01,1,1,1	script	control#arch	CLEAR_NPC,{
 		mes $@archbs + ".";
 		mes "Do you want to change it?";
 		next;
-		switch(select("0:1")) {
+		switch(select("0", "1")) {
 		case 1:
 			$@archbs = 0;
 			hideoffnpc "Valkyrie#arch";

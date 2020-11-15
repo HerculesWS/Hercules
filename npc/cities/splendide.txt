@@ -1,19 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Splendide Town
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Town-specific NPCs for Splendide.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Added more town NPCs
-//= 1.2 Added more town NPCs
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// cat_enhance
+//== cat_enhance ===========================================
 splendide,218,193,3	script	Fairy#ep13_1	4_F_FAIRYKID6,{
 	if (isequipped(2782) == 1) {
 		mes "[Exhausted Fairy]";
@@ -55,7 +74,7 @@ splendide,125,227,3	script	Fairy#ep13_3	4_M_FAIRYKID3,{
 	}
 }
 
-// ep13_2_hiki
+//== ep13_2_hiki ===========================================
 splendide,159,164,3	script	Fairy#13_2_1	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Fairy]";
@@ -331,7 +350,7 @@ splendide,181,107,5	script	Fairy#13_2_12	4_F_FAIRYSOLDIER,{
 	}
 }
 
-// ep13_2_tre
+//== ep13_2_tre ============================================
 splendide,188,76,5	script	Splendide Soldier#tre1	4_M_FAIRYSOLDIER2,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Splendide Soldier]";
@@ -417,7 +436,7 @@ spl_in01,281,329,3	script	Splendide Guard#tre	4_M_FAIRYSOLDIER,{
 	}
 	else {
 		mes "[Splendide Guard]";
-		mes "AnduVeldRe Ko VeldReFulo So LomaurDu So	So ";
+		mes "AnduVeldRe Ko VeldReFulo So LomaurDu So So";
 		close;
 	}
 }
@@ -437,7 +456,7 @@ spl_in01,287,306,3	script	#spl_prs	HIDDEN_NPC,{
 	}
 }
 
-spl_in01,265,315,0	script	#spl_prs1	-1,5,5,{
+spl_in01,265,315,0	script	#spl_prs1	FAKE_NPC,5,5,{
 OnTouch:
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Voice from another side]";
@@ -455,7 +474,7 @@ OnTouch:
 	}
 }
 
-// ep13_spl_extra
+//== ep13_spl_extra ========================================
 spl_in01,172,225,3	script	Wandering Poet#ep13	1_M_BARD,{
 	cutin "god_nelluad02",2;
 	mes "[Poet Nell]";
@@ -483,12 +502,12 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	1_M_BARD,{
 	mes "[Poet Nell]";
 	mes "So do you want to listen to my playing?";
 	next;
-	switch(select("Sure.:Not really.")) {
+	switch(select("Sure.", "Not really.")) {
 	case 1:
 		mes "[Poet Nell]";
 		mes "What song do you want??";
 		next;
-		switch(select("Poet of Bragie:Chaos in Eternity:Sunset Assassin:Ring of Nibelungen")) {
+		switch(select("Poet of Bragie", "Chaos in Eternity", "Sunset Assassin", "Ring of Nibelungen")) {
 		case 1:
 			cutin "god_nelluad02",2;
 			mes "[Poet Nell]";
@@ -791,7 +810,7 @@ spl_in01,122,311,1	script	Laphine Soldier#ep13_2	4_M_FAIRYSOLDIER,{
 	}
 }
 
-// ep33_2_dailybs
+//== ep33_2_dailybs ========================================
 splendide,121,259,3	script	Fairy#ep13bs1	4_F_FAIRYKID,{
 	if (isequipped(2782) == 1) {
 		mes "[Fairy]";

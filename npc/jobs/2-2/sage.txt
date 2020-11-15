@@ -1,31 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Kisuka
+//= Copyright (C) Brainstorm
+//= Copyright (C) Samuray22
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) KarLaeda
+//= Copyright (C) Vicious
+//= Copyright (C) Lupus
+//= Copyright (C) Darkchild
+//= Copyright (C) Athena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Sage Job Quest
-//===== By: ==================================================
-//= jAthena (0.9) - I guess
-//= Unknown Translator (1.0)
-//= Darkchild (1.2)
-//===== Current Version: =====================================
-//= 2.8
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job quest for Sage classes
-//===== Additional Comments: =================================
-//= 2.1 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     No longer uses function "F_BlockHigh"
-//= 2.2 Small bug fix (== -> !=) thanks to Saithis. [L0ne_W0lf]
-//= 2.2b ANotehr smaLL bugfix, pointed out by Cara. [L0ne_W0lf]
-//= 2.3 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.4 Fixes bug with first room monsters not being reset. [L0ne_W0lf]
-//= 2.4a Deleted unused variables. [Samuray22]
-//= 2.5 Updated waiting room. (Removes global var) [L0ne_W0lf]
-//= 2.5a Corrected some "mes"s without the getitemname. (bugreport:1564) [Samuray22]
-//=     -Changed an incorrect "!=" to "==". (bugreport:1572)
-//=     -And Small Typo Error
-//= 2.6 Fixed Kayron Grik cutin not being removed as reported by jc1991, bugreport:1825 [Brainstorm]
-//= 2.6a Fixed a Little Bug with Whispers Summoned in the Last Test. (bugreport:2253) [Samuray22]
-//= 2.7 Added Quest Log commands. [Kisuka]
-//= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 2.8
+//=========================================================================
 
 yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 	cutin "job_sage_kayron",2;
@@ -75,7 +88,7 @@ yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 		mes "Welcome, young one. I can see that you're intrigued by the wonders of magic.";
 		mes "So what kind of business brings you to me?";
 		next;
-		switch(select("I would like to be a Sage.:Let me know about the Sage job change.:Nothing.")) {
+		switch(select("I would like to be a Sage.", "Let me know about the Sage job change.", "Nothing.")) {
 		case 1:
 			mes "[Kayron Grik]";
 			mes "Hm? Do you wish to become a Sage?";
@@ -124,7 +137,7 @@ yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 		end;
 	}
 	else if (SAGE_Q == 15) {
-		if (countitem(1550) > 0) {
+		if (countitem(Book) > 0) {
 			if (JobLevel < 40) {
 				SAGE_Q = 0;
 				mes "You don't seem to be qualified yet.";
@@ -254,7 +267,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 		mes "Welcome to the Schweicherbil Magic Academy.";
 		mes "Oh, You're a Mage. How may I assist you?";
 		next;
-		switch(select("Let me know about the Sage job change.:I want to enroll in the school.:Nothing.")) {
+		switch(select("Let me know about the Sage job change.", "I want to enroll in the school.", "Nothing.")) {
 		case 1:
 			mes "[Metheus Sylphe]";
 			mes "I see. Do you wish to become a Sage?";
@@ -299,7 +312,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 			mes "[Metheus Sylphe]";
 			mes "So, do you wish to apply immediately?";
 			next;
-			switch(select("Yes, I do.:The fee is much too expensive.:I will come back later.")) {
+			switch(select("Yes, I do.", "The fee is much too expensive.", "I will come back later.")) {
 			case 1:
 				if (JobLevel < 40) {
 					mes "[Metheus Sylphe]";
@@ -317,9 +330,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				mes "Very well. Let's complete your application form.";
 				mes "Please put your signature here.";
 				next;
-				select(strcharinfo(0));
+				select(strcharinfo(PC_NAME));
 				mes "[Metheus Sylphe]";
-				mes "Your name is ... " + strcharinfo(0) + ". It's a very nice name.";
+				mes "Your name is ... " + strcharinfo(PC_NAME) + ". It's a very nice name.";
 				next;
 				if (JobLevel == 50) {
 					mes "[Metheus Sylphe]";
@@ -341,7 +354,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				mes "Will you pay the registration fee with 70,000 zeny?";
 				mes "Or will you give me ^3355FFOld Magicbook^000000 and ^3355FFNecklace of Wisdom^000000?";
 				next;
-				if (select("Pay 70,000 zeny.:Give him Old Magicbook and Necklace of Wisdom.") == 1) {
+				if (select("Pay 70,000 zeny.", "Give him Old Magicbook and Necklace of Wisdom.") == 1) {
 					if (Zeny > 69999) {
 						Zeny -= 70000;
 						mes "[Metheus Sylphe]";
@@ -360,9 +373,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "Please make sure you have at least 70,000 zeny to enroll in classes.";
 					close;
 				}
-				if (countitem(1006) > 0 && countitem(1007) > 0) {
-					delitem 1006,1; //Old_Magic_Book
-					delitem 1007,1; //Penetration
+				if (countitem(Old_Magic_Book) > 0 && countitem(Penetration) > 0) {
+					delitem Old_Magic_Book,1;
+					delitem Penetration,1;
 					mes "[Metheus Sylphe]";
 					mes "Thank you, your application has been accepted.";
 					mes "Next, you will take the entrance test.";
@@ -398,9 +411,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "Okay, let's complete the application form.";
 					mes "Please put your signature here.";
 					next;
-					select(strcharinfo(0));
+					select(strcharinfo(PC_NAME));
 					mes "[Metheus Sylphe]";
-					mes "Your name is ... " + strcharinfo(0) + ". It's a very nice name.";
+					mes "Your name is ... " + strcharinfo(PC_NAME) + ". It's a very nice name.";
 					next;
 					mes "[Metheus Sylphe]";
 					mes "Yes, everything's ready.";
@@ -431,7 +444,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "Oh, I guess you don't have enough money?";
 					mes "Under the existing provisions, you must pay 70,000 zeny for the application...";
 					next;
-					if (select("Please...is there any way?:Ok, I will come back later.") == 1) {
+					if (select("Please...is there any way?", "Ok, I will come back later.") == 1) {
 						mes "[Metheus Sylphe]";
 						mes "Hmmm...then I shall offer a special option!";
 						mes "You will pay 30,000 zeny and bring some items as compensation for the tuition discount.";
@@ -506,9 +519,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 	else if (SAGE_Q >= 1 && SAGE_Q <= 3) {
 		mes "Welcome, once again.";
 		next;
-		if (countitem(1006) > 0 && countitem(1007) > 0) {
-			delitem 1006,1; //Old_Magic_Book
-			delitem 1007,1; //Penetration
+		if (countitem(Old_Magic_Book) > 0 && countitem(Penetration) > 0) {
+			delitem Old_Magic_Book,1;
+			delitem Penetration,1;
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
 			SAGE_Q = 4;
@@ -583,12 +596,12 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 		mes "Let's complete the application form.";
 		mes "Please put your signature here.";
 		next;
-		select(strcharinfo(0));
+		select(strcharinfo(PC_NAME));
 		mes "[Metheus Sylphe]";
 		switch (.@SAGE_Q_T) {
-		case 1: mes "Your name is ... " + strcharinfo(0) + ". It's a very nice name."; break;
-		case 2: mes "Your name is ... " + strcharinfo(0) + ". It sounds very sagacious."; break;
-		case 3: mes "Your name is ... " + strcharinfo(0) + ". Interesting name."; break;
+		case 1: mes "Your name is ... " + strcharinfo(PC_NAME) + ". It's a very nice name."; break;
+		case 2: mes "Your name is ... " + strcharinfo(PC_NAME) + ". It sounds very sagacious."; break;
+		case 3: mes "Your name is ... " + strcharinfo(PC_NAME) + ". Interesting name."; break;
 		}
 		next;
 		mes "[Metheus Sylphe]";
@@ -692,268 +705,282 @@ yuno_in03,105,177,5	script	Written Test Professor#s	4_M_SAGE_A,{
 		mes "Come again when you finish the application.";
 		close;
 	}
-	else if (SAGE_Q == 4) {
-		mes "Welcome to the Schweicherbil Magic Academy.";
-		mes "You applied for this test already, didn't you?";
-		next;
-		mes "[Claytos Verdo]";
-		mes "Let's see, your name is " + strcharinfo(0) + "...";
-		mes "Okay, let's get started!";
-		next;
-		mes "[Claytos Verdo]";
-		mes "The test that I am going to give you will test your knowledge on all of the academic subjects in the world.";
-		mes "I will give you 20 questions, with each question being worth 5 points. When you earn a grade of 80 points, you will pass the test.";
-		next;
-		mes "[Claytos Verdo]";
-		mes "Okay, there's no need to wait. Let's start right away";
-		mes "Oh, and if you don't answer immediately, the test will be cancelled.";
-L_AskQuestions:
+	else if (SAGE_Q == 4 || SAGE_Q == 5) {
+		if (SAGE_Q == 4) {
+			mes "Welcome to the Schweicherbil Magic Academy.";
+			mes "You applied for this test already, didn't you?";
+			next;
+			mes "[Claytos Verdo]";
+			mes "Let's see, your name is " + strcharinfo(PC_NAME) + "...";
+			mes "Okay, let's get started!";
+			next;
+			mes "[Claytos Verdo]";
+			mes "The test that I am going to give you will test your knowledge on all of the academic subjects in the world.";
+			mes "I will give you 20 questions, with each question being worth 5 points. When you earn a grade of 80 points, you will pass the test.";
+			next;
+			mes "[Claytos Verdo]";
+			mes "Okay, there's no need to wait. Let's start right away";
+			mes "Oh, and if you don't answer immediately, the test will be cancelled.";
+		} else if (SAGE_Q == 5) {
+			mes "Welcome back.";
+			mes "So, did you study harder this time?";
+			next;
+			mes "[Claytos Verdo]";
+			mes "You will take the written test under the same conditions as the test you took before. I'll give you 20 questions.";
+			mes "Each correct answer will give you 5 points. When your score reaches 80 points, you pass the test.";
+			next;
+			sage_m2 = rand(1,3);
+			mes "[Claytos Verdo]";
+			mes "Okay, there's no need to wait.";
+			mes "Answer immediately, or I'll fail you again.";
+			SAGE_Q = 5;
+		}
 		next;
 		switch(rand(1,3)) {
 		case 1:
 			mes "1. Choose an item that the Gift merchant in Prontera does not sell.";
 			next;
-			if (select("China:Red Frame:Bouquet:Glass Bead") == 3)
+			if (select("China", "Red Frame", "Bouquet", "Glass Bead") == 3)
 				.@sage_t += 5;
 			mes "2. Choose a city where you cannot purchase a Stiletto.";
 			next;
-			if (select("Prontera:Morroc:Geffen:Lutie") == 1)
+			if (select("Prontera", "Morroc", "Geffen", "Lutie") == 1)
 				.@sage_t += 5;
 			mes "3. Choose the closest city to Turtle Island.";
 			next;
-			if (select("Al De Baran:Alberta:Comodo:Izlude") == 2)
+			if (select("Al De Baran", "Alberta", "Comodo", "Izlude") == 2)
 				.@sage_t += 5;
 			mes "4. Choose the monster that is a different type than the others.";
 			next;
-			if (select("Raggler:Pest:Frilldora:Aster") == 4)
+			if (select("Raggler", "Pest", "Frilldora", "Aster") == 4)
 				.@sage_t += 5;
 			mes "5. Choose the monster that has a different attribute than the others.";
 			next;
-			if (select("Mantis:Metaller:Rocker:Horn") == 2)
+			if (select("Mantis", "Metaller", "Rocker", "Horn") == 2)
 				.@sage_t += 5;
 			mes "6. Choose the monster that is different sized than the others.";
 			next;
-			if (select("Raydric:Raydric Archer:Wanderer:Dark Frame") == 1)
+			if (select("Raydric", "Raydric Archer", "Wanderer", "Dark Frame") == 1)
 				.@sage_t += 5;
 			mes "7. Choose the monster which doesn't drop 'Alcohol'.";
 			next;
-			if (select("Horong:Plankton:Poison Spore:Toad") == 3)
+			if (select("Horong", "Plankton", "Poison Spore", "Toad") == 3)
 				.@sage_t += 5;
 			mes "8. Choose the NPC that is irrelevant to the Knight job change quest.";
 			next;
-			if (select("Sir Siracuse:Thomas Servantes:Sir Windsor:Lady Amy") == 2)
+			if (select("Sir Siracuse", "Thomas Servantes", "Sir Windsor", "Lady Amy") == 2)
 				.@sage_t += 5;
 			mes "9. Choose the NPC that is not a citizen of Prontera.";
 			next;
-			if (select("Tono:Pina:YuPi:Hollgrehenn") == 2)
+			if (select("Tono", "Pina", "YuPi", "Hollgrehenn") == 2)
 				.@sage_t += 5;
 			mes "10. Choose the right name for the Kafra lady who wears glasses.";
 			next;
-			if (select("Pavianne:Roxie:Leilah:Curly Sue") == 3)
+			if (select("Pavianne", "Roxie", "Leilah", "Curly Sue") == 3)
 				.@sage_t += 5;
 			mes "11. How much SP is spent to use lvl 7 Thunderstorm?";
 			next;
-			if (select("49:59:69:74") == 2)
+			if (select("49", "59", "69", "74") == 2)
 				.@sage_t += 5;
 			mes "12. Choose the right amount of damage reduction and SP consumption of the Energy Coat skill when the caster's remaining SP is 50%.";
 			next;
-			if (select("Damage -24% SP1.5%:Damage -24% SP2%:Damage -18% SP1.5%:Damage -18% SP2%") == 4)
+			if (select("Damage -24% SP1.5%", "Damage -24% SP2%", "Damage -18% SP1.5%", "Damage -18% SP2%") == 4)
 				.@sage_t += 5;
 			mes "13. Choose the property that is irrelevant to 'Bolt' type skills for the Mage class.";
 			next;
-			if (select("Water:Earth:Fire:Wind") == 2)
+			if (select("Water", "Earth", "Fire", "Wind") == 2)
 				.@sage_t += 5;
 			mes "14. Choose the right chance and attack strength for lvl 7 Double Attack, the Thief skill.";
 			next;
-			if (select("35% / 120%:35% / 140%:40% / 120%:40% / 140%") == 2)
+			if (select("35% / 120%", "35% / 140%", "40% / 120%", "40% / 140%") == 2)
 				.@sage_t += 5;
 			mes "15. Choose the skill that is irrelevant to learning Magnus Exorcismus, the Priest skill.";
 			next;
-			if (select("Divine Protection:Heal:Ruwach:Aqua Benedicta") == 1)
+			if (select("Divine Protection", "Heal", "Ruwach", "Aqua Benedicta") == 1)
 				.@sage_t += 5;
 			mes "16. Choose the correct defense and ability of the Bunny Band.";
 			next;
-			if (select("1 / LUK +2:1 / LUK +5:2 / LUK +2:2 / LUK +5") == 3)
+			if (select("1 / LUK +2", "1 / LUK +5", "2 / LUK +2", "2 / LUK +5") == 3)
 				.@sage_t += 5;
 			mes "17. Choose the class that cannot equip Padded Armor.";
 			next;
-			if (select("Swordman:Merchant:Thief:Archer") == 4)
+			if (select("Swordman", "Merchant", "Thief", "Archer") == 4)
 				.@sage_t += 5;
 			mes "18. Choose the item that cures all abnormal status and restores full HP and SP at the same time.";
 			next;
-			if (select("Royal Jelly:Yggdrasil Seed:Yggdrasilberry:Mastella Fruit") == 3)
+			if (select("Royal Jelly", "Yggdrasil Seed", "Yggdrasilberry", "Mastella Fruit") == 3)
 				.@sage_t += 5;
 			mes "19. Who rules the Rune-Midgarts kingdom right now?";
 			next;
-			if (select("Tristun the 3rd:Tristram the 3rd:Tristar the 3rd:Trast the 3rd") == 2)
+			if (select("Tristun the 3rd", "Tristram the 3rd", "Tristar the 3rd", "Trast the 3rd") == 2)
 				.@sage_t += 5;
 			mes "20. Choose the god of Crusaders.";
 			next;
-			if (select("Odin:Loki:Thor:Venadin") == 1)
+			if (select("Odin", "Loki", "Thor", "Venadin") == 1)
 				.@sage_t += 5;
 			break;
 		case 2:
 			mes "1. Choose the jewel that the Morroc Jewel Merchant does not sell.";
 			next;
-			if (select("Topaz:Garnet:Diamond:Sapphire") == 2)
+			if (select("Topaz", "Garnet", "Diamond", "Sapphire") == 2)
 				.@sage_t += 5;
 			mes "2. Choose the city where users cannot purchase Monster's Feed from an NPC.";
 			next;
-			if (select("Prontera:Morroc:Al De Baran:Alberta") == 3)
+			if (select("Prontera", "Morroc", "Al De Baran", "Alberta") == 3)
 				.@sage_t += 5;
 			mes "3. Choose the closest city to the Maze.";
 			next;
-			if (select("Prontera:Morroc:Geffen:Payon") == 1)
+			if (select("Prontera", "Morroc", "Geffen", "Payon") == 1)
 				.@sage_t += 5;
 			mes "4. Choose the monster that is a different type than the others.";
 			next;
-			if (select("Muka:Drops:Plankton:Penomena") == 4)
+			if (select("Muka", "Drops", "Plankton", "Penomena") == 4)
 				.@sage_t += 5;
 			mes "5. Choose the monster with the different attribute.";
 			next;
-			if (select("Dokebi:Isis:Giearth:Deviruchi") == 3)
+			if (select("Dokebi", "Isis", "Giearth", "Deviruchi") == 3)
 				.@sage_t += 5;
 			mes "6. Choose the monster that is different in size.";
 			next;
-			if (select("Thiefbug (Aggressive):Horn:Metaller:Argos") == 4)
+			if (select("Thiefbug (Aggressive)", "Horn", "Metaller", "Argos") == 4)
 				.@sage_t += 5;
 			mes "7. Choose the monster which does not drop 'Yggdrasil Leaf'.";
 			next;
-			if (select("Marduk:Baphomet Jr.:Angeling:Wanderer") == 1)
+			if (select("Marduk", "Baphomet Jr.", "Angeling", "Wanderer") == 1)
 				.@sage_t += 5;
 			mes "8. Choose the NPC that is irrelevant to the Priest job change quest.";
 			next;
-			if (select("Paul:Sir Windsor:Peter S. Alberto:Cecilia") == 2)
+			if (select("Paul", "Sir Windsor", "Peter S. Alberto", "Cecilia") == 2)
 				.@sage_t += 5;
 			mes "9. Choose the NPC that is not a citizen of Morroc.";
 			next;
-			if (select("Syvia:Akira:Antonio:Dmitrii") == 3)
+			if (select("Syvia", "Akira", "Antonio", "Dmitrii") == 3)
 				.@sage_t += 5;
 			mes "10. Choose the Kafra lady who has gorgeous blue hair.";
 			next;
-			if (select("Pavianne:Roxie:Leilah:Curly Sue") == 1)
+			if (select("Pavianne", "Roxie", "Leilah", "Curly Sue") == 1)
 				.@sage_t += 5;
 			mes "11. Choose the skill that is irrelevant to learning Fire Wall, the Mage skill.";
 			next;
-			if (select("lvl 4 Fire Bolt:lvl 4 Napalm Beat:lvl 5 Fire Ball:lvl 1 Sight") == 2)
+			if (select("lvl 4 Fire Bolt", "lvl 4 Napalm Beat", "lvl 5 Fire Ball", "lvl 1 Sight") == 2)
 				.@sage_t += 5;
 			mes "12. How much SP can be restored when learning SP recovery at lvl 6 (without being affected by INT)?";
 			next;
-			if (select("14:16:18:21") == 3)
+			if (select("14", "16", "18", "21") == 3)
 				.@sage_t += 5;
 			mes "13. How many INT points does a Mage receive as a bonus at job lvl 33?";
 			next;
-			if (select("7:6:5:4") == 4)
+			if (select("7", "6", "5", "4") == 4)
 				.@sage_t += 5;
 			mes "14. Choose the correct SP consumption and the skill duration for Improve Concentration lvl 5 (Archer skill).";
 			next;
-			if (select("45 / 80 sec:50 / 80 sec:45 / 90 sec:50 / 90 sec") == 1)
+			if (select("45 / 80 sec", "50 / 80 sec", "45 / 90 sec", "50 / 90 sec") == 1)
 				.@sage_t += 5;
 			mes "15. Choose the skill that is irrelevant to learning Maximize Power, the Blacksmith skill.";
 			next;
-			if (select("Hilt Binding:Skin Tempering:Hammer Fall:Weapon Perfection") == 2)
+			if (select("Hilt Binding", "Skin Tempering", "Hammer Fall", "Weapon Perfection") == 2)
 				.@sage_t += 5;
 			mes "16. What is the correct defense rate and ability of Cute Ribbon?";
 			next;
-			if (select("0 / SP +20:0 / SP +30:1 / SP +20:1 / SP +30") == 3)
+			if (select("0 / SP +20", "0 / SP +30", "1 / SP +20", "1 / SP +30") == 3)
 				.@sage_t += 5;
 			mes "17. Choose the class that cannot equip Saint Robe.";
 			next;
-			if (select("Swordman:Merchant:Thief:Acolyte") == 3)
+			if (select("Swordman", "Merchant", "Thief", "Acolyte") == 3)
 				.@sage_t += 5;
 			mes "18. Choose the abnormal status that cannot be cured by Green Potion.";
 			next;
-			if (select("Silence:Chaos:Blind:Curse") == 4)
+			if (select("Silence", "Chaos", "Blind", "Curse") == 4)
 				.@sage_t += 5;
 			mes "19. Choose the correct name for the ancient kingdom that disappeared somewhere in Geffen.";
 			next;
-			if (select("Geffayon:Geffenia:Gefenn:Jaffen") == 2)
+			if (select("Geffayon", "Geffenia", "Gefenn", "Jaffen") == 2)
 				.@sage_t += 5;
 			mes "20. Choose the correct name for the tree that has become the root of this world.";
 			next;
-			if (select("Yggdrasil:Iggdrassil:Mastella:Dead Branch") == 1)
+			if (select("Yggdrasil", "Iggdrassil", "Mastella", "Dead Branch") == 1)
 				.@sage_t += 5;
 			break;
 		case 3:
 			mes "1. Choose the item that the Magical Tool merchant in Geffen does not sell.";
 			next;
-			if (select("Mantle:Wand:Circlet:Silver Robe") == 1)
+			if (select("Mantle", "Wand", "Circlet", "Silver Robe") == 1)
 				.@sage_t += 5;
 			mes "2. Choose the city where users cannot purchase Blade from an NPC.";
 			next;
-			if (select("Prontera:Izlude:Al De Baran:Payon") == 3)
+			if (select("Prontera", "Izlude", "Al De Baran", "Payon") == 3)
 				.@sage_t += 5;
 			mes "3. Choose the closest city to Glast Heim.";
 			next;
-			if (select("Prontera:Geffen:Morroc:Payon") == 2)
+			if (select("Prontera", "Geffen", "Morroc", "Payon") == 2)
 				.@sage_t += 5;
 			mes "4. Choose the monster that is a different type than the others.";
 			next;
-			if (select("Aster:Marc:Marse:Marin") == 4)
+			if (select("Aster", "Marc", "Marse", "Marin") == 4)
 				.@sage_t += 5;
 			mes "5. Choose the monster that has a different attribute.";
 			next;
-			if (select("Baby Desert Wolf:Smokie:Picky:Choco") == 2)
+			if (select("Baby Desert Wolf", "Smokie", "Picky", "Choco") == 2)
 				.@sage_t += 5;
 			mes "6. Choose the monster that is different sized.";
 			next;
-			if (select("Drake:Wraith:Evil Druid:Khalitzburg") == 1)
+			if (select("Drake", "Wraith", "Evil Druid", "Khalitzburg") == 1)
 				.@sage_t += 5;
 			mes "7. Choose the monster that does not drop 'Phracon'.";
 			next;
-			if (select("Pupa:Peco Peco Egg:Savage Bebe:Baby Desert Wolf") == 2)
+			if (select("Pupa", "Peco Peco Egg", "Savage Bebe", "Baby Desert Wolf") == 2)
 				.@sage_t += 5;
 			mes "8. Choose the NPC that is irrelevant to the Blacksmith job change quest.";
 			next;
-			if (select("Altiregen:Geschupenschte:Barcadi:Baisulist") == 3)
+			if (select("Altiregen", "Geschupenschte", "Barcadi", "Baisulist") == 3)
 				.@sage_t += 5;
 			mes "9. Choose the NPC that is not a citizen of Al De Baran.";
 			next;
-			if (select("RS125:GOD-POING:Stromme:Chemirre") == 2)
+			if (select("RS125", "GOD-POING", "Stromme", "Chemirre") == 2)
 				.@sage_t += 5;
 			mes "10. Choose the Kafra lady who is the youngest among the staff.";
 			next;
-			if (select("Pavianne:Roxie:Leilah:Curly Sue") == 4)
+			if (select("Pavianne", "Roxie", "Leilah", "Curly Sue") == 4)
 				.@sage_t += 5;
 			mes "11. Choose the correct SP consumption and the number of evasions when using Safety Wall lvl 6.";
 			next;
-			if (select("SP 40, 6 times:SP 35, 6 times:SP 40, 7 times:SP 35, 7 times") == 3)
+			if (select("SP 40, 6 times", "SP 35, 6 times", "SP 40, 7 times", "SP 35, 7 times") == 3)
 				.@sage_t += 5;
 			mes "12. Choose the correct amount of magic attack for Napalm Beat lvl 6.";
 			next;
-			if (select("MATK * 1.2:MATK * 1.3:MATK * 1.4:MATK * 1.5") == 2)
+			if (select("MATK * 1.2", "MATK * 1.3", "MATK * 1.4", "MATK * 1.5") == 2)
 				.@sage_t += 5;
 			mes "13. Choose the catalyst stone for Mage Solution no. 4 that is used for the Mage job change quest.";
 			next;
-			if (select("Blue Gemstone:Red Gemstone:Yellow Gemstone:1 carat Diamond") == 4)
+			if (select("Blue Gemstone", "Red Gemstone", "Yellow Gemstone", "1 carat Diamond") == 4)
 				.@sage_t += 5;
 			mes "14. Choose the correct attack strength and SP consumption for Bash lvl 6, the Swordman skill.";
 			next;
-			if (select("250% / 8:280% / 8:280% / 15:310% / 15") == 3)
+			if (select("250% / 8", "280% / 8", "280% / 15", "310% / 15") == 3)
 				.@sage_t += 5;
 			mes "15. Choose the skill that is irrelevant to learning Claymore Trap, the Hunter skill.";
 			next;
-			if (select("Remove Trap:Land Mine:Ankle Snare:Flasher") == 1)
+			if (select("Remove Trap", "Land Mine", "Ankle Snare", "Flasher") == 1)
 				.@sage_t += 5;
 			mes "16. Choose the correct defense and ability of Wedding Veil.";
 			next;
-			if (select("0 / MDEF +3:0 / MDEF +5:1 / MDEF +3:1 / MDEF +5") == 2)
+			if (select("0 / MDEF +3", "0 / MDEF +5", "1 / MDEF +3", "1 / MDEF +5") == 2)
 				.@sage_t += 5;
 			mes "17. Choose the class that cannot equip Coat.";
 			next;
-			if (select("Swordman:Merchant:Thief:Novice") == 4)
+			if (select("Swordman", "Merchant", "Thief", "Novice") == 4)
 				.@sage_t += 5;
 			mes "18. Choose the item that is not an ingredient for Blue Dyestuffs.";
 			next;
-			if (select("Alcohol:Detrimindexta:Karvodailnirol:Blue Herb") == 3)
+			if (select("Alcohol", "Detrimindexta", "Karvodailnirol", "Blue Herb") == 3)
 				.@sage_t += 5;
 			mes "19. When the world was created by the god Odin, what did he use for the material?";
 			next;
-			if (select("The heart of Ymir:The nail of Ymir:The tooth of Ymir:The memento of Ymir") == 1)
+			if (select("The heart of Ymir", "The nail of Ymir", "The tooth of Ymir", "The memento of Ymir") == 1)
 				.@sage_t += 5;
 			mes "20. Choose the metal that has rumored to bring fortune and fame to a person with the destiny.";
 			next;
-			if (select("Empelium Gold:Emperium:Emperor:Phracon") == 2)
+			if (select("Empelium Gold", "Emperium", "Emperor", "Phracon") == 2)
 				.@sage_t += 5;
 		}
 		mes "[Claytos Verdo]";
@@ -1012,22 +1039,6 @@ L_AskQuestions:
 		}
 		close;
 	}
-	else if (SAGE_Q == 5) {
-		mes "Welcome back.";
-		mes "So, did you study harder this time?";
-		next;
-		mes "[Claytos Verdo]";
-		mes "You will take the written test under the same conditions as the test you took before. I'll give you 20 questions.";
-		mes "Each correct answer will give you 5 points. When your score reaches 80 points, you pass the test.";
-		next;
-		sage_m2 = rand(1,3);
-		mes "[Claytos Verdo]";
-		mes "Okay, there's no need to wait.";
-		mes "Answer immediately, or I'll fail you again.";
-		SAGE_Q = 5;
-		goto L_AskQuestions;
-		end;
-	}
 	else if (SAGE_Q == 6) {
 		mes "What else do you want?! Do you want to take this test again?";
 		mes "You've already passed!";
@@ -1053,7 +1064,7 @@ L_AskQuestions:
 	}
 }
 
-//Practical Examination Professer
+//== Practical Examination Professer =======================
 yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 	mes "[Hermes Tris]";
 	if (BaseJob != Job_Mage) {
@@ -1126,7 +1137,7 @@ yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 		mes "It's better to experience this for yourself, rather than be told about this test 100 times.";
 		mes "How about it? Are you ready to take this test?";
 		next;
-		if (select("Yes, I am.:Sorry, give me some time.") == 1) {
+		if (select("Yes, I am.", "Sorry, give me some time.") == 1) {
 			SAGE_Q = 7;
 			mes "[Hermes Tris]";
 			mes "Good, let's start immediately.";
@@ -1147,7 +1158,7 @@ yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 		mes "[Hermes Tris]";
 		mes "Are you ready?";
 		next;
-		if (select("Yes, I am.:Sorry, give me some time.") == 1) {
+		if (select("Yes, I am.", "Sorry, give me some time.") == 1) {
 			mes "[Hermes Tris]";
 			mes "Good, let's start immediately.";
 			mes "Do your best and come back safely!";
@@ -1296,23 +1307,23 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 	}
 	if (SAGE_Q == 9) {
 		if (SAGE_Q2 == 0) {
-			mes "Welcome, " + strcharinfo(0) + ". I am glad to meet you.";
+			mes "Welcome, " + strcharinfo(PC_NAME) + ". I am glad to meet you.";
 			mes "My name is Saphien Layless, I will be in charge of your class for a while.";
 			next;
 			mes "[Saphien Layless]";
 			mes "The subject you're studying is Yggdrasil.";
 			mes "So...do you even know what Yggdrasil is?";
 			next;
-			switch(select("Yes, I know very well.:No, I don't.")) {
+			switch(select("Yes, I know very well.", "No, I don't.")) {
 			case 1:
 				mes "[Saphien Layless]";
 				mes "Okay then, what is Yggdrasil?";
 				mes "Please answer me.";
 				next;
-				switch(select("It's a name of a health item.:It's the source of life in the world.:Suckah, I lied.")) {
+				switch(select("It's a name of a health item.", "It's the source of life in the world.", "Suckah, I lied.")) {
 				case 1:
 					mes "[Saphien Layless]";
-					mes "Wrong. " + strcharinfo(0) + ", you got - 10 points.";
+					mes "Wrong. " + strcharinfo(PC_NAME) + ", you got - 10 points.";
 					mes "That's just one of the gifts from Yggdrasil.";
 					next;
 					mes "[Saphien Layless]";
@@ -1326,7 +1337,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				case 3:
 					mes "[Saphien Layless]";
 					mes "Great Schott...If you don't know, just say so.";
-					mes "By the way, " + strcharinfo(0) + ", you just got - 10 points for lying and for being wrong.";
+					mes "By the way, " + strcharinfo(PC_NAME) + ", you just got - 10 points for lying and for being wrong.";
 					break;
 				}
 				next;
@@ -1354,7 +1365,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			close;
 		}
 		else {
-			if (countitem(607) > 0) {
+			if (countitem(Yggdrasilberry) > 0) {
 				mes "[Saphien Layless]";
 				mes "Oh, did you bring them with you? Excellent!";
 				mes "You brought Yggdrasilberry!";
@@ -1364,7 +1375,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "Listen carefully, I will not accept dozing off in the middle of class.";
 				next;
 			}
-			else if (countitem(608) > 0) {
+			else if (countitem(Seed_Of_Yggdrasil) > 0) {
 				mes "[Saphien Layless]";
 				mes "Hmm, did you prepare for class? Let's see...";
 				mes "Oh! So you brought me the Yggdrasil Seed?";
@@ -1374,14 +1385,14 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "Listen carefully, I will not accept dozing off in the middle of class.";
 				next;
 			}
-			else if (countitem(610) > 0) {
+			else if (countitem(Leaf_Of_Yggdrasil) > 0) {
 				mes "[Saphien Layless]";
 				mes "Hmm, did you prepare for class? Let's see...";
 				mes "Yggdrasil Leaf...";
 				next;
 				mes "[Saphien Layless]";
 				mes "You can purchase this item from the town of Al De Baran! You didn't show any effort.";
-				mes "So, I must give you - 10 points, " + strcharinfo(0) + ".";
+				mes "So, I must give you - 10 points, " + strcharinfo(PC_NAME) + ".";
 				next;
 				mes "[Saphien Layless]";
 				mes "Okay, now I am starting the class.";
@@ -1481,12 +1492,12 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 		}
 	}
 	else if (SAGE_Q == 10) {
-		if (countitem(916) > 0 && countitem(919) > 0 && countitem(1019) > 0 && countitem(1024) > 0 && countitem(713) > 0) {
-			delitem 916,1; //Feather_Of_Birds
-			delitem 919,1; //Animal's_Skin
-			delitem 1019,1; //Wooden_Block
-			delitem 1024,1; //Chinese_Ink
-			delitem 713,1; //Empty_Bottle
+		if (countitem(Feather_Of_Birds) > 0 && countitem(Animals_Skin) > 0 && countitem(Wooden_Block) > 0 && countitem(Chinese_Ink) > 0 && countitem(Empty_Bottle) > 0) {
+			delitem Feather_Of_Birds,1;
+			delitem Animals_Skin,1;
+			delitem Wooden_Block,1;
+			delitem Chinese_Ink,1;
+			delitem Empty_Bottle,1;
 			mes "Now, you're writing your thesis.";
 			mes "I will assist you with your writing.";
 			next;
@@ -1498,7 +1509,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			next;
 			mes ".....There is a ocean around the continent,";
 			mes "The ocean is coiled up by";
-			switch(select("A giant ash tree.:A giant snake Yormungandr.:A giant turtle and elephants.:A giant dragon.")) {
+			switch(select("A giant ash tree.", "A giant snake Yormungandr.", "A giant turtle and elephants.", "A giant dragon.")) {
 			case 1:
 				.@w_point += 1;
 				mes "A giant ash tree.";
@@ -1516,7 +1527,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				break;
 			}
 			mes "The continent consists of three places such as,";
-			switch(select("Mt.Mjolnir, where spiders live,:Uranos, where titans live,:Utgard, where titans live,:Lutie, the winter land,")) {
+			switch(select("Mt.Mjolnir, where spiders live,", "Uranos, where titans live,", "Utgard, where titans live,", "Lutie, the winter land,")) {
 			case 1:
 				.@w_point += 1;
 				mes "Mt.Mjolnir where spiders live,";
@@ -1533,7 +1544,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "Lutie, the winter land,";
 				break;
 			}
-			switch(select("Midgard, where humans live,:Rune-Midgarts where humans live,:Tritonia, where mermaids live,:Morroc, the desert city,")) {
+			switch(select("Midgard, where humans live,", "Rune-Midgarts where humans live,", "Tritonia, where mermaids live,", "Morroc, the desert city,")) {
 			case 1:
 				mes "Midgard, where humans live in,";
 				break;
@@ -1550,7 +1561,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "Morroc, the desert city,";
 				break;
 			}
-			switch(select("Abguard, where gods live.:Asgard, where gods live.:Schwarzwald, where citizens live.:Prontera, the capital of Rune-Midgarts.")) {
+			switch(select("Abguard, where gods live.", "Asgard, where gods live.", "Schwarzwald, where citizens live.", "Prontera, the capital of Rune-Midgarts.")) {
 			case 1:
 				.@w_point += 1;
 				mes "Abguard where gods live.";
@@ -1571,7 +1582,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			next;
 			if (.@w_point > 0) {
 				mes "[Saphien Layless]";
-				mes "..." + strcharinfo(0) + ", have you lost your mind?";
+				mes "..." + strcharinfo(PC_NAME) + ", have you lost your mind?";
 				mes "Your work is too poor to be considered as a thesis!";
 				next;
 				mes "[Saphien Layless]";
@@ -1581,7 +1592,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			}
 			mes ".....as we studied from the last class,";
 			mes "Yggdrasil is...";
-			switch(select("A giant ash tree.:A fabulous Mastella tree.:A giant willow.:A giant dead branch.")) {
+			switch(select("A giant ash tree.", "A fabulous Mastella tree.", "A giant willow.", "A giant dead branch.")) {
 			case 1:
 				mes "A giant ash tree.";
 				break;
@@ -1599,7 +1610,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				break;
 			}
 			mes "The root of Yggdrasil is divided into 3 parts. Those parts reach to 3 places...";
-			switch(select("Schwarzwald, Jotunnheim, Niflheim.:Midgard, Jotunnheim, Naffleheim.:Asgard, Jotunnheim, Naffleheim.:Asgard, Jotunnheim, Niflheim.")) {
+			switch(select("Schwarzwald, Jotunnheim, Niflheim.", "Midgard, Jotunnheim, Naffleheim.", "Asgard, Jotunnheim, Naffleheim.", "Asgard, Jotunnheim, Niflheim.")) {
 			case 1:
 				.@w_point += 1;
 				mes "Schwarzwald, Jotunnheim, Niflheim.";
@@ -1617,7 +1628,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				break;
 			}
 			mes "One who has a Seed of Yggdrasil,";
-			switch(select("can be cured from all the abnormal statuses.:can restore full HP and SP at once.:can restore half of total HP and SP.:can be cured from Silence, Curse and Chaos.")) {
+			switch(select("can be cured from all the abnormal statuses.", "can restore full HP and SP at once.", "can restore half of total HP and SP.", "can be cured from Silence, Curse and Chaos.")) {
 			case 1:
 				.@w_point += 1;
 				mes "can be cured from all the abnormal statuses.";
@@ -1637,7 +1648,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			next;
 			if (.@w_point > 0) {
 				mes "[Saphien Layless]";
-				mes "..." + strcharinfo(0) + ", have you lost your mind?";
+				mes "..." + strcharinfo(PC_NAME) + ", have you lost your mind?";
 				mes "Your work is too poor to be considered as a thesis!";
 				next;
 				mes "[Saphien Layless]";
@@ -1656,7 +1667,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			mes "[Saphien Layless]";
 			mes "Oh, did you finish already? Well done.";
 			mes "Please handle this with care, because you won't be able to do this ever again.";
-			getitem 1550,1; //Book
+			getitem Book,1;
 			next;
 			mes "[Saphien Layless]";
 			mes "I assume you're ready to submit your work to the dean.";
@@ -1740,7 +1751,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 			mes "Huh...how rude of you! You're expected to introduce yourself to me as soon as I greet you!";
 			mes "What is your name, young one?";
 			next;
-			select(strcharinfo(0));
+			select(strcharinfo(PC_NAME));
 			mes "[Lucius Celsus]";
 			mes "A fine name. It's nice to meet you.";
 			mes "So, are you aware of the subject you're studying?";
@@ -1749,7 +1760,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 			mes "As you know, your topic of study is monsters.";
 			mes "How many times have you fought with monsters?";
 			next;
-			if (select("Well, I can't even count.:A few times, I guess...") == 1) {
+			if (select("Well, I can't even count.", "A few times, I guess...") == 1) {
 				mes "[Lucius Celsus]";
 				mes "Oh shut up, you brat. Don't be so sure about yourself.";
 				mes "Even if you have much experience with monsters, you will have a hard time comprehending my lecture.";
@@ -1812,7 +1823,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				mes "Somehow the monsters that drop those items have something in common.";
 				mes "Can you tell me what that similarity is?";
 				next;
-				switch(select("They possess water property.:They are fishes.:They are aggressive.:Um...they monsters.")) {
+				switch(select("They possess water property.", "They are fishes.", "They are aggressive.", "Um...they monsters.")) {
 				case 1:
 					mes "[Lucius Celsus]";
 					mes "Yes, they possess water property and at the same time they are fishes.";
@@ -1845,7 +1856,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 				mes "Not all fish class monsters possess water property, but most of them do.";
 				mes "So which kind of magic would work best on most fish class monsters?";
 				next;
-				switch(select("Lightening Bolt.:Fire Bolt.:Thunder Storm.:Frost Diver.")) {
+				switch(select("Lightening Bolt.", "Fire Bolt.", "Thunder Storm.", "Frost Diver.")) {
 				case 1:
 					mes "[Lucius Celsus]";
 					mes "That's right, Lightening Bolt, which possesses the wind property, works best on water property monsters.";
@@ -2032,12 +2043,12 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 		close;
 	}
 	else if (SAGE_Q == 12) {
-		if (countitem(916) > 0 && countitem(919) > 0 && countitem(1019) > 0 && countitem(1024) > 0 && countitem(713) > 0) {
-			delitem 916,1; //Feather_Of_Birds
-			delitem 919,1; //Animal's_Skin
-			delitem 1019,1; //Wooden_Block
-			delitem 1024,1; //Chinese_Ink
-			delitem 713,1; //Empty_Bottle
+		if (countitem(Feather_Of_Birds) > 0 && countitem(Animals_Skin) > 0 && countitem(Wooden_Block) > 0 && countitem(Chinese_Ink) > 0 && countitem(Empty_Bottle) > 0) {
+			delitem Feather_Of_Birds,1;
+			delitem Animals_Skin,1;
+			delitem Wooden_Block,1;
+			delitem Chinese_Ink,1;
+			delitem Empty_Bottle,1;
 			mes "Hmph. Lucky brat brought all of the items.";
 			mes "Well, I don't expect you to write an outrageously great thesis though...";
 			next;
@@ -2079,7 +2090,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 			mes "[Lucius Celsus]";
 			mes "Are you done? Okay, then it's over.";
 			mes "You won't be able to write another thesis again, handle this with care.";
-			getitem 1550,1; //Book
+			getitem Book,1;
 			next;
 			mes "[Lucius Celsus]";
 			mes "Show this masterpiece to the dean.";
@@ -2187,7 +2198,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			close;
 		}
 		else if (SAGE_Q2 == 1) {
-			if (countitem(7049) > 29) {
+			if (countitem(Stone) > 29) {
 				mes "Oh~ how sweet! You brought them all~ thank you~";
 				mes "Oh, can you wait a little bit? I need to do something before we start. Tee hee~";
 				next;
@@ -2200,7 +2211,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "[Aebecee George]";
 				mes "Ho~cus~fo~cus!!";
 				next;
-				delitem 7049,30; //Stone
+				delitem Stone,30;
 				mes "[Aebecee George]";
 				mes "Tee hee, you naughty stone~";
 				mes "Only 3 of them worked for me. Tee hee~";
@@ -2209,9 +2220,9 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "Here's my other favor to ask of you. Oh, are those tears of...joy?";
 				mes "Oh, I'm sooo excited too! Tee hee~";
 				next;
-				getitem 991,1; //Crystal_Blue
-				getitem 993,1; //Yellow_Live
-				getitem 992,1; //Wind_Of_Verdure
+				getitem Crystal_Blue,1;
+				getitem Yellow_Live,1;
+				getitem Wind_Of_Verdure,1;
 				mes "[Aebecee George]";
 				mes "I will give you these elemental ores...but...they are not for free.";
 				mes "Whoa there cowboy! Don't pull out so soon~ Listen, tee hee~";
@@ -2240,7 +2251,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			}
 		}
 		else if (SAGE_Q2 == 2) {
-			if (countitem(1754) > 49 && countitem(1756) > 49 && countitem(1755) > 49) {
+			if (countitem(Crystal_Arrow) > 49 && countitem(Stone_Arrow) > 49 && countitem(Arrow_Of_Wind) > 49) {
 				mes "Oh~ how sweet! You brought them all~ Oh thank you~";
 				mes "Well now, let's get down to business. Tee hee~";
 				next;
@@ -2268,9 +2279,9 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "...Oh my gosh! Time flies sooo fast!";
 				mes "Let's call it a day, dear, tee hee~";
 				next;
-				delitem 1754,50; //Crystal_Arrow
-				delitem 1756,50; //Stone_Arrow
-				delitem 1755,50; //Arrow_Of_Wind
+				delitem Crystal_Arrow,50;
+				delitem Stone_Arrow,50;
+				delitem Arrow_Of_Wind,50;
 				mes "[Aebecee George]";
 				mes "When you come to the next class, bring ^3355FF1 Holy Water^000000~";
 				mes "I hope you have at least one Priest friend. Oh, you don't? Well, it couldn't hurt to get friendly with one.";
@@ -2291,7 +2302,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			}
 		}
 		else if (SAGE_Q2 == 3) {
-			if (countitem(523) > 0) {
+			if (countitem(Holy_Water) > 0) {
 				mes "Oh~ how sweet! You brought some Holy Water~ thanks honey~";
 				mes "Oh righty, we should start class. Tee hee~";
 				next;
@@ -2319,7 +2330,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "Oh, it's the end of the class~ tee hee.";
 				mes "So? Do you think you've learned a lot? You can thank me, honey!";
 				next;
-				delitem 523,1; //Holy_Water
+				delitem Holy_Water,1;
 				mes "[Aebecee George]";
 				mes "Well, that's it. You can write your thesis with what I've taught you!";
 				mes "Tee hee~ yes! Yes! I am the best teacher in the world! Oh, I am on fire! Tee hee~";
@@ -2355,12 +2366,12 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 		}
 	}
 	else if (SAGE_Q == 14) {
-		if (countitem(916) > 0 && countitem(919) > 0 && countitem(1019) > 0 && countitem(1024) > 0 && countitem(713) > 0) {
-			delitem 916,1; //Feather_Of_Birds
-			delitem 919,1; //Animal's_Skin
-			delitem 1019,1; //Wooden_Block
-			delitem 1024,1; //Chinese_Ink
-			delitem 713,1; //Empty_Bottle
+		if (countitem(Feather_Of_Birds) > 0 && countitem(Animals_Skin) > 0 && countitem(Wooden_Block) > 0 && countitem(Chinese_Ink) > 0 && countitem(Empty_Bottle) > 0) {
+			delitem Feather_Of_Birds,1;
+			delitem Animals_Skin,1;
+			delitem Wooden_Block,1;
+			delitem Chinese_Ink,1;
+			delitem Empty_Bottle,1;
 			mes "Okay~ so its now or never~ tee hee~";
 			mes "I taught you everything I know. Don't be nervous, you'll be okay~";
 			next;
@@ -2371,7 +2382,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			mes ".................................";
 			next;
 			mes ".....Magic spells are varied into 4 elements such as";
-			switch(select("Water, Earth, Fire and Wind.:Earth, Water, Fire and Wind.:Water, Wind, Earth and Fire.")) {
+			switch(select("Water, Earth, Fire and Wind.", "Earth, Water, Fire and Wind.", "Water, Wind, Earth and Fire.")) {
 			case 1:
 				mes "Water, Earth, Fire and Wind.";
 				break;
@@ -2383,7 +2394,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				break;
 			}
 			mes "Each property has an opposing property,";
-			switch(select("Magic with wind property is strong against water:Magic with water property is strong against fire:Magic with fire property is strong against earth")) {
+			switch(select("Magic with wind property is strong against water", "Magic with water property is strong against fire", "Magic with fire property is strong against earth")) {
 			case 1:
 				mes "Magic with wind property is strong against water";
 				break;
@@ -2395,7 +2406,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				break;
 			}
 			mes "Magic with earth property is strong against wind.";
-			switch(select("However, that does not work on the opposite case :This theory works the same for earth property weapons:Elemental properties are varied by monster types")) {
+			switch(select("However, that does not work on the opposite case ", "This theory works the same for earth property weapons", "Elemental properties are varied by monster types")) {
 			case 1:
 				mes "However, that does not work on the opposite case ";
 				break;
@@ -2406,7 +2417,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "Elemental properties are varied by monster types";
 				break;
 			}
-			switch(select("You must be aware of the limit of your ability.:You must apply different types of property by the situation or place.:Red Potion is rumored to taste like strawberries.")) {
+			switch(select("You must be aware of the limit of your ability.", "You must apply different types of property by the situation or place.", "Red Potion is rumored to taste like strawberries.")) {
 			case 1:
 				mes "You must be aware of the limit of your ability.";
 				break;
@@ -2418,7 +2429,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				break;
 			}
 			next;
-			switch(select("The most adorable NPC is YuPi in Prontera:Red Potion is rumored to be made out of Porings:You never know the limits of magic")) {
+			switch(select("The most adorable NPC is YuPi in Prontera", "Red Potion is rumored to be made out of Porings", "You never know the limits of magic")) {
 			case 1:
 				mes "The most adorable NPC is YuPi in Prontera";
 				break;
@@ -2429,7 +2440,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "You never know the limits of magic";
 				break;
 			}
-			switch(select("Merchant Lady in Morroc is also as cute as YuPi.:Nobody knows why Red Potion tastes like strawberries.:It is not suggested to be too addicted to magic spells.")) {
+			switch(select("Merchant Lady in Morroc is also as cute as YuPi.", "Nobody knows why Red Potion tastes like strawberries.", "It is not suggested to be too addicted to magic spells.")) {
 			case 1:
 				mes "Merchant Lady in Morroc is also as cute as YuPi.";
 				break;
@@ -2440,7 +2451,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "It is not suggested to be too addicted to magic spells.";
 				break;
 			}
-			switch(select("If I had a Bunny Band,:If so, what about the taste of White Potion?:Only pertinent uses of magic, as well as rest")) {
+			switch(select("If I had a Bunny Band,", "If so, what about the taste of White Potion?", "Only pertinent uses of magic, as well as rest")) {
 			case 1:
 				mes "If I had a Bunny Band,";
 				break;
@@ -2451,7 +2462,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "Only pertinent uses of magic, as well as rest";
 				break;
 			}
-			switch(select("I would want to give it to her as a present.:I can't even imagine the taste.:will guarantee you a safe battle.")) {
+			switch(select("I would want to give it to her as a present.", "I can't even imagine the taste.", "will guarantee you a safe battle.")) {
 			case 1:
 				mes "I would want to give it to her as a present.";
 				break;
@@ -2462,7 +2473,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "will guarantee you a safe battle.";
 				break;
 			}
-			switch(select("Although the Bunny Band best fits the Acolyte class:I love this thrilling feeling:Forming a party with people of different classes")) {
+			switch(select("Although the Bunny Band best fits the Acolyte class", "I love this thrilling feeling", "Forming a party with people of different classes")) {
 			case 1:
 				mes "Although the Bunny Band best fits the Acolyte class";
 				break;
@@ -2473,7 +2484,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "Forming a party with people of different classes";
 				break;
 			}
-			switch(select("I still wonder if the Bunny Band would be perfect for GOD-POING.:I won't be able to drink it even if my HP is less than 1.:is considered the best way to ready for battle.")) {
+			switch(select("I still wonder if the Bunny Band would be perfect for GOD-POING.", "I won't be able to drink it even if my HP is less than 1.", "is considered the best way to ready for battle.")) {
 			case 1:
 				mes "I still wonder if the Bunny Band would be perfect for GOD-POING.";
 				break;
@@ -2496,7 +2507,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			mes "[Aebecee George]";
 			mes "Tee hee, so... are you done with your thesis? What do you think of your work? I think you did fine~";
 			mes "Don't forget, this is the first and the last time you'll write a thesis, okay? Tee hee~";
-			getitem 1550,1; //Book
+			getitem Book,1;
 			next;
 			mes "[Aebecee George]";
 			mes "Okay, now you can show the dean your thesis~";
@@ -2611,7 +2622,7 @@ OnReset:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_sage"," " + strcharinfo(0) + ", successfully defeat all the monsters.",bc_map;
+		mapannounce "job_sage"," " + strcharinfo(PC_NAME) + ", successfully defeat all the monsters.",bc_map;
 		donpcevent "Arena#2::OnEnable";
 		stopnpctimer;
 	}
@@ -2673,7 +2684,7 @@ OnTimer186000:
 	end;
 }
 
--	script	Arena#2	-1,{
+-	script	Arena#2	FAKE_NPC,{
 OnInit:
 	disablenpc "Arena#2";
 	end;
@@ -2717,7 +2728,7 @@ OnReset:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_sage"," " + strcharinfo(0) + ", successfully defeat all the monsters.",bc_map;
+		mapannounce "job_sage"," " + strcharinfo(PC_NAME) + ", successfully defeat all the monsters.",bc_map;
 		donpcevent "Arena#Doorkeeper::OnEnable";
 		donpcevent "Arena#3::OnEnable";
 		stopnpctimer;
@@ -2776,7 +2787,7 @@ OnTimer186000:
 	end;
 }
 
--	script	Arena#Doorkeeper	-1,{
+-	script	Arena#Doorkeeper	FAKE_NPC,{
 OnInit:
 	disablenpc "Arena#Doorkeeper";
 	end;
@@ -2802,7 +2813,7 @@ OnDisable:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_sage","Congratulations, " + strcharinfo(0) + ". You passed the test.",bc_map;
+		mapannounce "job_sage","Congratulations, " + strcharinfo(PC_NAME) + ". You passed the test.",bc_map;
 		SAGE_Q = 8;
 		donpcevent "Test Helper#sg::OnEnable";
 		disablenpc "Arena#Doorkeeper";
@@ -2842,7 +2853,7 @@ OnTimer63000:
 	end;
 }
 
--	script	Arena#3	-1,{
+-	script	Arena#3	FAKE_NPC,{
 OnInit:
 	disablenpc "Arena#3";
 	end;
@@ -2859,7 +2870,7 @@ OnDisable:
 	end;
 }
 
--	script	Test Helper#sg	-1,{
+-	script	Test Helper#sg	FAKE_NPC,{
 OnInit:
 	disablenpc "Test Helper#sg";
 	end;
@@ -2890,19 +2901,3 @@ OnTimer9000:
 	stopnpctimer;
 	end;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= Script mostly based on translated jA script
-//= Written test questions/answers weren't translated 100% corectly
-//= So a lot of those are based upon mRO site and my own info
-//= IF you by excident have (or can get) screenshots of these questions
-//= Then PLEASE send them to Darkchild
-//= 1.3 Baby class Support added [Lupus] 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where to go. [Lupus]
-//= 1.7 Fixed tuition fee. Fixed some answers, names & typos, added missing labels [Lupus]
-//= 1.7a Moved JFunc back in the main file, fixed typos [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.0a Fixed double warp [KarLaeda] 2.0b Mantis Scythe Item name fix

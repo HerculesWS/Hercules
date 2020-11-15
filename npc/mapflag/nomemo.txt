@@ -1,20 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Epoque
+//= Copyright (C) eAthena Dev Team
+//= Copyright (C) Gepard
+//= Copyright (C) Yommy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Samuray22
+//= Copyright (C) Lupus
+//= Copyright (C) Nova
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mapflag: Disable Warp Portal memory.
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 1.8b
-//===== Description: =========================================
+//================= Current Version =======================================
+//= 1.8.3
+//================= Description ===========================================
 //= Prevents players from using /memo on a map.
 //= Also disables marriage warp skills.
-//===== Additional Comments: =================================
-//= 1.6a - Added up to Hugel maps. [Lupus]
-//= 1.6b - Added job_knt map. [Samuray22]
-//= 1.7 - Added all novice maps. [L0ne_W0lf]
-//= 1.8 - Added nameless_i location. [Lupus]
-//= 1.8a - Removed duplicate gef_cas nomemo mapflags. [Yommy]
-//= 1.8b - Removed duplicate arug_dun01 & schg_dun01 entries. [Gepard]
-//============================================================
+//=========================================================================
 
 // Towns  ====================
 ayo_in01	mapflag	nomemo
@@ -235,8 +259,8 @@ que_hugel	mapflag	nomemo
 que_rachel	mapflag	nomemo
 que_san04	mapflag	nomemo
 que_thor	mapflag	nomemo
-poring_c01	mapflag	nomemo
-poring_c02	mapflag	nomemo
+//poring_c01	mapflag	nomemo
+//poring_c02	mapflag	nomemo
 // Dungeons =================
 alde_dun01	mapflag	nomemo
 alde_dun02	mapflag	nomemo
@@ -632,18 +656,8 @@ que_qaru03	mapflag	nomemo
 que_qaru04	mapflag	nomemo
 que_qaru05	mapflag	nomemo
 
-//Sealed Shrine ==================
-1@cata	mapflag	nomemo
-2@cata	mapflag	nomemo
-
 //Endless Tower ==================
 e_tower	mapflag	nomemo
-1@tower	mapflag	nomemo
-2@tower	mapflag	nomemo
-3@tower	mapflag	nomemo
-4@tower	mapflag	nomemo
-5@tower	mapflag	nomemo
-6@tower	mapflag	nomemo
 
 // Battle Grounds ================
 bat_c01	mapflag	nomemo
@@ -707,7 +721,6 @@ dic_dun02	mapflag	nomemo
 // Episode 14 ====================
 bif_fild01	mapflag	nomemo
 bif_fild02	mapflag	nomemo
-1@mist	mapflag	nomemo
 mora	mapflag	nomemo
 dew_dun01	mapflag	nomemo
 dew_dun02	mapflag	nomemo
@@ -716,13 +729,9 @@ dic_dun03	mapflag	nomemo
 mal_in01	mapflag	nomemo
 mal_in02	mapflag	nomemo
 mal_dun01	mapflag	nomemo
-1@cash	mapflag	nomemo
-1@pump	mapflag	nomemo
-2@pump	mapflag	nomemo
 iz_dun05	mapflag	nomemo
 lhz_dun04	mapflag	nomemo
 que_lhz	mapflag	nomemo
-1@lhz	mapflag	nomemo
 gld_dun01_2	mapflag	nomemo
 gld_dun02_2	mapflag	nomemo
 gld_dun03_2	mapflag	nomemo
@@ -734,9 +743,6 @@ gld2_prt	mapflag	nomemo
 ma_scene01	mapflag	nomemo
 ma_in01	mapflag	nomemo
 ma_dun01	mapflag	nomemo
-1@ma_h	mapflag	nomemo
-1@ma_c	mapflag	nomemo
-1@ma_b	mapflag	nomemo
 ma_zif01	mapflag	nomemo
 ma_zif02	mapflag	nomemo
 ma_zif03	mapflag	nomemo
@@ -752,7 +758,6 @@ ecl_in01	mapflag	nomemo
 ecl_in02	mapflag	nomemo
 ecl_in03	mapflag	nomemo
 ecl_in04	mapflag	nomemo
-1@ecl	mapflag	nomemo
 ecl_tdun01	mapflag	nomemo
 ecl_tdun02	mapflag	nomemo
 ecl_tdun03	mapflag	nomemo
@@ -760,14 +765,12 @@ ecl_tdun04	mapflag	nomemo
 ecl_hub01	mapflag	nomemo
 moc_prydn1	mapflag	nomemo
 moc_prydn2	mapflag	nomemo
-
-//Orc's Memory ===================
-1@orcs	mapflag	nomemo
-2@orcs	mapflag	nomemo
-
-// Nidhoggr's Instance ===========
-1@nyd	mapflag	nomemo
-2@nyd	mapflag	nomemo
+dali	mapflag	nomemo
+dali02	mapflag	nomemo
+c_tower2_	mapflag	nomemo
+c_tower3_	mapflag	nomemo
+gl_chyard_	mapflag	nomemo
+gl_cas02_	mapflag	nomemo
 
 //evt_zombie	mapflag	nomemo
 

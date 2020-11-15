@@ -1,12 +1,32 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2020 Hercules Dev Team
+ * Copyright (C) Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef COMMON_MAPINDEX_H
 #define COMMON_MAPINDEX_H
 
-#include "../common/db.h"
-#include "../common/mmo.h"
+#include "common/conf.h"
+#include "common/hercules.h"
+#include "common/mmo.h"
+
+/* Forward Declarations */
+struct DBMap; // common/db.h
 
 #define MAX_MAPINDEX 2000
 
@@ -65,7 +85,7 @@
 struct mapindex_interface {
 	char config_file[80];
 	/* mapname (str) -> index (int) */
-	DBMap *db;
+	struct DBMap *db;
 	/* number of entries in the index table */
 	int num;
 	/* default map name */
@@ -79,6 +99,9 @@ struct mapindex_interface {
 		char name[MAP_NAME_LENGTH];
 	} list[MAX_MAPINDEX];
 	/* */
+	bool (*config_read_dbpath) (const char *filename, const struct config_t *config);
+	bool (*config_read) (void);
+	/* */
 	int (*init) (void);
 	void (*final) (void);
 	/* */
@@ -90,14 +113,14 @@ struct mapindex_interface {
 	const char* (*getmapname_ext) (const char* string, char* output);
 	/* TODO: Hello World! make up your mind, this thing is int on some places and unsigned short on others */
 	unsigned short (*name2id) (const char*);
-	const char* (*id2name) (unsigned short,const char *file, int line, const char *func);
+	const char * (*id2name) (uint16 id, const char *file, int line, const char *func);
 	bool (*check_default) (void);
 };
-
-struct mapindex_interface *mapindex;
 
 #ifdef HERCULES_CORE
 void mapindex_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mapindex_interface *mapindex;
 
 #endif /* COMMON_MAPINDEX_H */

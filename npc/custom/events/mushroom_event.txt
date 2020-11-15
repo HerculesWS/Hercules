@@ -14,17 +14,17 @@
 
 prontera,142,228,6	script	Find the Mushroom	BLACK_MUSHROOM,{
 	mes "[ Find The Mushroom ]";
-	if (!.Status)
+	if (!.status)
 		mes "There is no event at the moment!";
 	else {
 		mes "There are "+.Spawn+" Mushrooms left in "+.Map$+"!";
 		mes "Find and kill the mushrooms to gain "+getitemname(.Prize)+"!";
 	}
-	if (.Status || getgmlevel() < .GM) close;
+	if (.status || getgmlevel() < .GM) close;
 	mes "Start the event?";
 	next;
-	if(select("- No:- Yes") == 1) close;
-	donpcevent strnpcinfo(0)+"::OnMinute10";
+	if(select("- No", "- Yes") == 1) close;
+	donpcevent strnpcinfo(NPC_NAME)+"::OnMinute10";
 	mes "[ Find The Mushroom ]";
 	mes "Event started!";
 	close;
@@ -33,16 +33,16 @@ OnInit:
 	set .Prize,512;	// Reward item ID
 	set .Amount,10;	// Reward item amount
 	set .GM,60;	// GM level required to access NPC
-	setarray .Maps$[0],"izlude","geffen","morocc","prontera"; // Possible maps
+	setarray .maps$[0],"izlude","geffen","morocc","prontera"; // Possible maps
 	end;
 
 OnMinute10:	// Start time (every hour)
-	if (.Status) end;
-	set .Status,1;
+	if (.status) end;
+	set .status,1;
 	set .Spawn,rand(1,10);	// How many Mushrooms should spawn?
-	set .Map$,.Maps$[rand(getarraysize(.Maps$))];
-	killmonster .Map$,"All";
-	monster .Map$,0,0,"Please don't kill me!",1084,.Spawn,strnpcinfo(0)+"::OnMobKilled";
+	set .Map$,.maps$[rand(getarraysize(.maps$))];
+	killmonster(.Map$, "all");
+	monster .Map$,0,0,"Please don't kill me!",1084,.Spawn,strnpcinfo(NPC_NAME)+"::OnMobKilled";
 	announce "Find the Mushroom : Total of "+.Spawn+" Mushrooms have been spawned in "+.Map$+"!",0;
 	sleep 2500;
 	announce "Find the Mushroom : Every Mushroom you kill will give you "+getitemname(.Prize)+"!",0;
@@ -50,11 +50,14 @@ OnMinute10:	// Start time (every hour)
 
 OnMobKilled:
 	set .Spawn, .Spawn - 1;
-	getitem .Prize, .Amount;
-	if (.Spawn) announce "[ "+strcharinfo(0)+" ] has killed a Mushroom. There are now "+.Spawn+" Mushroom(s) left.",bc_map;
-	else {
+	if (playerattached() != 0) {
+		getitem .Prize, .Amount;
+		if (.Spawn)
+			announce "[ "+strcharinfo(PC_NAME)+" ] has killed a Mushroom. There are now "+.Spawn+" Mushroom(s) left.",bc_map;
+	}	
+	if (!.Spawn) {
 		announce "The Find the Mushroom Event has ended. All the Mushrooms have been killed.",0;
-		set .Status,0;
+		set .status,0;
 	}
 	end;
 }

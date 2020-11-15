@@ -1,26 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Toms
+//= Copyright (C) Evera
+//= Copyright (C) Lance
+//= Copyright (C) massdriller
+//= Copyright (C) Lupus
+//= Copyright (C) Darkchild
+//= Copyright (C) Muad Dib
+//= Copyright (C) Fusion Dev Team
+//= Copyright (C) jAthena
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Umbala Town script
-//===== By: ==================================================
-//= jAthena (1.0) Fusion Dev Team (1.1) Muad Dib (1.2) Darkchild (1.3)
-//===== Current Version: =====================================
-//= 2.1
-//===== Description: =========================================
-//- [Official Conversion]
+//================= Description ===========================================
 //= Umbala Town Npcs
-//===== Additional Comments: =================================
-//= 1.0 Done By jAthena (dunno Who)
-//= 1.1 Translated by Fusion Dev Team
-//= 1.2 Fixed Something by Muad Dib
-//= 1.3 Fixed up For eA by Darkchild
-//= 1.4 Fixed some wrong item names [Lupus]
-//= 1.5 Spell Checked [massdriller]
-//= 1.6 Fixed item names, added a chance to get to Niflheim via Jumping Bungy Area [Lupus]
-//= 1.7 Fixed bugs and exploits [Lupus]
-//= 1.8 Warps you to Niff with 1HP [Lance]
-//= 1.9 Moved Umbala Event, Create Essence/Dismantle Stone, and Skeletal Gate to npc/quests/quests_umbala.txt [Evera]
-//= 2.0 Removed duplicates, max NPC name length is 23, so Utan Tribe Young Adult#1, the 1 is skipped [Toms]
-//= 2.1 Updated to Aegis 10.3 standards. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 2.1
+//=========================================================================
 
 comodo,170,137,7	script	La Ed#um	4_M_02,{
 	end;
@@ -74,7 +93,7 @@ comodo,171,137,1	script	Haith#um	4_F_03,{
 	emotion e_gg;
 	emotion e_gg,0,"La Ed#um";
 	next;
-	if (select("Pay 1,000 zeny:Refuse to pay") == 1) {
+	if (select("Pay 1,000 zeny", "Refuse to pay") == 1) {
 		if (Zeny > 999) {
 			Zeny -= 1000;
 			mes "[Haith]";
@@ -267,15 +286,15 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 		mes "richier than Utans! I beg you!";
 		emotion e_heh;
 		next;
-		if (select("(Nod head):(Shake head)") == 1) {
+		if (select("(Nod head)", "(Shake head)") == 1) {
 			mes "[Haatan]";
 			mes "Whoaaaa!!";
 			mes "You the man~!";
 			mes "Thank you so much, yay~!";
 			if (Zeny > 1000) {
 				Zeny -= 1000;
-				if (checkweight(517,1)) {
-					getitem 517,1; //Meat
+				if (checkweight(Meat,1)) {
+					getitem Meat,1;
 				}
 				emotion e_swt2;
 			}
@@ -328,15 +347,15 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 		mes "Umbahumbah umbabahumbaumhumbah! Umbah!";
 		emotion e_heh;
 		next;
-		if (select("(Nod head):(Shake head)") == 1) {
+		if (select("(Nod head)", "(Shake head)") == 1) {
 			mes "[Haatan]";
 			mes "Umbaumbah!!";
 			mes "Um~bahumbah~ Um~baumbah~";
 			mes "Um~baumbah~ um~baumbah~";
 			if (Zeny > 1000) {
 				Zeny -= 1000;
-				if (checkweight(517,1)) {
-					getitem 517,1; //Meat
+				if (checkweight(Meat,1)) {
+					getitem Meat,1;
 				}
 				emotion e_swt2;
 			}
@@ -370,16 +389,16 @@ umbala,59,243,5	script	Utan Kid#1	4_M_UMKID,{
 		mes "....gimme a Meat.";
 		emotion e_rock;
 		next;
-		if (select("Give him Meat.:Refuse.") == 1) {
-			if (countitem(517) > 0) {
+		if (select("Give him Meat.", "Refuse.") == 1) {
+			if (countitem(Meat) > 0) {
 				mes "[Kotan]";
 				mes "Whoa, are you really giving me";
 				mes "Meat? Thanks! I will pay you";
 				mes "back with these.";
-				delitem 517,1; //Meat
-				getitem 909,2; //Jellopy
-				getitem 914,2; //Fluff
-				getitem 705,2; //Clover
+				delitem Meat,1;
+				getitem Jellopy,2;
+				getitem Fluff,2;
+				getitem Clover,2;
 				emotion e_scissors;
 				close;
 			}
@@ -408,15 +427,15 @@ umbala,59,243,5	script	Utan Kid#1	4_M_UMKID,{
 		mes "......humbah.";
 		emotion e_rock;
 		next;
-		if (select("Umbah:Umbaboo") == 1) {
-			if (countitem(517) > 0) {
+		if (select("Umbah", "Umbaboo") == 1) {
+			if (countitem(Meat) > 0) {
 				mes "[???]";
 				mes "Umbaumbaumbabababah.";
 				mes "Umbababahum.";
-				delitem 517,1; //Meat
-				getitem 909,2; //Jellopy
-				getitem 914,2; //Fluff
-				getitem 705,2; //Clover
+				delitem Meat,1;
+				getitem Jellopy,2;
+				getitem Fluff,2;
+				getitem Clover,2;
 				emotion e_scissors;
 				close;
 			}
@@ -808,7 +827,7 @@ umbala,194,104,4	script	Utan Kid#2	4_M_UMKID,{
 		mes "Huh? You're from Rune-Midgard,";
 		mes "aren't you? Have you ever been bungee jumping?";
 		next;
-		if (select("Yeah:No") == 1) {
+		if (select("Yeah", "No") == 1) {
 			mes "[Boorkatan]";
 			mes "Whoa, what a surprise! I never";
 			mes "would have thought someone from";
@@ -831,7 +850,7 @@ umbala,194,104,4	script	Utan Kid#2	4_M_UMKID,{
 		mes "Umbaumbababah umhumba.";
 		mes "Umbabaumumba umbaumbah?";
 		next;
-		if (select("Yeah:No") == 1) {
+		if (select("Yeah", "No") == 1) {
 			mes "[???]";
 			mes "Umba, Umumbah umbabah.";
 			mes "Umbaumbah umumbabah.";
@@ -998,27 +1017,27 @@ um_in,158,71,3	script	Utan villager#um	4_M_UMKID,{
 	close;
 }
 
-umbala,140,197,1	script	Bungee Jump	-1,0,0,{
+umbala,140,197,1	script	Bungee Jump	FAKE_NPC,0,0,{
 OnTouch:
 	switch(rand(1,3)) {
 	case 1:
-		percentheal -100,0;
-		mapannounce "umbala","Bungee Jump: "+strcharinfo(0)+" : Kyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~~~~~~~",bc_map;
+		Hp = 1;
+		mapannounce "umbala","Bungee Jump: "+strcharinfo(PC_NAME)+" : Kyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~~~~~~~",bc_map;
 		end;
 	case 2:
 		percentheal -50,0;
-		mapannounce "umbala","Bungee Jump: "+strcharinfo(0)+" : Wooooooaaaaaaaaaaaaaahhhhhhhhhhhh~~~~~~!",bc_map;
+		mapannounce "umbala","Bungee Jump: "+strcharinfo(PC_NAME)+" : Wooooooaaaaaaaaaaaaaahhhhhhhhhhhh~~~~~~!",bc_map;
 		end;
 	case 3:
 		if (rand(1,2) == 2) {
-			percentheal -99,0;
+			Hp = 1;
 			warp "nif_in",69,15;
 		}
 		end;
 	}
 }
 
-umbala,136,195,0	script	 #jump	-1,1,1,{
+umbala,136,195,0	script	 #jump	FAKE_NPC,1,1,{
 OnTouch:
 	warp "umbala",145,166;
 	end;

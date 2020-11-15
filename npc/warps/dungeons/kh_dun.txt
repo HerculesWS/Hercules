@@ -1,29 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) Lost Kakashi
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Kiel Dungeon Warp Script
-//===== By: ==================================================
-//= Lost Kakashi
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= Description ===========================================
 //= Warp Points for the Kiel Dungeon
-//===== Additional Comments: =================================
-//= 1.1 Added official Kiel Dungeon entrance [Playtester]
-//= 1.2 Changed warps because of Kiel quest [Playtester]
-//= 1.3 Added second floor exit. [L0ne_W0lf]
-//=     Corrected coordinated for some of the other warps.
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-//= Kiel Dungeon =============================================
 kh_dun01,3,234,0	warp	kh_dun_00	1,1,yuno_fild08,74,174
 
-//Factory Restricted Area Exit
+//== Factory Restricted Area Exit ==========================
 kh_dun01,232,226,0	warp	kh_dun_01	1,1,kh_dun01,13,12
 
-//Factory side warps
+//== Factory side warps ====================================
 kh_dun01,63,7,0	warp	kh_dun_02	1,1,kh_dun01,227,176
 kh_dun01,232,176,0	warp	kh_dun_03	1,1,kh_dun01,63,12
 
-//Second Floor -> First floor Random warp
+//== Second Floor -> First floor Random warp ===============
 kh_dun02,43,195,0	script	kh_dun04	WARPNPC,1,1,{
 OnTouch:
 	if (rand(1,2) == 1) {

@@ -1,20 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) Muad_Dib (Prometheus Project)
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Valentine Event Script
-//===== By: ==================================================
-//= Muad_Dib (Prometheus Project)
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Valentine's Day Event Script.
+//================= Current Version =======================================
 //= 1.1
-//===== Description: =========================================
-//
-//===== Additional Comments: =================================
-//= 07/06/05 : Added 1st Version. [Muad_Dib]
-//= 08/28/05 : Ver. 1.01 Added a missing close; [Muad_Dib]
-//= Converted to rAthena format by Dr.Evil
-//= 1.1 Cleaning. [Euphy]
-//============================================================
+//=========================================================================
 
-// Stephen - Valentine Event Chocolate seller
-//============================================================
+//== Stephen - Valentine Event Chocolate seller ============
 alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "[Stephen]";
 	mes "Guess what I've got?";
@@ -25,7 +44,7 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "That's right, don't you love chocolate.... I do.";
 	mes "And you are in luck, because I'm selling them for only 5,000 zeny a piece!";
 	next;
-	if(select("I want some chocolate!:No thanks.")==2) {
+	if(select("I want some chocolate!", "No thanks.")==2) {
 		mes "[Stephen]";
 		mes "You don't want any chocolate?";
 		mes "I'm telling you! You'll regret it!";
@@ -39,8 +58,9 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	mes "you can come back again.";
 	mes "So how many do you want?";
 	next;
-	input .@i;
-	if (.@i <= 0) close;
+	input(.@i);
+	if (.@i <= 0)
+		close;
 	mes "[Stephen]";
 	if (.@i > 5)  {
 		mes "I'm sorry, but I can't give you that many.";
@@ -57,8 +77,7 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	close;
 }
 
-// Jainie -- Gives information about Valentine Event
-//============================================================
+//== Jainie -- Gives information about Valentine Event =====
 alberta,29,243,4	script	Jainie	1_M_INNKEEPER,{
 	mes "[Jainie]";
 	mes "You know what? The chocolate that my boyfriend sells are from me!";
@@ -81,13 +100,12 @@ alberta,29,243,4	script	Jainie	1_M_INNKEEPER,{
 	close;
 }
 
-// Carl Orleans -- Valentine Event Chocolate maker
-//============================================================
+//== Carl Orleans -- Valentine Event Chocolate maker =======
 prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Yes?";
 	next;
-	if(select("I want some hand made chocolate...:I'm lost, sorry to bother you.")==2) {
+	if(select("I want some hand made chocolate...", "I'm lost, sorry to bother you.")==2) {
 		mes "[Carl Orleans]";
 		mes "Oh... well, if you want me to make some of my special Hand Made Chocolate....";
 		mes "You will need to give me at least ^0000FF 3 Chocolates^000000.";
@@ -103,7 +121,7 @@ prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
 	mes "[Carl Orleans]";
-	if (countitem(558) < 3) {
+	if (countitem(Chocolate) < 3) {
 		mes "I'm sorry, you don't have enough Chocolate Bars to do this.";
 		close; }
 	delitem 558,3;

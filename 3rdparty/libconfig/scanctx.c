@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2020 Hercules Dev Team
+   Copyright (C) 2005-2014 Mark A Lindner
 
    This file is part of libconfig.
 
@@ -37,31 +38,27 @@ static const char *err_include_too_deep = "include file nesting too deep";
 /* ------------------------------------------------------------------------- */
 
 static const char *__scanctx_add_filename(struct scan_context *ctx,
-                                          const char *filename)
+                                          char *filename)
 {
-#ifndef __clang_analyzer__ // FIXME: Clang's static analyzer doesn't like this
   unsigned int count = ctx->num_filenames;
-  const char **f;
+  char **f;
 
   for(f = ctx->filenames; count > 0; ++f, --count)
   {
     if(!strcmp(*f, filename))
     {
-      free((void *)filename);
+      free(filename);
       return(*f); /* already in list */
     }
   }
 
   if((ctx->num_filenames % CHUNK_SIZE) == 0)
   {
-    ctx->filenames = (const char **)realloc(
-      (void *)ctx->filenames,
-      (ctx->num_filenames + CHUNK_SIZE) * sizeof(const char *));
+    ctx->filenames = realloc(ctx->filenames, (ctx->num_filenames + CHUNK_SIZE) * sizeof(char *));
   }
 
   ctx->filenames[ctx->num_filenames] = filename;
   ++ctx->num_filenames;
-#endif // __clang_analyzer__
   return(filename);
 }
 
@@ -76,8 +73,8 @@ void scanctx_init(struct scan_context *ctx, const char *top_filename)
 
 /* ------------------------------------------------------------------------- */
 
-const char **scanctx_cleanup(struct scan_context *ctx,
-                             unsigned int *num_filenames)
+char **scanctx_cleanup(struct scan_context *ctx,
+                       unsigned int *num_filenames)
 {
   int i;
 
@@ -96,7 +93,7 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
                            const char **error)
 {
   FILE *fp = NULL;
-  const char *file;
+  char *file;
   char *full_file = NULL;
 
   *error = NULL;
@@ -118,7 +115,7 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
   }
 
   fp = fopen(full_file ? full_file : file, "rt");
-  free((void *)full_file);
+  free(full_file);
 
   if(fp)
   {
@@ -129,7 +126,7 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
   }
   else
   {
-    free((void *)file);
+    free(file);
     *error = err_bad_include;
   }
 
@@ -169,4 +166,3 @@ const char *scanctx_current_filename(struct scan_context *ctx)
 }
 
 /* ------------------------------------------------------------------------- */
-/* eof */

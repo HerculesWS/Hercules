@@ -1,14 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Easter Event (2010)
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Lift Lina's curse for an Easter Egg Shell.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 	disable_items;
@@ -52,7 +74,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "and then needs to solve";
 		mes "several problems instead of me.";
 		next;
-		if (select("Let's help ^800080Rina^000000.:Just skip it.") == 2) {
+		if (select("Let's help ^800080Rina^000000.", "Just skip it.") == 2) {
 			emotion e_sigh;
 			mes "[Rina]";
 			mes "To help me,";
@@ -73,7 +95,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes " ";
 		mes "^787878( A mysterious atmosphere hangs in the air. )^000000";
 		next;
-		specialeffect2 EF_COUPLECASTING;
+		specialeffect(EF_COUPLECASTING, AREA, playerattached());
 		next;
 		mes "[Rina]";
 		mes "Blah blah blah...";
@@ -82,7 +104,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes " ";
 		mes "^787878( ... This is a strange spell. )^000000";
 		next;
-		specialeffect2 EF_SIGNUM;
+		specialeffect(EF_SIGNUM, AREA, playerattached());
 		mes "[Rina]";
 		mes "Haaaaah~";
 		mes "^800080Oath-taking ceremony^000000 is done enough now.";
@@ -97,31 +119,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		setquest 9117;
 		close;
 	} else if (.@quest1 == 1) {
-	L_HuntingInfo:
-		mes "[Rina]";
-		mes "What you need to do is";
-		mes "to choose one monster among";
-		mes "^FF0000DEVIRUCHI,^000000 ^FF0000WRAITH DEAD,^000000";
-		mes "^FF0000DULLAHAN,^000000 ^FF0000NIGHTMARE TERROR^000000";
-		mes "and then kill ^0000FF50^000000 monsters";
-		mes "and come back to me.";
-		next;
-		mes "[Rina]";
-		mes "It must be a tough task,";
-		mes "but you are the right person";
-		mes "who did the oath-taking ceremony.";
-		mes "I hope you succeed.";
-		if (.@quest1 < 2) {
-			completequest 9117;
-			setquest 9118;
-			setquest 9119;
-			setquest 9120;
-			setquest 9121;
-		}
-		close2;
-		npcskill "AL_INCAGI",1,0,0;
-		npcskill "AL_BLESSING",1,0,0;
-		end;
+		callsub(L_HuntingInfo, .@quest1);
 	} else if (.@quest1 == 2) {
 		if (questprogress(9118) != 2 || questprogress(9119) != 2 || questprogress(9120) != 2 || questprogress(9121) != 2) {
 			if (questprogress(9118,HUNTING) == 2 || questprogress(9119,HUNTING) == 2 || questprogress(9120,HUNTING) == 2 || questprogress(9121,HUNTING) == 2) {
@@ -140,7 +138,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 				completequest 9121;
 				setquest 9122;
 			} else
-				goto L_HuntingInfo;
+				callsub(L_HuntingInfo, .@quest1);
 			end;
 		}
 	}
@@ -162,7 +160,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "^787878- whether you can listen -^000000";
 		mes "^787878- to the music sound. -^000000";
 		next;
-		if(select("[I'm ready to listen to the BGM.]:[I can't listen to the BGM.]") == 2) {
+		if(select("[I'm ready to listen to the BGM.]", "[I can't listen to the BGM.]") == 2) {
 			mes "[Rina]";
 			mes "I am so shocked that";
 			mes "you cannot feel the music.";
@@ -222,7 +220,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "My curse has been released.";
 		mes "Thank you so much.";
 		next;
-		if (checkweight(5852,1) == 0) {
+		if (checkweight(Easter_Egg_Shell,1) == 0) {
 			mes "[Rina]";
 			mes "Your bag is too full.";
 			mes "I have a present for you";
@@ -231,7 +229,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 			close;
 		}
 		completequest 9123;
-		getitem 5852,1; //Easter_Egg_Shell
+		getitem Easter_Egg_Shell,1;
 		.@BaseExp = (BaseLevel * (BaseLevel / 4)) * ((BaseLevel / 29) + (BaseLevel / 6)) + (5 * BaseLevel / 2);
 		if (ADVJOB == 0) {
 			if (BaseLevel < 40) .@nBaseExp = .@BaseExp;
@@ -287,6 +285,32 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 	npcskill "AL_INCAGI",1,0,0;
 	npcskill "AL_BLESSING",1,0,0;
 	end;
+
+L_HuntingInfo:
+	mes "[Rina]";
+	mes "What you need to do is";
+	mes "to choose one monster among";
+	mes "^FF0000DEVIRUCHI,^000000 ^FF0000WRAITH DEAD,^000000";
+	mes "^FF0000DULLAHAN,^000000 ^FF0000NIGHTMARE TERROR^000000";
+	mes "and then kill ^0000FF50^000000 monsters";
+	mes "and come back to me.";
+	next;
+	mes "[Rina]";
+	mes "It must be a tough task,";
+	mes "but you are the right person";
+	mes "who did the oath-taking ceremony.";
+	mes "I hope you succeed.";
+	if (getarg(0) < 2) {
+		completequest 9117;
+		setquest 9118;
+		setquest 9119;
+		setquest 9120;
+		setquest 9121;
+	}
+	close2;
+	npcskill "AL_INCAGI",1,0,0;
+	npcskill "AL_BLESSING",1,0,0;
+	end;
 }
 
 geffen,207,114,4	script	#Hiddne01Easter	CLEAR_NPC,{
@@ -295,7 +319,7 @@ OnRelease:
 		specialeffect EF_PATTACK;
 		mes "- I found ^0000FFthe strange mark^000000. -";
 		next;
-		specialeffect2 EF_HOLYHIT;
+		specialeffect(EF_HOLYHIT, AREA, playerattached());
 		mes "- I can definitely feel that";
 		mes "- ^0000FFRina^000000 has been released";
 		mes "- from the curse.";
@@ -344,7 +368,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 		mes "I guess you're the trustworthy friend.";
 		mes "Are you here to make a deal with me?";
 		next;
-		switch(select("Yes.:No.:What do you mean?")) {
+		switch(select("Yes.", "No.", "What do you mean?")) {
 		case 1:
 			if (ADVJOB == 0) {
 				if (BaseLevel < 70)
@@ -355,7 +379,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 					.@nCharge = 480000;
 			} else
 				.@nCharge = 500000;
-			if (countitem(574) < 1 || countitem(1001) < 20 || Zeny < .@nCharge) {
+			if (countitem(Egg) < 1 || countitem(Sparkling_Dust) < 20 || Zeny < .@nCharge) {
 				mes "[Rina's Little Friend]";
 				mes "Hmm.";
 				mes "The material is not enough.";
@@ -367,7 +391,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			mes "I will start it right now.";
 			mes "Are you ready for it?";
 			next;
-			if(select("Yes, let's start it.:No, stop it.") == 2) {
+			if(select("Yes, let's start it.", "No, stop it.") == 2) {
 				mes "[Rina's Little Friend]";
 				mes "Heh. It's boring.";
 				close;
@@ -378,8 +402,8 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			mes "^787878( A mysterious atmosphere hangs in the air. )^000000";
 			next;
 			specialeffect EF_ASPERSIO;
-			delitem 574,1; //Egg
-			delitem 1001,20; //Sparkling_Dust
+			delitem Egg,1;
+			delitem Sparkling_Dust,20;
 			Zeny -= .@nCharge;
 			.@nPercentage = rand(1,100);
 			if (.@nPercentage <= 41) {
@@ -388,21 +412,21 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 				mes "Aaaaah~ I got to take some rest.";
 				mes "Good bye~!";
 				if (.@nPercentage <= 12)
-					getitem 9003,1; //Poporing_Egg
+					getitem Poporing_Egg,1;
 				else if (.@nPercentage <= 24)
-					getitem 9005,1; //Picky_Egg
+					getitem Picky_Egg,1;
 				else if (.@nPercentage <= 36)
-					getitem 9009,1; //Savage_Bebe_Egg
+					getitem Savage_Bebe_Egg,1;
 				else
-					getitem 9023,1; //Deviruchi_Egg
+					getitem Deviruchi_Egg,1;
 				close2;
 				emotion e_yawn;
 				end;
 			} else if (.@nPercentage <= 60) {
 				if (.@nPercentage >= 42 && .@nPercentage <= 45)
-					getitem 5852,1; //Easter_Egg_Shell
+					getitem Easter_Egg_Shell,1;
 				else
-					getitem 12019,5; //Holy_Egg
+					getitem Holy_Egg,5;
 				mes "[Rina's Little Friend]";
 				mes "It seems that you have quite interesting things.";
 				mes "I need to take some rest.";
@@ -412,11 +436,11 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 				end;
 			} else if (.@nPercentage <= 85) {
 				if (.@nPercentage >= 61 && .@nPercentage <= 75) {
-					getitem 1001,20; //Sparkling_Dust
-					getitem 607,1; //Yggdrasilberry
+					getitem Sparkling_Dust,20;
+					getitem Yggdrasilberry,1;
 				} else {
-					getitem 574,1; //Egg
-					getitem 608,2; //Seed_Of_Yggdrasil
+					getitem Egg,1;
+					getitem Seed_Of_Yggdrasil,2;
 				}
 				mes "[Rina's Little Friend]";
 				mes "There was no change.";
@@ -426,7 +450,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 				emotion e_dum;
 				close;
 			} else {
-				getitem 12093,2; //Dex_Dish08
+				getitem Dex_Dish08,2;
 				mes "[Rina's Little Friend]";
 				mes "Hmm.";
 				mes "It became a dish.";
@@ -469,7 +493,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			mes "It may be end in failure";
 			mes "and it can be something like Pet Egg.";
 			next;
-			if(select("Ask the cost.:Stop listening because it feels like a trick.") == 2) {
+			if(select("Ask the cost.", "Stop listening because it feels like a trick.") == 2) {
 				mes "[Rina's Little Friend]";
 				mes "Well... I don't really care.";
 				mes "Good bye.";
@@ -530,7 +554,7 @@ prontera,116,82,5	script	Traveler#01Easter	4_M_03,{
 	mes "Hmm, I think I might";
 	mes "see you around here before.";
 	next;
-	if(select("Listen some more.:Just ignore it.") == 2) {
+	if(select("Listen some more.", "Just ignore it.") == 2) {
 		mes "[Traveler]";
 		mes "As I expected,";
 		mes "you are a silent person. Ha ha.";
@@ -556,7 +580,7 @@ prontera,116,82,5	script	Traveler#01Easter	4_M_03,{
 	mes "that new adventurer?";
 	mes "Or that is just your face look. Ha ha.";
 	next;
-	if(select("I'm interested in it.:I don't care at all.") == 2) {
+	if(select("I'm interested in it.", "I don't care at all.") == 2) {
 		mes "[Traveler]";
 		mes "Ah~ I see~!";
 		mes "Then, Good bye.";

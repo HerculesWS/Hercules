@@ -1,23 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) Euphy
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Playtester
+//= Copyright (C) SinSloth
+//= Copyright (C) Lupus
+//= Copyright (C) Jukka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Thief Class Tutorial and Job Specific Quest
-//===== By: ==================================================
-//= Fix up by Jukka
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Thief training quest.
-//===== Additional Comments: =================================
-//= 1.0 Fully working
-//= 1.1 optimized [Lupus]
-//= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.3 Fixed a few minor mistakes [Playtester]
-//= 1.4 Misc. updates. [L0ne_W0lf]
-//= 1.5 Added Pre-Renewal support. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
-// Thief Trainer
-//============================================================
+//== Thief Trainer =========================================
 moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 	mes "[Yierhan]";
 	if(Class == Job_Novice){
@@ -56,7 +76,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "the guy in charge";
 			mes "of training new Thieves.";
 			next;
-			switch(select("Training?:Training? Right now?")){
+			switch(select("Training?", "Training? Right now?")){
 			case 1:
 				mes "[Yierhan]";
 				mes "Yeah, training. I mean, this kind of stuff is second nature to some people, but other guys need a little more help. So this is one of those 'just in case' things.";
@@ -76,7 +96,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "So for melee attacks, which stat increases your damage? Come on";
 			mes "now, you should know this if you didn't skip the Novice Training Grounds.";
 			next;
-			switch(select("^6B8E23INT^000000:^2F4F2FSTR^000000:^23238EDEX^000000")){
+			switch(select("^6B8E23INT^000000", "^2F4F2FSTR^000000", "^23238EDEX^000000")){
 			case 1:
 				mes "[Yierhan]";
 				mes "Say whaaat? ^6B8E23INT^000000 affects magic damage, magic defense and some skills. Thieves don't even work with magic!";
@@ -88,7 +108,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "So if you're feeling like the damage you're making is pretty weak, you might want more stat points in ^2F4F2FSTR^000000. How high your raise your own STR is really up to you.";
 				tu_thief01 = 1;
 				getexp 200,100;
-				specialeffect2 EF_HIT5;
+				specialeffect(EF_HIT5, AREA, playerattached());
 				close;
 			case 2:
 				mes "[Yierhan]";
@@ -104,7 +124,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "also increase your attack damage, but they're insignificant compared to STR. I repeat: ^660000insignificant^000000.";
 				tu_thief01 = 1;
 				getexp 400,200;
-				specialeffect2 EF_HIT5;
+				specialeffect(EF_HIT5, AREA, playerattached());
 				close;
 			case 3:
 				mes "[Yierhan]";
@@ -119,7 +139,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "So if you're feeling like the damage you're making is pretty weak, you might want more stat points in ^2F4F2FSTR^000000. How high your raise your own STR is really up to you.";
 				tu_thief01 = 1;
 				getexp 200,100;
-				specialeffect2 EF_HIT5;
+				specialeffect(EF_HIT5, AREA, playerattached());
 				close;
 			}
 		} else if(tu_thief01 == 1){
@@ -229,7 +249,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "I can explain real quick.";
 			tu_thief01 = 3;
 			getexp BaseLevel*30,BaseLevel*15;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close;
 		} else if(tu_thief01 == 3){
 			mes "So...";
@@ -240,7 +260,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "already know?";
 			next;
 			while(1){
-				switch(select("Double Attack:Increase Dodge:Steal:Hiding:Envenom:Detoxify:I know enough.")) {
+				switch(select("Double Attack", "Increase Dodge", "Steal", "Hiding", "Envenom", "Detoxify", "I know enough.")) {
 				case 1:
 					mes "[Yierhan]";
 					mes "Just like its name,";
@@ -271,7 +291,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 					mes "Steal is an Active Skill that has the chance of nabbing you some";
 					mes "free items! You can't use it against other people, though.";
 					next;
-					specialeffect2 EF_STEAL;
+					specialeffect(EF_STEAL, AREA, playerattached());
 					mes "[Yierhan]";
 					mes "But you can use Steal to take items from monsters! If you're lucky, you can get some good items that way. Oh, and Steal doesn't affect monster drop rates.";
 					.@read_s = 1;
@@ -314,7 +334,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 					mes "after you learn the Envenom skill. Detoxify allows you to counteract the effects of poison on a target.";
 					.@read_r = 1;
 					next;
-					specialeffect2 EF_DETOXICATION;
+					specialeffect(EF_DETOXICATION, AREA, playerattached());
 					next;
 					break;
 				case 7:
@@ -326,7 +346,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 					mes "[Yierhan]";
 					mes "Now that you're such an expert on skills, I want you to level up your skills and come back, got it?";
 					tu_thief01 = 4;
-					specialeffect2 EF_HIT5;
+					specialeffect(EF_HIT5, AREA, playerattached());
 					if(.@read_d) getexp 300,100;
 					if(.@read_f) getexp 300,100;
 					if(.@read_s) getexp 300,100;
@@ -348,14 +368,14 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "You can go ahead and kill Pickies to get those. It really shouldn't be that hard. Oh, and use this Wing thingee to come back.";
 			tu_thief01 = 5;
 			savepoint "moc_ruins",80,164;
-			getitem 602,1; //Wing_Of_Butterfly
+			getitem Wing_Of_Butterfly,1;
 			getexp 100,50;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close2;
 			warp "moc_fild12",158,373;
 			end;
 		} else if(tu_thief01 == 5 || tu_thief01 == 6){
-			if(countitem(916) < 10){
+			if(countitem(Feather_Of_Birds) < 10){
 				mes "'Ey, you don't have the 10 ^ff0000Feather of Birds^000000 I asked you for! You gotta apply what you know, you know.";
 				mes "Now hurry up and do it!";
 				close2;
@@ -374,7 +394,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "and do you have any questions?";
 				next;
 				if(tu_thief01 == 6){
-					switch(select("About those traces...:Nope.")) {
+					switch(select("About those traces...", "Nope.")) {
 					case 1:
 						mes "[Yierhan]";
 						mes "You found out, eh?";
@@ -406,9 +426,9 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						mes "to the poison! That stuff";
 						mes "is pretty strong!";
 						tu_thief01 = 8;
-						getitem 1207,1; //Main_Gauche
+						getitem Main_Gauche,1;
 						getexp 1000,500;
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						close;
 					case 2:
 						mes "[Yierhan]";
@@ -416,13 +436,13 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						mes "Less work for me!";
 						mes "Alright, you better get stronger the next time I see you. Oh, and you can have this stuff. You know, since you're so gangster and all.";
 						tu_thief01 = 7;
-						getitem 1207,1; //Main_Gauche
+						getitem Main_Gauche,1;
 						getexp 500,200;
-						specialeffect2 EF_HIT5;
+						specialeffect(EF_HIT5, AREA, playerattached());
 						close;
 					}
 				} else {
-					switch(select("It was nice to meet you.:Nope.")) {
+					switch(select("It was nice to meet you.", "Nope.")) {
 					case 1:
 						mes "[Yierhan]";
 						mes "Yeah, it was pretty cool just hanging out. Keep fighting";
@@ -443,9 +463,9 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						break;
 					}
 					tu_thief01 = 7;
-					getitem 1207,1; //Main_Gauche
+					getitem Main_Gauche,1;
 					getexp 500,200;
-					specialeffect2 EF_HIT5;
+					specialeffect(EF_HIT5, AREA, playerattached());
 					close;
 				}
 			}
@@ -488,7 +508,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "other there, okay?";
 			tu_thief01 = 8;
 			getexp 200,100;
-			specialeffect2 EF_HIT5;
+			specialeffect(EF_HIT5, AREA, playerattached());
 			close;
 		} else if(tu_thief01 == 8){
 			mes "Heya pal.";
@@ -523,7 +543,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "complete your mission?";
 			mes "I know, I know, the thing you've gotta do is pretty rough.";
 			next;
-			switch(select("I'm still investigating.:Not yet.:Yes, I did.")) {
+			switch(select("I'm still investigating.", "Not yet.", "Yes, I did.")) {
 			case 1:
 				mes "[Yierhan]";
 				mes "Ah, gotcha. Well, that's understandable. I mean, these things take time, you know?";
@@ -569,7 +589,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "[Yierhan]";
 				mes "Hey, this stuff is yours. Think of it as a reward for helping us out. Take care of yourself now~";
 				tu_thief01 = 27;
-				getitem 2307,1; //Mantle
+				getitem Mantle,1;
 				Zeny += 5000;
 				getexp 8000,3000;
 				close;
@@ -647,7 +667,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "I couldn't focus";
 			mes "on it at all...";
 			next;
-			switch(select("I'm still investigating.:I'm not done yet...:Oh, I finished~")) {
+			switch(select("I'm still investigating.", "I'm not done yet...", "Oh, I finished~")) {
 			case 1:
 				mes "[Yierhan]";
 				mes "Ah, gotcha. Well, that's understandable. I mean, these things take time, you know?";

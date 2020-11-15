@@ -1,29 +1,50 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2020 Hercules Dev Team
+//= Copyright (C) L0ne_W0lf
+//= Copyright (C) Lupus
+//= Copyright (C) kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= War of Emperium Kafras for N Guild Castles
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Description ===========================================
 //= Provides Kafra services for guild members of NGuild Castles.
+//================= Current Version =======================================
+//= 1.2
+//================= Additional Comments ===================================
 //= Used in conjuction with function F_Kafra.
-//===== Additional Comments: =================================
-//= Based off existing guild scripts.  Do not know if it is accurate.[kobra_k88]
-//= 1.1 All N Guild Kafras teleport to Prontera only! [Lupus]
-//= 1.2 Added Kafra function. [L0ne_W0lf]
-//============================================================
-
+//=========================================================================
 
 function	script	F_GKafra	{
 	cutin "kafra_01",2;
 	@GID = getcastledata(getarg(0),1);
-	if (getcharid(2) == @GID && getgdskilllv(@GID,10001)) goto L_StartG;
-
-	mes "[Kafra Service]";
-	mes "I am contracted to provide service only for the ^ff0000" + getguildname(@GID) + "^000000 Guild. Please use another Kafra Corporation staff member around here. I am Sorry for your inconvenience.";
-	cutin "",255;
-	close;
-L_StartG:
+	if (getcharid(CHAR_ID_GUILD) != @GID || getgdskilllv(@GID,10001) < 1) {
+		mes "[Kafra Service]";
+		mes "I am contracted to provide service only for the ^ff0000" + getguildinfo(GUILDINFO_NAME, @GID) + "^000000 Guild. Please use another Kafra Corporation staff member around here. I am Sorry for your inconvenience.";
+		cutin "",255;
+		close;
+	}
 	@wrpP[0] = 200;
 	@wrpD$[0] = getarg(1);
 	setarray @wrpC$[0], @wrpD$[0]+" ^880000"+@wrpP[0]+"^000000 z", "Cancel", "", "", "","";
@@ -31,7 +52,7 @@ L_StartG:
 	end;
 }
 
-// Castle 1 ===============================================
+//== Castle 1 ==============================================
 nguild_alde,218,170,0	script	Kafra Service#N01	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_alde", "Prontera";
 	end;
@@ -40,7 +61,7 @@ OnRecvCastleN01:
 	end;
 }
 
-// Castle 2 ===============================================
+//== Castle 2 ==============================================
 //nguild_gef,96,173,0	script	Kafra Service#N02	4_F_KAFRA1,{
 nguild_gef,35,37,0	script	Kafra Service#N02	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_gef", "Prontera";
@@ -50,7 +71,7 @@ OnRecvCastleN02:
 	end;
 }
 
-// Castle 3 ===============================================
+//== Castle 3 ==============================================
 nguild_pay,128,58,3	script	Kafra Service#N03	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_pay", "Prontera";
 	end;
@@ -59,7 +80,7 @@ OnRecvCastleN03:
 	end;
 }
 
-// Castle 4 ===============================================
+//== Castle 4 ==============================================
 nguild_prt,96,173,0	script	Kafra Service#N04	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_prt", "Prontera";
 	end;

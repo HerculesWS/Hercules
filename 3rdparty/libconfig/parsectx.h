@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2020 Hercules Dev Team
+   Copyright (C) 2005-2014 Mark A Lindner
 
    This file is part of libconfig.
 
@@ -27,9 +28,9 @@
 
 struct parse_context
 {
-  config_t *config;
-  config_setting_t *parent;
-  config_setting_t *setting;
+  struct config_t *config;
+  struct config_setting_t *parent;
+  struct config_setting_t *setting;
   char *name;
   strbuf_t string;
 };

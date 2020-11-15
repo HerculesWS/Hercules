@@ -1,3 +1,41 @@
+
+	----- version 1.5 ------
+
+2015-05-16  Mark Lindner  <markl@neuromancer>
+
+	* lib/libconfig.c - Don't fclose() a null pointer.
+
+2014-09-19  Mark Lindner  <markl@neuromancer>
+
+	* lib/libconfig.c, lib/wincompat.h - check if file being opened is a
+	  directory
+	* lib/libconfig.c, lib/libconfig.h, lib/libconfig.h++,
+	  doc/libconfig.texi - added config_set_options(),
+	  config_get_options(), setOptions(), getOptions().
+
+2014-05-25  Mark Lindner  <markl@neuromancer>
+
+	* lib/libconfig.c++, lib/libconfig.h++ - added patches from Matt
+	  Renaud (added iterators, removed throws() specifications); added
+	  Setting.lookup(); code cleanup; added patch from Yuri Dyachenko
+	  (made exception constructors public)
+	* lib/libconfig.c, lib/libconfig.h - renamed
+	  config_setting_lookup_from() to config_setting_lookup() and
+	  documented it; patch from Alexander Klauer (floating point precision
+	  loss)
+	* doc/libconfig.texi - documented new APIs, bumped version
+	* lib/scanner.c, lib/scanner.h, lib/scanner.l, libconfig.c -
+	  scanner code cleanup; and regenerated with flex 2.5.39
+	* lib/grammar.c, lib/grammar.h, lib/grammar.y - parser code cleanup;
+	  and regenerated with bison 3.0.2
+	* README, ChangeLog - version updates
+
+2014-01-21  Mark Lindner  <markl@neuromancer>
+
+	* lib/libconfig.c - bugfix; capture root filename
+	* tests/Makefile.am - fix for out-of-source builds
+	* ac_config.h.in, aclocal.m4 - updated to newer autotools
+
 	----- version 1.4.9 ------
 
 2012-09-28  Mark Lindner  <markl@neuromancer>
