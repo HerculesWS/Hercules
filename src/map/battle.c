@@ -3372,9 +3372,9 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 	if( bl->type == BL_MOB && !status->isdead(bl) && src != bl) {
 		struct mob_data *md = BL_UCAST(BL_MOB, bl);
 		if (damage > 0)
-			mob->skill_event(md, src, timer->gettick(), flag);
+			mob->use_skill_event(md, src, timer->gettick(), flag);
 		if (skill_id)
-			mob->skill_event(md, src, timer->gettick(), MSC_SKILLUSED|(skill_id<<16));
+			mob->use_skill_event(md, src, timer->gettick(), MSC_SKILLUSED | (skill_id << 16));
 	}
 	if (t_sd && pc_ismadogear(t_sd) && rnd()%100 < 50) {
 		int element = -1;
