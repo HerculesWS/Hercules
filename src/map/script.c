@@ -26570,11 +26570,24 @@ static BUILDIN(navigateto)
 static bool rodex_sendmail_sub(struct script_state *st, struct rodex_message *msg)
 {
 	const char *sender_name, *title, *body;
+	const char *func_name = script->getfuncname(st);
+	int receiver_id = script_getnum(st, 2);
 
-	if (strcmp(script->getfuncname(st), "rodex_sendmail_acc") == 0 || strcmp(script->getfuncname(st), "rodex_sendmail_acc2") == 0)
-		msg->receiver_accountid = script_getnum(st, 2);
-	else
-		msg->receiver_id = script_getnum(st, 2);
+	if (strcmp(func_name, "rodex_sendmail_acc") == 0 || strcmp(func_name, "rodex_sendmail_acc2") == 0) {
+		if (receiver_id < START_ACCOUNT_NUM || receiver_id > END_ACCOUNT_NUM) {
+			ShowError("script:rodex_sendmail: Invalid receiver account ID %d passed!\n", receiver_id);
+			return false;
+		}
+
+		msg->receiver_accountid = receiver_id;
+	} else {
+		if (receiver_id < START_CHAR_NUM) {
+			ShowError("script:rodex_sendmail: Invalid receiver character ID %d passed!\n", receiver_id);
+			return false;
+		}
+
+		msg->receiver_id = receiver_id;
+	}
 
 	sender_name = script_getstr(st, 3);
 	if (strlen(sender_name) >= NAME_LENGTH) {
@@ -26626,6 +26639,18 @@ static BUILDIN(rodex_sendmail)
 			return false;
 		}
 
+		if (!data_isint(script_getdata(st, param + 1))) {
+			ShowError("script:rodex_sendmail: Passed amount for item %d is not a number!\n", i + 1);
+			return false;
+		}
+
+		int amount = script_getnum(st, param + 1);
+
+		if (amount < 1 || amount > min(MAX_AMOUNT, SHRT_MAX)) {
+			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
+			return false;
+		}
+
 		++item_count;
 		if (data_isstring(script_getdata(st, param)) == false) {
 			int itemid = script_getnum(st, param);
@@ -26643,7 +26668,7 @@ static BUILDIN(rodex_sendmail)
 		}
 
 		msg.items[i].item.nameid = idata->nameid;
-		msg.items[i].item.amount = script_getnum(st, (param + 1));
+		msg.items[i].item.amount = amount;
 		msg.items[i].item.identify = 1;
 
 		++i;
@@ -26683,6 +26708,19 @@ static BUILDIN(rodex_sendmail2)
 			ShowError("script:rodex_sendmail: Missing Item %d amount!\n", (i + 1));
 			return false;
 		}
+
+		if (!data_isint(script_getdata(st, param + 1))) {
+			ShowError("script:rodex_sendmail: Passed amount for item %d is not a number!\n", i + 1);
+			return false;
+		}
+
+		int amount = script_getnum(st, param + 1);
+
+		if (amount < 1 || amount > min(MAX_AMOUNT, SHRT_MAX)) {
+			ShowError("script:rodex_sendmail: Invalid amount %d passed for item %d!\n", amount, i + 1);
+			return false;
+		}
+
 		if (!script_hasdata(st, param + 2)) {
 			ShowError("script:rodex_sendmail: Missing Item %d refine!\n", (i + 1));
 			return false;
@@ -26715,7 +26753,7 @@ static BUILDIN(rodex_sendmail2)
 		}
 
 		msg.items[i].item.nameid = idata->nameid;
-		msg.items[i].item.amount = script_getnum(st, (param + 1));
+		msg.items[i].item.amount = amount;
 		msg.items[i].item.refine = script_getnum(st, (param + 2));
 		msg.items[i].item.attribute = script_getnum(st, (param + 3));
 		msg.items[i].item.identify = 1;
