@@ -5585,9 +5585,10 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	int skill_id = 0;
 	const char *name = config_setting_name(it);
 	const char *mob_str = (mob_id < 0) ? "global ID" : "monster";
+	const char *mob_sprite = (mob_id > 0) ? mob->db(mob_id)->sprite : "";
 
 	if ((skill_id = skill->name2id(name)) == 0) {
-		ShowWarning("%s: Non existant skill %d in %s %d, skipping.\n", __func__, skill_id, mob_str, mob_id);
+		ShowWarning("%s: Non existant skill %s in %s %s (%d), skipping.\n", __func__, name, mob_str, mob_sprite, mob_id);
 		return false;
 	}
 
@@ -5619,7 +5620,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ARR_FIND(0, MAX_MOBSKILL, idx, (ms = &mob->db_data[mob_id]->skill[idx])->skill_id == 0);
 
 		if (idx == MAX_MOBSKILL) {
-			ShowError("%s: Too many skills for monster %d, skipping.\n", __func__, mob_id);
+			ShowError("%s: Too many skills for monster %s (%d), skipping.\n", __func__, mob_sprite, mob_id);
 			return false;
 		}
 
@@ -5630,8 +5631,8 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 
 	int i32 = MSS_ANY;
 	if (mob->lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
-		ShowWarning("%s: Invalid skill state %d for skill %d (%s) in %s %d, defaulting to MSS_ANY.\n",
-			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
+		ShowWarning("%s: Invalid skill state %d for skill %d (%s) in %s %s (%d), defaulting to MSS_ANY.\n",
+			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MSS_ANY;
 	}
 	ms->state = i32;
@@ -5668,23 +5669,23 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 
 	i32 = MST_TARGET;
 	if (mob->lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
-		ShowWarning("%s: Invalid skill target %d for skill %d (%s) in %s %d, defaulting to MST_TARGET.\n",
-			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
+		ShowWarning("%s: Invalid skill target %d for skill %d (%s) in %s %s (%d), defaulting to MST_TARGET.\n",
+			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MST_TARGET;
 	}
 	ms->target = i32;
 
 	// Check the target condition for non-ground skills. (Ground skills can use every target.)
 	if (skill->get_casttype2(skill->get_index(skill_id)) != CAST_GROUND && ms->target > MST_MASTER) {
-		ShowWarning("%s: Wrong skill target %d for non-ground skill %d (%s) in %s %d, defaulting to MST_TARGET.\n",
-			    __func__, ms->target, skill_id, skill_name, mob_str, mob_id);
+		ShowWarning("%s: Wrong skill target %d for non-ground skill %d (%s) in %s %s (%d), defaulting to MST_TARGET.\n",
+			    __func__, ms->target, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		ms->target = MST_TARGET;
 	}
 
 	i32 = MSC_ALWAYS;
 	if (mob->lookup_const(it, "CastCondition", &i32) && (i32 < MSC_ALWAYS || i32 > MSC_MAGICATTACKED)) {
-		ShowWarning("%s: Invalid skill condition %d for skill id %d (%s) in %s %d, defaulting to MSC_ALWAYS.\n",
-			    __func__, i32, skill_id, skill_name, mob_str, mob_id);
+		ShowWarning("%s: Invalid skill condition %d for skill id %d (%s) in %s %s (%d), defaulting to MSC_ALWAYS.\n",
+			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MSC_ALWAYS;
 	}
 	ms->cond1 = i32;
@@ -5724,8 +5725,8 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 
 	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) == CONFIG_TRUE) {
 		if (i32 <= 0 || i32 > MAX_MOB_CHAT || mob->chat_db[i32] == NULL) {
-			ShowWarning("%s: Invalid message ID %d for skill %d (%s) in %s %d, ignoring.\n",
-				    __func__, i32, skill_id, skill_name, mob_str, mob_id);
+			ShowWarning("%s: Invalid message ID %d for skill %d (%s) in %s %s (%d), ignoring.\n",
+				    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		} else {
 			ms->msg_id = i32;
 		}
