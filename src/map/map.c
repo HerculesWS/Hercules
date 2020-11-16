@@ -2945,36 +2945,129 @@ static enum unit_dir map_calc_dir(const struct block_list *src, int16 x, int16 y
 	return dir;
 }
 
-/*==========================================
- * Randomizes target cell x,y to a random walkable cell that
- * has the same distance from object as given coordinates do. [Skotlex]
- *------------------------------------------*/
+/**
+ * Randomizes (x, y) to a walkable cell that is at least min_dist away on a square and less than max_dist.
+ *
+ * __Only__ tries each quarter of the square once, doesn't try all possibilities. (Aegis behavior)
+ * The square has a width and height of 2 * max_dist - 1.
+ * The smaller square with (x,y) center has a width and height of 2 * min_dist - 1,
+ * and is not included in the returning random cells.
+ *
+ * @remark e.g. (x + x_range, y + y_range) is not part of the square and won't be randomized.
+ * @param[in] bl optional object to base walkable checks on.
+ * @param[in] m map ID for the walkable cell checks
+ * @param[in,out] x pointer which contains the x-axis center value of the square
+ * @param[in,out] y pointer which contains the y-axis center value of the square
+ * @param[in] min_dist minimum distance of cells from (x, y)
+ * @param[in] max_dist maximum distance of cells from (x, y)
+ * @retval 0 success, random walkable cell found
+ * @retval 1 failure, no cell found, x and y remain unchanged
+ * @retval 2 failure, x or y nullpointer.
+ */
+static int map_get_random_cell(struct block_list *bl, int16 m, int16 *x, int16 *y, int16 min_dist, int16 max_dist)
+{
+	nullpo_retr(2, x);
+	nullpo_retr(2, y);
+	enum unit_dir dir = unit_get_rnd_diagonal_dir();
+
+	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
+		int16 x_rnd_dist = (min_dist + rnd()) % max(1, max_dist);
+		int16 y_rnd_dist = (min_dist + rnd()) % max(1, max_dist);
+		int16 x_rnd = *x + dirx[dir] * x_rnd_dist;
+		int16 y_rnd = *y + diry[dir] * y_rnd_dist;
+
+		// cell walkable?
+		if (map->getcell(m, bl, x_rnd, y_rnd, CELL_CHKNOPASS) != 0)
+			continue;
+		if (!path->search(NULL, bl, m, *x, *y, x_rnd, y_rnd, 1, CELL_CHKNOREACH))
+			continue;
+
+		*x = x_rnd;
+		*y = y_rnd;
+		return 0;
+	}
+
+	return 1;
+}
+
+/**
+ * Randomizes (x, y) to a walkable cell on a rectangle with (x, y) being the center cell.
+ *
+ * __Only__ tries each quarter of the rectangle once, doesn't try all possibilities. (Aegis behavior)
+ * The rectangle has a width of 2 * x_range - 1 and a height of 2 * y_range - 1 .
+ *
+ * @remark e.g. (x + x_range, y + y_range) is not part of the rectangle and won't be randomized.
+ * @param[in] bl optional object to base walkable checks on.
+ * @param[in] m map ID for the walkable cell checks
+ * @param[in,out] x pointer which contains the x-axis center value of the rectangle
+ * @param[in,out] y pointer which contains the y-axis center value of the rectangle
+ * @param[in] x_range horizontal distance from center to border
+ * @param[in] y_range vertical distance from center to border
+ * @retval 0 success, random walkable cell found
+ * @retval 1 failure, no cell found, x and y remain unchanged
+ * @retval 2 failure, x or y nullpointer.
+ */
+static int map_get_random_cell_in_range(struct block_list *bl, int16 m, int16 *x, int16 *y, int16 x_range, int16 y_range)
+{
+	nullpo_retr(2, x);
+	nullpo_retr(2, y);
+	enum unit_dir dir = unit_get_rnd_diagonal_dir();
+
+	for (int i = 0; i < 4; i++, dir = unit_get_ccw90_dir(dir)) {
+		int16 x_rnd_range = rnd() % max(1, x_range);
+		int16 y_rnd_range = rnd() % max(1, y_range);
+		int16 x_rnd = *x + dirx[dir] * x_rnd_range;
+		int16 y_rnd = *y + diry[dir] * y_rnd_range;
+
+		// cell walkable?
+		if (map->getcell(m, bl, x_rnd, y_rnd, CELL_CHKNOPASS) != 0)
+			continue;
+		if (!path->search(NULL, bl, m, *x, *y, x_rnd, y_rnd, 1, CELL_CHKNOREACH))
+			continue;
+
+		*x = x_rnd;
+		*y = y_rnd;
+		return 0;
+	}
+
+	return 1;
+}
+
+/**
+ * Randomizes target cell x, y to a random walkable cell that
+ * has the same distance from bl on a circle as given coordinates do.
+ *
+ * @warning this function has gaps, especially on the west and east side in relation to @p bl
+ * @param bl object to which we keep the same distance after randomizing the giving cells
+ * @param[in,out] x x-axis pointer of cell for distance to @p bl
+ * @param[in,out] y y-axis pointer of cell for distance to @p bl
+ * @retval 0 failure to randomize coordinates, x and y won't be changed
+ * @retval 1 success
+ */
 static int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 {
-	short xi;
-	short yi;
-	short i=0;
-	int dist2;
-	short dist;
-
 	nullpo_ret(bl);
 	nullpo_ret(x);
 	nullpo_ret(y);
-	xi = *x-bl->x;
-	yi = *y-bl->y;
-	dist2 = xi*xi + yi*yi;
-	dist = (short)sqrt((float)dist2);
+	int16 xi = *x - bl->x;
+	int16 yi = *y - bl->y;
+	if (xi == 0 && yi == 0) {
+		// No distance between points, go with distance 1 instead to prevent NaN in second sqrt
+		xi = 1;
+		yi = 1;
+	}
+	int dist2 = xi * xi + yi * yi;
+	int16 dist = (int16)sqrt(dist2);
 
-	if (dist < 1) dist =1;
-
+	int16 i = 0;
 	do {
 		enum unit_dir dir = unit_get_rnd_diagonal_dir();
-		short segment = 1+(rnd()%dist); //Pick a random interval from the whole vector in that direction
+		int16 segment = 1 + (rnd() % dist); // Pick a random interval from the whole vector in that direction
 		xi = bl->x + segment * dirx[dir];
-		segment = (short)sqrt((float)(dist2 - segment*segment)); //The complement of the previously picked segment
+		segment = (int16)sqrt(dist2 - segment * segment); // The complement of the previously picked segment
 		yi = bl->y + segment * diry[dir];
 	} while ((map->getcell(bl->m, bl, xi, yi, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, xi, yi, 1, CELL_CHKNOREACH))
-	       && (++i)<100);
+	         && (++i) < 100);
 
 	if (i < 100) {
 		*x = xi;
@@ -7127,6 +7220,8 @@ PRAGMA_GCC9(GCC diagnostic pop)
 
 	map->check_dir = map_check_dir;
 	map->calc_dir = map_calc_dir;
+	map->get_random_cell = map_get_random_cell;
+	map->get_random_cell_in_range = map_get_random_cell_in_range;
 	map->random_dir = map_random_dir; // [Skotlex]
 
 	map->cleanup_sub = cleanup_sub;

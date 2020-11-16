@@ -1882,6 +1882,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->reloadnpc, HP_map_reloadnpc) },
 	{ HP_POP(map->check_dir, HP_map_check_dir) },
 	{ HP_POP(map->calc_dir, HP_map_calc_dir) },
+	{ HP_POP(map->get_random_cell, HP_map_get_random_cell) },
+	{ HP_POP(map->get_random_cell_in_range, HP_map_get_random_cell_in_range) },
 	{ HP_POP(map->random_dir, HP_map_random_dir) },
 	{ HP_POP(map->cleanup_sub, HP_map_cleanup_sub) },
 	{ HP_POP(map->delmap, HP_map_delmap) },

@@ -3678,6 +3678,10 @@ struct {
 	struct HPMHookPoint *HP_map_check_dir_post;
 	struct HPMHookPoint *HP_map_calc_dir_pre;
 	struct HPMHookPoint *HP_map_calc_dir_post;
+	struct HPMHookPoint *HP_map_get_random_cell_pre;
+	struct HPMHookPoint *HP_map_get_random_cell_post;
+	struct HPMHookPoint *HP_map_get_random_cell_in_range_pre;
+	struct HPMHookPoint *HP_map_get_random_cell_in_range_post;
 	struct HPMHookPoint *HP_map_random_dir_pre;
 	struct HPMHookPoint *HP_map_random_dir_post;
 	struct HPMHookPoint *HP_map_cleanup_sub_pre;
@@ -10737,6 +10741,10 @@ struct {
 	int HP_map_check_dir_post;
 	int HP_map_calc_dir_pre;
 	int HP_map_calc_dir_post;
+	int HP_map_get_random_cell_pre;
+	int HP_map_get_random_cell_post;
+	int HP_map_get_random_cell_in_range_pre;
+	int HP_map_get_random_cell_in_range_post;
 	int HP_map_random_dir_pre;
 	int HP_map_random_dir_post;
 	int HP_map_cleanup_sub_pre;
