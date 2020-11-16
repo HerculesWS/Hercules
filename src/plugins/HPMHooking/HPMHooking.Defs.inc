@@ -6302,6 +6302,8 @@ typedef int (*HPMHOOK_pre_pc_cleareventtimer) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_cleareventtimer) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_addeventtimercount) (struct map_session_data **sd, const char **name, int *tick);
 typedef int (*HPMHOOK_post_pc_addeventtimercount) (int retVal___, struct map_session_data *sd, const char *name, int tick);
+typedef int (*HPMHOOK_pre_pc_calc_pvprank_sub) (struct block_list **bl, va_list ap);
+typedef int (*HPMHOOK_post_pc_calc_pvprank_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_pc_calc_pvprank) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_pc_calc_pvprank) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_pc_calc_pvprank_timer) (int *tid, int64 *tick, int *id, intptr_t *data);

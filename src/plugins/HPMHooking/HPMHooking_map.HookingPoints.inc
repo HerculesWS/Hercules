@@ -2499,6 +2499,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->deleventtimer, HP_pc_deleventtimer) },
 	{ HP_POP(pc->cleareventtimer, HP_pc_cleareventtimer) },
 	{ HP_POP(pc->addeventtimercount, HP_pc_addeventtimercount) },
+	{ HP_POP(pc->calc_pvprank_sub, HP_pc_calc_pvprank_sub) },
 	{ HP_POP(pc->calc_pvprank, HP_pc_calc_pvprank) },
 	{ HP_POP(pc->calc_pvprank_timer, HP_pc_calc_pvprank_timer) },
 	{ HP_POP(pc->ismarried, HP_pc_ismarried) },

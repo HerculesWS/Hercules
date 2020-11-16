@@ -4882,6 +4882,8 @@ struct {
 	struct HPMHookPoint *HP_pc_cleareventtimer_post;
 	struct HPMHookPoint *HP_pc_addeventtimercount_pre;
 	struct HPMHookPoint *HP_pc_addeventtimercount_post;
+	struct HPMHookPoint *HP_pc_calc_pvprank_sub_pre;
+	struct HPMHookPoint *HP_pc_calc_pvprank_sub_post;
 	struct HPMHookPoint *HP_pc_calc_pvprank_pre;
 	struct HPMHookPoint *HP_pc_calc_pvprank_post;
 	struct HPMHookPoint *HP_pc_calc_pvprank_timer_pre;
@@ -11945,6 +11947,8 @@ struct {
 	int HP_pc_cleareventtimer_post;
 	int HP_pc_addeventtimercount_pre;
 	int HP_pc_addeventtimercount_post;
+	int HP_pc_calc_pvprank_sub_pre;
+	int HP_pc_calc_pvprank_sub_post;
 	int HP_pc_calc_pvprank_pre;
 	int HP_pc_calc_pvprank_post;
 	int HP_pc_calc_pvprank_timer_pre;
