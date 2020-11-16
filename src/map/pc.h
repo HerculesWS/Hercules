@@ -1098,6 +1098,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*cleareventtimer) (struct map_session_data *sd);
 	int (*addeventtimercount) (struct map_session_data *sd,const char *name,int tick);
 
+	int (*calc_pvprank_sub) (struct block_list *bl, va_list ap);
 	int (*calc_pvprank) (struct map_session_data *sd);
 	int (*calc_pvprank_timer) (int tid, int64 tick, int id, intptr_t data);
 
