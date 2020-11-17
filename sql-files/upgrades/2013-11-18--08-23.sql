@@ -75,7 +75,7 @@ BEGIN
 
 END $$
 
-CALL alter_if_not_exists('item_db2', 'bindonequip', 'ADD COLUMN', 'TINYINT(1) UNSIGNED DEFAULT NULL AFTER `view`') $$
+CALL alter_if_not_exists('item_db2', 'bindonequip', 'ADD COLUMN', 'TINYINT UNSIGNED DEFAULT NULL AFTER `view`') $$
 
 DROP PROCEDURE IF EXISTS alter_if_not_exists $$
 DROP PROCEDURE IF EXISTS alter_if_exists $$

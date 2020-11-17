@@ -18,7 +18,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD COLUMN `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `hotkey_rowshift`;
-ALTER TABLE `char` ADD COLUMN `attendance_timer` BIGINT(20) NULL DEFAULT '0' AFTER `attendance_count`;
+ALTER TABLE `char` ADD COLUMN `attendance_count` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `hotkey_rowshift`;
+ALTER TABLE `char` ADD COLUMN `attendance_timer` BIGINT NULL DEFAULT '0' AFTER `attendance_count`;
 
 INSERT INTO `sql_updates` (`timestamp`, `ignored`) VALUES (1520654809 , 'No');

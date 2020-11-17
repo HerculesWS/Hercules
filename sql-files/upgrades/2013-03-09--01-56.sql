@@ -18,6 +18,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `login` ADD COLUMN `pincode` VARCHAR(4) NOT NULL DEFAULT '';
-ALTER TABLE `login` ADD COLUMN `pincode_change` INT(11) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `login` ADD COLUMN `pincode` VARCHAR NOT NULL DEFAULT '';
+ALTER TABLE `login` ADD COLUMN `pincode_change` INT unsigned NOT NULL DEFAULT '0';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1362794218);

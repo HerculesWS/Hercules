@@ -18,8 +18,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `inventory` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `favorite`;
-ALTER TABLE `cart_inventory` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `expire_time`;
-ALTER TABLE `storage` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `expire_time`;
-ALTER TABLE `guild_storage` ADD COLUMN `bound` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `expire_time`;
+ALTER TABLE `inventory` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `favorite`;
+ALTER TABLE `cart_inventory` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL default '0' AFTER `expire_time`;
+ALTER TABLE `storage` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL default '0' AFTER `expire_time`;
+ALTER TABLE `guild_storage` ADD COLUMN `bound` TINYINT UNSIGNED NOT NULL default '0' AFTER `expire_time`;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);

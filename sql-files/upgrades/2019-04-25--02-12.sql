@@ -19,6 +19,6 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TRUNCATE TABLE `guild_expulsion`;
-ALTER TABLE `guild_expulsion` ADD `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
+ALTER TABLE `guild_expulsion` ADD `char_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
 
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1556147483);

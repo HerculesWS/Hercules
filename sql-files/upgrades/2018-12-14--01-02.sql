@@ -19,6 +19,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD `inventory_size` INT(11) UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `char` ADD `inventory_size` INT UNSIGNED NOT NULL DEFAULT '100';
 
 INSERT INTO `sql_updates` (`timestamp`, `ignored`) VALUES (1544738447, 'No');

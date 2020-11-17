@@ -18,5 +18,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `charlog` ADD COLUMN `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
+ALTER TABLE `charlog` ADD COLUMN `char_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302);

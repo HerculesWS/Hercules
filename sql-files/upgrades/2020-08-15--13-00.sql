@@ -19,8 +19,8 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -- Add attendance data to accounta_data table
-ALTER TABLE `account_data` ADD COLUMN `attendance_count` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `base_death`;
-ALTER TABLE `account_data` ADD COLUMN `attendance_timer` BIGINT(20) NULL DEFAULT '0' AFTER `attendance_count`;
+ALTER TABLE `account_data` ADD COLUMN `attendance_count` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `base_death`;
+ALTER TABLE `account_data` ADD COLUMN `attendance_timer` BIGINT NULL DEFAULT '0' AFTER `attendance_count`;
 
 -- Migrate data from the char table to the account_data table
 REPLACE INTO `account_data` (`account_id`, `attendance_count`, `attendance_timer`)

@@ -18,6 +18,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `charlog` ADD `class` MEDIUMINT(9) NOT NULL DEFAULT '0' AFTER `char_num`;
+ALTER TABLE `charlog` ADD `class` MEDIUMINT NOT NULL DEFAULT '0' AFTER `char_num`;
 
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1475526420);
