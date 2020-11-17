@@ -22,6 +22,50 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2020.11.16] `November 16 2020`
+
+### Added
+
+- Added a new script command `waitingroomkick()` offering better control than `kickwaitingroomall()`. (#2048)
+- Added a new function `map->get_random_cell_in_range()` to get a random cell in a square around a center cell. (part of #2882)
+- Added a new function `map->get_random_cell()` imitating an official cell randomization behavior, returning a cell between a minimum and a maximum distance away from the center, in a square area. (part of #2882)
+- Added `pc->calc_pvprank_sub()` to the `pc` interface to allow plugins to hook into it. (#2894)
+
+### Changed
+
+- Updated the list of Hat Effect ID constants with new values. (#2878)
+- Updated the list of NPC Sprite ID constants with new values. (#2879)
+- Renamed the `PARTY_BOOKING_JOBS` and `PARTY_BOOKING_RESULTS` macros to `MAX_PARTY_BOOKING_JOBS` and `MAX_PARTY_BOOKING_RESULTS` respectively to better suit their purpose, and refactored some related code. The macros can now also be redefined externally. (#2231)
+- Extended the `warpwaitingpc()` and `waitingroom()` script commands with an argument to specify which NPC to execute the commands on, for consistency with other waitingroom commands. (part of #2048)
+- Refactored `map->random_dir()`, fixed a possible runtime error and added/clarified the function documentation. (#2882)
+- Changed the libconfig directive `@include "FILENAME"` directive to search inside `conf/import/include/{SERVERNAME}/{FILEPATH}` before `{FILEPATH}` allowing for example to easily override `sql_connection.conf` on a server by server basis without editing other files. (#2881)
+- Improved the error messages in the mob skill DB parser to include the monster ID constants instead of just the numeric IDs. (#2884)
+- Corrected the return values in the null pointer checks of `mob->skill_use()` and renamed it to `mob->use_skill()` due to the changed API. (part of #2887)
+- Corrected the return values in the null pointer checks of `mob->skill_event()` and renamed it to `mob->use_skill_event()` due to the changed API. (part of #2887)
+- Removed an unnecessary call to `unit->set_dir()` when the direction doesn't change in the busy `unit->attack_timer_sub()`, preventing a needless `clif->changed_dir()` broadcast. (#2891)
+- Added data validation to the `rodex_sendmail*()` commands to ensure that the item amount is valid. (#2901, issue #2897)
+- Added data validation to the `rodex_sendmail_acc*()` commands to ensure that the receiver ID is in a valid range. (#2901, issue #2898)
+
+### Fixed
+
+- Added checks to the waitingroom script commands to ensure that their related waiting room and NPC exist. (part of #2048)
+- Fixed the random cell selection of Confusion and Chaos according to their official behavior (random cell in a square area). (part of #2882)
+- Fixed the random cell selection of `WE_CALLPARTNER`, `WE_CALLPARENT`, `WE_CALLBABY`, `AM_RESURRECTION` according to their official behavior (random cell in a quare area with minimum and maximum distance). (part of #2882)
+- Fixed the damage buff effect of Watery Evasion when using Freezing Spear. (#2873)
+- Fixed a missing scoreboard UI for battleground type 2. (#2849, issue #2848)
+- Fixed a null pointer error in the search store function when trying to search with an empty list or with an empty card list. (#2885)
+- Fixed the handling of the return value of `mob->skill_use()` and `mob->ai_sub_hard()`. (#2887)
+- Fixed summoned monsters not following their master if it's a `BL_PC`. (#2888, issue #2808)
+- Fixed the Impositio Manus behavior to always overwrite itself regardless of level. (#2890, issue #695)
+- Fixed a possible crash when changing the display class of a floating NPC, caused by missing data validation. (#2900, issue #2899)
+- Fixed the name of the `Fruit Pom Spider Card` item. (#2902, issue #2896)
+- Fixed the `KO_GENWAKU` skill effect, swapping the position of the caster and the target. (#2831)
+
+### Deprecated
+
+- Deprecated the `HAT_DIGITAL_SPACE` constant in favor of `HAT_EF_DIGITAL_SPACE`. (part of #2878)
+- Deprecated the `kickwaitingroomall()` script command in favor of `waitingroomkick()`. (part of #2048)
+
 ## [v2020.10.19] `October 19 2020`
 
 ### Added
@@ -1644,6 +1688,8 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.11.16]: https://github.com/HerculesWS/Hercules/compare/v2020.10.19...v2020.11.16
+[v2020.10.19]: https://github.com/HerculesWS/Hercules/compare/v2020.09.20...v2020.10.19
 [v2020.09.20]: https://github.com/HerculesWS/Hercules/compare/v2020.08.23...v2020.09.20
 [v2020.08.23]: https://github.com/HerculesWS/Hercules/compare/v2020.07.26...v2020.08.23
 [v2020.07.26]: https://github.com/HerculesWS/Hercules/compare/v2020.06.28...v2020.07.26
