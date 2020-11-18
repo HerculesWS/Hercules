@@ -631,6 +631,19 @@ struct guild_storage {
 	unsigned short lock;
 };
 
+/**
+ * Prevents @ref MAX_GUILD_STORAGE from causing oversized 0x3019 inter-server packets.
+ *
+ * @attention If the size of packet 0x3019 changes, this assertion check needs to be adjusted, too.
+ *
+ * @see intif_send_guild_storage() @n
+ *      mapif_parse_SaveGuildStorage()
+ *
+ * @anchor MAX_GUILD_STORAGE_ASSERT
+ *
+ **/
+STATIC_ASSERT(sizeof(struct guild_storage) + 12 <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
+
 struct s_pet {
 	int account_id;
 	int char_id;

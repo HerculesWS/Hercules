@@ -443,6 +443,25 @@ static int intif_request_guild_storage(int account_id, int guild_id)
 	WFIFOSET(inter_fd,10);
 	return 0;
 }
+
+/**
+ * Sends guild storage information for saving to the character server.
+ *
+ * @code{.unparsed}
+ *	@packet 0x3019 [out] <packet_len>.W <account_id>.L <guild_id>.L <struct guild_storage>.P
+ * @endcode
+ *
+ * @attention If the size of packet 0x3019 changes,
+ *            @ref MAX_GUILD_STORAGE_ASSERT "the related static assertion check"
+ *            in mmo.h needs to be adjusted, too.
+ *
+ * @see mapif_parse_SaveGuildStorage()
+ *
+ * @param[in] account_id The account ID of the character who initiated saving the guild storage information.
+ * @param[in] gstor Pointer to the guild storage data containing the information to save.
+ * @return Always 0. 
+ *
+ **/
 static int intif_send_guild_storage(int account_id, struct guild_storage *gstor)
 {
 	if (intif->CheckForCharServer())
