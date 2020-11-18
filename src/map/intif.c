@@ -357,10 +357,21 @@ static void intif_parse_account_storage(int fd)
 }
 
 /**
- * Send account storage information for saving.
- * @packet 0x3011 [out] <packet_len>.W <account_id>.L <struct item[]>.P
- * @param  sd     [in]  pointer to session data.
- */
+ * Sends account storage information for saving to the character server.
+ *
+ * @code{.unparsed}
+ *	@packet 0x3011 [out] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @endcode
+ *
+ * @attention If the size of packet 0x3011 changes,
+ *            @ref MAX_STORAGE_ASSERT "the related static assertion check"
+ *            in mmo.h needs to be adjusted, too.
+ *
+ * @see mapif_parse_AccountStorageSave()
+ *
+ * @param[in] sd Pointer to the session data containing the account storage information to save.
+ *
+ **/
 static void intif_send_account_storage(struct map_session_data *sd)
 {
 	int len = 0, i = 0, c = 0;
