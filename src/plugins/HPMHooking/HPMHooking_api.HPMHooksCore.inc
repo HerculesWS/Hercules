@@ -126,6 +126,10 @@ struct {
 	struct HPMHookPoint *HP_aclif_purge_disconnected_user_post;
 	struct HPMHookPoint *HP_aclif_get_char_server_id_pre;
 	struct HPMHookPoint *HP_aclif_get_char_server_id_post;
+	struct HPMHookPoint *HP_aclif_add_remove_timer_pre;
+	struct HPMHookPoint *HP_aclif_add_remove_timer_post;
+	struct HPMHookPoint *HP_aclif_remove_remove_timer_pre;
+	struct HPMHookPoint *HP_aclif_remove_remove_timer_post;
 	struct HPMHookPoint *HP_aclif_show_request_pre;
 	struct HPMHookPoint *HP_aclif_show_request_post;
 	struct HPMHookPoint *HP_aloginif_init_pre;
@@ -1013,6 +1017,10 @@ struct {
 	int HP_aclif_purge_disconnected_user_post;
 	int HP_aclif_get_char_server_id_pre;
 	int HP_aclif_get_char_server_id_post;
+	int HP_aclif_add_remove_timer_pre;
+	int HP_aclif_add_remove_timer_post;
+	int HP_aclif_remove_remove_timer_pre;
+	int HP_aclif_remove_remove_timer_post;
 	int HP_aclif_show_request_pre;
 	int HP_aclif_show_request_post;
 	int HP_aloginif_init_pre;

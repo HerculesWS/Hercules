@@ -278,6 +278,10 @@ typedef int (*HPMHOOK_pre_aclif_purge_disconnected_user) (union DBKey *key, stru
 typedef int (*HPMHOOK_post_aclif_purge_disconnected_user) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef int (*HPMHOOK_pre_aclif_get_char_server_id) (struct api_session_data **sd);
 typedef int (*HPMHOOK_post_aclif_get_char_server_id) (int retVal___, struct api_session_data *sd);
+typedef void (*HPMHOOK_pre_aclif_add_remove_timer) (struct online_api_login_data **data);
+typedef void (*HPMHOOK_post_aclif_add_remove_timer) (struct online_api_login_data *data);
+typedef void (*HPMHOOK_pre_aclif_remove_remove_timer) (struct online_api_login_data **data);
+typedef void (*HPMHOOK_post_aclif_remove_remove_timer) (struct online_api_login_data *data);
 typedef void (*HPMHOOK_pre_aclif_show_request) (int *fd, struct api_session_data **sd, bool *show_http_headers);
 typedef void (*HPMHOOK_post_aclif_show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
 #endif // API_ACLIF_H
@@ -4784,6 +4788,8 @@ typedef void (*HPMHOOK_pre_lapiif_connect_user) (struct login_session_data **sd,
 typedef void (*HPMHOOK_post_lapiif_connect_user) (struct login_session_data *sd, const unsigned char *auth_token);
 typedef void (*HPMHOOK_pre_lapiif_disconnect_user) (int *account_id);
 typedef void (*HPMHOOK_post_lapiif_disconnect_user) (int account_id);
+typedef void (*HPMHOOK_pre_lapiif_connect_user_char) (int *char_server, int *account_id);
+typedef void (*HPMHOOK_post_lapiif_connect_user_char) (int char_server, int account_id);
 typedef void (*HPMHOOK_pre_lapiif_server_init) (int *id);
 typedef void (*HPMHOOK_post_lapiif_server_init) (int id);
 typedef void (*HPMHOOK_pre_lapiif_server_destroy) (int *id);

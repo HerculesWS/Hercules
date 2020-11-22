@@ -1375,6 +1375,58 @@ int HP_aclif_get_char_server_id(struct api_session_data *sd) {
 	}
 	return retVal___;
 }
+void HP_aclif_add_remove_timer(struct online_api_login_data *data) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_aclif_add_remove_timer_pre > 0) {
+		void (*preHookFunc) (struct online_api_login_data **data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_add_remove_timer_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_aclif_add_remove_timer_pre[hIndex].func;
+			preHookFunc(&data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.aclif.add_remove_timer(data);
+	}
+	if (HPMHooks.count.HP_aclif_add_remove_timer_post > 0) {
+		void (*postHookFunc) (struct online_api_login_data *data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_add_remove_timer_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_aclif_add_remove_timer_post[hIndex].func;
+			postHookFunc(data);
+		}
+	}
+	return;
+}
+void HP_aclif_remove_remove_timer(struct online_api_login_data *data) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_aclif_remove_remove_timer_pre > 0) {
+		void (*preHookFunc) (struct online_api_login_data **data);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_remove_remove_timer_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_aclif_remove_remove_timer_pre[hIndex].func;
+			preHookFunc(&data);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.aclif.remove_remove_timer(data);
+	}
+	if (HPMHooks.count.HP_aclif_remove_remove_timer_post > 0) {
+		void (*postHookFunc) (struct online_api_login_data *data);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_aclif_remove_remove_timer_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_aclif_remove_remove_timer_post[hIndex].func;
+			postHookFunc(data);
+		}
+	}
+	return;
+}
 void HP_aclif_show_request(int fd, struct api_session_data *sd, bool show_http_headers) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_aclif_show_request_pre > 0) {

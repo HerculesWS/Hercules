@@ -78,6 +78,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(aclif->purge_disconnected_users, HP_aclif_purge_disconnected_users) },
 	{ HP_POP(aclif->purge_disconnected_user, HP_aclif_purge_disconnected_user) },
 	{ HP_POP(aclif->get_char_server_id, HP_aclif_get_char_server_id) },
+	{ HP_POP(aclif->add_remove_timer, HP_aclif_add_remove_timer) },
+	{ HP_POP(aclif->remove_remove_timer, HP_aclif_remove_remove_timer) },
 	{ HP_POP(aclif->show_request, HP_aclif_show_request) },
 /* aloginif_interface */
 	{ HP_POP(aloginif->init, HP_aloginif_init) },
