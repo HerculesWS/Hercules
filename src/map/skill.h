@@ -2291,7 +2291,6 @@ struct skill_interface {
 	int (*splash_target) (struct block_list* bl);
 	int (*check_npc_chaospanic) (struct block_list *bl, va_list args);
 	int (*count_wos) (struct block_list *bl, va_list ap);
-	int (*get_linked_song_dance_id) (int skill_id);
 	void (*add_bard_dancer_soullink_songs) (struct map_session_data *sd);
 };
 

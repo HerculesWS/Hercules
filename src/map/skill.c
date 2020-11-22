@@ -11273,37 +11273,6 @@ static int skill_count_wos(struct block_list *bl, va_list ap)
 	return 0;
 }
 
-/**
- * Returns the linked song/dance skill ID, if any (for the Bard/Dancer Soul Link).
- *
- * @param skill_id The skill ID to look up
- *
- * @return The linked song or dance's skill ID if any
- * @retval 0 if the given skill_id doesn't have a linked skill ID
- */
-static int skill_get_linked_song_dance_id(int skill_id)
-{
-	switch (skill_id) {
-		case BA_WHISTLE:
-			return DC_HUMMING;
-		case BA_ASSASSINCROSS:
-			return DC_DONTFORGETME;
-		case BA_POEMBRAGI:
-			return DC_FORTUNEKISS;
-		case BA_APPLEIDUN:
-			return DC_SERVICEFORYOU;
-		case DC_HUMMING:
-			return BA_WHISTLE;
-		case DC_DONTFORGETME:
-			return BA_ASSASSINCROSS;
-		case DC_FORTUNEKISS:
-			return BA_POEMBRAGI;
-		case DC_SERVICEFORYOU:
-			return BA_APPLEIDUN;
-	}
-	return 0;
-}
-
 /*==========================================
  *
  *------------------------------------------*/
@@ -24346,6 +24315,5 @@ void skill_defaults(void)
 	skill->splash_target = skill_splash_target;
 	skill->check_npc_chaospanic = skill_check_npc_chaospanic;
 	skill->count_wos = skill_count_wos;
-	skill->get_linked_song_dance_id = skill_get_linked_song_dance_id;
 	skill->add_bard_dancer_soullink_songs = skill_add_bard_dancer_soullink_songs;
 }
