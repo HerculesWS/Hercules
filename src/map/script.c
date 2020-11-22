@@ -21063,6 +21063,12 @@ static BUILDIN(setunitdata)
 			return false;
 		}
 
+		if (nd->bl.m == -1) {
+			ShowWarning("buildin_setunitdata: Can't set data on npc with no valid map for GID %d.\n", script_getnum(st, 2));
+			script_pushint(st, 0);
+			return false;
+		}
+
 		switch (type) {
 		case UDT_SIZE:
 			nd->status.size = (unsigned char)val;
