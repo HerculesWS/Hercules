@@ -18889,6 +18889,12 @@ static BUILDIN(setnpcdisplay)
 		return true;
 	}
 
+	if (nd->bl.m == -1) {
+		ShowWarning("buildin_setnpcdisplay: cannot display on an npc with no valid map.\n");
+		script_pushint(st, 1);
+		return false;
+	}
+
 	// update npc
 	if( newname )
 		npc->setdisplayname(nd, newname);
