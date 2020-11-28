@@ -1626,11 +1626,6 @@ static int map_count_sub(struct block_list *bl, va_list ap)
  */
 static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag)
 {
-	int tries, spawn=0;
-	int bx, by;
-	int rx2 = 2*rx+1;
-	int ry2 = 2*ry+1;
-
 	nullpo_ret(x);
 	nullpo_ret(y);
 
@@ -1640,6 +1635,8 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		return 0;
 	}
 
+	int bx;
+	int by;
 	if (flag&1) {
 		bx = *x;
 		by = *y;
@@ -1656,6 +1653,9 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		return map->getcell(m, src, *x, *y, CELL_CHKREACH);
 	}
 
+	int tries;
+	int rx2 = 2 * rx + 1;
+	int ry2 = 2 * ry + 1;
 	if (rx >= 0 && ry >= 0) {
 		tries = rx2*ry2;
 		if (tries > 100) tries = 100;
@@ -1664,6 +1664,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		if (tries > 500) tries = 500;
 	}
 
+	int spawn = 0;
 	while(tries--) {
 		*x = (rx >= 0)?(rnd()%rx2-rx+bx):(rnd()%(map->list[m].xs-2)+1);
 		*y = (ry >= 0)?(rnd()%ry2-ry+by):(rnd()%(map->list[m].ys-2)+1);
