@@ -1636,12 +1636,9 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		return 0;
 	}
 
-	int center_x;
-	int center_y;
-	if ((flag & SFC_XY_CENTER) != 0) {
-		center_x = *x;
-		center_y = *y;
-	} else {
+	int center_x = *x;
+	int center_y = *y;
+	if ((flag & SFC_XY_CENTER) == 0) {
 		nullpo_ret(src);
 		center_x = src->x;
 		center_y = src->y;
@@ -1654,16 +1651,13 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		return map->getcell(m, src, *x, *y, CELL_CHKREACH);
 	}
 
-	int tries;
 	int width = 2 * range_x + 1;
 	int height = 2 * range_y + 1;
-	if (range_x >= 0 && range_y >= 0) {
-		tries = width * height;
-		if (tries > 100) tries = 100;
-	} else {
-		tries = map->list[m].xs*map->list[m].ys;
-		if (tries > 500) tries = 500;
-	}
+	int tries;
+	if (range_x < 0 || range_y < 0)
+		tries = min(map->list[m].xs * map->list[m].ys, 500);
+	else
+		tries = min(width * height, 100);
 
 	int avoidplayer_retries = 0;
 	while (tries-- > 0) {
