@@ -1605,18 +1605,25 @@ static int map_count_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-/*==========================================
- * Locates a random spare cell around the object given, using range as max
- * distance from that spot. Used for warping functions. Use range < 0 for
- * whole map range.
- * Returns 1 on success. when it fails and src is available, x/y are set to src's
- * src can be null as long as flag&1
- * when ~flag&1, m is not needed.
- * Flag values:
- * &1 = random cell must be around given m,x,y, not around src
- * &2 = the target should be able to walk to the target tile.
- * &4 = there shouldn't be any players around the target tile (use the no_spawn_on_player setting)
- *------------------------------------------*/
+/**
+ * Locates a random free cell (x, y) on a rectangle or the entire map.
+ *
+ * The rectangles center is either on map `m` at (x, y) or at the location of object `src`.
+ * Searches on entire map if rx < 0 and ry < 0.
+ * @remark Usage in e.g. warping or mob spawning.
+ * @param src object used to base reach checks on
+ * @param m map to search cells on, if (flag & 1) set
+ * @param[in,out] x pointer to the x-axis
+ * @param[in,out] y pointer to the y-axis
+ * @param rx range to east border of rectangle, if rx < 0 use horizontal map range
+ * @param ry range to north border of rectangle, if ry < 0 use vertical map range
+ * @param flag *flag* parameter with following options @n
+ *  - `& 1` -> 0: `src` as center, 1: center is on `m` at (x, y)
+ *  - `& 2` -> 1: `src` needs to be able to reach found cell.
+ *  - `& 4` -> 1: avoid players around found cell (@see no_spawn_on_player setting)
+ * @retval 1 success, free cell found
+ * @retval 0 failure, ran out of tries or wrong usage
+ */
 static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag)
 {
 	int tries, spawn=0;
