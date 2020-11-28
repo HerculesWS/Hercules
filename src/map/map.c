@@ -1648,7 +1648,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		m = src->m;
 	}
 	if (range_x == 0 && range_y == 0) {
-		//No range? Return the target cell then....
+		// No range? Return the target cell then....
 		*x = center_x;
 		*y = center_y;
 		return map->getcell(m, src, *x, *y, CELL_CHKREACH);
@@ -1671,7 +1671,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		*y = (range_y >= 0) ? (rnd() % height - range_y + center_y) : (rnd() % (map->list[m].ys-2) + 1);
 
 		if (*x == center_x && *y == center_y)
-			continue; //Avoid picking the same target tile.
+			continue; // Avoid picking the same target tile.
 
 		if (map->getcell(m, src, *x, *y, CELL_CHKREACH) == 0)
 			continue;
