@@ -1130,7 +1130,7 @@ struct clif_interface {
 	/* storage handling */
 	void (*storageList) (struct map_session_data* sd, struct item* items, int items_length);
 	void (*guildStorageList) (struct map_session_data* sd, struct item* items, int items_length);
-	void (*storageItems) (struct map_session_data* sd, enum inventory_type type, struct item* items, int items_length, const char *name);
+	void (*storageItems) (struct map_session_data *sd, enum inventory_type type, struct item *items, int items_length, const char *name);
 	void (*inventoryStart) (struct map_session_data* sd, enum inventory_type type, const char* name);
 	void (*inventoryEnd) (struct map_session_data* sd, enum inventory_type type);
 	void (*updatestorageamount) (struct map_session_data* sd, int amount, int max_amount);

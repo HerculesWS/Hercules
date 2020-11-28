@@ -2955,15 +2955,11 @@ static void clif_equipItems(struct map_session_data *sd, enum inventory_type typ
 
 static void clif_storageList(struct map_session_data *sd, struct item *items, int items_length)
 {
-	const struct storage_settings* stst;
-	struct storage_data* stor = NULL;
 	nullpo_retv(sd);
-	stst = storage->get_settings(sd->storage.current);
+	const struct storage_settings *stst = storage->get_settings(sd->storage.current);
 	nullpo_retv(stst);
-	stor = storage->ensure(sd, sd->storage.current);
+	struct storage_data *stor = storage->ensure(sd, sd->storage.current);
 	nullpo_retv(stor);
-	
-
 
 	clif->inventoryStart(sd, INVTYPE_STORAGE, stst->name);
 	if (stor->aggregate > 0)
@@ -9385,19 +9381,15 @@ static void clif_refresh_storagewindow(struct map_session_data *sd)
 	// Notify the client that the storage is open
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
 		const struct storage_settings* stst = storage->get_settings(sd->storage.current);
-		struct storage_data* stor = NULL;
-
 		nullpo_retv(stst);
 
-		if ((stor = storage->ensure(sd, sd->storage.current)) == NULL) {
+		struct storage_data* stor = NULL;
+		if ((stor = storage->ensure(sd, sd->storage.current)) == NULL)
 			return;
-		}
 
-		nullpo_retv(stor);
-
-		if (stor->aggregate > 0) {
+		if (stor->aggregate > 0)
 			storage->sortitem(VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
-		}
+
 		clif->storageList(sd, VECTOR_DATA(stor->item), VECTOR_LENGTH(stor->item));
 
 		clif->updatestorageamount(sd, stor->aggregate, MAX_STORAGE);
@@ -13801,7 +13793,7 @@ static void clif_parse_MoveFromKafra(int fd, struct map_session_data *sd)
 		struct storage_data *stor = storage->ensure(sd, sd->storage.current);
 		if (stor != NULL)
 			storage->get(sd, stor, item_index, item_amount);
-	} else if(sd->state.storage_flag == STORAGE_FLAG_GUILD) {
+	} else if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 		gstorage->get(sd, item_index, item_amount);
 	}
 }

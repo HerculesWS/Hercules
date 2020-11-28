@@ -18,6 +18,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `storage` ADD `storage_id` INT(11)  UNSIGNED  NOT NULL  DEFAULT '1'  AFTER `account_id`;
+ALTER TABLE `storage` ADD `storage_id` INT UNSIGNED NOT NULL DEFAULT '1' AFTER `account_id`;
 
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1589649120);

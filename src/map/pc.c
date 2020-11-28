@@ -10837,7 +10837,7 @@ static int pc_checkitem(struct map_session_data *sd)
 			sd->itemcheck &= ~PCCHECKITEM_CART;
 		}
 
-		if (sd->itemcheck & PCCHECKITEM_STORAGE) {
+		if ((sd->itemcheck & PCCHECKITEM_STORAGE) != 0) {
 			for (i = 0; i < VECTOR_LENGTH(sd->storage.list); i++) {
 				struct storage_data *stor = &VECTOR_INDEX(sd->storage.list, i);
 
@@ -10847,7 +10847,7 @@ static int pc_checkitem(struct map_session_data *sd)
 					if ((id = it->nameid) == 0)
 						continue;
 
-					if (!itemdb_available(id)) {
+					if (itemdb_available(id) == 0) {
 						ShowWarning("pc_checkitem: Removed invalid/disabled item id %d from storage %d (amount=%d, char_id=%d).\n", id, stor->uid, it->amount, sd->status.char_id);
 						storage->delitem(sd, stor, i, it->amount);
 						continue;

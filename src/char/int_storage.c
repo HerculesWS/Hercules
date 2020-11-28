@@ -43,27 +43,22 @@ struct inter_storage_interface *inter_storage;
 /// Save storage data to sql
 static int inter_storage_tosql(int account_id, int storage_id, const struct storage_data *p)
 {
-	int i = 0, j = 0;
-	bool *matched_p = NULL;
-	int *delete = NULL;
-	int total_deletes = 0, total_updates = 0, total_inserts = 0;
-	int cp_size = 0;
-	struct storage_data cp = { 0 };
-	StringBuf buf;
-
 	nullpo_ret(p);
 
+	struct storage_data cp = { 0 };
 	VECTOR_INIT(cp.item);
 
-	cp_size = inter_storage->fromsql(account_id, storage_id, &cp, 0);
+	int cp_size = inter_storage->fromsql(account_id, storage_id, &cp, 0);
 
-	matched_p = aCalloc(VECTOR_LENGTH(p->item), sizeof(bool));
+	bool *matched_p = aCalloc(VECTOR_LENGTH(p->item), sizeof(bool));
 
+	StringBuf buf;
 	StrBuf->Init(&buf);
 
+	int total_deletes = 0, total_updates = 0, total_inserts = 0;
+	int i = 0, j = 0;
 	if (VECTOR_LENGTH(cp.item) > 0) {
-
-		delete = aCalloc(cp_size, sizeof(int));
+		int *delete = aCalloc(cp_size, sizeof(int));
 
 		/**
 		 * Compare and update items, if any.

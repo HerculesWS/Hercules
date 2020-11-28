@@ -297,14 +297,16 @@ static int intif_request_registry(struct map_session_data *sd, int flag)
 
 /**
  * Request the inter-server for a character's storage data.
- * @packet 0x3010  [out] <account_id>.L <storage_id>.W <storage_size>.W
- * @param  sd      [in]  pointer to session data.
+ * 
+ * @packet 0x3010      [out] <account_id>.L <storage_id>.W <storage_size>.W
+ * @param  sd          [in]  pointer to session data.
+ * @param  storage_id  [in]  storage id to retrieve
  */
 static void intif_request_account_storage(const struct map_session_data *sd, int storage_id)
 {
-	const struct storage_settings *stst = storage->get_settings(storage_id);
-
 	nullpo_retv(sd);
+
+	const struct storage_settings *stst = storage->get_settings(storage_id);
 	nullpo_retv(stst);
 
 	/* Check for character server availability */
@@ -329,7 +331,6 @@ static void intif_parse_account_storage(int fd)
 	int account_id = 0, payload_size = 0, storage_count = 0;
 	int i = 0;
 	struct map_session_data *sd = NULL;
-	struct storage_data *stor = NULL;
 
 	Assert_retv(fd > 0);
 
@@ -340,12 +341,11 @@ static void intif_parse_account_storage(int fd)
 		return;
 	}
 
+	struct storage_data *stor = NULL;
 	if ((stor = storage->ensure(sd, RFIFOW(fd, 8))) == NULL)
 		return;
 
-	Assert_retv(stor != NULL);
-
-	if (stor->received == true) {
+	if (stor->received) {
 		ShowError("intif_parse_account_storage: Multiple calls from the inter-server received.\n");
 		return;
 	}
@@ -369,23 +369,24 @@ static void intif_parse_account_storage(int fd)
 
 /**
  * Send account storage information for saving.
- * @packet 0x3011 [out] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
- * @param  sd     [in]  pointer to session data.
+ * 
+ * @packet 0x3011      [out] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
+ * @param  sd          [in]  pointer to session data.
+ * @param  storage_id  [in]  storage id to be saved.
  */
 static void intif_send_account_storage(struct map_session_data *sd, int storage_id)
 {
 	int len = 0, i = 0, c = 0;
-	struct storage_data *stor = NULL;
 
 	nullpo_retv(sd);
 
+	struct storage_data *stor = NULL;
 	if ((stor = storage->ensure(sd, storage_id)) == NULL)
 		return;
 
 	// Assert that at this point in the code, both flags are true.
-	Assert_retv(stor != NULL);
-	Assert_retv(stor->save == true);
-	Assert_retv(stor->received == true);
+	Assert_retv(stor->save);
+	Assert_retv(stor->received);
 
 	if (intif->CheckForCharServer())
 		return;
@@ -421,13 +422,12 @@ static void intif_parse_account_storage_save_ack(int fd)
 	int account_id = RFIFOL(fd, 2);
 	int storage_id = RFIFOW(fd, 6);
 	char saved = RFIFOB(fd, 8);
-	struct map_session_data *sd = NULL;
-	struct storage_data *stor = NULL;
 
 	Assert_retv(account_id > 0);
 	Assert_retv(fd > 0);
 	Assert_retv(storage_id >= 0);
 	
+	struct map_session_data *sd = NULL;
 	if ((sd = map->id2sd(account_id)) == NULL)
 		return; // character is most probably offline.
 
@@ -436,10 +436,9 @@ static void intif_parse_account_storage_save_ack(int fd)
 		return;
 	}
 
+	struct storage_data *stor = NULL;
 	if ((stor = storage->ensure(sd, storage_id)) == NULL)
 		return;
-
-	Assert_retv(stor != NULL);
 
 	stor->save = false; // Storage has been saved.
 }

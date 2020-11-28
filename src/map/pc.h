@@ -40,7 +40,6 @@
 #include "common/hercules.h"
 #include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS, struct s_achievement
 
-
 /**
  * Defines
  **/

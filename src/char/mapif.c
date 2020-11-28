@@ -1816,9 +1816,12 @@ static int mapif_save_guild_storage_ack(int fd, int account_id, int guild_id, in
 
 /**
  * Loads the account storage and send to the map server.
- * @packet 0x3805     [out] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
- * @param  fd         [in]  file/socket descriptor.
- * @param  account_id [in]  account id of the session.
+ * 
+ * @packet 0x3805       [out] <packet_len>.W <account_id>.L <storage_id>.W <struct item[]>.P
+ * @param  fd           [in]  file/socket descriptor.
+ * @param  account_id   [in]  account id of the session.
+ * @param  storage_id   [in]  storage id to load
+ * @param  storage_size [in]  size of storage
  * @return 1 on success, 0 on failure.
  */
 static int mapif_account_storage_load(int fd, int account_id, int storage_id, int storage_size)
@@ -1855,7 +1858,8 @@ static int mapif_account_storage_load(int fd, int account_id, int storage_id, in
  */
 static int mapif_parse_AccountStorageLoad(int fd)
 {
-	int account_id = RFIFOL(fd, 2), storage_id = RFIFOW(fd, 6);
+	int account_id = RFIFOL(fd, 2);
+	int storage_id = RFIFOW(fd, 6);
 	int storage_size = RFIFOW(fd, 8);
 
 	Assert_ret(fd > 0);
@@ -1876,8 +1880,9 @@ static int mapif_parse_AccountStorageLoad(int fd)
  */
 static int mapif_parse_AccountStorageSave(int fd)
 {
-	int payload_size = RFIFOW(fd, 2) - 10, account_id = RFIFOL(fd, 4);
-	short storage_id = RFIFOW(fd, 8);
+	int payload_size = RFIFOW(fd, 2) - 10;
+	int account_id = RFIFOL(fd, 4);
+	int storage_id = RFIFOW(fd, 8);
 
 	int i = 0, count = 0;
 	struct storage_data p_stor = { 0 };
@@ -1913,9 +1918,11 @@ static int mapif_parse_AccountStorageSave(int fd)
 /**
  * Sends an acknowledgement for the save
  * status of the account storage.
+ * 
  * @packet 0x3808     [out] <account_id>.L <storage_id>.W <save_flag>.B
  * @param  fd         [in]  File/Socket Descriptor.
  * @param  account_id [in]  Account ID of the storage in question.
+ * @param  storage_id [in]  acknowledgement of storage id.
  * @param  flag       [in]  Save flag, true for success and false for failure.
  */
 static void mapif_send_AccountStorageSaveAck(int fd, int account_id, int storage_id, bool flag)
