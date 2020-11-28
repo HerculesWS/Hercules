@@ -1660,14 +1660,15 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		tries = min(width * height, 100);
 
 	int avoidplayer_retries = 0;
+	const int margin = battle_config.search_freecell_map_margin;
 	while (tries-- > 0) {
 		if (range_x < 0)
-			*x = rnd() % (map->list[m].xs - 2) + 1;
+			*x = rnd() % max(1, map->list[m].xs - 2 * margin) + margin;
 		else
 			*x = rnd() % width - range_x + center_x;
 
 		if (range_y < 0)
-			*y = rnd() % (map->list[m].ys - 2) + 1;
+			*y = rnd() % max(1, map->list[m].ys - 2 * margin) + margin;
 		else
 			*y = rnd() % height - range_y + center_y;
 

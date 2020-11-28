@@ -7432,6 +7432,7 @@ static const struct battle_data {
 	{ "idletime_criteria",                  &battle_config.idletime_criteria,            0x25,      1,      INT_MAX,        },
 	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
 	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
+	{ "search_freecell_map_margin",         &battle_config.search_freecell_map_margin,     15,      0,      INT_MAX,        },
 	{ "guild_castle_invite",                &battle_config.guild_castle_invite,             0,      0,      1,              },
 	{ "guild_castle_expulsion",             &battle_config.guild_castle_expulsion,          0,      0,      1,              },
 	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
