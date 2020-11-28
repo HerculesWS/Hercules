@@ -1655,7 +1655,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 	int height = 2 * range_y + 1;
 	int tries;
 	if (range_x < 0 || range_y < 0)
-		tries = min(map->list[m].xs * map->list[m].ys, 500);
+		tries = min(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
 	else
 		tries = min(width * height, 100);
 
