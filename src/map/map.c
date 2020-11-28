@@ -1666,7 +1666,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 	}
 
 	int avoidplayer_retries = 0;
-	while(tries--) {
+	while (tries-- > 0) {
 		*x = (range_x >= 0) ? (rnd() % width - range_x + center_x) : (rnd() % (map->list[m].xs-2) + 1);
 		*y = (range_y >= 0) ? (rnd() % height - range_y + center_y) : (rnd() % (map->list[m].ys-2) + 1);
 
