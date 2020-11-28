@@ -47019,15 +47019,15 @@ int HP_map_get_new_object_id(void) {
 	}
 	return retVal___;
 }
-int HP_map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag) {
+int HP_map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 range_x, int16 range_y, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_map_search_freecell_pre > 0) {
-		int (*preHookFunc) (struct block_list **src, int16 *m, int16 **x, int16 **y, int16 *rx, int16 *ry, int *flag);
+		int (*preHookFunc) (struct block_list **src, int16 *m, int16 **x, int16 **y, int16 *range_x, int16 *range_y, int *flag);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_search_freecell_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_map_search_freecell_pre[hIndex].func;
-			retVal___ = preHookFunc(&src, &m, &x, &y, &rx, &ry, &flag);
+			retVal___ = preHookFunc(&src, &m, &x, &y, &range_x, &range_y, &flag);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -47035,13 +47035,13 @@ int HP_map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.map.search_freecell(src, m, x, y, rx, ry, flag);
+		retVal___ = HPMHooks.source.map.search_freecell(src, m, x, y, range_x, range_y, flag);
 	}
 	if (HPMHooks.count.HP_map_search_freecell_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag);
+		int (*postHookFunc) (int retVal___, struct block_list *src, int16 m, int16 *x, int16 *y, int16 range_x, int16 range_y, int flag);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_map_search_freecell_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_map_search_freecell_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, src, m, x, y, rx, ry, flag);
+			retVal___ = postHookFunc(retVal___, src, m, x, y, range_x, range_y, flag);
 		}
 	}
 	return retVal___;

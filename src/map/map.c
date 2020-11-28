@@ -1609,14 +1609,14 @@ static int map_count_sub(struct block_list *bl, va_list ap)
  * Locates a random free cell (x, y) on a rectangle or the entire map.
  *
  * The rectangles center is either on map `m` at (x, y) or at the location of object `src`.
- * Searches on entire map if rx < 0 and ry < 0.
+ * Searches on entire map if range_x < 0 and range_y < 0.
  * @remark Usage in e.g. warping or mob spawning.
  * @param src object used to base reach checks on
  * @param m map to search cells on, if flag has SFC_XY_CENTER set
  * @param[in,out] x pointer to the x-axis
  * @param[in,out] y pointer to the y-axis
- * @param rx range to east border of rectangle, if rx < 0 use horizontal map range
- * @param ry range to north border of rectangle, if ry < 0 use vertical map range
+ * @param range_x range to east border of rectangle, if range_x < 0 use horizontal map range
+ * @param range_y range to north border of rectangle, if range_y < 0 use vertical map range
  * @param flag *flag* parameter based on @enum search_freecell with following options @n
  *  - `& SFC_XY_CENTER` -> 0: `src` as center, 1: center is on `m` at (x, y)
  *  - `& SFC_REACHABLE` -> 1: `src` needs to be able to reach found cell.
@@ -1624,7 +1624,8 @@ static int map_count_sub(struct block_list *bl, va_list ap)
  * @retval 1 success, free cell found
  * @retval 0 failure, ran out of tries or wrong usage
  */
-static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag)
+static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y,
+                               int16 range_x, int16 range_y, int flag)
 {
 	nullpo_ret(x);
 	nullpo_ret(y);
@@ -1635,29 +1636,29 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		return 0;
 	}
 
-	int bx;
-	int by;
+	int center_x;
+	int center_y;
 	if ((flag & SFC_XY_CENTER) != 0) {
-		bx = *x;
-		by = *y;
+		center_x = *x;
+		center_y = *y;
 	} else {
 		nullpo_ret(src);
-		bx = src->x;
-		by = src->y;
+		center_x = src->x;
+		center_y = src->y;
 		m = src->m;
 	}
-	if (!rx && !ry) {
+	if (range_x == 0 && range_y == 0) {
 		//No range? Return the target cell then....
-		*x = bx;
-		*y = by;
+		*x = center_x;
+		*y = center_y;
 		return map->getcell(m, src, *x, *y, CELL_CHKREACH);
 	}
 
 	int tries;
-	int rx2 = 2 * rx + 1;
-	int ry2 = 2 * ry + 1;
-	if (rx >= 0 && ry >= 0) {
-		tries = rx2*ry2;
+	int width = 2 * range_x + 1;
+	int height = 2 * range_y + 1;
+	if (range_x >= 0 && range_y >= 0) {
+		tries = width * height;
 		if (tries > 100) tries = 100;
 	} else {
 		tries = map->list[m].xs*map->list[m].ys;
@@ -1666,10 +1667,10 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 
 	int spawn = 0;
 	while(tries--) {
-		*x = (rx >= 0)?(rnd()%rx2-rx+bx):(rnd()%(map->list[m].xs-2)+1);
-		*y = (ry >= 0)?(rnd()%ry2-ry+by):(rnd()%(map->list[m].ys-2)+1);
+		*x = (range_x >= 0) ? (rnd() % width - range_x + center_x) : (rnd() % (map->list[m].xs-2) + 1);
+		*y = (range_y >= 0) ? (rnd() % height - range_y + center_y) : (rnd() % (map->list[m].ys-2) + 1);
 
-		if (*x == bx && *y == by)
+		if (*x == center_x && *y == center_y)
 			continue; //Avoid picking the same target tile.
 
 		if (map->getcell(m, src, *x, *y, CELL_CHKREACH)) {
@@ -1686,8 +1687,8 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 			return 1;
 		}
 	}
-	*x = bx;
-	*y = by;
+	*x = center_x;
+	*y = center_y;
 	return 0;
 }
 

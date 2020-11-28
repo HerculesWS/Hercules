@@ -1161,7 +1161,7 @@ END_ZEROED_BLOCK;
 	struct skill_unit * (*find_skill_unit_oncell) (struct block_list* target,int16 x,int16 y,uint16 skill_id,struct skill_unit* out_unit, int flag);
 	// search and creation
 	int (*get_new_object_id) (void);
-	int (*search_freecell) (struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag);
+	int (*search_freecell) (struct block_list *src, int16 m, int16 *x, int16 *y, int16 range_x, int16 range_y, int flag);
 	bool (*closest_freecell) (int16 m, const struct block_list *bl, int16 *x, int16 *y, int type, int flag);
 	//
 	int (*quit) (struct map_session_data *sd);
