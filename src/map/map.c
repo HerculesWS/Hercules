@@ -1661,8 +1661,16 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 
 	int avoidplayer_retries = 0;
 	while (tries-- > 0) {
-		*x = (range_x >= 0) ? (rnd() % width - range_x + center_x) : (rnd() % (map->list[m].xs-2) + 1);
-		*y = (range_y >= 0) ? (rnd() % height - range_y + center_y) : (rnd() % (map->list[m].ys-2) + 1);
+		if (range_x < 0)
+			*x = rnd() % (map->list[m].xs - 2) + 1;
+		else
+			*x = rnd() % width - range_x + center_x;
+
+		if (range_y < 0)
+			*y = rnd() % (map->list[m].ys - 2) + 1;
+		else
+			*y = rnd() % height - range_y + center_y;
+
 
 		if (*x == center_x && *y == center_y)
 			continue; // Avoid picking the same target tile.
