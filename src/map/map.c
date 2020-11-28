@@ -1665,7 +1665,7 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		if (tries > 500) tries = 500;
 	}
 
-	int spawn = 0;
+	int avoidplayer_retries = 0;
 	while(tries--) {
 		*x = (range_x >= 0) ? (rnd() % width - range_x + center_x) : (rnd() % (map->list[m].xs-2) + 1);
 		*y = (range_y >= 0) ? (rnd() % height - range_y + center_y) : (rnd() % (map->list[m].ys-2) + 1);
@@ -1677,8 +1677,9 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 			if ((flag & SFC_REACHABLE) != 0 && !unit->can_reach_pos(src, *x, *y, 1))
 				continue;
 			if ((flag & SFC_AVOIDPLAYER) != 0) {
-				if (spawn >= 100) return 0; //Limit of retries reached.
-				if (spawn++ < battle_config.no_spawn_on_player
+				if (avoidplayer_retries >= 100)
+					return 0; //Limit of retries reached.
+				if (avoidplayer_retries++ < battle_config.no_spawn_on_player
 				 && map->foreachinarea(map->count_sub, m, *x-AREA_SIZE, *y-AREA_SIZE,
 				                                         *x+AREA_SIZE, *y+AREA_SIZE, BL_PC)
 				)
