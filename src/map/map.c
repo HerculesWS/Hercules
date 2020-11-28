@@ -1612,15 +1612,15 @@ static int map_count_sub(struct block_list *bl, va_list ap)
  * Searches on entire map if rx < 0 and ry < 0.
  * @remark Usage in e.g. warping or mob spawning.
  * @param src object used to base reach checks on
- * @param m map to search cells on, if (flag & 1) set
+ * @param m map to search cells on, if flag has SFC_XY_CENTER set
  * @param[in,out] x pointer to the x-axis
  * @param[in,out] y pointer to the y-axis
  * @param rx range to east border of rectangle, if rx < 0 use horizontal map range
  * @param ry range to north border of rectangle, if ry < 0 use vertical map range
- * @param flag *flag* parameter with following options @n
- *  - `& 1` -> 0: `src` as center, 1: center is on `m` at (x, y)
- *  - `& 2` -> 1: `src` needs to be able to reach found cell.
- *  - `& 4` -> 1: avoid players around found cell (@see no_spawn_on_player setting)
+ * @param flag *flag* parameter based on @enum search_freecell with following options @n
+ *  - `& SFC_XY_CENTER` -> 0: `src` as center, 1: center is on `m` at (x, y)
+ *  - `& SFC_REACHABLE` -> 1: `src` needs to be able to reach found cell.
+ *  - `& SFC_AVOIDPLAYER` -> 1: avoid players around found cell (@see no_spawn_on_player setting)
  * @retval 1 success, free cell found
  * @retval 0 failure, ran out of tries or wrong usage
  */
@@ -1629,15 +1629,15 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 	nullpo_ret(x);
 	nullpo_ret(y);
 
-	if( !src && (!(flag&1) || flag&2) )
-	{
-		ShowDebug("map_search_freecell: Incorrect usage! When src is NULL, flag has to be &1 and can't have &2\n");
+	if (src == NULL && ((flag & SFC_XY_CENTER) == 0 || (flag & SFC_REACHABLE) != 0)) {
+		ShowDebug("map_search_freecell: Incorrect usage! When src is NULL, flag has to have SFC_XY_CENTER set"
+		          " and can't have SFC_REACHABLE set\n");
 		return 0;
 	}
 
 	int bx;
 	int by;
-	if (flag&1) {
+	if ((flag & SFC_XY_CENTER) != 0) {
 		bx = *x;
 		by = *y;
 	} else {
@@ -1673,9 +1673,9 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 			continue; //Avoid picking the same target tile.
 
 		if (map->getcell(m, src, *x, *y, CELL_CHKREACH)) {
-			if(flag&2 && !unit->can_reach_pos(src, *x, *y, 1))
+			if ((flag & SFC_REACHABLE) != 0 && !unit->can_reach_pos(src, *x, *y, 1))
 				continue;
-			if(flag&4) {
+			if ((flag & SFC_AVOIDPLAYER) != 0) {
 				if (spawn >= 100) return 0; //Limit of retries reached.
 				if (spawn++ < battle_config.no_spawn_on_player
 				 && map->foreachinarea(map->count_sub, m, *x-AREA_SIZE, *y-AREA_SIZE,

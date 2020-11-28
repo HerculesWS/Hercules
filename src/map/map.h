@@ -448,6 +448,16 @@ enum auto_trigger_flag {
 	ATF_MISC=0x40,
 };
 
+/**
+ * used for map->search_freecell parameter flag
+ */
+enum search_freecell {
+	SFC_DEFAULT = 0,
+	SFC_XY_CENTER = 1,
+	SFC_REACHABLE = 2,
+	SFC_AVOIDPLAYER = 4,
+};
+
 struct block_list {
 	struct block_list *next,*prev;
 	int id;
