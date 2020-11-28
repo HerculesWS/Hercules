@@ -26006,6 +26006,16 @@ static BUILDIN(stopselling)
 
 			cursor++;
 		}
+		if (cursor != i) {
+			nd->u.scr.shop->item[cursor].nameid = 0;
+			nd->u.scr.shop->item[cursor].value  = 0;
+			nd->u.scr.shop->item[cursor].value2 = 0;
+			nd->u.scr.shop->item[cursor].qty    = 0;
+			if (nd->u.scr.shop->item[cursor].currency != NULL) {
+				aFree(nd->u.scr.shop->item[cursor].currency);
+				nd->u.scr.shop->item[cursor].currency = NULL;
+			}
+		}
 
 		nd->u.scr.shop->items--;
 		nd->u.scr.shop->item[nd->u.scr.shop->items].currency = NULL;
