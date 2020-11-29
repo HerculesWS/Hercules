@@ -8801,10 +8801,10 @@ static BUILDIN(makeitem2)
 		if ((x < 0 || y < 0) && sd == NULL) {
 			x = 0;
 			y = 0;
-			map->search_freecell(NULL, m, &x, &y, -1, -1, 1);
+			map->search_freecell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER);
 		} else {
 			range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
-			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, 0); // Locate spot next to player.
+			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, SFC_DEFAULT); // Locate spot next to player.
 		}
 	}
 
