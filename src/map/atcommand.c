@@ -4541,9 +4541,9 @@ ACMD(unloadnpc)
 		clif->message(fd, msg_fd(fd, 1133)); /// Please enter a NPC name (Usage: @unloadnpc <NPC_name> {<flag>}).
 		return false;
 	}
-	
+
 	struct npc_data *nd = npc->name2id(npc_name);
-	
+
 	if (nd == NULL) {
 		clif->message(fd, msg_fd(fd, 111)); /// This NPC doesn't exist.
 		return false;
@@ -5461,14 +5461,14 @@ ACMD(dropall)
 				ShowWarning("Non-existant item %d on dropall list (account_id: %d, char_id: %d)\n", sd->status.inventory[i].nameid, sd->status.account_id, sd->status.char_id);
 				continue;
 			}
-			
+
 			if (!pc->candrop(sd, &sd->status.inventory[i]))
 				continue;
-			
+
 			if (type == -1 || type == item_data->type) {
 				if (sd->status.inventory[i].equip != 0)
 					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
-				
+
 				int amount = sd->status.inventory[i].amount;
 				if (pc->dropitem(sd, i, amount) != 0)
 					count += amount;
