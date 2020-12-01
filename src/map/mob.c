@@ -560,11 +560,11 @@ static struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16
 
 	/** Locate spot next to player. **/
 	if (bl != NULL && (x < 0 || y < 0))
-		map->search_freecell(bl, m, &x, &y, 1, 1, SFC_DEFAULT);
+		map->search_free_cell(bl, m, &x, &y, 1, 1, SFC_DEFAULT);
 
 	/** If none found, pick random position on map. **/
 	if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys)
-		map->search_freecell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER);
+		map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER);
 
 	data.x = x;
 	data.y = y;
@@ -795,7 +795,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 		return 0;
 	}
 
-	if ((x <= 0 || y <= 0) && map->search_freecell(NULL, map_id, &x, &y, -1, -1, SFC_XY_CENTER) != 0) {
+	if ((x <= 0 || y <= 0) && map->search_free_cell(NULL, map_id, &x, &y, -1, -1, SFC_XY_CENTER) != 0) {
 		ShowWarning("mob_spawn_guardian: Couldn't locate a spawn cell for guardian class %d (index %d) on castle map %s.\n",
 			    class_, guardian, mapname);
 		return 0;
@@ -911,7 +911,7 @@ static int mob_spawn_bg(const char *mapname, short x, short y, const char *mobna
 		return 0;
 	}
 
-	if ((x <= 0 || y <= 0) && map->search_freecell(NULL, map_id, &x, &y, -1, -1, SFC_XY_CENTER) != 0) {
+	if ((x <= 0 || y <= 0) && map->search_free_cell(NULL, map_id, &x, &y, -1, -1, SFC_XY_CENTER) != 0) {
 		ShowWarning("mob_spawn_bg: Couldn't locate a spawn cell for guardian class %d (bg_id %u) on map %s.\n", class_, bg_id, mapname);
 		return 0;
 	}
@@ -1104,7 +1104,7 @@ static int mob_spawn(struct mob_data *md)
 		if( (md->bl.x == 0 && md->bl.y == 0) || md->spawn->xs || md->spawn->ys ) {
 			//Monster can be spawned on an area.
 			int sfc_flag = (battle_config.no_spawn_on_player != 0) ? SFC_AVOIDPLAYER : SFC_DEFAULT;
-			if (map->search_freecell(&md->bl, -1, &md->bl.x, &md->bl.y, md->spawn->xs, md->spawn->ys, sfc_flag) != 0) {
+			if (map->search_free_cell(&md->bl, -1, &md->bl.x, &md->bl.y, md->spawn->xs, md->spawn->ys, sfc_flag) != 0) {
 				// retry again later
 				if( md->spawn_timer != INVALID_TIMER )
 					timer->delete(md->spawn_timer, mob->delayspawn);
@@ -1466,7 +1466,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 			const struct mob_data *m_md = BL_CCAST(BL_MOB, bl); // Can be NULL due to master being BL_PC
 			// If master is BL_MOB and in battle, lock & chase to master's target instead, unless configured not to.
 			if ((bl->type == BL_PC || battle_config.slave_chase_masters_chasetarget == 0 || (m_md != NULL && !mob->is_in_battle_state(m_md)))
-			    && map->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, SFC_XY_CENTER) == 0
+			    && map->search_free_cell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, SFC_XY_CENTER) == 0
 			    && unit->walk_toxy(&md->bl, x, y, 0) == 0)
 				return 1;
 		}
@@ -3154,7 +3154,7 @@ static int mob_warpslave_sub(struct block_list *bl, va_list ap)
 	if(md->master_id!=master->id)
 		return 0;
 
-	map->search_freecell(master, 0, &x, &y, range, range, SFC_DEFAULT);
+	map->search_free_cell(master, 0, &x, &y, range, range, SFC_DEFAULT);
 	unit->warp(&md->bl, master->m, x, y,CLR_TELEPORT);
 	return 1;
 }
@@ -3260,7 +3260,7 @@ static int mob_summonslave(struct mob_data *md2, int *value, int amount, uint16 
 
 		short x;
 		short y;
-		map->search_freecell(&md2->bl, 0, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, SFC_DEFAULT);
+		map->search_free_cell(&md2->bl, 0, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, SFC_DEFAULT);
 		data.x = x;
 		data.y = y;
 
@@ -3633,7 +3633,7 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 			// Find a target cell.
 			if (target_type >= MST_AROUND5 && target_type <= MST_AROUND) {
 				int range = target_type - ((target_type >= MST_AROUND1) ? MST_AROUND1 : MST_AROUND5) + 1;
-				map->search_freecell(&md->bl, md->bl.m, &x, &y, range, range, (SFC_XY_CENTER | SFC_REACHABLE));
+				map->search_free_cell(&md->bl, md->bl.m, &x, &y, range, range, (SFC_XY_CENTER | SFC_REACHABLE));
 			}
 
 			md->skill_idx = skill_idx;

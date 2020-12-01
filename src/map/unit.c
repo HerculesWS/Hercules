@@ -1078,7 +1078,7 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_
 
 	if (x<0 || y<0) {
 		//Random map position.
-		if (map->search_freecell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER) != 0) {
+		if (map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER) != 0) {
 			ShowWarning("unit_warp failed. Unit Id:%d/Type:%u, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
 			return 2;
 
@@ -1087,7 +1087,7 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_
 		//Invalid target cell
 		ShowWarning("unit_warp: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", m, map->list[m].name, x,y);
 
-		if (map->search_freecell(NULL, m, &x, &y, 4, 4, SFC_XY_CENTER) != 0) {
+		if (map->search_free_cell(NULL, m, &x, &y, 4, 4, SFC_XY_CENTER) != 0) {
 			//Can't find a nearby cell
 			ShowWarning("unit_warp failed. Unit Id:%d/Type:%u, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
 			return 2;

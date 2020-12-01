@@ -1625,14 +1625,14 @@ static int map_count_sub(struct block_list *bl, va_list ap)
  * @retval 1 failure, ran out of tries or wrong usage
  * @retval 2 failure, nullpointer
  */
-static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y,
+static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16 *y,
                                int16 range_x, int16 range_y, int flag)
 {
 	nullpo_retr(2, x);
 	nullpo_retr(2, y);
 
 	if (src == NULL && ((flag & SFC_XY_CENTER) == 0 || (flag & SFC_REACHABLE) != 0)) {
-		ShowDebug("map_search_freecell: Incorrect usage! When src is NULL, flag has to have SFC_XY_CENTER set"
+		ShowDebug("map_search_free_cell: Incorrect usage! When src is NULL, flag has to have SFC_XY_CENTER set"
 		          " and can't have SFC_REACHABLE set\n");
 		return 1;
 	}
@@ -7163,7 +7163,7 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->find_skill_unit_oncell = map_find_skill_unit_oncell;
 	// search and creation
 	map->get_new_object_id = map_get_new_object_id;
-	map->search_freecell = map_search_freecell;
+	map->search_free_cell = map_search_free_cell;
 	map->closest_freecell = map_closest_freecell;
 	//
 	map->quit = map_quit;
