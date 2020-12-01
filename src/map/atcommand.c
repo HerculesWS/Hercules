@@ -477,7 +477,7 @@ ACMD(mapmove)
 	if ((x || y) && map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS) && pc_get_group_level(sd) < battle_config.gm_ignore_warpable_area) {
 		//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_fd(fd,2));
-		if (map->search_freecell(NULL, m, &x, &y, 10, 10, SFC_XY_CENTER) == 0)
+		if (map->search_freecell(NULL, m, &x, &y, 10, 10, SFC_XY_CENTER) != 0)
 			x = y = 0; //Invalid cell, use random spot.
 	}
 	if (map->list[m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
@@ -594,7 +594,7 @@ ACMD(jump)
 	if ((x || y) && map->getcell(sd->bl.m, &sd->bl, x, y, CELL_CHKNOPASS)) {
 		//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_fd(fd,2));
-		if (map->search_freecell(NULL, sd->bl.m, &x, &y, 10, 10, SFC_XY_CENTER) == 0)
+		if (map->search_freecell(NULL, sd->bl.m, &x, &y, 10, 10, SFC_XY_CENTER) != 0)
 			x = y = 0; //Invalid cell, use random spot.
 	}
 

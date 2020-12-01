@@ -1621,25 +1621,26 @@ static int map_count_sub(struct block_list *bl, va_list ap)
  *  - `& SFC_XY_CENTER` -> 0: `src` as center, 1: center is on `m` at (x, y)
  *  - `& SFC_REACHABLE` -> 1: `src` needs to be able to reach found cell.
  *  - `& SFC_AVOIDPLAYER` -> 1: avoid players around found cell (@see no_spawn_on_player setting)
- * @retval 1 success, free cell found
- * @retval 0 failure, ran out of tries or wrong usage
+ * @retval 0 success, free cell found
+ * @retval 1 failure, ran out of tries or wrong usage
+ * @retval 2 failure, nullpointer
  */
 static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y,
                                int16 range_x, int16 range_y, int flag)
 {
-	nullpo_ret(x);
-	nullpo_ret(y);
+	nullpo_retr(2, x);
+	nullpo_retr(2, y);
 
 	if (src == NULL && ((flag & SFC_XY_CENTER) == 0 || (flag & SFC_REACHABLE) != 0)) {
 		ShowDebug("map_search_freecell: Incorrect usage! When src is NULL, flag has to have SFC_XY_CENTER set"
 		          " and can't have SFC_REACHABLE set\n");
-		return 0;
+		return 1;
 	}
 
 	int center_x = *x;
 	int center_y = *y;
 	if ((flag & SFC_XY_CENTER) == 0) {
-		nullpo_ret(src);
+		nullpo_retr(2, src);
 		center_x = src->x;
 		center_y = src->y;
 		m = src->m;
@@ -1648,7 +1649,10 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 		// No range? Return the target cell then....
 		*x = center_x;
 		*y = center_y;
-		return map->getcell(m, src, *x, *y, CELL_CHKREACH);
+		if (map->getcell(m, src, *x, *y, CELL_CHKREACH) == 0)
+			return 1;
+		else
+			return 0;
 	}
 
 	int width = 2 * range_x + 1;
@@ -1683,20 +1687,20 @@ static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 
 			continue;
 
 		if ((flag & SFC_AVOIDPLAYER) == 0)
-			return 1;
+			return 0;
 
 		if (avoidplayer_retries >= 100)
-			return 0; // Limit of retries reached.
+			return 1; // Limit of retries reached.
 
 		if (avoidplayer_retries++ < battle_config.no_spawn_on_player
 		    && map->foreachinarea(map->count_sub, m, *x - AREA_SIZE, *y - AREA_SIZE,
 					  *x + AREA_SIZE, *y + AREA_SIZE, BL_PC) != 0)
 			continue;
-		return 1;
+		return 0;
 	}
 	*x = center_x;
 	*y = center_y;
-	return 0;
+	return 1;
 }
 
 /*==========================================
