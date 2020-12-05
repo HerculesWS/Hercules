@@ -1658,13 +1658,16 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 	int width = 2 * range_x + 1;
 	int height = 2 * range_y + 1;
 	int tries;
-	if (range_x < 0 || range_y < 0)
+	const int margin = battle_config.search_freecell_map_margin;
+	if (range_x < 0 || range_y < 0) {
+		if (Assert_chk(map->list[m].xs > 2 * margin && map->list[m].ys > 2 * margin))
+			ShowDebug("search_freecell_map_margin is too big for at least one map.");
 		tries = min(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
-	else
+	} else {
 		tries = min(width * height, 100);
+	}
 
 	int avoidplayer_retries = 0;
-	const int margin = battle_config.search_freecell_map_margin;
 	while (tries-- > 0) {
 		if (range_x < 0)
 			*x = rnd() % max(1, map->list[m].xs - 2 * margin) + margin;
@@ -1676,6 +1679,9 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 		else
 			*y = rnd() % height - range_y + center_y;
 
+		// Ensure we don't get out of map bounds.
+		*x = cap_value(*x, 1, map->list[m].xs - 1);
+		*y = cap_value(*y, 1, map->list[m].ys - 1);
 
 		if (*x == center_x && *y == center_y)
 			continue; // Avoid picking the same target tile.
