@@ -85002,33 +85002,6 @@ int HP_skill_count_wos(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-int HP_skill_get_linked_song_dance_id(int skill_id) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_skill_get_linked_song_dance_id_pre > 0) {
-		int (*preHookFunc) (int *skill_id);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_linked_song_dance_id_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_skill_get_linked_song_dance_id_pre[hIndex].func;
-			retVal___ = preHookFunc(&skill_id);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.skill.get_linked_song_dance_id(skill_id);
-	}
-	if (HPMHooks.count.HP_skill_get_linked_song_dance_id_post > 0) {
-		int (*postHookFunc) (int retVal___, int skill_id);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_linked_song_dance_id_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_skill_get_linked_song_dance_id_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, skill_id);
-		}
-	}
-	return retVal___;
-}
 void HP_skill_add_bard_dancer_soullink_songs(struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_skill_add_bard_dancer_soullink_songs_pre > 0) {

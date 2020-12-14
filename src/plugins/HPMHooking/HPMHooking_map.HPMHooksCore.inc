@@ -6358,8 +6358,6 @@ struct {
 	struct HPMHookPoint *HP_skill_check_npc_chaospanic_post;
 	struct HPMHookPoint *HP_skill_count_wos_pre;
 	struct HPMHookPoint *HP_skill_count_wos_post;
-	struct HPMHookPoint *HP_skill_get_linked_song_dance_id_pre;
-	struct HPMHookPoint *HP_skill_get_linked_song_dance_id_post;
 	struct HPMHookPoint *HP_skill_add_bard_dancer_soullink_songs_pre;
 	struct HPMHookPoint *HP_skill_add_bard_dancer_soullink_songs_post;
 	struct HPMHookPoint *HP_sockt_init_pre;
@@ -13425,8 +13423,6 @@ struct {
 	int HP_skill_check_npc_chaospanic_post;
 	int HP_skill_count_wos_pre;
 	int HP_skill_count_wos_post;
-	int HP_skill_get_linked_song_dance_id_pre;
-	int HP_skill_get_linked_song_dance_id_post;
 	int HP_skill_add_bard_dancer_soullink_songs_pre;
 	int HP_skill_add_bard_dancer_soullink_songs_post;
 	int HP_sockt_init_pre;

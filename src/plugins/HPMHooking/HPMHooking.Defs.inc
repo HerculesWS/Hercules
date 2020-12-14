@@ -7834,8 +7834,6 @@ typedef int (*HPMHOOK_pre_skill_check_npc_chaospanic) (struct block_list **bl, v
 typedef int (*HPMHOOK_post_skill_check_npc_chaospanic) (int retVal___, struct block_list *bl, va_list args);
 typedef int (*HPMHOOK_pre_skill_count_wos) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_count_wos) (int retVal___, struct block_list *bl, va_list ap);
-typedef int (*HPMHOOK_pre_skill_get_linked_song_dance_id) (int *skill_id);
-typedef int (*HPMHOOK_post_skill_get_linked_song_dance_id) (int retVal___, int skill_id);
 typedef void (*HPMHOOK_pre_skill_add_bard_dancer_soullink_songs) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_skill_add_bard_dancer_soullink_songs) (struct map_session_data *sd);
 #endif // MAP_SKILL_H
