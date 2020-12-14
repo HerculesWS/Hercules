@@ -1560,6 +1560,47 @@ static int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsig
 	return 1;
 }
 
+/**
+ * a sub-function from 'status_check_skilluse' function, which can be use for plugin manipulation
+ * check 'disabled_skills' flag settings from `db\(pre-)re\map_zone_db.conf`
+ *
+ * @param src        The source object can be BL_PC, BL_MOB, BL_PET, BL_HOM, BL_MER, BL_ELEM type
+ * @param st         The status_data of the source object, use to check MD_BOSS of BL_MOB type
+ * @param skill_id   The skill ID use by src
+ *
+ * @return false if the skill ID use is denied, true otherwise
+ **/
+static bool status_check_skilluse_mapzone(struct block_list *src, struct status_data *st, uint16 skill_id)
+{
+	nullpo_retr(false, src);
+	nullpo_retr(false, st);
+	for (int i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
+		int zone_nameid = map->list[src->m].zone->disabled_skills[i]->nameid;
+		enum bl_type zone_type = map->list[src->m].zone->disabled_skills[i]->type;
+		enum map_zone_skill_subtype zone_subtype = map->list[src->m].zone->disabled_skills[i]->subtype;
+		if (skill_id == zone_nameid && (zone_type & src->type) != 0) {
+			if (src->type == BL_PC) {
+				struct map_session_data *sd = BL_UCAST(BL_PC, src);
+#if PACKETVER >= 20080311
+				clif->skill_mapinfomessage(sd, 2);
+#else
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
+#endif
+			} else if (src->type == BL_MOB && zone_subtype != MZS_NONE) {
+				if ((st->mode & MD_BOSS) != 0) { /* is boss */
+					if ((zone_subtype & MZS_BOSS) == 0)
+						break;
+				} else { /* is not boss */
+					if ((zone_subtype & MZS_BOSS) != 0)
+						break;
+				}
+			}
+			return false;
+		}
+	}
+	return true;
+}
+
 /*==========================================
  * Checks whether the src can use the skill on the target,
  * taking into account status/option of both source/target. [Skotlex]
@@ -1600,28 +1641,8 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	if( skill_id ) {
 		if (src != NULL && (sd == NULL || sd->auto_cast_current.type != AUTOCAST_ITEM)) {
 			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
-			int i;
-
-			for(i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
-				if( skill_id == map->list[src->m].zone->disabled_skills[i]->nameid && (map->list[src->m].zone->disabled_skills[i]->type&src->type) ) {
-					if (src->type == BL_PC) {
-#if PACKETVER >= 20080311
-						clif->skill_mapinfomessage(sd, 2);
-#else
-						clif->messagecolor_self(sd->fd, COLOR_CYAN, msg_sd(sd, 50));
-#endif
-					} else if (src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE) {
-						if( st->mode&MD_BOSS ) { /* is boss */
-							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
-								break;
-						} else { /* is not boss */
-							if( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS )
-								break;
-						}
-					}
-					return 0;
-				}
-			}
+			if (!status->check_skilluse_mapzone(src, st, skill_id))
+				return 0;
 		}
 
 		switch( skill_id ) {
@@ -14142,6 +14163,7 @@ void status_defaults(void)
 	status->calc_regen_rate_homunculus = status_calc_regen_rate_homunculus;
 	status->calc_regen_rate = status_calc_regen_rate;
 
+	status->check_skilluse_mapzone = status_check_skilluse_mapzone;
 	status->check_skilluse = status_check_skilluse; // [Skotlex]
 	status->check_visibility = status_check_visibility; //[Skotlex]
 
