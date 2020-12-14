@@ -24,6 +24,7 @@
 #include "path.h"
 
 #include "map/map.h"
+#include "map/unit.h"
 #include "common/cbasetypes.h"
 #include "common/db.h"
 #include "common/memmgr.h"
@@ -82,10 +83,10 @@ static const unsigned char walk_choices [3][3] =
 };
 
 /*==========================================
- * Find the closest reachable cell, 'count' cells away from (x0,y0) in direction (dx,dy).
+ * Find the closest reachable cell, 'count' cells away from (x0,y0) in direction dir.
  * Income after the coordinates of the blow
  *------------------------------------------*/
-static int path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count)
+static int path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count)
 {
 	struct map_data *md;
 
@@ -98,11 +99,9 @@ static int path_blownpos(struct block_list *bl, int16 m, int16 x0, int16 y0, int
 		ShowWarning("path_blownpos: count too many %d !\n",count);
 		count=25;
 	}
-	if( dx > 1 || dx < -1 || dy > 1 || dy < -1 ){
-		ShowError("path_blownpos: illegal dx=%d or dy=%d !\n",dx,dy);
-		dx=(dx>0)?1:((dx<0)?-1:0);
-		dy=(dy>0)?1:((dy<0)?-1:0);
-	}
+	Assert_retr((x0 << 16) | y0, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
+	int dx = dirx[dir];
+	int dy = diry[dir];
 
 	while( count > 0 && (dx != 0 || dy != 0) ) {
 		if (!md->getcellp(md, bl, x0 + dx, y0 + dy, CELL_CHKPASS))

@@ -5678,6 +5678,8 @@ typedef int (*HPMHOOK_pre_npc_settimerevent_tick) (struct npc_data **nd, int *ne
 typedef int (*HPMHOOK_post_npc_settimerevent_tick) (int retVal___, struct npc_data *nd, int newtimer);
 typedef int (*HPMHOOK_pre_npc_event) (struct map_session_data **sd, const char **eventname, int *ontouch);
 typedef int (*HPMHOOK_post_npc_event) (int retVal___, struct map_session_data *sd, const char *eventname, int ontouch);
+typedef int (*HPMHOOK_pre_npc_handle_touch_events) (struct map_session_data **sd, int *x, int *y, bool *check_if_warped);
+typedef int (*HPMHOOK_post_npc_handle_touch_events) (int retVal___, struct map_session_data *sd, int x, int y, bool check_if_warped);
 typedef int (*HPMHOOK_pre_npc_touch_areanpc_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_npc_touch_areanpc_sub) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_npc_touchnext_areanpc) (struct map_session_data **sd, bool *leavemap);
@@ -5982,8 +5984,8 @@ typedef int (*HPMHOOK_pre_party_db_final) (union DBKey *key, struct DBData **dat
 typedef int (*HPMHOOK_post_party_db_final) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 #endif // MAP_PARTY_H
 #ifdef MAP_PATH_H /* path */
-typedef int (*HPMHOOK_pre_path_blownpos) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
-typedef int (*HPMHOOK_post_path_blownpos) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+typedef int (*HPMHOOK_pre_path_blownpos) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, enum unit_dir *dir, int *count);
+typedef int (*HPMHOOK_post_path_blownpos) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count);
 typedef bool (*HPMHOOK_pre_path_search) (struct walkpath_data **wpd, struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
 typedef bool (*HPMHOOK_post_path_search) (bool retVal___, struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
 typedef bool (*HPMHOOK_pre_path_search_long) (struct shootpath_data **spd, struct block_list **bl, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);
@@ -8496,22 +8498,22 @@ typedef int (*HPMHOOK_pre_unit_walk_toxy) (struct block_list **bl, short *x, sho
 typedef int (*HPMHOOK_post_unit_walk_toxy) (int retVal___, struct block_list *bl, short x, short y, int flag);
 typedef int (*HPMHOOK_pre_unit_walktobl_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_unit_walktobl_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-typedef int (*HPMHOOK_pre_unit_walktobl) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
-typedef int (*HPMHOOK_post_unit_walktobl) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
+typedef int (*HPMHOOK_pre_unit_walk_tobl) (struct block_list **bl, struct block_list **tbl, int *range, int *flag);
+typedef int (*HPMHOOK_post_unit_walk_tobl) (int retVal___, struct block_list *bl, struct block_list *tbl, int range, int flag);
 typedef bool (*HPMHOOK_pre_unit_run) (struct block_list **bl, struct map_session_data **sd, enum sc_type *type);
 typedef bool (*HPMHOOK_post_unit_run) (bool retVal___, struct block_list *bl, struct map_session_data *sd, enum sc_type type);
 typedef void (*HPMHOOK_pre_unit_run_hit) (struct block_list **bl, struct status_change **sc, struct map_session_data **sd, enum sc_type *type);
 typedef void (*HPMHOOK_post_unit_run_hit) (struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type);
-typedef int (*HPMHOOK_pre_unit_escape) (struct block_list **bl, struct block_list **target, short *dist);
-typedef int (*HPMHOOK_post_unit_escape) (int retVal___, struct block_list *bl, struct block_list *target, short dist);
-typedef int (*HPMHOOK_pre_unit_movepos) (struct block_list **bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
-typedef int (*HPMHOOK_post_unit_movepos) (int retVal___, struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
+typedef int (*HPMHOOK_pre_unit_attempt_escape) (struct block_list **bl, struct block_list **target, short *dist);
+typedef int (*HPMHOOK_post_unit_attempt_escape) (int retVal___, struct block_list *bl, struct block_list *target, short dist);
+typedef int (*HPMHOOK_pre_unit_move_pos) (struct block_list **bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
+typedef int (*HPMHOOK_post_unit_move_pos) (int retVal___, struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath);
 typedef int (*HPMHOOK_pre_unit_set_dir) (struct block_list **bl, enum unit_dir *dir);
 typedef int (*HPMHOOK_post_unit_set_dir) (int retVal___, struct block_list *bl, enum unit_dir dir);
 typedef enum unit_dir (*HPMHOOK_pre_unit_getdir) (const struct block_list **bl);
 typedef enum unit_dir (*HPMHOOK_post_unit_getdir) (enum unit_dir retVal___, const struct block_list *bl);
-typedef int (*HPMHOOK_pre_unit_blown) (struct block_list **bl, int *dx, int *dy, int *count, int *flag);
-typedef int (*HPMHOOK_post_unit_blown) (int retVal___, struct block_list *bl, int dx, int dy, int count, int flag);
+typedef int (*HPMHOOK_pre_unit_push) (struct block_list **bl, enum unit_dir *dir, int *count, bool *update);
+typedef int (*HPMHOOK_post_unit_push) (int retVal___, struct block_list *bl, enum unit_dir dir, int count, bool update);
 typedef int (*HPMHOOK_pre_unit_warp) (struct block_list **bl, short *m, short *x, short *y, enum clr_type *type);
 typedef int (*HPMHOOK_post_unit_warp) (int retVal___, struct block_list *bl, short m, short x, short y, enum clr_type type);
 typedef int (*HPMHOOK_pre_unit_warpto_master) (struct block_list **master_bl, struct block_list **slave_bl);

@@ -1673,7 +1673,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 			struct block_list *winkcharm_target = map->id2bl(sc->data[SC_DC_WINKCHARM]->val2);
 			if (winkcharm_target != NULL) {
 				if (unit->bl2ud(src) && (unit->bl2ud(src))->walktimer == INVALID_TIMER)
-					unit->walktobl(src, winkcharm_target, 3, 1);
+					unit->walk_tobl(src, winkcharm_target, 3, 1);
 				clif->emotion(src, E_LV);
 				return 0;
 			} else {
@@ -13801,7 +13801,7 @@ static void status_read_job_db(void)
 	struct config_t job_db_conf;
 	struct config_setting_t *jdb = NULL;
 	char config_filename[256];
-	
+
 #ifdef RENEWAL_ASPD
 	libconfig->format_db_path(DBPATH_RE"job_db.conf", config_filename, sizeof(config_filename));
 #else

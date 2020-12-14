@@ -9157,7 +9157,7 @@ static BUILDIN(enableitemuse)
 
 	if (flag < 0)
 		return true;
-	
+
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
@@ -9191,7 +9191,7 @@ static BUILDIN(disableitemuse)
 
 	if (flag < 0)
 		return true;
-	
+
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if (sd == NULL)
@@ -20361,7 +20361,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			md->status.speed = (unsigned short)val;
@@ -20535,7 +20535,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			hd->base_status.speed = (unsigned short)val;
@@ -20678,7 +20678,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			pd->status.speed = (unsigned short)val;
@@ -20812,7 +20812,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			mc->base_status.size = (unsigned char)val;
@@ -20949,7 +20949,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
 			ed->base_status.speed = (unsigned short)val;
@@ -21081,7 +21081,7 @@ static BUILDIN(setunitdata)
 			break;
 		case UDT_WALKTOXY:
 			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
-				unit->movepos(bl, (short)val, (short)val2, 0, 0);
+				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_CLASS:
 			npc->setclass(nd, (short)val);
@@ -21824,7 +21824,10 @@ static BUILDIN(unitwalk)
 	}
 	else {
 		int target_id = script_getnum(st, 3);
-		script_pushint(st, unit->walktobl(bl, map->id2bl(target_id), 1, 1));
+		if (unit->walk_tobl(bl, map->id2bl(target_id), 1, 1) == 0)
+			script_pushint(st, 1);
+		else
+			script_pushint(st, 0);
 	}
 
 	return true;
@@ -21969,7 +21972,10 @@ static BUILDIN(unitattack)
 			script_pushint(st, 0);
 			return false;
 	}
-	script_pushint(st, unit->walktobl(unit_bl, target_bl, 65025, 2));
+	if (unit->walk_tobl(unit_bl, target_bl, 65025, 2) == 0)
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
 	return true;
 }
 
@@ -24016,7 +24022,7 @@ static BUILDIN(progressbar_unit)
 }
 static BUILDIN(pushpc)
 {
-	int cells, dx, dy;
+	int cells;
 	struct map_session_data* sd;
 
 	if((sd = script->rid2sd(st))==NULL)
@@ -24044,11 +24050,7 @@ static BUILDIN(pushpc)
 		cells = -cells;
 	}
 
-	Assert_retr(false, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
-	dx = dirx[dir];
-	dy = diry[dir];
-
-	unit->blown(&sd->bl, dx, dy, cells, 0);
+	unit->push(&sd->bl, dir, cells, true);
 	return true;
 }
 

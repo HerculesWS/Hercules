@@ -254,6 +254,7 @@ struct npc_interface {
 	int64 (*gettimerevent_tick) (struct npc_data *nd);
 	int (*settimerevent_tick) (struct npc_data *nd, int newtimer);
 	int (*event) (struct map_session_data *sd, const char *eventname, int ontouch);
+	int (*handle_touch_events) (struct map_session_data *sd, int x, int y, bool check_if_warped);
 	int (*touch_areanpc_sub) (struct block_list *bl, va_list ap);
 	int (*touchnext_areanpc) (struct map_session_data *sd, bool leavemap);
 	int (*touch_areanpc) (struct map_session_data *sd, int16 m, int16 x, int16 y);

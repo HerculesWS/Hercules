@@ -58,7 +58,7 @@ struct shootpath_data {
 
 struct path_interface {
 	// calculates destination cell for knockback
-	int (*blownpos) (struct block_list *bl, int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+	int (*blownpos) (struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count);
 	// tries to find a walkable path
 	bool (*search) (struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
 	// tries to find a shootable path

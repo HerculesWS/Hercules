@@ -220,7 +220,7 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 		timer_delay = status->get_speed(bl);
 
 	if (timer_delay > 0)
-		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walk_toxy_timer, bl->id, 0); //TODO: check if unit->walk_toxy_timer uses any intptr data
+		ud->walktimer = timer->add(timer->gettick() + timer_delay, unit->walk_toxy_timer, bl->id, timer_delay);
 	return 0;
 }
 
@@ -310,10 +310,12 @@ static int unit_warpto_master(struct block_list *master_bl, struct block_list *s
 			*masterteleport_timer = timer->gettick();
 			return 0;
 		} else if (DIFF_TICK(timer->gettick(), *masterteleport_timer) > 3000) {
+			*masterteleport_timer = 0;
 			unit->warp(slave_bl, master_bl->m, master_bl->x, master_bl->y, CLR_TELEPORT);
 		}
+	} else {
+		*masterteleport_timer = 0; // resets tick in case he isn't far anymore.
 	}
-	*masterteleport_timer = 0; // resets tick in case he isn't far anymore.
 
 	return 0;
 }
@@ -407,15 +409,8 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 
 	struct mercenary_data *mrd = BL_CAST(BL_MER, bl);
 	if (sd != NULL) {
-		if (sd->touching_id != 0)
-			npc->touchnext_areanpc(sd, false);
-		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC)) {
-			npc->touch_areanpc(sd, bl->m, x, y);
-			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
-				return 0;
-		} else {
-			npc->untouch_areanpc(sd, bl->m, x, y);
-		}
+		if (npc->handle_touch_events(sd, x, y, true) != 0)
+			return 1;
 
 		if (sd->md != NULL) // mercenary should be warped after being 3 seconds too far from the master [greenbox]
 			unit->warpto_master(bl, &sd->md->bl);
@@ -425,10 +420,12 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		// Movement was successful, reset walktoxy_fail_count
 		md->walktoxy_fail_count = 0;
 
-		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC) != 0 && npc->touch_areanpc2(md))
-			return 0; // Warped
-		else
+		if (map->getcell(bl->m, bl, x, y, CELL_CHKNPC) != 0) {
+			if (npc->touch_areanpc2(md) != 0)
+				return 0; // Warped
+		} else {
 			md->areanpc_id = 0;
+		}
 
 		if (md->min_chase > md->db->range3)
 			md->min_chase--;
@@ -486,7 +483,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 		timer_delay = status->get_speed(bl);
 
 	if (timer_delay > 0) {
-		ud->walktimer = timer->add(tick + timer_delay, unit->walk_toxy_timer, id, 0);
+		ud->walktimer = timer->add(tick + timer_delay, unit->walk_toxy_timer, id, timer_delay);
 		if (md != NULL && DIFF_TICK(tick, md->dmgtick) < 3000) // not required not damaged recently
 			clif->move(ud);
 	} else if (ud->state.running != 0) {
@@ -515,7 +512,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 				unit->attack(bl, tbl->id, ud->state.attack_continue);
 			}
 		} else { // Update chase-path
-			unit->walktobl(bl, tbl, ud->chaserange, ud->state.walk_easy | ud->state.attack_continue);
+			unit->walk_tobl(bl, tbl, ud->chaserange, ud->state.walk_easy | ud->state.attack_continue);
 			return 0;
 		}
 	} else {
@@ -686,101 +683,114 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-// Chases a tbl. If the flag&1, use hard-path seek,
-// if flag&2, start attacking upon arrival within range, otherwise just walk to that character.
-static int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int flag)
+/**
+ * Makes the unit of @p bl walk up to the target @p tbl.
+ *
+ * See @p flag for additional actions or options.
+ *
+ * @param bl block_list of unit to move
+ * @param tbl block_list of target unit to move to
+ * @param range stop walking once within a distance of @p range with @p tbl
+ * @param flag *flag* parameter with following options: @n
+ *  - `& 1` -> 1/0 = easy / hard @n
+ *  - `& 2` -> 1 = chase to attack upon arrival within range.
+ *  .
+ * @return 0: success, 1: failure
+ */
+static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int range, int flag)
 {
-	struct unit_data     *ud = NULL;
-	struct status_change *sc = NULL;
+	nullpo_retr(1, bl);
+	nullpo_retr(1, tbl);
 
-	nullpo_ret(bl);
-	nullpo_ret(tbl);
+	if ((status_get_mode(bl) & MD_CANMOVE) == MD_NONE)
+		return 1;
 
-	ud = unit->bl2ud(bl);
-	if( ud == NULL) return 0;
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud == NULL)
+		return 1;
 
-	if (!(status_get_mode(bl)&MD_CANMOVE))
-		return 0;
-
-	if (!unit->can_reach_bl(bl, tbl, distance_bl(bl, tbl)+1, flag&1, &ud->to_x, &ud->to_y)) {
+	int walk_easy = ((flag & 1) == 0) ? 0 : 1;
+	if (!unit->can_reach_bl(bl, tbl, distance_bl(bl, tbl) + 1, walk_easy, &ud->to_x, &ud->to_y)) {
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
 		ud->target_to = 0;
-		return 0;
+		return 1;
 	} else if (range == 0) {
-		//Should walk on the same cell as target (for looters)
+		// Should walk on the same cell as target (for looters)
 		ud->to_x = tbl->x;
 		ud->to_y = tbl->y;
 	}
 
-	ud->state.walk_easy = flag&1;
+	ud->state.walk_easy = walk_easy;
 	ud->target_to = tbl->id;
-	ud->chaserange = range; //Note that if flag&2, this SHOULD be attack-range
-	ud->state.attack_continue = (flag&2) ? 1 : 0; //Chase to attack.
-	unit->stop_attack(bl); //Sets target to 0
+	ud->chaserange = range; // Note that if (flag & 2) != 0, this SHOULD be attack-range
+	int attack_continue = ((flag & 2) == 0) ? 0 : 1;
+	ud->state.attack_continue = attack_continue; // Chase to attack.
+	unit->stop_attack(bl); // Sets target to 0
 
-	sc = status->get_sc(bl);
-	if (sc != NULL && (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL)) { // Randomize the target position
-		// Aegis behavior, yes if it doesn't find a random walkable cell it will not move at all.
+	struct status_change *sc = status->get_sc(bl);
+	if (sc != NULL && (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL)) { //Randomize the target position
 		ud->to_x = bl->x;
 		ud->to_y = bl->y;
 		map->get_random_cell_in_range(bl, bl->m, &ud->to_x, &ud->to_y, AREA_SIZE / 2, AREA_SIZE / 2);
 	}
 
-	if(ud->walktimer != INVALID_TIMER) {
+	if (ud->walktimer != INVALID_TIMER) {
 		ud->state.change_walk_target = 1;
-		if ((flag & 2) != 0)
+		if (attack_continue != 0)
 			set_mobstate(bl);
-		return 1;
+		return 0;
 	}
 
 	if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0) {
-		//Can't move, wait a bit before invoking the movement.
+		// Can't move, wait a bit before invoking the movement.
 		timer->add(ud->canmove_tick + 1, unit->walktobl_timer, bl->id, ud->target);
-		return 1;
+		return 0;
 	}
 
-	if(!unit->can_move(bl))
-		return 0;
+	if (unit->can_move(bl) == 0)
+		return 1;
 
 	if (unit->walk_toxy_sub(bl) == 0) {
-		if ((flag & 2) != 0)
+		if (attack_continue != 0)
 			set_mobstate(bl);
-
-		return 1;
+		return 0;
 	}
-
-	return 0;
+	return 1;
 }
 
 
 /**
- * Called by unit_run when an object was hit
- * @param sd Required only when using SC_WUGDASH
- **/
+ * Called by unit->run when an object was hit.
+ *
+ * @param bl block_list of the unit that is running
+ * @param sc @see struct status_change of @p bl
+ * @param sd map_session_data of @p bl. *Required only when using SC_WUGDASH*
+ * @param type sc_type @p bl is affected by while running
+ */
 static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct map_session_data *sd, enum sc_type type)
 {
-	int lv;
-	struct unit_data *ud;
-
 	Assert_retv(type >= 0 && type < SC_MAX);
-	lv = sc->data[type]->val1;
+	nullpo_retv(sc);
+	nullpo_retv(sc->data[type]);
+
 	//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
-	if( type == SC_RUN )
+	if (type == SC_RUN)
 		clif->sc_load(bl, bl->id, AREA, status->get_sc_icon(SC_TING), 0, 0, 0);
 
-	ud = unit->bl2ud(bl);
+	struct unit_data *ud = unit->bl2ud(bl);
 	nullpo_retv(ud);
 	//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
 	ud->state.running = 0;
 	status_change_end(bl, type, INVALID_TIMER);
 
+	int lv = sc->data[type]->val1;
 	if (type == SC_RUN) {
 		if (lv > 0)
 			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
 		clif->sc_end(bl, bl->id, AREA, status->get_sc_icon(SC_TING));
-	} else if (sd) {
+	} else if (sd != NULL) {
 		clif->fixpos(bl);
 		skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
 	}
@@ -789,102 +799,120 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 
 /**
  * Makes character run, used for SC_RUN and SC_WUGDASH
- * @param sd Required only when using SC_WUGDASH
+ *
+ * @param bl block_list of the unit that is running
+ * @param sc @see struct status_change of @p bl
+ * @param sd map_session_data of @p bl. *Required only when using SC_WUGDASH*
+ * @param type sc_type @p bl is affected by while running
  * @retval true Finished running
  * @retval false Hit an object/Couldn't run
- **/
+ */
 static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc_type type)
 {
-	struct status_change *sc;
-	short to_x,to_y,dir_x,dir_y;
-	int i;
-
 	nullpo_retr(false, bl);
-	sc = status->get_sc(bl);
+	Assert_retr(false, type == SC_RUN || type == SC_WUGDASH);
 
-	if( !(sc && sc->data[type]) )
+	struct status_change *sc = status->get_sc(bl);
+	if (sc == NULL || sc->data[type] == NULL)
 		return false;
 
-	if( !unit->can_move(bl) ) {
+	if (unit->can_move(bl) == 0) {
 		status_change_end(bl, type, INVALID_TIMER);
 		return false;
 	}
 
-	dir_x = dirx[sc->data[type]->val2];
-	dir_y = diry[sc->data[type]->val2];
-
-	// determine destination cell
-	to_x = bl->x;
-	to_y = bl->y;
+	// Determine destination cell
+	int to_x = bl->x;
+	int to_y = bl->y;
+	Assert_retr(false, sc->data[type]->val2 >= UNIT_DIR_FIRST && sc->data[type]->val2 < UNIT_DIR_MAX);
+	int dir_x = dirx[sc->data[type]->val2];
+	int dir_y = diry[sc->data[type]->val2];
 
 	// Search for available path
-	for(i = 0; i < AREA_SIZE; i++) {
-		if (!map->getcell(bl->m, bl, to_x + dir_x, to_y + dir_y, CELL_CHKPASS))
+	int step_count;
+	for (step_count = 0; step_count < AREA_SIZE; step_count++) {
+		int step_x = to_x + dir_x;
+		int step_y = to_y + dir_y;
+		if (map->getcell(bl->m, bl, step_x, step_y, CELL_CHKPASS) == 0)
 			break;
 
-		//if sprinting and there's a PC/Mob/NPC, block the path [Kevin]
-		if ( map->count_oncell(bl->m, to_x + dir_x, to_y + dir_y, BL_PC | BL_MOB | BL_NPC, 0x2) )
+		// If sprinting and there's a PC/Mob/NPC blocking the path [Kevin]
+		if (map->count_oncell(bl->m, step_x, step_y, BL_PC | BL_MOB | BL_NPC, 0x2) != 0)
 			break;
 
-		to_x += dir_x;
-		to_y += dir_y;
+		to_x = step_x;
+		to_y = step_y;
 	}
 
-	// Can't run forward
-	if( (to_x == bl->x && to_y == bl->y ) || (to_x == (bl->x+1) || to_y == (bl->y+1)) || (to_x == (bl->x-1) || to_y == (bl->y-1))) {
-		unit->run_hit(bl, sc, sd, type);
-		return false;
-	}
-
-	if (unit->walk_toxy(bl, to_x, to_y, 1) == 0)
+	if (step_count > 1 && unit->walk_toxy(bl, to_x, to_y, 1) == 0)
 		return true;
 
-	//There must be an obstacle nearby. Attempt walking one cell at a time.
+	// There must be an obstacle nearby. Attempt walking one cell at a time.
 	do {
 		to_x -= dir_x;
 		to_y -= dir_y;
-	} while (--i > 0 && unit->walk_toxy(bl, to_x, to_y, 1) != 0);
+	} while (--step_count > 0 && unit->walk_toxy(bl, to_x, to_y, 1) != 0);
 
-	if ( i == 0 ) {
+	if (step_count <= 0) {
 		unit->run_hit(bl, sc, sd, type);
 		return false;
 	}
 
-	return 1;
+	return true;
 }
 
-//Makes bl attempt to run dist cells away from target. Uses hard-paths.
-static int unit_escape(struct block_list *bl, struct block_list *target, short dist)
+/**
+ * Makes @p bl attempt to run at most @p dist cells away from @p target. Uses hard-paths.
+ *
+ * @param bl block_list of the unit that is escaping
+ * @param target block_list of the unit that we're escaping from
+ * @param dist short of the maximum stay-away distance towards @p target
+ * @return 0: success, 1: failure
+ */
+static int unit_attempt_escape(struct block_list *bl, struct block_list *target, short dist)
 {
-	nullpo_ret(bl);
+#define x_dist (bl->x + dist * dirx[dir])
+#define y_dist (bl->y + dist * diry[dir])
+	nullpo_retr(1, bl);
 	enum unit_dir dir = map->calc_dir(target, bl->x, bl->y);
 	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
-	while (dist > 0 && map->getcell(bl->m, bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], CELL_CHKNOREACH))
+	while (dist > 0 && map->getcell(bl->m, bl, x_dist, y_dist, CELL_CHKNOREACH) != 0)
 		dist--;
-	if (dist > 0 && unit->walk_toxy(bl, bl->x + dist * dirx[dir], bl->y + dist * diry[dir], 0) == 0)
-		return 1;
-	else
+	if (dist > 0 && unit->walk_toxy(bl, x_dist, y_dist, 0) == 0)
 		return 0;
+	else
+		return 1;
+#undef x_dist
+#undef y_dist
 }
 
-//Instant warp function.
-static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
+/**
+ * _Instantly_ moves / warps @p bl to the coordinates @p dst_x and @p dst_y .
+ *
+ * @param bl block_list of unit to move
+ * @param dst_x short of destination x-coordinate
+ * @param dst_y short of destination y-coordinate
+ * @param easy 0: hard pathing 1: easy pathing used only when @p checkpath true
+ * @param checkpath check if path reachable when true
+ * @return 0: success 1: failure
+ */
+static int unit_move_pos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath)
 {
-	short dx,dy;
-	struct unit_data        *ud = NULL;
-	struct map_session_data *sd = NULL;
+	nullpo_retr(1, bl);
 
-	nullpo_ret(bl);
-	sd = BL_CAST(BL_PC, bl);
-	ud = unit->bl2ud(bl);
-
-	if( ud == NULL) return 0;
+	struct unit_data *ud = unit->bl2ud(bl);
+	if (ud == NULL)
+		return 1;
 
 	unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	unit->stop_attack(bl);
 
-	if (checkpath && (map->getcell(bl->m, bl, dst_x, dst_y, CELL_CHKNOPASS) || !path->search(NULL, bl, bl->m, bl->x, bl->y, dst_x, dst_y, easy, CELL_CHKNOREACH)) )
-		return 0; // unreachable
+	if (checkpath) {
+		if (map->getcell(bl->m, bl, dst_x, dst_y, CELL_CHKNOPASS) != 0) // respects cell-stacking mod
+			return 1;
+		if (!path->search(NULL, bl, bl->m, bl->x, bl->y, dst_x, dst_y, easy, CELL_CHKNOREACH)) // unreachable
+			return 1;
+	}
 
 	ud->to_x = dst_x;
 	ud->to_y = dst_y;
@@ -892,43 +920,34 @@ static int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int eas
 	enum unit_dir dir = map->calc_dir(bl, dst_x, dst_y);
 	ud->dir = dir;
 
-	dx = dst_x - bl->x;
-	dy = dst_y - bl->y;
+	int dx = dst_x - bl->x;
+	int dy = dst_y - bl->y;
 
-	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, sd?BL_ALL:BL_PC, bl);
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
+	enum bl_type receiver_type = (sd != NULL) ? BL_ALL : BL_PC;
+	map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, receiver_type, bl);
 
 	map->moveblock(bl, dst_x, dst_y, timer->gettick());
 
 	ud->walktimer = -2; // arbitrary non-INVALID_TIMER value to make the clif code send walking packets
-	map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, sd?BL_ALL:BL_PC, bl);
+	map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, receiver_type, bl);
 	ud->walktimer = INVALID_TIMER;
 
-	if(sd) {
-		if( sd->touching_id )
-			npc->touchnext_areanpc(sd,false);
-		if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC)) {
-			npc->touch_areanpc(sd,bl->m,bl->x,bl->y);
-			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
-				return 0;
-		} else
-			npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);
+	if (sd != NULL) {
+		if (npc->handle_touch_events(sd, bl->x, bl->y, true) != 0)
+			return 1;
 
-		if (sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > PET_INTIMACY_NONE)
-		{ // Check if pet needs to be teleported. [Skotlex]
-			int flag = 0;
+		// Check if pet needs to be teleported. [Skotlex]
+		if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
 			struct block_list* pbl = &sd->pd->bl;
-			if( !checkpath && !path->search(NULL,pbl,pbl->m,pbl->x,pbl->y,dst_x,dst_y,0,CELL_CHKNOPASS) )
-				flag = 1;
-			else if (!check_distance_bl(&sd->bl, pbl, AREA_SIZE)) //Too far, teleport.
-				flag = 2;
-			if( flag )
-			{
-				unit->movepos(pbl,sd->bl.x,sd->bl.y, 0, 0);
-				clif->slide(pbl,pbl->x,pbl->y);
+			if ((!checkpath && !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS)) // No path to master
+			    || !check_distance_bl(bl, pbl, AREA_SIZE)) { // Too far, teleport.
+				unit->move_pos(pbl, bl->x, bl->y, 0, false);
+				clif->slide(pbl, pbl->x, pbl->y);
 			}
 		}
 	}
-	return 1;
+	return 0;
 }
 
 /**
@@ -967,71 +986,59 @@ static enum unit_dir unit_getdir(const struct block_list *bl)
 	return ud->dir;
 }
 
-// Pushes a unit by given amount of cells into given direction. Only
-// map cell restrictions are respected.
-// flag:
-//  &1  Do not send position update packets.
-static int unit_blown(struct block_list *bl, int dx, int dy, int count, int flag)
+/**
+ * Pushes a unit by given amount of cells into given direction.
+ *
+ * @remark Only map cell restrictions are respected.
+ * @param bl unit to push
+ * @param dir direction of the push motion
+ * @param count amount of cells to push
+ * @param update *only* send position update packets when true
+ * @return amount of pushed cells.
+ */
+static int unit_push(struct block_list *bl, enum unit_dir dir, int count, bool update)
 {
-	if(count) {
-		struct map_session_data* sd;
-		struct skill_unit* su = NULL;
-		int nx, ny, result;
+	nullpo_ret(bl);
+	if (count == 0)
+		return 0;
 
-		nullpo_ret(bl);
+	int result = path->blownpos(bl, bl->m, bl->x, bl->y, dir, count);
 
-		sd = BL_CAST(BL_PC, bl);
-		su = BL_CAST(BL_SKILL, bl);
+	struct skill_unit *su = BL_CAST(BL_SKILL, bl);
+	if (su == NULL)
+		unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
 
-		result = path->blownpos(bl, bl->m, bl->x, bl->y, dx, dy, count);
-
-		nx = result>>16;
-		ny = result&0xffff;
-
-		if(!su) {
-			unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
-		}
-
-		if( sd ) {
-			unit->stop_stepaction(bl); //Stop stepaction when knocked back
-			sd->ud.to_x = nx;
-			sd->ud.to_y = ny;
-		}
-
-		dx = nx-bl->x;
-		dy = ny-bl->y;
-
-		if(dx || dy) {
-			map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
-
-			if(su) {
-				skill->unit_move_unit_group(su->group, bl->m, dx, dy);
-			} else {
-				map->moveblock(bl, nx, ny, timer->gettick());
-			}
-
-			map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
-
-			if(!(flag&1)) {
-				clif->blown(bl);
-			}
-
-			if(sd) {
-				if(sd->touching_id) {
-					npc->touchnext_areanpc(sd, false);
-				}
-				if (map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKNPC)) {
-					npc->touch_areanpc(sd, bl->m, bl->x, bl->y);
-				} else {
-					npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);;
-				}
-			}
-		}
-
-		count = path->distance(dx, dy);
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
+	int pushto_x = result >> 16;
+	int pushto_y = result & 0xffff;
+	if (sd != NULL) {
+		unit->stop_stepaction(bl);
+		sd->ud.to_x = pushto_x;
+		sd->ud.to_y = pushto_y;
 	}
 
-	return count;  // return amount of knocked back cells
+	int delta_x = pushto_x - bl->x;
+	int delta_y = pushto_y - bl->y;
+
+	if (delta_x != 0 || delta_y != 0) {
+		enum bl_type receiver_type = (bl->type == BL_PC) ? BL_ALL : BL_PC;
+		map->foreachinmovearea(clif->outsight, bl, AREA_SIZE, delta_x, delta_y, receiver_type, bl);
+
+		if (su != NULL)
+			skill->unit_move_unit_group(su->group, bl->m, delta_x, delta_y);
+		else
+			map->moveblock(bl, pushto_x, pushto_y, timer->gettick());
+
+		map->foreachinmovearea(clif->insight, bl, AREA_SIZE, -delta_x, -delta_y, receiver_type, bl);
+
+		if (update)
+			clif->blown(bl);
+
+		if (sd != NULL)
+			npc->handle_touch_events(sd, bl->x, bl->y, false);
+	}
+
+	return path->distance(delta_x, delta_y);
 }
 
 //Warps a unit/ud to a given map/position.
@@ -2325,14 +2332,14 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 		return 1;
 	} else if(md && !check_distance_bl(src,target,range)) {
 		// Monster: Chase if required
-		unit->walktobl(src,target,ud->chaserange,ud->state.walk_easy|2);
+		unit->walk_tobl(src, target, ud->chaserange, ud->state.walk_easy | 2);
 		return 1;
 	}
 	if( !battle->check_range(src,target,range) ) {
 		//Within range, but no direct line of attack
 		if( ud->state.attack_continue ) {
 			if(ud->chaserange > 2) ud->chaserange-=2;
-			unit->walktobl(src,target,ud->chaserange,ud->state.walk_easy|2);
+			unit->walk_tobl(src, target, ud->chaserange, ud->state.walk_easy | 2);
 		}
 		return 1;
 	}
@@ -3121,14 +3128,14 @@ void unit_defaults(void)
 	unit->delay_walk_toxy_timer = unit_delay_walk_toxy_timer;
 	unit->walk_toxy = unit_walk_toxy;
 	unit->walktobl_timer = unit_walktobl_timer;
-	unit->walktobl = unit_walktobl;
+	unit->walk_tobl = unit_walk_tobl;
 	unit->run = unit_run;
 	unit->run_hit = unit_run_hit;
-	unit->escape = unit_escape;
-	unit->movepos = unit_movepos;
+	unit->attempt_escape = unit_attempt_escape;
+	unit->move_pos = unit_move_pos;
 	unit->set_dir = unit_set_dir;
 	unit->getdir = unit_getdir;
-	unit->blown = unit_blown;
+	unit->push = unit_push;
 	unit->warp = unit_warp;
 	unit->warpto_master = unit_warpto_master;
 	unit->stop_walking = unit_stop_walking;
