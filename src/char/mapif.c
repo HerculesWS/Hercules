@@ -1866,10 +1866,22 @@ static int mapif_parse_AccountStorageLoad(int fd)
 
 /**
  * Parses an account storage save request from the map server.
- * @packet 0x3011 [in] <packet_len>.W <account_id>.L <struct item[]>.P
- * @param  fd     [in] file/socket descriptor.
- * @return 1 on success, 0 on failure.
- */
+ *
+ * @code{.unparsed}
+ *	@packet 0x3011 [in] <packet_len>.W <account_id>.L <struct item[]>.P
+ * @endcode
+ *
+ * @attention If the size of packet 0x3011 changes,
+ *            @ref MAX_STORAGE_ASSERT "the related static assertion check"
+ *            in mmo.h needs to be adjusted, too.
+ *
+ * @see intif_send_account_storage()
+ *
+ * @param[in] fd The file/socket descriptor.
+ * @retval 1 Success.
+ * @retval 0 Failure.
+ *
+ **/
 static int mapif_parse_AccountStorageSave(int fd)
 {
 	int payload_size = RFIFOW(fd, 2) - 8, account_id = RFIFOL(fd, 4);
@@ -1930,6 +1942,23 @@ static int mapif_parse_LoadGuildStorage(int fd)
 	return 0;
 }
 
+/**
+ * Parses a guild storage save request from the map server.
+ *
+ * @code{.unparsed}
+ *	@packet 0x3019 [in] <packet_len>.W <account_id>.L <guild_id>.L <struct guild_storage>.P
+ * @endcode
+ *
+ * @attention If the size of packet 0x3019 changes,
+ *            @ref MAX_GUILD_STORAGE_ASSERT "the related static assertion check"
+ *            in mmo.h needs to be adjusted, too.
+ *
+ * @see intif_send_guild_storage()
+ *
+ * @param[in] fd The file/socket descriptor.
+ * @return Always 0.
+ *
+ **/
 static int mapif_parse_SaveGuildStorage(int fd)
 {
 	int guild_id;
