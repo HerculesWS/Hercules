@@ -19,7 +19,7 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -- Adds new total_tick column
-ALTER TABLE `sc_data` ADD COLUMN `total_tick` INT(11) NOT NULL AFTER `tick`;
+ALTER TABLE `sc_data` ADD COLUMN `total_tick` INT NOT NULL AFTER `tick`;
 
 -- Copy current tick to total_tick so players doesn't lose their current
 -- status_changes, although those will still appear wrong until they end

@@ -18,5 +18,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE  `char` ADD COLUMN `hotkey_rowshift2` TINYINT(3) UNSIGNED NOT NULL DEFAULT  '0' AFTER `hotkey_rowshift`;
+ALTER TABLE `char` ADD COLUMN `hotkey_rowshift2` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `hotkey_rowshift`;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1557414445);

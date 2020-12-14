@@ -18,5 +18,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD COLUMN `uniqueitem_counter` BIGINT(20) NOT NULL AFTER `unban_time`;
+ALTER TABLE `char` ADD COLUMN `uniqueitem_counter` BIGINT NOT NULL AFTER `unban_time`;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866);

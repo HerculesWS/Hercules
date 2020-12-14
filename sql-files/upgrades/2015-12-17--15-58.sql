@@ -18,5 +18,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD `body` smallint(5) unsigned NOT NULL default '0' AFTER `clothes_color`;
+ALTER TABLE `char` ADD `body` smallint unsigned NOT NULL default '0' AFTER `clothes_color`;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1450367880);

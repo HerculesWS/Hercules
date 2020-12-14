@@ -18,7 +18,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `account_data` MODIFY `base_exp` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';
-ALTER TABLE `account_data` MODIFY `base_drop` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';
-ALTER TABLE `account_data` MODIFY `base_death` TINYINT(4) UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `account_data` MODIFY `base_exp` TINYINT UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `account_data` MODIFY `base_drop` TINYINT UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `account_data` MODIFY `base_death` TINYINT UNSIGNED NOT NULL DEFAULT '100';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);

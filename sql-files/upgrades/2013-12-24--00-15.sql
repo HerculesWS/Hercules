@@ -20,8 +20,8 @@
 
 CREATE TABLE IF NOT EXISTS `npc_market_data` (
   `name` VARCHAR(24) NOT NULL DEFAULT '',
-  `itemid` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `itemid` INT UNSIGNED NOT NULL DEFAULT '0',
+  `amount` INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`name`,`itemid`)
 ) ENGINE=MyISAM;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126);

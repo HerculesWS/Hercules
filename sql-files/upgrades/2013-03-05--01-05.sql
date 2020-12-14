@@ -18,5 +18,5 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `login` ADD `character_slots` TINYINT(3) UNSIGNED NOT NULL;
+ALTER TABLE `login` ADD `character_slots` TINYINT UNSIGNED NOT NULL;
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1362445531);

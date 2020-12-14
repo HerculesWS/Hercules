@@ -19,6 +19,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `char` ADD `title_id` INT(11) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `char` ADD `title_id` INT UNSIGNED NOT NULL DEFAULT '0';
 
 INSERT INTO `sql_updates` (`timestamp`, `ignored`) VALUES (1528026381, 'No');

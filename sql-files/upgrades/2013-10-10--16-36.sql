@@ -19,8 +19,8 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 CREATE TABLE IF NOT EXISTS `account_data` (
-  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `bank_vault` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `account_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `bank_vault` INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`)
 ) ENGINE=MyISAM; 
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1381423003);

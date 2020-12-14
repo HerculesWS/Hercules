@@ -18,8 +18,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE `inventory` MODIFY `equip` INT(11) UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `storage` MODIFY `equip` INT(11) UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `cart_inventory` MODIFY `equip` INT(11) UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `guild_storage` MODIFY `equip` INT(11) UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `inventory` MODIFY `equip` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `storage` MODIFY `equip` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `cart_inventory` MODIFY `equip` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `guild_storage` MODIFY `equip` INT UNSIGNED NOT NULL DEFAULT '0';
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1382892428);

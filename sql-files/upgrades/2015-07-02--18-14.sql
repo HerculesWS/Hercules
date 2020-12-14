@@ -63,8 +63,8 @@ BEGIN
 
 END $$
 
-CALL alter_if_not_exists('item_db', 'forceserial', 'ADD COLUMN', 'TINYINT(1) UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
-CALL alter_if_not_exists('item_db2', 'forceserial', 'ADD COLUMN', 'TINYINT(1) UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
+CALL alter_if_not_exists('item_db', 'forceserial', 'ADD COLUMN', 'TINYINT UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
+CALL alter_if_not_exists('item_db2', 'forceserial', 'ADD COLUMN', 'TINYINT UNSIGNED DEFAULT NULL AFTER `bindonequip`') $$
 
 DROP PROCEDURE IF EXISTS alter_if_not_exists $$
 DROP PROCEDURE IF EXISTS alter_if_exists $$
