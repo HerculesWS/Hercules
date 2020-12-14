@@ -6630,6 +6630,8 @@ struct {
 	struct HPMHookPoint *HP_status_calc_regen_rate_homunculus_post;
 	struct HPMHookPoint *HP_status_calc_regen_rate_pre;
 	struct HPMHookPoint *HP_status_calc_regen_rate_post;
+	struct HPMHookPoint *HP_status_check_skilluse_mapzone_pre;
+	struct HPMHookPoint *HP_status_check_skilluse_mapzone_post;
 	struct HPMHookPoint *HP_status_check_skilluse_pre;
 	struct HPMHookPoint *HP_status_check_skilluse_post;
 	struct HPMHookPoint *HP_status_check_visibility_pre;
@@ -13695,6 +13697,8 @@ struct {
 	int HP_status_calc_regen_rate_homunculus_post;
 	int HP_status_calc_regen_rate_pre;
 	int HP_status_calc_regen_rate_post;
+	int HP_status_check_skilluse_mapzone_pre;
+	int HP_status_check_skilluse_mapzone_post;
 	int HP_status_check_skilluse_pre;
 	int HP_status_check_skilluse_post;
 	int HP_status_check_visibility_pre;

@@ -88658,6 +88658,33 @@ void HP_status_calc_regen_rate(struct block_list *bl, struct regen_data *regen) 
 	}
 	return;
 }
+bool HP_status_check_skilluse_mapzone(struct block_list *src, struct status_data *st, uint16 skill_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_status_check_skilluse_mapzone_pre > 0) {
+		bool (*preHookFunc) (struct block_list **src, struct status_data **st, uint16 *skill_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_check_skilluse_mapzone_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_status_check_skilluse_mapzone_pre[hIndex].func;
+			retVal___ = preHookFunc(&src, &st, &skill_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.check_skilluse_mapzone(src, st, skill_id);
+	}
+	if (HPMHooks.count.HP_status_check_skilluse_mapzone_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *src, struct status_data *st, uint16 skill_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_check_skilluse_mapzone_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_status_check_skilluse_mapzone_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, src, st, skill_id);
+		}
+	}
+	return retVal___;
+}
 int HP_status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag) {
 	int hIndex = 0;
 	int retVal___ = 0;

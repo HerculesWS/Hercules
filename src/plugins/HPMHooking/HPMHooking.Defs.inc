@@ -8112,6 +8112,8 @@ typedef void (*HPMHOOK_pre_status_calc_regen_rate_homunculus) (struct homun_data
 typedef void (*HPMHOOK_post_status_calc_regen_rate_homunculus) (struct homun_data *hd, struct regen_data *regen);
 typedef void (*HPMHOOK_pre_status_calc_regen_rate) (struct block_list **bl, struct regen_data **regen);
 typedef void (*HPMHOOK_post_status_calc_regen_rate) (struct block_list *bl, struct regen_data *regen);
+typedef bool (*HPMHOOK_pre_status_check_skilluse_mapzone) (struct block_list **src, struct status_data **st, uint16 *skill_id);
+typedef bool (*HPMHOOK_post_status_check_skilluse_mapzone) (bool retVal___, struct block_list *src, struct status_data *st, uint16 skill_id);
 typedef int (*HPMHOOK_pre_status_check_skilluse) (struct block_list **src, struct block_list **target, uint16 *skill_id, int *flag);
 typedef int (*HPMHOOK_post_status_check_skilluse) (int retVal___, struct block_list *src, struct block_list *target, uint16 skill_id, int flag);
 typedef int (*HPMHOOK_pre_status_check_visibility) (struct block_list **src, struct block_list **target);

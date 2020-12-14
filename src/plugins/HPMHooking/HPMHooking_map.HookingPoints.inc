@@ -3387,6 +3387,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->calc_regen_rate_elemental, HP_status_calc_regen_rate_elemental) },
 	{ HP_POP(status->calc_regen_rate_homunculus, HP_status_calc_regen_rate_homunculus) },
 	{ HP_POP(status->calc_regen_rate, HP_status_calc_regen_rate) },
+	{ HP_POP(status->check_skilluse_mapzone, HP_status_check_skilluse_mapzone) },
 	{ HP_POP(status->check_skilluse, HP_status_check_skilluse) },
 	{ HP_POP(status->check_visibility, HP_status_check_visibility) },
 	{ HP_POP(status->change_spread, HP_status_change_spread) },
