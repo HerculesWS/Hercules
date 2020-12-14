@@ -18889,6 +18889,12 @@ static BUILDIN(setnpcdisplay)
 		return true;
 	}
 
+	if (nd->bl.m == -1) {
+		ShowWarning("buildin_setnpcdisplay: cannot display on an npc with no valid map.\n");
+		script_pushint(st, 1);
+		return false;
+	}
+
 	// update npc
 	if( newname )
 		npc->setdisplayname(nd, newname);
@@ -21053,6 +21059,12 @@ static BUILDIN(setunitdata)
 
 		if (nd == NULL) {
 			ShowError("buildin_setunitdata: Can't find NPC for GID %d!\n", script_getnum(st, 2));
+			script_pushint(st, 0);
+			return false;
+		}
+
+		if (nd->bl.m == -1) {
+			ShowWarning("buildin_setunitdata: Can't set data on npc with no valid map for GID %d.\n", script_getnum(st, 2));
 			script_pushint(st, 0);
 			return false;
 		}

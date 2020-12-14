@@ -7281,7 +7281,7 @@ the message, otherwise the npc name will not be shown.
 *setnpcdisplay("<npc name>", <class id>)
 
 Changes the display name and/or display class of the target NPC.
-Returns 0 is successful, 1 if the NPC does not exist.
+Returns 0 is successful, 1 if the NPC does not exist or is a floating npc.
 Size is 0 = normal 1 = small 2 = big.
 
 ---------------------------------------
