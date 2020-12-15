@@ -528,6 +528,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->itemname_ack, HP_clif_itemname_ack) },
 	{ HP_POP(clif->unknownname_ack, HP_clif_unknownname_ack) },
 	{ HP_POP(clif->monster_hp_bar, HP_clif_monster_hp_bar) },
+	{ HP_POP(clif->show_monster_hp_bar, HP_clif_show_monster_hp_bar) },
 	{ HP_POP(clif->hpmeter, HP_clif_hpmeter) },
 	{ HP_POP(clif->hpmeter_single, HP_clif_hpmeter_single) },
 	{ HP_POP(clif->hpmeter_sub, HP_clif_hpmeter_sub) },

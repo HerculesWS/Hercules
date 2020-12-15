@@ -1008,6 +1008,8 @@ struct {
 	struct HPMHookPoint *HP_clif_unknownname_ack_post;
 	struct HPMHookPoint *HP_clif_monster_hp_bar_pre;
 	struct HPMHookPoint *HP_clif_monster_hp_bar_post;
+	struct HPMHookPoint *HP_clif_show_monster_hp_bar_pre;
+	struct HPMHookPoint *HP_clif_show_monster_hp_bar_post;
 	struct HPMHookPoint *HP_clif_hpmeter_pre;
 	struct HPMHookPoint *HP_clif_hpmeter_post;
 	struct HPMHookPoint *HP_clif_hpmeter_single_pre;
@@ -8075,6 +8077,8 @@ struct {
 	int HP_clif_unknownname_ack_post;
 	int HP_clif_monster_hp_bar_pre;
 	int HP_clif_monster_hp_bar_post;
+	int HP_clif_show_monster_hp_bar_pre;
+	int HP_clif_show_monster_hp_bar_post;
 	int HP_clif_hpmeter_pre;
 	int HP_clif_hpmeter_post;
 	int HP_clif_hpmeter_single_pre;

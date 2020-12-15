@@ -13139,6 +13139,33 @@ void HP_clif_monster_hp_bar(struct mob_data *md, struct map_session_data *sd) {
 	}
 	return;
 }
+bool HP_clif_show_monster_hp_bar(struct block_list *bl) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_clif_show_monster_hp_bar_pre > 0) {
+		bool (*preHookFunc) (struct block_list **bl);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_show_monster_hp_bar_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_clif_show_monster_hp_bar_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.show_monster_hp_bar(bl);
+	}
+	if (HPMHooks.count.HP_clif_show_monster_hp_bar_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *bl);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_show_monster_hp_bar_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_clif_show_monster_hp_bar_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl);
+		}
+	}
+	return retVal___;
+}
 int HP_clif_hpmeter(struct map_session_data *sd) {
 	int hIndex = 0;
 	int retVal___ = 0;
