@@ -22,6 +22,56 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2020.12.14] `December 14 2020`
+
+### Added
+
+- Added a warning when `setnpcdisplay()` or `setunitdata()` is called on a floating NPC. (#2907)
+- Added support for RSW formats up to 2.5 for reading map water level. (#2916)
+- Added a `status->check_skilluse_mapzone()` function, simplifying `status->check_skilluse()` and adding a useful plugin hooking point. (#2893)
+
+### Changed
+
+- Second part of the refactoring of the functions in `unit.c`, adding code documentation and following the code style guidelines. Functions have been renamed when backward compatible changes to the arguments or return values were made. (#2783)
+  - Added proper documentation in doxygen-format.
+  - Moved variables declaration closer to their first use
+  - Corrected mistreatment on checks of non-boolean variables
+  - Renamed some variables to clarify their use
+  - Saved re-used calculations in variables or create local macros for them
+  - Simplified logical checks / conditions when possible
+  - Changed returning error-code in functions to obey code-style guidelines (Functions that are affected by this are renamed so that custom code fails to compile as to point at that change of behavior.)
+  - Split too long lines according to code-style guidelines
+  - Made functions use enums for directions (`enum unit_dir`), when dealing with a direction context
+  - Reduced code-repetition by separating code-chunks into new functions
+  - Fixed remaining code-style after applying all these changes if necessary
+  - The following functions have been refactored:
+    - `unit->walktobl()` (renamed to `unit->walk_tobl()`)
+    - `unit->run_hit()`
+    - `unit->run()`
+    - `unit->escape()` (renamed to `unit->attempt_escape()`)
+    - `unit->movepos()`
+    - `unit->walk_toxy_timer()` (return value fix)
+    - `unit->blown()` (renamed to `unit->push()`)
+    - `path->blownpos()` (related to the `unit->blown()` change)
+    - added `npc->handle_touch_events()` function
+    - the `is_boss()` macro now returns a boolean
+- Added static assertion checks to prevent `MAX_STORAGE` and `MAX_GUILD_STORAGE` from causing oversized inter-server packets (#2904)
+- Disabled the HP bar on Emperium and MVP monsters by default. The configuration flag `show_monster_hp_bar` has been extended to a bitmask, to allow specifying different setting for normal monsters, Emperium and MVPs. The new default value is 1 (normal monsters only), while the value corresponding to the previous behavior is 7 (`4|2|1`). (#2821)
+
+### Fixed
+
+- Fixed a walk delay error in `unit_stop_walking()`. (part of #2783)
+- Fixed homunculi and mercenaries not warping back to their master in time. (part of #2783)
+- Reverted an unintended logical change in `unit->walk_toxy_timer()` done during the first part of the `unit.c` refactoring. (#2783)
+- Fixed a warning (`Warning: #1681 Integer display width is deprecated and will be removed in a future release.`) when importing the database schema in recent versions of MySQL. (#2903)
+- Fixed compilation with recent versions of the MySQL/MariaDB client libraries. (#2917)
+- Fixed a farming exploit at the Cursed Spirit NPC. (#2883)
+- Fixed the configuration flag `monster_loot_type` not working as intended. (#2855, issue #2834)
+
+### Removed
+
+- Removed the unused function `skill->get_linked_song_dance_id()`. (#2906)
+
 ## [v2020.11.16] `November 16 2020`
 
 ### Added
@@ -1688,6 +1738,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.12.14]: https://github.com/HerculesWS/Hercules/compare/v2020.11.16...v2020.12.14
 [v2020.11.16]: https://github.com/HerculesWS/Hercules/compare/v2020.10.19...v2020.11.16
 [v2020.10.19]: https://github.com/HerculesWS/Hercules/compare/v2020.09.20...v2020.10.19
 [v2020.09.20]: https://github.com/HerculesWS/Hercules/compare/v2020.08.23...v2020.09.20
