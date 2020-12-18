@@ -12296,7 +12296,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			break;
 		case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
 			if (--(sce->val4) >= 0) {
-				clif->emotion(bl, E_CRY);
+				clif->emotion(bl, E_SOB);
 				sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
