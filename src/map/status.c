@@ -8749,6 +8749,15 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				val4 = total_tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
+			case SC_FIRE_EXPANSION_TEAR_GAS:
+				val2 = status_get_max_hp(bl) * 5 / 100; // Drain 5% HP
+				val4 = tick / 2000;
+				tick_time = 2000;
+				break;
+			case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
+				val4 = tick / 3000;
+				tick_time = 3000;
+				break;
 			case SC_BLOOD_SUCKER:
 			{
 				struct block_list *src2 = map->id2bl(val2);
@@ -11063,6 +11072,9 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				}
 			}
 			break;
+		case SC_FIRE_EXPANSION_TEAR_GAS:
+			status_change_end(bl, SC_FIRE_EXPANSION_TEAR_GAS_SOB, INVALID_TIMER);
+			break;
 		case SC_CLAIRVOYANCE:
 			calc_flag = SCB_ALL;/* required for overlapping */
 			break;
@@ -12266,7 +12278,29 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				return 0;
 			}
 			break;
+		case SC_FIRE_EXPANSION_TEAR_GAS:
+			if (--(sce->val4) >= 0) {
+				struct block_list *src = map->id2bl(sce->val3);
+				int damage = sce->val2;
 
+				map->freeblock_lock();
+				clif->damage(bl, bl, 0, 0, damage, 1, BDT_MULTIENDURE, 0);
+				status->damage(src, bl, damage, 0, 0, 1);
+
+				if( sc->data[type] ) {
+					sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
+				}
+				map->freeblock_unlock();
+				return 0;
+			}
+			break;
+		case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
+			if (--(sce->val4) >= 0) {
+				clif->emotion(bl, E_CRY);
+				sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
+				return 0;
+			}
+			break;
 		case SC_SIREN:
 			if( --(sce->val4) > 0 ) {
 				clif->emotion(bl,E_LV);
