@@ -10263,6 +10263,9 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			switch(select("Yes", "No")) {
 			case 1:
 				close2;
+				if ($@sign_w1 == 1)
+					end;
+				donpcevent("Timer#witch::OnStart");
 				$@sign_w1 = 1;
 				warp "que_sign01",195,189;
 				end;
@@ -12345,17 +12348,6 @@ OnReset:
 	killmonster "que_sign01","CallMonster#serin::OnMyMobDead";
 }
 
-que_sign01,197,195,0	script	Starter#witch	FAKE_NPC,32,32,{
-OnTouch:
-	donpcevent "Timer#witch::OnStart";
-	disablenpc "Starter#witch";
-	end;
-
-OnEnable:
-	enablenpc "Starter#witch";
-	end;
-}
-
 que_sign01,1,1,0	script	Timer#witch	FAKE_NPC,{
 OnStart:
 	initnpctimer;
@@ -12366,7 +12358,6 @@ OnTimer600000:
 	end;
 
 OnTimer620000:
-	donpcevent "Starter#witch::OnEnable";
 	donpcevent "Warp#witch::OnDisable";
 	donpcevent "CallMonster#witch::OnReset";
 	donpcevent "Serin#witch::OnEnable";
@@ -12440,6 +12431,7 @@ OnTouch:
 		close;
 	}
 	else {
+		donpcevent("Timer#witch::OnStart");
 		$@sign_w1 = 1;
 		warp "que_sign01",197,190;
 		end;
