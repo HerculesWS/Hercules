@@ -9675,6 +9675,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "Okay~";
 			mes "Let's go...";
 			close2;
+			donpcevent("Timer#serin::OnStart");
 			$@sign_w2 = 1;
 			warp "que_sign01",199,36;
 			end;
@@ -9700,6 +9701,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		case 1:
 			close2;
 			sign_q = 199;
+			donpcevent("Timer#serin::OnStart");
 			$@sign_w2 = 1;
 			warp "que_sign01",199,36;
 			end;
@@ -12306,17 +12308,6 @@ geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 	}
 }
 
-que_sign01,196,44,0	script	Starter#serin	FAKE_NPC,32,32,{
-OnTouch:
-	donpcevent "Timer#serin::OnStart";
-	disablenpc "Starter#serin";
-	end;
-
-OnEnable:
-	enablenpc "Starter#serin";
-	end;
-}
-
 que_sign01,1,0,0	script	Timer#serin	FAKE_NPC,{
 OnStart:
 	initnpctimer;
@@ -12328,7 +12319,6 @@ OnTimer600000:
 
 OnTimer620000:
 	$@sign_w2 = 0;
-	donpcevent "Starter#serin::OnEnable";
 	donpcevent "Serin#serin::OnEnable";
 	donpcevent "Dark Lord#serin::OnDisable";
 	donpcevent "Serin#dummy::OnDisable";
