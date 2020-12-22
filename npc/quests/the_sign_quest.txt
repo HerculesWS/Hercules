@@ -9675,6 +9675,8 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "Okay~";
 			mes "Let's go...";
 			close2;
+			if ($@sign_w2 == 1) // prevent others joining.
+				end;
 			donpcevent("Timer#serin::OnStart");
 			$@sign_w2 = 1;
 			warp "que_sign01",199,36;
@@ -9700,6 +9702,8 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		switch(select("Follow the trace.", "Ignore it.")) {
 		case 1:
 			close2;
+			if ($@sign_w2 == 1) // prevent others joining.
+				end;
 			sign_q = 199;
 			donpcevent("Timer#serin::OnStart");
 			$@sign_w2 = 1;
