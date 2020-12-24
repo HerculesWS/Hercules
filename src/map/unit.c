@@ -782,9 +782,9 @@ static void unit_run_hit(struct block_list *bl, struct status_change *sc, struct
 	nullpo_retv(ud);
 	//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
 	ud->state.running = 0;
+	int lv = sc->data[type]->val1;
 	status_change_end(bl, type, INVALID_TIMER);
 
-	int lv = sc->data[type]->val1;
 	if (type == SC_RUN) {
 		if (lv > 0)
 			skill->blown(bl, bl, skill->get_blewcount(TK_RUN, lv), unit->getdir(bl), 0);
