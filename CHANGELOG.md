@@ -22,6 +22,12 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2020.12.14+1] `December 14 2020` `PATCH 1`
+
+### Fixed
+
+- Fixed a crash in `unit->run_hit()` caused by a regression in the last update. (#2924)
+
 ## [v2020.12.14] `December 14 2020`
 
 ### Added
@@ -1738,6 +1744,7 @@ If you are reading this in a text editor, simply ignore this section
 - New versioning scheme and project changelogs/release notes (#1853)
 
 [Unreleased]: https://github.com/HerculesWS/Hercules/compare/stable...master
+[v2020.12.14+1]: https://github.com/HerculesWS/Hercules/compare/v2020.12.14...v2020.12.14+1
 [v2020.12.14]: https://github.com/HerculesWS/Hercules/compare/v2020.11.16...v2020.12.14
 [v2020.11.16]: https://github.com/HerculesWS/Hercules/compare/v2020.10.19...v2020.11.16
 [v2020.10.19]: https://github.com/HerculesWS/Hercules/compare/v2020.09.20...v2020.10.19
