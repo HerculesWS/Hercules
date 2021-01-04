@@ -3945,6 +3945,13 @@ struct PACKET_ZC_PERSONAL_INFOMATION {
 DEFINE_PACKET_HEADER(ZC_PERSONAL_INFOMATION, 0x097b);
 #endif  // PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
 
+struct PACKET_CZ_REQUEST_ACTNPC {
+	int16 packetType;
+	uint32 GID;
+	uint32 targetGID;
+	int8 action;
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris

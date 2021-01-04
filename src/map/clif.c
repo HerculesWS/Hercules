@@ -16894,18 +16894,17 @@ static void clif_parse_HomAttack(int fd, struct map_session_data *sd)
 		return;
 
 	struct block_list *bl = NULL;
-	int id = RFIFOL(fd,2),
-		target_id = RFIFOL(fd,6),
-		action_type = RFIFOB(fd,10);
+	const struct PACKET_CZ_REQUEST_ACTNPC *p = RP2PTR(fd);
 
-	if( homun_alive(sd->hd) && sd->hd->bl.id == id )
+	if (homun_alive(sd->hd) && sd->hd->bl.id == p->GID)
 		bl = &sd->hd->bl;
-	else if( sd->md && sd->md->bl.id == id )
+	else if (sd->md && sd->md->bl.id == p->GID)
 		bl = &sd->md->bl;
-	else return;
+	else
+		return;
 
 	unit->stop_attack(bl);
-	unit->attack(bl, target_id, action_type != 0);
+	unit->attack(bl, p->targetGID, p->action != 0);
 }
 
 static void clif_parse_HomMenu(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
