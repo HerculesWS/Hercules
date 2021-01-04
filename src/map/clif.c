@@ -11791,7 +11791,7 @@ static void clif_parse_HowManyConnections(int fd, struct map_session_data *sd)
 	clif->user_count(sd, map->getusers());
 }
 
-static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, int target_id, int64 tick)
+static void clif_parse_ActionRequest_sub(struct map_session_data *sd, enum action_type action_type, int target_id, int64 tick)
 {
 	nullpo_retv(sd);
 	if (pc_isdead(sd)) {
@@ -11803,14 +11803,14 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action
 	// (not all are included in pc_can_attack)
 	if( sd->sc.count && (
 			sd->sc.data[SC_TRICKDEAD] ||
-			(sd->sc.data[SC_AUTOCOUNTER] && action_type != 0x07) ||
+			(sd->sc.data[SC_AUTOCOUNTER] && action_type != ACT_ATTACK_REPEAT) ||
 			 sd->sc.data[SC_BLADESTOP] ||
 			 sd->sc.data[SC_DEEP_SLEEP] ||
 			 sd->sc.data[SC_SUHIDE] )
 			 )
 		return;
 
-	if(action_type != 0x00 && action_type != 0x07)
+	if (action_type != ACT_ATTACK && action_type != ACT_ATTACK_REPEAT)
 		pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS);
 	pc_stop_attack(sd);
 
@@ -11818,8 +11818,8 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action
 		target_id = sd->bl.id;
 
 	switch(action_type) {
-		case 0x00: // once attack
-		case 0x07: // continuous attack
+		case ACT_ATTACK: // once attack
+		case ACT_ATTACK_REPEAT: // continuous attack
 		{
 			struct npc_data *nd = map->id2nd(target_id);
 			if (nd != NULL) {
@@ -11846,10 +11846,10 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action
 
 			pc->delinvincibletimer(sd);
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
-			unit->attack(&sd->bl, target_id, action_type != 0);
+			unit->attack(&sd->bl, target_id, action_type != ACT_ATTACK);
 		}
 		break;
-		case 0x02: // sitdown
+		case ACT_SIT: // sitdown
 			if (battle_config.basic_skill_check && !pc->check_basicskill(sd, 3)) {
 				clif->skill_fail(sd, 1, USESKILL_FAIL_LEVEL, 2, 0);
 				break;
@@ -11883,7 +11883,7 @@ static void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action
 			skill->sit(sd,1);
 			clif->sitting(&sd->bl);
 		break;
-		case 0x03: // standup
+		case ACT_STAND: // standup
 
 			if (sd->sc.data[SC_SITDOWN_FORCE] || sd->sc.data[SC_BANANA_BOMB_SITDOWN_POSTDELAY])
 				return;
@@ -11921,7 +11921,7 @@ static void clif_parse_ActionRequest(int fd, struct map_session_data *sd) __attr
 static void clif_parse_ActionRequest(int fd, struct map_session_data *sd)
 {
 	clif->pActionRequest_sub(sd,
-		RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[1]),
+		(enum action_type)RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[1]),
 		RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[0]),
 		timer->gettick()
 	);
@@ -12317,7 +12317,7 @@ static void clif_parse_NpcClicked(int fd, struct map_session_data *sd)
 	switch (bl->type) {
 		case BL_MOB:
 		case BL_PC:
-			clif->pActionRequest_sub(sd, 0x07, bl->id, timer->gettick());
+			clif->pActionRequest_sub(sd, ACT_ATTACK_REPEAT, bl->id, timer->gettick());
 			break;
 		case BL_NPC:
 			if (sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER) { // TODO: should only work with none 3rd job skills
@@ -16904,7 +16904,7 @@ static void clif_parse_HomAttack(int fd, struct map_session_data *sd)
 		return;
 
 	unit->stop_attack(bl);
-	unit->attack(bl, p->targetGID, p->action != 0);
+	unit->attack(bl, p->targetGID, p->action != ACT_ATTACK);
 }
 
 static void clif_parse_HomMenu(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));

@@ -642,6 +642,23 @@ enum siege_teleport_result {
 	SIEGE_TP_INVALID_MODE = 0x2
 };
 
+/** Client action types */
+enum action_type {
+	ACT_ATTACK,
+	ACT_ITEMPICKUP,
+	ACT_SIT,
+	ACT_STAND,
+	ACT_ATTACK_NOMOTION,
+	ACT_SPLASH,
+	ACT_SKILL,
+	ACT_ATTACK_REPEAT,
+	ACT_ATTACK_MULTIPLE,
+	ACT_ATTACK_MULTIPLE_NOMOTION,
+	ACT_ATTACK_CRITICAL,
+	ACT_ATTACK_LUCKY,
+	ACT_TOUCHSKILL
+};
+
 /**
  * Structures
  **/
@@ -1383,7 +1400,7 @@ struct clif_interface {
 	void (*pEmotion) (int fd, struct map_session_data *sd);
 	void (*pHowManyConnections) (int fd, struct map_session_data *sd);
 	void (*pActionRequest) (int fd, struct map_session_data *sd);
-	void (*pActionRequest_sub) (struct map_session_data *sd, int action_type, int target_id, int64 tick);
+	void (*pActionRequest_sub) (struct map_session_data *sd, enum action_type action_type, int target_id, int64 tick);
 	void (*pRestart) (int fd, struct map_session_data *sd);
 	void (*pWisMessage) (int fd, struct map_session_data* sd);
 	void (*pBroadcast) (int fd, struct map_session_data* sd);
