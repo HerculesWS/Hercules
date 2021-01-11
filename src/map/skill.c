@@ -10992,7 +10992,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				{ MOBID_LUCIOLA_VESPA, 5 },
 			};
 			int i, dummy = 0;
-			Assert_retb(skill_lv < ARRAYLENGTH(summons));
+			Assert_retb(skill_lv <= ARRAYLENGTH(summons));
 
 			i = map->foreachinmap(skill->check_condition_mob_master_sub, src->m, BL_MOB, src->id, summons[skill_lv-1].mob_id, skill_id, &dummy);
 			if(i >= summons[skill_lv-1].quantity)
