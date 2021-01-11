@@ -312,7 +312,7 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 		return;
 
 	i = skill_id - HM_SKILLBASE;
-	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL);
+	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL && i < MAX_SKILL_TREE);
 	if (hd->homunculus.skillpts > 0 &&
 		hd->homunculus.hskill[i].id &&
 		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
@@ -323,7 +323,8 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 		// Check if pre-requisites were met
 		if (battle_config.skillfree == 0) {
 			int c = hd->homunculus.class_ - HM_CLASS_BASE;
-			if (hd->homunculus.intimacy < homun->dbs->skill_tree[c][i].intimacylv)
+			Assert_retv(c >= 0 && c < MAX_HOMUNCULUS_CLASS);
+			if ((int)hd->homunculus.intimacy < homun->dbs->skill_tree[c][i].intimacylv)
 				stop = true;
 			if (!stop) {
 				for (int j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
