@@ -67,7 +67,13 @@ struct s_pet_db {
 	VECTOR_DECL(struct pet_evolve_data) evolve_data;
 };
 
-enum { PET_CLASS,PET_CATCH,PET_EGG,PET_EQUIP,PET_FOOD };
+enum petdb_key_type {
+	PET_CLASS,
+	PET_CATCH,
+	PET_EGG,
+	PET_EQUIP,
+	PET_FOOD,
+};
 
 struct pet_recovery { //Stat recovery
 	enum sc_type type;    ///< Status Change id
@@ -155,7 +161,7 @@ struct pet_interface {
 	int (*target_check) (struct map_session_data *sd, struct block_list *bl, int type);
 	int (*sc_check) (struct map_session_data *sd, int type);
 	int (*hungry) (int tid, int64 tick, int id, intptr_t data);
-	int (*search_petDB_index) (int key, int type);
+	int (*search_petDB_index) (int key, enum petdb_key_type);
 	int (*hungry_timer_delete) (struct pet_data *pd);
 	int (*performance) (struct map_session_data *sd, struct pet_data *pd);
 	int (*return_egg) (struct map_session_data *sd, struct pet_data *pd);

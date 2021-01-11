@@ -366,25 +366,47 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-static int search_petDB_index(int key, int type)
+/**
+ * Retrieves a pet db entry's index.
+ *
+ * @remark only PET_CLASS is guaranteed to be an unique key. The other search
+ *         types will return the first of many entries that match the condition.
+ *
+ * @param key  The key to look up.
+ * @param type The key type (@see enum petdb_key_type)
+ * @return the index of the first matching entry or INDEX_NOT_FOUND if no such entry was found.
+ */
+static int search_petDB_index(int key, enum petdb_key_type type)
 {
-	int i;
-
-	for( i = 0; i < MAX_PET_DB; i++ )
-	{
-		if(pet->db[i].class_ <= 0)
+	for (int i = 0; i < MAX_PET_DB; i++) {
+		if (pet->db[i].class_ <= 0)
 			continue;
-		switch(type) {
-			case PET_CLASS: if(pet->db[i].class_ == key) return i; break;
-			case PET_CATCH: if(pet->db[i].itemID == key) return i; break;
-			case PET_EGG:   if(pet->db[i].EggID  == key) return i; break;
-			case PET_EQUIP: if(pet->db[i].AcceID == key) return i; break;
-			case PET_FOOD:  if(pet->db[i].FoodID == key) return i; break;
-			default:
-				return -1;
+		switch (type) {
+		case PET_CLASS:
+			if (pet->db[i].class_ == key)
+				return i;
+			break;
+		case PET_CATCH:
+			if (pet->db[i].itemID == key)
+				return i;
+			break;
+		case PET_EGG:
+			if (pet->db[i].EggID == key)
+				return i;
+			break;
+		case PET_EQUIP:
+			if (pet->db[i].AcceID == key)
+				return i;
+			break;
+		case PET_FOOD:
+			if (pet->db[i].FoodID == key)
+				return i;
+			break;
+		default:
+			return INDEX_NOT_FOUND;
 		}
 	}
-	return -1;
+	return INDEX_NOT_FOUND;
 }
 
 static int pet_hungry_timer_delete(struct pet_data *pd)
