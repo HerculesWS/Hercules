@@ -22483,10 +22483,10 @@ void HP_clif_pActionRequest(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
-void HP_clif_pActionRequest_sub(struct map_session_data *sd, int action_type, int target_id, int64 tick) {
+void HP_clif_pActionRequest_sub(struct map_session_data *sd, enum action_type action_type, int target_id, int64 tick) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_clif_pActionRequest_sub_pre > 0) {
-		void (*preHookFunc) (struct map_session_data **sd, int *action_type, int *target_id, int64 *tick);
+		void (*preHookFunc) (struct map_session_data **sd, enum action_type *action_type, int *target_id, int64 *tick);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pActionRequest_sub_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_clif_pActionRequest_sub_pre[hIndex].func;
@@ -22501,7 +22501,7 @@ void HP_clif_pActionRequest_sub(struct map_session_data *sd, int action_type, in
 		HPMHooks.source.clif.pActionRequest_sub(sd, action_type, target_id, tick);
 	}
 	if (HPMHooks.count.HP_clif_pActionRequest_sub_post > 0) {
-		void (*postHookFunc) (struct map_session_data *sd, int action_type, int target_id, int64 tick);
+		void (*postHookFunc) (struct map_session_data *sd, enum action_type action_type, int target_id, int64 tick);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_clif_pActionRequest_sub_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_clif_pActionRequest_sub_post[hIndex].func;
 			postHookFunc(sd, action_type, target_id, tick);

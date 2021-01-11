@@ -2134,8 +2134,8 @@ typedef void (*HPMHOOK_pre_clif_pHowManyConnections) (int *fd, struct map_sessio
 typedef void (*HPMHOOK_post_clif_pHowManyConnections) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pActionRequest) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pActionRequest) (int fd, struct map_session_data *sd);
-typedef void (*HPMHOOK_pre_clif_pActionRequest_sub) (struct map_session_data **sd, int *action_type, int *target_id, int64 *tick);
-typedef void (*HPMHOOK_post_clif_pActionRequest_sub) (struct map_session_data *sd, int action_type, int target_id, int64 tick);
+typedef void (*HPMHOOK_pre_clif_pActionRequest_sub) (struct map_session_data **sd, enum action_type *action_type, int *target_id, int64 *tick);
+typedef void (*HPMHOOK_post_clif_pActionRequest_sub) (struct map_session_data *sd, enum action_type action_type, int target_id, int64 tick);
 typedef void (*HPMHOOK_pre_clif_pRestart) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pRestart) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pWisMessage) (int *fd, struct map_session_data **sd);
