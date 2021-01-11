@@ -1622,7 +1622,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	struct config_setting_t *t;
 
 	if ((t = libconfig->setting_get_member(it, "Intimacy")) != NULL && config_setting_is_group(t))
-		pet->read_db_sub_intimacy(n, t);
+		pet->read_db_sub_intimacy(&pet->db[n], t);
 
 	ret = libconfig->setting_lookup_int(it, "CaptureRate", &i32);
 	pet->db[n].capture = (ret == CONFIG_FALSE) ? 1000 : cap_value(i32, 1, 10000);
@@ -1661,26 +1661,27 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		pet->db[n].equip_script = script->parse(str, source, -pet->db[n].class_, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL);
 
 	if ((t = libconfig->setting_get_member(it, "Evolve")) != NULL && config_setting_is_group(t))
-		pet->read_db_sub_evolution(t, n);
+		pet->read_db_sub_evolution(&pet->db[n], t);
 
 	return pet->db[n].class_;
 }
 
 /**
  * Read Pet Evolution Database [Dastgir/Hercules]
- * @param  t         libconfig setting
- * @param  n         Pet DB Index
+ * @param  entry The pet db entry.
+ * @param  t     The libconfig evolution block, to read information from.
+ * @return false on failure, true on success.
  */
-static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
+static bool pet_read_db_sub_evolution(struct s_pet_db *entry, struct config_setting_t *t)
 {
 	struct config_setting_t *pett;
 	int i = 0;
 	const char *str = NULL;
 
-	nullpo_retv(t);
-	Assert_retv(n >= 0 && n < MAX_PET_DB);
+	nullpo_retr(false, entry);
+	nullpo_retr(false, t);
 
-	VECTOR_INIT(pet->db[n].evolve_data);
+	VECTOR_INIT(entry->evolve_data);
 
 	while ((pett = libconfig->setting_get_elem(t, i))) {
 		if (config_setting_is_group(pett)) {
@@ -1692,8 +1693,8 @@ static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
 			str = config_setting_name(pett);
 
 			if (!(data = itemdb->name2id(str))) {
-				ShowWarning("pet_read_evolve_db_sub: Invalid Egg '%s' in Pet #%d, skipping.\n", str, pet->db[n].class_);
-				return;
+				ShowWarning("pet_read_evolve_db_sub: Invalid Egg '%s' in Pet #%d, skipping.\n", str, entry->class_);
+				return false;
 			} else {
 				ped.petEggId = data->nameid;
 			}
@@ -1734,48 +1735,48 @@ static void pet_read_db_sub_evolution(struct config_setting_t *t, int n)
 
 			}
 
-			VECTOR_ENSURE(pet->db[n].evolve_data, 1, 1);
-			VECTOR_PUSH(pet->db[n].evolve_data, ped);
+			VECTOR_ENSURE(entry->evolve_data, 1, 1);
+			VECTOR_PUSH(entry->evolve_data, ped);
 		}
 		i++;
 	}
+	return true;
 }
 
 /**
  * Reads a pet's intimacy data from DB.
  *
- * @param idx The pet's index in pet->db[].
- * @param t The libconfig settings block, which contains the pet's intimacy data.
+ * @param entry The pet db entry.
+ * @param t     The libconfig settings block, which contains the pet's intimacy data.
  * @return false on failure, true on success.
- *
- **/
-static bool pet_read_db_sub_intimacy(int idx, struct config_setting_t *t)
+ */
+static bool pet_read_db_sub_intimacy(struct s_pet_db *entry, struct config_setting_t *t)
 {
+	nullpo_retr(false, entry);
 	nullpo_retr(false, t);
-	Assert_retr(false, idx >= 0 && idx < MAX_PET_DB);
 
 	int i32 = 0;
 
 	if (libconfig->setting_lookup_int(t, "Initial", &i32) == CONFIG_TRUE)
-		pet->db[idx].intimate = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
+		entry->intimate = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "FeedIncrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].r_hungry = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
+		entry->r_hungry = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OverFeedDecrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].r_full = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->r_full = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "StarvingDelay", &i32) == CONFIG_TRUE)
-		pet->db[idx].starving_delay = cap_value(1000 * i32, 0, pet->db[idx].hungry_delay);
+		entry->starving_delay = cap_value(1000 * i32, 0, entry->hungry_delay);
 
 	if (libconfig->setting_lookup_int(t, "StarvingDecrement", &i32) == CONFIG_TRUE)
-		pet->db[idx].starving_decrement = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->starving_decrement = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
 
-	if (pet->db[idx].starving_decrement == PET_INTIMACY_NONE)
-		pet->db[idx].starving_delay = 0;
+	if (entry->starving_decrement == PET_INTIMACY_NONE)
+		entry->starving_delay = 0;
 
 	return true;
 }

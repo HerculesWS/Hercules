@@ -193,11 +193,11 @@ struct pet_interface {
 	void (*read_db) (void);
 	int (*read_db_libconfig) (const char *filename, bool ignore_missing, int count);
 	int (*read_db_sub) (struct config_setting_t *it, int n, const char *source);
-	bool (*read_db_sub_intimacy) (int idx, struct config_setting_t *t);
+	bool (*read_db_sub_intimacy) (struct s_pet_db *entry, struct config_setting_t *t);
 	void (*read_db_clear) (void);
 
 	/* Pet Evolution [Dastgir/Hercules] */
-	void (*read_db_sub_evolution) (struct config_setting_t *t, int n);
+	bool (*read_db_sub_evolution) (struct s_pet_db *entry, struct config_setting_t *t);
 
 };
 
