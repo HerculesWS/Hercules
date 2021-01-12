@@ -51589,32 +51589,31 @@ int HP_mercenary_dead(struct mercenary_data *md) {
 	}
 	return retVal___;
 }
-int HP_mercenary_delete(struct mercenary_data *md, int reply) {
+void HP_mercenary_delete(struct mercenary_data *md, int reply) {
 	int hIndex = 0;
-	int retVal___ = 0;
 	if (HPMHooks.count.HP_mercenary_delete_pre > 0) {
-		int (*preHookFunc) (struct mercenary_data **md, int *reply);
+		void (*preHookFunc) (struct mercenary_data **md, int *reply);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_delete_pre; hIndex++) {
 			preHookFunc = HPMHooks.list.HP_mercenary_delete_pre[hIndex].func;
-			retVal___ = preHookFunc(&md, &reply);
+			preHookFunc(&md, &reply);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
-			return retVal___;
+			return;
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.mercenary.delete(md, reply);
+		HPMHooks.source.mercenary.delete(md, reply);
 	}
 	if (HPMHooks.count.HP_mercenary_delete_post > 0) {
-		int (*postHookFunc) (int retVal___, struct mercenary_data *md, int reply);
+		void (*postHookFunc) (struct mercenary_data *md, int reply);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_delete_post; hIndex++) {
 			postHookFunc = HPMHooks.list.HP_mercenary_delete_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, md, reply);
+			postHookFunc(md, reply);
 		}
 	}
-	return retVal___;
+	return;
 }
 void HP_mercenary_contract_stop(struct mercenary_data *md) {
 	int hIndex = 0;

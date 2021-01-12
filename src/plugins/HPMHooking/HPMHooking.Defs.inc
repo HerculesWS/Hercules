@@ -5300,8 +5300,8 @@ typedef void (*HPMHOOK_pre_mercenary_heal) (struct mercenary_data **md, int *hp,
 typedef void (*HPMHOOK_post_mercenary_heal) (struct mercenary_data *md, int hp, int sp);
 typedef int (*HPMHOOK_pre_mercenary_dead) (struct mercenary_data **md);
 typedef int (*HPMHOOK_post_mercenary_dead) (int retVal___, struct mercenary_data *md);
-typedef int (*HPMHOOK_pre_mercenary_delete) (struct mercenary_data **md, int *reply);
-typedef int (*HPMHOOK_post_mercenary_delete) (int retVal___, struct mercenary_data *md, int reply);
+typedef void (*HPMHOOK_pre_mercenary_delete) (struct mercenary_data **md, int *reply);
+typedef void (*HPMHOOK_post_mercenary_delete) (struct mercenary_data *md, int reply);
 typedef void (*HPMHOOK_pre_mercenary_contract_stop) (struct mercenary_data **md);
 typedef void (*HPMHOOK_post_mercenary_contract_stop) (struct mercenary_data *md);
 typedef int (*HPMHOOK_pre_mercenary_get_lifetime) (struct mercenary_data **md);
