@@ -22,6 +22,31 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2021.01.11] `January 11 2020`
+
+### Added
+
+- Integrated the Renewal mob database with the correct `DamageTakenRate` value for MVPs that require it. Those MVPs have a green aura and only receive 10% of the damage dealt to them. (#2875)
+- Added an enum for client action types. See `enum action_type`. (#2930)
+- Added skill prerequisite checks before leveling up homunculus skills, allowing the definition of prerequisites for non-evolved or non-loyal homunculi, as it was previously limited to those. The check is disabled when the `player_skillfree` setting is enabled in the battle config. (#2807)
+- Added constants for the `mercenary_delete()` script command as well as the `mercenary->delete()` function and documentation for the formerly undocumented values. See `enum merc_delete_type` and the script constants `MERC_DELETE_*`. (part of #2858, issue #2843)
+
+### Changed
+
+- Cleaned up mob database from redundant `MVPExp: 0` fields. (part of #2875)
+- Updated packet `CZ_REQUEST_ACTNPC` to use a struct. (part of #2930)
+- Changed the default mercenary delete type of the `mercenary_delete()` script command to be fired by the user (not updating loyalty). (#2843)
+
+### Fixed
+
+- Fixed an issue that caused the Sign quest to lock up and become unfinishable for everyone when a player times out or logs out under certain conditions. (#2921)
+- Fixed an exploit that allowed multiple people into the solo room of the Sign quest. (part of #2921)
+- Fixed a failed assertion when using the `MH_SUMMON_LEGION` skill. (#2929)
+
+### Removed
+
+- Removed the undocumented and meaningless return value of `mercenary->delete()`, now returning void. It was previously relying on the return value of two other functions, and ultimately always returning zero. (part of #2843)
+
 ## [v2020.12.14+1] `December 14 2020` `PATCH 1`
 
 ### Fixed
