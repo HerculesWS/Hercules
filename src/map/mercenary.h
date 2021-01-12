@@ -136,7 +136,7 @@ struct mercenary_interface {
 	void (*heal) (struct mercenary_data *md, int hp, int sp);
 	int (*dead) (struct mercenary_data *md);
 
-	int (*delete) (struct mercenary_data *md, int reply);
+	void (*delete) (struct mercenary_data *md, int reply);
 	void (*contract_stop) (struct mercenary_data *md);
 
 	int (*get_lifetime) (struct mercenary_data *md);

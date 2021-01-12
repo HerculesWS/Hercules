@@ -271,17 +271,19 @@ static int merc_contract_end_timer(int tid, int64 tick, int id, intptr_t data)
  * @param md  Mercenary data belongs to the player
  * @param type Type of removal (@see enum merc_delete type)
  */
-static int merc_delete(struct mercenary_data *md, int type)
+static void merc_delete(struct mercenary_data *md, int type)
 {
-	nullpo_retr(0, md);
+	nullpo_retv(md);
 
 	struct map_session_data *sd = md->master;
 	md->mercenary.life_time = 0;
 
 	mercenary->contract_stop(md);
 
-	if (!sd)
-		return unit->free(&md->bl, CLR_OUTSIGHT);
+	if (sd == NULL) {
+		unit->free(&md->bl, CLR_OUTSIGHT);
+		return;
+	}
 
 	if (md->devotion_flag != 0) {
 		md->devotion_flag = 0;
@@ -294,7 +296,7 @@ static int merc_delete(struct mercenary_data *md, int type)
 		mercenary->set_faith(md, -1);// -1 Loyalty on Mercenary killed
 
 	clif->mercenary_message(sd, type);
-	return unit->remove_map(&md->bl, CLR_OUTSIGHT, ALC_MARK);
+	unit->remove_map(&md->bl, CLR_OUTSIGHT, ALC_MARK);
 }
 
 static void merc_contract_stop(struct mercenary_data *md)
