@@ -5036,6 +5036,13 @@
 - `MERCINFO_LEVEL`: 7
 - `MERCINFO_GID`: 8
 
+### Mercenary Delete Type
+
+- `MERC_DELETE_EXPIRED`: 0
+- `MERC_DELETE_KILLED`: 1
+- `MERC_DELETE_REMOVED`: 2
+- `MERC_DELETE_RANAWAY`: 3
+
 ### getpetinfo options
 
 - `PETINFO_ID`: 0
