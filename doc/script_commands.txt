@@ -10274,12 +10274,15 @@ in milliseconds. Typically used in item scripts of mercenary scrolls.
 
 ----------------------------------------
 
-*mercenary_delete({<char_id>, <update>})
+*mercenary_delete({<char_id>, <type>})
 
-Remove mercenary of the attached character.
-Mercenary Loyalty are updated depend on value of <update>:
-    0 - Mercenary Loyalty increase by 1, similar to contract ends (default).
-    1 - Mercenary Loyalty decrease by 1, similar to mercenary killed.
+Remove mercenary from the attached character. Default value of <type> is MERC_DELETE_REMOVED.
+
+Valid types are:
+    MERC_DELETE_EXPIRED - Mercenary soldier's duty fulfilled until contract expiration. Loyalty +1.
+    MERC_DELETE_KILLED  - Mercenary died before fulfilling its contract. Loyalty -1.
+    MERC_DELETE_REMOVED - Mercenary removed by the user. Loyalty +0.
+    MERC_DELETE_RANAWAY - Mercenary left because the player died or was hit by the SC__GROOMY status. Loyalty +0.
 
 ---------------------------------------
 

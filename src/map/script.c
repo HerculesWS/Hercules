@@ -22497,11 +22497,21 @@ static BUILDIN(mercenary_create)
 
 /*==========================================
  * Remove character's mercenary and update loyalty
- * mercenary_delete({<char_id>, <update>});
+ * mercenary_delete({<char_id>, <type>});
  *------------------------------------------*/
 static BUILDIN(mercenary_delete)
 {
-	struct map_session_data* sd = NULL;
+	struct map_session_data *sd = NULL;
+
+	int type = MERC_DELETE_REMOVED;
+	if (script_hasdata(st, 3)) {
+		type = script_getnum(st, 3);
+
+		if (type < MERC_DELETE_EXPIRED || type >= MERC_DELETE_MAX) {
+			ShowWarning("buildin_mercenary_delete: Invalid type %d.\n", type);
+			return false;
+		}
+	}
 
 	if (script_hasdata(st, 2))
 		sd = script->charid2sd(st, script_getnum(st, 2));
@@ -22509,15 +22519,10 @@ static BUILDIN(mercenary_delete)
 		sd = script->rid2sd(st);
 
 	if (sd != NULL) {
-		struct mercenary_data* md = (sd->status.mer_id && sd->md != NULL) ? sd->md : NULL;
+		struct mercenary_data *md = (sd->status.mer_id && sd->md != NULL) ? sd->md : NULL;
 
-		if (md != NULL) {
-			int update_faith = 0;
-			if (script_hasdata(st, 3))
-				update_faith = cap_value(script_getnum(st, 3), 0, 1);
-
-			mercenary->delete(md, update_faith);
-		}
+		if (md != NULL)
+			mercenary->delete(md, type);
 	}
 
 	return true;
@@ -28455,6 +28460,12 @@ static void script_hardcoded_constants(void)
 	script->set_constant("MERCINFO_LIFETIME", MERCINFO_LIFETIME, false, false);
 	script->set_constant("MERCINFO_LEVEL", MERCINFO_LEVEL, false, false);
 	script->set_constant("MERCINFO_GID", MERCINFO_GID, false, false);
+
+	script->constdb_comment("Mercenary Delete Type");
+	script->set_constant("MERC_DELETE_EXPIRED", MERC_DELETE_EXPIRED, false, false);
+	script->set_constant("MERC_DELETE_KILLED", MERC_DELETE_KILLED, false, false);
+	script->set_constant("MERC_DELETE_REMOVED", MERC_DELETE_REMOVED, false, false);
+	script->set_constant("MERC_DELETE_RANAWAY", MERC_DELETE_RANAWAY, false, false);
 
 	script->constdb_comment("getpetinfo options");
 	script->set_constant("PETINFO_ID", PETINFO_ID, false, false);

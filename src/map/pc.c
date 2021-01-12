@@ -8190,7 +8190,7 @@ static int pc_dead(struct map_session_data *sd, struct block_list *src)
 		homun->vaporize(sd, HOM_ST_REST, true);
 
 	if (sd->md != NULL)
-		mercenary->delete(sd->md, 3); // Your mercenary soldier ran away.
+		mercenary->delete(sd->md, MERC_DELETE_RANAWAY); // Your mercenary soldier ran away.
 
 	if (sd->ed != NULL)
 		elemental->delete(sd->ed, 0);
