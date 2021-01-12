@@ -1578,12 +1578,12 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 			entry.itemID = data->nameid;
 	}
 
-	entry.FoodID = 537;
+	entry.FoodID = ITEMID_PET_FOOD;
 
 	if (libconfig->setting_lookup_string(it, "FoodItem", &str) == CONFIG_TRUE) {
 		if ((data = itemdb->name2id(str)) == NULL)
-			ShowWarning("pet_read_db_sub: Invalid FoodItem '%s' in pet %d of \"%s\", defaulting to Pet_Food (ID=537).\n",
-				    str, entry.class_, source);
+			ShowWarning("pet_read_db_sub: Invalid FoodItem '%s' in pet %d of \"%s\", defaulting to Pet_Food (ID=%d).\n",
+				    str, entry.class_, source, ITEMID_PET_FOOD);
 		else
 			entry.FoodID = data->nameid;
 	}
