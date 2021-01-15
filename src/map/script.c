@@ -14736,7 +14736,6 @@ static BUILDIN(successremovecards)
 			cardflag = 1;
 			item_tmp.nameid = sd->status.inventory[i].card[c];
 			item_tmp.identify = 1;
-			sd->status.inventory[i].card[c] = 0;
 
 			if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT))) {
 				clif->additem(sd, 0, 0, flag);
@@ -14746,10 +14745,33 @@ static BUILDIN(successremovecards)
 	}
 
 	if (cardflag == 1) {
-		pc->unequipitem(sd, i, PCUNEQUIPITEM_FORCE);
-		clif->delitem(sd, i, 1, DELITEM_MATERIALCHANGE);
-		clif->additem(sd, i, 1, 0);
-		pc->equipitem(sd, i, sd->status.inventory[i].equip);
+		int flag;
+		struct item item_tmp;
+
+		memset(&item_tmp, 0, sizeof(item_tmp));
+
+		item_tmp.nameid = sd->status.inventory[i].nameid;
+		item_tmp.identify = 1;
+		item_tmp.refine = sd->status.inventory[i].refine;
+		item_tmp.attribute = sd->status.inventory[i].attribute;
+		item_tmp.expire_time = sd->status.inventory[i].expire_time;
+		item_tmp.bound = sd->status.inventory[i].bound;
+
+		for (int j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
+			item_tmp.card[j] = sd->status.inventory[i].card[j];
+
+		for (int j = 0; j < MAX_ITEM_OPTIONS; j++) {
+			item_tmp.option[j].index = sd->status.inventory[i].option[j].index;
+			item_tmp.option[j].value = sd->status.inventory[i].option[j].value;
+			item_tmp.option[j].param = sd->status.inventory[i].option[j].param;
+		}
+
+		pc->delitem(sd, i, 1, 0, DELITEM_MATERIALCHANGE, LOG_TYPE_SCRIPT);
+		if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT))) {
+			clif->additem(sd, 0, 0, flag);
+			map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
+		}
+
 		clif->misceffect(&sd->bl,3);
 	}
 	return true;
