@@ -47,7 +47,7 @@ struct grf_filelist {
 	int srcpos;         ///< position of entry in grf
 	int next;           ///< index of next filelist entry with same hash (-1: end of entry chain)
 	char type;
-	char fn[128-4*5];   ///< file name
+	char fn[256-4*5];   ///< file name
 	char *fnd;          ///< if the file was cloned, contains name of original file
 	int8 gentry;        ///< read grf file select
 };
