@@ -1907,7 +1907,7 @@ static void send_shortlist_add_fd(int fd)
 	}
 
 	// set the bit
-	send_shortlist_set[i] |= 1<<bit;
+	send_shortlist_set[i] |= 1U << bit;
 	// Add to the end of the shortlist array.
 	send_shortlist_array[send_shortlist_count++] = fd;
 }
@@ -1938,7 +1938,7 @@ static void send_shortlist_do_sends(void)
 			ShowDebug("send_shortlist_do_sends: fd is not set, why is it in the shortlist? (fd=%d)\n", fd);
 			continue;
 		}
-		send_shortlist_set[idx]&=~(1<<bit);// unset fd
+		send_shortlist_set[idx] &=~ (1U << bit);// unset fd
 		// If this session still exists, perform send operations on it and
 		// check for the eof state.
 		if( sockt->session[fd] )
