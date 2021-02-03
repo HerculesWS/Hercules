@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         # gcc, clang-8, clang-9 removed for reduce number of jobs
-        CC: ["gcc-10", "clang-10"]
+        CC: ["gcc-10", "clang-11"]
         RENEWAL: [""]
         CLIENT_TYPE: ["", "--enable-packetver-re", "--enable-packetver-zero"]
         SANITIZER: [""]
@@ -24,7 +24,7 @@ jobs:
         exclude:
           - PACKET_VERSION: "--enable-packetver=20100105"
             CLIENT_TYPE: "--enable-packetver-zero"
-          - CC: "clang-10"
+          - CC: "clang-11"
             LTO: "--enable-lto"
     container:
       image: debian:unstable
