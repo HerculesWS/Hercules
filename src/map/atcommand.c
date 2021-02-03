@@ -477,7 +477,7 @@ ACMD(mapmove)
 	if ((x || y) && map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS) && pc_get_group_level(sd) < battle_config.gm_ignore_warpable_area) {
 		//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_fd(fd,2));
-		if (!map->search_freecell(NULL, m, &x, &y, 10, 10, 1))
+		if (map->search_free_cell(NULL, m, &x, &y, 10, 10, SFC_XY_CENTER) != 0)
 			x = y = 0; //Invalid cell, use random spot.
 	}
 	if (map->list[m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
@@ -594,7 +594,7 @@ ACMD(jump)
 	if ((x || y) && map->getcell(sd->bl.m, &sd->bl, x, y, CELL_CHKNOPASS)) {
 		//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_fd(fd,2));
-		if (!map->search_freecell(NULL, sd->bl.m, &x, &y, 10, 10, 1))
+		if (map->search_free_cell(NULL, sd->bl.m, &x, &y, 10, 10, SFC_XY_CENTER) != 0)
 			x = y = 0; //Invalid cell, use random spot.
 	}
 
@@ -2131,7 +2131,7 @@ ACMD(monster)
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
 		int k;
-		map->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
+		map->search_free_cell(&sd->bl, 0, &mx,  &my, range, range, SFC_DEFAULT);
 		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPELIUM?0x200:0x0));
 		count += (k != 0) ? 1 : 0;
 	}
@@ -4541,9 +4541,9 @@ ACMD(unloadnpc)
 		clif->message(fd, msg_fd(fd, 1133)); /// Please enter a NPC name (Usage: @unloadnpc <NPC_name> {<flag>}).
 		return false;
 	}
-	
+
 	struct npc_data *nd = npc->name2id(npc_name);
-	
+
 	if (nd == NULL) {
 		clif->message(fd, msg_fd(fd, 111)); /// This NPC doesn't exist.
 		return false;
@@ -5461,14 +5461,14 @@ ACMD(dropall)
 				ShowWarning("Non-existant item %d on dropall list (account_id: %d, char_id: %d)\n", sd->status.inventory[i].nameid, sd->status.account_id, sd->status.char_id);
 				continue;
 			}
-			
+
 			if (!pc->candrop(sd, &sd->status.inventory[i]))
 				continue;
-			
+
 			if (type == -1 || type == item_data->type) {
 				if (sd->status.inventory[i].equip != 0)
 					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
-				
+
 				int amount = sd->status.inventory[i].amount;
 				if (pc->dropitem(sd, i, amount) != 0)
 					count += amount;

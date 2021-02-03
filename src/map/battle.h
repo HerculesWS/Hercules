@@ -528,6 +528,7 @@ struct Battle_Config {
 	int mon_trans_disable_in_gvg;
 
 	int case_sensitive_aegisnames;
+	int search_freecell_map_margin;
 	int guild_castle_invite;
 	int guild_castle_expulsion;
 

@@ -4239,7 +4239,7 @@ static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
 				case RG_INTIMIDATE:
 					if (unit->warp(src,-1,-1,-1,CLR_TELEPORT) == 0) {
 						short x,y;
-						map->search_freecell(src, 0, &x, &y, 1, 1, 0);
+						map->search_free_cell(src, 0, &x, &y, 1, 1, SFC_DEFAULT);
 						if (target != src && !status->isdead(target))
 							unit->warp(target, -1, x, y, CLR_TELEPORT);
 					}
@@ -4310,7 +4310,7 @@ static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
 						unit->warp(src, -1, skl->x, skl->y, CLR_TELEPORT);
 					else { // Target's Part
 						short x = skl->x, y = skl->y;
-						map->search_freecell(NULL, target->m, &x, &y, 2, 2, 1);
+						map->search_free_cell(NULL, target->m, &x, &y, 2, 2, SFC_XY_CENTER);
 						unit->warp(target,-1,x,y,CLR_TELEPORT);
 					}
 					break;
@@ -5379,7 +5379,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			if( !map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground ) {
 				//You don't move on GVG grounds.
 				short x, y;
-				map->search_freecell(bl, 0, &x, &y, 1, 1, 0);
+				map->search_free_cell(bl, 0, &x, &y, 1, 1, SFC_DEFAULT);
 				if (unit->move_pos(src, x, y, 0, false) == 0)
 					clif->slide(src,src->x,src->y);
 			}
@@ -5646,7 +5646,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			else {
 				short x, y;
-				map->search_freecell(src, 0, &x, &y, -1, -1, 0);
+				map->search_free_cell(src, 0, &x, &y, -1, -1, SFC_DEFAULT);
 				// Destination area
 				skill->area_temp[4] = x;
 				skill->area_temp[5] = y;

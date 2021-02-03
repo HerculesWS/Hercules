@@ -1605,82 +1605,108 @@ static int map_count_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-/*==========================================
- * Locates a random spare cell around the object given, using range as max
- * distance from that spot. Used for warping functions. Use range < 0 for
- * whole map range.
- * Returns 1 on success. when it fails and src is available, x/y are set to src's
- * src can be null as long as flag&1
- * when ~flag&1, m is not needed.
- * Flag values:
- * &1 = random cell must be around given m,x,y, not around src
- * &2 = the target should be able to walk to the target tile.
- * &4 = there shouldn't be any players around the target tile (use the no_spawn_on_player setting)
- *------------------------------------------*/
-static int map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag)
+/**
+ * Locates a random free cell (x, y) on a rectangle or the entire map.
+ *
+ * The rectangles center is either on map `m` at (x, y) or at the location of object `src`.
+ * Searches on entire map if range_x < 0 and range_y < 0.
+ * @remark Usage in e.g. warping or mob spawning.
+ * @param src object used to base reach checks on
+ * @param m map to search cells on, if flag has SFC_XY_CENTER set
+ * @param[in,out] x pointer to the x-axis
+ * @param[in,out] y pointer to the y-axis
+ * @param range_x range to east border of rectangle, if range_x < 0 use horizontal map range
+ * @param range_y range to north border of rectangle, if range_y < 0 use vertical map range
+ * @param flag *flag* parameter based on @enum search_freecell with following options @n
+ *  - `& SFC_XY_CENTER` -> 0: `src` as center, 1: center is on `m` at (x, y)
+ *  - `& SFC_REACHABLE` -> 1: `src` needs to be able to reach found cell.
+ *  - `& SFC_AVOIDPLAYER` -> 1: avoid players around found cell (@see no_spawn_on_player setting)
+ * @retval 0 success, free cell found
+ * @retval 1 failure, ran out of tries or wrong usage
+ * @retval 2 failure, nullpointer
+ */
+static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16 *y,
+                               int16 range_x, int16 range_y, int flag)
 {
-	int tries, spawn=0;
-	int bx, by;
-	int rx2 = 2*rx+1;
-	int ry2 = 2*ry+1;
+	nullpo_retr(2, x);
+	nullpo_retr(2, y);
 
-	nullpo_ret(x);
-	nullpo_ret(y);
-
-	if( !src && (!(flag&1) || flag&2) )
-	{
-		ShowDebug("map_search_freecell: Incorrect usage! When src is NULL, flag has to be &1 and can't have &2\n");
-		return 0;
+	if (src == NULL && ((flag & SFC_XY_CENTER) == 0 || (flag & SFC_REACHABLE) != 0)) {
+		ShowDebug("map_search_free_cell: Incorrect usage! When src is NULL, flag has to have SFC_XY_CENTER set"
+		          " and can't have SFC_REACHABLE set\n");
+		return 1;
 	}
 
-	if (flag&1) {
-		bx = *x;
-		by = *y;
-	} else {
-		nullpo_ret(src);
-		bx = src->x;
-		by = src->y;
+	int center_x = *x;
+	int center_y = *y;
+	if ((flag & SFC_XY_CENTER) == 0) {
+		nullpo_retr(2, src);
+		center_x = src->x;
+		center_y = src->y;
 		m = src->m;
 	}
-	if (!rx && !ry) {
-		//No range? Return the target cell then....
-		*x = bx;
-		*y = by;
-		return map->getcell(m, src, *x, *y, CELL_CHKREACH);
-	}
-
-	if (rx >= 0 && ry >= 0) {
-		tries = rx2*ry2;
-		if (tries > 100) tries = 100;
-	} else {
-		tries = map->list[m].xs*map->list[m].ys;
-		if (tries > 500) tries = 500;
-	}
-
-	while(tries--) {
-		*x = (rx >= 0)?(rnd()%rx2-rx+bx):(rnd()%(map->list[m].xs-2)+1);
-		*y = (ry >= 0)?(rnd()%ry2-ry+by):(rnd()%(map->list[m].ys-2)+1);
-
-		if (*x == bx && *y == by)
-			continue; //Avoid picking the same target tile.
-
-		if (map->getcell(m, src, *x, *y, CELL_CHKREACH)) {
-			if(flag&2 && !unit->can_reach_pos(src, *x, *y, 1))
-				continue;
-			if(flag&4) {
-				if (spawn >= 100) return 0; //Limit of retries reached.
-				if (spawn++ < battle_config.no_spawn_on_player
-				 && map->foreachinarea(map->count_sub, m, *x-AREA_SIZE, *y-AREA_SIZE,
-				                                         *x+AREA_SIZE, *y+AREA_SIZE, BL_PC)
-				)
-					continue;
-			}
+	if (range_x == 0 && range_y == 0) {
+		// No range? Return the target cell then....
+		*x = center_x;
+		*y = center_y;
+		if (map->getcell(m, src, *x, *y, CELL_CHKREACH) == 0)
 			return 1;
-		}
+		else
+			return 0;
 	}
-	*x = bx;
-	*y = by;
-	return 0;
+
+	int width = 2 * range_x + 1;
+	int height = 2 * range_y + 1;
+	int tries;
+	const int margin = battle_config.search_freecell_map_margin;
+	if (range_x < 0 || range_y < 0) {
+		if (Assert_chk(map->list[m].xs > 2 * margin && map->list[m].ys > 2 * margin))
+			ShowDebug("search_freecell_map_margin is too big for at least one map.");
+		tries = min(map->list[m].xs * map->list[m].ys, 500); // For likely every map this will be 500...
+	} else {
+		tries = min(width * height, 100);
+	}
+
+	int avoidplayer_retries = 0;
+	while (tries-- > 0) {
+		if (range_x < 0)
+			*x = rnd() % max(1, map->list[m].xs - 2 * margin) + margin;
+		else
+			*x = rnd() % width - range_x + center_x;
+
+		if (range_y < 0)
+			*y = rnd() % max(1, map->list[m].ys - 2 * margin) + margin;
+		else
+			*y = rnd() % height - range_y + center_y;
+
+		// Ensure we don't get out of map bounds.
+		*x = cap_value(*x, 1, map->list[m].xs - 1);
+		*y = cap_value(*y, 1, map->list[m].ys - 1);
+
+		if (*x == center_x && *y == center_y)
+			continue; // Avoid picking the same target tile.
+
+		if (map->getcell(m, src, *x, *y, CELL_CHKREACH) == 0)
+			continue;
+
+		if ((flag & SFC_REACHABLE) != 0 && !unit->can_reach_pos(src, *x, *y, 1))
+			continue;
+
+		if ((flag & SFC_AVOIDPLAYER) == 0)
+			return 0;
+
+		if (avoidplayer_retries >= 100)
+			return 1; // Limit of retries reached.
+
+		if (avoidplayer_retries++ < battle_config.no_spawn_on_player
+		    && map->foreachinarea(map->count_sub, m, *x - AREA_SIZE, *y - AREA_SIZE,
+					  *x + AREA_SIZE, *y + AREA_SIZE, BL_PC) != 0)
+			continue;
+		return 0;
+	}
+	*x = center_x;
+	*y = center_y;
+	return 1;
 }
 
 /*==========================================
@@ -7143,7 +7169,7 @@ PRAGMA_GCC9(GCC diagnostic pop)
 	map->find_skill_unit_oncell = map_find_skill_unit_oncell;
 	// search and creation
 	map->get_new_object_id = map_get_new_object_id;
-	map->search_freecell = map_search_freecell;
+	map->search_free_cell = map_search_free_cell;
 	map->closest_freecell = map_closest_freecell;
 	//
 	map->quit = map_quit;

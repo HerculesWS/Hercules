@@ -1828,7 +1828,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->count_oncell, HP_map_count_oncell) },
 	{ HP_POP(map->find_skill_unit_oncell, HP_map_find_skill_unit_oncell) },
 	{ HP_POP(map->get_new_object_id, HP_map_get_new_object_id) },
-	{ HP_POP(map->search_freecell, HP_map_search_freecell) },
+	{ HP_POP(map->search_free_cell, HP_map_search_free_cell) },
 	{ HP_POP(map->closest_freecell, HP_map_closest_freecell) },
 	{ HP_POP(map->quit, HP_map_quit) },
 	{ HP_POP(map->addnpc, HP_map_addnpc) },

@@ -8801,10 +8801,10 @@ static BUILDIN(makeitem2)
 		if ((x < 0 || y < 0) && sd == NULL) {
 			x = 0;
 			y = 0;
-			map->search_freecell(NULL, m, &x, &y, -1, -1, 1);
+			map->search_free_cell(NULL, m, &x, &y, -1, -1, SFC_XY_CENTER);
 		} else {
 			range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
-			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, 0); // Locate spot next to player.
+			map->search_free_cell(&sd->bl, sd->bl.m, &x, &y, range, range, SFC_DEFAULT); // Locate spot next to player.
 		}
 	}
 
@@ -13646,7 +13646,7 @@ static BUILDIN(waitingroom)
 ///
 /// delwaitingroom "<npc_name>";
 /// delwaitingroom;
-static BUILDIN(delwaitingroom) 
+static BUILDIN(delwaitingroom)
 {
 	struct npc_data *nd;
 	if (script_hasdata(st, 2))
@@ -13660,7 +13660,7 @@ static BUILDIN(delwaitingroom)
 		else
 			ShowWarning("buildin_delwaitingroom: NPC not found.\n");
 		return false;
-	} 
+	}
 
 	chat->delete_npc_chat(nd);
 	return true;
@@ -13701,7 +13701,7 @@ static BUILDIN(waitingroomkickall)
 ///
 /// kickwaitingroom "<npc_name>"{,"<name>"|<account id>};
 /// kickwaitingroom;
-static BUILDIN(waitingroomkick) 
+static BUILDIN(waitingroomkick)
 {
 	struct npc_data *nd;
 	struct chat_data *cd;
@@ -13865,7 +13865,7 @@ static BUILDIN(getwaitingroomstate)
 	case 34: script_pushint(st, cd->min_level); break;
 	case 35: script_pushint(st, cd->max_level); break;
 	case 36: script_pushint(st, cd->zeny); break;
-	default: 
+	default:
 		script_pushint(st, -1);
 		ShowWarning("buildin_getwaitingroomstate: invalid type '%d'.\n", type);
 		return false;
